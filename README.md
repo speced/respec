@@ -27,3 +27,27 @@ as to make it 100% compatible with the existing v1 but to start making use of th
 included in v2. Then I will cease all development on the other two versions, making this the only
 canonical option. Since it will start off v1 it will be guaranteed compatible, but it will progressively
 be rewritten over time to attain v2's features — without the synchronisation problems.
+
+How to contribute?
+==================
+
+It is common for people to contribute to RS, notably to make changes to the biblio references. You
+certainly are welcome to submit whatever change you wish to (though if it's a complex feature please
+try to coordinate with others first to avoid working long on something that will then be rejected).
+
+If you're familiar with GitHub then contributing is simple: just fork and make pull requests. Please
+just be careful to note that the primary branch is `gh-pages` and not `master` (this ensures that the
+result gets published on the Web).
+
+If you're not familiar with GitHub, you need to follow the following steps:
+
+* Get a GitHub account. This is done quickly, and the GH people will not bother you at all. Plus, it's
+pretty much a requirement for the majority of OSS communities these days.
+* If all you want to make is a small, simple change, you can use the Web interface. Navigate to the file
+that you want to change, click “Edit this file” in the toolbar, then save your changes — they will get
+sent to the project for approval (which ought to be quick).
+* If you wish to make more complex changes, you will need to fork the project (click “Fork”), clone the
+resulting repository, make the changes there, and push it back. Then click the “Pull Request” button.
+This allows you to request that the project integrate your changes. Those should normally get processed
+relatively fast (depending on how complex they are).
+
