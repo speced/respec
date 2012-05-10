@@ -1,0 +1,622 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'>
+<html lang="en" dir="ltr">
+<head>
+
+  
+    <title>W3C Wicked Cool Stuff Specification</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    
+    
+  <style type="text/css">
+/*****************************************************************
+ * ReSpec CSS
+ * Robin Berjon <robin at berjon dot com>
+ * v0.05 - 2009-07-31
+ *****************************************************************/
+
+
+/* --- INLINES --- */
+em.rfc2119 { 
+    text-transform:     lowercase;
+    font-variant:       small-caps;
+    font-style:         normal;
+    color:              #900;
+}
+
+h1 acronym, h2 acronym, h3 acronym, h4 acronym, h5 acronym, h6 acronym, a acronym,
+h1 abbr, h2 abbr, h3 abbr, h4 abbr, h5 abbr, h6 abbr, a abbr {
+    border: none;
+}
+
+dfn {
+    font-weight:    bold;
+}
+
+a.internalDFN {
+    color:  inherit;
+    border-bottom:  medium solid #99c;
+    text-decoration:    none;
+}
+
+a.externalDFN {
+    color:  inherit;
+    border-bottom:  medium dotted #ccc;
+    text-decoration:    none;
+}
+
+a.bibref {
+    text-decoration:    none;
+}
+
+code {
+    color:  #ff4500;
+}
+
+
+/* --- WEB IDL --- */
+pre.idl {
+    border-top: 1px solid #90b8de;
+    border-bottom: 1px solid #90b8de;
+    padding:    1em;
+    line-height:    120%;
+}
+
+pre.idl::before {
+    content:    "WebIDL";
+    display:    block;
+    width:      150px;
+    background: #90b8de;
+    color:  #fff;
+    font-family:    initial;
+    padding:    3px;
+    font-weight:    bold;
+    margin: -1em 0 1em -1em;
+}
+
+.idlType {
+    color:  #ff4500;
+    font-weight:    bold;
+    text-decoration:    none;
+}
+
+/*.idlModule*/
+/*.idlModuleID*/
+/*.idlInterface*/
+.idlInterfaceID {
+    font-weight:    bold;
+    color:  #005a9c;
+}
+
+.idlSuperclass {
+    font-style: italic;
+    color:  #005a9c;
+}
+
+/*.idlAttribute*/
+.idlAttrType {
+    color:  #005a9c;
+}
+.idlAttrName {
+    color:  #ff4500;
+}
+.idlAttrName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlMethod*/
+.idlMethType {
+    color:  #005a9c;
+}
+.idlMethName {
+    color:  #ff4500;
+}
+.idlMethName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlParam*/
+.idlParamType {
+    color:  #005a9c;
+}
+.idlParamName {
+    font-style: italic;
+}
+
+.extAttr {
+    color:  #666;
+}
+
+/*.idlConst*/
+.idlConstType {
+    color:  #005a9c;
+}
+.idlConstName {
+    color:  #ff4500;
+}
+.idlConstName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlException*/
+.idlExceptionID {
+    font-weight:    bold;
+    color:  #c00;
+}
+
+.idlTypedefID, .idlTypedefType {
+    color:  #005a9c;
+}
+
+.idlRaises, .idlRaises a.idlType, .idlRaises a.idlType code, .excName a, .excName a code {
+    color:  #c00;
+    font-weight:    normal;
+}
+
+.excName a {
+    font-family:    monospace;
+}
+
+.idlRaises a.idlType, .excName a.idlType {
+    border-bottom:  1px dotted #c00;
+}
+
+.excGetSetTrue, .excGetSetFalse, .prmNullTrue, .prmNullFalse, .prmOptTrue, .prmOptFalse {
+    width:  45px;
+    text-align: center;
+}
+.excGetSetTrue, .prmNullTrue, .prmOptTrue { color:  #0c0; }
+.excGetSetFalse, .prmNullFalse, .prmOptFalse { color:  #c00; }
+
+.idlImplements a {
+    font-weight:    bold;
+}
+
+dl.attributes, dl.methods, dl.constants {
+    margin-left:    2em;
+}
+
+.attributes dt, .methods dt, .constants dt {
+    font-weight:    normal;
+}
+
+.attributes dt code, .methods dt code, .constants dt code {
+    font-weight:    bold;
+    color:  #000;
+    font-family:    monospace;
+}
+
+.attributes dt code {
+    background:  #ffffd2;
+}
+
+.attributes dt .idlAttrType code {
+    color:  #005a9c;
+    background:  transparent;
+    font-family:    inherit;
+    font-weight:    normal;
+    font-style: italic;
+}
+
+.methods dt code {
+    background:  #d9e6f8;
+}
+
+.constants dt code {
+    background:  #ddffd2;
+}
+
+.attributes dd, .methods dd, .constants dd {
+    margin-bottom:  1em;
+}
+
+table.parameters, table.exceptions {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    margin: 0.5em 0;
+    width:  100%;
+}
+table.parameters { border-bottom:  1px solid #90b8de; }
+table.exceptions { border-bottom:  1px solid #deb890; }
+
+.parameters th, .exceptions th {
+    color:  #fff;
+    padding:    3px 5px;
+    text-align: left;
+    font-family:    initial;
+    font-weight:    normal;
+    text-shadow:    #666 1px 1px 0;
+}
+.parameters th { background: #90b8de; }
+.exceptions th { background: #deb890; }
+
+.parameters td, .exceptions td {
+    padding:    3px 10px;
+    border-top: 1px solid #ddd;
+    vertical-align: top;
+}
+
+.parameters tr:first-child td, .exceptions tr:first-child td {
+    border-top: none;
+}
+
+.parameters td.prmName, .exceptions td.excName, .exceptions td.excCodeName {
+    width:  100px;
+}
+
+.parameters td.prmType {
+    width:  120px;
+}
+
+table.exceptions table {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    width:  100%;
+}
+
+/* --- TOC --- */
+.toc a {
+    text-decoration:    none;
+}
+
+a .secno {
+    color:  #000;
+}
+
+/* --- TABLE --- */
+table.simple {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    border-bottom:  3px solid #005a9c;
+}
+
+.simple th {
+    background: #005a9c;
+    color:  #fff;
+    padding:    3px 5px;
+    text-align: left;
+}
+
+.simple th[scope="row"] {
+    background: inherit;
+    color:  inherit;
+    border-top: 1px solid #ddd;
+}
+
+.simple td {
+    padding:    3px 10px;
+    border-top: 1px solid #ddd;
+}
+
+.simple tr:nth-child(even) {
+    background: #f0f6ff;
+}
+
+/* --- DL --- */
+.section dd > p:first-child {
+    margin-top: 0;
+}
+
+.section dd > p:last-child {
+    margin-bottom: 0;
+}
+
+.section dd {
+    margin-bottom:  1em;
+}
+
+.section dl.attrs dd, .section dl.eldef dd {
+    margin-bottom:  0;
+}
+
+/* --- EXAMPLES --- */
+pre.example {
+    border-top: 1px solid #ff4500;
+    border-bottom: 1px solid #ff4500;
+    padding:    1em;
+    margin-top: 1em;
+}
+
+pre.example::before {
+    content:    "Example";
+    display:    block;
+    width:      150px;
+    background: #ff4500;
+    color:  #fff;
+    font-family:    initial;
+    padding:    3px;
+    font-weight:    bold;
+    margin: -1em 0 1em -1em;
+}
+
+/* --- EDITORIAL NOTES --- */
+.issue {
+    padding:    1em;
+    border: 1px solid #f00;
+    background: #ffc;
+}
+
+.issue::before {
+    content:    "Issue";
+    display:    block;
+    width:  150px;
+    margin: -1.5em 0 0.5em 0;
+    font-weight:    bold;
+    border: 1px solid #f00;
+    background: #fff;
+    padding:    3px 1em;
+}
+
+.note {
+    padding:    1em;
+    border: 2px solid #cff6d9;
+    background: #e2fff0;
+}
+
+.note::before {
+    content:    "Note";
+    display:    block;
+    width:  150px;
+    margin: -1.5em 0 0.5em 0;
+    font-weight:    bold;
+    border: 1px solid #cff6d9;
+    background: #fff;
+    padding:    3px 1em;
+}
+
+/* --- SYNTAX HIGHLIGHTING --- */
+pre.sh_sourceCode {
+  background-color: white;
+  color: black;
+  font-style: normal;
+  font-weight: normal;
+}
+
+pre.sh_sourceCode .sh_keyword { color: #005a9c; font-weight: bold; }           /* language keywords */
+pre.sh_sourceCode .sh_type { color: #666; }                            /* basic types */
+pre.sh_sourceCode .sh_usertype { color: teal; }                             /* user defined types */
+pre.sh_sourceCode .sh_string { color: red; font-family: monospace; }        /* strings and chars */
+pre.sh_sourceCode .sh_regexp { color: orange; font-family: monospace; }     /* regular expressions */
+pre.sh_sourceCode .sh_specialchar { color: 	#ffc0cb; font-family: monospace; }  /* e.g., \n, \t, \\ */
+pre.sh_sourceCode .sh_comment { color: #A52A2A; font-style: italic; }         /* comments */
+pre.sh_sourceCode .sh_number { color: purple; }                             /* literal numbers */
+pre.sh_sourceCode .sh_preproc { color: #00008B; font-weight: bold; }       /* e.g., #include, import */
+pre.sh_sourceCode .sh_symbol { color: blue; }                            /* e.g., <, >, + */
+pre.sh_sourceCode .sh_function { color: black; font-weight: bold; }         /* function calls and declarations */
+pre.sh_sourceCode .sh_cbracket { color: red; }                              /* block brackets (e.g., {, }) */
+pre.sh_sourceCode .sh_todo { font-weight: bold; background-color: #00FFFF; }   /* TODO and FIXME */
+
+/* Predefined variables and functions (for instance glsl) */
+pre.sh_sourceCode .sh_predef_var { color: #00008B; }
+pre.sh_sourceCode .sh_predef_func { color: #00008B; font-weight: bold; }
+
+/* for OOP */
+pre.sh_sourceCode .sh_classname { color: teal; }
+
+/* line numbers (not yet implemented) */
+pre.sh_sourceCode .sh_linenum { display: none; }
+
+/* Internet related */
+pre.sh_sourceCode .sh_url { color: blue; text-decoration: underline; font-family: monospace; }
+
+/* for ChangeLog and Log files */
+pre.sh_sourceCode .sh_date { color: blue; font-weight: bold; }
+pre.sh_sourceCode .sh_time, pre.sh_sourceCode .sh_file { color: #00008B; font-weight: bold; }
+pre.sh_sourceCode .sh_ip, pre.sh_sourceCode .sh_name { color: #006400; }
+
+/* for Prolog, Perl... */
+pre.sh_sourceCode .sh_variable { color: #006400; }
+
+/* for LaTeX */
+pre.sh_sourceCode .sh_italics { color: #006400; font-style: italic; }
+pre.sh_sourceCode .sh_bold { color: #006400; font-weight: bold; }
+pre.sh_sourceCode .sh_underline { color: #006400; text-decoration: underline; }
+pre.sh_sourceCode .sh_fixed { color: green; font-family: monospace; }
+pre.sh_sourceCode .sh_argument { color: #006400; }
+pre.sh_sourceCode .sh_optionalargument { color: purple; }
+pre.sh_sourceCode .sh_math { color: orange; }
+pre.sh_sourceCode .sh_bibtex { color: blue; }
+
+/* for diffs */
+pre.sh_sourceCode .sh_oldfile { color: orange; }
+pre.sh_sourceCode .sh_newfile { color: #006400; }
+pre.sh_sourceCode .sh_difflines { color: blue; }
+
+/* for css */
+pre.sh_sourceCode .sh_selector { color: purple; }
+pre.sh_sourceCode .sh_property { color: blue; }
+pre.sh_sourceCode .sh_value { color: #006400; font-style: italic; }
+
+/* other */
+pre.sh_sourceCode .sh_section { color: black; font-weight: bold; }
+pre.sh_sourceCode .sh_paren { color: red; }
+pre.sh_sourceCode .sh_attribute { color: #006400; }
+
+</style><link charset="utf-8" type="text/css" rel="stylesheet" href="http://www.w3.org/StyleSheets/TR/W3C-ED"></head><body style="display: inherit;"><div class="head"><p><a href="http://www.w3.org/"><img src="http://www.w3.org/Icons/w3c_home" alt="W3C" height="48" width="72"></a></p><h1 class="title" id="title"><acronym title="World Wide Web Consortium">W3C</acronym> Wicked Cool Stuff Specification</h1><h2 id="subtitle">An awesome example of 'wicked-coolness'</h2><h2 id="w3c-editor-s-draft-06-april-2010"><acronym title="World Wide Web Consortium">W3C</acronym> Editor's Draft 06 April 2010</h2><dl><dt>This Version:</dt><dd><a href="http://dev.w3.org/2009/dap/respec/test-spec/">http://dev.w3.org/2009/dap/respec/test-spec/</a></dd><dt>Latest Published Version:</dt><dd><a href="http://www.w3.org/TR/wicked-cool/">http://www.w3.org/TR/wicked-cool/</a></dd><dt>Latest Editor's Draft:</dt><dd><a href="http://dev.w3.org/2009/dap/respec/test-spec/">http://dev.w3.org/2009/dap/respec/test-spec/</a></dd><dt>Previous version:</dt><dd><a href="http://www.w3.org/TR/2009/WD-wicked-cool-20090315/">http://www.w3.org/TR/2009/WD-wicked-cool-20090315/</a></dd><dt>Editors:</dt><dd><a href="http://berjon.com/">Robin Berjon</a>, <a href="http://robineko.com/">Robineko</a></dd><dd>Batman, Outsiders</dd></dl><p>Please refer to the <a href="no_real_errata.html">errata</a> for this document, which may include some normative corrections.</p><p>This document is also available in these non-normative formats: <a href="format1.html">Some Format</a>, <a href="format2.html">Some Other Format</a>, and <a href="format3.html">Canonical Format</a>.</p><p class="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2009-2010 <a href="http://www.w3.org/"><acronym title="World Wide Web Consortium"><acronym title="World Wide Web Consortium">W3C</acronym></acronym></a><sup>®</sup> (<a href="http://www.csail.mit.edu/"><acronym title="Massachusetts Institute of Technology"><acronym title="Massachusetts Institute of Technology">MIT</acronym></acronym></a>, <a href="http://www.ercim.eu/"><acronym title="European Research Consortium for Informatics and Mathematics"><acronym title="European Research Consortium for Informatics and Mathematics">ERCIM</acronym></acronym></a>, <a href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. <acronym title="World Wide Web Consortium">W3C</acronym> <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>, <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a> rules apply.</p><hr></div>
+    <div class="introductory section" id="abstract"><h2 id="abstract-1">Abstract</h2>
+      This is an example specification used to test, develop, and document the ReSpec.js specification
+      publishing system. This really isn't so much a specification as a playground in more ways than one.
+    </div><div id="sotd" class="introductory section"><h2 id="status-of-this-document">Status of This Document</h2><p><em>This section describes the status of this document at the time of its publication. Other documents may supersede this document. A list of current <acronym title="World Wide Web Consortium">W3C</acronym> publications and the latest revision of this technical report can be found in the <a href="http://www.w3.org/TR/"><acronym title="World Wide Web Consortium">W3C</acronym> technical reports index</a> at http://www.w3.org/TR/.</em></p><p>This document was published by the <a href="http://www.w3.org/2009/dap/">Device APIs and Policy Working Group</a> as an Editor's Draft. If you wish to make comments regarding this document, please send them to <a href="mailto:public-device-apis@w3.org">public-device-apis@w3.org</a> (<a href="mailto:public-device-apis-request@w3.org?subject=subscribe">subscribe</a>, <a href="http://lists.w3.org/Archives/Public/public-device-apis/">archives</a>). All feedback is welcome.</p><p>Publication as a Editor's Draft does not imply endorsement by the <acronym title="World Wide Web Consortium">W3C</acronym> Membership. This is a draft document and may be updated, replaced or obsoleted by other documents at any time. It is inappropriate to cite this document as other than work in progress.</p><p>This document was produced by a group operating under the <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/">5 February 2004 <acronym title="World Wide Web Consortium">W3C</acronym> Patent Policy</a>. <acronym title="World Wide Web Consortium">W3C</acronym> maintains a <a href="http://www.w3.org/2004/01/pp-impl/43696/status" rel="disclosure">public list of any patent disclosures</a> made in connection with the deliverables of the group; that page also includes instructions for disclosing a patent. An individual who has actual knowledge of a patent which the individual believes contains <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential">Essential Claim(s)</a> must disclose the information in accordance with <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure">section 6 of the <acronym title="World Wide Web Consortium">W3C</acronym> Patent Policy</a>.</p></div><div class="section" id="toc"><h2 id="table-of-contents" class="introductory">Table of Contents</h2><ul class="toc"><li class="tocline"><a class="tocxref" href="#rfc-2119-is-not-optional"><span class="secno">1. </span>RFC 2119 is not <em title="optional" class="rfc2119">optional</em></a></li><li class="tocline"><a class="tocxref" href="#small-talk-about-abbreviations"><span class="secno">2. </span>Small Talk about Abbreviations</a></li><li class="tocline"><a class="tocxref" href="#a-defining-moment"><span class="secno">3. </span>A Defining Moment</a></li><li class="tocline"><a class="tocxref" href="#the-dahut-interface"><span class="secno">4. </span>The <span class="idlType formerLink idlType"><code>Dahut</code></span> interface</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#attributes"><span class="secno">4.1 </span>Attributes</a></li><li class="tocline"><a class="tocxref" href="#methods"><span class="secno">4.2 </span>Methods</a></li></ul></li><li class="tocline"><a class="tocxref" href="#a-good-reference"><span class="secno">5. </span>A Good Reference</a></li><li class="tocline"><a class="tocxref" href="#russian-turtles"><span class="secno">6. </span>Russian Turtles</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#russian-turtles-1"><span class="secno">6.1 </span>Russian Turtles</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#russian-turtles-2"><span class="secno">6.1.1 </span>Russian Turtles</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#russian-turtles-3"><span class="secno">6.1.1.1 </span>Russian Turtles</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#russian-turtles-4"><span class="secno">6.1.1.1.1 </span>Russian Turtles</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#russian-turtles-5"><span class="secno">6.1.1.1.1.1 </span>Russian Turtles</a></li></ul></li></ul></li></ul></li></ul></li></ul></li><li class="tocline"><a class="tocxref" href="#including-other-data"><span class="secno">7. </span>Including other data</a></li><li class="tocline"><a class="tocxref" href="#transforming-content"><span class="secno">8. </span>Transforming content</a></li><li class="tocline"><a class="tocxref" href="#acknowledgements"><span class="secno">A. </span>Acknowledgements</a></li><li class="tocline"><a class="tocxref" href="#references"><span class="secno">B. </span>References</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#normative-references"><span class="secno">B.1 </span>Normative references</a></li><li class="tocline"><a class="tocxref" href="#informative-references"><span class="secno">B.2 </span>Informative references</a></li></ul></li></ul></div>
+    
+    
+    <div class="section" id="rfc-2119-is-not-optional">
+      <!--OddPage--><h2 id="x1.-rfc-2119-is-not-optional"><span class="secno">1. </span>RFC 2119 is not <em title="optional" class="rfc2119">optional</em></h2>
+      <p>
+        There are several RFC 2119 keywords: <em title="must" class="rfc2119">must</em>, <em title="must not" class="rfc2119">must not</em>, <em title="required" class="rfc2119">required</em>, <em title="shall" class="rfc2119">shall</em>, <em title="shall
+        not" class="rfc2119">shall
+        not</em>, <em title="should" class="rfc2119">should</em>, <em title="should not" class="rfc2119">should not</em>, <em title="recommended" class="rfc2119">recommended</em>,  <em title="may" class="rfc2119">may</em>, and <em title="optional" class="rfc2119">optional</em>. They are only recognised in
+        uppercase, so that one may still write normally if one must. Importantly, the <em title="must
+        not" class="rfc2119">must
+        not</em> fail when happening over line breaks, but:
+      </p>
+      <ul>
+        <li><em title="must" class="rfc2119">must</em></li>
+        <li>NOT</li>
+        <li>work over element boundaries.</li>
+      </ul>
+    </div>
+    
+    
+    <div class="section" id="small-talk-about-abbreviations">
+      <!--OddPage--><h2 id="x2.-small-talk-about-abbreviations"><span class="secno">2. </span>Small Talk about Abbreviations</h2>
+      <p>
+        <acronym title="World Wide Web Consortium">W3C</acronym> is no different from other geek outfits, and is therefore full of abbreviations.
+        We don't care about the silly debate going on about <code><abbr title="abbreviation">abbr</abbr></code> and <code>acronym</code>,
+        we just support whatever people use, so that the following all ought to work:
+      </p>
+      <ul>
+        <li><acronym title="Devilishly Awesome Hypertext Über Troll"><acronym title="Devilishly Awesome Hypertext Über Troll">DAHUT</acronym></acronym> and <acronym title="Devilishly Awesome Hypertext Über Troll">DAHUT</acronym></li>
+        <li><abbr title="abbreviation"><abbr title="abbreviation">abbr</abbr></abbr> and <abbr title="abbreviation">abbr</abbr></li>
+        <li><abbr title="seriously"><abbr title="seriously">srsly</abbr></abbr> and <abbr title="seriously">srsly</abbr></li>
+      </ul>
+    </div>
+    
+    
+    <div class="section" id="a-defining-moment">
+      <!--OddPage--><h2 id="x3.-a-defining-moment"><span class="secno">3. </span>A Defining Moment</h2>
+      <p>
+        A <dfn id="dfn-definition">definition</dfn> is an element that marks out a term that is defined in the current
+        block.
+      </p>
+      <p>
+        They can sometimes be <dfn id="dfn-definition-with-a-title" title="definition with a title">definitions with a title</dfn> so
+        that they can be written in the flow of the sentence without disruption.
+      </p>
+      <p>
+        Sometimes you will see an <dfn id="dfn-abbreviation-based-definition"><abbr title="abbreviation-based definition"><abbr title="abbreviation-based definition">AbbrDef</abbr></abbr></dfn>, which
+        is an abbreviation-based definition.
+      </p>
+      <p>
+        One thing that should definitely work is creating <dfn id="dfn-definitions-over-multiple-lines">definitions
+          over
+        multiple
+            lines</dfn> in the source.
+      </p>
+      <p>
+        It is then possible to reuse them. The title trick works both ways so that <a class="internalDFN" href="#dfn-definition" title="definition">definitions</a>
+        can be reused fluidly. It would be possible to automatically detect them but for the time being
+        they require an <code>a</code> element.
+      </p>
+      <p>
+        This should have no problem mixing up with <code><abbr title="abbreviation">abbr</abbr></code> as <a class="internalDFN" href="#dfn-abbreviation-based-definition" title="abbreviation-based definition"><abbr title="abbreviation-based definition">AbbrDef</abbr></a> shows, and a <a class="internalDFN" href="#dfn-definition-with-a-title">definition
+        with a title</a> works over several lines, just like <a class="internalDFN" href="#dfn-definitions-over-multiple-lines">definitions over multiple lines</a>.
+      </p>
+    </div>
+    
+    <div class="section" id="the-dahut-interface">
+      <!--OddPage--><h2 id="x4.-the-dahut-interface"><span class="secno">4. </span>The <a class="idlType" href="#idl-def-Dahut"><code>Dahut</code></a> interface</h2>
+      <p>
+        This is a simple example of the way in which Web IDL [<a href="#bib-WEBIDL" rel="biblioentry" class="bibref">WEBIDL</a>] interfaces are created. This one is for
+        the <a class="idlType" href="#idl-def-Dahut"><code>Dahut</code></a> interface.
+      </p>
+      <pre class="idl"><span class="idlInterface" id="idl-def-Dahut">[<span class="extAttr">Constructor</span>]
+interface <span class="idlInterfaceID">Dahut</span> : <span class="idlSuperclass"><a>Mammal</a></span>, <span class="idlSuperclass"><a>Cryptoid</a></span> {
+<span class="idlAttribute">    readonly attribute <span class="idlAttrType"><a>DOMString</a></span>     <span class="idlAttrName"><a href="#widl-Dahut-chirality">chirality</a></span>;</span>
+<span class="idlAttribute">             attribute <span class="idlAttrType"><a>unsigned long</a></span> <span class="idlAttrName"><a href="#widl-Dahut-age">age</a></span>;</span>
+<span class="idlMethod">    <span class="idlMethType"><a class="idlType" href="#idl-def-Dahut"><code>Dahut</code></a></span>         <span class="idlMethName"><a href="#widl-Dahut-turnAround">turnAround</a></span> (<span class="idlParam">in <span class="idlParamType"><a>float</a></span> <span class="idlParamName">angle</span></span>, <span class="idlParam">in <span class="idlParamType"><a>boolean</a></span> <span class="idlParamName">fall</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType"><a>unsigned long</a></span> <span class="idlMethName"><a href="#widl-Dahut-trip">trip</a></span> ();</span>
+<span class="idlMethod">    <span class="idlMethType"><a>void</a></span>          <span class="idlMethName"><a href="#widl-Dahut-yell">yell</a></span> (<span class="idlParam">[<span class="extAttr">AllowAny</span>] in <span class="idlParamType"><a>unsigned long</a></span> <span class="idlParamName">volume</span></span>, <span class="idlParam">[<span class="extAttr">TreatNullAs=EmptyString</span>] in <span class="idlParamType"><a>DOMString</a></span> <span class="idlParamName">sentence</span></span>);</span>
+};</span>
+</pre><div class="section" id="attributes"><h3 id="x4.1-attributes"><span class="secno">4.1 </span>Attributes</h3><dl class="attributes"><dt id="widl-Dahut-age"><code>age</code> of type <span class="idlAttrType"><a>unsigned long</a></span></dt><dd>
+           Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        <div><em>No exceptions.</em></div></dd><dt id="widl-Dahut-chirality"><code>chirality</code> of type <span class="idlAttrType"><a>DOMString</a></span>, readonly</dt><dd>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        <div><em>No exceptions.</em></div></dd></dl></div><div class="section" id="methods"><h3 id="x4.2-methods"><span class="secno">4.2 </span>Methods</h3><dl class="methods"><dt id="widl-Dahut-trip"><code>trip</code></dt><dd>
+          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        <div><em>No parameters.</em></div><div><em>No exceptions.</em></div><div><em>Return type: </em><code><a>unsigned long</a></code></div></dd><dt id="widl-Dahut-turnAround"><code>turnAround</code></dt><dd>
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        <table class="parameters"><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">angle</td><td class="prmType"><code><a>float</a></code></td><td class="prmNullFalse">✘</td><td class="prmOptFalse">✘</td><td class="prmDesc"></td></tr><tr><td class="prmName">fall</td><td class="prmType"><code><a>boolean</a></code></td><td class="prmNullFalse">✘</td><td class="prmOptFalse">✘</td><td class="prmDesc"></td></tr></table><div><em>No exceptions.</em></div><div><em>Return type: </em><code><a class="idlType" href="#idl-def-Dahut"><code>Dahut</code></a></code></div></dd><dt id="widl-Dahut-yell"><code>yell</code></dt><dd>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        <table class="parameters"><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">volume</td><td class="prmType"><code><a>unsigned long</a></code></td><td class="prmNullFalse">✘</td><td class="prmOptFalse">✘</td><td class="prmDesc"></td></tr><tr><td class="prmName">sentence</td><td class="prmType"><code><a>DOMString</a></code></td><td class="prmNullFalse">✘</td><td class="prmOptFalse">✘</td><td class="prmDesc"></td></tr></table><div><em>No exceptions.</em></div><div><em>Return type: </em><code><a>void</a></code></div></dd></dl></div>
+    </div>
+    
+    <div class="section" id="a-good-reference">
+      <!--OddPage--><h2 id="x5.-a-good-reference"><span class="secno">5. </span>A Good Reference</h2>
+      <p>
+        One can trivially make references to any specification, say for instance [<a href="#bib-WIDGETS" rel="biblioentry" class="bibref">WIDGETS</a>], [<a href="#bib-WICD" rel="biblioentry" class="bibref">WICD</a>],
+        and even in a normative way [<a href="#bib-REX" rel="biblioentry" class="bibref">REX</a>] or [<a href="#bib-SVGMOBILE12" rel="biblioentry" class="bibref">SVGMOBILE12</a>]. It's all about I18N, [<a href="#bib-ZHMARK" rel="biblioentry" class="bibref">ZHMARK</a>].
+      </p>
+    </div>
+    
+    <div class="section" id="russian-turtles">
+      <!--OddPage--><h2 id="x6.-russian-turtles"><span class="secno">6. </span>Russian Turtles</h2>
+      <p>
+        This section has an <code>h2</code> title in the original source.
+      </p>
+      <div class="section" id="russian-turtles-1">
+        <h3 id="x6.1-russian-turtles"><span class="secno">6.1 </span>Russian Turtles</h3>
+        <p>
+          This section has an <code>h2</code> title in the original source.
+        </p>
+        <div class="section" id="russian-turtles-2">
+          <h4 id="x6.1.1-russian-turtles"><span class="secno">6.1.1 </span>Russian Turtles</h4>
+          <p>
+            This section has an <code>h2</code> title in the original source.
+          </p>
+          <div class="section" id="russian-turtles-3">
+            <h5 id="x6.1.1.1-russian-turtles"><span class="secno">6.1.1.1 </span>Russian Turtles</h5>
+            <p>
+              This section has an <code>h2</code> title in the original source.
+            </p>
+            <div class="section" id="russian-turtles-4">
+              <h6 id="x6.1.1.1.1-russian-turtles"><span class="secno">6.1.1.1.1 </span>Russian Turtles</h6>
+              <p>
+                This section has an <code>h2</code> title in the original source.
+              </p>
+              <div class="section" id="russian-turtles-5">
+                <h6 id="x6.1.1.1.1.1-russian-turtles"><span class="secno">6.1.1.1.1.1 </span>Russian Turtles</h6>
+                <p>
+                  This section has an <code>h2</code> title in the original source.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="including-other-data">
+      <!--OddPage--><h2 id="x7.-including-other-data"><span class="secno">7. </span>Including other data</h2>
+      <p>
+        Including other data is easy!  <span style="">This sentence came from an external file.
+</span>
+      </p>
+
+      <p>The example below is from an external file:</p>
+      <pre class="example">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    elementFormDefault="qualified" 
+&gt;
+  &lt;xs:attribute name="data-include" type="xs:string"/&gt;
+  &lt;xs:attribute name="data-oninclude" type="xs:ID"/&gt;
+
+&lt;/xs:schema&gt;</pre>
+    
+      </div>
+
+      <div class="section" id="transforming-content">
+      <!--OddPage--><h2 id="x8.-transforming-content"><span class="secno">8. </span>Transforming content</h2>
+      <p>Transforming content is also easy! <span><em>this text is hilighted by being wrapped in an 'em'</em></span>.</p>
+      </div>
+
+    <div id="acknowledgements" class="appendix section">
+      <!--OddPage--><h2 id="a.-acknowledgements"><span class="secno">A. </span>Acknowledgements</h2>
+      <p>
+        Many thanks to Marcos Cáceres for moral support, and to Bert Bos and Geoffrey Sneddon for their
+        tools from which I pilfered joyfully.
+      </p>
+    </div>
+  <div class="appendix section" id="references"><!--OddPage--><h2 id="b.-references"><span class="secno">B. </span>References</h2><div class="section" id="normative-references"><h3 id="b.1-normative-references"><span class="secno">B.1 </span>Normative references</h3><dl class="bibliography"><dt id="bib-REX">[REX]</dt><dd>Robin Berjon. <a href="http://www.w3.org/TR/2006/WD-rex-20061013"><cite>Remote Events for XML (REX) 1.0.</cite></a> 13 October 2006. W3C Working Draft. (Work in progress.) URL: <a href="http://www.w3.org/TR/2006/WD-rex-20061013">http://www.w3.org/TR/2006/WD-rex-20061013</a> 
+</dd><dt id="bib-SVGMOBILE12">[SVGMOBILE12]</dt><dd>Chris Lilley; et al. <a href="http://www.w3.org/TR/2006/CR-SVGMobile12-20060810"><cite>Scalable Vector Graphics (SVG) Tiny 1.2 Specification.</cite></a> 10 August 2006. W3C Candidate Recommendation. (Work in progress.) URL: <a href="http://www.w3.org/TR/2006/CR-SVGMobile12-20060810">http://www.w3.org/TR/2006/CR-SVGMobile12-20060810</a> 
+</dd></dl></div><div class="section" id="informative-references"><h3 id="b.2-informative-references"><span class="secno">B.2 </span>Informative references</h3><dl class="bibliography"><dt id="bib-WEBIDL">[WEBIDL]</dt><dd>Cameron McCormack. <a href="http://www.w3.org/TR/2008/WD-WebIDL-20081219"><cite>Web IDL.</cite></a> 19 December 2008. W3C Working Draft. (Work in progress.) URL: <a href="http://www.w3.org/TR/2008/WD-WebIDL-20081219">http://www.w3.org/TR/2008/WD-WebIDL-20081219</a> 
+</dd><dt id="bib-WICD">[WICD]</dt><dd>Daniel Appelquist; et al. <a href="http://www.w3.org/TR/2007/CR-WICD-20070718"><cite>WICD Core 1.0.</cite></a> 18 July 2007. W3C Candidate Recommendation. (Work in progress.) URL: <a href="http://www.w3.org/TR/2007/CR-WICD-20070718">http://www.w3.org/TR/2007/CR-WICD-20070718</a> 
+</dd><dt id="bib-WIDGETS">[WIDGETS]</dt><dd>Marcos Caceres. <a href="http://www.w3.org/TR/2009/CR-widgets-20091201/"><cite>Widget Packaging and Configuration.</cite></a> 01 December 2009. W3C Candidate Recommendation. (Work in progress.) URL: <a href="http://www.w3.org/TR/2009/CR-widgets-20091201/">http://www.w3.org/TR/2009/CR-widgets-20091201/</a> 
+</dd><dt id="bib-ZHMARK">[ZHMARK]</dt><dd><cite>标点符号用法 (Punctuation Mark Usage).</cite> 1995. 中华人民共和国国家标准 
+</dd></dl></div></div></body></html>
+

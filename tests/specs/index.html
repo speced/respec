@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>W3C Wicked Cool Stuff Specification</title>
+    <meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>
+    <script src='../js/respec.js' class='remove'></script>
+    <script class='remove'>
+      var respecConfig = {
+          // document info
+          subtitle:             "An awesome example of 'wicked-coolness'",
+          specStatus:           "ED",
+          shortName:            "wicked-cool",
+          copyrightStart:       "2009",
+          previousPublishDate:  "2009-03-15",
+          previousMaturity:     "ED",
+          previousDiffURI:      "http://dev.w3.org/2009/dap/ReSpec.js/test-spec/ED-respec-test-20100224.html",
+          edDraftURI:           "http://dev.w3.org/2009/dap/ReSpec.js/test-spec/",
+          // lcEnd: ...
+          // extraCSS:             ["http://dev.w3.org/2009/dap/ReSpec.js/css/respec.css"],
+          extraCSS:             ["../css/respec.css"],
+          inlineCSS:            true,
+          // editors
+          editors:  [
+              { name: "Robin Berjon", url: "http://berjon.com/",
+                company: "Robineko", companyURL: "http://robineko.com/" },
+              { name: "Batman", company: "Outsiders" },
+          ],
+          // errata
+          errata: 'no_real_errata.html',
+          // alternateFormats
+          alternateFormats: [
+              { uri: 'format1.html',
+                label: 'Some Format'},
+              { uri: 'format2.html',
+                label: 'Some Other Format'},
+              { uri: 'format3.html',
+                label: 'Canonical Format'}
+            ],
+          
+          // WG
+          wg:           "Device APIs and Policy Working Group",
+          wgURI:        "http://www.w3.org/2009/dap/",
+          wgPublicList: "public-device-apis",
+          wgPatentURI:  "http://www.w3.org/2004/01/pp-impl/43696/status",
+      };
+
+      function hilight(r, content) {
+        return '<em>' +content+ '</em>' ;
+      }
+
+      function fixSchema(r, content) {
+        return r._esc(content);
+      }
+    </script>
+  </head>
+  <body>
+    <section id='abstract'>
+      This is an example <strong>specification</strong> used to test, develop, and document the ReSpec.js specification
+      publishing system. This really isn't so much a specification as a playground in more ways than one.
+    </section>
+    
+    
+    <section>
+      <h2>RFC 2119 is not OPTIONAL</h2>
+      <p>
+        There are several RFC 2119 keywords: MUST, MUST NOT, REQUIRED, SHALL, SHALL
+        NOT, SHOULD, SHOULD NOT, RECOMMENDED,  MAY, and OPTIONAL. They are only recognised in
+        uppercase, so that one may still write normally if one must. Importantly, the MUST
+        NOT fail when happening over line breaks, but:
+      </p>
+      <ul>
+        <li>MUST</li>
+        <li>NOT</li>
+        <li>work over element boundaries.</li>
+      </ul>
+    </section>
+    
+    
+    <section>
+      <h2>Small Talk about Abbreviations</h2>
+      <p>
+        W3C is no different from other geek outfits, and is therefore full of abbreviations.
+        We don't care about the silly debate going on about <code>abbr</code> and <code>acronym</code>,
+        we just support whatever people use, so that the following all ought to work:
+      </p>
+      <ul>
+        <li><acronym title='Devilishly Awesome Hypertext Über Troll'>DAHUT</acronym> and DAHUT</li>
+        <li><abbr title='abbreviation'>abbr</abbr> and abbr</li>
+        <li><abbr title='seriously'>srsly</abbr> and srsly</li>
+      </ul>
+    </section>
+    
+    
+    <section>
+      <h2>A Defining Moment</h2>
+      <p>
+        A <dfn>definition</dfn> is an element that marks out a term that is defined in the current
+        block.
+      </p>
+      <p>
+        They can sometimes be <dfn title='definition with a title'>definitions with a title</dfn> so
+        that they can be written in the flow of the sentence without disruption.
+      </p>
+      <p>
+        Sometimes you will see an <dfn><abbr title='abbreviation-based definition'>AbbrDef</abbr></dfn>, which
+        is an abbreviation-based definition.
+      </p>
+      <p>
+        One thing that should definitely work is creating <dfn>definitions
+          over
+        multiple
+            lines</dfn> in the source.
+      </p>
+      <p>
+        It is then possible to reuse them. The title trick works both ways so that <a title='definition'>definitions</a>
+        can be reused fluidly. It would be possible to automatically detect them but for the time being
+        they require an <code>a</code> element.
+      </p>
+      <p>
+        This should have no problem mixing up with <code>abbr</code> as <a title='abbreviation-based definition'>AbbrDef</a> shows, and a <a>definition
+        with a title</a> works over several lines, just like <a>definitions over multiple lines</a>.
+      </p>
+    </section>
+    
+    <section>
+      <h2>The <a>Dahut</a> interface</h2>
+      <p>
+        This is a simple example of the way in which Web IDL [[WEBIDL]] interfaces are created. This one is for
+        the <a>Dahut</a> interface.
+      </p>
+      <dl title='[Constructor] interface Dahut : Mammal, Cryptoid' class='idl'>
+        <dt>readonly attribute DOMString chirality</dt>
+        <dd>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </dd>
+        <dt>attribute unsigned long age</dt>
+        <dd>
+           Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        </dd>
+        <dt>Dahut turnAround (in float angle, in boolean fall)</dt>
+        <dd>
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        </dd>
+        <dt>unsigned long trip ()</dt>
+        <dd>
+          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </dd>
+        <dt>void yell ([AllowAny] in unsigned long volume, [TreatNullAs=EmptyString] in DOMString sentence)</dt>
+        <dd>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </dd>
+      </dl>
+    </section>
+    
+    <section>
+      <h2>A Good Reference</h2>
+      <p>
+        One can trivially make references to any specification, say for instance [[WIDGETS]], [[WICD]],
+        and even in a normative way [[!REX]] or [[!SVGMOBILE12]]. It's all about I18N, [[ZHMARK]].
+      </p>
+    </section>
+    
+    <section>
+      <h2>Russian Turtles</h2>
+      <p>
+        This section has an <code>h2</code> title in the original source.
+      </p>
+      <section>
+        <h2>Russian Turtles</h2>
+        <p>
+          This section has an <code>h2</code> title in the original source.
+        </p>
+        <section>
+          <h2>Russian Turtles</h2>
+          <p>
+            This section has an <code>h2</code> title in the original source.
+          </p>
+          <section>
+            <h2>Russian Turtles</h2>
+            <p>
+              This section has an <code>h2</code> title in the original source.
+            </p>
+            <section>
+              <h2>Russian Turtles</h2>
+              <p>
+                This section has an <code>h2</code> title in the original source.
+              </p>
+              <section>
+                <h2>Russian Turtles</h2>
+                <p>
+                  This section has an <code>h2</code> title in the original source.
+                </p>
+              </section>
+            </section>
+          </section>
+        </section>
+      </section>
+    </section>
+
+    <section>
+      <h2>Including other data</h2>
+      <p>
+        Including other data is easy!  <span style='text-style: bold' data-include="include-test.html"></span>
+      </p>
+
+      <p>The example below is from an external file:</p>
+      <pre class='example' data-include='include-schema.xsd' data-oninclude='fixSchema'></pre>
+    
+      </section>
+
+      <section>
+      <h2>Transforming content</h2>
+      <p>Transforming content is also easy! <span data-transform='hilight'>this text is hilighted by being wrapped in an 'em'</span>.</p>
+      </section>
+
+    <section class='appendix'>
+      <h2>Acknowledgements</h2>
+      <p>
+        Many thanks to Marcos Cáceres for moral support, and to Bert Bos and Geoffrey Sneddon for their
+        tools from which I pilfered joyfully.
+      </p>
+    </section>
+  </body>
+</html>

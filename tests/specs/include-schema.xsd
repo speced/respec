@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    elementFormDefault="qualified" 
+>
+  <xs:attribute name="data-include" type="xs:string"/>
+  <xs:attribute name="data-oninclude" type="xs:ID"/>
+
+</xs:schema>
