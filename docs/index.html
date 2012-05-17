@@ -438,9 +438,11 @@ The class signals that this will be replaced with a link containing
         </dd>
         <dt>doRDFa</dt>
         <dd>
-          If this parameter is set to true, ReSpec.js will embed various RDFa attributes throughout 
+          If this parameter is set, ReSpec.js will embed various RDFa attributes throughout 
           the generated specification.  The triples generated use vocabulary items from the dcterms, 
-          foaf, and bibo.  The parameter defaults to false.
+          foaf, and bibo.  The parameter defaults to false.  If set to true
+          the system will generate RDFa 1.0 content.  If set to "1.1" it will
+          generate RDFa 1.1 content.
         </dd>
         <dt>noIDLSorting</dt>
         <dd>

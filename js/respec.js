@@ -332,7 +332,11 @@ berjon.respec.prototype = {
         }
         if (this.doRDFa) {
             if (prefixAtr != '') prefixAtr += ' ';
-            prefixAtr += "dcterms: http://purl.org/dc/terms/ bibo: http://purl.org/ontology/bibo/ foaf: http://xmlns.com/foaf/0.1/ xsd: http://www.w3.org/2001/XMLSchema#";
+            if (this.doRDFa != "1.1") {
+                prefixAtr += "dcterms: http://purl.org/dc/terms/ bibo: http://purl.org/ontology/bibo/ foaf: http://xmlns.com/foaf/0.1/ xsd: http://www.w3.org/2001/XMLSchema#";
+            } else {
+                prefixAtr += "bibo: http://purl.org/ontology/bibo/";
+            }
             str += " prefix=\"" + this._esc(prefixAtr) + "\"";
         }
 
@@ -350,8 +354,13 @@ berjon.respec.prototype = {
         }
         else { 
             if (this.doRDFa) {
-                // use the standard RDFa doctype
-                str += " PUBLIC '-//W3C//DTD XHTML+RDFa 1.0//EN' 'http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd'";
+                if (this.doRDFa == "1.1") {
+                    // use the standard RDFa 1.1 doctype
+                    str += " PUBLIC '-//W3C//DTD XHTML+RDFa 1.1//EN' 'http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd'";
+                } else {
+                    // use the standard RDFa doctype
+                    str += " PUBLIC '-//W3C//DTD XHTML+RDFa 1.0//EN' 'http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd'";
+                }
             } else {
                 str += " PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'";
             }
@@ -374,13 +383,23 @@ berjon.respec.prototype = {
         }
         if (!hasxmlns) str += ' xmlns="http://www.w3.org/1999/xhtml"';
         if (this.doRDFa) {
-            str += " xmlns:dcterms='http://purl.org/dc/terms/' xmlns:bibo='http://purl.org/ontology/bibo/' xmlns:foaf='http://xmlns.com/foaf/0.1/' xmlns:xsd='http://www.w3.org/2001/XMLSchema#'";
-            if (prefixAtr != '') {
-                var list = prefixAtr.split(/\s+/) ;
-                for (var i = 0; i < list.length; i += 2) {
-                    var n = list[i] ;
-                    n = n.replace(/:$/,'');
-                    str += ' xmlns:'+n+'="' + list[i+1] + '"';
+            if (this.doRDFa != "1.1") {
+                str += " xmlns:dcterms='http://purl.org/dc/terms/' xmlns:bibo='http://purl.org/ontology/bibo/' xmlns:foaf='http://xmlns.com/foaf/0.1/' xmlns:xsd='http://www.w3.org/2001/XMLSchema#'";
+                // there was already some prefix information
+                if (prefixAtr != '') {
+                    var list = prefixAtr.split(/\s+/) ;
+                    for (var i = 0; i < list.length; i += 2) {
+                        var n = list[i] ;
+                        n = n.replace(/:$/,'');
+                        str += ' xmlns:'+n+'="' + list[i+1] + '"';
+                    }
+                }
+                str += ' version="XHTML+RDFa 1.0"';
+            } else {
+                if (prefixAtr != '') {
+                    str += " prefix='" + prefixAtr + " bibo: http://purl.org/ontology/bibo/'" ;
+                } else {
+                    str += " prefix='bibo: http://purl.org/ontology/bibo/'" ;
                 }
             }
         }
@@ -924,7 +943,7 @@ berjon.respec.prototype = {
                 header += this.publishDate.getFullYear();
                 if (this.additionalCopyrightHolders) header += " " + this.additionalCopyrightHolders + " &amp;";
                 if (this.doRDFa) {
-                    header += " <span rel='dcterms:publisher'><span typeof='foaf:Organization'><a rel='foaf:homepage' property='foaf:name' content='World Wide Web Consotrium' href='http://www.w3.org/'><acronym title='World Wide Web Consortium'>W3C</acronym></a><sup>&reg;</sup></span></span> ";
+                    header += " <span rel='dcterms:publisher'><span typeof='foaf:Organization'><a rel='foaf:homepage' property='foaf:name' content='World Wide Web Consortium' href='http://www.w3.org/'><acronym title='World Wide Web Consortium'>W3C</acronym></a><sup>&reg;</sup></span></span> ";
                 } else {
                     header += " <a href='http://www.w3.org/'><acronym title='World Wide Web Consortium'>W3C</acronym></a><sup>&reg;</sup> ";
                 }
