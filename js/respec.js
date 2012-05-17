@@ -2648,7 +2648,7 @@ berjon.WebIDLProcessor.prototype = {
         var pad = max - memb.datatype.length;
         if (memb.nullable) pad = pad - 1;
         var nullable = memb.nullable ? "?" : "";
-        str += "<span class='idlMemberType'><a>" + memb.datatype + "</a>" + nullable + "</span> ";
+        str += "<span class='idlMemberType'>" + this.writeDatatype(memb.datatype) + nullable + "</span> ";
         for (var i = 0; i < pad; i++) str += " ";
         str += "<span class='idlMemberName'><a href='#" + curLnk + memb.refId + "'>" + memb.id + "</a></span>";
         if (memb.defaultValue) str += " = <span class='idlMemberValue'>" + memb.defaultValue + "</span>"
@@ -2657,8 +2657,12 @@ berjon.WebIDLProcessor.prototype = {
     },
 
     writeDatatype:    function (dt) {
+        // if (/sequence/.test(dt) || /dict/.test(dt)) {
+            console.log(dt);
+        // }
         var matched = /^sequence<(.+)>$/.exec(dt);
         if (matched) {
+            console.log("MATCHED!", matched[1])
             return "sequence&lt;<a>" + matched[1] + "</a>&gt;";
         }
         else {
