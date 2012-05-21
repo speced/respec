@@ -27,6 +27,7 @@ define(
     function () {
         return {
             runAll:    function (plugs) {
+                console.log("RUNALL");
                 // the first in the plugs is going to be us
                 plugs.shift();
                 if (!respecConfig) respecConfig = {};
@@ -40,9 +41,11 @@ define(
                     if (/\/js\//.test(src)) baseUrl = src.replace(/\/js\/.*/, "\/js\/")
                 });
                 respecConfig.respecBase = baseUrl;
+                console.log("BASE: " + respecConfig.respecBase);
                 
                 var pipeline;
                 pipeline = function () {
+                    console.log("PIPELINE");
                     if (!plugs.length) return;
                     var plug = plugs.shift();
                     if (plug.run) plug.run.call(plug, respecConfig, document, pipeline);
@@ -50,8 +53,8 @@ define(
                 };
                 pipeline();
                 if (respecConfig.afterEnd) respecConfig.afterEnd.apply(GLOBAL, Array.prototype.slice.call(arguments));
-            },
-            ieDummy: 1
+                console.log("END RUNALL");
+            }
         };
     }
 );
