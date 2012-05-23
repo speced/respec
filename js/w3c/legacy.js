@@ -17,11 +17,11 @@ function _errEl () {
     return sn.element("ul", {}, err);
 }
 function error (str) {
-    respecEvent.pub("error", str);
+    if (window.respecEvent) respecEvent.pub("error", str);
     sn.element("li", { style: "color: #c00" }, _errEl(), str);
 }
 function warning (str) {
-    respecEvent.pub("warn", str);
+    if (window.respecEvent) respecEvent.pub("warn", str);
     sn.element("li", { style: "color: #666" }, _errEl(), str);
 }
 function isArray (obj) {

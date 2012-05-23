@@ -9,9 +9,9 @@
         pub:    function (topic) {
             var args = Array.prototype.slice.call(arguments);
             args.shift();
+            if (embedded && window.postMessage) parent.postMessage({ topic: topic, args: args}, "*");
             $.each(handlers[topic], function () {
                 this.apply(GLOBAL, args);
-                if (embedded) parent.postMessage({ topic: topic, args: args}, "*");
             });
         }
     ,   sub:    function (topic, cb) {

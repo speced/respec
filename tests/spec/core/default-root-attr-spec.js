@@ -1,8 +1,11 @@
 describe("Core — Default Root Attribute", function () {
-    var doc;
+    var doc
+    ,   basicConfig = {
+            editors:    [{ name: "Robin Berjon" }]
+        };
     it("should apply en and ltr defaults", function () {
         runs(function () {
-            makeRSDoc({}, function (rsdoc) { doc = rsdoc; });
+            makeRSDoc({ config: basicConfig }, function (rsdoc) { doc = rsdoc; });
         });
         waits(500);
         runs(function () {
