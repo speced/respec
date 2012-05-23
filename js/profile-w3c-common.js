@@ -2,6 +2,7 @@
 define([
             "domReady"
         ,   "core/base-runner"
+        ,   "core/default-root-attr"
         ,   "w3c/legacy"
         ], 
         function (domReady, runner) {
