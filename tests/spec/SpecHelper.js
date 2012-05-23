@@ -1,4 +1,5 @@
 
+var iframes = [];
 function makeRSDoc (opts, cb) {
     var $ifr = $("<iframe width='800' height='200' style='display: none'></iframe>")
     ,   doc = document.implementation.createHTMLDocument("")
@@ -33,11 +34,16 @@ function makeRSDoc (opts, cb) {
     });
     // trigger load
     $ifr.appendTo($("body"));
+    iframes.push($ifr);
 
     // intercept that in the iframe we have finished processing
     window.addEventListener("message", function (ev) {
         if (ev.data && ev.data.topic == "end-all") cb($ifr[0].contentDocument);
     }, false);
+}
+
+function flushIframes () {
+    for (var i = 0, n = iframes.length; i < n; i++) iframes[i].remove();
 }
 
 // beforeEach(function() {
