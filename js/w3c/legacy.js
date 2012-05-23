@@ -17,9 +17,11 @@ function _errEl () {
     return sn.element("ul", {}, err);
 }
 function error (str) {
+    respecEvent.pub("error", str);
     sn.element("li", { style: "color: #c00" }, _errEl(), str);
 }
 function warning (str) {
+    respecEvent.pub("warn", str);
     sn.element("li", { style: "color: #666" }, _errEl(), str);
 }
 function isArray (obj) {
@@ -100,7 +102,6 @@ berjon.respec.prototype = {
                 base = src.replace(/js\/require\.js$/, "");
             }
         }
-        console.log("BASE", respecConfig.respecBase, base);
         // base = respecConfig.respecBase;
         this.base = base;
         if (base.indexOf("file://") == 0) this.isLocal = true;
@@ -2774,14 +2775,10 @@ function dbg (obj) {
 
 define([], function () {
     return {
-        run:    function (conf, doc, cb) {
-            // window.onload = function () {
-            //     // (new berjon.respec()).run();
-            //     (new berjon.respec()).loadAndRun();
-            // };
-            console.log("ABOUT TO START LOAD AND RUN");
+        run:    function (conf, doc, cb, msg) {
+            msg.pub("start", "w3c/legacy");
             (new berjon.respec()).loadAndRun();
-            console.log("END RUN LEGACY");
+            msg.pub("end", "w3c/legacy");
             cb();
         }
     };
