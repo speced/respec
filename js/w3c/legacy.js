@@ -570,8 +570,6 @@ berjon.respec.prototype = {
     },
 
     rootAttr:   function () {
-        document.documentElement.setAttribute("lang", "en");
-        document.documentElement.setAttribute("dir", "ltr");
         if (this.doRDFa) {
             document.documentElement.setAttribute("about", "");
             document.documentElement.setAttribute("property", "dcterms:language");
