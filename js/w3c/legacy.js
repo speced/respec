@@ -578,9 +578,6 @@ berjon.respec.prototype = {
     },
 
     addCSS: function () {
-        if (this.extraCSS) {
-            for (var i = 0; i < this.extraCSS.length; i++) this._insertCSS(this.extraCSS[i], this.inlineCSS);
-        }
         var statStyle = this.specStatus;
         if (statStyle == "FPWD" || statStyle == "LC" || statStyle == "WD-NOTE" || statStyle == "LC-NOTE" || statStyle == "FPWD-NOTE")  {
             statStyle = "WD";
