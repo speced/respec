@@ -2,11 +2,14 @@
 (function (GLOBAL) {
     // pubsub
     // freely adapted from http://higginsforpresident.net/js/static/jq.pubsub.js
-    var handlers = {};
+    var handlers = {}
+    ,   embedded = (top !== self)
+    ;
     GLOBAL.respecEvents = {
         pub:    function (topic) {
             var args = Array.prototype.slice.call(arguments);
             args.shift();
+            if (embedded && window.postMessage) parent.postMessage({ topic: topic, args: args}, "*");
             $.each(handlers[topic], function () {
                 this.apply(GLOBAL, args);
             });

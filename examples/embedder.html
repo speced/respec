@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml' lang='en'>
+  <head>
+    <meta charset='utf-8'/>
+    <title>Embedded Specification for Reuse</title>
+    <script src='../js/require.js'></script>
+    <script>
+      window.addEventListener("message", function (ev) {
+          console.log("ev", ev.data.topic, ev.data.args);
+          $("#log").append(document.createTextNode(ev.data.topic + ": " + ev.data.args[0] + "\n"));
+      }, false);
+    </script>
+  </head>
+  <body>
+    <p>
+      Below is an embedded specification. We get messages from it and can therefore see what's going on
+      in there.
+    </p>
+    <iframe width='800' height='400' src='basic.html' style='display: none'></iframe>
+    <pre id='log'></pre>
+  </body>
+</html>
