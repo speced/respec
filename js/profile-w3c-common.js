@@ -2,6 +2,7 @@
 define([
             "domReady"
         ,   "core/base-runner"
+        ,   "core/override-configuration"
         ,   "core/default-root-attr"
         ,   "core/style"
         ,   "w3c/legacy"
