@@ -1,4 +1,3 @@
-// XXX untested
 
 // Module core/override-configuration
 // A helper module that makes it possible to override settings specified in respecConfig
