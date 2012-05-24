@@ -23,7 +23,7 @@ exec("git symbolic-ref HEAD", function (err, stdout, stderr) {
     // older dependencies
     var config = {
         baseUrl:    pth.join(__dirname, "../js")
-    ,   optimize:   "none"
+    // ,   optimize:   "none"
     ,   paths:  {
             requireLib: "./require"
         ,   biblio:     "../bibref/biblio"
