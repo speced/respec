@@ -1,4 +1,3 @@
-// XXX untested
 
 // Module core/style
 // Inserts the CSS that ReSpec uses into the document.
