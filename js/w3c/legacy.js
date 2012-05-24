@@ -166,7 +166,7 @@ berjon.respec.prototype = {
     },
 
     run:    function () {
-        document.body.style.display = "none";
+        // document.body.style.display = "none";
         try {
             this.extractConfig();
             if (respecConfig.preProcess) {
@@ -221,11 +221,11 @@ berjon.respec.prototype = {
             shortcut.add("Esc", function () { obj.hideSaveOptions(); });
         }
         catch (e) {
-            document.body.style.display = "inherit";
+            // document.body.style.display = "inherit";
             error("Processing error: " + e);
             if (typeof(console) != "undefined" && console.log) console.log(e);
         }
-        document.body.style.display = "inherit";
+        // document.body.style.display = "inherit";
     },
 
     makeRDFa:  function () {
