@@ -13,10 +13,10 @@ var exec = require("child_process").exec
 exec("git symbolic-ref HEAD", function (err, stdout, stderr) {
     if (err) return console.log("ERR: " + err);
     var branch = stdout.replace(/refs\/heads\//, "").replace(/\n/, "");
-    // if (branch != "release/v" + version)
-    //     return console.log("Current branch (" + branch + ") does not match release/v" + version);
-    // if (pth.existsSync(versioned))
-    //     return console.log("Output build file respec-w3c-common-" + version + ".js already exists");
+    if (branch != "release/v" + version)
+        return console.log("Current branch (" + branch + ") does not match release/v" + version);
+    if (pth.existsSync(versioned))
+        return console.log("Output build file respec-w3c-common-" + version + ".js already exists");
     
     // optimisation settings
     // note that the paths/includes below will need to change in when we drop those
@@ -46,8 +46,3 @@ exec("git symbolic-ref HEAD", function (err, stdout, stderr) {
         console.log("OK!");
     });
 });
-
- // output both
- //   builds/respec-w3c-common.js (latest)
- //   builds/respec-w3c-common-3.0.7.js (specific version)
-
