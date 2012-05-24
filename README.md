@@ -7,6 +7,13 @@ that tend to be technical in nature in general. It was originally designed for t
 of writing W3C specifications, but has since grown to be able to support other outputs as 
 well.
 
+Important Note
+==============
+
+ReSpec is not endorsed by W3C and nobody should expect the W3C Webmaster to provide advice on 
+problems encountered with ReSpec, or on why it may be failing to produce pubrules-compliant
+content.
+
 What is this version of ReSpec?
 ===============================
 
