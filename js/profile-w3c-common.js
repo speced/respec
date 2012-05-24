@@ -2,15 +2,25 @@
 define([
             "domReady"
         ,   "core/base-runner"
+        ,   "core/default-root-attr"
+        ,   "core/style"
         ,   "w3c/legacy"
         ], 
         function (domReady, runner) {
-            console.log("RUNNING");
-            var args = arguments;
+            var args = Array.prototype.slice.call(arguments)
+            ,   hasRun = false;
             domReady(function () {
-                console.log("READY");
-                runner.runAll(Array.prototype.slice.call(args));
-                console.log("ALL RUN");
+                hasRun = true;
+                runner.runAll(args);
             });
+            // the below can trigger a run, assuming a way of starting this paused
+            // window.addEventListener("message", function (ev) {
+            //     console.log("message", ev.data);
+            //     if (hasRun) return;
+            //     if (ev.data && ev.data.topic == "run") {
+            //         hasRun = true;
+            //         runner.runAll(args);
+            //     }
+            // }, false);
         }
 );

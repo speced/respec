@@ -17,9 +17,11 @@ function _errEl () {
     return sn.element("ul", {}, err);
 }
 function error (str) {
+    if (window.respecEvent) respecEvent.pub("error", str);
     sn.element("li", { style: "color: #c00" }, _errEl(), str);
 }
 function warning (str) {
+    if (window.respecEvent) respecEvent.pub("warn", str);
     sn.element("li", { style: "color: #666" }, _errEl(), str);
 }
 function isArray (obj) {
@@ -100,7 +102,6 @@ berjon.respec.prototype = {
                 base = src.replace(/js\/require\.js$/, "");
             }
         }
-        console.log("BASE", respecConfig.respecBase, base);
         // base = respecConfig.respecBase;
         this.base = base;
         if (base.indexOf("file://") == 0) this.isLocal = true;
@@ -569,8 +570,6 @@ berjon.respec.prototype = {
     },
 
     rootAttr:   function () {
-        document.documentElement.setAttribute("lang", "en");
-        document.documentElement.setAttribute("dir", "ltr");
         if (this.doRDFa) {
             document.documentElement.setAttribute("about", "");
             document.documentElement.setAttribute("property", "dcterms:language");
@@ -579,9 +578,6 @@ berjon.respec.prototype = {
     },
 
     addCSS: function () {
-        if (this.extraCSS) {
-            for (var i = 0; i < this.extraCSS.length; i++) this._insertCSS(this.extraCSS[i], this.inlineCSS);
-        }
         var statStyle = this.specStatus;
         if (statStyle == "FPWD" || statStyle == "LC" || statStyle == "WD-NOTE" || statStyle == "LC-NOTE" || statStyle == "FPWD-NOTE")  {
             statStyle = "WD";
@@ -2774,14 +2770,10 @@ function dbg (obj) {
 
 define([], function () {
     return {
-        run:    function (conf, doc, cb) {
-            // window.onload = function () {
-            //     // (new berjon.respec()).run();
-            //     (new berjon.respec()).loadAndRun();
-            // };
-            console.log("ABOUT TO START LOAD AND RUN");
+        run:    function (conf, doc, cb, msg) {
+            msg.pub("start", "w3c/legacy");
             (new berjon.respec()).loadAndRun();
-            console.log("END RUN LEGACY");
+            msg.pub("end", "w3c/legacy");
             cb();
         }
     };
