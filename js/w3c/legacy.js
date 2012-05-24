@@ -94,7 +94,7 @@ berjon.respec.prototype = {
     loadAndRun:    function () {
         var scripts = document.querySelectorAll("script[src]");
         // XXX clean this up
-        var rs, base;
+        var rs, base = "";
         for (var i = 0; i < scripts.length; i++) {
             var src = scripts[i].src;
             if (/\/js\/require\.js$/.test(src)) {
@@ -155,6 +155,13 @@ berjon.respec.prototype = {
                 };
                 head.appendChild(sel);
             }
+        }
+        else {
+            sn = new berjon.simpleNode({
+                "":     "http://www.w3.org/1999/xhtml",
+                "x":    "http://www.w3.org/1999/xhtml"
+            }, document);
+            obj.run();
         }
     },
 

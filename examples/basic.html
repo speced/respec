@@ -3,7 +3,8 @@
   <head>
     <meta charset='utf-8'/>
     <title>Basic ReSpec Evolution Example</title>
-    <script src='../js/require.js' data-main='../js/profile-w3c-common' class='remove'></script>
+    <!-- // <script src='../js/require.js' data-main='../js/profile-w3c-common' class='remove'></script> -->
+    <script src='../builds/respec-w3c-common.js'></script>
     <script class='remove'>
       var respecConfig = {
               specStatus:   "ED"
@@ -22,6 +23,21 @@
       <p>
         This is just a very basic document. [[!REX]]
       </p>
+    </section>
+    <section>
+      <h2>Example testing</h2>
+      <pre class='example sh_javascript'>
+        while (lines.length || /^\s*$/.test(lines[0])) lines.shift();
+        while (/^\s*$/.test(lines[lines.length - 1])) lines.pop();
+        var matches = /^(\s+)/.exec(lines[0]);
+        if (matches) {
+            var rep = new RegExp("^" + matches[1]);
+            for (var j = 0; j > lines.length; j++) {
+                lines[j] = lines[j].replace(rep, "");
+            }
+        }
+        ex.innerHTML = lines.join("\n");
+      </pre>
     </section>
   </body>
 </html>
