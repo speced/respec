@@ -110,46 +110,51 @@ berjon.respec.prototype = {
         var deps = ["js/simple-node.js", "js/shortcut.js", "bibref/biblio.js", "js/sh_main.min.js"];
         var head = document.getElementsByTagName('head')[0];
         var obj = this;
-        for (var i = 0; i < deps.length; i++) {
-            var dep = deps[i];
-            var sel = document.createElement('script');
-            sel.type = 'text/javascript';
-            sel.src = base + dep;
-            sel.setAttribute("class", "remove");
-            sel.onload = function (ev) {
-                loaded.push(ev.target.src);
-                if (obj.isLocal && ev.target.src.indexOf("sh_main") > 0) {
-                    // dirty hack to fix local loading of SHJS
-                    this.oldSHLoad = window.sh_load;
-                    window.sh_load = function (language, element, prefix, suffix) {
-                        if (language in sh_requests) {
-                            sh_requests[language].push(element);
-                            return;
-                        }
-                        sh_requests[language] = [element];
-                        var url = prefix + 'sh_' + language + suffix;
-                        var shLang = document.createElement('script');
-                        shLang.type = 'text/javascript';
-                        shLang.src = url;
-                        shLang.setAttribute("class", "remove");
-                        shLang.onload = function (ev) {
-                            var elements = sh_requests[language];
-                            for (var i = 0; i < elements.length; i++) {
-                                sh_highlightElement(elements[i], sh_languages[language]);
+        // the fact that we hand-load is temporary, and will be fully replaced by RequireJS
+        // in the meantime, we need to avoid loading these if we are using the built (bundled)
+        // version. So we do some basic detection and decline to load.
+        if (!berjon.simpleNode && !berjon.biblio) {
+            for (var i = 0; i < deps.length; i++) {
+                var dep = deps[i];
+                var sel = document.createElement('script');
+                sel.type = 'text/javascript';
+                sel.src = base + dep;
+                sel.setAttribute("class", "remove");
+                sel.onload = function (ev) {
+                    loaded.push(ev.target.src);
+                    if (obj.isLocal && ev.target.src.indexOf("sh_main") > 0) {
+                        // dirty hack to fix local loading of SHJS
+                        this.oldSHLoad = window.sh_load;
+                        window.sh_load = function (language, element, prefix, suffix) {
+                            if (language in sh_requests) {
+                                sh_requests[language].push(element);
+                                return;
                             }
+                            sh_requests[language] = [element];
+                            var url = prefix + 'sh_' + language + suffix;
+                            var shLang = document.createElement('script');
+                            shLang.type = 'text/javascript';
+                            shLang.src = url;
+                            shLang.setAttribute("class", "remove");
+                            shLang.onload = function (ev) {
+                                var elements = sh_requests[language];
+                                for (var i = 0; i < elements.length; i++) {
+                                    sh_highlightElement(elements[i], sh_languages[language]);
+                                }
+                            };
+                            head.appendChild(shLang);
                         };
-                        head.appendChild(shLang);
-                    };
-                }
-                if (loaded.length == deps.length) {
-                    sn = new berjon.simpleNode({
-                        "":     "http://www.w3.org/1999/xhtml",
-                        "x":    "http://www.w3.org/1999/xhtml"
-                    }, document);
-                    obj.run();
-                }
-            };
-            head.appendChild(sel);
+                    }
+                    if (loaded.length == deps.length) {
+                        sn = new berjon.simpleNode({
+                            "":     "http://www.w3.org/1999/xhtml",
+                            "x":    "http://www.w3.org/1999/xhtml"
+                        }, document);
+                        obj.run();
+                    }
+                };
+                head.appendChild(sel);
+            }
         }
     },
 
