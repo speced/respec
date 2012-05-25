@@ -7,6 +7,7 @@ define([
         ,   "core/style"
         ,   "w3c/style"
         ,   "w3c/legacy"
+        ,   "w3c/unhtml5"
         ,   "core/remove-respec"
         ], 
         function (domReady, runner) {

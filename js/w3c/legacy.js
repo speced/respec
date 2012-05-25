@@ -210,7 +210,6 @@ berjon.respec.prototype = {
             // if (this.doMicroData) this.makeMicroData();
             if (this.doRDFa) this.makeRDFa();
             this.makeSectionRefs(); // allow references to sections using name for text, fjh
-           this.unHTML5();
 
             // shortcuts
             var obj = this;
@@ -1475,17 +1474,6 @@ berjon.respec.prototype = {
                 sn.addClass(ant, "idlType");
                 ant.innerHTML = "<code>" + name + "</code>";
             }
-        }
-    },
-
-    // --- CLEANUP --------------------------------------------------------------------------------------------
-    unHTML5:    function () {
-        var secs = document.querySelectorAll("section");
-        for (var i = 0; i < secs.length; i++) {
-            var sec = secs[i];
-            var div = sn.renameEl(sec, "div");
-            // div.setAttribute("class", "section"); // XXX that kills previous class, may not be a problem
-            sn.addClass(div, "section");
         }
     },
 
