@@ -5,6 +5,7 @@ define([
         ,   "core/override-configuration"
         ,   "core/default-root-attr"
         ,   "core/style"
+        ,   "w3c/style"
         ,   "w3c/legacy"
         ], 
         function (domReady, runner) {
@@ -25,3 +26,26 @@ define([
             // }, false);
         }
 );
+
+// XXX - FROM RSv2
+//  X    "core/base-runner",
+//      "core/utils", (port in increments, only including the stuff that is depended upon -- avoids cruft)
+//  X    "core/override-configuration",
+//  X    "core/default-root-attr",
+//  X    "core/style",
+//      "w3c/style",
+//      "w3c/headers",
+//      "core/data-transform",
+//      "core/data-include",
+//      "core/inlines",
+//      "core/webidl",
+//      "core/examples",
+//      "w3c/bibref",
+//      "core/figure",
+//      "core/structure",
+//      "w3c/structure",
+//      "core/dfn",
+//      "core/rdfa",
+//      "w3c/unhtml5",
+//      "core/remove-respec"
+
