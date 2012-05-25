@@ -7,6 +7,7 @@ define([
         ,   "core/style"
         ,   "w3c/style"
         ,   "w3c/legacy"
+        ,   "core/remove-respec"
         ], 
         function (domReady, runner) {
             var args = Array.prototype.slice.call(arguments)
@@ -29,7 +30,7 @@ define([
 
 // XXX - FROM RSv2
 //  X    "core/base-runner",
-//  X   "core/utils", (port in increments, only including the stuff that is depended upon -- avoids cruft)
+//  X    "core/utils", (port in increments, only including the stuff that is depended upon -- avoids cruft)
 //  X    "core/override-configuration",
 //  X    "core/default-root-attr",
 //  X    "core/style",
@@ -47,5 +48,5 @@ define([
 //      "core/dfn",
 //      "core/rdfa",
 //      "w3c/unhtml5",
-//      "core/remove-respec"
+//  X    "core/remove-respec"
 

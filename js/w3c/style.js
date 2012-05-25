@@ -1,13 +1,8 @@
-// XXX untested
 
 // Module w3c/style
 // Inserts a link to the appropriate W3C style for the specification's maturity level.
 // CONFIGURATION
 //  - specStatus: the short code for the specification's maturity level or type
-
-// XXX
-//  - test (for all options? or at least several: loop by setting the src on the iframe)
-//      FPWD, WD-NOTE, finding, unofficial, base, RSCND
 
 define(
     ["core/utils"],
