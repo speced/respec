@@ -574,7 +574,6 @@ berjon.respec.prototype = {
     // --- W3C BASICS -----------------------------------------------------------------------------------------
     makeTemplate:   function () {
         this.rootAttr();
-        this.addCSS();
         this.makeHeaders();
         this.makeAbstract();
         this.makeSotD();
@@ -587,29 +586,6 @@ berjon.respec.prototype = {
             document.documentElement.setAttribute("property", "dcterms:language");
             document.documentElement.setAttribute("content", "en");
         }
-    },
-
-    addCSS: function () {
-        var statStyle = this.specStatus;
-        if (statStyle == "FPWD" || statStyle == "LC" || statStyle == "WD-NOTE" || statStyle == "LC-NOTE" || statStyle == "FPWD-NOTE")  {
-            statStyle = "WD";
-        } 
-        else if (statStyle === "finding" || statStyle === "draft-finding") statStyle = "base";
-// else if ( statStyle == "WD-NOTE" || statStyle == "LC-NOTE"
-//        || statStyle == "FPWD-NOTE") {
-//            statStyle = "WG-NOTE";
-//        }
-        var css;
-        if (statStyle == "unofficial") {
-            css = "http://www.w3.org/StyleSheets/TR/w3c-unofficial";
-        }
-        else if (statStyle == "base") {
-            css = "http://www.w3.org/StyleSheets/TR/base";
-        }
-        else {
-            css = "http://www.w3.org/StyleSheets/TR/W3C-" + statStyle;// + ".css";
-        }
-        this._insertCSS(css, false);
     },
 
     doTransforms: function() {
@@ -1520,47 +1496,6 @@ berjon.respec.prototype = {
     },
 
     // --- HELPERS --------------------------------------------------------------------------------------------
-    _insertCSS:    function (css, inlined) {
-        // if (document.createStyleSheet) return document.createStyleSheet(css);
-        if (inlined) {
-            try {
-                // this is synchronous because order of the CSS matters (if though PubRules doesn't detect this
-                // correctly :-) If it's slow, turn off inlineCSS during development
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", css, false);
-                // xhr.onreadystatechange = function () {
-                //     if (this.readyState == 4) {
-                //         if (this.status == 200) {
-                //             sn.element("style", { type: "text/css" }, document.documentElement.firstElementChild, this.responseText);
-                //         }
-                //         else {
-                //             error("There appear to have been a problem fetching the style sheet; status=" + this.status);
-                //         }
-                //     }
-                // };
-                xhr.send(null);
-                if (xhr.status == 200) {
-                    sn.element("style", { type: "text/css" }, document.documentElement.firstElementChild, xhr.responseText);
-                }
-                else {
-                    error("There appears to have been a problem fetching the style sheet; status=" + xhr.status);
-                }
-            }
-            catch (e) {
-                // warning("There was an error with the request, probably that you're working from disk.");
-                this._insertCSS(css, false);
-            }
-        }
-        else {
-            sn.element("link", {
-                href:       css,
-                rel:        "stylesheet",
-                type:       "text/css",
-                charset:    "utf-8"
-            }, document.documentElement.firstElementChild);
-        }
-    },
-
     _readFile:    function (URI) {
             try {
                 var xhr = new XMLHttpRequest();
