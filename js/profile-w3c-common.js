@@ -29,11 +29,11 @@ define([
 
 // XXX - FROM RSv2
 //  X    "core/base-runner",
-//      "core/utils", (port in increments, only including the stuff that is depended upon -- avoids cruft)
+//  X   "core/utils", (port in increments, only including the stuff that is depended upon -- avoids cruft)
 //  X    "core/override-configuration",
 //  X    "core/default-root-attr",
 //  X    "core/style",
-//      "w3c/style",
+//  X    "w3c/style",
 //      "w3c/headers",
 //      "core/data-transform",
 //      "core/data-include",
