@@ -5,9 +5,6 @@
 // As the name implies, this contains a ragtag gang of methods that just don't fit 
 // anywhere else.
 
-// XXX
-//  - test individual methods
-
 define(
     [],
     function () {

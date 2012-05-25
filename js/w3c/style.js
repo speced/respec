@@ -6,7 +6,6 @@
 //  - specStatus: the short code for the specification's maturity level or type
 
 // XXX
-//  - bring in utils (minimally)
 //  - compare with legacy version to check that it hasn't been updated
 //  - test (for all options? or at least several: loop by setting the src on the iframe)
 
