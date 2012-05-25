@@ -1,6 +1,4 @@
 
-// XXX untested
-
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit 
 // anywhere else.
@@ -13,7 +11,7 @@ define(
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/utils");
                 msg.pub("end", "w3c/utils");
-                cb()
+                cb();
             }
             
             // --- STYLE HELPERS ------------------------------------------------------------------------------
@@ -29,3 +27,23 @@ define(
         return utils;
     }
 );
+
+// --- JQUERY EXTRAS ------------------------------------------------------------------------------
+// Applies to any jQuery object containing elements, changes their name to the one give, and
+// return a jQuery object containing the new elements
+$.fn.renameElement = function (name) {
+    var arr = [];
+    this.each(function () {
+        var $newEl = $(this.ownerDocument.createElement(name));
+        // I forget why this didn't work, maybe try again
+        // $newEl.attr($(this).attr());
+        for (var i = 0, n = this.attributes.length; i < n; i++) {
+            var at = this.attributes[i];
+            $newEl[0].setAttributeNS(at.namespaceURI, at.name, at.value);
+        }
+        $(this).contents().appendTo($newEl);
+        $(this).replaceWith($newEl);
+        arr.push($newEl[0]);
+    });
+    return $(arr);
+};
