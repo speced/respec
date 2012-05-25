@@ -6,7 +6,7 @@ define([
         ,   "core/default-root-attr"
         ,   "core/style"
         ,   "w3c/style"
-        // ,   "w3c/legacy"
+        ,   "w3c/legacy"
         ], 
         function (domReady, runner) {
             var args = Array.prototype.slice.call(arguments)
