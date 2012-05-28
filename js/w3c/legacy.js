@@ -573,7 +573,6 @@ berjon.respec.prototype = {
     makeTemplate:   function () {
         this.rootAttr();
         this.makeHeaders();
-        this.makeAbstract();
         this.makeSotD();
         this.makeConformance();
     },
@@ -921,20 +920,6 @@ berjon.respec.prototype = {
         var tmp = sn.element("div");
         tmp.innerHTML = header;
         document.body.insertBefore(tmp.firstChild, document.body.firstChild);
-    },
-
-    makeAbstract:    function () {
-        var abs = document.getElementById("abstract");
-        if (!abs) error("Document must have one element with ID 'abstract'");
-        if (abs.getElementsByTagName("p").length === 0) {
-            // warning("The abstract section should contain a <p> element rather than text directly. Attempting to insert one.");
-            var p = sn.element("p");
-            sn.copyChildren(abs, p);
-            abs.appendChild(p);
-        }
-        var h2 = sn.element("h2", {}, null, "Abstract");
-        abs.insertBefore(h2, abs.firstChild);
-        sn.addClass(abs, "introductory");
     },
 
     makeSotD:     function () {

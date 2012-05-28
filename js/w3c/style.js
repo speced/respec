@@ -28,7 +28,6 @@ define(
                 else {
                     css = "http://www.w3.org/StyleSheets/TR/W3C-" + statStyle;
                 }
-                console.log(css);
                 utils.linkCSS(doc, css);
                 msg.pub("end", "w3c/style");
                 cb();
