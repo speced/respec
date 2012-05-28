@@ -30,4 +30,24 @@ describe("Core — Utils", function () {
             $div.remove();
         });
     });
+
+    // lead0
+    it("should prepend 0 only when needed", function () {
+        runs(function () {
+            expect(utils.lead0("1")).toEqual("01");
+            expect(utils.lead0("01")).toEqual("01");
+        });
+    });
+
+    // concatDate
+    it("should format the date as needed", function () {
+        runs(function () {
+            var d = new Date();
+            d.setFullYear(1977);
+            d.setMonth(2);
+            d.setDate(15);
+            expect(utils.concatDate(d)).toEqual("19770315");
+            expect(utils.concatDate(d, "-")).toEqual("1977-03-15");
+        });
+    });
 });

@@ -714,6 +714,8 @@ berjon.respec.prototype = {
         return header;
     },
 
+    // XXX when removing this, remove the following as well:
+    //  - concatDate
     makeTAGHeaders:    function () {
         var base = "http://www.w3.org/2001/tag/doc/",
             latestVersion = base + this.shortName,

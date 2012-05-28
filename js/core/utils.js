@@ -14,6 +14,21 @@ define(
                 cb();
             }
             
+            // --- DATE HELPERS -------------------------------------------------------------------------------
+            // Takes a Date object and an optional separator and returns the year,month,day representation with
+            // the custom separator (defaulting to none) and proper 0-padding
+        ,   concatDate: function (date, sep) {
+                if (!sep) sep = "";
+                return "" + date.getFullYear() + sep + this.lead0(date.getMonth() + 1) + sep + this.lead0(date.getDate());
+            }
+
+            // takes a string, prepends a "0" if it is of length 1, does nothing otherwise
+        ,   lead0:  function (str) {
+                str = "" + str;
+                return (str.length == 1) ? "0" + str : str;
+            }
+            
+            
             // --- STYLE HELPERS ------------------------------------------------------------------------------
             // take a document and either a link or an array of links to CSS and appends a <link/> element
             // to the head pointing to each
