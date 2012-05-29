@@ -82,4 +82,16 @@ describe("Core — Utils", function () {
             expect(utils.humanDate(d)).toEqual("15 March 1977");
         });
     });
+
+    // joinAnd
+    it("should join with proper commas and 'and'", function () {
+        runs(function () {
+            expect(utils.joinAnd([])).toEqual("");
+            expect(utils.joinAnd(["x"])).toEqual("x");
+            expect(utils.joinAnd(["x", "x"])).toEqual("x and x");
+            expect(utils.joinAnd(["x", "x", "x"])).toEqual("x, x, and x");
+            expect(utils.joinAnd(["x", "x", "x", "x"])).toEqual("x, x, x, and x");
+            expect(utils.joinAnd(["x", "x", "x", "x"], function (str) { return str.toUpperCase(); })).toEqual("X, X, X, and X");
+        });
+    });
 });
