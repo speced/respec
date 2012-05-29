@@ -24,6 +24,10 @@ define(
                         if (v === "true") v = true;
                         else if (v === "false") v = false;
                         else if (v === "null") v = null;
+                        else if (/\[\]$/.test(k)) {
+                            k = k.replace(/\[\]/, "");
+                            v = $.parseJSON(v);
+                        }
                         conf[k] = v;
                     }
                 }

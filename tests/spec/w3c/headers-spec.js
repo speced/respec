@@ -1,6 +1,8 @@
 function loadWithConfig (conf, check) {
     var config = [];
-    for (var k in conf) config.push(k + "=" + conf[k]);
+    for (var k in conf) {
+        config.push(k + "=" + ($.isArray(conf[k]) ? JSON.stringify(conf[k]) : conf[k]));
+    }
     var $ifr = $("<iframe width='800' height='200' style='display: none' src='spec/core/simple.html?" + config.join(";") + "'></iframe>")
     ,   loaded = false
     ,   MAXOUT = 5000
@@ -35,14 +37,63 @@ describe("W3C — Headers", function () {
         });
     });
 
-    //  - shortName
-        // check this version
-        // check latest version
-    //  - editors
-        // check singular with one, plural with two
-        // check with name, uri, company, companyURL, mailto, note — and just name
+    // shortName
+    it("should take shortName into account", function () {
+        loadWithConfig({ specStatus: "REC", shortName: "xxx" }, function ($ifr) {
+            expect($("dt:contains('This version:')", $ifr[0].contentDocument).next("dd").text()).toMatch(/\/REC-xxx-/);
+            expect($("dt:contains('Latest published version:')", $ifr[0].contentDocument).next("dd").text()).toMatch(/\/TR\/xxx\//);
+        });
+    });
+
+    // editors
+    it("should take editors into account", function () {
+        loadWithConfig({ specStatus: "REC", "editors[]": [{
+                name:       "NAME"
+            ,   uri:        "http://URI"
+            ,   company:    "COMPANY"
+            ,   companyURL: "http://COMPANY"
+            ,   mailto:     "EMAIL"
+            ,   note:       "NOTE"
+            }] }, function ($ifr) {
+                expect($("dt:contains('Editors:')", $ifr[0].contentDocument).length).toEqual(0);
+                expect($("dt:contains('Editor:')", $ifr[0].contentDocument).length).toEqual(1);
+                var $dd = $("dt:contains('Editor:')", $ifr[0].contentDocument).next("dd");
+                expect($dd.find("a[href='http://URI']").length).toEqual(1);
+                expect($dd.find("a[href='http://URI']").text()).toEqual("NAME");
+                expect($dd.find("a[href='http://COMPANY']").length).toEqual(1);
+                expect($dd.find("a[href='http://COMPANY']").text()).toEqual("COMPANY");
+                expect($dd.find("a[href='mailto:EMAIL']").length).toEqual(1);
+                expect($dd.find("a[href='mailto:EMAIL']").text()).toEqual("EMAIL");
+                expect($dd.text()).toMatch(/\(NOTE\)/);
+        });
+        loadWithConfig({ specStatus: "REC", "editors[]": [{ name: "NAME1" }, { name: "NAME2" }] }, function ($ifr) {
+                expect($("dt:contains('Editors:')", $ifr[0].contentDocument).length).toEqual(1);
+                expect($("dt:contains('Editor:')", $ifr[0].contentDocument).length).toEqual(0);
+                var $dd = $("dt:contains('Editors:')", $ifr[0].contentDocument).next("dd");
+                expect($dd.text()).toEqual("NAME1");
+                expect($dd.next("dd").text()).toEqual("NAME2");
+        });
+    });
+
     //  - authors
-        // check none and with two
+    it("should take authors into account", function () {
+        loadWithConfig({ specStatus: "REC", "authors[]": [{ name: "NAME1" }] }, function ($ifr) {
+                console.log("SINGULAR", $("dt:contains('Author:')", $ifr[0].contentDocument));
+                expect($("dt:contains('Authors:')", $ifr[0].contentDocument).length).toEqual(0);
+                expect($("dt:contains('Author:')", $ifr[0].contentDocument).length).toEqual(1);
+                var $dd = $("dt:contains('Author:')", $ifr[0].contentDocument).next("dd");
+                expect($dd.text()).toEqual("NAME1");
+        });
+        loadWithConfig({ specStatus: "REC", "authors[]": [{ name: "NAME1" }, { name: "NAME2" }] }, function ($ifr) {
+                expect($("dt:contains('Authors:')", $ifr[0].contentDocument).length).toEqual(1);
+                expect($("dt:contains('Author:')", $ifr[0].contentDocument).length).toEqual(0);
+                var $dd = $("dt:contains('Authors:')", $ifr[0].contentDocument).next("dd");
+                expect($dd.text()).toEqual("NAME1");
+                expect($dd.next("dd").text()).toEqual("NAME2");
+        });
+    });
+
+
     //  - subtitle
         // check none and with one
     //  - publishDate
@@ -78,15 +129,4 @@ describe("W3C — Headers", function () {
         // check none
         // check short name
         // check uri
-
-
-
-    // it("should style according to spec status", function () {
-    //     var status = "FPWD   WD-NOTE finding unofficial     base RSCND".split(/\s+/)
-    //     ,   uris   = "W3C-WD W3C-WD  base    w3c-unofficial base W3C-RSCND".split(/\s+/)
-    //     ;
-    //     for (var i = 0, n = status.length; i < n; i++) {
-    //         loadWithStatus(status[i], uris[i]);
-    //     }
-    // });
 });

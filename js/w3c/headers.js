@@ -51,8 +51,8 @@ define(
             for (var i = 0, n = items.length; i < n; i++) {
                 var p = items[i];
                 ret += "<dd>";
-                if (p.url) ret += "<a href='" + p.url + "'>"+ p.name + "</a>";
-                else       ret += pers.name;
+                if (p.uri) ret += "<a href='" + p.uri + "'>"+ p.name + "</a>";
+                else       ret += p.name;
                 if (p.company) {
                     ret += ", ";
                     if (p.companyURL) ret += "<a href='" + p.companyURL + "'>" + p.company + "</a>";
@@ -61,7 +61,7 @@ define(
                 if (p.mailto) {
                     ret += ", <span class='ed_mailto'><a href='mailto:" + p.mailto + "'>" + p.mailto + "</a></span>";
                 }
-                if (p.note) ret += " ( " + p.note + " )";
+                if (p.note) ret += " (" + p.note + ")";
                 ret += "</dd>\n";
             }
             return new Handlebars.SafeString(ret);
@@ -116,7 +116,7 @@ define(
             
         ,   run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/headers");
-                
+
                 // validate configuration and derive new configuration values
                 if (!conf.specStatus) msg.pub("error", "Missing required configuration: specStatus");
                 if (!conf.shortName) msg.pub("error", "Missing required configuration: shortName");
