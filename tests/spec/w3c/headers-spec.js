@@ -75,10 +75,9 @@ describe("W3C — Headers", function () {
         });
     });
 
-    //  - authors
+    // authors
     it("should take authors into account", function () {
         loadWithConfig({ specStatus: "REC", "authors[]": [{ name: "NAME1" }] }, function ($ifr) {
-                console.log("SINGULAR", $("dt:contains('Author:')", $ifr[0].contentDocument));
                 expect($("dt:contains('Authors:')", $ifr[0].contentDocument).length).toEqual(0);
                 expect($("dt:contains('Author:')", $ifr[0].contentDocument).length).toEqual(1);
                 var $dd = $("dt:contains('Author:')", $ifr[0].contentDocument).next("dd");
@@ -93,9 +92,17 @@ describe("W3C — Headers", function () {
         });
     });
 
+    // subtitle
+    it("should take subtitle into account", function () {
+        loadWithConfig({ specStatus: "REC" }, function ($ifr) {
+                expect($("#subtitle", $ifr[0].contentDocument).length).toEqual(0);
+        });
+        loadWithConfig({ specStatus: "REC", "subtitle": "SUB" }, function ($ifr) {
+                expect($("#subtitle", $ifr[0].contentDocument).length).toEqual(1);
+                expect($("#subtitle", $ifr[0].contentDocument).text()).toEqual("SUB");
+        });
+    });
 
-    //  - subtitle
-        // check none and with one
     //  - publishDate
         // check that it's there (we already check the method that makes it)
     //  - previousPublishDate
