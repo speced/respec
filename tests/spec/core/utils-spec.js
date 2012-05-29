@@ -50,4 +50,24 @@ describe("Core — Utils", function () {
             expect(utils.concatDate(d, "-")).toEqual("1977-03-15");
         });
     });
+
+    // parseSimpleDate
+    it("should parse a simple date", function () {
+        runs(function () {
+            var d = utils.parseSimpleDate("1977-03-15");
+            expect(d.getFullYear()).toEqual(1977);
+            expect(d.getMonth()).toEqual(2);
+            expect(d.getDate()).toEqual(15);
+        });
+    });
+
+    // parseLastModified
+    it("should parse a date in lastModified format", function () {
+        runs(function () {
+            var d = utils.parseLastModified("03/15/1977 13:05:42");
+            expect(d.getFullYear()).toEqual(1977);
+            expect(d.getMonth()).toEqual(2);
+            expect(d.getDate()).toEqual(15);
+        });
+    });
 });

@@ -28,10 +28,12 @@ define(
                 return (str.length == 1) ? "0" + str : str;
             }
             
+            // takes a YYYY-MM-DD date and returns a Date object for it
         ,   parseSimpleDate:    function (str) {
                 return new Date(str.substr(0, 4), (str.substr(5, 2) - 1), str.substr(8, 2));
             }
 
+            // takes what document.lastModified returns and produces a Date object for it
         ,   parseLastModified:    function (str) {
                 if (!str) return new Date();
                 return new Date(Date.parse(str));
