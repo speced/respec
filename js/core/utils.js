@@ -28,6 +28,17 @@ define(
                 return (str.length == 1) ? "0" + str : str;
             }
             
+        ,   parseSimpleDate:    function (str) {
+                return new Date(str.substr(0, 4), (str.substr(5, 2) - 1), str.substr(8, 2));
+            }
+
+        ,   parseLastModified:    function (str) {
+                if (!str) return new Date();
+                return new Date(Date.parse(str));
+                // return new Date(str.substr(6, 4), (str.substr(0, 2) - 1), str.substr(3, 2));
+            }
+
+            
             
             // --- STYLE HELPERS ------------------------------------------------------------------------------
             // take a document and either a link or an array of links to CSS and appends a <link/> element

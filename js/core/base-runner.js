@@ -84,14 +84,16 @@ define(
                 
                 var pipeline;
                 pipeline = function () {
-                    if (!plugs.length) return;
+                    if (!plugs.length) {
+                        if (respecConfig.afterEnd) respecConfig.afterEnd.apply(GLOBAL, Array.prototype.slice.call(arguments));
+                        respecEvents.pub("end", "core/base-runner");
+                        return;
+                    };
                     var plug = plugs.shift();
                     if (plug.run) plug.run.call(plug, respecConfig, document, pipeline, respecEvents);
                     else pipeline();
                 };
                 pipeline();
-                if (respecConfig.afterEnd) respecConfig.afterEnd.apply(GLOBAL, Array.prototype.slice.call(arguments));
-                respecEvents.pub("end", "core/base-runner");
             }
         };
     }
