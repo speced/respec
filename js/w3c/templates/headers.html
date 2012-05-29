@@ -31,14 +31,15 @@
       <dt>Implementation report:</dt>
       <dd><a href='{{implementationReportURI}}'>{{implementationReportURI}}</a></dd>
     {{/if}}
-    {{#if showPreviousVersion}}
+    {{#if isED}}
       {{#if prevED}}
         <dt>Previous editor's draft:</dt>
         <dd><a href='{{prevED}}'>{{prevED}}</a></dd>
-      {{else}}
-        <dt>Previous version:</dt>
-        <dd><a href='{{prevVersion}}'>{{prevVersion}}</a></dd>
       {{/if}}
+    {{/if}}
+    {{#if showPreviousVersion}}
+      <dt>Previous version:</dt>
+      <dd><a href='{{prevVersion}}'>{{prevVersion}}</a></dd>
     {{/if}}
     {{#if prevRecURI}}
       <dt>Latest recommendation:</dt>

@@ -19,10 +19,10 @@ define(
             // "and". The second argument is a mapping function that can convert the items before they are 
             // joined
         ,   joinAnd:    function (arr, mapper) {
-                if (!arr) return "";
+                if (!arr || !arr.length) return "";
                 mapper = mapper || function (ret) { return ret; };
                 var ret = "";
-                if (arr.length <= 1) return arr.join("");
+                if (arr.length === 1) return mapper(arr[0]);
                 for (var i = 0, n = arr.length; i < n; i++) {
                     if (i > 0) {
                         if (n === 2) ret += ' ';

@@ -103,22 +103,64 @@ describe("W3C — Headers", function () {
         });
     });
 
-    //  - publishDate
-        // check that it's there (we already check the method that makes it)
-    //  - previousPublishDate
-        // check none and with one
-    //  - previousMaturity
-        // check what happens to previous version with this
-    //  - errata
-        // check none and with one
-    //  - alternateFormats
-        // check none and with two
-    //  - testSuiteURI
-        // check none and with one
-    //  - implementationReportURI
-        // check none and with one
-    //  - edDraftURI
-        // check none and with one
+    // publishDate
+    it("should take publishDate into account", function () {
+        loadWithConfig({ publishDate: "1977-03-15" }, function ($ifr) {
+                expect($("h2:contains('15 March 1977')", $ifr[0].contentDocument).length).toEqual(1);
+        });
+    });
+
+    // previousPublishDate & previousMaturity
+    it("should take previousPublishDate and previousMaturity into account", function () {
+        loadWithConfig({ specStatus: "REC", publishDate: "2017-03-15", 
+                         previousPublishDate: "1977-03-15", previousMaturity: "CR" }, function ($ifr) {
+                expect($("dt:contains('Previous version:')", $ifr[0].contentDocument).next("dd").text())
+                    .toMatch(/\/1977\/CR-[^\/]+-19770315\//);
+        });
+    });
+
+    // errata
+    it("should take errata into account", function () {
+        loadWithConfig({ specStatus: "REC", errata: "ERR" }, function ($ifr) {
+                expect($(".head a:contains('errata')", $ifr[0].contentDocument).attr("href")).toEqual("ERR");
+        });
+    });
+
+    // alternateFormats
+    it("should take alternateFormats into account", function () {
+        loadWithConfig({ specStatus: "FPWD", "alternateFormats[]": [{ uri: "URI", label: "LABEL" }] }, function ($ifr) {
+                expect($(".head a:contains('LABEL')", $ifr[0].contentDocument).attr("href")).toEqual("URI");
+        });
+    });
+
+    // testSuiteURI
+    it("should take testSuiteURI into account", function () {
+        loadWithConfig({ specStatus: "REC", testSuiteURI: "URI" }, function ($ifr) {
+                expect($("dt:contains('Test suite:')", $ifr[0].contentDocument).next("dd").text()).toEqual("URI");
+        });
+    });
+
+    // implementationReportURI
+    it("should take implementationReportURI into account", function () {
+        loadWithConfig({ specStatus: "REC", implementationReportURI: "URI" }, function ($ifr) {
+                expect($("dt:contains('Implementation report:')", $ifr[0].contentDocument).next("dd").text()).toEqual("URI");
+        });
+    });
+
+    // edDraftURI
+    it("should take edDraftURI into account", function () {
+        loadWithConfig({ specStatus: "WD", edDraftURI: "URI" }, function ($ifr) {
+                expect($("dt:contains('Latest editor\'s draft:')", $ifr[0].contentDocument).next("dd").text()).toEqual("URI");
+        });
+    });
+
+    // prevED
+    it("should take prevED into account", function () {
+        loadWithConfig({ specStatus: "ED", prevED: "URI" }, function ($ifr) {
+                expect($("dt:contains('Previous editor\'s draft:')", $ifr[0].contentDocument).next("dd").text()).toEqual("URI");
+        });
+    });
+
     //  - additionalCopyrightHolders
         // use markup
         // check with one, unofficial
@@ -129,8 +171,6 @@ describe("W3C — Headers", function () {
         // check with one equalling current year
         // check without
         // check with one in the past
-    //  - prevED
-        // check none and with one
     //  - prevRecShortname
     //  - prevRecURI
         // check none

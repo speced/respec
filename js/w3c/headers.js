@@ -133,7 +133,7 @@ define(
                 conf.isNoTrack = $.inArray(conf.specStatus, this.noTrackStatus) >= 0;
                 conf.isRecTrack = conf.noRecTrack ? false : $.inArray(conf.specStatus, this.recTrackStatus) >= 0;
                 conf.isTagFinding = conf.specStatus === "finding" || conf.specStatus === "draft-finding";
-                if (!conf.shortName) error("Missing required configuration: shortName");
+                if (!conf.shortName) msg.pub("error", "Missing required configuration: shortName");
                 if (!conf.edDraftURI) {
                     conf.edDraftURI = "";
                     if (conf.specStatus === "ED") msg.pub("warn", "Editor's Drafts should set edDraftURI.");
@@ -188,7 +188,7 @@ define(
                 conf.multipleEditors = conf.editors.length > 1;
                 conf.multipleAuthors = conf.authors && conf.authors.length > 1;
                 $.each(conf.alternateFormats || [], function (i, it) {
-                    if (!it.uri || !it.label) error("All alternate formats must have a uri and a label.");
+                    if (!it.uri || !it.label) msg.pub("error", "All alternate formats must have a uri and a label.");
                 });
                 conf.multipleAlternates = conf.alternateFormats && conf.alternateFormats.length > 1;
                 conf.alternatesHTML = utils.joinAnd(conf.alternateFormats, function (alt) {
@@ -209,6 +209,7 @@ define(
                 conf.isUnofficial = conf.specStatus === "unofficial";
                 conf.prependW3C = !conf.isUnofficial;
                 conf.isXGR = (conf.specStatus === "XGR");
+                conf.isED = (conf.specStatus === "ED");
                 // configuration done — yay!
                 
                 // insert into document
@@ -216,6 +217,9 @@ define(
                 ,   out = h(conf)
                 ;
                 $("body", doc).prepend($(out));
+
+                // XXX handle SotD here as well
+                //  (but not conformance)
 
                 msg.pub("end", "w3c/headers");
                 cb();

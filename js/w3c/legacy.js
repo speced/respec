@@ -516,9 +516,7 @@ berjon.respec.prototype = {
     // --- METADATA -------------------------------------------------------
     extractConfig:    function () {
         var cfg = respecConfig || {};
-        console.log("lcEnd");
         if (cfg.lcEnd) cfg.lcEnd = this._parseDate(cfg.lcEnd);
-        console.log("crEnd");
         if (cfg.crEnd) cfg.crEnd = this._parseDate(cfg.crEnd);
         if (cfg.specStatus == "LC" && !cfg.lcEnd) error("If specStatus is set to LC, then lcEnd must be defined");
         if (cfg.specStatus == "CR" && !cfg.crEnd) error("If specStatus is set to CR, then crEnd must be defined");
