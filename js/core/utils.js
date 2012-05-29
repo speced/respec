@@ -40,9 +40,12 @@ define(
                 // return new Date(str.substr(6, 4), (str.substr(0, 2) - 1), str.substr(3, 2));
             }
 
+            // list of human names for months (in English)
         ,   humanMonths: ["January", "February", "March", "April", "May", "June", "July",
                           "August", "September", "October", "November", "December"]
         
+            // given either a Date object or a date in YYYY-MM-DD format, return a human-formatted
+            // date suitable for use in a W3C specification
         ,   humanDate:  function (date) {
                 if (!(date instanceof Date)) date = this.parseSimpleDate(date);
                 return this.lead0(date.getDate()) + " " + this.humanMonths[date.getMonth()] + " " + date.getFullYear();

@@ -48,7 +48,7 @@ define([
 //      "core/structure",
 //      "w3c/structure",
 //      "core/dfn",
-//      "core/rdfa",
+//      "core/rdfa", (note that we've deleted support here and there since it was spread everywhere — reinstate)
 //  X    "w3c/unhtml5",
 //  X    "core/remove-respec"
 
