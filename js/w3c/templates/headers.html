@@ -10,73 +10,66 @@
     {{#if subtitle}}
       <h2 id='subtitle'>{{subtitle}}</h2>
     {{/if}}
-    <h2>{{#if prependW3C}}W3C {{/if}}
-      " + (this.specStatus == "unofficial" ? "" : "W3C ") + 
-        this.status2text[this.specStatus] + " " + this._humanDate(this.publishDate) + "</h2><dl>";
-}
-if (!this.isNoTrack) {
-    header += "<dt>This version:</dt><dd><a href='" + thisVersion + "'>" + thisVersion + "</a></dd>" + 
-              "<dt>Latest published version:</dt><dd>" + latestVersion + "</dd>"; 
-    if (this.edDraftURI) {
-        header += "<dt>Latest editor's draft:</dt><dd><a href='" + this.edDraftURI + "'>" + this.edDraftURI + "</a></dd>";
-    }
-}
-if (this.testSuiteURI) {
- header += "<dt>Test suite:</dt><dd><a href='" + this.testSuiteURI + "'>" + this.testSuiteURI + "</a></dd>";
-}
-if (this.implementationReportURI) {
- header += "<dt>Implementation report:</dt><dd><a href='" + this.implementationReportURI + "'>" + this.implementationReportURI + "</a></dd>";
-}
-if (this.specStatus != "FPWD" && this.specStatus != "FPWD-NOTE" &&
-    !this.isNoTrack) {
-    if (!this.prevED) {
-        header += "<dt>Previous version:</dt><dd>" + prevVersion + "</dd>";
-    } else {
-        header += "<dt>Previous editor's draft:</dt><dd>" + prevED + "</dd>";
-    }
-}
-
-if (this.prevRecShortname) {
-    var prevRecURI = "http://www.w3.org/TR/" + this.prevRecShortname + "/";
-    header += "<dt>Latest recommendation:</dt><dd>" + 
-        '<a href="' + prevRecURI + '">' + prevRecURI + "</a></dd>";
-}
-
-if(this.editors.length == 0) {
-    header += "<dt>" + "Editor" + ":</dt>";
-    error("There must be at least one editor.");
-}
-header += this.showPeople("Editor", this.editors);
-header += this.showPeople("Author", this.authors);
-header += "</dl>";
-
-if (this.errata) {
-    header += '<p>Please refer to the <a href="' + this.errata + '">errata</a> for this document, which may include some normative corrections.</p>';
-}
-
-if (this.alternateFormats.length > 0) {
-    var len = this.alternateFormats.length ;
-    if (len == 1) {
-        header += '<p>This document is also available in this non-normative format: ';
-    } else {
-        header += '<p>This document is also available in these non-normative formats: ';
-    }
-    for (var f = 0; f < len; f++) {
-        if (f > 0) {
-            if ( len == 2) {
-                header += ' ';
-            } else {
-                header += ', ' ;
-            }
-            if (f == len - 1) {
-                header += 'and ';
-            }
-        }
-        var ref = this.alternateFormats[f] ;
-        header += "<a href='" + ref.uri + "'>" + ref.label + "</a>" ;
-    }
-    header += '.</p>';
-}
+    <h2>{{#if prependW3C}}W3C {{/if}}{{longStatus}} {{publishHumanDate}}</h2>
+    <dl>
+      {{#unless isNoTrack}}
+        <dt>This version:</dt>
+        <dd><a href='{{thisVersion}}'>{{thisVersion}}</a></dd>
+        <dt>Latest published version:</dt>
+        <dd>{{#if latestVersion}}<a href='{{latestVersion}}'>{{latestVersion}}</a>{{else}}none{{/if}}</dd>
+        {{#if edDraftURI}}
+          <dt>Latest editor's draft:</dt>
+          <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
+        {{/if}}
+      {{/unless}}
+      {{#if testSuiteURI}}
+        <dt>Test suite:</dt>
+        <dd><a href='{{testSuiteURI}}'>{{testSuiteURI}}</a></dd>
+      {{/if}}
+      {{#if implementationReportURI}}
+        <dt>Implementation report:</dt>
+        <dd><a href='{{implementationReportURI}}'>{{implementationReportURI}}</a></dd>
+      {{/if}}
+      {{#if showPreviousVersion}}
+        {{#if prevED}}
+          <dt>Previous editor's draft:</dt>
+          <dd><a href='{{prevED}}'>{{prevED}}</a></dd>
+        {{else}}
+          <dt>Previous version:</dt>
+          <dd><a href='{{prevVersion}}'>{{prevVersion}}</a></dd>
+        {{/if}}
+      {{/if}}
+      {{#if prevRecURI}}
+        <dt>Latest recommendation:</dt>
+        <dd><a href='{{prevRecURI}}'>{{prevRecURI}}</a></dd>
+      {{/if}}
+      <dt>Editor{{#if multipleEditors}}s{{/if}}:</dt>
+      <dd>
+        {{showPeople editors}}
+      </dd>
+      {{#if authors}}
+        <dt>Author{{#if multipleAuthors}}s{{/if}}:</dt>
+        <dd>
+          {{showPeople authors}}
+        </dd>
+      {{/if}}
+    </dl>
+    {{#if errata}}
+      <p>
+        Please refer to the <a href="{{errata}}">errata</a> for this document, which may include some normative corrections.
+      </p>
+    {{/if}}
+    {{#if alternateFormats}}
+      <p>
+        {{#if multipleAlternates}}
+          This document is also available in these non-normative formats: 
+        {{else}}
+          This document is also available in this non-normative format: 
+        {{/if}}
+        {{{alternatesHTML}}}
+      </p>
+    {{/if}}
+    
 
 if (this.specStatus == "REC")
     header += '<p>The English version of this specification is the only normative version. Non-normative <a href="http://www.w3.org/Consortium/Translation/">translations</a> may also be available.</p>';

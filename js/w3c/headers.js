@@ -23,6 +23,8 @@
 //      defined by:
 //          - uri: the URI to the alternate
 //          - label: a label for the alternate
+//  - testSuiteURI: the URI to the test suite, if any
+//  - implementationReportURI: the URI to the implementation report, if any
 //  - noRecTrack: set to true if this document is not intended to be on the Recommendation track
 //  - edDraftURI: the URI of the Editor's Draft for this document, if any. Required if
 //      specStatus is set to "ED".
@@ -43,6 +45,29 @@
 define(
     ["core/utils", "text!w3c/templates/headers.html"],
     function (utils, headersTmpl) {
+        Handlebars.registerHelper("showPeople", function (items) {
+            var ret = "";
+            for (var i = 0, n = items.length; i < n; i++) {
+                var p = items[i];
+                ret += "<dd>";
+                if (p.url) ret += "<a href='" + p.url + "'>"+ p.name + "</a>";
+                else       ret += pers.name;
+                if (p.company) {
+                    ret += ", ";
+                    if (p.companyURL) ret += "<a href='" + p.companyURL + "'>" + p.company + "</a>";
+                    else              ret += p.company;
+                }
+                if (p.mailto) {
+                    ret += ", <span class='ed_mailto'><a href='mailto:" + p.mailto + "'>" + p.mailto + "</a></span>";
+                }
+                if (p.note) ret += " ( " + p.note + " )";
+                ret += "</dd>\n";
+            }
+            return new Handlebars.SafeString(ret);
+        });
+        
+
+        
         return {
             status2maturity:    {
                 FPWD:           "WD"
@@ -152,16 +177,28 @@ define(
                         msg.pub("error", "Document on track but no previous version.");
                     conf.prevVersion = "";
                 }
+                if (conf.prevRecShortname && !conf.prevRecURI) conf.prevRecURI = "http://www.w3.org/TR/" + conf.prevRecShortname;
                 if (!conf.editors || conf.editors.length === 0) msg.pub("error", "At least one editor is required");
                 var peopCheck = function (i, it) {
                     if (!it.name) msg.pub("error", "All authors and editors must have a name.");
                 };
                 $.each(conf.editors, peopCheck);
                 $.each(conf.authors || [], peopCheck);
+                conf.multipleEditors = conf.editors.length > 1;
+                conf.multipleAuthors = conf.authors && conf.authors.length > 1;
                 $.each(conf.alternateFormats || [], function (i, it) {
                     if (!it.uri || !it.label) error("All alternate formats must have a uri and a label.");
                 });
+                conf.multipleAlternates = conf.alternateFormats.length > 1;
+                conf.alternatesHTML = utils.joinAnd(conf.alternateFormats, function (alt) {
+                    return "<a href='" + alt.uri + "'>" + alt.label + "</a>";
+                });
                 if (conf.copyrightStart && conf.copyrightStart == conf.publishYear) conf.copyrightStart = "";
+                for (var k in this.status2text) {
+                    if (this.status2long[k]) continue;
+                    this.status2long[k] = this.status2text[k];
+                }
+                conf.longStatus = this.status2long[conf.specStatus];
                 conf.showThisVersion =  (!conf.isNoTrack || conf.specStatus === "XGR" || conf.isTagFinding);
                 conf.showPreviousVersion = (conf.specStatus !== "FPWD" && conf.specStatus !== "ED" && 
                                            !conf.isNoTrack && !conf.noRecTrack);

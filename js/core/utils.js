@@ -13,6 +13,22 @@ define(
                 msg.pub("end", "w3c/utils");
                 cb();
             }
+
+            // --- STRING HELPERS -----------------------------------------------------------------------------
+            // XXX
+        ,   joinAnd:    function (arr, mapper) {
+                mapper = mapper || function (ret) { return ret; };
+                var ret = "";
+                for (var i = 0, n = arr.length; i < n; i++) {
+                    if (i > 0) {
+                        if (n === 2) ret += ' ';
+                        else         ret += ', ';
+                        if (i == n - 1) header += 'and ';
+                    }
+                    ret += mapper(arr[i]);
+                }
+                return ret;
+            }
             
             // --- DATE HELPERS -------------------------------------------------------------------------------
             // Takes a Date object and an optional separator and returns the year,month,day representation with
@@ -50,7 +66,6 @@ define(
                 if (!(date instanceof Date)) date = this.parseSimpleDate(date);
                 return this.lead0(date.getDate()) + " " + this.humanMonths[date.getMonth()] + " " + date.getFullYear();
             }
-
             
             
             // --- STYLE HELPERS ------------------------------------------------------------------------------
