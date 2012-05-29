@@ -70,4 +70,16 @@ describe("Core — Utils", function () {
             expect(d.getDate()).toEqual(15);
         });
     });
+
+    // humanDate
+    it("should produce a human date", function () {
+        runs(function () {
+            expect(utils.humanDate("1977-03-15")).toEqual("15 March 1977");
+            var d = new Date();
+            d.setFullYear(1977);
+            d.setMonth(2);
+            d.setDate(15);
+            expect(utils.humanDate(d)).toEqual("15 March 1977");
+        });
+    });
 });

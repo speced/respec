@@ -40,6 +40,14 @@ define(
                 // return new Date(str.substr(6, 4), (str.substr(0, 2) - 1), str.substr(3, 2));
             }
 
+        ,   humanMonths: ["January", "February", "March", "April", "May", "June", "July",
+                          "August", "September", "October", "November", "December"]
+        
+        ,   humanDate:  function (date) {
+                if (!(date instanceof Date)) date = this.parseSimpleDate(date);
+                return this.lead0(date.getDate()) + " " + this.humanMonths[date.getMonth()] + " " + date.getFullYear();
+            }
+
             
             
             // --- STYLE HELPERS ------------------------------------------------------------------------------
