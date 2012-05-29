@@ -6,112 +6,107 @@
     {{#if isXGR}}
       <a href='http://www.w3.org/2005/Incubator/XGR/'><img alt='W3C Incubator Report' src='http://www.w3.org/2005/Incubator/images/XGR' height='48' width='160'/></a>
     {{/if}}
-    <h1 class='title' id='title'>{{title}}</h1>
-    {{#if subtitle}}
-      <h2 id='subtitle'>{{subtitle}}</h2>
+  </p>
+  <h1 class='title' id='title'>{{title}}</h1>
+  {{#if subtitle}}
+    <h2 id='subtitle'>{{subtitle}}</h2>
+  {{/if}}
+  <h2>{{#if prependW3C}}W3C {{/if}}{{longStatus}} {{publishHumanDate}}</h2>
+  <dl>
+    {{#unless isNoTrack}}
+      <dt>This version:</dt>
+      <dd><a href='{{thisVersion}}'>{{thisVersion}}</a></dd>
+      <dt>Latest published version:</dt>
+      <dd>{{#if latestVersion}}<a href='{{latestVersion}}'>{{latestVersion}}</a>{{else}}none{{/if}}</dd>
+      {{#if edDraftURI}}
+        <dt>Latest editor's draft:</dt>
+        <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
+      {{/if}}
+    {{/unless}}
+    {{#if testSuiteURI}}
+      <dt>Test suite:</dt>
+      <dd><a href='{{testSuiteURI}}'>{{testSuiteURI}}</a></dd>
     {{/if}}
-    <h2>{{#if prependW3C}}W3C {{/if}}{{longStatus}} {{publishHumanDate}}</h2>
-    <dl>
-      {{#unless isNoTrack}}
-        <dt>This version:</dt>
-        <dd><a href='{{thisVersion}}'>{{thisVersion}}</a></dd>
-        <dt>Latest published version:</dt>
-        <dd>{{#if latestVersion}}<a href='{{latestVersion}}'>{{latestVersion}}</a>{{else}}none{{/if}}</dd>
-        {{#if edDraftURI}}
-          <dt>Latest editor's draft:</dt>
-          <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
-        {{/if}}
-      {{/unless}}
-      {{#if testSuiteURI}}
-        <dt>Test suite:</dt>
-        <dd><a href='{{testSuiteURI}}'>{{testSuiteURI}}</a></dd>
+    {{#if implementationReportURI}}
+      <dt>Implementation report:</dt>
+      <dd><a href='{{implementationReportURI}}'>{{implementationReportURI}}</a></dd>
+    {{/if}}
+    {{#if showPreviousVersion}}
+      {{#if prevED}}
+        <dt>Previous editor's draft:</dt>
+        <dd><a href='{{prevED}}'>{{prevED}}</a></dd>
+      {{else}}
+        <dt>Previous version:</dt>
+        <dd><a href='{{prevVersion}}'>{{prevVersion}}</a></dd>
       {{/if}}
-      {{#if implementationReportURI}}
-        <dt>Implementation report:</dt>
-        <dd><a href='{{implementationReportURI}}'>{{implementationReportURI}}</a></dd>
-      {{/if}}
-      {{#if showPreviousVersion}}
-        {{#if prevED}}
-          <dt>Previous editor's draft:</dt>
-          <dd><a href='{{prevED}}'>{{prevED}}</a></dd>
-        {{else}}
-          <dt>Previous version:</dt>
-          <dd><a href='{{prevVersion}}'>{{prevVersion}}</a></dd>
-        {{/if}}
-      {{/if}}
-      {{#if prevRecURI}}
-        <dt>Latest recommendation:</dt>
-        <dd><a href='{{prevRecURI}}'>{{prevRecURI}}</a></dd>
-      {{/if}}
-      <dt>Editor{{#if multipleEditors}}s{{/if}}:</dt>
+    {{/if}}
+    {{#if prevRecURI}}
+      <dt>Latest recommendation:</dt>
+      <dd><a href='{{prevRecURI}}'>{{prevRecURI}}</a></dd>
+    {{/if}}
+    <dt>Editor{{#if multipleEditors}}s{{/if}}:</dt>
+    <dd>
+      {{showPeople editors}}
+    </dd>
+    {{#if authors}}
+      <dt>Author{{#if multipleAuthors}}s{{/if}}:</dt>
       <dd>
-        {{showPeople editors}}
+        {{showPeople authors}}
       </dd>
-      {{#if authors}}
-        <dt>Author{{#if multipleAuthors}}s{{/if}}:</dt>
-        <dd>
-          {{showPeople authors}}
-        </dd>
+    {{/if}}
+  </dl>
+  {{#if errata}}
+    <p>
+      Please refer to the <a href="{{errata}}">errata</a> for this document, which may include some normative corrections.
+    </p>
+  {{/if}}
+  {{#if alternateFormats}}
+    <p>
+      {{#if multipleAlternates}}
+        This document is also available in these non-normative formats: 
+      {{else}}
+        This document is also available in this non-normative format: 
       {{/if}}
-    </dl>
-    {{#if errata}}
-      <p>
-        Please refer to the <a href="{{errata}}">errata</a> for this document, which may include some normative corrections.
+      {{{alternatesHTML}}}
+    </p>
+  {{/if}}
+  {{#if isRec}}
+    <p>
+      The English version of this specification is the only normative version. Non-normative 
+      <a href="http://www.w3.org/Consortium/Translation/">translations</a> may also be available.
+    </p>
+  {{/if}}
+  {{#if isUnofficial}}
+    {{#if additionalCopyrightHolders}}
+      <p class='copyright'>{{{additionalCopyrightHolders}}}</p>
+    {{else}}
+      {{#if overrideCopyright}}
+        {{{overrideCopyright}}}
+      {{else}}
+        <p class='copyright'>
+          This document is licensed under a 
+          <a class='subfoot' href='http://creativecommons.org/licenses/by/3.0/' rel='license'>Creative Commons 
+          Attribution 3.0 License</a>.
+        </p>
+      {{/if}}
+    {{/if}}
+  {{else}}
+    {{#if overrideCopyright}}
+      {{{overrideCopyright}}}
+    {{else}}
+      <p class='copyright'>
+        <a href='http://www.w3.org/Consortium/Legal/ipr-notice#Copyright'>Copyright</a> &copy; 
+        {{#if copyrightStart}}{{copyrightStart}}-{{/if}}{{publishYear}}
+        {{#if additionalCopyrightHolders}} {{{additionalCopyrightHolders}}} &amp;{{/if}}
+        <a href='http://www.w3.org/'><acronym title='World Wide Web Consortium'>W3C</acronym></a><sup>&reg;</sup> 
+        <a href='http://www.csail.mit.edu/'><acronym title='Massachusetts Institute of Technology'>MIT</acronym></a>
+        <a href='http://www.ercim.eu/'><acronym title='European Research Consortium for Informatics and Mathematics'>ERCIM</acronym></a>
+        <a href='http://www.keio.ac.jp/'>Keio</a>), All Rights Reserved.
+        W3C <a href='http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer'>liability</a>,
+        <a href='http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks'>trademark</a> and
+        <a href='http://www.w3.org/Consortium/Legal/copyright-documents'>document use</a> rules apply.
       </p>
     {{/if}}
-    {{#if alternateFormats}}
-      <p>
-        {{#if multipleAlternates}}
-          This document is also available in these non-normative formats: 
-        {{else}}
-          This document is also available in this non-normative format: 
-        {{/if}}
-        {{{alternatesHTML}}}
-      </p>
-    {{/if}}
-    
-
-if (this.specStatus == "REC")
-    header += '<p>The English version of this specification is the only normative version. Non-normative <a href="http://www.w3.org/Consortium/Translation/">translations</a> may also be available.</p>';
-
-if (this.specStatus == "unofficial") {
-    var copyright;
-    if (this.additionalCopyrightHolders) copyright = "<p class='copyright'>" + this.additionalCopyrightHolders + "</p>";
-    else if (this.overrideCopyright) copyright = this.overrideCopyright;
-    else copyright = "<p class='copyright'>This document is licensed under a <a class='subfoot' href='http://creativecommons.org/licenses/by/3.0/' rel='license'>Creative Commons Attribution 3.0 License</a>.</p>";
-    header += copyright;
-}
-else {
-    if (this.overrideCopyright) {
-        header += this.overrideCopyright;
-    }
-    else {
-        header += "<p class='copyright'>";
-        if (this.doRDFa) {
-            header += "<a rel='license' href='http://www.w3.org/Consortium/Legal/ipr-notice#Copyright'>Copyright</a> &copy; ";
-        }
-        else {
-            header += "<a href='http://www.w3.org/Consortium/Legal/ipr-notice#Copyright'>Copyright</a> &copy; ";
-        }
-        if (this.copyrightStart) {
-            header += this.copyrightStart + '-';
-        }
-        header += this.publishDate.getFullYear();
-        if (this.additionalCopyrightHolders) header += " " + this.additionalCopyrightHolders + " &amp;";
-        if (this.doRDFa) {
-            header += " <span rel='dcterms:publisher'><span typeof='foaf:Organization'><a rel='foaf:homepage' property='foaf:name' content='World Wide Web Consortium' href='http://www.w3.org/'><acronym title='World Wide Web Consortium'>W3C</acronym></a><sup>&reg;</sup></span></span> ";
-        } else {
-            header += " <a href='http://www.w3.org/'><acronym title='World Wide Web Consortium'>W3C</acronym></a><sup>&reg;</sup> ";
-        }
-        header +=
-            "(<a href='http://www.csail.mit.edu/'><acronym title='Massachusetts Institute of Technology'>MIT</acronym></a>, " +
-            "<a href='http://www.ercim.eu/'><acronym title='European Research Consortium for Informatics and Mathematics'>ERCIM</acronym></a>, " +
-            "<a href='http://www.keio.ac.jp/'>Keio</a>), All Rights Reserved. " +
-            "W3C <a href='http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer'>liability</a>, " + 
-            "<a href='http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks'>trademark</a> and " +
-            "<a href='http://www.w3.org/Consortium/Legal/copyright-documents'>document use</a> rules apply.</p>";
-
-    }
-}
-header += "<hr/></div>";
-
+  {{/if}}
+  <hr/>
+</div>";

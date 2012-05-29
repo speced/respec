@@ -30,6 +30,7 @@
 //      specStatus is set to "ED".
 //  - additionalCopyrightHolders: a copyright owner in addition to W3C (or the only one if specStatus
 //      is unofficial)
+//  - overrideCopyright: provides markup to completely override the copyright
 //  - copyrightStart: the year from which the copyright starts running
 //  - prevED: the URI of the previous Editor's Draft if it has moved
 //  - prevRecShortname: the short name of the previous Recommendation, if the name has changed
@@ -109,7 +110,7 @@ define(
             ,   "FPWD-NOTE":    "First Public Working Draft"
             ,   LC:             "Last Call Working Draft"
             ,   "LC-NOTE":      "Last Call Working Draft"
-            },
+            }
         ,   recTrackStatus: ["FPWD", "WD", "LC", "CR", "PR", "PER", "REC"]
         ,   noTrackStatus:  ["MO", "unofficial", "base", "XGR", "finding", "draft-finding"]
             
@@ -189,7 +190,7 @@ define(
                 $.each(conf.alternateFormats || [], function (i, it) {
                     if (!it.uri || !it.label) error("All alternate formats must have a uri and a label.");
                 });
-                conf.multipleAlternates = conf.alternateFormats.length > 1;
+                conf.multipleAlternates = conf.alternateFormats && conf.alternateFormats.length > 1;
                 conf.alternatesHTML = utils.joinAnd(conf.alternateFormats, function (alt) {
                     return "<a href='" + alt.uri + "'>" + alt.label + "</a>";
                 });
@@ -204,9 +205,17 @@ define(
                                            !conf.isNoTrack && !conf.noRecTrack);
                 if (conf.isTagFinding) conf.showPreviousVersion = conf.previousPublishDate ? true : false;
                 conf.notYetRec = (conf.isRecTrack && conf.specStatus !== "REC");
-                conf.prependW3C = !(conf.specStatus === "unofficial" || conf.isTagFinding);
+                conf.isRec = (conf.isRecTrack && conf.specStatus === "REC");
+                conf.isUnofficial = conf.specStatus === "unofficial";
+                conf.prependW3C = !conf.isUnofficial;
                 conf.isXGR = (conf.specStatus === "XGR");
                 // configuration done — yay!
+                
+                // insert into document
+                var h = Handlebars.compile(headersTmpl)
+                ,   out = h(conf)
+                ;
+                $("body", doc).prepend($(out));
 
                 msg.pub("end", "w3c/headers");
                 cb();
@@ -214,190 +223,3 @@ define(
         };
     }
 );
-
-makeNormalHeaders:    function () {
-
-    var header = "<div class='head'><p>";
-    if (this.specStatus != "unofficial")
-        header += "<a href='http://www.w3.org/'><img width='72' height='48' src='http://www.w3.org/Icons/w3c_home' alt='W3C'/></a>";
-    if (this.specStatus == 'XGR') 
-        header += "<a href='http://www.w3.org/2005/Incubator/XGR/'><img alt='W3C Incubator Report' src='http://www.w3.org/2005/Incubator/images/XGR' height='48' width='160'/></a>";
-    if ( this.doRDFa ) {
-        header +=
-            "<h1 property='dcterms:title' class='title' id='title'>" + this.title + "</h1>" ;
-        if (this.subtitle) {
-            header += "<h2 property='bibo:subtitle' id='subtitle'>" + this.subtitle + "</h2>" ;
-        }
-        header +=
-            "<h2 property='dcterms:issued' datatype='xsd:dateTime' content='" + this._ISODate(this.publishDate) + "'>" + (this.specStatus == "unofficial" ? "" : "W3C ") + 
-            this.status2text[this.specStatus] + " " + this._humanDate(this.publishDate) + "</h2><dl>";
-    } else {
-        header +=
-            "<h1 class='title' id='title'>" + this.title + "</h1>" ;
-        if (this.subtitle) {
-            header += "<h2 id='subtitle'>" + this.subtitle + "</h2>" ;
-        }
-        header +=
-            "<h2>" + (this.specStatus == "unofficial" ? "" : "W3C ") + 
-            this.status2text[this.specStatus] + " " + this._humanDate(this.publishDate) + "</h2><dl>";
-    }
-    if (!this.isNoTrack) {
-        header += "<dt>This version:</dt><dd><a href='" + thisVersion + "'>" + thisVersion + "</a></dd>" + 
-                  "<dt>Latest published version:</dt><dd>" + latestVersion + "</dd>"; 
-        if (this.edDraftURI) {
-            header += "<dt>Latest editor's draft:</dt><dd><a href='" + this.edDraftURI + "'>" + this.edDraftURI + "</a></dd>";
-        }
-    }
-    if (this.testSuiteURI) {
-     header += "<dt>Test suite:</dt><dd><a href='" + this.testSuiteURI + "'>" + this.testSuiteURI + "</a></dd>";
-    }
-    if (this.implementationReportURI) {
-     header += "<dt>Implementation report:</dt><dd><a href='" + this.implementationReportURI + "'>" + this.implementationReportURI + "</a></dd>";
-    }
-    if (this.specStatus != "FPWD" && this.specStatus != "FPWD-NOTE" &&
-        !this.isNoTrack) {
-        if (!this.prevED) {
-            header += "<dt>Previous version:</dt><dd>" + prevVersion + "</dd>";
-        } else {
-            header += "<dt>Previous editor's draft:</dt><dd>" + prevED + "</dd>";
-        }
-    }
-
-    if (this.prevRecShortname) {
-        var prevRecURI = "http://www.w3.org/TR/" + this.prevRecShortname + "/";
-        header += "<dt>Latest recommendation:</dt><dd>" + 
-            '<a href="' + prevRecURI + '">' + prevRecURI + "</a></dd>";
-    }
-
-    if(this.editors.length == 0) {
-        header += "<dt>" + "Editor" + ":</dt>";
-        error("There must be at least one editor.");
-    }
-    header += this.showPeople("Editor", this.editors);
-    header += this.showPeople("Author", this.authors);
-    header += "</dl>";
-
-    if (this.errata) {
-        header += '<p>Please refer to the <a href="' + this.errata + '">errata</a> for this document, which may include some normative corrections.</p>';
-    }
-
-    if (this.alternateFormats.length > 0) {
-        var len = this.alternateFormats.length ;
-        if (len == 1) {
-            header += '<p>This document is also available in this non-normative format: ';
-        } else {
-            header += '<p>This document is also available in these non-normative formats: ';
-        }
-        for (var f = 0; f < len; f++) {
-            if (f > 0) {
-                if ( len == 2) {
-                    header += ' ';
-                } else {
-                    header += ', ' ;
-                }
-                if (f == len - 1) {
-                    header += 'and ';
-                }
-            }
-            var ref = this.alternateFormats[f] ;
-            header += "<a href='" + ref.uri + "'>" + ref.label + "</a>" ;
-        }
-        header += '.</p>';
-    }
-
-    if (this.specStatus == "REC")
-        header += '<p>The English version of this specification is the only normative version. Non-normative <a href="http://www.w3.org/Consortium/Translation/">translations</a> may also be available.</p>';
-
-    if (this.specStatus == "unofficial") {
-        var copyright;
-        if (this.additionalCopyrightHolders) copyright = "<p class='copyright'>" + this.additionalCopyrightHolders + "</p>";
-        else if (this.overrideCopyright) copyright = this.overrideCopyright;
-        else copyright = "<p class='copyright'>This document is licensed under a <a class='subfoot' href='http://creativecommons.org/licenses/by/3.0/' rel='license'>Creative Commons Attribution 3.0 License</a>.</p>";
-        header += copyright;
-    }
-    else {
-        if (this.overrideCopyright) {
-            header += this.overrideCopyright;
-        }
-        else {
-            header += "<p class='copyright'>";
-            if (this.doRDFa) {
-                header += "<a rel='license' href='http://www.w3.org/Consortium/Legal/ipr-notice#Copyright'>Copyright</a> &copy; ";
-            }
-            else {
-                header += "<a href='http://www.w3.org/Consortium/Legal/ipr-notice#Copyright'>Copyright</a> &copy; ";
-            }
-            if (this.copyrightStart) {
-                header += this.copyrightStart + '-';
-            }
-            header += this.publishDate.getFullYear();
-            if (this.additionalCopyrightHolders) header += " " + this.additionalCopyrightHolders + " &amp;";
-            if (this.doRDFa) {
-                header += " <span rel='dcterms:publisher'><span typeof='foaf:Organization'><a rel='foaf:homepage' property='foaf:name' content='World Wide Web Consortium' href='http://www.w3.org/'><acronym title='World Wide Web Consortium'>W3C</acronym></a><sup>&reg;</sup></span></span> ";
-            } else {
-                header += " <a href='http://www.w3.org/'><acronym title='World Wide Web Consortium'>W3C</acronym></a><sup>&reg;</sup> ";
-            }
-            header +=
-                "(<a href='http://www.csail.mit.edu/'><acronym title='Massachusetts Institute of Technology'>MIT</acronym></a>, " +
-                "<a href='http://www.ercim.eu/'><acronym title='European Research Consortium for Informatics and Mathematics'>ERCIM</acronym></a>, " +
-                "<a href='http://www.keio.ac.jp/'>Keio</a>), All Rights Reserved. " +
-                "W3C <a href='http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer'>liability</a>, " + 
-                "<a href='http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks'>trademark</a> and " +
-                "<a href='http://www.w3.org/Consortium/Legal/copyright-documents'>document use</a> rules apply.</p>";
-
-        }
-    }
-    header += "<hr/></div>";
-    return header;
-},
-
-makeHeaders:    function () {
-    var header;
-    if (this.specStatus === "finding" || this.specStatus === "draft-finding") header = this.makeTAGHeaders();
-    else header = this.makeNormalHeaders();
-    var tmp = sn.element("div");
-    tmp.innerHTML = header;
-    document.body.insertBefore(tmp.firstChild, document.body.firstChild);
-},
-
-
-
-makeTAGHeaders:    function () {
-    var base = "http://www.w3.org/2001/tag/doc/",
-        latestVersion = base + this.shortName,
-        thisVersion = latestVersion + "-" + this._concatDate(this.publishDate, "-"),
-        header = "<div class='head'><p>" +
-                 "<a href='http://www.w3.org/'><img width='72' height='48' src='http://www.w3.org/Icons/w3c_home' alt='W3C'/></a>";
-    header += "<h1 class='title' id='title'>" + this.title + "</h1>";
-    if (this.subtitle) header += "<h2 id='subtitle'>" + this.subtitle + "</h2>";
-    header += "<h2>" + this.status2text[this.specStatus] + " " + this._humanDate(this.publishDate) + "</h2><dl>";
-    header += "<dt>This version:</dt><dd><a href='" + thisVersion + "'>" + thisVersion + "</a></dd>\n" + 
-              "<dt>Latest published version:</dt><dd><a href='" + latestVersion + "'>" + latestVersion + "</a></dd>"; 
-    if (this.edDraftURI) {
-        header += "<dt>Latest editor's draft:</dt><dd><a href='" + this.edDraftURI + "'>" + this.edDraftURI + "</a></dd>";
-    }
-    if (this.previousPublishDate) {
-        var prevVersion = latestVersion + "-" + this._concatDate(this.previousPublishDate, "-");
-        header += "<dt>Previous version:</dt><dd><a href='" + prevVersion + "'>" + prevVersion + "</a></dd>"; 
-    }
-    if(this.editors.length == 0) {
-        header += "<dt>" + "Editor" + ":</dt>";
-        error("There must be at least one editor.");
-    }
-    header += this.showPeople("Editor", this.editors);
-    header += this.showPeople("Author", this.authors);
-    header += "</dl><p class='copyright'>";
-    header += 
-        "<a href='http://www.w3.org/Consortium/Legal/ipr-notice#Copyright'>Copyright</a> &copy; " ;
-    if (this.copyrightStart && this.copyrightStart != this.publishDate.getFullYear()) header += this.copyrightStart + '-';
-    header += this.publishDate.getFullYear();
-    header += " <a href='http://www.w3.org/'><acronym title='World Wide Web Consortium'>W3C</acronym></a><sup>&reg;</sup> " +
-        "(<a href='http://www.csail.mit.edu/'><acronym title='Massachusetts Institute of Technology'>MIT</acronym></a>, " +
-        "<a href='http://www.ercim.eu/'><acronym title='European Research Consortium for Informatics and Mathematics'>ERCIM</acronym></a>, " +
-        "<a href='http://www.keio.ac.jp/'>Keio</a>), All Rights Reserved. " +
-        "W3C <a href='http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer'>liability</a>, " + 
-        "<a href='http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks'>trademark</a> and " +
-        "<a href='http://www.w3.org/Consortium/Legal/copyright-documents'>document use</a> rules apply." +
-        "</p><hr/></div>";
-    return header;
-},

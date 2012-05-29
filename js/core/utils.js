@@ -15,8 +15,11 @@ define(
             }
 
             // --- STRING HELPERS -----------------------------------------------------------------------------
-            // XXX
+            // Takes an array and returns a string that separates each of its items with the proper commas and
+            // "and". The second argument is a mapping function that can convert the items before they are 
+            // joined
         ,   joinAnd:    function (arr, mapper) {
+                if (!arr) return "";
                 mapper = mapper || function (ret) { return ret; };
                 var ret = "";
                 if (arr.length <= 1) return arr.join("");

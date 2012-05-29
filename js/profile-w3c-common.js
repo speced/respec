@@ -6,6 +6,7 @@ define([
         ,   "core/default-root-attr"
         ,   "core/style"
         ,   "w3c/style"
+        ,   "w3c/headers"
         ,   "w3c/abstract"
         ,   "w3c/legacy"
         ,   "w3c/unhtml5"
