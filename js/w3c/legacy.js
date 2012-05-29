@@ -170,7 +170,6 @@ berjon.respec.prototype = {
     },
 
     run:    function () {
-        // document.body.style.display = "none";
         try {
             this.extractConfig();
             if (respecConfig.preProcess) {
@@ -223,11 +222,9 @@ berjon.respec.prototype = {
             shortcut.add("Esc", function () { obj.hideSaveOptions(); });
         }
         catch (e) {
-            // document.body.style.display = "inherit";
             error("Processing error: " + e);
             if (typeof(console) != "undefined" && console.log) console.log(e);
         }
-        // document.body.style.display = "inherit";
     },
 
     makeRDFa:  function () {
@@ -452,10 +449,6 @@ berjon.respec.prototype = {
         return str;
     },
 
-    toDiffHTMLSource:  function () {
-
-    },
-
     toDiffHTML:  function () {
         // create a diff marked version against the previousURI
         // strategy - open a window in which there is a form with the
@@ -530,36 +523,10 @@ berjon.respec.prototype = {
         for (var k in cfg) this[k] = cfg[k];
     },
 
-    _getMetaFor:    function (iProp, def) {
-        var meta = document.querySelector("head > meta[itemprop='" + iProp + "']");
-        if (meta) return meta.getAttribute("content");
-        else      return def;
-    },
-
-    _getDateFor:    function (sel) {
-        var el = document.querySelector(sel);
-        if (el) {
-            var val = el.getAttribute('datetime');
-            return new Date(val.substr(0, 4), val.substr(5, 2), val.substr(8, 2));
-        }
-        else {
-            return new Date();
-        }
-    },
-
     // --- W3C BASICS -----------------------------------------------------------------------------------------
     makeTemplate:   function () {
-        this.rootAttr();
         this.makeSotD();
         this.makeConformance();
-    },
-
-    rootAttr:   function () {
-        if (this.doRDFa) {
-            document.documentElement.setAttribute("about", "");
-            document.documentElement.setAttribute("property", "dcterms:language");
-            document.documentElement.setAttribute("content", "en");
-        }
     },
 
     doTransforms: function() {
@@ -610,85 +577,6 @@ berjon.respec.prototype = {
                 div.innerHTML = content ;
             }
         }
-    },
-
-    // single function used to display people information for editors,
-    // authors, etc (fjh 2009-12-04)
-
-    showPeople: function(name, people) {
-        var header = "";
-
-        if (people.length == 0) return header;
-        var re = '' ;
-        var rp = '' ;
-        var rl = '' ;
-        var rt = '' ;
-        var rm = '' ;
-        var rn = '' ;
-        var rwu = '' ;
-        var rpu = '' ;
-        if ( this.doRDFa ) {
-            if ( name == 'Editor' ) {
-                re = " rel='bibo:editor'";
-                rn = " property='foaf:name'";
-                rm = " rel='foaf:mbox'";
-                rp = " typeof='foaf:Person'";
-                rwu = " rel='foaf:workplaceHomepage'";
-                rpu = " rel='foaf:homepage'";
-            } else if (name == 'Author' ) {
-                re = " rel='dcterms:contributor'";
-                rn = " property='foaf:name'";
-                rm = " rel='foaf:mbox'";
-                rp = " typeof='foaf:Person'";
-                rwu = " rel='foaf:workplaceHomepage'";
-                rpu = " rel='foaf:homepage'";
-            }
-        }
-
-        if (people.length > 1) {
-            header += "<dt" + rl  + ">" + name + "s:</dt>";
-        } else {
-            header += "<dt>" + name + ":</dt>";
-        }
-
-
-        for (var i = 0; i < people.length; i++) {
-            var pers = people[i];
-            if (this.doRDFa) {
-                header += "<dd" + re +"><span" + rp + ">";
-            } else {
-                header += "<dd>";
-            }
-            if (pers.url) {
-                if (this.doRDFa) {
-                    header += "<a" + rpu + rn + " content='" + pers.name +  "' href='" + pers.url + "'>" + pers.name + "</a>";
-                } else {
-                    header += "<a href='" + pers.url + "'>"+ pers.name + "</a>";
-                }
-            } else {
-                header += "<span" + rn + ">" + pers.name + "</span>";
-            }
-            if (pers.company) {
-                header += ", ";
-                if (pers.companyURL) {
-                    header += "<a" + rwu + " href='" + pers.companyURL + "'>" + pers.company + "</a>";
-                } else {
-                    header += pers.company;
-                }
-            }
-            if (pers.mailto) {
-                header += ", ";
-                header += " <span class='ed_mailto'><a" + rm + " href='mailto:" + pers.mailto + "'>" + pers.mailto + "</a></span> ";
-            }
-            if (pers.note) {
-                header += " ( " + pers.note + " )";
-            }
-            if (this.doRDFa) {
-                header += "</span>\n";
-            }
-            header += "</dd>\n";
-        }
-        return header;
     },
 
     makeSotD:     function () {
@@ -1158,24 +1046,10 @@ berjon.respec.prototype = {
 
         var sec = document.getElementById("bp-summary");
         if(!sec) {
-//             alert("no bp-summary section");
             return;
         }
         sec.innerHTML = contents;
     },
-
-    //  <link href="section id" class="sectionRef" />
-
-//     returnObjById: function( id ) 
-//     { 
-//     if (document.getElementById) 
-//         var returnVar = document.getElementById(id); 
-//     else if (document.all) 
-//         var returnVar = document.all[id]; 
-//     else if (document.layers) 
-//         var returnVar = document.layers[id]; 
-//     return returnVar; 
-//     }, 
 
     makeSectionRefs: function () {
         var secrefs = document.querySelectorAll("a.sectionRef");
@@ -1254,20 +1128,9 @@ berjon.respec.prototype = {
         return this._lead0(date.getDate()) + " " + this._humanMonths[date.getMonth()] + " " + date.getFullYear();
     },
 
-    _ISODate:       function (date) {
-        return "" + date.getUTCFullYear() +'-'+ this._lead0(date.getUTCMonth() + 1)+'-' + this._lead0(date.getUTCDate()) +'T'+this._lead0(date.getUTCHours())+':'+this._lead0(date.getUTCMinutes()) +":"+this._lead0(date.getUTCSeconds())+'+0000';
-    },
-
     _parseDate:    function (str) {
         return new Date(str.substr(0, 4), (str.substr(5, 2) - 1), str.substr(8, 2));
     },
-
-    _parseLastModified:    function (str) {
-        if (!str) return new Date();
-        return new Date(Date.parse(str));
-        // return new Date(str.substr(6, 4), (str.substr(0, 2) - 1), str.substr(3, 2));
-    },
-
 
     _lead0:    function (str) {
         str = "" + str;
@@ -2437,14 +2300,6 @@ berjon.WebIDLProcessor.prototype = {
     }
 })();
 // EOXPATH
-
-// XXX
-// not sure if this is really used anymore, check
-function dbg (obj) {
-    var str = "";
-    for (var k in obj) str += k + "=" + obj[k] + "\n";
-    alert("DUMP\n" + str);
-}
 
 define([], function () {
     return {

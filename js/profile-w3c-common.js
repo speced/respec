@@ -39,17 +39,21 @@ define([
 //  X    "core/style",
 //  X    "w3c/style",
 //      "w3c/headers",
+//      conformance
 //      "core/data-transform",
 //      "core/data-include",
 //      "core/inlines",
 //      "core/webidl",
 //      "core/examples",
+//      best practices
 //      "w3c/bibref",
 //      "core/figure",
 //      "core/structure",
+//      informative
+//      section refs
 //      "w3c/structure",
 //      "core/dfn",
-//      "core/rdfa", (note that we've deleted support here and there since it was spread everywhere — reinstate)
+//      "core/rdfa", (note that we've deleted support here and there since it was spread everywhere — reinstate from original v1)
 //  X    "w3c/unhtml5",
 //  X    "core/remove-respec"
 
