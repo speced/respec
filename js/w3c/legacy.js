@@ -91,7 +91,7 @@ berjon.respec.prototype = {
 
     isLocal:    false,
 
-    loadAndRun:    function () {
+    loadAndRun:    function (cb, msg) {
         var scripts = document.querySelectorAll("script[src]");
         // XXX clean this up
         var rs, base = "";
@@ -151,6 +151,8 @@ berjon.respec.prototype = {
                             "x":    "http://www.w3.org/1999/xhtml"
                         }, document);
                         obj.run();
+                        msg.pub("end", "w3c/legacy");
+                        cb();
                     }
                 };
                 head.appendChild(sel);
@@ -162,11 +164,12 @@ berjon.respec.prototype = {
                 "x":    "http://www.w3.org/1999/xhtml"
             }, document);
             obj.run();
+            msg.pub("end", "w3c/legacy");
+            cb();
         }
     },
 
     run:    function () {
-        document.body.style.display = "none";
         try {
             this.extractConfig();
             if (respecConfig.preProcess) {
@@ -219,11 +222,9 @@ berjon.respec.prototype = {
             shortcut.add("Esc", function () { obj.hideSaveOptions(); });
         }
         catch (e) {
-            document.body.style.display = "inherit";
             error("Processing error: " + e);
             if (typeof(console) != "undefined" && console.log) console.log(e);
         }
-        document.body.style.display = "inherit";
     },
 
     makeRDFa:  function () {
@@ -448,10 +449,6 @@ berjon.respec.prototype = {
         return str;
     },
 
-    toDiffHTMLSource:  function () {
-
-    },
-
     toDiffHTML:  function () {
         // create a diff marked version against the previousURI
         // strategy - open a window in which there is a form with the
@@ -511,79 +508,25 @@ berjon.respec.prototype = {
 
     // --- METADATA -------------------------------------------------------
     extractConfig:    function () {
-        this.title = document.title;
-        var cfg;
-        if (respecConfig) cfg = respecConfig;
-        else              cfg = {};
-        // defaulting
-        if (!cfg.specStatus) cfg.specStatus = "ED";
-        // the below is experimental, use this if it fails:
-        // cfg.publishDate = new Date();
-        if (!cfg.publishDate) {
-            cfg.publishDate = this._parseLastModified(document.lastModified);
-        }
-        else {
-            cfg.publishDate = this._parseDate(cfg.publishDate);
-        }
-        if (cfg.previousPublishDate) cfg.previousPublishDate = this._parseDate(cfg.previousPublishDate);
-        if (cfg.previousPublishDate && ! cfg.previousMaturity && cfg.specStatus.indexOf("finding") === -1) 
-            error("Previous date is set, but not previousMaturity");
+        var cfg = respecConfig || {};
         if (cfg.lcEnd) cfg.lcEnd = this._parseDate(cfg.lcEnd);
         if (cfg.crEnd) cfg.crEnd = this._parseDate(cfg.crEnd);
         if (cfg.specStatus == "LC" && !cfg.lcEnd) error("If specStatus is set to LC, then lcEnd must be defined");
         if (cfg.specStatus == "CR" && !cfg.crEnd) error("If specStatus is set to CR, then crEnd must be defined");
-        if (!cfg.editors) cfg.editors = [];
-        if (!cfg.authors) cfg.authors = [];
-        if (!cfg.alternateFormats) cfg.alternateFormats = [];
         if (cfg.inlineCSS === undefined) cfg.inlineCSS = true;
         if (!cfg.noIDLSorting) cfg.noIDLSorting = false;
         if (cfg.noIDLIn === undefined) cfg.noIDLIn = true;
         if (cfg.tocIntroductory === undefined) cfg.tocIntroductory = false;
         if (!cfg.maxTocLevel) cfg.maxTocLevel = 0;
         if (!cfg.diffTool) cfg.diffTool = 'http://www5.aptest.com/standards/htmldiff/htmldiff.pl';
-        if (!cfg.noRecTrack) cfg.noRecTrack = false;
         if (!cfg.doRDFa) cfg.doRDFa = false;
         for (var k in cfg) this[k] = cfg[k];
-        this.isRecTrack = cfg.noRecTrack ? false : this.recTrackStatus.indexOf(this.specStatus) >= 0;
-        this.isNoTrack = this.noTrackStatus.indexOf(this.specStatus) >= 0;
-        // this.specStatus = this._getMetaFor("http://berjon.com/prop/spec-status", "ED");
-        // this.shortName = this._getMetaFor("http://berjon.com/prop/short-name", "xxx-xxx");
-        // this.publishDate = this._getDateFor("head > time[itemprop='http://berjon.com/prop/publish-date']");
-        // this.prevPublishDate = this._getDateFor("head > time[itemprop='http://berjon.com/prop/previous-publish-date']");
-    },
-
-    _getMetaFor:    function (iProp, def) {
-        var meta = document.querySelector("head > meta[itemprop='" + iProp + "']");
-        if (meta) return meta.getAttribute("content");
-        else      return def;
-    },
-
-    _getDateFor:    function (sel) {
-        var el = document.querySelector(sel);
-        if (el) {
-            var val = el.getAttribute('datetime');
-            return new Date(val.substr(0, 4), val.substr(5, 2), val.substr(8, 2));
-        }
-        else {
-            return new Date();
-        }
     },
 
     // --- W3C BASICS -----------------------------------------------------------------------------------------
     makeTemplate:   function () {
-        this.rootAttr();
-        this.makeHeaders();
-        this.makeAbstract();
         this.makeSotD();
         this.makeConformance();
-    },
-
-    rootAttr:   function () {
-        if (this.doRDFa) {
-            document.documentElement.setAttribute("about", "");
-            document.documentElement.setAttribute("property", "dcterms:language");
-            document.documentElement.setAttribute("content", "en");
-        }
     },
 
     doTransforms: function() {
@@ -634,307 +577,6 @@ berjon.respec.prototype = {
                 div.innerHTML = content ;
             }
         }
-    },
-
-    // single function used to display people information for editors,
-    // authors, etc (fjh 2009-12-04)
-
-    showPeople: function(name, people) {
-        var header = "";
-
-        if (people.length == 0) return header;
-        var re = '' ;
-        var rp = '' ;
-        var rl = '' ;
-        var rt = '' ;
-        var rm = '' ;
-        var rn = '' ;
-        var rwu = '' ;
-        var rpu = '' ;
-        if ( this.doRDFa ) {
-            if ( name == 'Editor' ) {
-                re = " rel='bibo:editor'";
-                rn = " property='foaf:name'";
-                rm = " rel='foaf:mbox'";
-                rp = " typeof='foaf:Person'";
-                rwu = " rel='foaf:workplaceHomepage'";
-                rpu = " rel='foaf:homepage'";
-            } else if (name == 'Author' ) {
-                re = " rel='dcterms:contributor'";
-                rn = " property='foaf:name'";
-                rm = " rel='foaf:mbox'";
-                rp = " typeof='foaf:Person'";
-                rwu = " rel='foaf:workplaceHomepage'";
-                rpu = " rel='foaf:homepage'";
-            }
-        }
-
-        if (people.length > 1) {
-            header += "<dt" + rl  + ">" + name + "s:</dt>";
-        } else {
-            header += "<dt>" + name + ":</dt>";
-        }
-
-
-        for (var i = 0; i < people.length; i++) {
-            var pers = people[i];
-            if (this.doRDFa) {
-                header += "<dd" + re +"><span" + rp + ">";
-            } else {
-                header += "<dd>";
-            }
-            if (pers.url) {
-                if (this.doRDFa) {
-                    header += "<a" + rpu + rn + " content='" + pers.name +  "' href='" + pers.url + "'>" + pers.name + "</a>";
-                } else {
-                    header += "<a href='" + pers.url + "'>"+ pers.name + "</a>";
-                }
-            } else {
-                header += "<span" + rn + ">" + pers.name + "</span>";
-            }
-            if (pers.company) {
-                header += ", ";
-                if (pers.companyURL) {
-                    header += "<a" + rwu + " href='" + pers.companyURL + "'>" + pers.company + "</a>";
-                } else {
-                    header += pers.company;
-                }
-            }
-            if (pers.mailto) {
-                header += ", ";
-                header += " <span class='ed_mailto'><a" + rm + " href='mailto:" + pers.mailto + "'>" + pers.mailto + "</a></span> ";
-            }
-            if (pers.note) {
-                header += " ( " + pers.note + " )";
-            }
-            if (this.doRDFa) {
-                header += "</span>\n";
-            }
-            header += "</dd>\n";
-        }
-        return header;
-    },
-
-    makeTAGHeaders:    function () {
-        var base = "http://www.w3.org/2001/tag/doc/",
-            latestVersion = base + this.shortName,
-            thisVersion = latestVersion + "-" + this._concatDate(this.publishDate, "-"),
-            header = "<div class='head'><p>" +
-                     "<a href='http://www.w3.org/'><img width='72' height='48' src='http://www.w3.org/Icons/w3c_home' alt='W3C'/></a>";
-        header += "<h1 class='title' id='title'>" + this.title + "</h1>";
-        if (this.subtitle) header += "<h2 id='subtitle'>" + this.subtitle + "</h2>";
-        header += "<h2>" + this.status2text[this.specStatus] + " " + this._humanDate(this.publishDate) + "</h2><dl>";
-        header += "<dt>This version:</dt><dd><a href='" + thisVersion + "'>" + thisVersion + "</a></dd>\n" + 
-                  "<dt>Latest published version:</dt><dd><a href='" + latestVersion + "'>" + latestVersion + "</a></dd>"; 
-        if (this.edDraftURI) {
-            header += "<dt>Latest editor's draft:</dt><dd><a href='" + this.edDraftURI + "'>" + this.edDraftURI + "</a></dd>";
-        }
-        if (this.previousPublishDate) {
-            var prevVersion = latestVersion + "-" + this._concatDate(this.previousPublishDate, "-");
-            header += "<dt>Previous version:</dt><dd><a href='" + prevVersion + "'>" + prevVersion + "</a></dd>"; 
-        }
-        if(this.editors.length == 0) {
-            header += "<dt>" + "Editor" + ":</dt>";
-            error("There must be at least one editor.");
-        }
-        header += this.showPeople("Editor", this.editors);
-        header += this.showPeople("Author", this.authors);
-        header += "</dl><p class='copyright'>";
-        header += 
-            "<a href='http://www.w3.org/Consortium/Legal/ipr-notice#Copyright'>Copyright</a> &copy; " ;
-        if (this.copyrightStart && this.copyrightStart != this.publishDate.getFullYear()) header += this.copyrightStart + '-';
-        header += this.publishDate.getFullYear();
-        header += " <a href='http://www.w3.org/'><acronym title='World Wide Web Consortium'>W3C</acronym></a><sup>&reg;</sup> " +
-            "(<a href='http://www.csail.mit.edu/'><acronym title='Massachusetts Institute of Technology'>MIT</acronym></a>, " +
-            "<a href='http://www.ercim.eu/'><acronym title='European Research Consortium for Informatics and Mathematics'>ERCIM</acronym></a>, " +
-            "<a href='http://www.keio.ac.jp/'>Keio</a>), All Rights Reserved. " +
-            "W3C <a href='http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer'>liability</a>, " + 
-            "<a href='http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks'>trademark</a> and " +
-            "<a href='http://www.w3.org/Consortium/Legal/copyright-documents'>document use</a> rules apply." +
-            "</p><hr/></div>";
-        return header;
-    },
-
-    makeNormalHeaders:    function () {
-        var mat = (this.status2maturity[this.specStatus]) ? this.status2maturity[this.specStatus] : this.specStatus;
-        var thisVersion = "http://www.w3.org/TR/" + this.publishDate.getFullYear() + "/" + mat + "-" +
-                          this.shortName + "-" + this._concatDate(this.publishDate) + "/";
-        if (this.specStatus == "ED") thisVersion = this.edDraftURI;
-        var latestVersion, prevVersion;
-        if (this.previousPublishDate) {
-            var pmat = (this.status2maturity[this.previousMaturity]) ? this.status2maturity[this.previousMaturity] : this.previousMaturity;
-            if (!this.previousURI) {
-                this.previousURI = "http://www.w3.org/TR/" + this.previousPublishDate.getFullYear() + "/" + pmat + "-" + this.shortName + "-" + this._concatDate(this.previousPublishDate) + "/";
-            }
-            if (this.doRDFa) {
-                prevVersion = "<a rel='dcterms:replaces' href='" + this.previousURI + "'>" + this.previousURI + "</a>";
-            } else {
-                prevVersion = "<a href='" + this.previousURI + "'>" + this.previousURI + "</a>";
-            }
-            // var latestURI = "http://www.w3.org/TR/" + this.shortName + "/";
-            // latestVersion = "<a href='" + latestURI + "'>" + latestURI + "</a>";
-        }
-        else {
-            prevVersion = "none";
-            // latestVersion = "none";
-        }
-        var latestURI = "http://www.w3.org/TR/" + this.shortName + "/";
-        latestVersion = "<a href='" + latestURI + "'>" + latestURI + "</a>";
-        var header = "<div class='head'><p>";
-        if (this.specStatus != "unofficial")
-            header += "<a href='http://www.w3.org/'><img width='72' height='48' src='http://www.w3.org/Icons/w3c_home' alt='W3C'/></a>";
-        if (this.specStatus == 'XGR') 
-            header += "<a href='http://www.w3.org/2005/Incubator/XGR/'><img alt='W3C Incubator Report' src='http://www.w3.org/2005/Incubator/images/XGR' height='48' width='160'/></a>";
-        if ( this.doRDFa ) {
-            header +=
-                "<h1 property='dcterms:title' class='title' id='title'>" + this.title + "</h1>" ;
-            if (this.subtitle) {
-                header += "<h2 property='bibo:subtitle' id='subtitle'>" + this.subtitle + "</h2>" ;
-            }
-            header +=
-                "<h2 property='dcterms:issued' datatype='xsd:dateTime' content='" + this._ISODate(this.publishDate) + "'>" + (this.specStatus == "unofficial" ? "" : "W3C ") + 
-                this.status2text[this.specStatus] + " " + this._humanDate(this.publishDate) + "</h2><dl>";
-        } else {
-            header +=
-                "<h1 class='title' id='title'>" + this.title + "</h1>" ;
-            if (this.subtitle) {
-                header += "<h2 id='subtitle'>" + this.subtitle + "</h2>" ;
-            }
-            header +=
-                "<h2>" + (this.specStatus == "unofficial" ? "" : "W3C ") + 
-                this.status2text[this.specStatus] + " " + this._humanDate(this.publishDate) + "</h2><dl>";
-        }
-        if (!this.isNoTrack) {
-            header += "<dt>This version:</dt><dd><a href='" + thisVersion + "'>" + thisVersion + "</a></dd>" + 
-                      "<dt>Latest published version:</dt><dd>" + latestVersion + "</dd>"; 
-            if (this.edDraftURI) {
-                header += "<dt>Latest editor's draft:</dt><dd><a href='" + this.edDraftURI + "'>" + this.edDraftURI + "</a></dd>";
-            }
-        }
-        if (this.testSuiteURI) {
-        	header += "<dt>Test suite:</dt><dd><a href='" + this.testSuiteURI + "'>" + this.testSuiteURI + "</a></dd>";
-        }
-        if (this.implementationReportURI) {
-        	header += "<dt>Implementation report:</dt><dd><a href='" + this.implementationReportURI + "'>" + this.implementationReportURI + "</a></dd>";
-        }
-        if (this.specStatus != "FPWD" && this.specStatus != "FPWD-NOTE" &&
-            !this.isNoTrack) {
-            if (!this.prevED) {
-                header += "<dt>Previous version:</dt><dd>" + prevVersion + "</dd>";
-            } else {
-                header += "<dt>Previous editor's draft:</dt><dd>" + prevED + "</dd>";
-            }
-        }
-
-        if (this.prevRecShortname) {
-            var prevRecURI = "http://www.w3.org/TR/" + this.prevRecShortname + "/";
-            header += "<dt>Latest recommendation:</dt><dd>" + 
-                '<a href="' + prevRecURI + '">' + prevRecURI + "</a></dd>";
-        }
-
-        if(this.editors.length == 0) {
-            header += "<dt>" + "Editor" + ":</dt>";
-            error("There must be at least one editor.");
-        }
-        header += this.showPeople("Editor", this.editors);
-        header += this.showPeople("Author", this.authors);
-        header += "</dl>";
-
-        if (this.errata) {
-            header += '<p>Please refer to the <a href="' + this.errata + '">errata</a> for this document, which may include some normative corrections.</p>';
-        }
-
-        if (this.alternateFormats.length > 0) {
-            var len = this.alternateFormats.length ;
-            if (len == 1) {
-                header += '<p>This document is also available in this non-normative format: ';
-            } else {
-                header += '<p>This document is also available in these non-normative formats: ';
-            }
-            for (var f = 0; f < len; f++) {
-                if (f > 0) {
-                    if ( len == 2) {
-                        header += ' ';
-                    } else {
-                        header += ', ' ;
-                    }
-                    if (f == len - 1) {
-                        header += 'and ';
-                    }
-                }
-                var ref = this.alternateFormats[f] ;
-                header += "<a href='" + ref.uri + "'>" + ref.label + "</a>" ;
-            }
-            header += '.</p>';
-        }
-
-        if (this.specStatus == "REC")
-            header += '<p>The English version of this specification is the only normative version. Non-normative <a href="http://www.w3.org/Consortium/Translation/">translations</a> may also be available.</p>';
-
-        if (this.specStatus == "unofficial") {
-            var copyright;
-            if (this.additionalCopyrightHolders) copyright = "<p class='copyright'>" + this.additionalCopyrightHolders + "</p>";
-            else if (this.overrideCopyright) copyright = this.overrideCopyright;
-            else copyright = "<p class='copyright'>This document is licensed under a <a class='subfoot' href='http://creativecommons.org/licenses/by/3.0/' rel='license'>Creative Commons Attribution 3.0 License</a>.</p>";
-            header += copyright;
-        }
-        else {
-            if (this.overrideCopyright) {
-                header += this.overrideCopyright;
-            }
-            else {
-                header += "<p class='copyright'>";
-                if (this.doRDFa) {
-                    header += "<a rel='license' href='http://www.w3.org/Consortium/Legal/ipr-notice#Copyright'>Copyright</a> &copy; ";
-                }
-                else {
-                    header += "<a href='http://www.w3.org/Consortium/Legal/ipr-notice#Copyright'>Copyright</a> &copy; ";
-                }
-                if (this.copyrightStart) {
-                    header += this.copyrightStart + '-';
-                }
-                header += this.publishDate.getFullYear();
-                if (this.additionalCopyrightHolders) header += " " + this.additionalCopyrightHolders + " &amp;";
-                if (this.doRDFa) {
-                    header += " <span rel='dcterms:publisher'><span typeof='foaf:Organization'><a rel='foaf:homepage' property='foaf:name' content='World Wide Web Consortium' href='http://www.w3.org/'><acronym title='World Wide Web Consortium'>W3C</acronym></a><sup>&reg;</sup></span></span> ";
-                } else {
-                    header += " <a href='http://www.w3.org/'><acronym title='World Wide Web Consortium'>W3C</acronym></a><sup>&reg;</sup> ";
-                }
-                header +=
-                    "(<a href='http://www.csail.mit.edu/'><acronym title='Massachusetts Institute of Technology'>MIT</acronym></a>, " +
-                    "<a href='http://www.ercim.eu/'><acronym title='European Research Consortium for Informatics and Mathematics'>ERCIM</acronym></a>, " +
-                    "<a href='http://www.keio.ac.jp/'>Keio</a>), All Rights Reserved. " +
-                    "W3C <a href='http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer'>liability</a>, " + 
-                    "<a href='http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks'>trademark</a> and " +
-                    "<a href='http://www.w3.org/Consortium/Legal/copyright-documents'>document use</a> rules apply.</p>";
-
-            }
-        }
-        header += "<hr/></div>";
-        return header;
-    },
-
-    makeHeaders:    function () {
-        var header;
-        if (this.specStatus === "finding" || this.specStatus === "draft-finding") header = this.makeTAGHeaders();
-        else header = this.makeNormalHeaders();
-        var tmp = sn.element("div");
-        tmp.innerHTML = header;
-        document.body.insertBefore(tmp.firstChild, document.body.firstChild);
-    },
-
-    makeAbstract:    function () {
-        var abs = document.getElementById("abstract");
-        if (!abs) error("Document must have one element with ID 'abstract'");
-        if (abs.getElementsByTagName("p").length === 0) {
-            // warning("The abstract section should contain a <p> element rather than text directly. Attempting to insert one.");
-            var p = sn.element("p");
-            sn.copyChildren(abs, p);
-            abs.appendChild(p);
-        }
-        var h2 = sn.element("h2", {}, null, "Abstract");
-        abs.insertBefore(h2, abs.firstChild);
-        sn.addClass(abs, "introductory");
     },
 
     makeSotD:     function () {
@@ -1404,24 +1046,10 @@ berjon.respec.prototype = {
 
         var sec = document.getElementById("bp-summary");
         if(!sec) {
-//             alert("no bp-summary section");
             return;
         }
         sec.innerHTML = contents;
     },
-
-    //  <link href="section id" class="sectionRef" />
-
-//     returnObjById: function( id ) 
-//     { 
-//     if (document.getElementById) 
-//         var returnVar = document.getElementById(id); 
-//     else if (document.all) 
-//         var returnVar = document.all[id]; 
-//     else if (document.layers) 
-//         var returnVar = document.layers[id]; 
-//     return returnVar; 
-//     }, 
 
     makeSectionRefs: function () {
         var secrefs = document.querySelectorAll("a.sectionRef");
@@ -1500,25 +1128,9 @@ berjon.respec.prototype = {
         return this._lead0(date.getDate()) + " " + this._humanMonths[date.getMonth()] + " " + date.getFullYear();
     },
 
-    _concatDate:    function (date, sep) {
-        if (!sep) sep = "";
-        return "" + date.getFullYear() + sep + this._lead0(date.getMonth() + 1) + sep + this._lead0(date.getDate());
-    },
-
-    _ISODate:       function (date) {
-        return "" + date.getUTCFullYear() +'-'+ this._lead0(date.getUTCMonth() + 1)+'-' + this._lead0(date.getUTCDate()) +'T'+this._lead0(date.getUTCHours())+':'+this._lead0(date.getUTCMinutes()) +":"+this._lead0(date.getUTCSeconds())+'+0000';
-    },
-
     _parseDate:    function (str) {
         return new Date(str.substr(0, 4), (str.substr(5, 2) - 1), str.substr(8, 2));
     },
-
-    _parseLastModified:    function (str) {
-        if (!str) return new Date();
-        return new Date(Date.parse(str));
-        // return new Date(str.substr(6, 4), (str.substr(0, 2) - 1), str.substr(3, 2));
-    },
-
 
     _lead0:    function (str) {
         str = "" + str;
@@ -2689,21 +2301,11 @@ berjon.WebIDLProcessor.prototype = {
 })();
 // EOXPATH
 
-// XXX
-// not sure if this is really used anymore, check
-function dbg (obj) {
-    var str = "";
-    for (var k in obj) str += k + "=" + obj[k] + "\n";
-    alert("DUMP\n" + str);
-}
-
 define([], function () {
     return {
         run:    function (conf, doc, cb, msg) {
             msg.pub("start", "w3c/legacy");
-            (new berjon.respec()).loadAndRun();
-            msg.pub("end", "w3c/legacy");
-            cb();
+            (new berjon.respec()).loadAndRun(cb, msg);
         }
     };
     

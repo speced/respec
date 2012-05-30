@@ -2,7 +2,7 @@
 // Module w3c/style
 // Inserts a link to the appropriate W3C style for the specification's maturity level.
 // CONFIGURATION
-//  - specStatus: the short code for the specification's maturity level or type
+//  - specStatus: the short code for the specification's maturity level or type (required)
 
 define(
     ["core/utils"],
@@ -28,7 +28,6 @@ define(
                 else {
                     css = "http://www.w3.org/StyleSheets/TR/W3C-" + statStyle;
                 }
-                console.log(css);
                 utils.linkCSS(doc, css);
                 msg.pub("end", "w3c/style");
                 cb();

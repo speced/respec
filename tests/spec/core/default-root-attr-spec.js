@@ -2,6 +2,7 @@ describe("Core — Default Root Attribute", function () {
     var MAXOUT = 5000
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
+        ,   specStatus: "WD"
         };
     it("should apply en and ltr defaults", function () {
         var doc;
