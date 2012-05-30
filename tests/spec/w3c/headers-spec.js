@@ -1,15 +1,16 @@
 function loadWithConfig (conf, check) {
     var config = [];
     for (var k in conf) {
-        config.push(k + "=" + ($.isArray(conf[k]) ? JSON.stringify(conf[k]) : conf[k]));
+        config.push(k + "=" + encodeURI($.isArray(conf[k]) ? JSON.stringify(conf[k]) : conf[k]).replace(/=/g, "%3D"));
     }
-    var $ifr = $("<iframe width='800' height='200' style='display: none' src='spec/core/simple.html?" + config.join(";") + "'></iframe>")
+    var $ifr = $("<iframe width='800' height='200' style='display: none'></iframe>")
     ,   loaded = false
     ,   MAXOUT = 5000
     ,   incr = function (ev) {
             if (ev.data && ev.data.topic == "end-all") loaded = true, console.log("OK");
         }
     ;
+    $ifr.attr("src", "spec/core/simple.html?" + config.join(";"));
     runs(function () {
         window.addEventListener("message", incr, false);
         $ifr.appendTo($("body"));
@@ -161,19 +162,47 @@ describe("W3C — Headers", function () {
         });
     });
 
-    //  - additionalCopyrightHolders
-        // use markup
-        // check with one, unofficial
-        // check with one, other
-    //  - overrideCopyright
-        // check none and with one
-    //  - copyrightStart
-        // check with one equalling current year
-        // check without
-        // check with one in the past
-    //  - prevRecShortname
-    //  - prevRecURI
-        // check none
-        // check short name
-        // check uri
+    // additionalCopyrightHolders
+    it("should take additionalCopyrightHolders into account", function () {
+        loadWithConfig({ specStatus: "REC", additionalCopyrightHolders: "XXX" }, function ($ifr) {
+                expect($(".head .copyright", $ifr[0].contentDocument).text()).toMatch(/XXX\s+&\s+W3C/);
+        });
+        loadWithConfig({ specStatus: "unofficial", additionalCopyrightHolders: "XXX" }, function ($ifr) {
+                expect($(".head .copyright", $ifr[0].contentDocument).text()).toEqual("XXX");
+        });
+        loadWithConfig({ specStatus: "REC", additionalCopyrightHolders: "<span class='test'>XXX</span>" }, function ($ifr) {
+                expect($(".head .copyright .test", $ifr[0].contentDocument).text()).toEqual("XXX");
+        });
+    });
+
+    // overrideCopyright
+    it("should take overrideCopyright into account", function () {
+        loadWithConfig({ overrideCopyright: "<p class='copyright2'>XXX</p>" }, function ($ifr) {
+                expect($(".head .copyright", $ifr[0].contentDocument).length).toEqual(0);
+                expect($(".head .copyright2", $ifr[0].contentDocument).length).toEqual(1);
+                expect($(".head .copyright2", $ifr[0].contentDocument).text()).toEqual("XXX");
+        });
+    });
+
+    // copyrightStart
+    it("should take copyrightStart into account", function () {
+        loadWithConfig({ publishDate: "2012-03-15", copyrightStart: "1977" }, function ($ifr) {
+                expect($(".head .copyright", $ifr[0].contentDocument).text()).toMatch(/1977-2012/);
+        });
+        loadWithConfig({ publishDate: "2012-03-15", copyrightStart: "2012" }, function ($ifr) {
+                expect($(".head .copyright", $ifr[0].contentDocument).text()).not.toMatch(/2012-2012/);
+        });
+    });
+
+    // prevRecShortname & prevRecURI
+    it("should take prevRecShortname and prevRecURI into account", function () {
+        loadWithConfig({ prevRecURI: "URI" }, function ($ifr) {
+                expect($("dt:contains('Latest recommendation:')", $ifr[0].contentDocument).next("dd").text()).toEqual("URI");
+        });
+        loadWithConfig({ prevRecShortname: "SN" }, function ($ifr) {
+                expect($("dt:contains('Latest recommendation:')", $ifr[0].contentDocument).next("dd").text())
+                    .toEqual("http://www.w3.org/TR/SN");
+        });
+    });
+
 });

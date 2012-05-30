@@ -16,10 +16,10 @@ define(
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/override-configuration");
                 if (location.search) {
-                    var confs = decodeURI(location.search.replace(/^\?/, "")).split(";");
+                    var confs = location.search.replace(/^\?/, "").split(";");
                     for (var i = 0, n = confs.length; i < n; i++) {
                         var items = confs[i].split("=", 2);
-                        var k = items[0], v = items[1];
+                        var k = decodeURI(items[0]), v = decodeURI(items[1]).replace(/%3D/g, "=");
                         // we could process more types here, as needed
                         if (v === "true") v = true;
                         else if (v === "false") v = false;
