@@ -1,0 +1,109 @@
+<div class='head'>
+  <p>
+    {{#if prependW3C}}
+      <a href='http://www.w3.org/'><img width='72' height='48' src='http://www.w3.org/Icons/w3c_home' alt='W3C'/></a>
+    {{/if}}
+    {{#if isXGR}}
+      <a href='http://www.w3.org/2005/Incubator/XGR/'><img alt='W3C Incubator Report' src='http://www.w3.org/2005/Incubator/images/XGR' height='48' width='160'/></a>
+    {{/if}}
+  </p>
+  <h1 class='title' id='title'>{{title}}</h1>
+  {{#if subtitle}}
+    <h2 id='subtitle'>{{subtitle}}</h2>
+  {{/if}}
+  <h2>{{#if prependW3C}}W3C {{/if}}{{longStatus}} {{publishHumanDate}}</h2>
+  <dl>
+    {{#unless isNoTrack}}
+      <dt>This version:</dt>
+      <dd><a href='{{thisVersion}}'>{{thisVersion}}</a></dd>
+      <dt>Latest published version:</dt>
+      <dd>{{#if latestVersion}}<a href='{{latestVersion}}'>{{latestVersion}}</a>{{else}}none{{/if}}</dd>
+      {{#if edDraftURI}}
+        <dt>Latest editor's draft:</dt>
+        <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
+      {{/if}}
+    {{/unless}}
+    {{#if testSuiteURI}}
+      <dt>Test suite:</dt>
+      <dd><a href='{{testSuiteURI}}'>{{testSuiteURI}}</a></dd>
+    {{/if}}
+    {{#if implementationReportURI}}
+      <dt>Implementation report:</dt>
+      <dd><a href='{{implementationReportURI}}'>{{implementationReportURI}}</a></dd>
+    {{/if}}
+    {{#if isED}}
+      {{#if prevED}}
+        <dt>Previous editor's draft:</dt>
+        <dd><a href='{{prevED}}'>{{prevED}}</a></dd>
+      {{/if}}
+    {{/if}}
+    {{#if showPreviousVersion}}
+      <dt>Previous version:</dt>
+      <dd><a href='{{prevVersion}}'>{{prevVersion}}</a></dd>
+    {{/if}}
+    {{#if prevRecURI}}
+      <dt>Latest recommendation:</dt>
+      <dd><a href='{{prevRecURI}}'>{{prevRecURI}}</a></dd>
+    {{/if}}
+    <dt>Editor{{#if multipleEditors}}s{{/if}}:</dt>
+    {{showPeople editors}}
+    {{#if authors}}
+      <dt>Author{{#if multipleAuthors}}s{{/if}}:</dt>
+      {{showPeople authors}}
+    {{/if}}
+  </dl>
+  {{#if errata}}
+    <p>
+      Please refer to the <a href="{{errata}}">errata</a> for this document, which may include some normative corrections.
+    </p>
+  {{/if}}
+  {{#if alternateFormats}}
+    <p>
+      {{#if multipleAlternates}}
+        This document is also available in these non-normative formats: 
+      {{else}}
+        This document is also available in this non-normative format: 
+      {{/if}}
+      {{{alternatesHTML}}}
+    </p>
+  {{/if}}
+  {{#if isRec}}
+    <p>
+      The English version of this specification is the only normative version. Non-normative 
+      <a href="http://www.w3.org/Consortium/Translation/">translations</a> may also be available.
+    </p>
+  {{/if}}
+  {{#if isUnofficial}}
+    {{#if additionalCopyrightHolders}}
+      <p class='copyright'>{{{additionalCopyrightHolders}}}</p>
+    {{else}}
+      {{#if overrideCopyright}}
+        {{{overrideCopyright}}}
+      {{else}}
+        <p class='copyright'>
+          This document is licensed under a 
+          <a class='subfoot' href='http://creativecommons.org/licenses/by/3.0/' rel='license'>Creative Commons 
+          Attribution 3.0 License</a>.
+        </p>
+      {{/if}}
+    {{/if}}
+  {{else}}
+    {{#if overrideCopyright}}
+      {{{overrideCopyright}}}
+    {{else}}
+      <p class='copyright'>
+        <a href='http://www.w3.org/Consortium/Legal/ipr-notice#Copyright'>Copyright</a> &copy; 
+        {{#if copyrightStart}}{{copyrightStart}}-{{/if}}{{publishYear}}
+        {{#if additionalCopyrightHolders}} {{{additionalCopyrightHolders}}} &amp;{{/if}}
+        <a href='http://www.w3.org/'><acronym title='World Wide Web Consortium'>W3C</acronym></a><sup>&reg;</sup> 
+        <a href='http://www.csail.mit.edu/'><acronym title='Massachusetts Institute of Technology'>MIT</acronym></a>
+        <a href='http://www.ercim.eu/'><acronym title='European Research Consortium for Informatics and Mathematics'>ERCIM</acronym></a>
+        <a href='http://www.keio.ac.jp/'>Keio</a>), All Rights Reserved.
+        W3C <a href='http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer'>liability</a>,
+        <a href='http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks'>trademark</a> and
+        <a href='http://www.w3.org/Consortium/Legal/copyright-documents'>document use</a> rules apply.
+      </p>
+    {{/if}}
+  {{/if}}
+  <hr/>
+</div>";

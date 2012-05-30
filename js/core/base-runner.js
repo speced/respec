@@ -37,10 +37,10 @@ if (window.console) {
         console.log("ERROR: " + details);
     });
     respecEvents.sub("start", function (details) {
-        console.log(">>> began: " + details);
+        if (respecConfig && respecConfig.trace) console.log(">>> began: " + details);
     });
     respecEvents.sub("end", function (details) {
-        console.log("<<< finished: " + details);
+        if (respecConfig && respecConfig.trace) console.log("<<< finished: " + details);
     });
     respecEvents.sub("start-all", function () {
         console.log("RESPEC PROCESSING STARTED");
@@ -84,14 +84,16 @@ define(
                 
                 var pipeline;
                 pipeline = function () {
-                    if (!plugs.length) return;
+                    if (!plugs.length) {
+                        if (respecConfig.afterEnd) respecConfig.afterEnd.apply(GLOBAL, Array.prototype.slice.call(arguments));
+                        respecEvents.pub("end", "core/base-runner");
+                        return;
+                    };
                     var plug = plugs.shift();
                     if (plug.run) plug.run.call(plug, respecConfig, document, pipeline, respecEvents);
                     else pipeline();
                 };
                 pipeline();
-                if (respecConfig.afterEnd) respecConfig.afterEnd.apply(GLOBAL, Array.prototype.slice.call(arguments));
-                respecEvents.pub("end", "core/base-runner");
             }
         };
     }

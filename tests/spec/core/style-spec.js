@@ -2,6 +2,7 @@ describe("Core — Style", function () {
     var MAXOUT = 5000
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
+        ,   specStatus: "WD"
         };
     it("should have included a style element", function () {
         var doc;

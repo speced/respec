@@ -2,6 +2,7 @@ describe("Core — Remove ReSpec", function () {
     var MAXOUT = 5000
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
+        ,   specStatus: "WD"
         };
     it("should have removed all artefacts", function () {
         var doc;
