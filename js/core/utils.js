@@ -22,14 +22,14 @@ define(
                 if (!arr || !arr.length) return "";
                 mapper = mapper || function (ret) { return ret; };
                 var ret = "";
-                if (arr.length === 1) return mapper(arr[0]);
+                if (arr.length === 1) return mapper(arr[0], 0);
                 for (var i = 0, n = arr.length; i < n; i++) {
                     if (i > 0) {
                         if (n === 2) ret += ' ';
                         else         ret += ', ';
                         if (i == n - 1) ret += 'and ';
                     }
-                    ret += mapper(arr[i]);
+                    ret += mapper(arr[i], i);
                 }
                 return ret;
             }

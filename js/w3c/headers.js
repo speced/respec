@@ -40,12 +40,25 @@
 //      Probably obsolete.
 //  - xgrDocShortName: short name (used in the URI) for the XG report itself, defaults to the name
 //      of the group. Probably obsolete.
+//  - wg: the name of the WG in charge of the document. This may be an array in which case wgURI
+//      and wgPatentURI need to be arrays as well, of the same length and in the same order
+//  - wgURI: the URI to the group's page, or an array of such
+//  - wgPatentURI: the URI to the group's patent information page, or an array of such. NOTE: this
+//      is VERY IMPORTANT information to provide and get right, do not just paste this without checking
+//      that you're doing it right
+//  - wgPublicList: the name of the mailing list where discussion takes place. Note that this cannot
+//      be an array as it is assumed that there is a single list to discuss the document, even if it
+//      is handled by multiple groups
+//  - charterDisclosureURI: used for IGs (when publishing IG-NOTEs) to provide a link to the IPR commitment
+//      defined in their charter.
+//  - addPatentNote: used to add patent-related information to the SotD, for instance if there's an open
+//      PAG on the document.
 
 
 
 define(
-    ["core/utils", "text!w3c/templates/headers.html"],
-    function (utils, headersTmpl) {
+    ["core/utils", "text!w3c/templates/headers.html", "text!w3c/templates/sotd.html"],
+    function (utils, headersTmpl, sotdTmpl) {
         Handlebars.registerHelper("showPeople", function (items) {
             var ret = "";
             for (var i = 0, n = items.length; i < n; i++) {
@@ -113,6 +126,7 @@ define(
             }
         ,   recTrackStatus: ["FPWD", "WD", "LC", "CR", "PR", "PER", "REC"]
         ,   noTrackStatus:  ["MO", "unofficial", "base", "XGR", "finding", "draft-finding"]
+        ,   precededByAn:   ["ED", "XGR", "IG-NOTE"]
             
         ,   run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/headers");
@@ -132,6 +146,7 @@ define(
                 conf.publishHumanDate = utils.humanDate(conf.publishDate);
                 conf.isNoTrack = $.inArray(conf.specStatus, this.noTrackStatus) >= 0;
                 conf.isRecTrack = conf.noRecTrack ? false : $.inArray(conf.specStatus, this.recTrackStatus) >= 0;
+                conf.anOrA = $.inArray(conf.specStatus, this.precededByAn) >= 0 ? "an" : "a";
                 conf.isTagFinding = conf.specStatus === "finding" || conf.specStatus === "draft-finding";
                 if (!conf.shortName) msg.pub("error", "Missing required configuration: shortName");
                 if (!conf.edDraftURI) {
@@ -206,20 +221,48 @@ define(
                 if (conf.isTagFinding) conf.showPreviousVersion = conf.previousPublishDate ? true : false;
                 conf.notYetRec = (conf.isRecTrack && conf.specStatus !== "REC");
                 conf.isRec = (conf.isRecTrack && conf.specStatus === "REC");
+                conf.notRec = (conf.specStatus !== "REC");
                 conf.isUnofficial = conf.specStatus === "unofficial";
                 conf.prependW3C = !conf.isUnofficial;
                 conf.isXGR = (conf.specStatus === "XGR");
                 conf.isED = (conf.specStatus === "ED");
+                conf.isLC = (conf.specStatus === "LC");
+                conf.isCR = (conf.specStatus === "CR");
+                conf.isMO = (conf.specStatus === "MO");
+                conf.isIGNote = (conf.specStatus === "IG-NOTE");
                 // configuration done — yay!
                 
                 // insert into document
-                var h = Handlebars.compile(headersTmpl)
-                ,   out = h(conf)
-                ;
-                $("body", doc).prepend($(out));
+                $("body", doc).prepend($((Handlebars.compile(headersTmpl))(conf)));
 
-                // XXX handle SotD here as well
-                //  (but not conformance)
+                // handle SotD
+                var $sotd = $("#sotd");
+                if ((!conf.isNoTrack || conf.isTagFinding || conf.isXGR) && !$sotd.length)
+                    msg.pub("error", "A custom SotD paragraph is required for your type of document.");
+                conf.sotdCustomParagraph = $("<div></div>").append($sotd).html();
+                if ($.isArray(conf.wg)) {
+                    conf.multipleWGs = conf.wg.length > 1;
+                    conf.wgHTML = utils.joinAnd($.isArray(conf.wg) ? conf.wg : [conf.wg], function (wg, idx) {
+                        return "<a href='" + conf.wgURI[idx] + "'>" + wg + "</a>";
+                    });
+                    var pats = [];
+                    for (var i = 0, n = conf.wg.length; i < n; i++) {
+                        pats.push("<a href='" + conf.wgPatentURI[i] + "' rel='disclosure'>" + conf.wg[i] + "</a>")
+                    }
+                    conf.wgPatentHTML = pats.join(", ");
+                }
+                else {
+                    conf.multipleWGs = false;
+                    conf.wgHTML = "<a href='" + conf.wgURI + "'>" + conf.wg + "</a>";
+                }
+                if (conf.specStatus === "LC" && !conf.lcEnd) msg.pub("error", "Status is LC but no lcEnd is specified");
+                conf.humanLCEnd = utils.humanDate(conf.lcEnd || "");
+                if (conf.specStatus === "CR" && !conf.crEnd) msg.pub("error", "Status is CR but no crEnd is specified");
+                conf.humanCREnd = utils.humanDate(conf.crEnd || "");
+                conf.recNotExpected = (!conf.isRecTrack && conf.maturity == "WD");
+                if (conf.isIGNote && !conf.charterDisclosureURI)
+                    msg.pub("error", "IG-NOTEs must link to charter's disclosure section using charterDisclosureURI");
+                $((Handlebars.compile(sotdTmpl))(conf)).insertAfter($("#abstract"));
 
                 msg.pub("end", "w3c/headers");
                 cb();
