@@ -968,7 +968,8 @@ berjon.respec.prototype = {
             var df = w.makeMarkup();
             idl.parentNode.replaceChild(df, idl);
             if (inf.type == "interface" || inf.type == "exception" || 
-                inf.type == "dictionary" || inf.type == "typedef" || inf.type == "callback") infNames.push(inf.id);
+                inf.type == "dictionary" || inf.type == "typedef" || 
+                inf.type == "callback" || inf.type == "enum") infNames.push(inf.id);
         }
         document.normalize();
         var ants = document.querySelectorAll("a:not([href])");
@@ -1041,6 +1042,7 @@ berjon.WebIDLProcessor.prototype = {
         else if (str.indexOf("exception") == 0) this.exception(def, str, idl);
         else if (str.indexOf("dictionary") == 0) this.dictionary(def, str, idl);
         else if (str.indexOf("callback") == 0) this.callback(def, str, idl);
+        else if (str.indexOf("enum") == 0) this.enum(def, str, idl);
         else if (str.indexOf("typedef") == 0)   this.typedef(def, str, idl);
         else if (/\bimplements\b/.test(str))     this.implements(def, str, idl);
         else    error("Expected definition, got: " + str);
@@ -1104,6 +1106,19 @@ berjon.WebIDLProcessor.prototype = {
         }
         else {
             error("Expected callback, got: " + str);
+        }
+        return inf;
+    },
+
+    enum:  function (inf, str, idl) {
+        inf.type = "enum";
+        var match = /^\s*enum\s+([A-Za-z][A-Za-z0-9]*)\s*$/.exec(str);
+        if (match) {
+            inf.id = match[1];
+            inf.refId = this._id(inf.id);
+        }
+        else {
+            error("Expected enum, got: " + str);
         }
         return inf;
     },
@@ -1180,6 +1195,9 @@ berjon.WebIDLProcessor.prototype = {
             }
             else if (obj.type == "callback") {
                 mem = this.callbackMember(dt, dd);
+            }
+            else if (obj.type == "enum") {
+                mem = this.enumMember(dt, dd);
             }
             else {
                 mem = this.interfaceMember(dt, dd);
@@ -1273,7 +1291,7 @@ berjon.WebIDLProcessor.prototype = {
         }
 
         // NOTHING MATCHED
-        error("Expected callback member, got: " + str);
+        error("Expected dictionary member, got: " + str);
     },
 
     callbackMember:    function (dt, dd) {
@@ -1315,7 +1333,21 @@ berjon.WebIDLProcessor.prototype = {
         }
 
         // NOTHING MATCHED
-        error("Expected dictionary member, got: " + str);
+        error("Expected callback member, got: " + str);
+    },
+
+    enumMember:    function (dt, dd) {
+        var mem = { children: [] };
+        var str = this._norm(dt.textContent);
+        mem.description = sn.documentFragment();
+        sn.copyChildren(dd, mem.description);
+        str = this.parseExtendedAttributes(str, mem);
+
+        // MEMBER
+        mem.type = "member";
+        mem.id = str;
+        mem.refId = this._id(mem.id);
+        return mem;
     },
 
     interfaceMember:    function (dt, dd) {
@@ -1725,6 +1757,25 @@ berjon.WebIDLProcessor.prototype = {
             return df;
         }
 
+        else if (obj.type == "enum") {
+            var df = sn.documentFragment();
+            var curLnk = "widl-" + obj.refId + "-";
+            var things = obj.children;
+            if (things.length == 0) return df;
+
+            var sec = sn.element("table", { "class": "simple" }, df);
+            sn.element("tr", {}, sec, [sn.element("th", { colspan: 2 }, null, [sn.text("Enumeration description")])]);
+            for (var j = 0; j < things.length; j++) {
+                var it = things[j];
+                var tr = sn.element("tr", {}, sec)
+                ,   td1 = sn.element("td", {}, tr)
+                ;
+                sn.element("code", {}, td1, it.id);
+                sn.element("td", {}, tr, [it.description]);
+            }
+            return df;
+        }
+
         else if (obj.type == "interface") {
             var df = sn.documentFragment();
             var curLnk = "widl-" + obj.refId + "-";
@@ -1784,32 +1835,6 @@ berjon.WebIDLProcessor.prototype = {
                         else {
                             sn.element("div", {}, desc, [sn.element("em", {}, null, "No parameters.")]);
                         }
-                        // if (it.raises.length) {
-                        //     var table = sn.element("table", { "class": "exceptions" }, desc);
-                        //     var tr = sn.element("tr", {}, table);
-                        //     ["Exception", "Description"].forEach(function (tit) { sn.element("th", {}, tr, tit); });
-                        //     for (var k = 0; k < it.raises.length; k++) {
-                        //         var exc = it.raises[k];
-                        //         var tr = sn.element("tr", {}, table);
-                        //         sn.element("td", { "class": "excName" }, tr, [sn.element("a", {}, null, exc.id)]);
-                        //         var dtd = sn.element("td", { "class": "excDesc" }, tr);
-                        //         if (exc.type == "simple") {
-                        //             dtd.appendChild(exc.description);
-                        //         }
-                        //         else {
-                        //             var ctab = sn.element("table", { "class": "exceptionCodes" }, dtd );
-                        //             for (var m = 0; m < exc.description.length; m++) {
-                        //                 var cd = exc.description[m];
-                        //                 var tr = sn.element("tr", {}, ctab);
-                        //                 sn.element("td", { "class": "excCodeName" }, tr, [sn.element("code", {}, null, cd.id)]);
-                        //                 sn.element("td", { "class": "excCodeDesc" }, tr, [cd.description]);
-                        //             }
-                        //         }
-                        //     }
-                        // }
-                        // else {
-                        //     sn.element("div", {}, desc, [sn.element("em", {}, null, "No exceptions.")]);
-                        // }
                         var reDiv = sn.element("div", {}, desc);
                         sn.element("em", {}, reDiv, "Return type: ");
                         var matched = /^sequence<(.+)>$/.exec(it.datatype);
@@ -1840,37 +1865,6 @@ berjon.WebIDLProcessor.prototype = {
                         }
                         if (it.readonly) sn.text(", readonly", dt);
                         if (it.nullable) sn.text(", nullable", dt);
-
-                        // if (it.raises.length) {
-                        //     var table = sn.element("table", { "class": "exceptions" }, desc);
-                        //     var tr = sn.element("tr", {}, table);
-                        //     ["Exception", "On Get", "On Set", "Description"].forEach(function (tit) { sn.element("th", {}, tr, tit); });
-                        //     for (var k = 0; k < it.raises.length; k++) {
-                        //         var exc = it.raises[k];
-                        //         var tr = sn.element("tr", {}, table);
-                        //         sn.element("td", { "class": "excName" }, tr, [sn.element("a", {}, null, exc.id)]);
-                        //         ["onGet", "onSet"].forEach(function (gs) {
-                        //             if (exc[gs]) sn.element("td", { "class": "excGetSetTrue" }, tr, "\u2714");
-                        //             else         sn.element("td", { "class": "excGetSetFalse" }, tr, "\u2718");
-                        //         });
-                        //         var dtd = sn.element("td", { "class": "excDesc" }, tr);
-                        //         if (exc.type == "simple") {
-                        //             dtd.appendChild(exc.description);
-                        //         }
-                        //         else {
-                        //             var ctab = sn.element("table", { "class": "exceptionCodes" }, dtd );
-                        //             for (var m = 0; m < exc.description.length; m++) {
-                        //                 var cd = exc.description[m];
-                        //                 var tr = sn.element("tr", {}, ctab);
-                        //                 sn.element("td", { "class": "excCodeName" }, tr, [sn.element("code", {}, null, cd.id)]);
-                        //                 sn.element("td", { "class": "excCodeDesc" }, tr, [cd.description]);
-                        //             }
-                        //         }
-                        //     }
-                        // }
-                        // else {
-                        //     sn.element("div", {}, desc, [sn.element("em", {}, null, "No exceptions.")]);
-                        // }
                     }
                     else if (type == "constant") {
                         sn.text(" of type ", dt);
@@ -2036,6 +2030,21 @@ berjon.WebIDLProcessor.prototype = {
                                     })
                               .join(", ");
             str += ");</span>\n";
+            return str;
+        }
+        else if (obj.type == "enum") {
+            var str = "<span class='idlEnum' id='idl-def-" + obj.refId + "'>";
+            if (obj.extendedAttributes) str += this._idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>]\n";
+            str += this._idn(indent) + "enum <span class='idlEnumID'>" + obj.id + "</span> {\n";
+
+            var curLnk = "widl-" + obj.refId + "-";
+            for (var i = 0; i < obj.children.length; i++) {
+                var ch = obj.children[i];
+                str += this._idn(indent + 1) + '"<span class="idlEnumItem">' + ch.id + '</span>"'
+                if (i < obj.children.length - 1) str += ","
+                str += "\n";
+            }
+            str += this._idn(indent) + "};</span>\n";
             return str;
         }
     },
