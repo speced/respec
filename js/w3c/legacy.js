@@ -169,10 +169,6 @@ berjon.respec.prototype = {
         try {
             this.extractConfig();
 
-            // This is done REALLY early in case the transform ends up
-            // needing to include something
-            this.doTransforms() ;
-
             // This is done early so that if other data gets embedded it will be 
             // processed
             this.includeFiles();
@@ -507,30 +503,6 @@ berjon.respec.prototype = {
     },
 
     // --- W3C BASICS -----------------------------------------------------------------------------------------
-    doTransforms: function() {
-        var divs = document.querySelectorAll("[data-transform]");
-        for (var i = 0; i < divs.length; i++) {
-            var div = divs[i];
-            var content = div.innerHTML ;
-            var flist = div.getAttribute('data-transform');
-            if (flist) {
-                var methods = flist.split(/\s+/) ;
-                for (var j = 0; j < methods.length; j++) {
-                    var call = 'content = ' + methods[j] + '(this,content)' ;
-                    try {
-                        eval(call) ;
-                    } catch (e) {
-                        warning('call to ' + call + ' failed with ' + e) ;
-                    }
-                }
-                div.removeAttribute('data-transform') ;
-            }
-            if (content) {
-                div.innerHTML = content ;
-            }
-        }
-    },
-
     includeFiles: function() {
         var divs = document.querySelectorAll("[data-include]");
         for (var i = 0; i < divs.length; i++) {

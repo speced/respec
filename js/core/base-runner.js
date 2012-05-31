@@ -2,6 +2,7 @@
 // Module core/base-runner
 // The module in charge of running the whole processing pipeline.
 // CONFIGURATION:
+//  - trace: activate tracing for all modules
 //  - preProcess: an array of functions that get called (with no parameters)
 //      before anything else happens. This is not recommended and the feature is not
 //      tested. Use with care, if you know what you're doing. Chances are you really
