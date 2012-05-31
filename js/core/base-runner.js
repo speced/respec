@@ -1,4 +1,16 @@
 
+// Module core/base-runner
+// The module in charge of running the whole processing pipeline.
+// CONFIGURATION:
+//  - preProcess: an array of functions that get called (with no parameters)
+//      before anything else happens. This is not recommended and the feature is not
+//      tested. Use with care, if you know what you're doing. Chances are you really
+//      want to be using a new module with your own profile
+//  - postProcess: the same as preProcess but at the end and with the same caveats
+//  - afterEnd: a single function called at the end, after postProcess, with the
+//      same caveats. These two coexist for historical reasons; please not that they
+//      are all considered deprecated and may all be removed.
+
 (function (GLOBAL) {
     // pubsub
     // freely adapted from http://higginsforpresident.net/js/static/jq.pubsub.js
@@ -85,6 +97,9 @@ define(
                 var pipeline;
                 pipeline = function () {
                     if (!plugs.length) {
+                        if (respecConfig.postProcess) {
+                            for (var i = 0; i < respecConfig.postProcess.length; i++) respecConfig.postProcess[i].apply(this);
+                        }
                         if (respecConfig.afterEnd) respecConfig.afterEnd.apply(GLOBAL, Array.prototype.slice.call(arguments));
                         respecEvents.pub("end", "core/base-runner");
                         return;
@@ -93,6 +108,9 @@ define(
                     if (plug.run) plug.run.call(plug, respecConfig, document, pipeline, respecEvents);
                     else pipeline();
                 };
+                if (respecConfig.preProcess) {
+                    for (var i = 0; i < respecConfig.preProcess.length; i++) respecConfig.preProcess[i].apply(this);
+                }
                 pipeline();
             }
         };

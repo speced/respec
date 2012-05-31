@@ -1,6 +1,4 @@
 
-// XXX untested
-
 // Module w3c/conformance
 // Handle the conformance section properly.
 

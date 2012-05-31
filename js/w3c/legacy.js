@@ -168,9 +168,6 @@ berjon.respec.prototype = {
     run:    function () {
         try {
             this.extractConfig();
-            if (respecConfig.preProcess) {
-                for (var i = 0; i < respecConfig.preProcess.length; i++) respecConfig.preProcess[i].apply(this);
-            }
 
             // This is done REALLY early in case the transform ends up
             // needing to include something
@@ -200,10 +197,6 @@ berjon.respec.prototype = {
 
             this.makeTOC();
             this.idHeaders();
-
-            if (respecConfig.postProcess) {
-                for (var i = 0; i < respecConfig.postProcess.length; i++) respecConfig.postProcess[i].apply(this);
-            }
 
             // if (this.doMicroData) this.makeMicroData();
             if (this.doRDFa) this.makeRDFa();
