@@ -171,7 +171,6 @@ berjon.respec.prototype = {
             if (respecConfig.preProcess) {
                 for (var i = 0; i < respecConfig.preProcess.length; i++) respecConfig.preProcess[i].apply(this);
             }
-            this.makeTemplate();
 
             // This is done REALLY early in case the transform ends up
             // needing to include something
@@ -516,10 +515,6 @@ berjon.respec.prototype = {
     },
 
     // --- W3C BASICS -----------------------------------------------------------------------------------------
-    makeTemplate:   function () {
-        this.makeConformance();
-    },
-
     doTransforms: function() {
         var divs = document.querySelectorAll("[data-transform]");
         for (var i = 0; i < divs.length; i++) {
@@ -568,19 +563,6 @@ berjon.respec.prototype = {
                 div.innerHTML = content ;
             }
         }
-    },
-
-    makeConformance:    function () {
-        var confo = document.getElementById("conformance");
-        if (!confo) return;
-        var dummy = sn.element("div");
-        if (confo.childNodes.length > 0) sn.copyChildren(confo, dummy);
-        sn.element("h2", {}, confo, "Conformance");
-        confo.innerHTML += "<p>As well as sections marked as non-normative, all authoring guidelines, diagrams, examples, " +
-                           "and notes in this specification are non-normative. Everything else in this specification is " +
-                           "normative.</p>\n<p>The key words MUST, MUST NOT, REQUIRED, SHOULD, SHOULD NOT, RECOMMENDED, MAY, " +
-                           "and OPTIONAL in this specification are to be interpreted as described in [[!RFC2119]].</p>\n";
-        sn.copyChildren(dummy, confo);
     },
 
     informative:    function () {
