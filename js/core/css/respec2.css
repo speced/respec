@@ -82,7 +82,7 @@ pre.idl::before {
 /*.idlModule*/
 /*.idlModuleID*/
 /*.idlInterface*/
-.idlInterfaceID, .idlCallbackID {
+.idlInterfaceID, .idlCallbackID, .idlEnumID {
     font-weight:    bold;
     color:  #005a9c;
 }
