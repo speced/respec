@@ -506,7 +506,6 @@ berjon.respec.prototype = {
         var cfg = respecConfig || {};
         if (cfg.inlineCSS === undefined) cfg.inlineCSS = true;
         if (!cfg.noIDLSorting) cfg.noIDLSorting = false;
-        if (cfg.noIDLIn === undefined) cfg.noIDLIn = true;
         if (cfg.tocIntroductory === undefined) cfg.tocIntroductory = false;
         if (!cfg.maxTocLevel) cfg.maxTocLevel = 0;
         if (!cfg.diffTool) cfg.diffTool = 'http://www5.aptest.com/standards/htmldiff/htmldiff.pl';
@@ -944,7 +943,7 @@ berjon.respec.prototype = {
         var infNames = [];
         for (var i = 0; i < idls.length; i++) {
             var idl = idls[i];
-            var w = new berjon.WebIDLProcessor({ noIDLSorting: this.noIDLSorting, noIDLIn: this.noIDLIn });
+            var w = new berjon.WebIDLProcessor({ noIDLSorting: this.noIDLSorting });
             var inf = w.definition(idl);
             var df = w.makeMarkup();
             idl.parentNode.replaceChild(df, idl);
@@ -2095,10 +2094,9 @@ berjon.WebIDLProcessor.prototype = {
                                     var nullable = it.nullable ? "?" : "";
                                     var optional = it.optional ? "optional " : "";
                                     var arr = it.array ? "[]" : "";
-                                    var inp = obj.noIDLIn ? "" : "in ";
                                     var prm = "<span class='idlParam'>";
                                     if (it.extendedAttributes) prm += "[<span class='extAttr'>" + it.extendedAttributes + "</span>] ";
-                                    prm += inp + optional + "<span class='idlParamType'>" + obj.writeDatatype(it.datatype) + arr + nullable + "</span> " +
+                                    prm += optional + "<span class='idlParamType'>" + obj.writeDatatype(it.datatype) + arr + nullable + "</span> " +
                                     "<span class='idlParamName'>" + it.id + "</span>" +
                                     "</span>";
                                     return prm;
