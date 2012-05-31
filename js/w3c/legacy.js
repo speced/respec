@@ -1,7 +1,4 @@
 
-
-
-
 // RESPEC
 (function () {
 if (typeof(berjon) == "undefined") berjon = {};
