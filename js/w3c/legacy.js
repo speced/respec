@@ -959,7 +959,7 @@ berjon.respec.prototype = {
 
     // --- WEB IDL --------------------------------------------------------------------------------------------
     webIDL:    function () {
-        var idls = document.querySelectorAll(".idl"); // should probably check that it's not inside one
+        var idls = document.querySelectorAll(".idl");
         var infNames = [];
         for (var i = 0; i < idls.length; i++) {
             var idl = idls[i];
@@ -967,7 +967,8 @@ berjon.respec.prototype = {
             var inf = w.definition(idl);
             var df = w.makeMarkup();
             idl.parentNode.replaceChild(df, idl);
-            if (inf.type == "interface" || inf.type == "exception" || inf.type == "dictionary" || inf.type == "typedef") infNames.push(inf.id);
+            if (inf.type == "interface" || inf.type == "exception" || 
+                inf.type == "dictionary" || inf.type == "typedef" || inf.type == "callback") infNames.push(inf.id);
         }
         document.normalize();
         var ants = document.querySelectorAll("a:not([href])");
@@ -1039,6 +1040,7 @@ berjon.WebIDLProcessor.prototype = {
         if      (str.indexOf("interface") == 0 || str.indexOf("partial") === 0) this.interface(def, str, idl);
         else if (str.indexOf("exception") == 0) this.exception(def, str, idl);
         else if (str.indexOf("dictionary") == 0) this.dictionary(def, str, idl);
+        else if (str.indexOf("callback") == 0) this.callback(def, str, idl);
         else if (str.indexOf("typedef") == 0)   this.typedef(def, str, idl);
         else if (/\bimplements\b/.test(str))     this.implements(def, str, idl);
         else    error("Expected definition, got: " + str);
@@ -1077,6 +1079,31 @@ berjon.WebIDLProcessor.prototype = {
         }
         else {
             error("Expected dictionary, got: " + str);
+        }
+        return inf;
+    },
+
+    callback:  function (inf, str, idl) {
+        inf.type = "callback";
+        var match = /^\s*callback\s+([A-Za-z][A-Za-z0-9]*)\s*=\s*\b(.*?)\s*$/.exec(str);
+        if (match) {
+            inf.id = match[1];
+            inf.refId = this._id(inf.id);
+            var type = match[2];
+            inf.nullable = false;
+            if (/\?$/.test(type)) {
+                type = type.replace(/\?$/, "");
+                inf.nullable = true;
+            }
+            inf.array = false;
+            if (/\[\]$/.test(type)) {
+                type = type.replace(/\[\]$/, "");
+                inf.array = true;
+            }
+            inf.datatype = type;
+        }
+        else {
+            error("Expected callback, got: " + str);
         }
         return inf;
     },
@@ -1150,6 +1177,9 @@ berjon.WebIDLProcessor.prototype = {
             }
             else if (obj.type == "dictionary") {
                 mem = this.dictionaryMember(dt, dd);
+            }
+            else if (obj.type == "callback") {
+                mem = this.callbackMember(dt, dd);
             }
             else {
                 mem = this.interfaceMember(dt, dd);
@@ -1228,6 +1258,38 @@ berjon.WebIDLProcessor.prototype = {
             var type = match[1];
             mem.id = match[2];
             mem.refId = this._id(mem.id);
+            mem.nullable = false;
+            if (/\?$/.test(type)) {
+                type = type.replace(/\?$/, "");
+                mem.nullable = true;
+            }
+            mem.array = false;
+            if (/\[\]$/.test(type)) {
+                type = type.replace(/\[\]$/, "");
+                mem.array = true;
+            }
+            mem.datatype = type;
+            return mem;
+        }
+
+        // NOTHING MATCHED
+        error("Expected callback member, got: " + str);
+    },
+
+    callbackMember:    function (dt, dd) {
+        var mem = { children: [] };
+        var str = this._norm(dt.textContent);
+        mem.description = sn.documentFragment();
+        sn.copyChildren(dd, mem.description);
+        str = this.parseExtendedAttributes(str, mem);
+
+        // MEMBER
+        var match = /^\s*\b(.*?)\s+([A-Za-z][A-Za-z0-9]*)\s*$/.exec(str);
+        if (match) {
+            mem.type = "member";
+            var type = match[1];
+            mem.id = match[2];
+            mem.refId = this._id(mem.id);
             mem.defaultValue = match[3];
             mem.nullable = false;
             if (/\?$/.test(type)) {
@@ -1238,6 +1300,15 @@ berjon.WebIDLProcessor.prototype = {
             if (/\[\]$/.test(type)) {
                 type = type.replace(/\[\]$/, "");
                 mem.array = true;
+            }
+            mem.optional = false;
+            var pkw = type.split(/\s+/)
+            ,   idx = pkw.indexOf("optional")
+            ;
+            if (idx > -1) {
+                mem.optional = true;
+                pkw.splice(idx, 1);
+                type = pkw.join(" ");
             }
             mem.datatype = type;
             return mem;
@@ -1616,6 +1687,44 @@ berjon.WebIDLProcessor.prototype = {
             return df;
         }
 
+        else if (obj.type == "callback") {
+            var df = sn.documentFragment();
+            var curLnk = "widl-" + obj.refId + "-";
+            var things = obj.children;
+            if (things.length == 0) return df;
+
+            var sec = sn.element("section", {}, df);
+            cnt = [sn.text("Callback "),
+                   sn.element("a", { "class": "idlType" }, null, obj.id),
+                   sn.text(" Parameters")];
+            sn.element("h2", {}, sec, cnt);
+            var dl = sn.element("dl", { "class": "callback-members" }, sec);
+            for (var j = 0; j < things.length; j++) {
+                var it = things[j];
+                var dt = sn.element("dt", { id: curLnk + it.refId }, dl);
+                sn.element("code", {}, dt, it.id);
+                var desc = sn.element("dd", {}, dl, [it.description]);
+                sn.text(" of type ", dt);
+                if (it.array) sn.text("array of ", dt);
+                var span = sn.element("span", { "class": "idlMemberType" }, dt);
+                var matched = /^sequence<(.+)>$/.exec(it.datatype);
+                if (matched) {
+                    sn.text("sequence<", span);
+                    sn.element("a", {}, span, matched[1]);
+                    sn.text(">", span);
+                }
+                else {
+                    sn.element("a", {}, span, it.datatype);
+                }
+                if (it.nullable) sn.text(", nullable", dt);
+                if (it.defaultValue) {
+                    sn.text(", defaulting to ", dt);
+                    sn.element("code", {}, dt, [sn.text(it.defaultValue)]);
+                }
+            }
+            return df;
+        }
+
         else if (obj.type == "interface") {
             var df = sn.documentFragment();
             var curLnk = "widl-" + obj.refId + "-";
@@ -1903,6 +2012,32 @@ berjon.WebIDLProcessor.prototype = {
             str += this._idn(indent) + "};</span>\n";
             return str;
         }
+        else if (obj.type == "callback") {
+            var str = "<span class='idlCallback' id='idl-def-" + obj.refId + "'>";
+            if (obj.extendedAttributes) str += this._idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>]\n";
+            str += this._idn(indent) + "callback <span class='idlCallbackID'>" + obj.id + "</span>";
+            str += " = ";
+            var nullable = obj.nullable ? "?" : "";
+            var arr = obj.array ? "[]" : "";
+            str += "<span class='idlCallbackType'>" + this.writeDatatype(obj.datatype) + arr + nullable + "</span> ";
+            str += "(";
+
+            var self = this;
+            str += obj.children.map(function (it) {
+                                        var nullable = it.nullable ? "?" : "";
+                                        var optional = it.optional ? "optional " : "";
+                                        var arr = it.array ? "[]" : "";
+                                        var prm = "<span class='idlParam'>";
+                                        if (it.extendedAttributes) prm += "[<span class='extAttr'>" + it.extendedAttributes + "</span>] ";
+                                        prm += optional + "<span class='idlParamType'>" + self.writeDatatype(it.datatype) + arr + nullable + "</span> " +
+                                        "<span class='idlParamName'>" + it.id + "</span>" +
+                                        "</span>";
+                                        return prm;
+                                    })
+                              .join(", ");
+            str += ");</span>\n";
+            return str;
+        }
     },
 
     writeField:    function (attr, max, indent, curLnk) {
@@ -1947,16 +2082,6 @@ berjon.WebIDLProcessor.prototype = {
         str += "<span class='idlAttrType'>" + this.writeDatatype(attr.datatype) + arr + nullable + "</span> ";
         for (var i = 0; i < pad; i++) str += " ";
         str += "<span class='idlAttrName'><a href='#" + curLnk + attr.refId + "'>" + attr.id + "</a></span>";
-        // if (gets.length) {
-        //     str += " getraises (" +
-        //            gets.map(function (it) { return "<span class='idlRaises'><a>" + it.id + "</a></span>"; }).join(", ") +
-        //            ")";
-        // }
-        // if (sets.length) {
-        //     str += " setraises (" +
-        //            sets.map(function (it) { return "<span class='idlRaises'><a>" + it.id + "</a></span>"; }).join(", ") +
-        //            ")";
-        // }
         str += ";</span>\n";
         return str;
     },
@@ -2030,7 +2155,7 @@ berjon.WebIDLProcessor.prototype = {
 
     writeDatatype:    function (dt) {
         // if (/sequence/.test(dt) || /dict/.test(dt)) {
-            console.log(dt);
+            // console.log(dt);
         // }
         var matched = /^sequence<(.+)>$/.exec(dt);
         if (matched) {

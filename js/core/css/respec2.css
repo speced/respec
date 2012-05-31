@@ -82,7 +82,7 @@ pre.idl::before {
 /*.idlModule*/
 /*.idlModuleID*/
 /*.idlInterface*/
-.idlInterfaceID {
+.idlInterfaceID, .idlCallbackID {
     font-weight:    bold;
     color:  #005a9c;
 }
@@ -106,7 +106,7 @@ pre.idl::before {
 }
 
 /*.idlMethod*/
-.idlMethType {
+.idlMethType, .idlCallbackType {
     color:  #005a9c;
 }
 .idlMethName {

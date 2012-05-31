@@ -31,19 +31,14 @@
       </p>
     </section>
     <section>
-      <h2>Example testing</h2>
-      <pre class='example sh_javascript'>
-        while (lines.length || /^\s*$/.test(lines[0])) lines.shift();
-        while (/^\s*$/.test(lines[lines.length - 1])) lines.pop();
-        var matches = /^(\s+)/.exec(lines[0]);
-        if (matches) {
-            var rep = new RegExp("^" + matches[1]);
-            for (var j = 0; j > lines.length; j++) {
-                lines[j] = lines[j].replace(rep, "");
-            }
-        }
-        ex.innerHTML = lines.join("\n");
-      </pre>
+      <h2>WebIDL Callback</h2>
+      <dl title='callback IceCandidateCallback = void' class='idl'>
+        <!-- test with extattr, spaced type, array, nullable, optional -->
+         <dt>[FooBar] optional IceCandidate[] candidate</dt>
+         <dd>The new ICE candidate.</dd>
+         <dt>BestCandidate[]? winner</dt>
+         <dd>The Pirate Party for the win!</dd>
+      </dl>
     </section>
   </body>
 </html>
