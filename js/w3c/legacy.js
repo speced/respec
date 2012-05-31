@@ -1,7 +1,4 @@
 
-
-
-
 // RESPEC
 (function () {
 if (typeof(berjon) == "undefined") berjon = {};
@@ -509,10 +506,6 @@ berjon.respec.prototype = {
     // --- METADATA -------------------------------------------------------
     extractConfig:    function () {
         var cfg = respecConfig || {};
-        if (cfg.lcEnd) cfg.lcEnd = this._parseDate(cfg.lcEnd);
-        if (cfg.crEnd) cfg.crEnd = this._parseDate(cfg.crEnd);
-        if (cfg.specStatus == "LC" && !cfg.lcEnd) error("If specStatus is set to LC, then lcEnd must be defined");
-        if (cfg.specStatus == "CR" && !cfg.crEnd) error("If specStatus is set to CR, then crEnd must be defined");
         if (cfg.inlineCSS === undefined) cfg.inlineCSS = true;
         if (!cfg.noIDLSorting) cfg.noIDLSorting = false;
         if (cfg.noIDLIn === undefined) cfg.noIDLIn = true;
@@ -525,7 +518,6 @@ berjon.respec.prototype = {
 
     // --- W3C BASICS -----------------------------------------------------------------------------------------
     makeTemplate:   function () {
-        this.makeSotD();
         this.makeConformance();
     },
 
@@ -577,119 +569,6 @@ berjon.respec.prototype = {
                 div.innerHTML = content ;
             }
         }
-    },
-
-    makeSotD:     function () {
-        var sotd;
-        var mat = (this.status2maturity[this.specStatus]) ? this.status2maturity[this.specStatus] : this.specStatus;
-        var custom = document.getElementById("sotd");
-
-        if (this.specStatus == "unofficial") {
-            sotd = "<section id='sotd' class='introductory'><h2>Status of This Document</h2>" +
-            "<p>This document is merely a public working draft of a potential specification. It has " +
-            "no official standing of any kind and does not represent the support or consensus of any " +
-            "standards organisation.</p>";
-            if (custom) sotd += custom.innerHTML;
-            sotd += "</section>";
-        }
-        else if (this.specStatus === "finding" || this.specStatus === "draft-finding") {
-            sotd = "<section id='sotd' class='introductory'><h2>Status of This Document</h2>";
-            if (custom) sotd += custom.innerHTML;
-            else sotd += "<p style='color: red'>ReSpec does not support automated SotD generation for TAG findings, please specify one using a &lt;section> element with ID=sotd.</p>";
-            sotd += "</section>";
-        }
-        else if (this.isNoTrack) {
-            var mc = (this.specStatus == "MO") ? " member-confidential" : "";
-            sotd = "<section id='sotd' class='introductory'><h2>Status of This Document</h2>" +
-                "<p>This document is merely a W3C-internal" + mc + " document. It has no "+
-                "official standing of any kind and does not represent consensus of the W3C Membership.</p>";
-            if (custom) sotd += custom.innerHTML;
-            sotd += "</section>";
-        }
-        else {
-            var art = "a ";
-            if (this.specStatus == "ED" || this.specStatus == "XGR" || this.specStatus == "IG-NOTE") art = "an ";
-            sotd = "<section id='sotd' class='introductory'><h2>Status of This Document</h2>" +
-                "<p><em>This section describes the status of this document at the time of its publication. Other " +
-                "documents may supersede this document. A list of current W3C publications and the latest revision " +
-                "of this technical report can be found in the <a href='http://www.w3.org/TR/'>W3C technical reports " +
-                "index</a> at http://www.w3.org/TR/.</em></p>";
-            if (custom) sotd += custom.innerHTML;
-            sotd += "<p>This document was published by the ";
-            if (isArray(this.wg)) {
-                var wgs = [];
-                for (var i = 0, n = this.wg.length; i < n; i++) {
-                    wgs.push("<a href='" + this.wgURI[i] + "'>" + this.wg[i] + "</a>")
-                }
-                sotd += joinAnd(wgs);
-            }
-            else {
-                sotd += "<a href='" + this.wgURI + "'>" + this.wg + "</a>";
-            }
-            sotd += " as " + art + this.status2long[this.specStatus] + ".";
-            if (this.isRecTrack && this.specStatus != "REC") sotd += " This document is intended to become a W3C Recommendation.";
-            sotd +=
-                " If you wish to make comments regarding this document, please send them to <a href='mailto:" + this.wgPublicList + "@w3.org'>" + 
-                this.wgPublicList + "@w3.org</a> (<a href='mailto:" + this.wgPublicList + "-request@w3.org?subject=subscribe'>subscribe</a>, " +
-                "<a href='http://lists.w3.org/Archives/Public/" + this.wgPublicList + "/'>archives</a>).";
-            if (this.specStatus == "LC") sotd += " The Last Call period ends " + this._humanDate(this.lcEnd) + ".";
-            if (this.specStatus == "CR") sotd += " W3C publishes a Candidate Recommendation to indicate that the document is believed" +
-                                                 " to be stable and to encourage implementation by the developer community. This" +
-                                                 " Candidate Recommendation is expected to advance to Proposed Recommendation no earlier than " +
-                                                 this._humanDate(this.crEnd) + ".";
-            sotd += " All feedback is welcome.</p>";
-            if (this.specStatus != "REC") {
-                sotd += "<p>Publication as " + art + this.status2text[this.specStatus] + " does not imply endorsement by the W3C Membership. " +
-                    "This is a draft document and may be updated, replaced or obsoleted by other documents at any time. It is inappropriate " +
-                    "to cite this document as other than work in progress.</p>";
-            }
-            if (this.specStatus == "LC") 
-                sotd += "<p>This is a Last Call Working Draft and thus the Working Group has determined that this document has satisfied the " +
-                        "relevant technical requirements and is sufficiently stable to advance through the Technical Recommendation process.</p>";
-            if (this.specStatus != "IG-NOTE") {
-                sotd +=
-                    "<p>This document was produced by a group operating under the <a href='http://www.w3.org/Consortium/Patent-Policy-20040205/'>5 February " +
-                    "2004 W3C Patent Policy</a>.";
-            }
-
-			if (!this.isRecTrack && mat == "WD")
-				sotd += " The group does not expect this document to become a W3C Recommendation.";
-
-            if (this.specStatus != "IG-NOTE") {
-                if (isArray(this.wgPatentURI)) {
-                    sotd += " W3C maintains a public list of any patent disclosures (";
-                    var wgs = [];
-                    for (var i = 0, n = this.wg.length; i < n; i++) {
-                        wgs.push("<a href='" + this.wgPatentURI[i] + "' rel='disclosure'>" + this.wg[i] + "</a>")
-                    }
-                    sotd += wgs.join(", ") + ") ";
-                }
-                else {
-                    sotd += " W3C maintains a <a href='" + this.wgPatentURI + "' rel='disclosure'>public list of any patent disclosures</a> ";
-                }
-    			sotd +=
-                    "made in connection with the deliverables of the group; that page also includes instructions for disclosing a patent. An " +
-                    "individual who has actual knowledge of a patent which the individual believes contains " +
-                    "<a href='http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential'>Essential Claim(s)</a> must disclose the " +
-                    "information in accordance with <a href='http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure'>section " +
-                    "6 of the W3C Patent Policy</a>.</p>";
-            }
-            else {
-                // XXX
-                if (!this.charterDisclosureURI) error("IG-NOTEs must link to charter's disclosure section using charterDisclosureURI");
-                else {
-                    sotd += "<p>The disclosure obligations of the Participants of this group are described in the <a href='" + this.charterDisclosureURI + "'>charter</a>. </p>";
-                }
-            }
-            if (this.addPatentNote) sotd += "<p>" + this.addPatentNote + "</p>";
-            sotd += "</section>";
-        }
-        if (custom) custom.parentNode.removeChild(custom);
-
-        var tmp = sn.element("div");
-        tmp.innerHTML = sotd;
-        var abs = document.getElementById("abstract");
-        abs.parentNode.insertBefore(tmp.firstChild, abs.nextSibling);
     },
 
     makeConformance:    function () {
@@ -1120,21 +999,6 @@ berjon.respec.prototype = {
             catch (e) {
                 warning("There was an error with the request to load " + URI + ", probably that you're working from disk.");
             }
-    },
-
-    _humanMonths:   ["January", "February", "March", "April", "May", "June", "July",
-                     "August", "September", "October", "November", "December"],
-    _humanDate:    function (date) {
-        return this._lead0(date.getDate()) + " " + this._humanMonths[date.getMonth()] + " " + date.getFullYear();
-    },
-
-    _parseDate:    function (str) {
-        return new Date(str.substr(0, 4), (str.substr(5, 2) - 1), str.substr(8, 2));
-    },
-
-    _lead0:    function (str) {
-        str = "" + str;
-        return (str.length == 1) ? "0" + str : str;
     },
 
     _getDfnTitle:    function (dfn) {
