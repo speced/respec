@@ -10,7 +10,8 @@
 // IMPORTANT:
 //  It is unlikely that you should use this module. The odds are that unless you really
 //  know what you are doing, you should be using a dedicated module instead. This feature
-//  is not actively supported and support for it may be dropped.
+//  is not actively supported and support for it may be dropped. It is not accounted for
+//  in the test suite, and therefore could easily break.
 
 define(
     ["core/utils"],
