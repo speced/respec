@@ -12,6 +12,7 @@ function makeRSDoc (opts, cb) {
         if (opts.htmlAttrs) $(doc.documentElement).attr(opts.htmlAttrs);
         if (opts.title) $("title", doc).text(opts.title);
         $body.append(opts.abstract || $("<section id='abstract'><p>test abstract</p></section>"));
+        if (opts.body) $body.append(opts.body);
         // import into iframe
         var newNode = destDoc.importNode(doc.documentElement, true);
         destDoc.replaceChild(newNode, destDoc.documentElement);
@@ -45,13 +46,3 @@ function makeRSDoc (opts, cb) {
 function flushIframes () {
     for (var i = 0, n = iframes.length; i < n; i++) iframes[i].remove();
 }
-
-// beforeEach(function() {
-//   this.addMatchers({
-//     toBePlaying: function(expectedSong) {
-//       var player = this.actual;
-//       return player.currentlyPlayingSong === expectedSong && 
-//              player.isPlaying;
-//     }
-//   });
-// });

@@ -3,12 +3,11 @@ describe("W3C — Abstract", function () {
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
-        ,   abstract:   $("<section id='abstract'>test abstract</section>")
         };
     it("should include an h2, set the class, and wrap the content", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig }, function (rsdoc) { doc = rsdoc; });
+            makeRSDoc({ config: basicConfig, abstract: $("<section id='abstract'>test abstract</section>") }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
         runs(function () {
