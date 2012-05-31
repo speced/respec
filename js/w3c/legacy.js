@@ -51,7 +51,6 @@ berjon.respec.prototype = {
         "IG-NOTE":      "Interest Group Note",
         "Member-SUBM":  "Member Submission",
         "Team-SUBM":    "Team Submission",
-        XGR:            "Incubator Group Report",
         MO:             "Member-Only Document",
         ED:             "Editor's Draft",
         FPWD:           "Working Draft",
