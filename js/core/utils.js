@@ -81,6 +81,30 @@ define(
                     $('head', doc).append($("<link/>").attr({ rel: 'stylesheet', href: css }));
                 });
             }
+
+            // --- TRANSFORMATIONS ------------------------------------------------------------------------------
+            // Run list of transforms over content and return result.
+            // Please note that this is a legacy method that is only kept in order to maintain compatibility
+            // with RSv1. It is therefore not tested and not actively supported.
+        ,   runTransforms: function (content, flist) {
+                if (flist) {
+                    var methods = flist.split(/\s+/);
+                    for (var j = 0; j < methods.length; j++) {
+                        var meth = methods[j];
+                        if (window[meth]) {
+                            // the initial call passed |this| directly, so we keep it that way
+                            try {
+                                content = window[meth].call(this, this, content);
+                            }
+                            catch (e) {
+                                respecEvents.pub("warn", "call to " + meth + "() failed with " + e) ;
+                            }
+                        }
+                    }
+                }
+                return content;
+            },
+
         };
         return utils;
     }

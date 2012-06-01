@@ -51,7 +51,6 @@ berjon.respec.prototype = {
         "IG-NOTE":      "Interest Group Note",
         "Member-SUBM":  "Member Submission",
         "Team-SUBM":    "Team Submission",
-        XGR:            "Incubator Group Report",
         MO:             "Member-Only Document",
         ED:             "Editor's Draft",
         FPWD:           "Working Draft",
@@ -169,14 +168,6 @@ berjon.respec.prototype = {
     run:    function () {
         try {
             this.extractConfig();
-            if (respecConfig.preProcess) {
-                for (var i = 0; i < respecConfig.preProcess.length; i++) respecConfig.preProcess[i].apply(this);
-            }
-            this.makeTemplate();
-
-            // This is done REALLY early in case the transform ends up
-            // needing to include something
-            this.doTransforms() ;
 
             // This is done early so that if other data gets embedded it will be 
             // processed
@@ -202,10 +193,6 @@ berjon.respec.prototype = {
 
             this.makeTOC();
             this.idHeaders();
-
-            if (respecConfig.postProcess) {
-                for (var i = 0; i < respecConfig.postProcess.length; i++) respecConfig.postProcess[i].apply(this);
-            }
 
             // if (this.doMicroData) this.makeMicroData();
             if (this.doRDFa) this.makeRDFa();
@@ -508,7 +495,6 @@ berjon.respec.prototype = {
         var cfg = respecConfig || {};
         if (cfg.inlineCSS === undefined) cfg.inlineCSS = true;
         if (!cfg.noIDLSorting) cfg.noIDLSorting = false;
-        if (cfg.noIDLIn === undefined) cfg.noIDLIn = true;
         if (cfg.tocIntroductory === undefined) cfg.tocIntroductory = false;
         if (!cfg.maxTocLevel) cfg.maxTocLevel = 0;
         if (!cfg.diffTool) cfg.diffTool = 'http://www5.aptest.com/standards/htmldiff/htmldiff.pl';
@@ -517,34 +503,6 @@ berjon.respec.prototype = {
     },
 
     // --- W3C BASICS -----------------------------------------------------------------------------------------
-    makeTemplate:   function () {
-        this.makeConformance();
-    },
-
-    doTransforms: function() {
-        var divs = document.querySelectorAll("[data-transform]");
-        for (var i = 0; i < divs.length; i++) {
-            var div = divs[i];
-            var content = div.innerHTML ;
-            var flist = div.getAttribute('data-transform');
-            if (flist) {
-                var methods = flist.split(/\s+/) ;
-                for (var j = 0; j < methods.length; j++) {
-                    var call = 'content = ' + methods[j] + '(this,content)' ;
-                    try {
-                        eval(call) ;
-                    } catch (e) {
-                        warning('call to ' + call + ' failed with ' + e) ;
-                    }
-                }
-                div.removeAttribute('data-transform') ;
-            }
-            if (content) {
-                div.innerHTML = content ;
-            }
-        }
-    },
-
     includeFiles: function() {
         var divs = document.querySelectorAll("[data-include]");
         for (var i = 0; i < divs.length; i++) {
@@ -569,19 +527,6 @@ berjon.respec.prototype = {
                 div.innerHTML = content ;
             }
         }
-    },
-
-    makeConformance:    function () {
-        var confo = document.getElementById("conformance");
-        if (!confo) return;
-        var dummy = sn.element("div");
-        if (confo.childNodes.length > 0) sn.copyChildren(confo, dummy);
-        sn.element("h2", {}, confo, "Conformance");
-        confo.innerHTML += "<p>As well as sections marked as non-normative, all authoring guidelines, diagrams, examples, " +
-                           "and notes in this specification are non-normative. Everything else in this specification is " +
-                           "normative.</p>\n<p>The key words MUST, MUST NOT, REQUIRED, SHOULD, SHOULD NOT, RECOMMENDED, MAY, " +
-                           "and OPTIONAL in this specification are to be interpreted as described in [[!RFC2119]].</p>\n";
-        sn.copyChildren(dummy, confo);
     },
 
     informative:    function () {
@@ -963,7 +908,7 @@ berjon.respec.prototype = {
         var infNames = [];
         for (var i = 0; i < idls.length; i++) {
             var idl = idls[i];
-            var w = new berjon.WebIDLProcessor({ noIDLSorting: this.noIDLSorting, noIDLIn: this.noIDLIn });
+            var w = new berjon.WebIDLProcessor({ noIDLSorting: this.noIDLSorting });
             var inf = w.definition(idl);
             var df = w.makeMarkup();
             idl.parentNode.replaceChild(df, idl);
@@ -2114,10 +2059,9 @@ berjon.WebIDLProcessor.prototype = {
                                     var nullable = it.nullable ? "?" : "";
                                     var optional = it.optional ? "optional " : "";
                                     var arr = it.array ? "[]" : "";
-                                    var inp = obj.noIDLIn ? "" : "in ";
                                     var prm = "<span class='idlParam'>";
                                     if (it.extendedAttributes) prm += "[<span class='extAttr'>" + it.extendedAttributes + "</span>] ";
-                                    prm += inp + optional + "<span class='idlParamType'>" + obj.writeDatatype(it.datatype) + arr + nullable + "</span> " +
+                                    prm += optional + "<span class='idlParamType'>" + obj.writeDatatype(it.datatype) + arr + nullable + "</span> " +
                                     "<span class='idlParamName'>" + it.id + "</span>" +
                                     "</span>";
                                     return prm;

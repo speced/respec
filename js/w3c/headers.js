@@ -36,10 +36,6 @@
 //  - prevRecShortname: the short name of the previous Recommendation, if the name has changed
 //  - prevRecURI: the URI of the previous Recommendation if not directly generated from 
 //    prevRecShortname.
-//  - xgrGroupShortName: short name (used in the URI) for Incubator Groups. Required for XGRs.
-//      Probably obsolete.
-//  - xgrDocShortName: short name (used in the URI) for the XG report itself, defaults to the name
-//      of the group. Probably obsolete.
 //  - wg: the name of the WG in charge of the document. This may be an array in which case wgURI
 //      and wgPatentURI need to be arrays as well, of the same length and in the same order
 //  - wgURI: the URI to the group's page, or an array of such
@@ -99,7 +95,6 @@ define(
             ,   "IG-NOTE":      "Interest Group Note"
             ,   "Member-SUBM":  "Member Submission"
             ,   "Team-SUBM":    "Team Submission"
-            ,   XGR:            "Incubator Group Report"
             ,   MO:             "Member-Only Document"
             ,   ED:             "Editor's Draft"
             ,   FPWD:           "Working Draft"
@@ -125,8 +120,8 @@ define(
             ,   "LC-NOTE":      "Last Call Working Draft"
             }
         ,   recTrackStatus: ["FPWD", "WD", "LC", "CR", "PR", "PER", "REC"]
-        ,   noTrackStatus:  ["MO", "unofficial", "base", "XGR", "finding", "draft-finding"]
-        ,   precededByAn:   ["ED", "XGR", "IG-NOTE"]
+        ,   noTrackStatus:  ["MO", "unofficial", "base", "finding", "draft-finding"]
+        ,   precededByAn:   ["ED", "IG-NOTE"]
             
         ,   run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/headers");
@@ -161,15 +156,7 @@ define(
                                     "/" + conf.maturity + "-" + conf.shortName + "-" + utils.concatDate(conf.publishDate) + "/";
                 if (conf.specStatus === "ED") conf.thisVersion = conf.edDraftURI;
                 conf.latestVersion = "http://www.w3.org/" + publishSpace + "/" + conf.shortName + "/";
-                if (conf.specStatus === "XGR") {
-                    if (!conf.xgrGroupShortName) msg.pub("error", "Document is an XGR but xgrGroupShortName is not specified");
-                    if (!conf.xgrDocShortName) conf.xgrDocShortName = conf.xgrGroupShortName;
-                    conf.thisVersion = "http://www.w3.org/2005/Incubator/" + conf.xgrGroupShortName + 
-                                       "/XGR-" + conf.xgrDocShortName + "-" + utils.concatDate(conf.publishDate) + "/";
-                    conf.latestVersion = "http://www.w3.org/2005/Incubator/" + conf.xgrGroupShortName + 
-                                       "/XGR-" + conf.xgrDocShortName + "/";
-                }
-                else if (conf.isTagFinding) {
+                if (conf.isTagFinding) {
                     conf.latestVersion = "http://www.w3.org/2001/tag/doc/" + conf.shortName;
                     conf.thisVersion = conf.latestVersion + "-" + utils.concatDate(conf.publishDate, "-");
                 }
@@ -215,7 +202,7 @@ define(
                     this.status2long[k] = this.status2text[k];
                 }
                 conf.longStatus = this.status2long[conf.specStatus];
-                conf.showThisVersion =  (!conf.isNoTrack || conf.specStatus === "XGR" || conf.isTagFinding);
+                conf.showThisVersion =  (!conf.isNoTrack || conf.isTagFinding);
                 conf.showPreviousVersion = (conf.specStatus !== "FPWD" && conf.specStatus !== "ED" && 
                                            !conf.isNoTrack && !conf.noRecTrack);
                 if (conf.isTagFinding) conf.showPreviousVersion = conf.previousPublishDate ? true : false;
@@ -224,7 +211,6 @@ define(
                 conf.notRec = (conf.specStatus !== "REC");
                 conf.isUnofficial = conf.specStatus === "unofficial";
                 conf.prependW3C = !conf.isUnofficial;
-                conf.isXGR = (conf.specStatus === "XGR");
                 conf.isED = (conf.specStatus === "ED");
                 conf.isLC = (conf.specStatus === "LC");
                 conf.isCR = (conf.specStatus === "CR");
@@ -237,7 +223,7 @@ define(
 
                 // handle SotD
                 var $sotd = $("#sotd");
-                if ((!conf.isNoTrack || conf.isTagFinding || conf.isXGR) && !$sotd.length)
+                if ((!conf.isNoTrack || conf.isTagFinding) && !$sotd.length)
                     msg.pub("error", "A custom SotD paragraph is required for your type of document.");
                 conf.sotdCustomParagraph = $("<div></div>").append($sotd).html();
                 if ($.isArray(conf.wg)) {

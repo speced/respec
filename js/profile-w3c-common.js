@@ -8,6 +8,8 @@ define([
         ,   "w3c/style"
         ,   "w3c/headers"
         ,   "w3c/abstract"
+        ,   "w3c/conformance"
+        ,   "core/data-transform"
         ,   "w3c/legacy"
         ,   "w3c/unhtml5"
         ,   "core/remove-respec"
@@ -38,9 +40,9 @@ define([
 //  X    "core/default-root-attr",
 //  X    "core/style",
 //  X    "w3c/style",
-//      "w3c/headers",
-//      conformance
-//      "core/data-transform",
+//  X    "w3c/headers",
+//  X    conformance
+//  X    "core/data-transform",
 //      "core/data-include",
 //      "core/inlines",
 //      "core/webidl",
