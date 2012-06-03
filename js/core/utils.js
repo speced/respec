@@ -33,6 +33,15 @@ define(
                 }
                 return ret;
             }
+        // Takes a string and 'escapes' all the common XML bits 
+        // Returns the escaped string
+        ,   xmlEscape:    function (s) {
+                s = s.replace(/&/g,'&amp;');
+                s = s.replace(/>/g,'&gt;');
+                s = s.replace(/"/g,'&quot;');
+                s = s.replace(/</g,'&lt;');
+                return s;
+            }
             
             // --- DATE HELPERS -------------------------------------------------------------------------------
             // Takes a Date object and an optional separator and returns the year,month,day representation with

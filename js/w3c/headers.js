@@ -55,22 +55,70 @@
 define(
     ["core/utils", "text!w3c/templates/headers.html", "text!w3c/templates/sotd.html"],
     function (utils, headersTmpl, sotdTmpl) {
-        Handlebars.registerHelper("showPeople", function (items) {
+        Handlebars.registerHelper("showPeople", function (name, items) {
+            // stuff to handle RDFa
+            var re = '' ;
+            var rp = '' ;
+            var rt = '' ;
+            var rm = '' ;
+            var rn = '' ;
+            var rwu = '' ;
+            var rpu = '' ;
+            if ( this.doRDFa ) {
+                if ( name == 'Editor' ) {
+                    re = " rel='bibo:editor'";
+                    if (this.doRDFa == "1.1") {
+                        re += " inlist=''" ;
+                    }
+                    rn = " property='foaf:name'";
+                    rm = " rel='foaf:mbox'";
+                    rp = " typeof='foaf:Person'";
+                    rwu = " rel='foaf:workplaceHomepage'";
+                    rpu = " rel='foaf:homepage'";
+                } else if (name == 'Author' ) {
+                    re = " rel='dcterms:contributor'";
+                    rn = " property='foaf:name'";
+                    rm = " rel='foaf:mbox'";
+                    rp = " typeof='foaf:Person'";
+                    rwu = " rel='foaf:workplaceHomepage'";
+                    rpu = " rel='foaf:homepage'";
+                }
+            }
             var ret = "";
             for (var i = 0, n = items.length; i < n; i++) {
                 var p = items[i];
-                ret += "<dd>";
-                if (p.uri) ret += "<a href='" + p.uri + "'>"+ p.name + "</a>";
-                else       ret += p.name;
+                if (this.doRDFa) {
+                    ret += "<dd" + re +"><span" + rp + ">";
+                } else {
+                    ret += "<dd>";
+                }
+                if (p.uri) {
+                    if (this.doRDFa) {
+                        ret += "<a" + rpu + rn + " content='" + p.name +  "' href='" + p.url + "'>" + p.name + "</a>";
+                    } else {
+                        ret += "<a href='" + p.url + "'>"+ p.name + "</a>";
+                    }
+                } else {
+                    ret += "<span" + rn + ">" + p.name + "</span>";
+                }
                 if (p.company) {
                     ret += ", ";
-                    if (p.companyURL) ret += "<a href='" + p.companyURL + "'>" + p.company + "</a>";
-                    else              ret += p.company;
+                    if (p.companyURL) {
+                        ret += "<a" + rwu + " href='" + p.companyURL + "'>" + p.company + "</a>";
+                    } else {
+                        ret += p.company;
+                    }
                 }
                 if (p.mailto) {
-                    ret += ", <span class='ed_mailto'><a href='mailto:" + p.mailto + "'>" + p.mailto + "</a></span>";
+                    ret += ", ";
+                    ret += " <span class='ed_mailto'><a" + rm + " href='mailto:" + p.mailto + "'>" + p.mailto + "</a></span> ";
                 }
-                if (p.note) ret += " (" + p.note + ")";
+                if (p.note) {
+                    ret += " ( " + p.note + " )";
+                }
+                if (this.doRDFa) {
+                    ret += "</span>\n";
+                }
                 ret += "</dd>\n";
             }
             return new Handlebars.SafeString(ret);
