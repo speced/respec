@@ -51,7 +51,7 @@ describe("W3C — Headers", function () {
     it("should take editors into account", function () {
         loadWithConfig({ specStatus: "REC", "editors[]": [{
                 name:       "NAME"
-            ,   uri:        "http://URI"
+            ,   url:        "http://URI"
             ,   company:    "COMPANY"
             ,   companyURL: "http://COMPANY"
             ,   mailto:     "EMAIL"
@@ -60,6 +60,7 @@ describe("W3C — Headers", function () {
                 expect($("dt:contains('Editors:')", $ifr[0].contentDocument).length).toEqual(0);
                 expect($("dt:contains('Editor:')", $ifr[0].contentDocument).length).toEqual(1);
                 var $dd = $("dt:contains('Editor:')", $ifr[0].contentDocument).next("dd");
+                console.log($dd);
                 expect($dd.find("a[href='http://URI']").length).toEqual(1);
                 expect($dd.find("a[href='http://URI']").text()).toEqual("NAME");
                 expect($dd.find("a[href='http://COMPANY']").length).toEqual(1);

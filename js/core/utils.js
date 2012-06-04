@@ -33,14 +33,16 @@ define(
                 }
                 return ret;
             }
-        // Takes a string and 'escapes' all the common XML bits 
-        // Returns the escaped string
+
+            // XXX untested
+            // Takes a string, applies some XML escapes, and returns the escaped string.
+            // Note that overall using either Handlebars' escaped output or jQuery is much
+            // preferred to operating on strings directly.
         ,   xmlEscape:    function (s) {
-                s = s.replace(/&/g,'&amp;');
-                s = s.replace(/>/g,'&gt;');
-                s = s.replace(/"/g,'&quot;');
-                s = s.replace(/</g,'&lt;');
-                return s;
+                return s.replace(/&/g, "&amp;")
+                        .replace(/>/g, "&gt;")
+                        .replace(/"/g, "&quot;")
+                        .replace(/</g, "&lt;");
             }
             
             // --- DATE HELPERS -------------------------------------------------------------------------------
