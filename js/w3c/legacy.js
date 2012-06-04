@@ -242,7 +242,8 @@ berjon.respec.prototype = {
             }
             if (about != '') {
                 secs[i].setAttribute('typeof', 'bibo:Chapter') ;
-                secs[i].setAttribute('about', about) ;
+                secs[i].setAttribute('resource', about) ;
+                secs[i].setAttribute('rel', "bibo:chapter" ) ;
             }
         }
     },
@@ -305,6 +306,7 @@ berjon.respec.prototype = {
                 prefixAtr += "bibo: http://purl.org/ontology/bibo/";
             }
             str += " prefix=\"" + this._esc(prefixAtr) + "\"";
+            str += " typeof=\"bibo:Document\"";
         }
 
         str += ">\n";
@@ -370,6 +372,7 @@ berjon.respec.prototype = {
                 }
             }
         }
+        str += " typeof=\"bibo:Document\"";
         str += ">\n";
         // walk the entire DOM tree grabbing nodes and emitting them - possibly modifying them
         // if they need the funny closing tag
