@@ -33,6 +33,17 @@ define(
                 }
                 return ret;
             }
+
+            // XXX untested
+            // Takes a string, applies some XML escapes, and returns the escaped string.
+            // Note that overall using either Handlebars' escaped output or jQuery is much
+            // preferred to operating on strings directly.
+        ,   xmlEscape:    function (s) {
+                return s.replace(/&/g, "&amp;")
+                        .replace(/>/g, "&gt;")
+                        .replace(/"/g, "&quot;")
+                        .replace(/</g, "&lt;");
+            }
             
             // --- DATE HELPERS -------------------------------------------------------------------------------
             // Takes a Date object and an optional separator and returns the year,month,day representation with

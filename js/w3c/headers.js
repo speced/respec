@@ -7,7 +7,7 @@
 //  - editors: an array of people editing the document (at least one is required). People
 //      are defined using:
 //          - name: the person's name (required)
-//          - uri: URI for the person's home page
+//          - url: URI for the person's home page
 //          - company: the person's company
 //          - companyURL: the URI for the person's company
 //          - mailto: the person's email
@@ -55,22 +55,55 @@
 define(
     ["core/utils", "text!w3c/templates/headers.html", "text!w3c/templates/sotd.html"],
     function (utils, headersTmpl, sotdTmpl) {
-        Handlebars.registerHelper("showPeople", function (items) {
+        // XXX RDFa support is untested
+        Handlebars.registerHelper("showPeople", function (name, items) {
+            // stuff to handle RDFa
+            var re = "", rp = "", rt = "", rm = "", rn = "", rwu = "", rpu = "";
+            if (this.doRDFa) {
+                if (name === "Editor") {
+                    re = " rel='bibo:editor'";
+                    if (this.doRDFa == "1.1") re += " inlist=''";
+                    rn = " property='foaf:name'";
+                    rm = " rel='foaf:mbox'";
+                    rp = " typeof='foaf:Person'";
+                    rwu = " rel='foaf:workplaceHomepage'";
+                    rpu = " rel='foaf:homepage'";
+                }
+                else if (name === "Author") {
+                    re = " rel='dcterms:contributor'";
+                    rn = " property='foaf:name'";
+                    rm = " rel='foaf:mbox'";
+                    rp = " typeof='foaf:Person'";
+                    rwu = " rel='foaf:workplaceHomepage'";
+                    rpu = " rel='foaf:homepage'";
+                }
+            }
             var ret = "";
             for (var i = 0, n = items.length; i < n; i++) {
                 var p = items[i];
-                ret += "<dd>";
-                if (p.uri) ret += "<a href='" + p.uri + "'>"+ p.name + "</a>";
-                else       ret += p.name;
+                if (this.doRDFa) ret += "<dd" + re +"><span" + rp + ">";
+                else             ret += "<dd>";
+                if (p.url) {
+                    if (this.doRDFa) {
+                        ret += "<a" + rpu + rn + " content='" + p.name +  "' href='" + p.url + "'>" + p.name + "</a>";
+                    }
+                    else {
+                        ret += "<a href='" + p.url + "'>"+ p.name + "</a>";
+                    }
+                }
+                else {
+                    ret += "<span" + rn + ">" + p.name + "</span>";
+                }
                 if (p.company) {
                     ret += ", ";
-                    if (p.companyURL) ret += "<a href='" + p.companyURL + "'>" + p.company + "</a>";
-                    else              ret += p.company;
+                    if (p.companyURL) ret += "<a" + rwu + " href='" + p.companyURL + "'>" + p.company + "</a>";
+                    else ret += p.company;
                 }
                 if (p.mailto) {
-                    ret += ", <span class='ed_mailto'><a href='mailto:" + p.mailto + "'>" + p.mailto + "</a></span>";
+                    ret += ", <span class='ed_mailto'><a" + rm + " href='mailto:" + p.mailto + "'>" + p.mailto + "</a></span>";
                 }
                 if (p.note) ret += " (" + p.note + ")";
+                if (this.doRDFa) ret += "</span>\n";
                 ret += "</dd>\n";
             }
             return new Handlebars.SafeString(ret);

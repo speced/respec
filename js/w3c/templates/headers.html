@@ -43,10 +43,10 @@
       <dd><a href='{{prevRecURI}}'>{{prevRecURI}}</a></dd>
     {{/if}}
     <dt>Editor{{#if multipleEditors}}s{{/if}}:</dt>
-    {{showPeople editors}}
+    {{showPeople "Editor" editors}}
     {{#if authors}}
       <dt>Author{{#if multipleAuthors}}s{{/if}}:</dt>
-      {{showPeople authors}}
+      {{showPeople "Author" authors}}
     {{/if}}
   </dl>
   {{#if errata}}
