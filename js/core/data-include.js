@@ -32,6 +32,10 @@ define(
                         }
                     }
                 ;
+                if (!len) {
+                    msg.pub("end", "w3c/data-include");
+                    cb();
+                }
                 $incs.each(function () {
                     var $el = $(this)
                     ,   uri = $el.attr("data-include")

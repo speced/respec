@@ -21,69 +21,13 @@ function warning (str) {
     if (window.respecEvent) respecEvent.pub("warn", str);
     sn.element("li", { style: "color: #666" }, _errEl(), str);
 }
-function isArray (obj) {
-    return Object.prototype.toString.call(obj) == '[object Array]'
-}
-function joinAnd (arr) {
-    var last = arr.pop();
-    arr[arr.length - 1] += " and " + last;
-    return arr.join(", ");
-}
-berjon.respec = function () {
-    for (var k in this.status2text) {
-        if (this.status2long[k]) continue;
-        this.status2long[k] = this.status2text[k];
-    }
-};
+berjon.respec = function () {};
 berjon.respec.prototype = {
     title:          null,
     additionalCopyrightHolders: null,
     overrideCopyright: null,
     editors:        [],
     authors:        [],
-
-    recTrackStatus: ["FPWD", "WD", "LC", "CR", "PR", "PER", "REC"],
-    noTrackStatus:  ["MO", "unofficial", "base"], 
-    status2text:    {
-        NOTE:           "Note",
-        "WG-NOTE":      "Working Group Note",
-        "CG-NOTE":      "Co-ordination Group Note",
-        "IG-NOTE":      "Interest Group Note",
-        "Member-SUBM":  "Member Submission",
-        "Team-SUBM":    "Team Submission",
-        MO:             "Member-Only Document",
-        ED:             "Editor's Draft",
-        FPWD:           "Working Draft",
-        WD:             "Working Draft",
-		"FPWD-NOTE":    "Working Draft",
-        "WD-NOTE": 		"Working Draft", 
-		"LC-NOTE":      "Working Draft", 
-        LC:             "Working Draft",
-        CR:             "Candidate Recommendation",
-        PR:             "Proposed Recommendation",
-        PER:            "Proposed Edited Recommendation",
-        REC:            "Recommendation",
-        RSCND:          "Rescinded Recommendation",
-        unofficial:     "Unofficial Draft",
-        base:           "Document",
-        "draft-finding":    "Draft TAG Finding",
-        "finding":      "TAG Finding"
-    },
-    status2long:    {
-        FPWD:           "First Public Working Draft",
-		"FPWD-NOTE": 	"First Public Working Draft", 
-        LC:             "Last Call Working Draft",
-        "LC-NOTE": 		"Last Call Working Draft"
-    },
-    status2maturity:    {
-        FPWD:       "WD",
-        LC:         "WD",
-		"FPWD-NOTE": "WD", 
-       	"WD-NOTE":  "WD", 
-		"LC-NOTE":  "LC",
-		"IG-NOTE":  "NOTE",
-        "WG-NOTE":  "NOTE"
-    },
 
     isLocal:    false,
 
@@ -169,7 +113,6 @@ berjon.respec.prototype = {
         try {
             this.extractConfig();
 
-            this.dfn();
             this.inlines();
 
             this.webIDL();
@@ -492,7 +435,6 @@ berjon.respec.prototype = {
     // --- METADATA -------------------------------------------------------
     extractConfig:    function () {
         var cfg = respecConfig || {};
-        if (cfg.inlineCSS === undefined) cfg.inlineCSS = true;
         if (!cfg.noIDLSorting) cfg.noIDLSorting = false;
         if (cfg.tocIntroductory === undefined) cfg.tocIntroductory = false;
         if (!cfg.maxTocLevel) cfg.maxTocLevel = 0;
@@ -785,34 +727,6 @@ berjon.respec.prototype = {
 
     },
 
-    dfn:    function () {
-        document.normalize();
-        var dfnMap = {};
-        var dfns = document.querySelectorAll("dfn");
-        for (var i = 0; i < dfns.length; i++) {
-            var dfn = dfns[i];
-            var title = this._getDfnTitle(dfn);
-            dfnMap[title.toLowerCase()] = sn.makeID(dfn, "dfn", title);
-        }
-
-        var ants = document.querySelectorAll("a:not([href])");
-        for (var i = 0; i < ants.length; i++) {
-            var ant = ants[i];
-            // if (ant.getAttribute("class") == "externalDFN") continue;
-            if (sn.hasClass(ant, "externalDFN")) continue;
-            var title = this._getDfnTitle(ant).toLowerCase();
-            if (dfnMap[title] && !(dfnMap[title] instanceof Function)) {
-                ant.setAttribute("href", "#" + dfnMap[title]);
-                // ant.setAttribute("class", "internalDFN");
-                sn.addClass(ant, "internalDFN");
-            }
-            else {
-                // we want to use these for other links too
-                // error("No definition for title: " + title);
-            }
-        }
-    },
-
     doBestPractices: function () {
         this.practiceNum = 1;
         var spans = document.querySelectorAll("span.practicelab");
@@ -905,22 +819,6 @@ berjon.respec.prototype = {
     },
 
     // --- HELPERS --------------------------------------------------------------------------------------------
-    _getDfnTitle:    function (dfn) {
-        var title;
-        if (dfn.hasAttribute("title")) title = dfn.getAttribute("title");
-        else if (dfn.childNodes.length == 1 && dfn.firstChild.nodeType == Node.ELEMENT_NODE && 
-                 (dfn.firstChild.localName.toLowerCase() == "abbr" || dfn.firstChild.localName.toLowerCase() == "acronym") &&
-                 dfn.firstChild.hasAttribute("title")) title = dfn.firstChild.getAttribute("title");
-        else title = dfn.textContent;
-        title = this._norm(title);
-        return title;
-    },
-
-    _norm:    function (str) {
-        str = str.replace(/^\s+/, "").replace(/\s+$/, "");
-        return str.split(/\s+/).join(" ");
-    },
-
     _esc:    function (s) {
         s = s.replace(/&/g,'&amp;');
         s = s.replace(/>/g,'&gt;');
