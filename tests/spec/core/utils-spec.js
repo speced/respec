@@ -101,4 +101,45 @@ describe("Core — Utils", function () {
             expect(utils.xmlEscape("&<>\"")).toEqual("&amp;&lt;&gt;&quot;");
         });
     });
+
+    // norm
+    it("should normalise text", function () {
+        runs(function () {
+            expect(utils.norm("  a   b   ")).toEqual("a b");
+        });
+    });
+
+    // $.dfnTitle()
+    it("should find the definition title", function () {
+        runs(function () {
+            var $dfn = $("<dfn title='DFN'><abbr title='ABBR'>TEXT</abbr></dfn>").appendTo($("body"));
+            expect($dfn.dfnTitle()).toEqual("DFN");
+            $dfn.removeAttr("title");
+            expect($dfn.dfnTitle()).toEqual("ABBR");
+            $dfn.find("abbr").removeAttr("title");
+            expect($dfn.dfnTitle()).toEqual("TEXT");
+            $dfn.remove();
+        });
+    });
+
+    // $.makeID()
+    it("should create the proper ID", function () {
+        runs(function () {
+            expect($("<p id='ID'></p>").makeID()).toEqual("ID");
+            expect($("<p title='TITLE'></p>").makeID()).toEqual("title");
+            expect($("<p>TEXT</p>").makeID()).toEqual("text");
+            expect($("<p></p>").makeID(null, "PASSED")).toEqual("passed");
+            expect($("<p></p>").makeID("PFX", "PASSED")).toEqual("PFX-passed");
+            expect($("<p>TEXT</p>").makeID("PFX")).toEqual("PFX-text");
+            var $p = $("<p>TEXT</p>");
+            $p.makeID();
+            expect($p.attr("id")).toEqual("text");
+            expect($("<p>  A--Bé9\n C</p>").makeID()).toEqual("a--b-9-c");
+            expect($("<p></p>").makeID()).toEqual("generatedID");
+            expect($("<p>2017</p>").makeID()).toEqual("x2017");
+            var $div = $("<div><p id='a'></p><p id='a-1'></p><span>A</span></div>").appendTo($("body"));
+            expect($div.find("span").makeID()).toEqual("a-2");
+            $div.remove();
+        });
+    });
 });

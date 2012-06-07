@@ -11,6 +11,7 @@ define([
         ,   "w3c/conformance"
         ,   "core/data-transform"
         ,   "core/data-include"
+        ,   "core/dfn"
         ,   "w3c/legacy"
         ,   "w3c/unhtml5"
         ,   "core/remove-respec"
@@ -55,7 +56,7 @@ define([
 //      informative
 //      section refs
 //      "w3c/structure",
-//      "core/dfn",
+//  X    "core/dfn",
 //      "core/rdfa", (note that we've deleted support here and there since it was spread everywhere — reinstate from original v1)
 //  X    "w3c/unhtml5",
 //  X    "core/remove-respec"

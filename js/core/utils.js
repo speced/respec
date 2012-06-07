@@ -43,6 +43,12 @@ define(
                         .replace(/"/g, "&quot;")
                         .replace(/</g, "&lt;");
             }
+
+            // Trims string at both ends and replaces all other white space with a single space
+        ,   norm:   function (str) {
+                return str.replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
+            }
+
             
             // --- DATE HELPERS -------------------------------------------------------------------------------
             // Takes a Date object and an optional separator and returns the year,month,day representation with
@@ -143,4 +149,36 @@ $.fn.renameElement = function (name) {
         arr.push($newEl[0]);
     });
     return $(arr);
+};
+
+// For any element, returns a title string that applies the algorithm used for determining the
+// actual title of a <dfn> element (but can apply to other as well).
+$.fn.dfnTitle = function () {
+    var title;
+    if (this.attr("title")) title = this.attr("title");
+    else if (this.contents().length == 1 && this.children("abbr, acronym").length == 1 &&
+             this.find(":first-child").attr("title")) title = this.find(":first-child").attr("title");
+    else title = this.text();
+    return title.replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");;
+};
+
+
+// Applied to an element, sets an ID for it (and returns it), using a specific prefix
+// if provided, and a specific text if given.
+$.fn.makeID = function (pfx, txt) {
+    if (this.attr("id")) return this.attr("id");
+    if (!txt) txt = this.attr("title") ? this.attr("title") : this.text();
+    txt = txt.replace(/^\s+/, "").replace(/\s+$/, "");
+    var id = txt.toLowerCase().split(/[^-.0-9a-z_]+/).join("-").replace(/^-+/, "").replace(/-+$/, "");
+    if (id.length > 0 && /^[^a-z]/.test(id)) id = "x" + id;
+    if (id.length == 0) id = "generatedID";
+    if (pfx) id = pfx + "-" + id;
+    var inc = 1;
+    var doc = this[0].ownerDocument;
+    if ($("#" + id).length) {
+        while ($("#" + id + "-" + inc).length) inc++;
+        id += "-" + inc;
+    }
+    this.attr("id", id);
+    return id;
 };
