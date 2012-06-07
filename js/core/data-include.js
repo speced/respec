@@ -1,6 +1,4 @@
 
-// XXX untested
-
 // Module w3c/data-include
 // Support for the data-include attribute. Causes external content to be included inside an
 // element that has data-include='some URI'. There is also a data-oninclude attribute that
@@ -36,7 +34,7 @@ define(
                 ;
                 $incs.each(function () {
                     var $el = $(this)
-                    ,   uri = $el.attr("data-include");
+                    ,   uri = $el.attr("data-include")
                     ,   format = $el.attr("data-include-format") || "html";
                     $.ajax({
                         dataType:   "html"
