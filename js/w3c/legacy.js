@@ -169,7 +169,6 @@ berjon.respec.prototype = {
         try {
             this.extractConfig();
 
-            this.dfn();
             this.inlines();
 
             this.webIDL();
@@ -492,7 +491,6 @@ berjon.respec.prototype = {
     // --- METADATA -------------------------------------------------------
     extractConfig:    function () {
         var cfg = respecConfig || {};
-        if (cfg.inlineCSS === undefined) cfg.inlineCSS = true;
         if (!cfg.noIDLSorting) cfg.noIDLSorting = false;
         if (cfg.tocIntroductory === undefined) cfg.tocIntroductory = false;
         if (!cfg.maxTocLevel) cfg.maxTocLevel = 0;
@@ -785,34 +783,6 @@ berjon.respec.prototype = {
 
     },
 
-    dfn:    function () {
-        document.normalize();
-        var dfnMap = {};
-        var dfns = document.querySelectorAll("dfn");
-        for (var i = 0; i < dfns.length; i++) {
-            var dfn = dfns[i];
-            var title = this._getDfnTitle(dfn);
-            dfnMap[title.toLowerCase()] = sn.makeID(dfn, "dfn", title);
-        }
-
-        var ants = document.querySelectorAll("a:not([href])");
-        for (var i = 0; i < ants.length; i++) {
-            var ant = ants[i];
-            // if (ant.getAttribute("class") == "externalDFN") continue;
-            if (sn.hasClass(ant, "externalDFN")) continue;
-            var title = this._getDfnTitle(ant).toLowerCase();
-            if (dfnMap[title] && !(dfnMap[title] instanceof Function)) {
-                ant.setAttribute("href", "#" + dfnMap[title]);
-                // ant.setAttribute("class", "internalDFN");
-                sn.addClass(ant, "internalDFN");
-            }
-            else {
-                // we want to use these for other links too
-                // error("No definition for title: " + title);
-            }
-        }
-    },
-
     doBestPractices: function () {
         this.practiceNum = 1;
         var spans = document.querySelectorAll("span.practicelab");
@@ -905,22 +875,6 @@ berjon.respec.prototype = {
     },
 
     // --- HELPERS --------------------------------------------------------------------------------------------
-    _getDfnTitle:    function (dfn) {
-        var title;
-        if (dfn.hasAttribute("title")) title = dfn.getAttribute("title");
-        else if (dfn.childNodes.length == 1 && dfn.firstChild.nodeType == Node.ELEMENT_NODE && 
-                 (dfn.firstChild.localName.toLowerCase() == "abbr" || dfn.firstChild.localName.toLowerCase() == "acronym") &&
-                 dfn.firstChild.hasAttribute("title")) title = dfn.firstChild.getAttribute("title");
-        else title = dfn.textContent;
-        title = this._norm(title);
-        return title;
-    },
-
-    _norm:    function (str) {
-        str = str.replace(/^\s+/, "").replace(/\s+$/, "");
-        return str.split(/\s+/).join(" ");
-    },
-
     _esc:    function (s) {
         s = s.replace(/&/g,'&amp;');
         s = s.replace(/>/g,'&gt;');
