@@ -21,69 +21,13 @@ function warning (str) {
     if (window.respecEvent) respecEvent.pub("warn", str);
     sn.element("li", { style: "color: #666" }, _errEl(), str);
 }
-function isArray (obj) {
-    return Object.prototype.toString.call(obj) == '[object Array]'
-}
-function joinAnd (arr) {
-    var last = arr.pop();
-    arr[arr.length - 1] += " and " + last;
-    return arr.join(", ");
-}
-berjon.respec = function () {
-    for (var k in this.status2text) {
-        if (this.status2long[k]) continue;
-        this.status2long[k] = this.status2text[k];
-    }
-};
+berjon.respec = function () {};
 berjon.respec.prototype = {
     title:          null,
     additionalCopyrightHolders: null,
     overrideCopyright: null,
     editors:        [],
     authors:        [],
-
-    recTrackStatus: ["FPWD", "WD", "LC", "CR", "PR", "PER", "REC"],
-    noTrackStatus:  ["MO", "unofficial", "base"], 
-    status2text:    {
-        NOTE:           "Note",
-        "WG-NOTE":      "Working Group Note",
-        "CG-NOTE":      "Co-ordination Group Note",
-        "IG-NOTE":      "Interest Group Note",
-        "Member-SUBM":  "Member Submission",
-        "Team-SUBM":    "Team Submission",
-        MO:             "Member-Only Document",
-        ED:             "Editor's Draft",
-        FPWD:           "Working Draft",
-        WD:             "Working Draft",
-		"FPWD-NOTE":    "Working Draft",
-        "WD-NOTE": 		"Working Draft", 
-		"LC-NOTE":      "Working Draft", 
-        LC:             "Working Draft",
-        CR:             "Candidate Recommendation",
-        PR:             "Proposed Recommendation",
-        PER:            "Proposed Edited Recommendation",
-        REC:            "Recommendation",
-        RSCND:          "Rescinded Recommendation",
-        unofficial:     "Unofficial Draft",
-        base:           "Document",
-        "draft-finding":    "Draft TAG Finding",
-        "finding":      "TAG Finding"
-    },
-    status2long:    {
-        FPWD:           "First Public Working Draft",
-		"FPWD-NOTE": 	"First Public Working Draft", 
-        LC:             "Last Call Working Draft",
-        "LC-NOTE": 		"Last Call Working Draft"
-    },
-    status2maturity:    {
-        FPWD:       "WD",
-        LC:         "WD",
-		"FPWD-NOTE": "WD", 
-       	"WD-NOTE":  "WD", 
-		"LC-NOTE":  "LC",
-		"IG-NOTE":  "NOTE",
-        "WG-NOTE":  "NOTE"
-    },
 
     isLocal:    false,
 
