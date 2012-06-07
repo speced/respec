@@ -169,10 +169,6 @@ berjon.respec.prototype = {
         try {
             this.extractConfig();
 
-            // This is done early so that if other data gets embedded it will be 
-            // processed
-            this.includeFiles();
-
             this.dfn();
             this.inlines();
 
@@ -506,32 +502,6 @@ berjon.respec.prototype = {
     },
 
     // --- W3C BASICS -----------------------------------------------------------------------------------------
-    includeFiles: function() {
-        var divs = document.querySelectorAll("[data-include]");
-        for (var i = 0; i < divs.length; i++) {
-            var div = divs[i];
-            var URI = div.getAttribute('data-include');
-            var content = this._readFile(URI) ;
-            if (content) {
-                var flist = div.getAttribute('data-oninclude');
-                if (flist) {
-                    var methods = flist.split(/\s+/) ;
-                    for (var j = 0; j < methods.length; j++) {
-                        var call = 'content = ' + methods[j] + '(this,content,URI)' ;
-                        try {
-                            eval(call) ;
-                        } catch (e) {
-                            warning('call to ' + call + ' failed with ' + e) ;
-                        }
-                    }
-                    div.removeAttribute('data-oninclude') ;
-                }
-                div.removeAttribute('data-include') ;
-                div.innerHTML = content ;
-            }
-        }
-    },
-
     informative:    function () {
         var secs = document.querySelectorAll("section.informative");
         for (var i = 0; i < secs.length; i++) {
@@ -935,22 +905,6 @@ berjon.respec.prototype = {
     },
 
     // --- HELPERS --------------------------------------------------------------------------------------------
-    _readFile:    function (URI) {
-            try {
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", URI, false);
-                xhr.send(null);
-                if (xhr.status == 200) {
-                    return xhr.responseText ;
-                } else {
-                    error("There appears to have been a problem fetching the file " + URI + "; status=" + xhr.status);
-                }
-            }
-            catch (e) {
-                warning("There was an error with the request to load " + URI + ", probably that you're working from disk.");
-            }
-    },
-
     _getDfnTitle:    function (dfn) {
         var title;
         if (dfn.hasAttribute("title")) title = dfn.getAttribute("title");
