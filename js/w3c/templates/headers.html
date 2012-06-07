@@ -15,11 +15,11 @@
       <dd><a href='{{thisVersion}}'>{{thisVersion}}</a></dd>
       <dt>Latest published version:</dt>
       <dd>{{#if latestVersion}}<a href='{{latestVersion}}'>{{latestVersion}}</a>{{else}}none{{/if}}</dd>
-      {{#if edDraftURI}}
-        <dt>Latest editor's draft:</dt>
-        <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
-      {{/if}}
     {{/unless}}
+    {{#if edDraftURI}}
+      <dt>Latest editor's draft:</dt>
+      <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
+    {{/if}}
     {{#if testSuiteURI}}
       <dt>Test suite:</dt>
       <dd><a href='{{testSuiteURI}}'>{{testSuiteURI}}</a></dd>

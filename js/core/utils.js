@@ -34,7 +34,6 @@ define(
                 return ret;
             }
 
-            // XXX untested
             // Takes a string, applies some XML escapes, and returns the escaped string.
             // Note that overall using either Handlebars' escaped output or jQuery is much
             // preferred to operating on strings directly.
@@ -98,6 +97,11 @@ define(
             // Please note that this is a legacy method that is only kept in order to maintain compatibility
             // with RSv1. It is therefore not tested and not actively supported.
         ,   runTransforms: function (content, flist) {
+                var args = [this, content]
+                ,   funcArgs = Array.prototype.slice.call(arguments)
+                ;
+                funcArgs.shift(); funcArgs.shift();
+                args = args.concat(funcArgs);
                 if (flist) {
                     var methods = flist.split(/\s+/);
                     for (var j = 0; j < methods.length; j++) {
@@ -105,7 +109,7 @@ define(
                         if (window[meth]) {
                             // the initial call passed |this| directly, so we keep it that way
                             try {
-                                content = window[meth].call(this, this, content);
+                                content = window[meth].apply(this, args);
                             }
                             catch (e) {
                                 respecEvents.pub("warn", "call to " + meth + "() failed with " + e) ;

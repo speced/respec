@@ -176,7 +176,6 @@ define(
                 conf.isRecTrack = conf.noRecTrack ? false : $.inArray(conf.specStatus, this.recTrackStatus) >= 0;
                 conf.anOrA = $.inArray(conf.specStatus, this.precededByAn) >= 0 ? "an" : "a";
                 conf.isTagFinding = conf.specStatus === "finding" || conf.specStatus === "draft-finding";
-                if (!conf.shortName) msg.pub("error", "Missing required configuration: shortName");
                 if (!conf.edDraftURI) {
                     conf.edDraftURI = "";
                     if (conf.specStatus === "ED") msg.pub("warn", "Editor's Drafts should set edDraftURI.");

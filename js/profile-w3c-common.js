@@ -10,6 +10,7 @@ define([
         ,   "w3c/abstract"
         ,   "w3c/conformance"
         ,   "core/data-transform"
+        ,   "core/data-include"
         ,   "w3c/legacy"
         ,   "w3c/unhtml5"
         ,   "core/remove-respec"
@@ -43,7 +44,7 @@ define([
 //  X    "w3c/headers",
 //  X    conformance
 //  X    "core/data-transform",
-//      "core/data-include",
+//  X    "core/data-include",
 //      "core/inlines",
 //      "core/webidl",
 //      "core/examples",
