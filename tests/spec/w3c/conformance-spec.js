@@ -13,7 +13,6 @@ describe("W3C — Conformance", function () {
         waitsFor(function () { return doc; }, MAXOUT);
         runs(function () {
             var $c = $("#conformance", doc);
-            console.log($c, doc);
             expect($c.find("h2").length).toEqual(1);
             expect($c.find("h2").text()).toMatch(/\d+\.\s+Conformance/);
             expect($c.find("p").length).toEqual(3);

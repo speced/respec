@@ -94,4 +94,11 @@ describe("Core — Utils", function () {
             expect(utils.joinAnd(["x", "x", "x", "x"], function (str) { return str.toUpperCase(); })).toEqual("X, X, X, and X");
         });
     });
+
+    // xmlEscape
+    it("should escape properly", function () {
+        runs(function () {
+            expect(utils.xmlEscape("&<>\"")).toEqual("&amp;&lt;&gt;&quot;");
+        });
+    });
 });
