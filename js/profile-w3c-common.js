@@ -49,6 +49,7 @@ define([
 //      "core/inlines",
 //      "core/webidl",
 //      "core/examples",
+//      highlights (these can be advantageously split out, since removing them saves a lot of code)
 //      best practices
 //      "w3c/bibref",
 //      "core/figure",

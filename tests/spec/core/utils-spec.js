@@ -1,12 +1,15 @@
 describe("Core — Utils", function () {
     var MAXOUT = 5000, utils;
 
-    // linkCSS()
-    it("should add a link element", function () {
+    beforeEach(function () {
         runs(function () {
             require(["../../../js/core/utils"], function (u) { utils = u; });
         });
         waitsFor(function () { return utils; }, MAXOUT);
+    });
+
+    // linkCSS()
+    it("should add a link element", function () {
         runs(function () {
             utils.linkCSS(document, "BOGUS");
             expect($("link[href='BOGUS']").length == 1).toBeTruthy();
@@ -140,6 +143,17 @@ describe("Core — Utils", function () {
             var $div = $("<div><p id='a'></p><p id='a-1'></p><span>A</span></div>").appendTo($("body"));
             expect($div.find("span").makeID()).toEqual("a-2");
             $div.remove();
+        });
+    });
+
+    // $.allTextNodes()
+    it("should find all the text nodes", function () {
+        runs(function () {
+            var tns = $("<div>aa<span>bb</span><p>cc<i>dd</i></p><pre>nope</pre></div>").allTextNodes(["pre"]);
+            expect(tns.length).toEqual(4);
+            var str = "";
+            for (var i = 0, n = tns.length; i < n; i++) str += tns[i].nodeValue;
+            expect(str).toEqual("aabbccdd");
         });
     });
 });
