@@ -204,7 +204,7 @@ define(
                                                       conf.maturity + "-" + conf.shortName + "-" + 
                                                       utils.concatDate(conf.publishDate) + "/";
                 if (conf.specStatus === "ED") conf.thisVersion = conf.edDraftURI;
-                if (conf.latestVersion) conf.latestVersion = "http://www.w3.org/" + publishSpace + "/" + conf.shortName + "/";
+                if (!conf.isCGBG) conf.latestVersion = "http://www.w3.org/" + publishSpace + "/" + conf.shortName + "/";
                 if (conf.isTagFinding) {
                     conf.latestVersion = "http://www.w3.org/2001/tag/doc/" + conf.shortName;
                     conf.thisVersion = conf.latestVersion + "-" + utils.concatDate(conf.publishDate, "-");
@@ -277,7 +277,7 @@ define(
                 var $sotd = $("#sotd");
                 if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !$sotd.length)
                     msg.pub("error", "A custom SotD paragraph is required for your type of document.");
-                conf.sotdCustomParagraph = $("<div></div>").append($sotd).html();
+                conf.sotdCustomParagraph = $sotd.html();
                 if ($.isArray(conf.wg)) {
                     conf.multipleWGs = conf.wg.length > 1;
                     conf.wgHTML = utils.joinAnd($.isArray(conf.wg) ? conf.wg : [conf.wg], function (wg, idx) {
