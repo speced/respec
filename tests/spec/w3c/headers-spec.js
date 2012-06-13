@@ -246,4 +246,31 @@ describe("W3C — Headers", function () {
         });
     });
 
+    // CG/BG
+    it("should handle CG-BG status", function () {
+        loadWithConfig({ specStatus: "CG-DRAFT", wg: "WGNAME", wgURI: "http://WG" }, function ($ifr) {
+            var $c = $(".head .copyright", $ifr[0].contentDocument);
+            expect($c.find("a[href='http://WG']").length).toEqual(1);
+            expect($c.find("a:contains(WGNAME)").length).toEqual(1);
+            expect($c.find("a[href='https://www.w3.org/community/about/agreements/cla/']").length).toEqual(1);
+            expect($(".head h2", $ifr[0].contentDocument).text()).toMatch(/Draft Community Group Specification/);
+            var $sotd = $("#sotd", $ifr[0].contentDocument);
+            expect($sotd.find("a[href='http://WG']").length).toEqual(1);
+            expect($sotd.find("a:contains(WGNAME)").length).toEqual(1);
+            expect($sotd.find("a[href='https://www.w3.org/community/about/agreements/cla/']").length).toEqual(1);
+        });
+        loadWithConfig({ specStatus: "BG-FINAL", wg: "WGNAME", wgURI: "http://WG", 
+                         thisVersion: "http://THIS", latestVersion: "http://LATEST" }, function ($ifr) {
+            expect($(".head .copyright a[href='https://www.w3.org/community/about/agreements/fsa/']", $ifr[0].contentDocument).length).toEqual(1);
+            expect($(".head h2", $ifr[0].contentDocument).text()).toMatch(/Final Business Group Specification/);
+            expect($("dt:contains('This version:')", $ifr[0].contentDocument).next("dd").text()).toMatch(/http:\/\/THIS/);
+            expect($("dt:contains('Latest published version:')", $ifr[0].contentDocument).next("dd").text()).toMatch(/http:\/\/LATEST/);
+            var $sotd = $("#sotd", $ifr[0].contentDocument);
+            expect($sotd.find("a[href='http://WG']").length).toEqual(1);
+            expect($sotd.find("a:contains(WGNAME)").length).toEqual(1);
+            expect($sotd.find("a[href='https://www.w3.org/community/about/agreements/final/']").length).toEqual(1);
+        });
+    });
+
+
 });
