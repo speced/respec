@@ -25,6 +25,10 @@ define(
                 else if (statStyle === "base") {
                     css = "http://www.w3.org/StyleSheets/TR/base";
                 }
+                else if (statStyle === "CG-DRAFT" || statStyle === "CG-FINAL" || 
+                         statStyle === "BG-DRAFT" || statStyle === "BG-FINAL") {
+                    css = "http://www.w3.org/community/src/css/spec/" + statStyle.toLowerCase();
+                }
                 else {
                     css = "http://www.w3.org/StyleSheets/TR/W3C-" + statStyle;
                 }

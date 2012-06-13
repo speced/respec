@@ -41,7 +41,8 @@ define(
                     ,   uri = $el.attr("data-include")
                     ,   format = $el.attr("data-include-format") || "html";
                     $.ajax({
-                        dataType:   "html"
+                        dataType:   format
+                    ,   url:        uri
                     ,   success:    function (data, status, xhr) {
                             if (data) {
                                 var flist = $el.attr("data-oninclude");
