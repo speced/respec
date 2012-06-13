@@ -1,0 +1,64 @@
+<div class='head'>
+  <p>
+    <a href='http://www.w3.org/'><img width='72' height='48' src='http://www.w3.org/Icons/w3c_home' alt='W3C'/></a>
+  </p>
+  <h1 class='title' id='title'>{{title}}</h1>
+  {{#if subtitle}}<h2 id='subtitle'>{{subtitle}}</h2>{{/if}}
+  <h2>{{longStatus}} {{publishHumanDate}}</h2>
+  <dl>
+    {{#if thisVersion}}
+      <dt>This version:</dt>
+      <dd><a href='{{thisVersion}}'>{{thisVersion}}</a></dd>
+    {{/if}}
+    {{#if latestVersion}}
+      <dt>Latest published version:</dt>
+      <dd><a href='{{latestVersion}}'>{{latestVersion}}</a></dd>
+    {{/if}}
+    {{#if edDraftURI}}
+      <dt>Latest editor's draft:</dt>
+      <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
+    {{/if}}
+    {{#if testSuiteURI}}
+      <dt>Test suite:</dt>
+      <dd><a href='{{testSuiteURI}}'>{{testSuiteURI}}</a></dd>
+    {{/if}}
+    {{#if implementationReportURI}}
+      <dt>Implementation report:</dt>
+      <dd><a href='{{implementationReportURI}}'>{{implementationReportURI}}</a></dd>
+    {{/if}}
+    {{#if prevVersion}}
+      <dt>Previous version:</dt>
+      <dd><a href='{{prevVersion}}'>{{prevVersion}}</a></dd>
+    {{/if}}
+    <dt>Editor{{#if multipleEditors}}s{{/if}}:</dt>
+    {{showPeople "Editor" editors}}
+    {{#if authors}}
+      <dt>Author{{#if multipleAuthors}}s{{/if}}:</dt>
+      {{showPeople "Author" authors}}
+    {{/if}}
+  </dl>
+  {{#if alternateFormats}}
+    <p>
+      {{#if multipleAlternates}}
+        This document is also available in these non-normative formats: 
+      {{else}}
+        This document is also available in this non-normative format: 
+      {{/if}}
+      {{{alternatesHTML}}}
+    </p>
+  {{/if}}
+  <p class='copyright'>
+    <a href='http://www.w3.org/Consortium/Legal/ipr-notice#Copyright'>Copyright</a> &copy; 
+    {{#if copyrightStart}}{{copyrightStart}}-{{/if}}{{publishYear}}
+    the Contributors to the {{title}} Specification, published by the
+    <a href='{{wgURI}}'>{{wg}}</a> under the
+    {{#if isCGFinal}}
+      <a href="https://www.w3.org/community/about/agreements/fsa/">W3C Community Final Specification Agreement (FSA)</a>. 
+      A human-readable <a href="http://www.w3.org/community/about/agreements/fsa-deed/">summary</a> is available.
+    {{else}}
+      <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+      A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available.
+    {{/if}}
+  </p>
+  <hr/>
+</div>
