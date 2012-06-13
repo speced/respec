@@ -1952,8 +1952,10 @@ berjon.WebIDLProcessor.prototype = {
         str += this._idn(indent);
         var pad = max - memb.datatype.length;
         if (memb.nullable) pad = pad - 1;
+        if (memb.array) pad = pad - 2;
         var nullable = memb.nullable ? "?" : "";
-        str += "<span class='idlMemberType'>" + this.writeDatatype(memb.datatype) + nullable + "</span> ";
+        var arr = memb.array ? "[]" : "";
+        str += "<span class='idlMemberType'>" + this.writeDatatype(memb.datatype) + arr + nullable + "</span> ";
         for (var i = 0; i < pad; i++) str += " ";
         str += "<span class='idlMemberName'><a href='#" + curLnk + memb.refId + "'>" + memb.id + "</a></span>";
         if (memb.defaultValue) str += " = <span class='idlMemberValue'>" + memb.defaultValue + "</span>"
