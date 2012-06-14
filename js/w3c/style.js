@@ -27,7 +27,9 @@ define(
                 }
                 else if (statStyle === "CG-DRAFT" || statStyle === "CG-FINAL" || 
                          statStyle === "BG-DRAFT" || statStyle === "BG-FINAL") {
-                    css = "http://www.w3.org/community/src/css/spec/" + statStyle.toLowerCase();
+                    // note: normally, the ".css" is not used in W3C, but here specifically it clashes
+                    // with a PNG of the same base name. CONNEG must die.
+                    css = "http://www.w3.org/community/src/css/spec/" + statStyle.toLowerCase() + ".css";
                 }
                 else {
                     css = "http://www.w3.org/StyleSheets/TR/W3C-" + statStyle;
