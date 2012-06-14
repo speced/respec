@@ -1,14 +1,6 @@
-
-/*
-    XXX this is not up to date with the needs of various other parts, it will require
-        to be synched up with the latest developments
-        It may be that this will be split up so that only the parts that are acually used
-        by the document get to be included (e.g. WebIDL).
-*/
-
 /*****************************************************************
- * ReSpec 2 CSS
- * Robin Berjon, 2010-01-04
+ * ReSpec 3 CSS
+ * Robin Berjon - http://berjon.com/
  *****************************************************************/
 
 /* --- INLINES --- */
@@ -321,26 +313,6 @@ table.simple {
 
 .section dl.attrs dd, .section dl.eldef dd {
     margin-bottom:  0;
-}
-
-/* --- EXAMPLES --- */
-pre.example {
-    border-top: 1px solid #ff4500;
-    border-bottom: 1px solid #ff4500;
-    padding:    1em;
-    margin:     2em 0;
-}
-
-pre.example::before {
-    content:    "Example";
-    display:    block;
-    width:      150px;
-    background: #ff4500;
-    color:  #fff;
-    font-family:    initial;
-    padding:    3px;
-    font-weight:    bold;
-    margin: -1em 0 1em -1em;
 }
 
 /* --- EDITORIAL NOTES --- */

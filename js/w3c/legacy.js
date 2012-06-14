@@ -455,22 +455,6 @@ berjon.respec.prototype = {
     },
 
     examples:    function () {
-        // reindent
-        var exes = document.querySelectorAll("pre.example");
-        for (var i = 0; i < exes.length; i++) {
-            var ex = exes[i];
-            var lines = ex.innerHTML.split("\n");
-            while (lines.length && /^\s*$/.test(lines[0])) lines.shift();
-            while (/^\s*$/.test(lines[lines.length - 1])) lines.pop();
-            var matches = /^(\s+)/.exec(lines[0]);
-            if (matches) {
-                var rep = new RegExp("^" + matches[1]);
-                for (var j = 0; j < lines.length; j++) {
-                    lines[j] = lines[j].replace(rep, "");
-                }
-            }
-            ex.innerHTML = lines.join("\n");
-        }
         // highlight
         sh_highlightDocument(this.base + "js/lang/", ".min.js");
     },

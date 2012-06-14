@@ -12,6 +12,7 @@ define([
         ,   "core/data-transform"
         ,   "core/data-include"
         ,   "core/dfn"
+        ,   "core/examples"
         ,   "w3c/legacy"
         ,   "w3c/unhtml5"
         ,   "core/remove-respec"
@@ -48,7 +49,7 @@ define([
 //  X    "core/data-include",
 //      "core/inlines",
 //      "core/webidl",
-//      "core/examples",
+//  X    "core/examples",
 //      highlights (these can be advantageously split out, since removing them saves a lot of code)
 //      best practices
 //      "w3c/bibref",
