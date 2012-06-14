@@ -52,6 +52,7 @@ define([
 //  X    "core/examples",
 //      highlights (these can be advantageously split out, since removing them saves a lot of code)
 //      best practices
+//      issues-notes
 //      "w3c/bibref",
 //      "core/figure",
 //      "core/structure",
