@@ -37,7 +37,10 @@ define(
                         var $div = $("<div class='example'></div>")
                         ,   $tit = $("<div class='example-title'><span>Example " + num + "</span></div>")
                         ;
-                        if ($ex.attr("title")) $tit.append(doc.createTextNode(": " + $ex.attr("title")));
+                        if ($ex.attr("title")) {
+                            $tit.append(doc.createTextNode(": " + $ex.attr("title")));
+                            $ex.removeAttr("title");
+                        }
                         $div.append($tit);
                         $div.append($ex.clone());
                         $ex.replaceWith($div);
