@@ -127,7 +127,6 @@ berjon.respec.prototype = {
             var bpnode = document.getElementsByClassName("practicelab");
             if(bpnode.length > 0) this.doBestPractices(); 
 
-            this.informative();
             this.fixHeaders();
 
             this.makeTOC();
@@ -444,16 +443,6 @@ berjon.respec.prototype = {
     },
 
     // --- W3C BASICS -----------------------------------------------------------------------------------------
-    informative:    function () {
-        var secs = document.querySelectorAll("section.informative");
-        for (var i = 0; i < secs.length; i++) {
-            var sec = secs[i];
-            var p = sn.element("p");
-            sn.element("em", {}, p, "This section is non-normative.");
-            sec.insertBefore(p, sec.firstElementChild.nextSibling);
-        }
-    },
-
     examples:    function () {
         // highlight
         sh_highlightDocument(this.base + "js/lang/", ".min.js");

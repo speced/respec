@@ -14,6 +14,7 @@ define([
         ,   "core/dfn"
         ,   "core/examples"
         ,   "w3c/legacy"
+        ,   "w3c/informative"
         ,   "w3c/unhtml5"
         ,   "core/remove-respec"
         ], 
@@ -56,7 +57,7 @@ define([
 //      "w3c/bibref",
 //      "core/figure",
 //      "core/structure",
-//      informative
+//  X    informative
 //      section refs
 //      "w3c/structure",
 //  X    "core/dfn",
