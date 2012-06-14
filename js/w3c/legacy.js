@@ -47,7 +47,7 @@ berjon.respec.prototype = {
         if (base.indexOf("file://") == 0) this.isLocal = true;
 
         var loaded = [];
-        var deps = ["js/simple-node.js", "js/shortcut.js", "bibref/biblio.js", "js/sh_main.min.js"];
+        var deps = ["js/simple-node.js", "js/shortcut.js", "bibref/biblio.js"];
         var head = document.getElementsByTagName('head')[0];
         var obj = this;
         // the fact that we hand-load is temporary, and will be fully replaced by RequireJS
@@ -62,29 +62,6 @@ berjon.respec.prototype = {
                 sel.setAttribute("class", "remove");
                 sel.onload = function (ev) {
                     loaded.push(ev.target.src);
-                    if (obj.isLocal && ev.target.src.indexOf("sh_main") > 0) {
-                        // dirty hack to fix local loading of SHJS
-                        this.oldSHLoad = window.sh_load;
-                        window.sh_load = function (language, element, prefix, suffix) {
-                            if (language in sh_requests) {
-                                sh_requests[language].push(element);
-                                return;
-                            }
-                            sh_requests[language] = [element];
-                            var url = prefix + 'sh_' + language + suffix;
-                            var shLang = document.createElement('script');
-                            shLang.type = 'text/javascript';
-                            shLang.src = url;
-                            shLang.setAttribute("class", "remove");
-                            shLang.onload = function (ev) {
-                                var elements = sh_requests[language];
-                                for (var i = 0; i < elements.length; i++) {
-                                    sh_highlightElement(elements[i], sh_languages[language]);
-                                }
-                            };
-                            head.appendChild(shLang);
-                        };
-                    }
                     if (loaded.length == deps.length) {
                         sn = new berjon.simpleNode({
                             "":     "http://www.w3.org/1999/xhtml",
@@ -116,7 +93,6 @@ berjon.respec.prototype = {
             this.inlines();
 
             this.webIDL();
-            this.examples();
 
             // only process best practices if element with class
             // practicelab found, do not slow down non best-practice
@@ -443,11 +419,6 @@ berjon.respec.prototype = {
     },
 
     // --- W3C BASICS -----------------------------------------------------------------------------------------
-    examples:    function () {
-        // highlight
-        sh_highlightDocument(this.base + "js/lang/", ".min.js");
-    },
-
     fixHeaders:    function () {
         var secs = document.querySelectorAll("section > h1:first-child, section > h2:first-child, section > h3:first-child, section > h4:first-child, section > h5:first-child, section > h6:first-child");
         for (var i = 0; i < secs.length; i++) {
