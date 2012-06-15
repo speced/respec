@@ -278,6 +278,7 @@ define(
                 if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !$sotd.length)
                     msg.pub("error", "A custom SotD paragraph is required for your type of document.");
                 conf.sotdCustomParagraph = $sotd.html();
+                $sotd.remove();
                 if ($.isArray(conf.wg)) {
                     conf.multipleWGs = conf.wg.length > 1;
                     conf.wgHTML = utils.joinAnd($.isArray(conf.wg) ? conf.wg : [conf.wg], function (wg, idx) {
