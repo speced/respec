@@ -1,5 +1,4 @@
-
-describe("W3C — Data Include", function () {
+describe("Core — Data Include", function () {
     var MAXOUT = 5000, $ifr = $("<iframe width='800' height='200' style='display: none'></iframe>"), loaded = false;
     // this does not test much, someone for whom this is important should provide more tests
     it("should include an external file", function () {

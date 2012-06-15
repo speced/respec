@@ -23,7 +23,7 @@
             var args = Array.prototype.slice.call(arguments);
             args.shift();
             if (embedded && window.postMessage) parent.postMessage({ topic: topic, args: args}, "*");
-            $.each(handlers[topic], function () {
+            $.each(handlers[topic] || [], function () {
                 this.apply(GLOBAL, args);
             });
         }
@@ -34,7 +34,7 @@
         }
     ,   unsub:  function (opaque) { // opaque is whatever is returned by sub()
             var t = opaque[0];
-            handlers[t] && d.each(handlers[t], function (idx) {
+            handlers[t] && d.each(handlers[t] || [], function (idx) {
                 if (this == opaque[1]) handlers[t].splice(idx, 1);
             });
         }

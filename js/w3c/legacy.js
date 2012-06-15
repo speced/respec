@@ -47,7 +47,7 @@ berjon.respec.prototype = {
         if (base.indexOf("file://") == 0) this.isLocal = true;
 
         var loaded = [];
-        var deps = ["js/simple-node.js", "js/shortcut.js", "bibref/biblio.js", "js/sh_main.min.js"];
+        var deps = ["js/simple-node.js", "js/shortcut.js", "bibref/biblio.js"];
         var head = document.getElementsByTagName('head')[0];
         var obj = this;
         // the fact that we hand-load is temporary, and will be fully replaced by RequireJS
@@ -62,29 +62,6 @@ berjon.respec.prototype = {
                 sel.setAttribute("class", "remove");
                 sel.onload = function (ev) {
                     loaded.push(ev.target.src);
-                    if (obj.isLocal && ev.target.src.indexOf("sh_main") > 0) {
-                        // dirty hack to fix local loading of SHJS
-                        this.oldSHLoad = window.sh_load;
-                        window.sh_load = function (language, element, prefix, suffix) {
-                            if (language in sh_requests) {
-                                sh_requests[language].push(element);
-                                return;
-                            }
-                            sh_requests[language] = [element];
-                            var url = prefix + 'sh_' + language + suffix;
-                            var shLang = document.createElement('script');
-                            shLang.type = 'text/javascript';
-                            shLang.src = url;
-                            shLang.setAttribute("class", "remove");
-                            shLang.onload = function (ev) {
-                                var elements = sh_requests[language];
-                                for (var i = 0; i < elements.length; i++) {
-                                    sh_highlightElement(elements[i], sh_languages[language]);
-                                }
-                            };
-                            head.appendChild(shLang);
-                        };
-                    }
                     if (loaded.length == deps.length) {
                         sn = new berjon.simpleNode({
                             "":     "http://www.w3.org/1999/xhtml",
@@ -116,7 +93,6 @@ berjon.respec.prototype = {
             this.inlines();
 
             this.webIDL();
-            this.examples();
 
             // only process best practices if element with class
             // practicelab found, do not slow down non best-practice
@@ -127,7 +103,6 @@ berjon.respec.prototype = {
             var bpnode = document.getElementsByClassName("practicelab");
             if(bpnode.length > 0) this.doBestPractices(); 
 
-            this.informative();
             this.fixHeaders();
 
             this.makeTOC();
@@ -444,37 +419,6 @@ berjon.respec.prototype = {
     },
 
     // --- W3C BASICS -----------------------------------------------------------------------------------------
-    informative:    function () {
-        var secs = document.querySelectorAll("section.informative");
-        for (var i = 0; i < secs.length; i++) {
-            var sec = secs[i];
-            var p = sn.element("p");
-            sn.element("em", {}, p, "This section is non-normative.");
-            sec.insertBefore(p, sec.firstElementChild.nextSibling);
-        }
-    },
-
-    examples:    function () {
-        // reindent
-        var exes = document.querySelectorAll("pre.example");
-        for (var i = 0; i < exes.length; i++) {
-            var ex = exes[i];
-            var lines = ex.innerHTML.split("\n");
-            while (lines.length && /^\s*$/.test(lines[0])) lines.shift();
-            while (/^\s*$/.test(lines[lines.length - 1])) lines.pop();
-            var matches = /^(\s+)/.exec(lines[0]);
-            if (matches) {
-                var rep = new RegExp("^" + matches[1]);
-                for (var j = 0; j < lines.length; j++) {
-                    lines[j] = lines[j].replace(rep, "");
-                }
-            }
-            ex.innerHTML = lines.join("\n");
-        }
-        // highlight
-        sh_highlightDocument(this.base + "js/lang/", ".min.js");
-    },
-
     fixHeaders:    function () {
         var secs = document.querySelectorAll("section > h1:first-child, section > h2:first-child, section > h3:first-child, section > h4:first-child, section > h5:first-child, section > h6:first-child");
         for (var i = 0; i < secs.length; i++) {
