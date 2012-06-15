@@ -29,15 +29,9 @@ exec("git symbolic-ref HEAD", function (err, stdout, stderr) {
         ,   biblio:     "../bibref/biblio"
         ,   simpleNode: "./simple-node"
         ,   shortcut:   "./shortcut"
-        ,   sh_main:    "./sh_main.min"
-        ,   sh_css:     "./lang/sh_css.min"
-        ,   sh_html:    "./lang/sh_html.min"
-        ,   sh_js:      "./lang/sh_javascript.min"
-        ,   sh_js_dom:  "./lang/sh_javascript_dom.min"
-        ,   sh_xml:     "./lang/sh_xml.min"
         }
     ,   name:       "profile-w3c-common"
-    ,   include:    "requireLib biblio simpleNode shortcut sh_main sh_css sh_html sh_js sh_js_dom sh_xml".split(" ")
+    ,   include:    "requireLib biblio simpleNode shortcut".split(" ")
     ,   out:        pth.join(builds, "respec-w3c-common.js")
     ,   inlineText: true
     };

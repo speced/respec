@@ -1,4 +1,4 @@
-describe("W3C — Examples", function () {
+describe("Core — Examples", function () {
     var MAXOUT = 5000
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
