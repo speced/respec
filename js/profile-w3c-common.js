@@ -13,6 +13,7 @@ define([
         ,   "core/data-include"
         ,   "core/dfn"
         ,   "core/examples"
+        ,   "core/issues-notes"
         ,   "core/highlight"
         ,   "w3c/legacy"
         ,   "w3c/informative"
@@ -37,9 +38,6 @@ define([
             // }, false);
         }
 );
-
-// XXX
-//  - we could have core/style only insert as much CSS as it needs (e.g. not used table.simple if there are none)
 
 // XXX - FROM RSv2
 //  X    "core/base-runner",
