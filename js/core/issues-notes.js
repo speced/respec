@@ -20,14 +20,15 @@ define(
                         var $inno = $(inno)
                         ,   isIssue = $inno.hasClass("issue")
                         ,   isInline = $inno.css("display") != "block"
-                        ,   report = { inline: isInline, content: $inno.clone() }
+                        ,   report = { inline: isInline }
                         ;
+                        // report.content = $inno.clone();
                         report.type = isIssue ? "issue" : "note";
                         if (isIssue && !isInline) {
                             issueNum++;
                             report.number = issueNum;
                         }
-
+                
                         // wrap
                         if (!isInline) {
                             var $div = $("<div class='" + report.type + "'></div>")
