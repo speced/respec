@@ -9,7 +9,6 @@ describe("Core — Issues and Notes", function () {
         runs(function () {
             makeRSDoc({
                         config: basicConfig
-                    // ,   visible:    true
                     ,   body: $("<section><p>BLAH <span class='issue'>ISS-INLINE</span></p><p class='issue' title='ISS-TIT'>ISSUE</p>"
                             +   "<p>BLAH <span class='note'>NOT-INLINE</span></p><p class='note' title='NOT-TIT'>NOTE</p></section>")
                     }, 

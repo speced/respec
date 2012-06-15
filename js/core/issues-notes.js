@@ -20,9 +20,8 @@ define(
                         var $inno = $(inno)
                         ,   isIssue = $inno.hasClass("issue")
                         ,   isInline = $inno.css("display") != "block"
-                        ,   report = { inline: isInline }
+                        ,   report = { inline: isInline, content: $inno.html() }
                         ;
-                        // report.content = $inno.clone();
                         report.type = isIssue ? "issue" : "note";
                         if (isIssue && !isInline) {
                             issueNum++;
