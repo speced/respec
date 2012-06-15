@@ -15,6 +15,7 @@ define([
         ,   "core/examples"
         ,   "core/issues-notes"
         ,   "core/highlight"
+        ,   "core/best-practices"
         ,   "w3c/legacy"
         ,   "w3c/informative"
         ,   "w3c/unhtml5"
@@ -54,7 +55,7 @@ define([
 //      "core/webidl",
 //  X    "core/examples",
 //  X    highlight (these can be advantageously split out, since removing them saves a lot of code)
-//      best practices
+//  X    best practices
 //  X    issues-notes (like examples)
 //      "w3c/bibref",
 //      "core/figure",

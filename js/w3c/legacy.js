@@ -89,22 +89,9 @@ berjon.respec.prototype = {
     run:    function () {
         try {
             this.extractConfig();
-
             this.inlines();
-
             this.webIDL();
-
-            // only process best practices if element with class
-            // practicelab found, do not slow down non best-practice
-            // docs.
-            // doBestPractices must be called before makeTOC, fjh
-            // this might not work with old browsers like IE 8
-
-            var bpnode = document.getElementsByClassName("practicelab");
-            if(bpnode.length > 0) this.doBestPractices(); 
-
             this.fixHeaders();
-
             this.makeTOC();
             this.idHeaders();
 
@@ -669,41 +656,6 @@ berjon.respec.prototype = {
             }
         }
 
-    },
-
-    doBestPractices: function () {
-        this.practiceNum = 1;
-        var spans = document.querySelectorAll("span.practicelab");
-        var contents = "<h2>Best Practices Summary</h2><ul>"
-        // scan all the best practices to number them and add handle
-        // at same time generate summary section contents if section
-        // is provided in source, using links if possible
-        //
-        // probably not the most efficient here but only used for best
-        // practices document
-        for (var i = 0; i < spans.length; i++) {
-            var span = spans[i];
-            var label = span.innerHTML;
-            var ref = span.getAttribute("id");
-            var handle = "Best Practice " + this.practiceNum;
-            var content =  ": " + label;
-            var item = handle + content;
-            if(!ref) {
-                contents += "<li>" + handle + content + "</li>";
-            } else {
-                contents += "<li><a href='#" + ref + "'>" + handle +
-                    "</a>" + content + "</li>";
-            }
-            span.innerHTML = item;
-            this.practiceNum++;
-        }
-        contents += "</ul>";
-
-        var sec = document.getElementById("bp-summary");
-        if(!sec) {
-            return;
-        }
-        sec.innerHTML = contents;
     },
 
     makeSectionRefs: function () {
