@@ -13,7 +13,9 @@ define([
         ,   "core/data-include"
         ,   "core/dfn"
         ,   "core/examples"
+        ,   "core/issues-notes"
         ,   "core/highlight"
+        ,   "core/best-practices"
         ,   "w3c/legacy"
         ,   "w3c/informative"
         ,   "w3c/unhtml5"
@@ -38,9 +40,6 @@ define([
         }
 );
 
-// XXX
-//  - we could have core/style only insert as much CSS as it needs (e.g. not used table.simple if there are none)
-
 // XXX - FROM RSv2
 //  X    "core/base-runner",
 //  X    "core/utils", (port in increments, only including the stuff that is depended upon -- avoids cruft)
@@ -56,8 +55,8 @@ define([
 //      "core/webidl",
 //  X    "core/examples",
 //  X    highlight (these can be advantageously split out, since removing them saves a lot of code)
-//      best practices
-//      issues-notes (like examples)
+//  X    best practices
+//  X    issues-notes (like examples)
 //      "w3c/bibref",
 //      "core/figure",
 //      "core/structure",

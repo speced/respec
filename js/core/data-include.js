@@ -1,10 +1,13 @@
+/*jshint
+    expr: true
+*/
 
 // Module w3c/data-include
 // Support for the data-include attribute. Causes external content to be included inside an
 // element that has data-include='some URI'. There is also a data-oninclude attribute that
-// features a white space separated list of global methods that will be called with the 
+// features a white space separated list of global methods that will be called with the
 // module object, the content, and the included URI.
-// 
+//
 // IMPORTANT:
 //  This module only really works when you are in an HTTP context, and will most likely
 //  fail if you are editing your documents on your local drive. That is due to security

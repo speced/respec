@@ -314,38 +314,3 @@ table.simple {
 .section dl.attrs dd, .section dl.eldef dd {
     margin-bottom:  0;
 }
-
-/* --- EDITORIAL NOTES --- */
-.issue {
-    padding:    1em;
-    border: 1px solid #f00;
-    background: #ffc;
-}
-
-.issue::before {
-    content:    "Issue";
-    display:    block;
-    width:  150px;
-    margin: -1.5em 0 0.5em 0;
-    font-weight:    bold;
-    border: 1px solid #f00;
-    background: #fff;
-    padding:    3px 1em;
-}
-
-.note {
-    padding:    1em;
-    border: 2px solid #cff6d9;
-    background: #e2fff0;
-}
-
-.note::before {
-    content:    "Note";
-    display:    block;
-    width:  150px;
-    margin: -1.5em 0 0.5em 0;
-    font-weight:    bold;
-    border: 1px solid #cff6d9;
-    background: #fff;
-    padding:    3px 1em;
-}

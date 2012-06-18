@@ -1,3 +1,7 @@
+/*jshint
+    expr:   true
+*/
+/*global self, respecEvents, respecConfig */
 
 // Module core/base-runner
 // The module in charge of running the whole processing pipeline.
@@ -34,12 +38,12 @@
         }
     ,   unsub:  function (opaque) { // opaque is whatever is returned by sub()
             var t = opaque[0];
-            handlers[t] && d.each(handlers[t] || [], function (idx) {
+            handlers[t] && $.each(handlers[t] || [], function (idx) {
                 if (this == opaque[1]) handlers[t].splice(idx, 1);
             });
         }
     };
-})(this);
+}(this));
 
 // these need to be improved, or complemented with proper UI indications
 if (window.console) {
@@ -83,7 +87,7 @@ define(
                 
                 // the first in the plugs is going to be us
                 plugs.shift();
-                if (!respecConfig) respecConfig = {};
+                if (!respecConfig) window.respecConfig = {};
 
                 // the base URL is used by some modules
                 var $scripts = $("script"),
@@ -91,7 +95,7 @@ define(
                 $scripts.each(function (i, s) {
                     var src = s.getAttribute("src");
                     if (!src || !$(s).hasClass("remove")) return;
-                    if (/\/js\//.test(src)) baseUrl = src.replace(/\/js\/.*/, "\/js\/")
+                    if (/\/js\//.test(src)) baseUrl = src.replace(/\/js\/.*/, "\/js\/");
                 });
                 respecConfig.respecBase = baseUrl;
                 
@@ -101,10 +105,10 @@ define(
                         if (respecConfig.postProcess) {
                             for (var i = 0; i < respecConfig.postProcess.length; i++) respecConfig.postProcess[i].apply(this);
                         }
-                        if (respecConfig.afterEnd) respecConfig.afterEnd.apply(GLOBAL, Array.prototype.slice.call(arguments));
+                        if (respecConfig.afterEnd) respecConfig.afterEnd.apply(window, Array.prototype.slice.call(arguments));
                         respecEvents.pub("end", "core/base-runner");
                         return;
-                    };
+                    }
                     var plug = plugs.shift();
                     if (plug.run) plug.run.call(plug, respecConfig, document, pipeline, respecEvents);
                     else pipeline();

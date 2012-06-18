@@ -1,9 +1,10 @@
 
 var iframes = [];
 function makeRSDoc (opts, cb) {
-    var $ifr = $("<iframe width='800' height='200' style='display: none'></iframe>")
+    var $ifr = $("<iframe width='800' height='200' style='position: relative; margin-left: -10000px'></iframe>")
     ,   doc = document.implementation.createHTMLDocument("")
     ,   $body = $("body", doc)
+    ,   opts = opts || {}
     ;
     $ifr.load(function () {
         var destDoc = $ifr[0].contentDocument;

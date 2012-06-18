@@ -2,7 +2,7 @@
 // Module core/highlight
 // Does syntax highlighting to all pre and code that have a class of "highlight"
 
-// A potential improvement would be to call cb() immediately and benefit from the asynchronous 
+// A potential improvement would be to call cb() immediately and benefit from the asynchronous
 // ability of prettyPrint() (but only call msg.pub() in the callback to remain accurate as to
 // the end of processing)
 
@@ -35,7 +35,7 @@ define(
                     prettyPrint(done);
                 }
                 else {
-                    done()
+                    done();
                 }
             }
         };
@@ -104,14 +104,14 @@ define(
  * UI events.
  * If set to {@code false}, {@code prettyPrint()} is synchronous.
  */
-window['PR_SHOULD_USE_CONTINUATION'] = true;
+window.PR_SHOULD_USE_CONTINUATION = true;
 
 (function () {
   // Keyword lists for various languages.
   // We use things that coerce to strings to make them compact when minified
   // and to defeat aggressive optimizers that fold large string constants.
   var FLOW_CONTROL_KEYWORDS = ["break,continue,do,else,for,if,return,while"];
-  var C_KEYWORDS = [FLOW_CONTROL_KEYWORDS,"auto,case,char,const,default," + 
+  var C_KEYWORDS = [FLOW_CONTROL_KEYWORDS,"auto,case,char,const,default," +
       "double,enum,extern,float,goto,int,long,register,short,signed,sizeof," +
       "static,struct,switch,typedef,union,unsigned,void,volatile"];
   var COMMON_KEYWORDS = [C_KEYWORDS,"catch,class,delete,false,import," +
