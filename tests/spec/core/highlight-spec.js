@@ -16,7 +16,6 @@ describe("Core — Highlight", function () {
         waitsFor(function () { return doc; }, MAXOUT);
         runs(function () {
             var $ex = $("pre.example", doc);
-            console.log($ex);
             expect($ex.hasClass("sh_javascript")).toBeFalsy();
             expect($ex.hasClass("highlight")).toBeTruthy();
             expect($ex.hasClass("prettyprint")).toBeTruthy();

@@ -3,7 +3,7 @@ function loadWithStatus (s, uri) {
     ,   loaded = false
     ,   MAXOUT = 5000
     ,   incr = function (ev) {
-            if (ev.data && ev.data.topic == "end-all") loaded = true, console.log("OK");
+            if (ev.data && ev.data.topic == "end-all") loaded = true;
         }
     ;
     runs(function () {
