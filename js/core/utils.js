@@ -1,6 +1,7 @@
+/*global respecEvents */
 
 // Module core/utils
-// As the name implies, this contains a ragtag gang of methods that just don't fit 
+// As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
 
 define(
@@ -16,7 +17,7 @@ define(
 
             // --- STRING HELPERS -----------------------------------------------------------------------------
             // Takes an array and returns a string that separates each of its items with the proper commas and
-            // "and". The second argument is a mapping function that can convert the items before they are 
+            // "and". The second argument is a mapping function that can convert the items before they are
             // joined
         ,   joinAnd:    function (arr, mapper) {
                 if (!arr || !arr.length) return "";
@@ -93,7 +94,7 @@ define(
             // to the head pointing to each
         ,   linkCSS:  function (doc, styles) {
                 if (!$.isArray(styles)) styles = [styles];
-                $.each(styles, function (i, css) { 
+                $.each(styles, function (i, css) {
                     $('head', doc).append($("<link/>").attr({ rel: 'stylesheet', href: css }));
                 });
             }
@@ -124,8 +125,7 @@ define(
                     }
                 }
                 return content;
-            },
-
+            }
         };
         return utils;
     }
@@ -159,7 +159,7 @@ $.fn.dfnTitle = function () {
     else if (this.contents().length == 1 && this.children("abbr, acronym").length == 1 &&
              this.find(":first-child").attr("title")) title = this.find(":first-child").attr("title");
     else title = this.text();
-    return title.replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");;
+    return title.replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
 };
 
 
@@ -169,14 +169,14 @@ $.fn.makeID = function (pfx, txt) {
     if (this.attr("id")) return this.attr("id");
     if (!txt) txt = this.attr("title") ? this.attr("title") : this.text();
     txt = txt.replace(/^\s+/, "").replace(/\s+$/, "");
-    var id = txt.toLowerCase().split(/[^-.0-9a-z_]+/).join("-").replace(/^-+/, "").replace(/-+$/, "");
+    var id = txt.toLowerCase().split(/[^\-.0-9a-z_]+/).join("-").replace(/^-+/, "").replace(/-+$/, "");
     if (id.length > 0 && /^[^a-z]/.test(id)) id = "x" + id;
-    if (id.length == 0) id = "generatedID";
+    if (id.length === 0) id = "generatedID";
     if (pfx) id = pfx + "-" + id;
     var inc = 1;
     var doc = this[0].ownerDocument;
     if ($("#" + id).length) {
-        while ($("#" + id + "-" + inc).length) inc++;
+        while ($("#" + id + "-" + inc, doc).length) inc++;
         id += "-" + inc;
     }
     this.attr("id", id);

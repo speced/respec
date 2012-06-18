@@ -1,10 +1,10 @@
 // these options are there for the XPath emulation code, which uses them
-// they can be dropped when it is
+// they can be dropped when it is (same for global Document)
 /*jshint
     bitwise: false,
     boss:   true
 */
-/*global berjon, respecEvent, shortcut, console, respecConfig, Node, Document, define */
+/*global berjon, respecEvent, shortcut, respecConfig, Node, Document */
 
 // RESPEC
 (function () {

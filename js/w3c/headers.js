@@ -1,3 +1,7 @@
+/*jshint
+    forin: false
+*/
+/*global Handlebars */
 
 // Module w3c/headers
 // Generate the headers material based on the provided configuration.
@@ -34,7 +38,7 @@
 //  - copyrightStart: the year from which the copyright starts running
 //  - prevED: the URI of the previous Editor's Draft if it has moved
 //  - prevRecShortname: the short name of the previous Recommendation, if the name has changed
-//  - prevRecURI: the URI of the previous Recommendation if not directly generated from 
+//  - prevRecURI: the URI of the previous Recommendation if not directly generated from
 //    prevRecShortname.
 //  - wg: the name of the WG in charge of the document. This may be an array in which case wgURI
 //      and wgPatentURI need to be arrays as well, of the same length and in the same order
@@ -67,7 +71,7 @@ define(
         // XXX RDFa support is untested
         Handlebars.registerHelper("showPeople", function (name, items) {
             // stuff to handle RDFa
-            var re = "", rp = "", rt = "", rm = "", rn = "", rwu = "", rpu = "";
+            var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "";
             if (this.doRDFa) {
                 if (name === "Editor") {
                     re = " rel='bibo:editor'";
@@ -141,7 +145,7 @@ define(
             ,   FPWD:           "Working Draft"
             ,   WD:             "Working Draft"
             ,   "FPWD-NOTE":    "Working Draft"
-            ,   "WD-NOTE": 		"Working Draft"
+            ,   "WD-NOTE":      "Working Draft"
             ,   "LC-NOTE":      "Working Draft"
             ,   LC:             "Working Draft"
             ,   CR:             "Candidate Recommendation"
@@ -199,9 +203,9 @@ define(
                 var publishSpace = "TR";
                 if (conf.specStatus === "Member-SUBM") publishSpace = "Submission";
                 else if (conf.specStatus === "Team-SUBM") publishSpace = "TeamSubmission";
-                if (!conf.isCGBG) conf.thisVersion =  "http://www.w3.org/" + publishSpace + "/" + 
-                                                      conf.publishDate.getFullYear() + "/" + 
-                                                      conf.maturity + "-" + conf.shortName + "-" + 
+                if (!conf.isCGBG) conf.thisVersion =  "http://www.w3.org/" + publishSpace + "/" +
+                                                      conf.publishDate.getFullYear() + "/" +
+                                                      conf.maturity + "-" + conf.shortName + "-" +
                                                       utils.concatDate(conf.publishDate) + "/";
                 if (conf.specStatus === "ED") conf.thisVersion = conf.edDraftURI;
                 if (!conf.isCGBG) conf.latestVersion = "http://www.w3.org/" + publishSpace + "/" + conf.shortName + "/";
@@ -212,9 +216,9 @@ define(
                 if (conf.previousPublishDate) {
                     if (!conf.previousMaturity && !conf.isTagFinding)
                         msg.pub("error", "previousPublishDate is set, but not previousMaturity");
-                    if (!(conf.previousPublishDate instanceof Date)) 
+                    if (!(conf.previousPublishDate instanceof Date))
                         conf.previousPublishDate = utils.parseSimpleDate(conf.previousPublishDate);
-                    var pmat = (this.status2maturity[conf.previousMaturity]) ? this.status2maturity[conf.previousMaturity] : 
+                    var pmat = (this.status2maturity[conf.previousMaturity]) ? this.status2maturity[conf.previousMaturity] :
                                                                                conf.previousMaturity;
                     if (conf.isTagFinding) {
                         conf.prevVersion = conf.latestVersion + "-" + utils.concatDate(conf.previousPublishDate, "-");
@@ -255,7 +259,7 @@ define(
                 }
                 conf.longStatus = this.status2long[conf.specStatus];
                 conf.showThisVersion =  (!conf.isNoTrack || conf.isTagFinding);
-                conf.showPreviousVersion = (conf.specStatus !== "FPWD" && conf.specStatus !== "ED" && 
+                conf.showPreviousVersion = (conf.specStatus !== "FPWD" && conf.specStatus !== "ED" &&
                                            !conf.isNoTrack && !conf.noRecTrack);
                 if (conf.isTagFinding) conf.showPreviousVersion = conf.previousPublishDate ? true : false;
                 conf.notYetRec = (conf.isRecTrack && conf.specStatus !== "REC");
@@ -268,7 +272,7 @@ define(
                 conf.isCR = (conf.specStatus === "CR");
                 conf.isMO = (conf.specStatus === "MO");
                 conf.isIGNote = (conf.specStatus === "IG-NOTE");
-                // configuration done — yay!
+                // configuration done - yay!
                 
                 // insert into document
                 $("body", doc).prepend($((Handlebars.compile(conf.isCGBG ? cgbgHeadersTmpl : headersTmpl))(conf)));
@@ -286,7 +290,7 @@ define(
                     });
                     var pats = [];
                     for (var i = 0, n = conf.wg.length; i < n; i++) {
-                        pats.push("<a href='" + conf.wgPatentURI[i] + "' rel='disclosure'>" + conf.wg[i] + "</a>")
+                        pats.push("<a href='" + conf.wgPatentURI[i] + "' rel='disclosure'>" + conf.wg[i] + "</a>");
                     }
                     conf.wgPatentHTML = pats.join(", ");
                 }
