@@ -101,7 +101,6 @@
                 this.webIDL();
                 this.fixHeaders();
                 this.makeTOC();
-                this.idHeaders();
 
                 // if (this.doMicroData) this.makeMicroData();
                 if (this.doRDFa) this.makeRDFa();
@@ -508,17 +507,6 @@
             }
 
             return ul;
-        },
-
-        idHeaders:    function () {
-            var heads = document.querySelectorAll("h2, h3, h4, h5, h6");
-            for (var i = 0; i < heads.length; i++) {
-                var h = heads[i];
-                if (h.hasAttribute("id")) continue;
-                var par = h.parentNode;
-                if (par.localName.toLowerCase() == "section" && par.hasAttribute("id") && !h.previousElementSibling) continue;
-                sn.makeID(h, null);
-            }
         },
 
         // --- INLINE PROCESSING ----------------------------------------------------------------------------------

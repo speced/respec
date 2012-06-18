@@ -18,9 +18,10 @@ define([
         ,   "core/best-practices"
         ,   "w3c/legacy"
         ,   "w3c/informative"
+        ,   "core/id-headers"
         ,   "w3c/unhtml5"
         ,   "core/remove-respec"
-        ], 
+        ],
         function (domReady, runner) {
             var args = Array.prototype.slice.call(arguments)
             ,   hasRun = false;
@@ -62,9 +63,8 @@ define([
 //      "core/structure",
 //  X    informative
 //      section refs
-//      "w3c/structure",
+//  X    "w3c/structure",
 //  X    "core/dfn",
-//      "core/rdfa", (note that we've deleted support here and there since it was spread everywhere — reinstate from original v1)
+//      "core/rdfa", (note that we've deleted support here and there since it was spread everywhere -- reinstate from original v1)
 //  X    "w3c/unhtml5",
 //  X    "core/remove-respec"
-
