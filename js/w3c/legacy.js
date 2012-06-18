@@ -99,7 +99,6 @@
                 this.extractConfig();
                 this.inlines();
                 this.webIDL();
-                this.fixHeaders();
                 this.makeTOC();
 
                 // if (this.doMicroData) this.makeMicroData();
@@ -414,17 +413,6 @@
         },
 
         // --- W3C BASICS -----------------------------------------------------------------------------------------
-        fixHeaders:    function () {
-            var secs = document.querySelectorAll("section > h1:first-child, section > h2:first-child, section > h3:first-child, section > h4:first-child, section > h5:first-child, section > h6:first-child");
-            for (var i = 0; i < secs.length; i++) {
-                var sec = secs[i];
-                var depth = sn.findNodes("ancestor::x:section|ancestor::section", sec).length + 1;
-                if (depth > 6) depth = 6;
-                var h = "h" + depth;
-                if (sec.localName.toLowerCase() != h) sn.renameEl(sec, h);
-            }
-        },
-
         makeTOC:    function () {
             var ul = this.makeTOCAtLevel(document.body, [0], 1);
             if (!ul) return;
@@ -2008,5 +1996,4 @@ define([], function () {
             (new berjon.respec()).loadAndRun(cb, msg);
         }
     };
-    
 });

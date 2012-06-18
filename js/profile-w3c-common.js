@@ -17,6 +17,7 @@ define([
         ,   "core/highlight"
         ,   "core/best-practices"
         ,   "w3c/legacy"
+        ,   "core/fix-headers"
         ,   "w3c/informative"
         ,   "core/id-headers"
         ,   "w3c/unhtml5"
@@ -41,6 +42,10 @@ define([
         }
 );
 
+// XXX other things to port
+//  - all the UI stuff
+//  - all the save as stuff (drop source option)
+
 // XXX - FROM RSv2
 //  X    "core/base-runner",
 //  X    "core/utils", (port in increments, only including the stuff that is depended upon -- avoids cruft)
@@ -60,6 +65,7 @@ define([
 //  X    issues-notes (like examples)
 //      "w3c/bibref",
 //      "core/figure",
+//  X    fix headers
 //      "core/structure",
 //  X    informative
 //      section refs
