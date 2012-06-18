@@ -103,7 +103,6 @@
 
                 // if (this.doMicroData) this.makeMicroData();
                 if (this.doRDFa) this.makeRDFa();
-                this.makeSectionRefs(); // allow references to sections using name for text, fjh
 
                 // shortcuts
                 var obj = this;
@@ -641,33 +640,6 @@
                 }
             }
 
-        },
-
-        makeSectionRefs: function () {
-            var secrefs = document.querySelectorAll("a.sectionRef");
-            for (var i = 0; i < secrefs.length; i++) {
-                var secref = secrefs[i];
-
-                // get the link href and section title
-                var h = secref.getAttribute('href');
-                var id = h.substring(1);
-
-                var sec = document.getElementById(id);
-                var secno = "Not found"+ id;
-
-                if(sec) {
-                    var span = sec.firstElementChild;
-
-                    if(span) {
-                        secno = span.textContent;
-                    }
-                }
-
-                var title = "section " + secno;
-
-                // create new a reference to section using section title
-                secref.innerHTML = title;
-            }
         },
 
         // --- WEB IDL --------------------------------------------------------------------------------------------

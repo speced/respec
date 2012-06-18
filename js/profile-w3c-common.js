@@ -19,6 +19,7 @@ define([
         ,   "w3c/legacy"
         ,   "core/fix-headers"
         ,   "w3c/informative"
+        ,   "core/section-refs"
         ,   "core/id-headers"
         ,   "w3c/unhtml5"
         ,   "core/remove-respec"
@@ -68,7 +69,7 @@ define([
 //  X    fix headers
 //      "core/structure",
 //  X    informative
-//      section refs
+//  X    section refs
 //  X    "w3c/structure",
 //  X    "core/dfn",
 //      "core/rdfa", (note that we've deleted support here and there since it was spread everywhere -- reinstate from original v1)
