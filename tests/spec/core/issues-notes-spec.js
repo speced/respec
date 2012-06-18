@@ -24,8 +24,6 @@ describe("Core — Issues and Notes", function () {
             ,   $spnot = $("span.note", doc)
             ;
 
-            console.log($iss, $piss, $spiss, $not, $pnot, $spnot);
-            
             expect($spiss.parent("div").length).toEqual(0);
             expect($spnot.parent("div").length).toEqual(0);
 
