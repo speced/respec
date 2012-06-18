@@ -3,7 +3,7 @@ describe("Core — Utils", function () {
 
     beforeEach(function () {
         runs(function () {
-            require(["/js/core/utils"], function (u) { utils = u; });
+            require(["../js/core/utils"], function (u) { utils = u; });
         });
         waitsFor(function () { return utils; }, MAXOUT);
     });
