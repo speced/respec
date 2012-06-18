@@ -738,7 +738,7 @@ berjon.WebIDLProcessor.prototype = {
         else if (str.indexOf("exception") == 0) this.exception(def, str, idl);
         else if (str.indexOf("dictionary") == 0) this.dictionary(def, str, idl);
         else if (str.indexOf("callback") == 0) this.callback(def, str, idl);
-        else if (str.indexOf("enum") == 0) this.enum(def, str, idl);
+        else if (str.indexOf("enum") == 0) this.processEnum(def, str, idl);
         else if (str.indexOf("typedef") == 0)   this.typedef(def, str, idl);
         else if (/\bimplements\b/.test(str))     this.implements(def, str, idl);
         else    error("Expected definition, got: " + str);
@@ -806,7 +806,7 @@ berjon.WebIDLProcessor.prototype = {
         return inf;
     },
 
-    enum:  function (inf, str, idl) {
+    processEnum:  function (inf, str, idl) {
         inf.type = "enum";
         var match = /^\s*enum\s+([A-Za-z][A-Za-z0-9]*)\s*$/.exec(str);
         if (match) {
@@ -893,7 +893,7 @@ berjon.WebIDLProcessor.prototype = {
                 mem = this.callbackMember(dt, dd);
             }
             else if (obj.type == "enum") {
-                mem = this.enumMember(dt, dd);
+                mem = this.processEnumMember(dt, dd);
             }
             else {
                 mem = this.interfaceMember(dt, dd);
@@ -1032,7 +1032,7 @@ berjon.WebIDLProcessor.prototype = {
         error("Expected callback member, got: " + str);
     },
 
-    enumMember:    function (dt, dd) {
+    processEnumMember:    function (dt, dd) {
         var mem = { children: [] };
         var str = this._norm(dt.textContent);
         mem.description = sn.documentFragment();
