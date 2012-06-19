@@ -11,6 +11,7 @@ define([
         ,   "w3c/conformance"
         ,   "core/data-transform"
         ,   "core/data-include"
+        ,   "core/inlines"
         ,   "core/dfn"
         ,   "core/examples"
         ,   "core/issues-notes"
@@ -59,7 +60,7 @@ define([
 //  X    conformance
 //  X    "core/data-transform",
 //  X    "core/data-include",
-//      "core/inlines",
+//  X    "core/inlines",
 //      "core/webidl",
 //  X    "core/examples",
 //  X    highlight (these can be advantageously split out, since removing them saves a lot of code)

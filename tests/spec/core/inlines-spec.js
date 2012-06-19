@@ -1,0 +1,35 @@
+describe("Core - Inlines", function () {
+    var MAXOUT = 5000
+    ,   basicConfig = {
+            editors:    [{ name: "Robin Berjon" }]
+        ,   specStatus: "WD"
+        };
+    it("should process all inline content", function () {
+        var doc;
+        runs(function () {
+            makeRSDoc({ config: basicConfig,
+                        body: "<section id='inlines'><p><acronym title='ACRO-TIT'>ACRO</acronym> ACRO</p><p>" +
+                              "<abbr title='ABBR-TIT'>ABBR</abbr> ABBR</p><p>MUST and NOT RECOMMENDED</p>" +
+                              "<p>[[!DAHUT]] [[REX]]</p></section>"
+                    }, function (rsdoc) { doc = rsdoc; });
+        });
+        waitsFor(function () { return doc; }, MAXOUT);
+        runs(function () {
+            var $inl = $("#inlines", doc)
+            ,   $nr = $("#normative-references", doc)
+            ,   $ir = $("#informative-references", doc)
+            ;
+            console.log($inl);
+            expect($inl.find("acronym[title='ACRO-TIT']:contains('ACRO')").length).toEqual(2);
+            expect($inl.find("abbr[title='ABBR-TIT']:contains('ABBR')").length).toEqual(2);
+            expect($inl.find("cite a:contains('DAHUT')").attr("href")).toEqual("#bib-DAHUT");
+            expect($inl.find("cite a:contains('REX')").attr("href")).toEqual("#bib-REX");
+            expect($nr.find("dl dt").length).toEqual(1);
+            expect($nr.find("dl dt:contains('[DAHUT]')").length).toEqual(1);
+            expect($ir.find("dl dt").length).toEqual(1);
+            expect($ir.find("dl dt:contains('[REX]')").length).toEqual(1);
+            flushIframes();
+        });
+    });
+});
+
