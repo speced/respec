@@ -12,7 +12,7 @@ define(
                 $("h2, h3, h4, h5, h6").each(function () {
                     var $h = $(this);
                     if (!$h.attr("id")) {
-                        if ($h.parent("section").attr("id") && $h.prev().length !== 0) return;
+                        if ($h.parent("section").attr("id") && $h.prev().length === 0) return;
                         $h.makeID();
                     }
                 });

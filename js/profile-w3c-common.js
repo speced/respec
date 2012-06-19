@@ -16,6 +16,7 @@ define([
         ,   "core/issues-notes"
         ,   "core/highlight"
         ,   "core/best-practices"
+        ,   "core/figures"
         ,   "w3c/legacy"
         ,   "core/fix-headers"
         ,   "w3c/informative"
@@ -65,7 +66,7 @@ define([
 //  X    best practices
 //  X    issues-notes (like examples)
 //      "w3c/bibref",
-//      "core/figure",
+//  X    "core/figure",
 //  X    fix headers
 //      "core/structure",
 //  X    informative
