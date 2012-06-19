@@ -11,7 +11,7 @@ describe("Core - ID headers", function () {
         });
         waitsFor(function () { return doc; }, MAXOUT);
         runs(function () {
-            var $s = $("div.section h6:contains('FOO')", doc);
+            var $s = $("div.section h2:contains('FOO')", doc);
             expect($s.attr("id")).toEqual("foo");
             flushIframes();
         });
