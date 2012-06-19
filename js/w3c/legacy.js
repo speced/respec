@@ -99,13 +99,10 @@
                 this.extractConfig();
                 this.inlines();
                 this.webIDL();
-                this.fixHeaders();
                 this.makeTOC();
-                this.idHeaders();
 
                 // if (this.doMicroData) this.makeMicroData();
                 if (this.doRDFa) this.makeRDFa();
-                this.makeSectionRefs(); // allow references to sections using name for text, fjh
 
                 // shortcuts
                 var obj = this;
@@ -415,17 +412,6 @@
         },
 
         // --- W3C BASICS -----------------------------------------------------------------------------------------
-        fixHeaders:    function () {
-            var secs = document.querySelectorAll("section > h1:first-child, section > h2:first-child, section > h3:first-child, section > h4:first-child, section > h5:first-child, section > h6:first-child");
-            for (var i = 0; i < secs.length; i++) {
-                var sec = secs[i];
-                var depth = sn.findNodes("ancestor::x:section|ancestor::section", sec).length + 1;
-                if (depth > 6) depth = 6;
-                var h = "h" + depth;
-                if (sec.localName.toLowerCase() != h) sn.renameEl(sec, h);
-            }
-        },
-
         makeTOC:    function () {
             var ul = this.makeTOCAtLevel(document.body, [0], 1);
             if (!ul) return;
@@ -508,17 +494,6 @@
             }
 
             return ul;
-        },
-
-        idHeaders:    function () {
-            var heads = document.querySelectorAll("h2, h3, h4, h5, h6");
-            for (var i = 0; i < heads.length; i++) {
-                var h = heads[i];
-                if (h.hasAttribute("id")) continue;
-                var par = h.parentNode;
-                if (par.localName.toLowerCase() == "section" && par.hasAttribute("id") && !h.previousElementSibling) continue;
-                sn.makeID(h, null);
-            }
         },
 
         // --- INLINE PROCESSING ----------------------------------------------------------------------------------
@@ -665,33 +640,6 @@
                 }
             }
 
-        },
-
-        makeSectionRefs: function () {
-            var secrefs = document.querySelectorAll("a.sectionRef");
-            for (var i = 0; i < secrefs.length; i++) {
-                var secref = secrefs[i];
-
-                // get the link href and section title
-                var h = secref.getAttribute('href');
-                var id = h.substring(1);
-
-                var sec = document.getElementById(id);
-                var secno = "Not found"+ id;
-
-                if(sec) {
-                    var span = sec.firstElementChild;
-
-                    if(span) {
-                        secno = span.textContent;
-                    }
-                }
-
-                var title = "section " + secno;
-
-                // create new a reference to section using section title
-                secref.innerHTML = title;
-            }
         },
 
         // --- WEB IDL --------------------------------------------------------------------------------------------
@@ -2020,5 +1968,4 @@ define([], function () {
             (new berjon.respec()).loadAndRun(cb, msg);
         }
     };
-    
 });

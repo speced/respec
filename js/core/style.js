@@ -23,8 +23,7 @@ define(
                 }
                 msg.pub("end", "core/style");
                 cb();
-            },
-            ieDummy: 1
+            }
         };
     }
 );

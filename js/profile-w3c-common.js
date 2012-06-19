@@ -16,11 +16,15 @@ define([
         ,   "core/issues-notes"
         ,   "core/highlight"
         ,   "core/best-practices"
+        ,   "core/figures"
         ,   "w3c/legacy"
+        ,   "core/fix-headers"
         ,   "w3c/informative"
+        ,   "core/section-refs"
+        ,   "core/id-headers"
         ,   "w3c/unhtml5"
         ,   "core/remove-respec"
-        ], 
+        ],
         function (domReady, runner) {
             var args = Array.prototype.slice.call(arguments)
             ,   hasRun = false;
@@ -40,6 +44,10 @@ define([
         }
 );
 
+// XXX other things to port
+//  - all the UI stuff
+//  - all the save as stuff (drop source option)
+
 // XXX - FROM RSv2
 //  X    "core/base-runner",
 //  X    "core/utils", (port in increments, only including the stuff that is depended upon -- avoids cruft)
@@ -58,13 +66,13 @@ define([
 //  X    best practices
 //  X    issues-notes (like examples)
 //      "w3c/bibref",
-//      "core/figure",
+//  X    "core/figure",
+//  X    fix headers
 //      "core/structure",
 //  X    informative
-//      section refs
-//      "w3c/structure",
+//  X    section refs
+//  X    "w3c/structure",
 //  X    "core/dfn",
-//      "core/rdfa", (note that we've deleted support here and there since it was spread everywhere — reinstate from original v1)
+//      "core/rdfa", (note that we've deleted support here and there since it was spread everywhere -- reinstate from original v1)
 //  X    "w3c/unhtml5",
 //  X    "core/remove-respec"
-
