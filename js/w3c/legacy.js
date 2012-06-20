@@ -30,15 +30,7 @@
     }
     berjon.respec = function () {};
     berjon.respec.prototype = {
-        title:          null,
-        additionalCopyrightHolders: null,
-        overrideCopyright: null,
-        editors:        [],
-        authors:        [],
-
-        isLocal:    false,
-
-        loadAndRun:    function (cb, msg) {
+        loadAndRun:    function (cb, msg, conf, doc, cb, msg) {
             var scripts = document.querySelectorAll("script[src]");
             // XXX clean this up
             var rs, base = "";
@@ -50,9 +42,6 @@
                 }
             }
             // base = respecConfig.respecBase;
-            this.base = base;
-            if (base.indexOf("file://") === 0) this.isLocal = true;
-
             var loaded = [];
             var deps = ["js/simple-node.js", "js/shortcut.js", "bibref/biblio.js"];
             var head = document.getElementsByTagName('head')[0];
@@ -64,7 +53,7 @@
                         "":     "http://www.w3.org/1999/xhtml",
                         "x":    "http://www.w3.org/1999/xhtml"
                     }, document);
-                    obj.run();
+                    obj.run(conf, doc, cb, msg);
                     msg.pub("end", "w3c/legacy");
                     cb();
                 }
@@ -88,16 +77,16 @@
                     "":     "http://www.w3.org/1999/xhtml",
                     "x":    "http://www.w3.org/1999/xhtml"
                 }, document);
-                obj.run();
+                obj.run(conf, doc, cb, msg);
                 msg.pub("end", "w3c/legacy");
                 cb();
             }
         },
 
-        run:    function () {
+        run:    function (conf, doc, cb, msg) {
             try {
                 this.extractConfig();
-                this.inlines();
+                this.bibref(conf, doc, cb, msg);
                 this.webIDL();
                 this.makeTOC();
 
@@ -497,124 +486,37 @@
         },
 
         // --- INLINE PROCESSING ----------------------------------------------------------------------------------
-        inlines:    function () {
-            document.normalize();
-
-            // PRE-PROCESSING
-            var norms = {}, informs = {}, abbrMap = {}, acroMap = {}, badrefs = {};
-            var badrefcount = 0;
-            var abbrs = document.querySelectorAll("abbr[title]");
-            for (var i = 0; i < abbrs.length; i++) abbrMap[abbrs[i].textContent] = abbrs[i].getAttribute("title");
-            var acros = document.querySelectorAll("acronym[title]");
-            for (var i = 0; i < acros.length; i++) acroMap[acros[i].textContent] = acros[i].getAttribute("title");
-            var aKeys = [];
-            for (var k in abbrMap) if (abbrMap.hasOwnProperty(k)) aKeys.push(k);
-            for (var k in acroMap) if (abbrMap.hasOwnProperty(k)) aKeys.push(k);
-            aKeys.sort(function (a, b) {
-                if (b.length < a.length) return -1;
-                if (a.length < b.length) return 1;
-                return 0;
-            });
-            var abbrRx = aKeys.length ? "|(?:\\b" + aKeys.join("\\b)|(?:\\b") + "\\b)" : "";
-            var rx = new RegExp("(\\bMUST(?:\\s+NOT)?\\b|\\bSHOULD(?:\\s+NOT)?\\b|\\bSHALL(?:\\s+NOT)?\\b|" +
-                                "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +
-                                "(?:\\[\\[(?:!)?[A-Za-z0-9-]+\\]\\])" +
-                                abbrRx + ")");
-            // PROCESSING
-            var txts = sn.findNodes(".//text()", document.body);
-            for (var i = 0; i < txts.length; i++) {
-                var txt = txts[i];
-                var subtxt = txt.data.split(rx);
-                var df = sn.documentFragment();
-                while (subtxt.length) {
-                    var t = subtxt.shift();
-                    var matched = null;
-                    if (subtxt.length) matched = subtxt.shift();
-                    sn.text(t, df);
-                    if (matched) {
-                        // RFC 2129
-                        if (/MUST(?:\s+NOT)?|SHOULD(?:\s+NOT)?|SHALL(?:\s+NOT)?|MAY|(?:NOT\s+)?REQUIRED|(?:NOT\s+)?RECOMMENDED|OPTIONAL/.test(matched)) {
-                            matched = matched.toLowerCase();
-                            sn.element("em", { "class": "rfc2119", title: matched }, df, matched);
-                        }
-                        // BIBREF
-                        else if (/^\[\[/.test(matched)) {
-                            var ref = matched;
-                            ref = ref.replace(/^\[\[/, "");
-                            ref = ref.replace(/\]\]$/, "");
-                            var norm = false;
-                            if (ref.indexOf("!") === 0) {
-                                norm = true;
-                                ref = ref.replace(/^!/, "");
-                            }
-                            if (berjon.biblio[ref]) {
-                                if (norm) norms[ref] = true;
-                                else      informs[ref] = true;
-                                sn.text("[", df);
-                                // embed a cite with an a inside of it
-                                var el = sn.element("cite", {} , df);
-                                sn.element("a", { "class": "bibref", rel: "biblioentry", href: "#bib-" + ref }, el, ref);
-                                sn.text("]", df);
-                            }
-                            else {
-                                badrefcount++;
-                                if ( badrefs[ref] ) {
-                                    badrefs[ref] = badrefs[ref] + 1 ;
-                                } else {
-                                    badrefs[ref] =  1 ;
-                                }
-                            }
-                        }
-                        // ABBR
-                        else if (abbrMap[matched]) {
-                            if (sn.findNodes("ancestor::abbr", txt).length) sn.text(matched, df);
-                            else sn.element("abbr", { title: abbrMap[matched] }, df, matched);
-                        }
-                        // ACRO
-                        else if (acroMap[matched]) {
-                            if (sn.findNodes("ancestor::acronym", txt).length) sn.text(matched, df);
-                            else sn.element("acronym", { title: acroMap[matched] }, df, matched);
-                        }
-                        // FAIL
-                        else {
-                            error("Found token '" + matched + "' but it does not correspond to anything");
-                        }
-                    }
-                }
-                txt.parentNode.replaceChild(df, txt);
-            }
-
-            // POST-PROCESSING
-            // bibref
-            if(badrefcount > 0) {
-                error("Got " + badrefcount + " tokens looking like a reference, not in biblio DB: ");
-                for (var item in badrefs) {
-                    if (badrefs.hasOwnProperty(item)) error("Bad ref: " + item + ", count = " + badrefs[item]);
-                }
-            }
+        bibref:    function (conf, doc, cb, msg) {
+            // this is in fact the bibref processing portion
+            var badrefs = {}
+            ,   badrefcount = 0
+            ,   informs = conf.informativeReferences
+            ,   norms = conf.normativeReferences
+            ;
 
             var del = [];
-            for (var k in informs) {
-                if (norms[k]) del.push(k);
-            }
+            for (var k in informs) if (norms[k]) del.push(k);
             for (var i = 0; i < del.length; i++) delete informs[del[i]];
 
             var refsec = sn.element("section", { id: "references", "class": "appendix" }, document.body);
             sn.element("h2", {}, refsec, "References");
             if (this.refNote) {
                 var refnote = sn.element("p", {}, refsec);
-                refnote.innerHTML= this.refNote;
+                refnote.innerHTML = this.refNote;
             }
+            var getKeys = function (obj) {
+                var res = [];
+                for (var k in obj) res.push(k);
+                return res;
+            };
 
             var types = ["Normative", "Informative"];
             for (var i = 0; i < types.length; i++) {
                 var type = types[i];
-                var refMap = (type == "Normative") ? norms : informs;
+                var refs = (type == "Normative") ? getKeys(norms) : getKeys(informs);
                 var sec = sn.element("section", {}, refsec);
                 sn.makeID(sec, null, type + " references");
                 sn.element("h3", {}, sec, type + " references");
-                var refs = [];
-                for (var k in refMap) if (refMap.hasOwnProperty(k)) refs.push(k);
                 refs.sort();
                 if (refs.length) {
                     var dl = sn.element("dl", { "class": "bibliography" }, sec);
@@ -633,10 +535,23 @@
                             }
                         }
                         if (berjon.biblio[ref]) dd.innerHTML = berjon.biblio[ref] + "\n";
+                        else {
+                            if (!badrefs[ref]) badrefs[ref] = 0;
+                            badrefs[ref]++;
+                            badrefcount++;
+                            dd.innerHTML = "<em>Reference not found.</em>\n";
+                        }
                     }
                 }
                 else {
                     sn.element("p", {}, sec, "No " + type.toLowerCase() + " references.");
+                }
+            }
+            
+            if(badrefcount > 0) {
+                error("Got " + badrefcount + " tokens looking like a reference, not in biblio DB: ");
+                for (var item in badrefs) {
+                    if (badrefs.hasOwnProperty(item)) error("Bad ref: " + item + ", count = " + badrefs[item]);
                 }
             }
 
@@ -1965,7 +1880,7 @@ define([], function () {
     return {
         run:    function (conf, doc, cb, msg) {
             msg.pub("start", "w3c/legacy");
-            (new berjon.respec()).loadAndRun(cb, msg);
+            (new berjon.respec()).loadAndRun(cb, msg, conf, doc, cb, msg);
         }
     };
 });

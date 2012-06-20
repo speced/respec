@@ -1,6 +1,4 @@
 
-// XXX untested
-
 // Module core/figure
 // Handles figures in the document. This encompasses two primary operations. One is
 // converting some old syntax to use the new HTML5 figure and figcaption elements
@@ -13,7 +11,7 @@ define(
     function () {
         return {
             run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/figure");
+                msg.pub("start", "core/figures");
 
                 // Move old syntax to new syntax
                 $(".figure", doc).each(function (i, figure) {
@@ -90,7 +88,7 @@ define(
                     var $ul = $tof.find("ul");
                     while (tof.length) $ul.append(tof.shift());
                 }
-                msg.pub("end", "core/figure");
+                msg.pub("end", "core/figures");
                 cb();
             }
         };

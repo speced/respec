@@ -74,7 +74,7 @@ pre.idl::before {
 /*.idlModule*/
 /*.idlModuleID*/
 /*.idlInterface*/
-.idlInterfaceID, .idlCallbackID, .idlEnumID {
+.idlInterfaceID, .idlDictionaryID, .idlCallbackID, .idlEnumID {
     font-weight:    bold;
     color:  #005a9c;
 }
@@ -85,13 +85,13 @@ pre.idl::before {
 }
 
 /*.idlAttribute*/
-.idlAttrType {
+.idlAttrType, .idlFieldType, .idlMemberType {
     color:  #005a9c;
 }
-.idlAttrName {
+.idlAttrName, .idlFieldName, .idlMemberName {
     color:  #ff4500;
 }
-.idlAttrName a {
+.idlAttrName a, .idlFieldName a, .idlMemberName a {
     color:  #ff4500;
     border-bottom:  1px dotted #ff4500;
     text-decoration: none;
@@ -169,25 +169,25 @@ pre.idl::before {
     font-weight:    bold;
 }
 
-dl.attributes, dl.methods, dl.constants {
+dl.attributes, dl.methods, dl.constants, dl.fields, dl.dictionary-members {
     margin-left:    2em;
 }
 
-.attributes dt, .methods dt, .constants dt {
+.attributes dt, .methods dt, .constants dt, .fields dt, .dictionary-members dt {
     font-weight:    normal;
 }
 
-.attributes dt code, .methods dt code, .constants dt code {
+.attributes dt code, .methods dt code, .constants dt code, .fields dt code, .dictionary-members dt code {
     font-weight:    bold;
     color:  #000;
     font-family:    monospace;
 }
 
-.attributes dt code {
+.attributes dt code, .fields dt code, .dictionary-members dt code {
     background:  #ffffd2;
 }
 
-.attributes dt .idlAttrType code {
+.attributes dt .idlAttrType code, .fields dt .idlFieldType code, .dictionary-members dt .idlMemberType code {
     color:  #005a9c;
     background:  transparent;
     font-family:    inherit;
@@ -203,7 +203,7 @@ dl.attributes, dl.methods, dl.constants {
     background:  #ddffd2;
 }
 
-.attributes dd, .methods dd, .constants dd {
+.attributes dd, .methods dd, .constants dd, .fields dd, .dictionary-members dd {
     margin-bottom:  1em;
 }
 
