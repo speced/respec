@@ -12,6 +12,8 @@ define(
                 $.each("section figcaption figure".split(" "), function (i, item) {
                     $(item, doc).renameElement("div").addClass(item);
                 });
+                $("style:not([type])").attr("type", "text/css");
+                $("script:not([type])").attr("type", "text/javascript");
                 msg.pub("end", "w3c/unhtml5");
                 cb();
             }
