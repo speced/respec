@@ -32,11 +32,11 @@ exec("git symbolic-ref HEAD", function (err, stdout, stderr) {
         }
     ,   name:       "profile-w3c-common"
     ,   include:    "requireLib biblio simpleNode shortcut".split(" ")
-    ,   out:        pth.join(builds, "respec-w3c-common.js")
+    ,   out:        versioned
     ,   inlineText: true
     };
     r.optimize(config, function (resp) {
-        fs.writeFileSync(versioned, "/* ReSpec " + version + " - Robin Berjon, http://berjon.com/ (@robinberjon) */\n" +
+        fs.writeFileSync(pth.join(builds, "respec-w3c-common.js"), "/* ReSpec " + version + " - Robin Berjon, http://berjon.com/ (@robinberjon) */\n" +
                                     fs.readFileSync(config.out));
         console.log("OK!");
     });
