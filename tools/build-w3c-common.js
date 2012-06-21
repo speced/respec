@@ -36,7 +36,8 @@ exec("git symbolic-ref HEAD", function (err, stdout, stderr) {
     ,   inlineText: true
     };
     r.optimize(config, function (resp) {
-        fs.writeFileSync(versioned, fs.readFileSync(config.out));
+        fs.writeFileSync(versioned, "/* ReSpec " + version + " - Robin Berjon, http://berjon.com/ (@robinberjon) */\n" +
+                                    fs.readFileSync(config.out));
         console.log("OK!");
     });
 });

@@ -45,6 +45,12 @@ code {
 }
 
 
+/* --- --- */
+ol.algorithm { counter-reset:numsection; list-style-type: none; }
+ol.algorithm li { margin: 0.5em 0; }
+ol.algorithm li:before { font-weight: bold; counter-increment: numsection; content: counters(numsection, ".") ") "; }
+
+
 /* --- WEB IDL --- */
 pre.idl {
     border-top: 1px solid #90b8de;
