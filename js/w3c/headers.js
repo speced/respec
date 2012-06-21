@@ -258,6 +258,7 @@ define(
                     this.status2long[k] = this.status2text[k];
                 }
                 conf.longStatus = this.status2long[conf.specStatus];
+                conf.textStatus = this.status2text[conf.specStatus];
                 conf.showThisVersion =  (!conf.isNoTrack || conf.isTagFinding);
                 conf.showPreviousVersion = (conf.specStatus !== "FPWD" && conf.specStatus !== "ED" &&
                                            !conf.isNoTrack && !conf.noRecTrack);

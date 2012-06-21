@@ -1744,7 +1744,6 @@
             // }
             var matched = /^sequence<(.+)>$/.exec(dt);
             if (matched) {
-                console.log("MATCHED!", matched[1]);
                 return "sequence&lt;<a>" + matched[1] + "</a>&gt;";
             }
             else {
