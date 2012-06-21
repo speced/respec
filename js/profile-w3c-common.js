@@ -45,9 +45,30 @@ define([
         }
 );
 
-// XXX other things to port
-//  - all the UI stuff
-//  - all the save as stuff (drop source option)
+// TODO:
+//  - UI
+//      - have a core UI module that exposes menu(name, cb), warning(), error(), startTask(), endTask(), done()
+//      - a small bullet in the top right corner, that can be closed
+//      - [ ReSpec v | 9 | 5 ] where the name is a menu that exposes various options (including About ReSpec)
+//        and that can be added to using menu(). Then is an orange count for warnings and a red count for errors
+//        Both can be clicked for details. Both are invisible if there are no problems. warning()/error() serve
+//        to feed those.
+//      - startTask/endTask serve to show progress in a little menu below the bullet. done() ends it
+//      - maybe use http://www.ryancollins.me/?p=1041
+//  - all the save as stuff (without source option), added to the UI (separate module)
+//  - a linter added to the menu (created using a separate module. the UI module needs to create a singleton in the conf
+//    that all others can reuse)
+//  - note that if we have a menu, we can drop shortcut.js!
+//  - WebIDL porting
+//      - give it a module of its own webidl-old-school
+//      - write a big set of tests for it (without touching anything else)
+//      - make it use templates wherever possible
+//      - then make it use jQuery
+//      - drop simple-node
+//  - make people() in headers use templates too
+//  - RDFa
+//      - search for RDFa throughout the code
+//      - give it its own module, that hooks over whatever it needs in the tree
 
 // XXX - FROM RSv2
 //  X    "core/base-runner",
