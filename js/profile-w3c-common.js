@@ -69,6 +69,17 @@ define([
 //  - RDFa
 //      - search for RDFa throughout the code
 //      - give it its own module, that hooks over whatever it needs in the tree
+//  - bibref
+//      - generate the proper data for webref
+//      - add localReferences hash that follows the new service format
+//      - kick the service in
+//      - make sure that we still define berjon.biblio because some people do weird stuff that
+//        accesses it. Read from it when generating the references.
+//      - look at the referers for RSv2 to get a list of specs that still use that
+//      - try to get those specs moved to RSv3
+//      - integrate the biblio changes from CVS that haven't been already
+//      - place a comment in that file asking for no updates to it
+//      - announce all of this
 
 // XXX - FROM RSv2
 //  X    "core/base-runner",
