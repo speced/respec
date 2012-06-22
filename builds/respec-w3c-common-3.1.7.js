@@ -1,4 +1,3 @@
-/* ReSpec 3.1.7 - Robin Berjon, http://berjon.com/ (@robinberjon) */
 /*! jQuery v1.7.2 jquery.com | jquery.org/license */
 /**
  * @license RequireJS domReady 1.0.0 Copyright (c) 2010-2011, The Dojo Foundation All Rights Reserved.
