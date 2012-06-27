@@ -474,7 +474,7 @@
                 var idl = idls[i];
                 var w = new berjon.WebIDLProcessor({ noIDLSorting: this.noIDLSorting });
                 var inf = w.definition(idl);
-                var df = w.makeMarkup();
+                var df = w.makeMarkup(inf.htmlID);
                 idl.parentNode.replaceChild(df, idl);
                 if (inf.type == "interface" || inf.type == "exception" ||
                     inf.type == "dictionary" || inf.type == "typedef" ||
@@ -514,6 +514,7 @@
         definition:    function (idl) {
             var def = { children: [] };
             var str = idl.getAttribute("title");
+            var id = idl.getAttribute("id");
             str = this.parseExtendedAttributes(str, def);
             if      (str.indexOf("interface") === 0 || str.indexOf("partial") === 0) this.processInterface(def, str, idl);
             else if (str.indexOf("exception") === 0) this.exception(def, str, idl);
@@ -525,6 +526,7 @@
             else    error("Expected definition, got: " + str);
             this.parent.children.push(def); // this should be done at the caller level
             this.processMembers(def, idl);
+            if (id) def.htmlID = id;
             return def;
         },
 
@@ -1046,9 +1048,11 @@
             return str;
         },
 
-        makeMarkup:    function () {
+        makeMarkup:    function (id) {
             var df = sn.documentFragment();
-            var pre = sn.element("pre", { "class": "idl" }, df);
+            var attr = { "class": "idl" };
+            if (id) attr.id = id;
+            var pre = sn.element("pre", attr, df);
             pre.innerHTML = this.writeAsWebIDL(this.parent, 0);
             df.appendChild(this.writeAsHTML(this.parent));
             return df;

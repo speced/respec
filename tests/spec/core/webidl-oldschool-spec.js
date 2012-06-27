@@ -9,6 +9,12 @@ describe("Core - WebIDL", function () {
     });
     waitsFor(function () { return loaded; }, MAXOUT);
 
+    // XXX
+    //  for each of these
+    //      - get the text of the IDL and compare it
+    //      - check the important parts of the highlighting
+    //      - look at the generated HTML for all of the important stuff
+
     it("should handle interfaces", function () {
         // ...
     });
