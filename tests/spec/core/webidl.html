@@ -57,6 +57,7 @@
         The following features are supposedly supported but actually buggy:
       </p>
       <ul>
+        <li>Copy the source ID to the IDL block</li>
         <li>In const (at least) the ? signifying nullable is made part of the type.</li>
         <li>Variadic arguments</li>
         <li>Dictionary defaults</li>
@@ -64,12 +65,15 @@
         <li>Extended attributes that don't need to be separated from the rest by a space</li>
         <li>Inheritance on exceptions</li>
         <li>Sequences as exception fields (not sure they actually can be, same for return value)</li>
+        <li>Extended attributes on typedefs</li>
+        <li>Extended attributes on implements</li>
+        <li>Union types</li>
       </ul>
       <p>
         Things that still need to be done:
       </p>
       <ul>
-        <li>Check that [], sequence, ?, and other such bothersome types are tested everywere</li>
+        <li>Check that [], sequence, ?, and other such bothersome types are tested everywhere</li>
         <li>Make sure that [][]... works</li>
       </ul>
     </section>
@@ -150,6 +154,8 @@
         <dd>2</dd>
         <dt>[Something] readonly attribute DOMString ext</dt>
         <dd>3</dd>
+        <dt>attribute sequence&lt;Date> dates</dt>
+        <dd>3.5</dd>
         <!-- <dt>static attribute DOMString unmovable</dt>
         <dd>3</dd>
         <dt>stringifier attribute DOMString asString</dt>
@@ -181,21 +187,29 @@
         <dd>3</dd>
         <dt>Perhaps? ull()</dt>
         <dd>3.5</dd>
-        <dt>void paramed()</dt>
+        <dt>short[][][][] paramed()</dt>
         <dd>
           4
           <dl class='parameters'>
-            <dt>DOMString one</dt>
+            <dt>Date one</dt>
             <dd>
               4.1
             </dd>
-            <dt>[ExtAttrs] DOMString? ext</dt>
+            <dt>[ExtAttrs] ByteString? ext</dt>
             <dd>
               4.1
             </dd>
             <dt>optional short maybe</dt>
             <dd>
               4.2
+            </dd>
+            <dt>short[] shorts</dt>
+            <dd>
+              4.3
+            </dd>
+            <dt>short[][][][] hypercubes</dt>
+            <dd>
+              4.3
             </dd>
             <!-- <dt>optional short defaulted = "one"</dt>
             <dd>
@@ -268,13 +282,69 @@
       <dl id='ex-fields' class='idl' title='exception SuperStar'>
         <dt>[Something]const long value = 42</dt>
         <dd>1</dd>
-        <dt>DOMString? message</dt>
+        <dt>Object? message</dt>
         <dd>2</dd>
         <dt>sequence&lt;float> floats</dt>
         <dd>3</dd>
         <dt>long[] numbers</dt>
         <dd>4</dd>
       </dl>
+    </section>
+    <section>
+      <h2>Enumerations</h2>
+      <p>
+        Basic enumeration.
+      </p>
+      <dl id='enum-basic' class='idl' title='enum SuperStar'>
+        <dt>one</dt>
+        <dd>1</dd>
+        <dt>two</dt>
+        <dd>2</dd>
+        <dt>three</dt>
+        <dd>3</dd>
+      </dl>
+      <!-- 
+        XXX extattr?
+       -->
+    </section>
+    <section>
+      <h2>Callbacks</h2>
+      <p>
+        Basic callback.
+      </p>
+      <dl id='cb-basic' class='idl' title='callback SuperStar = void'></dl>
+      <p>
+        Less basic callback.
+      </p>
+      <dl id='cb-less-basic' class='idl' title='callback SuperStar = unsigned long long?'>
+        <dt>optional any value</dt>
+        <dd>1</dd>
+      </dl>
+      <!-- 
+        XXX extattr?
+       -->
+    </section>
+    <section>
+      <h2>Typedefs</h2>
+      <p>
+        Basic typedef.
+      </p>
+      <div id='td-basic' class='idl' title='typedef DOMString string'></div>
+      <p>
+        Less basic typedef.
+      </p>
+      <div id='td-less-basic' class='idl' title='typedef [Something] unsigned long long? sth'></div>
+    </section>
+    <section>
+      <h2>Implements</h2>
+      <p>
+        Basic implements.
+      </p>
+      <div id='impl-basic' class='idl' title='Window implements Breakable'></div>
+      <p>
+        Less basic implements.
+      </p>
+      <div id='impl-less-basic' class='idl' title='[Something] Window implements Breakable'></div>
     </section>
   </body>
 </html>

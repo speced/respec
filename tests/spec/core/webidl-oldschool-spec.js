@@ -1,0 +1,53 @@
+describe("Core - WebIDL", function () {
+    var MAXOUT = 5000
+    ,   $widl = $("<iframe width='800' height='200' style='display: none' src='spec/core/webidl.html'></iframe>")
+    ,   loaded = false
+    ;
+    window.addEventListener("message", function () { loaded = true; }, false);
+    runs(function () {
+        $widl.appendTo($("body"));
+    });
+    waitsFor(function () { return loaded; }, MAXOUT);
+
+    it("should handle interfaces", function () {
+        // ...
+    });
+
+    it("should handle constants", function () {
+        // ...
+    });
+
+    it("should handle attributes", function () {
+        // ...
+    });
+
+    it("should handle operations", function () {
+        // ...
+    });
+
+    it("should handle dictionaries", function () {
+        // ...
+    });
+
+    it("should handle exceptions", function () {
+        // ...
+    });
+
+    it("should handle enumerations", function () {
+        // ...
+    });
+
+    it("should handle callbacks", function () {
+        // ...
+    });
+
+    it("should handle typedefs", function () {
+        // ...
+    });
+
+    it("should handle implements", function () {
+        // ...
+    });
+
+});
+
