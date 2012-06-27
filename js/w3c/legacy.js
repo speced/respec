@@ -89,13 +89,10 @@
                 this.bibref(conf, doc, cb, msg);
                 this.webIDL();
 
-                // if (this.doMicroData) this.makeMicroData();
                 if (this.doRDFa) this.makeRDFa();
 
                 // shortcuts
                 var obj = this;
-                // shortcut.add("Alt+H", function () { obj.toHTML(); });
-                // shortcut.add("Shift+Alt+H", function () { obj.toHTMLSource(); });
                 shortcut.add("Ctrl+Shift+Alt+S", function () { obj.showSaveOptions(); });
                 shortcut.add("Esc", function () { obj.hideSaveOptions(); });
             }
@@ -390,8 +387,6 @@
         extractConfig:    function () {
             var cfg = respecConfig || {};
             if (!cfg.noIDLSorting) cfg.noIDLSorting = false;
-            if (cfg.tocIntroductory === undefined) cfg.tocIntroductory = false;
-            if (!cfg.maxTocLevel) cfg.maxTocLevel = 0;
             if (!cfg.diffTool) cfg.diffTool = 'http://www5.aptest.com/standards/htmldiff/htmldiff.pl';
             if (!cfg.doRDFa) cfg.doRDFa = false;
             for (var k in cfg) {

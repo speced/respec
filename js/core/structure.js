@@ -79,6 +79,8 @@ define(
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/structure");
+                if (!conf.tocIntroductory) conf.tocIntroductory = false;
+                if (!conf.maxTocLevel) conf.maxTocLevel = 0;
                 var $secs = $("section:not(.introductory)", doc)
                                 .find("h1:first, h2:first, h3:first, h4:first, h5:first, h6:first")
                 ,   finish = function () {
