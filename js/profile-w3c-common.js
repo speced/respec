@@ -20,6 +20,7 @@ define([
         ,   "core/figures"
         ,   "w3c/legacy"
         ,   "core/fix-headers"
+        ,   "core/structure"
         ,   "w3c/informative"
         ,   "core/section-refs"
         ,   "core/id-headers"
@@ -101,7 +102,7 @@ define([
 //      "w3c/bibref",
 //  X    "core/figure",
 //  X    fix headers
-//      "core/structure",
+//  X    "core/structure",
 //  X    informative
 //  X    section refs
 //  X    "w3c/structure",

@@ -1,70 +1,28 @@
 
-// XXX untested
-
 // Module core/structure
+//  Handles producing the ToC and numbering sections across the document.
 
 // LIMITATION:
 //  At this point we don't support having more than 26 appendices.
 // CONFIGURATION:
-//  - noTOC: if set to true, no TOC is generated
+//  - noTOC: if set to true, no TOC is generated and sections are not numbered
 //  - tocIntroductory: if set to true, the introductory material is listed in the TOC
+//  - lang: can change the generated text (supported: en, fr)
+//  - maxTocLevel: only generate a TOC so many levels deep
 
 define(
     [],
     function () {
-        return {
-            i18n:   {
-                en: { toc: "Table of Contents" },
-                fr: { toc: "Sommaire" }
-            }
-        ,   run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/structure");
-                var $secs = $("section:not(.introductory)", doc)
-                                .find("h1:first, h2:first, h3:first, h4:first, h5:first, h6:first")
-                ,   finish = function () {
-                        msg.pub("end", "core/structure");
-                        cb();
-                    }
-                ;
-                if (!$secs.length) return finish();
-                $secs.each(function () {
-                    var depth = $(this).parents("section").length + 1;
-                    if (depth > 6) depth = 6;
-                    var h = "h" + depth;
-                    if (this.localName.toLowerCase() != h) $(this).renameElement(h);
-                });
-
-                // makeTOC
-                if (!conf.noTOC) {
-                    var $ul = this.makeTOCAtLevel($("body", doc), doc, [0], 1, conf);
-                    if (!$ul) return;
-                    var $sec = $("<section id='toc'/>").append("<h2 class='introductory'>" + this.i18n[conf.lang || "en"].toc + "</h2>")
-                                                       .append($ul);
-                    var $ref = $("#toc", doc);
-                    if (!$ref.length) $ref = $("#sotd", doc);
-                    if (!$ref.length) $ref = $("#abstract", doc);
-                    $ref.after($sec);
+        var i18n = {
+                    en: { toc: "Table of Contents" },
+                    fr: { toc: "Sommaire" }
                 }
-
-                // Update all anchors with empty content that reference a section ID
-                $("a[href^='#']:not(.tocxref)", doc).each(function () {
-                    var $a = $(this);
-                    if ($a.html() !== "") return;
-                    var id = $a.attr("href").slice(1);
-                    if (this.secMap[id]) {
-                        $a.addClass('sec-ref');
-                        $a.html(this.secMap[id]);
-                    }
-                });
-
-                finish();
-            }
-        ,   secMap: {}
-        ,   appendixMode:   false
-        ,   lastNonAppendix:    0
-        ,   alphabet:   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        ,   makeTOCAtLevel:    function ($parent, doc, current, level, conf) {
-                var $secs = $parent.children(this.tocIntroductory ? "section" : "section:not(.introductory)");
+        ,   secMap = {}
+        ,   appendixMode = false
+        ,   lastNonAppendix = 0
+        ,   alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        ,   makeTOCAtLevel = function ($parent, doc, current, level, conf) {
+                var $secs = $parent.children(conf.tocIntroductory ? "section" : "section:not(.introductory)");
 
                 if ($secs.length === 0) return null;
                 var $ul = $("<ul class='toc'></ul>");
@@ -84,11 +42,11 @@ define(
                     
                     if (!isIntro) current[current.length - 1]++;
                     var secnos = current.slice();
-                    if ($sec.hasClass("appendix") && current.length === 1 && !this.appendixMode) {
-                        this.lastNonAppendix = current[0];
-                        this.appendixMode = true;
+                    if ($sec.hasClass("appendix") && current.length === 1 && !appendixMode) {
+                        lastNonAppendix = current[0];
+                        appendixMode = true;
                     }
-                    if (this.appendixMode) secnos[0] = this.alphabet.charAt(current[0] - this.lastNonAppendix);
+                    if (appendixMode) secnos[0] = alphabet.charAt(current[0] - lastNonAppendix);
                     var secno = secnos.join(".")
                     ,   isTopLevel = secnos.length == 1;
                     if (isTopLevel) {
@@ -100,21 +58,66 @@ define(
                     }
                     var $span = $("<span class='secno'></span>").text(secno + " ");
                     if (!isIntro) $(h).prepend($span);
-                    this.secMap[id] = "<span class='secno'>" + secno + "</span> " +
-                                      "<span class='sec-title'>" + title + "</span>";
+                    secMap[id] = (isIntro ? "" : "<span class='secno'>" + secno + "</span> ") +
+                                "<span class='sec-title'>" + title + "</span>";
 
                     var $a = $("<a/>").attr({ href: "#" + id, 'class' : 'tocxref' })
-                                      .append($span.clone())
+                                      .append(isIntro ? "" : $span.clone())
                                       .append($hKids);
                     var $item = $("<li class='tocline'/>").append($a);
                     $ul.append($item);
                     if (conf.maxTocLevel && level >= conf.maxTocLevel) continue;
                     current.push(0);
-                    var $sub = this.makeTOCAtLevel($sec, doc, current, level + 1, conf);
+                    var $sub = makeTOCAtLevel($sec, doc, current, level + 1, conf);
                     if ($sub) $item.append($sub);
                     current.pop();
                 }
                 return $ul;
+            }
+        ;
+        
+        return {
+            run:    function (conf, doc, cb, msg) {
+                msg.pub("start", "core/structure");
+                var $secs = $("section:not(.introductory)", doc)
+                                .find("h1:first, h2:first, h3:first, h4:first, h5:first, h6:first")
+                ,   finish = function () {
+                        msg.pub("end", "core/structure");
+                        cb();
+                    }
+                ;
+                if (!$secs.length) return finish();
+                $secs.each(function () {
+                    var depth = $(this).parents("section").length + 1;
+                    if (depth > 6) depth = 6;
+                    var h = "h" + depth;
+                    if (this.localName.toLowerCase() != h) $(this).renameElement(h);
+                });
+
+                // makeTOC
+                if (!conf.noTOC) {
+                    var $ul = makeTOCAtLevel($("body", doc), doc, [0], 1, conf);
+                    if (!$ul) return;
+                    var $sec = $("<section id='toc'/>").append("<h2 class='introductory'>" + i18n[conf.lang || "en"].toc + "</h2>")
+                                                       .append($ul);
+                    var $ref = $("#toc", doc);
+                    if (!$ref.length) $ref = $("#sotd", doc);
+                    if (!$ref.length) $ref = $("#abstract", doc);
+                    $ref.after($sec);
+                }
+
+                // Update all anchors with empty content that reference a section ID
+                $("a[href^='#']:not(.tocxref)", doc).each(function () {
+                    var $a = $(this);
+                    if ($a.html() !== "") return;
+                    var id = $a.attr("href").slice(1);
+                    if (secMap[id]) {
+                        $a.addClass('sec-ref');
+                        $a.html(secMap[id]);
+                    }
+                });
+
+                finish();
             }
         };
     }
