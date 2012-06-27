@@ -42,6 +42,13 @@
         <li>
           Callback interfaces (but callback functions are).
         </li>
+        <li>
+          Static, inherit, stringifier attributes.
+        </li>
+        <li>Static operations</li>
+        <li>Default arguments</li>
+        <li>IDL wrapping</li>
+        <li>Special operations</li>
       </ul>
       <p>
         Support for these features will likely be added later.
@@ -51,6 +58,19 @@
       </p>
       <ul>
         <li>In const (at least) the ? signifying nullable is made part of the type.</li>
+        <li>Variadic arguments</li>
+        <li>Dictionary defaults</li>
+        <li>Extended attributes on dictionary members</li>
+        <li>Extended attributes that don't need to be separated from the rest by a space</li>
+        <li>Inheritance on exceptions</li>
+        <li>Sequences as exception fields (not sure they actually can be, same for return value)</li>
+      </ul>
+      <p>
+        Things that still need to be done:
+      </p>
+      <ul>
+        <li>Check that [], sequence, ?, and other such bothersome types are tested everywere</li>
+        <li>Make sure that [][]... works</li>
       </ul>
     </section>
     <section>
@@ -77,8 +97,6 @@
       <p>
         All constants and some type testing
       </p>
-      byte, octet, short, unsigned short, long, unsigned long, long long, unsigned long long, float, unresticted float, double and unrestricted double.
-      nullable
       <dl id='const-basic' class='idl' title='interface SuperStar'>
         <dt>const boolean test = true</dt>
         <dd>1</dd>
@@ -110,12 +128,152 @@
         <dd>14</dd>
         <dt>const boolean notSo? = null</dt>
         <dd>15</dd>
-        <dt>const short small = Infinity</dt>
+        <dt>const short inf = Infinity</dt>
         <dd>16</dd>
-        <dt>const short small = -Infinity</dt>
+        <dt>const short mininf = -Infinity</dt>
         <dd>17</dd>
-        <dt>const short small = NaN</dt>
+        <dt>const short cheese = NaN</dt>
         <dd>18</dd>
+        <dt>[Something] const short extAttr = NaN</dt>
+        <dd>18</dd>
+      </dl>
+    </section>
+    <section>
+      <h2>Attributes</h2>
+      <p>
+        Basic attributes testing.
+      </p>
+      <dl id='attr-basic' class='idl' title='interface SuperStar'>
+        <dt>attribute DOMString regular</dt>
+        <dd>1</dd>
+        <dt>readonly attribute DOMString ro</dt>
+        <dd>2</dd>
+        <dt>[Something] readonly attribute DOMString ext</dt>
+        <dd>3</dd>
+        <!-- <dt>static attribute DOMString unmovable</dt>
+        <dd>3</dd>
+        <dt>stringifier attribute DOMString asString</dt>
+        <dd>4</dd>
+        <dt>inherit attribute DOMString css</dt>
+        <dd>5</dd>
+        <dt>static inherit readonly attribute DOMString everything</dt>
+        <dd>6</dd>
+        <dt>stringifier inherit readonly attribute DOMString all</dt>
+        <dd>7</dd>-->
+      </dl>
+    </section>
+    <section>
+      <h2>Operations</h2>
+      <p>
+        Basic operations testing.
+      </p>
+      <!-- 
+      getter, setter, creator, deleter, legacycaller, stringifier, serilizer
+      static
+      specials don't necessarily have an indentifier
+       -->
+      <dl id='meth-basic' class='idl' title='interface SuperStar'>
+        <dt>void basic()</dt>
+        <dd>1</dd>
+        <dt>[Something] void ext()</dt>
+        <dd>2</dd>
+        <dt>unsigned long long ull()</dt>
+        <dd>3</dd>
+        <dt>Perhaps? ull()</dt>
+        <dd>3.5</dd>
+        <dt>void paramed()</dt>
+        <dd>
+          4
+          <dl class='parameters'>
+            <dt>DOMString one</dt>
+            <dd>
+              4.1
+            </dd>
+            <dt>[ExtAttrs] DOMString? ext</dt>
+            <dd>
+              4.1
+            </dd>
+            <dt>optional short maybe</dt>
+            <dd>
+              4.2
+            </dd>
+            <!-- <dt>optional short defaulted = "one"</dt>
+            <dd>
+              4.3
+            </dd> -->
+            <dt>short... variable</dt>
+            <dd>
+              4.last
+            </dd>
+          </dl>
+        </dd>
+        <!--
+        <dt>getter float ()</dt>
+        <dd>5</dd>
+        <dt>getter float withName ()</dt>
+        <dd>6</dd>
+        <dt>setter void ()</dt>
+        <dd>7</dd>
+        <dt>setter void named ()</dt>
+        <dd>8</dd>
+        ... and other special operations
+         -->
+      </dl>
+    </section>
+    <section>
+      <h2>Dictionaries</h2>
+      <p>
+        Basic dictionary.
+      </p>
+      <dl id='dict-basic' class='idl' title='dictionary SuperStar'></dl>
+      <p>
+        Inheriting dictionary.
+      </p>
+      <dl id='dict-inherit' class='idl' title='dictionary SuperStar : HyperStar'></dl>
+      <p>
+        Data in  dictionary.
+      </p>
+      <dl id='dict-fields' class='idl' title='dictionary SuperStar'>
+        <dt>DOMString value</dt>
+        <dd>1</dd>
+        <dt>DOMString? nullable</dt>
+        <dd>2</dd>
+        <dt>[Something]float ext</dt>
+        <dd>3</dd>
+        <dt>unsigned long long longLong</dt>
+        <dd>4</dd>
+        <dt>boolean test = true</dt>
+        <dd>5</dd>
+        <dt>byte little = 2</dt>
+        <dd>7</dd>
+        <dt>byte big = Infinity</dt>
+        <dd>8</dd>
+        <dt>byte cheese = NaN</dt>
+        <dd>9</dd>
+      </dl>
+    </section>
+    <section>
+      <h2>Exceptions</h2>
+      <p>
+        Basic exception.
+      </p>
+      <dl id='ex-basic' class='idl' title='exception SuperStar'></dl>
+      <p>
+        Inheriting exception.
+      </p>
+      <dl id='ex-inherit' class='idl' title='exception SuperStar : HyperStar'></dl>
+      <p>
+        Exception with content.
+      </p>
+      <dl id='ex-fields' class='idl' title='exception SuperStar'>
+        <dt>[Something]const long value = 42</dt>
+        <dd>1</dd>
+        <dt>DOMString? message</dt>
+        <dd>2</dd>
+        <dt>sequence&lt;float> floats</dt>
+        <dd>3</dd>
+        <dt>long[] numbers</dt>
+        <dd>4</dd>
       </dl>
     </section>
   </body>
