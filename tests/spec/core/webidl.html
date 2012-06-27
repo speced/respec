@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <meta charset='utf-8'/>
+    <title>WebIDL Tests</title>
+    <script src='../../../js/require.js' data-main='../../../js/profile-w3c-common' class='remove'></script>
+    <script class='remove'>
+      var respecConfig = {
+              specStatus:   "ED"
+          ,   shortName:    "webidl"
+          ,   editors:      [{ name: "Robin Berjon", url: "http://berjon.com/" }]
+          ,   wg:           "ReSpec Hackin' Gang"
+          ,   wgURI:        "http://darobin.github.com/respec"
+          ,   wgPublicList: "none"
+          ,   wgPatentURI:  "XXX"
+          ,   edDraftURI:   "http://darobin.github.com/respec"
+        };
+    </script>
+  </head>
+  <body>
+    <section id='abstract'>
+      <p>
+        This fake spec tried to exercise all aspects of WebIDL so as to do regression testing in this
+        complex piece of code.
+      </p>
+    </section>
+    <section id='sotd'>
+      <p>
+        CUSTOM PARAGRAPH
+      </p>
+    </section>
+    <section>
+      <h2>Unsupported</h2>
+      <p>
+        The following aspects of WebIDL are not currently supported and are not yet tested for:
+      </p>
+      <ul>
+        <li>
+          Names that begin with <code>_</code> in the IDL must drop the leading <code>_</code> for
+          their real name.
+        </li>
+        <li>
+          Callback interfaces (but callback functions are).
+        </li>
+      </ul>
+      <p>
+        Support for these features will likely be added later.
+      </p>
+      <p>
+        The following features are supposedly supported but actually buggy:
+      </p>
+      <ul>
+        <li>In const (at least) the ? signifying nullable is made part of the type.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Interfaces</h2>
+      <p>
+        Basic interface.
+      </p>
+      <dl id='if-basic' class='idl' title='interface SuperStar'><dt>void test()</dt><dd>test</dd></dl>
+      <p>
+        Interface with extended attribute.
+      </p>
+      <dl id='if-extended-attribute' class='idl' title='[Something, Constructor()] interface SuperStar'><dt>void test()</dt><dd>test</dd></dl>
+      <p>
+        Interface with inheritance.
+      </p>
+      <dl id='if-inheritance' class='idl' title='interface SuperStar : HyperStar'><dt>void test()</dt><dd>test</dd></dl>
+      <p>
+        Partial interface .
+      </p>
+      <dl id='if-partial' class='idl' title='partial interface SuperStar'><dt>void test()</dt><dd>test</dd></dl>
+    </section>
+    <section>
+      <h2>Constants</h2>
+      <p>
+        All constants and some type testing
+      </p>
+      byte, octet, short, unsigned short, long, unsigned long, long long, unsigned long long, float, unresticted float, double and unrestricted double.
+      nullable
+      <dl id='const-basic' class='idl' title='interface SuperStar'>
+        <dt>const boolean test = true</dt>
+        <dd>1</dd>
+        <dt>const byte bite = 8</dt>
+        <dd>2</dd>
+        <dt>const octet eight = 7</dt>
+        <dd>3</dd>
+        <dt>const short small = 42</dt>
+        <dd>4</dd>
+        <dt>const unsigned short shortish = 250</dt>
+        <dd>5</dd>
+        <dt>const long notSoLong = 99999</dt>
+        <dd>6</dd>
+        <dt>const unsigned long somewhatLong = 9999999</dt>
+        <dd>7</dd>
+        <dt>const long long veryLong = 9999999999999</dt>
+        <dd>8</dd>
+        <dt>const unsigned long long soLong = 99999999999999999</dt>
+        <dd>9</dd>
+        <dt>const float ationDevice = 4.2</dt>
+        <dd>10</dd>
+        <dt>const unrestricted float buoy = 4.2222222222</dt>
+        <dd>11</dd>
+        <dt>const double twice = 4.222222222</dt>
+        <dd>12</dd>
+        <dt>const unrestricted double rambaldi = 47.0</dt>
+        <dd>13</dd>
+        <dt>const boolean why? = false</dt>
+        <dd>14</dd>
+        <dt>const boolean notSo? = null</dt>
+        <dd>15</dd>
+        <dt>const short small = Infinity</dt>
+        <dd>16</dd>
+        <dt>const short small = -Infinity</dt>
+        <dd>17</dd>
+        <dt>const short small = NaN</dt>
+        <dd>18</dd>
+      </dl>
+    </section>
+  </body>
+</html>
