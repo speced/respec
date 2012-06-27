@@ -88,15 +88,11 @@
                 this.extractConfig();
                 this.bibref(conf, doc, cb, msg);
                 this.webIDL();
-                this.makeTOC();
 
-                // if (this.doMicroData) this.makeMicroData();
                 if (this.doRDFa) this.makeRDFa();
 
                 // shortcuts
                 var obj = this;
-                // shortcut.add("Alt+H", function () { obj.toHTML(); });
-                // shortcut.add("Shift+Alt+H", function () { obj.toHTMLSource(); });
                 shortcut.add("Ctrl+Shift+Alt+S", function () { obj.showSaveOptions(); });
                 shortcut.add("Esc", function () { obj.hideSaveOptions(); });
             }
@@ -391,98 +387,11 @@
         extractConfig:    function () {
             var cfg = respecConfig || {};
             if (!cfg.noIDLSorting) cfg.noIDLSorting = false;
-            if (cfg.tocIntroductory === undefined) cfg.tocIntroductory = false;
-            if (!cfg.maxTocLevel) cfg.maxTocLevel = 0;
             if (!cfg.diffTool) cfg.diffTool = 'http://www5.aptest.com/standards/htmldiff/htmldiff.pl';
             if (!cfg.doRDFa) cfg.doRDFa = false;
             for (var k in cfg) {
                 if (this.hasOwnProperty(k)) this[k] = cfg[k];
             }
-        },
-
-        // --- W3C BASICS -----------------------------------------------------------------------------------------
-        makeTOC:    function () {
-            var ul = this.makeTOCAtLevel(document.body, [0], 1);
-            if (!ul) return;
-            var sec = sn.element("section", { id: "toc" });
-            sn.element("h2", { "class": "introductory" }, sec, "Table of Contents");
-            sec.appendChild(ul);
-            document.body.insertBefore(sec, document.getElementById("sotd").nextSibling);
-        },
-
-        appendixMode:   false,
-        lastNonAppendix:    0,
-        alphabet:   "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-        makeTOCAtLevel:    function (parent, current, level) {
-            var xpath = this.tocIntroductory ? "./x:section|./section" :
-                                               "./x:section[not(@class='introductory')]|./section[not(@class='introductory')]";
-            var secs = sn.findNodes(xpath, parent);
-            if (secs.length === 0) return null;
-            var ul = sn.element("ul", { "class": "toc" });
-            for (var i = 0; i < secs.length; i++) {
-                var sec = secs[i],
-                    isIntro = sn.hasClass(sec, "introductory");
-                if (!sec.childNodes.length) continue;
-                var h = sec.firstElementChild;
-                var ln = h.localName.toLowerCase();
-                if (ln != "h2" && ln != "h3" && ln != "h4" && ln != "h5" && ln != "h6") continue;
-                var title = h.textContent;
-                var hKids = sn.documentFragment();
-                for (var j = 0; j < h.childNodes.length; j++) {
-                    var node = h.childNodes[j].cloneNode(true);
-                    hKids.appendChild(node);
-                    if (node.nodeType == Node.ELEMENT_NODE) {
-                        var ln = node.localName.toLowerCase();
-                        if (ln == "a") {
-                            node = sn.renameEl(node, "span");
-                            var cl = node.getAttribute("class");
-                            if (!cl) cl = "";
-                            else cl = " " + cl;
-                            // node.setAttribute("class", "formerLink" + cl);
-                            sn.addClass(node, "formerLink" + cl);
-                            node.removeAttribute("href");
-                        }
-                        else if (ln == "dfn") {
-                            node = sn.renameEl(node, "span");
-                            node.removeAttribute("id");
-                        }
-                    }
-                }
-                var id = sn.makeID(sec, null, title);
-                if (!isIntro) current[current.length-1]++;
-                var secnos = current.slice();
-                if (sn.hasClass(sec, "appendix") && current.length == 1 && !this.appendixMode) {
-                    this.lastNonAppendix = current[0];
-                    this.appendixMode = true;
-                }
-                if (this.appendixMode) secnos[0] = this.alphabet.charAt(current[0] - this.lastNonAppendix);
-                var secno = secnos.join(".");
-                if (!/\./.test(secno)) secno = secno + ".";
-                var df = sn.documentFragment();
-                if (!isIntro) sn.element("span", { "class": "secno" }, df, secno + " ");
-                // sn.text(" ", df);
-                var df2 = df.cloneNode(true);
-                h.insertBefore(df, h.firstChild);
-                // if this is a top level item, insert
-                // an OddPage comment so html2ps will correctly
-                // paginate the output
-                if (/\.$/.test(secno)) {
-                    var com = document.createComment('OddPage') ;
-                    h.parentNode.insertBefore(com, h) ;
-                }
-                // sn.text(title, df2);
-                df2.appendChild(hKids);
-                var a = sn.element("a", { href: "#" + id, 'class' : 'tocxref' }, null, [df2]);
-                var item = sn.element("li", { "class":"tocline" }, ul, [a]);
-
-                if (this.maxTocLevel && level >= this.maxTocLevel) continue;
-                current.push(0);
-                var sub = this.makeTOCAtLevel(sec, current, level + 1);
-                if (sub) item.appendChild(sub) ;
-                current.pop();
-            }
-
-            return ul;
         },
 
         // --- INLINE PROCESSING ----------------------------------------------------------------------------------

@@ -19,7 +19,6 @@ describe("Core - Inlines", function () {
             ,   $nr = $("#normative-references", doc)
             ,   $ir = $("#informative-references", doc)
             ;
-            console.log($inl);
             expect($inl.find("acronym[title='ACRO-TIT']:contains('ACRO')").length).toEqual(2);
             expect($inl.find("abbr[title='ABBR-TIT']:contains('ABBR')").length).toEqual(2);
             expect($inl.find("cite a:contains('DAHUT')").attr("href")).toEqual("#bib-DAHUT");
