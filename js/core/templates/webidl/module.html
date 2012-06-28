@@ -1,0 +1,4 @@
+<span class='idlModule'>{{extAttr obj indent }}
+{{idn indent}}module <span class='idlModuleID'>{{obj.id}}</span> {
+{{#each obj.children}}{{asWebIDL proc this indent}}{{/each}}
+{{idn indent}}};</span>
