@@ -516,7 +516,7 @@
             var str = idl.getAttribute("title");
             var id = idl.getAttribute("id");
             str = this.parseExtendedAttributes(str, def);
-            if      (str.indexOf("interface") === 0 || str.indexOf("partial") === 0) this.processInterface(def, str, idl);
+            if      (str.indexOf("interface") === 0 || str.indexOf("partial") === 0 || /^callback\s+interface\b/.test(str)) this.processInterface(def, str, idl);
             else if (str.indexOf("exception") === 0) this.exception(def, str, idl);
             else if (str.indexOf("dictionary") === 0) this.dictionary(def, str, idl);
             else if (str.indexOf("callback") === 0) this.callback(def, str, idl);
@@ -532,9 +532,10 @@
 
         processInterface:  function (inf, str, idl) {
             inf.type = "interface";
-            var match = /^\s*(partial\s+)?interface\s+([A-Za-z][A-Za-z0-9]*)(?:\s+:\s*([^{]+)\s*)?/.exec(str);
+            var match = /^\s*(?:(partial|callback)\s+)?interface\s+([A-Za-z][A-Za-z0-9]*)(?:\s+:\s*([^{]+)\s*)?/.exec(str);
             if (match) {
-                inf.partial = !!match[1];
+                inf.partial = !!match[1] && match[1] === "partial";
+                inf.callback = !!match[1] && match[1] === "callback";
                 inf.id = match[2];
                 inf.refId = this._id(inf.id);
                 if (idl.getAttribute('data-merge')) {
@@ -1486,6 +1487,7 @@
                 if (obj.extendedAttributes) str += this._idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>]\n";
                 str += this._idn(indent);
                 if (obj.partial) str += "partial ";
+                if (obj.callback) str += "callback ";
                 str += "interface <span class='idlInterfaceID'>" + obj.id + "</span>";
                 if (obj.superclasses && obj.superclasses.length) str += " : " +
                                                     obj.superclasses.map(function (it) {
