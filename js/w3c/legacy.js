@@ -1157,7 +1157,7 @@
                 var df = sn.documentFragment();
                 var curLnk = "widl-" + obj.refId + "-";
                 var types = ["field", "constant"];
-                var filterFunc = function (it) { return it.type == type; }
+                var filterFunc = function (it) { return it.type === type; }
                 ,   sortFunc = function (a, b) {
                         if (a.id < b.id) return -1;
                         if (a.id > b.id) return 1;
@@ -1185,7 +1185,7 @@
                         if (type == "field") {
                             sn.text(" of type ", dt);
                             if (it.array) {
-                                for (var i = 0, n = it.arrayCount; i < n; i++) sn.text("array of ", dt);
+                                for (var k = 0, n = it.arrayCount; k < n; k++) sn.text("array of ", dt);
                             }
                             var span = sn.element("span", { "class": "idlFieldType" }, dt);
                             var matched = /^sequence<(.+)>$/.exec(it.datatype);

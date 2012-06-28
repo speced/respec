@@ -23,11 +23,6 @@ describe("Core - WebIDL", function () {
         waitsFor(function () { return loaded; }, MAXOUT);
     });
 
-    // XXX
-    //  for each of these
-    //      - check the important parts of the highlighting
-    //      - look at the generated HTML for all of the important stuff
-
     it("should handle interfaces", function () {
         runs(function () {
             $target = $("#if-basic", doc);
@@ -88,6 +83,13 @@ describe("Core - WebIDL", function () {
         expect($const1.find(".idlConstName").text()).toEqual("test");
         expect($const1.find(".idlConstValue").text()).toEqual("true");
         expect($target.find(".idlConst").last().find(".extAttr").length).toEqual(1);
+        
+        var $sec = $("#constants-1 dl.constants", doc);
+        expect($sec.find("dt").length).toEqual(19);
+        expect($sec.find("dd").length).toEqual(19);
+        expect($sec.find("dt").first().find("code").text()).toEqual("ationDevice");
+        expect($sec.find("dt").first().find(".idlConstType").text()).toEqual("float");
+        expect($sec.find("dd").first().text()).toEqual("10");
     });
 
     it("should handle attributes", function () {
@@ -107,6 +109,13 @@ describe("Core - WebIDL", function () {
         var $lst = $target.find(".idlAttribute").last();
         expect($lst.find(".idlAttrType").text()).toEqual("sequence<Date>");
         expect($lst.find(".idlAttrType > a").text()).toEqual("Date");
+        
+        var $sec = $("#attributes-1 dl.attributes", doc);
+        expect($sec.find("dt").length).toEqual(4);
+        expect($sec.find("dd").length).toEqual(4);
+        expect($sec.find("dt").first().find("code").text()).toEqual("dates");
+        expect($sec.find("dt").first().find(".idlAttrType a").text()).toEqual("Date");
+        expect($sec.find("dd").first().text()).toEqual("3.5");
     });
 
     it("should handle operations", function () {
@@ -163,6 +172,14 @@ describe("Core - WebIDL", function () {
         expect($mem.find(".idlMemberType").text()).toEqual("DOMString");
         expect($mem.find(".idlMemberName").text()).toEqual("value");
         expect($target.find(".idlMember").last().find(".idlMemberValue").text()).toEqual('"blah blah"');
+
+        var $sec = $("#dictionary-superstar-members dl.dictionary-members", doc);
+        expect($sec.find("dt").length).toEqual(9);
+        expect($sec.find("dd").length).toEqual(9);
+        expect($sec.find("dt").first().find("code").first().text()).toEqual("big");
+        expect($sec.find("dt").first().find("code").last().text()).toEqual("Infinity");
+        expect($sec.find("dt").first().find(".idlMemberType").text()).toEqual("byte");
+        expect($sec.find("dd").first().text()).toEqual("8");
     });
 
     it("should handle exceptions", function () {
@@ -195,6 +212,20 @@ describe("Core - WebIDL", function () {
         var $fld = $target.find(".idlField").first();
         expect($fld.find(".idlFieldType a").text()).toEqual("Object");
         expect($fld.find(".idlFieldName").text()).toEqual("message");
+
+        var $sec = $("#fields dl.fields", doc);
+        expect($sec.find("dt").length).toEqual(3);
+        expect($sec.find("dd").length).toEqual(3);
+        expect($sec.find("dt").first().find("code").first().text()).toEqual("floats");
+        expect($sec.find("dt").first().find(".idlFieldType a").text()).toEqual("float");
+        expect($sec.find("dd").first().text()).toEqual("3");
+
+        $sec = $("#constants-2 dl.constants", doc);
+        expect($sec.find("dt").length).toEqual(1);
+        expect($sec.find("dd").length).toEqual(1);
+        expect($sec.find("dt").first().find("code").first().text()).toEqual("value");
+        expect($sec.find("dt").first().find(".idlConstType a").text()).toEqual("long");
+        expect($sec.find("dd").first().text()).toEqual("1");
     });
 
     it("should handle enumerations", function () {
@@ -205,6 +236,12 @@ describe("Core - WebIDL", function () {
         expect($target.find(".idlEnumID").text()).toEqual("SuperStar");
         expect($target.find(".idlEnumItem").length).toEqual(3);
         expect($target.find(".idlEnumItem").first().text()).toEqual("one");
+
+        var $sec = $target.next("table.simple");
+        expect($sec.find("th").attr("colspan")).toEqual("2");
+        expect($sec.find("th").text()).toEqual("Enumeration description");
+        expect($sec.find("tr").length).toEqual(4);
+        expect($sec.find("td").text()).toEqual("one1two2three3");
     });
 
     it("should handle callbacks", function () {
@@ -223,6 +260,13 @@ describe("Core - WebIDL", function () {
         expect($prm.length).toEqual(1);
         expect($prm.find(".idlParamType").text()).toEqual("any");
         expect($prm.find(".idlParamName").text()).toEqual("value");
+
+        var $sec = $("#callback-superstar-parameters dl.callback-members", doc);
+        expect($sec.find("dt").length).toEqual(1);
+        expect($sec.find("dd").length).toEqual(1);
+        expect($sec.find("dt").first().find("code").text()).toEqual("value");
+        expect($sec.find("dt").first().find(".idlMemberType").text()).toEqual("any");
+        expect($sec.find("dd").first().text()).toEqual("1");
     });
 
     it("should handle typedefs", function () {
@@ -236,6 +280,12 @@ describe("Core - WebIDL", function () {
         $target = $("#td-less-basic", doc);
         text = "typedef [Something] unsigned long long? sth;";
         expect($target.text()).toEqual(text);
+        
+        var $sec = $("#typedefs", doc);
+        expect($sec.find(".idlTypedefDesc").first().text()).toEqual("Throughout this specification, the identifier string is used to refer to the DOMString type.");
+        expect($sec.find(".idlTypedefDesc").first().find(".idlTypedefID").text()).toEqual("string");
+        expect($sec.find(".idlTypedefDesc").first().find(".idlTypedefType").text()).toEqual("DOMString");
+        expect($sec.find(".idlTypedefDesc").last().text()).toEqual("Throughout this specification, the identifier sth is used to refer to the unsigned long long (nullable) type.");
     });
 
     it("should handle implements", function () {
@@ -248,5 +298,8 @@ describe("Core - WebIDL", function () {
         $target = $("#impl-less-basic", doc);
         text = "[Something]\n" + text;
         expect($target.text()).toEqual(text);
+
+        var $sec = $("#implements", doc);
+        expect($sec.find(".idlImplementsDesc").first().text()).toEqual("All instances of the Window type are defined to also implement the Breakable interface.");
     });
 });
