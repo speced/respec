@@ -578,7 +578,11 @@
                 }
                 inf.array = false;
                 if (/\[\]$/.test(type)) {
-                    type = type.replace(/\[\]$/, "");
+                    inf.arrayCount = 0;
+                    type = type.replace(/(?:\[\])/g, function () {
+                        inf.arrayCount++;
+                        return "";
+                    });
                     inf.array = true;
                 }
                 inf.datatype = type;
@@ -604,10 +608,11 @@
 
         exception:  function (exc, str, idl) {
             exc.type = "exception";
-            var match = /^\s*exception\s+([A-Za-z][A-Za-z0-9]*)\s*/.exec(str);
+            var match = /^\s*exception\s+([A-Za-z][A-Za-z0-9]*)(?:\s+:\s*([^{]+)\s*)?\s*/.exec(str);
             if (match) {
                 exc.id = match[1];
                 exc.refId = this._id(exc.id);
+                if (match[2]) exc.superclasses = match[2].split(/\s*,\s*/);
             }
             else error("Expected exception, got: " + str);
             return exc;
@@ -615,8 +620,9 @@
 
         typedef:    function (tdf, str, idl) {
             tdf.type = "typedef";
-            tdf.extendedAttributes = null; // remove them in case some were there by mistake
-            var match = /^\s*typedef\s+(.+)\s+(\S+)\s*$/.exec(str);
+            str = str.replace(/^\s*typedef\s+/, "");
+            str = this.parseExtendedAttributes(str, tdf);
+            var match = /^(.+)\s+(\S+)\s*$/.exec(str);
             if (match) {
                 var type = match[1];
                 tdf.nullable = false;
@@ -626,7 +632,11 @@
                 }
                 tdf.array = false;
                 if (/\[\]$/.test(type)) {
-                    type = type.replace(/\[\]$/, "");
+                    tdf.arrayCount = 0;
+                    type = type.replace(/(?:\[\])/g, function () {
+                        tdf.arrayCount++;
+                        return "";
+                    });
                     tdf.array = true;
                 }
                 tdf.datatype = type;
@@ -643,7 +653,6 @@
 
         processImplements: function (imp, str, idl) {
             imp.type = "implements";
-            imp.extendedAttributes = null; // remove them in case some were there by mistake
             var match = /^\s*(.+?)\s+implements\s+(.+)\s*$/.exec(str);
             if (match) {
                 imp.id = match[1];
@@ -727,7 +736,11 @@
                 }
                 mem.array = false;
                 if (/\[\]$/.test(type)) {
-                    type = type.replace(/\[\]$/, "");
+                    mem.arrayCount = 0;
+                    type = type.replace(/(?:\[\])/g, function () {
+                        mem.arrayCount++;
+                        return "";
+                    });
                     mem.array = true;
                 }
                 mem.datatype = type;
@@ -754,6 +767,7 @@
                 mem.type = "member";
                 var type = match[1];
                 mem.id = match[2];
+                mem.defaultValue = match[3];
                 mem.refId = this._id(mem.id);
                 mem.nullable = false;
                 if (/\?$/.test(type)) {
@@ -762,7 +776,11 @@
                 }
                 mem.array = false;
                 if (/\[\]$/.test(type)) {
-                    type = type.replace(/\[\]$/, "");
+                    mem.arrayCount = 0;
+                    type = type.replace(/(?:\[\])/g, function () {
+                        mem.arrayCount++;
+                        return "";
+                    });
                     mem.array = true;
                 }
                 mem.datatype = type;
@@ -795,7 +813,11 @@
                 }
                 mem.array = false;
                 if (/\[\]$/.test(type)) {
-                    type = type.replace(/\[\]$/, "");
+                    mem.arrayCount = 0;
+                    type = type.replace(/(?:\[\])/g, function () {
+                        mem.arrayCount++;
+                        return "";
+                    });
                     mem.array = true;
                 }
                 mem.optional = false;
@@ -859,7 +881,11 @@
                 }
                 mem.array = false;
                 if (/\[\]$/.test(type)) {
-                    type = type.replace(/\[\]$/, "");
+                    mem.arrayCount = 0;
+                    type = type.replace(/(?:\[\])/g, function () {
+                        mem.arrayCount++;
+                        return "";
+                    });
                     mem.array = true;
                 }
                 mem.datatype = type;
@@ -916,7 +942,11 @@
                 }
                 mem.array = false;
                 if (/\[\]$/.test(type)) {
-                    type = type.replace(/\[\]$/, "");
+                    mem.arrayCount = 0;
+                    type = type.replace(/(?:\[\])/g, function () {
+                        mem.arrayCount++;
+                        return "";
+                    });
                     mem.array = true;
                 }
                 mem.datatype = type;
@@ -974,8 +1004,17 @@
                             }
                             p.array = false;
                             if (/\[\]$/.test(type)) {
-                                type = type.replace(/\[\]$/, "");
+                                p.arrayCount = 0;
+                                type = type.replace(/(?:\[\])/g, function () {
+                                    p.arrayCount++;
+                                    return "";
+                                });
                                 p.array = true;
+                            }
+                            p.variadic = false;
+                            if (i === dts.length - 1 && /\.\.\./.test(type)) {
+                                type = type.replace(/\.\.\./, "");
+                                p.variadic = true;
                             }
                             p.datatype = type;
                             p.id = match[2];
@@ -1007,8 +1046,17 @@
                             }
                             p.array = false;
                             if (/\[\]$/.test(type)) {
-                                type = type.replace(/\[\]$/, "");
+                                p.arrayCount = 0;
+                                type = type.replace(/(?:\[\])/g, function () {
+                                    p.arrayCount++;
+                                    return "";
+                                });
                                 p.array = true;
+                            }
+                            p.variadic = false;
+                            if (/\.\.\./.test(type)) {
+                                type = type.replace(/\.\.\./, "");
+                                p.variadic = true;
                             }
                             p.datatype = type;
                             p.id = match[2];
@@ -1044,7 +1092,7 @@
         },
 
         parseExtendedAttributes:    function (str, obj) {
-            str = str.replace(/^\s*\[([^\]]+)\]\s+/, function (x, m1) { obj.extendedAttributes = m1; return ""; });
+            str = str.replace(/^\s*\[([^\]]+)\]\s*/, function (x, m1) { obj.extendedAttributes = m1; return ""; });
             return str;
         },
 
@@ -1081,7 +1129,7 @@
                     cnt = [ sn.text("Throughout this specification, the identifier "),
                             sn.element("span", { "class": "idlTypedefID" }, null, obj.id),
                             sn.text(" is used to refer to the "),
-                            sn.text(obj.array ? "array of " : ""),
+                            sn.text(obj.array ? (obj.arrayCount > 1 ? obj.arrayCount + "-" : "") + "array of " : ""),
                             tdt,
                             sn.text(obj.nullable ? " (nullable)" : ""),
                             sn.text(" type.")];
@@ -1135,7 +1183,9 @@
                         var desc = sn.element("dd", {}, dl, [it.description]);
                         if (type == "field") {
                             sn.text(" of type ", dt);
-                            if (it.array) sn.text("array of ", dt);
+                            if (it.array) {
+                                for (var i = 0, n = it.arrayCount; i < n; i++) sn.text("array of ", dt);
+                            }
                             var span = sn.element("span", { "class": "idlFieldType" }, dt);
                             var matched = /^sequence<(.+)>$/.exec(it.datatype);
                             if (matched) {
@@ -1184,7 +1234,9 @@
                     sn.element("code", {}, dt, it.id);
                     var desc = sn.element("dd", {}, dl, [it.description]);
                     sn.text(" of type ", dt);
-                    if (it.array) sn.text("array of ", dt);
+                    if (it.array) {
+                        for (var i = 0, n = it.arrayCount; i < n; i++) sn.text("array of ", dt);
+                    }
                     var span = sn.element("span", { "class": "idlMemberType" }, dt);
                     var matched = /^sequence<(.+)>$/.exec(it.datatype);
                     if (matched) {
@@ -1223,7 +1275,9 @@
                     sn.element("code", {}, dt, it.id);
                     var desc = sn.element("dd", {}, dl, [it.description]);
                     sn.text(" of type ", dt);
-                    if (it.array) sn.text("array of ", dt);
+                    if (it.array) {
+                        for (var i = 0, n = it.arrayCount; i < n; i++) sn.text("array of ", dt);
+                    }
                     var span = sn.element("span", { "class": "idlMemberType" }, dt);
                     var matched = /^sequence<(.+)>$/.exec(it.datatype);
                     if (matched) {
@@ -1310,7 +1364,9 @@
                                     }
                                     else {
                                         var cnt = [sn.element("a", {}, null, prm.datatype)];
-                                        if (prm.array) cnt.push(sn.text("[]"));
+                                        if (prm.array) {
+                                            for (var i = 0, n = prm.arrayCount; i < n; i++) cnt.push(sn.text("[]"));
+                                        }
                                         sn.element("code", {}, tyTD, cnt);
                                     }
                                     if (prm.nullable) sn.element("td", { "class": "prmNullTrue" }, tr, "\u2714");
@@ -1334,14 +1390,18 @@
                             }
                             else {
                                 var cnt = [sn.element("a", {}, null, it.datatype)];
-                                if (it.array) cnt.push(sn.text("[]"));
+                                if (it.array) {
+                                    for (var i = 0, n = it.arrayCount; i < n; i++) cnt.push(sn.text("[]"));
+                                }
                                 sn.element("code", {}, reDiv, cnt);
                             }
                             if (it.nullable) sn.text(", nullable", reDiv);
                         }
                         else if (type == "attribute") {
                             sn.text(" of type ", dt);
-                            if (it.array) sn.text("array of ", dt);
+                            if (it.array) {
+                                for (var i = 0, n = it.arrayCount; i < n; i++) sn.text("array of ", dt);
+                            }
                             var span = sn.element("span", { "class": "idlAttrType" }, dt);
                             var matched = /^sequence<(.+)>$/.exec(it.datatype);
                             if (matched) {
@@ -1408,13 +1468,18 @@
             }
             else if (obj.type == "typedef") {
                 var nullable = obj.nullable ? "?" : "";
-                var arr = obj.array ? "[]" : "";
-                return  "<span class='idlTypedef' id='idl-def-" + obj.refId + "'>typedef <span class='idlTypedefType'>" +
-                        this.writeDatatype(obj.datatype) +
+                var arr = "";
+                for (var i = 0, n = obj.arrayCount; i < n; i++) arr += "[]";
+                return  "<span class='idlTypedef' id='idl-def-" + obj.refId + "'>typedef " +
+                        (obj.extendedAttributes ? "[<span class='extAttr'>" + obj.extendedAttributes + "</span>] " : "") +
+                        "<span class='idlTypedefType'>" + this.writeDatatype(obj.datatype) +
                         "</span>" + arr + nullable + " <span class='idlTypedefID'>" + obj.id + "</span>;</span>";
             }
             else if (obj.type == "implements") {
-                return  "<span class='idlImplements'><a>" + obj.id + "</a> implements <a>" + obj.datatype + "</a>;";
+                var str = "";
+                if (obj.extendedAttributes) str += this._idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>]\n";
+                str += this._idn(indent) + "<span class='idlImplements'><a>" + obj.id + "</a> implements <a>" + obj.datatype + "</a>;";
+                return str;
             }
             else if (obj.type == "interface") {
                 var str = "<span class='idlInterface' id='idl-def-" + obj.refId + "'>";
@@ -1433,7 +1498,7 @@
                 obj.children.forEach(function (it, idx) {
                     var len = it.datatype.length;
                     if (it.nullable) len = len + 1;
-                    if (it.array) len = len + 2;
+                    if (it.array) len = len + (2 * it.arrayCount);
                     if (it.type == "attribute") maxAttr = (len > maxAttr) ? len : maxAttr;
                     else if (it.type == "method") maxMeth = (len > maxMeth) ? len : maxMeth;
                     else if (it.type == "constant") maxConst = (len > maxConst) ? len : maxConst;
@@ -1452,12 +1517,18 @@
             else if (obj.type == "exception") {
                 var str = "<span class='idlException' id='idl-def-" + obj.refId + "'>";
                 if (obj.extendedAttributes) str += this._idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>]\n";
-                str += this._idn(indent) + "exception <span class='idlExceptionID'>" + obj.id + "</span> {\n";
+                str += this._idn(indent) + "exception <span class='idlExceptionID'>" + obj.id + "</span>";
+                if (obj.superclasses && obj.superclasses.length) str += " : " +
+                                                    obj.superclasses.map(function (it) {
+                                                                            return "<span class='idlSuperclass'><a>" + it + "</a></span>";
+                                                                        })
+                                                                    .join(", ");
+                str += " {\n";
                 var maxAttr = 0, maxConst = 0;
                 obj.children.forEach(function (it, idx) {
                     var len = it.datatype.length;
                     if (it.nullable) len = len + 1;
-                    if (it.array) len = len + 2;
+                    if (it.array) len = len + (2 * it.arrayCount);
                     if (it.type == "field")   maxAttr = (len > maxAttr) ? len : maxAttr;
                     else if (it.type == "constant") maxConst = (len > maxConst) ? len : maxConst;
                 });
@@ -1484,7 +1555,7 @@
                 obj.children.forEach(function (it, idx) {
                     var len = it.datatype.length;
                     if (it.nullable) len = len + 1;
-                    if (it.array) len = len + 2;
+                    if (it.array) len = len + (2 * it.arrayCount);
                     max = (len > max) ? len : max;
                 });
                 var curLnk = "widl-" + obj.refId + "-";
@@ -1501,7 +1572,8 @@
                 str += this._idn(indent) + "callback <span class='idlCallbackID'>" + obj.id + "</span>";
                 str += " = ";
                 var nullable = obj.nullable ? "?" : "";
-                var arr = obj.array ? "[]" : "";
+                var arr = "";
+                for (var i = 0, n = obj.arrayCount; i < n; i++) arr += "[]";
                 str += "<span class='idlCallbackType'>" + this.writeDatatype(obj.datatype) + arr + nullable + "</span> ";
                 str += "(";
 
@@ -1509,7 +1581,8 @@
                 str += obj.children.map(function (it) {
                                             var nullable = it.nullable ? "?" : "";
                                             var optional = it.optional ? "optional " : "";
-                                            var arr = it.array ? "[]" : "";
+                                            var arr = "";
+                                            for (var i = 0, n = it.arrayCount; i < n; i++) arr += "[]";
                                             var prm = "<span class='idlParam'>";
                                             if (it.extendedAttributes) prm += "[<span class='extAttr'>" + it.extendedAttributes + "</span>] ";
                                             prm += optional + "<span class='idlParamType'>" + self.writeDatatype(it.datatype) + arr + nullable + "</span> " +
@@ -1543,9 +1616,10 @@
             str += this._idn(indent);
             var pad = max - attr.datatype.length;
             if (attr.nullable) pad = pad - 1;
-            if (attr.array) pad = pad - 2;
+            if (attr.array) pad = pad - (2 * attr.arrayCount);
             var nullable = attr.nullable ? "?" : "";
-            var arr = attr.array ? "[]" : "";
+            var arr = "";
+            for (var i = 0, n = attr.arrayCount; i < n; i++) arr += "[]";
             str += "<span class='idlFieldType'>" + this.writeDatatype(attr.datatype) + arr + nullable + "</span> ";
             for (var i = 0; i < pad; i++) str += " ";
             str += "<span class='idlFieldName'><a href='#" + curLnk + attr.refId + "'>" + attr.id + "</a></span>";
@@ -1573,9 +1647,10 @@
             str += "attribute ";
             var pad = max - attr.datatype.length;
             if (attr.nullable) pad = pad - 1;
-            if (attr.array) pad = pad - 2;
+            if (attr.array) pad = pad - (2 * attr.arrayCount);
             var nullable = attr.nullable ? "?" : "";
-            var arr = attr.array ? "[]" : "";
+            var arr = "";
+            for (var i = 0, n = attr.arrayCount; i < n; i++) arr += "[]";
             str += "<span class='idlAttrType'>" + this.writeDatatype(attr.datatype) + arr + nullable + "</span> ";
             for (var i = 0; i < pad; i++) str += " ";
             str += "<span class='idlAttrName'><a href='#" + curLnk + attr.refId + "'>" + attr.id + "</a></span>";
@@ -1589,9 +1664,10 @@
             str += this._idn(indent);
             var pad = max - meth.datatype.length;
             if (meth.nullable) pad = pad - 1;
-            if (meth.array) pad = pad - 2;
+            if (meth.array) pad = pad - (2 * meth.arrayCount);
             var nullable = meth.nullable ? "?" : "";
-            var arr = meth.array ? "[]" : "";
+            var arr = "";
+            for (var i = 0, n = meth.arrayCount; i < n; i++) arr += "[]";
             str += "<span class='idlMethType'>" + this.writeDatatype(meth.datatype) + arr + nullable + "</span> ";
             for (var i = 0; i < pad; i++) str += " ";
             var id = this.makeMethodID(curLnk, meth);
@@ -1601,10 +1677,14 @@
             str += meth.params.map(function (it) {
                                         var nullable = it.nullable ? "?" : "";
                                         var optional = it.optional ? "optional " : "";
-                                        var arr = it.array ? "[]" : "";
+                                        var arr = "";
+                                        if (it.array) {
+                                            for (var i = 0, n = it.arrayCount; i < n; i++) arr += "[]";
+                                        }
+                                        var variadic = it.variadic ? "..." : "";
                                         var prm = "<span class='idlParam'>";
                                         if (it.extendedAttributes) prm += "[<span class='extAttr'>" + it.extendedAttributes + "</span>] ";
-                                        prm += optional + "<span class='idlParamType'>" + obj.writeDatatype(it.datatype) + arr + nullable + "</span> " +
+                                        prm += optional + "<span class='idlParamType'>" + obj.writeDatatype(it.datatype) + arr + nullable + variadic + "</span> " +
                                         "<span class='idlParamName'>" + it.id + "</span>" +
                                         "</span>";
                                         return prm;
@@ -1623,6 +1703,7 @@
 
         writeConst:    function (cons, max, indent, curLnk) {
             var str = "<span class='idlConst'>";
+            if (cons.extendedAttributes) str += this._idn(indent) + "[<span class='extAttr'>" + cons.extendedAttributes + "</span>]\n";
             str += this._idn(indent);
             str += "const ";
             var pad = max - cons.datatype.length;
@@ -1637,12 +1718,14 @@
 
         writeMember:    function (memb, max, indent, curLnk) {
             var str = "<span class='idlMember'>";
+            if (memb.extendedAttributes) str += this._idn(indent) + "[<span class='extAttr'>" + memb.extendedAttributes + "</span>]\n";
             str += this._idn(indent);
             var pad = max - memb.datatype.length;
             if (memb.nullable) pad = pad - 1;
-            if (memb.array) pad = pad - 2;
+            if (memb.array) pad = pad - (2 * memb.arrayCount);
             var nullable = memb.nullable ? "?" : "";
-            var arr = memb.array ? "[]" : "";
+            var arr = "";
+            for (var i = 0, n = memb.arrayCount; i < n; i++) arr += "[]";
             str += "<span class='idlMemberType'>" + this.writeDatatype(memb.datatype) + arr + nullable + "</span> ";
             for (var i = 0; i < pad; i++) str += " ";
             str += "<span class='idlMemberName'><a href='#" + curLnk + memb.refId + "'>" + memb.id + "</a></span>";

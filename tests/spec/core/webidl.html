@@ -49,6 +49,7 @@
         <li>Default arguments</li>
         <li>IDL wrapping</li>
         <li>Special operations</li>
+        <li>Union types</li>
       </ul>
       <p>
         Support for these features will likely be added later.
@@ -57,24 +58,13 @@
         The following features are supposedly supported but actually buggy:
       </p>
       <ul>
-        <li>Copy the source ID to the IDL block</li>
-        <li>In const (at least) the ? signifying nullable is made part of the type.</li>
-        <li>Variadic arguments</li>
-        <li>Dictionary defaults</li>
-        <li>Extended attributes on dictionary members</li>
-        <li>Extended attributes that don't need to be separated from the rest by a space</li>
-        <li>Inheritance on exceptions</li>
-        <li>Sequences as exception fields (not sure they actually can be, same for return value)</li>
-        <li>Extended attributes on typedefs</li>
-        <li>Extended attributes on implements</li>
-        <li>Union types</li>
+        <li><em>list currently empty</em></li>
       </ul>
       <p>
         Things that still need to be done:
       </p>
       <ul>
         <li>Check that [], sequence, ?, and other such bothersome types are tested everywhere</li>
-        <li>Make sure that [][]... works</li>
       </ul>
     </section>
     <section>
@@ -128,9 +118,9 @@
         <dd>12</dd>
         <dt>const unrestricted double rambaldi = 47.0</dt>
         <dd>13</dd>
-        <dt>const boolean why? = false</dt>
+        <dt>const boolean? why = false</dt>
         <dd>14</dd>
-        <dt>const boolean notSo? = null</dt>
+        <dt>const boolean? notSo = null</dt>
         <dd>15</dd>
         <dt>const short inf = Infinity</dt>
         <dd>16</dd>
@@ -191,7 +181,7 @@
         <dd>
           4
           <dl class='parameters'>
-            <dt>Date one</dt>
+            <dt>Date[][][] one</dt>
             <dd>
               4.1
             </dd>
@@ -264,6 +254,8 @@
         <dd>8</dd>
         <dt>byte cheese = NaN</dt>
         <dd>9</dd>
+        <dt>DOMString blah = "blah blah"</dt>
+        <dd>10</dd>
       </dl>
     </section>
     <section>
@@ -344,7 +336,7 @@
       <p>
         Less basic implements.
       </p>
-      <div id='impl-less-basic' class='idl' title='[Something] Window implements Breakable'></div>
+      <div id='impl-less-basic' class='idl' title='[Something]Window implements Breakable'></div>
     </section>
   </body>
 </html>
