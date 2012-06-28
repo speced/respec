@@ -4,7 +4,7 @@
     bitwise: false,
     boss:   true
 */
-/*global berjon, respecEvent, shortcut, respecConfig, Node, Document */
+/*global berjon, respecEvent, shortcut, respecConfig, Document */
 
 // RESPEC
 var sn;
@@ -96,8 +96,7 @@ var sn;
                 shortcut.add("Esc", function () { obj.hideSaveOptions(); });
             }
             catch (e) {
-                error("Processing error: " + e);
-                if (typeof(console) != "undefined" && console.log) console.log(e);
+                msg.pub("error", "Processing error: " + e);
             }
         },
 

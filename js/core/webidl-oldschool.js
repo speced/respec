@@ -13,19 +13,21 @@ define(
     ,    "text!core/templates/webidl/module.html"
     ,    "text!core/templates/webidl/typedef.html"
     ,    "text!core/templates/webidl/implements.html"
+    ,    "text!core/templates/webidl/dict-member.html"
     ],
-    function (css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl) {
+    function (css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDicMemberTmpl) {
         idlModuleTmpl = Handlebars.compile(idlModuleTmpl);
         idlTypedefTmpl = Handlebars.compile(idlTypedefTmpl);
         idlImplementsTmpl = Handlebars.compile(idlImplementsTmpl);
+        idlDicMemberTmpl = Handlebars.compile(idlDicMemberTmpl);
         var WebIDLProcessor = function (cfg) {
                 this.parent = { type: "module", id: "outermost", children: [] };
                 if (!cfg) cfg = {};
                 for (var k in cfg) if (cfg.hasOwnProperty(k)) this[k] = cfg[k];
 
-                Handlebars.registerHelper("extAttr", function (obj, indent) {
+                Handlebars.registerHelper("extAttr", function (obj, indent, nl) {
                     var ret = "";
-                    if (obj.extendedAttributes) ret += idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>]";
+                    if (obj.extendedAttributes) ret += idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>]" + (nl ? "\n" : "");
                     return new Handlebars.SafeString(ret);
                 });
                 Handlebars.registerHelper("idn", function (indent) {
@@ -36,6 +38,19 @@ define(
                 });
                 Handlebars.registerHelper("datatype", function (text) {
                     return new Handlebars.SafeString(datatype(text));
+                });
+                Handlebars.registerHelper("pads", function (num) {
+                    return new Handlebars.SafeString(pads(num));
+                });
+                Handlebars.registerHelper("superclasses", function (obj) {
+                    if (!obj.superclasses || !obj.superclasses.length) return "";
+                    var str = " : " +
+                              obj.superclasses.map(function (it) {
+                                                    return "<span class='idlSuperclass'><a>" + it + "</a></span>";
+                                                  }).join(", ") +
+                              " "
+                    ;
+                    return new Handlebars.SafeString(str);
                 });
             }
         ,   idn = function (lvl) {
@@ -63,6 +78,11 @@ define(
                 var matched = /^sequence<(.+)>$/.exec(text);
                 if (matched) return "sequence&lt;<a>" + matched[1] + "</a>&gt;";
                 else return "<a>" + text + "</a>";
+            }
+        ,   pads = function (num) {
+                var str = "";
+                for (var i = 0; i < num; i++) str += " ";
+                return str;
             }
         ;
         WebIDLProcessor.prototype = {
@@ -788,7 +808,6 @@ define(
                 }
                 else if (obj.type == "implements") {
                     return $(idlImplementsTmpl(opt));
-                    // return $("<div></div>").html(idlImplementsTmpl(opt)).children();
                 }
                 else if (obj.type == "interface") {
                     var str = "<span class='idlInterface' id='idl-def-" + obj.refId + "'>";
@@ -1002,20 +1021,12 @@ define(
             },
 
             writeMember:    function (memb, max, indent, curLnk) {
-                var str = "<span class='idlMember'>";
-                if (memb.extendedAttributes) str += idn(indent) + "[<span class='extAttr'>" + memb.extendedAttributes + "</span>]\n";
-                str += idn(indent);
-                var pad = max - memb.datatype.length;
-                if (memb.nullable) pad = pad - 1;
-                if (memb.array) pad = pad - (2 * memb.arrayCount);
-                var nullable = memb.nullable ? "?" : "";
-                var arr = arrsq(memb);
-                str += "<span class='idlMemberType'>" + datatype(memb.datatype) + arr + nullable + "</span> ";
-                for (var i = 0; i < pad; i++) str += " ";
-                str += "<span class='idlMemberName'><a href='#" + curLnk + memb.refId + "'>" + memb.id + "</a></span>";
-                if (memb.defaultValue) str += " = <span class='idlMemberValue'>" + memb.defaultValue + "</span>";
-                str += ";</span>\n";
-                return str;
+                var opt = { obj: memb, indent: indent, curLnk: curLnk,
+                            nullable: (memb.nullable ? "?" : ""), arr: arrsq(memb) };
+                opt.pad = max - memb.datatype.length;
+                if (memb.nullable) opt.pad = opt.pad - 1;
+                if (memb.array) opt.pad = opt.pad - (2 * memb.arrayCount);
+                return $(idlDicMemberTmpl(opt));
             }
         };
 
