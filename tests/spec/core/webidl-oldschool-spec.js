@@ -7,16 +7,16 @@ describe("Core - WebIDL", function () {
     ,   doc
     ;
 
-    window.addEventListener("message", function (ev) {
-        if (ev.data.topic !== "end-all") return;
-        loaded = true;
-        doc = $widl[0].contentDocument;
-    }, false);
-
-
     beforeEach(function () {
         runs(function () {
             if (!loaded) {
+                var handler = function (ev) {
+                    if (ev.data.topic !== "end-all") return;
+                    loaded = true;
+                    doc = $widl[0].contentDocument;
+                    window.removeEventListener("message", handler, false);
+                };
+                window.addEventListener("message", handler, false);
                 $widl.appendTo($("body"));
             }
         });
@@ -48,7 +48,6 @@ describe("Core - WebIDL", function () {
             $target = $("#if-callback", doc);
             text = "callback interface SuperStar {\n};";
             expect($target.text()).toEqual(text);
-            
         });
     });
 
