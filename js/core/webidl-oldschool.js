@@ -388,7 +388,7 @@ define(
                 ,   str = norm($dt.text())
                 ,   $extPrm = $dd.find("dl.parameters").first()
                 ;
-                obj.description = $dd.contents();
+                obj.description = $dd.contents().not("dl.parameters");
                 str = this.parseExtendedAttributes(str, obj);
                 var match;
 
@@ -418,8 +418,10 @@ define(
                     this.setID(obj, match[2]);
                     obj.params = [];
 
+                    console.log($extPrm, $extPrm.length);
                     if ($extPrm.length) {
                         $extPrm.remove();
+                        console.log("removed", $("dl.parameters").length, obj.description);
                         var self = this;
                         $extPrm.find("> dt").each(function (i) {
                             return self.params($(this).text(), $(this).next(), obj);
