@@ -1,4 +1,4 @@
-describe("Core — Utils", function () {
+describe("Core - Utils", function () {
     var MAXOUT = 5000, utils;
 
     beforeEach(function () {

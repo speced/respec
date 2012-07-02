@@ -1,3 +1,4 @@
+/*global berjon*/
 
 // ------------------------------------------------------------------------------------------ //
 //  simple-node.js -- simplified elements creations (based on XML::SimpleNode)
@@ -6,7 +7,7 @@
 // ------------------------------------------------------------------------------------------ //
 
 
-if (typeof(berjon) == "undefined") berjon = {};
+if (typeof(berjon) == "undefined") window.berjon = {};
 berjon.simpleNode = function (ns, doc) {
     // XXX need to default the xml prefix
     if (!ns) ns = {};
@@ -25,7 +26,8 @@ berjon.simpleNode.prototype = {
         for (var k in attr) this._setAttr(el, k, attr[k]);
         if (parent) parent.appendChild(el);
         if (content) {
-            if (content instanceof Array) for (var i = 0; i < content.length; i++) el.appendChild(content[i]);
+            if (content instanceof jQuery) $(el).append(content);
+            else if (content instanceof Array) for (var i = 0; i < content.length; i++) $(el).append(content[i]);
             else this.text(content, el);
         }
         return el;
@@ -63,10 +65,10 @@ berjon.simpleNode.prototype = {
     findNodes:    function (xpath, context) {
         if (!context) context = this.doc;
         var ns = this.ns;
-        var snap = this.doc.evaluate(xpath, 
-                                     context, 
-                                     function (pfx) { return ns[pfx] || null; }, 
-                                     XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, 
+        var snap = this.doc.evaluate(xpath,
+                                     context,
+                                     function (pfx) { return ns[pfx] || null; },
+                                     XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
                                      null);
         var res = [];
         for (var i = 0; i < snap.snapshotLength; i++) res.push(snap.snapshotItem(i));
@@ -111,7 +113,7 @@ berjon.simpleNode.prototype = {
         txt = txt.replace(/\s+$/, "");
         id += txt;
         id = id.toLowerCase();
-        if (id.length == 0) id = "generatedID";
+        if (id.length === 0) id = "generatedID";
         id = this.sanitiseID(id);
         if (pfx) id = pfx + "-" + id;
         id = this.idThatDoesNotExist(id);
@@ -120,11 +122,11 @@ berjon.simpleNode.prototype = {
     },
     
     sanitiseID:    function (id) {
-        id = id.split(/[^-.0-9a-zA-Z_]/).join("-");
+        id = id.split(/[^\-.0-9a-zA-Z_]/).join("-");
         id = id.replace(/^-+/g, "");
         id = id.replace(/-+$/, "");
         if (id.length > 0 && /^[^a-z]/.test(id)) id = "x" + id;
-        if (id.length == 0) id = "generatedID";
+        if (id.length === 0) id = "generatedID";
         return id;
     },
     
