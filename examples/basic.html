@@ -32,8 +32,32 @@
         CUSTOM PARAGRAPH
       </p>
     </section>
-    <section class='introductory'><h2>INTRO</h2></section>
-    <section><h2>ONE</h2><section><h2>TWO</h2><section><h2>THREE</h2><section><h2>FOUR</h2><section><h2>FIVE</h2><section><h2>SIX</h2></section></section></section></section></section></section>
-    <section class='appendix'><h2>ONE</h2><section><h2>TWO</h2><section><h2>THREE</h2><section><h2>FOUR</h2><section><h2>FIVE</h2><section><h2>SIX</h2></section></section></section></section></section></section>
+    <section>
+      <h2>Type Unions</h2>
+      <section>
+        <h2>One</h2>
+        <dl class="idl" title="interface Capabilities">
+          <dt>readonly attribute dictionary capabilities</dt>
+          <dd>The underlying collection of capabilities, represented as a dictionary mapping strings to values which may be
+          of type <code>boolean</code>, <code>numerical</code> or <code>string</code>.</dd>
+          <dt>boolean has(string capabilityName)</dt>
+          <dd>Queries the underlying <code>capabilities</code> to see whether the
+          value is set. This will return true if the capabilities contain a key with
+          the given <code>capabilityName</code> and the value of that key is defined.
+          If the value is a boolean, this function will return that boolean value. If
+          the value is <code>null</code>, an empty string or a 0 then this method will return
+          false.</dd>
+          <dt>(string or boolean or number)? get(string capabilityName)</dt>
+          <dd>Get the value of the key matching capabilityName in the underlying<code>capabilities</code>or <code>null</code>if no value is defined.</dd>
+        </dl>
+      </section>
+      <section>
+        <h2>Two</h2>
+        <dl class="idl" title="interface MutableCapabilities : Capabilities">
+          <dt>void set(string capabilityName, (string or boolean or number)? value)</dt>
+          <dd>Set the value of the given <code>capabilityName</code>to the given <code>value</code>. If the value is not a boolean, numerical type or a string, a <code>WebDriverException</code>should be thrown.</dd>
+        </dl>
+      </section>
+    </section>
   </body>
 </html>

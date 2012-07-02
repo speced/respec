@@ -14,12 +14,14 @@ define(
     ,    "text!core/templates/webidl/typedef.html"
     ,    "text!core/templates/webidl/implements.html"
     ,    "text!core/templates/webidl/dict-member.html"
+    ,    "text!core/templates/webidl/dictionary.html"
     ],
-    function (css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDicMemberTmpl) {
+    function (css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl) {
         idlModuleTmpl = Handlebars.compile(idlModuleTmpl);
         idlTypedefTmpl = Handlebars.compile(idlTypedefTmpl);
         idlImplementsTmpl = Handlebars.compile(idlImplementsTmpl);
-        idlDicMemberTmpl = Handlebars.compile(idlDicMemberTmpl);
+        idlDictMemberTmpl = Handlebars.compile(idlDictMemberTmpl);
+        idlDictionaryTmpl = Handlebars.compile(idlDictionaryTmpl);
         var WebIDLProcessor = function (cfg) {
                 this.parent = { type: "module", id: "outermost", children: [] };
                 if (!cfg) cfg = {};
@@ -47,8 +49,7 @@ define(
                     var str = " : " +
                               obj.superclasses.map(function (it) {
                                                     return "<span class='idlSuperclass'><a>" + it + "</a></span>";
-                                                  }).join(", ") +
-                              " "
+                                                  }).join(", ")
                     ;
                     return new Handlebars.SafeString(str);
                 });
@@ -75,9 +76,16 @@ define(
                 return str;
             }
         ,   datatype = function (text) {
-                var matched = /^sequence<(.+)>$/.exec(text);
-                if (matched) return "sequence&lt;<a>" + matched[1] + "</a>&gt;";
-                else return "<a>" + text + "</a>";
+                if ($.isArray(text)) {
+                    var arr = [];
+                    for (var i = 0, n = text.length; i < n; i++) arr.push(datatype(text[i]));
+                    return "(" + arr.join(" or ") + ")";
+                }
+                else {
+                    var matched = /^sequence<(.+)>$/.exec(text);
+                    if (matched) return "sequence&lt;<a>" + matched[1] + "</a>&gt;";
+                    else return "<a>" + text + "</a>";
+                }
             }
         ,   pads = function (num) {
                 var str = "";
@@ -114,21 +122,14 @@ define(
                 var p = {};
                 prm = this.parseExtendedAttributes(prm, p);
                 // either up to end of string, or up to ,
-                var re = /^\s*(?:in\s+)?\b([^,]+)\s+\b([^,\s]+)\s*(?:,)?\s*/;
+                var re = /^\s*(?:in\s+)?([^,]+)\s+\b([^,\s]+)\s*(?:,)?\s*/;
                 var match = re.exec(prm);
                 if (match) {
                     prm = prm.replace(re, "");
                     var type = match[1];
-                    type = this.nullable(p, type);
-                    type = this.array(p, type);
-                    p.variadic = false;
-                    if (/\.\.\./.test(type)) {
-                        type = type.replace(/\.\.\./, "");
-                        p.variadic = true;
-                    }
-                    p.datatype = type;
+                    this.parseDatatype(p, type);
                     this.setID(p, match[2]);
-                    if ($dd) p.description = $dd.children();
+                    if ($dd) p.description = $dd.contents();
                     obj.params.push(p);
                 }
                 else {
@@ -138,15 +139,22 @@ define(
                 return prm;
             }
         ,   optional:   function (p) {
-                var pkw = p.datatype.split(/\s+/)
-                ,   idx = pkw.indexOf("optional")
-                ,   isOptional = false;
-                if (idx > -1) {
-                    isOptional = true;
-                    pkw.splice(idx, 1);
-                    p.datatype = pkw.join(" ");
+                if (p.isUnionType) {
+                    p.optional = false;
+                    return false;
                 }
-                p.optional = isOptional;
+                else {
+                    var pkw = p.datatype.split(/\s+/)
+                    ,   idx = pkw.indexOf("optional")
+                    ,   isOptional = false;
+                    if (idx > -1) {
+                        isOptional = true;
+                        pkw.splice(idx, 1);
+                        p.datatype = pkw.join(" ");
+                    }
+                    p.optional = isOptional;
+                    return isOptional;
+                }
             }
             
             
@@ -238,7 +246,7 @@ define(
                     type = this.array(obj, type);
                     obj.datatype = type;
                     this.setID(obj, match[2]);
-                    obj.description = $idl.children();
+                    obj.description = $idl.contents();
                 }
                 else this.msg.pub("error", "Expected typedef, got: " + str);
                 return obj;
@@ -250,7 +258,7 @@ define(
                 if (match) {
                     this.setID(obj, match[1]);
                     obj.datatype = match[2];
-                    obj.description = $idl.children();
+                    obj.description = $idl.contents();
                 }
                 else this.msg.pub("error", "Expected implements, got: " + str);
                 return obj;
@@ -294,7 +302,7 @@ define(
             exceptionMember:    function ($dt, $dd) {
                 var obj = { children: [] }
                 ,   str = norm($dt.text());
-                obj.description = $dd.children();
+                obj.description = $dd.contents();
                 str = this.parseExtendedAttributes(str, obj);
                 
                 // CONST
@@ -319,7 +327,7 @@ define(
             dictionaryMember:    function ($dt, $dd) {
                 var obj = { children: [] }
                 ,   str = norm($dt.text());
-                obj.description = $dd.children();
+                obj.description = $dd.contents();
                 str = this.parseExtendedAttributes(str, obj);
 
                 // MEMBER
@@ -342,7 +350,7 @@ define(
             callbackMember:    function ($dt, $dd) {
                 var obj = { children: [] }
                 ,   str = norm($dt.text());
-                obj.description = $dd.children();
+                obj.description = $dd.contents();
                 str = this.parseExtendedAttributes(str, obj);
 
                 // MEMBER
@@ -366,7 +374,7 @@ define(
             processEnumMember:    function ($dt, $dd) {
                 var obj = { children: [] }
                 ,   str = norm($dt.text());
-                obj.description = $dd.children();
+                obj.description = $dd.contents();
                 str = this.parseExtendedAttributes(str, obj);
 
                 // MEMBER
@@ -380,7 +388,7 @@ define(
                 ,   str = norm($dt.text())
                 ,   $extPrm = $dd.find("dl.parameters").first()
                 ;
-                obj.description = $dd.children();
+                obj.description = $dd.contents();
                 str = this.parseExtendedAttributes(str, obj);
                 var match;
 
@@ -401,14 +409,12 @@ define(
                 if (this.parseConst(obj, str)) return obj;
 
                 // METHOD
-                match = /^\s*\b(.*?)\s+\b(\S+)\s*\(\s*(.*)\s*\)\s*$/.exec(str);
+                match = /^\s*(.*?)\s+\b(\S+)\s*\(\s*(.*)\s*\)\s*$/.exec(str);
                 if (match) {
                     obj.type = "method";
                     var type = match[1]
                     ,   prm = match[3];
-                    type = this.nullable(obj, type);
-                    type = this.array(obj, type);
-                    obj.datatype = type;
+                    this.parseDatatype(obj, type);
                     this.setID(obj, match[2]);
                     obj.params = [];
 
@@ -427,14 +433,40 @@ define(
                     }
 
                     // apply optional
-                    for (var i = 0; i < obj.params.length; i++) this.optional(obj.params[i]);
+                    var seenOptional = false;
+                    for (var i = 0; i < obj.params.length; i++) {
+                        if (seenOptional) {
+                            obj.params[i].optional = true;
+                        }
+                        else {
+                            seenOptional = this.optional(obj.params[i]);
+                        }
+                    }
                     return obj;
                 }
 
                 // NOTHING MATCHED
                 this.msg.pub("error", "Expected interface member, got: " + str);
             },
-
+            
+            parseDatatype:  function (obj, type) {
+                type = this.nullable(obj, type);
+                type = this.array(obj, type);
+                obj.variadic = false;
+                if (/\.\.\./.test(type)) {
+                    type = type.replace(/\.\.\./, "");
+                    obj.variadic = true;
+                }
+                if (type.indexOf("(") === 0) {
+                    type = type.replace("(", "").replace(")", "");
+                    obj.datatype = type.split(/\s+or\s+/);
+                    obj.isUnionType = true;
+                }
+                else {
+                    obj.datatype = type;
+                }
+            },
+            
             parseExtendedAttributes:    function (str, obj) {
                 return str.replace(/^\s*\[([^\]]+)\]\s*/, function (x, m1) { obj.extendedAttributes = m1; return ""; });
             },
@@ -446,8 +478,7 @@ define(
                 var $pre = $("<pre></pre>").attr(attr);
                 $pre.html(this.writeAsWebIDL(this.parent, -1));
                 $df.append($pre);
-                // XXX temporary
-                // $df.append(this.writeAsHTML(this.parent));
+                $df.append(this.writeAsHTML(this.parent));
                 return $df.children();
             },
 
@@ -464,9 +495,7 @@ define(
                 }
                 else if (obj.type == "typedef") {
                     var cnt;
-                    if (obj.description && obj.description.childNodes.length) {
-                        cnt = [obj.description];
-                    }
+                    if (obj.description && obj.description.text()) cnt = [obj.description];
                     else {
                         // yuck -- should use a single model...
                         var tdt = sn.element("span", { "class": "idlTypedefType" }, null);
@@ -483,9 +512,7 @@ define(
                 }
                 else if (obj.type == "implements") {
                     var cnt;
-                    if (obj.description && obj.description.childNodes.length) {
-                        cnt = [obj.description];
-                    }
+                    if (obj.description && obj.description.text()) cnt = [obj.description];
                     else {
                         cnt = [ sn.text("All instances of the "),
                                 sn.element("code", {}, null, [sn.element("a", {}, null, obj.id)]),
@@ -871,29 +898,24 @@ define(
                     return str;
                 }
                 else if (obj.type == "dictionary") {
-                    var str = "<span class='idlDictionary' id='idl-def-" + obj.refId + "'>";
-                    if (obj.extendedAttributes) str += idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>]\n";
-                    str += idn(indent) + "dictionary <span class='idlDictionaryID'>" + obj.id + "</span>";
-                    if (obj.superclasses && obj.superclasses.length) str += " : " +
-                                                        obj.superclasses.map(function (it) {
-                                                                                return "<span class='idlSuperclass'><a>" + it + "</a></span>";
-                                                                            })
-                                                                        .join(", ");
-                    str += " {\n";
-                    var max = 0;
+                    var opt = { obj: obj, indent: indent }
+                    ,   max = 0;
                     obj.children.forEach(function (it, idx) {
                         var len = it.datatype.length;
                         if (it.nullable) len = len + 1;
                         if (it.array) len = len + (2 * it.arrayCount);
                         max = (len > max) ? len : max;
                     });
-                    var curLnk = "widl-" + obj.refId + "-";
+                    var curLnk = "widl-" + obj.refId + "-"
+                    ,   $res = $(idlDictionaryTmpl(opt))
+                    ,   $ph = $res.find(".PLACEHOLDER")
+                    ;
                     for (var i = 0; i < obj.children.length; i++) {
-                        var ch = obj.children[i];
-                        str += this.writeMember(ch, max, indent + 1, curLnk);
+                        $ph.before(this.writeMember(obj.children[i], max, indent + 1, curLnk));
+                        $ph.before($ph[0].ownerDocument.createTextNode("\n"));
                     }
-                    str += idn(indent) + "};</span>\n";
-                    return str;
+                    $ph.remove();
+                    return $res;
                 }
                 else if (obj.type == "callback") {
                     var str = "<span class='idlCallback' id='idl-def-" + obj.refId + "'>";
@@ -1026,7 +1048,7 @@ define(
                 opt.pad = max - memb.datatype.length;
                 if (memb.nullable) opt.pad = opt.pad - 1;
                 if (memb.array) opt.pad = opt.pad - (2 * memb.arrayCount);
-                return $(idlDicMemberTmpl(opt));
+                return $(idlDictMemberTmpl(opt));
             }
         };
 
