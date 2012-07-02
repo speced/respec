@@ -19,6 +19,7 @@ define([
         ,   "core/best-practices"
         ,   "core/figures"
         ,   "w3c/legacy"
+        ,   "core/webidl-oldschool"
         ,   "core/fix-headers"
         ,   "core/structure"
         ,   "w3c/informative"
