@@ -418,10 +418,8 @@ define(
                     this.setID(obj, match[2]);
                     obj.params = [];
 
-                    console.log($extPrm, $extPrm.length);
                     if ($extPrm.length) {
                         $extPrm.remove();
-                        console.log("removed", $("dl.parameters").length, obj.description);
                         var self = this;
                         $extPrm.find("> dt").each(function (i) {
                             return self.params($(this).text(), $(this).next(), obj);
