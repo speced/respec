@@ -199,7 +199,7 @@ describe("Core - WebIDL", function () {
                 "    const long value = 42;\n" +
                 "    Object?         message;\n" +
                 "    sequence<float> floats;\n" +
-                "    long[]          numbers;\n" +
+                "    long[][]        numbers;\n" +
                 "};";
         expect($target.text()).toEqual(text);
         expect($target.find(".idlConst").length).toEqual(1);
