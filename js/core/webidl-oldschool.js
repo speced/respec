@@ -418,10 +418,8 @@ define(
                     this.setID(obj, match[2]);
                     obj.params = [];
 
-                    console.log($extPrm, $extPrm.length);
                     if ($extPrm.length) {
                         $extPrm.remove();
-                        console.log("removed", $("dl.parameters").length, obj.description);
                         var self = this;
                         $extPrm.find("> dt").each(function (i) {
                             return self.params($(this).text(), $(this).next(), obj);
@@ -730,17 +728,9 @@ define(
                                         var tr = sn.element("tr", {}, table);
                                         sn.element("td", { "class": "prmName" }, tr, prm.id);
                                         var tyTD = sn.element("td", { "class": "prmType" }, tr);
-                                        var matched = /^sequence<(.+)>$/.exec(prm.datatype);
-                                        if (matched) {
-                                            sn.element("code", {}, tyTD, [  sn.text("sequence<"),
-                                                                            sn.element("a", {}, null, matched[1]),
-                                                                            sn.text(">")]);
-                                        }
-                                        else {
-                                            var cnt = [sn.element("a", {}, null, prm.datatype)];
-                                            if (prm.array) cnt.push(arrsq(prm));
-                                            sn.element("code", {}, tyTD, cnt);
-                                        }
+                                        var code = sn.element("code", {}, tyTD);
+                                        code.innerHTML = datatype(prm.datatype);
+                                        if (prm.array) code.innerHTML += arrsq(prm);
                                         if (prm.nullable) sn.element("td", { "class": "prmNullTrue" }, tr, "\u2714");
                                         else              sn.element("td", { "class": "prmNullFalse" }, tr, "\u2718");
                                         if (prm.optional) sn.element("td", { "class": "prmOptTrue" }, tr, "\u2714");
@@ -754,17 +744,10 @@ define(
                                 }
                                 var reDiv = sn.element("div", {}, desc);
                                 sn.element("em", {}, reDiv, "Return type: ");
-                                var matched = /^sequence<(.+)>$/.exec(it.datatype);
-                                if (matched) {
-                                    sn.element("code", {}, reDiv, [ sn.text("sequence<"),
-                                                                    sn.element("a", {}, null, matched[1]),
-                                                                    sn.text(">")]);
-                                }
-                                else {
-                                    var cnt = [sn.element("a", {}, null, it.datatype)];
-                                    if (it.array) cnt.push(arrsq(it));
-                                    sn.element("code", {}, reDiv, cnt);
-                                }
+
+                                var code = sn.element("code", {}, reDiv);
+                                code.innerHTML = datatype(it.datatype);
+                                if (it.array) code.innerHTML += arrsq(it);
                                 if (it.nullable) sn.text(", nullable", reDiv);
                             }
                             else if (type == "attribute") {
