@@ -5,6 +5,10 @@
 // These are elements with classes "issue" or "note".
 // When an issue or note is found, it is reported using the "issue" or "note" event. This can
 // be used by a containing shell to extract all of these.
+// Issues are automatically numbered by default, but you can assign them specific numbers (or,
+// despite the name, any arbitrary identifier) using the data-number attribute. Note that as
+// soon as you use one data-number on any issue all the other issues stop being automatically
+// numbered to avoid involuntary clashes.
 
 define(
     ["text!core/css/issues-notes.css"],
@@ -15,25 +19,39 @@ define(
                 var $ins = $(".issue, .note");
                 if ($ins.length) {
                     $(doc).find("head link").first().before($("<style/>").text(css));
-                    var issueNum = 0;
+                    var hasDataNum = $(".issue[data-number]").length > 0
+                    ,   issueNum = 0;
                     $ins.each(function (i, inno) {
                         var $inno = $(inno)
                         ,   isIssue = $inno.hasClass("issue")
                         ,   isInline = $inno.css("display") != "block"
+                        ,   dataNum = $inno.attr("data-number")
                         ,   report = { inline: isInline, content: $inno.html() }
                         ;
                         report.type = isIssue ? "issue" : "note";
-                        if (isIssue && !isInline) {
+                        if (isIssue && !isInline && !hasDataNum) {
                             issueNum++;
                             report.number = issueNum;
+                        }
+                        else if (dataNum) {
+                            report.number = dataNum;
                         }
                 
                         // wrap
                         if (!isInline) {
                             var $div = $("<div class='" + report.type + "'></div>")
                             ,   $tit = $("<div class='" + report.type + "-title'><span></span></div>")
+                            ,   text = isIssue ? "Issue" : "Note"
                             ;
-                            $tit.find("span").text(isIssue ? "Issue " + issueNum : "Note");
+                            if (isIssue) {
+                                if (hasDataNum) {
+                                    if (dataNum) text += " " + dataNum;
+                                }
+                                else {
+                                    text += " " + issueNum;
+                                }
+                            }
+                            $tit.find("span").text(text);
                             report.title = $inno.attr("title");
                             if (report.title) {
                                 $tit.append(doc.createTextNode(": " + report.title));
