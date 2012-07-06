@@ -1063,14 +1063,14 @@ define(
                     ,   inf = w.definition($(this))
                     ,   $df = w.makeMarkup(inf.htmlID);
                     $(this).replaceWith($df);
-                    if ($.inArray(inf.type, "interface exception dictionary typedef callback enum".split(" "))) infNames.push(inf.id);
+                    if ($.inArray(inf.type, "interface exception dictionary typedef callback enum".split(" ")) !== -1) infNames.push(inf.id);
                 });
                 doc.normalize();
                 $("a:not([href])").each(function () {
                     var $ant = $(this);
                     if ($ant.hasClass("externalDFN")) return;
                     var name = $ant.text();
-                    if ($.inArray(name, infNames)) {
+                    if ($.inArray(name, infNames) !== -1) {
                         $ant.attr("href", "#idl-def-" + name)
                             .addClass("idlType")
                             .html("<code>" + name + "</code>");
