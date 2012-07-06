@@ -671,7 +671,6 @@ define(
 
                 else if (obj.type == "enum") {
                     var df = sn.documentFragment();
-                    var curLnk = "widl-" + obj.refId + "-";
                     var things = obj.children;
                     if (things.length === 0) return df;
 
@@ -822,7 +821,10 @@ define(
                     return $(idlImplementsTmpl(opt));
                 }
                 else if (obj.type == "interface") {
-                    var str = "<span class='idlInterface' id='idl-def-" + obj.refId + "'>";
+                    // stop gap fix for duplicate IDs while we're transitioning the code
+                    var div = this.doc.createElement("div")
+                    ,   id = $(div).makeID("idl-def", obj.refId, true);
+                    var str = "<span class='idlInterface' id='" + id + "'>";
                     if (obj.extendedAttributes) str += idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>]\n";
                     str += idn(indent);
                     if (obj.partial) str += "partial ";
@@ -837,7 +839,9 @@ define(
                     // we process attributes and methods in place
                     var maxAttr = 0, maxMeth = 0, maxConst = 0, hasRO = false;
                     obj.children.forEach(function (it, idx) {
-                        var len = it.datatype.length;
+                        var len = 0;
+                        if (it.isUnionType) len = it.datatype.join(" or ").length + 2;
+                        else                len = it.datatype.length;
                         if (it.nullable) len = len + 1;
                         if (it.array) len = len + (2 * it.arrayCount);
                         if (it.type == "attribute") maxAttr = (len > maxAttr) ? len : maxAttr;
@@ -984,7 +988,10 @@ define(
                 var str = "<span class='idlMethod'>";
                 if (meth.extendedAttributes) str += idn(indent) + "[<span class='extAttr'>" + meth.extendedAttributes + "</span>]\n";
                 str += idn(indent);
-                var pad = max - meth.datatype.length;
+                var len = 0;
+                if (meth.isUnionType) len = meth.datatype.join(" or ").length + 2;
+                else                len = meth.datatype.length;
+                var pad = max - len;
                 if (meth.nullable) pad = pad - 1;
                 if (meth.array) pad = pad - (2 * meth.arrayCount);
                 var nullable = meth.nullable ? "?" : "";
@@ -1052,18 +1059,18 @@ define(
 
                 var infNames = [];
                 $idl.each(function () {
-                    var w = new WebIDLProcessor({ noIDLSorting: conf.noIDLSorting, msg: msg })
+                    var w = new WebIDLProcessor({ noIDLSorting: conf.noIDLSorting, msg: msg, doc: doc, conf: conf })
                     ,   inf = w.definition($(this))
                     ,   $df = w.makeMarkup(inf.htmlID);
                     $(this).replaceWith($df);
-                    if ($.inArray(inf.type, "interface exception dictionary typedef callback enum".split(" "))) infNames.push(inf.id);
+                    if ($.inArray(inf.type, "interface exception dictionary typedef callback enum".split(" ")) !== -1) infNames.push(inf.id);
                 });
                 doc.normalize();
                 $("a:not([href])").each(function () {
                     var $ant = $(this);
                     if ($ant.hasClass("externalDFN")) return;
                     var name = $ant.text();
-                    if ($.inArray(name, infNames)) {
+                    if ($.inArray(name, infNames) !== -1) {
                         $ant.attr("href", "#idl-def-" + name)
                             .addClass("idlType")
                             .html("<code>" + name + "</code>");

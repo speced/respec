@@ -71,7 +71,7 @@ define(
                                 if (norm) conf.normativeReferences[ref] = true;
                                 else      conf.informativeReferences[ref] = true;
                                 df.appendChild(doc.createTextNode("["));
-                                df.appendChild($("<cite/>").wrapInner($("<a/>").attr({"class": "bibref", rel: "biblioentry", href: "#bib-" + ref}).text(ref))[0]);
+                                df.appendChild($("<cite/>").wrapInner($("<a/>").attr({"class": "bibref", href: "#bib-" + ref}).text(ref))[0]);
                                 df.appendChild(doc.createTextNode("]"));
                             }
                             // ABBR
