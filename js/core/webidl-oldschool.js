@@ -671,7 +671,6 @@ define(
 
                 else if (obj.type == "enum") {
                     var df = sn.documentFragment();
-                    var curLnk = "widl-" + obj.refId + "-";
                     var things = obj.children;
                     if (things.length === 0) return df;
 
@@ -822,7 +821,10 @@ define(
                     return $(idlImplementsTmpl(opt));
                 }
                 else if (obj.type == "interface") {
-                    var str = "<span class='idlInterface' id='idl-def-" + obj.refId + "'>";
+                    // stop gap fix for duplicate IDs while we're transitioning the code
+                    var div = this.doc.createElement("div")
+                    ,   id = $(div).makeID("idl-def", obj.refId, true);
+                    var str = "<span class='idlInterface' id='" + id + "'>";
                     if (obj.extendedAttributes) str += idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>]\n";
                     str += idn(indent);
                     if (obj.partial) str += "partial ";
@@ -1052,7 +1054,7 @@ define(
 
                 var infNames = [];
                 $idl.each(function () {
-                    var w = new WebIDLProcessor({ noIDLSorting: conf.noIDLSorting, msg: msg })
+                    var w = new WebIDLProcessor({ noIDLSorting: conf.noIDLSorting, msg: msg, doc: doc, conf: conf })
                     ,   inf = w.definition($(this))
                     ,   $df = w.makeMarkup(inf.htmlID);
                     $(this).replaceWith($df);

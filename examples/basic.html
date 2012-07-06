@@ -33,6 +33,37 @@
       </p>
     </section>
     <section>
+      <h2>Name clashes</h2>
+      <p>
+        blah
+      </p>
+      <dl class='idl' title='interface Dahut'>
+        <dt>void meth ()</dt>
+        <dd>
+          <p>A method</p>
+        </dd>
+        <dt>void meth ()</dt>
+        <dd>
+          <p>The same, overloaded</p>
+          <dl class='parameters'>
+            <dt>DOMString key</dt>
+            <p>
+              The <code>key</code> parameter, same method described differently.
+            </p>
+          </dl>
+        </dd>
+      </dl>
+    </section>
+    <section>
+      <h2>Clash here</h2>
+      <dl class='idl' title='interface Dahut'>
+        <dt>void other ()</dt>
+        <dd>
+          Partial would be better.
+        </dd>
+      </dl>
+    </section>
+    <section>
       <h2>Type Unions</h2>
       <section>
         <h2>One</h2>

@@ -165,17 +165,18 @@ $.fn.dfnTitle = function () {
 
 // Applied to an element, sets an ID for it (and returns it), using a specific prefix
 // if provided, and a specific text if given.
-$.fn.makeID = function (pfx, txt) {
+$.fn.makeID = function (pfx, txt, noLC) {
     if (this.attr("id")) return this.attr("id");
     if (!txt) txt = this.attr("title") ? this.attr("title") : this.text();
     txt = txt.replace(/^\s+/, "").replace(/\s+$/, "");
-    var id = txt.toLowerCase().split(/[^\-.0-9a-z_]+/).join("-").replace(/^-+/, "").replace(/-+$/, "");
-    if (id.length > 0 && /^[^a-z]/.test(id)) id = "x" + id;
+    var id = noLC ? txt : txt.toLowerCase();
+    id = id.split(/[^\-.0-9a-z_]+/i).join("-").replace(/^-+/, "").replace(/-+$/, "");
+    if (id.length > 0 && /^[^a-z]/i.test(id)) id = "x" + id;
     if (id.length === 0) id = "generatedID";
     if (pfx) id = pfx + "-" + id;
-    var inc = 1;
-    var doc = this[0].ownerDocument;
-    if ($("#" + id).length) {
+    var inc = 1
+    ,   doc = this[0].ownerDocument;
+    if ($("#" + id, doc).length) {
         while ($("#" + id + "-" + inc, doc).length) inc++;
         id += "-" + inc;
     }
