@@ -839,7 +839,9 @@ define(
                     // we process attributes and methods in place
                     var maxAttr = 0, maxMeth = 0, maxConst = 0, hasRO = false;
                     obj.children.forEach(function (it, idx) {
-                        var len = it.datatype.length;
+                        var len = 0;
+                        if (it.isUnionType) len = it.datatype.join(" or ").length + 2;
+                        else                len = it.datatype.length;
                         if (it.nullable) len = len + 1;
                         if (it.array) len = len + (2 * it.arrayCount);
                         if (it.type == "attribute") maxAttr = (len > maxAttr) ? len : maxAttr;
@@ -986,7 +988,10 @@ define(
                 var str = "<span class='idlMethod'>";
                 if (meth.extendedAttributes) str += idn(indent) + "[<span class='extAttr'>" + meth.extendedAttributes + "</span>]\n";
                 str += idn(indent);
-                var pad = max - meth.datatype.length;
+                var len = 0;
+                if (meth.isUnionType) len = meth.datatype.join(" or ").length + 2;
+                else                len = meth.datatype.length;
+                var pad = max - len;
                 if (meth.nullable) pad = pad - 1;
                 if (meth.array) pad = pad - (2 * meth.arrayCount);
                 var nullable = meth.nullable ? "?" : "";
