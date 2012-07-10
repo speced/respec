@@ -35,9 +35,10 @@ define(
                     ,   ln = h.localName.toLowerCase();
                     if (ln !== "h2" && ln !== "h3" && ln !== "h4" && ln !== "h5" && ln !== "h6") continue;
                     var title = h.textContent
-                    ,   $hKids = $(h).contents().clone();
-                    $hKids.find("a").renameElement("span").attr("class", "formerLink").removeAttr("href");
-                    $hKids.find("dfn").renameElement("span").removeAttr("id");
+                    ,   $kidsHolder = $("<div></div>").append($(h).contents().clone())
+                    ;
+                    $kidsHolder.find("a").renameElement("span").attr("class", "formerLink").removeAttr("href");
+                    $kidsHolder.find("dfn").renameElement("span").removeAttr("id");
                     var id = $sec.makeID(null, title);
                     
                     if (!isIntro) current[current.length - 1]++;
@@ -63,7 +64,7 @@ define(
 
                     var $a = $("<a/>").attr({ href: "#" + id, 'class' : 'tocxref' })
                                       .append(isIntro ? "" : $span.clone())
-                                      .append($hKids);
+                                      .append($kidsHolder.contents());
                     var $item = $("<li class='tocline'/>").append($a);
                     $ul.append($item);
                     if (conf.maxTocLevel && level >= conf.maxTocLevel) continue;
