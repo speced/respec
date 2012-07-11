@@ -25,7 +25,7 @@ define([
         ,   "w3c/informative"
         ,   "core/section-refs"
         ,   "core/id-headers"
-        ,   "w3c/unhtml5"
+        // ,   "w3c/unhtml5"
         ,   "core/remove-respec"
         ],
         function (domReady, runner) {
