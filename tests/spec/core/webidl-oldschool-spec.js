@@ -75,6 +75,7 @@ describe("Core - WebIDL", function () {
                 "    [Something]\n" +
                 "    const short               extAttr = NaN;\n" +
                 "};";
+        console.log(text, "\n", $target.text());
         expect($target.text()).toEqual(text);
         expect($target.find(".idlConst").length).toEqual(19);
         var $const1 = $target.find(".idlConst").first();

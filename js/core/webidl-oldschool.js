@@ -15,13 +15,20 @@ define(
     ,    "text!core/templates/webidl/implements.html"
     ,    "text!core/templates/webidl/dict-member.html"
     ,    "text!core/templates/webidl/dictionary.html"
+    ,    "text!core/templates/webidl/enum-item.html"
+    ,    "text!core/templates/webidl/enum.html"
+    ,    "text!core/templates/webidl/const.html"
     ],
-    function (css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl) {
+    function (css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
+                   idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl) {
         idlModuleTmpl = Handlebars.compile(idlModuleTmpl);
         idlTypedefTmpl = Handlebars.compile(idlTypedefTmpl);
         idlImplementsTmpl = Handlebars.compile(idlImplementsTmpl);
         idlDictMemberTmpl = Handlebars.compile(idlDictMemberTmpl);
         idlDictionaryTmpl = Handlebars.compile(idlDictionaryTmpl);
+        idlEnumItemTmpl = Handlebars.compile(idlEnumItemTmpl);
+        idlEnumTmpl = Handlebars.compile(idlEnumTmpl);
+        idlConstTmpl = Handlebars.compile(idlConstTmpl);
         var WebIDLProcessor = function (cfg) {
                 this.parent = { type: "module", id: "outermost", children: [] };
                 if (!cfg) cfg = {};
@@ -932,18 +939,10 @@ define(
                     return str;
                 }
                 else if (obj.type == "enum") {
-                    var str = "<span class='idlEnum' id='idl-def-" + obj.refId + "'>";
-                    if (obj.extendedAttributes) str += idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>]\n";
-                    str += idn(indent) + "enum <span class='idlEnumID'>" + obj.id + "</span> {\n";
-
-                    for (var i = 0; i < obj.children.length; i++) {
-                        var ch = obj.children[i];
-                        str += idn(indent + 1) + '"<span class="idlEnumItem">' + ch.id + '</span>"';
-                        if (i < obj.children.length - 1) str += ",";
-                        str += "\n";
-                    }
-                    str += idn(indent) + "};</span>\n";
-                    return str;
+                    var children = obj.children
+                                      .map(function (it) { return idlEnumItemTmpl({ obj: it, indent: indent + 1 }); })
+                                      .join(",\n");
+                    return idlEnumTmpl({obj: obj, indent: indent, children: children });
                 }
             },
 
@@ -1020,18 +1019,9 @@ define(
             },
 
             writeConst:    function (cons, max, indent, curLnk) {
-                var str = "<span class='idlConst'>";
-                if (cons.extendedAttributes) str += idn(indent) + "[<span class='extAttr'>" + cons.extendedAttributes + "</span>]\n";
-                str += idn(indent);
-                str += "const ";
                 var pad = max - cons.datatype.length;
-                if (cons.nullable) pad = pad - 1;
-                var nullable = cons.nullable ? "?" : "";
-                str += "<span class='idlConstType'><a>" + cons.datatype + "</a>" + nullable + "</span> ";
-                for (var i = 0; i < pad; i++) str += " ";
-                str += "<span class='idlConstName'><a href='#" + curLnk + cons.refId + "'>" + cons.id + "</a></span> = " +
-                       "<span class='idlConstValue'>" + cons.value + "</span>;</span>\n";
-                return str;
+                if (cons.nullable) pad--;
+                return idlConstTmpl({ obj: cons, indent: indent, pad: pad, nullable: cons.nullable ? "?" : ""});
             },
 
             writeMember:    function (memb, max, indent, curLnk) {
