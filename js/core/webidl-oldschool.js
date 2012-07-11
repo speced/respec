@@ -18,9 +18,11 @@ define(
     ,    "text!core/templates/webidl/enum-item.html"
     ,    "text!core/templates/webidl/enum.html"
     ,    "text!core/templates/webidl/const.html"
+    ,    "text!core/templates/webidl/param.html"
+    ,    "text!core/templates/webidl/callback.html"
     ],
     function (css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
-                   idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl) {
+                   idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl) {
         idlModuleTmpl = Handlebars.compile(idlModuleTmpl);
         idlTypedefTmpl = Handlebars.compile(idlTypedefTmpl);
         idlImplementsTmpl = Handlebars.compile(idlImplementsTmpl);
@@ -29,6 +31,8 @@ define(
         idlEnumItemTmpl = Handlebars.compile(idlEnumItemTmpl);
         idlEnumTmpl = Handlebars.compile(idlEnumTmpl);
         idlConstTmpl = Handlebars.compile(idlConstTmpl);
+        idlParamTmpl = Handlebars.compile(idlParamTmpl);
+        idlCallbackTmpl = Handlebars.compile(idlCallbackTmpl);
         var WebIDLProcessor = function (cfg) {
                 this.parent = { type: "module", id: "outermost", children: [] };
                 if (!cfg) cfg = {};
@@ -226,9 +230,7 @@ define(
                 if (match) {
                     this.setID(obj, match[1]);
                     var type = match[2];
-                    type = this.nullable(obj, type);
-                    type = this.array(obj, type);
-                    obj.datatype = type;
+                    this.parseDatatype(obj, type);
                 }
                 else this.msg.pub("error", "Expected callback, got: " + str);
                 return obj;
@@ -249,9 +251,7 @@ define(
                 var match = /^(.+)\s+(\S+)\s*$/.exec(str);
                 if (match) {
                     var type = match[1];
-                    type = this.nullable(obj, type);
-                    type = this.array(obj, type);
-                    obj.datatype = type;
+                    this.parseDatatype(obj, type);
                     this.setID(obj, match[2]);
                     obj.description = $idl.contents();
                 }
@@ -297,8 +297,7 @@ define(
                 if (match) {
                     obj.type = "constant";
                     var type = match[1];
-                    type = this.nullable(obj, type);
-                    obj.datatype = type;
+                    this.parseDatatype(obj, type);
                     this.setID(obj, match[2]);
                     obj.value = match[3];
                     return true;
@@ -320,9 +319,7 @@ define(
                 if (match) {
                     obj.type = "field";
                     var type = match[1];
-                    type = this.nullable(obj, type);
-                    type = this.array(obj, type);
-                    obj.datatype = type;
+                    this.parseDatatype(obj, type);
                     this.setID(obj, match[2]);
                     return obj;
                 }
@@ -344,9 +341,7 @@ define(
                     var type = match[1];
                     obj.defaultValue = match[3];
                     this.setID(obj, match[2]);
-                    type = this.nullable(obj, type);
-                    type = this.array(obj, type);
-                    obj.datatype = type;
+                    this.parseDatatype(obj, type);
                     return obj;
                 }
 
@@ -367,9 +362,7 @@ define(
                     var type = match[1];
                     this.setID(obj, match[2]);
                     obj.defaultValue = match[3];
-                    type = this.nullable(obj, type);
-                    type = this.array(obj, type);
-                    obj.datatype = type;
+                    this.parseDatatype(obj, type);
                     this.optional(obj);
                     return obj;
                 }
@@ -405,9 +398,7 @@ define(
                     obj.type = "attribute";
                     obj.readonly = (match[1] === "readonly");
                     var type = match[2];
-                    type = this.nullable(obj, type);
-                    type = this.array(obj, type);
-                    obj.datatype = type;
+                    this.parseDatatype(obj, type);
                     this.setID(obj, match[3]);
                     return obj;
                 }
@@ -914,29 +905,25 @@ define(
                     return $res;
                 }
                 else if (obj.type == "callback") {
-                    var str = "<span class='idlCallback' id='idl-def-" + obj.refId + "'>";
-                    if (obj.extendedAttributes) str += idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>]\n";
-                    str += idn(indent) + "callback <span class='idlCallbackID'>" + obj.id + "</span>";
-                    str += " = ";
-                    var nullable = obj.nullable ? "?" : "";
-                    var arr = arrsq(obj);
-                    str += "<span class='idlCallbackType'>" + datatype(obj.datatype) + arr + nullable + "</span> ";
-                    str += "(";
-
-                    str += obj.children.map(function (it) {
-                                                var nullable = it.nullable ? "?" : "";
-                                                var optional = it.optional ? "optional " : "";
-                                                var arr = arrsq(it);
-                                                var prm = "<span class='idlParam'>";
-                                                if (it.extendedAttributes) prm += "[<span class='extAttr'>" + it.extendedAttributes + "</span>] ";
-                                                prm += optional + "<span class='idlParamType'>" + datatype(it.datatype) + arr + nullable + "</span> " +
-                                                "<span class='idlParamName'>" + it.id + "</span>" +
-                                                "</span>";
-                                                return prm;
-                                            })
-                                      .join(", ");
-                    str += ");</span>\n";
-                    return str;
+                    var params = obj.children
+                                    .map(function (it) {
+                                        return idlParamTmpl({
+                                            obj:        it
+                                        ,   indent:     indent
+                                        ,   optional:   it.optional ? "optional " : ""
+                                        ,   arr:        arrsq(it)
+                                        ,   nullable:   it.nullable ? "?" : ""
+                                        ,   variadic:   it.variadic ? "..." : ""
+                                        });
+                                    })
+                                    .join(", ");
+                    return idlCallbackTmpl({
+                        obj:        obj
+                    ,   indent:     indent
+                    ,   arr:        arrsq(obj)
+                    ,   nullable:   obj.nullable ? "?" : ""
+                    ,   children:   params
+                    });
                 }
                 else if (obj.type == "enum") {
                     var children = obj.children
@@ -998,7 +985,6 @@ define(
                 str += "<span class='idlMethType'>" + datatype(meth.datatype) + arr + nullable + "</span> ";
                 for (var i = 0; i < pad; i++) str += " ";
                 var id = this.makeMethodID(curLnk, meth);
-                // str += "<span class='idlMethName'><a href='#" + curLnk + meth.refId + "'>" + meth.id + "</a></span> (";
                 str += "<span class='idlMethName'><a href='#" + id + "'>" + meth.id + "</a></span> (";
                 str += meth.params.map(function (it) {
                                             var nullable = it.nullable ? "?" : "";
