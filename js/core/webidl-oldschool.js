@@ -20,9 +20,10 @@ define(
     ,    "text!core/templates/webidl/const.html"
     ,    "text!core/templates/webidl/param.html"
     ,    "text!core/templates/webidl/callback.html"
+    ,    "text!core/templates/webidl/method.html"
     ],
     function (css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
-                   idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl) {
+                   idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl) {
         idlModuleTmpl = Handlebars.compile(idlModuleTmpl);
         idlTypedefTmpl = Handlebars.compile(idlTypedefTmpl);
         idlImplementsTmpl = Handlebars.compile(idlImplementsTmpl);
@@ -33,6 +34,7 @@ define(
         idlConstTmpl = Handlebars.compile(idlConstTmpl);
         idlParamTmpl = Handlebars.compile(idlParamTmpl);
         idlCallbackTmpl = Handlebars.compile(idlCallbackTmpl);
+        idlMethodTmpl = Handlebars.compile(idlMethodTmpl);
         var WebIDLProcessor = function (cfg) {
                 this.parent = { type: "module", id: "outermost", children: [] };
                 if (!cfg) cfg = {};
@@ -40,7 +42,7 @@ define(
 
                 Handlebars.registerHelper("extAttr", function (obj, indent, nl) {
                     var ret = "";
-                    if (obj.extendedAttributes) ret += idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>]" + (nl ? "\n" : "");
+                    if (obj.extendedAttributes) ret += idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>]" + (nl ? "\n" : " ");
                     return new Handlebars.SafeString(ret);
                 });
                 Handlebars.registerHelper("idn", function (indent) {
@@ -909,7 +911,6 @@ define(
                                     .map(function (it) {
                                         return idlParamTmpl({
                                             obj:        it
-                                        ,   indent:     indent
                                         ,   optional:   it.optional ? "optional " : ""
                                         ,   arr:        arrsq(it)
                                         ,   nullable:   it.nullable ? "?" : ""
@@ -971,37 +972,32 @@ define(
             },
 
             writeMethod:    function (meth, max, indent, curLnk) {
-                var str = "<span class='idlMethod'>";
-                if (meth.extendedAttributes) str += idn(indent) + "[<span class='extAttr'>" + meth.extendedAttributes + "</span>]\n";
-                str += idn(indent);
+                var params = meth.params
+                                .map(function (it) {
+                                    return idlParamTmpl({
+                                        obj:        it
+                                    ,   optional:   it.optional ? "optional " : ""
+                                    ,   arr:        arrsq(it)
+                                    ,   nullable:   it.nullable ? "?" : ""
+                                    ,   variadic:   it.variadic ? "..." : ""
+                                    });
+                                })
+                                .join(", ");
                 var len = 0;
                 if (meth.isUnionType) len = meth.datatype.join(" or ").length + 2;
-                else                len = meth.datatype.length;
+                else                  len = meth.datatype.length;
                 var pad = max - len;
                 if (meth.nullable) pad = pad - 1;
                 if (meth.array) pad = pad - (2 * meth.arrayCount);
-                var nullable = meth.nullable ? "?" : "";
-                var arr = arrsq(meth);
-                str += "<span class='idlMethType'>" + datatype(meth.datatype) + arr + nullable + "</span> ";
-                for (var i = 0; i < pad; i++) str += " ";
-                var id = this.makeMethodID(curLnk, meth);
-                str += "<span class='idlMethName'><a href='#" + id + "'>" + meth.id + "</a></span> (";
-                str += meth.params.map(function (it) {
-                                            var nullable = it.nullable ? "?" : "";
-                                            var optional = it.optional ? "optional " : "";
-                                            var arr = arrsq(it);
-                                            var variadic = it.variadic ? "..." : "";
-                                            var prm = "<span class='idlParam'>";
-                                            if (it.extendedAttributes) prm += "[<span class='extAttr'>" + it.extendedAttributes + "</span>] ";
-                                            prm += optional + "<span class='idlParamType'>" + datatype(it.datatype) + arr + nullable + variadic + "</span> " +
-                                            "<span class='idlParamName'>" + it.id + "</span>" +
-                                            "</span>";
-                                            return prm;
-                                        })
-                                  .join(", ");
-                str += ")";
-                str += ";</span>\n";
-                return str;
+                return idlMethodTmpl({
+                    obj:        meth
+                ,   indent:     indent
+                ,   arr:        arrsq(meth)
+                ,   nullable:   meth.nullable ? "?" : ""
+                ,   pad:        pad
+                ,   id:         this.makeMethodID(curLnk, meth)
+                ,   children:   params
+                });
             },
 
             writeConst:    function (cons, max, indent, curLnk) {
