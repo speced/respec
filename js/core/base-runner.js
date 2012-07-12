@@ -82,6 +82,7 @@ define(
                 respecEvents.sub("end", function () {
                     pluginStack--;
                     if (!pluginStack) respecEvents.pub("end-all");
+                    document.respecDone = true;
                 });
                 respecEvents.pub("start", "core/base-runner");
                 
