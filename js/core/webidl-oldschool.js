@@ -21,9 +21,12 @@ define(
     ,    "text!core/templates/webidl/param.html"
     ,    "text!core/templates/webidl/callback.html"
     ,    "text!core/templates/webidl/method.html"
+    ,    "text!core/templates/webidl/attribute.html"
+    ,    "text!core/templates/webidl/field.html"
     ],
     function (css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
-                   idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl) {
+                   idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl,
+                   idlAttributeTmpl, idlFieldTmpl) {
         idlModuleTmpl = Handlebars.compile(idlModuleTmpl);
         idlTypedefTmpl = Handlebars.compile(idlTypedefTmpl);
         idlImplementsTmpl = Handlebars.compile(idlImplementsTmpl);
@@ -35,6 +38,8 @@ define(
         idlParamTmpl = Handlebars.compile(idlParamTmpl);
         idlCallbackTmpl = Handlebars.compile(idlCallbackTmpl);
         idlMethodTmpl = Handlebars.compile(idlMethodTmpl);
+        idlAttributeTmpl = Handlebars.compile(idlAttributeTmpl);
+        idlFieldTmpl = Handlebars.compile(idlFieldTmpl);
         var WebIDLProcessor = function (cfg) {
                 this.parent = { type: "module", id: "outermost", children: [] };
                 if (!cfg) cfg = {};
@@ -887,8 +892,7 @@ define(
                     return str;
                 }
                 else if (obj.type == "dictionary") {
-                    var opt = { obj: obj, indent: indent }
-                    ,   max = 0;
+                    var max = 0;
                     obj.children.forEach(function (it, idx) {
                         var len = it.datatype.length;
                         if (it.nullable) len = len + 1;
@@ -896,15 +900,14 @@ define(
                         max = (len > max) ? len : max;
                     });
                     var curLnk = "widl-" + obj.refId + "-"
-                    ,   $res = $(idlDictionaryTmpl(opt))
-                    ,   $ph = $res.find(".PLACEHOLDER")
+                    ,   self = this
+                    ,   children = obj.children
+                                      .map(function (it) {
+                                          return self.writeMember(it, max, indent + 1, curLnk);
+                                      })
+                                      .join("")
                     ;
-                    for (var i = 0; i < obj.children.length; i++) {
-                        $ph.before(this.writeMember(obj.children[i], max, indent + 1, curLnk));
-                        $ph.before($ph[0].ownerDocument.createTextNode("\n"));
-                    }
-                    $ph.remove();
-                    return $res;
+                    return idlDictionaryTmpl({ obj: obj, indent: indent, children: children });
                 }
                 else if (obj.type == "callback") {
                     var params = obj.children
@@ -935,40 +938,32 @@ define(
             },
 
             writeField:    function (attr, max, indent, curLnk) {
-                var str = "<span class='idlField'>";
-                if (attr.extendedAttributes) str += idn(indent) + "[<span class='extAttr'>" + attr.extendedAttributes + "</span>]\n";
-                str += idn(indent);
                 var pad = max - attr.datatype.length;
                 if (attr.nullable) pad = pad - 1;
                 if (attr.array) pad = pad - (2 * attr.arrayCount);
-                var nullable = attr.nullable ? "?" : "";
-                var arr = arrsq(attr);
-                str += "<span class='idlFieldType'>" + datatype(attr.datatype) + arr + nullable + "</span> ";
-                for (var i = 0; i < pad; i++) str += " ";
-                str += "<span class='idlFieldName'><a href='#" + curLnk + attr.refId + "'>" + attr.id + "</a></span>";
-                str += ";</span>\n";
-                return str;
+                return idlFieldTmpl({
+                    obj:        attr
+                ,   indent:     indent
+                ,   arr:        arrsq(attr)
+                ,   nullable:   attr.nullable ? "?" : ""
+                ,   pad:        pad
+                ,   href:       curLnk + attr.refId
+                });
             },
 
             writeAttribute:    function (attr, max, indent, curLnk, hasRO) {
-                var str = "<span class='idlAttribute'>";
-                if (attr.extendedAttributes) str += idn(indent) + "[<span class='extAttr'>" + attr.extendedAttributes + "</span>]\n";
-                str += idn(indent);
-                if (hasRO) {
-                    if (attr.readonly) str += "readonly ";
-                    else               str += "         ";
-                }
-                str += "attribute ";
                 var pad = max - attr.datatype.length;
                 if (attr.nullable) pad = pad - 1;
                 if (attr.array) pad = pad - (2 * attr.arrayCount);
-                var nullable = attr.nullable ? "?" : "";
-                var arr = arrsq(attr);
-                str += "<span class='idlAttrType'>" + datatype(attr.datatype) + arr + nullable + "</span> ";
-                for (var i = 0; i < pad; i++) str += " ";
-                str += "<span class='idlAttrName'><a href='#" + curLnk + attr.refId + "'>" + attr.id + "</a></span>";
-                str += ";</span>\n";
-                return str;
+                return idlAttributeTmpl({
+                    obj:        attr
+                ,   indent:     indent
+                ,   readonly:   attr.readonly ? "readonly" : "        "
+                ,   pad:        pad
+                ,   arr:        arrsq(attr)
+                ,   nullable:   attr.nullable ? "?" : ""
+                ,   href:       curLnk + attr.refId
+                });
             },
 
             writeMethod:    function (meth, max, indent, curLnk) {
@@ -1012,7 +1007,7 @@ define(
                 opt.pad = max - memb.datatype.length;
                 if (memb.nullable) opt.pad = opt.pad - 1;
                 if (memb.array) opt.pad = opt.pad - (2 * memb.arrayCount);
-                return $(idlDictMemberTmpl(opt));
+                return idlDictMemberTmpl(opt);
             }
         };
 
