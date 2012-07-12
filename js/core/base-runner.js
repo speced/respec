@@ -98,6 +98,7 @@ define(
                     if (/\/js\//.test(src)) baseUrl = src.replace(/\/js\/.*/, "\/js\/");
                 });
                 respecConfig.respecBase = baseUrl;
+                respecConfig.scheme = location.protocol.replace(":", "");
                 
                 var pipeline;
                 pipeline = function () {

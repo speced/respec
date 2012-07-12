@@ -196,7 +196,7 @@ var sn;
             }
 
             str += ">\n";
-            var cmt = document.createComment("[if lt IE 9]><script src='http://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
+            var cmt = document.createComment("[if lt IE 9]><script src='" + this.scheme + "://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
             $("head").append(cmt);
             str += document.documentElement.innerHTML;
             str += "</html>";
@@ -270,7 +270,7 @@ var sn;
                 selfClosing[n] = true;
             });
             var noEsc = [false];
-            var cmt = document.createComment("[if lt IE 9]><script src='http://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
+            var cmt = document.createComment("[if lt IE 9]><script src='" + this.scheme + "://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
             $("head").append(cmt);
             var dumpNode = function (node) {
                 var out = '';
