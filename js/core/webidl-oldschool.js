@@ -23,23 +23,11 @@ define(
     ,   "tmpl!core/templates/webidl/method.html"
     ,   "tmpl!core/templates/webidl/attribute.html"
     ,   "tmpl!core/templates/webidl/field.html"
+    ,   "tmpl!core/templates/webidl/exception.html"
     ],
     function (css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
                    idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl,
-                   idlAttributeTmpl, idlFieldTmpl, idlFieldTmpl2) {
-        // idlModuleTmpl = Handlebars.compile(idlModuleTmpl);
-        // idlTypedefTmpl = Handlebars.compile(idlTypedefTmpl);
-        // idlImplementsTmpl = Handlebars.compile(idlImplementsTmpl);
-        // idlDictMemberTmpl = Handlebars.compile(idlDictMemberTmpl);
-        // idlDictionaryTmpl = Handlebars.compile(idlDictionaryTmpl);
-        // idlEnumItemTmpl = Handlebars.compile(idlEnumItemTmpl);
-        // idlEnumTmpl = Handlebars.compile(idlEnumTmpl);
-        // idlConstTmpl = Handlebars.compile(idlConstTmpl);
-        // idlParamTmpl = Handlebars.compile(idlParamTmpl);
-        // idlCallbackTmpl = Handlebars.compile(idlCallbackTmpl);
-        // idlMethodTmpl = Handlebars.compile(idlMethodTmpl);
-        // idlAttributeTmpl = Handlebars.compile(idlAttributeTmpl);
-        // idlFieldTmpl = Handlebars.compile(idlFieldTmpl);
+                   idlAttributeTmpl, idlFieldTmpl, idlExceptionTmpl) {
         var WebIDLProcessor = function (cfg) {
                 this.parent = { type: "module", id: "outermost", children: [] };
                 if (!cfg) cfg = {};
@@ -865,31 +853,24 @@ define(
                     return str;
                 }
                 else if (obj.type == "exception") {
-                    var str = "<span class='idlException' id='idl-def-" + obj.refId + "'>";
-                    if (obj.extendedAttributes) str += idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>]\n";
-                    str += idn(indent) + "exception <span class='idlExceptionID'>" + obj.id + "</span>";
-                    if (obj.superclasses && obj.superclasses.length) str += " : " +
-                                                        obj.superclasses.map(function (it) {
-                                                                                return "<span class='idlSuperclass'><a>" + it + "</a></span>";
-                                                                            })
-                                                                        .join(", ");
-                    str += " {\n";
                     var maxAttr = 0, maxConst = 0;
                     obj.children.forEach(function (it, idx) {
                         var len = it.datatype.length;
                         if (it.nullable) len = len + 1;
                         if (it.array) len = len + (2 * it.arrayCount);
-                        if (it.type == "field")   maxAttr = (len > maxAttr) ? len : maxAttr;
-                        else if (it.type == "constant") maxConst = (len > maxConst) ? len : maxConst;
+                        if (it.type === "field")   maxAttr = (len > maxAttr) ? len : maxAttr;
+                        else if (it.type === "constant") maxConst = (len > maxConst) ? len : maxConst;
                     });
-                    var curLnk = "widl-" + obj.refId + "-";
-                    for (var i = 0; i < obj.children.length; i++) {
-                        var ch = obj.children[i];
-                        if (ch.type == "field") str += this.writeField(ch, maxAttr, indent + 1, curLnk);
-                        else if (ch.type == "constant") str += this.writeConst(ch, maxConst, indent + 1, curLnk);
-                    }
-                    str += idn(indent) + "};</span>\n";
-                    return str;
+                    var curLnk = "widl-" + obj.refId + "-"
+                    ,   self = this
+                    ,   children = obj.children
+                                      .map(function (ch) {
+                                          if (ch.type === "field") return self.writeField(ch, maxAttr, indent + 1, curLnk);
+                                          else if (ch.type === "constant") return self.writeConst(ch, maxConst, indent + 1, curLnk);
+                                      })
+                                      .join("")
+                    ;
+                    return idlExceptionTmpl({ obj: obj, indent: indent, children: children });
                 }
                 else if (obj.type == "dictionary") {
                     var max = 0;
