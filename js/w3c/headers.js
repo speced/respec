@@ -62,10 +62,10 @@
 
 define(
     ["core/utils"
-    ,"text!w3c/templates/headers.html"
-    ,"text!w3c/templates/sotd.html"
-    ,"text!w3c/templates/cgbg-headers.html"
-    ,"text!w3c/templates/cgbg-sotd.html"
+    ,"tmpl!w3c/templates/headers.html"
+    ,"tmpl!w3c/templates/sotd.html"
+    ,"tmpl!w3c/templates/cgbg-headers.html"
+    ,"tmpl!w3c/templates/cgbg-sotd.html"
     ],
     function (utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl) {
         // XXX RDFa support is untested
@@ -76,20 +76,15 @@ define(
                 if (name === "Editor") {
                     re = " rel='bibo:editor'";
                     if (this.doRDFa == "1.1") re += " inlist=''";
-                    rn = " property='foaf:name'";
-                    rm = " rel='foaf:mbox'";
-                    rp = " typeof='foaf:Person'";
-                    rwu = " rel='foaf:workplaceHomepage'";
-                    rpu = " rel='foaf:homepage'";
                 }
                 else if (name === "Author") {
                     re = " rel='dcterms:contributor'";
-                    rn = " property='foaf:name'";
-                    rm = " rel='foaf:mbox'";
-                    rp = " typeof='foaf:Person'";
-                    rwu = " rel='foaf:workplaceHomepage'";
-                    rpu = " rel='foaf:homepage'";
                 }
+                rn = " property='foaf:name'";
+                rm = " rel='foaf:mbox'";
+                rp = " typeof='foaf:Person'";
+                rwu = " rel='foaf:workplaceHomepage'";
+                rpu = " rel='foaf:homepage'";
             }
             var ret = "";
             for (var i = 0, n = items.length; i < n; i++) {
@@ -276,7 +271,7 @@ define(
                 // configuration done - yay!
                 
                 // insert into document
-                $("body", doc).prepend($((Handlebars.compile(conf.isCGBG ? cgbgHeadersTmpl : headersTmpl))(conf)));
+                $("body", doc).prepend($(conf.isCGBG ? cgbgHeadersTmpl(conf) : headersTmpl(conf)));
 
                 // handle SotD
                 var $sotd = $("#sotd");
@@ -306,7 +301,7 @@ define(
                 conf.recNotExpected = (!conf.isRecTrack && conf.maturity == "WD");
                 if (conf.isIGNote && !conf.charterDisclosureURI)
                     msg.pub("error", "IG-NOTEs must link to charter's disclosure section using charterDisclosureURI");
-                $((Handlebars.compile(conf.isCGBG ? cgbgSotdTmpl : sotdTmpl))(conf)).insertAfter($("#abstract"));
+                $(conf.isCGBG ? cgbgSotdTmpl(conf) : sotdTmpl(conf)).insertAfter($("#abstract"));
 
                 msg.pub("end", "w3c/headers");
                 cb();

@@ -9,37 +9,37 @@
 
 define(
     [
-        "text!core/css/webidl-oldschool.css"
-    ,    "text!core/templates/webidl/module.html"
-    ,    "text!core/templates/webidl/typedef.html"
-    ,    "text!core/templates/webidl/implements.html"
-    ,    "text!core/templates/webidl/dict-member.html"
-    ,    "text!core/templates/webidl/dictionary.html"
-    ,    "text!core/templates/webidl/enum-item.html"
-    ,    "text!core/templates/webidl/enum.html"
-    ,    "text!core/templates/webidl/const.html"
-    ,    "text!core/templates/webidl/param.html"
-    ,    "text!core/templates/webidl/callback.html"
-    ,    "text!core/templates/webidl/method.html"
-    ,    "text!core/templates/webidl/attribute.html"
-    ,    "text!core/templates/webidl/field.html"
+        "tmpl!core/css/webidl-oldschool.css"
+    ,   "tmpl!core/templates/webidl/module.html"
+    ,   "tmpl!core/templates/webidl/typedef.html"
+    ,   "tmpl!core/templates/webidl/implements.html"
+    ,   "tmpl!core/templates/webidl/dict-member.html"
+    ,   "tmpl!core/templates/webidl/dictionary.html"
+    ,   "tmpl!core/templates/webidl/enum-item.html"
+    ,   "tmpl!core/templates/webidl/enum.html"
+    ,   "tmpl!core/templates/webidl/const.html"
+    ,   "tmpl!core/templates/webidl/param.html"
+    ,   "tmpl!core/templates/webidl/callback.html"
+    ,   "tmpl!core/templates/webidl/method.html"
+    ,   "tmpl!core/templates/webidl/attribute.html"
+    ,   "tmpl!core/templates/webidl/field.html"
     ],
     function (css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
                    idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl,
-                   idlAttributeTmpl, idlFieldTmpl) {
-        idlModuleTmpl = Handlebars.compile(idlModuleTmpl);
-        idlTypedefTmpl = Handlebars.compile(idlTypedefTmpl);
-        idlImplementsTmpl = Handlebars.compile(idlImplementsTmpl);
-        idlDictMemberTmpl = Handlebars.compile(idlDictMemberTmpl);
-        idlDictionaryTmpl = Handlebars.compile(idlDictionaryTmpl);
-        idlEnumItemTmpl = Handlebars.compile(idlEnumItemTmpl);
-        idlEnumTmpl = Handlebars.compile(idlEnumTmpl);
-        idlConstTmpl = Handlebars.compile(idlConstTmpl);
-        idlParamTmpl = Handlebars.compile(idlParamTmpl);
-        idlCallbackTmpl = Handlebars.compile(idlCallbackTmpl);
-        idlMethodTmpl = Handlebars.compile(idlMethodTmpl);
-        idlAttributeTmpl = Handlebars.compile(idlAttributeTmpl);
-        idlFieldTmpl = Handlebars.compile(idlFieldTmpl);
+                   idlAttributeTmpl, idlFieldTmpl, idlFieldTmpl2) {
+        // idlModuleTmpl = Handlebars.compile(idlModuleTmpl);
+        // idlTypedefTmpl = Handlebars.compile(idlTypedefTmpl);
+        // idlImplementsTmpl = Handlebars.compile(idlImplementsTmpl);
+        // idlDictMemberTmpl = Handlebars.compile(idlDictMemberTmpl);
+        // idlDictionaryTmpl = Handlebars.compile(idlDictionaryTmpl);
+        // idlEnumItemTmpl = Handlebars.compile(idlEnumItemTmpl);
+        // idlEnumTmpl = Handlebars.compile(idlEnumTmpl);
+        // idlConstTmpl = Handlebars.compile(idlConstTmpl);
+        // idlParamTmpl = Handlebars.compile(idlParamTmpl);
+        // idlCallbackTmpl = Handlebars.compile(idlCallbackTmpl);
+        // idlMethodTmpl = Handlebars.compile(idlMethodTmpl);
+        // idlAttributeTmpl = Handlebars.compile(idlAttributeTmpl);
+        // idlFieldTmpl = Handlebars.compile(idlFieldTmpl);
         var WebIDLProcessor = function (cfg) {
                 this.parent = { type: "module", id: "outermost", children: [] };
                 if (!cfg) cfg = {};
