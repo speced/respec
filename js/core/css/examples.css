@@ -6,7 +6,7 @@ div.example-title {
 div.example-title span {
     text-transform: uppercase;   
 }
-div.example, div.illegal-example {
+aside.example, div.example, div.illegal-example {
     padding: 0.5em;
     margin: 1em 0;
     position: relative;
@@ -14,10 +14,19 @@ div.example, div.illegal-example {
 }
 div.illegal-example { color: red }
 div.illegal-example p { color: black }
-div.example {
+aside.example, div.example {
     padding: .5em;
     border-left-width: .5em;
     border-left-style: solid;
     border-color: #e0cb52;
     background: #fcfaee;    
+}
+
+aside.example div.example {
+    border-left-width: .1em;
+    border-color: #999;
+    background: #fff;
+}
+aside.example div.example div.example-title {
+    color: #999;
 }

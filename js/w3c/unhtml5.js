@@ -1,7 +1,8 @@
 
 // Module w3c/unhtml5
 // Removes uses of HTML5 elements (e.g. section) and replaces them with HTML4 equivalents.
-// Hopefully we won't need this for long.
+// This module is now officially deprecated for use in W3C specifications. You can however
+// still use it if you need to for some reason.
 
 define(
     ["core/utils"], // load this to be sure that the jQuery extensions are loaded

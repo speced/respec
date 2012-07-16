@@ -82,6 +82,7 @@ define(
                 respecEvents.sub("end", function () {
                     pluginStack--;
                     if (!pluginStack) respecEvents.pub("end-all");
+                    document.respecDone = true;
                 });
                 respecEvents.pub("start", "core/base-runner");
                 
@@ -98,6 +99,7 @@ define(
                     if (/\/js\//.test(src)) baseUrl = src.replace(/\/js\/.*/, "\/js\/");
                 });
                 respecConfig.respecBase = baseUrl;
+                respecConfig.scheme = location.protocol.replace(":", "");
                 
                 var pipeline;
                 pipeline = function () {

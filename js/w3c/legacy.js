@@ -170,9 +170,6 @@ var sn;
             if (dt && dt.publicId) {
                 str += " PUBLIC '" + dt.publicId + "' '" + dt.systemId + "'";
             }
-            else { // when HTML5 is allowed we can remove this
-                str += " PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'";
-            }
             str += ">\n";
             str += "<html";
             var ats = document.documentElement.attributes;
@@ -199,6 +196,8 @@ var sn;
             }
 
             str += ">\n";
+            var cmt = document.createComment("[if lt IE 9]><script src='" + this.scheme + "://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
+            $("head").append(cmt);
             str += document.documentElement.innerHTML;
             str += "</html>";
             return str;
@@ -271,6 +270,8 @@ var sn;
                 selfClosing[n] = true;
             });
             var noEsc = [false];
+            var cmt = document.createComment("[if lt IE 9]><script src='" + this.scheme + "://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
+            $("head").append(cmt);
             var dumpNode = function (node) {
                 var out = '';
                 // if the node is the document node.. process the children
@@ -306,7 +307,7 @@ var sn;
                 }
                 // comments
                 else if (8 === node.nodeType) {
-                    out += "\n<!-- " + node.nodeValue + " -->\n";
+                    out += "\n<!--" + node.nodeValue + "-->\n";
                 }
                 // text or cdata
                 else if (3 === node.nodeType || 4 === node.nodeType) {
