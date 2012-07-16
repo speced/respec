@@ -9,7 +9,8 @@
 
 define(
     [
-        "tmpl!core/css/webidl-oldschool.css"
+        "handlebars"
+    ,   "tmpl!core/css/webidl-oldschool.css"
     ,   "tmpl!core/templates/webidl/module.html"
     ,   "tmpl!core/templates/webidl/typedef.html"
     ,   "tmpl!core/templates/webidl/implements.html"
@@ -26,7 +27,7 @@ define(
     ,   "tmpl!core/templates/webidl/exception.html"
     ,   "tmpl!core/templates/webidl/interface.html"
     ],
-    function (css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
+    function (hb, css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
                    idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl,
                    idlAttributeTmpl, idlFieldTmpl, idlExceptionTmpl, idlInterfaceTmpl) {
         var WebIDLProcessor = function (cfg) {
