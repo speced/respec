@@ -51,44 +51,44 @@
       };
     </script>
     <script class="remove">
-      function examples() {
-        var examples = document.querySelectorAll('div.example');
-        sn = new berjon.simpleNode({
-                        "":     "http://www.w3.org/1999/xhtml",
-                        "x":    "http://www.w3.org/1999/xhtml"
-                    });
-        for (var i = 0; i < examples.length; i++) {
-          var example = examples.item(i);
-          var header = sn.element('div', {'class': 'exampleHeader'}, null, 'Example');
-          example.insertBefore(header, example.firstChild);
-        }
-      }
+      // function examples() {
+      //   var examples = document.querySelectorAll('div.example');
+      //   sn = new berjon.simpleNode({
+      //                   "":     "http://www.w3.org/1999/xhtml",
+      //                   "x":    "http://www.w3.org/1999/xhtml"
+      //               });
+      //   for (var i = 0; i < examples.length; i++) {
+      //     var example = examples.item(i);
+      //     var header = sn.element('div', {'class': 'exampleHeader'}, null, 'Example');
+      //     example.insertBefore(header, example.firstChild);
+      //   }
+      // }
 
-      function codeblocks() {
-        document.normalize();
-        sn = new berjon.simpleNode({
-                        "":     "http://www.w3.org/1999/xhtml",
-                        "x":    "http://www.w3.org/1999/xhtml"
-                    });
-
-        var blocks = document.querySelectorAll('codeblock');
-        for (var i = 0; i < blocks.length; i++) {
-          var codeblock = blocks.item(i);
-          var div = sn.element('div', {'class': 'block'})
-          sn.element('span', {'class': 'blockTitle'},
-            sn.element('div', {'class': 'blockTitleDiv'}, div), 'ECMAScript');
-          var code = sn.element('code', {'class': 'es-code'},
-                       sn.element('pre', {'class': 'code'},
-                         sn.element('div', {'class': 'blockContent'}, div)));
-          sn.copyChildren(codeblock, code);
-          codeblock.parentNode.replaceChild(div, codeblock);
-        }
-      }
-      window.onload = function() {
-        examples();
-        codeblocks();
-        (new berjon.respec()).loadAndRun();
-      }
+      // function codeblocks() {
+      //   document.normalize();
+      //   sn = new berjon.simpleNode({
+      //                   "":     "http://www.w3.org/1999/xhtml",
+      //                   "x":    "http://www.w3.org/1999/xhtml"
+      //               });
+      // 
+      //   var blocks = document.querySelectorAll('codeblock');
+      //   for (var i = 0; i < blocks.length; i++) {
+      //     var codeblock = blocks.item(i);
+      //     var div = sn.element('div', {'class': 'block'})
+      //     sn.element('span', {'class': 'blockTitle'},
+      //       sn.element('div', {'class': 'blockTitleDiv'}, div), 'ECMAScript');
+      //     var code = sn.element('code', {'class': 'es-code'},
+      //                  sn.element('pre', {'class': 'code'},
+      //                    sn.element('div', {'class': 'blockContent'}, div)));
+      //     sn.copyChildren(codeblock, code);
+      //     codeblock.parentNode.replaceChild(div, codeblock);
+      //   }
+      // }
+      // window.onload = function() {
+      //   // examples();
+      //   codeblocks();
+      //   (new berjon.respec()).loadAndRun();
+      // }
     </script>
     <!--[if IE]>
     <style type='text/css'>
@@ -172,7 +172,7 @@
       </p>
 
 <!-- We need and example, but until this one is updated, it's doing more harm than good.
-      <div class="example">
+      <aside class="example">
         <p>
           A script can efficiently find records in an object store that come 
           closest to the required value provided the value is stored in either 
@@ -184,7 +184,7 @@
           for a given author. If an exact match is not found, the operation
           raises an exception.
         </p>
-        <codeblock>var db = indexedDB.open('books', 'Book store', false);
+        <pre class="example highlight">var db = indexedDB.open('books', 'Book store', false);
 if (db.version !== '1.0') {
   var olddb = indexedDB.open('books', 'Book store');
   olddb.createObjectStore('books', 'isbn');
@@ -197,11 +197,11 @@ var matching = index.get('fred');
 if (matching)
   report(matching.isbn, matching.name, matching.author);
 else
-  report(null);</codeblock>
+  report(null);</pre>
         <p>
         The next example performs the exact same logic as above asynchronously.
         </p>
-        <codeblock>
+        <pre class="example highlight">
   function findFred() {
     var store = db.objectStore('books');
     var index = store.index('BookAuthor');
@@ -239,7 +239,7 @@ else
     }
   }
    
-        </codeblock>
+        </pre>
         <p>
         Here is an example of a script using this API. First, a function
         <code>prepareDatabase()</code> is defined. This function tries to create 
@@ -248,7 +248,7 @@ else
         doesn't need creating, it calls the function that does the
         actual work, in this case <code>showDocCount()</code>.
         </p>
-        <codeblock>
+        <pre class="example highlight">
 var request = null;
 function prepareDatabase(ready, error) {
   request = new <a>IDBDatabaseRequest</a>();
@@ -287,8 +287,8 @@ prepareDatabase(function(evt) {
   // error getting database
   var error = request.error;
   alert(error.message);
-});</codeblock>
-      </div>-->
+});</pre>
+      </aside>-->
     </section>
 
     <section id='conformance' class='section'>
@@ -532,7 +532,7 @@ prepareDatabase(function(evt) {
             The following examples illustrate the different behaviors when trying to use in-line <a>key</a>s and <a>key generator</a>s 
             to save an object to an <a>object store</a>.
           </p>
-          <div class="example">       
+          <aside class="example">
             <p>If the following conditions are true:</p> 
               <ul>
                 <li>This is the fourth entry in an <a>object store</a>.</li>
@@ -546,10 +546,10 @@ prepareDatabase(function(evt) {
                 When the object is saved in the <a>object store</a> the <code>bar</code> property is assigned a value of 4 
                 because that is the next <a>key</a> generated by the <a>object store</a>.
               </p>
-            <codeblock>
+            <pre class="example highlight">
  "foo.bar"
 { foo: {} }
-            </codeblock>
+            </pre>
             <p>If the following conditions are true:</p> 
               <ul>
                 <li>This is the fourth entry in an <a>object store</a>.</li>
@@ -563,10 +563,10 @@ prepareDatabase(function(evt) {
               The actual object has a value of 10 for the <code>bar</code> property, <code>{ foo: { bar: 10} }</code>.  
               When the object is saved in the <a>object store</a> the <code>bar</code> property keeps its value of 10, because that is the <a>key value</a>.
             </p>
-            <codeblock>
+            <pre class="example highlight">
 "foo.bar"
 { foo: { bar: 10 } }
-            </codeblock>
+            </pre>
             <p>
               The following example illustrates the scenario when the specified in-line <a>key</a> is defined through a <a>key path</a> but there is no property matching it.  
               The value provided by the <a>key generator</a> is then used to populate the <a>key value</a> and the system is responsible 
@@ -577,10 +577,10 @@ prepareDatabase(function(evt) {
               are created each as a child of the other until a value for <code>foo.bar.baz</code> can be assigned. 
               The value for <code>foo.bar.baz</code> is the next key generated by the object store.
             </p>
-            <codeblock>
+            <pre class="example highlight">
 "foo.bar.baz"
 { zip: {} }
-            </codeblock>
+            </pre>
             <p>
               Attempting to store a property on a primitive value will fail and throw an error.  
               In the first example below the <a>key path</a> for the object store is <code>"foo"</code>.  
@@ -590,7 +590,7 @@ prepareDatabase(function(evt) {
               In the second example below, the actual object is an array, [10].  
               Trying to define a property on the array fails.
             </p>
-            <codeblock>
+            <pre class="example highlight">
 // The key generation will attempt to create and store the key path property on this primitive.
 "foo"
 4
@@ -599,7 +599,8 @@ prepareDatabase(function(evt) {
 "foo"
 [10]
             
-            </codeblock>
+            </pre>
+          </aside>
 
         </section>
         
@@ -1368,31 +1369,31 @@ dictionary IDBVersionChangeEventInit : EventInit {
             positive integer higher than the highest numeric key in the store. The same key is never generated
             twice for the same object store unless a transaction is rolled back.
           </p>
-          <div class="example">       
+          <aside class="example">       
             <p>Each object store gets it's own key generator:</p> 
-            <codeblock>
+            <pre class="example highlight">
 store1 = db.createObjectStore("store1", { autoIncrement: true });
 store1.put("a"); // Will get key 1
 store2 = db.createObjectStore("store2", { autoIncrement: true });
 store2.put("a"); // Will get key 1
 store1.put("b"); // Will get key 2
 store2.put("b"); // Will get key 2
-            </codeblock>
+            </pre>
 
             <p>If an insertion fails due to constraint violations or IO error, the
             key generator is not updated.</p>
-            <codeblock>
+            <pre class="example highlight">
 transaction.onerror = function(e) { e.preventDefault() };
 store = db.createObjectStore("store1", { autoIncrement: true });
 index = store.createIndex("index1", "ix", { unique: true });
 store.put({ ix: "a"}); // Will get key 1
 store.put({ ix: "a"}); // Will fail
 store.put({ ix: "b"}); // Will get key 2
-            </codeblock>
+            </pre>
 
             <p>Removing items from an objectStore never affects the key generator.
             Including when .clear() is called.</p>
-            <codeblock>
+            <pre class="example highlight">
 store = db.createObjectStore("store1", { autoIncrement: true });
 store.put("a"); // Will get key 1
 store.delete(1);
@@ -1401,12 +1402,12 @@ store.clear();
 store.put("c"); // Will get key 3
 store.delete(IDBKeyRange.lowerBound(0));
 store.put("d"); // Will get key 4
-            </codeblock>
+            </pre>
 
             <p>Inserting an item with an explicit key affects the key generator if,
             and only if, the key is numeric and higher than the last generated
             key.</p>
-            <codeblock>
+            <pre class="example highlight">
 store = db.createObjectStore("store1", { autoIncrement: true });
 store.put("a"); // Will get key 1
 store.put("b", 3); // Will use key 3
@@ -1423,13 +1424,13 @@ store.put("j", [1000]); // Will use key [1000]
 store.put("k"); // Will get key 11
 // All of these would behave the same if the objectStore used a
 keyPath and the explicit key was passed inline in the object
-            </codeblock>
+            </pre>
 
             <p>Aborting a transaction rolls back any increases to the key generator
             which happened during the transaction. This is to make all rollbacks
             consistent since rollbacks that happen due to crash never has a chance
             to commit the increased key generator value.</p>
-            <codeblock>
+            <pre class="example highlight">
 db.createObjectStore("store", { autoIncrement: true });
 trans1 = db.transaction(["store"], "readwrite");
 store_t1 = trans1.objectStore("store");
@@ -1440,8 +1441,8 @@ trans2 = db.transaction(["store"], "readwrite");
 store_t2 = trans2.objectStore("store");
 store_t2.put("c"); // Will get key 1
 store_t2.put("d"); // Will get key 2
-            </codeblock>
-          </div>
+            </pre>
+          </aside>
         </section> <!-- Key Generator -->
       </section>
       <section class="section" id="async-api"> 
@@ -1461,17 +1462,17 @@ store_t2.put("d"); // Will get key 2
             asynchronous requests to <a title="database">databases</a> and <a>database</a> 
             <a>objects</a> using <a>event handler attributes</a> [[!DOM-LEVEL-3-EVENTS]]. 
           </p>
-          <div class="example">       
+          <aside class="example">       
             <p>
               In the following example, we open a <a>database</a> asynchronously. Various 
               event handlers are registered for responding to various situations.
             </p>
-            <codeblock>
+            <pre class="example highlight">
  var request = indexedDB.<a>open</a>('AddressBook', 15);
  request.<a>onsuccess</a> = function(evt) {...};
  request.<a>onerror</a> = function(evt) {...};
-            </codeblock>
-          </div>
+            </pre>
+          </aside>
           <dl class="idl" title="interface IDBRequest : EventTarget">
             <dt>readonly attribute any result</dt>
             <dd>
@@ -3196,53 +3197,53 @@ store_t2.put("d"); // Will get key 2
         </section>
         <section class="section" id="object-store-sync">  
           <h4>Object Store</h4>
-          <div class="example">       
+          <aside class="example">       
             <p>
               In the following example, we set up an <a>object store</a> to use the 
               <a title="object store key path">key path</a> <em>id</em>. This
               <a>object store</a> is also designed to use a <a>key generator</a>.
             </p>
-            <codeblock>var db = indexedDBSync.open('AddressBook', 1, function(trans, oldVersion) {
+            <pre class="example highlight">var db = indexedDBSync.open('AddressBook', 1, function(trans, oldVersion) {
 trans.db.createObjectStore('Contact', {keyPath:'id', autoIncrement:true} );
 });
-            </codeblock>
+            </pre>
             <p>
               Using this <a>database</a>, we can store records in the <em>Contact</em>
               <a>object store</a>. 
             </p>
-            <codeblock>var tx = db.transaction();
+            <pre class="example highlight">var tx = db.transaction();
 var store = tx.objectStore('Contact');
 var contact = store.add({name: 'Lincoln', number: '7012'});
 // contact.id === 1
-            </codeblock>
+            </pre>
             <p>
               A stored value can be retrieved using the same key used by the
               first put operation.
             </p>
-            <codeblock>var contact = store.get(1);
-// contact.name === 'Lincoln'</codeblock>
+            <pre class="example highlight">var contact = store.get(1);
+// contact.name === 'Lincoln'</pre>
             <p>
               A put operation will overwrite the record stored by the first 
               add operation with the same <a>key</a>.
             </p>
-            <codeblock>var abraham = {id: 1, name: 'Abraham', number: '2107'};
-store.put(abraham);</codeblock>
+            <pre class="example highlight">var abraham = {id: 1, name: 'Abraham', number: '2107'};
+store.put(abraham);</pre>
             <p>
               Now when the object store is read with the same key, the result 
               is different compared to the object read earlier.
             </p>
-            <codeblock>var contact = store.get(1);
-// contact.id === 1 &amp;&amp; contact.name === 'Abraham';</codeblock>
+            <pre class="example highlight">var contact = store.get(1);
+// contact.id === 1 &amp;&amp; contact.name === 'Abraham';</pre>
             <p>
               Additionally, all the <a>records</a> of an <a>object store</a> 
               matching a certain <a>key range</a> can be retrieved in key order.
             </p>
-            <codeblock>var range = new IDBKeyRange.bound(2, 4);
+            <pre class="example highlight">var range = new IDBKeyRange.bound(2, 4);
 var cursor = store.openCursor(range);
 // each value is a contact and each key is the id for that  
 // contact whose id is between 2 and 4, both inclusive
-cursor.continue();</codeblock>
-          </div>
+cursor.continue();</pre>
+          </aside>
           
           <dl title="interface IDBObjectStoreSync" class="idl">
             <dt>readonly attribute DOMString      name</dt>
@@ -3656,29 +3657,29 @@ cursor.continue();</codeblock>
         <section id="index-sync" class="section">  
           <h4>Index</h4>
           
-          <div class="example">
+          <aside class="example">
             <p>
               An <a>index</a> can be created for retrieving records other than
               by using record keys. Continuing the earlier example, an 
               index could be maintained on the <em>name</em> property of objects
               in the <em>Contact</em> <a>object store</a>.
             </p>
-            <codeblock>var db = indexedDBSync.open('AddressBook', 2, function(trans, oldVersion) {
+            <pre class="example highlight">var db = indexedDBSync.open('AddressBook', 2, function(trans, oldVersion) {
   if (oldVersion === 1) {
     trans.db.createObjectStore('Contact', {keyPath:'id', autoIncrement:true});
   }
   var store = vtx.objectStore('Contact');
   store.createIndex('ContactName', {unique:false, multiEntry:false});
 });
-</codeblock>
+</pre>
             <p>
               For example, the <em>id</em> of an object with the <em>name</em> 
               property value 'Lincoln' can be retrieved using the 
               <em>ContactName</em> <a>index</a>.
             </p>
-            <codeblock>var index = store.<a>openIndex</a>('ContactName');
+            <pre class="example highlight">var index = store.<a>openIndex</a>('ContactName');
 var id = index.<a>get</a>('Lincoln');
-// id === 1</codeblock>              
+// id === 1</pre>              
             <p>
               Additionally, all the records of an <a>object store</a> matching
               a certain range index keys can be retrieved in key order. When
@@ -3688,21 +3689,21 @@ var id = index.<a>get</a>('Lincoln');
               <a>index</a>, they are arranged by the value of the <em>name</em> 
               property. 
             </p>
-            <codeblock>var range = new <a>IDBKeyRange</a>.<a>bound</a>('L', 'M');
+            <pre class="example highlight">var range = new <a>IDBKeyRange</a>.<a>bound</a>('L', 'M');
 var cursor = index.<a>openCursor</a>(range);
 // each value is a contact and each key is the name for that  
 // contact whose name's first letter is either L or M
-cursor.<a>continue</a>();</codeblock>
+cursor.<a>continue</a>();</pre>
             <p>
               If, on the other hand, we only want the names and keys but not the whole <em>Contact</em>
               objects for a given range, then we can use a different mechanism for that.
             </p>
-            <codeblock>var range = new <a>IDBKeyRange</a>.<a>bound</a>('L', 'M');
+            <pre class="example highlight">var range = new <a>IDBKeyRange</a>.<a>bound</a>('L', 'M');
 var cursor = index.<a>openKeyCursor</a>(range);
 // each value is a contact id and each key is the name for that  
 // contact whose name's first letter is either L or M
-cursor.<a>continue</a>();</codeblock>
-          </div>
+cursor.<a>continue</a>();</pre>
+          </aside>
               
           <dl class="idl" title="interface IDBIndexSync">
             <dt>readonly attribute DOMString      name</dt>
@@ -3911,30 +3912,30 @@ cursor.<a>continue</a>();</codeblock>
             Using the synchronous API, an application can process all the records
             in the <a>cursor</a>'s <a>range</a>. 
           </p>
-          <div class="example">
+          <aside class="example">
             <p>
               By default, a <a>cursor</a> walks over objects starting at the
               first record and ending at the last record including
               all the duplicates encountered along the way. 
             </p>
-            <codeblock>var tx = db.<a>transaction</a>('Contact');
+            <pre class="example highlight">var tx = db.<a>transaction</a>('Contact');
 var store = tx.<a>objectStore</a>('Contact');
 var cursor = store.<a>openCursor</a>();
 while(cursor.<a>continue</a>()) {
     var value = cursor.value;
     // act on each object or key
 }
-</codeblock>
+</pre>
             
             <p>
               To start at the last record and end in the first record, the cursor 
               should be created with the direction parameter <code>"prev"</code>.
             </p>
-            <codeblock>var cursor = store.<a>openCursor</a>("prev");
+            <pre class="example highlight">var cursor = store.<a>openCursor</a>("prev");
 while(cursor.<a>continue()</a>) {
     // act on each object or key
 }
-</codeblock>
+</pre>
 
             <p>
               To start at a certain key and end in the last record, i.e.,
@@ -3943,9 +3944,9 @@ while(cursor.<a>continue()</a>) {
               start key and the direction parameter. 
             </p>
             
-            <codeblock>var range = <a>IDBKeyRange</a>.leftBound(key);
+            <pre class="example highlight">var range = <a>IDBKeyRange</a>.leftBound(key);
 var cursor = store.<a>openCursor</a>(range, <a>IDBCursorSync</a>.<a>NEXT_NO_DUPLICATE</a>);
-</codeblock>
+</pre>
         
             <p>
               It is also possible to create a bounded cursor, i.e., with
@@ -3958,10 +3959,10 @@ var cursor = store.<a>openCursor</a>(range, <a>IDBCursorSync</a>.<a>NEXT_NO_DUPL
               from the beginning of the range to its end.
             </p>
   
-            <codeblock>var range = <a>IDBKeyRange</a>.bound(start, end);
+            <pre class="example highlight">var range = <a>IDBKeyRange</a>.bound(start, end);
 var cursor = objects.<a>openCursor</a>(range);
-</codeblock>
-          </div>
+</pre>
+          </aside>
           <dl title="interface IDBCursorSync" class="idl">
             <dt>readonly attribute Object             source</dt>
             <dd>

@@ -4,16 +4,16 @@
 pre code, .prod-lines .nt {
   font-size: 14px !important;
 }
-.ednote, .terminal, code, .prop, .esstring, .javavalue, .idlident, .idlstring, .example, /*.note,*/ blockquote {
+/*.ednote, .terminal, code, .prop, .esstring, .javavalue, .idlident, .idlstring, .example, blockquote {
   background: #d9e8ff;
 }
-td code {
+*/td code {
   background: inherit;
 }
-.example blockquote {
+/*.example blockquote {
   background: #f0f6ff;
 }
-table.grammar {
+*/table.grammar {
   background: #eee;
 }
 .ednote {
@@ -124,13 +124,13 @@ table.grammar td.prod-rhs {
 .typevar {
   font-style: italic;
 }
-.example/*, .note*/ {
+/*.example {
   border-top: 3px solid #005a9c;
   border-bottom: 3px solid #005a9c;
   margin: 1em 2em;
   padding: 0 1em 0 1em;
 }
-.exampleHeader, .noteHeader {
+*/.exampleHeader, .noteHeader {
   font-weight: bold;
   display: block;
   color: #005a9c;

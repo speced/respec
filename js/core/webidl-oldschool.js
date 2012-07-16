@@ -438,6 +438,8 @@ define(
                     obj.type = "method";
                     var type = match[1]
                     ,   prm = match[3];
+                    // XXX we need to do better for parsing modifiers
+                    type = this.parseStatic(obj, type);
                     this.parseDatatype(obj, type);
                     this.setID(obj, match[2]);
                     obj.params = [];
@@ -514,6 +516,17 @@ define(
                 else {
                     obj.datatype = type;
                 }
+            },
+            
+            parseStatic:  function (obj, type) {
+                if (/^static\s+/.test(type)) {
+                    type = type.replace(/^static\s+/, "");
+                    obj.isStatic = true;
+                }
+                else {
+                    obj.isStatic = false;
+                }
+                return type;
             },
             
             parseExtendedAttributes:    function (str, obj) {
@@ -765,6 +778,7 @@ define(
                             var id = (type == "method") ? this.makeMethodID(curLnk, it) : sn.idThatDoesNotExist(curLnk + it.refId);
                             var dt = sn.element("dt", { id: id }, dl);
                             sn.element("code", {}, dt, it.id);
+                            if (it.isStatic) dt.appendChild(this.doc.createTextNode(", static"));
                             var desc = sn.element("dd", {}, dl, [it.description]);
                             if (type == "method") {
                                 if (it.params.length) {
@@ -940,6 +954,7 @@ define(
                         var len = 0;
                         if (it.isUnionType) len = it.datatype.join(" or ").length + 2;
                         else                len = it.datatype.length;
+                        if (it.isStatic) len += 7;
                         if (it.nullable) len = len + 1;
                         if (it.array) len = len + (2 * it.arrayCount);
                         if (it.type == "attribute") maxAttr = (len > maxAttr) ? len : maxAttr;
@@ -1080,6 +1095,7 @@ define(
                 var len = 0;
                 if (meth.isUnionType) len = meth.datatype.join(" or ").length + 2;
                 else                  len = meth.datatype.length;
+                if (meth.isStatic) len += 7;
                 var pad = max - len;
                 if (meth.nullable) pad = pad - 1;
                 if (meth.array) pad = pad - (2 * meth.arrayCount);
@@ -1088,6 +1104,7 @@ define(
                 ,   indent:     indent
                 ,   arr:        arrsq(meth)
                 ,   nullable:   meth.nullable ? "?" : ""
+                ,   "static":   meth.isStatic ? "static " : ""
                 ,   pad:        pad
                 ,   id:         this.makeMethodID(curLnk, meth)
                 ,   children:   params
