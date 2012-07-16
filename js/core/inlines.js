@@ -44,6 +44,7 @@ define(
                 for (var i = 0; i < txts.length; i++) {
                     var txt = txts[i];
                     var subtxt = txt.data.split(rx);
+                    if (subtxt.length === 1) continue;
 
                     var df = doc.createDocumentFragment();
                     while (subtxt.length) {
