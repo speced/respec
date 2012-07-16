@@ -1211,39 +1211,24 @@ prepareDatabase(function(evt) {
             <a href="#widl-IDBObjectStore-createIndex-IDBIndex-DOMString-name-any-keyPath-IDBIndexParameters-optionalParameters">createIndex</a>. The attributes on the object
             correspond to optional parameters on the function called.
           </p>
-          <div class="block">
-            <div class="blockTitleDiv"><span class="blockTitle">IDL</span></div>
-            <div class="blockContent">
-            <p>The following WebIDL defines <dfn>IDBObjectStoreParameters</dfn> dictionary type.</p>
-              <pre class="code">                  <code class="es-code">
-dictionary IDBObjectStoreParameters {
-  DOMString? keyPath = null;
-  boolean autoIncrement = false;
-};
-                </code>
-              </pre>
-              <p>The following WebIDL defines <dfn>IDBIndexParameters</dfn> dictionary type.</p>
-              <pre class="code">
-                <code class="es-code">
-dictionary IDBIndexParameters {
-  boolean unique = false;
-  boolean multiEntry = false;
-};
-                </code>
-              </pre>
-              <p>The following WebIDL defines <dfn>IDBVersionChangeEventInit</dfn> dictionary type.</p>
-              <pre class="code">
-                <code class="es-code">
-dictionary IDBVersionChangeEventInit : EventInit {
-  unsigned long long oldVersion = 0;
-  unsigned long long? newVersion = null;
-};
-                </code>
-              </pre>
-            </div>
-          </div>
-
-
+          <dl class='idl' title='dictionary IDBObjectStoreParameters'>
+            <dt>DOMString? keyPath = null</dt>
+            <dd></dd>
+            <dt>boolean autoIncrement = false</dt>
+            <dd></dd>
+          </dl>
+          <dl class='idl' title='dictionary IDBIndexParameters'>
+            <dt>boolean unique = false</dt>
+            <dd></dd>
+            <dt>boolean multiEntry = false</dt>
+            <dd></dd>
+          </dl>
+          <dl class='idl' title='dictionary IDBVersionChangeEventInit : EventInit'>
+            <dt>unsigned long long oldVersion = 0</dt>
+            <dd></dd>
+            <dt>unsigned long long? newVersion = null</dt>
+            <dd></dd>
+          </dl>
         </section> <!-- Options Object -->
         <section id="key-generator-concept" class="section">
           <h4>Key Generators</h4>
