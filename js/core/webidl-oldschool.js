@@ -383,6 +383,8 @@ define(
                 var obj = { children: [] }
                 ,   str = norm($dt.text())
                 ,   $extPrm = $dd.find("dl.parameters").first()
+                ,   $sgrs = $dd.find(".getraises, .setraises")
+                ,   $excepts = $dd.find("dl.exception").first()
                 ;
                 obj.description = $dd.contents().not("dl.parameters");
                 str = this.parseExtendedAttributes(str, obj);
@@ -396,6 +398,34 @@ define(
                     var type = match[2];
                     this.parseDatatype(obj, type);
                     this.setID(obj, match[3]);
+                    obj.raises = [];
+                    $sgrs.each(function () {
+                        var $el = $(this)
+                        ,   exc = {
+                                id:     $el.attr("title")
+                            ,   onSet:  $el.hasClass("setraises")
+                            ,   onGet:  $el.hasClass("getraises")
+                        };
+                        if ($el.is("dl")) {
+                            exc.type = "codelist";
+                            exc.description = [];
+                            $el.find("dt").each(function () {
+                                var $dt = $(this)
+                                ,   $dd = $dt.next("dd");
+                                exc.description.push({ id: $dt.text(), description: $dd.contents().clone() });
+                            });
+                        }
+                        else if ($el.is("div")) {
+                            exc.type = "simple";
+                            exc.description = $el.contents().clone();
+                        }
+                        else {
+                            this.msg.pub("error", "Do not know what to do with exceptions being raised defined outside of a div or dl.");
+                        }
+                        $el.remove();
+                        obj.raises.push(exc);
+                    });
+
                     return obj;
                 }
 
@@ -411,6 +441,31 @@ define(
                     this.parseDatatype(obj, type);
                     this.setID(obj, match[2]);
                     obj.params = [];
+                    obj.raises = [];
+
+                    $excepts.each(function () {
+                        var $el = $(this)
+                        ,   exc = { id: $el.attr("title") };
+                        if ($el.is("dl")) {
+                            exc.type = "codelist";
+                            exc.description = [];
+                            $el.find("dt").each(function () {
+                                var $dt = $(this)
+                                ,   $dd = $dt.next("dd");
+                                exc.description.push({ id: $dt.text(), description: $dd.contents().clone() });
+                            });
+                        }
+                        else if ($el.is("div")) {
+                            exc.type = "simple";
+                            exc.description = $el.contents().clone();
+                        }
+                        else {
+                            this.msg.pub("error", "Do not know what to do with exceptions being raised defined outside of a div or dl.");
+                        }
+                        $el.remove();
+                        obj.raises.push(exc);
+                    });
+
 
                     if ($extPrm.length) {
                         $extPrm.remove();
@@ -540,7 +595,7 @@ define(
                         var sec = sn.element("section", {}, df);
                         var secTitle = type;
                         secTitle = secTitle.substr(0, 1).toUpperCase() + secTitle.substr(1) + "s";
-                        sn.element("h2", {}, sec, secTitle);
+                        if (!this.conf.noIDLSectionTitle) sn.element("h2", {}, sec, secTitle);
                         var dl = sn.element("dl", { "class": type + "s" }, sec);
                         for (var j = 0; j < things.length; j++) {
                             var it = things[j];
@@ -592,7 +647,7 @@ define(
                     cnt = [sn.text("Dictionary "),
                            sn.element("a", { "class": "idlType" }, null, obj.id),
                            sn.text(" Members")];
-                    sn.element("h2", {}, sec, cnt);
+                    if (!this.conf.noIDLSectionTitle) sn.element("h2", {}, sec, cnt);
                     var dl = sn.element("dl", { "class": "dictionary-members" }, sec);
                     for (var j = 0; j < things.length; j++) {
                         var it = things[j];
@@ -633,7 +688,7 @@ define(
                     cnt = [sn.text("Callback "),
                            sn.element("a", { "class": "idlType" }, null, obj.id),
                            sn.text(" Parameters")];
-                    sn.element("h2", {}, sec, cnt);
+                    if (!this.conf.noIDLSectionTitle) sn.element("h2", {}, sec, cnt);
                     var dl = sn.element("dl", { "class": "callback-members" }, sec);
                     for (var j = 0; j < things.length; j++) {
                         var it = things[j];
@@ -703,7 +758,7 @@ define(
                         var sec = sn.element("section", {}, df);
                         var secTitle = type;
                         secTitle = secTitle.substr(0, 1).toUpperCase() + secTitle.substr(1) + "s";
-                        sn.element("h2", {}, sec, secTitle);
+                        if (!this.conf.noIDLSectionTitle) sn.element("h2", {}, sec, secTitle);
                         var dl = sn.element("dl", { "class": type + "s" }, sec);
                         for (var j = 0; j < things.length; j++) {
                             var it = things[j];
@@ -735,6 +790,33 @@ define(
                                 else {
                                     sn.element("div", {}, desc, [sn.element("em", {}, null, "No parameters.")]);
                                 }
+                                if (this.conf.idlOldStyleExceptions && it.raises.length) {
+                                    var table = sn.element("table", { "class": "exceptions" }, desc);
+                                    var tr = sn.element("tr", {}, table);
+                                    ["Exception", "Description"].forEach(function (tit) { sn.element("th", {}, tr, tit); });
+                                    for (var k = 0; k < it.raises.length; k++) {
+                                        var exc = it.raises[k];
+                                        var tr = sn.element("tr", {}, table);
+                                        sn.element("td", { "class": "excName" }, tr, [sn.element("a", {}, null, exc.id)]);
+                                        var dtd = sn.element("td", { "class": "excDesc" }, tr);
+                                        if (exc.type == "simple") {
+                                            $(dtd).append(exc.description);
+                                        }
+                                        else {
+                                            var ctab = sn.element("table", { "class": "exceptionCodes" }, dtd );
+                                            for (var m = 0; m < exc.description.length; m++) {
+                                                var cd = exc.description[m];
+                                                var tr = sn.element("tr", {}, ctab);
+                                                sn.element("td", { "class": "excCodeName" }, tr, [sn.element("code", {}, null, cd.id)]);
+                                                sn.element("td", { "class": "excCodeDesc" }, tr, [cd.description]);
+                                            }
+                                        }
+                                    }
+                                }
+                                // else {
+                                //     sn.element("div", {}, desc, [sn.element("em", {}, null, "No exceptions.")]);
+                                // }
+
                                 var reDiv = sn.element("div", {}, desc);
                                 sn.element("em", {}, reDiv, "Return type: ");
 
@@ -760,6 +842,38 @@ define(
                                 }
                                 if (it.readonly) sn.text(", readonly", dt);
                                 if (it.nullable) sn.text(", nullable", dt);
+
+                                if (this.conf.idlOldStyleExceptions && it.raises.length) {
+                                    var table = sn.element("table", { "class": "exceptions" }, desc);
+                                    var tr = sn.element("tr", {}, table);
+                                    ["Exception", "On Get", "On Set", "Description"].forEach(function (tit) { sn.element("th", {}, tr, tit); });
+                                    for (var k = 0; k < it.raises.length; k++) {
+                                        var exc = it.raises[k];
+                                        var tr = sn.element("tr", {}, table);
+                                        sn.element("td", { "class": "excName" }, tr, [sn.element("a", {}, null, exc.id)]);
+                                        ["onGet", "onSet"].forEach(function (gs) {
+                                            if (exc[gs]) sn.element("td", { "class": "excGetSetTrue" }, tr, "\u2714");
+                                            else         sn.element("td", { "class": "excGetSetFalse" }, tr, "\u2718");
+                                        });
+                                        var dtd = sn.element("td", { "class": "excDesc" }, tr);
+                                        if (exc.type == "simple") {
+                                            dtd.appendChild(exc.description);
+                                        }
+                                        else {
+                                            var ctab = sn.element("table", { "class": "exceptionCodes" }, dtd );
+                                            for (var m = 0; m < exc.description.length; m++) {
+                                                var cd = exc.description[m];
+                                                var tr = sn.element("tr", {}, ctab);
+                                                sn.element("td", { "class": "excCodeName" }, tr, [sn.element("code", {}, null, cd.id)]);
+                                                sn.element("td", { "class": "excCodeDesc" }, tr, [cd.description]);
+                                            }
+                                        }
+                                    }
+                                }
+                                // else {
+                                //     sn.element("div", {}, desc, [sn.element("em", {}, null, "No exceptions.")]);
+                                // }
+
                             }
                             else if (type == "constant") {
                                 sn.text(" of type ", dt);
@@ -1001,6 +1115,7 @@ define(
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/webidl");
                 if (!conf.noIDLSorting) conf.noIDLSorting = false;
+                if (!conf.noIDLSectionTitle) conf.noIDLSectionTitle = false;
                 var $idl = $(".idl", doc)
                 ,   finish = function () {
                         msg.pub("end", "core/webidl");
