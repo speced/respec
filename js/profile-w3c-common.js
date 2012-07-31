@@ -61,8 +61,8 @@ define([
 //    that all others can reuse)
 //  - note that if we have a menu, we can drop shortcut.js!
 //  - WebIDL porting
-//      - give it a module of its own webidl-old-school
-//      - write a big set of tests for it (without touching anything else)
+//      x give it a module of its own webidl-oldschool
+//      x write a big set of tests for it (without touching anything else)
 //      - make it use templates wherever possible
 //      - then make it use jQuery
 //      - drop simple-node
