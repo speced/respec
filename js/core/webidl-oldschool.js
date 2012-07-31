@@ -96,6 +96,9 @@ define(
                 }
             }
         ,   pads = function (num) {
+                // XXX
+                //  this might be more simply done as
+                //  return Array(num + 1).join(" ")
                 var str = "";
                 for (var i = 0; i < num; i++) str += " ";
                 return str;
