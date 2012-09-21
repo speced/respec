@@ -30,6 +30,12 @@
       <dt>Previous version:</dt>
       <dd><a href='{{prevVersion}}'>{{prevVersion}}</a></dd>
     {{/if}}
+    {{#unless isCGFinal}}
+      {{#if prevED}}
+        <dt>Previous editor's draft:</dt>
+        <dd><a href='{{prevED}}'>{{prevED}}</a></dd>
+      {{/if}}
+    {{/unless}}
     <dt>Editor{{#if multipleEditors}}s{{/if}}:</dt>
     {{showPeople "Editor" editors}}
     {{#if authors}}
