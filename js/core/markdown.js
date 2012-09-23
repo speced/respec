@@ -35,7 +35,7 @@
 //       <section>
 //         <h3>Another subtitle</h3>
 //         <p>More text.</p>
-//       </section>  
+//       </section>
 //     </section>
 
 define(
@@ -49,6 +49,7 @@ define(
         
         return {
             toHTML: function(text) {
+                text = text.replace(/&gt;/g, '>');
                 return marked(text);
             },
             
