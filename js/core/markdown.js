@@ -49,10 +49,58 @@ define(
         
         return {
             toHTML: function(text) {
+                // As markdown is pulled from HTML > is already escaped, and
+                // thus blockquotes aren't picked up by the parser. This fixes
+                // it.
                 text = text.replace(/&gt;/g, '>');
+                text = this.removeLeftPadding(text);
                 return marked(text);
             },
             
+            removeLeftPadding: function(text) {
+                // Handles markdown content being nested
+                // inside elements with soft tabs. E.g.:
+                // <div>
+                //     This is a title
+                //     ---------------
+                //     
+                //     And this more text.
+                // </div
+                // 
+                // Gets turned into:
+                // <div>
+                //     <h2>This is a title</h2>
+                //     <p>And this more text.</p>
+                // </div
+                //
+                // Rather than:
+                // <div>
+                //     <pre><code>This is a title
+                // ---------------
+                // 
+                // And this more text.</code></pre>
+                // </div
+
+                var match = text.match(/\n[ ]+\S/g)
+                ,   current
+                ,   min
+                ;
+
+                if (match) {
+                    min = match[0].length - 2;
+                    for (var i = 0, length = match.length; i < length; i++) {
+                        current = match[i].length - 2;
+                        if (typeof min == 'undefined' || min > current) {
+                            min = current
+                        }
+                    }
+
+                    var re = new RegExp("\n[ ]{0," + min + "}", "g");
+                    text = text.replace(re, '\n');
+                }
+                return text;
+            },
+
             processBody: function(doc) {
                 var fragment = doc.createDocumentFragment()
                 ,   div = doc.createElement('div')
