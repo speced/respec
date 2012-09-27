@@ -123,7 +123,7 @@ define(
             status2maturity:    {
                 FPWD:           "WD"
             ,   LC:             "WD"
-            ,   "FPWD-NOTE":    "WD"
+            ,   "FPWD-NOTE":    "NOTE"
             ,   "WD-NOTE":      "WD"
             ,   "LC-NOTE":      "LC"
             ,   "IG-NOTE":      "NOTE"
