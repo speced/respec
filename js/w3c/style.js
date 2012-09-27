@@ -15,8 +15,8 @@ define(
                 if (statStyle === "FPWD"    ||
                     statStyle === "LC"      ||
                     statStyle === "WD-NOTE" ||
-                    statStyle === "LC-NOTE" ||
-                    statStyle === "FPWD-NOTE") statStyle = "WD";
+                    statStyle === "LC-NOTE") statStyle = "WD";
+                if (statStyle === "FPWD-NOTE") statStyle = "WG-NOTE";
                 if (statStyle === "finding" || statStyle === "draft-finding") statStyle = "base";
                 var css;
                 if (statStyle === "unofficial") {
