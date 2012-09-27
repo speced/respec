@@ -160,7 +160,7 @@ define(
             }
         ,   status2long:    {
                 FPWD:           "First Public Working Draft"
-            ,   "FPWD-NOTE":    "First Public Working Draft"
+            ,   "FPWD-NOTE":    "First Public Working Group Note"
             ,   LC:             "Last Call Working Draft"
             ,   "LC-NOTE":      "Last Call Working Draft"
             }
@@ -299,7 +299,7 @@ define(
                 conf.humanLCEnd = utils.humanDate(conf.lcEnd || "");
                 if (conf.specStatus === "CR" && !conf.crEnd) msg.pub("error", "Status is CR but no crEnd is specified");
                 conf.humanCREnd = utils.humanDate(conf.crEnd || "");
-                conf.recNotExpected = (!conf.isRecTrack && conf.maturity == "WD");
+                conf.recNotExpected = (!conf.isRecTrack && conf.maturity == "WD" && conf.specStatus !== "FPWD-NOTE");
                 if (conf.isIGNote && !conf.charterDisclosureURI)
                     msg.pub("error", "IG-NOTEs must link to charter's disclosure section using charterDisclosureURI");
                 $(conf.isCGBG ? cgbgSotdTmpl(conf) : sotdTmpl(conf)).insertAfter($("#abstract"));
