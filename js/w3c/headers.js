@@ -140,7 +140,7 @@ define(
             ,   ED:             "Editor's Draft"
             ,   FPWD:           "Working Draft"
             ,   WD:             "Working Draft"
-            ,   "FPWD-NOTE":    "Working Draft"
+            ,   "FPWD-NOTE":    "Working Group Note"
             ,   "WD-NOTE":      "Working Draft"
             ,   "LC-NOTE":      "Working Draft"
             ,   LC:             "Working Draft"
