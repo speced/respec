@@ -407,7 +407,7 @@ var sn;
             if (!cfg.diffTool) cfg.diffTool = 'http://www5.aptest.com/standards/htmldiff/htmldiff.pl';
             if (!cfg.doRDFa) cfg.doRDFa = false;
             for (var k in cfg) {
-                if (this.hasOwnProperty(k)) this[k] = cfg[k];
+                if (cfg.hasOwnProperty(k)) this[k] = cfg[k];
             }
         },
 
