@@ -401,57 +401,58 @@ var sn;
             ,   norms = conf.normativeReferences
             ;
 
+            function getKeys(obj) {
+                var res = [];
+                for (var k in obj) res.push(k);
+                return res;
+            }
+
             var del = [];
             for (var k in informs) if (norms[k]) del.push(k);
             for (var i = 0; i < del.length; i++) delete informs[del[i]];
 
+            informs = getKeys(informs);
+            norms = getKeys(norms);
+
+            if (!informs.length && !norms.length && !this.refNote) return;
             var refsec = sn.element("section", { id: "references", "class": "appendix" }, document.body);
             sn.element("h2", {}, refsec, "References");
             if (this.refNote) {
                 var refnote = sn.element("p", {}, refsec);
                 refnote.innerHTML = this.refNote;
             }
-            var getKeys = function (obj) {
-                var res = [];
-                for (var k in obj) res.push(k);
-                return res;
-            };
 
             var types = ["Normative", "Informative"];
             for (var i = 0; i < types.length; i++) {
                 var type = types[i];
-                var refs = (type == "Normative") ? getKeys(norms) : getKeys(informs);
+                var refs = (type == "Normative") ? norms : informs;
+                if (!refs.length) continue;
                 var sec = sn.element("section", {}, refsec);
                 sn.makeID(sec, null, type + " references");
                 sn.element("h3", {}, sec, type + " references");
                 refs.sort();
-                if (refs.length) {
-                    var dl = sn.element("dl", { "class": "bibliography" }, sec);
-                    if (this.doRDFa) {
-                        dl.setAttribute('about', '') ;
-                    }
-                    for (var j = 0; j < refs.length; j++) {
-                        var ref = refs[j];
-                        sn.element("dt", { id: "bib-" + ref }, dl, "[" + ref + "]");
-                        var dd = sn.element("dd", {}, dl);
-                        if (this.doRDFa) {
-                            if (type == 'Normative') {
-                                dd.setAttribute('rel','dcterms:requires');
-                            } else {
-                                dd.setAttribute('rel','dcterms:references');
-                            }
-                        }
-                        if (berjon.biblio[ref]) dd.innerHTML = berjon.biblio[ref] + "\n";
-                        else {
-                            if (!badrefs[ref]) badrefs[ref] = 0;
-                            badrefs[ref]++;
-                            badrefcount++;
-                            dd.innerHTML = "<em>Reference not found.</em>\n";
-                        }
-                    }
+                var dl = sn.element("dl", { "class": "bibliography" }, sec);
+                if (this.doRDFa) {
+                    dl.setAttribute('about', '') ;
                 }
-                else {
-                    sn.element("p", {}, sec, "No " + type.toLowerCase() + " references.");
+                for (var j = 0; j < refs.length; j++) {
+                    var ref = refs[j];
+                    sn.element("dt", { id: "bib-" + ref }, dl, "[" + ref + "]");
+                    var dd = sn.element("dd", {}, dl);
+                    if (this.doRDFa) {
+                        if (type == 'Normative') {
+                            dd.setAttribute('rel','dcterms:requires');
+                        } else {
+                            dd.setAttribute('rel','dcterms:references');
+                        }
+                    }
+                    if (berjon.biblio[ref]) dd.innerHTML = berjon.biblio[ref] + "\n";
+                    else {
+                        if (!badrefs[ref]) badrefs[ref] = 0;
+                        badrefs[ref]++;
+                        badrefcount++;
+                        dd.innerHTML = "<em>Reference not found.</em>\n";
+                    }
                 }
             }
             
