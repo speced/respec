@@ -124,7 +124,7 @@ define(
             processIssuesAndNotes: function(doc) {
                 var div = doc.createElement('div');
                 var self = this;
-                $('p.issue, p.note', doc).each(function() {
+                $('.issue, .note', doc).each(function() {
                     div.innerHTML = self.toHTML(this.innerHTML);
                     this.innerHTML = '';
                     var node = div.firstChild;
