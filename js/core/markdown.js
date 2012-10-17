@@ -6,8 +6,8 @@
 // 
 // We use marked for parsing Markkdown.
 // 
-// Note that the content of SECTION elements, and P elements with a
-// class name of "note" or "issue" is also parsed.
+// Note that the content of SECTION elements, and elements with a
+// class name of "note", "issue" or "req" are also parsed.
 // 
 // The HTML created by the Markdown parser is turned into a nested
 // structure of SECTION elements, following the strucutre given by 
@@ -121,10 +121,10 @@ define(
                 });
             },
             
-            processIssuesAndNotes: function(doc) {
+            processIssuesNotesAndReqs: function(doc) {
                 var div = doc.createElement('div');
                 var self = this;
-                $('.issue, .note', doc).each(function() {
+                $('.issue, .note, .req', doc).each(function() {
                     div.innerHTML = self.toHTML(this.innerHTML);
                     this.innerHTML = '';
                     var node = div.firstChild;
@@ -194,7 +194,7 @@ define(
             run: function (conf, doc, cb, msg) {
                 msg.pub("start", "core/markdown");
                 if (conf.format === 'markdown') {
-                    this.processIssuesAndNotes(doc);
+                    this.processIssuesNotesAndReqs(doc);
                     this.processSections(doc);
                     fragment = this.structure(this.processBody(doc), doc);
                     doc.body.innerHTML = '';
