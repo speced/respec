@@ -15,6 +15,7 @@ define([
         ,   "core/dfn"
         ,   "core/examples"
         ,   "core/issues-notes"
+        ,   "core/requirements"
         ,   "core/highlight"
         ,   "core/best-practices"
         ,   "core/figures"
