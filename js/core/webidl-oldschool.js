@@ -768,9 +768,7 @@ define(
                         var type = types[i];
                         var things = obj.children.filter(filterFunc);
                         if (things.length === 0) continue;
-                        if (!this.noIDLSorting) {
-                            things.sort(sortFunc);
-                        }
+                        if (!this.noIDLSorting) things.sort(sortFunc);
 
                         var sec = sn.element("section", {}, df);
                         var secTitle = type;
@@ -846,7 +844,7 @@ define(
                             else if (type == "attribute") {
                                 sn.text(" of type ", dt);
                                 if (it.array) {
-                                    for (var i = 0, n = it.arrayCount; i < n; i++) sn.text("array of ", dt);
+                                    for (var m = 0, n = it.arrayCount; m < n; m++) sn.text("array of ", dt);
                                 }
                                 var span = sn.element("span", { "class": "idlAttrType" }, dt);
                                 var matched = /^sequence<(.+)>$/.exec(it.datatype);
@@ -891,7 +889,6 @@ define(
                                 // else {
                                 //     sn.element("div", {}, desc, [sn.element("em", {}, null, "No exceptions.")]);
                                 // }
-
                             }
                             else if (type == "constant") {
                                 sn.text(" of type ", dt);
