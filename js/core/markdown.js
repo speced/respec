@@ -151,8 +151,9 @@ define(
                 }
 
                 function findParent(position) {
-                    while (1) {
-                        position--
+                    var parent;
+                    while (position > 0) {
+                        position--;
                         parent = stack[position];
                         if (parent) return parent;
                     }
@@ -196,7 +197,7 @@ define(
                 if (conf.format === 'markdown') {
                     this.processIssuesNotesAndReqs(doc);
                     this.processSections(doc);
-                    fragment = this.structure(this.processBody(doc), doc);
+                    var fragment = this.structure(this.processBody(doc), doc);
                     doc.body.innerHTML = '';
                     doc.body.appendChild(fragment)
                 }
