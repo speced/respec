@@ -195,7 +195,14 @@ define(
             run: function (conf, doc, cb, msg) {
                 msg.pub("start", "core/markdown");
                 if (conf.format === 'markdown') {
-                    this.processIssuesNotesAndReqs(doc);
+                    // Marked, the Markdown implementation we're currently using
+                    // parses markdown nested in markup (unless it's in a section element).
+                    // Turns out this is both what we need and generally not what other
+                    // parsers do.
+                    // In case we switch to another parser later on, we'll need to
+                    // uncomment the below line of code.
+                    //
+                    // this.processIssuesNotesAndReqs(doc);
                     this.processSections(doc);
                     var fragment = this.structure(this.processBody(doc), doc);
                     doc.body.innerHTML = '';
