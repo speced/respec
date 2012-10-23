@@ -17,7 +17,7 @@ define(
             run: function (conf, doc, cb, msg) {
                 msg.pub("start", "core/requirements");
 
-                $("*.req").each(function (i) {
+                $(".req").each(function (i) {
                     i++;
                     var $req = $(this)
                     ,   title = "Req. " + i
