@@ -21,14 +21,12 @@ var sn;
                             document.body);
         
         var hide = sn.element("p", {
-            style: "float: right; margin: 2px",
+            style: "float: right; margin: 2px; text-decoration: none"
         }, err);
         
         sn.text('[', hide);
         
-        var a = sn.element("a", {
-            href: "#",
-        }, hide, 'x');
+        var a = sn.element("a", { href: "#" }, hide, 'x');
         
         a.onclick = function() {
             document.getElementById(id).style.display = 'none';
@@ -105,6 +103,7 @@ var sn;
         run:    function (conf, doc, cb, msg) {
             try {
                 this.extractConfig();
+                this.overrideBiblio(conf);
                 this.bibref(conf, doc, cb, msg);
 
                 if (this.doRDFa) this.makeRDFa();
@@ -118,7 +117,15 @@ var sn;
                 msg.pub("error", "Processing error: " + e);
             }
         },
-
+        
+        overrideBiblio:     function (conf) {
+            if (conf.localBiblio) {
+                // console.log(conf.localBiblio);
+                // console.log(berjon.biblio.SVG12);
+                for (var k in conf.localBiblio) berjon.biblio[k] = conf.localBiblio[k];
+            }
+        },
+        
         makeRDFa:  function () {
             var abs = document.getElementById("abstract");
             if (abs) {
