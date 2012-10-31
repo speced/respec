@@ -4,6 +4,7 @@ define([
         ,   "core/base-runner"
         ,   "core/override-configuration"
         ,   "core/default-root-attr"
+        // ,   "core/local-biblio"
         ,   "core/markdown"
         ,   "core/style"
         ,   "w3c/style"
