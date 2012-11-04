@@ -120,8 +120,6 @@ var sn;
         
         overrideBiblio:     function (conf) {
             if (conf.localBiblio) {
-                // console.log(conf.localBiblio);
-                // console.log(berjon.biblio.SVG12);
                 for (var k in conf.localBiblio) berjon.biblio[k] = conf.localBiblio[k];
             }
         },
