@@ -173,6 +173,7 @@ define(
                 var def = { children: [] }
                 ,   str = $idl.attr("title")
                 ,   id = $idl.attr("id");
+                if (!str) this.msg.pub("error", "No IDL definition in element.");
                 str = this.parseExtendedAttributes(str, def);
                 if      (str.indexOf("interface") === 0 ||
                          str.indexOf("partial") === 0 ||
@@ -534,6 +535,7 @@ define(
             },
             
             parseExtendedAttributes:    function (str, obj) {
+                if (!str) return;
                 return str.replace(/^\s*\[([^\]]+)\]\s*/, function (x, m1) { obj.extendedAttributes = m1; return ""; });
             },
 
