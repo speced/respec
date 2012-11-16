@@ -173,9 +173,15 @@ define(
                 var def = { children: [] }
                 ,   str = $idl.attr("title")
                 ,   id = $idl.attr("id");
+                if (!str) this.msg.pub("error", "No IDL definition in element.");
                 str = this.parseExtendedAttributes(str, def);
-                if      (str.indexOf("interface") === 0 ||
-                         str.indexOf("partial") === 0 ||
+                if (str.indexOf("partial") === 0) { // Could be interface or dictionary
+                    var defType = str.slice(8);
+                    if  (defType.indexOf("interface") === 0)        this.processInterface(def, str, $idl, { partial : true });
+                    else if (defType.indexOf("dictionary") === 0)   this.dictionary(def, defType, $idl, { partial : true });
+                    else    this.msg.pub("error", "Expected definition, got: " + str);
+                }
+                else if      (str.indexOf("interface") === 0 ||
                          /^callback\s+interface\b/.test(str))   this.processInterface(def, str, $idl);
                 else if (str.indexOf("exception") === 0)        this.exception(def, str, $idl);
                 else if (str.indexOf("dictionary") === 0)       this.dictionary(def, str, $idl);
@@ -190,11 +196,13 @@ define(
                 return def;
             },
 
-            processInterface:  function (obj, str, $idl) {
+            processInterface:  function (obj, str, $idl, opt) {
+                opt = opt || {};
                 obj.type = "interface";
+                obj.partial = opt.partial || false;
+
                 var match = /^\s*(?:(partial|callback)\s+)?interface\s+([A-Za-z][A-Za-z0-9]*)(?:\s+:\s*([^{]+)\s*)?/.exec(str);
                 if (match) {
-                    obj.partial = !!match[1] && match[1] === "partial";
                     obj.callback = !!match[1] && match[1] === "callback";
                     this.setID(obj, match[2]);
                     if ($idl.attr('data-merge')) obj.merge = $idl.attr('data-merge').split(' ');
@@ -204,7 +212,9 @@ define(
                 return obj;
             },
 
-            dictionary:  function (obj, str, $idl) {
+            dictionary:  function (obj, str, $idl, opt) {
+                opt = opt || {};
+                obj.partial = opt.partial || false;
                 return this.excDic("dictionary", obj, str, $idl);
             },
 
@@ -534,6 +544,7 @@ define(
             },
             
             parseExtendedAttributes:    function (str, obj) {
+                if (!str) return;
                 return str.replace(/^\s*\[([^\]]+)\]\s*/, function (x, m1) { obj.extendedAttributes = m1; return ""; });
             },
 
@@ -1020,7 +1031,7 @@ define(
                                       })
                                       .join("")
                     ;
-                    return idlDictionaryTmpl({ obj: obj, indent: indent, children: children });
+                    return idlDictionaryTmpl({ obj: obj, indent: indent, children: children, partial: obj.partial ? "partial " : "" });
                 }
                 
                 else if (obj.type === "callback") {

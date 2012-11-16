@@ -283,8 +283,8 @@ var sn;
                         str += " prefix='bibo: http://purl.org/ontology/bibo/'" ;
                     }
                 }
+                str += " typeof=\"bibo:Document\"";
             }
-            str += " typeof=\"bibo:Document\"";
             str += ">\n";
             // walk the entire DOM tree grabbing nodes and emitting them - possibly modifying them
             // if they need the funny closing tag
