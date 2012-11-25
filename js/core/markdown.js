@@ -37,6 +37,7 @@
 //         <p>More text.</p>
 //       </section>
 //     </section>
+//
 
 define(
     ['core/marked'],
@@ -142,12 +143,17 @@ define(
                 ,   tagName
                 ;
                 
-                function newSection(node, position) {
-                    var section = doc.createElement('section');
+                function newSection(node) {
+                    var section = doc.createElement('section'),
+                        position = findPosition(node);
                     section.appendChild(node);
                     findParent(position).appendChild(section);
                     stack[position] = section;
                     current = section;
+                }
+
+                function findPosition(header) {
+                    return parseInt(header.tagName.charAt(1));
                 }
 
                 function findParent(position) {
@@ -167,22 +173,17 @@ define(
                     tagName = node.tagName.toLowerCase();
                     switch (tagName) {
                         case 'h1':
-                            newSection(node, 1);
-                            break;
                         case 'h2':
-                            newSection(node, 2);
-                            break;
                         case 'h3':
-                            newSection(node, 3);
-                            break;
                         case 'h4':
-                            newSection(node, 4);
-                            break;
                         case 'h5':
-                            newSection(node, 5);
-                            break;
                         case 'h6':
-                            newSection(node, 6);
+                            newSection(node);
+                            break;
+                        case 'section':
+                            var header = $(node, doc).find('h1, h2, h3, h4, h5, h6').get(0);
+                            position = header ? findPosition(header) : 1;
+                            findParent(position).appendChild(node);
                             break;
                         default:
                             current.appendChild(node);
