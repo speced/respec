@@ -41,13 +41,91 @@
 
 define(
     ['core/marked'],
-    function (markdown) {
+    function () {
         marked.setOptions({
             gfm: false,
             pedantic: false,
             sanitize: false
         });
         
+        function makeBuilder(doc) {
+            var root = doc.createDocumentFragment()
+            ,   stack = [root]
+            ,   current = root
+            ,   HEADERS = /H[1-6]/
+            ;
+
+            function findPosition(header) {
+                return parseInt(header.tagName.charAt(1));
+            }
+
+            function findParent(position) {
+                var parent;
+                while (position > 0) {
+                    position--;
+                    parent = stack[position];
+                    if (parent) return parent;
+                }
+            }
+
+            function findHeader(node) {
+                node = node.firstChild;
+                while (node) {
+                    if (HEADERS.test(node.tagName)) {
+                        return node;
+                    }
+                    node = node.nextSibling;
+                }
+                return null;
+            }
+
+            function addHeader(header) {
+              var section = doc.createElement('section')
+              ,   position = findPosition(header)
+              ;
+
+              section.appendChild(header);
+              findParent(position).appendChild(section);
+              stack[position] = section;
+              current = section;
+            }
+
+            function addSection(node, process) {
+                var header = findHeader(node)
+                ,   position = header ? findPosition(header) : 1
+                ,   parent = findParent(position)
+                ;
+
+                if (header) {
+                    node.removeChild(header);
+                }
+
+                node.appendChild(process(node));
+
+                if (header) {
+                    node.insertBefore(header, node.firstChild);
+                }
+
+                parent.appendChild(node);
+                current = parent;
+            }
+
+            function addElement(node) {
+                current.appendChild(node);
+            }
+
+            function getRoot() {
+                return root;
+            }
+
+            return {
+                addHeader: addHeader,
+                addSection: addSection,
+                addElement: addElement,
+                getRoot: getRoot
+            };
+        }
+
         return {
             toHTML: function(text) {
                 // As markdown is pulled from HTML > is already escaped, and
@@ -136,63 +214,41 @@ define(
             },
             
             structure: function(fragment, doc) {
-                var output = doc.createDocumentFragment()
-                ,   current = output
-                ,   stack = [output]
-                ,   node
-                ,   tagName
-                ;
-                
-                function newSection(node) {
-                    var section = doc.createElement('section'),
-                        position = findPosition(node);
-                    section.appendChild(node);
-                    findParent(position).appendChild(section);
-                    stack[position] = section;
-                    current = section;
+                function process(root) {
+                    var node
+                    ,   tagName
+                    ,   stack = makeBuilder(doc)
+                    ;
+
+                    while (node = root.firstChild) {
+                        if (node.nodeType !== 1) {
+                            root.removeChild(node);
+                            continue;
+                        }
+                        tagName = node.tagName.toLowerCase();
+                        switch (tagName) {
+                            case 'h1':
+                            case 'h2':
+                            case 'h3':
+                            case 'h4':
+                            case 'h5':
+                            case 'h6':
+                                stack.addHeader(node);
+                                break;
+                            case 'section':
+                                stack.addSection(node, process);
+                                break;
+                            default:
+                                stack.addElement(node);
+                        }
+                    }
+
+                    return stack.getRoot();
                 }
 
-                function findPosition(header) {
-                    return parseInt(header.tagName.charAt(1));
-                }
-
-                function findParent(position) {
-                    var parent;
-                    while (position > 0) {
-                        position--;
-                        parent = stack[position];
-                        if (parent) return parent;
-                    }
-                }
-                
-                while (node = fragment.firstChild) {
-                    if (node.nodeType !== 1) {
-                        fragment.removeChild(node);
-                        continue;
-                    }
-                    tagName = node.tagName.toLowerCase();
-                    switch (tagName) {
-                        case 'h1':
-                        case 'h2':
-                        case 'h3':
-                        case 'h4':
-                        case 'h5':
-                        case 'h6':
-                            newSection(node);
-                            break;
-                        case 'section':
-                            var header = $(node, doc).find('h1, h2, h3, h4, h5, h6').get(0);
-                            position = header ? findPosition(header) : 1;
-                            findParent(position).appendChild(node);
-                            break;
-                        default:
-                            current.appendChild(node);
-                    }
-                }
-
-                return output;
+                return process(fragment);
             },
-            
+
             run: function (conf, doc, cb, msg) {
                 msg.pub("start", "core/markdown");
                 if (conf.format === 'markdown') {
