@@ -104,4 +104,85 @@ describe("Core - Markdown", function () {
             expect($foo.find('#zing > h3').text()).toEqual("1.3 Zing");
         });
     });
+
+    it("should nest sections according to their first header, if present", function () {
+        var doc;
+        runs(function () {
+            makeRSDoc({ config: basicConfig,
+                        body: '\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n===\n</section>\n'
+                    }, function (rsdoc) { doc = rsdoc; });
+        });
+        waitsFor(function () { return doc; }, MAXOUT);
+
+        runs(function () {
+            var $bar = $('#bar', doc);
+            expect($bar.text()).toMatch(/2. Bar/);
+        });
+    });
+
+    it("should nest sections according to their headers", function () {
+        var doc;
+        runs(function () {
+            makeRSDoc({ config: basicConfig,
+                        body: '\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n'
+                    }, function (rsdoc) { doc = rsdoc; });
+        });
+        waitsFor(function () { return doc; }, MAXOUT);
+
+        runs(function () {
+          var $bar = $('#bar', doc);
+          expect($bar.text()).toMatch(/1.1 Bar/);
+          var $foo = $('#foo', doc);
+          expect($foo.find('#bar').length).toEqual(1);
+        });
+    });
+
+    it("shout not nest content following a section inside of said section", function () {
+        var doc;
+        runs(function () {
+            makeRSDoc({ config: basicConfig,
+                        body: '\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n\nBaz\n===\n\nsome text\n\n<'
+                    }, function (rsdoc) { doc = rsdoc; });
+        });
+        waitsFor(function () { return doc; }, MAXOUT);
+
+        runs(function () {
+          var $baz = $('#baz', doc);
+          expect($baz.text()).toMatch(/2. Baz/);
+          var $bar = $('#bar', doc);
+          expect($bar.find('#baz').length).toEqual(0);
+        });
+    });
+
+    it("should not nest sections with a top level header", function () {
+        var doc;
+        runs(function () {
+            makeRSDoc({ config: basicConfig,
+                        body: '\n\nFoo\n---\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n'
+                    }, function (rsdoc) { doc = rsdoc; });
+        });
+        waitsFor(function () { return doc; }, MAXOUT);
+
+        runs(function () {
+            var $bar = $('#bar', doc);
+            expect($bar.text()).toMatch(/2. Bar/);
+            var $body = $(doc.body, doc);
+            expect($body.find('> #bar').length).toEqual(1);
+        });
+    });
+
+    it("should not nest sections with no headers at all", function () {
+        var doc;
+        runs(function () {
+            makeRSDoc({ config: basicConfig,
+                        body: '\n\nFoo\n===\n\nsome text\n\n<section id=bar>no header</section>\n'
+                    }, function (rsdoc) { doc = rsdoc; });
+        });
+        waitsFor(function () { return doc; }, MAXOUT);
+
+        runs(function () {
+          var $body = $(doc.body, doc);
+          expect($body.find('> #bar').length).toEqual(1);
+        });
+    });
 });
