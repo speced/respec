@@ -133,13 +133,24 @@ define(
                 var p = {};
                 prm = this.parseExtendedAttributes(prm, p);
                 // either up to end of string, or up to ,
-                var re = /^\s*(?:in\s+)?([^,]+)\s+\b([^,\s]+)\s*(?:,)?\s*/;
+                // var re = /^\s*(?:in\s+)?([^,]+)\s+\b([^,\s]+)\s*(?:,)?\s*/;
+                var re = /^\s*(?:in\s+)?([^,=]+)\s+\b([^,]+)\s*(?:,)?\s*/;
                 var match = re.exec(prm);
                 if (match) {
                     prm = prm.replace(re, "");
-                    var type = match[1];
+                    var type = match[1]
+                    ,   name = match[2]
+                    ,   components = name.split(/\s*=\s*/)
+                    ,   deflt = null
+                    ;
+                    if (components.length === 1) name = name.replace(/\s+/g, "");
+                    else {
+                        name = components[0];
+                        deflt = components[1];
+                    }
                     this.parseDatatype(p, type);
-                    this.setID(p, match[2]);
+                    p.defaultValue = deflt;
+                    this.setID(p, name);
                     if ($dd) p.description = $dd.contents();
                     obj.params.push(p);
                 }
@@ -502,6 +513,7 @@ define(
                     for (var i = 0; i < obj.params.length; i++) {
                         if (seenOptional) {
                             obj.params[i].optional = true;
+                            obj.params[i].datatype = obj.params[i].datatype.replace(/\boptional\s+/, "");
                         }
                         else {
                             seenOptional = this.optional(obj.params[i]);
@@ -806,6 +818,9 @@ define(
                                         var code = sn.element("code", {}, tyTD);
                                         code.innerHTML = datatype(prm.datatype);
                                         if (prm.array) code.innerHTML += arrsq(prm);
+                                        if (prm.defaultValue) {
+                                            code.innerHTML += " = " + prm.defaultValue;
+                                        }
                                         if (prm.nullable) sn.element("td", { "class": "prmNullTrue" }, tr, "\u2714");
                                         else              sn.element("td", { "class": "prmNullFalse" }, tr, "\u2718");
                                         if (prm.optional) sn.element("td", { "class": "prmOptTrue" }, tr, "\u2714");
