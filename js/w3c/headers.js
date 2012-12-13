@@ -149,7 +149,7 @@ define(
             ,   PER:            "Proposed Edited Recommendation"
             ,   REC:            "Recommendation"
             ,   RSCND:          "Rescinded Recommendation"
-            ,   unofficial:     "Unofficial Draft"
+            ,   unofficial:     "Draft"
             ,   base:           "Document"
             ,   finding:        "TAG Finding"
             ,   "draft-finding": "Draft TAG Finding"
