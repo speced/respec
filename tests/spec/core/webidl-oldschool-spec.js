@@ -125,7 +125,7 @@ describe("Core - WebIDL", function () {
                 "    void               ext ();\n" +
                 "    unsigned long long ull ();\n" +
                 "    Perhaps?           ull ();\n" +
-                "    short[][][][]      paramed (Date[][][] one, [ExtAttrs] ByteString? ext, optional short maybe, optional short[] shorts, optional short[][][][] hypercubes, optional short... variable);\n" +
+                "    short[][][][]      paramed (Date[][][] one, [ExtAttrs] ByteString? ext, optional short maybe, optional short[] shorts, optional short[][][][] hypercubes, optional short defaulted = 3.5, optional DOMString defaulted2 = \"one\", optional short... variable);\n" +
                 "};";
         expect($target.text()).toEqual(text);
         expect($target.find(".idlMethod").length).toEqual(5);
@@ -135,8 +135,8 @@ describe("Core - WebIDL", function () {
         expect($target.find(".idlMethType:contains('Perhaps?') a").text()).toEqual("Perhaps");
         expect($target.find(".idlMethType:contains('short[][][][]') a").text()).toEqual("short");
         var $lst = $target.find(".idlMethod").last();
-        expect($lst.find(".idlParam").length).toEqual(6);
-        expect($lst.find(".idlParam:contains('optional')").length).toEqual(4);
+        expect($lst.find(".idlParam").length).toEqual(8);
+        expect($lst.find(".idlParam:contains('optional')").length).toEqual(6);
         expect($lst.find(".idlParam").first().find(".idlParamType > a").text()).toEqual("Date");
     });
 

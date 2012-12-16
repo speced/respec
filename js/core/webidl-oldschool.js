@@ -133,13 +133,24 @@ define(
                 var p = {};
                 prm = this.parseExtendedAttributes(prm, p);
                 // either up to end of string, or up to ,
-                var re = /^\s*(?:in\s+)?([^,]+)\s+\b([^,\s]+)\s*(?:,)?\s*/;
+                // var re = /^\s*(?:in\s+)?([^,]+)\s+\b([^,\s]+)\s*(?:,)?\s*/;
+                var re = /^\s*(?:in\s+)?([^,=]+)\s+\b([^,]+)\s*(?:,)?\s*/;
                 var match = re.exec(prm);
                 if (match) {
                     prm = prm.replace(re, "");
-                    var type = match[1];
+                    var type = match[1]
+                    ,   name = match[2]
+                    ,   components = name.split(/\s*=\s*/)
+                    ,   deflt = null
+                    ;
+                    if (components.length === 1) name = name.replace(/\s+/g, "");
+                    else {
+                        name = components[0];
+                        deflt = components[1];
+                    }
                     this.parseDatatype(p, type);
-                    this.setID(p, match[2]);
+                    p.defaultValue = deflt;
+                    this.setID(p, name);
                     if ($dd) p.description = $dd.contents();
                     obj.params.push(p);
                 }
@@ -173,9 +184,15 @@ define(
                 var def = { children: [] }
                 ,   str = $idl.attr("title")
                 ,   id = $idl.attr("id");
+                if (!str) this.msg.pub("error", "No IDL definition in element.");
                 str = this.parseExtendedAttributes(str, def);
-                if      (str.indexOf("interface") === 0 ||
-                         str.indexOf("partial") === 0 ||
+                if (str.indexOf("partial") === 0) { // Could be interface or dictionary
+                    var defType = str.slice(8);
+                    if  (defType.indexOf("interface") === 0)        this.processInterface(def, str, $idl, { partial : true });
+                    else if (defType.indexOf("dictionary") === 0)   this.dictionary(def, defType, $idl, { partial : true });
+                    else    this.msg.pub("error", "Expected definition, got: " + str);
+                }
+                else if      (str.indexOf("interface") === 0 ||
                          /^callback\s+interface\b/.test(str))   this.processInterface(def, str, $idl);
                 else if (str.indexOf("exception") === 0)        this.exception(def, str, $idl);
                 else if (str.indexOf("dictionary") === 0)       this.dictionary(def, str, $idl);
@@ -190,11 +207,13 @@ define(
                 return def;
             },
 
-            processInterface:  function (obj, str, $idl) {
+            processInterface:  function (obj, str, $idl, opt) {
+                opt = opt || {};
                 obj.type = "interface";
+                obj.partial = opt.partial || false;
+
                 var match = /^\s*(?:(partial|callback)\s+)?interface\s+([A-Za-z][A-Za-z0-9]*)(?:\s+:\s*([^{]+)\s*)?/.exec(str);
                 if (match) {
-                    obj.partial = !!match[1] && match[1] === "partial";
                     obj.callback = !!match[1] && match[1] === "callback";
                     this.setID(obj, match[2]);
                     if ($idl.attr('data-merge')) obj.merge = $idl.attr('data-merge').split(' ');
@@ -204,7 +223,9 @@ define(
                 return obj;
             },
 
-            dictionary:  function (obj, str, $idl) {
+            dictionary:  function (obj, str, $idl, opt) {
+                opt = opt || {};
+                obj.partial = opt.partial || false;
                 return this.excDic("dictionary", obj, str, $idl);
             },
 
@@ -492,6 +513,7 @@ define(
                     for (var i = 0; i < obj.params.length; i++) {
                         if (seenOptional) {
                             obj.params[i].optional = true;
+                            obj.params[i].datatype = obj.params[i].datatype.replace(/\boptional\s+/, "");
                         }
                         else {
                             seenOptional = this.optional(obj.params[i]);
@@ -534,6 +556,7 @@ define(
             },
             
             parseExtendedAttributes:    function (str, obj) {
+                if (!str) return;
                 return str.replace(/^\s*\[([^\]]+)\]\s*/, function (x, m1) { obj.extendedAttributes = m1; return ""; });
             },
 
@@ -768,9 +791,7 @@ define(
                         var type = types[i];
                         var things = obj.children.filter(filterFunc);
                         if (things.length === 0) continue;
-                        if (!this.noIDLSorting) {
-                            things.sort(sortFunc);
-                        }
+                        if (!this.noIDLSorting) things.sort(sortFunc);
 
                         var sec = sn.element("section", {}, df);
                         var secTitle = type;
@@ -797,6 +818,9 @@ define(
                                         var code = sn.element("code", {}, tyTD);
                                         code.innerHTML = datatype(prm.datatype);
                                         if (prm.array) code.innerHTML += arrsq(prm);
+                                        if (prm.defaultValue) {
+                                            code.innerHTML += " = " + prm.defaultValue;
+                                        }
                                         if (prm.nullable) sn.element("td", { "class": "prmNullTrue" }, tr, "\u2714");
                                         else              sn.element("td", { "class": "prmNullFalse" }, tr, "\u2718");
                                         if (prm.optional) sn.element("td", { "class": "prmOptTrue" }, tr, "\u2714");
@@ -846,7 +870,7 @@ define(
                             else if (type == "attribute") {
                                 sn.text(" of type ", dt);
                                 if (it.array) {
-                                    for (var i = 0, n = it.arrayCount; i < n; i++) sn.text("array of ", dt);
+                                    for (var m = 0, n = it.arrayCount; m < n; m++) sn.text("array of ", dt);
                                 }
                                 var span = sn.element("span", { "class": "idlAttrType" }, dt);
                                 var matched = /^sequence<(.+)>$/.exec(it.datatype);
@@ -891,7 +915,6 @@ define(
                                 // else {
                                 //     sn.element("div", {}, desc, [sn.element("em", {}, null, "No exceptions.")]);
                                 // }
-
                             }
                             else if (type == "constant") {
                                 sn.text(" of type ", dt);
@@ -1023,7 +1046,7 @@ define(
                                       })
                                       .join("")
                     ;
-                    return idlDictionaryTmpl({ obj: obj, indent: indent, children: children });
+                    return idlDictionaryTmpl({ obj: obj, indent: indent, children: children, partial: obj.partial ? "partial " : "" });
                 }
                 
                 else if (obj.type === "callback") {

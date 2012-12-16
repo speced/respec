@@ -67,7 +67,7 @@ pre.idl::before {
 .idlParamType {
     color:  #005a9c;
 }
-.idlParamName {
+.idlParamName, .idlDefaultValue {
     font-style: italic;
 }
 

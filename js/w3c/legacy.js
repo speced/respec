@@ -11,14 +11,31 @@ var sn;
 (function () {
     if (typeof(berjon) == "undefined") window.berjon = {};
     function _errEl () {
-        var err = document.getElementById("respec-err");
-        if (err) return err.firstElementChild;
+        var id = "respec-err";
+        var err = document.getElementById(id);
+        if (err) return err.firstElementChild.nextElementSibling;
         err = sn.element("div",
-                            { id: "respec-err",
+                            { id: id,
                               style: "position: fixed; width: 350px; top: 10px; right: 10px; border: 3px double #f00; background: #fff",
                               "class": "removeOnSave" },
                             document.body);
-        return sn.element("ul", {}, err);
+        
+        var hide = sn.element("p", {
+            style: "float: right; margin: 2px; text-decoration: none"
+        }, err);
+        
+        sn.text('[', hide);
+        
+        var a = sn.element("a", { href: "#" }, hide, 'x');
+        
+        a.onclick = function() {
+            document.getElementById(id).style.display = 'none';
+            return false;
+        };
+        
+        sn.text(']', hide);
+        
+        return sn.element("ul", { style: "clear: both"}, err);
     }
     function error (str) {
         if (window.respecEvent) respecEvent.pub("error", str);
@@ -86,6 +103,7 @@ var sn;
         run:    function (conf, doc, cb, msg) {
             try {
                 this.extractConfig();
+                this.overrideBiblio(conf);
                 this.bibref(conf, doc, cb, msg);
 
                 if (this.doRDFa) this.makeRDFa();
@@ -99,7 +117,13 @@ var sn;
                 msg.pub("error", "Processing error: " + e);
             }
         },
-
+        
+        overrideBiblio:     function (conf) {
+            if (conf.localBiblio) {
+                for (var k in conf.localBiblio) berjon.biblio[k] = conf.localBiblio[k];
+            }
+        },
+        
         makeRDFa:  function () {
             var abs = document.getElementById("abstract");
             if (abs) {
@@ -259,8 +283,8 @@ var sn;
                         str += " prefix='bibo: http://purl.org/ontology/bibo/'" ;
                     }
                 }
+                str += " typeof=\"bibo:Document\"";
             }
-            str += " typeof=\"bibo:Document\"";
             str += ">\n";
             // walk the entire DOM tree grabbing nodes and emitting them - possibly modifying them
             // if they need the funny closing tag
@@ -388,7 +412,7 @@ var sn;
             if (!cfg.diffTool) cfg.diffTool = 'http://www5.aptest.com/standards/htmldiff/htmldiff.pl';
             if (!cfg.doRDFa) cfg.doRDFa = false;
             for (var k in cfg) {
-                if (this.hasOwnProperty(k)) this[k] = cfg[k];
+                if (cfg.hasOwnProperty(k)) this[k] = cfg[k];
             }
         },
 
