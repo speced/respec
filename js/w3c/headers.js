@@ -267,6 +267,8 @@ define(
                 conf.isED = (conf.specStatus === "ED");
                 conf.isLC = (conf.specStatus === "LC");
                 conf.isCR = (conf.specStatus === "CR");
+                conf.isPR = (conf.specStatus === "PR");
+                conf.notPR = (conf.specStatus !== "PR");
                 conf.isMO = (conf.specStatus === "MO");
                 conf.isIGNote = (conf.specStatus === "IG-NOTE");
                 // configuration done - yay!
@@ -296,9 +298,13 @@ define(
                     conf.wgHTML = "<a href='" + conf.wgURI + "'>" + conf.wg + "</a>";
                 }
                 if (conf.specStatus === "LC" && !conf.lcEnd) msg.pub("error", "Status is LC but no lcEnd is specified");
+                if (conf.specStatus === "PR" && !conf.lcEnd) msg.pub("error", "Status is PR but no lcEnd is specified (needed to indicate end of previous LC)");
                 conf.humanLCEnd = utils.humanDate(conf.lcEnd || "");
                 if (conf.specStatus === "CR" && !conf.crEnd) msg.pub("error", "Status is CR but no crEnd is specified");
                 conf.humanCREnd = utils.humanDate(conf.crEnd || "");
+                if (conf.specStatus === "PR" && !conf.prEnd) msg.pub("error", "Status is PR but no prEnd is specified");
+                conf.humanPREnd = utils.humanDate(conf.prEnd || "");
+
                 conf.recNotExpected = (!conf.isRecTrack && conf.maturity == "WD" && conf.specStatus !== "FPWD-NOTE");
                 if (conf.isIGNote && !conf.charterDisclosureURI)
                     msg.pub("error", "IG-NOTEs must link to charter's disclosure section using charterDisclosureURI");
