@@ -87,6 +87,7 @@ define(
               section.appendChild(header);
               findParent(position).appendChild(section);
               stack[position] = section;
+              stack.length = position + 1;
               current = section;
             }
 
