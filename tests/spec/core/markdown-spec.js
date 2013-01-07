@@ -105,6 +105,20 @@ describe("Core - Markdown", function () {
         });
     });
 
+    it("should gracefully handle jumps in nested headers", function () {
+        var doc;
+        runs(function () {
+            makeRSDoc({ config: basicConfig,
+                        body: '\nFoo\n===\n\nBar\n---\n\nBaz\n===\n\n### Foobar ###\n\n'
+                    }, function (rsdoc) { doc = rsdoc; });
+        });
+        waitsFor(function () { return doc; }, MAXOUT);
+
+        runs(function () {
+            expect($('#baz > #foobar', doc).length).toEqual(1);
+        });
+    });
+
     it("should nest sections according to their first header, if present", function () {
         var doc;
         runs(function () {
