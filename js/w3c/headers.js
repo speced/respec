@@ -268,7 +268,6 @@ define(
                 conf.isLC = (conf.specStatus === "LC");
                 conf.isCR = (conf.specStatus === "CR");
                 conf.isPR = (conf.specStatus === "PR");
-                conf.notPR = (conf.specStatus !== "PR");
                 conf.isMO = (conf.specStatus === "MO");
                 conf.isIGNote = (conf.specStatus === "IG-NOTE");
                 // configuration done - yay!
