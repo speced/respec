@@ -294,16 +294,32 @@ The class signals that this will be replaced with a link containing
           If there a publicly available Editor's Draft, this is the link to it. This will typically be
           the link to the CVS version of the document you're editing.
         </dd>
+        <dt>implReport</dt>
+        <dd>
+          For a PR draft this specifies the URI of an implementation report and
+          is noted in the status section. Use of this parameter is not
+          required for a PR draft, as such information can be supplied
+          in the custom paragraph if needed. This is otherwise ignored.
+        </dd>
         <dt>lcEnd</dt>
         <dd>
           If the draft is a Last Call WD it needs to have a review period with a given end date. This is
-          that date in YYYY-MM-DD format. This is otherwise ignored.
+          that date in YYYY-MM-DD format. It is also required and used
+          in the status section of a PR draft to indicate when the
+          previous LC ended. This is otherwise ignored.
         </dd>
         <dt>crEnd</dt>
         <dd>
           If the draft is a Candidate Recommendation it needs to have an end date that is the promised
           <em>minimal</em> date before which it will not transition to PR. This is that date in YYYY-MM-DD format. 
           This is otherwise ignored.
+        </dd>
+        <dt>prEnd</dt>
+        <dd>
+          If the draft is a Proposed Recommendation it needs to have
+          an end date for the PR period. This is that date in YYYY-MM-DD format. 
+          This is otherwise ignored. When prEnd is used, lcEnd should
+          also be specified indicating the end of the earlier LC.
         </dd>
         <dt>prevRecShortname</dt>
         <dd>If there is an earler version of this specification at the
