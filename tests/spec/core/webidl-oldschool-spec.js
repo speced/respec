@@ -140,6 +140,20 @@ describe("Core - WebIDL", function () {
         expect($lst.find(".idlParam").first().find(".idlParamType > a").text()).toEqual("Date");
     });
 
+    it("should handle serializer", function () {
+        $target = $("#serializer-map", doc);
+        text =  "interface SuperStar {\n" +
+                "             attribute DOMString foo;\n" +
+                "             attribute DOMString bar;\n" +
+ 	        "    serializer = {foo, bar};\n" +
+                "};";
+        expect($target.text()).toEqual(text);
+        expect($target.find(".idlSerializer").length).toEqual(1);
+        var $serializer = $target.find(".idlSerializer").first();
+        expect($serializer.find(".idlSerializerValues").text()).toEqual("{foo, bar}");
+    });
+
+
     it("should handle dictionaries", function () {
         $target = $("#dict-basic", doc);
         text = "dictionary SuperStar {\n};";
