@@ -522,6 +522,50 @@ define(
                     return obj;
                 }
 
+                // SERIALIZER
+                match = /^\s*serializer(\s*=\s*((\{\s*(\S+(\s*,\s*\S+)*)?\s*\})|(\[(\s*\S+(\s*,\s*\S+)*)?\s*\])|(\S+)))?\s*$/.exec(str);
+                if (match) {
+                    obj.type = "serializer";
+		    obj.values = [];
+		    var serializermap = match[3],
+		    serializerlist = match[6],
+		    serializerattribute = match[9], rawvalues;
+		    
+		    if (serializermap) {
+			obj.serializertype = "map";
+			rawvalues = match[4];
+		    } else if (serializerlist) {
+			obj.serializertype = "list";
+			rawvalues = match[7];
+		    } else if (serializerattribute) {
+			obj.serializertype = "attribute";
+			obj.values.push(serializerattribute);
+		    } else {
+			obj.serializertype = "prose";
+		    }
+		    if (rawvalues) {
+			// split at comma and remove white space
+			var values = rawvalues.split(/\s*,\s*/);
+			obj.getter = false;
+			obj.inherit = false;
+			obj.all = false;
+			if (values[0] == "getter") {
+			    obj.getter = true;
+			} else {
+			    if (values[0] == "inherit") {
+				obj.inherit = true;
+				values.shift();
+			    }
+			    if (values[0] == "attribute" && obj.serializertype == "map" ) {
+				obj.all = true;
+			    } else {
+				obj.values = values;
+			    }
+			}
+		    }
+		    return obj;
+		}
+
                 // NOTHING MATCHED
                 this.msg.pub("error", "Expected interface member, got: " + str);
             },
@@ -795,7 +839,7 @@ define(
 
                         var sec = sn.element("section", {}, df);
                         var secTitle = type;
-                        secTitle = secTitle.substr(0, 1).toUpperCase() + secTitle.substr(1) + "s";
+                        secTitle = secTitle.substr(0, 1).toUpperCase() + secTitle.substr(1) + (type != "serializer" ? "s" : "");
                         if (!this.conf.noIDLSectionTitle) sn.element("h2", {}, sec, secTitle);
                         var dl = sn.element("dl", { "class": type + "s" }, sec);
                         for (var j = 0; j < things.length; j++) {
@@ -921,6 +965,9 @@ define(
                                 sn.element("span", { "class": "idlConstType" }, dt, [sn.element("a", {}, null, it.datatype)]);
                                 if (it.nullable) sn.text(", nullable", dt);
                             }
+                            else if (type == "serializer") {
+
+			    }
                         }
                     }
                     if (typeof obj.merge !== "undefined" && obj.merge.length > 0) {
