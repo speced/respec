@@ -44,7 +44,8 @@ try to coordinate with others first to avoid working long on something that will
 
 If you're familiar with GitHub then contributing is simple: just fork and make pull requests. Please
 just be careful to note that the primary branch is `gh-pages` and not `master` (this ensures that the
-result gets published on the Web).
+result gets published on the Web). **More importantly**, please note that the development branch is
+`develop`. If you are making patches and pull requests, please base them off this branch.
 
 If you're not familiar with GitHub, you need to follow the following steps:
 
