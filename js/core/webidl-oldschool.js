@@ -831,7 +831,7 @@ define(
                 else if (obj.type == "interface") {
                     var df = sn.documentFragment();
                     var curLnk = "widl-" + obj.refId + "-";
-                    var types = ["attribute", "method", "constant"];
+                    var types = ["attribute", "method", "constant", "serializer"];
                     var filterFunc = function (it) { return it.type == type; }
                     ,   sortFunc = function (a, b) {
                             if (a.id < b.id) return -1;
@@ -978,6 +978,7 @@ define(
 			} 
 			else { // Serializer 
 			    var div = sn.element("div", {}, sec);
+			    var it = things[0];
 			    if (it.serializertype != "prose") {
 				var generatedDescription = "Instances of this interface are serialized as ";
 				if (it.serializertype == "map") {
