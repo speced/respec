@@ -619,7 +619,8 @@ define(
                 var $pre = $("<pre></pre>").attr(attr);
                 $pre.html(this.writeAsWebIDL(this.parent, -1));
                 $df.append($pre);
-                $df.append(this.writeAsHTML(this.parent));
+                if (!this.conf.noLegacyStyle) $df.append(this.writeAsHTML(this.parent));
+                this.mergeWebIDL(this.parent.children[0]);
                 return $df.children();
             },
 
@@ -831,7 +832,7 @@ define(
                 else if (obj.type == "interface") {
                     var df = sn.documentFragment();
                     var curLnk = "widl-" + obj.refId + "-";
-                    var types = ["attribute", "method", "constant"];
+                    var types = ["attribute", "method", "constant", "serializer"];
                     var filterFunc = function (it) { return it.type == type; }
                     ,   sortFunc = function (a, b) {
                             if (a.id < b.id) return -1;
@@ -978,6 +979,7 @@ define(
 			} 
 			else { // Serializer 
 			    var div = sn.element("div", {}, sec);
+			    var it = things[0];
 			    if (it.serializertype != "prose") {
 				var generatedDescription = "Instances of this interface are serialized as ";
 				if (it.serializertype == "map") {
@@ -1024,18 +1026,6 @@ define(
 			    var desc = sn.element("p", {}, div, [it.description]);
 			}
 		    }
-		    if (typeof obj.merge !== "undefined" && obj.merge.length > 0) {
-                        // hackish: delay the execution until the DOM has been initialized, then merge
-                        setTimeout(function () {
-                            for (var i = 0; i < obj.merge.length; i++) {
-                                var idlInterface = document.querySelector("#idl-def-" + obj.refId),
-                                    idlDictionary = document.querySelector("#idl-def-" + obj.merge[i]);
-                                idlDictionary.parentNode.parentNode.removeChild(idlDictionary.parentNode);
-                                idlInterface.appendChild(document.createElement("br"));
-                                idlInterface.appendChild(idlDictionary);
-                            }
-                        }, 0);
-                    }
                     return df;
                 }
             },
@@ -1049,6 +1039,21 @@ define(
                 }
                 id += params.join("-");
                 return sanitiseID(id);
+            },
+
+            mergeWebIDL:    function (obj) {
+                if (typeof obj.merge === "undefined" || obj.merge.length === 0) return;
+                // queue for later execution
+                setTimeout(function () {
+                    for (var i = 0; i < obj.merge.length; i++) {
+                        var idlInterface = document.querySelector("#idl-def-" + obj.refId)
+                        ,   idlInterfaceToMerge = document.querySelector("#idl-def-" + obj.merge[i]);
+                        idlInterface.insertBefore(document.createElement("br"), idlInterface.firstChild);
+                        idlInterface.insertBefore(document.createElement("br"), idlInterface.firstChild);
+                        idlInterfaceToMerge.parentNode.parentNode.removeChild(idlInterfaceToMerge.parentNode);
+                        idlInterface.insertBefore(idlInterfaceToMerge, idlInterface.firstChild);
+                    }
+                }, 0);
             },
 
             writeAsWebIDL:    function (obj, indent) {
