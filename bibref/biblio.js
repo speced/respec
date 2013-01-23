@@ -1,17 +1,7 @@
 if (typeof berjon === "undefined") berjon = {};
     berjon.biblio = {
     "ABA-DSIG-GUIDELINES": "<a href=\"http://www.signelec.com/content/download/digital_signature_guidelines.pdf\"><cite>Digital Signature Guidelines.</cite></a> 1 August 1996. Information Security Committee, American Bar Association. URL: <a href=\"http://www.signelec.com/content/download/digital_signature_guidelines.pdf\">http://www.signelec.com/content/download/digital_signature_guidelines.pdf</a>",
-    "ABC": {
-        "authors": [
-            "Leo Geurts",
-            "Lambert Meertens",
-            "Steven Pemberton"
-        ],
-        "href": "http://www.cwi.nl/~steven/abc",
-        "title": "The ABC Programmer's Handbook.",
-        "date": "Prentice-Hall",
-        "status": "ISBN: 0-13-000027-2"
-    },
+    "ABC": "Leo Geurts; Lambert Meertens; Steven Pemberton. <a href=\"http://www.cwi.nl/~steven/abc\"><cite>The ABC Programmer's Handbook.</cite></a> Prentice-Hall. ISBN: 0-13-000027-2. URL: <a href=\"http://www.cwi.nl/~steven/abc\">http://www.cwi.nl/~steven/abc</a>",
     "ABNF": "D. Crocker and P. Overell. <a href='http://www.ietf.org/rfc/rfc5234.txt'><cite>Augmented BNF for Syntax Specifications: ABNF.</cite></a> January 2008. Internet RFC 5234. URL: <a href='http://www.ietf.org/rfc/rfc5234.txt'>http://www.ietf.org/rfc/rfc5234.txt</a>",
     "ACCESS-CONTROL": {
         "authors": [
