@@ -490,15 +490,15 @@ var sn;
         },
 
         stringifyRef: function(ref) {
-            if(typeof ref == "string") return ref;
-            var output = "";
-            output += ref.authors.join("; ");
-            if(ref.etAl) output += " et al";
-            output += ". ";
-            output += "<a href='" + ref.href + "'><cite>" + ref.title + "</cite></a> ";
+            if(typeof ref == 'string') return ref;
+            var output = '';
+            output += ref.authors.join('; ');
+            if(ref.etAl) output += ' et al';
+            output += '. ';
+            output += '<a href="' + ref.href + '"><cite>' + ref.title + '</cite></a> ';
             output += ref.date + '. ';
             output += this.REF_STATUSES[ref.status] || ref.status;
-            output += '. URL: <a href=' + ref.href + "'>" + ref.href + "</a>";
+            output += '. URL: <a href="' + ref.href + '">' + ref.href + '</a>';
             return output;
         },
 
