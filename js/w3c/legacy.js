@@ -470,7 +470,7 @@ var sn;
                             dd.setAttribute('rel','dcterms:references');
                         }
                     }
-                    if (berjon.biblio[ref]) dd.innerHTML = berjon.biblio[ref] + "\n";
+                    if (berjon.biblio[ref]) dd.innerHTML = this.stringifyRef(berjon.biblio[ref]) + "\n";
                     else {
                         if (!badrefs[ref]) badrefs[ref] = 0;
                         badrefs[ref]++;
@@ -487,6 +487,29 @@ var sn;
                 }
             }
 
+        },
+
+        stringifyRef: function(ref) {
+            if(typeof ref == "string") return ref;
+            var output = "";
+            output += ref.editors.join("; ");
+            if(ref.etAl) output += " et al";
+            output += ". ";
+            output += "<a href='" + ref.url + "'><cite>" + ref.title + "</cite></a> ";
+            output += ref.date + '. ';
+            output += this.REF_STATUSES[ref.status] || ref.status;
+            output += '. URL: <a href=' + ref.url + "'>" + ref.url + "</a>";
+            return output;
+        },
+
+        REF_STATUSES: {
+            "NOTE": "W3C Note",
+            "ED": "W3C Editor's Draft",
+            "FPWD": "W3C First Public Working Draft",
+            "WD": "W3C Working Draft",
+            "CR": "W3C Candidate Recommendation",
+            "PR": "W3C Proposed Recommendation",
+            "REC": "W3C Recommendation",
         },
 
         // --- HELPERS --------------------------------------------------------------------------------------------
