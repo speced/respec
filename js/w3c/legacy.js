@@ -492,13 +492,13 @@ var sn;
         stringifyRef: function(ref) {
             if(typeof ref == "string") return ref;
             var output = "";
-            output += ref.editors.join("; ");
+            output += ref.authors.join("; ");
             if(ref.etAl) output += " et al";
             output += ". ";
-            output += "<a href='" + ref.url + "'><cite>" + ref.title + "</cite></a> ";
+            output += "<a href='" + ref.href + "'><cite>" + ref.title + "</cite></a> ";
             output += ref.date + '. ';
             output += this.REF_STATUSES[ref.status] || ref.status;
-            output += '. URL: <a href=' + ref.url + "'>" + ref.url + "</a>";
+            output += '. URL: <a href=' + ref.href + "'>" + ref.href + "</a>";
             return output;
         },
 
