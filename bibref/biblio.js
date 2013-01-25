@@ -1851,6 +1851,17 @@ if (typeof berjon === "undefined") berjon = {};
         "date": "17 December 2012",
         "status": "CR",
         "publisher": "W3C"
+    },    
+    "HTML5-20121217": {
+        "authors": [
+            "Robin Berjon"
+        ],
+        "etAl": true,
+        "href": "http://www.w3.org/TR/2012/CR-html5-20121217/",
+        "title": "HTML5.",
+        "date": "17 December 2012",
+        "status": "CR",
+        "publisher": "W3C"
     },
     "HTML5-20121025": {
         "authors": [
