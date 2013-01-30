@@ -1186,7 +1186,17 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "DES": "<a href=\"http://csrc.nist.gov/publications/fips/fips46-3/fips46-3.pdf\"><cite>NIST FIPS 46-3: Data Encryption Standard (DES)</cite></a> . October 1999. URL: <a href=\"http://csrc.nist.gov/publications/fips/fips46-3/fips46-3.pdf\">http://csrc.nist.gov/publications/fips/fips46-3/fips46-3.pdf</a>",
-    "DEVICE-ORIENTATION": "Steve Block, Andrei Popescu. <a href=\"http://www.w3.org/TR/2011/WD-orientation-event-20111201/\">DeviceOrientation Event Specification</a>. 1 December 2011. Last Call Working Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/2011/WD-orientation-event-20111201/\">http://www.w3.org/TR/2011/WD-orientation-event-20111201/</a>",
+    "DEVICE-ORIENTATION": {
+        "authors": [
+            "Steve Block",
+            "Andrei Popescu"
+        ],
+        "href": "http://www.w3.org/TR/2011/WD-orientation-event-20111201",
+        "title": "DeviceOrientation Event Specification.",
+        "date": "1 December 2011",
+        "status": "LCWD",
+        "publisher": "W3C"
+    },
     "DFAUI": {
         "authors": [
             "Arthur Barstow"
