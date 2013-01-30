@@ -2029,7 +2029,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc2616.txt",
         "title": "Hypertext Transfer Protocol - HTTP/1.1.",
         "date": "June 1999",
-        "status": "Internet RFC 2616",
+        "status": "RFC 2616",
         "publisher": "IETF"
     },
     "HTTP-TLS": {
@@ -2039,7 +2039,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc2818.txt",
         "title": "HTTP Over TLS.",
         "date": "May 2000",
-        "status": "Internet RFC 2818",
+        "status": "RFC 2818",
         "publisher": "IETF"
     },
     "HunterZhan": "Hunter, Jane; Zhan, Zhimin. <a href=\"http://archive.dstc.edu.au/RDU/staff/jane-hunter/PNG/paper.html\">&ldquo;An Indexing and Querying System for Online Images Based on the PNG Format and Embedded Metadata&rdquo;</a> in: <cite>ARLIS/ANZ Conference.</cite> Sep 1999. Brisbane, Australia. URL: <a href=\"http://archive.dstc.edu.au/RDU/staff/jane-hunter/PNG/paper.html\">http://archive.dstc.edu.au/RDU/staff/jane-hunter/PNG/paper.html</a> ",
@@ -2118,7 +2118,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://tools.ietf.org/html/rfc5245",
         "title": "Interactive Connectivity Establishment (ICE): A Protocol for Network Address Translator (NAT) Traversal for Offer/Answer Protocols.",
         "date": "April 2010",
-        "status": "Internet RFC 5245",
+        "status": "RFC 5245",
         "publisher": "IETF"
     },
     "ILU-REQUESTOR": {
@@ -2186,7 +2186,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3987.txt",
         "title": "Internationalized Resource Identifiers (IRI).",
         "date": "January 2005",
-        "status": "Internet RFC 3987",
+        "status": "RFC 3987",
         "publisher": "IETF"
     },
     "ISO10646": "<cite>Information Technology - Universal Multiple- Octet Coded CharacterSet (UCS) - Part 1: Architecture and Basic Multilingual Plane.</cite> ISO/IEC10646-1:1993. The current specification also takes into consideration the first five amendments to ISO/IEC 10646-1:1993. Useful &lt;a href=&quot;http://www.egt.ie/standards/iso10646/ucs-roadmap.html&quot;&gt;roadmaps&lt;/a&gt;show which scripts sit at which numeric ranges.",
@@ -2766,7 +2766,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://tools.ietf.org/html/rfc6454",
         "title": "The Web Origin Concept.",
         "date": "December 2011",
-        "status": "Internet RFC 6454",
+        "status": "RFC 6454",
         "publisher": "IETF"
     },
     "OWL-FEATURES": {
@@ -3120,8 +3120,8 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "href": "http://www.ietf.org/rfc/rfc2898.txt",
         "title": "PKCS #5 v2.0: Password-Based Cryptography Standard",
-        "date": "IETF RFC 2898",
-        "status": "September 2000",
+        "date": "September 2000",
+        "status": "IETF RFC 2898",
         "publisher": "IETF"
     },
     "PKCS5Amd1": "<a href=\"ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-5v2/pkcs-5v2-0a1.pdf\"><cite>PKCS #5 v2.0 Amendment 1: XML Schema for Password-Based Cryptography</cite></a> RSA Laboratories, March 2007. URL: <a href=\"ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-5v2/pkcs-5v2-0a1.pdf\">ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-5v2/pkcs-5v2-0a1.pdf</a>",
@@ -3670,7 +3670,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc1034.txt",
         "title": "DOMAIN NAMES - CONCEPTS AND FACILITIES.",
         "date": "November 1987",
-        "status": "Internet RFC 1034",
+        "status": "RFC 1034",
         "publisher": "IETF"
     },
     "RFC1738": {
@@ -3682,7 +3682,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc1738.txt",
         "title": "Uniform Resource Locators (URL).",
         "date": "December 1994",
-        "status": "Internet RFC 1738",
+        "status": "RFC 1738",
         "publisher": "IETF"
     },
     "RFC1808": {
@@ -3692,7 +3692,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc1808.txt",
         "title": "Relative Uniform Resource Locators.",
         "date": "June 1995",
-        "status": "Internet RFC 1808 (Obsoleted by RFC 3986)",
+        "status": "RFC 1808 (Obsoleted by RFC 3986)",
         "publisher": "IETF"
     },
     "RFC2045": "N. Freed and N. Borenstein. <a href=\"http://www.ietf.org/rfc/rfc2045.txt\"><cite>Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies.</cite></a> November 1996. URL: <a href=\"http://www.ietf.org/rfc/rfc2045.txt\">http://www.ietf.org/rfc/rfc2045.txt</a> ",
@@ -3704,7 +3704,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc2046.txt",
         "title": "Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types.",
         "date": "November 1996",
-        "status": "Internet RFC 2046",
+        "status": "RFC 2046",
         "publisher": "IETF"
     },
     "RFC2119": "S. Bradner. <a href=\"http://www.ietf.org/rfc/rfc2119.txt\"><cite>Key words for use in RFCs to Indicate Requirement Levels.</cite></a> March 1997. Internet RFC 2119.  URL: <a href=\"http://www.ietf.org/rfc/rfc2119.txt\">http://www.ietf.org/rfc/rfc2119.txt</a> ",
@@ -3727,7 +3727,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc2397.txt",
         "title": "The &quot;data&quot; URL scheme.",
         "date": "August 1998",
-        "status": "Internet RFC 2397",
+        "status": "RFC 2397",
         "publisher": "IETF"
     },
     "RFC2426": "F. Dawson, T. Howes. <a href=\"http://www.ietf.org/rfc/rfc2426.txt\"><cite>vCard MIME Directory Profile.</cite></a> September 1998. URL: <a href=\"http://www.ietf.org/rfc/rfc2426.txt\">http://www.ietf.org/rfc/rfc2426.txt</a> ",
@@ -3739,7 +3739,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc2531.txt",
         "title": "Content Feature Schema for Internet Fax.",
         "date": "March 1999",
-        "status": "Internet RFC 2531",
+        "status": "RFC 2531",
         "publisher": "IETF"
     },
     "RFC2533": {
@@ -3749,7 +3749,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc2533",
         "title": "A Syntax for Describing Media Feature Sets.",
         "date": "March 1999",
-        "status": "Internet RFC 2533",
+        "status": "RFC 2533",
         "publisher": "IETF"
     },
     "RFC2534": {
@@ -3761,7 +3761,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc2534",
         "title": "Media Features for Display, Print, and Fax.",
         "date": "March 1999",
-        "status": "Internet RFC 2534",
+        "status": "RFC 2534",
         "publisher": "IETF"
     },
     "RFC3406": "L. Daigle, D. van Gulik, R. Iannella, P. Faltstrom. <a href=\"http://www.ietf.org/rfc/rfc3406.txt\"><cite> URN Namespace Definition Mechanisms.</cite></a>. IETF RFC 3406 October 2002. URL: <a href=\"http://www.ietf.org/rfc/rfc3406.txt\"> http://www.ietf.org/rfc/rfc3406.txt</a>",
@@ -3773,7 +3773,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.rfc-editor.org/rfc/rfc2854.txt",
         "title": "The 'text/html' Media Type.",
         "date": "June 2000",
-        "status": "Internet RFC 2854"
+        "status": "RFC 2854"
     },
     "RFC2978": {
         "authors": [
@@ -3783,7 +3783,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc2978.txt",
         "title": "IANA Charset Registration Procedures.",
         "date": "October 2000",
-        "status": "Internet RFC 2978",
+        "status": "RFC 2978",
         "publisher": "IETF"
     },
     "RFC3023": {
@@ -3795,7 +3795,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3023.txt",
         "title": "XML Media Types",
         "date": "January 2001",
-        "status": "Internet RFC 3023",
+        "status": "RFC 3023",
         "publisher": "IETF"
     },
     "RFC3161": {
@@ -3808,7 +3808,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.rfc-editor.org/rfc/rfc3161.txt",
         "title": "Internet X.509 Public Key Infrastructure Time-Stamp Protocol (TSP)",
         "date": "August 2001",
-        "status": "Internet RFC 3161"
+        "status": "RFC 3161"
     },
     "RFC3161-PKIX-UPDATE-9": "Stefan Santesson, Nick Pope. <a href=\"http://tools.ietf.org/id/draft-ietf-pkix-rfc3161-update-09.txt\"><cite> ESSCertIDv2 update for RFC 3161</cite></a> 29 April 2010, IETF Internet Draft. URL: <a href=\"http://tools.ietf.org/id/draft-ietf-pkix-rfc3161-update-09.txt\"> http://tools.ietf.org/id/draft-ietf-pkix-rfc3161-update-09.txt</a> ",
     "RFC3218": {
@@ -3830,7 +3830,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.rfc-editor.org/rfc/rfc3236.txt",
         "title": "The 'application/xhtml+xml' Media Type.",
         "date": "January 2002",
-        "status": "Internet RFC 3236"
+        "status": "RFC 3236"
     },
     "RFC3279": "W. Polk, R. Housley, L. Bassham. <a href=\"http://www.ietf.org/rfc/rfc3279.txt\"><cite>Algorithmupdates and Identifiers for the Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile</cite></a>. April 2002. Internet RFC 3279. URL: <a href=\"http://www.ietf.org/rfc/rfc3279.txt\">http://www.ietf.org/rfc/rfc3279.txt</a>",
     "RFC3339": "G. Klyne, C. Newman. <a href=\"http://www.ietf.org/rfc/rfc3339.txt\"><cite>Date and Time on the Internet: Timestamps</cite></a>. July 2002. Internet RFC 3339. URL: <a href=\"http://www.ietf.org/rfc/rfc3339.txt\">http://www.ietf.org/rfc/rfc3339.txt</a>",
@@ -3844,7 +3844,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3428.txt",
         "title": "Session Initiation Protocol (SIP) Extension for Instant Messaging.",
         "date": "December 2002",
-        "status": "Internet RFC 3428",
+        "status": "RFC 3428",
         "publisher": "IETF"
     },
     "RFC3490": "P. Faltstrom; P. Hoffman; A. Costello. <a href='http://www.rfc-editor.org/rfc/rfc3490.txt'><cite>Internationalizing Domain Names in Applications (IDNA).</cite></a> March 2003. Internet RFC 3490. URL: <a href='http://www.rfc-editor.org/rfc/rfc3490.txt'>http://www.rfc-editor.org/rfc/rfc3490.txt</a>",
@@ -3856,7 +3856,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3966.txt",
         "title": "The tel URI for Telephone Numbers",
         "date": "December 2004",
-        "status": "Internet RFC 3966",
+        "status": "RFC 3966",
         "publisher": "IETF"
     },
     "RFC3986": {
@@ -3868,7 +3868,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3986.txt",
         "title": "Uniform Resource Identifier (URI): Generic Syntax.",
         "date": "January 2005",
-        "status": "Internet RFC 3986",
+        "status": "RFC 3986",
         "publisher": "IETF"
     },
     "RFC3987": {
@@ -3879,7 +3879,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3987.txt",
         "title": "Internationalized Resource Identifiers (IRIs).",
         "date": "January 2005",
-        "status": "Internet RFC 3987",
+        "status": "RFC 3987",
         "publisher": "IETF"
     },
     "RFC4050": {
@@ -3906,7 +3906,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc4122.txt",
         "title": "A Universally Unique IDentifier (UUID) URN Namespace",
         "date": "July 2005",
-        "status": "Internet RFC 4122",
+        "status": "RFC 4122",
         "publisher": "IETF"
     },
     "RFC4180": "Y. Shafranovich. <a href=\"http://www.ietf.org/rfc/rfc4180.txt\"> <cite>Common Format and MIME Type for Comma-Separated Values (CSV) Files</cite></a> October 2005. Internet RFC 3987. URL: <a href=\"http://www.ietf.org/rfc/rfc4180.txt\">http://www.ietf.org/rfc/rfc4180.txt</a>",
@@ -3919,7 +3919,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc4281.txt",
         "title": "The Codecs Parameter for &quot;Bucket&quot; Media Types",
         "date": "November 2005",
-        "status": "Internet RFC 4281",
+        "status": "RFC 4281",
         "publisher": "IETF"
     },
     "RFC4572": {
@@ -3929,7 +3929,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc4572.txt",
         "title": " Connection-Oriented Media Transport over the Transport Layer Security (TLS) Protocol in the Session Description Protocol (SDP).",
         "date": "July 2006",
-        "status": "Internet RFC 4572",
+        "status": "RFC 4572",
         "publisher": "IETF"
     },
     "RFC4627": {
@@ -3939,7 +3939,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc4627.txt",
         "title": "The application/json Media Type for JavaScript Object Notation (JSON)",
         "date": "July 2006",
-        "status": "Internet RFC 4627",
+        "status": "RFC 4627",
         "publisher": "IETF"
     },
     "RFC4770": {
@@ -3950,7 +3950,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc4770.txt",
         "title": "vCard Extensions for Instant Messaging (IM)",
         "date": "January 2007",
-        "status": "Internet RFC 4770",
+        "status": "RFC 4770",
         "publisher": "IETF"
     },
     "RFC4868": {
@@ -3975,7 +3975,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.rfc-editor.org/rfc/rfc5545.txt",
         "title": "Internet Calendaring and Scheduling Core Object Specification (iCalendar).",
         "date": "September 2009",
-        "status": "Internet RFC 5545"
+        "status": "RFC 5545"
     },
     "RFC5646": {
         "authors": [
@@ -3985,7 +3985,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.rfc-editor.org/rfc/rfc5646.txt",
         "title": "Tags for Identifying Languages.",
         "date": "September 2009",
-        "status": "Internet RFC 5646"
+        "status": "RFC 5646"
     },
     "RFC5724": "E. Wilde, A. Vaha-Sipila. <a href=\"http://www.ietf.org/rfc/rfc5724.txt\">URI Scheme for Global System for Mobile Communications (GSM) Short Message Service (SMS)</a>. January 2010. Request for Comments. URL: <a href=\"http://www.ietf.org/rfc/rfc5724.txt\">http://www.ietf.org/rfc/rfc5724.txt</a>",
     "RFC5785": {
@@ -4225,7 +4225,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://tools.ietf.org/html/rfc3264",
         "title": "An Offer/Answer Model with the Session Description Protocol (SDP).",
         "date": "June 2002",
-        "status": "Internet RFC 3264",
+        "status": "RFC 3264",
         "publisher": "IETF"
     },
     "SDPLABEL": {
@@ -4236,7 +4236,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://tools.ietf.org/html/rfc4574",
         "title": "The Session Description Protocol (SDP) Label Attribute.",
         "date": "August 2006",
-        "status": "Internet RFC 4574",
+        "status": "RFC 4574",
         "publisher": "IETF"
     },
     "SECG1": "<a href=\"http://www.secg.org/download/aid-780/sec1-v2.pdf\"><cite>SEC1: Elliptic Curve Cryptography, Version 2.0, Standards for Efficient Cryptography Group</cite></a>. May 2009. URL: <a href=\"http://www.secg.org/download/aid-780/sec1-v2.pdf\">http://www.secg.org/download/aid-780/sec1-v2.pdf</a> ",
@@ -4385,7 +4385,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3851.txt",
         "title": "S/MIME Version 3.1 Message Specification.",
         "date": "July 2004",
-        "status": "Internet RFC 3851",
+        "status": "RFC 3851",
         "publisher": "IETF"
     },
     "SML": {
@@ -4696,7 +4696,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://tools.ietf.org/html/rfc5389",
         "title": "Session Traversal Utilities for NAT (STUN).",
         "date": "October 2008",
-        "status": "Internet RFC 5389",
+        "status": "RFC 5389",
         "publisher": "IETF"
     },
     "STUN-URI": {
@@ -5091,7 +5091,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://tools.ietf.org/html/rfc5246",
         "title": "The Transport Layer Security (TLS) Protocol, Version 1.2.",
         "date": "August 2008",
-        "status": "Internet RFC 5246",
+        "status": "RFC 5246",
         "publisher": "IETF"
     },
     "Tobin": "R. Tobin. <a href=\"http://lists.w3.org/Archives/Member/w3c-xml-core-wg/2000OctDec/0054\"><cite>Infoset for external entities.</cite></a> 2000. URL: <a href=\"http://lists.w3.org/Archives/Member/w3c-xml-core-wg/2000OctDec/0054\">http://lists.w3.org/Archives/Member/w3c-xml-core-wg/2000OctDec/0054</a> [XML Core mailing list, <a href=\"http://cgi.w3.org/MemberAccess/AccessRequest\">W3C Member Only</a>].",
@@ -5171,7 +5171,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://tools.ietf.org/html/rfc5766",
         "title": "Traversal Using Relays around NAT (TURN): Relay Extensions to Session Traversal Utilities for NAT (STUN).",
         "date": "April 2010",
-        "status": "Internet RFC 5766",
+        "status": "RFC 5766",
         "publisher": "IETF"
     },
     "TURN-URI": {
@@ -5372,7 +5372,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3986.txt",
         "title": "Uniform Resource Identifiers (URI): generic syntax.",
         "date": "January 2005",
-        "status": "Internet RFC 3986",
+        "status": "RFC 3986",
         "publisher": "IETF"
     },
     "URI-CLARIFICATION": {
@@ -5396,7 +5396,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.rfc-editor.org/rfc/rfc6570.txt",
         "title": "URI Template.",
         "date": "March 2012",
-        "status": "Internet RFC 6570"
+        "status": "RFC 6570"
     },
     "URN": "R. Moats. <a href=\"http://www.ietf.org/rfc/rfc2141.txt\"><cite>URN Syntax.</cite></a> IETF RFC 2141. May 1997.  URL: <a href=\"http://www.ietf.org/rfc/rfc2141.txt\">http://www.ietf.org/rfc/rfc2141.txt</a>",
     "URN-OID": "M. Mealling. <a href=\"http://www.ietf.org/rfc/rfc3061.txt\"><cite>A URN Namespace of Object Identifiers. </cite></a>. IETF RFC 3061. February 2001. URL: <a href=\"http://www.ietf.org/rfc/rfc3061.txt\">http://www.ietf.org/rfc/rfc3061.txt</a>",
