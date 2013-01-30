@@ -927,9 +927,9 @@ if (typeof berjon === "undefined") berjon = {};
             "Elika J. Etemad",
             "Koji Ishii"
         ],
-        "href": "http://www.w3.org/TR/css3-text/",
-        "title": "CSS Text Level 3.",
-        "date": "19 January 2012",
+        "href": "http://www.w3.org/TR/2012/WD-css3-text-20121113",
+        "title": "CSS Text Module Level 3.",
+        "date": "13 November 2012",
         "status": "WD",
         "publisher": "W3C"
     },
