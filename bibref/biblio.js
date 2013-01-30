@@ -594,12 +594,14 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "CSS3-ANIMATIONS": {
-        "authors": [
-            "Dean Jackson (Apple Inc)",
-            "David Hyatt (Apple Inc)",
-            "Chris Marrin (Apple Inc)"
+            "authors": [
+            "Dean Jackson",
+            "David Hyatt",
+            "Chris Marrin",
+            "Sylvain Galineau",
+            "L. David Baron"
         ],
-        "href": "http://www.w3.org/TR/css3-animations/",
+        "href": "http://www.w3.org/TR/2012/WD-css3-animations-20120403",
         "title": "CSS Animations.",
         "date": "03 April 2012",
         "status": "WD",
