@@ -3152,7 +3152,17 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
-    "POSTMSG": "Ian Hickson. <a href='http://dev.w3.org/html5/postmsg'><cite>HTML5 Web Messaging.</cite></a> URL: <a href='http://dev.w3.org/html5/postmsg'>http://dev.w3.org/html5/postmsg</a>",
+    "POSTMSG": {
+        "authors": [
+            "Ian Hickson"
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-webmessaging-20120501",
+        "title": "HTML5 Web Messaging",
+        "date": " 01 May 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
+    "Ian Hickson. <a href='http://dev.w3.org/html5/postmsg'><cite>HTML5 Web Messaging.</cite></a> URL: <a href='http://dev.w3.org/html5/postmsg'>http://dev.w3.org/html5/postmsg</a>",
     "POWDER-DR": {
         "authors": [
             "Kevin Smith",
