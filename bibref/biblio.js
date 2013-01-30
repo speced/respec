@@ -1,17 +1,7 @@
 if (typeof berjon === "undefined") berjon = {};
     berjon.biblio = {
     "ABA-DSIG-GUIDELINES": "<a href=\"http://www.signelec.com/content/download/digital_signature_guidelines.pdf\"><cite>Digital Signature Guidelines.</cite></a> 1 August 1996. Information Security Committee, American Bar Association. URL: <a href=\"http://www.signelec.com/content/download/digital_signature_guidelines.pdf\">http://www.signelec.com/content/download/digital_signature_guidelines.pdf</a>",
-    "ABC": {
-        "authors": [
-            "Leo Geurts",
-            "Lambert Meertens",
-            "Steven Pemberton"
-        ],
-        "href": "http://www.cwi.nl/~steven/abc",
-        "title": "The ABC Programmer's Handbook.",
-        "date": "Prentice-Hall",
-        "status": "ISBN: 0-13-000027-2"
-    },
+    "ABC": "Leo Geurts; Lambert Meertens; Steven Pemberton. <a href=\"http://www.cwi.nl/~steven/abc\"><cite>The ABC Programmer's Handbook.</cite></a> Prentice-Hall. ISBN: 0-13-000027-2. URL: <a href=\"http://www.cwi.nl/~steven/abc\">http://www.cwi.nl/~steven/abc</a>",
     "ABNF": "D. Crocker and P. Overell. <a href='http://www.ietf.org/rfc/rfc5234.txt'><cite>Augmented BNF for Syntax Specifications: ABNF.</cite></a> January 2008. Internet RFC 5234. URL: <a href='http://www.ietf.org/rfc/rfc5234.txt'>http://www.ietf.org/rfc/rfc5234.txt</a>",
     "ACCESS-CONTROL": {
         "authors": [
@@ -61,7 +51,17 @@ if (typeof berjon === "undefined") berjon = {};
     "AES-WRAP-PAD": "R. Housley, M. Dworkin. <a href=\"http://www.ietf.org/rfc/rfc5649.txt\"><cite>RFC 5649: Advanced Encryption Standard (AES) Key Wrap with Padding Algorithm</cite></a>.   IETF Informational RFC, August 2009. URL:  <a href=\"http://www.ietf.org/rfc/rfc5649.txt\"> http://www.ietf.org/rfc/rfc5649.txt</a>. ",
     "AGBDL": "Charles Jacobs; et al. <a href=\"http://grail.cs.washington.edu/pub/papers/Jacobs2003.pdf\">&ldquo;Adaptive Grid Based Document Layout&rdquo;</a> in: <cite>ACM Transactions on Graphics.</cite> 22. 3. pp. 838&#8211;847. July 2003. URL: <a href=\"http://grail.cs.washington.edu/pub/papers/Jacobs2003.pdf\">http://grail.cs.washington.edu/pub/papers/Jacobs2003.pdf</a> ",
     "ALT-TECHNIQUES": "Steve Faulkner <a href=\"http://www.w3.org/TR/html-alt-techniques/\"><cite>HTML5: Techniques for providing useful text alternatives</cite></a>. W3C Working Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/html-alt-techniques/\">http://www.w3.org/TR/html-alt-techniques/</a> ",
-    "ANIMATION-TIMING": "James Robinson; Cameron McCormack. <a href=\"http://www.w3.org/TR/animation-timing/\"><cite>Timing control for script-based animations.</cite></a> URL: <a href=\"http://www.w3.org/TR/animation-timing/\">http://www.w3.org/TR/animation-timing/</a>",
+    "ANIMATION-TIMING": {
+        "authors": [
+            "James Robinson",
+            "Cameron McCormack"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-animation-timing-20120221",
+        "title": "Timing control for script-based animations.",
+        "date": "21 February 2012",
+        "status": "LCWD",
+        "publisher": "W3C"
+    },
     "ANSI-X9-44-2007": "<a href=\"http://webstore.ansi.org/RecordDetail.aspx?sku=ANSI+X9.44-2007\"><cite>ANSI X9.44-2007: Key Establishment Using Integer Factorization Cryptography.</cite></a> URL: <a href=\"http://webstore.ansi.org/RecordDetail.aspx?sku=ANSI+X9.44-2007\">http://webstore.ansi.org/RecordDetail.aspx?sku=ANSI+X9.44-2007</a>",
     "ARABIC-MATH": {
         "authors": [
@@ -217,12 +217,16 @@ if (typeof berjon === "undefined") berjon = {};
     "CLABS-HNAPI": "<a href=\"http://www.w3.org/2011/webtv/HNTF/CableLabs_Revised_API_20110727-2.pdf\"><cite>CableLabs Revised Home Networking API</cite></a>. 26 July 2011. Draft proposal. URL: <a href=\"http://www.w3.org/2011/webtv/HNTF/CableLabs_Revised_API_20110727-2.pdf\">http://www.w3.org/2011/webtv/HNTF/CableLabs_Revised_API_20110727-2.pdf</a>",
     "CANVAS-2D": {
         "authors": [
+            "Rik Cabanier",
+            "Eliot Graff",
+            "Jay Munro",
+            "Tom Wiltzius",
             "Ian Hickson"
         ],
-        "href": "http://www.w3.org/TR/2dcontext/",
+        "href": "http://www.w3.org/TR/2012/CR-2dcontext-20121217",
         "title": "HTML Canvas 2D Context.",
-        "date": "25 May 2011",
-        "status": "WD",
+        "date": "17 December 2012",
+        "status": "CR",
         "publisher": "W3C"
     },
     "CC-ABOUT": "<a href = 'http://creativecommons.org/about/licenses/'><cite>Creative Commons: About Licenses</cite></a> URL: http://creativecommons.org/about/licenses/ ",
@@ -437,10 +441,10 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Anne van Kesteren"
         ],
-        "href": "http://www.w3.org/TR/2009/WD-cors-20090317",
+        "href": "http://www.w3.org/TR/2013/CR-cors-20130129",
         "title": "Cross-Origin Resource Sharing.",
-        "date": "17 March 2009",
-        "status": "WD",
+        "date": "29 January 2013",
+        "status": "CR",
         "publisher": "W3C"
     },
     "CORE-DEVICE": {
@@ -501,7 +505,16 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "CSP": "Adam Barth; Brendon Sterne. <a href=\"http://www.w3.org/TR/CSP/\"><cite>CSP.</cite></a> URL: <a href=\"http://www.w3.org/TR/CSP/\">http://www.w3.org/TR/CSP/</a> ",
-    "CSS-ADAPTATION": "Rune Lillesveen. <a href=\"http://dev.w3.org/csswg/css-device-adapt/\">CSS Device Adaptation</a>. 23 January 2012. Editor's Draft. (Work in progress.) URL: <a href=\"http://dev.w3.org/csswg/css-device-adapt/\">http://dev.w3.org/csswg/css-device-adapt/</a>",
+    "CSS-ADAPTATION": {
+        "authors": [
+            "Rune Lillesveen"
+        ],
+        "href": "http://www.w3.org/TR/2011/WD-css-device-adapt-20110915",
+        "title": "CSS Device Adaptation.",
+        "date": "15 September 2011",
+        "status": "FPWD",
+        "publisher": "W3C"
+    },
     "CSS-MOBILE": {
         "authors": [
             "Svante Schubert"
@@ -565,23 +578,59 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "REC",
         "publisher": "W3C"
     },
-    "CSS21": "Bert Bos; et al. <a href=\"http://www.w3.org/TR/CSS21/\"><cite>Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification.</cite></a>. W3C Recommendation. URL: <a href=\"http://www.w3.org/TR/CSS21\">http://www.w3.org/TR/CSS21/</a> ",
+    "CSS21": {
+        "authors": [
+            "Bert Bos"
+        ],
+        "etAl": true,
+        "href": "http://www.w3.org/TR/CSS21/",
+        "title": "Cascading Style Sheets, level 2 (CSS2) Specification.",
+        "date": "07 June 2011",
+        "status": "REC",
+        "publisher": "W3C"
+    },
     "CSS3-2D-TRANSFORMS": "Simon Fraser; Dean Jackson; David Hyatt; Chris Marrin; Edward O'Connor. <a href=\"http://www.w3.org/TR/css3-2d-transforms/\"><cite>CSS 2D Transforms Module Level 3.</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-2d-transforms/\">http://www.w3.org/TR/css3-2d-transforms/</a> ",
     "CSS3-3D-TRANSFORMS": "Dean Jackson; David Hyatt; Chris Marrin. <a href=\"http://www.w3.org/TR/css3-3d-transforms/\"><cite>CSS 3D Transforms Module Level 3.</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-3d-transforms/\">http://www.w3.org/TR/css3-3d-transforms</a> ",
-    "CSS3-TRANSFORMS": "Simon Fraser; Dean Jackson; David Hyatt; Chris Marrin; Edward O'Connor; Dirk Schulze; Aryeh Gregor. <a href=\"http://www.w3.org/TR/css3-transforms/\"><cite>CSS Transforms.</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-transforms/\">http://www.w3.org/TR/css3-transforms/</a> ",
-    "CSS3-ANIMATIONS": {
+    "CSS3-TRANSFORMS": {
         "authors": [
-            "Dean Jackson (Apple Inc)",
-            "David Hyatt (Apple Inc)",
-            "Chris Marrin (Apple Inc)"
+            "Simon Fraser",
+            "Dean Jackson",
+            "David Hyatt",
+            "Chris Marrin",
+            "Edward O'Connor",
+            "Dirk Schulze",
+            "Aryeh Gregor"
         ],
-        "href": "http://www.w3.org/TR/css3-animations/",
+        "href": "http://www.w3.org/TR/2012/WD-css3-transforms-20120911",
+        "title": "CSS Transforms.",
+        "date": "11 September 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
+    "CSS3-ANIMATIONS": {
+            "authors": [
+            "Dean Jackson",
+            "David Hyatt",
+            "Chris Marrin",
+            "Sylvain Galineau",
+            "L. David Baron"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-css3-animations-20120403",
         "title": "CSS Animations.",
         "date": "03 April 2012",
         "status": "WD",
         "publisher": "W3C"
     },
-    "CSS3-FONTS": "John Daggett (Mozilla). <a href=\"http://www.w3.org/TR/css3-fonts\"><cite>CSS Fonts Module Level 3</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-fonts\">http://www.w3.org/TR/css3-fonts</a> ",
+    "CSS3-FONTS":  {
+        "authors": [
+            "John Daggett"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-css3-fonts-20121211",
+        "title": "CSS Fonts Module Level 3.",
+        "date": "11 December 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
     "CSS3-FONTS-20020802": {
         "authors": [
             "Michel Suignard",
@@ -605,7 +654,17 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
-    "CSS3-IMAGES": "Elika J. Etemad, Tab Atkins Jr.. <a href=\"http://www.w3.org/TR/css3-images/\">CSS Image Values and Replaced Content</a>. 17 April 2012. W3C Candidate Recommendation. URL: <a href=\"http://www.w3.org/TR/css3-images/\">http://www.w3.org/TR/css3-images/</a>",
+    "CSS3-IMAGES": {
+        "authors": [
+            "Elika J. Etemad",
+            "Tab Atkins Jr."
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-css3-images-20120417",
+        "title": "CSS Image Values and Replaced Content",
+        "date": "17 April 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
     "CSS3-MARQUEE": {
         "authors": [
             "Bert Bos"
@@ -644,7 +703,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Chris Marrin",
             "L. David Baron"
         ],
-        "href": "http://www.w3.org/TR/css3-transitions/",
+        "href": "http://www.w3.org/TR/2012/WD-css3-transitions-20120403/",
         "title": "CSS Transitions.",
         "date": "03 April 2012",
         "status": "WD",
@@ -661,7 +720,18 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
-    "CSS3-BG": "Elika J. Etemad; Bert Bos; Brad Kemper. <a href=\"http://www.w3.org/TR/css3-background/\"><cite>CSS Backgrounds and Borders Module Level 3.</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-background/\">http://www.w3.org/TR/css3-background/</a> ",
+    "CSS3-BG": {
+        "authors": [
+            "Bert Bos",
+            "Elika J. Etemad",
+            "Brad Kemper"
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-css3-background-20120724/",
+        "title": "CSS Backgrounds and Borders Module Level 3.",
+        "date": "24 July 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
     "CSS3BORDER": {
         "authors": [
             "Tapas Roy"
@@ -798,7 +868,19 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "CR",
         "publisher": "W3C"
     },
-    "CSS3-MEDIAQUERIES": "H. Lie, T. Çelik, D. Glazman, A. van Kesteren. <a href=\"http://www.w3.org/TR/css3-mediaqueries/\"><cite>Media Queries</cite></a>  URL: <a href=\"http://www.w3.org/TR/css3-mediaqueries/\">http://www.w3.org/TR/css3-mediaqueries/</a> ",
+    "CSS3-MEDIAQUERIES": {
+        "authors": [
+            "H&#229;kon Wium Lie",
+            "Tantek &#199;elik",
+            "Daniel Glazman",
+            "Anne van Kesteren"
+        ],
+        "href": "http://www.w3.org/TR/css3-mediaqueries",
+        "title": "Media Queries.",
+        "date": "19 June 2012",
+        "status": "REC",
+        "publisher": "W3C"
+    },
     "CSS3NAMESPACE": {
         "authors": [
             "Anne van Kesteren",
@@ -861,9 +943,9 @@ if (typeof berjon === "undefined") berjon = {};
             "Elika J. Etemad",
             "Koji Ishii"
         ],
-        "href": "http://www.w3.org/TR/css3-text/",
-        "title": "CSS Text Level 3.",
-        "date": "19 January 2012",
+        "href": "http://www.w3.org/TR/2012/WD-css3-text-20121113",
+        "title": "CSS Text Module Level 3.",
+        "date": "13 November 2012",
         "status": "WD",
         "publisher": "W3C"
     },
@@ -880,13 +962,14 @@ if (typeof berjon === "undefined") berjon = {};
     },
     "CSS3VAL": {
         "authors": [
-            "Chris Lilley",
-            "H&#229;kon Wium Lie"
+            "H&#229;kon Wium Lie",
+            "Tab Atkin",
+            "Elika J. Etemad"
         ],
-        "href": "http://www.w3.org/TR/css3-values/",
+        "href": "http://www.w3.org/TR/2012/CR-css3-values-20120828/",
         "title": "CSS3 Values and Units.",
-        "date": "08 March 2012",
-        "status": "WD",
+        "date": "28 August 2012",
+        "status": "CR",
         "publisher": "W3C"
     },
     "CSS3WRITINGMODES": {
@@ -915,19 +998,19 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Anne van Kesteren"
         ],
-        "href": "http://www.w3.org/TR/cssom/",
+        "href": "http://www.w3.org/TR/2011/WD-cssom-20110712",
         "title": "CSSOM.",
         "date": "12 July 2011",
-        "status": "WD",
+        "status": "FPWD",
         "publisher": "W3C"
     },
     "CSSOM-VIEW": {
         "authors": [
             "Anne van Kesteren"
         ],
-        "href": "http://www.w3.org/TR/2008/WD-cssom-view-20080222",
+        "href": "http://www.w3.org/TR/2011/WD-cssom-view-20110804",
         "title": "CSSOM View Module.",
-        "date": "22 February 2008",
+        "date": "4 August 2011",
         "status": "WD",
         "publisher": "W3C"
     },
@@ -1117,7 +1200,17 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "DES": "<a href=\"http://csrc.nist.gov/publications/fips/fips46-3/fips46-3.pdf\"><cite>NIST FIPS 46-3: Data Encryption Standard (DES)</cite></a> . October 1999. URL: <a href=\"http://csrc.nist.gov/publications/fips/fips46-3/fips46-3.pdf\">http://csrc.nist.gov/publications/fips/fips46-3/fips46-3.pdf</a>",
-    "DEVICE-ORIENTATION": "Steve Block, Andrei Popescu. <a href=\"http://www.w3.org/TR/2011/WD-orientation-event-20111201/\">DeviceOrientation Event Specification</a>. 1 December 2011. Last Call Working Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/2011/WD-orientation-event-20111201/\">http://www.w3.org/TR/2011/WD-orientation-event-20111201/</a>",
+    "DEVICE-ORIENTATION": {
+        "authors": [
+            "Steve Block",
+            "Andrei Popescu"
+        ],
+        "href": "http://www.w3.org/TR/2011/WD-orientation-event-20111201",
+        "title": "DeviceOrientation Event Specification.",
+        "date": "1 December 2011",
+        "status": "LCWD",
+        "publisher": "W3C"
+    },
     "DFAUI": {
         "authors": [
             "Arthur Barstow"
@@ -1223,7 +1316,19 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
-    "DOM4": "Anne van Kesteren; Aryeh Gregor; Ms2ger. <a href=\"http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html/\"><cite>DOM4.</cite></a> URL: <a href=\"http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html/\">http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html/</a> ",
+    "DOM4": {
+        "authors": [
+            "Anne van Kesteren",
+            "Aryeh Gregor",
+            "Lachlan Hunt",
+            "Ms2ger"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-dom-20121206",
+        "title": "DOM4.",
+        "date": "6 December 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
     "DOM-LEVEL-1": {
         "authors": [
             "Vidur Apparao"
@@ -1341,10 +1446,10 @@ if (typeof berjon === "undefined") berjon = {};
             "Jacob Rossi",
             "Doug Schepers",
             "Bj&#246;rn H&#246;hrmann",
-            "Tom Pixley",
-            "Philippe Le H&#233;garet"
+            "Philippe Le H&#233;garet",
+            "Tom Pixley"
         ],
-        "href": "http://www.w3.org/TR/2012/WD-DOM-Level-3-Events-20120906/",
+        "href": "http://www.w3.org/TR/2012/WD-DOM-Level-3-Events-20120906",
         "title": "Document Object Model (DOM) Level 3 Events Specification.",
         "date": "06 September 2012",
         "status": "WD",
@@ -1610,9 +1715,9 @@ if (typeof berjon === "undefined") berjon = {};
             "Arun Ranganathan",
             "Jonas Sicking"
         ],
-        "href": "http://www.w3.org/TR/2011/WD-FileAPI-20111020/",
+        "href": "http://www.w3.org/TR/2012/WD-FileAPI-20121025",
         "title": "File API.",
-        "date": "20 October 2011",
+        "date": "25 October 2012",
         "status": "WD",
         "publisher": "W3C"
     },
@@ -1637,10 +1742,10 @@ if (typeof berjon === "undefined") berjon = {};
             "Elika J. Etemad",
             "Alex Mogilevsky"
         ],
-        "href": "http://www.w3.org/TR/css3-flexbox/",
-        "title": "Flexible Box Layout Module.",
-        "date": "12 June 2012",
-        "status": "WD",
+        "href": "http://www.w3.org/TR/2012/CR-css3-flexbox-20120918",
+        "title": "CSS Flexible Box Layout Module.",
+        "date": "18 September 2012",
+        "status": "CR",
         "publisher": "W3C"
     },
     "FOAF": "Dan Brickley, Libby Miller. <a href=\"http://xmlns.com/foaf/spec/\"><cite>FOAF Vocabulary Specification 0.98.</cite></a> 9 August 2010. URL: <a href=\"http://xmlns.com/foaf/spec/\">http://xmlns.com/foaf/spec/</a>",
@@ -1658,10 +1763,10 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Andrei Popescu"
         ],
-        "href": "http://www.w3.org/TR/2008/WD-geolocation-API-20081222/",
+        "href": "http://www.w3.org/TR/2012/PR-geolocation-API-20120510",
         "title": "Geolocation API Specification.",
-        "date": "22 December 2008",
-        "status": "WD",
+        "date": "10 May 2012",
+        "status": "PR",
         "publisher": "W3C"
     },
     "GEOPRIV-ARCH": "Barnes, R. Lepinski, M. Cooper, A. Morris, J. Tschofenig, H. Schulzrinne, H. <a href = 'http://tools.ietf.org/html/draft-ietf-geopriv-arch-01'><cite>An Architecture for Location and Location Privacy in Internet Applications</cite></a> 29 October 2009. URL: <a href=\"http://tools.ietf.org/html/draft-ietf-geopriv-arch-01\">http://tools.ietf.org/html/draft-ietf-geopriv-arch-01</a>",
@@ -1924,7 +2029,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc2616.txt",
         "title": "Hypertext Transfer Protocol - HTTP/1.1.",
         "date": "June 1999",
-        "status": "Internet RFC 2616",
+        "status": "RFC 2616",
         "publisher": "IETF"
     },
     "HTTP-TLS": {
@@ -1934,7 +2039,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc2818.txt",
         "title": "HTTP Over TLS.",
         "date": "May 2000",
-        "status": "Internet RFC 2818",
+        "status": "RFC 2818",
         "publisher": "IETF"
     },
     "HunterZhan": "Hunter, Jane; Zhan, Zhimin. <a href=\"http://archive.dstc.edu.au/RDU/staff/jane-hunter/PNG/paper.html\">&ldquo;An Indexing and Querying System for Online Images Based on the PNG Format and Embedded Metadata&rdquo;</a> in: <cite>ARLIS/ANZ Conference.</cite> Sep 1999. Brisbane, Australia. URL: <a href=\"http://archive.dstc.edu.au/RDU/staff/jane-hunter/PNG/paper.html\">http://archive.dstc.edu.au/RDU/staff/jane-hunter/PNG/paper.html</a> ",
@@ -2013,7 +2118,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://tools.ietf.org/html/rfc5245",
         "title": "Interactive Connectivity Establishment (ICE): A Protocol for Network Address Translator (NAT) Traversal for Offer/Answer Protocols.",
         "date": "April 2010",
-        "status": "Internet RFC 5245",
+        "status": "RFC 5245",
         "publisher": "IETF"
     },
     "ILU-REQUESTOR": {
@@ -2036,7 +2141,20 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "NOTE",
         "publisher": "W3C"
     },
-    "INDEXEDDB": "Nikunj Mehta, Jonas Sicking, Eliot Graff, Andrei Popescu, Jeremy Orlow. <a href=\"http://www.w3.org/TR/IndexedDB/\">Indexed Database API</a>. April 2011. Working Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/IndexedDB/\">http://www.w3.org/TR/IndexedDB/</a>",
+    "INDEXEDDB": {
+        "authors": [
+            "Nikunj Mehta",
+            "Jonas Sicking",
+            "Eliot Graff",
+            "Andrei Popescu",
+            "Jeremy Orlow"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-IndexedDB-20120524/",
+        "title": "Indexed Database API.",
+        "date": "24 May 2012",
+        "status": "LCWD",
+        "publisher": "W3C"
+    },
     "INKML": {
         "authors": [
             "Stephen M. Watt",
@@ -2068,7 +2186,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3987.txt",
         "title": "Internationalized Resource Identifiers (IRI).",
         "date": "January 2005",
-        "status": "Internet RFC 3987",
+        "status": "RFC 3987",
         "publisher": "IETF"
     },
     "ISO10646": "<cite>Information Technology - Universal Multiple- Octet Coded CharacterSet (UCS) - Part 1: Architecture and Basic Multilingual Plane.</cite> ISO/IEC10646-1:1993. The current specification also takes into consideration the first five amendments to ISO/IEC 10646-1:1993. Useful &lt;a href=&quot;http://www.egt.ie/standards/iso10646/ucs-roadmap.html&quot;&gt;roadmaps&lt;/a&gt;show which scripts sit at which numeric ranges.",
@@ -2641,7 +2759,16 @@ if (typeof berjon === "undefined") berjon = {};
     "OMA-DM": "<a href=\"http://www.openmobilealliance.org/Technical/release_program/dm_v1_2.aspx\"><cite>OMA Device Management V1.2 </cite></a> 17 June 2008. URL: <a href=\"http://www.openmobilealliance.org/Technical/release_program/dm_v1_2.aspx\">http://www.openmobilealliance.org/Technical/release_program/dm_v1_2.aspx</a> ",
     "OMA-URI-SCHEMES": "<a href=\"http://www.openmobilealliance.org/Technical/release_program/docs/URI_Schemes/V1_0-20080626-A/OMA-TS-URI_Schemes-V1_0-20080626-A.pdf\"><cite>URI Schemes for the Mobile Applications Environment. Approved Version 1.0</cite></a> 26 Jun 2008. URL: <a href=\"http://www.openmobilealliance.org/Technical/release_program/docs/URI_Schemes/V1_0-20080626-A/OMA-TS-URI_Schemes-V1_0-20080626-A.pdf\">http://www.openmobilealliance.org/Technical/release_program/docs/URI_Schemes/V1_0-20080626-A/OMA-TS-URI_Schemes-V1_0-20080626-A.pdf</a> ",
     "OMA-PUSH": "Open Mobile Alliance. OMA Push Version 2.3. URL: <a href=\"http://www.openmobilealliance.org/Technical/release_program/push_v2_3.aspx\">http://www.openmobilealliance.org/Technical/release_program/push_v2_3.aspx</a> ",
-    "ORIGIN": "<a href='http://tools.ietf.org/html/rfc6454'>The Web Origin Concept</a>, A. Barth. IETF.",
+    "ORIGIN": {
+        "authors": [
+            "A. Barth"
+        ],
+        "href": "http://tools.ietf.org/html/rfc6454",
+        "title": "The Web Origin Concept.",
+        "date": "December 2011",
+        "status": "RFC 6454",
+        "publisher": "IETF"
+    },
     "OWL-FEATURES": {
         "authors": [
             "Deborah L. McGuinness",
@@ -2993,8 +3120,8 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "href": "http://www.ietf.org/rfc/rfc2898.txt",
         "title": "PKCS #5 v2.0: Password-Based Cryptography Standard",
-        "date": "IETF RFC 2898",
-        "status": "September 2000",
+        "date": "September 2000",
+        "status": "IETF RFC 2898",
         "publisher": "IETF"
     },
     "PKCS5Amd1": "<a href=\"ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-5v2/pkcs-5v2-0a1.pdf\"><cite>PKCS #5 v2.0 Amendment 1: XML Schema for Password-Based Cryptography</cite></a> RSA Laboratories, March 2007. URL: <a href=\"ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-5v2/pkcs-5v2-0a1.pdf\">ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-5v2/pkcs-5v2-0a1.pdf</a>",
@@ -3015,9 +3142,9 @@ if (typeof berjon === "undefined") berjon = {};
             "Jacob Rossi",
             "Matt Brubeck"
         ],
-        "href": "http://www.w3.org/TR/pointerevents/",
+        "href": "http://www.w3.org/TR/2013/WD-pointerevents-20130115",
         "title": "Pointer Events.",
-        "date": "11 December 2012",
+        "date": "15 January 2013",
         "status": "WD",
         "publisher": "W3C"
     },
@@ -3058,7 +3185,17 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
-    "POSTMSG": "Ian Hickson. <a href='http://dev.w3.org/html5/postmsg'><cite>HTML5 Web Messaging.</cite></a> URL: <a href='http://dev.w3.org/html5/postmsg'>http://dev.w3.org/html5/postmsg</a>",
+    "POSTMSG": {
+        "authors": [
+            "Ian Hickson"
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-webmessaging-20120501",
+        "title": "HTML5 Web Messaging",
+        "date": " 01 May 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
+    "Ian Hickson. <a href='http://dev.w3.org/html5/postmsg'><cite>HTML5 Web Messaging.</cite></a> URL: <a href='http://dev.w3.org/html5/postmsg'>http://dev.w3.org/html5/postmsg</a>",
     "POWDER-DR": {
         "authors": [
             "Kevin Smith",
@@ -3178,10 +3315,10 @@ if (typeof berjon === "undefined") berjon = {};
     },
     "PROGRESS-EVENTS": {
         "authors": [
-            "Charles McCathieNevile"
+            "Anne van Kesteren"
         ],
-        "href": "http://www.w3.org/TR/2011/CR-progress-events-20110922/",
-        "title": "Progress Events 1.0.",
+        "href": "http://www.w3.org/TR/2011/CR-progress-events-20110922",
+        "title": "Progress Events.",
         "date": "22 September 2011",
         "status": "CR",
         "publisher": "W3C"
@@ -3255,7 +3392,16 @@ if (typeof berjon === "undefined") berjon = {};
         "date": "17 March, 2004",
         "status": "TAG Finding"
     },
-    "QUOTA-API": "Kinuko Yasuda. <a href=\"http://www.w3.org/TR/quota-api/\"><cite>Quota Management API</cite></a>. 3 July 2012. W3C Working Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/quota-api/\">http://www.w3.org/TR/quota-api/</a>",
+    "QUOTA-API": {
+        "authors": [
+            "Kinuko Yasuda"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-quota-api-20120703",
+        "title": "Quota Management API",
+        "date": "03 July 2012",
+        "status": "FPWD",
+        "publisher": "W3C"
+    },
     "RANDOM": "D.  Eastlake, S. Crocker, J. Schiller. <a href=\"http://www.ietf.org/rfc/rfc4086.txt\"><cite>Randomness Recommendations for Security.</cite></a>. IETF RFC 4086. June 2005. URL: <a href=\"http://www.ietf.org/rfc/rfc4086.txt\">http://www.ietf.org/rfc/rfc4086.txt</a>",
     "RDB2RDF-UC": {
         "authors": [
@@ -3524,7 +3670,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc1034.txt",
         "title": "DOMAIN NAMES - CONCEPTS AND FACILITIES.",
         "date": "November 1987",
-        "status": "Internet RFC 1034",
+        "status": "RFC 1034",
         "publisher": "IETF"
     },
     "RFC1738": {
@@ -3536,7 +3682,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc1738.txt",
         "title": "Uniform Resource Locators (URL).",
         "date": "December 1994",
-        "status": "Internet RFC 1738",
+        "status": "RFC 1738",
         "publisher": "IETF"
     },
     "RFC1808": {
@@ -3546,7 +3692,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc1808.txt",
         "title": "Relative Uniform Resource Locators.",
         "date": "June 1995",
-        "status": "Internet RFC 1808 (Obsoleted by RFC 3986)",
+        "status": "RFC 1808 (Obsoleted by RFC 3986)",
         "publisher": "IETF"
     },
     "RFC2045": "N. Freed and N. Borenstein. <a href=\"http://www.ietf.org/rfc/rfc2045.txt\"><cite>Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies.</cite></a> November 1996. URL: <a href=\"http://www.ietf.org/rfc/rfc2045.txt\">http://www.ietf.org/rfc/rfc2045.txt</a> ",
@@ -3558,7 +3704,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc2046.txt",
         "title": "Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types.",
         "date": "November 1996",
-        "status": "Internet RFC 2046",
+        "status": "RFC 2046",
         "publisher": "IETF"
     },
     "RFC2119": "S. Bradner. <a href=\"http://www.ietf.org/rfc/rfc2119.txt\"><cite>Key words for use in RFCs to Indicate Requirement Levels.</cite></a> March 1997. Internet RFC 2119.  URL: <a href=\"http://www.ietf.org/rfc/rfc2119.txt\">http://www.ietf.org/rfc/rfc2119.txt</a> ",
@@ -3581,7 +3727,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc2397.txt",
         "title": "The &quot;data&quot; URL scheme.",
         "date": "August 1998",
-        "status": "Internet RFC 2397",
+        "status": "RFC 2397",
         "publisher": "IETF"
     },
     "RFC2426": "F. Dawson, T. Howes. <a href=\"http://www.ietf.org/rfc/rfc2426.txt\"><cite>vCard MIME Directory Profile.</cite></a> September 1998. URL: <a href=\"http://www.ietf.org/rfc/rfc2426.txt\">http://www.ietf.org/rfc/rfc2426.txt</a> ",
@@ -3593,7 +3739,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc2531.txt",
         "title": "Content Feature Schema for Internet Fax.",
         "date": "March 1999",
-        "status": "Internet RFC 2531",
+        "status": "RFC 2531",
         "publisher": "IETF"
     },
     "RFC2533": {
@@ -3603,7 +3749,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc2533",
         "title": "A Syntax for Describing Media Feature Sets.",
         "date": "March 1999",
-        "status": "Internet RFC 2533",
+        "status": "RFC 2533",
         "publisher": "IETF"
     },
     "RFC2534": {
@@ -3615,7 +3761,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc2534",
         "title": "Media Features for Display, Print, and Fax.",
         "date": "March 1999",
-        "status": "Internet RFC 2534",
+        "status": "RFC 2534",
         "publisher": "IETF"
     },
     "RFC3406": "L. Daigle, D. van Gulik, R. Iannella, P. Faltstrom. <a href=\"http://www.ietf.org/rfc/rfc3406.txt\"><cite> URN Namespace Definition Mechanisms.</cite></a>. IETF RFC 3406 October 2002. URL: <a href=\"http://www.ietf.org/rfc/rfc3406.txt\"> http://www.ietf.org/rfc/rfc3406.txt</a>",
@@ -3627,7 +3773,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.rfc-editor.org/rfc/rfc2854.txt",
         "title": "The 'text/html' Media Type.",
         "date": "June 2000",
-        "status": "Internet RFC 2854"
+        "status": "RFC 2854"
     },
     "RFC2978": {
         "authors": [
@@ -3637,7 +3783,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc2978.txt",
         "title": "IANA Charset Registration Procedures.",
         "date": "October 2000",
-        "status": "Internet RFC 2978",
+        "status": "RFC 2978",
         "publisher": "IETF"
     },
     "RFC3023": {
@@ -3649,7 +3795,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3023.txt",
         "title": "XML Media Types",
         "date": "January 2001",
-        "status": "Internet RFC 3023",
+        "status": "RFC 3023",
         "publisher": "IETF"
     },
     "RFC3161": {
@@ -3662,7 +3808,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.rfc-editor.org/rfc/rfc3161.txt",
         "title": "Internet X.509 Public Key Infrastructure Time-Stamp Protocol (TSP)",
         "date": "August 2001",
-        "status": "Internet RFC 3161"
+        "status": "RFC 3161"
     },
     "RFC3161-PKIX-UPDATE-9": "Stefan Santesson, Nick Pope. <a href=\"http://tools.ietf.org/id/draft-ietf-pkix-rfc3161-update-09.txt\"><cite> ESSCertIDv2 update for RFC 3161</cite></a> 29 April 2010, IETF Internet Draft. URL: <a href=\"http://tools.ietf.org/id/draft-ietf-pkix-rfc3161-update-09.txt\"> http://tools.ietf.org/id/draft-ietf-pkix-rfc3161-update-09.txt</a> ",
     "RFC3218": {
@@ -3684,7 +3830,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.rfc-editor.org/rfc/rfc3236.txt",
         "title": "The 'application/xhtml+xml' Media Type.",
         "date": "January 2002",
-        "status": "Internet RFC 3236"
+        "status": "RFC 3236"
     },
     "RFC3279": "W. Polk, R. Housley, L. Bassham. <a href=\"http://www.ietf.org/rfc/rfc3279.txt\"><cite>Algorithmupdates and Identifiers for the Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile</cite></a>. April 2002. Internet RFC 3279. URL: <a href=\"http://www.ietf.org/rfc/rfc3279.txt\">http://www.ietf.org/rfc/rfc3279.txt</a>",
     "RFC3339": "G. Klyne, C. Newman. <a href=\"http://www.ietf.org/rfc/rfc3339.txt\"><cite>Date and Time on the Internet: Timestamps</cite></a>. July 2002. Internet RFC 3339. URL: <a href=\"http://www.ietf.org/rfc/rfc3339.txt\">http://www.ietf.org/rfc/rfc3339.txt</a>",
@@ -3698,7 +3844,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3428.txt",
         "title": "Session Initiation Protocol (SIP) Extension for Instant Messaging.",
         "date": "December 2002",
-        "status": "Internet RFC 3428",
+        "status": "RFC 3428",
         "publisher": "IETF"
     },
     "RFC3490": "P. Faltstrom; P. Hoffman; A. Costello. <a href='http://www.rfc-editor.org/rfc/rfc3490.txt'><cite>Internationalizing Domain Names in Applications (IDNA).</cite></a> March 2003. Internet RFC 3490. URL: <a href='http://www.rfc-editor.org/rfc/rfc3490.txt'>http://www.rfc-editor.org/rfc/rfc3490.txt</a>",
@@ -3710,7 +3856,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3966.txt",
         "title": "The tel URI for Telephone Numbers",
         "date": "December 2004",
-        "status": "Internet RFC 3966",
+        "status": "RFC 3966",
         "publisher": "IETF"
     },
     "RFC3986": {
@@ -3722,7 +3868,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3986.txt",
         "title": "Uniform Resource Identifier (URI): Generic Syntax.",
         "date": "January 2005",
-        "status": "Internet RFC 3986",
+        "status": "RFC 3986",
         "publisher": "IETF"
     },
     "RFC3987": {
@@ -3733,7 +3879,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3987.txt",
         "title": "Internationalized Resource Identifiers (IRIs).",
         "date": "January 2005",
-        "status": "Internet RFC 3987",
+        "status": "RFC 3987",
         "publisher": "IETF"
     },
     "RFC4050": {
@@ -3760,7 +3906,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc4122.txt",
         "title": "A Universally Unique IDentifier (UUID) URN Namespace",
         "date": "July 2005",
-        "status": "Internet RFC 4122",
+        "status": "RFC 4122",
         "publisher": "IETF"
     },
     "RFC4180": "Y. Shafranovich. <a href=\"http://www.ietf.org/rfc/rfc4180.txt\"> <cite>Common Format and MIME Type for Comma-Separated Values (CSV) Files</cite></a> October 2005. Internet RFC 3987. URL: <a href=\"http://www.ietf.org/rfc/rfc4180.txt\">http://www.ietf.org/rfc/rfc4180.txt</a>",
@@ -3773,7 +3919,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc4281.txt",
         "title": "The Codecs Parameter for &quot;Bucket&quot; Media Types",
         "date": "November 2005",
-        "status": "Internet RFC 4281",
+        "status": "RFC 4281",
         "publisher": "IETF"
     },
     "RFC4572": {
@@ -3783,7 +3929,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc4572.txt",
         "title": " Connection-Oriented Media Transport over the Transport Layer Security (TLS) Protocol in the Session Description Protocol (SDP).",
         "date": "July 2006",
-        "status": "Internet RFC 4572",
+        "status": "RFC 4572",
         "publisher": "IETF"
     },
     "RFC4627": {
@@ -3793,7 +3939,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc4627.txt",
         "title": "The application/json Media Type for JavaScript Object Notation (JSON)",
         "date": "July 2006",
-        "status": "Internet RFC 4627",
+        "status": "RFC 4627",
         "publisher": "IETF"
     },
     "RFC4770": {
@@ -3804,7 +3950,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc4770.txt",
         "title": "vCard Extensions for Instant Messaging (IM)",
         "date": "January 2007",
-        "status": "Internet RFC 4770",
+        "status": "RFC 4770",
         "publisher": "IETF"
     },
     "RFC4868": {
@@ -3829,7 +3975,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.rfc-editor.org/rfc/rfc5545.txt",
         "title": "Internet Calendaring and Scheduling Core Object Specification (iCalendar).",
         "date": "September 2009",
-        "status": "Internet RFC 5545"
+        "status": "RFC 5545"
     },
     "RFC5646": {
         "authors": [
@@ -3839,7 +3985,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.rfc-editor.org/rfc/rfc5646.txt",
         "title": "Tags for Identifying Languages.",
         "date": "September 2009",
-        "status": "Internet RFC 5646"
+        "status": "RFC 5646"
     },
     "RFC5724": "E. Wilde, A. Vaha-Sipila. <a href=\"http://www.ietf.org/rfc/rfc5724.txt\">URI Scheme for Global System for Mobile Communications (GSM) Short Message Service (SMS)</a>. January 2010. Request for Comments. URL: <a href=\"http://www.ietf.org/rfc/rfc5724.txt\">http://www.ietf.org/rfc/rfc5724.txt</a>",
     "RFC5785": {
@@ -4054,7 +4200,7 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Mounir Lamouri"
         ],
-        "href": "http://www.w3.org/TR/screen-orientation/",
+        "href": "http://www.w3.org/TR/2012/WD-screen-orientation-20121206",
         "title": "The Screen Orientation API.",
         "date": "06 December 2012",
         "status": "WD",
@@ -4079,7 +4225,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://tools.ietf.org/html/rfc3264",
         "title": "An Offer/Answer Model with the Session Description Protocol (SDP).",
         "date": "June 2002",
-        "status": "Internet RFC 3264",
+        "status": "RFC 3264",
         "publisher": "IETF"
     },
     "SDPLABEL": {
@@ -4090,19 +4236,22 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://tools.ietf.org/html/rfc4574",
         "title": "The Session Description Protocol (SDP) Label Attribute.",
         "date": "August 2006",
-        "status": "Internet RFC 4574",
+        "status": "RFC 4574",
         "publisher": "IETF"
     },
     "SECG1": "<a href=\"http://www.secg.org/download/aid-780/sec1-v2.pdf\"><cite>SEC1: Elliptic Curve Cryptography, Version 2.0, Standards for Efficient Cryptography Group</cite></a>. May 2009. URL: <a href=\"http://www.secg.org/download/aid-780/sec1-v2.pdf\">http://www.secg.org/download/aid-780/sec1-v2.pdf</a> ",
     "SELECT": {
         "authors": [
-            "Daniel Glazman"
+            "Tantek Çelik",
+            "Elika J. Etemad",
+            "Daniel Glazman",
+            "Ian Hickson"
         ],
         "etAl": true,
-        "href": "http://www.w3.org/TR/2009/WD-css3-selectors-20090310",
+        "href": "http://www.w3.org/TR/css3-selectors/",
         "title": "Selectors Level 3.",
-        "date": "10 March 2009",
-        "status": "WD",
+        "date": "29 September 2011",
+        "status": "REC",
         "publisher": "W3C"
     },
     "SELECTORS-LEVEL-3": "Daniel Glazman; et al. <a href=\"http://www.w3.org/TR/2011/REC-css3-selectors-20110929\"><cite>Selectors Level 3.</cite></a> W3C Recommendation 29 September 2011 URL: <a href=\"http://www.w3.org/TR/2011/REC-css3-selectors-20110929\">http://www.w3.org/TR/2011/REC-css3-selectors-20110929</a> ",
@@ -4111,10 +4260,10 @@ if (typeof berjon === "undefined") berjon = {};
             "Lachlan Hunt",
             "Anne van Kesteren"
         ],
-        "href": "http://www.w3.org/TR/2008/WD-selectors-api-20081114",
-        "title": "Selectors API.",
-        "date": "14 November 2008",
-        "status": "WD",
+        "href": "http://www.w3.org/TR/2012/PR-selectors-api-20121213",
+        "title": "Selectors API Level 1.",
+        "date": "13 December 2012",
+        "status": "PR",
         "publisher": "W3C"
     },
     "SELECTORS-API2": "Lachlan Hunt. <a href=\"http://www.w3.org/TR/selectors-api2/\">Selectors API Level 2</a>. 19 January 2010. Working Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/selectors-api2/\">http://www.w3.org/TR/selectors-api2/</a>",
@@ -4236,7 +4385,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3851.txt",
         "title": "S/MIME Version 3.1 Message Specification.",
         "date": "July 2004",
-        "status": "Internet RFC 3851",
+        "status": "RFC 3851",
         "publisher": "IETF"
     },
     "SML": {
@@ -4547,7 +4696,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://tools.ietf.org/html/rfc5389",
         "title": "Session Traversal Utilities for NAT (STUN).",
         "date": "October 2008",
-        "status": "Internet RFC 5389",
+        "status": "RFC 5389",
         "publisher": "IETF"
     },
     "STUN-URI": {
@@ -4942,11 +5091,22 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://tools.ietf.org/html/rfc5246",
         "title": "The Transport Layer Security (TLS) Protocol, Version 1.2.",
         "date": "August 2008",
-        "status": "Internet RFC 5246",
+        "status": "RFC 5246",
         "publisher": "IETF"
     },
     "Tobin": "R. Tobin. <a href=\"http://lists.w3.org/Archives/Member/w3c-xml-core-wg/2000OctDec/0054\"><cite>Infoset for external entities.</cite></a> 2000. URL: <a href=\"http://lists.w3.org/Archives/Member/w3c-xml-core-wg/2000OctDec/0054\">http://lists.w3.org/Archives/Member/w3c-xml-core-wg/2000OctDec/0054</a> [XML Core mailing list, <a href=\"http://cgi.w3.org/MemberAccess/AccessRequest\">W3C Member Only</a>].",
-    "TOUCH-EVENTS": "Matt Brubeck; Sangwhan Moon; Doug Schepers; <a href=\"http://www.w3.org/TR/touch-events/\"><cite>Touch Events version 1</cite></a> URL: <a href=\"http://www.w3.org/TR/touch-events/\">http://www.w3.org/TR/touch-events</a>",
+    "TOUCH-EVENTS": {
+      "authors": [
+          "Doug Schepers",
+          "Sangwhan Moon",
+          "Matt Brubeck"
+      ],
+      "href": "http://www.w3.org/TR/2013/WD-touch-events-20130124",
+      "title": "Touch Events version 1.",
+      "date": "24 January 2013",
+      "status": "WD",
+      "publisher": "W3C"
+    },
     "TRACKING-COMPLIANCE": {
         "authors": [
             "Justin Brookman",
@@ -5011,7 +5171,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://tools.ietf.org/html/rfc5766",
         "title": "Traversal Using Relays around NAT (TURN): Relay Extensions to Session Traversal Utilities for NAT (STUN).",
         "date": "April 2010",
-        "status": "Internet RFC 5766",
+        "status": "RFC 5766",
         "publisher": "IETF"
     },
     "TURN-URI": {
@@ -5212,7 +5372,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3986.txt",
         "title": "Uniform Resource Identifiers (URI): generic syntax.",
         "date": "January 2005",
-        "status": "Internet RFC 3986",
+        "status": "RFC 3986",
         "publisher": "IETF"
     },
     "URI-CLARIFICATION": {
@@ -5236,7 +5396,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.rfc-editor.org/rfc/rfc6570.txt",
         "title": "URI Template.",
         "date": "March 2012",
-        "status": "Internet RFC 6570"
+        "status": "RFC 6570"
     },
     "URN": "R. Moats. <a href=\"http://www.ietf.org/rfc/rfc2141.txt\"><cite>URN Syntax.</cite></a> IETF RFC 2141. May 1997.  URL: <a href=\"http://www.ietf.org/rfc/rfc2141.txt\">http://www.ietf.org/rfc/rfc2141.txt</a>",
     "URN-OID": "M. Mealling. <a href=\"http://www.ietf.org/rfc/rfc3061.txt\"><cite>A URN Namespace of Object Identifiers. </cite></a>. IETF RFC 3061. February 2001. URL: <a href=\"http://www.ietf.org/rfc/rfc3061.txt\">http://www.ietf.org/rfc/rfc3061.txt</a>",
@@ -5571,7 +5731,16 @@ if (typeof berjon === "undefined") berjon = {};
     },
     "WCSS11": "Open Mobile Alliance. <a href=\"http://www.openmobilealliance.org/technical/release_program/docs/Browsing/V2_3-20080331-A/OMA-WAP-WCSS-V1_1-20061020-A.pdf\"><cite>Wireless CSS Specification.</cite></a> October 2006. Approved Version 1.1. URL: <a href=\"http://www.openmobilealliance.org/technical/release_program/docs/Browsing/V2_3-20080331-A/OMA-WAP-WCSS-V1_1-20061020-A.pdf\">http://www.openmobilealliance.org/technical/release_program/docs/Browsing/V2_3-20080331-A/OMA-WAP-WCSS-V1_1-20061020-A.pdf</a> ",
     "WCSS12": "Open Mobile Alliance. <a href=\"http://www.openmobilealliance.org/ftp/Public_documents/MCE/MAE/Permanent_documents/OMA-TS-WCSS-V1_2-20070921-D.zip\"><cite>Wireless CSS Specification Version 1.2.</cite></a> 21 September 2007. (Work in progress.) URL: <a href=\"http://www.openmobilealliance.org/ftp/Public_documents/MCE/MAE/Permanent_documents/OMA-TS-WCSS-V1_2-20070921-D.zip\">http://www.openmobilealliance.org/ftp/Public_documents/MCE/MAE/Permanent_documents/OMA-TS-WCSS-V1_2-20070921-D.zip</a> ",
-    "WEBAPPS-MANIFEST-API": "Anant Narayanan. <a href=\"http://dvcs.w3.org/hg/app-manifest/raw-file/tip/index.html\"><cite>Web Application Manifest Format and Management APIs</cite></a>. W3C Editor's Draft. (Work in progress.) URL: <a href=\"http://dvcs.w3.org/hg/app-manifest/raw-file/tip/index.html\">http://dvcs.w3.org/hg/app-manifest/raw-file/tip/index.html</a> ",
+    "WEBAPPS-MANIFEST-API": {
+        "authors": [
+            "Anant Narayanan"
+        ],
+        "href": "https://dvcs.w3.org/hg/app-manifest/raw-file/tip/index.html",
+        "title": "Web Application Manifest Format and Management APIs.",
+        "date": "30 January 2013",
+        "status": "ED",
+        "publisher": "W3C"
+    },
     "WEBAPP-PRIVACY-BESTPRACTICES": "Frederick Hirsch. <a href=\"http://www.w3.org/TR/app-privacy-bp/\"><cite>Web Application Privacy Best Practices</cite></a>. W3C Working Group Note. URL: <a href=\"http://www.w3.org/TR/app-privacy-bp/\">http://www.w3.org/TR/app-privacy-bp/</a> ",
     "WEB-FORMS-2": {
         "authors": [
@@ -5680,10 +5849,10 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Ian Hickson"
         ],
-        "href": "http://www.w3.org/TR/2009/WD-webstorage-20090910/",
+        "href": "http://www.w3.org/TR/2011/CR-webstorage-20111208",
         "title": "Web Storage.",
-        "date": "10 September 2009",
-        "status": "WD",
+        "date": "08 December 2011",
+        "status": "CR",
         "publisher": "W3C"
     },
     "WEBVTT": {
@@ -5700,10 +5869,10 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Ian Hickson"
         ],
-        "href": "http://www.w3.org/TR/2011/WD-workers-20110901/",
+        "href": "http://www.w3.org/TR/2012/CR-workers-20120501",
         "title": "Web Workers.",
-        "date": "1 September 2011",
-        "status": "WD",
+        "date": "01 May 2012",
+        "status": "CR",
         "publisher": "W3C"
     },
     "WICD": {
@@ -5739,7 +5908,16 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "CR",
         "publisher": "W3C"
     },
-    "WIDGETS": "Marcos Cáceres. <a href=\"http://www.w3.org/TR/widgets/\"><cite>Widget Packaging and XML Configuration</cite></a>. W3C Recommendation. URL: <a href=\"http://www.w3.org/TR/widgets/\">http://www.w3.org/TR/widgets/</a> ",
+    "WIDGETS": {
+        "authors": [
+            "Marcos Cáceres"
+        ],
+        "href": "http://www.w3.org/TR/widgets/",
+        "title": "Widget Packaging and XML Configuration",
+        "date": "27 November 2012",
+        "status": "REC",
+        "publisher": "W3C"
+    },
     "WIDGETS-APIS": "Marcos Cáceres <a href=\"http://www.w3.org/TR/widgets-api/\"><cite>Widget Interface.</cite></a> W3C Proposed Recommendation. URL: <a href=\"http://www.w3.org/TR/widgets-api/\">http://www.w3.org/TR/widgets-api/</a> ",
     "WIDGETS-DIGSIG": {
         "authors": [
@@ -5789,7 +5967,18 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
-    "WOFF": "Jonathan Kew, Tal Leming, Erik van Blokland. <a href=\"http://www.w3.org/TR/WOFF/\">WOFF File Format 1.0</a>. 04 August 2011. Candidate Recommendation. URL: <a href=\"http://www.w3.org/TR/WOFF/\">http://www.w3.org/TR/WOFF/</a>",
+    "WOFF": {
+        "authors": [
+            "Jonathan Kew",
+            "Tal Leming",
+            "Erik van Blokland"
+        ],
+        "href": "http://www.w3.org/TR/WOFF/",
+        "title": "WOFF File Format 1.0.",
+        "date": "13 December 2012",
+        "status": "REC",
+        "publisher": "W3C"
+    },
     "WORDNET-RDF": {
         "authors": [
             "Aldo Gangemi",
@@ -7278,11 +7467,14 @@ if (typeof berjon === "undefined") berjon = {};
     "XHR": "Anne van Kesteren. <a href='http://www.w3.org/TR/XMLHttpRequest/'>XMLHttpRequest</a>",
     "XMLHTTPREQUEST": {
         "authors": [
+            "Julian Aubourg",
+            "Jungkee Song",
+            "Hallvord R. M. Steen",
             "Anne van Kesteren"
         ],
-        "href": "http://www.w3.org/TR/2008/WD-XMLHttpRequest-20080415",
-        "title": "The XMLHttpRequest Object.",
-        "date": "15 April 2008",
+        "href": "http://www.w3.org/TR/2012/WD-XMLHttpRequest-20121206/",
+        "title": "XMLHttpRequest.",
+        "date": "6 December 2012",
         "status": "WD",
         "publisher": "W3C"
     },
