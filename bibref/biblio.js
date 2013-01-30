@@ -5731,7 +5731,16 @@ if (typeof berjon === "undefined") berjon = {};
     },
     "WCSS11": "Open Mobile Alliance. <a href=\"http://www.openmobilealliance.org/technical/release_program/docs/Browsing/V2_3-20080331-A/OMA-WAP-WCSS-V1_1-20061020-A.pdf\"><cite>Wireless CSS Specification.</cite></a> October 2006. Approved Version 1.1. URL: <a href=\"http://www.openmobilealliance.org/technical/release_program/docs/Browsing/V2_3-20080331-A/OMA-WAP-WCSS-V1_1-20061020-A.pdf\">http://www.openmobilealliance.org/technical/release_program/docs/Browsing/V2_3-20080331-A/OMA-WAP-WCSS-V1_1-20061020-A.pdf</a> ",
     "WCSS12": "Open Mobile Alliance. <a href=\"http://www.openmobilealliance.org/ftp/Public_documents/MCE/MAE/Permanent_documents/OMA-TS-WCSS-V1_2-20070921-D.zip\"><cite>Wireless CSS Specification Version 1.2.</cite></a> 21 September 2007. (Work in progress.) URL: <a href=\"http://www.openmobilealliance.org/ftp/Public_documents/MCE/MAE/Permanent_documents/OMA-TS-WCSS-V1_2-20070921-D.zip\">http://www.openmobilealliance.org/ftp/Public_documents/MCE/MAE/Permanent_documents/OMA-TS-WCSS-V1_2-20070921-D.zip</a> ",
-    "WEBAPPS-MANIFEST-API": "Anant Narayanan. <a href=\"http://dvcs.w3.org/hg/app-manifest/raw-file/tip/index.html\"><cite>Web Application Manifest Format and Management APIs</cite></a>. W3C Editor's Draft. (Work in progress.) URL: <a href=\"http://dvcs.w3.org/hg/app-manifest/raw-file/tip/index.html\">http://dvcs.w3.org/hg/app-manifest/raw-file/tip/index.html</a> ",
+    "WEBAPPS-MANIFEST-API": {
+        "authors": [
+            "Anant Narayanan"
+        ],
+        "href": "https://dvcs.w3.org/hg/app-manifest/raw-file/tip/index.html",
+        "title": "Web Application Manifest Format and Management APIs.",
+        "date": "30 January 2013",
+        "status": "ED",
+        "publisher": "W3C"
+    },
     "WEBAPP-PRIVACY-BESTPRACTICES": "Frederick Hirsch. <a href=\"http://www.w3.org/TR/app-privacy-bp/\"><cite>Web Application Privacy Best Practices</cite></a>. W3C Working Group Note. URL: <a href=\"http://www.w3.org/TR/app-privacy-bp/\">http://www.w3.org/TR/app-privacy-bp/</a> ",
     "WEB-FORMS-2": {
         "authors": [
