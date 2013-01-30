@@ -4129,13 +4129,16 @@ if (typeof berjon === "undefined") berjon = {};
     "SECG1": "<a href=\"http://www.secg.org/download/aid-780/sec1-v2.pdf\"><cite>SEC1: Elliptic Curve Cryptography, Version 2.0, Standards for Efficient Cryptography Group</cite></a>. May 2009. URL: <a href=\"http://www.secg.org/download/aid-780/sec1-v2.pdf\">http://www.secg.org/download/aid-780/sec1-v2.pdf</a> ",
     "SELECT": {
         "authors": [
-            "Daniel Glazman"
+            "Tantek Çelik",
+            "Elika J. Etemad",
+            "Daniel Glazman",
+            "Ian Hickson"
         ],
         "etAl": true,
-        "href": "http://www.w3.org/TR/2009/WD-css3-selectors-20090310",
+        "href": "http://www.w3.org/TR/css3-selectors/",
         "title": "Selectors Level 3.",
-        "date": "10 March 2009",
-        "status": "WD",
+        "date": "29 September 2011",
+        "status": "REC",
         "publisher": "W3C"
     },
     "SELECTORS-LEVEL-3": "Daniel Glazman; et al. <a href=\"http://www.w3.org/TR/2011/REC-css3-selectors-20110929\"><cite>Selectors Level 3.</cite></a> W3C Recommendation 29 September 2011 URL: <a href=\"http://www.w3.org/TR/2011/REC-css3-selectors-20110929\">http://www.w3.org/TR/2011/REC-css3-selectors-20110929</a> ",
