@@ -51,7 +51,17 @@ if (typeof berjon === "undefined") berjon = {};
     "AES-WRAP-PAD": "R. Housley, M. Dworkin. <a href=\"http://www.ietf.org/rfc/rfc5649.txt\"><cite>RFC 5649: Advanced Encryption Standard (AES) Key Wrap with Padding Algorithm</cite></a>.   IETF Informational RFC, August 2009. URL:  <a href=\"http://www.ietf.org/rfc/rfc5649.txt\"> http://www.ietf.org/rfc/rfc5649.txt</a>. ",
     "AGBDL": "Charles Jacobs; et al. <a href=\"http://grail.cs.washington.edu/pub/papers/Jacobs2003.pdf\">&ldquo;Adaptive Grid Based Document Layout&rdquo;</a> in: <cite>ACM Transactions on Graphics.</cite> 22. 3. pp. 838&#8211;847. July 2003. URL: <a href=\"http://grail.cs.washington.edu/pub/papers/Jacobs2003.pdf\">http://grail.cs.washington.edu/pub/papers/Jacobs2003.pdf</a> ",
     "ALT-TECHNIQUES": "Steve Faulkner <a href=\"http://www.w3.org/TR/html-alt-techniques/\"><cite>HTML5: Techniques for providing useful text alternatives</cite></a>. W3C Working Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/html-alt-techniques/\">http://www.w3.org/TR/html-alt-techniques/</a> ",
-    "ANIMATION-TIMING": "James Robinson; Cameron McCormack. <a href=\"http://www.w3.org/TR/animation-timing/\"><cite>Timing control for script-based animations.</cite></a> URL: <a href=\"http://www.w3.org/TR/animation-timing/\">http://www.w3.org/TR/animation-timing/</a>",
+    "ANIMATION-TIMING": {
+        "authors": [
+            "James Robinson",
+            "Cameron McCormack"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-animation-timing-20120221",
+        "title": "Timing control for script-based animations.",
+        "date": "21 February 2012",
+        "status": "LCWD",
+        "publisher": "W3C"
+    },
     "ANSI-X9-44-2007": "<a href=\"http://webstore.ansi.org/RecordDetail.aspx?sku=ANSI+X9.44-2007\"><cite>ANSI X9.44-2007: Key Establishment Using Integer Factorization Cryptography.</cite></a> URL: <a href=\"http://webstore.ansi.org/RecordDetail.aspx?sku=ANSI+X9.44-2007\">http://webstore.ansi.org/RecordDetail.aspx?sku=ANSI+X9.44-2007</a>",
     "ARABIC-MATH": {
         "authors": [
