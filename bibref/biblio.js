@@ -5030,7 +5030,18 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "IETF"
     },
     "Tobin": "R. Tobin. <a href=\"http://lists.w3.org/Archives/Member/w3c-xml-core-wg/2000OctDec/0054\"><cite>Infoset for external entities.</cite></a> 2000. URL: <a href=\"http://lists.w3.org/Archives/Member/w3c-xml-core-wg/2000OctDec/0054\">http://lists.w3.org/Archives/Member/w3c-xml-core-wg/2000OctDec/0054</a> [XML Core mailing list, <a href=\"http://cgi.w3.org/MemberAccess/AccessRequest\">W3C Member Only</a>].",
-    "TOUCH-EVENTS": "Matt Brubeck; Sangwhan Moon; Doug Schepers; <a href=\"http://www.w3.org/TR/touch-events/\"><cite>Touch Events version 1</cite></a> URL: <a href=\"http://www.w3.org/TR/touch-events/\">http://www.w3.org/TR/touch-events</a>",
+    "TOUCH-EVENTS": {
+      "authors": [
+          "Doug Schepers",
+          "Sangwhan Moon",
+          "Matt Brubeck"
+      ],
+      "href": "http://www.w3.org/TR/2013/WD-touch-events-20130124",
+      "title": "Touch Events version 1.",
+      "date": "24 January 2013",
+      "status": "WD",
+      "publisher": "W3C"
+    },
     "TRACKING-COMPLIANCE": {
         "authors": [
             "Justin Brookman",
