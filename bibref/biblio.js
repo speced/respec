@@ -3259,10 +3259,10 @@ if (typeof berjon === "undefined") berjon = {};
     },
     "PROGRESS-EVENTS": {
         "authors": [
-            "Charles McCathieNevile"
+            "Anne van Kesteren"
         ],
-        "href": "http://www.w3.org/TR/2011/CR-progress-events-20110922/",
-        "title": "Progress Events 1.0.",
+        "href": "http://www.w3.org/TR/2011/CR-progress-events-20110922",
+        "title": "Progress Events.",
         "date": "22 September 2011",
         "status": "CR",
         "publisher": "W3C"
