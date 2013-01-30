@@ -577,7 +577,22 @@ if (typeof berjon === "undefined") berjon = {};
     },
     "CSS3-2D-TRANSFORMS": "Simon Fraser; Dean Jackson; David Hyatt; Chris Marrin; Edward O'Connor. <a href=\"http://www.w3.org/TR/css3-2d-transforms/\"><cite>CSS 2D Transforms Module Level 3.</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-2d-transforms/\">http://www.w3.org/TR/css3-2d-transforms/</a> ",
     "CSS3-3D-TRANSFORMS": "Dean Jackson; David Hyatt; Chris Marrin. <a href=\"http://www.w3.org/TR/css3-3d-transforms/\"><cite>CSS 3D Transforms Module Level 3.</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-3d-transforms/\">http://www.w3.org/TR/css3-3d-transforms</a> ",
-    "CSS3-TRANSFORMS": "Simon Fraser; Dean Jackson; David Hyatt; Chris Marrin; Edward O'Connor; Dirk Schulze; Aryeh Gregor. <a href=\"http://www.w3.org/TR/css3-transforms/\"><cite>CSS Transforms.</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-transforms/\">http://www.w3.org/TR/css3-transforms/</a> ",
+    "CSS3-TRANSFORMS": {
+        "authors": [
+            "Simon Fraser",
+            "Dean Jackson",
+            "David Hyatt",
+            "Chris Marrin",
+            "Edward O'Connor",
+            "Dirk Schulze",
+            "Aryeh Gregor"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-css3-transforms-20120911",
+        "title": "CSS Transforms.",
+        "date": "11 September 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
     "CSS3-ANIMATIONS": {
         "authors": [
             "Dean Jackson (Apple Inc)",
