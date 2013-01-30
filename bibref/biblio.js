@@ -2117,7 +2117,20 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "NOTE",
         "publisher": "W3C"
     },
-    "INDEXEDDB": "Nikunj Mehta, Jonas Sicking, Eliot Graff, Andrei Popescu, Jeremy Orlow. <a href=\"http://www.w3.org/TR/IndexedDB/\">Indexed Database API</a>. April 2011. Working Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/IndexedDB/\">http://www.w3.org/TR/IndexedDB/</a>",
+    "INDEXEDDB": {
+        "authors": [
+            "Nikunj Mehta",
+            "Jonas Sicking",
+            "Eliot Graff",
+            "Andrei Popescu",
+            "Jeremy Orlow"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-IndexedDB-20120524/",
+        "title": "Indexed Database API.",
+        "date": "24 May 2012",
+        "status": "LCWD",
+        "publisher": "W3C"
+    },
     "INKML": {
         "authors": [
             "Stephen M. Watt",
