@@ -4195,10 +4195,10 @@ if (typeof berjon === "undefined") berjon = {};
             "Lachlan Hunt",
             "Anne van Kesteren"
         ],
-        "href": "http://www.w3.org/TR/2008/WD-selectors-api-20081114",
-        "title": "Selectors API.",
-        "date": "14 November 2008",
-        "status": "WD",
+        "href": "http://www.w3.org/TR/2012/PR-selectors-api-20121213",
+        "title": "Selectors API Level 1.",
+        "date": "13 December 2012",
+        "status": "PR",
         "publisher": "W3C"
     },
     "SELECTORS-API2": "Lachlan Hunt. <a href=\"http://www.w3.org/TR/selectors-api2/\">Selectors API Level 2</a>. 19 January 2010. Working Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/selectors-api2/\">http://www.w3.org/TR/selectors-api2/</a>",
