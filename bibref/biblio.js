@@ -3349,7 +3349,16 @@ if (typeof berjon === "undefined") berjon = {};
         "date": "17 March, 2004",
         "status": "TAG Finding"
     },
-    "QUOTA-API": "Kinuko Yasuda. <a href=\"http://www.w3.org/TR/quota-api/\"><cite>Quota Management API</cite></a>. 3 July 2012. W3C Working Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/quota-api/\">http://www.w3.org/TR/quota-api/</a>",
+    "QUOTA-API": {
+        "authors": [
+            "Kinuko Yasuda"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-quota-api-20120703",
+        "title": "Quota Management API",
+        "date": "03 July 2012",
+        "status": "FPWD",
+        "publisher": "W3C"
+    },
     "RANDOM": "D.  Eastlake, S. Crocker, J. Schiller. <a href=\"http://www.ietf.org/rfc/rfc4086.txt\"><cite>Randomness Recommendations for Security.</cite></a>. IETF RFC 4086. June 2005. URL: <a href=\"http://www.ietf.org/rfc/rfc4086.txt\">http://www.ietf.org/rfc/rfc4086.txt</a>",
     "RDB2RDF-UC": {
         "authors": [
