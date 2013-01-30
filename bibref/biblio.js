@@ -491,7 +491,16 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "CSP": "Adam Barth; Brendon Sterne. <a href=\"http://www.w3.org/TR/CSP/\"><cite>CSP.</cite></a> URL: <a href=\"http://www.w3.org/TR/CSP/\">http://www.w3.org/TR/CSP/</a> ",
-    "CSS-ADAPTATION": "Rune Lillesveen. <a href=\"http://dev.w3.org/csswg/css-device-adapt/\">CSS Device Adaptation</a>. 23 January 2012. Editor's Draft. (Work in progress.) URL: <a href=\"http://dev.w3.org/csswg/css-device-adapt/\">http://dev.w3.org/csswg/css-device-adapt/</a>",
+    "CSS-ADAPTATION": {
+        "authors": [
+            "Rune Lillesveen"
+        ],
+        "href": "http://www.w3.org/TR/2011/WD-css-device-adapt-20110915",
+        "title": "CSS Device Adaptation.",
+        "date": "15 September 2011",
+        "status": "FPWD",
+        "publisher": "W3C"
+    },
     "CSS-MOBILE": {
         "authors": [
             "Svante Schubert"
