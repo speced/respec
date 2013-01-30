@@ -5899,7 +5899,16 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "CR",
         "publisher": "W3C"
     },
-    "WIDGETS": "Marcos Cáceres. <a href=\"http://www.w3.org/TR/widgets/\"><cite>Widget Packaging and XML Configuration</cite></a>. W3C Recommendation. URL: <a href=\"http://www.w3.org/TR/widgets/\">http://www.w3.org/TR/widgets/</a> ",
+    "WIDGETS": {
+        "authors": [
+            "Marcos Cáceres"
+        ],
+        "href": "http://www.w3.org/TR/widgets/",
+        "title": "Widget Packaging and XML Configuration",
+        "date": "27 November 2012",
+        "status": "REC",
+        "publisher": "W3C"
+    },
     "WIDGETS-APIS": "Marcos Cáceres <a href=\"http://www.w3.org/TR/widgets-api/\"><cite>Widget Interface.</cite></a> W3C Proposed Recommendation. URL: <a href=\"http://www.w3.org/TR/widgets-api/\">http://www.w3.org/TR/widgets-api/</a> ",
     "WIDGETS-DIGSIG": {
         "authors": [
