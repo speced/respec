@@ -687,7 +687,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Brad Kemper"
         ],
         "href": "http://www.w3.org/TR/2012/CR-css3-background-20120724/",
-        "title": "CSS3 module: Backgrounds and Borders.",
+        "title": "CSS Backgrounds and Borders Module Level 3.",
         "date": "24 July 2012",
         "status": "CR",
         "publisher": "W3C"
