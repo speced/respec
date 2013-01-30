@@ -7406,11 +7406,14 @@ if (typeof berjon === "undefined") berjon = {};
     "XHR": "Anne van Kesteren. <a href='http://www.w3.org/TR/XMLHttpRequest/'>XMLHttpRequest</a>",
     "XMLHTTPREQUEST": {
         "authors": [
+            "Julian Aubourg",
+            "Jungkee Song",
+            "Hallvord R. M. Steen",
             "Anne van Kesteren"
         ],
-        "href": "http://www.w3.org/TR/2008/WD-XMLHttpRequest-20080415",
-        "title": "The XMLHttpRequest Object.",
-        "date": "15 April 2008",
+        "href": "http://www.w3.org/TR/2012/WD-XMLHttpRequest-20121206/",
+        "title": "XMLHttpRequest.",
+        "date": "6 December 2012",
         "status": "WD",
         "publisher": "W3C"
     },
