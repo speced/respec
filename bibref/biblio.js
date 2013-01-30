@@ -1292,7 +1292,19 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
-    "DOM4": "Anne van Kesteren; Aryeh Gregor; Ms2ger. <a href=\"http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html/\"><cite>DOM4.</cite></a> URL: <a href=\"http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html/\">http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html/</a> ",
+    "DOM4": {
+        "authors": [
+            "Anne van Kesteren",
+            "Aryeh Gregor",
+            "Lachlan Hunt",
+            "Ms2ger"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-dom-20121206",
+        "title": "DOM4.",
+        "date": "6 December 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
     "DOM-LEVEL-1": {
         "authors": [
             "Vidur Apparao"
