@@ -1691,9 +1691,9 @@ if (typeof berjon === "undefined") berjon = {};
             "Arun Ranganathan",
             "Jonas Sicking"
         ],
-        "href": "http://www.w3.org/TR/2011/WD-FileAPI-20111020/",
+        "href": "http://www.w3.org/TR/2012/WD-FileAPI-20121025",
         "title": "File API.",
-        "date": "20 October 2011",
+        "date": "25 October 2012",
         "status": "WD",
         "publisher": "W3C"
     },
