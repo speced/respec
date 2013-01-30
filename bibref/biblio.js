@@ -689,7 +689,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Chris Marrin",
             "L. David Baron"
         ],
-        "href": "http://www.w3.org/TR/css3-transitions/",
+        "href": "http://www.w3.org/TR/2012/WD-css3-transitions-20120403/",
         "title": "CSS Transitions.",
         "date": "03 April 2012",
         "status": "WD",
