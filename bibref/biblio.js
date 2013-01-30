@@ -670,7 +670,18 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
-    "CSS3-BG": "Elika J. Etemad; Bert Bos; Brad Kemper. <a href=\"http://www.w3.org/TR/css3-background/\"><cite>CSS Backgrounds and Borders Module Level 3.</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-background/\">http://www.w3.org/TR/css3-background/</a> ",
+    "CSS3-BG": {
+        "authors": [
+            "Bert Bos",
+            "Elika J. Etemad",
+            "Brad Kemper"
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-css3-background-20120724/",
+        "title": "CSS3 module: Backgrounds and Borders.",
+        "date": "24 July 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
     "CSS3BORDER": {
         "authors": [
             "Tapas Roy"
