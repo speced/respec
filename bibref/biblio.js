@@ -5859,7 +5859,18 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
-    "WOFF": "Jonathan Kew, Tal Leming, Erik van Blokland. <a href=\"http://www.w3.org/TR/WOFF/\">WOFF File Format 1.0</a>. 04 August 2011. Candidate Recommendation. URL: <a href=\"http://www.w3.org/TR/WOFF/\">http://www.w3.org/TR/WOFF/</a>",
+    "WOFF": {
+        "authors": [
+            "Jonathan Kew",
+            "Tal Leming",
+            "Erik van Blokland"
+        ],
+        "href": "http://www.w3.org/TR/WOFF/",
+        "title": "WOFF File Format 1.0.",
+        "date": "13 December 2012",
+        "status": "REC",
+        "publisher": "W3C"
+    },
     "WORDNET-RDF": {
         "authors": [
             "Aldo Gangemi",
