@@ -1422,10 +1422,10 @@ if (typeof berjon === "undefined") berjon = {};
             "Jacob Rossi",
             "Doug Schepers",
             "Bj&#246;rn H&#246;hrmann",
-            "Tom Pixley",
-            "Philippe Le H&#233;garet"
+            "Philippe Le H&#233;garet",
+            "Tom Pixley"
         ],
-        "href": "http://www.w3.org/TR/2012/WD-DOM-Level-3-Events-20120906/",
+        "href": "http://www.w3.org/TR/2012/WD-DOM-Level-3-Events-20120906",
         "title": "Document Object Model (DOM) Level 3 Events Specification.",
         "date": "06 September 2012",
         "status": "WD",
