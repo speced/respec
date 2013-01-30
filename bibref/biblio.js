@@ -441,10 +441,10 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Anne van Kesteren"
         ],
-        "href": "http://www.w3.org/TR/2009/WD-cors-20090317",
+        "href": "http://www.w3.org/TR/2013/CR-cors-20130129",
         "title": "Cross-Origin Resource Sharing.",
-        "date": "17 March 2009",
-        "status": "WD",
+        "date": "29 January 2013",
+        "status": "CR",
         "publisher": "W3C"
     },
     "CORE-DEVICE": {
