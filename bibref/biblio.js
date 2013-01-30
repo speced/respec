@@ -4200,7 +4200,7 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Mounir Lamouri"
         ],
-        "href": "http://www.w3.org/TR/screen-orientation/",
+        "href": "http://www.w3.org/TR/2012/WD-screen-orientation-20121206",
         "title": "The Screen Orientation API.",
         "date": "06 December 2012",
         "status": "WD",
