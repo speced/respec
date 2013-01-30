@@ -984,10 +984,10 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Anne van Kesteren"
         ],
-        "href": "http://www.w3.org/TR/cssom/",
+        "href": "http://www.w3.org/TR/2011/WD-cssom-20110712",
         "title": "CSSOM.",
         "date": "12 July 2011",
-        "status": "WD",
+        "status": "FPWD",
         "publisher": "W3C"
     },
     "CSSOM-VIEW": {
