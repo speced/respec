@@ -5775,10 +5775,10 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Ian Hickson"
         ],
-        "href": "http://www.w3.org/TR/2009/WD-webstorage-20090910/",
+        "href": "http://www.w3.org/TR/2011/CR-webstorage-20111208",
         "title": "Web Storage.",
-        "date": "10 September 2009",
-        "status": "WD",
+        "date": "08 December 2011",
+        "status": "CR",
         "publisher": "W3C"
     },
     "WEBVTT": {
