@@ -3142,9 +3142,9 @@ if (typeof berjon === "undefined") berjon = {};
             "Jacob Rossi",
             "Matt Brubeck"
         ],
-        "href": "http://www.w3.org/TR/pointerevents/",
+        "href": "http://www.w3.org/TR/2013/WD-pointerevents-20130115",
         "title": "Pointer Events.",
-        "date": "11 December 2012",
+        "date": "15 January 2013",
         "status": "WD",
         "publisher": "W3C"
     },
