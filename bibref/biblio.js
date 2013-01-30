@@ -564,7 +564,17 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "REC",
         "publisher": "W3C"
     },
-    "CSS21": "Bert Bos; et al. <a href=\"http://www.w3.org/TR/CSS21/\"><cite>Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification.</cite></a>. W3C Recommendation. URL: <a href=\"http://www.w3.org/TR/CSS21\">http://www.w3.org/TR/CSS21/</a> ",
+    "CSS21": {
+        "authors": [
+            "Bert Bos"
+        ],
+        "etAl": true,
+        "href": "http://www.w3.org/TR/CSS21/",
+        "title": "Cascading Style Sheets, level 2 (CSS2) Specification.",
+        "date": "07 June 2011",
+        "status": "REC",
+        "publisher": "W3C"
+    },
     "CSS3-2D-TRANSFORMS": "Simon Fraser; Dean Jackson; David Hyatt; Chris Marrin; Edward O'Connor. <a href=\"http://www.w3.org/TR/css3-2d-transforms/\"><cite>CSS 2D Transforms Module Level 3.</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-2d-transforms/\">http://www.w3.org/TR/css3-2d-transforms/</a> ",
     "CSS3-3D-TRANSFORMS": "Dean Jackson; David Hyatt; Chris Marrin. <a href=\"http://www.w3.org/TR/css3-3d-transforms/\"><cite>CSS 3D Transforms Module Level 3.</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-3d-transforms/\">http://www.w3.org/TR/css3-3d-transforms</a> ",
     "CSS3-TRANSFORMS": "Simon Fraser; Dean Jackson; David Hyatt; Chris Marrin; Edward O'Connor; Dirk Schulze; Aryeh Gregor. <a href=\"http://www.w3.org/TR/css3-transforms/\"><cite>CSS Transforms.</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-transforms/\">http://www.w3.org/TR/css3-transforms/</a> ",
