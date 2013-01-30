@@ -1680,10 +1680,10 @@ if (typeof berjon === "undefined") berjon = {};
             "Elika J. Etemad",
             "Alex Mogilevsky"
         ],
-        "href": "http://www.w3.org/TR/css3-flexbox/",
-        "title": "Flexible Box Layout Module.",
-        "date": "12 June 2012",
-        "status": "WD",
+        "href": "http://www.w3.org/TR/2012/CR-css3-flexbox-20120918",
+        "title": "CSS Flexible Box Layout Module.",
+        "date": "18 September 2012",
+        "status": "CR",
         "publisher": "W3C"
     },
     "FOAF": "Dan Brickley, Libby Miller. <a href=\"http://xmlns.com/foaf/spec/\"><cite>FOAF Vocabulary Specification 0.98.</cite></a> 9 August 2010. URL: <a href=\"http://xmlns.com/foaf/spec/\">http://xmlns.com/foaf/spec/</a>",
