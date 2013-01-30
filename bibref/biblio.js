@@ -605,7 +605,16 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
-    "CSS3-FONTS": "John Daggett (Mozilla). <a href=\"http://www.w3.org/TR/css3-fonts\"><cite>CSS Fonts Module Level 3</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-fonts\">http://www.w3.org/TR/css3-fonts</a> ",
+    "CSS3-FONTS":  {
+        "authors": [
+            "John Daggett"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-css3-fonts-20121211",
+        "title": "CSS Fonts Module Level 3.",
+        "date": "11 December 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
     "CSS3-FONTS-20020802": {
         "authors": [
             "Michel Suignard",
