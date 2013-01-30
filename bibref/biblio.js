@@ -207,12 +207,16 @@ if (typeof berjon === "undefined") berjon = {};
     "CLABS-HNAPI": "<a href=\"http://www.w3.org/2011/webtv/HNTF/CableLabs_Revised_API_20110727-2.pdf\"><cite>CableLabs Revised Home Networking API</cite></a>. 26 July 2011. Draft proposal. URL: <a href=\"http://www.w3.org/2011/webtv/HNTF/CableLabs_Revised_API_20110727-2.pdf\">http://www.w3.org/2011/webtv/HNTF/CableLabs_Revised_API_20110727-2.pdf</a>",
     "CANVAS-2D": {
         "authors": [
+            "Rik Cabanier",
+            "Eliot Graff",
+            "Jay Munro",
+            "Tom Wiltzius",
             "Ian Hickson"
         ],
-        "href": "http://www.w3.org/TR/2dcontext/",
+        "href": "http://www.w3.org/TR/2012/CR-2dcontext-20121217",
         "title": "HTML Canvas 2D Context.",
-        "date": "25 May 2011",
-        "status": "WD",
+        "date": "17 December 2012",
+        "status": "CR",
         "publisher": "W3C"
     },
     "CC-ABOUT": "<a href = 'http://creativecommons.org/about/licenses/'><cite>Creative Commons: About Licenses</cite></a> URL: http://creativecommons.org/about/licenses/ ",
