@@ -2759,7 +2759,16 @@ if (typeof berjon === "undefined") berjon = {};
     "OMA-DM": "<a href=\"http://www.openmobilealliance.org/Technical/release_program/dm_v1_2.aspx\"><cite>OMA Device Management V1.2 </cite></a> 17 June 2008. URL: <a href=\"http://www.openmobilealliance.org/Technical/release_program/dm_v1_2.aspx\">http://www.openmobilealliance.org/Technical/release_program/dm_v1_2.aspx</a> ",
     "OMA-URI-SCHEMES": "<a href=\"http://www.openmobilealliance.org/Technical/release_program/docs/URI_Schemes/V1_0-20080626-A/OMA-TS-URI_Schemes-V1_0-20080626-A.pdf\"><cite>URI Schemes for the Mobile Applications Environment. Approved Version 1.0</cite></a> 26 Jun 2008. URL: <a href=\"http://www.openmobilealliance.org/Technical/release_program/docs/URI_Schemes/V1_0-20080626-A/OMA-TS-URI_Schemes-V1_0-20080626-A.pdf\">http://www.openmobilealliance.org/Technical/release_program/docs/URI_Schemes/V1_0-20080626-A/OMA-TS-URI_Schemes-V1_0-20080626-A.pdf</a> ",
     "OMA-PUSH": "Open Mobile Alliance. OMA Push Version 2.3. URL: <a href=\"http://www.openmobilealliance.org/Technical/release_program/push_v2_3.aspx\">http://www.openmobilealliance.org/Technical/release_program/push_v2_3.aspx</a> ",
-    "ORIGIN": "<a href='http://tools.ietf.org/html/rfc6454'>The Web Origin Concept</a>, A. Barth. IETF.",
+    "ORIGIN": {
+        "authors": [
+            "A. Barth"
+        ],
+        "href": "http://tools.ietf.org/html/rfc6454",
+        "title": "The Web Origin Concept.",
+        "date": "December 2011",
+        "status": "Internet RFC 6454",
+        "publisher": "IETF"
+    },
     "OWL-FEATURES": {
         "authors": [
             "Deborah L. McGuinness",
