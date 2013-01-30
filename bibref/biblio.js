@@ -1739,10 +1739,10 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Andrei Popescu"
         ],
-        "href": "http://www.w3.org/TR/2008/WD-geolocation-API-20081222/",
+        "href": "http://www.w3.org/TR/2012/PR-geolocation-API-20120510",
         "title": "Geolocation API Specification.",
-        "date": "22 December 2008",
-        "status": "WD",
+        "date": "10 May 2012",
+        "status": "PR",
         "publisher": "W3C"
     },
     "GEOPRIV-ARCH": "Barnes, R. Lepinski, M. Cooper, A. Morris, J. Tschofenig, H. Schulzrinne, H. <a href = 'http://tools.ietf.org/html/draft-ietf-geopriv-arch-01'><cite>An Architecture for Location and Location Privacy in Internet Applications</cite></a> 29 October 2009. URL: <a href=\"http://tools.ietf.org/html/draft-ietf-geopriv-arch-01\">http://tools.ietf.org/html/draft-ietf-geopriv-arch-01</a>",
