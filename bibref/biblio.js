@@ -614,7 +614,17 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
-    "CSS3-IMAGES": "Elika J. Etemad, Tab Atkins Jr.. <a href=\"http://www.w3.org/TR/css3-images/\">CSS Image Values and Replaced Content</a>. 17 April 2012. W3C Candidate Recommendation. URL: <a href=\"http://www.w3.org/TR/css3-images/\">http://www.w3.org/TR/css3-images/</a>",
+    "CSS3-IMAGES": {
+        "authors": [
+            "Elika J. Etemad",
+            "Tab Atkins Jr."
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-css3-images-20120417",
+        "title": "CSS Image Values and Replaced Content",
+        "date": "17 April 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
     "CSS3-MARQUEE": {
         "authors": [
             "Bert Bos"
