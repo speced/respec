@@ -818,7 +818,19 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "CR",
         "publisher": "W3C"
     },
-    "CSS3-MEDIAQUERIES": "H. Lie, T. Çelik, D. Glazman, A. van Kesteren. <a href=\"http://www.w3.org/TR/css3-mediaqueries/\"><cite>Media Queries</cite></a>  URL: <a href=\"http://www.w3.org/TR/css3-mediaqueries/\">http://www.w3.org/TR/css3-mediaqueries/</a> ",
+    "CSS3-MEDIAQUERIES": {
+        "authors": [
+            "H&#229;kon Wium Lie",
+            "Tantek &#199;elik",
+            "Daniel Glazman",
+            "Anne van Kesteren"
+        ],
+        "href": "http://www.w3.org/TR/css3-mediaqueries",
+        "title": "Media Queries.",
+        "date": "19 June 2012",
+        "status": "REC",
+        "publisher": "W3C"
+    },
     "CSS3NAMESPACE": {
         "authors": [
             "Anne van Kesteren",
