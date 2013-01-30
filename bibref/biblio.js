@@ -912,13 +912,14 @@ if (typeof berjon === "undefined") berjon = {};
     },
     "CSS3VAL": {
         "authors": [
-            "Chris Lilley",
-            "H&#229;kon Wium Lie"
+            "H&#229;kon Wium Lie",
+            "Tab Atkin",
+            "Elika J. Etemad"
         ],
-        "href": "http://www.w3.org/TR/css3-values/",
+        "href": "http://www.w3.org/TR/2012/CR-css3-values-20120828/",
         "title": "CSS3 Values and Units.",
-        "date": "08 March 2012",
-        "status": "WD",
+        "date": "28 August 2012",
+        "status": "CR",
         "publisher": "W3C"
     },
     "CSS3WRITINGMODES": {
