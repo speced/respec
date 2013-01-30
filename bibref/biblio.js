@@ -5827,10 +5827,10 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Ian Hickson"
         ],
-        "href": "http://www.w3.org/TR/2011/WD-workers-20110901/",
+        "href": "http://www.w3.org/TR/2012/CR-workers-20120501",
         "title": "Web Workers.",
-        "date": "1 September 2011",
-        "status": "WD",
+        "date": "01 May 2012",
+        "status": "CR",
         "publisher": "W3C"
     },
     "WICD": {
