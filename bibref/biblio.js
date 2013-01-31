@@ -3195,7 +3195,6 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "CR",
         "publisher": "W3C"
     },
-    "Ian Hickson. <a href='http://dev.w3.org/html5/postmsg'><cite>HTML5 Web Messaging.</cite></a> URL: <a href='http://dev.w3.org/html5/postmsg'>http://dev.w3.org/html5/postmsg</a>",
     "POWDER-DR": {
         "authors": [
             "Kevin Smith",
