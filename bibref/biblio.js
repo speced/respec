@@ -1610,9 +1610,9 @@ if (typeof berjon === "undefined") berjon = {};
             "Arun Ranganathan",
             "Jonas Sicking"
         ],
-        "href": "http://www.w3.org/TR/2011/WD-FileAPI-20111020/",
+        "href": "http://www.w3.org/TR/2012/WD-FileAPI-20121025/",
         "title": "File API.",
-        "date": "20 October 2011",
+        "date": "25 October 2012",
         "status": "WD",
         "publisher": "W3C"
     },
@@ -1671,7 +1671,7 @@ if (typeof berjon === "undefined") berjon = {};
             "D. Burnett",
             "A. Narayanan"
         ],
-        "href": "http://dev.w3.org/TR/2012/WD-mediacapture-streams-20120628/",
+        "href": "http://www.w3.org/TR/2012/WD-mediacapture-streams-20120628/",
         "title": "Media Capture and Streams",
         "date": "28 June 2012",
         "status": "WD",
