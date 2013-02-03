@@ -5399,13 +5399,14 @@ if (typeof berjon === "undefined") berjon = {};
     },
     "WAI-ARIA": {
         "authors": [
-            "Lisa Pappas"
+            "James Craig",
+            "Michael Cooper"
         ],
         "etAl": true,
-        "href": "http://www.w3.org/TR/2009/WD-wai-aria-20090224",
+        "href": "http://www.w3.org/TR/2011/CR-wai-aria-20110118/",
         "title": "Accessible Rich Internet Applications (WAI-ARIA) 1.0.",
-        "date": "24 February 2009",
-        "status": "WD",
+        "date": "18 January 2011",
+        "status": "CR",
         "publisher": "W3C"
     },
     "WAI-ARIA-IMPLEMENTATION": {
@@ -5421,13 +5422,12 @@ if (typeof berjon === "undefined") berjon = {};
     },
     "WAI-ARIA-PRACTICES": {
         "authors": [
-            "Michael Cooper",
-            "Richard Schwerdtfeger",
-            "Lisa Pappas"
+            "Joseph Scheuhammer",
+            "Michael Cooper"
         ],
-        "href": "http://www.w3.org/TR/2009/WD-wai-aria-practices-20090224",
+        "href": "http://www.w3.org/TR/2010/WD-wai-aria-practices-20100916/",
         "title": "WAI-ARIA Best Practices.",
-        "date": "24 February 2009",
+        "date": "16 September 2010",
         "status": "WD",
         "publisher": "W3C"
     },
