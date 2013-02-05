@@ -1,24 +1,14 @@
 if (typeof berjon === "undefined") berjon = {};
     berjon.biblio = {
     "ABA-DSIG-GUIDELINES": "<a href=\"http://www.signelec.com/content/download/digital_signature_guidelines.pdf\"><cite>Digital Signature Guidelines.</cite></a> 1 August 1996. Information Security Committee, American Bar Association. URL: <a href=\"http://www.signelec.com/content/download/digital_signature_guidelines.pdf\">http://www.signelec.com/content/download/digital_signature_guidelines.pdf</a>",
-    "ABC": {
-        "authors": [
-            "Leo Geurts",
-            "Lambert Meertens",
-            "Steven Pemberton"
-        ],
-        "href": "http://www.cwi.nl/~steven/abc",
-        "title": "The ABC Programmer's Handbook.",
-        "date": "Prentice-Hall",
-        "status": "ISBN: 0-13-000027-2"
-    },
+    "ABC": "Leo Geurts; Lambert Meertens; Steven Pemberton. <a href=\"http://www.cwi.nl/~steven/abc\"><cite>The ABC Programmer's Handbook.</cite></a> Prentice-Hall. ISBN: 0-13-000027-2. URL: <a href=\"http://www.cwi.nl/~steven/abc\">http://www.cwi.nl/~steven/abc</a>",
     "ABNF": "D. Crocker and P. Overell. <a href='http://www.ietf.org/rfc/rfc5234.txt'><cite>Augmented BNF for Syntax Specifications: ABNF.</cite></a> January 2008. Internet RFC 5234. URL: <a href='http://www.ietf.org/rfc/rfc5234.txt'>http://www.ietf.org/rfc/rfc5234.txt</a>",
     "ACCESS-CONTROL": {
         "authors": [
             "Anne van Kesteren"
         ],
         "href": "http://www.w3.org/TR/2008/WD-access-control-20080912",
-        "title": "Access Control for Cross-Site Requests.",
+        "title": "Access Control for Cross-Site Requests",
         "date": "12 September 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -28,7 +18,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Rhys Lewis"
         ],
         "href": "http://www.w3.org/TR/2003/NOTE-acdi-20030901",
-        "title": "Authoring Challenges for Device Independence.",
+        "title": "Authoring Challenges for Device Independence",
         "date": "1 September 2003",
         "status": "NOTE",
         "publisher": "W3C"
@@ -39,7 +29,7 @@ if (typeof berjon === "undefined") berjon = {};
             "T. V. Raman"
         ],
         "href": "http://www.w3.org/TR/1999/WD-acss-19990902",
-        "title": "Aural Cascading Style Sheets (ACSS) Specification.",
+        "title": "Aural Cascading Style Sheets (ACSS) Specification",
         "date": "2 September 1999",
         "status": "WD",
         "publisher": "W3C"
@@ -51,7 +41,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Wendy Chisholm"
         ],
         "href": "http://www.w3.org/TR/2000/WD-AERT-20000426",
-        "title": "Techniques For Accessibility Evaluation And Repair Tools.",
+        "title": "Techniques For Accessibility Evaluation And Repair Tools",
         "date": "26 April 2000",
         "status": "WD",
         "publisher": "W3C"
@@ -61,7 +51,17 @@ if (typeof berjon === "undefined") berjon = {};
     "AES-WRAP-PAD": "R. Housley, M. Dworkin. <a href=\"http://www.ietf.org/rfc/rfc5649.txt\"><cite>RFC 5649: Advanced Encryption Standard (AES) Key Wrap with Padding Algorithm</cite></a>.   IETF Informational RFC, August 2009. URL:  <a href=\"http://www.ietf.org/rfc/rfc5649.txt\"> http://www.ietf.org/rfc/rfc5649.txt</a>. ",
     "AGBDL": "Charles Jacobs; et al. <a href=\"http://grail.cs.washington.edu/pub/papers/Jacobs2003.pdf\">&ldquo;Adaptive Grid Based Document Layout&rdquo;</a> in: <cite>ACM Transactions on Graphics.</cite> 22. 3. pp. 838&#8211;847. July 2003. URL: <a href=\"http://grail.cs.washington.edu/pub/papers/Jacobs2003.pdf\">http://grail.cs.washington.edu/pub/papers/Jacobs2003.pdf</a> ",
     "ALT-TECHNIQUES": "Steve Faulkner <a href=\"http://www.w3.org/TR/html-alt-techniques/\"><cite>HTML5: Techniques for providing useful text alternatives</cite></a>. W3C Working Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/html-alt-techniques/\">http://www.w3.org/TR/html-alt-techniques/</a> ",
-    "ANIMATION-TIMING": "James Robinson; Cameron McCormack. <a href=\"http://www.w3.org/TR/animation-timing/\"><cite>Timing control for script-based animations.</cite></a> URL: <a href=\"http://www.w3.org/TR/animation-timing/\">http://www.w3.org/TR/animation-timing/</a>",
+    "ANIMATION-TIMING": {
+        "authors": [
+            "James Robinson",
+            "Cameron McCormack"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-animation-timing-20120221",
+        "title": "Timing control for script-based animations",
+        "date": "21 February 2012",
+        "status": "LCWD",
+        "publisher": "W3C"
+    },
     "ANSI-X9-44-2007": "<a href=\"http://webstore.ansi.org/RecordDetail.aspx?sku=ANSI+X9.44-2007\"><cite>ANSI X9.44-2007: Key Establishment Using Integer Factorization Cryptography.</cite></a> URL: <a href=\"http://webstore.ansi.org/RecordDetail.aspx?sku=ANSI+X9.44-2007\">http://webstore.ansi.org/RecordDetail.aspx?sku=ANSI+X9.44-2007</a>",
     "ARABIC-MATH": {
         "authors": [
@@ -69,7 +69,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Bruce R. Miller"
         ],
         "href": "http://www.w3.org/TR/2006/NOTE-arabic-math-20060131",
-        "title": "Arabic mathematical notation.",
+        "title": "Arabic mathematical notation",
         "date": "31 January 2006",
         "status": "NOTE",
         "publisher": "W3C"
@@ -82,7 +82,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jutta Treviranus"
         ],
         "href": "http://www.w3.org/TR/2001/WD-ATAG-wombat-20011221",
-        "title": "Authoring Tool Accessibility Guidelines &quot;Wombat&quot;.",
+        "title": "Authoring Tool Accessibility Guidelines &quot;Wombat&quot;",
         "date": "21 December 2001",
         "status": "WD",
         "publisher": "W3C"
@@ -93,7 +93,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2000/REC-ATAG10-20000203",
-        "title": "Authoring Tool Accessibility Guidelines 1.0.",
+        "title": "Authoring Tool Accessibility Guidelines 1.0",
         "date": "3 February 2000",
         "status": "REC",
         "publisher": "W3C"
@@ -104,7 +104,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2002/NOTE-ATAG10-TECHS-20021029",
-        "title": "Techniques for Authoring Tool Accessibility Guidelines 1.0.",
+        "title": "Techniques for Authoring Tool Accessibility Guidelines 1.0",
         "date": "29 October 2002",
         "status": "NOTE",
         "publisher": "W3C"
@@ -116,7 +116,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jeanne Spellman"
         ],
         "href": "http://www.w3.org/TR/2009/WD-ATAG20-20090217",
-        "title": "Authoring Tool Accessibility Guidelines (ATAG) 2.0.",
+        "title": "Authoring Tool Accessibility Guidelines (ATAG) 2.0",
         "date": "17 February 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -128,7 +128,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Tim Boland"
         ],
         "href": "http://www.w3.org/TR/2008/WD-ATAG20-TECHS-20080310",
-        "title": "Implementation Techniques for Authoring Tool Accessibility Guidelines 2.0.",
+        "title": "Implementation Techniques for Authoring Tool Accessibility Guidelines 2.0",
         "date": "10 March 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -139,7 +139,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2006/NOTE-backplane-20061116",
-        "title": "Rich Web Application Backplane.",
+        "title": "Rich Web Application Backplane",
         "date": "16 November 2006",
         "status": "NOTE",
         "publisher": "W3C"
@@ -162,7 +162,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ian Hickson"
         ],
         "href": "http://www.w3.org/TR/2007/WD-becss-20071019",
-        "title": "Behavioral Extensions to CSS.",
+        "title": "Behavioral Extensions to CSS",
         "date": "19 October 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -172,7 +172,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Arun Ranganathan"
         ],
         "href": "http://www.w3.org/TR/2009/WD-FileAPI-20091117/#dfn-Blob",
-        "title": "Blob.",
+        "title": "Blob",
         "date": "17 November 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -186,7 +186,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Kahan"
         ],
         "href": "http://www.w3.org/TR/2006/NOTE-C14N-issues-20061220",
-        "title": "Known Issues with Canonical XML 1.0 (C14N/1.0).",
+        "title": "Known Issues with Canonical XML 1.0 (C14N/1.0)",
         "date": "20 December 2006",
         "status": "NOTE",
         "publisher": "W3C"
@@ -208,7 +208,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Brad Porter"
         ],
         "href": "http://www.w3.org/TR/2001/WD-call-control-reqs-20010413",
-        "title": "Call Control Requirements in a Voice Browser Framework.",
+        "title": "Call Control Requirements in a Voice Browser Framework",
         "date": "13 April 2001",
         "status": "WD",
         "publisher": "W3C"
@@ -217,12 +217,16 @@ if (typeof berjon === "undefined") berjon = {};
     "CLABS-HNAPI": "<a href=\"http://www.w3.org/2011/webtv/HNTF/CableLabs_Revised_API_20110727-2.pdf\"><cite>CableLabs Revised Home Networking API</cite></a>. 26 July 2011. Draft proposal. URL: <a href=\"http://www.w3.org/2011/webtv/HNTF/CableLabs_Revised_API_20110727-2.pdf\">http://www.w3.org/2011/webtv/HNTF/CableLabs_Revised_API_20110727-2.pdf</a>",
     "CANVAS-2D": {
         "authors": [
+            "Rik Cabanier",
+            "Eliot Graff",
+            "Jay Munro",
+            "Tom Wiltzius",
             "Ian Hickson"
         ],
-        "href": "http://www.w3.org/TR/2dcontext/",
-        "title": "HTML Canvas 2D Context.",
-        "date": "25 May 2011",
-        "status": "WD",
+        "href": "http://www.w3.org/TR/2012/CR-2dcontext-20121217",
+        "title": "HTML Canvas 2D Context",
+        "date": "17 December 2012",
+        "status": "CR",
         "publisher": "W3C"
     },
     "CC-ABOUT": "<a href = 'http://creativecommons.org/about/licenses/'><cite>Creative Commons: About Licenses</cite></a> URL: http://creativecommons.org/about/licenses/ ",
@@ -233,7 +237,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2004/REC-CCPP-struct-vocab-20040115",
-        "title": "Composite Capability/Preference Profiles (CC/PP): Structure and Vocabularies 1.0.",
+        "title": "Composite Capability/Preference Profiles (CC/PP): Structure and Vocabularies 1.0",
         "date": "15 January 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -244,7 +248,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Lalitha Suryanarayana"
         ],
         "href": "http://www.w3.org/TR/2001/NOTE-CCPP-COORDINATION-20011220",
-        "title": "CC/PP Implementors Guide: Harmonization with Existing Vocabularies and Content Transformation Heuristics.",
+        "title": "CC/PP Implementors Guide: Harmonization with Existing Vocabularies and Content Transformation Heuristics",
         "date": "20 December 2001",
         "status": "NOTE",
         "publisher": "W3C"
@@ -256,7 +260,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Hidetaka Ohto"
         ],
         "href": "http://www.w3.org/TR/2000/WD-CCPP-ra-20000721",
-        "title": "Composite Capabilities/Preference Profiles: Requirements and Architecture.",
+        "title": "Composite Capabilities/Preference Profiles: Requirements and Architecture",
         "date": "21 July 2000",
         "status": "WD",
         "publisher": "W3C"
@@ -266,7 +270,7 @@ if (typeof berjon === "undefined") berjon = {};
             "C&#233;dric Kiss"
         ],
         "href": "http://www.w3.org/TR/2007/WD-CCPP-struct-vocab2-20070430",
-        "title": "Composite Capability/Preference Profiles (CC/PP): Structure and Vocabularies 2.0.",
+        "title": "Composite Capability/Preference Profiles (CC/PP): Structure and Vocabularies 2.0",
         "date": "30 April 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -276,7 +280,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Mikael Nilsson"
         ],
         "href": "http://www.w3.org/TR/2000/WD-CCPP-ta-20000721",
-        "title": "Composite Capabilities/Preference Profiles: Terminology and Abbreviations.",
+        "title": "Composite Capabilities/Preference Profiles: Terminology and Abbreviations",
         "date": "21 July 2000",
         "status": "WD",
         "publisher": "W3C"
@@ -288,7 +292,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Lalitha Suryanarayana"
         ],
         "href": "http://www.w3.org/TR/2001/WD-CCPP-trust-20011220",
-        "title": "CC/PP Implementors Guide: Privacy and Protocols.",
+        "title": "CC/PP Implementors Guide: Privacy and Protocols",
         "date": "20 December 2001",
         "status": "WD",
         "publisher": "W3C"
@@ -298,7 +302,7 @@ if (typeof berjon === "undefined") berjon = {};
             "RJ Auburn"
         ],
         "href": "http://www.w3.org/TR/2007/WD-ccxml-20070119",
-        "title": "Voice Browser Call Control: CCXML Version 1.0.",
+        "title": "Voice Browser Call Control: CCXML Version 1.0",
         "date": "19 January 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -309,7 +313,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Petri Vuorimaa"
         ],
         "href": "http://www.w3.org/TR/2005/WD-CDFReqs-20051219",
-        "title": "Compound Document Use Cases and Requirements Version 2.0.",
+        "title": "Compound Document Use Cases and Requirements Version 2.0",
         "date": "19 December 2005",
         "status": "WD",
         "publisher": "W3C"
@@ -320,7 +324,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/CR-CDR-20070718",
-        "title": "Compound Document by Reference Framework 1.0.",
+        "title": "Compound Document by Reference Framework 1.0",
         "date": "18 July 2007",
         "status": "CR",
         "publisher": "W3C"
@@ -332,7 +336,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Timur Mehrvarz"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-CDRReqs-20051219",
-        "title": "Compound Document by Reference Use Cases and Requirements Version 1.0.",
+        "title": "Compound Document by Reference Use Cases and Requirements Version 1.0",
         "date": "19 December 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -343,7 +347,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Chris Lilley"
         ],
         "href": "http://www.w3.org/TR/NOTE-cgm-970618",
-        "title": "Use of CGM as a Scalable Graphics Format.",
+        "title": "Use of CGM as a Scalable Graphics Format",
         "date": "18 June 1997",
         "status": "NOTE",
         "publisher": "W3C"
@@ -354,7 +358,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2005/REC-charmod-20050215",
-        "title": "Character Model for the World Wide Web 1.0: Fundamentals.",
+        "title": "Character Model for the World Wide Web 1.0: Fundamentals",
         "date": "15 February 2005",
         "status": "REC",
         "publisher": "W3C"
@@ -365,7 +369,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2005/WD-charmod-norm-20051027",
-        "title": "Character Model for the World Wide Web 1.0: Normalization.",
+        "title": "Character Model for the World Wide Web 1.0: Normalization",
         "date": "27 October 2005",
         "status": "WD",
         "publisher": "W3C"
@@ -376,7 +380,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2004/CR-charmod-resid-20041122",
-        "title": "Character Model for the World Wide Web 1.0: Resource Identifiers.",
+        "title": "Character Model for the World Wide Web 1.0: Resource Identifiers",
         "date": "22 November 2004",
         "status": "CR",
         "publisher": "W3C"
@@ -386,7 +390,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Martin J. D&#252;rst"
         ],
         "href": "http://www.w3.org/TR/1998/WD-charreq-19980710",
-        "title": "Requirements for String Identity Matching and String Indexing.",
+        "title": "Requirements for String Identity Matching and String Indexing",
         "date": "10 July 1998",
         "status": "WD",
         "publisher": "W3C"
@@ -398,7 +402,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Charles McCathieNevile"
         ],
         "href": "http://www.w3.org/TR/2006/WD-clipboard-apis-20061115",
-        "title": "Clipboard Operations for the Web 1.0: Copy, Paste, Drag and Drop.",
+        "title": "Clipboard Operations for the Web 1.0: Copy, Paste, Drag and Drop",
         "date": "15 November 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -416,7 +420,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Johannes Koch"
         ],
         "href": "http://www.w3.org/TR/2008/WD-Content-in-RDF-20080908",
-        "title": "Representing Content in RDF.",
+        "title": "Representing Content in RDF",
         "date": "8 September 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -428,7 +432,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Leo Sauermann"
         ],
         "href": "http://www.w3.org/TR/2008/NOTE-cooluris-20081203",
-        "title": "Cool URIs for the Semantic Web.",
+        "title": "Cool URIs for the Semantic Web",
         "date": "3 December 2008",
         "status": "NOTE",
         "publisher": "W3C"
@@ -437,10 +441,10 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Anne van Kesteren"
         ],
-        "href": "http://www.w3.org/TR/2009/WD-cors-20090317",
-        "title": "Cross-Origin Resource Sharing.",
-        "date": "17 March 2009",
-        "status": "WD",
+        "href": "http://www.w3.org/TR/2013/CR-cors-20130129",
+        "title": "Cross-Origin Resource Sharing",
+        "date": "29 January 2013",
+        "status": "CR",
         "publisher": "W3C"
     },
     "CORE-DEVICE": {
@@ -448,7 +452,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Robin Berjon"
         ],
         "href": "http://dev.w3.org/2009/dap/device/",
-        "title": "Core Device Interfaces.",
+        "title": "Core Device Interfaces",
         "date": "02 December 2009",
         "status": "ED",
         "publisher": "W3C"
@@ -461,7 +465,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Amy Yu"
         ],
         "href": "http://www.w3.org/TR/2003/WD-cpc-req-20030510",
-        "title": "Core Presentation Characteristics:&#160;Requirements and Use Cases.",
+        "title": "Core Presentation Characteristics:&#160;Requirements and Use Cases",
         "date": "10 May 2003",
         "status": "WD",
         "publisher": "W3C"
@@ -473,7 +477,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Roland Merrick"
         ],
         "href": "http://www.w3.org/TR/2007/CR-cselection-20070725",
-        "title": "Content Selection for Device Independence (DISelect) 1.0.",
+        "title": "Content Selection for Device Independence (DISelect) 1.0",
         "date": "25 July 2007",
         "status": "CR",
         "publisher": "W3C"
@@ -484,7 +488,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Rhys Lewis"
         ],
         "href": "http://www.w3.org/TR/2007/WD-cselection-primer-20070109",
-        "title": "Content Selection Primer 1.0.",
+        "title": "Content Selection Primer 1.0",
         "date": "9 January 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -495,19 +499,28 @@ if (typeof berjon === "undefined") berjon = {};
             "Roland Merrick"
         ],
         "href": "http://www.w3.org/TR/2007/CR-cselection-xaf-20070725",
-        "title": "Delivery Context: XPath Access Functions 1.0.",
+        "title": "Delivery Context: XPath Access Functions 1.0",
         "date": "25 July 2007",
         "status": "CR",
         "publisher": "W3C"
     },
     "CSP": "Adam Barth; Brendon Sterne. <a href=\"http://www.w3.org/TR/CSP/\"><cite>CSP.</cite></a> URL: <a href=\"http://www.w3.org/TR/CSP/\">http://www.w3.org/TR/CSP/</a> ",
-    "CSS-ADAPTATION": "Rune Lillesveen. <a href=\"http://dev.w3.org/csswg/css-device-adapt/\">CSS Device Adaptation</a>. 23 January 2012. Editor's Draft. (Work in progress.) URL: <a href=\"http://dev.w3.org/csswg/css-device-adapt/\">http://dev.w3.org/csswg/css-device-adapt/</a>",
+    "CSS-ADAPTATION": {
+        "authors": [
+            "Rune Lillesveen"
+        ],
+        "href": "http://www.w3.org/TR/2011/WD-css-device-adapt-20110915",
+        "title": "CSS Device Adaptation",
+        "date": "15 September 2011",
+        "status": "FPWD",
+        "publisher": "W3C"
+    },
     "CSS-MOBILE": {
         "authors": [
             "Svante Schubert"
         ],
         "href": "http://www.w3.org/TR/2008/CR-css-mobile-20081210",
-        "title": "CSS Mobile Profile 2.0.",
+        "title": "CSS Mobile Profile 2.0",
         "date": "10 December 2008",
         "status": "CR",
         "publisher": "W3C"
@@ -517,7 +530,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Bert Bos"
         ],
         "href": "http://www.w3.org/TR/1998/NOTE-CSS-potential-19981210",
-        "title": "List of suggested extensions to CSS.",
+        "title": "List of suggested extensions to CSS",
         "date": "10 December 1998",
         "status": "NOTE",
         "publisher": "W3C"
@@ -527,7 +540,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Melinda Grant"
         ],
         "href": "http://www.w3.org/TR/2006/WD-css-print-20061013",
-        "title": "CSS Print Profile.",
+        "title": "CSS Print Profile",
         "date": "13 October 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -538,7 +551,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2003/CR-css-tv-20030514",
-        "title": "CSS TV Profile 1.0.",
+        "title": "CSS TV Profile 1.0",
         "date": "14 May 2003",
         "status": "CR",
         "publisher": "W3C"
@@ -549,7 +562,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Bert Bos"
         ],
         "href": "http://www.w3.org/TR/2008/REC-CSS1-20080411",
-        "title": "Cascading Style Sheets (CSS1) Level 1 Specification.",
+        "title": "Cascading Style Sheets (CSS1) Level 1 Specification",
         "date": "11 April 2008",
         "status": "REC",
         "publisher": "W3C"
@@ -560,35 +573,71 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/CSS21/",
-        "title": "Cascading Style Sheets, level 2 (CSS2) Specification.",
+        "title": "Cascading Style Sheets, level 2 (CSS2) Specification",
         "date": "07 June 2011",
         "status": "REC",
         "publisher": "W3C"
     },
-    "CSS21": "Bert Bos; et al. <a href=\"http://www.w3.org/TR/CSS21/\"><cite>Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification.</cite></a>. W3C Recommendation. URL: <a href=\"http://www.w3.org/TR/CSS21\">http://www.w3.org/TR/CSS21/</a> ",
+    "CSS21": {
+        "authors": [
+            "Bert Bos"
+        ],
+        "etAl": true,
+        "href": "http://www.w3.org/TR/CSS21/",
+        "title": "Cascading Style Sheets, level 2 (CSS2) Specification",
+        "date": "07 June 2011",
+        "status": "REC",
+        "publisher": "W3C"
+    },
     "CSS3-2D-TRANSFORMS": "Simon Fraser; Dean Jackson; David Hyatt; Chris Marrin; Edward O'Connor. <a href=\"http://www.w3.org/TR/css3-2d-transforms/\"><cite>CSS 2D Transforms Module Level 3.</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-2d-transforms/\">http://www.w3.org/TR/css3-2d-transforms/</a> ",
     "CSS3-3D-TRANSFORMS": "Dean Jackson; David Hyatt; Chris Marrin. <a href=\"http://www.w3.org/TR/css3-3d-transforms/\"><cite>CSS 3D Transforms Module Level 3.</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-3d-transforms/\">http://www.w3.org/TR/css3-3d-transforms</a> ",
-    "CSS3-TRANSFORMS": "Simon Fraser; Dean Jackson; David Hyatt; Chris Marrin; Edward O'Connor; Dirk Schulze; Aryeh Gregor. <a href=\"http://www.w3.org/TR/css3-transforms/\"><cite>CSS Transforms.</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-transforms/\">http://www.w3.org/TR/css3-transforms/</a> ",
-    "CSS3-ANIMATIONS": {
+    "CSS3-TRANSFORMS": {
         "authors": [
-            "Dean Jackson (Apple Inc)",
-            "David Hyatt (Apple Inc)",
-            "Chris Marrin (Apple Inc)"
+            "Simon Fraser",
+            "Dean Jackson",
+            "David Hyatt",
+            "Chris Marrin",
+            "Edward O'Connor",
+            "Dirk Schulze",
+            "Aryeh Gregor"
         ],
-        "href": "http://www.w3.org/TR/css3-animations/",
-        "title": "CSS Animations.",
+        "href": "http://www.w3.org/TR/2012/WD-css3-transforms-20120911",
+        "title": "CSS Transforms",
+        "date": "11 September 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
+    "CSS3-ANIMATIONS": {
+            "authors": [
+            "Dean Jackson",
+            "David Hyatt",
+            "Chris Marrin",
+            "Sylvain Galineau",
+            "L. David Baron"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-css3-animations-20120403",
+        "title": "CSS Animations",
         "date": "03 April 2012",
         "status": "WD",
         "publisher": "W3C"
     },
-    "CSS3-FONTS": "John Daggett (Mozilla). <a href=\"http://www.w3.org/TR/css3-fonts\"><cite>CSS Fonts Module Level 3</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-fonts\">http://www.w3.org/TR/css3-fonts</a> ",
+    "CSS3-FONTS":  {
+        "authors": [
+            "John Daggett"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-css3-fonts-20121211",
+        "title": "CSS Fonts Module Level 3",
+        "date": "11 December 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
     "CSS3-FONTS-20020802": {
         "authors": [
             "Michel Suignard",
             "Chris Lilley"
         ],
         "href": "http://www.w3.org/TR/2002/WD-css3-fonts-20020802",
-        "title": "CSS3 module: Fonts.",
+        "title": "CSS3 module: Fonts",
         "date": "2 August 2002",
         "status": "WD",
         "publisher": "W3C"
@@ -600,18 +649,28 @@ if (typeof berjon === "undefined") berjon = {};
             "Tantek &#199;elik"
         ],
         "href": "http://www.w3.org/TR/2004/WD-css3-hyperlinks-20040224",
-        "title": "CSS3 Hyperlink Presentation Module.",
+        "title": "CSS3 Hyperlink Presentation Module",
         "date": "24 February 2004",
         "status": "WD",
         "publisher": "W3C"
     },
-    "CSS3-IMAGES": "Elika J. Etemad, Tab Atkins Jr.. <a href=\"http://www.w3.org/TR/css3-images/\">CSS Image Values and Replaced Content</a>. 17 April 2012. W3C Candidate Recommendation. URL: <a href=\"http://www.w3.org/TR/css3-images/\">http://www.w3.org/TR/css3-images/</a>",
+    "CSS3-IMAGES": {
+        "authors": [
+            "Elika J. Etemad",
+            "Tab Atkins Jr."
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-css3-images-20120417",
+        "title": "CSS Image Values and Replaced Content",
+        "date": "17 April 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
     "CSS3-MARQUEE": {
         "authors": [
             "Bert Bos"
         ],
         "href": "http://www.w3.org/TR/2008/CR-css3-marquee-20081205",
-        "title": "CSS Marquee Module Level 3.",
+        "title": "CSS Marquee Module Level 3",
         "date": "5 December 2008",
         "status": "CR",
         "publisher": "W3C"
@@ -622,7 +681,7 @@ if (typeof berjon === "undefined") berjon = {};
             "H&#229;kon Wium Lie"
         ],
         "href": "http://www.w3.org/TR/2003/WD-css3-preslev-20030813",
-        "title": "CSS3 module: Presentation Levels.",
+        "title": "CSS3 module: Presentation Levels",
         "date": "13 August 2003",
         "status": "WD",
         "publisher": "W3C"
@@ -632,7 +691,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Bert Bos"
         ],
         "href": "http://www.w3.org/TR/2004/WD-css3-reader-20040224",
-        "title": "The CSS 'Reader' Media Type.",
+        "title": "The CSS 'Reader' Media Type",
         "date": "24 February 2004",
         "status": "WD",
         "publisher": "W3C"
@@ -644,8 +703,8 @@ if (typeof berjon === "undefined") berjon = {};
             "Chris Marrin",
             "L. David Baron"
         ],
-        "href": "http://www.w3.org/TR/css3-transitions/",
-        "title": "CSS Transitions.",
+        "href": "http://www.w3.org/TR/2012/WD-css3-transitions-20120403/",
+        "title": "CSS Transitions",
         "date": "03 April 2012",
         "status": "WD",
         "publisher": "W3C"
@@ -656,18 +715,29 @@ if (typeof berjon === "undefined") berjon = {};
             "Chris Lilley"
         ],
         "href": "http://www.w3.org/TR/2002/WD-css3-webfonts-20020802",
-        "title": "CSS3 module: Web Fonts.",
+        "title": "CSS3 module: Web Fonts",
         "date": "2 August 2002",
         "status": "WD",
         "publisher": "W3C"
     },
-    "CSS3-BG": "Elika J. Etemad; Bert Bos; Brad Kemper. <a href=\"http://www.w3.org/TR/css3-background/\"><cite>CSS Backgrounds and Borders Module Level 3.</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-background/\">http://www.w3.org/TR/css3-background/</a> ",
+    "CSS3-BG": {
+        "authors": [
+            "Bert Bos",
+            "Elika J. Etemad",
+            "Brad Kemper"
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-css3-background-20120724/",
+        "title": "CSS Backgrounds and Borders Module Level 3",
+        "date": "24 July 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
     "CSS3BORDER": {
         "authors": [
             "Tapas Roy"
         ],
         "href": "http://www.w3.org/TR/2002/WD-css3-border-20021107",
-        "title": "CSS3 module: Border.",
+        "title": "CSS3 module: Border",
         "date": "7 November 2002",
         "status": "WD",
         "publisher": "W3C"
@@ -677,7 +747,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Bert Bos"
         ],
         "href": "http://www.w3.org/TR/2007/WD-css3-box-20070809",
-        "title": "CSS basic box model.",
+        "title": "CSS basic box model",
         "date": "9 August 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -687,7 +757,7 @@ if (typeof berjon === "undefined") berjon = {};
             "H&#229;kon Wium Lie"
         ],
         "href": "http://www.w3.org/TR/2005/WD-css3-cascade-20051215",
-        "title": "CSS3 module: Cascading and inheritance.",
+        "title": "CSS3 module: Cascading and inheritance",
         "date": "15 December 2005",
         "status": "WD",
         "publisher": "W3C"
@@ -697,7 +767,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Håkon Wium Lie"
         ],
         "href": "http://www.w3.org/TR/css3-multicol/",
-        "title": "CSS3 module: Multi-column layout.",
+        "title": "CSS3 module: Multi-column layout",
         "date": "12 April 2011",
         "status": "CR",
         "publisher": "W3C"
@@ -709,7 +779,7 @@ if (typeof berjon === "undefined") berjon = {};
             "L. David Baron"
         ],
         "href": "http://www.w3.org/TR/css3-color",
-        "title": "CSS Color Module Level 3.",
+        "title": "CSS Color Module Level 3",
         "date": "07 June 2011",
         "status": "REC",
         "publisher": "W3C"
@@ -719,7 +789,7 @@ if (typeof berjon === "undefined") berjon = {};
             "H&#229;kon Wium Lie"
         ],
         "href": "http://www.w3.org/TR/2007/WD-css3-gcpm-20070504",
-        "title": "CSS3 module: Generated Content for Paged Media.",
+        "title": "CSS3 module: Generated Content for Paged Media",
         "date": "4 May 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -729,7 +799,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ian Hickson"
         ],
         "href": "http://www.w3.org/TR/2003/WD-css3-content-20030514",
-        "title": "CSS3 Generated and Replaced Content Module.",
+        "title": "CSS3 Generated and Replaced Content Module",
         "date": "14 May 2003",
         "status": "WD",
         "publisher": "W3C"
@@ -740,7 +810,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Alex Mogilevsky"
         ],
         "href": "http://www.w3.org/TR/2007/WD-css3-grid-20070905",
-        "title": "CSS Grid Positioning Module Level 3.",
+        "title": "CSS Grid Positioning Module Level 3",
         "date": "5 September 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -751,7 +821,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Bert Bos"
         ],
         "href": "http://www.w3.org/TR/2001/WD-css3-roadmap-20010523",
-        "title": "CSS3 introduction.",
+        "title": "CSS3 introduction",
         "date": "23 May 2001",
         "status": "WD",
         "publisher": "W3C"
@@ -761,7 +831,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Bert Bos"
         ],
         "href": "http://www.w3.org/TR/2007/WD-css3-layout-20070809",
-        "title": "CSS Advanced Layout Module.",
+        "title": "CSS Advanced Layout Module",
         "date": "9 August 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -772,7 +842,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Eric A. Meyer"
         ],
         "href": "http://www.w3.org/TR/2002/WD-css3-linebox-20020515",
-        "title": "CSS3 module: line.",
+        "title": "CSS3 module: line",
         "date": "15 May 2002",
         "status": "WD",
         "publisher": "W3C"
@@ -783,7 +853,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Tantek &#199;elik"
         ],
         "href": "http://www.w3.org/TR/2002/WD-css3-lists-20021107",
-        "title": "CSS3 module: Lists.",
+        "title": "CSS3 module: Lists",
         "date": "7 November 2002",
         "status": "WD",
         "publisher": "W3C"
@@ -793,19 +863,31 @@ if (typeof berjon === "undefined") berjon = {};
             "Bert Bos"
         ],
         "href": "http://www.w3.org/TR/2008/CR-css3-marquee-20081205",
-        "title": "CSS Marquee Module Level 3.",
+        "title": "CSS Marquee Module Level 3",
         "date": "5 December 2008",
         "status": "CR",
         "publisher": "W3C"
     },
-    "CSS3-MEDIAQUERIES": "H. Lie, T. Çelik, D. Glazman, A. van Kesteren. <a href=\"http://www.w3.org/TR/css3-mediaqueries/\"><cite>Media Queries</cite></a>  URL: <a href=\"http://www.w3.org/TR/css3-mediaqueries/\">http://www.w3.org/TR/css3-mediaqueries/</a> ",
+    "CSS3-MEDIAQUERIES": {
+        "authors": [
+            "H&#229;kon Wium Lie",
+            "Tantek &#199;elik",
+            "Daniel Glazman",
+            "Anne van Kesteren"
+        ],
+        "href": "http://www.w3.org/TR/css3-mediaqueries",
+        "title": "Media Queries",
+        "date": "19 June 2012",
+        "status": "REC",
+        "publisher": "W3C"
+    },
     "CSS3NAMESPACE": {
         "authors": [
             "Anne van Kesteren",
             "Elika J. Etemad"
         ],
         "href": "http://www.w3.org/TR/2008/CR-css3-namespace-20080523",
-        "title": "CSS Namespaces Module.",
+        "title": "CSS Namespaces Module",
         "date": "23 May 2008",
         "status": "CR",
         "publisher": "W3C"
@@ -816,7 +898,7 @@ if (typeof berjon === "undefined") berjon = {};
             "H&#229;kon Wium Lie"
         ],
         "href": "http://www.w3.org/TR/2006/WD-css3-page-20061010",
-        "title": "CSS3 Module: Paged Media.",
+        "title": "CSS3 Module: Paged Media",
         "date": "10 October 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -827,7 +909,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Michel Suignard"
         ],
         "href": "http://www.w3.org/TR/2003/CR-css3-ruby-20030514",
-        "title": "CSS3 Ruby Module.",
+        "title": "CSS3 Ruby Module",
         "date": "14 May 2003",
         "status": "CR",
         "publisher": "W3C"
@@ -839,7 +921,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Claudio Santambrogio"
         ],
         "href": "http://www.w3.org/TR/2004/WD-css3-speech-20041216",
-        "title": "CSS3 Speech Module.",
+        "title": "CSS3 Speech Module",
         "date": "16 December 2004",
         "status": "WD",
         "publisher": "W3C"
@@ -849,7 +931,7 @@ if (typeof berjon === "undefined") berjon = {};
             "L. David Baron"
         ],
         "href": "http://www.w3.org/TR/2003/WD-css3-syntax-20030813",
-        "title": "CSS3 module: Syntax.",
+        "title": "CSS3 module: Syntax",
         "date": "13 August 2003",
         "status": "WD",
         "publisher": "W3C"
@@ -861,9 +943,9 @@ if (typeof berjon === "undefined") berjon = {};
             "Elika J. Etemad",
             "Koji Ishii"
         ],
-        "href": "http://www.w3.org/TR/css3-text/",
-        "title": "CSS Text Level 3.",
-        "date": "19 January 2012",
+        "href": "http://www.w3.org/TR/2012/WD-css3-text-20121113",
+        "title": "CSS Text Module Level 3",
+        "date": "13 November 2012",
         "status": "WD",
         "publisher": "W3C"
     },
@@ -873,20 +955,21 @@ if (typeof berjon === "undefined") berjon = {};
             "Tantek Çelik"
         ],
         "href": "http://www.w3.org/TR/css3-ui/",
-        "title": "CSS3 Basic User Interface Module.",
+        "title": "CSS3 Basic User Interface Module",
         "date": "17 January 2012",
         "status": "WD",
         "publisher": "W3C"
     },
     "CSS3VAL": {
         "authors": [
-            "Chris Lilley",
-            "H&#229;kon Wium Lie"
+            "H&#229;kon Wium Lie",
+            "Tab Atkin",
+            "Elika J. Etemad"
         ],
-        "href": "http://www.w3.org/TR/css3-values/",
-        "title": "CSS3 Values and Units.",
-        "date": "08 March 2012",
-        "status": "WD",
+        "href": "http://www.w3.org/TR/2012/CR-css3-values-20120828/",
+        "title": "CSS3 Values and Units",
+        "date": "28 August 2012",
+        "status": "CR",
         "publisher": "W3C"
     },
     "CSS3WRITINGMODES": {
@@ -896,7 +979,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Shinyu Murakami"
         ],
         "href": "http://dev.w3.org/csswg/css3-writing-modes",
-        "title": "CSS Writing Modes Module Level 3.",
+        "title": "CSS Writing Modes Module Level 3",
         "date": "17 October 2010",
         "status": "ED",
         "publisher": "W3C"
@@ -906,7 +989,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Elika J. Etemad"
         ],
         "href": "http://www.w3.org/TR/2008/WD-css-beijing-20080516",
-        "title": "Cascading Style Sheets (CSS) Snapshot 2007.",
+        "title": "Cascading Style Sheets (CSS) Snapshot 2007",
         "date": "16 May 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -915,19 +998,19 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Anne van Kesteren"
         ],
-        "href": "http://www.w3.org/TR/cssom/",
-        "title": "CSSOM.",
+        "href": "http://www.w3.org/TR/2011/WD-cssom-20110712",
+        "title": "CSSOM",
         "date": "12 July 2011",
-        "status": "WD",
+        "status": "FPWD",
         "publisher": "W3C"
     },
     "CSSOM-VIEW": {
         "authors": [
             "Anne van Kesteren"
         ],
-        "href": "http://www.w3.org/TR/2008/WD-cssom-view-20080222",
-        "title": "CSSOM View Module.",
-        "date": "22 February 2008",
+        "href": "http://www.w3.org/TR/2011/WD-cssom-view-20110804",
+        "title": "CSSOM View Module",
+        "date": "4 August 2011",
         "status": "WD",
         "publisher": "W3C"
     },
@@ -938,7 +1021,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Tantek &#199;elik"
         ],
         "href": "http://www.w3.org/TR/2002/WD-css-style-attr-20020515",
-        "title": "Syntax of CSS rules in HTML's &quot;style&quot; attribute.",
+        "title": "Syntax of CSS rules in HTML's &quot;style&quot; attribute",
         "date": "15 May 2002",
         "status": "WD",
         "publisher": "W3C"
@@ -948,7 +1031,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jo Rabin"
         ],
         "href": "http://www.w3.org/TR/2008/WD-ct-guidelines-20080801",
-        "title": "Content Transformation Guidelines 1.0.",
+        "title": "Content Transformation Guidelines 1.0",
         "date": "1 August 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -959,7 +1042,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Andrew Swainston"
         ],
         "href": "http://www.w3.org/TR/2007/WD-ct-landscape-20071025",
-        "title": "Content Transformation Landscape 1.0.",
+        "title": "Content Transformation Landscape 1.0",
         "date": "25 October 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -970,7 +1053,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2012/REC-rdfa-core-20120607/",
-        "title": "RDFa Core 1.1 - Section 6.",
+        "title": "RDFa Core 1.1 - Section 6",
         "date": "7 June 2012",
         "status": "REC",
         "publisher": "W3C"
@@ -982,7 +1065,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2001/NOTE-CX-20011211",
-        "title": "Component Extension (CX) API requirements Version 1.0.",
+        "title": "Component Extension (CX) API requirements Version 1.0",
         "date": "11 December 2001",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1020,7 +1103,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Dublin Core metadata initiative"
         ],
         "href": "http://dublincore.org/documents/dcmi-terms/",
-        "title": "Dublin Core metadata element set, version 1.1.",
+        "title": "Dublin Core metadata element set, version 1.1",
         "date": "July 1999",
         "status": "Dublin Core recommendation"
     },
@@ -1031,7 +1114,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Rhys Lewis"
         ],
         "href": "http://www.w3.org/TR/2009/WD-dcontology-20090616",
-        "title": "Delivery Context Ontology.",
+        "title": "Delivery Context Ontology",
         "date": "16 June 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -1042,7 +1125,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://dublincore.org/documents/dc-rdf/",
-        "title": "Expressing Dublin Core metadata using the Resource Description Framework (RDF).",
+        "title": "Expressing Dublin Core metadata using the Resource Description Framework (RDF)",
         "date": "14 January 2008",
         "status": "DCMI Recommendation"
     },
@@ -1053,7 +1136,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Rotan Hanrahan"
         ],
         "href": "http://www.w3.org/TR/2007/NOTE-dd-ecosystem-20071031",
-        "title": "Device Description Ecosystem 1.0.",
+        "title": "Device Description Ecosystem 1.0",
         "date": "31 October 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1065,7 +1148,7 @@ if (typeof berjon === "undefined") berjon = {};
             "James Pearce"
         ],
         "href": "http://www.w3.org/TR/2007/NOTE-dd-landscape-20071031",
-        "title": "Device Description Landscape 1.0.",
+        "title": "Device Description Landscape 1.0",
         "date": "31 October 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1076,7 +1159,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Manuel Cantera Fonseca"
         ],
         "href": "http://www.w3.org/TR/2008/WD-dd-structures-20081205",
-        "title": "Device Description Structures.",
+        "title": "Device Description Structures",
         "date": "5 December 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -1088,7 +1171,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Rotan Hanrahan"
         ],
         "href": "http://www.w3.org/TR/2008/NOTE-ddr-core-vocabulary-20080414",
-        "title": "Device Description Repository Core Vocabulary.",
+        "title": "Device Description Repository Core Vocabulary",
         "date": "14 April 2008",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1099,7 +1182,7 @@ if (typeof berjon === "undefined") berjon = {};
             "David Sanders"
         ],
         "href": "http://www.w3.org/TR/2007/NOTE-DDR-requirements-20071217",
-        "title": "Device Description Repository Requirements 1.0.",
+        "title": "Device Description Repository Requirements 1.0",
         "date": "17 December 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1111,19 +1194,29 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/REC-DDR-Simple-API-20081205",
-        "title": "Device Description Repository Simple API.",
+        "title": "Device Description Repository Simple API",
         "date": "5 December 2008",
         "status": "REC",
         "publisher": "W3C"
     },
     "DES": "<a href=\"http://csrc.nist.gov/publications/fips/fips46-3/fips46-3.pdf\"><cite>NIST FIPS 46-3: Data Encryption Standard (DES)</cite></a> . October 1999. URL: <a href=\"http://csrc.nist.gov/publications/fips/fips46-3/fips46-3.pdf\">http://csrc.nist.gov/publications/fips/fips46-3/fips46-3.pdf</a>",
-    "DEVICE-ORIENTATION": "Steve Block, Andrei Popescu. <a href=\"http://www.w3.org/TR/2011/WD-orientation-event-20111201/\">DeviceOrientation Event Specification</a>. 1 December 2011. Last Call Working Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/2011/WD-orientation-event-20111201/\">http://www.w3.org/TR/2011/WD-orientation-event-20111201/</a>",
+    "DEVICE-ORIENTATION": {
+        "authors": [
+            "Steve Block",
+            "Andrei Popescu"
+        ],
+        "href": "http://www.w3.org/TR/2011/WD-orientation-event-20111201",
+        "title": "DeviceOrientation Event Specification",
+        "date": "1 December 2011",
+        "status": "LCWD",
+        "publisher": "W3C"
+    },
     "DFAUI": {
         "authors": [
             "Arthur Barstow"
         ],
         "href": "http://www.w3.org/TR/2007/NOTE-dfaui-20070912",
-        "title": "Declarative Formats for Applications and User Interfaces.",
+        "title": "Declarative Formats for Applications and User Interfaces",
         "date": "12 September 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1134,7 +1227,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Rotan Hanrahan"
         ],
         "href": "http://www.w3.org/TR/2004/NOTE-di-atdi-20040218",
-        "title": "Authoring Techniques for Device Independence.",
+        "title": "Authoring Techniques for Device Independence",
         "date": "18 February 2004",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1146,7 +1239,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Roger Gimson"
         ],
         "href": "http://www.w3.org/TR/2006/NOTE-di-dco-20060320",
-        "title": "Delivery Context Overview for Device Independence.",
+        "title": "Delivery Context Overview for Device Independence",
         "date": "20 March 2006",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1156,7 +1249,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Rhys Lewis"
         ],
         "href": "http://www.w3.org/TR/2005/WD-di-gloss-20050118",
-        "title": "Glossary of Terms for Device Independence.",
+        "title": "Glossary of Terms for Device Independence",
         "date": "18 January 2005",
         "status": "WD",
         "publisher": "W3C"
@@ -1166,7 +1259,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Roger Gimson"
         ],
         "href": "http://www.w3.org/TR/2003/NOTE-di-princ-20030901",
-        "title": "Device Independence Principles.",
+        "title": "Device Independence Principles",
         "date": "1 September 2003",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1176,7 +1269,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Kevin Smith"
         ],
         "href": "http://www.w3.org/TR/2007/WD-dial-20070727",
-        "title": "Device Independent Authoring Language (DIAL).",
+        "title": "Device Independent Authoring Language (DIAL)",
         "date": "27 July 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -1187,7 +1280,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Kevin Smith"
         ],
         "href": "http://www.w3.org/TR/2007/WD-dial-primer-20071101",
-        "title": "DIAL Part 0: Primer.",
+        "title": "DIAL Part 0: Primer",
         "date": "1 November 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -1197,7 +1290,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Digital Imaging Group"
         ],
         "href": "http://www.digitalimaging.org/pdf/wg1n1017.pdf",
-        "title": "DIG2000 file format proposal.",
+        "title": "DIG2000 file format proposal",
         "date": "Oct 1998",
         "status": "Report (draft) ISO/IEC JTC1/SG29/WG1 N1017"
     },
@@ -1208,7 +1301,7 @@ if (typeof berjon === "undefined") berjon = {};
             "M. Krochmal"
         ],
         "href": "http://files.dns-sd.org/draft-cheshire-dnsext-dns-sd.txt",
-        "title": "DNS-Based Service Discovery.",
+        "title": "DNS-Based Service Discovery",
         "date": "27 February 2011",
         "status": "IETF Draft",
         "publisher": "IETF"
@@ -1218,19 +1311,31 @@ if (typeof berjon === "undefined") berjon = {};
             "Cameron McCormack"
         ],
         "href": "http://www.w3.org/TR/2008/WD-WebIDL-20081219",
-        "title": "Web IDL.",
+        "title": "Web IDL",
         "date": "19 December 2008",
         "status": "WD",
         "publisher": "W3C"
     },
-    "DOM4": "Anne van Kesteren; Aryeh Gregor; Ms2ger. <a href=\"http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html/\"><cite>DOM4.</cite></a> URL: <a href=\"http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html/\">http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html/</a> ",
+    "DOM4": {
+        "authors": [
+            "Anne van Kesteren",
+            "Aryeh Gregor",
+            "Lachlan Hunt",
+            "Ms2ger"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-dom-20121206",
+        "title": "DOM4",
+        "date": "6 December 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
     "DOM-LEVEL-1": {
         "authors": [
             "Vidur Apparao"
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/",
-        "title": "Document Object Model (DOM) Level 1.",
+        "title": "Document Object Model (DOM) Level 1",
         "date": "1 October 1998",
         "status": "REC",
         "publisher": "W3C"
@@ -1241,7 +1346,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2000/WD-DOM-Level-1-20000929",
-        "title": "Document Object Model (DOM) Level 1 Specification (Second Edition).",
+        "title": "Document Object Model (DOM) Level 1 Specification (Second Edition)",
         "date": "29 September 2000",
         "status": "WD",
         "publisher": "W3C"
@@ -1252,7 +1357,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/",
-        "title": "Document Object Model (DOM) Level 2 Core Specification.",
+        "title": "Document Object Model (DOM) Level 2 Core Specification",
         "date": "13 November 2000",
         "status": "REC",
         "publisher": "W3C"
@@ -1262,7 +1367,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Tom Pixley"
         ],
         "href": "http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113",
-        "title": "Document Object Model (DOM) Level 2 Events Specification.",
+        "title": "Document Object Model (DOM) Level 2 Events Specification",
         "date": "13 November 2000",
         "status": "REC",
         "publisher": "W3C"
@@ -1274,7 +1379,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Philippe Le H&#233;garet"
         ],
         "href": "http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109",
-        "title": "Document Object Model (DOM) Level 2 HTML Specification.",
+        "title": "Document Object Model (DOM) Level 2 HTML Specification",
         "date": "9 January 2003",
         "status": "REC",
         "publisher": "W3C"
@@ -1286,7 +1391,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Chris Wilson"
         ],
         "href": "http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113",
-        "title": "Document Object Model (DOM) Level 2 Style Specification.",
+        "title": "Document Object Model (DOM) Level 2 Style Specification",
         "date": "13 November 2000",
         "status": "REC",
         "publisher": "W3C"
@@ -1297,7 +1402,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-Range-20001113",
-        "title": "Document Object Model (DOM) Level 2 Traversal and Range Specification.",
+        "title": "Document Object Model (DOM) Level 2 Traversal and Range Specification",
         "date": "13 November 2000",
         "status": "REC",
         "publisher": "W3C"
@@ -1308,7 +1413,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Arnaud Le Hors"
         ],
         "href": "http://www.w3.org/TR/2000/REC-DOM-Level-2-Views-20001113",
-        "title": "Document Object Model (DOM) Level 2 Views Specification.",
+        "title": "Document Object Model (DOM) Level 2 Views Specification",
         "date": "13 November 2000",
         "status": "REC",
         "publisher": "W3C"
@@ -1319,7 +1424,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2002/NOTE-DOM-Level-3-AS-20020725",
-        "title": "Document Object Model (DOM) Level 3 Abstract Schemas Specification.",
+        "title": "Document Object Model (DOM) Level 3 Abstract Schemas Specification",
         "date": "25 July 2002",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1330,7 +1435,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407",
-        "title": "Document Object Model (DOM) Level 3 Core Specification.",
+        "title": "Document Object Model (DOM) Level 3 Core Specification",
         "date": "7 April 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -1341,11 +1446,11 @@ if (typeof berjon === "undefined") berjon = {};
             "Jacob Rossi",
             "Doug Schepers",
             "Bj&#246;rn H&#246;hrmann",
-            "Tom Pixley",
-            "Philippe Le H&#233;garet"
+            "Philippe Le H&#233;garet",
+            "Tom Pixley"
         ],
-        "href": "http://www.w3.org/TR/2012/WD-DOM-Level-3-Events-20120906/",
-        "title": "Document Object Model (DOM) Level 3 Events Specification.",
+        "href": "http://www.w3.org/TR/2012/WD-DOM-Level-3-Events-20120906",
+        "title": "Document Object Model (DOM) Level 3 Events Specification",
         "date": "06 September 2012",
         "status": "WD",
         "publisher": "W3C"
@@ -1356,7 +1461,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Andy Heninger"
         ],
         "href": "http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407",
-        "title": "Document Object Model (DOM) Level 3 Load and Save Specification.",
+        "title": "Document Object Model (DOM) Level 3 Load and Save Specification",
         "date": "7 April 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -1368,7 +1473,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Joe Kesselman"
         ],
         "href": "http://www.w3.org/TR/2004/REC-DOM-Level-3-Val-20040127",
-        "title": "Document Object Model (DOM) Level 3 Validation Specification.",
+        "title": "Document Object Model (DOM) Level 3 Validation Specification",
         "date": "27 January 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -1378,7 +1483,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ray Whitmer"
         ],
         "href": "http://www.w3.org/TR/2004/NOTE-DOM-Level-3-Views-20040226",
-        "title": "Document Object Model (DOM) Level 3 Views and Formatting Specification.",
+        "title": "Document Object Model (DOM) Level 3 Views and Formatting Specification",
         "date": "26 February 2004",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1388,7 +1493,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ray Whitmer"
         ],
         "href": "http://www.w3.org/TR/2004/NOTE-DOM-Level-3-XPath-20040226",
-        "title": "Document Object Model (DOM) Level 3 XPath Specification.",
+        "title": "Document Object Model (DOM) Level 3 XPath Specification",
         "date": "26 February 2004",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1399,7 +1504,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2004/NOTE-DOM-Requirements-20040226",
-        "title": "Document Object Model (DOM) Requirements.",
+        "title": "Document Object Model (DOM) Requirements",
         "date": "26 February 2004",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1410,7 +1515,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/CR-DPF-20071221",
-        "title": "Delivery Context: Client Interfaces (DCCI) 1.0.",
+        "title": "Delivery Context: Client Interfaces (DCCI) 1.0",
         "date": "21 December 2007",
         "status": "CR",
         "publisher": "W3C"
@@ -1421,7 +1526,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/1998/REC-DSig-label-19980527",
-        "title": "PICS Signed Labels (DSig) 1.0 Specification.",
+        "title": "PICS Signed Labels (DSig) 1.0 Specification",
         "date": "27 May 1998",
         "status": "REC",
         "publisher": "W3C"
@@ -1431,7 +1536,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Thomas Roessler"
         ],
         "href": "http://www.w3.org/TR/2006/NOTE-DSig-usage-20061220",
-        "title": "Using XML Digital Signatures in the 2006 XML Environment.",
+        "title": "Using XML Digital Signatures in the 2006 XML Environment",
         "date": "20 December 2006",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1443,7 +1548,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jim Ley"
         ],
         "href": "http://www.w3.org/TR/2005/WD-EARL10-Requirements-20050711",
-        "title": "Requirements for the Evaluation and Report Language (EARL) 1.0.",
+        "title": "Requirements for the Evaluation and Report Language (EARL) 1.0",
         "date": "11 July 2005",
         "status": "WD",
         "publisher": "W3C"
@@ -1453,7 +1558,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Shadi Abou-Zahra"
         ],
         "href": "http://www.w3.org/TR/2007/WD-EARL10-Schema-20070323",
-        "title": "Evaluation and Report Language (EARL) 1.0 Schema.",
+        "title": "Evaluation and Report Language (EARL) 1.0 Schema",
         "date": "23 March 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -1466,7 +1571,7 @@ if (typeof berjon === "undefined") berjon = {};
             "M. Salter"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc6090.txt",
-        "title": "RFC 6090: Fundamental Elliptic Curve Cryptography Algorithms.",
+        "title": "RFC 6090: Fundamental Elliptic Curve Cryptography Algorithms",
         "date": "February 2011",
         "status": "IETF Informational RFC",
         "publisher": "IETF"
@@ -1476,7 +1581,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Thierry Michel"
         ],
         "href": "http://www.w3.org/TR/2000/NOTE-EC-related-activities-20000107",
-        "title": "W3C and Electronic Commerce.",
+        "title": "W3C and Electronic Commerce",
         "date": "7 January 2000",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1490,7 +1595,7 @@ if (typeof berjon === "undefined") berjon = {};
             "M. Alonso"
         ],
         "href": "http://www.w3.org/TR/2009/WD-egov-improving-20090310",
-        "title": "Improving Access to Government through Better Use of the Web.",
+        "title": "Improving Access to Government through Better Use of the Web",
         "date": "10 March 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -1501,7 +1606,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Doug Schepers"
         ],
         "href": "http://www.w3.org/TR/2008/REC-ElementTraversal-20081222",
-        "title": "Element Traversal Specification.",
+        "title": "Element Traversal Specification",
         "date": "22 December 2008",
         "status": "REC",
         "publisher": "W3C"
@@ -1513,7 +1618,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Michael Johnston"
         ],
         "href": "http://www.w3.org/TR/2009/REC-emma-20090210",
-        "title": "EMMA: Extensible MultiModal Annotation markup language.",
+        "title": "EMMA: Extensible MultiModal Annotation markup language",
         "date": "10 February 2009",
         "status": "REC",
         "publisher": "W3C"
@@ -1524,7 +1629,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Stephen Potter"
         ],
         "href": "http://www.w3.org/TR/2003/NOTE-EMMAreqs-20030113",
-        "title": "Requirements for EMMA.",
+        "title": "Requirements for EMMA",
         "date": "13 January 2003",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1537,7 +1642,7 @@ if (typeof berjon === "undefined") berjon = {};
             "John Schneider"
         ],
         "href": "http://www.w3.org/TR/2009/CR-exi-20091208/",
-        "title": "Efficient XML Interchange (EXI) Format 1.0.",
+        "title": "Efficient XML Interchange (EXI) Format 1.0",
         "date": "8 December 2009",
         "status": "CR",
         "publisher": "W3C"
@@ -1548,7 +1653,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Daniel Vogelheim"
         ],
         "href": "http://www.w3.org/TR/2007/WD-exi-best-practices-20071219",
-        "title": "Efficient XML Interchange (EXI) Best Practices.",
+        "title": "Efficient XML Interchange (EXI) Best Practices",
         "date": "19 December 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -1558,7 +1663,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Carine Bournez"
         ],
         "href": "http://www.w3.org/TR/2008/WD-exi-evaluation-20080728",
-        "title": "Efficient XML Interchange Evaluation.",
+        "title": "Efficient XML Interchange Evaluation",
         "date": "28 July 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -1568,7 +1673,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jaakko Kangasharju"
         ],
         "href": "http://www.w3.org/TR/2008/WD-exi-impacts-20080903",
-        "title": "Efficient XML Interchange (EXI) Impacts.",
+        "title": "Efficient XML Interchange (EXI) Impacts",
         "date": "3 September 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -1579,7 +1684,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/WD-exi-measurements-20070725",
-        "title": "Efficient XML Interchange Measurements Note.",
+        "title": "Efficient XML Interchange Measurements Note",
         "date": "25 July 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -1590,7 +1695,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Santiago Pericas-Geertsen"
         ],
         "href": "http://www.w3.org/TR/2007/WD-exi-primer-20071219",
-        "title": "Efficient XML Interchange (EXI) Primer.",
+        "title": "Efficient XML Interchange (EXI) Primer",
         "date": "19 December 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -1600,7 +1705,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Robin Berjon"
         ],
         "href": "http://www.w3.org/TR/2006/WD-file-upload-20061018",
-        "title": "File Upload.",
+        "title": "File Upload",
         "date": "18 October 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -1610,9 +1715,9 @@ if (typeof berjon === "undefined") berjon = {};
             "Arun Ranganathan",
             "Jonas Sicking"
         ],
-        "href": "http://www.w3.org/TR/2011/WD-FileAPI-20111020/",
-        "title": "File API.",
-        "date": "20 October 2011",
+        "href": "http://www.w3.org/TR/2012/WD-FileAPI-20121025",
+        "title": "File API",
+        "date": "25 October 2012",
         "status": "WD",
         "publisher": "W3C"
     },
@@ -1621,7 +1726,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Eric Uhrhane"
         ],
         "href": "http://www.w3.org/TR/2011/WD-file-writer-api-20110419/",
-        "title": "File Writer API.",
+        "title": "File Writer API",
         "date": "19 April 2011",
         "status": "WD",
         "publisher": "W3C"
@@ -1637,10 +1742,10 @@ if (typeof berjon === "undefined") berjon = {};
             "Elika J. Etemad",
             "Alex Mogilevsky"
         ],
-        "href": "http://www.w3.org/TR/css3-flexbox/",
-        "title": "Flexible Box Layout Module.",
-        "date": "12 June 2012",
-        "status": "WD",
+        "href": "http://www.w3.org/TR/2012/CR-css3-flexbox-20120918",
+        "title": "CSS Flexible Box Layout Module",
+        "date": "18 September 2012",
+        "status": "CR",
         "publisher": "W3C"
     },
     "FOAF": "Dan Brickley, Libby Miller. <a href=\"http://xmlns.com/foaf/spec/\"><cite>FOAF Vocabulary Specification 0.98.</cite></a> 9 August 2010. URL: <a href=\"http://xmlns.com/foaf/spec/\">http://xmlns.com/foaf/spec/</a>",
@@ -1649,7 +1754,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Anne van Kesteren"
         ],
         "href": "http://dvcs.w3.org/hg/fullscreen/raw-file/tip/Overview.html",
-        "title": "The Fullscreen API.",
+        "title": "The Fullscreen API",
         "date": "4 January 2012",
         "status": "ED",
         "publisher": "W3C"
@@ -1658,10 +1763,10 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Andrei Popescu"
         ],
-        "href": "http://www.w3.org/TR/2008/WD-geolocation-API-20081222/",
-        "title": "Geolocation API Specification.",
-        "date": "22 December 2008",
-        "status": "WD",
+        "href": "http://www.w3.org/TR/2012/PR-geolocation-API-20120510",
+        "title": "Geolocation API Specification",
+        "date": "10 May 2012",
+        "status": "PR",
         "publisher": "W3C"
     },
     "GEOPRIV-ARCH": "Barnes, R. Lepinski, M. Cooper, A. Morris, J. Tschofenig, H. Schulzrinne, H. <a href = 'http://tools.ietf.org/html/draft-ietf-geopriv-arch-01'><cite>An Architecture for Location and Location Privacy in Internet Applications</cite></a> 29 October 2009. URL: <a href=\"http://tools.ietf.org/html/draft-ietf-geopriv-arch-01\">http://tools.ietf.org/html/draft-ietf-geopriv-arch-01</a>",
@@ -1671,7 +1776,7 @@ if (typeof berjon === "undefined") berjon = {};
             "D. Burnett",
             "A. Narayanan"
         ],
-        "href": "http://dev.w3.org/TR/2012/WD-mediacapture-streams-20120628/",
+        "href": "http://www.w3.org/TR/2012/WD-mediacapture-streams-20120628/",
         "title": "Media Capture and Streams",
         "date": "28 June 2012",
         "status": "WD",
@@ -1682,7 +1787,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Dan Connolly"
         ],
         "href": "http://www.w3.org/TR/2007/REC-grddl-20070911",
-        "title": "Gleaning Resource Descriptions from Dialects of Languages (GRDDL).",
+        "title": "Gleaning Resource Descriptions from Dialects of Languages (GRDDL)",
         "date": "11 September 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -1693,7 +1798,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ian Davis"
         ],
         "href": "http://www.w3.org/TR/2007/NOTE-grddl-primer-20070628",
-        "title": "GRDDL Primer.",
+        "title": "GRDDL Primer",
         "date": "28 June 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1703,7 +1808,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Fabien Gandon"
         ],
         "href": "http://www.w3.org/TR/2007/NOTE-grddl-scenarios-20070406",
-        "title": "GRDDL Use Cases: Scenarios of extracting RDF data from XML documents.",
+        "title": "GRDDL Use Cases: Scenarios of extracting RDF data from XML documents",
         "date": "6 April 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1713,7 +1818,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Chimezie Ogbuji"
         ],
         "href": "http://www.w3.org/TR/2007/REC-grddl-tests-20070911",
-        "title": "GRDDL Test Cases.",
+        "title": "GRDDL Test Cases",
         "date": "11 September 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -1723,7 +1828,7 @@ if (typeof berjon === "undefined") berjon = {};
             "3G Partnership Project"
         ],
         "href": "http://www.3gpp.org/ftp/Specs/archive/03_series/03.40/0340-750.zip",
-        "title": "Technical realization of the Short Message Service (SMS).",
+        "title": "Technical realization of the Short Message Service (SMS)",
         "date": "11 January 2002",
         "status": "3GPP 0340-750"
     },
@@ -1733,7 +1838,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ashok Malhotra"
         ],
         "href": "http://www.w3.org/2001/tag/2011/01/HashInURI-20110115",
-        "title": "Repurposing the Hash Sign for the New Web.",
+        "title": "Repurposing the Hash Sign for the New Web",
         "date": "15 January 2011",
         "status": "Putative TAG Finding"
     },
@@ -1743,7 +1848,7 @@ if (typeof berjon === "undefined") berjon = {};
             "M. Scott Marshall"
         ],
         "href": "http://www.w3.org/TR/2008/NOTE-hcls-kb-20080604",
-        "title": "A Prototype Knowledge Base for the Life Sciences.",
+        "title": "A Prototype Knowledge Base for the Life Sciences",
         "date": "4 June 2008",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1754,7 +1859,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Matthias Samwald"
         ],
         "href": "http://www.w3.org/TR/2008/NOTE-hcls-senselab-20080604",
-        "title": "Experiences with the conversion of SenseLab databases to RDF/OWL.",
+        "title": "Experiences with the conversion of SenseLab databases to RDF/OWL",
         "date": "4 June 2008",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1766,7 +1871,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Masayasu Ishikawa"
         ],
         "href": "http://www.w3.org/TR/2002/WD-hlink-20020913",
-        "title": "HLink: Link recognition for the XHTML Family.",
+        "title": "HLink: Link recognition for the XHTML Family",
         "date": "13 September 2002",
         "status": "WD",
         "publisher": "W3C"
@@ -1781,7 +1886,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Maciej Stachowiak"
         ],
         "href": "http://www.w3.org/TR/2007/WD-html-design-principles-20071126",
-        "title": "HTML Design Principles.",
+        "title": "HTML Design Principles",
         "date": "26 November 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -1791,7 +1896,7 @@ if (typeof berjon === "undefined") berjon = {};
             "M. T. Carrasco Benitez"
         ],
         "href": "http://www.w3.org/TR/1998/NOTE-html-lan-19980313",
-        "title": "Primary Language in HTML.",
+        "title": "Primary Language in HTML",
         "date": "13 March 1998",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1801,7 +1906,7 @@ if (typeof berjon === "undefined") berjon = {};
             "David Raggett"
         ],
         "href": "http://www.w3.org/TR/REC-html32-19970114",
-        "title": "HTML 3.2 Reference Specification.",
+        "title": "HTML 3.2 Reference Specification",
         "date": "14 January 1997",
         "status": "REC",
         "publisher": "W3C"
@@ -1813,7 +1918,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Arnaud Le Hors"
         ],
         "href": "http://www.w3.org/TR/1998/REC-html40-19980424",
-        "title": "HTML 4.0 Specification.",
+        "title": "HTML 4.0 Specification",
         "date": "24 April 1998",
         "status": "REC",
         "publisher": "W3C"
@@ -1824,7 +1929,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/1999/NOTE-html40-mobile-19990315",
-        "title": "HTML 4.0 Guidelines for Mobile Access.",
+        "title": "HTML 4.0 Guidelines for Mobile Access",
         "date": "15 March 1999",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1836,7 +1941,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Arnaud Le Hors"
         ],
         "href": "http://www.w3.org/TR/1999/REC-html401-19991224",
-        "title": "HTML 4.01 Specification.",
+        "title": "HTML 4.01 Specification",
         "date": "24 December 1999",
         "status": "REC",
         "publisher": "W3C"
@@ -1847,6 +1952,17 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/html5/",
+        "title": "HTML5",
+        "date": "17 December 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },    
+    "HTML5-20121217": {
+        "authors": [
+            "Robin Berjon"
+        ],
+        "etAl": true,
+        "href": "http://www.w3.org/TR/2012/CR-html5-20121217/",
         "title": "HTML5.",
         "date": "17 December 2012",
         "status": "CR",
@@ -1858,7 +1974,7 @@ if (typeof berjon === "undefined") berjon = {};
             "David Hyatt"
         ],
         "href": "http://www.w3.org/TR/2012/WD-html5-20121025/",
-        "title": "HTML5.",
+        "title": "HTML5",
         "date": "25 October 2012",
         "status": "WD",
         "publisher": "W3C"
@@ -1868,7 +1984,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Anne van Kesteren"
         ],
         "href": "http://www.w3.org/TR/2009/WD-html5-diff-20090212",
-        "title": "HTML 5 differences from HTML 4.",
+        "title": "HTML 5 differences from HTML 4",
         "date": "12 February 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -1878,7 +1994,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Michael Smith"
         ],
         "href": "http://www.w3.org/TR/2008/NOTE-html5-pubnotes-20080610",
-        "title": "HTML 5 Publication Notes.",
+        "title": "HTML 5 Publication Notes",
         "date": "10 June 2008",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1901,7 +2017,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Shadi Abou-Zahra"
         ],
         "href": "http://www.w3.org/TR/2008/WD-HTTP-in-RDF-20080908",
-        "title": "HTTP Vocabulary in RDF.",
+        "title": "HTTP Vocabulary in RDF",
         "date": "8 September 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -1911,7 +2027,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Daniel Veillard"
         ],
         "href": "http://www.w3.org/TR/1998/NOTE-HTTP-NG-testbed-19980710",
-        "title": "Design of HTTP-ng Testbed.",
+        "title": "Design of HTTP-ng Testbed",
         "date": "10 July 1998",
         "status": "NOTE",
         "publisher": "W3C"
@@ -1922,9 +2038,9 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.ietf.org/rfc/rfc2616.txt",
-        "title": "Hypertext Transfer Protocol - HTTP/1.1.",
+        "title": "Hypertext Transfer Protocol - HTTP/1.1",
         "date": "June 1999",
-        "status": "Internet RFC 2616",
+        "status": "RFC 2616",
         "publisher": "IETF"
     },
     "HTTP-TLS": {
@@ -1932,9 +2048,9 @@ if (typeof berjon === "undefined") berjon = {};
             "E. Rescorla"
         ],
         "href": "http://www.ietf.org/rfc/rfc2818.txt",
-        "title": "HTTP Over TLS.",
+        "title": "HTTP Over TLS",
         "date": "May 2000",
-        "status": "Internet RFC 2818",
+        "status": "RFC 2818",
         "publisher": "IETF"
     },
     "HunterZhan": "Hunter, Jane; Zhan, Zhimin. <a href=\"http://archive.dstc.edu.au/RDU/staff/jane-hunter/PNG/paper.html\">&ldquo;An Indexing and Querying System for Online Images Based on the PNG Format and Embedded Metadata&rdquo;</a> in: <cite>ARLIS/ANZ Conference.</cite> Sep 1999. Brisbane, Australia. URL: <a href=\"http://archive.dstc.edu.au/RDU/staff/jane-hunter/PNG/paper.html\">http://archive.dstc.edu.au/RDU/staff/jane-hunter/PNG/paper.html</a> ",
@@ -1954,7 +2070,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Richard Ishida"
         ],
         "href": "http://www.w3.org/TR/2003/WD-i18n-guide-framework-20030417",
-        "title": "Framework Document for i18n Guidelines 1.0.",
+        "title": "Framework Document for i18n Guidelines 1.0",
         "date": "17 April 2003",
         "status": "WD",
         "publisher": "W3C"
@@ -1969,7 +2085,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Richard Ishida"
         ],
         "href": "http://www.w3.org/TR/2007/WD-i18n-html-tech-bidi-20070606",
-        "title": "Internationalization Best Practices: Handling Right-to-left Scripts in XHTML and HTML Content.",
+        "title": "Internationalization Best Practices: Handling Right-to-left Scripts in XHTML and HTML Content",
         "date": "6 June 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -1979,7 +2095,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Richard Ishida"
         ],
         "href": "http://www.w3.org/TR/2004/WD-i18n-html-tech-char-20040509",
-        "title": "Authoring Techniques for XHTML &amp; HTML Internationalization: Characters and Encodings 1.0.",
+        "title": "Authoring Techniques for XHTML &amp; HTML Internationalization: Characters and Encodings 1.0",
         "date": "9 May 2004",
         "status": "WD",
         "publisher": "W3C"
@@ -1989,7 +2105,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Richard Ishida"
         ],
         "href": "http://www.w3.org/TR/2007/NOTE-i18n-html-tech-lang-20070412",
-        "title": "Internationalization Best Practices: Specifying Language in XHTML &amp; HTML Content.",
+        "title": "Internationalization Best Practices: Specifying Language in XHTML &amp; HTML Content",
         "date": "12 April 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2011,9 +2127,9 @@ if (typeof berjon === "undefined") berjon = {};
             "J. Rosenberg"
         ],
         "href": "http://tools.ietf.org/html/rfc5245",
-        "title": "Interactive Connectivity Establishment (ICE): A Protocol for Network Address Translator (NAT) Traversal for Offer/Answer Protocols.",
+        "title": "Interactive Connectivity Establishment (ICE): A Protocol for Network Address Translator (NAT) Traversal for Offer/Answer Protocols",
         "date": "April 2010",
-        "status": "Internet RFC 5245",
+        "status": "RFC 5245",
         "publisher": "IETF"
     },
     "ILU-REQUESTOR": {
@@ -2021,7 +2137,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Paul Everitt"
         ],
         "href": "http://www.w3.org/TR/WD-ilu-requestor-960307",
-        "title": "The ILU Requester: Object Services in HTTP Servers.",
+        "title": "The ILU Requester: Object Services in HTTP Servers",
         "date": "7 March 1996",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2031,12 +2147,25 @@ if (typeof berjon === "undefined") berjon = {};
             "Ian Graham"
         ],
         "href": "http://www.w3.org/TR/NOTE-imagemap",
-        "title": "Imagemapped Images and Image-Incapable User Agents.",
+        "title": "Imagemapped Images and Image-Incapable User Agents",
         "date": "27 November 1996",
         "status": "NOTE",
         "publisher": "W3C"
     },
-    "INDEXEDDB": "Nikunj Mehta, Jonas Sicking, Eliot Graff, Andrei Popescu, Jeremy Orlow. <a href=\"http://www.w3.org/TR/IndexedDB/\">Indexed Database API</a>. April 2011. Working Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/IndexedDB/\">http://www.w3.org/TR/IndexedDB/</a>",
+    "INDEXEDDB": {
+        "authors": [
+            "Nikunj Mehta",
+            "Jonas Sicking",
+            "Eliot Graff",
+            "Andrei Popescu",
+            "Jeremy Orlow"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-IndexedDB-20120524/",
+        "title": "Indexed Database API",
+        "date": "24 May 2012",
+        "status": "LCWD",
+        "publisher": "W3C"
+    },
     "INKML": {
         "authors": [
             "Stephen M. Watt",
@@ -2044,7 +2173,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Yi-Min Chee"
         ],
         "href": "http://www.w3.org/TR/2006/WD-InkML-20061023",
-        "title": "Ink Markup Language (InkML).",
+        "title": "Ink Markup Language (InkML)",
         "date": "23 October 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -2055,7 +2184,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Sai Prasad"
         ],
         "href": "http://www.w3.org/TR/2003/NOTE-inkreqs-20030122",
-        "title": "Requirements for the Ink Markup Language.",
+        "title": "Requirements for the Ink Markup Language",
         "date": "22 January 2003",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2066,9 +2195,9 @@ if (typeof berjon === "undefined") berjon = {};
             "M. Suignard"
         ],
         "href": "http://www.ietf.org/rfc/rfc3987.txt",
-        "title": "Internationalized Resource Identifiers (IRI).",
+        "title": "Internationalized Resource Identifiers (IRI)",
         "date": "January 2005",
-        "status": "Internet RFC 3987",
+        "status": "RFC 3987",
         "publisher": "IETF"
     },
     "ISO10646": "<cite>Information Technology - Universal Multiple- Octet Coded CharacterSet (UCS) - Part 1: Architecture and Basic Multilingual Plane.</cite> ISO/IEC10646-1:1993. The current specification also takes into consideration the first five amendments to ISO/IEC 10646-1:1993. Useful &lt;a href=&quot;http://www.egt.ie/standards/iso10646/ucs-roadmap.html&quot;&gt;roadmaps&lt;/a&gt;show which scripts sit at which numeric ranges.",
@@ -2083,7 +2212,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Christian Lieske"
         ],
         "href": "http://www.w3.org/TR/2007/REC-its-20070403",
-        "title": "Internationalization Tag Set (ITS) Version 1.0.",
+        "title": "Internationalization Tag Set (ITS) Version 1.0",
         "date": "3 April 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -2093,7 +2222,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Yves Savourel"
         ],
         "href": "http://www.w3.org/TR/2006/WD-itsreq-20060518",
-        "title": "Internationalization and Localization Markup Requirements.",
+        "title": "Internationalization and Localization Markup Requirements",
         "date": "18 May 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -2109,7 +2238,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/WD-jlreq-20081015",
-        "title": "Requirements of Japanese Text Layout.",
+        "title": "Requirements of Japanese Text Layout",
         "date": "15 October 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -2120,7 +2249,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Joint Photographers Expert Group (JPEG)"
         ],
         "href": "http://www.jpeg.org/cd15444-1.pdf",
-        "title": "Jpeg 2000 image coding system.",
+        "title": "Jpeg 2000 image coding system",
         "date": "9 Dec 1999",
         "status": "Report (draft) ISO/IEC CD15444-1:1999"
     },
@@ -2142,7 +2271,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Thierry"
         ],
         "href": "http://www.inria.fr/koala/kuil/index.html",
-        "title": "KUIL, the Koala User Interface Language.",
+        "title": "KUIL, the Koala User Interface Language",
         "date": "Sep 1999",
         "status": "Software package"
     },
@@ -2153,7 +2282,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Patrick Hayes"
         ],
         "href": "http://www.w3.org/TR/2003/NOTE-lbase-20031010",
-        "title": "LBase: Semantics for Languages of the Semantic Web.",
+        "title": "LBase: Semantics for Languages of the Semantic Web",
         "date": "10 October 2003",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2166,7 +2295,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Henry S. Thompson"
         ],
         "href": "http://www.w3.org/TR/2008/NOTE-leiri-20081103",
-        "title": "Legacy extended IRIs for XML resource identification.",
+        "title": "Legacy extended IRIs for XML resource identification",
         "date": "3 November 2008",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2177,7 +2306,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Frank Scahill"
         ],
         "href": "http://www.w3.org/TR/2004/WD-lexicon-reqs-20041029",
-        "title": "Pronunciation Lexicon Specification (PLS) Version 1.0 Requirements.",
+        "title": "Pronunciation Lexicon Specification (PLS) Version 1.0 Requirements",
         "date": "29 October 2004",
         "status": "WD",
         "publisher": "W3C"
@@ -2188,7 +2317,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Tim Berners-Lee"
         ],
         "href": "http://www.w3.org/DesignIssues/LinkedData.html",
-        "title": "Linked Data Design Issues.",
+        "title": "Linked Data Design Issues",
         "date": "27 July 2006",
         "status": "W3C-Internal Document",
         "publisher": "W3C"
@@ -2209,7 +2338,7 @@ if (typeof berjon === "undefined") berjon = {};
             "D. Vila Suero"
         ],
         "href": "http://www.w3.org/2005/Incubator/lld/XGR-lld-usecase-20111025/",
-        "title": "Library Linked Data Incubartor Group: Use Cases.",
+        "title": "Library Linked Data Incubartor Group: Use Cases",
         "date": "25 October 2011",
         "status": "W3C Incubator Group Report",
         "publisher": "W3C"
@@ -2219,7 +2348,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Felix Sasaki"
         ],
         "href": "http://www.w3.org/TR/2006/WD-ltli-20060612",
-        "title": "Language Tags and Locale Identifiers for the World Wide Web.",
+        "title": "Language Tags and Locale Identifiers for the World Wide Web",
         "date": "12 June 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -2230,7 +2359,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Robert Miner"
         ],
         "href": "http://www.w3.org/1999/07/REC-MathML-19990707",
-        "title": "Mathematical Markup Language (MathML) 1.01 Specification.",
+        "title": "Mathematical Markup Language (MathML) 1.01 Specification",
         "date": "7 July 1999",
         "status": "REC",
         "publisher": "W3C"
@@ -2241,7 +2370,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Michael Kohlhase"
         ],
         "href": "http://www.w3.org/TR/2003/NOTE-mathml-bvar-20031110",
-        "title": "Bound Variables in MathML.",
+        "title": "Bound Variables in MathML",
         "date": "10 November 2003",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2252,7 +2381,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/WD-mathml-for-css-20071214",
-        "title": "A MathML for CSS profile.",
+        "title": "A MathML for CSS profile",
         "date": "14 December 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -2264,7 +2393,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Max Froumentin"
         ],
         "href": "http://www.w3.org/TR/2003/NOTE-mathml-types-20031110",
-        "title": "Structured Types in MathML 2.0.",
+        "title": "Structured Types in MathML 2.0",
         "date": "10 November 2003",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2275,7 +2404,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Stan Devitt"
         ],
         "href": "http://www.w3.org/TR/2003/NOTE-mathml-units-20031110",
-        "title": "Units in MathML.",
+        "title": "Units in MathML",
         "date": "10 November 2003",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2286,7 +2415,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2003/REC-MathML2-20031021",
-        "title": "Mathematical Markup Language (MathML) Version 2.0 (Second Edition).",
+        "title": "Mathematical Markup Language (MathML) Version 2.0 (Second Edition)",
         "date": "21 October 2003",
         "status": "REC",
         "publisher": "W3C"
@@ -2298,7 +2427,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Robert Miner"
         ],
         "href": "http://www.w3.org/TR/2008/WD-MathML3-20081117",
-        "title": "Mathematical Markup Language (MathML) Version 3.0.",
+        "title": "Mathematical Markup Language (MathML) Version 3.0",
         "date": "17 November 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -2311,7 +2440,7 @@ if (typeof berjon === "undefined") berjon = {};
             "M. Krochmal"
         ],
         "href": "http://files.multicastdns.org/draft-cheshire-dnsext-multicastdns.txt",
-        "title": "Multicast DNS.",
+        "title": "Multicast DNS",
         "date": "14 February 2011",
         "status": "IETF Draft",
         "publisher": "IETF"
@@ -2324,7 +2453,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Silvia Pfeiffer and Davy Van Deursen"
         ],
         "href": "http://www.w3.org/TR/2010/WD-media-frags-20100624",
-        "title": "Media Fragments URI 1.0.",
+        "title": "Media Fragments URI 1.0",
         "date": "18 November 2010",
         "status": "REC",
         "publisher": "W3C"
@@ -2338,7 +2467,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Roland Lundblad"
         ],
         "href": "http://www.w3.org/TR/2006/WD-MediaAccessEvents-20061013",
-        "title": "Media Access Events.",
+        "title": "Media Access Events",
         "date": "13 October 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -2350,7 +2479,7 @@ if (typeof berjon === "undefined") berjon = {};
             "et. al"
         ],
         "href": "http://www.w3.org/TR/2012/REC-mediaont-10-20120209/",
-        "title": "Ontology for Media Resources 1.0.",
+        "title": "Ontology for Media Resources 1.0",
         "date": "9 February 2012",
         "status": "REC",
         "publisher": "W3C"
@@ -2362,7 +2491,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Chris Poppe"
         ],
         "href": "http://www.w3.org/TR/2010/WD-mediaont-api-1.0-20100608",
-        "title": "API for Media Resource 1.0.",
+        "title": "API for Media Resource 1.0",
         "date": "8 June 2010",
         "status": "WD",
         "publisher": "W3C"
@@ -2379,7 +2508,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jim Barnett"
         ],
         "href": "http://www.w3.org/TR/2008/WD-mmi-arch-20081016",
-        "title": "Multimodal Architecture and Interfaces.",
+        "title": "Multimodal Architecture and Interfaces",
         "date": "16 October 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -2389,7 +2518,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ingmar Kliche"
         ],
         "href": "http://www.w3.org/TR/2008/NOTE-mmi-auth-20080702",
-        "title": "Authoring Applications for the Multimodal Architecture.",
+        "title": "Authoring Applications for the Multimodal Architecture",
         "date": "2 July 2008",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2400,7 +2529,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2006/NOTE-mmi-dev-feedback-20060414",
-        "title": "Multimodal Application Developer Feedback.",
+        "title": "Multimodal Application Developer Feedback",
         "date": "14 April 2006",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2412,7 +2541,7 @@ if (typeof berjon === "undefined") berjon = {};
             "David Raggett"
         ],
         "href": "http://www.w3.org/TR/2003/NOTE-mmi-framework-20030506",
-        "title": "W3C Multimodal Interaction Framework.",
+        "title": "W3C Multimodal Interaction Framework",
         "date": "6 May 2003",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2423,7 +2552,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Vijay Saraswat"
         ],
         "href": "http://www.w3.org/TR/2003/NOTE-mmi-reqs-20030108",
-        "title": "Multimodal Interaction Requirements.",
+        "title": "Multimodal Interaction Requirements",
         "date": "8 January 2003",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2433,7 +2562,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jim Larson"
         ],
         "href": "http://www.w3.org/TR/2006/NOTE-mmi-suggestions-20060911",
-        "title": "Common Sense Suggestions for Developing Multimodal User Interfaces.",
+        "title": "Common Sense Suggestions for Developing Multimodal User Interfaces",
         "date": "11 September 2006",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2444,7 +2573,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Emily Candell"
         ],
         "href": "http://www.w3.org/TR/2002/NOTE-mmi-use-cases-20021204",
-        "title": "Multimodal Interaction Use Cases.",
+        "title": "Multimodal Interaction Use Cases",
         "date": "4 December 2002",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2455,7 +2584,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jo Rabin"
         ],
         "href": "http://www.w3.org/TR/2008/REC-mobile-bp-20080729",
-        "title": "Mobile Web Best Practices 1.0.",
+        "title": "Mobile Web Best Practices 1.0",
         "date": "29 July 2008",
         "status": "REC",
         "publisher": "W3C"
@@ -2466,7 +2595,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ed Mitukiewicz"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-mobile-bp-scope-20051220",
-        "title": "Scope of Mobile Web Best Practices.",
+        "title": "Scope of Mobile Web Best Practices",
         "date": "20 December 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2477,7 +2606,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Phil Archer"
         ],
         "href": "http://www.w3.org/TR/2008/WD-mobileOK-20081117",
-        "title": "W3C mobileOK Scheme 1.0.",
+        "title": "W3C mobileOK Scheme 1.0",
         "date": "17 November 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -2488,7 +2617,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Sean Owen"
         ],
         "href": "http://www.w3.org/TR/2008/REC-mobileOK-basic10-tests-20081208",
-        "title": "W3C mobileOK Basic Tests 1.0.",
+        "title": "W3C mobileOK Basic Tests 1.0",
         "date": "8 December 2008",
         "status": "REC",
         "publisher": "W3C"
@@ -2498,7 +2627,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Brad Porter"
         ],
         "href": "http://www.w3.org/TR/2004/NOTE-modality-interface-20040510",
-        "title": "Modality Component to Host Environment DOM Requirements and Capabilities Assessment.",
+        "title": "Modality Component to Host Environment DOM Requirements and Capabilities Assessment",
         "date": "10 May 2004",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2510,7 +2639,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Marianne Hickey"
         ],
         "href": "http://www.w3.org/TR/2000/WD-multimodal-reqs-20000710",
-        "title": "Multimodal Requirements for Voice Markup Languages.",
+        "title": "Multimodal Requirements for Voice Markup Languages",
         "date": "10 July 2000",
         "status": "WD",
         "publisher": "W3C"
@@ -2521,7 +2650,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Bryan Sullivan"
         ],
         "href": "http://www.w3.org/TR/2010/REC-mwabp-20101214/",
-        "title": "Mobile Web Application Best Practices.",
+        "title": "Mobile Web Application Best Practices",
         "date": "14 December 2010",
         "status": "REC",
         "publisher": "W3C"
@@ -2532,7 +2661,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Alan Chuter"
         ],
         "href": "http://www.w3.org/TR/2008/WD-mwbp-wcag-20080703",
-        "title": "Relationship between Mobile Web Best Practices (MWBP) and Web Content Accessibility Guidelines (WCAG).",
+        "title": "Relationship between Mobile Web Best Practices (MWBP) and Web Content Accessibility Guidelines (WCAG)",
         "date": "3 July 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -2543,7 +2672,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Chris"
         ],
         "href": "http://lists.w3.org/Archives/Member/w3c-ui-tech/2001Mar/0002.html",
-        "title": "Restrictions on identifiers.",
+        "title": "Restrictions on identifiers",
         "date": "(forthcoming)",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2553,7 +2682,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Norman Walsh"
         ],
         "href": "http://www.w3.org/TR/2006/WD-namespaceState-20060329",
-        "title": "The Disposition of Names in an XML Namespace.",
+        "title": "The Disposition of Names in an XML Namespace",
         "date": "29 March 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -2568,7 +2697,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Andreas Kellner"
         ],
         "href": "http://www.w3.org/TR/2001/WD-ngram-spec-20010103",
-        "title": "Stochastic Language Models (N-Gram) Specification.",
+        "title": "Stochastic Language Models (N-Gram) Specification",
         "date": "3 January 2001",
         "status": "WD",
         "publisher": "W3C"
@@ -2578,7 +2707,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Deborah A. Dahl"
         ],
         "href": "http://www.w3.org/TR/2000/WD-nl-spec-20001120",
-        "title": "Natural Language Semantics Markup Language for the Speech Interface Framework.",
+        "title": "Natural Language Semantics Markup Language for the Speech Interface Framework",
         "date": "20 November 2000",
         "status": "WD",
         "publisher": "W3C"
@@ -2589,7 +2718,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/1999/07/NOTE-CCPP-19990727",
-        "title": "Composite Capability/Preference Profiles (CC/PP): A user side framework for content negotiation.",
+        "title": "Composite Capability/Preference Profiles (CC/PP): A user side framework for content negotiation",
         "date": "27 July 1999",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2600,7 +2729,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Dan Connolly"
         ],
         "href": "http://www.w3.org/TeamSubmission/2008/SUBM-n3-20080114/",
-        "title": "Notation3 (N3): A readable RDF syntax.",
+        "title": "Notation3 (N3): A readable RDF syntax",
         "date": "14 January 2008",
         "status": "W3C Team Submission",
         "publisher": "W3C"
@@ -2615,7 +2744,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Renato Iannella"
         ],
         "href": "http://www.w3.org/TR/odrl",
-        "title": "Open Digital Rights Language (ODRL) Version 1.1.",
+        "title": "Open Digital Rights Language (ODRL) Version 1.1",
         "date": "W3C Note",
         "status": "19 September 2002",
         "publisher": "W3C"
@@ -2627,7 +2756,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Anne van Kesteren"
         ],
         "href": "http://www.w3.org/TR/2008/NOTE-offline-webapps-20080530",
-        "title": "Offline Web Applications.",
+        "title": "Offline Web Applications",
         "date": "30 May 2008",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2641,14 +2770,23 @@ if (typeof berjon === "undefined") berjon = {};
     "OMA-DM": "<a href=\"http://www.openmobilealliance.org/Technical/release_program/dm_v1_2.aspx\"><cite>OMA Device Management V1.2 </cite></a> 17 June 2008. URL: <a href=\"http://www.openmobilealliance.org/Technical/release_program/dm_v1_2.aspx\">http://www.openmobilealliance.org/Technical/release_program/dm_v1_2.aspx</a> ",
     "OMA-URI-SCHEMES": "<a href=\"http://www.openmobilealliance.org/Technical/release_program/docs/URI_Schemes/V1_0-20080626-A/OMA-TS-URI_Schemes-V1_0-20080626-A.pdf\"><cite>URI Schemes for the Mobile Applications Environment. Approved Version 1.0</cite></a> 26 Jun 2008. URL: <a href=\"http://www.openmobilealliance.org/Technical/release_program/docs/URI_Schemes/V1_0-20080626-A/OMA-TS-URI_Schemes-V1_0-20080626-A.pdf\">http://www.openmobilealliance.org/Technical/release_program/docs/URI_Schemes/V1_0-20080626-A/OMA-TS-URI_Schemes-V1_0-20080626-A.pdf</a> ",
     "OMA-PUSH": "Open Mobile Alliance. OMA Push Version 2.3. URL: <a href=\"http://www.openmobilealliance.org/Technical/release_program/push_v2_3.aspx\">http://www.openmobilealliance.org/Technical/release_program/push_v2_3.aspx</a> ",
-    "ORIGIN": "<a href='http://tools.ietf.org/html/rfc6454'>The Web Origin Concept</a>, A. Barth. IETF.",
+    "ORIGIN": {
+        "authors": [
+            "A. Barth"
+        ],
+        "href": "http://tools.ietf.org/html/rfc6454",
+        "title": "The Web Origin Concept",
+        "date": "December 2011",
+        "status": "RFC 6454",
+        "publisher": "IETF"
+    },
     "OWL-FEATURES": {
         "authors": [
             "Deborah L. McGuinness",
             "Frank van Harmelen"
         ],
         "href": "http://www.w3.org/TR/2004/REC-owl-features-20040210",
-        "title": "OWL Web Ontology Language Overview.",
+        "title": "OWL Web Ontology Language Overview",
         "date": "10 February 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -2660,7 +2798,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Chris Welty"
         ],
         "href": "http://www.w3.org/TR/2004/REC-owl-guide-20040210",
-        "title": "OWL Web Ontology Language Guide.",
+        "title": "OWL Web Ontology Language Guide",
         "date": "10 February 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -2670,7 +2808,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Sean Bechhofer"
         ],
         "href": "http://www.w3.org/TR/2004/NOTE-owl-parsing-20040121",
-        "title": "OWL Web Ontology Language Parsing OWL in RDF/XML.",
+        "title": "OWL Web Ontology Language Parsing OWL in RDF/XML",
         "date": "21 January 2004",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2681,7 +2819,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Mike Dean"
         ],
         "href": "http://www.w3.org/TR/2004/REC-owl-ref-20040210",
-        "title": "OWL Web Ontology Language Reference.",
+        "title": "OWL Web Ontology Language Reference",
         "date": "10 February 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -2693,7 +2831,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ian Horrocks"
         ],
         "href": "http://www.w3.org/TR/2004/REC-owl-semantics-20040210",
-        "title": "OWL Web Ontology Language Semantics and Abstract Syntax.",
+        "title": "OWL Web Ontology Language Semantics and Abstract Syntax",
         "date": "10 February 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -2704,7 +2842,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jos De Roo"
         ],
         "href": "http://www.w3.org/TR/2004/REC-owl-test-20040210",
-        "title": "OWL Web Ontology Language Test Cases.",
+        "title": "OWL Web Ontology Language Test Cases",
         "date": "10 February 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -2715,7 +2853,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jerry R. Hobbs"
         ],
         "href": "http://www.w3.org/TR/2006/WD-owl-time-20060927",
-        "title": "Time Ontology in OWL.",
+        "title": "Time Ontology in OWL",
         "date": "27 September 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -2727,7 +2865,7 @@ if (typeof berjon === "undefined") berjon = {};
             "J&#233;r&#244;me Euzenat"
         ],
         "href": "http://www.w3.org/TR/2003/NOTE-owl-xmlsyntax-20030611",
-        "title": "OWL Web Ontology Language XML Presentation Syntax.",
+        "title": "OWL Web Ontology Language XML Presentation Syntax",
         "date": "11 June 2003",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2738,7 +2876,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Matthew Horridge"
         ],
         "href": "http://www.w3.org/TR/2009/NOTE-owl2-manchester-syntax-20091027/",
-        "title": "OWL 2 Web Ontology Language:Manchester Syntax.",
+        "title": "OWL 2 Web Ontology Language:Manchester Syntax",
         "date": "27 October 2009",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2749,7 +2887,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Peter F. Patel-Schneider"
         ],
         "href": "http://www.w3.org/TR/2009/REC-owl2-mapping-to-rdf-20091027/",
-        "title": "OWL 2 Web Ontology Language:Mapping to RDF Graphs.",
+        "title": "OWL 2 Web Ontology Language:Mapping to RDF Graphs",
         "date": "27 October 2009",
         "status": "REC",
         "publisher": "W3C"
@@ -2760,7 +2898,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Christine Golbreich"
         ],
         "href": "http://www.w3.org/TR/2009/REC-owl2-new-features-20091027",
-        "title": "OWL 2 Web Ontology Language:New Features and Rationale.",
+        "title": "OWL 2 Web Ontology Language:New Features and Rationale",
         "date": "27 October 2009",
         "status": "REC",
         "publisher": "W3C"
@@ -2774,7 +2912,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Sebastian Rudolph"
         ],
         "href": "http://www.w3.org/TR/2009/REC-owl2-primer-20091027/",
-        "title": "OWL 2 Web Ontology Language:Primer.",
+        "title": "OWL 2 Web Ontology Language:Primer",
         "date": "27 October 2009",
         "status": "REC",
         "publisher": "W3C"
@@ -2789,7 +2927,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Carsten Lutz"
         ],
         "href": "http://www.w3.org/TR/2009/REC-owl2-profiles-20091027/",
-        "title": "OWL 2 Web Ontology Language:Profiles.",
+        "title": "OWL 2 Web Ontology Language:Profiles",
         "date": "27 October 2009",
         "status": "REC",
         "publisher": "W3C"
@@ -2802,7 +2940,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Peter F. Patel-Schneider"
         ],
         "href": "http://www.w3.org/TR/2009/REC-owl2-quick-reference-20091027/",
-        "title": "OWL 2 Web Ontology Language:Quick Reference Guide.",
+        "title": "OWL 2 Web Ontology Language:Quick Reference Guide",
         "date": "27 October 2009",
         "status": "REC",
         "publisher": "W3C"
@@ -2812,7 +2950,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Michael Schneider"
         ],
         "href": "http://www.w3.org/TR/2009/REC-owl2-rdf-based-semantics-20091027/",
-        "title": "OWL 2 Web Ontology Language:RDF-Based Semantics.",
+        "title": "OWL 2 Web Ontology Language:RDF-Based Semantics",
         "date": "27 October 2009",
         "status": "REC",
         "publisher": "W3C"
@@ -2822,7 +2960,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Dave Reynolds"
         ],
         "href": "http://www.w3.org/TR/2010/NOTE-rif-owl-rl-20100622/",
-        "title": "OWL 2 RL in RIF.",
+        "title": "OWL 2 RL in RIF",
         "date": "22 June 2010",
         "status": "W3C Working Group Note",
         "publisher": "W3C"
@@ -2834,7 +2972,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Bernardo Cuenca Grau"
         ],
         "href": "http://www.w3.org/TR/2009/REC-owl2-direct-semantics-20091027/",
-        "title": "OWL 2 Web Ontology Language:Direct Semantics.",
+        "title": "OWL 2 Web Ontology Language:Direct Semantics",
         "date": "27 October 2009",
         "status": "REC",
         "publisher": "W3C"
@@ -2846,7 +2984,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Bijan Parsia"
         ],
         "href": "http://www.w3.org/TR/2009/REC-owl2-syntax-20091027/",
-        "title": "OWL 2 Web Ontology Language:Structural Specification and Functional-Style Syntax.",
+        "title": "OWL 2 Web Ontology Language:Structural Specification and Functional-Style Syntax",
         "date": "27 October 2009",
         "status": "REC",
         "publisher": "W3C"
@@ -2860,7 +2998,7 @@ if (typeof berjon === "undefined") berjon = {};
             ""
         ],
         "href": "http://www.w3.org/TR/2009/REC-owl2-xml-serialization-20091027/",
-        "title": "OWL 2 Web Ontology Language: XML Serialization.",
+        "title": "OWL 2 Web Ontology Language: XML Serialization",
         "date": "27 October 2009",
         "status": "REC",
         "publisher": "W3C"
@@ -2870,7 +3008,7 @@ if (typeof berjon === "undefined") berjon = {};
             "W3C OWL Working Group"
         ],
         "href": "http://www.w3.org/TR/2009/REC-owl2-overview-20091027/",
-        "title": "OWL 2 Web Ontology Language: Overview.",
+        "title": "OWL 2 Web Ontology Language: Overview",
         "date": "27 October 2009",
         "status": "REC",
         "publisher": "W3C"
@@ -2880,7 +3018,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Marc Langheinrich"
         ],
         "href": "http://www.w3.org/TR/2002/WD-P3P-preferences-20020415",
-        "title": "A P3P Preference Exchange Language 1.0 (APPEL1.0).",
+        "title": "A P3P Preference Exchange Language 1.0 (APPEL1.0)",
         "date": "15 April 2002",
         "status": "WD",
         "publisher": "W3C"
@@ -2892,7 +3030,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Brian McBride"
         ],
         "href": "http://www.w3.org/TR/2002/NOTE-p3p-rdfschema-20020125",
-        "title": "An RDF Schema for P3P.",
+        "title": "An RDF Schema for P3P",
         "date": "25 January 2002",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2902,7 +3040,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Massimo Marchiori"
         ],
         "href": "http://www.w3.org/TR/2002/REC-P3P-20020416",
-        "title": "The Platform for Privacy Preferences 1.0 (P3P1.0) Specification.",
+        "title": "The Platform for Privacy Preferences 1.0 (P3P1.0) Specification",
         "date": "16 April 2002",
         "status": "REC",
         "publisher": "W3C"
@@ -2912,7 +3050,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Lorrie Faith Cranor"
         ],
         "href": "http://www.w3.org/TR/1998/NOTE-P3P10-principles-19980721",
-        "title": "P3P Guiding Principles.",
+        "title": "P3P Guiding Principles",
         "date": "21 July 1998",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2924,7 +3062,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Steve Lucas"
         ],
         "href": "http://www.w3.org/TR/1998/NOTE-P3P10-Protocols-19980324",
-        "title": "P3P Protocol and Data Transport Working Group Draft White Paper.",
+        "title": "P3P Protocol and Data Transport Working Group Draft White Paper",
         "date": "24 March 1998",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2935,7 +3073,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Rigo Wenning"
         ],
         "href": "http://www.w3.org/TR/2006/NOTE-P3P11-20061113",
-        "title": "The Platform for Privacy Preferences 1.1 (P3P1.1) Specification.",
+        "title": "The Platform for Privacy Preferences 1.1 (P3P1.1) Specification",
         "date": "13 November 2006",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2945,7 +3083,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Martin Presler-Marshall"
         ],
         "href": "http://www.w3.org/TR/2002/NOTE-p3pdeployment-20020211",
-        "title": "The Platform for Privacy Preferences 1.0 Deployment Guide.",
+        "title": "The Platform for Privacy Preferences 1.0 Deployment Guide",
         "date": "11 February 2002",
         "status": "NOTE",
         "publisher": "W3C"
@@ -2958,7 +3096,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/REC-PICS-labels-961031",
-        "title": "PICS 1.1 Label Distribution -- Label Syntax and Communication Protocols.",
+        "title": "PICS 1.1 Label Distribution -- Label Syntax and Communication Protocols",
         "date": "31 October 1996",
         "status": "REC",
         "publisher": "W3C"
@@ -2970,7 +3108,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jim Miller"
         ],
         "href": "http://www.w3.org/TR/REC-PICS-services-961031",
-        "title": "PICS 1.1 Rating Services and Rating Systems -- and Their Machine Readable Descriptions.",
+        "title": "PICS 1.1 Rating Services and Rating Systems -- and Their Machine Readable Descriptions",
         "date": "31 October 1996",
         "status": "REC",
         "publisher": "W3C"
@@ -2981,7 +3119,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/REC-PICSRules-971229",
-        "title": "PICSRules 1.1 Specification.",
+        "title": "PICSRules 1.1 Specification",
         "date": "29 December 1997",
         "status": "REC",
         "publisher": "W3C"
@@ -2993,8 +3131,8 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "href": "http://www.ietf.org/rfc/rfc2898.txt",
         "title": "PKCS #5 v2.0: Password-Based Cryptography Standard",
-        "date": "IETF RFC 2898",
-        "status": "September 2000",
+        "date": "September 2000",
+        "status": "IETF RFC 2898",
         "publisher": "IETF"
     },
     "PKCS5Amd1": "<a href=\"ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-5v2/pkcs-5v2-0a1.pdf\"><cite>PKCS #5 v2.0 Amendment 1: XML Schema for Password-Based Cryptography</cite></a> RSA Laboratories, March 2007. URL: <a href=\"ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-5v2/pkcs-5v2-0a1.pdf\">ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-5v2/pkcs-5v2-0a1.pdf</a>",
@@ -3004,7 +3142,7 @@ if (typeof berjon === "undefined") berjon = {};
             "David Duce"
         ],
         "href": "http://www.w3.org/TR/2003/REC-PNG-20031110",
-        "title": "Portable Network Graphics (PNG) Specification (Second Edition).",
+        "title": "Portable Network Graphics (PNG) Specification (Second Edition)",
         "date": "10 November 2003",
         "status": "REC",
         "publisher": "W3C"
@@ -3015,9 +3153,9 @@ if (typeof berjon === "undefined") berjon = {};
             "Jacob Rossi",
             "Matt Brubeck"
         ],
-        "href": "http://www.w3.org/TR/pointerevents/",
-        "title": "Pointer Events.",
-        "date": "11 December 2012",
+        "href": "http://www.w3.org/TR/2013/WD-pointerevents-20130115",
+        "title": "Pointer Events",
+        "date": "15 January 2013",
         "status": "WD",
         "publisher": "W3C"
     },
@@ -3027,7 +3165,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Carlos Iglesias"
         ],
         "href": "http://www.w3.org/TR/2009/WD-Pointers-in-RDF-20090310",
-        "title": "Pointer Methods in RDF.",
+        "title": "Pointer Methods in RDF",
         "date": "10 March 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -3041,7 +3179,7 @@ if (typeof berjon === "undefined") berjon = {};
             "David Rogers"
         ],
         "href": "http://dev.w3.org/2009/dap/policy-reqs",
-        "title": "Device API Policy Requirements.",
+        "title": "Device API Policy Requirements",
         "date": "13 April 2010",
         "status": "ED",
         "publisher": "W3C"
@@ -3053,12 +3191,21 @@ if (typeof berjon === "undefined") berjon = {};
             "Scott Isaacs"
         ],
         "href": "http://www.w3.org/TR/1999/WD-positioning-19990902",
-        "title": "Positioning HTML Elements with Cascading Style Sheets.",
+        "title": "Positioning HTML Elements with Cascading Style Sheets",
         "date": "2 September 1999",
         "status": "WD",
         "publisher": "W3C"
     },
-    "POSTMSG": "Ian Hickson. <a href='http://dev.w3.org/html5/postmsg'><cite>HTML5 Web Messaging.</cite></a> URL: <a href='http://dev.w3.org/html5/postmsg'>http://dev.w3.org/html5/postmsg</a>",
+    "POSTMSG": {
+        "authors": [
+            "Ian Hickson"
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-webmessaging-20120501",
+        "title": "HTML5 Web Messaging",
+        "date": " 01 May 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
     "POWDER-DR": {
         "authors": [
             "Kevin Smith",
@@ -3066,7 +3213,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Andrea Perego"
         ],
         "href": "http://www.w3.org/TR/2008/WD-powder-dr-20081114",
-        "title": "Protocol for Web Description Resources (POWDER): Description Resources.",
+        "title": "Protocol for Web Description Resources (POWDER): Description Resources",
         "date": "14 November 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -3077,7 +3224,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Stasinos Konstantopoulos"
         ],
         "href": "http://www.w3.org/TR/2008/WD-powder-formal-20081114",
-        "title": "Protocol for Web Description Resources (POWDER): Formal Semantics.",
+        "title": "Protocol for Web Description Resources (POWDER): Formal Semantics",
         "date": "14 November 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -3089,7 +3236,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Phil Archer"
         ],
         "href": "http://www.w3.org/TR/2008/WD-powder-grouping-20081114",
-        "title": "Protocol for Web Description Resources (POWDER): Grouping of Resources.",
+        "title": "Protocol for Web Description Resources (POWDER): Grouping of Resources",
         "date": "14 November 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -3099,7 +3246,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Kai Scheppe"
         ],
         "href": "http://www.w3.org/TR/2008/WD-powder-primer-20081114",
-        "title": "Protocol for Web Description Resources (POWDER): Primer.",
+        "title": "Protocol for Web Description Resources (POWDER): Primer",
         "date": "14 November 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -3109,7 +3256,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Antonis Kukurikos"
         ],
         "href": "http://www.w3.org/TR/2008/WD-powder-test-20080815",
-        "title": "Protocol for Web Description Resources (POWDER): Test Suite.",
+        "title": "Protocol for Web Description Resources (POWDER): Test Suite",
         "date": "15 August 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -3119,7 +3266,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Phil Archer"
         ],
         "href": "http://www.w3.org/TR/2007/NOTE-powder-use-cases-20071031",
-        "title": "POWDER: Use Cases and Requirements.",
+        "title": "POWDER: Use Cases and Requirements",
         "date": "31 October 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -3130,7 +3277,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Phil Archer"
         ],
         "href": "http://www.w3.org/TR/2007/WD-powder-voc-20070925",
-        "title": "Protocol for Web Description Resources (POWDER): Web Description Resources (WDR) Vocabulary.",
+        "title": "Protocol for Web Description Resources (POWDER): Web Description Resources (WDR) Vocabulary",
         "date": "25 September 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -3142,7 +3289,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Phil Archer"
         ],
         "href": "http://www.w3.org/TR/2007/WD-powder-xsd-20070925",
-        "title": "Protocol for Web Description Resources (POWDER): Web Description Resources Datatypes (WDRD).",
+        "title": "Protocol for Web Description Resources (POWDER): Web Description Resources Datatypes (WDRD)",
         "date": "25 September 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -3154,7 +3301,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Stephen Waters"
         ],
         "href": "http://www.w3.org/TR/1999/WD-print-19990902",
-        "title": "CSS Printing Extensions.",
+        "title": "CSS Printing Extensions",
         "date": "2 September 1999",
         "status": "WD",
         "publisher": "W3C"
@@ -3171,17 +3318,17 @@ if (typeof berjon === "undefined") berjon = {};
             "Norman Walsh"
         ],
         "href": "http://www.w3.org/TR/2004/NOTE-proc-model-req-20040405",
-        "title": "XML Processing Model Requirements.",
+        "title": "XML Processing Model Requirements",
         "date": "5 April 2004",
         "status": "NOTE",
         "publisher": "W3C"
     },
     "PROGRESS-EVENTS": {
         "authors": [
-            "Charles McCathieNevile"
+            "Anne van Kesteren"
         ],
-        "href": "http://www.w3.org/TR/2011/CR-progress-events-20110922/",
-        "title": "Progress Events 1.0.",
+        "href": "http://www.w3.org/TR/2011/CR-progress-events-20110922",
+        "title": "Progress Events",
         "date": "22 September 2011",
         "status": "CR",
         "publisher": "W3C"
@@ -3193,7 +3340,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Paolo Baggia"
         ],
         "href": "http://www.w3.org/TR/2008/REC-pronunciation-lexicon-20081014",
-        "title": "Pronunciation Lexicon Specification (PLS) Version 1.0.",
+        "title": "Pronunciation Lexicon Specification (PLS) Version 1.0",
         "date": "14 October 2008",
         "status": "REC",
         "publisher": "W3C"
@@ -3208,7 +3355,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Lofton Henderson"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-qa-handbook-20050906",
-        "title": "The QA Handbook.",
+        "title": "The QA Handbook",
         "date": "6 September 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -3219,7 +3366,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2002/NOTE-qaframe-ops-extech-20021202",
-        "title": "QA Framework: Operational Examples &amp; Techniques.",
+        "title": "QA Framework: Operational Examples &amp; Techniques",
         "date": "2 December 2002",
         "status": "NOTE",
         "publisher": "W3C"
@@ -3230,7 +3377,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2005/REC-qaframe-spec-20050817",
-        "title": "QA Framework: Specification Guidelines.",
+        "title": "QA Framework: Specification Guidelines",
         "date": "17 August 2005",
         "status": "REC",
         "publisher": "W3C"
@@ -3241,7 +3388,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Dimitris Dimitriadis"
         ],
         "href": "http://www.w3.org/TR/2004/WD-qaframe-test-20040820",
-        "title": "QA Framework: Test Guidelines.",
+        "title": "QA Framework: Test Guidelines",
         "date": "20 August 2004",
         "status": "WD",
         "publisher": "W3C"
@@ -3255,7 +3402,16 @@ if (typeof berjon === "undefined") berjon = {};
         "date": "17 March, 2004",
         "status": "TAG Finding"
     },
-    "QUOTA-API": "Kinuko Yasuda. <a href=\"http://www.w3.org/TR/quota-api/\"><cite>Quota Management API</cite></a>. 3 July 2012. W3C Working Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/quota-api/\">http://www.w3.org/TR/quota-api/</a>",
+    "QUOTA-API": {
+        "authors": [
+            "Kinuko Yasuda"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-quota-api-20120703",
+        "title": "Quota Management API",
+        "date": "03 July 2012",
+        "status": "FPWD",
+        "publisher": "W3C"
+    },
     "RANDOM": "D.  Eastlake, S. Crocker, J. Schiller. <a href=\"http://www.ietf.org/rfc/rfc4086.txt\"><cite>Randomness Recommendations for Security.</cite></a>. IETF RFC 4086. June 2005. URL: <a href=\"http://www.ietf.org/rfc/rfc4086.txt\">http://www.ietf.org/rfc/rfc4086.txt</a>",
     "RDB2RDF-UC": {
         "authors": [
@@ -3263,7 +3419,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Michael Hausenblas"
         ],
         "href": "http://www.w3.org/TR/2010/WD-rdb2rdf-ucr-20100608/",
-        "title": "Use Cases and Requirements for Mapping Relational Databases to RDF.",
+        "title": "Use Cases and Requirements for Mapping Relational Databases to RDF",
         "date": "8 June 2010",
         "status": "WD",
         "publisher": "W3C"
@@ -3274,7 +3430,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jeremy J. Carroll"
         ],
         "href": "http://www.w3.org/TR/2004/REC-rdf-concepts-20040210",
-        "title": "Resource Description Framework (RDF): Concepts and Abstract Syntax.",
+        "title": "Resource Description Framework (RDF): Concepts and Abstract Syntax",
         "date": "10 February 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -3284,7 +3440,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Kendall Grant Clark"
         ],
         "href": "http://www.w3.org/TR/2005/WD-rdf-dawg-uc-20050325",
-        "title": "RDF Data Access Use Cases and Requirements.",
+        "title": "RDF Data Access Use Cases and Requirements",
         "date": "25 March 2005",
         "status": "WD",
         "publisher": "W3C"
@@ -3294,7 +3450,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Patrick Hayes"
         ],
         "href": "http://www.w3.org/TR/2004/REC-rdf-mt-20040210",
-        "title": "RDF Semantics.",
+        "title": "RDF Semantics",
         "date": "10 February 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -3305,7 +3461,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Eric Miller"
         ],
         "href": "http://www.w3.org/TR/2004/REC-rdf-primer-20040210/",
-        "title": "RDF Primer.",
+        "title": "RDF Primer",
         "date": "10 February 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -3316,7 +3472,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ramanathan V. Guha"
         ],
         "href": "http://www.w3.org/TR/2004/REC-rdf-schema-20040210",
-        "title": "RDF Vocabulary Description Language 1.0: RDF Schema.",
+        "title": "RDF Vocabulary Description Language 1.0: RDF Schema",
         "date": "10 February 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -3328,7 +3484,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Lee Feigenbaum"
         ],
         "href": "http://www.w3.org/TR/2007/NOTE-rdf-sparql-json-res-20070618",
-        "title": "Serializing SPARQL Query Results in JSON.",
+        "title": "Serializing SPARQL Query Results in JSON",
         "date": "18 June 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -3340,7 +3496,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Elias Torres"
         ],
         "href": "http://www.w3.org/TR/2008/REC-rdf-sparql-protocol-20080115",
-        "title": "SPARQL Protocol for RDF.",
+        "title": "SPARQL Protocol for RDF",
         "date": "15 January 2008",
         "status": "REC",
         "publisher": "W3C"
@@ -3351,7 +3507,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Eric Prud'hommeaux"
         ],
         "href": "http://www.w3.org/TR/2008/REC-rdf-sparql-query-20080115",
-        "title": "SPARQL Query Language for RDF.",
+        "title": "SPARQL Query Language for RDF",
         "date": "15 January 2008",
         "status": "REC",
         "publisher": "W3C"
@@ -3362,7 +3518,7 @@ if (typeof berjon === "undefined") berjon = {};
             "P. Gearon"
         ],
         "href": "http://www.w3.org/TR/2010/WD-sparql11-update-20100126/",
-        "title": "SPARQL 1.1 Update.",
+        "title": "SPARQL 1.1 Update",
         "date": "W3C Working Draft",
         "status": "26 January 2010",
         "publisher": "W3C"
@@ -3373,7 +3529,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Dave Beckett"
         ],
         "href": "http://www.w3.org/TR/2008/REC-rdf-sparql-XMLres-20080115",
-        "title": "SPARQL Query Results XML Format.",
+        "title": "SPARQL Query Results XML Format",
         "date": "15 January 2008",
         "status": "REC",
         "publisher": "W3C"
@@ -3384,7 +3540,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ralph R. Swick"
         ],
         "href": "http://www.w3.org/TR/1999/REC-rdf-syntax-19990222",
-        "title": "Resource Description Framework (RDF) Model and Syntax Specification.",
+        "title": "Resource Description Framework (RDF) Model and Syntax Specification",
         "date": "22 February 1999",
         "status": "REC",
         "publisher": "W3C"
@@ -3394,7 +3550,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Dave Beckett"
         ],
         "href": "http://www.w3.org/TR/2004/REC-rdf-syntax-grammar-20040210",
-        "title": "RDF/XML Syntax Specification (Revised).",
+        "title": "RDF/XML Syntax Specification (Revised)",
         "date": "10 February 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -3405,7 +3561,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Dave Beckett"
         ],
         "href": "http://www.w3.org/TR/2004/REC-rdf-testcases-20040210",
-        "title": "RDF Test Cases.",
+        "title": "RDF Test Cases",
         "date": "10 February 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -3415,7 +3571,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Walter W. Chang"
         ],
         "href": "http://www.w3.org/TR/1998/NOTE-rdf-uml-19980804",
-        "title": "A Discussion of the Relationship Between RDF-Schema and UML.",
+        "title": "A Discussion of the Relationship Between RDF-Schema and UML",
         "date": "4 August 1998",
         "status": "NOTE",
         "publisher": "W3C"
@@ -3426,7 +3582,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2012/REC-rdfa-core-20120607/",
-        "title": "RDFa Core 1.1: Syntax and processing rules for embedding RDF through attributes.",
+        "title": "RDFa Core 1.1: Syntax and processing rules for embedding RDF through attributes",
         "date": "7 June 2012",
         "status": "REC",
         "publisher": "W3C"
@@ -3436,7 +3592,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Manu Sporny"
         ],
         "href": "http://www.w3.org/TR/2012/REC-rdfa-lite-20120607/",
-        "title": "RDFa Lite 1.1.",
+        "title": "RDFa Lite 1.1",
         "date": "7 June 2012",
         "status": "REC",
         "publisher": "W3C"
@@ -3448,7 +3604,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Manu Sporny"
         ],
         "href": "http://www.w3.org/TR/2012/NOTE-rdfa-primer-20120607",
-        "title": "RDFa Primer.",
+        "title": "RDFa Primer",
         "date": "07 June 2012",
         "status": "NOTE",
         "publisher": "W3C"
@@ -3459,7 +3615,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/REC-rdfa-syntax-20081014",
-        "title": "RDFa in XHTML: Syntax and Processing.",
+        "title": "RDFa in XHTML: Syntax and Processing",
         "date": "14 October 2008",
         "status": "REC",
         "publisher": "W3C"
@@ -3470,7 +3626,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Libby Miller"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-rdfcal-20050929",
-        "title": "RDF Calendar - an application of the Resource Description Framework to iCalendar Data.",
+        "title": "RDF Calendar - an application of the Resource Description Framework to iCalendar Data",
         "date": "29 September 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -3481,7 +3637,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2006/NOTE-rdftm-survey-20060210",
-        "title": "A Survey of RDF/Topic Maps Interoperability Proposals.",
+        "title": "A Survey of RDF/Topic Maps Interoperability Proposals",
         "date": "10 February 2006",
         "status": "NOTE",
         "publisher": "W3C"
@@ -3492,7 +3648,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Daniel C. Burnett"
         ],
         "href": "http://www.w3.org/TR/2000/WD-reusable-dialog-reqs-20000426",
-        "title": "Reusable Dialog Requirements for Voice Markup Language.",
+        "title": "Reusable Dialog Requirements for Voice Markup Language",
         "date": "26 April 2000",
         "status": "WD",
         "publisher": "W3C"
@@ -3502,7 +3658,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Robin Berjon"
         ],
         "href": "http://www.w3.org/TR/2006/WD-rex-20061013",
-        "title": "Remote Events for XML (REX) 1.0.",
+        "title": "Remote Events for XML (REX) 1.0",
         "date": "13 October 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -3512,7 +3668,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Robin Berjon"
         ],
         "href": "http://www.w3.org/TR/2006/NOTE-rex-reqs-20060202",
-        "title": "Remote Events for XML (REX) Requirements.",
+        "title": "Remote Events for XML (REX) Requirements",
         "date": "2 February 2006",
         "status": "NOTE",
         "publisher": "W3C"
@@ -3522,9 +3678,9 @@ if (typeof berjon === "undefined") berjon = {};
             "P. Mockapetris"
         ],
         "href": "http://www.ietf.org/rfc/rfc1034.txt",
-        "title": "DOMAIN NAMES - CONCEPTS AND FACILITIES.",
+        "title": "DOMAIN NAMES - CONCEPTS AND FACILITIES",
         "date": "November 1987",
-        "status": "Internet RFC 1034",
+        "status": "RFC 1034",
         "publisher": "IETF"
     },
     "RFC1738": {
@@ -3534,9 +3690,9 @@ if (typeof berjon === "undefined") berjon = {};
             "M. McCahill"
         ],
         "href": "http://www.ietf.org/rfc/rfc1738.txt",
-        "title": "Uniform Resource Locators (URL).",
+        "title": "Uniform Resource Locators (URL)",
         "date": "December 1994",
-        "status": "Internet RFC 1738",
+        "status": "RFC 1738",
         "publisher": "IETF"
     },
     "RFC1808": {
@@ -3544,9 +3700,9 @@ if (typeof berjon === "undefined") berjon = {};
             "R. Fielding"
         ],
         "href": "http://www.ietf.org/rfc/rfc1808.txt",
-        "title": "Relative Uniform Resource Locators.",
+        "title": "Relative Uniform Resource Locators",
         "date": "June 1995",
-        "status": "Internet RFC 1808 (Obsoleted by RFC 3986)",
+        "status": "RFC 1808 (Obsoleted by RFC 3986)",
         "publisher": "IETF"
     },
     "RFC2045": "N. Freed and N. Borenstein. <a href=\"http://www.ietf.org/rfc/rfc2045.txt\"><cite>Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies.</cite></a> November 1996. URL: <a href=\"http://www.ietf.org/rfc/rfc2045.txt\">http://www.ietf.org/rfc/rfc2045.txt</a> ",
@@ -3556,9 +3712,9 @@ if (typeof berjon === "undefined") berjon = {};
             "N. Borenstein"
         ],
         "href": "http://www.ietf.org/rfc/rfc2046.txt",
-        "title": "Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types.",
+        "title": "Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types",
         "date": "November 1996",
-        "status": "Internet RFC 2046",
+        "status": "RFC 2046",
         "publisher": "IETF"
     },
     "RFC2119": "S. Bradner. <a href=\"http://www.ietf.org/rfc/rfc2119.txt\"><cite>Key words for use in RFCs to Indicate Requirement Levels.</cite></a> March 1997. Internet RFC 2119.  URL: <a href=\"http://www.ietf.org/rfc/rfc2119.txt\">http://www.ietf.org/rfc/rfc2119.txt</a> ",
@@ -3568,7 +3724,7 @@ if (typeof berjon === "undefined") berjon = {};
             "K. Moore"
         ],
         "href": "http://www.ietf.org/rfc/rfc2231.txt",
-        "title": "MIME Parameter Value and Encoded Word Extensions: Character Sets, Languages, and Continuations.",
+        "title": "MIME Parameter Value and Encoded Word Extensions: Character Sets, Languages, and Continuations",
         "date": "November 1997",
         "status": "IETF RFC 2231",
         "publisher": "IETF"
@@ -3579,9 +3735,9 @@ if (typeof berjon === "undefined") berjon = {};
             "L. Masinter"
         ],
         "href": "http://www.ietf.org/rfc/rfc2397.txt",
-        "title": "The &quot;data&quot; URL scheme.",
+        "title": "The &quot;data&quot; URL scheme",
         "date": "August 1998",
-        "status": "Internet RFC 2397",
+        "status": "RFC 2397",
         "publisher": "IETF"
     },
     "RFC2426": "F. Dawson, T. Howes. <a href=\"http://www.ietf.org/rfc/rfc2426.txt\"><cite>vCard MIME Directory Profile.</cite></a> September 1998. URL: <a href=\"http://www.ietf.org/rfc/rfc2426.txt\">http://www.ietf.org/rfc/rfc2426.txt</a> ",
@@ -3591,9 +3747,9 @@ if (typeof berjon === "undefined") berjon = {};
             "L. McIntyre"
         ],
         "href": "http://www.ietf.org/rfc/rfc2531.txt",
-        "title": "Content Feature Schema for Internet Fax.",
+        "title": "Content Feature Schema for Internet Fax",
         "date": "March 1999",
-        "status": "Internet RFC 2531",
+        "status": "RFC 2531",
         "publisher": "IETF"
     },
     "RFC2533": {
@@ -3601,9 +3757,9 @@ if (typeof berjon === "undefined") berjon = {};
             "G. Klyne"
         ],
         "href": "http://www.ietf.org/rfc/rfc2533",
-        "title": "A Syntax for Describing Media Feature Sets.",
+        "title": "A Syntax for Describing Media Feature Sets",
         "date": "March 1999",
-        "status": "Internet RFC 2533",
+        "status": "RFC 2533",
         "publisher": "IETF"
     },
     "RFC2534": {
@@ -3613,9 +3769,9 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.ietf.org/rfc/rfc2534",
-        "title": "Media Features for Display, Print, and Fax.",
+        "title": "Media Features for Display, Print, and Fax",
         "date": "March 1999",
-        "status": "Internet RFC 2534",
+        "status": "RFC 2534",
         "publisher": "IETF"
     },
     "RFC3406": "L. Daigle, D. van Gulik, R. Iannella, P. Faltstrom. <a href=\"http://www.ietf.org/rfc/rfc3406.txt\"><cite> URN Namespace Definition Mechanisms.</cite></a>. IETF RFC 3406 October 2002. URL: <a href=\"http://www.ietf.org/rfc/rfc3406.txt\"> http://www.ietf.org/rfc/rfc3406.txt</a>",
@@ -3625,9 +3781,9 @@ if (typeof berjon === "undefined") berjon = {};
             "L. Masinter"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc2854.txt",
-        "title": "The 'text/html' Media Type.",
+        "title": "The 'text/html' Media Type",
         "date": "June 2000",
-        "status": "Internet RFC 2854"
+        "status": "RFC 2854"
     },
     "RFC2978": {
         "authors": [
@@ -3635,9 +3791,9 @@ if (typeof berjon === "undefined") berjon = {};
             "J. Postel"
         ],
         "href": "http://www.ietf.org/rfc/rfc2978.txt",
-        "title": "IANA Charset Registration Procedures.",
+        "title": "IANA Charset Registration Procedures",
         "date": "October 2000",
-        "status": "Internet RFC 2978",
+        "status": "RFC 2978",
         "publisher": "IETF"
     },
     "RFC3023": {
@@ -3649,7 +3805,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3023.txt",
         "title": "XML Media Types",
         "date": "January 2001",
-        "status": "Internet RFC 3023",
+        "status": "RFC 3023",
         "publisher": "IETF"
     },
     "RFC3161": {
@@ -3662,7 +3818,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.rfc-editor.org/rfc/rfc3161.txt",
         "title": "Internet X.509 Public Key Infrastructure Time-Stamp Protocol (TSP)",
         "date": "August 2001",
-        "status": "Internet RFC 3161"
+        "status": "RFC 3161"
     },
     "RFC3161-PKIX-UPDATE-9": "Stefan Santesson, Nick Pope. <a href=\"http://tools.ietf.org/id/draft-ietf-pkix-rfc3161-update-09.txt\"><cite> ESSCertIDv2 update for RFC 3161</cite></a> 29 April 2010, IETF Internet Draft. URL: <a href=\"http://tools.ietf.org/id/draft-ietf-pkix-rfc3161-update-09.txt\"> http://tools.ietf.org/id/draft-ietf-pkix-rfc3161-update-09.txt</a> ",
     "RFC3218": {
@@ -3671,7 +3827,7 @@ if (typeof berjon === "undefined") berjon = {};
             "E"
         ],
         "href": "http://tools.ietf.org/html/rfc3218",
-        "title": "Preventing the Million Message Attack on Cryptographic Message Syntax.",
+        "title": "Preventing the Million Message Attack on Cryptographic Message Syntax",
         "date": "January 2002",
         "status": "Informational RFC 3218",
         "publisher": "IETF"
@@ -3682,9 +3838,9 @@ if (typeof berjon === "undefined") berjon = {};
             "M. Baker"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc3236.txt",
-        "title": "The 'application/xhtml+xml' Media Type.",
+        "title": "The 'application/xhtml+xml' Media Type",
         "date": "January 2002",
-        "status": "Internet RFC 3236"
+        "status": "RFC 3236"
     },
     "RFC3279": "W. Polk, R. Housley, L. Bassham. <a href=\"http://www.ietf.org/rfc/rfc3279.txt\"><cite>Algorithmupdates and Identifiers for the Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile</cite></a>. April 2002. Internet RFC 3279. URL: <a href=\"http://www.ietf.org/rfc/rfc3279.txt\">http://www.ietf.org/rfc/rfc3279.txt</a>",
     "RFC3339": "G. Klyne, C. Newman. <a href=\"http://www.ietf.org/rfc/rfc3339.txt\"><cite>Date and Time on the Internet: Timestamps</cite></a>. July 2002. Internet RFC 3339. URL: <a href=\"http://www.ietf.org/rfc/rfc3339.txt\">http://www.ietf.org/rfc/rfc3339.txt</a>",
@@ -3696,9 +3852,9 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.ietf.org/rfc/rfc3428.txt",
-        "title": "Session Initiation Protocol (SIP) Extension for Instant Messaging.",
+        "title": "Session Initiation Protocol (SIP) Extension for Instant Messaging",
         "date": "December 2002",
-        "status": "Internet RFC 3428",
+        "status": "RFC 3428",
         "publisher": "IETF"
     },
     "RFC3490": "P. Faltstrom; P. Hoffman; A. Costello. <a href='http://www.rfc-editor.org/rfc/rfc3490.txt'><cite>Internationalizing Domain Names in Applications (IDNA).</cite></a> March 2003. Internet RFC 3490. URL: <a href='http://www.rfc-editor.org/rfc/rfc3490.txt'>http://www.rfc-editor.org/rfc/rfc3490.txt</a>",
@@ -3710,7 +3866,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc3966.txt",
         "title": "The tel URI for Telephone Numbers",
         "date": "December 2004",
-        "status": "Internet RFC 3966",
+        "status": "RFC 3966",
         "publisher": "IETF"
     },
     "RFC3986": {
@@ -3720,9 +3876,9 @@ if (typeof berjon === "undefined") berjon = {};
             "L. Masinter"
         ],
         "href": "http://www.ietf.org/rfc/rfc3986.txt",
-        "title": "Uniform Resource Identifier (URI): Generic Syntax.",
+        "title": "Uniform Resource Identifier (URI): Generic Syntax",
         "date": "January 2005",
-        "status": "Internet RFC 3986",
+        "status": "RFC 3986",
         "publisher": "IETF"
     },
     "RFC3987": {
@@ -3731,9 +3887,9 @@ if (typeof berjon === "undefined") berjon = {};
             "M. Suignard"
         ],
         "href": "http://www.ietf.org/rfc/rfc3987.txt",
-        "title": "Internationalized Resource Identifiers (IRIs).",
+        "title": "Internationalized Resource Identifiers (IRIs)",
         "date": "January 2005",
-        "status": "Internet RFC 3987",
+        "status": "RFC 3987",
         "publisher": "IETF"
     },
     "RFC4050": {
@@ -3744,7 +3900,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Y. Wang"
         ],
         "href": "http://www.ietf.org/rfc/rfc4050.txt",
-        "title": "Using the Elliptic Curve Signature Algorithm (ECDSA) for XML Digital Signatures.",
+        "title": "Using the Elliptic Curve Signature Algorithm (ECDSA) for XML Digital Signatures",
         "date": "IETF RFC 4050",
         "status": "April 2005",
         "publisher": "IETF"
@@ -3760,7 +3916,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc4122.txt",
         "title": "A Universally Unique IDentifier (UUID) URN Namespace",
         "date": "July 2005",
-        "status": "Internet RFC 4122",
+        "status": "RFC 4122",
         "publisher": "IETF"
     },
     "RFC4180": "Y. Shafranovich. <a href=\"http://www.ietf.org/rfc/rfc4180.txt\"> <cite>Common Format and MIME Type for Comma-Separated Values (CSV) Files</cite></a> October 2005. Internet RFC 3987. URL: <a href=\"http://www.ietf.org/rfc/rfc4180.txt\">http://www.ietf.org/rfc/rfc4180.txt</a>",
@@ -3773,7 +3929,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc4281.txt",
         "title": "The Codecs Parameter for &quot;Bucket&quot; Media Types",
         "date": "November 2005",
-        "status": "Internet RFC 4281",
+        "status": "RFC 4281",
         "publisher": "IETF"
     },
     "RFC4572": {
@@ -3781,9 +3937,9 @@ if (typeof berjon === "undefined") berjon = {};
             "J. Lennox"
         ],
         "href": "http://www.ietf.org/rfc/rfc4572.txt",
-        "title": " Connection-Oriented Media Transport over the Transport Layer Security (TLS) Protocol in the Session Description Protocol (SDP).",
+        "title": " Connection-Oriented Media Transport over the Transport Layer Security (TLS) Protocol in the Session Description Protocol (SDP)",
         "date": "July 2006",
-        "status": "Internet RFC 4572",
+        "status": "RFC 4572",
         "publisher": "IETF"
     },
     "RFC4627": {
@@ -3793,7 +3949,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc4627.txt",
         "title": "The application/json Media Type for JavaScript Object Notation (JSON)",
         "date": "July 2006",
-        "status": "Internet RFC 4627",
+        "status": "RFC 4627",
         "publisher": "IETF"
     },
     "RFC4770": {
@@ -3804,7 +3960,7 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.ietf.org/rfc/rfc4770.txt",
         "title": "vCard Extensions for Instant Messaging (IM)",
         "date": "January 2007",
-        "status": "Internet RFC 4770",
+        "status": "RFC 4770",
         "publisher": "IETF"
     },
     "RFC4868": {
@@ -3827,9 +3983,9 @@ if (typeof berjon === "undefined") berjon = {};
             "B. Desruisseaux"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc5545.txt",
-        "title": "Internet Calendaring and Scheduling Core Object Specification (iCalendar).",
+        "title": "Internet Calendaring and Scheduling Core Object Specification (iCalendar)",
         "date": "September 2009",
-        "status": "Internet RFC 5545"
+        "status": "RFC 5545"
     },
     "RFC5646": {
         "authors": [
@@ -3837,9 +3993,9 @@ if (typeof berjon === "undefined") berjon = {};
             "M. Davis"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc5646.txt",
-        "title": "Tags for Identifying Languages.",
+        "title": "Tags for Identifying Languages",
         "date": "September 2009",
-        "status": "Internet RFC 5646"
+        "status": "RFC 5646"
     },
     "RFC5724": "E. Wilde, A. Vaha-Sipila. <a href=\"http://www.ietf.org/rfc/rfc5724.txt\">URI Scheme for Global System for Mobile Communications (GSM) Short Message Service (SMS)</a>. January 2010. Request for Comments. URL: <a href=\"http://www.ietf.org/rfc/rfc5724.txt\">http://www.ietf.org/rfc/rfc5724.txt</a>",
     "RFC5785": {
@@ -3848,7 +4004,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Eran Hammer-Lahav"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc5785.txt",
-        "title": "Defining Well-Known Uniform Resource Identifiers (URIs).",
+        "title": "Defining Well-Known Uniform Resource Identifiers (URIs)",
         "date": "April 2010",
         "status": "Internet Proposed Standard RFC 5785"
     },
@@ -3858,7 +4014,7 @@ if (typeof berjon === "undefined") berjon = {};
             "J. Snell"
         ],
         "href": "http://tools.ietf.org/html/rfc5789",
-        "title": "PATCH Method for HTTP.",
+        "title": "PATCH Method for HTTP",
         "date": "March 2010",
         "status": "Internet Proposed Standard RFC 5789",
         "publisher": "IETF"
@@ -3870,7 +4026,7 @@ if (typeof berjon === "undefined") berjon = {};
             "J. Zawinski"
         ],
         "href": "http://www.ietf.org/rfc/rfc6068.txt",
-        "title": "The 'mailto' URI Scheme.",
+        "title": "The 'mailto' URI Scheme",
         "date": "October 2010",
         "status": "Internet Proposed Standard RFC 6068",
         "publisher": "IETF"
@@ -3883,7 +4039,7 @@ if (typeof berjon === "undefined") berjon = {};
             ""
         ],
         "href": "http://www.w3.org/TR/2010/REC-rif-bld-20100622/",
-        "title": "RIF Basic Logic Dialect.",
+        "title": "RIF Basic Logic Dialect",
         "date": "22 June 2010",
         "status": "REC",
         "publisher": "W3C"
@@ -3894,7 +4050,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2010/REC-rif-core-20100622/",
-        "title": "RIF Core.",
+        "title": "RIF Core",
         "date": "22 June 2010",
         "status": "REC",
         "publisher": "W3C"
@@ -3906,7 +4062,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Michael Kifer"
         ],
         "href": "http://www.w3.org/TR/2010/REC-rif-dtb-20100622/",
-        "title": "RIF Datatypes and Built-Ins 1.0.",
+        "title": "RIF Datatypes and Built-Ins 1.0",
         "date": "22 June 2010",
         "status": "REC",
         "publisher": "W3C"
@@ -3917,7 +4073,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Michael Kifer"
         ],
         "href": "http://www.w3.org/TR/2010/REC-rif-fld-20100622/",
-        "title": "RIF Framework for Logic Dialects.",
+        "title": "RIF Framework for Logic Dialects",
         "date": "22 June 2010",
         "status": "REC",
         "publisher": "W3C"
@@ -3930,7 +4086,7 @@ if (typeof berjon === "undefined") berjon = {};
             ""
         ],
         "href": "http://www.w3.org/TR/2010/REC-rif-prd-20100622/",
-        "title": "RIF Production Rule Dialect.",
+        "title": "RIF Production Rule Dialect",
         "date": "22 June 2010",
         "status": "REC",
         "publisher": "W3C"
@@ -3940,7 +4096,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jos de Bruijn"
         ],
         "href": "http://www.w3.org/TR/2010/REC-rif-rdf-owl-20100622/",
-        "title": "RIF RDF and OWL Compatibility.",
+        "title": "RIF RDF and OWL Compatibility",
         "date": "22 June 2010",
         "status": "REC",
         "publisher": "W3C"
@@ -3952,7 +4108,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Adrian Paschke"
         ],
         "href": "http://www.w3.org/TR/2010/WD-rif-test-20100622/",
-        "title": "RIF Test Cases.",
+        "title": "RIF Test Cases",
         "date": "1 October 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -3963,7 +4119,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Harold Boley"
         ],
         "href": "http://www.w3.org/TR/2010/NOTE-rif-overview-20100622/",
-        "title": "RIF Overview.",
+        "title": "RIF Overview",
         "date": "22 June 2010",
         "status": "W3C Working Group Note",
         "publisher": "W3C"
@@ -3974,7 +4130,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/WD-rif-ucr-20081218",
-        "title": "RIF Use Cases and Requirements.",
+        "title": "RIF Use Cases and Requirements",
         "date": "18 December 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -3986,7 +4142,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2012/CR-role-attribute-20120712/",
-        "title": "Role Attribute.",
+        "title": "Role Attribute",
         "date": "12 July 2012",
         "status": "CR",
         "publisher": "W3C"
@@ -4000,7 +4156,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2001/REC-ruby-20010531",
-        "title": "Ruby Annotation.",
+        "title": "Ruby Annotation",
         "date": "31 May 2001",
         "status": "REC",
         "publisher": "W3C"
@@ -4010,7 +4166,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Stuart Weibel"
         ],
         "href": "http://www.w3.org/Search/9605-Indexing-Workshop/ReportOutcomes/S6Group2",
-        "title": "A Proposed Convention for Embedding Metadata in HTML.",
+        "title": "A Proposed Convention for Embedding Metadata in HTML",
         "date": "2 June 1996",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4022,7 +4178,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Holger Lausen"
         ],
         "href": "http://www.w3.org/TR/2007/REC-sawsdl-20070828",
-        "title": "Semantic Annotations for WSDL and XML Schema.",
+        "title": "Semantic Annotations for WSDL and XML Schema",
         "date": "28 August 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -4033,7 +4189,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Brahmananda Sapkota"
         ],
         "href": "http://www.w3.org/TR/2007/NOTE-sawsdl-guide-20070828",
-        "title": "Semantic Annotations for WSDL and XML Schema &#8212; Usage Guide.",
+        "title": "Semantic Annotations for WSDL and XML Schema &#8212; Usage Guide",
         "date": "28 August 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4045,7 +4201,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Henry S. Thompson"
         ],
         "href": "http://www.w3.org/TR/1999/NOTE-schema-arch-19991007",
-        "title": "The Cambridge Communiqu&#233;.",
+        "title": "The Cambridge Communiqu&#233;",
         "date": "7 October 1999",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4054,8 +4210,8 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Mounir Lamouri"
         ],
-        "href": "http://www.w3.org/TR/screen-orientation/",
-        "title": "The Screen Orientation API.",
+        "href": "http://www.w3.org/TR/2012/WD-screen-orientation-20121206",
+        "title": "The Screen Orientation API",
         "date": "06 December 2012",
         "status": "WD",
         "publisher": "W3C"
@@ -4066,7 +4222,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/WD-scxml-20080516",
-        "title": "State Chart XML (SCXML): State Machine Notation for Control Abstraction.",
+        "title": "State Chart XML (SCXML): State Machine Notation for Control Abstraction",
         "date": "16 May 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -4077,9 +4233,9 @@ if (typeof berjon === "undefined") berjon = {};
             "H. Schulzrinne"
         ],
         "href": "http://tools.ietf.org/html/rfc3264",
-        "title": "An Offer/Answer Model with the Session Description Protocol (SDP).",
+        "title": "An Offer/Answer Model with the Session Description Protocol (SDP)",
         "date": "June 2002",
-        "status": "Internet RFC 3264",
+        "status": "RFC 3264",
         "publisher": "IETF"
     },
     "SDPLABEL": {
@@ -4088,21 +4244,24 @@ if (typeof berjon === "undefined") berjon = {};
             "G. Camarillo"
         ],
         "href": "http://tools.ietf.org/html/rfc4574",
-        "title": "The Session Description Protocol (SDP) Label Attribute.",
+        "title": "The Session Description Protocol (SDP) Label Attribute",
         "date": "August 2006",
-        "status": "Internet RFC 4574",
+        "status": "RFC 4574",
         "publisher": "IETF"
     },
     "SECG1": "<a href=\"http://www.secg.org/download/aid-780/sec1-v2.pdf\"><cite>SEC1: Elliptic Curve Cryptography, Version 2.0, Standards for Efficient Cryptography Group</cite></a>. May 2009. URL: <a href=\"http://www.secg.org/download/aid-780/sec1-v2.pdf\">http://www.secg.org/download/aid-780/sec1-v2.pdf</a> ",
     "SELECT": {
         "authors": [
-            "Daniel Glazman"
+            "Tantek Çelik",
+            "Elika J. Etemad",
+            "Daniel Glazman",
+            "Ian Hickson"
         ],
         "etAl": true,
-        "href": "http://www.w3.org/TR/2009/WD-css3-selectors-20090310",
-        "title": "Selectors Level 3.",
-        "date": "10 March 2009",
-        "status": "WD",
+        "href": "http://www.w3.org/TR/css3-selectors/",
+        "title": "Selectors Level 3",
+        "date": "29 September 2011",
+        "status": "REC",
         "publisher": "W3C"
     },
     "SELECTORS-LEVEL-3": "Daniel Glazman; et al. <a href=\"http://www.w3.org/TR/2011/REC-css3-selectors-20110929\"><cite>Selectors Level 3.</cite></a> W3C Recommendation 29 September 2011 URL: <a href=\"http://www.w3.org/TR/2011/REC-css3-selectors-20110929\">http://www.w3.org/TR/2011/REC-css3-selectors-20110929</a> ",
@@ -4111,10 +4270,10 @@ if (typeof berjon === "undefined") berjon = {};
             "Lachlan Hunt",
             "Anne van Kesteren"
         ],
-        "href": "http://www.w3.org/TR/2008/WD-selectors-api-20081114",
-        "title": "Selectors API.",
-        "date": "14 November 2008",
-        "status": "WD",
+        "href": "http://www.w3.org/TR/2012/PR-selectors-api-20121213",
+        "title": "Selectors API Level 1",
+        "date": "13 December 2012",
+        "status": "PR",
         "publisher": "W3C"
     },
     "SELECTORS-API2": "Lachlan Hunt. <a href=\"http://www.w3.org/TR/selectors-api2/\">Selectors API Level 2</a>. 19 January 2010. Working Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/selectors-api2/\">http://www.w3.org/TR/selectors-api2/</a>",
@@ -4124,7 +4283,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Luc Van Tichelen"
         ],
         "href": "http://www.w3.org/TR/2007/REC-semantic-interpretation-20070405",
-        "title": "Semantic Interpretation for Speech Recognition (SISR) Version 1.0.",
+        "title": "Semantic Interpretation for Speech Recognition (SISR) Version 1.0",
         "date": "5 April 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -4135,7 +4294,7 @@ if (typeof berjon === "undefined") berjon = {};
             "James Clark"
         ],
         "href": "http://www.w3.org/TR/NOTE-sgml-xml-971215",
-        "title": "Comparison of SGML and XML.",
+        "title": "Comparison of SGML and XML",
         "date": "15 December 1997",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4148,7 +4307,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ed Summers"
         ],
         "href": "http://www.w3.org/TR/2009/NOTE-skos-primer-20090818/",
-        "title": "SKOS Simple Knowledge Organization System Primer.",
+        "title": "SKOS Simple Knowledge Organization System Primer",
         "date": "18 August 2009",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4159,7 +4318,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Alistair Miles"
         ],
         "href": "http://www.w3.org/TR/2009/REC-skos-reference-20090818/",
-        "title": "SKOS Simple Knowledge Organization System Reference.",
+        "title": "SKOS Simple Knowledge Organization System Reference",
         "date": "18 August 2009",
         "status": "REC",
         "publisher": "W3C"
@@ -4171,7 +4330,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Antoine Isaac"
         ],
         "href": "http://www.w3.org/TR/2007/WD-skos-ucr-20070516",
-        "title": "SKOS Use Cases and Requirements.",
+        "title": "SKOS Use Cases and Requirements",
         "date": "16 May 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -4182,7 +4341,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Aaron Cohen"
         ],
         "href": "http://www.w3.org/TR/2001/REC-smil-animation-20010904",
-        "title": "SMIL Animation.",
+        "title": "SMIL Animation",
         "date": "4 September 2001",
         "status": "REC",
         "publisher": "W3C"
@@ -4192,7 +4351,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Philipp Hoschka"
         ],
         "href": "http://www.w3.org/TR/1998/REC-smil-19980615",
-        "title": "Synchronized Multimedia Integration Language (SMIL) 1.0 Specification.",
+        "title": "Synchronized Multimedia Integration Language (SMIL) 1.0 Specification",
         "date": "15 June 1998",
         "status": "REC",
         "publisher": "W3C"
@@ -4203,7 +4362,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2005/REC-SMIL2-20051213",
-        "title": "Synchronized Multimedia Integration Language (SMIL 2.1).",
+        "title": "Synchronized Multimedia Integration Language (SMIL 2.1)",
         "date": "13 December 2005",
         "status": "REC",
         "publisher": "W3C"
@@ -4214,7 +4373,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2005/REC-SMIL2-20051213",
-        "title": "Synchronized Multimedia Integration Language (SMIL 2.1).",
+        "title": "Synchronized Multimedia Integration Language (SMIL 2.1)",
         "date": "13 December 2005",
         "status": "REC",
         "publisher": "W3C"
@@ -4224,7 +4383,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Dick Bulterman"
         ],
         "href": "http://www.w3.org/TR/2008/REC-SMIL3-20081201",
-        "title": "Synchronized Multimedia Integration Language (SMIL 3.0).",
+        "title": "Synchronized Multimedia Integration Language (SMIL 3.0)",
         "date": "1 December 2008",
         "status": "REC",
         "publisher": "W3C"
@@ -4234,9 +4393,9 @@ if (typeof berjon === "undefined") berjon = {};
             "B. Ramsdell"
         ],
         "href": "http://www.ietf.org/rfc/rfc3851.txt",
-        "title": "S/MIME Version 3.1 Message Specification.",
+        "title": "S/MIME Version 3.1 Message Specification",
         "date": "July 2004",
-        "status": "Internet RFC 3851",
+        "status": "RFC 3851",
         "publisher": "IETF"
     },
     "SML": {
@@ -4246,7 +4405,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Bhalchandra Pandit"
         ],
         "href": "http://www.w3.org/TR/2009/PR-sml-20090212",
-        "title": "Service Modeling Language, Version 1.1.",
+        "title": "Service Modeling Language, Version 1.1",
         "date": "12 February 2009",
         "status": "PR",
         "publisher": "W3C"
@@ -4258,7 +4417,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Virginia Smith"
         ],
         "href": "http://www.w3.org/TR/2009/PR-sml-if-20090212",
-        "title": "Service Modeling Language Interchange Format Version 1.1.",
+        "title": "Service Modeling Language Interchange Format Version 1.1",
         "date": "12 February 2009",
         "status": "PR",
         "publisher": "W3C"
@@ -4268,7 +4427,7 @@ if (typeof berjon === "undefined") berjon = {};
             "David Orchard"
         ],
         "href": "http://www.w3.org/TR/2006/NOTE-soap11-ror-httpbinding-20060321",
-        "title": "SOAP 1.1 Request Optional Response HTTP Binding.",
+        "title": "SOAP 1.1 Request Optional Response HTTP Binding",
         "date": "21 March 2006",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4280,7 +4439,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ruellan"
         ],
         "href": "http://www.w3.org/TR/2004/NOTE-soap12-af-20040608",
-        "title": "SOAP 1.2 Attachment Feature.",
+        "title": "SOAP 1.2 Attachment Feature",
         "date": "8 June 2004",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4291,7 +4450,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2002/NOTE-soap12-email-20020703",
-        "title": "SOAP Version 1.2 Email Binding.",
+        "title": "SOAP Version 1.2 Email Binding",
         "date": "3 July 2002",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4302,7 +4461,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2005/REC-soap12-mtom-20050125",
-        "title": "SOAP Message Transmission Optimization Mechanism.",
+        "title": "SOAP Message Transmission Optimization Mechanism",
         "date": "25 January 2005",
         "status": "REC",
         "publisher": "W3C"
@@ -4313,7 +4472,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Yves Lafon"
         ],
         "href": "http://www.w3.org/TR/2007/WD-soap12-mtom-policy-20070918",
-        "title": "MTOM Serialization Policy Assertion 1.1.",
+        "title": "MTOM Serialization Policy Assertion 1.1",
         "date": "18 September 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -4324,7 +4483,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Marc Hadley"
         ],
         "href": "http://www.w3.org/TR/2003/NOTE-soap12-n11n-20031008",
-        "title": "SOAP Version 1.2 Message Normalization.",
+        "title": "SOAP Version 1.2 Message Normalization",
         "date": "8 October 2003",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4336,7 +4495,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Anish Karmarkar"
         ],
         "href": "http://www.w3.org/TR/2004/WD-soap12-os-ucr-20040608",
-        "title": "SOAP Optimized Serialization Use Cases and Requirements.",
+        "title": "SOAP Optimized Serialization Use Cases and Requirements",
         "date": "8 June 2004",
         "status": "WD",
         "publisher": "W3C"
@@ -4347,7 +4506,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Nilo Mitra"
         ],
         "href": "http://www.w3.org/TR/2007/REC-soap12-part0-20070427",
-        "title": "SOAP Version 1.2 Part 0: Primer (Second Edition).",
+        "title": "SOAP Version 1.2 Part 0: Primer (Second Edition)",
         "date": "27 April 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -4358,7 +4517,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/REC-soap12-part1-20070427/",
-        "title": "SOAP Version 1.2 Part 1: Messaging Framework (Second Edition).",
+        "title": "SOAP Version 1.2 Part 1: Messaging Framework (Second Edition)",
         "date": "27 April 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -4369,7 +4528,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/REC-soap12-part2-20070427",
-        "title": "SOAP Version 1.2 Part 2: Adjuncts (Second Edition).",
+        "title": "SOAP Version 1.2 Part 2: Adjuncts (Second Edition)",
         "date": "27 April 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -4379,7 +4538,7 @@ if (typeof berjon === "undefined") berjon = {};
             "David Orchard"
         ],
         "href": "http://www.w3.org/TR/2007/NOTE-soap12-part3-20070702",
-        "title": "SOAP 1.2 Part 3: One-Way MEP.",
+        "title": "SOAP 1.2 Part 3: One-Way MEP",
         "date": "2 July 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4391,7 +4550,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Martin Gudgin"
         ],
         "href": "http://www.w3.org/TR/2005/REC-soap12-rep-20050125",
-        "title": "Resource Representation SOAP Header Block.",
+        "title": "Resource Representation SOAP Header Block",
         "date": "25 January 2005",
         "status": "REC",
         "publisher": "W3C"
@@ -4402,7 +4561,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/REC-soap12-testcollection-20070427",
-        "title": "SOAP Version 1.2 Specification Assertions and Test Collection (Second Edition).",
+        "title": "SOAP Version 1.2 Specification Assertions and Test Collection (Second Edition)",
         "date": "27 April 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -4414,7 +4573,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Peter Easton"
         ],
         "href": "http://www.w3.org/TR/2008/WD-soapjms-20081121",
-        "title": "SOAP over Java Message Service 1.0.",
+        "title": "SOAP over Java Message Service 1.0",
         "date": "21 November 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -4429,7 +4588,7 @@ if (typeof berjon === "undefined") berjon = {};
             "A. Seaborne"
         ],
         "href": "http://www.w3.org/TR/2008/REC-rdf-sparql-query-20080115/",
-        "title": "SPARQL Query  Language for RDF.",
+        "title": "SPARQL Query  Language for RDF",
         "date": "</cite> W3C Recommendation",
         "status": "15 January 2008",
         "publisher": "W3C"
@@ -4440,7 +4599,7 @@ if (typeof berjon === "undefined") berjon = {};
             "P. Gearon"
         ],
         "href": "http://www.w3.org/TR/2010/WD-sparql11-update-20100126/",
-        "title": "SPARQL 1.1 Update.",
+        "title": "SPARQL 1.1 Update",
         "date": "W3C Working Draft",
         "status": "26 January 2010",
         "publisher": "W3C"
@@ -4451,7 +4610,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Lynne Rosenthal"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-spec-variability-20050831",
-        "title": "Variability in Specifications.",
+        "title": "Variability in Specifications",
         "date": "31 August 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4462,7 +4621,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Scott McGlashan"
         ],
         "href": "http://www.w3.org/TR/2004/REC-speech-grammar-20040316",
-        "title": "Speech Recognition Grammar Specification Version 1.0.",
+        "title": "Speech Recognition Grammar Specification Version 1.0",
         "date": "16 March 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -4474,7 +4633,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Andrew Hunt"
         ],
         "href": "http://www.w3.org/TR/2004/REC-speech-synthesis-20040907",
-        "title": "Speech Synthesis Markup Language (SSML) Version 1.0.",
+        "title": "Speech Synthesis Markup Language (SSML) Version 1.0",
         "date": "7 September 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -4485,7 +4644,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Daniel C. Burnett"
         ],
         "href": "http://www.w3.org/TR/2008/CR-speech-synthesis11-20081107",
-        "title": "Speech Synthesis Markup Language (SSML) Version 1.1.",
+        "title": "Speech Synthesis Markup Language (SSML) Version 1.1",
         "date": "7 November 2008",
         "status": "CR",
         "publisher": "W3C"
@@ -4497,7 +4656,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Elias Torres"
         ],
         "href": "http://www.w3.org/TR/2005/WD-sprot11-20051024",
-        "title": "SPARQL Protocol for RDF Using WSDL 1.1.",
+        "title": "SPARQL Protocol for RDF Using WSDL 1.1",
         "date": "24 October 2005",
         "status": "WD",
         "publisher": "W3C"
@@ -4511,7 +4670,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2005/NOTE-ssml-sayas-20050526",
-        "title": "SSML 1.0 say-as attribute values.",
+        "title": "SSML 1.0 say-as attribute values",
         "date": "26 May 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4522,7 +4681,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Zhi Wei Shuang"
         ],
         "href": "http://www.w3.org/TR/2007/WD-ssml11reqs-20070611",
-        "title": "Speech Synthesis Markup Language Version 1.1 Requirements.",
+        "title": "Speech Synthesis Markup Language Version 1.1 Requirements",
         "date": "11 June 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -4532,7 +4691,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Feras Moussa"
         ],
         "href": "http://dvcs.w3.org/hg/streams-api/raw-file/tip/Overview.htm",
-        "title": "Streams API.",
+        "title": "Streams API",
         "date": "25 October 2012",
         "status": "ED",
         "publisher": "W3C"
@@ -4545,9 +4704,9 @@ if (typeof berjon === "undefined") berjon = {};
             "D. Wing"
         ],
         "href": "http://tools.ietf.org/html/rfc5389",
-        "title": "Session Traversal Utilities for NAT (STUN).",
+        "title": "Session Traversal Utilities for NAT (STUN)",
         "date": "October 2008",
-        "status": "Internet RFC 5389",
+        "status": "RFC 5389",
         "publisher": "IETF"
     },
     "STUN-URI": {
@@ -4558,7 +4717,7 @@ if (typeof berjon === "undefined") berjon = {};
             "and M. Petit-Huguenin"
         ],
         "href": "http://tools.ietf.org/html/draft-nandakumar-rtcweb-stun-uri",
-        "title": "URI Scheme for Session Traversal Utilities for NAT (STUN) Protocol.",
+        "title": "URI Scheme for Session Traversal Utilities for NAT (STUN) Protocol",
         "date": "12 March 2012",
         "status": "Internet Draft (work in progress)",
         "publisher": "IETF"
@@ -4570,7 +4729,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jon Ferraiolo"
         ],
         "href": "http://www.w3.org/TR/2001/REC-SVG-20010904",
-        "title": "Scalable Vector Graphics (SVG) 1.0 Specification.",
+        "title": "Scalable Vector Graphics (SVG) 1.0 Specification",
         "date": "4 September 2001",
         "status": "REC",
         "publisher": "W3C"
@@ -4581,7 +4740,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2011/REC-SVG11-20110816/",
-        "title": "Scalable Vector Graphics (SVG) 1.1 (Second Edition).",
+        "title": "Scalable Vector Graphics (SVG) 1.1 (Second Edition)",
         "date": "16 August 2011",
         "status": "REC",
         "publisher": "W3C"
@@ -4593,7 +4752,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Dean Jackson"
         ],
         "href": "http://www.w3.org/TR/2005/WD-SVG12-20050413",
-        "title": "Scalable Vector Graphics (SVG) Full 1.2 Specification.",
+        "title": "Scalable Vector Graphics (SVG) Full 1.2 Specification",
         "date": "13 April 2005",
         "status": "WD",
         "publisher": "W3C"
@@ -4603,7 +4762,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Dean Jackson"
         ],
         "href": "http://www.w3.org/TR/2002/WD-SVG2Reqs-20020422",
-        "title": "SVG 1.1/1.2/2.0 Requirements.",
+        "title": "SVG 1.1/1.2/2.0 Requirements",
         "date": "22 April 2002",
         "status": "WD",
         "publisher": "W3C"
@@ -4613,7 +4772,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Erik Dahlstr&#246;m"
         ],
         "href": "http://www.w3.org/TR/2007/WD-SVGFilter12-20070501",
-        "title": "SVG Filters 1.2, Part 2: Language.",
+        "title": "SVG Filters 1.2, Part 2: Language",
         "date": "1 May 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -4623,7 +4782,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Erik Dahlstr&#246;m"
         ],
         "href": "http://www.w3.org/TR/2007/WD-SVGFilterPrimer12-20070501",
-        "title": "SVG Filters 1.2, Part 1: Primer.",
+        "title": "SVG Filters 1.2, Part 1: Primer",
         "date": "1 May 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -4633,7 +4792,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Erik Dahlstr&#246;m"
         ],
         "href": "http://www.w3.org/TR/2007/WD-SVGFilterReqs12-20070501",
-        "title": "SVG Filter Requirements.",
+        "title": "SVG Filter Requirements",
         "date": "1 May 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -4643,7 +4802,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Tolga Capin"
         ],
         "href": "http://www.w3.org/TR/2003/REC-SVGMobile-20030114",
-        "title": "Mobile SVG Profiles: SVG Tiny and SVG Basic.",
+        "title": "Mobile SVG Profiles: SVG Tiny and SVG Basic",
         "date": "14 January 2003",
         "status": "REC",
         "publisher": "W3C"
@@ -4654,7 +4813,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2006/CR-SVGMobile12-20060810",
-        "title": "Scalable Vector Graphics (SVG) Tiny 1.2 Specification.",
+        "title": "Scalable Vector Graphics (SVG) Tiny 1.2 Specification",
         "date": "10 August 2006",
         "status": "CR",
         "publisher": "W3C"
@@ -4665,7 +4824,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Tolga Capin"
         ],
         "href": "http://www.w3.org/TR/2001/WD-SVGMobileReqs-20010803",
-        "title": "SVG Mobile Requirements.",
+        "title": "SVG Mobile Requirements",
         "date": "3 August 2001",
         "status": "WD",
         "publisher": "W3C"
@@ -4676,7 +4835,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/WD-SVGPrint12-20071221",
-        "title": "SVG Print 1.2, Part 2: Language.",
+        "title": "SVG Print 1.2, Part 2: Language",
         "date": "21 December 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -4688,7 +4847,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Andrew Shellshear"
         ],
         "href": "http://www.w3.org/TR/2007/WD-SVGPrintPrimer12-20071221",
-        "title": "SVG Print 1.2, Part 1: Primer.",
+        "title": "SVG Print 1.2, Part 1: Primer",
         "date": "21 December 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -4699,7 +4858,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2003/WD-SVGPrintReqs-20030218",
-        "title": "SVG Printing Requirements.",
+        "title": "SVG Printing Requirements",
         "date": "18 February 2003",
         "status": "WD",
         "publisher": "W3C"
@@ -4709,7 +4868,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jon Ferraiolo"
         ],
         "href": "http://www.w3.org/TR/1998/WD-SVGReq-19981029",
-        "title": "Scalable Vector Graphics (SVG) Requirements.",
+        "title": "Scalable Vector Graphics (SVG) Requirements",
         "date": "29 October 1998",
         "status": "WD",
         "publisher": "W3C"
@@ -4720,7 +4879,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/REC-SVGTiny12-20081222",
-        "title": "Scalable Vector Graphics (SVG) Tiny 1.2 Specification.",
+        "title": "Scalable Vector Graphics (SVG) Tiny 1.2 Specification",
         "date": "22 December 2008",
         "status": "REC",
         "publisher": "W3C"
@@ -4730,7 +4889,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Andrew Emmons"
         ],
         "href": "http://www.w3.org/TR/2006/WD-SVGTiny12Reqs-20060810",
-        "title": "SVGT 1.2 Requirements.",
+        "title": "SVGT 1.2 Requirements",
         "date": "10 August 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -4741,7 +4900,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2006/NOTE-sw-oosd-primer-20060309",
-        "title": "A Semantic Web Primer for Object-Oriented Software Developers.",
+        "title": "A Semantic Web Primer for Object-Oriented Software Developers",
         "date": "9 March 2006",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4751,7 +4910,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Natasha Noy"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-swbp-classes-as-values-20050405",
-        "title": "Representing Classes As Property Values on the Semantic Web.",
+        "title": "Representing Classes As Property Values on the Semantic Web",
         "date": "5 April 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4762,7 +4921,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Alan Rector"
         ],
         "href": "http://www.w3.org/TR/2006/NOTE-swbp-n-aryRelations-20060412",
-        "title": "Defining N-ary Relations on the Semantic Web.",
+        "title": "Defining N-ary Relations on the Semantic Web",
         "date": "12 April 2006",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4773,7 +4932,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Dan Brickley"
         ],
         "href": "http://www.w3.org/TR/2005/WD-swbp-skos-core-guide-20051102",
-        "title": "SKOS Core Guide.",
+        "title": "SKOS Core Guide",
         "date": "2 November 2005",
         "status": "WD",
         "publisher": "W3C"
@@ -4784,7 +4943,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Dan Brickley"
         ],
         "href": "http://www.w3.org/TR/2005/WD-swbp-skos-core-spec-20051102",
-        "title": "SKOS Core Vocabulary Specification.",
+        "title": "SKOS Core Vocabulary Specification",
         "date": "2 November 2005",
         "status": "WD",
         "publisher": "W3C"
@@ -4794,7 +4953,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Alan Rector"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-swbp-specified-values-20050517",
-        "title": "Representing Specified Values in OWL: &quot;value partitions&quot; and &quot;value sets&quot;.",
+        "title": "Representing Specified Values in OWL: &quot;value partitions&quot; and &quot;value sets&quot;",
         "date": "17 May 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4804,7 +4963,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Alistair Miles"
         ],
         "href": "http://www.w3.org/TR/2005/WD-swbp-thesaurus-pubguide-20050517",
-        "title": "Quick Guide to Publishing a Thesaurus on the Semantic Web.",
+        "title": "Quick Guide to Publishing a Thesaurus on the Semantic Web",
         "date": "17 May 2005",
         "status": "WD",
         "publisher": "W3C"
@@ -4815,7 +4974,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Diego Berrueta"
         ],
         "href": "http://www.w3.org/TR/2008/NOTE-swbp-vocab-pub-20080828",
-        "title": "Best Practice Recipes for Publishing RDF Vocabularies.",
+        "title": "Best Practice Recipes for Publishing RDF Vocabularies",
         "date": "28 August 2008",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4826,7 +4985,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jeff Z. Pan"
         ],
         "href": "http://www.w3.org/TR/2006/NOTE-swbp-xsch-datatypes-20060314",
-        "title": "XML Schema Datatypes in RDF and OWL.",
+        "title": "XML Schema Datatypes in RDF and OWL",
         "date": "14 March 2006",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4838,7 +4997,7 @@ if (typeof berjon === "undefined") berjon = {};
             "David Hyatt"
         ],
         "href": "http://www.w3.org/TR/2005/WD-sXBL-20050815",
-        "title": "SVG's XML Binding Language (sXBL).",
+        "title": "SVG's XML Binding Language (sXBL)",
         "date": "15 August 2005",
         "status": "WD",
         "publisher": "W3C"
@@ -4849,7 +5008,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Mark Boulton"
         ],
         "href": "http://www.subtraction.com/pics/0703/grids_are_good.pdf",
-        "title": "Grids Are Good.",
+        "title": "Grids Are Good",
         "date": "March 2007",
         "status": "SXSW Interactive, Austin, TX"
     },
@@ -4860,7 +5019,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Warner ten Kate"
         ],
         "href": "http://www.w3.org/TR/1999/NOTE-SYMM-modules-19990223",
-        "title": "Synchronized Multimedia Modules based upon SMIL 1.0.",
+        "title": "Synchronized Multimedia Modules based upon SMIL 1.0",
         "date": "23 February 1999",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4872,7 +5031,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2010/WD-system-info-api-20100202/",
-        "title": "The System Information API.",
+        "title": "The System Information API",
         "date": "2 February 2010",
         "status": "WD",
         "publisher": "W3C"
@@ -4884,7 +5043,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Dominique Hazaël-Massieux"
         ],
         "href": "http://www.w3.org/TR/2012/WD-html-media-capture-20120529/",
-        "title": "HTML Media Capture.",
+        "title": "HTML Media Capture",
         "date": "29 May 2012",
         "status": "WD",
         "publisher": "W3C"
@@ -4894,7 +5053,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ian Jacobs (Scribe)"
         ],
         "href": "http://www.w3.org/2003/01/16-tag-xlink",
-        "title": "Minutes of 16 Jan 2003 discussion on Linking in XML Documents.",
+        "title": "Minutes of 16 Jan 2003 discussion on Linking in XML Documents",
         "date": "2003",
         "status": "W3C TAG archives",
         "publisher": "W3C"
@@ -4905,7 +5064,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Karl Dubost"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-test-metadata-20050914",
-        "title": "Test Metadata.",
+        "title": "Test Metadata",
         "date": "14 September 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4918,7 +5077,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Petri Vuorimaa"
         ],
         "href": "http://www.w3.org/TR/2008/WD-timesheets-20080110",
-        "title": "SMIL Timesheets 1.0.",
+        "title": "SMIL Timesheets 1.0",
         "date": "10 January 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -4929,7 +5088,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2005/NOTE-timezone-20051013",
-        "title": "Working with Time Zones.",
+        "title": "Working with Time Zones",
         "date": "13 October 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4940,13 +5099,24 @@ if (typeof berjon === "undefined") berjon = {};
             "E. Rescorla"
         ],
         "href": "http://tools.ietf.org/html/rfc5246",
-        "title": "The Transport Layer Security (TLS) Protocol, Version 1.2.",
+        "title": "The Transport Layer Security (TLS) Protocol, Version 1.2",
         "date": "August 2008",
-        "status": "Internet RFC 5246",
+        "status": "RFC 5246",
         "publisher": "IETF"
     },
     "Tobin": "R. Tobin. <a href=\"http://lists.w3.org/Archives/Member/w3c-xml-core-wg/2000OctDec/0054\"><cite>Infoset for external entities.</cite></a> 2000. URL: <a href=\"http://lists.w3.org/Archives/Member/w3c-xml-core-wg/2000OctDec/0054\">http://lists.w3.org/Archives/Member/w3c-xml-core-wg/2000OctDec/0054</a> [XML Core mailing list, <a href=\"http://cgi.w3.org/MemberAccess/AccessRequest\">W3C Member Only</a>].",
-    "TOUCH-EVENTS": "Matt Brubeck; Sangwhan Moon; Doug Schepers; <a href=\"http://www.w3.org/TR/touch-events/\"><cite>Touch Events version 1</cite></a> URL: <a href=\"http://www.w3.org/TR/touch-events/\">http://www.w3.org/TR/touch-events</a>",
+    "TOUCH-EVENTS": {
+      "authors": [
+          "Doug Schepers",
+          "Sangwhan Moon",
+          "Matt Brubeck"
+      ],
+      "href": "http://www.w3.org/TR/2013/WD-touch-events-20130124",
+      "title": "Touch Events version 1",
+      "date": "24 January 2013",
+      "status": "WD",
+      "publisher": "W3C"
+    },
     "TRACKING-COMPLIANCE": {
         "authors": [
             "Justin Brookman",
@@ -4955,7 +5125,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Heather West"
         ],
         "href": "http://www.w3.org/TR/tracking-compliance/",
-        "title": "Tracking Compliance and Scope.",
+        "title": "Tracking Compliance and Scope",
         "date": "13 March 2012",
         "status": "WD",
         "publisher": "W3C"
@@ -4966,7 +5136,7 @@ if (typeof berjon === "undefined") berjon = {};
             "David Singer"
         ],
         "href": "http://www.w3.org/TR/tracking-dnt/",
-        "title": "Tracking Preference Expression (DNT).",
+        "title": "Tracking Preference Expression (DNT)",
         "date": "13 March 2012",
         "status": "WD",
         "publisher": "W3C"
@@ -4977,7 +5147,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Glenn Adams"
         ],
         "href": "http://www.w3.org/TR/2006/CR-ttaf1-dfxp-20061116",
-        "title": "Timed Text (TT) Authoring Format 1.0&#160;&#8211; Distribution Format Exchange Profile (DFXP).",
+        "title": "Timed Text (TT) Authoring Format 1.0&#160;&#8211; Distribution Format Exchange Profile (DFXP)",
         "date": "16 November 2006",
         "status": "CR",
         "publisher": "W3C"
@@ -4987,7 +5157,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Glenn Adams"
         ],
         "href": "http://www.w3.org/TR/2006/NOTE-ttaf1-req-20060427",
-        "title": "Timed Text (TT) Authoring Format 1.0 Use Cases and Requirements.",
+        "title": "Timed Text (TT) Authoring Format 1.0 Use Cases and Requirements",
         "date": "27 April 2006",
         "status": "NOTE",
         "publisher": "W3C"
@@ -4997,7 +5167,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Matt May"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-turingtest-20051123",
-        "title": "Inaccessibility of CAPTCHA.",
+        "title": "Inaccessibility of CAPTCHA",
         "date": "23 November 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -5009,9 +5179,9 @@ if (typeof berjon === "undefined") berjon = {};
             "J. Rosenberg"
         ],
         "href": "http://tools.ietf.org/html/rfc5766",
-        "title": "Traversal Using Relays around NAT (TURN): Relay Extensions to Session Traversal Utilities for NAT (STUN).",
+        "title": "Traversal Using Relays around NAT (TURN): Relay Extensions to Session Traversal Utilities for NAT (STUN)",
         "date": "April 2010",
-        "status": "Internet RFC 5766",
+        "status": "RFC 5766",
         "publisher": "IETF"
     },
     "TURN-URI": {
@@ -5022,7 +5192,7 @@ if (typeof berjon === "undefined") berjon = {};
             "and  P. Jones"
         ],
         "href": "http://tools.ietf.org/html/draft-petithuguenin-behave-turn-uris",
-        "title": "Traversal Using Relays around NAT (TURN) Uniform Resource Identifiers.",
+        "title": "Traversal Using Relays around NAT (TURN) Uniform Resource Identifiers",
         "date": "12 March 2012",
         "status": "Internet Draft (work in progress)",
         "publisher": "IETF"
@@ -5033,7 +5203,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Tim Berners-Lee"
         ],
         "href": "http://www.w3.org/TeamSubmission/turtle/",
-        "title": "Turtle: Terse RDF Triple Language.",
+        "title": "Turtle: Terse RDF Triple Language",
         "date": "January 2008",
         "status": "W3C Team Submission",
         "publisher": "W3C"
@@ -5046,7 +5216,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Craig Finseth"
         ],
         "href": "http://www.w3.org/TR/1999/NOTE-TVWeb-URI-Requirements-19991021",
-        "title": "TV Broadcast URI Schemes Requirements.",
+        "title": "TV Broadcast URI Schemes Requirements",
         "date": "21 October 1999",
         "status": "NOTE",
         "publisher": "W3C"
@@ -5060,7 +5230,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Eric Hansen"
         ],
         "href": "http://www.w3.org/TR/2002/REC-UAAG10-20021217",
-        "title": "User Agent Accessibility Guidelines 1.0.",
+        "title": "User Agent Accessibility Guidelines 1.0",
         "date": "17 December 2002",
         "status": "REC",
         "publisher": "W3C"
@@ -5072,7 +5242,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Eric Hansen"
         ],
         "href": "http://www.w3.org/TR/2002/NOTE-UAAG10-TECHS-20021217",
-        "title": "Techniques for User Agent Accessibility Guidelines 1.0.",
+        "title": "Techniques for User Agent Accessibility Guidelines 1.0",
         "date": "17 December 2002",
         "status": "NOTE",
         "publisher": "W3C"
@@ -5083,7 +5253,7 @@ if (typeof berjon === "undefined") berjon = {};
             "James Allan"
         ],
         "href": "http://www.w3.org/TR/2009/WD-UAAG20-20090311",
-        "title": "User Agent Accessibility Guidelines (UAAG) 2.0.",
+        "title": "User Agent Accessibility Guidelines (UAAG) 2.0",
         "date": "11 March 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -5094,7 +5264,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jan Richards"
         ],
         "href": "http://www.w3.org/TR/2007/WD-UAAG20-requirements-20071031",
-        "title": "User Agent Accessibility Guidelines 2.0 Requirements.",
+        "title": "User Agent Accessibility Guidelines 2.0 Requirements",
         "date": "31 October 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -5104,7 +5274,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Asmus Freytag"
         ],
         "href": "http://www.unicode.org/unicode/reports/tr11/tr11-8.html",
-        "title": "East Asian Width.",
+        "title": "East Asian Width",
         "date": "23 March 2001",
         "status": "Unicode Standard Annex #11"
     },
@@ -5113,7 +5283,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Asmus Freytag"
         ],
         "href": "http://www.unicode.org/unicode/reports/tr14/tr14-17.html",
-        "title": "Line Breaking Properties.",
+        "title": "Line Breaking Properties",
         "date": "29 March 2005",
         "status": "Unicode Standard Annex #14"
     },
@@ -5122,7 +5292,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Mark Davis"
         ],
         "href": "http://www.unicode.org/reports/tr21/tr21-5.html",
-        "title": "Case Mappings.",
+        "title": "Case Mappings",
         "date": "26 March 2001",
         "status": "Unicode Standard Annex #21"
     },
@@ -5131,7 +5301,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Mark Davis"
         ],
         "href": "http://www.unicode.org/unicode/reports/tr24/tr24-7.html",
-        "title": "Script Names.",
+        "title": "Script Names",
         "date": "28 March 2005",
         "status": "Unicode Standard Annex #24"
     },
@@ -5142,7 +5312,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.unicode.org/unicode/reports/tr27/tr27-4.html",
-        "title": "Unicode 3.1.0.",
+        "title": "Unicode 3.1.0",
         "date": "16 May 2001",
         "status": "Unicode Standard Annex #27"
     },
@@ -5151,7 +5321,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Mark Davis"
         ],
         "href": "http://www.unicode.org/unicode/reports/tr29/tr29-9.html",
-        "title": "Text Boundaries.",
+        "title": "Text Boundaries",
         "date": "25 March 2005",
         "status": "Unicode Standard Annex #29"
     },
@@ -5161,7 +5331,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Gary Kacmarcik"
         ],
         "href": "http://dvcs.w3.org/hg/d4e/raw-file/tip/source_respec.htm",
-        "title": "UI Events.",
+        "title": "UI Events",
         "date": "7 January 2013",
         "status": "ED",
         "publisher": "W3C"
@@ -5172,7 +5342,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/NOTE-UNDERSTANDING-WCAG20-20081211",
-        "title": "Understanding WCAG 2.0.",
+        "title": "Understanding WCAG 2.0",
         "date": "11 December 2008",
         "status": "NOTE",
         "publisher": "W3C"
@@ -5184,7 +5354,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Martin D&#252;rst"
         ],
         "href": "http://www.w3.org/TR/2007/NOTE-unicode-xml-20070516",
-        "title": "Unicode in XML and other Markup Languages.",
+        "title": "Unicode in XML and other Markup Languages",
         "date": "16 May 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -5210,9 +5380,9 @@ if (typeof berjon === "undefined") berjon = {};
             "L. Masinter"
         ],
         "href": "http://www.ietf.org/rfc/rfc3986.txt",
-        "title": "Uniform Resource Identifiers (URI): generic syntax.",
+        "title": "Uniform Resource Identifiers (URI): generic syntax",
         "date": "January 2005",
-        "status": "Internet RFC 3986",
+        "status": "RFC 3986",
         "publisher": "IETF"
     },
     "URI-CLARIFICATION": {
@@ -5220,7 +5390,7 @@ if (typeof berjon === "undefined") berjon = {};
             "URI Planning Interest Group"
         ],
         "href": "http://www.w3.org/TR/2001/NOTE-uri-clarification-20010921",
-        "title": "URIs, URLs, and URNs: Clarifications and Recommendations 1.0.",
+        "title": "URIs, URLs, and URNs: Clarifications and Recommendations 1.0",
         "date": "21 September 2001",
         "status": "NOTE",
         "publisher": "W3C"
@@ -5234,9 +5404,9 @@ if (typeof berjon === "undefined") berjon = {};
             "David Orchard"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc6570.txt",
-        "title": "URI Template.",
+        "title": "URI Template",
         "date": "March 2012",
-        "status": "Internet RFC 6570"
+        "status": "RFC 6570"
     },
     "URN": "R. Moats. <a href=\"http://www.ietf.org/rfc/rfc2141.txt\"><cite>URN Syntax.</cite></a> IETF RFC 2141. May 1997.  URL: <a href=\"http://www.ietf.org/rfc/rfc2141.txt\">http://www.ietf.org/rfc/rfc2141.txt</a>",
     "URN-OID": "M. Mealling. <a href=\"http://www.ietf.org/rfc/rfc3061.txt\"><cite>A URN Namespace of Object Identifiers. </cite></a>. IETF RFC 3061. February 2001. URL: <a href=\"http://www.ietf.org/rfc/rfc3061.txt\">http://www.ietf.org/rfc/rfc3061.txt</a>",
@@ -5247,7 +5417,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Mark Davis"
         ],
         "href": "http://www.unicode.org/unicode/reports/tr24/tr24-3.html",
-        "title": "Script Names.",
+        "title": "Script Names",
         "date": "27 September 2001",
         "status": "Unicode Technical Report #24"
     },
@@ -5256,7 +5426,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Kenneth G. Rehor"
         ],
         "href": "http://www.w3.org/TR/2002/WD-vbi-reqs-20020808",
-        "title": "Voice Browser Interoperation: Requirements.",
+        "title": "Voice Browser Interoperation: Requirements",
         "date": "8 August 2002",
         "status": "WD",
         "publisher": "W3C"
@@ -5267,7 +5437,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Or Ben-Nattan"
         ],
         "href": "http://www.w3.org/TR/1998/NOTE-voice-0128",
-        "title": "Voice Browsers.",
+        "title": "Voice Browsers",
         "date": "28 January 1998",
         "status": "NOTE",
         "publisher": "W3C"
@@ -5278,7 +5448,7 @@ if (typeof berjon === "undefined") berjon = {};
             "D. A. Dahl"
         ],
         "href": "http://www.w3.org/TR/1999/WD-voice-architecture-19991223",
-        "title": "Model Architecture for Voice Browser Systems.",
+        "title": "Model Architecture for Voice Browser Systems",
         "date": "23 December 1999",
         "status": "WD",
         "publisher": "W3C"
@@ -5288,7 +5458,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Scott McGlashan"
         ],
         "href": "http://www.w3.org/TR/1999/WD-voice-dialog-reqs-19991223",
-        "title": "Dialog Requirements for Voice Markup Languages.",
+        "title": "Dialog Requirements for Voice Markup Languages",
         "date": "23 December 1999",
         "status": "WD",
         "publisher": "W3C"
@@ -5298,7 +5468,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Michael K. Brown"
         ],
         "href": "http://www.w3.org/TR/1999/WD-voice-grammar-reqs-19991223",
-        "title": "Grammar Representation Requirements for Voice Markup Languages.",
+        "title": "Grammar Representation Requirements for Voice Markup Languages",
         "date": "23 December 1999",
         "status": "WD",
         "publisher": "W3C"
@@ -5308,7 +5478,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jim Larson"
         ],
         "href": "http://www.w3.org/TR/2000/WD-voice-intro-20001204",
-        "title": "Voice Browsers, Introduction.",
+        "title": "Voice Browsers, Introduction",
         "date": "4 December 2000",
         "status": "WD",
         "publisher": "W3C"
@@ -5318,7 +5488,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Deborah Dahl"
         ],
         "href": "http://www.w3.org/TR/1999/WD-voice-nlu-reqs-19991223",
-        "title": "Natural Language Processing Requirements for Voice Markup Languages.",
+        "title": "Natural Language Processing Requirements for Voice Markup Languages",
         "date": "23 December 1999",
         "status": "WD",
         "publisher": "W3C"
@@ -5328,7 +5498,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Andrew Hunt"
         ],
         "href": "http://www.w3.org/TR/1999/WD-voice-tts-reqs-19991223",
-        "title": "Speech Synthesis Markup Requirements for Voice Markup Languages.",
+        "title": "Speech Synthesis Markup Requirements for Voice Markup Languages",
         "date": "23 December 1999",
         "status": "WD",
         "publisher": "W3C"
@@ -5339,7 +5509,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2004/REC-voicexml20-20040316",
-        "title": "Voice Extensible Markup Language (VoiceXML) Version 2.0.",
+        "title": "Voice Extensible Markup Language (VoiceXML) Version 2.0",
         "date": "16 March 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -5350,7 +5520,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/REC-voicexml21-20070619",
-        "title": "Voice Extensible Markup Language (VoiceXML) 2.1.",
+        "title": "Voice Extensible Markup Language (VoiceXML) 2.1",
         "date": "19 June 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -5361,7 +5531,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/WD-voicexml30-20081219",
-        "title": "Voice Extensible Markup Language (VoiceXML) 3.0.",
+        "title": "Voice Extensible Markup Language (VoiceXML) 3.0",
         "date": "19 December 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -5372,7 +5542,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jeff Hoepfinger"
         ],
         "href": "http://www.w3.org/TR/2008/WD-vxml30reqs-20080808",
-        "title": "Voice Extensible Markup Language (VoiceXML) 3.0 Requirements.",
+        "title": "Voice Extensible Markup Language (VoiceXML) 3.0 Requirements",
         "date": "8 August 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -5392,18 +5562,19 @@ if (typeof berjon === "undefined") berjon = {};
             "Andrew Arch"
         ],
         "href": "http://www.w3.org/TR/2008/WD-wai-age-literature-20080514",
-        "title": "Web Accessibility for Older Users: A Literature Review.",
+        "title": "Web Accessibility for Older Users: A Literature Review",
         "date": "14 May 2008",
         "status": "WD",
         "publisher": "W3C"
     },
     "WAI-ARIA": {
         "authors": [
-            "Lisa Pappas"
+            "James Craig",
+            "Michael Cooper"
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2009/WD-wai-aria-20090224",
-        "title": "Accessible Rich Internet Applications (WAI-ARIA) 1.0.",
+        "title": "Accessible Rich Internet Applications (WAI-ARIA) 1.0",
         "date": "24 February 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -5414,20 +5585,19 @@ if (typeof berjon === "undefined") berjon = {};
             "Aaron Leventhal"
         ],
         "href": "http://www.w3.org/TR/2009/WD-wai-aria-implementation-20090224",
-        "title": "WAI-ARIA 1.0 User Agent Implementation Guide.",
+        "title": "WAI-ARIA 1.0 User Agent Implementation Guide",
         "date": "24 February 2009",
         "status": "WD",
         "publisher": "W3C"
     },
     "WAI-ARIA-PRACTICES": {
         "authors": [
-            "Michael Cooper",
-            "Richard Schwerdtfeger",
-            "Lisa Pappas"
+            "Joseph Scheuhammer",
+            "Michael Cooper"
         ],
-        "href": "http://www.w3.org/TR/2009/WD-wai-aria-practices-20090224",
+        "href": "http://www.w3.org/TR/2010/WD-wai-aria-practices-20100916/",
         "title": "WAI-ARIA Best Practices.",
-        "date": "24 February 2009",
+        "date": "16 September 2010",
         "status": "WD",
         "publisher": "W3C"
     },
@@ -5438,7 +5608,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Lisa Pappas"
         ],
         "href": "http://www.w3.org/TR/2008/WD-wai-aria-primer-20080204",
-        "title": "WAI-ARIA Primer.",
+        "title": "WAI-ARIA Primer",
         "date": "4 February 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -5448,7 +5618,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Richard Schwerdtfeger"
         ],
         "href": "http://www.w3.org/TR/2008/WD-wai-aria-roadmap-20080204",
-        "title": "Roadmap for Accessible Rich Internet Applications (WAI-ARIA Roadmap).",
+        "title": "Roadmap for Accessible Rich Internet Applications (WAI-ARIA Roadmap)",
         "date": "4 February 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -5460,7 +5630,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Henrik Frystyk Nielsen"
         ],
         "href": "http://www.w3.org/TR/1999/NOTE-WCA-19990319",
-        "title": "Web Characterization: From working group to activity.",
+        "title": "Web Characterization: From working group to activity",
         "date": "19 March 1999",
         "status": "NOTE",
         "publisher": "W3C"
@@ -5472,7 +5642,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ian Jacobs"
         ],
         "href": "http://www.w3.org/TR/1999/WAI-WEBCONTENT-19990505",
-        "title": "Web Content Accessibility Guidelines 1.0.",
+        "title": "Web Content Accessibility Guidelines 1.0",
         "date": "5 May 1999",
         "status": "REC",
         "publisher": "W3C"
@@ -5484,7 +5654,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Wendy Chisholm"
         ],
         "href": "http://www.w3.org/TR/2000/NOTE-WCAG10-CORE-TECHS-20001106",
-        "title": "Core Techniques for Web Content Accessibility Guidelines 1.0.",
+        "title": "Core Techniques for Web Content Accessibility Guidelines 1.0",
         "date": "6 November 2000",
         "status": "NOTE",
         "publisher": "W3C"
@@ -5496,7 +5666,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Wendy Chisholm"
         ],
         "href": "http://www.w3.org/TR/2000/NOTE-WCAG10-CSS-TECHS-20001106",
-        "title": "CSS Techniques for Web Content Accessibility Guidelines 1.0.",
+        "title": "CSS Techniques for Web Content Accessibility Guidelines 1.0",
         "date": "6 November 2000",
         "status": "NOTE",
         "publisher": "W3C"
@@ -5508,7 +5678,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ian Jacobs"
         ],
         "href": "http://www.w3.org/TR/2000/NOTE-WCAG10-HTML-TECHS-20001106",
-        "title": "HTML Techniques for Web Content Accessibility Guidelines 1.0.",
+        "title": "HTML Techniques for Web Content Accessibility Guidelines 1.0",
         "date": "6 November 2000",
         "status": "NOTE",
         "publisher": "W3C"
@@ -5520,7 +5690,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Wendy Chisholm"
         ],
         "href": "http://www.w3.org/TR/2000/NOTE-WCAG10-TECHS-20001106",
-        "title": "Techniques for Web Content Accessibility Guidelines 1.0.",
+        "title": "Techniques for Web Content Accessibility Guidelines 1.0",
         "date": "6 November 2000",
         "status": "NOTE",
         "publisher": "W3C"
@@ -5532,7 +5702,7 @@ if (typeof berjon === "undefined") berjon = {};
             "John Slatin"
         ],
         "href": "http://www.w3.org/TR/2006/NOTE-wcag2-req-20060425",
-        "title": "Requirements for WCAG 2.0.",
+        "title": "Requirements for WCAG 2.0",
         "date": "25 April 2006",
         "status": "NOTE",
         "publisher": "W3C"
@@ -5542,7 +5712,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Michael Cooper"
         ],
         "href": "http://www.w3.org/TR/2003/WD-wcag2-tech-req-20030207",
-        "title": "Requirements for WCAG 2.0 Checklists and Techniques.",
+        "title": "Requirements for WCAG 2.0 Checklists and Techniques",
         "date": "7 February 2003",
         "status": "WD",
         "publisher": "W3C"
@@ -5553,7 +5723,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/REC-WCAG20-20081211",
-        "title": "Web Content Accessibility Guidelines (WCAG) 2.0.",
+        "title": "Web Content Accessibility Guidelines (WCAG) 2.0",
         "date": "11 December 2008",
         "status": "REC",
         "publisher": "W3C"
@@ -5564,21 +5734,30 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/NOTE-WCAG20-TECHS-20081211",
-        "title": "Techniques for WCAG 2.0.",
+        "title": "Techniques for WCAG 2.0",
         "date": "11 December 2008",
         "status": "NOTE",
         "publisher": "W3C"
     },
     "WCSS11": "Open Mobile Alliance. <a href=\"http://www.openmobilealliance.org/technical/release_program/docs/Browsing/V2_3-20080331-A/OMA-WAP-WCSS-V1_1-20061020-A.pdf\"><cite>Wireless CSS Specification.</cite></a> October 2006. Approved Version 1.1. URL: <a href=\"http://www.openmobilealliance.org/technical/release_program/docs/Browsing/V2_3-20080331-A/OMA-WAP-WCSS-V1_1-20061020-A.pdf\">http://www.openmobilealliance.org/technical/release_program/docs/Browsing/V2_3-20080331-A/OMA-WAP-WCSS-V1_1-20061020-A.pdf</a> ",
     "WCSS12": "Open Mobile Alliance. <a href=\"http://www.openmobilealliance.org/ftp/Public_documents/MCE/MAE/Permanent_documents/OMA-TS-WCSS-V1_2-20070921-D.zip\"><cite>Wireless CSS Specification Version 1.2.</cite></a> 21 September 2007. (Work in progress.) URL: <a href=\"http://www.openmobilealliance.org/ftp/Public_documents/MCE/MAE/Permanent_documents/OMA-TS-WCSS-V1_2-20070921-D.zip\">http://www.openmobilealliance.org/ftp/Public_documents/MCE/MAE/Permanent_documents/OMA-TS-WCSS-V1_2-20070921-D.zip</a> ",
-    "WEBAPPS-MANIFEST-API": "Anant Narayanan. <a href=\"http://dvcs.w3.org/hg/app-manifest/raw-file/tip/index.html\"><cite>Web Application Manifest Format and Management APIs</cite></a>. W3C Editor's Draft. (Work in progress.) URL: <a href=\"http://dvcs.w3.org/hg/app-manifest/raw-file/tip/index.html\">http://dvcs.w3.org/hg/app-manifest/raw-file/tip/index.html</a> ",
+    "WEBAPPS-MANIFEST-API": {
+        "authors": [
+            "Anant Narayanan"
+        ],
+        "href": "https://dvcs.w3.org/hg/app-manifest/raw-file/tip/index.html",
+        "title": "Web Application Manifest Format and Management APIs",
+        "date": "30 January 2013",
+        "status": "ED",
+        "publisher": "W3C"
+    },
     "WEBAPP-PRIVACY-BESTPRACTICES": "Frederick Hirsch. <a href=\"http://www.w3.org/TR/app-privacy-bp/\"><cite>Web Application Privacy Best Practices</cite></a>. W3C Working Group Note. URL: <a href=\"http://www.w3.org/TR/app-privacy-bp/\">http://www.w3.org/TR/app-privacy-bp/</a> ",
     "WEB-FORMS-2": {
         "authors": [
             "Ian Hickson"
         ],
         "href": "http://www.w3.org/TR/2006/WD-web-forms-2-20060821",
-        "title": "Web Forms 2.0.",
+        "title": "Web Forms 2.0",
         "date": "21 August 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -5589,7 +5768,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ian Jacobs"
         ],
         "href": "http://www.w3.org/TR/2004/REC-webarch-20041215/",
-        "title": "Architecture of the World Wide Web, Volume One.",
+        "title": "Architecture of the World Wide Web, Volume One",
         "date": "15 December 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -5600,7 +5779,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2001/REC-WebCGM-20011217",
-        "title": "WebCGM 1.0 Second Release.",
+        "title": "WebCGM 1.0 Second Release",
         "date": "17 December 2001",
         "status": "REC",
         "publisher": "W3C"
@@ -5612,7 +5791,7 @@ if (typeof berjon === "undefined") berjon = {};
             "David Cruikshank"
         ],
         "href": "http://www.w3.org/TR/2007/REC-webcgm20-20070130",
-        "title": "WebCGM 2.0.",
+        "title": "WebCGM 2.0",
         "date": "30 January 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -5623,7 +5802,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Benoit Bezaire"
         ],
         "href": "http://www.w3.org/TR/2009/WD-webcgm21-20090130",
-        "title": "WebCGM 2.1.",
+        "title": "WebCGM 2.1",
         "date": "30 January 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -5634,7 +5813,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Cameron McCormack"
         ],
         "href": "http://www.w3.org/TR/2011/WD-WebIDL-20110927/",
-        "title": "Web IDL.",
+        "title": "Web IDL",
         "date": "27 September 2011",
         "status": "WD",
         "publisher": "W3C"
@@ -5644,7 +5823,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jeff Heflin"
         ],
         "href": "http://www.w3.org/TR/2004/REC-webont-req-20040210",
-        "title": "OWL Web Ontology Language Use Cases and Requirements.",
+        "title": "OWL Web Ontology Language Use Cases and Requirements",
         "date": "10 February 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -5659,7 +5838,7 @@ if (typeof berjon === "undefined") berjon = {};
             "A Narayanan"
         ],
         "href": "http://www.w3.org/TR/2011/WD-webrtc-20111027/",
-        "title": "WebRTC 1.0.",
+        "title": "WebRTC 1.0",
         "date": "27 October 2011",
         "status": "WD",
         "publisher": "W3C"
@@ -5669,7 +5848,7 @@ if (typeof berjon === "undefined") berjon = {};
             "I. Hickson"
         ],
         "href": "http://www.w3.org/TR/2011/WD-websockets-20110929/",
-        "title": "The WebSocket API.",
+        "title": "The WebSocket API",
         "date": "29 September 2011",
         "status": "WD",
         "publisher": "W3C"
@@ -5680,10 +5859,10 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Ian Hickson"
         ],
-        "href": "http://www.w3.org/TR/2009/WD-webstorage-20090910/",
-        "title": "Web Storage.",
-        "date": "10 September 2009",
-        "status": "WD",
+        "href": "http://www.w3.org/TR/2011/CR-webstorage-20111208",
+        "title": "Web Storage",
+        "date": "08 December 2011",
+        "status": "CR",
         "publisher": "W3C"
     },
     "WEBVTT": {
@@ -5691,7 +5870,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ian Hickson"
         ],
         "href": "http://dev.w3.org/html5/webvtt/",
-        "title": "WebVTT.",
+        "title": "WebVTT",
         "date": "21 August 2012",
         "status": "WD",
         "publisher": "W3C"
@@ -5700,10 +5879,10 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Ian Hickson"
         ],
-        "href": "http://www.w3.org/TR/2011/WD-workers-20110901/",
-        "title": "Web Workers.",
-        "date": "1 September 2011",
-        "status": "WD",
+        "href": "http://www.w3.org/TR/2012/CR-workers-20120501",
+        "title": "Web Workers",
+        "date": "01 May 2012",
+        "status": "CR",
         "publisher": "W3C"
     },
     "WICD": {
@@ -5712,7 +5891,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/CR-WICD-20070718",
-        "title": "WICD Core 1.0.",
+        "title": "WICD Core 1.0",
         "date": "18 July 2007",
         "status": "CR",
         "publisher": "W3C"
@@ -5723,7 +5902,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/CR-WICDFull-20070718",
-        "title": "WICD Full 1.0.",
+        "title": "WICD Full 1.0",
         "date": "18 July 2007",
         "status": "CR",
         "publisher": "W3C"
@@ -5734,12 +5913,21 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/CR-WICDMobile-20070718",
-        "title": "WICD Mobile 1.0.",
+        "title": "WICD Mobile 1.0",
         "date": "18 July 2007",
         "status": "CR",
         "publisher": "W3C"
     },
-    "WIDGETS": "Marcos Cáceres. <a href=\"http://www.w3.org/TR/widgets/\"><cite>Widget Packaging and XML Configuration</cite></a>. W3C Recommendation. URL: <a href=\"http://www.w3.org/TR/widgets/\">http://www.w3.org/TR/widgets/</a> ",
+    "WIDGETS": {
+        "authors": [
+            "Marcos Cáceres"
+        ],
+        "href": "http://www.w3.org/TR/widgets/",
+        "title": "Widget Packaging and XML Configuration",
+        "date": "27 November 2012",
+        "status": "REC",
+        "publisher": "W3C"
+    },
     "WIDGETS-APIS": "Marcos Cáceres <a href=\"http://www.w3.org/TR/widgets-api/\"><cite>Widget Interface.</cite></a> W3C Proposed Recommendation. URL: <a href=\"http://www.w3.org/TR/widgets-api/\">http://www.w3.org/TR/widgets-api/</a> ",
     "WIDGETS-DIGSIG": {
         "authors": [
@@ -5750,7 +5938,7 @@ if (typeof berjon === "undefined") berjon = {};
             "M Priestley"
         ],
         "href": "http://www.w3.org/TR/widgets-digsig",
-        "title": "Digital Signatures for Widgets.",
+        "title": "Digital Signatures for Widgets",
         "date": "(Work in progress",
         "status": ")"
     },
@@ -5759,7 +5947,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Marcos Cáceres"
         ],
         "href": "http://www.w3.org/TR/2008/WD-widgets-land-20080414",
-        "title": "The Widget Landscape (Q1 2008).",
+        "title": "The Widget Landscape (Q1 2008)",
         "date": "14 April 2008",
         "status": "W3C Working Group Note",
         "publisher": "W3C"
@@ -5772,7 +5960,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Marcos Cáceres"
         ],
         "href": "http://www.w3.org/TR/2008/WD-widgets-updates-20081007",
-        "title": "Widget Updates.",
+        "title": "Widget Updates",
         "date": "7 October 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -5784,12 +5972,23 @@ if (typeof berjon === "undefined") berjon = {};
             "Maciej Stachowiak"
         ],
         "href": "http://www.w3.org/TR/2006/WD-Window-20060407",
-        "title": "Window Object 1.0.",
+        "title": "Window Object 1.0",
         "date": "7 April 2006",
         "status": "WD",
         "publisher": "W3C"
     },
-    "WOFF": "Jonathan Kew, Tal Leming, Erik van Blokland. <a href=\"http://www.w3.org/TR/WOFF/\">WOFF File Format 1.0</a>. 04 August 2011. Candidate Recommendation. URL: <a href=\"http://www.w3.org/TR/WOFF/\">http://www.w3.org/TR/WOFF/</a>",
+    "WOFF": {
+        "authors": [
+            "Jonathan Kew",
+            "Tal Leming",
+            "Erik van Blokland"
+        ],
+        "href": "http://www.w3.org/TR/WOFF/",
+        "title": "WOFF File Format 1.0",
+        "date": "13 December 2012",
+        "status": "REC",
+        "publisher": "W3C"
+    },
     "WORDNET-RDF": {
         "authors": [
             "Aldo Gangemi",
@@ -5797,7 +5996,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Mark van Assem"
         ],
         "href": "http://www.w3.org/TR/2006/WD-wordnet-rdf-20060619",
-        "title": "RDF/OWL Representation of WordNet.",
+        "title": "RDF/OWL Representation of WordNet",
         "date": "19 June 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -5809,7 +6008,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Tony Rogers"
         ],
         "href": "http://www.w3.org/TR/2006/REC-ws-addr-core-20060509",
-        "title": "Web Services Addressing 1.0 - Core.",
+        "title": "Web Services Addressing 1.0 - Core",
         "date": "9 May 2006",
         "status": "REC",
         "publisher": "W3C"
@@ -5820,7 +6019,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/REC-ws-addr-metadata-20070904",
-        "title": "Web Services Addressing 1.0 - Metadata.",
+        "title": "Web Services Addressing 1.0 - Metadata",
         "date": "4 September 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -5831,7 +6030,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2006/REC-ws-addr-soap-20060509",
-        "title": "Web Services Addressing 1.0 - SOAP Binding.",
+        "title": "Web Services Addressing 1.0 - SOAP Binding",
         "date": "9 May 2006",
         "status": "REC",
         "publisher": "W3C"
@@ -5842,7 +6041,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2004/NOTE-ws-arch-20040211",
-        "title": "Web Services Architecture.",
+        "title": "Web Services Architecture",
         "date": "11 February 2004",
         "status": "NOTE",
         "publisher": "W3C"
@@ -5854,7 +6053,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Hao He"
         ],
         "href": "http://www.w3.org/TR/2004/NOTE-ws-arch-scenarios-20040211",
-        "title": "Web Services Architecture Usage Scenarios.",
+        "title": "Web Services Architecture Usage Scenarios",
         "date": "11 February 2004",
         "status": "NOTE",
         "publisher": "W3C"
@@ -5865,7 +6064,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2005/CR-ws-cdl-10-20051109",
-        "title": "Web Services Choreography Description Language Version 1.0.",
+        "title": "Web Services Choreography Description Language Version 1.0",
         "date": "9 November 2005",
         "status": "CR",
         "publisher": "W3C"
@@ -5876,7 +6075,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Tony Fletcher"
         ],
         "href": "http://www.w3.org/TR/2006/WD-ws-cdl-10-primer-20060619",
-        "title": "Web Services Choreography Description Language: Primer.",
+        "title": "Web Services Choreography Description Language: Primer",
         "date": "19 June 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -5887,7 +6086,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Nickolas Kavantzas"
         ],
         "href": "http://www.w3.org/TR/2004/WD-ws-chor-model-20040324",
-        "title": "WS Choreography Model Overview.",
+        "title": "WS Choreography Model Overview",
         "date": "24 March 2004",
         "status": "WD",
         "publisher": "W3C"
@@ -5898,7 +6097,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2004/WD-ws-chor-reqs-20040311",
-        "title": "Web Services Choreography Requirements.",
+        "title": "Web Services Choreography Requirements",
         "date": "11 March 2004",
         "status": "WD",
         "publisher": "W3C"
@@ -5908,7 +6107,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jeffrey C. Schlimmer"
         ],
         "href": "http://www.w3.org/TR/2002/WD-ws-desc-reqs-20021028",
-        "title": "Web Services Description Requirements.",
+        "title": "Web Services Description Requirements",
         "date": "28 October 2002",
         "status": "WD",
         "publisher": "W3C"
@@ -5919,7 +6118,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Sandeep Kumar"
         ],
         "href": "http://www.w3.org/TR/2002/WD-ws-desc-usecases-20020604",
-        "title": "Web Service Description Usage Scenarios.",
+        "title": "Web Service Description Usage Scenarios",
         "date": "4 June 2002",
         "status": "WD",
         "publisher": "W3C"
@@ -5930,7 +6129,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2009/WD-ws-enumeration-20090317",
-        "title": "Web Services Enumeration (WS-Enumeration).",
+        "title": "Web Services Enumeration (WS-Enumeration)",
         "date": "17 March 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -5941,7 +6140,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2009/WD-ws-eventing-20090317",
-        "title": "Web Services Eventing (WS-Eventing).",
+        "title": "Web Services Eventing (WS-Eventing)",
         "date": "17 March 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -5954,7 +6153,7 @@ if (typeof berjon === "undefined") berjon = {};
             "W. Chou"
         ],
         "href": "http://www.w3.org/TR/2010/WD-ws-fragment-20100330",
-        "title": "Web Services Fragment (WS-Fragment).",
+        "title": "Web Services Fragment (WS-Fragment)",
         "date": "30 March 2010",
         "status": "WD",
         "publisher": "W3C"
@@ -5965,7 +6164,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Allen Brown"
         ],
         "href": "http://www.w3.org/TR/2004/NOTE-ws-gloss-20040211",
-        "title": "Web Services Glossary.",
+        "title": "Web Services Glossary",
         "date": "11 February 2004",
         "status": "NOTE",
         "publisher": "W3C"
@@ -5977,7 +6176,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Felix Sasaki"
         ],
         "href": "http://www.w3.org/TR/2008/WD-ws-i18n-20080415",
-        "title": "Web Services Internationalization (WS-I18N).",
+        "title": "Web Services Internationalization (WS-I18N)",
         "date": "15 April 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -5987,7 +6186,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Addison Phillips"
         ],
         "href": "http://www.w3.org/TR/2004/NOTE-ws-i18n-req-20041116",
-        "title": "Requirements for the Internationalization of Web Services.",
+        "title": "Requirements for the Internationalization of Web Services",
         "date": "16 November 2004",
         "status": "NOTE",
         "publisher": "W3C"
@@ -5998,7 +6197,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2004/NOTE-ws-i18n-scenarios-20040730",
-        "title": "Web Services Internationalization Usage Scenarios.",
+        "title": "Web Services Internationalization Usage Scenarios",
         "date": "30 July 2004",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6009,7 +6208,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2009/WD-ws-metadata-exchange-20090317",
-        "title": "Web Services Metadata Exchange (WS-MetadataExchange).",
+        "title": "Web Services Metadata Exchange (WS-MetadataExchange)",
         "date": "17 March 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -6020,7 +6219,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/REC-ws-policy-20070904",
-        "title": "Web Services Policy 1.5 - Framework.",
+        "title": "Web Services Policy 1.5 - Framework",
         "date": "4 September 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -6031,7 +6230,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/REC-ws-policy-attach-20070904",
-        "title": "Web Services Policy 1.5 - Attachment.",
+        "title": "Web Services Policy 1.5 - Attachment",
         "date": "4 September 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -6042,7 +6241,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/NOTE-ws-policy-guidelines-20071112",
-        "title": "Web Services Policy 1.5 - Guidelines for Policy Assertion Authors.",
+        "title": "Web Services Policy 1.5 - Guidelines for Policy Assertion Authors",
         "date": "12 November 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6053,7 +6252,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/NOTE-ws-policy-primer-20071112",
-        "title": "Web Services Policy 1.5 - Primer.",
+        "title": "Web Services Policy 1.5 - Primer",
         "date": "12 November 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6064,7 +6263,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2009/WD-ws-resource-transfer-20090317",
-        "title": "Web Services Resource Transfer (WS-RT).",
+        "title": "Web Services Resource Transfer (WS-RT)",
         "date": "17 March 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -6078,7 +6277,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2009/WD-ws-transfer-20090317",
-        "title": "Web Services Transfer (WS-Transfer).",
+        "title": "Web Services Transfer (WS-Transfer)",
         "date": "17 March 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -6091,7 +6290,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2004/NOTE-wsa-reqs-20040211",
-        "title": "Web Services Architecture Requirements.",
+        "title": "Web Services Architecture Requirements",
         "date": "11 February 2004",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6101,7 +6300,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Thomas Roessler"
         ],
         "href": "http://www.w3.org/TR/2007/NOTE-wsc-threats-20071101",
-        "title": "Web User Interaction: Threat Trees.",
+        "title": "Web User Interaction: Threat Trees",
         "date": "1 November 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6112,7 +6311,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Thomas Roessler"
         ],
         "href": "http://www.w3.org/TR/2009/WD-wsc-ui-20090226",
-        "title": "Web Security Context: User Interface Guidelines.",
+        "title": "Web Security Context: User Interface Guidelines",
         "date": "26 February 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -6122,7 +6321,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Tyler Close"
         ],
         "href": "http://www.w3.org/TR/2008/NOTE-wsc-usecases-20080306",
-        "title": "Web Security Experience, Indicators and Trust: Scope and Use Cases.",
+        "title": "Web Security Experience, Indicators and Trust: Scope and Use Cases",
         "date": "6 March 2008",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6133,7 +6332,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Thomas Roessler"
         ],
         "href": "http://www.w3.org/TR/2008/WD-wsc-xit-20080403",
-        "title": "Web Security Context: Experience, Indicators, and Trust.",
+        "title": "Web Security Context: Experience, Indicators, and Trust",
         "date": "3 April 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -6144,7 +6343,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/NOTE-wsdl11elementidentifiers-20070720",
-        "title": "WSDL 1.1 Element Identifiers.",
+        "title": "WSDL 1.1 Element Identifiers",
         "date": "20 July 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6155,7 +6354,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/REC-wsdl20-20070626",
-        "title": "Web Services Description Language (WSDL) Version 2.0 Part 1: Core Language.",
+        "title": "Web Services Description Language (WSDL) Version 2.0 Part 1: Core Language",
         "date": "26 June 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -6165,7 +6364,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Amelia A. Lewis"
         ],
         "href": "http://www.w3.org/TR/2007/NOTE-wsdl20-additional-meps-20070626",
-        "title": "Web Services Description Language (WSDL) Version 2.0: Additional MEPs.",
+        "title": "Web Services Description Language (WSDL) Version 2.0: Additional MEPs",
         "date": "26 June 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6176,7 +6375,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/REC-wsdl20-adjuncts-20070626",
-        "title": "Web Services Description Language (WSDL) Version 2.0 Part 2: Adjuncts.",
+        "title": "Web Services Description Language (WSDL) Version 2.0 Part 2: Adjuncts",
         "date": "26 June 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -6187,7 +6386,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Bijan Parsia"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-wsdl20-altschemalangs-20050817",
-        "title": "Discussion of Alternative Schema Languages and Type System Support in WSDL 2.0.",
+        "title": "Discussion of Alternative Schema Languages and Type System Support in WSDL 2.0",
         "date": "17 August 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6198,7 +6397,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Canyang Kevin Liu"
         ],
         "href": "http://www.w3.org/TR/2007/REC-wsdl20-primer-20070626",
-        "title": "Web Services Description Language (WSDL) Version 2.0 Part 0: Primer.",
+        "title": "Web Services Description Language (WSDL) Version 2.0 Part 0: Primer",
         "date": "26 June 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -6208,7 +6407,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jacek Kopecky"
         ],
         "href": "http://www.w3.org/TR/2007/NOTE-wsdl20-rdf-20070626",
-        "title": "Web Services Description Language (WSDL) Version 2.0: RDF Mapping.",
+        "title": "Web Services Description Language (WSDL) Version 2.0: RDF Mapping",
         "date": "26 June 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6218,7 +6417,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Asir S. Vedamuthu"
         ],
         "href": "http://www.w3.org/TR/2007/NOTE-wsdl20-soap11-binding-20070626",
-        "title": "Web Services Description Language (WSDL) Version 2.0 SOAP 1.1 Binding.",
+        "title": "Web Services Description Language (WSDL) Version 2.0 SOAP 1.1 Binding",
         "date": "26 June 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6231,7 +6430,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Mark Potts"
         ],
         "href": "http://www.w3.org/TR/2004/NOTE-wslc-20040211",
-        "title": "Web Service Management: Service Life Cycle.",
+        "title": "Web Service Management: Service Life Cycle",
         "date": "11 February 2004",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6241,7 +6440,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Robert B. Hess"
         ],
         "href": "http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwebgen/html/X11_names.asp",
-        "title": "Colors By Name.",
+        "title": "Colors By Name",
         "date": "MSDN Online Web Workshop",
         "status": "02 November 1996"
     },
@@ -6256,7 +6455,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Daniel Dardailler"
         ],
         "href": "http://www.w3.org/TR/2002/WD-xag-20021003",
-        "title": "XML Accessibility Guidelines.",
+        "title": "XML Accessibility Guidelines",
         "date": "3 October 2002",
         "status": "WD",
         "publisher": "W3C"
@@ -6267,7 +6466,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Oliver Goldman"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-xbc-characterization-20050331",
-        "title": "XML Binary Characterization.",
+        "title": "XML Binary Characterization",
         "date": "31 March 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6278,7 +6477,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Stephen D. Williams"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-xbc-measurement-20050331",
-        "title": "XML Binary Characterization Measurement Methodologies.",
+        "title": "XML Binary Characterization Measurement Methodologies",
         "date": "31 March 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6289,7 +6488,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Mike Cokus"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-xbc-properties-20050331",
-        "title": "XML Binary Characterization Properties.",
+        "title": "XML Binary Characterization Properties",
         "date": "31 March 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6300,7 +6499,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Mike Cokus"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-xbc-use-cases-20050331",
-        "title": "XML Binary Characterization Use Cases.",
+        "title": "XML Binary Characterization Use Cases",
         "date": "31 March 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6310,7 +6509,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ian Hickson"
         ],
         "href": "http://www.w3.org/TR/2007/CR-xbl-20070316",
-        "title": "XML Binding Language (XBL) 2.0.",
+        "title": "XML Binding Language (XBL) 2.0",
         "date": "16 March 2007",
         "status": "CR",
         "publisher": "W3C"
@@ -6321,7 +6520,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Marcos Cáceres"
         ],
         "href": "http://www.w3.org/TR/2007/WD-xbl-primer-20070718",
-        "title": "XBL 2.0 Primer: An Introduction for Developers.",
+        "title": "XBL 2.0 Primer: An Introduction for Developers",
         "date": "18 July 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -6332,7 +6531,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Roland Merrick"
         ],
         "href": "http://www.w3.org/TR/2004/NOTE-xforms-11-req-20040831",
-        "title": "XForms 1.1 Requirements.",
+        "title": "XForms 1.1 Requirements",
         "date": "31 August 2004",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6343,7 +6542,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Micah Dubinko"
         ],
         "href": "http://www.w3.org/TR/2003/CR-xforms-basic-20031014",
-        "title": "XForms 1.0 Basic Profile.",
+        "title": "XForms 1.0 Basic Profile",
         "date": "14 October 2003",
         "status": "CR",
         "publisher": "W3C"
@@ -6353,7 +6552,7 @@ if (typeof berjon === "undefined") berjon = {};
             "John M. Boyer"
         ],
         "href": "http://www.w3.org/TR/2008/WD-XForms-for-HTML-20081219",
-        "title": "XForms for HTML.",
+        "title": "XForms for HTML",
         "date": "19 December 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -6363,7 +6562,7 @@ if (typeof berjon === "undefined") berjon = {};
             "John M. Boyer"
         ],
         "href": "http://www.w3.org/TR/2007/REC-xforms-20071029",
-        "title": "XForms 1.0 (Third Edition).",
+        "title": "XForms 1.0 (Third Edition)",
         "date": "29 October 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -6373,7 +6572,7 @@ if (typeof berjon === "undefined") berjon = {};
             "John M. Boyer"
         ],
         "href": "http://www.w3.org/TR/2007/CR-xforms11-20071129",
-        "title": "XForms 1.1.",
+        "title": "XForms 1.1",
         "date": "29 November 2007",
         "status": "CR",
         "publisher": "W3C"
@@ -6384,7 +6583,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Masayasu Ishikawa"
         ],
         "href": "http://www.w3.org/TR/2005/WD-xframes-20051012",
-        "title": "XFrames.",
+        "title": "XFrames",
         "date": "12 October 2005",
         "status": "WD",
         "publisher": "W3C"
@@ -6395,7 +6594,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Lauren Wood"
         ],
         "href": "http://www.w3.org/TR/1998/NOTE-xh-19980511",
-        "title": "XML in HTML Meeting Report.",
+        "title": "XML in HTML Meeting Report",
         "date": "11 May 1998",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6406,7 +6605,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/WD-xhtml-access-20080526",
-        "title": "XHTML Access Module.",
+        "title": "XHTML Access Module",
         "date": "26 May 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -6417,7 +6616,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2000/REC-xhtml-basic-20001219",
-        "title": "XHTML&#8482; Basic.",
+        "title": "XHTML&#8482; Basic",
         "date": "19 December 2000",
         "status": "REC",
         "publisher": "W3C"
@@ -6428,7 +6627,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/REC-xhtml-basic-20080729",
-        "title": "XHTML&#8482; Basic 1.1.",
+        "title": "XHTML&#8482; Basic 1.1",
         "date": "29 July 2008",
         "status": "REC",
         "publisher": "W3C"
@@ -6439,7 +6638,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2001/WD-xhtml-forms-req-20010404",
-        "title": "XForms Requirements.",
+        "title": "XForms Requirements",
         "date": "4 April 2001",
         "status": "WD",
         "publisher": "W3C"
@@ -6449,7 +6648,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Shane McCarron"
         ],
         "href": "http://www.w3.org/TR/2009/NOTE-xhtml-media-types-20090116",
-        "title": "XHTML Media Types - Second Edition.",
+        "title": "XHTML Media Types - Second Edition",
         "date": "16 January 2009",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6460,7 +6659,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2004/WD-xhtml-modularization-20040218",
-        "title": "Modularization of XHTML&#8482; 1.0 - Second Edition.",
+        "title": "Modularization of XHTML&#8482; 1.0 - Second Edition",
         "date": "18 February 2004",
         "status": "WD",
         "publisher": "W3C"
@@ -6471,7 +6670,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/REC-xhtml-modularization-20081008",
-        "title": "XHTML&#8482; Modularization 1.1.",
+        "title": "XHTML&#8482; Modularization 1.1",
         "date": "8 October 2008",
         "status": "REC",
         "publisher": "W3C"
@@ -6481,7 +6680,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Shane McCarron"
         ],
         "href": "http://www.w3.org/TR/2010/REC-xhtml-modularization-20100729",
-        "title": "XHTML&#8482; Modularization 1.1 Second Edition.",
+        "title": "XHTML&#8482; Modularization 1.1 Second Edition",
         "date": "29 July 2010",
         "status": "REC",
         "publisher": "W3C"
@@ -6492,7 +6691,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Melinda Grant"
         ],
         "href": "http://www.w3.org/TR/2006/REC-xhtml-print-20060920",
-        "title": "XHTML-Print.",
+        "title": "XHTML-Print",
         "date": "20 September 2006",
         "status": "REC",
         "publisher": "W3C"
@@ -6504,7 +6703,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Peter Stark"
         ],
         "href": "http://www.w3.org/TR/1999/WD-xhtml-prof-req-19990906",
-        "title": "XHTML&#8482; Document Profile Requirements.",
+        "title": "XHTML&#8482; Document Profile Requirements",
         "date": "6 September 1999",
         "status": "WD",
         "publisher": "W3C"
@@ -6515,7 +6714,7 @@ if (typeof berjon === "undefined") berjon = {};
             "et. al"
         ],
         "href": "http://www.w3.org/TR/2012/REC-xhtml-rdfa-20120607/",
-        "title": "XHTML+RDFa 1.1.",
+        "title": "XHTML+RDFa 1.1",
         "date": "7 June 2012",
         "status": "REC",
         "publisher": "W3C"
@@ -6526,7 +6725,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ben Adida"
         ],
         "href": "http://www.w3.org/TR/2008/NOTE-xhtml-rdfa-primer-20081014",
-        "title": "RDFa Primer.",
+        "title": "RDFa Primer",
         "date": "14 October 2008",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6537,7 +6736,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ben Adida"
         ],
         "href": "http://www.w3.org/TR/2007/WD-xhtml-rdfa-scenarios-20070330",
-        "title": "RDFa Use Cases: Scenarios for Embedding RDF in HTML.",
+        "title": "RDFa Use Cases: Scenarios for Embedding RDF in HTML",
         "date": "30 March 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -6549,7 +6748,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Masayasu Ishikawa"
         ],
         "href": "http://www.w3.org/TR/2000/NOTE-xhtml-roadmap-20001108",
-        "title": "HTML Working Group Roadmap.",
+        "title": "HTML Working Group Roadmap",
         "date": "8 November 2000",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6560,7 +6759,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/WD-xhtml-role-20080407",
-        "title": "XHTML Role Attribute Module.",
+        "title": "XHTML Role Attribute Module",
         "date": "7 April 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -6571,7 +6770,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Masayasu Ishikawa"
         ],
         "href": "http://www.w3.org/TR/2002/NOTE-xhtml1-schema-20020902",
-        "title": "XHTML 1.0 in XML Schema.",
+        "title": "XHTML 1.0 in XML Schema",
         "date": "2 September 2002",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6581,7 +6780,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Steven Pemberton"
         ],
         "href": "http://www.w3.org/TR/2002/REC-xhtml1-20020801/",
-        "title": "XHTML&#8482; 1.0 The Extensible HyperText Markup Language (Second Edition).",
+        "title": "XHTML&#8482; 1.0 The Extensible HyperText Markup Language (Second Edition)",
         "date": "1 August 2002",
         "status": "REC",
         "publisher": "W3C"
@@ -6592,7 +6791,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Shane McCarron"
         ],
         "href": "http://www.w3.org/TR/2001/REC-xhtml11-20010531",
-        "title": "XHTML&#8482; 1.1 - Module-based XHTML.",
+        "title": "XHTML&#8482; 1.1 - Module-based XHTML",
         "date": "31 May 2001",
         "status": "REC",
         "publisher": "W3C"
@@ -6603,7 +6802,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Shane McCarron"
         ],
         "href": "http://www.w3.org/TR/2007/WD-xhtml11-20070216",
-        "title": "XHTML&#8482; 1.1 - Module-based XHTML - Second Edition.",
+        "title": "XHTML&#8482; 1.1 - Module-based XHTML - Second Edition",
         "date": "16 February 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -6614,7 +6813,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2006/WD-xhtml2-20060726",
-        "title": "XHTML&#8482; 2.0.",
+        "title": "XHTML&#8482; 2.0",
         "date": "26 July 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -6624,7 +6823,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Masayasu Ishikawa"
         ],
         "href": "http://www.w3.org/TR/2002/WD-XHTMLplusMathMLplusSVG-20020809",
-        "title": "An XHTML + MathML + SVG Profile.",
+        "title": "An XHTML + MathML + SVG Profile",
         "date": "9 August 2002",
         "status": "WD",
         "publisher": "W3C"
@@ -6636,7 +6835,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Debbie Newman"
         ],
         "href": "http://www.w3.org/TR/2002/NOTE-XHTMLplusSMIL-20020131",
-        "title": "XHTML+SMIL Profile.",
+        "title": "XHTML+SMIL Profile",
         "date": "31 January 2002",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6648,7 +6847,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Daniel Veillard"
         ],
         "href": "http://www.w3.org/TR/2006/REC-xinclude-20061115",
-        "title": "XML Inclusions (XInclude) Version 1.0 (Second Edition).",
+        "title": "XML Inclusions (XInclude) Version 1.0 (Second Edition)",
         "date": "15 November 2006",
         "status": "REC",
         "publisher": "W3C"
@@ -6660,7 +6859,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Kahan"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-xkms-pgp-20051219",
-        "title": "Using XKMS with PGP.",
+        "title": "Using XKMS with PGP",
         "date": "19 December 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6671,7 +6870,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Yunhao Zhang"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-xkms-wsdl-20051118",
-        "title": "A WSDL 1.1 description for XKMS.",
+        "title": "A WSDL 1.1 description for XKMS",
         "date": "18 November 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6682,7 +6881,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Phillip Hallam-Baker"
         ],
         "href": "http://www.w3.org/TR/2005/REC-xkms2-20050628/",
-        "title": "XML Key Management Specification (XKMS 2.0).",
+        "title": "XML Key Management Specification (XKMS 2.0)",
         "date": "28 June 2005",
         "status": "REC",
         "publisher": "W3C"
@@ -6693,7 +6892,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Phillip Hallam-Baker"
         ],
         "href": "http://www.w3.org/TR/2005/REC-xkms2-bindings-20050628",
-        "title": "XML Key Management Specification (XKMS 2.0) Bindings.",
+        "title": "XML Key Management Specification (XKMS 2.0) Bindings",
         "date": "28 June 2005",
         "status": "REC",
         "publisher": "W3C"
@@ -6704,7 +6903,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Mike Just"
         ],
         "href": "http://www.w3.org/TR/2003/NOTE-xkms2-req-20030505",
-        "title": "XML Key Management (XKMS 2.0) Requirements.",
+        "title": "XML Key Management (XKMS 2.0) Requirements",
         "date": "5 May 2003",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6715,7 +6914,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Steven DeRose"
         ],
         "href": "http://www.w3.org/TR/1998/NOTE-xlink-principles-19980303",
-        "title": "XML Linking Language (XLink) Design Principles.",
+        "title": "XML Linking Language (XLink) Design Principles",
         "date": "3 March 1998",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6725,7 +6924,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Steven J. DeRose"
         ],
         "href": "http://www.w3.org/TR/1999/NOTE-xlink-req-19990224",
-        "title": "XML XLink Requirements Version 1.0.",
+        "title": "XML XLink Requirements Version 1.0",
         "date": "24 February 1999",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6737,7 +6936,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Steven DeRose"
         ],
         "href": "http://www.w3.org/TR/2001/REC-xlink-20010627",
-        "title": "XML Linking Language (XLink) Version 1.0.",
+        "title": "XML Linking Language (XLink) Version 1.0",
         "date": "27 June 2001",
         "status": "REC",
         "publisher": "W3C"
@@ -6747,7 +6946,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Norman Walsh"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-xlink10-ext-20050127",
-        "title": "Extending XLink 1.0.",
+        "title": "Extending XLink 1.0",
         "date": "27 January 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6758,7 +6957,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/WD-xlink11-20080331",
-        "title": "XML Linking Language (XLink) Version 1.1.",
+        "title": "XML Linking Language (XLink) Version 1.1",
         "date": "31 March 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -6768,7 +6967,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ron Daniel Jr"
         ],
         "href": "http://www.w3.org/TR/2000/NOTE-xlink2rdf-20000929",
-        "title": "Harvesting RDF Statements from XLinks.",
+        "title": "Harvesting RDF Statements from XLinks",
         "date": "29 September 2000",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6778,7 +6977,7 @@ if (typeof berjon === "undefined") berjon = {};
             "John Cowan"
         ],
         "href": "http://www.w3.org/TR/2001/WD-xml-blueberry-req-20010921",
-        "title": "XML Blueberry Requirements.",
+        "title": "XML Blueberry Requirements",
         "date": "21 September 2001",
         "status": "WD",
         "publisher": "W3C"
@@ -6788,7 +6987,7 @@ if (typeof berjon === "undefined") berjon = {};
             "John Boyer"
         ],
         "href": "http://www.w3.org/TR/2001/REC-xml-c14n-20010315",
-        "title": "Canonical XML Version 1.0.",
+        "title": "Canonical XML Version 1.0",
         "date": "15 March 2001",
         "status": "REC",
         "publisher": "W3C"
@@ -6799,7 +6998,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Glenn Marcy"
         ],
         "href": "http://www.w3.org/TR/2008/REC-xml-c14n11-20080502/",
-        "title": "Canonical XML Version 1.1.",
+        "title": "Canonical XML Version 1.1",
         "date": "2 May 2008",
         "status": "REC",
         "publisher": "W3C"
@@ -6812,7 +7011,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Frederick Hirsch"
         ],
         "href": "http://www.w3.org/TR/2012/CR-xml-c14n2-20120124/",
-        "title": "Canonical XML Version 2.0.",
+        "title": "Canonical XML Version 2.0",
         "date": "24 January 2012",
         "status": "CR",
         "publisher": "W3C"
@@ -6823,7 +7022,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Joel Nava"
         ],
         "href": "http://www.w3.org/TR/1999/NOTE-xml-canonical-req-19990605",
-        "title": "XML Canonicalization Requirements.",
+        "title": "XML Canonicalization Requirements",
         "date": "5 June 1999",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6833,7 +7032,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Joseph Reagle"
         ],
         "href": "http://www.w3.org/TR/2002/NOTE-xml-encryption-req-20020304",
-        "title": "XML Encryption Requirements.",
+        "title": "XML Encryption Requirements",
         "date": "4 March 2002",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6844,7 +7043,7 @@ if (typeof berjon === "undefined") berjon = {};
             "David Carlisle"
         ],
         "href": "http://www.w3.org/TR/2008/WD-xml-entity-names-20080721",
-        "title": "XML Entity definitions for Characters.",
+        "title": "XML Entity definitions for Characters",
         "date": "21 July 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -6855,7 +7054,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Shane McCarron"
         ],
         "href": "http://www.w3.org/TR/2007/WD-xml-events-20070216",
-        "title": "XML Events 2.",
+        "title": "XML Events 2",
         "date": "16 February 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -6867,7 +7066,7 @@ if (typeof berjon === "undefined") berjon = {};
             "John Boyer"
         ],
         "href": "http://www.w3.org/TR/2002/REC-xml-exc-c14n-20020718/",
-        "title": "Exclusive XML Canonicalization Version 1.0.",
+        "title": "Exclusive XML Canonicalization Version 1.0",
         "date": "18 July 2002",
         "status": "REC",
         "publisher": "W3C"
@@ -6877,7 +7076,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Paul Grosso"
         ],
         "href": "http://www.w3.org/TR/1998/NOTE-XML-FRAG-REQ-19981123",
-        "title": "XML Fragment Interchange Requirements, Version 1.0.",
+        "title": "XML Fragment Interchange Requirements, Version 1.0",
         "date": "23 November 1998",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6887,7 +7086,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Paul Grosso"
         ],
         "href": "http://www.w3.org/TR/2003/NOTE-xml-fragid-20030912",
-        "title": "Proposal for XML Fragment Identifier Syntax 0.9.",
+        "title": "Proposal for XML Fragment Identifier Syntax 0.9",
         "date": "12 September 2003",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6898,7 +7097,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Daniel Veillard"
         ],
         "href": "http://www.w3.org/TR/2001/CR-xml-fragment-20010212",
-        "title": "XML Fragment Interchange.",
+        "title": "XML Fragment Interchange",
         "date": "12 February 2001",
         "status": "CR",
         "publisher": "W3C"
@@ -6910,7 +7109,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Richard Ishida"
         ],
         "href": "http://www.w3.org/TR/2008/NOTE-xml-i18n-bp-20080213",
-        "title": "Best Practices for XML Internationalization.",
+        "title": "Best Practices for XML Internationalization",
         "date": "13 February 2008",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6922,7 +7121,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Norman Walsh"
         ],
         "href": "http://www.w3.org/TR/2005/REC-xml-id-20050909",
-        "title": "xml:id Version 1.0.",
+        "title": "xml:id Version 1.0",
         "date": "9 September 2005",
         "status": "REC",
         "publisher": "W3C"
@@ -6932,7 +7131,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jonathan Marsh"
         ],
         "href": "http://www.w3.org/TR/2003/WD-xml-id-req-20030806",
-        "title": "xml:id Requirements.",
+        "title": "xml:id Requirements",
         "date": "6 August 2003",
         "status": "WD",
         "publisher": "W3C"
@@ -6943,7 +7142,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Richard Tobin"
         ],
         "href": "http://www.w3.org/TR/2004/REC-xml-infoset-20040204/",
-        "title": "XML Information Set (Second Edition).",
+        "title": "XML Information Set (Second Edition)",
         "date": "4 February 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -6953,7 +7152,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Richard Tobin"
         ],
         "href": "http://www.w3.org/TR/2001/NOTE-xml-infoset-rdfs-20010406",
-        "title": "An RDF Schema for the XML Information Set.",
+        "title": "An RDF Schema for the XML Information Set",
         "date": "6 April 2001",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6963,7 +7162,7 @@ if (typeof berjon === "undefined") berjon = {};
             "David Megginson"
         ],
         "href": "http://www.w3.org/TR/1999/NOTE-xml-infoset-req-19990218",
-        "title": "XML Information Set Requirements.",
+        "title": "XML Information Set Requirements",
         "date": "18 February 1999",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6974,7 +7173,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Norman Walsh"
         ],
         "href": "http://www.w3.org/TR/2001/NOTE-xml-link-style-20010605",
-        "title": "XML Linking and Style.",
+        "title": "XML Linking and Style",
         "date": "5 June 2001",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6985,7 +7184,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Anish Karmarkar"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-xml-media-types-20050504/",
-        "title": "Describing Media Content of Binary Data in XML.",
+        "title": "Describing Media Content of Binary Data in XML",
         "date": "4 May 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -6997,7 +7196,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2009/REC-xml-names-20091208/",
-        "title": "Namespaces in XML 1.0 (Third Edition).",
+        "title": "Namespaces in XML 1.0 (Third Edition)",
         "date": "8 December 2009",
         "status": "REC",
         "publisher": "W3C"
@@ -7008,7 +7207,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2006/REC-xml-names11-20060816",
-        "title": "Namespaces in XML 1.1 (Second Edition).",
+        "title": "Namespaces in XML 1.1 (Second Edition)",
         "date": "16 August 2006",
         "status": "REC",
         "publisher": "W3C"
@@ -7018,7 +7217,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jonathan Marsh"
         ],
         "href": "http://www.w3.org/TR/2002/WD-xml-names11-req-20020403",
-        "title": "Namespaces in XML 1.1 Requirements.",
+        "title": "Namespaces in XML 1.1 Requirements",
         "date": "3 April 2002",
         "status": "WD",
         "publisher": "W3C"
@@ -7029,7 +7228,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Murray Maloney"
         ],
         "href": "http://www.w3.org/TR/1999/NOTE-xml-schema-req-19990215",
-        "title": "XML Schema Requirements.",
+        "title": "XML Schema Requirements",
         "date": "15 February 1999",
         "status": "NOTE",
         "publisher": "W3C"
@@ -7039,7 +7238,7 @@ if (typeof berjon === "undefined") berjon = {};
             "James Clark"
         ],
         "href": "http://www.w3.org/1999/06/REC-xml-stylesheet-19990629",
-        "title": "Associating Style Sheets with XML documents.",
+        "title": "Associating Style Sheets with XML documents",
         "date": "29 June 1999",
         "status": "REC",
         "publisher": "W3C"
@@ -7050,7 +7249,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/REC-xml-20081126/",
-        "title": "Extensible Markup Language (XML) 1.0 (Fifth Edition).",
+        "title": "Extensible Markup Language (XML) 1.0 (Fifth Edition)",
         "date": "26 November 2008",
         "status": "REC",
         "publisher": "W3C"
@@ -7061,7 +7260,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2006/REC-xml-20060816/",
-        "title": "Extensible Markup Language (XML) 1.0 (Fourth Edition).",
+        "title": "Extensible Markup Language (XML) 1.0 (Fourth Edition)",
         "date": "16 August 2006",
         "status": "REC",
         "publisher": "W3C"
@@ -7072,7 +7271,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2006/REC-xml11-20060816",
-        "title": "Extensible Markup Language (XML) 1.1 (Second Edition).",
+        "title": "Extensible Markup Language (XML) 1.1 (Second Edition)",
         "date": "16 August 2006",
         "status": "REC",
         "publisher": "W3C"
@@ -7082,7 +7281,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Henry S. Thompson"
         ],
         "href": "http://www.w3.org/TR/2005/NOTE-xml11schema10-20050511",
-        "title": "Processing XML 1.1 documents with XML Schema 1.0 processors.",
+        "title": "Processing XML 1.1 documents with XML Schema 1.0 processors",
         "date": "11 May 2005",
         "status": "NOTE",
         "publisher": "W3C"
@@ -7093,7 +7292,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Richard Tobin"
         ],
         "href": "http://www.w3.org/TR/2009/REC-xmlbase-20090128/",
-        "title": "XML Base (Second Edition).",
+        "title": "XML Base (Second Edition)",
         "date": "28 January 2009",
         "status": "REC",
         "publisher": "W3C"
@@ -7104,7 +7303,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Frederick Hirsch"
         ],
         "href": "http://www.w3.org/TR/2013/NOTE-xmldsig-bestpractices-20130124/",
-        "title": "XML Signature Best Practices.",
+        "title": "XML Signature Best Practices",
         "date": "24 January 2013",
         "status": "W3C Working Group Note",
         "publisher": "W3C"
@@ -7115,7 +7314,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/",
-        "title": "XML Signature Syntax and Processing.",
+        "title": "XML Signature Syntax and Processing",
         "date": "12 February 2002",
         "status": "REC",
         "publisher": "W3C"
@@ -7126,7 +7325,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/REC-xmldsig-core-20080610/",
-        "title": "XML Signature Syntax and Processing (Second Edition).",
+        "title": "XML Signature Syntax and Processing (Second Edition)",
         "date": "10 June 2008",
         "status": "REC",
         "publisher": "W3C"
@@ -7167,7 +7366,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Joseph Reagle"
         ],
         "href": "http://www.w3.org/TR/2002/REC-xmldsig-filter2-20021108/",
-        "title": "XML-Signature XPath Filter 2.0.",
+        "title": "XML-Signature XPath Filter 2.0",
         "date": "8 November 2002",
         "status": "REC",
         "publisher": "W3C"
@@ -7177,7 +7376,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Frederick Hirsch"
         ],
         "href": "http://www.w3.org/TR/2013/PR-xmldsig-properties-20130124/",
-        "title": "XML Signature Properties.",
+        "title": "XML Signature Properties",
         "date": "24 January 2013",
         "status": "PR",
         "publisher": "W3C"
@@ -7187,7 +7386,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Joseph Reagle Jr"
         ],
         "href": "http://www.w3.org/TR/1999/WD-xmldsig-requirements-19991014",
-        "title": "XML-Signature Requirements.",
+        "title": "XML-Signature Requirements",
         "date": "14 October 1999",
         "status": "WD",
         "publisher": "W3C"
@@ -7198,7 +7397,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Frederick Hirsch"
         ],
         "href": "http://www.w3.org/TR/2009/WD-xmldsig-simplify-20090226",
-        "title": "XML Signature Transform Simplification: Requirements and Design.",
+        "title": "XML Signature Transform Simplification: Requirements and Design",
         "date": "26 February 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -7210,7 +7409,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Juan Carlos Cruellas"
         ],
         "href": "http://www.w3.org/TR/2008/NOTE-xmldsig2ed-tests-20080610",
-        "title": "Test Cases for C14N 1.1 and XMLDSig Interoperability.",
+        "title": "Test Cases for C14N 1.1 and XMLDSig Interoperability",
         "date": "10 June 2008",
         "status": "NOTE",
         "publisher": "W3C"
@@ -7243,7 +7442,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Joseph Reagle"
         ],
         "href": "http://www.w3.org/TR/2002/REC-xmlenc-core-20021210/",
-        "title": "XML Encryption Syntax and Processing.",
+        "title": "XML Encryption Syntax and Processing",
         "date": "10 December 2002",
         "status": "REC",
         "publisher": "W3C"
@@ -7258,7 +7457,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Hiroshi Maruyama"
         ],
         "href": "http://www.w3.org/TR/2002/REC-xmlenc-decrypt-20021210",
-        "title": "Decryption Transform for XML Signature.",
+        "title": "Decryption Transform for XML Signature",
         "date": "10 December 2002",
         "status": "REC",
         "publisher": "W3C"
@@ -7270,7 +7469,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Frederick Hirsch"
         ],
         "href": "http://www.w3.org/TR/2012/WD-xmlenc-core1-testcases-20120105/",
-        "title": "Test Cases for XML Encryption 1.1.",
+        "title": "Test Cases for XML Encryption 1.1",
         "date": "5 January 2012",
         "status": "FPWD",
         "publisher": "W3C"
@@ -7278,11 +7477,14 @@ if (typeof berjon === "undefined") berjon = {};
     "XHR": "Anne van Kesteren. <a href='http://www.w3.org/TR/XMLHttpRequest/'>XMLHttpRequest</a>",
     "XMLHTTPREQUEST": {
         "authors": [
+            "Julian Aubourg",
+            "Jungkee Song",
+            "Hallvord R. M. Steen",
             "Anne van Kesteren"
         ],
-        "href": "http://www.w3.org/TR/2008/WD-XMLHttpRequest-20080415",
-        "title": "The XMLHttpRequest Object.",
-        "date": "15 April 2008",
+        "href": "http://www.w3.org/TR/2012/WD-XMLHttpRequest-20121206/",
+        "title": "XMLHttpRequest",
+        "date": "6 December 2012",
         "status": "WD",
         "publisher": "W3C"
     },
@@ -7291,7 +7493,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Anne van Kesteren"
         ],
         "href": "http://www.w3.org/TR/2008/WD-XMLHttpRequest2-20080930",
-        "title": "XMLHttpRequest Level 2.",
+        "title": "XMLHttpRequest Level 2",
         "date": "30 September 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -7312,7 +7514,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2003/NOTE-xmlp-reqs-20030728",
-        "title": "XML Protocol (XMLP) Requirements.",
+        "title": "XML Protocol (XMLP) Requirements",
         "date": "28 July 2003",
         "status": "NOTE",
         "publisher": "W3C"
@@ -7322,7 +7524,7 @@ if (typeof berjon === "undefined") berjon = {};
             "John Ibbotson"
         ],
         "href": "http://www.w3.org/TR/2003/NOTE-xmlp-scenarios-20030730",
-        "title": "SOAP Version 1.2 Usage Scenarios.",
+        "title": "SOAP Version 1.2 Usage Scenarios",
         "date": "30 July 2003",
         "status": "NOTE",
         "publisher": "W3C"
@@ -7333,7 +7535,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Priscilla Walmsley"
         ],
         "href": "http://www.w3.org/TR/2004/REC-xmlschema-0-20041028/",
-        "title": "XML Schema Part 0: Primer Second Edition.",
+        "title": "XML Schema Part 0: Primer Second Edition",
         "date": "28 October 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -7344,7 +7546,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2004/REC-xmlschema-1-20041028/",
-        "title": "XML Schema Part 1: Structures Second Edition.",
+        "title": "XML Schema Part 1: Structures Second Edition",
         "date": "28 October 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -7356,7 +7558,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Charles Campbell"
         ],
         "href": "http://www.w3.org/TR/2003/WD-xmlschema-11-req-20030121",
-        "title": "Requirements for XML Schema 1.1.",
+        "title": "Requirements for XML Schema 1.1",
         "date": "21 January 2003",
         "status": "WD",
         "publisher": "W3C"
@@ -7367,7 +7569,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ashok Malhotra"
         ],
         "href": "http://www.w3.org/TR/2004/REC-xmlschema-2-20041028/",
-        "title": "XML Schema Part 2: Datatypes Second Edition.",
+        "title": "XML Schema Part 2: Datatypes Second Edition",
         "date": "28 October 2004",
         "status": "REC",
         "publisher": "W3C"
@@ -7378,7 +7580,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2001/WD-xmlschema-formal-20010925",
-        "title": "XML Schema: Formal Description.",
+        "title": "XML Schema: Formal Description",
         "date": "25 September 2001",
         "status": "WD",
         "publisher": "W3C"
@@ -7388,7 +7590,7 @@ if (typeof berjon === "undefined") berjon = {};
             "David Orchard"
         ],
         "href": "http://www.w3.org/TR/2007/WD-xmlschema-guide2versioning-20070720",
-        "title": "Guide to Versioning XML Languages using new XML Schema 1.1 features.",
+        "title": "Guide to Versioning XML Languages using new XML Schema 1.1 features",
         "date": "20 July 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -7399,7 +7601,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/WD-xmlschema-patterns-20080328",
-        "title": "Basic XML Schema Patterns for Databinding Version 1.0.",
+        "title": "Basic XML Schema Patterns for Databinding Version 1.0",
         "date": "28 March 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -7410,7 +7612,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/WD-xmlschema-patterns-advanced-20080328",
-        "title": "Advanced XML Schema Patterns for Databinding Version 1.0.",
+        "title": "Advanced XML Schema Patterns for Databinding Version 1.0",
         "date": "28 March 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -7421,7 +7623,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Mary Holstege"
         ],
         "href": "http://www.w3.org/TR/2008/WD-xmlschema-ref-20081117",
-        "title": "W3C XML Schema Definition Language (XSD): Component Designators.",
+        "title": "W3C XML Schema Definition Language (XSD): Component Designators",
         "date": "17 November 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -7433,7 +7635,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Shudi Gao"
         ],
         "href": "http://www.w3.org/TR/2012/REC-xmlschema11-1-20120405/",
-        "title": "W3C XML Schema Definition Language (XSD) 1.1 Part 1: Structures.",
+        "title": "W3C XML Schema Definition Language (XSD) 1.1 Part 1: Structures",
         "date": "5 April 2012",
         "status": "REC",
         "publisher": "W3C"
@@ -7444,7 +7646,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2012/REC-xmlschema11-2-20120405/",
-        "title": "W3C XML Schema Definition Language (XSD) 1.1 Part 2: Datatypes.",
+        "title": "W3C XML Schema Definition Language (XSD) 1.1 Part 2: Datatypes",
         "date": "5 April 2012",
         "status": "REC",
         "publisher": "W3C"
@@ -7455,7 +7657,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Magnus Nystr&#246;m"
         ],
         "href": "http://www.w3.org/TR/2009/WD-xmlsec-derivedkeys-20090226/",
-        "title": "XML Security Derived Keys.",
+        "title": "XML Security Derived Keys",
         "date": "26 February 2009",
         "status": "WD",
         "publisher": "W3C"
@@ -7466,7 +7668,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Frederick Hirsch"
         ],
         "href": "http://www.w3.org/TR/2013/NOTE-xmlsec-generic-hybrid-20130124/",
-        "title": "XML Security Generic Hybrid Ciphers.",
+        "title": "XML Security Generic Hybrid Ciphers",
         "date": "24 January 2013",
         "status": "W3C Working Group Note",
         "publisher": "W3C"
@@ -7488,7 +7690,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Frederick Hirsch"
         ],
         "href": "http://www.w3.org/TR/2013/NOTE-xmlsec-rngschema-20130124/",
-        "title": "XML Security RELAX NG Schemas.",
+        "title": "XML Security RELAX NG Schemas",
         "date": "24 January 2013",
         "status": "W3C Working Group Note",
         "publisher": "W3C"
@@ -7500,7 +7702,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Pratik Datta"
         ],
         "href": "http://www.w3.org/TR/2011/WD-xmlsec-reqs2-20110421/",
-        "title": "XML Security 2.0 Requirements and Design Considerations.",
+        "title": "XML Security 2.0 Requirements and Design Considerations",
         "date": "21 April 2011",
         "status": "WD",
         "publisher": "W3C"
@@ -7510,7 +7712,7 @@ if (typeof berjon === "undefined") berjon = {};
             "James Clark"
         ],
         "href": "http://www.w3.org/1999/06/REC-xml-stylesheet-19990629",
-        "title": "Associating Style Sheets with XML documents.",
+        "title": "Associating Style Sheets with XML documents",
         "date": "29 June 1999",
         "status": "REC",
         "publisher": "W3C"
@@ -7522,7 +7724,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2005/REC-xop10-20050125",
-        "title": "XML-binary Optimized Packaging.",
+        "title": "XML-binary Optimized Packaging",
         "date": "25 January 2005",
         "status": "REC",
         "publisher": "W3C"
@@ -7532,7 +7734,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Michael Mahan"
         ],
         "href": "http://www.w3.org/TR/2004/NOTE-xopinc-FAQ-20040608",
-        "title": "XOP Inclusion Mechanism - Frequently Asked Questions.",
+        "title": "XOP Inclusion Mechanism - Frequently Asked Questions",
         "date": "8 June 2004",
         "status": "NOTE",
         "publisher": "W3C"
@@ -7543,7 +7745,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Steven DeRose"
         ],
         "href": "http://www.w3.org/TR/1999/REC-xpath-19991116/",
-        "title": "XML Path Language (XPath) Version 1.0.",
+        "title": "XML Path Language (XPath) Version 1.0",
         "date": "16 November 1999",
         "status": "REC",
         "publisher": "W3C"
@@ -7554,7 +7756,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/REC-xpath-datamodel-20070123",
-        "title": "XQuery 1.0 and XPath 2.0 Data Model (XDM).",
+        "title": "XQuery 1.0 and XPath 2.0 Data Model (XDM)",
         "date": "23 January 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -7565,7 +7767,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/CR-xpath-full-text-10-20080516",
-        "title": "XQuery and XPath Full Text 1.0.",
+        "title": "XQuery and XPath Full Text 1.0",
         "date": "16 May 2008",
         "status": "CR",
         "publisher": "W3C"
@@ -7577,7 +7779,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Michael Rys"
         ],
         "href": "http://www.w3.org/TR/2008/WD-xpath-full-text-10-requirements-20080516",
-        "title": "XQuery and XPath Full Text 1.0 Requirements.",
+        "title": "XQuery and XPath Full Text 1.0 Requirements",
         "date": "16 May 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -7588,7 +7790,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Sihem Amer-Yahia"
         ],
         "href": "http://www.w3.org/TR/2008/WD-xpath-full-text-10-use-cases-20080516",
-        "title": "XQuery and XPath Full Text 1.0 Use Cases.",
+        "title": "XQuery and XPath Full Text 1.0 Use Cases",
         "date": "16 May 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -7600,7 +7802,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Norman Walsh"
         ],
         "href": "http://www.w3.org/TR/2007/REC-xpath-functions-20070123",
-        "title": "XQuery 1.0 and XPath 2.0 Functions and Operators.",
+        "title": "XQuery 1.0 and XPath 2.0 Functions and Operators",
         "date": "23 January 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -7611,7 +7813,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/REC-xpath20-20070123",
-        "title": "XML Path Language (XPath) 2.0.",
+        "title": "XML Path Language (XPath) 2.0",
         "date": "23 January 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -7623,7 +7825,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Mark Scardina"
         ],
         "href": "http://www.w3.org/TR/2005/WD-xpath20req-20050603",
-        "title": "XPath Requirements Version 2.0.",
+        "title": "XPath Requirements Version 2.0",
         "date": "3 June 2005",
         "status": "WD",
         "publisher": "W3C"
@@ -7635,7 +7837,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Norman Walsh"
         ],
         "href": "http://www.w3.org/TR/2008/CR-xproc-20081126/",
-        "title": "XProc: An XML Pipeline Language.",
+        "title": "XProc: An XML Pipeline Language",
         "date": "26 November 2008",
         "status": "CR",
         "publisher": "W3C"
@@ -7645,7 +7847,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Alex Milowski"
         ],
         "href": "http://www.w3.org/TR/2006/WD-xproc-requirements-20060411",
-        "title": "XML Processing Model Requirements and Use Cases.",
+        "title": "XML Processing Model Requirements and Use Cases",
         "date": "11 April 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -7656,7 +7858,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2003/REC-xptr-element-20030325/",
-        "title": "XPointer element() Scheme.",
+        "title": "XPointer element() Scheme",
         "date": "25 March 2003",
         "status": "REC",
         "publisher": "W3C"
@@ -7667,7 +7869,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2003/REC-xptr-framework-20030325/",
-        "title": "XPointer Framework.",
+        "title": "XPointer Framework",
         "date": "25 March 2003",
         "status": "REC",
         "publisher": "W3C"
@@ -7677,7 +7879,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Steven J. DeRose"
         ],
         "href": "http://www.w3.org/TR/1999/NOTE-xptr-infoset-liaison-19990224",
-        "title": "XPointer-Information Set Liaison Statement Version 1.0.",
+        "title": "XPointer-Information Set Liaison Statement Version 1.0",
         "date": "24 February 1999",
         "status": "NOTE",
         "publisher": "W3C"
@@ -7688,7 +7890,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Steven J. DeRose"
         ],
         "href": "http://www.w3.org/TR/1999/NOTE-xptr-req-19990224",
-        "title": "XML XPointer Requirements Version 1.0.",
+        "title": "XML XPointer Requirements Version 1.0",
         "date": "24 February 1999",
         "status": "NOTE",
         "publisher": "W3C"
@@ -7699,7 +7901,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2003/REC-xptr-xmlns-20030325/",
-        "title": "XPointer xmlns() Scheme.",
+        "title": "XPointer xmlns() Scheme",
         "date": "25 March 2003",
         "status": "REC",
         "publisher": "W3C"
@@ -7711,7 +7913,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Steven DeRose"
         ],
         "href": "http://www.w3.org/TR/2001/CR-xptr-20010911/",
-        "title": "XPointer xpointer() Scheme.",
+        "title": "XPointer xpointer() Scheme",
         "date": "September 2001",
         "status": "CR",
         "publisher": "W3C"
@@ -7723,7 +7925,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Steven DeRose"
         ],
         "href": "http://www.w3.org/TR/2002/WD-xptr-xpointer-20021219/",
-        "title": "XPointer xpointer() Scheme.",
+        "title": "XPointer xpointer() Scheme",
         "date": "19 December 2002",
         "status": "WD",
         "publisher": "W3C"
@@ -7734,7 +7936,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/REC-xquery-20070123",
-        "title": "XQuery 1.0: An XML Query Language.",
+        "title": "XQuery 1.0: An XML Query Language",
         "date": "23 January 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -7745,7 +7947,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Don Chamberlin"
         ],
         "href": "http://www.w3.org/TR/2008/WD-xquery-11-20081203",
-        "title": "XQuery 1.1.",
+        "title": "XQuery 1.1",
         "date": "3 December 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -7756,7 +7958,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Daniel Engovatov"
         ],
         "href": "http://www.w3.org/TR/2007/WD-xquery-11-requirements-20070323",
-        "title": "XML Query (XQuery) 1.1 Requirements.",
+        "title": "XML Query (XQuery) 1.1 Requirements",
         "date": "23 March 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -7766,7 +7968,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Tim Kraska"
         ],
         "href": "http://www.w3.org/TR/2008/WD-xquery-11-use-cases-20081203",
-        "title": "XQuery 1.1 Use Cases.",
+        "title": "XQuery 1.1 Use Cases",
         "date": "3 December 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -7779,7 +7981,7 @@ if (typeof berjon === "undefined") berjon = {};
             "John Snelson"
         ],
         "href": "http://www.w3.org/TR/2011/WD-xquery-30-20111213/",
-        "title": "XQuery 3.0.",
+        "title": "XQuery 3.0",
         "date": "13 December 2011",
         "status": "WD",
         "publisher": "W3C"
@@ -7790,7 +7992,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jonathan Robie"
         ],
         "href": "http://www.w3.org/TR/2010/WD-xquery-30-requirements-20100916/",
-        "title": "XQuery 3.0 Requirements.",
+        "title": "XQuery 3.0 Requirements",
         "date": "16 September 2010",
         "status": "WD",
         "publisher": "W3C"
@@ -7801,7 +8003,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Tim Kraska"
         ],
         "href": "http://www.w3.org/TR/2012/WD-xquery-30-use-cases-20120327/",
-        "title": "XQuery 3.0 Use Cases.",
+        "title": "XQuery 3.0 Use Cases",
         "date": "27 March 2012",
         "status": "WD",
         "publisher": "W3C"
@@ -7812,7 +8014,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/NOTE-xquery-requirements-20070323",
-        "title": "XML Query (XQuery) Requirements.",
+        "title": "XML Query (XQuery) Requirements",
         "date": "23 March 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -7823,7 +8025,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/REC-xquery-semantics-20070123",
-        "title": "XQuery 1.0 and XPath 2.0 Formal Semantics.",
+        "title": "XQuery 1.0 and XPath 2.0 Formal Semantics",
         "date": "23 January 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -7834,7 +8036,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/WD-xquery-sx-10-20081203",
-        "title": "XQuery Scripting Extension 1.0.",
+        "title": "XQuery Scripting Extension 1.0",
         "date": "3 December 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -7845,7 +8047,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/WD-xquery-sx-10-requirements-20070323",
-        "title": "XQuery Scripting Extension 1.0 Requirements.",
+        "title": "XQuery Scripting Extension 1.0 Requirements",
         "date": "23 March 2007",
         "status": "WD",
         "publisher": "W3C"
@@ -7855,7 +8057,7 @@ if (typeof berjon === "undefined") berjon = {};
             "John Snelson"
         ],
         "href": "http://www.w3.org/TR/2008/WD-xquery-sx-10-use-cases-20081203",
-        "title": "XQuery Scripting Extension 1.0 Use Cases.",
+        "title": "XQuery Scripting Extension 1.0 Use Cases",
         "date": "3 December 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -7866,7 +8068,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2008/CR-xquery-update-10-20080801",
-        "title": "XQuery Update Facility 1.0.",
+        "title": "XQuery Update Facility 1.0",
         "date": "1 August 2008",
         "status": "CR",
         "publisher": "W3C"
@@ -7877,7 +8079,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Don Chamberlin"
         ],
         "href": "http://www.w3.org/TR/2008/CR-xquery-update-10-requirements-20080314",
-        "title": "XQuery Update Facility 1.0 Requirements.",
+        "title": "XQuery Update Facility 1.0 Requirements",
         "date": "14 March 2008",
         "status": "CR",
         "publisher": "W3C"
@@ -7888,7 +8090,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Ioana Manolescu"
         ],
         "href": "http://www.w3.org/TR/2008/CR-xquery-update-10-use-cases-20080314",
-        "title": "XQuery Update Facility 1.0 Use Cases.",
+        "title": "XQuery Update Facility 1.0 Use Cases",
         "date": "14 March 2008",
         "status": "CR",
         "publisher": "W3C"
@@ -7899,7 +8101,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/NOTE-xquery-use-cases-20070323",
-        "title": "XML Query Use Cases.",
+        "title": "XML Query Use Cases",
         "date": "23 March 2007",
         "status": "NOTE",
         "publisher": "W3C"
@@ -7909,7 +8111,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Scott Boag"
         ],
         "href": "http://www.w3.org/TR/2005/WD-xquery-xpath-parsing-20050404",
-        "title": "Building a Tokenizer for XPath or XQuery.",
+        "title": "Building a Tokenizer for XPath or XQuery",
         "date": "4 April 2005",
         "status": "WD",
         "publisher": "W3C"
@@ -7920,7 +8122,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jim Melton"
         ],
         "href": "http://www.w3.org/TR/2007/REC-xqueryx-20070123",
-        "title": "XML Syntax for XQuery 1.0 (XQueryX).",
+        "title": "XML Syntax for XQuery 1.0 (XQueryX)",
         "date": "23 January 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -7930,7 +8132,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jim Melton"
         ],
         "href": "http://www.w3.org/TR/2008/WD-xqueryx-11-20081203",
-        "title": "XQueryX 1.1.",
+        "title": "XQueryX 1.1",
         "date": "3 December 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -7941,7 +8143,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Jonathan Robie"
         ],
         "href": "http://www.w3.org/TR/2006/WD-xqupdateusecases-20060508",
-        "title": "XQuery Update Facility Use Cases.",
+        "title": "XQuery Update Facility Use Cases",
         "date": "8 May 2006",
         "status": "WD",
         "publisher": "W3C"
@@ -7952,7 +8154,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2001/REC-xsl-20011015/",
-        "title": "Extensible Stylesheet Language (XSL) Version 1.0.",
+        "title": "Extensible Stylesheet Language (XSL) Version 1.0",
         "date": "15 October 2001",
         "status": "REC",
         "publisher": "W3C"
@@ -7962,7 +8164,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Anders Berglund"
         ],
         "href": "http://www.w3.org/TR/2006/REC-xsl11-20061205",
-        "title": "Extensible Stylesheet Language (XSL) Version 1.1.",
+        "title": "Extensible Stylesheet Language (XSL) Version 1.1",
         "date": "5 December 2006",
         "status": "REC",
         "publisher": "W3C"
@@ -7972,7 +8174,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Paul Grosso"
         ],
         "href": "http://www.w3.org/TR/2003/WD-xsl11-req-20031217",
-        "title": "Extensible Stylesheet Language (XSL) Version 1.1 Requirements.",
+        "title": "Extensible Stylesheet Language (XSL) Version 1.1 Requirements",
         "date": "17 December 2003",
         "status": "WD",
         "publisher": "W3C"
@@ -7982,7 +8184,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Klaas Bals"
         ],
         "href": "http://www.w3.org/TR/2008/WD-xslfo20-req-20080326",
-        "title": "Extensible Stylesheet Language (XSL) Requirements Version 2.0.",
+        "title": "Extensible Stylesheet Language (XSL) Requirements Version 2.0",
         "date": "26 March 2008",
         "status": "WD",
         "publisher": "W3C"
@@ -7992,7 +8194,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Norman Walsh"
         ],
         "href": "http://www.w3.org/TR/1998/WD-XSLReq-19980511",
-        "title": "XSL Requirements Summary.",
+        "title": "XSL Requirements Summary",
         "date": "11 May 1998",
         "status": "WD",
         "publisher": "W3C"
@@ -8002,7 +8204,7 @@ if (typeof berjon === "undefined") berjon = {};
             "James Clark"
         ],
         "href": "http://www.w3.org/TR/1999/REC-xslt-19991116",
-        "title": "XSL Transformations (XSLT) Version 1.0.",
+        "title": "XSL Transformations (XSLT) Version 1.0",
         "date": "16 November 1999",
         "status": "REC",
         "publisher": "W3C"
@@ -8013,7 +8215,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2007/REC-xslt-xquery-serialization-20070123",
-        "title": "XSLT 2.0 and XQuery 1.0 Serialization.",
+        "title": "XSLT 2.0 and XQuery 1.0 Serialization",
         "date": "23 January 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -8023,7 +8225,7 @@ if (typeof berjon === "undefined") berjon = {};
             "James Clark"
         ],
         "href": "http://www.w3.org/TR/2001/WD-xslt11-20010824",
-        "title": "XSL Transformations (XSLT) Version 1.1.",
+        "title": "XSL Transformations (XSLT) Version 1.1",
         "date": "24 August 2001",
         "status": "WD",
         "publisher": "W3C"
@@ -8033,7 +8235,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Steve Muench"
         ],
         "href": "http://www.w3.org/TR/2000/WD-xslt11req-20000825",
-        "title": "XSL Transformations Requirements Version 1.1.",
+        "title": "XSL Transformations Requirements Version 1.1",
         "date": "25 August 2000",
         "status": "WD",
         "publisher": "W3C"
@@ -8043,7 +8245,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Michael Kay"
         ],
         "href": "http://www.w3.org/TR/2007/REC-xslt20-20070123",
-        "title": "XSL Transformations (XSLT) Version 2.0.",
+        "title": "XSL Transformations (XSLT) Version 2.0",
         "date": "23 January 2007",
         "status": "REC",
         "publisher": "W3C"
@@ -8053,7 +8255,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Michael Kay"
         ],
         "href": "http://www.w3.org/TR/2010/WD-xslt-21-20100511/",
-        "title": "XSL Transformations (XSLT) Version 2.1.",
+        "title": "XSL Transformations (XSLT) Version 2.1",
         "date": "11 May 2011",
         "status": "WD",
         "publisher": "W3C"
@@ -8064,7 +8266,7 @@ if (typeof berjon === "undefined") berjon = {};
             "Mark Scardina"
         ],
         "href": "http://www.w3.org/TR/2001/WD-xslt20req-20010214",
-        "title": "XSLT Requirements Version 2.0.",
+        "title": "XSLT Requirements Version 2.0",
         "date": "14 February 2001",
         "status": "WD",
         "publisher": "W3C"
@@ -8077,7 +8279,7 @@ if (typeof berjon === "undefined") berjon = {};
             "E. Guttman"
         ],
         "href": "http://files.zeroconf.org/rfc3927.txt",
-        "title": "Dynamic Configuration of IPv4 Link-Local Addresses.",
+        "title": "Dynamic Configuration of IPv4 Link-Local Addresses",
         "date": "May 2005",
         "status": "IETF Draft",
         "publisher": "IETF"

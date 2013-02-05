@@ -246,7 +246,7 @@ define(
                 });
                 conf.multipleAlternates = conf.alternateFormats && conf.alternateFormats.length > 1;
                 conf.alternatesHTML = utils.joinAnd(conf.alternateFormats, function (alt) {
-                    return "<a href='" + alt.uri + "'>" + alt.label + "</a>";
+                    return "<a class='alt-format' href='" + alt.uri + "'>" + alt.label + "</a>";
                 });
                 if (conf.copyrightStart && conf.copyrightStart == conf.publishYear) conf.copyrightStart = "";
                 for (var k in this.status2text) {
