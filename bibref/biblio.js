@@ -4301,6 +4301,16 @@ if (typeof berjon === "undefined") berjon = {};
     },
     "SHA-1-Analysis": "McDonald, C., Hawkes, P., and J. Pieprzyk. <a href=\"http://eurocrypt2009rump.cr.yp.to/837a0a8086fa6ca714249409ddfae43d.pdf\"><cite>SHA-1 collisions now 2<sup>52</sup> </cite></a>. EuroCrypt 2009 Rump session. URL: <a href=\"http://eurocrypt2009rump.cr.yp.to/837a0a8086fa6ca714249409ddfae43d.pdf\">http://eurocrypt2009rump.cr.yp.to/837a0a8086fa6ca714249409ddfae43d.pdf</a>",
     "SHA-1-Collisions": "X. Wang, Y.L. Yin, H. Yu. <a href=\"http://people.csail.mit.edu/yiqun/SHA1AttackProceedingVersion.pdf\"><cite>Finding Collisions in the Full SHA-1</cite></a>. In Shoup, V., editor, Advances in Cryptology - CRYPTO 2005, 25th Annual International Cryptology Conference, Santa Barbara, California, USA, August 14-18, 2005, Proceedings, volume 3621 of LNCS, pages 17–36. Springer, 2005. URL: <a href=\"http://people.csail.mit.edu/yiqun/SHA1AttackProceedingVersion.pdf\">http://people.csail.mit.edu/yiqun/SHA1AttackProceedingVersion.pdf</a> (also published in <a href=\"http://www.springerlink.com/content/26vljj3xhc28ux5m/\">http://www.springerlink.com/content/26vljj3xhc28ux5m/</a>)",
+    "SHADOW-DOM": {
+        "authors": [
+            "Dimitri Glazkov"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-shadow-dom-20121016/",
+        "title": "Shadow DOM",
+        "date": "16 October 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
     "SKOS-PRIMER": {
         "authors": [
             "Antoine Isaac",
