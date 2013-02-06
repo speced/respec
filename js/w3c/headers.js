@@ -27,6 +27,8 @@
 //      defined by:
 //          - uri: the URI to the alternate
 //          - label: a label for the alternate
+//          - lang: optional language
+//          - type: optional MIME type
 //  - testSuiteURI: the URI to the test suite, if any
 //  - implementationReportURI: the URI to the implementation report, if any
 //  - noRecTrack: set to true if this document is not intended to be on the Recommendation track
@@ -246,7 +248,9 @@ define(
                 });
                 conf.multipleAlternates = conf.alternateFormats && conf.alternateFormats.length > 1;
                 conf.alternatesHTML = utils.joinAnd(conf.alternateFormats, function (alt) {
-                    return "<a rel='alternate' href='" + alt.uri + "'>" + alt.label + "</a>";
+                    var optional = (alt.hasOwnProperty('lang') && alt.lang) ? " hreflang='" + alt.lang + "'" : "";
+                    optional += (alt.hasOwnProperty('type') && alt.type) ? " type='" + alt.type + "'" : "";
+                    return "<a class='altFormat' href='" + alt.uri + "'" + optional + ">" + alt.label + "</a>";
                 });
                 if (conf.copyrightStart && conf.copyrightStart == conf.publishYear) conf.copyrightStart = "";
                 for (var k in this.status2text) {
