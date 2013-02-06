@@ -3,12 +3,14 @@
 
 var page = require('webpage').create(),
     args = require('system').args,
-    fs = require('fs');
+    fs = require('fs'),
+    timeout = (!isNaN(args[3])) ? parseInt(args[3], 10) : 10;
 
-if (args.length !== 3) {
-    console.log('Usage:\n   phantomjs respec2html.js [respec-source] [html-output]\n');
-    console.log('   [respec-source]\t ReSpec source file, or an URL to the file');
-    console.log('   [html-output]\t Name for the HTML file to be generated\n');
+if (args.length !== 3 && args.length !== 4) {
+    console.log('Usage:\n   phantomjs respec2html.js respec-source html-output [timeout]\n');
+    console.log('   respec-source  ReSpec source file, or an URL to the file');
+    console.log('   html-output    Name for the HTML file to be generated');
+    console.log('   [timeout]      An optional timeout in seconds, default is 10\n');
     phantom.exit();
 }
 
@@ -36,11 +38,16 @@ page.open(args[1], function(status) {
                     return '<!DOCTYPE html>\n' + outer.replace('<head>', '\n<head>');
                 });
                 fs.write(args[2], html, 'w');
-                console.log(args[2] + ' created!\n')
+                console.log(args[2] + ' created!\n');
                 phantom.exit();
             } else {
-                console.log('Invalid ReSpec source file. Exiting.');
-                phantom.exit();
+                if (timeout === 0) {
+                    clearInterval(timer);
+                    console.log('Timeout loading ' + args[1] + '. Is it a valid ReSpec source file?');
+                    phantom.exit();
+                } else {
+                    console.log('Timing out in ' + timeout-- + ' s');
+                }
             }
         }, 1000);
     }
