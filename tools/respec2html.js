@@ -4,6 +4,8 @@
 var page = require('webpage').create(),
     args = require('system').args,
     fs = require('fs'),
+    source = args[1],
+    output = args[2],
     timeout = (!isNaN(args[3])) ? parseInt(args[3], 10) : 10;
 
 if (args.length !== 3 && args.length !== 4) {
@@ -14,7 +16,7 @@ if (args.length !== 3 && args.length !== 4) {
     phantom.exit();
 }
 
-page.open(args[1], function(status) {
+page.open(source, function(status) {
     page.onResourceRequested = function(request) {
         console.log('Loading ' + request.url);
     };
@@ -23,7 +25,7 @@ page.open(args[1], function(status) {
         console.log('Unable to access ReSpec source file.');
         phantom.exit();
     } else {
-        console.log('Loading ' + args[1]);
+        console.log('Loading ' + source);
         var timer = setInterval(function() {
             // Poll document.respecDone for doneness. A proper way would be to listen
             // for the end-all message on respecEvents (unsupported by PhantomJS).
@@ -37,13 +39,13 @@ page.open(args[1], function(status) {
                     var outer = document.querySelector('html').outerHTML;
                     return '<!DOCTYPE html>\n' + outer.replace('<head>', '\n<head>');
                 });
-                fs.write(args[2], html, 'w');
-                console.log(args[2] + ' created!\n');
+                fs.write(output, html, 'w');
+                console.log(output + ' created!\n');
                 phantom.exit();
             } else {
                 if (timeout === 0) {
                     clearInterval(timer);
-                    console.log('Timeout loading ' + args[1] + '. Is it a valid ReSpec source file?');
+                    console.log('Timeout loading ' + source + '. Is it a valid ReSpec source file?');
                     phantom.exit();
                 } else {
                     console.log('Timing out in ' + timeout-- + ' s');
