@@ -513,6 +513,7 @@ var sn;
             "ED": "W3C Editor's Draft",
             "FPWD": "W3C First Public Working Draft",
             "WD": "W3C Working Draft",
+            "LCWD": "W3C Last Call Working Draft",
             "CR": "W3C Candidate Recommendation",
             "PR": "W3C Proposed Recommendation",
             "REC": "W3C Recommendation",
