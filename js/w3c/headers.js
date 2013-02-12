@@ -250,7 +250,7 @@ define(
                 conf.alternatesHTML = utils.joinAnd(conf.alternateFormats, function (alt) {
                     var optional = (alt.hasOwnProperty('lang') && alt.lang) ? " hreflang='" + alt.lang + "'" : "";
                     optional += (alt.hasOwnProperty('type') && alt.type) ? " type='" + alt.type + "'" : "";
-                    return "<a class='altFormat' href='" + alt.uri + "'" + optional + ">" + alt.label + "</a>";
+                    return "<a rel='alternate' href='" + alt.uri + "'" + optional + ">" + alt.label + "</a>";
                 });
                 if (conf.copyrightStart && conf.copyrightStart == conf.publishYear) conf.copyrightStart = "";
                 for (var k in this.status2text) {
