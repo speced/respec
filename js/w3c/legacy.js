@@ -220,7 +220,7 @@ var sn;
             }
 
             str += ">\n";
-            var cmt = document.createComment("[if lt IE 9]><script src='" + this.httpScheme + "://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
+            var cmt = document.createComment("[if lt IE 9]><script src='" + respecConfig.httpScheme + "://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
             $("head").append(cmt);
             str += document.documentElement.innerHTML;
             str += "</html>";
@@ -294,7 +294,7 @@ var sn;
                 selfClosing[n] = true;
             });
             var noEsc = [false];
-            var cmt = document.createComment("[if lt IE 9]><script src='" + this.httpScheme + "://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
+            var cmt = document.createComment("[if lt IE 9]><script src='" + respecConfig.httpScheme + "://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
             $("head").append(cmt);
             var dumpNode = function (node) {
                 var out = '';
@@ -492,14 +492,20 @@ var sn;
         stringifyRef: function(ref) {
             if(typeof ref == 'string') return ref;
             var output = '';
-            output += ref.authors.join('; ');
-            if(ref.etAl) output += ' et al';
-            output += '. ';
+            if(ref.authors && ref.authors.length) {
+                output += ref.authors.join('; ');
+                if(ref.etAl) output += ' et al';
+                output += '. ';
+            }
             output += '<a href="' + ref.href + '"><cite>' + ref.title + '</cite></a>. ';
-            output += ref.date + '. ';
-            output += this.REF_STATUSES[ref.status] || ref.status;
-            output += '. URL: <a href="' + ref.href + '">' + ref.href + '</a>';
+            if(ref.date) output += ref.date + '. ';
+            if(ref.status) output += this.getRefStatus(ref.status) + '. ';
+            output += 'URL: <a href="' + ref.href + '">' + ref.href + '</a>';
             return output;
+        },
+
+        getRefStatus: function(status) {
+            return this.REF_STATUSES[status] || status;
         },
 
         REF_STATUSES: {
@@ -507,6 +513,7 @@ var sn;
             "ED": "W3C Editor's Draft",
             "FPWD": "W3C First Public Working Draft",
             "WD": "W3C Working Draft",
+            "LCWD": "W3C Last Call Working Draft",
             "CR": "W3C Candidate Recommendation",
             "PR": "W3C Proposed Recommendation",
             "REC": "W3C Recommendation",
