@@ -113,7 +113,7 @@
           remove itself and its dependencies so that you should normally get a document that's 
           PubRules-OK).
         </dd>
-        <dt><acronym title="Don't Repeat Yourself">DRY</acronym></dt>
+        <dt><abbr title="Don't Repeat Yourself">DRY</abbr></dt>
         <dd>
           You shouldn't have to repeat anything within a specification, or across specifications
           (apart from the template). For instance, marking RFC 2119 keywords is automatic, the
@@ -180,6 +180,7 @@
       </p>
 <p>Same document references may be created using the following
   formatting:
+</p>
 <pre>
 &lt;a href="#general-structure" class="sectionRef"&gt;&lt;/a&gt;
 </pre>(It is
@@ -187,7 +188,6 @@
 The class signals that this will be replaced with a link containing
   the section number and title as follows:
 <pre>&lt;a href="#general-structure" class="sectionRef"&gt;section Section-Number Section-Title&lt;/a&gt;</pre>
-</p>
     </section>
     <section>
       <h2>Configuration</h2>
@@ -402,8 +402,8 @@ The class signals that this will be replaced with a link containing
             information, such as the specific release the editor
             worked on, for example. This could be done by  setting
             note to &quot;2nd Edition&quot;, for example: 
-                  <dl><dt>Mr Example, Foo Company ( 2nd Edition )</dt></dl>
           </p>
+                  <dl><dt>Mr Example, Foo Company ( 2nd Edition )</dt><dd></dd></dl>
         </dd>
         <dt>authors</dt>
         <dd>
@@ -531,7 +531,7 @@ supported.";
     <section>
       <h2>Table of Contents &amp; Numbering</h2>
       <p>
-        The <acronym title='Table of Contents'>ToC</acronym> is generated entirely for you, so long as
+        The <abbr title='Table of Contents'>ToC</abbr> is generated entirely for you, so long as
         you are careful to stick to the following simple rules:
       </p>
       <ul>
@@ -558,7 +558,7 @@ supported.";
       <h2>RFC 2119</h2>
       <p>
         Any editor who wishes to do a good job MUST have read RFC 2119 [[!RFC2119]]. This 
-        <acronym title='Request For Comments'>RFC</acronym> defines a number of keywords that have a specific
+        <abbr title='Request For Comments'>RFC</abbr> defines a number of keywords that have a specific
         meaning in a standards context.
       </p>
       <p>
@@ -608,7 +608,7 @@ supported.";
       <p>
         <a>ReSpec</a> relies on an <a href='bibref/biblio.js'>external database of references</a> stored as the
         <code>berjon.biblio</code> Javascript object. The keys to that database are the terms used to
-        refer to a given specification, and the values the <acronym title='HyperText Markup Language'>HTML</acronym>
+        refer to a given specification, and the values the <abbr title='HyperText Markup Language'>HTML</abbr>
         that is inserted. The contents of that database were originally extracted from the database in
         Refer format that is part of the CSS3 Module Preprocessor but is now maintained separately.
       </p>
@@ -643,7 +643,7 @@ supported.";
         abbreviation is defined anywhere inside the document using one of these two elements and its <code>title</code>
         attribute, any occurrence of the same abbreviation anywhere else in the body of the specification will
         see itself wrapped automatically in the same element, with the same <code>title</code>. You can therefore
-        define an abbreviation thus: <acronym title='Devious Application of Hibernation to Ukulele Trolling'>DAHUT</acronym>.
+        define an abbreviation thus: <abbr title='Devious Application of Hibernation to Ukulele Trolling'>DAHUT</abbr>.
       </p>
       <p>
         Note that thanks the standard header, some abbreviations like W3C or ERCIM are always defined, while others
@@ -746,7 +746,7 @@ function updateExample(doc, content) {
     <section>
       <h2>WebIDL Support</h2>
       <p>
-        WebIDL [[!WEBIDL]] is the language that is used to define <acronym title='Application Programming Interface'>API</acronym>s
+        WebIDL [[!WEBIDL]] is the language that is used to define <abbr title='Application Programming Interface'>API</abbr>s
         inside W3C specifications. It is powerful and very expressive, and at this stage <a>ReSpec</a>
         only supports a limited (but hopefully useful) subset of it.
       </p>
@@ -872,54 +872,73 @@ function updateExample(doc, content) {
     
     <section>
       <h2>Saving the Generated Specification</h2>
-      <p>
-        Of course the downside of the approach taken by <a>ReSpec</a> is that the specification as it is
-        expected to be, with all its bells and whistles, exists only in your browser's memory. Publishing
-        directly with the script would not work as it does not work for all browsers (and there are still
-        quite a few people using Internet Explorer out there) and would not show all the content for
-        search indexing. And sadly enough browsers aren't very good at saving HTML that's been modified 
-        by script.
-      </p>
-      <p>
-        The solution that is used here is that you hit the <code>Ctrl+Shift+Alt+S</code> key combination (this is
-        subject to change until we agree on an option we all like). That will show a menu offering to either 
-        "Save as HTML", "Save as HTML (Source)", "Save as XHTML", or "Save as XHTML (Source)". You can hit <code>Esc</code> to hide it.
-      </p>
-      <p>
-        Those options are very similar. The non-source ones open a new window (which may be in a new tab depending
-        on your configuration) and shows you a document that should look exactly the same as the one you're
-        editing. That's normal. The difference is that it's a static document that represents the same DOM
-        tree as the live one after <a>ReSpec</a> has run. That page you can then save using your browser's
-        vanilla saving mechanism (be sure to refuse any option that tries to save the complete page with
-        images and other dependencies — you want just the (X)HTML). The "Source" alternative shows you the same
-        page's source code so that you can paste it into your favourite editor.
-      </p>
-      <p>
-        Note that some browsers will still save the original document when you use the non-Source alternative,
-        so if in doubt use the Source alternative.
-      </p>
-      <p>
-        Currently only HTML 4.01 and XHTML 1.0 are supported.
-        HTML5 is not supported because it is currently rejected
-        by PubRules.
-      </p>
-      <p>
-        The idea is that such snapshots would be created only when actual official W3C publication is
-        required — all the while that the specification is an Editor's Draft it should simply live
-        as itself.
+      <section>
+        <h2>In the Browser</h2>
+        <p>
+          Of course the downside of the approach taken by <a>ReSpec</a> is that the specification as it is
+          expected to be, with all its bells and whistles, exists only in your browser's memory. Publishing
+          directly with the script would not work as it does not work for all browsers (and there are still
+          quite a few people using Internet Explorer out there) and would not show all the content for
+          search indexing. And sadly enough browsers aren't very good at saving HTML that's been modified 
+          by script.
         </p>
-        <p>The tool is also capable of producing a diff-marked version.  
-        , but if you have a configuration setting of
-        'previousDiffURI' set to a document to compare to
-        When selected, the tool will use special configuration
-        parameter 'previousDiffURI' (or the previousURI if
-        previousDiffURI is not defined) and the current content to produce
-        a diffmarked version by passing parameters 'oldfile' and
-        'newcontent' to the diff tool.  It also sets the 'base' parameter.
-        By default, the diff tool is set to
-        http://www.aptest.com/standards/htmldiff/htmldiff.pl.  You can
-        override this with the configuration parameter 'diffTool'.
+        <p>
+          The solution that is used here is that you hit the <code>Ctrl+Shift+Alt+S</code> key combination (this is
+          subject to change until we agree on an option we all like). That will show a menu offering to either 
+          "Save as HTML", "Save as HTML (Source)", "Save as XHTML", or "Save as XHTML (Source)". You can hit <code>Esc</code> to hide it.
         </p>
+        <p>
+          Those options are very similar. The non-source ones open a new window (which may be in a new tab depending
+          on your configuration) and shows you a document that should look exactly the same as the one you're
+          editing. That's normal. The difference is that it's a static document that represents the same DOM
+          tree as the live one after <a>ReSpec</a> has run. That page you can then save using your browser's
+          vanilla saving mechanism (be sure to refuse any option that tries to save the complete page with
+          images and other dependencies — you want just the (X)HTML). The "Source" alternative shows you the same
+          page's source code so that you can paste it into your favourite editor.
+        </p>
+        <p>
+          Note that some browsers will still save the original document when you use the non-Source alternative,
+          so if in doubt use the Source alternative.
+        </p>
+        <p>
+          Currently only HTML 4.01 and XHTML 1.0 are supported.
+          HTML5 is not supported because it is currently rejected
+          by PubRules.
+        </p>
+        <p>
+          The idea is that such snapshots would be created only when actual official W3C publication is
+          required — all the while that the specification is an Editor's Draft it should simply live
+          as itself.
+          </p>
+          <p>The tool is also capable of producing a diff-marked version.  
+          , but if you have a configuration setting of
+          'previousDiffURI' set to a document to compare to
+          When selected, the tool will use special configuration
+          parameter 'previousDiffURI' (or the previousURI if
+          previousDiffURI is not defined) and the current content to produce
+          a diffmarked version by passing parameters 'oldfile' and
+          'newcontent' to the diff tool.  It also sets the 'base' parameter.
+          By default, the diff tool is set to
+          http://www.aptest.com/standards/htmldiff/htmldiff.pl.  You can
+          override this with the configuration parameter 'diffTool'.
+          </p>
+        </section>
+        <section>
+          <h2>Using a Command-line Utility</h2>
+          <p>
+            <code><a href="https://raw.github.com/darobin/respec/develop/tools/respec2html.js">respec2html.js</a></code>
+            is a command-line utility that converts a ReSpec source file to an HTML file. It depends on
+            <a href="http://phantomjs.org">PhantomJS</a>.
+          </p>
+          <pre class='example'>
+            Usage:
+               phantomjs respec2html.js respec-source html-output [timeout]
+
+               respec-source  ReSpec source file, or an URL to the file
+               html-output    Name for the HTML file to be generated
+               [timeout]      An optional timeout in seconds, default is 10
+          </pre>
+        </section>
     </section>
     
     <section class='appendix'>
