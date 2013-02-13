@@ -2637,6 +2637,18 @@ if (typeof berjon === "undefined") berjon = {};
     "MOZ-ICONS": "Martin, J. Raskin, A. Gelman, L. Rood, D. Surman, M. Hadfield, G. Greant, Z. <a href = 'https://wiki.mozilla.org/Drumbeat/Challenges/Privacy_Icons'<cite>Privacy Icons</cite></a> 6 March 2010. Mozilla Wiki. URL: https://wiki.mozilla.org/Drumbeat/Challenges/Privacy_Icons ",
 	"MPEGDASH": "<a href=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/c057623_ISO_IEC_23009-1_2012.zip\"><cite>Information technology -- Dynamic adaptive streaming over HTTP (DASH) -- Part 1: Media presentation description and segment formats</cite></a> ISO/IEC 23009-1:2012. URL: <a href=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/c057623_ISO_IEC_23009-1_2012.zip\">http://standards.iso.org/ittf/PubliclyAvailableStandards/c057623_ISO_IEC_23009-1_2012.zip</a> ",
     "MRCPv2": "Burnett, D. Shanmugham, S. <a href = 'http://tools.ietf.org/html/draft-ietf-speechsc-mrcpv2-27'><cite>Media Resource Control Protocol Version 2</cite></a> 15 November 2011. URL: <a href=\"http://tools.ietf.org/html/draft-ietf-speechsc-mrcpv2-27\">http://tools.ietf.org/html/draft-ietf-speechsc-mrcpv2-27</a>",
+    "MSE": {
+        "authors": [
+            "Aaron Colwell",
+			"Adrian Bateman",
+			"Mark Watson"
+        ],
+        "href": "http://www.w3.org/TR/2013/WD-media-source-20130129/",
+        "title": "Media Source Extensions",
+        "date": "29 January 2013",
+        "status": "WD",
+        "publisher": "W3C"
+    },
     "MULTIMODAL-REQS": {
         "authors": [
             "Marianne Hickey"
