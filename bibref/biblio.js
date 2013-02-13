@@ -3883,7 +3883,19 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "IETF"
     },
     "RFC3490": "P. Faltstrom; P. Hoffman; A. Costello. <a href='http://www.rfc-editor.org/rfc/rfc3490.txt'><cite>Internationalizing Domain Names in Applications (IDNA).</cite></a> March 2003. Internet RFC 3490. URL: <a href='http://www.rfc-editor.org/rfc/rfc3490.txt'>http://www.rfc-editor.org/rfc/rfc3490.txt</a>",
-    "RFC3550": "H. Schulzrinne; S.  Casner; R. Frederick; V. Jacobson. <a href='http://www.ietf.org/rfc/rfc3550.txt'><cite> RTP: A Transport Protocol for Real-Time Applications</cite></a>. July 2003. Internet RFC 3550. URL: <a href='http://www.ietf.org/rfc/rfc3550.txt'>http://www.ietf.org/rfc/rfc3550.txt</a>",
+    "RFC3550": {
+		"authors": [
+			"H. Schulzrinne",
+			"S. Casner",
+			"R. Frederick",
+			"V. Jacobson"
+		],
+		"href": "http://www.ietf.org/rfc/rfc3550.txt",
+		"title": "RTP: A Transport Protocol for Real-Time Applications",
+		"date": "July 2003",
+		"status": "RFC 3550",
+		"publisher": "IETF"
+	},
     "RFC3555": "S. Casner; P. Hoschka. <a href='http://www.rfc-editor.org/rfc/rfc3555.txt'><cite>MIME Type Registration of RTP Payload Formats</cite></a>. July 2003. Internet RFC 3555. URL: <a href='http://www.rfc-editor.org/rfc/rfc3555.txt'>http://www.rfc-editor.org/rfc/rfc3555.txt</a>",
     "RFC3966": {
         "authors": [
