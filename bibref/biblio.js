@@ -4199,6 +4199,17 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "REC",
         "publisher": "W3C"
     },
+    "RUBY-UC": {
+        "authors": [
+            "Richard Ishida"
+        ],
+        "etAl": true,
+        "href": "http://www.w3.org/TR/ruby-use-cases/",
+        "title": "Use Cases &amp; Exploratory Approaches for Ruby Markup",
+        "date": "10 July 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
     "S6GROUP2": {
         "authors": [
             "Stuart Weibel"
