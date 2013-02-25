@@ -1876,6 +1876,17 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
+    "HLS": {
+		"authors": [
+			"R. Pantos",
+			"W. May"
+		],
+		"href": "http://tools.ietf.org/html/draft-pantos-http-live-streaming",
+		"title": "HTTP Live Streaming (HLS)",
+		"date": "15 October 2012",
+		"status": "Internet Draft",
+		"publisher": "IETF"
+	},
     "HMAC": "H. Krawczyk, M. Bellare, R. Canetti. <a href=\"http://www.ietf.org/rfc/rfc2104.txt\"><cite>HMAC: Keyed-Hashing for Message Authentication</cite></a>. February 1997. IETF RFC 2104.  URL: <a href=\"http://www.ietf.org/rfc/rfc2104.txt\">http://www.ietf.org/rfc/rfc2104.txt</a>",
     "HMAC-Security": "C. Rechberger, V. Rijmen. <a href=\"http://www.jucs.org/jucs_14_3/new_results_on_nmac/jucs_14_3_0347_0376_rechberger.pdf\"><cite>New Results on NMAC/HMAC when Instantiated with Popular Hash Functions</cite></a>. 2 January 2008. Journal of Universal Computer Science, vol. 14, no. 3 (2008), 347-376.  URL: <a href=\"http://www.jucs.org/jucs_14_3/new_results_on_nmac/jucs_14_3_0347_0376_rechberger.pdf\">http://www.jucs.org/jucs_14_3/new_results_on_nmac/jucs_14_3_0347_0376_rechberger.pdf</a>",
     "HMRMC": "<a href=\"http://www.hmrc.gov.uk/softwaredevelopers/index.htm\"><cite>HM Revenue and customs</cite></a> Her Majesty's Revenue and Customs. URL: <a href=\"http://www.hmrc.gov.uk/softwaredevelopers/index.htm\">http://www.hmrc.gov.uk/softwaredevelopers/index.htm</a> <br> Sample response message with XML signature: <a href=\"http://www.hmrc.gov.uk/ebu/responsemessages.pdf\">http://www.hmrc.gov.uk/ebu/responsemessages.pdf</a>",
@@ -2206,6 +2217,7 @@ if (typeof berjon === "undefined") berjon = {};
     "ISO8601": "<cite>Representation of dates and times.</cite> International Organization for Standardization. 2004. ISO 8601:2004. URL: <a href=\"http://www.iso.org/iso/catalogue_detail?csnumber=40874\">http://www.iso.org/iso/catalogue_detail?csnumber=40874</a> ",
     "ISO9070": "<cite>Registration procedures for public text owner identifiers.</cite> International Organization for Standardization. 1990. ISO 9070:1990. URL: <a href=\"http://www.iso.org/iso/catalogue_detail.htm?csnumber=16644\">http://www.iso.org/iso/catalogue_detail.htm?csnumber=16644</a> ",
     "ISO8879": "<a href=\"http://www.iso.ch/cate/d16387.html\"><cite>Information Processing -- Text and Office Systems -- Standard Generalized Markup Language (SGML).</cite></a> ISO 8879:1986. URL: <a href=\"http://www.iso.ch/cate/d16387.html\">http://www.iso.ch/cate/d16387.html</a> ",
+    "ISOBMFF": "<a href=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/c061988_ISO_IEC_14496-12_2012.zip\"><cite>Information technology -- Coding of audio-visual objects -- Part 12: ISO base media file format</cite></a> ISO/IEC 14496-12:2012. URL: <a href=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/c061988_ISO_IEC_14496-12_2012.zip\">http://standards.iso.org/ittf/PubliclyAvailableStandards/c061988_ISO_IEC_14496-12_2012.zip</a> ",
     "ITS": {
         "authors": [
             "Felix Sasaki",
@@ -2633,7 +2645,20 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "MOZ-ICONS": "Martin, J. Raskin, A. Gelman, L. Rood, D. Surman, M. Hadfield, G. Greant, Z. <a href = 'https://wiki.mozilla.org/Drumbeat/Challenges/Privacy_Icons'<cite>Privacy Icons</cite></a> 6 March 2010. Mozilla Wiki. URL: https://wiki.mozilla.org/Drumbeat/Challenges/Privacy_Icons ",
+	"MPEGDASH": "<a href=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/c057623_ISO_IEC_23009-1_2012.zip\"><cite>Information technology -- Dynamic adaptive streaming over HTTP (DASH) -- Part 1: Media presentation description and segment formats</cite></a> ISO/IEC 23009-1:2012. URL: <a href=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/c057623_ISO_IEC_23009-1_2012.zip\">http://standards.iso.org/ittf/PubliclyAvailableStandards/c057623_ISO_IEC_23009-1_2012.zip</a> ",
     "MRCPv2": "Burnett, D. Shanmugham, S. <a href = 'http://tools.ietf.org/html/draft-ietf-speechsc-mrcpv2-27'><cite>Media Resource Control Protocol Version 2</cite></a> 15 November 2011. URL: <a href=\"http://tools.ietf.org/html/draft-ietf-speechsc-mrcpv2-27\">http://tools.ietf.org/html/draft-ietf-speechsc-mrcpv2-27</a>",
+    "MSE": {
+        "authors": [
+            "Aaron Colwell",
+			"Adrian Bateman",
+			"Mark Watson"
+        ],
+        "href": "http://www.w3.org/TR/2013/WD-media-source-20130129/",
+        "title": "Media Source Extensions",
+        "date": "29 January 2013",
+        "status": "WD",
+        "publisher": "W3C"
+    },
     "MULTIMODAL-REQS": {
         "authors": [
             "Marianne Hickey"
@@ -3858,6 +3883,19 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "IETF"
     },
     "RFC3490": "P. Faltstrom; P. Hoffman; A. Costello. <a href='http://www.rfc-editor.org/rfc/rfc3490.txt'><cite>Internationalizing Domain Names in Applications (IDNA).</cite></a> March 2003. Internet RFC 3490. URL: <a href='http://www.rfc-editor.org/rfc/rfc3490.txt'>http://www.rfc-editor.org/rfc/rfc3490.txt</a>",
+    "RFC3550": {
+		"authors": [
+			"H. Schulzrinne",
+			"S. Casner",
+			"R. Frederick",
+			"V. Jacobson"
+		],
+		"href": "http://www.ietf.org/rfc/rfc3550.txt",
+		"title": "RTP: A Transport Protocol for Real-Time Applications",
+		"date": "July 2003",
+		"status": "RFC 3550",
+		"publisher": "IETF"
+	},
     "RFC3555": "S. Casner; P. Hoschka. <a href='http://www.rfc-editor.org/rfc/rfc3555.txt'><cite>MIME Type Registration of RTP Payload Formats</cite></a>. July 2003. Internet RFC 3555. URL: <a href='http://www.rfc-editor.org/rfc/rfc3555.txt'>http://www.rfc-editor.org/rfc/rfc3555.txt</a>",
     "RFC3966": {
         "authors": [
