@@ -179,8 +179,8 @@ define(
                     return isOptional;
                 }
             }
-            
-            
+
+
         ,   definition:    function ($idl) {
                 var def = { children: [] }
                 ,   str = $idl.attr("title")
@@ -332,7 +332,7 @@ define(
                 ,   str = norm($dt.text());
                 obj.description = $dd.contents();
                 str = this.parseExtendedAttributes(str, obj);
-                
+
                 // CONST
                 if (this.parseConst(obj, str)) return obj;
 
@@ -398,10 +398,12 @@ define(
                 ,   str = norm($dt.text());
                 obj.description = $dd.contents();
                 str = this.parseExtendedAttributes(str, obj);
+                str.replace("")
 
                 // MEMBER
                 obj.type = "member";
                 this.setID(obj, str);
+                obj.refId = sanitiseID(obj.id);
                 return obj;
             },
 
@@ -576,7 +578,7 @@ define(
                 // NOTHING MATCHED
                 this.msg.pub("error", "Expected interface member, got: " + str);
             },
-            
+
             parseDatatype:  function (obj, type) {
                 type = this.nullable(obj, type);
                 type = this.array(obj, type);
@@ -594,7 +596,7 @@ define(
                     obj.datatype = type;
                 }
             },
-            
+
             parseStatic:  function (obj, type) {
                 if (/^static\s+/.test(type)) {
                     type = type.replace(/^static\s+/, "");
@@ -605,7 +607,7 @@ define(
                 }
                 return type;
             },
-            
+
             parseExtendedAttributes:    function (str, obj) {
                 if (!str) return;
                 return str.replace(/^\s*\[([^\]]+)\]\s*/, function (x, m1) { obj.extendedAttributes = m1; return ""; });
@@ -822,7 +824,7 @@ define(
                         var tr = sn.element("tr", {}, sec)
                         ,   td1 = sn.element("td", {}, tr)
                         ;
-                        sn.element("code", {}, td1, it.id);
+                        sn.element("code", { "id": "idl-def-" + obj.refId + "." + it.refId }, td1, it.id);
                         sn.element("td", {}, tr, [it.description]);
                     }
                     return df;
@@ -1070,17 +1072,17 @@ define(
                     }
                     else return $(idlModuleTmpl(opt));
                 }
-                
+
                 else if (obj.type === "typedef") {
                     opt.nullable = obj.nullable ? "?" : "";
                     opt.arr = arrsq(obj);
                     return $(idlTypedefTmpl(opt));
                 }
-                
+
                 else if (obj.type === "implements") {
                     return $(idlImplementsTmpl(opt));
                 }
-                
+
                 else if (obj.type === "interface") {
                     // stop gap fix for duplicate IDs while we're transitioning the code
                     var div = this.doc.createElement("div")
@@ -1118,7 +1120,7 @@ define(
                     ,   children:   children
                     });
                 }
-                
+
                 else if (obj.type === "exception") {
                     var maxAttr = 0, maxConst = 0;
                     obj.children.forEach(function (it) {
@@ -1139,7 +1141,7 @@ define(
                     ;
                     return idlExceptionTmpl({ obj: obj, indent: indent, children: children });
                 }
-                
+
                 else if (obj.type === "dictionary") {
                     var max = 0;
                     obj.children.forEach(function (it) {
@@ -1158,7 +1160,7 @@ define(
                     ;
                     return idlDictionaryTmpl({ obj: obj, indent: indent, children: children, partial: obj.partial ? "partial " : "" });
                 }
-                
+
                 else if (obj.type === "callback") {
                     var params = obj.children
                                     .map(function (it) {
@@ -1179,7 +1181,7 @@ define(
                     ,   children:   params
                     });
                 }
-                
+
                 else if (obj.type === "enum") {
                     var children = obj.children
                                       .map(function (it) { return idlEnumItemTmpl({ obj: it, parentID: obj.refId, indent: indent + 1 }); })
