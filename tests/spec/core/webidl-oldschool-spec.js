@@ -145,7 +145,7 @@ describe("Core - WebIDL", function () {
         text =  "interface SuperStar {\n" +
                 "             attribute DOMString foo;\n" +
                 "             attribute DOMString bar;\n" +
- 	        "    serializer = {foo, bar};\n" +
+                "    serializer = {foo, bar};\n" +
                 "};";
         expect($target.text()).toEqual(text);
         expect($target.find(".idlSerializer").length).toEqual(1);
@@ -243,18 +243,18 @@ describe("Core - WebIDL", function () {
 
     it("should handle enumerations", function () {
         $target = $("#enum-basic", doc);
-        text = "enum SuperStar {\n    \"one\",\n    \"two\",\n    \"three\"\n};";
+        text = "enum SuperStar {\n    \"one\",\n    \"two\",\n    \"three\",\n    \"white space\"\n};";
         expect($target.text()).toEqual(text);
         expect($target.find(".idlEnum").length).toEqual(1);
         expect($target.find(".idlEnumID").text()).toEqual("SuperStar");
-        expect($target.find(".idlEnumItem").length).toEqual(3);
+        expect($target.find(".idlEnumItem").length).toEqual(4);
         expect($target.find(".idlEnumItem").first().text()).toEqual("one");
 
         var $sec = $target.next("table.simple");
         expect($sec.find("th").attr("colspan")).toEqual("2");
         expect($sec.find("th").text()).toEqual("Enumeration description");
-        expect($sec.find("tr").length).toEqual(4);
-        expect($sec.find("td").text()).toEqual("one1two2three3");
+        expect($sec.find("tr").length).toEqual(5);
+        expect($sec.find("td").text()).toEqual("one1two2three3white space4");
     });
 
     it("should handle callbacks", function () {

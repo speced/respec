@@ -234,7 +234,7 @@ define(
                 return this.excDic("exception", obj, str, $idl);
             },
 
-            excDic:  function (type, obj, str, $idl) {
+            excDic:  function (type, obj, str) {
                 obj.type = type;
                 var re = new RegExp("^\\s*" + type + "\\s+([A-Za-z][A-Za-z0-9]*)(?:\\s+:\\s*([^{]+)\\s*)?\\s*")
                 ,   match = re.exec(str);
@@ -246,7 +246,7 @@ define(
                 return obj;
             },
 
-            callback:  function (obj, str, $idl) {
+            callback:  function (obj, str) {
                 obj.type = "callback";
                 var match = /^\s*callback\s+([A-Za-z][A-Za-z0-9]*)\s*=\s*\b(.*?)\s*$/.exec(str);
                 if (match) {
@@ -258,7 +258,7 @@ define(
                 return obj;
             },
 
-            processEnum:  function (obj, str, $idl) {
+            processEnum:  function (obj, str) {
                 obj.type = "enum";
                 var match = /^\s*enum\s+([A-Za-z][A-Za-z0-9]*)\s*$/.exec(str);
                 if (match) this.setID(obj, match[1]);
@@ -498,7 +498,7 @@ define(
                     if ($extPrm.length) {
                         $extPrm.remove();
                         var self = this;
-                        $extPrm.find("> dt").each(function (i) {
+                        $extPrm.find("> dt").each(function () {
                             return self.params($(this).text(), $(this).next(), obj);
                         });
                     }
@@ -527,52 +527,51 @@ define(
                 match = /^\s*serializer(\s*=\s*((\{\s*(\S+(\s*,\s*\S+)*)?\s*\})|(\[(\s*\S+(\s*,\s*\S+)*)?\s*\])|(\S+)))?\s*$/.exec(str);
                 if (match) {
                     obj.type = "serializer";
-		    obj.values = [];
+                    obj.values = [];
                     this.setID(obj, "serializer");
-		    var serializermap = match[3],
-		    serializerlist = match[6],
-		    serializerattribute = match[9], rawvalues;
-		    
-		    if (serializermap) {
-			obj.serializertype = "map";
-			rawvalues = match[4];
-		    } 
-		    else if (serializerlist) {
-			obj.serializertype = "list";
-			rawvalues = match[7];
-		    }
-		    else if (serializerattribute) {
-			obj.serializertype = "attribute";
-			obj.values.push(serializerattribute);
-		    }
-		    else {
-			obj.serializertype = "prose";
-		    }
-		    if (rawvalues) {
-			// split at comma and remove white space
-			var values = rawvalues.split(/\s*,\s*/);
-			obj.getter = false;
-			obj.inherit = false;
-			obj.all = false;
-			if (values[0] == "getter") {
-			    obj.getter = true;
-			} 
-			else {
-			    if (obj.serializertype == "map") {
- 				if (values[0] == "inherit") {
-				    obj.inherit = true;
-				    values.shift();
-				}
-				if (values[0] == "attribute" && obj.serializertype == "map" ) {
-				    obj.all = true;
-				    values = [];
-				}
-			    }
-			    obj.values = values;
-			}
-		    }
-		    return obj;
-		}
+                    var serializermap = match[3],
+                    serializerlist = match[6],
+                    serializerattribute = match[9], rawvalues;
+                    if (serializermap) {
+                        obj.serializertype = "map";
+                        rawvalues = match[4];
+                    }
+                    else if (serializerlist) {
+                        obj.serializertype = "list";
+                        rawvalues = match[7];
+                    }
+                    else if (serializerattribute) {
+                        obj.serializertype = "attribute";
+                        obj.values.push(serializerattribute);
+                    }
+                    else {
+                        obj.serializertype = "prose";
+                    }
+                    if (rawvalues) {
+                        // split at comma and remove white space
+                        var values = rawvalues.split(/\s*,\s*/);
+                        obj.getter = false;
+                        obj.inherit = false;
+                        obj.all = false;
+                        if (values[0] == "getter") {
+                            obj.getter = true;
+                        }
+                        else {
+                            if (obj.serializertype == "map") {
+                                if (values[0] == "inherit") {
+                                    obj.inherit = true;
+                                    values.shift();
+                                }
+                                if (values[0] == "attribute" && obj.serializertype == "map" ) {
+                                    obj.all = true;
+                                    values = [];
+                                }
+                            }
+                            obj.values = values;
+                        }
+                    }
+                    return obj;
+                }
 
                 // NOTHING MATCHED
                 this.msg.pub("error", "Expected interface member, got: " + str);
@@ -850,21 +849,21 @@ define(
                         var secTitle = type;
                         secTitle = secTitle.substr(0, 1).toUpperCase() + secTitle.substr(1) + (type != "serializer" ? "s" : "");
                         if (!this.conf.noIDLSectionTitle) sn.element("h2", {}, sec, secTitle);
-			if (type != "serializer") {
+                        if (type != "serializer") {
                             var dl = sn.element("dl", { "class": type + "s" }, sec);
                             for (var j = 0; j < things.length; j++) {
-				var it = things[j];
-				var id = (type == "method") ? this.makeMethodID(curLnk, it) : sn.idThatDoesNotExist(curLnk + it.refId);
-				var dt = sn.element("dt", { id: id }, dl);
-				sn.element("code", {}, dt, it.id);
-				if (it.isStatic) dt.appendChild(this.doc.createTextNode(", static"));
-				var desc = sn.element("dd", {}, dl, [it.description]);
-				if (type == "method") {
+                                var it = things[j];
+                                var id = (type == "method") ? this.makeMethodID(curLnk, it) : sn.idThatDoesNotExist(curLnk + it.refId);
+                                var dt = sn.element("dt", { id: id }, dl);
+                                sn.element("code", {}, dt, it.id);
+                                if (it.isStatic) dt.appendChild(this.doc.createTextNode(", static"));
+                                var desc = sn.element("dd", {}, dl, [it.description]);
+                                if (type == "method") {
                                     if (it.params.length) {
-					var table = sn.element("table", { "class": "parameters" }, desc);
-					var tr = sn.element("tr", {}, table);
-					["Parameter", "Type", "Nullable", "Optional", "Description"].forEach(function (tit) { sn.element("th", {}, tr, tit); });
-					for (var k = 0; k < it.params.length; k++) {
+                                        var table = sn.element("table", { "class": "parameters" }, desc);
+                                        var tr = sn.element("tr", {}, table);
+                                        ["Parameter", "Type", "Nullable", "Optional", "Description"].forEach(function (tit) { sn.element("th", {}, tr, tit); });
+                                        for (var k = 0; k < it.params.length; k++) {
                                             var prm = it.params[k];
                                             var tr = sn.element("tr", {}, table);
                                             sn.element("td", { "class": "prmName" }, tr, prm.id);
@@ -873,7 +872,7 @@ define(
                                             code.innerHTML = datatype(prm.datatype);
                                             if (prm.array) code.innerHTML += arrsq(prm);
                                             if (prm.defaultValue) {
-						code.innerHTML += " = " + prm.defaultValue;
+                                                code.innerHTML += " = " + prm.defaultValue;
                                             }
                                             if (prm.nullable) sn.element("td", { "class": "prmNullTrue" }, tr, "\u2714");
                                             else              sn.element("td", { "class": "prmNullFalse" }, tr, "\u2718");
@@ -881,33 +880,33 @@ define(
                                             else              sn.element("td", { "class": "prmOptFalse" }, tr, "\u2718");
                                             var cnt = prm.description ? [prm.description] : "";
                                             sn.element("td", { "class": "prmDesc" }, tr, cnt);
-					}
+                                        }
                                     }
                                     else {
-					sn.element("div", {}, desc, [sn.element("em", {}, null, "No parameters.")]);
+                                        sn.element("div", {}, desc, [sn.element("em", {}, null, "No parameters.")]);
                                     }
                                     if (this.conf.idlOldStyleExceptions && it.raises.length) {
-					var table = sn.element("table", { "class": "exceptions" }, desc);
-					var tr = sn.element("tr", {}, table);
-					["Exception", "Description"].forEach(function (tit) { sn.element("th", {}, tr, tit); });
-					for (var k = 0; k < it.raises.length; k++) {
+                                        var table = sn.element("table", { "class": "exceptions" }, desc);
+                                        var tr = sn.element("tr", {}, table);
+                                        ["Exception", "Description"].forEach(function (tit) { sn.element("th", {}, tr, tit); });
+                                        for (var k = 0; k < it.raises.length; k++) {
                                             var exc = it.raises[k];
                                             var tr = sn.element("tr", {}, table);
                                             sn.element("td", { "class": "excName" }, tr, [sn.element("a", {}, null, exc.id)]);
                                             var dtd = sn.element("td", { "class": "excDesc" }, tr);
                                             if (exc.type == "simple") {
-						$(dtd).append(exc.description);
+                                                $(dtd).append(exc.description);
                                             }
                                             else {
-						var ctab = sn.element("table", { "class": "exceptionCodes" }, dtd );
-						for (var m = 0; m < exc.description.length; m++) {
+                                                var ctab = sn.element("table", { "class": "exceptionCodes" }, dtd );
+                                                for (var m = 0; m < exc.description.length; m++) {
                                                     var cd = exc.description[m];
                                                     var tr = sn.element("tr", {}, ctab);
                                                     sn.element("td", { "class": "excCodeName" }, tr, [sn.element("code", {}, null, cd.id)]);
                                                     sn.element("td", { "class": "excCodeDesc" }, tr, [cd.description]);
-						}
+                                                }
                                             }
-					}
+                                        }
                                     }
                                     // else {
                                     //     sn.element("div", {}, desc, [sn.element("em", {}, null, "No exceptions.")]);
@@ -920,112 +919,116 @@ define(
                                     code.innerHTML = datatype(it.datatype);
                                     if (it.array) code.innerHTML += arrsq(it);
                                     if (it.nullable) sn.text(", nullable", reDiv);
-				}
-				else if (type == "attribute") {
+                                }
+                                else if (type == "attribute") {
                                     sn.text(" of type ", dt);
                                     if (it.array) {
-					for (var m = 0, n = it.arrayCount; m < n; m++) sn.text("array of ", dt);
+                                        for (var m = 0, n = it.arrayCount; m < n; m++) sn.text("array of ", dt);
                                     }
                                     var span = sn.element("span", { "class": "idlAttrType" }, dt);
                                     var matched = /^sequence<(.+)>$/.exec(it.datatype);
                                     if (matched) {
-					sn.text("sequence<", span);
-					sn.element("a", {}, span, matched[1]);
-					sn.text(">", span);
+                                        sn.text("sequence<", span);
+                                        sn.element("a", {}, span, matched[1]);
+                                        sn.text(">", span);
                                     }
                                     else {
-					sn.element("a", {}, span, it.datatype);
+                                        sn.element("a", {}, span, it.datatype);
                                     }
                                     if (it.readonly) sn.text(", readonly", dt);
                                     if (it.nullable) sn.text(", nullable", dt);
 
                                     if (this.conf.idlOldStyleExceptions && it.raises.length) {
-					var table = sn.element("table", { "class": "exceptions" }, desc);
-					var tr = sn.element("tr", {}, table);
-					["Exception", "On Get", "On Set", "Description"].forEach(function (tit) { sn.element("th", {}, tr, tit); });
-					for (var k = 0; k < it.raises.length; k++) {
+                                        var table = sn.element("table", { "class": "exceptions" }, desc);
+                                        var tr = sn.element("tr", {}, table);
+                                        ["Exception", "On Get", "On Set", "Description"].forEach(function (tit) { sn.element("th", {}, tr, tit); });
+                                        for (var k = 0; k < it.raises.length; k++) {
                                             var exc = it.raises[k];
                                             var tr = sn.element("tr", {}, table);
                                             sn.element("td", { "class": "excName" }, tr, [sn.element("a", {}, null, exc.id)]);
                                             ["onGet", "onSet"].forEach(function (gs) {
-						if (exc[gs]) sn.element("td", { "class": "excGetSetTrue" }, tr, "\u2714");
-						else         sn.element("td", { "class": "excGetSetFalse" }, tr, "\u2718");
+                                                if (exc[gs]) sn.element("td", { "class": "excGetSetTrue" }, tr, "\u2714");
+                                                else         sn.element("td", { "class": "excGetSetFalse" }, tr, "\u2718");
                                             });
                                             var dtd = sn.element("td", { "class": "excDesc" }, tr);
                                             if (exc.type == "simple") {
-						dtd.appendChild(exc.description);
+                                                dtd.appendChild(exc.description);
                                             }
                                             else {
-						var ctab = sn.element("table", { "class": "exceptionCodes" }, dtd );
-						for (var m = 0; m < exc.description.length; m++) {
+                                                var ctab = sn.element("table", { "class": "exceptionCodes" }, dtd );
+                                                for (var m = 0; m < exc.description.length; m++) {
                                                     var cd = exc.description[m];
                                                     var tr = sn.element("tr", {}, ctab);
                                                     sn.element("td", { "class": "excCodeName" }, tr, [sn.element("code", {}, null, cd.id)]);
                                                     sn.element("td", { "class": "excCodeDesc" }, tr, [cd.description]);
-						}
+                                                }
                                             }
-					}
+                                        }
                                     }
                                     // else {
                                     //     sn.element("div", {}, desc, [sn.element("em", {}, null, "No exceptions.")]);
                                     // }
-				}
-				else if (type == "constant") {
+                                }
+                                else if (type == "constant") {
                                     sn.text(" of type ", dt);
                                     sn.element("span", { "class": "idlConstType" }, dt, [sn.element("a", {}, null, it.datatype)]);
                                     if (it.nullable) sn.text(", nullable", dt);
-				}
+                                }
                             }
-			} 
-			else { // Serializer 
-			    var div = sn.element("div", {}, sec);
-			    var it = things[0];
-			    if (it.serializertype != "prose") {
-				var generatedDescription = "Instances of this interface are serialized as ";
-				if (it.serializertype == "map") {
-				    var mapDescription = "a map ";
-				    if (it.getter) {
-					mapDescription += "with entries corresponding to the named properties";
-				    }
-				    else {
-					var and = "";
-					if (it.inherit) {
-					    mapDescription += "with entries from the closest inherited interface ";
-					    and = "and ";
-					}
-					if (it.all) {
-					    mapDescription += and + "with entries for each of the serializable attributes";
-					} else if (it.values && it.values.length) {
-					    mapDescription += and + "with entries for the following attributes: " + it.values.join(", ");
-					} else {
-					    mapDescription = "an empty map";
-					}
-				    }
-				    generatedDescription += mapDescription;
-				}
-				else if (it.serializertype == "list") {
-				    var listDescription = "a list ";
-				    if (it.getter) {
-					listDescription += "with values corresponding to the indexed properties";
-				    }
-				    else {
-					if (it.values && it.values.length) {
-					    listDescription += "with the values of the following attributes: " + it.values.join(", ");
-					} else {
-					    mapDescription = "an empty list";
-					}
-				    }
-				    generatedDescription += listDescription;
-				}
-				else if (it.serializertype == "attribute") {
-				    generatedDescription += "the value of the attribute " + it.values[0];
-				}
-				generatedDescription += ".";
-				var p = sn.element("p", {}, div, generatedDescription);
-			    }
-			    var desc = sn.element("p", {}, div, [it.description]);
-			}
-		    }
+                        }
+                        // Serializer
+                        else {
+                            var div = sn.element("div", {}, sec);
+                            var it = things[0];
+                            if (it.serializertype != "prose") {
+                                var generatedDescription = "Instances of this interface are serialized as ";
+                                if (it.serializertype == "map") {
+                                    var mapDescription = "a map ";
+                                    if (it.getter) {
+                                        mapDescription += "with entries corresponding to the named properties";
+                                    }
+                                    else {
+                                        var and = "";
+                                        if (it.inherit) {
+                                            mapDescription += "with entries from the closest inherited interface ";
+                                            and = "and ";
+                                        }
+                                        if (it.all) {
+                                            mapDescription += and + "with entries for each of the serializable attributes";
+                                        }
+                                        else if (it.values && it.values.length) {
+                                            mapDescription += and + "with entries for the following attributes: " + it.values.join(", ");
+                                        }
+                                        else {
+                                            mapDescription = "an empty map";
+                                        }
+                                    }
+                                    generatedDescription += mapDescription;
+                                }
+                                else if (it.serializertype == "list") {
+                                    var listDescription = "a list ";
+                                    if (it.getter) {
+                                        listDescription += "with values corresponding to the indexed properties";
+                                    }
+                                    else {
+                                        if (it.values && it.values.length) {
+                                            listDescription += "with the values of the following attributes: " + it.values.join(", ");
+                                        }
+                                        else {
+                                            listDescription = "an empty list";
+                                        }
+                                    }
+                                    generatedDescription += listDescription;
+                                }
+                                else if (it.serializertype == "attribute") {
+                                    generatedDescription += "the value of the attribute " + it.values[0];
+                                }
+                                generatedDescription += ".";
+                                sn.element("p", {}, div, generatedDescription);
+                            }
+                            sn.element("p", {}, div, [it.description]);
+                        }
+                    }
                     return df;
                 }
             },
@@ -1083,7 +1086,7 @@ define(
                     var div = this.doc.createElement("div")
                     ,   id = $(div).makeID("idl-def", obj.refId, true)
                     ,   maxAttr = 0, maxMeth = 0, maxConst = 0, hasRO = false;
-                    obj.children.forEach(function (it, idx) {
+                    obj.children.forEach(function (it) {
                         var len = 0;
                         if (it.isUnionType)   len = it.datatype.join(" or ").length + 2;
                         else if (it.datatype) len = it.datatype.length;
@@ -1118,7 +1121,7 @@ define(
                 
                 else if (obj.type === "exception") {
                     var maxAttr = 0, maxConst = 0;
-                    obj.children.forEach(function (it, idx) {
+                    obj.children.forEach(function (it) {
                         var len = it.datatype.length;
                         if (it.nullable) len = len + 1;
                         if (it.array) len = len + (2 * it.arrayCount);
@@ -1139,7 +1142,7 @@ define(
                 
                 else if (obj.type === "dictionary") {
                     var max = 0;
-                    obj.children.forEach(function (it, idx) {
+                    obj.children.forEach(function (it) {
                         var len = it.datatype.length;
                         if (it.nullable) len = len + 1;
                         if (it.array) len = len + (2 * it.arrayCount);
@@ -1179,7 +1182,7 @@ define(
                 
                 else if (obj.type === "enum") {
                     var children = obj.children
-                                      .map(function (it) { return idlEnumItemTmpl({ obj: it, indent: indent + 1 }); })
+                                      .map(function (it) { return idlEnumItemTmpl({ obj: it, parentID: obj.refId, indent: indent + 1 }); })
                                       .join(",\n");
                     return idlEnumTmpl({obj: obj, indent: indent, children: children });
                 }
@@ -1199,7 +1202,7 @@ define(
                 });
             },
 
-            writeAttribute:    function (attr, max, indent, curLnk, hasRO) {
+            writeAttribute:    function (attr, max, indent, curLnk) {
                 var pad = max - attr.datatype.length;
                 if (attr.nullable) pad = pad - 1;
                 if (attr.array) pad = pad - (2 * attr.arrayCount);
@@ -1245,36 +1248,36 @@ define(
                 });
             },
 
-            writeConst:    function (cons, max, indent, curLnk) {
+            writeConst:    function (cons, max, indent) {
                 var pad = max - cons.datatype.length;
                 if (cons.nullable) pad--;
                 return idlConstTmpl({ obj: cons, indent: indent, pad: pad, nullable: cons.nullable ? "?" : ""});
             },
 
 
-            writeSerializer: function (serializer, indent, curLnk) {
-		var values = "";
-		if (serializer.serializertype == "map") {
-		    var mapValues = [];
-		    if (serializer.getter) mapValues = ["getter"];
-		    else {
-			if (serializer.inherit) mapValues.push("inherit");
-			if (serializer.all) mapValues.push("attribute");
-			else                mapValues = mapValues.concat(serializer.values);
-		    }
-		    values = "{" + mapValues.join(", ") + "}";
-		} 
-		else if (serializer.serializertype == "list") {
-		    var listValues = (serializer.getter ? ["getter"] : serializer.values);
-		    values = "[" + listValues.join(", ") + "]";
-		}
-		else if (serializer.serializertype == "attribute") {
-		    values = serializer.values[0];
-		}
+            writeSerializer: function (serializer, indent) {
+                var values = "";
+                if (serializer.serializertype == "map") {
+                    var mapValues = [];
+                    if (serializer.getter) mapValues = ["getter"];
+                    else {
+                        if (serializer.inherit) mapValues.push("inherit");
+                        if (serializer.all) mapValues.push("attribute");
+                        else                mapValues = mapValues.concat(serializer.values);
+                    }
+                    values = "{" + mapValues.join(", ") + "}";
+                }
+                else if (serializer.serializertype == "list") {
+                    var listValues = (serializer.getter ? ["getter"] : serializer.values);
+                    values = "[" + listValues.join(", ") + "]";
+                }
+                else if (serializer.serializertype == "attribute") {
+                    values = serializer.values[0];
+                }
                 return idlSerializerTmpl({
                     obj:        serializer
                 ,   indent:     indent
-		,   values:     values
+                ,   values:     values
                 });
             },
 
