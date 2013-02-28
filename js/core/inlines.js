@@ -53,9 +53,8 @@ define(
                         if (subtxt.length) matched = subtxt.shift();
                         df.appendChild(doc.createTextNode(t));
                         if (matched) {
-                            // RFC 2129
+                            // RFC 2119
                             if (/MUST(?:\s+NOT)?|SHOULD(?:\s+NOT)?|SHALL(?:\s+NOT)?|MAY|(?:NOT\s+)?REQUIRED|(?:NOT\s+)?RECOMMENDED|OPTIONAL/.test(matched)) {
-                                matched = matched.toLowerCase();
                                 df.appendChild($("<em/>").attr({ "class": "rfc2119", title: matched }).text(matched)[0]);
                             }
                             // BIBREF
