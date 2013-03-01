@@ -402,6 +402,7 @@ define(
                 // MEMBER
                 obj.type = "member";
                 this.setID(obj, str);
+                obj.refId = sanitiseID(obj.id); // override with different ID type
                 return obj;
             },
 
@@ -417,7 +418,7 @@ define(
                 var match;
 
                 // ATTRIBUTE
-                match = /^\s*(?:(readonly)\s+)?attribute\s+\b(.*?)\s+(\S+)\s*$/.exec(str);
+                match = /^\s*(?:(readonly)\s+)?attribute\s+(.*?)\s+(\S+)\s*$/.exec(str);
                 if (match) {
                     obj.type = "attribute";
                     obj.readonly = (match[1] === "readonly");
@@ -822,7 +823,7 @@ define(
                         var tr = sn.element("tr", {}, sec)
                         ,   td1 = sn.element("td", {}, tr)
                         ;
-                        sn.element("code", {}, td1, it.id);
+                        sn.element("code", { "id": "idl-def-" + obj.refId + "." + it.refId }, td1, it.id);
                         sn.element("td", {}, tr, [it.description]);
                     }
                     return df;
@@ -933,7 +934,7 @@ define(
                                         sn.text(">", span);
                                     }
                                     else {
-                                        sn.element("a", {}, span, it.datatype);
+                                        sn.element("a", {}, span, it.isUnionType ? "(" + it.datatype.join(" or ") + ")" : it.datatype);
                                     }
                                     if (it.readonly) sn.text(", readonly", dt);
                                     if (it.nullable) sn.text(", nullable", dt);
@@ -1203,7 +1204,10 @@ define(
             },
 
             writeAttribute:    function (attr, max, indent, curLnk) {
-                var pad = max - attr.datatype.length;
+                var len = 0;
+                if (attr.isUnionType)   len = attr.datatype.join(" or ").length + 2;
+                else if (attr.datatype) len = attr.datatype.length;
+                var pad = max - len;
                 if (attr.nullable) pad = pad - 1;
                 if (attr.array) pad = pad - (2 * attr.arrayCount);
                 return idlAttributeTmpl({

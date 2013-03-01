@@ -2713,7 +2713,16 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "NAMED-GRAPHS": "Jeremy J. Carroll; Chris Bizer; Pat Hayes; Patrick Stickler. <a href=\"http://sites.wiwiss.fu-berlin.de/suhl/bizer/SWTSGuide/carroll-ISWC2004.pdf\"><cite>Named Graphs, Provenance and Trust</cite></a>. The Semantic Web — ISWC2004, Yokohama, Springer–Verlag, 2005. URL: <a href='http://sites.wiwiss.fu-berlin.de/suhl/bizer/SWTSGuide/carroll-ISWC2004.pdf'>http://sites.wiwiss.fu-berlin.de/suhl/bizer/SWTSGuide/carroll-ISWC2004.pdf</a>.",
-    "NAVIGATOR": "Ian Hickson, David Hyatt. <a href='http://dev.w3.org/html5/spec/timers.html#navigator'><cite>Navigator interface in HTML5.</cite></a> 15 April 2011. Editors' draft. (Work in progress.) URL: <a href='http://dev.w3.org/html5/spec/timers.html#navigator'>http://dev.w3.org/html5/spec/timers.html#navigator</a> ",
+    "NAVIGATOR": {
+        "authors": [
+            "Robin Berjon"
+        ],
+        "etAl": true,
+        "href": "http://www.w3.org/html/wg/drafts/html/master/webappapis.html#navigator",
+        "title": "Navigator interface in HTML5",
+        "status": "ED",
+        "publisher": "W3C"
+    },    
     "NFC": "M. Davis, Ken Whistler. <a href=\"http://www.unicode.org/reports/tr15/\"><cite>TR15, Unicode Normalization Forms.</cite></a>. 17 September 2010, URL: <a href=\"http://www.unicode.org/reports/tr15/\">http://www.unicode.org/reports/tr15/</a>",
     "NGRAM-SPEC": {
         "authors": [
@@ -5185,7 +5194,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "href": "http://www.w3.org/TR/tracking-compliance/",
         "title": "Tracking Compliance and Scope",
-        "date": "13 March 2012",
+        "date": "02 October 2012",
         "status": "WD",
         "publisher": "W3C"
     },
@@ -5196,7 +5205,7 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "href": "http://www.w3.org/TR/tracking-dnt/",
         "title": "Tracking Preference Expression (DNT)",
-        "date": "13 March 2012",
+        "date": "02 October 2012",
         "status": "WD",
         "publisher": "W3C"
     },
