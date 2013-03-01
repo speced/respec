@@ -1204,7 +1204,10 @@ define(
             },
 
             writeAttribute:    function (attr, max, indent, curLnk) {
-                var pad = max - attr.datatype.length;
+                var len = 0;
+                if (attr.isUnionType)   len = attr.datatype.join(" or ").length + 2;
+                else if (attr.datatype) len = attr.datatype.length;
+                var pad = max - len;
                 if (attr.nullable) pad = pad - 1;
                 if (attr.array) pad = pad - (2 * attr.arrayCount);
                 return idlAttributeTmpl({
