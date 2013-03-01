@@ -934,7 +934,7 @@ define(
                                         sn.text(">", span);
                                     }
                                     else {
-                                        sn.element("a", {}, span, it.datatype);
+                                        sn.element("a", {}, span, it.isUnionType ? "(" + it.datatype.join(" or ") + ")" : it.datatype);
                                     }
                                     if (it.readonly) sn.text(", readonly", dt);
                                     if (it.nullable) sn.text(", nullable", dt);
