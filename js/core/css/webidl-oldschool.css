@@ -31,6 +31,11 @@ pre.idl::before {
     font-weight:    bold;
     color:  #005a9c;
 }
+a.idlEnumItem {
+    color:  #000;
+    border-bottom:  1px dotted #ccc;
+    text-decoration: none;
+}
 
 .idlSuperclass {
     font-style: italic;

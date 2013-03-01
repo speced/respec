@@ -402,6 +402,7 @@ define(
                 // MEMBER
                 obj.type = "member";
                 this.setID(obj, str);
+                obj.refId = sanitiseID(obj.id); // override with different ID type
                 return obj;
             },
 
@@ -822,7 +823,7 @@ define(
                         var tr = sn.element("tr", {}, sec)
                         ,   td1 = sn.element("td", {}, tr)
                         ;
-                        sn.element("code", {}, td1, it.id);
+                        sn.element("code", { "id": "idl-def-" + obj.refId + "." + it.refId }, td1, it.id);
                         sn.element("td", {}, tr, [it.description]);
                     }
                     return df;
