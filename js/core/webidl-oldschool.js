@@ -418,7 +418,7 @@ define(
                 var match;
 
                 // ATTRIBUTE
-                match = /^\s*(?:(readonly)\s+)?attribute\s+\b(.*?)\s+(\S+)\s*$/.exec(str);
+                match = /^\s*(?:(readonly)\s+)?attribute\s+(.*?)\s+(\S+)\s*$/.exec(str);
                 if (match) {
                     obj.type = "attribute";
                     obj.readonly = (match[1] === "readonly");
