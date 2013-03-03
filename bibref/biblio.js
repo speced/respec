@@ -1544,12 +1544,12 @@ if (typeof berjon === "undefined") berjon = {};
     "DSS": "<a href=\"http://csrc.nist.gov/publications/fips/fips186-3/fips_186-3.pdf\"><cite>FIPS PUB 186-3:  Digital Signature Standard (DSS)</cite></a>. June 2009. U.S. Department of Commerce/National Institute of Standards and Technology. URL: <a href=\"http://csrc.nist.gov/publications/fips/fips186-3/fips_186-3.pdf\">http://csrc.nist.gov/publications/fips/fips186-3/fips_186-3.pdf</a>",
     "EARL10-REQUIREMENTS": {
         "authors": [
-            "Shadi Abou-Zahra",
-            "Jim Ley"
+            "Michael Squillace",
+            "Shadi Abou-Zahra"
         ],
-        "href": "http://www.w3.org/TR/2005/WD-EARL10-Requirements-20050711",
+        "href": "http://www.w3.org/TR/2009/WD-EARL10-Requirements-20091029/",
         "title": "Requirements for the Evaluation and Report Language (EARL) 1.0",
-        "date": "11 July 2005",
+        "date": "29 October 2009",
         "status": "WD",
         "publisher": "W3C"
     },
@@ -1557,10 +1557,10 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Shadi Abou-Zahra"
         ],
-        "href": "http://www.w3.org/TR/2007/WD-EARL10-Schema-20070323",
+        "href": "http://www.w3.org/TR/2011/WD-EARL10-Schema-20110510/",
         "title": "Evaluation and Report Language (EARL) 1.0 Schema",
-        "date": "23 March 2007",
-        "status": "WD",
+        "date": "10 May 2011",
+        "status": "LC",
         "publisher": "W3C"
     },
     "EBXML-MSG": "Ian Jones; Brian Gibb; David Fischer. <a href=\"https://www.oasis-open.org/committees/download.php/272/ebMS_v2_0.pdf\"><cite> OASIS ebXML Message Service Specification</cite></a> 1 April 2002. URL: <a href=\"https://www.oasis-open.org/committees/download.php/272/ebMS_v2_0.pdf\">https://www.oasis-open.org/committees/download.php/272/ebMS_v2_0.pdf</a>",
