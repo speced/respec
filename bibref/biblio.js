@@ -960,6 +960,16 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
+    "CSS3UI-20120117": {
+        "authors": [
+            "Tantek Çelik"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-css3-ui-20120117/",
+        "title": "CSS3 Basic User Interface Module",
+        "date": "17 January 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
     "CSS3VAL": {
         "authors": [
             "H&#229;kon Wium Lie",
