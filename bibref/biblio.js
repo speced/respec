@@ -3999,6 +3999,17 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "RFC 4627",
         "publisher": "IETF"
     },
+    "RFC4646": {
+        "authors": [
+            "A. Phillips",
+            "M. Davis"
+        ],
+        "href": "https://www.ietf.org/rfc/rfc4646.txt",
+        "title": "Tags for Identifying Languages",
+        "date": "September 2006",
+        "status": "RFC 4646",
+        "publisher": "IETF"
+    },
     "RFC4770": {
         "authors": [
             "C. Jennings",
