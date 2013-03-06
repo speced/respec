@@ -229,6 +229,20 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "CR",
         "publisher": "W3C"
     },
+    "CANVAS-2D-20121217": {
+        "authors": [
+            "Rik Cabanier",
+            "Eliot Graff",
+            "Jay Munro",
+            "Tom Wiltzius",
+            "Ian Hickson"
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-2dcontext-20121217",
+        "title": "HTML Canvas 2D Context",
+        "date": "17 December 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
     "CC-ABOUT": "<a href = 'http://creativecommons.org/about/licenses/'><cite>Creative Commons: About Licenses</cite></a> URL: http://creativecommons.org/about/licenses/ ",
     "CC-CHOOSE": "<a href = 'http://creativecommons.org/choose/'><cite>Creative Commons: License Your Work</cite></a> URL: http://creativecommons.org/choose/ ",
     "CCPP": {
@@ -589,6 +603,17 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "REC",
         "publisher": "W3C"
     },
+    "CSS21-20110607": {
+        "authors": [
+            "Bert Bos"
+        ],
+        "etAl": true,
+        "href": "http://www.w3.org/TR/2011/REC-CSS2-20110607/",
+        "title": "Cascading Style Sheets, level 2 (CSS2) Specification",
+        "date": "07 June 2011",
+        "status": "REC",
+        "publisher": "W3C"
+    },
     "CSS3-2D-TRANSFORMS": "Simon Fraser; Dean Jackson; David Hyatt; Chris Marrin; Edward O'Connor. <a href=\"http://www.w3.org/TR/css3-2d-transforms/\"><cite>CSS 2D Transforms Module Level 3.</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-2d-transforms/\">http://www.w3.org/TR/css3-2d-transforms/</a> ",
     "CSS3-3D-TRANSFORMS": "Dean Jackson; David Hyatt; Chris Marrin. <a href=\"http://www.w3.org/TR/css3-3d-transforms/\"><cite>CSS 3D Transforms Module Level 3.</cite></a> URL: <a href=\"http://www.w3.org/TR/css3-3d-transforms/\">http://www.w3.org/TR/css3-3d-transforms</a> ",
     "CSS3-TRANSFORMS": {
@@ -607,8 +632,24 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
+    "CSS3-TRANSFORMS-20120911": {
+        "authors": [
+            "Simon Fraser",
+            "Dean Jackson",
+            "David Hyatt",
+            "Chris Marrin",
+            "Edward O'Connor",
+            "Dirk Schulze",
+            "Aryeh Gregor"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-css3-transforms-20120911",
+        "title": "CSS Transforms",
+        "date": "11 September 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
     "CSS3-ANIMATIONS": {
-            "authors": [
+        "authors": [
             "Dean Jackson",
             "David Hyatt",
             "Chris Marrin",
@@ -621,6 +662,20 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
+		"CSS3-ANIMATIONS-20130219": {
+				"authors": [
+            "Dean Jackson",
+            "David Hyatt",
+            "Chris Marrin",
+            "Sylvain Galineau",
+            "L. David Baron"
+        ],
+        "href": "http://www.w3.org/TR/2013/WD-css3-animations-20130219/",
+        "title": "CSS Animations",
+        "date": "19 February 2013",
+        "status": "WD",
+        "publisher": "W3C"
+    },
     "CSS3-FONTS":  {
         "authors": [
             "John Daggett"
@@ -628,6 +683,16 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.w3.org/TR/2012/WD-css3-fonts-20121211",
         "title": "CSS Fonts Module Level 3",
         "date": "11 December 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
+		"CSS3-FONTS-20130212":  {
+        "authors": [
+            "John Daggett"
+        ],
+        "href": "http://www.w3.org/TR/2013/WD-css3-fonts-20130212/",
+        "title": "CSS Fonts Module Level 3",
+        "date": "12 February 2013",
         "status": "WD",
         "publisher": "W3C"
     },
@@ -655,6 +720,17 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "CSS3-IMAGES": {
+        "authors": [
+            "Elika J. Etemad",
+            "Tab Atkins Jr."
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-css3-images-20120417",
+        "title": "CSS Image Values and Replaced Content",
+        "date": "17 April 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
+		"CSS3-IMAGES-20120417": {
         "authors": [
             "Elika J. Etemad",
             "Tab Atkins Jr."
@@ -709,6 +785,19 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
+    "CSS3-TRANSITIONS-20130212": {
+        "authors": [
+            "Dean Jackson",
+            "David Hyatt",
+            "Chris Marrin",
+            "L. David Baron"
+        ],
+        "href": "http://www.w3.org/TR/2013/WD-css3-transitions-20130212/",
+        "title": "CSS Transitions",
+        "date": "12 February 2013",
+        "status": "WD",
+        "publisher": "W3C"
+    },
     "CSS3-WEBFONTS": {
         "authors": [
             "Michel Suignard",
@@ -721,6 +810,18 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "CSS3-BG": {
+        "authors": [
+            "Bert Bos",
+            "Elika J. Etemad",
+            "Brad Kemper"
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-css3-background-20120724/",
+        "title": "CSS Backgrounds and Borders Module Level 3",
+        "date": "24 July 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
+    "CSS3-BG-20120724": {
         "authors": [
             "Bert Bos",
             "Elika J. Etemad",
@@ -772,6 +873,16 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "CR",
         "publisher": "W3C"
     },
+    "CSS3COL-20110412": {
+        "authors": [
+            "Håkon Wium Lie"
+        ],
+        "href": "http://www.w3.org/TR/2011/CR-css3-multicol-20110412/",
+        "title": "CSS3 module: Multi-column layout",
+        "date": "12 April 2011",
+        "status": "CR",
+        "publisher": "W3C"
+    },
     "CSS3COLOR": {
         "authors": [
             "Tantek Çelik",
@@ -779,6 +890,18 @@ if (typeof berjon === "undefined") berjon = {};
             "L. David Baron"
         ],
         "href": "http://www.w3.org/TR/css3-color",
+        "title": "CSS Color Module Level 3",
+        "date": "07 June 2011",
+        "status": "REC",
+        "publisher": "W3C"
+    },
+		"CSS3COLOR-20110607": {
+        "authors": [
+            "Tantek Çelik",
+            "Chris Lilley",
+            "L. David Baron"
+        ],
+        "href": "http://www.w3.org/TR/2011/REC-css3-color-20110607/",
         "title": "CSS Color Module Level 3",
         "date": "07 June 2011",
         "status": "REC",
@@ -881,6 +1004,19 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "REC",
         "publisher": "W3C"
     },
+		"CSS3-MEDIAQUERIES-20120619": {
+        "authors": [
+            "H&#229;kon Wium Lie",
+            "Tantek &#199;elik",
+            "Daniel Glazman",
+            "Anne van Kesteren"
+        ],
+        "href": "http://www.w3.org/TR/2012/REC-css3-mediaqueries-20120619/",
+        "title": "Media Queries",
+        "date": "19 June 2012",
+        "status": "REC",
+        "publisher": "W3C"
+    },
     "CSS3NAMESPACE": {
         "authors": [
             "Anne van Kesteren",
@@ -949,12 +1085,33 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
+    "CSS3TEXT-20121113": {
+        "authors": [
+            "Elika J. Etemad",
+            "Koji Ishii"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-css3-text-20121113/",
+        "title": "CSS Text Module Level 3",
+        "date": "13 November 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },    
     "CSS3TEXTLAYOUT": "Elika J. Etemad; Paul Nelson. <cite>CSS3 Text Layout Module.</cite> (forthcoming). W3C Working Draft. (Work in progress.)",
     "CSS3UI": {
         "authors": [
             "Tantek Çelik"
         ],
         "href": "http://www.w3.org/TR/css3-ui/",
+        "title": "CSS3 Basic User Interface Module",
+        "date": "17 January 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
+    "CSS3UI-20120117": {
+        "authors": [
+            "Tantek Çelik"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-css3-ui-20120117/",
         "title": "CSS3 Basic User Interface Module",
         "date": "17 January 2012",
         "status": "WD",
@@ -1544,12 +1701,12 @@ if (typeof berjon === "undefined") berjon = {};
     "DSS": "<a href=\"http://csrc.nist.gov/publications/fips/fips186-3/fips_186-3.pdf\"><cite>FIPS PUB 186-3:  Digital Signature Standard (DSS)</cite></a>. June 2009. U.S. Department of Commerce/National Institute of Standards and Technology. URL: <a href=\"http://csrc.nist.gov/publications/fips/fips186-3/fips_186-3.pdf\">http://csrc.nist.gov/publications/fips/fips186-3/fips_186-3.pdf</a>",
     "EARL10-REQUIREMENTS": {
         "authors": [
-            "Shadi Abou-Zahra",
-            "Jim Ley"
+            "Michael Squillace",
+            "Shadi Abou-Zahra"
         ],
-        "href": "http://www.w3.org/TR/2005/WD-EARL10-Requirements-20050711",
+        "href": "http://www.w3.org/TR/2009/WD-EARL10-Requirements-20091029/",
         "title": "Requirements for the Evaluation and Report Language (EARL) 1.0",
-        "date": "11 July 2005",
+        "date": "29 October 2009",
         "status": "WD",
         "publisher": "W3C"
     },
@@ -1557,10 +1714,10 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Shadi Abou-Zahra"
         ],
-        "href": "http://www.w3.org/TR/2007/WD-EARL10-Schema-20070323",
+        "href": "http://www.w3.org/TR/2011/WD-EARL10-Schema-20110510/",
         "title": "Evaluation and Report Language (EARL) 1.0 Schema",
-        "date": "23 March 2007",
-        "status": "WD",
+        "date": "10 May 2011",
+        "status": "LC",
         "publisher": "W3C"
     },
     "EBXML-MSG": "Ian Jones; Brian Gibb; David Fischer. <a href=\"https://www.oasis-open.org/committees/download.php/272/ebMS_v2_0.pdf\"><cite> OASIS ebXML Message Service Specification</cite></a> 1 April 2002. URL: <a href=\"https://www.oasis-open.org/committees/download.php/272/ebMS_v2_0.pdf\">https://www.oasis-open.org/committees/download.php/272/ebMS_v2_0.pdf</a>",
@@ -1743,6 +1900,18 @@ if (typeof berjon === "undefined") berjon = {};
             "Alex Mogilevsky"
         ],
         "href": "http://www.w3.org/TR/2012/CR-css3-flexbox-20120918",
+        "title": "CSS Flexible Box Layout Module",
+        "date": "18 September 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
+		"FLEXBOX-20120918": {
+        "authors": [
+            "Tab Atkins Jr",
+            "Elika J. Etemad",
+            "Alex Mogilevsky"
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-css3-flexbox-20120918/",
         "title": "CSS Flexible Box Layout Module",
         "date": "18 September 2012",
         "status": "CR",
@@ -3240,6 +3409,16 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "CR",
         "publisher": "W3C"
     },
+    "POSTMSG-20120501": {
+        "authors": [
+            "Ian Hickson"
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-webmessaging-20120501",
+        "title": "HTML5 Web Messaging",
+        "date": " 01 May 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
     "POWDER-DR": {
         "authors": [
             "Kevin Smith",
@@ -3999,6 +4178,17 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "RFC 4627",
         "publisher": "IETF"
     },
+    "RFC4646": {
+        "authors": [
+            "A. Phillips",
+            "M. Davis"
+        ],
+        "href": "https://www.ietf.org/rfc/rfc4646.txt",
+        "title": "Tags for Identifying Languages",
+        "date": "September 2006",
+        "status": "RFC 4646",
+        "publisher": "IETF"
+    },
     "RFC4770": {
         "authors": [
             "C. Jennings",
@@ -4323,6 +4513,17 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "SELECTORS-LEVEL-3": "Daniel Glazman; et al. <a href=\"http://www.w3.org/TR/2011/REC-css3-selectors-20110929\"><cite>Selectors Level 3.</cite></a> W3C Recommendation 29 September 2011 URL: <a href=\"http://www.w3.org/TR/2011/REC-css3-selectors-20110929\">http://www.w3.org/TR/2011/REC-css3-selectors-20110929</a> ",
+		"SELECTORS-LEVEL-3-20110929": {
+        "authors": [
+		        "Daniel Glazman",
+        ],
+        "etAl": true,
+        "href": "http://www.w3.org/TR/2011/REC-css3-selectors-20110929/",
+        "title": "Selectors API Level 3",
+        "date": "29 September 2011",
+        "status": "PR",
+        "publisher": "W3C"
+    },
     "SELECTORS-API": {
         "authors": [
             "Lachlan Hunt",
@@ -4731,6 +4932,16 @@ if (typeof berjon === "undefined") berjon = {};
     },
     "SRGB": "<a href=\"http://www.iec.ch/nr1899.htm\"><cite>Multimedia systems and equipment - Colour measurement and management - Part 2-1: Colour management - Default RGB colour space - sRGB.</cite></a> IEC 61966-2-1 (1999-10). ISBN: 2-8318-4989-6 - ICS codes: 33.160.60, 37.080 - TC 100 - 51 pp. URL: <a href=\"http://www.iec.ch/nr1899.htm\">http://www.iec.ch/nr1899.htm</a>",
     "SSE": "Ian Hickson; <a href=\"http://www.w3.org/TR/eventsource/\"><cite>Server-Sent Events.</cite></a>W3C Editor Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/eventsource/\">http://www.w3.org/TR/eventsource/</a> ",
+		"SSE-20121211": {
+			"authors": [
+			    "Ian Hickson"
+			],
+			"href": "http://www.w3.org/TR/2012/CR-eventsource-20121211/",
+			"title": "Server-Sent Events",
+			"date": "11 December 2012",
+			"status": "CR",
+			"publisher": "W3C"
+		},
     "SSE-ed": "Ian Hickson; <a href=\"http://dev.w3.org/html5/eventsource/\"><cite>Server-Sent Events.</cite></a>W3C Editor Draft. (Work in progress.) URL: <a href=\"http://dev.w3.org/html5/eventsource/\">http://dev.w3.org/html5/eventsource/</a> ",
     "SSML-SAYAS": {
         "authors": [
@@ -5921,6 +6132,16 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
+    "WEBSOCKETS-API-20120920": {
+        "authors": [
+            "I. Hickson"
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-websockets-20120920/",
+        "title": "The WebSocket API",
+        "date": "20 September 2012",
+        "status": "CD",
+        "publisher": "W3C"
+    },
     "WEBSOCKETS-API": "I. Hickson. <a href=\"http://www.w3.org/TR/websockets/\"><cite>The WebSocket API.</cite></a> W3C Working Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/websockets/\">http://www.w3.org/TR/websockets/</a> ",
     "WEBSOCKETS-PROTOCOL": "C. Holmberg, S. Hakansson, G. Eriksson. <a href=\"http://tools.ietf.org/id/draft-ietf-hybi-thewebsocketprotocol-09.txt\"><cite>The WebSocket protocol.</cite></a> URL: <a href=\"http://tools.ietf.org/id/draft-ietf-hybi-thewebsocketprotocol-09.txt\">http://tools.ietf.org/id/draft-ietf-hybi-thewebsocketprotocol-09.txt</a> ",
     "WEBSTORAGE": {
@@ -5933,6 +6154,16 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "CR",
         "publisher": "W3C"
     },
+    "WEBSTORAGE-20111208": {
+        "authors": [
+            "Ian Hickson"
+        ],
+        "href": "http://www.w3.org/TR/2011/CR-webstorage-20111208",
+        "title": "Web Storage",
+        "date": "08 December 2011",
+        "status": "CR",
+        "publisher": "W3C"
+    },    
     "WEBVTT": {
         "authors": [
             "Ian Hickson"
@@ -5953,6 +6184,16 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "CR",
         "publisher": "W3C"
     },
+    "WEBWORKERS-20120501": {
+        "authors": [
+            "Ian Hickson"
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-workers-20120501",
+        "title": "Web Workers",
+        "date": "01 May 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },    
     "WICD": {
         "authors": [
             "Daniel Appelquist"
@@ -6057,6 +6298,18 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "REC",
         "publisher": "W3C"
     },
+    "WOFF-20121213": {
+        "authors": [
+            "Jonathan Kew",
+            "Tal Leming",
+            "Erik van Blokland"
+        ],
+        "href": "http://www.w3.org/TR/2012/REC-WOFF-20121213/",
+        "title": "WOFF File Format 1.0",
+        "date": "13 December 2012",
+        "status": "REC",
+        "publisher": "W3C"
+    },    
     "WORDNET-RDF": {
         "authors": [
             "Aldo Gangemi",
