@@ -425,6 +425,17 @@ if (typeof berjon === "undefined") berjon = {};
     "CMS-WRAP": "R. Housley. <a href=\"http://www.ietf.org/rfc/rfc3217.txt\"><cite>RFC3217: Triple-DES and R2 Key Wrapping</cite></a>.  IETF Informational RFC, December 2001. URL: <a href=\"http://www.ietf.org/rfc/rfc3217.txt\">http://www.ietf.org/rfc/rfc3217.txt</a>",
     "COAP": "E Shelby; et al. <a href=\"http://tools.ietf.org/html/draft-ietf-core-coap\"><cite>Constrained Application Protocol (CoAP)</cite></a>. IETF Internet Draft, December 2012. URL: <a href=\"http://tools.ietf.org/html/draft-ietf-core-coap\">http://tools.ietf.org/html/draft-ietf-core-coap</a>",
     "COLORIMETRY": "<cite>Colorimetry, Second Edition.</cite> CIE Publication 15.2-1986. ISBN 3-900-734-00-3",
+    "COMPOSITING": {
+        "authors": [
+            "Rik Cabanier",
+            "Nikos Andronikos"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-compositing-20120816",
+        "title": "Compositing and Blending 1.0",
+        "date": "16 August 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
     "CONSENT-EU-WP187": "WP189, <a href=\"http://ec.europa.eu/justice/policies/privacy/docs/wpdocs/2011/wp187_en.pdf\"><cite>Opinion 15/2011 on the definition of consent</cite></a>. EU Article 29 Data Protection Working Party, 01197/11/EN WP187. 13 July 2011. URL: <a href=\"http://ec.europa.eu/justice/policies/privacy/docs/wpdocs/2011/wp187_en.pdf\">http://ec.europa.eu/justice/policies/privacy/docs/wpdocs/2011/wp187_en.pdf</a>",
     "CONTACTS-API": "R. Tibbett. <a href=\"http://dev.w3.org/2009/dap/contacts/Overview.html\"><cite>Contacts API</cite></a>. 3rd August 2010. W3C Latest Editor's Draft. (Work in progress.) URL: <a href=\"http://dev.w3.org/2009/dap/contacts/Overview.html\">http://dev.w3.org/2009/dap/contacts/Overview.html</a> ",
     "CONTACTS-WRITER-API": "R. Tibbett. <a href=\"http://dev.w3.org/2009/dap/contacts/Writer.html\"><cite>Contacts Writer API</cite></a>. 3rd August 2010. W3C Latest Editor's Draft. (Work in progress.) URL: <a href=\"http://dev.w3.org/2009/dap/contacts/Writer.html\">http://dev.w3.org/2009/dap/contacts/Writer.html</a> ",
@@ -527,6 +538,18 @@ if (typeof berjon === "undefined") berjon = {};
         "title": "CSS Device Adaptation",
         "date": "15 September 2011",
         "status": "FPWD",
+        "publisher": "W3C"
+    },
+    "CSS-MASKING": {
+        "authors": [
+            "Dirk Schulze",
+            "Brian Birtles",
+            "Tab Atkins Jr."
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-css-masking-20121115/",
+        "title": "CSS Masking",
+        "date": "15 November 2012",
+        "status": "WD",
         "publisher": "W3C"
     },
     "CSS-MOBILE": {
@@ -1885,6 +1908,14 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.w3.org/TR/2011/WD-file-writer-api-20110419/",
         "title": "File Writer API",
         "date": "19 April 2011",
+        "status": "WD",
+        "publisher": "W3C"
+    },
+    "FILTER-EFFECTS": {
+        "authors": "Vincent Hardy, Dean Jackson, Erik Dahlstr&#246;m, Dirk Schulze",
+        "href": "http://www.w3.org/TR/2012/WD-filter-effects-20121025",
+        "title": "Filter Effcts 1.0",
+        "date": "25 October 2012",
         "status": "WD",
         "publisher": "W3C"
     },
