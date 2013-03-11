@@ -1878,6 +1878,16 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
+    "FILE-SYSTEM": {
+        "authors": [
+            "Eric Uhrhane"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-file-system-api-20120417",
+        "title": "File API: Directories and System",
+        "date": "17 April 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
     "FILE-WRITER": {
         "authors": [
             "Eric Uhrhane"
@@ -6164,6 +6174,16 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "CR",
         "publisher": "W3C"
     },    
+    "WEB-SQL": {
+        "authors": [
+            "Ian Hickson"
+        ],
+        "href": "http://www.w3.org/TR/2010/NOTE-webdatabase-20101118",
+        "title": "Web SQL Database",
+        "date": "18 November 2010",
+        "status": "W3C Workging Group Note",
+        "publisher": "W3C"
+    },
     "WEBVTT": {
         "authors": [
             "Ian Hickson"
