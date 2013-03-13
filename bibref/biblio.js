@@ -1745,6 +1745,14 @@ if (typeof berjon === "undefined") berjon = {};
     },
     "ECMA-262": "<a href=\"http://www.ecma-international.org/publications/standards/Ecma-262.htm\"><cite>ECMAScript Language Specification.</cite></a> June 2011. URL: <a href=\"http://www.ecma-international.org/publications/standards/Ecma-262.htm\">http://www.ecma-international.org/publications/standards/Ecma-262.htm</a> ",
     "ECMA-262-51": "<a href=\"http://www.ecma-international.org/publications/standards/Ecma-262.htm\">ECMAScript Language Specification, Edition 5.1</a>. June 2011. URL: <a href=\"http://www.ecma-international.org/publications/standards/Ecma-262.htm\">http://www.ecma-international.org/publications/standards/Ecma-262.htm</a>",
+    "ECMAS-402": {
+        "authors": ["Norbert Lindenberg"],
+        "date": "1 December 2012",
+        "href": "http://www.ecma-international.org/ecma-402/1.0/",
+        "publisher": "ECMA",
+        "status": "Standard ECMA-402",
+        "title": "ECMAScript Internationalization API Specification"
+    }
     "EGOV-IMPROVING": {
         "authors": [
             "Kevin Novak",
