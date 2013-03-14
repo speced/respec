@@ -1752,7 +1752,7 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "ECMA",
         "status": "Standard ECMA-402",
         "title": "ECMAScript Internationalization API Specification"
-    }
+    },
     "EGOV-IMPROVING": {
         "authors": [
             "Kevin Novak",
