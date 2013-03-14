@@ -51,6 +51,38 @@ describe("Core - WebIDL", function () {
         });
     });
 
+    it("should handle constructors", function () {
+        $target = $("#ctor-basic", doc);
+        text =  "[Something,\n" +
+                " Constructor,\n" +
+                " Constructor (boolean bar, sequence<double> foo)]\n" +
+                "interface SuperStar {\n" +
+                "};";
+        expect($target.text()).toEqual(text);
+        expect($target.find(".idlCtor").length).toEqual(2);
+        var $ctor1 = $target.find(".idlCtor").last();
+        expect($ctor1.find(".idlCtorName").text()).toEqual("Constructor");
+        expect($ctor1.find(".idlParam").length).toEqual(2);
+        expect($ctor1.find(".idlParam:contains('sequence')").length).toEqual(1);
+        expect($ctor1.find(".idlParam").first().find(".idlParamType > a").text()).toEqual("boolean");
+    });
+
+    it("should handle named constructors", function () {
+        $target = $("#namedctor-basic", doc);
+        text =  "[Something,\n" +
+                " NamedConstructor=Sun,\n" +
+                " NamedConstructor=Sun (boolean bar, Date[][][] foo)]\n" +
+                "interface SuperStar {\n" +
+                "};";
+        expect($target.text()).toEqual(text);
+        expect($target.find(".idlCtor").length).toEqual(2);
+        var $ctor1 = $target.find(".idlCtor").last();
+        expect($ctor1.find(".idlCtorName").text()).toEqual("Sun");
+        expect($ctor1.find(".idlParam").length).toEqual(2);
+        expect($ctor1.find(".idlParam:contains('Date[][][]')").length).toEqual(1);
+        expect($ctor1.find(".idlParam").first().find(".idlParamType > a").text()).toEqual("boolean");
+    });
+
     it("should handle constants", function () {
         $target = $("#const-basic", doc);
         text =  "interface SuperStar {\n" +
@@ -94,14 +126,16 @@ describe("Core - WebIDL", function () {
     it("should handle attributes", function () {
         $target = $("#attr-basic", doc);
         text =  "interface SuperStar {\n" +
-                "             attribute DOMString      regular;\n" +
-                "    readonly attribute DOMString      ro;\n" +
+                "                attribute DOMString      regular;\n" +
+                "    readonly    attribute DOMString      ro;\n" +
+                "    inherit     attribute DOMString      in;\n" +
+                "    stringifier attribute DOMString      st;\n" +
                 "    [Something]\n" +
-                "    readonly attribute DOMString      ext;\n" +
-                "             attribute sequence<Date> dates;\n" +
+                "    readonly    attribute DOMString      ext;\n" +
+                "                attribute sequence<Date> dates;\n" +
                 "};";
         expect($target.text()).toEqual(text);
-        expect($target.find(".idlAttribute").length).toEqual(4);
+        expect($target.find(".idlAttribute").length).toEqual(6);
         var $at = $target.find(".idlAttribute").first();
         expect($at.find(".idlAttrType").text()).toEqual("DOMString");
         expect($at.find(".idlAttrName").text()).toEqual("regular");
@@ -110,8 +144,8 @@ describe("Core - WebIDL", function () {
         expect($lst.find(".idlAttrType > a").text()).toEqual("Date");
         
         var $sec = $("#attributes-1 dl.attributes", doc);
-        expect($sec.find("dt").length).toEqual(4);
-        expect($sec.find("dd").length).toEqual(4);
+        expect($sec.find("dt").length).toEqual(6);
+        expect($sec.find("dd").length).toEqual(6);
         expect($sec.find("dt").first().find("code").first().text()).toEqual("dates");
         expect($sec.find("dt").first().find(".idlAttrType a").text()).toEqual("Date");
         expect($sec.find("dd").first().text()).toEqual("3.5");
@@ -143,8 +177,8 @@ describe("Core - WebIDL", function () {
     it("should handle serializer", function () {
         $target = $("#serializer-map", doc);
         text =  "interface SuperStar {\n" +
-                "             attribute DOMString foo;\n" +
-                "             attribute DOMString bar;\n" +
+                "                attribute DOMString foo;\n" +
+                "                attribute DOMString bar;\n" +
                 "    serializer = {foo, bar};\n" +
                 "};";
         expect($target.text()).toEqual(text);
