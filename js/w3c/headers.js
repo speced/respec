@@ -125,6 +125,7 @@ define(
             status2maturity:    {
                 FPWD:           "WD"
             ,   LC:             "WD"
+            ,   FPLC:           "WD"
             ,   "FPWD-NOTE":    "NOTE"
             ,   "WD-NOTE":      "WD"
             ,   "LC-NOTE":      "LC"
@@ -140,12 +141,13 @@ define(
             ,   "Team-SUBM":    "Team Submission"
             ,   MO:             "Member-Only Document"
             ,   ED:             "Editor's Draft"
-            ,   FPWD:           "Working Draft"
+            ,   FPWD:           "First Public Working Draft"
             ,   WD:             "Working Draft"
             ,   "FPWD-NOTE":    "Working Group Note"
             ,   "WD-NOTE":      "Working Draft"
             ,   "LC-NOTE":      "Working Draft"
-            ,   LC:             "Working Draft"
+            ,   FPLC:           "First Public and Last Call Working Draft"
+            ,   LC:             "Last Call Working Draft"
             ,   CR:             "Candidate Recommendation"
             ,   PR:             "Proposed Recommendation"
             ,   PER:            "Proposed Edited Recommendation"
@@ -161,12 +163,10 @@ define(
             ,   "BG-FINAL":     "Final Business Group Specification"
             }
         ,   status2long:    {
-                FPWD:           "First Public Working Draft"
-            ,   "FPWD-NOTE":    "First Public Working Group Note"
-            ,   LC:             "Last Call Working Draft"
+                "FPWD-NOTE":    "First Public Working Group Note"
             ,   "LC-NOTE":      "Last Call Working Draft"
             }
-        ,   recTrackStatus: ["FPWD", "WD", "LC", "CR", "PR", "PER", "REC"]
+        ,   recTrackStatus: ["FPWD", "WD", "FPLC", "LC", "CR", "PR", "PER", "REC"]
         ,   noTrackStatus:  ["MO", "unofficial", "base", "finding", "draft-finding", "CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"]
         ,   cgbg:           ["CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"]
         ,   precededByAn:   ["ED", "IG-NOTE"]
@@ -230,7 +230,7 @@ define(
                     }
                 }
                 else {
-                    if (conf.specStatus !== "FPWD" && conf.specStatus !== "ED" && !conf.noRecTrack && !conf.isNoTrack)
+                    if (conf.specStatus !== "FPWD" && conf.specStatus !== "FPLC" && conf.specStatus !== "ED" && !conf.noRecTrack && !conf.isNoTrack)
                         msg.pub("error", "Document on track but no previous version.");
                     if (!conf.prevVersion) conf.prevVersion = "";
                 }
@@ -260,7 +260,7 @@ define(
                 conf.longStatus = this.status2long[conf.specStatus];
                 conf.textStatus = this.status2text[conf.specStatus];
                 conf.showThisVersion =  (!conf.isNoTrack || conf.isTagFinding);
-                conf.showPreviousVersion = (conf.specStatus !== "FPWD" && conf.specStatus !== "ED" &&
+                conf.showPreviousVersion = (conf.specStatus !== "FPWD" && conf.specStatus !== "FPLC" && conf.specStatus !== "ED" &&
                                            !conf.isNoTrack && !conf.noRecTrack);
                 if (conf.isTagFinding) conf.showPreviousVersion = conf.previousPublishDate ? true : false;
                 conf.notYetRec = (conf.isRecTrack && conf.specStatus !== "REC");
@@ -269,7 +269,7 @@ define(
                 conf.isUnofficial = conf.specStatus === "unofficial";
                 conf.prependW3C = !conf.isUnofficial;
                 conf.isED = (conf.specStatus === "ED");
-                conf.isLC = (conf.specStatus === "LC");
+                conf.isLC = (conf.specStatus === "LC" || conf.specStatus === "FPLC");
                 conf.isCR = (conf.specStatus === "CR");
                 conf.isPR = (conf.specStatus === "PR");
                 conf.isMO = (conf.specStatus === "MO");
@@ -300,7 +300,7 @@ define(
                     conf.multipleWGs = false;
                     conf.wgHTML = "<a href='" + conf.wgURI + "'>" + conf.wg + "</a>";
                 }
-                if (conf.specStatus === "LC" && !conf.lcEnd) msg.pub("error", "Status is LC but no lcEnd is specified");
+                if (conf.isLC && !conf.lcEnd) msg.pub("error", "Status is LC but no lcEnd is specified");
                 if (conf.specStatus === "PR" && !conf.lcEnd) msg.pub("error", "Status is PR but no lcEnd is specified (needed to indicate end of previous LC)");
                 conf.humanLCEnd = utils.humanDate(conf.lcEnd || "");
                 if (conf.specStatus === "CR" && !conf.crEnd) msg.pub("error", "Status is CR but no crEnd is specified");

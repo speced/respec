@@ -89,6 +89,30 @@
       <dl id='if-callback' class='idl' title='callback interface SuperStar'></dl>
     </section>
     <section>
+      <h2>Constructors</h2>
+      <p>
+        Constructors on interfaces
+      </p>
+      <dl id='ctor-basic' class='idl' title='[Something] interface SuperStar'>
+        <dt>Constructor()</dt>
+        <dd>Constructor without parameters.</dd>
+        <dt>Constructor(boolean bar, sequence&lt;double> foo)</dt>
+        <dd>Constructor with parameters.</dd>
+      </dl>
+    </section>
+    <section>
+      <h2>NamedConstructors</h2>
+      <p>
+        NamedConstructors on interfaces
+      </p>
+      <dl id='namedctor-basic' class='idl' title='[Something] interface SuperStar'>
+        <dt>NamedConstructor=Sun()</dt>
+        <dd>NamedConstructor without parameters.</dd>
+        <dt>NamedConstructor=Sun(boolean bar, Date[][][] foo)</dt>
+        <dd>NamedConstructor with parameters.</dd>
+      </dl>
+    </section>
+    <section>
       <h2>Constants</h2>
       <p>
         All constants and some type testing
@@ -144,6 +168,10 @@
         <dd>1</dd>
         <dt>readonly attribute DOMString ro</dt>
         <dd>2</dd>
+        <dt>inherit attribute DOMString in</dt>
+        <dd>2.5</dd>
+        <dt>stringifier attribute DOMString st</dt>
+        <dd>2.7</dd>
         <dt>[Something] readonly attribute DOMString ext</dt>
         <dd>3</dd>
         <dt>attribute sequence&lt;Date> dates</dt>
@@ -236,6 +264,15 @@
 	<dt>attribute DOMString foo</dt>
 	<dt>attribute DOMString bar</dt>
         <dt>serializer = { foo, bar }</dt>
+      </dl>
+    </section>
+    <section>
+      <h2>Comments</h2>
+      <dl id="comments-basic" class='idl' title='interface SuperStar'>
+        <dt>// This is a comment</dt>
+        <dd></dd>
+        <dt>// over two lines.</dt>
+        <dd></dd>
       </dl>
     </section>
     <section>

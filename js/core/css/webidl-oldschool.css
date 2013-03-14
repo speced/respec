@@ -68,6 +68,16 @@ a.idlEnumItem {
     text-decoration: none;
 }
 
+/*.idlCtor*/
+.idlCtorName {
+    color:  #ff4500;
+}
+.idlCtorName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
 /*.idlParam*/
 .idlParamType {
     color:  #005a9c;
@@ -78,6 +88,11 @@ a.idlEnumItem {
 
 .extAttr {
     color:  #666;
+}
+
+/*.idlSectionComment*/
+.idlSectionComment {
+    color: gray;
 }
 
 /*.idlConst*/
@@ -127,15 +142,15 @@ a.idlEnumItem {
     font-weight:    bold;
 }
 
-dl.attributes, dl.methods, dl.constants, dl.fields, dl.dictionary-members {
+dl.attributes, dl.methods, dl.constants, dl.constructors, dl.fields, dl.dictionary-members {
     margin-left:    2em;
 }
 
-.attributes dt, .methods dt, .constants dt, .fields dt, .dictionary-members dt {
+.attributes dt, .methods dt, .constants dt, .constructors dt, .fields dt, .dictionary-members dt {
     font-weight:    normal;
 }
 
-.attributes dt code, .methods dt code, .constants dt code, .fields dt code, .dictionary-members dt code {
+.attributes dt code, .methods dt code, .constants dt code, .constructors dt code, .fields dt code, .dictionary-members dt code {
     font-weight:    bold;
     color:  #000;
     font-family:    monospace;
@@ -161,7 +176,11 @@ dl.attributes, dl.methods, dl.constants, dl.fields, dl.dictionary-members {
     background:  #ddffd2;
 }
 
-.attributes dd, .methods dd, .constants dd, .fields dd, .dictionary-members dd {
+.constructors dt code {
+    background:  #cfc;
+}
+
+.attributes dd, .methods dd, .constants dd, .constructors dd, .fields dd, .dictionary-members dd {
     margin-bottom:  1em;
 }
 
