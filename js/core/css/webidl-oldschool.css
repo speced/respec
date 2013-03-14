@@ -90,6 +90,11 @@ a.idlEnumItem {
     color:  #666;
 }
 
+/*.idlSectionComment*/
+.idlSectionComment {
+    color: gray;
+}
+
 /*.idlConst*/
 .idlConstType {
     color:  #005a9c;

@@ -25,13 +25,14 @@ define(
     ,   "tmpl!core/templates/webidl/constructor.html"
     ,   "tmpl!core/templates/webidl/attribute.html"
     ,   "tmpl!core/templates/webidl/serializer.html"
+    ,   "tmpl!core/templates/webidl/comment.html"
     ,   "tmpl!core/templates/webidl/field.html"
     ,   "tmpl!core/templates/webidl/exception.html"
     ,   "tmpl!core/templates/webidl/interface.html"
     ],
     function (hb, css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
                    idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl,
-              idlConstructorTmpl, idlAttributeTmpl, idlSerializerTmpl, idlFieldTmpl, idlExceptionTmpl, idlInterfaceTmpl) {
+              idlConstructorTmpl, idlAttributeTmpl, idlSerializerTmpl, idlCommentTmpl, idlFieldTmpl, idlExceptionTmpl, idlInterfaceTmpl) {
         var WebIDLProcessor = function (cfg) {
                 this.parent = { type: "module", id: "outermost", children: [] };
                 if (!cfg) cfg = {};
@@ -40,8 +41,8 @@ define(
                 Handlebars.registerHelper("extAttr", function (obj, indent, nl, ctor) {
                     var ret = "";
                     if (obj.extendedAttributes) {
-                        ret += idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>"
-                            + (typeof ctor === 'string' && ctor.length ? ",\n" + ctor : "") + "]" + (nl ? "\n" : " ");
+                        ret += idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>" +
+                               (typeof ctor === 'string' && ctor.length ? ",\n" + ctor : "") + "]" + (nl ? "\n" : " ");
                     }
                     return new Handlebars.SafeString(ret);
                 });
@@ -557,6 +558,14 @@ define(
                     return obj;
                 }
 
+                // COMMENT
+                match = /^\s*\/\/\s*(.*)\s*$/.exec(str);
+                if (match) {
+                    obj.type = "comment";
+                    obj.id = match[1];
+                    return obj;
+                }
+
                 // NOTHING MATCHED
                 this.msg.pub("error", "Expected interface member, got: " + str);
             },
@@ -954,15 +963,14 @@ define(
                                     //     sn.element("div", {}, desc, [sn.element("em", {}, null, "No exceptions.")]);
                                     // }
 
-                                    if (type != "constructor") {
+                                    if (type !== "constructor") {
                                         var reDiv = sn.element("div", {}, desc);
                                         sn.element("em", {}, reDiv, "Return type: ");
+                                        var code = sn.element("code", {}, reDiv);
+                                        code.innerHTML = datatype(it.datatype);
+                                        if (it.array) code.innerHTML += arrsq(it);
+                                        if (it.nullable) sn.text(", nullable", reDiv);
                                     }
-
-                                    var code = sn.element("code", {}, reDiv);
-                                    code.innerHTML = datatype(it.datatype);
-                                    if (it.array) code.innerHTML += arrsq(it);
-                                    if (it.nullable) sn.text(", nullable", reDiv);
                                 }
                                 else if (type == "attribute") {
                                     sn.text(" of type ", dt);
@@ -1152,6 +1160,7 @@ define(
                                           else if (ch.type == "constant") return self.writeConst(ch, maxConst, indent + 1, curLnk);
                                           else if (ch.type == "serializer") return self.writeSerializer(ch, indent + 1, curLnk);
                                           else if (ch.type == "constructor") ctor.push(self.writeConstructor(ch, indent, "widl-ctor-"));
+                                          else if (ch.type == "comment") return self.writeComment(ch, indent + 1);
                                       })
                                       .join("")
                     ;
@@ -1324,6 +1333,10 @@ define(
                 var pad = max - cons.datatype.length;
                 if (cons.nullable) pad--;
                 return idlConstTmpl({ obj: cons, indent: indent, pad: pad, nullable: cons.nullable ? "?" : ""});
+            },
+
+            writeComment:   function (comment, indent) {
+                return idlCommentTmpl({ obj: comment, indent: indent, comment: comment.id});
             },
 
 

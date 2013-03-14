@@ -187,6 +187,16 @@ describe("Core - WebIDL", function () {
         expect($serializer.find(".idlSerializerValues").text()).toEqual("{foo, bar}");
     });
 
+    it("should handle comments", function () {
+        $target = $("#comments-basic", doc);
+        text =  "interface SuperStar {\n" +
+                "    // This is a comment\n" +
+                "    // over two lines.\n" +
+                "};";
+        expect($target.text()).toEqual(text);
+        expect($target.find(".idlSectionComment").length).toEqual(2);
+    });
+
 
     it("should handle dictionaries", function () {
         $target = $("#dict-basic", doc);
