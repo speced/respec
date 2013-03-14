@@ -22,6 +22,7 @@ define(
     ,   "tmpl!core/templates/webidl/param.html"
     ,   "tmpl!core/templates/webidl/callback.html"
     ,   "tmpl!core/templates/webidl/method.html"
+    ,   "tmpl!core/templates/webidl/constructor.html"
     ,   "tmpl!core/templates/webidl/attribute.html"
     ,   "tmpl!core/templates/webidl/serializer.html"
     ,   "tmpl!core/templates/webidl/field.html"
@@ -30,16 +31,24 @@ define(
     ],
     function (hb, css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
                    idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl,
-              idlAttributeTmpl, idlSerializerTmpl, idlFieldTmpl, idlExceptionTmpl, idlInterfaceTmpl) {
+              idlConstructorTmpl, idlAttributeTmpl, idlSerializerTmpl, idlFieldTmpl, idlExceptionTmpl, idlInterfaceTmpl) {
         var WebIDLProcessor = function (cfg) {
                 this.parent = { type: "module", id: "outermost", children: [] };
                 if (!cfg) cfg = {};
                 for (var k in cfg) if (cfg.hasOwnProperty(k)) this[k] = cfg[k];
 
-                Handlebars.registerHelper("extAttr", function (obj, indent, nl) {
+                Handlebars.registerHelper("extAttr", function (obj, indent, nl, ctor) {
                     var ret = "";
-                    if (obj.extendedAttributes) ret += idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>]" + (nl ? "\n" : " ");
+                    if (obj.extendedAttributes) {
+                        ret += idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>"
+                            + (typeof ctor === 'string' && ctor.length ? ",\n" + ctor : "") + "]" + (nl ? "\n" : " ");
+                    }
                     return new Handlebars.SafeString(ret);
+                });
+                Handlebars.registerHelper("param", function (obj, children) {
+                    var param = "";
+                    if (children) param += " (" + children + ")";
+                    return new Handlebars.SafeString(param);
                 });
                 Handlebars.registerHelper("idn", function (indent) {
                     return new Handlebars.SafeString(idn(indent));
@@ -459,6 +468,30 @@ define(
                 // CONST
                 if (this.parseConst(obj, str)) return obj;
 
+                // CONSTRUCTOR
+                match = /^\s*Constructor(?:\s*\(\s*(.*)\s*\))?\s*$/.exec(str);
+                if (match) {
+                    obj.type = "constructor";
+                    var prm = match[1] ? match[1] : [];
+                    this.setID(obj, this.parent.id);
+                    obj.named = false;
+                    obj.datatype = "";
+
+                    return this.methodMember(obj, $excepts, $extPrm, prm);
+                }
+
+                // NAMED CONSTRUCTOR
+                match = /^\s*NamedConstructor\s*(?:=\s*)?\b([^(]+)(?:\s*\(\s*(.*)\s*\))?\s*$/.exec(str);
+                if (match) {
+                    obj.type = "constructor";
+                    var prm = match[2] ? match[2] : [];
+                    this.setID(obj, match[1]);
+                    obj.named = true;
+                    obj.datatype = "";
+
+                    return this.methodMember(obj, $excepts, $extPrm, prm);
+                }
+
                 // METHOD
                 match = /^\s*(.*?)\s+\b(\S+)\s*\(\s*(.*)\s*\)\s*$/.exec(str);
                 if (match) {
@@ -469,59 +502,8 @@ define(
                     type = this.parseStatic(obj, type);
                     this.parseDatatype(obj, type);
                     this.setID(obj, match[2]);
-                    obj.params = [];
-                    obj.raises = [];
 
-                    $excepts.each(function () {
-                        var $el = $(this)
-                        ,   exc = { id: $el.attr("title") };
-                        if ($el.is("dl")) {
-                            exc.type = "codelist";
-                            exc.description = [];
-                            $el.find("dt").each(function () {
-                                var $dt = $(this)
-                                ,   $dd = $dt.next("dd");
-                                exc.description.push({ id: $dt.text(), description: $dd.contents().clone() });
-                            });
-                        }
-                        else if ($el.is("div")) {
-                            exc.type = "simple";
-                            exc.description = $el.contents().clone();
-                        }
-                        else {
-                            this.msg.pub("error", "Do not know what to do with exceptions being raised defined outside of a div or dl.");
-                        }
-                        $el.remove();
-                        obj.raises.push(exc);
-                    });
-
-
-                    if ($extPrm.length) {
-                        $extPrm.remove();
-                        var self = this;
-                        $extPrm.find("> dt").each(function () {
-                            return self.params($(this).text(), $(this).next(), obj);
-                        });
-                    }
-                    else {
-                        while (prm.length) {
-                            prm = this.params(prm, null, obj);
-                            if (prm === false) break;
-                        }
-                    }
-
-                    // apply optional
-                    var seenOptional = false;
-                    for (var i = 0; i < obj.params.length; i++) {
-                        if (seenOptional) {
-                            obj.params[i].optional = true;
-                            obj.params[i].datatype = obj.params[i].datatype.replace(/\boptional\s+/, "");
-                        }
-                        else {
-                            seenOptional = this.optional(obj.params[i]);
-                        }
-                    }
-                    return obj;
+                    return this.methodMember(obj, $excepts, $extPrm, prm);
                 }
 
                 // SERIALIZER
@@ -576,6 +558,62 @@ define(
 
                 // NOTHING MATCHED
                 this.msg.pub("error", "Expected interface member, got: " + str);
+            },
+
+            methodMember:   function (obj, $excepts, $extPrm, prm) {
+                obj.params = [];
+                obj.raises = [];
+
+                $excepts.each(function () {
+                    var $el = $(this)
+                    ,   exc = { id: $el.attr("title") };
+                    if ($el.is("dl")) {
+                        exc.type = "codelist";
+                        exc.description = [];
+                        $el.find("dt").each(function () {
+                            var $dt = $(this)
+                            ,   $dd = $dt.next("dd");
+                            exc.description.push({ id: $dt.text(), description: $dd.contents().clone() });
+                        });
+                    }
+                    else if ($el.is("div")) {
+                        exc.type = "simple";
+                        exc.description = $el.contents().clone();
+                    }
+                    else {
+                        this.msg.pub("error", "Do not know what to do with exceptions being raised defined outside of a div or dl.");
+                    }
+                    $el.remove();
+                    obj.raises.push(exc);
+                });
+
+
+                if ($extPrm.length) {
+                    $extPrm.remove();
+                    var self = this;
+                    $extPrm.find("> dt").each(function () {
+                        return self.params($(this).text(), $(this).next(), obj);
+                    });
+                }
+                else {
+                    while (prm.length) {
+                        prm = this.params(prm, null, obj);
+                        if (prm === false) break;
+                    }
+                }
+
+                // apply optional
+                var seenOptional = false;
+                for (var i = 0; i < obj.params.length; i++) {
+                    if (seenOptional) {
+                        obj.params[i].optional = true;
+                        obj.params[i].datatype = obj.params[i].datatype.replace(/\boptional\s+/, "");
+                    }
+                    else {
+                        seenOptional = this.optional(obj.params[i]);
+                    }
+                }
+                return obj;
             },
             
             parseDatatype:  function (obj, type) {
@@ -832,7 +870,7 @@ define(
                 else if (obj.type == "interface") {
                     var df = sn.documentFragment();
                     var curLnk = "widl-" + obj.refId + "-";
-                    var types = ["attribute", "method", "constant", "serializer"];
+                    var types = ["constructor", "attribute", "method", "constant", "serializer"];
                     var filterFunc = function (it) { return it.type == type; }
                     ,   sortFunc = function (a, b) {
                             if (a.id < b.id) return -1;
@@ -854,12 +892,14 @@ define(
                             var dl = sn.element("dl", { "class": type + "s" }, sec);
                             for (var j = 0; j < things.length; j++) {
                                 var it = things[j];
-                                var id = (type == "method") ? this.makeMethodID(curLnk, it) : sn.idThatDoesNotExist(curLnk + it.refId);
+                                var id = (type == "method") ? this.makeMethodID(curLnk, it) :
+                                    (type == "constructor") ? this.makeMethodID("widl-ctor-", it)
+                                    : sn.idThatDoesNotExist(curLnk + it.refId);
                                 var dt = sn.element("dt", { id: id }, dl);
                                 sn.element("code", {}, dt, it.id);
                                 if (it.isStatic) dt.appendChild(this.doc.createTextNode(", static"));
                                 var desc = sn.element("dd", {}, dl, [it.description]);
-                                if (type == "method") {
+                                if (type == "method" || type == "constructor") {
                                     if (it.params.length) {
                                         var table = sn.element("table", { "class": "parameters" }, desc);
                                         var tr = sn.element("tr", {}, table);
@@ -913,8 +953,10 @@ define(
                                     //     sn.element("div", {}, desc, [sn.element("em", {}, null, "No exceptions.")]);
                                     // }
 
-                                    var reDiv = sn.element("div", {}, desc);
-                                    sn.element("em", {}, reDiv, "Return type: ");
+                                    if (type != "constructor") {
+                                        var reDiv = sn.element("div", {}, desc);
+                                        sn.element("em", {}, reDiv, "Return type: ");
+                                    }
 
                                     var code = sn.element("code", {}, reDiv);
                                     code.innerHTML = datatype(it.datatype);
@@ -1101,12 +1143,14 @@ define(
                     });
                     var curLnk = "widl-" + obj.refId + "-"
                     ,   self = this
+                    ,   ctor = []
                     ,   children = obj.children
                                       .map(function (ch) {
                                           if (ch.type == "attribute") return self.writeAttribute(ch, maxAttr, indent + 1, curLnk, hasRO);
                                           else if (ch.type == "method") return self.writeMethod(ch, maxMeth, indent + 1, curLnk);
                                           else if (ch.type == "constant") return self.writeConst(ch, maxConst, indent + 1, curLnk);
                                           else if (ch.type == "serializer") return self.writeSerializer(ch, indent + 1, curLnk);
+                                          else if (ch.type == "constructor") ctor.push(self.writeConstructor(ch, indent, "widl-ctor-"));
                                       })
                                       .join("")
                     ;
@@ -1114,6 +1158,7 @@ define(
                         obj:        obj
                     ,   indent:     indent
                     ,   id:         id
+                    ,   ctor:       ctor.join(",\n")
                     ,   partial:    obj.partial ? "partial " : ""
                     ,   callback:   obj.callback ? "callback " : ""
                     ,   children:   children
@@ -1248,6 +1293,28 @@ define(
                 ,   "static":   meth.isStatic ? "static " : ""
                 ,   pad:        pad
                 ,   id:         this.makeMethodID(curLnk, meth)
+                ,   children:   params
+                });
+            },
+
+            writeConstructor:   function (ctor, indent, curLnk) {
+                var params = ctor.params
+                                .map(function (it) {
+                                    return idlParamTmpl({
+                                        obj:        it
+                                    ,   optional:   it.optional ? "optional " : ""
+                                    ,   arr:        arrsq(it)
+                                    ,   nullable:   it.nullable ? "?" : ""
+                                    ,   variadic:   it.variadic ? "..." : ""
+                                    });
+                                })
+                                .join(", ");
+                return idlConstructorTmpl({
+                    obj:        ctor
+                ,   indent:     indent
+                ,   id:         this.makeMethodID(curLnk, ctor)
+                ,   name:       ctor.named ? ctor.id : "Constructor"
+                ,   keyword:    ctor.named ? "NamedConstructor=" : ""
                 ,   children:   params
                 });
             },

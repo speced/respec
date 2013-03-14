@@ -51,6 +51,38 @@ describe("Core - WebIDL", function () {
         });
     });
 
+    it("should handle constructors", function () {
+        $target = $("#ctor-basic", doc);
+        text =  "[Something,\n" +
+                " Constructor,\n" +
+                " Constructor (boolean bar, sequence<double> foo)]\n" +
+                "interface SuperStar {\n" +
+                "};";
+        expect($target.text()).toEqual(text);
+        expect($target.find(".idlCtor").length).toEqual(2);
+        var $ctor1 = $target.find(".idlCtor").last();
+        expect($ctor1.find(".idlCtorName").text()).toEqual("Constructor");
+        expect($ctor1.find(".idlParam").length).toEqual(2);
+        expect($ctor1.find(".idlParam:contains('sequence')").length).toEqual(1);
+        expect($ctor1.find(".idlParam").first().find(".idlParamType > a").text()).toEqual("boolean");
+    });
+
+    it("should handle named constructors", function () {
+        $target = $("#namedctor-basic", doc);
+        text =  "[Something,\n" +
+                " NamedConstructor=Sun,\n" +
+                " NamedConstructor=Sun (boolean bar, Date[][][] foo)]\n" +
+                "interface SuperStar {\n" +
+                "};";
+        expect($target.text()).toEqual(text);
+        expect($target.find(".idlCtor").length).toEqual(2);
+        var $ctor1 = $target.find(".idlCtor").last();
+        expect($ctor1.find(".idlCtorName").text()).toEqual("Sun");
+        expect($ctor1.find(".idlParam").length).toEqual(2);
+        expect($ctor1.find(".idlParam:contains('Date[][][]')").length).toEqual(1);
+        expect($ctor1.find(".idlParam").first().find(".idlParamType > a").text()).toEqual("boolean");
+    });
+
     it("should handle constants", function () {
         $target = $("#const-basic", doc);
         text =  "interface SuperStar {\n" +
