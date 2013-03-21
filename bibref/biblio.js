@@ -6109,10 +6109,10 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Cameron McCormack"
         ],
-        "href": "http://www.w3.org/TR/2011/WD-WebIDL-20110927/",
+        "href": "http://www.w3.org/TR/2012/CR-WebIDL-20120419/",
         "title": "Web IDL",
-        "date": "27 September 2011",
-        "status": "WD",
+        "date": "19 April 2012",
+        "status": "CR",
         "publisher": "W3C"
     },
     "WEBONT-REQ": {
