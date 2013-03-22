@@ -3806,12 +3806,12 @@ berjon.biblio = {
     },
     "RDF-SYNTAX": {
         "authors": [
-            "Ora Lassila",
-            "Ralph R. Swick"
+            "Graham Klyne",
+            "Jeremy J. Carroll"
         ],
-        "href": "http://www.w3.org/TR/1999/REC-rdf-syntax-19990222",
+        "href": "http://www.w3.org/TR/2004/REC-rdf-concepts-20040210/",
         "title": "Resource Description Framework (RDF) Model and Syntax Specification",
-        "date": "22 February 1999",
+        "date": "10 February 2004",
         "status": "REC",
         "publisher": "W3C"
     },
