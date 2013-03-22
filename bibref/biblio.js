@@ -2900,6 +2900,16 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "NAMED-GRAPHS": "Jeremy J. Carroll; Chris Bizer; Pat Hayes; Patrick Stickler. <a href=\"http://sites.wiwiss.fu-berlin.de/suhl/bizer/SWTSGuide/carroll-ISWC2004.pdf\"><cite>Named Graphs, Provenance and Trust</cite></a>. The Semantic Web — ISWC2004, Yokohama, Springer–Verlag, 2005. URL: <a href='http://sites.wiwiss.fu-berlin.de/suhl/bizer/SWTSGuide/carroll-ISWC2004.pdf'>http://sites.wiwiss.fu-berlin.de/suhl/bizer/SWTSGuide/carroll-ISWC2004.pdf</a>.",
+    "NAVIGATION-TIMING": {
+        "authors": [
+            "Zhiheng Wang"
+        ],
+        "href": "http://www.w3.org/TR/2012/REC-navigation-timing-20121217/",
+        "title": "Navigation Timing",
+        "date": "17 December 2012",
+        "status": "REC",
+        "publisher": "W3C"
+    },
     "NAVIGATOR": {
         "authors": [
             "Robin Berjon"
