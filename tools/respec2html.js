@@ -1,3 +1,4 @@
+/*global phantom*/
 // respec2html is a command line utility that converts a ReSpec source file to an HTML file.
 // Depends on PhantomJS <http://phantomjs.org>.
 
@@ -16,26 +17,22 @@ if (args.length !== 3 && args.length !== 4) {
     phantom.exit();
 }
 
-page.open(source, function(status) {
-    page.onResourceRequested = function(request) {
-        console.log('Loading ' + request.url);
-    };
-    
+page.open(source, function (status) {
     if (status !== 'success') {
         console.log('Unable to access ReSpec source file.');
         phantom.exit();
-    } else {
+    }
+    else {
         console.log('Loading ' + source);
-        var timer = setInterval(function() {
+        var timer = setInterval(function () {
             // Poll document.respecDone for doneness. A proper way would be to listen
             // for the end-all message on respecEvents (unsupported by PhantomJS).
-            var done = page.evaluate(function() { return (document.respecDone) ? true : false; });
+            var done = page.evaluate(function () { return (document && document.respecDone) ? true : false; });
             if (done) {
                 clearInterval(timer);
                 console.log('Serializing the DOM into HTML...');
                 var html = page.evaluate(function() {
                     // Serialize the DOM using the built-in serializer.
-                    (new berjon.respec()).toHTMLSource();
                     var outer = document.querySelector('html').outerHTML;
                     return '<!DOCTYPE html>\n' + outer.replace('<head>', '\n<head>');
                 });
