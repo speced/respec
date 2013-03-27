@@ -421,6 +421,17 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
+    "COMPOSITING": {
+        "authors": [
+            "Rik Cabanier",
+            "Nikos Andronikos"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-compositing-20120816/",
+        "title": "Compositing and Blending 1.0",
+        "date": "16 August 2012",
+        "status": "FPWD",
+        "publisher": "W3C"
+    },
     "CMS-Algorithms": "R. Housley. <a href=\"http://www.ietf.org/rfc/rfc3370.txt\"><cite>RFC3370: Cryptographic Message Syntax (CMS) Algorithms</cite></a>.  IETF Informational RFC, February 2002. URL: <a href=\"http://www.ietf.org/rfc/rfc3370.txt\">http://www.ietf.org/rfc/rfc3370.txt</a>",
     "CMS-WRAP": "R. Housley. <a href=\"http://www.ietf.org/rfc/rfc3217.txt\"><cite>RFC3217: Triple-DES and R2 Key Wrapping</cite></a>.  IETF Informational RFC, December 2001. URL: <a href=\"http://www.ietf.org/rfc/rfc3217.txt\">http://www.ietf.org/rfc/rfc3217.txt</a>",
     "COAP": "E Shelby; et al. <a href=\"http://tools.ietf.org/html/draft-ietf-core-coap\"><cite>Constrained Application Protocol (CoAP)</cite></a>. IETF Internet Draft, December 2012. URL: <a href=\"http://tools.ietf.org/html/draft-ietf-core-coap\">http://tools.ietf.org/html/draft-ietf-core-coap</a>",
@@ -526,6 +537,18 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.w3.org/TR/2011/WD-css-device-adapt-20110915",
         "title": "CSS Device Adaptation",
         "date": "15 September 2011",
+        "status": "FPWD",
+        "publisher": "W3C"
+    },
+    "CSS-MASKING": {
+        "authors": [
+            "Dirk Schulze",
+            "Brian Birtles",
+            "Tab Atkins Jr."
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-css-masking-20121115/",
+        "title": "CSS Masking",
+        "date": "15 November 2012",
         "status": "FPWD",
         "publisher": "W3C"
     },
@@ -1904,6 +1927,18 @@ if (typeof berjon === "undefined") berjon = {};
         "title": "File Writer API",
         "date": "19 April 2011",
         "status": "WD",
+        "publisher": "W3C"
+    },
+    "FILTER-EFFECTS": {
+        "authors": [
+            "Erik Dahlstr&#246;m",
+            "Dean Jackson",
+            "Dirk Schulze"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-filter-effects-20121025/",
+        "title": "Filter Effects 1.0",
+        "date": "25 October 2012",
+        "status": "FPWD",
         "publisher": "W3C"
     },
     "FIN-PRIV-NOTICE": "Kleimann Communications Group, Inc. <a href='http://www.ftc.gov/privacy/privacyinitiatives/ftcfinalreport060228.pdf'><cite>Evolution of a Prototype Financial Privacy Notice </cite></a> 28 February 2006. URL: http://www.ftc.gov/privacy/privacyinitiatives/ftcfinalreport060228.pdf ",
@@ -5062,6 +5097,25 @@ if (typeof berjon === "undefined") berjon = {};
         "title": "SVG 1.1/1.2/2.0 Requirements",
         "date": "22 April 2002",
         "status": "WD",
+        "publisher": "W3C"
+    },
+    "SVG2": {
+        "authors": [
+            "Nikos Andronikos",
+            "Tavmjong Bah",
+            "Brian Birtles",
+            "Cyril Concolato",
+            "Erik Dahlstr&#246;m",
+            "Chris Lilley",
+            "Cameron McCormack",
+            "Dirk Schulze",
+            "Richard Schwerdtfeger",
+            "Jonathan Watt"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-SVG2-20120828/",
+        "title": "Scalable Vector Graphics (SVG) 2",
+        "date": "28 August 2012",
+        "status": "FPWD",
         "publisher": "W3C"
     },
     "SVGFILTER12": {
