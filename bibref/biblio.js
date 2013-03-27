@@ -4586,9 +4586,9 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "SELECTORS-LEVEL-3": "Daniel Glazman; et al. <a href=\"http://www.w3.org/TR/2011/REC-css3-selectors-20110929\"><cite>Selectors Level 3.</cite></a> W3C Recommendation 29 September 2011 URL: <a href=\"http://www.w3.org/TR/2011/REC-css3-selectors-20110929\">http://www.w3.org/TR/2011/REC-css3-selectors-20110929</a> ",
-		"SELECTORS-LEVEL-3-20110929": {
+    "SELECTORS-LEVEL-3-20110929": {
         "authors": [
-		        "Daniel Glazman",
+            "Daniel Glazman"
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2011/REC-css3-selectors-20110929/",
