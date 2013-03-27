@@ -61,7 +61,7 @@ berjon.biblio = {
         "href" :
         "http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf",
         "title" : "NIST FIPS 197: Advanced Encryption Standard (AES)",
-        "date" : "November 2001",
+        "date" : "November 2001"
     },
     "AES-WRAP": {
         "authors" : [ "J. Schaad", "R. Housley" ],
@@ -222,7 +222,7 @@ berjon.biblio = {
     "C14N2-TestCases": {
         "authors": [
             "Pratik Datta",
-            "Frederick Hirsch",
+            "Frederick Hirsch"
         ],
         "href": "http://www.w3.org/TR/2013/NOTE-xml-c14n2-testcases-20130411/",
         "title": "Test Cases for Canonical XML 2.0",
@@ -471,7 +471,7 @@ berjon.biblio = {
         "href" : "http://www.ietf.org/rfc/rfc3217.txt",
         "title" : "RFC3217: Triple-DES and R2 Key Wrapping",
         "status":  "IETF Informational RFC",
-        "date" : "December 2001",
+        "date" : "December 2001"
     },
     "COAP": "E Shelby; et al. <a href=\"http://tools.ietf.org/html/draft-ietf-core-coap\"><cite>Constrained Application Protocol (CoAP)</cite></a>. IETF Internet Draft, December 2012. URL: <a href=\"http://tools.ietf.org/html/draft-ietf-core-coap\">http://tools.ietf.org/html/draft-ietf-core-coap</a>",
     "COLORIMETRY": "<cite>Colorimetry, Second Edition.</cite> CIE Publication 15.2-1986. ISBN 3-900-734-00-3",
@@ -8050,7 +8050,7 @@ berjon.biblio = {
         "title" : "Functional Explanation of in XML Encryption 1.1",
         "date" : "11 April 2013",
         "status" : "WG-NOTE",
-        "publisher": "W3C",
+        "publisher": "W3C"
     },
     "XMLENC-CORE1-INTEROP": {
         "authors" : [ "Pratik Datta",
@@ -8060,7 +8060,7 @@ berjon.biblio = {
         "title" : "XML Encryption 1.1 Interop Test Report",
         "date" : "11 April 2013",
         "status" : "WG-NOTE",
-        "publisher": "W3C",
+        "publisher": "W3C"
     },
     "XMLENC-DECRYPT": {
         "authors": [
@@ -8082,7 +8082,7 @@ berjon.biblio = {
         "href" : "http://www.nds.rub.de/research/publications/breaking-xml-encryption-pkcs15.pdf",
         "title" : "Bleichenbacher&quot;s Attack Strikes Again: Breaking PKCS#1.5 in XML Encryption",
         "date" :  "2012",
-        "publisher" : "In Proceedings of the 17th European Symposium on Research in Computer Security (ESO RICS)",
+        "publisher" : "In Proceedings of the 17th European Symposium on Research in Computer Security (ESO RICS)"
     },
     "XMLENC11-TESTCASES": {
         "authors": [
