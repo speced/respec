@@ -1743,8 +1743,18 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "NOTE",
         "publisher": "W3C"
     },
-    "ECMA-262": "<a href=\"http://www.ecma-international.org/publications/standards/Ecma-262.htm\"><cite>ECMAScript Language Specification.</cite></a> June 2011. URL: <a href=\"http://www.ecma-international.org/publications/standards/Ecma-262.htm\">http://www.ecma-international.org/publications/standards/Ecma-262.htm</a> ",
-    "ECMA-262-51": "<a href=\"http://www.ecma-international.org/publications/standards/Ecma-262.htm\">ECMAScript Language Specification, Edition 5.1</a>. June 2011. URL: <a href=\"http://www.ecma-international.org/publications/standards/Ecma-262.htm\">http://www.ecma-international.org/publications/standards/Ecma-262.htm</a>",
+    "ECMA-262": {
+      "date": "June 2011",
+      "href": "http://www.ecma-international.org/publications/standards/Ecma-262.htm",
+      "publisher": "ECMA",
+      "title": "ECMAScript Language Specification, Edition 5.1"
+    },
+    "ECMA-262-51": {
+      "date": "June 2011",
+      "href": "http://www.ecma-international.org/publications/standards/Ecma-262.htm",
+      "publisher": "ECMA",
+      "title": "ECMAScript Language Specification, Edition 5.1"
+    },
     "ECMAS-402": {
         "authors": ["Norbert Lindenberg"],
         "date": "1 December 2012",
