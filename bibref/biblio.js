@@ -4994,18 +4994,36 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "SRGB": "<a href=\"http://www.iec.ch/nr1899.htm\"><cite>Multimedia systems and equipment - Colour measurement and management - Part 2-1: Colour management - Default RGB colour space - sRGB.</cite></a> IEC 61966-2-1 (1999-10). ISBN: 2-8318-4989-6 - ICS codes: 33.160.60, 37.080 - TC 100 - 51 pp. URL: <a href=\"http://www.iec.ch/nr1899.htm\">http://www.iec.ch/nr1899.htm</a>",
-    "SSE": "Ian Hickson; <a href=\"http://www.w3.org/TR/eventsource/\"><cite>Server-Sent Events.</cite></a>W3C Editor Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/eventsource/\">http://www.w3.org/TR/eventsource/</a> ",
-		"SSE-20121211": {
-			"authors": [
-			    "Ian Hickson"
-			],
-			"href": "http://www.w3.org/TR/2012/CR-eventsource-20121211/",
-			"title": "Server-Sent Events",
-			"date": "11 December 2012",
-			"status": "CR",
-			"publisher": "W3C"
-		},
-    "SSE-ed": "Ian Hickson; <a href=\"http://dev.w3.org/html5/eventsource/\"><cite>Server-Sent Events.</cite></a>W3C Editor Draft. (Work in progress.) URL: <a href=\"http://dev.w3.org/html5/eventsource/\">http://dev.w3.org/html5/eventsource/</a> ",
+    "SSE": {
+        "authors": [
+            "Ian Hickson"
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-eventsource-20121211/",
+        "title": "Server-Sent Events",
+        "date": "11 December 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
+    "SSE-20121211": {
+        "authors": [
+            "Ian Hickson"
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-eventsource-20121211/",
+        "title": "Server-Sent Events",
+        "date": "11 December 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
+    "SSE-ed": {
+        "authors": [
+            "Ian Hickson"
+        ],
+        "href": "http://dev.w3.org/html5/eventsource/",
+        "title": "Server-Sent Events",
+        "date": "25 March 2013",
+        "status": "ED",
+        "publisher": "W3C"
+    },
     "SSML-SAYAS": {
         "authors": [
             "Daniel C. Burnett"
