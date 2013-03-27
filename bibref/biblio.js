@@ -1458,7 +1458,7 @@ if (typeof berjon === "undefined") berjon = {};
             "M. Krochmal"
         ],
         "href": "http://tools.ietf.org/html/rfc6763",
-        "title": "DNS-Based Service Discovery",
+        "title": "DNS-Based Service Discovery (RFC 6763)",
         "date": "February 2013",
         "status": "RFC 6763",
         "publisher": "IETF"
@@ -2639,7 +2639,7 @@ if (typeof berjon === "undefined") berjon = {};
             "M. Krochmal"
         ],
         "href": "http://tools.ietf.org/html/rfc6762",
-        "title": "Multicast DNS",
+        "title": "Multicast DNS (RFC 6762)",
         "date": "February 2013",
         "status": "RFC 6762",
         "publisher": "IETF"
