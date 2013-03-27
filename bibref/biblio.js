@@ -3083,7 +3083,12 @@ berjon.biblio = {
     "OIPF-PROT-2": "Open IPTV Forum. Release 2 volume 4 (v2.1). URL:<a href='http://www.oipf.tv/docs/Release2/V2.1/OIPF-T1-R2-Specification-Volume-4-Protocols-v2_1-2011-06-21.pdf'>http://www.oipf.tv/docs/Release2/V2.1/OIPF-T1-R2-Specification-Volume-4-Protocols-v2_1-2011-06-21.pdf</a>",
     "OMA-CAB": "Converged Address Book Enabler, Version 1.0, Open Mobile Alliance, URL: http://www.openmobilealliance.org/",
     "OMA-DM": "<a href=\"http://www.openmobilealliance.org/Technical/release_program/dm_v1_2.aspx\"><cite>OMA Device Management V1.2 </cite></a> 17 June 2008. URL: <a href=\"http://www.openmobilealliance.org/Technical/release_program/dm_v1_2.aspx\">http://www.openmobilealliance.org/Technical/release_program/dm_v1_2.aspx</a> ",
-    "OMA-URI-SCHEMES": "<a href=\"http://www.openmobilealliance.org/Technical/release_program/docs/URI_Schemes/V1_0-20080626-A/OMA-TS-URI_Schemes-V1_0-20080626-A.pdf\"><cite>URI Schemes for the Mobile Applications Environment. Approved Version 1.0</cite></a> 26 Jun 2008. URL: <a href=\"http://www.openmobilealliance.org/Technical/release_program/docs/URI_Schemes/V1_0-20080626-A/OMA-TS-URI_Schemes-V1_0-20080626-A.pdf\">http://www.openmobilealliance.org/Technical/release_program/docs/URI_Schemes/V1_0-20080626-A/OMA-TS-URI_Schemes-V1_0-20080626-A.pdf</a> ",
+    "OMA-URI-SCHEMES": {
+        "href": "http://www.openmobilealliance.org/Technical/release_program/docs/URI_Schemes/V1_0-20080626-A/OMA-TS-URI_Schemes-V1_0-20080626-A.pdf",
+        "title": "URI Schemes for the Mobile Applications Environment. Approved Version 1.0",
+        "date": "26 Jun 2008",
+        "publisher": "OMA"
+    },
     "OMA-PUSH": "Open Mobile Alliance. OMA Push Version 2.3. URL: <a href=\"http://www.openmobilealliance.org/Technical/release_program/push_v2_3.aspx\">http://www.openmobilealliance.org/Technical/release_program/push_v2_3.aspx</a> ",
     "ORIGIN": {
         "authors": [
