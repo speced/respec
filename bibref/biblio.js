@@ -4008,9 +4008,9 @@ berjon.biblio = {
             "P. Mockapetris"
         ],
         "href": "http://www.ietf.org/rfc/rfc1034.txt",
-        "title": "DOMAIN NAMES - CONCEPTS AND FACILITIES",
+        "title": "Domain Names - Concepts and Facilities (RFC 1034)",
         "date": "November 1987",
-        "status": "RFC 1034",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC1738": {
@@ -4020,9 +4020,9 @@ berjon.biblio = {
             "M. McCahill"
         ],
         "href": "http://www.ietf.org/rfc/rfc1738.txt",
-        "title": "Uniform Resource Locators (URL)",
+        "title": "Uniform Resource Locators (URL) (RFC 1738)",
         "date": "December 1994",
-        "status": "RFC 1738",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC1808": {
@@ -4030,9 +4030,9 @@ berjon.biblio = {
             "R. Fielding"
         ],
         "href": "http://www.ietf.org/rfc/rfc1808.txt",
-        "title": "Relative Uniform Resource Locators",
+        "title": "Relative Uniform Resource Locators (RFC 1808)",
         "date": "June 1995",
-        "status": "RFC 1808 (Obsoleted by RFC 3986)",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC2045": "N. Freed and N. Borenstein. <a href=\"http://www.ietf.org/rfc/rfc2045.txt\"><cite>Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies.</cite></a> November 1996. URL: <a href=\"http://www.ietf.org/rfc/rfc2045.txt\">http://www.ietf.org/rfc/rfc2045.txt</a> ",
@@ -4042,9 +4042,9 @@ berjon.biblio = {
             "N. Borenstein"
         ],
         "href": "http://www.ietf.org/rfc/rfc2046.txt",
-        "title": "Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types",
+        "title": "Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types (RFC 2046)",
         "date": "November 1996",
-        "status": "RFC 2046",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC2119": "S. Bradner. <a href=\"http://www.ietf.org/rfc/rfc2119.txt\"><cite>Key words for use in RFCs to Indicate Requirement Levels.</cite></a> March 1997. Internet RFC 2119.  URL: <a href=\"http://www.ietf.org/rfc/rfc2119.txt\">http://www.ietf.org/rfc/rfc2119.txt</a> ",
@@ -4054,9 +4054,9 @@ berjon.biblio = {
             "K. Moore"
         ],
         "href": "http://www.ietf.org/rfc/rfc2231.txt",
-        "title": "MIME Parameter Value and Encoded Word Extensions: Character Sets, Languages, and Continuations",
+        "title": "MIME Parameter Value and Encoded Word Extensions: Character Sets, Languages, and Continuations (RFC 2231)",
         "date": "November 1997",
-        "status": "IETF RFC 2231",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC2318": "H. Lie, B. Bos, C. Lilley. <a href=\"http://www.ietf.org/rfc/rfc2318.txt\"><cite>The text/css Media Type.</cite></a> March 1998. URL: <a href=\"http://www.ietf.org/rfc/rfc2318.txt\">http://www.ietf.org/rfc/rfc2318.txt</a> ",
@@ -4065,9 +4065,9 @@ berjon.biblio = {
             "L. Masinter"
         ],
         "href": "http://www.ietf.org/rfc/rfc2397.txt",
-        "title": "The &quot;data&quot; URL scheme",
+        "title": "The &quot;data&quot; URL scheme (RFC 2397)",
         "date": "August 1998",
-        "status": "RFC 2397",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC2426": "F. Dawson, T. Howes. <a href=\"http://www.ietf.org/rfc/rfc2426.txt\"><cite>vCard MIME Directory Profile.</cite></a> September 1998. URL: <a href=\"http://www.ietf.org/rfc/rfc2426.txt\">http://www.ietf.org/rfc/rfc2426.txt</a> ",
@@ -4077,9 +4077,9 @@ berjon.biblio = {
             "L. McIntyre"
         ],
         "href": "http://www.ietf.org/rfc/rfc2531.txt",
-        "title": "Content Feature Schema for Internet Fax",
+        "title": "Content Feature Schema for Internet Fax (RFC 2533)",
         "date": "March 1999",
-        "status": "RFC 2531",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC2533": {
@@ -4087,9 +4087,9 @@ berjon.biblio = {
             "G. Klyne"
         ],
         "href": "http://www.ietf.org/rfc/rfc2533",
-        "title": "A Syntax for Describing Media Feature Sets",
+        "title": "A Syntax for Describing Media Feature Sets (RFC 2533)",
         "date": "March 1999",
-        "status": "RFC 2533",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC2534": {
@@ -4099,9 +4099,9 @@ berjon.biblio = {
         ],
         "etAl": true,
         "href": "http://www.ietf.org/rfc/rfc2534",
-        "title": "Media Features for Display, Print, and Fax",
+        "title": "Media Features for Display, Print, and Fax (RFC 2534)",
         "date": "March 1999",
-        "status": "RFC 2534",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC3406": "L. Daigle, D. van Gulik, R. Iannella, P. Faltstrom. <a href=\"http://www.ietf.org/rfc/rfc3406.txt\"><cite> URN Namespace Definition Mechanisms.</cite></a>. IETF RFC 3406 October 2002. URL: <a href=\"http://www.ietf.org/rfc/rfc3406.txt\"> http://www.ietf.org/rfc/rfc3406.txt</a>",
@@ -4111,9 +4111,10 @@ berjon.biblio = {
             "L. Masinter"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc2854.txt",
-        "title": "The 'text/html' Media Type",
+        "title": "The 'text/html' Media Type (RFC 2854)",
         "date": "June 2000",
-        "status": "RFC 2854"
+        "status": "RFC",
+        "publisher": "IETF"
     },
     "RFC2978": {
         "authors": [
@@ -4121,9 +4122,9 @@ berjon.biblio = {
             "J. Postel"
         ],
         "href": "http://www.ietf.org/rfc/rfc2978.txt",
-        "title": "IANA Charset Registration Procedures",
+        "title": "IANA Charset Registration Procedures (RFC 2978)",
         "date": "October 2000",
-        "status": "RFC 2978",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC3023": {
@@ -4133,9 +4134,9 @@ berjon.biblio = {
             "D. Kohn"
         ],
         "href": "http://www.ietf.org/rfc/rfc3023.txt",
-        "title": "XML Media Types",
+        "title": "XML Media Types (RFC 3023)",
         "date": "January 2001",
-        "status": "RFC 3023",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC3161": {
@@ -4146,20 +4147,20 @@ berjon.biblio = {
             "R. Zuccherato"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc3161.txt",
-        "title": "Internet X.509 Public Key Infrastructure Time-Stamp Protocol (TSP)",
+        "title": "Internet X.509 Public Key Infrastructure Time-Stamp Protocol (TSP) (RFC 3161)",
         "date": "August 2001",
-        "status": "RFC 3161"
+        "status": "RFC",
+        "publisher": "IETF"
     },
     "RFC3161-PKIX-UPDATE-9": "Stefan Santesson, Nick Pope. <a href=\"http://tools.ietf.org/id/draft-ietf-pkix-rfc3161-update-09.txt\"><cite> ESSCertIDv2 update for RFC 3161</cite></a> 29 April 2010, IETF Internet Draft. URL: <a href=\"http://tools.ietf.org/id/draft-ietf-pkix-rfc3161-update-09.txt\"> http://tools.ietf.org/id/draft-ietf-pkix-rfc3161-update-09.txt</a> ",
     "RFC3218": {
         "authors": [
-            "Rescorla",
-            "E"
+            "E. Rescorla"
         ],
-        "href": "http://tools.ietf.org/html/rfc3218",
-        "title": "Preventing the Million Message Attack on Cryptographic Message Syntax",
+        "href": "http://www.rfc-editor.org/rfc/rfc3218.txt",
+        "title": "Preventing the Million Message Attack on Cryptographic Message Syntax (RFC 3218)",
         "date": "January 2002",
-        "status": "Informational RFC 3218",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC3236": {
@@ -4168,9 +4169,10 @@ berjon.biblio = {
             "M. Baker"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc3236.txt",
-        "title": "The 'application/xhtml+xml' Media Type",
+        "title": "The 'application/xhtml+xml' Media Type (RFC 3236)",
         "date": "January 2002",
-        "status": "RFC 3236"
+        "status": "RFC",
+        "publisher": "IETF"
     },
     "RFC3279": "W. Polk, R. Housley, L. Bassham. <a href=\"http://www.ietf.org/rfc/rfc3279.txt\"><cite>Algorithmupdates and Identifiers for the Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile</cite></a>. April 2002. Internet RFC 3279. URL: <a href=\"http://www.ietf.org/rfc/rfc3279.txt\">http://www.ietf.org/rfc/rfc3279.txt</a>",
     "RFC3339": "G. Klyne, C. Newman. <a href=\"http://www.ietf.org/rfc/rfc3339.txt\"><cite>Date and Time on the Internet: Timestamps</cite></a>. July 2002. Internet RFC 3339. URL: <a href=\"http://www.ietf.org/rfc/rfc3339.txt\">http://www.ietf.org/rfc/rfc3339.txt</a>",
@@ -4182,9 +4184,9 @@ berjon.biblio = {
         ],
         "etAl": true,
         "href": "http://www.ietf.org/rfc/rfc3428.txt",
-        "title": "Session Initiation Protocol (SIP) Extension for Instant Messaging",
+        "title": "Session Initiation Protocol (SIP) Extension for Instant Messaging (RFC 3428)",
         "date": "December 2002",
-        "status": "RFC 3428",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC3490": "P. Faltstrom; P. Hoffman; A. Costello. <a href='http://www.rfc-editor.org/rfc/rfc3490.txt'><cite>Internationalizing Domain Names in Applications (IDNA).</cite></a> March 2003. Internet RFC 3490. URL: <a href='http://www.rfc-editor.org/rfc/rfc3490.txt'>http://www.rfc-editor.org/rfc/rfc3490.txt</a>",
@@ -4196,9 +4198,9 @@ berjon.biblio = {
             "V. Jacobson"
         ],
         "href": "http://www.ietf.org/rfc/rfc3550.txt",
-        "title": "RTP: A Transport Protocol for Real-Time Applications",
+        "title": "RTP: A Transport Protocol for Real-Time Applications (RFC 3550)",
         "date": "July 2003",
-        "status": "RFC 3550",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC3555": "S. Casner; P. Hoschka. <a href='http://www.rfc-editor.org/rfc/rfc3555.txt'><cite>MIME Type Registration of RTP Payload Formats</cite></a>. July 2003. Internet RFC 3555. URL: <a href='http://www.rfc-editor.org/rfc/rfc3555.txt'>http://www.rfc-editor.org/rfc/rfc3555.txt</a>",
@@ -4207,9 +4209,9 @@ berjon.biblio = {
             "H. Schulzrinne"
         ],
         "href": "http://www.ietf.org/rfc/rfc3966.txt",
-        "title": "The tel URI for Telephone Numbers",
+        "title": "The tel URI for Telephone Numbers (RFC 3966)",
         "date": "December 2004",
-        "status": "RFC 3966",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC3986": {
@@ -4219,9 +4221,9 @@ berjon.biblio = {
             "L. Masinter"
         ],
         "href": "http://www.ietf.org/rfc/rfc3986.txt",
-        "title": "Uniform Resource Identifier (URI): Generic Syntax",
+        "title": "Uniform Resource Identifier (URI): Generic Syntax (RFC 3986)",
         "date": "January 2005",
-        "status": "RFC 3986",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC3987": {
@@ -4230,9 +4232,9 @@ berjon.biblio = {
             "M. Suignard"
         ],
         "href": "http://www.ietf.org/rfc/rfc3987.txt",
-        "title": "Internationalized Resource Identifiers (IRIs)",
+        "title": "Internationalized Resource Identifiers (IRIs) (RFC 3987)",
         "date": "January 2005",
-        "status": "RFC 3987",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4050": {
@@ -4243,9 +4245,9 @@ berjon.biblio = {
             "Y. Wang"
         ],
         "href": "http://www.ietf.org/rfc/rfc4050.txt",
-        "title": "Using the Elliptic Curve Signature Algorithm (ECDSA) for XML Digital Signatures",
-        "date": "IETF RFC 4050",
-        "status": "April 2005",
+        "title": "Using the Elliptic Curve Signature Algorithm (ECDSA) for XML Digital Signatures (RFC 4050)",
+        "date": "April 2005",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4051": "D. Eastlake 3rd. <a href=\"http://www.ietf.org/rfc/rfc4051.txt\"><cite>Additional XML Security Uniform Resource Identifiers</cite></a>. RFC 4051 April 2005. URL: <a href=\"http://www.ietf.org/rfc/rfc4051.txt\">http://www.ietf.org/rfc/rfc4051.txt</a>",
@@ -4257,9 +4259,9 @@ berjon.biblio = {
             "R. Salz"
         ],
         "href": "http://www.ietf.org/rfc/rfc4122.txt",
-        "title": "A Universally Unique IDentifier (UUID) URN Namespace",
+        "title": "A Universally Unique IDentifier (UUID) URN Namespace (RFC 4122)",
         "date": "July 2005",
-        "status": "RFC 4122",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4180": "Y. Shafranovich. <a href=\"http://www.ietf.org/rfc/rfc4180.txt\"> <cite>Common Format and MIME Type for Comma-Separated Values (CSV) Files</cite></a> October 2005. Internet RFC 3987. URL: <a href=\"http://www.ietf.org/rfc/rfc4180.txt\">http://www.ietf.org/rfc/rfc4180.txt</a>",
@@ -4270,9 +4272,9 @@ berjon.biblio = {
             "P. Frojdh"
         ],
         "href": "http://www.ietf.org/rfc/rfc4281.txt",
-        "title": "The Codecs Parameter for &quot;Bucket&quot; Media Types",
+        "title": "The Codecs Parameter for &quot;Bucket&quot; Media Types (RFC 4281)",
         "date": "November 2005",
-        "status": "RFC 4281",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4572": {
@@ -4280,9 +4282,9 @@ berjon.biblio = {
             "J. Lennox"
         ],
         "href": "http://www.ietf.org/rfc/rfc4572.txt",
-        "title": " Connection-Oriented Media Transport over the Transport Layer Security (TLS) Protocol in the Session Description Protocol (SDP)",
+        "title": " Connection-Oriented Media Transport over the Transport Layer Security (TLS) Protocol in the Session Description Protocol (SDP) (RFC 4572)",
         "date": "July 2006",
-        "status": "RFC 4572",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4627": {
@@ -4290,9 +4292,9 @@ berjon.biblio = {
             "D. Crockford"
         ],
         "href": "http://www.ietf.org/rfc/rfc4627.txt",
-        "title": "The application/json Media Type for JavaScript Object Notation (JSON)",
+        "title": "The application/json Media Type for JavaScript Object Notation (JSON) (RFC 4627)",
         "date": "July 2006",
-        "status": "RFC 4627",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4646": {
@@ -4301,9 +4303,9 @@ berjon.biblio = {
             "M. Davis"
         ],
         "href": "https://www.ietf.org/rfc/rfc4646.txt",
-        "title": "Tags for Identifying Languages",
+        "title": "Tags for Identifying Languages (RFC 4646)",
         "date": "September 2006",
-        "status": "RFC 4646",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4770": {
@@ -4312,9 +4314,9 @@ berjon.biblio = {
             "J. Reschke"
         ],
         "href": "http://www.ietf.org/rfc/rfc4770.txt",
-        "title": "vCard Extensions for Instant Messaging (IM)",
+        "title": "vCard Extensions for Instant Messaging (IM) (RFC 4770)",
         "date": "January 2007",
-        "status": "RFC 4770",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4868": {
@@ -4323,9 +4325,9 @@ berjon.biblio = {
             "S. Frankel"
         ],
         "href": "http://www.ietf.org/rfc/rfc4868.txt",
-        "title": "Using HMAC-SHA-256, HMAC-SHA-384, and HMAC-SHA-512 with IPsec",
-        "date": "IETF RFC 4868",
-        "status": "May 2007",
+        "title": "Using HMAC-SHA-256, HMAC-SHA-384, and HMAC-SHA-512 with IPsec (RFC 4868)",
+        "date": "May 2007",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4949": "R. Shirey. <a href=\"http://www.ietf.org/rfc/rfc4949.txt\"><cite>Internet Security Glossary, Version 2.</cite></a>. IETF RFC 4949. August 2007. URL: <a href=\"http://www.ietf.org/rfc/rfc4949.txt\">http://www.ietf.org/rfc/rfc4949.txt</a>",
@@ -4337,9 +4339,10 @@ berjon.biblio = {
             "B. Desruisseaux"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc5545.txt",
-        "title": "Internet Calendaring and Scheduling Core Object Specification (iCalendar)",
+        "title": "Internet Calendaring and Scheduling Core Object Specification (iCalendar) (RFC 5545)",
         "date": "September 2009",
-        "status": "RFC 5545"
+        "status": "RFC",
+        "publisher": "IETF"
     },
     "RFC5646": {
         "authors": [
@@ -4347,20 +4350,32 @@ berjon.biblio = {
             "M. Davis"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc5646.txt",
-        "title": "Tags for Identifying Languages",
+        "title": "Tags for Identifying Languages (RFC 5646)",
         "date": "September 2009",
-        "status": "RFC 5646"
+        "status": "RFC",
+        "publisher": "IETF"
     },
-    "RFC5724": "E. Wilde, A. Vaha-Sipila. <a href=\"http://www.ietf.org/rfc/rfc5724.txt\">URI Scheme for Global System for Mobile Communications (GSM) Short Message Service (SMS)</a>. January 2010. Request for Comments. URL: <a href=\"http://www.ietf.org/rfc/rfc5724.txt\">http://www.ietf.org/rfc/rfc5724.txt</a>",
+    "RFC5724": {
+        "authors": [
+            "E. Wilde",
+            "A. Vaha-Sipila"
+        ],
+        "href": "http://www.ietf.org/rfc/rfc5724.txt",
+        "title": "URI Scheme for Global System for Mobile Communications (GSM) Short Message Service (SMS) (RFC 5785)",
+        "date": "January 2010",
+        "status": "RFC",
+        "publisher": "IETF"
+    },
     "RFC5785": {
         "authors": [
             "Mark Nottingham",
             "Eran Hammer-Lahav"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc5785.txt",
-        "title": "Defining Well-Known Uniform Resource Identifiers (URIs)",
+        "title": "Defining Well-Known Uniform Resource Identifiers (URIs) (RFC 5785)",
         "date": "April 2010",
-        "status": "Internet Proposed Standard RFC 5785"
+        "status": "RFC",
+        "publisher": "IETF"
     },
     "RFC5789": {
         "authors": [
@@ -4368,9 +4383,9 @@ berjon.biblio = {
             "J. Snell"
         ],
         "href": "http://tools.ietf.org/html/rfc5789",
-        "title": "PATCH Method for HTTP",
+        "title": "PATCH Method for HTTP (RFC 5789)",
         "date": "March 2010",
-        "status": "Internet Proposed Standard RFC 5789",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC5988": {
@@ -4378,9 +4393,9 @@ berjon.biblio = {
             "Mark Nottingham"
         ],
         "href": "http://www.ietf.org/rfc/rfc5988.txt",
-        "title": "Web Linking",
+        "title": "Web Linking (RFC 5988)",
         "date": "October 2010",
-        "status": "RFC 5988",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC6068": {
@@ -4390,9 +4405,9 @@ berjon.biblio = {
             "J. Zawinski"
         ],
         "href": "http://www.ietf.org/rfc/rfc6068.txt",
-        "title": "The 'mailto' URI Scheme",
+        "title": "The 'mailto' URI Scheme (RFC 6068)",
         "date": "October 2010",
-        "status": "Internet Proposed Standard RFC 6068",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC6906": {
@@ -4400,17 +4415,16 @@ berjon.biblio = {
             "Erik Wilde"
         ],
         "href": "http://www.ietf.org/rfc/rfc6906.txt",
-        "title": "The 'profile' Link Relation Type",
+        "title": "The 'profile' Link Relation Type (RFC 6906)",
         "date": "March 2013",
-        "status": "RFC 6906",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RichSnippets": "<a href=\"http://googlewebmastercentral.blogspot.com/2009/05/introducing-rich-snippets.html/\"><cite>Introducing Rich Snippets.</cite></a> 12 May 2009. Google Webmaster Central Blog. URL: <a href=\"http://googlewebmastercentral.blogspot.com/2009/05/introducing-rich-snippets.html/\">http://googlewebmastercentral.blogspot.com/2009/05/introducing-rich-snippets.html/</a> ",
     "RIF-BLD": {
         "authors": [
             "Harold Boley",
-            "Michael Kifer",
-            ""
+            "Michael Kifer"
         ],
         "href": "http://www.w3.org/TR/2010/REC-rif-bld-20100622/",
         "title": "RIF Basic Logic Dialect",
