@@ -1,8 +1,19 @@
 if (typeof berjon === "undefined") berjon = {};
-    berjon.biblio = {
-    "ABA-DSIG-GUIDELINES": "<a href=\"http://www.signelec.com/content/download/digital_signature_guidelines.pdf\"><cite>Digital Signature Guidelines.</cite></a> 1 August 1996. Information Security Committee, American Bar Association. URL: <a href=\"http://www.signelec.com/content/download/digital_signature_guidelines.pdf\">http://www.signelec.com/content/download/digital_signature_guidelines.pdf</a>",
+berjon.biblio = {
+    "ABA-DSIG-GUIDELINES": {
+        "href" : "http://www.signelec.com/content/download/digital_signature_guidelines.pdf",
+        "title" : "Digital Signature Guidelines",
+        "date" : "1 August 1996",
+        "status" : "Information Security Committee, American Bar Association"
+    },
     "ABC": "Leo Geurts; Lambert Meertens; Steven Pemberton. <a href=\"http://www.cwi.nl/~steven/abc\"><cite>The ABC Programmer's Handbook.</cite></a> Prentice-Hall. ISBN: 0-13-000027-2. URL: <a href=\"http://www.cwi.nl/~steven/abc\">http://www.cwi.nl/~steven/abc</a>",
-    "ABNF": "D. Crocker and P. Overell. <a href='http://www.ietf.org/rfc/rfc5234.txt'><cite>Augmented BNF for Syntax Specifications: ABNF.</cite></a> January 2008. Internet RFC 5234. URL: <a href='http://www.ietf.org/rfc/rfc5234.txt'>http://www.ietf.org/rfc/rfc5234.txt</a>",
+    "ABNF": {
+        "authors" : [ "D. Crocker",  "P. Overell"],
+        "href" : "http://www.ietf.org/rfc/rfc5234.txt",
+        "title" : "Augmented BNF for Syntax Specifications: ABNF",
+        "date" : "January 2008",
+        "status" : "Internet RFC 5234"
+    },
     "ACCESS-CONTROL": {
         "authors": [
             "Anne van Kesteren"
@@ -46,9 +57,26 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
-    "AES": "<a href=\"http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf\"><cite>NIST FIPS 197: Advanced Encryption Standard (AES)</cite></a>. November 2001. URL: <a href=\"http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf\">http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf</a>",
-    "AES-WRAP": "J. Schaad and R. Housley. <a href=\"http://www.ietf.org/rfc/rfc3394.txt\"><cite>RFC3394: Advanced Encryption Standard (AES) Key Wrap Algorithm</cite></a>.  IETF Informational RFC, September 2002. URL: <a href=\"http://www.rfc-editor.org/rfc/rfc3394.txt\">http://www.rfc-editor.org/rfc/rfc3394.txt</a>",
-    "AES-WRAP-PAD": "R. Housley, M. Dworkin. <a href=\"http://www.ietf.org/rfc/rfc5649.txt\"><cite>RFC 5649: Advanced Encryption Standard (AES) Key Wrap with Padding Algorithm</cite></a>.   IETF Informational RFC, August 2009. URL:  <a href=\"http://www.ietf.org/rfc/rfc5649.txt\"> http://www.ietf.org/rfc/rfc5649.txt</a>. ",
+    "AES": {
+        "href" :
+        "http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf",
+        "title" : "NIST FIPS 197: Advanced Encryption Standard (AES)",
+        "date" : "November 2001"
+    },
+    "AES-WRAP": {
+        "authors" : [ "J. Schaad", "R. Housley" ],
+        "href" : "http://www.ietf.org/rfc/rfc3394.txt", 
+        "title" : "RFC3394: Advanced Encryption Standard (AES) Key Wrap Algorithm",
+        "status" : "IETF Informational RFC",
+        "date" : "September 2002"
+    },
+    "AES-WRAP-PAD": {
+        "authors" : [ "R. Housley", "M. Dworkin" ],
+        "href" : "http://www.ietf.org/rfc/rfc5649.txt",
+        "title" : "RFC 5649: Advanced Encryption Standard (AES) Key Wrap with Padding Algorithm",
+        "status" : "   IETF Informational RFC",
+        "date" : "August 2009"
+    },
     "AGBDL": "Charles Jacobs; et al. <a href=\"http://grail.cs.washington.edu/pub/papers/Jacobs2003.pdf\">&ldquo;Adaptive Grid Based Document Layout&rdquo;</a> in: <cite>ACM Transactions on Graphics.</cite> 22. 3. pp. 838&#8211;847. July 2003. URL: <a href=\"http://grail.cs.washington.edu/pub/papers/Jacobs2003.pdf\">http://grail.cs.washington.edu/pub/papers/Jacobs2003.pdf</a> ",
     "ALT-TECHNIQUES": "Steve Faulkner <a href=\"http://www.w3.org/TR/html-alt-techniques/\"><cite>HTML5: Techniques for providing useful text alternatives</cite></a>. W3C Working Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/html-alt-techniques/\">http://www.w3.org/TR/html-alt-techniques/</a> ",
     "ANIMATION-TIMING": {
@@ -194,13 +222,12 @@ if (typeof berjon === "undefined") berjon = {};
     "C14N2-TestCases": {
         "authors": [
             "Pratik Datta",
-            "Frederick Hirsch",
-            ""
+            "Frederick Hirsch"
         ],
-        "href": "http://www.w3.org/2008/xmlsec/Drafts/c14n-20/test-cases/",
+        "href": "http://www.w3.org/TR/2013/NOTE-xml-c14n2-testcases-20130411/",
         "title": "Test Cases for Canonical XML 2.0",
-        "date": "5 January 2012",
-        "status": "FPWD",
+        "date": "11 April 2013",
+        "status": "WG-NOTE",
         "publisher": "W3C"
     },
     "CALL-CONTROL-REQS": {
@@ -421,8 +448,31 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
-    "CMS-Algorithms": "R. Housley. <a href=\"http://www.ietf.org/rfc/rfc3370.txt\"><cite>RFC3370: Cryptographic Message Syntax (CMS) Algorithms</cite></a>.  IETF Informational RFC, February 2002. URL: <a href=\"http://www.ietf.org/rfc/rfc3370.txt\">http://www.ietf.org/rfc/rfc3370.txt</a>",
-    "CMS-WRAP": "R. Housley. <a href=\"http://www.ietf.org/rfc/rfc3217.txt\"><cite>RFC3217: Triple-DES and R2 Key Wrapping</cite></a>.  IETF Informational RFC, December 2001. URL: <a href=\"http://www.ietf.org/rfc/rfc3217.txt\">http://www.ietf.org/rfc/rfc3217.txt</a>",
+    "COMPOSITING": {
+        "authors": [
+            "Rik Cabanier",
+            "Nikos Andronikos"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-compositing-20120816/",
+        "title": "Compositing and Blending 1.0",
+        "date": "16 August 2012",
+        "status": "FPWD",
+        "publisher": "W3C"
+    },
+    "CMS-Algorithms": {
+        "authors" : ["R. Housley" ],
+        "href" : "http://www.ietf.org/rfc/rfc3370.txt",
+        "title" : "RFC3370: Cryptographic Message Syntax (CMS) Algorithms",
+        "status":  "IETF Informational RFC",
+        "date": "February 2002"
+    },
+    "CMS-WRAP": {
+        "authors" : ["R. Housley"],
+        "href" : "http://www.ietf.org/rfc/rfc3217.txt",
+        "title" : "RFC3217: Triple-DES and R2 Key Wrapping",
+        "status":  "IETF Informational RFC",
+        "date" : "December 2001"
+    },
     "COAP": "E Shelby; et al. <a href=\"http://tools.ietf.org/html/draft-ietf-core-coap\"><cite>Constrained Application Protocol (CoAP)</cite></a>. IETF Internet Draft, December 2012. URL: <a href=\"http://tools.ietf.org/html/draft-ietf-core-coap\">http://tools.ietf.org/html/draft-ietf-core-coap</a>",
     "COLORIMETRY": "<cite>Colorimetry, Second Edition.</cite> CIE Publication 15.2-1986. ISBN 3-900-734-00-3",
     "CONSENT-EU-WP187": "WP189, <a href=\"http://ec.europa.eu/justice/policies/privacy/docs/wpdocs/2011/wp187_en.pdf\"><cite>Opinion 15/2011 on the definition of consent</cite></a>. EU Article 29 Data Protection Working Party, 01197/11/EN WP187. 13 July 2011. URL: <a href=\"http://ec.europa.eu/justice/policies/privacy/docs/wpdocs/2011/wp187_en.pdf\">http://ec.europa.eu/justice/policies/privacy/docs/wpdocs/2011/wp187_en.pdf</a>",
@@ -526,6 +576,18 @@ if (typeof berjon === "undefined") berjon = {};
         "href": "http://www.w3.org/TR/2011/WD-css-device-adapt-20110915",
         "title": "CSS Device Adaptation",
         "date": "15 September 2011",
+        "status": "FPWD",
+        "publisher": "W3C"
+    },
+    "CSS-MASKING": {
+        "authors": [
+            "Dirk Schulze",
+            "Brian Birtles",
+            "Tab Atkins Jr."
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-css-masking-20121115/",
+        "title": "CSS Masking",
+        "date": "15 November 2012",
         "status": "FPWD",
         "publisher": "W3C"
     },
@@ -662,8 +724,8 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
-		"CSS3-ANIMATIONS-20130219": {
-				"authors": [
+    "CSS3-ANIMATIONS-20130219": {
+        "authors": [
             "Dean Jackson",
             "David Hyatt",
             "Chris Marrin",
@@ -686,7 +748,7 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
-		"CSS3-FONTS-20130212":  {
+    "CSS3-FONTS-20130212":  {
         "authors": [
             "John Daggett"
         ],
@@ -730,7 +792,7 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "CR",
         "publisher": "W3C"
     },
-		"CSS3-IMAGES-20120417": {
+    "CSS3-IMAGES-20120417": {
         "authors": [
             "Elika J. Etemad",
             "Tab Atkins Jr."
@@ -895,7 +957,7 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "REC",
         "publisher": "W3C"
     },
-		"CSS3COLOR-20110607": {
+    "CSS3COLOR-20110607": {
         "authors": [
             "Tantek Çelik",
             "Chris Lilley",
@@ -1004,7 +1066,7 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "REC",
         "publisher": "W3C"
     },
-		"CSS3-MEDIAQUERIES-20120619": {
+    "CSS3-MEDIAQUERIES-20120619": {
         "authors": [
             "H&#229;kon Wium Lie",
             "Tantek &#199;elik",
@@ -1095,7 +1157,7 @@ if (typeof berjon === "undefined") berjon = {};
         "date": "13 November 2012",
         "status": "WD",
         "publisher": "W3C"
-    },    
+    },
     "CSS3TEXTLAYOUT": "Elika J. Etemad; Paul Nelson. <cite>CSS3 Text Layout Module.</cite> (forthcoming). W3C Working Draft. (Work in progress.)",
     "CSS3UI": {
         "authors": [
@@ -1743,8 +1805,18 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "NOTE",
         "publisher": "W3C"
     },
-    "ECMA-262": "<a href=\"http://www.ecma-international.org/publications/standards/Ecma-262.htm\"><cite>ECMAScript Language Specification.</cite></a> June 2011. URL: <a href=\"http://www.ecma-international.org/publications/standards/Ecma-262.htm\">http://www.ecma-international.org/publications/standards/Ecma-262.htm</a> ",
-    "ECMA-262-51": "<a href=\"http://www.ecma-international.org/publications/standards/Ecma-262.htm\">ECMAScript Language Specification, Edition 5.1</a>. June 2011. URL: <a href=\"http://www.ecma-international.org/publications/standards/Ecma-262.htm\">http://www.ecma-international.org/publications/standards/Ecma-262.htm</a>",
+    "ECMA-262": {
+      "date": "June 2011",
+      "href": "http://www.ecma-international.org/publications/standards/Ecma-262.htm",
+      "publisher": "ECMA",
+      "title": "ECMAScript Language Specification, Edition 5.1"
+    },
+    "ECMA-262-51": {
+      "date": "June 2011",
+      "href": "http://www.ecma-international.org/publications/standards/Ecma-262.htm",
+      "publisher": "ECMA",
+      "title": "ECMAScript Language Specification, Edition 5.1"
+    },
     "ECMAS-402": {
         "authors": ["Norbert Lindenberg"],
         "date": "1 December 2012",
@@ -1906,6 +1978,18 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
+    "FILTER-EFFECTS": {
+        "authors": [
+            "Erik Dahlstr&#246;m",
+            "Dean Jackson",
+            "Dirk Schulze"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-filter-effects-20121025/",
+        "title": "Filter Effects 1.0",
+        "date": "25 October 2012",
+        "status": "FPWD",
+        "publisher": "W3C"
+    },
     "FIN-PRIV-NOTICE": "Kleimann Communications Group, Inc. <a href='http://www.ftc.gov/privacy/privacyinitiatives/ftcfinalreport060228.pdf'><cite>Evolution of a Prototype Financial Privacy Notice </cite></a> 28 February 2006. URL: http://www.ftc.gov/privacy/privacyinitiatives/ftcfinalreport060228.pdf ",
     "FIPS-180-3": "<a href=\"http://csrc.nist.gov/publications/fips/fips180-3/fips180-3_final.pdf\"><cite>FIPS PUB 180-3 Secure Hash Standard</cite></a>.  U.S. Department of Commerce/National Institute of Standards and Technology. URL: <a href=\"http://csrc.nist.gov/publications/fips/fips180-3/fips180-3_final.pdf\">http://csrc.nist.gov/publications/fips/fips180-3/fips180-3_final.pdf</a>",
     "FIPS-186-3": "<a href=\"http://csrc.nist.gov/publications/fips/fips186-3/fips_186-3.pdf\"><cite>FIPS PUB 186-3:  Digital Signature Standard (DSS)</cite></a>. June 2009. U.S. Department of Commerce/National Institute of Standards and Technology. URL: <a href=\"http://csrc.nist.gov/publications/fips/fips186-3/fips_186-3.pdf\">http://csrc.nist.gov/publications/fips/fips186-3/fips_186-3.pdf</a>",
@@ -1923,7 +2007,7 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "CR",
         "publisher": "W3C"
     },
-		"FLEXBOX-20120918": {
+    "FLEXBOX-20120918": {
         "authors": [
             "Tab Atkins Jr",
             "Elika J. Etemad",
@@ -2064,16 +2148,16 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "HLS": {
-		"authors": [
-			"R. Pantos",
-			"W. May"
-		],
-		"href": "http://tools.ietf.org/html/draft-pantos-http-live-streaming",
-		"title": "HTTP Live Streaming (HLS)",
-		"date": "15 October 2012",
-		"status": "Internet Draft",
-		"publisher": "IETF"
-	},
+        "authors": [
+            "R. Pantos",
+            "W. May"
+        ],
+        "href": "http://tools.ietf.org/html/draft-pantos-http-live-streaming",
+        "title": "HTTP Live Streaming (HLS)",
+        "date": "15 October 2012",
+        "status": "Internet Draft",
+        "publisher": "IETF"
+    },
     "HMAC": "H. Krawczyk, M. Bellare, R. Canetti. <a href=\"http://www.ietf.org/rfc/rfc2104.txt\"><cite>HMAC: Keyed-Hashing for Message Authentication</cite></a>. February 1997. IETF RFC 2104.  URL: <a href=\"http://www.ietf.org/rfc/rfc2104.txt\">http://www.ietf.org/rfc/rfc2104.txt</a>",
     "HMAC-Security": "C. Rechberger, V. Rijmen. <a href=\"http://www.jucs.org/jucs_14_3/new_results_on_nmac/jucs_14_3_0347_0376_rechberger.pdf\"><cite>New Results on NMAC/HMAC when Instantiated with Popular Hash Functions</cite></a>. 2 January 2008. Journal of Universal Computer Science, vol. 14, no. 3 (2008), 347-376.  URL: <a href=\"http://www.jucs.org/jucs_14_3/new_results_on_nmac/jucs_14_3_0347_0376_rechberger.pdf\">http://www.jucs.org/jucs_14_3/new_results_on_nmac/jucs_14_3_0347_0376_rechberger.pdf</a>",
     "HMRMC": "<a href=\"http://www.hmrc.gov.uk/softwaredevelopers/index.htm\"><cite>HM Revenue and customs</cite></a> Her Majesty's Revenue and Customs. URL: <a href=\"http://www.hmrc.gov.uk/softwaredevelopers/index.htm\">http://www.hmrc.gov.uk/softwaredevelopers/index.htm</a> <br> Sample response message with XML signature: <a href=\"http://www.hmrc.gov.uk/ebu/responsemessages.pdf\">http://www.hmrc.gov.uk/ebu/responsemessages.pdf</a>",
@@ -2154,7 +2238,7 @@ if (typeof berjon === "undefined") berjon = {};
         "date": "17 December 2012",
         "status": "CR",
         "publisher": "W3C"
-    },    
+    },
     "HTML5-20121217": {
         "authors": [
             "Robin Berjon"
@@ -2832,13 +2916,13 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "MOZ-ICONS": "Martin, J. Raskin, A. Gelman, L. Rood, D. Surman, M. Hadfield, G. Greant, Z. <a href = 'https://wiki.mozilla.org/Drumbeat/Challenges/Privacy_Icons'<cite>Privacy Icons</cite></a> 6 March 2010. Mozilla Wiki. URL: https://wiki.mozilla.org/Drumbeat/Challenges/Privacy_Icons ",
-	"MPEGDASH": "<a href=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/c057623_ISO_IEC_23009-1_2012.zip\"><cite>Information technology -- Dynamic adaptive streaming over HTTP (DASH) -- Part 1: Media presentation description and segment formats</cite></a> ISO/IEC 23009-1:2012. URL: <a href=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/c057623_ISO_IEC_23009-1_2012.zip\">http://standards.iso.org/ittf/PubliclyAvailableStandards/c057623_ISO_IEC_23009-1_2012.zip</a> ",
+    "MPEGDASH": "<a href=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/c057623_ISO_IEC_23009-1_2012.zip\"><cite>Information technology -- Dynamic adaptive streaming over HTTP (DASH) -- Part 1: Media presentation description and segment formats</cite></a> ISO/IEC 23009-1:2012. URL: <a href=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/c057623_ISO_IEC_23009-1_2012.zip\">http://standards.iso.org/ittf/PubliclyAvailableStandards/c057623_ISO_IEC_23009-1_2012.zip</a> ",
     "MRCPv2": "Burnett, D. Shanmugham, S. <a href = 'http://tools.ietf.org/html/draft-ietf-speechsc-mrcpv2-27'><cite>Media Resource Control Protocol Version 2</cite></a> 15 November 2011. URL: <a href=\"http://tools.ietf.org/html/draft-ietf-speechsc-mrcpv2-27\">http://tools.ietf.org/html/draft-ietf-speechsc-mrcpv2-27</a>",
     "MSE": {
         "authors": [
             "Aaron Colwell",
-			"Adrian Bateman",
-			"Mark Watson"
+            "Adrian Bateman",
+            "Mark Watson"
         ],
         "href": "http://www.w3.org/TR/2013/WD-media-source-20130129/",
         "title": "Media Source Extensions",
@@ -2900,6 +2984,16 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "NAMED-GRAPHS": "Jeremy J. Carroll; Chris Bizer; Pat Hayes; Patrick Stickler. <a href=\"http://sites.wiwiss.fu-berlin.de/suhl/bizer/SWTSGuide/carroll-ISWC2004.pdf\"><cite>Named Graphs, Provenance and Trust</cite></a>. The Semantic Web — ISWC2004, Yokohama, Springer–Verlag, 2005. URL: <a href='http://sites.wiwiss.fu-berlin.de/suhl/bizer/SWTSGuide/carroll-ISWC2004.pdf'>http://sites.wiwiss.fu-berlin.de/suhl/bizer/SWTSGuide/carroll-ISWC2004.pdf</a>.",
+    "NAVIGATION-TIMING": {
+        "authors": [
+            "Zhiheng Wang"
+        ],
+        "href": "http://www.w3.org/TR/2012/REC-navigation-timing-20121217/",
+        "title": "Navigation Timing",
+        "date": "17 December 2012",
+        "status": "REC",
+        "publisher": "W3C"
+    },
     "NAVIGATOR": {
         "authors": [
             "Robin Berjon"
@@ -2909,7 +3003,7 @@ if (typeof berjon === "undefined") berjon = {};
         "title": "Navigator interface in HTML5",
         "status": "ED",
         "publisher": "W3C"
-    },    
+    },
     "NFC": "M. Davis, Ken Whistler. <a href=\"http://www.unicode.org/reports/tr15/\"><cite>TR15, Unicode Normalization Forms.</cite></a>. 17 September 2010, URL: <a href=\"http://www.unicode.org/reports/tr15/\">http://www.unicode.org/reports/tr15/</a>",
     "NGRAM-SPEC": {
         "authors": [
@@ -2989,7 +3083,12 @@ if (typeof berjon === "undefined") berjon = {};
     "OIPF-PROT-2": "Open IPTV Forum. Release 2 volume 4 (v2.1). URL:<a href='http://www.oipf.tv/docs/Release2/V2.1/OIPF-T1-R2-Specification-Volume-4-Protocols-v2_1-2011-06-21.pdf'>http://www.oipf.tv/docs/Release2/V2.1/OIPF-T1-R2-Specification-Volume-4-Protocols-v2_1-2011-06-21.pdf</a>",
     "OMA-CAB": "Converged Address Book Enabler, Version 1.0, Open Mobile Alliance, URL: http://www.openmobilealliance.org/",
     "OMA-DM": "<a href=\"http://www.openmobilealliance.org/Technical/release_program/dm_v1_2.aspx\"><cite>OMA Device Management V1.2 </cite></a> 17 June 2008. URL: <a href=\"http://www.openmobilealliance.org/Technical/release_program/dm_v1_2.aspx\">http://www.openmobilealliance.org/Technical/release_program/dm_v1_2.aspx</a> ",
-    "OMA-URI-SCHEMES": "<a href=\"http://www.openmobilealliance.org/Technical/release_program/docs/URI_Schemes/V1_0-20080626-A/OMA-TS-URI_Schemes-V1_0-20080626-A.pdf\"><cite>URI Schemes for the Mobile Applications Environment. Approved Version 1.0</cite></a> 26 Jun 2008. URL: <a href=\"http://www.openmobilealliance.org/Technical/release_program/docs/URI_Schemes/V1_0-20080626-A/OMA-TS-URI_Schemes-V1_0-20080626-A.pdf\">http://www.openmobilealliance.org/Technical/release_program/docs/URI_Schemes/V1_0-20080626-A/OMA-TS-URI_Schemes-V1_0-20080626-A.pdf</a> ",
+    "OMA-URI-SCHEMES": {
+        "href": "http://www.openmobilealliance.org/Technical/release_program/docs/URI_Schemes/V1_0-20080626-A/OMA-TS-URI_Schemes-V1_0-20080626-A.pdf",
+        "title": "URI Schemes for the Mobile Applications Environment. Approved Version 1.0",
+        "date": "26 Jun 2008",
+        "publisher": "OMA"
+    },
     "OMA-PUSH": "Open Mobile Alliance. OMA Push Version 2.3. URL: <a href=\"http://www.openmobilealliance.org/Technical/release_program/push_v2_3.aspx\">http://www.openmobilealliance.org/Technical/release_program/push_v2_3.aspx</a> ",
     "ORIGIN": {
         "authors": [
@@ -3767,12 +3866,12 @@ if (typeof berjon === "undefined") berjon = {};
     },
     "RDF-SYNTAX": {
         "authors": [
-            "Ora Lassila",
-            "Ralph R. Swick"
+            "Graham Klyne",
+            "Jeremy J. Carroll"
         ],
-        "href": "http://www.w3.org/TR/1999/REC-rdf-syntax-19990222",
+        "href": "http://www.w3.org/TR/2004/REC-rdf-concepts-20040210/",
         "title": "Resource Description Framework (RDF) Model and Syntax Specification",
-        "date": "22 February 1999",
+        "date": "10 February 2004",
         "status": "REC",
         "publisher": "W3C"
     },
@@ -3909,9 +4008,9 @@ if (typeof berjon === "undefined") berjon = {};
             "P. Mockapetris"
         ],
         "href": "http://www.ietf.org/rfc/rfc1034.txt",
-        "title": "DOMAIN NAMES - CONCEPTS AND FACILITIES",
+        "title": "Domain Names - Concepts and Facilities (RFC 1034)",
         "date": "November 1987",
-        "status": "RFC 1034",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC1738": {
@@ -3921,9 +4020,9 @@ if (typeof berjon === "undefined") berjon = {};
             "M. McCahill"
         ],
         "href": "http://www.ietf.org/rfc/rfc1738.txt",
-        "title": "Uniform Resource Locators (URL)",
+        "title": "Uniform Resource Locators (URL) (RFC 1738)",
         "date": "December 1994",
-        "status": "RFC 1738",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC1808": {
@@ -3931,9 +4030,9 @@ if (typeof berjon === "undefined") berjon = {};
             "R. Fielding"
         ],
         "href": "http://www.ietf.org/rfc/rfc1808.txt",
-        "title": "Relative Uniform Resource Locators",
+        "title": "Relative Uniform Resource Locators (RFC 1808)",
         "date": "June 1995",
-        "status": "RFC 1808 (Obsoleted by RFC 3986)",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC2045": "N. Freed and N. Borenstein. <a href=\"http://www.ietf.org/rfc/rfc2045.txt\"><cite>Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies.</cite></a> November 1996. URL: <a href=\"http://www.ietf.org/rfc/rfc2045.txt\">http://www.ietf.org/rfc/rfc2045.txt</a> ",
@@ -3943,9 +4042,9 @@ if (typeof berjon === "undefined") berjon = {};
             "N. Borenstein"
         ],
         "href": "http://www.ietf.org/rfc/rfc2046.txt",
-        "title": "Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types",
+        "title": "Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types (RFC 2046)",
         "date": "November 1996",
-        "status": "RFC 2046",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC2119": "S. Bradner. <a href=\"http://www.ietf.org/rfc/rfc2119.txt\"><cite>Key words for use in RFCs to Indicate Requirement Levels.</cite></a> March 1997. Internet RFC 2119.  URL: <a href=\"http://www.ietf.org/rfc/rfc2119.txt\">http://www.ietf.org/rfc/rfc2119.txt</a> ",
@@ -3955,9 +4054,9 @@ if (typeof berjon === "undefined") berjon = {};
             "K. Moore"
         ],
         "href": "http://www.ietf.org/rfc/rfc2231.txt",
-        "title": "MIME Parameter Value and Encoded Word Extensions: Character Sets, Languages, and Continuations",
+        "title": "MIME Parameter Value and Encoded Word Extensions: Character Sets, Languages, and Continuations (RFC 2231)",
         "date": "November 1997",
-        "status": "IETF RFC 2231",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC2318": "H. Lie, B. Bos, C. Lilley. <a href=\"http://www.ietf.org/rfc/rfc2318.txt\"><cite>The text/css Media Type.</cite></a> March 1998. URL: <a href=\"http://www.ietf.org/rfc/rfc2318.txt\">http://www.ietf.org/rfc/rfc2318.txt</a> ",
@@ -3966,9 +4065,9 @@ if (typeof berjon === "undefined") berjon = {};
             "L. Masinter"
         ],
         "href": "http://www.ietf.org/rfc/rfc2397.txt",
-        "title": "The &quot;data&quot; URL scheme",
+        "title": "The &quot;data&quot; URL scheme (RFC 2397)",
         "date": "August 1998",
-        "status": "RFC 2397",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC2426": "F. Dawson, T. Howes. <a href=\"http://www.ietf.org/rfc/rfc2426.txt\"><cite>vCard MIME Directory Profile.</cite></a> September 1998. URL: <a href=\"http://www.ietf.org/rfc/rfc2426.txt\">http://www.ietf.org/rfc/rfc2426.txt</a> ",
@@ -3978,9 +4077,9 @@ if (typeof berjon === "undefined") berjon = {};
             "L. McIntyre"
         ],
         "href": "http://www.ietf.org/rfc/rfc2531.txt",
-        "title": "Content Feature Schema for Internet Fax",
+        "title": "Content Feature Schema for Internet Fax (RFC 2533)",
         "date": "March 1999",
-        "status": "RFC 2531",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC2533": {
@@ -3988,9 +4087,9 @@ if (typeof berjon === "undefined") berjon = {};
             "G. Klyne"
         ],
         "href": "http://www.ietf.org/rfc/rfc2533",
-        "title": "A Syntax for Describing Media Feature Sets",
+        "title": "A Syntax for Describing Media Feature Sets (RFC 2533)",
         "date": "March 1999",
-        "status": "RFC 2533",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC2534": {
@@ -4000,9 +4099,9 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.ietf.org/rfc/rfc2534",
-        "title": "Media Features for Display, Print, and Fax",
+        "title": "Media Features for Display, Print, and Fax (RFC 2534)",
         "date": "March 1999",
-        "status": "RFC 2534",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC3406": "L. Daigle, D. van Gulik, R. Iannella, P. Faltstrom. <a href=\"http://www.ietf.org/rfc/rfc3406.txt\"><cite> URN Namespace Definition Mechanisms.</cite></a>. IETF RFC 3406 October 2002. URL: <a href=\"http://www.ietf.org/rfc/rfc3406.txt\"> http://www.ietf.org/rfc/rfc3406.txt</a>",
@@ -4012,9 +4111,10 @@ if (typeof berjon === "undefined") berjon = {};
             "L. Masinter"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc2854.txt",
-        "title": "The 'text/html' Media Type",
+        "title": "The 'text/html' Media Type (RFC 2854)",
         "date": "June 2000",
-        "status": "RFC 2854"
+        "status": "RFC",
+        "publisher": "IETF"
     },
     "RFC2978": {
         "authors": [
@@ -4022,9 +4122,9 @@ if (typeof berjon === "undefined") berjon = {};
             "J. Postel"
         ],
         "href": "http://www.ietf.org/rfc/rfc2978.txt",
-        "title": "IANA Charset Registration Procedures",
+        "title": "IANA Charset Registration Procedures (RFC 2978)",
         "date": "October 2000",
-        "status": "RFC 2978",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC3023": {
@@ -4034,9 +4134,9 @@ if (typeof berjon === "undefined") berjon = {};
             "D. Kohn"
         ],
         "href": "http://www.ietf.org/rfc/rfc3023.txt",
-        "title": "XML Media Types",
+        "title": "XML Media Types (RFC 3023)",
         "date": "January 2001",
-        "status": "RFC 3023",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC3161": {
@@ -4047,20 +4147,20 @@ if (typeof berjon === "undefined") berjon = {};
             "R. Zuccherato"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc3161.txt",
-        "title": "Internet X.509 Public Key Infrastructure Time-Stamp Protocol (TSP)",
+        "title": "Internet X.509 Public Key Infrastructure Time-Stamp Protocol (TSP) (RFC 3161)",
         "date": "August 2001",
-        "status": "RFC 3161"
+        "status": "RFC",
+        "publisher": "IETF"
     },
     "RFC3161-PKIX-UPDATE-9": "Stefan Santesson, Nick Pope. <a href=\"http://tools.ietf.org/id/draft-ietf-pkix-rfc3161-update-09.txt\"><cite> ESSCertIDv2 update for RFC 3161</cite></a> 29 April 2010, IETF Internet Draft. URL: <a href=\"http://tools.ietf.org/id/draft-ietf-pkix-rfc3161-update-09.txt\"> http://tools.ietf.org/id/draft-ietf-pkix-rfc3161-update-09.txt</a> ",
     "RFC3218": {
         "authors": [
-            "Rescorla",
-            "E"
+            "E. Rescorla"
         ],
-        "href": "http://tools.ietf.org/html/rfc3218",
-        "title": "Preventing the Million Message Attack on Cryptographic Message Syntax",
+        "href": "http://www.rfc-editor.org/rfc/rfc3218.txt",
+        "title": "Preventing the Million Message Attack on Cryptographic Message Syntax (RFC 3218)",
         "date": "January 2002",
-        "status": "Informational RFC 3218",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC3236": {
@@ -4069,9 +4169,10 @@ if (typeof berjon === "undefined") berjon = {};
             "M. Baker"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc3236.txt",
-        "title": "The 'application/xhtml+xml' Media Type",
+        "title": "The 'application/xhtml+xml' Media Type (RFC 3236)",
         "date": "January 2002",
-        "status": "RFC 3236"
+        "status": "RFC",
+        "publisher": "IETF"
     },
     "RFC3279": "W. Polk, R. Housley, L. Bassham. <a href=\"http://www.ietf.org/rfc/rfc3279.txt\"><cite>Algorithmupdates and Identifiers for the Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile</cite></a>. April 2002. Internet RFC 3279. URL: <a href=\"http://www.ietf.org/rfc/rfc3279.txt\">http://www.ietf.org/rfc/rfc3279.txt</a>",
     "RFC3339": "G. Klyne, C. Newman. <a href=\"http://www.ietf.org/rfc/rfc3339.txt\"><cite>Date and Time on the Internet: Timestamps</cite></a>. July 2002. Internet RFC 3339. URL: <a href=\"http://www.ietf.org/rfc/rfc3339.txt\">http://www.ietf.org/rfc/rfc3339.txt</a>",
@@ -4083,34 +4184,34 @@ if (typeof berjon === "undefined") berjon = {};
         ],
         "etAl": true,
         "href": "http://www.ietf.org/rfc/rfc3428.txt",
-        "title": "Session Initiation Protocol (SIP) Extension for Instant Messaging",
+        "title": "Session Initiation Protocol (SIP) Extension for Instant Messaging (RFC 3428)",
         "date": "December 2002",
-        "status": "RFC 3428",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC3490": "P. Faltstrom; P. Hoffman; A. Costello. <a href='http://www.rfc-editor.org/rfc/rfc3490.txt'><cite>Internationalizing Domain Names in Applications (IDNA).</cite></a> March 2003. Internet RFC 3490. URL: <a href='http://www.rfc-editor.org/rfc/rfc3490.txt'>http://www.rfc-editor.org/rfc/rfc3490.txt</a>",
     "RFC3550": {
-		"authors": [
-			"H. Schulzrinne",
-			"S. Casner",
-			"R. Frederick",
-			"V. Jacobson"
-		],
-		"href": "http://www.ietf.org/rfc/rfc3550.txt",
-		"title": "RTP: A Transport Protocol for Real-Time Applications",
-		"date": "July 2003",
-		"status": "RFC 3550",
-		"publisher": "IETF"
-	},
+        "authors": [
+            "H. Schulzrinne",
+            "S. Casner",
+            "R. Frederick",
+            "V. Jacobson"
+        ],
+        "href": "http://www.ietf.org/rfc/rfc3550.txt",
+        "title": "RTP: A Transport Protocol for Real-Time Applications (RFC 3550)",
+        "date": "July 2003",
+        "status": "RFC",
+        "publisher": "IETF"
+    },
     "RFC3555": "S. Casner; P. Hoschka. <a href='http://www.rfc-editor.org/rfc/rfc3555.txt'><cite>MIME Type Registration of RTP Payload Formats</cite></a>. July 2003. Internet RFC 3555. URL: <a href='http://www.rfc-editor.org/rfc/rfc3555.txt'>http://www.rfc-editor.org/rfc/rfc3555.txt</a>",
     "RFC3966": {
         "authors": [
             "H. Schulzrinne"
         ],
         "href": "http://www.ietf.org/rfc/rfc3966.txt",
-        "title": "The tel URI for Telephone Numbers",
+        "title": "The tel URI for Telephone Numbers (RFC 3966)",
         "date": "December 2004",
-        "status": "RFC 3966",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC3986": {
@@ -4120,9 +4221,9 @@ if (typeof berjon === "undefined") berjon = {};
             "L. Masinter"
         ],
         "href": "http://www.ietf.org/rfc/rfc3986.txt",
-        "title": "Uniform Resource Identifier (URI): Generic Syntax",
+        "title": "Uniform Resource Identifier (URI): Generic Syntax (RFC 3986)",
         "date": "January 2005",
-        "status": "RFC 3986",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC3987": {
@@ -4131,9 +4232,9 @@ if (typeof berjon === "undefined") berjon = {};
             "M. Suignard"
         ],
         "href": "http://www.ietf.org/rfc/rfc3987.txt",
-        "title": "Internationalized Resource Identifiers (IRIs)",
+        "title": "Internationalized Resource Identifiers (IRIs) (RFC 3987)",
         "date": "January 2005",
-        "status": "RFC 3987",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4050": {
@@ -4144,9 +4245,9 @@ if (typeof berjon === "undefined") berjon = {};
             "Y. Wang"
         ],
         "href": "http://www.ietf.org/rfc/rfc4050.txt",
-        "title": "Using the Elliptic Curve Signature Algorithm (ECDSA) for XML Digital Signatures",
-        "date": "IETF RFC 4050",
-        "status": "April 2005",
+        "title": "Using the Elliptic Curve Signature Algorithm (ECDSA) for XML Digital Signatures (RFC 4050)",
+        "date": "April 2005",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4051": "D. Eastlake 3rd. <a href=\"http://www.ietf.org/rfc/rfc4051.txt\"><cite>Additional XML Security Uniform Resource Identifiers</cite></a>. RFC 4051 April 2005. URL: <a href=\"http://www.ietf.org/rfc/rfc4051.txt\">http://www.ietf.org/rfc/rfc4051.txt</a>",
@@ -4158,9 +4259,9 @@ if (typeof berjon === "undefined") berjon = {};
             "R. Salz"
         ],
         "href": "http://www.ietf.org/rfc/rfc4122.txt",
-        "title": "A Universally Unique IDentifier (UUID) URN Namespace",
+        "title": "A Universally Unique IDentifier (UUID) URN Namespace (RFC 4122)",
         "date": "July 2005",
-        "status": "RFC 4122",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4180": "Y. Shafranovich. <a href=\"http://www.ietf.org/rfc/rfc4180.txt\"> <cite>Common Format and MIME Type for Comma-Separated Values (CSV) Files</cite></a> October 2005. Internet RFC 3987. URL: <a href=\"http://www.ietf.org/rfc/rfc4180.txt\">http://www.ietf.org/rfc/rfc4180.txt</a>",
@@ -4171,9 +4272,9 @@ if (typeof berjon === "undefined") berjon = {};
             "P. Frojdh"
         ],
         "href": "http://www.ietf.org/rfc/rfc4281.txt",
-        "title": "The Codecs Parameter for &quot;Bucket&quot; Media Types",
+        "title": "The Codecs Parameter for &quot;Bucket&quot; Media Types (RFC 4281)",
         "date": "November 2005",
-        "status": "RFC 4281",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4572": {
@@ -4181,9 +4282,9 @@ if (typeof berjon === "undefined") berjon = {};
             "J. Lennox"
         ],
         "href": "http://www.ietf.org/rfc/rfc4572.txt",
-        "title": " Connection-Oriented Media Transport over the Transport Layer Security (TLS) Protocol in the Session Description Protocol (SDP)",
+        "title": " Connection-Oriented Media Transport over the Transport Layer Security (TLS) Protocol in the Session Description Protocol (SDP) (RFC 4572)",
         "date": "July 2006",
-        "status": "RFC 4572",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4627": {
@@ -4191,9 +4292,9 @@ if (typeof berjon === "undefined") berjon = {};
             "D. Crockford"
         ],
         "href": "http://www.ietf.org/rfc/rfc4627.txt",
-        "title": "The application/json Media Type for JavaScript Object Notation (JSON)",
+        "title": "The application/json Media Type for JavaScript Object Notation (JSON) (RFC 4627)",
         "date": "July 2006",
-        "status": "RFC 4627",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4646": {
@@ -4202,9 +4303,9 @@ if (typeof berjon === "undefined") berjon = {};
             "M. Davis"
         ],
         "href": "https://www.ietf.org/rfc/rfc4646.txt",
-        "title": "Tags for Identifying Languages",
+        "title": "Tags for Identifying Languages (RFC 4646)",
         "date": "September 2006",
-        "status": "RFC 4646",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4770": {
@@ -4213,9 +4314,9 @@ if (typeof berjon === "undefined") berjon = {};
             "J. Reschke"
         ],
         "href": "http://www.ietf.org/rfc/rfc4770.txt",
-        "title": "vCard Extensions for Instant Messaging (IM)",
+        "title": "vCard Extensions for Instant Messaging (IM) (RFC 4770)",
         "date": "January 2007",
-        "status": "RFC 4770",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4868": {
@@ -4224,9 +4325,9 @@ if (typeof berjon === "undefined") berjon = {};
             "S. Frankel"
         ],
         "href": "http://www.ietf.org/rfc/rfc4868.txt",
-        "title": "Using HMAC-SHA-256, HMAC-SHA-384, and HMAC-SHA-512 with IPsec",
-        "date": "IETF RFC 4868",
-        "status": "May 2007",
+        "title": "Using HMAC-SHA-256, HMAC-SHA-384, and HMAC-SHA-512 with IPsec (RFC 4868)",
+        "date": "May 2007",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC4949": "R. Shirey. <a href=\"http://www.ietf.org/rfc/rfc4949.txt\"><cite>Internet Security Glossary, Version 2.</cite></a>. IETF RFC 4949. August 2007. URL: <a href=\"http://www.ietf.org/rfc/rfc4949.txt\">http://www.ietf.org/rfc/rfc4949.txt</a>",
@@ -4238,9 +4339,10 @@ if (typeof berjon === "undefined") berjon = {};
             "B. Desruisseaux"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc5545.txt",
-        "title": "Internet Calendaring and Scheduling Core Object Specification (iCalendar)",
+        "title": "Internet Calendaring and Scheduling Core Object Specification (iCalendar) (RFC 5545)",
         "date": "September 2009",
-        "status": "RFC 5545"
+        "status": "RFC",
+        "publisher": "IETF"
     },
     "RFC5646": {
         "authors": [
@@ -4248,20 +4350,32 @@ if (typeof berjon === "undefined") berjon = {};
             "M. Davis"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc5646.txt",
-        "title": "Tags for Identifying Languages",
+        "title": "Tags for Identifying Languages (RFC 5646)",
         "date": "September 2009",
-        "status": "RFC 5646"
+        "status": "RFC",
+        "publisher": "IETF"
     },
-    "RFC5724": "E. Wilde, A. Vaha-Sipila. <a href=\"http://www.ietf.org/rfc/rfc5724.txt\">URI Scheme for Global System for Mobile Communications (GSM) Short Message Service (SMS)</a>. January 2010. Request for Comments. URL: <a href=\"http://www.ietf.org/rfc/rfc5724.txt\">http://www.ietf.org/rfc/rfc5724.txt</a>",
+    "RFC5724": {
+        "authors": [
+            "E. Wilde",
+            "A. Vaha-Sipila"
+        ],
+        "href": "http://www.ietf.org/rfc/rfc5724.txt",
+        "title": "URI Scheme for Global System for Mobile Communications (GSM) Short Message Service (SMS) (RFC 5785)",
+        "date": "January 2010",
+        "status": "RFC",
+        "publisher": "IETF"
+    },
     "RFC5785": {
         "authors": [
             "Mark Nottingham",
             "Eran Hammer-Lahav"
         ],
         "href": "http://www.rfc-editor.org/rfc/rfc5785.txt",
-        "title": "Defining Well-Known Uniform Resource Identifiers (URIs)",
+        "title": "Defining Well-Known Uniform Resource Identifiers (URIs) (RFC 5785)",
         "date": "April 2010",
-        "status": "Internet Proposed Standard RFC 5785"
+        "status": "RFC",
+        "publisher": "IETF"
     },
     "RFC5789": {
         "authors": [
@@ -4269,9 +4383,19 @@ if (typeof berjon === "undefined") berjon = {};
             "J. Snell"
         ],
         "href": "http://tools.ietf.org/html/rfc5789",
-        "title": "PATCH Method for HTTP",
+        "title": "PATCH Method for HTTP (RFC 5789)",
         "date": "March 2010",
-        "status": "Internet Proposed Standard RFC 5789",
+        "status": "RFC",
+        "publisher": "IETF"
+    },
+    "RFC5988": {
+        "authors": [
+            "Mark Nottingham"
+        ],
+        "href": "http://www.ietf.org/rfc/rfc5988.txt",
+        "title": "Web Linking (RFC 5988)",
+        "date": "October 2010",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RFC6068": {
@@ -4281,17 +4405,26 @@ if (typeof berjon === "undefined") berjon = {};
             "J. Zawinski"
         ],
         "href": "http://www.ietf.org/rfc/rfc6068.txt",
-        "title": "The 'mailto' URI Scheme",
+        "title": "The 'mailto' URI Scheme (RFC 6068)",
         "date": "October 2010",
-        "status": "Internet Proposed Standard RFC 6068",
+        "status": "RFC",
+        "publisher": "IETF"
+    },
+    "RFC6906": {
+        "authors": [
+            "Erik Wilde"
+        ],
+        "href": "http://www.ietf.org/rfc/rfc6906.txt",
+        "title": "The 'profile' Link Relation Type (RFC 6906)",
+        "date": "March 2013",
+        "status": "RFC",
         "publisher": "IETF"
     },
     "RichSnippets": "<a href=\"http://googlewebmastercentral.blogspot.com/2009/05/introducing-rich-snippets.html/\"><cite>Introducing Rich Snippets.</cite></a> 12 May 2009. Google Webmaster Central Blog. URL: <a href=\"http://googlewebmastercentral.blogspot.com/2009/05/introducing-rich-snippets.html/\">http://googlewebmastercentral.blogspot.com/2009/05/introducing-rich-snippets.html/</a> ",
     "RIF-BLD": {
         "authors": [
             "Harold Boley",
-            "Michael Kifer",
-            ""
+            "Michael Kifer"
         ],
         "href": "http://www.w3.org/TR/2010/REC-rif-bld-20100622/",
         "title": "RIF Basic Logic Dialect",
@@ -4531,9 +4664,9 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "SELECTORS-LEVEL-3": "Daniel Glazman; et al. <a href=\"http://www.w3.org/TR/2011/REC-css3-selectors-20110929\"><cite>Selectors Level 3.</cite></a> W3C Recommendation 29 September 2011 URL: <a href=\"http://www.w3.org/TR/2011/REC-css3-selectors-20110929\">http://www.w3.org/TR/2011/REC-css3-selectors-20110929</a> ",
-		"SELECTORS-LEVEL-3-20110929": {
+    "SELECTORS-LEVEL-3-20110929": {
         "authors": [
-		        "Daniel Glazman",
+            "Daniel Glazman"
         ],
         "etAl": true,
         "href": "http://www.w3.org/TR/2011/REC-css3-selectors-20110929/",
@@ -4949,18 +5082,36 @@ if (typeof berjon === "undefined") berjon = {};
         "publisher": "W3C"
     },
     "SRGB": "<a href=\"http://www.iec.ch/nr1899.htm\"><cite>Multimedia systems and equipment - Colour measurement and management - Part 2-1: Colour management - Default RGB colour space - sRGB.</cite></a> IEC 61966-2-1 (1999-10). ISBN: 2-8318-4989-6 - ICS codes: 33.160.60, 37.080 - TC 100 - 51 pp. URL: <a href=\"http://www.iec.ch/nr1899.htm\">http://www.iec.ch/nr1899.htm</a>",
-    "SSE": "Ian Hickson; <a href=\"http://www.w3.org/TR/eventsource/\"><cite>Server-Sent Events.</cite></a>W3C Editor Draft. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/eventsource/\">http://www.w3.org/TR/eventsource/</a> ",
-		"SSE-20121211": {
-			"authors": [
-			    "Ian Hickson"
-			],
-			"href": "http://www.w3.org/TR/2012/CR-eventsource-20121211/",
-			"title": "Server-Sent Events",
-			"date": "11 December 2012",
-			"status": "CR",
-			"publisher": "W3C"
-		},
-    "SSE-ed": "Ian Hickson; <a href=\"http://dev.w3.org/html5/eventsource/\"><cite>Server-Sent Events.</cite></a>W3C Editor Draft. (Work in progress.) URL: <a href=\"http://dev.w3.org/html5/eventsource/\">http://dev.w3.org/html5/eventsource/</a> ",
+    "SSE": {
+        "authors": [
+            "Ian Hickson"
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-eventsource-20121211/",
+        "title": "Server-Sent Events",
+        "date": "11 December 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
+    "SSE-20121211": {
+        "authors": [
+            "Ian Hickson"
+        ],
+        "href": "http://www.w3.org/TR/2012/CR-eventsource-20121211/",
+        "title": "Server-Sent Events",
+        "date": "11 December 2012",
+        "status": "CR",
+        "publisher": "W3C"
+    },
+    "SSE-ed": {
+        "authors": [
+            "Ian Hickson"
+        ],
+        "href": "http://dev.w3.org/html5/eventsource/",
+        "title": "Server-Sent Events",
+        "date": "25 March 2013",
+        "status": "ED",
+        "publisher": "W3C"
+    },
     "SSML-SAYAS": {
         "authors": [
             "Daniel C. Burnett"
@@ -5062,6 +5213,25 @@ if (typeof berjon === "undefined") berjon = {};
         "title": "SVG 1.1/1.2/2.0 Requirements",
         "date": "22 April 2002",
         "status": "WD",
+        "publisher": "W3C"
+    },
+    "SVG2": {
+        "authors": [
+            "Nikos Andronikos",
+            "Tavmjong Bah",
+            "Brian Birtles",
+            "Cyril Concolato",
+            "Erik Dahlstr&#246;m",
+            "Chris Lilley",
+            "Cameron McCormack",
+            "Dirk Schulze",
+            "Richard Schwerdtfeger",
+            "Jonathan Watt"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-SVG2-20120828/",
+        "title": "Scalable Vector Graphics (SVG) 2",
+        "date": "28 August 2012",
+        "status": "FPWD",
         "publisher": "W3C"
     },
     "SVGFILTER12": {
@@ -5403,16 +5573,16 @@ if (typeof berjon === "undefined") berjon = {};
     },
     "Tobin": "R. Tobin. <a href=\"http://lists.w3.org/Archives/Member/w3c-xml-core-wg/2000OctDec/0054\"><cite>Infoset for external entities.</cite></a> 2000. URL: <a href=\"http://lists.w3.org/Archives/Member/w3c-xml-core-wg/2000OctDec/0054\">http://lists.w3.org/Archives/Member/w3c-xml-core-wg/2000OctDec/0054</a> [XML Core mailing list, <a href=\"http://cgi.w3.org/MemberAccess/AccessRequest\">W3C Member Only</a>].",
     "TOUCH-EVENTS": {
-      "authors": [
-          "Doug Schepers",
-          "Sangwhan Moon",
-          "Matt Brubeck"
-      ],
-      "href": "http://www.w3.org/TR/2013/WD-touch-events-20130124",
-      "title": "Touch Events version 1",
-      "date": "24 January 2013",
-      "status": "WD",
-      "publisher": "W3C"
+        "authors": [
+            "Doug Schepers",
+            "Sangwhan Moon",
+            "Matt Brubeck"
+        ],
+        "href": "http://www.w3.org/TR/2013/WD-touch-events-20130124",
+        "title": "Touch Events version 1",
+        "date": "24 January 2013",
+        "status": "WD",
+        "publisher": "W3C"
     },
     "TRACKING-COMPLIANCE": {
         "authors": [
@@ -6104,15 +6274,23 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
-    "WEBGL": "Chris Marrin (Apple Inc.) <a href=\"https://www.khronos.org/registry/webgl/specs/1.0/\"><cite>WebGL Specification, Version 1.0</cite></a> , 10 February 2011 URL: <a href=\"https://www.khronos.org/registry/webgl/specs/1.0//\">https://www.khronos.org/registry/webgl/specs/1.0/</a>",
+    "WEBGL": {
+        "authors": [
+            "Chris Marrin (Apple Inc.)"
+        ],
+        "href": "https://www.khronos.org/registry/webgl/specs/1.0/",
+        "title": "WebGL Specification, Version 1.0",
+        "date": "10 February 2011",
+        "publisher": "Khronos"
+    },
     "WEBIDL": {
         "authors": [
             "Cameron McCormack"
         ],
-        "href": "http://www.w3.org/TR/2011/WD-WebIDL-20110927/",
+        "href": "http://www.w3.org/TR/2012/CR-WebIDL-20120419/",
         "title": "Web IDL",
-        "date": "27 September 2011",
-        "status": "WD",
+        "date": "19 April 2012",
+        "status": "CR",
         "publisher": "W3C"
     },
     "WEBONT-REQ": {
@@ -6181,7 +6359,7 @@ if (typeof berjon === "undefined") berjon = {};
         "date": "08 December 2011",
         "status": "CR",
         "publisher": "W3C"
-    },    
+    },
     "WEB-SQL": {
         "authors": [
             "Ian Hickson"
@@ -6221,7 +6399,7 @@ if (typeof berjon === "undefined") berjon = {};
         "date": "01 May 2012",
         "status": "CR",
         "publisher": "W3C"
-    },    
+    },
     "WICD": {
         "authors": [
             "Daniel Appelquist"
@@ -6337,7 +6515,7 @@ if (typeof berjon === "undefined") berjon = {};
         "date": "13 December 2012",
         "status": "REC",
         "publisher": "W3C"
-    },    
+    },
     "WORDNET-RDF": {
         "authors": [
             "Aldo Gangemi",
@@ -7359,10 +7537,10 @@ if (typeof berjon === "undefined") berjon = {};
             "Pratik Datta",
             "Frederick Hirsch"
         ],
-        "href": "http://www.w3.org/TR/2012/CR-xml-c14n2-20120124/",
+        "href": "http://www.w3.org/TR/2013/NOTE-xml-c14n2-20130411/",
         "title": "Canonical XML Version 2.0",
-        "date": "24 January 2012",
-        "status": "CR",
+        "date": "11 April 2013",
+        "status": "WG-NOTE",
         "publisher": "W3C"
     },
     "XML-CANONICAL-REQ": {
@@ -7651,10 +7829,10 @@ if (typeof berjon === "undefined") berjon = {};
             "Pratik Datta",
             "Frederick Hirsch"
         ],
-        "href": "http://www.w3.org/TR/2013/NOTE-xmldsig-bestpractices-20130124/",
+        "href": "http://www.w3.org/TR/2013/NOTE-xmldsig-bestpractices-20130411/",
         "title": "XML Signature Best Practices",
-        "date": "24 January 2013",
-        "status": "W3C Working Group Note",
+        "date": "11 April 2013",
+        "status": "WG-NOTE",
         "publisher": "W3C"
     },
     "XMLDSIG-CORE2002": {
@@ -7679,12 +7857,79 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "REC",
         "publisher": "W3C"
     },
-    "XMLDSIG-CORE1": "D. Eastlake, J. Reagle, D. Solo, F. Hirsch, T. Roessler, K. Yiu. <a href=\"http://www.w3.org/TR/2013/PR-xmldsig-core1-20130124/\"><cite>XML Signature Syntax and Processing Version 1.1.</cite></a> 24 January 2013. W3C Proposed Recommendation. (Work in progress) URL: <a href=\"http://www.w3.org/TR/2013/PR-xmldsig-core1-20130124/\">http://www.w3.org/TR/2013/PR-xmldsig-core1-20130124/</a> ",
-    "XMLDSIG-CORE1-CHGS": "Frederick Hirsch. <a href=\"http://www.w3.org/TR/2012/NOTE-xmldsig-core1-explain-20121018/\"><cite>Functional Explanation of Changes in XML Signature 1.1</cite></a>. 18 October 2012. W3C Working Group Note. URL: <a href=\"http://www.w3.org/TR/2012/NOTE-xmldsig-core1-explain-20121018/\">http://www.w3.org/TR/2012/NOTE-xmldsig-core1-explain-20121018/</a> ",
-    "XMLDSIG-CORE1-INTEROP": "Frederick Hirsch, Pratik Datta <a href=\"http://www.w3.org/TR/2012/NOTE-xmldsig-core1-interop-20121113/\"><cite>XML Signature 1.1 Interop Test Report</cite></a>. 13 November 2012. W3C Working Group Note. URL: <a href=\"http://www.w3.org/TR/2012/NOTE-xmldsig-core1-interop-20121113/\">http://www.w3.org/TR/2012/NOTE-xmldsig-core1-interop-20121113/</a> ",
-    "XMLDSIG-CORE2": "Mark Bartel; John Boyer; Barb Fox et al. <a href=\"http://www.w3.org/TR/2012/CR-xmldsig-core2-20120124/\"><cite>XML Signature Syntax and Processing Version 2.0</cite></a>. 24 January 2012.  W3C Candidate Recommendation. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/2012/CR-xmldsig-core2-20120124/\">http://www.w3.org/TR/2012/CR-xmldsig-core2-20120124/</a>",
-    "XMLDSIG-GARCIA": "Raúl Benito García. <a href=\"http://www.w3.org/2008/xmlsec/papers/TFCFirmasdigitalesenXML-11-10-2007.pdf\"><cite>Verificación De Firmas Digitales En Documentos XML De Tamaño Arbitrario.</cite></a> December 2006. URL: <a href=\"http://www.w3.org/2008/xmlsec/papers/TFCFirmasdigitalesenXML-11-10-2007.pdf\">http://www.w3.org/2008/xmlsec/papers/TFCFirmasdigitalesenXML-11-10-2007.pdf</a>",
-    "XMLDSIG-COMPLEXITY": "Brad Hill. <a href=\"http://www.w3.org/2007/xmlsec/ws/papers/04-hill-isecpartners/\"><cite>Complexity as the Enemy of Security: Position Paper for W3C Workshop on Next Steps for XML Signature and XML Encryption.</cite></a>. 25-26 September 2007. W3C Workshop. URL: <a href=\"http://www.w3.org/2007/xmlsec/ws/papers/04-hill-isecpartners/\">http://www.w3.org/2007/xmlsec/ws/papers/04-hill-isecpartners/</a> ",
+    "XMLDSIG-CORE1": {
+        "authors" : [
+            "D. Eastlake",
+            "J. Reagle",
+            "D. Solo",
+            "F. Hirsch",
+            "T. Roessler",
+            "K. Yiu" 
+        ],
+        "href" : "http://www.w3.org/TR/2013/REC-xmldsig-core1-20130411/",
+        "title" : "XML Signature Syntax and Processing Version 1.1",
+        "date" :  "11 April 2013",
+        "status" : "REC",
+        "publisher" : "W3C"
+    },
+    "XMLDSIG-CORE1-CHGS": {
+        "authors" : [
+            "Frederick Hirsch" 
+        ],
+        "href" : "http://www.w3.org/TR/2012/NOTE-xmldsig-core1-explain-20130411/",
+        "title" : "Functional Explanation of Changes in XML Signature 1.1",
+        "date" : "11 April 2013",
+        "status" : "WG-NOTE",
+        "publisher" : "W3C"
+    },
+    "XMLDSIG-CORE1-INTEROP": {
+        "authors" : [
+            "Frederick Hirsch",
+            "Pratik Datta"
+        ],
+        "href" : "http://www.w3.org/TR/2012/NOTE-xmldsig-core1-interop-20130411/",
+        "title" : "XML Signature 1.1 Interop Test Report",
+        "date" : "11 April 2013",
+        "status" : "WG-NOTE",
+        "publisher" : "W3C"
+    },
+    "XMLDSIG-CORE2": {
+        "authors" : [
+            "D. Eastlake",
+            "J. Reagle",
+            "D. Solo",
+            "F. Hirsch",
+            "T. Roessler",
+            "K. Yiu",
+            "P. Datta",
+            "S. Cantor"
+        ],
+        "href" : "http://www.w3.org/TR/2012/CR-xmldsig-core2-20130411/",
+        "title" : "XML Signature Syntax and Processing Version 2.0",
+        "date" : "11 April 2013",
+        "status" : "WG-NOTE",
+        "publisher" : "W3C"
+    },
+    "XMLDSIG-GARCIA": {
+        "authors" : [
+            "Raúl Benito García" 
+        ],
+        "href" : "http://www.w3.org/2008/xmlsec/papers/TFCFirmasdigitalesenXML-11-10-2007.pdf",
+        "title" : "Verificación De Firmas Digitales En Documentos XML De  Tamaño Arbitrario",
+        "date" :  "December 2006",
+        "status" : "WD",
+        "publisher" : "W3C"
+    },
+    "XMLDSIG-COMPLEXITY": {
+        "authors" : [
+            "Brad Hill" 
+        ],
+        "href" : "http://www.w3.org/2007/xmlsec/ws/papers/04-hill-isecpartners/",
+        "title" : "Complexity as the Enemy of Security: Position Paper for W3C Workshop on Next Steps for XML Signature and XML Encryption",
+        "date" : "25-26 September",
+        "status" : "WD",
+        "publisher" : "W3C"
+    },
     "XMLDSIG-SEMANTICS": {
         "authors": [
             "Sebastian Gajek",
@@ -7707,7 +7952,17 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "W3C Workshop",
         "publisher": "W3C"
     },
-    "XMLDSIG-XPATH": "Pratik Datta. Frederick Hirsch, Meiko Jensen <a href=\"http://www.w3.org/TR/2012/CR-xmldsig-xpath-20120124/\"><cite>XML Signature Streaming Profile of XPath 1.0</cite>.</a> 24 January 2012. W3C Candidate Recommendation. (Work in progress.) URL: <a href=\"http://www.w3.org/TR/2012/CR-xmldsig-xpath-20120124/\">http://www.w3.org/TR/2012/CR-xmldsig-xpath-20120124/</a>",
+    "XMLDSIG-XPATH": {
+        "authors" : [ 
+            "Pratik Datta", 
+            "Frederick Hirsch", 
+            "Meiko Jensen" ],
+        "href" : "http://www.w3.org/TR/2013/NOTE-xmldsig-xpath-20130411/", 
+        "title" : "XML Signature Streaming Profile of XPath 1.0",
+        "date" : "11 April 2013",
+        "status" : "WG-NOTE",
+        "publisher": "W3C"
+    },
     "XMLDSIG-XPATH-FILTER2": {
         "authors": [
             "Merlin Hughes",
@@ -7724,10 +7979,10 @@ if (typeof berjon === "undefined") berjon = {};
         "authors": [
             "Frederick Hirsch"
         ],
-        "href": "http://www.w3.org/TR/2013/PR-xmldsig-properties-20130124/",
+        "href": "http://www.w3.org/TR/2013/PR-xmldsig-properties-20130411/",
         "title": "XML Signature Properties",
-        "date": "24 January 2013",
-        "status": "PR",
+        "date": "11 April 2013",
+        "status": "REC",
         "publisher": "W3C"
     },
     "XMLDSIG-REQUIREMENTS": {
@@ -7763,7 +8018,17 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "NOTE",
         "publisher": "W3C"
     },
-    "XMLENC-BACKWARDS-COMP": "Tibor Jager, Kenneth G. Paterson, Juraj Somorovsky. <a href=\"http://www.nds.ruhr-uni-bochum.de/research/publications/backwards-compatibility/\"><cite>One Bad Apple: Backwards Compatibility Attacks on State-of-the-Art Cryptography.</cite></a> In Proceedings of the Network and Distributed System Security Symposium (NDSS), 2013. URL: <a href=\"http://www.nds.ruhr-uni-bochum.de/research/publications/backwards-compatibility/\">http://www.nds.ruhr-uni-bochum.de/research/publications/backwards-compatibility/</a>",
+    "XMLENC-BACKWARDS-COMP": {
+        "authors" : [
+            "Tibor Jager",
+            "Kenneth G. Paterson",
+            "Juraj Somorovsky" 
+        ],
+        "href" : "http://www.nds.ruhr-uni-bochum.de/research/publications/backwards-compatibility/",
+        "title" : "One Bad Apple: Backwards Compatibility Attacks on State-of-the-Art Cryptography",
+        "date" :  "2013",
+        "publisher" : " In Proceedings of the Network and Distributed System Security Symposium (NDSS)"
+    },
     "XMLENC-CBC-ATTACK": {
         "authors": [
             "Tibor Jager",
@@ -7774,15 +8039,23 @@ if (typeof berjon === "undefined") berjon = {};
         "date": "17-21 October 2011",
         "status": "CCS&#8217;11, ACM"
     },
-    "XMLENC-CBC-ATTACK-COUNTERMEASURES": "Juraj Somorovsky, J&ouml;rg Schwenk. <a href=\"http://www.w3.org/2008/xmlsec/papers/xmlEncCountermeasuresW3C.pdf\"><cite>Technical Analysis of Countermeasures against Attack on XML Encryption - or - Just Another Motivation for Authenticated Encryption</cite.></a>. 2011.  URL: <a href=\"http://www.w3.org/2008/xmlsec/papers/xmlEncCountermeasuresW3C.pdf\">http://www.w3.org/2008/xmlsec/papers/xmlEncCountermeasuresW3C.pdf</a>",
+    "XMLENC-CBC-ATTACK-COUNTERMEASURES": {
+        "authors" : [
+            "Juraj Somorovsky",
+            "J&ouml;rg Schwenk" 
+        ],
+        "href" : "http://www.w3.org/2008/xmlsec/papers/xmlEncCountermeasuresW3C.pdf",
+        "title" : "Technical Analysis of Countermeasures against Attack on XML Encryption - or - Just Another Motivation for Authenticated Encryption",
+        "date" : "2011"
+    },
     "XMLENC-CREF2": {
-        "authors": [
+        "authors" : [
             "Frederick Hirsch"
         ],
-        "href": "http://www.w3.org/TR/2012/CR-xmlenc-transform20-20120313/",
-        "title": "Encryption 1.1 CipherReference Processing Using 2.0 Transforms",
-        "date": "13 March 2012",
-        "status": "CR",
+        "href": "http://www.w3.org/TR/2013/NOTE-xmlenc-transform20-20130411/",
+        "title": "XML Encryption 1.1 CipherReference Processing Using 2.0 Transforms",
+        "date": "11 April 2013",
+        "status": "WG-NOTE",
         "publisher": "W3C"
     },
     "XMLENC-CORE": {
@@ -7796,9 +8069,38 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "REC",
         "publisher": "W3C"
     },
-    "XMLENC-CORE1": "J. Reagle; D. Eastlake; F. Hirsch; T. Roessler. <a href=\"http://www.w3.org/TR/2013/PR-xmlenc-core1-20130124/\"><cite>XML Encryption Syntax and Processing Version 1.1.</cite></a> 24 January 2013. W3C Proposed Recommendation. (Work in progress) URL: <a href=\"http://www.w3.org/TR/2013/PR-xmlenc-core1-20130124/\">http://www.w3.org/TR/2013/PR-xmlenc-core1-20130124/</a> ",
-    "XMLENC-CORE1-CHGS": "Frederick Hirsch. <a href=\"http://www.w3.org/TR/2013/NOTE-xmlenc-core1-explain-20130124/\"><cite>Functional Explanation of in XML Encryption 1.1</cite></a>. 24 January 2013. W3C Working Group Note. URL: <a href=\"http://www.w3.org/TR/2013/NOTE-xmlenc-core1-explain-20130124/\">http://www.w3.org/TR/2013/NOTE-xmlenc-core1-explain-20130124/</a> ",
-    "XMLENC-CORE1-INTEROP": "Pratik Datta, Frederick Hirsch <a href=\"http://www.w3.org/TR/2012/NOTE-xmlenc-core1-interop-20121113/\"><cite>XML Encryption 1.1 Interop Test Report</cite></a>. 13 November 2012. W3C Working Group Note. URL: <a href=\"http://www.w3.org/TR/2012/NOTE-xmlenc-core1-interop-20121113/\">http://www.w3.org/TR/2012/NOTE-xmlenc-core1-interop-20121113/</a> ",
+    "XMLENC-CORE1": {
+        "authors" : [
+            "J. Reagle",
+            "D. Eastlake",
+            "F. Hirsch",
+            "T. Roessler"
+        ],
+        "href" : "http://www.w3.org/TR/2013/REC-xmlenc-core1-20130411/",
+        "title" : "XML Encryption Syntax and Processing Version 1.1",
+        "date" :  "11 April 2013",
+        "status" : "REC",
+        "publisher": "W3C"
+    },
+    "XMLENC-CORE1-CHGS": {
+        "authors" : [ "Frederick Hirsch"
+                    ],
+        "href" : "http://www.w3.org/TR/2013/NOTE-xmlenc-core1-explain-20130411/",
+        "title" : "Functional Explanation of in XML Encryption 1.1",
+        "date" : "11 April 2013",
+        "status" : "WG-NOTE",
+        "publisher": "W3C"
+    },
+    "XMLENC-CORE1-INTEROP": {
+        "authors" : [ "Pratik Datta",
+                      "Frederick Hirsch"
+                    ],
+        "href" : "http://www.w3.org/TR/2012/NOTE-xmlenc-core1-interop-20130411/",
+        "title" : "XML Encryption 1.1 Interop Test Report",
+        "date" : "11 April 2013",
+        "status" : "WG-NOTE",
+        "publisher": "W3C"
+    },
     "XMLENC-DECRYPT": {
         "authors": [
             "Takeshi Imamura",
@@ -7811,7 +8113,16 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "REC",
         "publisher": "W3C"
     },
-    "XMLENC-PKCS15-ATTACK": "Tibor Jager; Sebastian Schinzel, Juraj Somorovsky. <a href=\"http://www.nds.rub.de/research/publications/breaking-xml-encryption-pkcs15.pdf\"><cite>Bleichenbacher's Attack Strikes Again: Breaking PKCS#1.5 in XML Encryption</cite></a>. 2012. In Proceedings of the 17th European Symposium on Research in Computer Security (ESO RICS). URL: <a href=\"http://www.nds.rub.de/research/publications/breaking-xml-encryption-pkcs15.pdf\">http://www.nds.rub.de/research/publications/breaking-xml-encryption-pkcs15.pdf</a> ",
+    "XMLENC-PKCS15-ATTACK": {
+        "authors" : [ "Tibor Jager",
+                      "Sebastian Schinzel",
+                      "Juraj Somorovsky"
+                    ],
+        "href" : "http://www.nds.rub.de/research/publications/breaking-xml-encryption-pkcs15.pdf",
+        "title" : "Bleichenbacher&quot;s Attack Strikes Again: Breaking PKCS#1.5 in XML Encryption",
+        "date" :  "2012",
+        "publisher" : "In Proceedings of the 17th European Symposium on Research in Computer Security (ESO RICS)"
+    },
     "XMLENC11-TESTCASES": {
         "authors": [
             "Pratik Datta",
@@ -8000,7 +8311,17 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "REC",
         "publisher": "W3C"
     },
-    "XMLSEC-ALGORITHMS": "Thomas Roessler; Frederick Hirsch; Kelvin Yiu. <a href=\"http://www.w3.org/TR/2013/NOTE-xmlsec-algorithms-20130124/\"><cite>XML Security Algorithm Cross-Reference.</Cite></a> 24 January 2013. W3C Working Group Note. URL: <a href=\"http://www.w3.org/TR/2013/NOTE-xmlsec-algorithms-20130124/\">http://www.w3.org/TR/2013/NOTE-xmlsec-algorithms-20130124/</a> ",
+    "XMLSEC-ALGORITHMS": {
+        "authors" : ["Thomas Roessler",
+                     "Frederick Hirsch",
+                     "Kelvin Yiu"
+                    ],
+        "href" : "http://www.w3.org/TR/2013/NOTE-xmlsec-algorithms-20130411/",
+        "title" : "XML Security Algorithm Cross-Reference",
+        "date" : "11 April 2013",
+        "status" : "WG-NOTE",
+        "publisher": "W3C"
+    },
     "XMLSEC-DERIVEDKEYS": {
         "authors": [
             "Magnus Nystr&#246;m"
@@ -8016,10 +8337,10 @@ if (typeof berjon === "undefined") berjon = {};
             "Magnus Nystr&#246;m",
             "Frederick Hirsch"
         ],
-        "href": "http://www.w3.org/TR/2013/NOTE-xmlsec-generic-hybrid-20130124/",
+        "href": "http://www.w3.org/TR/2013/NOTE-xmlsec-generic-hybrid-20130411/",
         "title": "XML Security Generic Hybrid Ciphers",
-        "date": "24 January 2013",
-        "status": "W3C Working Group Note",
+        "date": "11 April 2013",
+        "status": "WG-NOTE",
         "publisher": "W3C"
     },
     "XMLSEC-NEXTSTEPS-2007": {
@@ -8038,22 +8359,32 @@ if (typeof berjon === "undefined") berjon = {};
             "Makoto Murata",
             "Frederick Hirsch"
         ],
-        "href": "http://www.w3.org/TR/2013/NOTE-xmlsec-rngschema-20130124/",
+        "href": "http://www.w3.org/TR/2013/NOTE-xmlsec-rngschema-20130411/",
         "title": "XML Security RELAX NG Schemas",
-        "date": "24 January 2013",
-        "status": "W3C Working Group Note",
+        "date": "11 April 2013",
+        "status": "WG-NOTE",
         "publisher": "W3C"
     },
-    "XMLSEC11-REQS": "Frederick Hirsch, Thomas Roessler. <a href=\"http://www.w3.org/TR/2013/NOTE-xmlsec-reqs-20130124/\"><cite>XML Security 1.1 Requirements and Design Considerations.</Cite></a> 24 January 2013. W3C Working Group Note. URL: <a href=\"http://www.w3.org/TR/2013/NOTE-xmlsec-reqs-20130124/\">http://www.w3.org/TR/2013/NOTE-xmlsec-reqs-20130124/</a> ",
+    "XMLSEC11-REQS": {
+        "authors" : [ "Frederick Hirsch",
+                      "Thomas Roessler" 
+                    ],
+        "href" : "http://www.w3.org/TR/2013/NOTE-xmlsec-reqs-20130411/",
+        "title" : "XML Security 1.1 Requirements and Design Considerations",
+        "date" : "11 April 2013",
+        "status" : "WG-NOTE",
+        "publisher": "W3C"
+    },
+
     "XMLSEC2-REQS": {
         "authors": [
             "Frederick Hirsch",
             "Pratik Datta"
         ],
-        "href": "http://www.w3.org/TR/2011/WD-xmlsec-reqs2-20110421/",
+        "href": "http://www.w3.org/TR/2013/NOTE-xmlsec-reqs2-20130411/",
         "title": "XML Security 2.0 Requirements and Design Considerations",
-        "date": "21 April 2011",
-        "status": "WD",
+        "date": "11 April 2013",
+        "status": "WG-NOTE",
         "publisher": "W3C"
     },
     "XMLSTYLE": {
