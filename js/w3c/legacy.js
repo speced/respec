@@ -510,6 +510,7 @@ var sn;
 
         REF_STATUSES: {
             "NOTE": "W3C Note",
+            "WG-NOTE": "W3C Working Group Note",
             "ED": "W3C Editor's Draft",
             "FPWD": "W3C First Public Working Draft",
             "WD": "W3C Working Draft",
