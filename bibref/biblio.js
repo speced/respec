@@ -1157,7 +1157,7 @@ berjon.biblio = {
         "date": "13 November 2012",
         "status": "WD",
         "publisher": "W3C"
-    },    
+    },
     "CSS3TEXTLAYOUT": "Elika J. Etemad; Paul Nelson. <cite>CSS3 Text Layout Module.</cite> (forthcoming). W3C Working Draft. (Work in progress.)",
     "CSS3UI": {
         "authors": [
@@ -2238,7 +2238,7 @@ berjon.biblio = {
         "date": "17 December 2012",
         "status": "CR",
         "publisher": "W3C"
-    },    
+    },
     "HTML5-20121217": {
         "authors": [
             "Robin Berjon"
@@ -3003,7 +3003,7 @@ berjon.biblio = {
         "title": "Navigator interface in HTML5",
         "status": "ED",
         "publisher": "W3C"
-    },    
+    },
     "NFC": "M. Davis, Ken Whistler. <a href=\"http://www.unicode.org/reports/tr15/\"><cite>TR15, Unicode Normalization Forms.</cite></a>. 17 September 2010, URL: <a href=\"http://www.unicode.org/reports/tr15/\">http://www.unicode.org/reports/tr15/</a>",
     "NGRAM-SPEC": {
         "authors": [
@@ -4368,6 +4368,16 @@ berjon.biblio = {
         "status": "Internet Proposed Standard RFC 5789",
         "publisher": "IETF"
     },
+    "RFC5988": {
+        "authors": [
+            "Mark Nottingham"
+        ],
+        "href": "http://www.ietf.org/rfc/rfc5988.txt",
+        "title": "Web Linking",
+        "date": "October 2010",
+        "status": "RFC 5988",
+        "publisher": "IETF"
+    },
     "RFC6068": {
         "authors": [
             "M. Duerst",
@@ -4378,6 +4388,16 @@ berjon.biblio = {
         "title": "The 'mailto' URI Scheme",
         "date": "October 2010",
         "status": "Internet Proposed Standard RFC 6068",
+        "publisher": "IETF"
+    },
+    "RFC6906": {
+        "authors": [
+            "Erik Wilde"
+        ],
+        "href": "http://www.ietf.org/rfc/rfc6906.txt",
+        "title": "The 'profile' Link Relation Type",
+        "date": "March 2013",
+        "status": "RFC 6906",
         "publisher": "IETF"
     },
     "RichSnippets": "<a href=\"http://googlewebmastercentral.blogspot.com/2009/05/introducing-rich-snippets.html/\"><cite>Introducing Rich Snippets.</cite></a> 12 May 2009. Google Webmaster Central Blog. URL: <a href=\"http://googlewebmastercentral.blogspot.com/2009/05/introducing-rich-snippets.html/\">http://googlewebmastercentral.blogspot.com/2009/05/introducing-rich-snippets.html/</a> ",
@@ -6320,7 +6340,7 @@ berjon.biblio = {
         "date": "08 December 2011",
         "status": "CR",
         "publisher": "W3C"
-    },    
+    },
     "WEB-SQL": {
         "authors": [
             "Ian Hickson"
@@ -6360,7 +6380,7 @@ berjon.biblio = {
         "date": "01 May 2012",
         "status": "CR",
         "publisher": "W3C"
-    },    
+    },
     "WICD": {
         "authors": [
             "Daniel Appelquist"
@@ -6476,7 +6496,7 @@ berjon.biblio = {
         "date": "13 December 2012",
         "status": "REC",
         "publisher": "W3C"
-    },    
+    },
     "WORDNET-RDF": {
         "authors": [
             "Aldo Gangemi",
