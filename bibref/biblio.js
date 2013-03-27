@@ -6104,7 +6104,15 @@ if (typeof berjon === "undefined") berjon = {};
         "status": "WD",
         "publisher": "W3C"
     },
-    "WEBGL": "Chris Marrin (Apple Inc.) <a href=\"https://www.khronos.org/registry/webgl/specs/1.0/\"><cite>WebGL Specification, Version 1.0</cite></a> , 10 February 2011 URL: <a href=\"https://www.khronos.org/registry/webgl/specs/1.0//\">https://www.khronos.org/registry/webgl/specs/1.0/</a>",
+    "WEBGL": {
+        "authors": [
+            "Chris Marrin (Apple Inc.)"
+        ],
+        "href": "https://www.khronos.org/registry/webgl/specs/1.0/",
+        "title": "WebGL Specification, Version 1.0",
+        "date": "10 February 2011",
+        "publisher": "Khronos"
+    },
     "WEBIDL": {
         "authors": [
             "Cameron McCormack"
