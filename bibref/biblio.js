@@ -1519,10 +1519,10 @@ berjon.biblio = {
             "S. Cheshire",
             "M. Krochmal"
         ],
-        "href": "http://files.dns-sd.org/draft-cheshire-dnsext-dns-sd.txt",
-        "title": "DNS-Based Service Discovery",
-        "date": "27 February 2011",
-        "status": "IETF Draft",
+        "href": "http://tools.ietf.org/html/rfc6763",
+        "title": "DNS-Based Service Discovery (RFC 6763)",
+        "date": "February 2013",
+        "status": "RFC 6763",
         "publisher": "IETF"
     },
     "DOM-BINDINGS": {
@@ -2722,10 +2722,10 @@ berjon.biblio = {
             "S. Cheshire",
             "M. Krochmal"
         ],
-        "href": "http://files.multicastdns.org/draft-cheshire-dnsext-multicastdns.txt",
-        "title": "Multicast DNS",
-        "date": "14 February 2011",
-        "status": "IETF Draft",
+        "href": "http://tools.ietf.org/html/rfc6762",
+        "title": "Multicast DNS (RFC 6762)",
+        "date": "February 2013",
+        "status": "RFC 6762",
         "publisher": "IETF"
     },
     "MEDIA-ANNOT-REQS": "WonSuk Lee; Felix Sasaki; Tobias B&#252;rger; V&eacute;ronique Malais&eacute;. <a href=\"http://www.w3.org/TR/2010/WD-media-annot-reqs-20100121/\"><cite>Use Cases and Requirements for Ontology and API for Media Object 1.0.</cite></a>W3C Working Draft 21 January 2010. URL: <a href=\"http://www.w3.org/TR/2010/WD-media-annot-reqs-20100121/\">http://www.w3.org/TR/2010/WD-media-annot-reqs-20100121/</a> ",

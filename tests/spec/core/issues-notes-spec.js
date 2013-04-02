@@ -8,6 +8,12 @@ describe("Core — Issues and Notes", function () {
             editors:    [{ name: "Gregg Kellogg" }]
         ,   issueBase:  "http://example.com/issues/"
         ,   specStatus: "WD"
+      }
+    ,   atRiskBaseConfig = {
+            editors:    [{ name: "Markus Lanthaler" }]
+        ,   issueBase:  "http://example.com/issues/"
+        ,   atRiskBase: "http://example.com/atrisk/"
+        ,   specStatus: "WD"
       };
     it("should process issues and notes", function () {
         var doc;
@@ -15,27 +21,39 @@ describe("Core — Issues and Notes", function () {
             makeRSDoc({
                         config: basicConfig
                     ,   body: $("<section><p>BLAH <span class='issue'>ISS-INLINE</span></p><p class='issue' title='ISS-TIT'>ISSUE</p>" +
+                                "<p>BLAH <span class='issue atrisk'>ATR-INLINE</span></p><p class='issue atrisk' title='ATR-TIT'>FEATURE AT RISK</p>" +
                                 "<p>BLAH <span class='note'>NOT-INLINE</span></p><p class='note' title='NOT-TIT'>NOTE</p></section>")
                     },
                     function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
         runs(function () {
-            var $iss = $("div.issue", doc)
+            var $iss = $("div.issue", doc).first()
+            ,   $atr = $("div.atrisk", doc)
             ,   $piss = $iss.find("p")
+            ,   $patr = $atr.find("p")
             ,   $spiss = $("span.issue", doc)
+            ,   $spatr = $("span.atrisk", doc)
             ,   $not = $("div.note", doc)
             ,   $pnot = $not.find("p")
             ,   $spnot = $("span.note", doc)
             ;
 
+            console.log(doc);
+
             expect($spiss.parent("div").length).toEqual(0);
+            expect($spatr.parent("div").length).toEqual(0);
             expect($spnot.parent("div").length).toEqual(0);
 
             expect($iss.find("div.issue-title").length).toEqual(1);
             expect($iss.find("div.issue-title").text()).toEqual("Issue 1: ISS-TIT");
             expect($piss.attr("title")).toBeUndefined();
             expect($piss.text()).toEqual("ISSUE");
+
+            expect($atr.find("div.issue-title").length).toEqual(1);
+            expect($atr.find("div.issue-title").text()).toEqual("Feature at Risk 2: ATR-TIT");
+            expect($patr.attr("title")).toBeUndefined();
+            expect($patr.text()).toEqual("FEATURE AT RISK");
 
             expect($not.find("div.note-title").length).toEqual(1);
             expect($not.find("div.note-title").text()).toEqual("Note: NOT-TIT");
@@ -91,6 +109,29 @@ describe("Core — Issues and Notes", function () {
             expect($iss.find("div.issue-title a").attr("href")).toEqual(issueBaseConfig.issueBase + "10");
             expect($piss.attr("title")).toBeUndefined();
             expect($piss.text()).toEqual("ISSUE");
+            flushIframes();
+        });
+    });
+   it("should link to external issue tracker for features at risk", function () {
+        var doc;
+        runs(function () {
+            makeRSDoc({
+                        config: atRiskBaseConfig
+                    ,   body: $("<section><p class='issue atrisk' data-number='10'>FEATURE AT RISK</p></section>")
+                    },
+                    function (rsdoc) { doc = rsdoc; });
+        });
+        waitsFor(function () { return doc; }, MAXOUT);
+        runs(function () {
+            var $iss = $("div.atrisk", doc)
+            ,   $piss = $iss.find("p")
+            ;
+
+            expect($iss.find("div.issue-title").length).toEqual(1);
+            expect($iss.find("div.issue-title").text()).toEqual("Feature at Risk 10");
+            expect($iss.find("div.issue-title a").attr("href")).toEqual(atRiskBaseConfig.atRiskBase + "10");
+            expect($piss.attr("title")).toBeUndefined();
+            expect($piss.text()).toEqual("FEATURE AT RISK");
             flushIframes();
         });
     });
