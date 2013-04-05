@@ -7979,7 +7979,7 @@ berjon.biblio = {
         "authors": [
             "Frederick Hirsch"
         ],
-        "href": "http://www.w3.org/TR/2013/PR-xmldsig-properties-20130411/",
+        "href": "http://www.w3.org/TR/2013/REC-xmldsig-properties-20130411/",
         "title": "XML Signature Properties",
         "date": "11 April 2013",
         "status": "REC",
