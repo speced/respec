@@ -1791,7 +1791,7 @@ berjon.biblio = {
         "href": "http://www.w3.org/TR/2011/WD-EARL10-Schema-20110510/",
         "title": "Evaluation and Report Language (EARL) 1.0 Schema",
         "date": "10 May 2011",
-        "status": "LC",
+        "status": "LCWD",
         "publisher": "W3C"
     },
     "EBXML-MSG": "Ian Jones; Brian Gibb; David Fischer. <a href=\"https://www.oasis-open.org/committees/download.php/272/ebMS_v2_0.pdf\"><cite> OASIS ebXML Message Service Specification</cite></a> 1 April 2002. URL: <a href=\"https://www.oasis-open.org/committees/download.php/272/ebMS_v2_0.pdf\">https://www.oasis-open.org/committees/download.php/272/ebMS_v2_0.pdf</a>",
@@ -3177,7 +3177,7 @@ berjon.biblio = {
         "href": "http://www.w3.org/TR/2010/NOTE-rif-owl-rl-20100622/",
         "title": "OWL 2 RL in RIF",
         "date": "22 June 2010",
-        "status": "W3C Working Group Note",
+        "status": "WG-NOTE",
         "publisher": "W3C"
     },
     "OWL-SEMANTICS": {
@@ -3875,8 +3875,8 @@ berjon.biblio = {
         ],
         "href": "http://www.w3.org/TR/2010/WD-sparql11-update-20100126/",
         "title": "SPARQL 1.1 Update",
-        "date": "W3C Working Draft",
-        "status": "26 January 2010",
+        "date": "26 January 2010",
+        "status": "WD",
         "publisher": "W3C"
     },
     "RDF-SPARQL-XMLRES": {
@@ -4500,7 +4500,7 @@ berjon.biblio = {
         "href": "http://www.w3.org/TR/2010/NOTE-rif-overview-20100622/",
         "title": "RIF Overview",
         "date": "22 June 2010",
-        "status": "W3C Working Group Note",
+        "status": "WG-NOTE",
         "publisher": "W3C"
     },
     "RIF-PRD": {
@@ -5035,8 +5035,8 @@ berjon.biblio = {
         ],
         "href": "http://www.w3.org/TR/2008/REC-rdf-sparql-query-20080115/",
         "title": "SPARQL Query  Language for RDF",
-        "date": "</cite> W3C Recommendation",
-        "status": "15 January 2008",
+        "date": "15 January 2008",
+        "status": "REC",
         "publisher": "W3C"
     },
     "SPARQL-UPDATE": {
@@ -5046,8 +5046,8 @@ berjon.biblio = {
         ],
         "href": "http://www.w3.org/TR/2010/WD-sparql11-update-20100126/",
         "title": "SPARQL 1.1 Update",
-        "date": "W3C Working Draft",
-        "status": "26 January 2010",
+        "date": "26 January 2010",
+        "status": "WD",
         "publisher": "W3C"
     },
     "SPEC-VARIABILITY": {
@@ -6239,7 +6239,7 @@ berjon.biblio = {
         "href": "http://www.w3.org/TR/2010/NOTE-webdatabase-20101118",
         "title": "Web SQL Database",
         "date": "18 November 2010",
-        "status": "W3C Workging Group Note",
+        "status": "WG-NOTE",
         "publisher": "W3C"
     },
     "WEBAPP-PRIVACY-BESTPRACTICES": "Frederick Hirsch. <a href=\"http://www.w3.org/TR/app-privacy-bp/\"><cite>Web Application Privacy Best Practices</cite></a>. W3C Working Group Note. URL: <a href=\"http://www.w3.org/TR/app-privacy-bp/\">http://www.w3.org/TR/app-privacy-bp/</a> ",
@@ -6360,7 +6360,7 @@ berjon.biblio = {
         "href": "http://www.w3.org/TR/2012/CR-websockets-20120920/",
         "title": "The WebSocket API",
         "date": "20 September 2012",
-        "status": "CD",
+        "status": "CR",
         "publisher": "W3C"
     },
     "WEBSOCKETS-PROTOCOL": "C. Holmberg, S. Hakansson, G. Eriksson. <a href=\"http://tools.ietf.org/id/draft-ietf-hybi-thewebsocketprotocol-09.txt\"><cite>The WebSocket protocol.</cite></a> URL: <a href=\"http://tools.ietf.org/id/draft-ietf-hybi-thewebsocketprotocol-09.txt\">http://tools.ietf.org/id/draft-ietf-hybi-thewebsocketprotocol-09.txt</a> ",
@@ -6478,7 +6478,7 @@ berjon.biblio = {
         "href": "http://www.w3.org/TR/2008/WD-widgets-land-20080414",
         "title": "The Widget Landscape (Q1 2008)",
         "date": "14 April 2008",
-        "status": "W3C Working Group Note",
+        "status": "WG-NOTE",
         "publisher": "W3C"
     },
     "WIDGETS-PC-INTEROP": "Marcos Cáceres <a href=\"http://dev.w3.org/2006/waf/widgets/imp-report/\"><cite>Implementation Report for Widgets Packaging and XML Configuration.</cite></a>. URL: <a href=\"http://dev.w3.org/2006/waf/widgets/imp-report/\">http://dev.w3.org/2006/waf/widgets/imp-report/</a> ",
