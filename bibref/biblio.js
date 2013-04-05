@@ -448,17 +448,6 @@ berjon.biblio = {
         "status": "WD",
         "publisher": "W3C"
     },
-    "COMPOSITING": {
-        "authors": [
-            "Rik Cabanier",
-            "Nikos Andronikos"
-        ],
-        "href": "http://www.w3.org/TR/2012/WD-compositing-20120816/",
-        "title": "Compositing and Blending 1.0",
-        "date": "16 August 2012",
-        "status": "FPWD",
-        "publisher": "W3C"
-    },
     "CMS-Algorithms": {
         "authors" : ["R. Housley" ],
         "href" : "http://www.ietf.org/rfc/rfc3370.txt",
