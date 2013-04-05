@@ -4710,7 +4710,7 @@ berjon.biblio = {
         "href": "http://www.w3.org/TR/2011/REC-css3-selectors-20110929/",
         "title": "Selectors API Level 3",
         "date": "29 September 2011",
-        "status": "PR",
+        "status": "REC",
         "publisher": "W3C"
     },
     "SEMANTIC-INTERPRETATION": {
@@ -7953,7 +7953,7 @@ berjon.biblio = {
         "href": "http://www.w3.org/TR/2013/PR-xmldsig-properties-20130411/",
         "title": "XML Signature Properties",
         "date": "11 April 2013",
-        "status": "REC",
+        "status": "PR",
         "publisher": "W3C"
     },
     "XMLDSIG-REQUIREMENTS": {
