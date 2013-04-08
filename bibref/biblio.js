@@ -7891,7 +7891,7 @@ berjon.biblio = {
         "authors": [
             "Frederick Hirsch"
         ],
-        "href": "http://www.w3.org/TR/2012/NOTE-xmldsig-core1-explain-20130411/",
+        "href": "http://www.w3.org/TR/2013/NOTE-xmldsig-core1-explain-20130411/",
         "title": "Functional Explanation of Changes in XML Signature 1.1",
         "date": "11 April 2013",
         "status": "WG-NOTE",
@@ -7902,9 +7902,9 @@ berjon.biblio = {
             "Frederick Hirsch",
             "Pratik Datta"
         ],
-        "href": "http://www.w3.org/TR/2012/NOTE-xmldsig-core1-interop-20130411/",
+        "href": "http://www.w3.org/TR/2012/NOTE-xmldsig-core1-interop-20121113/",
         "title": "XML Signature 1.1 Interop Test Report",
-        "date": "11 April 2013",
+        "date": "13 November 2012",
         "status": "WG-NOTE",
         "publisher": "W3C"
     },
@@ -7919,7 +7919,7 @@ berjon.biblio = {
             "P. Datta",
             "S. Cantor"
         ],
-        "href": "http://www.w3.org/TR/2012/CR-xmldsig-core2-20130411/",
+        "href": "http://www.w3.org/TR/2013/CR-xmldsig-core2-20130411/",
         "title": "XML Signature Syntax and Processing Version 2.0",
         "date": "11 April 2013",
         "status": "WG-NOTE",
@@ -8104,9 +8104,9 @@ berjon.biblio = {
             "Pratik Datta",
             "Frederick Hirsch"
         ],
-        "href": "http://www.w3.org/TR/2012/NOTE-xmlenc-core1-interop-20130411/",
+        "href": "http://www.w3.org/TR/2012/NOTE-xmlenc-core1-interop-20121113/",
         "title": "XML Encryption 1.1 Interop Test Report",
-        "date": "11 April 2013",
+        "date": "13 November 2012",
         "status": "WG-NOTE",
         "publisher": "W3C"
     },
