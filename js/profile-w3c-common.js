@@ -29,6 +29,7 @@ define([
         ,   "core/section-refs"
         ,   "core/id-headers"
         ,   "core/remove-respec"
+        ,   "core/location-hash"
         ],
         function (domReady, runner) {
             var args = Array.prototype.slice.call(arguments)
