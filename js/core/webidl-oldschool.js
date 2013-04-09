@@ -388,7 +388,7 @@ define(
                 str = this.parseExtendedAttributes(str, obj);
 
                 // MEMBER
-                var match = /^\s*\b(.*?)\s+([A-Za-z][A-Za-z0-9]*)\s*$/.exec(str);
+                var match = /^\s*(.*?)\s+([A-Za-z][A-Za-z0-9]*)\s*$/.exec(str);
                 if (match) {
                     obj.type = "member";
                     var type = match[1];
@@ -848,7 +848,7 @@ define(
                             sn.text(">", span);
                         }
                         else {
-                            sn.element("a", {}, span, it.datatype);
+                            sn.element("a", {}, span, it.isUnionType ? "(" + it.datatype.join(" or ") + ")" : it.datatype);
                         }
                         if (it.nullable) sn.text(", nullable", dt);
                         if (it.defaultValue) {
