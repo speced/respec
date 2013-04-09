@@ -44,19 +44,22 @@ define(
                         // wrap
                         if (!isInline) {
                             var $div = $("<div class='" + report.type + (isFeatureAtRisk ? " atrisk" : "") + "'></div>")
-                            ,   $tit = $("<div class='" + report.type + "-title'><span></span></div>")
+                            ,   $tit = $("<div class='" + report.type + "-title' role='heading'><span></span></div>")
                             ,   text = isIssue ? (isFeatureAtRisk ? "Feature at Risk" : "Issue") : "Note"
+                            ,   level = $inno.parents("section").length + 2
                             ;
+                            $tit.attr("aria-level", level);
                             if (isIssue) {
                                 if (hasDataNum) {
                                     if (dataNum) {
-                                      text += " " + dataNum;
-                                      // Set issueBase to cause issue to be linked to the external issue tracker
-                                      if (!isFeatureAtRisk && conf.issueBase) {
-                                        $tit.find("span").wrap($("<a href='" + conf.issueBase + dataNum + "'/>"))
-                                      } else if (isFeatureAtRisk && conf.atRiskBase) {
-                                        $tit.find("span").wrap($("<a href='" + conf.atRiskBase + dataNum + "'/>"))
-                                      }
+                                        text += " " + dataNum;
+                                        // Set issueBase to cause issue to be linked to the external issue tracker
+                                        if (!isFeatureAtRisk && conf.issueBase) {
+                                            $tit.find("span").wrap($("<a href='" + conf.issueBase + dataNum + "'/>"));
+                                        }
+                                        else if (isFeatureAtRisk && conf.atRiskBase) {
+                                            $tit.find("span").wrap($("<a href='" + conf.atRiskBase + dataNum + "'/>"));
+                                        }
                                     }
                                 }
                                 else {
