@@ -8982,6 +8982,14 @@ berjon.biblio = {
         "date": "May 2005",
         "status": "IETF Draft",
         "publisher": "IETF"
+    },    
+    "ZIP": {
+        "authors": [""],
+        "date": "1 September 2012",
+        "href": "http://www.pkware.com/documents/casestudies/APPNOTE.TXT",
+        "publisher": "",
+        "status": "Final",
+        "title": ".ZIP File Format Specification"
     },
     "ZHMARK": "<cite>&#26631;&#28857;&#31526;&#21495;&#29992;&#27861; (Punctuation Mark Usage).</cite> 1995. &#20013;&#21326;&#20154;&#27665;&#20849;&#21644;&#22269;&#22269;&#23478;&#26631;&#20934; "
 };
