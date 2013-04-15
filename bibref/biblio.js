@@ -2563,9 +2563,40 @@ berjon.biblio = {
         "date": "9 Dec 1999",
         "status": "Report (draft) ISO/IEC CD15444-1:1999"
     },
-    "JSON-LD": "Manu Sporny, Gregg Kellogg, Markus Lanthaler, Editors. <cite><a href=\"http://www.w3.org/TR/2013/WD-json-ld-20130411/\">JSON-LD 1.0</a>.</cite> W3C Working Draft (work in progress). URL: <a href=\"http://www.w3.org/TR/2013/WD-json-ld-20130411/\">http://www.w3.org/TR/2013/WD-json-ld-20130411/</a>. The latest edition is available at <a href=\"http://www.w3.org/TR/json-ld/\">http://www.w3.org/TR/json-ld/</a>",
-    "JSON-LD-API": "Markus Lanthaler, Gregg Kellogg, Manu Sporny, Editors. <cite><a href=\"http://www.w3.org/TR/2013/WD-json-ld-api-20130411/\">JSON-LD 1.0 Processing Algorithms and API</a>.</cite> W3C Working Draft (work in progress). URL: <a href=\"http://www.w3.org/TR/2013/WD-json-ld-api-20130411/\">http://www.w3.org/TR/2013/WD-json-ld-api-20130411/</a>. The latest edition is available at <a href=\"http://www.w3.org/TR/json-ld-api/\">http://www.w3.org/TR/json-ld-api/</a>",
-    "JSON-LD-TESTS": "<cite><a href=\"http://www.w3.org/2013/json-ld-tests/\">JSON-LD 1.0 Test Suite</a></cite>. W3C Test Suite (work in progress). URL: <a href=\"http://www.w3.org/2013/json-ld-tests/\">http://www.w3.org/2013/json-ld-tests/</a>",
+    "JSON-LD": {
+        "authors": [
+            "Manu Sporny",
+            "Gregg Kellogg",
+            "Markus Lanthaler"
+        ],
+        "href": "http://www.w3.org/TR/json-ld/",
+        "title": "JSON-LD 1.0",
+        "date": "11 April 2013",
+        "status": "WD",
+        "publisher": "W3C"
+    },
+    "JSON-LD-API": {
+        "authors": [
+            "Markus Lanthaler",
+            "Gregg Kellogg",
+            "Manu Sporny"
+        ],
+        "href": "http://www.w3.org/TR/json-ld-api/",
+        "title": "JSON-LD 1.0 Processing Algorithms and API",
+        "date": "11 April 2013",
+        "status": "WD",
+        "publisher": "W3C"
+    },
+    "JSON-LD-TESTS": {
+        "authors": [
+            "RDF Working Group"
+        ],
+        "href": "http://www.w3.org/2013/json-ld-tests/",
+        "title": "JSON-LD 1.0 Test Suite",
+        "date": "11 April 2013",
+        "status": "ED",
+        "publisher": "W3C"
+    },
     "KnowPrivacy": "Joshua Gomez; Travis Pinnick; Ashkan Soltani. <a href=\"http://www.knowprivacy.org/report/KnowPrivacy_Final_Report.pdf\"><cite>KnowPrivacy.</cite></a> 1 June 2009. URL: <a href=\"http://www.knowprivacy.org/report/KnowPrivacy_Final_Report.pdf\">http://www.knowprivacy.org/report/KnowPrivacy_Final_Report.pdf</a> ",
     "KUIL": {
         "authors": [
