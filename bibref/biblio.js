@@ -8984,10 +8984,8 @@ berjon.biblio = {
         "publisher": "IETF"
     },    
     "ZIP": {
-        "authors": [""],
         "date": "1 September 2012",
         "href": "http://www.pkware.com/documents/casestudies/APPNOTE.TXT",
-        "publisher": "",
         "status": "Final",
         "title": ".ZIP File Format Specification"
     },
