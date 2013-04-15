@@ -2565,13 +2565,37 @@ berjon.biblio = {
     },
     "JSON-LD": {
         "authors": [
+            "Manu Sporny",
+            "Gregg Kellogg",
+            "Markus Lanthaler"
+        ],
+        "href": "http://www.w3.org/TR/json-ld/",
+        "title": "JSON-LD 1.0",
+        "date": "11 April 2013",
+        "status": "WD",
+        "publisher": "W3C"
+    },
+    "JSON-LD-API": {
+        "authors": [
+            "Markus Lanthaler",
+            "Gregg Kellogg",
             "Manu Sporny"
         ],
-        "etAl": true,
-        "href": "http://json-ld.org/spec/latest/",
-        "title": "JSON-LD - Linked Data Expression in JSON",
-        "date": "15 October 2010",
-        "status": "Unofficial Draft"
+        "href": "http://www.w3.org/TR/json-ld-api/",
+        "title": "JSON-LD 1.0 Processing Algorithms and API",
+        "date": "11 April 2013",
+        "status": "WD",
+        "publisher": "W3C"
+    },
+    "JSON-LD-TESTS": {
+        "authors": [
+            "RDF Working Group"
+        ],
+        "href": "http://www.w3.org/2013/json-ld-tests/",
+        "title": "JSON-LD 1.0 Test Suite",
+        "date": "11 April 2013",
+        "status": "ED",
+        "publisher": "W3C"
     },
     "KnowPrivacy": "Joshua Gomez; Travis Pinnick; Ashkan Soltani. <a href=\"http://www.knowprivacy.org/report/KnowPrivacy_Final_Report.pdf\"><cite>KnowPrivacy.</cite></a> 1 June 2009. URL: <a href=\"http://www.knowprivacy.org/report/KnowPrivacy_Final_Report.pdf\">http://www.knowprivacy.org/report/KnowPrivacy_Final_Report.pdf</a> ",
     "KUIL": {
