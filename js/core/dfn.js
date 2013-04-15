@@ -11,9 +11,7 @@ define(
                 if (!conf.definitionMap) conf.definitionMap = {};
                 $("dfn").each(function () {
                     var title = $(this).dfnTitle();
-                    if (conf.definitionMap[title]) {
-                      msg.pub("error", "Duplicate definition of '" + title + "'");
-                    }
+                    if (conf.definitionMap[title]) msg.pub("error", "Duplicate definition of '" + title + "'");
                     conf.definitionMap[title] = $(this).makeID("dfn", title);
                 });
                 $("a:not([href])").each(function () {
@@ -22,8 +20,9 @@ define(
                     var title = $ant.dfnTitle();
                     if (conf.definitionMap[title] && !(conf.definitionMap[title] instanceof Function)) {
                         $ant.attr("href", "#" + conf.definitionMap[title]).addClass("internalDFN");
-                    } else if (!conf.definitionMap[title]) {
-                      msg.pub("error", "Found reference to undefined definition: '" + title + "'");
+                    }
+                    else if (!conf.definitionMap[title]) {
+                        msg.pub("error", "Found reference to undefined definition: '" + title + "'");
                     }
                 });
                 msg.pub("end", "core/dfn");
