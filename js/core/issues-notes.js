@@ -26,11 +26,13 @@ define(
                     $ins.each(function (i, inno) {
                         var $inno = $(inno)
                         ,   isIssue = $inno.hasClass("issue")
+                        ,   isFeatureAtRisk = $inno.hasClass("atrisk")
                         ,   isInline = $inno.css("display") != "block"
                         ,   dataNum = $inno.attr("data-number")
                         ,   report = { inline: isInline, content: $inno.html() }
                         ;
                         report.type = isIssue ? "issue" : "note";
+
                         if (isIssue && !isInline && !hasDataNum) {
                             issueNum++;
                             report.number = issueNum;
@@ -38,21 +40,26 @@ define(
                         else if (dataNum) {
                             report.number = dataNum;
                         }
-                
+
                         // wrap
                         if (!isInline) {
-                            var $div = $("<div class='" + report.type + "'></div>")
-                            ,   $tit = $("<div class='" + report.type + "-title'><span></span></div>")
-                            ,   text = isIssue ? "Issue" : "Note"
+                            var $div = $("<div class='" + report.type + (isFeatureAtRisk ? " atrisk" : "") + "'></div>")
+                            ,   $tit = $("<div class='" + report.type + "-title' role='heading'><span></span></div>")
+                            ,   text = isIssue ? (isFeatureAtRisk ? "Feature at Risk" : "Issue") : "Note"
+                            ,   level = $inno.parents("section").length + 2
                             ;
+                            $tit.attr("aria-level", level);
                             if (isIssue) {
                                 if (hasDataNum) {
                                     if (dataNum) {
-                                      text += " " + dataNum;
-                                      // Set issueBase to cause issue to be linked to the external issue tracker
-                                      if (conf.issueBase) {
-                                        $tit.find("span").wrap($("<a href='" + conf.issueBase + dataNum + "'/>"))
-                                      }
+                                        text += " " + dataNum;
+                                        // Set issueBase to cause issue to be linked to the external issue tracker
+                                        if (!isFeatureAtRisk && conf.issueBase) {
+                                            $tit.find("span").wrap($("<a href='" + conf.issueBase + dataNum + "'/>"));
+                                        }
+                                        else if (isFeatureAtRisk && conf.atRiskBase) {
+                                            $tit.find("span").wrap($("<a href='" + conf.atRiskBase + dataNum + "'/>"));
+                                        }
                                     }
                                 }
                                 else {

@@ -36,10 +36,14 @@
           {{#if notYetRec}}
             This document is intended to become a W3C Recommendation.
           {{/if}}
+          {{#if isPR}}
+          {{else}}
           If you wish to make comments regarding this document, please send them to 
           <a href='mailto:{{wgPublicList}}@w3.org'>{{wgPublicList}}@w3.org</a> 
           (<a href='mailto:{{wgPublicList}}-request@w3.org?subject=subscribe'>subscribe</a>,
-          <a href='http://lists.w3.org/Archives/Public/{{wgPublicList}}/'>archives</a>).
+          <a
+              href='http://lists.w3.org/Archives/Public/{{wgPublicList}}/'>archives</a>).
+          {{/if}}
           {{#if isLC}}The Last Call period ends {{humanLCEnd}}.{{/if}}
           {{#if isCR}}
             W3C publishes a Candidate Recommendation to indicate that the document is believed
@@ -47,8 +51,25 @@
             Candidate Recommendation is expected to advance to Proposed Recommendation no earlier than
             {{humanCREnd}}.
           {{/if}}
-          All feedback is welcome.
+          {{#if isPR}}
+          The W3C Membership and other interested parties are invited
+          to review the document and send comments to
+
+          <a href='mailto:{{wgPublicList}}@w3.org'>{{wgPublicList}}@w3.org</a> 
+          (<a href='mailto:{{wgPublicList}}-request@w3.org?subject=subscribe'>subscribe</a>,
+          <a
+              href='http://lists.w3.org/Archives/Public/{{wgPublicList}}/'>archives</a>)
+          through {{humanPREnd}}.
+          Advisory Committee Representatives should consult their
+          <a href='https://www.w3.org/2002/09/wbs/myQuestionnaires'>WBS questionnaires</a>. 
+          Note that substantive technical comments were expected during the Last Call review period that ended {{humanLCEnd}}.
         </p>
+        {{#if implReport}}
+        <p>Please see the Working Group's <a href='{{implReport}}'>implementation report</a>.</p>
+        {{/if}}
+        {{else}}
+        All comments are welcome.
+        {{/if}}
         {{#if notRec}}
           <p>
             Publication as {{anOrA}} {{textStatus}} does not imply endorsement by the W3C Membership.

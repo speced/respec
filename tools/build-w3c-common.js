@@ -38,7 +38,7 @@ exec("git symbolic-ref HEAD", function (err, stdout, stderr) {
     };
     r.optimize(config, function (resp) {
         fs.writeFileSync(pth.join(builds, "respec-w3c-common.js"),
-                        "/* ReSpec " + version + " - Robin Berjon, http://berjon.com/ (@robinberjon) */\n/* See original source for licenses. */\n" +
+                        "/* ReSpec " + version + " - Robin Berjon, http://berjon.com/ (@robinberjon) */\n/* See original source for licenses: https://github.com/darobin/respec. */\n" +
                         fs.readFileSync(config.out));
         console.log("OK!");
     });

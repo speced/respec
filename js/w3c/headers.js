@@ -27,6 +27,8 @@
 //      defined by:
 //          - uri: the URI to the alternate
 //          - label: a label for the alternate
+//          - lang: optional language
+//          - type: optional MIME type
 //  - testSuiteURI: the URI to the test suite, if any
 //  - implementationReportURI: the URI to the implementation report, if any
 //  - noRecTrack: set to true if this document is not intended to be on the Recommendation track
@@ -123,7 +125,8 @@ define(
             status2maturity:    {
                 FPWD:           "WD"
             ,   LC:             "WD"
-            ,   "FPWD-NOTE":    "WD"
+            ,   FPLC:           "WD"
+            ,   "FPWD-NOTE":    "NOTE"
             ,   "WD-NOTE":      "WD"
             ,   "LC-NOTE":      "LC"
             ,   "IG-NOTE":      "NOTE"
@@ -138,12 +141,13 @@ define(
             ,   "Team-SUBM":    "Team Submission"
             ,   MO:             "Member-Only Document"
             ,   ED:             "Editor's Draft"
-            ,   FPWD:           "Working Draft"
+            ,   FPWD:           "First Public Working Draft"
             ,   WD:             "Working Draft"
-            ,   "FPWD-NOTE":    "Working Draft"
+            ,   "FPWD-NOTE":    "Working Group Note"
             ,   "WD-NOTE":      "Working Draft"
             ,   "LC-NOTE":      "Working Draft"
-            ,   LC:             "Working Draft"
+            ,   FPLC:           "First Public and Last Call Working Draft"
+            ,   LC:             "Last Call Working Draft"
             ,   CR:             "Candidate Recommendation"
             ,   PR:             "Proposed Recommendation"
             ,   PER:            "Proposed Edited Recommendation"
@@ -159,12 +163,10 @@ define(
             ,   "BG-FINAL":     "Final Business Group Specification"
             }
         ,   status2long:    {
-                FPWD:           "First Public Working Draft"
-            ,   "FPWD-NOTE":    "First Public Working Draft"
-            ,   LC:             "Last Call Working Draft"
+                "FPWD-NOTE":    "First Public Working Group Note"
             ,   "LC-NOTE":      "Last Call Working Draft"
             }
-        ,   recTrackStatus: ["FPWD", "WD", "LC", "CR", "PR", "PER", "REC"]
+        ,   recTrackStatus: ["FPWD", "WD", "FPLC", "LC", "CR", "PR", "PER", "REC"]
         ,   noTrackStatus:  ["MO", "unofficial", "base", "finding", "draft-finding", "CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"]
         ,   cgbg:           ["CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"]
         ,   precededByAn:   ["ED", "IG-NOTE"]
@@ -228,7 +230,7 @@ define(
                     }
                 }
                 else {
-                    if (conf.specStatus !== "FPWD" && conf.specStatus !== "ED" && !conf.noRecTrack && !conf.isNoTrack)
+                    if (conf.specStatus !== "FPWD" && conf.specStatus !== "FPLC" && conf.specStatus !== "ED" && !conf.noRecTrack && !conf.isNoTrack)
                         msg.pub("error", "Document on track but no previous version.");
                     if (!conf.prevVersion) conf.prevVersion = "";
                 }
@@ -246,7 +248,9 @@ define(
                 });
                 conf.multipleAlternates = conf.alternateFormats && conf.alternateFormats.length > 1;
                 conf.alternatesHTML = utils.joinAnd(conf.alternateFormats, function (alt) {
-                    return "<a href='" + alt.uri + "'>" + alt.label + "</a>";
+                    var optional = (alt.hasOwnProperty('lang') && alt.lang) ? " hreflang='" + alt.lang + "'" : "";
+                    optional += (alt.hasOwnProperty('type') && alt.type) ? " type='" + alt.type + "'" : "";
+                    return "<a rel='alternate' href='" + alt.uri + "'" + optional + ">" + alt.label + "</a>";
                 });
                 if (conf.copyrightStart && conf.copyrightStart == conf.publishYear) conf.copyrightStart = "";
                 for (var k in this.status2text) {
@@ -256,7 +260,7 @@ define(
                 conf.longStatus = this.status2long[conf.specStatus];
                 conf.textStatus = this.status2text[conf.specStatus];
                 conf.showThisVersion =  (!conf.isNoTrack || conf.isTagFinding);
-                conf.showPreviousVersion = (conf.specStatus !== "FPWD" && conf.specStatus !== "ED" &&
+                conf.showPreviousVersion = (conf.specStatus !== "FPWD" && conf.specStatus !== "FPLC" && conf.specStatus !== "ED" &&
                                            !conf.isNoTrack && !conf.noRecTrack);
                 if (conf.isTagFinding) conf.showPreviousVersion = conf.previousPublishDate ? true : false;
                 conf.notYetRec = (conf.isRecTrack && conf.specStatus !== "REC");
@@ -265,8 +269,9 @@ define(
                 conf.isUnofficial = conf.specStatus === "unofficial";
                 conf.prependW3C = !conf.isUnofficial;
                 conf.isED = (conf.specStatus === "ED");
-                conf.isLC = (conf.specStatus === "LC");
+                conf.isLC = (conf.specStatus === "LC" || conf.specStatus === "FPLC");
                 conf.isCR = (conf.specStatus === "CR");
+                conf.isPR = (conf.specStatus === "PR");
                 conf.isMO = (conf.specStatus === "MO");
                 conf.isIGNote = (conf.specStatus === "IG-NOTE");
                 // configuration done - yay!
@@ -295,11 +300,15 @@ define(
                     conf.multipleWGs = false;
                     conf.wgHTML = "<a href='" + conf.wgURI + "'>" + conf.wg + "</a>";
                 }
-                if (conf.specStatus === "LC" && !conf.lcEnd) msg.pub("error", "Status is LC but no lcEnd is specified");
+                if (conf.isLC && !conf.lcEnd) msg.pub("error", "Status is LC but no lcEnd is specified");
+                if (conf.specStatus === "PR" && !conf.lcEnd) msg.pub("error", "Status is PR but no lcEnd is specified (needed to indicate end of previous LC)");
                 conf.humanLCEnd = utils.humanDate(conf.lcEnd || "");
                 if (conf.specStatus === "CR" && !conf.crEnd) msg.pub("error", "Status is CR but no crEnd is specified");
                 conf.humanCREnd = utils.humanDate(conf.crEnd || "");
-                conf.recNotExpected = (!conf.isRecTrack && conf.maturity == "WD");
+                if (conf.specStatus === "PR" && !conf.prEnd) msg.pub("error", "Status is PR but no prEnd is specified");
+                conf.humanPREnd = utils.humanDate(conf.prEnd || "");
+
+                conf.recNotExpected = (!conf.isRecTrack && conf.maturity == "WD" && conf.specStatus !== "FPWD-NOTE");
                 if (conf.isIGNote && !conf.charterDisclosureURI)
                     msg.pub("error", "IG-NOTEs must link to charter's disclosure section using charterDisclosureURI");
                 $(conf.isCGBG ? cgbgSotdTmpl(conf) : sotdTmpl(conf)).insertAfter($("#abstract"));

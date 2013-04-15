@@ -5,7 +5,7 @@ div.issue-title, div.note-title {
     color: #b9ab2d;
 }
 div.issue-title { color: #e05252; }
-div.note-title { color: #52e052; }
+div.note-title { color: #2b2; }
 div.issue-title span, div.note-title span {
     text-transform: uppercase;
 }
@@ -20,7 +20,7 @@ div.note, div.issue {
     border-left-style: solid;
 }
 div.issue, div.note {
-    padding: 0.5em;
+    padding: 1em 1.2em 0.5em;
     margin: 1em 0;
     position: relative;
     clear: both;

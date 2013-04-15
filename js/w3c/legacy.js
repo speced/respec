@@ -11,14 +11,31 @@ var sn;
 (function () {
     if (typeof(berjon) == "undefined") window.berjon = {};
     function _errEl () {
-        var err = document.getElementById("respec-err");
-        if (err) return err.firstElementChild;
+        var id = "respec-err";
+        var err = document.getElementById(id);
+        if (err) return err.firstElementChild.nextElementSibling;
         err = sn.element("div",
-                            { id: "respec-err",
+                            { id: id,
                               style: "position: fixed; width: 350px; top: 10px; right: 10px; border: 3px double #f00; background: #fff",
                               "class": "removeOnSave" },
                             document.body);
-        return sn.element("ul", {}, err);
+        
+        var hide = sn.element("p", {
+            style: "float: right; margin: 2px; text-decoration: none"
+        }, err);
+        
+        sn.text('[', hide);
+        
+        var a = sn.element("a", { href: "#" }, hide, 'x');
+        
+        a.onclick = function() {
+            document.getElementById(id).style.display = 'none';
+            return false;
+        };
+        
+        sn.text(']', hide);
+        
+        return sn.element("ul", { style: "clear: both"}, err);
     }
     function error (str) {
         if (window.respecEvent) respecEvent.pub("error", str);
@@ -86,6 +103,7 @@ var sn;
         run:    function (conf, doc, cb, msg) {
             try {
                 this.extractConfig();
+                this.overrideBiblio(conf);
                 this.bibref(conf, doc, cb, msg);
 
                 if (this.doRDFa) this.makeRDFa();
@@ -99,7 +117,13 @@ var sn;
                 msg.pub("error", "Processing error: " + e);
             }
         },
-
+        
+        overrideBiblio:     function (conf) {
+            if (conf.localBiblio) {
+                for (var k in conf.localBiblio) berjon.biblio[k] = conf.localBiblio[k];
+            }
+        },
+        
         makeRDFa:  function () {
             var abs = document.getElementById("abstract");
             if (abs) {
@@ -196,7 +220,7 @@ var sn;
             }
 
             str += ">\n";
-            var cmt = document.createComment("[if lt IE 9]><script src='" + this.httpScheme + "://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
+            var cmt = document.createComment("[if lt IE 9]><script src='" + respecConfig.httpScheme + "://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
             $("head").append(cmt);
             str += document.documentElement.innerHTML;
             str += "</html>";
@@ -259,8 +283,8 @@ var sn;
                         str += " prefix='bibo: http://purl.org/ontology/bibo/'" ;
                     }
                 }
+                str += " typeof=\"bibo:Document\"";
             }
-            str += " typeof=\"bibo:Document\"";
             str += ">\n";
             // walk the entire DOM tree grabbing nodes and emitting them - possibly modifying them
             // if they need the funny closing tag
@@ -270,7 +294,7 @@ var sn;
                 selfClosing[n] = true;
             });
             var noEsc = [false];
-            var cmt = document.createComment("[if lt IE 9]><script src='" + this.httpScheme + "://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
+            var cmt = document.createComment("[if lt IE 9]><script src='" + respecConfig.httpScheme + "://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
             $("head").append(cmt);
             var dumpNode = function (node) {
                 var out = '';
@@ -388,7 +412,7 @@ var sn;
             if (!cfg.diffTool) cfg.diffTool = 'http://www5.aptest.com/standards/htmldiff/htmldiff.pl';
             if (!cfg.doRDFa) cfg.doRDFa = false;
             for (var k in cfg) {
-                if (this.hasOwnProperty(k)) this[k] = cfg[k];
+                if (cfg.hasOwnProperty(k)) this[k] = cfg[k];
             }
         },
 
@@ -401,57 +425,58 @@ var sn;
             ,   norms = conf.normativeReferences
             ;
 
+            function getKeys(obj) {
+                var res = [];
+                for (var k in obj) res.push(k);
+                return res;
+            }
+
             var del = [];
             for (var k in informs) if (norms[k]) del.push(k);
             for (var i = 0; i < del.length; i++) delete informs[del[i]];
 
+            informs = getKeys(informs);
+            norms = getKeys(norms);
+
+            if (!informs.length && !norms.length && !this.refNote) return;
             var refsec = sn.element("section", { id: "references", "class": "appendix" }, document.body);
             sn.element("h2", {}, refsec, "References");
             if (this.refNote) {
                 var refnote = sn.element("p", {}, refsec);
                 refnote.innerHTML = this.refNote;
             }
-            var getKeys = function (obj) {
-                var res = [];
-                for (var k in obj) res.push(k);
-                return res;
-            };
 
             var types = ["Normative", "Informative"];
             for (var i = 0; i < types.length; i++) {
                 var type = types[i];
-                var refs = (type == "Normative") ? getKeys(norms) : getKeys(informs);
+                var refs = (type == "Normative") ? norms : informs;
+                if (!refs.length) continue;
                 var sec = sn.element("section", {}, refsec);
                 sn.makeID(sec, null, type + " references");
                 sn.element("h3", {}, sec, type + " references");
                 refs.sort();
-                if (refs.length) {
-                    var dl = sn.element("dl", { "class": "bibliography" }, sec);
-                    if (this.doRDFa) {
-                        dl.setAttribute('about', '') ;
-                    }
-                    for (var j = 0; j < refs.length; j++) {
-                        var ref = refs[j];
-                        sn.element("dt", { id: "bib-" + ref }, dl, "[" + ref + "]");
-                        var dd = sn.element("dd", {}, dl);
-                        if (this.doRDFa) {
-                            if (type == 'Normative') {
-                                dd.setAttribute('rel','dcterms:requires');
-                            } else {
-                                dd.setAttribute('rel','dcterms:references');
-                            }
-                        }
-                        if (berjon.biblio[ref]) dd.innerHTML = berjon.biblio[ref] + "\n";
-                        else {
-                            if (!badrefs[ref]) badrefs[ref] = 0;
-                            badrefs[ref]++;
-                            badrefcount++;
-                            dd.innerHTML = "<em>Reference not found.</em>\n";
-                        }
-                    }
+                var dl = sn.element("dl", { "class": "bibliography" }, sec);
+                if (this.doRDFa) {
+                    dl.setAttribute('about', '') ;
                 }
-                else {
-                    sn.element("p", {}, sec, "No " + type.toLowerCase() + " references.");
+                for (var j = 0; j < refs.length; j++) {
+                    var ref = refs[j];
+                    sn.element("dt", { id: "bib-" + ref }, dl, "[" + ref + "]");
+                    var dd = sn.element("dd", {}, dl);
+                    if (this.doRDFa) {
+                        if (type == 'Normative') {
+                            dd.setAttribute('rel','dcterms:requires');
+                        } else {
+                            dd.setAttribute('rel','dcterms:references');
+                        }
+                    }
+                    if (berjon.biblio[ref]) dd.innerHTML = this.stringifyRef(berjon.biblio[ref]) + "\n";
+                    else {
+                        if (!badrefs[ref]) badrefs[ref] = 0;
+                        badrefs[ref]++;
+                        badrefcount++;
+                        dd.innerHTML = "<em>Reference not found.</em>\n";
+                    }
                 }
             }
             
@@ -462,6 +487,37 @@ var sn;
                 }
             }
 
+        },
+
+        stringifyRef: function(ref) {
+            if(typeof ref == 'string') return ref;
+            var output = '';
+            if(ref.authors && ref.authors.length) {
+                output += ref.authors.join('; ');
+                if(ref.etAl) output += ' et al';
+                output += '. ';
+            }
+            output += '<a href="' + ref.href + '"><cite>' + ref.title + '</cite></a>. ';
+            if(ref.date) output += ref.date + '. ';
+            if(ref.status) output += this.getRefStatus(ref.status) + '. ';
+            output += 'URL: <a href="' + ref.href + '">' + ref.href + '</a>';
+            return output;
+        },
+
+        getRefStatus: function(status) {
+            return this.REF_STATUSES[status] || status;
+        },
+
+        REF_STATUSES: {
+            "NOTE": "W3C Note",
+            "WG-NOTE": "W3C Working Group Note",
+            "ED": "W3C Editor's Draft",
+            "FPWD": "W3C First Public Working Draft",
+            "WD": "W3C Working Draft",
+            "LCWD": "W3C Last Call Working Draft",
+            "CR": "W3C Candidate Recommendation",
+            "PR": "W3C Proposed Recommendation",
+            "REC": "W3C Recommendation",
         },
 
         // --- HELPERS --------------------------------------------------------------------------------------------

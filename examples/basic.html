@@ -18,13 +18,18 @@
           ,   wgPublicList: "none"
           ,   wgPatentURI:  "XXX"
           ,   edDraftURI:   "http://darobin.github.com/respec"
+          ,   localBiblio:  {
+                  "MEMES":  "<a href='http://w3cmemes.tumblr.com/'>W3C Memes</a>"
+              ,   "REX":    "<strong>Overridden!</strong>"
+              }
         };
     </script>
   </head>
   <body>
     <section id='abstract'>
       <p>
-        This is just a very basic document. [[!REX]]
+        This is just a very basic document. [[!REX]] Yeah for memes [[MEMES]].
+        [[DOM4]], [[XML10]]
       </p>
     </section>
     <section id='sotd'>
@@ -34,6 +39,15 @@
     </section>
     <section>
       <h2>Name <a href='http://berjon.com/'>clashes</a> after <span>and <a href='http://w3.org/'>deep</a> stuff</span></h2>
+      <p>
+        Something MUST happen.
+      </p>
+      <p class='issue' title='A real problem'>
+        This is a problem
+      </p>
+      <p class='note' title='About this'>
+        Just a note
+      </p>
     </section>
     <section>
       <h2>Clash here</h2>
@@ -47,27 +61,14 @@
     <section>
       <h2>Type Unions</h2>
       <section>
-        <h2>One</h2>
-        <dl class="idl" title="interface Capabilities">
-          <dt>readonly attribute dictionary capabilities</dt>
-          <dd>The underlying collection of capabilities, represented as a dictionary mapping strings to values which may be
-          of type <code>boolean</code>, <code>numerical</code> or <code>string</code>.</dd>
-          <dt>boolean has(string capabilityName)</dt>
-          <dd>Queries the underlying <code>capabilities</code> to see whether the
-          value is set. This will return true if the capabilities contain a key with
-          the given <code>capabilityName</code> and the value of that key is defined.
-          If the value is a boolean, this function will return that boolean value. If
-          the value is <code>null</code>, an empty string or a 0 then this method will return
-          false.</dd>
-          <dt>(string or boolean or number)? get(string capabilityName)</dt>
-          <dd>Get the value of the key matching capabilityName in the underlying<code>capabilities</code>or <code>null</code>if no value is defined.</dd>
-        </dl>
-      </section>
-      <section>
         <h2>Two</h2>
         <dl class="idl" title="interface MutableCapabilities : Capabilities">
-          <dt>void set(string capabilityName, (string or boolean or number)? value)</dt>
-          <dd>Set the value of the given <code>capabilityName</code>to the given <code>value</code>. If the value is not a boolean, numerical type or a string, a <code>WebDriverException</code>should be thrown.</dd>
+          <dt>void foo(boolean value1, DOMString other1)</dt>
+          <dd>without default</dd>
+          <dt>void bar(boolean value2 = true, DOMString other2)</dt>
+          <dd>with default</dd>
+          <dt>void bar(unsigned long value3 = 8.2, DOMString other3 = "something else")</dt>
+          <dd>with default</dd>
         </dl>
       </section>
     </section>
