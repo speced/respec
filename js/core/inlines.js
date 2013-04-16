@@ -40,7 +40,7 @@ define(
                 var txts = $("body", doc).allTextNodes(["pre"]);
                 var rx = new RegExp("(\\bMUST(?:\\s+NOT)?\\b|\\bSHOULD(?:\\s+NOT)?\\b|\\bSHALL(?:\\s+NOT)?\\b|" +
                                     "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +
-                                    "(?:\\[\\[(?:!)?[A-Za-z0-9-]+\\]\\])" + ( abbrRx ? "|" + abbrRx : "") + ")");
+                                    "(?:\\[\\[(?:!|\\\\)?[A-Za-z0-9-]+\\]\\])" + ( abbrRx ? "|" + abbrRx : "") + ")");
                 for (var i = 0; i < txts.length; i++) {
                     var txt = txts[i];
                     var subtxt = txt.data.split(rx);
@@ -62,17 +62,22 @@ define(
                                 var ref = matched;
                                 ref = ref.replace(/^\[\[/, "");
                                 ref = ref.replace(/\]\]$/, "");
-                                var norm = false;
-                                if (ref.indexOf("!") === 0) {
-                                    norm = true;
-                                    ref = ref.replace(/^!/, "");
+                                if (ref.indexOf("\\") === 0) {
+                                    df.appendChild(doc.createTextNode("[[" + ref.replace(/^\\/, "") + "]]"));
                                 }
-                                // contrary to before, we always insert the link
-                                if (norm) conf.normativeReferences[ref] = true;
-                                else      conf.informativeReferences[ref] = true;
-                                df.appendChild(doc.createTextNode("["));
-                                df.appendChild($("<cite/>").wrapInner($("<a/>").attr({"class": "bibref", href: "#bib-" + ref}).text(ref))[0]);
-                                df.appendChild(doc.createTextNode("]"));
+                                else {
+                                    var norm = false;
+                                    if (ref.indexOf("!") === 0) {
+                                        norm = true;
+                                        ref = ref.replace(/^!/, "");
+                                    }
+                                    // contrary to before, we always insert the link
+                                    if (norm) conf.normativeReferences[ref] = true;
+                                    else      conf.informativeReferences[ref] = true;
+                                    df.appendChild(doc.createTextNode("["));
+                                    df.appendChild($("<cite/>").wrapInner($("<a/>").attr({"class": "bibref", href: "#bib-" + ref}).text(ref))[0]);
+                                    df.appendChild(doc.createTextNode("]"));
+                                }
                             }
                             // ABBR
                             else if (abbrMap[matched]) {

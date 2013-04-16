@@ -495,7 +495,7 @@ define(
                 }
 
                 // METHOD
-                match = /^\s*(.*?)\s+\b(\S+)\s*\(\s*(.*)\s*\)\s*$/.exec(str);
+                match = /^\s*(.*?)\s+\b(\S+?)\s*\(\s*(.*)\s*\)\s*$/.exec(str);
                 if (match) {
                     obj.type = "method";
                     var type = match[1]
