@@ -159,7 +159,7 @@ $.fn.dfnTitle = function () {
     else if (this.contents().length == 1 && this.children("abbr, acronym").length == 1 &&
              this.find(":first-child").attr("title")) title = this.find(":first-child").attr("title");
     else title = this.text();
-    return title.replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
+    return title.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
 };
 
 
