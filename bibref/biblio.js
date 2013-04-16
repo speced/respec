@@ -2565,13 +2565,37 @@ berjon.biblio = {
     },
     "JSON-LD": {
         "authors": [
+            "Manu Sporny",
+            "Gregg Kellogg",
+            "Markus Lanthaler"
+        ],
+        "href": "http://www.w3.org/TR/json-ld/",
+        "title": "JSON-LD 1.0",
+        "date": "11 April 2013",
+        "status": "WD",
+        "publisher": "W3C"
+    },
+    "JSON-LD-API": {
+        "authors": [
+            "Markus Lanthaler",
+            "Gregg Kellogg",
             "Manu Sporny"
         ],
-        "etAl": true,
-        "href": "http://json-ld.org/spec/latest/",
-        "title": "JSON-LD - Linked Data Expression in JSON",
-        "date": "15 October 2010",
-        "status": "Unofficial Draft"
+        "href": "http://www.w3.org/TR/json-ld-api/",
+        "title": "JSON-LD 1.0 Processing Algorithms and API",
+        "date": "11 April 2013",
+        "status": "WD",
+        "publisher": "W3C"
+    },
+    "JSON-LD-TESTS": {
+        "authors": [
+            "RDF Working Group"
+        ],
+        "href": "http://www.w3.org/2013/json-ld-tests/",
+        "title": "JSON-LD 1.0 Test Suite",
+        "date": "11 April 2013",
+        "status": "ED",
+        "publisher": "W3C"
     },
     "KnowPrivacy": "Joshua Gomez; Travis Pinnick; Ashkan Soltani. <a href=\"http://www.knowprivacy.org/report/KnowPrivacy_Final_Report.pdf\"><cite>KnowPrivacy.</cite></a> 1 June 2009. URL: <a href=\"http://www.knowprivacy.org/report/KnowPrivacy_Final_Report.pdf\">http://www.knowprivacy.org/report/KnowPrivacy_Final_Report.pdf</a> ",
     "KUIL": {
@@ -8982,6 +9006,12 @@ berjon.biblio = {
         "date": "May 2005",
         "status": "IETF Draft",
         "publisher": "IETF"
+    },    
+    "ZIP": {
+        "date": "1 September 2012",
+        "href": "http://www.pkware.com/documents/casestudies/APPNOTE.TXT",
+        "status": "Final",
+        "title": ".ZIP File Format Specification"
     },
     "ZHMARK": "<cite>&#26631;&#28857;&#31526;&#21495;&#29992;&#27861; (Punctuation Mark Usage).</cite> 1995. &#20013;&#21326;&#20154;&#27665;&#20849;&#21644;&#22269;&#22269;&#23478;&#26631;&#20934; "
 };
