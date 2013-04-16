@@ -44,12 +44,6 @@ code {
     color:  #ff4500;
 }
 
-
-/* --- --- */
-ol.algorithm { counter-reset:numsection; list-style-type: none; }
-ol.algorithm li { margin: 0.5em 0; }
-ol.algorithm li:before { font-weight: bold; counter-increment: numsection; content: counters(numsection, ".") ") "; }
-
 /* --- TOC --- */
 .toc a, .tof a {
     text-decoration:    none;
