@@ -62,9 +62,7 @@ define(
                                 var ref = matched;
                                 ref = ref.replace(/^\[\[/, "");
                                 ref = ref.replace(/\]\]$/, "");
-                                console.log("ref is " + ref);
                                 if (ref.indexOf("\\") === 0) {
-                                    console.log("escaped ref");
                                     df.appendChild(doc.createTextNode("[[" + ref.replace(/^\\/, "") + "]]"));
                                 }
                                 else {
