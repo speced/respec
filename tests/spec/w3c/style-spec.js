@@ -12,7 +12,6 @@ function loadWithStatus (s, uri) {
     });
     waitsFor(function () { return loaded; }, MAXOUT);
     runs(function () {
-        // console.log(s, uri);
         expect($("link[href^='" + uri + "']", $ifr[0].contentDocument).length == 1).toBeTruthy();
         $ifr.remove();
         loaded = false;

@@ -21,7 +21,9 @@ define(
                     if (conf.definitionMap[title] && !(conf.definitionMap[title] instanceof Function)) {
                         $ant.attr("href", "#" + conf.definitionMap[title]).addClass("internalDFN");
                     }
-                    else if (!conf.definitionMap[title]) {
+                    else if (!conf.definitionMap[title] &&
+                             !$ant.parents("dl.methods, dl.attributes, dl.constants, dl.fields, dl.dictionary-members, "+
+                                           "dl.callback-members, dl.constructors, dl.serializers, pre.idl").length) {
                         msg.pub("error", "Found reference to undefined definition: '" + title + "'");
                     }
                 });
