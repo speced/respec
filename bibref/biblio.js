@@ -1301,6 +1301,7 @@ berjon.biblio = {
         "status": "NOTE",
         "publisher": "W3C"
     },
+    "DAHU": { "aliasOf": "DAHUT" },
     "DAHUT": "Robin Berjon; et al. <cite>The Dahut Specification Example From the Higher Circle.</cite> 15 March 1977. Lazy Daft. (Work for progress.) URL: <a href='http://berjon.com/'>http://berjon.com/</a>",
     "DAP-ACCESS-REQS": "L. Arribas, P. Byers, M. Hanclik, F Hirsch, D. Rogers. <a href=\"http://dev.w3.org/2009/dap/policy-reqs/\"><cite>Device API Access Control Requirements</cite></a> 17 June 2010. (Work in progress.) URL: <a href=\"http://dev.w3.org/2009/dap/policy-reqs/\">http://dev.w3.org/2009/dap/policy-reqs/</a> ",
     "DAP-POLICY-FRAMEWORK": "L. Arribas, P. Byers, M. Hanclik, F Hirsch, D. Rogers. <a href=\"http://dev.w3.org/2009/dap/policy/Framework.html\"><cite>Device API Policy Framework.</cite></a> 17 June 2010. (Work in progress.) URL: <a href=\"http://dev.w3.org/2009/dap/policy/Framework.html\">http://dev.w3.org/2009/dap/policy/Framework.html</a> ",

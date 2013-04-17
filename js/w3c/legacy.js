@@ -423,6 +423,7 @@ var sn;
             ,   badrefcount = 0
             ,   informs = conf.informativeReferences
             ,   norms = conf.normativeReferences
+            ,   aliases = {}
             ;
 
             function getKeys(obj) {
@@ -470,13 +471,37 @@ var sn;
                             dd.setAttribute('rel','dcterms:references');
                         }
                     }
-                    if (berjon.biblio[ref]) dd.innerHTML = this.stringifyRef(berjon.biblio[ref]) + "\n";
-                    else {
+                    
+                    var refcontent = berjon.biblio[ref],
+                        circular = {},
+                        key = ref;
+                    circular[ref] = true;
+                    while (refcontent && refcontent.aliasOf) {
+                        key = refcontent.aliasOf;
+                        if (circular[key]) {
+                            refcontent = null;
+                            error("Circular reference in biblio DB between [" + ref + "] and [" + key + "].");
+                        } else {
+                            refcontent = berjon.biblio[key];
+                            circular[key] = true;
+                        }
+                    }
+                    aliases[key] = aliases[key] || [];
+                    if (aliases[key].indexOf(ref) < 0) aliases[key].push(ref);
+                    
+                    if (refcontent) {
+                        dd.innerHTML = this.stringifyRef(refcontent) + "\n";
+                    } else {
                         if (!badrefs[ref]) badrefs[ref] = 0;
                         badrefs[ref]++;
                         badrefcount++;
                         dd.innerHTML = "<em>Reference not found.</em>\n";
                     }
+                }
+            }
+            for (var k in aliases) {
+                if (aliases[k].length > 1) {
+                    warning("[" + k + "] is referenced in " + aliases[k].length + " ways (" + aliases[k].join(", ") + "). This causes duplicate entries in the reference section.");
                 }
             }
             
