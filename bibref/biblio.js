@@ -2112,10 +2112,10 @@ berjon.biblio = {
         "authors": [
             "3G Partnership Project"
         ],
-        "href": "http://www.3gpp.org/ftp/Specs/archive/03_series/03.40/0340-750.zip",
+        "href": "http://www.3gpp.org/ftp/Specs/html-info/23040.htm",
         "title": "Technical realization of the Short Message Service (SMS)",
-        "date": "11 January 2002",
-        "status": "3GPP 0340-750"
+        "date": "",
+        "status": ""
     },
     "HASH-IN-URI": {
         "authors": [
