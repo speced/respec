@@ -99,6 +99,14 @@ berjon.biblio = {
         "publisher": "W3C"
     },
     "ANSI-X9-44-2007": "<a href=\"http://webstore.ansi.org/RecordDetail.aspx?sku=ANSI+X9.44-2007\"><cite>ANSI X9.44-2007: Key Establishment Using Integer Factorization Cryptography.</cite></a> URL: <a href=\"http://webstore.ansi.org/RecordDetail.aspx?sku=ANSI+X9.44-2007\">http://webstore.ansi.org/RecordDetail.aspx?sku=ANSI+X9.44-2007</a>",
+    "APP-URI": {
+        "authors": [
+            "Marcos Cáceres"
+        ],
+        "href": "http://app-uri.sysapps.org",
+        "status": "Unofficial Draft",
+        "title": "The app: URI scheme"
+    },
     "ARABIC-MATH": {
         "authors": [
             "Azzeddine Lazrek",
