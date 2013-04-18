@@ -2911,6 +2911,14 @@ berjon.biblio = {
         "status": "NOTE",
         "publisher": "W3C"
     },
+    "MMS13": {
+        "authors": [""],
+        "date": "",
+        "href": "http://technical.openmobilealliance.org/Technical/release_program/mms_v1_3.aspx",
+        "publisher": "Open Mobile Alliance",
+        "status": "",
+        "title": "Multimedia Messaging Service 1.3"
+  }
     "MOBILE-BP": {
         "authors": [
             "Charles McCathieNevile",
