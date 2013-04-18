@@ -2120,10 +2120,8 @@ berjon.biblio = {
         "authors": [
             "3G Partnership Project"
         ],
-        "href": "http://www.3gpp.org/ftp/Specs/archive/03_series/03.40/0340-750.zip",
+        "href": "http://www.3gpp.org/ftp/Specs/html-info/23040.htm",
         "title": "Technical realization of the Short Message Service (SMS)",
-        "date": "11 January 2002",
-        "status": "3GPP 0340-750"
     },
     "HASH-IN-URI": {
         "authors": [
@@ -2918,6 +2916,13 @@ berjon.biblio = {
         "date": "4 December 2002",
         "status": "NOTE",
         "publisher": "W3C"
+    },
+    "MMS13": {
+        "date": "13 September 2011",
+        "href": "http://technical.openmobilealliance.org/Technical/release_program/mms_v1_3.aspx",
+        "publisher": "Open Mobile Alliance",
+        "status": "Approved Enabler Release",
+        "title": "Multimedia Messaging Service 1.3"
     },
     "MOBILE-BP": {
         "authors": [
@@ -5548,6 +5553,13 @@ berjon.biblio = {
         "date": "23 February 1999",
         "status": "NOTE",
         "publisher": "W3C"
+    },
+    "SYSAPPS-RUNTIME": {
+        "authors": ["Mounir Lamouri", "Ming Jin"],
+        "href": "http://runtime.sysapps.org/",
+        "publisher": "W3C",
+        "status": "ED",
+        "title": "Runtime and Security Model for Web Applications"
     },
     "SYSINFOAPI": {
         "authors": [
