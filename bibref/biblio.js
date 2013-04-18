@@ -2918,7 +2918,7 @@ berjon.biblio = {
         "publisher": "Open Mobile Alliance",
         "status": "",
         "title": "Multimedia Messaging Service 1.3"
-    }
+    },
     "MOBILE-BP": {
         "authors": [
             "Charles McCathieNevile",
