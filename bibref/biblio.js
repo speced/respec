@@ -2114,8 +2114,6 @@ berjon.biblio = {
         ],
         "href": "http://www.3gpp.org/ftp/Specs/html-info/23040.htm",
         "title": "Technical realization of the Short Message Service (SMS)",
-        "date": "",
-        "status": ""
     },
     "HASH-IN-URI": {
         "authors": [
@@ -2912,11 +2910,10 @@ berjon.biblio = {
         "publisher": "W3C"
     },
     "MMS13": {
-        "authors": [""],
-        "date": "",
+        "date": "13 September 2011",
         "href": "http://technical.openmobilealliance.org/Technical/release_program/mms_v1_3.aspx",
         "publisher": "Open Mobile Alliance",
-        "status": "",
+        "status": "Approved Enabler Release",
         "title": "Multimedia Messaging Service 1.3"
     },
     "MOBILE-BP": {
@@ -5551,7 +5548,6 @@ berjon.biblio = {
     },
     "SYSAPPS-RUNTIME": {
         "authors": ["Mounir Lamouri", "Ming Jin"],
-        "date": "",
         "href": "http://runtime.sysapps.org/",
         "publisher": "W3C",
         "status": "ED",
