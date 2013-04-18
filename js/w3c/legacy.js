@@ -477,11 +477,11 @@ var sn;
                         key = ref;
                     circular[ref] = true;
                     while (refcontent && refcontent.aliasOf) {
-                        key = refcontent.aliasOf;
-                        if (circular[key]) {
+                        if (circular[refcontent.aliasOf]) {
                             refcontent = null;
                             error("Circular reference in biblio DB between [" + ref + "] and [" + key + "].");
                         } else {
+                            key = refcontent.aliasOf;
                             refcontent = berjon.biblio[key];
                             circular[key] = true;
                         }
