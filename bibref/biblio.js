@@ -5913,6 +5913,15 @@ berjon.biblio = {
         "date": "March 2012",
         "status": "RFC 6570"
     },
+    "URL": {
+        "authors": [
+            "Anne van Kesteren"
+        ],
+        "href": "http://url.spec.whatwg.org/",
+        "publisher": "WHATWG",
+        "status": "Living Standard",
+        "title": "URL Standard"
+    },
     "URN": "R. Moats. <a href=\"http://www.ietf.org/rfc/rfc2141.txt\"><cite>URN Syntax.</cite></a> IETF RFC 2141. May 1997.  URL: <a href=\"http://www.ietf.org/rfc/rfc2141.txt\">http://www.ietf.org/rfc/rfc2141.txt</a>",
     "URN-OID": "M. Mealling. <a href=\"http://www.ietf.org/rfc/rfc3061.txt\"><cite>A URN Namespace of Object Identifiers. </cite></a>. IETF RFC 3061. February 2001. URL: <a href=\"http://www.ietf.org/rfc/rfc3061.txt\">http://www.ietf.org/rfc/rfc3061.txt</a>",
     "UTF-16": "P. Hoffman , F. Yergeau. <a href=\"http://www.ietf.org/rfc/rfc2781.txt\"><cite>UTF-16, an encoding of ISO 10646.</cite></a> IETF RFC 2781. February 2000.   URL: <a href=\"http://www.ietf.org/rfc/rfc2781.txt\">http://www.ietf.org/rfc/rfc2781.txt</a>",
