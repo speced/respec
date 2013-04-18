@@ -2918,7 +2918,7 @@ berjon.biblio = {
         "publisher": "Open Mobile Alliance",
         "status": "",
         "title": "Multimedia Messaging Service 1.3"
-  }
+    }
     "MOBILE-BP": {
         "authors": [
             "Charles McCathieNevile",
@@ -5548,6 +5548,14 @@ berjon.biblio = {
         "date": "23 February 1999",
         "status": "NOTE",
         "publisher": "W3C"
+    },
+    "SYSAPPS-RUNTIME": {
+        "authors": ["Mounir Lamouri", "Ming Jin"],
+        "date": "",
+        "href": "http://runtime.sysapps.org/",
+        "publisher": "W3C",
+        "status": "ED",
+        "title": "Runtime and Security Model for Web Applications"
     },
     "SYSINFOAPI": {
         "authors": [
