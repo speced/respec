@@ -588,7 +588,14 @@ berjon.biblio = {
         "status": "CR",
         "publisher": "W3C"
     },
-    "CSP": "Adam Barth; Brendon Sterne. <a href=\"http://www.w3.org/TR/CSP/\"><cite>CSP.</cite></a> URL: <a href=\"http://www.w3.org/TR/CSP/\">http://www.w3.org/TR/CSP/</a> ",
+    "CSP": {
+        "authors": ["Brandon Sterne", "Adam Barth"],
+        "date": "15 November 2012",
+        "href": "http://www.w3.org/TR/CSP/",
+        "publisher": "W3C",
+        "status": "CR",
+        "title": "Content Security Policy 1.0"
+    },
     "CSS-ADAPTATION": {
         "authors": [
             "Rune Lillesveen"
@@ -598,6 +605,9 @@ berjon.biblio = {
         "date": "15 September 2011",
         "status": "FPWD",
         "publisher": "W3C"
+    },
+    "CSS-MIME": {
+        "aliasOf": "RFC2318"
     },
     "CSS-MASKING": {
         "authors": [
@@ -1848,6 +1858,9 @@ berjon.biblio = {
         "status": "Standard ECMA-402",
         "title": "ECMAScript Internationalization API Specification"
     },
+    "ECMAScript-MIME": {
+        "aliasOf": "RFC4329"
+    },
     "EGOV-IMPROVING": {
         "authors": [
             "Kevin Novak",
@@ -2183,6 +2196,13 @@ berjon.biblio = {
     "HMAC-Security": "C. Rechberger, V. Rijmen. <a href=\"http://www.jucs.org/jucs_14_3/new_results_on_nmac/jucs_14_3_0347_0376_rechberger.pdf\"><cite>New Results on NMAC/HMAC when Instantiated with Popular Hash Functions</cite></a>. 2 January 2008. Journal of Universal Computer Science, vol. 14, no. 3 (2008), 347-376.  URL: <a href=\"http://www.jucs.org/jucs_14_3/new_results_on_nmac/jucs_14_3_0347_0376_rechberger.pdf\">http://www.jucs.org/jucs_14_3/new_results_on_nmac/jucs_14_3_0347_0376_rechberger.pdf</a>",
     "HMRMC": "<a href=\"http://www.hmrc.gov.uk/softwaredevelopers/index.htm\"><cite>HM Revenue and customs</cite></a> Her Majesty's Revenue and Customs. URL: <a href=\"http://www.hmrc.gov.uk/softwaredevelopers/index.htm\">http://www.hmrc.gov.uk/softwaredevelopers/index.htm</a> <br> Sample response message with XML signature: <a href=\"http://www.hmrc.gov.uk/ebu/responsemessages.pdf\">http://www.hmrc.gov.uk/ebu/responsemessages.pdf</a>",
     "HSL": "Steven Pemberton. <a href=\"http://www.cwi.nl/~steven/css/hsl.html\"><cite>HSL: light vs saturation.</cite></a> 19 November 1998. URL: <a href=\"http://www.cwi.nl/~steven/css/hsl.html\">http://www.cwi.nl/~steven/css/hsl.html</a> ",
+    "HTML": {
+        "authors": ["Ian Hickson"],
+        "href": "http://www.whatwg.org/specs/web-apps/current-work/",
+        "publisher": "WHATWG",
+        "status": "Living Standard",
+        "title": "HTML"
+    },
     "HTML-DESIGN-PRINCIPLES": {
         "authors": [
             "Anne van Kesteren",
@@ -2569,6 +2589,9 @@ berjon.biblio = {
         "title": "Jpeg 2000 image coding system",
         "date": "9 Dec 1999",
         "status": "Report (draft) ISO/IEC CD15444-1:1999"
+    },
+    "JSON": {
+        "aliasOf": "RFC4627"
     },
     "JSON-LD": {
         "authors": [
@@ -4123,7 +4146,14 @@ berjon.biblio = {
         "status": "RFC",
         "publisher": "IETF"
     },
-    "RFC2318": "H. Lie, B. Bos, C. Lilley. <a href=\"http://www.ietf.org/rfc/rfc2318.txt\"><cite>The text/css Media Type.</cite></a> March 1998. URL: <a href=\"http://www.ietf.org/rfc/rfc2318.txt\">http://www.ietf.org/rfc/rfc2318.txt</a> ",
+    "RFC2318": {
+        "authors": ["H. Lie", "B. Bos", "C. Lilley"],
+        "date": "1 March 1998",
+        "href": "http://www.ietf.org/rfc/rfc2318.txt",
+        "publisher": "IETF",
+        "status": "Informational",
+        "title": "The text/css Media Type"
+    },
     "RFC2397": {
         "authors": [
             "L. Masinter"
@@ -4340,6 +4370,14 @@ berjon.biblio = {
         "date": "November 2005",
         "status": "RFC",
         "publisher": "IETF"
+    },
+    "RFC4329": {
+        "authors": ["B. Hoehrmann"],
+        "date": "4 January 2006",
+        "href": "http://tools.ietf.org/html/rfc4329",
+        "publisher": "IETF",
+        "status": "Informational",
+        "title": "Scripting Media Types"
     },
     "RFC4572": {
         "authors": [
@@ -4905,6 +4943,13 @@ berjon.biblio = {
         "date": "12 February 2009",
         "status": "PR",
         "publisher": "W3C"
+    },
+    "SNIFF": {
+        "authors": ["Gordon P. Hemsley"],
+        "href": "http://mimesniff.spec.whatwg.org/",
+        "publisher": "WHATWG",
+        "status": "Living Standard",
+        "title": "MIME Sniffing Standard"
     },
     "SOAP11-ROR-HTTPBINDING": {
         "authors": [
@@ -5873,7 +5918,11 @@ berjon.biblio = {
         "status": "NOTE",
         "publisher": "W3C"
     },
-    "UNICODE": "The Unicode Consortium. <a href=\"http://www.unicode.org/unicode/standard/versions/enumeratedversions.html\"><cite>The Unicode Standard.</cite></a> 2003. Defined by: The Unicode Standard, Version 4.0 (Boston, MA, Addison-Wesley, ISBN 0-321-18578-1), as updated from time to time by the publication of new versions URL: <a href=\"http://www.unicode.org/unicode/standard/versions/enumeratedversions.html\">http://www.unicode.org/unicode/standard/versions/enumeratedversions.html</a> ",
+    "UNICODE": {
+        "href": "http://www.unicode.org/versions/latest/",
+        "publisher": "The Unicode Consortium",
+        "title": "The Unicode Standard"
+    },
     "UNICODE-XML": {
         "authors": [
             "Asmus Freytag",
