@@ -588,7 +588,14 @@ berjon.biblio = {
         "status": "CR",
         "publisher": "W3C"
     },
-    "CSP": "Adam Barth; Brendon Sterne. <a href=\"http://www.w3.org/TR/CSP/\"><cite>CSP.</cite></a> URL: <a href=\"http://www.w3.org/TR/CSP/\">http://www.w3.org/TR/CSP/</a> ",
+    "CSP": {
+        "authors": ["Brandon Sterne", "Adam Barth"],
+        "date": "15 November 2012",
+        "href": "http://www.w3.org/TR/CSP/",
+        "publisher": "W3C",
+        "status": "CR",
+        "title": "Content Security Policy 1.0"
+    },
     "CSS-ADAPTATION": {
         "authors": [
             "Rune Lillesveen"
