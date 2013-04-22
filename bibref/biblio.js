@@ -2191,6 +2191,13 @@ berjon.biblio = {
     "HMAC-Security": "C. Rechberger, V. Rijmen. <a href=\"http://www.jucs.org/jucs_14_3/new_results_on_nmac/jucs_14_3_0347_0376_rechberger.pdf\"><cite>New Results on NMAC/HMAC when Instantiated with Popular Hash Functions</cite></a>. 2 January 2008. Journal of Universal Computer Science, vol. 14, no. 3 (2008), 347-376.  URL: <a href=\"http://www.jucs.org/jucs_14_3/new_results_on_nmac/jucs_14_3_0347_0376_rechberger.pdf\">http://www.jucs.org/jucs_14_3/new_results_on_nmac/jucs_14_3_0347_0376_rechberger.pdf</a>",
     "HMRMC": "<a href=\"http://www.hmrc.gov.uk/softwaredevelopers/index.htm\"><cite>HM Revenue and customs</cite></a> Her Majesty's Revenue and Customs. URL: <a href=\"http://www.hmrc.gov.uk/softwaredevelopers/index.htm\">http://www.hmrc.gov.uk/softwaredevelopers/index.htm</a> <br> Sample response message with XML signature: <a href=\"http://www.hmrc.gov.uk/ebu/responsemessages.pdf\">http://www.hmrc.gov.uk/ebu/responsemessages.pdf</a>",
     "HSL": "Steven Pemberton. <a href=\"http://www.cwi.nl/~steven/css/hsl.html\"><cite>HSL: light vs saturation.</cite></a> 19 November 1998. URL: <a href=\"http://www.cwi.nl/~steven/css/hsl.html\">http://www.cwi.nl/~steven/css/hsl.html</a> ",
+    "HTML": {
+        "authors": ["Ian Hickson"],
+        "href": "http://www.whatwg.org/specs/web-apps/current-work/",
+        "publisher": "WHATWG",
+        "status": "Living Standard",
+        "title": "HTML"
+    },
     "HTML-DESIGN-PRINCIPLES": {
         "authors": [
             "Anne van Kesteren",
@@ -2577,6 +2584,9 @@ berjon.biblio = {
         "title": "Jpeg 2000 image coding system",
         "date": "9 Dec 1999",
         "status": "Report (draft) ISO/IEC CD15444-1:1999"
+    },
+    "JSON": {
+        "aliasOf": "RFC4627"
     },
     "JSON-LD": {
         "authors": [
