@@ -4906,6 +4906,13 @@ berjon.biblio = {
         "status": "PR",
         "publisher": "W3C"
     },
+    "SNIFF": {
+        "authors": ["Gordon P. Hemsley"],
+        "href": "http://mimesniff.spec.whatwg.org/",
+        "publisher": "WHATWG",
+        "status": "Living Standard",
+        "title": "MIME Sniffing Standard"
+    },
     "SOAP11-ROR-HTTPBINDING": {
         "authors": [
             "David Orchard"
