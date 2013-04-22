@@ -599,6 +599,9 @@ berjon.biblio = {
         "status": "FPWD",
         "publisher": "W3C"
     },
+    "CSS-MIME": {
+        "aliasOf": "RFC2318"
+    },
     "CSS-MASKING": {
         "authors": [
             "Dirk Schulze",
