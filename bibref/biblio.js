@@ -1859,12 +1859,7 @@ berjon.biblio = {
         "title": "ECMAScript Internationalization API Specification"
     },
     "ECMAScript-MIME": {
-        "authors": ["B. Hoehrmann"],
-        "date": "4 January 2006",
-        "href": "http://tools.ietf.org/html/rfc4329",
-        "publisher": "IETF",
-        "status": "Informational",
-        "title": "Scripting Media Types"
+        "aliasOf": "RFC4329"
     },
     "EGOV-IMPROVING": {
         "authors": [
@@ -4375,6 +4370,14 @@ berjon.biblio = {
         "date": "November 2005",
         "status": "RFC",
         "publisher": "IETF"
+    },
+    "RFC4329": {
+        "authors": ["B. Hoehrmann"],
+        "date": "4 January 2006",
+        "href": "http://tools.ietf.org/html/rfc4329",
+        "publisher": "IETF",
+        "status": "Informational",
+        "title": "Scripting Media Types"
     },
     "RFC4572": {
         "authors": [
