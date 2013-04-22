@@ -1848,6 +1848,14 @@ berjon.biblio = {
         "status": "Standard ECMA-402",
         "title": "ECMAScript Internationalization API Specification"
     },
+    "ECMAScript-MIME": {
+        "authors": ["B. Hoehrmann"],
+        "date": "4 January 2006",
+        "href": "http://tools.ietf.org/html/rfc4329",
+        "publisher": "IETF",
+        "status": "Informational",
+        "title": "Scripting Media Types"
+    },
     "EGOV-IMPROVING": {
         "authors": [
             "Kevin Novak",
