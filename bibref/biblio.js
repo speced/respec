@@ -4141,7 +4141,14 @@ berjon.biblio = {
         "status": "RFC",
         "publisher": "IETF"
     },
-    "RFC2318": "H. Lie, B. Bos, C. Lilley. <a href=\"http://www.ietf.org/rfc/rfc2318.txt\"><cite>The text/css Media Type.</cite></a> March 1998. URL: <a href=\"http://www.ietf.org/rfc/rfc2318.txt\">http://www.ietf.org/rfc/rfc2318.txt</a> ",
+    "RFC2318": {
+        "authors": ["H. Lie", "B. Bos", "C. Lilley"],
+        "date": "1 March 1998",
+        "href": "http://www.ietf.org/rfc/rfc2318.txt",
+        "publisher": "IETF",
+        "status": "Informational",
+        "title": "The text/css Media Type"
+    },
     "RFC2397": {
         "authors": [
             "L. Masinter"
