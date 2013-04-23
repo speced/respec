@@ -2130,12 +2130,21 @@ berjon.biblio = {
         "status": "REC",
         "publisher": "W3C"
     },
+    "GSM-CALL": {
+        "authors": ["Bruno Landais"],
+        "date": "28 April 1999",
+        "href": "http://www.3gpp.org/ftp/Specs/html-info/23018.htm",
+        "publisher": "3GPP",
+        "status": "Technical realization",
+        "title": "GSM TS 23.018 Basic call handling"
+    },
     "GSM-SMS": {
         "authors": [
-            "3G Partnership Project"
+            "Richard Burbidge"
         ],
         "href": "http://www.3gpp.org/ftp/Specs/html-info/23040.htm",
         "title": "Technical realization of the Short Message Service (SMS)",
+        "publisher": "3GPP"
     },
     "HASH-IN-URI": {
         "authors": [
@@ -2486,6 +2495,14 @@ berjon.biblio = {
         "date": "27 November 1996",
         "status": "NOTE",
         "publisher": "W3C"
+    },
+    "IMS": {
+        "authors": ["Thomas Towle"],
+        "date": "14 March 2002",
+        "href": "http://www.3gpp.org/ftp/Specs/html-info/23228.htm",
+        "publisher": "3GPP",
+        "status": "Stage 2",
+        "title": "IP Multimedia Subsystem (IMS)"
     },
     "INDEXEDDB": {
         "authors": [
