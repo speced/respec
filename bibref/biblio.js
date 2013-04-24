@@ -4539,6 +4539,14 @@ berjon.biblio = {
         "status": "RFC",
         "publisher": "IETF"
     },
+    "RFC6931": {
+        "authors": [
+            "D. Eastlake"
+        ],
+        "href": "https://datatracker.ietf.org/doc/rfc6931/",
+        "title": "Additional XML Security Uniform Resource Identifiers (URIs)",
+        "status": "IETF RFC 6931. April 2013.",
+    },
     "RichSnippets": "<a href=\"http://googlewebmastercentral.blogspot.com/2009/05/introducing-rich-snippets.html/\"><cite>Introducing Rich Snippets.</cite></a> 12 May 2009. Google Webmaster Central Blog. URL: <a href=\"http://googlewebmastercentral.blogspot.com/2009/05/introducing-rich-snippets.html/\">http://googlewebmastercentral.blogspot.com/2009/05/introducing-rich-snippets.html/</a> ",
     "RIF-BLD": {
         "authors": [
