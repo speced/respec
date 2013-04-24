@@ -99,6 +99,14 @@ berjon.biblio = {
         "publisher": "W3C"
     },
     "ANSI-X9-44-2007": "<a href=\"http://webstore.ansi.org/RecordDetail.aspx?sku=ANSI+X9.44-2007\"><cite>ANSI X9.44-2007: Key Establishment Using Integer Factorization Cryptography.</cite></a> URL: <a href=\"http://webstore.ansi.org/RecordDetail.aspx?sku=ANSI+X9.44-2007\">http://webstore.ansi.org/RecordDetail.aspx?sku=ANSI+X9.44-2007</a>",
+    "APP-URI": {
+        "authors": [
+            "Marcos Cáceres"
+        ],
+        "href": "http://app-uri.sysapps.org",
+        "status": "Unofficial Draft",
+        "title": "The app: URI scheme"
+    },
     "ARABIC-MATH": {
         "authors": [
             "Azzeddine Lazrek",
@@ -580,7 +588,14 @@ berjon.biblio = {
         "status": "CR",
         "publisher": "W3C"
     },
-    "CSP": "Adam Barth; Brendon Sterne. <a href=\"http://www.w3.org/TR/CSP/\"><cite>CSP.</cite></a> URL: <a href=\"http://www.w3.org/TR/CSP/\">http://www.w3.org/TR/CSP/</a> ",
+    "CSP": {
+        "authors": ["Brandon Sterne", "Adam Barth"],
+        "date": "15 November 2012",
+        "href": "http://www.w3.org/TR/CSP/",
+        "publisher": "W3C",
+        "status": "CR",
+        "title": "Content Security Policy 1.0"
+    },
     "CSS-ADAPTATION": {
         "authors": [
             "Rune Lillesveen"
@@ -590,6 +605,9 @@ berjon.biblio = {
         "date": "15 September 2011",
         "status": "FPWD",
         "publisher": "W3C"
+    },
+    "CSS-MIME": {
+        "aliasOf": "RFC2318"
     },
     "CSS-MASKING": {
         "authors": [
@@ -1301,6 +1319,7 @@ berjon.biblio = {
         "status": "NOTE",
         "publisher": "W3C"
     },
+    "DAHU": { "aliasOf": "DAHUT" },
     "DAHUT": "Robin Berjon; et al. <cite>The Dahut Specification Example From the Higher Circle.</cite> 15 March 1977. Lazy Daft. (Work for progress.) URL: <a href='http://berjon.com/'>http://berjon.com/</a>",
     "DAP-ACCESS-REQS": "L. Arribas, P. Byers, M. Hanclik, F Hirsch, D. Rogers. <a href=\"http://dev.w3.org/2009/dap/policy-reqs/\"><cite>Device API Access Control Requirements</cite></a> 17 June 2010. (Work in progress.) URL: <a href=\"http://dev.w3.org/2009/dap/policy-reqs/\">http://dev.w3.org/2009/dap/policy-reqs/</a> ",
     "DAP-POLICY-FRAMEWORK": "L. Arribas, P. Byers, M. Hanclik, F Hirsch, D. Rogers. <a href=\"http://dev.w3.org/2009/dap/policy/Framework.html\"><cite>Device API Policy Framework.</cite></a> 17 June 2010. (Work in progress.) URL: <a href=\"http://dev.w3.org/2009/dap/policy/Framework.html\">http://dev.w3.org/2009/dap/policy/Framework.html</a> ",
@@ -1839,6 +1858,9 @@ berjon.biblio = {
         "status": "Standard ECMA-402",
         "title": "ECMAScript Internationalization API Specification"
     },
+    "ECMAScript-MIME": {
+        "aliasOf": "RFC4329"
+    },
     "EGOV-IMPROVING": {
         "authors": [
             "Kevin Novak",
@@ -2108,14 +2130,21 @@ berjon.biblio = {
         "status": "REC",
         "publisher": "W3C"
     },
+    "GSM-CALL": {
+        "authors": ["Bruno Landais"],
+        "date": "28 April 1999",
+        "href": "http://www.3gpp.org/ftp/Specs/html-info/23018.htm",
+        "publisher": "3GPP",
+        "status": "Technical realization",
+        "title": "GSM TS 23.018 Basic call handling"
+    },
     "GSM-SMS": {
         "authors": [
-            "3G Partnership Project"
+            "Richard Burbidge"
         ],
-        "href": "http://www.3gpp.org/ftp/Specs/archive/03_series/03.40/0340-750.zip",
+        "href": "http://www.3gpp.org/ftp/Specs/html-info/23040.htm",
         "title": "Technical realization of the Short Message Service (SMS)",
-        "date": "11 January 2002",
-        "status": "3GPP 0340-750"
+        "publisher": "3GPP"
     },
     "HASH-IN-URI": {
         "authors": [
@@ -2176,6 +2205,13 @@ berjon.biblio = {
     "HMAC-Security": "C. Rechberger, V. Rijmen. <a href=\"http://www.jucs.org/jucs_14_3/new_results_on_nmac/jucs_14_3_0347_0376_rechberger.pdf\"><cite>New Results on NMAC/HMAC when Instantiated with Popular Hash Functions</cite></a>. 2 January 2008. Journal of Universal Computer Science, vol. 14, no. 3 (2008), 347-376.  URL: <a href=\"http://www.jucs.org/jucs_14_3/new_results_on_nmac/jucs_14_3_0347_0376_rechberger.pdf\">http://www.jucs.org/jucs_14_3/new_results_on_nmac/jucs_14_3_0347_0376_rechberger.pdf</a>",
     "HMRMC": "<a href=\"http://www.hmrc.gov.uk/softwaredevelopers/index.htm\"><cite>HM Revenue and customs</cite></a> Her Majesty's Revenue and Customs. URL: <a href=\"http://www.hmrc.gov.uk/softwaredevelopers/index.htm\">http://www.hmrc.gov.uk/softwaredevelopers/index.htm</a> <br> Sample response message with XML signature: <a href=\"http://www.hmrc.gov.uk/ebu/responsemessages.pdf\">http://www.hmrc.gov.uk/ebu/responsemessages.pdf</a>",
     "HSL": "Steven Pemberton. <a href=\"http://www.cwi.nl/~steven/css/hsl.html\"><cite>HSL: light vs saturation.</cite></a> 19 November 1998. URL: <a href=\"http://www.cwi.nl/~steven/css/hsl.html\">http://www.cwi.nl/~steven/css/hsl.html</a> ",
+    "HTML": {
+        "authors": ["Ian Hickson"],
+        "href": "http://www.whatwg.org/specs/web-apps/current-work/",
+        "publisher": "WHATWG",
+        "status": "Living Standard",
+        "title": "HTML"
+    },
     "HTML-DESIGN-PRINCIPLES": {
         "authors": [
             "Anne van Kesteren",
@@ -2460,6 +2496,14 @@ berjon.biblio = {
         "status": "NOTE",
         "publisher": "W3C"
     },
+    "IMS": {
+        "authors": ["Thomas Towle"],
+        "date": "14 March 2002",
+        "href": "http://www.3gpp.org/ftp/Specs/html-info/23228.htm",
+        "publisher": "3GPP",
+        "status": "Stage 2",
+        "title": "IP Multimedia Subsystem (IMS)"
+    },
     "INDEXEDDB": {
         "authors": [
             "Nikunj Mehta",
@@ -2563,15 +2607,42 @@ berjon.biblio = {
         "date": "9 Dec 1999",
         "status": "Report (draft) ISO/IEC CD15444-1:1999"
     },
+    "JSON": {
+        "aliasOf": "RFC4627"
+    },
     "JSON-LD": {
         "authors": [
+            "Manu Sporny",
+            "Gregg Kellogg",
+            "Markus Lanthaler"
+        ],
+        "href": "http://www.w3.org/TR/json-ld/",
+        "title": "JSON-LD 1.0",
+        "date": "11 April 2013",
+        "status": "WD",
+        "publisher": "W3C"
+    },
+    "JSON-LD-API": {
+        "authors": [
+            "Markus Lanthaler",
+            "Gregg Kellogg",
             "Manu Sporny"
         ],
-        "etAl": true,
-        "href": "http://json-ld.org/spec/latest/",
-        "title": "JSON-LD - Linked Data Expression in JSON",
-        "date": "15 October 2010",
-        "status": "Unofficial Draft"
+        "href": "http://www.w3.org/TR/json-ld-api/",
+        "title": "JSON-LD 1.0 Processing Algorithms and API",
+        "date": "11 April 2013",
+        "status": "WD",
+        "publisher": "W3C"
+    },
+    "JSON-LD-TESTS": {
+        "authors": [
+            "RDF Working Group"
+        ],
+        "href": "http://www.w3.org/2013/json-ld-tests/",
+        "title": "JSON-LD 1.0 Test Suite",
+        "date": "11 April 2013",
+        "status": "ED",
+        "publisher": "W3C"
     },
     "KnowPrivacy": "Joshua Gomez; Travis Pinnick; Ashkan Soltani. <a href=\"http://www.knowprivacy.org/report/KnowPrivacy_Final_Report.pdf\"><cite>KnowPrivacy.</cite></a> 1 June 2009. URL: <a href=\"http://www.knowprivacy.org/report/KnowPrivacy_Final_Report.pdf\">http://www.knowprivacy.org/report/KnowPrivacy_Final_Report.pdf</a> ",
     "KUIL": {
@@ -2886,6 +2957,13 @@ berjon.biblio = {
         "date": "4 December 2002",
         "status": "NOTE",
         "publisher": "W3C"
+    },
+    "MMS13": {
+        "date": "13 September 2011",
+        "href": "http://technical.openmobilealliance.org/Technical/release_program/mms_v1_3.aspx",
+        "publisher": "Open Mobile Alliance",
+        "status": "Approved Enabler Release",
+        "title": "Multimedia Messaging Service 1.3"
     },
     "MOBILE-BP": {
         "authors": [
@@ -4085,7 +4163,14 @@ berjon.biblio = {
         "status": "RFC",
         "publisher": "IETF"
     },
-    "RFC2318": "H. Lie, B. Bos, C. Lilley. <a href=\"http://www.ietf.org/rfc/rfc2318.txt\"><cite>The text/css Media Type.</cite></a> March 1998. URL: <a href=\"http://www.ietf.org/rfc/rfc2318.txt\">http://www.ietf.org/rfc/rfc2318.txt</a> ",
+    "RFC2318": {
+        "authors": ["H. Lie", "B. Bos", "C. Lilley"],
+        "date": "1 March 1998",
+        "href": "http://www.ietf.org/rfc/rfc2318.txt",
+        "publisher": "IETF",
+        "status": "Informational",
+        "title": "The text/css Media Type"
+    },
     "RFC2397": {
         "authors": [
             "L. Masinter"
@@ -4302,6 +4387,14 @@ berjon.biblio = {
         "date": "November 2005",
         "status": "RFC",
         "publisher": "IETF"
+    },
+    "RFC4329": {
+        "authors": ["B. Hoehrmann"],
+        "date": "4 January 2006",
+        "href": "http://tools.ietf.org/html/rfc4329",
+        "publisher": "IETF",
+        "status": "Informational",
+        "title": "Scripting Media Types"
     },
     "RFC4572": {
         "authors": [
@@ -4867,6 +4960,13 @@ berjon.biblio = {
         "date": "12 February 2009",
         "status": "PR",
         "publisher": "W3C"
+    },
+    "SNIFF": {
+        "authors": ["Gordon P. Hemsley"],
+        "href": "http://mimesniff.spec.whatwg.org/",
+        "publisher": "WHATWG",
+        "status": "Living Standard",
+        "title": "MIME Sniffing Standard"
     },
     "SOAP11-ROR-HTTPBINDING": {
         "authors": [
@@ -5517,6 +5617,13 @@ berjon.biblio = {
         "status": "NOTE",
         "publisher": "W3C"
     },
+    "SYSAPPS-RUNTIME": {
+        "authors": ["Mounir Lamouri", "Ming Jin"],
+        "href": "http://runtime.sysapps.org/",
+        "publisher": "W3C",
+        "status": "ED",
+        "title": "Runtime and Security Model for Web Applications"
+    },
     "SYSINFOAPI": {
         "authors": [
             "Dzung Tran",
@@ -5828,7 +5935,11 @@ berjon.biblio = {
         "status": "NOTE",
         "publisher": "W3C"
     },
-    "UNICODE": "The Unicode Consortium. <a href=\"http://www.unicode.org/unicode/standard/versions/enumeratedversions.html\"><cite>The Unicode Standard.</cite></a> 2003. Defined by: The Unicode Standard, Version 4.0 (Boston, MA, Addison-Wesley, ISBN 0-321-18578-1), as updated from time to time by the publication of new versions URL: <a href=\"http://www.unicode.org/unicode/standard/versions/enumeratedversions.html\">http://www.unicode.org/unicode/standard/versions/enumeratedversions.html</a> ",
+    "UNICODE": {
+        "href": "http://www.unicode.org/versions/latest/",
+        "publisher": "The Unicode Consortium",
+        "title": "The Unicode Standard"
+    },
     "UNICODE-XML": {
         "authors": [
             "Asmus Freytag",
@@ -5888,6 +5999,15 @@ berjon.biblio = {
         "title": "URI Template",
         "date": "March 2012",
         "status": "RFC 6570"
+    },
+    "URL": {
+        "authors": [
+            "Anne van Kesteren"
+        ],
+        "href": "http://url.spec.whatwg.org/",
+        "publisher": "WHATWG",
+        "status": "Living Standard",
+        "title": "URL Standard"
     },
     "URN": "R. Moats. <a href=\"http://www.ietf.org/rfc/rfc2141.txt\"><cite>URN Syntax.</cite></a> IETF RFC 2141. May 1997.  URL: <a href=\"http://www.ietf.org/rfc/rfc2141.txt\">http://www.ietf.org/rfc/rfc2141.txt</a>",
     "URN-OID": "M. Mealling. <a href=\"http://www.ietf.org/rfc/rfc3061.txt\"><cite>A URN Namespace of Object Identifiers. </cite></a>. IETF RFC 3061. February 2001. URL: <a href=\"http://www.ietf.org/rfc/rfc3061.txt\">http://www.ietf.org/rfc/rfc3061.txt</a>",
@@ -8982,6 +9102,12 @@ berjon.biblio = {
         "date": "May 2005",
         "status": "IETF Draft",
         "publisher": "IETF"
+    },    
+    "ZIP": {
+        "date": "1 September 2012",
+        "href": "http://www.pkware.com/documents/casestudies/APPNOTE.TXT",
+        "status": "Final",
+        "title": ".ZIP File Format Specification"
     },
     "ZHMARK": "<cite>&#26631;&#28857;&#31526;&#21495;&#29992;&#27861; (Punctuation Mark Usage).</cite> 1995. &#20013;&#21326;&#20154;&#27665;&#20849;&#21644;&#22269;&#22269;&#23478;&#26631;&#20934; "
 };
