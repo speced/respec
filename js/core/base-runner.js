@@ -88,7 +88,7 @@ define(
                 
                 // the first in the plugs is going to be us
                 plugs.shift();
-                if (!respecConfig) window.respecConfig = {};
+                if (!("respecConfig" in window)) window.respecConfig = {};
 
                 // the base URL is used by some modules
                 var $scripts = $("script"),
