@@ -93,25 +93,25 @@ define(
             for (var i = 0, n = items.length; i < n; i++) {
                 var p = items[i];
                 if (this.doRDFa) ret += "<dd" + re +"><span" + rp + ">";
-                else             ret += "<dd>";
+                else             ret += "<dd class='p-author h-card vcard'>";
                 if (p.url) {
                     if (this.doRDFa) {
                         ret += "<a" + rpu + rn + " content='" + p.name +  "' href='" + p.url + "'>" + p.name + "</a>";
                     }
                     else {
-                        ret += "<a href='" + p.url + "'>"+ p.name + "</a>";
+                        ret += "<a class='u-url url p-name fn' href='" + p.url + "'>"+ p.name + "</a>";
                     }
                 }
                 else {
-                    ret += "<span" + rn + ">" + p.name + "</span>";
+                    ret += "<span" + rn + " class='p-name fn'>" + p.name + "</span>";
                 }
                 if (p.company) {
                     ret += ", ";
-                    if (p.companyURL) ret += "<a" + rwu + " href='" + p.companyURL + "'>" + p.company + "</a>";
+                    if (p.companyURL) ret += "<a" + rwu + " class='p-org org h-org h-card' href='" + p.companyURL + "'>" + p.company + "</a>";
                     else ret += p.company;
                 }
                 if (p.mailto) {
-                    ret += ", <span class='ed_mailto'><a" + rm + " href='mailto:" + p.mailto + "'>" + p.mailto + "</a></span>";
+                    ret += ", <span class='ed_mailto'><a class='u-email email' " + rm + " href='mailto:" + p.mailto + "'>" + p.mailto + "</a></span>";
                 }
                 if (p.note) ret += " (" + p.note + ")";
                 if (this.doRDFa) ret += "</span>\n";
@@ -274,10 +274,12 @@ define(
                 conf.isPR = (conf.specStatus === "PR");
                 conf.isMO = (conf.specStatus === "MO");
                 conf.isIGNote = (conf.specStatus === "IG-NOTE");
+                conf.dashDate = utils.concatDate(conf.publishDate, "-");
                 // configuration done - yay!
                 
-                // insert into document
-                $("body", doc).prepend($(conf.isCGBG ? cgbgHeadersTmpl(conf) : headersTmpl(conf)));
+                // insert into document and mark with microformat
+                $("body", doc).prepend($(conf.isCGBG ? cgbgHeadersTmpl(conf) : headersTmpl(conf)))
+                              .addClass("h-entry");
 
                 // handle SotD
                 var $sotd = $("#sotd");
