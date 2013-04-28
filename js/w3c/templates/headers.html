@@ -48,6 +48,40 @@
       <dt>Author{{#if multipleAuthors}}s{{/if}}:</dt>
       {{showPeople "Author" authors}}
     {{/if}}
+    {{#if otherLinks}}
+      {{#each otherLinks}}
+	{{#if key}}
+	  <dt>{{key}}:</dt>
+	  {{#if data}}
+	     {{#each data}}
+		{{#if value}}
+		  <dd>
+		    {{#if href}}<a href="{{href}}">{{/if}}
+		      {{value}}
+		    {{#if href}}</a>{{/if}}
+		  </dd>
+		{{else}}
+		  {{#if href}}
+		    <dd><a href="{{href}}">{{href}}</dd>
+		  {{/if}}
+		{{/if}}
+	     {{/each}}
+	  {{else}}
+	    {{#if value}}
+	      <dd>
+		{{#if href}}<a href="{{href}}">{{/if}}
+		  {{value}}
+		{{#if href}}</a>{{/if}}
+	      </dd>
+	    {{else}}
+	      {{#if href}}
+		<dd><a href="{{href}}">{{href}}</dd>
+	      {{/if}}
+	    {{/if}}
+	  {{/if}}
+	{{/if}}
+      {{/each}}
+    {{/if}}
   </dl>
   {{#if errata}}
     <p>
