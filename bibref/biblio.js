@@ -4529,6 +4529,18 @@ berjon.biblio = {
         "status": "RFC",
         "publisher": "IETF"
     },
+    "RFC6838": {
+	"authors": [
+	    "N. Freed",
+	    "J. Klensin",
+	    "T. Hansen"
+	],
+	"href":"http://www.ietf.org/rfc/rfc6838.txt",
+	"title": "Media Type Specifications and Registration Procedures",
+	"date": "January 2013",
+	"status": "RFC",
+	"publisher": "IETF"
+    },
     "RFC6906": {
         "authors": [
             "Erik Wilde"
