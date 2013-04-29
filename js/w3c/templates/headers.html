@@ -4,15 +4,15 @@
       <a href='http://www.w3.org/'><img width='72' height='48' src='{{httpScheme}}://www.w3.org/Icons/w3c_home' alt='W3C'/></a>
     {{/if}}
   </p>
-  <h1 class='title' id='title'>{{title}}</h1>
+  <h1 class='title p-name' id='title'>{{title}}</h1>
   {{#if subtitle}}
     <h2 id='subtitle'>{{subtitle}}</h2>
   {{/if}}
-  <h2>{{#if prependW3C}}W3C {{/if}}{{textStatus}} {{publishHumanDate}}</h2>
+  <h2>{{#if prependW3C}}W3C {{/if}}{{textStatus}} <time class='dt-published' datetime='{{dashDate}}'>{{publishHumanDate}}</time></h2>
   <dl>
     {{#unless isNoTrack}}
       <dt>This version:</dt>
-      <dd><a href='{{thisVersion}}'>{{thisVersion}}</a></dd>
+      <dd><a class='u-url' href='{{thisVersion}}'>{{thisVersion}}</a></dd>
       <dt>Latest published version:</dt>
       <dd>{{#if latestVersion}}<a href='{{latestVersion}}'>{{latestVersion}}</a>{{else}}none{{/if}}</dd>
     {{/unless}}

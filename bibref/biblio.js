@@ -2130,12 +2130,21 @@ berjon.biblio = {
         "status": "REC",
         "publisher": "W3C"
     },
+    "GSM-CALL": {
+        "authors": ["Bruno Landais"],
+        "date": "28 April 1999",
+        "href": "http://www.3gpp.org/ftp/Specs/html-info/23018.htm",
+        "publisher": "3GPP",
+        "status": "Technical realization",
+        "title": "GSM TS 23.018 Basic call handling"
+    },
     "GSM-SMS": {
         "authors": [
-            "3G Partnership Project"
+            "Richard Burbidge"
         ],
         "href": "http://www.3gpp.org/ftp/Specs/html-info/23040.htm",
         "title": "Technical realization of the Short Message Service (SMS)",
+        "publisher": "3GPP"
     },
     "HASH-IN-URI": {
         "authors": [
@@ -2486,6 +2495,14 @@ berjon.biblio = {
         "date": "27 November 1996",
         "status": "NOTE",
         "publisher": "W3C"
+    },
+    "IMS": {
+        "authors": ["Thomas Towle"],
+        "date": "14 March 2002",
+        "href": "http://www.3gpp.org/ftp/Specs/html-info/23228.htm",
+        "publisher": "3GPP",
+        "status": "Stage 2",
+        "title": "IP Multimedia Subsystem (IMS)"
     },
     "INDEXEDDB": {
         "authors": [
@@ -4521,6 +4538,14 @@ berjon.biblio = {
         "date": "March 2013",
         "status": "RFC",
         "publisher": "IETF"
+    },
+    "RFC6931": {
+        "authors": [
+            "D. Eastlake"
+        ],
+        "href": "https://datatracker.ietf.org/doc/rfc6931/",
+        "title": "Additional XML Security Uniform Resource Identifiers (URIs)",
+        "status": "IETF RFC 6931. April 2013.",
     },
     "RichSnippets": "<a href=\"http://googlewebmastercentral.blogspot.com/2009/05/introducing-rich-snippets.html/\"><cite>Introducing Rich Snippets.</cite></a> 12 May 2009. Google Webmaster Central Blog. URL: <a href=\"http://googlewebmastercentral.blogspot.com/2009/05/introducing-rich-snippets.html/\">http://googlewebmastercentral.blogspot.com/2009/05/introducing-rich-snippets.html/</a> ",
     "RIF-BLD": {
@@ -8056,7 +8081,7 @@ berjon.biblio = {
         "href": "http://www.w3.org/TR/2013/REC-xmldsig-properties-20130411/",
         "title": "XML Signature Properties",
         "date": "11 April 2013",
-        "status": "PR",
+        "status": "REC",
         "publisher": "W3C"
     },
     "XMLDSIG-REQUIREMENTS": {
