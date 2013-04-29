@@ -4315,6 +4315,19 @@ berjon.biblio = {
         "publisher": "IETF"
     },
     "RFC3555": "S. Casner; P. Hoschka. <a href='http://www.rfc-editor.org/rfc/rfc3555.txt'><cite>MIME Type Registration of RTP Payload Formats</cite></a>. July 2003. Internet RFC 3555. URL: <a href='http://www.rfc-editor.org/rfc/rfc3555.txt'>http://www.rfc-editor.org/rfc/rfc3555.txt</a>",
+    "RFC3778": {
+	"authors": [
+	    "E. Taft",
+	    "J. Pravetz",
+	    "S. Zilles",
+	    "L. Masinter"
+	],
+	"href": "http://www.ietf.org/rfc/rfc3778.txt",
+	"title": "The application/pdf Media Type",
+	"date": "May 2004",
+	"status": "RFC",
+	"publisher": "IETF"
+    },
     "RFC3966": {
         "authors": [
             "H. Schulzrinne"
@@ -4528,6 +4541,18 @@ berjon.biblio = {
         "date": "October 2010",
         "status": "RFC",
         "publisher": "IETF"
+    },
+    "RFC6838": {
+	"authors": [
+	    "N. Freed",
+	    "J. Klensin",
+	    "T. Hansen"
+	],
+	"href":"http://www.ietf.org/rfc/rfc6838.txt",
+	"title": "Media Type Specifications and Registration Procedures",
+	"date": "January 2013",
+	"status": "RFC",
+	"publisher": "IETF"
     },
     "RFC6906": {
         "authors": [
