@@ -2882,6 +2882,9 @@ berjon.biblio = {
     "MICRODATA-RDF": "<cite><a href=\"http://www.w3.org/TR/2012/NOTE-microdata-rdf-20120308/\">Microdata to RDF</a></cite> Gregg Kellogg Editor. W3C Note. 08 March 2012. This edition of the HTML Microdata specification is http://www.w3.org/TR/2012/NOTE-microdata-rdf-20120308/. The <a href=\"http://www.w3.org/TR/microdata-rdf/\">latest edition of HTML Microdata</a> is available at http://www.w3.org/TR/microdata-rdf/",
     "MICROFORMATS": "<a href='http://microformats.org'><cite>Microformats</cite></a>. URL: <a href='http://microformats.org'>http://microformats.org</a> ",
     "MIDI": "<a href=\"http://www.midi.org/techspecs/index.php\"><cite>Musical Instrument Digital Interface (MIDI)</cite></a> November 2001. MIDI Manufacturers Association. Complete MIDI 1.0 Detailed Specification ISBN 0-9728831-0-X URL: <a href=\"http://www.midi.org/techspecs/index.php\">http://www.midi.org/techspecs/index.php</a>",
+    "MIME-ENC": {
+        "aliasOf": "RFC2557"
+  },
     "MIME-REG": "N. Freed, J. Klensin. <a href=\"http://www.ietf.org/rfc/rfc4289.txt\"><cite>RFC 4289: Multipurpose Internet Mail Extensions (MIME) Part Four: Registration Procedures</cite></a>. December 2005. Best Current Practice. URL: <a href=\"http://www.ietf.org/rfc/rfc4289.txt\">http://www.ietf.org/rfc/rfc4289.txt</a>",
     "MMI-ARCH": {
         "authors": [
@@ -4215,6 +4218,14 @@ berjon.biblio = {
         "status": "RFC",
         "publisher": "IETF"
     },
+    "RFC2557": {
+        "authors": ["J. Palme", "A. Hopmann", "N. Shelness"],
+        "date": "March 1999",
+        "href": "http://www.ietf.org/rfc/rfc2557.txt",
+        "publisher": "IETF",
+        "status": "RFC",
+        "title": "MIME Encapsulation of Aggregate Documents, such as HTML (MHTML)"
+  },
     "RFC2854": {
         "authors": [
             "D. Connolly",
