@@ -1025,6 +1025,16 @@ berjon.biblio = {
         "status": "REC",
         "publisher": "W3C"
     },
+    "CSS3-CONDITIONAL-20121213": {
+       "authors": [
+        "L. David Baron"
+        ],
+	  "href": "http://www.w3.org/TR/2012/WD-css3-conditional-20121213/",
+	  "title": "CSS Conditional Rules Module Level 3",
+	  "date": "13 December 2012",
+	  "status": "WD",
+	  "publisher": "W3C"
+    },
     "CSS3GCPM": {
         "authors": [
             "H&#229;kon Wium Lie"
@@ -1678,6 +1688,21 @@ berjon.biblio = {
         "publisher": "W3C"
     },
     "DOM-LEVEL-3-EVENTS": {
+        "authors": [
+            "Travis Leithead",
+            "Jacob Rossi",
+            "Doug Schepers",
+            "Bj&#246;rn H&#246;hrmann",
+            "Philippe Le H&#233;garet",
+            "Tom Pixley"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-DOM-Level-3-Events-20120906",
+        "title": "Document Object Model (DOM) Level 3 Events Specification",
+        "date": "06 September 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
+    "DOM-LEVEL-3-EVENTS-20120906": {
         "authors": [
             "Travis Leithead",
             "Jacob Rossi",
@@ -2838,6 +2863,17 @@ berjon.biblio = {
         "status": "REC",
         "publisher": "W3C"
     },
+"MEDIA-FRAGS-20120925": {
+	  "authors": [
+	      "Raphaël Troncy"
+	  ],
+	  "etAl": true,
+	  "href": "http://www.w3.org/TR/2012/REC-media-frags-20120925/",
+	  "title": "Media Fragments URI 1.0 (basic)",
+	  "date": "25 September 2012",
+	  "status": "REC",
+	  "publisher": "W3C"
+},
     "MEDIA-FRAGMENTS": "Raphael Troncy; Erik Mannens; Silvia Pfeiffer and Davy Van Deursen. <a href=\"http://www.w3.org/TR/2011/WD-media-frags-20110317/\"><cite>Media Fragments URI 1.0</a>. W3C Working Draft 17 March 2011.</cite> URL: <a href=\"http://www.w3.org/TR/2011/WD-media-frags-20110317/\">http://www.w3.org/TR/2011/WD-media-frags-20110317/</a> ",
     "MEDIA-FRAGMENTS-REQS": "Raphael Troncy; Erik Mannens. <a href=\"http://www.w3.org/TR/2009/WD-media-frags-reqs-20091217\"><cite>Use cases and requirements for Media Fragments</a>. W3C Working Draft 17 December 2009.</cite> URL: <a href=\"http://www.w3.org/TR/2009/WD-media-frags-reqs-20091217\">http://www.w3.org/TR/2009/WD-media-frags-reqs-20091217</a> ",
     "MEDIAACCESSEVENTS": {
@@ -7305,6 +7341,17 @@ berjon.biblio = {
         "publisher": "W3C"
     },
     "XHR": "Anne van Kesteren. <a href='http://www.w3.org/TR/XMLHttpRequest/'>XMLHttpRequest</a>",
+    "XHR-20121206": {
+        "authors": [
+            "Julian Aubourg"
+        ],
+        	"etAl": true,
+        	"href": "http://www.w3.org/TR/2012/WD-XMLHttpRequest-20121206/",
+        	"title": "XMLHttpRequest.",
+        	"date": "6 December 2012",
+        	"status": "WD",
+        	"publisher": "W3C"
+    },
     "XHTML-ACCESS": {
         "authors": [
             "T. V. Raman"
