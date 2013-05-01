@@ -1032,7 +1032,7 @@ berjon.biblio = {
 	  "href": "http://www.w3.org/TR/2012/WD-css3-conditional-20121213/",
 	  "title": "CSS Conditional Rules Module Level 3",
 	  "date": "13 December 2012",
-	  "status": "Working Draft",
+	  "status": "WD",
 	  "publisher": "W3C"
     },
     "CSS3GCPM": {
