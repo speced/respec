@@ -6568,10 +6568,10 @@ berjon.biblio = {
         "authors": [
             "Ian Hickson"
         ],
-        "href": "http://www.w3.org/TR/2011/CR-webstorage-20111208",
+        "href": "http://www.w3.org/TR/2013/PR-webstorage-20130409",
         "title": "Web Storage",
-        "date": "08 December 2011",
-        "status": "CR",
+        "date": "09 April 2013",
+        "status": "PR",
         "publisher": "W3C"
     },
     "WEBSTORAGE-20111208": {
