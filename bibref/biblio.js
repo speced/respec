@@ -2871,7 +2871,7 @@ berjon.biblio = {
 	  "href": "http://www.w3.org/TR/2012/REC-media-frags-20120925/",
 	  "title": "Media Fragments URI 1.0 (basic)",
 	  "date": "25 September 2012",
-	  "status": "W3C Recommendation",
+	  "status": "REC",
 	  "publisher": "W3C"
 },
     "MEDIA-FRAGMENTS": "Raphael Troncy; Erik Mannens; Silvia Pfeiffer and Davy Van Deursen. <a href=\"http://www.w3.org/TR/2011/WD-media-frags-20110317/\"><cite>Media Fragments URI 1.0</a>. W3C Working Draft 17 March 2011.</cite> URL: <a href=\"http://www.w3.org/TR/2011/WD-media-frags-20110317/\">http://www.w3.org/TR/2011/WD-media-frags-20110317/</a> ",
