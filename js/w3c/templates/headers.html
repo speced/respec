@@ -51,11 +51,11 @@
     {{#if otherLinks}}
       {{#each otherLinks}}
         {{#if key}}
-          <dt>{{key}}:</dt>
+          <dt {{#if class}}class="{{class}}"{{/if}}>{{key}}:</dt>
           {{#if data}}
              {{#each data}} 
                 {{#if value}}
-                  <dd>
+                  <dd {{#if class}}class="{{class}}"{{/if}}>
                     {{#if href}}<a href="{{href}}">{{/if}}
                       {{value}}
                     {{#if href}}</a>{{/if}}
@@ -68,14 +68,16 @@
              {{/each}}
           {{else}}
             {{#if value}}
-              <dd>
+              <dd {{#if class}}class="{{class}}"{{/if}}>
                 {{#if href}}<a href="{{href}}">{{/if}}
                   {{value}}
                 {{#if href}}</a>{{/if}}
               </dd>
             {{else}}
               {{#if href}}
-                <dd><a href="{{href}}">{{href}}</a></dd>  
+                <dd {{#if class}}class="{{class}}"{{/if}}>
+                  <a href="{{href}}">{{href}}</a>
+                </dd>  
               {{/if}}
             {{/if}}
           {{/if}}
