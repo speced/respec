@@ -674,15 +674,7 @@ berjon.biblio = {
         "publisher": "W3C"
     },
     "CSS2": {
-        "authors": [
-            "Ian Jacobs"
-        ],
-        "etAl": true,
-        "href": "http://www.w3.org/TR/CSS21/",
-        "title": "Cascading Style Sheets, level 2 (CSS2) Specification",
-        "date": "07 June 2011",
-        "status": "REC",
-        "publisher": "W3C"
+        "aliasOf": "CSS21"
     },
     "CSS21": {
         "authors": [
@@ -824,6 +816,9 @@ berjon.biblio = {
         "date": "17 April 2012",
         "status": "CR",
         "publisher": "W3C"
+    },
+    "CSS3MARQUEE": {
+        "aliasOf": "CSS3-MARQUEE" 
     },
     "CSS3-MARQUEE": {
         "authors": [
@@ -1109,16 +1104,6 @@ berjon.biblio = {
         "status": "WD",
         "publisher": "W3C"
     },
-    "CSS3MARQUEE": {
-        "authors": [
-            "Bert Bos"
-        ],
-        "href": "http://www.w3.org/TR/2008/CR-css3-marquee-20081205",
-        "title": "CSS Marquee Module Level 3",
-        "date": "5 December 2008",
-        "status": "CR",
-        "publisher": "W3C"
-    },
     "CSS3NAMESPACE": {
         "authors": [
             "Anne van Kesteren",
@@ -1307,15 +1292,7 @@ berjon.biblio = {
         "publisher": "W3C"
     },
     "CURIE": {
-        "authors": [
-            "Shane McCarron"
-        ],
-        "etAl": true,
-        "href": "http://www.w3.org/TR/2012/REC-rdfa-core-20120607/",
-        "title": "RDFa Core 1.1 - Section 6",
-        "date": "7 June 2012",
-        "status": "REC",
-        "publisher": "W3C"
+        "aliasOf": "RDFA-CORE"
     },
     "CVE-2009-0217": "<a href=\"http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-0217\"><cite>Common Vulnerabilities and Exposures List, CVE-2009-0217</cite></a> URL: <a href=\"http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-0217\"> http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-0217</a>",
     "CX": {
@@ -4987,15 +4964,7 @@ berjon.biblio = {
         "publisher": "W3C"
     },
     "SMIL20": {
-        "authors": [
-            "Jack Jansen"
-        ],
-        "etAl": true,
-        "href": "http://www.w3.org/TR/2005/REC-SMIL2-20051213",
-        "title": "Synchronized Multimedia Integration Language (SMIL 2.1)",
-        "date": "13 December 2005",
-        "status": "REC",
-        "publisher": "W3C"
+        "aliasOf": "SMIL2"
     },
     "SMIL3": {
         "authors": [
@@ -5220,15 +5189,7 @@ berjon.biblio = {
         "publisher": "W3C"
     },
     "SPARQL-UPDATE": {
-        "authors": [
-            "S. Schenk",
-            "P. Gearon"
-        ],
-        "href": "http://www.w3.org/TR/2010/WD-sparql11-update-20100126/",
-        "title": "SPARQL 1.1 Update",
-        "date": "26 January 2010",
-        "status": "WD",
-        "publisher": "W3C"
+        "aliasOf": "RDF-SPARQL-UPDATE"
     },
     "SPEC-VARIABILITY": {
         "authors": [
