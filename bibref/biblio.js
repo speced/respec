@@ -4866,6 +4866,9 @@ berjon.biblio = {
         "status": "REC",
         "publisher": "W3C"
     },
+    "SMIL20": {
+        "aliasOf": "SMIL2"
+    },
     "SMIL3": {
         "authors": [
             "Dick Bulterman"
