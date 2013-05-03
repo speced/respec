@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <meta charset='utf-8'/>
+    <title>Adding more links to header!</title>
+    <!-- // <script src='http://w3.dev/2009/dap/ReSpec.js/js/respec.js' class='remove'></script> -->
+    <script src='../js/require.js' data-main='../js/profile-w3c-common' async class='remove'></script>
+    <!-- // <script src='../builds/respec-w3c-common.js' async class='remove'></script> -->
+    <!-- // <script src='//www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script> -->
+    <!-- // <script src='http://darobin.github.com/respec/builds/respec-w3c-common.js' async class='remove'></script> -->
+    <script class='remove'>
+      var respecConfig = {
+              specStatus:   "unofficial"
+          ,   shortName:    "otherlinks"
+          ,   editors:      [{ name: "Marcos Caceres", url: "http://marcosc.com/" }]
+          ,   wg:           "ReSpec Hackin' Gang"
+          ,   wgURI:        "http://darobin.github.com/respec"
+          ,   wgPublicList: "none"
+          ,   wgPatentURI:  "XXX"
+          ,   edDraftURI:   "http://darobin.github.com/respec"
+          ,   otherLinks: [{
+                    key: "Repo",
+                    value: "We are on Github",
+                    href: "https://github.com/darobin/respec",
+                    class: "some cssclasses"
+                }, {
+                    key: "Bug tracker",
+                    href: "https://github.com/darobin/respec/issues?state=open"
+                }, {
+                    key: "No linking",
+                    value: "I don't hyperlink."
+                }, {
+                    key: "Previous Editors",
+                    data: [{
+                            value: "John Smith",
+                            href: "http://example.com"
+                        }, {
+                            value: "Adam Smith"
+                        }, {
+                            value: "Foobar Smith"
+                        }
+                    ]
+                }
+              ]
+        };
+    </script>
+  </head>
+  <body>
+    <section id='abstract'>
+      <p>This document shows you how to add your own links to the header of the document!
+        Example of how the links above are generated: </p>
+      <pre class="example highlight">
+        otherLinks: [{
+              key: "Repo",
+              value: "We are on Github",
+              href: "https://github.com/darobin/respec",
+              class: "some cssclasses"
+          }, {
+              key: "Bug tracker",
+              href: "https://github.com/darobin/respec/issues?state=open"
+          }, {
+              key: "No linking",
+              value: "I don't hyperlink."
+          }, {
+              key: "Previous Editors",
+              data: [{
+                      value: "John Smith",
+                      href: "http://example.com"
+                  }, {
+                      value: "Adam Smith"
+                  }, {
+                      value: "Foobar Smith"
+                  }
+              ]
+          }
+        ]
+      </pre>
+    </section>
+  </body>
+</html>
