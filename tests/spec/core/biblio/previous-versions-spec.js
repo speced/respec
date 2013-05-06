@@ -35,54 +35,44 @@ describe('Core — Definitions', function() {
                 biblio = iframe.contentWindow.berjon.biblio,
                 dahut = biblio.DAHUT;
 
-            //it("inherits all of DAHUT's properties", function(){
-                var test1 = biblio['DAHUT-TEST1'];
-                expect(test1.authors[0]).toEqual(dahut.authors[0]);
-                expect(test1.etAl).toEqual(dahut.etAl);
-                expect(test1.title).toEqual(dahut.title);
-                expect(test1.date).toEqual(dahut.date);
-                expect(test1.status).toEqual(dahut.status);
-                expect(test1.href).toEqual(dahut.href);
-           // });
+            var test1 = biblio['DAHUT-TEST1'];
+            expect(test1.authors[0]).toEqual(dahut.authors[0]);
+            expect(test1.etAl).toEqual(dahut.etAl);
+            expect(test1.title).toEqual(dahut.title);
+            expect(test1.date).toEqual(dahut.date);
+            expect(test1.status).toEqual(dahut.status);
+            expect(test1.href).toEqual(dahut.href);
 
-           // it("inherits some of DAHUT's properties", function(){
-                var test2 = biblio['DAHUT-TEST2'];
-                expect(test2.authors[0]).toEqual(dahut.authors[0]);
-                expect(test2.etAl).toEqual(true);
-                expect(test2.title).toEqual(dahut.title);
-                expect(test2.date).toEqual(dahut.date);
-                expect(test2.status).toEqual(dahut.status);
-                expect(test2.href).toEqual('http://test.com');
-           //});
+            var test2 = biblio['DAHUT-TEST2'];
+            expect(test2.authors[0]).toEqual(dahut.authors[0]);
+            expect(test2.etAl).toEqual(true);
+            expect(test2.title).toEqual(dahut.title);
+            expect(test2.date).toEqual(dahut.date);
+            expect(test2.status).toEqual(dahut.status);
+            expect(test2.href).toEqual('http://test.com');
 
-            //it("inherits DAHUT's properties, but adds new ones", function(){
-                var test3 = biblio['DAHUT-TEST3'];
-                expect(test3.authors[0]).toEqual(dahut.authors[0]);
-                expect(test3.etAl).toEqual(true);
-                expect(test3.title).toEqual('test title');
-                expect(test3.date).toEqual('test date');
-                expect(test3.status).toEqual('test status');
-                expect(test3.href).toEqual(dahut.href);
-           // });
+            var test3 = biblio['DAHUT-TEST3'];
+            expect(test3.authors[0]).toEqual(dahut.authors[0]);
+            expect(test3.etAl).toEqual(true);
+            expect(test3.title).toEqual('test title');
+            expect(test3.date).toEqual('test date');
+            expect(test3.status).toEqual('test status');
+            expect(test3.href).toEqual(dahut.href);
 
-            //it("inherits DAHUT's authors and inherits other props", function(){
-                var test4 = biblio['DAHUT-TEST4'];
-                expect(test4.authors[0]).toEqual('Test Author 1');
-                expect(test4.authors[1]).toEqual('Test Author 2');
-                expect(test4.etAl).toEqual(true);
-                expect(test4.title).toEqual(dahut.title);
-                expect(test4.date).toEqual(dahut.date);
-                expect(test4.status).toEqual(dahut.status);
-                expect(test4.href).toEqual(dahut.href);
-            //});
+            var test4 = biblio['DAHUT-TEST4'];
+            expect(test4.authors[0]).toEqual('Test Author 1');
+            expect(test4.authors[1]).toEqual('Test Author 2');
+            expect(test4.etAl).toEqual(true);
+            expect(test4.title).toEqual(dahut.title);
+            expect(test4.date).toEqual(dahut.date);
+            expect(test4.status).toEqual(dahut.status);
+            expect(test4.href).toEqual(dahut.href);
 
-            //it("aliases doesn't inherit anything", function(){
-                var test5 = biblio['DAHUT-TEST5'],
-                    props = Object.getOwnPropertyNames(test5);
-                expect(props.length).toEqual(1);
-                expect(props[0]).toEqual('aliasOf');
-                expect(test5['aliasOf']).toEqual('DC11');
-            //});
+            var test5 = biblio['DAHUT-TEST5'],
+                props = Object.getOwnPropertyNames(test5);
+            expect(props.length).toEqual(1);
+            expect(props[0]).toEqual('aliasOf');
+            expect(test5['aliasOf']).toEqual('DC11');
             flushIframes();
         });
     });
@@ -120,8 +110,10 @@ describe('Core — Definitions', function() {
                 content = '[' + test + ']';
                 expect(doc.querySelector(query).textContent).toEqual(content);
             }
-            expect(doc.querySelector('#bib-FOO').textContent, doc).toEqual('[FOO]');
-            expect(doc.querySelector('#bib-FOO-TEST7').textContent).toEqual('[FOO-TEST7]');
+            content = doc.querySelector('#bib-FOO').textContent;
+            expect(content).toEqual('[FOO]');
+            content = doc.querySelector('#bib-FOO-TEST7').textContent;
+            expect(content).toEqual('[FOO-TEST7]');
             flushIframes();
         });
     });
