@@ -674,15 +674,7 @@ berjon.biblio = {
         "publisher": "W3C"
     },
     "CSS2": {
-        "authors": [
-            "Ian Jacobs"
-        ],
-        "etAl": true,
-        "href": "http://www.w3.org/TR/CSS21/",
-        "title": "Cascading Style Sheets, level 2 (CSS2) Specification",
-        "date": "07 June 2011",
-        "status": "REC",
-        "publisher": "W3C"
+        "aliasOf": "CSS21"
     },
     "CSS21": {
         "authors": [
@@ -824,6 +816,9 @@ berjon.biblio = {
         "date": "17 April 2012",
         "status": "CR",
         "publisher": "W3C"
+    },
+    "CSS3MARQUEE": {
+        "aliasOf": "CSS3-MARQUEE" 
     },
     "CSS3-MARQUEE": {
         "authors": [
@@ -1025,6 +1020,16 @@ berjon.biblio = {
         "status": "REC",
         "publisher": "W3C"
     },
+    "CSS3-CONDITIONAL-20121213": {
+       "authors": [
+        "L. David Baron"
+        ],
+	  "href": "http://www.w3.org/TR/2012/WD-css3-conditional-20121213/",
+	  "title": "CSS Conditional Rules Module Level 3",
+	  "date": "13 December 2012",
+	  "status": "WD",
+	  "publisher": "W3C"
+    },
     "CSS3GCPM": {
         "authors": [
             "H&#229;kon Wium Lie"
@@ -1097,16 +1102,6 @@ berjon.biblio = {
         "title": "CSS3 module: Lists",
         "date": "7 November 2002",
         "status": "WD",
-        "publisher": "W3C"
-    },
-    "CSS3MARQUEE": {
-        "authors": [
-            "Bert Bos"
-        ],
-        "href": "http://www.w3.org/TR/2008/CR-css3-marquee-20081205",
-        "title": "CSS Marquee Module Level 3",
-        "date": "5 December 2008",
-        "status": "CR",
         "publisher": "W3C"
     },
     "CSS3NAMESPACE": {
@@ -1297,15 +1292,7 @@ berjon.biblio = {
         "publisher": "W3C"
     },
     "CURIE": {
-        "authors": [
-            "Shane McCarron"
-        ],
-        "etAl": true,
-        "href": "http://www.w3.org/TR/2012/REC-rdfa-core-20120607/",
-        "title": "RDFa Core 1.1 - Section 6",
-        "date": "7 June 2012",
-        "status": "REC",
-        "publisher": "W3C"
+        "aliasOf": "RDFA-CORE"
     },
     "CVE-2009-0217": "<a href=\"http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-0217\"><cite>Common Vulnerabilities and Exposures List, CVE-2009-0217</cite></a> URL: <a href=\"http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-0217\"> http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-0217</a>",
     "CX": {
@@ -1678,6 +1665,21 @@ berjon.biblio = {
         "publisher": "W3C"
     },
     "DOM-LEVEL-3-EVENTS": {
+        "authors": [
+            "Travis Leithead",
+            "Jacob Rossi",
+            "Doug Schepers",
+            "Bj&#246;rn H&#246;hrmann",
+            "Philippe Le H&#233;garet",
+            "Tom Pixley"
+        ],
+        "href": "http://www.w3.org/TR/2012/WD-DOM-Level-3-Events-20120906",
+        "title": "Document Object Model (DOM) Level 3 Events Specification",
+        "date": "06 September 2012",
+        "status": "WD",
+        "publisher": "W3C"
+    },
+    "DOM-LEVEL-3-EVENTS-20120906": {
         "authors": [
             "Travis Leithead",
             "Jacob Rossi",
@@ -2838,6 +2840,17 @@ berjon.biblio = {
         "status": "REC",
         "publisher": "W3C"
     },
+"MEDIA-FRAGS-20120925": {
+	  "authors": [
+	      "Raphaël Troncy"
+	  ],
+	  "etAl": true,
+	  "href": "http://www.w3.org/TR/2012/REC-media-frags-20120925/",
+	  "title": "Media Fragments URI 1.0 (basic)",
+	  "date": "25 September 2012",
+	  "status": "REC",
+	  "publisher": "W3C"
+},
     "MEDIA-FRAGMENTS": "Raphael Troncy; Erik Mannens; Silvia Pfeiffer and Davy Van Deursen. <a href=\"http://www.w3.org/TR/2011/WD-media-frags-20110317/\"><cite>Media Fragments URI 1.0</a>. W3C Working Draft 17 March 2011.</cite> URL: <a href=\"http://www.w3.org/TR/2011/WD-media-frags-20110317/\">http://www.w3.org/TR/2011/WD-media-frags-20110317/</a> ",
     "MEDIA-FRAGMENTS-REQS": "Raphael Troncy; Erik Mannens. <a href=\"http://www.w3.org/TR/2009/WD-media-frags-reqs-20091217\"><cite>Use cases and requirements for Media Fragments</a>. W3C Working Draft 17 December 2009.</cite> URL: <a href=\"http://www.w3.org/TR/2009/WD-media-frags-reqs-20091217\">http://www.w3.org/TR/2009/WD-media-frags-reqs-20091217</a> ",
     "MEDIAACCESSEVENTS": {
@@ -2882,6 +2895,9 @@ berjon.biblio = {
     "MICRODATA-RDF": "<cite><a href=\"http://www.w3.org/TR/2012/NOTE-microdata-rdf-20120308/\">Microdata to RDF</a></cite> Gregg Kellogg Editor. W3C Note. 08 March 2012. This edition of the HTML Microdata specification is http://www.w3.org/TR/2012/NOTE-microdata-rdf-20120308/. The <a href=\"http://www.w3.org/TR/microdata-rdf/\">latest edition of HTML Microdata</a> is available at http://www.w3.org/TR/microdata-rdf/",
     "MICROFORMATS": "<a href='http://microformats.org'><cite>Microformats</cite></a>. URL: <a href='http://microformats.org'>http://microformats.org</a> ",
     "MIDI": "<a href=\"http://www.midi.org/techspecs/index.php\"><cite>Musical Instrument Digital Interface (MIDI)</cite></a> November 2001. MIDI Manufacturers Association. Complete MIDI 1.0 Detailed Specification ISBN 0-9728831-0-X URL: <a href=\"http://www.midi.org/techspecs/index.php\">http://www.midi.org/techspecs/index.php</a>",
+    "MIME-ENC": {
+        "aliasOf": "RFC2557"
+  },
     "MIME-REG": "N. Freed, J. Klensin. <a href=\"http://www.ietf.org/rfc/rfc4289.txt\"><cite>RFC 4289: Multipurpose Internet Mail Extensions (MIME) Part Four: Registration Procedures</cite></a>. December 2005. Best Current Practice. URL: <a href=\"http://www.ietf.org/rfc/rfc4289.txt\">http://www.ietf.org/rfc/rfc4289.txt</a>",
     "MMI-ARCH": {
         "authors": [
@@ -4215,6 +4231,14 @@ berjon.biblio = {
         "status": "RFC",
         "publisher": "IETF"
     },
+    "RFC2557": {
+        "authors": ["J. Palme", "A. Hopmann", "N. Shelness"],
+        "date": "March 1999",
+        "href": "http://www.ietf.org/rfc/rfc2557.txt",
+        "publisher": "IETF",
+        "status": "RFC",
+        "title": "MIME Encapsulation of Aggregate Documents, such as HTML (MHTML)"
+  },
     "RFC2854": {
         "authors": [
             "D. Connolly",
@@ -4315,6 +4339,19 @@ berjon.biblio = {
         "publisher": "IETF"
     },
     "RFC3555": "S. Casner; P. Hoschka. <a href='http://www.rfc-editor.org/rfc/rfc3555.txt'><cite>MIME Type Registration of RTP Payload Formats</cite></a>. July 2003. Internet RFC 3555. URL: <a href='http://www.rfc-editor.org/rfc/rfc3555.txt'>http://www.rfc-editor.org/rfc/rfc3555.txt</a>",
+    "RFC3778": {
+	"authors": [
+	    "E. Taft",
+	    "J. Pravetz",
+	    "S. Zilles",
+	    "L. Masinter"
+	],
+	"href": "http://www.ietf.org/rfc/rfc3778.txt",
+	"title": "The application/pdf Media Type",
+	"date": "May 2004",
+	"status": "RFC",
+	"publisher": "IETF"
+    },
     "RFC3966": {
         "authors": [
             "H. Schulzrinne"
@@ -4528,6 +4565,18 @@ berjon.biblio = {
         "date": "October 2010",
         "status": "RFC",
         "publisher": "IETF"
+    },
+    "RFC6838": {
+	"authors": [
+	    "N. Freed",
+	    "J. Klensin",
+	    "T. Hansen"
+	],
+	"href":"http://www.ietf.org/rfc/rfc6838.txt",
+	"title": "Media Type Specifications and Registration Procedures",
+	"date": "January 2013",
+	"status": "RFC",
+	"publisher": "IETF"
     },
     "RFC6906": {
         "authors": [
@@ -4915,15 +4964,7 @@ berjon.biblio = {
         "publisher": "W3C"
     },
     "SMIL20": {
-        "authors": [
-            "Jack Jansen"
-        ],
-        "etAl": true,
-        "href": "http://www.w3.org/TR/2005/REC-SMIL2-20051213",
-        "title": "Synchronized Multimedia Integration Language (SMIL 2.1)",
-        "date": "13 December 2005",
-        "status": "REC",
-        "publisher": "W3C"
+        "aliasOf": "SMIL2"
     },
     "SMIL3": {
         "authors": [
@@ -5148,15 +5189,7 @@ berjon.biblio = {
         "publisher": "W3C"
     },
     "SPARQL-UPDATE": {
-        "authors": [
-            "S. Schenk",
-            "P. Gearon"
-        ],
-        "href": "http://www.w3.org/TR/2010/WD-sparql11-update-20100126/",
-        "title": "SPARQL 1.1 Update",
-        "date": "26 January 2010",
-        "status": "WD",
-        "publisher": "W3C"
+        "aliasOf": "RDF-SPARQL-UPDATE"
     },
     "SPEC-VARIABILITY": {
         "authors": [
@@ -6496,10 +6529,10 @@ berjon.biblio = {
         "authors": [
             "Ian Hickson"
         ],
-        "href": "http://www.w3.org/TR/2011/CR-webstorage-20111208",
+        "href": "http://www.w3.org/TR/2013/PR-webstorage-20130409",
         "title": "Web Storage",
-        "date": "08 December 2011",
-        "status": "CR",
+        "date": "09 April 2013",
+        "status": "PR",
         "publisher": "W3C"
     },
     "WEBSTORAGE-20111208": {
@@ -7269,6 +7302,17 @@ berjon.biblio = {
         "publisher": "W3C"
     },
     "XHR": "Anne van Kesteren. <a href='http://www.w3.org/TR/XMLHttpRequest/'>XMLHttpRequest</a>",
+    "XHR-20121206": {
+        "authors": [
+            "Julian Aubourg"
+        ],
+        	"etAl": true,
+        	"href": "http://www.w3.org/TR/2012/WD-XMLHttpRequest-20121206/",
+        	"title": "XMLHttpRequest.",
+        	"date": "6 December 2012",
+        	"status": "WD",
+        	"publisher": "W3C"
+    },
     "XHTML-ACCESS": {
         "authors": [
             "T. V. Raman"

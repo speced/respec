@@ -4,11 +4,11 @@
   </p>
   <h1 class='title' id='title'>{{title}}</h1>
   {{#if subtitle}}<h2 id='subtitle'>{{subtitle}}</h2>{{/if}}
-  <h2>{{longStatus}} {{publishHumanDate}}</h2>
+  <h2>{{longStatus}} <time class='dt-published' datetime='{{dashDate}}'>{{publishHumanDate}}</time></h2>
   <dl>
     {{#if thisVersion}}
       <dt>This version:</dt>
-      <dd><a href='{{thisVersion}}'>{{thisVersion}}</a></dd>
+      <dd><a class='u-url' href='{{thisVersion}}'>{{thisVersion}}</a></dd>
     {{/if}}
     {{#if latestVersion}}
       <dt>Latest published version:</dt>
