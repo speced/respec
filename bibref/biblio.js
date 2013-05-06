@@ -1356,7 +1356,7 @@ berjon.biblio = {
                 "aliasOf": "DC11"
             },
             {
-                "key": "TEST5",
+                "key": "TEST6",
                 "aliasOf": "DAHU"
             }
         ]
