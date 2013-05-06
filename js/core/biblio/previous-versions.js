@@ -1,19 +1,16 @@
 /*jshint
     expr:   true
 */
-
-// Module core/biblio/previousVersions
+// Module core/biblio/previous-versions
 // This module provides an object that finds "previousVersions" 
-// properties and expands them in a bibliography so they can
+// properties in bibliographies and expands them so they can
 // be used in specifications. 
-// USAGE:
-// void obj.addBiblio(Object or Array)
-
 
 define([], function () {
-    var prevVersionExpander = {};
+    var prevVersionExpander = {},
+        biblio;
 
-    function expandPrevVersions(bib) {
+    function expandPrevVersions(bib, msg) {
         var props = Object.getOwnPropertyNames(bib);
 
         function hasPrevVersion(key) {
@@ -27,28 +24,28 @@ define([], function () {
 
         function processPrevVersions(key, parentEntry) {
             parentEntry.previousVersions.forEach(function (prevObj, index) {
-                var warn = "",
+                var warning = "",
                     newKey = key + "-";
 
                 if ((typeof prevObj) !== "object") {
-                    warn = "Expected Object, but got an " + type + "?";
-                    warn += "Please fix: " + key + " at index " + index + ".";
-                    console.warn(warn);
+                    warning = "Expected Object, but got an " + type + "?";
+                    warning += "Please fix: " + key + " at index " + index + ".";
+                    msg("error",warning);
                     return;
                 }
 
                 if (!prevObj.hasOwnProperty("key")) {
-                    warn = "Previous versions require a key property. ";
-                    warn += "Please fix: " + key;
-                    console.warn(warn);
+                    warning = "Previous versions require a key property. ";
+                    warning += "Please fix: " + key;
+                    msg("error",warning);
                     return;
                 }
 
                 newKey += String(prevObj.key);
                 if (bib[newKey]) {
-                    warn = "Previous version (" + newKey + ") already in biblio. ";
-                    warn += "Please fix previousVersion key: " + prevObj.key;
-                    console.warn(warn);
+                    warning = "Previous version (" + newKey + ") already in biblio. ";
+                    warning += "Please fix previousVersion key: " + prevObj.key;
+                    msg("error",warning);
                     return;
                 }
                 addPrevVersion(newKey, parentEntry, prevObj);
@@ -61,9 +58,10 @@ define([], function () {
                 allProps = parentProps.concat(newProps).sort().filter(clean),
                 newEntry = bib[newKey] = {};
 
-            for (var prop = allProps.pop(); allProps.length; prop = allProps.pop()) {
-                newEntry[prop] = prevObj[prop] || parentEntry[prop];
-            }
+            allProps.forEach(function (prop) {
+                var value = prevObj[prop] || parentEntry[prop];
+                this[prop] = value;
+            }, newEntry);
 
             //remove duplicates, "previousVersions", and "key" prop
 
@@ -77,14 +75,28 @@ define([], function () {
         props.forEach(hasPrevVersion);
     }
 
-    prevVersionExpander.addBiblio = function(bibs){
-        if(bibs instanceof Array){
-            for (var i = bib.length - 1; i >= 0; i--) {
-                expandPrevVersions(bib[i]);
+    prevVersionExpander.run = function (conf, doc, cb, msg) {
+        var props ={
+            get: function () {
+                return biblio;
+            },
+            set: function (obj) {
+                biblio = obj;
+                expandPrevVersions(obj, msg);
             }
-            return;
+        };
+        msg.pub("start", "core/biblio/previous-versions");
+        if (conf.localBiblio) {
+            expandPrevVersions(conf.localBiblio, msg);
         }
-        expandPrevVersions(bibs);
-    }
+        if (berjon.biblio) {
+            expandPrevVersions(berjon.biblio, msg);
+        } else {
+            Object.defineProperty(berjon, "biblio", props);
+        }
+        msg.pub("end", "core/fix-headers");
+        cb();
+    };
+
     return prevVersionExpander;
 });
