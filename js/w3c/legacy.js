@@ -9,6 +9,9 @@
 // RESPEC
 var sn;
 (function () {
+    window.setBerjonBiblio = function(payload) {
+        berjon.biblio = payload;
+    };
     if (typeof(berjon) == "undefined") window.berjon = {};
     function _errEl () {
         var id = "respec-err";
@@ -47,7 +50,7 @@ var sn;
     }
     berjon.respec = function () {};
     berjon.respec.prototype = {
-        loadAndRun:    function (cb, msg, conf, doc, cb, msg) {
+        loadAndRun:    function (conf, doc, cb, msg) {
             var scripts = document.querySelectorAll("script[src]");
             // XXX clean this up
             var rs, base = "";
@@ -60,7 +63,12 @@ var sn;
             }
             // base = respecConfig.respecBase;
             var loaded = [];
-            var deps = ["js/simple-node.js", "js/shortcut.js", "bibref/biblio.js"];
+            var refs = this.getRefKeys(conf);            
+            refs = refs.normativeReferences.concat(refs.informativeReferences);
+            var deps = [base + "js/simple-node.js", base + "js/shortcut.js"];
+            if (refs.length) {
+                deps.push("http://specref.jit.su/bibrefs?callback=setBerjonBiblio&refs=" + refs.join(','));
+            }
             var head = document.getElementsByTagName('head')[0];
             var obj = this;
             var loadHandler = function (ev) {
@@ -71,8 +79,6 @@ var sn;
                         "x":    "http://www.w3.org/1999/xhtml"
                     }, document);
                     obj.run(conf, doc, cb, msg);
-                    msg.pub("end", "w3c/legacy");
-                    cb();
                 }
             };
             // the fact that we hand-load is temporary, and will be fully replaced by RequireJS
@@ -83,7 +89,7 @@ var sn;
                     var dep = deps[i];
                     var sel = document.createElement('script');
                     sel.type = 'text/javascript';
-                    sel.src = base + dep;
+                    sel.src = dep;
                     sel.setAttribute("class", "remove");
                     sel.onload = loadHandler;
                     head.appendChild(sel);
@@ -95,8 +101,6 @@ var sn;
                     "x":    "http://www.w3.org/1999/xhtml"
                 }, document);
                 obj.run(conf, doc, cb, msg);
-                msg.pub("end", "w3c/legacy");
-                cb();
             }
         },
 
@@ -116,6 +120,8 @@ var sn;
             catch (e) {
                 msg.pub("error", "Processing error: " + e);
             }
+            msg.pub("end", "w3c/legacy");
+            cb();
         },
         
         overrideBiblio:     function (conf) {
@@ -415,29 +421,38 @@ var sn;
                 if (cfg.hasOwnProperty(k)) this[k] = cfg[k];
             }
         },
-
-        // --- INLINE PROCESSING ----------------------------------------------------------------------------------
-        bibref:    function (conf, doc, cb, msg) {
-            // this is in fact the bibref processing portion
-            var badrefs = {}
-            ,   badrefcount = 0
-            ,   informs = conf.informativeReferences
+        
+        getRefKeys:    function (conf) {
+            var informs = conf.informativeReferences
             ,   norms = conf.normativeReferences
-            ,   aliases = {}
+            ,   del = []
             ;
-
+            
             function getKeys(obj) {
                 var res = [];
                 for (var k in obj) res.push(k);
                 return res;
             }
 
-            var del = [];
             for (var k in informs) if (norms[k]) del.push(k);
             for (var i = 0; i < del.length; i++) delete informs[del[i]];
 
-            informs = getKeys(informs);
-            norms = getKeys(norms);
+            return {
+                informativeReferences: getKeys(informs),
+                normativeReferences: getKeys(norms)
+            };
+        },
+
+        // --- INLINE PROCESSING ----------------------------------------------------------------------------------
+        bibref:    function (conf, doc, cb, msg) {
+            // this is in fact the bibref processing portion
+            var badrefs = {}
+            ,   badrefcount = 0
+            ,   refs = this.getRefKeys(conf)
+            ,   informs = refs.informativeReferences
+            ,   norms = refs.normativeReferences
+            ,   aliases = {}
+            ;
 
             if (!informs.length && !norms.length && !this.refNote) return;
             var refsec = sn.element("section", { id: "references", "class": "appendix" }, document.body);
@@ -666,7 +681,7 @@ define([], function () {
     return {
         run:    function (conf, doc, cb, msg) {
             msg.pub("start", "w3c/legacy");
-            (new berjon.respec()).loadAndRun(cb, msg, conf, doc, cb, msg);
+            (new berjon.respec()).loadAndRun(conf, doc, cb, msg);
         }
     };
 });
