@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <meta charset='utf-8'/>
+    <title>Basic ReSpec Evolution Example</title>
+    <!-- // <script src='http://w3.dev/2009/dap/ReSpec.js/js/respec.js' class='remove'></script> -->
+    <script src='../js/require.js' data-main='../js/profile-w3c-common' async class='remove'></script>
+    <!-- // <script src='../builds/respec-w3c-common.js' async class='remove'></script> -->
+    <!-- // <script src='//www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script> -->
+    <!-- // <script src='http://darobin.github.com/respec/builds/respec-w3c-common.js' async class='remove'></script> -->
+    <script class='remove'>
+      var respecConfig = {
+              specStatus:   "ED"
+          ,   shortName:    "basics"
+          ,   editors:      [{ name: "Robin Berjon", url: "http://berjon.com/" }]
+          ,   wg:           "ReSpec Hackin' Gang"
+          ,   wgURI:        "http://darobin.github.com/respec"
+          ,   wgPublicList: "none"
+          ,   wgPatentURI:  "XXX"
+          ,   edDraftURI:   "http://darobin.github.com/respec"
+          ,   localBiblio:  {
+                "MEMES":  "<a href='http://w3cmemes.tumblr.com/'>W3C Memes</a>",
+                "REX":    "<strong>Overridden!</strong>",
+                "WEE": {
+                    title: "weee!"
+                }
+              }
+        };
+    </script>
+  </head>
+  <body>
+    <section id='abstract'>
+      <p>
+        This is just a very basic document. [[!REX]] Yeah for memes [[MEMES]].
+        [[DOM4]], [[XML10]], [[\WHATEVER]], [[!DAHUT-TEST1]], 
+        [[!WEE]],
+        [[!DAHUT-TEST2]],
+        [[!DAHUT-TEST3]],
+        [[!DAHUT-TEST4]],
+        [[!DAHUT-TEST5]],
+        [[!DAHUT-TEST6]]
+
+      </p>
+    </section>
+    <section id='sotd'>
+      <p>
+        CUSTOM PARAGRAPH
+      </p>
+    </section>
+    <section>
+      <h2>Name <a href='http://berjon.com/'>clashes</a> after <span>and <a href='http://w3.org/'>deep</a> stuff</span></h2>
+      <p>
+        Something MUST happen.
+      </p>
+      <p class='issue' title='A real problem'>
+        This is a problem
+      </p>
+      <p class='note' title='About this'>
+        Just a note
+      </p>
+    </section>
+    <section>
+      <h2>Clash here</h2>
+      <dl class='idl' title='interface Dahut'>
+        <dt>void other ()</dt>
+        <dd>
+          Partial would be better.
+        </dd>
+      </dl>
+    </section>
+    <section>
+      <h2>Type Unions</h2>
+      <section>
+        <h2>Two</h2>
+        <dl class="idl" title="interface MutableCapabilities : Capabilities">
+          <dt>(DOMString or sequence&lt;long>) bar()</dt>
+          <dd>without default</dd>
+          <dt>void foo((unsigned long or sequence&lt;unsigned long>) value1)</dt>
+          <dd>without default</dd>
+          <!-- <dt>void foo(boolean value1, DOMString other1)</dt>
+          <dd>without default</dd>
+          <dt>void bar(boolean value2 = true, DOMString other2)</dt>
+          <dd>with default</dd>
+          <dt>void bar(unsigned long value3 = 8.2, DOMString other3 = "something else")</dt>
+          <dd>with default</dd> -->
+        </dl>
+      </section>
+    </section>
+  </body>
+</html>
