@@ -26,11 +26,12 @@ exec("git symbolic-ref HEAD", function (err, stdout, stderr) {
     // ,   optimize:   "none"
     ,   paths:  {
             requireLib: "./require"
+        ,   biblio:     "../bibref/biblio"
         ,   simpleNode: "./simple-node"
         ,   shortcut:   "./shortcut"
         }
     ,   name:       "profile-w3c-common"
-    ,   include:    "requireLib simpleNode shortcut".split(" ")
+    ,   include:    "requireLib biblio simpleNode shortcut".split(" ")
     ,   out:        versioned
     ,   inlineText: true
     ,   preserveLicenseComments:    false
