@@ -568,7 +568,8 @@ var sn;
             "LCWD": "W3C Last Call Working Draft",
             "CR": "W3C Candidate Recommendation",
             "PR": "W3C Proposed Recommendation",
-            "REC": "W3C Recommendation",
+            "PER": "W3C Proposed Edited Recommendation",
+            "REC": "W3C Recommendation"
         },
 
         // --- HELPERS --------------------------------------------------------------------------------------------
