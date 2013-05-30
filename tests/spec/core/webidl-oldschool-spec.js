@@ -136,18 +136,19 @@ describe("Core - WebIDL", function () {
                 "                attribute sequence<Date> dates;\n" +
                 "};";
         expect($target.text()).toEqual(text);
-        expect($target.find(".idlAttribute").length).toEqual(6);
+        expect($target.find(".idlAttribute").length).toEqual(7);
         var $at = $target.find(".idlAttribute").first();
         expect($at.find(".idlAttrType").text()).toEqual("DOMString");
         expect($at.find(".idlAttrName").text()).toEqual("regular");
         var $ro = $target.find(".idlAttribute").eq(2);
-        expect($ro.find(".idlAttrName").text()).toEqual("readonly");
+        expect($ro.find(".idlAttrName").text()).toEqual("_readonly");
         var $lst = $target.find(".idlAttribute").last();
         expect($lst.find(".idlAttrType").text()).toEqual("sequence<Date>");
         expect($lst.find(".idlAttrType > a").text()).toEqual("Date");
         
         var $sec = $("#attributes-1 dl.attributes", doc);
         expect($sec.find("dt").length).toEqual(7);
+        expect($sec.find("dt").eq(3).find("code").text()).toEqual("readonly");
         expect($sec.find("dd").length).toEqual(7);
         expect($sec.find("dt").first().find("code").first().text()).toEqual("dates");
         expect($sec.find("dt").first().find(".idlAttrType a").text()).toEqual("Date");
