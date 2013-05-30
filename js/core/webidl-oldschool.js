@@ -742,7 +742,7 @@ define(
                         for (var j = 0; j < things.length; j++) {
                             var it = things[j];
                             var dt = sn.element("dt", { id: curLnk + it.refId }, dl);
-                            sn.element("code", {}, dt, it.id);
+                            sn.element("code", {}, dt, it.unescapedId);
                             var desc = sn.element("dd", {}, dl, [it.description]);
                             if (type == "field") {
                                 sn.text(" of type ", dt);
@@ -794,7 +794,7 @@ define(
                     for (var j = 0; j < things.length; j++) {
                         var it = things[j];
                         var dt = sn.element("dt", { id: curLnk + it.refId }, dl);
-                        sn.element("code", {}, dt, it.id);
+                        sn.element("code", {}, dt, it.unescapedId);
                         var desc = sn.element("dd", {}, dl, [it.description]);
                         sn.text(" of type ", dt);
                         if (it.array) {
@@ -835,7 +835,7 @@ define(
                     for (var j = 0; j < things.length; j++) {
                         var it = things[j];
                         var dt = sn.element("dt", { id: curLnk + it.refId }, dl);
-                        sn.element("code", {}, dt, it.id);
+                        sn.element("code", {}, dt, it.unescapedId);
                         var desc = sn.element("dd", {}, dl, [it.description]);
                         sn.text(" of type ", dt);
                         if (it.array) {
@@ -872,7 +872,7 @@ define(
                         var tr = sn.element("tr", {}, sec)
                         ,   td1 = sn.element("td", {}, tr)
                         ;
-                        sn.element("code", { "id": "idl-def-" + obj.refId + "." + it.refId }, td1, it.id);
+                        sn.element("code", { "id": "idl-def-" + obj.refId + "." + it.refId }, td1, it.unescapedId);
                         sn.element("td", {}, tr, [it.description]);
                     }
                     return df;
@@ -907,7 +907,7 @@ define(
                                     (type == "constructor") ? this.makeMethodID("widl-ctor-", it)
                                     : sn.idThatDoesNotExist(curLnk + it.refId);
                                 var dt = sn.element("dt", { id: id }, dl);
-                                sn.element("code", {}, dt, it.id);
+                                sn.element("code", {}, dt, it.unescapedId);
                                 if (it.isStatic) dt.appendChild(this.doc.createTextNode(", static"));
                                 var desc = sn.element("dd", {}, dl, [it.description]);
                                 if (type == "method" || type == "constructor") {
