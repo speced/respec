@@ -4,3 +4,4 @@ scratch
 /node_modules
 .htaccess
 examples/touchevents.html
+bevy.json
