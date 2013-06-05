@@ -98,8 +98,8 @@ var sn;
             var base = "", src;
             for (var i = 0; i < scripts.length; i++) {
                 src = scripts[i].src;
-                if (/\/js\/require\.js$/.test(src)) {
-                    base = src.replace(/js\/require\.js$/, "");
+                if (/\/js\/require.*\.js$/.test(src)) {
+                    base = src.replace(/js\/require.*\.js$/, "");
                 }
             }
             // base = respecConfig.respecBase;
