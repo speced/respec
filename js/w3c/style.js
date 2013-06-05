@@ -18,7 +18,7 @@ define(
                     statStyle === "LC-NOTE") statStyle = "WD";
                 if (statStyle === "FPWD-NOTE") statStyle = "WG-NOTE";
                 if (statStyle === "finding" || statStyle === "draft-finding") statStyle = "base";
-                var css = ('http' !== conf.scheme.substring(0, 4)) ? 'http://' : '//';
+                var css = conf.httpScheme  + "://";
                 if (statStyle === "unofficial") {
                     css += "www.w3.org/StyleSheets/TR/w3c-unofficial";
                 }
