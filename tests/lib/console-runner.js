@@ -73,7 +73,7 @@
     var items = spec.results().getItems()
     for (var i = 0; i < items.length; i++) {
       var trace = items[i].trace.stack || items[i].trace;
-      this.log(trace);
+      this.log(JSON.stringify(trace, null, 4));
     }
   };
 
