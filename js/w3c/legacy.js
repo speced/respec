@@ -75,7 +75,7 @@ var sn;
             refs = refs.normativeReferences.concat(refs.informativeReferences);
             if (refs.length) {
                 count++;
-                src = "http://specref.jit.su/bibrefs?callback=setBerjonBiblio&refs=" + refs.join(',');
+                src = conf.httpScheme + "://specref.jit.su/bibrefs?callback=setBerjonBiblio&refs=" + refs.join(',');
                 this.loadScript(src, loadHandler);
             }
 
@@ -568,7 +568,8 @@ var sn;
             "LCWD": "W3C Last Call Working Draft",
             "CR": "W3C Candidate Recommendation",
             "PR": "W3C Proposed Recommendation",
-            "REC": "W3C Recommendation",
+            "PER": "W3C Proposed Edited Recommendation",
+            "REC": "W3C Recommendation"
         },
 
         // --- HELPERS --------------------------------------------------------------------------------------------

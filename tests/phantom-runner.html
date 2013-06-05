@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'/>
+    <title>Jasmine Spec Runner</title>
+
+    <link rel="shortcut icon" type="image/png" href="lib/jasmine-1.2.0/jasmine_favicon.png">
+    <link rel="stylesheet" href="lib/jasmine-1.2.0/jasmine.css">
+    <script src="lib/jasmine-1.2.0/jasmine.js"></script>
+    <script src="lib/jasmine-1.2.0/jasmine-html.js"></script>
+    <script src="lib/console-runner.js"></script>
+    <!-- this also brings in jQuery -->
+    <script src='../js/require.js'></script>
+
+    <!-- SPECS -->
+    <script src="spec/SpecHelper.js"></script>
+    <script src="spec/core/default-root-attr-spec.js"></script>
+    <script src="spec/core/style-spec.js"></script>
+    <script src="spec/core/override-configuration-spec.js"></script>
+    <script src="spec/core/utils-spec.js"></script>
+    <script src="spec/w3c/style-spec.js"></script>
+    <script src="spec/core/remove-respec-spec.js"></script>
+    <!-- <script src="spec/w3c/unhtml5-spec.js"></script> -->
+    <script src="spec/w3c/abstract-spec.js"></script>
+    <script src="spec/w3c/headers-spec.js"></script>
+    <script src="spec/w3c/conformance-spec.js"></script>
+    <script src="spec/core/data-include-spec.js"></script>
+    <script src="spec/core/dfn-spec.js"></script>
+    <script src="spec/core/examples-spec.js"></script>
+    <script src="spec/core/informative-spec.js"></script>
+    <script src="spec/core/highlight-spec.js"></script>
+    <script src="spec/core/issues-notes-spec.js"></script>
+    <script src="spec/core/requirements-spec.js"></script>
+    <script src="spec/core/best-practices-spec.js"></script>
+    <script src="spec/core/id-headers-spec.js"></script>
+    <script src="spec/core/fix-headers-spec.js"></script>
+    <script src="spec/core/section-refs-spec.js"></script>
+    <script src="spec/core/figures-spec.js"></script>
+    <script src="spec/core/inlines-spec.js"></script>
+    <script src="spec/core/structure-spec.js"></script>
+    <script src="spec/core/webidl-oldschool-spec.js"></script>
+    <script src="spec/core/markdown-spec.js"></script>
+
+    <!-- SOURCE -->
+    <!-- none currently -->
+      
+    <script type="text/javascript">
+      var console_reporter = new jasmine.ConsoleReporter()
+      jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+      jasmine.getEnv().addReporter(console_reporter);
+      
+      jasmine.getEnv().updateInterval = 1000;
+      
+      var currentWindowOnload = window.onload;
+      window.onload = function() {
+          if (currentWindowOnload) currentWindowOnload();
+          jasmine.getEnv().execute();
+      };
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
