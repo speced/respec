@@ -75,7 +75,7 @@ var sn;
             refs = refs.normativeReferences.concat(refs.informativeReferences);
             if (refs.length) {
                 count++;
-                src = "http://specref.jit.su/bibrefs?callback=setBerjonBiblio&refs=" + refs.join(',');
+                src = respecConfig.scheme + "://specref.jit.su/bibrefs?callback=setBerjonBiblio&refs=" + refs.join(',');
                 this.loadScript(src, loadHandler);
             }
 
