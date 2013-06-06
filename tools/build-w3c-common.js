@@ -4,7 +4,7 @@ var exec = require("child_process").exec
 ,   fs   = require("fs")
 ,   pth  = require("path")
 ,   r    = require("./r")
-,   version = fs.readFileSync(pth.join(__dirname, "VERSION"), "utf-8").replace(/\n/g, "")
+,   version = JSON.parse(fs.readFileSync(pth.join(__dirname, "../package.json"), "utf-8")).version
 ,   builds = pth.join(__dirname, "../builds")
 ,   versioned = pth.join(builds, "respec-w3c-common-" + version + ".js")
 ;
