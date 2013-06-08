@@ -12,7 +12,7 @@ var sn;
     window.setBerjonBiblio = function(payload) {
         berjon.biblio = payload;
     };
-    if (typeof(berjon) == "undefined") window.berjon = {};
+    if (typeof berjon === 'undefined') window.berjon = {};
     function _errEl () {
         var id = "respec-err";
         var err = document.getElementById(id);
@@ -72,7 +72,7 @@ var sn;
             }
 
             var src, refs = this.getRefKeys(conf);
-            refs = refs.normativeReferences.concat(refs.informativeReferences);
+            refs = refs.normativeReferences.concat(refs.informativeReferences).concat(this.findLocalAliases(conf));
             if (refs.length) {
                 count++;
                 src = conf.httpScheme + "://specref.jit.su/bibrefs?callback=setBerjonBiblio&refs=" + refs.join(',');
@@ -91,7 +91,17 @@ var sn;
 
             callback();
         },
-
+        findLocalAliases: function(conf) {
+            var res = [];
+            if (conf.localBiblio) {
+                for (var k in conf.localBiblio) {
+                    if (typeof conf.localBiblio[k].aliasOf !== 'undefined') {
+                        res.push(conf.localBiblio[k].aliasOf);
+                    }
+                }
+            }
+            return res;
+        },
         findBase: function() {
             var scripts = document.querySelectorAll("script[src]");
             // XXX clean this up
