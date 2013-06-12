@@ -1,4 +1,4 @@
-describe("W3C ? Aliased References", function () {
+describe("W3C — Aliased References", function () {
     var MAXOUT = 5000
         , basicConfig = {
             editors: [
