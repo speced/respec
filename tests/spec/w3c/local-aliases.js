@@ -24,7 +24,7 @@ describe("W3C ? Aliased References", function () {
         runs(function () {
             var $r = $("#bib-FOOBARGLOP + dd", doc);
             expect($r.length).toBeTruthy();
-            expect($r.text()).toMatch(/RFC2119/);
+            expect($r.text()).toMatch(/2119/);
             flushIframes();
         });
     });
