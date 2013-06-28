@@ -1,22 +1,22 @@
 {
-  "name": "respec",
-  "version": "3.1.58",
-  "description": "Specification Edition Support Tool.",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs",
-    "example": "examples",
-    "test": "tests"
-  },
-  "scripts": {
-    "test": "node ./tests/headless.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/darobin/respec.git"
-  },
-  "author": "Robin Berjon",
-  "devDependencies": {
-      "express": "*"
-  }
+    "name": "respec",
+    "version": "3.1.60",
+    "description": "Specification Edition Support Tool.",
+    "main": "index.js",
+    "directories": {
+        "doc": "docs",
+        "example": "examples",
+        "test": "tests"
+    },
+    "scripts": {
+        "test": "node ./tests/headless.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/darobin/respec.git"
+    },
+    "author": "Robin Berjon",
+    "devDependencies": {
+        "express": "*"
+    }
 }

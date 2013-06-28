@@ -12,7 +12,7 @@ var sn;
     window.setBerjonBiblio = function(payload) {
         berjon.biblio = payload;
     };
-    if (typeof(berjon) == "undefined") window.berjon = {};
+    if (typeof berjon === 'undefined') window.berjon = {};
     function _errEl () {
         var id = "respec-err";
         var err = document.getElementById(id);
@@ -22,22 +22,22 @@ var sn;
                               style: "position: fixed; width: 350px; top: 10px; right: 10px; border: 3px double #f00; background: #fff",
                               "class": "removeOnSave" },
                             document.body);
-        
+
         var hide = sn.element("p", {
             style: "float: right; margin: 2px; text-decoration: none"
         }, err);
-        
+
         sn.text('[', hide);
-        
+
         var a = sn.element("a", { href: "#" }, hide, 'x');
-        
+
         a.onclick = function() {
             document.getElementById(id).style.display = 'none';
             return false;
         };
-        
+
         sn.text(']', hide);
-        
+
         return sn.element("ul", { style: "clear: both"}, err);
     }
     function error (str) {
@@ -72,7 +72,7 @@ var sn;
             }
 
             var src, refs = this.getRefKeys(conf);
-            refs = refs.normativeReferences.concat(refs.informativeReferences);
+            refs = refs.normativeReferences.concat(refs.informativeReferences).concat(this.findLocalAliases(conf));
             if (refs.length) {
                 count++;
                 src = conf.httpScheme + "://specref.jit.su/bibrefs?callback=setBerjonBiblio&refs=" + refs.join(',');
@@ -91,15 +91,25 @@ var sn;
 
             callback();
         },
-
+        findLocalAliases: function(conf) {
+            var res = [];
+            if (conf.localBiblio) {
+                for (var k in conf.localBiblio) {
+                    if (typeof conf.localBiblio[k].aliasOf !== 'undefined') {
+                        res.push(conf.localBiblio[k].aliasOf);
+                    }
+                }
+            }
+            return res;
+        },
         findBase: function() {
             var scripts = document.querySelectorAll("script[src]");
             // XXX clean this up
             var base = "", src;
             for (var i = 0; i < scripts.length; i++) {
                 src = scripts[i].src;
-                if (/\/js\/require\.js$/.test(src)) {
-                    base = src.replace(/js\/require\.js$/, "");
+                if (/\/js\/require.*\.js$/.test(src)) {
+                    base = src.replace(/js\/require.*\.js$/, "");
                 }
             }
             // base = respecConfig.respecBase;
@@ -134,13 +144,13 @@ var sn;
             msg.pub("end", "w3c/legacy");
             cb();
         },
-        
+
         overrideBiblio:     function (conf) {
             if (conf.localBiblio) {
                 for (var k in conf.localBiblio) berjon.biblio[k] = conf.localBiblio[k];
             }
         },
-        
+
         makeRDFa:  function () {
             var abs = document.getElementById("abstract");
             if (abs) {
@@ -237,7 +247,7 @@ var sn;
             }
 
             str += ">\n";
-            var cmt = document.createComment("[if lt IE 9]><script src='" + respecConfig.httpScheme + "://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
+            var cmt = document.createComment("[if lt IE 9]><script src='https://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
             $("head").append(cmt);
             str += document.documentElement.innerHTML;
             str += "</html>";
@@ -311,7 +321,7 @@ var sn;
                 selfClosing[n] = true;
             });
             var noEsc = [false];
-            var cmt = document.createComment("[if lt IE 9]><script src='" + respecConfig.httpScheme + "://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
+            var cmt = document.createComment("[if lt IE 9]><script src='https://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
             $("head").append(cmt);
             var dumpNode = function (node) {
                 var out = '';
@@ -432,13 +442,13 @@ var sn;
                 if (cfg.hasOwnProperty(k)) this[k] = cfg[k];
             }
         },
-        
+
         getRefKeys:    function (conf) {
             var informs = conf.informativeReferences
             ,   norms = conf.normativeReferences
             ,   del = []
             ;
-            
+
             function getKeys(obj) {
                 var res = [];
                 for (var k in obj) res.push(k);
@@ -497,7 +507,7 @@ var sn;
                             dd.setAttribute('rel','dcterms:references');
                         }
                     }
-                    
+
                     var refcontent = berjon.biblio[ref],
                         circular = {},
                         key = ref;
@@ -514,7 +524,7 @@ var sn;
                     }
                     aliases[key] = aliases[key] || [];
                     if (aliases[key].indexOf(ref) < 0) aliases[key].push(ref);
-                    
+
                     if (refcontent) {
                         dd.innerHTML = this.stringifyRef(refcontent) + "\n";
                     } else {
@@ -530,7 +540,7 @@ var sn;
                     warning("[" + k + "] is referenced in " + aliases[k].length + " ways (" + aliases[k].join(", ") + "). This causes duplicate entries in the reference section.");
                 }
             }
-            
+
             if(badrefcount > 0) {
                 error("Got " + badrefcount + " tokens looking like a reference, not in biblio DB: ");
                 for (var item in badrefs) {
