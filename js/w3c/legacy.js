@@ -199,10 +199,14 @@ var sn;
             butH.onclick = function () { obj.hideSaveOptions(); obj.toHTML(); };
             var butS = sn.element("button", {}, this.saveMenu, "Save as HTML (Source)");
             butS.onclick = function () { obj.hideSaveOptions(); obj.toHTMLSource(); };
-            var butS = sn.element("button", {}, this.saveMenu, "Save as XHTML");
-            butS.onclick = function () { obj.hideSaveOptions(); obj.toXHTML(); };
-            var butS = sn.element("button", {}, this.saveMenu, "Save as XHTML (Source)");
-            butS.onclick = function () { obj.hideSaveOptions(); obj.toXHTMLSource(); };
+            var butS = sn.element("button", {}, this.saveMenu, "Save as XHTML 1");
+            butS.onclick = function () { obj.hideSaveOptions(); obj.toXHTML(1); };
+            var butS = sn.element("button", {}, this.saveMenu, "Save as XHTML 1 (Source)");
+            butS.onclick = function () { obj.hideSaveOptions(); obj.toXHTMLSource(1); };
+            var butS = sn.element("button", {}, this.saveMenu, "Save as XHTML 5");
+            butS.onclick = function () { obj.hideSaveOptions(); obj.toXHTML(5); };
+            var butS = sn.element("button", {}, this.saveMenu, "Save as XHTML 5 (Source)");
+            butS.onclick = function () { obj.hideSaveOptions(); obj.toXHTMLSource(5); };
             if (this.diffTool && (this.previousDiffURI || this.previousURI) ) {
                 var butD = sn.element("button", {}, this.saveMenu, "Diffmark");
                 butD.onclick = function () { obj.hideSaveOptions(); obj.toDiffHTML(); };
@@ -235,16 +239,6 @@ var sn;
                 }
                 str += " " + an + "=\"" + this._esc(ats[i].value) + "\"";
             }
-            if (this.doRDFa) {
-                if (prefixAtr !== '') prefixAtr += ' ';
-                if (this.doRDFa != "1.1") {
-                    prefixAtr += "dcterms: http://purl.org/dc/terms/ bibo: http://purl.org/ontology/bibo/ foaf: http://xmlns.com/foaf/0.1/ xsd: http://www.w3.org/2001/XMLSchema#";
-                } else {
-                    prefixAtr += "bibo: http://purl.org/ontology/bibo/";
-                }
-                str += " prefix=\"" + this._esc(prefixAtr) + "\"";
-                str += " typeof=\"bibo:Document\"";
-            }
 
             str += ">\n";
             var cmt = document.createComment("[if lt IE 9]><script src='" + respecConfig.httpScheme + "://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
@@ -254,13 +248,23 @@ var sn;
             return str;
         },
 
-        toXML:        function () {
+        toXML:        function ( mode ) {
+            if ( mode != 5 ) {
+                // not doing xhtml5 so rip out the html5 stuff
+                $.each("section figcaption figure".split(" "), function (i, item) {
+                    $(item).renameElement("div").addClass(item);
+                });
+                $("time").renameElement("span").addClass("time").removeAttr('datetime');
+                $("div[role]").removeAttr('role').removeAttr('aria-level') ;
+                $("style:not([type])").attr("type", "text/css");
+                $("script:not([type])").attr("type", "text/javascript");
+            }
             var str = "<?xml version='1.0' encoding='UTF-8'?>\n<!DOCTYPE html";
             var dt = document.doctype;
             if (dt && dt.publicId) {
                 str += " PUBLIC '" + dt.publicId + "' '" + dt.systemId + "'";
             }
-            else {
+            else if ( mode != 5) {
                 if (this.doRDFa) {
                     if (this.doRDFa == "1.1") {
                         // use the standard RDFa 1.1 doctype
@@ -283,35 +287,9 @@ var sn;
                 var an = ats[i].name;
                 if (an == "lang") continue;
                 if (an == "xmlns") hasxmlns = true;
-                if (an == "prefix") {
-                    prefixAtr = ats[i].value;
-                    continue;
-                }
                 str += " " + an + "=\"" + this._esc(ats[i].value) + "\"";
             }
             if (!hasxmlns) str += ' xmlns="http://www.w3.org/1999/xhtml"';
-            if (this.doRDFa) {
-                if (this.doRDFa != "1.1") {
-                    str += " xmlns:dcterms='http://purl.org/dc/terms/' xmlns:bibo='http://purl.org/ontology/bibo/' xmlns:foaf='http://xmlns.com/foaf/0.1/' xmlns:xsd='http://www.w3.org/2001/XMLSchema#'";
-                    // there was already some prefix information
-                    if (prefixAtr !== '') {
-                        var list = prefixAtr.split(/\s+/) ;
-                        for (var i = 0; i < list.length; i += 2) {
-                            var n = list[i] ;
-                            n = n.replace(/:$/,'');
-                            str += ' xmlns:'+n+'="' + list[i+1] + '"';
-                        }
-                    }
-                    str += ' version="XHTML+RDFa 1.0"';
-                } else {
-                    if (prefixAtr !== '') {
-                        str += " prefix='" + prefixAtr + " bibo: http://purl.org/ontology/bibo/'" ;
-                    } else {
-                        str += " prefix='bibo: http://purl.org/ontology/bibo/'" ;
-                    }
-                }
-                str += " typeof=\"bibo:Document\"";
-            }
             str += ">\n";
             // walk the entire DOM tree grabbing nodes and emitting them - possibly modifying them
             // if they need the funny closing tag
@@ -321,8 +299,10 @@ var sn;
                 selfClosing[n] = true;
             });
             var noEsc = [false];
-            var cmt = document.createComment("[if lt IE 9]><script src='" + respecConfig.httpScheme + "://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
-            $("head").append(cmt);
+            if ( mode == 5 ) {
+                var cmt = document.createComment("[if lt IE 9]><script src='" + respecConfig.httpScheme + "://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
+                $("head", document).append(cmt);
+            }
             var dumpNode = function (node) {
                 var out = '';
                 // if the node is the document node.. process the children
@@ -421,15 +401,15 @@ var sn;
             x.document.close();
         },
 
-        toXHTML:    function () {
+        toXHTML:    function ( mode ) {
             var x = window.open();
-            x.document.write(this.toXML()) ;
+            x.document.write(this.toXML( mode )) ;
             x.document.close();
         },
 
-        toXHTMLSource:    function () {
+        toXHTMLSource:    function ( mode ) {
             var x = window.open();
-            x.document.write("<pre>" + this._esc(this.toXML()) + "</pre>");
+            x.document.write("<pre>" + this._esc(this.toXML( mode )) + "</pre>");
             x.document.close();
         },
 
@@ -437,7 +417,9 @@ var sn;
         extractConfig:    function () {
             var cfg = respecConfig || {};
             if (!cfg.diffTool) cfg.diffTool = 'http://www5.aptest.com/standards/htmldiff/htmldiff.pl';
-            if (!cfg.doRDFa) cfg.doRDFa = false;
+            // note this change - the default is now to inject RDFa 1.1.  You can override it by
+            // setting RDFa to false
+            if (cfg.doRDFa === undefined) cfg.doRDFa = "1.1";
             for (var k in cfg) {
                 if (cfg.hasOwnProperty(k)) this[k] = cfg[k];
             }

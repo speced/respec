@@ -6,10 +6,6 @@ describe("Core - Utils", function () {
             require(["../js/core/utils"], function (u) { utils = u; });
         });
         waitsFor(function () { return utils; }, MAXOUT);
-    });
-
-    // linkCSS()
-    it("should add a link element", function () {
         runs(function () {
             utils.linkCSS(document, "BOGUS");
             expect($("link[href='BOGUS']").length == 1).toBeTruthy();
@@ -87,6 +83,22 @@ describe("Core - Utils", function () {
             expect(utils.humanDate(d)).toEqual("15 March 1977");
         });
     });
+    
+    // isoDate
+    it("should produce an ISO date", function () {
+        runs(function () {
+            expect(utils.isoDate("2013-06-25")).toEqual("2013-06-25T05:00:00+0000");
+            var d = new Date();
+            d.setFullYear(2013);
+            d.setMonth(5);
+            d.setDate(25);
+            d.setHours(0);
+            d.setMinutes(0);
+            d.setSeconds(0);
+            expect(utils.isoDate(d)).toEqual("2013-06-25T05:00:00+0000");
+        });
+    });
+
 
     // joinAnd
     it("should join with proper commas and 'and'", function () {

@@ -10,8 +10,8 @@ define(
         var utils = {
             // --- SET UP
             run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "w3c/utils");
-                msg.pub("end", "w3c/utils");
+                msg.pub("start", "core/utils");
+                msg.pub("end", "core/utils");
                 cb();
             }
 
@@ -86,6 +86,12 @@ define(
         ,   humanDate:  function (date) {
                 if (!(date instanceof Date)) date = this.parseSimpleDate(date);
                 return this.lead0(date.getDate()) + " " + this.humanMonths[date.getMonth()] + " " + date.getFullYear();
+            }
+            // given either a Date object or a date in YYYY-MM-DD format, return an ISO formatted
+            // date suitable for use in a xsd:datetime item
+        ,   isoDate:    function (date) {
+                if (!(date instanceof Date)) date = this.parseSimpleDate(date);
+                return "" + date.getUTCFullYear() +'-'+ this.lead0(date.getUTCMonth() + 1)+'-' + this.lead0(date.getUTCDate()) +'T'+this.lead0(date.getUTCHours())+':'+this.lead0(date.getUTCMinutes()) +":"+this.lead0(date.getUTCSeconds())+'+0000';
             }
             
             

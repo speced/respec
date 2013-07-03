@@ -2,9 +2,11 @@
   <p>
     <a href='http://www.w3.org/'><img width='72' height='48' src='{{httpScheme}}://www.w3.org/Icons/w3c_home' alt='W3C'/></a>
   </p>
-  <h1 class='title' id='title'>{{title}}</h1>
-  {{#if subtitle}}<h2 id='subtitle'>{{subtitle}}</h2>{{/if}}
-  <h2>{{longStatus}} <time class='dt-published' datetime='{{dashDate}}'>{{publishHumanDate}}</time></h2>
+  <h1 class='title p-name' id='title'{{#if doRDFa}} property='dcterms:title'{{/if}}>{{title}}</h1>
+  {{#if subtitle}}
+    <h2 {{#if doRDFa}}property='bibo:subtitle' {{/if}}id='subtitle'>{{subtitle}}</h2>
+  {{/if}}
+  <h2 {{#if doRDFa}}property="dcterms:issued" datatype="xsd:dateTime" content="{{publishISODate}}"{{/if}}>{{longStatus}} <time class='dt-published' datetime='{{dashDate}}'>{{publishHumanDate}}</time></h2>
   <dl>
     {{#if thisVersion}}
       <dt>This version:</dt>
@@ -28,7 +30,7 @@
     {{/if}}
     {{#if prevVersion}}
       <dt>Previous version:</dt>
-      <dd><a href='{{prevVersion}}'>{{prevVersion}}</a></dd>
+      <dd><a {{#if doRDFa}}rel="dcterms:replaces"{{/if}} href='{{prevVersion}}'>{{prevVersion}}</a></dd>
     {{/if}}
     {{#unless isCGFinal}}
       {{#if prevED}}

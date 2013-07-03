@@ -84,10 +84,10 @@ define(
         Handlebars.registerHelper("showPeople", function (name, items) {
             // stuff to handle RDFa
             var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "";
-            if (this.doRDFa) {
+            if (this.doRDFa != false) {
                 if (name === "Editor") {
                     re = " rel='bibo:editor'";
-                    if (this.doRDFa == "1.1") re += " inlist=''";
+                    if (this.doRDFa !== "1.0") re += " inlist=''";
                 }
                 else if (name === "Author") {
                     re = " rel='dcterms:contributor'";
@@ -101,11 +101,11 @@ define(
             var ret = "";
             for (var i = 0, n = items.length; i < n; i++) {
                 var p = items[i];
-                if (this.doRDFa) ret += "<dd" + re +"><span" + rp + ">";
+                if (this.doRDFa != false ) ret += "<dd class='p-author h-card vcard' " + re +"><span" + rp + ">";
                 else             ret += "<dd class='p-author h-card vcard'>";
                 if (p.url) {
-                    if (this.doRDFa) {
-                        ret += "<a" + rpu + rn + " content='" + p.name +  "' href='" + p.url + "'>" + p.name + "</a>";
+                    if (this.doRDFa != false ) {
+                        ret += "<a class='u-url url p-name fn' " + rpu + rn + " content='" + p.name +  "' href='" + p.url + "'>" + p.name + "</a>";
                     }
                     else {
                         ret += "<a class='u-url url p-name fn' href='" + p.url + "'>"+ p.name + "</a>";
@@ -123,7 +123,7 @@ define(
                     ret += ", <span class='ed_mailto'><a class='u-email email' " + rm + " href='mailto:" + p.mailto + "'>" + p.mailto + "</a></span>";
                 }
                 if (p.note) ret += " (" + p.note + ")";
-                if (this.doRDFa) ret += "</span>\n";
+                if (this.doRDFa != false ) ret += "</span>\n";
                 ret += "</dd>\n";
             }
             return new Handlebars.SafeString(ret);
@@ -140,6 +140,16 @@ define(
             ,   "LC-NOTE":      "LC"
             ,   "IG-NOTE":      "NOTE"
             ,   "WG-NOTE":      "NOTE"
+            }
+        ,   status2rdf: {
+                NOTE:           "w3p:NOTE",
+                WD:             "w3p:WD",
+                LC:             "w3p:LastCall",
+                CR:             "w3p:CR",
+                PR:             "w3p:PR",
+                REC:            "w3p:REC",
+                PER:            "w3p:PER",
+                RSCND:          "w3p:RSCND"
             }
         ,   status2text: {
                 NOTE:           "Note"
@@ -183,6 +193,11 @@ define(
         ,   run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/headers");
 
+                if (conf.doRDFa != false) {
+                    if (conf.doRDFa === undefined) {
+                        conf.doRDFa = '1.1';
+                    }
+                }
                 // validate configuration and derive new configuration values
                 conf.isCGBG = $.inArray(conf.specStatus, this.cgbg) >= 0;
                 conf.isCGFinal = conf.isCGBG && /G-FINAL$/.test(conf.specStatus);
@@ -268,6 +283,9 @@ define(
                 }
                 conf.longStatus = this.status2long[conf.specStatus];
                 conf.textStatus = this.status2text[conf.specStatus];
+                if ( this.status2rdf[conf.specStatus]) {
+                    conf.rdfStatus = this.status2rdf[conf.specStatus];
+                }
                 conf.showThisVersion =  (!conf.isNoTrack || conf.isTagFinding);
                 conf.showPreviousVersion = (conf.specStatus !== "FPWD" && conf.specStatus !== "FPLC" && conf.specStatus !== "ED" &&
                                            !conf.isNoTrack && !conf.noRecTrack);
@@ -284,8 +302,26 @@ define(
                 conf.isMO = (conf.specStatus === "MO");
                 conf.isIGNote = (conf.specStatus === "IG-NOTE");
                 conf.dashDate = utils.concatDate(conf.publishDate, "-");
+                conf.publishISODate = utils.isoDate(conf.publishDate) ;
                 // configuration done - yay!
                 
+                // annotate html element with RFDa
+                if (conf.doRDFa) {
+                    if (conf.rdfStatus) {
+                        $("html").attr("typeof", "bibo:Document "+conf.rdfStatus ) ;
+                    } else {
+                        $("html").attr("typeof", "bibo:Document ") ;
+                    }
+                    $("html").attr("about", "") ;
+                    $("html").attr("property", "dcterms:language") ;
+                    $("html").attr("content", "en") ;
+                    var prefixes = "bibo: http://purl.org/ontology/bibo/ w3p: http://www.w3.org/2001/02pd/rec54#";
+                    if (conf.doRDFa != '1.1') {
+                        $("html").attr("version", "XHTML+RDFa 1.0") ;
+                        prefixes += " dcterms: http://purl.org/dc/terms/ foaf: http://xmlns.com/foaf/0.1/ xsd: http://www.w3.org/2001/XMLSchema#";
+                    }
+                    $("html").attr("prefix", prefixes);
+                }
                 // insert into document and mark with microformat
                 $("body", doc).prepend($(conf.isCGBG ? cgbgHeadersTmpl(conf) : headersTmpl(conf)))
                               .addClass("h-entry");
