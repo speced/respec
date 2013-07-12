@@ -248,8 +248,8 @@ var sn;
             return str;
         },
 
-        toXML:        function ( mode ) {
-            if ( mode != 5 ) {
+        toXML:        function (mode) {
+            if (mode != 5) {
                 // not doing xhtml5 so rip out the html5 stuff
                 $.each("section figcaption figure".split(" "), function (i, item) {
                     $(item).renameElement("div").addClass(item);
@@ -264,7 +264,7 @@ var sn;
             if (dt && dt.publicId) {
                 str += " PUBLIC '" + dt.publicId + "' '" + dt.systemId + "'";
             }
-            else if ( mode != 5) {
+            else if (mode != 5) {
                 if (this.doRDFa) {
                     if (this.doRDFa == "1.1") {
                         // use the standard RDFa 1.1 doctype
@@ -299,7 +299,7 @@ var sn;
                 selfClosing[n] = true;
             });
             var noEsc = [false];
-            if ( mode == 5 ) {
+            if (mode == 5) {
                 var cmt = document.createComment("[if lt IE 9]><script src='https://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
                 $("head", document).append(cmt);
             }
@@ -401,15 +401,15 @@ var sn;
             x.document.close();
         },
 
-        toXHTML:    function ( mode ) {
+        toXHTML:    function (mode) {
             var x = window.open();
-            x.document.write(this.toXML( mode )) ;
+            x.document.write(this.toXML(mode)) ;
             x.document.close();
         },
 
-        toXHTMLSource:    function ( mode ) {
+        toXHTMLSource:    function (mode) {
             var x = window.open();
-            x.document.write("<pre>" + this._esc(this.toXML( mode )) + "</pre>");
+            x.document.write("<pre>" + this._esc(this.toXML(mode)) + "</pre>");
             x.document.close();
         },
 

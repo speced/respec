@@ -6,6 +6,10 @@ describe("Core - Utils", function () {
             require(["../js/core/utils"], function (u) { utils = u; });
         });
         waitsFor(function () { return utils; }, MAXOUT);
+    });
+
+    // linkCSS()
+    it("should add a link element", function () {
         runs(function () {
             utils.linkCSS(document, "BOGUS");
             expect($("link[href='BOGUS']").length == 1).toBeTruthy();

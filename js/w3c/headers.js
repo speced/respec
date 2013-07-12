@@ -283,7 +283,7 @@ define(
                 }
                 conf.longStatus = this.status2long[conf.specStatus];
                 conf.textStatus = this.status2text[conf.specStatus];
-                if ( this.status2rdf[conf.specStatus]) {
+                if (this.status2rdf[conf.specStatus]) {
                     conf.rdfStatus = this.status2rdf[conf.specStatus];
                 }
                 conf.showThisVersion =  (!conf.isNoTrack || conf.isTagFinding);
