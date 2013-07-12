@@ -1,6 +1,6 @@
 ReSpec
 ======
-[![Build Status](https://travis-ci.org/darobin/respec.png)](https://travis-ci.org/darobin/respec)
+[![Build Status](https://travis-ci.org/darobin/respec.png)][travis]
 
 ReSpec is a JS library that makes it easier to write technical specifications, or documents
 that tend to be technical in nature in general. It was originally designed for the purpose
@@ -64,3 +64,46 @@ resulting repository, make the changes there, and push it back. Then click the â
 This allows you to request that the project integrate your changes. Those should normally get processed
 relatively fast (depending on how complex they are).
 
+Running the test suite
+----------------------
+
+Respec runs a number of high level, end-to-end tests using [Jasmine][jasmine]. These tests are
+run by [Travis][travis], a hosted continuous integration solution, on each pull requests.
+
+There are two options to run these tests locally: in a browser or using [PhantomJS][phantomjs].
+
+### Running the test suite in a browser
+
+Tests need to be served from the root of the repository to function properly. Any server will do, but
+here's an example using Python's `SimpleHTTPServer`:
+
+```
+$ cd /path/to/repo/
+$ python -m SimpleHTTPServer
+Serving HTTP on 0.0.0.0 port 8000 ...
+```
+
+Navigating to `http://localhost:8000/tests/SpecRunner.html` with any recent browser will launch the test
+suite.
+
+### Running the test suite in PhantomJS
+
+[PhantomJS][phantomjs] is a headless, WebKit-based browser. It allows running the tests directly from
+the command line.
+
+In order to run the test from the command line, you need to [install Node][install-node], [npm][npm] and
+[PhantomJS][install-phjs]. _Note that npm comes bundled with recent versions of Node._
+
+Once these dependencies are installed, running the test suite should be as simple as:
+
+```
+$ npm test
+```
+
+
+[jasmine]: http://pivotal.github.io/jasmine/
+[travis]: https://travis-ci.org/darobin/respec
+[phantomjs]: http://phantomjs.org/
+[install-phjs]: http://phantomjs.org/download.html
+[install-node]: http://nodejs.org/download/
+[npm]: https://npmjs.org/
