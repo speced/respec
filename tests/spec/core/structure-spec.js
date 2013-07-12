@@ -3,6 +3,7 @@ describe("Core - Structure", function () {
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
+        ,   doRDFa:  false
         }
     ,   body = "<section class='introductory'><h2>INTRO</h2></section>" +
               "<section><h2>ONE</h2><section><h2>TWO</h2><section><h2>THREE</h2><section><h2>FOUR</h2>" +

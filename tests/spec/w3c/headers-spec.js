@@ -49,7 +49,7 @@ describe("W3C — Headers", function () {
 
     // editors
     it("should take editors into account", function () {
-        loadWithConfig({ specStatus: "REC", "editors[]": [{
+        loadWithConfig({ specStatus: "REC", doRDFa: false, "editors[]": [{
                 name:       "NAME"
             ,   url:        "http://URI"
             ,   company:    "COMPANY"
@@ -68,7 +68,7 @@ describe("W3C — Headers", function () {
                 expect($dd.find("a[href='mailto:EMAIL']").text()).toEqual("EMAIL");
                 expect($dd.text()).toMatch(/\(NOTE\)/);
         });
-        loadWithConfig({ specStatus: "REC", "editors[]": [{ name: "NAME1" }, { name: "NAME2" }] }, function ($ifr) {
+        loadWithConfig({ specStatus: "REC", doRDFa: false, "editors[]": [{ name: "NAME1" }, { name: "NAME2" }] }, function ($ifr) {
             expect($("dt:contains('Editors:')", $ifr[0].contentDocument).length).toEqual(1);
             expect($("dt:contains('Editor:')", $ifr[0].contentDocument).length).toEqual(0);
             var $dd = $("dt:contains('Editors:')", $ifr[0].contentDocument).next("dd");
@@ -79,13 +79,13 @@ describe("W3C — Headers", function () {
 
     // authors
     it("should take authors into account", function () {
-        loadWithConfig({ specStatus: "REC", "authors[]": [{ name: "NAME1" }] }, function ($ifr) {
+        loadWithConfig({ specStatus: "REC", doRDFa: false, "authors[]": [{ name: "NAME1" }] }, function ($ifr) {
             expect($("dt:contains('Authors:')", $ifr[0].contentDocument).length).toEqual(0);
             expect($("dt:contains('Author:')", $ifr[0].contentDocument).length).toEqual(1);
             var $dd = $("dt:contains('Author:')", $ifr[0].contentDocument).next("dd");
             expect($dd.text()).toEqual("NAME1");
         });
-        loadWithConfig({ specStatus: "REC", "authors[]": [{ name: "NAME1" }, { name: "NAME2" }] }, function ($ifr) {
+        loadWithConfig({ specStatus: "REC", doRDFa: false, "authors[]": [{ name: "NAME1" }, { name: "NAME2" }] }, function ($ifr) {
             expect($("dt:contains('Authors:')", $ifr[0].contentDocument).length).toEqual(1);
             expect($("dt:contains('Author:')", $ifr[0].contentDocument).length).toEqual(0);
             var $dd = $("dt:contains('Authors:')", $ifr[0].contentDocument).next("dd");
