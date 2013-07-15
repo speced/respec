@@ -13,6 +13,8 @@ define(
                 $.each("section figcaption figure".split(" "), function (i, item) {
                     $(item, doc).renameElement("div").addClass(item);
                 });
+                $("time", doc).renameElement("span").addClass("time").removeAttr('datetime');
+                $("div[role]").removeAttr('role').removeAttr('aria-level') ;
                 $("style:not([type])").attr("type", "text/css");
                 $("script:not([type])").attr("type", "text/javascript");
                 msg.pub("end", "w3c/unhtml5");

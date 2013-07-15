@@ -3,6 +3,7 @@ describe("Core - Inlines", function () {
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
+        ,   doRDFa:  false
         };
     it("should process all inline content", function () {
         var doc;

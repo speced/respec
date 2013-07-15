@@ -3,6 +3,7 @@ describe("W3C — Conformance", function () {
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
+        ,   doRDFa:  false
         };
     it("should include an h2 and inject its content", function () {
         var doc;

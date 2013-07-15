@@ -159,7 +159,8 @@
       </p>
       <p>
         During processing, <code>section</code> elements will be converted to <code>div</code>
-        elements with <code>class</code> "section".
+        elements with <code>class</code> "section".  Note that this will only happen if you request
+        that XHTML1 be generated.  (X)HTML5 has a section element, so it will not be replaced.
       </p>
       <p>
         Any section at the beginning that has a <code>class</code> of "introductory" will not
@@ -453,10 +454,10 @@ The class signals that this will be replaced with a link containing
         <dt>doRDFa</dt>
         <dd>
           If this parameter is set, ReSpec.js will embed various RDFa attributes throughout 
-          the generated specification.  The triples generated use vocabulary items from the dcterms, 
-          foaf, and bibo.  The parameter defaults to false.  If set to true
-          the system will generate RDFa 1.0 content.  If set to "1.1" it will
-          generate RDFa 1.1 content.
+          the generated specification.  The triples generated use vocabulary items from dcterms, 
+          foaf, bibo, and w3p.  The parameter defaults to "1.1".  If set to "1.0"
+          the system will generate (old, depecated) RDFa 1.0 content.  If set to "1.1" it will
+          generate RDFa 1.1 content.  If set to "false" then no RDFa will be embedded in the document.
         </dd>
         <dt>noIDLSorting</dt>
         <dd>
@@ -890,7 +891,8 @@ function updateExample(doc, content) {
         <p>
           The solution that is used here is that you hit the <code>Ctrl+Shift+Alt+S</code> key combination (this is
           subject to change until we agree on an option we all like). That will show a menu offering to either 
-          "Save as HTML", "Save as HTML (Source)", "Save as XHTML", or "Save as XHTML (Source)". You can hit <code>Esc</code> to hide it.
+          "Save as HTML", "Save as HTML (Source)", "Save as XHTML1", "Save as XHTML1 (Source)", "Save as XHTML5", or "Save as XHTML5
+          (Source)". You can hit <code>Esc</code> to hide it.
         </p>
         <p>
           Those options are very similar. The non-source ones open a new window (which may be in a new tab depending
