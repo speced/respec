@@ -83,7 +83,11 @@
         <p>
           {{#unless isIGNote}}
             This document was produced by a group operating under the 
-            <a href='http://www.w3.org/Consortium/Patent-Policy-20040205/'>5 February 2004 W3C Patent Policy</a>.
+            {{#if doRDFa}} 
+                <a id="sotd_patent" about='' rel='w3p:patentRules' href='http://www.w3.org/Consortium/Patent-Policy-20040205/'>5 February 2004 W3C Patent Policy</a>.
+            {{else}}
+                <a href='http://www.w3.org/Consortium/Patent-Policy-20040205/'>5 February 2004 W3C Patent Policy</a>.
+            {{/if}}
           {{/unless}}
           {{#if recNotExpected}}The group does not expect this document to become a W3C Recommendation.{{/if}}
           {{#unless isIGNote}}
