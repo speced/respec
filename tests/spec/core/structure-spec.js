@@ -3,7 +3,7 @@ describe("Core - Structure", function () {
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
-        ,   doRDFa:  false
+//        ,   doRDFa:  false
         }
     ,   body = "<section class='introductory'><h2>INTRO</h2></section>" +
               "<section><h2>ONE</h2><section><h2>TWO</h2><section><h2>THREE</h2><section><h2>FOUR</h2>" +
@@ -23,6 +23,8 @@ describe("Core - Structure", function () {
             var $toc = $("#toc", doc)
             ;
             expect($toc.find("h2").text()).toEqual("Table of Contents");
+            expect($toc.find("h2").attr('role')).toEqual('heading');
+            expect($toc.find("h2").attr('aria-level')).toEqual('1');
             expect($toc.find("> ul > li").length).toEqual(3);
             expect($toc.find("li").length).toEqual(15);
             expect($toc.find("> ul > li a").first().text()).toEqual("1. ONE");
