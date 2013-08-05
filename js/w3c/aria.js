@@ -1,5 +1,6 @@
 // Module w3c/aria
 // Adds wai-aria landmarks and roles to entire document.
+// Introduced by Shane McCarron (shane@aptest.com) from the W3C PFWG
 
 define(
     ["core/utils"], // load this to be sure that the jQuery extensions are loaded
