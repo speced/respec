@@ -28,6 +28,7 @@ define([
         ,   "w3c/informative"
         ,   "core/section-refs"
         ,   "core/id-headers"
+        ,   "w3c/aria"
         ,   "core/remove-respec"
         ,   "core/location-hash"
         ],
