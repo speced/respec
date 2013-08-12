@@ -25,12 +25,17 @@ define(
                 });
                 // ensure head section is labelled
                 $('body', doc).attr('role', 'document') ;
-                $('body', doc).attr('id', 'theDocument') ;
+                $('body', doc).attr('id', 'respecDocument') ;
                 $('div.head', doc).attr('role', 'contentinfo') ;
-                $('div.head', doc).attr('id', 'theHeader') ;
+                $('div.head', doc).attr('id', 'respecHeader') ;
                 if (!conf.noTOC) {
                     // ensure toc is labelled
-                    $('section#toc', doc).attr('role', 'directory') ;
+                    var toc = $('section#toc', doc)
+                                  .find("ul:first");
+                    toc.attr('role', 'directory') ;
+                    if (!toc.attr("id")) {
+                        toc.attr('id', 'respecContents') ;
+                    }
                 }
                 // mark issues and notes with heading
                 var noteNum = 0, issueNum = 0;
