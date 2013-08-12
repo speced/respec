@@ -107,3 +107,27 @@ $ npm test
 [install-phjs]: http://phantomjs.org/download.html
 [install-node]: http://nodejs.org/download/
 [npm]: https://npmjs.org/
+
+### Building ReSpec
+
+Normally, producing a build of ReSpec should not be necessary for anyone, unless you're on the core
+development team. Certrainly don't bother with this if you are providing pull requests. But on occasion it
+can be useful in order to debug a painful corner-case, so here are the instructions. This not being something
+normally exposed to the world, they are a bit convoluted (and may be simplified).
+
+1. Make sure you are up to date and on the develop branch (git up; git checkout develop)
+2. You will need to have [git flow](https://github.com/nvie/gitflow)
+3. Get the current version (grep version package.json) and increment it in your head (or, you know, on a piece 
+of paper).
+4. Start a new release in git flow using v$NEW_VERSION as the name, e.g.
+"git flow release start v3.1.61" if you are currently on 3.1.60.
+5. Update the version in package.json
+6. Run the build script (node tools/build-w3c-common.js). This should respond "OK!" (if not, fix the issue).
+7. Add the new build (git add builds/respec-w3c-common-3.1.61.js).
+8. Commit your changes (git commit -am v3.1.61)
+9. Finish the release git flow (git flow release finish v3.1.61). This should prompt you to enter a message for 
+the tag.
+10. Push everything back to the server (make sure you are pushing at least the develop and gh-pages branches).
+
+That should be all. Normally, within a few minutes the W3C server will have picked up, gzipped, and published
+the latest and greatest version.
