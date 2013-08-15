@@ -13,7 +13,7 @@
     {{#unless isNoTrack}}
       <dt>This version:</dt>
       <dd><a class='u-url' href='{{thisVersion}}'>{{thisVersion}}</a></dd>
-      <dt>Latest published version:</dt>
+      <dt>Latest version:</dt>
       <dd>{{#if latestVersion}}<a href='{{latestVersion}}'>{{latestVersion}}</a>{{else}}none{{/if}}</dd>
     {{/unless}}
     {{#if edDraftURI}}
@@ -39,8 +39,13 @@
       <dd><a {{#if doRDFa}}rel="dcterms:replaces"{{/if}} href='{{prevVersion}}'>{{prevVersion}}</a></dd>
     {{/if}}
     {{#if prevRecURI}}
-      <dt>Latest recommendation:</dt>
-      <dd><a href='{{prevRecURI}}'>{{prevRecURI}}</a></dd>
+      {{#if isRec}}
+          <dt>Previous Recommendation:</dt>
+          <dd><a {{#if doRDFa}}rel="dcterms:replaces"{{/if}} href='{{prevRecURI}}'>{{prevRecURI}}</a></dd>
+      {{else}}
+          <dt>Latest Recommendation:</dt>
+          <dd><a href='{{prevRecURI}}'>{{prevRecURI}}</a></dd>
+      {{/if}}
     {{/if}}
     <dt>Editor{{#if multipleEditors}}s{{/if}}:</dt>
     {{showPeople "Editor" editors}}
