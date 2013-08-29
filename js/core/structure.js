@@ -103,10 +103,11 @@ define(
                     if (!$ul) return;
                     var $sec = $("<section id='toc'/>").append("<h2 class='introductory'>" + i18n[conf.lang || "en"].toc + "</h2>")
                                                        .append($ul);
-                    var $ref = $("#toc", doc);
+                    var $ref = $("#toc", doc), replace = false;
+                    if ($ref) replace = true;
                     if (!$ref.length) $ref = $("#sotd", doc);
                     if (!$ref.length) $ref = $("#abstract", doc);
-                    $ref.after($sec);
+                    replace ? $ref.replaceWith($sec) : $ref.after($sec);
                 }
 
                 // Update all anchors with empty content that reference a section ID
