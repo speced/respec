@@ -42,15 +42,20 @@ define(
                 $incs.each(function () {
                     var $el = $(this)
                     ,   uri = $el.attr("data-include")
-                    ,   format = $el.attr("data-include-format") || "html";
+                    ,   format = $el.attr("data-include-format") || "html"
+                    ,   replace = !!$el.attr("data-include-replace")
+                    ,   sync = !!$el.attr("data-include-sync")
+                    ;
                     $.ajax({
                         dataType:   format
                     ,   url:        uri
-                    ,   success:    function (data, status, xhr) {
+                    ,   async:      !sync
+                    ,   success:    function (data) {
                             if (data) {
                                 var flist = $el.attr("data-oninclude");
                                 if (flist) data = utils.runTransforms(data, flist, uri);
-                                format === "text" ? $el.text(data) : $el.html(data);
+                                if (replace) $el.replaceWith(format === "text" ? doc.createTextNode(data) : data);
+                                else format === "text" ? $el.text(data) : $el.html(data);
                             }
                             finish($el);
                         }
