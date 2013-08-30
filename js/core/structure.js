@@ -117,7 +117,7 @@ define(
                     var id = $a.attr("href").slice(1);
                     if (secMap[id]) {
                         $a.addClass('sec-ref');
-                        $a.html(secMap[id]);
+                        $a.html(($a.hasClass("sectionRef") ? "section " : "") + secMap[id]);
                     }
                 });
 

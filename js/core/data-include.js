@@ -28,6 +28,8 @@ define(
                         $el.removeAttr("data-include");
                         $el.removeAttr("data-oninclude");
                         $el.removeAttr("data-include-format");
+                        $el.removeAttr("data-include-replace");
+                        $el.removeAttr("data-include-sync");
                         len--;
                         if (len <= 0) {
                             msg.pub("end", "w3c/data-include");
