@@ -65,6 +65,13 @@ describe("Core - WebIDL", function () {
         expect($ctor1.find(".idlParam").length).toEqual(2);
         expect($ctor1.find(".idlParam:contains('sequence')").length).toEqual(1);
         expect($ctor1.find(".idlParam").first().find(".idlParamType > a").text()).toEqual("boolean");
+
+        $target = $("#ctor-noea", doc);
+        text =  "[ Constructor]\n" +
+                "interface SuperStar {\n" +
+                "};";
+        expect($target.text()).toEqual(text);
+
     });
 
     it("should handle named constructors", function () {
