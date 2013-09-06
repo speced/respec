@@ -28,6 +28,8 @@ define(
                         $el.removeAttr("data-include");
                         $el.removeAttr("data-oninclude");
                         $el.removeAttr("data-include-format");
+                        $el.removeAttr("data-include-replace");
+                        $el.removeAttr("data-include-sync");
                         len--;
                         if (len <= 0) {
                             msg.pub("end", "w3c/data-include");
@@ -42,15 +44,20 @@ define(
                 $incs.each(function () {
                     var $el = $(this)
                     ,   uri = $el.attr("data-include")
-                    ,   format = $el.attr("data-include-format") || "html";
+                    ,   format = $el.attr("data-include-format") || "html"
+                    ,   replace = !!$el.attr("data-include-replace")
+                    ,   sync = !!$el.attr("data-include-sync")
+                    ;
                     $.ajax({
                         dataType:   format
                     ,   url:        uri
-                    ,   success:    function (data, status, xhr) {
+                    ,   async:      !sync
+                    ,   success:    function (data) {
                             if (data) {
                                 var flist = $el.attr("data-oninclude");
                                 if (flist) data = utils.runTransforms(data, flist, uri);
-                                format === "text" ? $el.text(data) : $el.html(data);
+                                if (replace) $el.replaceWith(format === "text" ? doc.createTextNode(data) : data);
+                                else format === "text" ? $el.text(data) : $el.html(data);
                             }
                             finish($el);
                         }
