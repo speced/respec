@@ -43,7 +43,7 @@ describe("W3C — Headers", function () {
     it("should take shortName into account", function () {
         loadWithConfig({ specStatus: "REC", shortName: "xxx" }, function ($ifr) {
             expect($("dt:contains('This version:')", $ifr[0].contentDocument).next("dd").text()).toMatch(/\/REC-xxx-/);
-            expect($("dt:contains('Latest version:')", $ifr[0].contentDocument).next("dd").text()).toMatch(/\/TR\/xxx\//);
+            expect($("dt:contains('Latest published version:')", $ifr[0].contentDocument).next("dd").text()).toMatch(/\/TR\/xxx\//);
         });
     });
 
@@ -264,7 +264,7 @@ describe("W3C — Headers", function () {
             expect($(".head .copyright a[href='https://www.w3.org/community/about/agreements/fsa/']", $ifr[0].contentDocument).length).toEqual(1);
             expect($(".head h2", $ifr[0].contentDocument).text()).toMatch(/Final Business Group Specification/);
             expect($("dt:contains('This version:')", $ifr[0].contentDocument).next("dd").text()).toMatch(/http:\/\/THIS/);
-            expect($("dt:contains('Latest version:')", $ifr[0].contentDocument).next("dd").text()).toMatch(/http:\/\/LATEST/);
+            expect($("dt:contains('Latest published version:')", $ifr[0].contentDocument).next("dd").text()).toMatch(/http:\/\/LATEST/);
             var $sotd = $("#sotd", $ifr[0].contentDocument);
             expect($sotd.find("a[href='http://WG']").length).toEqual(1);
             expect($sotd.find("a:contains(WGNAME)").length).toEqual(1);
