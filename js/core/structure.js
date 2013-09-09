@@ -104,7 +104,7 @@ define(
                     var $sec = $("<section id='toc'/>").append("<h2 class='introductory'>" + i18n[conf.lang || "en"].toc + "</h2>")
                                                        .append($ul);
                     var $ref = $("#toc", doc), replace = false;
-                    if ($ref) replace = true;
+                    if ($ref.length) replace = true;
                     if (!$ref.length) $ref = $("#sotd", doc);
                     if (!$ref.length) $ref = $("#abstract", doc);
                     replace ? $ref.replaceWith($sec) : $ref.after($sec);
