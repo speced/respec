@@ -26,7 +26,6 @@ define([
         ,   "core/fix-headers"
         ,   "core/structure"
         ,   "w3c/informative"
-        ,   "core/section-refs"
         ,   "core/id-headers"
         ,   "w3c/aria"
         ,   "core/remove-respec"

@@ -43,7 +43,9 @@ define(
                     if (obj.extendedAttributes) {
                         ret += idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>" +
                                (typeof ctor === 'string' && ctor.length ? ",\n" + ctor : "") + "]" + (nl ? "\n" : " ");
-                    }
+                    } else if (typeof ctor === 'string' && ctor.length) {
+			ret += idn(indent) + "[" + ctor + "]" + (nl ? "\n" : " ");
+		    }
                     return new Handlebars.SafeString(ret);
                 });
                 Handlebars.registerHelper("param", function (obj, children) {
