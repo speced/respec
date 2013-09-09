@@ -64,10 +64,10 @@
 //  - subjectPrefix: the string that is expected to be used as a subject prefix when posting to the mailing
 //      list of the group.
 //  - otherLinks: an array of other links that you might want in the header (e.g., link github, twitter, etc).
-//         Example of usage: [{key: "foo", href:"http://b"}, {key: "bar", href:"http://"}]. 
+//         Example of usage: [{key: "foo", href:"http://b"}, {key: "bar", href:"http://"}].
 //         Allowed values are:
 //          - key: the key for the <dt> (e.g., "Bug Tracker"). Required.
-//          - value: The value that will appear in the <dd> (e.g., "GitHub"). Optional. 
+//          - value: The value that will appear in the <dd> (e.g., "GitHub"). Optional.
 //          - href: a URL for the value (e.g., "http://foo.com/issues"). Optional.
 //          - class: a string representing CSS classes. Optional.
 
@@ -84,7 +84,7 @@ define(
         Handlebars.registerHelper("showPeople", function (name, items) {
             // stuff to handle RDFa
             var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "";
-            if (this.doRDFa != false) {
+            if (this.doRDFa !== false) {
                 if (name === "Editor") {
                     re = " rel='bibo:editor'";
                     if (this.doRDFa !== "1.0") re += " inlist=''";
@@ -101,10 +101,10 @@ define(
             var ret = "";
             for (var i = 0, n = items.length; i < n; i++) {
                 var p = items[i];
-                if (this.doRDFa != false ) ret += "<dd class='p-author h-card vcard' " + re +"><span" + rp + ">";
+                if (this.doRDFa !== false ) ret += "<dd class='p-author h-card vcard' " + re +"><span" + rp + ">";
                 else             ret += "<dd class='p-author h-card vcard'>";
                 if (p.url) {
-                    if (this.doRDFa != false ) {
+                    if (this.doRDFa !== false ) {
                         ret += "<a class='u-url url p-name fn' " + rpu + rn + " content='" + p.name +  "' href='" + p.url + "'>" + p.name + "</a>";
                     }
                     else {
@@ -123,7 +123,7 @@ define(
                     ret += ", <span class='ed_mailto'><a class='u-email email' " + rm + " href='mailto:" + p.mailto + "'>" + p.mailto + "</a></span>";
                 }
                 if (p.note) ret += " (" + p.note + ")";
-                if (this.doRDFa != false ) ret += "</span>\n";
+                if (this.doRDFa !== false ) ret += "</span>\n";
                 ret += "</dd>\n";
             }
             return new Handlebars.SafeString(ret);
@@ -193,7 +193,7 @@ define(
         ,   run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/headers");
 
-                if (conf.doRDFa != false) {
+                if (conf.doRDFa !== false) {
                     if (conf.doRDFa === undefined) {
                         conf.doRDFa = '1.1';
                     }
@@ -288,7 +288,7 @@ define(
                 }
                 conf.showThisVersion =  (!conf.isNoTrack || conf.isTagFinding);
                 conf.showPreviousVersion = (conf.specStatus !== "FPWD" && conf.specStatus !== "FPLC" && conf.specStatus !== "ED" &&
-                                           !conf.isNoTrack && !conf.noRecTrack);
+                                           !conf.isNoTrack);
                 if (conf.isTagFinding) conf.showPreviousVersion = conf.previousPublishDate ? true : false;
                 conf.notYetRec = (conf.isRecTrack && conf.specStatus !== "REC");
                 conf.isRec = (conf.isRecTrack && conf.specStatus === "REC");
