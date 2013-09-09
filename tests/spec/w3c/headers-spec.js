@@ -198,10 +198,10 @@ describe("W3C — Headers", function () {
     // prevRecShortname & prevRecURI
     it("should take prevRecShortname and prevRecURI into account", function () {
         loadWithConfig({ prevRecURI: "URI" }, function ($ifr) {
-            expect($("dt:contains('Latest recommendation:')", $ifr[0].contentDocument).next("dd").text()).toEqual("URI");
+            expect($("dt:contains('Latest Recommendation:')", $ifr[0].contentDocument).next("dd").text()).toEqual("URI");
         });
         loadWithConfig({ prevRecShortname: "SN" }, function ($ifr) {
-            expect($("dt:contains('Latest recommendation:')", $ifr[0].contentDocument).next("dd").text())
+            expect($("dt:contains('Latest Recommendation:')", $ifr[0].contentDocument).next("dd").text())
                 .toEqual("http://www.w3.org/TR/SN");
         });
     });

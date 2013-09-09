@@ -39,8 +39,13 @@
       <dd><a {{#if doRDFa}}rel="dcterms:replaces"{{/if}} href='{{prevVersion}}'>{{prevVersion}}</a></dd>
     {{/if}}
     {{#if prevRecURI}}
-      <dt>Latest recommendation:</dt>
-      <dd><a href='{{prevRecURI}}'>{{prevRecURI}}</a></dd>
+      {{#if isRec}}
+          <dt>Previous Recommendation:</dt>
+          <dd><a {{#if doRDFa}}rel="dcterms:replaces"{{/if}} href='{{prevRecURI}}'>{{prevRecURI}}</a></dd>
+      {{else}}
+          <dt>Latest Recommendation:</dt>
+          <dd><a href='{{prevRecURI}}'>{{prevRecURI}}</a></dd>
+      {{/if}}
     {{/if}}
     <dt>Editor{{#if multipleEditors}}s{{/if}}:</dt>
     {{showPeople "Editor" editors}}
