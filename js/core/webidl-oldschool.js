@@ -928,10 +928,10 @@ define(
                                             if (prm.defaultValue) {
                                                 code.innerHTML += " = " + prm.defaultValue;
                                             }
-                                            if (prm.nullable) sn.element("td", { "class": "prmNullTrue" }, tr, "\u2714");
-                                            else              sn.element("td", { "class": "prmNullFalse" }, tr, "\u2718");
-                                            if (prm.optional) sn.element("td", { "class": "prmOptTrue" }, tr, "\u2714");
-                                            else              sn.element("td", { "class": "prmOptFalse" }, tr, "\u2718");
+                                            if (prm.nullable) sn.element("td", { "class": "prmNullTrue" }, tr, $("<span role='img' aria-label='True'>\u2714</span>"));
+                                            else              sn.element("td", { "class": "prmNullFalse" }, tr, $("<span role='img' aria-label='False'>\u2718</span>"));
+                                            if (prm.optional) sn.element("td", { "class": "prmOptTrue" }, tr,  $("<span role='img' aria-label='True'>\u2714</span>"));
+                                            else              sn.element("td", { "class": "prmOptFalse" }, tr, $("<span role='img' aria-label='False'>\u2718</span>"));
                                             var cnt = prm.description ? [prm.description] : "";
                                             sn.element("td", { "class": "prmDesc" }, tr, cnt);
                                         }
@@ -1002,8 +1002,8 @@ define(
                                             var tr = sn.element("tr", {}, table);
                                             sn.element("td", { "class": "excName" }, tr, [sn.element("a", {}, null, exc.id)]);
                                             ["onGet", "onSet"].forEach(function (gs) {
-                                                if (exc[gs]) sn.element("td", { "class": "excGetSetTrue" }, tr, "\u2714");
-                                                else         sn.element("td", { "class": "excGetSetFalse" }, tr, "\u2718");
+                                                if (exc[gs]) sn.element("td", { "class": "excGetSetTrue" }, tr, $("<span role='img' aria-label='True'>\u2714</span>"));
+                                                else         sn.element("td", { "class": "excGetSetFalse" }, tr, $("<span role='img' aria-label='False'>\u2718</span>"));
                                             });
                                             var dtd = sn.element("td", { "class": "excDesc" }, tr);
                                             if (exc.type == "simple") {
