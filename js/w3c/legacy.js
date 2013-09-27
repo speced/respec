@@ -316,6 +316,7 @@ var sn;
                     out += '<' + ename ;
                     for (var i = 0; i < node.attributes.length; i++) {
                         var atn = node.attributes[i];
+                        if (/^\d+$/.test(atn.name)) continue;
                         out += " " + atn.name + "=\"" + pRef._esc(atn.value) + "\"";
                     }
                     if (selfClosing[ename]) {
