@@ -1,3 +1,4 @@
+/*global respecEvents */
 
 // Module core/ui
 // Handles the ReSpec UI
@@ -20,6 +21,33 @@ define(
         var $modal
         ,   errors = []
         ,   warnings = []
+        ,   buttons = {}
+        ,   $respecButton
+        ,   errWarn = function (msg, arr, butName, bg, title) {
+                arr.push(msg);
+                if (!buttons[butName]) {
+                    buttons[butName] = $("<button></button>")
+                                            .css({
+                                                background:     bg
+                                            ,   color:          "#fff"
+                                            ,   fontWeight:     "bold"
+                                            ,   border:         "none"
+                                            ,   borderRadius:   "5px"
+                                            ,   marginLeft:     "5px"
+                                            })
+                                            .insertAfter($respecButton)
+                                            .click(function () {
+                                                var $ul = $("<ol></ol>");
+                                                for (var i = 0, n = arr.length; i < n; i++) {
+                                                    var err = arr[i];
+                                                    $("<li></li>").text(err).appendTo($ul);
+                                                }
+                                                ui.freshModal(title, $ul);
+                                            })
+                                            ;
+                }
+                buttons[butName].text(arr.length);
+            }
         ;
         var ui = {
             run:    function (conf, doc, cb, msg) {
@@ -34,18 +62,18 @@ define(
                                 })
                                 .appendTo($("body", doc))
                                 ;
-                $("<button>ReSpec</button>")
-                    .css({
-                        background:     "#fff"
-                    ,   fontWeight:     "bold"
-                    ,   border:         "1px solid #ccc"
-                    ,   borderRadius:   "5px"
-                    })
-                    .click(function () {
-                        $menu.toggle();
-                    })
-                    .appendTo($div)
-                    ;
+                $respecButton = $("<button>ReSpec</button>")
+                                    .css({
+                                        background:     "#fff"
+                                    ,   fontWeight:     "bold"
+                                    ,   border:         "1px solid #ccc"
+                                    ,   borderRadius:   "5px"
+                                    })
+                                    .click(function () {
+                                        $menu.toggle();
+                                    })
+                                    .appendTo($div)
+                                    ;
                 $menu.appendTo($div);
                 msg.pub("end", "core/ui");
                 cb();
@@ -70,14 +98,10 @@ define(
                     ;
             }
         ,   error:  function (msg) {
-                errors.push(msg);
-                // add a pill if it's not there
-                // increment its counter
-                // clicking the pill shows the modal with list of errors
+                errWarn(msg, errors, "error", "#c00", "Errors");
             }
         ,   warning:  function (msg) {
-                warnings.push(msg);
-                // same as above
+                errWarn(msg, warnings, "warning", "#9c0", "Warnings");
             }
         ,   freshModal: function (title, content) {
                 if ($modal) $modal.remove();
@@ -129,6 +153,12 @@ define(
                     ;
             }
         };
+        if (window.respecEvents) respecEvents.sub("error", function (details) {
+            ui.error(details);
+        });
+        if (window.respecEvents) respecEvents.sub("warn", function (details) {
+            ui.warning(details);
+        });
         return ui;
     }
 );

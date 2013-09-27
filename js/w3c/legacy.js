@@ -4,7 +4,7 @@
     bitwise: false,
     boss:   true
 */
-/*global berjon, respecEvent, shortcut, respecConfig, Document */
+/*global berjon, respecEvents, shortcut, respecConfig, Document */
 
 // RESPEC
 var sn;
@@ -13,40 +13,11 @@ var sn;
         berjon.biblio = payload;
     };
     if (typeof berjon === 'undefined') window.berjon = {};
-    function _errEl () {
-        var id = "respec-err";
-        var err = document.getElementById(id);
-        if (err) return err.firstElementChild.nextElementSibling;
-        err = sn.element("div",
-                            { id: id,
-                              style: "position: fixed; width: 350px; top: 10px; right: 10px; border: 3px double #f00; background: #fff",
-                              "class": "removeOnSave" },
-                            document.body);
-
-        var hide = sn.element("p", {
-            style: "float: right; margin: 2px; text-decoration: none"
-        }, err);
-
-        sn.text('[', hide);
-
-        var a = sn.element("a", { href: "#" }, hide, 'x');
-
-        a.onclick = function() {
-            document.getElementById(id).style.display = 'none';
-            return false;
-        };
-
-        sn.text(']', hide);
-
-        return sn.element("ul", { style: "clear: both"}, err);
-    }
     function error (str) {
-        if (window.respecEvent) respecEvent.pub("error", str);
-        sn.element("li", { style: "color: #c00" }, _errEl(), str);
+        if (window.respecEvents) respecEvents.pub("error", str);
     }
     function warning (str) {
-        if (window.respecEvent) respecEvent.pub("warn", str);
-        sn.element("li", { style: "color: #666" }, _errEl(), str);
+        if (window.respecEvents) respecEvents.pub("warn", str);
     }
     berjon.respec = function () {};
     berjon.respec.prototype = {
@@ -281,7 +252,6 @@ var sn;
             str += ">\n";
             str += "<html";
             var ats = document.documentElement.attributes;
-            var prefixAtr = '' ;
 
             var hasxmlns = false;
             for (var i = 0; i < ats.length; i++) {
@@ -449,7 +419,7 @@ var sn;
         },
 
         // --- INLINE PROCESSING ----------------------------------------------------------------------------------
-        bibref:    function (conf, doc, cb, msg) {
+        bibref:    function (conf) {
             // this is in fact the bibref processing portion
             var badrefs = {}
             ,   badrefcount = 0
@@ -651,7 +621,7 @@ var sn;
                 }
                 return candidates;
             };
-            assignee.evaluate = function (xPathExpression, contextNode, resolverCallback, type, result) {
+            assignee.evaluate = function (xPathExpression, contextNode) {
                 // "ancestor::x:section|ancestor::section", sec
                 if (xPathExpression == "ancestor::x:section|ancestor::section") // e.g., "section :scope" (but matching section)
                     return XPathResult(findElementsContainingContextNode("section", contextNode));
