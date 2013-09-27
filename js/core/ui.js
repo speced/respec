@@ -4,6 +4,20 @@
 // Handles the ReSpec UI
 
 
+// XXX TODO
+//  - move all the saving code from legacy to ui/save-html
+//  - make a decent menu for save-html
+//  - try saving with FileSaver or <a download>
+//  - allow addCommand to get a keyboard shortcut
+//  - replace shortcut with something more recent (probably)
+//  - wire in Esc for modals
+//  - go through code adding errors and warnings wherever possible
+//  - look at other UI things to add
+//      - list issues
+//      - lint: validator, link checker, check WebIDL, ID references
+//      - save to GitHub
+//  - once we have something decent, merge, ship as 3.2.0
+
 define(
     ["jquery"],
     function ($) {
@@ -101,7 +115,7 @@ define(
                 errWarn(msg, errors, "error", "#c00", "Errors");
             }
         ,   warning:  function (msg) {
-                errWarn(msg, warnings, "warning", "#9c0", "Warnings");
+                errWarn(msg, warnings, "warning", "#f60", "Warnings");
             }
         ,   freshModal: function (title, content) {
                 if ($modal) $modal.remove();
@@ -109,7 +123,7 @@ define(
                 ,   $overlay = $("<div id='respec-overlay' class='removeOnSave'></div>").hide()
                 ,   $modal = $("<div id='respec-modal' class='removeOnSave'><h3></h3><div class='content'></div></div>").hide()
                 ,   close = function () {
-                        $overlay.fadeOut(200);
+                        $overlay.fadeOut(200, function () { $overlay.remove(); });
                         $modal.remove();
                         $modal = null;
                     }
