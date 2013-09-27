@@ -1,6 +1,18 @@
+/*global respecVersion */
+
+// this is only set in a build, not at all in the dev environment
+if ("respecVersion" in window && respecVersion) {
+    require.config({
+        paths:  {
+            "ui":   "https://darobin.github.io/respec/js/ui"
+        }
+    });
+}
+
 define([
             "domReady"
         ,   "core/base-runner"
+        ,   "core/ui"
         ,   "core/override-configuration"
         ,   "core/default-root-attr"
         // ,   "core/local-biblio"
@@ -30,11 +42,12 @@ define([
         ,   "core/remove-respec"
         ,   "core/location-hash"
         ],
-        function (domReady, runner) {
+        function (domReady, runner, ui) {
             var args = Array.prototype.slice.call(arguments)
             ,   hasRun = false;
             domReady(function () {
                 hasRun = true;
+                ui.addCommand("Save Snapshot", "ui/save-html");
                 runner.runAll(args);
             });
             // the below can trigger a run, assuming a way of starting this paused
