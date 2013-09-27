@@ -22,6 +22,7 @@
     var handlers = {}
     ,   embedded = (top !== self)
     ;
+    if (!("respecConfig" in window)) window.respecConfig = {};
     GLOBAL.respecEvents = {
         pub:    function (topic) {
             var args = Array.prototype.slice.call(arguments);
@@ -90,7 +91,6 @@ define(
                 
                 // the first in the plugs is going to be us
                 plugs.shift();
-                if (!("respecConfig" in window)) window.respecConfig = {};
 
                 // the base URL is used by some modules
                 var $scripts = $("script"),
