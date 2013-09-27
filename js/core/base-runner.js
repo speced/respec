@@ -69,7 +69,7 @@ if (window.console) {
 
 
 define(
-    [],
+    ["jquery"],
     function () {
         return {
             runAll:    function (plugs) {
@@ -81,8 +81,10 @@ define(
                 });
                 respecEvents.sub("end", function () {
                     pluginStack--;
-                    if (!pluginStack) respecEvents.pub("end-all");
-                    document.respecDone = true;
+                    if (!pluginStack) {
+                        respecEvents.pub("end-all");
+                        document.respecDone = true;
+                    }
                 });
                 respecEvents.pub("start", "core/base-runner");
                 
