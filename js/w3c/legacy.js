@@ -255,7 +255,8 @@ var sn;
                     $(item).renameElement("div").addClass(item);
                 });
                 $("time").renameElement("span").addClass("time").removeAttr('datetime');
-                $("div[role]").removeAttr('role').removeAttr('aria-level') ;
+                $("[role]").removeAttr('role') ;
+                $("[aria-level]").removeAttr('aria-level') ;
                 $("style:not([type])").attr("type", "text/css");
                 $("script:not([type])").attr("type", "text/javascript");
             }

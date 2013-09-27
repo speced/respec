@@ -1,35 +1,32 @@
 /**
- * @license RequireJS domReady 1.0.0 Copyright (c) 2010-2011, The Dojo Foundation All Rights Reserved.
+ * @license RequireJS domReady 2.0.1 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
- * see: http://github.com/jrburke/requirejs for details
+ * see: http://github.com/requirejs/domReady for details
  */
-/*jslint strict: false, plusplus: false */
+/*jslint */
 /*global require: false, define: false, requirejs: false,
   window: false, clearInterval: false, document: false,
   self: false, setInterval: false */
 
 
 define(function () {
-    var isBrowser = typeof window !== "undefined" && window.document,
+    'use strict';
+
+    var isTop, testDiv, scrollIntervalId,
+        isBrowser = typeof window !== "undefined" && window.document,
         isPageLoaded = !isBrowser,
         doc = isBrowser ? document : null,
-        readyCalls = [],
-        readyLoaderCalls = [],
-        //Bind to a specific implementation, but if not there, try a
-        //a generic one under the "require" name.
-        req = requirejs || require || {},
-        oldResourcesReady = req.resourcesReady,
-        scrollIntervalId;
+        readyCalls = [];
 
     function runCallbacks(callbacks) {
-        for (var i = 0, callback; (callback = callbacks[i]); i++) {
-            callback(doc);
+        var i;
+        for (i = 0; i < callbacks.length; i += 1) {
+            callbacks[i](doc);
         }
     }
 
     function callReady() {
-        var callbacks = readyCalls,
-            loaderCallbacks = readyLoaderCalls;
+        var callbacks = readyCalls;
 
         if (isPageLoaded) {
             //Call the DOM ready callbacks
@@ -37,32 +34,7 @@ define(function () {
                 readyCalls = [];
                 runCallbacks(callbacks);
             }
-
-            //Now handle DOM ready + loader ready callbacks.
-            if (req.resourcesDone && loaderCallbacks.length) {
-                readyLoaderCalls = [];
-                runCallbacks(loaderCallbacks);
-            }
         }
-    }
-
-    /**
-     * Add a method to require to get callbacks if there are loader resources still
-     * being loaded. If so, then hold off calling "withResources" callbacks.
-     *
-     * @param {Boolean} isReady: pass true if all resources have been loaded.
-     */
-    if ('resourcesReady' in req) {
-        req.resourcesReady = function (isReady) {
-            //Call the old function if it is around.
-            if (oldResourcesReady) {
-                oldResourcesReady(isReady);
-            }
-
-            if (isReady) {
-                callReady();
-            }
-        };
     }
 
     /**
@@ -88,30 +60,35 @@ define(function () {
         } else if (window.attachEvent) {
             window.attachEvent("onload", pageLoaded);
 
-            //DOMContentLoaded approximation, as found by Diego Perini:
-            //http://javascript.nwbox.com/IEContentLoaded/
-            if (self === self.top) {
+            testDiv = document.createElement('div');
+            try {
+                isTop = window.frameElement === null;
+            } catch (e) {}
+
+            //DOMContentLoaded approximation that uses a doScroll, as found by
+            //Diego Perini: http://javascript.nwbox.com/IEContentLoaded/,
+            //but modified by other contributors, including jdalton
+            if (testDiv.doScroll && isTop && window.external) {
                 scrollIntervalId = setInterval(function () {
                     try {
-                        //From this ticket:
-                        //http://bugs.dojotoolkit.org/ticket/11106,
-                        //In IE HTML Application (HTA), such as in a selenium test,
-                        //javascript in the iframe can't see anything outside
-                        //of it, so self===self.top is true, but the iframe is
-                        //not the top window and doScroll will be available
-                        //before document.body is set. Test document.body
-                        //before trying the doScroll trick.
-                        if (document.body) {
-                            document.documentElement.doScroll("left");
-                            pageLoaded();
-                        }
+                        testDiv.doScroll();
+                        pageLoaded();
                     } catch (e) {}
                 }, 30);
             }
         }
 
         //Check if document already complete, and if so, just trigger page load
-        //listeners.
+        //listeners. Latest webkit browsers also use "interactive", and
+        //will fire the onDOMContentLoaded before "interactive" but not after
+        //entering "interactive" or "complete". More details:
+        //http://dev.w3.org/html5/spec/the-end.html#the-end
+        //http://stackoverflow.com/questions/3665561/document-readystate-of-interactive-vs-ondomcontentloaded
+        //Hmm, this is more complicated on further use, see "firing too early"
+        //bug: https://github.com/requirejs/domReady/issues/1
+        //so removing the || document.readyState === "interactive" test.
+        //There is still a window.onload binding that should get fired if
+        //DOMContentLoaded is missed.
         if (document.readyState === "complete") {
             pageLoaded();
         }
@@ -133,25 +110,7 @@ define(function () {
         return domReady;
     }
 
-    /**
-     * Callback that waits for DOM ready as well as any outstanding
-     * loader resources. Useful when there are implicit dependencies.
-     * This method should be avoided, and always use explicit
-     * dependency resolution, with just regular DOM ready callbacks.
-     * The callback passed to this method will be called immediately
-     * if the DOM and loader are already ready.
-     * @param {Function} callback
-     */
-    domReady.withResources = function (callback) {
-        if (isPageLoaded && req.resourcesDone) {
-            callback(doc);
-        } else {
-            readyLoaderCalls.push(callback);
-        }
-        return domReady;
-    };
-
-    domReady.version = '1.0.0';
+    domReady.version = '2.0.1';
 
     /**
      * Loader Plugin API method

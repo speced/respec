@@ -1,9 +1,13 @@
 describe("Core - Utils", function () {
-    var MAXOUT = 5000, utils;
+    var MAXOUT = 5000, utils, $;
 
     beforeEach(function () {
         runs(function () {
-            require(["../js/core/utils"], function (u) { utils = u; });
+            require.config({ baseUrl: "../js/" });
+            require(["jquery", "core/utils"], function (jq, u) {
+                $ = jq;
+                utils = u;
+            });
         });
         waitsFor(function () { return utils; }, MAXOUT);
     });
