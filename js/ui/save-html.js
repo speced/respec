@@ -3,6 +3,8 @@
 // Saves content to HTML when asked to
 
 // XXX need to remove stuff that's removed on save
+// $(".removeOnSave", doc).remove();
+
 
 define(
     ["jquery", "core/utils"],
@@ -74,6 +76,8 @@ define(
             }
             // convert the document to a string (HTML)
         ,   toString:    function () {
+                doc = doc.cloneNode(true);
+                $(".removeOnSave", doc).remove();
                 var str = "<!DOCTYPE html"
                 ,   dt = doc.doctype;
                 if (dt && dt.publicId) str += " PUBLIC '" + dt.publicId + "' '" + dt.systemId + "'";
@@ -98,6 +102,8 @@ define(
             }
             // convert the document to XML, pass 5 as mode for XHTML5
         ,   toXML:        function (mode) {
+                doc = doc.cloneNode(true);
+                $(".removeOnSave", doc).remove();
                 if (mode !== 5) {
                     // not doing xhtml5 so rip out the html5 stuff
                     $.each("section figcaption figure aside".split(" "), function (i, item) {
