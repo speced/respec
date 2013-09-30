@@ -8808,3 +8808,5 @@ shortcut = {
 	}
 };
 define("shortcut", function(){});
+
+require(['profile-w3c-common']);
