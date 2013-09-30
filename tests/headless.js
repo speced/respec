@@ -24,6 +24,7 @@ function runPhantom () {
 }
 
 if (!process.env.TRAVIS) {
+    console.log("dump:", JSON.stringify(process.env, null, 4));
     builder.buildW3C(false, function () {
         console.log("Script built");
         runPhantom();

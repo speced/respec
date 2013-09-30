@@ -34,13 +34,18 @@ function build (options, cb) {
     r.optimize(config, function () {
         console.log("callback from optimize");
         // add header
-        fs.writeFileSync(config.out
-                    ,   "/* ReSpec " + version +
-                        " - Robin Berjon, http://berjon.com/ (@robinberjon) */\n" +
-                        "/* Documentation: http://w3.org/respec/. */\n" +
-                        "/* See original source for licenses: https://github.com/darobin/respec. */\n" +
-                        fs.readFileSync(config.out, "utf8") + "\nrequire(['profile-w3c-common']);\n"
-                    ,   { encoding: "utf8" });
+        try {
+            fs.writeFileSync(config.out
+                        ,   "/* ReSpec " + version +
+                            " - Robin Berjon, http://berjon.com/ (@robinberjon) */\n" +
+                            "/* Documentation: http://w3.org/respec/. */\n" +
+                            "/* See original source for licenses: https://github.com/darobin/respec. */\n" +
+                            fs.readFileSync(config.out, "utf8") + "\nrequire(['profile-w3c-common']);\n"
+                        ,   { encoding: "utf8" });
+        }
+        catch (e) {
+            console.log("ERROR", e);
+        }
         console.log("about to exit optimize");
         cb();
     });

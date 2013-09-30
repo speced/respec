@@ -9,8 +9,6 @@ var fs   = require("fs")
 ,   versioned = pth.join(builds, "respec-w3c-common-" + version + ".js")
 ;
 
-console.log("dump:", JSON.stringify(process.env, null, 4));
-
 function buildW3C (versionSnapshot, cb) {
     console.log("running with versionSnapshot=", versionSnapshot, latest);
     b.build({ out: latest }, function () {
