@@ -5,9 +5,6 @@
 
 
 // XXX TODO
-//  - allow addCommand to get a keyboard shortcut
-//  - replace shortcut with something more recent (probably)
-//  - wire in Esc for modals
 //  - go through code adding errors and warnings wherever possible
 //  - look at other UI things to add
 //      - list issues
@@ -16,8 +13,8 @@
 //  - once we have something decent, merge, ship as 3.2.0
 
 define(
-    ["jquery"],
-    function ($) {
+    ["jquery", "shortcut"],
+    function ($, shortcut) {
         var $menu = $("<div></div>")
                         .css({
                             background:     "#fff"
@@ -89,10 +86,25 @@ define(
                                     .appendTo($div)
                                     ;
                 $menu.appendTo($div);
+                shortcut.add("Esc", function () {
+                    ui.closeModal();
+                });
+                shortcut.add("Ctrl+Alt+Shift+E", function () {
+                    if (buttons.error) buttons.error.click();
+                });
+                shortcut.add("Ctrl+Alt+Shift+W", function () {
+                    if (buttons.warning) buttons.warning.click();
+                });
                 msg.pub("end", "core/ui");
                 cb();
             }
-        ,   addCommand: function (label, module) {
+        ,   addCommand: function (label, module, keyShort) {
+                var handler = function () {
+                    $menu.hide();
+                    require([module], function (mod) {
+                        mod.show(ui, conf, doc, msg);
+                    });
+                };
                 $("<button></button>")
                     .css({
                         background:     "#fff"
@@ -102,14 +114,10 @@ define(
                     ,   textAlign:      "left"
                     })
                     .text(label)
-                    .click(function () {
-                        $menu.hide();
-                        require([module], function (mod) {
-                            mod.show(ui, conf, doc, msg);
-                        });
-                    })
+                    .click(handler)
                     .appendTo($menu)
                     ;
+                    if (keyShort) shortcut.add(keyShort, handler);
             }
         ,   error:  function (msg) {
                 errWarn(msg, errors, "error", "#c00", "Errors");

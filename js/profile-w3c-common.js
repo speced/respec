@@ -1,13 +1,19 @@
 /*global respecVersion */
 
 // this is only set in a build, not at all in the dev environment
-if ("respecVersion" in window && respecVersion) {
-    require.config({
-        paths:  {
-            "ui":   "https://darobin.github.io/respec/js/ui"
+var requireConfig = {
+    shim:   {
+        "shortcut": {
+            exports:    "shortcut"
         }
-    });
+    }
+};
+if ("respecVersion" in window && respecVersion) {
+    requireConfig.paths = {
+        "ui":   "https://darobin.github.io/respec/js/ui"
+    };
 }
+require.config(requireConfig);
 
 define([
             "domReady"
@@ -47,7 +53,7 @@ define([
             ,   hasRun = false;
             domReady(function () {
                 hasRun = true;
-                ui.addCommand("Save Snapshot", "ui/save-html");
+                ui.addCommand("Save Snapshot", "ui/save-html", "Ctrl+Shift+Alt+S");
                 runner.runAll(args);
             });
             // the below can trigger a run, assuming a way of starting this paused

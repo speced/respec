@@ -5,12 +5,6 @@
 define(
     ["jquery", "core/utils"],
     function ($, utils) {
-        
-        // shortcuts
-        // var obj = this;
-        // shortcut.add("Ctrl+Shift+Alt+S", function () { obj.showSaveOptions(); });
-        // shortcut.add("Esc", function () { obj.hideSaveOptions(); });
-        
         var msg, doc, conf;
         return {
             show:   function (ui, _conf, _doc, _msg) {

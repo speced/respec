@@ -4,7 +4,7 @@
     bitwise: false,
     boss:   true
 */
-/*global berjon, respecEvents, shortcut, respecConfig, Document */
+/*global berjon, respecEvents, respecConfig, Document */
 
 // RESPEC
 var sn;
@@ -24,7 +24,7 @@ var sn;
         loadAndRun:    function (conf, doc, cb, msg) {
             var count = 0;
             var base = this.findBase();
-            var deps = [base + "js/simple-node.js", base + "js/shortcut.js"];
+            var deps = [base + "js/simple-node.js"];
             var obj = this;
 
             function callback() {

@@ -21,10 +21,14 @@ function build (options, cb) {
     ,   paths:  {
             requireLib: "./require"
         ,   simpleNode: "./simple-node"
-        ,   shortcut:   "./shortcut"
+        }
+    ,   shim:   {
+            "shortcut": {
+                exports:    "shortcut"
+            }
         }
     ,   name:       "profile-w3c-common"
-    ,   include:    "requireLib simpleNode shortcut".split(" ")
+    ,   include:    "requireLib simpleNode".split(" ")
     ,   out:        options.out
     ,   inlineText: true
     ,   preserveLicenseComments:    false
