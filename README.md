@@ -1,6 +1,6 @@
 ReSpec
 ======
-[![Build Status](https://travis-ci.org/darobin/respec.png)][travis]
+[![Build Status](https://travis-ci.org/darobin/respec.png?branch=develop)](https://travis-ci.org/darobin/respec)
 
 ReSpec is a JS library that makes it easier to write technical specifications, or documents
 that tend to be technical in nature in general. It was originally designed for the purpose
