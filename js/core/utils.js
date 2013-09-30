@@ -47,6 +47,7 @@ define(
             txt = txt.replace(/^\s+/, "").replace(/\s+$/, "");
             var id = noLC ? txt : txt.toLowerCase();
             id = id.split(/[^\-.0-9a-z_]+/i).join("-").replace(/^-+/, "").replace(/-+$/, "");
+            if (/\.$/.test(id)) id += "x"; // trailing . doesn't play well with jQuery
             if (id.length > 0 && /^[^a-z]/i.test(id)) id = "x" + id;
             if (id.length === 0) id = "generatedID";
             if (pfx) id = pfx + "-" + id;
