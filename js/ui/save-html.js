@@ -2,10 +2,6 @@
 // Module ui/save-html
 // Saves content to HTML when asked to
 
-// XXX need to remove stuff that's removed on save
-// $(".removeOnSave", doc).remove();
-
-
 define(
     ["jquery", "core/utils"],
     function ($, utils) {

@@ -1,9 +1,3 @@
-// these options are there for the XPath emulation code, which uses them
-// they can be dropped when it is (same for global Document)
-/*jshint
-    bitwise: false,
-    boss:   true
-*/
 /*global berjon, respecEvents, respecConfig */
 
 // RESPEC
