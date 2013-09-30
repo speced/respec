@@ -61,20 +61,6 @@ berjon.simpleNode.prototype = {
         return df;
     },
     
-    // --- FINDING STUFF ---
-    findNodes:    function (xpath, context) {
-        if (!context) context = this.doc;
-        var ns = this.ns;
-        var snap = this.doc.evaluate(xpath,
-                                     context,
-                                     function (pfx) { return ns[pfx] || null; },
-                                     XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
-                                     null);
-        var res = [];
-        for (var i = 0; i < snap.snapshotLength; i++) res.push(snap.snapshotItem(i));
-        return res;
-    },
-    
     // --- MANIPULATION ---
     copyChildren:   function (from, to) {
         while (from.childNodes.length) to.appendChild(from.firstChild);
