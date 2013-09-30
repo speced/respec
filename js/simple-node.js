@@ -1,15 +1,7 @@
 /*global berjon*/
 
-// ------------------------------------------------------------------------------------------ //
-//  simple-node.js -- simplified elements creations (based on XML::SimpleNode)
-//  Robin Berjon, <robin at berjon dot org>
-//  v0.01 - 2009-07-29
-// ------------------------------------------------------------------------------------------ //
-
-
 if (typeof(berjon) == "undefined") window.berjon = {};
 berjon.simpleNode = function (ns, doc) {
-    // XXX need to default the xml prefix
     if (!ns) ns = {};
     if (!doc) doc = document;
     this.ns = ns;
@@ -39,18 +31,6 @@ berjon.simpleNode.prototype = {
         return tn;
     },
     
-    comment:    function (txt, parent) {
-        var cmt = this.doc.createComment(txt);
-        if (parent) parent.appendChild(cmt);
-        return cmt;
-    },
-    
-    pi:    function (target, data, parent) {
-        var pi = this.doc.createProcessingInstruction(target, data);
-        if (parent) parent.appendChild(pi);
-        return pi;
-    },
-    
     documentFragment:    function (parent, content) {
         var df = this.doc.createDocumentFragment();
         if (content) {
@@ -59,32 +39,6 @@ berjon.simpleNode.prototype = {
         }
         if (parent) parent.appendChild(df);
         return df;
-    },
-    
-    // --- MANIPULATION ---
-    copyChildren:   function (from, to) {
-        while (from.childNodes.length) to.appendChild(from.firstChild);
-    },
-    
-    copyAttr:   function (from, to) {
-        for (var i = 0; i < from.attributes.length; i++) {
-            var at = from.attributes[i];
-            to.setAttributeNS(at.namespaceURI, at.name, at.value);
-        }
-    },
-    
-    renameEl:   function (el, name) {
-        // we remove, copy, then insert instead of just replacing because it's a *lot*
-        // faster if the copyChildren operation is done while the node is not being displayed
-        var folSib = el.nextSibling;
-        var par = el.parentNode;
-        if (par) par.removeChild(el);
-        var newEl = this.element(name);
-        this.copyAttr(el, newEl);
-        this.copyChildren(el, newEl);
-        // if (el.parentNode) el.parentNode.replaceChild(newEl, el);
-        if (par) par.insertBefore(newEl, folSib);
-        return newEl;
     },
     
     // --- ID MANAGEMENT ---
@@ -129,22 +83,10 @@ berjon.simpleNode.prototype = {
     },
     
     // --- CLASS HANDLING ---
-    hasClass:    function (el, cl) {
-        return this.listClasses(el).indexOf(cl) >= 0;
-    },
-    
     addClass:    function (el, cl) {
         var ls = this.listClasses(el);
         if (ls.indexOf(cl) >= 0) return;
         ls.push(cl);
-        this.setClassList(el, ls);
-    },
-    
-    removeClass:    function (el, cl) {
-        var ls = this.listClasses(el);
-        var idx = ls.indexOf(cl);
-        if (idx < 0) return;
-        ls.splice(idx, 1);
         this.setClassList(el, ls);
     },
     
