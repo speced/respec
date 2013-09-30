@@ -15,10 +15,6 @@ function makeRSDoc (opts, cb) {
         if (opts.title) $("title", destDoc).text(opts.title);
         $body.append(opts.abstract || $("<section id='abstract'><p>test abstract</p></section>"));
         if (opts.body) $body.append(opts.body);
-        // import into iframe
-        // var newNode = destDoc.importNode(destDoc.documentElement, true);
-        // destDoc.replaceChild(newNode, destDoc.documentElement);
-        // inject scripts (it doesn't work through cloning)
         var path = opts.jsPath || "../js/";
         var config = destDoc.createElement("script");
         $(config)
@@ -26,8 +22,11 @@ function makeRSDoc (opts, cb) {
             .addClass("remove");
         $head[0].appendChild(config);
         var loader = destDoc.createElement("script");
+        var loadAttr = (typeof window.callPhantom === 'function')   ?
+                            { src: "/builds/respec-w3c-common.js" } :
+                            { src: path + "require.js", "data-main": path + (opts.profile || "profile-w3c-common" )};
         $(loader)
-            .attr({ src: path + "require.js", "data-main": path + (opts.profile || "profile-w3c-common" )})
+            .attr(loadAttr)
             .addClass("remove");
         $head[0].appendChild(loader);
     });
