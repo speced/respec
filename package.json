@@ -1,6 +1,6 @@
 {
     "name": "respec",
-    "version": "3.1.65",
+    "version": "3.1.66",
     "description": "Specification Edition Support Tool.",
     "main": "index.js",
     "directories": {
@@ -17,6 +17,7 @@
     },
     "author": "Robin Berjon",
     "devDependencies": {
-        "express": "*"
+        "express":      "*"
+    ,   "requirejs":    "2.1.8"
     }
 }
