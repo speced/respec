@@ -5,9 +5,6 @@
 
 
 // XXX TODO
-//  - move all the saving code from legacy to ui/save-html
-//  - make a decent menu for save-html
-//  - try saving with FileSaver or <a download>
 //  - allow addCommand to get a keyboard shortcut
 //  - replace shortcut with something more recent (probably)
 //  - wire in Esc for modals
@@ -33,6 +30,7 @@ define(
                         })
                         ;
         var $modal
+        ,   $overlay
         ,   errors = []
         ,   warnings = []
         ,   buttons = {}
@@ -63,8 +61,10 @@ define(
                 buttons[butName].text(arr.length);
             }
         ;
+        var conf, doc, msg;
         var ui = {
-            run:    function (conf, doc, cb, msg) {
+            run:    function (_conf, _doc, cb, _msg) {
+                conf = _conf, doc = _doc, msg = _msg;
                 msg.pub("start", "core/ui");
                 var $div = $("<div id='respec-ui' class='removeOnSave'></div>", doc)
                                 .css({
@@ -105,7 +105,7 @@ define(
                     .click(function () {
                         $menu.hide();
                         require([module], function (mod) {
-                            mod.show(ui);
+                            mod.show(ui, conf, doc, msg);
                         });
                     })
                     .appendTo($menu)
@@ -117,24 +117,24 @@ define(
         ,   warning:  function (msg) {
                 errWarn(msg, warnings, "warning", "#f60", "Warnings");
             }
+        ,   closeModal: function () {
+                if ($overlay) $overlay.fadeOut(200, function () { $overlay.remove(); $overlay = null; });
+                if (!$modal) return;
+                $modal.remove();
+                $modal = null;
+            }
         ,   freshModal: function (title, content) {
                 if ($modal) $modal.remove();
-                var width = 500
-                ,   $overlay = $("<div id='respec-overlay' class='removeOnSave'></div>").hide()
-                ,   $modal = $("<div id='respec-modal' class='removeOnSave'><h3></h3><div class='content'></div></div>").hide()
-                ,   close = function () {
-                        $overlay.fadeOut(200, function () { $overlay.remove(); });
-                        $modal.remove();
-                        $modal = null;
-                    }
-                ;
+                var width = 500;
+                $overlay = $("<div id='respec-overlay' class='removeOnSave'></div>").hide();
+                $modal = $("<div id='respec-modal' class='removeOnSave'><h3></h3><div class='content'></div></div>").hide();
                 $modal.find("h3").text(title);
                 $modal.find(".content").append(content);
                 $("body")
                     .append($overlay)
                     .append($modal);
                 $overlay
-                    .click(close)
+                    .click(this.closeModal)
                     .css({
                         display:    "block"
                     ,   opacity:    0

@@ -32,4 +32,3 @@ if (!process.env.TRAVIS) {
 else {
     runPhantom();
 }
-
