@@ -9,7 +9,17 @@ var fs   = require("fs")
 ,   versioned = pth.join(builds, "respec-w3c-common-" + version + ".js")
 ;
 
-b.build({ out: latest }, function () {
-    fs.writeFileSync(versioned, fs.readFileSync(latest, "utf8"), { encoding: "utf8" });
-    console.log("OK!");
-});
+function buildW3C (versionSnapshot, cb) {
+    b.build({ out: latest }, function () {
+        if (versionSnapshot) fs.writeFileSync(versioned, fs.readFileSync(latest, "utf8"), { encoding: "utf8" });
+        cb();
+    });
+}
+
+if (require.main === module) {
+    buildW3C(true, function () {
+        console.log("OK!");
+    });
+}
+
+exports.buildW3C = buildW3C;
