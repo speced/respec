@@ -111,6 +111,7 @@ define(
                     ,   borderBottom:   "1px solid #ccc"
                     ,   width:          "100%"
                     ,   textAlign:      "left"
+                    ,   fontSize:       "inherit"
                     })
                     .text(label)
                     .click(handler)
