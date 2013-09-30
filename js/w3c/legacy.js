@@ -16,9 +16,6 @@ var sn;
     function error (str) {
         if (window.respecEvents) respecEvents.pub("error", str);
     }
-    function warning (str) {
-        if (window.respecEvents) respecEvents.pub("warn", str);
-    }
     berjon.respec = function () {};
     berjon.respec.prototype = {
         loadAndRun:    function (conf, doc, cb, msg) {
@@ -157,7 +154,6 @@ var sn;
         // --- METADATA -------------------------------------------------------
         extractConfig:    function () {
             var cfg = respecConfig || {};
-            if (!cfg.diffTool) cfg.diffTool = 'http://www5.aptest.com/standards/htmldiff/htmldiff.pl';
             // note this change - the default is now to inject RDFa 1.1.  You can override it by
             // setting RDFa to false
             if (cfg.doRDFa === undefined) cfg.doRDFa = "1.1";
@@ -191,7 +187,6 @@ var sn;
         bibref:    function (conf) {
             // this is in fact the bibref processing portion
             var badrefs = {}
-            ,   badrefcount = 0
             ,   refs = this.getRefKeys(conf)
             ,   informs = refs.informativeReferences
             ,   norms = refs.normativeReferences
@@ -253,24 +248,19 @@ var sn;
                     } else {
                         if (!badrefs[ref]) badrefs[ref] = 0;
                         badrefs[ref]++;
-                        badrefcount++;
                         dd.innerHTML = "<em>Reference not found.</em>\n";
                     }
                 }
             }
             for (var k in aliases) {
                 if (aliases[k].length > 1) {
-                    warning("[" + k + "] is referenced in " + aliases[k].length + " ways (" + aliases[k].join(", ") + "). This causes duplicate entries in the reference section.");
+                    respecEvents.pub("warn", "[" + k + "] is referenced in " + aliases[k].length + " ways (" + aliases[k].join(", ") + "). This causes duplicate entries in the reference section.");
                 }
             }
 
-            if(badrefcount > 0) {
-                error("Got " + badrefcount + " tokens looking like a reference, not in biblio DB: ");
-                for (var item in badrefs) {
-                    if (badrefs.hasOwnProperty(item)) error("Bad ref: " + item + ", count = " + badrefs[item]);
-                }
+            for (var item in badrefs) {
+                if (badrefs.hasOwnProperty(item)) error("Bad reference: [" + item + "] (appears " + badrefs[item] + " times)");
             }
-
         },
 
         stringifyRef: function(ref) {
@@ -303,15 +293,6 @@ var sn;
             "PR": "W3C Proposed Recommendation",
             "PER": "W3C Proposed Edited Recommendation",
             "REC": "W3C Recommendation"
-        },
-
-        // --- HELPERS --------------------------------------------------------------------------------------------
-        _esc:    function (s) {
-            s = s.replace(/&/g,'&amp;');
-            s = s.replace(/>/g,'&gt;');
-            s = s.replace(/"/g,'&quot;');
-            s = s.replace(/</g,'&lt;');
-            return s;
         }
     };
 }());

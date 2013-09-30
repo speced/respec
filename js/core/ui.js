@@ -3,7 +3,6 @@
 // Module core/ui
 // Handles the ReSpec UI
 
-
 // XXX TODO
 //  - go through code adding errors and warnings wherever possible
 //  - look at other UI things to add

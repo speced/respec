@@ -13,6 +13,7 @@ define(
         return {
             show:   function (ui, _conf, _doc, _msg) {
                 msg = _msg, doc = _doc, conf = _conf;
+                if (!conf.diffTool) conf.diffTool = "http://www5.aptest.com/standards/htmldiff/htmldiff.pl";
                 var supportsDownload = $("<a href='foo' download='x'>A</a>")[0].download === "x"
                 ,   self = this
                 ;
