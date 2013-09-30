@@ -9,11 +9,10 @@ var fs   = require("fs")
 ,   versioned = pth.join(builds, "respec-w3c-common-" + version + ".js")
 ;
 
-console.log("loading build-w3c-common");
-console.log("dump:", version, builds, latest, versioned);
+console.log("dump:", JSON.stringify(process.env, null, 4));
 
 function buildW3C (versionSnapshot, cb) {
-    console.log("running with versionSnapshot=", versionSnapshot);
+    console.log("running with versionSnapshot=", versionSnapshot, latest);
     b.build({ out: latest }, function () {
         console.log("in build cb");
         if (versionSnapshot) fs.writeFileSync(versioned, fs.readFileSync(latest, "utf8"), { encoding: "utf8" });
@@ -24,12 +23,9 @@ function buildW3C (versionSnapshot, cb) {
 }
 
 if (require.main === module) {
-    console.log("running as main");
     buildW3C(true, function () {
         console.log("OK!");
     });
 }
 
 exports.buildW3C = buildW3C;
-
-console.log("end of build-w3c-common file");

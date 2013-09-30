@@ -12,6 +12,7 @@ var fs   = require("fs")
 //  optimize:   none || uglify || uglify2
 //  out:        /path/to/output
 function build (options, cb) {
+    console.log("in build");
     // optimisation settings
     // note that the paths/includes below will need to change in when we drop those
     // older dependencies
@@ -29,7 +30,9 @@ function build (options, cb) {
     ,   inlineText: true
     ,   preserveLicenseComments:    false
     };
+    console.log("building with config", JSON.stringify(config, null, 4));
     r.optimize(config, function () {
+        console.log("callback from optimize");
         // add header
         fs.writeFileSync(config.out
                     ,   "/* ReSpec " + version +
@@ -38,6 +41,7 @@ function build (options, cb) {
                         "/* See original source for licenses: https://github.com/darobin/respec. */\n" +
                         fs.readFileSync(config.out, "utf8") + "\nrequire(['profile-w3c-common']);\n"
                     ,   { encoding: "utf8" });
+        console.log("about to exit optimize");
         cb();
     });
 }
