@@ -10,14 +10,10 @@ var fs   = require("fs")
 ;
 
 function buildW3C (versionSnapshot, cb) {
-    console.log("running with versionSnapshot=", versionSnapshot, latest);
     b.build({ out: latest }, function () {
-        console.log("in build cb");
         if (versionSnapshot) fs.writeFileSync(versioned, fs.readFileSync(latest, "utf8"), { encoding: "utf8" });
-        console.log("exiting build cb");
         cb();
     });
-    console.log("called build");
 }
 
 if (require.main === module) {
