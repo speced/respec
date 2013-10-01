@@ -99,18 +99,30 @@ define(
                 pipeline = function () {
                     if (!plugs.length) {
                         if (respecConfig.postProcess) {
-                            for (var i = 0; i < respecConfig.postProcess.length; i++) respecConfig.postProcess[i].apply(this);
+                            for (var i = 0; i < respecConfig.postProcess.length; i++) {
+                                try { respecConfig.postProcess[i].apply(this); }
+                                catch (e) { respecEvents.pub("error", e); }
+                            }
                         }
-                        if (respecConfig.afterEnd) respecConfig.afterEnd.apply(window, Array.prototype.slice.call(arguments));
+                        if (respecConfig.afterEnd) {
+                            try { respecConfig.afterEnd.apply(window, Array.prototype.slice.call(arguments)); }
+                            catch (e) { respecEvents.pub("error", e); }
+                        }
                         respecEvents.pub("end", "core/base-runner");
                         return;
                     }
                     var plug = plugs.shift();
-                    if (plug.run) plug.run.call(plug, respecConfig, document, pipeline, respecEvents);
+                    if (plug.run) {
+                        try { plug.run.call(plug, respecConfig, document, pipeline, respecEvents); }
+                        catch (e) { respecEvents.pub("error", e); }
+                    }
                     else pipeline();
                 };
                 if (respecConfig.preProcess) {
-                    for (var i = 0; i < respecConfig.preProcess.length; i++) respecConfig.preProcess[i].apply(this);
+                    for (var i = 0; i < respecConfig.preProcess.length; i++) {
+                        try { respecConfig.preProcess[i].apply(this); }
+                        catch (e) { respecEvents.pub("error", e); }
+                    }
                 }
                 pipeline();
             }
