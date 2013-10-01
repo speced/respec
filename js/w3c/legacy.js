@@ -93,8 +93,6 @@ var sn;
                 this.extractConfig();
                 this.overrideBiblio(conf);
                 this.bibref(conf, doc, cb, msg);
-
-                if (this.doRDFa) this.makeRDFa();
             }
             catch (e) {
                 msg.pub("error", "Processing error: " + e);
@@ -109,39 +107,9 @@ var sn;
             }
         },
 
-        makeRDFa:  function () {
-            // annotate sections with Section data
-            var secs = document.querySelectorAll("section");
-            for (var i = 0; i < secs.length; i++) {
-                // if the section has an id, use that.  if not, look at the first child for an id
-                var about = '' ;
-                // the first child should be a header - that's what we will annotate
-                var fc = secs[i].firstElementChild;
-                var ref = secs[i].getAttribute('id') ;
-                if ( ref ) {
-                    about = '#' + ref ;
-                } else {
-                    if (fc) {
-                        ref = fc.getAttribute('id') ;
-                        if (ref) {
-                            about = '#' + ref;
-                        }
-                    }
-                }
-                if (about !== '') {
-                    secs[i].setAttribute('typeof', 'bibo:Chapter') ;
-                    secs[i].setAttribute('resource', about) ;
-                    secs[i].setAttribute('rel', "bibo:chapter" ) ;
-                }
-            }
-        },
-
         // --- METADATA -------------------------------------------------------
         extractConfig:    function () {
             var cfg = respecConfig || {};
-            // note this change - the default is now to inject RDFa 1.1.  You can override it by
-            // setting RDFa to false
-            if (cfg.doRDFa === undefined) cfg.doRDFa = "1.1";
             for (var k in cfg) {
                 if (cfg.hasOwnProperty(k)) this[k] = cfg[k];
             }

@@ -38,6 +38,7 @@ define([
         ,   "core/best-practices"
         ,   "core/figures"
         ,   "w3c/legacy"
+        ,   "core/rdfa"
         ,   "core/webidl-oldschool"
         ,   "core/dfn"
         ,   "core/fix-headers"
