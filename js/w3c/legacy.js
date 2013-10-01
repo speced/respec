@@ -6,7 +6,7 @@ var sn;
     window.setBerjonBiblio = function(payload) {
         berjon.biblio = payload;
     };
-    if (typeof berjon === 'undefined') window.berjon = {};
+    if (typeof berjon === 'undefined') window.berjon = { biblio: {} };
     function error (str) {
         if (window.respecEvents) respecEvents.pub("error", str);
     }
@@ -45,7 +45,7 @@ var sn;
             if (refs.length) {
                 count++;
                 src = conf.httpScheme + "://specref.jit.su/bibrefs?callback=setBerjonBiblio&refs=" + refs.join(',');
-                this.loadScript(src, loadHandler);
+                this.loadScript(src, loadHandler, msg);
             }
 
             // the fact that we hand-load is temporary, and will be fully replaced by RequireJS
@@ -54,7 +54,7 @@ var sn;
             if (!berjon.simpleNode) {
                 for (var i = 0; i < deps.length; i++) {
                     count++;
-                    this.loadScript(deps[i], loadHandler);
+                    this.loadScript(deps[i], loadHandler, msg);
                 }
             }
 
@@ -72,12 +72,19 @@ var sn;
             return res;
         },
 
-        loadScript: function(src, cb) {
+        loadScript: function(src, cb, msg) {
             var script = document.createElement('script');
             script.type = 'text/javascript';
             script.src = src;
             script.setAttribute("class", "remove");
-            script.onload = cb;
+            var timeout = setTimeout(function () {
+                msg.pub("error", "Failed to load '" + src + "', timed out.");
+                cb();
+            }, 5000);
+            script.onload = function () {
+                clearTimeout(timeout);
+                cb();
+            };
             document.getElementsByTagName('head')[0].appendChild(script);
         },
 

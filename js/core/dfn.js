@@ -22,7 +22,11 @@ define(
                         $ant.attr("href", "#" + conf.definitionMap[title]).addClass("internalDFN");
                     }
                     else {
-                        msg.pub("warn", "Found linkless <a> element with text '" + title + "' but no matching <dfn>.");
+                        // ignore WebIDL
+                        if (!$ant.parents(".idl, dl.methods, dl.attributes, dl.constants, dl.constructors, dl.fields, dl.dictionary-members").length) {
+                            msg.pub("warn", "Found linkless <a> element with text '" + title + "' but no matching <dfn>.");
+                        }
+                        $ant.replaceWith($ant.contents());
                     }
                 });
                 msg.pub("end", "core/dfn");

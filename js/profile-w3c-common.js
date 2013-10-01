@@ -53,6 +53,7 @@ define([
             var args = Array.prototype.slice.call(arguments);
             domReady(function () {
                 ui.addCommand("Save Snapshot", "ui/save-html", "Ctrl+Shift+Alt+S");
+                ui.addCommand("About ReSpec", "ui/about-respec", "Ctrl+Shift+Alt+A");
                 runner.runAll(args);
             });
         }

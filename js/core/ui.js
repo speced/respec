@@ -8,6 +8,7 @@
 //      - list issues
 //      - lint: validator, link checker, check WebIDL, ID references
 //      - save to GitHub
+//  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
 
 define(
