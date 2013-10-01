@@ -73,8 +73,6 @@ define(
             }
             // convert the document to a string (HTML)
         ,   toString:    function () {
-                doc = doc.cloneNode(true);
-                $(".removeOnSave", doc).remove();
                 var str = "<!DOCTYPE html"
                 ,   dt = doc.doctype;
                 if (dt && dt.publicId) str += " PUBLIC '" + dt.publicId + "' '" + dt.systemId + "'";
@@ -93,24 +91,29 @@ define(
                 str += ">\n";
                 var cmt = doc.createComment("[if lt IE 9]><script src='https://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
                 $("head").append(cmt);
-                str += doc.documentElement.innerHTML;
+                var rootEl = doc.documentElement.cloneNode(true);
+                $(".removeOnSave", rootEl).remove();
+                str += rootEl.innerHTML;
                 str += "</html>";
                 return str;
             }
             // convert the document to XML, pass 5 as mode for XHTML5
         ,   toXML:        function (mode) {
-                doc = doc.cloneNode(true);
-                $(".removeOnSave", doc).remove();
+                if (mode === 5) {
+                    var cmt = doc.createComment("[if lt IE 9]><script src='https://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
+                    $("head", doc).append(cmt);
+                }
+                var rootEl = doc.documentElement.cloneNode(true);
                 if (mode !== 5) {
                     // not doing xhtml5 so rip out the html5 stuff
                     $.each("section figcaption figure aside".split(" "), function (i, item) {
-                        $(item).renameElement("div").addClass(item);
+                        $(item, rootEl).renameElement("div").addClass(item);
                     });
-                    $("time").renameElement("span").addClass("time").removeAttr('datetime');
-                    $("[role]").removeAttr('role') ;
-                    $("[aria-level]").removeAttr('aria-level') ;
-                    $("style:not([type])").attr("type", "text/css");
-                    $("script:not([type])").attr("type", "text/javascript");
+                    $("time", rootEl).renameElement("span").addClass("time").removeAttr('datetime');
+                    $("[role]", rootEl).removeAttr('role') ;
+                    $("[aria-level]", rootEl).removeAttr('aria-level') ;
+                    $("style:not([type])", rootEl).attr("type", "text/css");
+                    $("script:not([type])", rootEl).attr("type", "text/javascript");
                 }
                 var str = "<!DOCTYPE html"
                 ,   dt = doc.doctype;
@@ -145,10 +148,6 @@ define(
                     selfClosing[n] = true;
                 });
                 var noEsc = [false];
-                if (mode === 5) {
-                    var cmt = doc.createComment("[if lt IE 9]><script src='https://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
-                    $("head", doc).append(cmt);
-                }
                 var dumpNode = function (node) {
                     var out = "";
                     // if the node is the document node.. process the children
@@ -187,7 +186,7 @@ define(
                     }
                     return out;
                 };
-                str += dumpNode(doc.documentElement) + "</html>";
+                str += dumpNode(rootEl) + "</html>";
                 return str;
             }
             // create a diff marked version against the previousURI
