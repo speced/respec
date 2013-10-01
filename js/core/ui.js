@@ -48,7 +48,46 @@ define(
                                                 var $ul = $("<ol></ol>");
                                                 for (var i = 0, n = arr.length; i < n; i++) {
                                                     var err = arr[i];
-                                                    $("<li></li>").text(err).appendTo($ul);
+                                                    if (err instanceof Error) {
+                                                        $("<li><span></span> <a>\u229e</a><pre></pre></li>")
+                                                            .appendTo($ul)
+                                                            .find("span")
+                                                                .text("[" + err.name + "] " + err.message)
+                                                            .end()
+                                                            .find("a")
+                                                                .css({
+                                                                    fontSize:   "1.1em"
+                                                                ,   color:      "#999"
+                                                                ,   cursor:     "pointer"
+                                                                })
+                                                                .click(function () {
+                                                                    var $a = $(this)
+                                                                    ,   state = $a.text()
+                                                                    ,   $pre = $a.parent().find("pre");
+                                                                    if (state === "\u229e") {
+                                                                        $a.text("\u229f");
+                                                                        $pre.show();
+                                                                    }
+                                                                    else {
+                                                                        $a.text("\u229e");
+                                                                        $pre.hide();
+                                                                    }
+                                                                })
+                                                            .end()
+                                                            .find("pre")
+                                                                .text(err.stack)
+                                                                .css({
+                                                                    marginLeft: "0"
+                                                                ,   maxWidth:   "100%"
+                                                                ,   overflowY:  "hidden"
+                                                                ,   overflowX:  "scroll"
+                                                                })
+                                                                .hide()
+                                                            .end();
+                                                    }
+                                                    else {
+                                                        $("<li></li>").text(err).appendTo($ul);
+                                                    }
                                                 }
                                                 ui.freshModal(title, $ul);
                                             })

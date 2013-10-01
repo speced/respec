@@ -49,21 +49,10 @@ define([
         ,   "core/location-hash"
         ],
         function (domReady, runner, ui) {
-            var args = Array.prototype.slice.call(arguments)
-            ,   hasRun = false;
+            var args = Array.prototype.slice.call(arguments);
             domReady(function () {
-                hasRun = true;
                 ui.addCommand("Save Snapshot", "ui/save-html", "Ctrl+Shift+Alt+S");
                 runner.runAll(args);
             });
-            // the below can trigger a run, assuming a way of starting this paused
-            // window.addEventListener("message", function (ev) {
-            //     console.log("message", ev.data);
-            //     if (hasRun) return;
-            //     if (ev.data && ev.data.topic == "run") {
-            //         hasRun = true;
-            //         runner.runAll(args);
-            //     }
-            // }, false);
         }
 );

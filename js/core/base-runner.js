@@ -114,7 +114,11 @@ define(
                     var plug = plugs.shift();
                     if (plug.run) {
                         try { plug.run.call(plug, respecConfig, document, pipeline, respecEvents); }
-                        catch (e) { respecEvents.pub("error", e); }
+                        catch (e) {
+                            respecEvents.pub("error", e);
+                            respecEvents.pub("end", "unknown/with-error");
+                            pipeline();
+                        }
                     }
                     else pipeline();
                 };
