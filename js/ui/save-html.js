@@ -3,9 +3,13 @@
 // Saves content to HTML when asked to
 
 define(
-    ["jquery", "core/utils"],
-    function ($, utils) {
+    ["jquery", "core/utils", "core/remove-respec"],
+    function ($, utils, rr) {
         var msg, doc, conf;
+        var cleanup = function (rootEl) {
+            $(".removeOnSave", rootEl).remove();
+            rr.run(conf, rootEl, function () {}, msg);
+        };
         return {
             show:   function (ui, _conf, _doc, _msg) {
                 msg = _msg, doc = _doc, conf = _conf;
@@ -90,7 +94,7 @@ define(
                 }
                 str += ">\n";
                 var rootEl = doc.documentElement.cloneNode(true);
-                $(".removeOnSave", rootEl).remove();
+                cleanup(rootEl);
                 str += rootEl.innerHTML;
                 str += "</html>";
                 return str;
@@ -98,6 +102,7 @@ define(
             // convert the document to XML, pass 5 as mode for XHTML5
         ,   toXML:        function (mode) {
                 var rootEl = doc.documentElement.cloneNode(true);
+                cleanup(rootEl);
                 if (mode !== 5) {
                     // not doing xhtml5 so rip out the html5 stuff
                     $.each("section figcaption figure aside".split(" "), function (i, item) {
