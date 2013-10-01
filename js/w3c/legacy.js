@@ -110,16 +110,6 @@ var sn;
         },
 
         makeRDFa:  function () {
-            var abs = document.getElementById("abstract");
-            if (abs) {
-                var rel = 'dcterms:abstract' ;
-                var ref = abs.getAttribute('property') ;
-                if (ref) {
-                    rel = ref + ' ' + rel ;
-                }
-                abs.setAttribute('property', rel) ;
-                abs.setAttribute('datatype', '') ;
-            }
             // annotate sections with Section data
             var secs = document.querySelectorAll("section");
             for (var i = 0; i < secs.length; i++) {

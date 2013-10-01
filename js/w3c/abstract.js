@@ -13,6 +13,15 @@ define(
                 if ($abs.find("p").length === 0) $abs.contents().wrapAll($("<p></p>"));
                 $abs.prepend("<h2>Abstract</h2>");
                 $abs.addClass("introductory");
+                if (this.doRDFa !== false) {
+                    var rel = "dcterms:abstract"
+                    ,   ref = $abs.attr("property");
+                    if (ref) rel = ref + " " + rel;
+                    $abs.attr({
+                        "property": rel
+                    ,   "datatype": ""
+                    });
+                }
                 msg.pub("end", "w3c/abstract");
                 cb();
             }
