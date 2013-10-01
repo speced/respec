@@ -92,9 +92,6 @@ define(
                 // the first in the plugs is going to be us
                 plugs.shift();
 
-                respecConfig.scheme = (respecConfig.scheme) ? respecConfig.scheme : location.protocol.replace(":", "").toLowerCase();
-                respecConfig.httpScheme = (respecConfig.scheme === "https") ? "https" : "http";
-                
                 var pipeline;
                 pipeline = function () {
                     if (!plugs.length) {
