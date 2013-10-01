@@ -3,12 +3,12 @@
 // Saves content to HTML when asked to
 
 define(
-    ["jquery", "core/utils", "core/remove-respec"],
-    function ($, utils, rr) {
+    ["jquery", "core/utils"],
+    function ($, utils) {
         var msg, doc, conf;
         var cleanup = function (rootEl) {
             $(".removeOnSave", rootEl).remove();
-            rr.run(conf, rootEl, function () {}, msg);
+            utils.removeReSpec(doc);
         };
         return {
             show:   function (ui, _conf, _doc, _msg) {
