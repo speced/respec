@@ -89,8 +89,6 @@ define(
                     str += " " + an + "=\"" + utils.xmlEscape(ats[i].value) + "\"";
                 }
                 str += ">\n";
-                var cmt = doc.createComment("[if lt IE 9]><script src='https://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
-                $("head").append(cmt);
                 var rootEl = doc.documentElement.cloneNode(true);
                 $(".removeOnSave", rootEl).remove();
                 str += rootEl.innerHTML;
@@ -99,10 +97,6 @@ define(
             }
             // convert the document to XML, pass 5 as mode for XHTML5
         ,   toXML:        function (mode) {
-                if (mode === 5) {
-                    var cmt = doc.createComment("[if lt IE 9]><script src='https://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]");
-                    $("head", doc).append(cmt);
-                }
                 var rootEl = doc.documentElement.cloneNode(true);
                 if (mode !== 5) {
                     // not doing xhtml5 so rip out the html5 stuff
