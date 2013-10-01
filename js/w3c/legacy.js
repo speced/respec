@@ -14,7 +14,14 @@ var sn;
     berjon.respec.prototype = {
         loadAndRun:    function (conf, doc, cb, msg) {
             var count = 0;
-            var base = this.findBase();
+            var base = "";
+            $("script[src]").each(function () {
+                var src = $(this).attr("src");
+                if (!src) return;
+                if (/\/js\/require.*\.js$/.test(src)) {
+                    base = src.replace(/js\/require.*\.js$/, "");
+                }
+            });
             var deps = [base + "js/simple-node.js"];
             var obj = this;
 
@@ -63,19 +70,6 @@ var sn;
                 }
             }
             return res;
-        },
-        findBase: function() {
-            var scripts = document.querySelectorAll("script[src]");
-            // XXX clean this up
-            var base = "", src;
-            for (var i = 0; i < scripts.length; i++) {
-                src = scripts[i].src;
-                if (/\/js\/require.*\.js$/.test(src)) {
-                    base = src.replace(/js\/require.*\.js$/, "");
-                }
-            }
-            // base = respecConfig.respecBase;
-            return base;
         },
 
         loadScript: function(src, cb) {

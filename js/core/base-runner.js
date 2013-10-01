@@ -92,15 +92,6 @@ define(
                 // the first in the plugs is going to be us
                 plugs.shift();
 
-                // the base URL is used by some modules
-                var $scripts = $("script"),
-                    baseUrl = "";
-                $scripts.each(function (i, s) {
-                    var src = s.getAttribute("src");
-                    if (!src || !$(s).hasClass("remove")) return;
-                    if (/\/js\//.test(src)) baseUrl = src.replace(/\/js\/.*/, "\/js\/");
-                });
-                respecConfig.respecBase = baseUrl;
                 respecConfig.scheme = (respecConfig.scheme) ? respecConfig.scheme : location.protocol.replace(":", "").toLowerCase();
                 respecConfig.httpScheme = (respecConfig.scheme === "https") ? "https" : "http";
                 
