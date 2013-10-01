@@ -21,6 +21,9 @@ define(
                     if (conf.definitionMap[title] && !(conf.definitionMap[title] instanceof Function)) {
                         $ant.attr("href", "#" + conf.definitionMap[title]).addClass("internalDFN");
                     }
+                    else {
+                        msg.pub("warn", "Found linkless <a> element with text '" + title + "' but no matching <dfn>.");
+                    }
                 });
                 msg.pub("end", "core/dfn");
                 cb();

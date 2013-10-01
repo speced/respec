@@ -23,7 +23,13 @@ define(
                     var $n = $(node);
                     var flist = $n.attr('data-transform');
                     $n.removeAttr('data-transform') ;
-                    var content = utils.runTransforms($n.html(), flist);
+                    var content;
+                    try {
+                        content = utils.runTransforms($n.html(), flist);
+                    }
+                    catch (e) {
+                        msg.pub("error", e);
+                    }
                     if (content) $n.html(content);
                 });
                 msg.pub("end", "w3c/data-transform");

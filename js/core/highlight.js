@@ -19,6 +19,7 @@ define(
                     var old = oldies[i];
                     $("." + old).each(function () {
                         $(this).removeClass(old).addClass("highlight");
+                        msg.pub("warn", "Old highlighting class '" + old + "', use 'highlight' instead.");
                     });
                 }
                 

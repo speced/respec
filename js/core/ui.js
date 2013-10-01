@@ -4,7 +4,6 @@
 // Handles the ReSpec UI
 
 // XXX TODO
-//  - go through code adding errors and warnings wherever possible
 //  - look at other UI things to add
 //      - list issues
 //      - lint: validator, link checker, check WebIDL, ID references

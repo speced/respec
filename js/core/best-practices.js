@@ -28,6 +28,7 @@ define(
                     if ($("#bp-summary")) $("#bp-summary").append($content.contents());
                 }
                 else {
+                    msg.pub("warn", "Using best practices summary (#bp-summary) but no best practices found.");
                     $("#bp-summary").remove();
                 }
 
