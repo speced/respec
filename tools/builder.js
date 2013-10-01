@@ -20,7 +20,6 @@ function build (options, cb) {
     ,   optimize:   options.optimize || "uglify2"
     ,   paths:  {
             requireLib: "./require"
-        ,   simpleNode: "./simple-node"
         }
     ,   shim:   {
             "shortcut": {
@@ -28,7 +27,7 @@ function build (options, cb) {
             }
         }
     ,   name:       "profile-w3c-common"
-    ,   include:    "requireLib simpleNode".split(" ")
+    ,   include:    "requireLib".split(" ")
     ,   out:        options.out
     ,   inlineText: true
     ,   preserveLicenseComments:    false
