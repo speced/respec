@@ -85,14 +85,6 @@ define(
         ,   norm = function (str) {
                 return str.replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
             }
-        ,   sanitiseID = function (id) {
-                id = id.split(/[^\-.0-9a-zA-Z_]/).join("-");
-                id = id.replace(/^\-+/g, "");
-                id = id.replace(/\-+$/, "");
-                if (id.length > 0 && /^[^a-z]/.test(id)) id = "x" + id;
-                if (id.length === 0) id = "generatedID";
-                return id;
-            }
         ,   arrsq = function (obj) {
                 var str = "";
                 for (var i = 0, n = obj.arrayCount; i < n; i++) str += "[]";
@@ -417,7 +409,7 @@ define(
                 // MEMBER
                 obj.type = "member";
                 this.setID(obj, str);
-                obj.refId = sanitiseID(obj.id); // override with different ID type
+                obj.refId = sn.sanitiseID(obj.id); // override with different ID type
                 return obj;
             },
 
@@ -1098,7 +1090,7 @@ define(
                     params.push(prm.datatype + (prm.array ? "Array" : "") + "-" + prm.id);
                 }
                 id += params.join("-");
-                return sanitiseID(id);
+                return sn.sanitiseID(id);
             },
 
             mergeWebIDL:    function (obj) {
@@ -1424,29 +1416,27 @@ define(
     }
 );
 
-simpleNode = function (doc) {
-    if (!doc) doc = document;
-    this.doc = doc;
+window.simpleNode = function (doc) {
+    this.doc = doc ? doc : document;
 };
-simpleNode.prototype = {
+window.simpleNode.prototype = {
 
     // --- NODE CREATION ---
     element:    function (name, attr, parent, content) {
-        if (!attr) attr = {};
-        var el = this.doc.createElement(name);
-        for (var k in attr) el.setAttribute(k, attr[k]);
-        if (parent) parent.appendChild(el);
+        var $el = $(this.doc.createElement(name));
+        $el.attr(attr || {});
+        if (parent) $(parent).append($el);
         if (content) {
-            if (content instanceof jQuery) $(el).append(content);
-            else if (content instanceof Array) for (var i = 0; i < content.length; i++) $(el).append(content[i]);
-            else this.text(content, el);
+            if (content instanceof jQuery) $el.append(content);
+            else if (content instanceof Array) for (var i = 0; i < content.length; i++) $el.append(content[i]);
+            else this.text(content, $el);
         }
-        return el;
+        return $el;
     },
     
     text:    function (txt, parent) {
         var tn = this.doc.createTextNode(txt);
-        if (parent) parent.appendChild(tn);
+        if (parent) $(parent).append(tn);
         return tn;
     },
     
@@ -1489,34 +1479,12 @@ simpleNode.prototype = {
         return id;
     },
     
-    idCache: {},
     idThatDoesNotExist:    function (id) {
         var inc = 1;
-        if (this.doc.getElementById(id) || this.idCache[id]) {
-            while (this.doc.getElementById(id + "-" + inc) || this.idCache[id + "-" + inc]) inc++;
+        if (this.doc.getElementById(id)) {
+            while (this.doc.getElementById(id + "-" + inc)) inc++;
             id = id + "-" + inc;
         }
-        // XXX disable caching for now
-        // this.idCache[id] = true;
         return id;
-    },
-    
-    // --- CLASS HANDLING ---
-    addClass:    function (el, cl) {
-        var ls = this.listClasses(el);
-        if (ls.indexOf(cl) >= 0) return;
-        ls.push(cl);
-        this.setClassList(el, ls);
-    },
-    
-    listClasses:    function (el) {
-        if (el.hasAttribute("class")) {
-            return el.getAttribute("class").split(/\s+/);
-        }
-        else return [];
-    },
-    
-    setClassList:    function (el, ls) {
-        el.setAttribute("class", ls.join(" "));
     }
 };
