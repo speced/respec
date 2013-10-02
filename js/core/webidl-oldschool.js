@@ -1,4 +1,4 @@
-/*global Handlebars, berjon */
+/*global Handlebars, simpleNode */
 
 // Module core/webidl-oldschool
 //  Transforms specific markup into the complex old school rendering for API information.
@@ -1390,10 +1390,7 @@ define(
                 msg.pub("start", "core/webidl");
                 if (!conf.noIDLSorting) conf.noIDLSorting = false;
                 if (!conf.noIDLSectionTitle) conf.noIDLSectionTitle = false;
-                sn = new berjon.simpleNode({
-                    "":     "http://www.w3.org/1999/xhtml",
-                    "x":    "http://www.w3.org/1999/xhtml"
-                }, document);
+                sn = new simpleNode(document);
                 var $idl = $(".idl", doc)
                 ,   finish = function () {
                         msg.pub("end", "core/webidl");
@@ -1427,21 +1424,17 @@ define(
     }
 );
 
-if (typeof(berjon) == "undefined") window.berjon = {};
-berjon.simpleNode = function (ns, doc) {
-    if (!ns) ns = {};
+simpleNode = function (doc) {
     if (!doc) doc = document;
-    this.ns = ns;
     this.doc = doc;
 };
-berjon.simpleNode.prototype = {
+simpleNode.prototype = {
 
     // --- NODE CREATION ---
     element:    function (name, attr, parent, content) {
         if (!attr) attr = {};
-        var nmSt = this._nameToQName(name, false);
-        var el = this.doc.createElementNS(nmSt.ns, name);
-        for (var k in attr) this._setAttr(el, k, attr[k]);
+        var el = this.doc.createElement(name);
+        for (var k in attr) el.setAttribute(k, attr[k]);
         if (parent) parent.appendChild(el);
         if (content) {
             if (content instanceof jQuery) $(el).append(content);
@@ -1525,28 +1518,5 @@ berjon.simpleNode.prototype = {
     
     setClassList:    function (el, ls) {
         el.setAttribute("class", ls.join(" "));
-    },
-    
-    // --- HELPERS ---
-    _nameToQName:    function (name, isAttr) {
-        var matches = /^(.+):(.+)$/.exec(name);
-        var pfx, ns, ln;
-        if (matches) {
-            pfx = matches[1];
-            ln = matches[2];
-            if (!this.ns[pfx]) throw "No namespace declared for prefix '" + pfx + "'";
-            ns = this.ns[pfx];
-        }
-        else {
-            if (isAttr) ns = null;
-            else        ns = this.ns[""];
-            ln = name;
-        }
-        return { ns: ns, ln: ln };
-    },
-    
-    _setAttr:    function (el, name, value) {
-        var nmSt = this._nameToQName(name, true);
-        el.setAttributeNS(nmSt.ns, nmSt.ln, value);
     }
 };
