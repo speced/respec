@@ -14,12 +14,22 @@ var app = express();
 app.use(express.static(dir));
 app.listen(PORT);
 
-builder.buildW3C(false, function () {
-    console.log("Script built");
+function runPhantom () {
     var childProcess = exec('phantomjs ./tests/phantom.js', function () {});
     childProcess.stdout.pipe(process.stdout);
     childProcess.stderr.pipe(process.stderr);
     childProcess.on('exit', function (code) {
         process.exit(code);
     });
-});
+}
+
+if (!process.env.TRAVIS) {
+    builder.buildW3C(false, function () {
+        console.log("Script built");
+        runPhantom();
+    });
+}
+else {
+    runPhantom();
+}
+
