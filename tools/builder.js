@@ -40,6 +40,7 @@ function build (options, cb) {
                             " - Robin Berjon, http://berjon.com/ (@robinberjon) */\n" +
                             "/* Documentation: http://w3.org/respec/. */\n" +
                             "/* See original source for licenses: https://github.com/darobin/respec. */\n" +
+                            "respecVersion = '" + version + "';\n" +
                             fs.readFileSync(config.out, "utf8") + "\nrequire(['profile-w3c-common']);\n");
         }
         catch (e) {
