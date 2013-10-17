@@ -70,10 +70,10 @@ define(
                 if (!refs.length) continue;
                 var $sec = $("<section><h3></h3></section>")
                                 .appendTo($refsec)
-                                .makeID(null, type + " references")
                                 .find("h3")
                                     .text(type + " references")
                                 ;
+                $sec.makeID(null, type + " references");
                 refs.sort();
                 var $dl = $("<dl class='bibliography'></dl>").appendTo($sec);
                 if (conf.doRDFa !== false) $dl.attr("about", "");
