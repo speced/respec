@@ -23,8 +23,9 @@ define(
                     }
                     else {
                         // ignore WebIDL
-                        if (!$ant.parents(".idl, dl.methods, dl.attributes, dl.constants, dl.constructors, dl.fields, dl.dictionary-members").length) {
+                        if (!$ant.parents(".idl, dl.methods, dl.attributes, dl.constants, dl.constructors, dl.fields, dl.dictionary-members, span.idlMemberType, span.idlTypedefType, div.idlImplementsDesc").length) {
                             msg.pub("warn", "Found linkless <a> element with text '" + title + "' but no matching <dfn>.");
+                            console.log($ant.parents());
                         }
                         $ant.replaceWith($ant.contents());
                     }
