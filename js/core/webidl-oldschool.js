@@ -685,13 +685,13 @@ define(
                     if (obj.description && obj.description.text()) cnt = [obj.description];
                     else {
                         // yuck -- should use a single model...
-                        var tdt = sn.element("span", { "class": "idlTypedefType" }, null);
-                        tdt.innerHTML = datatype(obj.datatype);
+                        var $tdt = sn.element("span", { "class": "idlTypedefType" }, null);
+                        $tdt.html(datatype(obj.datatype));
                         cnt = [ sn.text("Throughout this specification, the identifier "),
                                 sn.element("span", { "class": "idlTypedefID" }, null, obj.unescapedId),
                                 sn.text(" is used to refer to the "),
                                 sn.text(obj.array ? (obj.arrayCount > 1 ? obj.arrayCount + "-" : "") + "array of " : ""),
-                                tdt,
+                                $tdt,
                                 sn.text(obj.nullable ? " (nullable)" : ""),
                                 sn.text(" type.")];
                     }
