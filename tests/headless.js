@@ -15,7 +15,7 @@ app.use(express.static(dir));
 app.listen(PORT);
 
 function runPhantom () {
-    var childProcess = exec('phantomjs ./tests/phantom.js', function () {});
+    var childProcess = exec('phantomjs --ssl-protocol=any ./tests/phantom.js', function () {});
     childProcess.stdout.pipe(process.stdout);
     childProcess.stderr.pipe(process.stderr);
     childProcess.on('exit', function (code) {
