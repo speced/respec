@@ -146,7 +146,12 @@
         {{/if}}
         W3C <a href='http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer'>liability</a>,
         <a href='http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks'>trademark</a> and
-        <a href='http://www.w3.org/Consortium/Legal/copyright-documents'>document use</a> rules apply.
+        {{#if isCCBY}}
+          <a href='http://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html'>document use</a>
+        {{else}}
+          <a href='http://www.w3.org/Consortium/Legal/copyright-documents'>document use</a>
+        {{/if}}
+        rules apply.
       </p>
     {{/if}}
   {{/if}}
