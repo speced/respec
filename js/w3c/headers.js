@@ -202,7 +202,9 @@ define(
                 }
                 // validate configuration and derive new configuration values
                 if (!conf.license) conf.license = "w3c";
-                conf.isCCBY = conf.license === "cc-by";
+                // NOTE: this is currently only available to the HTML WG
+                // this check will be relaxed later
+                conf.isCCBY = conf.license === "cc-by" && conf.wgPatentURI === "http://www.w3.org/2004/01/pp-impl/40318/status";
                 conf.isCGBG = $.inArray(conf.specStatus, this.cgbg) >= 0;
                 conf.isCGFinal = conf.isCGBG && /G-FINAL$/.test(conf.specStatus);
                 if (!conf.specStatus) msg.pub("error", "Missing required configuration: specStatus");
