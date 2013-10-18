@@ -16,7 +16,7 @@ define(
                     var depth = $(this).parents("section").length + 1;
                     if (depth > 6) depth = 6;
                     var h = "h" + depth;
-                    if (this.localName.toLowerCase() != h) $(this).renameElement(h);
+                    if (this.localName.toLowerCase() !== h) $(this).renameElement(h);
                 });
                 msg.pub("end", "core/fix-headers");
                 cb();

@@ -25,10 +25,12 @@ define(
                     
                     // change old syntax to something HTML5 compatible
                     if ($figure.is("div")) {
+                        msg.pub("warn", "You are using the deprecated div.figure syntax; please switch to <figure>.");
                         $figure.append($caption);
                         $figure.renameElement("figure");
                     }
                     else {
+                        msg.pub("warn", "You are using the deprecated img.figure syntax; please switch to <figure>.");
                         $figure.wrap("<figure></figure>");
                         $figure.parent().append($caption);
                     }
@@ -41,6 +43,7 @@ define(
                     ,   $cap = $fig.find("figcaption")
                     ,   tit = $cap.text()
                     ,   id = $fig.makeID("fig", tit);
+                    if (!$cap.length) msg.pub("warn", "A <figure> should contain a <figcaption>.");
                     
                     // set proper caption title
                     num++;

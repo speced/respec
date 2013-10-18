@@ -83,7 +83,6 @@ define(
     ,"tmpl!w3c/templates/cgbg-sotd.html"
     ],
     function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl) {
-        // XXX RDFa support is untested
         Handlebars.registerHelper("showPeople", function (name, items) {
             // stuff to handle RDFa
             var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "";

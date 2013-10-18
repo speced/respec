@@ -207,17 +207,17 @@ shortcut = {
 	},
 
 	//Remove the shortcut - just specify the shortcut and I will remove the binding
-	'remove':function(shortcut_combination) {
-		shortcut_combination = shortcut_combination.toLowerCase();
-		var binding = this.all_shortcuts[shortcut_combination];
-		delete(this.all_shortcuts[shortcut_combination])
-		if(!binding) return;
-		var type = binding['event'];
-		var ele = binding['target'];
-		var callback = binding['callback'];
-
-		if(ele.detachEvent) ele.detachEvent('on'+type, callback);
-		else if(ele.removeEventListener) ele.removeEventListener(type, callback, false);
-		else ele['on'+type] = false;
-	}
+    // 'remove':function(shortcut_combination) {
+    //  shortcut_combination = shortcut_combination.toLowerCase();
+    //  var binding = this.all_shortcuts[shortcut_combination];
+    //  delete(this.all_shortcuts[shortcut_combination])
+    //  if(!binding) return;
+    //  var type = binding['event'];
+    //  var ele = binding['target'];
+    //  var callback = binding['callback'];
+    // 
+    //  if(ele.detachEvent) ele.detachEvent('on'+type, callback);
+    //  else if(ele.removeEventListener) ele.removeEventListener(type, callback, false);
+    //  else ele['on'+type] = false;
+    // }
 }

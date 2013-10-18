@@ -87,6 +87,11 @@ define(
                 cb();
             }
 
+            // --- RESPEC STUFF -------------------------------------------------------------------------------
+        ,   removeReSpec:   function (doc) {
+                $(".remove, script[data-requiremodule]", doc).remove();
+            }
+
             // --- STRING HELPERS -----------------------------------------------------------------------------
             // Takes an array and returns a string that separates each of its items with the proper commas and
             // "and". The second argument is a mapping function that can convert the items before they are

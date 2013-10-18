@@ -20,11 +20,14 @@ function build (options, cb) {
     ,   optimize:   options.optimize || "uglify2"
     ,   paths:  {
             requireLib: "./require"
-        ,   simpleNode: "./simple-node"
-        ,   shortcut:   "./shortcut"
+        }
+    ,   shim:   {
+            "shortcut": {
+                exports:    "shortcut"
+            }
         }
     ,   name:       "profile-w3c-common"
-    ,   include:    "requireLib simpleNode shortcut".split(" ")
+    ,   include:    "requireLib".split(" ")
     ,   out:        options.out
     ,   inlineText: true
     ,   preserveLicenseComments:    false
@@ -37,6 +40,7 @@ function build (options, cb) {
                             " - Robin Berjon, http://berjon.com/ (@robinberjon) */\n" +
                             "/* Documentation: http://w3.org/respec/. */\n" +
                             "/* See original source for licenses: https://github.com/darobin/respec. */\n" +
+                            "respecVersion = '" + version + "';\n" +
                             fs.readFileSync(config.out, "utf8") + "\nrequire(['profile-w3c-common']);\n");
         }
         catch (e) {
