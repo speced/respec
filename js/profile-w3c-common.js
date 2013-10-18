@@ -10,7 +10,7 @@ var requireConfig = {
 };
 if ("respecVersion" in window && respecVersion) {
     requireConfig.paths = {
-        "ui":   "https://darobin.github.io/respec/js/ui"
+        "ui":   "https://raw.github.com/darobin/respec/gh-pages/js/ui"
     };
 }
 require.config(requireConfig);
