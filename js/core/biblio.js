@@ -72,6 +72,7 @@ define(
                                 .appendTo($refsec)
                                 .find("h3")
                                     .text(type + " references")
+                                .end()
                                 ;
                 $sec.makeID(null, type + " references");
                 refs.sort();
