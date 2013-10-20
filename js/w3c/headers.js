@@ -70,6 +70,9 @@
 //          - value: The value that will appear in the <dd> (e.g., "GitHub"). Optional.
 //          - href: a URL for the value (e.g., "http://foo.com/issues"). Optional.
 //          - class: a string representing CSS classes. Optional.
+//  - license: can either be "w3c" (for the currently default, restrictive license) or "cc-by" for
+//      the friendly persmissive dual license that nice people use (if they are participating in the
+//      HTML WG licensing experiment)
 
 define(
     ["handlebars"
@@ -80,7 +83,6 @@ define(
     ,"tmpl!w3c/templates/cgbg-sotd.html"
     ],
     function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl) {
-        // XXX RDFa support is untested
         Handlebars.registerHelper("showPeople", function (name, items) {
             // stuff to handle RDFa
             var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "";
@@ -199,6 +201,10 @@ define(
                     }
                 }
                 // validate configuration and derive new configuration values
+                if (!conf.license) conf.license = "w3c";
+                // NOTE: this is currently only available to the HTML WG
+                // this check will be relaxed later
+                conf.isCCBY = conf.license === "cc-by" && conf.wgPatentURI === "http://www.w3.org/2004/01/pp-impl/40318/status";
                 conf.isCGBG = $.inArray(conf.specStatus, this.cgbg) >= 0;
                 conf.isCGFinal = conf.isCGBG && /G-FINAL$/.test(conf.specStatus);
                 if (!conf.specStatus) msg.pub("error", "Missing required configuration: specStatus");

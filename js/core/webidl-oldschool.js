@@ -1,4 +1,4 @@
-/*global sn, Handlebars */
+/*global Handlebars, simpleNode */
 
 // Module core/webidl-oldschool
 //  Transforms specific markup into the complex old school rendering for API information.
@@ -7,6 +7,7 @@
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
 
+var sn;
 define(
     [
         "handlebars"
@@ -43,9 +44,10 @@ define(
                     if (obj.extendedAttributes) {
                         ret += idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>" +
                                (typeof ctor === 'string' && ctor.length ? ",\n" + ctor : "") + "]" + (nl ? "\n" : " ");
-                    } else if (typeof ctor === 'string' && ctor.length) {
-			ret += idn(indent) + "[" + ctor + "]" + (nl ? "\n" : " ");
-		    }
+                    }
+                    else if (typeof ctor === 'string' && ctor.length) {
+                        ret += idn(indent) + "[" + ctor + "]" + (nl ? "\n" : " ");
+                    }
                     return new Handlebars.SafeString(ret);
                 });
                 Handlebars.registerHelper("param", function (obj, children) {
@@ -82,14 +84,6 @@ define(
             }
         ,   norm = function (str) {
                 return str.replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
-            }
-        ,   sanitiseID = function (id) {
-                id = id.split(/[^\-.0-9a-zA-Z_]/).join("-");
-                id = id.replace(/^\-+/g, "");
-                id = id.replace(/\-+$/, "");
-                if (id.length > 0 && /^[^a-z]/.test(id)) id = "x" + id;
-                if (id.length === 0) id = "generatedID";
-                return id;
             }
         ,   arrsq = function (obj) {
                 var str = "";
@@ -415,7 +409,7 @@ define(
                 // MEMBER
                 obj.type = "member";
                 this.setID(obj, str);
-                obj.refId = sanitiseID(obj.id); // override with different ID type
+                obj.refId = sn.sanitiseID(obj.id); // override with different ID type
                 return obj;
             },
 
@@ -691,13 +685,13 @@ define(
                     if (obj.description && obj.description.text()) cnt = [obj.description];
                     else {
                         // yuck -- should use a single model...
-                        var tdt = sn.element("span", { "class": "idlTypedefType" }, null);
-                        tdt.innerHTML = datatype(obj.datatype);
+                        var $tdt = sn.element("span", { "class": "idlTypedefType" }, null);
+                        $tdt.html(datatype(obj.datatype));
                         cnt = [ sn.text("Throughout this specification, the identifier "),
                                 sn.element("span", { "class": "idlTypedefID" }, null, obj.unescapedId),
                                 sn.text(" is used to refer to the "),
                                 sn.text(obj.array ? (obj.arrayCount > 1 ? obj.arrayCount + "-" : "") + "array of " : ""),
-                                tdt,
+                                $tdt,
                                 sn.text(obj.nullable ? " (nullable)" : ""),
                                 sn.text(" type.")];
                     }
@@ -928,10 +922,10 @@ define(
                                             if (prm.defaultValue) {
                                                 code.innerHTML += " = " + prm.defaultValue;
                                             }
-                                            if (prm.nullable) sn.element("td", { "class": "prmNullTrue" }, tr, "\u2714");
-                                            else              sn.element("td", { "class": "prmNullFalse" }, tr, "\u2718");
-                                            if (prm.optional) sn.element("td", { "class": "prmOptTrue" }, tr, "\u2714");
-                                            else              sn.element("td", { "class": "prmOptFalse" }, tr, "\u2718");
+                                            if (prm.nullable) sn.element("td", { "class": "prmNullTrue" }, tr, $("<span role='img' aria-label='True'>\u2714</span>"));
+                                            else              sn.element("td", { "class": "prmNullFalse" }, tr, $("<span role='img' aria-label='False'>\u2718</span>"));
+                                            if (prm.optional) sn.element("td", { "class": "prmOptTrue" }, tr,  $("<span role='img' aria-label='True'>\u2714</span>"));
+                                            else              sn.element("td", { "class": "prmOptFalse" }, tr, $("<span role='img' aria-label='False'>\u2718</span>"));
                                             var cnt = prm.description ? [prm.description] : "";
                                             sn.element("td", { "class": "prmDesc" }, tr, cnt);
                                         }
@@ -1002,8 +996,8 @@ define(
                                             var tr = sn.element("tr", {}, table);
                                             sn.element("td", { "class": "excName" }, tr, [sn.element("a", {}, null, exc.id)]);
                                             ["onGet", "onSet"].forEach(function (gs) {
-                                                if (exc[gs]) sn.element("td", { "class": "excGetSetTrue" }, tr, "\u2714");
-                                                else         sn.element("td", { "class": "excGetSetFalse" }, tr, "\u2718");
+                                                if (exc[gs]) sn.element("td", { "class": "excGetSetTrue" }, tr, $("<span role='img' aria-label='True'>\u2714</span>"));
+                                                else         sn.element("td", { "class": "excGetSetFalse" }, tr, $("<span role='img' aria-label='False'>\u2718</span>"));
                                             });
                                             var dtd = sn.element("td", { "class": "excDesc" }, tr);
                                             if (exc.type == "simple") {
@@ -1096,7 +1090,7 @@ define(
                     params.push(prm.datatype + (prm.array ? "Array" : "") + "-" + prm.id);
                 }
                 id += params.join("-");
-                return sanitiseID(id);
+                return sn.sanitiseID(id);
             },
 
             mergeWebIDL:    function (obj) {
@@ -1388,6 +1382,7 @@ define(
                 msg.pub("start", "core/webidl");
                 if (!conf.noIDLSorting) conf.noIDLSorting = false;
                 if (!conf.noIDLSectionTitle) conf.noIDLSectionTitle = false;
+                sn = new simpleNode(document);
                 var $idl = $(".idl", doc)
                 ,   finish = function () {
                         msg.pub("end", "core/webidl");
@@ -1420,3 +1415,57 @@ define(
         };
     }
 );
+
+window.simpleNode = function (doc) {
+    this.doc = doc ? doc : document;
+};
+window.simpleNode.prototype = {
+
+    // --- NODE CREATION ---
+    element:    function (name, attr, parent, content) {
+        var $el = $(this.doc.createElement(name));
+        $el.attr(attr || {});
+        if (parent) $(parent).append($el);
+        if (content) {
+            if (content instanceof jQuery) $el.append(content);
+            else if (content instanceof Array) for (var i = 0; i < content.length; i++) $el.append(content[i]);
+            else this.text(content, $el);
+        }
+        return $el;
+    },
+    
+    text:    function (txt, parent) {
+        var tn = this.doc.createTextNode(txt);
+        if (parent) $(parent).append(tn);
+        return tn;
+    },
+    
+    documentFragment:    function (parent, content) {
+        var df = this.doc.createDocumentFragment();
+        if (content) {
+            if (content instanceof Array) for (var i = 0; i < content.length; i++) df.appendChild(content[i]);
+            else this.text(content, df);
+        }
+        if (parent) parent.appendChild(df);
+        return df;
+    },
+    
+    // --- ID MANAGEMENT ---
+    sanitiseID:    function (id) {
+        id = id.split(/[^\-.0-9a-zA-Z_]/).join("-");
+        id = id.replace(/^-+/g, "");
+        id = id.replace(/-+$/, "");
+        if (id.length > 0 && /^[^a-z]/.test(id)) id = "x" + id;
+        if (id.length === 0) id = "generatedID";
+        return id;
+    },
+    
+    idThatDoesNotExist:    function (id) {
+        var inc = 1;
+        if (this.doc.getElementById(id)) {
+            while (this.doc.getElementById(id + "-" + inc)) inc++;
+            id = id + "-" + inc;
+        }
+        return id;
+    }
+};

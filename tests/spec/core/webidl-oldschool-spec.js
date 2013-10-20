@@ -64,7 +64,7 @@ describe("Core - WebIDL", function () {
         expect($ctor1.find(".idlCtorName").text()).toEqual("Constructor");
         expect($ctor1.find(".idlParam").length).toEqual(2);
         expect($ctor1.find(".idlParam:contains('sequence')").length).toEqual(1);
-        expect($ctor1.find(".idlParam").first().find(".idlParamType > a").text()).toEqual("boolean");
+        expect($ctor1.find(".idlParam").first().find(".idlParamType").text()).toEqual("boolean");
 
         $target = $("#ctor-noea", doc);
         text =  "[ Constructor]\n" +
@@ -87,7 +87,7 @@ describe("Core - WebIDL", function () {
         expect($ctor1.find(".idlCtorName").text()).toEqual("Sun");
         expect($ctor1.find(".idlParam").length).toEqual(2);
         expect($ctor1.find(".idlParam:contains('Date[][][]')").length).toEqual(1);
-        expect($ctor1.find(".idlParam").first().find(".idlParamType > a").text()).toEqual("boolean");
+        expect($ctor1.find(".idlParam").first().find(".idlParamType").text()).toEqual("boolean");
     });
 
     it("should handle constants", function () {
@@ -151,14 +151,13 @@ describe("Core - WebIDL", function () {
         expect($ro.find(".idlAttrName").text()).toEqual("_readonly");
         var $lst = $target.find(".idlAttribute").last();
         expect($lst.find(".idlAttrType").text()).toEqual("sequence<Date>");
-        expect($lst.find(".idlAttrType > a").text()).toEqual("Date");
         
         var $sec = $("#attributes-1 dl.attributes", doc);
         expect($sec.find("dt").length).toEqual(7);
         expect($sec.find("dt").eq(3).find("code").text()).toEqual("readonly");
         expect($sec.find("dd").length).toEqual(7);
         expect($sec.find("dt").first().find("code").first().text()).toEqual("dates");
-        expect($sec.find("dt").first().find(".idlAttrType a").text()).toEqual("Date");
+        expect($sec.find("dt").first().find(".idlAttrType").text()).toEqual("sequence<Date>");
         expect($sec.find("dd").first().text()).toEqual("3.5");
     });
 
@@ -169,20 +168,20 @@ describe("Core - WebIDL", function () {
                 "    [Something]\n" +
                 "    void               ext ();\n" +
                 "    unsigned long long ull ();\n" +
-                "    Perhaps?           ull ();\n" +
-                "    short[][][][]      paramed (Date[][][] one, [ExtAttrs] ByteString? ext, optional short maybe, optional short[] shorts, optional short[][][][] hypercubes, optional short defaulted = 3.5, optional DOMString defaulted2 = \"one\", optional short... variable);\n" +
+                "    SuperStar?         ull ();\n" +
+                "    SuperStar[][][][]  paramed (SuperStar[][][] one, [ExtAttrs] ByteString? ext, optional short maybe, optional short[] shorts, optional short[][][][] hypercubes, optional short defaulted = 3.5, optional DOMString defaulted2 = \"one\", optional short... variable);\n" +
                 "};";
         expect($target.text()).toEqual(text);
         expect($target.find(".idlMethod").length).toEqual(5);
         var $meth = $target.find(".idlMethod").first();
         expect($meth.find(".idlMethType").text()).toEqual("void");
         expect($meth.find(".idlMethName").text()).toEqual("basic");
-        expect($target.find(".idlMethType:contains('Perhaps?') a").text()).toEqual("Perhaps");
-        expect($target.find(".idlMethType:contains('short[][][][]') a").text()).toEqual("short");
+        expect($target.find(".idlMethType:contains('SuperStar?') a").text()).toEqual("SuperStar");
+        expect($target.find(".idlMethType:contains('SuperStar[][][][]') a").text()).toEqual("SuperStar");
         var $lst = $target.find(".idlMethod").last();
         expect($lst.find(".idlParam").length).toEqual(8);
         expect($lst.find(".idlParam:contains('optional')").length).toEqual(6);
-        expect($lst.find(".idlParam").first().find(".idlParamType > a").text()).toEqual("Date");
+        expect($lst.find(".idlParam").first().find(".idlParamType > a").text()).toEqual("SuperStar");
     });
 
     it("should handle serializer", function () {
@@ -265,34 +264,34 @@ describe("Core - WebIDL", function () {
         $target = $("#ex-fields", doc);
         text =  "exception SuperStar {\n" +
                 "    [Something]\n" +
-                "    const long value = 42;\n" +
-                "    Object?         message;\n" +
-                "    sequence<float> floats;\n" +
-                "    long[][]        numbers;\n" +
+                "    const SuperStar value = 42;\n" +
+                "    SuperStar?          message;\n" +
+                "    sequence<SuperStar> floats;\n" +
+                "    SuperStar[][]       numbers;\n" +
                 "};";
         expect($target.text()).toEqual(text);
         expect($target.find(".idlConst").length).toEqual(1);
         expect($target.find(".idlField").length).toEqual(3);
         var $const = $target.find(".idlConst");
-        expect($const.find(".idlConstType").text()).toEqual("long");
+        expect($const.find(".idlConstType").text()).toEqual("SuperStar");
         expect($const.find(".idlConstName").text()).toEqual("value");
         expect($const.find(".idlConstValue").text()).toEqual("42");
         var $fld = $target.find(".idlField").first();
-        expect($fld.find(".idlFieldType a").text()).toEqual("Object");
+        expect($fld.find(".idlFieldType a").text()).toEqual("SuperStar");
         expect($fld.find(".idlFieldName").text()).toEqual("message");
 
         var $sec = $("#fields dl.fields", doc);
         expect($sec.find("dt").length).toEqual(3);
         expect($sec.find("dd").length).toEqual(3);
         expect($sec.find("dt").first().find("code").first().text()).toEqual("floats");
-        expect($sec.find("dt").first().find(".idlFieldType a").text()).toEqual("float");
+        expect($sec.find("dt").first().find(".idlFieldType a").text()).toEqual("SuperStar");
         expect($sec.find("dd").first().text()).toEqual("3");
 
         $sec = $("#constants-2 dl.constants", doc);
         expect($sec.find("dt").length).toEqual(1);
         expect($sec.find("dd").length).toEqual(1);
         expect($sec.find("dt").first().find("code").first().text()).toEqual("value");
-        expect($sec.find("dt").first().find(".idlConstType a").text()).toEqual("long");
+        expect($sec.find("dt").first().find(".idlConstType a").text()).toEqual("SuperStar");
         expect($sec.find("dd").first().text()).toEqual("1");
     });
 
@@ -323,7 +322,7 @@ describe("Core - WebIDL", function () {
         $target = $("#cb-less-basic", doc);
         text = "callback SuperStar = unsigned long long? (optional any value);";
         expect($target.text()).toEqual(text);
-        expect($target.find(".idlCallbackType a").text()).toEqual("unsigned long long");
+        expect($target.find(".idlCallbackType").text()).toEqual("unsigned long long?");
         var $prm = $target.find(".idlCallback").last().find(".idlParam");
         expect($prm.length).toEqual(1);
         expect($prm.find(".idlParamType").text()).toEqual("any");
@@ -361,7 +360,6 @@ describe("Core - WebIDL", function () {
         text = "Window implements Breakable;";
         expect($target.text()).toEqual(text);
         expect($target.find(".idlImplements").length).toEqual(1);
-        expect($target.find(".idlImplements a").length).toEqual(2);
 
         $target = $("#impl-less-basic", doc);
         text = "[Something]\n" + text;

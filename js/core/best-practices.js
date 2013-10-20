@@ -27,7 +27,8 @@ define(
                     $(doc).find("head link").first().before($("<style/>").text(css));
                     if ($("#bp-summary")) $("#bp-summary").append($content.contents());
                 }
-                else {
+                else if ($("#bp-summary").length) {
+                    msg.pub("warn", "Using best practices summary (#bp-summary) but no best practices found.");
                     $("#bp-summary").remove();
                 }
 

@@ -5,14 +5,91 @@
 // anywhere else.
 
 define(
-    [],
-    function () {
+    ["jquery"],
+    function ($) {
+        // --- JQUERY EXTRAS ------------------------------------------------------------------------------
+        // Applies to any jQuery object containing elements, changes their name to the one give, and
+        // return a jQuery object containing the new elements
+        $.fn.renameElement = function (name) {
+            var arr = [];
+            this.each(function () {
+                var $newEl = $(this.ownerDocument.createElement(name));
+                // I forget why this didn't work, maybe try again
+                // $newEl.attr($(this).attr());
+                for (var i = 0, n = this.attributes.length; i < n; i++) {
+                    var at = this.attributes[i];
+                    $newEl[0].setAttributeNS(at.namespaceURI, at.name, at.value);
+                }
+                $(this).contents().appendTo($newEl);
+                $(this).replaceWith($newEl);
+                arr.push($newEl[0]);
+            });
+            return $(arr);
+        };
+
+        // For any element, returns a title string that applies the algorithm used for determining the
+        // actual title of a <dfn> element (but can apply to other as well).
+        $.fn.dfnTitle = function () {
+            var title;
+            if (this.attr("title")) title = this.attr("title");
+            else if (this.contents().length == 1 && this.children("abbr, acronym").length == 1 &&
+                     this.find(":first-child").attr("title")) title = this.find(":first-child").attr("title");
+            else title = this.text();
+            return title.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
+        };
+
+
+        // Applied to an element, sets an ID for it (and returns it), using a specific prefix
+        // if provided, and a specific text if given.
+        $.fn.makeID = function (pfx, txt, noLC) {
+            if (this.attr("id")) return this.attr("id");
+            if (!txt) txt = this.attr("title") ? this.attr("title") : this.text();
+            txt = txt.replace(/^\s+/, "").replace(/\s+$/, "");
+            var id = noLC ? txt : txt.toLowerCase();
+            id = id.split(/[^\-.0-9a-z_]+/i).join("-").replace(/^-+/, "").replace(/-+$/, "");
+            if (/\.$/.test(id)) id += "x"; // trailing . doesn't play well with jQuery
+            if (id.length > 0 && /^[^a-z]/i.test(id)) id = "x" + id;
+            if (id.length === 0) id = "generatedID";
+            if (pfx) id = pfx + "-" + id;
+            var inc = 1
+            ,   doc = this[0].ownerDocument;
+            if ($("#" + id, doc).length) {
+                while ($("#" + id + "-" + inc, doc).length) inc++;
+                id += "-" + inc;
+            }
+            this.attr("id", id);
+            return id;
+        };
+
+        // Returns all the descendant text nodes of an element. Note that those nodes aren't
+        // returned as a jQuery array since I'm not sure if that would make too much sense.
+        $.fn.allTextNodes = function (exclusions) {
+            var textNodes = [],
+                excl = {};
+            for (var i = 0, n = exclusions.length; i < n; i++) excl[exclusions[i]] = true;
+            function getTextNodes (node) {
+                if (node.nodeType === 1 && excl[node.localName.toLowerCase()]) return;
+                if (node.nodeType === 3) textNodes.push(node);
+                else {
+                    for (var i = 0, len = node.childNodes.length; i < len; ++i) getTextNodes(node.childNodes[i]);
+                }
+            }
+            getTextNodes(this[0]);
+            return textNodes;
+        };
+        
+        
         var utils = {
             // --- SET UP
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/utils");
                 msg.pub("end", "core/utils");
                 cb();
+            }
+
+            // --- RESPEC STUFF -------------------------------------------------------------------------------
+        ,   removeReSpec:   function (doc) {
+                $(".remove, script[data-requiremodule]", doc).remove();
             }
 
             // --- STRING HELPERS -----------------------------------------------------------------------------
@@ -137,73 +214,3 @@ define(
         return utils;
     }
 );
-
-// --- JQUERY EXTRAS ------------------------------------------------------------------------------
-// Applies to any jQuery object containing elements, changes their name to the one give, and
-// return a jQuery object containing the new elements
-$.fn.renameElement = function (name) {
-    var arr = [];
-    this.each(function () {
-        var $newEl = $(this.ownerDocument.createElement(name));
-        // I forget why this didn't work, maybe try again
-        // $newEl.attr($(this).attr());
-        for (var i = 0, n = this.attributes.length; i < n; i++) {
-            var at = this.attributes[i];
-            $newEl[0].setAttributeNS(at.namespaceURI, at.name, at.value);
-        }
-        $(this).contents().appendTo($newEl);
-        $(this).replaceWith($newEl);
-        arr.push($newEl[0]);
-    });
-    return $(arr);
-};
-
-// For any element, returns a title string that applies the algorithm used for determining the
-// actual title of a <dfn> element (but can apply to other as well).
-$.fn.dfnTitle = function () {
-    var title;
-    if (this.attr("title")) title = this.attr("title");
-    else if (this.contents().length == 1 && this.children("abbr, acronym").length == 1 &&
-             this.find(":first-child").attr("title")) title = this.find(":first-child").attr("title");
-    else title = this.text();
-    return title.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
-};
-
-
-// Applied to an element, sets an ID for it (and returns it), using a specific prefix
-// if provided, and a specific text if given.
-$.fn.makeID = function (pfx, txt, noLC) {
-    if (this.attr("id")) return this.attr("id");
-    if (!txt) txt = this.attr("title") ? this.attr("title") : this.text();
-    txt = txt.replace(/^\s+/, "").replace(/\s+$/, "");
-    var id = noLC ? txt : txt.toLowerCase();
-    id = id.split(/[^\-.0-9a-z_]+/i).join("-").replace(/^-+/, "").replace(/-+$/, "");
-    if (id.length > 0 && /^[^a-z]/i.test(id)) id = "x" + id;
-    if (id.length === 0) id = "generatedID";
-    if (pfx) id = pfx + "-" + id;
-    var inc = 1
-    ,   doc = this[0].ownerDocument;
-    if ($("#" + id, doc).length) {
-        while ($("#" + id + "-" + inc, doc).length) inc++;
-        id += "-" + inc;
-    }
-    this.attr("id", id);
-    return id;
-};
-
-// Returns all the descendant text nodes of an element. Note that those nodes aren't
-// returned as a jQuery array since I'm not sure if that would make too much sense.
-$.fn.allTextNodes = function (exclusions) {
-    var textNodes = [],
-        excl = {};
-    for (var i = 0, n = exclusions.length; i < n; i++) excl[exclusions[i]] = true;
-    function getTextNodes (node) {
-        if (node.nodeType === 1 && excl[node.localName.toLowerCase()]) return;
-        if (node.nodeType === 3) textNodes.push(node);
-        else {
-            for (var i = 0, len = node.childNodes.length; i < len; ++i) getTextNodes(node.childNodes[i]);
-        }
-    }
-    getTextNodes(this[0]);
-    return textNodes;
-};

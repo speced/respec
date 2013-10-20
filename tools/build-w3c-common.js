@@ -1,44 +1,25 @@
 #!/usr/local/bin/node
 
-var exec = require("child_process").exec
-,   fs   = require("fs")
+var fs   = require("fs")
 ,   pth  = require("path")
-,   r    = require("./r")
+,   b    = require("./builder")
 ,   version = JSON.parse(fs.readFileSync(pth.join(__dirname, "../package.json"), "utf-8")).version
 ,   builds = pth.join(__dirname, "../builds")
+,   latest = pth.join(builds, "respec-w3c-common.js")
 ,   versioned = pth.join(builds, "respec-w3c-common-" + version + ".js")
 ;
 
-// check that we are in a release branch
-exec("git symbolic-ref HEAD", function (err, stdout, stderr) {
-    if (err) return console.log("ERR: " + err);
-    var branch = stdout.replace(/refs\/heads\//, "").replace(/\n/, "");
-    if (branch != "release/v" + version)
-        return console.log("Current branch (" + branch + ") does not match release/v" + version);
-    if (fs.existsSync(versioned))
-        return console.log("Output build file respec-w3c-common-" + version + ".js already exists");
-    
-    // optimisation settings
-    // note that the paths/includes below will need to change in when we drop those
-    // older dependencies
-    var config = {
-        baseUrl:    pth.join(__dirname, "../js")
-    // ,   optimize:   "none"
-    ,   paths:  {
-            requireLib: "./require"
-        ,   simpleNode: "./simple-node"
-        ,   shortcut:   "./shortcut"
-        }
-    ,   name:       "profile-w3c-common"
-    ,   include:    "requireLib simpleNode shortcut".split(" ")
-    ,   out:        versioned
-    ,   inlineText: true
-    ,   preserveLicenseComments:    false
-    };
-    r.optimize(config, function (resp) {
-        fs.writeFileSync(pth.join(builds, "respec-w3c-common.js"),
-                        "/* ReSpec " + version + " - Robin Berjon, http://berjon.com/ (@robinberjon) */\n/* See original source for licenses: https://github.com/darobin/respec. */\n" +
-                        fs.readFileSync(config.out));
+function buildW3C (versionSnapshot, cb) {
+    b.build({ out: latest }, function () {
+        if (versionSnapshot) fs.writeFileSync(versioned, fs.readFileSync(latest, "utf8"), { encoding: "utf8" });
+        cb();
+    });
+}
+
+if (require.main === module) {
+    buildW3C(true, function () {
         console.log("OK!");
     });
-});
+}
+
+exports.buildW3C = buildW3C;

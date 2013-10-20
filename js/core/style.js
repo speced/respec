@@ -17,6 +17,9 @@ define(
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/style");
+                if (conf.extraCSS) {
+                    msg.pub("warn", "The 'extraCSS' configuration property is now deprecated.");
+                }
                 if (!conf.noReSpecCSS) {
                     $("<style/>").appendTo($("head", $(doc)))
                                  .text(css);

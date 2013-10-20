@@ -23,10 +23,10 @@ define(
                     ,   title = "Req. " + i
                     ;
                     msg.pub("req", {
-                      type: "req",
-                      number: i,
-                      content: $req.html(),
-                      title: title
+                        type: "req",
+                        number: i,
+                        content: $req.html(),
+                        title: title
                     });
                     $req.prepend("<a href='#" + $req.attr("id") + "'>" + title + "</a>: ");
                 });
@@ -42,9 +42,11 @@ define(
                     id = href.substring(1);
                     $req = $("#" + id);
                     if ($req.length) {
-                      txt = $req.find("> a").text();
-                    } else {
-                      txt = "Req. not found '" + id + "'";
+                        txt = $req.find("> a").text();
+                    }
+                    else {
+                        txt = "Req. not found '" + id + "'";
+                        msg.pub("error", "Requirement not found in a.reqRef: " + id);
                     }
                     $ref.text(txt);
                 });

@@ -15,6 +15,7 @@ describe("Core - Markdown", function () {
         waitsFor(function () { return doc; }, MAXOUT);
 
         runs(function () {
+            $(".removeOnSave", doc).remove();
             var $foo = $('#foo', doc);
             expect($foo.length).toEqual(1);
             expect($foo.text()).toEqual("1. Foo");

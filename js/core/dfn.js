@@ -21,6 +21,13 @@ define(
                     if (conf.definitionMap[title] && !(conf.definitionMap[title] instanceof Function)) {
                         $ant.attr("href", "#" + conf.definitionMap[title]).addClass("internalDFN");
                     }
+                    else {
+                        // ignore WebIDL
+                        if (!$ant.parents(".idl, dl.methods, dl.attributes, dl.constants, dl.constructors, dl.fields, dl.dictionary-members, span.idlMemberType, span.idlTypedefType, div.idlImplementsDesc").length) {
+                            msg.pub("warn", "Found linkless <a> element with text '" + title + "' but no matching <dfn>.");
+                        }
+                        $ant.replaceWith($ant.contents());
+                    }
                 });
                 msg.pub("end", "core/dfn");
                 cb();
