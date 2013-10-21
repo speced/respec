@@ -175,9 +175,9 @@ define(
                 if ($overlay) $overlay.remove();
                 var width = 500;
                 $overlay = $("<div id='respec-overlay' class='removeOnSave'></div>").hide();
-                $modal = $("<div id='respec-modal' class='removeOnSave'><h3></h3><div class='content'></div></div>").hide();
+                $modal = $("<div id='respec-modal' class='removeOnSave'><h3></h3><div class='inside'></div></div>").hide();
                 $modal.find("h3").text(title);
-                $modal.find(".content").append(content);
+                $modal.find(".inside").append(content);
                 $("body")
                     .append($overlay)
                     .append($modal);
