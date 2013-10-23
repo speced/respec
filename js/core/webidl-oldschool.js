@@ -904,7 +904,7 @@ define(
                                     : sn.idThatDoesNotExist(curLnk + it.refId);
                                 var dt = sn.element("dt", { id: id }, dl);
                                 sn.element("code", {}, dt, it.unescapedId);
-                                if (it.isStatic) dt.appendChild(this.doc.createTextNode(", static"));
+                                if (it.isStatic) dt.append(this.doc.createTextNode(", static"));
                                 var desc = sn.element("dd", {}, dl, [it.description]);
                                 if (type == "method" || type == "constructor") {
                                     if (it.params.length) {
@@ -943,7 +943,7 @@ define(
                                             sn.element("td", { "class": "excName" }, tr, [sn.element("a", {}, null, exc.id)]);
                                             var dtd = sn.element("td", { "class": "excDesc" }, tr);
                                             if (exc.type == "simple") {
-                                                $(dtd).append(exc.description);
+                                                dtd.append(exc.description);
                                             }
                                             else {
                                                 var ctab = sn.element("table", { "class": "exceptionCodes" }, dtd );
@@ -1001,7 +1001,7 @@ define(
                                             });
                                             var dtd = sn.element("td", { "class": "excDesc" }, tr);
                                             if (exc.type == "simple") {
-                                                dtd.appendChild(exc.description);
+                                                dtd.append(exc.description);
                                             }
                                             else {
                                                 var ctab = sn.element("table", { "class": "exceptionCodes" }, dtd );
@@ -1440,14 +1440,8 @@ window.simpleNode.prototype = {
         return tn;
     },
     
-    documentFragment:    function (parent, content) {
-        var df = this.doc.createDocumentFragment();
-        if (content) {
-            if (content instanceof Array) for (var i = 0; i < content.length; i++) df.appendChild(content[i]);
-            else this.text(content, df);
-        }
-        if (parent) parent.appendChild(df);
-        return df;
+    documentFragment:    function () {
+        return this.doc.createDocumentFragment();
     },
     
     // --- ID MANAGEMENT ---
