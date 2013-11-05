@@ -8,7 +8,7 @@ define(
         var msg, doc, conf;
         var cleanup = function (rootEl) {
             $(".removeOnSave", rootEl).remove();
-            utils.removeReSpec(doc);
+            utils.removeReSpec(rootEl);
         };
         return {
             show:   function (ui, _conf, _doc, _msg) {
