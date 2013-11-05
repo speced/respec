@@ -210,6 +210,7 @@ describe("W3C — Headers", function () {
     it("should take wg configurations into account", function () {
         loadWithConfig({ wg: "WGNAME", wgURI: "WGURI", wgPatentURI: "WGPATENT", wgPublicList: "WGLIST" }, function ($ifr) {
             var $sotd = $("#sotd", $ifr[0].contentDocument);
+            console.log($sotd);
             expect($sotd.find("p:contains('CUSTOM PARAGRAPH')").length).toEqual(1);
             expect($sotd.find("a:contains('WGNAME')").length).toEqual(1);
             expect($sotd.find("a:contains('WGNAME')").attr("href")).toEqual("WGURI");
