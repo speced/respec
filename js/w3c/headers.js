@@ -366,6 +366,14 @@ define(
                     msg.pub("error", "IG-NOTEs must link to charter's disclosure section using charterDisclosureURI");
                 $(conf.isCGBG ? cgbgSotdTmpl(conf) : sotdTmpl(conf)).insertAfter($("#abstract"));
 
+                if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
+                    msg.pub("error", "CR, PR, and REC documents need to have an implementationReportURI defined.");
+                }
+                if (conf.isTagFinding && !conf.sotdCustomParagraph) {
+                    msg.pub("error", "ReSpec does not support automated SotD generation for TAG findings, " +
+                                     "please specify one using a <code><section></code> element with ID=sotd.");
+                }
+
                 msg.pub("end", "w3c/headers");
                 cb();
             }
