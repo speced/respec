@@ -210,6 +210,8 @@ define(
                     ,   borderRadius:   "5px"
                     ,   width:          width + "px"
                     ,   padding:        "0 20px 20px 20px"
+                    ,   maxHeight:      ($(window).height() - 150) + "px"
+                    ,   overflowY:      "auto"
                     })
                     .fadeTo(200, 1)
                     ;
