@@ -917,11 +917,12 @@ define(
                                             sn.element("td", { "class": "prmName" }, tr, prm.id);
                                             var tyTD = sn.element("td", { "class": "prmType" }, tr);
                                             var code = sn.element("code", {}, tyTD);
-                                            code.innerHTML = datatype(prm.datatype);
-                                            if (prm.array) code.innerHTML += arrsq(prm);
+                                            var codeHTML = datatype(prm.datatype);
+                                            if (prm.array) codeHTML += arrsq(prm);
                                             if (prm.defaultValue) {
-                                                code.innerHTML += " = " + prm.defaultValue;
+                                                codeHTML += " = " + prm.defaultValue;
                                             }
+                                            code.html(codeHTML);
                                             if (prm.nullable) sn.element("td", { "class": "prmNullTrue" }, tr, $("<span role='img' aria-label='True'>\u2714</span>"));
                                             else              sn.element("td", { "class": "prmNullFalse" }, tr, $("<span role='img' aria-label='False'>\u2718</span>"));
                                             if (prm.optional) sn.element("td", { "class": "prmOptTrue" }, tr,  $("<span role='img' aria-label='True'>\u2714</span>"));
@@ -964,9 +965,10 @@ define(
                                         var reDiv = sn.element("div", {}, desc);
                                         sn.element("em", {}, reDiv, "Return type: ");
                                         var code = sn.element("code", {}, reDiv);
-                                        code.innerHTML = datatype(it.datatype);
-                                        if (it.array) code.innerHTML += arrsq(it);
+                                        var codeHTML = datatype(it.datatype);
+                                        if (it.array) codeHTML += arrsq(it);
                                         if (it.nullable) sn.text(", nullable", reDiv);
+                                        code.html(codeHTML);
                                     }
                                 }
                                 else if (type == "attribute") {
