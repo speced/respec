@@ -23,14 +23,32 @@ define(
                         $item.attr('id', $item.prop('tagName').toLowerCase() + '_' + resourceID) ;
                     }
                 });
-                // ensure head section is labelled
+                // ensure head section is labeled
                 $('body', doc).attr('role', 'document') ;
                 $('body', doc).attr('id', 'respecDocument') ;
                 $('div.head', doc).attr('role', 'contentinfo') ;
                 $('div.head', doc).attr('id', 'respecHeader') ;
                 if (!conf.noTOC) {
-                    // ensure toc is labelled
+                    // ensure Table of Contents (toc) is labeled
                     var toc = $('section#toc', doc)
+                                  .find("ul:first");
+                    toc.attr('role', 'directory') ;
+                    if (!toc.attr("id")) {
+                        toc.attr('id', 'respecContents') ;
+                    }
+                }
+                if (!conf.TOF) {
+                    // ensure Table of Figures (tof) is labeled
+                    var toc = $('section#tof', doc)
+                                  .find("ul:first");
+                    toc.attr('role', 'directory') ;
+                    if (!toc.attr("id")) {
+                        toc.attr('id', 'respecContents') ;
+                    }
+                }
+                if (!conf.TOT) {
+                    // ensure Table of Tables (tot) is labeled
+                    var toc = $('section#tot', doc)
                                   .find("ul:first");
                     toc.attr('role', 'directory') ;
                     if (!toc.attr("id")) {
