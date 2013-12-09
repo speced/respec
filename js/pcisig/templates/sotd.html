@@ -1,0 +1,118 @@
+<section id='sotd' class='introductory'><h2>Status of This Document</h2>
+  {{#if isUnofficial}}
+    <p>
+      This document is merely a public working draft of a potential specification. It has
+      no official standing of any kind and does not represent the support or consensus of any
+      standards organisation.
+    </p>
+    {{{sotdCustomParagraph}}}
+  {{else}}
+    {{#if isTagFinding}}
+      {{{sotdCustomParagraph}}}
+    {{else}}
+      {{#if isNoTrack}}
+        <p>
+          This document is merely a W3C-internal {{#if isMO}}member-confidential{{/if}} document. It
+          has no official standing of any kind and does not represent consensus of the W3C
+          Membership.
+        </p>
+        {{{sotdCustomParagraph}}}
+      {{else}}
+        <p>
+          <em>This section describes the status of this document at the time of its publication.
+          Other documents may supersede this document. A list of current W3C publications and the
+          latest revision of this technical report can be found in the <a
+          href='http://www.w3.org/TR/'>W3C technical reports index</a> at
+          http://www.w3.org/TR/.</em>
+        </p>
+        {{{sotdCustomParagraph}}}
+        <p>
+          This document was published by the {{{wgHTML}}} as {{anOrA}} {{longStatus}}.
+          {{#if notYetRec}}
+            This document is intended to become a W3C Recommendation.
+          {{/if}}
+          {{#unless isPR}}
+            If you wish to make comments regarding this document, please send them to 
+            <a href='mailto:{{wgPublicList}}@w3.org{{#if subjectPrefix}}?subject={{subjectPrefix}}{{/if}}'>{{wgPublicList}}@w3.org</a> 
+            (<a href='mailto:{{wgPublicList}}-request@w3.org?subject=subscribe'>subscribe</a>,
+            <a
+              href='http://lists.w3.org/Archives/Public/{{wgPublicList}}/'>archives</a>){{#if subjectPrefix}}
+              with <code>{{subjectPrefix}}</code> at the start of your email's subject{{/if}}.
+          {{/unless}}
+          {{#if isLC}}The Last Call period ends {{humanLCEnd}}.{{/if}}
+          {{#if isCR}}
+            W3C publishes a Candidate Recommendation to indicate that the document is believed to be
+            stable and to encourage implementation by the developer community. This Candidate
+            Recommendation is expected to advance to Proposed Recommendation no earlier than
+            {{humanCREnd}}.
+          {{/if}}
+          {{#if isPR}}
+              The W3C Membership and other interested parties are invited to review the document and
+              send comments to
+              <a rel='discussion' href='mailto:{{wgPublicList}}@w3.org'>{{wgPublicList}}@w3.org</a> 
+              (<a href='mailto:{{wgPublicList}}-request@w3.org?subject=subscribe'>subscribe</a>,
+              <a href='http://lists.w3.org/Archives/Public/{{wgPublicList}}/'>archives</a>)
+              through {{humanPREnd}}. Advisory Committee Representatives should consult their
+              <a href='https://www.w3.org/2002/09/wbs/myQuestionnaires'>WBS questionnaires</a>. 
+              Note that substantive technical comments were expected during the Last Call review
+              period that ended {{humanLCEnd}}.
+          {{else}}
+            All comments are welcome.
+          {{/if}}
+        </p>
+        {{#if implementationReportURI}}
+          <p>
+            Please see the Working Group's  <a href='{{implementationReportURI}}'>implementation
+            report</a>.
+          </p>
+        {{/if}}
+        {{#if notRec}}
+          <p>
+            Publication as {{anOrA}} {{textStatus}} does not imply endorsement by the W3C
+            Membership. This is a draft document and may be updated, replaced or obsoleted by other
+            documents at any time. It is inappropriate to cite this document as other than work in
+            progress.
+          </p>
+        {{/if}}
+        {{#if isLC}}
+          <p>
+            This is a Last Call Working Draft and thus the Working Group has determined that this
+            document has satisfied the relevant technical requirements and is sufficiently stable to
+            advance through the Technical Recommendation process.
+          </p>
+        {{/if}}
+        <p>
+          {{#unless isIGNote}}
+            This document was produced by a group operating under the 
+            <a{{#if doRDFa}} id="sotd_patent" about='' rel='w3p:patentRules'{{/if}}
+            href='http://www.w3.org/Consortium/Patent-Policy-20040205/'>5 February 2004 W3C Patent
+            Policy</a>.
+          {{/unless}}
+          {{#if recNotExpected}}
+            The group does not expect this document to become a W3C Recommendation.
+          {{/if}}
+          {{#unless isIGNote}}
+            {{#if multipleWGs}}
+              W3C maintains a public list of any patent disclosures ({{{wgPatentHTML}}})
+            {{else}}
+              W3C maintains a <a href='{{wgPatentURI}}' rel='disclosure'>public list of any patent
+              disclosures</a> 
+            {{/if}}
+            made in connection with the deliverables of the group; that page also includes
+            instructions for disclosing a patent. An individual who has actual knowledge of a patent
+            which the individual believes contains
+            <a href='http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential'>Essential
+            Claim(s)</a> must disclose the information in accordance with
+            <a href='http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure'>section
+            6 of the W3C Patent Policy</a>.
+          {{/unless}}
+          {{#if isIGNote}}
+            The disclosure obligations of the Participants of this group are described in the 
+            <a href='{{charterDisclosureURI}}'>charter</a>. 
+          {{/if}}
+        </p>
+        {{#if addPatentNote}}<p>{{{addPatentNote}}}</p>{{/if}}
+      {{/if}}
+    {{/if}}
+  {{/if}}
+</section>
