@@ -63,7 +63,7 @@ define(
 	                        lastNonAppendix = i;
 	                        appendixMode = true;
 	                }
-	                var chapter = i;
+	                var chapter = i + 1;
 	                if (appendixMode) chapter = appendixMap(i - lastNonAppendix);
 	          		$("table", $sec).each(function () {
 						var $tbl = $(this)
