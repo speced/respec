@@ -43,7 +43,7 @@ define(
                                   .find("ul:first");
                     toc.attr('role', 'directory') ;
                     if (!toc.attr("id")) {
-                        toc.attr('id', 'respecContents') ;
+                        toc.attr('id', 'respecFigures') ;
                     }
                 }
                 if (!conf.TOT) {
@@ -52,7 +52,7 @@ define(
                                   .find("ul:first");
                     toc.attr('role', 'directory') ;
                     if (!toc.attr("id")) {
-                        toc.attr('id', 'respecContents') ;
+                        toc.attr('id', 'respecTables') ;
                     }
                 }
                 // mark issues and notes with heading
