@@ -6,33 +6,81 @@
 define(
     [],
     function () {
+    	var makeFigNum = function(fmt, doc, chapter, $cap, label, num, tit) {
+    		//console.log("fmt=\"" + fmt + "\"");
+    		$cap.html("");
+            if (fmt === "" || fmt === "%t") {
+            	$cap.append($("<span class='" + label + "-title'/>").text(tit));
+            	return num;
+            }
+            var $num = $("<span class='" + label + "no'/>");
+            var $cur = $cap;
+            var sfmt = fmt.split("%");
+            var last = "";
+            for (var i = 0; i < sfmt.length; i++) {
+            	var s = sfmt[i];
+            	if (last === "") {
+            		$cur.append(doc.createTextNode(s));
+            	} else {
+            		switch (s.substr(0,1)) {
+            		case "(": $cur = $num; break;
+            		case ")": $cur = $cap; $cur.append($num); $num = $("<span class='"+label+"no'/>"); break;
+            		case "":  $cur.append(doc.createTextNode("%")); break;
+            		case "#": $cur.append(doc.createTextNode(num[0])); break;
+            		case "c": $cur.append(doc.createTextNode(chapter)); break;
+            		case "1": if (num[1] != chapter) num = [1, chapter]; break;
+            		case "t": $cur.append($("<span class='"+label+"-title'/>").text(tit)); break;
+            		default: $cur.append(doc.createTextNode("?{"+s.substr(0,1)+"}")); break;
+            		}
+            		$cur.append(doc.createTextNode(s.substr(1)));
+            	}
+            	//console.log("s=\"" + s + "\"" + "  chapter=" + chapter + "  $cur=\""+$cur.html()+"\"" + "  last='" + last + "'");
+            	last = s.substr(0,1);
+            }
+    		num[0]++;
+            return num;
+    	}
+    	,   appendixMap = function(n) {
+    		var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            if (n < alphabet.length) {
+            	return alphabet.charAt(n);
+            } else {
+            	return appendixMap(floor(n/alphabet.length)) + alphabet.charAt(mod(n,alphabet.length));
+            }
+    	};
         return {
             run:        function (conf, doc, cb, msg) {
                 msg.pub("start", "core/tables");
+                if (!conf.tblFmt) conf.tblFmt = "";//Table %(%1%c-%#%): %t";
+                //conf.tblFmt = "";
 
                 // process all tables
-                var tblMap = {}, tot =[ ], num = 0;
-                $("table").each(function () {
-                    var $tbl = $(this)
-                    ,   $cap = $tbl.find("caption")
-                    ,   tit = $cap.text()
-                    ,   id = $tbl.makeID("tbl", tit);
-                    if (! $cap.length) {
-                        // if caption exists, add Table # and class
-                        num++;
-                        $cap.html("")
-                            .append(doc.createTextNode("Table "))
-                            .append($("<span class='tblno'>" + num + "</span>"))
-                            .append(doc.createTextNode(" "))
-                            .append($("<span class='tbl-title'/>")
-                            .text(tit));
-                        tblMap[id] = $cap.contents().clone();
-                        tot.push($("<li class='totline'><a class='tocxref' href='#" + id + "'></a></li>")
-                           .find(".tocxref")
-                           .append($cap.contents().clone())
-                           .end());
-                    }
-                });
+                var tblMap = {}, tot =[ ], num = [1,1], appendixMode = false, lastNonAppendix = -1000;;
+                var $secs = $("body", doc).children(conf.tocIntroductory ? "section" : "section:not(.introductory)");
+				for (var i = 0; i < $secs.length; i++) {
+					var $sec = $($secs[i], doc);
+			        if ($sec.hasClass("appendix") && !appendixMode) {
+	                        lastNonAppendix = i;
+	                        appendixMode = true;
+	                }
+	                var chapter = i;
+	                if (appendixMode) chapter = appendixMap(i - lastNonAppendix);
+	          		$("table", $sec).each(function () {
+						var $tbl = $(this)
+						,   $cap = $tbl.find("caption")
+						,   tit = $cap.text()
+						,   id = $tbl.makeID("tbl", tit);
+						if ($cap.length) {
+							// if caption exists, add Table # and class
+							num = makeFigNum(conf.tblFmt, doc, chapter ,$cap, "tbl", num, tit);
+							tblMap[id] = $cap.contents().clone();
+							tot.push($("<li class='totline'><a class='tocxref' href='#" + id + "'></a></li>")
+									.find(".tocxref")
+									.append($cap.contents().clone())
+									.end());
+						}
+					});
+                }
 
                 // Update all anchors with empty content that reference a table ID
                 $("a[href]", doc).each(function () {
@@ -61,7 +109,7 @@ define(
                         }
                     }
                     $tot.append($("<h2>Table of Tables</h2>"));
-                    $tot.append($("<ul class='tot'/>"));
+                    $tot.append($("<ul class='tof'/>"));
                     var $ul = $tot.find("ul");
                     while (tot.length) $ul.append(tot.shift());
                 }
