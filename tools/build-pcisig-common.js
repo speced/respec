@@ -2,7 +2,7 @@
 
 var fs   = require("fs")
 ,   pth  = require("path")
-,   b    = require("./builder")
+,   b    = require("./builder-pcisig")
 ,   version = JSON.parse(fs.readFileSync(pth.join(__dirname, "../package-pcisig.json"), "utf-8")).version
 ,   builds = pth.join(__dirname, "../builds")
 ,   latest = pth.join(builds, "respec-pcisig-common.js")
