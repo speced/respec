@@ -1,0 +1,159 @@
+<div class='head'>
+  <p>
+    {{#if prependW3C}}
+      <a href='http://www.w3.org/'><img width='72' height='48' src='https://www.w3.org/Icons/w3c_home' alt='W3C'/></a>
+    {{/if}}
+  </p>
+  <h1 class='title p-name' id='title'{{#if doRDFa}} property='dcterms:title'{{/if}}>{{title}}</h1>
+  {{#if subtitle}}
+    <h2 {{#if doRDFa}}property='bibo:subtitle' {{/if}}id='subtitle'>{{subtitle}}</h2>
+  {{/if}}
+  <h2 {{#if doRDFa}}property="dcterms:issued" datatype="xsd:dateTime" content="{{publishISODate}}"{{/if}}>{{#if prependW3C}}W3C {{/if}}{{textStatus}} <time class='dt-published' datetime='{{dashDate}}'>{{publishHumanDate}}</time></h2>
+  <dl>
+    {{#unless isNoTrack}}
+      <dt>This version:</dt>
+      <dd><a class='u-url' href='{{thisVersion}}'>{{thisVersion}}</a></dd>
+      <dt>Latest published version:</dt>
+      <dd>{{#if latestVersion}}<a href='{{latestVersion}}'>{{latestVersion}}</a>{{else}}none{{/if}}</dd>
+    {{/unless}}
+    {{#if edDraftURI}}
+      <dt>Latest editor's draft:</dt>
+      <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
+    {{/if}}
+    {{#if testSuiteURI}}
+      <dt>Test suite:</dt>
+      <dd><a href='{{testSuiteURI}}'>{{testSuiteURI}}</a></dd>
+    {{/if}}
+    {{#if implementationReportURI}}
+      <dt>Implementation report:</dt>
+      <dd><a href='{{implementationReportURI}}'>{{implementationReportURI}}</a></dd>
+    {{/if}}
+    {{#if isED}}
+      {{#if prevED}}
+        <dt>Previous editor's draft:</dt>
+        <dd><a href='{{prevED}}'>{{prevED}}</a></dd>
+      {{/if}}
+    {{/if}}
+    {{#if showPreviousVersion}}
+      <dt>Previous version:</dt>
+      <dd><a {{#if doRDFa}}rel="dcterms:replaces"{{/if}} href='{{prevVersion}}'>{{prevVersion}}</a></dd>
+    {{/if}}
+    {{#if prevRecURI}}
+      {{#if isRec}}
+          <dt>Previous Recommendation:</dt>
+          <dd><a {{#if doRDFa}}rel="dcterms:replaces"{{/if}} href='{{prevRecURI}}'>{{prevRecURI}}</a></dd>
+      {{else}}
+          <dt>Latest Recommendation:</dt>
+          <dd><a href='{{prevRecURI}}'>{{prevRecURI}}</a></dd>
+      {{/if}}
+    {{/if}}
+    <dt>Editor{{#if multipleEditors}}s{{/if}}:</dt>
+    {{showPeople "Editor" editors}}
+    {{#if authors}}
+      <dt>Author{{#if multipleAuthors}}s{{/if}}:</dt>
+      {{showPeople "Author" authors}}
+    {{/if}}
+    {{#if otherLinks}}
+      {{#each otherLinks}}
+        {{#if key}}
+          <dt {{#if class}}class="{{class}}"{{/if}}>{{key}}:</dt>
+          {{#if data}}
+             {{#each data}}
+                {{#if value}}
+                  <dd {{#if class}}class="{{class}}"{{/if}}>
+                    {{#if href}}<a href="{{href}}">{{/if}}
+                      {{value}}
+                    {{#if href}}</a>{{/if}}
+                  </dd>
+                {{else}}
+                  {{#if href}}
+                    <dd><a href="{{href}}">{{href}}</a></dd>
+                  {{/if}}
+                {{/if}}
+             {{/each}}
+          {{else}}
+            {{#if value}}
+              <dd {{#if class}}class="{{class}}"{{/if}}>
+                {{#if href}}<a href="{{href}}">{{/if}}
+                  {{value}}
+                {{#if href}}</a>{{/if}}
+              </dd>
+            {{else}}
+              {{#if href}}
+                <dd {{#if class}}class="{{class}}"{{/if}}>
+                  <a href="{{href}}">{{href}}</a>
+                </dd>
+              {{/if}}
+            {{/if}}
+          {{/if}}
+        {{/if}}
+      {{/each}}
+    {{/if}}
+  </dl>
+  {{#if errata}}
+    <p>
+      Please refer to the <a href="{{errata}}"><strong>errata</strong></a> for this document, which may include some normative corrections.
+    </p>
+  {{/if}}
+  {{#if alternateFormats}}
+    <p>
+      {{#if multipleAlternates}}
+        This document is also available in these non-normative formats:
+      {{else}}
+        This document is also available in this non-normative format:
+      {{/if}}
+      {{{alternatesHTML}}}
+    </p>
+  {{/if}}
+  {{#if isRec}}
+    <p>
+      The English version of this specification is the only normative version. Non-normative
+      <a href="http://www.w3.org/Consortium/Translation/">translations</a> may also be available.
+    </p>
+  {{/if}}
+  {{#if isUnofficial}}
+    {{#if additionalCopyrightHolders}}
+      <p class='copyright'>{{{additionalCopyrightHolders}}}</p>
+    {{else}}
+      {{#if overrideCopyright}}
+        {{{overrideCopyright}}}
+      {{else}}
+        <p class='copyright'>
+          This document is licensed under a
+          <a class='subfoot' href='http://creativecommons.org/licenses/by/3.0/' rel='license'>Creative Commons
+          Attribution 3.0 License</a>.
+        </p>
+      {{/if}}
+    {{/if}}
+  {{else}}
+    {{#if overrideCopyright}}
+      {{{overrideCopyright}}}
+    {{else}}
+      <p class='copyright'>
+        <a href='http://www.w3.org/Consortium/Legal/ipr-notice#Copyright'>Copyright</a> &copy;
+        {{#if copyrightStart}}{{copyrightStart}}-{{/if}}{{publishYear}}
+        {{#if additionalCopyrightHolders}} {{{additionalCopyrightHolders}}} &amp;{{/if}}
+        <a href='http://www.w3.org/'><abbr title='World Wide Web Consortium'>W3C</abbr></a><sup>&reg;</sup>
+        (<a href='http://www.csail.mit.edu/'><abbr title='Massachusetts Institute of Technology'>MIT</abbr></a>,
+        <a href='http://www.ercim.eu/'><abbr title='European Research Consortium for Informatics and Mathematics'>ERCIM</abbr></a>,
+        <a href='http://www.keio.ac.jp/'>Keio</a>, <a href="http://ev.buaa.edu.cn/">Beihang</a>), 
+        {{#if isCCBY}}
+          Some Rights Reserved: this document is dual-licensed,
+          <a href="https://creativecommons.org/licenses/by/3.0/">CC-BY</a> and 
+          <a href="http://www.w3.org/Consortium/Legal/copyright-documents">W3C Document License</a>.
+        {{else}}
+        All Rights Reserved.
+        {{/if}}
+        W3C <a href='http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer'>liability</a>,
+        <a href='http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks'>trademark</a> and
+        {{#if isCCBY}}
+          <a href='http://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html'>document use</a>
+        {{else}}
+          <a href='http://www.w3.org/Consortium/Legal/copyright-documents'>document use</a>
+        {{/if}}
+        rules apply.
+      </p>
+    {{/if}}
+  {{/if}}
+  <hr/>
+</div>
