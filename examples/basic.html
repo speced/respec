@@ -23,6 +23,8 @@
                   "MEMES":  "<a href='http://w3cmemes.tumblr.com/'>W3C Memes</a>"
               ,   "REX":    "<strong>Overridden!</strong>"
               }
+    	  ,   figFmt: "Figure %1%(%c-%#%): %t"
+      	  ,   tblFmt: "Table %1%(%c-%#%): %t"
         };
     </script>
   </head>
@@ -53,6 +55,10 @@
       <section>
         <h2>Other inner section</h2>
         <p>blahblah</p>
+		<figure>
+			<figcaption class="caption">This is figure 0 caption</figcaption>
+			This is a figure
+		</figure>
       </section>
     </section>
     <section>
@@ -144,5 +150,17 @@
         </dl>
       </section>
     </section>
-  </body>
+	<section class="appendix">
+		<h2>Appendix A</h2>
+		<table>
+			<caption class="caption">This is table 2 caption</caption>
+		</table>
+	</section>
+	<section class="appendix">
+		<h2>Appendix B</h2>
+		<table>
+			<caption class="caption">This is table 2 caption</caption>
+		</table>
+	</section>
+</body>
 </html>
