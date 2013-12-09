@@ -39,7 +39,7 @@ define([
         ,   "core/tables"
         ,   "core/biblio"
         ,   "core/rdfa"
-        ,   "core/webidl-oldschool"
+        //,   "core/webidl-oldschool"
         ,   "core/dfn"
         ,   "core/fix-headers"
         ,   "core/structure"
