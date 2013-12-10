@@ -23,18 +23,36 @@ define(
                         $item.attr('id', $item.prop('tagName').toLowerCase() + '_' + resourceID) ;
                     }
                 });
-                // ensure head section is labelled
+                // ensure head section is labeled
                 $('body', doc).attr('role', 'document') ;
                 $('body', doc).attr('id', 'respecDocument') ;
                 $('div.head', doc).attr('role', 'contentinfo') ;
                 $('div.head', doc).attr('id', 'respecHeader') ;
                 if (!conf.noTOC) {
-                    // ensure toc is labelled
+                    // ensure toc is labeled
                     var toc = $('section#toc', doc)
                                   .find("ul:first");
                     toc.attr('role', 'directory') ;
                     if (!toc.attr("id")) {
                         toc.attr('id', 'respecContents') ;
+                    }
+                }
+		// ensure Table of Figures (tof) is labeled
+                var tof = $('section#tof', doc)
+                               .find("ul:first");
+                if (tof.length > 0) {
+		    tof.attr('role', 'directory') ;
+                    if (!tof.attr("id")) {
+                        tof.attr('id', 'respecFigures') ;
+                    }
+                }
+                // ensure Table of Tables (tot) is labeled
+                var tot = $('section#tot', doc)
+                    	       .find("ul:first");
+                if (tot.length > 0) {
+		    tot.attr('role', 'directory') ;
+                    if (!tot.attr("id")) {
+                        tot.attr('id', 'respecTables') ;
                     }
                 }
                 // mark issues and notes with heading
