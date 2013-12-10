@@ -31,7 +31,9 @@ define(
                     }
                 ;
                 if ($highs.length) {
-                    $(doc).find("head link").first().before($("<style/>").text(css));
+                    if (!conf.noHighlightCSS) {
+                        $(doc).find("head link").first().before($("<style/>").text(css));
+                    }
                     $highs.addClass("prettyprint");
                     prettyPrint(done);
                 }
