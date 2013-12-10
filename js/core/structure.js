@@ -9,8 +9,8 @@
 //  - maxTocLevel: only generate a TOC so many levels deep
 
 define(
-    [],
-    function () {
+    ["core/utils"],
+    function (utils) {
         var i18n = {
                     en: { toc: "Table of Contents" },
                     fr: { toc: "Sommaire" }

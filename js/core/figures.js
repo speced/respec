@@ -7,12 +7,48 @@
 // to be found as well as normalise the titles of figures.
 
 define(
-    [],
-    function () {
+    ["core/utils"],
+    function (utils) {
+    	var makeFigNum = function(fmt, doc, chapter, $cap, label, num, tit) {
+    		console.log("fmt=\"" + fmt + "\"");
+            $cap.html("");
+            if (fmt === "" || fmt === "%t") {
+            	$cap.append($("<span class='" + label + "-title'/>").text(tit));
+            	return num;
+            }
+            var $num = $("<span class='" + label + "no'/>");
+            var $cur = $cap;
+            var sfmt = fmt.split("%");
+            var last = "";
+            for (var i = 0; i < sfmt.length; i++) {
+            	var s = sfmt[i];
+            	if (last === "") {
+            		$cur.append(doc.createTextNode(s));
+            	} else {
+            		switch (s.substr(0,1)) {
+            		case "(": $cur = $num; break;
+            		case ")": $cur = $cap; $cur.append($num); $num = $("<span class='"+label+"no'/>"); break;
+            		case "":  $cur.append(doc.createTextNode("%")); break;
+            		case "#": $cur.append(doc.createTextNode(num[0])); break;
+            		case "c": $cur.append(doc.createTextNode(chapter)); break;
+            		case "1": if (num[1] != chapter) num = [1, chapter]; break;
+            		case "t": $cur.append($("<span class='"+label+"-title'/>").text(tit)); break;
+            		default: $cur.append(doc.createTextNode("?{"+s.substr(0,1)+"}")); break;
+            		}
+            		$cur.append(doc.createTextNode(s.substr(1)));
+            	}
+            	console.log("s=\"" + s + "\"" + "  chapter=" + chapter + "  $cur=\""+$cur.html()+"\"" + "  last='" + last + "'");
+            	last = s.substr(0,1);
+            }
+    		num[0]++;
+            return num;
+    	};
+
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/figures");
-
+                if (!conf.figFmt) conf.figFmt = "Fig. %(%#%) %t"; //"%1Figure %(%c-%#%): %t";
+                
                 // Move old syntax to new syntax
                 $(".figure", doc).each(function (i, figure) {
                     var $figure = $(figure)
@@ -36,28 +72,33 @@ define(
                     }
                 });
                 
-                // process all figures
-                var figMap = {}, tof = [], num = 0;
-                $("figure").each(function () {
-                    var $fig = $(this)
-                    ,   $cap = $fig.find("figcaption")
-                    ,   tit = $cap.text()
-                    ,   id = $fig.makeID("fig", tit);
-                    if (!$cap.length) msg.pub("warn", "A <figure> should contain a <figcaption>.");
+                // for each top level section, process all figures in that section
+                var figMap = {}, tof = [], num = [1, 1], appendixMode = false, lastNonAppendix = -1000;
+                var $secs = $("body", doc).children(conf.tocIntroductory ? "section" : "section:not(.introductory)");
+				for (var i = 0; i < $secs.length; i++) {
+					var $sec = $($secs[i], doc);
+                    if ($sec.hasClass("appendix") && !appendixMode) {
+                        lastNonAppendix = i;
+                        appendixMode = true;
+                    }
+                    var chapter = i + 1;
+                    if (appendixMode) chapter = utils.appendixMap(i - lastNonAppendix);
+                    $("figure", $sec).each(function () {
+						var $fig = $(this)
+						,   $cap = $fig.find("figcaption")
+						,   tit = $cap.text()
+						,   id = $fig.makeID("fig", tit);
+						if (!$cap.length) msg.pub("warn", "A <figure> should contain a <figcaption>.");
                     
-                    // set proper caption title
-                    num++;
-                    $cap.html("")
-                        .append(doc.createTextNode("Fig. "))
-                        .append($("<span class='figno'>" + num + "</span>"))
-                        .append(doc.createTextNode(" "))
-                        .append($("<span class='fig-title'/>").text(tit));
-                    figMap[id] = $cap.contents().clone();
-                    tof.push($("<li class='tofline'><a class='tocxref' href='#" + id + "'></a></li>")
-                                .find(".tocxref")
-                                    .append($cap.contents().clone())
+						// set proper caption title
+						num = makeFigNum(conf.figFmt, doc, chapter ,$cap, "fig", num, tit);
+						figMap[id] = $cap.contents().clone();
+						tof.push($("<li class='tofline'><a class='tocxref' href='#" + id + "'></a></li>")
+								.find(".tocxref")
+                                .append($cap.contents().clone())
                                 .end());
-                });
+					});
+				}
 
                 // Update all anchors with empty content that reference a figure ID
                 $("a[href]", doc).each(function () {
