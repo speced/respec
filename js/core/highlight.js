@@ -8,7 +8,7 @@
 
 define(
     ["text!core/css/highlight.css", "google-code-prettify"],
-    function (css) {
+    function (css, PR) {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/highlight");
@@ -35,7 +35,7 @@ define(
                         $(doc).find("head link").first().before($("<style/>").text(css));
                     }
                     $highs.addClass("prettyprint");
-                    prettyPrint(done);
+                    PR.prettyPrint(done);
                 }
                 else {
                     done();
