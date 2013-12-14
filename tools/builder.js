@@ -24,6 +24,9 @@ function build (options, cb) {
     ,   shim:   {
             "shortcut": {
                 exports:    "shortcut"
+            },
+            "handlebars": {
+                exports:    "Handlebars"
             }
         }
     ,   name:       "profile-w3c-common"

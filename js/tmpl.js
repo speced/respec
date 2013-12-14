@@ -11,9 +11,9 @@ define(["handlebars", "text"], function (hb, text) {
         }
     ,   write:  function (pluginName, moduleName, write) {
             if (moduleName in buildMap) {
-                var content = text.jsEscape(buildMap[moduleName]);
+                var content = hb.precompile(buildMap[moduleName]);
                 write("define('" + pluginName + "!" + moduleName  +
-                      "', ['handlebars'], function (hb) { return Handlebars.compile('" + content + "');});\n");
+                      "', ['handlebars'], function (hb) { return Handlebars.template(" + content + ");});\n");
             }
         }
     };
