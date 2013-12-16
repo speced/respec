@@ -10,35 +10,31 @@ define(
     ["core/utils"],
     function (utils) {
     	var makeFigNum = function(fmt, doc, chapter, $cap, label, num, tit) {
-    		console.log("fmt=\"" + fmt + "\"");
             $cap.html("");
-            if (fmt === "" || fmt === "%t") {
+            if (fmt === "" || fmt === "%t" || fmt === "%") {
             	$cap.append($("<span class='" + label + "-title'/>").text(tit));
             	return num;
             }
             var $num = $("<span class='" + label + "no'/>");
             var $cur = $cap;
-            var sfmt = fmt.split("%");
-            var last = "";
-            for (var i = 0; i < sfmt.length; i++) {
+            var adjfmt = " " + fmt.replace(/%%/g, "%\\");
+            var sfmt = adjfmt.split("%");
+    		//console.log("fmt=\"" + adjfmt + "\"");
+    		for (var i = 0; i < sfmt.length; i++) {
             	var s = sfmt[i];
-            	if (last === "") {
-            		$cur.append(doc.createTextNode(s));
-            	} else {
-            		switch (s.substr(0,1)) {
-            		case "(": $cur = $num; break;
-            		case ")": $cur = $cap; $cur.append($num); $num = $("<span class='"+label+"no'/>"); break;
-            		case "":  $cur.append(doc.createTextNode("%")); break;
-            		case "#": $cur.append(doc.createTextNode(num[0])); break;
-            		case "c": $cur.append(doc.createTextNode(chapter)); break;
-            		case "1": if (num[1] != chapter) num = [1, chapter]; break;
-            		case "t": $cur.append($("<span class='"+label+"-title'/>").text(tit)); break;
-            		default: $cur.append(doc.createTextNode("?{"+s.substr(0,1)+"}")); break;
-            		}
-            		$cur.append(doc.createTextNode(s.substr(1)));
+            	switch (s.substr(0,1)) {
+            	case " ": break;
+            	case "(": $cur = $num; break;
+            	case ")": $cur = $cap; $cur.append($num); $num = $("<span class='"+label+"no'/>"); break;
+            	case "\\":$cur.append(doc.createTextNode("%")); break;
+            	case "#": $cur.append(doc.createTextNode(num[0])); break;
+            	case "c": $cur.append(doc.createTextNode(chapter)); break;
+            	case "1": if (num[1] != chapter) num = [1, chapter]; break;
+            	case "t": $cur.append($("<span class='"+label+"-title'/>").text(tit)); break;
+            	default: $cur.append(doc.createTextNode("?{%"+s.substr(0,1)+"}")); break;
             	}
-            	console.log("s=\"" + s + "\"" + "  chapter=" + chapter + "  $cur=\""+$cur.html()+"\"" + "  last='" + last + "'");
-            	last = s.substr(0,1);
+            	$cur.append(doc.createTextNode(s.substr(1)));
+            	//console.log("s=\"" + s + "\"" + "  chapter=" + chapter + "  $cur=\""+$cur.html()+"\"");
             }
     		num[0]++;
             return num;
@@ -74,7 +70,7 @@ define(
                 
                 // for each top level section, process all figures in that section
                 var figMap = {}, tof = [], num = [1, 1], appendixMode = false, lastNonAppendix = -1000;
-                var $secs = $("body", doc).children(conf.tocIntroductory ? "section" : "section:not(.introductory)");
+                var $secs = $("body", doc).children(conf.tocIntroductory ? "section" : "section:not(.introductory):not(#toc):not(#tof):not(#tot)");
 				for (var i = 0; i < $secs.length; i++) {
 					var $sec = $($secs[i], doc);
                     if ($sec.hasClass("appendix") && !appendixMode) {
