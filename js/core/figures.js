@@ -47,15 +47,17 @@ define(
                     
                     // set proper caption title
                     num++;
-                    $cap.html("")
-                        .append(doc.createTextNode("Fig. "))
-                        .append($("<span class='figno'>" + num + "</span>"))
-                        .append(doc.createTextNode(" "))
-                        .append($("<span class='fig-title'/>").text(tit));
+                    $cap.wrapInner($("<span class='fig-title'/>"))
+                        .prepend(doc.createTextNode(" "))
+                        .prepend($("<span class='figno'>" + num + "</span>"))
+                        .prepend(doc.createTextNode("Fig. "))
+                    ;
                     figMap[id] = $cap.contents().clone();
+                    var $tofCap = $cap.clone();
+                    $tofCap.find("a").renameElement("span").removeAttr("href");
                     tof.push($("<li class='tofline'><a class='tocxref' href='#" + id + "'></a></li>")
                                 .find(".tocxref")
-                                    .append($cap.contents().clone())
+                                    .append($tofCap.contents())
                                 .end());
                 });
 
