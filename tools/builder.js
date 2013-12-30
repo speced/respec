@@ -20,6 +20,7 @@ function build (options, cb) {
     ,   optimize:   options.optimize || "uglify2"
     ,   paths:  {
             requireLib: "./require"
+        ,   handlebars: "../node_modules/handlebars/dist/handlebars.runtime"
         }
     ,   shim:   {
             "shortcut": {
@@ -29,6 +30,7 @@ function build (options, cb) {
     ,   name:       "profile-w3c-common"
     ,   include:    "requireLib".split(" ")
     ,   out:        options.out
+    ,   stubModules:["tmpl"]
     ,   inlineText: true
     ,   preserveLicenseComments:    false
     };

@@ -19,5 +19,6 @@
     "devDependencies": {
         "express":      "*"
     ,   "requirejs":    "2.1.8"
+    ,   "handlebars":   "~1.2.1"
     }
 }
