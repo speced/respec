@@ -66,7 +66,7 @@ define(
                                       .append(isIntro ? "" : $span.clone())
                                       .append($kidsHolder.contents());
                     var $item = $("<li class='tocline'/>").append($a);
-                    if (conf.maxTocLevel && level <= conf.maxTocLevel) {
+                    if (conf.maxTocLevel == 0 || level <= conf.maxTocLevel) {
                     	$ul.append($item);
                     }
                     current.push(0);
