@@ -254,7 +254,7 @@ describe("W3C — Headers", function () {
             expect($c.find("a[href='http://WG']").length).toEqual(1);
             expect($c.find("a:contains(WGNAME)").length).toEqual(1);
             expect($c.find("a[href='https://www.w3.org/community/about/agreements/cla/']").length).toEqual(1);
-            expect($(".head h2", $ifr[0].contentDocument).text()).toMatch(/Draft Community Group Specification/);
+            expect($(".head h2", $ifr[0].contentDocument).text()).toMatch(/Draft Community Group Report/);
             var $sotd = $("#sotd", $ifr[0].contentDocument);
             expect($sotd.find("a[href='http://WG']").length).toEqual(1);
             expect($sotd.find("a:contains(WGNAME)").length).toEqual(1);
@@ -263,7 +263,7 @@ describe("W3C — Headers", function () {
         loadWithConfig({ specStatus: "BG-FINAL", wg: "WGNAME", wgURI: "http://WG", 
                          thisVersion: "http://THIS", latestVersion: "http://LATEST" }, function ($ifr) {
             expect($(".head .copyright a[href='https://www.w3.org/community/about/agreements/fsa/']", $ifr[0].contentDocument).length).toEqual(1);
-            expect($(".head h2", $ifr[0].contentDocument).text()).toMatch(/Final Business Group Specification/);
+            expect($(".head h2", $ifr[0].contentDocument).text()).toMatch(/Final Business Group Report/);
             expect($("dt:contains('This version:')", $ifr[0].contentDocument).next("dd").text()).toMatch(/http:\/\/THIS/);
             expect($("dt:contains('Latest published version:')", $ifr[0].contentDocument).next("dd").text()).toMatch(/http:\/\/LATEST/);
             var $sotd = $("#sotd", $ifr[0].contentDocument);
