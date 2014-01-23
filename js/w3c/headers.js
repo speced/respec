@@ -298,6 +298,8 @@ define(
                 if (conf.isTagFinding) conf.showPreviousVersion = conf.previousPublishDate ? true : false;
                 conf.notYetRec = (conf.isRecTrack && conf.specStatus !== "REC");
                 conf.isRec = (conf.isRecTrack && conf.specStatus === "REC");
+                if (conf.isRec && !conf.errata)
+                    msg.pub("error", "Recommendations must have an errata link.");
                 conf.notRec = (conf.specStatus !== "REC");
                 conf.isUnofficial = conf.specStatus === "unofficial";
                 conf.prependW3C = !conf.isUnofficial;
