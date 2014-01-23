@@ -126,6 +126,7 @@ can follow this process:
 4. Add the new build (git add builds/respec-w3c-common-3.x.y.js).
 5. Commit your changes (git commit -am v3.x.y)
 6. Merge to gh-pages (git checkout gh-pages; git merge develop)
+6. Tag the release (git tag v3.x.y) and be sure that git is pushing tags.
 7. Push everything back to the server (make sure you are pushing at least the `develop` and
    `gh-pages` branches).
 
