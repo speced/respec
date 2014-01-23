@@ -111,20 +111,21 @@ $ npm test
 
 ### Building ReSpec
 
-Normally, producing a build of ReSpec should not be necessary for anyone, unless you're on the core
-development team. Certainly don't bother with this if you are providing pull requests. But on
-occasion it can be useful in order to debug a painful corner-case, so here are the instructions.
-This not being something normally exposed to the world, they are a bit convoluted (and may be
-simplified).
+Whenever you run the test suite a new build is made for you. You can run `tools/test-build.js` to
+obtain the same result.
+
+### Releasing ReSpec
+
+Normally, only @darobin makes releases. But in the eventuality that he wouldn't be available, others
+can follow this process:
 
 1. Make sure you are up to date and on the develop branch (git up; git checkout develop)
 2. Bump the version in `package.json`.
 3. Run the build script (node tools/build-w3c-common.js). This should respond "OK!" (if not, fix the
    issue).
-7. Add the new build (git add builds/respec-w3c-common-3.1.61.js).
-8. Commit your changes (git commit -am v3.1.61)
-9. Finish the release git flow (git flow release finish v3.1.61). This should prompt you to enter a message for 
-the tag.
+4. Add the new build (git add builds/respec-w3c-common-3.x.y.js).
+5. Commit your changes (git commit -am v3.x.y)
+6. Merge to master (git checkout master; git merge develop)
 10. Push everything back to the server (make sure you are pushing at least the develop and gh-pages branches).
 
 That should be all. Normally, within a few minutes the W3C server will have picked up, gzipped, and published
