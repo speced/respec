@@ -28,24 +28,28 @@ page.open(source, function (status) {
     }
     else {
         if (output) console.error("Loading " + source);
-        page.evaluateAsync(function () {
-            respecEvents.sub("end-all", function () {
-                require(["core/ui", "ui/save-html"], function (ui, saver) {
-                           saver.show(ui, respecConfig, document, respecEvents);
-                           window.callPhantom({ html: saver.toString() });
-                });
-            });
-        });
         timer = setInterval(function () {
-            if (timeout === 0) {
+            var done = page.evaluate(function () { return document && document.respecDone; });
+            if (done) {
                 clearInterval(timer);
-                console.error("Timeout loading " + source + ".\n" +
-                              "  Is it a valid ReSpec source file?\n" +
-                              "  Did you forget  --ssl-protocol=any?");
-                phantom.exit(1);
+                page.evaluateAsync(function () {
+                    require(["core/ui", "ui/save-html"], function (ui, saver) {
+                               saver.show(ui, respecConfig, document, respecEvents);
+                               window.callPhantom({ html: saver.toString() });
+                    });
+                });
             }
             else {
-                if (output) console.error("Timing out in " + --timeout + "s...");
+                if (timeout === 0) {
+                    clearInterval(timer);
+                    console.error("Timeout loading " + source + ".\n" +
+                                  "  Is it a valid ReSpec source file?\n" +
+                                  "  Did you forget  --ssl-protocol=any?");
+                    phantom.exit(1);
+                }
+                else {
+                    if (output) console.error("Timing out in " + --timeout + "s...");
+                }
             }
         }, 1000);
     }
