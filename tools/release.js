@@ -107,7 +107,7 @@ function checkoutDevelop (cb) {
 }
 
 function tag (cb) {
-    exec("git tag v" + targetVersion, cb);
+    exec("git tag -s v" + targetVersion, cb);
 }
 
 // 8. Push everything back to the server (make sure you are pushing at least the `develop` and
