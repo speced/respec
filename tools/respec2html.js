@@ -1,3 +1,4 @@
+#!/usr/local/bin/phantomjs
 /*global phantom, respecEvents, respecConfig*/
 
 // respec2html is a command line utility that converts a ReSpec source file to an HTML file.
@@ -29,12 +30,14 @@ page.open(source, function (status) {
     else {
         if (output) console.error("Loading " + source);
         page.evaluateAsync(function () {
-            respecEvents.sub("end-all", function () {
+            function saveToPhantom () {
                 require(["core/ui", "ui/save-html"], function (ui, saver) {
                            saver.show(ui, respecConfig, document, respecEvents);
                            window.callPhantom({ html: saver.toString() });
                 });
-            });
+            }
+            if (document.respecDone) saveToPhantom();
+            else respecEvents.sub("end-all", saveToPhantom);
         });
         timer = setInterval(function () {
             if (timeout === 0) {
