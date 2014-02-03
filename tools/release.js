@@ -1,3 +1,4 @@
+#!/usr/local/bin/node
 /*jshint es5:true*/
 
 var prompt = require("prompt")
