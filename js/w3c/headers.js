@@ -31,6 +31,9 @@
 //          - type: optional MIME type
 //  - testSuiteURI: the URI to the test suite, if any
 //  - implementationReportURI: the URI to the implementation report, if any
+//  - bugTracker: and object with the following details
+//      - open: pointer to the list of open bugs
+//      - new: pointer to where to raise new bugs
 //  - noRecTrack: set to true if this document is not intended to be on the Recommendation track
 //  - edDraftURI: the URI of the Editor's Draft for this document, if any. Required if
 //      specStatus is set to "ED".
@@ -282,6 +285,18 @@ define(
                     optional += (alt.hasOwnProperty('type') && alt.type) ? " type='" + alt.type + "'" : "";
                     return "<a rel='alternate' href='" + alt.uri + "'" + optional + ">" + alt.label + "</a>";
                 });
+                if (conf.bugTracker) {
+                    if (conf.bugTracker["new"] && conf.bugTracker.open) {
+                        conf.bugTrackerHTML = "<a href='" + conf.bugTracker["new"] + "'>file a bug</a>" +
+                                              " (<a href='" + conf.bugTracker.open + "'>open bugs</a>)";
+                    }
+                    else if (conf.bugTracker.open) {
+                        conf.bugTrackerHTML = "<a href='" + conf.bugTracker.open + "'>open bugs</a>";
+                    }
+                    else if (conf.bugTracker["new"]) {
+                        conf.bugTrackerHTML = "<a href='" + conf.bugTracker["new"] + "'>file a bug</a>";
+                    }
+                }
                 if (conf.copyrightStart && conf.copyrightStart == conf.publishYear) conf.copyrightStart = "";
                 for (var k in this.status2text) {
                     if (this.status2long[k]) continue;
