@@ -128,6 +128,7 @@ define(
         };
         
         return {
+            stringifyRef: stringifyRef,
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/biblio");
                 var refs = getRefKeys(conf)
