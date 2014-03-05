@@ -4,10 +4,10 @@
 define(
     ["jquery", "core/biblio"],
     function ($, biblio) {
-        function pluralize(count, sing, plur) {
+        function pluralize (count, sing, plur) {
             return count + ' ' + (count == 1 ? sing : plur);
         }
-        function buildResults(json) {
+        function buildResults (json) {
             var html = "", count = 0;
             for (var k in json) {
                 var obj = json[k];
@@ -29,12 +29,14 @@ define(
         return {
             show: function (ui) {
                 var $halp = $("<div><form><p><input name=q type=search> <input type=submit value=search /></p></form></div");
-                $status = $("<p style='font-size: smaller'></p>");
-                $results = $("<dl></dl>");
+                var $search = $halp.find("input[type=search]");
+                var $status = $("<p style='font-size: smaller'></p>");
+                var $results = $("<dl></dl>");
+                
                 $status.appendTo($halp);
                 $results.appendTo($halp);
+                
                 ui.freshModal("Search Specref DB", $halp);
-                var $search = $halp.find("input[type=search]");
                 $search.focus();
                 $halp.find("form").on("submit", function() {
                     $status.html("Searching…");
