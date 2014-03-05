@@ -1,5 +1,5 @@
 // Module ui/search-specref
-// Search specref database
+// Search Specref database
 
 define(
     ["jquery", "core/biblio"],
@@ -23,7 +23,7 @@ define(
             if (count) {
                 return 'We found ' + pluralize(count, 'result', 'results') + ' for your search for "' + query + '".';
             }
-            return 'Your search for "' + query + '" did not match any references in the Specref database. Sorry. :(';
+            return 'Your search for "' + query + '" did not match any references in the Specref database.<br>Sorry. :\'(';
         }
         
         return {
