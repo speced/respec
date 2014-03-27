@@ -904,7 +904,7 @@ define(
                                     : sn.idThatDoesNotExist(curLnk + it.refId);
                                 var dt = sn.element("dt", { id: id }, dl);
                                 sn.element("code", {}, dt, it.unescapedId);
-                                if (it.isStatic) dt.appendChild(this.doc.createTextNode(", static"));
+                                if (it.isStatic) dt.append(this.doc.createTextNode(", static"));
                                 var desc = sn.element("dd", {}, dl, [it.description]);
                                 if (type == "method" || type == "constructor") {
                                     if (it.params.length) {
@@ -917,11 +917,12 @@ define(
                                             sn.element("td", { "class": "prmName" }, tr, prm.id);
                                             var tyTD = sn.element("td", { "class": "prmType" }, tr);
                                             var code = sn.element("code", {}, tyTD);
-                                            code.innerHTML = datatype(prm.datatype);
-                                            if (prm.array) code.innerHTML += arrsq(prm);
+                                            var codeHTML = datatype(prm.datatype);
+                                            if (prm.array) codeHTML += arrsq(prm);
                                             if (prm.defaultValue) {
-                                                code.innerHTML += " = " + prm.defaultValue;
+                                                codeHTML += " = " + prm.defaultValue;
                                             }
+                                            code.html(codeHTML);
                                             if (prm.nullable) sn.element("td", { "class": "prmNullTrue" }, tr, $("<span role='img' aria-label='True'>\u2714</span>"));
                                             else              sn.element("td", { "class": "prmNullFalse" }, tr, $("<span role='img' aria-label='False'>\u2718</span>"));
                                             if (prm.optional) sn.element("td", { "class": "prmOptTrue" }, tr,  $("<span role='img' aria-label='True'>\u2714</span>"));
@@ -943,7 +944,7 @@ define(
                                             sn.element("td", { "class": "excName" }, tr, [sn.element("a", {}, null, exc.id)]);
                                             var dtd = sn.element("td", { "class": "excDesc" }, tr);
                                             if (exc.type == "simple") {
-                                                $(dtd).append(exc.description);
+                                                dtd.append(exc.description);
                                             }
                                             else {
                                                 var ctab = sn.element("table", { "class": "exceptionCodes" }, dtd );
@@ -964,9 +965,10 @@ define(
                                         var reDiv = sn.element("div", {}, desc);
                                         sn.element("em", {}, reDiv, "Return type: ");
                                         var code = sn.element("code", {}, reDiv);
-                                        code.innerHTML = datatype(it.datatype);
-                                        if (it.array) code.innerHTML += arrsq(it);
+                                        var codeHTML = datatype(it.datatype);
+                                        if (it.array) codeHTML += arrsq(it);
                                         if (it.nullable) sn.text(", nullable", reDiv);
+                                        code.html(codeHTML);
                                     }
                                 }
                                 else if (type == "attribute") {
@@ -1001,7 +1003,7 @@ define(
                                             });
                                             var dtd = sn.element("td", { "class": "excDesc" }, tr);
                                             if (exc.type == "simple") {
-                                                dtd.appendChild(exc.description);
+                                                dtd.append(exc.description);
                                             }
                                             else {
                                                 var ctab = sn.element("table", { "class": "exceptionCodes" }, dtd );
@@ -1440,14 +1442,8 @@ window.simpleNode.prototype = {
         return tn;
     },
     
-    documentFragment:    function (parent, content) {
-        var df = this.doc.createDocumentFragment();
-        if (content) {
-            if (content instanceof Array) for (var i = 0; i < content.length; i++) df.appendChild(content[i]);
-            else this.text(content, df);
-        }
-        if (parent) parent.appendChild(df);
-        return df;
+    documentFragment:    function () {
+        return this.doc.createDocumentFragment();
     },
     
     // --- ID MANAGEMENT ---

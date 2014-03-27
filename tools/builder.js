@@ -15,6 +15,7 @@ function build (options, cb) {
     // optimisation settings
     // note that the paths/includes below will need to change in when we drop those
     // older dependencies
+    version = options.version || version;
     var config = {
         baseUrl:    pth.join(__dirname, "../js")
     ,   optimize:   options.optimize || "uglify2"

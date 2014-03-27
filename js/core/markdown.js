@@ -1,31 +1,32 @@
+/*global marked*/
 // Module core/markdown
 // Handles the optional markdown processing.
-// 
+//
 // Markdown support is optional. It is enabled by setting the `format`
 // property of the configuration object to "markdown."
-// 
-// We use marked for parsing Markkdown.
-// 
+//
+// We use marked for parsing Markdown.
+//
 // Note that the content of SECTION elements, and elements with a
 // class name of "note", "issue" or "req" are also parsed.
-// 
+//
 // The HTML created by the Markdown parser is turned into a nested
-// structure of SECTION elements, following the strucutre given by 
+// structure of SECTION elements, following the strucutre given by
 // the headings. For example, the following markup:
-// 
+//
 //     Title
 //     -----
-//     
+//
 //     ### Subtitle ###
-//     
+//
 //     Here's some text.
-//     
+//
 //     ### Another subtitle ###
-//     
+//
 //     More text.
-// 
+//
 // will be transformed into:
-// 
+//
 //     <section>
 //       <h2>Title</h2>
 //       <section>
@@ -56,7 +57,7 @@ define(
             ;
 
             function findPosition(header) {
-                return parseInt(header.tagName.charAt(1));
+                return parseInt(header.tagName.charAt(1), 10);
             }
 
             function findParent(position) {
@@ -143,10 +144,10 @@ define(
                 // <div>
                 //     This is a title
                 //     ---------------
-                //     
+                //
                 //     And this more text.
                 // </div
-                // 
+                //
                 // Gets turned into:
                 // <div>
                 //     <h2>This is a title</h2>
@@ -157,7 +158,7 @@ define(
                 // <div>
                 //     <pre><code>This is a title
                 // ---------------
-                // 
+                //
                 // And this more text.</code></pre>
                 // </div
 
@@ -171,7 +172,7 @@ define(
                     for (var i = 0, length = match.length; i < length; i++) {
                         current = match[i].length - 2;
                         if (typeof min == 'undefined' || min > current) {
-                            min = current
+                            min = current;
                         }
                     }
 
@@ -262,9 +263,14 @@ define(
                     //
                     // this.processIssuesNotesAndReqs(doc);
                     this.processSections(doc);
+                    // the processing done here blows away the ReSpec UI (or rather, the elements
+                    // that it needs to reference). So we save a reference to the original element
+                    // and re-inject it later
+                    var $rsUI = $("#respec-ui");
                     var fragment = this.structure(this.processBody(doc), doc);
                     doc.body.innerHTML = '';
-                    doc.body.appendChild(fragment)
+                    doc.body.appendChild(fragment);
+                    if ($rsUI.length) $("#respec-ui").replaceWith($rsUI);
                 }
                 msg.pub("end", "core/markdown");
                 cb();

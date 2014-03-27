@@ -107,3 +107,9 @@ table.simple {
 .section dl.attrs dd, .section dl.eldef dd {
     margin-bottom:  0;
 }
+
+@media print {
+    .removeOnSave {
+        display: none;
+    }
+}
