@@ -7,7 +7,7 @@
 define(
     ["jquery"],
     function ($) {
-        // --- JQUERY EXTRAS ------------------------------------------------------------------------------
+        // --- JQUERY EXTRAS -----------------------------------------------------------------------
         // Applies to any jQuery object containing elements, changes their name to the one give, and
         // return a jQuery object containing the new elements
         $.fn.renameElement = function (name) {

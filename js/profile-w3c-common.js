@@ -10,7 +10,7 @@ var requireConfig = {
 };
 if ("respecVersion" in window && respecVersion) {
     requireConfig.paths = {
-        "ui":   "https://raw.github.com/darobin/respec/gh-pages/js/ui"
+        "ui":   "https://darobin.github.io/respec/js/ui"
     };
 }
 require.config(requireConfig);
@@ -55,6 +55,7 @@ define([
             domReady(function () {
                 ui.addCommand("Save Snapshot", "ui/save-html", "Ctrl+Shift+Alt+S");
                 ui.addCommand("About ReSpec", "ui/about-respec", "Ctrl+Shift+Alt+A");
+                ui.addCommand("Search Specref DB", "ui/search-specref", "Ctrl+Shift+Alt+space");
                 runner.runAll(args);
             });
         }

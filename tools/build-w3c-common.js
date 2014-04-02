@@ -6,11 +6,18 @@ var fs   = require("fs")
 ,   version = JSON.parse(fs.readFileSync(pth.join(__dirname, "../package.json"), "utf-8")).version
 ,   builds = pth.join(__dirname, "../builds")
 ,   latest = pth.join(builds, "respec-w3c-common.js")
-,   versioned = pth.join(builds, "respec-w3c-common-" + version + ".js")
 ;
 
 function buildW3C (versionSnapshot, cb) {
-    b.build({ out: latest }, function () {
+    var opts = { out: latest };
+    if (versionSnapshot === true) {
+        opts.version = version;
+    }
+    else if (typeof versionSnapshot === "string") {
+        opts.version = versionSnapshot;
+    }
+    var versioned = pth.join(builds, "respec-w3c-common-" + opts.version + ".js");
+    b.build(opts, function () {
         if (versionSnapshot) fs.writeFileSync(versioned, fs.readFileSync(latest, "utf8"), { encoding: "utf8" });
         cb();
     });

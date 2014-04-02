@@ -31,6 +31,9 @@
 //          - type: optional MIME type
 //  - testSuiteURI: the URI to the test suite, if any
 //  - implementationReportURI: the URI to the implementation report, if any
+//  - bugTracker: and object with the following details
+//      - open: pointer to the list of open bugs
+//      - new: pointer to where to raise new bugs
 //  - noRecTrack: set to true if this document is not intended to be on the Recommendation track
 //  - edDraftURI: the URI of the Editor's Draft for this document, if any. Required if
 //      specStatus is set to "ED".
@@ -130,7 +133,6 @@ define(
             }
             return new Handlebars.SafeString(ret);
         });
-        
 
         return {
             status2maturity:    {
@@ -154,7 +156,7 @@ define(
                 RSCND:          "w3p:RSCND"
             }
         ,   status2text: {
-                NOTE:           "Note"
+                NOTE:           "Working Group Note"
             ,   "WG-NOTE":      "Working Group Note"
             ,   "CG-NOTE":      "Co-ordination Group Note"
             ,   "IG-NOTE":      "Interest Group Note"
@@ -178,10 +180,10 @@ define(
             ,   base:           "Document"
             ,   finding:        "TAG Finding"
             ,   "draft-finding": "Draft TAG Finding"
-            ,   "CG-DRAFT":     "Draft Community Group Specification"
-            ,   "CG-FINAL":     "Final Community Group Specification"
-            ,   "BG-DRAFT":     "Draft Business Group Specification"
-            ,   "BG-FINAL":     "Final Business Group Specification"
+            ,   "CG-DRAFT":     "Draft Community Group Report"
+            ,   "CG-FINAL":     "Final Community Group Report"
+            ,   "BG-DRAFT":     "Draft Business Group Report"
+            ,   "BG-FINAL":     "Final Business Group Report"
             }
         ,   status2long:    {
                 "FPWD-NOTE":    "First Public Working Group Note"
@@ -191,7 +193,6 @@ define(
         ,   noTrackStatus:  ["MO", "unofficial", "base", "finding", "draft-finding", "CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"]
         ,   cgbg:           ["CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"]
         ,   precededByAn:   ["ED", "IG-NOTE"]
-                        
         ,   run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/headers");
 
@@ -260,7 +261,7 @@ define(
                     }
                 }
                 else {
-                    if (conf.specStatus !== "FPWD" && conf.specStatus !== "FPLC" && conf.specStatus !== "ED" && !conf.noRecTrack && !conf.isNoTrack)
+                    if (/NOTE$/.test(conf.specStatus) === false && conf.specStatus !== "FPWD" && conf.specStatus !== "FPLC" && conf.specStatus !== "ED" && !conf.noRecTrack && !conf.isNoTrack)
                         msg.pub("error", "Document on track but no previous version.");
                     if (!conf.prevVersion) conf.prevVersion = "";
                 }
@@ -282,6 +283,18 @@ define(
                     optional += (alt.hasOwnProperty('type') && alt.type) ? " type='" + alt.type + "'" : "";
                     return "<a rel='alternate' href='" + alt.uri + "'" + optional + ">" + alt.label + "</a>";
                 });
+                if (conf.bugTracker) {
+                    if (conf.bugTracker["new"] && conf.bugTracker.open) {
+                        conf.bugTrackerHTML = "<a href='" + conf.bugTracker["new"] + "'>file a bug</a>" +
+                                              " (<a href='" + conf.bugTracker.open + "'>open bugs</a>)";
+                    }
+                    else if (conf.bugTracker.open) {
+                        conf.bugTrackerHTML = "<a href='" + conf.bugTracker.open + "'>open bugs</a>";
+                    }
+                    else if (conf.bugTracker["new"]) {
+                        conf.bugTrackerHTML = "<a href='" + conf.bugTracker["new"] + "'>file a bug</a>";
+                    }
+                }
                 if (conf.copyrightStart && conf.copyrightStart == conf.publishYear) conf.copyrightStart = "";
                 for (var k in this.status2text) {
                     if (this.status2long[k]) continue;
@@ -293,11 +306,13 @@ define(
                     conf.rdfStatus = this.status2rdf[conf.specStatus];
                 }
                 conf.showThisVersion =  (!conf.isNoTrack || conf.isTagFinding);
-                conf.showPreviousVersion = (conf.specStatus !== "FPWD" && conf.specStatus !== "FPLC" && conf.specStatus !== "ED" &&
+                conf.showPreviousVersion = (/NOTE$/.test(conf.specStatus) === false && conf.specStatus !== "FPWD" && conf.specStatus !== "FPLC" && conf.specStatus !== "ED" &&
                                            !conf.isNoTrack);
                 if (conf.isTagFinding) conf.showPreviousVersion = conf.previousPublishDate ? true : false;
                 conf.notYetRec = (conf.isRecTrack && conf.specStatus !== "REC");
                 conf.isRec = (conf.isRecTrack && conf.specStatus === "REC");
+                if (conf.isRec && !conf.errata)
+                    msg.pub("error", "Recommendations must have an errata link.");
                 conf.notRec = (conf.specStatus !== "REC");
                 conf.isUnofficial = conf.specStatus === "unofficial";
                 conf.prependW3C = !conf.isUnofficial;
@@ -310,7 +325,7 @@ define(
                 conf.dashDate = utils.concatDate(conf.publishDate, "-");
                 conf.publishISODate = utils.isoDate(conf.publishDate) ;
                 // configuration done - yay!
-                
+
                 // annotate html element with RFDa
                 if (conf.doRDFa) {
                     if (conf.rdfStatus) {

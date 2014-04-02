@@ -28,6 +28,10 @@
       <dt>Implementation report:</dt>
       <dd><a href='{{implementationReportURI}}'>{{implementationReportURI}}</a></dd>
     {{/if}}
+    {{#if bugTrackerHTML}}
+      <dt>Bug tracker:</dt>
+      <dd>{{{bugTrackerHTML}}}</dd>
+    {{/if}}
     {{#if isED}}
       {{#if prevED}}
         <dt>Previous editor's draft:</dt>
@@ -92,7 +96,8 @@
   </dl>
   {{#if errata}}
     <p>
-      Please refer to the <a href="{{errata}}"><strong>errata</strong></a> for this document, which may include some normative corrections.
+      Please check the <a href="{{errata}}"><strong>errata</strong></a> for any errors or issues
+      reported since publication.
     </p>
   {{/if}}
   {{#if alternateFormats}}
