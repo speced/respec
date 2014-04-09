@@ -70,7 +70,7 @@
         Things that still need to be done:
       </p>
       <ul>
-        <li>Check that [], sequence, ?, and other such bothersome types are tested everywhere</li>
+        <li>Check that [], sequence, Promise, ?, and other such bothersome types are tested everywhere</li>
       </ul>
     </section>
     <section>
@@ -104,7 +104,7 @@
       <dl id='ctor-basic' class='idl' title='[Something] interface SuperStar'>
         <dt>Constructor()</dt>
         <dd>Constructor without parameters.</dd>
-        <dt>Constructor(boolean bar, sequence&lt;double> foo)</dt>
+        <dt>Constructor(boolean bar, sequence&lt;double> foo, Promise&lt;double&gt; blah)</dt>
         <dd>Constructor with parameters.</dd>
       </dl>
       <dl id='ctor-noea' class='idl' title='interface SuperStar'>
@@ -190,6 +190,8 @@
         <dd>3</dd>
         <dt>attribute sequence&lt;Date> dates</dt>
         <dd>3.5</dd>
+        <dt>attribute Promise&lt;DOMString&gt; operation</dt>
+        <dd>4.0</dd>
         <!-- <dt>static attribute DOMString unmovable</dt>
         <dd>3</dd>
         <dt>stringifier attribute DOMString asString</dt>
@@ -207,7 +209,7 @@
       <p>
         Basic operations testing.
       </p>
-      <!-- 
+      <!--
       getter, setter, creator, deleter, legacycaller, stringifier, serilizer
       static
       specials don't necessarily have an indentifier
@@ -345,6 +347,8 @@
         <dd>3</dd>
         <dt>SuperStar[][] numbers</dt>
         <dd>4</dd>
+        <dt>Promise&lt;SuperStar&gt; stars</dt>
+        <dd>5</dd>
       </dl>
     </section>
     <section>
@@ -362,7 +366,7 @@
         <dt>white space</dt>
         <dd>4</dd>
       </dl>
-      <!-- 
+      <!--
         XXX extattr?
        -->
     </section>
@@ -379,7 +383,7 @@
         <dt>optional any value</dt>
         <dd>1</dd>
       </dl>
-      <!-- 
+      <!--
         XXX extattr?
        -->
     </section>
