@@ -131,7 +131,7 @@ can follow this process:
    `gh-pages` branches).
 
 The simplest way of doing this, is to just run `tools/release.js`. This will prompt you a few times
-with the above process.
+with the above process. Note that you will need gpg and a key with which to sign the tag.
 
 That should be all. Normally, within a few minutes the W3C server will have picked up, gzipped, and
 published the latest and greatest version.

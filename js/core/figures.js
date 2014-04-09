@@ -22,7 +22,7 @@ define(
                                 $figure.find("[alt]").attr("alt") ||
                                 "";
                     var $caption = $("<figcaption/>").text(title);
-                    
+
                     // change old syntax to something HTML5 compatible
                     if ($figure.is("div")) {
                         msg.pub("warn", "You are using the deprecated div.figure syntax; please switch to <figure>.");
@@ -35,7 +35,7 @@ define(
                         $figure.parent().append($caption);
                     }
                 });
-                
+
                 // process all figures
                 var figMap = {}, tof = [], num = 0;
                 $("figure").each(function () {
@@ -44,7 +44,7 @@ define(
                     ,   tit = $cap.text()
                     ,   id = $fig.makeID("fig", tit);
                     if (!$cap.length) msg.pub("warn", "A <figure> should contain a <figcaption>.");
-                    
+
                     // set proper caption title
                     num++;
                     $cap.wrapInner($("<span class='fig-title'/>"))
@@ -72,7 +72,7 @@ define(
                         if ($a.html() === "") $a.append(figMap[id]);
                     }
                 });
-                
+
                 // Create a Table of Figures if a section with id 'tof' exists.
                 var $tof = $("#tof", doc);
                 if (tof.length && $tof.length) {

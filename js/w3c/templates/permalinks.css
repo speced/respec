@@ -1,0 +1,32 @@
+/* --- PERMALINKS --- */
+{{#if permalinkHide}}
+section > *:hover > span.permalink { visibility: visible; } 
+{{/if}}
+
+.permalink {
+    width: 1px;
+    height: 1px;
+    overflow: visible;
+    font-size: 10pt;
+    font-style: normal;
+    vertical-align: middle;
+    margin-left: 4px;
+    {{#if permalinkEdge}}
+	float: right;
+    {{/if}}
+    {{#if permalinkHide}}
+    visibility: hidden;
+    {{/if}}
+}
+
+.permalink a, .permalink a:link, .permalink a:visited, .permalink a:hover, .permalink a:focus, .permalink a:active 
+{
+	background:transparent !important;
+	text-decoration:none;
+    font-weight: bold;
+	color:#666 !important;
+}
+
+.permalink abbr {
+	border:0;
+}
