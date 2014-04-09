@@ -22,7 +22,7 @@ define(
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/permalinks");
-                if (conf.includePermalinks == true ) {
+                if (conf.includePermalinks) {
                     var symbol = conf.permalinkSymbol || '§';
                     var style = "<style>" + css(conf) + "</style>" ;
 
