@@ -97,9 +97,11 @@ define(
                     return "(" + arr.join(" or ") + ")";
                 }
                 else {
-                    var matched = /^sequence<(.+)>$/.exec(text);
-                    if (matched) return "sequence&lt;<a>" + matched[1] + "</a>&gt;";
-                    else return "<a>" + text + "</a>";
+                    var matched = /^(sequence|Promise)<(.+)>$/.exec(text);
+                    if (matched)
+                        return matched[1] + "&lt;<a>" + matched[2] + "</a>&gt;";
+
+                    return "<a>" + text + "</a>";
                 }
             }
         ,   pads = function (num) {
@@ -669,6 +671,13 @@ define(
                 return $df.children();
             },
 
+            parseParameterized: function (str) {
+                var matched = /^(sequence|Promise)<(.+)>$/.exec(str);
+                if (!matched)
+                    return null;
+                return { type: matched[1], parameter: matched[2] };
+            },
+
             writeAsHTML:    function (obj) {
                 if (obj.type == "module") {
                     if (obj.id == "outermost") {
@@ -746,10 +755,10 @@ define(
                                     for (var k = 0, n = it.arrayCount; k < n; k++) sn.text("array of ", dt);
                                 }
                                 var span = sn.element("span", { "class": "idlFieldType" }, dt);
-                                var matched = /^sequence<(.+)>$/.exec(it.datatype);
-                                if (matched) {
-                                    sn.text("sequence<", span);
-                                    sn.element("a", {}, span, matched[1]);
+                                var parameterized = this.parseParameterized(it.datatype);
+                                if (parameterized) {
+                                    sn.text(parameterized.type + "<", span);
+                                    sn.element("a", {}, span, parameterized.parameter);
                                     sn.text(">", span);
                                 }
                                 else {
@@ -797,10 +806,10 @@ define(
                             for (var i = 0, n = it.arrayCount; i < n; i++) sn.text("array of ", dt);
                         }
                         var span = sn.element("span", { "class": "idlMemberType" }, dt);
-                        var matched = /^sequence<(.+)>$/.exec(it.datatype);
-                        if (matched) {
-                            sn.text("sequence<", span);
-                            sn.element("a", {}, span, matched[1]);
+                        var parameterized = this.parseParameterized(it.datatype);
+                        if (parameterized) {
+                            sn.text(parameterized.type + "<", span);
+                            sn.element("a", {}, span, parameterized.parameter);
                             sn.text(">", span);
                         }
                         else {
@@ -838,10 +847,10 @@ define(
                             for (var i = 0, n = it.arrayCount; i < n; i++) sn.text("array of ", dt);
                         }
                         var span = sn.element("span", { "class": "idlMemberType" }, dt);
-                        var matched = /^sequence<(.+)>$/.exec(it.datatype);
-                        if (matched) {
-                            sn.text("sequence<", span);
-                            sn.element("a", {}, span, matched[1]);
+                        var parameterized = this.parseParameterized(it.datatype);
+                        if (parameterized) {
+                            sn.text(parameterized.type + "<", span);
+                            sn.element("a", {}, span, parameterized.parameter);
                             sn.text(">", span);
                         }
                         else {
@@ -977,10 +986,10 @@ define(
                                         for (var m = 0, n = it.arrayCount; m < n; m++) sn.text("array of ", dt);
                                     }
                                     var span = sn.element("span", { "class": "idlAttrType" }, dt);
-                                    var matched = /^sequence<(.+)>$/.exec(it.datatype);
-                                    if (matched) {
-                                        sn.text("sequence<", span);
-                                        sn.element("a", {}, span, matched[1]);
+                                    var parameterized = this.parseParameterized(it.datatype);
+                                    if (parameterized) {
+                                        sn.text(parameterized.type + "<", span);
+                                        sn.element("a", {}, span, parameterized.parameter);
                                         sn.text(">", span);
                                     }
                                     else {
@@ -1435,17 +1444,17 @@ window.simpleNode.prototype = {
         }
         return $el;
     },
-    
+
     text:    function (txt, parent) {
         var tn = this.doc.createTextNode(txt);
         if (parent) $(parent).append(tn);
         return tn;
     },
-    
+
     documentFragment:    function () {
         return this.doc.createDocumentFragment();
     },
-    
+
     // --- ID MANAGEMENT ---
     sanitiseID:    function (id) {
         id = id.split(/[^\-.0-9a-zA-Z_]/).join("-");
@@ -1455,7 +1464,7 @@ window.simpleNode.prototype = {
         if (id.length === 0) id = "generatedID";
         return id;
     },
-    
+
     idThatDoesNotExist:    function (id) {
         var inc = 1;
         if (this.doc.getElementById(id)) {
