@@ -17,16 +17,13 @@
 //                         hovered over.  Defaults to false.
 
 define(
-    ["tmpl!w3c/css/permalinks.css", "core/utils"], // load this to be sure that the jQuery extensions are loaded
+    ["tmpl!w3c/templates/permalinks.css", "core/utils"], // load this to be sure that the jQuery extensions are loaded
     function (css, utils) {
         return {
             run:    function (conf, doc, cb, msg) {
-                if (conf.includePermalinks === true ) {
-                    msg.pub("start", "w3c/permalinks");
-                    var symbol = conf.permalinkSymbol;
-                    if (symbol == null) {
-                        symbol = '§';
-                    }
+                msg.pub("start", "w3c/permalinks");
+                if (conf.includePermalinks == true ) {
+                    var symbol = conf.permalinkSymbol || '§';
                     var style = "<style>" + css(conf) + "</style>" ;
 
                     $(doc).find("head link").first().before(style) ;
@@ -36,10 +33,10 @@ define(
                         if (!$item.hasClass("nolink")) {
                             var resourceID = $item.attr('id');
 
-                            var par = $item.parent()[0];
-                            if (par && par.localName && par.localName.toLowerCase() == "section") {
-                                if (!$(par).hasClass("introductory") && !$(par).hasClass("nolink")) {
-                                    resourceID = $(par).attr('id') ;
+                            var $par = $item.parent();
+                            if ($par.is("section")) {
+                                if (!$par.hasClass("introductory") && !$par.hasClass("nolink")) {
+                                    resourceID = $par.attr('id') ;
                                 } else {
                                     resourceID = null;
                                 }
@@ -49,20 +46,23 @@ define(
                             if (resourceID != null) {
                                 // we have an id.  add a permalink
                                 // right after the h* element
-                                var content = "<span typeof='bookmark' class='permalink'>";
+                                var type = conf.doRDFa ? "typeof='bookmark' " : "";
+                                var urlprop = conf.doRDFa ? "property='url' " : "";
+                                var titprop = conf.doRDFa ? "property='title' " : "";
+                                var content = "<span " + type + "class='permalink'>";
                                 if (!conf.permalinkEdge) {
                                     content += "&nbsp;";
                                 }
-                                content += "<a href='#"+resourceID+"' property='url' aria-label='Permalink for "
+                                content += "<a href='#"+resourceID+"' " + urlprop + "aria-label='Permalink for "
                                         +resourceID+"' title='Permalink for "+resourceID+"'>" 
-                                        + "<span property='title' content='"+$item.text()+"'>"
+                                        + "<span " + titprop + "content='"+$item.text()+"'>"
                                         + symbol + "</span></a></span>";
                                 $item.append(content);
                             }
                         }
                     });
-                    msg.pub("end", "w3c/permalinks");
                 };
+                msg.pub("end", "w3c/permalinks");
                 cb();
             }
         };
