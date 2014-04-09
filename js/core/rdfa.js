@@ -18,11 +18,11 @@ define(
                         ,   ref = $sec.attr("id")
                         ;
                         if (ref) {
-                            about = "#" + "ref";
+                            about = "#" + ref;
                         }
                         else if ($fc.length) {
                             ref = $fc.attr("id");
-                            if (ref) about = "#" + "ref";
+                            if (ref) about = "#" + ref;
                         }
                         if (about !== "") {
                             $sec.attr({
