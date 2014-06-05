@@ -55,15 +55,16 @@ describe("Core - WebIDL", function () {
         $target = $("#ctor-basic", doc);
         text =  "[Something,\n" +
                 " Constructor,\n" +
-                " Constructor (boolean bar, sequence<double> foo)]\n" +
+                " Constructor (boolean bar, sequence<double> foo, Promise<double> blah)]\n" +
                 "interface SuperStar {\n" +
                 "};";
         expect($target.text()).toEqual(text);
         expect($target.find(".idlCtor").length).toEqual(2);
         var $ctor1 = $target.find(".idlCtor").last();
         expect($ctor1.find(".idlCtorName").text()).toEqual("Constructor");
-        expect($ctor1.find(".idlParam").length).toEqual(2);
+        expect($ctor1.find(".idlParam").length).toEqual(3);
         expect($ctor1.find(".idlParam:contains('sequence')").length).toEqual(1);
+        expect($ctor1.find(".idlParam:contains('Promise')").length).toEqual(1);
         expect($ctor1.find(".idlParam").first().find(".idlParamType").text()).toEqual("boolean");
 
         $target = $("#ctor-noea", doc);
@@ -121,7 +122,7 @@ describe("Core - WebIDL", function () {
         expect($const1.find(".idlConstName").text()).toEqual("test");
         expect($const1.find(".idlConstValue").text()).toEqual("true");
         expect($target.find(".idlConst").last().find(".extAttr").length).toEqual(1);
-        
+
         var $sec = $("#constants-1 dl.constants", doc);
         expect($sec.find("dt").length).toEqual(19);
         expect($sec.find("dd").length).toEqual(19);
@@ -133,32 +134,38 @@ describe("Core - WebIDL", function () {
     it("should handle attributes", function () {
         $target = $("#attr-basic", doc);
         text =  "interface SuperStar {\n" +
-                "                attribute DOMString      regular;\n" +
-                "    readonly    attribute DOMString      ro;\n" +
-                "    readonly    attribute DOMString      _readonly;\n" +
-                "    inherit     attribute DOMString      in;\n" +
-                "    stringifier attribute DOMString      st;\n" +
+                "                attribute DOMString          regular;\n" +
+                "    readonly    attribute DOMString          ro;\n" +
+                "    readonly    attribute DOMString          _readonly;\n" +
+                "    inherit     attribute DOMString          in;\n" +
+                "    stringifier attribute DOMString          st;\n" +
                 "    [Something]\n" +
-                "    readonly    attribute DOMString      ext;\n" +
-                "                attribute sequence<Date> dates;\n" +
+                "    readonly    attribute DOMString          ext;\n" +
+                "                attribute sequence<Date>     dates;\n" +
+                "                attribute Promise<DOMString> operation;\n" +
                 "};";
         expect($target.text()).toEqual(text);
-        expect($target.find(".idlAttribute").length).toEqual(7);
+        expect($target.find(".idlAttribute").length).toEqual(8);
         var $at = $target.find(".idlAttribute").first();
         expect($at.find(".idlAttrType").text()).toEqual("DOMString");
         expect($at.find(".idlAttrName").text()).toEqual("regular");
         var $ro = $target.find(".idlAttribute").eq(2);
         expect($ro.find(".idlAttrName").text()).toEqual("_readonly");
-        var $lst = $target.find(".idlAttribute").last();
-        expect($lst.find(".idlAttrType").text()).toEqual("sequence<Date>");
-        
+        var $seq = $target.find(".idlAttribute").eq(6);
+        expect($seq.find(".idlAttrType").text()).toEqual("sequence<Date>");
+        var $promise = $target.find(".idlAttribute").eq(7);
+        expect($promise.find(".idlAttrType").text()).toEqual("Promise<DOMString>");
+
         var $sec = $("#attributes-1 dl.attributes", doc);
-        expect($sec.find("dt").length).toEqual(7);
-        expect($sec.find("dt").eq(3).find("code").text()).toEqual("readonly");
-        expect($sec.find("dd").length).toEqual(7);
+        expect($sec.find("dt").length).toEqual(8);
+        expect($sec.find("dt").eq(4).find("code").text()).toEqual("readonly");
+        expect($sec.find("dd").length).toEqual(8);
         expect($sec.find("dt").first().find("code").first().text()).toEqual("dates");
         expect($sec.find("dt").first().find(".idlAttrType").text()).toEqual("sequence<Date>");
         expect($sec.find("dd").first().text()).toEqual("3.5");
+        expect($sec.find("dt").eq(3).find("code").first().text()).toEqual("operation");
+        expect($sec.find("dt").eq(3).find(".idlAttrType").text()).toEqual("Promise<DOMString>");
+        expect($sec.find("dd").eq(3).text()).toEqual("4.0");
     });
 
     it("should handle operations", function () {
@@ -268,10 +275,11 @@ describe("Core - WebIDL", function () {
                 "    SuperStar?          message;\n" +
                 "    sequence<SuperStar> floats;\n" +
                 "    SuperStar[][]       numbers;\n" +
+                "    Promise<SuperStar>  stars;\n" +
                 "};";
         expect($target.text()).toEqual(text);
         expect($target.find(".idlConst").length).toEqual(1);
-        expect($target.find(".idlField").length).toEqual(3);
+        expect($target.find(".idlField").length).toEqual(4);
         var $const = $target.find(".idlConst");
         expect($const.find(".idlConstType").text()).toEqual("SuperStar");
         expect($const.find(".idlConstName").text()).toEqual("value");
@@ -281,8 +289,8 @@ describe("Core - WebIDL", function () {
         expect($fld.find(".idlFieldName").text()).toEqual("message");
 
         var $sec = $("#fields dl.fields", doc);
-        expect($sec.find("dt").length).toEqual(3);
-        expect($sec.find("dd").length).toEqual(3);
+        expect($sec.find("dt").length).toEqual(4);
+        expect($sec.find("dd").length).toEqual(4);
         expect($sec.find("dt").first().find("code").first().text()).toEqual("floats");
         expect($sec.find("dt").first().find(".idlFieldType a").text()).toEqual("SuperStar");
         expect($sec.find("dd").first().text()).toEqual("3");
@@ -347,7 +355,7 @@ describe("Core - WebIDL", function () {
         $target = $("#td-less-basic", doc);
         text = "typedef [Something] unsigned long long? sth;";
         expect($target.text()).toEqual(text);
-        
+
         var $sec = $("#typedefs", doc);
         expect($sec.find(".idlTypedefDesc").first().text()).toEqual("Throughout this specification, the identifier string is used to refer to the DOMString type.");
         expect($sec.find(".idlTypedefDesc").first().find(".idlTypedefID").text()).toEqual("string");

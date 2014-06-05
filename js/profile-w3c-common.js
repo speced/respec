@@ -44,6 +44,7 @@ define([
         ,   "core/fix-headers"
         ,   "core/structure"
         ,   "w3c/informative"
+        ,   "w3c/permalinks"
         ,   "core/id-headers"
         ,   "w3c/aria"
         ,   "core/shiv"

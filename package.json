@@ -1,6 +1,6 @@
 {
     "name": "respec",
-    "version": "3.2.7",
+    "version": "3.2.15",
     "description": "Specification Edition Support Tool.",
     "main": "index.js",
     "directories": {
@@ -19,5 +19,7 @@
     "devDependencies": {
         "express":      "*"
     ,   "requirejs":    "2.1.8"
+    ,   "prompt":       "0.2.12"
+    ,   "async":        "0.2.9"
     }
 }
