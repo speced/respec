@@ -208,8 +208,9 @@ define(
                 conf.isCCBY = conf.license === "cc-by" && conf.wgPatentURI === "http://www.w3.org/2004/01/pp-impl/40318/status";
                 conf.isCGBG = $.inArray(conf.specStatus, this.cgbg) >= 0;
                 conf.isCGFinal = conf.isCGBG && /G-FINAL$/.test(conf.specStatus);
+                conf.isBasic = (conf.specStatus === "base");
                 if (!conf.specStatus) msg.pub("error", "Missing required configuration: specStatus");
-                if (!conf.isCGBG && !conf.shortName) msg.pub("error", "Missing required configuration: shortName");
+                if ((!conf.isCGBG && !conf.isBasic) && !conf.shortName) msg.pub("error", "Missing required configuration: shortName");
                 conf.title = doc.title || "No Title";
                 if (!conf.subtitle) conf.subtitle = "";
                 if (!conf.publishDate) {
@@ -232,12 +233,12 @@ define(
                 var publishSpace = "TR";
                 if (conf.specStatus === "Member-SUBM") publishSpace = "Submission";
                 else if (conf.specStatus === "Team-SUBM") publishSpace = "TeamSubmission";
-                if (!conf.isCGBG) conf.thisVersion =  "http://www.w3.org/" + publishSpace + "/" +
-                                                      conf.publishDate.getFullYear() + "/" +
-                                                      conf.maturity + "-" + conf.shortName + "-" +
-                                                      utils.concatDate(conf.publishDate) + "/";
+                if (!conf.isCGBG && !conf.isBasic) conf.thisVersion =  "http://www.w3.org/" + publishSpace + "/" +
+                                                                      conf.publishDate.getFullYear() + "/" +
+                                                                      conf.maturity + "-" + conf.shortName + "-" +
+                                                                      utils.concatDate(conf.publishDate) + "/";
                 if (conf.specStatus === "ED") conf.thisVersion = conf.edDraftURI;
-                if (!conf.isCGBG) conf.latestVersion = "http://www.w3.org/" + publishSpace + "/" + conf.shortName + "/";
+                if (!conf.isCGBG && !conf.isBasic) conf.latestVersion = "http://www.w3.org/" + publishSpace + "/" + conf.shortName + "/";
                 if (conf.isTagFinding) {
                     conf.latestVersion = "http://www.w3.org/2001/tag/doc/" + conf.shortName;
                     conf.thisVersion = conf.latestVersion + "-" + utils.concatDate(conf.publishDate, "-");
@@ -254,6 +255,9 @@ define(
                     }
                     else if (conf.isCGBG) {
                         conf.prevVersion = conf.prevVersion || "";
+                    }
+                    else if (conf.isBasic) {
+                        conf.prevVersion = "";
                     }
                     else {
                         conf.prevVersion = "http://www.w3.org/TR/" + conf.previousPublishDate.getFullYear() + "/" + pmat + "-" +
