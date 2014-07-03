@@ -137,7 +137,7 @@ define(
                         $before = $main ;
                     }
                     // create the container
-                    var $con = $(doc.createElement("div")) ;
+                    var $con = $(doc.createElement("main")) ;
                     $con.attr('id', "respecMain");
                     $con.attr('role', 'main');
                     // move the main sections into this container
