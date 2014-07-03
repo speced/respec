@@ -54,7 +54,8 @@ define(
                                 $t.attr('role', 'definition') ;
                                 $t.attr("aria-labelledby", $ant.attr('id')) ;
                             }
-                        } else {
+                        }
+                        else {
                             // we are not in a dt - we must be in *something*
                             $p = $ant.parent() ;
                             if ($p && !$p.attr("aria-labelledby")) {
@@ -92,9 +93,10 @@ define(
                     $item.attr('aria-level', level);
                     $item.attr('role', 'heading') ;
                     if (isIssue) {
-                        $item.makeID("h_issue");
-                    } else {
-                        $item.makeID("h_note");
+                        $item.makeID("h-issue");
+                    } 
+                    else {
+                        $item.makeID("h-note");
                     }
                 });
                 
@@ -128,7 +130,8 @@ define(
                         if (!done && $t.is("section") && $t.hasClass("appendix")) {
                             done = 1;
                             foundApp = 1;
-                        } else if (!done) {
+                        } 
+                        else if (!done) {
                             $con.append(item);
                         }
                     });
