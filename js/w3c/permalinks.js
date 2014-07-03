@@ -34,7 +34,7 @@ define(
                             var resourceID = $item.attr('id');
 
                             var $par = $item.parent();
-                            if ($par.is("section")) {
+                            if ($par.is("section") || $par.is("div")) {
                                 if (!$par.hasClass("introductory") && !$par.hasClass("nolink")) {
                                     resourceID = $par.attr('id') ;
                                 } else {
