@@ -39,8 +39,16 @@ define(
                         toc.attr('id', 'respecContents') ;
                     }
                 }
-                // If there are definitions in a DL, and the definition is in a 
-                // dt element, assume it refers to the next dd element.
+                // Search for terms and link them to their definitions
+                // if possible
+                //
+                // dfn elements enclose a term, but the definition of
+                // that term is in the surrounding element OR in a
+                // subsequent dd element if the term is within a dt
+                // element. aria-describedby is designed to help
+                // users of assistive technologies find the actual
+                // definition of a term (among other things).
+                //
                 $("dfn", doc).each( function(i, item) {
                     var $ant = $(item) ;
                     // if the item does not point to its description, see if we can find it
@@ -48,7 +56,12 @@ define(
                         // the definition of a term should have a role of definition 
                         var $p = $ant.parent("dt") ;
                         if ($p.length) {
+                            // The dfn is within a dt element.  Its
+                            // definition is by convention in the next
+                            // dd element.  Point to that.
                             var $t = $p.next("dd") ;
+                            // if there is already an indication of
+                            // its label, then don't change it
                             if ($t && !$t.attr("aria-labelledby")) {
                                 $ant.attr("aria-describedby", $t.makeID("desc", $ant.attr('id').replace(/^dfn-/, ''))) ;
                                 $t.attr('role', 'definition') ;
@@ -57,7 +70,12 @@ define(
                         }
                         else {
                             // we are not in a dt - we must be in *something*
+                            // assume that the definition of the term
+                            // is within the enclosing element and use
+                            // that.
                             $p = $ant.parent() ;
+                            // if there is already an indication of
+                            // its label, then don't change it
                             if ($p && !$p.attr("aria-labelledby")) {
                                 $ant.attr("aria-describedby", $p.makeID("desc", $ant.attr('id').replace(/^dfn-/, ''))) ;
                                 $p.attr('role', 'definition') ;
