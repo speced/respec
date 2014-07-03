@@ -44,10 +44,11 @@ define(
                 if (ref.etAl) output += " et al";
                 output += ". ";
             }
-            output += '<a href="' + ref.href + '"><cite>' + ref.title + "</cite></a>. ";
+            if (ref.href) output += '<a href="' + ref.href + '"><cite>' + ref.title + "</cite></a>. ";
+            else output += '<cite>' + ref.title + '</cite>. ';
             if (ref.date) output += ref.date + ". ";
             if (ref.status) output += (REF_STATUSES[ref.status] || ref.status) + ". ";
-            output += 'URL: <a href="' + ref.href + '">' + ref.href + "</a>";
+            if (ref.href) output += 'URL: <a href="' + ref.href + '">' + ref.href + "</a>";
             return output;
         };
         var bibref = function (conf, msg) {
