@@ -328,7 +328,9 @@ define(
                 conf.isMO = (conf.specStatus === "MO");
                 conf.isIGNote = (conf.specStatus === "IG-NOTE");
                 conf.dashDate = utils.concatDate(conf.publishDate, "-");
-                conf.publishISODate = utils.isoDate(conf.publishDate) ;
+                conf.publishISODate = utils.isoDate(conf.publishDate);
+                conf.processVersion = conf.processVersion || "2014";
+                conf.isNewProcess = conf.processVersion == "2014";
                 // configuration done - yay!
 
                 // annotate html element with RFDa
