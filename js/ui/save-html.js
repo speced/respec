@@ -77,6 +77,7 @@ define(
             }
             // convert the document to a string (HTML)
         ,   toString:    function () {
+                respecEvents.pub("save", "toString")
                 var str = "<!DOCTYPE html"
                 ,   dt = doc.doctype;
                 if (dt && dt.publicId) str += " PUBLIC '" + dt.publicId + "' '" + dt.systemId + "'";
@@ -101,6 +102,7 @@ define(
             }
             // convert the document to XML, pass 5 as mode for XHTML5
         ,   toXML:        function (mode) {
+                respecEvents.pub("save", "toXML" + mode)
                 var rootEl = doc.documentElement.cloneNode(true);
                 cleanup(rootEl);
                 if (mode !== 5) {
@@ -193,7 +195,7 @@ define(
             // data needed for diff marking - submit the form so that the response populates
             // page with the diff marked version
         ,   toDiffHTML:  function () {
-                respecEvent.pub("save", "toDiffHTML")
+                respecEvents.pub("save", "toDiffHTML")
                 var base = window.location.href.replace(/\/[^\/]*$/, "/")
                 ,   str = "<!DOCTYPE html>\n<html>\n" +
                           "<head><title>Diff form</title></head>\n" +
@@ -221,7 +223,6 @@ define(
             // },
             // popup the generated source
             toHTMLSource:    function () {
-                respecEvent.pub("save", "toHTML")
                 var x = window.open();
                 x.document.write("<pre>" + utils.xmlEscape(this.toString()) + "</pre>");
                 x.document.close();
@@ -234,7 +235,6 @@ define(
             // },
             // popup the generated XHTML source
             toXHTMLSource:    function (mode) {
-                respecEvent.pub("save", "toXHTML" + mode)
                 var x = window.open();
                 x.document.write("<pre>" + utils.xmlEscape(this.toXML(mode)) + "</pre>");
                 x.document.close();
