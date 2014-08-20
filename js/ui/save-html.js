@@ -193,6 +193,7 @@ define(
             // data needed for diff marking - submit the form so that the response populates
             // page with the diff marked version
         ,   toDiffHTML:  function () {
+                respecEvent.pub("save", "toDiffHTML")
                 var base = window.location.href.replace(/\/[^\/]*$/, "/")
                 ,   str = "<!DOCTYPE html>\n<html>\n" +
                           "<head><title>Diff form</title></head>\n" +
@@ -220,6 +221,7 @@ define(
             // },
             // popup the generated source
             toHTMLSource:    function () {
+                respecEvent.pub("save", "toHTML")
                 var x = window.open();
                 x.document.write("<pre>" + utils.xmlEscape(this.toString()) + "</pre>");
                 x.document.close();
@@ -232,6 +234,7 @@ define(
             // },
             // popup the generated XHTML source
             toXHTMLSource:    function (mode) {
+                respecEvent.pub("save", "toXHTML" + mode)
                 var x = window.open();
                 x.document.write("<pre>" + utils.xmlEscape(this.toXML(mode)) + "</pre>");
                 x.document.close();
