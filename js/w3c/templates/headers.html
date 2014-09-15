@@ -1,8 +1,17 @@
 <div class='head'>
   <p>
-    {{#if prependW3C}}
-      <a href='http://www.w3.org/'><img width='72' height='48' src='https://www.w3.org/Icons/w3c_home' alt='W3C'/></a>
-    {{/if}}
+      {{#if overrideLogo}}
+        {{#if overrideLogoLink}}<a href='{{overrideLogoLink}}'>{{/if}
+            <img {{#if overrideLogoWidth}}width='{{overrideLogoWidth}}'{{/if}}
+                 {{#if overrideLogoHeight}}height='{{overrideLogoHeight}}'{{/if}}
+                 src='{{overrideLogo}}'
+                 {{#if overrideLogoAlt}}alt='{{overrideLogoAlt}}'{{else}}alt='Logo'{{/if}}/>
+        {{#if overrideLogoLink}}</a>{{/if}
+      {{else}
+        {{#if prependW3C}}
+            <a href='http://www.w3.org/'><img width='72' height='48' src='https://www.w3.org/Icons/w3c_home' alt='W3C'/></a>
+        {{/if}}
+      {{/if}}
   </p>
   <h1 class='title p-name' id='title'{{#if doRDFa}} property='dcterms:title'{{/if}}>{{title}}</h1>
   {{#if subtitle}}
