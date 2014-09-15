@@ -1,13 +1,13 @@
 <div class='head'>
   <p>
       {{#if overrideLogo}}
-        {{#if overrideLogoLink}}<a href='{{overrideLogoLink}}'>{{/if}
+        {{#if overrideLogoURI}}<a href='{{overrideLogoURI}}'>{{/if}}
             <img {{#if overrideLogoWidth}}width='{{overrideLogoWidth}}'{{/if}}
                  {{#if overrideLogoHeight}}height='{{overrideLogoHeight}}'{{/if}}
                  src='{{overrideLogo}}'
                  {{#if overrideLogoAlt}}alt='{{overrideLogoAlt}}'{{else}}alt='Logo'{{/if}}/>
-        {{#if overrideLogoLink}}</a>{{/if}
-      {{else}
+        {{#if overrideLogoURI}}</a>{{/if}}
+      {{else}}
         {{#if prependW3C}}
             <a href='http://www.w3.org/'><img width='72' height='48' src='https://www.w3.org/Icons/w3c_home' alt='W3C'/></a>
         {{/if}}
