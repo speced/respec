@@ -1,12 +1,7 @@
 <div class='head'>
   <p>
-      {{#if overrideLogo}}
-        {{#if overrideLogoURI}}<a href='{{overrideLogoURI}}'>{{/if}}
-            <img {{#if overrideLogoWidth}}width='{{overrideLogoWidth}}'{{/if}}
-                 {{#if overrideLogoHeight}}height='{{overrideLogoHeight}}'{{/if}}
-                 src='{{overrideLogo}}'
-                 {{#if overrideLogoAlt}}alt='{{overrideLogoAlt}}'{{else}}alt='Logo'{{/if}}/>
-        {{#if overrideLogoURI}}</a>{{/if}}
+      {{#if overrideLogos}}
+        {{showLogos overrideLogos}}
       {{else}}
         {{#if prependW3C}}
             <a href='http://www.w3.org/'><img width='72' height='48' src='https://www.w3.org/Icons/w3c_home' alt='W3C'/></a>
