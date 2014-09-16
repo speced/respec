@@ -29,7 +29,7 @@
 //          - label: a label for the alternate
 //          - lang: optional language
 //          - type: optional MIME type
-//  - overrideLogos: a list of logos to use instead of the W3C logo, each of which being defined by:
+//  - logos: a list of logos to use instead of the W3C logo, each of which being defined by:
 //          - src: the URI to the logo (target of <img src=>)
 //          - alt: alternate text for the image (<img alt=>), defaults to "Logo" or "Logo 1", "Logo 2", ...
 //            if src is not specified, this is the text of the "logo"
