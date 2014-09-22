@@ -10,7 +10,7 @@ var requireConfig = {
 };
 if ("respecVersion" in window && respecVersion) {
     requireConfig.paths = {
-        "ui":   "https://darobin.github.io/respec/js/ui"
+        "ui":   "https://w3c.github.io/respec/js/ui"
     };
 }
 require.config(requireConfig);

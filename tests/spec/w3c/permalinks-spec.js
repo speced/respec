@@ -74,6 +74,23 @@ describe("W3C — Permalinks", function () {
             flushIframes();
         });
     });
+    it("permalinks data should be added when div or h* have an id", function () {
+        var doc;
+        runs(function () {
+            makeRSDoc({ config: basicConfig, body: $("<section class='introductory' id='sotd'>Some unique SOTD content</section><div id='testing'><h2>a heading</h2><p>some content</p></div>") }, 
+                      function (rsdoc) { doc = rsdoc; });
+        });
+        waitsFor(function () { return doc; }, MAXOUT);
+        runs(function () {
+            var $c = $("#sotd", doc) ;
+            var list = $(".permalink", $c);
+            expect(list.length).toEqual(0);
+            $c = $("#testing", doc);
+            list = $(".permalink", $c) ;
+            expect(list.length).toEqual(1);
+            flushIframes();
+        });
+    });
     it("permalinks data should not be added when section or h* have no id", function () {
         var doc;
         runs(function () {
