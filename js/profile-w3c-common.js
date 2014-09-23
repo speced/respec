@@ -36,6 +36,7 @@ define([
         ,   "core/highlight"
         ,   "core/best-practices"
         ,   "core/figures"
+        ,   "core/tables"
         ,   "core/biblio"
         ,   "core/rdfa"
         ,   "core/webidl-oldschool"

@@ -183,6 +183,18 @@ define(
                 });
             }
 
+            // --- APPENDIX NUMBERING --------------------------------------------------------------------------
+            // take a a number and return the corresponding Appendix String. 0 means 'A', ... 25 means 'Z, 26
+            // means 'AA', 26**26-1 means 'ZZ, 26**26 means 'AAA', etc.
+        ,   appendixMap: function(n) {
+        	var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                if (n < alphabet.length) {
+                	return alphabet.charAt(n);
+                } else {
+                	return this.appendixMap(floor(n/alphabet.length)) + alphabet.charAt(mod(n,alphabet.length));
+                }
+            }
+
             // --- TRANSFORMATIONS ------------------------------------------------------------------------------
             // Run list of transforms over content and return result.
             // Please note that this is a legacy method that is only kept in order to maintain compatibility

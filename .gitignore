@@ -5,3 +5,6 @@ scratch
 .htaccess
 examples/touchevents.html
 bevy.json
+.idea
+www.w3.org.zip
+examples/respec

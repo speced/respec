@@ -2,8 +2,6 @@
 // Module core/structure
 //  Handles producing the ToC and numbering sections across the document.
 
-// LIMITATION:
-//  At this point we don't support having more than 26 appendices.
 // CONFIGURATION:
 //  - noTOC: if set to true, no TOC is generated and sections are not numbered
 //  - tocIntroductory: if set to true, the introductory material is listed in the TOC
@@ -11,8 +9,8 @@
 //  - maxTocLevel: only generate a TOC so many levels deep
 
 define(
-    [],
-    function () {
+    ["core/utils"],
+    function (utils) {
         var i18n = {
                     en: { toc: "Table of Contents" },
                     fr: { toc: "Sommaire" }
@@ -20,7 +18,6 @@ define(
         ,   secMap = {}
         ,   appendixMode = false
         ,   lastNonAppendix = 0
-        ,   alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         ,   makeTOCAtLevel = function ($parent, doc, current, level, conf) {
                 var $secs = $parent.children(conf.tocIntroductory ? "section" : "section:not(.introductory)");
 
@@ -47,7 +44,7 @@ define(
                         lastNonAppendix = current[0];
                         appendixMode = true;
                     }
-                    if (appendixMode) secnos[0] = alphabet.charAt(current[0] - lastNonAppendix);
+                    if (appendixMode) secnos[0] = utils.appendixMap(current[0] - lastNonAppendix);
                     var secno = secnos.join(".")
                     ,   isTopLevel = secnos.length == 1;
                     if (isTopLevel) {
