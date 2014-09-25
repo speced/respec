@@ -29,6 +29,15 @@
 //          - label: a label for the alternate
 //          - lang: optional language
 //          - type: optional MIME type
+//  - logos: a list of logos to use instead of the W3C logo, each of which being defined by:
+//          - src: the URI to the logo (target of <img src=>)
+//          - alt: alternate text for the image (<img alt=>), defaults to "Logo" or "Logo 1", "Logo 2", ...
+//            if src is not specified, this is the text of the "logo"
+//          - height: optional height of the logo (<img height=>)
+//          - width: optional width of the logo (<img width=>)
+//          - url: the URI to the organization represented by the logo (target of <a href=>)
+//          - id: optional id for the logo, permits custom CSS (wraps logo in <span id=>)
+//          - each logo element must specifiy either src or alt
 //  - testSuiteURI: the URI to the test suite, if any
 //  - implementationReportURI: the URI to the implementation report, if any
 //  - bugTracker: and object with the following details
@@ -131,6 +140,34 @@ define(
                 if (this.doRDFa !== false ) ret += "</span>\n";
                 ret += "</dd>\n";
             }
+            return new Handlebars.SafeString(ret);
+        });
+
+        Handlebars.registerHelper("showLogos", function (items) {
+            var ret = "<p>";
+            for (var i = 0, n = items.length; i < n; i++) {
+                var p = items[i];
+                if (p.url) ret += "<a href='" + p.url + "'>";
+                if (p.id)  ret += "<span id='" + p.id + "'>";
+                if (p.src) {
+                    ret += "<img src='" + p.src + "'";
+                    if (p.width)  ret += " width='" + p.width + "'";
+                    if (p.height) ret += " height='" + p.height + "'";
+                    if (p.alt) {
+                        ret += " alt='" + p.alt + "'";
+                    } else if (items.length == 1) {
+                        ret += " alt='Logo'";
+                    } else {
+                        ret += " alt='Logo " + (i+1) + "'";
+                    }
+                    ret += "/>"
+                } else if (p.alt) {
+                    ret += p.alt;
+                }
+                if (p.url) ret += "</a>";
+                if (p.id) ret += "</span>";
+            }
+            ret += "</p>"
             return new Handlebars.SafeString(ret);
         });
 
