@@ -423,6 +423,8 @@ define(
                 conf.recNotExpected = (!conf.isRecTrack && conf.maturity == "WD" && conf.specStatus !== "FPWD-NOTE");
                 if (conf.isIGNote && !conf.charterDisclosureURI)
                     msg.pub("error", "IG-NOTEs must link to charter's disclosure section using charterDisclosureURI");
+                // ensure subjectPrefix is encoded before using template
+                if (conf.subjectPrefix !== '') conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
                 $(conf.isCGBG ? cgbgSotdTmpl(conf) : sotdTmpl(conf)).insertAfter($("#abstract"));
 
                 if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
