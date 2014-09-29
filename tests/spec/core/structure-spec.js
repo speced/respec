@@ -24,7 +24,6 @@ describe("Core - Structure", function () {
             ;
             expect($toc.find("h2").text()).toEqual("Table of Contents");
             expect($toc.find("h2").attr('role')).toEqual('heading');
-            expect($toc.find("h2").attr('aria-level')).toEqual('1');
             expect($toc.find("ul:first").attr('role')).toEqual('directory');
             expect($toc.find("> ul > li").length).toEqual(3);
             expect($toc.find("li").length).toEqual(15);

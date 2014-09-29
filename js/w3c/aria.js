@@ -14,10 +14,8 @@ define(
                                 .find("h1:first, h2:first, h3:first, h4:first, h5:first, h6:first");
                 $secs.each(function(i, item) {
                     var $item = $(item)
-                    ,   resourceID = $item.parent('section[id]').attr('id')
-                    ,   level = $item.parents("section").length ;
+                    ,   resourceID = $item.parent('section[id]').attr('id');
 
-                    $item.attr('aria-level', level);
                     $item.attr('role', 'heading') ;
                     if (!$item.attr("id")) {
                         $item.attr('id', $item.prop('tagName').toLowerCase() + '_' + resourceID) ;
@@ -42,7 +40,7 @@ define(
                 $(".note-title, .issue-title", doc).each(function (i, item) {
                     var $item = $(item)
                     ,   isIssue = $item.hasClass("issue-title")
-                    ,   level = $item.parents("section").length + 1 ;
+                    ,   level = $item.parents("section").length ;
 
                     $item.attr('aria-level', level);
                     $item.attr('role', 'heading') ;

@@ -15,7 +15,6 @@ describe("W3C — Abstract", function () {
             expect($abs.find("h2").length).toBeTruthy();
             expect($abs.find("h2").text()).toEqual("Abstract");
             expect($abs.find("h2").attr('role')).toEqual("heading");
-            expect($abs.find("h2").attr('aria-level')).toEqual("1");
             expect($abs.hasClass("introductory")).toBeTruthy();
             expect($abs.find("p").length).toBeTruthy();
             flushIframes();
