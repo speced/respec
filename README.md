@@ -23,7 +23,8 @@ https://github.com/tobie/specref
 Want to see complete documentation?
 ===================================
 
-Thorough documentation for ReSpec can be found at http://www.w3.org/respec, with a github repository for the sources at https://github.com/w3c/respec-docs
+Thorough documentation for ReSpec can be found at http://www.w3.org/respec, with a github repository 
+for the sources at https://github.com/w3c/respec-docs
 
 What is this version of ReSpec?
 ===============================
