@@ -208,14 +208,14 @@ describe("W3C — Headers", function () {
 
     // wg, wgURI, wgPatentURI, wgPublicList
     it("should take wg configurations into account", function () {
-        loadWithConfig({ wg: "WGNAME", wgURI: "WGURI", wgPatentURI: "WGPATENT", wgPublicList: "WGLIST" }, function ($ifr) {
+        loadWithConfig({ wg: "WGNAME", wgURI: "WGURI", wgPatentURI: "WGPATENT", wgPublicList: "WGLIST", subjectPrefix: "[The Prefix]" }, function ($ifr) {
             var $sotd = $("#sotd", $ifr[0].contentDocument);
             console.log($sotd);
             expect($sotd.find("p:contains('CUSTOM PARAGRAPH')").length).toEqual(1);
             expect($sotd.find("a:contains('WGNAME')").length).toEqual(1);
             expect($sotd.find("a:contains('WGNAME')").attr("href")).toEqual("WGURI");
             expect($sotd.find("a:contains('WGLIST@w3.org')").length).toEqual(1);
-            expect($sotd.find("a:contains('WGLIST@w3.org')").attr("href")).toEqual("mailto:WGLIST@w3.org");
+            expect($sotd.find("a:contains('WGLIST@w3.org')").attr("href")).toEqual("mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D");
             expect($sotd.find("a:contains('subscribe')").attr("href")).toEqual("mailto:WGLIST-request@w3.org?subject=subscribe");
             expect($sotd.find("a:contains('archives')").attr("href")).toEqual("http://lists.w3.org/Archives/Public/WGLIST/");
             expect($sotd.find("a:contains('disclosures')").attr("href")).toEqual("WGPATENT");

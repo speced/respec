@@ -57,6 +57,8 @@ describe("Core — Issues and Notes", function () {
 
             expect($not.find("div.note-title").length).toEqual(1);
             expect($not.find("div.note-title").text()).toEqual("Note: NOT-TIT");
+            expect($not.attr("role")).toEqual("note");
+            expect($not.find("div.note-title").attr("role")).toEqual("heading");
             expect($pnot.attr("title")).toBeUndefined();
             expect($pnot.text()).toEqual("NOTE");
             flushIframes();
