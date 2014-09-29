@@ -20,6 +20,12 @@ Want to change a bibliographical reference?
 Bibliographical references have been moved out of ReSpec. You want to use this: 
 https://github.com/tobie/specref
 
+Want to see complete documentation?
+===================================
+
+Thorough documentation for ReSpec can be found at http://www.w3.org/respec, with a github repository 
+for the sources at https://github.com/w3c/respec-docs
+
 What is this version of ReSpec?
 ===============================
 
@@ -103,7 +109,7 @@ $ npm test
 
 
 [jasmine]: http://pivotal.github.io/jasmine/
-[travis]: https://travis-ci.org/darobin/respec
+[travis]: https://travis-ci.org/w3c/respec
 [phantomjs]: http://phantomjs.org/
 [install-phjs]: http://phantomjs.org/download.html
 [install-node]: http://nodejs.org/download/
@@ -116,7 +122,7 @@ obtain the same result.
 
 ### Releasing ReSpec
 
-Normally, only @darobin makes releases. But in the eventuality that he wouldn't be available, others
+Normally, only the maintainers make releases. But in the eventuality that they aren't available, others
 can follow this process:
 
 1. Make sure you are up to date and on the develop branch (git up; git checkout develop)
