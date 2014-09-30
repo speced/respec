@@ -99,7 +99,7 @@ define(
                 else {
                     var matched = /^(sequence|Promise)<(.+)>$/.exec(text);
                     if (matched)
-                        return matched[1] + "&lt;<a>" + matched[2] + "</a>&gt;";
+                        return matched[1] + "&lt;<a>" + datatype(matched[2]) + "</a>&gt;";
 
                     return "<a>" + text + "</a>";
                 }
