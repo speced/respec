@@ -208,14 +208,14 @@ describe("W3C — Headers", function () {
 
     // wg, wgURI, wgPatentURI, wgPublicList
     it("should take wg configurations into account", function () {
-        loadWithConfig({ wg: "WGNAME", wgURI: "WGURI", wgPatentURI: "WGPATENT", wgPublicList: "WGLIST" }, function ($ifr) {
+        loadWithConfig({ wg: "WGNAME", wgURI: "WGURI", wgPatentURI: "WGPATENT", wgPublicList: "WGLIST", subjectPrefix: "[The Prefix]" }, function ($ifr) {
             var $sotd = $("#sotd", $ifr[0].contentDocument);
             console.log($sotd);
             expect($sotd.find("p:contains('CUSTOM PARAGRAPH')").length).toEqual(1);
             expect($sotd.find("a:contains('WGNAME')").length).toEqual(1);
             expect($sotd.find("a:contains('WGNAME')").attr("href")).toEqual("WGURI");
             expect($sotd.find("a:contains('WGLIST@w3.org')").length).toEqual(1);
-            expect($sotd.find("a:contains('WGLIST@w3.org')").attr("href")).toEqual("mailto:WGLIST@w3.org");
+            expect($sotd.find("a:contains('WGLIST@w3.org')").attr("href")).toEqual("mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D");
             expect($sotd.find("a:contains('subscribe')").attr("href")).toEqual("mailto:WGLIST-request@w3.org?subject=subscribe");
             expect($sotd.find("a:contains('archives')").attr("href")).toEqual("http://lists.w3.org/Archives/Public/WGLIST/");
             expect($sotd.find("a:contains('disclosures')").attr("href")).toEqual("WGPATENT");
@@ -249,7 +249,7 @@ describe("W3C — Headers", function () {
 
     // CG/BG
     it("should handle CG-BG status", function () {
-        loadWithConfig({ specStatus: "CG-DRAFT", wg: "WGNAME", wgURI: "http://WG" }, function ($ifr) {
+        loadWithConfig({ specStatus: "CG-DRAFT", wg: "WGNAME", wgURI: "http://WG", wgPublicList: "WGLIST", subjectPrefix: "[The Prefix]" }, function ($ifr) {
             var $c = $(".head .copyright", $ifr[0].contentDocument);
             expect($c.find("a[href='http://WG']").length).toEqual(1);
             expect($c.find("a:contains(WGNAME)").length).toEqual(1);
@@ -259,6 +259,10 @@ describe("W3C — Headers", function () {
             expect($sotd.find("a[href='http://WG']").length).toEqual(1);
             expect($sotd.find("a:contains(WGNAME)").length).toEqual(1);
             expect($sotd.find("a[href='https://www.w3.org/community/about/agreements/cla/']").length).toEqual(1);
+            expect($sotd.find("a:contains('WGLIST@w3.org')").length).toEqual(1);
+            expect($sotd.find("a:contains('WGLIST@w3.org')").attr("href")).toEqual("mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D");
+            expect($sotd.find("a:contains('subscribe')").attr("href")).toEqual("mailto:WGLIST-request@w3.org?subject=subscribe");
+            expect($sotd.find("a:contains('archives')").attr("href")).toEqual("http://lists.w3.org/Archives/Public/WGLIST/");
         });
         loadWithConfig({ specStatus: "BG-FINAL", wg: "WGNAME", wgURI: "http://WG", 
                          thisVersion: "http://THIS", latestVersion: "http://LATEST" }, function ($ifr) {
