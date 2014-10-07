@@ -11,6 +11,8 @@
 //  may rely on them.
 //  - normativeReferences: a map of normative reference identifiers.
 //  - informativeReferences: a map of informative reference identifiers.
+//  - respecRFC2119: a list of the number of times each RFC2119
+//    term was used.
 
 define(
     ["core/utils"],
@@ -21,6 +23,7 @@ define(
                 doc.normalize();
                 if (!conf.normativeReferences) conf.normativeReferences = {};
                 if (!conf.informativeReferences) conf.informativeReferences = {};
+                if (!conf.respecRFC2119) conf.respecRFC2119 = {} ;
 
                 // PRE-PROCESSING
                 var abbrMap = {}, acroMap = {};
@@ -56,6 +59,12 @@ define(
                             // RFC 2119
                             if (/MUST(?:\s+NOT)?|SHOULD(?:\s+NOT)?|SHALL(?:\s+NOT)?|MAY|(?:NOT\s+)?REQUIRED|(?:NOT\s+)?RECOMMENDED|OPTIONAL/.test(matched)) {
                                 df.appendChild($("<em/>").attr({ "class": "rfc2119", title: matched }).text(matched)[0]);
+                                // remember which ones were used
+                                if (conf.respecRFC2119[matched]) {
+                                    conf.respecRFC2119[matched]++;
+                                } else {
+                                    conf.respecRFC2119[matched] = 1;
+                                }
                             }
                             // BIBREF
                             else if (/^\[\[/.test(matched)) {
