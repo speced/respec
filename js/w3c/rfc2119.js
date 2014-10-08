@@ -22,7 +22,8 @@ define(
 
                         if (used.length > 1) {
                             str += "key words " + utils.joinAnd(used, mapper) + " are ";
-                        } else {
+                        } 
+                        else {
                             str += "key word " + utils.joinAnd(used, mapper) + " is " ;
                         }
                         str += $confo[0].innerHTML ;

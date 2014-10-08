@@ -62,7 +62,8 @@ define(
                                 // remember which ones were used
                                 if (conf.respecRFC2119[matched]) {
                                     conf.respecRFC2119[matched]++;
-                                } else {
+                                } 
+                                else {
                                     conf.respecRFC2119[matched] = 1;
                                 }
                             }
