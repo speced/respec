@@ -12,7 +12,8 @@
 //  - normativeReferences: a map of normative reference identifiers.
 //  - informativeReferences: a map of informative reference identifiers.
 //  - respecRFC2119: a list of the number of times each RFC2119
-//    term was used.
+//    key word was used.  NOTE: While each member is a counter, at this time
+//    the counter is not used.
 
 define(
     ["core/utils"],
