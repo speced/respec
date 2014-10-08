@@ -21,9 +21,9 @@ define(
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/inlines");
                 doc.normalize();
-                if (!conf.normativeReferences) conf.normativeReferences = {};
-                if (!conf.informativeReferences) conf.informativeReferences = {};
-                if (!conf.respecRFC2119) conf.respecRFC2119 = {} ;
+                if (!conf.normativeReferences) { conf.normativeReferences = {} };
+                if (!conf.informativeReferences) { conf.informativeReferences = {} };
+                if (!conf.respecRFC2119) { conf.respecRFC2119 = {} };
 
                 // PRE-PROCESSING
                 var abbrMap = {}, acroMap = {};
