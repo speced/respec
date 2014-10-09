@@ -30,6 +30,7 @@ define([
         ,   "core/data-transform"
         ,   "core/data-include"
         ,   "core/inlines"
+        ,   "w3c/rfc2119"
         ,   "core/examples"
         ,   "core/issues-notes"
         ,   "core/requirements"
