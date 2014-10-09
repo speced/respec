@@ -11,7 +11,7 @@ define(
                 if ($confo.length) {
                     // do we have a list of used RFC2119 items in
                     // conf.respecRFC2119
-                    var used = Object.getOwnPropertyNames(conf.respecRFC2119) ;
+                    var used = Object.getOwnPropertyNames(conf.respecRFC2119).sort() ;
                     if (used && used.length) {
                         // put in the 2119 clause and reference
                         var str = "The " ;

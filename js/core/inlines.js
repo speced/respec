@@ -59,6 +59,7 @@ define(
                         if (matched) {
                             // RFC 2119
                             if (/MUST(?:\s+NOT)?|SHOULD(?:\s+NOT)?|SHALL(?:\s+NOT)?|MAY|(?:NOT\s+)?REQUIRED|(?:NOT\s+)?RECOMMENDED|OPTIONAL/.test(matched)) {
+                                matched = matched.split(/\s+/).join(" ");
                                 df.appendChild($("<em/>").attr({ "class": "rfc2119", title: matched }).text(matched)[0]);
                                 // remember which ones were used
                                 if (conf.respecRFC2119[matched]) {
