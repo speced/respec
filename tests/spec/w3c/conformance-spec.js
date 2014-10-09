@@ -25,14 +25,14 @@ describe("W3C — Conformance", function () {
     it("should include only referenced 2119 terms", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='conformance'><p>CONFORMANCE</p></section><section><h2>my section</h2><p>Terms are MUST and SHOULD</p></section>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section id='conformance'><p>CONFORMANCE</p></section><section><h2>my section</h2><p>Terms are MUST, SHOULD, SHOULD NOT, and SHOULD  NOT.</p></section>") }, 
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
         runs(function () {
             var $c = $("#conformance", doc);
             var $d = $(".rfc2119", $c) ;
-            expect($d.length).toEqual(2);
+            expect($d.length).toEqual(3);
             flushIframes();
         });
     });
