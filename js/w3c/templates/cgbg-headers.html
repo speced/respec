@@ -28,6 +28,10 @@
       <dt>Implementation report:</dt>
       <dd><a href='{{implementationReportURI}}'>{{implementationReportURI}}</a></dd>
     {{/if}}
+    {{#if bugTrackerHTML}}
+      <dt>Bug tracker:</dt>
+      <dd>{{{bugTrackerHTML}}}</dd>
+    {{/if}}
     {{#if prevVersion}}
       <dt>Previous version:</dt>
       <dd><a {{#if doRDFa}}rel="dcterms:replaces"{{/if}} href='{{prevVersion}}'>{{prevVersion}}</a></dd>
@@ -43,6 +47,42 @@
     {{#if authors}}
       <dt>Author{{#if multipleAuthors}}s{{/if}}:</dt>
       {{showPeople "Author" authors}}
+    {{/if}}
+    {{#if otherLinks}}
+      {{#each otherLinks}}
+        {{#if key}}
+          <dt {{#if class}}class="{{class}}"{{/if}}>{{key}}:</dt>
+          {{#if data}}
+             {{#each data}}
+                {{#if value}}
+                  <dd {{#if class}}class="{{class}}"{{/if}}>
+                    {{#if href}}<a href="{{href}}">{{/if}}
+                      {{value}}
+                    {{#if href}}</a>{{/if}}
+                  </dd>
+                {{else}}
+                  {{#if href}}
+                    <dd><a href="{{href}}">{{href}}</a></dd>
+                  {{/if}}
+                {{/if}}
+             {{/each}}
+          {{else}}
+            {{#if value}}
+              <dd {{#if class}}class="{{class}}"{{/if}}>
+                {{#if href}}<a href="{{href}}">{{/if}}
+                  {{value}}
+                {{#if href}}</a>{{/if}}
+              </dd>
+            {{else}}
+              {{#if href}}
+                <dd {{#if class}}class="{{class}}"{{/if}}>
+                  <a href="{{href}}">{{href}}</a>
+                </dd>
+              {{/if}}
+            {{/if}}
+          {{/if}}
+        {{/if}}
+      {{/each}}
     {{/if}}
   </dl>
   {{#if alternateFormats}}
