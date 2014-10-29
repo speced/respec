@@ -97,7 +97,7 @@ define(
                     return "(" + arr.join(" or ") + ")";
                 }
                 else {
-                    var matched = /^(sequence|Promise)<(.+)>$/.exec(text);
+                    var matched = /^(sequence|Promise|CancelablePromise|EventStream)<(.+)>$/.exec(text);
                     if (matched)
                         return matched[1] + "&lt;<a>" + datatype(matched[2]) + "</a>&gt;";
 
@@ -672,7 +672,7 @@ define(
             },
 
             parseParameterized: function (str) {
-                var matched = /^(sequence|Promise)<(.+)>$/.exec(str);
+                var matched = /^(sequence|Promise|CancelablePromise|EventStream)<(.+)>$/.exec(str);
                 if (!matched)
                     return null;
                 return { type: matched[1], parameter: matched[2] };
