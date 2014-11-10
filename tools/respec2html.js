@@ -47,6 +47,14 @@ if (args.length < 2 || args.length > 4) {
     phantom.exit(1);
 }
 
+// Dealing with ReSpec source being loaded with scheme-relative link
+// i.e. <script src='//www.w3.org/Tools/respec/respec-w3c-common'>
+page.onResourceRequested = function (requestData, networkRequest) {
+    if (requestData.url === "file://www.w3.org/Tools/respec/respec-w3c-common") {
+        networkRequest.changeUrl("https://www.w3.org/Tools/respec/respec-w3c-common");
+    }
+};
+
 page.onConsoleMessage = function (msg) {
     if (msg.match(/^ERROR: /)) {
         errors.push(msg);
