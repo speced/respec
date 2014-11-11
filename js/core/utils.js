@@ -27,17 +27,79 @@ define(
             return $(arr);
         };
 
-        // For any element, returns a title string that applies the algorithm used for determining the
-        // actual title of a <dfn> element (but can apply to other as well).
-        $.fn.dfnTitle = function () {
+        // For any element, returns a title string that applies the 
+        // algorithm used for determining the actual title of a <dfn> 
+        // element (but can apply to other as well).
+        // attrName is optional and defaults to 'title'
+        $.fn.dfnTitle = function ( attrName ) {
             var title;
-            if (this.attr("title")) title = this.attr("title");
+            if (attrName == null) attrName = 'title' ;
+            if (this.attr(attrName)) title = this.attr(attrName);
             else if (this.contents().length == 1 && this.children("abbr, acronym").length == 1 &&
-                     this.find(":first-child").attr("title")) title = this.find(":first-child").attr("title");
+                     this.find(":first-child").attr(attrName)) title = this.find(":first-child").attr(attrName);
             else title = this.text();
             return title.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
         };
 
+        // For any element, returns the definition "scope" for
+        // that element; the bucket into which a definition
+        // would be placed
+
+        $.fn.dfnScope = function () {
+            var scope = '';
+            var $e = $(this) ;
+            // TODO - define a list of local attribute names
+            // that can be used to indicate scope.
+            if ($e.attr("data-dfn-type")) {
+                scope = $e.attr("data-dfn-type") ;
+            }
+
+            if (scope == "") {
+                var p = $(this).parents("[data-dfn-type]") ;
+                if (p.length && p[0]) {
+                    scope = $(p[0]).attr("data-dfn-type") ;
+                }
+            }
+
+            if (scope == "") {
+                scope = 'dfn' ;
+            }
+
+            return scope.toLowerCase().replace(/^\s/, "");
+        };
+
+        // For any element, returns whether a defintion should
+        // be exported or not.  By default we export
+
+        $.fn.dfnExport = function ( scope ) {
+            // default to yes we are exporting
+            var r = true;
+            if ( scope && scope == 'dfn' ) {
+                r = false ; // by default basic definitions are NOT exported
+            }
+            var $e = $(this) ;
+            // do we have a local attribute that controls export
+            if ($e.attr("noexport")) {
+                r = false ;
+            }
+            else if ($e.attr("export")) {
+                r = true ;
+            }
+            // is there any parent with either of the 
+            // controls
+            else {
+                var p = $e.parents("[export][noexport]") ;
+                if (p.length && p[0]) {
+                    if ($(p[0]).attr("noexport")) {
+                        r = false ;
+                    }
+                    else {
+                        r = true;
+                    }
+                }
+            }
+            return r ;
+        };
 
         // Applied to an element, sets an ID for it (and returns it), using a specific prefix
         // if provided, and a specific text if given.
