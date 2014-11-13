@@ -64,9 +64,9 @@ define(
                             conf.exportedDefs[scope+":"+title] = theID;
                         }
                     }) ;
-                    if ($t.attr('data-local-title')) {
-                        a = $t.dfnTitle('data-local-title');
-                        if (a != '') {
+                    if ($t.attr('local-title')) {
+                        a = $t.dfnTitle('local-title');
+                        if (a) {
                             titles = a.split(/\|/) ;
                             $.each(titles, function (i, title) {
                                 title = title.replace(/^\s+/, "").replace(/\s+$/, "");
@@ -74,7 +74,7 @@ define(
                                 conf.definitionMap[scope][title] = theID ;
                             }) ;
                         }
-                        $t.removeAttr('data-local-title') ;
+                        $t.removeAttr('local-title') ;
                     }
                 });
                 $("a:not([href])").each(function () {
@@ -82,7 +82,7 @@ define(
                     if ($ant.hasClass("externalDFN")) return;
                     var title = $ant.dfnTitle();
                     var scope = $ant.dfnScope() ;
-                    if (conf.definitionMap[scope][title] && !(conf.definitionMap[scope][title] instanceof Function)) {
+                    if (conf.definitionMap[scope][title] && !(typeof conf.definitionMap[scope][title] == "function" )) {
                         $ant.attr("href", "#" + conf.definitionMap[scope][title]).addClass("internalDFN");
                     }
                     else {

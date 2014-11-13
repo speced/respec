@@ -37,7 +37,7 @@ describe("Core — Definitions", function () {
     it("should allow scoping", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='dfn' data-dfn-type='myScope'><dfn data-title='text|the text|  more text'>text</dfn></section><section id='ref' data-dfn-type='myScope'><a>more text</a></section>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section id='dfn' dfn-type='myScope'><dfn data-title='text|the text|  more text'>text</dfn></section><section id='ref' dfn-type='myScope'><a>more text</a></section>") }, 
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -52,14 +52,14 @@ describe("Core — Definitions", function () {
     it("should allow local aliases", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='dfn'><dfn data-local-title='local' title='text|the text|  more text'>text</dfn><a>local</a></section>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section id='dfn'><dfn local-title='local' title='text|the text|  more text'>text</dfn><a>local</a></section>") }, 
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
         runs(function () {
             var $sec = $("#dfn", doc);
             expect($sec.find("dfn").attr("id")).toEqual("dfn-text");
-            expect($sec.find("dfn").attr("data-local-title")).toBeUndefined();
+            expect($sec.find("dfn").attr("local-title")).toBeUndefined();
             expect($sec.find("a").attr("href")).toEqual("#dfn-text");
             flushIframes();
         });
