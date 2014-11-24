@@ -14,7 +14,9 @@
     Learn more about 
     <a href="http://www.w3.org/community/">W3C Community and Business Groups</a>.
   </p>
+  {{#unless sotdAfterWGinfo}}
   {{{sotdCustomParagraph}}}
+  {{/unless}}
     {{#if wgPublicList}}
       <p>If you wish to make comments regarding this document, please send them to 
       <a href='mailto:{{wgPublicList}}@w3.org{{#if subjectPrefix}}?subject={{subjectPrefixEnc}}{{/if}}'>{{wgPublicList}}@w3.org</a> 
@@ -24,4 +26,7 @@
       with <code>{{subjectPrefix}}</code> at the start of your
       email's subject{{/if}}.</p>
     {{/if}}
+  {{#if sotdAfterWGinfo}}
+  {{{sotdCustomParagraph}}}
+  {{/if}}
 </section>
