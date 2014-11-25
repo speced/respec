@@ -25,7 +25,9 @@
           href='http://www.w3.org/TR/'>W3C technical reports index</a> at
           http://www.w3.org/TR/.</em>
         </p>
+        {{#unless sotdAfterWGinfo}}
         {{{sotdCustomParagraph}}}
+        {{/unless}}
         <p>
           This document was published by the {{{wgHTML}}} as {{anOrA}} {{longStatus}}.
           {{#if notYetRec}}
@@ -65,6 +67,9 @@
             Please see the Working Group's  <a href='{{implementationReportURI}}'>implementation
             report</a>.
           </p>
+        {{/if}}
+        {{#if sotdAfterWGinfo}}
+        {{{sotdCustomParagraph}}
         {{/if}}
         {{#if notRec}}
           <p>
