@@ -233,6 +233,20 @@ describe("W3C — Headers", function () {
         });
     });
 
+    // sotdAfterWGinfo
+    it("should relocate custom sotd", function () {
+        loadWithConfig({ sotdAfterWGinfo: true, wg: "WGNAME", wgURI: "WGURI", wgPublicList: "WGLIST", subjectPrefix: "[The Prefix]" }, function ($ifr) {
+            var $sotd = $("#sotd", $ifr[0].contentDocument);
+            console.log($sotd.text());
+            var $f = $($sotd.find("p:contains('CUSTOM PARAGRAPH')")) ;
+            expect($f.length).toEqual(1);
+            var $p = $f.prev() ;
+            expect($("a:contains('WGNAME')", $p).length).toEqual(1);
+            expect($("a:contains('WGNAME')", $p).attr("href")).toEqual("WGURI");
+            expect($("a:contains('WGLIST@w3.org')", $p).attr("href")).toEqual("mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D");
+        });
+    });
+
     // charterDisclosureURI
     it("should take charterDisclosureURI into account", function () {
         loadWithConfig({ specStatus: "IG-NOTE", charterDisclosureURI: "URI" }, function ($ifr) {
