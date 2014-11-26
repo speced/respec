@@ -4,12 +4,18 @@ describe("Core - Markdown", function () {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
         ,   format: "markdown"
-        };
+        ,   shortName: "mydoc"
+        ,   previousURI:  "http://www.example.com"
+        ,   previousMaturity: "WD"
+        ,   previousPublishDate:  "2014-01-01"
+        }
+    ,   body = "<section id='sotd'>Custom SOTD</section>"
+    ;
     it("should process standard markdown content", function () {
         var doc;
         runs(function () {
             makeRSDoc({ config: basicConfig,
-                        body: '\nFoo\n===\n'
+                        body: '\nFoo\n===\n' + body
                     }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -26,7 +32,7 @@ describe("Core - Markdown", function () {
         var doc;
         runs(function () {
             makeRSDoc({ config: basicConfig,
-                        body: '<section>\nFoo\n===\n</section>'
+                        body: '<section>\nFoo\n===\n</section>' + body
                     }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -42,7 +48,7 @@ describe("Core - Markdown", function () {
         var doc;
         runs(function () {
             makeRSDoc({ config: basicConfig,
-                        body: '<p class=note>_foo_</p><div class=issue>_foo_</div><ul><li class=req>\n### _foo_###\n</li></ul>'
+                        body: '<p class=note>_foo_</p><div class=issue>_foo_</div><ul><li class=req>\n### _foo_###\n</li></ul>' + body
                     }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -59,7 +65,7 @@ describe("Core - Markdown", function () {
         var doc;
         runs(function () {
             makeRSDoc({ config: basicConfig,
-                        body: '\n    Foo\n    ===\n'
+                        body: '\n    Foo\n    ===\n'+body
                     }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -73,7 +79,7 @@ describe("Core - Markdown", function () {
         var doc;
         runs(function () {
             makeRSDoc({ config: basicConfig,
-                        body: '\nFoo\n===\n\nBar\n---\n\nBaz\n---\n\n### Foobar ###\n\n#### Foobaz ####\n\nZing\n---\n\n'
+                        body: '\nFoo\n===\n\nBar\n---\n\nBaz\n---\n\n### Foobar ###\n\n#### Foobaz ####\n\nZing\n---\n\n' + body
                     }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -110,7 +116,7 @@ describe("Core - Markdown", function () {
         var doc;
         runs(function () {
             makeRSDoc({ config: basicConfig,
-                        body: '\nFoo\n===\n\nBar\n---\n\nBaz\n===\n\n### Foobar ###\n\n'
+                        body: '\nFoo\n===\n\nBar\n---\n\nBaz\n===\n\n### Foobar ###\n\n' + body
                     }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -124,7 +130,7 @@ describe("Core - Markdown", function () {
         var doc;
         runs(function () {
             makeRSDoc({ config: basicConfig,
-                        body: '\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n===\n</section>\n'
+                        body: '\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n===\n</section>\n' + body
                     }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -139,7 +145,7 @@ describe("Core - Markdown", function () {
         var doc;
         runs(function () {
             makeRSDoc({ config: basicConfig,
-                        body: '\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n'
+                        body: '\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n' + body
                     }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -156,7 +162,7 @@ describe("Core - Markdown", function () {
         var doc;
         runs(function () {
             makeRSDoc({ config: basicConfig,
-                        body: '\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n\nBaz\n===\n\nsome text\n\n<'
+                        body: body + '\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n\nBaz\n===\n\nsome text\n\n<'
                     }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -173,7 +179,7 @@ describe("Core - Markdown", function () {
         var doc;
         runs(function () {
             makeRSDoc({ config: basicConfig,
-                        body: '\n\nFoo\n---\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n'
+                        body: '\n\nFoo\n---\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n' + body
                     }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -190,7 +196,7 @@ describe("Core - Markdown", function () {
         var doc;
         runs(function () {
             makeRSDoc({ config: basicConfig,
-                        body: '\n\nFoo\n===\n\nsome text\n\n<section id=bar>no header</section>\n'
+                        body: '\n\nFoo\n===\n\nsome text\n\n<section id=bar>no header</section>\n' + body
                     }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);

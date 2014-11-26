@@ -3,13 +3,19 @@ describe("Core — Highlight", function () {
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
-        };
+        ,   shortName: "mydoc"
+        ,   previousURI:  "http://www.example.com"
+        ,   previousMaturity: "WD"
+        ,   previousPublishDate:  "2014-01-01"
+        }
+    ;
     it("should process highlights", function () {
         var doc;
         runs(function () {
             makeRSDoc({
                         config: basicConfig
-                    ,   body: $("<section><pre class='example sh_javascript'>function () {\n  alert('foo');\n}</pre></section>")
+                    ,   body: $("<section><pre class='example highlight'>function () {\n  alert('foo');\n}</pre></section>" +
+                                "<section id='sotd'>Custom SOTD</section>")
                     }, 
                     function (rsdoc) { doc = rsdoc; });
         });

@@ -4,8 +4,13 @@ describe("Core - Structure", function () {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
 //        ,   doRDFa:  false
+        ,   shortName: "mydoc"
+        ,   previousURI:  "http://www.example.com"
+        ,   previousMaturity: "WD"
+        ,   previousPublishDate:  "2014-01-01"
         }
     ,   body = "<section class='introductory'><h2>INTRO</h2></section>" +
+              "<section id='sotd'>Custom SOTD</section>" +
               "<section><h2>ONE</h2><section><h2>TWO</h2><section><h2>THREE</h2><section><h2>FOUR</h2>" +
               "<section><h2>FIVE</h2><section><h2>SIX</h2></section></section></section></section></section></section>" +
               "<section class='appendix'><h2>ONE</h2><section><h2>TWO</h2><section><h2>THREE</h2><section>" +

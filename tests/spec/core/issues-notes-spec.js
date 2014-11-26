@@ -3,18 +3,30 @@ describe("Core — Issues and Notes", function () {
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
+        ,   shortName: "mydoc"
+        ,   previousURI:  "http://www.example.com"
+        ,   previousMaturity: "WD"
+        ,   previousPublishDate:  "2014-01-01"
         }
     ,   issueBaseConfig = {
             editors:    [{ name: "Gregg Kellogg" }]
         ,   issueBase:  "http://example.com/issues/"
         ,   specStatus: "WD"
-      }
+        ,   shortName: "mydoc"
+        ,   previousURI:  "http://www.example.com"
+        ,   previousMaturity: "WD"
+        ,   previousPublishDate:  "2014-01-01"
+        }
     ,   atRiskBaseConfig = {
             editors:    [{ name: "Markus Lanthaler" }]
         ,   issueBase:  "http://example.com/issues/"
         ,   atRiskBase: "http://example.com/atrisk/"
         ,   specStatus: "WD"
-      };
+        ,   shortName: "mydoc"
+        ,   previousURI:  "http://www.example.com"
+        ,   previousMaturity: "WD"
+        ,   previousPublishDate:  "2014-01-01"
+    };
     it("should process issues and notes", function () {
         var doc;
         runs(function () {
@@ -22,7 +34,8 @@ describe("Core — Issues and Notes", function () {
                         config: basicConfig
                     ,   body: $("<section><p>BLAH <span class='issue'>ISS-INLINE</span></p><p class='issue' title='ISS-TIT'>ISSUE</p>" +
                                 "<p>BLAH <span class='issue atrisk'>ATR-INLINE</span></p><p class='issue atrisk' title='ATR-TIT'>FEATURE AT RISK</p>" +
-                                "<p>BLAH <span class='note'>NOT-INLINE</span></p><p class='note' title='NOT-TIT'>NOTE</p></section>")
+                                "<p>BLAH <span class='note'>NOT-INLINE</span></p><p class='note' title='NOT-TIT'>NOTE</p></section>" +
+                                "<section id='sotd'>Custom SOTD</section>" )
                     },
                     function (rsdoc) { doc = rsdoc; });
         });
@@ -67,7 +80,8 @@ describe("Core — Issues and Notes", function () {
       runs(function () {
           makeRSDoc({
                       config: basicConfig
-                  ,   body: $("<section><p id='i10' class='issue' data-number='10'>Numbered ISSUE</p><p id='i11' class='issue' title='ISS-TIT' data-number='11'>Titled and Numbered Issue</p><p id='ixx' class='issue'>Unnumbered ISSUE</p></section>")
+                  ,   body: $("<section><p id='i10' class='issue' data-number='10'>Numbered ISSUE</p><p id='i11' class='issue' title='ISS-TIT' data-number='11'>Titled and Numbered Issue</p><p id='ixx' class='issue'>Unnumbered ISSUE</p></section>" +
+                  "<section id='sotd'>Custom SOTD</section>" )
                   },
                   function (rsdoc) { doc = rsdoc; });
       });
@@ -94,7 +108,8 @@ describe("Core — Issues and Notes", function () {
         runs(function () {
             makeRSDoc({
                         config: issueBaseConfig
-                    ,   body: $("<section><p class='issue' data-number='10'>ISSUE</p></section>")
+                    ,   body: $("<section><p class='issue' data-number='10'>ISSUE</p></section>" +
+                    "<section id='sotd'>Custom SOTD</section>" )
                     },
                     function (rsdoc) { doc = rsdoc; });
         });
@@ -117,7 +132,8 @@ describe("Core — Issues and Notes", function () {
         runs(function () {
             makeRSDoc({
                         config: atRiskBaseConfig
-                    ,   body: $("<section><p class='issue atrisk' data-number='10'>FEATURE AT RISK</p></section>")
+                    ,   body: $("<section><p class='issue atrisk' data-number='10'>FEATURE AT RISK</p></section>" +
+                    "<section id='sotd'>Custom SOTD</section>" )
                     },
                     function (rsdoc) { doc = rsdoc; });
         });

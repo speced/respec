@@ -4,14 +4,20 @@ describe("Core - Inlines", function () {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
         ,   doRDFa:  false
-        };
+        ,   shortName: "mydoc"
+        ,   previousURI:  "http://www.example.com"
+        ,   previousMaturity: "WD"
+        ,   previousPublishDate:  "2014-01-01"
+        }
+    ;
     it("should process all inline content", function () {
         var doc;
         runs(function () {
             makeRSDoc({ config: basicConfig,
                         body: "<section id='inlines'><p><acronym title='ACRO-TIT'>ACRO</acronym> ACRO</p><p>" +
                               "<abbr title='ABBR-TIT'>ABBR</abbr> ABBR</p><p>MUST and NOT RECOMMENDED</p>" +
-                              "<p>[[!DAHU]] [[REX]]</p></section>"
+                              "<p>[[!DAHU]] [[REX]]</p></section>" +
+                              "<section id='sotd'>Custom SOTD</section>"
                     }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
