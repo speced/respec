@@ -78,134 +78,147 @@
       <p>
         Basic interface.
       </p>
-      <dl id='if-basic' class='idl' title='interface SuperStar'></dl>
+      <pre id='if-basic' class='idl'>
+        interface SuperStar {};
+      </pre>
       <p>
         Interface with extended attribute.
       </p>
-      <dl id='if-extended-attribute' class='idl' title='[Something, Constructor()] interface SuperStar'></dl>
+      <pre id='if-extended-attribute' class='idl'>
+        [Something, Constructor()] interface SuperStar {};
+      </pre>
       <p>
         Interface with inheritance.
       </p>
-      <dl id='if-inheritance' class='idl' title='interface SuperStar : HyperStar'></dl>
+      <pre id='if-inheritance' class='idl'>
+        interface SuperStar : HyperStar {};
+      </pre>
       <p>
         Partial interface .
       </p>
-      <dl id='if-partial' class='idl' title='partial interface SuperStar'></dl>
+      <pre id='if-partial' class='idl'>
+        partial interface SuperStar {};
+      </pre>
       <p>
         Callback interface .
       </p>
-      <dl id='if-callback' class='idl' title='callback interface SuperStar'></dl>
+      <pre id='if-callback' class='idl'>
+        callback interface SuperStar {};
+      </pre>
     </section>
     <section>
       <h2>Constructors</h2>
       <p>
         Constructors on interfaces
       </p>
-      <dl id='ctor-basic' class='idl' title='[Something] interface SuperStar'>
-        <dt>Constructor()</dt>
-        <dd>Constructor without parameters.</dd>
-        <dt>Constructor(boolean bar, sequence&lt;double> foo, Promise&lt;double&gt; blah)</dt>
-        <dd>Constructor with parameters.</dd>
-      </dl>
-      <dl id='ctor-noea' class='idl' title='interface SuperStar'>
-	<dt>Constructor()</dt>
-	<dd></dd>
-      </dl>
+      <pre id='ctor-basic' class='idl'>
+        [Something,
+         Constructor,
+         Constructor(boolean bar, sequence&lt;double> foo, Promise&lt;double&gt; blah)]
+        interface SuperStar {};
+      </pre>
+      <pre id='ctor-noea' class='idl'>
+        [Constructor] interface SuperStar {};
+      </pre>
     </section>
     <section>
       <h2>NamedConstructors</h2>
       <p>
         NamedConstructors on interfaces
       </p>
-      <dl id='namedctor-basic' class='idl' title='[Something] interface SuperStar'>
-        <dt>NamedConstructor=Sun()</dt>
-        <dd>NamedConstructor without parameters.</dd>
-        <dt>NamedConstructor=Sun(boolean bar, Date[][][] foo)</dt>
-        <dd>NamedConstructor with parameters.</dd>
-      </dl>
+      <pre id='namedctor-basic' class='idl'>
+        [Something,
+         NamedConstructor=Sun(),
+         NamedConstructor=Sun(boolean bar, Date[][][] foo)]
+        interface SuperStar {};
+      </pre>
     </section>
     <section>
       <h2>Constants</h2>
       <p>
         All constants and some type testing
       </p>
-      <dl id='const-basic' class='idl' title='interface SuperStar'>
-        <dt>const boolean test = true</dt>
-        <dd>1</dd>
-        <dt>const byte bite = 8</dt>
-        <dd>2</dd>
-        <dt>const octet eight = 7</dt>
-        <dd>3</dd>
-        <dt>const short small = 42</dt>
-        <dd>4</dd>
-        <dt>const unsigned short shortish = 250</dt>
-        <dd>5</dd>
-        <dt>const long notSoLong = 99999</dt>
-        <dd>6</dd>
-        <dt>const unsigned long somewhatLong = 9999999</dt>
-        <dd>7</dd>
-        <dt>const long long veryLong = 9999999999999</dt>
-        <dd>8</dd>
-        <dt>const unsigned long long soLong = 99999999999999999</dt>
-        <dd>9</dd>
-        <dt>const float ationDevice = 4.2</dt>
-        <dd>10</dd>
-        <dt>const unrestricted float buoy = 4.2222222222</dt>
-        <dd>11</dd>
-        <dt>const double twice = 4.222222222</dt>
-        <dd>12</dd>
-        <dt>const unrestricted double rambaldi = 47.0</dt>
-        <dd>13</dd>
-        <dt>const boolean? why = false</dt>
-        <dd>14</dd>
-        <dt>const boolean? notSo = null</dt>
-        <dd>15</dd>
-        <dt>const short inf = Infinity</dt>
-        <dd>16</dd>
-        <dt>const short mininf = -Infinity</dt>
-        <dd>17</dd>
-        <dt>const short cheese = NaN</dt>
-        <dd>18</dd>
-        <dt>[Something] const short extAttr = NaN</dt>
-        <dd>18</dd>
-      </dl>
+      <pre id='const-basic' class='idl'>
+        interface SuperStar {
+          // 1
+          const boolean test = true;
+          // 2
+          const byte bite = 8;
+          // 3
+          const octet eight = 7;
+          // 4
+          const short small = 42;
+          // 5
+          const unsigned short shortish = 250;
+          // 6
+          const long notSoLong = 99999;
+          // 7
+          const unsigned long somewhatLong = 9999999;
+          // 8
+          const long long veryLong = 9999999999999;
+          // 9
+          const unsigned long long soLong = 99999999999999999;
+          // 10
+          const float ationDevice = 4.2;
+          // 11
+          const unrestricted float buoy = 4.2222222222;
+          // 12
+          const double twice = 4.222222222;
+          // 13
+          const unrestricted double rambaldi = 47.0;
+          // 14
+          const boolean? why = false;
+          // 15
+          const boolean? notSo = null;
+          // 16
+          const short inf = Infinity;
+          // 17
+          const short mininf = -Infinity;
+          // 18
+          const short cheese = NaN;
+          // 18
+          [Something] const short extAttr = NaN;
+        };
+      </pre>
     </section>
     <section>
       <h2>Attributes</h2>
       <p>
         Basic attributes testing.
       </p>
-      <dl id='attr-basic' class='idl' title='interface SuperStar'>
-        <dt>attribute DOMString regular</dt>
-        <dd>1</dd>
-        <dt>readonly attribute DOMString ro</dt>
-        <dd>2</dd>
-        <dt>readonly attribute DOMString _readonly</dt>
-        <dd>2.2</dd>
-        <dt>inherit attribute DOMString in</dt>
-        <dd>2.5</dd>
-        <dt>stringifier attribute DOMString st</dt>
-        <dd>2.7</dd>
-        <dt>[Something] readonly attribute DOMString ext</dt>
-        <dd>3</dd>
-        <dt>attribute sequence&lt;Date> dates</dt>
-        <dd>3.5</dd>
-        <dt>attribute Promise&lt;DOMString&gt; operation</dt>
-        <dd>4.0</dd>
-        <dt>attribute sequence&lt;Promise&lt;Superstar&gt;&gt; wouldBeStars</dt>
-        <dd>4.5</dd>
+      <pre id='attr-basic' class='idl'>
+        interface SuperStar {
+          // 1
+          attribute DOMString regular;
+          // 2
+          readonly attribute DOMString ro;
+          // 2.2
+          readonly attribute DOMString _readonly;
+          // 2.5
+          inherit attribute DOMString in;
+          // 2.7
+          stringifier attribute DOMString st;
+          // 3
+          [Something] readonly attribute DOMString ext;
+          // 3.5
+          attribute Date[] dates;
+          // 4.0
+          attribute Promise&lt;DOMString&gt; operation;
+        <!--  // 4.5
+          attribute Promise&lt;Superstar&gt;[] wouldBeStars;
 
-        <!-- <dt>static attribute DOMString unmovable</dt>
-        <dd>3</dd>
-        <dt>stringifier attribute DOMString asString</dt>
-        <dd>4</dd>
-        <dt>inherit attribute DOMString css</dt>
-        <dd>5</dd>
-        <dt>static inherit readonly attribute DOMString everything</dt>
-        <dd>6</dd>
-        <dt>stringifier inherit readonly attribute DOMString all</dt>
-        <dd>7</dd>-->
-      </dl>
+          // 3
+           static attribute DOMString unmovable;
+          // 4
+          stringifier attribute DOMString asString;
+          // 5
+          inherit attribute DOMString css;
+          // 6
+          static inherit readonly attribute DOMString everything;
+          // 7
+          stringifier inherit readonly attribute DOMString all;-->
+        };
+      </pre>
     </section>
     <section>
       <h2>Operations</h2>
@@ -217,158 +230,150 @@
       static
       specials don't necessarily have an indentifier
        -->
-      <dl id='meth-basic' class='idl' title='interface SuperStar'>
-        <dt>void basic()</dt>
-        <dd>1</dd>
-        <dt>[Something] void ext()</dt>
-        <dd>2</dd>
-        <dt>unsigned long long ull()</dt>
-        <dd>3</dd>
-        <dt>SuperStar? ull()</dt>
-        <dd>3.5</dd>
-        <dt>SuperStar[][][][] paramed()</dt>
-        <dd>
-          4
-          <dl class='parameters'>
-            <dt>SuperStar[][][] one</dt>
-            <dd>
-              4.1
-            </dd>
-            <dt>[ExtAttrs] ByteString? ext</dt>
-            <dd>
-              4.1
-            </dd>
-            <dt>optional short maybe</dt>
-            <dd>
-              4.2
-            </dd>
-            <dt>short[] shorts</dt>
-            <dd>
-              4.3
-            </dd>
-            <dt>short[][][][] hypercubes</dt>
-            <dd>
-              4.3
-            </dd>
-            <dt>optional short defaulted = 3.5</dt>
-            <dd>
-              4.3
-            </dd>
-            <dt>DOMString defaulted2 = "one"</dt>
-            <dd>
-              4.3
-            </dd>
-            <dt>short... variable</dt>
-            <dd>
-              4.last
-            </dd>
-          </dl>
-        </dd>
+      <pre id='meth-basic' class='idl'>
+        interface SuperStar {
+          // 1
+          void basic();
+          // 2
+          [Something] void ext();
+          // 3
+          unsigned long long ull();
+          // 3.5
+          SuperStar? ull();
+          // 4
+          // Parameters:
+          // one: 4.1
+          // ext: 4.1
+          // maybe: 4.2
+          // shorts: 4.3
+          // hypercubes: 4.3
+          // defaulted: 4.3
+          // defaulted2: 4.3
+          // variable: 4.last
+          SuperStar[][][][] paramed(SuperStar[][][] one, [ExtAttrs] ByteString? ext, optional short maybe, short[] shorts, short[][][][] hypercubes, optional short defaulted = 3.5, optional DOMString defaulted2 = "one", short... variable);
+
         <!--
-        <dt>getter float ()</dt>
-        <dd>5</dd>
-        <dt>getter float withName ()</dt>
-        <dd>6</dd>
-        <dt>setter void ()</dt>
-        <dd>7</dd>
-        <dt>setter void named ()</dt>
-        <dd>8</dd>
+          // 5
+          getter float ();
+          // 6
+          getter float withName ();
+          // 7
+          setter void ();
+          // 8
+          setter void named ();
         ... and other special operations
          -->
-      </dl>
+        };
+      </pre>
     </section>
     <section>
       <h2>Serializer</h2>
-      <dl id='serializer-map' class='idl' title='interface SuperStar'>
-	<dt>attribute DOMString foo</dt>
-	<dt>attribute DOMString bar</dt>
-        <dt>serializer = { foo, bar }</dt>
-      </dl>
+      <pre id='serializer-map' class='idl'>
+        interface SuperStar {
+          attribute DOMString foo;
+          attribute DOMString bar;
+          serializer = { foo, bar };
+        };
+      </pre>
     </section>
     <section>
       <h2>Comments</h2>
-      <dl id="comments-basic" class='idl' title='interface SuperStar'>
-        <dt>// This is a comment</dt>
-        <dd></dd>
-        <dt>// over two lines.</dt>
-        <dd></dd>
-      </dl>
+      <pre id="comments-basic" class='idl'>
+        interface SuperStar {
+          // This is a comment
+          // over two lines.
+        };
+      </pre>
     </section>
     <section>
       <h2>Dictionaries</h2>
       <p>
         Basic dictionary.
       </p>
-      <dl id='dict-basic' class='idl' title='dictionary SuperStar'></dl>
+      <pre id='dict-basic' class='idl'>
+        dictionary SuperStar {};
+      </pre>
       <p>
         Inheriting dictionary.
       </p>
-      <dl id='dict-inherit' class='idl' title='dictionary SuperStar : HyperStar'></dl>
+      <pre id='dict-inherit' class='idl'>
+        dictionary SuperStar : HyperStar {};
+      </pre>
       <p>
         Data in  dictionary.
       </p>
-      <dl id='dict-fields' class='idl' title='dictionary SuperStar'>
-        <dt>DOMString value</dt>
-        <dd>1</dd>
-        <dt>DOMString? nullable</dt>
-        <dd>2</dd>
-        <dt>[Something]float ext</dt>
-        <dd>3</dd>
-        <dt>unsigned long long longLong</dt>
-        <dd>4</dd>
-        <dt>boolean test = true</dt>
-        <dd>5</dd>
-        <dt>byte little = 2</dt>
-        <dd>7</dd>
-        <dt>byte big = Infinity</dt>
-        <dd>8</dd>
-        <dt>byte cheese = NaN</dt>
-        <dd>9</dd>
-        <dt>DOMString blah = "blah blah"</dt>
-        <dd>10</dd>
-      </dl>
+      <pre id='dict-fields' class='idl'>
+        dictionary SuperStar {
+          // 1
+          DOMString value;
+          // 2
+          DOMString? nullable;
+          // 3
+          [Something]float ext;
+          // 4
+          unsigned long long longLong;
+          // 5
+          boolean test = true;
+          // 7
+          byte little = 2;
+          // 8
+          byte big = Infinity;
+          // 9
+          byte cheese = NaN;
+          // 10
+          DOMString blah = "blah blah";
+        };
+      </pre>
     </section>
     <section>
       <h2>Exceptions</h2>
       <p>
         Basic exception.
       </p>
-      <dl id='ex-basic' class='idl' title='exception SuperStar'></dl>
+      <pre id='ex-basic' class='idl'>
+        exception SuperStar {};
+      </pre>
       <p>
         Inheriting exception.
       </p>
-      <dl id='ex-inherit' class='idl' title='exception SuperStar : HyperStar'></dl>
+      <pre id='ex-inherit' class='idl'>
+        exception SuperStar : HyperStar {};
+      </pre>
       <p>
         Exception with content.
       </p>
-      <dl id='ex-fields' class='idl' title='exception SuperStar'>
-        <dt>[Something]const SuperStar value = 42</dt>
-        <dd>1</dd>
-        <dt>SuperStar? message</dt>
-        <dd>2</dd>
-        <dt>sequence&lt;SuperStar> floats</dt>
-        <dd>3</dd>
-        <dt>SuperStar[][] numbers</dt>
-        <dd>4</dd>
-        <dt>Promise&lt;SuperStar&gt; stars</dt>
-        <dd>5</dd>
-      </dl>
+      <pre id='ex-fields' class='idl'>
+        exception SuperStar {
+          // 1
+          [Something]const SuperStar value = 42;
+          // 2
+          SuperStar? message;
+          // 3
+          sequence&lt;SuperStar> floats;
+          // 4
+          SuperStar[][] numbers;
+          // 5
+          Promise&lt;SuperStar&gt; stars;
+        };
+      </pre>
     </section>
     <section>
       <h2>Enumerations</h2>
       <p>
         Basic enumeration.
       </p>
-      <dl id='enum-basic' class='idl' title='enum SuperStar'>
-        <dt>one</dt>
-        <dd>1</dd>
-        <dt>two</dt>
-        <dd>2</dd>
-        <dt>three</dt>
-        <dd>3</dd>
-        <dt>white space</dt>
-        <dd>4</dd>
-      </dl>
+      <pre id='enum-basic' class='idl'>
+        enum SuperStar {
+          // 1
+          "one",
+          // 2
+          "two",
+          // 3
+          "three",
+          // 4
+          "white space"
+        };
+      </pre>
       <!--
         XXX extattr?
        -->
@@ -378,14 +383,15 @@
       <p>
         Basic callback.
       </p>
-      <dl id='cb-basic' class='idl' title='callback SuperStar = void'></dl>
+      <pre id='cb-basic' class='idl'>
+        callback SuperStar = void();
+      </pre>
       <p>
         Less basic callback.
       </p>
-      <dl id='cb-less-basic' class='idl' title='callback SuperStar = unsigned long long?'>
-        <dt>optional any value</dt>
-        <dd>1</dd>
-      </dl>
+      <pre id='cb-less-basic' class='idl'>
+        callback SuperStar = unsigned long long?(optional any value);
+      </pre>
       <!--
         XXX extattr?
        -->
@@ -395,22 +401,30 @@
       <p>
         Basic typedef.
       </p>
-      <div id='td-basic' class='idl' title='typedef DOMString string'></div>
+      <pre id='td-basic' class='idl'>
+        typedef DOMString string;
+      </pre>
       <p>
         Less basic typedef.
       </p>
-      <div id='td-less-basic' class='idl' title='typedef [Something] unsigned long long? sth'></div>
+      <pre id='td-less-basic' class='idl'>
+        typedef [Something] unsigned long long? sth;
+      </pre>
     </section>
     <section>
       <h2>Implements</h2>
       <p>
         Basic implements.
       </p>
-      <div id='impl-basic' class='idl' title='Window implements Breakable'></div>
+      <pre id='impl-basic' class='idl'>
+        Window implements Breakable;
+      </pre>
       <p>
         Less basic implements.
       </p>
-      <div id='impl-less-basic' class='idl' title='[Something]Window implements Breakable'></div>
+      <pre id='impl-less-basic' class='idl'>
+        [Something]Window implements Breakable;
+      </pre>
     </section>
   </body>
 </html>

@@ -39,6 +39,7 @@ define([
         ,   "core/best-practices"
         ,   "core/figures"
         ,   "core/biblio"
+        ,   "core/webidl-contiguous"
         ,   "core/webidl-oldschool"
         ,   "core/link-to-dfn"
         ,   "core/fix-headers"
