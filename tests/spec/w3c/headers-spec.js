@@ -210,7 +210,6 @@ describe("W3C — Headers", function () {
     it("should take wg configurations into account", function () {
         loadWithConfig({ wg: "WGNAME", wgURI: "WGURI", wgPatentURI: "WGPATENT", wgPublicList: "WGLIST", subjectPrefix: "[The Prefix]" }, function ($ifr) {
             var $sotd = $("#sotd", $ifr[0].contentDocument);
-            console.log($sotd);
             expect($sotd.find("p:contains('CUSTOM PARAGRAPH')").length).toEqual(1);
             expect($sotd.find("a:contains('WGNAME')").length).toEqual(1);
             expect($sotd.find("a:contains('WGNAME')").attr("href")).toEqual("WGURI");
@@ -237,7 +236,6 @@ describe("W3C — Headers", function () {
     it("should correctly flag a PER", function () {
         loadWithConfig({ previousMaturity: "REC", previousPublishDate: "2014-01-01", prevRecURI: "http://www.example.com/rec.html", implementationReportURI: "http://www.example.com/report.html", perEnd: "2014-12-01", specStatus: "PER", wg: "WGNAME", wgURI: "WGURI", wgPublicList: "WGLIST", subjectPrefix: "[The Prefix]" }, function ($ifr) {
             var $sotd = $("#sotd", $ifr[0].contentDocument);
-            console.log($sotd.text());
             var $f = $($sotd.find("p:contains('Proposed Edited Recommendation')")) ;
             expect($f.length).toEqual(2);
             var $p = $f[0];
@@ -249,7 +247,6 @@ describe("W3C — Headers", function () {
     it("should relocate custom sotd", function () {
         loadWithConfig({ sotdAfterWGinfo: true, wg: "WGNAME", wgURI: "WGURI", wgPublicList: "WGLIST", subjectPrefix: "[The Prefix]" }, function ($ifr) {
             var $sotd = $("#sotd", $ifr[0].contentDocument);
-            console.log($sotd.text());
             var $f = $($sotd.find("p:contains('CUSTOM PARAGRAPH')")) ;
             expect($f.length).toEqual(1);
             var $p = $f.prev() ;
