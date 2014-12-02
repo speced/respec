@@ -34,12 +34,14 @@
             This document is intended to become a W3C Recommendation.
           {{/if}}
           {{#unless isPR}}
+            {{#unless isPER}}
             If you wish to make comments regarding this document, please send them to 
             <a href='mailto:{{wgPublicList}}@w3.org{{#if subjectPrefix}}?subject={{subjectPrefixEnc}}{{/if}}'>{{wgPublicList}}@w3.org</a> 
             (<a href='mailto:{{wgPublicList}}-request@w3.org?subject=subscribe'>subscribe</a>,
             <a
               href='http://lists.w3.org/Archives/Public/{{wgPublicList}}/'>archives</a>){{#if subjectPrefix}}
               with <code>{{subjectPrefix}}</code> at the start of your email's subject{{/if}}.
+            {{/unless}}
           {{/unless}}
           {{#if isLC}}The Last Call period ends {{humanLCEnd}}.{{/if}}
           {{#if isCR}}
@@ -47,6 +49,16 @@
             stable and to encourage implementation by the developer community. This Candidate
             Recommendation is expected to advance to Proposed Recommendation no earlier than
             {{humanCREnd}}.
+          {{/if}}
+          {{#if isPER}}
+              W3C Advisory Committee Members are invited to
+              send formal review comments on this Proposed
+              Edited Recommendation to the W3C Team until
+              {{humanPEREnd}}. 
+              Members of the Advisory Committee will find the
+              appropriate review form for this document by
+              consulting their list of current
+              <a href='https://www.w3.org/2002/09/wbs/myQuestionnaires'>WBS questionnaires</a>. 
           {{/if}}
           {{#if isPR}}
               The W3C Membership and other interested parties are invited to review the document and
@@ -59,7 +71,9 @@
               Note that substantive technical comments were expected during the Last Call review
               period that ended {{humanLCEnd}}.
           {{else}}
+            {{#unless isPER}}
             All comments are welcome.
+            {{/unless}}
           {{/if}}
         </p>
         {{#if implementationReportURI}}
