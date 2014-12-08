@@ -362,6 +362,7 @@ define(
                 conf.isLC = (conf.specStatus === "LC" || conf.specStatus === "FPLC");
                 conf.isCR = (conf.specStatus === "CR");
                 conf.isPR = (conf.specStatus === "PR");
+                conf.isPER = (conf.specStatus === "PER");
                 conf.isMO = (conf.specStatus === "MO");
                 conf.isIGNote = (conf.specStatus === "IG-NOTE");
                 conf.dashDate = utils.concatDate(conf.publishDate, "-");
@@ -419,6 +420,8 @@ define(
                 conf.humanCREnd = utils.humanDate(conf.crEnd || "");
                 if (conf.specStatus === "PR" && !conf.prEnd) msg.pub("error", "Status is PR but no prEnd is specified");
                 conf.humanPREnd = utils.humanDate(conf.prEnd || "");
+                conf.humanPEREnd = utils.humanDate(conf.perEnd || "");
+                if (conf.specStatus === "PER" && !conf.perEnd) msg.pub("error", "Status is PER but no perEnd is specified");
 
                 conf.recNotExpected = (!conf.isRecTrack && conf.maturity == "WD" && conf.specStatus !== "FPWD-NOTE");
                 if (conf.isIGNote && !conf.charterDisclosureURI)
