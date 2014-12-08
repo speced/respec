@@ -34,14 +34,12 @@
             This document is intended to become a W3C Recommendation.
           {{/if}}
           {{#unless isPR}}
-            {{#unless isPER}}
             If you wish to make comments regarding this document, please send them to 
             <a href='mailto:{{wgPublicList}}@w3.org{{#if subjectPrefix}}?subject={{subjectPrefixEnc}}{{/if}}'>{{wgPublicList}}@w3.org</a> 
             (<a href='mailto:{{wgPublicList}}-request@w3.org?subject=subscribe'>subscribe</a>,
             <a
               href='http://lists.w3.org/Archives/Public/{{wgPublicList}}/'>archives</a>){{#if subjectPrefix}}
               with <code>{{subjectPrefix}}</code> at the start of your email's subject{{/if}}.
-            {{/unless}}
           {{/unless}}
           {{#if isLC}}The Last Call period ends {{humanLCEnd}}.{{/if}}
           {{#if isCR}}
