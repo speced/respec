@@ -16,13 +16,17 @@ define(
                         ,   about = ""
                         ,   $fc = $sec.children("*").first()
                         ,   ref = $sec.attr("id")
+                        ,   fcref = null
                         ;
                         if (ref) {
                             about = "#" + ref;
                         }
                         else if ($fc.length) {
                             ref = $fc.attr("id");
-                            if (ref) about = "#" + ref;
+                            if (ref) {
+                                about = "#" + ref;
+                                fcref = ref;
+                            }
                         }
                         if (about !== "") {
                             $sec.attr({
@@ -30,7 +34,26 @@ define(
                             ,   resource:   about
                             ,   rel:        "bibo:Chapter"
                             });
+                            // create a heading triple too, as per the role spec
+                            // since we should not be putting an @role on 
+                            // h* elements with a value of heading, but we 
+                            // still want the semantic markup
+                            if ($fc.length) {
+                                if (!fcref) {
+                                    // there is no ID on the heading itself.  Add one
+                                    fcref = $fc.makeID("h", ref) ;
+                                }
+                                $fc.attr({
+                                    about:      "#" + fcref
+                                ,   property:   "xhv:role"
+                                ,   resource:   "xhv:heading"
+                                });
+                            }
                         }
+                        // annotate the child h* element
+                        
+
+
                     });
                 }
                 msg.pub("end", "core/rdfa");
