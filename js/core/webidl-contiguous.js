@@ -100,7 +100,18 @@ define(
                 });
                 Handlebars.registerHelper("join", function(arr, between, options) {
                     return new Handlebars.SafeString(arr.map(function(elem) { return options.fn(elem); }).join(between));
-                })
+                });
+                // A block helper that emits  an <a href> around its contents
+                // if obj.refTitle exists. If it exists, that implies that
+                // there's another <dfn> for the object.
+                Handlebars.registerHelper("tryLink", function(obj, options) {
+                    var content = options.fn(this);
+                    if (obj.refTitle) {
+                        return "<a title='" + Handlebars.Utils.escapeExpression(obj.refTitle) + "'>" + content + "</a>";
+                    } else {
+                        return content;
+                    }
+                });
             }
         ,   idn = function (lvl) {
                 var str = "";
@@ -299,17 +310,6 @@ define(
                 return $pre;
             },
 
-            makeMethodID:    function (cur, obj) {
-                var id = cur + obj.refId + "-" + idlType2Text(obj.idlType) + "-"
-                ,   params = [];
-                for (var i = 0, n = obj.arguments.length; i < n; i++) {
-                    var prm = obj.arguments[i];
-                    params.push(idlType2Text(prm.idlType) + "-" + prm.id);
-                }
-                id += params.join("-");
-                return sanitiseID(id);
-            },
-
             writeDefinition:    function (obj, indent) {
                 indent++;
                 var opt = { indent: indent, obj: obj, proc: this }
@@ -334,11 +334,10 @@ define(
                             if (it.type === "field")   maxAttr = (len > maxAttr) ? len : maxAttr;
                             else if (it.type === "const") maxConst = (len > maxConst) ? len : maxConst;
                         });
-                        var curLnk = "widl-" + obj.refId + "-"
-                        ,   children = obj.members
+                        var children = obj.members
                                           .map(function (ch) {
-                                              if (ch.type === "field") return self.writeField(ch, maxAttr, indent + 1, curLnk);
-                                              else if (ch.type === "const") return self.writeConst(ch, maxConst, indent + 1, curLnk);
+                                              if (ch.type === "field") return self.writeField(ch, maxAttr, indent + 1);
+                                              else if (ch.type === "const") return self.writeConst(ch, maxConst, indent + 1);
                                           })
                                           .join("")
                         ;
@@ -351,10 +350,9 @@ define(
                             var len = idlType2Text(it.idlType).length;
                             max = (len > max) ? len : max;
                         });
-                        var curLnk = "widl-" + obj.name + "-"
-                        ,   children = obj.members
+                        var children = obj.members
                                           .map(function (it) {
-                                              return self.writeMember(it, max, indent + 1, curLnk);
+                                              return self.writeMember(it, max, indent + 1);
                                           })
                                           .join("")
                         ;
@@ -380,7 +378,7 @@ define(
 
                     "enum": function() {
                         var children = obj.values
-                                          .map(function (it) { return idlEnumItemTmpl({ obj: it, parentID: obj.name, indent: indent + 1 }); })
+                                          .map(function (it) { return idlEnumItemTmpl({ obj: it, parentID: obj.fullPath, indent: indent + 1 }); })
                                           .join(",\n");
                         return idlEnumTmpl({obj: obj, indent: indent, children: children });
                     },
@@ -394,9 +392,7 @@ define(
             writeInterfaceDefinition: function(opt, callback) {
                 var obj = opt.obj, indent = opt.indent;
                 // stop gap fix for duplicate IDs while we're transitioning the code
-                var div = this.doc.createElement("div")
-                ,   self = this
-                ,   id = $(div).makeID("idl-def", obj.name, true)
+                var self = this
                 ,   maxAttr = 0, maxMeth = 0, maxConst = 0;
                 obj.members.forEach(function (it) {
                     if (it.type === "serializer") return;
@@ -406,14 +402,12 @@ define(
                     else if (it.type == "operation") maxMeth = (len > maxMeth) ? len : maxMeth;
                     else if (it.type == "const") maxConst = (len > maxConst) ? len : maxConst;
                 });
-                var curLnk = "widl-" + obj.refId + "-"
-                ,   ctor = []
-                ,   children = obj.members
+                var children = obj.members
                                   .map(function (ch) {
-                                      if (ch.type == "attribute") return self.writeAttribute(ch, maxAttr, indent + 1, curLnk);
-                                      else if (ch.type == "operation") return self.writeMethod(ch, maxMeth, indent + 1, curLnk);
-                                      else if (ch.type == "const") return self.writeConst(ch, maxConst, indent + 1, curLnk);
-                                      else if (ch.type == "serializer") return self.writeSerializer(ch, indent + 1, curLnk);
+                                      if (ch.type == "attribute") return self.writeAttribute(ch, maxAttr, indent + 1);
+                                      else if (ch.type == "operation") return self.writeMethod(ch, maxMeth, indent + 1);
+                                      else if (ch.type == "const") return self.writeConst(ch, maxConst, indent + 1);
+                                      else if (ch.type == "serializer") return self.writeSerializer(ch, indent + 1);
                                       else throw new Error("Unexpected member type: " + ch.type);
                                   })
                                   .join("")
@@ -421,25 +415,22 @@ define(
                 return idlInterfaceTmpl({
                     obj:        obj
                 ,   indent:     indent
-                ,   id:         id
-                ,   ctor:       ctor.join(",\n")
                 ,   partial:    obj.partial ? "partial " : ""
                 ,   callback:   callback
                 ,   children:   children
                 });
             },
 
-            writeField:    function (attr, max, indent, curLnk) {
+            writeField:    function (attr, max, indent) {
                 var pad = max - idlType2Text(attr.idlType).length;
                 return idlFieldTmpl({
                     obj:        attr
                 ,   indent:     indent
                 ,   pad:        pad
-                ,   href:       curLnk + attr.refId
                 });
             },
 
-            writeAttribute:    function (attr, max, indent, curLnk) {
+            writeAttribute:    function (attr, max, indent) {
                 var len = idlType2Text(attr.idlType).length;
                 var pad = max - len;
                 var qualifiers = "";
@@ -454,11 +445,10 @@ define(
                 ,   indent:         indent
                 ,   qualifiers:     qualifiers
                 ,   pad:            pad
-                ,   href:           curLnk + attr.refId
                 });
             },
 
-            writeMethod:    function (meth, max, indent, curLnk) {
+            writeMethod:    function (meth, max, indent) {
                 var params = meth.arguments
                                 .map(function (it) {
                                     return idlParamTmpl({
@@ -476,7 +466,6 @@ define(
                 ,   indent:     indent
                 ,   "static":   meth.static ? "static " : ""
                 ,   pad:        pad
-                ,   id:         this.makeMethodID(curLnk, meth)
                 ,   children:   params
                 });
             },
@@ -509,13 +498,119 @@ define(
                 });
             },
 
-            writeMember:    function (memb, max, indent, curLnk) {
-                var opt = { obj: memb, indent: indent, curLnk: curLnk };
+            writeMember:    function (memb, max, indent) {
+                var opt = { obj: memb, indent: indent };
                 opt.pad = max - idlType2Text(memb.idlType).length;
                 return idlDictMemberTmpl(opt);
             }
         };
 
+        // Each entity defined in IDL has a complete path like
+        // "window.Interface.operation(ParamType1, optional ParamType2)". This
+        // function recursively computes the path of everything in a parse
+        // tree, and uses findRefTitle() to assign a "suffix" of the path to the
+        // parse node's 'refTitle' attribute.
+        function computeRefTitles(parse, root, definitionMap) {
+            function combinePath(name) {
+                if (root === "")
+                    return name;
+                return root + "." + name;
+            }
+            parse.forEach(function(defn) {
+                var fullPath;
+                switch (defn.type) {
+                    case "callback interface":
+                    case "dictionary":
+                    case "enum":
+                    case "exception":
+                    case "interface":
+                        fullPath = combinePath(defn.name);
+                        if (defn.type != "enum") {
+                            computeRefTitles(defn.members, fullPath, definitionMap);
+                        }
+                        break;
+
+                    case "callback":
+                    case "typedef":
+                    case "attribute":
+                    case "const":
+                    case "field":
+                        fullPath = combinePath(defn.name);
+                        break;
+
+                    case "operation":
+                        fullPath = (combinePath(defn.name) + '(' +
+                                    defn.arguments.map(function(arg) {
+                                        var optional = arg.optional ? "optional-" : "";
+                                        var variadic = arg.variadic ? "..." : "";
+                                        return optional + idlType2Text(arg.idlType) + variadic;
+                                    }).join(',') + ')');
+                        break;
+                    case "iterator":
+                        fullPath = combinePath("iterator");
+                        break;
+                    case "serializer":
+                        fullPath = combinePath("serializer");
+                        break;
+
+                    case "implements":
+                        // Nothing to link here.
+                        return;
+                    default:
+                        throw new Error("Unexpected type when computing refTitles: " + defn.type);
+                }
+                defn.fullPath = fullPath.toLowerCase();
+                defn.refTitle = findRefTitle(defn.fullPath, definitionMap);
+            });
+        }
+
+        // This function looks for "suffixes" of 'fullPath' in the document's
+        // <dfn> elements and sets the refTitle of the entity's representation
+        // in the parse tree to point to that element. For operations,
+        // versions of the 'fullPath' are also tried with the parameters
+        // removed.
+        //
+        // When a matching <dfn> is found, it's given <code> formatting.  If
+        // no <dfn> is found, the function returns 'undefined'.
+        //
+        // Suffixes are tried in descending order of precision. For example,
+        // in the path "window.Interface.operation(ParamType1, optional
+        // ParamType2)", the order would be:
+        //  1) window.Interface.operation(ParamType1, optional ParamType2)
+        //  2) Interface.operation(ParamType1, optional ParamType2)
+        //  3) operation(ParamType1, optional ParamType2)
+        //  4) window.Interface.operation
+        //  5) Interface.operation
+        //  6) operation
+        function findRefTitle(fullPath, definitionMap) {
+            fullPath = fullPath.toLowerCase();
+            function searchSuffixes(path) {
+                while (true) {
+                    if (definitionMap[path])
+                        return path;
+                    var firstDot = path.indexOf('.');
+                    if (firstDot == -1)
+                        break;
+                    path = path.slice(firstDot + 1);
+                }
+                return undefined;
+            }
+            var result = searchSuffixes(fullPath);
+            if (!result) {
+                // If the path is an operation or serializer, we want to try again without the parameters.
+                var paramStart = fullPath.indexOf("(");
+                if (paramStart == -1)
+                    return undefined;
+                result = searchSuffixes(fullPath.slice(0, paramStart));
+            }
+            if (!result)
+                return undefined;
+            var dfn = definitionMap[result];
+            // Mark the definition as code.
+            if (dfn.children('code').length == 0 && dfn.parents('code').length == 0)
+                dfn.wrapInner('<code></code>');
+            return result;
+        }
 
         return {
             run:    function (conf, doc, cb, msg) {
@@ -541,6 +636,7 @@ define(
                         // Skip this <pre> and move on to the next one.
                         return;
                     }
+                    computeRefTitles(parse, "", conf.definitionMap);
                     var $df = w.makeMarkup(parse);
                     $df.attr({id: this.id});
                     $.merge(infNames,
@@ -552,11 +648,11 @@ define(
                 $("a:not([href])").each(function () {
                     var $ant = $(this);
                     if ($ant.hasClass("externalDFN")) return;
-                    var name = $ant.text();
-                    if ($.inArray('idl-def-' + name, infNames) !== -1) {
+                    var name = $ant.dfnTitle();
+                    if (!conf.definitionMap[name] && $.inArray('idl-def-' + name, infNames) !== -1) {
                         $ant.attr("href", "#idl-def-" + name)
                             .addClass("idlType")
-                            .html("<code>" + name + "</code>");
+                            .wrapInner("<code></code>");
                     }
                 });
                 finish();

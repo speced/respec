@@ -1,2 +1,4 @@
-<span class='idlInterface' id='{{id}}'>{{extAttr obj indent}}{{idn indent}}{{partial}}{{callback}}interface <span class='idlInterfaceID'>{{obj.name}}</span>{{#if obj.inheritance}} : <span class='idlSuperclass'><a>{{obj.inheritance}}</a></span>{{/if}} {
+<span class='idlInterface' id='idl-def-{{obj.fullPath}}'>{{extAttr obj indent
+}}{{idn indent}}{{partial}}{{callback}}interface <span class='idlInterfaceID'>{{#tryLink obj}}{{obj.name}}{{/tryLink
+}}</span>{{#if obj.inheritance}} : <span class='idlSuperclass'><a>{{obj.inheritance}}</a></span>{{/if}} {
 {{{children}}}{{idn indent}}}};</span>

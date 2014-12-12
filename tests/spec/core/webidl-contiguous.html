@@ -105,6 +105,12 @@
       <pre id='if-callback' class='idl'>
         callback interface SuperStar {};
       </pre>
+      <pre id='if-doc' class='idl'>
+        interface DocInterface {};
+        interface DocIsNotCaseSensitive {};
+        interface UndocInterface {};
+      </pre>
+      <p id='if-doc-p'><dfn>DocInterface</dfn> is an interface and so is <dfn>DoCiSnOtCaSeSeNsItIvE</dfn>.</p>
     </section>
     <section>
       <h2>Constructors</h2>
@@ -139,7 +145,7 @@
         All constants and some type testing
       </p>
       <pre id='const-basic' class='idl'>
-        interface SuperStar {
+        interface ConstTest {
           // 1
           const boolean test = true;
           // 2
@@ -180,6 +186,9 @@
           [Something] const short extAttr = NaN;
         };
       </pre>
+      <p id="const-basic-doc">
+        <dfn>rambaldi</dfn> is a constant and so are <dfn>ConstTest.why</dfn> and <dfn title="ConstTest.inf">this other thing</dfn>.
+      </p>
     </section>
     <section>
       <h2>Attributes</h2>
@@ -187,7 +196,7 @@
         Basic attributes testing.
       </p>
       <pre id='attr-basic' class='idl'>
-        interface SuperStar {
+        interface AttrBasic {
           // 1
           attribute DOMString regular;
           // 2
@@ -219,6 +228,7 @@
           stringifier inherit readonly attribute DOMString all;-->
         };
       </pre>
+      <p id="attr-basic-doc"><dfn>AttrBasic.readonly</dfn> and <dfn>regular</dfn> are attributes.</p>
     </section>
     <section>
       <h2>Operations</h2>
@@ -231,13 +241,13 @@
       specials don't necessarily have an indentifier
        -->
       <pre id='meth-basic' class='idl'>
-        interface SuperStar {
+        interface MethBasic {
           // 1
           void basic();
           // 2
           [Something] void ext();
           // 3
-          unsigned long long ull();
+          unsigned long long ull(short s);
           // 3.5
           SuperStar? ull();
           // 4
@@ -265,16 +275,20 @@
          -->
         };
       </pre>
+      <p id="meth-basic-doc">
+        <dfn>MethBasic.ull</dfn> is a method, and <dfn>ull(short)</dfn> is its overload.
+      </p>
     </section>
     <section>
       <h2>Serializer</h2>
       <pre id='serializer-map' class='idl'>
-        interface SuperStar {
+        interface SerializerMap {
           attribute DOMString foo;
           attribute DOMString bar;
           serializer = { foo, bar };
         };
       </pre>
+      <p id='serializer-map-doc'><dfn>SerializerMap.serializer</dfn> serializes a SerializerMap.</p>
     </section>
     <section>
       <h2>Comments</h2>
@@ -324,6 +338,14 @@
           DOMString blah = "blah blah";
         };
       </pre>
+      <pre id='dict-doc' class='idl'>
+        dictionary DictDocTest {
+          DOMString dictDocField;
+          DOMString? otherField;
+          long undocField;
+        };
+      </pre>
+      <p id='dict-doc-p'><dfn>DictDocTest</dfn> contains <dfn>dictDocField</dfn> and <dfn>DictDocTest.otherField</dfn></p>
     </section>
     <section>
       <h2>Exceptions</h2>
@@ -343,7 +365,7 @@
         Exception with content.
       </p>
       <pre id='ex-fields' class='idl'>
-        exception SuperStar {
+        exception ExFields {
           // 1
           [Something]const SuperStar value = 42;
           // 2
@@ -356,6 +378,7 @@
           Promise&lt;SuperStar&gt; stars;
         };
       </pre>
+      <p id="ex-fields-doc"><dfn>ExFields</dfn> contains <dfn>ExFields.value</dfn> and <dfn>floats</dfn></p>
     </section>
     <section>
       <h2>Enumerations</h2>
@@ -363,7 +386,7 @@
         Basic enumeration.
       </p>
       <pre id='enum-basic' class='idl'>
-        enum SuperStar {
+        enum EnumBasic {
           // 1
           "one",
           // 2
@@ -374,6 +397,7 @@
           "white space"
         };
       </pre>
+      <p id="enum-basic-doc"><dfn>EnumBasic</dfn></p>
       <!--
         XXX extattr?
        -->
@@ -390,8 +414,9 @@
         Less basic callback.
       </p>
       <pre id='cb-less-basic' class='idl'>
-        callback SuperStar = unsigned long long?(optional any value);
+        callback CbLessBasic = unsigned long long?(optional any value);
       </pre>
+      <p id="cb-less-basic-doc"><dfn>CbLessBasic</dfn></p>
       <!--
         XXX extattr?
        -->
@@ -408,8 +433,9 @@
         Less basic typedef.
       </p>
       <pre id='td-less-basic' class='idl'>
-        typedef [Something] unsigned long long? sth;
+        typedef [Something] unsigned long long? tdLessBasic;
       </pre>
+      <p id='td-less-basic-doc'><dfn>tdLessBasic</dfn></p>
     </section>
     <section>
       <h2>Implements</h2>

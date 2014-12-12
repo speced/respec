@@ -1,4 +1,4 @@
-<span class='idlEnum' id='idl-def-{{obj.name}}'>{{extAttr obj indent
-}}{{idn indent}}enum <span class='idlEnumID'>{{obj.name}}</span> {
+<span class='idlEnum' id='idl-def-{{obj.fullPath}}'>{{extAttr obj indent
+}}{{idn indent}}enum <span class='idlEnumID'>{{#tryLink obj}}{{obj.name}}{{/tryLink}}</span> {
 {{{children}}}
 {{idn indent}}}};

@@ -1,4 +1,4 @@
-<span class='idlMember'>{{extAttr obj indent
+<span class='idlMember' id="idl-def-{{obj.fullPath}}">{{extAttr obj indent
 }}{{idn indent}}<span class='idlMemberType'>{{idlType obj}}</span> {{pads pad
-}}<span class='idlMemberName'><a href='#{{curLnk}}{{obj.name}}'>{{obj.name}}</a></span>{{#if obj.default
+}}<span class='idlMemberName'>{{#tryLink obj}}{{obj.name}}{{/tryLink}}</span>{{#if obj.default
 }} = <span class='idlMemberValue'>{{stringifyIdlConst obj.default}}</span>{{/if}};</span>
