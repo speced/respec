@@ -183,7 +183,7 @@ describe("Core - Contiguous WebIDL", function () {
                 "    void               ext ();\n" +
                 "    unsigned long long ull (short s);\n" +
                 "    SuperStar?         ull ();\n" +
-                "    SuperStar[][][][]  paramed (SuperStar[][][] one, [ExtAttrs] ByteString? ext, optional short maybe, short[] shorts, short[][][][] hypercubes, optional short defaulted = 3.5, optional DOMString defaulted2 = \"one\", short... variable);\n" +
+                "    SuperStar[][][][]  paramed (SuperStar[][]?[] one, [ExtAttrs] ByteString? ext, optional short maybe, short[] shorts, short[][][][] hypercubes, optional short defaulted = 3.5, optional DOMString defaulted2 = \"one\", short... variable);\n" +
                 "};";
         expect($target.text()).toEqual(text);
         expect($target.find(".idlMethod").length).toEqual(5);
@@ -201,7 +201,7 @@ describe("Core - Contiguous WebIDL", function () {
         var ulls = $target.find(".idlMethName:contains('ull')");
         expect(ulls.first().children("a").attr("href")).toEqual("#dfn-ull-short");
         expect(ulls.last().children("a").attr("href")).toEqual("#dfn-methbasic.ull");
-        expect($target.find(".idlMethod:contains('paramed')").attr("id")).toEqual("idl-def-methbasic.paramed(superstar[][][],bytestring?,optional-short,short[],short[][][][],optional-short,optional-domstring,short...)");
+        expect($target.find(".idlMethod:contains('paramed')").attr("id")).toEqual("idl-def-methbasic.paramed(superstar[][]?[],bytestring?,optional-short,short[],short[][][][],optional-short,optional-domstring,short...)");
         expect($target.find(":contains('dates')").filter("a").length).toEqual(0);
     });
 

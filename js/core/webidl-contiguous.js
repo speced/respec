@@ -131,16 +131,15 @@ define(
                 if (idlType.array) {
                     var arrayStr = '';
                     for (var i = 0; i < idlType.array; ++i) {
-                        arrayStr += '[]';
                         if (idlType.nullableArray[i]) {
-                            // This supercedes the 'nullable' field on the overall type.
                             arrayStr += '?';
                         }
+                        arrayStr += '[]';
                     }
                     return idlType2Html({
                             generic: idlType.generic,
                             idlType: idlType.idlType,
-                        }) + arrayStr;
+                        }) + arrayStr + nullable;
                 }
                 if (idlType.generic) {
                     return Handlebars.Utils.escapeExpression(idlType.generic) + '&lt;' + idlType2Html(idlType.idlType) + '>' + nullable;
@@ -160,16 +159,15 @@ define(
                 if (idlType.array) {
                     var arrayStr = '';
                     for (var i = 0; i < idlType.array; ++i) {
-                        arrayStr += '[]';
                         if (idlType.nullableArray[i]) {
-                            // This supercedes the 'nullable' field on the overall type.
                             arrayStr += '?';
                         }
+                        arrayStr += '[]';
                     }
                     return idlType2Text({
                             generic: idlType.generic,
                             idlType: idlType.idlType,
-                        }) + arrayStr;
+                        }) + arrayStr + nullable;
                 }
                 if (idlType.generic) {
                     return idlType.generic + '<' + idlType2Text(idlType.idlType) + '>' + nullable;
