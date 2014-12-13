@@ -27,17 +27,41 @@ define(
             return $(arr);
         };
 
-        // For any element, returns a title string that applies the algorithm used for determining the
-        // actual title of a <dfn> element (but can apply to other as well).
-        $.fn.dfnTitle = function () {
+        // For any element, returns a title string that applies the 
+        // algorithm used for determining the actual title of a <dfn> 
+        // element (but can apply to other as well).
+        // attrName is optional and defaults to 'title'
+        $.fn.dfnTitle = function ( attrName ) {
             var title;
-            if (this.attr("title")) title = this.attr("title");
+            if (!attrName) attrName = 'title' ;
+            if (this.attr(attrName)) title = this.attr(attrName);
             else if (this.contents().length == 1 && this.children("abbr, acronym").length == 1 &&
-                     this.find(":first-child").attr("title")) title = this.find(":first-child").attr("title");
+                     this.find(":first-child").attr(attrName)) title = this.find(":first-child").attr(attrName);
             else title = this.text();
             return title.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
         };
 
+        // For any element, returns the definition "scope" for
+        // that element; the bucket into which a definition
+        // would be placed
+
+        $.fn.dfnScope = function () {
+            // TODO - define a list of local attribute names
+            // that can be used to indicate scope.
+            var scope = $(this).closest("[dfn-type]").attr("dfn-type");
+            return (scope || "dfn").toLowerCase().replace(/^\s/, "");
+        };
+
+        // For any element, returns whether a defintion should
+        // be exported or not.  By default we export
+
+        $.fn.dfnExport = function ( scope ) {
+            // is export explicit?
+            var $e = $(this).closest("[export],[noexport]");
+            if ($e.length) return !!$e.attr("export");
+            // by default basic definitions are NOT exported
+            return scope != "dfn";
+        };
 
         // Applied to an element, sets an ID for it (and returns it), using a specific prefix
         // if provided, and a specific text if given.
