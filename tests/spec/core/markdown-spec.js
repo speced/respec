@@ -181,7 +181,7 @@ describe("Core - Markdown", function () {
         runs(function () {
             var $bar = $('#bar', doc);
             expect($bar.text()).toMatch(/2. Bar/);
-            var $body = $(doc.body, doc);
+            var $body = $("#respecMain", doc);
             expect($body.find('> #bar').length).toEqual(1);
         });
     });
@@ -196,7 +196,7 @@ describe("Core - Markdown", function () {
         waitsFor(function () { return doc; }, MAXOUT);
 
         runs(function () {
-          var $body = $(doc.body, doc);
+          var $body = $("#respecMain", doc);
           expect($body.find('> #bar').length).toEqual(1);
         });
     });
