@@ -379,10 +379,6 @@ define(
                         $("html").attr("typeof", "bibo:Document ") ;
                     }
                     var prefixes = "bibo: http://purl.org/ontology/bibo/ w3p: http://www.w3.org/2001/02pd/rec54#";
-                    if (conf.doRDFa === '1.0') {
-                        $("html").attr("version", "XHTML+RDFa 1.0") ;
-                        prefixes += " dc: http://purl.org/dc/terms/ foaf: http://xmlns.com/foaf/0.1/ xsd: http://www.w3.org/2001/XMLSchema#";
-                    }
                     $("html").attr("prefix", prefixes);
                     $("html>head").prepend($("<meta lang='' property='dc:language' content='en' />"))
                 }

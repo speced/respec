@@ -56,21 +56,6 @@ describe("W3C — RDFa", function () {
         ,   wgPatentURI:  "http://www.w3.org/fake-patent-uri"
         ,   doRDFa: "lite"
         }
-    ,   oldConfig = {
-            editors:    [{ name: "Shane McCarron",
-                           url:  "http://URI",
-                           company: "COMPANY",
-                           companyURI: "http://COMPANY",
-                           mailto:     "EMAIL",
-                           note:       "NOTE"}]
-        ,   shortName: "some-spec"
-        ,   publicationDate: "2013-06-25"
-        ,   previousPublishDate: "2012-06-07"
-        ,   previousMaturity:  "REC"
-        ,   specStatus: "PER"
-        ,   wgPatentURI:  "http://www.w3.org/fake-patent-uri"
-        ,   doRDFa: "1.0"
-        }
     ,   noConfig = {
             editors:    [{ name: "Shane McCarron",
                            url:  "http://URI",
@@ -120,29 +105,6 @@ describe("W3C — RDFa", function () {
             expect($c.attr('prefix')).toMatch(/w3p:/);
             expect($c.attr('typeof')).toMatch(/w3p:PER/);
             expect($c.attr('typeof')).toMatch(/bibo:Document/);
-
-            var $lang = $("html>head>meta[property='dc:language']", doc) ;
-            expect($lang.attr('content')).toEqual("en") ;
-            flushIframes();
-        });
-    });
-    it("should set the 1.0 document information", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: oldConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") }, 
-                      function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
-        runs(function () {
-            var $c = $("html", doc);
-            expect($c.attr('prefix')).toMatch(/bibo:/);
-            expect($c.attr('prefix')).toMatch(/w3p:/);
-            expect($c.attr('prefix')).toMatch(/dc:/);
-            expect($c.attr('prefix')).toMatch(/foaf:/);
-            expect($c.attr('prefix')).toMatch(/xsd:/);
-            expect($c.attr('typeof')).toMatch(/w3p:PER/);
-            expect($c.attr('typeof')).toMatch(/bibo:Document/);
-            expect($c.attr('version')).toEqual("XHTML+RDFa 1.0") ;
 
             var $lang = $("html>head>meta[property='dc:language']", doc) ;
             expect($lang.attr('content')).toEqual("en") ;
