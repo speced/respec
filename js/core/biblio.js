@@ -87,10 +87,6 @@ define(
                         .appendTo($dl)
                         ;
                     var $dd = $("<dd></dd>").appendTo($dl);
-                    if (this.doRDFa !== false) {
-                        if (type === "Normative") $dd.attr("property", "dc:requires");
-                        else $dd.attr("property", "dc:references");
-                    }
                     var refcontent = conf.biblio[ref]
                     ,   circular = {}
                     ,   key = ref;
@@ -110,6 +106,10 @@ define(
                     if (aliases[key].indexOf(ref) < 0) aliases[key].push(ref);
                     if (refcontent) {
                         $dd.html(stringifyRef(refcontent) + "\n");
+                        if (this.doRDFa !== false) {
+                            $a = $dd.children("a");
+                            $a.attr("property", type === "Normative" ? "dc:requires" : "dc:references");
+                        }
                     }
                     else {
                         if (!badrefs[ref]) badrefs[ref] = 0;

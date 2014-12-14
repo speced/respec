@@ -174,6 +174,31 @@ describe("W3C — RDFa", function () {
             flushIframes();
         });
     });
+    it("should describe normative references", function () {
+      var doc;
+      runs(function () {
+          makeRSDoc({ config: basicConfig, body: $("<section><p>[[!DAHU]] [[REX]]</p></section>") }, 
+                    function (rsdoc) { doc = rsdoc; });
+      });
+      waitsFor(function () { return doc; }, MAXOUT);
+      runs(function () {
+          var $nr = $("#normative-references", doc)
+          ,   $ir = $("#informative-references", doc)
+          ;
+          expect($nr.attr('typeof')).toMatch(/bibo:Chapter/);
+          expect($nr.attr('resource')).toEqual("#normative-references");
+          expect($nr.find("dl dt").length).toEqual(1);
+          expect($nr.find("dl dt:contains('[DAHU]')").length).toEqual(1);
+          expect($nr.find("dl>dd>a").attr('property')).toEqual('dc:requires');
+
+          expect($ir.attr('typeof')).toMatch(/bibo:Chapter/);
+          expect($ir.attr('resource')).toEqual("#informative-references");
+          expect($ir.find("dl dt").length).toEqual(1);
+          expect($ir.find("dl dt:contains('[REX]')").length).toEqual(1);
+          expect($ir.find("dl>dd>a").attr('property')).toEqual('dc:references');
+          flushIframes();
+      });
+    });
     it("should do nothing when disabled", function () {
         var doc;
         runs(function () {
