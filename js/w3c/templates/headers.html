@@ -12,7 +12,7 @@
   {{#if subtitle}}
     <h2 {{#if doRDFa}}property='bibo:subtitle' {{/if}}id='subtitle'>{{subtitle}}</h2>
   {{/if}}
-  <h2 {{#if doRDFa}}property="dcterms:issued" datatype="xsd:dateTime" content="{{publishISODate}}"{{/if}}>{{#if prependW3C}}W3C {{/if}}{{textStatus}} <time class='dt-published' datetime='{{dashDate}}'>{{publishHumanDate}}</time></h2>
+  <h2>{{#if prependW3C}}W3C {{/if}}{{textStatus}} <time {{#if doRDFa}}property="dcterms:issued"{{/if}}class='dt-published' datetime='{{dashDate}}'>{{publishHumanDate}}</time></h2>
   <dl>
     {{#unless isNoTrack}}
       <dt>This version:</dt>

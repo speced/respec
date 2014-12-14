@@ -100,17 +100,17 @@ define(
             var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "";
             if (this.doRDFa !== false) {
                 if (name === "Editor") {
-                    re = " rel='bibo:editor'";
-                    if (this.doRDFa !== "1.0") re += " inlist=''";
+                    re = " property='bibo:editor'";
+                    if (this.doRDFa === "1.1") re += " inlist=''";
                 }
                 else if (name === "Author") {
-                    re = " rel='dcterms:contributor'";
+                    re = " rel='dc:contributor'";
                 }
                 rn = " property='foaf:name'";
-                rm = " rel='foaf:mbox'";
+                rm = " property='foaf:mbox'";
                 rp = " typeof='foaf:Person'";
-                rwu = " rel='foaf:workplaceHomepage'";
-                rpu = " rel='foaf:homepage'";
+                rwu = " property='foaf:workplaceHomepage'";
+                rpu = " property='foaf:homepage'";
             }
             var ret = "";
             for (var i = 0, n = items.length; i < n; i++) {
@@ -119,7 +119,7 @@ define(
                 else             ret += "<dd class='p-author h-card vcard'>";
                 if (p.url) {
                     if (this.doRDFa !== false ) {
-                        ret += "<a class='u-url url p-name fn' " + rpu + rn + " content='" + p.name +  "' href='" + p.url + "'>" + p.name + "</a>";
+                        ret += "<meta" + rn + "' content='" + p.name + "' /><a class='u-url url p-name fn' " + rpu + " href='" + p.url + "'>"+ p.name + "</a>";
                     }
                     else {
                         ret += "<a class='u-url url p-name fn' href='" + p.url + "'>"+ p.name + "</a>";
@@ -235,7 +235,7 @@ define(
 
                 if (conf.doRDFa !== false) {
                     if (conf.doRDFa === undefined) {
-                        conf.doRDFa = '1.1';
+                        conf.doRDFa = 'lite';
                     }
                 }
                 // validate configuration and derive new configuration values
@@ -378,15 +378,13 @@ define(
                     } else {
                         $("html").attr("typeof", "bibo:Document ") ;
                     }
-                    $("html").attr("about", "") ;
-                    $("html").attr("property", "dcterms:language") ;
-                    $("html").attr("content", "en") ;
                     var prefixes = "bibo: http://purl.org/ontology/bibo/ w3p: http://www.w3.org/2001/02pd/rec54#";
-                    if (conf.doRDFa != '1.1') {
+                    if (conf.doRDFa === '1.0') {
                         $("html").attr("version", "XHTML+RDFa 1.0") ;
-                        prefixes += " dcterms: http://purl.org/dc/terms/ foaf: http://xmlns.com/foaf/0.1/ xsd: http://www.w3.org/2001/XMLSchema#";
+                        prefixes += " dc: http://purl.org/dc/terms/ foaf: http://xmlns.com/foaf/0.1/ xsd: http://www.w3.org/2001/XMLSchema#";
                     }
                     $("html").attr("prefix", prefixes);
+                    $("html>head").prepend($("<meta lang='' property='dc:language' content='en' />"))
                 }
                 // insert into document and mark with microformat
                 $("body", doc).prepend($(conf.isCGBG ? cgbgHeadersTmpl(conf) : headersTmpl(conf)))

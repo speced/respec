@@ -78,7 +78,7 @@ define(
                 $sec.makeID(null, type + " references");
                 refs.sort();
                 var $dl = $("<dl class='bibliography'></dl>").appendTo($sec);
-                if (conf.doRDFa !== false) $dl.attr("about", "");
+                if (conf.doRDFa !== false) $dl.attr("resource", "");
                 for (var j = 0; j < refs.length; j++) {
                     var ref = refs[j];
                     $("<dt></dt>")
@@ -88,8 +88,8 @@ define(
                         ;
                     var $dd = $("<dd></dd>").appendTo($dl);
                     if (this.doRDFa !== false) {
-                        if (type === "Normative") $dd.attr("rel", "dcterms:requires");
-                        else $dd.attr("rel", "dcterms:references");
+                        if (type === "Normative") $dd.attr("property", "dc:requires");
+                        else $dd.attr("property", "dc:references");
                     }
                     var refcontent = conf.biblio[ref]
                     ,   circular = {}

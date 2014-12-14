@@ -14,12 +14,11 @@ define(
                     $abs.prepend("<h2>Abstract</h2>");
                     $abs.addClass("introductory");
                     if (conf.doRDFa !== false) {
-                        var rel = "dcterms:abstract"
+                        var rel = "dc:abstract"
                         ,   ref = $abs.attr("property");
                         if (ref) rel = ref + " " + rel;
                         $abs.attr({
                             "property": rel
-                        ,   "datatype": ""
                         });
                     }
                 }

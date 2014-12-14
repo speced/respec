@@ -13,22 +13,22 @@ define(
                 if (conf.doRDFa !== false) {
                     $("section").each(function () {
                         var $sec = $(this)
-                        ,   about = ""
+                        ,   resource = ""
                         ,   $fc = $sec.children("*").first()
                         ,   ref = $sec.attr("id")
                         ;
                         if (ref) {
-                            about = "#" + ref;
+                            resource = "#" + ref;
                         }
                         else if ($fc.length) {
                             ref = $fc.attr("id");
-                            if (ref) about = "#" + ref;
+                            if (ref) resource = "#" + ref;
                         }
-                        if (about !== "") {
+                        if (resource !== "") {
                             $sec.attr({
                                 "typeof":   "bibo:Chapter"
-                            ,   resource:   about
-                            ,   rel:        "bibo:Chapter"
+                            ,   resource:   resource
+                            ,   property:   "bibo:Chapter"
                             });
                         }
                     });
