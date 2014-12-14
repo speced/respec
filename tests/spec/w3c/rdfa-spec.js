@@ -199,6 +199,21 @@ describe("W3C — RDFa", function () {
           flushIframes();
       });
     });
+    it("should add bibo to chapters", function () {
+      var doc;
+      runs(function () {
+          makeRSDoc({ config: basicConfig, body: $("<section id='chap'><h2>Chapter</h2></section>") }, 
+                    function (rsdoc) { doc = rsdoc; });
+      });
+      waitsFor(function () { return doc; }, MAXOUT);
+      runs(function () {
+          var $chap = $("#chap", doc);
+          expect($chap.attr('typeof')).toEqual("bibo:Chapter");
+          expect($chap.attr('resource')).toEqual("#chap");
+          expect($chap.attr('property')).toEqual("bibo:hasPart");
+          flushIframes();
+      });
+    });
     it("should do nothing when disabled", function () {
         var doc;
         runs(function () {
