@@ -28,7 +28,7 @@ define(
                             $sec.attr({
                                 "typeof":   "bibo:Chapter"
                             ,   resource:   resource
-                            ,   property:   "bibo:Chapter"
+                            ,   property:   "bibo:hasPart"
                             });
                         }
                     });
