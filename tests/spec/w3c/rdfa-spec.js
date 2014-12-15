@@ -199,6 +199,21 @@ describe("W3C — RDFa", function () {
           flushIframes();
       });
     });
+    it("should mark abstract using dc:abstract", function () {
+      var doc;
+      runs(function () {
+          makeRSDoc({ config: basicConfig, body: $("<section id='abstract'>test abstract</section>") }, 
+                    function (rsdoc) { doc = rsdoc; });
+      });
+      waitsFor(function () { return doc; }, MAXOUT);
+      runs(function () {
+          var $abs = $("#abstract", doc);
+          expect($abs.attr('property')).toMatch(/dc:abstract/);
+          expect($abs.attr('typeof')).toEqual("bibo:Chapter");
+          expect($abs.attr('resource')).toEqual("#abstract");
+          flushIframes();
+      });
+    });
     it("should add bibo to chapters", function () {
       var doc;
       runs(function () {
@@ -210,7 +225,7 @@ describe("W3C — RDFa", function () {
           var $chap = $("#chap", doc);
           expect($chap.attr('typeof')).toEqual("bibo:Chapter");
           expect($chap.attr('resource')).toEqual("#chap");
-          expect($chap.attr('property')).toEqual("bibo:hasPart");
+          expect($chap.attr('property')).toMatch(/bibo:hasPart/);
           flushIframes();
       });
     });

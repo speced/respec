@@ -24,11 +24,14 @@ define(
                             ref = $fc.attr("id");
                             if (ref) resource = "#" + ref;
                         }
+                        var property = "bibo:hasPart";
+                        // This partly duplicates work in abstract.js, but is not order dependent
+                        if (resource === "#abstract") property = "bibo:hasPart dc:abstract";
                         if (resource !== "") {
                             $sec.attr({
                                 "typeof":   "bibo:Chapter"
                             ,   resource:   resource
-                            ,   property:   "bibo:hasPart"
+                            ,   property:   property
                             });
                         }
                     });

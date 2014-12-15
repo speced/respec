@@ -14,7 +14,7 @@ define(
                     $abs.prepend("<h2>Abstract</h2>");
                     $abs.addClass("introductory");
                     if (conf.doRDFa !== false) {
-                        var rel = "dc:abstract"
+                        var rel = "bibo:hasPart dc:abstract"
                         ,   ref = $abs.attr("property");
                         if (ref) rel = ref + " " + rel;
                         $abs.attr({
