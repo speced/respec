@@ -127,7 +127,7 @@ define(
                 }
                 if (p.url) {
                     if (this.doRDFa) {
-                        ret += "<meta" + rn + "' content='" + p.name + "' /><a class='u-url url p-name fn' " + rpu + " href='" + p.url + "'>"+ p.name + "</a>";
+                        ret += "<meta" + rn + " content='" + p.name + "' /><a class='u-url url p-name fn' " + rpu + " href='" + p.url + "'>"+ p.name + "</a>";
                     }
                     else {
                         ret += "<a class='u-url url p-name fn' href='" + p.url + "'>"+ p.name + "</a>";
