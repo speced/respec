@@ -117,7 +117,7 @@ define(
             setID:  function (obj, match) {
                 obj.id = match;
                 obj.refId = obj.id.replace(/[^a-zA-Z_\-]/g, "");
-		obj.unescapedId = (obj.id[0] == "_" ? obj.id.slice(1) : obj.id);
+                obj.unescapedId = (obj.id[0] == "_" ? obj.id.slice(1) : obj.id);
             }
         ,   nullable:   function (obj, type) {
                 obj.nullable = false;
@@ -410,7 +410,7 @@ define(
 
                 // MEMBER
                 obj.type = "member";
-                this.setID(obj, str);
+                this.setID(obj, str || "EMPTY");
                 obj.refId = sn.sanitiseID(obj.id); // override with different ID type
                 return obj;
             },
