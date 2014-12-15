@@ -32,29 +32,16 @@ describe("W3C — RDFa", function () {
                            company: "COMPANY",
                            companyURI: "http://COMPANY",
                            mailto:     "EMAIL",
-                           note:       "NOTE"}]
+                           note:       "NOTE"},
+                         { name: "Gregg Kellogg"}]
+        ,   authors:   [{ name: "Gregg Kellogg"}, { name: "Shane McCarron"}]
         ,   shortName: "some-spec"
         ,   publicationDate: "2013-06-25"
         ,   previousPublishDate: "2012-06-07"
         ,   previousMaturity:  "REC"
         ,   specStatus: "PER"
         ,   wgPatentURI:  "http://www.w3.org/fake-patent-uri"
-        ,   doRDFa: "1.1"
-        }
-    ,   liteConfig = {
-            editors:    [{ name: "Shane McCarron",
-                           url:  "http://URI",
-                           company: "COMPANY",
-                           companyURI: "http://COMPANY",
-                           mailto:     "EMAIL",
-                           note:       "NOTE"}]
-        ,   shortName: "some-spec"
-        ,   publicationDate: "2013-06-25"
-        ,   previousPublishDate: "2012-06-07"
-        ,   previousMaturity:  "REC"
-        ,   specStatus: "PER"
-        ,   wgPatentURI:  "http://www.w3.org/fake-patent-uri"
-        ,   doRDFa: "lite"
+        ,   doRDFa: true
         }
     ,   noConfig = {
             editors:    [{ name: "Shane McCarron",
@@ -63,6 +50,7 @@ describe("W3C — RDFa", function () {
                            companyURI: "http://COMPANY",
                            mailto:     "EMAIL",
                            note:       "NOTE"}]
+        ,   authors:   [{ name: "Gregg Kellogg"}, { name: "Shane McCarron"}]
         ,   shortName: "some-spec"
         ,   publicationDate: "2013-06-25"
         ,   previousPublishDate: "2012-06-07"
@@ -92,25 +80,6 @@ describe("W3C — RDFa", function () {
             flushIframes();
         });
     });
-    it("should set the lite document information", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: liteConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") }, 
-                      function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
-        runs(function () {
-            var $c = $("html", doc);
-            expect($c.attr('prefix')).toMatch(/bibo:/);
-            expect($c.attr('prefix')).toMatch(/w3p:/);
-            expect($c.attr('typeof')).toMatch(/w3p:PER/);
-            expect($c.attr('typeof')).toMatch(/bibo:Document/);
-
-            var $lang = $("html>head>meta[property='dc:language']", doc) ;
-            expect($lang.attr('content')).toEqual("en") ;
-            flushIframes();
-        });
-    });
     it("should set RDFa information on editors", function () {
         var doc;
         runs(function () {
@@ -119,10 +88,11 @@ describe("W3C — RDFa", function () {
         });
         waitsFor(function () { return doc; }, MAXOUT);
         runs(function () {
-            var $dd = $("dt:contains('Editor:')", doc ).next("dd") ;
+            var $dd = $("dt:contains('Editors:')", doc ).next("dd") ;
             expect($dd.attr("property")).toEqual("bibo:editor") ;
-            expect($dd.attr("inlist")).toEqual("") ;
-            var $sp = $dd.children("span");
+            expect($dd.attr("resource")).toEqual("_:editor0") ;
+            var $sp = $dd.children("span").first();
+            expect($sp.attr("property")).toEqual('rdf:first') ;
             expect($sp.attr("typeof")).toEqual('foaf:Person') ;
             var $meta = $sp.children("meta") ;
             expect($meta.attr("property")).toEqual('foaf:name') ;
@@ -133,31 +103,48 @@ describe("W3C — RDFa", function () {
             $a = $sp.children("span").children("a");
             expect($a.attr("property")).toEqual('foaf:mbox') ;
             expect($a.attr("href")).toEqual('mailto:EMAIL') ;
+            var $rest = $sp.next();
+            expect($rest.attr("property")).toEqual("rdf:rest");
+            expect($rest.attr("resource")).toEqual("_:editor1");
+
+            var $ddd = $dd.next("dd");
+            expect($ddd.attr("property")).not.toBeDefined() ;
+            expect($ddd.attr("resource")).toEqual("_:editor1") ;
+            $sp = $ddd.children("span").first();
+            expect($sp.attr("property")).toEqual('rdf:first') ;
+            expect($sp.attr("typeof")).toEqual('foaf:Person') ;
+            $spp = $sp.children("span") ;
+            expect($spp.attr("property")).toEqual('foaf:name') ;
+            expect($spp.text()).toEqual('Gregg Kellogg') ;
+            $rest = $sp.next();
+            expect($rest.attr("property")).toEqual("rdf:rest");
+            expect($rest.attr("resource")).toEqual("rdf:nil");
             flushIframes();
         });
     });
-    it("should set RDFa information on editors (lite)", function () {
+    it("should set RDFa information on authors", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: liteConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") }, 
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
         runs(function () {
-            var $dd = $("dt:contains('Editor:')", doc ).next("dd") ;
-            expect($dd.attr("property")).toEqual("bibo:editor") ;
-            expect($dd.attr("inlist")).not.toBeDefined() ;
-            var $sp = $dd.children("span");
+            var $dd = $("dt:contains('Authors:')", doc ).next("dd") ;
+            var $sp = $dd.children("span").first();
+            expect($sp.attr("property")).toEqual("dc:contributor") ;
             expect($sp.attr("typeof")).toEqual('foaf:Person') ;
-            var $meta = $sp.children("meta") ;
-            expect($meta.attr("property")).toEqual('foaf:name') ;
-            expect($meta.attr("content")).toEqual('Shane McCarron') ;
-            var $a = $sp.children("a") ;
-            expect($a.attr("property")).toEqual('foaf:homepage') ;
-            expect($a.attr("href")).toEqual('http://URI') ;
-            $a = $sp.children("span").children("a");
-            expect($a.attr("property")).toEqual('foaf:mbox') ;
-            expect($a.attr("href")).toEqual('mailto:EMAIL') ;
+            var $spp = $sp.children("span") ;
+            expect($spp.attr("property")).toEqual('foaf:name') ;
+            expect($spp.text()).toEqual('Gregg Kellogg') ;
+
+            var $ddd = $dd.next("dd");
+            $sp = $ddd.children("span").first();
+            expect($sp.attr("property")).toEqual('dc:contributor') ;
+            expect($sp.attr("typeof")).toEqual('foaf:Person') ;
+            $spp = $sp.children("span") ;
+            expect($spp.attr("property")).toEqual('foaf:name') ;
+            expect($spp.text()).toEqual('Shane McCarron') ;
             flushIframes();
         });
     });

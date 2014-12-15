@@ -10,7 +10,7 @@ define(
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/rdfa");
-                if (conf.doRDFa !== false) {
+                if (conf.doRDFa) {
                     $("section").each(function () {
                         var $sec = $(this)
                         ,   resource = ""
