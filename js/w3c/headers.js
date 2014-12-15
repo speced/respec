@@ -97,28 +97,36 @@ define(
     function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl) {
         Handlebars.registerHelper("showPeople", function (name, items) {
             // stuff to handle RDFa
-            var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "";
-            if (this.doRDFa !== false) {
+            var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "", bn = "";
+            if (this.doRDFa) {
                 if (name === "Editor") {
-                    re = " property='bibo:editor'";
-                    if (this.doRDFa === "1.1") re += " inlist=''";
+                    bn = "_:editor0";
+                    re = " property='bibo:editor' resource='" + bn + "'";
+                    rp = " property='rdf:first' typeof='foaf:Person'";
                 }
                 else if (name === "Author") {
-                    re = " rel='dc:contributor'";
+                    rp = " property='dc:contributor' typeof='foaf:Person'";
                 }
                 rn = " property='foaf:name'";
                 rm = " property='foaf:mbox'";
-                rp = " typeof='foaf:Person'";
                 rwu = " property='foaf:workplaceHomepage'";
                 rpu = " property='foaf:homepage'";
             }
             var ret = "";
             for (var i = 0, n = items.length; i < n; i++) {
                 var p = items[i];
-                if (this.doRDFa !== false ) ret += "<dd class='p-author h-card vcard' " + re +"><span" + rp + ">";
-                else             ret += "<dd class='p-author h-card vcard'>";
+                if (this.doRDFa) {
+                  ret += "<dd class='p-author h-card vcard' " + re + "><span" + rp + ">";
+                  if (name === "Editor") {
+                    // Update to next sequence in rdf:List
+                    bn = (i < n - 1) ? ("_:editor" + (i + 1)) : "rdf:nil";
+                    re = " resource='" + bn + "'";
+                  }
+                } else {
+                  ret += "<dd class='p-author h-card vcard'>";
+                }
                 if (p.url) {
-                    if (this.doRDFa !== false ) {
+                    if (this.doRDFa) {
                         ret += "<meta" + rn + "' content='" + p.name + "' /><a class='u-url url p-name fn' " + rpu + " href='" + p.url + "'>"+ p.name + "</a>";
                     }
                     else {
@@ -137,7 +145,10 @@ define(
                     ret += ", <span class='ed_mailto'><a class='u-email email' " + rm + " href='mailto:" + p.mailto + "'>" + p.mailto + "</a></span>";
                 }
                 if (p.note) ret += " (" + p.note + ")";
-                if (this.doRDFa !== false ) ret += "</span>\n";
+                if (this.doRDFa) {
+                  ret += "</span>\n";
+                  if (name === "Editor") ret += "<span property='rdf:rest' resource='" + bn + "'></span>\n";
+                }
                 ret += "</dd>\n";
             }
             return new Handlebars.SafeString(ret);
@@ -233,11 +244,8 @@ define(
         ,   run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/headers");
 
-                if (conf.doRDFa !== false) {
-                    if (conf.doRDFa === undefined) {
-                        conf.doRDFa = 'lite';
-                    }
-                }
+                // Default include RDFa document metadata
+                if (conf.doRDFa === undefined) conf.doRDFa = true;
                 // validate configuration and derive new configuration values
                 if (!conf.license) conf.license = "w3c";
                 // NOTE: this is currently only available to the HTML WG
