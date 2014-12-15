@@ -82,15 +82,10 @@ define(
                 ,   dt = doc.doctype;
                 if (dt && dt.publicId) str += " PUBLIC '" + dt.publicId + "' '" + dt.systemId + "'";
                 str += ">\n<html";
-                var ats = doc.documentElement.attributes
-                ,   prefixAtr = "";
+                var ats = doc.documentElement.attributes;
                 for (var i = 0; i < ats.length; i++) {
                     var an = ats[i].name;
                     if (an === "xmlns" || an === "xml:lang") continue;
-                    if (an === "prefix") {
-                        prefixAtr = ats[i].value;
-                        continue;
-                    }
                     str += " " + an + "=\"" + utils.xmlEscape(ats[i].value) + "\"";
                 }
                 str += ">\n";
