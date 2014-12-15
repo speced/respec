@@ -208,9 +208,9 @@ describe("W3C — RDFa", function () {
       waitsFor(function () { return doc; }, MAXOUT);
       runs(function () {
           var $abs = $("#abstract", doc);
-          expect($abs.attr('property')).toMatch(/dc:abstract/);
-          expect($abs.attr('typeof')).toEqual("bibo:Chapter");
-          expect($abs.attr('resource')).toEqual("#abstract");
+          expect($abs.attr('property')).toEqual("dc:abstract");
+          expect($abs.attr('typeof')).not.toBeDefined();
+          expect($abs.attr('resource')).not.toBeDefined();
           flushIframes();
       });
     });

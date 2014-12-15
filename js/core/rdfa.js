@@ -25,9 +25,8 @@ define(
                             if (ref) resource = "#" + ref;
                         }
                         var property = "bibo:hasPart";
-                        // This partly duplicates work in abstract.js, but is not order dependent
-                        if (resource === "#abstract") property = "bibo:hasPart dc:abstract";
-                        if (resource !== "") {
+                        // Headings on everything but boilerplate
+                        if (!resource.match(/#(abstract|sotd|toc)$/)) {
                             $sec.attr({
                                 "typeof":   "bibo:Chapter"
                             ,   resource:   resource
