@@ -18,7 +18,8 @@ describe("Core - Fix headers", function () {
             expect($s.find("h1").length).toEqual(0);
             expect($s.find("h2").length).toEqual(1);
             expect($s.find("h2").text()).toMatch(/ONE/);
-            expect($s.find("h2").attr('role')).toEqual('heading');
+            expect($s.find("h2 > span").attr('resource')).toEqual('xhv:heading');
+            expect($s.find("h2 > span").attr('property')).toEqual('xhv:role');
             expect($s.find("h3").length).toEqual(1);
             expect($s.find("h3").text()).toMatch(/TWO/);
             expect($s.find("h4").length).toEqual(1);

@@ -23,7 +23,8 @@ describe("Core - Structure", function () {
             var $toc = $("#toc", doc)
             ;
             expect($toc.find("h2").text()).toEqual("Table of Contents");
-            expect($toc.find("h2").attr('role')).toEqual('heading');
+            expect($toc.find("h2 span").attr('resource')).toEqual('xhv:heading');
+            expect($toc.find("h2 span").attr('property')).toEqual('xhv:role');
             expect($toc.find("ul:first").attr('role')).toEqual('directory');
             expect($toc.find("> ul > li").length).toEqual(3);
             expect($toc.find("li").length).toEqual(15);

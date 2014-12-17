@@ -14,7 +14,8 @@ describe("W3C — Abstract", function () {
             var $abs = $("#abstract", doc);
             expect($abs.find("h2").length).toBeTruthy();
             expect($abs.find("h2").text()).toEqual("Abstract");
-            expect($abs.find("h2").attr('role')).toEqual("heading");
+            expect($abs.find("h2 span").attr('resource')).toEqual('xhv:heading');
+            expect($abs.find("h2 span").attr('property')).toEqual('xhv:role');
             expect($abs.hasClass("introductory")).toBeTruthy();
             expect($abs.find("p").length).toBeTruthy();
             flushIframes();

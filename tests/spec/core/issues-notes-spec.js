@@ -77,6 +77,7 @@ describe("Core — Issues and Notes", function () {
           ,   $i11 = $("#i11", doc).parent('div')
           ,   $ixx = $("#ixx", doc).parent('div')
           ;
+          console.log($i10.innerHTML) ;
 
           expect($i10.find("div.issue-title").length).toEqual(1);
           expect($i10.find("div.issue-title").text()).toEqual("Issue 10");
