@@ -82,15 +82,10 @@ define(
                 ,   dt = doc.doctype;
                 if (dt && dt.publicId) str += " PUBLIC '" + dt.publicId + "' '" + dt.systemId + "'";
                 str += ">\n<html";
-                var ats = doc.documentElement.attributes
-                ,   prefixAtr = "";
+                var ats = doc.documentElement.attributes;
                 for (var i = 0; i < ats.length; i++) {
                     var an = ats[i].name;
                     if (an === "xmlns" || an === "xml:lang") continue;
-                    if (an === "prefix") {
-                        prefixAtr = ats[i].value;
-                        continue;
-                    }
                     str += " " + an + "=\"" + utils.xmlEscape(ats[i].value) + "\"";
                 }
                 str += ">\n";
@@ -121,14 +116,9 @@ define(
                 if (dt && dt.publicId) str += " PUBLIC '" + dt.publicId + "' '" + dt.systemId + "'";
                 else if (mode !== 5) {
                     if (conf.doRDFa) {
-                        if (conf.doRDFa === "1.1") { // use the standard RDFa 1.1 doctype
-                            str += " PUBLIC '-//W3C//DTD XHTML+RDFa 1.1//EN' 'http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd'";
-                        }
-                        else { // use the standard RDFa doctype
-                            str += " PUBLIC '-//W3C//DTD XHTML+RDFa 1.0//EN' 'http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd'";
-                        }
-                    }
-                    else {
+                        // use the standard RDFa 1.1 doctype
+                        str += " PUBLIC '-//W3C//DTD XHTML+RDFa 1.1//EN' 'http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd'";
+                    } else {
                         str += " PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'";
                     }
                 }

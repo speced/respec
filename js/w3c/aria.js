@@ -23,20 +23,20 @@ define(
                     }
                 }
                 // mark issues and notes with heading
-                var noteNum = 0, issueNum = 0;
+                var noteCount = 0 ; var issueCount = 0 ;
                 $(".note-title, .issue-title", doc).each(function (i, item) {
                     var $item = $(item)
                     ,   isIssue = $item.hasClass("issue-title")
                     ,   level = $item.parents("section").length+2 ;
 
-                    $item.attr('aria-level', level);
+                    $item.attr('aria-level', level) ;
                     $item.attr('role', 'heading') ;
                     if (isIssue) {
-                        issueNum++;
-                        $item.attr('id', 'h_issue_'+issueNum);
+                        issueCount++;
+                        $item.makeID('h', "issue" + issueCount) ;
                     } else {
-                        noteNum++;
-                        $item.attr('id', 'h_note_'+noteNum);
+                        noteCount++;
+                        $item.makeID('h', "note" + noteCount) ;
                     }
                 });
                 msg.pub("end", "w3c/aria");
