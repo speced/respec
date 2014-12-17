@@ -10,25 +10,27 @@ define(
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/rdfa");
-                if (conf.doRDFa !== false) {
+                if (conf.doRDFa) {
                     $("section").each(function () {
                         var $sec = $(this)
-                        ,   about = ""
+                        ,   resource = ""
                         ,   $fc = $sec.children("*").first()
                         ,   ref = $sec.attr("id")
                         ;
                         if (ref) {
-                            about = "#" + ref;
+                            resource = "#" + ref;
                         }
                         else if ($fc.length) {
                             ref = $fc.attr("id");
-                            if (ref) about = "#" + ref;
+                            if (ref) resource = "#" + ref;
                         }
-                        if (about !== "") {
+                        var property = "bibo:hasPart";
+                        // Headings on everything but boilerplate
+                        if (!resource.match(/#(abstract|sotd|toc)$/)) {
                             $sec.attr({
                                 "typeof":   "bibo:Chapter"
-                            ,   resource:   about
-                            ,   rel:        "bibo:Chapter"
+                            ,   resource:   resource
+                            ,   property:   property
                             });
                         }
                     });
