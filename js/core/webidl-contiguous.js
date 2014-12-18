@@ -1,4 +1,4 @@
-/*global Handlebars, simpleNode */
+/*global Handlebars */
 
 // Module core/webidl-contiguous
 //  Highlights and links WebIDL marked up inside <pre class="idl">.
@@ -179,7 +179,7 @@ define(
             return str;
         }
         function extAttr(extAttrs, indent, singleLine) {
-            if (extAttrs.length == 0) {
+            if (extAttrs.length === 0) {
                 // If there are no extended attributes, omit the [] entirely.
                 return "";
             }
@@ -270,17 +270,17 @@ define(
             ]
         ,   AttributeNameKeyword = ["required"];
         function escapeArgumentName(argumentName) {
-            if (idlKeywords.indexOf(argumentName) != -1 && ArgumentNameKeyword.indexOf(argumentName) == -1)
+            if (idlKeywords.indexOf(argumentName) !== -1 && ArgumentNameKeyword.indexOf(argumentName) === -1)
                 return "_" + argumentName;
             return argumentName;
         }
         function escapeAttributeName(attributeName) {
-            if (idlKeywords.indexOf(attributeName) != -1 && AttributeNameKeyword.indexOf(attributeName) == -1)
+            if (idlKeywords.indexOf(attributeName) !== -1 && AttributeNameKeyword.indexOf(attributeName) === -1)
                 return "_" + attributeName;
             return attributeName;
         }
         function escapeIdentifier(identifier) {
-            if (idlKeywords.indexOf(identifier) != -1)
+            if (idlKeywords.indexOf(identifier) !== -1)
                 return "_" + identifier;
             return identifier;
         }
@@ -290,7 +290,7 @@ define(
             var attr = { "class": "idl" };
             var $pre = $("<pre></pre>").attr(attr);
             $pre.html(parse.map(function(defn) { return writeDefinition(defn, -1, msg); })
-                           .join('<br><br>'));
+                           .join('\n\n'));
             return $pre;
         }
 
@@ -367,9 +367,9 @@ define(
                 if (it.type === "serializer") return;
                 var len = idlType2Text(it.idlType).length;
                 if (it.static) len += 7;
-                if (it.type == "attribute") maxAttr = (len > maxAttr) ? len : maxAttr;
-                else if (it.type == "operation") maxMeth = (len > maxMeth) ? len : maxMeth;
-                else if (it.type == "const") maxConst = (len > maxConst) ? len : maxConst;
+                if (it.type === "attribute") maxAttr = (len > maxAttr) ? len : maxAttr;
+                else if (it.type === "operation") maxMeth = (len > maxMeth) ? len : maxMeth;
+                else if (it.type === "const") maxConst = (len > maxConst) ? len : maxConst;
             });
             var children = obj.members
                               .map(function (ch) {
@@ -495,7 +495,7 @@ define(
                     case "exception":
                     case "interface":
                         fullPath = combinePath(defn.name);
-                        if (defn.type != "enum") {
+                        if (defn.type !== "enum") {
                             computeRefTitles(defn.members, fullPath, definitionMap);
                         }
                         break;
@@ -559,7 +559,7 @@ define(
                     if (definitionMap[path])
                         return path;
                     var firstDot = path.indexOf('.');
-                    if (firstDot == -1)
+                    if (firstDot === -1)
                         break;
                     path = path.slice(firstDot + 1);
                 }
@@ -569,7 +569,7 @@ define(
             if (!result) {
                 // If the path is an operation or serializer, we want to try again without the parameters.
                 var paramStart = fullPath.indexOf("(");
-                if (paramStart == -1)
+                if (paramStart === -1)
                     return undefined;
                 result = searchSuffixes(fullPath.slice(0, paramStart));
             }
@@ -577,7 +577,7 @@ define(
                 return undefined;
             var dfn = definitionMap[result];
             // Mark the definition as code.
-            if (dfn.children('code').length == 0 && dfn.parents('code').length == 0)
+            if (dfn.children('code').length === 0 && dfn.parents('code').length === 0)
                 dfn.wrapInner('<code></code>');
             return result;
         }

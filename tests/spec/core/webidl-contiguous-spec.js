@@ -178,12 +178,12 @@ describe("Core - Contiguous WebIDL", function () {
     it("should handle operations", function () {
         $target = $("#meth-basic", doc);
         text =  "interface MethBasic {\n" +
-                "    void               basic ();\n" +
+                "    void               basic();\n" +
                 "    [Something]\n" +
-                "    void               ext ();\n" +
-                "    unsigned long long ull (short s);\n" +
-                "    SuperStar?         ull ();\n" +
-                "    SuperStar[][][][]  paramed (SuperStar[][]?[] one, [ExtAttrs] ByteString? ext, optional short maybe, short[] shorts, short[][][][] hypercubes, optional short defaulted = 3.5, optional DOMString defaulted2 = \"one\", short... variable);\n" +
+                "    void               ext();\n" +
+                "    unsigned long long ull(short s);\n" +
+                "    SuperStar?         ull();\n" +
+                "    SuperStar[][][][]  paramed(SuperStar[][]?[] one, [ExtAttrs] ByteString? ext, optional short maybe, short[] shorts, short[][][][] hypercubes, optional short defaulted = 3.5, optional DOMString defaulted2 = \"one\", short... variable);\n" +
                 "};";
         expect($target.text()).toEqual(text);
         expect($target.find(".idlMethod").length).toEqual(5);
