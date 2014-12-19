@@ -13,7 +13,7 @@ define(
                 var obj = json[k];
                 if (!obj.aliasOf) {
                     count++;
-                    html += "<dt>[" + k + "]</dt><dd><small>" + biblio.stringifyRef(obj) + "</small></dd>";
+                    html += "<dt>[" + (obj.id || k) + "]</dt><dd><small>" + biblio.stringifyRef(obj) + "</small></dd>";
                 }
             }
             return { html: html, count: count };
@@ -49,8 +49,18 @@ define(
                 $halp.find("form").on("submit", function() {
                     $status.html("Searching…");
                     var query = $search.val();
-                    $.getJSON("http://specref.jit.su/search-refs", { q: query }).then(function(json) {
-                        var output = buildResults(json);
+                    $.when(
+                        $.getJSON("http://specref.jit.su/search-refs", { q: query }),
+                        $.getJSON("http://specref.jit.su/reverse-lookup", { urls: query })
+                    ).done(function(search, revLookup) {
+                        var ref;
+                        search = search[0],
+                        revLookup = revLookup[0];
+                        for (var k in revLookup) {
+                            ref = revLookup[k];
+                            search[ref.id] = ref;
+                        }
+                        var output = buildResults(search);
                         $results.html(highlight(output.html, query));
                         $status.html(msg(query, output.count));
                         $search.select();
