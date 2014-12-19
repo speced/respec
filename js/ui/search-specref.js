@@ -26,6 +26,14 @@ define(
             return 'Your search for "' + query + '" did not match any references in the Specref database.<br>Sorry. :\'(';
         }
         
+        function highlight(txt, searchString) {
+            var regexp = new RegExp("(<[^>]+>)|(" + searchString + ")", "gi");
+            return (txt || "").replace(regexp, function wrap(_, tag, txt) {
+                if (tag) return tag;
+                return "<strong style='font-weight: inherit; background-color: yellow'>" + txt + "</strong>";
+            });
+        }
+        
         return {
             show: function (ui) {
                 var $halp = $("<div><form><p><input name=q type=search> <input type=submit value=search /></p></form></div");
@@ -43,7 +51,7 @@ define(
                     var query = $search.val();
                     $.getJSON("http://specref.jit.su/search-refs", { q: query }).then(function(json) {
                         var output = buildResults(json);
-                        $results.html(output.html);
+                        $results.html(highlight(output.html, query));
                         $status.html(msg(query, output.count));
                         $search.select();
                     });
