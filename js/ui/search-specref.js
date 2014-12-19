@@ -50,8 +50,8 @@ define(
                     $status.html("Searching…");
                     var query = $search.val();
                     $.when(
-                        $.getJSON("http://specref.jit.su/search-refs", { q: query }),
-                        $.getJSON("http://specref.jit.su/reverse-lookup", { urls: query })
+                        $.getJSON("https://specref.jit.su/search-refs", { q: query }),
+                        $.getJSON("https://specref.jit.su/reverse-lookup", { urls: query })
                     ).done(function(search, revLookup) {
                         var ref;
                         search = search[0],
