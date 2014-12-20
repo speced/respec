@@ -62,6 +62,24 @@ describe("Core — Issues and Notes", function () {
             flushIframes();
         });
     });
+    it("should process warnings", function () {
+      var doc;
+        runs(function () {
+            makeRSDoc({
+                        config: basicConfig
+                    ,   body: $("<section><p>BLAH <span class='warning'>WARN-INLINE</span></p><p class='warning' title='WARN-TIT'>WARNING</p>" +
+                                "<p class='issue' title='ISS-TIT'>ISSUE</p></section>")
+                    },
+                    function (rsdoc) { doc = rsdoc; });
+        });
+        waitsFor(function () { return doc; }, MAXOUT);
+        runs(function () {
+          var $sec = $("section", doc);
+          expect($sec.find(".warning").length).toEqual(2);
+          expect($sec.find(".warning-title").length).toEqual(1);
+          expect($sec.find(".warning-title").text()).toEqual("Warning: WARN-TIT");
+        });
+    });
     it("should use data-number for issue and note numbers", function () {
       var doc;
       runs(function () {
