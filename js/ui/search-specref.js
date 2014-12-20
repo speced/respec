@@ -13,7 +13,7 @@ define(
                 var obj = json[k];
                 if (!obj.aliasOf) {
                     count++;
-                    html += "<dt>[" + k + "]</dt><dd><small>" + biblio.stringifyRef(obj) + "</small></dd>";
+                    html += "<dt>[" + (obj.id || k) + "]</dt><dd><small>" + biblio.stringifyRef(obj) + "</small></dd>";
                 }
             }
             return { html: html, count: count };
@@ -24,6 +24,14 @@ define(
                 return 'We found ' + pluralize(count, 'result', 'results') + ' for your search for "' + query + '".';
             }
             return 'Your search for "' + query + '" did not match any references in the Specref database.<br>Sorry. :\'(';
+        }
+        
+        function highlight(txt, searchString) {
+            var regexp = new RegExp("(<[^>]+>)|(" + searchString + ")", "gi");
+            return (txt || "").replace(regexp, function wrap(_, tag, txt) {
+                if (tag) return tag;
+                return "<strong style='font-weight: inherit; background-color: yellow'>" + txt + "</strong>";
+            });
         }
         
         return {
@@ -41,9 +49,19 @@ define(
                 $halp.find("form").on("submit", function() {
                     $status.html("Searching…");
                     var query = $search.val();
-                    $.getJSON("http://specref.jit.su/search-refs", { q: query }).then(function(json) {
-                        var output = buildResults(json);
-                        $results.html(output.html);
+                    $.when(
+                        $.getJSON("https://specref.jit.su/search-refs", { q: query }),
+                        $.getJSON("https://specref.jit.su/reverse-lookup", { urls: query })
+                    ).done(function(search, revLookup) {
+                        var ref;
+                        search = search[0],
+                        revLookup = revLookup[0];
+                        for (var k in revLookup) {
+                            ref = revLookup[k];
+                            search[ref.id] = ref;
+                        }
+                        var output = buildResults(search);
+                        $results.html(highlight(output.html, query));
                         $status.html(msg(query, output.count));
                         $search.select();
                     });

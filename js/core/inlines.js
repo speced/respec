@@ -22,9 +22,9 @@ define(
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/inlines");
                 doc.normalize();
-                if (!conf.normativeReferences) { conf.normativeReferences = {} };
-                if (!conf.informativeReferences) { conf.informativeReferences = {} };
-                if (!conf.respecRFC2119) { conf.respecRFC2119 = {} };
+                if (!conf.normativeReferences) conf.normativeReferences = {};
+                if (!conf.informativeReferences) conf.informativeReferences = {};
+                if (!conf.respecRFC2119) conf.respecRFC2119 = {};
 
                 // PRE-PROCESSING
                 var abbrMap = {}, acroMap = {};
@@ -62,12 +62,7 @@ define(
                                 matched = matched.split(/\s+/).join(" ");
                                 df.appendChild($("<em/>").attr({ "class": "rfc2119", title: matched }).text(matched)[0]);
                                 // remember which ones were used
-                                if (conf.respecRFC2119[matched]) {
-                                    conf.respecRFC2119[matched]++;
-                                } 
-                                else {
-                                    conf.respecRFC2119[matched] = 1;
-                                }
+                                conf.respecRFC2119[matched] = true;
                             }
                             // BIBREF
                             else if (/^\[\[/.test(matched)) {
