@@ -18,7 +18,7 @@ define(
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/issues-notes");
-                var $ins = $(".issue, .note");
+                var $ins = $(".issue, .note, .warning");
                 if ($ins.length) {
                     $(doc).find("head link").first().before($("<style/>").text(css));
                     var hasDataNum = $(".issue[data-number]").length > 0
@@ -26,12 +26,13 @@ define(
                     $ins.each(function (i, inno) {
                         var $inno = $(inno)
                         ,   isIssue = $inno.hasClass("issue")
+                        ,   isWarning = $inno.hasClass("warning")
                         ,   isFeatureAtRisk = $inno.hasClass("atrisk")
                         ,   isInline = $inno.css("display") != "block"
                         ,   dataNum = $inno.attr("data-number")
                         ,   report = { inline: isInline, content: $inno.html() }
                         ;
-                        report.type = isIssue ? "issue" : "note";
+                        report.type = isIssue ? "issue" : isWarning ? "warning" : "note";
 
                         if (isIssue && !isInline && !hasDataNum) {
                             issueNum++;
@@ -45,7 +46,7 @@ define(
                         if (!isInline) {
                             var $div = $("<div class='" + report.type + (isFeatureAtRisk ? " atrisk" : "") + "'></div>")
                             ,   $tit = $("<div class='" + report.type + "-title'><span></span></div>")
-                            ,   text = isIssue ? (isFeatureAtRisk ? "Feature at Risk" : "Issue") : "Note"
+                            ,   text = isIssue ? (isFeatureAtRisk ? "Feature at Risk" : "Issue") : isWarning ? "Warning" : "Note"
                             ;
                             if (isIssue) {
                                 if (hasDataNum) {
