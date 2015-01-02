@@ -97,13 +97,18 @@ define(
             Handlebars.registerHelper("join", function(arr, between, options) {
                 return new Handlebars.SafeString(arr.map(function(elem) { return options.fn(elem); }).join(between));
             });
-            // A block helper that emits  an <a href> around its contents
-            // if obj.refTitle exists. If it exists, that implies that
+            // A block helper that emits an <a title> around its contents
+            // if obj.dfn exists. If it exists, that implies that
             // there's another <dfn> for the object.
             Handlebars.registerHelper("tryLink", function(obj, options) {
                 var content = options.fn(this);
-                if (obj.refTitle) {
-                    return "<a title='" + Handlebars.Utils.escapeExpression(obj.refTitle) + "'>" + content + "</a>";
+                if (obj.dfn) {
+                    var result = "<a for='" + Handlebars.Utils.escapeExpression(obj.linkFor || "") + "'";
+                    if (obj.name) {
+                        result += " title='" + Handlebars.Utils.escapeExpression(obj.name) + "'";
+                    }
+                    result += ">" + content + "</a>";
+                    return result;
                 } else {
                     return content;
                 }
@@ -475,111 +480,113 @@ define(
             return idlDictMemberTmpl(opt);
         }
 
-        // Each entity defined in IDL has a complete path like
-        // "window.Interface.operation(ParamType1, optional ParamType2)". This
-        // function recursively computes the path of everything in a parse
-        // tree, and uses findRefTitle() to assign a "suffix" of the path to the
-        // parse node's 'refTitle' attribute.
-        function computeRefTitles(parse, root, definitionMap) {
-            function combinePath(name) {
-                if (root === "")
-                    return name;
-                return root + "." + name;
-            }
+        // Each entity defined in IDL is either a top- or second-level entity:
+        // Interface or Interface.member. This function finds the <dfn>
+        // element defining each entity and attaches it to the entity's
+        // 'refTitle' property, and records that it describes an IDL entity by
+        // adding a [data-idl] attribute.
+        function linkDefinitions(parse, definitionMap, parent, msg) {
             parse.forEach(function(defn) {
-                var fullPath;
+                var name;
                 switch (defn.type) {
+                    // Top-level entities with linkable members.
                     case "callback interface":
                     case "dictionary":
-                    case "enum":
                     case "exception":
                     case "interface":
-                        fullPath = combinePath(defn.name);
-                        if (defn.type !== "enum") {
-                            computeRefTitles(defn.members, fullPath, definitionMap);
-                        }
+                        linkDefinitions(defn.members, definitionMap, defn.name, msg);
+                        name = defn.name;
+                        defn.idlId = "idl-def-" + name.toLowerCase();
                         break;
 
+                    // Top-level entities without linkable members.
+                    case "enum":  // TODO: link enum members.
                     case "callback":
                     case "typedef":
+                        name = defn.name;
+                        defn.idlId = "idl-def-" + name.toLowerCase();
+                        break;
+
+                    // Members of top-level entities.
                     case "attribute":
                     case "const":
                     case "field":
-                        fullPath = combinePath(defn.name);
+                        name = defn.name;
+                        defn.idlId = "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
                         break;
-
                     case "operation":
-                        fullPath = (combinePath(defn.name) + '(' +
-                                    defn.arguments.map(function(arg) {
-                                        var optional = arg.optional ? "optional-" : "";
-                                        var variadic = arg.variadic ? "..." : "";
-                                        return optional + idlType2Text(arg.idlType) + variadic;
-                                    }).join(',') + ')');
+                        name = defn.name;
+                        defn.idlId = ("idl-def-" + parent.toLowerCase() + "-" +
+                                      name.toLowerCase() + '(' +
+                                      defn.arguments.map(function(arg) {
+                                          var optional = arg.optional ? "optional-" : "";
+                                          var variadic = arg.variadic ? "..." : "";
+                                          return optional + idlType2Text(arg.idlType).toLowerCase() + variadic;
+                                      }).join(',') + ')');
                         break;
                     case "iterator":
-                        fullPath = combinePath("iterator");
+                        name = "iterator";
+                        defn.idlId = "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
                         break;
                     case "serializer":
-                        fullPath = combinePath("serializer");
+                        name = "serializer";
+                        defn.idlId = "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
                         break;
 
                     case "implements":
                         // Nothing to link here.
                         return;
                     default:
-                        throw new Error("Unexpected type when computing refTitles: " + defn.type);
+                        msg.pub("error", "Unexpected type when computing refTitles: " + defn.type);
+                        return;
                 }
-                defn.fullPath = fullPath.toLowerCase();
-                defn.refTitle = findRefTitle(defn.fullPath, definitionMap);
+                if (parent) {
+                    defn.linkFor = parent;
+                }
+                defn.dfn = findDfn(parent, name, definitionMap, msg);
             });
         }
 
-        // This function looks for "suffixes" of 'fullPath' in the document's
-        // <dfn> elements and sets the refTitle of the entity's representation
-        // in the parse tree to point to that element. For operations,
-        // versions of the 'fullPath' are also tried with the parameters
-        // removed.
+        // This function looks for a <dfn> element whose title is 'name' and
+        // that is "for" 'parent', which is the empty string when 'name'
+        // refers to a top-level entity. For top-level entities, <dfn>
+        // elements that inherit a non-empty [dfn-for] attribute are also
+        // counted as matching.
         //
-        // When a matching <dfn> is found, it's given <code> formatting.  If
-        // no <dfn> is found, the function returns 'undefined'.
-        //
-        // Suffixes are tried in descending order of precision. For example,
-        // in the path "window.Interface.operation(ParamType1, optional
-        // ParamType2)", the order would be:
-        //  1) window.Interface.operation(ParamType1, optional ParamType2)
-        //  2) Interface.operation(ParamType1, optional ParamType2)
-        //  3) operation(ParamType1, optional ParamType2)
-        //  4) window.Interface.operation
-        //  5) Interface.operation
-        //  6) operation
-        function findRefTitle(fullPath, definitionMap) {
-            fullPath = fullPath.toLowerCase();
-            function searchSuffixes(path) {
-                while (true) {
-                    if (definitionMap[path])
-                        return path;
-                    var firstDot = path.indexOf('.');
-                    if (firstDot === -1)
-                        break;
-                    path = path.slice(firstDot + 1);
-                }
+        // When a matching <dfn> is found, it's given <code> formatting,
+        // marked as an IDL definition, and returned.  If no <dfn> is found,
+        // the function returns 'undefined'.
+        function findDfn(parent, name, definitionMap) {
+            parent = parent.toLowerCase();
+            name = name.toLowerCase();
+            var dfnForArray = definitionMap[name];
+            if (!dfnForArray) {
                 return undefined;
             }
-            var result = searchSuffixes(fullPath);
-            if (!result) {
-                // If the path is an operation or serializer, we want to try again without the parameters.
-                var paramStart = fullPath.indexOf("(");
-                if (paramStart === -1)
-                    return undefined;
-                result = searchSuffixes(fullPath.slice(0, paramStart));
+            // Definitions that have a title and [for] that exactly match the
+            // IDL entity:
+            var dfns = dfnForArray.filter(function(dfn) {
+                return dfn.attr('data-dfn-for') === parent;
+            });
+            // If this is a top-level entity, and we didn't find anything with
+            // an explicitly empty [for], try <dfn> that inherited a [for].
+            if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
+                var dfns = dfnForArray;
             }
-            if (!result)
+            if (dfns.length > 1) {
+                msg.pub("error", "Multiple <dfn>s for " + name + " in " + parent);
+            }
+            if (dfns.length === 0) {
                 return undefined;
-            var dfn = definitionMap[result];
+            }
+            var dfn = dfns[0];
             // Mark the definition as code.
+            dfn.attr('id', "dom-" + (parent ? parent + "-" : "") + name)
+            dfn.attr('data-idl', '');
+            dfn.attr('data-dfn-for', parent);
             if (dfn.children('code').length === 0 && dfn.parents('code').length === 0)
                 dfn.wrapInner('<code></code>');
-            return result;
+            return dfn;
         }
 
         return {
@@ -606,7 +613,7 @@ define(
                         // Skip this <pre> and move on to the next one.
                         return;
                     }
-                    computeRefTitles(parse, "", conf.definitionMap);
+                    linkDefinitions(parse, conf.definitionMap, "", msg);
                     var $df = makeMarkup(parse, msg);
                     $df.attr({id: this.id});
                     $.merge(infNames,
