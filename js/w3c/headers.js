@@ -407,7 +407,12 @@ define(
                 //  publish together but some aren't used for patent policy purposes (typically this
                 //  happens when one is foolish enough to do joint work with the TAG). In such cases,
                 //  the groups whose patent policy applies need to be listed first, and wgPatentURI
-                //  can be shorter.
+                //  can be shorter — but it still needs to be an array.
+                var wgPotentialArray = [conf.wg, conf.wgURI, conf.wgPatentURI];
+                if (
+                    wgPotentialArray.some(function (it) { return $.isArray(it); }) &&
+                    wgPotentialArray.some(function (it) { return !$.isArray(it); })
+                ) msg.pub("error", "If one of 'wg', 'wgURI', or 'wgPatentURI' is an array, they all have to be.");
                 if ($.isArray(conf.wg)) {
                     conf.multipleWGs = conf.wg.length > 1;
                     conf.wgHTML = utils.joinAnd(conf.wg, function (wg, idx) {
