@@ -53,9 +53,11 @@ define(
                                 if (!conf.permalinkEdge) {
                                     content += "&nbsp;";
                                 }
+                                var ctext = $item.text().replace("'", "&apos;") ;
+
                                 content += "<a href='#"+resourceID+"' " + urlprop + "aria-label='Permalink for "
                                         +resourceID+"' title='Permalink for "+resourceID+"'>" 
-                                        + "<span " + titprop + "content='"+$item.text()+"'>"
+                                        + "<span " + titprop + "content='"+ctext+"'>"
                                         + symbol + "</span></a></span>";
                                 $item.append(content);
                             }

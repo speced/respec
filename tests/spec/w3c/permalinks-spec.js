@@ -137,4 +137,20 @@ describe("W3C — Permalinks", function () {
             flushIframes();
         });
     });
+    it("permalinks content attribute should have special characters escaped", function () {
+        var doc;
+        runs(function () {
+            makeRSDoc({ config: basicConfig, body: $("<section class='introductory' id='sotd'>Some unique SOTD content</section><div id='testing'><h2>a heading with "+'"'+" and '</h2><p>some content</p></div>") }, 
+                      function (rsdoc) { doc = rsdoc; });
+        });
+        waitsFor(function () { return doc; }, MAXOUT);
+        runs(function () {
+            var $c = $("#testing", doc);
+            var list = $("span.permalink a span", $c) ;
+            expect(list.length).toEqual(1);
+            expect($(list[0]).attr("content")).toMatch(/'/);
+            expect($(list[0]).attr("content")).toMatch(/"/);
+            flushIframes();
+        });
+    });
 });
