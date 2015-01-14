@@ -127,7 +127,7 @@ define(
                 }
                 if (p.url) {
                     if (this.doRDFa) {
-                        ret += "<meta" + rn + " content='" + p.name + "' /><a class='u-url url p-name fn' " + rpu + " href='" + p.url + "'>"+ p.name + "</a>";
+                        ret += "<meta" + rn + " content='" + p.name + "'><a class='u-url url p-name fn' " + rpu + " href='" + p.url + "'>"+ p.name + "</a>";
                     }
                     else {
                         ret += "<a class='u-url url p-name fn' href='" + p.url + "'>"+ p.name + "</a>";
@@ -171,14 +171,14 @@ define(
                     } else {
                         ret += " alt='Logo " + (i+1) + "'";
                     }
-                    ret += "/>"
+                    ret += ">";
                 } else if (p.alt) {
                     ret += p.alt;
                 }
                 if (p.url) ret += "</a>";
                 if (p.id) ret += "</span>";
             }
-            ret += "</p>"
+            ret += "</p>";
             return new Handlebars.SafeString(ret);
         });
 
@@ -388,7 +388,7 @@ define(
                     }
                     var prefixes = "bibo: http://purl.org/ontology/bibo/ w3p: http://www.w3.org/2001/02pd/rec54#";
                     $("html").attr("prefix", prefixes);
-                    $("html>head").prepend($("<meta lang='' property='dc:language' content='en' />"))
+                    $("html>head").prepend($("<meta lang='' property='dc:language' content='en'>"));
                 }
                 // insert into document and mark with microformat
                 $("body", doc).prepend($(conf.isCGBG ? cgbgHeadersTmpl(conf) : headersTmpl(conf)))
