@@ -400,9 +400,17 @@ define(
                     msg.pub("error", "A custom SotD paragraph is required for your type of document.");
                 conf.sotdCustomParagraph = $sotd.html();
                 $sotd.remove();
+                // NOTE:
+                //  When arrays, wg and wgURI have to be the same length (and in the same order).
+                //  Technically wgURI could be longer but the rest is ignored.
+                //  However wgPatentURI can be shorter. This covers the case where multiple groups
+                //  publish together but some aren't used for patent policy purposes (typically this
+                //  happens when one is foolish enough to do joint work with the TAG). In such cases,
+                //  the groups whose patent policy applies need to be listed first, and wgPatentURI
+                //  can be shorter.
                 if ($.isArray(conf.wg)) {
                     conf.multipleWGs = conf.wg.length > 1;
-                    conf.wgHTML = utils.joinAnd($.isArray(conf.wg) ? conf.wg : [conf.wg], function (wg, idx) {
+                    conf.wgHTML = utils.joinAnd(conf.wg, function (wg, idx) {
                         return "<a href='" + conf.wgURI[idx] + "'>" + wg + "</a>";
                     });
                     var pats = [];
