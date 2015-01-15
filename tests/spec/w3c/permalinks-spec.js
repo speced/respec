@@ -40,7 +40,7 @@ describe("W3C — Permalinks", function () {
         ,   specStatus: "PER"
         ,   wgPatentURI:  "http://www.w3.org/fake-patent-uri"
         ,   includePermalinks: true
-        ,   doRDFa: false
+        ,   doRDFa: 1.1
         }
     ,   noConfig = {
             editors:    [{ name: "Shane McCarron",
@@ -148,7 +148,7 @@ describe("W3C — Permalinks", function () {
             var $c = $("#testing", doc);
             var list = $("span.permalink a span", $c) ;
             expect(list.length).toEqual(1);
-            expect($(list[0]).attr("content")).toMatch(/'/);
+            expect($(list[0]).attr("content")).toMatch(/&apos;/);
             expect($(list[0]).attr("content")).toMatch(/"/);
             flushIframes();
         });

@@ -46,20 +46,44 @@ define(
                             if (resourceID != null) {
                                 // we have an id.  add a permalink
                                 // right after the h* element
-                                var type = conf.doRDFa ? "typeof='bookmark' " : "";
-                                var urlprop = conf.doRDFa ? "property='url' " : "";
-                                var titprop = conf.doRDFa ? "property='title' " : "";
-                                var content = "<span " + type + "class='permalink'>";
-                                if (!conf.permalinkEdge) {
-                                    content += "&nbsp;";
+                                var theNode = $(document.createElement('span')) ;
+                                theNode.attr('class', 'permalink') ;
+                                if (conf.doRDFa) {
+                                    theNode.attr('typeof', 'bookmark')
                                 }
+
+
                                 var ctext = $item.text().replace("'", "&apos;") ;
 
-                                content += "<a href='#"+resourceID+"' " + urlprop + "aria-label='Permalink for "
-                                        +resourceID+"' title='Permalink for "+resourceID+"'>" 
-                                        + "<span " + titprop + "content='"+ctext+"'>"
-                                        + symbol + "</span></a></span>";
-                                $item.append(content);
+                                var el = $(document.createElement('a')) ;
+                                el.attr({
+                                    href: '#'+resourceID,
+                                    'aria-label': 'Permalink for '+ctext,
+                                    title: 'Permalink for '+ctext } ) ;
+
+                                if (conf.doRDFa) {
+                                    el.attr('property', 'url') ;
+                                }
+                                
+                                var sym = $(document.createElement('span')) ;
+                                if (conf.doRDFa) {
+                                    sym.attr({
+                                        property: 'title',
+                                        content: ctext } ) ;
+                                        
+                                }
+                                sym.append(symbol) ;
+                                el.append(sym) ;
+                                theNode.append(el) ;
+
+                                // if this is not being put at
+                                // page edge, then separate it
+                                // from the heading with a
+                                // non-breaking space
+                                if (!conf.permalinkEdge) {
+                                   $item.append("&nbsp;") ;
+                                }
+                                $item.append(theNode);
                             }
                         }
                     });
