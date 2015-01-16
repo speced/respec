@@ -127,7 +127,7 @@ define(
                 }
                 if (p.url) {
                     if (this.doRDFa) {
-                        ret += "<meta" + rn + " content='" + p.name + "' /><a class='u-url url p-name fn' " + rpu + " href='" + p.url + "'>"+ p.name + "</a>";
+                        ret += "<meta" + rn + " content='" + p.name + "'><a class='u-url url p-name fn' " + rpu + " href='" + p.url + "'>"+ p.name + "</a>";
                     }
                     else {
                         ret += "<a class='u-url url p-name fn' href='" + p.url + "'>"+ p.name + "</a>";
@@ -171,14 +171,14 @@ define(
                     } else {
                         ret += " alt='Logo " + (i+1) + "'";
                     }
-                    ret += "/>"
+                    ret += ">";
                 } else if (p.alt) {
                     ret += p.alt;
                 }
                 if (p.url) ret += "</a>";
                 if (p.id) ret += "</span>";
             }
-            ret += "</p>"
+            ret += "</p>";
             return new Handlebars.SafeString(ret);
         });
 
@@ -388,7 +388,7 @@ define(
                     }
                     var prefixes = "bibo: http://purl.org/ontology/bibo/ w3p: http://www.w3.org/2001/02pd/rec54#";
                     $("html").attr("prefix", prefixes);
-                    $("html>head").prepend($("<meta lang='' property='dc:language' content='en' />"))
+                    $("html>head").prepend($("<meta lang='' property='dc:language' content='en'>"));
                 }
                 // insert into document and mark with microformat
                 $("body", doc).prepend($(conf.isCGBG ? cgbgHeadersTmpl(conf) : headersTmpl(conf)))
@@ -400,9 +400,22 @@ define(
                     msg.pub("error", "A custom SotD paragraph is required for your type of document.");
                 conf.sotdCustomParagraph = $sotd.html();
                 $sotd.remove();
+                // NOTE:
+                //  When arrays, wg and wgURI have to be the same length (and in the same order).
+                //  Technically wgURI could be longer but the rest is ignored.
+                //  However wgPatentURI can be shorter. This covers the case where multiple groups
+                //  publish together but some aren't used for patent policy purposes (typically this
+                //  happens when one is foolish enough to do joint work with the TAG). In such cases,
+                //  the groups whose patent policy applies need to be listed first, and wgPatentURI
+                //  can be shorter — but it still needs to be an array.
+                var wgPotentialArray = [conf.wg, conf.wgURI, conf.wgPatentURI];
+                if (
+                    wgPotentialArray.some(function (it) { return $.isArray(it); }) &&
+                    wgPotentialArray.some(function (it) { return !$.isArray(it); })
+                ) msg.pub("error", "If one of 'wg', 'wgURI', or 'wgPatentURI' is an array, they all have to be.");
                 if ($.isArray(conf.wg)) {
                     conf.multipleWGs = conf.wg.length > 1;
-                    conf.wgHTML = utils.joinAnd($.isArray(conf.wg) ? conf.wg : [conf.wg], function (wg, idx) {
+                    conf.wgHTML = utils.joinAnd(conf.wg, function (wg, idx) {
                         return "<a href='" + conf.wgURI[idx] + "'>" + wg + "</a>";
                     });
                     var pats = [];
