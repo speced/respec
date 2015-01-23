@@ -1394,7 +1394,7 @@ define(
                 if (!conf.noIDLSorting) conf.noIDLSorting = false;
                 if (!conf.noIDLSectionTitle) conf.noIDLSectionTitle = false;
                 sn = new simpleNode(document);
-                var $idl = $(".idl", doc)
+                var $idl = $(".idl", doc).not("pre")
                 ,   finish = function () {
                         msg.pub("end", "core/webidl");
                         cb();

@@ -42,18 +42,19 @@
     <script src="spec/core/inlines-spec.js"></script>
     <script src="spec/core/structure-spec.js"></script>
     <script src="spec/core/webidl-oldschool-spec.js"></script>
+    <script src="spec/core/webidl-contiguous-spec.js"></script>
     <script src="spec/core/markdown-spec.js"></script>
 
     <!-- SOURCE -->
     <!-- none currently -->
-      
+
     <script type="text/javascript">
       var console_reporter = new jasmine.ConsoleReporter()
       jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
       jasmine.getEnv().addReporter(console_reporter);
-      
+
       jasmine.getEnv().updateInterval = 1000;
-      
+
       var currentWindowOnload = window.onload;
       window.onload = function() {
           if (currentWindowOnload) currentWindowOnload();
