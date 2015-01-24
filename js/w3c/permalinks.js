@@ -49,7 +49,7 @@ define(
                                 var theNode = $("<span></span>");
                                 theNode.attr('class', 'permalink');
                                 if (conf.doRDFa) theNode.attr('typeof', 'bookmark');
-                                var ctext = $item.text().replace("'", "'");
+                                var ctext = $item.text();
                                 var el = $("<a></a>");
                                 el.attr({
                                     href:         '#' + resourceID,
