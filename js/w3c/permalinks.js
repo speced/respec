@@ -24,19 +24,19 @@ define(
                 msg.pub("start", "w3c/permalinks");
                 if (conf.includePermalinks) {
                     var symbol = conf.permalinkSymbol || '§';
-                    var style = "<style>" + css(conf) + "</style>" ;
+                    var style = "<style>" + css(conf) + "</style>";
 
-                    $(doc).find("head link").first().before(style) ;
+                    $(doc).find("head link").first().before(style);
                     var $secs = $(doc).find("h2, h3, h4, h5, h6");
                     $secs.each(function(i, item) {
-                        var $item = $(item) ;
+                        var $item = $(item);
                         if (!$item.hasClass("nolink")) {
                             var resourceID = $item.attr('id');
 
                             var $par = $item.parent();
                             if ($par.is("section") || $par.is("div")) {
                                 if (!$par.hasClass("introductory") && !$par.hasClass("nolink")) {
-                                    resourceID = $par.attr('id') ;
+                                    resourceID = $par.attr('id');
                                 } else {
                                     resourceID = null;
                                 }
@@ -46,18 +46,34 @@ define(
                             if (resourceID != null) {
                                 // we have an id.  add a permalink
                                 // right after the h* element
-                                var type = conf.doRDFa ? "typeof='bookmark' " : "";
-                                var urlprop = conf.doRDFa ? "property='url' " : "";
-                                var titprop = conf.doRDFa ? "property='title' " : "";
-                                var content = "<span " + type + "class='permalink'>";
-                                if (!conf.permalinkEdge) {
-                                    content += "&nbsp;";
+                                var theNode = $("<span></span>");
+                                theNode.attr('class', 'permalink');
+                                if (conf.doRDFa) theNode.attr('typeof', 'bookmark');
+                                var ctext = $item.text();
+                                var el = $("<a></a>");
+                                el.attr({
+                                    href:         '#' + resourceID,
+                                    'aria-label': 'Permalink for ' + ctext,
+                                    title:        'Permalink for ' + ctext });
+                                if (conf.doRDFa) el.attr('property', 'url');
+                                var sym = $("<span></span>");
+                                if (conf.doRDFa) {
+                                    sym.attr({
+                                        property: 'title',
+                                        content:  ctext });
                                 }
-                                content += "<a href='#"+resourceID+"' " + urlprop + "aria-label='Permalink for "
-                                        +resourceID+"' title='Permalink for "+resourceID+"'>" 
-                                        + "<span " + titprop + "content='"+$item.text()+"'>"
-                                        + symbol + "</span></a></span>";
-                                $item.append(content);
+                                sym.append(symbol);
+                                el.append(sym);
+                                theNode.append(el);
+
+                                // if this is not being put at
+                                // page edge, then separate it
+                                // from the heading with a
+                                // non-breaking space
+                                if (!conf.permalinkEdge) {
+                                   $item.append("&nbsp;");
+                                }
+                                $item.append(theNode);
                             }
                         }
                     });
