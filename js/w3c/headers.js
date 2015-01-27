@@ -82,9 +82,15 @@
 //          - value: The value that will appear in the <dd> (e.g., "GitHub"). Optional.
 //          - href: a URL for the value (e.g., "http://foo.com/issues"). Optional.
 //          - class: a string representing CSS classes. Optional.
-//  - license: can either be "w3c" (for the currently default, restrictive license) or "cc-by" for
-//      the friendly persmissive dual license that nice people use (if they are participating in the
-//      HTML WG licensing experiment)
+//  - license: can be one of the following
+//      - "w3c", currently the default (restrictive) license
+//      - "cc-by", which is experimentally available in some groups (but likely to be phased out).
+//          Note that this is a dual licensing regime.
+//      - "cc0", an extremely permissive license. This only works with the webspecs specStatus,
+//          and it is only recommended if you are working on a document that is intended to be
+//          pushed to the WHATWG
+//      - "w3c-software", a permissive and attributions license (but GPL-compatible). This is only
+//          available with webspecs and is the recommended value. It is the default for webspecs.
 
 define(
     ["handlebars"
@@ -248,10 +254,12 @@ define(
                 // Default include RDFa document metadata
                 if (conf.doRDFa === undefined) conf.doRDFa = true;
                 // validate configuration and derive new configuration values
-                if (!conf.license) conf.license = "w3c";
-                // NOTE: this is currently only available to the HTML WG
-                // this check will be relaxed later
-                conf.isCCBY = conf.license === "cc-by" && conf.wgPatentURI === "http://www.w3.org/2004/01/pp-impl/40318/status";
+                if (!conf.license) conf.license = conf.specStatus === "webspec" ? "w3c-software" : "w3c";
+                conf.isCCBY = conf.license === "cc-by";
+                if (conf.specStatus === "webspec" && !$.inArray(conf.license, ["cc0", "w3c-software"]))
+                    msg.pub("error", "You cannot use that license with WebSpecs.");
+                if (conf.specStatus !== "webspec" && !$.inArray(conf.license, ["cc-by", "w3c"]))
+                    msg.pub("error", "You cannot use that license with that type of document.");
                 conf.isCGBG = $.inArray(conf.specStatus, this.cgbg) >= 0;
                 conf.isCGFinal = conf.isCGBG && /G-FINAL$/.test(conf.specStatus);
                 conf.isBasic = (conf.specStatus === "base");
@@ -259,6 +267,7 @@ define(
                 conf.isRegular = (!conf.isCGBG && !conf.isBasic && !conf.isWebSpec);
                 if (!conf.specStatus) msg.pub("error", "Missing required configuration: specStatus");
                 if (conf.isRegular && !conf.shortName) msg.pub("error", "Missing required configuration: shortName");
+                if (conf.isWebSpec && !conf.repository) msg.pub("error", "Missing required configuration: repository (as in 'darobin/respec')");
                 conf.title = doc.title || "No Title";
                 if (!conf.subtitle) conf.subtitle = "";
                 if (!conf.publishDate) {
