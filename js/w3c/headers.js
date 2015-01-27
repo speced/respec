@@ -93,8 +93,10 @@ define(
     ,"tmpl!w3c/templates/sotd.html"
     ,"tmpl!w3c/templates/cgbg-headers.html"
     ,"tmpl!w3c/templates/cgbg-sotd.html"
+    ,"tmpl!w3c/templates/webspecs-headers.html"
+    ,"tmpl!w3c/templates/webspecs-sotd.html"
     ],
-    function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl) {
+    function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl, wsHeadersTmpl, wsSotdTmpl) {
         Handlebars.registerHelper("showPeople", function (name, items) {
             // stuff to handle RDFa
             var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "", bn = "";
@@ -238,7 +240,7 @@ define(
             ,   "LC-NOTE":      "Last Call Working Draft"
             }
         ,   recTrackStatus: ["FPWD", "WD", "FPLC", "LC", "CR", "PR", "PER", "REC"]
-        ,   noTrackStatus:  ["MO", "unofficial", "base", "finding", "draft-finding", "CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"]
+        ,   noTrackStatus:  ["MO", "unofficial", "base", "finding", "draft-finding", "CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL", "webspec"]
         ,   cgbg:           ["CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"]
         ,   precededByAn:   ["ED", "IG-NOTE"]
         ,   run:    function (conf, doc, cb, msg) {
@@ -254,8 +256,10 @@ define(
                 conf.isCGBG = $.inArray(conf.specStatus, this.cgbg) >= 0;
                 conf.isCGFinal = conf.isCGBG && /G-FINAL$/.test(conf.specStatus);
                 conf.isBasic = (conf.specStatus === "base");
+                conf.isWebSpec = (conf.specStatus === "webspec");
+                conf.isRegular = (!conf.isCGBG && !conf.isBasic && !conf.isWebSpec);
                 if (!conf.specStatus) msg.pub("error", "Missing required configuration: specStatus");
-                if ((!conf.isCGBG && !conf.isBasic) && !conf.shortName) msg.pub("error", "Missing required configuration: shortName");
+                if (conf.isRegular && !conf.shortName) msg.pub("error", "Missing required configuration: shortName");
                 conf.title = doc.title || "No Title";
                 if (!conf.subtitle) conf.subtitle = "";
                 if (!conf.publishDate) {
@@ -278,12 +282,12 @@ define(
                 var publishSpace = "TR";
                 if (conf.specStatus === "Member-SUBM") publishSpace = "Submission";
                 else if (conf.specStatus === "Team-SUBM") publishSpace = "TeamSubmission";
-                if (!conf.isCGBG && !conf.isBasic) conf.thisVersion =  "http://www.w3.org/" + publishSpace + "/" +
-                                                                      conf.publishDate.getFullYear() + "/" +
-                                                                      conf.maturity + "-" + conf.shortName + "-" +
-                                                                      utils.concatDate(conf.publishDate) + "/";
+                if (conf.isRegular) conf.thisVersion =  "http://www.w3.org/" + publishSpace + "/" +
+                                                          conf.publishDate.getFullYear() + "/" +
+                                                          conf.maturity + "-" + conf.shortName + "-" +
+                                                          utils.concatDate(conf.publishDate) + "/";
                 if (conf.specStatus === "ED") conf.thisVersion = conf.edDraftURI;
-                if (!conf.isCGBG && !conf.isBasic) conf.latestVersion = "http://www.w3.org/" + publishSpace + "/" + conf.shortName + "/";
+                if (conf.isRegular) conf.latestVersion = "http://www.w3.org/" + publishSpace + "/" + conf.shortName + "/";
                 if (conf.isTagFinding) {
                     conf.latestVersion = "http://www.w3.org/2001/tag/doc/" + conf.shortName;
                     conf.thisVersion = conf.latestVersion + "-" + utils.concatDate(conf.publishDate, "-");
@@ -301,7 +305,7 @@ define(
                     else if (conf.isCGBG) {
                         conf.prevVersion = conf.prevVersion || "";
                     }
-                    else if (conf.isBasic) {
+                    else if (conf.isBasic || conf.isWebSpec) {
                         conf.prevVersion = "";
                     }
                     else {
@@ -391,8 +395,11 @@ define(
                     $("html>head").prepend($("<meta lang='' property='dc:language' content='en'>"));
                 }
                 // insert into document and mark with microformat
-                $("body", doc).prepend($(conf.isCGBG ? cgbgHeadersTmpl(conf) : headersTmpl(conf)))
-                              .addClass("h-entry");
+                var bp;
+                if (conf.isCGBG) bp = cgbgHeadersTmpl(conf);
+                else if (conf.isWebSpec) bp = wsHeadersTmpl(conf);
+                else bp = headersTmpl(conf);
+                $("body", doc).prepend($(bp)).addClass("h-entry");
 
                 // handle SotD
                 var $sotd = $("#sotd");
@@ -443,7 +450,11 @@ define(
                     msg.pub("error", "IG-NOTEs must link to charter's disclosure section using charterDisclosureURI");
                 // ensure subjectPrefix is encoded before using template
                 if (conf.subjectPrefix !== '') conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
-                $(conf.isCGBG ? cgbgSotdTmpl(conf) : sotdTmpl(conf)).insertAfter($("#abstract"));
+                var sotd;
+                if (conf.isCGBG) sotd = cgbgSotdTmpl(conf);
+                else if (conf.isWebSpec) sotd = wsSotdTmpl(conf);
+                else sotd = sotdTmpl(conf);
+                $(sotd).insertAfter($("#abstract"));
 
                 if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
                     msg.pub("error", "CR, PR, and REC documents need to have an implementationReportURI defined.");
