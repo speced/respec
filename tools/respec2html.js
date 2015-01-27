@@ -1,4 +1,4 @@
-#!/usr/local/bin/phantomjs
+#!/usr/bin/env phantomjs
 /*global phantom, respecEvents, respecConfig*/
 
 // respec2html is a command line utility that converts a ReSpec source file to an HTML file.
