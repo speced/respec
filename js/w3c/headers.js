@@ -94,9 +94,8 @@ define(
     ,"tmpl!w3c/templates/cgbg-headers.html"
     ,"tmpl!w3c/templates/cgbg-sotd.html"
     ,"tmpl!w3c/templates/webspecs-headers.html"
-    ,"tmpl!w3c/templates/webspecs-sotd.html"
     ],
-    function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl, wsHeadersTmpl, wsSotdTmpl) {
+    function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl, wsHeadersTmpl) {
         Handlebars.registerHelper("showPeople", function (name, items) {
             // stuff to handle RDFa
             var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "", bn = "";
@@ -452,9 +451,9 @@ define(
                 if (conf.subjectPrefix !== '') conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
                 var sotd;
                 if (conf.isCGBG) sotd = cgbgSotdTmpl(conf);
-                else if (conf.isWebSpec) sotd = wsSotdTmpl(conf);
+                else if (conf.isWebSpec) sotd = null;
                 else sotd = sotdTmpl(conf);
-                $(sotd).insertAfter($("#abstract"));
+                if (sotd) $(sotd).insertAfter($("#abstract"));
 
                 if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
                     msg.pub("error", "CR, PR, and REC documents need to have an implementationReportURI defined.");

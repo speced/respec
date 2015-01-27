@@ -1,0 +1,20 @@
+<header>
+  <a href="http://specs.webplatform.org/" id="logo">
+    <img alt="Web Platform Specs logo" height="50" src="https://specs.webplatform.org/assets/img/logo.svg" width="50"><br>
+    <span>Web Platform Specs</span>
+  </a>
+  <h1>{{title}}</h1>
+  {{#if subtitle}}
+    <h2>{{subtitle}}</h2>
+  {{/if}}
+  <div id="meta">
+    <button class='contributors linkalike' data-repository="{{repository}}">contributors</button>•
+    <a href="https://github.com/{{repository}}/issues">bugs</a>
+    •
+    <a href="https://github.com/{{repository}}">fork me</a>
+    •
+    <a href="http://creativecommons.org/publicdomain/zero/1.0/" rel="license">CC0</a>
+    •
+    <span class="date">{{publishISODate}} (<a href="https://github.com/{{repository}}/commits">commit log</a>)</span>
+  </div>
+</header>
