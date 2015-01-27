@@ -248,6 +248,18 @@ define(
         ,   noTrackStatus:  ["MO", "unofficial", "base", "finding", "draft-finding", "CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL", "webspec"]
         ,   cgbg:           ["CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"]
         ,   precededByAn:   ["ED", "IG-NOTE"]
+        ,   licenses: {
+                cc0:    {
+                    name:   "Creative Commons 0 Public Domain Dedication"
+                ,   short:  "CC0"
+                ,   url:    "http://creativecommons.org/publicdomain/zero/1.0/"
+                }
+            ,   "w3c-software": {
+                    name:   "W3C Software Notice and License"
+                ,   short:  "W3C"
+                ,   url:    "http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231"
+                }
+            }
         ,   run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/headers");
 
@@ -260,6 +272,7 @@ define(
                     msg.pub("error", "You cannot use that license with WebSpecs.");
                 if (conf.specStatus !== "webspec" && !$.inArray(conf.license, ["cc-by", "w3c"]))
                     msg.pub("error", "You cannot use that license with that type of document.");
+                conf.licenseInfo = this.licenses[conf.license];
                 conf.isCGBG = $.inArray(conf.specStatus, this.cgbg) >= 0;
                 conf.isCGFinal = conf.isCGBG && /G-FINAL$/.test(conf.specStatus);
                 conf.isBasic = (conf.specStatus === "base");
@@ -387,6 +400,7 @@ define(
                 conf.isIGNote = (conf.specStatus === "IG-NOTE");
                 conf.dashDate = utils.concatDate(conf.publishDate, "-");
                 conf.publishISODate = utils.isoDate(conf.publishDate);
+                conf.shortISODate = conf.publishISODate.replace(/T.*/, "");
                 conf.processVersion = conf.processVersion || "2014";
                 conf.isNewProcess = conf.processVersion == "2014";
                 // configuration done - yay!
