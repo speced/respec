@@ -33,7 +33,7 @@ define(
                 }
                 else if (statStyle === "webspec") {
                     css = "https://specs.webplatform.org/assets/css/kraken.css";
-                    $('<link rel="shortcut icon" href="https://specs.webplatform.org/assets/img/icon.png">', doc)
+                    $('<link rel="icon" href="https://specs.webplatform.org/assets/img/icon.png">', doc)
                         .appendTo($("head"));
                     $(doc.createElement("script"))
                         .attr({ async: "async", src: "https://specs.webplatform.org/assets/js/kraken.js"})

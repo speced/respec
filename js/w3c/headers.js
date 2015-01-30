@@ -266,7 +266,7 @@ define(
                 // Default include RDFa document metadata
                 if (conf.doRDFa === undefined) conf.doRDFa = true;
                 // validate configuration and derive new configuration values
-                if (!conf.license) conf.license = conf.specStatus === "webspec" ? "w3c-software" : "w3c";
+                if (!conf.license) conf.license = (conf.specStatus === "webspec") ? "w3c-software" : "w3c";
                 conf.isCCBY = conf.license === "cc-by";
                 if (conf.specStatus === "webspec" && !$.inArray(conf.license, ["cc0", "w3c-software"]))
                     msg.pub("error", "You cannot use that license with WebSpecs.");
