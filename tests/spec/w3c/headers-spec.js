@@ -56,6 +56,7 @@ describe("W3C — Headers", function () {
             ,   companyURL: "http://COMPANY"
             ,   mailto:     "EMAIL"
             ,   note:       "NOTE"
+            ,   w3cid:       "1234"
             }] }, function ($ifr) {
                 expect($("dt:contains('Editors:')", $ifr[0].contentDocument).length).toEqual(0);
                 expect($("dt:contains('Editor:')", $ifr[0].contentDocument).length).toEqual(1);
@@ -66,6 +67,7 @@ describe("W3C — Headers", function () {
                 expect($dd.find("a[href='http://COMPANY']").text()).toEqual("COMPANY");
                 expect($dd.find("a[href='mailto:EMAIL']").length).toEqual(1);
                 expect($dd.find("a[href='mailto:EMAIL']").text()).toEqual("EMAIL");
+                expect($dd.get(0).dataset.editorId).toEqual("1234");
                 expect($dd.text()).toMatch(/\(NOTE\)/);
         });
         loadWithConfig({ specStatus: "REC", doRDFa: false, "editors[]": [{ name: "NAME1" }, { name: "NAME2" }] }, function ($ifr) {
