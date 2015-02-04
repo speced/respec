@@ -1,6 +1,6 @@
 {
     "name": "respec",
-    "version": "3.2.36",
+    "version": "3.2.39",
     "description": "Specification Edition Support Tool.",
     "main": "index.js",
     "directories": {
@@ -10,6 +10,9 @@
     },
     "scripts": {
         "test": "node ./tests/headless.js"
+    },
+    "bin":  {
+        "respec2html":  "./tools/respec2html.js"
     },
     "repository": {
         "type": "git",
