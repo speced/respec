@@ -97,7 +97,8 @@ define(
     function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl) {
         Handlebars.registerHelper("showPeople", function (name, items) {
             // stuff to handle RDFa
-            var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "", bn = "";
+            var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "", bn = "",
+            editorid = "";
             if (this.doRDFa) {
                 if (name === "Editor") {
                     bn = "_:editor0";
@@ -115,15 +116,18 @@ define(
             var ret = "";
             for (var i = 0, n = items.length; i < n; i++) {
                 var p = items[i];
+                if (p.w3cid) {
+                    editorid = " data-editor-id='" + parseInt(p.w3cid, 10) + "'";
+                }
                 if (this.doRDFa) {
-                  ret += "<dd class='p-author h-card vcard' " + re + "><span" + rp + ">";
+                  ret += "<dd class='p-author h-card vcard' " + re + editorid + "><span" + rp + ">";
                   if (name === "Editor") {
                     // Update to next sequence in rdf:List
                     bn = (i < n - 1) ? ("_:editor" + (i + 1)) : "rdf:nil";
                     re = " resource='" + bn + "'";
                   }
                 } else {
-                  ret += "<dd class='p-author h-card vcard'>";
+                  ret += "<dd class='p-author h-card vcard'" + editorid + ">";
                 }
                 if (p.url) {
                     if (this.doRDFa) {

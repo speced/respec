@@ -11,6 +11,9 @@
     "scripts": {
         "test": "node ./tests/headless.js"
     },
+    "bin":  {
+        "respec2html":  "./tools/respec2html.js"
+    },
     "repository": {
         "type": "git",
         "url": "git://github.com/w3c/respec.git"
