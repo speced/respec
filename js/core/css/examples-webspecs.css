@@ -1,0 +1,8 @@
+/* --- EXAMPLES CONFLICTING WITH WEBSPECS --- */
+aside.example:before, div.example:before, div.illegal-example:before, pre.example:before {
+    content:    "" !important;
+    display:    none;
+}
+div.example-title {
+    color: #ef0000;
+}
