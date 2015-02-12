@@ -263,6 +263,11 @@ define(
                 ,   short:  "W3C"
                 ,   url:    "http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231"
                 }
+            ,   "cc-by": {
+                    name:   "Creative Commons Attribution 4.0 International Public License"
+                ,   short:  "CC-BY"
+                ,   url:    "http://creativecommons.org/licenses/by/4.0/legalcode"
+                }
             }
         ,   run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/headers");
