@@ -107,7 +107,6 @@ Once these dependencies are installed, running the test suite should be as simpl
 $ npm test
 ```
 
-
 [jasmine]: http://pivotal.github.io/jasmine/
 [travis]: https://travis-ci.org/w3c/respec
 [phantomjs]: http://phantomjs.org/

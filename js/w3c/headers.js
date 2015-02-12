@@ -82,9 +82,15 @@
 //          - value: The value that will appear in the <dd> (e.g., "GitHub"). Optional.
 //          - href: a URL for the value (e.g., "http://foo.com/issues"). Optional.
 //          - class: a string representing CSS classes. Optional.
-//  - license: can either be "w3c" (for the currently default, restrictive license) or "cc-by" for
-//      the friendly persmissive dual license that nice people use (if they are participating in the
-//      HTML WG licensing experiment)
+//  - license: can be one of the following
+//      - "w3c", currently the default (restrictive) license
+//      - "cc-by", which is experimentally available in some groups (but likely to be phased out).
+//          Note that this is a dual licensing regime.
+//      - "cc0", an extremely permissive license. This only works with the webspecs specStatus,
+//          and it is only recommended if you are working on a document that is intended to be
+//          pushed to the WHATWG
+//      - "w3c-software", a permissive and attributions license (but GPL-compatible). This is only
+//          available with webspecs and is the recommended value. It is the default for webspecs.
 
 define(
     ["handlebars"
@@ -93,8 +99,9 @@ define(
     ,"tmpl!w3c/templates/sotd.html"
     ,"tmpl!w3c/templates/cgbg-headers.html"
     ,"tmpl!w3c/templates/cgbg-sotd.html"
+    ,"tmpl!w3c/templates/webspecs-headers.html"
     ],
-    function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl) {
+    function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl, wsHeadersTmpl) {
         Handlebars.registerHelper("showPeople", function (name, items) {
             // stuff to handle RDFa
             var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "", bn = "",
@@ -242,24 +249,42 @@ define(
             ,   "LC-NOTE":      "Last Call Working Draft"
             }
         ,   recTrackStatus: ["FPWD", "WD", "FPLC", "LC", "CR", "PR", "PER", "REC"]
-        ,   noTrackStatus:  ["MO", "unofficial", "base", "finding", "draft-finding", "CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"]
+        ,   noTrackStatus:  ["MO", "unofficial", "base", "finding", "draft-finding", "CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL", "webspec"]
         ,   cgbg:           ["CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"]
         ,   precededByAn:   ["ED", "IG-NOTE"]
+        ,   licenses: {
+                cc0:    {
+                    name:   "Creative Commons 0 Public Domain Dedication"
+                ,   short:  "CC0"
+                ,   url:    "http://creativecommons.org/publicdomain/zero/1.0/"
+                }
+            ,   "w3c-software": {
+                    name:   "W3C Software Notice and License"
+                ,   short:  "W3C"
+                ,   url:    "http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231"
+                }
+            }
         ,   run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/headers");
 
                 // Default include RDFa document metadata
                 if (conf.doRDFa === undefined) conf.doRDFa = true;
                 // validate configuration and derive new configuration values
-                if (!conf.license) conf.license = "w3c";
-                // NOTE: this is currently only available to the HTML WG
-                // this check will be relaxed later
-                conf.isCCBY = conf.license === "cc-by" && conf.wgPatentURI === "http://www.w3.org/2004/01/pp-impl/40318/status";
+                if (!conf.license) conf.license = (conf.specStatus === "webspec") ? "w3c-software" : "w3c";
+                conf.isCCBY = conf.license === "cc-by";
+                if (conf.specStatus === "webspec" && !$.inArray(conf.license, ["cc0", "w3c-software"]))
+                    msg.pub("error", "You cannot use that license with WebSpecs.");
+                if (conf.specStatus !== "webspec" && !$.inArray(conf.license, ["cc-by", "w3c"]))
+                    msg.pub("error", "You cannot use that license with that type of document.");
+                conf.licenseInfo = this.licenses[conf.license];
                 conf.isCGBG = $.inArray(conf.specStatus, this.cgbg) >= 0;
                 conf.isCGFinal = conf.isCGBG && /G-FINAL$/.test(conf.specStatus);
                 conf.isBasic = (conf.specStatus === "base");
+                conf.isWebSpec = (conf.specStatus === "webspec");
+                conf.isRegular = (!conf.isCGBG && !conf.isBasic && !conf.isWebSpec);
                 if (!conf.specStatus) msg.pub("error", "Missing required configuration: specStatus");
-                if ((!conf.isCGBG && !conf.isBasic) && !conf.shortName) msg.pub("error", "Missing required configuration: shortName");
+                if (conf.isRegular && !conf.shortName) msg.pub("error", "Missing required configuration: shortName");
+                if (conf.isWebSpec && !conf.repository) msg.pub("error", "Missing required configuration: repository (as in 'darobin/respec')");
                 conf.title = doc.title || "No Title";
                 if (!conf.subtitle) conf.subtitle = "";
                 if (!conf.publishDate) {
@@ -282,12 +307,12 @@ define(
                 var publishSpace = "TR";
                 if (conf.specStatus === "Member-SUBM") publishSpace = "Submission";
                 else if (conf.specStatus === "Team-SUBM") publishSpace = "TeamSubmission";
-                if (!conf.isCGBG && !conf.isBasic) conf.thisVersion =  "http://www.w3.org/" + publishSpace + "/" +
-                                                                      conf.publishDate.getFullYear() + "/" +
-                                                                      conf.maturity + "-" + conf.shortName + "-" +
-                                                                      utils.concatDate(conf.publishDate) + "/";
+                if (conf.isRegular) conf.thisVersion =  "http://www.w3.org/" + publishSpace + "/" +
+                                                          conf.publishDate.getFullYear() + "/" +
+                                                          conf.maturity + "-" + conf.shortName + "-" +
+                                                          utils.concatDate(conf.publishDate) + "/";
                 if (conf.specStatus === "ED") conf.thisVersion = conf.edDraftURI;
-                if (!conf.isCGBG && !conf.isBasic) conf.latestVersion = "http://www.w3.org/" + publishSpace + "/" + conf.shortName + "/";
+                if (conf.isRegular) conf.latestVersion = "http://www.w3.org/" + publishSpace + "/" + conf.shortName + "/";
                 if (conf.isTagFinding) {
                     conf.latestVersion = "http://www.w3.org/2001/tag/doc/" + conf.shortName;
                     conf.thisVersion = conf.latestVersion + "-" + utils.concatDate(conf.publishDate, "-");
@@ -305,7 +330,7 @@ define(
                     else if (conf.isCGBG) {
                         conf.prevVersion = conf.prevVersion || "";
                     }
-                    else if (conf.isBasic) {
+                    else if (conf.isBasic || conf.isWebSpec) {
                         conf.prevVersion = "";
                     }
                     else {
@@ -379,6 +404,7 @@ define(
                 conf.isIGNote = (conf.specStatus === "IG-NOTE");
                 conf.dashDate = utils.concatDate(conf.publishDate, "-");
                 conf.publishISODate = utils.isoDate(conf.publishDate);
+                conf.shortISODate = conf.publishISODate.replace(/T.*/, "");
                 conf.processVersion = conf.processVersion || "2014";
                 conf.isNewProcess = conf.processVersion == "2014";
                 // configuration done - yay!
@@ -395,8 +421,11 @@ define(
                     $("html>head").prepend($("<meta lang='' property='dc:language' content='en'>"));
                 }
                 // insert into document and mark with microformat
-                $("body", doc).prepend($(conf.isCGBG ? cgbgHeadersTmpl(conf) : headersTmpl(conf)))
-                              .addClass("h-entry");
+                var bp;
+                if (conf.isCGBG) bp = cgbgHeadersTmpl(conf);
+                else if (conf.isWebSpec) bp = wsHeadersTmpl(conf);
+                else bp = headersTmpl(conf);
+                $("body", doc).prepend($(bp)).addClass("h-entry");
 
                 // handle SotD
                 var $sotd = $("#sotd");
@@ -447,7 +476,11 @@ define(
                     msg.pub("error", "IG-NOTEs must link to charter's disclosure section using charterDisclosureURI");
                 // ensure subjectPrefix is encoded before using template
                 if (conf.subjectPrefix !== '') conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
-                $(conf.isCGBG ? cgbgSotdTmpl(conf) : sotdTmpl(conf)).insertAfter($("#abstract"));
+                var sotd;
+                if (conf.isCGBG) sotd = cgbgSotdTmpl(conf);
+                else if (conf.isWebSpec) sotd = null;
+                else sotd = sotdTmpl(conf);
+                if (sotd) $(sotd).insertAfter($("#abstract"));
 
                 if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
                     msg.pub("error", "CR, PR, and REC documents need to have an implementationReportURI defined.");
