@@ -1,0 +1,20 @@
+<header>
+  <a href="http://specs.webplatform.org/" id="logo">
+    <img alt="Web Platform Specs logo" height="50" src="https://specs.webplatform.org/assets/img/logo.svg" width="50"><br>
+    Web Platform Specs
+  </a>
+  <h1>{{title}}</h1>
+  {{#if subtitle}}
+    <h2>{{subtitle}}</h2>
+  {{/if}}
+  <div id="meta">
+    <button class='contributors linkalike' data-repository="{{repository}}">contributors</button>•
+    <a href="https://github.com/{{repository}}/issues">bugs</a>
+    •
+    <a href="https://github.com/{{repository}}">fork me</a>
+    •
+    <a href="{{licenseInfo.url}}" title="{{licenseInfo.name}}" rel="license">{{licenseInfo.short}}</a>
+    •
+    <span class="date">{{shortISODate}} (<a href="https://github.com/{{repository}}/commits">commit log</a>)</span>
+  </div>
+</header>
