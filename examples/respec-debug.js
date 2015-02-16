@@ -5909,7 +5909,7 @@ var sn;
             refs = refs.normativeReferences.concat(refs.informativeReferences).concat(this.findLocalAliases(conf));
             if (refs.length) {
                 count++;
-                src = conf.httpScheme + "://specref.jit.su/bibrefs?callback=setBerjonBiblio&refs=" + refs.join(',');
+                src = conf.httpScheme + "://specref.herokuapp.com/bibrefs?callback=setBerjonBiblio&refs=" + refs.join(',');
                 this.loadScript(src, loadHandler);
             }
 
