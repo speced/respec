@@ -26,6 +26,7 @@ define(
     ,   "tmpl!core/templates/webidl/constructor.html"
     ,   "tmpl!core/templates/webidl/attribute.html"
     ,   "tmpl!core/templates/webidl/serializer.html"
+    ,   "tmpl!core/templates/webidl/maplike.html"
     ,   "tmpl!core/templates/webidl/comment.html"
     ,   "tmpl!core/templates/webidl/field.html"
     ,   "tmpl!core/templates/webidl/exception.html"
@@ -33,7 +34,7 @@ define(
     ],
     function (hb, css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
                    idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl,
-              idlConstructorTmpl, idlAttributeTmpl, idlSerializerTmpl, idlCommentTmpl, idlFieldTmpl, idlExceptionTmpl, idlInterfaceTmpl) {
+              idlConstructorTmpl, idlAttributeTmpl, idlSerializerTmpl, idlMaplikeTmpl, idlCommentTmpl, idlFieldTmpl, idlExceptionTmpl, idlInterfaceTmpl) {
         var WebIDLProcessor = function (cfg) {
                 this.parent = { type: "module", id: "outermost", children: [] };
                 if (!cfg) cfg = {};
@@ -557,6 +558,16 @@ define(
                     return obj;
                 }
 
+                // MAPLIKE
+                match = /^\s*(readonly\s+)?maplike\s*<\s*(.*)\s*,\s*(.*)\s*>\s*$/.exec(str);
+                if (match) {
+                    obj.type = "maplike";
+                    obj.readonly = match[1] !== undefined;
+                    obj.key = match[2];
+                    obj.value = match[3];
+                    return obj;
+                }
+
                 // COMMENT
                 match = /^\s*\/\/\s*(.*)\s*$/.exec(str);
                 if (match) {
@@ -728,11 +739,20 @@ define(
                 sn.element("p", {}, div, [it.description]);
             },
 
+            writeMaplikeAsHTML: function (sec, maplike) {
+                sn.element("p", {}, sec, maplike.description);
+            },
+
             writeTypeFilteredThingsInInterfaceAsHTML: function (obj, curLnk, sec, type, things) {
-                var secTitle = type.substr(0, 1).toUpperCase() + type.substr(1) + (type != "serializer" ? "s" : "");
+                var secTitle = type.substr(0, 1).toUpperCase() + type.substr(1) + (type != "serializer" && type != "maplike" ? "s" : "");
                 if (!this.conf.noIDLSectionTitle) sn.element("h2", {}, sec, secTitle);
                 if (type == "serializer") {
                     this.writeSerializerAsHTML(sn.element("div", {}, sec), things[0]);
+                    return;
+                }
+                if (type == "maplike") {
+                    // We assume maplike is specified at most once in one interface.
+                    this.writeMaplikeAsHTML(sec, things[0]);
                     return;
                 }
 
@@ -870,7 +890,7 @@ define(
             writeInterfaceAsHTML: function (obj) {
                 var df = sn.documentFragment();
                 var curLnk = "widl-" + obj.refId + "-";
-                var types = ["constructor", "attribute", "method", "constant", "serializer"];
+                var types = ["constructor", "attribute", "method", "constant", "serializer", "maplike"];
                 var filterFunc = function (it) { return it.type == type; }
                 ,   sortFunc = function (a, b) {
                         if (a.unescapedId < b.unescapedId) return -1;
@@ -1174,6 +1194,7 @@ define(
                                           else if (ch.type == "constant") return self.writeConst(ch, maxConst, indent + 1, curLnk);
                                           else if (ch.type == "serializer") return self.writeSerializer(ch, indent + 1, curLnk);
                                           else if (ch.type == "constructor") ctor.push(self.writeConstructor(ch, indent, "widl-ctor-"));
+                                          else if (ch.type == "maplike") return self.writeMaplike(ch, indent + 1, curLnk);
                                           else if (ch.type == "comment") return self.writeComment(ch, indent + 1);
                                       })
                                       .join("")
@@ -1379,6 +1400,15 @@ define(
                     obj:        serializer
                 ,   indent:     indent
                 ,   values:     values
+                });
+            },
+
+            writeMaplike: function (maplike, indent) {
+                var readonly = maplike.readonly ? "readonly " : "";
+                return idlMaplikeTmpl({
+                    obj:        maplike
+                ,   indent:     indent
+                ,   readonly:   readonly
                 });
             },
 

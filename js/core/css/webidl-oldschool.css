@@ -95,6 +95,11 @@ a.idlEnumItem {
     color: gray;
 }
 
+/*.idlMaplike*/
+.idlMaplikeKeyType, .idlMaplikeValueType {
+    color:  #005a9c;
+}
+
 /*.idlConst*/
 .idlConstType {
     color:  #005a9c;
