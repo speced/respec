@@ -18,7 +18,7 @@ Want to change a bibliographical reference?
 ===========================================
 
 Bibliographical references have been moved out of ReSpec. You want to use this: 
-https://github.com/tobie/specref
+http://www.specref.org/
 
 Want to see complete documentation?
 ===================================
