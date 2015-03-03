@@ -107,7 +107,7 @@ define(
                     if (refcontent) {
                         $dd.html(stringifyRef(refcontent) + "\n");
                         if (conf.doRDFa) {
-                            $a = $dd.children("a");
+                            var $a = $dd.children("a");
                             $a.attr("property", type === "Normative" ? "dc:requires" : "dc:references");
                         }
                     }
@@ -150,7 +150,7 @@ define(
                                 .concat(refs.informativeReferences)
                                 .concat(localAliases);
                 if (refs.length) {
-                    var url = "https://labs.w3.org/specrefs/bibrefs?refs=" + refs.join(",");
+                    var url = "http://specref.jit.su/bibrefs?refs=" + refs.join(",");
                     $.ajax({
                         dataType:   "json"
                     ,   url:        url
