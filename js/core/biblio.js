@@ -150,7 +150,7 @@ define(
                                 .concat(refs.informativeReferences)
                                 .concat(localAliases);
                 if (refs.length) {
-                    var url = "http://specref.jit.su/bibrefs?refs=" + refs.join(",");
+                    var url = "https://specref.jit.su/bibrefs?refs=" + refs.join(",");
                     $.ajax({
                         dataType:   "json"
                     ,   url:        url
