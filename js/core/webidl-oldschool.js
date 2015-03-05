@@ -740,22 +740,36 @@ define(
             },
 
             writeMaplikeAsHTML: function (sec, maplike) {
+                var readonly = "";
+                var members = "";
+                if (maplike.readonly) {
+                    readonly = "readonly ";
+                    members = '"entries", "forEach", "has", "keys", "values", @@iterator methods and a "size" getter';
+                } else {
+                    members = '"entries", "forEach", "has", "keys", "values", "add", "clear", "delete", @@iterator methods and a "size" getter';
+                }
+
+                var p = sn.element("p", {}, sec);
+                sn.text("This interface has " + members + " induced by ", p);
+                sn.element("code", {}, p, readonly + "maplike");
+                sn.text(".", p);
+
                 sn.element("p", {}, sec, maplike.description);
             },
 
             writeTypeFilteredThingsInInterfaceAsHTML: function (obj, curLnk, sec, type, things) {
-                var secTitle = type.substr(0, 1).toUpperCase() + type.substr(1) + (type != "serializer" && type != "maplike" ? "s" : "");
-                if (!this.conf.noIDLSectionTitle) sn.element("h2", {}, sec, secTitle);
-                if (type == "serializer") {
-                    this.writeSerializerAsHTML(sn.element("div", {}, sec), things[0]);
-                    return;
-                }
                 if (type == "maplike") {
                     // We assume maplike is specified at most once in one interface.
                     this.writeMaplikeAsHTML(sec, things[0]);
                     return;
                 }
 
+                var secTitle = type.substr(0, 1).toUpperCase() + type.substr(1) + (type != "serializer" ? "s" : "");
+                if (!this.conf.noIDLSectionTitle) sn.element("h2", {}, sec, secTitle);
+                if (type == "serializer") {
+                    this.writeSerializerAsHTML(sn.element("div", {}, sec), things[0]);
+                    return;
+                }
                 var dl = sn.element("dl", { "class": type + "s" }, sec);
                 for (var j = 0; j < things.length; j++) {
                     var it = things[j];
@@ -890,7 +904,8 @@ define(
             writeInterfaceAsHTML: function (obj) {
                 var df = sn.documentFragment();
                 var curLnk = "widl-" + obj.refId + "-";
-                var types = ["constructor", "attribute", "method", "constant", "serializer", "maplike"];
+                // maplike is placed first because it doesn't have its own section.
+                var types = ["maplike", "constructor", "attribute", "method", "constant", "serializer"];
                 var filterFunc = function (it) { return it.type == type; }
                 ,   sortFunc = function (a, b) {
                         if (a.unescapedId < b.unescapedId) return -1;
