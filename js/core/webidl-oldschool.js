@@ -750,7 +750,7 @@ define(
                 }
 
                 var p = sn.element("p", {}, sec);
-                sn.text("This interface has " + members + " induced by ", p);
+                sn.text("This interface has " + members + " brought by ", p);
                 sn.element("code", {}, p, readonly + "maplike");
                 sn.text(".", p);
 
