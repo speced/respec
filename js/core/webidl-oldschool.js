@@ -739,31 +739,32 @@ define(
                 sn.element("p", {}, div, [it.description]);
             },
 
-            writeMaplikeAsHTML: function (sec, maplike) {
+            writeMaplikeAsHTML: function (parent, maplike) {
                 var readonly = "";
                 var members = "";
                 if (maplike.readonly) {
                     readonly = "readonly ";
-                    members = '"entries", "forEach", "has", "keys", "values", @@iterator methods and a "size" getter';
+                    members = '"entries", "forEach", "get", "has", "keys", "values", @@iterator methods and a "size" getter';
                 } else {
-                    members = '"entries", "forEach", "has", "keys", "values", "add", "clear", "delete", @@iterator methods and a "size" getter';
+                    members = '"entries", "forEach", "get", "has", "keys", "values", "clear", "delete", "set", @@iterator methods and a "size" getter';
                 }
 
-                var p = sn.element("p", {}, sec);
+                var p = sn.element("p", {}, parent);
                 sn.text("This interface has " + members + " brought by ", p);
                 sn.element("code", {}, p, readonly + "maplike");
                 sn.text(".", p);
 
-                sn.element("p", {}, sec, maplike.description);
+                sn.element("p", {}, parent, maplike.description);
             },
 
-            writeTypeFilteredThingsInInterfaceAsHTML: function (obj, curLnk, sec, type, things) {
+            writeTypeFilteredThingsInInterfaceAsHTML: function (obj, curLnk, parent, type, things) {
                 if (type == "maplike") {
                     // We assume maplike is specified at most once in one interface.
-                    this.writeMaplikeAsHTML(sec, things[0]);
+                    this.writeMaplikeAsHTML(parent, things[0]);
                     return;
                 }
 
+                var sec = sn.element("section", {}, parent)
                 var secTitle = type.substr(0, 1).toUpperCase() + type.substr(1) + (type != "serializer" ? "s" : "");
                 if (!this.conf.noIDLSectionTitle) sn.element("h2", {}, sec, secTitle);
                 if (type == "serializer") {
@@ -919,7 +920,7 @@ define(
                     if (things.length === 0) continue;
                     if (!this.noIDLSorting) things.sort(sortFunc);
 
-                    this.writeTypeFilteredThingsInInterfaceAsHTML(obj, curLnk, sn.element("section", {}, df), type, things);
+                    this.writeTypeFilteredThingsInInterfaceAsHTML(obj, curLnk, df, type, things);
                 }
                 return df;
             },
