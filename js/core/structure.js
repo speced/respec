@@ -91,12 +91,6 @@ define(
                     }
                 ;
                 if (!$secs.length) return finish();
-                $secs.each(function () {
-                    var depth = $(this).parents("section").length + 1;
-                    if (depth > 6) depth = 6;
-                    var h = "h" + depth;
-                    if (this.localName.toLowerCase() != h) $(this).renameElement(h);
-                });
 
                 // makeTOC
                 if (!conf.noTOC) {

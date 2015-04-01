@@ -10,13 +10,16 @@ define(
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/fix-headers");
-                var $secs = $("section:not(.introductory)", doc)
-                                .find("h1:first, h2:first, h3:first, h4:first, h5:first, h6:first");
-                $secs.each(function () {
-                    var depth = $(this).parents("section").length + 1;
-                    if (depth > 6) depth = 6;
-                    var h = "h" + depth;
-                    if (this.localName.toLowerCase() !== h) $(this).renameElement(h);
+                var $secs = $(doc).find("section");
+                $secs.each(function(i, item) {
+                    var $items = $(item).find("h1:first, h2:first, h3:first, h4:first, h5:first, h6:first");
+                    if ($items.length) {
+                        var $item = $($items[0]) ;
+                        var depth = $item.parents("section").length + 1;
+                        if (depth > 6) depth = 6;
+                        var h = "h" + depth;
+                        if (! $item.is(h)) $item.renameElement(h);
+                    }
                 });
                 msg.pub("end", "core/fix-headers");
                 cb();
