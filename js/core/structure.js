@@ -28,9 +28,10 @@ define(
                 var $ul = $("<ul class='toc'></ul>");
                 for (var i = 0; i < $secs.length; i++) {
                     var $sec = $($secs[i], doc)
-                    ,   isIntro = $sec.hasClass("introductory") || $sec.hasClass("notoc")
+                    ,   isIntro = $sec.hasClass("introductory")
+                    ,   noToc = $sec.hasClass("notoc")
                     ;
-                    if (!$sec.children().length) continue;
+                    if (!$sec.children().length || noToc) continue;
                     var h = $sec.children()[0]
                     ,   ln = h.localName.toLowerCase();
                     if (ln !== "h2" && ln !== "h3" && ln !== "h4" && ln !== "h5" && ln !== "h6") continue;
