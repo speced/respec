@@ -28,7 +28,7 @@ define(
                 var $ul = $("<ul class='toc'></ul>");
                 for (var i = 0; i < $secs.length; i++) {
                     var $sec = $($secs[i], doc)
-                    ,   isIntro = $sec.hasClass("introductory")
+                    ,   isIntro = $sec.hasClass("introductory") || $sec.hasClass("notoc")
                     ;
                     if (!$sec.children().length) continue;
                     var h = $sec.children()[0]
