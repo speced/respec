@@ -103,24 +103,43 @@ describe("Core - Contiguous WebIDL", function () {
     it("should handle constants", function () {
         $target = $("#const-basic", doc);
         text =  "interface ConstTest {\n" +
+                "    // 1\n" +
                 "    const boolean             test = true;\n" +
+                "    // 2\n" +
                 "    const byte                bite = 8;\n" +
+                "    // 3\n" +
                 "    const octet               eight = 7;\n" +
+                "    // 4\n" +
                 "    const short               small = 42;\n" +
+                "    // 5\n" +
                 "    const unsigned short      shortish = 250;\n" +
+                "    // 6\n" +
                 "    const long                notSoLong = 99999;\n" +
+                "    // 7\n" +
                 "    const unsigned long       somewhatLong = 9999999;\n" +
+                "    // 8\n" +
                 "    const long long           veryLong = 9999999999999;\n" +
+                "    // 9\n" +
                 "    const unsigned long long  soLong = 100000000000000000;\n" +
+                "    // 10\n" +
                 "    const float               ationDevice = 4.2;\n" +
+                "    // 11\n" +
                 "    const unrestricted float  buoy = 4.2222222222;\n" +
+                "    // 12\n" +
                 "    const double              twice = 4.222222222;\n" +
+                "    // 13\n" +
                 "    const unrestricted double rambaldi = 47;\n" +
+                "    // 14\n" +
                 "    const boolean?            why = false;\n" +
+                "    // 15\n" +
                 "    const boolean?            notSo = null;\n" +
+                "    // 16\n" +
                 "    const short               inf = Infinity;\n" +
+                "    // 17\n" +
                 "    const short               mininf = -Infinity;\n" +
+                "    // 18\n" +
                 "    const short               cheese = NaN;\n" +
+                "    // 19\n" +
                 "    [Something]\n" +
                 "    const short               extAttr = NaN;\n" +
                 "};";
@@ -143,14 +162,22 @@ describe("Core - Contiguous WebIDL", function () {
     it("should handle attributes", function () {
         $target = $("#attr-basic", doc);
         text =  "interface AttrBasic {\n" +
+                "    // 1\n" +
                 "                attribute DOMString          regular;\n" +
+                "    // 2\n" +
                 "    readonly    attribute DOMString          ro;\n" +
+                "    // 2.2\n" +
                 "    readonly    attribute DOMString          _readonly;\n" +
+                "    // 2.5\n" +
                 "    inherit     attribute DOMString          in;\n" +
+                "    // 2.7\n" +
                 "    stringifier attribute DOMString          st;\n" +
+                "    // 3\n" +
                 "    [Something]\n" +
                 "    readonly    attribute DOMString          ext;\n" +
+                "    // 3.5\n" +
                 "                attribute Date[]             dates;\n" +
+                "    // 4.0\n" +
                 "                attribute Promise<DOMString> operation;\n" +
                 //"                attribute Promise<Superstar>[] wouldBeStars;\n" +
                 "};";
@@ -178,11 +205,16 @@ describe("Core - Contiguous WebIDL", function () {
     it("should handle operations", function () {
         $target = $("#meth-basic", doc);
         text =  "interface MethBasic {\n" +
+                "    // 1\n" +
                 "    void               basic();\n" +
+                "    // 2\n" +
                 "    [Something]\n" +
                 "    void               ext();\n" +
+                "    // 3\n" +
                 "    unsigned long long ull(short s);\n" +
+                "    // 3.5\n" +
                 "    SuperStar?         ull();\n" +
+                "    // 4\n" +
                 "    SuperStar[][][][]  paramed(SuperStar[][]?[] one, [ExtAttrs] ByteString? ext, optional short maybe, short[] shorts, short[][][][] hypercubes, optional short defaulted = 3.5, optional DOMString defaulted2 = \"one\", short... variable);\n" +
                 "};";
         expect($target.text()).toEqual(text);
@@ -227,11 +259,14 @@ describe("Core - Contiguous WebIDL", function () {
         $target = $("#comments-basic", doc);
         // TODO: Handle comments when WebIDL2 does.
         text =  "interface SuperStar {\n" +
-                //"    // This is a comment\n" +
-                //"    // over two lines.\n" +
+                "    // This is a comment\n" +
+                "    // over two lines.\n" +
+                "    /* This one\n" +
+                "       has\n" +
+                "       three. */\n" +
                 "};";
         expect($target.text()).toEqual(text);
-        //expect($target.find(".idlSectionComment").length).toEqual(2);
+        expect($target.find(".idlSectionComment").length).toEqual(3);
     });
 
 
@@ -249,15 +284,24 @@ describe("Core - Contiguous WebIDL", function () {
 
         $target = $("#dict-fields", doc);
         text =  "dictionary SuperStar {\n" +
+                "    // 1\n" +
                 "    DOMString          value;\n" +
+                "    // 2\n" +
                 "    DOMString?         nullable;\n" +
+                "    // 3\n" +
                 "    [Something]\n" +
                 "    float              ext;\n" +
+                "    // 4\n" +
                 "    unsigned long long longLong;\n" +
+                "    // 5\n" +
                 "    boolean            test = true;\n" +
+                "    // 6\n" +
                 "    byte               little = 2;\n" +
+                "    // 7\n" +
                 "    byte               big = Infinity;\n" +
+                "    // 8\n" +
                 "    byte               cheese = NaN;\n" +
+                "    // 9\n" +
                 "    DOMString          blah = \"blah blah\";\n" +
                 "};";
         expect($target.text()).toEqual(text);
@@ -291,11 +335,16 @@ describe("Core - Contiguous WebIDL", function () {
 
         $target = $("#ex-fields", doc);
         text =  "exception ExFields {\n" +
+                "    // 1\n" +
                 "    [Something]\n" +
                 "    const SuperStar value = 42;\n" +
+                "    // 2\n" +
                 "    SuperStar?          message;\n" +
+                "    // 3\n" +
                 "    sequence<SuperStar> floats;\n" +
+                "    // 4\n" +
                 "    SuperStar[][]       numbers;\n" +
+                "    // 5\n" +
                 "    Promise<SuperStar>  stars;\n" +
                 "};";
         expect($target.text()).toEqual(text);
@@ -322,7 +371,16 @@ describe("Core - Contiguous WebIDL", function () {
 
     it("should handle enumerations", function () {
         $target = $("#enum-basic", doc);
-        text = "enum EnumBasic {\n    \"one\",\n    \"two\",\n    \"three\",\n    \"white space\"\n};";
+        text = "enum EnumBasic {\n" +
+               "    // 1\n" +
+               "    \"one\",\n" +
+               "    // 2\n" +
+               "    \"two\",\n" +
+               "    // 3\n" +
+               "    \"three\",\n" +
+               "    // 4\n" +
+               "    \"white space\"\n" +
+               "};";
         expect($target.text()).toEqual(text);
         expect($target.find(".idlEnum").length).toEqual(1);
         expect($target.find(".idlEnumID").text()).toEqual("EnumBasic");

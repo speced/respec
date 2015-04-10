@@ -24,7 +24,8 @@ define(
     ,   "tmpl!core/templates/webidl-contiguous/method.html"
     ,   "tmpl!core/templates/webidl-contiguous/attribute.html"
     ,   "tmpl!core/templates/webidl-contiguous/serializer.html"
-    ,   "tmpl!core/templates/webidl-contiguous/comment.html"
+    ,   "tmpl!core/templates/webidl-contiguous/line-comment.html"
+    ,   "tmpl!core/templates/webidl-contiguous/multiline-comment.html"
     ,   "tmpl!core/templates/webidl-contiguous/field.html"
     ,   "tmpl!core/templates/webidl-contiguous/exception.html"
     ,   "tmpl!core/templates/webidl-contiguous/extended-attribute.html"
@@ -32,7 +33,7 @@ define(
     ],
     function (hb, webidl2, css, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
                    idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl,
-              idlAttributeTmpl, idlSerializerTmpl, idlCommentTmpl, idlFieldTmpl, idlExceptionTmpl,
+              idlAttributeTmpl, idlSerializerTmpl, idlLineCommentTmpl, idlMultiLineCommentTmpl, idlFieldTmpl, idlExceptionTmpl,
               idlExtAttributeTmpl, idlInterfaceTmpl) {
         "use strict";
         function registerHelpers (msg) {
@@ -95,7 +96,14 @@ define(
                 return new Handlebars.SafeString(pads(num));
             });
             Handlebars.registerHelper("join", function(arr, between, options) {
-                return new Handlebars.SafeString(arr.map(function(elem) { return options.fn(elem); }).join(between));
+                return arr.map(function(elem) { return options.fn(elem); }).join(between);
+            });
+            Handlebars.registerHelper("joinNonWhitespace", function(arr, between, options) {
+                return arr.filter(function(elem) {
+                    return elem.type !== "ws";
+                }).map(function(elem) {
+                    return options.fn(elem);
+                }).join(between);
             });
             // A block helper that emits an <a title> around its contents
             // if obj.dfn exists. If it exists, that implies that
@@ -182,6 +190,10 @@ define(
             var str = "";
             for (var i = 0; i < num; i++) str += " ";
             return str;
+        }
+        var whitespaceTypes = {"ws": true, "ws-pea": true, "ws-tpea": true, "line-comment": true, "multiline-comment": true};
+        function typeIsWhitespace(webIdlType) {
+            return whitespaceTypes[webIdlType];
         }
         function extAttr(extAttrs, indent, singleLine) {
             if (extAttrs.length === 0) {
@@ -294,7 +306,8 @@ define(
         function makeMarkup (parse, msg) {
             var attr = { "class": "idl" };
             var $pre = $("<pre></pre>").attr(attr);
-            $pre.html(parse.map(function(defn) { return writeDefinition(defn, -1, msg); })
+            $pre.html(parse.filter(function(defn) { return !typeIsWhitespace(defn.type); })
+                           .map(function(defn) { return writeDefinition(defn, -1, msg); })
                            .join('\n\n'));
             return $pre;
         }
@@ -314,27 +327,51 @@ define(
                 case "exception":
                     var maxAttr = 0, maxConst = 0;
                     obj.members.forEach(function (it) {
+                        if (typeIsWhitespace(it.type)) {
+                            return;
+                        }
                         var len = idlType2Text(it.idlType).length;
                         if (it.type === "field")   maxAttr = (len > maxAttr) ? len : maxAttr;
                         else if (it.type === "const") maxConst = (len > maxConst) ? len : maxConst;
                     });
                     var children = obj.members
                                       .map(function (ch) {
-                                          if (ch.type === "field") return writeField(ch, maxAttr, indent + 1);
-                                          else if (ch.type === "const") return writeConst(ch, maxConst, indent + 1);
+                                          switch (ch.type) {
+                                            case "field": return writeField(ch, maxAttr, indent + 1);
+                                            case "const": return writeConst(ch, maxConst, indent + 1);
+                                            case "line-comment": return writeLineComment(ch, indent + 1);
+                                            case "multiline-comment": return writeMultiLineComment(ch, indent + 1);
+                                            case "ws":
+                                            case "ws-pea": break;
+                                            default:
+                                                throw new Error('Unexpected type in exception: ' + it.type);
+                                          }
                                       })
                                       .join("")
                     ;
                     return idlExceptionTmpl({ obj: obj, indent: indent, children: children });
                 case "dictionary":
                     var max = 0;
+                    var members = obj.members.filter(function(member) { return !typeIsWhitespace(member.type); });
                     obj.members.forEach(function (it) {
+                        if (typeIsWhitespace(it.type)) {
+                            return;
+                        }
                         var len = idlType2Text(it.idlType).length;
                         max = (len > max) ? len : max;
                     });
                     var children = obj.members
                                       .map(function (it) {
-                                          return writeMember(it, max, indent + 1);
+                                          switch(it.type) {
+                                            case "field": return writeMember(it, max, indent + 1);
+                                            case "line-comment": return writeLineComment(it, indent + 1);
+                                            case "multiline-comment": return writeMultiLineComment(it, indent + 1);
+                                            case "ws":
+                                            case "ws-pea": break;
+                                            default:
+                                                throw new Error('Unexpected type in dictionary: ' + it.type);
+                                          }
+                                          
                                       })
                                       .join("")
                     ;
@@ -355,9 +392,36 @@ define(
                     ,   children:   params
                     });
                 case "enum":
-                    var children = obj.values
-                                      .map(function (it) { return idlEnumItemTmpl({ obj: it, parentID: obj.fullPath, indent: indent + 1 }); })
-                                      .join(",\n");
+                    var children = "";
+                    for (var i = 0; i < obj.values.length; i++) {
+                        var item = obj.values[i];
+                        switch (item.type) {
+                            case undefined:
+                                var needsComma = false;
+                                for (var j = i + 1; j < obj.values.length; j++) {
+                                    var lookahead = obj.values[j];
+                                    if (lookahead.type === undefined) break;
+                                    if (lookahead.type === ",") {
+                                        needsComma = true;
+                                        break;
+                                    }
+                                }
+                                children += idlEnumItemTmpl({
+                                    obj: item,
+                                    parentID: obj.fullPath,
+                                    indent: indent + 1,
+                                    needsComma: needsComma
+                                });
+                                break;
+                            case "line-comment": children += writeLineComment(item, indent + 1); break;
+                            case "multiline-comment": children += writeMultiLineComment(item, indent + 1); break;
+                            case ",":
+                            case "ws":
+                            case "ws-pea": break;
+                            default:
+                                throw new Error('Unexpected type in exception: ' + item.type);
+                        }
+                    }
                     return idlEnumTmpl({obj: obj, indent: indent, children: children });
                 default:
                     msg.pub("error", "Unexpected object type " + obj.type + " in " + JSON.stringify(obj));
@@ -369,7 +433,9 @@ define(
             var obj = opt.obj, indent = opt.indent;
             var maxAttr = 0, maxMeth = 0, maxConst = 0;
             obj.members.forEach(function (it) {
-                if (it.type === "serializer") return;
+                if (typeIsWhitespace(it.type) || it.type === "serializer") {
+                    return;
+                }
                 var len = idlType2Text(it.idlType).length;
                 if (it.static) len += 7;
                 if (it.type === "attribute") maxAttr = (len > maxAttr) ? len : maxAttr;
@@ -383,6 +449,9 @@ define(
                                       case "operation": return writeMethod(ch, maxMeth, indent + 1);
                                       case "const": return writeConst(ch, maxConst, indent + 1);
                                       case "serializer": return writeSerializer(ch, indent + 1);
+                                      case "ws": return "";
+                                      case "line-comment": return writeLineComment(ch, indent + 1);
+                                      case "multiline-comment": return writeMultiLineComment(ch, indent + 1);
                                       default: throw new Error("Unexpected member type: " + ch.type);
                                   }
                               })
@@ -426,7 +495,9 @@ define(
 
         function writeMethod (meth, max, indent) {
             var params = meth.arguments
-                            .map(function (it) {
+                            .filter(function (it) {
+                                return !typeIsWhitespace(it.type);
+                            }).map(function (it) {
                                 return idlParamTmpl({
                                     obj:        it
                                 ,   optional:   it.optional ? "optional " : ""
@@ -452,8 +523,27 @@ define(
             return idlConstTmpl({ obj: cons, indent: indent, pad: pad, nullable: cons.nullable ? "?" : ""});
         }
 
-        function writeComment (comment, indent) {
-            return idlCommentTmpl({ obj: comment, indent: indent, comment: comment.id});
+        function writeLineComment (comment, indent) {
+            return idlLineCommentTmpl({ indent: indent, comment: comment.value});
+        }
+
+        function writeMultiLineComment (comment, indent) {
+            // Split the multi-line comment into lines so we can indent it properly.
+            var lines = comment.value.split(/\r\n|\r|\n/);
+            if (lines.length === 0) {
+                return "";
+            } else if (lines.length === 1) {
+                return idlLineCommentTmpl({ indent: indent, comment: lines[0]});
+            }
+            var initialSpaces = Math.max(0, /^ */.exec(lines[1])[0].length - 3);
+            function trimInitialSpace(line) {
+                return line.slice(initialSpaces);
+            }
+            return idlMultiLineCommentTmpl({
+                indent: indent,
+                firstLine: lines[0],
+                lastLine: trimInitialSpace(lines[lines.length - 1]),
+                innerLine: lines.slice(1, -1).map(trimInitialSpace) });
         }
 
         function writeSerializer (serializer, indent) {
@@ -518,7 +608,9 @@ define(
                         name = defn.name;
                         defn.idlId = ("idl-def-" + parent.toLowerCase() + "-" +
                                       name.toLowerCase() + '(' +
-                                      defn.arguments.map(function(arg) {
+                                      defn.arguments.filter(function(arg) {
+                                          return !typeIsWhitespace(arg.type);
+                                      }).map(function(arg) {
                                           var optional = arg.optional ? "optional-" : "";
                                           var variadic = arg.variadic ? "..." : "";
                                           return optional + idlType2Text(arg.idlType).toLowerCase() + variadic;
@@ -534,6 +626,11 @@ define(
                         break;
 
                     case "implements":
+                    case "ws":
+                    case "ws-pea":
+                    case "ws-tpea":
+                    case "line-comment":
+                    case "multiline-comment":
                         // Nothing to link here.
                         return;
                     default:
@@ -607,7 +704,7 @@ define(
                 $idl.each(function () {
                     var parse;
                     try {
-                        parse = window.WebIDL2.parse($(this).text());
+                        parse = window.WebIDL2.parse($(this).text(), {ws: true});
                     } catch(e) {
                         msg.pub("error", "Failed to parse <pre>" + $idl.text() + "</pre> as IDL: " + (e.stack || e));
                         // Skip this <pre> and move on to the next one.
