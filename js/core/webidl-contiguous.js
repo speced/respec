@@ -341,7 +341,7 @@ define(
                                             case "const": return writeConst(ch, maxConst, indent + 1);
                                             case "line-comment": return writeLineComment(ch, indent + 1);
                                             case "multiline-comment": return writeMultiLineComment(ch, indent + 1);
-                                            case "ws":
+                                            case "ws": return writeBlankLines(ch);
                                             case "ws-pea": break;
                                             default:
                                                 throw new Error('Unexpected type in exception: ' + it.type);
@@ -366,12 +366,11 @@ define(
                                             case "field": return writeMember(it, max, indent + 1);
                                             case "line-comment": return writeLineComment(it, indent + 1);
                                             case "multiline-comment": return writeMultiLineComment(it, indent + 1);
-                                            case "ws":
+                                            case "ws": return writeBlankLines(it);
                                             case "ws-pea": break;
                                             default:
                                                 throw new Error('Unexpected type in dictionary: ' + it.type);
                                           }
-                                          
                                       })
                                       .join("")
                     ;
@@ -415,8 +414,8 @@ define(
                                 break;
                             case "line-comment": children += writeLineComment(item, indent + 1); break;
                             case "multiline-comment": children += writeMultiLineComment(item, indent + 1); break;
+                            case "ws": children += writeBlankLines(item); break;
                             case ",":
-                            case "ws":
                             case "ws-pea": break;
                             default:
                                 throw new Error('Unexpected type in exception: ' + item.type);
@@ -449,7 +448,7 @@ define(
                                       case "operation": return writeMethod(ch, maxMeth, indent + 1);
                                       case "const": return writeConst(ch, maxConst, indent + 1);
                                       case "serializer": return writeSerializer(ch, indent + 1);
-                                      case "ws": return "";
+                                      case "ws": return writeBlankLines(ch);
                                       case "line-comment": return writeLineComment(ch, indent + 1);
                                       case "multiline-comment": return writeMultiLineComment(ch, indent + 1);
                                       default: throw new Error("Unexpected member type: " + ch.type);
@@ -521,6 +520,15 @@ define(
             var pad = max - idlType2Text(cons.idlType).length;
             if (cons.nullable) pad--;
             return idlConstTmpl({ obj: cons, indent: indent, pad: pad, nullable: cons.nullable ? "?" : ""});
+        }
+
+        // Writes a single blank line if whitespace includes at least one blank line.
+        function writeBlankLines(whitespace) {
+            if (/\n.*\n/.test(whitespace.value)) {
+                // Members end with a newline, so we only need 1 extra one to get a blank line.
+                return "\n";
+            }
+            return "";
         }
 
         function writeLineComment (comment, indent) {

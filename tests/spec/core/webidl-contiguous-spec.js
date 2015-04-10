@@ -129,6 +129,7 @@ describe("Core - Contiguous WebIDL", function () {
                 "    const double              twice = 4.222222222;\n" +
                 "    // 13\n" +
                 "    const unrestricted double rambaldi = 47;\n" +
+                "\n" +
                 "    // 14\n" +
                 "    const boolean?            why = false;\n" +
                 "    // 15\n" +
@@ -293,6 +294,7 @@ describe("Core - Contiguous WebIDL", function () {
                 "    float              ext;\n" +
                 "    // 4\n" +
                 "    unsigned long long longLong;\n" +
+                "\n" +
                 "    // 5\n" +
                 "    boolean            test = true;\n" +
                 "    // 6\n" +
@@ -340,6 +342,7 @@ describe("Core - Contiguous WebIDL", function () {
                 "    const SuperStar value = 42;\n" +
                 "    // 2\n" +
                 "    SuperStar?          message;\n" +
+                "\n" +
                 "    // 3\n" +
                 "    sequence<SuperStar> floats;\n" +
                 "    // 4\n" +
@@ -378,6 +381,7 @@ describe("Core - Contiguous WebIDL", function () {
                "    \"two\",\n" +
                "    // 3\n" +
                "    \"three\",\n" +
+               "\n" +
                "    // 4\n" +
                "    \"white space\"\n" +
                "};";
