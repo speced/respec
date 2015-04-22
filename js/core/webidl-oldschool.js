@@ -367,12 +367,14 @@ define(
                 str = this.parseExtendedAttributes(str, obj);
 
                 // MEMBER
-                var match = /^\s*([^=]+\??)\s+([^=\s]+)(?:\s*=\s*(.*))?$/.exec(str);
+                var match = /^\s*(?:(required)\s+)?([^=]+\??)\s+([^=\s]+)(?:\s*=\s*(.*))?$/.exec(str);
                 if (match) {
                     obj.type = "member";
-                    var type = match[1];
-                    obj.defaultValue = match[3];
-                    this.setID(obj, match[2]);
+                    obj.declaration = match[1] ? match[1] : "";
+                    obj.declaration += (new Array(9-obj.declaration.length)).join(" "); // fill string with spaces
+                    var type = match[2];
+                    obj.defaultValue = match[4];
+                    this.setID(obj, match[3]);
                     this.parseDatatype(obj, type);
                     return obj;
                 }
@@ -1062,6 +1064,7 @@ define(
                         else {
                             sn.element("a", {}, span, it.isUnionType ? "(" + it.datatype.join(" or ") + ")" : it.datatype);
                         }
+                        if (it.declaration) sn.text(", " + it.declaration, dt);
                         if (it.nullable) sn.text(", nullable", dt);
                         if (it.defaultValue) {
                             sn.text(", defaulting to ", dt);
@@ -1430,7 +1433,8 @@ define(
 
             writeMember:    function (memb, max, indent, curLnk) {
                 var opt = { obj: memb, indent: indent, curLnk: curLnk,
-                            nullable: (memb.nullable ? "?" : ""), arr: arrsq(memb) };
+                            nullable: (memb.nullable ? "?" : ""), arr: arrsq(memb)};
+                if (memb.declaration)   opt.declaration = memb.declaration;
                 if (memb.isUnionType)   opt.pad = max - (memb.datatype.join(" or ").length + 2);
                 else if (memb.datatype) opt.pad = max - memb.datatype.length;
                 if (memb.nullable) opt.pad = opt.pad - 1;
