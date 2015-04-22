@@ -351,19 +351,23 @@ define(
                     ;
                     return idlExceptionTmpl({ obj: obj, indent: indent, children: children });
                 case "dictionary":
-                    var max = 0;
+                    var maxQualifiers = 0, maxType = 0;
                     var members = obj.members.filter(function(member) { return !typeIsWhitespace(member.type); });
                     obj.members.forEach(function (it) {
                         if (typeIsWhitespace(it.type)) {
                             return;
                         }
-                        var len = idlType2Text(it.idlType).length;
-                        max = (len > max) ? len : max;
+                        var qualifiers = '';
+                        if (it.required) qualifiers += 'required ';
+                        if (maxQualifiers < qualifiers.length) maxQualifiers = qualifiers.length;
+
+                        var typeLen = idlType2Text(it.idlType).length;
+                        if (maxType < typeLen) maxType = typeLen;
                     });
                     var children = obj.members
                                       .map(function (it) {
                                           switch(it.type) {
-                                            case "field": return writeMember(it, max, indent + 1);
+                                            case "field": return writeMember(it, maxQualifiers, maxType, indent + 1);
                                             case "line-comment": return writeLineComment(it, indent + 1);
                                             case "multiline-comment": return writeMultiLineComment(it, indent + 1);
                                             case "ws": return writeBlankLines(it);
@@ -572,9 +576,12 @@ define(
             });
         }
 
-        function writeMember (memb, max, indent) {
+        function writeMember (memb, maxQualifiers, maxType, indent) {
             var opt = { obj: memb, indent: indent };
-            opt.pad = max - idlType2Text(memb.idlType).length;
+            opt.typePad = maxType - idlType2Text(memb.idlType).length;
+            if (memb.required) opt.qualifiers = 'required ';
+            else opt.qualifiers = '         ';
+            opt.qualifiers = opt.qualifiers.slice(0, maxQualifiers);
             return idlDictMemberTmpl(opt);
         }
 
