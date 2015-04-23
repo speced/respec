@@ -234,27 +234,28 @@ describe("Core - WebIDL", function () {
 
         $target = $("#dict-fields", doc);
         text =  "dictionary SuperStar {\n" +
-                "    DOMString          value;\n" +
-                "    DOMString?         nullable;\n" +
+                "             DOMString           value;\n" +
+                "             DOMString?          nullable;\n" +
                 "    [Something]\n" +
-                "    float              ext;\n" +
-                "    unsigned long long longLong;\n" +
-                "    boolean            test = true;\n" +
-                "    byte               little = 2;\n" +
-                "    byte               big = Infinity;\n" +
-                "    byte               cheese = NaN;\n" +
-                "    DOMString          blah = \"blah blah\";\n" +
+                "             float               ext;\n" +
+                "             unsigned long long  longLong;\n" +
+                "             boolean             test = true;\n" +
+                "             byte                little = 2;\n" +
+                "             byte                big = Infinity;\n" +
+                "             byte                cheese = NaN;\n" +
+                "    required sequence<DOMString> names;\n" +
+                "             DOMString           blah = \"blah blah\";\n" +
                 "};";
         expect($target.text()).toEqual(text);
-        expect($target.find(".idlMember").length).toEqual(9);
+        expect($target.find(".idlMember").length).toEqual(10);
         var $mem = $target.find(".idlMember").first();
         expect($mem.find(".idlMemberType").text()).toEqual("DOMString");
         expect($mem.find(".idlMemberName").text()).toEqual("value");
         expect($target.find(".idlMember").last().find(".idlMemberValue").text()).toEqual('"blah blah"');
 
         var $sec = $("#dictionary-superstar-members dl.dictionary-members", doc);
-        expect($sec.find("dt").length).toEqual(9);
-        expect($sec.find("dd").length).toEqual(9);
+        expect($sec.find("dt").length).toEqual(10);
+        expect($sec.find("dd").length).toEqual(10);
         expect($sec.find("dt").first().find("code").first().text()).toEqual("big");
         expect($sec.find("dt").first().find("code").last().text()).toEqual("Infinity");
         expect($sec.find("dt").first().find(".idlMemberType").text()).toEqual("byte");
