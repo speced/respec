@@ -12,7 +12,7 @@ pre.idl::before {
     width:      150px;
     background: #90b8de;
     color:  #fff;
-    font-family:    initial;
+    font-family:    sans-serif;
     padding:    3px;
     font-weight:    bold;
     margin: -1em 0 1em -1em;
@@ -202,7 +202,6 @@ table.exceptions { border-bottom:  1px solid #deb890; }
     color:  #fff;
     padding:    3px 5px;
     text-align: left;
-    font-family:    initial;
     font-weight:    normal;
     text-shadow:    #666 1px 1px 0;
 }
