@@ -3,18 +3,28 @@ describe("Core — Requirements", function () {
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
+        ,   shortName: "mydoc"
+        ,   previousURI:  "http://www.example.com"
+        ,   previousMaturity: "WD"
+        ,   previousPublishDate:  "2014-01-01"
         }
+    ,   body = "<section id='sotd'>Custom SOTD</section>"
     ,   issueBaseConfig = {
             editors:    [{ name: "Gregg Kellogg" }]
         ,   issueBase:  "http://example.com/issues/"
         ,   specStatus: "WD"
-      };
+        ,   shortName: "mydoc"
+        ,   previousURI:  "http://www.example.com"
+        ,   previousMaturity: "WD"
+        ,   previousPublishDate:  "2014-01-01"
+        }
+    ;
     it("should process requirements", function () {
         var doc;
         runs(function () {
             makeRSDoc({
                         config: basicConfig
-                    ,   body: $("<p class='req' id='req-id'>REQ</p>")
+                    ,   body: $("<p class='req' id='req-id'>REQ</p>" + body)
                     },
                     function (rsdoc) { doc = rsdoc; });
         });
@@ -36,7 +46,7 @@ describe("Core — Requirements", function () {
       runs(function () {
           makeRSDoc({
                       config: basicConfig
-                      ,   body: $("<a href='#req-id' class='reqRef'></a><a href='#foo' class='reqRef'></a><p class='req' id='req-id'>REQ</p>")
+                      ,   body: $("<a href='#req-id' class='reqRef'></a><a href='#foo' class='reqRef'></a><p class='req' id='req-id'>REQ</p>" + body)
                   },
                   function (rsdoc) { doc = rsdoc; });
       });

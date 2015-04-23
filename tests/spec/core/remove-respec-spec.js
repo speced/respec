@@ -3,11 +3,17 @@ describe("Core — Remove ReSpec", function () {
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
-        };
+        ,   shortName: "mydoc"
+        ,   previousURI:  "http://www.example.com"
+        ,   previousMaturity: "WD"
+        ,   previousPublishDate:  "2014-01-01"
+        }
+    ,   body = "<section id='sotd'>Custom SOTD</section>"
+    ;
     it("should have removed all artefacts", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig }, function (rsdoc) { doc = rsdoc; });
+            makeRSDoc({ config: basicConfig, body: body }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
         runs(function () {

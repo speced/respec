@@ -3,13 +3,19 @@ describe("Core - Fix headers", function () {
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
-        };
+        ,   shortName: "mydoc"
+        ,   previousURI:  "http://www.example.com"
+        ,   previousMaturity: "WD"
+        ,   previousPublishDate:  "2014-01-01"
+        }
+    ;
     it("should have set the correct header level", function () {
         var doc;
         runs(function () {
             makeRSDoc({ config: basicConfig,
                         body: "<section id='turtles'><h1>ONE</h1><section><h1>TWO</h1><section><h1>THREE</h1><section><h1>FOUR</h1>" +
-                              "<section><h1>FIVE</h1><section><h1>SIX</h1></section></section></section></section></section></section>"
+                              "<section><h1>FIVE</h1><section><h1>SIX</h1></section></section></section></section></section></section>" +
+                              "<section id='sotd'>Custom SOTD</section>"
                     }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);

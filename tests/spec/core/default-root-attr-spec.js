@@ -3,11 +3,17 @@ describe("Core — Default Root Attribute", function () {
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
-        };
+        ,   shortName: "mydoc"
+        ,   previousURI:  "http://www.example.com"
+        ,   previousMaturity: "WD"
+        ,   previousPublishDate:  "2014-01-01"
+        }
+    ,   body = "<section id='sotd'>Custom SOTD</section>"
+    ;
     it("should apply en and ltr defaults", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig }, function (rsdoc) { doc = rsdoc; });
+            makeRSDoc({ body: body, config: basicConfig }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
         runs(function () {
@@ -19,7 +25,7 @@ describe("Core — Default Root Attribute", function () {
     it("should not override existing dir", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, htmlAttrs: { dir: "rtl" } }, function (rsdoc) { doc = rsdoc; });
+            makeRSDoc({ body: body, config: basicConfig, htmlAttrs: { dir: "rtl" } }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
         runs(function () {
@@ -31,7 +37,7 @@ describe("Core — Default Root Attribute", function () {
     it("should not override existing lang and not set dir", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, htmlAttrs: { lang: "fr" } }, function (rsdoc) { doc = rsdoc; });
+            makeRSDoc({ body: body, config: basicConfig, htmlAttrs: { lang: "fr" } }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
         runs(function () {

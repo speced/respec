@@ -3,13 +3,19 @@ describe("Core - Figures", function () {
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
-        };
+        ,   shortName: "mydoc"
+        ,   previousURI:  "http://www.example.com"
+        ,   previousMaturity: "WD"
+        ,   previousPublishDate:  "2014-01-01"
+        }
+    ;
     it("should have handled figures", function () {
         var doc;
         runs(function () {
             makeRSDoc({ config: basicConfig,
                         body: "<section><section id='figs'><div class='figure'><pre title='PREFIG'>PRE</pre></div>" +
-                              "<img src='IMG' title='IMGTIT' class='figure'/></section><section id='tof'></section></section>"
+                              "<img src='IMG' title='IMGTIT' class='figure'/></section><section id='tof'></section></section>" +
+                              "<section id='sotd'>Custom SOTD</section>"
                     }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);

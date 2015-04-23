@@ -3,14 +3,20 @@ describe("Core — Best Practices", function () {
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
-        };
+        ,   shortName: "mydoc"
+        ,   previousURI:  "http://www.example.com"
+        ,   previousMaturity: "WD"
+        ,   previousPublishDate:  "2014-01-01"
+        }
+    ;
     it("should process examples", function () {
         var doc;
         runs(function () {
             makeRSDoc({
                         config: basicConfig
                     ,   body: $("<section><span class='practicelab'>BP1</span><span class='practicelab'>BP2</span>"
-                            +   "<section id='bp-summary'></section></section>")
+                            +   "<section id='bp-summary'></section></section>"
+                            +   "<section id='sotd'>Custom status</section>")
                     }, 
                     function (rsdoc) { doc = rsdoc; });
         });

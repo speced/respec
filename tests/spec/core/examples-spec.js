@@ -3,13 +3,19 @@ describe("Core — Examples", function () {
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
-        };
+        ,   shortName: "mydoc"
+        ,   previousURI:  "http://www.example.com"
+        ,   previousMaturity: "WD"
+        ,   previousPublishDate:  "2014-01-01"
+        }
+    ,   body = "<section id='sotd'>Custom SOTD</section>"
+    ;
     it("should process examples", function () {
         var doc;
         runs(function () {
             makeRSDoc({
                         config: basicConfig
-                    ,   body: $("<section><pre class='example' title='EX'>\n  {\n    CONTENT\n  }\n  </pre></section>")
+                    ,   body: $("<section><pre class='example' title='EX'>\n  {\n    CONTENT\n  }\n  </pre></section><section id='sotd'>Custom SOTD</section>")
                     }, 
                     function (rsdoc) { doc = rsdoc; });
         });

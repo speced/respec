@@ -4,11 +4,17 @@ describe("W3C — Conformance", function () {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
         ,   doRDFa:  false
-        };
+        ,   shortName: "mydoc"
+        ,   previousURI:  "http://www.example.com"
+        ,   previousMaturity: "WD"
+        ,   previousPublishDate:  "2014-01-01"
+        }
+    ,   body = "<section id='sotd'>Custom SOTD</section>"
+    ;
     it("should include an h2 and inject its content", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='conformance'><p>CONFORMANCE</p></section><section><h2>my section</h2><p>No terms are used except SHOULD.</p></section>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section id='conformance'><p>CONFORMANCE</p></section><section><h2>my section</h2><p>No terms are used except SHOULD.</p></section>" + body) }, 
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -25,7 +31,7 @@ describe("W3C — Conformance", function () {
     it("should include only referenced 2119 terms", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='conformance'><p>CONFORMANCE</p></section><section><h2>my section</h2><p>Terms are MUST, SHOULD, SHOULD NOT, and SHOULD  NOT.</p></section>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section id='conformance'><p>CONFORMANCE</p></section><section><h2>my section</h2><p>Terms are MUST, SHOULD, SHOULD NOT, and SHOULD  NOT.</p></section>" + body) }, 
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -39,7 +45,7 @@ describe("W3C — Conformance", function () {
     it("should omit the 2119 reference when there are no terms", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='conformance'><p>CONFORMANCE</p></section><section><h2>my section</h2><p>Terms are not used.</p></section>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section id='conformance'><p>CONFORMANCE</p></section><section><h2>my section</h2><p>Terms are not used.</p></section>" + body) }, 
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
