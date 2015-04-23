@@ -313,6 +313,13 @@ describe("Core - Contiguous WebIDL", function () {
         expect($mem.find(".idlMemberName").text()).toEqual("value");
         expect($target.find(".idlMember").last().find(".idlMemberValue").text()).toEqual('"blah blah"');
 
+        $target = $("#dict-required-fields", doc);
+        text =  "dictionary SuperStar {\n" +
+                "    required DOMString value;\n" +
+                "             DOMString optValue;\n" +
+                "};";
+        expect($target.text()).toEqual(text);
+
         // Links and IDs.
         $target = $("#dict-doc", doc);
         expect($target.find(":contains('DictDocTest')").filter("a").attr("href")).toEqual("#dom-dictdoctest");
