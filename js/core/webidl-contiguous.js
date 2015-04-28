@@ -510,11 +510,21 @@ define(
                             .join(", ");
             var len = idlType2Text(meth.idlType).length;
             if (meth.static) len += 7;
+            var specialProps = ["getter", "setter", "deleter", "legacycaller", "serializer", "stringifier"];
+            var special = "";
+            for (var i in specialProps) {
+                if (meth[specialProps[i]]) {
+                    special = specialProps[i] + " ";
+                    len += special.length;
+                    break;
+                }
+            }
             var pad = max - len;
             return idlMethodTmpl({
                 obj:        meth
             ,   indent:     indent
             ,   "static":   meth.static ? "static " : ""
+            ,   special:    special
             ,   pad:        pad
             ,   children:   params
             });
@@ -620,7 +630,13 @@ define(
                         defn.idlId = "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
                         break;
                     case "operation":
-                        name = defn.name;
+                        if (defn.name) {
+                            name = defn.name;
+                        } else if (defn.getter || defn.setter || defn.deleter ||
+                                   defn.legacycaller || defn.stringifier ||
+                                   defn.serializer ) {
+                            name = "";
+                        }
                         defn.idlId = ("idl-def-" + parent.toLowerCase() + "-" +
                                       name.toLowerCase() + '(' +
                                       defn.arguments.filter(function(arg) {
