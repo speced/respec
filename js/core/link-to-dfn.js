@@ -34,7 +34,12 @@ define(
                     var title = $ant.dfnTitle();
                     var link_for = ($ant.attr("for") || $ant.closest("[link-for]").attr("link-for") || "").toLowerCase();
                     if (titles[title] && titles[title][link_for]) {
+                        // Use an IDL, scoped definition if possible.
                         $ant.attr("href", "#" + titles[title][link_for].prop("id")).addClass("internalDFN");
+                    }
+                    else if (titles[title] && titles[title][""]) {
+                        // Use the global definition otherwise.
+                        $ant.attr("href", "#" + titles[title][""].prop("id")).addClass("internalDFN");
                     }
                     else {
                         // ignore WebIDL

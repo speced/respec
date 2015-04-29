@@ -467,5 +467,12 @@ describe("Core - Contiguous WebIDL", function () {
         $target = $("#doc-iface", doc);
         expect($target.find(".idlAttrName:contains('docString') a").attr("href")).toEqual("#dom-documented-docstring");
         expect($section.find("dfn:contains('docString')").attr("id")).toEqual("dom-documented-docstring");
+
+        expect($section.find("dfn:contains('Some generic term')").attr("id")).toEqual("dfn-some-generic-term");
+        expect($section.find("a:contains('Some generic term')").attr("href")).toEqual("#dfn-some-generic-term");
+        expect($section.find("p[link-for] a:contains('docString')").attr("href")).toEqual("#dom-documented-docstring");
+        var notDefinedAttr = $target.find(".idlAttribute:contains('notDefined')");
+        expect(notDefinedAttr.find(".idlAttrName").length).toEqual(1);
+        expect(notDefinedAttr.find(".idlAttrName").find('a').length).toEqual(0);
     });
 });

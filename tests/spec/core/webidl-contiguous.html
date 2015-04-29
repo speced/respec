@@ -458,10 +458,18 @@
       <pre id='doc-iface' class='idl'>
         interface Documented {
           attribute DOMString docString;
+          attribute DOMString notDefined;
         };
       </pre>
       <p class='note' dfn-for="Documented">
         <dfn>docString</dfn> is defined in a note.
+      </p>
+      <p link-for="Documented">
+        Testing <code>[link-for]</code>:
+        <dfn>Some generic term</dfn> isn't IDL.
+        <a>Some generic term</a> also isn't part of <a>Documented</a>.
+        <a>docString</a> is.
+        <a>notDefined</a> is too, but isn't defined elsewhere.
       </p>
     </section>
   </body>
