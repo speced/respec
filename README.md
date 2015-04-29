@@ -107,6 +107,20 @@ Once these dependencies are installed, running the test suite should be as simpl
 $ npm test
 ```
 
+That command is an alias for
+
+```
+$ node ./tests/headless.js
+```
+
+If you want to run only a subset of the tests, you can filter which jasmine specs are loaded by specifying additional parameters to that command. For instance,
+
+```
+$ node ./tests/headless.js contiguous
+```
+
+will run only tests whose spec filenames contains "contiguous". You can make a union of these filters by adding more parameters.
+
 [jasmine]: http://pivotal.github.io/jasmine/
 [travis]: https://travis-ci.org/w3c/respec
 [phantomjs]: http://phantomjs.org/
