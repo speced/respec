@@ -3,6 +3,7 @@ describe("Core - Contiguous WebIDL", function () {
     ,   $widl = $("<iframe width='800' height='200' style='display: none' src='spec/core/webidl-contiguous.html'></iframe>")
     ,   loaded = false
     ,   $target
+    ,   $section
     ,   text
     ,   doc
     ;
@@ -451,5 +452,12 @@ describe("Core - Contiguous WebIDL", function () {
         $target = $("#impl-less-basic", doc);
         text = "[Something]\n" + text;
         expect($target.text()).toEqual(text);
+    });
+
+    it("should link documentation", function() {
+        $section = $("#documentation", doc);
+        $target = $("#doc-iface", doc);
+        expect($target.find(".idlAttrName:contains('docString') a").attr("href")).toEqual("#dom-documented-docstring");
+        expect($section.find("dfn:contains('docString')").attr("id")).toEqual("dom-documented-docstring");
     });
 });

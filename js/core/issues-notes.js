@@ -72,8 +72,8 @@ define(
                                 $inno.removeAttr("title");
                             }
                             $div.append($tit);
-                            $div.append($inno.clone().removeClass(report.type).removeAttr('data-number'));
                             $inno.replaceWith($div);
+                            $div.append($inno.removeClass(report.type).removeAttr('data-number'));
                         }
                         msg.pub(report.type, report);
                     });
