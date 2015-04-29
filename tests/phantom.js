@@ -3,7 +3,7 @@ var page = require("webpage").create()
 ,   args = require("system").args
 ;
 
-page.open("http://localhost:3000/tests/phantom-runner.html?filter=" + (args[1] || ""), function () {});
+page.open("http://localhost:3000/tests/phantom-runner.html?filter=" + (args.slice(1).join("%20")), function () {});
 
 page.onConsoleMessage = function (msg) {
     if (msg === "JASMINE: ConsoleReporter finished") {

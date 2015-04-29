@@ -48,9 +48,16 @@
       "core/markdown-spec.js"
       ];
       var filter = function(x) { return true;};
-      var filterString = window.location.search.split("=")[1];
-      if (filterString) {
-         filter = function(x) { return x.indexOf(filterString) !== -1;};
+      var filterStrings = window.location.search.split("=")[1].split("%20");
+      if (filterStrings.length) {
+         filter = function(x) {
+            for (var i = 0; i < filterStrings.length; i++) {
+                if (x.indexOf(filterStrings[i]) !== -1) {
+                   return true;
+                }
+            }
+            return false;
+         };
       }
 
       specs.filter(filter).forEach(function(s) {
