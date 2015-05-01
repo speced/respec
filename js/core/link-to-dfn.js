@@ -51,6 +51,16 @@ define(
                         if (titles[target.title] && titles[target.title][target.for_]) {
                             var dfn = titles[target.title][target.for_];
                             $ant.attr("href", "#" + dfn.prop("id")).addClass("internalDFN");
+                            // If a definition is <code>, links to it should
+                            // also be <code>.
+                            //
+                            // Note that contents().length===1 excludes
+                            // definitions that have either other text, or other
+                            // whitespace, inside the <dfn>.
+                            if (dfn.closest('code,pre').length ||
+                                (dfn.contents().length === 1 && dfn.children('code').length === 1)) {
+                                $ant.wrapInner('<code></code>');
+                            }
                             return true;
                         }
                         return false;

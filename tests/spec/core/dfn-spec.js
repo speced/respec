@@ -18,4 +18,30 @@ describe("Core — Definitions", function () {
             flushIframes();
         });
     });
+    it("should make links <code> when their definitions are <code>", function () {
+        var doc;
+        runs(function () {
+            makeRSDoc({ config: basicConfig, body:
+                        $("<section id='dfn'>" +
+                            "<code><dfn>outerCode</dfn></code>" +
+                            "<pre><dfn>outerPre</dfn></pre>" +
+                            "<dfn><code>innerCode</code></dfn>" +
+                            "<dfn><code>partial</code> inner code</dfn>" +
+                            "<a>outerCode</a>" +
+                            "<a>outerPre</a>" +
+                            "<a>innerCode</a>" +
+                            "<a>partial inner code</a>" +
+                            "</section>") },
+                      function (rsdoc) { doc = rsdoc; });
+        });
+        waitsFor(function () { return doc; }, MAXOUT);
+        runs(function () {
+            var $sec = $("#dfn", doc);
+            expect($sec.find("a:contains('outerCode')").contents()[0].nodeName).toEqual("CODE");
+            expect($sec.find("a:contains('outerPre')").contents()[0].nodeName).toEqual("CODE");
+            expect($sec.find("a:contains('innerCode')").contents()[0].nodeName).toEqual("CODE");
+            expect($sec.find("a:contains('partial')").contents()[0].nodeName).toEqual("#text");
+            flushIframes();
+        });
+    });
 });
