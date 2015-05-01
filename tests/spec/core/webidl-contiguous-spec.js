@@ -477,7 +477,10 @@ describe("Core - Contiguous WebIDL", function () {
         expect(notDefinedAttr.attr("id")).toEqual("idl-def-documented-notdefined");
         expect($section.find("p[link-for] a:contains('notDefined')").attr("href")).toEqual("#idl-def-documented-notdefined");
 
+        var definedElsewhere = $section.find("dfn:contains('definedElsewhere')");
         var linkFromElsewhere = $section.find("a:contains('Documented.docString')");
+        expect(definedElsewhere.prop('id')).toEqual('dom-documented-definedelsewhere');
+        expect($target.find(".idlAttrName:contains('definedElsewhere') a").attr("href")).toEqual("#dom-documented-definedelsewhere");
         expect(linkFromElsewhere.attr('href')).toEqual('#dom-documented-docstring');
 
         expect($section.find("#without-link-for a:contains('Documented')").attr("href")).toEqual("#idl-def-documented");
