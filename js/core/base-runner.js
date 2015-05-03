@@ -118,15 +118,25 @@ define(
                         return;
                     }
                     var plug = plugs.shift();
+                    var resolve;
+                    var stepPromise = new Promise(function(r) {
+                        resolve = r;
+                    });
+                    stepPromise.then(pipeline);
                     if (plug.run) {
-                        try { plug.run.call(plug, respecConfig, document, pipeline, respecEvents); }
+                        try {
+                            var result = plug.run.call(plug, respecConfig, document, resolve, respecEvents);
+                            if (result) {
+                                resolve(result);
+                            }
+                        }
                         catch (e) {
                             respecEvents.pub("error", e);
                             respecEvents.pub("end", "unknown/with-error");
-                            pipeline();
+                            resolve();
                         }
                     }
-                    else pipeline();
+                    else resolve();
                 };
                 if (respecConfig.preProcess) {
                     for (var i = 0; i < respecConfig.preProcess.length; i++) {
