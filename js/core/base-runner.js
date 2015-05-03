@@ -79,7 +79,7 @@ if (window.console) {
 
 
 define(
-    ["jquery"],
+    ["jquery", "Promise.min"],
     function () {
         return {
             runAll:    function (plugs) {
