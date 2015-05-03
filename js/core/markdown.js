@@ -48,7 +48,7 @@ define(
             pedantic: false,
             sanitize: false
         });
-        
+
         function makeBuilder(doc) {
             var root = doc.createDocumentFragment()
             ,   stack = [root]
@@ -137,7 +137,7 @@ define(
                 text = this.removeLeftPadding(text);
                 return marked(text);
             },
-            
+
             removeLeftPadding: function(text) {
                 // Handles markdown content being nested
                 // inside elements with soft tabs. E.g.:
@@ -187,21 +187,21 @@ define(
                 ,   div = doc.createElement('div')
                 ,   node
                 ;
-                
+
                 div.innerHTML = this.toHTML(doc.body.innerHTML);
                 while (node = div.firstChild) {
                     fragment.appendChild(node);
                 }
                 return fragment;
             },
-            
+
             processSections: function(doc) {
                 var self = this;
                 $('section', doc).each(function() {
                     this.innerHTML = self.toHTML(this.innerHTML);
                 });
             },
-            
+
             processIssuesNotesAndReqs: function(doc) {
                 var div = doc.createElement('div');
                 var self = this;
@@ -214,7 +214,7 @@ define(
                     }
                 });
             },
-            
+
             structure: function(fragment, doc) {
                 function process(root) {
                     var node

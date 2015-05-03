@@ -22,7 +22,7 @@ define(
 
                         if (used.length > 1) {
                             str += "key words " + utils.joinAnd(used, mapper) + " are ";
-                        } 
+                        }
                         else {
                             str += "key word " + utils.joinAnd(used, mapper) + " is " ;
                         }

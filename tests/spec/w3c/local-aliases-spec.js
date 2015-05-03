@@ -29,4 +29,3 @@ describe("W3C — Aliased References", function () {
         });
     });
 });
-

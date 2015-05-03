@@ -41,7 +41,7 @@ define(
                     $kidsHolder.find("a").renameElement("span").attr("class", "formerLink").removeAttr("href");
                     $kidsHolder.find("dfn").renameElement("span").removeAttr("id");
                     var id = $sec.makeID(null, title);
-                    
+
                     if (!isIntro) current[current.length - 1]++;
                     var secnos = current.slice();
                     if ($sec.hasClass("appendix") && current.length === 1 && !appendixMode) {
@@ -78,7 +78,7 @@ define(
                 return $ul;
             }
         ;
-        
+
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/structure");

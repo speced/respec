@@ -1,6 +1,6 @@
 /* --- PERMALINKS --- */
 {{#if permalinkHide}}
-section > *:hover > span.permalink { visibility: visible; } 
+section > *:hover > span.permalink { visibility: visible; }
 {{/if}}
 
 .permalink {
@@ -19,7 +19,7 @@ section > *:hover > span.permalink { visibility: visible; }
     {{/if}}
 }
 
-.permalink a, .permalink a:link, .permalink a:visited, .permalink a:hover, .permalink a:focus, .permalink a:active 
+.permalink a, .permalink a:link, .permalink a:visited, .permalink a:hover, .permalink a:focus, .permalink a:active
 {
 	background:transparent !important;
 	text-decoration:none;

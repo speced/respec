@@ -61,7 +61,7 @@ describe("W3C — RDFa", function () {
     it("should set the document information", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") },
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -83,7 +83,7 @@ describe("W3C — RDFa", function () {
     it("should set RDFa information on editors", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") },
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -125,7 +125,7 @@ describe("W3C — RDFa", function () {
     it("should set RDFa information on authors", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") },
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -151,7 +151,7 @@ describe("W3C — RDFa", function () {
     it("should set information on patent", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") },
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -164,7 +164,7 @@ describe("W3C — RDFa", function () {
     it("should describe normative references", function () {
       var doc;
       runs(function () {
-          makeRSDoc({ config: basicConfig, body: $("<section><p>[[!DAHU]] [[REX]]</p></section>") }, 
+          makeRSDoc({ config: basicConfig, body: $("<section><p>[[!DAHU]] [[REX]]</p></section>") },
                     function (rsdoc) { doc = rsdoc; });
       });
       waitsFor(function () { return doc; }, MAXOUT);
@@ -189,7 +189,7 @@ describe("W3C — RDFa", function () {
     it("should mark abstract using dc:abstract", function () {
       var doc;
       runs(function () {
-          makeRSDoc({ config: basicConfig, body: $("<section id='abstract'>test abstract</section>") }, 
+          makeRSDoc({ config: basicConfig, body: $("<section id='abstract'>test abstract</section>") },
                     function (rsdoc) { doc = rsdoc; });
       });
       waitsFor(function () { return doc; }, MAXOUT);
@@ -204,7 +204,7 @@ describe("W3C — RDFa", function () {
     it("should add bibo to chapters", function () {
       var doc;
       runs(function () {
-          makeRSDoc({ config: basicConfig, body: $("<section id='chap'><h2>Chapter</h2></section>") }, 
+          makeRSDoc({ config: basicConfig, body: $("<section id='chap'><h2>Chapter</h2></section>") },
                     function (rsdoc) { doc = rsdoc; });
       });
       waitsFor(function () { return doc; }, MAXOUT);
@@ -219,7 +219,7 @@ describe("W3C — RDFa", function () {
     it("should do nothing when disabled", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: noConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") }, 
+            makeRSDoc({ config: noConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") },
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);

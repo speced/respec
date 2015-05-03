@@ -10,10 +10,10 @@
 //
 //     permalinkSymbol:    the character(s) to use for the link.
 //                         Defaults to §
-//     permalinkEdge:      Boolean. The link will be right-justified.  Otherwise 
+//     permalinkEdge:      Boolean. The link will be right-justified.  Otherwise
 //                         it will be immediately after the heading text.
 //                         Defaults to false.
-//     permalinkHide:      Boolean. The symbol will be hidden until the header is 
+//     permalinkHide:      Boolean. The symbol will be hidden until the header is
 //                         hovered over.  Defaults to false.
 
 define(

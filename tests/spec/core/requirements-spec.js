@@ -43,7 +43,7 @@ describe("Core — Requirements", function () {
       waitsFor(function () { return doc; }, MAXOUT);
       runs(function () {
         var $refs = $("a.reqRef", doc);
-        
+
         expect($refs.first().text()).toEqual("Req. 1");
         expect($refs.last().text()).toEqual("Req. not found 'foo'");
       });

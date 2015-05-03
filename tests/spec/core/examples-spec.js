@@ -10,7 +10,7 @@ describe("Core — Examples", function () {
             makeRSDoc({
                         config: basicConfig
                     ,   body: $("<section><pre class='example' title='EX'>\n  {\n    CONTENT\n  }\n  </pre></section>")
-                    }, 
+                    },
                     function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);

@@ -32,4 +32,3 @@ describe("Core - Inlines", function () {
         });
     });
 });
-
