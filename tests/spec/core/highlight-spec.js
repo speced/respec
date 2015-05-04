@@ -10,7 +10,7 @@ describe("Core — Highlight", function () {
             makeRSDoc({
                         config: basicConfig
                     ,   body: $("<section><pre class='example sh_javascript'>function () {\n  alert('foo');\n}</pre></section>")
-                    }, 
+                    },
                     function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);

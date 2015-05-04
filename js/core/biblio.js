@@ -127,7 +127,7 @@ define(
                 if (badrefs.hasOwnProperty(item)) msg.pub("error", "Bad reference: [" + item + "] (appears " + badrefs[item] + " times)");
             }
         };
-        
+
         return {
             stringifyRef: stringifyRef,
             run:    function (conf, doc, cb, msg) {

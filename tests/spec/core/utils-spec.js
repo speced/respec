@@ -91,7 +91,7 @@ describe("Core - Utils", function () {
             expect(utils.humanDate(d)).toEqual("15 March 1977");
         });
     });
-    
+
     // isoDate
     it("should produce an ISO date", function () {
         runs(function () {

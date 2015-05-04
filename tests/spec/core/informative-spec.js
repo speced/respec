@@ -10,7 +10,7 @@ describe("Core — Informative", function () {
             makeRSDoc({
                         config: basicConfig
                     ,   body: $("<section class='informative'><h2>TITLE</h2></section>")
-                    }, 
+                    },
                     function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);

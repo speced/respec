@@ -116,7 +116,7 @@ describe("W3C — Headers", function () {
 
     // previousPublishDate & previousMaturity
     it("should take previousPublishDate and previousMaturity into account", function () {
-        loadWithConfig({ specStatus: "REC", publishDate: "2017-03-15", 
+        loadWithConfig({ specStatus: "REC", publishDate: "2017-03-15",
                          previousPublishDate: "1977-03-15", previousMaturity: "CR" }, function ($ifr) {
             expect($("dt:contains('Previous version:')", $ifr[0].contentDocument).next("dd").text())
                 .toMatch(/\/1977\/CR-[^\/]+-19770315\//);
@@ -221,7 +221,7 @@ describe("W3C — Headers", function () {
             expect($sotd.find("a:contains('archives')").attr("href")).toEqual("http://lists.w3.org/Archives/Public/WGLIST/");
             expect($sotd.find("a:contains('disclosures')").attr("href")).toEqual("WGPATENT");
         });
-        loadWithConfig({ "wg[]": ["WGNAME1", "WGNAME2"], "wgURI[]": ["WGURI1", "WGURI2"], 
+        loadWithConfig({ "wg[]": ["WGNAME1", "WGNAME2"], "wgURI[]": ["WGURI1", "WGURI2"],
                          "wgPatentURI[]": ["WGPATENT1", "WGPATENT2"], wgPublicList: "WGLIST" }, function ($ifr) {
             var $sotd = $("#sotd", $ifr[0].contentDocument);
             expect($sotd.find("a:contains('WGNAME1')").length).toEqual(2);
@@ -289,7 +289,7 @@ describe("W3C — Headers", function () {
             expect($sotd.find("a:contains('subscribe')").attr("href")).toEqual("mailto:WGLIST-request@w3.org?subject=subscribe");
             expect($sotd.find("a:contains('archives')").attr("href")).toEqual("http://lists.w3.org/Archives/Public/WGLIST/");
         });
-        loadWithConfig({ specStatus: "BG-FINAL", wg: "WGNAME", wgURI: "http://WG", 
+        loadWithConfig({ specStatus: "BG-FINAL", wg: "WGNAME", wgURI: "http://WG",
                          thisVersion: "http://THIS", latestVersion: "http://LATEST" }, function ($ifr) {
             expect($(".head .copyright a[href='https://www.w3.org/community/about/agreements/fsa/']", $ifr[0].contentDocument).length).toEqual(1);
             expect($(".head h2", $ifr[0].contentDocument).text()).toMatch(/Final Business Group Report/);

@@ -12,7 +12,7 @@ define(
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/highlight");
-                
+
                 // fix old classes
                 var oldies = "sh_css sh_html sh_javascript sh_javascript_dom sh_xml".split(" ");
                 for (var i = 0, n = oldies.length; i < n; i++) {
@@ -22,7 +22,7 @@ define(
                         msg.pub("warn", "Old highlighting class '" + old + "', use 'highlight' instead.");
                     });
                 }
-                
+
                 // prettify
                 var $highs = $("pre.highlight, code.highlight")
                 ,   done = function () {
