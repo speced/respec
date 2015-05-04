@@ -79,7 +79,7 @@ if (window.console) {
 
 
 define(
-    ["jquery"],
+    ["jquery", "Promise.min"],
     function () {
         return {
             runAll:    function (plugs) {
@@ -98,43 +98,49 @@ define(
                 });
                 respecEvents.pub("start", "core/base-runner");
 
-                // the first in the plugs is going to be us
-                plugs.shift();
-
-                var pipeline;
-                pipeline = function () {
-                    if (!plugs.length) {
-                        if (respecConfig.postProcess) {
-                            for (var i = 0; i < respecConfig.postProcess.length; i++) {
-                                try { respecConfig.postProcess[i].apply(this); }
-                                catch (e) { respecEvents.pub("error", e); }
-                            }
-                        }
-                        if (respecConfig.afterEnd) {
-                            try { respecConfig.afterEnd.apply(window, Array.prototype.slice.call(arguments)); }
-                            catch (e) { respecEvents.pub("error", e); }
-                        }
-                        respecEvents.pub("end", "core/base-runner");
-                        return;
-                    }
-                    var plug = plugs.shift();
-                    if (plug.run) {
-                        try { plug.run.call(plug, respecConfig, document, pipeline, respecEvents); }
-                        catch (e) {
-                            respecEvents.pub("error", e);
-                            respecEvents.pub("end", "unknown/with-error");
-                            pipeline();
-                        }
-                    }
-                    else pipeline();
-                };
                 if (respecConfig.preProcess) {
                     for (var i = 0; i < respecConfig.preProcess.length; i++) {
                         try { respecConfig.preProcess[i].apply(this); }
                         catch (e) { respecEvents.pub("error", e); }
                     }
                 }
-                pipeline();
+
+                var pipeline = Promise.resolve();
+                // the first in the plugs is going to be us
+                plugs.shift();
+                plugs.forEach(function(plug) {
+                    pipeline = pipeline.then(function () {
+                        if (plug.run) {
+                            return new Promise(function runPlugin(resolve, reject) {
+                                var result = plug.run.call(plug, respecConfig, document, resolve, respecEvents);
+                                // If the plugin returns a promise, have that
+                                // control the end of the plugin's run.
+                                // Otherwise, assume it'll call resolve() as a
+                                // completion callback.
+                                if (result) {
+                                    resolve(result);
+                                }
+                            }).catch(function(e) {
+                                respecEvents.pub("error", e);
+                                respecEvents.pub("end", "unknown/with-error");
+                            });
+                        }
+                        else return Promise.resolve();
+                    });
+                });
+                return pipeline.then(function() {
+                    if (respecConfig.postProcess) {
+                        for (var i = 0; i < respecConfig.postProcess.length; i++) {
+                            try { respecConfig.postProcess[i].apply(this); }
+                            catch (e) { respecEvents.pub("error", e); }
+                        }
+                    }
+                    if (respecConfig.afterEnd) {
+                        try { respecConfig.afterEnd.apply(window, Array.prototype.slice.call(arguments)); }
+                        catch (e) { respecEvents.pub("error", e); }
+                    }
+                    respecEvents.pub("end", "core/base-runner");
+                });
             }
         };
     }
