@@ -21,7 +21,7 @@ function runPhantom () {
         childProcess.stdout.pipe(process.stdout);
         childProcess.stderr.pipe(process.stderr);
     }
-    var childProcess = exec('phantomjs --ssl-protocol=any --ignore-ssl-errors=yes ./tests/phantom.js', function () {});
+    var childProcess = exec('phantomjs --ssl-protocol=any --ignore-ssl-errors=yes ./tests/phantom.js ' + (process.argv.slice(2).join(" ")), function () {});
     childProcess.stdout.pipe(process.stdout);
     childProcess.stderr.pipe(process.stderr);
     childProcess.on('exit', function (code) {
