@@ -217,15 +217,23 @@ describe("Core - Contiguous WebIDL", function () {
                 "    SuperStar?         ull();\n" +
                 "    // 4\n" +
                 "    SuperStar[][][][]  paramed(SuperStar[][]?[] one, [ExtAttrs] ByteString? ext, optional short maybe, short[] shorts, short[][][][] hypercubes, optional short defaulted = 3.5, optional DOMString defaulted2 = \"one\", short... variable);\n" +
+                "    // 5\n" +
+                "    getter float       ();\n" +
+                "    // 6\n" +
+                "    getter float       withName();\n" +
+                "    // 7\n" +
+                "    setter void        ();\n" +
+                "    // 8\n" +
+                "    setter void        named();\n" +
                 "};";
         expect($target.text()).toEqual(text);
-        expect($target.find(".idlMethod").length).toEqual(5);
+        expect($target.find(".idlMethod").length).toEqual(9);
         var $meth = $target.find(".idlMethod").first();
         expect($meth.find(".idlMethType").text()).toEqual("void");
         expect($meth.find(".idlMethName").text()).toEqual("basic");
         expect($target.find(".idlMethType:contains('SuperStar?') a").text()).toEqual("SuperStar");
         expect($target.find(".idlMethType:contains('SuperStar[][][][]') a").text()).toEqual("SuperStar");
-        var $lst = $target.find(".idlMethod").last();
+        var $lst = $target.find(".idlMethod").eq(4);
         expect($lst.find(".idlParam").length).toEqual(8);
         expect($lst.find(".idlParam:contains('optional')").length).toEqual(3);
         expect($lst.find(".idlParam").first().find(".idlParamType > a").text()).toEqual("SuperStar");
