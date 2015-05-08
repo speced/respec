@@ -23,10 +23,11 @@ define(
                     }
                 }
                 // mark issues and notes with heading
-                var noteCount = 0 ; var issueCount = 0 ;
-                $(".note-title, .issue-title", doc).each(function (i, item) {
+                var noteCount = 0 ; var issueCount = 0 ; var ednoteCount = 0;
+                $(".note-title, .ednote-title, .issue-title", doc).each(function (i, item) {
                     var $item = $(item)
                     ,   isIssue = $item.hasClass("issue-title")
+                    ,   isEdNote = $item.hasClass("ednote-title")
                     ,   level = $item.parents("section").length+2 ;
 
                     $item.attr('aria-level', level) ;
@@ -34,6 +35,9 @@ define(
                     if (isIssue) {
                         issueCount++;
                         $item.makeID('h', "issue" + issueCount) ;
+                    } else if (isEdNote) {
+                        ednoteCount++;
+                        $item.makeID('h', "ednote" + ednoteCount) ;
                     } else {
                         noteCount++;
                         $item.makeID('h', "note" + noteCount) ;

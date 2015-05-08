@@ -62,6 +62,31 @@ describe("Core — Issues and Notes", function () {
             flushIframes();
         });
     });
+    it("should process ednodes", function () {
+        var doc;
+        runs(function () {
+            makeRSDoc({
+                        config: basicConfig
+                    ,   body: $("<section><p>BLAH <span class='ednote'>EDNOTE-INLINE</span></p><p class='ednote' title='EDNOTE-TIT'>EDNOTE</p>")
+                    },
+                    function (rsdoc) { doc = rsdoc; });
+        });
+        waitsFor(function () { return doc; }, MAXOUT);
+        runs(function () {
+            var $not = $("div.ednote", doc)
+            ,   $pnot = $not.find("p")
+            ,   $spnot = $("span.ednote", doc)
+            ;
+
+            console.log(doc);
+
+            expect($not.find("div.ednote-title").length).toEqual(1);
+            expect($not.find("div.ednote-title").text()).toEqual("Editor's Note: EDNOTE-TIT");
+            expect($pnot.attr("title")).toBeUndefined();
+            expect($pnot.text()).toEqual("EDNOTE");
+            flushIframes();
+        });
+    });
     it("should process warnings", function () {
       var doc;
         runs(function () {
