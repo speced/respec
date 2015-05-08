@@ -38,8 +38,8 @@ define(
                             });
                         }
                         // create a heading triple too, as per the role spec
-                        // since we should not be putting an @role on 
-                        // h* elements with a value of heading, but we 
+                        // since we should not be putting an @role on
+                        // h* elements with a value of heading, but we
                         // still want the semantic markup
                         if ($fc.length) {
                             if (!fcref) {

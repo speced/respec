@@ -4,7 +4,7 @@ div.example-title {
     color: #b9ab2d;
 }
 div.example-title span {
-    text-transform: uppercase;   
+    text-transform: uppercase;
 }
 aside.example, div.example, div.illegal-example {
     padding: 0.5em;
@@ -19,7 +19,7 @@ aside.example, div.example {
     border-left-width: .5em;
     border-left-style: solid;
     border-color: #e0cb52;
-    background: #fcfaee;    
+    background: #fcfaee;
 }
 
 aside.example div.example {

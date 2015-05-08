@@ -253,7 +253,6 @@
           SuperStar? ull();
           // 4
           SuperStar[][][][] paramed(SuperStar[][]?[] one, [ExtAttrs] ByteString? ext, optional short maybe, short[] shorts, short[][][][] hypercubes, optional short defaulted = 3.5, optional DOMString defaulted2 = "one", short... variable);
-        <!--
           // 5
           getter float ();
           // 6
@@ -262,7 +261,7 @@
           setter void ();
           // 8
           setter void named ();
-        ... and other special operations
+<!--        ... and other special operations
      -->};
       </pre>
       <p id="meth-basic-doc" dfn-for="MethBasic">
@@ -453,6 +452,17 @@
       <pre id='impl-less-basic' class='idl'>
         [Something]Window implements Breakable;
       </pre>
+    </section>
+    <section id="documentation">
+      <h2>Documentation</h2>
+      <pre id='doc-iface' class='idl'>
+        interface Documented {
+          attribute DOMString docString;
+        };
+      </pre>
+      <p class='note' dfn-for="Documented">
+        <dfn>docString</dfn> is defined in a note.
+      </p>
     </section>
   </body>
 </html>

@@ -53,7 +53,7 @@ describe("Core - Structure", function () {
             delete basicConfig.noTOC;
         });
     });
-        
+
     it("should include introductory sections in ToC with tocIntroductory", function () {
         // test with tocIntroductory
         var doc;
@@ -98,4 +98,3 @@ describe("Core - Structure", function () {
         });
     });
 });
-

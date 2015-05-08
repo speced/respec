@@ -7,7 +7,7 @@ describe("Core — Definitions", function () {
     it("should process definitions", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='dfn'><dfn>text</dfn><a>text</a></section>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section id='dfn'><dfn>text</dfn><a>text</a></section>") },
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);

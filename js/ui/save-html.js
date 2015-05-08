@@ -57,7 +57,7 @@ define(
                                 })
                                 ;
                         }
-                        
+
                     }
                 ;
                 addButton("Save as HTML", self.toString(), "Overview.html", function () { self.toHTMLSource(); });

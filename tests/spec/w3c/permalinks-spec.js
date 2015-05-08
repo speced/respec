@@ -60,7 +60,7 @@ describe("W3C — Permalinks", function () {
     it("permalinks data should be added when section or h* have an id", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section class='introductory' id='sotd'>Some unique SOTD content</section><section id='testing'><h2>a heading</h2><p>some content</p></section>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section class='introductory' id='sotd'>Some unique SOTD content</section><section id='testing'><h2>a heading</h2><p>some content</p></section>") },
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -77,7 +77,7 @@ describe("W3C — Permalinks", function () {
     it("permalinks data should be added when div or h* have an id", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section class='introductory' id='sotd'>Some unique SOTD content</section><div id='testing'><h2>a heading</h2><p>some content</p></div>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section class='introductory' id='sotd'>Some unique SOTD content</section><div id='testing'><h2>a heading</h2><p>some content</p></div>") },
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -94,7 +94,7 @@ describe("W3C — Permalinks", function () {
     it("permalinks data should not be added when section or h* have no id", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section class='introductory' id='sotd'>Some unique SOTD content</section><section id='testing'><h2>a heading</h2><p>some content</p></section><section><h2>another heading</h2><p>Other Content</p></section>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section class='introductory' id='sotd'>Some unique SOTD content</section><section id='testing'><h2>a heading</h2><p>some content</p></section><section><h2>another heading</h2><p>Other Content</p></section>") },
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -109,7 +109,7 @@ describe("W3C — Permalinks", function () {
     it("permalinks data should not be added when section has a class of nolink", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section class='introductory' id='sotd'>Some unique SOTD content</section><section class='nolink' id='testing'><h2>a heading</h2><p>some content</p></section>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section class='introductory' id='sotd'>Some unique SOTD content</section><section class='nolink' id='testing'><h2>a heading</h2><p>some content</p></section>") },
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -123,7 +123,7 @@ describe("W3C — Permalinks", function () {
     it("should do nothing when disabled", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: noConfig, body: $("<section class='introductory' id='sotd'>Some unique SOTD content</section><section id='testing'><h2>a heading</h2><p>some content</p></section>") }, 
+            makeRSDoc({ config: noConfig, body: $("<section class='introductory' id='sotd'>Some unique SOTD content</section><section id='testing'><h2>a heading</h2><p>some content</p></section>") },
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -140,7 +140,7 @@ describe("W3C — Permalinks", function () {
     it("permalinks content attribute should have special characters escaped", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section class='introductory' id='sotd'>Some unique SOTD content</section><div id='testing'><h2>a heading with "+'"'+" and '</h2><p>some content</p></div>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section class='introductory' id='sotd'>Some unique SOTD content</section><div id='testing'><h2>a heading with "+'"'+" and '</h2><p>some content</p></div>") },
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -156,7 +156,7 @@ describe("W3C — Permalinks", function () {
     it("permalinks not on edge will have non-breaking space after heading", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section class='introductory' id='sotd'>Some unique SOTD content</section><div id='testing'><h2>a heading with "+'"'+" and '</h2><p>some content</p></div>") }, 
+            makeRSDoc({ config: basicConfig, body: $("<section class='introductory' id='sotd'>Some unique SOTD content</section><div id='testing'><h2>a heading with "+'"'+" and '</h2><p>some content</p></div>") },
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
