@@ -748,7 +748,8 @@ define(
                         .each(function() {
                             var elem = $(this);
                             var title = elem.attr('data-title').toLowerCase();
-                            var parent = elem.closest('.idlDictionary,.idlEnum,.idlException,.idlInterface');
+                            // Select the nearest ancestor element that can contain members.
+                            var parent = elem.parent().closest('.idlDictionary,.idlEnum,.idlException,.idlInterface');
                             if (parent.length) {
                                 elem.attr('data-dfn-for', parent.attr('data-title').toLowerCase());
                             }

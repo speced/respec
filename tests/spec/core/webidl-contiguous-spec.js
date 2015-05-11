@@ -479,5 +479,7 @@ describe("Core - Contiguous WebIDL", function () {
 
         var linkFromElsewhere = $section.find("a:contains('Documented.docString')");
         expect(linkFromElsewhere.attr('href')).toEqual('#dom-documented-docstring');
+
+        expect($section.find("#without-link-for a:contains('Documented')").attr("href")).toEqual("#idl-def-documented");
     });
 });
