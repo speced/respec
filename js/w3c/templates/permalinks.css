@@ -1,9 +1,13 @@
 /* --- PERMALINKS --- */
 {{#if permalinkHide}}
-section > *:hover > span.permalink { visibility: visible; }
+section > *:hover > p.permalink { visibility: visible; } 
 {{/if}}
 
-.permalink {
+h2.permalink, h3.permalink, h4.permalink, h5.permalink, h6.permalink {
+    display:inline;
+}
+
+p.permalink {
     width: 1px;
     height: 1px;
     overflow: visible;
@@ -11,6 +15,7 @@ section > *:hover > span.permalink { visibility: visible; }
     font-style: normal;
     vertical-align: middle;
     margin-left: 4px;
+    display: inline;
     {{#if permalinkEdge}}
 	float: right;
     {{/if}}
