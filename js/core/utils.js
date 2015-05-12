@@ -38,6 +38,31 @@ define(
             return title.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
         };
 
+        // For any element (usually <a>), returns an array of targets that
+        // element might refer to, of the form
+        // {for_: 'interfacename', title: 'membername'}.
+        //
+        // For an element like:
+        //  <p link-for="Int1"><a for="Int2">Int3.member</a></p>
+        // we'll return:
+        //  * {for_: "int2", title: "int3.member"}
+        //  * {for_: "int3", title: "member"}
+        //  * {for_: "", title: "int3.member"}
+        $.fn.linkTargets = function () {
+            var elem = this;
+            var link_for = (elem.attr("for") || elem.closest("[link-for]").attr("link-for") || "").toLowerCase();
+            var title = elem.dfnTitle();
+            var result = [{for_: link_for, title: title}];
+            var split = title.split('.');
+            if (split.length === 2) {
+                // If there are multiple '.'s, this won't match an
+                // Interface/member pair anyway.
+                result.push({for_: split[0], title: split[1]});
+            }
+            result.push({for_:"", title: title});
+            return result;
+        };
+
 
         // Applied to an element, sets an ID for it (and returns it), using a specific prefix
         // if provided, and a specific text if given.

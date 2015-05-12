@@ -731,7 +731,7 @@ define(
                     $(doc).find("head link").first().before($("<style/>").text(css));
                 }
 
-                var infNames = [];
+                var idlNames = [];
                 $idl.each(function () {
                     var parse;
                     try {
@@ -744,22 +744,23 @@ define(
                     linkDefinitions(parse, conf.definitionMap, "", msg);
                     var $df = makeMarkup(parse, msg);
                     $df.attr({id: this.id});
-                    $.merge(infNames,
-                            $df.find('.idlInterface,.idlException,.idlDictionary,.idlTypedef,.idlCallback,.idlEnum')
-                               .map(function() { return this.id; }).get());
+                    $df.find('.idlAttribute,.idlCallback,.idlConst,.idlDictionary,.idlEnum,.idlException,.idlField,.idlInterface,.idlMember,.idlMethod,.idlSerializer,.idlTypedef')
+                        .each(function() {
+                            var elem = $(this);
+                            var title = elem.attr('data-title').toLowerCase();
+                            // Select the nearest ancestor element that can contain members.
+                            var parent = elem.parent().closest('.idlDictionary,.idlEnum,.idlException,.idlInterface');
+                            if (parent.length) {
+                                elem.attr('data-dfn-for', parent.attr('data-title').toLowerCase());
+                            }
+                            if (!conf.definitionMap[title]) {
+                                conf.definitionMap[title] = [];
+                            }
+                            conf.definitionMap[title].push(elem);
+                        });
                     $(this).replaceWith($df);
                 });
                 doc.normalize();
-                $("a:not([href])").each(function () {
-                    var $ant = $(this);
-                    if ($ant.hasClass("externalDFN")) return;
-                    var name = $ant.dfnTitle();
-                    if (!conf.definitionMap[name] && $.inArray('idl-def-' + name, infNames) !== -1) {
-                        $ant.attr("href", "#idl-def-" + name)
-                            .addClass("idlType")
-                            .wrapInner("<code></code>");
-                    }
-                });
                 finish();
             }
         };
