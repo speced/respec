@@ -684,25 +684,42 @@ define(
         // When a matching <dfn> is found, it's given <code> formatting,
         // marked as an IDL definition, and returned.  If no <dfn> is found,
         // the function returns 'undefined'.
-        function findDfn(parent, name, definitionMap) {
+        function findDfn(parent, name, definitionMap, msg) {
             parent = parent.toLowerCase();
             name = name.toLowerCase();
             var dfnForArray = definitionMap[name];
-            if (!dfnForArray) {
-                return undefined;
+            var dfns = [];
+            if (dfnForArray) {
+                // Definitions that have a title and [for] that exactly match the
+                // IDL entity:
+                dfns = dfnForArray.filter(function(dfn) {
+                    return dfn.attr('data-dfn-for') === parent;
+                });
+                // If this is a top-level entity, and we didn't find anything with
+                // an explicitly empty [for], try <dfn> that inherited a [for].
+                if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
+                    dfns = dfnForArray;
+                }
             }
-            // Definitions that have a title and [for] that exactly match the
-            // IDL entity:
-            var dfns = dfnForArray.filter(function(dfn) {
-                return dfn.attr('data-dfn-for') === parent;
-            });
-            // If this is a top-level entity, and we didn't find anything with
-            // an explicitly empty [for], try <dfn> that inherited a [for].
-            if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
-                var dfns = dfnForArray;
+            // If we haven't found any definitions with explicit [for]
+            // and [title], look for a dotted definition, "parent.name".
+            if (dfns.length === 0 && parent !== "") {
+                var dottedName = parent + '.' + name;
+                dfnForArray = definitionMap[dottedName];
+                if (dfnForArray !== undefined && dfnForArray.length === 1) {
+                    dfns = dfnForArray;
+                    // Found it: update the definition to specify its [for] and title.
+                    delete definitionMap[dottedName];
+                    dfns[0].attr('data-dfn-for', parent);
+                    dfns[0].attr('title', name);
+                    if (definitionMap[name] === undefined) {
+                        definitionMap[name] = [];
+                    }
+                    definitionMap[name].push(dfns[0]);
+                }
             }
             if (dfns.length > 1) {
-                msg.pub("error", "Multiple <dfn>s for " + name + " in " + parent);
+                msg.pub("error", "Multiple <dfn>s for " + name + (parent ? " in " + parent : ""));
             }
             if (dfns.length === 0) {
                 return undefined;
