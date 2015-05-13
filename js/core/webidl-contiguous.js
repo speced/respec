@@ -684,7 +684,7 @@ define(
         // When a matching <dfn> is found, it's given <code> formatting,
         // marked as an IDL definition, and returned.  If no <dfn> is found,
         // the function returns 'undefined'.
-        function findDfn(parent, name, definitionMap) {
+        function findDfn(parent, name, definitionMap, msg) {
             parent = parent.toLowerCase();
             name = name.toLowerCase();
             var dfnForArray = definitionMap[name];
@@ -719,7 +719,7 @@ define(
                 }
             }
             if (dfns.length > 1) {
-                msg.pub("error", "Multiple <dfn>s for " + name + " in " + parent);
+                msg.pub("error", "Multiple <dfn>s for " + name + (parent ? " in " + parent : ""));
             }
             if (dfns.length === 0) {
                 return undefined;
