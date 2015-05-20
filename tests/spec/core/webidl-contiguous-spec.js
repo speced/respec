@@ -37,7 +37,13 @@ describe("Core - Contiguous WebIDL", function () {
             expect($target.text()).toEqual(text);
             expect($target.find(".extAttr").text()).toEqual("Something");
             expect($target.find(".idlCtor").text()).toEqual("Constructor()");
-
+            
+            $target = $("#if-identifier-list", doc);
+            text = "[Global=Window,\n Exposed=(Window,Worker)]\ninterface SuperStar {\n};";
+            expect($target.text()).toEqual(text);
+            expect($target.find(".extAttrRhs").first().text()).toEqual("Window");
+            expect($target.find(".extAttrRhs").last().text()).toEqual("(Window,Worker)");
+            
             $target = $("#if-inheritance", doc);
             text = "interface SuperStar : HyperStar {\n};";
             expect($target.text()).toEqual(text);

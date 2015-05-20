@@ -214,8 +214,7 @@
                     ret.idlType = type() || error("Error parsing generic type " + value);
                     all_ws();
                     if (!consume(OTHER, ">")) error("Unterminated generic type " + value);
-                    all_ws();
-                    if (consume(OTHER, "?")) ret.nullable = true;
+                    type_suffix(ret);
                     return ret;
                 }
                 else {
@@ -337,6 +336,7 @@
                   ret.rhs = rhs
                 }
                 else if (consume(OTHER, "(")) {
+                    // [Exposed=(Window,Worker)]
                     rhs = [];
                     var id = consume(ID);
                     if (id) {
@@ -344,7 +344,10 @@
                     }
                     identifiers(rhs);
                     consume(OTHER, ")") || error("Unexpected token in extended attribute argument list or type pair");
-                    ret.rhs = rhs;
+                    ret.rhs = {
+                        type: "identifier-list",
+                        value: rhs
+                    };
                 }
                 if (!ret.rhs) return error("No right hand side to extended attribute assignment");
             }
