@@ -121,7 +121,7 @@ $ node ./tests/headless.js contiguous
 
 will run only tests whose spec filenames contains "contiguous". You can make a union of these filters by adding more parameters.
 
-[jasmine]: http://pivotal.github.io/jasmine/
+[jasmine]: http://jasmine.github.io/
 [travis]: https://travis-ci.org/w3c/respec
 [phantomjs]: http://phantomjs.org/
 [install-phjs]: http://phantomjs.org/download.html
