@@ -13,13 +13,16 @@
 // manually numbered, a link to the issue is created using issueBase and the issue number
 
 define(
-    ["text!core/css/issues-notes.css"],
-    function (css) {
+    ["text!core/css/issues-notes.css", "github", "core/marked"],
+    function (css, github) {
         return {
             run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/issues-notes");
-                var $ins = $(".issue, .note, .warning, .ednote");
-                if ($ins.length) {
+                function onEnd() {
+                    msg.pub("end", "core/issues-notes");
+                    cb();
+                }
+                
+                function handleIssues($ins) {
                     $(doc).find("head link").first().before($("<style/>").text(css));
                     var hasDataNum = $(".issue[data-number]").length > 0
                     ,   issueNum = 0;
@@ -48,6 +51,7 @@ define(
                             var $div = $("<div class='" + report.type + (isFeatureAtRisk ? " atrisk" : "") + "'></div>")
                             ,   $tit = $("<div class='" + report.type + "-title'><span></span></div>")
                             ,   text = isIssue ? (isFeatureAtRisk ? "Feature at Risk" : "Issue") : isWarning ? "Warning" : isEdNote ? "Editor's Note" : "Note"
+                            ,   ghIssue
                             ;
                             if (isIssue) {
                                 if (hasDataNum) {
@@ -60,6 +64,7 @@ define(
                                         else if (isFeatureAtRisk && conf.atRiskBase) {
                                             $tit.find("span").wrap($("<a href='" + conf.atRiskBase + dataNum + "'/>"));
                                         }
+                                        ghIssue = ghIssues[dataNum];
                                     }
                                 }
                                 else {
@@ -67,20 +72,47 @@ define(
                                 }
                             }
                             $tit.find("span").text(text);
-                            report.title = $inno.attr("title");
+                            report.title = $inno.attr("title") || (ghIssue && ghIssue.title) || null;
                             if (report.title) {
                                 $tit.append(doc.createTextNode(": " + report.title));
                                 $inno.removeAttr("title");
                             }
                             $div.append($tit);
                             $inno.replaceWith($div);
-                            $div.append($inno.removeClass(report.type).removeAttr('data-number'));
+                            var body = $inno.removeClass(report.type).removeAttr('data-number');
+                            if (ghIssue && !body.text().trim()) {
+                                body = marked(ghIssue.body, {
+                                    gfm: true,
+                                    pedantic: false,
+                                    sanitize: false
+                                });
+                            }
+                            $div.append(body);
                         }
                         msg.pub(report.type, report);
                     });
                 }
-                msg.pub("end", "core/issues-notes");
-                cb();
+                msg.pub("start", "core/issues-notes");
+                var $ins = $(".issue, .note, .warning, .ednote");
+                var ghIssues = {};
+                if ($ins.length) {
+                    if (conf.githubAPI) {
+                        github.fetch(conf.githubAPI).then(function(json) {
+                            return github.fetchIndex(json.issues_url);
+                        }).then(function (issues) {
+                            issues.forEach(function(issue) {
+                                ghIssues[issue.number] = issue;
+                            });
+                            handleIssues($ins);
+                            onEnd();
+                        });
+                    } else {
+                        handleIssues($ins);
+                        onEnd();
+                    }
+                } else {
+                    onEnd();
+                }
             }
         };
     }
