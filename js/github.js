@@ -12,32 +12,36 @@ define(
             return (m && m[1]) || null;
         }
         
-        function fetch(url) {
+        function fetch(url, options) {
+            if (options) {
+                options.url = url;
+                url = options;
+            }
             return $.ajax(url);
         }
-        function fetchAll(url) {
-            return _fetchAll(url, []);
+        function fetchAll(url, options) {
+            return _fetchAll(url, options, []);
         }
         
-        function _fetchAll(url, output) {
-            var request = fetch(url);
+        function _fetchAll(url, options, output) {
+            var request = fetch(url, options);
             return request.then(function(resp) {
                 output.push.apply(output, resp);
                 var next = findNext(request.getResponseHeader("Link"));
-                return next ? req(next, output) : output;
+                return next ? _fetchAll(next, options, output) : output;
             });
         }
         
         return {
             fetch: fetch,
             fetchAll: fetchAll,
-            fetchIndex: function(url) {
+            fetchIndex: function(url, options) {
                 // converts URLs of the form:
                 // https://api.github.com/repos/user/repo/comments{/number}
                 // into:
                 // https://api.github.com/repos/user/repo/comments
                 // which is what you need if you want to get the index.
-                return fetchAll(url.replace(/\{[^}]+\}/, ""));
+                return fetchAll(url.replace(/\{[^}]+\}/, ""), options);
             }
         };
     }

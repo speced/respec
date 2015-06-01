@@ -55,3 +55,12 @@ span.note, span.ednote, span.issue, span.warning { padding: .1em .5em .15em; }
     vertical-align: top;
     margin-top: -0.5em;
 }
+
+li.task-list-item {
+    list-style: none;
+}
+
+input.task-list-item-checkbox {
+    margin: 0 0.35em 0.25em -1.6em;
+    vertical-align: middle;
+}

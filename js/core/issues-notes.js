@@ -13,7 +13,7 @@
 // manually numbered, a link to the issue is created using issueBase and the issue number
 
 define(
-    ["text!core/css/issues-notes.css", "github", "core/marked"],
+    ["text!core/css/issues-notes.css", "github"],
     function (css, github) {
         return {
             run:    function (conf, doc, cb, msg) {
@@ -81,11 +81,7 @@ define(
                             $inno.replaceWith($div);
                             var body = $inno.removeClass(report.type).removeAttr('data-number');
                             if (ghIssue && !body.text().trim()) {
-                                body = marked(ghIssue.body, {
-                                    gfm: true,
-                                    pedantic: false,
-                                    sanitize: false
-                                });
+                                body = ghIssue.body_html;
                             }
                             $div.append(body);
                         }
@@ -98,7 +94,13 @@ define(
                 if ($ins.length) {
                     if (conf.githubAPI) {
                         github.fetch(conf.githubAPI).then(function(json) {
-                            return github.fetchIndex(json.issues_url);
+                            return github.fetchIndex(json.issues_url, {
+                                // Get back HTML content instead of markdown
+                                // See: https://developer.github.com/v3/media/
+                                headers: {
+                                    "Accept": "application/vnd.github.v3.html+json"
+                                }
+                            });
                         }).then(function (issues) {
                             issues.forEach(function(issue) {
                                 ghIssues[issue.number] = issue;
