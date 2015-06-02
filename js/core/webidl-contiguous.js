@@ -53,6 +53,12 @@ define(
                 }
                 return "extAttr";
             });
+            Handlebars.registerHelper("extAttrRhs", function(rhs, options) {
+                if (rhs.type === "identifier") {
+                    return options.fn(rhs.value);
+                }
+                return "(" + rhs.value.map(function(item) { return options.fn(item); }).join(",") + ")";
+            });
             Handlebars.registerHelper("param", function (obj) {
                 return new Handlebars.SafeString(
                     idlParamTmpl({
