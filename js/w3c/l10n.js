@@ -19,19 +19,29 @@ define(
                 ,   toc:                        "Table of Contents"
                 ,   note:                       "Note"
                 ,   fig:                        "Fig. "
+                ,   bug_tracker:                "Bug tracker:"
+                ,   file_a_bug:                 "file a bug"
+                ,   open_bugs:                  "open bugs"
+                ,   open_parens:                "("
+                ,   close_parens:               ")"
             }
             ,   zh: {
                     this_version:               "本版本："
                 ,   latest_published_version:   "最新发布草稿："
                 ,   latest_editors_draft:       "最新编辑草稿："
                 ,   editor:                     "编辑："
-                ,   editors:                    "编辑："
+                ,   editors:                    "编辑们："
                 ,   abstract:                   "摘要"
                 ,   sotd:                       "关于本文档"
-                ,   status_at_publication:      "本章节描述了本文档的发布状态。其它更新版本可能会覆盖本文档。W3C的文档列 表和最新版本可通过W3C技术报告索引访问。"
+                ,   status_at_publication:      "本章节描述了本文档的发布状态。其它更新版本可能会覆盖本文档。W3C的文档列 表和最新版本可通过<a href='http://www.w3.org/TR/'>W3C技术报告</a>索引访问。"
                 ,   toc:                        "内容大纲"
                 ,   note:                       "注"
                 ,   fig:                        "圖"
+                ,   bug_tracker:                "错误跟踪："
+                ,   file_a_bug:                 "反馈错误"
+                ,   open_bugs:                  "修正中的错误"
+                ,   open_parens:                "（"
+                ,   close_parens:               "）"
             }
         };
         l10n["zh-hans"] = l10n.zh;
