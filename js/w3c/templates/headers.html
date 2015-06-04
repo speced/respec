@@ -15,13 +15,13 @@
   <h2>{{#if prependW3C}}W3C {{/if}}{{textStatus}} <time {{#if doRDFa}}property="dcterms:issued"{{/if}}class='dt-published' datetime='{{dashDate}}'>{{publishHumanDate}}</time></h2>
   <dl>
     {{#unless isNoTrack}}
-      <dt>This version:</dt>
+      <dt>{{l10n.this_version}}</dt>
       <dd><a class='u-url' href='{{thisVersion}}'>{{thisVersion}}</a></dd>
-      <dt>Latest published version:</dt>
+      <dt>{{l10n.latest_published_version}}</dt>
       <dd>{{#if latestVersion}}<a href='{{latestVersion}}'>{{latestVersion}}</a>{{else}}none{{/if}}</dd>
     {{/unless}}
     {{#if edDraftURI}}
-      <dt>Latest editor's draft:</dt>
+      <dt>{{l10n.latest_editors_draft}}</dt>
       <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
     {{/if}}
     {{#if testSuiteURI}}
@@ -33,7 +33,7 @@
       <dd><a href='{{implementationReportURI}}'>{{implementationReportURI}}</a></dd>
     {{/if}}
     {{#if bugTrackerHTML}}
-      <dt>Bug tracker:</dt>
+      <dt>{{l10n.bug_tracker}}</dt>
       <dd>{{{bugTrackerHTML}}}</dd>
     {{/if}}
     {{#if isED}}
@@ -55,7 +55,7 @@
           <dd><a href='{{prevRecURI}}'>{{prevRecURI}}</a></dd>
       {{/if}}
     {{/if}}
-    <dt>Editor{{#if multipleEditors}}s{{/if}}:</dt>
+    <dt>{{#if multipleEditors}}{{l10n.editors}}{{else}}{{l10n.editor}}{{/if}}</dt>
     {{showPeople "Editor" editors}}
     {{#if authors}}
       <dt>Author{{#if multipleAuthors}}s{{/if}}:</dt>

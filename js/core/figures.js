@@ -20,8 +20,8 @@ define(
                                 $figure.find("[title]").attr("title") ||
                                 $figure.attr("alt") ||
                                 $figure.find("[alt]").attr("alt") ||
-                                "";
-                    var $caption = $("<figcaption/>").text(title);
+                                ""
+                    ,   $caption = $("<figcaption/>").text(title);
 
                     // change old syntax to something HTML5 compatible
                     if ($figure.is("div")) {
@@ -50,7 +50,7 @@ define(
                     $cap.wrapInner($("<span class='fig-title'/>"))
                         .prepend(doc.createTextNode(" "))
                         .prepend($("<span class='figno'>" + num + "</span>"))
-                        .prepend(doc.createTextNode("Fig. "))
+                        .prepend(doc.createTextNode(conf.l10n.fig))
                     ;
                     figMap[id] = $cap.contents().clone();
                     var $tofCap = $cap.clone();

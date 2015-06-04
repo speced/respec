@@ -13,11 +13,7 @@
 define(
     [],
     function () {
-        var i18n = {
-                    en: { toc: "Table of Contents" },
-                    fr: { toc: "Sommaire" }
-                }
-        ,   secMap = {}
+        var secMap = {}
         ,   appendixMode = false
         ,   lastNonAppendix = 0
         ,   alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -56,20 +52,18 @@ define(
                         // if this is a top level item, insert
                         // an OddPage comment so html2ps will correctly
                         // paginate the output
-                        $(h).before(document.createComment('OddPage'));
+                        $(h).before(document.createComment("OddPage"));
                     }
                     var $span = $("<span class='secno'></span>").text(secno + " ");
                     if (!isIntro) $(h).prepend($span);
                     secMap[id] = (isIntro ? "" : "<span class='secno'>" + secno + "</span> ") +
                                 "<span class='sec-title'>" + title + "</span>";
 
-                    var $a = $("<a/>").attr({ href: "#" + id, 'class' : 'tocxref' })
+                    var $a = $("<a/>").attr({ href: "#" + id, "class": "tocxref" })
                                       .append(isIntro ? "" : $span.clone())
-                                      .append($kidsHolder.contents());
-                    var $item = $("<li class='tocline'/>").append($a);
-                    if (conf.maxTocLevel == 0 || level <= conf.maxTocLevel) {
-                    	$ul.append($item);
-                    }
+                                      .append($kidsHolder.contents())
+                    ,   $item = $("<li class='tocline'/>").append($a);
+                    if (conf.maxTocLevel == 0 || level <= conf.maxTocLevel) $ul.append($item);
                     current.push(0);
                     var $sub = makeTOCAtLevel($sec, doc, current, level + 1, conf);
                     if ($sub) $item.append($sub);
@@ -103,9 +97,9 @@ define(
                 if (!conf.noTOC) {
                     var $ul = makeTOCAtLevel($("body", doc), doc, [0], 1, conf);
                     if (!$ul) return;
-                    var $sec = $("<section id='toc'/>").append("<h2 class='introductory'>" + i18n[conf.lang || "en"].toc + "</h2>")
-                                                       .append($ul);
-                    var $ref = $("#toc", doc), replace = false;
+                    var $sec = $("<section id='toc'/>").append("<h2 class='introductory'>" + conf.l10n.toc + "</h2>")
+                                                       .append($ul)
+                    ,   $ref = $("#toc", doc), replace = false;
                     if ($ref.length) replace = true;
                     if (!$ref.length) $ref = $("#sotd", doc);
                     if (!$ref.length) $ref = $("#abstract", doc);
@@ -118,7 +112,7 @@ define(
                     if ($a.html() !== "") return;
                     var id = $a.attr("href").slice(1);
                     if (secMap[id]) {
-                        $a.addClass('sec-ref');
+                        $a.addClass("sec-ref");
                         $a.html(($a.hasClass("sectionRef") ? "section " : "") + secMap[id]);
                     }
                 });

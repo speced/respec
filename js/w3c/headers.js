@@ -93,13 +93,14 @@
 //          available with webspecs and is the recommended value. It is the default for webspecs.
 
 define(
-    ["handlebars"
-    ,"core/utils"
-    ,"tmpl!w3c/templates/headers.html"
-    ,"tmpl!w3c/templates/sotd.html"
-    ,"tmpl!w3c/templates/cgbg-headers.html"
-    ,"tmpl!w3c/templates/cgbg-sotd.html"
-    ,"tmpl!w3c/templates/webspecs-headers.html"
+    [
+        "handlebars"
+    ,   "core/utils"
+    ,   "tmpl!w3c/templates/headers.html"
+    ,   "tmpl!w3c/templates/sotd.html"
+    ,   "tmpl!w3c/templates/cgbg-headers.html"
+    ,   "tmpl!w3c/templates/cgbg-sotd.html"
+    ,   "tmpl!w3c/templates/webspecs-headers.html"
     ],
     function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl, wsHeadersTmpl) {
         Handlebars.registerHelper("showPeople", function (name, items) {
@@ -138,11 +139,9 @@ define(
                 }
                 if (p.url) {
                     if (this.doRDFa) {
-                        ret += "<meta" + rn + " content='" + p.name + "'><a class='u-url url p-name fn' " + rpu + " href='" + p.url + "'>"+ p.name + "</a>";
+                        ret += "<meta" + rn + " content='" + p.name + "'><a class='u-url url p-name fn' " + rpu + " href='" + p.url + "'>" + p.name + "</a>";
                     }
-                    else {
-                        ret += "<a class='u-url url p-name fn' href='" + p.url + "'>"+ p.name + "</a>";
-                    }
+                    else ret += "<a class='u-url url p-name fn' href='" + p.url + "'>" + p.name + "</a>";
                 }
                 else {
                     ret += "<span" + rn + " class='p-name fn'>" + p.name + "</span>";
@@ -175,17 +174,12 @@ define(
                     ret += "<img src='" + p.src + "'";
                     if (p.width)  ret += " width='" + p.width + "'";
                     if (p.height) ret += " height='" + p.height + "'";
-                    if (p.alt) {
-                        ret += " alt='" + p.alt + "'";
-                    } else if (items.length == 1) {
-                        ret += " alt='Logo'";
-                    } else {
-                        ret += " alt='Logo " + (i+1) + "'";
-                    }
+                    if (p.alt) ret += " alt='" + p.alt + "'";
+                    else if (items.length == 1) ret += " alt='Logo'";
+                    else ret += " alt='Logo " + (i + 1) + "'";
                     ret += ">";
-                } else if (p.alt) {
-                    ret += p.alt;
                 }
+                else if (p.alt) ret += p.alt;
                 if (p.url) ret += "</a>";
                 if (p.id) ret += "</span>";
             }
@@ -362,14 +356,15 @@ define(
                 });
                 conf.multipleAlternates = conf.alternateFormats && conf.alternateFormats.length > 1;
                 conf.alternatesHTML = utils.joinAnd(conf.alternateFormats, function (alt) {
-                    var optional = (alt.hasOwnProperty('lang') && alt.lang) ? " hreflang='" + alt.lang + "'" : "";
-                    optional += (alt.hasOwnProperty('type') && alt.type) ? " type='" + alt.type + "'" : "";
+                    var optional = (alt.hasOwnProperty("lang") && alt.lang) ? " hreflang='" + alt.lang + "'" : "";
+                    optional += (alt.hasOwnProperty("type") && alt.type) ? " type='" + alt.type + "'" : "";
                     return "<a rel='alternate' href='" + alt.uri + "'" + optional + ">" + alt.label + "</a>";
                 });
                 if (conf.bugTracker) {
                     if (conf.bugTracker["new"] && conf.bugTracker.open) {
-                        conf.bugTrackerHTML = "<a href='" + conf.bugTracker["new"] + "'>file a bug</a>" +
-                                              " (<a href='" + conf.bugTracker.open + "'>open bugs</a>)";
+                        conf.bugTrackerHTML = "<a href='" + conf.bugTracker["new"] + "'>" + conf.l10n.file_a_bug + "</a> " +
+                                              conf.l10n.open_parens + "<a href='" + conf.bugTracker.open + "'>" +
+                                              conf.l10n.open_bugs + "</a>" + conf.l10n.close_parens;
                     }
                     else if (conf.bugTracker.open) {
                         conf.bugTrackerHTML = "<a href='" + conf.bugTracker.open + "'>open bugs</a>";
@@ -416,11 +411,8 @@ define(
 
                 // annotate html element with RFDa
                 if (conf.doRDFa) {
-                    if (conf.rdfStatus) {
-                        $("html").attr("typeof", "bibo:Document "+conf.rdfStatus ) ;
-                    } else {
-                        $("html").attr("typeof", "bibo:Document ") ;
-                    }
+                    if (conf.rdfStatus) $("html").attr("typeof", "bibo:Document " + conf.rdfStatus );
+                    else $("html").attr("typeof", "bibo:Document ");
                     var prefixes = "bibo: http://purl.org/ontology/bibo/ w3p: http://www.w3.org/2001/02pd/rec54#";
                     $("html").attr("prefix", prefixes);
                     $("html>head").prepend($("<meta lang='' property='dc:language' content='en'>"));
@@ -480,7 +472,7 @@ define(
                 if (conf.isIGNote && !conf.charterDisclosureURI)
                     msg.pub("error", "IG-NOTEs must link to charter's disclosure section using charterDisclosureURI");
                 // ensure subjectPrefix is encoded before using template
-                if (conf.subjectPrefix !== '') conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
+                if (conf.subjectPrefix !== "") conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
                 var sotd;
                 if (conf.isCGBG) sotd = cgbgSotdTmpl(conf);
                 else if (conf.isWebSpec) sotd = null;

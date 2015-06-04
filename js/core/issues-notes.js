@@ -17,12 +17,12 @@ define(
     function (css, github) {
         return {
             run:    function (conf, doc, cb, msg) {
-                function onEnd() {
+                function onEnd () {
                     msg.pub("end", "core/issues-notes");
                     cb();
                 }
                 
-                function handleIssues($ins) {
+                function handleIssues ($ins) {
                     $(doc).find("head link").first().before($("<style/>").text(css));
                     var hasDataNum = $(".issue[data-number]").length > 0
                     ,   issueNum = 0;
@@ -50,7 +50,7 @@ define(
                         if (!isInline) {
                             var $div = $("<div class='" + report.type + (isFeatureAtRisk ? " atrisk" : "") + "'></div>")
                             ,   $tit = $("<div class='" + report.type + "-title'><span></span></div>")
-                            ,   text = isIssue ? (isFeatureAtRisk ? "Feature at Risk" : "Issue") : isWarning ? "Warning" : isEdNote ? "Editor's Note" : "Note"
+                            ,   text = isIssue ? (isFeatureAtRisk ? "Feature at Risk" : "Issue") : isWarning ? "Warning" : isEdNote ? "Editor's Note" : conf.l10n.note
                             ,   ghIssue
                             ;
                             if (isIssue) {
@@ -79,7 +79,7 @@ define(
                             }
                             $div.append($tit);
                             $inno.replaceWith($div);
-                            var body = $inno.removeClass(report.type).removeAttr('data-number');
+                            var body = $inno.removeClass(report.type).removeAttr("data-number");
                             if (ghIssue && !body.text().trim()) {
                                 body = ghIssue.body_html;
                             }
@@ -89,20 +89,20 @@ define(
                     });
                 }
                 msg.pub("start", "core/issues-notes");
-                var $ins = $(".issue, .note, .warning, .ednote");
-                var ghIssues = {};
+                var $ins = $(".issue, .note, .warning, .ednote")
+                ,   ghIssues = {};
                 if ($ins.length) {
                     if (conf.githubAPI) {
-                        github.fetch(conf.githubAPI).then(function(json) {
+                        github.fetch(conf.githubAPI).then(function (json) {
                             return github.fetchIndex(json.issues_url, {
                                 // Get back HTML content instead of markdown
                                 // See: https://developer.github.com/v3/media/
                                 headers: {
-                                    "Accept": "application/vnd.github.v3.html+json"
+                                    Accept: "application/vnd.github.v3.html+json"
                                 }
                             });
                         }).then(function (issues) {
-                            issues.forEach(function(issue) {
+                            issues.forEach(function (issue) {
                                 ghIssues[issue.number] = issue;
                             });
                             handleIssues($ins);
