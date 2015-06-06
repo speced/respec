@@ -22,7 +22,7 @@ define(
                     cb();
                 }
                 
-                function handleIssues ($ins) {
+                function handleIssues ($ins, ghIssues, issueBase) {
                     $(doc).find("head link").first().before($("<style/>").text(css));
                     var hasDataNum = $(".issue[data-number]").length > 0
                     ,   issueNum = 0;
@@ -94,10 +94,12 @@ define(
                 }
                 msg.pub("start", "core/issues-notes");
                 var $ins = $(".issue, .note, .warning, .ednote")
-                ,   ghIssues = {};
+                ,   ghIssues = {}
+                ,   issueBase = conf.issueBase;
                 if ($ins.length) {
                     if (conf.githubAPI) {
                         github.fetch(conf.githubAPI).then(function (json) {
+                            issueBase = issueBase || json.html_url + "/issues/";
                             return github.fetchIndex(json.issues_url, {
                                 // Get back HTML content instead of markdown
                                 // See: https://developer.github.com/v3/media/
@@ -109,11 +111,11 @@ define(
                             issues.forEach(function (issue) {
                                 ghIssues[issue.number] = issue;
                             });
-                            handleIssues($ins);
+                            handleIssues($ins, ghIssues, issueBase);
                             onEnd();
                         });
                     } else {
-                        handleIssues($ins);
+                        handleIssues($ins, ghIssues, issueBase);
                         onEnd();
                     }
                 } else {
