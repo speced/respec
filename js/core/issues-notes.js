@@ -53,6 +53,7 @@ define(
                             ,   text = isIssue ? (isFeatureAtRisk ? "Feature at Risk" : "Issue") : isWarning ? "Warning" : isEdNote ? "Editor's Note" : conf.l10n.note
                             ,   ghIssue
                             ;
+                            report.title = $inno.attr("title");
                             if (isIssue) {
                                 if (hasDataNum) {
                                     if (dataNum) {
@@ -65,6 +66,9 @@ define(
                                             $tit.find("span").wrap($("<a href='" + conf.atRiskBase + dataNum + "'/>"));
                                         }
                                         ghIssue = ghIssues[dataNum];
+                                        if (ghIssue && !report.title) {
+                                            report.title = ghIssue.title;
+                                        }
                                     }
                                 }
                                 else {
@@ -72,7 +76,7 @@ define(
                                 }
                             }
                             $tit.find("span").text(text);
-                            report.title = $inno.attr("title") || (ghIssue && ghIssue.title) || null;
+                            
                             if (report.title) {
                                 $tit.append(doc.createTextNode(": " + report.title));
                                 $inno.removeAttr("title");
