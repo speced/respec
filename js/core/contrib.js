@@ -71,8 +71,6 @@ define(
                 }
 
                 msg.pub("start", "core/contrib");
-                var $commenters = $(doc).find("#gh-commenters")[0];
-                var $contributors = $(doc).find("#gh-contributors")[0];
                 if (conf.githubAPI && ($commenters || $contributors)) {
                     github.fetch(conf.githubAPI).then(function (json) {
                         return $.when(
@@ -90,6 +88,8 @@ define(
                         });
                     }).then(theEnd);
                 } else {
+                var $commenters = doc.querySelector("#gh-commenters");
+                var $contributors = doc.querySelector("#gh-contributors");
                     theEnd();
                 }
             }
