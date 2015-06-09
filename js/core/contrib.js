@@ -71,27 +71,41 @@ define(
                 }
 
                 msg.pub("start", "core/contrib");
-                if (conf.githubAPI && ($commenters || $contributors)) {
-                    github.fetch(conf.githubAPI).then(function (json) {
-                        return $.when(
-                            github.fetchIndex(json.issues_url),
-                            github.fetchIndex(json.issue_comment_url),
-                            github.fetchIndex(json.contributors_url)
-                        ).then(function(issues, comments, contributors) {
-                            var editors = respecConfig.editors.map(prop("name"));
-                            var commenters = findUsers(issues, comments);
-                            contributors = contributors.map(prop("url"));
-                            return $.when(
-                                toHTML(commenters, editors, $commenters),
-                                toHTML(contributors, editors, $contributors)
-                            );
-                        });
-                    }).then(theEnd);
-                } else {
                 var $commenters = doc.querySelector("#gh-commenters");
                 var $contributors = doc.querySelector("#gh-contributors");
+
+                if (!$commenters && !$contributors) {
                     theEnd();
+                    return;
                 }
+
+                if (!conf.githubAPI) {
+                    var elements = [];
+                    if ($commenters) elements.push("#" + $commenters.id); 
+                    if ($contributors) elements.push("#" + $contributors.id);
+                    msg.pub("error", "Requested list of contributors and/or commenters from GitHub (" + elements.join(" and ") + ") but config.githubAPI is not set.");
+                    theEnd();
+                    return;
+                }
+
+                github.fetch(conf.githubAPI).then(function (json) {
+                    return $.when(
+                        github.fetchIndex(json.issues_url),
+                        github.fetchIndex(json.issue_comment_url),
+                        github.fetchIndex(json.contributors_url)
+                    );
+                }).then(function(issues, comments, contributors) {
+                    var editors = respecConfig.editors.map(prop("name"));
+                    var commenters = findUsers(issues, comments);
+                    contributors = contributors.map(prop("url"));
+                    return $.when(
+                        toHTML(commenters, editors, $commenters),
+                        toHTML(contributors, editors, $contributors)
+                    );
+                }).then(theEnd, function(error) {
+                    msg.pub("error", "Error loading contributors and/or commenters from GitHub. Error: " + error);
+                    theEnd();
+                });
             }
         };
     }
