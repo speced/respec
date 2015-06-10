@@ -45,7 +45,7 @@
     <dt>{{#if multipleEditors}}{{l10n.editors}}{{else}}{{l10n.editor}}{{/if}}</dt>
     {{showPeople "Editor" editors}}
     {{#if authors}}
-      <dt>Author{{#if multipleAuthors}}s{{/if}}:</dt>
+      <dt>{{#if multipleAuthors}}{{l10n.authors}}{{else}}{{l10n.author}}{{/if}}</dt>
       {{showPeople "Author" authors}}
     {{/if}}
     {{#if otherLinks}}
