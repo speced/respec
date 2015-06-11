@@ -387,6 +387,9 @@ define(
                     return idlDictionaryTmpl({ obj: obj, indent: indent, children: children, partial: obj.partial ? "partial " : "" });
                 case "callback":
                     var params = obj.arguments
+                                    .filter(function(it) {
+                                        return !typeIsWhitespace(it.type);
+                                    })
                                     .map(function (it) {
                                         return idlParamTmpl({
                                             obj:        it
