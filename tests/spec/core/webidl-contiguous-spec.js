@@ -438,6 +438,16 @@ describe("Core - Contiguous WebIDL", function () {
         // Links and IDs.
         expect($target.find(":contains('CbLessBasic')").filter("a").attr("href")).toEqual("#dom-cblessbasic");
         expect($target.find(".idlCallback:contains('CbLessBasic')").attr("id")).toEqual("idl-def-cblessbasic");
+
+        $target = $("#cb-mult-args", doc);
+        text = "callback SortCallback = void (any a, any b);";
+        expect($target.text()).toEqual(text);
+        var $prm = $target.find(".idlCallback").last().find(".idlParam");
+        expect($prm.length).toEqual(2);
+        expect($prm.find(".idlParamType").first().text()).toEqual("any");
+        expect($prm.find(".idlParamName").first().text()).toEqual("a");
+        expect($prm.find(".idlParamType").last().text()).toEqual("any");
+        expect($prm.find(".idlParamName").last().text()).toEqual("b");
     });
 
     it("should handle typedefs", function () {
