@@ -43,6 +43,7 @@ define([
         ,   "core/webidl-contiguous"
         ,   "core/webidl-oldschool"
         ,   "core/link-to-dfn"
+        ,   "core/contrib"
         ,   "core/fix-headers"
         ,   "core/structure"
         ,   "w3c/informative"
