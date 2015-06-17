@@ -26,6 +26,7 @@ define(
     ,   "tmpl!core/templates/webidl/constructor.html"
     ,   "tmpl!core/templates/webidl/attribute.html"
     ,   "tmpl!core/templates/webidl/serializer.html"
+    ,   "tmpl!core/templates/webidl/iterable.html"
     ,   "tmpl!core/templates/webidl/maplike.html"
     ,   "tmpl!core/templates/webidl/comment.html"
     ,   "tmpl!core/templates/webidl/field.html"
@@ -34,7 +35,7 @@ define(
     ],
     function (hb, css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
                    idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl,
-              idlConstructorTmpl, idlAttributeTmpl, idlSerializerTmpl, idlMaplikeTmpl, idlCommentTmpl, idlFieldTmpl, idlExceptionTmpl, idlInterfaceTmpl) {
+              idlConstructorTmpl, idlAttributeTmpl, idlSerializerTmpl, idlIterableTmpl, idlMaplikeTmpl, idlCommentTmpl, idlFieldTmpl, idlExceptionTmpl, idlInterfaceTmpl) {
         var WebIDLProcessor = function (cfg) {
                 this.parent = { type: "module", id: "outermost", children: [] };
                 if (!cfg) cfg = {};
@@ -560,6 +561,15 @@ define(
                     return obj;
                 }
 
+                // ITERABLE
+                match = /^\s*iterable\s*<\s*([^,]*)\s*(,\s*(.*)\s*)?>\s*$/.exec(str);
+                if (match) {
+                    obj.type = "iterable";
+                    obj.key = match[1];
+                    obj.value = match[3];
+                    return obj;
+                }
+
                 // MAPLIKE
                 match = /^\s*(readonly\s+)?maplike\s*<\s*(.*)\s*,\s*(.*)\s*>\s*$/.exec(str);
                 if (match) {
@@ -741,6 +751,17 @@ define(
                 sn.element("p", {}, div, [it.description]);
             },
 
+            writeIterableAsHTML: function (parent, iterable) {
+                var members = '"entries", "keys", "values" and @@iterator methods';
+
+                var p = sn.element("p", {}, parent);
+                sn.text("This interface has " + members + " brought by ", p);
+                sn.element("code", {}, p, "iterable");
+                sn.text(".", p);
+
+                sn.element("p", {}, parent, iterable.description);
+            },
+
             writeMaplikeAsHTML: function (parent, maplike) {
                 var readonly = "";
                 var members = "";
@@ -760,6 +781,13 @@ define(
             },
 
             writeTypeFilteredThingsInInterfaceAsHTML: function (obj, curLnk, parent, type, things) {
+
+                if (type == "iterable") {
+                    // We assume iterable is specified at most once in one interface.
+                    this.writeIterableAsHTML(parent, things[0]);
+                    return;
+                }
+
                 if (type == "maplike") {
                     // We assume maplike is specified at most once in one interface.
                     this.writeMaplikeAsHTML(parent, things[0]);
@@ -907,8 +935,8 @@ define(
             writeInterfaceAsHTML: function (obj) {
                 var df = sn.documentFragment();
                 var curLnk = "widl-" + obj.refId + "-";
-                // maplike is placed first because it doesn't have its own section.
-                var types = ["maplike", "constructor", "attribute", "method", "constant", "serializer"];
+                // iterable and maplike are placed first because they don't have their own sections.
+                var types = ["iterable", "maplike", "constructor", "attribute", "method", "constant", "serializer"];
                 var filterFunc = function (it) { return it.type == type; }
                 ,   sortFunc = function (a, b) {
                         if (a.unescapedId < b.unescapedId) return -1;
@@ -1213,6 +1241,7 @@ define(
                                           else if (ch.type == "constant") return self.writeConst(ch, maxConst, indent + 1, curLnk);
                                           else if (ch.type == "serializer") return self.writeSerializer(ch, indent + 1, curLnk);
                                           else if (ch.type == "constructor") ctor.push(self.writeConstructor(ch, indent, "widl-ctor-"));
+                                          else if (ch.type == "iterable") return self.writeIterable(ch, indent + 1, curLnk);
                                           else if (ch.type == "maplike") return self.writeMaplike(ch, indent + 1, curLnk);
                                           else if (ch.type == "comment") return self.writeComment(ch, indent + 1);
                                       })
@@ -1419,6 +1448,13 @@ define(
                     obj:        serializer
                 ,   indent:     indent
                 ,   values:     values
+                });
+            },
+            
+            writeIterable: function (iterable, indent) {
+                return idlIterableTmpl({
+                    obj:        iterable
+                ,   indent:     indent
                 });
             },
 

@@ -1,6 +1,6 @@
 describe("Core - WebIDL", function () {
     var MAXOUT = 5000
-    ,   $widl = $("<iframe width='800' height='200' style='display: none' src='spec/core/webidl.html'></iframe>")
+    ,   $widl = $("<iframe width='800' height='200' src='spec/core/webidl.html'></iframe>")
     ,   loaded = false
     ,   $target
     ,   text
@@ -207,6 +207,61 @@ describe("Core - WebIDL", function () {
         expect($target.find(".idlSerializer").length).toEqual(1);
         var $serializer = $target.find(".idlSerializer").first();
         expect($serializer.find(".idlSerializerValues").text()).toEqual("{foo, bar}");
+    });
+
+    it("should handle maplike", function() {
+      $target = $("#if-maplike", doc);
+      text = "interface SuperStar {\n" +
+             "    void foo ();\n" +
+             "    maplike<DOMString, SuperStar>;\n" +
+             "                attribute DOMString bar;\n" +
+             "};";
+      expect($target.text()).toEqual(text);
+      expect($target.find(".idlMaplike").length).toEqual(1);
+      var $iterable = $target.find(".idlMaplike").first();
+      expect($iterable.find(".idlMaplikeKeyType").text()).toEqual("DOMString");
+      expect($iterable.find(".idlMaplikeValueType").text()).toEqual("SuperStar");
+    });
+    
+    it("should handle readonly maplike", function() {
+      $target = $("#if-readonly-maplike", doc);
+      text = "interface SuperStar {\n" +
+             "    void foo ();\n" +
+             "    readonly maplike<DOMString, SuperStar>;\n" +
+             "                attribute DOMString bar;\n" +
+             "};";
+      expect($target.text()).toEqual(text);
+      expect($target.find(".idlMaplike").length).toEqual(1);
+      var $iterable = $target.find(".idlMaplike").first();
+      expect($iterable.find(".idlMaplikeKeyType").text()).toEqual("DOMString");
+      expect($iterable.find(".idlMaplikeValueType").text()).toEqual("SuperStar");
+    });
+
+    it("should handle value iterable", function() {
+      $target = $("#if-iterable", doc);
+      text = "interface AnIterableInterface {\n" +
+             "    iterable<DOMString>;\n" +
+             "                attribute DOMString foo;\n" +
+             "                attribute DOMString bar;\n" +
+             "};";
+      expect($target.text()).toEqual(text);
+      expect($target.find(".idlIterable").length).toEqual(1);
+      var $iterable = $target.find(".idlIterable").first();
+      expect($iterable.find(".idlIterableKeyType").text()).toEqual("DOMString");
+    });
+
+    it("should handle pair iterable", function() {
+      $target = $("#if-iterable-pairs", doc);
+      text = "interface AnIterablePairInterface {\n" +
+             "    iterable<DOMString,SuperStar>;\n" +
+             "                attribute DOMString foo;\n" +
+             "                attribute DOMString bar;\n" +
+             "};";
+      expect($target.text()).toEqual(text);
+      expect($target.find(".idlIterable").length).toEqual(1);
+      var $iterable = $target.find(".idlIterable").first();
+      expect($iterable.find(".idlIterableKeyType").text()).toEqual("DOMString");
+      expect($iterable.find(".idlIterableValueType").text()).toEqual("SuperStar");
     });
 
     it("should handle comments", function () {
