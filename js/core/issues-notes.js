@@ -76,18 +76,20 @@ define(
                                 else {
                                     text += " " + issueNum;
                                 }
+                                if (report.number !== undefined) {
+                                    // Add entry to #issue-summary.
+                                    var id = "issue-" + report.number
+                                    ,   $li = $("<li><a></a></li>")
+                                    ,   $a = $li.find("a");
                                 
-                                // Add entry to #issue-summary.
-                                var id = "issue-" + report.number
-                                ,   $li = $("<li><a></a></li>")
-                                ,   $a = $li.find("a");
-                                
-                                $div.attr("id", id);
-                                $a.attr("href", "#" + id).text("Issue " + report.number);
-                                if (report.title) {
-                                    $li.append(doc.createTextNode(": " + report.title));
+                                    $div.attr("id", id);
+                                    $a.attr("href", "#" + id).text("Issue " + report.number);
+
+                                    if (report.title) {
+                                        $li.append(doc.createTextNode(": " + report.title));
+                                    }
+                                    $issueList.append($li);
                                 }
-                                $issueList.append($li);
                             }
                             $tit.find("span").text(text);
                             
