@@ -44,4 +44,31 @@ describe("Core — Definitions", function () {
             flushIframes();
         });
     });
+    it("should process aliases", function () {
+        var doc;
+        runs(function () {
+            makeRSDoc({ config: basicConfig, body: $("<section id='dfn'><dfn title='text|text 1|text  2|text 3 '>text</dfn><a>text</a></section>") },
+                      function (rsdoc) { doc = rsdoc; });
+        });
+        waitsFor(function () { return doc; }, MAXOUT);
+        runs(function () {
+            var $sec = $("#dfn", doc);
+            expect($sec.find("dfn").attr("data-lt")).toEqual("text|text 1|text 2|text 3");
+            expect($sec.find("dfn").attr("data-dfn-type")).toEqual("dfn");
+            flushIframes();
+        });
+    });
+    it("should allow defined dfn-type ", function () {
+        var doc;
+        runs(function () {
+            makeRSDoc({ config: basicConfig, body: $("<section id='dfn'><dfn dfn-type='myType'>text</dfn><a>text</a></section>") },
+                      function (rsdoc) { doc = rsdoc; });
+        });
+        waitsFor(function () { return doc; }, MAXOUT);
+        runs(function () {
+            var $sec = $("#dfn", doc);
+            expect($sec.find("dfn").attr("data-dfn-type")).toEqual("myType");
+            flushIframes();
+        });
+    });
 });

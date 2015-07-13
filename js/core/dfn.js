@@ -21,11 +21,13 @@ define(
                     } else {
                         dfn.attr("data-dfn-for", (dfn.closest("[data-dfn-for]").attr("data-dfn-for") || "").toLowerCase());
                     }
-                    var title = dfn.dfnTitle();
-                    if (!conf.definitionMap[title]) {
-                        conf.definitionMap[title] = [];
-                    }
-                    conf.definitionMap[title].push(dfn);
+                    var titles = dfn.dfnTitle( true );
+                    $.each(titles, function() {
+                        if (!conf.definitionMap[this]) {
+                            conf.definitionMap[this] = [];
+                        }
+                        conf.definitionMap[this].push($(dfn[0]));
+                        });
                 });
                 msg.pub("end", "core/dfn");
                 cb();

@@ -137,12 +137,15 @@ describe("Core - Utils", function () {
     // $.dfnTitle()
     it("should find the definition title", function () {
         runs(function () {
-            var $dfn = $("<dfn title='DFN'><abbr title='ABBR'>TEXT</abbr></dfn>").appendTo($("body"));
-            expect($dfn.dfnTitle()).toEqual("dfn");
+            var $dfn = $("<dfn title='DFN|DFN2|DFN3'><abbr title='ABBR'>TEXT</abbr></dfn>").appendTo($("body"));
+            var titles = $dfn.dfnTitle();
+            expect(titles[0]).toEqual("dfn");
+            expect(titles[1]).toEqual("dfn2");
+            expect(titles[2]).toEqual("dfn3");
             $dfn.removeAttr("title");
-            expect($dfn.dfnTitle()).toEqual("abbr");
+            expect($dfn.dfnTitle()[0]).toEqual("abbr");
             $dfn.find("abbr").removeAttr("title");
-            expect($dfn.dfnTitle()).toEqual("text");
+            expect($dfn.dfnTitle()[0]).toEqual("text");
             $dfn.remove();
         });
     });
