@@ -75,7 +75,7 @@ define(
                     this.removeAttr("dfn-type");
                 }
             }
-            titleString.split('|').forEach( function( item, i ) {
+            titleString.split('|').forEach( function( item ) {
                     if (item != "") {
                         titles.push(item);
                     }

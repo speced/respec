@@ -22,7 +22,7 @@ define(
                         dfn.attr("data-dfn-for", (dfn.closest("[data-dfn-for]").attr("data-dfn-for") || "").toLowerCase());
                     }
                     var titles = dfn.getDfnTitles( { isDefinition: true } );
-                    titles.forEach( function( item, i ) {
+                    titles.forEach( function( item ) {
                         if (!conf.definitionMap[item]) {
                             conf.definitionMap[item] = [];
                         }

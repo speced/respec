@@ -51,6 +51,10 @@ define(
                         if (titles[target.title] && titles[target.title][target.for_]) {
                             var dfn = titles[target.title][target.for_];
                             $ant.attr("href", "#" + dfn.prop("id")).addClass("internalDFN");
+                            // add a bikeshed style indication of the type of link
+                            if (! $ant.attr("data-link-type") ) {
+                                $ant.attr("data-link-type", "dfn") ;
+                            }
                             // If a definition is <code>, links to it should
                             // also be <code>.
                             //
