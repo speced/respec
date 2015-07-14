@@ -7,7 +7,8 @@ describe("Core — Definitions", function () {
     it("should process definitions", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='dfn'><dfn>text</dfn><a>text</a></section>") },
+            makeRSDoc({ config: basicConfig, 
+                        body: $("<section id='dfn'><dfn>text</dfn><a>text</a></section>") },
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -47,7 +48,11 @@ describe("Core — Definitions", function () {
     it("should process aliases", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='dfn'><dfn title='text|text 1|text  2|text 3 '>text</dfn><a>text</a></section>") },
+            makeRSDoc({ config: basicConfig, 
+                        body: $("<section id='dfn'>" +
+                                "<dfn title='text|text 1|text  2|text 3 '>text</dfn>" +
+                                "<a>text</a>" +
+                                "</section>") },
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
@@ -61,7 +66,11 @@ describe("Core — Definitions", function () {
     it("should allow defined dfn-type ", function () {
         var doc;
         runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='dfn'><dfn dfn-type='myType'>text</dfn><a>text</a></section>") },
+            makeRSDoc({ config: basicConfig, 
+                        body: $("<section id='dfn'>" +
+                                "<dfn dfn-type='myType'>text</dfn>" +
+                                "<a>text</a>" +
+                                "</section>") },
                       function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);

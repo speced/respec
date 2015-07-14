@@ -134,18 +134,18 @@ describe("Core - Utils", function () {
         });
     });
 
-    // $.dfnTitle()
+    // $.getDfnTitles()
     it("should find the definition title", function () {
         runs(function () {
             var $dfn = $("<dfn title='DFN|DFN2|DFN3'><abbr title='ABBR'>TEXT</abbr></dfn>").appendTo($("body"));
-            var titles = $dfn.dfnTitle();
+            var titles = $dfn.getDfnTitles();
             expect(titles[0]).toEqual("dfn");
             expect(titles[1]).toEqual("dfn2");
             expect(titles[2]).toEqual("dfn3");
             $dfn.removeAttr("title");
-            expect($dfn.dfnTitle()[0]).toEqual("abbr");
+            expect($dfn.getDfnTitles()[0]).toEqual("abbr");
             $dfn.find("abbr").removeAttr("title");
-            expect($dfn.dfnTitle()[0]).toEqual("text");
+            expect($dfn.getDfnTitles()[0]).toEqual("text");
             $dfn.remove();
         });
     });

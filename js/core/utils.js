@@ -31,10 +31,10 @@ define(
         // the algorithm used for determining the
         // actual title of a <dfn> element (but can apply to other as well).
         // 
-        // if isDefinition is true, then the element is a definition, not a 
+        // if args.isDefinition is true, then the element is a definition, not a 
         // reference to a definition.  Any @title or @lt will be replaced with
         // @data-lt to be consistent with Bikeshed / Shepherd.
-        $.fn.dfnTitle = function ( isDefinition ) {
+        $.fn.getDfnTitles = function ( args ) {
             var titles = [];
             var theAttr = "";
             var titleString = ""; 
@@ -46,28 +46,40 @@ define(
                 titleString = this.attr("lt");
                 theAttr = "lt";
             }
-            else if (this.contents().length == 1 && this.children("abbr, acronym").length == 1 &&
-                     this.find(":first-child").attr("title")) titleString = this.find(":first-child").attr("title");
-            else titleString = this.text();
+            else if (this.contents().length == 1 
+                     && this.children("abbr, acronym").length == 1 
+                     && this.find(":first-child").attr("title")) {
+                titleString = this.find(":first-child").attr("title");
+            }
+            else {
+                titleString = this.text();
+            }
             // now we have a string of one or more titles
-            // ensure there is no extra whitespace
-            titleString = titleString.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
-            if (isDefinition) {
+            titleString = titleString.toLowerCase() // mask to lower case
+                .replace(/^\s+/, "") // strip out any leading whitespace
+                .replace(/\s+$/, "") // and any trailing whitespace
+                .split(/\s+/) // split on any whitepace
+                .join(" ");  // and replace with a single space
+            if (args && args.isDefinition === true) {
                 // if it came from an attribute, replace that with data-lt as per contract with Shepherd
                 if (theAttr) {
                     this.attr("data-lt", titleString);
                     this.removeAttr(theAttr) ;
                 }
                 // if there is no pre-defined type, assume it is a 'dfn'
-                if (!this.attr("dfn-type")) this.attr("data-dfn-type", "dfn")
+                if (!this.attr("dfn-type")) {
+                    this.attr("data-dfn-type", "dfn");
+                }
                 else {
                     this.attr("data-dfn-type", this.attr("dfn-type"));
                     this.removeAttr("dfn-type");
                 }
             }
-            $.each(titleString.split('|'), function() {
-                    if (this != "") titles.push(this);
-                    });
+            titleString.split('|').forEach( function( item, i ) {
+                    if (item != "") {
+                        titles.push(item);
+                    }
+                });
             return titles;
         };
 
@@ -84,7 +96,7 @@ define(
         $.fn.linkTargets = function () {
             var elem = this;
             var link_for = (elem.attr("for") || elem.closest("[link-for]").attr("link-for") || "").toLowerCase();
-            var titles = elem.dfnTitle();
+            var titles = elem.getDfnTitles();
             var result = [];
             $.each(titles, function() {
                     result.push({for_: link_for, title: this});
