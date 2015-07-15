@@ -27,15 +27,60 @@ define(
             return $(arr);
         };
 
-        // For any element, returns a title string that applies the algorithm used for determining the
+        // For any element, returns an array of title strings that applies
+        // the algorithm used for determining the
         // actual title of a <dfn> element (but can apply to other as well).
-        $.fn.dfnTitle = function () {
-            var title;
-            if (this.attr("title")) title = this.attr("title");
-            else if (this.contents().length == 1 && this.children("abbr, acronym").length == 1 &&
-                     this.find(":first-child").attr("title")) title = this.find(":first-child").attr("title");
-            else title = this.text();
-            return title.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
+        // 
+        // if args.isDefinition is true, then the element is a definition, not a 
+        // reference to a definition.  Any @title or @lt will be replaced with
+        // @data-lt to be consistent with Bikeshed / Shepherd.
+        $.fn.getDfnTitles = function ( args ) {
+            var titles = [];
+            var theAttr = "";
+            var titleString = ""; 
+            if (this.attr("title")) {
+                titleString = this.attr("title");
+                theAttr = "title";
+            }
+            else if (this.attr("lt")) {
+                titleString = this.attr("lt");
+                theAttr = "lt";
+            }
+            else if (this.contents().length == 1 
+                     && this.children("abbr, acronym").length == 1 
+                     && this.find(":first-child").attr("title")) {
+                titleString = this.find(":first-child").attr("title");
+            }
+            else {
+                titleString = this.text();
+            }
+            // now we have a string of one or more titles
+            titleString = titleString.toLowerCase() // mask to lower case
+                .replace(/^\s+/, "") // strip out any leading whitespace
+                .replace(/\s+$/, "") // and any trailing whitespace
+                .split(/\s+/) // split on any whitepace
+                .join(" ");  // and replace with a single space
+            if (args && args.isDefinition === true) {
+                // if it came from an attribute, replace that with data-lt as per contract with Shepherd
+                if (theAttr) {
+                    this.attr("data-lt", titleString);
+                    this.removeAttr(theAttr) ;
+                }
+                // if there is no pre-defined type, assume it is a 'dfn'
+                if (!this.attr("dfn-type")) {
+                    this.attr("data-dfn-type", "dfn");
+                }
+                else {
+                    this.attr("data-dfn-type", this.attr("dfn-type"));
+                    this.removeAttr("dfn-type");
+                }
+            }
+            titleString.split('|').forEach( function( item ) {
+                    if (item != "") {
+                        titles.push(item);
+                    }
+                });
+            return titles;
         };
 
         // For any element (usually <a>), returns an array of targets that
@@ -51,15 +96,18 @@ define(
         $.fn.linkTargets = function () {
             var elem = this;
             var link_for = (elem.attr("for") || elem.closest("[link-for]").attr("link-for") || "").toLowerCase();
-            var title = elem.dfnTitle();
-            var result = [{for_: link_for, title: title}];
-            var split = title.split('.');
-            if (split.length === 2) {
-                // If there are multiple '.'s, this won't match an
-                // Interface/member pair anyway.
-                result.push({for_: split[0], title: split[1]});
-            }
-            result.push({for_:"", title: title});
+            var titles = elem.getDfnTitles();
+            var result = [];
+            $.each(titles, function() {
+                    result.push({for_: link_for, title: this});
+                    var split = this.split('.');
+                    if (split.length === 2) {
+                        // If there are multiple '.'s, this won't match an
+                        // Interface/member pair anyway.
+                        result.push({for_: split[0], title: split[1]});
+                    }
+                    result.push({for_: "", title: this});
+                });
             return result;
         };
 
