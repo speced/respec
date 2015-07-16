@@ -34,11 +34,19 @@ define(
         // if args.isDefinition is true, then the element is a definition, not a 
         // reference to a definition.  Any @title or @lt will be replaced with
         // @data-lt to be consistent with Bikeshed / Shepherd.
+        //
+        // This method now *prefers* the data-lt attribute for the list of 
+        // titles.  That attribute is added by this method to dfn elements, so 
+        // subsequent calls to this method will return the data-lt based list.
         $.fn.getDfnTitles = function ( args ) {
             var titles = [];
             var theAttr = "";
             var titleString = ""; 
-            if (this.attr("title")) {
+            if (( !args || (args && args.isDefinition != true) ) && this.attr("data-lt")) {
+                titleString = this.attr("data-lt");
+                theAttr = "data-lt";
+            }
+            else if (this.attr("title")) {
                 titleString = this.attr("title");
                 theAttr = "title";
             }
