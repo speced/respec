@@ -38,21 +38,27 @@ define(
         // This method now *prefers* the data-lt attribute for the list of 
         // titles.  That attribute is added by this method to dfn elements, so 
         // subsequent calls to this method will return the data-lt based list.
+        //
+        // This method will publish a warning if a title is used on a definition
+        // instead of an @lt (as per specprod mailing list discussion).
         $.fn.getDfnTitles = function ( args ) {
             var titles = [];
             var theAttr = "";
             var titleString = ""; 
             if (( !args || (args && args.isDefinition != true) ) && this.attr("data-lt")) {
+                // only look for a data-lt when we are NOT being called to create a
+                // new definition
                 titleString = this.attr("data-lt");
                 theAttr = "data-lt";
-            }
-            else if (this.attr("title")) {
-                titleString = this.attr("title");
-                theAttr = "title";
             }
             else if (this.attr("lt")) {
                 titleString = this.attr("lt");
                 theAttr = "lt";
+            }
+            else if (this.attr("title")) {
+                titleString = this.attr("title");
+                theAttr = "title";
+                respecEvents.pub("warn", "Using deprecated attribute @title to specify link title for '" + this.text() + "': Change to @lt");
             }
             else if (this.contents().length == 1 
                      && this.children("abbr, acronym").length == 1 
