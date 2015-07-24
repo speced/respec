@@ -58,7 +58,7 @@ define(
             else if (this.attr("title")) {
                 titleString = this.attr("title");
                 theAttr = "title";
-                respecEvents.pub("warn", "Using deprecated attribute @title to specify link title for '" + this.text() + "': Change to @lt");
+                respecEvents.pub("warn", "Using deprecated attribute @title for '" + this.text() + "': see http://w3.org/respec/guide.html#definitions-and-linking");
             }
             else if (this.contents().length == 1 
                      && this.children("abbr, acronym").length == 1 
