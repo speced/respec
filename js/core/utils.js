@@ -32,7 +32,7 @@ define(
         // actual title of a <dfn> element (but can apply to other as well).
         // 
         // if args.isDefinition is true, then the element is a definition, not a 
-        // reference to a definition.  Any @title or @lt  or will be replaced with
+        // reference to a definition.  Any @title or @lt will be replaced with
         // @data-lt to be consistent with Bikeshed / Shepherd.
         //
         // This method now *prefers* the data-lt attribute for the list of 
