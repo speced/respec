@@ -98,12 +98,12 @@ describe("Core - Utils", function () {
             expect(utils.isoDate("2013-06-25")).toMatch(/2013-06-2[45]T/) ;
             var d = new Date();
             d.setFullYear(2013);
-            d.setMonth(5);
             d.setDate(25);
+            d.setMonth(8);
             d.setHours(0);
             d.setMinutes(0);
             d.setSeconds(0);
-            expect(utils.isoDate(d)).toMatch(/2013-06-2[45]T/);
+            expect(utils.isoDate(d)).toMatch(/2013-09-2[45]T/);
         });
     });
 
