@@ -44,16 +44,22 @@ define(
         $.fn.getDfnTitles = function ( args ) {
             var titles = [];
             var theAttr = "";
-            var titleString = ""; 
-            if (this.attr("data-lt")) {
+            var titleString = "";
+            var normalizedText = utils.norm(this.text()).toLowerCase();
+            // allow @lt to be consistent with bikeshed
+            if (this.attr("data-lt") || this.attr("lt")) {
+                theAttr = this.attr("data-lt") ? "data-lt" : "lt";
                 // prefer @data-lt for the list of title aliases
-                titleString = this.attr("data-lt");
-                theAttr = "data-lt";
-            }
-            else if (this.attr("lt")) {
-                // allow @lt to be consistent with bikeshed
-                titleString = this.attr("lt");
-                theAttr = "lt";
+                titleString = this.attr(theAttr).toLowerCase();
+                if (normalizedText !== "") {
+                    //Regex: starts with the "normalizedText|"
+                    var startsWith = new RegExp("^" + normalizedText + "\\|");
+                    // Use the definition itself as first item, so to avoid
+                    // having to declare the definition twice.
+                    if (!startsWith.test(titleString)) {
+                        titleString = normalizedText + "|" + titleString;
+                    }
+                }
             }
             else if (this.attr("title")) {
                 // allow @title for backward compatibility
@@ -70,11 +76,7 @@ define(
                 titleString = this.text();
             }
             // now we have a string of one or more titles
-            titleString = titleString.toLowerCase() // mask to lower case
-                .replace(/^\s+/, "") // strip out any leading whitespace
-                .replace(/\s+$/, "") // and any trailing whitespace
-                .split(/\s+/) // split on any whitepace
-                .join(" ");  // and replace with a single space
+            titleString = utils.norm(titleString).toLowerCase();
             if (args && args.isDefinition === true) {
                 // if it came from an attribute, replace that with data-lt as per contract with Shepherd
                 if (theAttr) {
@@ -199,7 +201,6 @@ define(
                 }
                 return ret;
             }
-
             // Takes a string, applies some XML escapes, and returns the escaped string.
             // Note that overall using either Handlebars' escaped output or jQuery is much
             // preferred to operating on strings directly.
