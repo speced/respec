@@ -32,7 +32,7 @@ define(
         // actual title of a <dfn> element (but can apply to other as well).
         // 
         // if args.isDefinition is true, then the element is a definition, not a 
-        // reference to a definition.  Any @title or @lt will be replaced with
+        // reference to a definition.  Any @title or @lt  or will be replaced with
         // @data-lt to be consistent with Bikeshed / Shepherd.
         //
         // This method now *prefers* the data-lt attribute for the list of 
@@ -45,17 +45,18 @@ define(
             var titles = [];
             var theAttr = "";
             var titleString = ""; 
-            if (( !args || (args && args.isDefinition != true) ) && this.attr("data-lt")) {
-                // only look for a data-lt when we are NOT being called to create a
-                // new definition
+            if (this.attr("data-lt")) {
+                // prefer @data-lt for the list of title aliases
                 titleString = this.attr("data-lt");
                 theAttr = "data-lt";
             }
             else if (this.attr("lt")) {
+                // allow @lt to be consistent with bikeshed
                 titleString = this.attr("lt");
                 theAttr = "lt";
             }
             else if (this.attr("title")) {
+                // allow @title for backward compatibility
                 titleString = this.attr("title");
                 theAttr = "title";
                 respecEvents.pub("warn", "Using deprecated attribute @title for '" + this.text() + "': see http://w3.org/respec/guide.html#definitions-and-linking");
