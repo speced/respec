@@ -302,5 +302,39 @@ describe("W3C — Headers", function () {
         });
     });
 
+    // Member-SUBM
+    it("should not expose a Previous version link for Member submissions", function () {
+        loadWithConfig({ specStatus: "Member-SUBM" }, function ($ifr) {
+            expect($("dt:contains('Previous version:')", $ifr[0].contentDocument).length).toEqual(0);
+        });
+    });
+    it("should display the Member Submission logo for Member submissions", function () {
+        loadWithConfig({ specStatus: "Member-SUBM" }, function ($ifr) {
+            expect($(".head img[src='http://www.w3.org/Icons/member_subm']", $ifr[0].contentDocument).length).toEqual(1);
+        });
+    });
+    it("should use the right SoTD boilerplate for Member submissions", function () {
+        loadWithConfig({ specStatus: "Member-SUBM" }, function ($ifr) {
+            var $sotd = $("#sotd", $ifr[0].contentDocument);
+            expect($sotd.find("p:contains('W3C acknowledges that the Submitting Members have made a formal Submission request')").length).toEqual(1);
+        });
+    });
 
+    // Team-SUBM
+    it("should not expose a Previous version link for Team submissions", function () {
+        loadWithConfig({ specStatus: "Team-SUBM" }, function ($ifr) {
+            expect($("dt:contains('Previous version:')", $ifr[0].contentDocument).length).toEqual(0);
+        });
+    });
+    it("should display the Team Submission logo for Team submissions", function () {
+        loadWithConfig({ specStatus: "Team-SUBM" }, function ($ifr) {
+            expect($(".head img[src='http://www.w3.org/Icons/team_subm']", $ifr[0].contentDocument).length).toEqual(1);
+        });
+    });
+    it("should use the right SoTD boilerplate for Team submissions", function () {
+        loadWithConfig({ specStatus: "Team-SUBM" }, function ($ifr) {
+            var $sotd = $("#sotd", $ifr[0].contentDocument);
+            expect($sotd.find("a[href='http://www.w3.org/TeamSubmission/']").length).toEqual(1);
+        });
+    });
 });
