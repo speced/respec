@@ -135,13 +135,43 @@ describe("Core - Utils", function () {
     });
 
     // $.getDfnTitles()
-    it("should find the definition title", function () {
+    it("should not prepend empty dfns to data-lt", function () {
         runs(function () {
-            var $dfn = $("<dfn lt='DFN|DFN2|DFN3'><abbr title='ABBR'>TEXT</abbr></dfn>").appendTo($("body"));
+            var $dfn = $("<dfn data-lt='DFN|DFN2|DFN3'></dfn>").appendTo($("body"));
             var titles = $dfn.getDfnTitles( { isDefinition: true } );
             expect(titles[0]).toEqual("dfn");
             expect(titles[1]).toEqual("dfn2");
             expect(titles[2]).toEqual("dfn3");
+            $dfn.remove();
+        });
+    });
+
+    // $.getDfnTitles()
+    it("should find the data-lts", function () {
+        runs(function () {
+            var $dfn = $("<dfn data-lt='DFN|DFN2|DFN3'><abbr title='ABBR'>TEXT</abbr></dfn>").appendTo($("body"));
+            var titles = $dfn.getDfnTitles( { isDefinition: true } );
+            expect(titles[0]).toEqual("text");
+            expect(titles[1]).toEqual("dfn");
+            expect(titles[2]).toEqual("dfn2");
+            expect(titles[3]).toEqual("dfn3");
+            $dfn.removeAttr("data-lt");
+            expect($dfn.getDfnTitles()[0]).toEqual("abbr");
+            $dfn.find("abbr").removeAttr("title");
+            expect($dfn.getDfnTitles()[0]).toEqual("text");
+            $dfn.remove();
+        });
+    });
+
+    // $.getDfnTitles()
+    it("should find the definition title", function () {
+        runs(function () {
+            var $dfn = $("<dfn lt='DFN|DFN2|DFN3'><abbr title='ABBR'>TEXT</abbr></dfn>").appendTo($("body"));
+            var titles = $dfn.getDfnTitles( { isDefinition: true } );
+            expect(titles[0]).toEqual("text");
+            expect(titles[1]).toEqual("dfn");
+            expect(titles[2]).toEqual("dfn2");
+            expect(titles[3]).toEqual("dfn3");
             $dfn.removeAttr("data-lt");
             expect($dfn.getDfnTitles()[0]).toEqual("abbr");
             $dfn.find("abbr").removeAttr("title");
@@ -155,11 +185,12 @@ describe("Core - Utils", function () {
         runs(function () {
             var $dfn = $("<dfn lt='DFN|DFN2|DFN3'>TEXT</dfn>").appendTo($("body"));
             var titles = $dfn.getDfnTitles( { isDefinition: true } );
-            expect(titles[0]).toEqual("dfn");
-            expect(titles[1]).toEqual("dfn2");
-            expect(titles[2]).toEqual("dfn3");
-            expect($dfn.attr("data-lt")).toEqual('dfn|dfn2|dfn3');
-            expect($dfn.getDfnTitles()[0]).toEqual("dfn");
+            expect(titles[0]).toEqual("text");
+            expect(titles[1]).toEqual("dfn");
+            expect(titles[2]).toEqual("dfn2");
+            expect(titles[3]).toEqual("dfn3");
+            expect($dfn.attr("data-lt")).toEqual("text|dfn|dfn2|dfn3");
+            expect($dfn.getDfnTitles()[1]).toEqual("dfn");
             $dfn.remove();
         });
     });

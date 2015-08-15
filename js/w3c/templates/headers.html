@@ -5,6 +5,12 @@
       {{else}}
         {{#if prependW3C}}
             <a href='http://www.w3.org/'><img width='72' height='48' src='https://www.w3.org/Icons/w3c_home' alt='W3C'></a>
+            {{#if isMemberSubmission}}
+            <a href="http://www.w3.org/Submission/"> <img height="48" width="211" alt="W3C Member Submission" src="http://www.w3.org/Icons/member_subm" /></a>
+            {{/if}}
+            {{#if isTeamSubmission}}
+            <a href="http://www.w3.org/TeamSubmission/"><img height="48" width="211" alt="W3C Team Submission" src="http://www.w3.org/Icons/team_subm"/></a>
+            {{/if}}
         {{/if}}
       {{/if}}
   </p>
