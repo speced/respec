@@ -46,8 +46,8 @@
               This document is intended to become a W3C Recommendation.
             {{/if}}
             {{#unless isPR}}
-              If you wish to make comments regarding this document, please send them to 
-              <a href='mailto:{{wgPublicList}}@w3.org{{#if subjectPrefix}}?subject={{subjectPrefixEnc}}{{/if}}'>{{wgPublicList}}@w3.org</a> 
+              If you wish to make comments regarding this document, please send them to
+              <a href='mailto:{{wgPublicList}}@w3.org{{#if subjectPrefix}}?subject={{subjectPrefixEnc}}{{/if}}'>{{wgPublicList}}@w3.org</a>
               (<a href='mailto:{{wgPublicList}}-request@w3.org?subject=subscribe'>subscribe</a>,
               <a
                 href='http://lists.w3.org/Archives/Public/{{wgPublicList}}/'>archives</a>){{#if subjectPrefix}}
@@ -64,20 +64,20 @@
                 W3C Advisory Committee Members are invited to
                 send formal review comments on this Proposed
                 Edited Recommendation to the W3C Team until
-                {{humanPEREnd}}. 
+                {{humanPEREnd}}.
                 Members of the Advisory Committee will find the
                 appropriate review form for this document by
                 consulting their list of current
-                <a href='https://www.w3.org/2002/09/wbs/myQuestionnaires'>WBS questionnaires</a>. 
+                <a href='https://www.w3.org/2002/09/wbs/myQuestionnaires'>WBS questionnaires</a>.
             {{/if}}
             {{#if isPR}}
                 The W3C Membership and other interested parties are invited to review the document and
                 send comments to
-                <a rel='discussion' href='mailto:{{wgPublicList}}@w3.org'>{{wgPublicList}}@w3.org</a> 
+                <a rel='discussion' href='mailto:{{wgPublicList}}@w3.org'>{{wgPublicList}}@w3.org</a>
                 (<a href='mailto:{{wgPublicList}}-request@w3.org?subject=subscribe'>subscribe</a>,
                 <a href='http://lists.w3.org/Archives/Public/{{wgPublicList}}/'>archives</a>)
                 through {{humanPREnd}}. Advisory Committee Representatives should consult their
-                <a href='https://www.w3.org/2002/09/wbs/myQuestionnaires'>WBS questionnaires</a>. 
+                <a href='https://www.w3.org/2002/09/wbs/myQuestionnaires'>WBS questionnaires</a>.
                 Note that substantive technical comments were expected during the Last Call review
                 period that ended {{humanLCEnd}}.
             {{else}}
@@ -122,7 +122,12 @@
           {{/if}}
           <p>
             {{#unless isIGNote}}
-              This document was produced by a group operating under the 
+              This document was produced by
+              {{#if multipleWGs}}
+              groups
+              {{else}}
+              a group
+              {{/if}} operating under the
               <a{{#if doRDFa}} id="sotd_patent" property='w3p:patentRules'{{/if}}
               href='http://www.w3.org/Consortium/Patent-Policy-20040205/'>5 February 2004 W3C Patent
               Policy</a>.
@@ -132,12 +137,17 @@
             {{/if}}
             {{#unless isIGNote}}
               {{#if multipleWGs}}
-                W3C maintains a public list of any patent disclosures ({{{wgPatentHTML}}})
+                W3C maintains {{{wgPatentHTML}}}
               {{else}}
                 W3C maintains a <a href='{{wgPatentURI}}' rel='disclosure'>public list of any patent
-                disclosures</a> 
+                disclosures</a>
               {{/if}}
-              made in connection with the deliverables of the group; that page also includes
+              made in connection with the deliverables of
+              {{#if multipleWGs}}
+              each group; these pages also include
+              {{else}}
+              the group; that page also includes
+              {{/if}}
               instructions for disclosing a patent. An individual who has actual knowledge of a patent
               which the individual believes contains
               <a href='http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential'>Essential
@@ -146,8 +156,8 @@
               6 of the W3C Patent Policy</a>.
             {{/unless}}
             {{#if isIGNote}}
-              The disclosure obligations of the Participants of this group are described in the 
-              <a href='{{charterDisclosureURI}}'>charter</a>. 
+              The disclosure obligations of the Participants of this group are described in the
+              <a href='{{charterDisclosureURI}}'>charter</a>.
             {{/if}}
           </p>
           {{#if isNewProcess}}
