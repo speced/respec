@@ -452,7 +452,9 @@ define(
                     });
                     var pats = [];
                     for (var i = 0, n = conf.wg.length; i < n; i++) {
-                        pats.push("a <a href='" + conf.wgPatentURI[i] + "' rel='disclosure'>" + "public list of any patent disclosures  (" + conf.wg[i] + ")</a>");
+                        pats.push("a <a href='" + conf.wgPatentURI[i] + "' rel='disclosure'>"
+                                  + "public list of any patent disclosures  (" + conf.wg[i]
+                                  + ")</a>");
                     }
                     conf.wgPatentHTML = utils.joinAnd(pats);
                 }
