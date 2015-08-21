@@ -119,7 +119,7 @@ define(
                 if (obj.dfn) {
                     var result = "<a for='" + Handlebars.Utils.escapeExpression(obj.linkFor || "") + "'";
                     if (obj.name) {
-                        result += " title='" + Handlebars.Utils.escapeExpression(obj.name) + "'";
+                        result += " data-lt='" + Handlebars.Utils.escapeExpression(obj.name) + "'";
                     }
                     result += ">" + content + "</a>";
                     return result;
@@ -717,10 +717,10 @@ define(
                 dfnForArray = definitionMap[dottedName];
                 if (dfnForArray !== undefined && dfnForArray.length === 1) {
                     dfns = dfnForArray;
-                    // Found it: update the definition to specify its [for] and title.
+                    // Found it: update the definition to specify its [for] and data-lt.
                     delete definitionMap[dottedName];
                     dfns[0].attr('data-dfn-for', parent);
-                    dfns[0].attr('title', name);
+                    dfns[0].attr('data-lt', name);
                     if (definitionMap[name] === undefined) {
                         definitionMap[name] = [];
                     }
