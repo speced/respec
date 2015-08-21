@@ -717,7 +717,7 @@ define(
                 dfnForArray = definitionMap[dottedName];
                 if (dfnForArray !== undefined && dfnForArray.length === 1) {
                     dfns = dfnForArray;
-                    // Found it: update the definition to specify its [for] and title.
+                    // Found it: update the definition to specify its [for] and data-lt.
                     delete definitionMap[dottedName];
                     dfns[0].attr('data-dfn-for', parent);
                     dfns[0].attr('data-lt', name);
