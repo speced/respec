@@ -230,7 +230,7 @@ describe("W3C — Headers", function () {
             expect($sotd.find("a:contains('WGNAME1')").last().attr("href")).toEqual("WGPATENT1");
             expect($sotd.find("a:contains('WGNAME2')").first().attr("href")).toEqual("WGURI2");
             expect($sotd.find("a:contains('WGNAME2')").last().attr("href")).toEqual("WGPATENT2");
-            expect($sotd.find("a:contains('disclosures')").length).toEqual(0);
+            expect($sotd.find("a:contains('disclosures')").length).toEqual(2);
         });
     });
 
