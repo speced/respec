@@ -408,6 +408,10 @@ define(
                 conf.publishISODate = utils.isoDate(conf.publishDate);
                 conf.shortISODate = conf.publishISODate.replace(/T.*/, "");
                 conf.processVersion = conf.processVersion || "2015";
+                if (conf.processVersion == "2014") {
+                    msg.pub("warn", "Process " + conf.processVersion + " has been superceded by Process 2015.");
+                    conf.processVersion = "2015";
+                }
                 conf.isNewProcess = conf.processVersion == "2015";
                 // configuration done - yay!
 
