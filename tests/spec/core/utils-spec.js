@@ -147,6 +147,19 @@ describe("Core - Utils", function () {
     });
 
     // $.getDfnTitles()
+    it("should not use the text content when data-lt-noDefault is present", function () {
+        runs(function () {
+            var $dfn = $("<dfn data-lt-noDefault data-lt='DFN|DFN2|DFN3'>FAIL</dfn>").appendTo($("body"));
+            var titles = $dfn.getDfnTitles( { isDefinition: true } );
+            expect(titles[0]).toEqual("dfn");
+            expect(titles[1]).toEqual("dfn2");
+            expect(titles[2]).toEqual("dfn3");
+            expect(titles[3]).toEqual(undefined);
+            $dfn.remove();
+        });
+    });
+
+    // $.getDfnTitles()
     it("should find the data-lts", function () {
         runs(function () {
             var $dfn = $("<dfn data-lt='DFN|DFN2|DFN3'><abbr title='ABBR'>TEXT</abbr></dfn>").appendTo($("body"));
