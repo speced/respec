@@ -8,8 +8,8 @@ define(
       run: function(conf, doc, cb, msg) {
         msg.pub("start", "core/include-config");
         var script = doc.createElement("script");
-        script.id = "respecFinalConfig";
-        script.innerText = JSON.stringify(conf, null, 2);
+        script.id = "respecConfig";
+        script.innerHTML = JSON.stringify(conf, null, 2);
         script.type = "application/json";
         doc.head.appendChild(script);
         msg.pub("end", "core/include-config");
