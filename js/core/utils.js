@@ -30,13 +30,13 @@ define(
         // For any element, returns an array of title strings that applies
         // the algorithm used for determining the
         // actual title of a <dfn> element (but can apply to other as well).
-        // 
-        // if args.isDefinition is true, then the element is a definition, not a 
+        //
+        // if args.isDefinition is true, then the element is a definition, not a
         // reference to a definition.  Any @title or @lt will be replaced with
         // @data-lt to be consistent with Bikeshed / Shepherd.
         //
-        // This method now *prefers* the data-lt attribute for the list of 
-        // titles.  That attribute is added by this method to dfn elements, so 
+        // This method now *prefers* the data-lt attribute for the list of
+        // titles.  That attribute is added by this method to dfn elements, so
         // subsequent calls to this method will return the data-lt based list.
         //
         // This method will publish a warning if a title is used on a definition
@@ -45,7 +45,12 @@ define(
             var titles = [];
             var theAttr = "";
             var titleString = "";
-            var normalizedText = utils.norm(this.text()).toLowerCase();
+            var normalizedText = "";
+            //data-lt-noDefault avoid using the text content of a definition
+            //in the definition list.
+            if (this.attr("data-lt-noDefault") === undefined){
+                normalizedText = utils.norm(this.text()).toLowerCase();
+            }
             // allow @lt to be consistent with bikeshed
             if (this.attr("data-lt") || this.attr("lt")) {
                 theAttr = this.attr("data-lt") ? "data-lt" : "lt";
@@ -67,8 +72,8 @@ define(
                 theAttr = "title";
                 respecEvents.pub("warn", "Using deprecated attribute @title for '" + this.text() + "': see http://w3.org/respec/guide.html#definitions-and-linking");
             }
-            else if (this.contents().length == 1 
-                     && this.children("abbr, acronym").length == 1 
+            else if (this.contents().length == 1
+                     && this.children("abbr, acronym").length == 1
                      && this.find(":first-child").attr("title")) {
                 titleString = this.find(":first-child").attr("title");
             }
@@ -167,8 +172,8 @@ define(
             getTextNodes(this[0]);
             return textNodes;
         };
-        
-        
+
+
         var utils = {
             // --- SET UP
             run:    function (conf, doc, cb, msg) {
@@ -216,7 +221,7 @@ define(
                 return str.replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
             }
 
-            
+
             // --- DATE HELPERS -------------------------------------------------------------------------------
             // Takes a Date object and an optional separator and returns the year,month,day representation with
             // the custom separator (defaulting to none) and proper 0-padding
@@ -230,7 +235,7 @@ define(
                 str = "" + str;
                 return (str.length == 1) ? "0" + str : str;
             }
-            
+
             // takes a YYYY-MM-DD date and returns a Date object for it
         ,   parseSimpleDate:    function (str) {
                 return new Date(str.substr(0, 4), (str.substr(5, 2) - 1), str.substr(8, 2));
@@ -246,7 +251,7 @@ define(
             // list of human names for months (in English)
         ,   humanMonths: ["January", "February", "March", "April", "May", "June", "July",
                           "August", "September", "October", "November", "December"]
-        
+
             // given either a Date object or a date in YYYY-MM-DD format, return a human-formatted
             // date suitable for use in a W3C specification
         ,   humanDate:  function (date) {
@@ -260,8 +265,8 @@ define(
                 // return "" + date.getUTCFullYear() +'-'+ this.lead0(date.getUTCMonth() + 1)+'-' + this.lead0(date.getUTCDate()) +'T'+this.lead0(date.getUTCHours())+':'+this.lead0(date.getUTCMinutes()) +":"+this.lead0(date.getUTCSeconds())+'+0000';
                 return date.toISOString() ;
             }
-            
-            
+
+
             // --- STYLE HELPERS ------------------------------------------------------------------------------
             // take a document and either a link or an array of links to CSS and appends a <link/> element
             // to the head pointing to each
