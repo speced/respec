@@ -14,7 +14,7 @@ define(
             show:   function (ui, _conf, _doc, _msg) {
                 msg = _msg, doc = _doc, conf = _conf;
                 if (!conf.diffTool) conf.diffTool = "http://www5.aptest.com/standards/htmldiff/htmldiff.pl";
-                if (!conf.epubGenTool) conf.epubGenTool = "http://localhost:8001/cgi-bin/epub-generator";
+                if (!conf.epubGenTool) conf.epubGenTool = "https://labs.w3.org/epub-generator/cgi-bin/epub-generator.py";
                 var supportsDownload = $("<a href='foo' download='x'>A</a>")[0].download === "x"
                 ,   self = this
                 ;
