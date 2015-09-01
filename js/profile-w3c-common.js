@@ -52,6 +52,7 @@ define([
         ,   "core/rdfa"
         ,   "w3c/aria"
         ,   "core/shiv"
+        ,   "core/include-config"
         ,   "core/remove-respec"
         ,   "core/location-hash"
         ],
