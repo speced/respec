@@ -154,14 +154,14 @@ describe("W3C — Headers", function () {
     // edDraftURI
     it("should take edDraftURI into account", function () {
         loadWithConfig({ specStatus: "WD", edDraftURI: "URI" }, function ($ifr) {
-            expect($("dt:contains('Latest editor\'s draft:')", $ifr[0].contentDocument).next("dd").text()).toEqual("URI");
+            expect($('dt:contains("Latest editor\'s draft:")', $ifr[0].contentDocument).next("dd").text()).toEqual("URI");
         });
     });
 
     // prevED
     it("should take prevED into account", function () {
         loadWithConfig({ specStatus: "ED", prevED: "URI" }, function ($ifr) {
-            expect($("dt:contains('Previous editor\'s draft:')", $ifr[0].contentDocument).next("dd").text()).toEqual("URI");
+            expect($('dt:contains("Previous editor\'s draft:")', $ifr[0].contentDocument).next("dd").text()).toEqual("URI");
         });
     });
 
