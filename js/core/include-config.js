@@ -9,8 +9,7 @@ define(
         msg.pub("start", "core/include-config");
         var script = doc.createElement("script");
         script.id = "respecFinalConfig";
-        seen = [];
-        script.innerText = JSON.stringify(conf, function(key, val) {
+        var confFilter = function(key, val) {
           // DefinitionMap contains array of DOM elements that aren't serializable
           // we replace them by their id
           if (key === "definitionMap") {
@@ -21,7 +20,8 @@ define(
             return ret;
           }
           return val;
-          }, 2);
+        }
+        script.innerText = JSON.stringify(conf, confFilter, 2);
         script.type = "application/json";
         doc.head.appendChild(script);
         msg.pub("end", "core/include-config");
