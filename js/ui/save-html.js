@@ -14,6 +14,7 @@ define(
             show:   function (ui, _conf, _doc, _msg) {
                 msg = _msg, doc = _doc, conf = _conf;
                 if (!conf.diffTool) conf.diffTool = "http://www5.aptest.com/standards/htmldiff/htmldiff.pl";
+                if (!conf.epubGenTool) conf.epubGenTool = "https://labs.w3.org/epub-generator/cgi-bin/epub-generator.py";
                 var supportsDownload = $("<a href='foo' download='x'>A</a>")[0].download === "x"
                 ,   self = this
                 ;
@@ -63,6 +64,16 @@ define(
                 addButton("Save as HTML", self.toString(), "Overview.html", function () { self.toHTMLSource(); });
                 addButton("Save as XHTML5", self.toXML(5), "Overview.xhtml", function () { self.toXHTMLSource(5); });
                 addButton("Save as XHTML 1.0", self.toXML(1), "Overview.xhtml", function () { self.toXHTMLSource(1); });
+                if (conf.epubGenTool) {
+                   $("<button>Save as EPUB 3</button>")
+                        .appendTo($div)
+                        .css(buttonCSS)
+                        .click(function () {
+                            self.toEPUB();
+                            ui.closeModal();
+                        })
+                        ;
+                }
                 if (conf.diffTool && (conf.previousDiffURI || conf.previousURI)) {
                     $("<button>Diff</button>")
                         .appendTo($div)
@@ -204,6 +215,21 @@ define(
                 x.document.write(str);
                 x.document.close();
                 x.document.form.submit();
+            }
+        ,   toEPUB:  function () {
+                respecEvents.pub("save", "toEPUB")
+                var base = window.location.href.replace(/\/[^\/]*$/, "/")
+                ,   str = "<!DOCTYPE html>\n<html>\n" +
+                          "<head><title>Generating EPUB from respec</title></head>\n" +
+                          "<body><form name='form' method='GET' action='" + conf.epubGenTool + "'>\n" +
+                          "<input name='type' type='hidden' value='respec'>\n" +
+                          "<input name='url'  type='hidden' value='" + document.location.href + "'>\n" +
+                          "<p>Submitting, please wait... (it may take a while, because the HTML is also generated through a remove service).</p>"
+                          "</form></body></html>" ;
+                var x = window.open();
+                x.document.write(str);
+                x.document.close();
+                x.document.form.submit(); 
             },
             // popup the generated HTML content
             // toHTML:    function () {

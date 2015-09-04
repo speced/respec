@@ -22,8 +22,8 @@ describe("Core — Include config as JSON", function() {
     }, MAXOUT);
     runs(function() {
       var $script = $("#respecConfig", doc);
-      expect($script[0].tagName).toEqual("SCRIPT");
-      expect($script.attr("id")).toEqual("respecFinalConfig");
+      expect($script[0] instanceof HTMLScriptElement).toEqual(true);
+      expect($script.attr("id")).toEqual("respecConfig");
       expect($script.attr("type")).toEqual("application/json");
       flushIframes();
     });
@@ -33,7 +33,7 @@ describe("Core — Include config as JSON", function() {
     runs(function() {
       makeRSDoc({
           config: basicConfig,
-          body: $("<section id='abstract'>no content</section>")
+          body: $("")
         },
         function(rsdoc) {
           doc = rsdoc;
