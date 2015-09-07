@@ -452,7 +452,7 @@ define(
                 if ($.isArray(conf.wg)) {
                     conf.multipleWGs = conf.wg.length > 1;
                     conf.wgHTML = utils.joinAnd(conf.wg, function (wg, idx) {
-                        return "<a href='" + conf.wgURI[idx] + "'>" + wg + "</a>";
+                        return "the <a href='" + conf.wgURI[idx] + "'>" + wg + "</a>";
                     });
                     var pats = [];
                     for (var i = 0, n = conf.wg.length; i < n; i++) {
@@ -464,7 +464,7 @@ define(
                 }
                 else {
                     conf.multipleWGs = false;
-                    conf.wgHTML = "<a href='" + conf.wgURI + "'>" + conf.wg + "</a>";
+                    conf.wgHTML = "the <a href='" + conf.wgURI + "'>" + conf.wg + "</a>";
                 }
                 if (conf.isLC && !conf.lcEnd) msg.pub("error", "Status is LC but no lcEnd is specified");
                 if (conf.specStatus === "PR" && !conf.lcEnd) msg.pub("error", "Status is PR but no lcEnd is specified (needed to indicate end of previous LC)");
