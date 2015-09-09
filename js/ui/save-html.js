@@ -31,15 +31,16 @@ define(
                     ,   textAlign:      "center"
                     ,   fontSize:       "inherit"
                     }
-                ,   addButton = function (title, content, fileName, popupContent) {
+                ,   addButton = function (options) {
                         if (supportsDownload) {
                             $("<a></a>")
                                 .appendTo($div)
-                                .text(title)
+                                .text(options.title)
                                 .css(buttonCSS)
                                 .attr({
-                                    href:   "data:text/html;charset=utf-8," + encodeURIComponent(content)
-                                ,   download:   fileName
+                                    href: options.url
+                                ,   download: options.fileName
+                                ,   type: options.type || ""
                                 })
                                 .click(function () {
                                     ui.closeModal();
@@ -49,10 +50,10 @@ define(
                         else {
                             $("<button></button>")
                                 .appendTo($div)
-                                .text(title)
+                                .text(options.title)
                                 .css(buttonCSS)
                                 .click(function () {
-                                    popupContent();
+                                    options.popupContent();
                                     ui.closeModal();
                                 })
                                 ;
@@ -60,9 +61,47 @@ define(
 
                     }
                 ;
-                addButton("Save as HTML", self.toString(), "Overview.html", function () { self.toHTMLSource(); });
-                addButton("Save as XHTML5", self.toXML(5), "Overview.xhtml", function () { self.toXHTMLSource(5); });
-                addButton("Save as XHTML 1.0", self.toXML(1), "Overview.xhtml", function () { self.toXHTMLSource(1); });
+
+                // HTML
+                addButton({
+                    title: "Save as HTML",
+                    url: this.htmlToDataURL(this.toString()),
+                    popupContent: this.toHTMLSource.bind(this),
+                    fileName: "index.html",
+                });
+
+                // XHTML5
+                addButton({
+                    fileName: "index.xhtml",
+                    popupContent: function () {
+                        this.toXHTMLSource(5);
+                    }.bind(this),
+                    title: "Save as XHTML5",
+                    url: this.htmlToDataURL(this.toXML(5)),
+                });
+
+                // XHTML 1.0
+                addButton({
+                    fileName: "index.xhtml",
+                    popupContent: function () {
+                        this.toXHTMLSource(1);
+                    }.bind(this),
+                    title: "Save as XHTML 1.0",
+                    url: this.htmlToDataURL(this.toXML(1)),
+                });
+
+                // ePub
+                addButton({
+                    fileName: "spec.epub",
+                    popupContent: function () {
+                        window.open(this.makeEPubHref(), "_blank");
+                    }.bind(this),
+                    title: "Save as EPUB 3",
+                    type: "application/epub+zip",
+                    url: this.makeEPubHref(),
+                });
+
+
                 if (conf.diffTool && (conf.previousDiffURI || conf.previousURI)) {
                     $("<button>Diff</button>")
                         .appendTo($div)
@@ -74,6 +113,19 @@ define(
                         ;
                 }
                 ui.freshModal("Save Snapshot", $div);
+            }
+        ,   htmlToDataURL: function(data){
+                data = encodeURIComponent(data);
+                return "data:text/html;charset=utf-8," + data;
+            }
+        // Create and download an EPUB 3 version of the content
+        // Using (by default) the EPUB 3 conversion service set up at labs.w3.org/epub-generator
+        // For more details on that service, see https://github.com/iherman/respec2epub
+        ,   makeEPubHref: function(){
+                var EPUB_GEN_HREF = "https://labs.w3.org/epub-generator/cgi-bin/epub-generator.py";
+                var finalURL = EPUB_GEN_HREF + "?type=respec&";
+                finalURL += "url=" + encodeURIComponent(doc.location.href);
+                return finalURL;
             }
             // convert the document to a string (HTML)
         ,   toString:    function () {
