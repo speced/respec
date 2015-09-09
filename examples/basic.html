@@ -50,6 +50,33 @@
       </dl>
     </section>
     <section>
+      <h2>Contiguous WebIDL</h2>
+<pre class="idl">
+interface MediaStreamTrack : EventTarget {
+    readonly    attribute DOMString             kind;
+    readonly    attribute DOMString             id;
+    readonly    attribute DOMString             label;
+                attribute boolean               enabled;
+    readonly    attribute boolean               muted;
+                attribute EventHandler          onmute;
+                attribute EventHandler          onunmute;
+    readonly    attribute boolean               _readonly;
+    readonly    attribute boolean               remote;
+    readonly    attribute MediaStreamTrackState readyState;
+                attribute EventHandler          onstarted;
+                attribute EventHandler          onended;
+    static void                                    getSources (SourceInfoCallback resultCallback);
+    MediaTrackConstraints?                         constraints ();
+    MediaSourceStates                              states ();
+    (AllVideoCapabilities or AllAudioCapabilities) capabilities ();
+    void                                           applyConstraints (MediaTrackConstraints constraints);
+                attribute EventHandler          onoverconstrained;
+    MediaStreamTrack                               clone ();
+    void                                           stop ();
+};
+</pre>
+    </section>
+    <section>
       <h2>Type Unions</h2>
       <section>
         <h2>Two</h2>
