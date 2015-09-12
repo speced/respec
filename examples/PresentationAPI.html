@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <title>
+      Presentation API
+    </title>
+    <script src='../js/require.js' data-main='../js/profile-w3c-common' async class='remove'></script>
+    <script class="remove">
+    var respecConfig = {
+        specStatus: 'ED',
+        edDraftURI: 'http://w3c.github.io/presentation-api/',
+        shortName:  'presentation-api',
+        editors: [
+          {
+            w3cid: 68454,
+            name: 'Mark Foltz',
+            company: 'Google',
+            mailto: 'mfoltz@google.com'
+          },
+          {
+            w3cid: 63802,
+            name: 'Dominik Röttsches',
+            company: 'Intel',
+            note: 'until April 2015'
+          }
+        ],
+        previousMaturity: 'WD',
+        previousPublishDate: '2015-07-01',
+        otherLinks: [
+          {
+            key: 'Version history',
+            data: [
+              {
+                value: 'GitHub w3c/presentation-api/commits',
+                href: 'https://github.com/w3c/presentation-api/commits/'
+              }
+            ]
+          },
+          {
+            key: 'Participate',
+            data: [
+              {
+                value: 'GitHub w3c/presentation-api',
+                href: 'https://github.com/w3c/presentation-api/'
+              },
+              {
+                value: 'File an issue',
+                href: 'https://github.com/w3c/presentation-api/issues/new'
+              },
+              {
+                value: 'Open issues',
+                href: 'https://github.com/w3c/presentation-api/issues/'
+              },
+              {
+                value: 'Mailing-list (public-secondscreen@w3.org)',
+                href: 'https://lists.w3.org/Archives/Public/public-secondscreen/'
+              }
+            ]
+          }
+        ],
+        wg: 'Second Screen Presentation Working Group',
+        wgURI: 'http://www.w3.org/2014/secondscreen/',
+        wgPublicList: 'public-secondscreen',
+        wgPatentURI: 'http://www.w3.org/2004/01/pp-impl/74168/status',
+        localBiblio: {
+          PROMGUIDE: {
+            title: 'Writing Promise-Using Specifications',
+            href: 'http://www.w3.org/2001/tag/doc/promises-guide',
+            authors: [
+              'Domenic Denicola'
+            ],
+            status: 'finding',
+            publisher: 'W3C'
+          }
+        },
+        issueBase: "https://www.github.com/w3c/presentation-api/issues/",
+        githubAPI: "https://api.github.com/repos/w3c/presentation-api",
+
+      };
+    </script>
+    <style>
+    /* Note formatting taken from HTML5 spec */
+    .note { border-left-style: solid; border-left-width: 0.25em; background: none repeat scroll 0 0 #E9FBE9; border-color: #52E052; }
+    .note em, .warning em, .note i, .warning i { font-style: normal; }
+    p.note, div.note { padding: 0.5em 2em; }
+    span.note { padding: 0 2em; }
+    .note p:first-child { margin-top: 0; }
+    .note p:last-child { margin-bottom: 0; }
+    p.note:before { content: 'NOTE: '; }
+    .non-normative { border-left-style: solid; border-left-width: 0.25em; background: none repeat scroll 0 0 #E9FBE9; border-color: #52E052; }
+    p.non-normative:before { content: 'Non-normative: '; font-weight: bolder;}
+    p.non-normative, div.non-normative { padding: 0.5em 2em; }
+
+
+    /* Pre.idl formatting taken from HTML5 spec */
+    pre.idl { border: solid thin #d3d3d3; background: #FCFCFC; color: black; padding: 0.5em 1em; position: relative; }
+    pre.idl :link, pre.idl :visited { color: inherit; background: transparent; }
+    pre.idl::before { content: "IDL"; font: bold small sans-serif;
+    padding: 0.5em; background: white; position: absolute; top: 0;
+    margin: -1px 0 0 -4em; width: 1.5em; border: thin solid;
+    border-radius: 0 0 0 0.5em }
+
+    /* .example idl formatting taken from HTML5 nightly spec */
+    .example {
+        display: block;
+        color: #222222;
+        background: #FCFCFC;
+        border-left-style: solid;
+        border-color: #c0c0c0;
+        border-left-width: 0.25em;
+        margin-left: 1em;
+        padding-left: 1em;
+        padding-bottom: 0.5em;
+    }
+
+    .algorithm li {
+        margin-bottom: 0.5em;
+    }
+
+    .interface dd, .parameters dt {
+        margin-bottom: 0.5em;
+    }
+
+    code { color: orangered; }
+    table { border-collapse: collapse; border-style: hidden hidden none hidden; }
+    table thead, table tbody { border-bottom: solid; }
+    table td, table th { border-left: solid; border-right: solid; border-bottom: solid thin; vertical-align: top; padding: 0.2em; }
+    dfn { font-weight: bolder; font-style: normal; }
+    .copyright { font-size: small; }
+    .issue[id^='issue-'] > *:not([role='heading']) { display: none; }
+    </style>
+  </head>
+  <body>
+    <section id="abstract">
+      <p>
+        This specification defines an API to enable web content to access
+        external presentation-type displays and use them for presenting web
+        content.
+      </p>
+    </section>
+    <section id="sotd">
+      <p>
+        This document is a <b>work in progress</b> and is subject to change.
+        Some sections are still incomplete or underspecified. <a href=
+        "#security-and-privacy-considerations">Security and privacy
+        considerations</a> need to be adjusted based on feedback and
+        experience. Some open issues are noted inline; please check the group's
+        <a href="https://github.com/w3c/presentation-api/issues">issue
+        tracker</a> on GitHub for all open issues. Feedback from early
+        experimentations is encouraged to allow the Second Screen Presentation
+        Working Group to evolve the specification based on implementation
+        issues.
+      </p>
+    </section>
+    <section class="informative">
+      <h2>
+        Introduction
+      </h2>
+      <p>
+        This specification aims to make <a>presentation displays</a> such as
+        projectors or connected TVs, available to the Web and takes into
+        account displays that are attached using wired (HDMI, DVI, or similar)
+        and wireless technologies (Miracast, Chromecast, DLNA, AirPlay, or
+        similar).
+      </p>
+      <p>
+        Devices with limited screen size lack the ability to show content to a
+        larger audience, for example, a group of colleagues in a conference
+        room, or friends and family at home. Showing content on an external
+        large <a>presentation display</a> helps to improve the perceived
+        quality and impact of the presented content.
+      </p>
+      <p>
+        At its core, this specification enables an exchange of messages between
+        a page that acts as the <a>controller</a> and another page that
+        represents the <a data-lt="presenting browsing context">presentation</a>
+        shown in the <a>presentation display</a>. How the messages are
+        transmitted is left to the UA in order to allow the use of
+        <a>presentation display</a> devices that can be attached in a wide
+        variety of ways. For example, when a <a>presentation display</a> device
+        is attached using HDMI or Miracast, the same UA that acts as the
+        <a>controller</a> renders the <a data-lt=
+        "presenting browsing context">presentation</a>. Instead of displaying
+        the <a data-lt="presenting browsing context">presentation</a> in another
+        window on the same device, however, it can use whatever means the
+        operating system provides for using the external <a>presentation
+        displays</a>. In such a case, both the <a>controller</a> and <a data-lt=
+        "presenting browsing context">presentation</a> run on the same UA and
+        the operating system is used to route the <a>presentation display</a>
+        output to the <a>presentation display</a>. This is commonly referred to
+        as the <b id="1-ua">1-UA</b> case. This specification imposes no
+        requirements on the <a>presentation display</a> devices connected in
+        such a manner.
+      </p>
+      <p>
+        If the <a>presentation display</a> is able to render HTML documents and
+        communicate with the <a>controller</a>, the <a>controller</a> does not
+        need to render the <a data-lt=
+        "presenting browsing context">presentation</a>. In this case, the UA
+        acts as a proxy that requests the <a>presentation display</a> to show
+        and render the <a data-lt="presenting browsing context">presentation</a>
+        itself. This is commonly referred to as the <b id="2-ua">2-UA</b> case.
+        This way of attaching to displays could be enhanced in the future by
+        defining a standard protocol for delivering these types of messages
+        that display devices could choose to implement.
+      </p>
+      <p>
+        The API defined here is intended to be used with UAs that attach to
+        <a>presentation display</a> devices through any of the above means.
+      </p>
+    </section>
+    <section id="use-cases-and-requirements">
+      <h2>
+        Use cases and requirements
+      </h2>
+      <p>
+        Use cases and requirements are captured in a separate <a href=
+        "https://github.com/w3c/presentation-api/blob/gh-pages/uc-req.md">Presentation
+        API Use Cases and Requirements</a> document.
+      </p>
+    </section>
+    <section id="conformance">
+      <p>
+        Requirements phrased in the imperative as part of algorithms (such as
+        "strip any leading space characters" or "return false and terminate
+        these steps") are to be interpreted with the meaning of the key word
+        ("MUST", "SHOULD", "MAY", etc.) used in introducing the algorithm.
+      </p>
+      <p>
+        Conformance requirements phrased as algorithms or specific steps may be
+        implemented in any manner, so long as the result is equivalent. (In
+        particular, the algorithms defined in this specification are intended
+        to be easy to follow, and not intended to be performant.)
+      </p>
+    </section>
+    <section>
+      <h2>
+        Terminology
+      </h2>
+      <p>
+        The terms <dfn><a href=
+        "http://www.w3.org/TR/html5/browsers.html#browsing-context">browsing
+        context</a></dfn>, <dfn><a href=
+        "http://www.w3.org/TR/html5/webappapis.html#event-handlers">event
+        handler</a></dfn>, <dfn><a href=
+        "http://www.w3.org/TR/html5/webappapis.html#event-handler-event-type">event
+        handler event type</a></dfn>, <dfn data-lt="fire"><a href=
+        "http://www.w3.org/TR/html5/infrastructure.html#concept-event-fire">firing
+        an event</a></dfn>, <dfn><a href=
+        "http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">firing
+        a simple event</a></dfn> <dfn><a href=
+        "http://www.w3.org/TR/html5/browsers.html#navigate">navigate</a></dfn>,
+        <dfn><a href="http://www.w3.org/TR/html5/webappapis.html">queue a
+        task</a></dfn>, <dfn><a href=
+        "http://www.w3.org/TR/html5/infrastructure.html#concept-events-trusted">
+        trusted event</a></dfn>, <dfn><a href=
+        "http://www.w3.org/TR/html5/browsers.html#allowed-to-show-a-popup">allowed
+        to show a popup</a></dfn> are defined in [[!HTML5]].
+      </p>
+      <p>
+        This document provides interface definitions using the Web IDL standard
+        ([[!WEBIDL]]). The terms <dfn><a href=
+        "https://heycam.github.io/webidl/#idl-promise">Promise</a></dfn>,
+        <dfn><a href=
+        "http://heycam.github.io/webidl/#idl-ArrayBuffer">ArrayBuffer</a></dfn>,
+        <dfn><a href=
+        "http://heycam.github.io/webidl/#idl-ArrayBufferView">ArrayBufferView</a></dfn>
+        and <dfn><a href=
+        "http://heycam.github.io/webidl/#idl-DOMException">DOMException</a></dfn>
+        are defined in [[!WEBIDL]].
+      </p>
+      <p>
+        The terms <dfn data-lt="resolve"><a href=
+        "http://www.w3.org/2001/tag/doc/promises-guide#resolve-promise">resolving
+        a Promise</a></dfn>, and <dfn data-lt="reject"><a href=
+        "http://www.w3.org/2001/tag/doc/promises-guide#reject-promise">rejecting
+        a Promise</a></dfn> are used as explained in [[!PROMGUIDE]].
+      </p>
+      <p>
+        The term <dfn><a href="https://url.spec.whatwg.org/#url">URL</a></dfn>
+        is defined in the WHATWG URL standard [[!URL]].
+      </p>
+      <p>
+        The term <dfn><a href=
+        "http://dev.w3.org/2006/webapi/FileAPI/#blob">Blob</a></dfn> is defined
+        in the File API specification [[!FILEAPI]].
+      </p>
+      <p>
+        The term <dfn><a href=
+        "http://w3c.github.io/webrtc-pc/#idl-def-RTCDataChannel">RTCDataChannel</a></dfn>
+        is defined in the WebRTC API specification ([[WEBRTC]]).
+      </p>
+    </section>
+    <section>
+      <h2>
+        Examples
+      </h2>
+      <p>
+        This section shows example codes that highlight the usage of main
+        features of the Presentation API. In these examples,
+        <code>controller.html</code> implements the controller and
+        <code>presentation.html</code> implements the presentation. Both pages
+        are served from the domain <code>http://example.org</code>
+        (<code>http://example.org/controller.html</code> and
+        <code>http://example.org/presentation.html</code>). Please refer to the
+        comments in the code examples for further details.
+      </p>
+      <section>
+        <h3>
+          Monitor availability of presentation displays example
+        </h3>
+        <pre class="example highlight">
+&lt;!-- controller.html --&gt;
+&lt;button id="castBtn" style="display: none;"&gt;Cast&lt;/button&gt;
+&lt;script&gt;
+  // it is also possible to use relative presentation URL e.g. "presentation.html"
+  var presUrl = "http://example.com/presentation.html";
+  // the cast button is visible if at least one presentation display is available
+  var castBtn = document.getElementById("castBtn");
+  // show or hide cast button depending on display availability
+  var handleAvailabilityChange = function(available) {
+    castBtn.style.display = available ? "inline" : "none";
+  };
+  // Promise is resolved as soon as the presentation display availability is known.
+  var request = new PresentationRequest(presUrl);
+  request.getAvailability().then(function(availability) {
+    // availability.value may be kept up-to-date by the UA as long as the availability
+    // object is alive. It is advised for the web developers to discard the object
+    // as soon as it's not needed.
+    handleAvailabilityChange(availability.value);
+    availability.onchange = function() { handleAvailabilityChange(this.value); };
+  }).catch(function() {
+    // Availability monitoring is not supported by the platform, so discovery of presentation
+    // displays will happen only after request.start() is called.  Pretend the
+    // devices are available for simplicity; or, one could implement a third state for the
+    // button.
+    handleAvailabilityChange(true);
+  });
+&lt;/script&gt;
+</pre>
+      </section>
+      <section>
+        <h3>
+          Starting a new presentation session example
+        </h3>
+        <pre class="example highlight">
+&lt;!-- controller.html --&gt;
+&lt;script&gt;
+  // Start new session.
+  request.start()
+    // the new started session will be passed to setSession on success
+    .then(setSession)
+    // user cancels the selection dialog or an error is occurred
+    .catch(endSession);
+&lt;/script&gt;
+</pre>
+      </section>
+      <section>
+        <h3>
+          Reconnect to a presentation session example
+        </h3>
+        <pre class="example highlight">
+&lt;!-- controller.html --&gt;
+&lt;script&gt;
+  // read presId from localStorage if exists
+  var presId = localStorage &amp;&amp; localStorage["presId"] || null;
+  // presId is mandatory when reconnecting to a session.
+  if (presId) {
+    request.reconnect(presId)
+      // The reconnected session will be passed to setSession on success
+      .then(setSession)
+      // no session found for presUrl and presId or an error is occurred
+      .catch(endSession);
+  }
+&lt;/script&gt;
+</pre>
+      </section>
+      <section>
+        <h3>
+          Handling an event for a UA initiated presentation session example
+        </h3>
+        <pre class="example highlight">
+&lt;!-- controller.html --&gt;
+&lt;head&gt;
+  &lt;!-- Setting presentation.defaultRequest allows the page to specify the
+       PresentationRequest to use when the UA initiates a presentation session. --&gt;
+&lt;/head&gt;
+&lt;script&gt;
+  navigator.presentation.defaultRequest = new PresentationRequest(defaultUrl);
+  navigator.presentation.defaultRequest.onsessionconnect = function(evt) {
+    setSession(evt.session);
+  };
+&lt;/script&gt;
+
+</pre>
+      </section>
+      <section>
+        <h3>
+          Monitor session's state and exchange data example
+        </h3>
+        <pre class="example highlight">
+&lt;!-- controller.html --&gt;
+&lt;script&gt;
+  var session;
+  var setSession = function (theSession) {
+    // end existing session, if any
+    endSession();
+    // set the new session
+    session = theSession;
+    if (session) {
+      // save presId in localStorage
+      localStorage &amp;&amp; (localStorage["presId"] = session.id);
+      // monitor session's state
+      session.onstatechange = function () {
+        if (this == session &amp;&amp; this.state == "disconnected")
+          endSession();
+      };
+      // register message handler
+      session.onmessage = function (evt) {
+        console.log("receive message", evt.data);
+      };
+      // send message to presentation page
+      session.send("say hello");
+    }
+  };
+  var endSession = function () {
+    // close old session if exists
+    session &amp;&amp; session.close();
+    // remove old presId from localStorage if exists
+    localStorage &amp;&amp; delete localStorage["presId"];
+  };
+&lt;/script&gt;
+
+</pre>
+        <pre class="example highlight">
+&lt;!-- presentation.html --&gt;
+&lt;script&gt;
+  var addSession = function(session) {
+    session.onstatechange = function () {
+      // session.state is either 'connected' or 'disconnected'
+      console.log("session's state is now", session.state);
+    };
+    session.onmessage = function (evt) {
+      if (evt.data == "say hello")
+        session.send("hello");
+    }
+  });
+  navigator.presentation.getSession().then(addSession);
+  navigator.presentation.onsessionavailable = function(evt) {
+    navigator.presentation.getSessions().then(function(sessions) {
+      addSession(sessions[sessions.length-1]);
+    });
+  };
+&lt;/script&gt;
+
+</pre>
+      </section>
+    </section>
+    <section>
+      <h2>
+        API
+      </h2>
+      <section>
+        <h3>
+          Common idioms
+        </h3>
+        <p>
+          A <dfn lt="presentation display|presentation displays">presentation
+          display</dfn> refers to an external screen available to the user
+          agent via an implementation specific connection technology.
+        </p>
+        <p>
+          A <dfn lt="presentation session|presentation sessions">presentation
+          session</dfn> is an object relating a <a>controlling browsing
+          context</a> to its <a>presenting browsing context</a> and enables
+          two-way-messaging between them. Each <a>presentation session</a> has
+          a <dfn>presentation session state</dfn>, a <dfn lt=
+          "presentation session identifier|presentation session identifiers">presentation
+          session identifier</dfn> to distinguish it from other <a>presentation
+          sessions</a>, and a <dfn>presentation session URL</dfn> that is a
+          <a>URL</a> used to create or resume the <a>presentation session</a>.
+          A <dfn>valid presentation session identifier</dfn> consists of
+          alphanumeric ASCII characters only, is at least 16 characters long,
+          and is unique within the <a>set of presentations</a>.
+        </p>
+        <p>
+          A <dfn lt=
+          "controlling browsing context|controlling browsing contexts">controlling
+          browsing context</dfn> (or <dfn>controller</dfn> for short) is a
+          <a>browsing context</a> that has connected to a <a>presentation
+          session</a> by calling <code><a for=
+          "PresentationRequest">start</a>()</code> or <code><a for=
+          "PresentationRequest">reconnect</a>()</code>, or received a
+          <a>presentation session</a> via a <code>sessionconnect</code> event.
+        </p>
+        <p>
+          The <dfn>presenting browsing context</dfn> (or <dfn data-lt=
+          "presentation context">presentation</dfn> for short) is the browsing
+          context responsible for rendering to a <a>presentation display</a>. A
+          <a>presenting browsing context</a> can reside in the same user agent
+          as the <a>controlling browsing context</a> or a different one.
+        </p>
+        <p>
+          The <dfn>set of presentations</dfn>, initially empty, contains the
+          <a>presentation session</a>s created by the <a>controlling browsing
+          contexts</a> for the user agent (or a specific user profile within
+          the user agent). The <a>set of presentations</a> is represented by a
+          list of tuples, where each tuple consists of a <a>presentation
+          session URL</a>, a <a>presentation session identifier</a>, and the
+          <a>presentation session</a> itself. The <a>presentation session
+          URL</a> and <a>presentation session identifier</a> uniquely identify
+          the <a>presentation session</a>.
+        </p>
+      </section>
+      <section>
+        <h3>
+          Interface <code>PresentationSession</code>
+        </h3>
+        <p>
+          Each <a>presentation session</a> is represented by a
+          <a>PresentationSession</a> object.
+        </p>
+        <pre class="idl">
+          enum PresentationSessionState { "connected", "disconnected" /*, "resumed" */ };
+          enum BinaryType { "blob", "arraybuffer" };
+
+          interface PresentationSession : EventTarget {
+            readonly attribute DOMString? id;
+            readonly attribute PresentationSessionState state;
+            void close();
+            attribute EventHandler onstatechange;
+
+            // Communication
+            attribute BinaryType binaryType;
+            attribute EventHandler onmessage;
+            void send (DOMString message);
+            void send (Blob data);
+            void send (ArrayBuffer data);
+            void send (ArrayBufferView data);
+          };
+
+</pre>
+        <div dfn-for="PresentationSession" link-for="PresentationSession">
+          <p>
+            The <dfn><code>id</code></dfn> attribute specifies the
+            <a>presentation session</a>'s <a>presentation session
+            identifier</a>.
+          </p>
+          <p>
+            The <dfn><code>state</code></dfn> attribute represents the
+            <a>presentation session</a>'s current state. It can take one of the
+            values of <a>PresentationSessionState</a> depending on connection
+            state.
+          </p>
+          <p>
+            When the <code><dfn>send</dfn>()</code> method is called on a
+            <a>PresentationSession</a> object with a <code>message</code>, the
+            user agent MUST run the algorithm to <a data-lt="algorithm-send">send
+            a message through a <code>PresentationSession</code></a>.
+          </p>
+          <p>
+            When the <code><dfn>close</dfn>()</code> method is called on a
+            <a>PresentationSession</a>, the user agent MUST run the algorithm
+            to <a data-lt="close-algorithm">close a presentation session</a> with
+            <a>PresentationSession</a>.
+          </p>
+        </div>
+        <section>
+          <h4>
+            Sending a message through <code>PresentationSession</code>
+          </h4>
+          <div class="note">
+            No specific transport for the connection between the <a>controlling
+            browsing context</a> and the <a>presenting browsing context</a> is
+            mandated, except that for multiple calls to <code><a for=
+            "PresentationSession">send</a>()</code> it has to be ensured that
+            messages are delivered to the other end reliably and in sequence.
+            The transport should function equivalently to an
+            <a><code>RTCDataChannel</code></a> in reliable mode.
+          </div>
+          <p>
+            Let <dfn>presentation message data</dfn> be the payload data to be
+            transmitted between two browsing contexts. Let <dfn>presentation
+            message type</dfn> be the type of that data, one of
+            <code>text</code> and <code>binary</code>.
+          </p>
+          <p>
+            When the user agent is to <dfn data-lt="algorithm-send">send a
+            message through a <code>PresentationSession</code> S</dfn>, it MUST
+            run the following steps:
+          </p>
+          <ol link-for="PresentationSession">
+            <li>If the <a>state</a> property of <a>PresentationSession</a> is
+            <code>"disconnected"</code>, throw an
+            <code>InvalidStateError</code> exception.
+            </li>
+            <li>Let <a>presentation message type</a> <em>messageType</em> be
+            <code>binary</code> if <code>data</code> is one of
+            <code>ArrayBuffer</code>, <code>ArrayBufferView</code>, or
+            <code>Blob</code>. Let <em>messageType</em> be <code>text</code> if
+            <code>data</code> is of type <code>DOMString</code>)
+            </li>
+            <li>Assign the <dfn>destination browsing context</dfn> as follows:
+              <ol>
+                <li>Let the <a>destination browsing context</a> be the
+                <a>controlling browsing context</a> if
+                <code><a>send</a>()</code> is called in the <a>presenting
+                browsing context</a>.
+                </li>
+                <li>Let <a>destination browsing context</a> be the
+                <a>presenting browsing context</a> if
+                <code><a>send</a>()</code> is called from the <a>controlling
+                browsing context</a>.
+                </li>
+              </ol>
+            </li>
+            <li>Using an implementation specific mechanism, transmit the
+            contents of the <code>data</code> argument as <a>presentation
+            message data</a> and <a>presentation message type</a>
+            <em>messageType</em> to the <a>destination browsing context</a>
+            side.
+            </li>
+          </ol>
+        </section>
+        <section>
+          <h4>
+            Receiving a message through <code>PresentationSession</code>
+          </h4>
+          <p>
+            When the user agent has received a transmission from the remote
+            side consisting of <a>presentation message data</a> and
+            <a>presentation message type</a>, it MUST run the following steps:
+          </p>
+          <ol link-for="PresentationSession">
+            <li>If the <a>state</a> property of <a>PresentationSession</a> is
+            <code>"disconnected"</code>, abort these steps.
+            </li>
+            <li>Let <em>event</em> be a newly created <a>trusted event</a> that
+            uses the <code>MessageEvent</code> interface, with the event type
+            <code>message</code>, which does not bubble, is not cancelable, and
+            has no default action.
+            </li>
+            <li>Initialize the <em>event's</em> data attribute as follows:
+              <ol>
+                <li>If the <a>presentation message type</a> is
+                <code>text</code>, then initialize <em>event's</em>
+                <code>data</code> attribute to the contents of <a>presentation
+                message data</a> of type <code>DOMString</code>.
+                </li>
+                <li>If the <a>presentation message type</a> is
+                <code>binary</code>, and <a>binaryType</a> is set to
+                <code>blob</code>, then initialize <em>event</em>'s
+                <code>data</code> attribute to a new <code>Blob</code> object
+                that represents <a>presentation message data</a> as its raw
+                data.
+                </li>
+                <li>If the <a>presentation message type</a> is
+                <code>binary</code>, and <a>binaryType</a> is set to
+                <code>arraybuffer</code>, then initialize <em>event</em>'s
+                <code>data</code> attribute to a new <code>ArrayBuffer</code>
+                object whose contents are <a>presentation message data</a>.
+                </li>
+              </ol>
+            </li>
+            <li>
+              <a>Queue a task</a> to <a>fire</a> <em>event</em> at
+              <a><code>PresentationSession</code></a>.
+            </li>
+          </ol>
+        </section>
+        <section>
+          <h4>
+            Closing a <code>PresentationSession</code>
+          </h4>
+          <p>
+            When the user agent is to <dfn data-lt="close-algorithm">close a
+            presentation session</dfn> using <em>session</em>, it MUST run the
+            following steps:
+          </p>
+          <ol>
+            <li>If <a>presentation session state</a> of <em>session</em> is not
+            <code>connected</code>, then abort these steps.
+            </li>
+            <li>Set <a>presentation session state</a> of <em>session</em> to
+            <code>disconnected</code>.
+            </li>
+            <li>
+              <a>Queue a task</a> to run the following steps in order:
+              <ol>
+                <li>For each <em>known session</em> in the <a>set of
+                presentations</a>:
+                  <ol>
+                    <li>If the <a>presentation session identifier</a> of
+                    <em>known session</em> and <em>session</em> are equal, run
+                    the following steps:
+                      <ol>
+                        <li>
+                          <a>Queue a task</a> to <a>fire</a> an event named
+                          <code>statechange</code> at <em>session</em>.
+                        </li>
+                      </ol>
+                    </li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+          </ol>
+          <div class="issue" data-number="35"></div>
+        </section>
+        <section>
+          <h4>
+            Event Handlers
+          </h4>
+          <p>
+            The following are the event handlers (and their corresponding event
+            handler event types) that must be supported, as event handler IDL
+            attributes, by objects implementing the <a>PresentationSession</a>
+            interface:
+          </p>
+          <table dfn-for="PresentationSession">
+            <thead>
+              <tr>
+                <th>
+                  Event handler
+                </th>
+                <th>
+                  Event handler event type
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <dfn><code>onmessage</code></dfn>
+                </td>
+                <td>
+                  <code>message</code>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <dfn><code>onstatechange</code></dfn>
+                </td>
+                <td>
+                  <code>statechange</code>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </section>
+      <section>
+        <h3>
+          Interface <code>PresentationAvailability</code>
+        </h3>
+        <pre class="idl">
+          interface PresentationAvailability : EventTarget {
+            readonly attribute boolean value;
+            attribute EventHandler onchange;
+          };
+
+</pre>
+        <p>
+          A <a><code>PresentationAvailability</code></a> object is associated
+          with a <a>presentation display</a> and represents its
+          <dfn>presentation display availability</dfn>.
+        </p>
+        <p>
+          The <dfn for="PresentationAvailability">value</dfn> attribute MUST
+          return the last value it was set to. The value is updated by the
+          <a>monitor the list of available presentation displays</a> algorithm.
+        </p>
+        <p>
+          The <dfn for="PresentationAvailability">onchange</dfn> attribute is
+          an <a>event handler</a> whose corresponding <a>event handler event
+          type</a> is <code>change</code>.
+        </p>
+        <section>
+          <h4>
+            The set of availability objects
+          </h4>
+          <p>
+            The user agent MUST keep track of the <dfn>set of availability
+            objects</dfn> requested through the <code><a for=
+            "PresentationRequest">getAvailability</a>()</code> method. The
+            <a>set of availability objects</a> is represented as a set of
+            tuples <em>(A, availabilityUrl)</em>, initially empty, where:
+          </p>
+          <ol>
+            <li>
+              <em>A</em> is a live <a>PresentationAvailability</a> object;
+            </li>
+            <li>
+              <em>availabilityUrl</em> is the <code>availabilityUrl</code>
+              passed to <code><a for=
+              "PresentationRequest">getAvailability</a>()</code> to create A.
+            </li>
+          </ol>
+        </section>
+        <section>
+          <h4>
+            The list of available presentation displays
+          </h4>
+          <p>
+            The user agent MUST keep a <dfn>list of available presentation
+            displays</dfn>. This current list of <a>presentation displays</a>
+            may be used for starting new presentations, and is populated based
+            on an implementation specific discovery mechanism. It is set to the
+            most recent result of the algorithm to <a>monitor the list of
+            available presentation displays</a>.
+          </p>
+          <p>
+            While there are live <a>PresentationAvailability</a> objects, the
+            user agent MAY <a>monitor the list of available presentation
+            displays</a> continuously, so that pages can use the <a for=
+            "PresentationAvailability">value</a> property of an
+            <a>PresentationAvailability</a> object to offer presentation only
+            when there are available displays. However, the user agent may not
+            support continuous availability monitoring; for example, because of
+            platform or power consumption restrictions. In this case the
+            <a>Promise</a> returned by <code>getAvailability()</code> MUST be
+            <a data-lt="reject">rejected</a> and the algorithm to <a>monitor the
+            list of available presentation displays</a> will only run as part
+            of the <a for="PresentationRequest" data-lt="start">start a
+            presentation session</a> algorithm.
+          </p>
+          <p>
+            When there are no live <a>PresentationAvailability</a> objects
+            (that is, the <a>set of availability objects</a> is empty), user
+            agents SHOULD NOT <a>monitor the list of available presentation
+            displays</a> to satisfy the <a href=
+            "https://github.com/w3c/presentation-api/blob/gh-pages/uc-req.md#nf-req01-power-saving-friendly">
+            power saving non-functional requirement</a>. To further save power,
+            the user agent MAY also keep track of whether the page holding a
+            <a>PresentationAvailability</a> object is in the foreground. Using
+            this information, implementation specific discovery of
+            <a>presentation displays</a> can be resumed or suspended.
+          </p>
+          <p>
+            Some <a>presentation displays</a> may only be able to display a
+            subset of Web content because of functional, security or hardware
+            limitations. Examples are set-top boxes, smart TVs or networked
+            speakers capable of rendering only audio. We say that such a
+            display is a <dfn>compatible presentation display</dfn> for a
+            <dfn>display availability URL</dfn> if the user agent can
+            reasonably guarantee that the presentation of the URL on that
+            display will succeed.
+          </p>
+        </section>
+        <section>
+          <h4>
+            Monitor the list of available presentation displays
+          </h4>
+          <p>
+            If <a>set of availability objects</a> is non-empty, or there is a
+            pending request to <a for="PresentationRequest" data-lt="start">start
+            a presentation session</a>, the user agent MUST <dfn>monitor the
+            list of available presentation displays</dfn> by running the
+            following steps.
+          </p>
+          <ol link-for="PresentationAvailability">
+            <li>
+              <a>Queue a task</a> to retrieve available presentation displays
+              (using an implementation specific mechanism) and let
+              <em>newDisplays</em> be this list.
+            </li>
+            <li>Wait for the completion of that task.
+            </li>
+            <li>For each member <em>(A, availabilityUrl)</em> of the <a>set
+            of availability objects</a>:
+              <ol>
+                <li>Set <em>previousAvailability</em> to the value of
+                <em>A</em>'s <a>value</a> property.
+                </li>
+                <li>Let <em>newAvailability</em> be <code>true</code> if
+                <em>newDisplays</em> is not empty and at least one display in
+                <em>newDisplays</em> is a <a>compatible presentation
+                display</a> for <em>availabilityUrl</em>. Otherwise, set
+                <em>newAvailability</em> to <code>false</code>.
+                </li>
+                <li>If <em>previousAvailability</em> is not equal to
+                <em>newAvailability</em>, then <a>queue a task</a> to run the
+                following steps:
+                  <ol>
+                    <li>Set <em>A</em>'s <a>value</a> property to
+                    <em>newAvailability</em>.
+                    </li>
+                    <li>
+                      <a data-lt='firing a simple event'>Fire a simple event</a>
+                      named <code>change</code> at <em>A</em>.
+                    </li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+            <li>Set the <a>list of available presentation displays</a> to the
+            value of <em>newDisplays</em>.
+            </li>
+          </ol>
+          <p>
+            When a <a>PresentationAvailability</a> object is no longer alive
+            (i.e., is eligible for garbage collection), the user agent SHOULD
+            run the following steps:
+          </p>
+          <ol>
+            <li>Find and remove any entry <em>(A, availabilityUrl)</em> in the
+            <a>set of availability objects</a> for the newly deceased <em>A</em>.
+            </li>
+            <li>If the <a>set of availability objects</a> is now empty and
+            there is no pending request to <a for="PresentationRequest"
+              data-lt="start">start a presentation session</a>, cancel any
+              pending task to <a>monitor the list of available presentation
+              displays</a> for power saving purposes.
+            </li>
+          </ol>
+          <div class="note">
+            The mechanism used to monitor <a>presentation displays</a>
+            availability and determine the compatibility of a <a>presentation
+            display</a> with a given URL is left to the user agent.
+          </div>
+        </section>
+      </section>
+      <section>
+        <h3>
+          Interface <a><code>PresentationRequest</code></a>
+        </h3>
+        <pre class="idl">
+          [Constructor(DOMString url)]
+          interface PresentationRequest : EventTarget {
+            Promise&lt;PresentationSession&gt; start();
+            Promise&lt;PresentationSession&gt; reconnect(DOMString presentationId);
+            Promise&lt;PresentationAvailability&gt; getAvailability();
+
+            attribute EventHandler onsessionconnect;
+          };
+
+</pre>
+        <p>
+          When a <a><code>PresentationRequest</code></a> is constructed, the
+          given <code>url</code> MUST be used as the <dfn>presentation request
+          URL</dfn> which is the <a>presentation session URL</a> for the
+          <a><code>PresentationRequest</code></a> instance.
+        </p>
+        <section>
+          <h4>
+            Starting a presentation session
+          </h4>
+          <p>
+            When the <code><dfn for="PresentationRequest">start</dfn></code>
+            method is called, the user agent MUST run the following steps to
+            <dfn>start a presentation session</dfn>:
+          </p>
+          <dl>
+            <dt>
+              Input
+            </dt>
+            <dd>
+              <code>presentationRequest</code>, the
+              <code>PresentationRequest</code> object
+            </dd>
+            <dd>
+              <code>presentationUrl</code>, the <a>presentation request URL</a>
+            </dd>
+            <dt>
+              Output
+            </dt>
+            <dd>
+              <em>P</em>, a <a>Promise</a>
+            </dd>
+          </dl>
+          <ol>
+            <li>If the algorithm isn't <a>allowed to show a popup</a>, return a
+            <a>Promise</a> rejected with a <a>DOMException</a> named
+            <code>"InvalidAccessError"</code> and abort these steps.
+            </li>
+            <li>Let <em>P</em> be a new <a>Promise</a>.
+            </li>
+            <li>Return <em>P</em>.
+            </li>
+            <li>Run the following steps:
+              <ol>
+                <li>
+                  <a>Monitor the list of available presentation displays</a>.
+                </li>
+                <li>Wait until the algorithm completes.
+                </li>
+              </ol>
+            </li>
+            <li>If either of the following is true:
+              <ol>
+                <li>The <a>list of available presentation displays</a> is
+                empty;
+                </li>
+                <li>No member if the list of available presentation displays is
+                a <a>compatible presentation display</a> for
+                <code>presentationUrl</code>;
+                </li>
+              </ol>
+            </li>
+            <li>Then run the following steps:
+              <ol>
+                <li>
+                  <a>Reject</a> <em>P</em> with a <a>DOMException</a> named
+                  <code>"NotFoundError"</code>.
+                </li>
+                <li>Abort all remaining steps.
+                </li>
+              </ol>
+            </li>
+            <li>
+              <a>Queue a task</a> <em>T</em> to request user permission for the
+              use of a <a>presentation display</a> and selection of one
+              presentation display.
+              <ol>
+                <li>If <em>T</em> completes with the user <em>granting
+                permission</em> to use a display, run the following steps:
+                  <ol>
+                    <li>Let <var>I</var> be a new <a>valid presentation session
+                    identifier</a> unique among all <a>presentation session
+                    identifiers</a> for known sessions in the <a>set of
+                    presentations</a>.
+                    </li>
+                    <li>Create a new <a>PresentationSession</a> <em>S</em>.
+                    </li>
+                    <li>Set the <a>presentation session identifier</a> of <var>
+                      S</var> to <var>I</var>, and set the <a>presentation
+                      session state</a> of <var>S</var> to
+                      <code>disconnected</code>.
+                    </li>
+                    <li>
+                      <a>Queue a task</a> <em>C</em> to create a new
+                      <a>browsing context</a> on the user-selected
+                      <a>presentation display</a> and <a>navigate</a> to
+                      <code>presentationUrl</code> in it.
+                      <ol>
+                        <li>If <em>C</em> completes successfully, run the
+                        following steps:
+                          <ol>
+                            <li>Add the tuple {<em>presentationUrl</em>,
+                            <em>S.id</em>, <em>S</em>} to the <a>set of
+                            presentations</a>.
+                            </li>
+                            <li>
+                              <a>Resolve</a> <em>P</em> with <em>S</em>.
+                            </li>
+                            <li>
+                              <a>Queue a task</a> to <a>fire</a> an event named
+                              <code>sessionconnect</code> at
+                              <code>presentationRequest</code> with <em>S</em>
+                              as its <code>session</code> attribute.
+                            </li>
+                            <li>
+                              <a>Establish a presentation connection</a> with
+                              <em>S</em>.
+                            </li>
+                          </ol>
+                        </li>
+                        <li>If <em>C</em> fails, run the following steps:
+                          <ol>
+                            <li>
+                              <a>Reject</a> P with a <a>DOMException</a> named
+                              <code>"OperationError"</code>.
+                            </li>
+                          </ol>
+                        </li>
+                      </ol>
+                    </li>
+                  </ol>
+                </li>
+                <li>If <em>T</em> completes with the user <em>denying
+                permission</em>, run the following steps:
+                  <ol>
+                    <li>
+                      <a>Reject</a> <em>P</em> with a <a>DOMException</a> named
+                      <code>"AbortError"</code>.
+                    </li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+          </ol>
+          <div class="note">
+            The details of implementing the permission request and display
+            selection are left to the user agent; for example it may show the
+            user a dialog and allow the user to select an available display
+            (granting permission), or cancel the selection (denying
+            permission).
+          </div>
+          <div class="note">
+            The <code>presentationUrl</code> should name a resource accessible
+            to the local or a remote user agent. This specification defines
+            behavior for <code>presentationUrl</code> using the
+            <code>http</code> or <code>https</code> schemes; behavior for other
+            schemes is not defined by this specification.
+          </div>
+          <div class="issue">
+            Do we want to distinguish the permission-denied outcome from the
+            no-screens-available outcome? Developers would be able to infer it
+            anyway from <code>getAvailability()</code>.
+          </div>
+        </section>
+        <section>
+          <h4>
+            Reconnect to a presentation session
+          </h4>
+          <p>
+            When the <code><dfn for=
+            "PresentationRequest">reconnect</dfn>(presentationId)</code> method
+            is called, the user agent MUST run the following steps to <dfn>reconnect
+            to a presentation session</dfn>:
+          </p>
+          <dl>
+            <dt>
+              Input
+            </dt>
+            <dd>
+              <code>presentationRequest</code>, the
+              <code>PresentationRequest</code> object
+            </dd>
+            <dd>
+              <code>presentationUrl</code>, the <a>presentation request URL</a>
+            </dd>
+            <dd>
+              <code>presentationId</code>, the <a>presentation session
+              identifier</a>
+            </dd>
+            <dt>
+              Output
+            </dt>
+            <dd>
+              <em>P</em>, a <a>Promise</a>
+            </dd>
+          </dl>
+          <ol>
+            <li>Let <em>P</em> be a new <a>Promise</a>.
+            </li>
+            <li>Return <em>P</em>.
+            </li>
+            <li>
+              <a>Queue a task</a> <em>T</em> to run the following steps in
+              order:
+              <ol>
+                <li>For each <var>known session</var> in the <a>set of
+                presentations</a>,
+                  <div style="margin-left: 2em">
+                    If the <a>presentation session URL</a> of <var>known
+                    session</var> is equal to <code>presentationUrl</code>, and
+                    the <a>presentation session identifier</a> of <var>known
+                    session</var> is equal to <code>presentationId</code>, run
+                    the following steps:
+                    <ol>
+                      <li>Let <var>S</var> be the <a>presentation session</a>
+                      of <var>known session</var>.
+                      </li>
+                      <li>
+                        <a>Resolve</a> <var>P</var> with <var>S</var>.
+                      </li>
+                      <li>
+                        <a>Queue a task</a> to <a>fire</a> an event named
+                        <code>sessionconnect</code> at
+                        <code>presentationRequest</code> with <em>S</em> as its
+                        <code>session</code> attribute.
+                      </li>
+                      <li>
+                        <a>Establish a presentation connection</a> with
+                        <var>S</var>.
+                      </li>
+                      <li>Abort the remaining steps of <var>T</var>.
+                      </li>
+                    </ol>
+                  </div>
+                </li>
+                <li>
+                  <a>Reject</a> <em>P</em> with a <a>DOMException</a> named
+                  <code>"NotFoundError"</code>.
+                </li>
+              </ol>
+            </li>
+          </ol>
+          <div class="issue">
+            If no matching presentation is found, we could leave the Promise
+            pending in case a matching presentation is started in the future.
+          </div>
+        </section>
+        <section>
+          <h4>
+            Establishing a presentation connection in a controlling browsing
+            context
+          </h4>
+          <p>
+            When the user agent is to <dfn>establish a presentation
+            connection</dfn> using a <a>presentation session</a> <em>S</em>, it
+            MUST run the following steps:
+          </p>
+          <ol>
+            <li>If the <a>presentation session state</a> of <var>S</var> is
+            <code>connected</code>, then:
+              <ol>
+                <li>Abort all remaining steps.
+                </li>
+              </ol>
+            </li>
+            <li>
+              <a>Queue a task</a> <em>T</em> to connect the <a>presentation
+              session</a> <em>S</em> to the <a>presenting browsing context</a>.
+            </li>
+            <li>If <em>T</em> completes successfully, run the following steps:
+              <ol>
+                <li>Set the <a>presentation session state</a> of <var>S</var>
+                to <code>connected.</code>
+                </li>
+                <li>
+                  <a>Queue a task</a> <em>T</em> to run the following steps in
+                  order:
+                  <ol>
+                    <li>For each <var>known session</var> in the <a>set of
+                    presentations</a>:
+                      <ol>
+                        <li>If the <a>presentation session identifier</a> of
+                        <var>known session</var> and <var>S</var> are equal,
+                        then run the following steps:
+                          <ol>
+                            <li>
+                              <a>Queue a task</a> to <a>fire</a> an event named
+                              <code>statechange</code> at <em>s</em>.
+                            </li>
+                          </ol>
+                        </li>
+                      </ol>
+                    </li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+          </ol>
+          <div class="note">
+            The mechanism that is used to present on the remote display and
+            connect the <a>controlling browsing context</a> with the presented
+            document is an implementation choice of the user agent. The
+            connection must provide a two-way messaging abstraction capable of
+            carrying <code>DOMString</code> payloads in a reliable and in-order
+            fashion as described in the <em>Send Message</em> and <em>Receive
+            Message</em> steps below.
+          </div>
+          <div class="note">
+            If <em>T</em> does not complete successfully, the user agent may
+            choose to re-execute the Presentation Connection algorithm at a
+            later time.
+          </div>
+          <div class="issue">
+            Do we want to notify the caller of a failure to connect, i.e. with
+            an "error" onstatechange?
+          </div>
+          <div class="issue">
+            Do we want to pass the new state as a property of the statechange
+            event?
+          </div>
+        </section>
+        <section>
+          <h4>
+            Getting the <a>presentation displays</a> availability information
+          </h4>
+          <p>
+            When the <code><dfn for=
+            "PresentationRequest">getAvailability</dfn>()</code> method is
+            called, the user agent MUST run the following steps:
+          </p>
+          <dl>
+            <dt>
+              Input
+            </dt>
+            <dd>
+              <code>presentationUrl</code>, the <a>presentation request URL</a>
+            </dd>
+            <dt>
+              Output
+            </dt>
+            <dd>
+              <em>P</em>, a <a>Promise</a>
+            </dd>
+          </dl>
+          <ol>
+            <li>Let <em>P</em> be a new <a>Promise</a>.
+            </li>
+            <li>Return <em>P</em>.
+            </li>
+            <li>If the user agent is unable to monitor presentation displays
+            for the entire duration of the controlling browsing context (e.g.,
+            because the user has disabled this feature), then:
+              <ol>
+                <li>
+                  <a>Resolve</a> <em>P</em> with a new <code>PresentationAvailability</code>
+                  object with its <code>value</code> property set to <code>false</code>.
+                </li>
+                <li>
+                  Abort all the remaining steps.
+                </li>
+              </ol>
+            </li>
+            <li>If the user agent is unable to continuously <a>monitor the list
+            of available presentation displays</a> but can find presentation
+            displays in order to start a session, then:
+              <ol>
+                <li>
+                  <a>Reject</a> <em>P</em> with a <a>DOMException</a> named
+                  <code>"NotSupportedError"</code>.
+                </li>
+                <li>Abort all the remaining steps.
+                </li>
+              </ol>
+            </li>
+            <li>Let <em>A</em> be a new <code>PresentationAvailability</code>
+            object with its <code>value</code> property set to
+            <code>false</code> if the <a>list of available presentation
+            displays</a> is empty or non of them is a <a>compatible
+            presentation display</a>, <code>true</code> otherwise.
+            </li>
+            <li>Create a tuple <em>(A, presentationUrl)</em> and add it to the
+            <a>set of availability objects</a>.
+            </li>
+            <li>Run the algorithm to <a>monitor the list of available
+            presentation displays</a>.
+            </li>
+            <li><a>Resolve</a> <em>P</em> with <em>A</em>.
+            </li>
+          </ol>
+        </section>
+        <section>
+          <h4>
+            Establishing a presentation connection in a presenting browsing
+            context
+          </h4>
+          <p>
+            When a new <a>presenting browsing context</a> has been created and
+            navigated to the <code>presentationUrl</code> on a user-selected
+            <a>presentation display</a>, the user agent MUST run the following
+            steps:
+          </p>
+          <ol>
+            <li>
+              <a>Queue a task</a> to start <a>monitoring incoming presentation
+              sessions</a> from <a>controlling browsing contexts</a>.
+            </li>
+          </ol>
+        </section>
+        <section>
+          <h4>
+            Event Handlers
+          </h4>
+          <p>
+            The following are the event handlers (and their corresponding event
+            handler event types) that must be supported, as event handler IDL
+            attributes, by objects implementing the <a>PresentationRequest</a>
+            interface:
+          </p>
+          <table dfn-for="PresentationRequest">
+            <thead>
+              <tr>
+                <th>
+                  Event handler
+                </th>
+                <th>
+                  Event handler event type
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <dfn><code>onsessionconnect</code></dfn>
+                </td>
+                <td>
+                  <code>sessionconnect</code>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+        <section>
+          <h3>
+            Interface <code>PresentationSessionConnectEvent</code>
+          </h3>
+          <pre class="idl">
+            [Constructor(DOMString type, PresentationSessionConnectEventInit eventInitDict)]
+            interface PresentationSessionConnectEvent : Event {
+              [SameObject] readonly attribute PresentationSession session;
+            };
+
+            dictionary PresentationSessionConnectEventInit : EventInit {
+              required PresentationSession session;
+            };
+
+</pre>
+          <p>
+            An event named <code>sessionconnect</code> is fired on a
+            <a>PresentationRequest</a> when a session associated with the
+            object is created. It is fired at the <a>PresentationRequest</a>
+            instance, using the <a>PresentationSessionConnectEvent</a>
+            interface, with the <a for=
+            "PresentationSessionConnectEvent">session</a> attribute set to the
+            <a><code>PresentationSession</code></a> object that was created.
+            The event is fired for all sessions that are created for the
+            <a>controller</a>, either by the <a>controller</a> calling
+            <code>start()</code> or <code>reconnect()</code>, or by the UA creating
+            a session on the controller's behalf via <a for=
+            "Presentation"><code>defaultRequest</code></a>.
+          </p>
+          <p>
+            The UA MUST fire the event as soon as it can create the
+            <a><code>PresentationSession</code></a> associated with the event.
+          </p>
+        </section>
+      </section>
+      <section>
+        <h3>
+          Interface <a><code>Presentation</code></a>
+        </h3>
+        <pre class="idl">
+          partial interface Navigator {
+            [SameObject] readonly attribute Presentation presentation;
+          };
+
+</pre>
+        <p>
+          The <dfn for="Navigator"><code>presentation</code></dfn> attribute is
+          used to retrieve an instance of the <a>Presentation</a> interface.
+        </p>
+        <pre class="idl">
+          interface Presentation : EventTarget {
+            // This API used by controlling browsing context.
+            attribute PresentationRequest? defaultRequest;
+
+            // This API used by presenting browsing context.
+            Promise&lt;PresentationSession&gt; getSession();
+            Promise&lt;sequence&lt;PresentationSession&gt;&gt; getSessions();
+            attribute EventHandler onsessionavailable;
+          };
+
+</pre>
+        <p>
+          The <dfn for="Presentation"><code>defaultRequest</code></dfn> MUST
+          return the <a>default presentation request</a> if any, null
+          otherwise.
+        </p>
+        <section>
+          <h4>
+            Setting the default presentation request
+          </h4>
+          <p>
+            If set by the <a>controller</a>, the <a for=
+            "Presentation">defaultRequest</a> SHOULD be used by the UA as the
+            <dfn>default presentation request</dfn> for that controller. When
+            the UA wishes to initiate a <a>PresentationSession</a> on the
+            controller's behalf, it MUST <a>start a presentation session</a>
+            using the <a>default presentation request</a> for the
+            <a>controller</a> (as if the controller had called
+            <code>defaultRequest.start()</code>).
+          </p>
+          <p>
+            The user agent SHOULD initiate presentation using the <a>default
+            presentation request</a> only when the user has expressed an
+            intention to do so, for example by clicking a button in the
+            browser.
+          </p>
+          <div class="note">
+            Not all user agents may support initiation of a presentation
+            session outside of the content area. In this case setting
+            <code>defaultRequest</code> has no effect.
+          </div>
+          <div class="issue">
+            It should be clear that user-intiated presentation via the user
+            agent may have pre-selected the presentation display. In this case
+            step 6 of <a>start a presentation session</a> is optional. It may
+            be cleaner to define a separate set of steps for initiating a
+            default presentation.
+          </div>
+        </section>
+        <section>
+          <h4>
+            Monitoring incoming presentation sessions in a presenting browsing
+            context
+          </h4>
+          <p>
+            When the user agent is to start <dfn>monitoring incoming
+            presentation sessions</dfn> in a <a>presenting browsing context</a>
+            from <a>controlling browsing contexts</a>, it MUST run the
+            following steps:
+          </p>
+          <ol>
+            <li>
+              <a>Queue a task</a> <var>T</var> to wait for and accept an
+              incoming connection request from a <a>controlling browsing
+              context</a> using an implementation specific mechanism.
+            </li>
+            <li>When a new connection request is received from a <a>controlling
+            browsing context</a>, run the following steps:
+              <ol>
+                <li>Create a new <a>PresentationSession</a> <var>S</var>.
+                </li>
+                <li>Let <var>I</var> be a new <a>valid presentation session
+                identifier</a> unique among all <a>presentation session
+                identifier</a>s for known sessions in the <a>set of
+                presentations</a>.
+                </li>
+                <li>Set the <a>presentation session identifier</a> of
+                <var>S</var> to <var>I</var>.
+                </li>
+                <li>Establish the connection between the controlling and
+                presenting browsing contexts using an implementation specific
+                mechanism.
+                </li>
+                <li>Set the <a>presentation session state</a> of <var>S</var>
+                to <code>connected</code>.
+                </li>
+                <li>Add a tuple (<code>undefined</code>, <a>presentation
+                session identifier</a> of <var>S</var>, <var>S</var>) to the
+                <a>set of presentations</a>.
+                </li>
+                <li>
+                  <a>Queue a task</a> to <a>fire</a> an event named
+                  <code>sessionavailable</code> at <a for=
+                  "Navigator"><code>presentation</code></a>.
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </section>
+        <section>
+          <h4>
+            Getting the first connected presentation session on the startup of
+            a presenting browsing context
+          </h4>
+          <p>
+            When the <code><dfn for="Presentation">getSession</dfn>()</code>
+            method is called, the user agent MUST run the following steps:
+          </p>
+          <ol>
+            <li>Let <var>P</var> be a new <a>Promise</a>.
+            </li>
+            <li>Return <var>P</var>.
+            </li>
+            <li>
+              <a>Queue a task</a> <var>T</var> to run the following steps in
+              order:
+              <ol>
+                <li>If the <a>set of presentations</a> is empty, then wait
+                until at least one element is added to the <a>set of
+                presentations</a>.
+                </li>
+                <li>Let <var>S</var> be the first <a>presentation session</a>
+                added to the <a>set of presentations</a>.
+                </li>
+                <li>
+                  <a>Resolve</a> <var>P</var> with <var>S</var>.
+                </li>
+              </ol>
+            </li>
+          </ol>
+          <div class="note">
+            If the <a>set of presentations</a> is empty, we leave the
+            <a>Promise</a> pending until connecting request arrives from the
+            <a>controlling browsing context</a>. If the first <a>controlling
+            browsing context</a> disconnects after initial connection, then the
+            <a>Promise</a> returned to subsequent calls to <code><a for=
+            "Presentation">getSession</a>()</code> will resolve with a
+            <a>presentation session</a> that has its <a>presentation session
+            state</a> set to <code>disconnected</code>.
+          </div>
+        </section>
+        <section>
+          <h4>
+            Getting all connected presentation sessions in a presenting
+            browsing context
+          </h4>
+          <p>
+            When the <code><dfn for="Presentation">getSessions</dfn>()</code>
+            method is called, the user agent MUST run the following steps:
+          </p>
+          <ol>
+            <li>Let <var>P</var> be a new <a>Promise</a>.
+            </li>
+            <li>Return <var>P</var>.
+            </li>
+            <li>
+              <a>Queue a task</a> to run the following steps in order:
+              <ol>
+                <li>Let <var>array</var> be an empty array.
+                </li>
+                <li>For each known session in the <a>set of presentations</a>
+                  <ol>
+                    <li>Add known session to <var>array</var>.
+                    </li>
+                  </ol>
+                </li>
+                <li>
+                  <a>Resolve</a> <var>P</var> with <var>array</var>.
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </section>
+        <section>
+          <h4>
+            Event Handlers
+          </h4>
+          <p>
+            The following are the event handlers (and their corresponding event
+            handler event types) that must be supported, as event handler IDL
+            attributes, by objects implementing the <a>Presentation</a>
+            interface:
+          </p>
+          <table dfn-for="Presentation">
+            <thead>
+              <tr>
+                <th>
+                  Event handler
+                </th>
+                <th>
+                  Event handler event type
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <dfn><code>onsessionavailable</code></dfn>
+                </td>
+                <td>
+                  <code>sessionavailable</code>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </section>
+    </section>
+    <section>
+      <h2>
+        Security and privacy considerations
+      </h2>
+      <div class="issue" data-number="45"></div>
+      <h3>
+        Personally identifiable information
+      </h3>
+      <p>
+        The <code>change</code> event fired on the
+        <a>PresentationAvailability</a> object reveals one bit of information
+        about the presence (or non-presence) of a <a>presentation display</a>
+        typically discovered through the local area network. This could be used
+        in conjunction with other information for fingerprinting the user.
+        However, this information is also dependent on the user's local network
+        context, so the risk is minimized.
+      </p>
+      <h3>
+        Cross-origin access
+      </h3>
+      <p>
+        A <a>presentation session</a> is allowed to be accessed across origins;
+        the presentation URL and presentation ID used to create the
+        presentation are the only information needed to reconnect to a session
+        from any origin in that user agent. In other words, a presentation is
+        not tied to a particular opening origin.
+      </p>
+      <p>
+        This design allows controlling contexts from different domains to
+        connect to a shared presentation resource. The security of the
+        presentation ID prevents arbitrary pages from connecting to an existing
+        presentation.
+      </p>
+      <p>
+        This specification does not prohibit a user agent from publishing
+        information about its <a>set of presentations</a>. The group envisions
+        a user agent on another device (distinct from the controller or
+        presentation) becoming authorized to reconnect to the presentation,
+        either by user action or by discovering the presentation's URL and id.
+      </p>
+      <div class="issue">
+        This section should provide informative guidance as to what constitutes
+        a reasonable context for a Web page to become authorized to control a
+        presentation session.
+      </div>
+      <h3>
+        Device Access
+      </h3>
+      <p>
+        The presentation API abstracts away what "local" means for displays,
+        meaning that it exposes network-accessible displays as though they were
+        local displays. The Presentation API requires user permission for a
+        page to access any display to mitigate issues that could arise, such as
+        showing unwanted content on a display viewable by others.
+      </p>
+      <h3>
+        Temporary identifiers and browser state
+      </h3>
+      <p>
+        The presentation URL and presentation ID can be used to connect to a
+        presentation session from another browsing context. They can be
+        intercepted if an attacker can inject content into the controlling
+        page.
+      </p>
+      <div class="issue">
+        Should we restrict the API to some extent in non secure contexts?
+      </div>
+      <h3>
+        Incognito mode and clearing of browsing data
+      </h3>
+      <p>
+        The content displayed on the presentation is different from the
+        controller. In particular, if the user is logged in in both contexts,
+        then logs out of the controlling browsing context, she will not be
+        automatically logged out from the presenting browsing context.
+        Applications that use authentication should pay extra care when
+        communicating between devices.
+      </p>
+      <p>
+        The set of presentations known to the user agent should be cleared when
+        the user requests to "clear browsing data."
+      </p>
+      <div class="issue" data-number="14"></div>
+      <div class="issue">
+        The spec should clarify what is to happen to the set of known
+        presentations in "incognito" (private browsing context) mode.
+      </div>
+      <h3>
+        Messaging between presentation sessions
+      </h3>
+      <p>
+        This spec will not mandate communication protocols between the
+        <a>controlling browsing context</a> and the <a>presenting browsing
+        context</a>, but it should set some guarantees of message
+        confidentiality and authenticity between corresponding <a>presentation
+        sessions</a>.
+      </p>
+      <div class="issue" data-number="80"></div>
+    </section>
+    <section>
+      <h2>
+        Acknowledgments
+      </h2>
+      <p>
+        Thanks to Wayne Carr, Louay Bassbouss, Anssi Kostiainen, 闵洪波 (Hongbo
+        Min), Anton Vayvod, and Mark Foltz for help with editing, reviews and
+        feedback to this draft.
+      </p>
+    </section>
+  </body>
+</html>
