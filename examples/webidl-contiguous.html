@@ -3,8 +3,7 @@
   <head>
     <meta charset='utf-8'/>
     <title>WebIDL Tests</title>
-    <script src='https://www.w3.org/Tools/respec/respec-w3c-common'
-            async class='remove'></script>
+    <script src='../js/require.js' data-main='../js/profile-w3c-common' async class='remove'></script>
     <script class='remove'>
       var respecConfig = {
               specStatus:   "ED"
@@ -30,6 +29,12 @@
         CUSTOM PARAGRAPH
       </p>
     </section>
+    <pre class="idl">
+interface Foo {
+  attribute DOMString attr;
+};
+</pre>
+    <p link-for="Foo">The <dfn data-lt="Foo.attr">attr</dfn> attribute's getter must...</p>
     <section>
       <h2>Introduction</h2>
 
