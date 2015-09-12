@@ -1481,6 +1481,12 @@ define(
 
 
         return {
+            showDeprecationWarning: function(msg){
+                var deprecationWarn = "Defining WebIDL in `dl` elements is deprecated. "
+                    + "Please use Contiguous IDL instead: "
+                    + "https://www.w3.org/respec/guide.html#contiguous-idl";
+                msg.pub("warn", deprecationWarn);
+            },
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/webidl");
                 if (!conf.noIDLSorting) conf.noIDLSorting = false;
@@ -1492,6 +1498,7 @@ define(
                         cb();
                     };
                 if (!$idl.length) return finish();
+                this.showDeprecationWarning(msg);
                 $(doc).find("head link").first().before($("<style/>").text(css));
 
                 var infNames = [];
