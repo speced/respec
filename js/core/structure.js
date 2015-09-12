@@ -95,8 +95,9 @@ define(
 
                 // makeTOC
                 if (!conf.noTOC) {
-                    var $ul = makeTOCAtLevel($("body", doc), doc, [0], 1, conf);
-                    if (!$ul) return;
+                    var main = doc.querySelector("main, *[role=main]");
+                    var $ul = makeTOCAtLevel($(main || doc.body), doc, [0], 1, conf);
+                    if (!$ul) return finish();
                     var $sec = $("<section id='toc'/>").append("<h2 class='introductory'>" + conf.l10n.toc + "</h2>")
                                                        .append($ul)
                     ,   $ref = $("#toc", doc), replace = false;
@@ -117,6 +118,10 @@ define(
                     }
                 });
 
+                //Wrap sections with <main>
+                if(doc.querySelector("main, *[role=main]") === null){
+                    $("body > section").wrapAll("<main></main>");
+                }
                 finish();
             }
         };
