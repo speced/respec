@@ -55,10 +55,10 @@
 // these need to be improved, or complemented with proper UI indications
 if (window.console) {
     respecEvents.sub("warn", function (details) {
-        console.log("WARN: " + details);
+        console.warn("WARN: ", details);
     });
     respecEvents.sub("error", function (details) {
-        console.log("ERROR: " + details);
+        console.error("ERROR: ", details);
     });
     respecEvents.sub("start", function (details) {
         if (respecConfig && respecConfig.trace) console.log(">>> began: " + details);
