@@ -79,6 +79,23 @@ define(
                         $ant.replaceWith($ant.contents());
                     }
                 });
+                // done linking, so clean up
+                function attrToDataAttr(name){
+                    return function(elem){
+                        var value = elem.getAttribute(name);
+                        elem.removeAttribute(name);
+                        elem.setAttribute("data-" + name, value);
+                    }
+                }
+
+                var forList = doc.querySelectorAll("*[for]");
+                Array.prototype.forEach.call(forList, attrToDataAttr("for"));
+
+                var dfnForList = doc.querySelectorAll("*[dfn-for]");
+                Array.prototype.forEach.call(dfnForList, attrToDataAttr("dfn-for"));
+
+                var linkForList = doc.querySelectorAll("*[link-for]");
+                Array.prototype.forEach.call(linkForList, attrToDataAttr("link-for"));
                 msg.pub("end", "core/link-to-dfn");
                 cb();
             }
