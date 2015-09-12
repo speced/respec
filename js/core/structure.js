@@ -120,7 +120,7 @@ define(
 
                 //Wrap sections with <main>
                 if(doc.querySelector("main, *[role=main]") === null){
-                    $("body > section").wrapAll("<main></main>");
+                    $("body > section").wrapAll("<main role='main'></main>");
                 }
                 finish();
             }
