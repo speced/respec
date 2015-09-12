@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <meta charset='utf-8'/>
+    <title>WebIDL Tests</title>
+    <script src='https://www.w3.org/Tools/respec/respec-w3c-common'
+            async class='remove'></script>
+    <script class='remove'>
+      var respecConfig = {
+              specStatus:   "ED"
+          ,   shortName:    "webidl"
+          ,   editors:      [{ name: "Robin Berjon", url: "http://berjon.com/" }]
+          ,   wg:           "ReSpec Hackin' Gang"
+          ,   wgURI:        "http://darobin.github.com/respec"
+          ,   wgPublicList: "none"
+          ,   wgPatentURI:  "XXX"
+          ,   edDraftURI:   "http://darobin.github.com/respec"
+        };
+    </script>
+  </head>
+  <body>
+    <section id='abstract'>
+      <p>
+        This fake spec tried to exercise all aspects of WebIDL so as to do regression testing in this
+        complex piece of code.
+      </p>
+    </section>
+    <section id='sotd'>
+      <p>
+        CUSTOM PARAGRAPH
+      </p>
+    </section>
+    <section>
+      <h2>Introduction</h2>
+
+      <p>
+        To document an interface using contiguous IDL, first write your WebIDL in a <code>&lt;pre class="idl"></code> block:
+      </p>
+      <pre class="example highlight">&lt;pre class="idl">
+  [Constructor]
+  interface Dahut : Mammal {
+    const unsigned short LEVROGYROUS = 0;
+    const unsigned short DEXTROGYROUS = 1;
+    readonly attribute DOMString chirality;
+    attribute unsigned long age;
+    Dahut turnAround(float angle, boolean fall);
+    unsigned long trip();
+    void yell([AllowAny] unsigned long volume,
+              [TreatNullAs=EmptyString] DOMString sentence);
+  };
+&lt;/pre></pre>
+      <p>
+        This is pretty-printed as:
+      </p>
+      <pre class="idl">
+        [Constructor]
+        interface Dahut : Mammal {
+          const unsigned short LEVROGYROUS = 0;
+          const unsigned short DEXTROGYROUS = 1;
+          readonly attribute DOMString chirality;
+          attribute unsigned long age;
+          Dahut turnAround(float angle, boolean fall);
+          unsigned long trip();
+          void yell([AllowAny] unsigned long volume,
+                    [TreatNullAs=EmptyString] DOMString sentence);
+        };
+      </pre>
+      <p>
+        Then document the interface and its fields using
+        <code>&lt;dfn><var>interface-name</var>&lt;/dfn></code> and
+        <code>&lt;dfn><var>interface-name</var>.<var>member-name</var>&lt;/dfn></code>.
+        For example, to discuss <dfn>Dahut</dfn>, you'd write <code>&lt;dfn>Dahut&lt;/dfn></code>,
+        and to document <dfn>Dahut.trip</dfn>, you'd write
+        <code>&lt;dfn>Dahut.trip&lt;/dfn></code>.
+        This also automatically links the IDL declaration to the prose definition.
+      </p>
+      <p>
+        You can also link to IDL terms in a similar way.
+        <code>&lt;a>Dahut.trip&lt;/a></code> will link to the definition above:
+        <a>Dahut.trip</a>.
+      </p>
+      <p dfn-for="Dahut" link-for="Dahut">
+        If you have a whole paragraph about a single interface, you can also set the <code>dfn-for</code> or <code>link-for</code> attribute on any ancestor
+        element of the <code>&lt;dfn></code> or <code>&lt;a></code> element, respectively. Since this paragraph
+        defines members of <a>Dahut</a>, its tag is <code>&lt;p dfn-for="Dahut" link-for="Dahut"></code>,
+        which allows a simple <code>&lt;dfn>chirality&lt;/dfn></code> tag to
+        define the <dfn>chirality</dfn> attribute and a simple
+        <code>&lt;a>LEVROGYROUS&lt;/a></code> tag to link to the <a>LEVROGYROUS</a>
+        constant.
+      </p>
+      <p>
+        Finally, if you need a one-off definition or link whose text isn't
+        exactly the IDL entity it's discussing, you can specify the <code>for</code>
+        and/or <code>title</code> attributes directly on the <code>&lt;dfn></code> or
+        <code>&lt;a></code> tag, similarly to when
+        <a href="../guide.html#definitions-and-linking">defining or
+        linking to a non-IDL term</a>. The <dfn for="Dahut" title="turnAround">
+        <code>turnAround</code> member of the <code>Dahut</code> interface</dfn> can
+        be defined with <code>&lt;dfn for="Dahut"
+        title="turnAround">&lt;code>turnAround&lt;/code> member of the
+        &lt;code>Dahut&lt;/code> interface&lt;/dfn></code>. We can also link to
+        <a for="Dahut" title="LEVROGYROUS">some constant</a> with
+        <code>&lt;a for="Dahut" title="LEVROGYROUS">some constant&lt;/a></code>.
+      </p>
+    </section>
+    <section>
+      <h2>Unsupported</h2>
+      <p>
+        The following aspects of WebIDL are not currently supported and are not yet tested for:
+      </p>
+      <ul>
+        <li>
+          Static, inherit, stringifier attributes.
+        </li>
+        <li>Static operations</li>
+        <li>IDL wrapping</li>
+        <li>Special operations</li>
+        <li>Union types</li>
+        <li>partial dictionaries</li>
+      </ul>
+      <p>
+        Support for these features will likely be added later.
+      </p>
+      <p>
+        The following features are supposedly supported but actually buggy:
+      </p>
+      <ul>
+        <li><em>list currently empty</em></li>
+      </ul>
+      <p>
+        Things that still need to be done:
+      </p>
+      <ul>
+        <li>Check that [], sequence, Promise, ?, and other such bothersome types are tested everywhere</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Interfaces</h2>
+      <p>
+        Basic interface.
+      </p>
+      <pre id='if-basic' class='idl'>
+        interface SuperStar {};
+      </pre>
+      <p>
+        Interface with extended attribute.
+      </p>
+      <pre id='if-extended-attribute' class='idl'>
+        [Something, Constructor()] interface SuperStar {};
+      </pre>
+      <p>
+        Interface with inheritance.
+      </p>
+      <pre id='if-inheritance' class='idl'>
+        interface SuperStar : HyperStar {};
+      </pre>
+      <p>
+        Partial interface.
+      </p>
+      <pre id='if-partial' class='idl'>
+        partial interface SuperStar {};
+      </pre>
+      <p>
+        Callback interface .
+      </p>
+      <pre id='if-callback' class='idl'>
+        callback interface SuperStar {};
+      </pre>
+      <pre id='if-doc' class='idl'>
+        interface DocInterface {};
+        interface DocIsNotCaseSensitive {};
+        interface UndocInterface {};
+      </pre>
+      <p id='if-doc-p'><dfn>DocInterface</dfn> is an interface and so is <dfn>DoCiSnOtCaSeSeNsItIvE</dfn>.</p>
+    </section>
+    <section>
+      <h2>Constructors</h2>
+      <p>
+        Constructors on interfaces
+      </p>
+      <pre id='ctor-basic' class='idl'>
+        [Something,
+         Constructor,
+         Constructor(boolean bar, sequence&lt;double> foo, Promise&lt;double&gt; blah)]
+        interface SuperStar {};
+      </pre>
+      <pre id='ctor-noea' class='idl'>
+        [Constructor] interface SuperStar {};
+      </pre>
+    </section>
+    <section>
+      <h2>NamedConstructors</h2>
+      <p>
+        NamedConstructors on interfaces
+      </p>
+      <pre id='namedctor-basic' class='idl'>
+        [Something,
+         NamedConstructor=Sun(),
+         NamedConstructor=Sun(boolean bar, Date[][][] foo)]
+        interface SuperStar {};
+      </pre>
+    </section>
+    <section>
+      <h2>Constants</h2>
+      <p>
+        All constants and some type testing
+      </p>
+      <pre id='const-basic' class='idl'>
+        interface ConstTest {
+          // 1
+          const boolean test = true;
+          // 2
+          const byte bite = 8;
+          // 3
+          const octet eight = 7;
+          // 4
+          const short small = 42;
+          // 5
+          const unsigned short shortish = 250;
+          // 6
+          const long notSoLong = 99999;
+          // 7
+          const unsigned long somewhatLong = 9999999;
+          // 8
+          const long long veryLong = 9999999999999;
+          // 9
+          const unsigned long long soLong = 99999999999999999;
+          // 10
+          const float ationDevice = 4.2;
+          // 11
+          const unrestricted float buoy = 4.2222222222;
+          // 12
+          const double twice = 4.222222222;
+          // 13
+          const unrestricted double rambaldi = 47.0;
+          // 14
+          const boolean? why = false;
+          // 15
+          const boolean? notSo = null;
+          // 16
+          const short inf = Infinity;
+          // 17
+          const short mininf = -Infinity;
+          // 18
+          const short cheese = NaN;
+          // 18
+          [Something] const short extAttr = NaN;
+        };
+      </pre>
+      <p id="const-basic-doc">
+        <dfn for="ConstTest">rambaldi</dfn> is a constant and so are <dfn for="ConstTest">why</dfn> and <dfn for="ConstTest" title="inf">this other thing</dfn>.
+      </p>
+    </section>
+    <section>
+      <h2>Attributes</h2>
+      <p>
+        Basic attributes testing.
+      </p>
+      <pre id='attr-basic' class='idl'>
+        interface AttrBasic {
+          // 1
+          attribute DOMString regular;
+          // 2
+          readonly attribute DOMString ro;
+          // 2.2
+          readonly attribute DOMString _readonly;
+          // 2.5
+          inherit attribute DOMString in;
+          // 2.7
+          stringifier attribute DOMString st;
+          // 3
+          [Something] readonly attribute DOMString ext;
+          // 3.5
+          attribute Date[] dates;
+          // 4.0
+          attribute Promise&lt;DOMString&gt; operation;
+        <!--  // 4.5
+          attribute Promise&lt;Superstar&gt;[] wouldBeStars;
+
+          // 3
+           static attribute DOMString unmovable;
+          // 4
+          stringifier attribute DOMString asString;
+          // 5
+          inherit attribute DOMString css;
+          // 6
+          static inherit readonly attribute DOMString everything;
+          // 7
+          stringifier inherit readonly attribute DOMString all;-->
+        };
+      </pre>
+      <p id="attr-basic-doc" dfn-for="AttrBasic"><dfn>readonly</dfn> and <dfn>regular</dfn> are attributes.</p>
+    </section>
+    <section>
+      <h2>Operations</h2>
+      <p>
+        Basic operations testing.
+      </p>
+      <!--
+      getter, setter, creator, deleter, legacycaller, stringifier, serilizer
+      static
+      specials don't necessarily have an indentifier
+       -->
+      <pre id='meth-basic' class='idl'>
+        interface MethBasic {
+          // 1
+          void basic();
+          // 2
+          [Something] void ext();
+          // 3
+          unsigned long long ull(short s);
+          // 3.5
+          SuperStar? ull();
+          // 4
+          // Parameters:
+          // one: 4.1
+          // ext: 4.1
+          // maybe: 4.2
+          // shorts: 4.3
+          // hypercubes: 4.3
+          // defaulted: 4.3
+          // defaulted2: 4.3
+          // variable: 4.last
+          SuperStar[][][][] paramed(SuperStar[][]?[] one, [ExtAttrs] ByteString? ext, optional short maybe, short[] shorts, short[][][][] hypercubes, optional short defaulted = 3.5, optional DOMString defaulted2 = "one", short... variable);
+
+        <!--
+          // 5
+          getter float ();
+          // 6
+          getter float withName ();
+          // 7
+          setter void ();
+          // 8
+          setter void named ();
+        ... and other special operations
+         -->
+        };
+      </pre>
+      <p id="meth-basic-doc" dfn-for="MethBasic">
+        <dfn>ull</dfn> is a method.
+      </p>
+    </section>
+    <section>
+      <h2>Serializer</h2>
+      <pre id='serializer-map' class='idl'>
+        interface SerializerMap {
+          attribute DOMString foo;
+          attribute DOMString bar;
+          serializer = { foo, bar };
+        };
+      </pre>
+      <p id='serializer-map-doc'><dfn for="SerializerMap">serializer</dfn> serializes a SerializerMap.</p>
+    </section>
+    <section>
+      <h2>Comments</h2>
+      <pre id="comments-basic" class='idl'>
+        interface SuperStar {
+          // This is a comment
+          // over two lines.
+        };
+      </pre>
+    </section>
+    <section>
+      <h2>Dictionaries</h2>
+      <p>
+        Basic dictionary.
+      </p>
+      <pre id='dict-basic' class='idl'>
+        dictionary SuperStar {};
+      </pre>
+      <p>
+        Inheriting dictionary.
+      </p>
+      <pre id='dict-inherit' class='idl'>
+        dictionary SuperStar : HyperStar {};
+      </pre>
+      <p>
+        Data in  dictionary.
+      </p>
+      <pre id='dict-fields' class='idl'>
+        dictionary SuperStar {
+          // 1
+          DOMString value;
+          // 2
+          DOMString? nullable;
+          // 3
+          [Something]float ext;
+          // 4
+          unsigned long long longLong;
+          // 5
+          boolean test = true;
+          // 7
+          byte little = 2;
+          // 8
+          byte big = Infinity;
+          // 9
+          byte cheese = NaN;
+          // 10
+          DOMString blah = "blah blah";
+        };
+      </pre>
+      <pre id='dict-doc' class='idl'>
+        dictionary DictDocTest {
+          DOMString dictDocField;
+          DOMString? otherField;
+          long undocField;
+        };
+      </pre>
+      <p id='dict-doc-p'><dfn>DictDocTest</dfn> contains <dfn for="DictDocTest">dictDocField</dfn> and <dfn for="DictDocTest">otherField</dfn></p>
+    </section>
+    <section>
+      <h2>Exceptions</h2>
+      <p>
+        Basic exception.
+      </p>
+      <pre id='ex-basic' class='idl'>
+        exception SuperStar {};
+      </pre>
+      <p>
+        Inheriting exception.
+      </p>
+      <pre id='ex-inherit' class='idl'>
+        exception SuperStar : HyperStar {};
+      </pre>
+      <p>
+        Exception with content.
+      </p>
+      <pre id='ex-fields' class='idl'>
+        exception ExFields {
+          // 1
+          [Something]const SuperStar value = 42;
+          // 2
+          SuperStar? message;
+          // 3
+          sequence&lt;SuperStar> floats;
+          // 4
+          SuperStar[][] numbers;
+          // 5
+          Promise&lt;SuperStar&gt; stars;
+        };
+      </pre>
+      <p id="ex-fields-doc" dfn-for="ExFields"><dfn>ExFields</dfn> contains <dfn>value</dfn> and <dfn>floats</dfn></p>
+    </section>
+    <section>
+      <h2>Enumerations</h2>
+      <p>
+        Basic enumeration.
+      </p>
+      <pre id='enum-basic' class='idl'>
+        enum EnumBasic {
+          // 1
+          "one",
+          // 2
+          "two",
+          // 3
+          "three",
+          // 4
+          "white space"
+        };
+      </pre>
+      <p id="enum-basic-doc"><dfn>EnumBasic</dfn></p>
+      <!--
+        XXX extattr?
+       -->
+    </section>
+    <section>
+      <h2>Callbacks</h2>
+      <p>
+        Basic callback.
+      </p>
+      <pre id='cb-basic' class='idl'>
+        callback SuperStar = void();
+      </pre>
+      <p>
+        Less basic callback.
+      </p>
+      <pre id='cb-less-basic' class='idl'>
+        callback CbLessBasic = unsigned long long?(optional any value);
+      </pre>
+      <p id="cb-less-basic-doc"><dfn>CbLessBasic</dfn></p>
+      <!--
+        XXX extattr?
+       -->
+    </section>
+    <section>
+      <h2>Typedefs</h2>
+      <p>
+        Basic typedef.
+      </p>
+      <pre id='td-basic' class='idl'>
+        typedef DOMString string;
+      </pre>
+      <p>
+        Less basic typedef.
+      </p>
+      <pre id='td-less-basic' class='idl'>
+        typedef [Something] unsigned long long? tdLessBasic;
+      </pre>
+      <p id='td-less-basic-doc'><dfn>tdLessBasic</dfn></p>
+    </section>
+    <section>
+      <h2>Implements</h2>
+      <p>
+        Basic implements.
+      </p>
+      <pre id='impl-basic' class='idl'>
+        Window implements Breakable;
+      </pre>
+      <p>
+        Less basic implements.
+      </p>
+      <pre id='impl-less-basic' class='idl'>
+        [Something]Window implements Breakable;
+      </pre>
+    </section>
+  </body>
+</html>
