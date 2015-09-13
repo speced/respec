@@ -23,6 +23,16 @@
     ,   embedded = (top !== self)
     ;
     if (!("respecConfig" in window)) window.respecConfig = {};
+    // clone the initial user configuration.
+    try{
+        if(Object.assign){
+            respecConfig.initialUserConfig = Object.assign({}, respecConfig);
+        } else {
+            respecConfig.initialUserConfig = JSON.parse(JSON.stringify(respecConfig));
+        }
+    }catch(err){
+        respecConfig.initialUserConfig = {};
+    }
     GLOBAL.respecEvents = {
         pub:    function (topic) {
             var args = Array.prototype.slice.call(arguments);

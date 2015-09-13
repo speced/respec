@@ -1,11 +1,11 @@
 describe("Core — Include config as JSON", function() {
-  var MAXOUT = 5000,
-    basicConfig = {
-      editors: [{
-        name: "Robin Berjon"
-      }],
-      specStatus: "WD"
-    };
+  var MAXOUT = 5000;
+  var basicConfig = {
+    editors: [{
+      name: "Robin Berjon"
+    }],
+    specStatus: "WD"
+  };
   it("should have a script tag with the correct attributes", function() {
     var doc;
     runs(function() {
@@ -21,9 +21,9 @@ describe("Core — Include config as JSON", function() {
       return doc;
     }, MAXOUT);
     runs(function() {
-      var $script = $("#respecConfig", doc);
+      var $script = $("#initialUserConfig", doc);
       expect($script[0].tagName).toEqual("SCRIPT");
-      expect($script.attr("id")).toEqual("respecFinalConfig");
+      expect($script.attr("id")).toEqual("initialUserConfig");
       expect($script.attr("type")).toEqual("application/json");
       flushIframes();
     });
@@ -43,9 +43,9 @@ describe("Core — Include config as JSON", function() {
       return doc;
     }, MAXOUT);
     runs(function() {
-      var $script = $("#respecConfig", doc);
-      var jsonConfig = JSON.stringify(doc.defaultView.respecConfig, null, 2);
-      expect($script.text()).toEqual(jsonConfig);
+      var $script = $("#initialUserConfig", doc);
+      var jsonConfig = JSON.stringify(doc.defaultView.respecConfig.initialUserConfig, null, 2);
+      expect($script[0].innerHTML).toEqual(jsonConfig);
       flushIframes();
     });
   });
