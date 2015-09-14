@@ -66,7 +66,7 @@ define(
                 addButton({
                     title: "Save as HTML",
                     url: this.htmlToDataURL(this.toString()),
-                    popupContent: this.toHTMLSource.bind(this),
+                    popupContent: function () { self.toHTMLSource(); },
                     fileName: "index.html",
                 });
 
@@ -74,8 +74,8 @@ define(
                 addButton({
                     fileName: "index.xhtml",
                     popupContent: function () {
-                        this.toXHTMLSource(5);
-                    }.bind(this),
+                        self.toXHTMLSource(5);
+                    },
                     title: "Save as XHTML5",
                     url: this.htmlToDataURL(this.toXML(5)),
                 });
@@ -84,8 +84,8 @@ define(
                 addButton({
                     fileName: "index.xhtml",
                     popupContent: function () {
-                        this.toXHTMLSource(1);
-                    }.bind(this),
+                        self.toXHTMLSource(1);
+                    },
                     title: "Save as XHTML 1.0",
                     url: this.htmlToDataURL(this.toXML(1)),
                 });
@@ -94,8 +94,8 @@ define(
                 addButton({
                     fileName: "spec.epub",
                     popupContent: function () {
-                        window.open(this.makeEPubHref(), "_blank");
-                    }.bind(this),
+                        window.open(self.makeEPubHref(), "_blank");
+                    },
                     title: "Save as EPUB 3",
                     type: "application/epub+zip",
                     url: this.makeEPubHref(),
