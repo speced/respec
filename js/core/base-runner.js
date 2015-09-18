@@ -23,16 +23,6 @@
     ,   embedded = (top !== self)
     ;
     if (!("respecConfig" in window)) window.respecConfig = {};
-    // clone the initial user configuration.
-    try{
-        if(Object.assign){
-            respecConfig.initialUserConfig = Object.assign({}, respecConfig);
-        } else {
-            respecConfig.initialUserConfig = JSON.parse(JSON.stringify(respecConfig));
-        }
-    }catch(err){
-        respecConfig.initialUserConfig = {};
-    }
     GLOBAL.respecEvents = {
         pub:    function (topic) {
             var args = Array.prototype.slice.call(arguments);
@@ -65,10 +55,10 @@
 // these need to be improved, or complemented with proper UI indications
 if (window.console) {
     respecEvents.sub("warn", function (details) {
-        console.log("WARN: " + details);
+        console.warn("WARN: ", details);
     });
     respecEvents.sub("error", function (details) {
-        console.log("ERROR: " + details);
+        console.error("ERROR: ", details);
     });
     respecEvents.sub("start", function (details) {
         if (respecConfig && respecConfig.trace) console.log(">>> began: " + details);

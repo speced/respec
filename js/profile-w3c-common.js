@@ -19,6 +19,7 @@ define([
             "domReady"
         ,   "core/base-runner"
         ,   "core/ui"
+        ,   "core/include-config"
         ,   "core/override-configuration"
         ,   "core/default-root-attr"
         ,   "w3c/l10n"
@@ -52,7 +53,6 @@ define([
         ,   "core/rdfa"
         ,   "w3c/aria"
         ,   "core/shiv"
-        ,   "core/include-config"
         ,   "core/remove-respec"
         ,   "core/location-hash"
         ],
