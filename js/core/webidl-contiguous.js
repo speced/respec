@@ -654,7 +654,7 @@ define(
                                           var optional = arg.optional ? "optional-" : "";
                                           var variadic = arg.variadic ? "..." : "";
                                           return optional + idlType2Text(arg.idlType).toLowerCase() + variadic;
-                                      }).join(',') + ')');
+                                      }).join(',').replace(/\s/g, '_') + ')');
                         break;
                     case "iterator":
                         name = "iterator";
