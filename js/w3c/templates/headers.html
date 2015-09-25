@@ -154,15 +154,19 @@
         <a href='http://www.keio.ac.jp/'>Keio</a>, <a href="http://ev.buaa.edu.cn/">Beihang</a>). 
         {{#if isCCBY}}
           Some Rights Reserved: this document is dual-licensed,
-          <a href="https://creativecommons.org/licenses/by/3.0/">CC-BY</a> and 
-          <a href="http://www.w3.org/Consortium/Legal/copyright-documents">W3C Document License</a>.
+          <a rel="license" href="https://creativecommons.org/licenses/by/3.0/">CC-BY</a> and
+          <a rel="license" href="http://www.w3.org/Consortium/Legal/copyright-documents">W3C Document License</a>.
         {{/if}}
         W3C <a href='http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer'>liability</a>,
         <a href='http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks'>trademark</a> and
         {{#if isCCBY}}
-          <a href='http://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html'>document use</a>
+          <a rel="license" href='http://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html'>document use</a>
         {{else}}
-          <a href='http://www.w3.org/Consortium/Legal/copyright-documents'>document use</a>
+          {{#if isW3CSoftAndDocLicense}}
+            <a rel="license" href='http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document'>document + software use</a>
+          {{else}}
+            <a rel="license" href='http://www.w3.org/Consortium/Legal/copyright-documents'>document use</a>
+          {{/if}}
         {{/if}}
         rules apply.
       </p>

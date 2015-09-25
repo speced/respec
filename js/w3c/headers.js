@@ -91,6 +91,9 @@
 //          pushed to the WHATWG
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible). This is only
 //          available with webspecs and is the recommended value. It is the default for webspecs.
+//      - "w3c-software-doc", the W3C Software and Document License
+//            http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+
 
 define(
     [
@@ -247,30 +250,35 @@ define(
         ,   cgbg:           ["CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"]
         ,   precededByAn:   ["ED", "IG-NOTE"]
         ,   licenses: {
-                cc0:    {
-                    name:   "Creative Commons 0 Public Domain Dedication"
-                ,   short:  "CC0"
-                ,   url:    "http://creativecommons.org/publicdomain/zero/1.0/"
-                }
-            ,   "w3c-software": {
-                    name:   "W3C Software Notice and License"
-                ,   short:  "W3C"
-                ,   url:    "http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231"
-                }
-            ,   "cc-by": {
-                    name:   "Creative Commons Attribution 4.0 International Public License"
-                ,   short:  "CC-BY"
-                ,   url:    "http://creativecommons.org/licenses/by/4.0/legalcode"
+                cc0: {
+                  name: "Creative Commons 0 Public Domain Dedication",
+                  short: "CC0",
+                  url: "http://creativecommons.org/publicdomain/zero/1.0/",
+                },
+                "w3c-software": {
+                  name: "W3C Software Notice and License",
+                  short: "W3C Software",
+                  url: "http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231",
+                },
+                "w3c-software-doc": {
+                  name: "W3C Software and Document Notice and License",
+                  short: "W3C Software and Document",
+                  url: "http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
+                },
+                "cc-by": {
+                  name: "Creative Commons Attribution 4.0 International Public License",
+                  short: "CC-BY",
+                  url: "http://creativecommons.org/licenses/by/4.0/legalcode",
                 }
             }
         ,   run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/headers");
-
                 // Default include RDFa document metadata
                 if (conf.doRDFa === undefined) conf.doRDFa = true;
                 // validate configuration and derive new configuration values
                 if (!conf.license) conf.license = (conf.specStatus === "webspec") ? "w3c-software" : "w3c";
                 conf.isCCBY = conf.license === "cc-by";
+                conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
                 if (conf.specStatus === "webspec" && !$.inArray(conf.license, ["cc0", "w3c-software"]))
                     msg.pub("error", "You cannot use that license with WebSpecs.");
                 if (conf.specStatus !== "webspec" && !$.inArray(conf.license, ["cc-by", "w3c"]))
