@@ -130,6 +130,17 @@ describe("W3C — Headers", function () {
         });
     });
 
+    // license "w3c-software-doc"
+    it("it should allow the inclusion of the W3C Software and Document Notice and License (w3c-software-doc)", function () {
+        loadWithConfig({ specStatus: "FPWD", license: "w3c-software-doc" }, function ($ifr) {
+            var document = $ifr[0].contentDocument;
+            var licenses = document.querySelectorAll("#respecHeader a[rel=license]");
+            expect(licenses.length).toEqual(1);
+            expect(licenses.item(0).tagName).toEqual("A");
+            expect(licenses.item().href).toEqual("http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document");
+        });
+    });
+
     // alternateFormats
     it("should take alternateFormats into account", function () {
         loadWithConfig({ specStatus: "FPWD", "alternateFormats[]": [{ uri: "URI", label: "LABEL" }] }, function ($ifr) {
