@@ -40,6 +40,7 @@ define(
           script.innerHTML = JSON.stringify(initialUserConfig, confFilter, 2);
           script.type = 'application/json';
           doc.head.appendChild(script);
+          conf.initialUserConfig = initialUserConfig;
         });
         msg.pub('end', 'core/include-config');
         cb();

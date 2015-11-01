@@ -26,9 +26,13 @@ define(
                         else if (v === "null") v = null;
                         else if (/\[\]$/.test(k)) {
                             k = k.replace(/\[\]/, "");
-                            v = $.parseJSON(v);
+                            v = JSON.parse(v);
                         }
-                        conf[k] = v;
+                        try {
+                            conf[k] = JSON.parse(v);
+                        } catch (err) {
+                            conf[k] = v;
+                        }
                     }
                 }
                 msg.pub("end", "core/override-configuration");
