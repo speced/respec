@@ -384,7 +384,7 @@ define(
                 }
                 if (conf.prevRecShortname && !conf.prevRecURI) conf.prevRecURI = "http://www.w3.org/TR/" + conf.prevRecShortname;
                 if (!conf.editors || conf.editors.length === 0) msg.pub("error", "At least one editor is required");
-                var peopCheck = function (i, it) {
+                var peopCheck = function (it) {
                     if (!it.name) msg.pub("error", "All authors and editors must have a name.");
                 };
                 if (conf.editors) {
