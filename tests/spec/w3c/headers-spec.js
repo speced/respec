@@ -1,3 +1,6 @@
+/*globals expect, it, $, runs, waitsFor, describe*/
+(function(){ // prevent this loadWithConfig being trashed by other files
+"use strict";
 function loadWithConfig (conf, check) {
     var config = [];
     for (var k in conf) {
@@ -22,6 +25,10 @@ function loadWithConfig (conf, check) {
         loaded = false;
         window.removeEventListener("message", incr, false);
     });
+}
+
+function isPhantom () {
+    return window.callPhantom || window._phantom
 }
 
 // the matrix of features here is such that we're not testing everything
@@ -76,6 +83,87 @@ describe("W3C — Headers", function () {
             var $dd = $("dt:contains('Editors:')", $ifr[0].contentDocument).next("dd");
             expect($dd.text()).toEqual("NAME1");
             expect($dd.next("dd").text()).toEqual("NAME2");
+        });
+    });
+
+    it("should not add RDFa stuff to editors extras when doRDFa is false", function() {
+        var config = {
+            specStatus: "REC",
+            doRDFa: false,
+            editors: [{
+                name: "Mr foo",
+                extras: [{
+                    "name": "0000-0003-0782-2704",
+                    "href": "http://orcid.org/0000-0003-0782-2704",
+                    "class": "orcid"
+                }]
+            }]
+        };
+        loadWithConfig(config, function($ifr) {
+            var doc = $ifr[0].contentDocument;
+            var oricdHref = config.editors[0].extras[0].href;
+            var orcidAnchor = doc.querySelector("a[href='" + oricdHref + "']");
+            if (!isPhantom()) {
+                // Check that RDFa is applied
+                expect(orcidAnchor.getAttribute("property")).toEqual(null);
+                expect(orcidAnchor.parentNode.className).toEqual("orcid");
+            }
+        });
+    });
+
+    it("should take editors extras into account", function() {
+        var config = {
+            specStatus: "REC",
+            doRDFa: true,
+            editors: [{
+                name: "Mr foo",
+                extras: [{
+                        "name": "0000-0003-0782-2704",
+                        "href": "http://orcid.org/0000-0003-0782-2704",
+                        "class": "orcid"
+                    }, {
+                        "name": "@ivan_herman",
+                        "href": "http://twitter.com/ivan_herman",
+                        "class": "twitter"
+                    },
+                    //this should not exist in the doc, as it doesn't have a name
+                    {
+                        "href": "http://not-valid-missing-name",
+                        "class": "invalid"
+                    },
+                    //this should not exist in the doc, as the name is empty
+                    {
+                        "name": "\n\t  \n",
+                        "href": "http://empty-name",
+                        "class": "invalid"
+                    }
+                ]
+            }]
+        };
+        loadWithConfig(config, function($ifr) {
+            var doc = $ifr[0].contentDocument;
+            var oricdHref = config.editors[0].extras[0].href;
+            var twitterHref = config.editors[0].extras[1].href;
+            var orcidAnchor = doc.querySelector("a[href='" + oricdHref + "']");
+            var twitterAnchor = doc.querySelector("a[href='" + twitterHref + "']");
+            // general checks
+            var header = doc.querySelector("#respecHeader");
+            if (!isPhantom()) {
+                [orcidAnchor, twitterAnchor].forEach(function(elem) {
+                    // Check parent is correct.
+                    expect(elem.parentNode.localName).toEqual("span");
+                    // Check that RDFa is applied
+                    expect(elem.hasAttribute("property")).toEqual(true);
+                    // Check that it's in the header of the document
+                    expect(header.contains(elem)).toEqual(true);
+                });
+                // Check CSS is correctly applied
+                expect(orcidAnchor.parentNode.className).toEqual("orcid");
+                expect(twitterAnchor.parentNode.className).toEqual("twitter");
+            }
+            // check that extra items with no name are ignored
+            expect(document.querySelector("a[href='http://not-valid']")).toEqual(null);
+            expect(document.querySelector("a[href='http://empty-name']")).toEqual(null);
         });
     });
 
@@ -137,7 +225,7 @@ describe("W3C — Headers", function () {
             var licenses = document.querySelectorAll("#respecHeader a[rel=license]");
             expect(licenses.length).toEqual(1);
             expect(licenses.item(0).tagName).toEqual("A");
-            expect(licenses.item().href).toEqual("http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document");
+            expect(licenses.item(0).href).toEqual("http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document");
         });
     });
 
@@ -349,3 +437,4 @@ describe("W3C — Headers", function () {
         });
     });
 });
+}());

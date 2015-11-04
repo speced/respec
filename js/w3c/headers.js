@@ -123,6 +123,7 @@ define(
                 rm = " property='foaf:mbox'";
                 rwu = " property='foaf:workplaceHomepage'";
                 rpu = " property='foaf:homepage'";
+                propSeeAlso = " property='rdfs:seeAlso'";
             }
             var ret = "";
             for (var i = 0, n = items.length; i < n; i++) {
@@ -158,6 +159,34 @@ define(
                     ret += ", <span class='ed_mailto'><a class='u-email email' " + rm + " href='mailto:" + p.mailto + "'>" + p.mailto + "</a></span>";
                 }
                 if (p.note) ret += " (" + p.note + ")";
+                if (p.extras) {
+                    var resultHTML = p.extras
+                      // Remove empty names
+                      .filter(function (extra) {
+                        return extra.name && extra.name.trim();
+                      })
+                      // Convert to HTML
+                      .map(function (extra) {
+                        var span = document.createElement('span');
+                        var textContainer = span;
+                        if (extra.class) {
+                          span.className = extra.class;
+                        }
+                        if (extra.href) {
+                          var a = document.createElement('a');
+                          span.appendChild(a);
+                          a.href = extra.href;
+                          textContainer = a;
+                          if (this.doRDFa) {
+                            a.setAttribute('property', 'rdfs:seeAlso');
+                          }
+                        }
+                        textContainer.innerHTML = extra.name;
+                        return span.outerHTML;
+                      }.bind(this))
+                      .join(', ');
+                    ret += resultHTML;
+                }
                 if (this.doRDFa) {
                   ret += "</span>\n";
                   if (name === "Editor") ret += "<span property='rdf:rest' resource='" + bn + "'></span>\n";
@@ -355,10 +384,12 @@ define(
                 }
                 if (conf.prevRecShortname && !conf.prevRecURI) conf.prevRecURI = "http://www.w3.org/TR/" + conf.prevRecShortname;
                 if (!conf.editors || conf.editors.length === 0) msg.pub("error", "At least one editor is required");
-                var peopCheck = function (i, it) {
+                var peopCheck = function (it) {
                     if (!it.name) msg.pub("error", "All authors and editors must have a name.");
                 };
-                $.each(conf.editors, peopCheck);
+                if (conf.editors) {
+                    conf.editors.forEach(peopCheck);
+                }
                 $.each(conf.authors || [], peopCheck);
                 conf.multipleEditors = conf.editors.length > 1;
                 conf.multipleAuthors = conf.authors && conf.authors.length > 1;

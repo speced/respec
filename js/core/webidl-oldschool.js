@@ -891,7 +891,7 @@ define(
                         else {
                             sn.element("a", {}, span, it.isUnionType ? "(" + it.datatype.join(" or ") + ")" : it.datatype);
                         }
-                        if (it.declaration) sn.text(", " + it.declaration, dt);
+                        if (it.declaration.trim()) sn.text(", " + it.declaration, dt);
                         if (it.nullable) sn.text(", nullable", dt);
                          if (this.conf.idlOldStyleExceptions && it.raises.length) {
                             var table = sn.element("table", { "class": "exceptions" }, desc);
@@ -1092,7 +1092,7 @@ define(
                         else {
                             sn.element("a", {}, span, it.isUnionType ? "(" + it.datatype.join(" or ") + ")" : it.datatype);
                         }
-                        if (it.declaration) sn.text(", " + it.declaration, dt);
+                        if (it.declaration.trim()) sn.text(", " + it.declaration, dt);
                         if (it.nullable) sn.text(", nullable", dt);
                         if (it.defaultValue) {
                             sn.text(", defaulting to ", dt);
