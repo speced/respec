@@ -185,7 +185,7 @@ define(
                         return span.outerHTML;
                       }.bind(this))
                       .join(', ');
-                    ret += resultHTML;
+                    ret += ", " + resultHTML;
                 }
                 if (this.doRDFa) {
                   ret += "</span>\n";
