@@ -390,8 +390,10 @@ define(
                 if (conf.editors) {
                     conf.editors.forEach(peopCheck);
                 }
-                $.each(conf.authors || [], peopCheck);
-                conf.multipleEditors = conf.editors.length > 1;
+                if (conf.authors) {
+                    conf.authors.forEach(peopCheck);
+                }
+                conf.multipleEditors = conf.editors && conf.editors.length > 1;
                 conf.multipleAuthors = conf.authors && conf.authors.length > 1;
                 $.each(conf.alternateFormats || [], function (i, it) {
                     if (!it.uri || !it.label) msg.pub("error", "All alternate formats must have a uri and a label.");
