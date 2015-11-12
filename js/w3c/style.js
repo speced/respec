@@ -40,6 +40,9 @@ define(
                         .appendTo($("head"))
                         ;
                 }
+                else if (conf.useExperimentalStyles) {
+                    css = "http://fantasai.inkedblade.net/style/design/w3c-restyle/2016/W3C-" + statStyle;
+                }
                 else {
                     css += "www.w3.org/StyleSheets/TR/W3C-" + statStyle;
                 }

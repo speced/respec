@@ -55,6 +55,9 @@ define(
                             }
                             report.content = lines.join("\n");
                             $ex.html(lines.join("\n"));
+                            if (conf.useExperimentalStyles) {
+                                $ex.removeClass("example illegal-example");
+                            }
                             // wrap
                             var $div = $("<div class='example'></div>")
                             ,   $tit = makeTitle($ex, inAside ? 0 : num, report)
