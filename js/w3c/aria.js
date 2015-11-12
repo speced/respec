@@ -17,7 +17,7 @@ define(
                     // ensure toc is labelled
                     var toc = $('section#toc', doc)
                                   .find("ul:first");
-                    toc.attr('role', 'directory') ;
+                    toc.attr('role', 'navigation') ;
                     if (!toc.attr("id")) {
                         toc.attr('id', 'respecContents') ;
                     }
