@@ -105,6 +105,11 @@ define(
                     if (!$ref.length) $ref = $("#sotd", doc);
                     if (!$ref.length) $ref = $("#abstract", doc);
                     replace ? $ref.replaceWith($sec) : $ref.after($sec);
+
+                    if (conf.useExperimentalStyles) {
+                        var $link = $("<p role='navigation' id='back-to-top'><a href='#toc'><abbr title='Back to Top'>&uarr;</abbr></p>");
+                        $("body").append($link);;
+                    }
                 }
 
                 // Update all anchors with empty content that reference a section ID
