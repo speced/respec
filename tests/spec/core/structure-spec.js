@@ -26,7 +26,7 @@ describe("Core - Structure", function () {
             expect($toc.find("h2").text()).toEqual("Table of Contents");
             expect($toc.find("h2 span").attr('resource')).toEqual('xhv:heading');
             expect($toc.find("h2 span").attr('property')).toEqual('xhv:role');
-            expect($toc.find("ul:first").attr('role')).toEqual('navigation');
+            expect($toc.attr('role')).toEqual('navigation');
             expect($toc.find("> ul > li").length).toEqual(3);
             expect($toc.find("li").length).toEqual(15);
             expect($toc.find("> ul > li a").first().text()).toEqual("1. ONE");
