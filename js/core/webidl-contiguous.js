@@ -309,8 +309,8 @@ define(
         }
 
         // Takes the result of WebIDL2.parse(), an array of definitions.
-        function makeMarkup (parse, msg) {
-            var attr = { "class": "idl" };
+        function makeMarkup (conf, parse, msg) {
+            var attr = { "class": ( conf.useExperimentalStyles ? "def idl" :  "idl" ) };
             var $pre = $("<pre></pre>").attr(attr);
             $pre.html(parse.filter(function(defn) { return !typeIsWhitespace(defn.type); })
                            .map(function(defn) { return writeDefinition(defn, -1, msg); })
@@ -768,7 +768,7 @@ define(
                         return;
                     }
                     linkDefinitions(parse, conf.definitionMap, "", msg);
-                    var $df = makeMarkup(parse, msg);
+                    var $df = makeMarkup(conf, parse, msg);
                     $df.attr({id: this.id});
                     $df.find('.idlAttribute,.idlCallback,.idlConst,.idlDictionary,.idlEnum,.idlException,.idlField,.idlInterface,.idlMember,.idlMethod,.idlSerializer,.idlTypedef')
                         .each(function() {
