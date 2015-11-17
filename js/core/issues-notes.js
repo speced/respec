@@ -86,7 +86,7 @@ define(
                                     $a.attr("href", "#" + id).text("Issue " + report.number);
 
                                     if (report.title) {
-                                        $li.append(doc.createTextNode(": " + report.title));
+                                        $li.append($("<span style='text-transform: none'>: " + report.title + "</span>"));
                                     }
                                     $issueList.append($li);
                                 }
@@ -94,9 +94,14 @@ define(
                             $tit.find("span").text(text);
                             
                             if (report.title) {
-                                $tit.append(doc.createTextNode(": " + report.title));
+                                $tit.append($("<span style='text-transform: none'>: " + report.title + "</span>"));
                                 $inno.removeAttr("title");
                             }
+
+                            if (conf.useExperimentalStyles) {
+                                $tit.addClass("marker") ;
+                            }
+
                             $div.append($tit);
                             $inno.replaceWith($div);
                             var body = $inno.removeClass(report.type).removeAttr("data-number");

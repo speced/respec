@@ -97,9 +97,10 @@ define(
                 if (!conf.noTOC) {
                     var $ul = makeTOCAtLevel($("body", doc), doc, [0], 1, conf);
                     if (!$ul) return;
-                    var w = ( conf.useExperimentalStyles ? "nav" : "section" );
-                    var $sec = $("<" + w + " id='toc'/>").append("<h2 class='introductory'>" + conf.l10n.toc + "</h2>")
-                                                       .append($ul)
+                    var w = conf.useExperimentalStyles ? "nav" : "section";
+                    var $sec = $("<" + w + " id='toc'/>")
+                        .append("<h2 class='introductory'>" + conf.l10n.toc + "</h2>")
+                        .append($ul)
                     ,   $ref = $("#toc", doc), replace = false;
                     if ($ref.length) replace = true;
                     if (!$ref.length) $ref = $("#sotd", doc);
