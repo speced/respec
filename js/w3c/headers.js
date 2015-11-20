@@ -160,6 +160,7 @@ define(
                 }
                 if (p.note) ret += " (" + p.note + ")";
                 if (p.extras) {
+                    var self = this;
                     var resultHTML = p.extras
                       // Remove empty names
                       .filter(function (extra) {
@@ -177,15 +178,15 @@ define(
                           span.appendChild(a);
                           a.href = extra.href;
                           textContainer = a;
-                          if (this.doRDFa) {
+                          if (self.doRDFa) {
                             a.setAttribute('property', 'rdfs:seeAlso');
                           }
                         }
                         textContainer.innerHTML = extra.name;
                         return span.outerHTML;
-                      }.bind(this))
+                      })
                       .join(', ');
-                    ret += resultHTML;
+                    ret += ", " + resultHTML;
                 }
                 if (this.doRDFa) {
                   ret += "</span>\n";

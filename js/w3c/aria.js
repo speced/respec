@@ -15,8 +15,8 @@ define(
                 $('div.head', doc).attr('id', 'respecHeader') ;
                 if (!conf.noTOC) {
                     // ensure toc is labelled
-                    var toc = conf.useExperimentalStyles ? $('nav#toc', doc) : $('section#toc', doc);
-                    toc.attr('role', 'navigation') ;
+                    var toc = conf.useExperimentalStyles ? $('nav#toc', doc).find("ul:first") : $('section#toc', doc).find("ul:first");
+                    toc.attr('role', 'directory') ;
                 }
                 // mark issues and notes with heading
                 var noteCount = 0 ; var issueCount = 0 ; var ednoteCount = 0;
