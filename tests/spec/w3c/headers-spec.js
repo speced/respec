@@ -436,5 +436,16 @@ describe("W3C — Headers", function () {
             expect($sotd.find("a[href='http://www.w3.org/TeamSubmission/']").length).toEqual(1);
         });
     });
+    // statusOverride
+    it("should allow status paragraph to be overridden", function () {
+        loadWithConfig({ overrideStatus: true, wg: "WGNAME", wgURI: "WGURI", wgPatentURI: "WGPATENT", wgPublicList: "WGLIST" }, function ($ifr) {
+            var $sotd = $("#sotd", $ifr[0].contentDocument);
+            expect($sotd.find("p:contains('CUSTOM PARAGRAPH')").length).toEqual(1);
+            expect($sotd.find("a:contains('WGNAME')").length).toEqual(0);
+            expect($sotd.find("a:contains('WGLIST@w3.org')").length).toEqual(0);
+            expect($sotd.find("a:contains('subscribe')").length).toEqual(0);
+            expect($sotd.find("a:contains('disclosures')").attr("href")).toEqual("WGPATENT");
+        });
+    });
 });
 }());

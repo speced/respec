@@ -40,6 +40,7 @@
           {{#unless sotdAfterWGinfo}}
           {{{sotdCustomParagraph}}}
           {{/unless}}
+          {{#unless overrideStatus}}
           <p>
             This document was published by {{{wgHTML}}} as {{anOrA}} {{longStatus}}.
             {{#if notYetRec}}
@@ -86,6 +87,7 @@
               {{/unless}}
             {{/if}}
           </p>
+          {{/unless}}
           {{#if implementationReportURI}}
             <p>
               Please see the Working Group's  <a href='{{implementationReportURI}}'>implementation
