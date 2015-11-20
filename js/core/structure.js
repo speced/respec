@@ -97,13 +97,20 @@ define(
                 if (!conf.noTOC) {
                     var $ul = makeTOCAtLevel($("body", doc), doc, [0], 1, conf);
                     if (!$ul) return;
-                    var $sec = $("<section id='toc'/>").append("<h2 class='introductory'>" + conf.l10n.toc + "</h2>")
-                                                       .append($ul)
+                    var w = conf.useExperimentalStyles ? "nav" : "section";
+                    var $sec = $("<" + w + " id='toc'/>")
+                        .append("<h2 class='introductory'>" + conf.l10n.toc + "</h2>")
+                        .append($ul)
                     ,   $ref = $("#toc", doc), replace = false;
                     if ($ref.length) replace = true;
                     if (!$ref.length) $ref = $("#sotd", doc);
                     if (!$ref.length) $ref = $("#abstract", doc);
                     replace ? $ref.replaceWith($sec) : $ref.after($sec);
+
+                    if (conf.useExperimentalStyles) {
+                        var $link = $("<p role='navigation' id='back-to-top'><a href='#toc'><abbr title='Back to Top'>&uarr;</abbr></p>");
+                        $("body").append($link);;
+                    }
                 }
 
                 // Update all anchors with empty content that reference a section ID
