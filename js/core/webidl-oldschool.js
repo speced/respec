@@ -431,14 +431,15 @@ define(
                 var match;
 
                 // ATTRIBUTE
-                match = /^\s*(?:(readonly|inherit|stringifier)\s+)?attribute\s+(.*?)\s+(\S+)\s*$/.exec(str);
+                match = /^\s*(?:(static)\s+)?(?:(readonly|inherit|stringifier)\s+)?attribute\s+(.*?)\s+(\S+)\s*$/.exec(str);
                 if (match) {
                     obj.type = "attribute";
                     obj.declaration = match[1] ? match[1] : "";
-                    obj.declaration += (new Array(12-obj.declaration.length)).join(" "); // fill string with spaces
-                    var type = match[2];
+                    obj.declaration += (obj.declaration ? " " : "") + (match[2] !== undefined ? match[2] : "");
+                    obj.declaration += (new Array(16-obj.declaration.length)).join(" "); // fill string with spaces
+                    var type = match[3];
                     this.parseDatatype(obj, type);
-                    this.setID(obj, match[3]);
+                    this.setID(obj, match[4]);
                     obj.raises = [];
                     $sgrs.each(function () {
                         var $el = $(this)
