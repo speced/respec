@@ -134,19 +134,20 @@ describe("Core - WebIDL", function () {
     it("should handle attributes", function () {
         $target = $("#attr-basic", doc);
         text =  "interface SuperStar {\n" +
-                "                attribute DOMString                    regular;\n" +
-                "    readonly    attribute DOMString                    ro;\n" +
-                "    readonly    attribute DOMString                    _readonly;\n" +
-                "    inherit     attribute DOMString                    in;\n" +
-                "    stringifier attribute DOMString                    st;\n" +
+                "                    attribute DOMString                    regular;\n" +
+                "    readonly        attribute DOMString                    ro;\n" +
+                "    readonly        attribute DOMString                    _readonly;\n" +
+                "    inherit         attribute DOMString                    in;\n" +
+                "    stringifier     attribute DOMString                    st;\n" +
                 "    [Something]\n" +
-                "    readonly    attribute DOMString                    ext;\n" +
-                "                attribute sequence<Date>               dates;\n" +
-                "                attribute Promise<DOMString>           operation;\n" +
-                "                attribute sequence<Promise<Superstar>> wouldBeStars;\n" +
+                "    readonly        attribute DOMString                    ext;\n" +
+                "                    attribute sequence<Date>               dates;\n" +
+                "                    attribute Promise<DOMString>           operation;\n" +
+                "                    attribute sequence<Promise<Superstar>> wouldBeStars;\n" +
+                "    static readonly attribute FrozenArray<RTCIceServer>    xdefaultIceServers;\n" +
                 "};";
         expect($target.text()).toEqual(text);
-        expect($target.find(".idlAttribute").length).toEqual(9);
+        expect($target.find(".idlAttribute").length).toEqual(10);
         var $at = $target.find(".idlAttribute").first();
         expect($at.find(".idlAttrType").text()).toEqual("DOMString");
         expect($at.find(".idlAttrName").text()).toEqual("regular");
@@ -160,9 +161,9 @@ describe("Core - WebIDL", function () {
         expect($seqpromise.find(".idlAttrType").text()).toEqual("sequence<Promise<Superstar>>");
 
         var $sec = $("#attributes-1 dl.attributes", doc);
-        expect($sec.find("dt").length).toEqual(9);
+        expect($sec.find("dt").length).toEqual(10);
         expect($sec.find("dt").eq(4).find("code").text()).toEqual("readonly");
-        expect($sec.find("dd").length).toEqual(9);
+        expect($sec.find("dd").length).toEqual(10);
         expect($sec.find("dt").first().find("code").first().text()).toEqual("dates");
         expect($sec.find("dt").first().find(".idlAttrType").text()).toEqual("sequence<Date>");
         expect($sec.find("dd").first().text()).toEqual("3.5");
@@ -171,6 +172,8 @@ describe("Core - WebIDL", function () {
         expect($sec.find("dd").eq(3).text()).toEqual("4.0");
         expect($sec.find("dt").eq(8).find(".idlAttrType").text()).toEqual("sequence<Promise<Superstar>>");
         expect($sec.find("dd").eq(8).text()).toEqual("4.5");
+        expect($sec.find("dt").eq(9).find(".idlAttrType").text()).toEqual("FrozenArray<RTCIceServer>");
+        expect($sec.find("dd").eq(9).text()).toEqual("4.6");
     });
 
     it("should handle operations", function () {
@@ -199,8 +202,8 @@ describe("Core - WebIDL", function () {
     it("should handle serializer", function () {
         $target = $("#serializer-map", doc);
         text =  "interface SuperStar {\n" +
-                "                attribute DOMString foo;\n" +
-                "                attribute DOMString bar;\n" +
+                "                    attribute DOMString foo;\n" +
+                "                    attribute DOMString bar;\n" +
                 "    serializer = {foo, bar};\n" +
                 "};";
         expect($target.text()).toEqual(text);
@@ -214,7 +217,7 @@ describe("Core - WebIDL", function () {
       text = "interface SuperStar {\n" +
              "    void foo ();\n" +
              "    maplike<DOMString, SuperStar>;\n" +
-             "                attribute DOMString bar;\n" +
+             "                    attribute DOMString bar;\n" +
              "};";
       expect($target.text()).toEqual(text);
       expect($target.find(".idlMaplike").length).toEqual(1);
@@ -228,7 +231,7 @@ describe("Core - WebIDL", function () {
       text = "interface SuperStar {\n" +
              "    void foo ();\n" +
              "    readonly maplike<DOMString, SuperStar>;\n" +
-             "                attribute DOMString bar;\n" +
+             "                    attribute DOMString bar;\n" +
              "};";
       expect($target.text()).toEqual(text);
       expect($target.find(".idlMaplike").length).toEqual(1);
@@ -241,8 +244,8 @@ describe("Core - WebIDL", function () {
       $target = $("#if-iterable", doc);
       text = "interface AnIterableInterface {\n" +
              "    iterable<DOMString>;\n" +
-             "                attribute DOMString foo;\n" +
-             "                attribute DOMString bar;\n" +
+             "                    attribute DOMString foo;\n" +
+             "                    attribute DOMString bar;\n" +
              "};";
       expect($target.text()).toEqual(text);
       expect($target.find(".idlIterable").length).toEqual(1);
@@ -254,8 +257,8 @@ describe("Core - WebIDL", function () {
       $target = $("#if-iterable-pairs", doc);
       text = "interface AnIterablePairInterface {\n" +
              "    iterable<DOMString,SuperStar>;\n" +
-             "                attribute DOMString foo;\n" +
-             "                attribute DOMString bar;\n" +
+             "                    attribute DOMString foo;\n" +
+             "                    attribute DOMString bar;\n" +
              "};";
       expect($target.text()).toEqual(text);
       expect($target.find(".idlIterable").length).toEqual(1);
