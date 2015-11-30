@@ -41,7 +41,7 @@ define(
                         ;
                 }
                 else if (conf.useExperimentalStyles) {
-                    css = "http://fantasai.inkedblade.net/style/design/w3c-restyle/2016/W3C-" + statStyle;
+                    css = "//w3c.github.io/tr-design/src/W3C-" + statStyle + ".css";
                 }
                 else {
                     css += "www.w3.org/StyleSheets/TR/W3C-" + statStyle;
