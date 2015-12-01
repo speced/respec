@@ -438,7 +438,14 @@ describe("W3C — Headers", function () {
     });
     // statusOverride
     it("should allow status paragraph to be overridden", function () {
-        loadWithConfig({ overrideStatus: true, wg: "WGNAME", wgURI: "WGURI", wgPatentURI: "WGPATENT", wgPublicList: "WGLIST" }, function ($ifr) {
+        var conf = { 
+           overrideStatus: true,
+           wg: "WGNAME",
+           wgURI: "WGURI",
+           wgPatentURI: "WGPATENT",
+           wgPublicList: "WGLIST",
+        };
+        loadWithConfig(conf, function ($ifr) {
             var $sotd = $("#sotd", $ifr[0].contentDocument);
             expect($sotd.find("p:contains('CUSTOM PARAGRAPH')").length).toEqual(1);
             expect($sotd.find("a:contains('WGNAME')").length).toEqual(0);
