@@ -41,7 +41,7 @@ define(
                         ;
                 }
                 else if (conf.useExperimentalStyles) {
-                    css = "www.w3.org/2016/01/W3C-" + statStyle;
+                    css += "www.w3.org/2016/01/W3C-" + statStyle;
                 }
                 else {
                     css += "www.w3.org/StyleSheets/TR/W3C-" + statStyle;
