@@ -420,7 +420,7 @@ define(
                                 }
                                 children += idlEnumItemTmpl({
                                     obj: item,
-                                    parentID: obj.fullPath,
+                                    parentID: obj.name,
                                     indent: indent + 1,
                                     needsComma: needsComma
                                 });
