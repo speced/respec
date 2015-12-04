@@ -118,7 +118,7 @@ define(
         WebIDLProcessor.prototype = {
             setID:  function (obj, match) {
                 obj.id = match;
-                obj.refId = obj.id.replace(/[^a-zA-Z_\-]/g, "");
+                obj.refId = obj.id.replace(/[^a-zA-Z0-9_\-]/g, "");
                 obj.unescapedId = (obj.id[0] == "_" ? obj.id.slice(1) : obj.id);
             }
         ,   nullable:   function (obj, type) {
