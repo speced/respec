@@ -117,7 +117,7 @@ define(
         //  * {for_: "", title: "int3.member"}
         $.fn.linkTargets = function () {
             var elem = this;
-            var link_for = (elem.attr("for") || elem.closest("[link-for]").attr("link-for") || "").toLowerCase();
+            var link_for = (elem.attr("for") || elem.attr("data-for") || elem.closest("[link-for]").attr("link-for") || elem.closest("[data-link-for]").attr("data-link-for") || "").toLowerCase();
             var titles = elem.getDfnTitles();
             var result = [];
             $.each(titles, function() {
