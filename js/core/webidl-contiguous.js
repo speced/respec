@@ -673,7 +673,7 @@ define(
                         break;
                     case "maplike":
                         name = "maplike";
-                        defn.idlId = "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
+                        defn.idlId = ("idl-def-" + parent + "-" + name).toLowerCase();
                     case "iterator":
                         name = "iterator";
                         defn.idlId = "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
