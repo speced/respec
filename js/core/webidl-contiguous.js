@@ -24,6 +24,7 @@ define(
     ,   "tmpl!core/templates/webidl-contiguous/method.html"
     ,   "tmpl!core/templates/webidl-contiguous/attribute.html"
     ,   "tmpl!core/templates/webidl-contiguous/serializer.html"
+    ,   "tmpl!core/templates/webidl-contiguous/maplike.html"
     ,   "tmpl!core/templates/webidl-contiguous/line-comment.html"
     ,   "tmpl!core/templates/webidl-contiguous/multiline-comment.html"
     ,   "tmpl!core/templates/webidl-contiguous/field.html"
@@ -33,7 +34,7 @@ define(
     ],
     function (hb, webidl2, css, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
                    idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl,
-              idlAttributeTmpl, idlSerializerTmpl, idlLineCommentTmpl, idlMultiLineCommentTmpl, idlFieldTmpl, idlExceptionTmpl,
+              idlAttributeTmpl, idlSerializerTmpl, idlMaplikeTmpl, idlLineCommentTmpl, idlMultiLineCommentTmpl, idlFieldTmpl, idlExceptionTmpl,
               idlExtAttributeTmpl, idlInterfaceTmpl) {
         "use strict";
         function registerHelpers (msg) {
@@ -136,6 +137,9 @@ define(
         function idlType2Html (idlType) {
             if (typeof idlType === "string") {
                 return "<a>" + Handlebars.Utils.escapeExpression(idlType) + "</a>";
+            }
+            if (Array.isArray(idlType)) {
+                return idlType.map(idlType2Html).join(", ");
             }
             var nullable = idlType.nullable ? "?" : "";
             if (idlType.union) {
@@ -445,7 +449,7 @@ define(
             var obj = opt.obj, indent = opt.indent;
             var maxAttr = 0, maxMeth = 0, maxConst = 0;
             obj.members.forEach(function (it) {
-                if (typeIsWhitespace(it.type) || it.type === "serializer") {
+                if (typeIsWhitespace(it.type) || it.type === "serializer" || it.type === "maplike") {
                     return;
                 }
                 var len = idlType2Text(it.idlType).length;
@@ -461,6 +465,7 @@ define(
                                       case "operation": return writeMethod(ch, maxMeth, indent + 1);
                                       case "const": return writeConst(ch, maxConst, indent + 1);
                                       case "serializer": return writeSerializer(ch, indent + 1);
+                                      case "maplike": return writeMaplike(ch, indent + 1);
                                       case "ws": return writeBlankLines(ch);
                                       case "line-comment": return writeLineComment(ch, indent + 1);
                                       case "multiline-comment": return writeMultiLineComment(ch, indent + 1);
@@ -595,6 +600,16 @@ define(
             });
         }
 
+        function writeMaplike (maplike, indent) {
+            var qualifiers = "";
+            if (maplike.readonly) qualifiers += "readonly ";
+            return idlMaplikeTmpl({
+                obj:        maplike
+            ,   qualifiers:     qualifiers
+            ,   indent:     indent
+            });
+        }
+
         function writeMember (memb, maxQualifiers, maxType, indent) {
             var opt = { obj: memb, indent: indent };
             opt.typePad = maxType - idlType2Text(memb.idlType).length;
@@ -656,6 +671,9 @@ define(
                                           return optional + idlType2Text(arg.idlType).toLowerCase() + variadic;
                                       }).join(',').replace(/\s/g, '_') + ')');
                         break;
+                    case "maplike":
+                        name = "maplike";
+                        defn.idlId = ("idl-def-" + parent + "-" + name).toLowerCase();
                     case "iterator":
                         name = "iterator";
                         defn.idlId = "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
@@ -770,7 +788,7 @@ define(
                     linkDefinitions(parse, conf.definitionMap, "", msg);
                     var $df = makeMarkup(conf, parse, msg);
                     $df.attr({id: this.id});
-                    $df.find('.idlAttribute,.idlCallback,.idlConst,.idlDictionary,.idlEnum,.idlException,.idlField,.idlInterface,.idlMember,.idlMethod,.idlSerializer,.idlTypedef')
+                    $df.find('.idlAttribute,.idlCallback,.idlConst,.idlDictionary,.idlEnum,.idlException,.idlField,.idlInterface,.idlMember,.idlMethod,.idlSerializer,.idlMaplike,.idlTypedef')
                         .each(function() {
                             var elem = $(this);
                             var title = elem.attr('data-title').toLowerCase();
