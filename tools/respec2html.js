@@ -10,6 +10,7 @@ var page = require("webpage").create()
 ,   timer
 ,   reportErrors = false
 ,   reportWarnings = false
+,   ignoreScripts = false
 ,   errors = []
 ,   warnings = []
 ;
@@ -29,6 +30,13 @@ if (args.indexOf("-w") !== -1) {
     args.splice(args.indexOf("-w"), 1);
     reportWarnings = true;
 }
+
+if (args.indexOf("--exclude-script") !== -1) {
+    var idx = args.indexOf("--exclude-script");
+    var values = args.splice(idx, 2);
+    ignoreScripts = values[1];
+}
+
 
 // Reading other parameters
 var source = args[1]
@@ -52,6 +60,8 @@ if (args.length < 2 || args.length > 4) {
 page.onResourceRequested = function (requestData, networkRequest) {
     if (requestData.url === "file://www.w3.org/Tools/respec/respec-w3c-common") {
         networkRequest.changeUrl("https://www.w3.org/Tools/respec/respec-w3c-common");
+    } else if (ignoreScripts && requestData.url.indexOf(ignoreScripts) === 0) {
+        networkRequest.abort();
     }
 };
 
