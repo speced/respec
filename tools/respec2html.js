@@ -45,12 +45,15 @@ var source = args[1]
 
 
 if (args.length < 2 || args.length > 4) {
-    var usage = "Usage:\n   phantomjs --ssl-protocol=any respec2html.js [-e] [-w] respec-source [html-output] [timeout]\n" +
+    var usage = "Usage:\n   phantomjs --ssl-protocol=any respec2html.js [-e] [-w] [--exclude-script url] respec-source [html-output] [timeout]\n" +
                 "   respec-source  ReSpec source file, or an URL to the file\n" +
-                "   [-e]           Report ReSpec errors on stderr\n" +
-                "   [-w]           Report ReSpec warnings on stderr\n" +
-                "   [html-output]  Name for the HTML file to be generated, defaults to stdout\n" +
-                "   [timeout]      An optional timeout in seconds, default is 10\n";
+                "   [-e]                    Report ReSpec errors on stderr\n" +
+                "   [-w]                    Report ReSpec warnings on stderr\n" +
+                "   [--exclude-script url]  Do not load scripts whose source\n" +
+                "                           starts with the passed URL\n" +
+                "   [html-output]           Name for the HTML file to be generated," +
+                "                           defaults to stdout\n" +
+                "   [timeout]               An optional timeout in seconds, default is 10\n";
     console.error(usage);
     phantom.exit(1);
 }
