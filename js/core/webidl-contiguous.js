@@ -641,8 +641,10 @@ define(
                     case "enum":
                         name = defn.name;
                         defn.values.filter(function (v) { return v.type === undefined;})
-                                   .forEach(function(v) {
-                            v.dfn = findDfn(name, v, definitionMap, msg);
+                        .map(function(v) {
+                            return { toString: function() {return v;},
+                                     dfn: findDfn(name, v, definitionMap, msg)
+                                   };
                         });
                         defn.idlId = "idl-def-" + name.toLowerCase();
                         break;
