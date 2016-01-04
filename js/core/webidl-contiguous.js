@@ -640,7 +640,7 @@ define(
 
                     case "enum":
                         name = defn.name;
-                        defn.values.filter(function (v) { return v.type === undefined;})
+                        defn.values = defn.values.filter(function (v) { return v.type === undefined;})
                         .map(function(v) {
                             return { toString: function() {return v;},
                                      dfn: findDfn(name, v, definitionMap, msg)
