@@ -418,6 +418,13 @@ describe("Core - Contiguous WebIDL", function () {
         expect($target.find(".idlEnum:contains('EnumBasic')").attr("id")).toEqual("idl-def-enumbasic");
     });
 
+    it("should handle enumeration value definitions", function () {
+        $section = $("#enumerations", doc);
+        expect($section.find("dfn:contains('one')").attr("id")).toEqual("dom-enumbasic-one");
+        expect($section.find("p[data-link-for] a:contains('one')").attr("href")).toEqual("#dom-enumbasic-one");
+        expect($section.find("#enum-ref-without-link-for a:contains('one')").attr("href")).toEqual("#dom-enumbasic-one");
+    });
+
     it("should handle callbacks", function () {
         $target = $("#cb-basic", doc);
         text = "callback SuperStar = void ();";
