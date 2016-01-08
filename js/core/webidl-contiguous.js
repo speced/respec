@@ -297,6 +297,7 @@ define(
             ]
         ,   AttributeNameKeyword = ["required"];
         var operationNames = {};
+        var idlPartials = {};
         function escapeArgumentName(argumentName) {
             if (idlKeywords.indexOf(argumentName) !== -1 && ArgumentNameKeyword.indexOf(argumentName) === -1)
                 return "_" + argumentName;
@@ -658,9 +659,18 @@ define(
                     case "dictionary":
                     case "exception":
                     case "interface":
+                        var partialIdx = "";
+                        if (defn.partial) {
+                            if (!idlPartials[defn.name]) {
+                                idlPartials[defn.name] = [];
+                            }
+                            idlPartials[defn.name].push(defn);
+                            partialIdx = "-partial-" + idlPartials[defn.name].length;
+                        }
+
                         linkDefinitions(defn.members, definitionMap, defn.name, msg);
                         name = defn.name;
-                        defn.idlId = "idl-def-" + name.toLowerCase();
+                        defn.idlId = "idl-def-" + name.toLowerCase() + partialIdx;
                         break;
 
                     case "enum":
@@ -819,7 +829,6 @@ define(
                     $(doc).find("head link").first().before($("<style/>").text(css));
                 }
 
-                var idlNames = [];
                 $idl.each(function () {
                     var parse;
                     try {
