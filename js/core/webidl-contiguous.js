@@ -500,7 +500,7 @@ define(
             if (attr.stringifier) qualifiers += "stringifier ";
             if (attr.inherit) qualifiers += "inherit ";
             if (attr.readonly) qualifiers += "readonly ";
-            qualifiers += "           ";
+            qualifiers += Array(21).join(" ");
             // 20 is to cater for "stringifier readonly", the longest possible
             // qualifier
             qualifiers = qualifiers.slice(0, 20);
