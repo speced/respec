@@ -501,7 +501,9 @@ define(
             if (attr.inherit) qualifiers += "inherit ";
             if (attr.readonly) qualifiers += "readonly ";
             qualifiers += "           ";
-            qualifiers = qualifiers.slice(0, 11);
+            // 20 is to cater for "stringifier readonly", the longest possible
+            // qualifier
+            qualifiers = qualifiers.slice(0, 20);
             return idlAttributeTmpl({
                 obj:            attr
             ,   indent:         indent
