@@ -120,7 +120,7 @@ define(
                 if (obj.dfn) {
                     var result = "<a for='" + Handlebars.Utils.escapeExpression(obj.linkFor || "") + "'";
                     if (obj.name) {
-                        result += " data-lt='" + Handlebars.Utils.escapeExpression(obj.name) + "'";
+                        result += " data-lt='" + Handlebars.Utils.escapeExpression(obj.name) + (obj.overload ? "!overload-" + obj.overload + "' data-lt-noDefault" : "'") ;
                     }
                     result += ">" + content + "</a>";
                     return result;
@@ -296,6 +296,7 @@ define(
                 "unrestricted",
             ]
         ,   AttributeNameKeyword = ["required"];
+        var operationNames = {};
         function escapeArgumentName(argumentName) {
             if (idlKeywords.indexOf(argumentName) !== -1 && ArgumentNameKeyword.indexOf(argumentName) === -1)
                 return "_" + argumentName;
@@ -667,6 +668,13 @@ define(
                     case "operation":
                         if (defn.name) {
                             name = defn.name;
+                            var qualifiedName = [parent + "." + name];
+                            if (!operationNames[qualifiedName]) {
+                                operationNames[qualifiedName] = [];
+                            } else {
+                                defn.overload = operationNames[qualifiedName].length;
+                            }
+                            operationNames[qualifiedName].push(defn);
                         } else if (defn.getter || defn.setter || defn.deleter ||
                                    defn.legacycaller || defn.stringifier ||
                                    defn.serializer ) {
