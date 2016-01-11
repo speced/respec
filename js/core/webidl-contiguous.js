@@ -390,7 +390,7 @@ define(
                     ;
                     return idlDictionaryTmpl({ obj: obj, indent: indent, children: children, partial: obj.partial ? "partial " : "" });
                 case "callback":
-                    var params = obj.arguments
+                    var paramObjs = obj.arguments
                                     .filter(function(it) {
                                         return !typeIsWhitespace(it.type);
                                     })
@@ -400,13 +400,21 @@ define(
                                         ,   optional:   it.optional ? "optional " : ""
                                         ,   variadic:   it.variadic ? "..." : ""
                                         });
-                                    })
-                                    .join(", ");
-                    return idlCallbackTmpl({
+                                    });
+                    var callbackObj = {
                         obj:        obj
                     ,   indent:     indent
-                    ,   children:   params
-                    });
+                    ,   children:   paramObjs.join(", ")
+                    }
+                    var ret = idlCallbackTmpl(callbackObj);
+                    var line = $(ret).text();
+                    if (line.length > 80) {
+                        var paramPad = line.indexOf('(') + 1;
+                        callbackObj.children = paramObjs.join(",\n" + Array(paramPad + 1).join(" "));
+
+                        ret = idlCallbackTmpl(callbackObj);
+                    }
+                    return ret;
                 case "enum":
                     var children = "";
                     for (var i = 0; i < obj.values.length; i++) {
@@ -511,17 +519,17 @@ define(
         }
 
         function writeMethod (meth, max, indent) {
-            var params = meth.arguments
+            var paramObjs = meth.arguments
                             .filter(function (it) {
                                 return !typeIsWhitespace(it.type);
                             }).map(function (it) {
                                 return idlParamTmpl({
                                     obj:        it
-                                ,   optional:   it.optional ? "optional " : ""
-                                ,   variadic:   it.variadic ? "..." : ""
+                                    ,   optional:   it.optional ? "optional " : ""
+                                    ,   variadic:   it.variadic ? "..." : ""
                                 });
-                            })
-                            .join(", ");
+                            });
+            var params = paramObjs.join(", ");
             var len = idlType2Text(meth.idlType).length;
             if (meth.static) len += 7;
             var specialProps = ["getter", "setter", "deleter", "legacycaller", "serializer", "stringifier"];
@@ -534,14 +542,22 @@ define(
                 }
             }
             var pad = max - len;
-            return idlMethodTmpl({
+            var methObj = {
                 obj:        meth
             ,   indent:     indent
             ,   "static":   meth.static ? "static " : ""
             ,   special:    special
             ,   pad:        pad
             ,   children:   params
-            });
+            };
+            var ret = idlMethodTmpl(methObj);
+            var line = $(ret).text();
+            if (line.length > 80) {
+                var paramPad = line.indexOf('(') + 1;
+                methObj.children = paramObjs.join(",\n" + Array(paramPad + 1).join(" "));
+                ret = idlMethodTmpl(methObj);
+            }
+            return ret;
         }
 
         function writeConst (cons, max, indent) {
