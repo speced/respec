@@ -84,6 +84,7 @@ page.open(source, function (status) {
     else {
         console.error("Loading " + source);
         page.evaluateAsync(function () {
+            $.ajaxSetup({timeout: 4000});
             function saveToPhantom () {
                 require(["core/ui", "ui/save-html"], function (ui, saver) {
                            saver.show(ui, respecConfig, document, respecEvents);
