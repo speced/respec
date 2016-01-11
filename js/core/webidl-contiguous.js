@@ -410,7 +410,7 @@ define(
                     var line = $(ret).text();
                     if (line.length > 80) {
                         var paramPad = line.indexOf('(') + 1;
-                        callbackObj.children = paramObjs.join(",\n" + Array(paramPad + 1).join(" "));
+                        callbackObj.children = paramObjs.join(",\n" + pads(paramPad));
 
                         ret = idlCallbackTmpl(callbackObj);
                     }
@@ -554,7 +554,7 @@ define(
             var line = $(ret).text();
             if (line.length > 80) {
                 var paramPad = line.indexOf('(') + 1;
-                methObj.children = paramObjs.join(",\n" + Array(paramPad + 1).join(" "));
+                methObj.children = paramObjs.join(",\n" + pads(paramPad));
                 ret = idlMethodTmpl(methObj);
             }
             return ret;
