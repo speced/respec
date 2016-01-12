@@ -423,8 +423,9 @@ define(
                                     }
                                 }
                                 children += idlEnumItemTmpl({
-                                    obj: item,
-                                    parentID: obj.name,
+                                    lname: item.toString().toLowerCase(),
+                                    name: item.toString(),
+                                    parentID: obj.name.toLowerCase(),
                                     indent: indent + 1,
                                     needsComma: needsComma
                                 });
