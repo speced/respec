@@ -248,7 +248,7 @@ describe("Core - Contiguous WebIDL", function () {
         // Links and IDs.
         var ulls = $target.find(".idlMethName:contains('ull')");
         expect(ulls.first().children("a").attr("href")).toEqual("#dom-methbasic-ull");
-        expect(ulls.last().children("a").attr("href")).toEqual("#dom-methbasic-ull");
+        expect(ulls.last().children("a").attr("href")).toEqual("#dom-methbasic-ull!overload-1");
         expect($target.find(".idlMethod:contains('paramed')").attr("id")).toEqual("idl-def-methbasic-paramed(superstar[][]?[],bytestring?,optional-short,short[],short[][][][],optional-short,optional-domstring,short...)");
         expect($target.find(":contains('dates')").filter("a").length).toEqual(0);
     });
