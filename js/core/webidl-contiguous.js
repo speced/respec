@@ -453,7 +453,6 @@ define(
                     return;
                 }
                 var len = idlType2Text(it.idlType).length;
-                if (it.static) len += 7;
                 if (it.type === "attribute") maxAttr = (len > maxAttr) ? len : maxAttr;
                 else if (it.type === "operation") maxMeth = (len > maxMeth) ? len : maxMeth;
                 else if (it.type === "const") maxConst = (len > maxConst) ? len : maxConst;
