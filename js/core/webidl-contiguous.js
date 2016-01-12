@@ -457,21 +457,23 @@ define(
 
         function writeInterfaceDefinition(opt, callback) {
             var obj = opt.obj, indent = opt.indent;
-            var maxAttr = 0, maxMeth = 0, maxConst = 0;
+            var maxAttr = 0, maxAttrQualifiers = 0, maxMeth = 0, maxConst = 0;
             obj.members.forEach(function (it) {
                 if (typeIsWhitespace(it.type) || it.type === "serializer" || it.type === "maplike") {
                     return;
                 }
                 var len = idlType2Text(it.idlType).length;
-                if (it.static) len += 7;
-                if (it.type === "attribute") maxAttr = (len > maxAttr) ? len : maxAttr;
-                else if (it.type === "operation") maxMeth = (len > maxMeth) ? len : maxMeth;
+                if (it.type === "attribute") {
+                    var qualifiersLen = writeAttributeQualifiers(it).length;
+                    maxAttr = (len > maxAttr) ? len : maxAttr;
+                    maxAttrQualifiers = (qualifiersLen > maxAttrQualifiers) ? qualifiersLen : maxAttrQualifiers;
+                } else if (it.type === "operation") maxMeth = (len > maxMeth) ? len : maxMeth;
                 else if (it.type === "const") maxConst = (len > maxConst) ? len : maxConst;
             });
             var children = obj.members
                               .map(function (ch) {
                                   switch (ch.type) {
-                                      case "attribute": return writeAttribute(ch, maxAttr, indent + 1);
+                                      case "attribute": return writeAttribute(ch, maxAttr, indent + 1, maxAttrQualifiers);
                                       case "operation": return writeMethod(ch, maxMeth, indent + 1);
                                       case "const": return writeConst(ch, maxConst, indent + 1);
                                       case "serializer": return writeSerializer(ch, indent + 1);
@@ -502,16 +504,21 @@ define(
             });
         }
 
-        function writeAttribute (attr, max, indent) {
-            var len = idlType2Text(attr.idlType).length;
-            var pad = max - len;
+        function writeAttributeQualifiers(attr) {
             var qualifiers = "";
             if (attr.static) qualifiers += "static ";
             if (attr.stringifier) qualifiers += "stringifier ";
             if (attr.inherit) qualifiers += "inherit ";
             if (attr.readonly) qualifiers += "readonly ";
-            qualifiers += "           ";
-            qualifiers = qualifiers.slice(0, 11);
+            return qualifiers;
+        }
+
+        function writeAttribute (attr, max, indent, maxQualifiers) {
+            var len = idlType2Text(attr.idlType).length;
+            var pad = max - len;
+            var qualifiers = writeAttributeQualifiers(attr);
+            qualifiers += pads(maxQualifiers);
+            qualifiers = qualifiers.slice(0, maxQualifiers);
             return idlAttributeTmpl({
                 obj:            attr
             ,   indent:         indent
