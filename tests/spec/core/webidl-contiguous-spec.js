@@ -256,8 +256,8 @@ describe("Core - Contiguous WebIDL", function () {
     it("should handle serializer", function () {
         $target = $("#serializer-map", doc);
         text =  "interface SerializerMap {\n" +
-                "                attribute DOMString foo;\n" +
-                "                attribute DOMString bar;\n" +
+                "    attribute DOMString foo;\n" +
+                "    attribute DOMString bar;\n" +
                 "    serializer = {foo, bar};\n" +
                 "};";
         expect($target.text()).toEqual(text);
