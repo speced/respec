@@ -799,6 +799,13 @@ define(
                     definitionMap[name].push(dfns[0]);
                 }
             }
+            // If there are multiple definitions found, keep the explicit ones
+            // i.e. with <dfn> tags
+            if (dfns.length > 1) {
+                dfns = dfns.filter(function(dfn) {
+                    return dfn.tagName === 'dfn';
+                });
+            }
             if (dfns.length > 1) {
                 msg.pub("error", "Multiple <dfn>s for " + name + (parent ? " in " + parent : ""));
             }
