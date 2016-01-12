@@ -223,7 +223,14 @@ describe("Core - Contiguous WebIDL", function () {
                 "    // 3.5\n" +
                 "    SuperStar?         ull();\n" +
                 "    // 4\n" +
-                "    SuperStar[][][][]  paramed(SuperStar[][]?[] one, [ExtAttrs] ByteString? ext, optional short maybe, short[] shorts, short[][][][] hypercubes, optional short defaulted = 3.5, optional DOMString defaulted2 = \"one\", short... variable);\n" +
+                "    SuperStar[][][][]  paramed(SuperStar[][]?[] one,\n" +
+                "                               [ExtAttrs] ByteString? ext,\n" +
+                "                               optional short maybe,\n" +
+                "                               short[] shorts,\n" +
+                "                               short[][][][] hypercubes,\n" +
+                "                               optional short defaulted = 3.5,\n" +
+                "                               optional DOMString defaulted2 = \"one\",\n" +
+                "                               short... variable);\n" +
                 "    // 5\n" +
                 "    getter float       ();\n" +
                 "    // 6\n" +

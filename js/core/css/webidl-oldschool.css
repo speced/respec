@@ -6,6 +6,12 @@ pre.idl {
     line-height:    120%;
 }
 
+@media print {
+  pre.idl {
+      white-space: pre-wrap;
+  }
+}
+
 pre.idl::before {
     content:    "WebIDL";
     display:    block;
