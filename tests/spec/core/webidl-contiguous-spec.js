@@ -171,26 +171,27 @@ describe("Core - Contiguous WebIDL", function () {
         $target = $("#attr-basic", doc);
         text =  "interface AttrBasic {\n" +
                 "    // 1\n" +
-                "                attribute DOMString          regular;\n" +
+                "                         attribute DOMString          regular;\n" +
                 "    // 2\n" +
-                "    readonly    attribute DOMString          ro;\n" +
+                "    readonly             attribute DOMString          ro;\n" +
                 "    // 2.2\n" +
-                "    readonly    attribute DOMString          _readonly;\n" +
+                "    readonly             attribute DOMString          _readonly;\n" +
                 "    // 2.5\n" +
-                "    inherit     attribute DOMString          in;\n" +
+                "    inherit              attribute DOMString          in;\n" +
                 "    // 2.7\n" +
-                "    stringifier attribute DOMString          st;\n" +
+                "    stringifier          attribute DOMString          st;\n" +
                 "    // 3\n" +
                 "    [Something]\n" +
-                "    readonly    attribute DOMString          ext;\n" +
+                "    readonly             attribute DOMString          ext;\n" +
                 "    // 3.5\n" +
-                "                attribute Date[]             dates;\n" +
+                "                         attribute Date[]             dates;\n" +
                 "    // 4.0\n" +
-                "                attribute Promise<DOMString> operation;\n" +
-                //"                attribute Promise<Superstar>[] wouldBeStars;\n" +
+                "                         attribute Promise<DOMString> operation;\n" +
+                "    // 7\n" +
+                "    stringifier readonly attribute DOMString          all;\n" +
                 "};";
         expect($target.text()).toEqual(text);
-        expect($target.find(".idlAttribute").length).toEqual(8);
+        expect($target.find(".idlAttribute").length).toEqual(9);
         var $at = $target.find(".idlAttribute").first();
         expect($at.find(".idlAttrType").text()).toEqual("DOMString");
         expect($at.find(".idlAttrName").text()).toEqual("regular");
@@ -256,8 +257,8 @@ describe("Core - Contiguous WebIDL", function () {
     it("should handle serializer", function () {
         $target = $("#serializer-map", doc);
         text =  "interface SerializerMap {\n" +
-                "                attribute DOMString foo;\n" +
-                "                attribute DOMString bar;\n" +
+                "                         attribute DOMString foo;\n" +
+                "                         attribute DOMString bar;\n" +
                 "    serializer = {foo, bar};\n" +
                 "};";
         expect($target.text()).toEqual(text);
