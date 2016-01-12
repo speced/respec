@@ -118,7 +118,7 @@
           the track is ended for any reason.</p>
 
           <p>On the <code><a>MediaStreamTrack</a></code> object,
-          sources are represented by a <code><a>sourceType</a></code>
+          sources are represented by a <code>sourceType</code>
           attribute. The behavior of APIs associated with the source's
           capabilities and state change depending on the source
           type.</p>
@@ -132,7 +132,7 @@
           the same answer).</p>
         </dd>
 
-        <dt><dfn title="state">State (Source State)</dfn></dt>
+        <dt><dfn data-lt="state">State (Source State)</dfn></dt>
         <dd>
           <p>State refers to the immediate, current value of the
           source's (optionally constrained) capabilities. State is
@@ -155,7 +155,7 @@
           defined in this spec.</p>
         </dd>
 
-        <dt><dfn title="capabilities"
+        <dt><dfn
         id="dfn-capabilities">Capabilities</dfn></dt>
         <dd>
           <p>Source capabilities are the intrinsic "features" of a
@@ -178,7 +178,7 @@
           session.</p>
         </dd>
 
-        <dt><dfn title="constraints"
+        <dt><dfn
         id="dfn-constraints">Constraints</dfn></dt>
 
         <dd>
@@ -541,7 +541,7 @@
 
               <li>
                 <p>If <var>track</var> has no source attached
-                (<code><a>sourceType</a></code> is "none") or if the source is
+                (<code>sourceType</code> is "none") or if the source is
                 provided by an <code>RTCPeerConnection</code>, then abort these
                 steps.</p>
               </li>
@@ -600,7 +600,7 @@
             track).  Once a track enters this state, it never exits it.</p>
 
             <p>For example, a video track in a
-            <code><a>MediaStream</a></code> ends if the user unplugs the
+            <code>MediaStream</code> ends if the user unplugs the
             USB web camera that acts as the track's media source.</p>
           </dd>
         </dl>
@@ -620,13 +620,13 @@
           <dt>camera</dt>
 
 	  <dd>A valid source type only for
-	  <code><a>VideoStreamTrack</a></code>s. The source is a local
+	  <code>VideoStreamTrack</code>s. The source is a local
 	  video-producing camera source.</dd>
 
           <dt>microphone</dt>
 
 	  <dd>A valid source type only for
-	  <code><a>AudioStreamTrack</a></code>s. The source is a local
+	  <code>AudioStreamTrack</code>s. The source is a local
 	  audio-producing microphone source.</dd>
 	  
         </dl>

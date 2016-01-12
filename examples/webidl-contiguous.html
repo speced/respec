@@ -34,7 +34,7 @@ interface Foo {
   attribute DOMString attr;
 };
 </pre>
-    <p link-for="Foo">The <dfn data-lt="Foo.attr">attr</dfn> attribute's getter must...</p>
+    <p link-for="Foo">The <dfn data-for="Foo">attr</dfn> attribute's getter must...</p>
     <section>
       <h2>Introduction</h2>
 
@@ -99,13 +99,12 @@ interface Foo {
         and/or <code>title</code> attributes directly on the <code>&lt;dfn></code> or
         <code>&lt;a></code> tag, similarly to when
         <a href="../guide.html#definitions-and-linking">defining or
-        linking to a non-IDL term</a>. The <dfn for="Dahut" title="turnAround">
+        linking to a non-IDL term</a>. The <dfn for="Dahut">
         <code>turnAround</code> member of the <code>Dahut</code> interface</dfn> can
-        be defined with <code>&lt;dfn for="Dahut"
-        title="turnAround">&lt;code>turnAround&lt;/code> member of the
+        be defined with <code>&lt;dfn for="Dahut">&lt;code>turnAround&lt;/code> member of the
         &lt;code>Dahut&lt;/code> interface&lt;/dfn></code>. We can also link to
-        <a for="Dahut" title="LEVROGYROUS">some constant</a> with
-        <code>&lt;a for="Dahut" title="LEVROGYROUS">some constant&lt;/a></code>.
+        <a for="Dahut" data-lt="LEVROGYROUS">some constant</a> with
+        <code>&lt;a for="Dahut" data-lt="LEVROGYROUS">some constant&lt;/a></code>.
       </p>
     </section>
     <section>
@@ -253,7 +252,7 @@ interface Foo {
         };
       </pre>
       <p id="const-basic-doc">
-        <dfn for="ConstTest">rambaldi</dfn> is a constant and so are <dfn for="ConstTest">why</dfn> and <dfn for="ConstTest" title="inf">this other thing</dfn>.
+        <dfn for="ConstTest">rambaldi</dfn> is a constant and so are <dfn for="ConstTest">why</dfn> and <dfn for="ConstTest" data-lt="inf">this other thing</dfn>.
       </p>
     </section>
     <section>
