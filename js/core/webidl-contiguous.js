@@ -673,6 +673,7 @@ define(
                                 operationNames[qualifiedName] = [];
                             } else {
                                 defn.overload = operationNames[qualifiedName].length;
+                                name = defn.name + '!overload-' + defn.overload;
                             }
                             operationNames[qualifiedName].push(defn);
                         } else if (defn.getter || defn.setter || defn.deleter ||
