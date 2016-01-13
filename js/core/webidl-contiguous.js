@@ -120,7 +120,7 @@ define(
                 if (obj.dfn) {
                     var result = "<a for='" + Handlebars.Utils.escapeExpression(obj.linkFor || "") + "'";
                     if (obj.name) {
-                        result += " data-lt='" + Handlebars.Utils.escapeExpression(obj.name) + "'";
+                        result += " data-lt='" + Handlebars.Utils.escapeExpression(obj.name) + (obj.overload ? "!overload-" + obj.overload + "' data-lt-noDefault" : "'") ;
                     }
                     result += ">" + content + "</a>";
                     return result;
@@ -296,6 +296,8 @@ define(
                 "unrestricted",
             ]
         ,   AttributeNameKeyword = ["required"];
+        var operationNames = {};
+        var idlPartials = {};
         function escapeArgumentName(argumentName) {
             if (idlKeywords.indexOf(argumentName) !== -1 && ArgumentNameKeyword.indexOf(argumentName) === -1)
                 return "_" + argumentName;
@@ -390,7 +392,7 @@ define(
                     ;
                     return idlDictionaryTmpl({ obj: obj, indent: indent, children: children, partial: obj.partial ? "partial " : "" });
                 case "callback":
-                    var params = obj.arguments
+                    var paramObjs = obj.arguments
                                     .filter(function(it) {
                                         return !typeIsWhitespace(it.type);
                                     })
@@ -400,13 +402,21 @@ define(
                                         ,   optional:   it.optional ? "optional " : ""
                                         ,   variadic:   it.variadic ? "..." : ""
                                         });
-                                    })
-                                    .join(", ");
-                    return idlCallbackTmpl({
+                                    });
+                    var callbackObj = {
                         obj:        obj
                     ,   indent:     indent
-                    ,   children:   params
-                    });
+                    ,   children:   paramObjs.join(", ")
+                    }
+                    var ret = idlCallbackTmpl(callbackObj);
+                    var line = $(ret).text();
+                    if (line.length > 80) {
+                        var paramPad = line.indexOf('(') + 1;
+                        callbackObj.children = paramObjs.join(",\n" + pads(paramPad));
+
+                        ret = idlCallbackTmpl(callbackObj);
+                    }
+                    return ret;
                 case "enum":
                     var children = "";
                     for (var i = 0; i < obj.values.length; i++) {
@@ -423,8 +433,9 @@ define(
                                     }
                                 }
                                 children += idlEnumItemTmpl({
-                                    obj: item,
-                                    parentID: obj.name,
+                                    lname: item.toString().toLowerCase(),
+                                    name: item.toString(),
+                                    parentID: obj.name.toLowerCase(),
                                     indent: indent + 1,
                                     needsComma: needsComma
                                 });
@@ -447,21 +458,23 @@ define(
 
         function writeInterfaceDefinition(opt, callback) {
             var obj = opt.obj, indent = opt.indent;
-            var maxAttr = 0, maxMeth = 0, maxConst = 0;
+            var maxAttr = 0, maxAttrQualifiers = 0, maxMeth = 0, maxConst = 0;
             obj.members.forEach(function (it) {
                 if (typeIsWhitespace(it.type) || it.type === "serializer" || it.type === "maplike") {
                     return;
                 }
                 var len = idlType2Text(it.idlType).length;
-                if (it.static) len += 7;
-                if (it.type === "attribute") maxAttr = (len > maxAttr) ? len : maxAttr;
-                else if (it.type === "operation") maxMeth = (len > maxMeth) ? len : maxMeth;
+                if (it.type === "attribute") {
+                    var qualifiersLen = writeAttributeQualifiers(it).length;
+                    maxAttr = (len > maxAttr) ? len : maxAttr;
+                    maxAttrQualifiers = (qualifiersLen > maxAttrQualifiers) ? qualifiersLen : maxAttrQualifiers;
+                } else if (it.type === "operation") maxMeth = (len > maxMeth) ? len : maxMeth;
                 else if (it.type === "const") maxConst = (len > maxConst) ? len : maxConst;
             });
             var children = obj.members
                               .map(function (ch) {
                                   switch (ch.type) {
-                                      case "attribute": return writeAttribute(ch, maxAttr, indent + 1);
+                                      case "attribute": return writeAttribute(ch, maxAttr, indent + 1, maxAttrQualifiers);
                                       case "operation": return writeMethod(ch, maxMeth, indent + 1);
                                       case "const": return writeConst(ch, maxConst, indent + 1);
                                       case "serializer": return writeSerializer(ch, indent + 1);
@@ -492,16 +505,21 @@ define(
             });
         }
 
-        function writeAttribute (attr, max, indent) {
-            var len = idlType2Text(attr.idlType).length;
-            var pad = max - len;
+        function writeAttributeQualifiers(attr) {
             var qualifiers = "";
             if (attr.static) qualifiers += "static ";
             if (attr.stringifier) qualifiers += "stringifier ";
             if (attr.inherit) qualifiers += "inherit ";
             if (attr.readonly) qualifiers += "readonly ";
-            qualifiers += "           ";
-            qualifiers = qualifiers.slice(0, 11);
+            return qualifiers;
+        }
+
+        function writeAttribute (attr, max, indent, maxQualifiers) {
+            var len = idlType2Text(attr.idlType).length;
+            var pad = max - len;
+            var qualifiers = writeAttributeQualifiers(attr);
+            qualifiers += pads(maxQualifiers);
+            qualifiers = qualifiers.slice(0, maxQualifiers);
             return idlAttributeTmpl({
                 obj:            attr
             ,   indent:         indent
@@ -511,17 +529,17 @@ define(
         }
 
         function writeMethod (meth, max, indent) {
-            var params = meth.arguments
+            var paramObjs = meth.arguments
                             .filter(function (it) {
                                 return !typeIsWhitespace(it.type);
                             }).map(function (it) {
                                 return idlParamTmpl({
                                     obj:        it
-                                ,   optional:   it.optional ? "optional " : ""
-                                ,   variadic:   it.variadic ? "..." : ""
+                                    ,   optional:   it.optional ? "optional " : ""
+                                    ,   variadic:   it.variadic ? "..." : ""
                                 });
-                            })
-                            .join(", ");
+                            });
+            var params = paramObjs.join(", ");
             var len = idlType2Text(meth.idlType).length;
             if (meth.static) len += 7;
             var specialProps = ["getter", "setter", "deleter", "legacycaller", "serializer", "stringifier"];
@@ -534,14 +552,22 @@ define(
                 }
             }
             var pad = max - len;
-            return idlMethodTmpl({
+            var methObj = {
                 obj:        meth
             ,   indent:     indent
             ,   "static":   meth.static ? "static " : ""
             ,   special:    special
             ,   pad:        pad
             ,   children:   params
-            });
+            };
+            var ret = idlMethodTmpl(methObj);
+            var line = $(ret).text();
+            if (line.length > 80) {
+                var paramPad = line.indexOf('(') + 1;
+                methObj.children = paramObjs.join(",\n" + pads(paramPad));
+                ret = idlMethodTmpl(methObj);
+            }
+            return ret;
         }
 
         function writeConst (cons, max, indent) {
@@ -633,9 +659,18 @@ define(
                     case "dictionary":
                     case "exception":
                     case "interface":
+                        var partialIdx = "";
+                        if (defn.partial) {
+                            if (!idlPartials[defn.name]) {
+                                idlPartials[defn.name] = [];
+                            }
+                            idlPartials[defn.name].push(defn);
+                            partialIdx = "-partial-" + idlPartials[defn.name].length;
+                        }
+
                         linkDefinitions(defn.members, definitionMap, defn.name, msg);
                         name = defn.name;
-                        defn.idlId = "idl-def-" + name.toLowerCase();
+                        defn.idlId = "idl-def-" + name.toLowerCase() + partialIdx;
                         break;
 
                     case "enum":
@@ -667,6 +702,14 @@ define(
                     case "operation":
                         if (defn.name) {
                             name = defn.name;
+                            var qualifiedName = [parent + "." + name];
+                            if (!operationNames[qualifiedName]) {
+                                operationNames[qualifiedName] = [];
+                            } else {
+                                defn.overload = operationNames[qualifiedName].length;
+                                name = defn.name + '!overload-' + defn.overload;
+                            }
+                            operationNames[qualifiedName].push(defn);
                         } else if (defn.getter || defn.setter || defn.deleter ||
                                    defn.legacycaller || defn.stringifier ||
                                    defn.serializer ) {
@@ -786,7 +829,6 @@ define(
                     $(doc).find("head link").first().before($("<style/>").text(css));
                 }
 
-                var idlNames = [];
                 $idl.each(function () {
                     var parse;
                     try {

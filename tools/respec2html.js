@@ -13,6 +13,7 @@ var page = require("webpage").create()
 ,   ignoreScripts = false
 ,   errors = []
 ,   warnings = []
+,   delay = 0
 ;
 
 // report console.error on stderr
@@ -29,6 +30,10 @@ if (eOption !== -1) {
 if (args.indexOf("-w") !== -1) {
     args.splice(args.indexOf("-w"), 1);
     reportWarnings = true;
+}
+
+if (args.indexOf("--delay") !== -1) {
+    delay = args.splice(args.indexOf("--delay"), 2)[1];
 }
 
 if (args.indexOf("--exclude-script") !== -1) {
@@ -83,7 +88,8 @@ page.open(source, function (status) {
     }
     else {
         console.error("Loading " + source);
-        page.evaluateAsync(function () {
+        setTimeout(function() { page.evaluateAsync(function () {
+            $.ajaxSetup({timeout: 4000});
             function saveToPhantom () {
                 require(["core/ui", "ui/save-html"], function (ui, saver) {
                            saver.show(ui, respecConfig, document, respecEvents);
@@ -92,6 +98,7 @@ page.open(source, function (status) {
             }
             if (document.respecDone) saveToPhantom();
             else respecEvents.sub("end-all", saveToPhantom);
+}, delay*1000);
         });
         timer = setInterval(function () {
             if (timeout === 0) {
