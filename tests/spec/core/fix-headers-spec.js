@@ -9,14 +9,14 @@ describe("Core - Fix headers", function () {
         runs(function () {
             makeRSDoc({ config: basicConfig,
                         body: "<section id='turtles'><h1>ONE</h1><section><h1>TWO</h1><section><h1>THREE</h1><section><h1>FOUR</h1>" +
-                              "<section><h1>FIVE</h1><section><h1>SIX</h1></section></section></section></section></section></section>"
+                              "<section><h1>FIVE</h1><section><h1>SIX</h1><h2>SUBHEADING</h2></section></section></section></section></section></section>"
                     }, function (rsdoc) { doc = rsdoc; });
         });
         waitsFor(function () { return doc; }, MAXOUT);
         runs(function () {
             var $s = $("#turtles", doc);
             expect($s.find("h1").length).toEqual(0);
-            expect($s.find("h2").length).toEqual(1);
+            expect($s.find("h2").length).toEqual(2);    // there is an explicit h2 later
             expect($s.find("h2").text()).toMatch(/ONE/);
             expect($s.find("h2 > span").attr('resource')).toEqual('xhv:heading');
             expect($s.find("h2 > span").attr('property')).toEqual('xhv:role');
@@ -29,6 +29,7 @@ describe("Core - Fix headers", function () {
             expect($s.find("h6").length).toEqual(2);
             expect($s.find("h6").first().text()).toMatch(/FIVE/);
             expect($s.find("h6").last().text()).toMatch(/SIX/);
+            expect($s.find("h2").last().text()).toMatch(/SUBHEADING/);
             flushIframes();
         });
     });
