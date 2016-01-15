@@ -70,7 +70,7 @@ describe("W3C — Permalinks", function () {
             expect(list.length).toEqual(0);
             $c = $("#testing", doc);
             list = $(".permalink", $c) ;
-            expect(list.length).toEqual(1);
+            expect(list.length).toEqual(2);
             flushIframes();
         });
     });
@@ -87,7 +87,7 @@ describe("W3C — Permalinks", function () {
             expect(list.length).toEqual(0);
             $c = $("#testing", doc);
             list = $(".permalink", $c) ;
-            expect(list.length).toEqual(1);
+            expect(list.length).toEqual(2);
             flushIframes();
         });
     });
@@ -146,25 +146,10 @@ describe("W3C — Permalinks", function () {
         waitsFor(function () { return doc; }, MAXOUT);
         runs(function () {
             var $c = $("#testing", doc);
-            var list = $("span.permalink a span", $c) ;
+            var list = $("p.permalink a span", $c) ;
             expect(list.length).toEqual(1);
             expect($(list[0]).attr("content")).toMatch(/'/);
             expect($(list[0]).attr("content")).toMatch(/"/);
-            flushIframes();
-        });
-    });
-    it("permalinks not on edge will have non-breaking space after heading", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section class='introductory' id='sotd'>Some unique SOTD content</section><div id='testing'><h2>a heading with "+'"'+" and '</h2><p>some content</p></div>") },
-                      function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
-        runs(function () {
-            var $c = $("#testing", doc);
-            var list = $("h2", $c) ;
-            expect(list.length).toEqual(1);
-            expect(list[0].innerHTML).toMatch(/&nbsp;/);
             flushIframes();
         });
     });

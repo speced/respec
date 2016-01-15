@@ -45,16 +45,18 @@ define(
                             // if we still have resourceID
                             if (resourceID != null) {
                                 // we have an id.  add a permalink
+                                $item.addClass("permalink");
+                                $item.wrap("<div></div>") ;
                                 // right after the h* element
-                                var theNode = $("<span></span>");
+                                var theNode = $("<p></p>");
                                 theNode.attr('class', 'permalink');
                                 if (conf.doRDFa) theNode.attr('typeof', 'bookmark');
                                 var ctext = $item.text();
                                 var el = $("<a></a>");
                                 el.attr({
                                     href:         '#' + resourceID,
-                                    'aria-label': 'Permalink for ' + ctext,
-                                    title:        'Permalink for ' + ctext });
+                                    'aria-label': ctext + " permalink",
+                                    title:        ctext + " permalink" });
                                 if (conf.doRDFa) el.attr('property', 'url');
                                 var sym = $("<span></span>");
                                 if (conf.doRDFa) {
@@ -66,14 +68,7 @@ define(
                                 el.append(sym);
                                 theNode.append(el);
 
-                                // if this is not being put at
-                                // page edge, then separate it
-                                // from the heading with a
-                                // non-breaking space
-                                if (!conf.permalinkEdge) {
-                                   $item.append("&nbsp;");
-                                }
-                                $item.append(theNode);
+                                $item.parent().append(theNode);
                             }
                         }
                     });
