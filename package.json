@@ -1,6 +1,6 @@
 {
     "name": "respec",
-    "version": "3.2.96",
+    "version": "3.2.97",
     "description": "Specification Edition Support Tool.",
     "main": "index.js",
     "directories": {
