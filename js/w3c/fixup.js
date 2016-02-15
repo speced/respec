@@ -27,7 +27,7 @@ define(
                     // @@ TO BE CHANGED ONCE the NEW STYLESHEETS ARE OFFICIAL
                     // fixup = "https://www.w3.org/scripts/TR/2016/fixup.js";
                 } else if (conf.useExperimentalStyles) {
-                    fixup = "https://www.w3.org/scripts/TR/2016/fixup.js";
+                    fixup = "https://www.w3.org/2016/01/fixup.js";
                 }
                 if (fixup !== null) {
                   $("html>body").append($('<script src="' + fixup + '"></script>'));
