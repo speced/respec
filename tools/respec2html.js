@@ -46,7 +46,7 @@ if (args.indexOf("--exclude-script") !== -1) {
 // Reading other parameters
 var source = args[1]
 ,   output = args[2]
-,   timeout = isNaN(args[3]) ? 10: parseInt(args[3], 10);
+,   timeout = isNaN(args[3]) ? 20: parseInt(args[3], 10);
 
 
 if (args.length < 2 || args.length > 4) {
