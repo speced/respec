@@ -18,7 +18,7 @@ define(
                     statStyle === "LC-NOTE") statStyle = "WD";
                 if (statStyle === "FPWD-NOTE") statStyle = "WG-NOTE";
                 if (statStyle === "finding" || statStyle === "draft-finding") statStyle = "base";
-                var fixup = "null";
+                var fixup;
                 if (statStyle === "unofficial" || statStyle === "base" ||
                     statStyle === "CG-DRAFT" || statStyle === "CG-FINAL" ||
                     statStyle === "BG-DRAFT" || statStyle === "BG-FINAL") {
@@ -29,7 +29,7 @@ define(
                 } else if (conf.useExperimentalStyles) {
                     fixup = "https://www.w3.org/scripts/TR/2016/fixup.js";
                 }
-                if (fixup !== null) {
+                if (fixup) {
                   $("html>body").append($('<script src="' + fixup + '"></script>'));
                 }
                 msg.pub("end", "w3c/fixup");
