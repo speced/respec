@@ -539,8 +539,10 @@ define(
                 // experimental style info
                 var hasViewportMeta = doc.head.querySelector("meta[name=viewport]") ? true : false;
                 if (conf.useExperimentalStyles && !hasViewportMeta) {
-                    $("html>head").prepend($('<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">'));
+                    $("html>head").prepend($('<meta name="viewport" content="width=device-width, initial-scale=1, width = content-width, initial-scale = 1.0, shrink-to-fit=no">'));
                 }
+
+
 
                 msg.pub("end", "w3c/headers");
                 cb();
