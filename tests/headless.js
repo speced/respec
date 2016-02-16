@@ -45,11 +45,12 @@ function buildFailureReporter(source) {
 }
 
 function runRespec2html() {
-  // Run respec2html.js on each example file (except "embedder.html")
+  // Run respec2html.js on each example file (except "embedder.html" and "PresentationAPI.html")
   // and stops in error if any of them reports a warning or an error
   let sources = fs.readdirSync("examples")
     .filter(filename => filename.match(/\.html$/))
-    .filter(filename => filename !== "embedder.html");
+    .filter(filename => filename !== "embedder.html")
+    .filter(filename => filename !== "PresentationAPI.html");
 
   // Spawn processes and add them to process counter.
   processCounter += sources.map((source) => {
