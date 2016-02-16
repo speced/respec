@@ -44,6 +44,14 @@ define(
                 if (ref.etAl) output += " et al";
                 output += ". ";
             }
+            if(ref.publisher){
+                output += ref.publisher;
+                if(/\.$/.test(ref.publisher)){
+                    output += " ";
+                }else{
+                    output += ". ";
+                }
+            }
             if (ref.href) output += '<a href="' + ref.href + '"><cite>' + ref.title + "</cite></a>. ";
             else output += '<cite>' + ref.title + '</cite>. ';
             if (ref.date) output += ref.date + ". ";
