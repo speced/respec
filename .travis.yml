@@ -1,6 +1,6 @@
 language: node_js
 sudo: false
 node_js:
-  - 4.2.1
+  - v5.6.0
 before_script:  node tools/test-build.js
 # env: TRACE=1
