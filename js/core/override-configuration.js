@@ -1,4 +1,5 @@
-
+/*jshint strict:true, maxcomplexity:5 */
+/*globals define*/
 // Module core/override-configuration
 // A helper module that makes it possible to override settings specified in respecConfig
 // by passing them as a query string. This is useful when you just want to make a few
@@ -8,36 +9,81 @@
 // Note that fields are separated by semicolons and not ampersands.
 // TODO
 //  There could probably be a UI for this to make it even simpler.
-
+"use strict";
 define(
     [],
-    function () {
-        return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/override-configuration");
-                if (location.search) {
-                    var confs = location.search.replace(/^\?/, "").split(";");
-                    for (var i = 0, n = confs.length; i < n; i++) {
-                        var items = confs[i].split("=", 2);
-                        var k = decodeURI(items[0]), v = decodeURI(items[1]).replace(/%3D/g, "=");
-                        // we could process more types here, as needed
-                        if (v === "true") v = true;
-                        else if (v === "false") v = false;
-                        else if (v === "null") v = null;
-                        else if (/\[\]$/.test(k)) {
-                            k = k.replace(/\[\]/, "");
-                            v = JSON.parse(v);
-                        }
-                        try {
-                            conf[k] = JSON.parse(v);
-                        } catch (err) {
-                            conf[k] = v;
-                        }
-                    }
+    function() {
+      function castToType(value){
+        var result;
+        switch (value.trim()) {
+        case "true":
+        case "false":
+          result = (value === "true");
+          break;
+        case "null":
+          result = null;
+          break;
+        default:
+          result = value;
+          break;
+        }
+        return value;
+      }
+      return {
+        run: function(conf, doc, cb, msg) { //jshint ignore:line
+          msg.pub("start", "core/override-configuration");
+          var done = function(){
+            msg.pub("end", "core/override-configuration");
+            cb();
+          };
+
+          if (!location.search) {
+            return done();
+          }
+
+          location.search
+            //Remove "?" from search
+            .replace(/^\?/, "")
+            // The default separator is ";" for key/value pairs
+            .split(";")
+            // Make array of key/value pairs.
+            .map(function(item){
+              return item.split("=", 2);
+            })
+            // URI decode key and values
+            .map(function(keyValue){
+              var key = decodeURI(keyValue[0]);
+              var value = decodeURI(keyValue[1].replace(/%3D/g, "="));
+              return [key, value];
+            })
+            // See if we can cast the value to a type
+            .map(function(keyValue){
+              return [keyValue[0], castToType(keyValue[1])];
+            })
+            // filter out empty keys
+            .filter(function(keyValue){
+              return !!keyValue[0];
+            })
+            // try to JSON.parse values, or just use the string otherwise.
+            .map(
+              function (keyValue) {
+                var key = keyValue[0];
+                var value;
+                try {
+                  value = JSON.parse(keyValue[1]);
+                } catch (err) {
+                  value = keyValue[1];
                 }
-                msg.pub("end", "core/override-configuration");
-                cb();
-            }
-        };
+                return [key, value];
+              }
+            )
+            // Override the conf properties by reducing
+            .reduce(function(conf, keyValue){
+              conf[keyValue[0]] = keyValue[1];
+              return conf;
+            }, conf);
+          done();
+        }
+      };
     }
 );
