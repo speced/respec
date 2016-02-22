@@ -8,6 +8,15 @@
 define(
     ["core/utils"],
     function(utils) {
+      function attachFixupScript(doc, version){
+        var script = doc.createElement("script");
+        script.async = "async";
+        var helperScript = "https://www.w3.org/scripts/TR/{version}/fixup.js"
+          .replace("{version}", version);
+        script.src = helperScript;
+        doc.body.appendChild(script);
+      }
+
       return {
         run: function(conf, doc, cb, msg) {
           msg.pub("start", "w3c/style");
@@ -63,14 +72,12 @@ define(
                 version = conf.useExperimentalStyles.toString().trim();
               }
           }
-
+          // Attach W3C fixup script after we are done.
           if (version) {
-            var script = doc.createElement("script");
-            script.async = "async";
-            var helperScript = "https://www.w3.org/scripts/TR/{version}/fixup.js"
-              .replace("{version}", version);
-            script.src = helperScript;
-            doc.body.appendChild(script);
+            var subscribeKey = window.respecEvents.sub("end-all", function endAllHandler(){
+              attachFixupScript(doc, version);
+              window.respecEvents.unsub("end-all", subscribeKey);
+            });
           }
           var finalVersionPath = (version) ? version + "/" : "";
           finalStyleURL = styleBaseURL.replace("{version}", finalVersionPath);
