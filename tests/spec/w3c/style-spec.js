@@ -59,6 +59,8 @@ function loadWithStatus(status, expectedURL, mode) {
       }
   }
   var testedURL = expectedURL.replace("{version}", version);
+  //make tests less noisy
+  docURL += ";prevVersion=FPWD;previousMaturity=FPWD;shortName=Foo;previousPublishDate=2013-12-17";
   ifr.src = docURL;
   var incr = function(ev) {
     if (ev.data && ev.data.topic === "end-all") {
@@ -88,7 +90,9 @@ describe("W3C - Style", function() {
   // Busted in PhantomJS
   xit("should include 'fixup.js'", function() {
     var ifr = document.createElement("iframe");
-    ifr.src = "spec/core/simple.html?specStatus=unofficail;useExperimentalStyles=2016";
+    var url = "spec/core/simple.html?specStatus=unofficial;useExperimentalStyles=2016";
+    url += ";prevVersion=FPWD;previousMaturity=FPWD;shortName=Foo;previousPublishDate=2013-12-17;";
+    ifr.src = url;
     var loaded = false;
     var MAXOUT = 5000;
     var incr = function(ev) {
