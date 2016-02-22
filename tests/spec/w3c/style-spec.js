@@ -106,7 +106,6 @@ describe("W3C - Style", function() {
     runs(function() {
       var query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
       var elem = ifr.contentDocument.querySelector(query);
-      console.log("********************", elem.src)
       expect(elem.src).toEqual("https://www.w3.org/scripts/TR/2016/fixup.js");
       ifr.remove();
       loaded = false;
