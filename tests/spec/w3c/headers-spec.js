@@ -441,7 +441,7 @@ describe("W3C — Headers", function() {
   // statusOverride
   it("should allow status paragraph to be overridden", function() {
     var conf = {
-           overrideStatus: true,
+      overrideStatus: true,
       wg: "WGNAME",
       wgURI: "WGURI",
       wgPatentURI: "WGPATENT",
