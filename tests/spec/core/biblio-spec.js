@@ -2,11 +2,16 @@
 /*global makeRSDoc, flushIframes*/
 "use strict";
 describe("W3C — Bibliographic References", function() {
-  var MAXOUT = 5000;
+  flushIframes();
   var basicConfig = {
     editors: [
         {name: "Robin Berjon"}
-    ], specStatus: "WD",
+    ],
+    shortName: "Foo",
+    specStatus: "WD",
+    prevVersion: 'FPWD',
+    previousMaturity: "WD",
+    previousPublishDate: "2013-12-17",
     localBiblio: {
       "TestRef1": {
         title: "Test ref title",
@@ -28,20 +33,12 @@ describe("W3C — Bibliographic References", function() {
     }
   };
 
-  it("should display the publisher when present", function() {
-    var doc;
-    runs(function() {
-      makeRSDoc({
-          config: basicConfig,
-          body: $("<section id='sample'><p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p></section>")
-      }, function(rsdoc) {
-            doc = rsdoc;
-        });
-    });
-    waitsFor(function() {
-      return doc;
-    }, MAXOUT);
-    runs(function() {
+  it("should display the publisher when present", function(done) {
+    var ops = {
+      config: basicConfig,
+      body: $("<section id='sotd'><p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p></section>")
+    };
+    makeRSDoc(ops, function(doc) {
       // Make sure the reference is added.
       var ref = doc.querySelector("#bib-TestRef1 + dd");
       expect(ref).toBeTruthy();
@@ -57,9 +54,7 @@ describe("W3C — Bibliographic References", function() {
       ref = doc.querySelector("#bib-TestRef3 + dd");
       expect(ref).toBeTruthy();
       expect(ref.textContent).toMatch(/^Publisher Here\.\s/);
-
-      //Done!
-      flushIframes();
+      done();
     });
   });
 });

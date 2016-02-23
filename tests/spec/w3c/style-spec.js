@@ -40,135 +40,93 @@ var specStatus = [{
 },];
 
 function loadWithStatus(status, expectedURL, mode) {
-  var loaded = false;
-  var MAXOUT = 10000;
-  var ifr = document.createElement("iframe");
-  var docURL = "spec/core/simple.html?specStatus=" + status;
-  var version = "";
-  switch (mode) {
-    case "experimental":
-      docURL += ";useExperimentalStyles=true";
-      version = new Date().getFullYear() + "/";
-      break;
-    case "force-stable":
-      docURL += ";useExperimentalStyles=false";
-      break;
-    default:
-      if (mode && Number.isNaN(mode) === false) {
-        docURL += ";useExperimentalStyles=" + mode;
-        version = mode + "/";
-      }
-  }
-  var testedURL = expectedURL.replace("{version}", version);
-  //make tests less noisy
-  docURL += ";prevVersion=FPWD;previousMaturity=FPWD;shortName=Foo;previousPublishDate=2013-12-17";
-  ifr.src = docURL;
-  var incr = function(ev) {
-    if (ev.data && ev.data.topic === "end-all") {
-      loaded = true;
+  return new Promise(function(resolve){
+    var config = makeBasicConfig();
+    config.useExperimentalStyles = false;
+    config.specStatus = status;
+    var version = "";
+    switch (mode) {
+      case "experimental":
+        config.useExperimentalStyles = true;
+        version = new Date().getFullYear() + "/";
+        break;
+      default:
+        if (mode && Number.isNaN(mode) === false) {
+          config.useExperimentalStyles = mode;
+          version = mode + "/";
+        }
     }
-  };
-  runs(function() {
-    window.addEventListener("message", incr);
-    document.body.appendChild(ifr);
-  });
-  waitsFor(function() {
-    return loaded;
-  }, MAXOUT);
-  runs(function() {
-    var query = "link[href^='" + testedURL + "']";
-    var elem = ifr.contentDocument.querySelector(query);
-    expect(elem).toBeTruthy();
-    expect(elem.href).toEqual(testedURL);
-    ifr.remove();
-    loaded = false;
-    window.removeEventListener("message", incr);
+    var testedURL = expectedURL.replace("{version}", version);
+    var ops = {
+      config: config,
+      body: makeDefaultBody(),
+    };
+    makeRSDoc(ops, function(doc) {
+      var query = "link[href^='" + testedURL + "']";
+      var elem = doc.querySelector(query);
+      expect(elem).toBeTruthy();
+      expect(elem.href).toEqual(testedURL);
+      resolve();
+    });
   });
 }
 
 describe("W3C - Style", function() {
+  flushIframes();
   // Tests are busted in PhantomJS
-  if(!isPhantom()){
-    it("should include 'fixup.js'", function() {
-      var ifr = document.createElement("iframe");
-      var url = "spec/core/simple.html?specStatus=unofficial;useExperimentalStyles=2016";
-      url += ";prevVersion=FPWD;previousMaturity=FPWD;shortName=Foo;previousPublishDate=2013-12-17;";
-      ifr.src = url;
-      var loaded = false;
-      var MAXOUT = 5000;
-      var incr = function(ev) {
-        if (ev.data && ev.data.topic === "end-all") {
-          loaded = true;
-        }
-      };
-      runs(function() {
-        window.addEventListener("message", incr);
-        document.body.appendChild(ifr);
-      });
-      waitsFor(function() {
-        return loaded;
-      }, MAXOUT);
-      runs(function() {
+  if (!isPhantom()) {
+    it("should include 'fixup.js'", function(done) {
+      var ops = makeStandardOps();
+      ops.config.useExperimentalStyles = "2016";
+      var theTest = function(doc) {
         var query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
-        var elem = ifr.contentDocument.querySelector(query);
+        var elem = doc.querySelector(query);
         expect(elem.src).toEqual("https://www.w3.org/scripts/TR/2016/fixup.js");
-        ifr.remove();
-        loaded = false;
-        window.removeEventListener("message", incr);
-      });
+        done();
+      };
+      makeRSDoc(ops, theTest, "spec/core/simple.html");
     });
 
-    it("should have a meta viewport added", function() {
-      var ifr = document.createElement("iframe");
-      var url = "spec/core/simple.html?specStatus=unofficial;useExperimentalStyles=2016";
-      url += ";prevVersion=FPWD;previousMaturity=FPWD;shortName=Foo;previousPublishDate=2013-12-17";
-      ifr.src = url;
-      var loaded = false;
-      var MAXOUT = 5000;
-      var incr = function(ev) {
-        if (ev.data && ev.data.topic === "end-all") {
-          loaded = true;
-        }
-      };
-      runs(function() {
-        window.addEventListener("message", incr);
-        document.body.appendChild(ifr);
-      });
-      waitsFor(function() {
-        return loaded;
-      }, MAXOUT);
-      runs(function() {
-        var elem = ifr.contentDocument.head.querySelector("meta[name=viewport]");
+    it("should have a meta viewport added", function(done) {
+      var ops = makeStandardOps();
+      ops.config.useExperimentalStyles = "2016";
+      var theTest = function(doc) {
+        var elem = doc.head.querySelector("meta[name=viewport]");
         expect(elem).toBeTruthy();
-        ifr.remove();
-        loaded = false;
-        window.removeEventListener("message", incr);
-      });
+        done();
+      };
+      makeRSDoc(ops, theTest, "spec/core/simple.html");
     });
   }
 
-  it("should default to base when specStatus is missing", function() {
-    loadWithStatus("", "https://www.w3.org/StyleSheets/TR/base");
+  it("should default to base when specStatus is missing", function(done) {
+    loadWithStatus("", "https://www.w3.org/StyleSheets/TR/base").then(done);
   });
 
-  it("should style according to spec status", function() {
+  it("should style according to spec status", function(done) {
     // We pick random half from the list, as running the whole set is very slow
-    pickRandomsFromList(specStatus).forEach(function(test) {
-      loadWithStatus(test.status, test.expectedURL);
-    });
+    var promises = pickRandomsFromList(specStatus)
+      .map(function(test) {
+        return loadWithStatus(test.status, test.expectedURL, "2016");
+      });
+    Promise.all(promises).then(done);
   });
 
-  it("should style according to experimental styles", function() {
+  it("should style according to experimental styles", function(done) {
     // We pick random half from the list, as running the whole set is very slow
-    pickRandomsFromList(specStatus).forEach(function(test) {
-      loadWithStatus(test.status, test.expectedURL, "experimental");
-    });
+    var promises = pickRandomsFromList(specStatus)
+      .map(function(test) {
+        return loadWithStatus(test.status, test.expectedURL, "experimental");
+      });
+    Promise.all(promises).then(done);
   });
 
-  it("should not use 'experimental' URL when useExperimentalStyles is false", function() {
+  it("should not use 'experimental' URL when useExperimentalStyles is false", function(done) {
     // We pick random half from the list, as running the whole set is very slow
-    pickRandomsFromList(specStatus).forEach(function(test) {
-      loadWithStatus(test.status, test.expectedURL, "force-stable");
-    });
+    var promises = pickRandomsFromList(specStatus)
+      .map(function(test) {
+        return loadWithStatus(test.status, test.expectedURL);
+      });
+    Promise.all(promises).then(done);
   });
 });
