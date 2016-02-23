@@ -17,6 +17,32 @@ define(
         doc.body.appendChild(script);
       }
 
+      function attachMetaViewport(doc){
+        var meta = doc.createElement("meta");
+        meta.name = "viewport";
+        var contentProps = {
+            "initial-scale": "1.0",
+            "shrink-to-fit": "no",
+            "width": "device-width",
+        };
+        meta.content = utils.toKeyValuePairs(contentProps);
+        doc.head.appendChild(meta);
+      }
+
+     function selectStyleVersion(styleVersion){
+        var version = "";
+        switch (styleVersion) {
+        case true:
+          version = new Date().getFullYear().toString();
+          break;
+        default:
+          if(styleVersion && !Number.isNaN(styleVersion)){
+            version = styleVersion.toString().trim();
+          }
+        }
+        return version;
+      }
+
       return {
         run: function(conf, doc, cb, msg) {
           msg.pub("start", "w3c/style");
@@ -30,7 +56,6 @@ define(
           var styleBaseURL = "https://www.w3.org/StyleSheets/TR/{version}";
           var finalStyleURL = "";
           var styleFile = "W3C-";
-          var version = "";
 
           // Figure out which style file to use.
           switch (conf.specStatus){
@@ -63,18 +88,16 @@ define(
           }
 
           // Select between released styles and experimental style.
-          switch (conf.useExperimentalStyles) {
-            case true:
-              version = new Date().getFullYear().toString();
-              break;
-            default:
-              if(conf.useExperimentalStyles && !Number.isNaN(conf.useExperimentalStyles)){
-                version = conf.useExperimentalStyles.toString().trim();
-              }
+          var version = selectStyleVersion(conf.useExperimentalStyles || null);
+
+          // Make spec mobile friendly by attaching meta viewport
+          if (!doc.head.querySelector("meta[name=viewport]")) {
+            attachMetaViewport(doc);
           }
+
           // Attach W3C fixup script after we are done.
           if (version) {
-            var subscribeKey = window.respecEvents.sub("end-all", function endAllHandler(){
+            var subscribeKey = window.respecEvents.sub("end-all", function (){
               attachFixupScript(doc, version);
               window.respecEvents.unsub("end-all", subscribeKey);
             });
