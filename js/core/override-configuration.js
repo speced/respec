@@ -13,7 +13,7 @@
 define(
     [],
     function() {
-      function castToType(value){
+      function castToType(value) {
         var result;
         switch (value.trim()) {
         case "true":
@@ -32,7 +32,7 @@ define(
       return {
         run: function(conf, doc, cb, msg) { //jshint ignore:line
           msg.pub("start", "core/override-configuration");
-          var done = function(){
+          var done = function() {
             msg.pub("end", "core/override-configuration");
             cb();
           };
@@ -46,39 +46,33 @@ define(
             .replace(/^\?/, "")
             // The default separator is ";" for key/value pairs
             .split(";")
-            // Make array of key/value pairs.
-            .map(function(item){
+            .filter(function removeEmpties(item) {
+              return Boolean(item);
+            })
+            .map(function makeKeyValuePairs(item) {
               return item.split("=", 2);
             })
-            // URI decode key and values
-            .map(function(keyValue){
+            .map(function decodeKeyValues(keyValue) {
               var key = decodeURI(keyValue[0]);
               var value = decodeURI(keyValue[1].replace(/%3D/g, "="));
               return [key, value];
             })
-            // See if we can cast the value to a type
-            .map(function(keyValue){
+            .map(function attemptTypeCast(keyValue) {
               return [keyValue[0], castToType(keyValue[1])];
             })
-            // filter out empty keys
-            .filter(function(keyValue){
-              return !!keyValue[0];
-            })
             // try to JSON.parse values, or just use the string otherwise.
-            .map(
-              function (keyValue) {
-                var key = keyValue[0];
-                var value;
-                try {
-                  value = JSON.parse(keyValue[1]);
-                } catch (err) {
-                  value = keyValue[1];
-                }
-                return [key, value];
+            .map(function toJSONifiedValues(keyValue) {
+              var key = keyValue[0];
+              var value;
+              try {
+                value = JSON.parse(keyValue[1]);
+              } catch (err) {
+                value = keyValue[1];
               }
-            )
+              return [key, value];
+            })
             // Override the conf properties by reducing
-            .reduce(function(conf, keyValue){
+            .reduce(function reduceIntoConfig(conf, keyValue) {
               conf[keyValue[0]] = keyValue[1];
               return conf;
             }, conf);
