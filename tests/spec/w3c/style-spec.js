@@ -1,4 +1,5 @@
 /*jshint strict: true, jquery:true, jasmine:true*/
+/*globals pickRandomsFromList*/
 "use strict";
 var specStatus = [{
   status: "FPWD",
@@ -86,55 +87,87 @@ function loadWithStatus(status, expectedURL, mode) {
 }
 
 describe("W3C - Style", function() {
-  // Blocked on: https://github.com/w3c/tr-design/pull/55
-  // Busted in PhantomJS
-  xit("should include 'fixup.js'", function() {
-    var ifr = document.createElement("iframe");
-    var url = "spec/core/simple.html?specStatus=unofficial;useExperimentalStyles=2016";
-    url += ";prevVersion=FPWD;previousMaturity=FPWD;shortName=Foo;previousPublishDate=2013-12-17;";
-    ifr.src = url;
-    var loaded = false;
-    var MAXOUT = 5000;
-    var incr = function(ev) {
-      if (ev.data && ev.data.topic === "end-all") {
-        loaded = true;
-      }
-    };
-    runs(function() {
-      window.addEventListener("message", incr);
-      document.body.appendChild(ifr);
+  // Tests are busted in PhantomJS
+  if(!isPhantom()){
+    it("should include 'fixup.js'", function() {
+      var ifr = document.createElement("iframe");
+      var url = "spec/core/simple.html?specStatus=unofficial;useExperimentalStyles=2016";
+      url += ";prevVersion=FPWD;previousMaturity=FPWD;shortName=Foo;previousPublishDate=2013-12-17;";
+      ifr.src = url;
+      var loaded = false;
+      var MAXOUT = 5000;
+      var incr = function(ev) {
+        if (ev.data && ev.data.topic === "end-all") {
+          loaded = true;
+        }
+      };
+      runs(function() {
+        window.addEventListener("message", incr);
+        document.body.appendChild(ifr);
+      });
+      waitsFor(function() {
+        return loaded;
+      }, MAXOUT);
+      runs(function() {
+        var query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
+        var elem = ifr.contentDocument.querySelector(query);
+        expect(elem.src).toEqual("https://www.w3.org/scripts/TR/2016/fixup.js");
+        ifr.remove();
+        loaded = false;
+        window.removeEventListener("message", incr);
+      });
     });
-    waitsFor(function() {
-      return loaded;
-    }, MAXOUT);
-    runs(function() {
-      var query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
-      var elem = ifr.contentDocument.querySelector(query);
-      expect(elem.src).toEqual("https://www.w3.org/scripts/TR/2016/fixup.js");
-      ifr.remove();
-      loaded = false;
-      window.removeEventListener("message", incr);
+
+    it("should have a meta viewport added", function() {
+      var ifr = document.createElement("iframe");
+      var url = "spec/core/simple.html?specStatus=unofficial;useExperimentalStyles=2016";
+      url += ";prevVersion=FPWD;previousMaturity=FPWD;shortName=Foo;previousPublishDate=2013-12-17";
+      ifr.src = url;
+      var loaded = false;
+      var MAXOUT = 5000;
+      var incr = function(ev) {
+        if (ev.data && ev.data.topic === "end-all") {
+          loaded = true;
+        }
+      };
+      runs(function() {
+        window.addEventListener("message", incr);
+        document.body.appendChild(ifr);
+      });
+      waitsFor(function() {
+        return loaded;
+      }, MAXOUT);
+      runs(function() {
+        var elem = ifr.contentDocument.head.querySelector("meta[name=viewport]");
+        expect(elem).toBeTruthy();
+        ifr.remove();
+        loaded = false;
+        window.removeEventListener("message", incr);
+      });
     });
-  });
+  }
 
   it("should default to base when specStatus is missing", function() {
     loadWithStatus("", "https://www.w3.org/StyleSheets/TR/base");
   });
 
   it("should style according to spec status", function() {
-    specStatus.forEach(function(test) {
+    // We pick random half from the list, as running the whole set is very slow
+    pickRandomsFromList(specStatus).forEach(function(test) {
       loadWithStatus(test.status, test.expectedURL);
     });
   });
 
   it("should style according to experimental styles", function() {
-    specStatus.forEach(function(test) {
+    // We pick random half from the list, as running the whole set is very slow
+    pickRandomsFromList(specStatus).forEach(function(test) {
       loadWithStatus(test.status, test.expectedURL, "experimental");
     });
   });
 
   it("should not use 'experimental' URL when useExperimentalStyles is false", function() {
-    specStatus.forEach(function(test) {
+    // We pick random half from the list, as running the whole set is very slow
+    pickRandomsFromList(specStatus).forEach(function(test) {
       loadWithStatus(test.status, test.expectedURL, "force-stable");
     });
   });
