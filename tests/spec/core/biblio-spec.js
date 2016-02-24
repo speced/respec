@@ -1,9 +1,7 @@
-/*jshint strict: true, jasmine:true, jquery:true*/
-/*global makeRSDoc, flushIframes*/
-"use strict";
 describe("W3C — Bibliographic References", function() {
+  "use strict";
   flushIframes();
-  var basicConfig = {
+  var customConfig = {
     editors: [
         {name: "Robin Berjon"}
     ],
@@ -35,7 +33,7 @@ describe("W3C — Bibliographic References", function() {
 
   it("should display the publisher when present", function(done) {
     var ops = {
-      config: basicConfig,
+      config: customConfig,
       body: $("<section id='sotd'><p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p></section>")
     };
     makeRSDoc(ops, function(doc) {

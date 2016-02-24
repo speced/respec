@@ -1,20 +1,19 @@
 describe("Core - Markdown", function () {
-    var MAXOUT = 5000
+
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
         ,   format: "markdown"
         };
     it("should process standard markdown content", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: basicConfig,
-                        body: '\nFoo\n===\n'
-                    }, function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
 
-        runs(function () {
+
+            makeRSDoc({ config: makeBasicConfig(),
+                        body: '\nFoo\n===\n'
+                    }, function (doc) {  });
+
+
+
             $(".removeOnSave", doc).remove();
             var $foo = $('#foo', doc);
             expect($foo.length).toEqual(1);
@@ -23,15 +22,14 @@ describe("Core - Markdown", function () {
     });
 
     it("should process markdown inside of sections", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: basicConfig,
-                        body: '<section>\nFoo\n===\n</section>'
-                    }, function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
 
-        runs(function () {
+
+            makeRSDoc({ config: makeBasicConfig(),
+                        body: '<section>\nFoo\n===\n</section>'
+                    }, function (doc) {  });
+
+
+
             var $foo = $('#foo', doc);
             expect($foo.length).toEqual(1);
             expect($foo.text()).toMatch(/1\. Foo/);
@@ -39,15 +37,14 @@ describe("Core - Markdown", function () {
     });
 
     it("should process markdown inside of notes, issues and reqs.", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: basicConfig,
-                        body: '<p class=note>_foo_</p><div class=issue>_foo_</div><ul><li class=req>\n### _foo_###\n</li></ul>'
-                    }, function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
 
-        runs(function () {
+
+            makeRSDoc({ config: makeBasicConfig(),
+                        body: '<p class=note>_foo_</p><div class=issue>_foo_</div><ul><li class=req>\n### _foo_###\n</li></ul>'
+                    }, function (doc) {  });
+
+
+
             expect($('.note em', doc).length).toEqual(1);
             expect($('.issue em', doc).length).toEqual(1);
             expect($('.req em', doc).length).toEqual(1);
@@ -56,29 +53,27 @@ describe("Core - Markdown", function () {
     });
 
     it("should remove left padding before processing markdown content", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: basicConfig,
-                        body: '\n    Foo\n    ===\n'
-                    }, function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
 
-        runs(function () {
+
+            makeRSDoc({ config: makeBasicConfig(),
+                        body: '\n    Foo\n    ===\n'
+                    }, function (doc) {  });
+
+
+
             expect($('code', doc).length).toEqual(0);
         });
     });
 
     it("should structure content in nested sections with appropriate titles", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: basicConfig,
-                        body: '\nFoo\n===\n\nBar\n---\n\nBaz\n---\n\n### Foobar ###\n\n#### Foobaz ####\n\nZing\n---\n\n'
-                    }, function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
 
-        runs(function () {
+
+            makeRSDoc({ config: makeBasicConfig(),
+                        body: '\nFoo\n===\n\nBar\n---\n\nBaz\n---\n\n### Foobar ###\n\n#### Foobaz ####\n\nZing\n---\n\n'
+                    }, function (doc) {  });
+
+
+
             var $foo = $('#foo', doc);
             expect($foo.prop("tagName")).toEqual('SECTION');
             expect($foo.find('> h2').length).toEqual(1);
@@ -107,44 +102,41 @@ describe("Core - Markdown", function () {
     });
 
     it("should gracefully handle jumps in nested headers", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: basicConfig,
-                        body: '\nFoo\n===\n\nBar\n---\n\nBaz\n===\n\n### Foobar ###\n\n'
-                    }, function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
 
-        runs(function () {
+
+            makeRSDoc({ config: makeBasicConfig(),
+                        body: '\nFoo\n===\n\nBar\n---\n\nBaz\n===\n\n### Foobar ###\n\n'
+                    }, function (doc) {  });
+
+
+
             expect($('#baz > #foobar', doc).length).toEqual(1);
         });
     });
 
     it("should nest sections according to their first header, if present", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: basicConfig,
-                        body: '\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n===\n</section>\n'
-                    }, function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
 
-        runs(function () {
+
+            makeRSDoc({ config: makeBasicConfig(),
+                        body: '\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n===\n</section>\n'
+                    }, function (doc) {  });
+
+
+
             var $bar = $('#bar', doc);
             expect($bar.text()).toMatch(/2. Bar/);
         });
     });
 
     it("should nest sections according to their headers", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: basicConfig,
-                        body: '\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n'
-                    }, function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
 
-        runs(function () {
+
+            makeRSDoc({ config: makeBasicConfig(),
+                        body: '\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n'
+                    }, function (doc) {  });
+
+
+
           var $bar = $('#bar', doc);
           expect($bar.text()).toMatch(/1.1 Bar/);
           var $foo = $('#foo', doc);
@@ -153,15 +145,14 @@ describe("Core - Markdown", function () {
     });
 
     it("shout not nest content following a section inside of said section", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: basicConfig,
-                        body: '\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n\nBaz\n===\n\nsome text\n\n<'
-                    }, function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
 
-        runs(function () {
+
+            makeRSDoc({ config: makeBasicConfig(),
+                        body: '\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n\nBaz\n===\n\nsome text\n\n<'
+                    }, function (doc) {  });
+
+
+
           var $baz = $('#baz', doc);
           expect($baz.text()).toMatch(/2. Baz/);
           var $bar = $('#bar', doc);
@@ -170,15 +161,14 @@ describe("Core - Markdown", function () {
     });
 
     it("should not nest sections with a top level header", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: basicConfig,
-                        body: '\n\nFoo\n---\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n'
-                    }, function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
 
-        runs(function () {
+
+            makeRSDoc({ config: makeBasicConfig(),
+                        body: '\n\nFoo\n---\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n'
+                    }, function (doc) {  });
+
+
+
             var $bar = $('#bar', doc);
             expect($bar.text()).toMatch(/2. Bar/);
             var $body = $(doc.body, doc);
@@ -187,15 +177,14 @@ describe("Core - Markdown", function () {
     });
 
     it("should not nest sections with no headers at all", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: basicConfig,
-                        body: '\n\nFoo\n===\n\nsome text\n\n<section id=bar>no header</section>\n'
-                    }, function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
 
-        runs(function () {
+
+            makeRSDoc({ config: makeBasicConfig(),
+                        body: '\n\nFoo\n===\n\nsome text\n\n<section id=bar>no header</section>\n'
+                    }, function (doc) {  });
+
+
+
           var $body = $(doc.body, doc);
           expect($body.find('> #bar').length).toEqual(1);
         });

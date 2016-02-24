@@ -31,22 +31,25 @@ function makeRSDoc(opts, cb, src) {
     var loader = destDoc.createElement("script");
     var loadAttr = (isPhantom()) ?
       {src: "/builds/respec-w3c-common.js"} :
-      {src: path + "require.js", "data-main": path + (opts.profile || "profile-w3c-common")};
+      {src: "/js/require.js", "data-main": path + (opts.profile || "profile-w3c-common")};
     $(loader)
         .attr(loadAttr)
         .addClass("remove");
     head.appendChild(loader);
+    var handleAndVerify = function(doc){
+      return function handler(ev){
+        if (ev.data.topic === "end-all" && doc === ev.source.document) {
+          window.removeEventListener("message", handler);
+          cb(doc);
+        }
+      }
+    }
+    // intercept that in the iframe we have finished processing
+    window.addEventListener("message", handleAndVerify(destDoc));
   });
   // trigger load
   $ifr.appendTo($("body"));
   iframes.push($ifr);
-
-  // intercept that in the iframe we have finished processing
-  window.addEventListener("message", function(ev) {
-    if (ev.data && ev.data.topic == "end-all") {
-      cb($ifr[0].contentDocument);
-    }
-  });
 }
 
 function flushIframes() {
@@ -64,10 +67,10 @@ function pickRandomsFromList(list, howMany) {
   if (howMany > list.length) {
     // Return a new list, but randomized.
     return list
-        .slice()
-        .sort(function randomSort() {
-          return Math.round(Math.random() * (1 - (-1)) + -1);
-        });
+      .slice()
+      .sort(function randomSort() {
+        return Math.round(Math.random() * (1 - (-1)) + -1);
+      });
   }
   var collectedValues = [];
   // collect a unique set based on howMany we need.
@@ -91,7 +94,7 @@ function isPhantom() {
 function makeBasicConfig(){
   return {
     editors: [{
-      name: "Robin Berjon"
+      name: "Person Name"
     }],
     specStatus: "ED",
     edDraftURI: "http://foo.com",
@@ -100,7 +103,7 @@ function makeBasicConfig(){
 }
 
 function makeDefaultBody(){
-  return $("<section id='sotd'><p>foo</p></section>");
+  return "<section id='sotd'><p>foo</p></section>";
 }
 
 function makeStandardOps(){

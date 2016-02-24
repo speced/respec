@@ -1,29 +1,33 @@
 {
-    "name": "respec",
-    "version": "3.2.97",
-    "description": "Specification Edition Support Tool.",
-    "main": "index.js",
-    "directories": {
-        "doc": "docs",
-        "example": "examples",
-        "test": "tests"
-    },
-    "scripts": {
-        "test": "node ./tests/headless.js"
-    },
-    "bin":  {
-        "respec2html":  "./tools/respec2html.js"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/w3c/respec.git"
-    },
-    "author": "Robin Berjon",
-    "devDependencies": {
-        "async": "^1.5.0",
-        "express": "*",
-        "prompt": "^0.2.14",
-        "requirejs": "^2.1.22",
-        "phantomjs-prebuilt": "^2.1.4"
-    }
+  "name": "respec",
+  "version": "3.2.97",
+  "description": "Specification Edition Support Tool.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "node ./tests/headless.js"
+  },
+  "bin": {
+    "respec2html": "./tools/respec2html.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/w3c/respec.git"
+  },
+  "author": "Robin Berjon",
+  "devDependencies": {
+    "async": "^1.5.0",
+    "colors": "^1.1.2",
+    "express": "*",
+    "jasmine-reporters": "^2.1.1",
+    "marcosc-async": "^1.0.2",
+    "moment": "^2.11.2",
+    "phantomjs-prebuilt": "^2.1.4",
+    "prompt": "^0.2.14",
+    "requirejs": "^2.1.22"
+  }
 }

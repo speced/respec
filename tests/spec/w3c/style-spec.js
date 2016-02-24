@@ -61,20 +61,21 @@ function loadWithStatus(status, expectedURL, mode) {
       config: config,
       body: makeDefaultBody(),
     };
+    console.log(status, testedURL);
     makeRSDoc(ops, function(doc) {
       var query = "link[href^='" + testedURL + "']";
       var elem = doc.querySelector(query);
       expect(elem).toBeTruthy();
       expect(elem.href).toEqual(testedURL);
-      resolve();
+      resolve(doc);
     });
   });
 }
 
 describe("W3C - Style", function() {
-  flushIframes();
+  //flushIframes();
   // Tests are busted in PhantomJS
-  if (!isPhantom()) {
+  //if (!isPhantom()) {
     it("should include 'fixup.js'", function(done) {
       var ops = makeStandardOps();
       ops.config.useExperimentalStyles = "2016";
@@ -97,7 +98,7 @@ describe("W3C - Style", function() {
       };
       makeRSDoc(ops, theTest, "spec/core/simple.html");
     });
-  }
+  //}
 
   it("should default to base when specStatus is missing", function(done) {
     loadWithStatus("", "https://www.w3.org/StyleSheets/TR/base").then(done);
@@ -105,7 +106,8 @@ describe("W3C - Style", function() {
 
   it("should style according to spec status", function(done) {
     // We pick random half from the list, as running the whole set is very slow
-    var promises = pickRandomsFromList(specStatus)
+
+    var promises = pickRandomsFromList(specStatus, 3)
       .map(function(test) {
         return loadWithStatus(test.status, test.expectedURL, "2016");
       });

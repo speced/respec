@@ -1,5 +1,5 @@
 describe("Core - WebIDL", function () {
-    var MAXOUT = 5000
+
     ,   $widl = $("<iframe width='800' height='200' src='spec/core/webidl.html'></iframe>")
     ,   loaded = false
     ,   $target
@@ -8,7 +8,7 @@ describe("Core - WebIDL", function () {
     ;
 
     beforeEach(function () {
-        runs(function () {
+
             if (!loaded) {
                 var handler = function (ev) {
                     if (ev.data.topic !== "end-all") return;
@@ -24,7 +24,7 @@ describe("Core - WebIDL", function () {
     });
 
     it("should handle interfaces", function () {
-        runs(function () {
+
             $target = $("#if-basic", doc);
             text = "interface SuperStar {\n};";
             expect($target.text()).toEqual(text);
@@ -225,7 +225,7 @@ describe("Core - WebIDL", function () {
       expect($iterable.find(".idlMaplikeKeyType").text()).toEqual("DOMString");
       expect($iterable.find(".idlMaplikeValueType").text()).toEqual("SuperStar");
     });
-    
+
     it("should handle readonly maplike", function() {
       $target = $("#if-readonly-maplike", doc);
       text = "interface SuperStar {\n" +

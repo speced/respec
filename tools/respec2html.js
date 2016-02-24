@@ -1,52 +1,51 @@
-#!/usr/bin/env phantomjs --ssl-protocol=any 
+#!/usr/bin/env phantomjs --ssl-protocol=any
 /*global phantom, respecEvents, respecConfig*/
 
 // respec2html is a command line utility that converts a ReSpec source file to an HTML file.
 // Depends on PhantomJS <http://phantomjs.org>.
 
-var page = require("webpage").create()
-,   args = require("system").args.slice()
-,   fs = require("fs")
-,   timer
-,   reportErrors = false
-,   reportWarnings = false
-,   ignoreScripts = false
-,   errors = []
-,   warnings = []
-,   delay = 0
-;
+var page = require("webpage").create();
+var args = require("system").args.slice();
+var fs = require("fs");
+var timer;
+var reportErrors = false;
+var reportWarnings = false;
+var ignoreScripts = false;
+var errors = [];
+var warnings = [];
+var delay = 0;
 
 // report console.error on stderr
 console.error = function () {
-    require("system").stderr.write(Array.prototype.join.call(arguments, ' ') + '\n');
+  require("system").stderr.write(Array.prototype.join.call(arguments, ' ') + '\n');
 };
 
 var eOption = args.indexOf("-e");
 if (eOption !== -1) {
-    args.splice(args.indexOf("-e"), 1);
-    reportErrors = true;
+  args.splice(args.indexOf("-e"), 1);
+  reportErrors = true;
 }
 
 if (args.indexOf("-w") !== -1) {
-    args.splice(args.indexOf("-w"), 1);
-    reportWarnings = true;
+  args.splice(args.indexOf("-w"), 1);
+  reportWarnings = true;
 }
 
 if (args.indexOf("--delay") !== -1) {
-    delay = args.splice(args.indexOf("--delay"), 2)[1];
+  delay = args.splice(args.indexOf("--delay"), 2)[1];
 }
 
 if (args.indexOf("--exclude-script") !== -1) {
-    var idx = args.indexOf("--exclude-script");
-    var values = args.splice(idx, 2);
-    ignoreScripts = values[1];
+  var idx = args.indexOf("--exclude-script");
+  var values = args.splice(idx, 2);
+  ignoreScripts = values[1];
 }
 
 
 // Reading other parameters
-var source = args[1]
-,   output = args[2]
-,   timeout = isNaN(args[3]) ? 20: parseInt(args[3], 10);
+var source = args[1];
+var output = args[2];
+var timeout = isNaN(args[3]) ? 20: parseInt(args[3], 10);
 
 
 if (args.length < 2 || args.length > 4) {
@@ -60,7 +59,7 @@ if (args.length < 2 || args.length > 4) {
                 "                           defaults to stdout\n" +
                 "   [timeout]               An optional timeout in seconds, default is 10\n";
     console.error(usage);
-    phantom.exit(1);
+    phantom.exit(2);
 }
 
 // Dealing with ReSpec source being loaded with scheme-relative link

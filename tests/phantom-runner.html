@@ -9,11 +9,27 @@
 
     <script src="lib/jasmine-2.4.1/jasmine.js"></script>
     <script src="lib/jasmine-2.4.1/jasmine-html.js"></script>
+    <script src="lib/terminal_reporter.js"></script>
     <script src="lib/jasmine-2.4.1/boot.js"></script>
-
     <script src='../js/jquery.js'></script>
     <script src='../js/require.js'></script>
     <script src='../js/Promise.min.js'></script>
+
+    <script>
+    (function(){
+      jasmine.DEFAULT_TIMEOUT_INTERVAL = 1220000;
+      var ops = {
+        verbosity: 3,
+        color: true,
+        showStack: true,
+      };
+      var termReporter = new jasmineReporters.TerminalReporter();
+      jasmine.getEnv().addReporter(termReporter);
+    }())
+    </script>
+
+    <!-- Test utils -->
+    <script src="spec/SpecHelper.js"></script>
 
     <!-- SPECS -->
     <script src="spec/SpecHelper.js"></script>
@@ -22,7 +38,21 @@
     <script src="spec/core/best-practices-spec.js"></script>
     <script src="spec/core/include-config-spec.js"></script>
     <script src="spec/core/data-include-spec.js"></script>
-    <script src="spec/w3c/style-spec.js"></script>
+    <script src="spec/core/style-spec.js"></script>
+    <script src="spec/core/dfn-spec.js"></script>
+    <script src="spec/core/examples-spec.js"></script>
+    <script src="spec/core/figures-spec.js"></script>
+    <script src="spec/w3c/abstract-spec.js"></script>
+    <script src="spec/w3c/conformance-spec.js"></script>
+    <script src="spec/core/section-refs-spec.js"></script>
+    <script src="spec/core/highlight-spec.js"></script>
+    <script src="spec/core/id-headers-spec.js"></script>
+    <script src="spec/core/informative-spec.js"></script>
+    <script src="spec/core/fix-headers-spec.js"></script>
+    <script src="spec/w3c/local-aliases-spec.js"></script>
+    <script src="spec/core/inlines-spec.js"></script>
+    <script src="spec/core/remove-respec-spec.js"></script>
+    <script src="spec/core/utils-spec.js"></script>
     <!--
 
     <script src="spec/core/dfn-spec.js"></script>
@@ -52,22 +82,6 @@
     <script src="spec/w3c/permalinks-spec.js"></script>
     <script src="spec/w3c/rdfa-spec.js"></script>
     -->
-    <!-- SOURCE -->
-    <!-- none currently -->
-
-    <script type="text/javascript">
-      // var console_reporter = new jasmine.ConsoleReporter();
-      // jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
-      // jasmine.getEnv().addReporter(console_reporter);
-
-      // jasmine.getEnv().updateInterval = 1000;
-
-      // var currentWindowOnload = window.onload;
-      // window.onload = function() {
-      //     if (currentWindowOnload) currentWindowOnload();
-      //     jasmine.getEnv().execute();
-      // };
-    </script>
   </head>
   <body>
   </body>

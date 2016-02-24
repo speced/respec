@@ -1,14 +1,6 @@
-"use strict";
 describe("Core — Best Practices", function() {
+  "use strict";
   flushIframes();
-  var basicConfig = {
-    editors: [{
-      name: "Robin Berjon"
-    }],
-    specStatus: "ED",
-    edDraftURI: "http://foo.com",
-    shortName: "Foo",
-  };
   it("should process examples", function(done) {
     var bodyText = "<section><span class='practicelab'>BP1</span>";
     bodyText += "<span class='practicelab'>BP2</span>";
@@ -16,7 +8,7 @@ describe("Core — Best Practices", function() {
     bodyText += "</section>";
     bodyText += "<section id='sotd'><p>foo</p></section>";
     var ops = {
-      config: basicConfig,
+      config: makeBasicConfig(),
       body: $(bodyText),
     };
     makeRSDoc(ops, function(doc) {

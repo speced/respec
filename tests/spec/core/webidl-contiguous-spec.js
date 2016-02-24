@@ -1,15 +1,13 @@
 describe("Core - Contiguous WebIDL", function () {
-    var MAXOUT = 5000
-    ,   $widl = $("<iframe width='800' height='200' style='display: none' src='spec/core/webidl-contiguous.html'></iframe>")
-    ,   loaded = false
-    ,   $target
-    ,   $section
-    ,   text
-    ,   doc
-    ;
+    var $widl = $("<iframe width='800' height='200' style='display: none' src='spec/core/webidl-contiguous.html'></iframe>")
+    var loaded = false;
+    var $target;
+    var $section;
+    var text;
+
 
     beforeEach(function () {
-        runs(function () {
+
             if (!loaded) {
                 var handler = function (ev) {
                     if (ev.data.topic !== "end-all") return;
@@ -25,7 +23,7 @@ describe("Core - Contiguous WebIDL", function () {
     });
 
     it("should handle interfaces", function () {
-        runs(function () {
+
             $target = $("#if-basic", doc);
             text = "interface SuperStar {\n};";
             expect($target.text()).toEqual(text);
@@ -37,13 +35,13 @@ describe("Core - Contiguous WebIDL", function () {
             expect($target.text()).toEqual(text);
             expect($target.find(".extAttr").text()).toEqual("Something");
             expect($target.find(".idlCtor").text()).toEqual("Constructor()");
-            
+
             $target = $("#if-identifier-list", doc);
             text = "[Global=Window,\n Exposed=(Window,Worker)]\ninterface SuperStar {\n};";
             expect($target.text()).toEqual(text);
             expect($target.find(".extAttrRhs").first().text()).toEqual("Window");
             expect($target.find(".extAttrRhs").last().text()).toEqual("(Window,Worker)");
-            
+
             $target = $("#if-inheritance", doc);
             text = "interface SuperStar : HyperStar {\n};";
             expect($target.text()).toEqual(text);

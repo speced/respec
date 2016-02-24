@@ -1,5 +1,3 @@
-/*jshint jquery: true, jasmine: true*/
-/*globals expect, it, $, runs, waitsFor, describe*/
 (function() { // prevent this loadWithConfig being trashed by other files
 "use strict";
 function loadWithConfig(conf, check) {
@@ -9,7 +7,6 @@ function loadWithConfig(conf, check) {
   }
   var $ifr = $("<iframe width='800' height='200' style='display: none'></iframe>");
   var loaded = false;
-  var MAXOUT = 5000;
   var incr = function(ev) {
     if (ev.data && ev.data.topic == "end-all") loaded = true;
   };
@@ -19,7 +16,6 @@ function loadWithConfig(conf, check) {
     window.addEventListener("message", incr, false);
     $ifr.appendTo($("body"));
   });
-  waitsFor(function() { return loaded; }, MAXOUT);
   runs(function() {
     check($ifr);
     $ifr.remove();
@@ -38,7 +34,7 @@ function isPhantom() {
 
 describe("W3C — Headers", function() {
   // specStatus
-  it("should take specStatus into account", function() {
+  it("should take specStatus into account", function(done) {
     loadWithConfig({specStatus: "ED"}, function($ifr) {
       expect($(".head h2", $ifr[0].contentDocument).text())
         .toMatch(/W3C Editor's Draft/);
@@ -49,7 +45,7 @@ describe("W3C — Headers", function() {
   });
 
   // shortName
-  it("should take shortName into account", function() {
+  it("should take shortName into account", function(done) {
     loadWithConfig({specStatus: "REC", shortName: "xxx"}, function($ifr) {
       expect($("dt:contains('This version:')", $ifr[0].contentDocument).next("dd").text()).toMatch(/\/REC-xxx-/);
       expect($("dt:contains('Latest published version:')", $ifr[0].contentDocument).next("dd").text()).toMatch(/\/TR\/xxx\//);
@@ -57,7 +53,7 @@ describe("W3C — Headers", function() {
   });
 
   // editors
-  xit("should take editors into account", function() {
+  it("should take editors into account", function(done) {
     loadWithConfig({specStatus: "REC", doRDFa: false, "editors": [{
       name: "NAME",
       url: "http://URI",
@@ -88,7 +84,7 @@ describe("W3C — Headers", function() {
     });
   });
 
-  it("should not add RDFa stuff to editors extras when doRDFa is false", function() {
+  it("should not add RDFa stuff to editors extras when doRDFa is false", function(done) {
     var config = {
       specStatus: "REC",
       doRDFa: false,
@@ -113,7 +109,7 @@ describe("W3C — Headers", function() {
     });
   });
 
-  it("should take editors extras into account", function() {
+  it("should take editors extras into account", function(done) {
     var config = {
       specStatus: "REC",
       doRDFa: true,
@@ -169,7 +165,7 @@ describe("W3C — Headers", function() {
   });
 
   // authors
-  xit("should take authors into account", function() {
+  it("should take authors into account", function(done) {
     loadWithConfig({specStatus: "REC", doRDFa: false, "authors": [{name: "NAME1"}]}, function($ifr) {
       expect($("dt:contains('Authors:')", $ifr[0].contentDocument).length).toEqual(0);
       expect($("dt:contains('Author:')", $ifr[0].contentDocument).length).toEqual(1);
@@ -186,7 +182,7 @@ describe("W3C — Headers", function() {
   });
 
   // subtitle
-  it("should take subtitle into account", function() {
+  it("should take subtitle into account", function(done) {
     loadWithConfig({specStatus: "REC"}, function($ifr) {
       expect($("#subtitle", $ifr[0].contentDocument).length).toEqual(0);
     });
@@ -197,14 +193,14 @@ describe("W3C — Headers", function() {
   });
 
   // publishDate
-  it("should take publishDate into account", function() {
+  it("should take publishDate into account", function(done) {
     loadWithConfig({publishDate: "1977-03-15"}, function($ifr) {
       expect($("h2:contains('15 March 1977')", $ifr[0].contentDocument).length).toEqual(1);
     });
   });
 
   // previousPublishDate & previousMaturity
-  it("should take previousPublishDate and previousMaturity into account", function() {
+  it("should take previousPublishDate and previousMaturity into account", function(done) {
     loadWithConfig({specStatus: "REC", publishDate: "2017-03-15",
                          previousPublishDate: "1977-03-15", previousMaturity: "CR"}, function($ifr) {
                            expect($("dt:contains('Previous version:')", $ifr[0].contentDocument).next("dd").text())
@@ -213,14 +209,14 @@ describe("W3C — Headers", function() {
   });
 
   // errata
-  it("should take errata into account", function() {
+  it("should take errata into account", function(done) {
     loadWithConfig({specStatus: "REC", errata: "ERR"}, function($ifr) {
       expect($(".head a:contains('errata')", $ifr[0].contentDocument).attr("href")).toEqual("ERR");
     });
   });
 
   // license "w3c-software-doc"
-  it("should allow the inclusion of the W3C Software and Document Notice and License (w3c-software-doc)", function() {
+  it("should allow the inclusion of the W3C Software and Document Notice and License (w3c-software-doc)", function(done) {
     loadWithConfig({specStatus: "FPWD", license: "w3c-software-doc"}, function($ifr) {
       var document = $ifr[0].contentDocument;
       var licenses = document.querySelectorAll("#respecHeader a[rel=license]");
@@ -231,35 +227,35 @@ describe("W3C — Headers", function() {
   });
 
   // alternateFormats
-  xit("should take alternateFormats into account", function() {
+  it("should take alternateFormats into account", function(done) {
     loadWithConfig({specStatus: "FPWD", "alternateFormats": [{uri: "URI", label: "LABEL"}]}, function($ifr) {
       expect($(".head a:contains('LABEL')", $ifr[0].contentDocument).attr("href")).toEqual("URI");
     });
   });
 
   // testSuiteURI
-  it("should take testSuiteURI into account", function() {
+  it("should take testSuiteURI into account", function(done) {
     loadWithConfig({specStatus: "REC", testSuiteURI: "URI"}, function($ifr) {
       expect($("dt:contains('Test suite:')", $ifr[0].contentDocument).next("dd").text()).toEqual("URI");
     });
   });
 
   // implementationReportURI
-  it("should take implementationReportURI into account", function() {
+  it("should take implementationReportURI into account", function(done) {
     loadWithConfig({specStatus: "REC", implementationReportURI: "URI"}, function($ifr) {
       expect($("dt:contains('Implementation report:')", $ifr[0].contentDocument).next("dd").text()).toEqual("URI");
     });
   });
 
   // edDraftURI
-  it("should take edDraftURI into account", function() {
+  it("should take edDraftURI into account", function(done) {
     loadWithConfig({specStatus: "WD", edDraftURI: "URI"}, function($ifr) {
       expect($("dt:contains('Latest editor\\'s draft:')", $ifr[0].contentDocument).next("dd").text()).toEqual("URI");
     });
   });
 
   // prevED
-  it("should take prevED into account", function() {
+  it("should take prevED into account", function(done) {
     loadWithConfig({specStatus: "ED", prevED: "URI"}, function($ifr) {
       var query = "dt:contains('Previous editor\\'s draft:')";
       expect($(query,$ifr[0].contentDocument).next("dd").text()).toEqual("URI");
@@ -267,7 +263,7 @@ describe("W3C — Headers", function() {
   });
 
   // additionalCopyrightHolders
-  xit("should take additionalCopyrightHolders into account", function() {
+  it("should take additionalCopyrightHolders into account", function(done) {
     loadWithConfig({specStatus: "REC", additionalCopyrightHolders: "XXX"}, function($ifr) {
       expect($(".head .copyright", $ifr[0].contentDocument).text()).toMatch(/XXX\s+&\s+W3C/);
     });
@@ -280,7 +276,7 @@ describe("W3C — Headers", function() {
   });
 
   // overrideCopyright
-  xit("should take overrideCopyright into account", function() {
+  it("should take overrideCopyright into account", function(done) {
     loadWithConfig({overrideCopyright: "<p class='copyright2'>XXX</p>"}, function($ifr) {
       expect($(".head .copyright", $ifr[0].contentDocument).length).toEqual(0);
       expect($(".head .copyright2", $ifr[0].contentDocument).length).toEqual(1);
@@ -289,7 +285,7 @@ describe("W3C — Headers", function() {
   });
 
   // copyrightStart
-  it("should take copyrightStart into account", function() {
+  it("should take copyrightStart into account", function(done) {
     loadWithConfig({publishDate: "2012-03-15", copyrightStart: "1977"}, function($ifr) {
       expect($(".head .copyright", $ifr[0].contentDocument).text()).toMatch(/1977-2012/);
     });
@@ -299,7 +295,7 @@ describe("W3C — Headers", function() {
   });
 
   // prevRecShortname & prevRecURI
-  it("should take prevRecShortname and prevRecURI into account", function() {
+  it("should take prevRecShortname and prevRecURI into account", function(done) {
     loadWithConfig({prevRecURI: "URI"}, function($ifr) {
       expect($("dt:contains('Latest Recommendation:')", $ifr[0].contentDocument).next("dd").text()).toEqual("URI");
     });
@@ -310,7 +306,7 @@ describe("W3C — Headers", function() {
   });
 
   // wg, wgURI, wgPatentURI, wgPublicList
-  xit("should take wg configurations into account", function() {
+  it("should take wg configurations into account", function(done) {
     loadWithConfig({wg: "WGNAME", wgURI: "WGURI", wgPatentURI: "WGPATENT", wgPublicList: "WGLIST", subjectPrefix: "[The Prefix]"}, function($ifr) {
       var $sotd = $("#sotd", $ifr[0].contentDocument);
       expect($sotd.find("p:contains('CUSTOM PARAGRAPH')").length).toEqual(1);
@@ -336,7 +332,7 @@ describe("W3C — Headers", function() {
   });
 
   // perEnd
-  it("should correctly flag a PER", function() {
+  it("should correctly flag a PER", function(done) {
     loadWithConfig({previousMaturity: "REC", previousPublishDate: "2014-01-01", prevRecURI: "http://www.example.com/rec.html", implementationReportURI: "http://www.example.com/report.html", perEnd: "2014-12-01", specStatus: "PER", wg: "WGNAME", wgURI: "WGURI", wgPublicList: "WGLIST", subjectPrefix: "[The Prefix]"}, function($ifr) {
       var $sotd = $("#sotd", $ifr[0].contentDocument);
       var $f = $($sotd.find("p:contains('Proposed Edited Recommendation')")) ;
@@ -347,7 +343,7 @@ describe("W3C — Headers", function() {
   });
 
   // sotdAfterWGinfo
-  xit("should relocate custom sotd", function() {
+  it("should relocate custom sotd", function(done) {
     loadWithConfig({sotdAfterWGinfo: true, wg: "WGNAME", wgURI: "WGURI", wgPublicList: "WGLIST", subjectPrefix: "[The Prefix]"}, function($ifr) {
       var $sotd = $("#sotd", $ifr[0].contentDocument);
       var $f = $($sotd.find("p:contains('CUSTOM PARAGRAPH')")) ;
@@ -360,21 +356,21 @@ describe("W3C — Headers", function() {
   });
 
   // charterDisclosureURI
-  it("should take charterDisclosureURI into account", function() {
+  it("should take charterDisclosureURI into account", function(done) {
     loadWithConfig({specStatus: "IG-NOTE", charterDisclosureURI: "URI"}, function($ifr) {
       expect($("#sotd a:contains('charter')", $ifr[0].contentDocument).attr("href")).toEqual("URI");
     });
   });
 
   // addPatentNote
-  xit("should take addPatentNote into account", function() {
+  it("should take addPatentNote into account", function(done) {
     loadWithConfig({addPatentNote: "<strong>PATENTNOTE</strong>"}, function($ifr) {
       expect($("#sotd p strong", $ifr[0].contentDocument).text()).toEqual("PATENTNOTE");
     });
   });
 
   // CG/BG
-  xit("should handle CG-BG status", function() {
+  it("should handle CG-BG status", function(done) {
     loadWithConfig({specStatus: "CG-DRAFT", wg: "WGNAME", wgURI: "http://WG", wgPublicList: "WGLIST", subjectPrefix: "[The Prefix]"}, function($ifr) {
       var $c = $(".head .copyright", $ifr[0].contentDocument);
       expect($c.find("a[href='http://WG']").length).toEqual(1);
@@ -404,17 +400,17 @@ describe("W3C — Headers", function() {
   });
 
   // Member-SUBM
-  it("should not expose a Previous version link for Member submissions", function() {
+  it("should not expose a Previous version link for Member submissions", function(done) {
     loadWithConfig({specStatus: "Member-SUBM"}, function($ifr) {
       expect($("dt:contains('Previous version:')", $ifr[0].contentDocument).length).toEqual(0);
     });
   });
-  it("should display the Member Submission logo for Member submissions", function() {
+  it("should display the Member Submission logo for Member submissions", function(done) {
     loadWithConfig({specStatus: "Member-SUBM"}, function($ifr) {
       expect($(".head img[src='http://www.w3.org/Icons/member_subm']", $ifr[0].contentDocument).length).toEqual(1);
     });
   });
-  it("should use the right SoTD boilerplate for Member submissions", function() {
+  it("should use the right SoTD boilerplate for Member submissions", function(done) {
     loadWithConfig({specStatus: "Member-SUBM"}, function($ifr) {
       var $sotd = $("#sotd", $ifr[0].contentDocument);
       expect($sotd.find("p:contains('W3C acknowledges that the Submitting Members have made a formal Submission request')").length).toEqual(1);
@@ -422,24 +418,24 @@ describe("W3C — Headers", function() {
   });
 
   // Team-SUBM
-  it("should not expose a Previous version link for Team submissions", function() {
+  it("should not expose a Previous version link for Team submissions", function(done) {
     loadWithConfig({specStatus: "Team-SUBM"}, function($ifr) {
       expect($("dt:contains('Previous version:')", $ifr[0].contentDocument).length).toEqual(0);
     });
   });
-  it("should display the Team Submission logo for Team submissions", function() {
+  it("should display the Team Submission logo for Team submissions", function(done) {
     loadWithConfig({specStatus: "Team-SUBM"}, function($ifr) {
       expect($(".head img[src='http://www.w3.org/Icons/team_subm']", $ifr[0].contentDocument).length).toEqual(1);
     });
   });
-  it("should use the right SoTD boilerplate for Team submissions", function() {
+  it("should use the right SoTD boilerplate for Team submissions", function(done) {
     loadWithConfig({specStatus: "Team-SUBM"}, function($ifr) {
       var $sotd = $("#sotd", $ifr[0].contentDocument);
       expect($sotd.find("a[href='http://www.w3.org/TeamSubmission/']").length).toEqual(1);
     });
   });
   // statusOverride
-  it("should allow status paragraph to be overridden", function() {
+  it("should allow status paragraph to be overridden", function(done) {
     var conf = {
       overrideStatus: true,
       wg: "WGNAME",

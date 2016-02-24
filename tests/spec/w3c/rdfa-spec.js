@@ -5,18 +5,17 @@ function loadWithConfig (conf, check) {
     }
     var $ifr = $("<iframe width='800' height='200' style='display: none'></iframe>")
     ,   loaded = false
-    ,   MAXOUT = 5000
+
     ,   incr = function (ev) {
             if (ev.data && ev.data.topic == "end-all") loaded = true;
         }
     ;
     $ifr.attr("src", "spec/core/simple.html?" + config.join(";"));
-    runs(function () {
+
         window.addEventListener("message", incr, false);
         $ifr.appendTo($("body"));
     });
-    waitsFor(function () { return loaded; }, MAXOUT);
-    runs(function () {
+
         check($ifr);
         $ifr.remove();
         loaded = false;
@@ -25,23 +24,23 @@ function loadWithConfig (conf, check) {
 }
 
 describe("W3C — RDFa", function () {
-    var MAXOUT = 5000
-    ,   basicConfig = {
+    flushIframes();
+    var basicConfig = {
             editors:    [{ name: "Shane McCarron",
                            url:  "http://URI",
                            company: "COMPANY",
                            companyURI: "http://COMPANY",
                            mailto:     "EMAIL",
                            note:       "NOTE"},
-                         { name: "Gregg Kellogg"}]
-        ,   authors:   [{ name: "Gregg Kellogg"}, { name: "Shane McCarron"}]
-        ,   shortName: "some-spec"
-        ,   publicationDate: "2013-06-25"
-        ,   previousPublishDate: "2012-06-07"
-        ,   previousMaturity:  "REC"
-        ,   specStatus: "PER"
-        ,   wgPatentURI:  "http://www.w3.org/fake-patent-uri"
-        ,   doRDFa: true
+                         { name: "Gregg Kellogg"}],
+                          authors:   [{ name: "Gregg Kellogg"}, { name: "Shane McCarron"}],
+                          shortName: "some-spec",
+                          publicationDate: "2013-06-25",
+                          previousPublishDate: "2012-06-07",
+                          previousMaturity:  "REC",
+                          specStatus: "PER",
+                          wgPatentURI:  "http://www.w3.org/fake-patent-uri",
+                          doRDFa: true
         }
     ,   noConfig = {
             editors:    [{ name: "Shane McCarron",
@@ -49,23 +48,21 @@ describe("W3C — RDFa", function () {
                            company: "COMPANY",
                            companyURI: "http://COMPANY",
                            mailto:     "EMAIL",
-                           note:       "NOTE"}]
-        ,   authors:   [{ name: "Gregg Kellogg"}, { name: "Shane McCarron"}]
-        ,   shortName: "some-spec"
-        ,   publicationDate: "2013-06-25"
-        ,   previousPublishDate: "2012-06-07"
-        ,   previousMaturity:  "REC"
-        ,   specStatus: "PER"
-        ,   doRDFa: false
+                           note:       "NOTE"}],
+           authors:   [{ name: "Gregg Kellogg"}, { name: "Shane McCarron"}],
+           shortName: "some-spec",
+           publicationDate: "2013-06-25",
+           previousPublishDate: "2012-06-07",
+           previousMaturity:  "REC",
+           specStatus: "PER",
+           doRDFa: false
         };
-    it("should set the document information", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") },
-                      function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
-        runs(function () {
+    it("should set the document information", function (done) {
+
+
+            makeRSDoc({ config: makeBasicConfig(), body: $("<section id='sotd'>Some unique SOTD content</section>") },function (doc) {  });
+
+
             var $c = $("html", doc);
             expect($c.attr('prefix')).toMatch(/bibo:/);
             expect($c.attr('prefix')).toMatch(/w3p:/);
@@ -77,17 +74,14 @@ describe("W3C — RDFa", function () {
 
             var $lang = $("html>head>meta[property='dc:language']", doc) ;
             expect($lang.attr('content')).toEqual("en") ;
-            flushIframes();
         });
     });
-    it("should set RDFa information on editors", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") },
-                      function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
-        runs(function () {
+    it("should set RDFa information on editors", function (done) {
+
+
+            makeRSDoc({ config: makeBasicConfig(), body: $("<section id='sotd'>Some unique SOTD content</section>") },function (doc) {  });
+
+
             var $dd = $("dt:contains('Editors:')", doc ).next("dd") ;
             expect($dd.attr("property")).toEqual("bibo:editor") ;
             expect($dd.attr("resource")).toEqual("_:editor0") ;
@@ -119,17 +113,14 @@ describe("W3C — RDFa", function () {
             $rest = $sp.next();
             expect($rest.attr("property")).toEqual("rdf:rest");
             expect($rest.attr("resource")).toEqual("rdf:nil");
-            flushIframes();
         });
     });
-    it("should set RDFa information on authors", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") },
-                      function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
-        runs(function () {
+    it("should set RDFa information on authors", function (done) {
+
+
+            makeRSDoc({ config: makeBasicConfig(), body: $("<section id='sotd'>Some unique SOTD content</section>") },function (doc) {  });
+
+
             var $dd = $("dt:contains('Authors:')", doc ).next("dd") ;
             var $sp = $dd.children("span").first();
             expect($sp.attr("property")).toEqual("dc:contributor") ;
@@ -145,30 +136,26 @@ describe("W3C — RDFa", function () {
             $spp = $sp.children("span") ;
             expect($spp.attr("property")).toEqual('foaf:name') ;
             expect($spp.text()).toEqual('Shane McCarron') ;
-            flushIframes();
         });
     });
-    it("should set information on patent", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: basicConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") },
-                      function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
-        runs(function () {
+    it("should set information on patent", function (done) {
+
+
+            makeRSDoc({ config: makeBasicConfig(), body: $("<section id='sotd'>Some unique SOTD content</section>") },function (doc) {  });
+
+
             var $c = $("#sotd_patent", doc);
             expect($c.attr('property')).toEqual("w3p:patentRules");
-            flushIframes();
         });
     });
-    it("should describe normative references", function () {
-      var doc;
-      runs(function () {
-          makeRSDoc({ config: basicConfig, body: $("<section><p>[[!DAHU]] [[REX]]</p></section>") },
-                    function (rsdoc) { doc = rsdoc; });
+    it("should describe normative references", function (done) {
+
+
+          makeRSDoc({ config: makeBasicConfig(), body: $("<section><p>[[!DAHU]] [[REX]]</p></section>") },
+                    function (doc) {  });
       });
-      waitsFor(function () { return doc; }, MAXOUT);
-      runs(function () {
+
+
           var $nr = $("#normative-references", doc)
           ,   $ir = $("#informative-references", doc)
           ;
@@ -183,54 +170,54 @@ describe("W3C — RDFa", function () {
           expect($ir.find("dl dt").length).toEqual(1);
           expect($ir.find("dl dt:contains('[REX]')").length).toEqual(1);
           expect($ir.find("dl>dd>a").attr('property')).toEqual('dc:references');
-          flushIframes();
+
       });
     });
-    it("should mark abstract using dc:abstract", function () {
-      var doc;
-      runs(function () {
-          makeRSDoc({ config: basicConfig, body: $("<section id='abstract'>test abstract</section>") },
-                    function (rsdoc) { doc = rsdoc; });
+    it("should mark abstract using dc:abstract", function (done) {
+
+
+          makeRSDoc({ config: makeBasicConfig(), body: $("<section id='abstract'>test abstract</section>") },
+                    function (doc) {  });
       });
-      waitsFor(function () { return doc; }, MAXOUT);
-      runs(function () {
+
+
           var $abs = $("#abstract", doc);
           expect($abs.attr('property')).toEqual("dc:abstract");
           expect($abs.attr('typeof')).not.toBeDefined();
           expect($abs.attr('resource')).not.toBeDefined();
-          flushIframes();
+
       });
     });
-    it("should add bibo to chapters", function () {
-      var doc;
-      runs(function () {
-          makeRSDoc({ config: basicConfig, body: $("<section id='chap'><h2>Chapter</h2></section>") },
-                    function (rsdoc) { doc = rsdoc; });
+    it("should add bibo to chapters", function (done) {
+
+
+          makeRSDoc({ config: makeBasicConfig(), body: $("<section id='chap'><h2>Chapter</h2></section>") },
+                    function (doc) {  });
       });
-      waitsFor(function () { return doc; }, MAXOUT);
-      runs(function () {
+
+
           var $chap = $("#chap", doc);
           expect($chap.attr('typeof')).toEqual("bibo:Chapter");
           expect($chap.attr('resource')).toEqual("#chap");
           expect($chap.attr('property')).toMatch(/bibo:hasPart/);
-          flushIframes();
+
       });
     });
-    it("should do nothing when disabled", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: noConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") },
-                      function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
-        runs(function () {
+    it("should do nothing when disabled", function (done) {
+
+
+            makeRSDoc({ config: noConfig, body: $("<section id='sotd'>Some unique SOTD content</section>") },function (doc) {
+
+            });
+
+
+
             var $c = $("html", doc);
             expect($c.attr('prefix')).not.toBeDefined();
             expect($c.attr('typeof')).not.toBeDefined();
             expect($c.attr('property')).not.toBeDefined();
             expect($c.attr('content')).not.toBeDefined();
             expect($c.attr('about')).not.toBeDefined();
-            flushIframes();
         });
     });
 });

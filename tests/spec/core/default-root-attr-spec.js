@@ -1,23 +1,12 @@
 /*globals flushIframes, makeRSDoc*/
-"use strict";
 describe("Core — Default Root Attribute", function() {
+  "use strict";
   flushIframes();
-  var basicConfig = {
-    editors: [{
-      name: "Robin Berjon"
-    }],
-    specStatus: "ED",
-    edDraftURI: "http://foo.com",
-    shortName: "Foo",
-    prevVersion: 'FPWD',
-    previousMaturity: "WD",
-    previousPublishDate: "2013-12-17",
-  };
   var body = $("<section id='sotd'><p>foo</p></section>");
 
   it("should apply en and ltr defaults", function(done) {
     var ops = {
-      config: basicConfig,
+      config: makeBasicConfig(),
       body: body,
     };
     makeRSDoc(ops, function(doc) {
@@ -29,7 +18,7 @@ describe("Core — Default Root Attribute", function() {
 
   it("should not override existing dir", function(done) {
     var ops = {
-      config: basicConfig,
+      config: makeBasicConfig(),
       htmlAttrs: {
         dir: "rtl"
       },
@@ -44,7 +33,7 @@ describe("Core — Default Root Attribute", function() {
 
   it("should not override existing lang and not set dir", function(done) {
     var ops = {
-      config: basicConfig,
+      config: makeBasicConfig(),
       htmlAttrs: {
         lang: "fr"
       },

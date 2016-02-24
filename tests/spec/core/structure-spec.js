@@ -1,5 +1,5 @@
 describe("Core - Structure", function () {
-    var MAXOUT = 5000
+
     ,   basicConfig = {
             editors:    [{ name: "Robin Berjon" }]
         ,   specStatus: "WD"
@@ -14,13 +14,12 @@ describe("Core - Structure", function () {
               "</section></section></section>"
     ;
     it("should build a ToC with default values", function () {
-        var doc;
-        runs(function () {
-            makeRSDoc({ config: basicConfig, body: body }, function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
+
+
+            makeRSDoc({ config: makeBasicConfig(), body: body }, function (doc) {  });
+
         // test default values
-        runs(function () {
+
             var $toc = $("#toc", doc)
             ;
             expect($toc.find("h2").text()).toEqual("Table of Contents");
@@ -39,13 +38,12 @@ describe("Core - Structure", function () {
 
     it("should not build a ToC with noTOC", function () {
         // test with noTOC
-        var doc;
-        runs(function () {
+
+
             basicConfig.noTOC = true;
-            makeRSDoc({ config: basicConfig, body: body }, function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
-        runs(function () {
+            makeRSDoc({ config: makeBasicConfig(), body: body }, function (doc) {  });
+
+
             var $toc = $("#toc", doc)
             ;
             expect($toc.length).toEqual(0);
@@ -56,13 +54,12 @@ describe("Core - Structure", function () {
 
     it("should include introductory sections in ToC with tocIntroductory", function () {
         // test with tocIntroductory
-        var doc;
-        runs(function () {
+
+
             basicConfig.tocIntroductory = true;
-            makeRSDoc({ config: basicConfig, body: body }, function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
-        runs(function () {
+            makeRSDoc({ config: makeBasicConfig(), body: body }, function (doc) {  });
+
+
             var $toc = $("#toc", doc)
             ;
             expect($toc.find("h2").text()).toEqual("Table of Contents");
@@ -77,13 +74,12 @@ describe("Core - Structure", function () {
 
     it("should limit ToC depth with maxTocLevel", function () {
         // test with maxTocLevel
-        var doc;
-        runs(function () {
+
+
             basicConfig.maxTocLevel = 4;
-            makeRSDoc({ config: basicConfig, body: body }, function (rsdoc) { doc = rsdoc; });
-        });
-        waitsFor(function () { return doc; }, MAXOUT);
-        runs(function () {
+            makeRSDoc({ config: makeBasicConfig(), body: body }, function (doc) {  });
+
+
             var $toc = $("#toc", doc)
             ;
             expect($toc.find("h2").text()).toEqual("Table of Contents");

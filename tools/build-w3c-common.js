@@ -1,32 +1,57 @@
 #!/usr/local/bin/node
 
-var fs   = require("fs")
-,   pth  = require("path")
-,   b    = require("./builder")
-,   version = JSON.parse(fs.readFileSync(pth.join(__dirname, "../package.json"), "utf-8")).version
-,   builds = pth.join(__dirname, "../builds")
-,   latest = pth.join(builds, "respec-w3c-common.js")
-;
+"use strict";
+const async = require("marcosc-async");
+const builder = require("./builder");
+const fs = require("fs");
+const path = require("path");
+const colors = require('colors');
 
-function buildW3C (versionSnapshot, cb) {
-    var opts = { out: latest };
-    if (versionSnapshot === true) {
-        opts.version = version;
-    }
-    else if (typeof versionSnapshot === "string") {
-        opts.version = versionSnapshot;
-    }
-    var versioned = pth.join(builds, "respec-w3c-common-" + opts.version + ".js");
-    b.build(opts, function () {
-        if (versionSnapshot) fs.writeFileSync(versioned, fs.readFileSync(latest, "utf8"), { encoding: "utf8" });
-        cb();
-    });
+colors.setTheme({
+  data: 'grey',
+  debug: 'cyan',
+  error: 'red',
+  help: 'cyan',
+  info: 'green',
+  input: 'grey',
+  prompt: 'grey',
+  verbose: 'cyan',
+  warn: 'yellow',
+});
+
+// Helper function for Node functions not returning promises.
+function dataHandler(resolve, reject) {
+  return function(err, data) {
+    return (err) ? reject(err) : resolve(data);
+  };
 }
 
+const getPackageVersion = async(function*() {
+  const packagePath = path.join(__dirname, "../package.json");
+  const packageContents = yield new Promise((resolve, reject) => {
+    fs.readFile(packagePath, "utf-8", dataHandler(resolve, reject));
+  });
+  return JSON.parse(packageContents).version;
+});
+
+const buildW3C = async(function*(aVersion) {
+  aVersion = (!aVersion) ? "latest" : aVersion;
+  const builds = path.join(__dirname, "../builds");
+  const isLatest = aVersion === "latest";
+  const version = (isLatest) ? yield getPackageVersion() : aVersion;
+  const outFile = "respec-w3c-common" + ((isLatest) ? ".js" : `-${aVersion}.js`);
+  const out = path.join(builds, outFile);
+  yield new Promise((resolve) => {
+    builder.build({
+      out, version
+    }, resolve);
+  });
+});
+
 if (require.main === module) {
-    buildW3C(true, function () {
-        console.log("OK!");
-    });
+  buildW3C()
+    .then(() => console.log(colors.info("OK!")))
+    .catch((err) => console.log(colors.error(`ERROR! ${err.message}`)));
 }
 
 exports.buildW3C = buildW3C;
