@@ -1,5 +1,3 @@
-/*jshint strict:true, maxcomplexity:5 */
-/*globals define*/
 // Module core/override-configuration
 // A helper module that makes it possible to override settings specified in respecConfig
 // by passing them as a query string. This is useful when you just want to make a few
@@ -14,18 +12,13 @@ define(
     [],
     function() {
       function castToType(value) {
-        var result;
         switch (value.trim()) {
         case "true":
+          return true;
         case "false":
-          result = (value === "true");
-          break;
+          return false;
         case "null":
-          result = null;
-          break;
-        default:
-          result = value;
-          break;
+          return null;
         }
         return value;
       }
@@ -49,21 +42,11 @@ define(
             .filter(function removeEmpties(item) {
               return Boolean(item);
             })
-            .map(function makeKeyValuePairs(item) {
-              return item.split("=", 2);
-            })
-            .map(function decodeKeyValues(keyValue) {
+            .map(function decodeKeyValues(item) {
+              var keyValue = item.split("=", 2);
               var key = decodeURI(keyValue[0]);
               var value = decodeURI(keyValue[1].replace(/%3D/g, "="));
-              return [key, value];
-            })
-            .map(function attemptTypeCast(keyValue) {
-              return [keyValue[0], castToType(keyValue[1])];
-            })
-            // try to JSON.parse values, or just use the string otherwise.
-            .map(function toJSONifiedValues(keyValue) {
-              var key = keyValue[0];
-              var value;
+              value = castToType(value)
               try {
                 value = JSON.parse(keyValue[1]);
               } catch (err) {
