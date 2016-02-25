@@ -274,7 +274,7 @@ describe("Core - Utils", function() {
     var expected = 'editors;[{"name":"Person Name"}], specStatus;"ED", edDraftURI;"http://foo.com", shortName;"Foo"';
     expect(utils.toKeyValuePairs(obj, null, ";")).toEqual(expected);
 
-    var expected = 'editors^[{"name":"Person Name"}] % specStatus^"ED" % edDraftURI^"http://foo.com" % shortName^"Foo"';
+    expected = 'editors^[{"name":"Person Name"}] % specStatus^"ED" % edDraftURI^"http://foo.com" % shortName^"Foo"';
     expect(utils.toKeyValuePairs(obj, " % ", "^")).toEqual(expected);
     done();
   });
