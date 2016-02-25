@@ -1,12 +1,10 @@
 describe("Core — Definitions", function() {
   "use strict";
   flushIframes();
-  var sotd = "<section id=sotd><p>foo</p></section>";
-
   it("should process definitions", function(done) {
     let ops = {
       config: makeBasicConfig(),
-      body: $("<section id='dfn'><dfn>text</dfn><a>text</a></section>" + sotd),
+      body: makeDefaultBody() + "<section id='dfn'><dfn>text</dfn><a>text</a></section>",
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("#dfn", doc);
@@ -19,7 +17,8 @@ describe("Core — Definitions", function() {
   it("should make links <code> when their definitions are <code>", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: $("<section id='dfn'>" +
+      body: makeDefaultBody() +
+        "<section id='dfn'>" +
         "<code><dfn>outerCode</dfn></code>" +
         "<pre><dfn>outerPre</dfn></pre>" +
         "<dfn><code>innerCode</code></dfn>" +
@@ -28,7 +27,7 @@ describe("Core — Definitions", function() {
         "<a>outerPre</a>" +
         "<a>innerCode</a>" +
         "<a>partial inner code</a>" +
-        "</section>" + sotd)
+        "</section>",
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("#dfn", doc);
@@ -43,10 +42,11 @@ describe("Core — Definitions", function() {
   it("should process aliases", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: $("<section id='dfn'>" +
-        "<dfn title='text|text 1|text  2|text 3 '>text</dfn>" +
-        "<a>text</a>" +
-        "</section>" + sotd)
+      body: makeDefaultBody() +
+        "<section id='dfn'>" +
+        "  <dfn title='text|text 1|text  2|text 3 '>text</dfn>" +
+        "  <a>text</a>" +
+        "</section>",
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("#dfn", doc);
@@ -59,10 +59,11 @@ describe("Core — Definitions", function() {
   it("should allow defined dfn-type ", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: $("<section id='dfn'>" +
+      body: makeDefaultBody() +
+        "<section™¡™ id='dfn'>" +
         "<dfn dfn-type='myType'>text</dfn>" +
         "<a>text</a>" +
-        "</section>" + sotd)
+        "</section>",
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("#dfn", doc);

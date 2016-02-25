@@ -6,7 +6,7 @@ function makeRSDoc(opts, cb, src) {
   if(!src){
     src = "about-blank.html";
   }
-  var $ifr = $("<iframe src='" + src + "' width='800' height='200' style='position: relative; margin-left: -10000px'></iframe>");
+  var $ifr = $("<iframe src='" + src + "' style='display: none'></iframe>");
   opts = opts || {};
   $ifr.load(function() {
     var destDoc = $ifr[0].contentDocument;

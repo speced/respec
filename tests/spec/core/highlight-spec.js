@@ -1,10 +1,11 @@
+"use strict";
 describe("Core — Highlight", function() {
-  "use strict";
   flushIframes();
   it("should process highlights", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: $("<section><pre class='example sh_javascript'>function () {\n  alert('foo');\n}</pre></section>")
+      body: makeDefaultBody() +
+        "<section><pre class='example sh_javascript'>function () {\n  alert('foo');\n}</pre></section>"
     };
     makeRSDoc(ops, function(doc) {
       var $ex = $("pre.example", doc);

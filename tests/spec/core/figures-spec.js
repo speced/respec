@@ -1,14 +1,13 @@
+"use strict";
 describe("Core - Figures", function() {
-  "use strict";
   flushIframes();
-  var sotd = "<section id=sotd><p>foo</p></section>";
   it("should have handled figures", function(done) {
     var ops = {
       config: makeBasicConfig(),
       body: $(
         "<section><section id='figs'><div class='figure'><pre title='PREFIG'>PRE</pre></div>" +
         "<img src='IMG' title='IMGTIT' class='figure'/></section><section id='tof'></section></section>" +
-        sotd)
+        makeDefaultBody())
     };
     makeRSDoc(ops, function(doc) {
       var $figs = $("#figs", doc);

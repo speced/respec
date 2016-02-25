@@ -1,10 +1,11 @@
+"use strict";
 describe("Core - Section References", function() {
-  "use strict";
   flushIframes();
   it("should have produced the section reference", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: "<section id='ONE'><h2>ONE</h2></section><section id='TWO'><a href='#ONE' class='sectionRef'></a></section>"
+      body: makeDefaultBody() +
+        "<section id='ONE'><h2>ONE</h2></section><section id='TWO'><a href='#ONE' class='sectionRef'></a></section>"
     };
     makeRSDoc(ops, function(doc) {
       var $one = $("#ONE", doc);

@@ -1,12 +1,16 @@
+"use strict";
 describe("Core - Inlines", function() {
-  "use strict";
   flushIframes();
   it("should process all inline content", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: "<section id='inlines'><p><acronym title='ACRO-TIT'>ACRO</acronym> ACRO</p><p>" +
-        "<abbr title='ABBR-TIT'>ABBR</abbr> ABBR</p><p>MUST and NOT RECOMMENDED</p>" +
-        "<p>[[!DAHU]] [[REX]]</p></section>"
+      body: makeDefaultBody() +
+        "<section id='inlines'>" +
+        "  <p><acronym title='ACRO-TIT'>ACRO</acronym> ACRO</p>" +
+        "  <p><abbr title='ABBR-TIT'>ABBR</abbr> ABBR</p>" +
+        "  <p>MUST and NOT RECOMMENDED</p>" +
+        "  <p>[[!DAHU]] [[REX]]</p>" +
+        "</section>",
     };
     makeRSDoc(ops, function(doc) {
       var $inl = $("#inlines", doc);

@@ -1,12 +1,12 @@
+"use strict";
 describe("W3C — Conformance", function() {
-  "use strict";
   flushIframes();
-
   it("should include an h2 and inject its content", function(done) {
     var ops = {
       doRDFa: false,
       config: makeBasicConfig(),
-      body: $("<section id='conformance'><p>CONFORMANCE</p></section><section><h2>my section</h2><p>No terms are used except SHOULD.</p></section>"),
+      body: makeDefaultBody() +
+        "<section id='conformance'><p>CONFORMANCE</p></section><section><h2>my section</h2><p>No terms are used except SHOULD.</p></section>",
     };
     makeRSDoc(ops, function(doc) {
       var $c = $("#conformance", doc);
@@ -23,7 +23,8 @@ describe("W3C — Conformance", function() {
     var ops = {
       doRDFa: false,
       config: makeBasicConfig(),
-      body: $("<section id='conformance'><p>CONFORMANCE</p></section><section><h2>my section</h2><p>Terms are MUST, SHOULD, SHOULD NOT, and SHOULD  NOT.</p></section>"),
+      body: makeDefaultBody() +
+        "<section id='conformance'><p>CONFORMANCE</p></section><section><h2>my section</h2><p>Terms are MUST, SHOULD, SHOULD NOT, and SHOULD  NOT.</p></section>",
     };
     makeRSDoc(ops, function(doc) {
       var $c = $("#conformance", doc);
@@ -37,7 +38,8 @@ describe("W3C — Conformance", function() {
     var ops = {
       doRDFa: false,
       config: makeBasicConfig(),
-      body: $("<section id='conformance'><p>CONFORMANCE</p></section><section><h2>my section</h2><p>Terms are not used.</p></section>")
+      body: makeDefaultBody() +
+        "<section id='conformance'><p>CONFORMANCE</p></section><section><h2>my section</h2><p>Terms are not used.</p></section>",
     };
     makeRSDoc(ops, function(doc) {
       var $c = $("#conformance", doc);

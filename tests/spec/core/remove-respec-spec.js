@@ -1,7 +1,7 @@
+"use strict";
 describe("Core — Remove ReSpec", function() {
-  "use strict";
   flushIframes();
-  it("should have removed all artefacts", function(done) {
+  it("should have removed all artifacts", function(done) {
     var ops = makeStandardOps();
     makeRSDoc(ops, function(doc) {
       expect(doc.querySelectorAll(".remove").length).toEqual(0);

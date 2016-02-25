@@ -1,5 +1,3 @@
-/*jshint strict: true, jquery:true, jasmine:true*/
-/*globals pickRandomsFromList*/
 "use strict";
 var specStatus = [{
   status: "FPWD",
@@ -44,6 +42,9 @@ function loadWithStatus(status, expectedURL, mode) {
     var config = makeBasicConfig();
     config.useExperimentalStyles = false;
     config.specStatus = status;
+    config.prevVersion = 'FPWD';
+    config.previousMaturity = "WD";
+    config.previousPublishDate = "2013-12-17";
     var version = "";
     switch (mode) {
       case "experimental":
@@ -61,7 +62,6 @@ function loadWithStatus(status, expectedURL, mode) {
       config: config,
       body: makeDefaultBody(),
     };
-    console.log(status, testedURL);
     makeRSDoc(ops, function(doc) {
       var query = "link[href^='" + testedURL + "']";
       var elem = doc.querySelector(query);

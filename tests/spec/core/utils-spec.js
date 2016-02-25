@@ -1,17 +1,17 @@
+"use strict";
 describe("Core - Utils", function() {
-  "use strict";
   var utils;
-  var $;
   beforeAll(function(done) {
     require.config({
       baseUrl: "../js/"
     });
-    require(["jquery", "core/utils"], function(jq, u) {
-      $ = jq;
+    require(["core/utils"], function(u) {
       utils = u;
+      window.utils = u;
       done();
     });
   });
+
   // linkCSS()
   it("should add a link element", function(done) {
     utils.linkCSS(document, "BOGUS");
@@ -19,12 +19,14 @@ describe("Core - Utils", function() {
     $("link[href='BOGUS']").remove();
     done();
   });
+
   it("should add several link elements", function(done) {
     utils.linkCSS(document, ["BOGUS", "BOGUS", "BOGUS"]);
     expect($("link[href='BOGUS']").length == 3).toBeTruthy();
     $("link[href='BOGUS']").remove();
     done();
   });
+
   // $.renameElement()
   it("should rename the element", function(done) {
     var $div = $("<div><p><a></a></p><b>some text</b></div>").appendTo($("body"));
@@ -35,12 +37,14 @@ describe("Core - Utils", function() {
     $div.remove();
     done();
   });
+
   // lead0
   it("should prepend 0 only when needed", function(done) {
     expect(utils.lead0("1")).toEqual("01");
     expect(utils.lead0("01")).toEqual("01");
     done();
   });
+
   // concatDate
   it("should format the date as needed", function(done) {
     var d = new Date();
@@ -51,6 +55,7 @@ describe("Core - Utils", function() {
     expect(utils.concatDate(d, "-")).toEqual("1977-03-15");
     done();
   });
+
   // parseSimpleDate
   it("should parse a simple date", function(done) {
     var d = utils.parseSimpleDate("1977-03-15");
@@ -59,6 +64,7 @@ describe("Core - Utils", function() {
     expect(d.getDate()).toEqual(15);
     done();
   });
+
   // parseLastModified
   it("should parse a date in lastModified format", function(done) {
     var d = utils.parseLastModified("03/15/1977 13:05:42");
@@ -67,6 +73,7 @@ describe("Core - Utils", function() {
     expect(d.getDate()).toEqual(15);
     done();
   });
+
   // humanDate
   it("should produce a human date", function(done) {
     expect(utils.humanDate("1977-03-15")).toEqual("15 March 1977");
@@ -77,6 +84,7 @@ describe("Core - Utils", function() {
     expect(utils.humanDate(d)).toEqual("15 March 1977");
     done();
   });
+
   // isoDate
   it("should produce an ISO date", function(done) {
     expect(utils.isoDate("2013-06-25")).toMatch(/2013-06-2[45]T/);
@@ -90,6 +98,7 @@ describe("Core - Utils", function() {
     expect(utils.isoDate(d)).toMatch(/2013-09-2[45]T/);
     done();
   });
+
   // joinAnd
   it("should join with proper commas and 'and'", function(done) {
     expect(utils.joinAnd([])).toEqual("");
@@ -102,16 +111,19 @@ describe("Core - Utils", function() {
     })).toEqual("X, X, X, and X");
     done();
   });
+
   // xmlEscape
   it("should escape properly", function(done) {
     expect(utils.xmlEscape("&<>\"")).toEqual("&amp;&lt;&gt;&quot;");
     done();
   });
+
   // norm
   it("should normalise text", function(done) {
     expect(utils.norm("  a   b   ")).toEqual("a b");
     done();
   });
+
   // $.getDfnTitles()
   it("should not prepend empty dfns to data-lt", function(done) {
     var $dfn = $("<dfn data-lt='DFN|DFN2|DFN3'></dfn>").appendTo($("body"));
@@ -124,6 +136,7 @@ describe("Core - Utils", function() {
     $dfn.remove();
     done();
   });
+
   // $.getDfnTitles()
   it("should not use the text content when data-lt-noDefault is present", function(done) {
     var $dfn = $("<dfn data-lt-noDefault data-lt='DFN|DFN2|DFN3'>FAIL</dfn>").appendTo($("body"));
@@ -137,6 +150,7 @@ describe("Core - Utils", function() {
     $dfn.remove();
     done();
   });
+
   // $.getDfnTitles()
   it("should find the data-lts", function(done) {
     var $dfn = $("<dfn data-lt='DFN|DFN2|DFN3'><abbr title='ABBR'>TEXT</abbr></dfn>").appendTo($("body"));
@@ -154,6 +168,7 @@ describe("Core - Utils", function() {
     $dfn.remove();
     done();
   });
+
   // $.getDfnTitles()
   it("should find the definition title", function(done) {
     var $dfn = $("<dfn lt='DFN|DFN2|DFN3'><abbr title='ABBR'>TEXT</abbr></dfn>").appendTo($("body"));
@@ -171,6 +186,7 @@ describe("Core - Utils", function() {
     $dfn.remove();
     done();
   });
+
   // $.getDfnTitles()
   it("should return list of terms when called a second time", function(done) {
     var $dfn = $("<dfn lt='DFN|DFN2|DFN3'>TEXT</dfn>").appendTo($("body"));
@@ -186,6 +202,7 @@ describe("Core - Utils", function() {
     $dfn.remove();
     done();
   });
+
   // $.makeID()
   it("should create the proper ID", function(done) {
     expect($("<p id='ID'></p>").makeID()).toEqual("ID");
@@ -205,6 +222,7 @@ describe("Core - Utils", function() {
     $div.remove();
     done();
   });
+
   // $.allTextNodes()
   it("should find all the text nodes", function(done) {
     var tns = $("<div>aa<span>bb</span><p>cc<i>dd</i></p><pre>nope</pre></div>").allTextNodes(["pre"]);
@@ -212,6 +230,52 @@ describe("Core - Utils", function() {
     var str = "";
     for (var i = 0, n = tns.length; i < n; i++) str += tns[i].nodeValue;
     expect(str).toEqual("aabbccdd");
+    done();
+  });
+
+  // toKeyValuePairs
+  it("should convert objects to key values pairs", function(done) {
+    var obj = {
+      editors: [{
+        "name": "Person Name"
+      }],
+      specStatus: "ED",
+      edDraftURI: "http://foo.com",
+      shortName: "Foo"
+    };
+    var expected = 'editors=[{"name":"Person Name"}], specStatus="ED", edDraftURI="http://foo.com", shortName="Foo"';
+    expect(utils.toKeyValuePairs(obj)).toEqual(expected);
+    done();
+  });
+
+  it("should convert objects to key values pairs with different separator", function(done) {
+    var obj = {
+      editors: [{
+        "name": "Person Name"
+      }],
+      specStatus: "ED",
+      edDraftURI: "http://foo.com",
+      shortName: "Foo"
+    };
+    var expected = 'editors=[{"name":"Person Name"}]|||specStatus="ED"|||edDraftURI="http://foo.com"|||shortName="Foo"';
+    expect(utils.toKeyValuePairs(obj, "|||")).toEqual(expected);
+    done();
+  });
+
+  it("should convert objects to key values pairs with different separator and delimiter", function(done) {
+    var obj = {
+      editors: [{
+        "name": "Person Name"
+      }],
+      specStatus: "ED",
+      edDraftURI: "http://foo.com",
+      shortName: "Foo"
+    };
+    var expected = 'editors;[{"name":"Person Name"}], specStatus;"ED", edDraftURI;"http://foo.com", shortName;"Foo"';
+    expect(utils.toKeyValuePairs(obj, null, ";")).toEqual(expected);
+
+    var expected = 'editors^[{"name":"Person Name"}] % specStatus^"ED" % edDraftURI^"http://foo.com" % shortName^"Foo"';
+    expect(utils.toKeyValuePairs(obj, " % ", "^")).toEqual(expected);
     done();
   });
 });

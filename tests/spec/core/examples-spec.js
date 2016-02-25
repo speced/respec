@@ -1,11 +1,13 @@
+"use strict";
 describe("Core — Examples", function() {
-  "use strict";
   flushIframes();
-  var sotd = "<section id=sotd><p>foo</p></section>";
   it("should process examples", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: $("<section><pre class='example' title='EX'>\n  {\n    CONTENT\n  }\n  </pre></section>" + sotd)
+      body: makeDefaultBody() +
+        "<section>" +
+        "<pre class='example' title='EX'>\n  {\n    CONTENT\n  }\n  </pre>"+
+        "</section>",
     };
     makeRSDoc(ops, function(doc) {
       var $ex = $("pre.example", doc);

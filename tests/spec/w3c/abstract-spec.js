@@ -1,5 +1,5 @@
+"use strict";
 describe("W3C — Abstract", function() {
-  "use strict";
   flushIframes();
   it("should include an h2, set the class, and wrap the content", function(done) {
     var ops = {

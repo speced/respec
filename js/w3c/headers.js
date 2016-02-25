@@ -380,7 +380,7 @@ define(
                 }
                 else {
                     if (!/NOTE$/.test(conf.specStatus) && conf.specStatus !== "FPWD" && conf.specStatus !== "FPLC" && conf.specStatus !== "ED" && !conf.noRecTrack && !conf.isNoTrack && !conf.isSubmission)
-                        msg.pub("error", "Document on track but no previous version.");
+                        msg.pub("error", "Document on track but no previous version: Add previousMaturity previousPublishDate to ReSpec's config.");
                     if (!conf.prevVersion) conf.prevVersion = "";
                 }
                 if (conf.prevRecShortname && !conf.prevRecURI) conf.prevRecURI = "http://www.w3.org/TR/" + conf.prevRecShortname;
