@@ -27,12 +27,15 @@ if (typeof Object.assign != 'function') {
   })();
 }
 
-function makeRSDoc(opts, cb, src) {
+function makeRSDoc(opts, cb, src, style) {
   return new Promise(function(resove, reject) {
     if (!src) {
       src = "about-blank.html";
     }
-    var $ifr = $("<iframe src='" + src + "' style='display: none'></iframe>");
+    if(!style){
+      style = "display: none";
+    }
+    var $ifr = $("<iframe src='" + src + "' style='" + style + "'></iframe>");
     opts = opts || {};
     $ifr.load(function() {
       var destDoc = $ifr[0].contentDocument;

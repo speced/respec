@@ -1,5 +1,5 @@
 {
-  "strict": true,
+  "strict": "global",
   "jquery": true,
   "jasmine": true,
   "predef": [ "makeStandardOps", "makeDefaultBody", "makeRSDoc", "flushIframes", "isPhantom", "makeBasicConfig", "require" ]

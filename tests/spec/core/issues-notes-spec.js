@@ -42,10 +42,10 @@ describe("Core — Issues and Notes", function() {
       expect($pnot.attr("title")).toBeUndefined();
       expect($pnot.text()).toEqual("NOTE");
       done();
-    });
+    }, null, "display: block;");
   });
 
-  it("should process ednodes", function(done) {
+  it("should process ednotes", function(done) {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
@@ -60,7 +60,7 @@ describe("Core — Issues and Notes", function() {
       expect($pnot.attr("title")).toBeUndefined();
       expect($pnot.text()).toEqual("EDNOTE");
       done();
-    });
+    }, null, "display: block;");
   });
 
   it("should process warnings", function(done) {
@@ -77,7 +77,7 @@ describe("Core — Issues and Notes", function() {
       expect($sec.find(".warning-title").length).toEqual(1);
       expect($sec.find(".warning-title").text()).toEqual("Warning: WARN-TIT");
       done();
-    });
+    }, null, "display: block;");
   });
 
   it("should use data-number for issue and note numbers", function(done) {
@@ -101,7 +101,7 @@ describe("Core — Issues and Notes", function() {
       expect($ixx.find("div.issue-title").length).toEqual(1);
       expect($ixx.find("div.issue-title").text()).toEqual("Issue");
       done();
-    });
+    }, null, "display: block;");
   });
 
   it("should link to external issue tracker", function(done) {
@@ -127,7 +127,7 @@ describe("Core — Issues and Notes", function() {
       expect($piss.attr("title")).toBeUndefined();
       expect($piss.text()).toEqual("ISSUE");
       done();
-    });
+    }, null, "display: block;");
   });
 
   it("should link to external issue tracker for features at risk", function(done) {
@@ -154,6 +154,6 @@ describe("Core — Issues and Notes", function() {
       expect($piss.attr("title")).toBeUndefined();
       expect($piss.text()).toEqual("FEATURE AT RISK");
       done();
-    });
+    }, null, "display: block;");
   });
 });
