@@ -2,54 +2,88 @@
  makeStandardOps, makeDefaultBody, makeBasicConfig, isPhantom*/
 "use strict";
 var iframes = [];
-function makeRSDoc(opts, cb, src) {
-  if(!src){
-    src = "about-blank.html";
-  }
-  var $ifr = $("<iframe src='" + src + "' style='display: none'></iframe>");
-  opts = opts || {};
-  $ifr.load(function() {
-    var destDoc = $ifr[0].contentDocument;
-    var body = destDoc.body;
-    var head = destDoc.head;
-    if (opts.htmlAttrs) {
-      $(destDoc.documentElement).attr(opts.htmlAttrs);
-    }
-    if (opts.title) {
-      destDoc.title = opts.title;
-    }
-    $(body).append(opts.abstract || $("<section id='abstract'><p>test abstract</p></section>"));
-    if (opts.body) {
-      $(body).append(opts.body);
-    }
-    var path = opts.jsPath || "../js/";
-    var config = destDoc.createElement("script");
-    $(config)
-        .text("var respecConfig = " + JSON.stringify(opts.config || {}) + ";")
-        .addClass("remove");
-    head.appendChild(config);
-    var loader = destDoc.createElement("script");
-    var loadAttr = (isPhantom()) ?
-      {src: "/builds/respec-w3c-common.js"} :
-      {src: "/js/require.js", "data-main": path + (opts.profile || "profile-w3c-common")};
-    $(loader)
-        .attr(loadAttr)
-        .addClass("remove");
-    head.appendChild(loader);
-    var handleAndVerify = function(doc){
-      return function handler(ev){
-        if (ev.data.topic === "end-all" && doc === ev.source.document) {
-          window.removeEventListener("message", handler);
-          cb(doc);
+
+// Polyfill for Object.assign()
+// From https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+if (typeof Object.assign != 'function') {
+  (function () {
+    Object.assign = function (target) {
+      if (target === undefined || target === null) {
+        throw new TypeError('Cannot convert undefined or null to object');
+      }
+      var output = Object(target);
+      for (var index = 1; index < arguments.length; index++) {
+        var source = arguments[index];
+        if (source !== undefined && source !== null) {
+          for (var nextKey in source) {
+            if (source.hasOwnProperty(nextKey)) {
+              output[nextKey] = source[nextKey];
+            }
+          }
         }
       }
+      return output;
+    };
+  })();
+}
+
+function makeRSDoc(opts, cb, src) {
+  return new Promise(function(resove, reject) {
+    if (!src) {
+      src = "about-blank.html";
     }
-    // intercept that in the iframe we have finished processing
-    window.addEventListener("message", handleAndVerify(destDoc));
+    var $ifr = $("<iframe src='" + src + "' style='display: none'></iframe>");
+    opts = opts || {};
+    $ifr.load(function() {
+      var destDoc = $ifr[0].contentDocument;
+      var body = destDoc.body;
+      var head = destDoc.head;
+      if (opts.htmlAttrs) {
+        $(destDoc.documentElement).attr(opts.htmlAttrs);
+      }
+      if (opts.title) {
+        destDoc.title = opts.title;
+      }
+      $(body).append(opts.abstract || $("<section id='abstract'><p>test abstract</p></section>"));
+      if (opts.body) {
+        $(body).append(opts.body);
+      }
+      var path = opts.jsPath || "../js/";
+      var config = destDoc.createElement("script");
+      $(config)
+        .text("var respecConfig = " + JSON.stringify(opts.config || {}) + ";")
+        .addClass("remove");
+      head.appendChild(config);
+      var loader = destDoc.createElement("script");
+      var loadAttr = (isPhantom()) ? {
+        src: "/builds/respec-w3c-common.js"
+      } : {
+        src: "/js/require.js",
+        "data-main": path + (opts.profile || "profile-w3c-common")
+      };
+      $(loader)
+        .attr(loadAttr)
+        .addClass("remove");
+      head.appendChild(loader);
+      var handleAndVerify = function(doc) {
+        return function handler(ev) {
+          if (ev.data.topic === "end-all" && doc === ev.source.document) {
+            window.removeEventListener("message", handler);
+            cb(doc);
+            resove();
+          }
+        };
+      };
+      // intercept that in the iframe we have finished processing
+      window.addEventListener("message", handleAndVerify(destDoc));
+    });
+    // trigger load
+    $ifr.appendTo($("body"));
+    iframes.push($ifr);
+    setTimeout(function() {
+      reject(new Error("Timed out waiting on " + src));
+    }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
   });
-  // trigger load
-  $ifr.appendTo($("body"));
-  iframes.push($ifr);
 }
 
 function flushIframes() {
@@ -91,7 +125,7 @@ function isPhantom() {
   return window.callPhantom || window._phantom;
 }
 
-function makeBasicConfig(){
+function makeBasicConfig() {
   return {
     editors: [{
       name: "Person Name"
@@ -102,11 +136,11 @@ function makeBasicConfig(){
   };
 }
 
-function makeDefaultBody(){
+function makeDefaultBody() {
   return "<section id='sotd'><p>foo</p></section>";
 }
 
-function makeStandardOps(){
+function makeStandardOps() {
   return {
     config: makeBasicConfig(),
     body: makeDefaultBody(),
