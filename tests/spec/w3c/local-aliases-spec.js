@@ -1,6 +1,9 @@
 "use strict";
 describe("W3C — Aliased References", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   it("aliased spec must be resolved", function(done) {
     var ops = {
       config: makeBasicConfig(),
@@ -16,7 +19,6 @@ describe("W3C — Aliased References", function() {
       var $r = $("#bib-FOOBARGLOP + dd", doc);
       expect($r.length).toBeTruthy();
       expect($r.text()).toMatch(/2119/);
-      done();
-    });
+    }).then(done);
   });
 });

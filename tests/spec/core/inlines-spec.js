@@ -1,6 +1,9 @@
 "use strict";
 describe("Core - Inlines", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   it("should process all inline content", function(done) {
     var ops = {
       config: makeBasicConfig(),
@@ -24,7 +27,6 @@ describe("Core - Inlines", function() {
       expect($nr.find("dl dt:contains('[DAHU]')").length).toEqual(1);
       expect($ir.find("dl dt").length).toEqual(1);
       expect($ir.find("dl dt:contains('[REX]')").length).toEqual(1);
-      done();
-    });
+    }).then(done);
   });
 });

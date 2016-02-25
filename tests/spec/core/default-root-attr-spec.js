@@ -1,7 +1,10 @@
 /*globals flushIframes, makeRSDoc*/
 describe("Core — Default Root Attribute", function() {
   "use strict";
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   var body = $("<section id='sotd'><p>foo</p></section>");
 
   it("should apply en and ltr defaults", function(done) {
@@ -12,8 +15,7 @@ describe("Core — Default Root Attribute", function() {
     makeRSDoc(ops, function(doc) {
       expect(doc.querySelector("html").lang).toEqual("en");
       expect(doc.querySelector("html").dir).toEqual("ltr");
-      done();
-    });
+    }).then(done);
   });
 
   it("should not override existing dir", function(done) {
@@ -27,8 +29,7 @@ describe("Core — Default Root Attribute", function() {
     makeRSDoc(ops, function(doc) {
       expect(doc.querySelector("html").lang).toEqual("en");
       expect(doc.querySelector("html").dir).toEqual("rtl");
-      done();
-    });
+    }).then(done);
   });
 
   it("should not override existing lang and not set dir", function(done) {
@@ -42,7 +43,6 @@ describe("Core — Default Root Attribute", function() {
     makeRSDoc(ops, function(doc) {
       expect(doc.querySelector("html").lang).toEqual("fr");
       expect(doc.querySelector("html").dir).toEqual("");
-      done();
-    });
+    }).then(done);
   });
 });

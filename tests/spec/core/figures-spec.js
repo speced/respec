@@ -1,6 +1,9 @@
 "use strict";
 describe("Core - Figures", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   it("should have handled figures", function(done) {
     var ops = {
       config: makeBasicConfig(),
@@ -20,7 +23,6 @@ describe("Core - Figures", function() {
       expect($tof.find("ul li").length).toEqual(2);
       expect($tof.find("ul li a").first().text()).toEqual("Fig. 1 PREFIG");
       expect($tof.find("ul li a").last().text()).toEqual("Fig. 2 IMGTIT");
-      done();
-    });
+    }).then(done);
   });
 });

@@ -8,8 +8,7 @@ describe("Core - Utils", function() {
     require(["core/utils"], function(u) {
       utils = u;
       window.utils = u;
-      done();
-    });
+    }).then(done);
   });
 
   // linkCSS()

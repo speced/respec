@@ -1,6 +1,9 @@
 describe("Core — Definitions", function() {
   "use strict";
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   it("should process definitions", function(done) {
     let ops = {
       config: makeBasicConfig(),
@@ -10,8 +13,7 @@ describe("Core — Definitions", function() {
       var $sec = $("#dfn", doc);
       expect($sec.find("dfn").attr("id")).toEqual("dfn-text");
       expect($sec.find("a").attr("href")).toEqual("#dfn-text");
-      done();
-    });
+    }).then(done);
   });
 
   it("should make links <code> when their definitions are <code>", function(done) {
@@ -35,8 +37,7 @@ describe("Core — Definitions", function() {
       expect($sec.find("a:contains('outerPre')").contents()[0].nodeName).toEqual("CODE");
       expect($sec.find("a:contains('innerCode')").contents()[0].nodeName).toEqual("CODE");
       expect($sec.find("a:contains('partial')").contents()[0].nodeName).toEqual("#text");
-      done();
-    });
+    }).then(done);
   });
 
   it("should process aliases", function(done) {
@@ -52,8 +53,7 @@ describe("Core — Definitions", function() {
       var $sec = $("#dfn", doc);
       expect($sec.find("dfn").attr("data-lt")).toEqual("text|text 1|text 2|text 3");
       expect($sec.find("dfn").attr("data-dfn-type")).toEqual("dfn");
-      done();
-    });
+    }).then(done);
   });
 
   it("should allow defined dfn-type ", function(done) {
@@ -68,7 +68,6 @@ describe("Core — Definitions", function() {
     makeRSDoc(ops, function(doc) {
       var $sec = $("#dfn", doc);
       expect($sec.find("dfn").attr("data-dfn-type")).toEqual("myType");
-      done();
-    });
+    }).then(done);
   });
 });

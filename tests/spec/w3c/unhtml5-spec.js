@@ -1,6 +1,9 @@
 describe("W3C - un-HTML5", function() {
   "use strict";
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   it("should have renamed all the HTML5 elements to div.elName", function(done) {
     var ops = {
       config: makeBasicConfig(),
@@ -13,7 +16,6 @@ describe("W3C - un-HTML5", function() {
       expect($("div.figure", doc).length).toBeGreaterThan(0);
       expect($("figcaption", doc).length).toEqual(0);
       expect($("div.figcaption", doc).length).toBeGreaterThan(0);
-      done();
-    });
+    }).then(done);
   });
 });

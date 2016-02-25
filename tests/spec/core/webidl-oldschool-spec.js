@@ -1,13 +1,15 @@
 "use strict";
 describe("Core - Legacy WebIDL", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   var doc;
   beforeAll(function(done) {
     var ops = makeStandardOps();
     makeRSDoc(ops, function(idlDoc) {
       doc = idlDoc;
-      done();
-    }, "spec/core/webidl.html");
+    }, "spec/core/webidl.html").then(done);
   });
   it("should handle interfaces", function(done) {
     var $target = $("#if-basic", doc);

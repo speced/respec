@@ -26,8 +26,7 @@ describe("Core - Structure", function() {
       expect($toc.find("a[href='#six']").text()).toEqual("1.1.1.1.1.1 SIX");
       expect($toc.find("> ul > li").first().next().find("> a").text()).toEqual("A. ONE");
       expect($toc.find("a[href='#six-1']").text()).toEqual("A.1.1.1.1.1 SIX");
-      done();
-    });
+    }).then(done);
   });
 
   it("should not build a ToC with noTOC", function(done) {
@@ -39,8 +38,7 @@ describe("Core - Structure", function() {
     ops.config.noTOC = true;
     makeRSDoc(ops, function(doc) {
       expect(doc.getElementById("toc")).toEqual(null);
-      done();
-    });
+    }).then(done);
   });
 
   it("should include introductory sections in ToC with tocIntroductory", function(done) {
@@ -56,8 +54,7 @@ describe("Core - Structure", function() {
       expect($toc.find("li").length).toEqual(18);
       expect($toc.find("> ul > li a").first().text()).toEqual("Abstract");
       expect($toc.find("> ul > li a[href='#intro']").length).toEqual(1);
-      done();
-    });
+    }).then(done);
   });
 
   it("should limit ToC depth with maxTocLevel", function(done) {
@@ -75,7 +72,6 @@ describe("Core - Structure", function() {
       expect($toc.find("a[href='#four']").text()).toEqual("1.1.1.1 FOUR");
       expect($toc.find("> ul > li").first().next().find("> a").text()).toEqual("A. ONE");
       expect($toc.find("a[href='#four-1']").text()).toEqual("A.1.1.1 FOUR");
-      done();
-    });
+    }).then(done);
   });
 });

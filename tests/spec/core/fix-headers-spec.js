@@ -1,6 +1,9 @@
 "use strict";
 describe("Core - Fix headers", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   it("should have set the correct header level", function(done) {
     var ops = {
       config: makeBasicConfig(),
@@ -24,7 +27,6 @@ describe("Core - Fix headers", function() {
       expect($s.find("h6").length).toEqual(2);
       expect($s.find("h6").first().text()).toMatch(/FIVE/);
       expect($s.find("h6").last().text()).toMatch(/SIX/);
-      done();
-    });
+    }).then(done);
   });
 });

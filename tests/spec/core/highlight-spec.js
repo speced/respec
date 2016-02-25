@@ -1,6 +1,9 @@
 "use strict";
 describe("Core — Highlight", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   it("should process highlights", function(done) {
     var ops = {
       config: makeBasicConfig(),
@@ -13,7 +16,6 @@ describe("Core — Highlight", function() {
       expect($ex.hasClass("highlight")).toBeTruthy();
       expect($ex.hasClass("prettyprint")).toBeTruthy();
       expect($ex.find("span.str").length).toBeGreaterThan(0);
-      done();
-    });
+    }).then(done);
   });
 });

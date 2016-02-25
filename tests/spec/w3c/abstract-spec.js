@@ -1,6 +1,9 @@
 "use strict";
 describe("W3C — Abstract", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   it("should include an h2, set the class, and wrap the content", function(done) {
     var ops = {
       config: makeBasicConfig(),
@@ -15,8 +18,7 @@ describe("W3C — Abstract", function() {
       expect($abs.find("h2 span").attr('property')).toEqual('xhv:role');
       expect($abs.hasClass("introductory")).toBeTruthy();
       expect($abs.find("p").length).toBeTruthy();
-      done();
-    });
+    }).then(done);
   });
   // XXX we should also test that an error is sent when absent
 });

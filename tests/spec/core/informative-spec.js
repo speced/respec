@@ -1,6 +1,9 @@
 "use strict";
 describe("Core — Informative", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   it("should process informative sections", function(done) {
     var ops = {
       config: makeBasicConfig(),
@@ -12,7 +15,6 @@ describe("Core — Informative", function() {
       expect($sec.find("p").length).toEqual(1);
       expect($sec.find("p em").length).toEqual(1);
       expect($sec.find("p em").text()).toEqual("This section is non-normative.");
-      done();
-    });
+    }).then(done);
   });
 });

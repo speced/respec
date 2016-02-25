@@ -1,6 +1,9 @@
 "use strict";
 describe("W3C — Conformance", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   it("should include an h2 and inject its content", function(done) {
     var ops = {
       doRDFa: false,
@@ -15,8 +18,7 @@ describe("W3C — Conformance", function() {
       expect($c.find("p").length).toEqual(3);
       expect($c.find("p").text()).toMatch("non-normative");
       expect($c.find("p").last().text()).toMatch("CONFORMANCE");
-      done();
-    });
+    }).then(done);
   });
 
   it("should include only referenced 2119 terms", function(done) {
@@ -30,8 +32,7 @@ describe("W3C — Conformance", function() {
       var $c = $("#conformance", doc);
       var $d = $(".rfc2119", $c);
       expect($d.length).toEqual(3);
-      done();
-    });
+    }).then(done);
   });
 
   it("should omit the 2119 reference when there are no terms", function(done) {
@@ -45,7 +46,6 @@ describe("W3C — Conformance", function() {
       var $c = $("#conformance", doc);
       var $d = $(".rfc2119", $c);
       expect($d.length).toEqual(0);
-      done();
-    });
+    }).then(done);
   });
 });

@@ -1,6 +1,9 @@
 "use strict";
 describe("Core - ID headers", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   it("should have set ID on header", function(done) {
     var ops = {
       config: makeBasicConfig(),
@@ -10,7 +13,6 @@ describe("Core - ID headers", function() {
     makeRSDoc(ops, function(doc) {
       var $s = $("section h2:contains('FOO')", doc);
       expect($s.attr("id")).toEqual("foo");
-      done();
-    });
+    }).then(done);
   });
 });

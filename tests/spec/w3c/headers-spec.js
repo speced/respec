@@ -1,6 +1,9 @@
 "use strict";
 describe("W3C — Headers", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   var simpleSpecURL = "spec/core/simple.html";
   // specStatus
   it("should take specStatus into account", function(done) {
@@ -58,7 +61,7 @@ describe("W3C — Headers", function() {
       expect($dd.find("a[href='mailto:EMAIL']").text()).toEqual("EMAIL");
       expect($dd.get(0).dataset.editorId).toEqual("1234");
       expect($dd.text()).toMatch(/\(NOTE\)/);
-    }).then(function(){
+    }).then(function() {
       var ops = makeStandardOps();
       var newProps = {
         specStatus: "REC",
@@ -201,7 +204,7 @@ describe("W3C — Headers", function() {
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
       expect($("#subtitle", doc).length).toEqual(0);
-    }).then(function(){
+    }).then(function() {
       var ops = makeStandardOps();
       var newProps = {
         specStatus: "REC",
@@ -352,7 +355,7 @@ describe("W3C — Headers", function() {
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
       expect($(".head .copyright", doc).text()).toMatch(/XXX\s+&\s+W3C/);
-    }).then(function(){
+    }).then(function() {
       var ops = makeStandardOps();
       var newProps = {
         specStatus: "unofficial",
@@ -362,7 +365,7 @@ describe("W3C — Headers", function() {
       return makeRSDoc(ops, function(doc) {
         expect($(".head .copyright", doc).text()).toEqual("XXX");
       });
-    }).then(function(){
+    }).then(function() {
       var ops = makeStandardOps();
       var newProps = {
         specStatus: "REC",
@@ -399,7 +402,7 @@ describe("W3C — Headers", function() {
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
       expect($(".head .copyright", doc).text()).toMatch(/1977-2012/);
-    }).then(function(){
+    }).then(function() {
       var ops = makeStandardOps();
       var newProps = {
         publishDate: "2012-03-15",
@@ -421,7 +424,7 @@ describe("W3C — Headers", function() {
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
       expect($("dt:contains('Latest Recommendation:')", doc).next("dd").text()).toEqual("URI");
-    }).then(function(){
+    }).then(function() {
       var ops = makeStandardOps();
       var newProps = {
         prevRecShortname: "SN"
@@ -455,7 +458,7 @@ describe("W3C — Headers", function() {
       expect($sotd.find("a:contains('subscribe')").attr("href")).toEqual("mailto:WGLIST-request@w3.org?subject=subscribe");
       expect($sotd.find("a:contains('archives')").attr("href")).toEqual("http://lists.w3.org/Archives/Public/WGLIST/");
       expect($sotd.find("a:contains('disclosures')").attr("href")).toEqual("WGPATENT");
-    }, simpleSpecURL).then(function(){
+    }, simpleSpecURL).then(function() {
       var ops = makeStandardOps();
       var newProps = {
         "wg": ["WGNAME1", "WGNAME2"],
@@ -574,7 +577,7 @@ describe("W3C — Headers", function() {
       expect($sotd.find("a:contains('WGLIST@w3.org')").attr("href")).toEqual("mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D");
       expect($sotd.find("a:contains('subscribe')").attr("href")).toEqual("mailto:WGLIST-request@w3.org?subject=subscribe");
       expect($sotd.find("a:contains('archives')").attr("href")).toEqual("http://lists.w3.org/Archives/Public/WGLIST/");
-    }).then(function(){
+    }).then(function() {
       var ops = makeStandardOps();
       var newProps = {
         specStatus: "BG-FINAL",

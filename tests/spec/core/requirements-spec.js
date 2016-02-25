@@ -1,6 +1,9 @@
 "use strict";
 describe("Core — Requirements", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   it("should process requirements", function(done) {
     var ops = {
       config: makeBasicConfig(),
@@ -14,8 +17,7 @@ describe("Core — Requirements", function() {
       expect($a.length).toEqual(1);
       expect($a.text()).toEqual("Req. 1");
       expect($a.attr("href")).toEqual("#req-id");
-      done();
-    });
+    }).then(done);
   });
 
   it("should process requirement references", function(done) {
@@ -30,7 +32,6 @@ describe("Core — Requirements", function() {
       var $refs = $("a.reqRef", doc);
       expect($refs.first().text()).toEqual("Req. 1");
       expect($refs.last().text()).toEqual("Req. not found 'foo'");
-      done();
-    });
+    }).then(done);
   });
 });

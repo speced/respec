@@ -83,9 +83,9 @@ describe("W3C - Style", function() {
         var query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
         var elem = doc.querySelector(query);
         expect(elem.src).toEqual("https://www.w3.org/scripts/TR/2016/fixup.js");
-        done();
       };
-      makeRSDoc(ops, theTest, "spec/core/simple.html");
+      makeRSDoc(ops, theTest, "spec/core/simple.html")
+        .then(done);
     });
 
     it("should have a meta viewport added", function(done) {
@@ -94,9 +94,9 @@ describe("W3C - Style", function() {
       var theTest = function(doc) {
         var elem = doc.head.querySelector("meta[name=viewport]");
         expect(elem).toBeTruthy();
-        done();
       };
-      makeRSDoc(ops, theTest, "spec/core/simple.html");
+      makeRSDoc(ops, theTest, "spec/core/simple.html")
+        .then(done);
     });
   //}
 

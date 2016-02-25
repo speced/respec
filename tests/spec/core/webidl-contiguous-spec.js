@@ -1,13 +1,15 @@
 "use strict";
 describe("Core - Contiguous WebIDL", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   var doc;
   beforeAll(function(done) {
     var ops = makeStandardOps();
     makeRSDoc(ops, function(idlDoc) {
       doc = idlDoc;
-      done();
-    }, "spec/core/webidl-contiguous.html");
+    }, "spec/core/webidl-contiguous.html").then(done);
   });
   it("should handle interfaces", function(done) {
     var $target = $("#if-basic", doc);
@@ -72,7 +74,6 @@ describe("Core - Contiguous WebIDL", function() {
       "interface SuperStar {\n" +
       "};";
     expect($target.text()).toEqual(text);
-
     done();
   });
 
@@ -390,7 +391,6 @@ describe("Core - Contiguous WebIDL", function() {
     expect($target.find(":contains('floats')").filter("a").attr("href")).toEqual("#dom-exfields-floats");
     expect($target.find(".idlField:contains('floats')").attr("id")).toEqual("idl-def-exfields-floats");
     expect($target.find(":contains('numbers')").filter("a").length).toEqual(0);
-
     done();
   });
 

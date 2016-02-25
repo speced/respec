@@ -1,6 +1,9 @@
 "use strict";
 describe("Core — Data Include", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   // this does not test much, someone for whom this is
   // important should provide more tests
   it("should include an external file", function(done) {
@@ -12,12 +15,11 @@ describe("Core — Data Include", function() {
       expect($sec.find("p").text()).toEqual("INCLUDED");
       expect($sec.find("div > p").length).toEqual(1);
       expect($sec.find("div > p").attr("data-include")).toBeFalsy();
-      done();
     };
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody(),
     }
-    makeRSDoc(ops, theTest, url);
+    makeRSDoc(ops, theTest, url).then(done);
   });
 });

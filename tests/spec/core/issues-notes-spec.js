@@ -1,6 +1,9 @@
 "use strict";
 describe("Core — Issues and Notes", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   it("should process issues and notes", function(done) {
     var ops = {
       config: makeBasicConfig(),

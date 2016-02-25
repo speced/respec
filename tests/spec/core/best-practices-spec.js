@@ -1,6 +1,9 @@
 describe("Core — Best Practices", function() {
   "use strict";
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   it("should process examples", function(done) {
     var bodyText = "<section><span class='practicelab'>BP1</span>";
     bodyText += "<span class='practicelab'>BP2</span>";
@@ -18,7 +21,6 @@ describe("Core — Best Practices", function() {
       expect($pls.last().text()).toEqual("Best Practice 2: BP2");
       expect($bps.find("h2, h3, h4, h5, h6").text()).toEqual("Best Practices Summary");
       expect($bps.find("ul li").length).toEqual(2);
-      done();
-    });
+    }).then(done);
   });
 });

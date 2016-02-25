@@ -1,6 +1,9 @@
 "use strict";
 describe("Core — Examples", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   it("should process examples", function(done) {
     var ops = {
       config: makeBasicConfig(),
@@ -17,7 +20,6 @@ describe("Core — Examples", function() {
       expect($div.find("div.example-title").text()).toEqual("Example 1: EX");
       expect($ex.attr("title")).toBeUndefined();
       expect($ex.text()).toEqual("{\n  CONTENT\n}");
-      done();
-    });
+    }).then(done);
   });
 });

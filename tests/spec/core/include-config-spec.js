@@ -1,6 +1,9 @@
 "use strict";
 describe("Core — Include config as JSON", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   var ops = {
     config: makeBasicConfig(),
     body: $("<section id='abstract'>no content</section><section id='sotd'><p>x</p></section>")
@@ -11,15 +14,13 @@ describe("Core — Include config as JSON", function() {
       expect(script.tagName).toEqual("SCRIPT");
       expect(script.id).toEqual("initialUserConfig");
       expect(script.type).toEqual("application/json");
-      done();
-    });
+    }).then(done);
   });
   it("should have the same content for the config and the script's text", function(done) {
     makeRSDoc(ops, function(doc){
       var $script = $("#initialUserConfig", doc);
       var jsonConfig = JSON.stringify(doc.defaultView.respecConfig.initialUserConfig, null, 2);
       expect($script[0].innerHTML).toEqual(jsonConfig);
-      done();
-    });
+    }).then(done);
   });
 });

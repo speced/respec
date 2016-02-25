@@ -1,6 +1,9 @@
 "use strict";
 describe("W3C — RDFa", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
 
   function makeCustomConfig() {
     return {
@@ -48,8 +51,7 @@ describe("W3C — RDFa", function() {
 
       var $lang = $("html>head>meta[property='dc:language']", doc);
       expect($lang.attr('content')).toEqual("en");
-      done();
-    });
+    }).then(done);
   });
 
   it("should set RDFa information on editors", function(done) {
@@ -90,8 +92,7 @@ describe("W3C — RDFa", function() {
       $rest = $sp.next();
       expect($rest.attr("property")).toEqual("rdf:rest");
       expect($rest.attr("resource")).toEqual("rdf:nil");
-      done();
-    });
+    }).then(done);
   });
 
   it("should set RDFa information on authors", function(done) {
@@ -117,8 +118,7 @@ describe("W3C — RDFa", function() {
       expect($spp.attr("property")).toEqual('foaf:name');
       expect($spp.text()).toEqual('Shane McCarron');
 
-      done();
-    });
+    }).then(done);
   });
 
   it("should set information on patent", function(done) {
@@ -130,8 +130,7 @@ describe("W3C — RDFa", function() {
       var $c = $("#sotd_patent", doc);
       expect($c.attr('property')).toEqual("w3p:patentRules");
 
-      done();
-    });
+    }).then(done);
   });
   it("should describe normative references", function(done) {
     var ops = {
@@ -154,8 +153,7 @@ describe("W3C — RDFa", function() {
       expect($ir.find("dl dt").length).toEqual(1);
       expect($ir.find("dl dt:contains('[REX]')").length).toEqual(1);
       expect($ir.find("dl>dd>a").attr('property')).toEqual('dc:references');
-      done();
-    });
+    }).then(done);
   });
 
   it("should mark abstract using dc:abstract", function(done) {
@@ -169,8 +167,7 @@ describe("W3C — RDFa", function() {
       expect($abs.attr('property')).toEqual("dc:abstract");
       expect($abs.attr('typeof')).not.toBeDefined();
       expect($abs.attr('resource')).not.toBeDefined();
-      done();
-    });
+    }).then(done);
   });
 
   it("should add bibo to chapters", function(done) {
@@ -184,8 +181,7 @@ describe("W3C — RDFa", function() {
       expect($chap.attr('typeof')).toEqual("bibo:Chapter");
       expect($chap.attr('resource')).toEqual("#chap");
       expect($chap.attr('property')).toMatch(/bibo:hasPart/);
-      done();
-    });
+    }).then(done);
   });
 
   it("should do nothing when disabled", function(done) {
@@ -222,7 +218,6 @@ describe("W3C — RDFa", function() {
       expect($c.attr('property')).not.toBeDefined();
       expect($c.attr('content')).not.toBeDefined();
       expect($c.attr('about')).not.toBeDefined();
-      done();
-    });
+    }).then(done);
   });
 });

@@ -1,6 +1,9 @@
 "use strict";
 describe("W3C — Permalinks", function() {
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
 
   function makeCustomConfig() {
     return {
@@ -36,8 +39,7 @@ describe("W3C — Permalinks", function() {
       $c = $("#testing", doc);
       list = $(".permalink", $c);
       expect(list.length).toEqual(1);
-      done();
-    });
+    }).then(done);
   });
 
   it("permalinks data should be added when div or h* have an id", function(done) {
@@ -54,8 +56,7 @@ describe("W3C — Permalinks", function() {
       list = $(".permalink", $c);
       expect(list.length).toEqual(1);
 
-      done();
-    });
+    }).then(done);
   });
 
   it("permalinks data should not be added when section or h* have no id", function(done) {
@@ -71,8 +72,7 @@ describe("W3C — Permalinks", function() {
       var list = $(".permalink", $c);
       expect(list.length).toEqual(0);
 
-      done();
-    });
+    }).then(done);
   });
 
   it("permalinks data should not be added when section has a class of nolink", function(done) {
@@ -85,8 +85,7 @@ describe("W3C — Permalinks", function() {
       var $c = $("#testing", doc);
       var list = $(".permalink", $c);
       expect(list.length).toEqual(0);
-      done();
-    });
+    }).then(done);
   });
 
   it("should do nothing when disabled", function(done) {
@@ -119,8 +118,7 @@ describe("W3C — Permalinks", function() {
       var $n = $("#testing", doc);
       list = $n.children(".permalink");
       expect(list.length).toEqual(0);
-      done();
-    });
+    }).then(done);
   });
 
   it("permalinks content attribute should have special characters escaped", function(done) {
@@ -135,8 +133,7 @@ describe("W3C — Permalinks", function() {
       expect(list.length).toEqual(1);
       expect($(list[0]).attr("content")).toMatch(/'/);
       expect($(list[0]).attr("content")).toMatch(/"/);
-      done();
-    });
+    }).then(done);
   });
 
   it("permalinks not on edge will have non-breaking space after heading", function(done) {
@@ -150,7 +147,6 @@ describe("W3C — Permalinks", function() {
       var list = $("h2", $c);
       expect(list.length).toEqual(1);
       expect(list[0].innerHTML).toMatch(/&nbsp;/);
-      done();
-    });
+    }).then(done);
   });
 });

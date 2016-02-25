@@ -1,6 +1,9 @@
 describe("W3C — Bibliographic References", function() {
   "use strict";
-  flushIframes();
+  afterAll(function(done) {
+    flushIframes();
+    done();
+  });
   var customConfig = {
     editors: [
         {name: "Robin Berjon"}
@@ -52,7 +55,6 @@ describe("W3C — Bibliographic References", function() {
       ref = doc.querySelector("#bib-TestRef3 + dd");
       expect(ref).toBeTruthy();
       expect(ref.textContent).toMatch(/^Publisher Here\.\s/);
-      done();
-    });
+    }).then(done);
   });
 });
