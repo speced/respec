@@ -58,9 +58,7 @@ function makeRSDoc(opts, cb, src, style) {
         .addClass("remove");
       head.appendChild(config);
       var loader = destDoc.createElement("script");
-      var loadAttr = (isPhantom()) ? {
-        src: "/builds/respec-w3c-common.js"
-      } : {
+      var loadAttr = {
         src: "/js/require.js",
         "data-main": path + (opts.profile || "profile-w3c-common")
       };
