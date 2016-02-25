@@ -30,7 +30,6 @@ function spawnPhantom(url) {
     childProcess.stderr.pipe(process.stderr);
   }
   const args = process.argv.slice(2).join(" ");
-  debug(`ARGS: ${args}`);
   const cmd = `phantomjs --ssl-protocol=any ./tests/phantom.js ${url} ${args}`;
   return toExecutable(cmd).run();
 }
