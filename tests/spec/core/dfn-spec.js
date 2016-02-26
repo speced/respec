@@ -1,11 +1,11 @@
+"use strict";
 describe("Core — Definitions", function() {
-  "use strict";
   afterAll(function(done) {
     flushIframes();
     done();
   });
   it("should process definitions", function(done) {
-    let ops = {
+    var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() + "<section id='dfn'><dfn>text</dfn><a>text</a></section>",
     };

@@ -1,5 +1,5 @@
+"use strict";
 describe("W3C — Bibliographic References", function() {
-  "use strict";
   afterAll(function(done) {
     flushIframes();
     done();
@@ -10,7 +10,7 @@ describe("W3C — Bibliographic References", function() {
     ],
     shortName: "Foo",
     specStatus: "WD",
-    prevVersion: 'FPWD',
+    prevVersion: "FPWD",
     previousMaturity: "WD",
     previousPublishDate: "2013-12-17",
     localBiblio: {

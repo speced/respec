@@ -15,14 +15,14 @@ describe("Core - Utils", function() {
   // linkCSS()
   it("should add a link element", function(done) {
     utils.linkCSS(document, "BOGUS");
-    expect($("link[href='BOGUS']").length == 1).toBeTruthy();
+    expect($("link[href='BOGUS']").length).toEqual(1);
     $("link[href='BOGUS']").remove();
     done();
   });
 
   it("should add several link elements", function(done) {
     utils.linkCSS(document, ["BOGUS", "BOGUS", "BOGUS"]);
-    expect($("link[href='BOGUS']").length == 3).toBeTruthy();
+    expect($("link[href='BOGUS']").length).toEqual(3);
     $("link[href='BOGUS']").remove();
     done();
   });
@@ -228,7 +228,9 @@ describe("Core - Utils", function() {
     var tns = $("<div>aa<span>bb</span><p>cc<i>dd</i></p><pre>nope</pre></div>").allTextNodes(["pre"]);
     expect(tns.length).toEqual(4);
     var str = "";
-    for (var i = 0, n = tns.length; i < n; i++) str += tns[i].nodeValue;
+    for (var i = 0, n = tns.length; i < n; i++) {
+      str += tns[i].nodeValue;
+    }
     expect(str).toEqual("aabbccdd");
     done();
   });
@@ -243,7 +245,8 @@ describe("Core - Utils", function() {
       edDraftURI: "http://foo.com",
       shortName: "Foo"
     };
-    var expected = 'editors=[{"name":"Person Name"}], specStatus="ED", edDraftURI="http://foo.com", shortName="Foo"';
+    var expected = "editors=[{\"name\":\"Person Name\"}], specStatus=\"ED\", " +
+      "edDraftURI=\"http://foo.com\", shortName=\"Foo\"";
     expect(utils.toKeyValuePairs(obj)).toEqual(expected);
     done();
   });
@@ -257,7 +260,8 @@ describe("Core - Utils", function() {
       edDraftURI: "http://foo.com",
       shortName: "Foo"
     };
-    var expected = 'editors=[{"name":"Person Name"}]|||specStatus="ED"|||edDraftURI="http://foo.com"|||shortName="Foo"';
+    var expected = "editors=[{\"name\":\"Person Name\"}]|||specStatus=\"ED\"|||" +
+      "edDraftURI=\"http://foo.com\"|||shortName=\"Foo\"";
     expect(utils.toKeyValuePairs(obj, "|||")).toEqual(expected);
     done();
   });
@@ -271,7 +275,8 @@ describe("Core - Utils", function() {
       edDraftURI: "http://foo.com",
       shortName: "Foo"
     };
-    var expected = 'editors;[{"name":"Person Name"}], specStatus;"ED", edDraftURI;"http://foo.com", shortName;"Foo"';
+    var expected = "editors;[{\"name\":\"Person Name\"}], specStatus;\"ED\", " +
+      "edDraftURI;\"http://foo.com\", shortName;\"Foo\"";
     expect(utils.toKeyValuePairs(obj, null, ";")).toEqual(expected);
 
     expected = 'editors^[{"name":"Person Name"}] % specStatus^"ED" % edDraftURI^"http://foo.com" % shortName^"Foo"';

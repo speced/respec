@@ -41,16 +41,16 @@ describe("W3C — RDFa", function() {
 
     makeRSDoc(ops, function(doc) {
       var $c = $("html", doc);
-      expect($c.attr('prefix')).toMatch(/bibo:/);
-      expect($c.attr('prefix')).toMatch(/w3p:/);
-      expect($c.attr('prefix')).not.toMatch(/dc:/);
-      expect($c.attr('prefix')).not.toMatch(/foaf:/);
-      expect($c.attr('prefix')).not.toMatch(/xsd:/);
-      expect($c.attr('typeof')).toMatch(/w3p:PER/);
-      expect($c.attr('typeof')).toMatch(/bibo:Document/);
+      expect($c.attr("prefix")).toMatch(/bibo:/);
+      expect($c.attr("prefix")).toMatch(/w3p:/);
+      expect($c.attr("prefix")).not.toMatch(/dc:/);
+      expect($c.attr("prefix")).not.toMatch(/foaf:/);
+      expect($c.attr("prefix")).not.toMatch(/xsd:/);
+      expect($c.attr("typeof")).toMatch(/w3p:PER/);
+      expect($c.attr("typeof")).toMatch(/bibo:Document/);
 
       var $lang = $("html>head>meta[property='dc:language']", doc);
-      expect($lang.attr('content')).toEqual("en");
+      expect($lang.attr("content")).toEqual("en");
     }).then(done);
   });
 
@@ -65,17 +65,17 @@ describe("W3C — RDFa", function() {
       expect($dd.attr("property")).toEqual("bibo:editor");
       expect($dd.attr("resource")).toEqual("_:editor0");
       var $sp = $dd.children("span").first();
-      expect($sp.attr("property")).toEqual('rdf:first');
-      expect($sp.attr("typeof")).toEqual('foaf:Person');
+      expect($sp.attr("property")).toEqual("rdf:first");
+      expect($sp.attr("typeof")).toEqual("foaf:Person");
       var $meta = $sp.children("meta");
-      expect($meta.attr("property")).toEqual('foaf:name');
-      expect($meta.attr("content")).toEqual('Shane McCarron');
+      expect($meta.attr("property")).toEqual("foaf:name");
+      expect($meta.attr("content")).toEqual("Shane McCarron");
       var $a = $sp.children("a");
-      expect($a.attr("property")).toEqual('foaf:homepage');
-      expect($a.attr("href")).toEqual('http://URI');
+      expect($a.attr("property")).toEqual("foaf:homepage");
+      expect($a.attr("href")).toEqual("http://URI");
       $a = $sp.children("span").children("a");
-      expect($a.attr("property")).toEqual('foaf:mbox');
-      expect($a.attr("href")).toEqual('mailto:EMAIL');
+      expect($a.attr("property")).toEqual("foaf:mbox");
+      expect($a.attr("href")).toEqual("mailto:EMAIL");
       var $rest = $sp.next();
       expect($rest.attr("property")).toEqual("rdf:rest");
       expect($rest.attr("resource")).toEqual("_:editor1");
@@ -84,11 +84,11 @@ describe("W3C — RDFa", function() {
       expect($ddd.attr("property")).not.toBeDefined();
       expect($ddd.attr("resource")).toEqual("_:editor1");
       $sp = $ddd.children("span").first();
-      expect($sp.attr("property")).toEqual('rdf:first');
-      expect($sp.attr("typeof")).toEqual('foaf:Person');
+      expect($sp.attr("property")).toEqual("rdf:first");
+      expect($sp.attr("typeof")).toEqual("foaf:Person");
       var $spp = $sp.children("span");
-      expect($spp.attr("property")).toEqual('foaf:name');
-      expect($spp.text()).toEqual('Gregg Kellogg');
+      expect($spp.attr("property")).toEqual("foaf:name");
+      expect($spp.text()).toEqual("Gregg Kellogg");
       $rest = $sp.next();
       expect($rest.attr("property")).toEqual("rdf:rest");
       expect($rest.attr("resource")).toEqual("rdf:nil");
@@ -105,18 +105,18 @@ describe("W3C — RDFa", function() {
       var $dd = $("dt:contains('Authors:')", doc).next("dd");
       var $sp = $dd.children("span").first();
       expect($sp.attr("property")).toEqual("dc:contributor");
-      expect($sp.attr("typeof")).toEqual('foaf:Person');
+      expect($sp.attr("typeof")).toEqual("foaf:Person");
       var $spp = $sp.children("span");
-      expect($spp.attr("property")).toEqual('foaf:name');
-      expect($spp.text()).toEqual('Gregg Kellogg');
+      expect($spp.attr("property")).toEqual("foaf:name");
+      expect($spp.text()).toEqual("Gregg Kellogg");
 
       var $ddd = $dd.next("dd");
       $sp = $ddd.children("span").first();
-      expect($sp.attr("property")).toEqual('dc:contributor');
-      expect($sp.attr("typeof")).toEqual('foaf:Person');
+      expect($sp.attr("property")).toEqual("dc:contributor");
+      expect($sp.attr("typeof")).toEqual("foaf:Person");
       $spp = $sp.children("span");
-      expect($spp.attr("property")).toEqual('foaf:name');
-      expect($spp.text()).toEqual('Shane McCarron');
+      expect($spp.attr("property")).toEqual("foaf:name");
+      expect($spp.text()).toEqual("Shane McCarron");
 
     }).then(done);
   });
@@ -128,8 +128,7 @@ describe("W3C — RDFa", function() {
     };
     makeRSDoc(ops, function(doc) {
       var $c = $("#sotd_patent", doc);
-      expect($c.attr('property')).toEqual("w3p:patentRules");
-
+      expect($c.attr("property")).toEqual("w3p:patentRules");
     }).then(done);
   });
   it("should describe normative references", function(done) {
@@ -139,20 +138,19 @@ describe("W3C — RDFa", function() {
         "<section><p>[[!DAHU]] [[REX]]</p></section>",
     };
     makeRSDoc(ops, function(doc) {
-
       var $nr = $("#normative-references", doc);
       var $ir = $("#informative-references", doc);
-      expect($nr.attr('typeof')).toMatch(/bibo:Chapter/);
-      expect($nr.attr('resource')).toEqual("#normative-references");
+      expect($nr.attr("typeof")).toMatch(/bibo:Chapter/);
+      expect($nr.attr("resource")).toEqual("#normative-references");
       expect($nr.find("dl dt").length).toEqual(1);
       expect($nr.find("dl dt:contains('[DAHU]')").length).toEqual(1);
-      expect($nr.find("dl>dd>a").attr('property')).toEqual('dc:requires');
+      expect($nr.find("dl>dd>a").attr("property")).toEqual("dc:requires");
 
-      expect($ir.attr('typeof')).toMatch(/bibo:Chapter/);
-      expect($ir.attr('resource')).toEqual("#informative-references");
+      expect($ir.attr("typeof")).toMatch(/bibo:Chapter/);
+      expect($ir.attr("resource")).toEqual("#informative-references");
       expect($ir.find("dl dt").length).toEqual(1);
       expect($ir.find("dl dt:contains('[REX]')").length).toEqual(1);
-      expect($ir.find("dl>dd>a").attr('property')).toEqual('dc:references');
+      expect($ir.find("dl>dd>a").attr("property")).toEqual("dc:references");
     }).then(done);
   });
 
@@ -164,9 +162,9 @@ describe("W3C — RDFa", function() {
     };
     makeRSDoc(ops, function(doc) {
       var $abs = $("#abstract", doc);
-      expect($abs.attr('property')).toEqual("dc:abstract");
-      expect($abs.attr('typeof')).not.toBeDefined();
-      expect($abs.attr('resource')).not.toBeDefined();
+      expect($abs.attr("property")).toEqual("dc:abstract");
+      expect($abs.attr("typeof")).not.toBeDefined();
+      expect($abs.attr("resource")).not.toBeDefined();
     }).then(done);
   });
 
@@ -178,9 +176,9 @@ describe("W3C — RDFa", function() {
     };
     makeRSDoc(ops, function(doc) {
       var $chap = $("#chap", doc);
-      expect($chap.attr('typeof')).toEqual("bibo:Chapter");
-      expect($chap.attr('resource')).toEqual("#chap");
-      expect($chap.attr('property')).toMatch(/bibo:hasPart/);
+      expect($chap.attr("typeof")).toEqual("bibo:Chapter");
+      expect($chap.attr("resource")).toEqual("#chap");
+      expect($chap.attr("property")).toMatch(/bibo:hasPart/);
     }).then(done);
   });
 
@@ -213,11 +211,11 @@ describe("W3C — RDFa", function() {
     };
     makeRSDoc(ops, function(doc) {
       var $c = $("html", doc);
-      expect($c.attr('prefix')).not.toBeDefined();
-      expect($c.attr('typeof')).not.toBeDefined();
-      expect($c.attr('property')).not.toBeDefined();
-      expect($c.attr('content')).not.toBeDefined();
-      expect($c.attr('about')).not.toBeDefined();
+      expect($c.attr("prefix")).not.toBeDefined();
+      expect($c.attr("typeof")).not.toBeDefined();
+      expect($c.attr("property")).not.toBeDefined();
+      expect($c.attr("content")).not.toBeDefined();
+      expect($c.attr("about")).not.toBeDefined();
     }).then(done);
   });
 });

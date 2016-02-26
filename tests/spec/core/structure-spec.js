@@ -6,8 +6,8 @@ describe("Core - Structure", function() {
     "<section><h2>FIVE</h2><section><h2>SIX</h2></section></section></section></section></section></section>" +
     "<section class='notoc'><h2>Not in TOC</h2></section>" +
     "<section class='appendix'><h2>ONE</h2><section><h2>TWO</h2><section><h2>THREE</h2><section>" +
-    "<h2>FOUR</h2><section><h2>FIVE</h2><section><h2>SIX</h2><p>[[DAHUT]]</p><p>[[!HTML5]]</p></section></section></section>" +
-    "</section></section></section>";
+    "<h2>FOUR</h2><section><h2>FIVE</h2><section><h2>SIX</h2><p>[[DAHUT]]</p><p>[[!HTML5]]</p>" +
+    "</section></section></section></section></section></section>";
   it("should build a ToC with default values", function(done) {
     var ops = {
       config: makeBasicConfig(),
@@ -17,9 +17,9 @@ describe("Core - Structure", function() {
       // test default values
       var $toc = $("#toc", doc);
       expect($toc.find("h2").text()).toEqual("Table of Contents");
-      expect($toc.find("h2 span").attr('resource')).toEqual('xhv:heading');
-      expect($toc.find("h2 span").attr('property')).toEqual('xhv:role');
-      expect($toc.find("ul:first").attr('role')).toEqual('directory');
+      expect($toc.find("h2 span").attr("resource")).toEqual("xhv:heading");
+      expect($toc.find("h2 span").attr("property")).toEqual("xhv:role");
+      expect($toc.find("ul:first").attr("role")).toEqual("directory");
       expect($toc.find("> ul > li").length).toEqual(3);
       expect($toc.find("li").length).toEqual(15);
       expect($toc.find("> ul > li a").first().text()).toEqual("1. ONE");

@@ -38,11 +38,11 @@ var specStatus = [{
 },];
 
 function loadWithStatus(status, expectedURL, mode) {
-  return new Promise(function(resolve){
+  return new Promise(function(resolve) {
     var config = makeBasicConfig();
     config.useExperimentalStyles = false;
     config.specStatus = status;
-    config.prevVersion = 'FPWD';
+    config.prevVersion = "FPWD";
     config.previousMaturity = "WD";
     config.previousPublishDate = "2013-12-17";
     var version = "";
@@ -76,7 +76,7 @@ describe("W3C - Style", function() {
   //flushIframes();
   // Tests are busted in PhantomJS
   //if (!isPhantom()) {
-    it("should include 'fixup.js'", function(done) {
+  it("should include 'fixup.js'", function(done) {
       var ops = makeStandardOps();
       ops.config.useExperimentalStyles = "2016";
       var theTest = function(doc) {
@@ -88,7 +88,7 @@ describe("W3C - Style", function() {
         .then(done);
     });
 
-    it("should have a meta viewport added", function(done) {
+  it("should have a meta viewport added", function(done) {
       var ops = makeStandardOps();
       ops.config.useExperimentalStyles = "2016";
       var theTest = function(doc) {

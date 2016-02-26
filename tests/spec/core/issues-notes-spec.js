@@ -92,9 +92,9 @@ describe("Core — Issues and Notes", function() {
         "<p id='ixx' class='issue'>Unnumbered ISSUE</p></section>",
     };
     makeRSDoc(ops, function(doc) {
-      var $i10 = $("#i10", doc).parent('div');
-      var $i11 = $("#i11", doc).parent('div');
-      var $ixx = $("#ixx", doc).parent('div');
+      var $i10 = $("#i10", doc).parent("div");
+      var $i11 = $("#i11", doc).parent("div");
+      var $ixx = $("#ixx", doc).parent("div");
       expect($i10.find("div.issue-title").length).toEqual(1);
       expect($i10.find("div.issue-title").text()).toEqual("Issue 10");
 

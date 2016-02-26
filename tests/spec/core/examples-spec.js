@@ -9,7 +9,7 @@ describe("Core — Examples", function() {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
         "<section>" +
-        "<pre class='example' title='EX'>\n  {\n    CONTENT\n  }\n  </pre>"+
+        "<pre class='example' title='EX'>\n  {\n    CONTENT\n  }\n  </pre>" +
         "</section>",
     };
     makeRSDoc(ops, function(doc) {

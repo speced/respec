@@ -1,5 +1,5 @@
+"use strict";
 describe("Core — Best Practices", function() {
-  "use strict";
   afterAll(function(done) {
     flushIframes();
     done();

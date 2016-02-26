@@ -1,6 +1,5 @@
-/*globals flushIframes, makeRSDoc*/
+"use strict";
 describe("Core — Default Root Attribute", function() {
-  "use strict";
   afterAll(function(done) {
     flushIframes();
     done();

@@ -17,7 +17,7 @@ describe("Core — Include config as JSON", function() {
     }).then(done);
   });
   it("should have the same content for the config and the script's text", function(done) {
-    makeRSDoc(ops, function(doc){
+    makeRSDoc(ops, function(doc) {
       var $script = $("#initialUserConfig", doc);
       var jsonConfig = JSON.stringify(doc.defaultView.respecConfig.initialUserConfig, null, 2);
       expect($script[0].innerHTML).toEqual(jsonConfig);
