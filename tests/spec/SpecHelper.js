@@ -3,36 +3,12 @@
 "use strict";
 var iframes = [];
 
-// Polyfill for Object.assign()
-// From https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
-if (typeof Object.assign != 'function') {
-  (function () {
-    Object.assign = function (target) {
-      if (target === undefined || target === null) {
-        throw new TypeError('Cannot convert undefined or null to object');
-      }
-      var output = Object(target);
-      for (var index = 1; index < arguments.length; index++) {
-        var source = arguments[index];
-        if (source !== undefined && source !== null) {
-          for (var nextKey in source) {
-            if (source.hasOwnProperty(nextKey)) {
-              output[nextKey] = source[nextKey];
-            }
-          }
-        }
-      }
-      return output;
-    };
-  })();
-}
-
 function makeRSDoc(opts, cb, src, style) {
   return new Promise(function(resove, reject) {
     if (!src) {
-      src = "about-blank.html";
+      src = "base/tests/about-blank.html";
     }
-    if(!style){
+    if (!style) {
       style = "display: none";
     }
     var $ifr = $("<iframe src='" + src + "' style='" + style + "'></iframe>");
@@ -59,7 +35,7 @@ function makeRSDoc(opts, cb, src, style) {
       head.appendChild(config);
       var loader = destDoc.createElement("script");
       var loadAttr = {
-        src: "/js/require.js",
+        src: "/base/js/require.js",
         "data-main": path + (opts.profile || "profile-w3c-common")
       };
       $(loader)
