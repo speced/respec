@@ -1,15 +1,13 @@
 {
   "name": "respec",
   "version": "3.2.97",
+  "license": "W3C",
   "description": "Specification Edition Support Tool.",
   "main": "index.js",
   "directories": {
     "doc": "docs",
     "example": "examples",
     "test": "tests"
-  },
-  "scripts": {
-    "test": "node ./tests/headless.js"
   },
   "bin": {
     "respec2html": "./tools/respec2html.js"
@@ -23,11 +21,26 @@
     "async": "^1.5.0",
     "colors": "^1.1.2",
     "express": "*",
+    "jasmine-core": "^2.4.1",
     "jasmine-reporters": "^2.1.1",
+    "karma": "^0.13.21",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-firefox-launcher": "^0.1.7",
+    "karma-jasmine": "^0.3.7",
+    "karma-requirejs": "^0.2.5",
+    "karma-safari-launcher": "^0.1.1",
     "marcosc-async": "^1.0.2",
     "moment": "^2.11.2",
     "phantomjs-prebuilt": "^2.1.4",
     "prompt": "^0.2.14",
     "requirejs": "^2.1.22"
+  },
+  "scripts": {
+    "karma": "karma start --single-run",
+    "test": "npm run karma && node ./tests/headless.js",
+    "jshint": "jshint tests",
+    "jscs": "jscs --esnext tests",
+    "jscs:fix": "jscs --esnext --fix tests",
+    "pretest": "npm run jshint && npm run jscs"
   }
 }
