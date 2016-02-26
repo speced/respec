@@ -1,5 +1,5 @@
-describe("W3C - un-HTML5", function() {
-  "use strict";
+"use strict";
+xdescribe("W3C - un-HTML5", function() {
   afterAll(function(done) {
     flushIframes();
     done();
