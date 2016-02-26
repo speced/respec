@@ -5,34 +5,22 @@
 const fs = require("fs");
 const async = require("marcosc-async");
 const builder = require("../tools/build-w3c-common");
-const colors = require('colors');
+const colors = require("colors");
 const exec = require("child_process").exec;
 const express = require("express");
 const noOp = function() {};
 const moment = require("moment");
 colors.setTheme({
-  data: 'grey',
-  debug: 'cyan',
-  error: 'red',
-  help: 'cyan',
-  info: 'green',
-  input: 'grey',
-  prompt: 'grey',
-  verbose: 'cyan',
-  warn: 'yellow',
+  data: "grey",
+  debug: "cyan",
+  error: "red",
+  help: "cyan",
+  info: "green",
+  input: "grey",
+  prompt: "grey",
+  verbose: "cyan",
+  warn: "yellow",
 });
-
-function spawnPhantom(url) {
-  if (process.env.TRACE) {
-    debug("PhantomJS version:");
-    let childProcess = exec("phantomjs -v", noOp);
-    childProcess.stdout.pipe(process.stdout);
-    childProcess.stderr.pipe(process.stderr);
-  }
-  const args = process.argv.slice(2).join(" ");
-  const cmd = `phantomjs --ssl-protocol=any ./tests/phantom.js ${url} ${args}`;
-  return toExecutable(cmd).run();
-}
 
 function toExecutable(cmd) {
   return {
@@ -89,7 +77,6 @@ function debug(msg) {
 
 async.task(function*() {
   const server = "http://localhost:3000";
-  const specRunner = `${server}/tests/phantom-runner.html`;
   debug("Starting up Express...");
   const app = express();
   const dir = require("path").join(__dirname, "..");
@@ -98,15 +85,12 @@ async.task(function*() {
 
   if (process.env.TRAVIS) {
     yield runRespec2html(server);
-    yield spawnPhantom(specRunner);
     return;
   }
   debug("Building ReSpec...");
   yield builder.buildW3C();
   debug("Running ReSpec2html tests...");
   yield runRespec2html(server);
-  debug("Starting up PhantomJS + Jasmine...");
-  yield spawnPhantom(specRunner);
   process.exit(0);
 }).catch((err) => {
   console.error(err);
