@@ -91,8 +91,11 @@ async.task(function*() {
   yield builder.buildW3C();
   debug("Running ReSpec2html tests...");
   yield runRespec2html(server);
-  process.exit(0);
-}).catch((err) => {
+})
+.then(
+  () => process.exit(0)
+)
+.catch((err) => {
   console.error(err);
   process.exit(1);
 });
