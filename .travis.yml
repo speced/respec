@@ -7,6 +7,7 @@ before_install:
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16 -extension RANDR"
 
 before_script:
+  - export CHROME_BIN=chromium-browser
   - cd $TRAVIS_BUILD_DIR
   - ./node_modules/.bin/mozilla-download --branch mozilla-central --product firefox firefox
   - export FIREFOX_PATH=$TRAVIS_BUILD_DIR/firefox/firefox
