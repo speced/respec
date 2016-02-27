@@ -123,7 +123,7 @@ module.exports = function(config) {
     console.log(i, process.env[i]);
   }
   if(process.env.TRAVIS){
-    configuration.autoWatch = false;
+    config.autoWatch = false;
     config.browsers = ['chrome_canary_travis', "Firefox"];
     config.singleRun = true;
     config.concurrency = Infinity;
