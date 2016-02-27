@@ -119,8 +119,11 @@ module.exports = function(config) {
       }
     },
   });
+  for (var i in process.env){
+    console.log(i, process.env[i]);
+  }
   if(process.env.TRAVIS){
-    config.browsers = ['Chrome_travis_ci', "Firefox"];
+    config.browsers = ['ChromeCanary', "Firefox"];
     config.singleRun = true;
     config.concurrency = Infinity;
     config.reporters = ["progress"];
