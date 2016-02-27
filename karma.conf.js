@@ -112,7 +112,6 @@ module.exports = function(config) {
 
     browserNoActivityTimeout: 100000,
 
-
     customLaunchers: {
       Chrome_travis_ci: {
         base: 'Chrome',
@@ -124,5 +123,6 @@ module.exports = function(config) {
     config.browsers = ['Chrome_travis_ci', "Firefox"];
     config.singleRun = true;
     config.concurrency = Infinity;
+    config.reporters = ["progress"];
   }
 };
