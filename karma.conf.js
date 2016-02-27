@@ -113,17 +113,18 @@ module.exports = function(config) {
     browserNoActivityTimeout: 100000,
 
     customLaunchers: {
-      Chrome_travis_ci: {
-        base: 'Chrome',
-        flags: ['--no-sandbox']
-      }
+      chrome_canary_travis: {
+        base: 'ChromeCanary',
+        flags: [ '--no-sandbox' ]
+       },
     },
   });
   for (var i in process.env){
     console.log(i, process.env[i]);
   }
   if(process.env.TRAVIS){
-    config.browsers = ['ChromeCanary', "Firefox"];
+    configuration.autoWatch = false;
+    config.browsers = ['chrome_canary_travis', "Firefox"];
     config.singleRun = true;
     config.concurrency = Infinity;
     config.reporters = ["progress"];
