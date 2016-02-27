@@ -5,7 +5,7 @@ module.exports = function(config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
+    basePath: './',
 
 
     // frameworks to use
@@ -22,7 +22,7 @@ module.exports = function(config) {
         pattern: 'js/**/*.css',
         included: false,
         served: true,
-      },{
+      }, {
         pattern: 'js/**/*.html',
         included: false,
         served: true,
@@ -34,16 +34,26 @@ module.exports = function(config) {
         pattern: 'tests/**/*.html',
         included: false,
         served: true,
-      },
-      {
-        pattern: 'node_modules/requirejs/*.js',
+      }, {
+        pattern: 'node_modules/requirejs/require.js',
+        included: false,
+        served: true,
+      }, {
+        pattern: "node_modules/promise-polyfill/Promise.js",
+        included: false,
+        served: true,
+      }, {
+        pattern: "js/core/utils.js",
+        included: false,
+        served: true,
+      }, {
+        pattern: "node_modules/jquery/dist/jquery*.js",
         included: false,
         served: true,
       },
-      'js/jquery.js',
-      'js/Promise.min.js',
       'tests/spec/SpecHelper.js',
       'tests/test-main.js',
+      'node_modules/jquery/dist/jquery.js'
     ],
 
     // list of files to exclude
@@ -55,12 +65,9 @@ module.exports = function(config) {
 
     proxies: {
       '/js/': '/base/js/',
-      '/js/require.js' : '/base/node_modules/requirejs/require.js',
-      '/spec/core/simple.html': '/base/tests/spec/core/simple.html',
-      '/spec/core/includer.html': '/base/tests/spec/core/includer.html',
-      '/spec/core/webidl-contiguous.html': '/base/tests/spec/core/webidl-contiguous.html',
-      '/spec/core/webidl.html': '/base/tests/spec/core/webidl.html',
-      '/js/profile-w3c-common.js': '/base/js/profile-w3c-common.js',
+      '/tests/': '/base/tests/',
+      '/spec/': '/base/tests/spec/',
+      '/node_modules/': '/base/node_modules/',
     },
 
     // preprocess matching files before serving them to the browser
@@ -71,8 +78,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
-
+    reporters: ['mocha'],
 
     // web server port
     port: 9876,
@@ -93,7 +99,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Firefox'], //'Chrome', 'Safari'
+    browsers: ['Safari'],
 
 
     // Continuous Integration mode
@@ -102,6 +108,8 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity
+    concurrency: 1,
+
+    browserNoActivityTimeout: 100000,
   });
 };

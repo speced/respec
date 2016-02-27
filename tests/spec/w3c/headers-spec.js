@@ -1,10 +1,22 @@
 "use strict";
 describe("W3C — Headers", function() {
-  afterAll(function(done) {
+  afterEach(function(done) {
     flushIframes();
     done();
   });
   var simpleSpecURL = "spec/core/simple.html";
+  // prevRecShortname & prevRecURI
+  it("should take prevRecShortname and prevRecURI into account", function(done) {
+    var ops = makeStandardOps();
+    var newProps = {
+      prevRecURI: "URI"
+    };
+    Object.assign(ops.config, newProps);
+    makeRSDoc(ops, function(doc) {
+      expect($("dt:contains('Latest Recommendation:')", doc).next("dd").text())
+        .toEqual("URI");
+    }).then(done);
+  });
   // specStatus
   it("should take specStatus into account", function(done) {
     var ops = makeStandardOps();
@@ -33,7 +45,7 @@ describe("W3C — Headers", function() {
   });
 
   // editors
-  it("should take editors into account", function(done) {
+  it("should take a single editors into account", function(done) {
     var ops = makeStandardOps();
     var newProps = {
       specStatus: "REC",
@@ -70,29 +82,31 @@ describe("W3C — Headers", function() {
       expect($dd.get(0).dataset.editorId)
         .toEqual("1234");
       expect($dd.text()).toMatch(/\(NOTE\)/);
-    }).then(function() {
-      var ops = makeStandardOps();
-      var newProps = {
-        specStatus: "REC",
-        doRDFa: false,
-        "editors": [{
-          name: "NAME1"
-        }, {
-          name: "NAME2"
-        }]
-      };
-      Object.assign(ops.config, newProps);
-      return makeRSDoc(ops, function(doc) {
-        expect($("dt:contains('Editors:')", doc).length)
-          .toEqual(1);
-        expect($("dt:contains('Editor:')", doc).length)
-          .toEqual(0);
-        var $dd = $("dt:contains('Editors:')", doc).next("dd");
-        expect($dd.text())
-          .toEqual("NAME1");
-        expect($dd.next("dd").text())
-          .toEqual("NAME2");
-      });
+    }).then(done);
+  });
+
+  it("should take multiple editors into account", function(done) {
+    var ops = makeStandardOps();
+    var newProps = {
+      specStatus: "REC",
+      doRDFa: false,
+      "editors": [{
+        name: "NAME1"
+      }, {
+        name: "NAME2"
+      }]
+    };
+    Object.assign(ops.config, newProps);
+    makeRSDoc(ops, function(doc) {
+      expect($("dt:contains('Editors:')", doc).length)
+        .toEqual(1);
+      expect($("dt:contains('Editor:')", doc).length)
+        .toEqual(0);
+      var $dd = $("dt:contains('Editors:')", doc).next("dd");
+      expect($dd.text())
+        .toEqual("NAME1");
+      expect($dd.next("dd").text())
+        .toEqual("NAME2");
     }).then(done);
   });
 
@@ -180,7 +194,7 @@ describe("W3C — Headers", function() {
   });
 
   // authors
-  it("should take authors into account", function(done) {
+  it("should take a single author into account", function(done) {
     var ops = makeStandardOps();
     var newProps = {
       specStatus: "REC",
@@ -198,9 +212,12 @@ describe("W3C — Headers", function() {
       var $dd = $("dt:contains('Author:')", doc).next("dd");
       expect($dd.text())
         .toEqual("NAME1");
-    }).then(function() {
-      var ops = makeStandardOps();
-      var newProps = {
+    }).then(done);
+  });
+
+  it("should take a multiple authors into account", function(done) {
+    var ops = makeStandardOps();
+    var newProps = {
         specStatus: "REC",
         doRDFa: false,
         "authors": [{
@@ -209,8 +226,8 @@ describe("W3C — Headers", function() {
           name: "NAME2"
         }]
       };
-      Object.assign(ops.config, newProps);
-      return makeRSDoc(ops, function(doc) {
+    Object.assign(ops.config, newProps);
+    makeRSDoc(ops, function(doc) {
         expect($("dt:contains('Authors:')", doc).length)
           .toEqual(1);
         expect($("dt:contains('Author:')", doc).length)
@@ -220,12 +237,11 @@ describe("W3C — Headers", function() {
           .toEqual("NAME1");
         expect($dd.next("dd").text())
           .toEqual("NAME2");
-      });
-    }).then(done);
+      }).then(done);
   });
 
   // subtitle
-  it("should take subtitle into account", function(done) {
+  it("should handle missing subtitle", function(done) {
     var ops = makeStandardOps();
     var newProps = {
       specStatus: "REC"
@@ -234,20 +250,22 @@ describe("W3C — Headers", function() {
     makeRSDoc(ops, function(doc) {
       expect($("#subtitle", doc).length)
         .toEqual(0);
-    }).then(function() {
-      var ops = makeStandardOps();
-      var newProps = {
+    }).then(done);
+  });
+
+  it("should take subtitle into account", function(done) {
+    var ops = makeStandardOps();
+    var newProps = {
         specStatus: "REC",
         "subtitle": "SUB"
       };
-      Object.assign(ops.config, newProps);
-      return makeRSDoc(ops, function(doc) {
+    Object.assign(ops.config, newProps);
+    makeRSDoc(ops, function(doc) {
         expect($("#subtitle", doc).length)
           .toEqual(1);
         expect($("#subtitle", doc).text())
           .toEqual("SUB");
-      });
-    }).then(done);
+      }).then(done);
   });
 
   // publishDate
@@ -397,28 +415,32 @@ describe("W3C — Headers", function() {
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
       expect($(".head .copyright", doc).text()).toMatch(/XXX\s+&\s+W3C/);
-    }).then(function() {
-      var ops = makeStandardOps();
-      var newProps = {
-        specStatus: "unofficial",
-        additionalCopyrightHolders: "XXX"
-      };
-      Object.assign(ops.config, newProps);
-      return makeRSDoc(ops, function(doc) {
-        expect($(".head .copyright", doc).text())
-          .toEqual("XXX");
-      });
-    }).then(function() {
-      var ops = makeStandardOps();
-      var newProps = {
-        specStatus: "REC",
-        additionalCopyrightHolders: "<span class='test'>XXX</span>"
-      };
-      Object.assign(ops.config, newProps);
-      return makeRSDoc(ops, function(doc) {
-        expect($(".head .copyright .test", doc).text())
-          .toEqual("XXX");
-      });
+    }).then(done);
+  });
+
+  it("should take additionalCopyrightHolders into account when spec is unofficial", function(done) {
+    var ops = makeStandardOps();
+    var newProps = {
+      specStatus: "unofficial",
+      additionalCopyrightHolders: "XXX"
+    };
+    Object.assign(ops.config, newProps);
+    makeRSDoc(ops, function(doc) {
+      expect($(".head .copyright", doc).text())
+        .toEqual("XXX");
+    }).then(done);
+  });
+
+  it("should handle additionalCopyrightHolders when text is markup", function(done) {
+    var ops  = makeStandardOps();
+    var newProps = {
+      specStatus: "REC",
+      additionalCopyrightHolders: "<span class='test'>XXX</span>"
+    };
+    Object.assign(ops.config, newProps);
+    makeRSDoc(ops, function(doc) {
+      expect($(".head .copyright .test", doc).text())
+        .toEqual("XXX");
     }).then(done);
   });
 
@@ -440,7 +462,7 @@ describe("W3C — Headers", function() {
   });
 
   // copyrightStart
-  it("should take copyrightStart into account", function(done) {
+  it("should take copyrightStart with an old date", function(done) {
     var ops = makeStandardOps();
     var newProps = {
       publishDate: "2012-03-15",
@@ -449,39 +471,18 @@ describe("W3C — Headers", function() {
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
       expect($(".head .copyright", doc).text()).toMatch(/1977-2012/);
-    }).then(function() {
-      var ops = makeStandardOps();
-      var newProps = {
-        publishDate: "2012-03-15",
-        copyrightStart: "2012"
-      };
-      Object.assign(ops.config, newProps);
-      return makeRSDoc(ops, function(doc) {
-        expect($(".head .copyright", doc).text()).not.toMatch(/2012-2012/);
-      });
     }).then(done);
   });
 
-  // prevRecShortname & prevRecURI
-  it("should take prevRecShortname and prevRecURI into account", function(done) {
+  it("should handle copyrightStart with a new date", function(done) {
     var ops = makeStandardOps();
     var newProps = {
-      prevRecURI: "URI"
+      publishDate: "2012-03-15",
+      copyrightStart: "2012"
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
-      expect($("dt:contains('Latest Recommendation:')", doc).next("dd").text())
-        .toEqual("URI");
-    }).then(function() {
-      var ops = makeStandardOps();
-      var newProps = {
-        prevRecShortname: "SN"
-      };
-      Object.assign(ops.config, newProps);
-      return makeRSDoc(ops, function(doc) {
-        expect($("dt:contains('Latest Recommendation:')", doc).next("dd").text())
-          .toEqual("http://www.w3.org/TR/SN");
-      });
+      expect($(".head .copyright", doc).text()).not.toMatch(/2012-2012/);
     }).then(done);
   });
 
@@ -514,32 +515,34 @@ describe("W3C — Headers", function() {
         .toEqual("http://lists.w3.org/Archives/Public/WGLIST/");
       expect($sotd.find("a:contains('disclosures')").attr("href"))
         .toEqual("WGPATENT");
-    }, simpleSpecURL).then(function() {
-      var ops = makeStandardOps();
-      var newProps = {
-        "wg": ["WGNAME1", "WGNAME2"],
-        "wgURI": ["WGURI1", "WGURI2"],
-        "wgPatentURI": ["WGPATENT1", "WGPATENT2"],
-        wgPublicList: "WGLIST"
-      };
-      Object.assign(ops.config, newProps);
-      return makeRSDoc(ops, function(doc) {
-        var $sotd = $("#sotd", doc);
-        expect($sotd.find("a:contains('WGNAME1')").length)
-          .toEqual(2);
-        expect($sotd.find("a:contains('WGNAME2')").length)
-          .toEqual(2);
-        expect($sotd.find("a:contains('WGNAME1')").first().attr("href"))
-          .toEqual("WGURI1");
-        expect($sotd.find("a:contains('WGNAME1')").last().attr("href"))
-          .toEqual("WGPATENT1");
-        expect($sotd.find("a:contains('WGNAME2')").first().attr("href"))
-          .toEqual("WGURI2");
-        expect($sotd.find("a:contains('WGNAME2')").last().attr("href"))
-          .toEqual("WGPATENT2");
-        expect($sotd.find("a:contains('disclosures')").length)
-          .toEqual(2);
-      });
+    }, simpleSpecURL).then(done);
+  });
+
+  it("should take multi-group configurations into account", function(done) {
+    var ops = makeStandardOps();
+    var newProps = {
+      "wg": ["WGNAME1", "WGNAME2"],
+      "wgURI": ["WGURI1", "WGURI2"],
+      "wgPatentURI": ["WGPATENT1", "WGPATENT2"],
+      wgPublicList: "WGLIST"
+    };
+    Object.assign(ops.config, newProps);
+    makeRSDoc(ops, function(doc) {
+      var $sotd = $("#sotd", doc);
+      expect($sotd.find("a:contains('WGNAME1')").length)
+        .toEqual(2);
+      expect($sotd.find("a:contains('WGNAME2')").length)
+        .toEqual(2);
+      expect($sotd.find("a:contains('WGNAME1')").first().attr("href"))
+        .toEqual("WGURI1");
+      expect($sotd.find("a:contains('WGNAME1')").last().attr("href"))
+        .toEqual("WGPATENT1");
+      expect($sotd.find("a:contains('WGNAME2')").first().attr("href"))
+        .toEqual("WGURI2");
+      expect($sotd.find("a:contains('WGNAME2')").last().attr("href"))
+        .toEqual("WGPATENT2");
+      expect($sotd.find("a:contains('disclosures')").length)
+        .toEqual(2);
     }).then(done);
   });
 
@@ -624,7 +627,7 @@ describe("W3C — Headers", function() {
   });
 
   // CG/BG
-  it("should handle CG-BG status", function(done) {
+  it("should handle CG-DRAFT status", function(done) {
     var ops = makeStandardOps();
     var newProps = {
       specStatus: "CG-DRAFT",
@@ -658,17 +661,20 @@ describe("W3C — Headers", function() {
         .toEqual("mailto:WGLIST-request@w3.org?subject=subscribe");
       expect($sotd.find("a:contains('archives')").attr("href"))
         .toEqual("http://lists.w3.org/Archives/Public/WGLIST/");
-    }).then(function() {
-      var ops = makeStandardOps();
-      var newProps = {
+    }).then(done);
+  });
+
+  it("should handle BG-FINAL status", function(done) {
+    var ops = makeStandardOps();
+    var newProps = {
         specStatus: "BG-FINAL",
         wg: "WGNAME",
         wgURI: "http://WG",
         thisVersion: "http://THIS",
         latestVersion: "http://LATEST"
       };
-      Object.assign(ops.config, newProps);
-      return makeRSDoc(ops, function(doc) {
+    Object.assign(ops.config, newProps);
+    makeRSDoc(ops, function(doc) {
         expect($(".head .copyright a[href='https://www.w3.org/community/about/agreements/fsa/']", doc).length)
           .toEqual(1);
         expect($(".head h2", doc).text()).toMatch(/Final Business Group Report/);
@@ -681,8 +687,7 @@ describe("W3C — Headers", function() {
           .toEqual(1);
         expect($sotd.find("a[href='https://www.w3.org/community/about/agreements/final/']").length)
           .toEqual(1);
-      });
-    }).then(done);
+      }).then(done);
   });
 
   // Member-SUBM
@@ -783,4 +788,5 @@ describe("W3C — Headers", function() {
         .toEqual("WGPATENT");
     }, simpleSpecURL).then(done);
   });
+
 });

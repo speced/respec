@@ -22,7 +22,6 @@ define(
         }
 
         function handleIssues($ins, ghIssues, issueBase) {
-          debugger;
           $(doc).find("head link").first().before($("<style/>").text(css));
           var hasDataNum = $(".issue[data-number]").length > 0,
             issueNum = 0,

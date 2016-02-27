@@ -1,39 +1,44 @@
 #!/usr/local/bin/node
 
-var prompt = require("prompt");
+"use strict";
+var cmdPrompt = require("prompt");
 var async = require("async");
 var fs = require("fs");
 var pth = require("path");
 var bwc = require("./build-w3c-common");
 var exec = require("child_process").exec;
-var rfs = function (f) {
+var rfs = function(f) {
   return fs.readFileSync(f, {
     encoding: "utf8"
   });
 };
-var wfs = function (f, data) {
+var wfs = function(f, data) {
   return fs.writeFileSync(f, data, {
     encoding: "utf8"
   });
 };
-var rel = function (f) {
+var rel = function(f) {
   return pth.join(__dirname, f);
 };
 var targetVersion;
 
-prompt.start();
+cmdPrompt.start();
 
 // 1. Make sure you are up to date and on the develop branch (git up; git checkout develop)
 function upToDateAndDev(cb) {
-  prompt.get({
+  cmdPrompt.get({
     description: "Are you up to date and on branch develop",
     pattern: /^[yn]$/i,
     message: "Values can be 'y' or 'n'.",
     default: "y"
-  }, function (err, res) {
+  }, function(err, res) {
     var val = res.question.toLowerCase();
-    if (err) return cb(err);
-    if (val === "n") return cb("Make sure to run git up; git checkout develop");
+    if (err) {
+      return cb(err);
+    }
+    if (val === "n") {
+      return cb("Make sure to run git up; git checkout develop");
+    }
     cb();
   });
 }
@@ -42,18 +47,22 @@ function upToDateAndDev(cb) {
 function bumpVersion(cb) {
   var pack = rfs(rel("../package.json"));
   var version = pack.match(/"version"\s*:\s*"([\d\.]+)"/)[1];
-  if (!version) cb("Version string not found in package.json");
+  if (!version) {
+    cb("Version string not found in package.json");
+  }
   var newVersion = version.split(".");
   newVersion[2]++;
   newVersion = newVersion.join(".");
-  prompt.get({
+  cmdPrompt.get({
     description: "Current version is " + version + ", bump it to",
     pattern: /^\d+\.\d+\.\d+$/i,
     message: "Values must be x.y.z",
     default: newVersion
-  }, function (err, res) {
+  }, function(err, res) {
     targetVersion = res.question;
-    if (err) return cb(err);
+    if (err) {
+      return cb(err);
+    }
     pack = pack.replace(/("version"\s*:\s*")[\d\.]+(")/, "$1" + targetVersion + "$2");
     wfs(rel("../package.json"), pack);
     cb();
@@ -67,15 +76,19 @@ function bumpVersion(cb) {
 // 6. Merge to gh-pages (git checkout gh-pages; git merge develop)
 // 7. Tag the release (git tag v3.x.y) and be sure that git is pushing tags.
 function buildAddCommitMergeTag(cb) {
-  prompt.get({
+  cmdPrompt.get({
     description: "Are you ready to build, add, commit, merge, and tag",
     pattern: /^[yn]$/i,
     message: "Values can be 'y' or 'n'.",
     default: "y"
-  }, function (err, res) {
+  }, function(err, res) {
     var val = res.question.toLowerCase();
-    if (err) return cb(err);
-    if (val === "n") return cb("User not ready! ABORT, ABORT!");
+    if (err) {
+      return cb(err);
+    }
+    if (val === "n") {
+      return cb("User not ready! ABORT, ABORT!");
+    }
     cb();
   });
 }
@@ -106,14 +119,14 @@ function checkoutDevelop(cb) {
 }
 
 function tag(cb) {
-  var version = "v"+ targetVersion;
+  var version = "v" + targetVersion;
   exec("git tag -m " + version + " " + version, cb);
 }
 
 // 8. Push everything back to the server (make sure you are pushing at least the `develop` and
 //    `gh-pages` branches).
 function pushAll(cb) {
-  prompt.get(
+  cmdPrompt.get(
 
     {
       description: "Are you ready to push everything? This is your last chance",
@@ -121,10 +134,14 @@ function pushAll(cb) {
       message: "Values can be 'y' or 'n'.",
       default: "y"
     },
-    function (err, res) {
+    function(err, res) {
       var val = res.question.toLowerCase();
-      if (err) return cb(err);
-      if (val === "n") return cb("User not ready! ABORT, ABORT!");
+      if (err) {
+        return cb(err);
+      }
+      if (val === "n") {
+        return cb("User not ready! ABORT, ABORT!");
+      }
       cb();
     }
   );
@@ -139,8 +156,13 @@ function pushTags(cb) {
 }
 
 async.series([
-  upToDateAndDev, bumpVersion, buildAddCommitMergeTag, build, add, commit, checkoutGHPages, merge, checkoutDevelop, tag, pushAll, pushCommits, pushTags
-], function (err) {
-  if (err) console.error("ERROR:", err);
-  else console.log("OK!");
+  upToDateAndDev, bumpVersion, buildAddCommitMergeTag, build, add, commit,
+  checkoutGHPages, merge, checkoutDevelop, tag, pushAll, pushCommits,
+  pushTags
+], function(err) {
+  if (err) {
+    console.error("ERROR:", err);
+  } else {
+    console.log("OK!");
+  }
 });

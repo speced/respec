@@ -135,7 +135,7 @@ describe("Core - Markdown", function() {
     }).then(done);
   });
 
-  it("shout not nest content following a section inside of said section", function(done) {
+  it("should not nest content following a section inside of said section", function(done) {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +

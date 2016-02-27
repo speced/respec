@@ -1,5 +1,4 @@
 {
-  "strict": "global",
   "jquery": true,
   "predef": [ "require", "define" ]
 }

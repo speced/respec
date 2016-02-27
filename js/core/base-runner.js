@@ -70,7 +70,7 @@ if (window.console) {
 
 
 define(
-    ["jquery", "Promise.min"],
+    ["jquery", "Promise"],
     function () {
         return {
             runAll:    function (plugs) {

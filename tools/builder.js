@@ -1,54 +1,61 @@
 #!/usr/local/bin/node
 
-var fs   = require("fs")
-,   pth  = require("path")
-,   r    = require("requirejs")
-,   version = JSON.parse(fs.readFileSync(pth.join(__dirname, "../package.json"), "utf-8")).version
-// ,   builds = pth.join(__dirname, "../builds")
-// ,   versioned = pth.join(builds, "respec-w3c-common-" + version + ".js")
-;
+"use strict";
+const async = require("marcosc-async");
+const fsp = require("fs-promise");
+const pth = require("path");
+const r = require("requirejs");
 
-// options:
-//  optimize:   none || uglify || uglify2
-//  out:        /path/to/output
-function build (options, cb) {
-    // optimisation settings
-    // note that the paths/includes below will need to change in when we drop those
-    // older dependencies
-    version = options.version || version;
-    var config = {
-        baseUrl:    pth.join(__dirname, "../js")
-    ,   optimize:   options.optimize || "uglify2"
-    ,   paths:  {
-            requireLib: "./require"
-        }
-    ,   shim:   {
-            "shortcut": {
-                exports:    "shortcut"
-            }
-        }
-    ,   name:       "profile-w3c-common"
-    ,   include:    "requireLib".split(" ")
-    ,   out:        options.out
-    ,   inlineText: true
-    ,   preserveLicenseComments:    false
-    };
-    r.optimize(config, function () {
-        // add header
-        try {
-            fs.writeFileSync(config.out
-                        ,   "/* ReSpec " + version +
-                            " - Robin Berjon, http://berjon.com/ (@robinberjon) */\n" +
-                            "/* Documentation: http://w3.org/respec/. */\n" +
-                            "/* See original source for licenses: https://github.com/darobin/respec. */\n" +
-                            "respecVersion = '" + version + "';\n" +
-                            fs.readFileSync(config.out, "utf8") + "\nrequire(['profile-w3c-common']);\n");
-        }
-        catch (e) {
-            console.log("ERROR", e);
-        }
-        cb();
-    });
-}
+var Builder = {
+  getRespecVersion: async(function*() {
+    const path = pth.join(__dirname, "../package.json");
+    const content = yield fsp.readFile(path, "utf-8");
+    return JSON.parse(content).version;
+  }),
 
-exports.build = build;
+  appendBoilerplate(outPath, version) {
+    return async(function*(optimizedJs, sourceMap) {
+      const respecJs = `"use strict";
+/* ReSpec ${version}
+Created by Robin Berjon, http://berjon.com/ (@robinberjon)
+Documentation: http://w3.org/respec/.
+See original source for licenses: https://github.com/w3c/respec */
+window.respecVersion = ${version};
+${optimizedJs}
+require(['profile-w3c-common']);`;
+      const promiseToWriteJs = fsp.writeFile(outPath, respecJs, "utf-8");
+      const promiseToSourceMap = fsp.writeFile(`${outPath}.map`, sourceMap, "utf-8");
+      yield Promise.all([promiseToWriteJs, promiseToSourceMap]);
+    }, Builder);
+  },
+
+  build(options) {
+    return async.task(function*() {
+      // optimisation settings
+      const version = options.version || (yield this.getRespecVersion());
+      const outputWritter = this.appendBoilerplate(options.out, version);
+      const config = {
+        baseUrl: pth.join(__dirname, "../js/"),
+        optimize: options.optimize || "uglify2",
+        paths: {
+          "require": "../node_modules/requirejs/require",
+          "jquery": "../node_modules/jquery/dist/jquery",
+          "Promise": "../node_modules/promise-polyfill/Promise",
+        },
+        shim: {
+          "shortcut": {
+            exports: "shortcut"
+          }
+        },
+        name: "profile-w3c-common",
+        include: ["require", "jquery", "Promise"],
+        out: outputWritter,
+        inlineText: true,
+        preserveLicenseComments: false,
+      };
+      r.optimize(config);
+    }, Builder);
+  },
+};
+
+exports.Builder = Builder;

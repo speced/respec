@@ -279,7 +279,8 @@ describe("Core - Utils", function() {
       "edDraftURI;\"http://foo.com\", shortName;\"Foo\"";
     expect(utils.toKeyValuePairs(obj, null, ";")).toEqual(expected);
 
-    expected = 'editors^[{"name":"Person Name"}] % specStatus^"ED" % edDraftURI^"http://foo.com" % shortName^"Foo"';
+    expected = "editors^[{\"name\":\"Person Name\"}] % specStatus^\"ED\" % " +
+      "edDraftURI^\"http://foo.com\" % shortName^\"Foo\"";
     expect(utils.toKeyValuePairs(obj, " % ", "^")).toEqual(expected);
     done();
   });

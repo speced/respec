@@ -26,7 +26,7 @@ define(
             "shrink-to-fit": "no",
             "width": "device-width",
         };
-        meta.content = utils.toKeyValuePairs(contentProps);
+        meta.content = utils.toKeyValuePairs(contentProps).replace(/\"/g, "")
         doc.head.appendChild(meta);
       }
 

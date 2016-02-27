@@ -73,32 +73,33 @@ function loadWithStatus(status, expectedURL, mode) {
 }
 
 describe("W3C - Style", function() {
-  //flushIframes();
-  // Tests are busted in PhantomJS
-  //if (!isPhantom()) {
+  afterEach(function(done) {
+    flushIframes();
+    done();
+  });
+
   it("should include 'fixup.js'", function(done) {
-      var ops = makeStandardOps();
-      ops.config.useExperimentalStyles = "2016";
-      var theTest = function(doc) {
-        var query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
-        var elem = doc.querySelector(query);
-        expect(elem.src).toEqual("https://www.w3.org/scripts/TR/2016/fixup.js");
-      };
-      makeRSDoc(ops, theTest, "spec/core/simple.html")
-        .then(done);
-    });
+    var ops = makeStandardOps();
+    ops.config.useExperimentalStyles = "2016";
+    var theTest = function(doc) {
+      var query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
+      var elem = doc.querySelector(query);
+      expect(elem.src).toEqual("https://www.w3.org/scripts/TR/2016/fixup.js");
+    };
+    makeRSDoc(ops, theTest, "spec/core/simple.html")
+      .then(done);
+  });
 
   it("should have a meta viewport added", function(done) {
-      var ops = makeStandardOps();
-      ops.config.useExperimentalStyles = "2016";
-      var theTest = function(doc) {
-        var elem = doc.head.querySelector("meta[name=viewport]");
-        expect(elem).toBeTruthy();
-      };
-      makeRSDoc(ops, theTest, "spec/core/simple.html")
-        .then(done);
-    });
-  //}
+    var ops = makeStandardOps();
+    ops.config.useExperimentalStyles = "2016";
+    var theTest = function(doc) {
+      var elem = doc.head.querySelector("meta[name=viewport]");
+      expect(elem).toBeTruthy();
+    };
+    makeRSDoc(ops, theTest, "spec/core/simple.html")
+      .then(done);
+  });
 
   it("should default to base when specStatus is missing", function(done) {
     loadWithStatus("", "https://www.w3.org/StyleSheets/TR/base").then(done);
@@ -107,7 +108,7 @@ describe("W3C - Style", function() {
   it("should style according to spec status", function(done) {
     // We pick random half from the list, as running the whole set is very slow
 
-    var promises = pickRandomsFromList(specStatus, 3)
+    var promises = pickRandomsFromList(specStatus)
       .map(function(test) {
         return loadWithStatus(test.status, test.expectedURL, "2016");
       });

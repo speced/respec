@@ -1,9 +1,10 @@
 "use strict";
-var TEST_REGEXP = /(spec|test)\.js$/i;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
 // Get a list of all the test files to include
 var allTestFiles = Object.keys(window.__karma__.files)
   .filter(function(file) {
-    return TEST_REGEXP.test(file);
+    // ends with "-spec.js"
+    return /-spec\.js$/.test(file);
   })
   .map(function(file) {
     // Normalize paths to RequireJS module names.
@@ -20,8 +21,7 @@ require.config({
   // Karma serves files under /base, which is the basePath from your config file
   baseUrl: "/base/",
   paths: {
-    "js/jquery": "jquery",
-    "core/utils": "js/core/utils",
+    "jquery": "/node_modules/jquery/dist/jquery.slim.js",
     "ui": (window.respecVersion) ? "https://w3c.github.io/respec/js/ui" : "",
   },
   shim: {

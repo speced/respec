@@ -6,14 +6,14 @@ var iframes = [];
 function makeRSDoc(opts, cb, src, style) {
   return new Promise(function(resove, reject) {
     if (!src) {
-      src = "base/tests/about-blank.html";
+      src = "about:blank";
     }
     if (!style) {
       style = "display: none";
     }
     var $ifr = $("<iframe src='" + src + "' style='" + style + "'></iframe>");
     opts = opts || {};
-    $ifr.load(function() {
+    $ifr.on("load", function() {
       var destDoc = $ifr[0].contentDocument;
       var body = destDoc.body;
       var head = destDoc.head;
@@ -35,7 +35,7 @@ function makeRSDoc(opts, cb, src, style) {
       head.appendChild(config);
       var loader = destDoc.createElement("script");
       var loadAttr = {
-        src: "/base/js/require.js",
+        src: "/node_modules/requirejs/require.js",
         "data-main": path + (opts.profile || "profile-w3c-common")
       };
       $(loader)
