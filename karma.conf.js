@@ -111,5 +111,16 @@ module.exports = function(config) {
     concurrency: 1,
 
     browserNoActivityTimeout: 100000,
+
+
+    customLaunchers: {
+      Chrome_travis_ci: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
+      }
+    },
   });
+  if(process.env.TRAVIS){
+    configuration.browsers = ['Chrome_travis_ci'];
+  }
 };
