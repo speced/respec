@@ -53,6 +53,6 @@
     "jscs": "jscs --esnext tests tools",
     "jscs:fix": "jscs --esnext --fix tests",
     "pretest": "npm run jshint && npm run jscs",
-    "test:travis": "karma start --single-run --reporters mocha karma.conf.js; npm run test:headless"
+    "test:travis": "npm run pretest; karma start --single-run --reporters mocha karma.conf.js; npm run test:headless"
   }
 }
