@@ -37,7 +37,7 @@ async.task(function*() {
   yield Promise.all([builder.buildW3C(), builder.buildW3C(randomName)]);
   yield checkIfFileExists(latest);
   yield checkIfFileExists(customPath);
-  yield Promise.all([fsp.remove(customPath), fsp.remove(`${customPath}.map`)];
+  yield Promise.all([fsp.remove(customPath), fsp.remove(`${customPath}.map`)]);
   console.log(colors.debug(`Deleted ${customPath}.`));
 }).catch(err => {
   console.log(colors.error(err.stack));
