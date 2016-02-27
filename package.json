@@ -38,6 +38,7 @@
     "karma-verbose-summary-reporter": "0.0.1",
     "marcosc-async": "^1.0.2",
     "moment": "^2.11.2",
+    "mozilla-download": "^1.1.1",
     "phantomjs-prebuilt": "^2.1.4",
     "promise-polyfill": "^3.1.0",
     "prompt": "^0.2.14",
