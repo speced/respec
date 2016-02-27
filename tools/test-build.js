@@ -34,7 +34,7 @@ async.task(function*() {
   const latest = path.join(__dirname, "../builds/respec-w3c-common.js");
   const randomName = "test-" + Math.round(Math.random() * 10000000);
   const customPath = path.join(__dirname, `../builds/respec-w3c-common-${randomName}.js`);
-  yield Promise.all([builder.buildW3C(), builder.buildW3C(name)]);
+  yield Promise.all([builder.buildW3C(), builder.buildW3C(randomName)]);
   yield checkIfFileExists(latest);
   yield checkIfFileExists(customPath);
   yield fsp.deleteFile(customPath);
