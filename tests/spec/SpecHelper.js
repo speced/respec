@@ -128,12 +128,12 @@ Polyfill for Object.assign() from:
 https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 */
 /* jshint ignore:start */
-if (typeof Object.assign != 'function') {
+if (typeof Object.assign !== "function") {
   (function() {
     Object.assign = function(target) {
-      'use strict';
+      "use strict";
       if (target === undefined || target === null) {
-        throw new TypeError('Cannot convert undefined or null to object');
+        throw new TypeError("Cannot convert undefined or null to object");
       }
 
       var output = Object(target);
