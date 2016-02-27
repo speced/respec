@@ -108,7 +108,7 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: 1,
+    concurrency: Infinity,
 
     browserNoActivityTimeout: 100000,
 
@@ -121,6 +121,7 @@ module.exports = function(config) {
     },
   });
   if(process.env.TRAVIS){
-    conf.browsers = ['Chrome_travis_ci'];
+    config.browsers = ['Chrome_travis_ci'];
+    config.singleRun = true;
   }
 };
