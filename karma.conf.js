@@ -43,17 +43,12 @@ module.exports = function(config) {
         included: false,
         served: true,
       }, {
-        pattern: "js/core/utils.js",
-        included: false,
-        served: true,
-      }, {
-        pattern: "node_modules/jquery/dist/jquery*.js",
-        included: false,
+        pattern: "node_modules/jquery/dist/jquery.js",
+        included: true,
         served: true,
       },
       'tests/spec/SpecHelper.js',
       'tests/test-main.js',
-      'node_modules/jquery/dist/jquery.js'
     ],
 
     // list of files to exclude
@@ -99,7 +94,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['ChromeCanary', 'Firefox', 'Safari'],
+    browsers: ['Firefox', 'Safari', 'ChromeCanary'],
 
 
     // Continuous Integration mode
@@ -119,9 +114,6 @@ module.exports = function(config) {
        },
     },
   });
-  for (var i in process.env){
-    console.log(i, process.env[i]);
-  }
   if(process.env.TRAVIS){
     config.autoWatch = false;
     config.browsers = ['chrome_canary_travis', "Firefox"];
