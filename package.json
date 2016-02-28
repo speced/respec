@@ -49,7 +49,7 @@
     "test:karma": "npm run karma",
     "test:headless": "node ./tests/headless.js",
     "test": "npm run test:headless; npm run test:karma",
-    "jshint": "jshint tests tools",
+    "jshint": "jshint karma.conf.js tests tools",
     "jscs": "jscs --esnext tests tools",
     "jscs:fix": "jscs --esnext --fix tests",
     "pretest": "npm run jshint && npm run jscs",
