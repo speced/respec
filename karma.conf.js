@@ -46,6 +46,10 @@ module.exports = function(config) {
         pattern: "node_modules/jquery/dist/jquery.js",
         included: true,
         served: true,
+      },{
+        pattern: "./node_modules/handlebars/dist/amd/*.js",
+        included: false,
+        served: true,
       },
       'tests/spec/SpecHelper.js',
       'tests/test-main.js',

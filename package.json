@@ -23,6 +23,7 @@
     "express": "*",
     "fs-extra": "^0.26.5",
     "fs-promise": "^0.4.1",
+    "handlebars": "^4.0.5",
     "jasmine-core": "^2.4.1",
     "jasmine-reporters": "^2.1.1",
     "jquery": "^2.2.1",
