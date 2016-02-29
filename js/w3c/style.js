@@ -14,7 +14,7 @@ define(
         var helperScript = "https://www.w3.org/scripts/TR/{version}/fixup.js"
           .replace("{version}", version);
         script.src = helperScript;
-        doc.head.appendChild(script);
+        doc.body.appendChild(script);
       }
 
       function attachMetaViewport(doc){
