@@ -1,9 +1,9 @@
 // Karma configuration
 // Generated on Fri Feb 26 2016 13:09:51 GMT+1100 (AEDT)
 /*globals module, require, process*/
-"use strict";
 module.exports = function(config) {
-  const os = require("os");
+  "use strict";
+  var os = require("os");
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
