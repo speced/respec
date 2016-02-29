@@ -1,8 +1,8 @@
 // Karma configuration
 // Generated on Fri Feb 26 2016 13:09:51 GMT+1100 (AEDT)
 /*globals module, require, process*/
+"use strict";
 module.exports = function(config) {
-  "use strict";
   var os = require("os");
   config.set({
 
@@ -23,13 +23,6 @@ module.exports = function(config) {
       enabled: false,
       usePhantomJS: false,
       postDetection: function(browsers) {
-        if(process.env.TRAVIS){
-          config.autoWatch = false;
-          config.singleRun = true;
-          config.concurrency = Infinity;
-          config.reporters = ["progress"];
-          return ["chrome_canary_travis", "Firefox"];
-        }
         return browsers;
       }
     },
@@ -141,4 +134,11 @@ module.exports = function(config) {
        },
     },
   });
+  if(process.env.TRAVIS){
+    config.autoWatch = false;
+    config.singleRun = true;
+    config.concurrency = Infinity;
+    config.reporters = ["progress"];
+    return ["chrome_canary_travis", "Firefox"];
+  }
 };
