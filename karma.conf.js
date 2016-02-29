@@ -1,41 +1,62 @@
 // Karma configuration
 // Generated on Fri Feb 26 2016 13:09:51 GMT+1100 (AEDT)
-'use strict';
+/*globals module, require, process*/
+"use strict";
 module.exports = function(config) {
+  const os = require("os");
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: './',
+    basePath: "./",
 
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine', 'requirejs'],
+    frameworks: [
+      "jasmine",
+      "requirejs",
+      "detectBrowsers",
+    ],
 
+    // configuration
+    detectBrowsers: {
+      enabled: true,
+      usePhantomJS: false,
+      postDetection: function(browsers) {
+        if(process.env.TRAVIS){
+          config.autoWatch = false;
+          config.singleRun = true;
+          config.concurrency = Infinity;
+          config.reporters = ["progress"];
+          return ["chrome_canary_travis", "Firefox"];
+        }
+        return browsers;
+      }
+    },
 
     // list of files / patterns to load in the browser
     files: [{
-        pattern: 'js/**/*.js',
+        pattern: "js/**/*.js",
         included: false,
         served: true,
       }, {
-        pattern: 'js/**/*.css',
+        pattern: "js/**/*.css",
         included: false,
         served: true,
       }, {
-        pattern: 'js/**/*.html',
+        pattern: "js/**/*.html",
         included: false,
         served: true,
       }, {
-        pattern: 'tests/**/*-spec.js',
+        pattern: "tests/**/*-spec.js",
         included: false,
         served: true,
       }, {
-        pattern: 'tests/**/*.html',
+        pattern: "tests/**/*.html",
         included: false,
         served: true,
       }, {
-        pattern: 'node_modules/requirejs/require.js',
+        pattern: "node_modules/requirejs/require.js",
         included: false,
         served: true,
       }, {
@@ -47,26 +68,30 @@ module.exports = function(config) {
         included: true,
         served: true,
       },{
-        pattern: "./node_modules/handlebars/dist/amd/*.js",
+        pattern: "./node_modules/handlebars/dist/**/*.js",
+        included: false,
+        served: true,
+      },{
+        pattern: "./node_modules/webidl2/lib/*.js",
         included: false,
         served: true,
       },
-      'tests/spec/SpecHelper.js',
-      'tests/test-main.js',
+      "tests/spec/SpecHelper.js",
+      "tests/test-main.js",
     ],
 
     // list of files to exclude
     exclude: [
-      '**/*.swp',
-      '*.swp',
-      '.DS_Store',
+      "**/*.swp",
+      "*.swp",
+      ".DS_Store",
     ],
 
     proxies: {
-      '/js/': '/base/js/',
-      '/tests/': '/base/tests/',
-      '/spec/': '/base/tests/spec/',
-      '/node_modules/': '/base/node_modules/',
+      "/js/": "/base/js/",
+      "/tests/": "/base/tests/",
+      "/spec/": "/base/tests/spec/",
+      "/node_modules/": "/base/node_modules/",
     },
 
     // preprocess matching files before serving them to the browser
@@ -75,9 +100,9 @@ module.exports = function(config) {
 
 
     // test results reporter to use
-    // possible values: 'dots', 'progress'
+    // possible values: "dots", "progress"
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['mocha'],
+    reporters: ["mocha"],
 
     // web server port
     port: 9876,
@@ -96,10 +121,8 @@ module.exports = function(config) {
     autoWatch: true,
 
 
-    // start these browsers
-    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Firefox', 'Safari', 'ChromeCanary'],
-
+    // See "detectBrowsers"
+    //browsers: ["Firefox"],//, "Safari", "Chrome"],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
@@ -107,22 +130,15 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: 1,
+    concurrency: os.cpus().length,
 
     browserNoActivityTimeout: 100000,
 
     customLaunchers: {
       chrome_canary_travis: {
-        base: 'ChromeCanary',
-        flags: [ '--no-sandbox' ]
+        base: "ChromeCanary",
+        flags: [ "--no-sandbox" ]
        },
     },
   });
-  if(process.env.TRAVIS){
-    config.autoWatch = false;
-    config.browsers = ['chrome_canary_travis', "Firefox"];
-    config.singleRun = true;
-    config.concurrency = Infinity;
-    config.reporters = ["progress"];
-  }
 };

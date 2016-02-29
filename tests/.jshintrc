@@ -26,7 +26,6 @@
   "debug": false,
   "eqnull": false,
   "es5": false,
-  "esversion": 6,
   "moz": true,
   "evil": false,
   "expr": false,
@@ -66,5 +65,6 @@
   "worker": false,
   "wsh": false,
   "yui": false,
-  "predef": [ "makeStandardOps", "makeDefaultBody", "makeRSDoc", "flushIframes", "isPhantom", "makeBasicConfig", "require", "pickRandomsFromList" ]
+  "predef": [ "makeStandardOps", "makeDefaultBody", "makeRSDoc", "flushIframes", "isPhantom", "makeBasicConfig", "require", "pickRandomsFromList" ],
+  "esversion": 6
 }

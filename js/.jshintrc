@@ -1,4 +1,5 @@
 {
   "jquery": true,
-  "predef": [ "require", "define" ]
+  "esversion": "6",
+  "predef": [ "require", "define" ],
 }

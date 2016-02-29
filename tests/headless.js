@@ -28,15 +28,13 @@ function toExecutable(cmd) {
       return cmd;
     },
     run() {
-      debug(`Executing: ${cmd}`);
       const childProcess = exec(cmd, noOp);
       childProcess.stdout.pipe(process.stdout);
       childProcess.stderr.pipe(process.stderr);
       return new Promise((resolve, reject) => {
         let handler = function(code) {
-          debug(`Done: ${cmd} (${code})`);
           if (code) {
-            return reject(new Error(`Error ({code}): ${cmd}`));
+            return reject(new Error(`${cmd} (${code})`));
           }
           resolve();
         };
@@ -46,13 +44,18 @@ function toExecutable(cmd) {
   };
 }
 
+const excludedFiles = new Set([
+  "embedder.html",
+  "starter.html",
+  "PresentationAPI.html",
+]);
+
 const runRespec2html = async(function*(server) {
-  // Run respec2html.js on each example file (except "embedder.html" and "PresentationAPI.html")
+  // Run respec2html.js on each example file (except whatever gets filtered)
   // and stops in error if any of them reports a warning or an error
   let sources = fs.readdirSync("examples")
     .filter(filename => filename.match(/\.html$/))
-    .filter(filename => filename !== "embedder.html")
-    .filter(filename => filename !== "PresentationAPI.html");
+    .filter(filename => !excludedFiles.has(filename));
 
   // Incrementally spawn processes and add them to process counter.
   const executables = sources.map((source) => {
@@ -66,7 +69,7 @@ const runRespec2html = async(function*(server) {
     try {
       yield exe.run();
     } catch (err) {
-      console.error(colors.error(err));
+      console.error(colors.error(`${err}`));
     }
   }
 });

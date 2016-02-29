@@ -41,6 +41,8 @@ require(['profile-w3c-common']);`;
           "require": "../node_modules/requirejs/require",
           "jquery": "../node_modules/jquery/dist/jquery",
           "Promise": "../node_modules/promise-polyfill/Promise",
+          "handlebars": "../node_modules/handlebars/dist/handlebars",
+          "webidl2": "../node_modules/webidl2/lib/webidl2",
         },
         shim: {
           "shortcut": {
@@ -48,7 +50,7 @@ require(['profile-w3c-common']);`;
           }
         },
         name: "profile-w3c-common",
-        include: ["require", "jquery", "Promise"],
+        include: ["require", "jquery", "Promise", "handlebars", "webidl2"],
         out: outputWritter,
         inlineText: true,
         preserveLicenseComments: false,

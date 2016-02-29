@@ -45,7 +45,7 @@ if (args.indexOf("--exclude-script") !== -1) {
 // Reading other parameters
 var source = args[1];
 var output = args[2];
-var timeout = isNaN(args[3]) ? 20 : parseInt(args[3], 10);
+var timeout = isNaN(args[3]) ? 5 : parseInt(args[3], 10);
 
 if (args.length < 2 || args.length > 4) {
   var usage = "Usage:\n   phantomjs --ssl-protocol=any respec2html.js [-e] [-w] " +
@@ -83,62 +83,55 @@ page.onConsoleMessage = function(msg) {
 page.open(source, function(status) {
   if (status !== "success") {
     console.error("Unable to access ReSpec source file.");
-    phantom.exit(1);
-  } else {
-    console.error("Loading " + source);
-    setTimeout(function() {
-      page.evaluateAsync(function() {
-        $.ajaxSetup({
-          timeout: 4000
-        });
-
-        function saveToPhantom() {
-          require(["core/ui", "ui/save-html"], function(ui, saver) {
-            saver.show(ui, respecConfig, document, respecEvents);
-            window.callPhantom({
-              html: saver.toString()
-            });
-          });
-        }
-        if (document.respecDone) {
-          saveToPhantom();
-        } else {
-          respecEvents.sub("end-all", saveToPhantom);
-        }
-      }, delay * 1000);
-    });
-    timer = setInterval(function() {
-      if (timeout === 0) {
-        clearInterval(timer);
-        console.error("Timeout loading " + source + ".\n" +
-            "  Is it a valid ReSpec source file?\n" +
-            "  Did you forget  --ssl-protocol=any?");
-        phantom.exit(1);
-      } else {
-        console.error("Timing out in " + --timeout + "s...");
-      }
-    }, 1000);
+    return phantom.exit(1);
   }
+  setTimeout(function() {
+    page.evaluateAsync(function() {
+      $.ajaxSetup({
+        timeout: 4000
+      });
+
+      function saveToPhantom() {
+        require(["core/ui", "ui/save-html"], function(ui, saver) {
+          saver.show(ui, respecConfig, document, respecEvents);
+          window.callPhantom({
+            html: saver.toString()
+          });
+        });
+      }
+      if (document.respecDone) {
+        saveToPhantom();
+      } else {
+        respecEvents.sub("end-all", saveToPhantom);
+      }
+    }, delay * 1000);
+  });
+  timer = setInterval(function() {
+    if (timeout === 0) {
+      clearInterval(timer);
+      console.error("Timeout loading " + source + ".\n" +
+          "  Is it a valid ReSpec source file?\n" +
+          "  Did you forget  --ssl-protocol=any?");
+      phantom.exit(1);
+    }
+  }, 1000);
 });
 
 page.onCallback = function(data) {
   clearInterval(timer);
-  var exit = 0;
+  var code = 0;
   if (warnings.length && reportWarnings) {
     console.error(warnings.join("\n"));
-    exit = 65;
+    code = 65;
   }
   if (errors.length && reportErrors) {
     console.error(errors.join("\n"));
-    exit = 64;
+    code = 64;
   }
   if (output) {
     fs.write(output, data.html, "w");
   } else {
     console.log(data.html);
   }
-  if (output) {
-    console.error(output + " created!");
-  }
-  phantom.exit(exit);
+  phantom.exit(code);
 };
