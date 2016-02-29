@@ -1,9 +1,8 @@
-
+"use strict";
 var iframes = [];
 function makeRSDoc (opts, cb) {
-    var $ifr = $("<iframe src='about-blank.html' width='800' height='200' style='position: relative; margin-left: -10000px'></iframe>")
-    ,   opts = opts || {}
-    ;
+    var $ifr = $("<iframe src='about-blank.html' width='800' height='200' style='position: relative; margin-left: -10000px'></iframe>");
+    opts = opts || {};
     $ifr.load(function () {
         var destDoc = $ifr[0].contentDocument
         ,   $body = $("body", destDoc)
@@ -40,6 +39,42 @@ function makeRSDoc (opts, cb) {
     }, false);
 }
 
+
 function flushIframes () {
-    for (var i = 0, n = iframes.length; i < n; i++) iframes[i].remove();
+    while (iframes.length){
+     // Poping them from the list prevents memory leaks.
+     iframes.pop().remove();
+    }
+}
+
+function pickRandomsFromList(list, howMany){
+  // Get at least half by default.
+  if(!howMany){
+    howMany = Math.floor(list.length / 2);
+  }
+  if(howMany > list.length) {
+    // Return a new list, but randomized.
+    return list
+        .slice()
+        .sort(function randomSort(){
+            return Math.round(Math.random() * (1 - (-1)) + -1);
+        });
+  }
+  var collectedValues = [];
+  // collect a unique set based on howMany we need.
+  while(collectedValues.length < howMany){
+    var potentialValue = Math.floor(Math.random() * list.length);
+    if(collectedValues.indexOf(potentialValue) === -1){
+      collectedValues.push(potentialValue);
+    }
+  }
+  // Reduce the collectedValues into a new list
+  return collectedValues.reduce(function(randList, next){
+    randList.push(list[next]);
+    return randList;
+  }, []);
+}
+
+function isPhantom() {
+  return window.callPhantom || window._phantom;
 }

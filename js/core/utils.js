@@ -3,7 +3,7 @@
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
-
+"use strict";
 define(
     ["jquery"],
     function ($) {
@@ -266,6 +266,22 @@ define(
                 return date.toISOString() ;
             }
 
+            // Given an object, it converts it to a key value pair separated by
+            // ("=", configurable) and a delimiter (" ," configurable).
+            // for example, {"foo": "bar", "baz": 1} becomes "foo=bar, baz=1"
+        ,   toKeyValuePairs: function(obj, delimiter, seperator) {
+                if(!seperator){
+                    seperator = "=";
+                }
+                if(!delimiter){
+                    delimiter = ", ";
+                }
+                return Object.getOwnPropertyNames(obj)
+                    .map(function(key){
+                        return key + seperator + obj[key];
+                    })
+                    .join(delimiter);
+            }
 
             // --- STYLE HELPERS ------------------------------------------------------------------------------
             // take a document and either a link or an array of links to CSS and appends a <link/> element
