@@ -20,7 +20,7 @@ module.exports = function(config) {
 
     // configuration
     detectBrowsers: {
-      enabled: true,
+      enabled: false,
       usePhantomJS: false,
       postDetection: function(browsers) {
         if(process.env.TRAVIS){
@@ -122,7 +122,7 @@ module.exports = function(config) {
 
 
     // See "detectBrowsers"
-    //browsers: ["Firefox"],//, "Safari", "Chrome"],
+    browsers: ["Chrome"],//, "Safari", "Chrome"],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
