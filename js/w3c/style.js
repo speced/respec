@@ -32,6 +32,7 @@ define(
      function selectStyleVersion(styleVersion){
         var version = "";
         switch (styleVersion) {
+        case null:
         case true:
           version = new Date().getFullYear().toString();
           break;
