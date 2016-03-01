@@ -1,7 +1,7 @@
 /*jshint
     forin: false
 */
-/*global Handlebars*/
+/*global hb*/
 
 // Module w3c/headers
 // Generate the headers material based on the provided configuration.
@@ -106,7 +106,7 @@ define(
     ,   "tmpl!w3c/templates/webspecs-headers.html"
     ],
     function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl, wsHeadersTmpl) {
-        Handlebars.registerHelper("showPeople", function (name, items) {
+        hb.registerHelper("showPeople", function (name, items) {
             // stuff to handle RDFa
             var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "", bn = "",
             editorid = "";
@@ -194,10 +194,10 @@ define(
                 }
                 ret += "</dd>\n";
             }
-            return new Handlebars.SafeString(ret);
+            return new hb.SafeString(ret);
         });
 
-        Handlebars.registerHelper("showLogos", function (items) {
+        hb.registerHelper("showLogos", function (items) {
             var ret = "<p>";
             for (var i = 0, n = items.length; i < n; i++) {
                 var p = items[i];
@@ -217,7 +217,7 @@ define(
                 if (p.id) ret += "</span>";
             }
             ret += "</p>";
-            return new Handlebars.SafeString(ret);
+            return new hb.SafeString(ret);
         });
 
         return {
@@ -380,7 +380,7 @@ define(
                 }
                 else {
                     if (!/NOTE$/.test(conf.specStatus) && conf.specStatus !== "FPWD" && conf.specStatus !== "FPLC" && conf.specStatus !== "ED" && !conf.noRecTrack && !conf.isNoTrack && !conf.isSubmission)
-                        msg.pub("error", "Document on track but no previous version.");
+                        msg.pub("error", "Document on track but no previous version: Add previousMaturity previousPublishDate to ReSpec's config.");
                     if (!conf.prevVersion) conf.prevVersion = "";
                 }
                 if (conf.prevRecShortname && !conf.prevRecURI) conf.prevRecURI = "http://www.w3.org/TR/" + conf.prevRecShortname;

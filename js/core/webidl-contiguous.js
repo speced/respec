@@ -38,50 +38,50 @@ define(
               idlExtAttributeTmpl, idlInterfaceTmpl) {
         "use strict";
         function registerHelpers (msg) {
-            Handlebars.registerHelper("extAttr", function (obj, indent) {
+            hb.registerHelper("extAttr", function (obj, indent) {
                 return extAttr(obj.extAttrs, indent, /*singleLine=*/false);
             });
-            Handlebars.registerHelper("extAttrInline", function (obj) {
+            hb.registerHelper("extAttrInline", function (obj) {
                 return extAttr(obj.extAttrs, 0, /*singleLine=*/true);
             });
-            Handlebars.registerHelper("typeExtAttrs", function (obj) {
+            hb.registerHelper("typeExtAttrs", function (obj) {
                 return extAttr(obj.typeExtAttrs, 0, /*singleLine=*/true);
             });
-            Handlebars.registerHelper("extAttrClassName", function() {
+            hb.registerHelper("extAttrClassName", function() {
                 var extAttr = this;
                 if (extAttr.name === "Constructor" || extAttr.name === "NamedConstructor") {
                     return "idlCtor";
                 }
                 return "extAttr";
             });
-            Handlebars.registerHelper("extAttrRhs", function(rhs, options) {
+            hb.registerHelper("extAttrRhs", function(rhs, options) {
                 if (rhs.type === "identifier") {
                     return options.fn(rhs.value);
                 }
                 return "(" + rhs.value.map(function(item) { return options.fn(item); }).join(",") + ")";
             });
-            Handlebars.registerHelper("param", function (obj) {
-                return new Handlebars.SafeString(
+            hb.registerHelper("param", function (obj) {
+                return new hb.SafeString(
                     idlParamTmpl({
                         obj:        obj
                     ,   optional:   obj.optional ? "optional " : ""
                     ,   variadic:   obj.variadic ? "..." : ""
                     }));
             });
-            Handlebars.registerHelper("jsIf", function (condition, options) {
+            hb.registerHelper("jsIf", function (condition, options) {
                 if (condition) {
                     return options.fn(this);
                 } else {
                     return options.inverse(this);
                 }
             });
-            Handlebars.registerHelper("idn", function (indent) {
-                return new Handlebars.SafeString(idn(indent));
+            hb.registerHelper("idn", function (indent) {
+                return new hb.SafeString(idn(indent));
             });
-            Handlebars.registerHelper("idlType", function (obj) {
-                return new Handlebars.SafeString(idlType2Html(obj.idlType));
+            hb.registerHelper("idlType", function (obj) {
+                return new hb.SafeString(idlType2Html(obj.idlType));
             });
-            Handlebars.registerHelper("stringifyIdlConst", function (value) {
+            hb.registerHelper("stringifyIdlConst", function (value) {
                 switch (value.type) {
                     case "null": return "null";
                     case "Infinity": return value.negative ? "-Infinity" : "Infinity";
@@ -96,16 +96,16 @@ define(
                         return "<Unknown>";
                 }
             });
-            Handlebars.registerHelper("escapeArgumentName", escapeArgumentName);
-            Handlebars.registerHelper("escapeAttributeName", escapeAttributeName);
-            Handlebars.registerHelper("escapeIdentifier", escapeIdentifier);
-            Handlebars.registerHelper("pads", function (num) {
-                return new Handlebars.SafeString(pads(num));
+            hb.registerHelper("escapeArgumentName", escapeArgumentName);
+            hb.registerHelper("escapeAttributeName", escapeAttributeName);
+            hb.registerHelper("escapeIdentifier", escapeIdentifier);
+            hb.registerHelper("pads", function (num) {
+                return new hb.SafeString(pads(num));
             });
-            Handlebars.registerHelper("join", function(arr, between, options) {
+            hb.registerHelper("join", function(arr, between, options) {
                 return arr.map(function(elem) { return options.fn(elem); }).join(between);
             });
-            Handlebars.registerHelper("joinNonWhitespace", function(arr, between, options) {
+            hb.registerHelper("joinNonWhitespace", function(arr, between, options) {
                 return arr.filter(function(elem) {
                     return elem.type !== "ws";
                 }).map(function(elem) {
@@ -115,12 +115,12 @@ define(
             // A block helper that emits an <a title> around its contents
             // if obj.dfn exists. If it exists, that implies that
             // there's another <dfn> for the object.
-            Handlebars.registerHelper("tryLink", function(obj, options) {
+            hb.registerHelper("tryLink", function(obj, options) {
                 var content = options.fn(this);
                 if (obj.dfn) {
-                    var result = "<a for='" + Handlebars.Utils.escapeExpression(obj.linkFor || "") + "'";
+                    var result = "<a for='" + hb.Utils.escapeExpression(obj.linkFor || "") + "'";
                     if (obj.name) {
-                        result += " data-lt='" + Handlebars.Utils.escapeExpression(obj.name) + (obj.overload ? "!overload-" + obj.overload + "' data-lt-noDefault" : "'") ;
+                        result += " data-lt='" + hb.Utils.escapeExpression(obj.name) + (obj.overload ? "!overload-" + obj.overload + "' data-lt-noDefault" : "'") ;
                     }
                     result += ">" + content + "</a>";
                     return result;
@@ -136,7 +136,7 @@ define(
         }
         function idlType2Html (idlType) {
             if (typeof idlType === "string") {
-                return "<a>" + Handlebars.Utils.escapeExpression(idlType) + "</a>";
+                return "<a>" + hb.Utils.escapeExpression(idlType) + "</a>";
             }
             if (Array.isArray(idlType)) {
                 return idlType.map(idlType2Html).join(", ");
@@ -161,7 +161,7 @@ define(
                     }) + arrayStr + nullable;
             }
             if (idlType.generic) {
-                return Handlebars.Utils.escapeExpression(idlType.generic) + '&lt;' + idlType2Html(idlType.idlType) + '>' + nullable;
+                return hb.Utils.escapeExpression(idlType.generic) + '&lt;' + idlType2Html(idlType.idlType) + '>' + nullable;
             }
             return idlType2Html(idlType.idlType) + nullable;
         }
@@ -216,7 +216,7 @@ define(
                 sep: singleLine ? ", " : ",\n " + idn(indent),
                 end: singleLine ? " " : "\n",
             };
-            return new Handlebars.SafeString(idlExtAttributeTmpl(opt));
+            return new hb.SafeString(idlExtAttributeTmpl(opt));
         }
         var idlKeywords = [
                 "ByteString",
