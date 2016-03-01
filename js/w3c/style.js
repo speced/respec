@@ -1,55 +1,115 @@
-
+/*jshint strict: true, browser:true, jquery: true*/
+/*globals define*/
 // Module w3c/style
 // Inserts a link to the appropriate W3C style for the specification's maturity level.
 // CONFIGURATION
 //  - specStatus: the short code for the specification's maturity level or type (required)
-
+"use strict";
 define(
     ["core/utils"],
-    function (utils) {
-        return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "w3c/style");
-                if (!conf.specStatus) msg.pub("error", "Configuration 'specStatus' is not set, required for w3c/style");
-                var statStyle = conf.specStatus;
-                if (statStyle === "FPWD"    ||
-                    statStyle === "LC"      ||
-                    statStyle === "WD-NOTE" ||
-                    statStyle === "LC-NOTE") statStyle = "WD";
-                if (statStyle === "FPWD-NOTE") statStyle = "WG-NOTE";
-                if (statStyle === "finding" || statStyle === "draft-finding") statStyle = "base";
-                var css = "https://";
-                if (statStyle === "unofficial") {
-                    css += "www.w3.org/StyleSheets/TR/w3c-unofficial";
-                }
-                else if (statStyle === "base") {
-                    css += "www.w3.org/StyleSheets/TR/base";
-                }
-                else if (statStyle === "CG-DRAFT" || statStyle === "CG-FINAL" ||
-                         statStyle === "BG-DRAFT" || statStyle === "BG-FINAL") {
-                    // note: normally, the ".css" is not used in W3C, but here specifically it clashes
-                    // with a PNG of the same base name. CONNEG must die.
-                    css += "www.w3.org/community/src/css/spec/" + statStyle.toLowerCase() + ".css";
-                }
-                else if (statStyle === "webspec") {
-                    css = "https://specs.webplatform.org/assets/css/kraken.css";
-                    $('<link rel="icon" href="https://specs.webplatform.org/assets/img/icon.png">', doc)
-                        .appendTo($("head"));
-                    $(doc.createElement("script"))
-                        .attr({ async: "async", src: "https://specs.webplatform.org/assets/js/kraken.js"})
-                        .appendTo($("head"))
-                        ;
-                }
-                else if (conf.useExperimentalStyles) {
-                    css += "www.w3.org/StyleSheets/TR/2016/W3C-" + statStyle;
-                }
-                else {
-                    css += "www.w3.org/StyleSheets/TR/W3C-" + statStyle;
-                }
-                utils.linkCSS(doc, css);
-                msg.pub("end", "w3c/style");
-                cb();
-            }
+    function(utils) {
+      function attachFixupScript(doc, version){
+        var script = doc.createElement("script");
+        script.async = "async";
+        var helperScript = "https://www.w3.org/scripts/TR/{version}/fixup.js"
+          .replace("{version}", version);
+        script.src = helperScript;
+        doc.body.appendChild(script);
+      }
+
+      function attachMetaViewport(doc){
+        var meta = doc.createElement("meta");
+        meta.name = "viewport";
+        var contentProps = {
+            "initial-scale": "1.0",
+            "shrink-to-fit": "no",
+            "width": "device-width",
         };
+        meta.content = utils.toKeyValuePairs(contentProps);
+        doc.head.appendChild(meta);
+      }
+
+     function selectStyleVersion(styleVersion){
+        var version = "";
+        switch (styleVersion) {
+        case true:
+          version = new Date().getFullYear().toString();
+          break;
+        default:
+          if(styleVersion && !Number.isNaN(styleVersion)){
+            version = styleVersion.toString().trim();
+          }
+        }
+        return version;
+      }
+
+      return {
+        run: function(conf, doc, cb, msg) {
+          msg.pub("start", "w3c/style");
+
+          if (!conf.specStatus) {
+            var warn = "'specStatus' missing from ReSpec config. Defaulting to 'base'.";
+            conf.specStatus = "base";
+            msg.pub("warn", warn);
+          }
+
+          var styleBaseURL = "https://www.w3.org/StyleSheets/TR/{version}";
+          var finalStyleURL = "";
+          var styleFile = "W3C-";
+
+          // Figure out which style file to use.
+          switch (conf.specStatus){
+            case "CG-DRAFT":
+            case "CG-FINAL":
+            case "BG-DRAFT":
+            case "BG-FINAL":
+              styleBaseURL = "https://www.w3.org/community/src/css/spec/";
+              styleFile = conf.specStatus.toLowerCase();
+              break;
+            case "FPWD":
+            case "LC":
+            case "WD-NOTE":
+            case "LC-NOTE":
+              styleFile += "WD";
+              break;
+            case "FPWD-NOTE":
+              styleFile += "WG-NOTE";
+              break;
+            case "unofficial":
+              styleFile += "UD";
+              break;
+            case "finding":
+            case "finding-draft":
+            case "base":
+              styleFile = "base";
+              break;
+            default:
+              styleFile += conf.specStatus;
+          }
+
+          // Select between released styles and experimental style.
+          var version = selectStyleVersion(conf.useExperimentalStyles || null);
+
+          // Make spec mobile friendly by attaching meta viewport
+          if (!doc.head.querySelector("meta[name=viewport]")) {
+            attachMetaViewport(doc);
+          }
+
+          // Attach W3C fixup script after we are done.
+          if (version) {
+            var subscribeKey = window.respecEvents.sub("end-all", function (){
+              attachFixupScript(doc, version);
+              window.respecEvents.unsub("end-all", subscribeKey);
+            });
+          }
+          var finalVersionPath = (version) ? version + "/" : "";
+          finalStyleURL = styleBaseURL.replace("{version}", finalVersionPath);
+          finalStyleURL += styleFile;
+
+          utils.linkCSS(doc, finalStyleURL);
+          msg.pub("end", "w3c/style");
+          cb();
+        }
+      };
     }
 );

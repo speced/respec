@@ -46,7 +46,7 @@ if (args.indexOf("--exclude-script") !== -1) {
 // Reading other parameters
 var source = args[1]
 ,   output = args[2]
-,   timeout = isNaN(args[3]) ? 10: parseInt(args[3], 10);
+,   timeout = isNaN(args[3]) ? 20: parseInt(args[3], 10);
 
 
 if (args.length < 2 || args.length > 4) {
@@ -56,7 +56,7 @@ if (args.length < 2 || args.length > 4) {
                 "   [-w]                    Report ReSpec warnings on stderr\n" +
                 "   [--exclude-script url]  Do not load scripts whose source\n" +
                 "                           starts with the passed URL\n" +
-                "   [html-output]           Name for the HTML file to be generated," +
+                "   [html-output]           Name for the HTML file to be generated,\n" +
                 "                           defaults to stdout\n" +
                 "   [timeout]               An optional timeout in seconds, default is 10\n";
     console.error(usage);
