@@ -45,14 +45,14 @@ function loadWithStatus(status, expectedURL, mode) {
     config.prevVersion = "FPWD";
     config.previousMaturity = "WD";
     config.previousPublishDate = "2013-12-17";
-    var version = "";
+    var version = "2016/";
     switch (mode) {
       case "experimental":
         config.useExperimentalStyles = true;
         version = new Date().getFullYear() + "/";
         break;
       default:
-        if (mode && Number.isNaN(mode) === false) {
+        if (mode) {
           config.useExperimentalStyles = mode;
           version = mode + "/";
         }
@@ -102,7 +102,7 @@ describe("W3C - Style", function() {
   });
 
   it("should default to base when specStatus is missing", function(done) {
-    loadWithStatus("", "https://www.w3.org/StyleSheets/TR/base").then(done);
+    loadWithStatus("", "https://www.w3.org/StyleSheets/TR/{version}base").then(done);
   });
 
   it("should style according to spec status", function(done) {

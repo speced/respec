@@ -38,7 +38,7 @@ define(
           version = new Date().getFullYear().toString();
           break;
         default:
-          if(styleVersion && !Number.isNaN(styleVersion)){
+          if(styleVersion && !isNaN(styleVersion)){
             version = styleVersion.toString().trim();
           }
         }
@@ -90,7 +90,7 @@ define(
           }
 
           // Select between released styles and experimental style.
-          var version = selectStyleVersion(conf.useExperimentalStyles || null);
+          var version = selectStyleVersion(conf.useExperimentalStyles || "2016");
 
           // Make spec mobile friendly by attaching meta viewport
           if (!doc.head.querySelector("meta[name=viewport]")) {
