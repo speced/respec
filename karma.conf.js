@@ -4,7 +4,7 @@
 "use strict";
 module.exports = function(config) {
   var os = require("os");
-  config = {
+  const options = {
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: "./",
@@ -135,11 +135,11 @@ module.exports = function(config) {
     },
   };
   if (process.env.TRAVIS) {
-    config.autoWatch = false;
-    config.singleRun = true;
-    config.concurrency = Infinity;
-    config.reporters = ["progress"];
+    options.autoWatch = false;
+    options.singleRun = true;
+    options.concurrency = Infinity;
+    options.reporters = ["progress"];
     return ["chrome_canary_travis", "Firefox"];
   }
-  config.set(config);
+  config.set(options);
 };
