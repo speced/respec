@@ -7,8 +7,8 @@
 // be used by a containing shell to extract all examples.
 
 define(
-    ["text!core/css/examples.css", "text!core/css/examples-webspecs.css"],
-    function (css, cssKraken) {
+    ["text!core/css/examples.css", "text!core/css/examples-webspecs.css", "jquery"],
+    function (css, cssKraken, $) {
         var makeTitle = function (conf, $el, num, report) {
             var txt = (num > 0) ? " " + num : ""
             ,   $tit = $("<div class='example-title'><span>Example" + txt + "</span></div>");

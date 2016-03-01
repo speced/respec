@@ -31,11 +31,12 @@ define(
     ,   "tmpl!core/templates/webidl-contiguous/exception.html"
     ,   "tmpl!core/templates/webidl-contiguous/extended-attribute.html"
     ,   "tmpl!core/templates/webidl-contiguous/interface.html"
+    ,   "jquery"
     ],
     function (hb, webidl2, css, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
                    idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl,
               idlAttributeTmpl, idlSerializerTmpl, idlMaplikeTmpl, idlLineCommentTmpl, idlMultiLineCommentTmpl, idlFieldTmpl, idlExceptionTmpl,
-              idlExtAttributeTmpl, idlInterfaceTmpl) {
+              idlExtAttributeTmpl, idlInterfaceTmpl, $) {
         "use strict";
         function registerHelpers (msg) {
             hb.registerHelper("extAttr", function (obj, indent) {

@@ -17,8 +17,8 @@
 //                         hovered over.  Defaults to false.
 
 define(
-    ["tmpl!w3c/templates/permalinks.css", "core/utils"], // load this to be sure that the jQuery extensions are loaded
-    function (css, utils) {
+    ["tmpl!w3c/templates/permalinks.css", "core/utils", "jquery"], // load this to be sure that the jQuery extensions are loaded
+    function (css, utils, $) {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/permalinks");

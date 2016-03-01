@@ -71,7 +71,7 @@ if (window.console) {
 
 define(
     ["jquery", "Promise"],
-    function () {
+    function ($) {
         return {
             runAll:    function (plugs) {
                 // publish messages for beginning of all and end of all

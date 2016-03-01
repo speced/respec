@@ -17,8 +17,8 @@
 //  entail performance issues.
 
 define(
-    ["core/utils"],
-    function (utils) {
+    ["core/utils", "jquery"],
+    function (utils, $) {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/data-include");

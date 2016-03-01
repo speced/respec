@@ -41,8 +41,8 @@
 //
 
 define(
-    ['core/marked'],
-    function () {
+    ['core/marked', "jquery"],
+    function (coreMarked, $) {
         marked.setOptions({
             gfm: false,
             pedantic: false,

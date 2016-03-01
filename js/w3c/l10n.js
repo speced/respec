@@ -4,8 +4,8 @@
 // that other parts of the system can localise their text
 
 define(
-    [],
-    function () {
+    ["jquery"],
+    function ($) {
         var l10n = {
             en: {
                     this_version:               "This version:"
@@ -70,7 +70,7 @@ define(
         };
         l10n["zh-hans"] = l10n.zh;
         l10n["zh-cn"] = l10n.zh;
-        
+
         return {
             run:    function (config, doc, cb, msg) {
                 msg.pub("start", "w3c/l10n");
