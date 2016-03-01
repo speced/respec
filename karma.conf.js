@@ -139,7 +139,7 @@ module.exports = function(config) {
     options.singleRun = true;
     options.concurrency = Infinity;
     options.reporters = ["progress"];
-    return ["chrome_canary_travis", "Firefox"];
+    options.browsers = ["chrome_canary_travis", "Firefox"];
   }
   config.set(options);
 };
