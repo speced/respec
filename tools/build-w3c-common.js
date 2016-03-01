@@ -1,32 +1,36 @@
 #!/usr/local/bin/node
 
-var fs   = require("fs")
-,   pth  = require("path")
-,   b    = require("./builder")
-,   version = JSON.parse(fs.readFileSync(pth.join(__dirname, "../package.json"), "utf-8")).version
-,   builds = pth.join(__dirname, "../builds")
-,   latest = pth.join(builds, "respec-w3c-common.js")
-;
+"use strict";
+const async = require("marcosc-async");
+const Builder = require("./builder").Builder;
+const path = require("path");
+const colors = require("colors");
 
-function buildW3C (versionSnapshot, cb) {
-    var opts = { out: latest };
-    if (versionSnapshot === true) {
-        opts.version = version;
-    }
-    else if (typeof versionSnapshot === "string") {
-        opts.version = versionSnapshot;
-    }
-    var versioned = pth.join(builds, "respec-w3c-common-" + opts.version + ".js");
-    b.build(opts, function () {
-        if (versionSnapshot) fs.writeFileSync(versioned, fs.readFileSync(latest, "utf8"), { encoding: "utf8" });
-        cb();
-    });
-}
+colors.setTheme({
+  data: "grey",
+  debug: "cyan",
+  error: "red",
+  help: "cyan",
+  info: "green",
+  input: "grey",
+  prompt: "grey",
+  verbose: "cyan",
+  warn: "yellow",
+});
+
+const buildW3C = async(function*(aVersion) {
+  aVersion = (!aVersion) ? "latest" : aVersion;
+  const builds = path.join(__dirname, "../builds");
+  const isLatest = aVersion === "latest";
+  const version = (isLatest) ? yield Builder.getRespecVersion() : aVersion;
+  const outFile = "respec-w3c-common" + ((isLatest) ? ".js" : `-${aVersion}.js`);
+  const out = path.join(builds, outFile);
+  yield Builder.build({out, version});
+});
 
 if (require.main === module) {
-    buildW3C(true, function () {
-        console.log("OK!");
-    });
+  buildW3C()
+    .catch((err) => console.log(colors.error(err.stack)));
 }
 
 exports.buildW3C = buildW3C;

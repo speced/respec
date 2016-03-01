@@ -3,14 +3,7 @@
   <head>
     <meta charset='utf-8'/>
     <title>Includer Spec</title>
-    <script class='remove'>
-      document.write(
-          "<scr" + "ipt " +
-          ((typeof window.callPhantom === 'function') ?
-                "src='/builds/respec-w3c-common.js'" :
-                "src='/js/require.js' data-main='/js/profile-w3c-common'") +
-          " class='remove'></scr"+"ipt>"
-      );
+    <script class='remove' src='/node_modules/requirejs/require.js' data-main='/js/profile-w3c-common'>
     </script>
     <script class='remove'>
       var respecConfig = {
@@ -35,7 +28,7 @@
       </p>
     </section>
     <section id='includes'>
-      <div data-include='inc.html'></div>
+      <div data-include='/tests/spec/core/inc.html'></div>
     </section>
   </body>
 </html>

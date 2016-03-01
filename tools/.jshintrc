@@ -26,6 +26,7 @@
   "debug": false,
   "eqnull": false,
   "es5": false,
+  "esversion": 6,
   "moz": true,
   "evil": false,
   "expr": false,
@@ -50,9 +51,9 @@
   "couch": false,
   "devel": true,
   "dojo": false,
-  "jasmine": true,
+  "jasmine": false,
   "jquery": true,
-  "mocha": true,
+  "mocha": false,
   "mootools": false,
   "node": false,
   "nonstandard": false,
@@ -64,7 +65,5 @@
   "typed": false,
   "worker": false,
   "wsh": false,
-  "yui": false,
-  "predef": [ "makeStandardOps", "makeDefaultBody", "makeRSDoc", "flushIframes", "isPhantom", "makeBasicConfig", "require", "pickRandomsFromList" ],
-  "esversion": 6
+  "yui": false
 }

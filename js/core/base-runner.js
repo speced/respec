@@ -66,20 +66,11 @@ if (window.console) {
     respecEvents.sub("end", function (details) {
         if (respecConfig && respecConfig.trace) console.log("<<< finished: " + details);
     });
-    respecEvents.sub("start-all", function () {
-        console.log("RESPEC PROCESSING STARTED");
-        if ("respecVersion" in window && respecVersion) {
-            console.log("RESPEC Version: " + respecVersion) ;
-        }
-    });
-    respecEvents.sub("end-all", function () {
-        console.log("RESPEC DONE!");
-    });
 }
 
 
 define(
-    ["jquery", "Promise.min"],
+    ["jquery", "Promise"],
     function () {
         return {
             runAll:    function (plugs) {

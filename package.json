@@ -1,29 +1,59 @@
 {
-    "name": "respec",
-    "version": "3.2.97",
-    "description": "Specification Edition Support Tool.",
-    "main": "index.js",
-    "directories": {
-        "doc": "docs",
-        "example": "examples",
-        "test": "tests"
-    },
-    "scripts": {
-        "test": "node ./tests/headless.js"
-    },
-    "bin":  {
-        "respec2html":  "./tools/respec2html.js"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/w3c/respec.git"
-    },
-    "author": "Robin Berjon",
-    "devDependencies": {
-        "async": "^1.5.0",
-        "express": "*",
-        "prompt": "^0.2.14",
-        "requirejs": "^2.1.22",
-        "phantomjs-prebuilt": "^2.1.4"
-    }
+  "name": "respec",
+  "version": "3.2.97",
+  "license": "W3C",
+  "description": "Specification Edition Support Tool.",
+  "bin": {
+    "respec2html": "./tools/respec2html.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/w3c/respec.git"
+  },
+  "author": "Robin Berjon",
+  "devDependencies": {
+    "async": "^1.5.0",
+    "colors": "^1.1.2",
+    "express": "*",
+    "fs-extra": "^0.26.5",
+    "fs-promise": "^0.4.1",
+    "handlebars": "^4.0.5",
+    "jasmine-core": "^2.4.1",
+    "jasmine-reporters": "^2.1.1",
+    "jquery": "^2.2.1",
+    "jscs": "^2.10.1",
+    "jshint": "^2.9.1",
+    "karma": "^0.13.21",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-detect-browsers": "^2.0.2",
+    "karma-firefox-launcher": "^0.1.7",
+    "karma-ie-launcher": "^0.2.0",
+    "karma-jasmine": "^0.3.7",
+    "karma-mocha": "^0.2.2",
+    "karma-mocha-reporter": "^1.2.2",
+    "karma-opera-launcher": "^0.3.0",
+    "karma-requirejs": "^0.2.5",
+    "karma-safari-launcher": "^0.1.1",
+    "karma-verbose-summary-reporter": "0.0.1",
+    "marcosc-async": "^1.0.2",
+    "mocha": "^2.4.5",
+    "moment": "^2.11.2",
+    "mozilla-download": "^1.1.1",
+    "phantomjs-prebuilt": "^2.1.4",
+    "promise-polyfill": "^3.1.0",
+    "prompt": "^0.2.14",
+    "requirejs": "^2.1.22",
+    "webidl2": "^2.0.11"
+  },
+  "scripts": {
+    "karma": "karma start --single-run",
+    "test:karma": "npm run karma",
+    "test:headless": "node ./tests/headless.js",
+    "test": "npm run test:headless; npm run test:karma",
+    "jshint": "jshint karma.conf.js tests tools",
+    "jscs": "jscs --esnext tests tools",
+    "jscs:fix": "jscs --esnext --fix tests",
+    "pretest": "npm run jshint && npm run jscs",
+    "test:travis": "npm run pretest; karma start --single-run --reporters progress karma.conf.js; npm run test:headless"
+  }
 }
