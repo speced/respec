@@ -4,7 +4,7 @@
 "use strict";
 module.exports = function(config) {
   var os = require("os");
-  config.set({
+  config = {
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: "./",
@@ -20,7 +20,7 @@ module.exports = function(config) {
 
     // configuration
     detectBrowsers: {
-      enabled: false,
+      enabled: true,
       usePhantomJS: false,
       postDetection: function(browsers) {
         return browsers;
@@ -60,11 +60,11 @@ module.exports = function(config) {
         pattern: "node_modules/jquery/dist/jquery.js",
         included: true,
         served: true,
-      },{
+      }, {
         pattern: "./node_modules/handlebars/dist/**/*.js",
         included: false,
         served: true,
-      },{
+      }, {
         pattern: "./node_modules/webidl2/lib/*.js",
         included: false,
         served: true,
@@ -115,7 +115,7 @@ module.exports = function(config) {
 
 
     // See "detectBrowsers"
-    browsers: ["Chrome"],//, "Safari", "Chrome"],
+    browsers: ["Chrome"], //, "Safari", "Chrome"],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
@@ -130,15 +130,16 @@ module.exports = function(config) {
     customLaunchers: {
       chrome_canary_travis: {
         base: "ChromeCanary",
-        flags: [ "--no-sandbox" ]
-       },
+        flags: ["--no-sandbox"]
+      },
     },
-  });
-  if(process.env.TRAVIS){
+  };
+  if (process.env.TRAVIS) {
     config.autoWatch = false;
     config.singleRun = true;
     config.concurrency = Infinity;
     config.reporters = ["progress"];
     return ["chrome_canary_travis", "Firefox"];
   }
+  config.set(config);
 };
