@@ -4,7 +4,7 @@
 "use strict";
 module.exports = function(config) {
   var os = require("os");
-  const options = {
+  var options = {
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: "./",
