@@ -10,7 +10,8 @@ define(
     function(utils) {
       function attachFixupScript(doc, version){
         var script = doc.createElement("script");
-        script.async = "async";
+        script.async = true;
+        script.defer = true;
         var helperScript = "https://www.w3.org/scripts/TR/{version}/fixup.js"
           .replace("{version}", version);
         script.src = helperScript;
@@ -25,7 +26,7 @@ define(
             "shrink-to-fit": "no",
             "width": "device-width",
         };
-        meta.content = utils.toKeyValuePairs(contentProps);
+        meta.content = utils.toKeyValuePairs(contentProps).replace(/\"/g, "")
         doc.head.appendChild(meta);
       }
 
