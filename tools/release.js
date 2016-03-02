@@ -94,7 +94,7 @@ function buildAddCommitMergeTag(cb) {
 }
 
 function build(cb) {
-  bwc.buildW3C(targetVersion, cb);
+  bwc.buildW3C(targetVersion).then(cb);
 }
 
 function add(cb) {
