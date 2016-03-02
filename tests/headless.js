@@ -48,6 +48,7 @@ const excludedFiles = new Set([
   "embedder.html",
   "starter.html",
   "PresentationAPI.html",
+  "basic.built.html",
 ]);
 
 const runRespec2html = async(function*(server) {
