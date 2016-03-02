@@ -199,7 +199,7 @@ async.task(function * () {
     yield git(`tag -m v${version} v${version}`);
     yield Promps.askPushAll();
     console.log(colors.info(" 📡  Pushing everything back to server..."));
-    yield git("push develop");
+    yield git("push origin develop");
     yield git("push gh-pages");
     yield git("push --tags");
     console.log(colors.info(" 📡  Publishing to npm..."));
