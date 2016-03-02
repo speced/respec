@@ -20,4 +20,6 @@ before_script:
   - firefox -v
 
 script:
-  - npm run test:travis
+  - npm run pretest
+  - karma start --single-run --reporters progress karma.conf.js
+  - npm run test:headless
