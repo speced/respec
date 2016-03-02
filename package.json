@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "3.2.102",
+  "version": "3.2.103",
   "license": "W3C",
   "description": "Specification Edition Support Tool.",
   "bin": {
@@ -14,7 +14,7 @@
   "devDependencies": {
     "async": "^1.5.0",
     "colors": "^1.1.2",
-    "express": "*",
+    "express": "^4.13.4",
     "fs-extra": "^0.26.5",
     "fs-promise": "^0.4.1",
     "handlebars": "^4.0.5",

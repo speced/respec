@@ -54,7 +54,11 @@ define([
     "w3c/aria",
     "core/shiv",
     "core/remove-respec",
-    "core/location-hash"
+    "core/location-hash",
+    "ui/about-respec",
+    "ui/dfn-list",
+    "ui/save-html",
+    "ui/search-specref",
   ],
   function(domReady, runner, ui) {
     var args = Array.prototype.slice.call(arguments);
