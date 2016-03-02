@@ -24,8 +24,8 @@ window.respecVersion = "${version}";
 ${optimizedJs}
 require(['profile-w3c-common']);`;
       const promiseToWriteJs = fsp.writeFile(outPath, respecJs, "utf-8");
-      const promiseToSourceMap = fsp.writeFile(`${outPath}.map`, sourceMap, "utf-8");
-      yield Promise.all([promiseToWriteJs, promiseToSourceMap]);
+      const promiseToWriteSourceMap = fsp.writeFile(`${outPath}.map`, sourceMap, "utf-8");
+      yield Promise.all([promiseToWriteJs, promiseToWriteSourceMap]);
     }, Builder);
   },
 
@@ -58,12 +58,19 @@ require(['profile-w3c-common']);`;
           "../node_modules/handlebars/dist/handlebars",
           "../node_modules/webidl2/lib/webidl2",
         ],
-        out: outputWritter,
         inlineText: true,
         preserveLicenseComments: false,
       };
+      const promiseToWrite = new Promise((resolve, reject)=>{
+        config.out = (optimizedJs, sourceMap) => {
+          outputWritter(optimizedJs, sourceMap)
+            .then(resolve)
+            .catch(reject);
+        };
+      });
       r.optimize(config);
-    }, Builder);
+      yield promiseToWrite;
+    }, this);
   },
 };
 
