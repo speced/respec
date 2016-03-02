@@ -181,7 +181,6 @@ async.task(function * () {
     if (branchState !== "up-to-date") {
       throw new Error("Your branch is not up-to-date. It ${branchState}.");
     }
-    DEBUG = true;
     // 2. Bump the version in `package.json`.
     const version = yield Promps.askBumpVersion();
     const file = rel(`../builds/respec-w3c-common-${version}.js`);
