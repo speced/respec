@@ -94,7 +94,7 @@
 //      - "w3c-software-doc", the W3C Software and Document License
 //            http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
 
-
+"use strict";
 define(
     [
         "handlebars"
@@ -110,7 +110,7 @@ define(
         hb.registerHelper("showPeople", function (name, items) {
             // stuff to handle RDFa
             var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "", bn = "",
-            editorid = "";
+            editorid = "", propSeeAlso = "";
             if (this.doRDFa) {
                 if (name === "Editor") {
                     bn = "_:editor0";
