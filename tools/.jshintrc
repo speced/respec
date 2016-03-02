@@ -26,7 +26,7 @@
   "debug": false,
   "eqnull": false,
   "es5": false,
-  "esversion": 6,
+  "esnext": true,
   "moz": true,
   "evil": false,
   "expr": false,
