@@ -80,19 +80,15 @@ function debug(msg) {
 }
 
 async.task(function*() {
-  const server = "http://localhost:3000";
+  const port = process.env.PORT || 3000;
+  const server = "http://localhost:" + port;
   debug("Starting up Express...");
   const app = express();
   const dir = require("path").join(__dirname, "..");
   app.use(express.static(dir));
-  app.listen(3000);
-
-  if (process.env.TRAVIS) {
-    yield runRespec2html(server);
-    return;
-  }
+  app.listen(port);
   debug("Building ReSpec...");
-  yield builder.buildW3C();
+  yield builder.buildW3C("latest");
   debug("Running ReSpec2html tests...");
   yield runRespec2html(server);
 })
