@@ -20,7 +20,7 @@ var Builder = {
 Created by Robin Berjon, http://berjon.com/ (@robinberjon)
 Documentation: http://w3.org/respec/.
 See original source for licenses: https://github.com/w3c/respec */
-window.respecVersion = ${version};
+window.respecVersion = "${version}";
 ${optimizedJs}
 require(['profile-w3c-common']);`;
       const promiseToWriteJs = fsp.writeFile(outPath, respecJs, "utf-8");
