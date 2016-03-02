@@ -19,7 +19,7 @@ colors.setTheme({
 });
 
 const buildW3C = async(function*() {
-  var versionsToBuild = Array.from(arguments);
+  let versionsToBuild = Array.from(arguments);
   if (!versionsToBuild.length){
     versionsToBuild.push("latest");
   }
