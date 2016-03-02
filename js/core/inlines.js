@@ -16,8 +16,8 @@
 //    the counter is not used.
 
 define(
-    ["core/utils"],
-    function () {
+    ["jquery"],
+    function ($) {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/inlines");

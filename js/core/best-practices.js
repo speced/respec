@@ -5,7 +5,7 @@
 // Best practices are marked up with span.practicelab.
 
 define(
-    ["text!core/css/bp.css"],
+    ["text!core/css/bp.css", "jquery"],
     function (css) {
         return {
             run:    function (conf, doc, cb, msg) {

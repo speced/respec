@@ -14,7 +14,7 @@
 //  in the test suite, and therefore could easily break.
 
 define(
-    ["core/utils"],
+    ["core/utils", "jquery"],
     function (utils) {
         return {
             run:    function (conf, doc, cb, msg) {

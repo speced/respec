@@ -7,8 +7,8 @@
 // publishing.
 
 define(
-    [],
-    function () {
+    ["jquery"],
+    function ($) {
         return {
             run:    function (config, doc, cb, msg) {
                 msg.pub("start", "core/default-root-attr");

@@ -2,8 +2,8 @@
 // update the 2119 terms section with the terms actually used
 
 define(
-    ["core/utils"],
-    function (utils) {
+    ["core/utils", "jquery"],
+    function (utils, $) {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/rfc2119");

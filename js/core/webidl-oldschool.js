@@ -1,4 +1,4 @@
-/*global Handlebars, simpleNode */
+/*global hb, simpleNode */
 
 // Module core/webidl-oldschool
 //  Transforms specific markup into the complex old school rendering for API information.
@@ -32,16 +32,17 @@ define(
     ,   "tmpl!core/templates/webidl/field.html"
     ,   "tmpl!core/templates/webidl/exception.html"
     ,   "tmpl!core/templates/webidl/interface.html"
+    ,   "jquery"
     ],
     function (hb, css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
                    idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl,
-              idlConstructorTmpl, idlAttributeTmpl, idlSerializerTmpl, idlIterableTmpl, idlMaplikeTmpl, idlCommentTmpl, idlFieldTmpl, idlExceptionTmpl, idlInterfaceTmpl) {
+              idlConstructorTmpl, idlAttributeTmpl, idlSerializerTmpl, idlIterableTmpl, idlMaplikeTmpl, idlCommentTmpl, idlFieldTmpl, idlExceptionTmpl, idlInterfaceTmpl, jQuery) {
         var WebIDLProcessor = function (cfg) {
                 this.parent = { type: "module", id: "outermost", children: [] };
                 if (!cfg) cfg = {};
                 for (var k in cfg) if (cfg.hasOwnProperty(k)) this[k] = cfg[k];
 
-                Handlebars.registerHelper("extAttr", function (obj, indent, nl, ctor) {
+                hb.registerHelper("extAttr", function (obj, indent, nl, ctor) {
                     var ret = "";
                     if (obj.extendedAttributes) {
                         ret += idn(indent) + "[<span class='extAttr'>" + obj.extendedAttributes + "</span>" +
@@ -50,33 +51,33 @@ define(
                     else if (typeof ctor === 'string' && ctor.length) {
                         ret += idn(indent) + "[" + ctor + "]" + (nl ? "\n" : " ");
                     }
-                    return new Handlebars.SafeString(ret);
+                    return new hb.SafeString(ret);
                 });
-                Handlebars.registerHelper("param", function (obj, children) {
+                hb.registerHelper("param", function (obj, children) {
                     var param = "";
                     if (children) param += " (" + children + ")";
-                    return new Handlebars.SafeString(param);
+                    return new hb.SafeString(param);
                 });
-                Handlebars.registerHelper("idn", function (indent) {
-                    return new Handlebars.SafeString(idn(indent));
+                hb.registerHelper("idn", function (indent) {
+                    return new hb.SafeString(idn(indent));
                 });
-                Handlebars.registerHelper("asWebIDL", function (proc, obj, indent) {
-                    return new Handlebars.SafeString(proc.writeAsWebIDL(obj, indent));
+                hb.registerHelper("asWebIDL", function (proc, obj, indent) {
+                    return new hb.SafeString(proc.writeAsWebIDL(obj, indent));
                 });
-                Handlebars.registerHelper("datatype", function (text) {
-                    return new Handlebars.SafeString(datatype(text));
+                hb.registerHelper("datatype", function (text) {
+                    return new hb.SafeString(datatype(text));
                 });
-                Handlebars.registerHelper("pads", function (num) {
-                    return new Handlebars.SafeString(pads(num));
+                hb.registerHelper("pads", function (num) {
+                    return new hb.SafeString(pads(num));
                 });
-                Handlebars.registerHelper("superclasses", function (obj) {
+                hb.registerHelper("superclasses", function (obj) {
                     if (!obj.superclasses || !obj.superclasses.length) return "";
                     var str = " : " +
                               obj.superclasses.map(function (it) {
                                                     return "<span class='idlSuperclass'><a>" + it + "</a></span>";
                                                   }).join(", ")
                     ;
-                    return new Handlebars.SafeString(str);
+                    return new hb.SafeString(str);
                 });
             }
         ,   idn = function (lvl) {
@@ -1451,7 +1452,7 @@ define(
                 ,   values:     values
                 });
             },
-            
+
             writeIterable: function (iterable, indent) {
                 return idlIterableTmpl({
                     obj:        iterable

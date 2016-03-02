@@ -2,8 +2,8 @@
 // Module core/dfn
 // Finds all <dfn> elements and populates conf.definitionMap to identify them.
 define(
-    [],
-    function () {
+    ["jquery"],
+    function ($) {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/dfn");
