@@ -317,7 +317,7 @@ define(
 
         // Takes the result of WebIDL2.parse(), an array of definitions.
         function makeMarkup (conf, parse, msg) {
-            var attr = { "class": ( conf.useExperimentalStyles ? "def idl" :  "idl" ) };
+            var attr = { "class": "def idl" ) };
             var $pre = $("<pre></pre>").attr(attr);
             $pre.html(parse.filter(function(defn) { return !typeIsWhitespace(defn.type); })
                            .map(function(defn) { return writeDefinition(defn, -1, msg); })
