@@ -200,7 +200,7 @@ async.task(function * () {
     yield Promps.askPushAll();
     console.log(colors.info(" 📡  Pushing everything back to server..."));
     yield git("push origin develop");
-    yield git("push gh-pages");
+    yield git("push origin gh-pages");
     yield git("push --tags");
     console.log(colors.info(" 📡  Publishing to npm..."));
     yield toExecPromise("npm publish");
