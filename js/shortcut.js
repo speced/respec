@@ -4,6 +4,7 @@
  * By Binny V A
  * License : BSD
  */
+"use strict";
 var shortcut = {
 	'all_shortcuts':{},//All the shortcuts are stored in this array
 	'add': function(shortcut_combination,callback,opt) {
@@ -15,8 +16,9 @@ var shortcut = {
 			'target':document,
 			'keycode':false,
 		}
-		if(!opt) opt = default_options;
-		else {
+		if(!opt) {
+			opt = default_options;
+		} else {
 			for(var dfo in default_options) {
 				if(typeof opt[dfo] == 'undefined') opt[dfo] = default_options[dfo];
 			}
@@ -29,6 +31,7 @@ var shortcut = {
 
 		//The function to be called at keypress
 		var func = function(e) {
+			var code;
 			e = e || window.event;
 
 			if(opt['disable_in_input']) { //Don't enable shortcut keys in Input, Textarea fields
@@ -141,7 +144,7 @@ var shortcut = {
 			if(e.altKey)	modifiers.alt.pressed = true;
 			if(e.metaKey)   modifiers.meta.pressed = true;
 
-			for(var i=0; k=keys[i],i<keys.length; i++) {
+			for(var i=0, k; k=keys[i],i<keys.length; i++) {
 				//Modifiers
 				if(k == 'ctrl' || k == 'control') {
 					kp++;
@@ -194,7 +197,7 @@ var shortcut = {
 					return false;
 				}
 			}
-		}
+		};
 		this.all_shortcuts[shortcut_combination] = {
 			'callback':func,
 			'target':ele,
@@ -220,4 +223,4 @@ var shortcut = {
     //  else if(ele.removeEventListener) ele.removeEventListener(type, callback, false);
     //  else ele['on'+type] = false;
     // }
-}
+};
