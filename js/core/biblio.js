@@ -5,8 +5,8 @@
 //  - localBiblio: override or supplement the official biblio with your own.
 
 define(
-    [],
-    function () {
+    ["jquery"],
+    function ($) {
         var getRefKeys = function (conf) {
             var informs = conf.informativeReferences
             ,   norms = conf.normativeReferences

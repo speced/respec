@@ -8,7 +8,7 @@
           "<scr" + "ipt " +
           ((typeof window.callPhantom === 'function') ?
                 "src='/builds/respec-w3c-common.js'" :
-                "src='/js/require.js' data-main='/js/profile-w3c-common'") +
+                "src='/node_modules/requirejs/require.js' data-main='/js/profile-w3c-common'") +
           " class='remove'></scr"+"ipt>"
       );
     </script>
@@ -194,7 +194,7 @@
         };
       </pre>
       <p id="const-basic-doc">
-        <dfn for="ConstTest">rambaldi</dfn> is a constant and so are <dfn for="ConstTest">why</dfn> and <dfn for="ConstTest" title="inf">this other thing</dfn>.
+        <dfn for="ConstTest">rambaldi</dfn> is a constant and so are <dfn for="ConstTest">why</dfn> and <dfn for="ConstTest" data-lt="inf">this other thing</dfn>.
       </p>
     </section>
     <section>

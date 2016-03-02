@@ -12,7 +12,7 @@
    To publish this document, see instructions in README
    -->
 
-   <script src='../js/require.js' data-main='../js/profile-w3c-common' async class='remove'></script>
+   <script src='/node_modules/requirejs/require.js' data-main='/js/profile-w3c-common' async class='remove'></script>
   <script class="remove" src="getusermedia.js" type="text/javascript">
   <!-- keep this comment -->
   </script>
@@ -610,7 +610,7 @@
         <h2>Track Source Types</h2>
 
         <dl class="idl" title="enum SourceTypeEnum">
-	  
+
           <dt>none</dt>
 
 	  <dd>This track has no source. This is the case when the
@@ -628,13 +628,13 @@
 	  <dd>A valid source type only for
 	  <code>AudioStreamTrack</code>s. The source is a local
 	  audio-producing microphone source.</dd>
-	  
+
         </dl>
       </section>
 
       <section>
         <h2>Source Info</h2>
- 
+
         <dl class="idl" title=
         "callback SourceInfoCallback = void">
           <dt>sequence&lt;SourceInfo&gt; sourceInfoList</dt>
@@ -646,9 +646,9 @@
         </dl>
 
         <dl class="idl" title="dictionary SourceInfo">
-	  
+
           <dt>DOMString sourceId</dt>
-	  
+
           <dd>The unique id for this source as described in the
           <code><a>MediaSourceStates</a></code> dictionary.</dd>
 
@@ -686,7 +686,7 @@
 
       <section>
         <h2>Isolated Media Streams</h2>
-        
+
         <p>When either the "noaccess" or "peerIdentity" constraints is
           applied to a MediaStreamTrack, the track shall be isolated so that its
           content is not accessible to the content JS. An isolated media stream
@@ -719,9 +719,9 @@
         is connect to another PeerConenction in the same application, the
         application could get access to the data. We sugest this should be changed
         from "may be added" to "may not be added". This will allow noaccess=true
-        to be used for things like hair check dialogs. 
+        to be used for things like hair check dialogs.
         </p>
-        
+
         <p>
           When the peerIdentity=foo constraint applies to a track, then
           that track may be added only to PeerConnections with compatible
@@ -734,6 +734,6 @@
         </p>
       </section>
     </section>
-  
+
 </body>
 </html>

@@ -269,16 +269,16 @@ define(
             // Given an object, it converts it to a key value pair separated by
             // ("=", configurable) and a delimiter (" ," configurable).
             // for example, {"foo": "bar", "baz": 1} becomes "foo=bar, baz=1"
-        ,   toKeyValuePairs: function(obj, delimiter, seperator) {
-                if(!seperator){
-                    seperator = "=";
+        ,   toKeyValuePairs: function(obj, delimiter, separator) {
+                if(!separator){
+                    separator = "=";
                 }
                 if(!delimiter){
                     delimiter = ", ";
                 }
                 return Object.getOwnPropertyNames(obj)
                     .map(function(key){
-                        return key + seperator + obj[key];
+                        return key + separator + JSON.stringify(obj[key]);
                     })
                     .join(delimiter);
             }

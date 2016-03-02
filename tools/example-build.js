@@ -1,13 +1,12 @@
 #!/usr/local/bin/node
 
-var fs   = require("fs")
-,   pth  = require("path")
-,   b  = require("./builder")
-;
-
-b.build({
-    optimize:   "none"
-,   out:        pth.join(__dirname, "../examples/respec-debug.js")
-}, function () {
-    console.log("DONE");
-});
+"use strict";
+const pth = require("path");
+const builder = require("./builder").Builder;
+const options = {
+  optimize: "none",
+  out: pth.join(__dirname, "../examples/respec-debug.js")
+};
+builder.build(options).catch(
+  (err) => console.log(err.stack)
+);

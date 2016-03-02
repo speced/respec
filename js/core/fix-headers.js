@@ -5,8 +5,8 @@
 // h2) with the knowledge that the proper depth level will be used
 
 define(
-    [],
-    function () {
+    ["jquery"],
+    function ($) {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/fix-headers");

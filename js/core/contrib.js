@@ -6,7 +6,7 @@
 // Spec editors get filtered out automatically.
 
 define(
-    ["github"],
+    ["github", "jquery"],
     function (github) {
         return {
             run: function (conf, doc, cb, msg) {
@@ -14,13 +14,13 @@ define(
                     msg.pub("end", "core/contrib");
                     cb();
                 }
-                
+
                 function prop(prop) {
                     return function (o) {
                         return o[prop];
                     };
                 }
-                
+
                 function slice(args) {
                     return Array.prototype.slice.call(args, 0)
                 }
@@ -35,7 +35,7 @@ define(
                         });
                     });
                     return Object.keys(users);
-                }  
+                }
 
                 function join(things) {
                     if (!things.length) {
@@ -81,7 +81,7 @@ define(
 
                 if (!conf.githubAPI) {
                     var elements = [];
-                    if ($commenters) elements.push("#" + $commenters.id); 
+                    if ($commenters) elements.push("#" + $commenters.id);
                     if ($contributors) elements.push("#" + $contributors.id);
                     msg.pub("error", "Requested list of contributors and/or commenters from GitHub (" + elements.join(" and ") + ") but config.githubAPI is not set.");
                     theEnd();
