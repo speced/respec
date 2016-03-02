@@ -99,6 +99,7 @@ function build(cb) {
 
 function add(cb) {
   var path = rel("../builds/respec-w3c-common-" + targetVersion + ".js");
+  path += rel(" ../builds/respec-w3c-common-" + targetVersion + ".js.map");
   exec("git add " + path, cb);
 }
 
@@ -155,10 +156,14 @@ function pushTags(cb) {
   exec("git push --tags", cb);
 }
 
+// function publishToNPM(cb){
+//   exec("npm publish", cb);
+// }
+
 async.series([
   upToDateAndDev, bumpVersion, buildAddCommitMergeTag, build, add, commit,
   checkoutGHPages, merge, checkoutDevelop, tag, pushAll, pushCommits,
-  pushTags
+  pushTags, publishToNPM
 ], function(err) {
   if (err) {
     console.error("ERROR:", err);
