@@ -35,6 +35,7 @@ require(['profile-w3c-common']);`;
       const version = options.version || (yield this.getRespecVersion());
       const outputWritter = this.appendBoilerplate(options.out, version);
       const config = {
+        generateSourceMaps: true,
         baseUrl: pth.join(__dirname, "../js/"),
         optimize: options.optimize || "uglify2",
         paths: {
@@ -50,7 +51,13 @@ require(['profile-w3c-common']);`;
           }
         },
         name: "profile-w3c-common",
-        include: ["require", "jquery", "Promise", "handlebars", "webidl2"],
+        include: [
+          "../node_modules/requirejs/require",
+          "../node_modules/jquery/dist/jquery",
+          "../node_modules/promise-polyfill/Promise",
+          "../node_modules/handlebars/dist/handlebars",
+          "../node_modules/webidl2/lib/webidl2",
+        ],
         out: outputWritter,
         inlineText: true,
         preserveLicenseComments: false,
