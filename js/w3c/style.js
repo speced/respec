@@ -65,7 +65,6 @@ define(
             case "CG-FINAL":
             case "BG-DRAFT":
             case "BG-FINAL":
-              styleBaseURL = "https://www.w3.org/community/src/css/spec/";
               styleFile = conf.specStatus.toLowerCase();
               break;
             case "FPWD":
