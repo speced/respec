@@ -13,7 +13,7 @@ describe("Core — Examples", function() {
         "</section>",
     };
     makeRSDoc(ops, function(doc) {
-      var $ex = $("pre.example", doc);
+      var $ex = $("div.example pre", doc);
       var $div = $ex.parent("div");
       expect($div.hasClass("example")).toBeTruthy();
       expect($div.find("div.example-title").length).toEqual(1);

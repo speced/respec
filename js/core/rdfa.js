@@ -11,7 +11,7 @@ define(
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/rdfa");
                 if (conf.doRDFa) {
-                    $("section").each(function () {
+                    $("section,nav").each(function () {
                         var $sec = $(this)
                         ,   resource = ""
                         ,   $fc = $sec.children("h1,h2,h3,h4,h5,h6").first()

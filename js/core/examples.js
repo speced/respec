@@ -17,9 +17,7 @@ define(
                 $tit.append($("<span style='text-transform: none'>: " + report.title + "</span>"));
                 $el.removeAttr("title");
             }
-            if (conf.useExperimentalStyles) {
-                $tit.addClass("marker") ;
-            }
+            $tit.addClass("marker") ;
             return $tit;
         };
 
@@ -58,9 +56,7 @@ define(
                             }
                             report.content = lines.join("\n");
                             $ex.html(lines.join("\n"));
-                            if (conf.useExperimentalStyles) {
-                                $ex.removeClass("example illegal-example");
-                            }
+                            $ex.removeClass("example illegal-example");
                             // wrap
                             var $div = $("<div class='example'></div>")
                             ,   $tit = makeTitle(conf, $ex, inAside ? 0 : num, report)
