@@ -136,6 +136,9 @@
             {{/unless}}
             {{#if recNotExpected}}
               The group does not expect this document to become a W3C Recommendation.
+              {{#if noRecTrack}}
+                It is expected to become a W3C Note.
+              {{/if}}
             {{/if}}
             {{#unless isIGNote}}
               {{#if multipleWGs}}
