@@ -3,7 +3,7 @@
 // Introduced by Shane McCarron (shane@aptest.com) from the W3C PFWG
 
 define(
-    ["core/utils", "jquery"], // load this to be sure that the jQuery extensions are loaded
+    ["core/utils", "core/jquery-enhanced"], // load this to be sure that the jQuery extensions are loaded
     function (utils, $) {
         return {
             run:    function (conf, doc, cb, msg) {

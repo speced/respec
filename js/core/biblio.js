@@ -5,7 +5,7 @@
 //  - localBiblio: override or supplement the official biblio with your own.
 
 define(
-    ["jquery"],
+    ["core/jquery-enhanced"],
     function ($) {
         var getRefKeys = function (conf) {
             var informs = conf.informativeReferences

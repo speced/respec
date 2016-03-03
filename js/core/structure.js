@@ -11,7 +11,7 @@
 //  - maxTocLevel: only generate a TOC so many levels deep
 
 define(
-    ["jquery"],
+    ["core/jquery-enhanced"],
     function ($) {
         var secMap = {}
         ,   appendixMode = false

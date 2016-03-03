@@ -5,7 +5,7 @@
 // h2) with the knowledge that the proper depth level will be used
 
 define(
-    ["jquery"],
+    ["core/jquery-enhanced"],
     function ($) {
         return {
             run:    function (conf, doc, cb, msg) {

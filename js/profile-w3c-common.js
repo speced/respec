@@ -59,6 +59,7 @@ define([
     "ui/dfn-list",
     "ui/save-html",
     "ui/search-specref",
+    "core/jquery-enhanced",
   ],
   function(domReady, runner, ui) {
     var args = Array.prototype.slice.call(arguments);
