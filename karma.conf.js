@@ -140,7 +140,7 @@ module.exports = function(config) {
     options.singleRun = true;
     options.concurrency = Infinity;
     options.reporters = ["progress"];
-    options.browsers = ["chrome_canary_travis", "FirefoxNightly"];
+    options.browsers = ["chrome_canary_travis"];// "FirefoxNightly"];
   }
   config.set(options);
 };
