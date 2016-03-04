@@ -3,7 +3,7 @@
 // Handles bibliographic references
 // Configuration:
 //  - localBiblio: override or supplement the official biblio with your own.
-
+"use strict";
 define(
     ["jquery"],
     function ($) {
@@ -146,6 +146,7 @@ define(
                         msg.pub("end", "core/biblio");
                         cb();
                     }
+                ,   localKeys = [];
                 ;
                 if (conf.localBiblio) {
                     for (var k in conf.localBiblio) {
@@ -155,16 +156,21 @@ define(
                     }
                 }
                 refs = refs.normativeReferences
-                                .concat(refs.informativeReferences)
-                                .concat(localAliases);
+                    .concat(refs.informativeReferences)
+                    .concat(localAliases)
+                    //don't go to network for local refs
+                    .filter(function(key){
+                        return !(conf.localBiblio && conf.localBiblio.hasOwnProperty(key));
+                    });
+                conf.biblio = {};
                 if (refs.length) {
                     var url = "https://labs.w3.org/specrefs/bibrefs?refs=" + refs.join(",");
                     $.ajax({
                         dataType:   "json"
                     ,   url:        url
                     ,   success:    function (data) {
-                            conf.biblio = data || {};
                             // override biblio data
+                            conf.biblio = data || {};
                             if (conf.localBiblio) {
                                 for (var k in conf.localBiblio) conf.biblio[k] = conf.localBiblio[k];
                             }
@@ -176,8 +182,16 @@ define(
                             finish();
                         }
                     });
+                } else if(conf.localBiblio){
+                    //Populate biblio with local data
+                    Object.getOwnPropertyNames(conf.localBiblio)
+                        .reduce(function (biblio, next){
+                            conf.biblio[next] = conf.localBiblio[next];
+                            return biblio;
+                        }, conf.biblio);
+                    bibref(conf, msg);
                 }
-                else finish();
+                finish();
             }
         };
     }
