@@ -28,12 +28,14 @@ function toExecutable(cmd) {
     },
     run() {
       return new Promise((resolve, reject) => {
-        exec(cmd, (err, data) => {
+        const childProcess = exec(cmd, (err, data) => {
           if (err) {
             return reject(err);
           }
           resolve(data);
         });
+        childProcess.stdout.pipe(process.stdout);
+        childProcess.stderr.pipe(process.stderr);
       });
     }
   };
