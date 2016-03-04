@@ -59,11 +59,19 @@
     });
     Object.defineProperty(document, "respecDone", {
         get: function(){
+            var warn = "document.respecDone is deprecated, use document.respectIsReady instead.";
+            console.warn(warn);
             return respecDone;
         },
         set: function(value){
-            respecDone = Boolean(value);
-            return (value) ? doneResolver() : doneRejector();
+            if (typeof value === "boolean" && value){
+                respecDone =  value;
+                doneResolver(respecConfig);
+            }
+            if(value instanceof Error){
+                doneRejector(value)
+            }
+            return value;
         }
     });
     Object.defineProperty(document, "respectIsReady", {
@@ -88,7 +96,6 @@ if (window.console) {
         if (respecConfig && respecConfig.trace) console.log("<<< finished: " + details);
     });
 }
-
 
 define(
     ["jquery", "Promise"],
