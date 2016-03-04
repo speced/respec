@@ -1,5 +1,6 @@
 "use strict";
 describe("W3C — Bibliographic References", function() {
+  var isSpecRefAvailable = true;
   afterAll(function(done) {
     flushIframes();
     done();
@@ -10,13 +11,14 @@ describe("W3C — Bibliographic References", function() {
     var test = function(result) {
       expect(result).toEqual("success");
       done();
-    }
+    };
     require(["fetch"], function() {
       var fetchOps = {
         method: "HEAD"
       };
       fetch("https://labs.w3.org/specrefs/bibrefs", fetchOps)
         .then(function(res) {
+          isSpecRefAvailable = res.ok;
           test((res.ok) ? "success" : "fail");
         })
         .catch(function(err) {
@@ -64,8 +66,10 @@ describe("W3C — Bibliographic References", function() {
       // Make sure the reference is added.
       var ref = doc.querySelector("#bib-TestRef1 + dd");
       expect(ref).toBeTruthy();
-      if(!ref){
-        return;
+      // This prevents Jasmine from taking down the whole test suite if SpecRef is down.
+      if (!isSpecRefAvailable) {
+        var err = new Error("SpecRef seems to be down. Can't proceed with this spec.");
+        return Promise.reject(err);
       }
       expect(ref.textContent).toMatch(/Publishers Inc\.\s/);
       ref = null;
