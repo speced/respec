@@ -16,7 +16,7 @@
     "colors": "^1.1.2",
     "express": "^4.13.4",
     "fs-extra": "^0.26.5",
-    "fs-promise": "^0.4.1",
+    "fs-promise": "^0.5.0",
     "handlebars": "^4.0.5",
     "jasmine-core": "^2.4.1",
     "jasmine-reporters": "^2.1.1",
@@ -41,7 +41,7 @@
     "mozilla-download": "^1.1.1",
     "phantomjs-prebuilt": "^2.1.4",
     "promise-polyfill": "^3.1.0",
-    "prompt": "^0.2.14",
+    "prompt": "^1.0.0",
     "requirejs": "^2.1.22",
     "webidl2": "^2.0.11"
   },
