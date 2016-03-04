@@ -4,7 +4,7 @@ describe("Core - Inlines", function() {
     flushIframes();
     done();
   });
-  it("should process all inline content", function(done) {
+  it("should process all in-line content", function(done) {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
@@ -14,6 +14,16 @@ describe("Core - Inlines", function() {
         "  <p>MUST and NOT RECOMMENDED</p>" +
         "  <p>[[!DAHU]] [[REX]]</p>" +
         "</section>",
+    };
+    ops.config.localBiblio = {
+      "DAHU": {
+        title: "One short leg. How I learned to overcome.",
+        publisher: "Publishers Inc."
+      },
+      "REX": {
+        title: "Am I a dinosaur or a failed technology?",
+        publisher: "Publishers Inc."
+      },
     };
     makeRSDoc(ops, function(doc) {
       var $inl = $("#inlines", doc);

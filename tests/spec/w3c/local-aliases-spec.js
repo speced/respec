@@ -12,13 +12,16 @@ describe("W3C — Aliased References", function() {
     };
     ops.config.localBiblio = {
       "FOOBARGLOP": {
-        "aliasOf": "RFC2119"
+        "aliasOf": "BARBAR",
+      },
+      "BARBAR": {
+        title: "The BARBAR Spec",
       }
     };
     makeRSDoc(ops, function(doc) {
       var $r = $("#bib-FOOBARGLOP + dd", doc);
       expect($r.length).toBeTruthy();
-      expect($r.text()).toMatch(/2119/);
+      expect($r.text()).toMatch(/BARBAR/);
     }).then(done);
   });
 });
