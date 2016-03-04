@@ -4,10 +4,31 @@ describe("W3C — Bibliographic References", function() {
     flushIframes();
     done();
   });
+
+  // Ping biblio service to see if it's running
+  it("should reach biblio service", function(done) {
+    var test = function(result) {
+      expect(result).toEqual("success");
+      done();
+    }
+    require(["fetch"], function() {
+      var fetchOps = {
+        method: "HEAD"
+      };
+      fetch("https://labs.w3.org/specrefs/bibrefs", fetchOps)
+        .then(function(res) {
+          test((res.ok) ? "success" : "fail");
+        })
+        .catch(function(err) {
+          test(err.message);
+        });
+    });
+  });
+
   var customConfig = {
-    editors: [
-        {name: "Robin Berjon"}
-    ],
+    editors: [{
+      name: "Robin Berjon"
+    }],
     shortName: "Foo",
     specStatus: "WD",
     prevVersion: "FPWD",
@@ -43,6 +64,9 @@ describe("W3C — Bibliographic References", function() {
       // Make sure the reference is added.
       var ref = doc.querySelector("#bib-TestRef1 + dd");
       expect(ref).toBeTruthy();
+      if(!ref){
+        return;
+      }
       expect(ref.textContent).toMatch(/Publishers Inc\.\s/);
       ref = null;
       // Make sure the ". " is automatically added to publisher.
@@ -55,6 +79,6 @@ describe("W3C — Bibliographic References", function() {
       ref = doc.querySelector("#bib-TestRef3 + dd");
       expect(ref).toBeTruthy();
       expect(ref.textContent).toMatch(/^Publisher Here\.\s/);
-    }).then(done);
+    }).then(done).catch(done);
   });
 });
