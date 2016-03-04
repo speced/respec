@@ -89,9 +89,7 @@ define(
                 $tit.append($("<span style='text-transform: none'>: " + report.title + "</span>"));
                 $inno.removeAttr("title");
               }
-              if (conf.useExperimentalStyles) {
-                $tit.addClass("marker");
-              }
+              $tit.addClass("marker");
               $div.append($tit);
               $inno.replaceWith($div);
               var body = $inno.removeClass(report.type).removeAttr("data-number");

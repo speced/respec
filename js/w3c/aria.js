@@ -15,7 +15,7 @@ define(
                 $('div.head', doc).attr('id', 'respecHeader') ;
                 if (!conf.noTOC) {
                     // ensure toc is labelled
-                    var toc = conf.useExperimentalStyles ? $('nav#toc', doc).find("ul:first") : $('section#toc', doc).find("ul:first");
+                    var toc = $('nav#toc', doc).find("ul:first") ;
                     toc.attr('role', 'directory') ;
                 }
                 // mark issues and notes with heading
