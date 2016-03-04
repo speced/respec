@@ -66,5 +66,5 @@
   "wsh": false,
   "yui": false,
   "predef": [ "makeStandardOps", "makeDefaultBody", "makeRSDoc", "flushIframes", "isPhantom", "makeBasicConfig", "require", "pickRandomsFromList" ],
-  "esversion": 6
+  "esnext": true
 }

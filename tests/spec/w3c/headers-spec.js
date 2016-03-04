@@ -158,7 +158,7 @@ describe("W3C — Headers", function() {
           "name": "\n\t  \n",
           "href": "http://empty-name",
           "class": "invalid"
-        },]
+        }, ]
       }]
     };
     Object.assign(ops.config, newProps);
@@ -218,26 +218,26 @@ describe("W3C — Headers", function() {
   it("should take a multiple authors into account", function(done) {
     var ops = makeStandardOps();
     var newProps = {
-        specStatus: "REC",
-        doRDFa: false,
-        "authors": [{
-          name: "NAME1"
-        }, {
-          name: "NAME2"
-        }]
-      };
+      specStatus: "REC",
+      doRDFa: false,
+      "authors": [{
+        name: "NAME1"
+      }, {
+        name: "NAME2"
+      }]
+    };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
-        expect($("dt:contains('Authors:')", doc).length)
-          .toEqual(1);
-        expect($("dt:contains('Author:')", doc).length)
-          .toEqual(0);
-        var $dd = $("dt:contains('Authors:')", doc).next("dd");
-        expect($dd.text())
-          .toEqual("NAME1");
-        expect($dd.next("dd").text())
-          .toEqual("NAME2");
-      }).then(done);
+      expect($("dt:contains('Authors:')", doc).length)
+        .toEqual(1);
+      expect($("dt:contains('Author:')", doc).length)
+        .toEqual(0);
+      var $dd = $("dt:contains('Authors:')", doc).next("dd");
+      expect($dd.text())
+        .toEqual("NAME1");
+      expect($dd.next("dd").text())
+        .toEqual("NAME2");
+    }).then(done);
   });
 
   // subtitle
@@ -256,16 +256,16 @@ describe("W3C — Headers", function() {
   it("should take subtitle into account", function(done) {
     var ops = makeStandardOps();
     var newProps = {
-        specStatus: "REC",
-        "subtitle": "SUB"
-      };
+      specStatus: "REC",
+      "subtitle": "SUB"
+    };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
-        expect($("#subtitle", doc).length)
-          .toEqual(1);
-        expect($("#subtitle", doc).text())
-          .toEqual("SUB");
-      }).then(done);
+      expect($("#subtitle", doc).length)
+        .toEqual(1);
+      expect($("#subtitle", doc).text())
+        .toEqual("SUB");
+    }).then(done);
   });
 
   // publishDate
@@ -432,7 +432,7 @@ describe("W3C — Headers", function() {
   });
 
   it("should handle additionalCopyrightHolders when text is markup", function(done) {
-    var ops  = makeStandardOps();
+    var ops = makeStandardOps();
     var newProps = {
       specStatus: "REC",
       additionalCopyrightHolders: "<span class='test'>XXX</span>"
@@ -667,27 +667,27 @@ describe("W3C — Headers", function() {
   it("should handle BG-FINAL status", function(done) {
     var ops = makeStandardOps();
     var newProps = {
-        specStatus: "BG-FINAL",
-        wg: "WGNAME",
-        wgURI: "http://WG",
-        thisVersion: "http://THIS",
-        latestVersion: "http://LATEST"
-      };
+      specStatus: "BG-FINAL",
+      wg: "WGNAME",
+      wgURI: "http://WG",
+      thisVersion: "http://THIS",
+      latestVersion: "http://LATEST"
+    };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
-        expect($(".head .copyright a[href='https://www.w3.org/community/about/agreements/fsa/']", doc).length)
-          .toEqual(1);
-        expect($(".head h2", doc).text()).toMatch(/Final Business Group Report/);
-        expect($("dt:contains('This version:')", doc).next("dd").text()).toMatch(/http:\/\/THIS/);
-        expect($("dt:contains('Latest published version:')", doc).next("dd").text()).toMatch(/http:\/\/LATEST/);
-        var $sotd = $("#sotd", doc);
-        expect($sotd.find("a[href='http://WG']").length)
-          .toEqual(1);
-        expect($sotd.find("a:contains(WGNAME)").length)
-          .toEqual(1);
-        expect($sotd.find("a[href='https://www.w3.org/community/about/agreements/final/']").length)
-          .toEqual(1);
-      }).then(done);
+      expect($(".head .copyright a[href='https://www.w3.org/community/about/agreements/fsa/']", doc).length)
+        .toEqual(1);
+      expect($(".head h2", doc).text()).toMatch(/Final Business Group Report/);
+      expect($("dt:contains('This version:')", doc).next("dd").text()).toMatch(/http:\/\/THIS/);
+      expect($("dt:contains('Latest published version:')", doc).next("dd").text()).toMatch(/http:\/\/LATEST/);
+      var $sotd = $("#sotd", doc);
+      expect($sotd.find("a[href='http://WG']").length)
+        .toEqual(1);
+      expect($sotd.find("a:contains(WGNAME)").length)
+        .toEqual(1);
+      expect($sotd.find("a[href='https://www.w3.org/community/about/agreements/final/']").length)
+        .toEqual(1);
+    }).then(done);
   });
 
   // Member-SUBM
@@ -787,6 +787,21 @@ describe("W3C — Headers", function() {
       expect($sotd.find("a:contains('disclosures')").attr("href"))
         .toEqual("WGPATENT");
     }, simpleSpecURL).then(done);
+  });
+
+  it("should state that the spec is destined to become a note", function() {
+    var ops = makeStandardOps();
+    var newProps = {
+      noRecTrack: true,
+      specStatus: "WD",
+      recNotExpected: true,
+    };
+    Object.assign(ops.config, newProps);
+    makeRSDoc(ops, function(doc) {
+      var sotdText = doc.getElementById("sotd").textContent;
+      var expectedString = "It is expected to become a W3C Note.";
+      expect(sotdText).to.include(expectedString);
+    });
   });
 
 });
