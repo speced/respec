@@ -11,9 +11,10 @@ describe("Core — Data Include", function() {
     var theTest = function(doc) {
       var $sec = $("#includes", doc);
       expect($sec.find("p").length).toEqual(1);
-      expect($sec.find("p").text()).toEqual("INCLUDED");
+      expect($sec.find("dfn").text()).toEqual("INCLUDED");
       expect($sec.find("div > p").length).toEqual(1);
-      expect($sec.find("div > p").attr("data-include")).toBeFalsy();
+      expect($sec.find("div").attr("data-include")).toBeFalsy();
+      expect($sec.find("dfn").attr("data-testing")).toEqual("itWorked");
     };
     var ops = {
       config: makeBasicConfig(),

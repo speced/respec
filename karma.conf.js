@@ -68,6 +68,10 @@ module.exports = function(config) {
         pattern: "./node_modules/webidl2/lib/*.js",
         included: false,
         served: true,
+      }, {
+        pattern: "builds/respec-w3c-common.js",
+        included: false,
+        served: true,
       },
       "tests/spec/SpecHelper.js",
       "tests/test-main.js",
@@ -85,6 +89,7 @@ module.exports = function(config) {
       "/tests/": "/base/tests/",
       "/spec/": "/base/tests/spec/",
       "/node_modules/": "/base/node_modules/",
+      "/builds/": "/base/builds/",
     },
 
     // preprocess matching files before serving them to the browser

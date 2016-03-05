@@ -3,7 +3,7 @@
   <head>
     <meta charset='utf-8'/>
     <title>Includer Spec</title>
-    <script class='remove' src='/node_modules/requirejs/require.js' data-main='/js/profile-w3c-common'>
+    <script class='remove' src='/builds/respec-w3c-common.js'>
     </script>
     <script class='remove'>
       var respecConfig = {
@@ -16,6 +16,20 @@
           ,   wgPatentURI:  "XXX"
           ,   edDraftURI:   "http://darobin.github.com/respec"
         };
+      function doCleanup(utils, content) {
+        // create a place for the content to go
+        var base = document.createElement("div") ;
+        // instantiate the new content
+        base.innerHTML = content;
+        // iterate over and create IDs for each definition
+        $.each(base.querySelectorAll("dfn"), function(i, item) {
+          var $t = $(item) ;
+          var titles = $t.getDfnTitles();
+          var n = $t.makeID("dfn", titles[0]);
+          $t.attr('data-testing', 'itWorked') ;
+        });
+        return base.innerHTML;
+      };
     </script>
   </head>
   <body>
@@ -28,7 +42,7 @@
       </p>
     </section>
     <section id='includes'>
-      <div data-include='/tests/spec/core/inc.html'></div>
+      <div data-include='/tests/spec/core/inc.html' data-oninclude='doCleanup'></div>
     </section>
   </body>
 </html>
