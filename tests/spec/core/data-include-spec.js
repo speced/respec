@@ -14,7 +14,7 @@ describe("Core — Data Include", function() {
       expect($sec.find("dfn").text()).toEqual("INCLUDED");
       expect($sec.find("div > p").length).toEqual(1);
       expect($sec.find("div").attr("data-include")).toBeFalsy();
-      expect($sec.find("dfn").attr("id")).toEqual("dfn-included");
+      expect($sec.find("dfn").attr("data-testing")).toEqual("itWorked");
     };
     var ops = {
       config: makeBasicConfig(),

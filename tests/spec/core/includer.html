@@ -3,7 +3,7 @@
   <head>
     <meta charset='utf-8'/>
     <title>Includer Spec</title>
-    <script class='remove' src='/node_modules/requirejs/require.js' data-main='/js/profile-w3c-common'>
+    <script class='remove' src='/builds/respec-w3c-common.js'>
     </script>
     <script class='remove'>
       var respecConfig = {
@@ -26,6 +26,7 @@
           var $t = $(item) ;
           var titles = $t.getDfnTitles();
           var n = $t.makeID("dfn", titles[0]);
+          $t.attr('data-testing', 'itWorked') ;
         });
         return base.innerHTML;
       };
