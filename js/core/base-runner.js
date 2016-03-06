@@ -15,7 +15,7 @@
 //  - afterEnd: a single function called at the end, after postProcess, with the
 //      same caveats. These two coexist for historical reasons; please not that they
 //      are all considered deprecated and may all be removed.
-
+"use strict";
 (function (GLOBAL) {
     // pubsub
     // freely adapted from http://higginsforpresident.net/js/static/jq.pubsub.js
@@ -50,6 +50,35 @@
             });
         }
     };
+    var respecDone = false;
+    var doneResolver;
+    var doneRejector;
+    var respecDonePromise = new Promise(function(resolve, reject){
+        doneResolver = resolve;
+        doneRejector = reject;
+    });
+    Object.defineProperty(document, "respecDone", {
+        get: function(){
+            var warn = "document.respecDone is deprecated, use document.respectIsReady instead.";
+            console.warn(warn);
+            return respecDone;
+        },
+        set: function(value){
+            if (typeof value === "boolean" && value){
+                respecDone =  value;
+                doneResolver(respecConfig);
+            }
+            if(value instanceof Error){
+                doneRejector(value)
+            }
+            return value;
+        }
+    });
+    Object.defineProperty(document, "respectIsReady", {
+        get: function(){
+            return respecDonePromise;
+        },
+    });
 }(this));
 
 // these need to be improved, or complemented with proper UI indications
@@ -67,7 +96,6 @@ if (window.console) {
         if (respecConfig && respecConfig.trace) console.log("<<< finished: " + details);
     });
 }
-
 
 define(
     ["jquery", "Promise"],

@@ -2,7 +2,6 @@
  makeStandardOps, makeDefaultBody, makeBasicConfig, isPhantom*/
 "use strict";
 var iframes = [];
-
 function makeRSDoc(opts, cb, src, style) {
   return new Promise(function(resove, reject) {
     if (!src) {
@@ -44,7 +43,7 @@ function makeRSDoc(opts, cb, src, style) {
       head.appendChild(loader);
       var handleAndVerify = function(doc) {
         return function handler(ev) {
-          if (ev.data.topic === "end-all" && doc === ev.source.document) {
+          if (ev.source && doc === ev.source.document && ev.data.topic === "end-all") {
             window.removeEventListener("message", handler);
             cb(doc);
             resove();

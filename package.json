@@ -13,6 +13,8 @@
   "author": "Robin Berjon",
   "devDependencies": {
     "async": "^1.5.0",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^5.2.0",
     "colors": "^1.1.2",
     "express": "^4.13.4",
     "fs-extra": "^0.26.5",
@@ -24,6 +26,8 @@
     "jscs": "^2.10.1",
     "jshint": "^2.9.1",
     "karma": "^0.13.21",
+    "karma-chai": "^0.1.0",
+    "karma-chai-as-promised": "^0.1.2",
     "karma-chrome-launcher": "^0.2.2",
     "karma-detect-browsers": "^2.0.2",
     "karma-firefox-launcher": "^0.1.7",
