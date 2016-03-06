@@ -17,7 +17,6 @@
   "plusplus": false,
   "quotmark": "double",
   "unused": "strict",
-  "strict": true,
   "maxparams": false,
   "maxdepth": 3,
   "maxlen": false,
@@ -31,7 +30,6 @@
   "evil": false,
   "expr": false,
   "funcscope": false,
-  "globalstrict": true,
   "iterator": false,
   "lastsemic": false,
   "laxbreak": false,
@@ -65,5 +63,6 @@
   "typed": false,
   "worker": false,
   "wsh": false,
-  "yui": false
+  "yui": false,
+  "strict": "global"
 }
