@@ -118,9 +118,7 @@ define(
               return github.fetchIndex(json.issues_url, {
                 // Get back HTML content instead of markdown
                 // See: https://developer.github.com/v3/media/
-                headers: {
-                  Accept: "application/vnd.github.v3.html+json"
-                }
+                Accept: "application/vnd.github.v3.html+json"
               });
             }).then(function(issues) {
               issues.forEach(function(issue) {
