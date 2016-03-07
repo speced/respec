@@ -11,6 +11,7 @@ require.config({
     "jquery": "/node_modules/jquery/dist/jquery.slim",
     "Promise": "/node_modules/promise-polyfill/Promise",
     "webidl2": "/node_modules/webidl2/lib/webidl2",
+    "fetch": "/node_modules/whatwg-fetch/fetch",
   },
 });
 
