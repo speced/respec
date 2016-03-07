@@ -3,7 +3,7 @@
 // Injects the HTML5 shiv conditional comment
 
 define(
-    ["jquery"],
+    ["core/jquery-enhanced"],
     function ($) {
         return {
             run:    function (conf, doc, cb, msg) {

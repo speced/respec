@@ -4,7 +4,7 @@
 // that other parts of the system can localise their text
 
 define(
-    ["jquery"],
+    ["core/jquery-enhanced"],
     function ($) {
         var l10n = {
             en: {

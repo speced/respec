@@ -41,7 +41,7 @@
 //
 
 define(
-    ['core/marked', "jquery"],
+    ['core/marked', "core/jquery-enhanced"],
     function (coreMarked, $) {
         marked.setOptions({
             gfm: false,

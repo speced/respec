@@ -7,7 +7,7 @@
 // be used by a containing shell to extract all examples.
 
 define(
-    ["text!core/css/examples.css", "text!core/css/examples-webspecs.css", "jquery"],
+    ["text!core/css/examples.css", "text!core/css/examples-webspecs.css", "core/jquery-enhanced"],
     function (css, cssKraken, $) {
         var makeTitle = function (conf, $el, num, report) {
             var txt = (num > 0) ? " " + num : ""

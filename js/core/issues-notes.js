@@ -12,7 +12,7 @@
 // manually numbered, a link to the issue is created using issueBase and the issue number
 "use strict";
 define(
-  ["text!core/css/issues-notes.css", "github", "jquery"],
+  ["text!core/css/issues-notes.css", "github", "core/jquery-enhanced"],
   function(css, github, $) {
     return {
       run: function(conf, doc, cb, msg) {

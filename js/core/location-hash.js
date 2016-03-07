@@ -3,7 +3,7 @@
 // Resets window.location.hash to jump to the right point in the document
 
 define(
-    ["jquery"],
+    ["core/jquery-enhanced"],
     function ($) {
         return {
             run:    function (conf, doc, cb, msg) {

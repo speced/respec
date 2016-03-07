@@ -3,7 +3,7 @@
 // A simple about dialogue with pointer to the help
 
 define(
-    ["jquery"],
+    ["core/jquery-enhanced"],
     function ($) {
         return {
             show:   function (ui) {
