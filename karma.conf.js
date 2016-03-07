@@ -20,7 +20,7 @@ module.exports = function(config) {
 
     // configuration
     detectBrowsers: {
-      enabled: false,
+      enabled: true,
       usePhantomJS: false,
       postDetection: function(browsers) {
         return browsers;
