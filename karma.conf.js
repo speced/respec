@@ -72,7 +72,7 @@ module.exports = function(config) {
         pattern: "node_modules/whatwg-fetch/fetch.js",
         included: false,
         served: true,
-      }
+      },
       "tests/spec/SpecHelper.js",
       "tests/test-main.js",
     ],

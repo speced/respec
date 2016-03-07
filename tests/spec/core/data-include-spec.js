@@ -11,8 +11,8 @@ fdescribe("Core — Data Include", function() {
     require(["core/jquery-enhanced"], function(jq){
       $ = jq;
       done();
-    })
-  })
+    });
+  });
   afterAll(function(done) {
     flushIframes();
     done();
@@ -23,7 +23,6 @@ fdescribe("Core — Data Include", function() {
     var url = "/tests/spec/core/includer.html";
     var theTest = function(doc) {
       var $sec = $("#includes", doc);
-      debugger;
       expect($sec.find("p").length).toEqual(1);
       expect($sec.find("dfn").text()).toEqual("INCLUDED");
       expect($sec.find("div > p").length).toEqual(1);
