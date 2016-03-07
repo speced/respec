@@ -1,5 +1,5 @@
 "use strict";
-fdescribe("Core — Data Include", function() {
+describe("Core — Data Include", function() {
   var $;
   beforeAll(function(done){
     require.config({
