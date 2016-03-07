@@ -1,8 +1,8 @@
 // Helpers for the GitHub API.
-
+"use strict";
 define(
-    [],
-    function () {
+    ["jquery-enhanced"],
+    function ($) {
         function findNext(header) {
             // Finds the next URL of paginated resources which
             // is available in the Link header. Link headers look like this:
