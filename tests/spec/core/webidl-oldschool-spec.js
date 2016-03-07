@@ -9,7 +9,7 @@ describe("Core - Legacy WebIDL", function() {
     var ops = makeStandardOps();
     makeRSDoc(ops, function(idlDoc) {
       doc = idlDoc;
-    }, "spec/core/webidl.html").then(done);
+    }, "/tests/spec/core/webidl.html").then(done);
   });
   it("should handle interfaces", function(done) {
     var $target = $("#if-basic", doc);
@@ -149,8 +149,6 @@ describe("Core - Legacy WebIDL", function() {
       .toEqual("ationDevice");
     expect($sec.find("dt").first().find(".idlConstType").text())
       .toEqual("float");
-    expect($sec.find("dd").first().text())
-      .toEqual("10");
     done();
   });
 
@@ -202,22 +200,14 @@ describe("Core - Legacy WebIDL", function() {
       .toEqual("dates");
     expect($sec.find("dt").first().find(".idlAttrType").text())
       .toEqual("sequence<Date>");
-    expect($sec.find("dd").first().text())
-      .toEqual("3.5");
     expect($sec.find("dt").eq(3).find("code").first().text())
       .toEqual("operation");
     expect($sec.find("dt").eq(3).find(".idlAttrType").text())
       .toEqual("Promise<DOMString>");
-    expect($sec.find("dd").eq(3).text())
-      .toEqual("4.0");
     expect($sec.find("dt").eq(8).find(".idlAttrType").text())
       .toEqual("sequence<Promise<Superstar>>");
-    expect($sec.find("dd").eq(8).text())
-      .toEqual("4.5");
     expect($sec.find("dt").eq(9).find(".idlAttrType").text())
       .toEqual("FrozenArray<RTCIceServer>");
-    expect($sec.find("dd").eq(9).text())
-      .toEqual("4.6");
     done();
   });
 
