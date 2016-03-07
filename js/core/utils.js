@@ -5,7 +5,7 @@
 // anywhere else.
 "use strict";
 define(
-    ["core/jquery-enhanced"],
+    ["jquery"],
     function ($) {
         var utils = {
             // --- SET UP
