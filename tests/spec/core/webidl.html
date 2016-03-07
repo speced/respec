@@ -3,15 +3,7 @@
   <head>
     <meta charset='utf-8'/>
     <title>WebIDL Tests</title>
-    <script class='remove'>
-      document.write(
-          "<scr" + "ipt " +
-          ((typeof window.callPhantom === 'function') ?
-                "src='/builds/respec-w3c-common.js'" :
-                "src='/node_modules/requirejs/require.js' data-main='/js/profile-w3c-common'") +
-          " class='remove'></scr"+"ipt>"
-      );
-    </script>
+    <script class='remove' src='/node_modules/requirejs/require.js' data-main='/js/profile-w3c-common'></script>
     <script class='remove'>
       var respecConfig = {
               specStatus:   "ED"
