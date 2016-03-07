@@ -32,7 +32,7 @@ define(
     ,   "tmpl!core/templates/webidl/field.html"
     ,   "tmpl!core/templates/webidl/exception.html"
     ,   "tmpl!core/templates/webidl/interface.html"
-    ,   "jquery"
+    ,   "core/jquery-enhanced"
     ],
     function (hb, css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
                    idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl,

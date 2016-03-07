@@ -8,9 +8,10 @@ require.config({
   },
   paths: {
     "handlebars": "/node_modules/handlebars/dist/handlebars",
-    "jquery": "/node_modules/jquery/dist/jquery",
+    "jquery": "/node_modules/jquery/dist/jquery.slim",
     "Promise": "/node_modules/promise-polyfill/Promise",
     "webidl2": "/node_modules/webidl2/lib/webidl2",
+    "fetch": "/node_modules/whatwg-fetch/fetch",
   },
 });
 
@@ -19,6 +20,7 @@ define([
     "domReady",
     "core/base-runner",
     "core/ui",
+    "core/jquery-enhanced",
     "core/include-config",
     "core/override-configuration",
     "core/default-root-attr",

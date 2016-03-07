@@ -3,7 +3,7 @@
 // Saves content to HTML when asked to
 
 define(
-    ["jquery", "core/utils"],
+    ["core/jquery-enhanced", "core/utils"],
     function ($, utils) {
         var msg, doc, conf;
         var cleanup = function (rootEl) {

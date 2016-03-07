@@ -31,7 +31,7 @@ define(
     ,   "tmpl!core/templates/webidl-contiguous/exception.html"
     ,   "tmpl!core/templates/webidl-contiguous/extended-attribute.html"
     ,   "tmpl!core/templates/webidl-contiguous/interface.html"
-    ,   "jquery"
+    ,   "core/jquery-enhanced"
     ],
     function (hb, webidl2, css, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
                    idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl,

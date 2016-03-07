@@ -3,7 +3,7 @@
 // Mark specific sections as informative, based on CSS
 
 define(
-    ["jquery"],
+    ["core/jquery-enhanced"],
     function ($) {
         return {
             run:    function (conf, doc, cb, msg) {

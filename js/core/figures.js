@@ -7,7 +7,7 @@
 // to be found as well as normalise the titles of figures.
 
 define(
-    ["jquery"],
+    ["core/jquery-enhanced"],
     function ($) {
         return {
             run:    function (conf, doc, cb, msg) {

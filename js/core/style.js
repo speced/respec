@@ -12,7 +12,7 @@
 //    the style, set this to true
 
 define(
-    ["text!core/css/respec2.css", "jquery"],
+    ["text!core/css/respec2.css", "core/jquery-enhanced"],
     function (css, $) {
         return {
             run:    function (conf, doc, cb, msg) {

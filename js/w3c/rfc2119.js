@@ -2,7 +2,7 @@
 // update the 2119 terms section with the terms actually used
 
 define(
-    ["core/utils", "jquery"],
+    ["core/utils", "core/jquery-enhanced"],
     function (utils, $) {
         return {
             run:    function (conf, doc, cb, msg) {

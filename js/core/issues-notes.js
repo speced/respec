@@ -12,7 +12,7 @@
 // manually numbered, a link to the issue is created using issueBase and the issue number
 "use strict";
 define(
-  ["text!core/css/issues-notes.css", "github", "jquery"],
+  ["text!core/css/issues-notes.css", "github", "core/jquery-enhanced"],
   function(css, github, $) {
     return {
       run: function(conf, doc, cb, msg) {
@@ -118,9 +118,7 @@ define(
               return github.fetchIndex(json.issues_url, {
                 // Get back HTML content instead of markdown
                 // See: https://developer.github.com/v3/media/
-                headers: {
-                  Accept: "application/vnd.github.v3.html+json"
-                }
+                Accept: "application/vnd.github.v3.html+json"
               });
             }).then(function(issues) {
               issues.forEach(function(issue) {

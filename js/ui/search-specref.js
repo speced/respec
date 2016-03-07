@@ -2,7 +2,7 @@
 // Search Specref database
 
 define(
-    ["jquery", "core/biblio"],
+    ["core/jquery-enhanced", "core/biblio"],
     function ($, biblio) {
         function pluralize (count, sing, plur) {
             return count + ' ' + (count == 1 ? sing : plur);

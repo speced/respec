@@ -12,7 +12,7 @@
 //  - once we have something decent, merge, ship as 3.2.0
 
 define(
-    ["jquery", "shortcut"],
+    ["core/jquery-enhanced", "shortcut"],
     function ($, shortcut) {
         var $menu = $("<div></div>")
                         .css({

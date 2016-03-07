@@ -2,7 +2,7 @@
 // Module core/dfn
 // Finds all <dfn> elements and populates conf.definitionMap to identify them.
 define(
-    ["jquery"],
+    ["core/jquery-enhanced"],
     function ($) {
         return {
             run:    function (conf, doc, cb, msg) {

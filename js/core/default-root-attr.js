@@ -7,7 +7,7 @@
 // publishing.
 
 define(
-    ["jquery"],
+    ["core/jquery-enhanced"],
     function ($) {
         return {
             run:    function (config, doc, cb, msg) {

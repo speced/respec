@@ -57,8 +57,8 @@ module.exports = function(config) {
         included: false,
         served: true,
       }, {
-        pattern: "node_modules/jquery/dist/jquery.js",
-        included: true,
+        pattern: "node_modules/jquery/dist/*.js",
+        included: false,
         served: true,
       }, {
         pattern: "./node_modules/handlebars/dist/**/*.js",
@@ -66,6 +66,10 @@ module.exports = function(config) {
         served: true,
       }, {
         pattern: "./node_modules/webidl2/lib/*.js",
+        included: false,
+        served: true,
+      },{
+        pattern: "node_modules/whatwg-fetch/fetch.js",
         included: false,
         served: true,
       },
@@ -115,7 +119,7 @@ module.exports = function(config) {
 
 
     // See "detectBrowsers"
-    browsers: ["Chrome", "Safari", "Chrome"],
+    browsers: ["Chrome"],//, "Safari", "Chrome"],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits

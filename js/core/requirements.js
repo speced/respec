@@ -11,7 +11,7 @@
 //     and a class of "reqRef".
 
 define(
-    ["jquery"],
+    ["core/jquery-enhanced"],
     function ($) {
         return {
             run: function (conf, doc, cb, msg) {

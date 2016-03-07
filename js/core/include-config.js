@@ -2,7 +2,7 @@
 // Inject's the document's configuration into the head as JSON.
 
 define(
-  ["jquery"],
+  ["core/jquery-enhanced"],
   function ($) {
     'use strict';
     return {

@@ -70,7 +70,7 @@ if (window.console) {
 
 
 define(
-    ["jquery", "Promise"],
+    ["core/jquery-enhanced", "Promise"],
     function ($) {
         return {
             runAll:    function (plugs) {

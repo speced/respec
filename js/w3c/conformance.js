@@ -3,7 +3,7 @@
 // Handle the conformance section properly.
 
 define(
-    ["tmpl!w3c/templates/conformance.html", "jquery"],
+    ["tmpl!w3c/templates/conformance.html", "core/jquery-enhanced"],
     function (confoTmpl, $) {
         return {
             run:    function (conf, doc, cb, msg) {

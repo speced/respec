@@ -4,7 +4,7 @@
 // This is currently in core though it comes from a W3C rule. It may move in the future.
 
 define(
-    ["jquery"],
+    ["core/jquery-enhanced"],
     function ($) {
         return {
             run:    function (conf, doc, cb, msg) {

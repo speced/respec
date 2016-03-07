@@ -2,7 +2,7 @@
 // Module ui/dfn-list
 // Displays all definitions with links to the defining element.
 define(
-    ["jquery"],
+    ["core/jquery-enhanced"],
     function ($) {
         return {
             show:   function (ui, _conf) {

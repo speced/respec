@@ -5,7 +5,7 @@
 //  - localBiblio: override or supplement the official biblio with your own.
 
 define(
-    ["jquery"],
+    ["core/jquery-enhanced", "fetch"],
     function ($) {
         var getRefKeys = function (conf) {
             var informs = conf.informativeReferences
@@ -159,10 +159,10 @@ define(
                                 .concat(localAliases);
                 if (refs.length) {
                     var url = "https://labs.w3.org/specrefs/bibrefs?refs=" + refs.join(",");
-                    $.ajax({
-                        dataType:   "json"
-                    ,   url:        url
-                    ,   success:    function (data) {
+                    fetch(url)
+                        .then(function(response){
+                            return response.json()
+                        }).then(function(data){
                             conf.biblio = data || {};
                             // override biblio data
                             if (conf.localBiblio) {
@@ -170,14 +170,13 @@ define(
                             }
                             bibref(conf, msg);
                             finish();
-                        }
-                    ,   error:      function (xhr, status, error) {
-                            msg.pub("error", "Error loading references from '" + url + "': " + status + " (" + error + ")");
+                        }).catch(function(err){
+                            msg.pub("error", err);
                             finish();
-                        }
-                    });
+                        });
+                } else {
+                 finish();
                 }
-                else finish();
             }
         };
     }
