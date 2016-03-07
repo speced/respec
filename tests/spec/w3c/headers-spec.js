@@ -789,7 +789,7 @@ describe("W3C — Headers", function() {
     }, simpleSpecURL).then(done);
   });
 
-  it("should state that the spec is destined to become a note", function() {
+  it("should state that the spec is destined to become a note", function(done) {
     var ops = makeStandardOps();
     var newProps = {
       noRecTrack: true,
@@ -801,7 +801,7 @@ describe("W3C — Headers", function() {
       var sotdText = doc.getElementById("sotd").textContent;
       var expectedString = "It is expected to become a W3C Note.";
       expect(sotdText).to.include(expectedString);
-    });
+    }).then(done);
   });
 
 });
