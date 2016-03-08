@@ -190,8 +190,8 @@ define(
                             return biblio;
                         }, conf.biblio);
                     bibref(conf, msg);
+                    finish();
                 }
-                finish();
             }
         };
     }
