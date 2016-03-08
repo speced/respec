@@ -44,6 +44,7 @@ require(['profile-w3c-common']);`;
           "Promise": "../node_modules/promise-polyfill/Promise",
           "handlebars": "../node_modules/handlebars/dist/handlebars",
           "webidl2": "../node_modules/webidl2/lib/webidl2",
+          "fetch": "../node_modules/whatwg-fetch/fetch",
         },
         shim: {
           "shortcut": {
@@ -57,6 +58,7 @@ require(['profile-w3c-common']);`;
           "../node_modules/promise-polyfill/Promise",
           "../node_modules/handlebars/dist/handlebars",
           "../node_modules/webidl2/lib/webidl2",
+          "../node_modules/whatwg-fetch/fetch",
         ],
         inlineText: true,
         preserveLicenseComments: false,
