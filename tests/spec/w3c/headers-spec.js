@@ -1,5 +1,5 @@
 "use strict";
-describe("W3C — Headers", function() {
+fdescribe("W3C — Headers", function() {
   afterEach(function(done) {
     flushIframes();
     done();
@@ -789,7 +789,7 @@ describe("W3C — Headers", function() {
     }, simpleSpecURL).then(done);
   });
 
-  it("should state that the spec is destined to become a note", function() {
+  it("should state that the spec is destined to become a note", function(done) {
     var ops = makeStandardOps();
     var newProps = {
       noRecTrack: true,
@@ -799,9 +799,9 @@ describe("W3C — Headers", function() {
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
       var sotdText = doc.getElementById("sotd").textContent;
-      var expectedString = "It is expected to become a W3C Note.";
-      expect(sotdText).to.include(expectedString);
-    });
+      var expectedString = /It is expected to become a W3C Note/;
+      expect(sotdText).toMatch(expectedString);
+    }).then(done);
   });
 
 });
