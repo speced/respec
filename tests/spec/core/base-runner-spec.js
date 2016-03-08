@@ -32,18 +32,11 @@ describe("Core — Base runner", function() {
             // to have the script injected and run, but not long enough
             // for everthing else to complete (promise won't have settled).
             setTimeout(function() {
-              var endAllPromise = new Promise(function(resolve){
-                doc.defaultView.respecEvents.sub("end-all", function(){
-                  resolve();
-                });
-              });
               var testPromise = performTest(doc);
-              Promise.all([endAllPromise, testPromise])
-                .then(function() {
-                  iframe.remove();
-                  done();
-                });
-            }, 100);
+              testPromise.then(function() {
+                iframe.remove();
+                done();
+              });
           });
           observer.disconnect();
         });
