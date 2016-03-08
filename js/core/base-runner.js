@@ -15,7 +15,7 @@
 //  - afterEnd: a single function called at the end, after postProcess, with the
 //      same caveats. These two coexist for historical reasons; please not that they
 //      are all considered deprecated and may all be removed.
-
+"use strict";
 (function (GLOBAL) {
     // pubsub
     // freely adapted from http://higginsforpresident.net/js/static/jq.pubsub.js
@@ -68,9 +68,8 @@ if (window.console) {
     });
 }
 
-
 define(
-    ["jquery", "Promise"],
+    ["jquery"],
     function ($) {
         return {
             runAll:    function (plugs) {

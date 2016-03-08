@@ -12,6 +12,10 @@ require.config({
     "Promise": "/node_modules/promise-polyfill/Promise",
     "webidl2": "/node_modules/webidl2/lib/webidl2",
   },
+  deps: [
+    "Promise",
+    "core/respec-ready",
+  ],
 });
 
 define([
@@ -71,3 +75,4 @@ define([
     });
   }
 );
+
