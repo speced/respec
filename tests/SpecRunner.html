@@ -52,7 +52,14 @@
     <!-- SOURCE -->
     <!-- none currently -->
     <script>
-     jasmine.DEFAULT_TIMEOUT_INTERVAL = 1220000;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 1220000;
+    require.config({
+      baseUrl: "/js/",
+        paths: {
+          "jquery": "/node_modules/jquery/dist/jquery",
+      },
+    });
+    isKarma = false;
     </script>
 
   </head>

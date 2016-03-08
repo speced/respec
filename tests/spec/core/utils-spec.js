@@ -2,16 +2,7 @@
 describe("Core - Utils", function() {
   var utils;
   beforeAll(function(done) {
-    require.config({
-      baseUrl: "../js/",
-      paths: {
-        "handlebars": "/node_modules/handlebars/dist/handlebars",
-        "jquery": "/node_modules/jquery/dist/jquery",
-        "Promise": "/node_modules/promise-polyfill/Promise",
-        "webidl2": "/node_modules/webidl2/lib/webidl2",
-      },
-    });
-    require(["core/utils"], function(u) {
+    require([(window.isKarma) ? "js/core/utils" : "core/utils"], function(u) {
       utils = u;
       window.utils = u;
       done();
