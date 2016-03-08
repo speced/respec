@@ -1,6 +1,21 @@
 "use strict";
 describe("W3C — Bibliographic References", function() {
   var isSpecRefAvailable = true;
+  beforeAll(function(done) {
+    require.config({
+      paths: {
+        "jquery": "/node_modules/jquery/dist/jquery",
+        "fetch": "/node_modules/whatwg-fetch/fetch",
+      },
+      deps: ["fetch"],
+      shim: {
+        fetch: {
+          exports: "fetch",
+        }
+      },
+    });
+    done();
+  });
   afterAll(function(done) {
     flushIframes();
     done();
@@ -8,11 +23,11 @@ describe("W3C — Bibliographic References", function() {
 
   // Ping biblio service to see if it's running
   it("should reach biblio service", function(done) {
-    var test = function(result) {
-      expect(result).toEqual("success");
-      done();
-    };
-    require(["fetch"], function() {
+    require(["fetch"], function(fetch){
+      var test = function(result) {
+        expect(result).toEqual("success");
+        done();
+      };
       var fetchOps = {
         method: "HEAD"
       };
@@ -20,9 +35,11 @@ describe("W3C — Bibliographic References", function() {
         .then(function(res) {
           isSpecRefAvailable = res.ok;
           test((res.ok) ? "success" : "fail");
+          done();
         })
         .catch(function(err) {
           test(err.message);
+          done();
         });
     });
   });
