@@ -21,8 +21,8 @@ require.config({
   // Karma serves files under /base, which is the basePath from your config file
   baseUrl: "/base/",
   paths: {
-    "jquery": "/node_modules/jquery/dist/jquery.slim.js",
-    "ui": (window.respecVersion) ? "https://w3c.github.io/respec/js/ui" : "",
+    "jquery": "/node_modules/jquery/dist/jquery",
+    "fetch": "/node_modules/whatwg-fetch/fetch",
   },
   shim: {
     shortcut: {

@@ -61,6 +61,10 @@ module.exports = function(config) {
         included: true,
         served: true,
       }, {
+        pattern: "node_modules/whatwg-fetch/fetch.js",
+        included: false,
+        served: true,
+      }, {
         pattern: "./node_modules/handlebars/dist/**/*.js",
         included: false,
         served: true,
