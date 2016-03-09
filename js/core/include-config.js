@@ -2,8 +2,8 @@
 // Inject's the document's configuration into the head as JSON.
 
 define(
-  ["jquery"],
-  function ($) {
+  [],
+  function () {
     'use strict';
     return {
       run: function (conf, doc, cb, msg) {

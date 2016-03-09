@@ -4,8 +4,8 @@
 // that other parts of the system can localise their text
 
 define(
-    ["jquery"],
-    function ($) {
+    [],
+    function () {
         var l10n = {
             en: {
                     this_version:               "This version:"

@@ -2,8 +2,8 @@
 // Module ui/dfn-list
 // Displays all definitions with links to the defining element.
 define(
-    ["jquery"],
-    function ($) {
+    [],
+    function () {
         return {
             show:   function (ui, _conf) {
                 var $halp = $("<ul></ul>");
