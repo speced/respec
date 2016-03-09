@@ -12,7 +12,11 @@ require.config({
     "Promise": "/node_modules/promise-polyfill/Promise",
     "webidl2": "/node_modules/webidl2/lib/webidl2",
   },
-  deps: ["core/jquery-enhanced", "Promise"]
+  deps: [
+    "core/jquery-enhanced",
+    "core/respec-ready",
+    "Promise",
+  ],
 });
 
 define([
