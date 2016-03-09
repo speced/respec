@@ -1,5 +1,5 @@
 "use strict";
-fdescribe("W3C — Headers", function() {
+describe("W3C — Headers", function() {
   afterEach(function(done) {
     flushIframes();
     done();
