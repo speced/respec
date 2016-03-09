@@ -4,6 +4,7 @@
 "use strict";
 const fs = require("fs");
 const async = require("marcosc-async");
+const builder = require("../tools/build-w3c-common");
 const colors = require("colors");
 const exec = require("child_process").exec;
 const express = require("express");
@@ -27,12 +28,14 @@ function toExecutable(cmd) {
     },
     run() {
       return new Promise((resolve, reject) => {
-        exec(cmd, (err, data) => {
+        const childProcess = exec(cmd, (err, data) => {
           if (err) {
             return reject(err);
           }
           resolve(data);
         });
+        childProcess.stdout.pipe(process.stdout);
+        childProcess.stderr.pipe(process.stderr);
       });
     }
   };
@@ -88,6 +91,8 @@ async.task(function*() {
   const dir = require("path").join(__dirname, "..");
   app.use(express.static(dir));
   app.listen(port);
+  debug(" ⏲  Building ReSpec...");
+  yield builder.buildW3C("latest");
   debug(" ⏲  Running ReSpec2html tests...");
   yield runRespec2html(server);
 })
