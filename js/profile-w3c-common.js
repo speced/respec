@@ -13,7 +13,7 @@ require.config({
     "webidl2": "/node_modules/webidl2/lib/webidl2",
   },
   deps: [
-    "core/jquery-enhanced"
+    "core/jquery-enhanced",
   ]
 });
 
