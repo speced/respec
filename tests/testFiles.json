@@ -16,6 +16,7 @@
   "spec/core/jquery-enhanced-spec.js",
   "spec/core/markdown-spec.js",
   "spec/core/override-configuration-spec.js",
+  "spec/core/ready-promise-spec.js",
   "spec/core/remove-respec-spec.js",
   "spec/core/requirements-spec.js",
   "spec/core/section-refs-spec.js",
