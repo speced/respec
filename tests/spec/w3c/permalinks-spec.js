@@ -22,7 +22,8 @@ describe("W3C — Permalinks", function() {
       specStatus: "PER",
       wgPatentURI: "http://www.w3.org/fake-patent-uri",
       includePermalinks: true,
-      doRDFa: 1.1
+      doRDFa: 1.1,
+      perEnd: "2013-06-25",
     };
   }
 

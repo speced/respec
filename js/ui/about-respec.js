@@ -3,8 +3,8 @@
 // A simple about dialogue with pointer to the help
 
 define(
-    ["jquery"],
-    function ($) {
+    [],
+    function () {
         return {
             show:   function (ui) {
                 var $halp = $("<div><p>ReSpec is a document production toolchain, with a notable focus on W3C specifications.</p></div>");

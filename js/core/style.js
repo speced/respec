@@ -12,8 +12,8 @@
 //    the style, set this to true
 
 define(
-    ["text!core/css/respec2.css", "jquery"],
-    function (css, $) {
+    ["text!core/css/respec2.css"],
+    function (css) {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/style");

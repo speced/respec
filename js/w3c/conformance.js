@@ -3,8 +3,8 @@
 // Handle the conformance section properly.
 
 define(
-    ["tmpl!w3c/templates/conformance.html", "jquery"],
-    function (confoTmpl, $) {
+    ["tmpl!w3c/templates/conformance.html"],
+    function (confoTmpl) {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/conformance");

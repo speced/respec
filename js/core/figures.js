@@ -7,8 +7,8 @@
 // to be found as well as normalise the titles of figures.
 
 define(
-    ["jquery"],
-    function ($) {
+    [],
+    function () {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/figures");

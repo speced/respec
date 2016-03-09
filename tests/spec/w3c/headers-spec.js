@@ -581,7 +581,8 @@ describe("W3C — Headers", function() {
       wg: "WGNAME",
       wgURI: "WGURI",
       wgPublicList: "WGLIST",
-      subjectPrefix: "[The Prefix]"
+      subjectPrefix: "[The Prefix]",
+      implementationReportURI: "",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {

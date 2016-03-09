@@ -7,8 +7,8 @@
 // the end of processing)
 
 define(
-    ["text!core/css/highlight.css", "google-code-prettify", "jquery"],
-    function (css, PR, $) {
+    ["text!core/css/highlight.css", "google-code-prettify"],
+    function (css, PR) {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/highlight");

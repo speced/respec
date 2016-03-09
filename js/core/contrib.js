@@ -6,7 +6,7 @@
 // Spec editors get filtered out automatically.
 
 define(
-    ["github", "jquery"],
+    ["github"],
     function (github) {
         return {
             run: function (conf, doc, cb, msg) {

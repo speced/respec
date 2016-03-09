@@ -3,8 +3,8 @@
 // Injects the HTML5 shiv conditional comment
 
 define(
-    ["jquery"],
-    function ($) {
+    [],
+    function () {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/shiv");
