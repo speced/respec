@@ -70,7 +70,7 @@ if (window.console) {
 
 
 define(
-    [],
+    ["core/respec-ready"],
     function () {
         return {
             runAll:    function (plugs) {
