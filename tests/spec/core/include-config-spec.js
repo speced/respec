@@ -4,10 +4,14 @@ describe("Core — Include config as JSON", function() {
     flushIframes();
     done();
   });
-  var ops = {
-    config: makeBasicConfig(),
-    body: $("<section id='abstract'>no content</section><section id='sotd'><p>x</p></section>")
-  };
+  var ops;
+  beforeAll(function(done){
+      ops = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody(),
+    };
+    done();
+  });
   it("should have a script tag with the correct attributes", function(done) {
     makeRSDoc(ops, function(doc) {
       var script = doc.getElementById("initialUserConfig");
