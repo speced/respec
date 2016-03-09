@@ -110,6 +110,11 @@ function makeBasicConfig() {
     specStatus: "ED",
     edDraftURI: "http://foo.com",
     shortName: "Foo",
+    previousMaturity: "CR",
+    previousPublishDate: "1999-01-01",
+    errata: "https://github.com/tabatkins/bikeshed",
+    implementationReportURI: "http://example.com/implementationReportURI",
+    perEnd: "1999-01-01",
   };
 }
 
