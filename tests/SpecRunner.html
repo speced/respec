@@ -10,62 +10,33 @@
     <script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
     <script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
     <script src="/node_modules/jasmine-core/lib/jasmine-core/boot.js"></script>
+    <script src="spec/SpecHelper.js"></script>
 
     <script src='/node_modules/requirejs/require.js'></script>
-
+    <script src="/node_modules/whatwg-fetch/fetch.js"></script>
     <script>
     "use strict";
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 200000;
-    // Get a list of all the test files to include
-    var allDeps = [
-      "core/jquery-enhanced",
-      "spec/SpecHelper.js",
-      "spec/core/best-practices-spec.js",
-      "spec/core/biblio-spec.js",
-      "spec/core/data-include-spec.js",
-      "spec/core/default-root-attr-spec.js",
-      "spec/core/dfn-spec.js",
-      "spec/core/examples-spec.js",
-      "spec/core/figures-spec.js",
-      "spec/core/fix-headers-spec.js",
-      "spec/core/highlight-spec.js",
-      "spec/core/id-headers-spec.js",
-      "spec/core/include-config-spec.js",
-      "spec/core/informative-spec.js",
-      "spec/core/inlines-spec.js",
-      "spec/core/issues-notes-spec.js",
-      "spec/core/jquery-enhanced-spec.js",
-      "spec/core/markdown-spec.js",
-      "spec/core/override-configuration-spec.js",
-      "spec/core/remove-respec-spec.js",
-      "spec/core/requirements-spec.js",
-      "spec/core/section-refs-spec.js",
-      "spec/core/structure-spec.js",
-      "spec/core/style-spec.js",
-      "spec/core/utils-spec.js",
-      "spec/core/webidl-contiguous-spec.js",
-      "spec/core/webidl-oldschool-spec.js",
-      "spec/w3c/abstract-spec.js",
-      "spec/w3c/conformance-spec.js",
-      "spec/w3c/headers-spec.js",
-      "spec/w3c/local-aliases-spec.js",
-      "spec/w3c/permalinks-spec.js",
-      "spec/w3c/rdfa-spec.js",
-      "spec/w3c/style-spec.js",
-    ];
-
-    require.config({
-      baseUrl: "/js/",
-      paths: {
-        "jquery": "/node_modules/jquery/dist/jquery",
-      },
-      deps: allDeps,
-      callback: function(){
-        jasmine.getEnv().execute();
-      }
-    });
+     // Get a list of all the test files to include
+    fetch("testFiles.json")
+      .then(function(res) {
+        return res.json();
+      })
+      .then(function(testFiles) {
+        var allDeps = ["core/jquery-enhanced"]
+          .concat(testFiles);
+        require.config({
+          baseUrl: "/js/",
+          paths: {
+            "jquery": "/node_modules/jquery/dist/jquery",
+          },
+          deps: allDeps,
+          callback: function() {
+            jasmine.getEnv().execute();
+          }
+        });
+      });
     </script>
-
   </head>
   <body>
   </body>
