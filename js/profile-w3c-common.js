@@ -11,12 +11,14 @@ require.config({
   },
   paths: {
     "handlebars": "/node_modules/handlebars/dist/handlebars",
+    "fetch": "/node_modules/whatwg-fetch/fetch",
     "jquery": "/node_modules/jquery/dist/jquery",
     "Promise": "/node_modules/promise-polyfill/Promise",
     "webidl2": "/node_modules/webidl2/lib/webidl2",
   },
   deps: [
     "jquery",
+    "fetch",
     "Promise",
     "core/jquery-enhanced",
   ],
