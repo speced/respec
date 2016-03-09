@@ -70,7 +70,7 @@ if (window.console) {
 
 
 define(
-    [],
+    [ "Promise" ],
     function () {
         return {
             runAll:    function (plugs) {
