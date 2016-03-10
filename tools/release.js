@@ -172,7 +172,7 @@ async.task(function * () {
   try {
     // 1. Confirm maintainer is on up-to-date and on the develop branch ()
     console.log(colors.info(" 📡  Performing Git remote update..."));
-    //yield git(`remote update`);
+    yield git(`remote update`);
     const currentBranch = (yield git(`rev-parse --abbrev-ref HEAD`)).trim();
     if (currentBranch !== MAIN_BRANCH) {
       yield Promps.askSwitchToBranch(currentBranch, MAIN_BRANCH);
@@ -184,11 +184,13 @@ async.task(function * () {
     // 2. Bump the version in `package.json`.
     const version = yield Promps.askBumpVersion();
     const file = rel(`../builds/respec-w3c-common-${version}.js`);
-    //yield Promps.askBuildAddCommitMergeTag();
+    yield Promps.askBuildAddCommitMergeTag();
     // 3. Run the build script (node tools/build-w3c-common.js).
     yield w3cBuild.buildW3C("latest", version);
     // 4. Add the new build (git add builds/respec-w3c-common-3.x.y.js).
-    yield git(`add ${file} ${file}.map`);
+    const basename = path.basename(file, ".js");
+    const mapfile = rel(`../builds/${basename}.build.js.map`);
+    yield git(`add ${file} ${mapfile}`);
     // 5. Commit your changes (git commit -am v3.x.y)
     yield git(`commit -am v${version}`);
     // 6. Merge to gh-pages (git checkout gh-pages; git merge develop)
@@ -205,6 +207,7 @@ async.task(function * () {
     console.log(colors.info(" 📡  Publishing to npm..."));
     yield toExecPromise("npm publish");
   } catch (err) {
+    console.error(colors.red(err));
     process.exit(1);
   }
 }).then(
