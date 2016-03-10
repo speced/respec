@@ -7,8 +7,8 @@
 // be used by a containing shell to extract all examples.
 
 define(
-    ["text!core/css/examples.css", "text!core/css/examples-webspecs.css", "jquery"],
-    function (css, cssKraken, $) {
+    ["text!core/css/examples.css", "text!core/css/examples-webspecs.css"],
+    function (css, cssKraken) {
         var makeTitle = function (conf, $el, num, report) {
             var txt = (num > 0) ? " " + num : ""
             ,   $tit = $("<div class='example-title'><span>Example" + txt + "</span></div>");
@@ -17,9 +17,7 @@ define(
                 $tit.append($("<span style='text-transform: none'>: " + report.title + "</span>"));
                 $el.removeAttr("title");
             }
-            if (conf.useExperimentalStyles) {
-                $tit.addClass("marker") ;
-            }
+            $tit.addClass("marker") ;
             return $tit;
         };
 
@@ -58,9 +56,7 @@ define(
                             }
                             report.content = lines.join("\n");
                             $ex.html(lines.join("\n"));
-                            if (conf.useExperimentalStyles) {
-                                $ex.removeClass("example illegal-example");
-                            }
+                            $ex.removeClass("example illegal-example");
                             // wrap
                             var $div = $("<div class='example'></div>")
                             ,   $tit = makeTitle(conf, $ex, inAside ? 0 : num, report)

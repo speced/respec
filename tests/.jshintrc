@@ -17,7 +17,6 @@
   "plusplus": false,
   "quotmark": "double",
   "unused": "strict",
-  "strict": true,
   "maxparams": false,
   "maxdepth": 3,
   "maxlen": false,
@@ -30,7 +29,6 @@
   "evil": false,
   "expr": false,
   "funcscope": false,
-  "globalstrict": true,
   "iterator": false,
   "lastsemic": false,
   "laxbreak": false,
@@ -54,7 +52,7 @@
   "jquery": true,
   "mocha": true,
   "mootools": false,
-  "node": false,
+  "node": true,
   "nonstandard": false,
   "phantom": false,
   "prototypejs": false,
@@ -66,5 +64,8 @@
   "wsh": false,
   "yui": false,
   "predef": [ "makeStandardOps", "makeDefaultBody", "makeRSDoc", "flushIframes", "isPhantom", "makeBasicConfig", "require", "pickRandomsFromList" ],
-  "esversion": 6
+  "globals": {
+    "expect": true
+  },
+  "esnext": true
 }

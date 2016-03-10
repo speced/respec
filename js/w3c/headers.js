@@ -104,9 +104,8 @@ define(
     ,   "tmpl!w3c/templates/cgbg-headers.html"
     ,   "tmpl!w3c/templates/cgbg-sotd.html"
     ,   "tmpl!w3c/templates/webspecs-headers.html"
-    ,   "jquery"
     ],
-    function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl, wsHeadersTmpl, $) {
+    function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl, wsHeadersTmpl) {
         hb.registerHelper("showPeople", function (name, items) {
             // stuff to handle RDFa
             var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "", bn = "",

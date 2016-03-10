@@ -4,12 +4,11 @@ describe("Core — Default Root Attribute", function() {
     flushIframes();
     done();
   });
-  var body = $("<section id='sotd'><p>foo</p></section>");
 
   it("should apply en and ltr defaults", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: body,
+      body: makeDefaultBody(),
     };
     makeRSDoc(ops, function(doc) {
       expect(doc.querySelector("html").lang).toEqual("en");
@@ -23,7 +22,7 @@ describe("Core — Default Root Attribute", function() {
       htmlAttrs: {
         dir: "rtl"
       },
-      body: body,
+      body: makeDefaultBody(),
     };
     makeRSDoc(ops, function(doc) {
       expect(doc.querySelector("html").lang).toEqual("en");
@@ -37,7 +36,7 @@ describe("Core — Default Root Attribute", function() {
       htmlAttrs: {
         lang: "fr"
       },
-      body: body,
+      body: makeDefaultBody(),
     };
     makeRSDoc(ops, function(doc) {
       expect(doc.querySelector("html").lang).toEqual("fr");

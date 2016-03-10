@@ -2,8 +2,8 @@
 // Module core/link-to-dfn
 // Gives definitions in conf.definitionMap IDs and links <a> tags to the matching definitions.
 define(
-    ["jquery"],
-    function ($) {
+    [],
+    function () {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/link-to-dfn");

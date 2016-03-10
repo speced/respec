@@ -3,8 +3,8 @@
 // Resets window.location.hash to jump to the right point in the document
 
 define(
-    ["jquery"],
-    function ($) {
+    [],
+    function () {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/location-hash");

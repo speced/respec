@@ -25,16 +25,16 @@ var specStatus = [{
   expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-FAKE-TEST-TYPE",
 }, {
   status: "CG-FINAL",
-  expectedURL: "https://www.w3.org/community/src/css/spec/cg-final",
+  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}cg-final",
 }, {
   status: "CG-DRAFT",
-  expectedURL: "https://www.w3.org/community/src/css/spec/cg-draft",
+  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}cg-draft",
 }, {
   status: "BG-FINAL",
-  expectedURL: "https://www.w3.org/community/src/css/spec/bg-final",
+  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}bg-final",
 }, {
   status: "BG-DRAFT",
-  expectedURL: "https://www.w3.org/community/src/css/spec/bg-draft",
+  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}bg-draft",
 },];
 
 function loadWithStatus(status, expectedURL, mode) {

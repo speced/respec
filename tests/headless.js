@@ -8,7 +8,6 @@ const builder = require("../tools/build-w3c-common");
 const colors = require("colors");
 const exec = require("child_process").exec;
 const express = require("express");
-const noOp = function() {};
 const moment = require("moment");
 colors.setTheme({
   data: "grey",
@@ -28,17 +27,15 @@ function toExecutable(cmd) {
       return cmd;
     },
     run() {
-      const childProcess = exec(cmd, noOp);
-      childProcess.stdout.pipe(process.stdout);
-      childProcess.stderr.pipe(process.stderr);
       return new Promise((resolve, reject) => {
-        let handler = function(code) {
-          if (code) {
-            return reject(new Error(`${cmd} (${code})`));
+        const childProcess = exec(cmd, (err, data) => {
+          if (err) {
+            return reject(err);
           }
-          resolve();
-        };
-        childProcess.on("exit", handler);
+          resolve(data);
+        });
+        childProcess.stdout.pipe(process.stdout);
+        childProcess.stderr.pipe(process.stderr);
       });
     }
   };
@@ -66,12 +63,19 @@ const runRespec2html = async(function*(server) {
   }).map(
     toExecutable
   );
+  var testCount = 1;
+  var errored = false;
   for (const exe of executables) {
     try {
+      debug(` 🚄  Running test ${testCount++} of ${sources.length}.`);
       yield exe.run();
     } catch (err) {
-      console.error(colors.error(`${err}`));
+      console.error(colors.error(err));
+      errored = true;
     }
+  }
+  if(errored){
+    throw new Error(" ❌ A test generated an error");
   }
 });
 
@@ -82,14 +86,14 @@ function debug(msg) {
 async.task(function*() {
   const port = process.env.PORT || 3000;
   const server = "http://localhost:" + port;
-  debug("Starting up Express...");
+  debug(" ✅ Starting up Express...");
   const app = express();
   const dir = require("path").join(__dirname, "..");
   app.use(express.static(dir));
   app.listen(port);
-  debug("Building ReSpec...");
+  debug(" ⏲  Building ReSpec...");
   yield builder.buildW3C("latest");
-  debug("Running ReSpec2html tests...");
+  debug(" ⏲  Running ReSpec2html tests...");
   yield runRespec2html(server);
 })
 .then(

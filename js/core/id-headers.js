@@ -4,8 +4,8 @@
 // This is currently in core though it comes from a W3C rule. It may move in the future.
 
 define(
-    ["jquery"],
-    function ($) {
+    [],
+    function () {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/id-headers");

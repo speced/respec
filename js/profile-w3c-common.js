@@ -4,7 +4,10 @@ require.config({
   shim: {
     shortcut: {
       exports: "shortcut"
-    }
+    },
+    Promise: {
+      exports: "Promise"
+    },
   },
   paths: {
     "handlebars": "/node_modules/handlebars/dist/handlebars",
@@ -12,6 +15,11 @@ require.config({
     "Promise": "/node_modules/promise-polyfill/Promise",
     "webidl2": "/node_modules/webidl2/lib/webidl2",
   },
+  deps: [
+    "jquery",
+    "Promise",
+    "core/jquery-enhanced",
+  ],
 });
 
 define([

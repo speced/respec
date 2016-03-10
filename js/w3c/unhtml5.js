@@ -5,8 +5,8 @@
 // still use it if you need to for some reason.
 
 define(
-    ["core/utils", "jquery"], // load this to be sure that the jQuery extensions are loaded
-    function (utils, $) {
+    ["core/utils"], // load this to be sure that the jQuery extensions are loaded
+    function (utils) {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/unhtml5");

@@ -3,8 +3,8 @@
 // Introduced by Shane McCarron (shane@aptest.com) from the W3C PFWG
 
 define(
-    ["core/utils", "jquery"], // load this to be sure that the jQuery extensions are loaded
-    function (utils, $) {
+    ["core/utils"], // load this to be sure that the jQuery extensions are loaded
+    function (utils) {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "w3c/aria");
@@ -15,7 +15,7 @@ define(
                 $('div.head', doc).attr('id', 'respecHeader') ;
                 if (!conf.noTOC) {
                     // ensure toc is labelled
-                    var toc = conf.useExperimentalStyles ? $('nav#toc', doc).find("ul:first") : $('section#toc', doc).find("ul:first");
+                    var toc = $('nav#toc', doc).find("ul:first") ;
                     toc.attr('role', 'directory') ;
                 }
                 // mark issues and notes with heading

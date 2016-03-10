@@ -3,8 +3,8 @@
 // Mark specific sections as informative, based on CSS
 
 define(
-    ["jquery"],
-    function ($) {
+    [],
+    function () {
         return {
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/informative");
