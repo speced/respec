@@ -80,6 +80,10 @@ page.onConsoleMessage = function(msg) {
   }
 };
 
+page.onError = function(msg) {
+  errors.push(msg);
+};
+
 page.open(source, function(status) {
   if (status !== "success") {
     console.error("Unable to access ReSpec source file.");
