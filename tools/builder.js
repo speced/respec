@@ -79,30 +79,26 @@ var Builder = {
       const outputWritter = appendBoilerplate(options.out, version);
       const config = {
         generateSourceMaps: true,
+        mainConfigFile: "js/profile-w3c-common.js",
         baseUrl: pth.join(__dirname, "../js/"),
         optimize: options.optimize || "uglify2",
         paths: {
-          "require": "../node_modules/requirejs/require",
+          "handlebars": "../node_modules/handlebars/dist/handlebars",
           "jquery": "../node_modules/jquery/dist/jquery",
           "Promise": "../node_modules/promise-polyfill/Promise",
-          "handlebars": "../node_modules/handlebars/dist/handlebars",
+          "requireLib": "../node_modules/requirejs/require",
           "webidl2": "../node_modules/webidl2/lib/webidl2",
         },
-        shim: {
-          "shortcut": {
-            exports: "shortcut"
-          }
-        },
         name: "profile-w3c-common",
-        include: [
-          "../node_modules/requirejs/require",
-          "../node_modules/jquery/dist/jquery",
-          "../node_modules/promise-polyfill/Promise",
-          "../node_modules/handlebars/dist/handlebars",
-          "../node_modules/webidl2/lib/webidl2",
+        deps: [
+          "core/jquery-enhanced",
+          "jquery",
+          "Promise",
+          "requireLib",
         ],
         inlineText: true,
         preserveLicenseComments: false,
+        useStrict: true,
       };
       const promiseToWrite = new Promise((resolve, reject)=>{
         config.out = (optimizedJs, sourceMap) => {
