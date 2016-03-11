@@ -8,6 +8,7 @@ define(
         var msg, doc, conf;
         var cleanup = function (rootEl) {
             $(".removeOnSave", rootEl).remove();
+            $("#toc-nav", rootEl).remove() ;
             utils.removeReSpec(rootEl);
         };
         return {
