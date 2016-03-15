@@ -80,7 +80,6 @@ describe("W3C - Style", function() {
 
   it("should include 'fixup.js'", function(done) {
     var ops = makeStandardOps();
-    ops.config.useExperimentalStyles = "2016";
     var theTest = function(doc) {
       var query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
       var elem = doc.querySelector(query);
@@ -92,10 +91,11 @@ describe("W3C - Style", function() {
 
   it("should have a meta viewport added", function(done) {
     var ops = makeStandardOps();
-    ops.config.useExperimentalStyles = "2016";
     var theTest = function(doc) {
       var elem = doc.head.querySelector("meta[name=viewport]");
       expect(elem).toBeTruthy();
+      var expectedStr = "width=device-width, initial-scale=1, shrink-to-fit=no";
+      expect(elem.content).toEqual(expectedStr);
     };
     makeRSDoc(ops, theTest, "spec/core/simple.html")
       .then(done);
