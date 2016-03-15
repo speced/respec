@@ -35,7 +35,7 @@ function rel(f) {
 function git(cmd) {
   if (DEBUG) {
     console.log(colors.debug(`Pretending to run: ${"git " + colors.prompt(cmd)}`));
-    return Promise.resolve();
+    return Promise.resolve("");
   }
   return toExecPromise(`git ${cmd}`);
 }
@@ -65,7 +65,21 @@ const Promps = {
         message: "Values can be 'y' or 'n'.",
         default: "y",
       };
-      return yield this.askQuestion(promptOps);
+      yield this.askQuestion(promptOps);
+      yield git(`checkout ${to}`);
+    }, this);
+  },
+
+  askToPullBranch(branch) {
+    return async.task(function * () {
+      const promptOps = {
+        description: `Branch ${branch} needs a pull. Do you want me to do a pull?`,
+        pattern: /^[yn]$/i,
+        message: "Values can be 'y' or 'n'.",
+        default: "y",
+      };
+      yield this.askQuestion(promptOps);
+      yield git(`pull origin ${branch}`);
     }, this);
   },
 
@@ -138,7 +152,7 @@ const Promps = {
 
 function toExecPromise(cmd, timeout) {
   if (!timeout) {
-    timeout = 20000;
+    timeout = 40000;
   }
   return new Promise((resolve, reject) => {
     const id = setTimeout(() => {
@@ -175,18 +189,34 @@ function getBranchState() {
   });
 }
 
+function getCurrentBranch(){
+  return async.task(function*(){
+     const branch = yield git(`rev-parse --abbrev-ref HEAD`);
+     return branch.trim();
+  });
+}
+
 async.task(function * () {
+  const initialBranch = yield getCurrentBranch();
   try {
     // 1. Confirm maintainer is on up-to-date and on the develop branch ()
     console.log(colors.info(" 📡  Performing Git remote update..."));
     yield git(`remote update`);
-    const currentBranch = (yield git(`rev-parse --abbrev-ref HEAD`)).trim();
-    if (currentBranch !== MAIN_BRANCH) {
-      yield Promps.askSwitchToBranch(currentBranch, MAIN_BRANCH);
+    if (initialBranch !== MAIN_BRANCH) {
+      yield Promps.askSwitchToBranch(initialBranch, MAIN_BRANCH);
     }
     const branchState = yield getBranchState();
-    if (branchState !== "up-to-date") {
-      throw new Error("Your branch is not up-to-date. It ${branchState}.");
+    switch(branchState){
+      case "needs a pull":
+        yield Promps.askToPullBranch(MAIN_BRANCH);
+        break;
+      case "up-to-date":
+        break;
+      case "needs to push":
+        var err = `There are unpushed commits on ${MAIN_BRANCH}! Don't do work on ${MAIN_BRANCH}.`;
+        throw new Error(err);
+      default:
+        throw new Error(`Your branch is not up-to-date. It ${branchState}.`);
     }
     // 2. Bump the version in `package.json`.
     const version = yield Promps.askBumpVersion();
@@ -214,8 +244,15 @@ async.task(function * () {
     console.log(colors.info(" 📡  Publishing to npm..."));
     // We give npm publish 1 minute to time out, as it can be slow.
     yield toExecPromise("npm publish", 60000);
+    if (initialBranch !== MAIN_BRANCH) {
+      yield Promps.askSwitchToBranch(MAIN_BRANCH, initialBranch);
+    }
   } catch (err) {
-    console.error(colors.red(err));
+    console.error(colors.red(err.stack));
+    const currentBranch = getCurrentBranch();
+    if(initialBranch !== currentBranch){
+      yield git(`checkout ${initialBranch}`);
+    }
     process.exit(1);
   }
 }).then(
