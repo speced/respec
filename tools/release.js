@@ -79,7 +79,7 @@ const Promps = {
         default: "y",
       };
       yield this.askQuestion(promptOps);
-      yield git(`pull ${branch}`);
+      yield git(`pull origin ${branch}`);
     }, this);
   },
 
@@ -189,12 +189,19 @@ function getBranchState() {
   });
 }
 
+function getCurrentBranch(){
+  return async.task(function*(){
+     const branch = yield git(`rev-parse --abbrev-ref HEAD`);
+     return branch.trim();
+  });
+}
+
 async.task(function * () {
+  const initialBranch = yield getCurrentBranch();
   try {
     // 1. Confirm maintainer is on up-to-date and on the develop branch ()
     console.log(colors.info(" 📡  Performing Git remote update..."));
     yield git(`remote update`);
-    const initialBranch = (yield git(`rev-parse --abbrev-ref HEAD`)).trim();
     if (initialBranch !== MAIN_BRANCH) {
       yield Promps.askSwitchToBranch(initialBranch, MAIN_BRANCH);
     }
@@ -242,6 +249,10 @@ async.task(function * () {
     }
   } catch (err) {
     console.error(colors.red(err.stack));
+    const currentBranch = getCurrentBranch();
+    if(initialBranch !== currentBranch){
+      yield git(`checkout ${initialBranch}`);
+    }
     process.exit(1);
   }
 }).then(
