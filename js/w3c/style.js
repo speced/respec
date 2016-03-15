@@ -22,7 +22,7 @@ define(
         var meta = doc.createElement("meta");
         meta.name = "viewport";
         var contentProps = {
-            "initial-scale": "1.0",
+            "initial-scale": "1",
             "shrink-to-fit": "no",
             "width": "device-width",
         };
