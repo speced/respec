@@ -12,6 +12,9 @@ const colors = require("colors");
 const MAIN_BRANCH = "develop";
 let DEBUG = false;
 
+//See: https://github.com/w3c/respec/issues/645
+require("epipebomb")();
+
 colors.setTheme({
   data: "grey",
   debug: "cyan",
@@ -24,12 +27,13 @@ colors.setTheme({
   verbose: "cyan",
   warn: "yellow",
 });
+
 function rel(f) {
   return path.join(__dirname, f);
 }
 
 function git(cmd) {
-  if(DEBUG){
+  if (DEBUG) {
     console.log(colors.debug(`Pretending to run: ${"git " + colors.prompt(cmd)}`));
     return Promise.resolve();
   }
@@ -132,12 +136,15 @@ const Promps = {
   }
 };
 
-function toExecPromise(cmd) {
+function toExecPromise(cmd, timeout) {
+  if (!timeout) {
+    timeout = 20000;
+  }
   return new Promise((resolve, reject) => {
     const id = setTimeout(() => {
       reject(new Error(`Command took too long: ${cmd}`));
       proc.kill("SIGTERM");
-    }, 20000);
+    }, timeout);
     const proc = exec(cmd, (err, stdout) => {
       clearTimeout(id);
       if (err) {
@@ -154,7 +161,7 @@ function getBranchState() {
     const remote = yield git(`rev-parse @{u}`);
     const base = yield git(`merge-base @ @{u}`);
     let result = "";
-    switch(local){
+    switch (local) {
       case remote:
         result = "up-to-date";
         break;
@@ -205,7 +212,8 @@ async.task(function * () {
     yield git("push origin gh-pages");
     yield git("push --tags");
     console.log(colors.info(" 📡  Publishing to npm..."));
-    yield toExecPromise("npm publish");
+    // We give npm publish 1 minute to time out, as it can be slow.
+    yield toExecPromise("npm publish", 60000);
   } catch (err) {
     console.error(colors.red(err));
     process.exit(1);
