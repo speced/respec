@@ -187,7 +187,7 @@ async.task(function * () {
     }
     const branchState = yield getBranchState();
     if (branchState !== "up-to-date") {
-      throw new Error("Your branch is not up-to-date. It ${branchState}.");
+      throw new Error(`Your branch is not up-to-date. It ${branchState}.`);
     }
     // 2. Bump the version in `package.json`.
     const version = yield Promps.askBumpVersion();
