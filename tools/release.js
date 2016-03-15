@@ -181,9 +181,9 @@ async.task(function * () {
     // 1. Confirm maintainer is on up-to-date and on the develop branch ()
     console.log(colors.info(" 📡  Performing Git remote update..."));
     yield git(`remote update`);
-    const currentBranch = (yield git(`rev-parse --abbrev-ref HEAD`)).trim();
-    if (currentBranch !== MAIN_BRANCH) {
-      yield Promps.askSwitchToBranch(currentBranch, MAIN_BRANCH);
+    const initialBranch = (yield git(`rev-parse --abbrev-ref HEAD`)).trim();
+    if (initialBranch !== MAIN_BRANCH) {
+      yield Promps.askSwitchToBranch(initialBranch, MAIN_BRANCH);
     }
     const branchState = yield getBranchState();
     if (branchState !== "up-to-date") {
@@ -215,6 +215,9 @@ async.task(function * () {
     console.log(colors.info(" 📡  Publishing to npm..."));
     // We give npm publish 1 minute to time out, as it can be slow.
     yield toExecPromise("npm publish", 60000);
+    if (initialBranch !== MAIN_BRANCH) {
+      yield Promps.askSwitchToBranch(MAIN_BRANCH, initialBranch);
+    }
   } catch (err) {
     console.error(colors.red(err.stack));
     process.exit(1);
