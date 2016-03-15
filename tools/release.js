@@ -35,7 +35,7 @@ function rel(f) {
 function git(cmd) {
   if (DEBUG) {
     console.log(colors.debug(`Pretending to run: ${"git " + colors.prompt(cmd)}`));
-    return Promise.resolve();
+    return Promise.resolve("");
   }
   return toExecPromise(`git ${cmd}`);
 }
@@ -65,7 +65,8 @@ const Promps = {
         message: "Values can be 'y' or 'n'.",
         default: "y",
       };
-      return yield this.askQuestion(promptOps);
+      yield this.askQuestion(promptOps);
+      yield git(`checkout ${to}`);
     }, this);
   },
 
@@ -215,7 +216,7 @@ async.task(function * () {
     // We give npm publish 1 minute to time out, as it can be slow.
     yield toExecPromise("npm publish", 60000);
   } catch (err) {
-    console.error(colors.red(err));
+    console.error(colors.red(err.stack));
     process.exit(1);
   }
 }).then(
