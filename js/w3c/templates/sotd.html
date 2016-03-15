@@ -134,12 +134,6 @@
               href='http://www.w3.org/Consortium/Patent-Policy-20040205/'>5 February 2004 W3C Patent
               Policy</a>.
             {{/unless}}
-            {{#if recNotExpected}}
-              The group does not expect this document to become a W3C Recommendation.
-              {{#if noRecTrack}}
-                It is expected to become a W3C Note.
-              {{/if}}
-            {{/if}}
             {{#unless isIGNote}}
               {{#if multipleWGs}}
                 W3C maintains {{{wgPatentHTML}}}
@@ -164,6 +158,14 @@
               The disclosure obligations of the Participants of this group are described in the
               <a href='{{charterDisclosureURI}}'>charter</a>.
             {{/if}}
+          </p>
+          <p>
+          {{#if recNotExpected}}
+            The group does not expect this document to become a W3C Recommendation.
+            {{#if noRecTrack}}
+              It is expected to become a W3C Note.
+            {{/if}}
+          {{/if}}
           </p>
           {{#if isNewProcess}}
             <p>This document is governed by the <a id="w3c_process_revision"
