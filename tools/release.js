@@ -138,7 +138,7 @@ const Promps = {
 
 function toExecPromise(cmd, timeout) {
   if (!timeout) {
-    timeout = 20000;
+    timeout = 40000;
   }
   return new Promise((resolve, reject) => {
     const id = setTimeout(() => {
