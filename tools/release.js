@@ -70,6 +70,19 @@ const Promps = {
     }, this);
   },
 
+  askToPullBranch(branch) {
+    return async.task(function * () {
+      const promptOps = {
+        description: `Branch ${branch} needs a pull. Do you want me to do a pull?`,
+        pattern: /^[yn]$/i,
+        message: "Values can be 'y' or 'n'.",
+        default: "y",
+      };
+      yield this.askQuestion(promptOps);
+      yield git(`pull ${branch}`);
+    }, this);
+  },
+
   askUpToDateAndDev() {
     return async.task(function * () {
       const promptOps = {
@@ -186,8 +199,17 @@ async.task(function * () {
       yield Promps.askSwitchToBranch(initialBranch, MAIN_BRANCH);
     }
     const branchState = yield getBranchState();
-    if (branchState !== "up-to-date") {
-      throw new Error(`Your branch is not up-to-date. It ${branchState}.`);
+    switch(branchState){
+      case "needs a pull":
+        yield Promps.askToPullBranch(MAIN_BRANCH);
+        break;
+      case "up-to-date":
+        break;
+      case "needs to push":
+        var err = `There are unpushed commits on ${MAIN_BRANCH}! Don't do work on ${MAIN_BRANCH}.`;
+        throw new Error(err);
+      default:
+        throw new Error(`Your branch is not up-to-date. It ${branchState}.`);
     }
     // 2. Bump the version in `package.json`.
     const version = yield Promps.askBumpVersion();
