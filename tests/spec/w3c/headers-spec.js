@@ -790,6 +790,7 @@ describe("W3C — Headers", function() {
     }, simpleSpecURL).then(done);
   });
 
+  /*
   it("should state that the spec is destined to become a note", function(done) {
     var ops = makeStandardOps();
     var newProps = {
@@ -804,5 +805,6 @@ describe("W3C — Headers", function() {
       expect(sotdText).toMatch(expectedString);
     }).then(done);
   });
+  */
 
 });
