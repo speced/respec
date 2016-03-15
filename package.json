@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "3.2.114",
+  "version": "3.2.115",
   "license": "W3C",
   "description": "Specification Edition Support Tool.",
   "bin": {
