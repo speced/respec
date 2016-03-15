@@ -12,7 +12,7 @@ define(
                     this.setAttribute("data-dfn-for", this.getAttribute("dfn-for").toLowerCase());
                     this.removeAttribute("dfn-for");
                 });
-                if (!conf.definitionMap) conf.definitionMap = {};
+                if (!conf.definitionMap) conf.definitionMap = Object.create(null);
                 $("dfn").each(function () {
                     var dfn = $(this);
                     if (dfn.attr("for")) {
