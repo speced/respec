@@ -3,7 +3,6 @@
 /*globals module, require, process*/
 "use strict";
 module.exports = function(config) {
-  var os = require("os");
   var options = {
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -123,7 +122,7 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: os.cpus().length,
+    concurrency: 1,
 
     browserNoActivityTimeout: 100000,
 
