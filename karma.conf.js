@@ -114,7 +114,7 @@ module.exports = function(config) {
 
 
     // See "detectBrowsers"
-    browsers: ["Chrome", "Safari", "Chrome"],
+    //browsers: ["Chrome", "Safari", "Firefox"],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
