@@ -5,67 +5,81 @@ var iframes = [];
 
 function makeRSDoc(opts, cb, src, style) {
   return new Promise(function(resove, reject) {
-    if (!src) {
-      src = "about:blank";
-    }
-    if (!style) {
-      style = "display: none";
-    }
-    var $ifr = $("<iframe src='" + src + "' style='" + style + "'></iframe>");
+    var ifr = document.createElement("iframe");
     opts = opts || {};
-    $ifr.on("load", function() {
-      var destDoc = $ifr[0].contentDocument;
-      var body = destDoc.body;
-      var head = destDoc.head;
-      if (opts.htmlAttrs) {
-        $(destDoc.documentElement).attr(opts.htmlAttrs);
-      }
-      if (opts.title) {
-        destDoc.title = opts.title;
-      }
-      $(body).append(opts.abstract || $("<section id='abstract'><p>test abstract</p></section>"));
-      if (opts.body) {
-        $(body).append(opts.body);
-      }
-      var path = opts.jsPath || "../js/";
-      var config = destDoc.createElement("script");
-      $(config)
-        .text("var respecConfig = " + JSON.stringify(opts.config || {}) + ";")
-        .addClass("remove");
-      head.appendChild(config);
-      var loader = destDoc.createElement("script");
-      var loadAttr = {
-        src: "/node_modules/requirejs/require.js",
-        "data-main": path + (opts.profile || "profile-w3c-common")
-      };
-      $(loader)
-        .attr(loadAttr)
-        .addClass("remove");
-      head.appendChild(loader);
-      var handleAndVerify = function(doc) {
-        return function handler(ev) {
-          if (ev.data.topic === "end-all" && doc === ev.source.document) {
-            window.removeEventListener("message", handler);
-            cb(doc);
-            resove();
-          }
-        };
-      };
-      // intercept that in the iframe we have finished processing
-      window.addEventListener("message", handleAndVerify(destDoc));
-    });
-    // trigger load
-    $ifr.appendTo($("body"));
-    iframes.push($ifr);
-    setTimeout(function() {
+    // reject when DEFAULT_TIMEOUT_INTERVAL passes
+    var timeoutId = setTimeout(function() {
       reject(new Error("Timed out waiting on " + src));
     }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
+    ifr.addEventListener("load", function () {
+      var doc = this.contentDocument;
+      decorateDocument(doc, opts);
+      window.addEventListener("message", function msgHandler(ev){
+        if (doc && doc === ev.source.document && ev.data.topic === "end-all") {
+          window.removeEventListener("message", msgHandler);
+          cb(doc);
+          resove();
+          clearTimeout(timeoutId);
+        }
+      });
+    });
+    ifr.style = (style) ? style : "display: none";
+    ifr.src = (src) ? src : "about:blank";
+    // trigger load
+    document.body.appendChild(ifr);
+    iframes.push(ifr);
   });
+}
+
+function decorateDocument(doc, opts){
+  function intoAttributes(element, key){
+    element.setAttribute(key, this[key]);
+    return element;
+  }
+
+  function decorateHead(opts){
+    var path = opts.jsPath || "../js/";
+    var loader = this.ownerDocument.createElement("script");
+    var config = this.ownerDocument.createElement("script");
+    var configText = "var respecConfig = " + JSON.stringify(opts.config || {}) + ";";
+    config.classList.add("remove");
+    config.innerText = configText;
+    var loadAttr = {
+      src: "/node_modules/requirejs/require.js",
+      "data-main": path + (opts.profile || "profile-w3c-common")
+    };
+    Object
+      .keys(loadAttr)
+      .reduce(intoAttributes.bind(loadAttr), loader)
+      .classList.add("remove");
+    this.appendChild(config);
+    this.appendChild(loader);
+  }
+
+  function decorateBody(opts){
+    // We only need to use jQuery to polyfill ParentElement.append()
+    var body = (this.append) ? this : $(this);
+    body.append(opts.abstract || "<section id='abstract'><p>test abstract</p></section>");
+    if (opts.body) {
+      body.append(opts.body);
+    }
+  }
+
+  if (opts.htmlAttrs) {
+    Object
+      .keys(opts.htmlAttrs)
+      .reduce(intoAttributes.bind(opts.htmlAttrs), doc.documentElement);
+  }
+  if (opts.title) {
+    doc.title = opts.title;
+  }
+  decorateBody.call(doc.body, opts);
+  decorateHead.call(doc.head, opts);
 }
 
 function flushIframes() {
   while (iframes.length) {
-    // Poping them from the list prevents memory leaks.
+    // Popping them from the list prevents memory leaks.
     iframes.pop().remove();
   }
 }
