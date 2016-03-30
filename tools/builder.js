@@ -85,6 +85,7 @@ var Builder = {
         paths: {
           "handlebars": "../node_modules/handlebars/dist/handlebars",
           "jquery": "../node_modules/jquery/dist/jquery",
+          "fetch": "../node_modules/whatwg-fetch/fetch",
           "Promise": "../node_modules/promise-polyfill/Promise",
           "requireLib": "../node_modules/requirejs/require",
           "webidl2": "../node_modules/webidl2/lib/webidl2",
@@ -92,6 +93,7 @@ var Builder = {
         name: "profile-w3c-common",
         deps: [
           "core/jquery-enhanced",
+          "fetch",
           "jquery",
           "Promise",
           "requireLib",
