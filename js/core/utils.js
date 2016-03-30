@@ -132,9 +132,8 @@ define(
                     })
                     .reduce(function(elem, nextLink) {
                       elem.appendChild(nextLink);
-                      return element;
+                      return elem;
                     }, doc.head);
-                });
             }
 
             // --- TRANSFORMATIONS ------------------------------------------------------------------------------

@@ -62,3 +62,7 @@ input.task-list-item-checkbox {
     margin: 0 0.35em 0.25em -1.6em;
     vertical-align: middle;
 }
+
+div.issue-title span.issue-title-text {
+  text-transform: none !important;
+}
