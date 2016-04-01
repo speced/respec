@@ -52,7 +52,7 @@ module.exports = function(config) {
         included: false,
         served: true,
       }, {
-        pattern: "node_modules/promise-polyfill/Promise.js",
+	pattern: "node_modules/promise-polyfill/promise.js",
         included: false,
         served: true,
       }, {
