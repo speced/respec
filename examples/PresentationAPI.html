@@ -6,7 +6,6 @@
       Presentation API
     </title>
     <script src='/node_modules/requirejs/require.js' data-main='/js/profile-w3c-common' async class='remove'></script>
-    </script>
     <script class="remove">
     var respecConfig = {
         specStatus: 'ED',
@@ -39,6 +38,19 @@
             ]
           },
           {
+            key: 'Test suite',
+            data: [
+              {
+                value: 'GitHub web-platform-tests/presentation-api',
+                href: 'https://github.com/w3c/web-platform-tests/tree/master/presentation-api'
+              },
+              {
+                value: 'w3c-test.org/presentation-api/',
+                href: 'http://w3c-test.org/presentation-api/'
+              }
+            ]
+          },
+          {
             key: 'Participate',
             data: [
               {
@@ -65,7 +77,27 @@
         wgURI: 'http://www.w3.org/2014/secondscreen/',
         wgPublicList: 'public-secondscreen',
         wgPatentURI: 'http://www.w3.org/2004/01/pp-impl/74168/status',
-        issueBase: "https://www.github.com/w3c/presentation-api/issues/",
+        localBiblio: {
+          PROMGUIDE: {
+            title: 'Writing Promise-Using Specifications',
+            href: 'http://www.w3.org/2001/tag/doc/promises-guide',
+            authors: [
+              'Domenic Denicola'
+            ],
+            status: 'finding',
+            publisher: 'W3C'
+          },
+          DIAL: {
+            title: 'DIscovery And Launch Protocol Specification',
+            href: 'http://www.dial-multiscreen.org/dial-protocol-specification',
+            authors: [
+              'Netflix',
+              'YouTube'
+            ],
+            publisher: 'Netflix'
+          }
+        },
+        issueBase: "https://www.github.com/w3c/presentation-api/issues/"
         // TODO: Uncomment when https://github.com/w3c/presentation-api/issues/228 is fixed
         // githubAPI: "https://api.github.com/repos/w3c/presentation-api"
       };
@@ -82,28 +114,6 @@
     .non-normative { border-left-style: solid; border-left-width: 0.25em; background: none repeat scroll 0 0 #E9FBE9; border-color: #52E052; }
     p.non-normative:before { content: 'Non-normative: '; font-weight: bolder;}
     p.non-normative, div.non-normative { padding: 0.5em 2em; }
-
-
-    /* Pre.idl formatting taken from HTML5 spec */
-    pre.idl { border: solid thin #d3d3d3; background: #FCFCFC; color: black; padding: 0.5em 1em; position: relative; }
-    pre.idl :link, pre.idl :visited { color: inherit; background: transparent; }
-    pre.idl::before { content: "IDL"; font: bold small sans-serif;
-    padding: 0.5em; background: white; position: absolute; top: 0;
-    margin: -1px 0 0 -4em; width: 1.5em; border: thin solid;
-    border-radius: 0 0 0 0.5em }
-
-    /* .example idl formatting taken from HTML5 nightly spec */
-    .example {
-        display: block;
-        color: #222222;
-        background: #FCFCFC;
-        border-left-style: solid;
-        border-color: #c0c0c0;
-        border-left-width: 0.25em;
-        margin-left: 1em;
-        padding-left: 1em;
-        padding-bottom: 0.5em;
-    }
 
     .algorithm li {
         margin-bottom: 0.5em;
@@ -355,7 +365,7 @@
       </p>
       <ul>
         <li>
-          <dfn><code>AbortError</code></dfn>
+          <dfn><code>NotAllowedError</code></dfn>
         </li>
         <li>
           <dfn><code>InvalidAccessError</code></dfn>
@@ -725,10 +735,11 @@
           partial interface Navigator {
             [SameObject] readonly attribute Presentation? presentation;
           };
-
+          
           interface Presentation {
           };
-        </pre>
+        
+</pre>
         <p>
           The <dfn for="Navigator"><code>presentation</code></dfn> attribute is
           used to retrieve an instance of the <a><code>Presentation</code></a>
@@ -744,7 +755,8 @@
             partial interface Presentation {
               attribute PresentationRequest? defaultRequest;
             };
-          </pre>
+          
+</pre>
           <p>
             In a <a>controlling user agent</a>, the <dfn for=
             "Presentation"><code>defaultRequest</code></dfn> attribute MUST
@@ -756,30 +768,37 @@
             If set by the <a>controller</a>, the value of the <a for=
             "Presentation">defaultRequest</a> attribute SHOULD be used by the
             <a>controlling user agent</a> as the <dfn>default presentation
-            request</dfn> for that controller. When the <a>controlling user
-            agent</a> wishes to initiate a <a>PresentationConnection</a> on the
-            controller's behalf, it MUST <a>start a presentation</a> using the
-            <a>default presentation request</a> for the <a>controller</a> (as
-            if the controller had called <code>defaultRequest.start()</code>).
+            request</dfn> for that <a>controlling browsing context</a>. When
+            the <a>controlling user agent</a> wishes to initiate a
+            <a>PresentationConnection</a> on the behalf of that browsing
+            context, it MUST <a>start a presentation</a> using the <a>default
+            presentation request</a> for the <a>controller</a> (as if the
+            controller had called <code>defaultRequest.start()</code>).
           </p>
           <p>
             The <a>controlling user agent</a> SHOULD initiate presentation
             using the <a>default presentation request</a> only when the user
-            has expressed an intention to do so, for example by clicking a
-            button in the browser.
+            has expressed an intention to do so via a user gesture, for example
+            by clicking a button in the browser.
           </p>
           <div class="note">
-            Not all <a data-lt="controlling user agent">controlling user
-            agents</a> may support initiation of a presentation connection via
-            the browser chrome. In this case, setting
-            <code>defaultRequest</code> would have no effect.
+            If a <a>controlling user agent</a> does not support initiation of a
+            <a>presentation connection</a> from the browser chrome, setting
+            <code>defaultRequest</code> will have no effect.
           </div>
-          <div class="issue">
-            It should be clear that user-intiated presentation via the user
-            agent may have pre-selected the presentation display. In this case
-            step 6 of <a>start a presentation</a> is optional. It may be
-            cleaner to define a separate set of steps for initiating a default
-            presentation.
+          <div class="note">
+            Some <a data-lt="controlling user agent">controlling user agents</a>
+            may allow the user to initiate a default <a>presentation
+            connection</a> and select a <a>presentation display</a> with the
+            same user gesture.  For example, the browser chrome could allow the
+            user to pick a display from a menu, or allow the user to tap on
+            an <a href="https://nfc-forum.org/">Near Field Communications
+            (NFC)</a> enabled display. In this case, when the <a>controlling
+            user agent</a> asks for permission while
+            <a data-lt="start a presentation">starting a presentation</a>, the
+            browser could offer that display as the default choice, or consider
+            the gesture as granting permission for the display and bypass
+            display selection entirely.
           </div>
         </section>
         <section>
@@ -790,7 +809,8 @@
             partial interface Presentation {
               [SameObject] readonly attribute PresentationReceiver? receiver;
             };
-          </pre>
+          
+</pre>
           <p>
             In a <a>receiving user agent</a>, the <dfn for=
             "Presentation"><code>receiver</code></dfn> attribute MUST return
@@ -960,8 +980,8 @@
               </ol>
             </li>
             <li>If the user <em>denied permission</em> to use a display, reject
-            <var>P</var> with an <a>AbortError</a> exception, and abort all
-            remaining steps.
+            <var>P</var> with an <a>NotAllowedError</a> exception, and abort
+            all remaining steps.
             </li>
             <li>Otherwise, the user <em>granted permission</em> to use a
             display; let <var>D</var> be that display.
@@ -2484,170 +2504,184 @@
       <h2>
         Security and privacy considerations
       </h2>
-      <h3>
-        Personally identifiable information
-      </h3>
-      <p>
-        The <code>change</code> event fired on the
-        <a>PresentationAvailability</a> object reveals one bit of information
-        about the presence (or non-presence) of a <a>presentation display</a>
-        typically discovered through the local area network. This could be used
-        in conjunction with other information for fingerprinting the user.
-        However, this information is also dependent on the user's local network
-        context, so the risk is minimized.
-      </p>
-      <p>
-        The API enables <a href=
-        "#monitoring-the-list-of-available-presentation-displays">monitoring
-        the list of available presentation displays</a>. How the user agent
-        determines the compatibility and availability of a <a>presentation
-        display</a> with a given URL is an implementation detail. If a
-        <a>controlling user agent</a> matches a <a>presentation request URL</a>
-        to a <a>DIAL</a> application to determine its availability, this
-        feature can be used to probe information about which <a>DIAL</a>
-        applications the user has installed on the <a>presentation display</a>
-        without user consent.
-      </p>
-      <h3>
-        Cross-origin access
-      </h3>
-      <p>
-        A <a>presentation</a> is allowed to be accessed across origins; the
-        presentation URL and presentation ID used to create the presentation
-        are the only information needed to reconnect to a connection from any
-        origin in that user agent. In other words, a presentation is not tied
-        to a particular opening origin.
-      </p>
-      <p>
-        This design allows controlling contexts from different domains to
-        connect to a shared presentation resource. The security of the
-        presentation ID prevents arbitrary pages from connecting to an existing
-        presentation.
-      </p>
-      <p>
-        This specification allows a user agent to publish information about its
-        <a>set of controlled presentations</a>, and allows a browsing context
-        on another user agent to connect to a running presentation via
-        <code><a for="PresentationRequest">reconnect</a>()</code>. To connect,
-        the additional browsing context must discover the presentation URL and
-        presentation ID of the presentation, either provided by the user, or
-        via a shared service.
-      </p>
-      <p>
-        However, this specification makes no guarantee as to the identity of
-        the connecting party. Once connected, the receiving application may
-        wish to further verify the identity of the connecting party through
-        application-specific means. For example, the connecting application
-        could provide a token via <code><a for=
-        "PresentationConnection">send</a>()</code> that the receiving
-        application could verify corresponds an authorized entity.
-      </p>
-      <h3>
-        User interface guidelines
-      </h3>
-      <dl>
-        <dt>
-          Origin display
-        </dt>
-        <dd>
-          <p>
-            When the user is asked permission to use a <a>presentation
-            display</a> during the steps to <a>start a presentation</a>, the
-            <a>controlling user agent</a> should make it clear what origin is
-            requesting presentation <i>and</i> what origin will be presented.
-          </p>
-          <p>
-            Display of the origin requesting presentation will help the user
-            understand what content is making the request, especially when the
-            request is initiated from a <a>nested browsing context</a>. For
-            example, embedded content may try to convince the user to click to
-            trigger a request to start an unwanted presentation.
-          </p>
-          <p>
-            Showing the origin that will be presented will help the user know
-            if that content is from an <a>potentially secure</a> (e.g.,
-            <code>https:</code>) origin, and corresponds to a known or expected
-            site. For example, a malicious site may attempt to convince the
-            user to enter login credentials into a presentation page that
-            imitates a legimitate site. Examination of the requested origin
-            will help the user detect these cases.
-          </p>
-        </dd>
-        <dt>
-          Cross-device access
-        </dt>
-        <dd>
-          <p>
-            When a user <a data-lt="start a presentation">starts a
-            presentation</a>, the user will begin with exclusive control of the
-            presentation. However, the Presentation API allows additional
-            devices (likely belonging to distinct users) to connect and thereby
-            control the presentation as well. When a second device connects to
-            a presentation, it is recommended that all connected <a data-lt=
-            "controlling user agent">controlling user agents</a> notify their
-            users via the browser chrome that the original user has lost
-            exclusive access, and there are now multiple controllers for the
-            presentation.
-          </p>
-          <p>
-            In addition, it may be the case that the <a>receiving user
-            agent</a> is capable of receiving user input, as well as acting as
-            a <a>presentation display</a>. In this case, the <a>receiving user
-            agent</a> should notify its user via browser chrome when a
-            <a>receiving browsing context</a> is under the control of a remote
-            party (i.e., it has one or more connected controllers).
-          </p>
-        </dd>
-      </dl>
-      <h3>
-        Device Access
-      </h3>
-      <p>
-        The presentation API abstracts away what "local" means for displays,
-        meaning that it exposes network-accessible displays as though they were
-        local displays. The Presentation API requires user permission for a
-        page to access any display to mitigate issues that could arise, such as
-        showing unwanted content on a display viewable by others.
-      </p>
-      <h3>
-        Temporary identifiers and browser state
-      </h3>
-      <p>
-        The presentation URL and presentation ID can be used to connect to a
-        presentation from another browsing context. They can be intercepted if
-        an attacker can inject content into the controlling page.
-      </p>
-      <h3>
-        Incognito mode and clearing of browsing data
-      </h3>
-      <p>
-        The content displayed on the presentation is different from the
-        controller. In particular, if the user is logged in in both contexts,
-        then logs out of the <a>controlling browsing context</a>, she will not
-        be automatically logged out from the <a>receiving browsing context</a>.
-        Applications that use authentication should pay extra care when
-        communicating between devices.
-      </p>
-      <p>
-        The set of presentations known to the user agent should be cleared when
-        the user requests to "clear browsing data."
-      </p>
-      <p>
-        When in private browsing mode ("incognito"), the initial <a>set of
-        controlled presentations</a> in that browsing session must be empty.
-        Any <a data-lt="presentation connection">presentation connections</a>
-        added to it must be discarded when the session terminates.
-      </p>
-      <h3>
-        Messaging between presentation connections
-      </h3>
-      <p>
-        This spec will not mandate communication protocols between the
-        <a>controlling browsing context</a> and the <a>receiving browsing
-        context</a>, but it should set some guarantees of message
-        confidentiality and authenticity between corresponding <a>presentation
-        connections</a>.
-      </p>
+      <section>
+        <h3>
+          Personally identifiable information
+        </h3>
+        <p>
+          The <code>change</code> event fired on the
+          <a>PresentationAvailability</a> object reveals one bit of information
+          about the presence (or non-presence) of a <a>presentation display</a>
+          typically discovered through the local area network. This could be
+          used in conjunction with other information for fingerprinting the
+          user. However, this information is also dependent on the user's local
+          network context, so the risk is minimized.
+        </p>
+        <p>
+          The API enables <a href=
+          "#monitoring-the-list-of-available-presentation-displays">monitoring
+          the list of available presentation displays</a>. How the user agent
+          determines the compatibility and availability of a <a>presentation
+          display</a> with a given URL is an implementation detail. If a
+          <a>controlling user agent</a> matches a <a>presentation request
+          URL</a> to a <a>DIAL</a> application to determine its availability,
+          this feature can be used to probe information about which <a>DIAL</a>
+          applications the user has installed on the <a>presentation
+          display</a> without user consent.
+        </p>
+      </section>
+      <section>
+        <h3>
+          Cross-origin access
+        </h3>
+        <p>
+          A <a>presentation</a> is allowed to be accessed across origins; the
+          presentation URL and presentation ID used to create the presentation
+          are the only information needed to reconnect to a connection from any
+          origin in that user agent. In other words, a presentation is not tied
+          to a particular opening origin.
+        </p>
+        <p>
+          This design allows controlling contexts from different domains to
+          connect to a shared presentation resource. The security of the
+          presentation ID prevents arbitrary pages from connecting to an
+          existing presentation.
+        </p>
+        <p>
+          This specification allows a user agent to publish information about
+          its <a>set of controlled presentations</a>, and allows a browsing
+          context on another user agent to connect to a running presentation
+          via <code><a for="PresentationRequest">reconnect</a>()</code>. To
+          connect, the additional browsing context must discover the
+          presentation URL and presentation ID of the presentation, either
+          provided by the user, or via a shared service.
+        </p>
+        <p>
+          However, this specification makes no guarantee as to the identity of
+          the connecting party. Once connected, the receiving application may
+          wish to further verify the identity of the connecting party through
+          application-specific means. For example, the connecting application
+          could provide a token via <code><a for=
+          "PresentationConnection">send</a>()</code> that the receiving
+          application could verify corresponds an authorized entity.
+        </p>
+      </section>
+      <section>
+        <h3>
+          User interface guidelines
+        </h3>
+        <dl>
+          <dt>
+            Origin display
+          </dt>
+          <dd>
+            <p>
+              When the user is asked permission to use a <a>presentation
+              display</a> during the steps to <a>start a presentation</a>, the
+              <a>controlling user agent</a> should make it clear what origin is
+              requesting presentation <i>and</i> what origin will be presented.
+            </p>
+            <p>
+              Display of the origin requesting presentation will help the user
+              understand what content is making the request, especially when
+              the request is initiated from a <a>nested browsing context</a>.
+              For example, embedded content may try to convince the user to
+              click to trigger a request to start an unwanted presentation.
+            </p>
+            <p>
+              Showing the origin that will be presented will help the user know
+              if that content is from an <a>potentially secure</a> (e.g.,
+              <code>https:</code>) origin, and corresponds to a known or
+              expected site. For example, a malicious site may attempt to
+              convince the user to enter login credentials into a presentation
+              page that imitates a legimitate site. Examination of the
+              requested origin will help the user detect these cases.
+            </p>
+          </dd>
+          <dt>
+            Cross-device access
+          </dt>
+          <dd>
+            <p>
+              When a user <a data-lt="start a presentation">starts a
+              presentation</a>, the user will begin with exclusive control of
+              the presentation. However, the Presentation API allows additional
+              devices (likely belonging to distinct users) to connect and
+              thereby control the presentation as well. When a second device
+              connects to a presentation, it is recommended that all connected
+              <a data-lt="controlling user agent">controlling user agents</a>
+              notify their users via the browser chrome that the original user
+              has lost exclusive access, and there are now multiple controllers
+              for the presentation.
+            </p>
+            <p>
+              In addition, it may be the case that the <a>receiving user
+              agent</a> is capable of receiving user input, as well as acting
+              as a <a>presentation display</a>. In this case, the <a>receiving
+              user agent</a> should notify its user via browser chrome when a
+              <a>receiving browsing context</a> is under the control of a
+              remote party (i.e., it has one or more connected controllers).
+            </p>
+          </dd>
+        </dl>
+      </section>
+      <section>
+        <h3>
+          Device Access
+        </h3>
+        <p>
+          The presentation API abstracts away what "local" means for displays,
+          meaning that it exposes network-accessible displays as though they
+          were local displays. The Presentation API requires user permission
+          for a page to access any display to mitigate issues that could arise,
+          such as showing unwanted content on a display viewable by others.
+        </p>
+      </section>
+      <section>
+        <h3>
+          Temporary identifiers and browser state
+        </h3>
+        <p>
+          The presentation URL and presentation ID can be used to connect to a
+          presentation from another browsing context. They can be intercepted
+          if an attacker can inject content into the controlling page.
+        </p>
+      </section>
+      <section>
+        <h3>
+          Incognito mode and clearing of browsing data
+        </h3>
+        <p>
+          The content displayed on the presentation is different from the
+          controller. In particular, if the user is logged in in both contexts,
+          then logs out of the <a>controlling browsing context</a>, she will
+          not be automatically logged out from the <a>receiving browsing
+          context</a>. Applications that use authentication should pay extra
+          care when communicating between devices.
+        </p>
+        <p>
+          The set of presentations known to the user agent should be cleared
+          when the user requests to "clear browsing data."
+        </p>
+        <p>
+          When in private browsing mode ("incognito"), the initial <a>set of
+          controlled presentations</a> in that browsing session must be empty.
+          Any <a data-lt="presentation connection">presentation connections</a>
+          added to it must be discarded when the session terminates.
+        </p>
+      </section>
+      <section>
+        <h3>
+          Messaging between presentation connections
+        </h3>
+        <p>
+          This spec will not mandate communication protocols between the
+          <a>controlling browsing context</a> and the <a>receiving browsing
+          context</a>, but it should set some guarantees of message
+          confidentiality and authenticity between corresponding
+          <a>presentation connections</a>.
+        </p>
+      </section>
     </section>
     <section>
       <h2>
@@ -2661,4 +2695,5 @@
     </section>
   </body>
 </html>
+
 

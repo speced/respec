@@ -44,7 +44,6 @@ function toExecutable(cmd) {
 const excludedFiles = new Set([
   "embedder.html",
   "starter.html",
-  "PresentationAPI.html",
   "basic.built.html",
 ]);
 
