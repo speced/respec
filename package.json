@@ -42,7 +42,7 @@
     "moment": "^2.12.0",
     "mozilla-download": "^1.1.1",
     "phantomjs-prebuilt": "^2.1.5",
-    "promise-polyfill": "^3.1.0",
+    "promise-polyfill": "^4.0.3",
     "prompt": "^1.0.0",
     "requirejs": "^2.1.22",
     "webidl2": "^2.0.11",
