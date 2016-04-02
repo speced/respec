@@ -52,7 +52,7 @@ module.exports = function(config) {
         included: false,
         served: true,
       }, {
-        pattern: "node_modules/promise-polyfill/Promise.js",
+        pattern: "node_modules/promise-polyfill/promise.js",
         included: false,
         served: true,
       }, {
@@ -60,11 +60,11 @@ module.exports = function(config) {
         included: true,
         served: true,
       }, {
-        pattern: "./node_modules/handlebars/dist/**/*.js",
+        pattern: "node_modules/handlebars/dist/**/*.js",
         included: false,
         served: true,
       }, {
-        pattern: "./node_modules/webidl2/lib/*.js",
+        pattern: "node_modules/webidl2/lib/*.js",
         included: false,
         served: true,
       },
