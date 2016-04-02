@@ -15,7 +15,9 @@ define(
             show:   function (ui, _conf, _doc, _msg) {
                 msg = _msg, doc = _doc, conf = _conf;
                 if (!conf.diffTool) conf.diffTool = "http://www5.aptest.com/standards/htmldiff/htmldiff.pl";
-                var supportsDownload = $("<a href='foo' download='x'>A</a>")[0].download === "x"
+                var supportsDownload = Object
+                    .getOwnPropertyNames(HTMLAnchorElement.prototype)
+                    .indexOf("download") > -1
                 ,   self = this
                 ;
                 var $div = $("<div></div>")
@@ -39,7 +41,8 @@ define(
                                 .text(options.title)
                                 .css(buttonCSS)
                                 .attr({
-                                    href: options.url
+                    id: options.id
+                ,   href: options.url
                                 ,   download: options.fileName
                                 ,   type: options.type || ""
                                 })
@@ -65,6 +68,7 @@ define(
 
                 // HTML
                 addButton({
+            id: "respec-save-as-html",
                     title: "Save as HTML",
                     url: this.htmlToDataURL(this.toString()),
                     popupContent: function () { self.toHTMLSource(); },
@@ -73,6 +77,7 @@ define(
 
                 // XHTML5
                 addButton({
+            id: "respec-save-as-xhtml5",
                     fileName: "index.xhtml",
                     popupContent: function () {
                         self.toXHTMLSource(5);
@@ -83,6 +88,7 @@ define(
 
                 // XHTML 1.0
                 addButton({
+            id: "respec-save-as-xhtml",
                     fileName: "index.xhtml",
                     popupContent: function () {
                         self.toXHTMLSource(1);
@@ -93,6 +99,7 @@ define(
 
                 // ePub
                 addButton({
+            id: "respec-save-as-epub",
                     fileName: "spec.epub",
                     popupContent: function () {
                         window.open(self.makeEPubHref(), "_blank");
