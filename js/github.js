@@ -1,5 +1,5 @@
 // Helpers for the GitHub API.
-"use strict";
+
 define(
     [],
     function () {
@@ -11,42 +11,38 @@ define(
             var m = (header||"").match(/<([^>]+)>\s*;\s*rel="next"/);
             return (m && m[1]) || null;
         }
-
-        function fetch(url, headers) {
-            var options = {};
-            if (headers) {
-            options.headers = headers;
+        
+        function fetch(url, options) {
+            if (options) {
+                options.url = url;
+                url = options;
             }
-            return fetch(url, options)
-                .then(function(resp){
-                    return resp.json();
-                });
+            return $.ajax(url);
         }
-
-        function fetchAll(url, headers) {
-            return _fetchAll(url, headers, []);
+        function fetchAll(url, options) {
+            return _fetchAll(url, options, []);
         }
-
-        function _fetchAll(url, headers, output) {
-            var request = fetch(url, headers);
+        
+        function _fetchAll(url, options, output) {
+            var request = fetch(url, options);
             return request.then(function(resp) {
                 output.push.apply(output, resp);
                 var next = findNext(request.getResponseHeader("Link"));
-                return next ? _fetchAll(next, headers, output) : output;
+                return next ? _fetchAll(next, options, output) : output;
             });
         }
-
+        
         return {
             fetch: fetch,
             fetchAll: fetchAll,
-            fetchIndex: function(url, headers) {
+            fetchIndex: function(url, options) {
                 // converts URLs of the form:
                 // https://api.github.com/repos/user/repo/comments{/number}
                 // into:
                 // https://api.github.com/repos/user/repo/comments
                 // which is what you need if you want to get the index.
-                return fetchAll(url.replace(/\{[^}]+\}/, ""), headers);
-            },
+                return fetchAll(url.replace(/\{[^}]+\}/, ""), options);
+            }
         };
     }
 );
