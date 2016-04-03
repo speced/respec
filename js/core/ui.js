@@ -111,7 +111,7 @@ define(
                                 })
                                 .appendTo($("body", doc))
                                 ;
-                $respecButton = $("<button>ReSpec</button>")
+                $respecButton = $("<button id='respec-pill'>ReSpec</button>")
                                     .css({
                                         background:     "#fff"
                                     ,   fontWeight:     "bold"
@@ -143,7 +143,9 @@ define(
                         mod.show(ui, conf, doc, msg);
                     });
                 };
+		var id = "respec-modal-" + label.toLowerCase().replace(/\s+/, "-");
                 $("<button></button>")
+		    .attr({id: id})
                     .css({
                         background:     "#fff"
                     ,   border:         "none"
