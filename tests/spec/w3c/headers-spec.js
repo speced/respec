@@ -789,9 +789,8 @@ describe("W3C — Headers", function() {
         .toEqual("WGPATENT");
     }, simpleSpecURL).then(done);
   });
-
-  /*
-  it("should state that the spec is destined to become a note", function(done) {
+  // See https://github.com/w3c/respec/issues/653
+  xit("should state that the spec is destined to become a note", function(done) {
     var ops = makeStandardOps();
     var newProps = {
       noRecTrack: true,
@@ -805,6 +804,4 @@ describe("W3C — Headers", function() {
       expect(sotdText).toMatch(expectedString);
     }).then(done);
   });
-  */
-
 });

@@ -3,7 +3,6 @@
 /*globals module, require, process*/
 "use strict";
 module.exports = function(config) {
-  var os = require("os");
   var options = {
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -53,7 +52,7 @@ module.exports = function(config) {
         included: false,
         served: true,
       }, {
-        pattern: "node_modules/promise-polyfill/Promise.js",
+        pattern: "node_modules/promise-polyfill/promise.js",
         included: false,
         served: true,
       }, {
@@ -61,11 +60,11 @@ module.exports = function(config) {
         included: true,
         served: true,
       }, {
-        pattern: "./node_modules/handlebars/dist/**/*.js",
+        pattern: "node_modules/handlebars/dist/**/*.js",
         included: false,
         served: true,
       }, {
-        pattern: "./node_modules/webidl2/lib/*.js",
+        pattern: "node_modules/webidl2/lib/*.js",
         included: false,
         served: true,
       },
@@ -115,7 +114,7 @@ module.exports = function(config) {
 
 
     // See "detectBrowsers"
-    browsers: ["Chrome", "Safari", "Chrome"],
+    //browsers: ["Chrome", "Safari", "Firefox"],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
@@ -123,7 +122,7 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: os.cpus().length,
+    concurrency: 1,
 
     browserNoActivityTimeout: 100000,
 

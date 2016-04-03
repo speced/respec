@@ -83,9 +83,10 @@ var Builder = {
         baseUrl: pth.join(__dirname, "../js/"),
         optimize: options.optimize || "uglify2",
         paths: {
+          "fetch": "../node_modules/whatwg-fetch/fetch",
           "handlebars": "../node_modules/handlebars/dist/handlebars",
           "jquery": "../node_modules/jquery/dist/jquery",
-          "Promise": "../node_modules/promise-polyfill/Promise",
+          "Promise": "../node_modules/promise-polyfill/promise",
           "requireLib": "../node_modules/requirejs/require",
           "webidl2": "../node_modules/webidl2/lib/webidl2",
         },
