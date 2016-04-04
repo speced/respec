@@ -48,7 +48,7 @@ const excludedFiles = new Set([
   "manifest.html",
 ]);
 
-const runRespec2html = async(function*(server) {
+const runRespec2html = async(function* (server) {
   // Run respec2html.js on each example file (except whatever gets filtered)
   // and stops in error if any of them reports a warning or an error
   let sources = fs.readdirSync("examples")
@@ -57,24 +57,27 @@ const runRespec2html = async(function*(server) {
 
   // Incrementally spawn processes and add them to process counter.
   const executables = sources.map((source) => {
-    let cmd = `node ./tools/respec2html.js ${server}/examples/${source} > /dev/null`;
+    let cmd = `node ./tools/respec2html.js -e --timeout 10 --src ${server}/examples/${source} > /dev/null`;
     return cmd;
   }).map(
     toExecutable
   );
-  var testCount = 1;
-  var errored = false;
+  let testCount = 1;
+  const errored = new Set();
+  const captureFile = /(\w+\.html)/;
   for (const exe of executables) {
+    const filename = captureFile.exec(exe.cmd)[1];
     try {
-      debug(` 🚄  Running test ${testCount++} of ${sources.length}.`);
+      debug(` 🚄  Generating ${filename} - test ${testCount++} of ${sources.length}.`);
       yield exe.run();
     } catch (err) {
       console.error(colors.error(err));
-      errored = true;
+      errored.add(filename);
     }
   }
-  if(errored){
-    throw new Error(" ❌ A test generated an error");
+  if (errored.size) {
+    const files = Array.from(errored).join(", ");
+    throw new Error(` ❌ File(s) generated errors: ${files}.`);
   }
 });
 
@@ -82,7 +85,7 @@ function debug(msg) {
   console.log(colors.debug(`${colors.input(moment().format("LTS"))} ${msg}`));
 }
 
-async.task(function*() {
+async.task(function* () {
   const port = process.env.PORT || 3000;
   const server = "http://localhost:" + port;
   debug(" ✅ Starting up Express...");
@@ -93,7 +96,11 @@ async.task(function*() {
   debug(" ⏲  Building ReSpec...");
   yield builder.buildW3C("latest");
   debug(" ⏲  Running ReSpec2html tests...");
-  yield runRespec2html(server);
+  try {
+    yield runRespec2html(server);
+  } catch (err) {
+    throw err;
+  }
 })
 .then(
   () => process.exit(0)
