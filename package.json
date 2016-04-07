@@ -27,7 +27,7 @@
     "jshint": "^2.9.1",
     "karma": "^0.13.22",
     "karma-chrome-launcher": "^0.2.3",
-    "karma-detect-browsers": "^2.0.2",
+    "karma-detect-browsers": "^2.1.0",
     "karma-firefox-launcher": "^0.1.7",
     "karma-ie-launcher": "^0.2.0",
     "karma-jasmine": "^0.3.8",
