@@ -9,6 +9,7 @@ define(
         var cleanup = function (rootEl) {
             $(".removeOnSave", rootEl).remove();
             $("#toc-nav", rootEl).remove() ;
+            $("body", rootEl).removeClass('toc-sidebar');
             utils.removeReSpec(rootEl);
         };
         return {
