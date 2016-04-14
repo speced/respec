@@ -45,6 +45,7 @@ const excludedFiles = new Set([
   "embedder.html",
   "starter.html",
   "basic.built.html",
+  "manifest.html",
 ]);
 
 const runRespec2html = async(function*(server) {
@@ -56,8 +57,7 @@ const runRespec2html = async(function*(server) {
 
   // Incrementally spawn processes and add them to process counter.
   const executables = sources.map((source) => {
-    let cmd = "phantomjs --ssl-protocol=any ./tools/respec2html.js " +
-      `--delay 1 -w -e ${server}/examples/${source} /dev/null 10`;
+    let cmd = `node ./tools/respec2html.js ${server}/examples/${source} > /dev/null`;
     return cmd;
   }).map(
     toExecutable
