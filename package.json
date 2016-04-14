@@ -24,7 +24,7 @@
     "jasmine-core": "^2.4.1",
     "jasmine-reporters": "^2.1.1",
     "jquery": "^2.2.3",
-    "jscs": "^2.11.0",
+    "jscs": "^3.0.0",
     "jshint": "^2.9.1",
     "karma": "^0.13.22",
     "karma-chrome-launcher": "^0.2.3",
