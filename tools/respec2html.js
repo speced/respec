@@ -4,7 +4,7 @@
 "use strict";
 const async = require("marcosc-async");
 const colors = require("colors");
-const os = require("os");
+const fetchAndWrite = require("./respecDocWriter").fetchAndWrite;
 colors.setTheme({
   data: "grey",
   debug: "cyan",
@@ -66,59 +66,7 @@ const tasks = {
     };
     console.log(getUsage(optionDefinitions, appDetails));
   },
-  writeTo(outPath, data) {
-    const fsp = require("fs-promise");
-    const path = require("path");
-    return async.task(function* () {
-      let newFilePath = "";
-      if (path.isAbsolute(outPath)) {
-        newFilePath = outPath;
-      } else {
-        newFilePath = path.resolve(process.cwd(), outPath);
-      }
-      try {
-        yield fsp.writeFile(newFilePath, data, "utf-8");
-      } catch (err) {
-        console.error(err, err.stack);
-        process.exit(1);
-      }
-    });
-  },
-  makeTempDir(prefix) {
-    const fs = require("fs");
-    return new Promise((resolve, reject) => {
-      fs.mkdtemp(prefix, (err, folder) => {
-        return (err) ? reject(err) : resolve(folder);
-      });
-    });
-  },
 };
-
-function makeConsoleMsgHandler(nightmare) {
-  return function handleConsoleMessages(parsedArgs) {
-    nightmare.on("console", (type, message) => {
-      const abortOnWarning = parsedArgs.haltonwarn && type === "warn";
-      const abortOnError = parsedArgs.haltonerror && type === "error";
-      const output = `ReSpec ${type}: ${colors.debug(message)}`;
-      switch (type) {
-      case "error":
-        console.error(colors.error(`😱 ${output}`));
-        break;
-      case "warn":
-        // Ignore Nightmare's poling of respecDone
-        if (/document\.respecDone/.test(message)) {
-          return;
-        }
-        console.error(colors.warn(`😳 ${output}`));
-        break;
-      }
-      if (abortOnError || abortOnWarning) {
-        nightmare.proc.kill();
-        process.exit(1);
-      }
-    });
-  };
-}
 
 async.task(function* run() {
   const cli = require("command-line-args")(optionDefinitions);
@@ -134,45 +82,12 @@ async.task(function* run() {
     tasks.showHelp();
     return;
   }
-  const userData = yield tasks.makeTempDir(os.tmpDir() + "/respec2html-");
-  const Nightmare = require("nightmare");
-  const nightmare = new Nightmare({
-    show: false,
-    timeout: parsedArgs.timeout,
-    webPreferences: {
-      "images": false,
-      "defaultEncoding": "utf-8",
-      userData,
-    }
-  });
-  nightmare.useragent("respec2html");
-  const url = require("url")
-    .parse(parsedArgs.src)
-    .href;
-  const handleConsoleMessages = makeConsoleMsgHandler(nightmare);
-  handleConsoleMessages(parsedArgs);
-  const html = yield nightmare
-    .goto(url)
-    .wait(function () {
-      return document.respecDone;
-    })
-    .wait("#respec-modal-save-snapshot")
-    .click("#respec-modal-save-snapshot")
-    .wait(100)
-    .evaluate(function () {
-      var encodedText = document.querySelector("#respec-save-as-html").href;
-      var decodedText = decodeURIComponent(encodedText);
-      var cleanedUpText = decodedText.replace(/^data:text\/html;charset=utf-8,/, "");
-      return cleanedUpText;
-    })
-    .end();
-  if (!parsedArgs.out) {
-    return process.stdout.write(html);
-  }
-  try {
-    yield tasks.writeTo(parsedArgs.out, html);
-  } catch (err) {
-    console.error(err.stack);
-    process.exit(1);
-  }
+  const src = parsedArgs.src;
+  const whenToHalt = {
+    haltOnError: parsedArgs.haltonerror,
+    haltOnWarn: parsedArgs.haltonwarn,
+  };
+  const timeout = parsedArgs.timeout;
+  const out = parsedArgs.out;
+  yield fetchAndWrite(src, out, whenToHalt, timeout);
 });
