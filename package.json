@@ -60,5 +60,13 @@
     "jscs:fix": "jscs --esnext --fix tests",
     "pretest": "npm run jshint && npm run jscs",
     "test:travis": "npm run pretest; npm run test:build; karma start --single-run --reporters progress karma.conf.js; npm run test:headless"
+  },
+  "dependencies": {
+    "colors": "^1.1.2",
+    "command-line-args": "^2.1.6",
+    "command-line-usage": "^2.0.3",
+    "fs-promise": "^0.5.0",
+    "marcosc-async": "^1.1.3",
+    "nightmare": "^2.3.2"
   }
 }
