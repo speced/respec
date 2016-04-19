@@ -60,7 +60,7 @@ define(
           var styleFile = "W3C-";
 
           // Figure out which style file to use.
-          switch (conf.specStatus){
+          switch (conf.specStatus.toUpperCase()){
             case "CG-DRAFT":
             case "CG-FINAL":
             case "BG-DRAFT":
@@ -73,15 +73,16 @@ define(
             case "LC-NOTE":
               styleFile += "WD";
               break;
+            case "WG-NOTE":
             case "FPWD-NOTE":
-              styleFile += "WG-NOTE";
+              styleFile += "WG-NOTE.css";
               break;
-            case "unofficial":
+            case "UNOFFICIAL":
               styleFile += "UD";
               break;
-            case "finding":
-            case "finding-draft":
-            case "base":
+            case "FINDING":
+            case "FINDING-DRAFT":
+            case "BASE":
               styleFile = "base";
               break;
             default:

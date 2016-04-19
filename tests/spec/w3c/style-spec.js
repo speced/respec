@@ -19,7 +19,7 @@ var specStatus = [{
   expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-RSCND",
 }, {
   status: "FPWD-NOTE",
-  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WG-NOTE",
+  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WG-NOTE.css",
 }, {
   status: "FAKE-TEST-TYPE",
   expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-FAKE-TEST-TYPE",
