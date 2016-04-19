@@ -108,6 +108,10 @@ table.simple {
     margin-bottom:  0;
 }
 
+.respec-hidden {
+    display: none;
+}
+
 @media print {
     .removeOnSave {
         display: none;
