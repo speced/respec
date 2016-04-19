@@ -18,7 +18,7 @@
     "command-line-args": "^2.1.6",
     "epipebomb": "^0.1.1",
     "express": "^4.13.4",
-    "fs-extra": "^0.27.0",
+    "fs-extra": "^0.28.0",
     "fs-promise": "^0.5.0",
     "handlebars": "^4.0.5",
     "jasmine-core": "^2.4.1",
