@@ -1,8 +1,11 @@
-
 // Module core/biblio
 // Handles bibliographic references
 // Configuration:
 //  - localBiblio: override or supplement the official biblio with your own.
+
+/*jshint jquery: true*/
+/*globals console*/
+"use strict";
 
 define(
     [],
@@ -80,7 +83,7 @@ define(
                 var $sec = $("<section><h3></h3></section>")
                                 .appendTo($refsec)
                                 .find("h3")
-                                    .text(type + " references")
+                                .text(type + " references")
                                 .end()
                                 ;
                 $sec.makeID(null, type + " references");
@@ -138,46 +141,66 @@ define(
 
         return {
             stringifyRef: stringifyRef,
-            run:    function (conf, doc, cb, msg) {
+            run: function (conf, doc, cb, msg) {
+                function finish() {
+                    msg.pub("end", "core/biblio");
+                    cb();
+                }
                 msg.pub("start", "core/biblio");
-                var refs = getRefKeys(conf)
-                ,   localAliases = []
-                ,   finish = function () {
-                        msg.pub("end", "core/biblio");
-                        cb();
-                    }
-                ;
-                if (conf.localBiblio) {
-                    for (var k in conf.localBiblio) {
-                        if (typeof conf.localBiblio[k].aliasOf !== "undefined") {
-                            localAliases.push(conf.localBiblio[k].aliasOf);
-                        }
-                    }
+                if(!conf.localBiblio){
+                    conf.localBiblio = {};
                 }
-                refs = refs.normativeReferences
-                                .concat(refs.informativeReferences)
-                                .concat(localAliases);
-                if (refs.length) {
-                    var url = "https://labs.w3.org/specrefs/bibrefs?refs=" + refs.join(",");
-                    $.ajax({
-                        dataType:   "json"
-                    ,   url:        url
-                    ,   success:    function (data) {
-                            conf.biblio = data || {};
-                            // override biblio data
-                            if (conf.localBiblio) {
-                                for (var k in conf.localBiblio) conf.biblio[k] = conf.localBiblio[k];
-                            }
-                            bibref(conf, msg);
-                            finish();
-                        }
-                    ,   error:      function (xhr, status, error) {
-                            msg.pub("error", "Error loading references from '" + url + "': " + status + " (" + error + ")");
-                            finish();
-                        }
+                if(conf.biblio){
+                    var warn = "Overriding `.biblio` in config. Please use `.localBiblio` for custom biblio entries.";
+                    msg.pub("warn", warn);
+                }
+                conf.biblio = {};
+                var localAliases = Array
+                    .from(Object.keys(conf.localBiblio))
+                    .filter(function(key){
+                        return conf.localBiblio[key].hasOwnProperty("aliasOf");
+                    })
+                    .map(function(key){
+                        return conf.localBiblio[key].aliasOf;
                     });
+
+                var allRefs = getRefKeys(conf);
+                var externalRefs = allRefs.normativeReferences
+                    .concat(allRefs.informativeReferences)
+                    // Filter, as to not go to network for local refs
+                    .filter(function(key){
+                        return !conf.localBiblio.hasOwnProperty(key);
+                    })
+                    // but include local aliases, in case they refer to external specs
+                    .concat(localAliases)
+                    // remove duplicates
+                    .reduce(function(collector, item){
+                        if(!collector.includes(item)){
+                            collector.push(item);
+                        }
+                        return collector;
+                    }, [])
+                    .sort();
+                // If we don't need to go to network, just use internal biblio
+                if (!externalRefs.length) {
+                    Object.assign(conf.biblio, conf.localBiblio);
+                    bibref(conf, msg);
+                    finish();
+                    return;
                 }
-                else finish();
+                var url = "https://labs.w3.org/specrefs/bibrefs?refs=" + externalRefs.join(",");
+                fetch(url)
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        Object.assign(conf.biblio, data, conf.localBiblio);
+                        bibref(conf, msg);
+                    })
+                    .catch(function(err) {
+                        console.error(err);
+                    })
+                    .then(finish);
             }
         };
     }
