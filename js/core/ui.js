@@ -31,6 +31,7 @@ define(
         ,   warnings = []
         ,   buttons = {}
         ,   $respecButton
+        ,   $respecUI
         ,   errWarn = function (msg, arr, butName, bg, title) {
                 arr.push(msg);
                 if (!buttons[butName]) {
@@ -98,10 +99,16 @@ define(
         ;
         var conf, doc, msg;
         var ui = {
+            show:   function(){
+                $respecUI[0].classList.remove("respec-hidden");
+            },
+            hide:   function(){
+                $respecUI[0].classList.add("respec-hidden");
+            },
             run:    function (_conf, _doc, cb, _msg) {
                 conf = _conf, doc = _doc, msg = _msg;
                 msg.pub("start", "core/ui");
-                var $div = $("<div id='respec-ui' class='removeOnSave'></div>", doc)
+                var $div = $respecUI = $("<div id='respec-ui' class='removeOnSave'></div>", doc)
                                 .css({
                                     position:   "fixed"
                                 ,   top:        "20px"
@@ -134,6 +141,7 @@ define(
                     if (buttons.warning) buttons.warning.click();
                 });
                 msg.pub("end", "core/ui");
+                this.hide();
                 cb();
             }
         ,   addCommand: function (label, module, keyShort) {
@@ -219,6 +227,7 @@ define(
                     ;
             }
         };
+        window.respecUI = ui;
         if (window.respecEvents) respecEvents.sub("error", function (details) {
             ui.error(details);
         });
