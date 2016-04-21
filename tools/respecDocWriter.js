@@ -70,7 +70,8 @@ const tasks = {
    *                             if either occurs.
    * @param  {Number} timeout    Optional. Milliseconds before NightmareJS
    *                             should timeout.
-   * @return {Promise}           Resolves when done writing. Rejects on errors.
+   * @return {Promise}           Resolves with HTML when done writing.
+   *                             Rejects on errors.
    */
   fetchAndWrite(src, out, whenToHalt, timeout){
     return async.task(function* () {
@@ -104,10 +105,12 @@ const tasks = {
         })
         .end();
       if (!out) {
-        return process.stdout.write(html);
+        process.stdout.write(html);
+        return html;
       }
       try {
         yield this.writeTo(out, html);
+        return html;
       } catch (err) {
         console.error(err.stack);
         process.exit(1);
