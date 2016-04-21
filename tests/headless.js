@@ -57,7 +57,7 @@ const runRespec2html = async(function* (server) {
 
   // Incrementally spawn processes and add them to process counter.
   const executables = sources.map((source) => {
-    let cmd = `node ./tools/respec2html.js -e --timeout 10 --src ${server}/examples/${source} > /dev/null`;
+    let cmd = `node ./tools/respec2html.js -e --timeout 10 --src ${server}/examples/${source} --out /dev/null`;
     return cmd;
   }).map(
     toExecutable
