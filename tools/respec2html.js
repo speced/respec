@@ -89,5 +89,11 @@ async.task(function* run() {
   };
   const timeout = parsedArgs.timeout;
   const out = parsedArgs.out;
-  yield fetchAndWrite(src, out, whenToHalt, timeout);
+  try {
+    yield fetchAndWrite(src, out, whenToHalt, timeout);
+  } catch (err) {
+    console.error(colors.red(err.stack));
+    return process.exit(1);
+  }
+  process.exit(0);
 });

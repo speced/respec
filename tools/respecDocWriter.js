@@ -63,17 +63,18 @@ const tasks = {
    * "out" path within a given "timeout".
    *
    * @public
-   * @param  {String} src        A URL that is the ReSpec source.
-   * @param  {String|null} out   A path to write to. If null, goes to stdout.
-   * @param  {Object} whenToHalt Object with two bool props (haltOnWarn,
-   *                             haltOnError), allowing execution to stop
-   *                             if either occurs.
-   * @param  {Number} timeout    Optional. Milliseconds before NightmareJS
-   *                             should timeout.
-   * @return {Promise}           Resolves with HTML when done writing.
-   *                             Rejects on errors.
+   * @param  {String} src         A URL that is the ReSpec source.
+   * @param  {String|null|""} out A path to write to. If null, goes to stdout.
+   *                              If "", then don't write, just return value.
+   * @param  {Object} whenToHalt  Object with two bool props (haltOnWarn,
+   *                              haltOnError), allowing execution to stop
+   *                              if either occurs.
+   * @param  {Number} timeout     Optional. Milliseconds before NightmareJS
+   *                              should timeout.
+   * @return {Promise}            Resolves with HTML when done writing.
+   *                              Rejects on errors.
    */
-  fetchAndWrite(src, out, whenToHalt, timeout){
+  fetchAndWrite(src, out, whenToHalt, timeout) {
     return async.task(function* () {
       const userData = yield this.makeTempDir(os.tmpDir() + "/respec2html-");
       const nightmare = new Nightmare({
@@ -89,8 +90,13 @@ const tasks = {
       const url = parseURL(src).href;
       const handleConsoleMessages = makeConsoleMsgHandler(nightmare);
       handleConsoleMessages(whenToHalt);
+      const response = yield nightmare
+        .goto(url);
+      if (response.code !== 200) {
+        const msg = `HTTP Error ${response.code}: ${url}`;
+        throw new Error(msg);
+      }
       const html = yield nightmare
-        .goto(url)
         .wait(function () {
           return document.respecDone;
         })
@@ -104,17 +110,20 @@ const tasks = {
           return cleanedUpText;
         })
         .end();
-      if (!out) {
+      switch (out) {
+      case null:
         process.stdout.write(html);
-        return html;
+        break;
+      case "":
+        break;
+      default:
+        try {
+          yield this.writeTo(out, html);
+        } catch (err) {
+          throw err;
+        }
       }
-      try {
-        yield this.writeTo(out, html);
-        return html;
-      } catch (err) {
-        console.error(err.stack);
-        process.exit(1);
-      }
+      return html;
     }, this);
   }
 };
