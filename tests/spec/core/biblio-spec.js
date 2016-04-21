@@ -1,13 +1,33 @@
 "use strict";
 describe("W3C — Bibliographic References", function() {
+  var isSpecRefAvailable = true;
+
   afterAll(function(done) {
     flushIframes();
     done();
   });
+
+  // Ping biblio service to see if it's running
+  it("should reach biblio service", function(done) {
+    var fetchOps = {
+      method: "HEAD"
+    };
+    fetch("https://labs.w3.org/specrefs/bibrefs", fetchOps)
+      .then(function(res) {
+        isSpecRefAvailable = res.ok;
+        expect(res.ok).toBeTruthy();
+        done();
+      })
+      .catch(function(err) {
+        fail("Error", err);
+        done();
+      });
+  });
+
   var customConfig = {
-    editors: [
-        {name: "Robin Berjon"}
-    ],
+    editors: [{
+      name: "Robin Berjon"
+    }],
     shortName: "Foo",
     specStatus: "WD",
     prevVersion: "FPWD",
@@ -43,6 +63,11 @@ describe("W3C — Bibliographic References", function() {
       // Make sure the reference is added.
       var ref = doc.querySelector("#bib-TestRef1 + dd");
       expect(ref).toBeTruthy();
+      // This prevents Jasmine from taking down the whole test suite if SpecRef is down.
+      if (!isSpecRefAvailable) {
+        var err = new Error("SpecRef seems to be down. Can't proceed with this spec.");
+        return Promise.reject(err);
+      }
       expect(ref.textContent).toMatch(/Publishers Inc\.\s/);
       ref = null;
       // Make sure the ". " is automatically added to publisher.
@@ -55,6 +80,6 @@ describe("W3C — Bibliographic References", function() {
       ref = doc.querySelector("#bib-TestRef3 + dd");
       expect(ref).toBeTruthy();
       expect(ref.textContent).toMatch(/^Publisher Here\.\s/);
-    }).then(done);
+    }).then(done).catch(done);
   });
 });

@@ -11,7 +11,7 @@ well.
 
 If you are just interested in writing a spec, you can grab the [starter spec](examples/starter.html).
 
-** You don't need to check-out or fork this repository.**
+**You don't need to check-out or fork this repository.**
 
 If you are new to spec writing, we strongly encourage you to read:
 

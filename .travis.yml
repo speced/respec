@@ -13,11 +13,9 @@ before_script:
   - curl ${CHROME_URL}/${CHROME_REV}/chrome-linux.zip --create-dirs -o out/chrome-linux.zip
   - unzip out/chrome-linux.zip -d out
   - export CHROME_CANARY_BIN=$PWD/out/chrome-linux/chrome
-  - cd $TRAVIS_BUILD_DIR
-  - ./node_modules/.bin/mozilla-download --branch mozilla-central --product firefox firefox
-  - export FIREFOX_PATH=$TRAVIS_BUILD_DIR/firefox/firefox
-  - export PATH=$FIREFOX_PATH:$PATH
-  - firefox -v
+
+addons:
+  firefox: "latest"
 
 script:
   - npm run pretest

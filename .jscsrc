@@ -1,6 +1,5 @@
 {
   "fileExtensions": [".js"],
-  "esnext": true,
   "validateQuoteMarks": true,
   "maximumLineLength": 120,
   "excludeFiles": [
