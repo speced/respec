@@ -93,7 +93,25 @@ const tasks = {
       const response = yield nightmare
         .goto(url);
       if (response.code !== 200) {
-        const msg = `HTTP Error ${response.code}: ${url}`;
+        const warn = colors.warn(`📡 HTTP Error ${response.code}:`);
+        const msg = `${warn} ${colors.debug(url)}`;
+        throw new Error(msg);
+      }
+      const isRespecDoc = yield nightmare
+        .wait(function(){
+          return document.readyState === "complete";
+        }) 
+        .evaluate(function(){
+          if(document.hasOwnProperty("respectIsReady")){
+            return true;
+          }
+          // does it try to load ReSpec locally or remotely
+          const remoteScriptQuery = "script[src='https://www.w3.org/Tools/respec/respec-w3c-common']";
+          const query = `script[data-main*=profile-w3c-common], ${remoteScriptQuery}`;
+          return (document.querySelector(query)) ? true : false;
+        });
+      if(!isRespecDoc){
+        const msg = `${colors.warn("💣 Not a ReSpec source document?")} ${colors.debug(url)}`;
         throw new Error(msg);
       }
       const html = yield nightmare
