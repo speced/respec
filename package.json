@@ -3,6 +3,9 @@
   "version": "3.2.120",
   "license": "W3C",
   "description": "Specification Edition Support Tool.",
+  "engines": {
+    "node": ">=5"
+  },
   "bin": {
     "respec2html": "./tools/respec2html.js"
   },
