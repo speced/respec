@@ -33,6 +33,9 @@ var specStatus = [{
   status: "BG-FINAL",
   expectedURL: "https://www.w3.org/StyleSheets/TR/{version}bg-final",
 }, {
+  status: "webspec",
+  expectedURL: "https://specs.webplatform.org/assets/css/kraken.css",
+}, {
   status: "BG-DRAFT",
   expectedURL: "https://www.w3.org/StyleSheets/TR/{version}bg-draft",
 },];
