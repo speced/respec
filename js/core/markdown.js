@@ -44,9 +44,11 @@ define(
     ['core/marked'],
     function (coreMarked) {
         marked.setOptions({
-            gfm: false,
+            gfm: true,
             pedantic: false,
-            sanitize: false
+            sanitize: false,
+            tables: true,
+            breaks: false
         });
 
         function makeBuilder(doc) {
