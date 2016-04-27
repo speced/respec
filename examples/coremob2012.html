@@ -72,6 +72,28 @@
     Introduction
     ============
 
-Quoting from its [charter](http://www.w3.org/community/coremob/charter/):
+
+    ### `<item>`
+
+
+    ```Javascript
+    <item> => {
+          state: 'updated' | 'deleted',
+          kind: "session",
+          id: "{21EC2020-3AEA-4069-A2DD-08002B303123}",
+          modified: Date(a),
+          data: <data> 
+       }
+    ```
+
+
+    | Key | Description |
+    | --- | ----------- |
+    | state | Deleted items are included in the response with a "deleted" state, but no `<data>` associated. |
+    | kind | The "kind" attribute allows for the representation of different entity types. The standard does not advocate embedding of child entities if they change more frequently than the parent. Each entity type ("kind") can be synchronised separately, this allows us to decouple the sync logic from the data structure, and allows us to reassemble the data structure on the client side. It also makes the implementation very simple. |
+    | id | Although IDs shown here are GUIDs, and above are numeric, and although the example above shows Unix timestamps, the standard does not prescribe any specific format of either. |
+    | modified | Modified timestamp of the item. Must be comparable to itself. |
+    | data | Note this key is not included if state is `'deleted'` |
+
   </body>
 </html>
