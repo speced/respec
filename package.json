@@ -51,7 +51,7 @@
     "prompt": "^1.0.0",
     "requirejs": "^2.2.0",
     "webidl2": "^2.0.11",
-    "whatwg-fetch": "^0.11.0"
+    "whatwg-fetch": "^1.0.0"
   },
   "scripts": {
     "karma": "karma start --single-run",
