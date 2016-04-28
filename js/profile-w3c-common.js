@@ -14,13 +14,13 @@ require.config({
     "handlebars": "/node_modules/handlebars/dist/handlebars",
     "jquery": "/node_modules/jquery/dist/jquery",
     "Promise": "/node_modules/promise-polyfill/promise",
-    "webidl2": "/node_modules/webidl2/lib/webidl2",
+    "webidl2": "/node_modules/webidl2/lib/webidl2"
   },
   deps: [
     "fetch",
     "jquery",
     "Promise",
-    "core/jquery-enhanced",
+    "core/jquery-enhanced"
   ],
 });
 
@@ -33,9 +33,10 @@ define([
     "core/override-configuration",
     "core/default-root-attr",
     "w3c/l10n",
-    "core/markdown",
+    "core/hljs",
     "core/style",
     "w3c/style",
+    "core/markdown",
     "w3c/headers",
     "w3c/abstract",
     "w3c/conformance",

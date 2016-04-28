@@ -41,12 +41,21 @@
 //
 
 define(
-    ['core/marked'],
-    function (coreMarked) {
+    ['core/marked', "text!core/css/github.css", "core/hljs"],
+    function (coreMarked, css, hljs) {
         marked.setOptions({
-            gfm: false,
+            gfm: true,
             pedantic: false,
-            sanitize: false
+            sanitize: false,
+            tables: true,
+            breaks: false,
+            highlight: function (code, lang) {
+              if (lang && lang != '') {
+                 return hljs.highlight(lang, code, true).value;
+              } else {
+                 return hljs.highlightAuto(code).value;
+              }
+            }
         });
 
         function makeBuilder(doc) {
@@ -271,6 +280,11 @@ define(
                     doc.body.innerHTML = '';
                     doc.body.appendChild(fragment);
                     if ($rsUI.length) $("#respec-ui").replaceWith($rsUI);
+
+                    //Add classes for highlighting
+                    if (!conf.noHighlightCSS) {
+                        $(doc).find("head").append($("<style/>").text(css));
+                    }
                 }
                 msg.pub("end", "core/markdown");
                 cb();
