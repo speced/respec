@@ -85,7 +85,7 @@ var Builder = {
         paths: {
           "fetch": "../node_modules/whatwg-fetch/fetch",
           "handlebars": "../node_modules/handlebars/dist/handlebars",
-          "jquery": "../node_modules/jquery/dist/jquery",
+          "jquery": "empty:",
           "Promise": "../node_modules/promise-polyfill/promise",
           "requireLib": "../node_modules/requirejs/require",
           "webidl2": "../node_modules/webidl2/lib/webidl2",
