@@ -26,7 +26,7 @@ require.config({
   // Karma serves files under /base, which is the basePath from your config file
   baseUrl: "/base/",
   paths: {
-    "jquery": "/base/node_modules/jquery/dist/jquery",
+    "jquery": "https://code.jquery.com/jquery-2.2.3.min",
     "core/utils": "js/core/utils",
     "core/jquery-enhanced": "js/core/jquery-enhanced",
     "fetch": "/base/node_modules/whatwg-fetch/fetch"

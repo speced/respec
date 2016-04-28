@@ -26,7 +26,6 @@
     "handlebars": "^4.0.5",
     "jasmine-core": "^2.4.1",
     "jasmine-reporters": "^2.1.1",
-    "jquery": "^2.2.3",
     "jscs": "^3.0.3",
     "jshint": "^2.9.2",
     "karma": "^0.13.22",

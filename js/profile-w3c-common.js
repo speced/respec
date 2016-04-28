@@ -1,4 +1,13 @@
 "use strict";
+/**
+ * Sub resource integrity strings can be dynamically added to each node
+ * as RequireJS loads them from a CDN.
+ *
+ */
+var sriTable = {
+  "https://code.jquery.com/jquery-2.2.3.min.js": "sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+};
+
 // this is only set in a build, not at all in the dev environment
 require.config({
   shim: {
@@ -12,7 +21,7 @@ require.config({
   paths: {
     "fetch": "/node_modules/whatwg-fetch/fetch",
     "handlebars": "/node_modules/handlebars/dist/handlebars",
-    "jquery": "/node_modules/jquery/dist/jquery",
+    "jquery": "https://code.jquery.com/jquery-2.2.3.min",
     "Promise": "/node_modules/promise-polyfill/promise",
     "webidl2": "/node_modules/webidl2/lib/webidl2",
   },
@@ -22,6 +31,14 @@ require.config({
     "Promise",
     "core/jquery-enhanced",
   ],
+  onNodeCreated: function(node, config, moduleName, url) {
+    console.log(node, config, moduleName, url);
+    if(url in sriTable){
+      node.crossOrigin = "anonymous";
+      node.integrity = sriTable[url];
+    }
+    return node;
+  }
 });
 
 define([
@@ -85,7 +102,7 @@ define([
           console.error(err);
           // even if things go critically bad, we should still try to show the UI
           ui.show();
-        })
+        });
     });
   }
 );
