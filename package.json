@@ -40,6 +40,7 @@
     "karma-opera-launcher": "^0.3.0",
     "karma-requirejs": "^0.2.6",
     "karma-safari-launcher": "^0.1.1",
+    "karma-safaritechpreview-launcher": "0.0.4",
     "karma-verbose-summary-reporter": "0.0.1",
     "marcosc-async": "^1.1.3",
     "mocha": "^2.4.5",
