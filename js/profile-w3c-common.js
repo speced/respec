@@ -79,7 +79,7 @@ define([
       ui.addCommand("Search Specref DB", "ui/search-specref", "Ctrl+Shift+Alt+space");
       runner
         .runAll(args)
-        .then(document.respectIsReady)
+        .then(document.respecIsReady)
         .then(ui.show)
         .catch(function(err){
           console.error(err);
