@@ -102,7 +102,7 @@ const tasks = {
           return document.readyState === "complete";
         }) 
         .evaluate(function(){
-          if(document.hasOwnProperty("respectIsReady")){
+          if(document.hasOwnProperty("respecIsReady")){
             return true;
           }
           // does it try to load ReSpec locally or remotely

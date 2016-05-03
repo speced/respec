@@ -1,8 +1,11 @@
 {
   "name": "respec",
-  "version": "3.2.120",
+  "version": "3.2.121",
   "license": "W3C",
   "description": "Specification Edition Support Tool.",
+  "engines": {
+    "node": ">=5"
+  },
   "bin": {
     "respec2html": "./tools/respec2html.js"
   },
@@ -18,36 +21,37 @@
     "command-line-args": "^2.1.6",
     "epipebomb": "^0.1.1",
     "express": "^4.13.4",
-    "fs-extra": "^0.28.0",
+    "fs-extra": "^0.30.0",
     "fs-promise": "^0.5.0",
     "handlebars": "^4.0.5",
     "jasmine-core": "^2.4.1",
     "jasmine-reporters": "^2.1.1",
     "jquery": "^2.2.3",
-    "jscs": "^3.0.1",
-    "jshint": "^2.9.1",
+    "jscs": "^3.0.3",
+    "jshint": "^2.9.2",
     "karma": "^0.13.22",
-    "karma-chrome-launcher": "^0.2.3",
+    "karma-chrome-launcher": "^1.0.1",
     "karma-detect-browsers": "^2.1.0",
     "karma-firefox-launcher": "^0.1.7",
     "karma-ie-launcher": "^0.2.0",
     "karma-jasmine": "^0.3.8",
-    "karma-mocha": "^0.2.2",
-    "karma-mocha-reporter": "^2.0.0",
+    "karma-mocha": "^1.0.1",
+    "karma-mocha-reporter": "^2.0.2",
     "karma-opera-launcher": "^0.3.0",
     "karma-requirejs": "^0.2.6",
     "karma-safari-launcher": "^0.1.1",
+    "karma-safaritechpreview-launcher": "0.0.4",
     "karma-verbose-summary-reporter": "0.0.1",
     "marcosc-async": "^1.1.3",
     "mocha": "^2.4.5",
-    "moment": "^2.12.0",
+    "moment": "^2.13.0",
     "mozilla-download": "^1.1.1",
-    "nightmare": "^2.3.2",
-    "promise-polyfill": "^4.0.3",
+    "nightmare": "^2.3.3",
+    "promise-polyfill": "^5.0.0",
     "prompt": "^1.0.0",
     "requirejs": "^2.2.0",
     "webidl2": "^2.0.11",
-    "whatwg-fetch": "^0.11.0"
+    "whatwg-fetch": "^1.0.0"
   },
   "scripts": {
     "karma": "karma start --single-run",
@@ -64,9 +68,9 @@
   "dependencies": {
     "colors": "^1.1.2",
     "command-line-args": "^2.1.6",
-    "command-line-usage": "^2.0.3",
+    "command-line-usage": "^2.0.4",
     "fs-promise": "^0.5.0",
     "marcosc-async": "^1.1.3",
-    "nightmare": "^2.3.2"
+    "nightmare": "^2.3.3"
   }
 }

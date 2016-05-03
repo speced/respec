@@ -175,7 +175,7 @@ define(
                     .concat(localAliases)
                     // remove duplicates
                     .reduce(function(collector, item){
-                        if(!collector.includes(item)){
+                        if(collector.indexOf(item) === -1){
                             collector.push(item);
                         }
                         return collector;
