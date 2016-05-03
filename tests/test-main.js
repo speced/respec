@@ -29,7 +29,8 @@ require.config({
     "jquery": "/base/node_modules/jquery/dist/jquery",
     "core/utils": "js/core/utils",
     "core/jquery-enhanced": "js/core/jquery-enhanced",
-    "fetch": "/base/node_modules/whatwg-fetch/fetch"
+    "fetch": "/base/node_modules/whatwg-fetch/fetch",
+    "marked": "/base/node_modules/marked/lib/marked.js",
   },
   // dynamically load all test files and other deps
   deps: allDeps,
