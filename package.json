@@ -34,7 +34,7 @@
     "karma-detect-browsers": "^2.1.0",
     "karma-firefox-launcher": "^0.1.7",
     "karma-ie-launcher": "^1.0.0",
-    "karma-jasmine": "^1.0.0",
+    "karma-jasmine": "^1.0.2",
     "karma-mocha": "^1.0.1",
     "karma-mocha-reporter": "^2.0.2",
     "karma-opera-launcher": "^0.3.0",
