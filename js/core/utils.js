@@ -14,6 +14,61 @@ define(
                 msg.pub("end", "core/utils");
                 cb();
             }
+        ,   normalizePadding: function (text) {
+                function testRegex(regex) {
+                    return function(text) {
+                        return regex.test(text);
+                    }
+                }
+                if (!text) {
+                    return "";
+                }
+                if (typeof text !== "string") {
+                    throw TypeError("Invalid input");
+                }
+                var hasOpeningPre = testRegex(/<pre\b[^>]*>/i);
+                var hasClosingPre = testRegex(/<\/pre>/i);
+                // We need deduce the minimum column size
+                // by just checking white space from the left
+                function calculateLeftPad(text) {
+                    return (!text) ? 0 : text.match(/^\s*/)[0].length;
+                }
+
+                function nonEmpty(item) {
+                    return item.startsWith(" ");
+                }
+                var inPre = false; // Are we in pre element?
+                // If we know the left column size, we can chop that
+                // off everywhere, except inside pre-tags.
+                var firstPaddedLine = text.split("\n").filter(nonEmpty).shift();
+                var baseCol = calculateLeftPad(firstPaddedLine);
+                var result = text
+                    .split("\n")
+                    .reduce(function(collector, item) {
+                        var currentCol = calculateLeftPad(item);
+                        var trimBy = 0;
+                        if (!inPre) {
+                            // trim whatever we can
+                            if (currentCol < baseCol) {
+                                trimBy = currentCol;
+                            } else {
+                                trimBy = baseCol;
+                            }
+                        }
+                        var result = (trimBy) ? item.replace(new RegExp("^\\s{" + trimBy + "}"), "") : item;
+                        if (hasOpeningPre(item)) {
+                            inPre = true;
+                        }
+                        if (hasClosingPre(item)) {
+                            inPre = false;
+                        }
+                        return collector
+                            .concat(result)
+                            .concat("\n");
+                    }, "")
+                    .trim();
+                return result;
+            }
 
             // --- RESPEC STUFF -------------------------------------------------------------------------------
         ,   removeReSpec:   function (doc) {
