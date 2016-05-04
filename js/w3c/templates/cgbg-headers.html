@@ -2,6 +2,11 @@
   <p>
     <a class='logo' href='http://www.w3.org/'><img width='72' height='48' src='https://www.w3.org/StyleSheets/TR/2016/logos/W3C' alt='W3C'></a>
   </p>
+  <p>
+    {{#if logos}}
+      {{showLogos logos}}
+    {{/if}}
+  </p>
   <h1 class='title p-name' id='title'{{#if doRDFa}} property='dc:title'{{/if}}>{{title}}</h1>
   {{#if subtitle}}
     <h2 {{#if doRDFa}}property='bibo:subtitle' {{/if}}id='subtitle'>{{subtitle}}</h2>
