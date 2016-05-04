@@ -38,7 +38,7 @@
     "karma-mocha": "^1.0.1",
     "karma-mocha-reporter": "^2.0.2",
     "karma-opera-launcher": "^0.3.0",
-    "karma-requirejs": "^0.2.6",
+    "karma-requirejs": "^1.0.0",
     "karma-safari-launcher": "^0.1.1",
     "karma-safaritechpreview-launcher": "0.0.4",
     "karma-verbose-summary-reporter": "0.0.1",
