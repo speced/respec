@@ -10,8 +10,6 @@ describe("Core - Ui", function () {
     makeRSDoc(makeStandardOps(), function (doc) {
       var ui = doc.defaultView.respecUI;
       var pillContainer = doc.querySelector("#respec-ui");
-      // Initially, it should be showing
-      expect(pillContainer.classList.contains("respec-hidden")).toBe(false);
       ui.show();
       // showing it doesn't change it from showing
       expect(pillContainer.classList.contains("respec-hidden")).toBe(false);
