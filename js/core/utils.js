@@ -14,6 +14,82 @@ define(
                 msg.pub("end", "core/utils");
                 cb();
             }
+        ,   normalizePadding: function (text) {
+                if (!text) {
+                    return "";
+                }
+                if (typeof text !== "string") {
+                    throw TypeError("Invalid input");
+                }
+
+                function calculateLeftPad(text) {
+                    var spaceOrTab = /^[\ |\t]*/;
+                    var textToCheck = text.replace(/\n/gm, "");
+                    return (!textToCheck) ? 0 : textToCheck.match(spaceOrTab)[0].length;
+                }
+
+                function filterTextNodes(node) {
+                    return node.nodeType === Node.TEXT_NODE;
+                }
+
+                function parentIs(type) {
+                    return function checkParent(node) {
+                        if (!node) {
+                            return false;
+                        }
+                        var match = node.parentNode && node.parentNode.localName === type;
+                        return (!match) ? checkParent(node.parentNode) : true;
+                    };
+                }
+                var filterParentIsPre = parentIs("pre");
+                // Force into body
+                var parserInput = "<body>" + text;
+                var doc = new DOMParser().parseFromString(parserInput, "text/html");
+                var firstPaddedLine = Array
+                    .from(doc.body.childNodes)
+                    .filter(filterTextNodes)
+                    .find(function(textNode) {
+                        return textNode.textContent
+                            .replace(/\n/gm, "")
+                            .startsWith(" ");
+                    });
+
+                var baseText = (firstPaddedLine) ? firstPaddedLine.textContent.replace(/\n/g, "") : "";
+                var baseCol = calculateLeftPad(baseText);
+
+                Array
+                    .from(doc.body.childNodes)
+                    .filter(filterTextNodes)
+                    .filter(function(textNode) {
+                        // 🎵 Hey, processor! Leave those pre's alone! 🎵
+                        return !filterParentIsPre(textNode);
+                    })
+                    .map(function toTrimmedTextNode(textNode) {
+                        var rawText = textNode.textContent;
+                        var trimBy = calculateLeftPad(rawText) || baseCol;
+                        if (!trimBy) {
+                            return null; //nothing to do
+                        }
+                        var exp = "^ {" + trimBy + "}";
+                        var startTrim = new RegExp(exp, "gm");
+                        var trimmedText = (trimBy) ? rawText.replace(startTrim, "") : rawText;
+                        var newNode = textNode.ownerDocument.createTextNode(trimmedText);
+                        // We can then swap the old with the new
+                        return {
+                            oldNode: textNode,
+                            newNode: newNode,
+                        };
+                    })
+                    .filter(function(nodes) {
+                        return nodes;
+                    })
+                    .forEach(function(nodes) {
+                        var oldNode = nodes.oldNode;
+                        var newNode = nodes.newNode;
+                        oldNode.parentElement.replaceChild(newNode, oldNode);
+                    });
+                return doc.body.innerHTML;
+            }
 
             // --- RESPEC STUFF -------------------------------------------------------------------------------
         ,   removeReSpec:   function (doc) {

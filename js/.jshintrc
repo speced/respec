@@ -1,5 +1,7 @@
 {
+  "strict": "global",
   "jquery": true,
-  "esversion": "6",
+  "esnext": true,
   "predef": [ "require", "define" ],
+  "browser": true
 }

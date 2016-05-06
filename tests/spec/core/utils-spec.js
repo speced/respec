@@ -8,6 +8,43 @@ describe("Core - Utils", function() {
     });
   });
 
+  describe("normalizePadding() method", function(){
+    it("throws given an argument that is not a string", function(done){
+      expect(function(){
+        utils.normalizePadding({});
+      }).toThrow();
+      expect(function(){
+        utils.normalizePadding([]);
+      }).toThrow();
+      expect(function(){
+        utils.normalizePadding(123);
+      }).toThrow();
+      done();
+    });
+
+    it("should return the empty string given falsy values", function(done){
+      expect(utils.normalizePadding()).toEqual("");
+      expect(utils.normalizePadding("")).toEqual("");
+      expect(utils.normalizePadding(null)).toEqual("");
+      done();
+    });
+
+    it("should normalise whitespace, but ignore white with pre tags", function(done){
+      var str = "   trim start\n    * trim 3 from start \n <pre>trim 1\n   if(x){\n\t party()</pre>\n  foo \n    bar";
+      var testStrings = utils
+        .normalizePadding(str)
+        .split("\n");
+      expect(testStrings[0]).toEqual("trim start");
+      expect(testStrings[1]).toEqual(" * trim 3 from start ");
+      expect(testStrings[2]).toEqual(" <pre>trim 1");
+      expect(testStrings[3]).toEqual("   if(x){");
+      expect(testStrings[4]).toEqual("\t party()</pre>");
+      expect(testStrings[5]).toEqual("foo ");
+      expect(testStrings[6]).toEqual("  bar");
+      done();
+    });
+  });
+
   // linkCSS()
   it("should add a link element", function(done) {
     utils.linkCSS(document, "BOGUS");

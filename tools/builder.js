@@ -86,6 +86,7 @@ var Builder = {
           "fetch": "../node_modules/whatwg-fetch/fetch",
           "handlebars": "../node_modules/handlebars/dist/handlebars",
           "jquery": "../node_modules/jquery/dist/jquery",
+          "marked": "../node_modules/marked/lib/marked",
           "Promise": "../node_modules/promise-polyfill/promise",
           "requireLib": "../node_modules/requirejs/require",
           "webidl2": "../node_modules/webidl2/lib/webidl2",

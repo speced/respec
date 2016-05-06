@@ -72,6 +72,11 @@ module.exports = function(config) {
         included: false,
         served: true,
       },
+      {
+        pattern: "./node_modules/marked/lib/marked.js",
+        included: false,
+        served: true,
+      },
       "tests/spec/SpecHelper.js",
       "tests/test-main.js",
     ],
