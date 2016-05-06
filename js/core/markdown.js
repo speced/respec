@@ -60,9 +60,9 @@ define(['marked', 'core/utils'], function (marked, utils) {
   }
 
   function processElements(selector) {
-    return function (doc) {
+    return function (element) {
       Array
-        .from(doc.querySelectorAll(selector))
+        .from(element.querySelectorAll(selector))
         .map(function (elem) {
           return {
             element: elem,
@@ -82,7 +82,7 @@ define(['marked', 'core/utils'], function (marked, utils) {
             item.element.appendChild(node.firstChild);
           }
           return div;
-        }, doc.createElement("div"));
+        }, element.ownerDocument.createElement("div"));
     };
   }
 
@@ -171,7 +171,7 @@ define(['marked', 'core/utils'], function (marked, utils) {
 
       while (root.firstChild) {
         node = root.firstChild;
-        if (node.nodeType !== 1) {
+        if (node.nodeType !== Node.ELEMENT_NODE) {
           root.removeChild(node);
           continue;
         }
@@ -198,8 +198,8 @@ define(['marked', 'core/utils'], function (marked, utils) {
 
     return process(fragment);
   }
-  var processSections = processElements("section");
-  var processIssuesNotesAndReqs = processElements(".issue, .note, .req");
+
+  var processBlockLevelElements = processElements("section, .issue, .note, .req");
 
   return {
     run: function (conf, doc, cb, msg) {
@@ -209,20 +209,19 @@ define(['marked', 'core/utils'], function (marked, utils) {
         var rsUI = doc.getElementById("respec-ui");
         rsUI.remove();
         // Marked expects markdown be flush against the left margin
-        // so we need to normalize the inner text of all block
+        // so we need to normalize the inner text of some block
         // elements.
-        processSections(doc);
-        processIssuesNotesAndReqs(doc);
         var html = toHTML(doc.body.innerHTML);
         // Now we create a new body and replace the old body
         var newBody = doc.createElement("body");
         newBody.innerHTML = html;
+        processBlockLevelElements(newBody);
         // Restructure the document properly
         var fragment = structure(newBody, doc);
-        newBody.appendChild(fragment);
-        newBody.appendChild(rsUI);
 
         // Frankenstein the whole thing back together
+        newBody.appendChild(fragment);
+        newBody.appendChild(rsUI);
         doc.body.parentNode.replaceChild(newBody, doc.body);
       }
       msg.pub("end", "core/markdown");
