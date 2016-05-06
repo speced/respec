@@ -27,7 +27,6 @@ if you think something is broken, [file a bug](https://github.com/w3c/respec/iss
 **Please note:** ReSpec is not endorsed by W3C and nobody should expect the W3C Webmaster to provide advice on
 problems encountered with ReSpec, or on why it may be failing to produce pubrules-compliant
 content.
->>>>>>> develop
 
 ## Bibliographical references
 
