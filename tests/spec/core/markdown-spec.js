@@ -56,7 +56,7 @@ describe("Core - Markdown", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-       "\n\n  Foo\n  ===\n    * list item 1\n    * list item 2\n      * nested list item",
+       "\n    Foo\n    ===\n      * list item 1\n      * list item 2\n        * nested list item",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
