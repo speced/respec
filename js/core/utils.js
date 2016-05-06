@@ -15,59 +15,80 @@ define(
                 cb();
             }
         ,   normalizePadding: function (text) {
-                function testRegex(regex) {
-                    return function(text) {
-                        return regex.test(text);
-                    }
-                }
                 if (!text) {
                     return "";
                 }
                 if (typeof text !== "string") {
                     throw TypeError("Invalid input");
                 }
-                var hasOpeningPre = testRegex(/<pre\b[^>]*>/i);
-                var hasClosingPre = testRegex(/<\/pre>/i);
-                // We need deduce the minimum column size
-                // by just checking white space from the left
+
                 function calculateLeftPad(text) {
-                    return (!text) ? 0 : text.match(/^\s*/)[0].length;
+                    var spaceOrTab = /^[\ |\t]*/;
+                    var textToCheck = text.replace(/\n/gm, "");
+                    return (!textToCheck) ? 0 : textToCheck.match(spaceOrTab)[0].length;
                 }
 
-                function nonEmpty(item) {
-                    return item.startsWith(" ");
+                function filterTextNodes(node) {
+                    return node.nodeType === Node.TEXT_NODE;
                 }
-                var inPre = false; // Are we in pre element?
-                // If we know the left column size, we can chop that
-                // off everywhere, except inside pre-tags.
-                var firstPaddedLine = text.split("\n").filter(nonEmpty).shift();
-                var baseCol = calculateLeftPad(firstPaddedLine);
-                var result = text
-                    .split("\n")
-                    .reduce(function(collector, item) {
-                        var currentCol = calculateLeftPad(item);
-                        var trimBy = 0;
-                        if (!inPre) {
-                            // trim whatever we can
-                            if (currentCol < baseCol) {
-                                trimBy = currentCol;
-                            } else {
-                                trimBy = baseCol;
-                            }
+
+                function parentIs(type) {
+                    return function checkParent(node) {
+                        if (!node) {
+                            return false;
                         }
-                        var result = (trimBy) ? item.replace(new RegExp("^\\s{" + trimBy + "}"), "") : item;
-                        if (hasOpeningPre(item)) {
-                            inPre = true;
+                        var match = node.parentNode && node.parentNode.localName === type;
+                        return (!match) ? checkParent(node.parentNode) : true;
+                    };
+                }
+                var filterParentIsPre = parentIs("pre");
+                // Force into body
+                var parserInput = "<body>" + text;
+                var doc = new DOMParser().parseFromString(parserInput, "text/html");
+                var firstPaddedLine = Array
+                    .from(doc.body.childNodes)
+                    .filter(filterTextNodes)
+                    .find(function(textNode) {
+                        return textNode.textContent
+                            .replace(/\n/gm, "")
+                            .startsWith(" ");
+                    });
+
+                var baseText = (firstPaddedLine) ? firstPaddedLine.textContent.replace(/\n/g, "") : "";
+                var baseCol = calculateLeftPad(baseText);
+
+                Array
+                    .from(doc.body.childNodes)
+                    .filter(filterTextNodes)
+                    .filter(function(textNode) {
+                        // 🎵 Hey, processor! Leave those pre's alone! 🎵
+                        return !filterParentIsPre(textNode);
+                    })
+                    .map(function toTrimmedTextNode(textNode) {
+                        var rawText = textNode.textContent;
+                        var trimBy = calculateLeftPad(rawText) || baseCol;
+                        if (!trimBy) {
+                            return null; //nothing to do
                         }
-                        if (hasClosingPre(item)) {
-                            inPre = false;
-                        }
-                        return collector
-                            .concat(result)
-                            .concat("\n");
-                    }, "")
-                    .trim();
-                return result;
+                        var exp = "^ {" + trimBy + "}";
+                        var startTrim = new RegExp(exp, "gm");
+                        var trimmedText = (trimBy) ? rawText.replace(startTrim, "") : rawText;
+                        var newNode = textNode.ownerDocument.createTextNode(trimmedText);
+                        // We can then swap the old with the new
+                        return {
+                            oldNode: textNode,
+                            newNode: newNode,
+                        };
+                    })
+                    .filter(function(nodes) {
+                        return nodes;
+                    })
+                    .forEach(function(nodes) {
+                        var oldNode = nodes.oldNode;
+                        var newNode = nodes.newNode;
+                        oldNode.parentElement.replaceChild(newNode, oldNode);
+                    });
+                return doc.body.innerHTML;
             }
 
             // --- RESPEC STUFF -------------------------------------------------------------------------------

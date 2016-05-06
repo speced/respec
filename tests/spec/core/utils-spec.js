@@ -36,11 +36,11 @@ describe("Core - Utils", function() {
         .split("\n");
       expect(testStrings[0]).toEqual("trim start");
       expect(testStrings[1]).toEqual(" * trim 3 from start ");
-      expect(testStrings[2]).toEqual("<pre>trim 1");
+      expect(testStrings[2]).toEqual(" <pre>trim 1");
       expect(testStrings[3]).toEqual("   if(x){");
       expect(testStrings[4]).toEqual("\t party()</pre>");
       expect(testStrings[5]).toEqual("foo ");
-      expect(testStrings[6]).toEqual(" bar");
+      expect(testStrings[6]).toEqual("  bar");
       done();
     });
   });
