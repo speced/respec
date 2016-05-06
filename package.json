@@ -60,7 +60,7 @@
     "test:build": "mocha ./tests/test-build.js",
     "test": "npm run test:headless; npm run test:karma",
     "jshint": "jshint karma.conf.js tests tools js/core/markdown.js",
-    "jscs": "jscs --esnext tests tools",
+    "jscs": "jscs --esnext tests tools js/core/markdown.js",
     "jscs:fix": "jscs --esnext --fix tests",
     "pretest": "npm run jshint && npm run jscs",
     "test:travis": "npm run pretest; npm run test:build; karma start --single-run --reporters progress karma.conf.js; npm run test:headless"

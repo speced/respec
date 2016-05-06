@@ -43,7 +43,7 @@
  * The whitespace of pre elements are left alone.
  **/
 "use strict";
-define(['marked', 'core/utils'], function (marked, utils) {
+define(["marked", "core/utils"], function (marked, utils) {
 
   marked.setOptions({
     sanitize: false,
@@ -53,7 +53,7 @@ define(['marked', 'core/utils'], function (marked, utils) {
     // As markdown is pulled from HTML > is already escaped, and
     // thus blockquotes aren't picked up by the parser. This fixes
     // it.
-    var cleanText = text.replace(/&gt;/g, '>');
+    var cleanText = text.replace(/&gt;/g, ">");
     var normalizedLeftPad = utils.normalizePadding(cleanText);
     var html = marked(normalizedLeftPad);
     return html;
@@ -77,7 +77,7 @@ define(['marked', 'core/utils'], function (marked, utils) {
           if (div.firstChild && element.localName === div.firstChild.localName) {
             node = div.firstChild;
           }
-          element.innerHTML = '';
+          element.innerHTML = "";
           while (node.firstChild) {
             item.element.appendChild(node.firstChild);
           }
@@ -118,7 +118,7 @@ define(['marked', 'core/utils'], function (marked, utils) {
     }
 
     function addHeader(header) {
-      var section = doc.createElement('section');
+      var section = doc.createElement("section");
       var position = findPosition(header);
 
       section.appendChild(header);
@@ -177,15 +177,15 @@ define(['marked', 'core/utils'], function (marked, utils) {
         }
         tagName = node.localName;
         switch (tagName) {
-        case 'h1':
-        case 'h2':
-        case 'h3':
-        case 'h4':
-        case 'h5':
-        case 'h6':
+        case "h1":
+        case "h2":
+        case "h3":
+        case "h4":
+        case "h5":
+        case "h6":
           stack.addHeader(node);
           break;
-        case 'section':
+        case "section":
           stack.addSection(node, process);
           break;
         default:
@@ -204,7 +204,7 @@ define(['marked', 'core/utils'], function (marked, utils) {
   return {
     run: function (conf, doc, cb, msg) {
       msg.pub("start", "core/markdown");
-      if (conf.format === 'markdown') {
+      if (conf.format === "markdown") {
         // We transplant the UI to do the markdown processing
         var rsUI = doc.getElementById("respec-ui");
         rsUI.remove();
