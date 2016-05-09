@@ -58,9 +58,23 @@ define(
           var styleBaseURL = "https://www.w3.org/StyleSheets/TR/{version}";
           var finalStyleURL = "";
           var styleFile = "W3C-";
+          var addFixup = true;
 
           // Figure out which style file to use.
           switch (conf.specStatus.toUpperCase()){
+            case "WEBSPEC":
+              addFixup = false;
+              styleBaseURL = "https://specs.webplatform.org/assets/css/";
+              styleFile = "kraken.css";
+              var icon = doc.createElement("link");
+              icon.rel = "icon";
+              icon.href = "https://specs.webplatform.org/assets/img/icon.png";
+              doc.head.appendChild(icon);
+              var script = doc.createElement("script");
+              script.async = true;
+              script.src = "https://specs.webplatform.org/assets/js/kraken.js";
+              doc.head.appendChild(script) ;
+              break;
             case "CG-DRAFT":
             case "CG-FINAL":
             case "BG-DRAFT":
@@ -98,7 +112,7 @@ define(
           }
 
           // Attach W3C fixup script after we are done.
-          if (version) {
+          if (version && addFixup) {
             var subscribeKey = window.respecEvents.sub("end-all", function (){
               attachFixupScript(doc, version);
               window.respecEvents.unsub("end-all", subscribeKey);
