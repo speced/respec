@@ -47,7 +47,7 @@
     "moment": "^2.13.0",
     "mozilla-download": "^1.1.1",
     "nightmare": "^2.4.0",
-    "promise-polyfill": "^5.0.0",
+    "promise-polyfill": "^5.1.0",
     "prompt": "^1.0.0",
     "requirejs": "^2.2.0",
     "webidl2": "^2.0.11",
