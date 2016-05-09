@@ -63,7 +63,8 @@
     "jscs": "jscs --esnext tests tools js/core/markdown.js",
     "jscs:fix": "jscs --esnext --fix tests",
     "pretest": "npm run jshint && npm run jscs",
-    "test:travis": "npm run pretest; npm run test:build; karma start --single-run --reporters progress karma.conf.js; npm run test:headless"
+    "test:travis": "npm run pretest; npm run test:build; karma start --single-run --reporters progress karma.conf.js; npm run test:headless",
+    "test:appveyor": "npm run pretest"
   },
   "dependencies": {
     "colors": "^1.1.2",
