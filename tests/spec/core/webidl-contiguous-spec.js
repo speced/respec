@@ -226,7 +226,7 @@ describe("Core - Contiguous WebIDL", function() {
     expect($target.text())
       .toEqual(text);
     expect($target.find(".idlAttribute").length)
-      .toEqual(8);
+      .toEqual(9);
     var $at = $target.find(".idlAttribute").first();
     expect($at.find(".idlAttrType").text())
       .toEqual("DOMString");
