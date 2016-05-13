@@ -3,8 +3,13 @@
  * Robin Berjon - http://berjon.com/
  *****************************************************************/
 
+/* Override code highlighter background */
+.hljs {
+    background: transparent !important;
+}
+
 /* --- INLINES --- */
-em.rfc2119 { 
+em.rfc2119 {
     text-transform:     lowercase;
     font-variant:       small-caps;
     font-style:         normal;
