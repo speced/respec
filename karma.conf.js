@@ -77,6 +77,16 @@ module.exports = function(config) {
         included: false,
         served: true,
       },
+      {
+        pattern: "./node_modules/highlightjs/*.js",
+        included: false,
+        served: true,
+      },
+      {
+        pattern: "./node_modules/js-beautify/js/lib/*.js",
+        included: false,
+        served: true,
+      },
       "tests/spec/SpecHelper.js",
       "tests/test-main.js",
     ],
