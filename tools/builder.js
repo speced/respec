@@ -15,11 +15,19 @@ const r = require("requirejs");
  * @return {Object} An object with a updated `source` and the new filename for
  *                  the map file.
  */
+
 function replaceMapFilename(respecJs, outPath){
+  // Capture group 1 is the name
+  const findSourceMapName = /\/\/# sourceMappingURL=(.+)/gm;
   const basename = pth.basename(outPath, ".js");
-  const currentMapFilename = respecJs.match(/\/\/# sourceMappingURL=(.+)/)[1];
   const newMapFilename = basename + ".build.js.map";
-  const source = respecJs.replace(currentMapFilename, newMapFilename);
+  let source;
+  if(findSourceMapName.test(respecJs)){
+    const currentMapFilename = respecJs.match(findSourceMapName)[1];
+    source = respecJs.replace(currentMapFilename, newMapFilename);
+  } else {
+    source = respecJs;
+  }
   const mapPath = pth.resolve(outPath, `../${newMapFilename}`);
   return {
     source,
@@ -83,8 +91,13 @@ var Builder = {
         baseUrl: pth.join(__dirname, "../js/"),
         optimize: options.optimize || "uglify2",
         paths: {
+          "beautify": "../node_modules/js-beautify/js/lib/beautify",
+          "beautify-css": "../node_modules/js-beautify/js/lib/beautify-css",
+          "beautify-html": "../node_modules/js-beautify/js/lib/beautify-html",
           "fetch": "../node_modules/whatwg-fetch/fetch",
           "handlebars": "../node_modules/handlebars/dist/handlebars",
+          "highlight": "../node_modules/highlightjs/highlight.pack.min",
+          "highlightStyles": "../node_modules/highlightjs/styles/",
           "jquery": "../node_modules/jquery/dist/jquery",
           "marked": "../node_modules/marked/lib/marked",
           "Promise": "../node_modules/promise-polyfill/promise",
