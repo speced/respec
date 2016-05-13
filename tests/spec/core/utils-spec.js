@@ -8,28 +8,45 @@ describe("Core - Utils", function() {
     });
   });
 
-  describe("normalizePadding() method", function(){
-    it("throws given an argument that is not a string", function(done){
-      expect(function(){
+  describe("toESIterable() method", function() {
+    it("creates an object that conforms to the ES iterator protocol", function(done) {
+      var genericObject = {
+        values: [1, 2, 3, 4],
+        current: 0,
+        nextValue: function() {
+          return this.values[this.current++] || null;
+        }
+      };
+      var iterable = utils.toESIterable(genericObject.nextValue.bind(genericObject));
+      expect(Object.getOwnPropertySymbols(genericObject)).not.toContain(Symbol.iterator);
+      expect(Object.getOwnPropertySymbols(iterable)).toContain(Symbol.iterator);
+      expect(Array.from(iterable)).toEqual([1, 2, 3, 4]);
+      done();
+    });
+  });
+
+  describe("normalizePadding() method", function() {
+    it("throws given an argument that is not a string", function(done) {
+      expect(function() {
         utils.normalizePadding({});
       }).toThrow();
-      expect(function(){
+      expect(function() {
         utils.normalizePadding([]);
       }).toThrow();
-      expect(function(){
+      expect(function() {
         utils.normalizePadding(123);
       }).toThrow();
       done();
     });
 
-    it("should return the empty string given falsy values", function(done){
+    it("should return the empty string given falsy values", function(done) {
       expect(utils.normalizePadding()).toEqual("");
       expect(utils.normalizePadding("")).toEqual("");
       expect(utils.normalizePadding(null)).toEqual("");
       done();
     });
 
-    it("should normalise whitespace, but ignore white with pre tags", function(done){
+    it("should normalise whitespace, but ignore white with pre tags", function(done) {
       var str = "   trim start\n    * trim 3 from start \n <pre>trim 1\n   if(x){\n\t party()</pre>\n  foo \n    bar";
       var testStrings = utils
         .normalizePadding(str)
