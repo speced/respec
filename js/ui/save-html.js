@@ -113,21 +113,10 @@ define(
             id: "respec-save-as-xhtml5",
                     fileName: "index.xhtml",
                     popupContent: function () {
-                        self.toXHTMLSource(5);
+                        self.toXHTMLSource();
                     },
                     title: "Save as XHTML5",
-                    url: this.htmlToDataURL(this.toXML(5)),
-                });
-
-                // XHTML 1.0
-                addButton({
-            id: "respec-save-as-xhtml",
-                    fileName: "index.xhtml",
-                    popupContent: function () {
-                        self.toXHTMLSource(1);
-                    },
-                    title: "Save as XHTML 1.0",
-                    url: this.htmlToDataURL(this.toXML(1)),
+                    url: this.htmlToDataURL(this.toXML()),
                 });
 
                 // ePub
@@ -195,27 +184,10 @@ define(
                 pubsubhub.pub("save", "toXML" + mode)
                 var rootEl = doc.documentElement.cloneNode(true);
                 cleanup(rootEl);
-                if (mode !== 5) {
-                    // not doing xhtml5 so rip out the html5 stuff
-                    $.each("section figcaption figure aside".split(" "), function (i, item) {
-                        $(item, rootEl).renameElement("div").addClass(item);
-                    });
-                    $("time", rootEl).renameElement("span").addClass("time").removeAttr('datetime');
-                    $("[role]", rootEl).removeAttr('role') ;
-                    $("[aria-level]", rootEl).removeAttr('aria-level') ;
-                    $("style:not([type])", rootEl).attr("type", "text/css");
-                    $("script:not([type])", rootEl).attr("type", "text/javascript");
-                }
                 var str = "<!DOCTYPE html"
-                ,   dt = doc.doctype;
-                if (dt && dt.publicId) str += " PUBLIC '" + dt.publicId + "' '" + dt.systemId + "'";
-                else if (mode !== 5) {
-                    if (conf.doRDFa) {
-                        // use the standard RDFa 1.1 doctype
-                        str += " PUBLIC '-//W3C//DTD XHTML+RDFa 1.1//EN' 'https://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd'";
-                    } else {
-                        str += " PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'";
-                    }
+                var dt = doc.doctype;
+                if (dt && dt.publicId){
+                    str += " PUBLIC '" + dt.publicId + "' '" + dt.systemId + "'";
                 }
                 str += ">\n<html";
                 var ats = doc.documentElement.attributes
@@ -315,15 +287,15 @@ define(
                 x.document.close();
             },
             // popup the generated XHTML content
-            // toXHTML:    function (mode) {
+            // toXHTML:    function () {
             //     var x = window.open();
-            //     x.document.write(this.toXML(mode)) ;
+            //     x.document.write(this.toXML()) ;
             //     x.document.close();
             // },
             // popup the generated XHTML source
-            toXHTMLSource:    function (mode) {
+            toXHTMLSource:    function () {
                 var x = window.open();
-                x.document.write("<pre>" + utils.xmlEscape(this.toXML(mode)) + "</pre>");
+                x.document.write("<pre>" + utils.xmlEscape(this.toXML()) + "</pre>");
                 x.document.close();
             }
         };
