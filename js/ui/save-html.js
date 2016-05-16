@@ -3,8 +3,12 @@
 // Saves content to HTML when asked to
 
 define(
-    ["core/utils"],
-    function (utils) {
+    [
+        "beautify-html",
+        "core/beautify-options",
+        "core/utils",
+    ],
+    function (beautify, beautifyOpts, utils) {
         var msg, doc, conf;
         var cleanup = function (rootEl) {
             $(".removeOnSave", rootEl).remove();
@@ -154,7 +158,8 @@ define(
                 cleanup(rootEl);
                 str += rootEl.innerHTML;
                 str += "</html>";
-                return str;
+                var beautifulHTML = beautify.html_beautify(str, beautifyOpts);
+                return beautifulHTML;
             }
             // convert the document to XML, pass 5 as mode for XHTML5
         ,   toXML:        function (mode) {
@@ -239,7 +244,8 @@ define(
                     return out;
                 };
                 str += dumpNode(rootEl) + "</html>";
-                return str;
+                var beautifulXML = beautify.html_beautify(str, beautifyOpts);
+                return beautifulXML;
             }
             // create a diff marked version against the previousURI
             // strategy - open a window in which there is a form with the
