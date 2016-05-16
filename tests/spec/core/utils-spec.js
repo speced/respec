@@ -9,6 +9,26 @@ describe("Core - Utils", function() {
   });
 
   describe("toESIterable() method", function() {
+
+    it("throws if passed something that is not a function", function(done) {
+      expect(function(){
+        utils.toESIterable(function(){});
+      }).not.toThrow();
+      expect(function(){
+        utils.toESIterable("");
+      }).toThrow();
+      expect(function(){
+        utils.toESIterable(null);
+      }).toThrow();
+      expect(function(){
+        utils.toESIterable([]);
+      }).toThrow();
+      expect(function(){
+        utils.toESIterable(undefined);
+      }).toThrow();
+      done();
+    });
+
     it("creates an object that conforms to the ES iterator protocol", function(done) {
       var genericObject = {
         values: [1, 2, 3, 4],
