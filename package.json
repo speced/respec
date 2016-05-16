@@ -51,6 +51,7 @@
     "promise-polyfill": "^5.1.0",
     "prompt": "^1.0.0",
     "requirejs": "^2.2.0",
+    "text": "github:requirejs/text",
     "webidl2": "^2.0.11",
     "whatwg-fetch": "^1.0.0"
   },
