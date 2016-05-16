@@ -19,6 +19,7 @@
     "chai": "^3.5.0",
     "colors": "^1.1.2",
     "command-line-args": "^2.1.6",
+    "domReady": "github:requirejs/domReady",
     "epipebomb": "^0.1.1",
     "express": "^4.13.4",
     "fs-extra": "^0.30.0",
