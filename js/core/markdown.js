@@ -43,19 +43,56 @@
  * The whitespace of pre elements are left alone.
  **/
 "use strict";
-define(["marked", "core/utils"], function (marked, utils) {
+define([
+  "marked",
+  "core/utils",
+  "highlight",
+  "beautify-html",
+  "core/beautify-options",
+], function(marked, utils, hljs, beautify, beautifyOps) {
+  var defaultLanguages = Object.freeze([
+    "css",
+    "html",
+    "js",
+    "json",
+    "xml",
+  ]);
+
+  hljs.configure({
+    tabReplace: "  ", // 2 spaces
+  });
 
   marked.setOptions({
     sanitize: false,
+    gfm: true,
+    highlight: makeHighlightHelper(),
   });
 
+  function makeHighlightHelper() {
+    var div = document.createElement("div");
+    return function(code, language) {
+      var leftPadding = utils.calculateLeftPad(code);
+      var normalizedCode;
+      if (leftPadding) {
+        var leftPaddingMatcher = new RegExp("^ {" + leftPadding + "}", "gm");
+        normalizedCode = code.replace(leftPaddingMatcher, "");
+      } else {
+        normalizedCode = code;
+      }
+      div.innerHTML = normalizedCode;
+      var cleanCode = div.textContent;
+      var possibleLanguages = [].concat(language || defaultLanguages);
+      var highlightedCode = hljs.highlightAuto(cleanCode, possibleLanguages);
+      return highlightedCode.value;
+    };
+  }
+
   function toHTML(text) {
-    // As markdown is pulled from HTML > is already escaped, and
-    // thus blockquotes aren't picked up by the parser. This fixes
-    // it.
-    var cleanText = text.replace(/&gt;/g, ">");
-    var normalizedLeftPad = utils.normalizePadding(cleanText);
-    var html = marked(normalizedLeftPad);
+    var normalizedLeftPad = utils.normalizePadding(text);
+    // As markdown is pulled from HTML, > is already escaped and
+    // so blockquotes aren't picked up by the parser. This fixes it.
+    var potentialMarkdown = normalizedLeftPad.replace(/&gt;/g, ">");
+    var html = marked(potentialMarkdown);
     return html;
   }
 
@@ -85,7 +122,6 @@ define(["marked", "core/utils"], function (marked, utils) {
         }, element.ownerDocument.createElement("div"));
     };
   }
-
 
   function makeBuilder(doc) {
     var root = doc.createDocumentFragment();
@@ -202,23 +238,26 @@ define(["marked", "core/utils"], function (marked, utils) {
   var processBlockLevelElements = processElements("section, .issue, .note, .req");
 
   return {
-    run: function (conf, doc, cb, msg) {
+    run: function(conf, doc, cb, msg) {
       msg.pub("start", "core/markdown");
       if (conf.format === "markdown") {
         // We transplant the UI to do the markdown processing
         var rsUI = doc.getElementById("respec-ui");
         rsUI.remove();
+        // The new body will replace the old body
+        var newBody = doc.createElement("body");
+        newBody.innerHTML = doc.body.innerHTML;
         // Marked expects markdown be flush against the left margin
         // so we need to normalize the inner text of some block
         // elements.
-        var html = toHTML(doc.body.innerHTML);
-        // Now we create a new body and replace the old body
-        var newBody = doc.createElement("body");
-        newBody.innerHTML = html;
         processBlockLevelElements(newBody);
+        var dirtyHTML = toHTML(newBody.innerHTML);
+        // Markdown parsing sometimes inserts empty p tags
+        var cleanHTML = dirtyHTML.replace(/<p>\s*<\/p>/gm, "");
+        var beautifulHTML = beautify.html_beautify(cleanHTML, beautifyOps);
+        newBody.innerHTML = beautifulHTML;
         // Restructure the document properly
         var fragment = structure(newBody, doc);
-
         // Frankenstein the whole thing back together
         newBody.appendChild(fragment);
         newBody.appendChild(rsUI);
