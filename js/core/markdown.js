@@ -247,8 +247,7 @@ define([
   var processBlockLevelElements = processElements("section, .issue, .note, .req");
 
   return {
-    run: function(conf, doc, cb, msg) {
-      msg.pub("start", "core/markdown");
+    run: function(conf, doc, cb) {
       if (conf.format === "markdown") {
         // We transplant the UI to do the markdown processing
         var rsUI = doc.getElementById("respec-ui");
@@ -274,7 +273,6 @@ define([
         newBody.appendChild(rsUI);
         doc.body.parentNode.replaceChild(newBody, doc.body);
       }
-      msg.pub("end", "core/markdown");
       cb();
     }
   };

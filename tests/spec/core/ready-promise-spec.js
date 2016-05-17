@@ -13,13 +13,15 @@ describe("respecIsReady promise", function() {
   it("should resolve with the resulting respecConfig", function(done) {
     var ops = makeStandardOps();
     makeRSDoc(ops, function(doc) {
-      doc.respecIsReady.then(function(resultingConfig) {
-        // previousPublishDate gets changed to a Date object by ReSpec,
-        // so not worth checking for equality.
-        delete resultingConfig.previousPublishDate;
-        delete ops.config.previousPublishDate;
-        expect(resultingConfig).toEqual(jasmine.objectContaining(ops.config));
-      });
-    }).then(done);
+      doc.respecIsReady
+        .then(function(resultingConfig) {
+          // previousPublishDate gets changed to a Date object by ReSpec,
+          // so not worth checking for equality.
+          delete resultingConfig.previousPublishDate;
+          delete ops.config.previousPublishDate;
+          expect(resultingConfig).toEqual(jasmine.objectContaining(ops.config));
+        })
+        .then(done);
+    });
   });
 });

@@ -17,8 +17,7 @@ define(
     ["core/utils"],
     function (utils) {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "w3c/data-transform");
+            run:    function (conf, doc, cb) {
                 $("[data-transform]", doc).each(function (i, node) {
                     var $n = $(node);
                     var flist = $n.attr('data-transform');
@@ -28,11 +27,10 @@ define(
                         content = utils.runTransforms($n.html(), flist);
                     }
                     catch (e) {
-                        msg.pub("error", e);
+                        console.error(e);
                     }
                     if (content) $n.html(content);
                 });
-                msg.pub("end", "w3c/data-transform");
                 cb();
             }
         };

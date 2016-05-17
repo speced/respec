@@ -8,8 +8,8 @@
 "use strict";
 
 define(
-    [],
-    function () {
+    ["core/pubsubhub"],
+    function (pubsubhub) {
         var getRefKeys = function (conf) {
             var informs = conf.informativeReferences
             ,   norms = conf.normativeReferences
@@ -62,7 +62,7 @@ define(
             if (ref.href) output += 'URL: <a href="' + ref.href + '">' + ref.href + "</a>";
             return output;
         };
-        var bibref = function (conf, msg) {
+        var bibref = function (conf) {
             // this is in fact the bibref processing portion
             var badrefs = {}
             ,   refs = getRefKeys(conf)
@@ -105,7 +105,7 @@ define(
                     while (refcontent && refcontent.aliasOf) {
                         if (circular[refcontent.aliasOf]) {
                             refcontent = null;
-                            msg.pub("error", "Circular reference in biblio DB between [" + ref + "] and [" + key + "].");
+                            pubsubhub.pub("error", "Circular reference in biblio DB between [" + ref + "] and [" + key + "].");
                         }
                         else {
                             key = refcontent.aliasOf;
@@ -131,28 +131,23 @@ define(
             }
             for (var k in aliases) {
                 if (aliases[k].length > 1) {
-                    msg.pub("warn", "[" + k + "] is referenced in " + aliases[k].length + " ways (" + aliases[k].join(", ") + "). This causes duplicate entries in the reference section.");
+                    pubsubhub.pub("warn", "[" + k + "] is referenced in " + aliases[k].length + " ways (" + aliases[k].join(", ") + "). This causes duplicate entries in the reference section.");
                 }
             }
             for (var item in badrefs) {
-                if (badrefs.hasOwnProperty(item)) msg.pub("error", "Bad reference: [" + item + "] (appears " + badrefs[item] + " times)");
+                if (badrefs.hasOwnProperty(item)) pubsubhub.pub("error", "Bad reference: [" + item + "] (appears " + badrefs[item] + " times)");
             }
         };
 
         return {
             stringifyRef: stringifyRef,
-            run: function (conf, doc, cb, msg) {
-                function finish() {
-                    msg.pub("end", "core/biblio");
-                    cb();
-                }
-                msg.pub("start", "core/biblio");
+            run: function (conf, doc, cb) {
                 if(!conf.localBiblio){
                     conf.localBiblio = {};
                 }
                 if(conf.biblio){
                     var warn = "Overriding `.biblio` in config. Please use `.localBiblio` for custom biblio entries.";
-                    msg.pub("warn", warn);
+                    pubsubhub.pub("warn", warn);
                 }
                 conf.biblio = {};
                 var localAliases = Array
@@ -184,8 +179,8 @@ define(
                 // If we don't need to go to network, just use internal biblio
                 if (!externalRefs.length) {
                     Object.assign(conf.biblio, conf.localBiblio);
-                    bibref(conf, msg);
-                    finish();
+                    bibref(conf);
+                    cb();
                     return;
                 }
                 var url = "https://labs.w3.org/specrefs/bibrefs?refs=" + externalRefs.join(",");
@@ -195,12 +190,12 @@ define(
                     })
                     .then(function(data) {
                         Object.assign(conf.biblio, data, conf.localBiblio);
-                        bibref(conf, msg);
+                        bibref(conf);
                     })
                     .catch(function(err) {
                         console.error(err);
                     })
-                    .then(finish);
+                    .then(cb);
             }
         };
     }

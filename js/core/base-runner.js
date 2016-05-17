@@ -1,7 +1,7 @@
 /*jshint
     expr:   true
 */
-/*global self, respecEvents, respecConfig */
+/*global respecConfig */
 
 // Module core/base-runner
 // The module in charge of running the whole processing pipeline.
@@ -15,95 +15,47 @@
 //  - afterEnd: a single function called at the end, after postProcess, with the
 //      same caveats. These two coexist for historical reasons; please not that they
 //      are all considered deprecated and may all be removed.
-
-(function (GLOBAL) {
-    // pubsub
-    // freely adapted from http://higginsforpresident.net/js/static/jq.pubsub.js
-    var handlers = {}
-    ,   embedded = (top !== self)
-    ;
-    if (!("respecConfig" in window)) window.respecConfig = {};
-    GLOBAL.respecEvents = {
-        pub:    function (topic) {
-            var args = Array.prototype.slice.call(arguments);
-            args.shift();
-            if (embedded && window.postMessage) {
-                // Make sure all args are structured-cloneable.
-                args = args.map(function(arg) {
-                    return (arg.stack || arg) + '';
-                });
-                parent.postMessage({ topic: topic, args: args}, "*");
-            }
-            $.each(handlers[topic] || [], function () {
-                this.apply(GLOBAL, args);
-            });
-        }
-    ,   sub:    function (topic, cb) {
-            if (!handlers[topic]) handlers[topic] = [];
-            handlers[topic].push(cb);
-            return [topic, cb];
-        }
-    ,   unsub:  function (opaque) { // opaque is whatever is returned by sub()
-            var t = opaque[0];
-            handlers[t] && $.each(handlers[t] || [], function (idx) {
-                if (this == opaque[1]) handlers[t].splice(idx, 1);
-            });
-        }
-    };
-}(this));
-
-// these need to be improved, or complemented with proper UI indications
-if (window.console) {
-    respecEvents.sub("warn", function (details) {
-        console.warn(details);
-    });
-    respecEvents.sub("error", function (details) {
-        console.error(details.stack || details);
-    });
-    respecEvents.sub("start", function (details) {
-        if (respecConfig && respecConfig.trace) console.log(">>> began: " + details);
-    });
-    respecEvents.sub("end", function (details) {
-        if (respecConfig && respecConfig.trace) console.log("<<< finished: " + details);
-    });
-}
-
-
+"use strict";
 define(
-    ["core/respec-ready"],
-    function () {
+    ["core/pubsubhub"],
+    function (pubsubhub) {
+        function createLegacyWrapper(pubsubhub){
+            var deprecatedMsg = "Using 'msg' is deprecated. " +
+                "Import 'pubsubhub' into your module instead."
+            return Object
+                .keys(pubsubhub)
+                .reduce(function(obj, key){
+                    return Object.defineProperty(obj, key, {
+                        value: function(){
+                            console.warn(deprecatedMsg);
+                            return pubsubhub[key].apply(pubsubhub, Array.from(arguments));
+                        }
+                    });
+                }, {});
+        }
         return {
             runAll:    function (plugs) {
                 // publish messages for beginning of all and end of all
-                var pluginStack = 0;
-                respecEvents.pub("start-all");
-                respecEvents.sub("start", function () {
-                    pluginStack++;
-                });
-                respecEvents.sub("end", function () {
-                    pluginStack--;
-                    if (!pluginStack) {
-                        respecEvents.pub("end-all");
-                        document.respecDone = true;
-                    }
-                });
-                respecEvents.pub("start", "core/base-runner");
-
+                pubsubhub.pub("start-all");
                 if (respecConfig.preProcess) {
                     for (var i = 0; i < respecConfig.preProcess.length; i++) {
-                        try { respecConfig.preProcess[i].apply(this); }
-                        catch (e) { respecEvents.pub("error", e); }
+                        try {
+                            respecConfig.preProcess[i].apply(this); }
+                        catch (e) {
+                            window.console.error(e);
+                        }
                     }
                 }
-
+                var deprecated = createLegacyWrapper(pubsubhub);
                 var pipeline = Promise.resolve();
                 // the first in the plugs is going to be us
                 plugs.shift();
                 plugs.forEach(function(plug) {
                     pipeline = pipeline.then(function () {
                         if (plug.run) {
-                            return new Promise(function runPlugin(resolve, reject) {
-                                var result = plug.run.call(plug, respecConfig, document, resolve, respecEvents);
+                            return new Promise(function runPlugin(resolve) {
+                                // We send pubsubhub in to retain backwards
+                                var result = plug.run.call(plug, respecConfig, document, resolve, deprecated);
                                 // If the plugin returns a promise, have that
                                 // control the end of the plugin's run.
                                 // Otherwise, assume it'll call resolve() as a
@@ -112,26 +64,29 @@ define(
                                     resolve(result);
                                 }
                             }).catch(function(e) {
-                                respecEvents.pub("error", e);
-                                respecEvents.pub("end", "unknown/with-error");
+                                throw e;
                             });
                         }
                         else return Promise.resolve();
                     });
                 });
-                return pipeline.then(function() {
-                    if (respecConfig.postProcess) {
-                        for (var i = 0; i < respecConfig.postProcess.length; i++) {
-                            try { respecConfig.postProcess[i].apply(this); }
-                            catch (e) { respecEvents.pub("error", e); }
+                return pipeline
+                    .then(function(){
+                        var resultingConfig = Object.assign({}, window.respecConfig);
+                        pubsubhub.pub("end-all", resultingConfig);
+                    })
+                    .then(function() {
+                        if (respecConfig.postProcess) {
+                            for (var i = 0; i < respecConfig.postProcess.length; i++) {
+                                try { respecConfig.postProcess[i].apply(this); }
+                                catch (e) { pubsubhub.pub("error", e); }
+                            }
                         }
-                    }
-                    if (respecConfig.afterEnd) {
-                        try { respecConfig.afterEnd.apply(window, Array.prototype.slice.call(arguments)); }
-                        catch (e) { respecEvents.pub("error", e); }
-                    }
-                    respecEvents.pub("end", "core/base-runner");
-                });
+                        if (respecConfig.afterEnd) {
+                            try { respecConfig.afterEnd.apply(window, Array.from(arguments)); }
+                            catch (e) { pubsubhub.pub("error", e); }
+                        }
+                    });
             }
         };
     }

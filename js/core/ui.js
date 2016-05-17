@@ -1,8 +1,6 @@
-/*global respecEvents */
-
 // Module core/ui
 // Handles the ReSpec UI
-
+/*jshint laxcomma:true*/
 // XXX TODO
 //  - look at other UI things to add
 //      - list issues
@@ -10,10 +8,14 @@
 //      - save to GitHub
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
-
+"use strict";
 define(
-    ["shortcut", "core/jquery-enhanced"],
-    function (shortcut) {
+    [
+        "shortcut",
+        "core/pubsubhub",
+        "core/jquery-enhanced",
+    ],
+    function (shortcut, pubsubhub) {
         var $menu = $("<div id=respec-menu></div>")
                         .css({
                             background:     "#fff"
@@ -97,7 +99,7 @@ define(
                 buttons[butName].text(arr.length);
             }
         ;
-        var conf, doc, msg;
+        var conf, doc;
         var ui = {
             show:   function(){
                 $respecUI[0].classList.remove("respec-hidden");
@@ -105,9 +107,8 @@ define(
             hide:   function(){
                 $respecUI[0].classList.add("respec-hidden");
             },
-            run:    function (_conf, _doc, cb, _msg) {
-                conf = _conf, doc = _doc, msg = _msg;
-                msg.pub("start", "core/ui");
+            run:    function (_conf, _doc, cb) {
+                conf = _conf, doc = _doc;
                 var $div = $respecUI = $("<div id='respec-ui' class='removeOnSave'></div>", doc)
                                 .css({
                                     position:   "fixed"
@@ -131,7 +132,7 @@ define(
                                     })
                                     .appendTo($div)
                                     ;
-                doc.firstElementChild.addEventListener("click", function(ev){
+                doc.firstElementChild.addEventListener("click", function(){
                     if(window.getComputedStyle($menu[0]).display === "block"){
                         $menu.fadeOut(200);
                     }
@@ -146,7 +147,6 @@ define(
                 shortcut.add("Ctrl+Alt+Shift+W", function () {
                     if (buttons.warning) buttons.warning.click();
                 });
-                msg.pub("end", "core/ui");
                 this.hide();
                 cb();
             }
@@ -154,7 +154,7 @@ define(
                 var handler = function () {
                     $menu.hide();
                     require([module], function (mod) {
-                        mod.show(ui, conf, doc, msg);
+                        mod.show(ui, conf, doc);
                     });
                 };
 		var id = "respec-modal-" + label.toLowerCase().replace(/\s+/, "-");
@@ -234,10 +234,10 @@ define(
             }
         };
         window.respecUI = ui;
-        if (window.respecEvents) respecEvents.sub("error", function (details) {
+        pubsubhub.sub("error", function (details) {
             ui.error(details);
         });
-        if (window.respecEvents) respecEvents.sub("warn", function (details) {
+        pubsubhub.sub("warn", function (details) {
             ui.warning(details);
         });
         return ui;

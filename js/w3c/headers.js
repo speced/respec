@@ -101,8 +101,9 @@ define(
     ,   "tmpl!w3c/templates/sotd.html"
     ,   "tmpl!w3c/templates/cgbg-headers.html"
     ,   "tmpl!w3c/templates/cgbg-sotd.html"
+    ,   "core/pubsubhub"
     ],
-    function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl, wsHeadersTmpl) {
+    function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl, pubsubhub) {
         hb.registerHelper("showPeople", function (name, items) {
             // stuff to handle RDFa
             var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "", bn = "",
@@ -298,8 +299,7 @@ define(
                   url: "http://creativecommons.org/licenses/by/4.0/legalcode",
                 }
             }
-        ,   run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "w3c/headers");
+        ,   run:    function (conf, doc, cb) {
                 // Default include RDFa document metadata
                 if (conf.doRDFa === undefined) conf.doRDFa = true;
                 // validate configuration and derive new configuration values
@@ -307,16 +307,16 @@ define(
                 conf.isCCBY = conf.license === "cc-by";
                 conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
                 if (conf.specStatus === "webspec" && !$.inArray(conf.license, ["cc0", "w3c-software"]))
-                    msg.pub("error", "You cannot use that license with WebSpecs.");
+                    pubsubhub.pub("error", "You cannot use that license with WebSpecs.");
                 if (conf.specStatus !== "webspec" && !$.inArray(conf.license, ["cc-by", "w3c"]))
-                    msg.pub("error", "You cannot use that license with that type of document.");
+                    pubsubhub.pub("error", "You cannot use that license with that type of document.");
                 conf.licenseInfo = this.licenses[conf.license];
                 conf.isCGBG = $.inArray(conf.specStatus, this.cgbg) >= 0;
                 conf.isCGFinal = conf.isCGBG && /G-FINAL$/.test(conf.specStatus);
                 conf.isBasic = (conf.specStatus === "base");
                 conf.isRegular = (!conf.isCGBG && !conf.isBasic);
-                if (!conf.specStatus) msg.pub("error", "Missing required configuration: specStatus");
-                if (conf.isRegular && !conf.shortName) msg.pub("error", "Missing required configuration: shortName");
+                if (!conf.specStatus) pubsubhub.pub("error", "Missing required configuration: specStatus");
+                if (conf.isRegular && !conf.shortName) pubsubhub.pub("error", "Missing required configuration: shortName");
                 conf.title = doc.title || "No Title";
                 if (!conf.subtitle) conf.subtitle = "";
                 if (!conf.publishDate) {
@@ -336,7 +336,7 @@ define(
                 conf.isTagFinding = conf.specStatus === "finding" || conf.specStatus === "draft-finding";
                 if (!conf.edDraftURI) {
                     conf.edDraftURI = "";
-                    if (conf.specStatus === "ED") msg.pub("warn", "Editor's Drafts should set edDraftURI.");
+                    if (conf.specStatus === "ED") pubsubhub.pub("warn", "Editor's Drafts should set edDraftURI.");
                 }
                 conf.maturity = (this.status2maturity[conf.specStatus]) ? this.status2maturity[conf.specStatus] : conf.specStatus;
                 var publishSpace = "TR";
@@ -354,7 +354,7 @@ define(
                 }
                 if (conf.previousPublishDate) {
                     if (!conf.previousMaturity && !conf.isTagFinding)
-                        msg.pub("error", "previousPublishDate is set, but not previousMaturity");
+                        pubsubhub.pub("error", "previousPublishDate is set, but not previousMaturity");
                     if (!(conf.previousPublishDate instanceof Date))
                         conf.previousPublishDate = utils.parseSimpleDate(conf.previousPublishDate);
                     var pmat = (this.status2maturity[conf.previousMaturity]) ? this.status2maturity[conf.previousMaturity] :
@@ -375,13 +375,13 @@ define(
                 }
                 else {
                     if (!/NOTE$/.test(conf.specStatus) && conf.specStatus !== "FPWD" && conf.specStatus !== "FPLC" && conf.specStatus !== "ED" && !conf.noRecTrack && !conf.isNoTrack && !conf.isSubmission)
-                        msg.pub("error", "Document on track but no previous version: Add previousMaturity previousPublishDate to ReSpec's config.");
+                        pubsubhub.pub("error", "Document on track but no previous version: Add previousMaturity previousPublishDate to ReSpec's config.");
                     if (!conf.prevVersion) conf.prevVersion = "";
                 }
                 if (conf.prevRecShortname && !conf.prevRecURI) conf.prevRecURI = "http://www.w3.org/TR/" + conf.prevRecShortname;
-                if (!conf.editors || conf.editors.length === 0) msg.pub("error", "At least one editor is required");
+                if (!conf.editors || conf.editors.length === 0) pubsubhub.pub("error", "At least one editor is required");
                 var peopCheck = function (it) {
-                    if (!it.name) msg.pub("error", "All authors and editors must have a name.");
+                    if (!it.name) pubsubhub.pub("error", "All authors and editors must have a name.");
                 };
                 if (conf.editors) {
                     conf.editors.forEach(peopCheck);
@@ -392,7 +392,7 @@ define(
                 conf.multipleEditors = conf.editors && conf.editors.length > 1;
                 conf.multipleAuthors = conf.authors && conf.authors.length > 1;
                 $.each(conf.alternateFormats || [], function (i, it) {
-                    if (!it.uri || !it.label) msg.pub("error", "All alternate formats must have a uri and a label.");
+                    if (!it.uri || !it.label) pubsubhub.pub("error", "All alternate formats must have a uri and a label.");
                 });
                 conf.multipleAlternates = conf.alternateFormats && conf.alternateFormats.length > 1;
                 conf.alternatesHTML = utils.joinAnd(conf.alternateFormats, function (alt) {
@@ -430,7 +430,7 @@ define(
                 conf.notYetRec = (conf.isRecTrack && conf.specStatus !== "REC");
                 conf.isRec = (conf.isRecTrack && conf.specStatus === "REC");
                 if (conf.isRec && !conf.errata)
-                    msg.pub("error", "Recommendations must have an errata link.");
+                    pubsubhub.pub("error", "Recommendations must have an errata link.");
                 conf.notRec = (conf.specStatus !== "REC");
                 conf.isUnofficial = conf.specStatus === "unofficial";
                 conf.prependW3C = !conf.isUnofficial;
@@ -446,7 +446,7 @@ define(
                 conf.shortISODate = conf.publishISODate.replace(/T.*/, "");
                 conf.processVersion = conf.processVersion || "2015";
                 if (conf.processVersion == "2014") {
-                    msg.pub("warn", "Process " + conf.processVersion + " has been superceded by Process 2015.");
+                    pubsubhub.pub("warn", "Process " + conf.processVersion + " has been superceded by Process 2015.");
                     conf.processVersion = "2015";
                 }
                 conf.isNewProcess = conf.processVersion == "2015";
@@ -469,7 +469,7 @@ define(
                 // handle SotD
                 var $sotd = $("#sotd");
                 if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !$sotd.length)
-                    msg.pub("error", "A custom SotD paragraph is required for your type of document.");
+                    pubsubhub.pub("error", "A custom SotD paragraph is required for your type of document.");
                 conf.sotdCustomParagraph = $sotd.html();
                 $sotd.remove();
                 // NOTE:
@@ -484,7 +484,7 @@ define(
                 if (
                     wgPotentialArray.some(function (it) { return $.isArray(it); }) &&
                     wgPotentialArray.some(function (it) { return !$.isArray(it); })
-                ) msg.pub("error", "If one of 'wg', 'wgURI', or 'wgPatentURI' is an array, they all have to be.");
+                ) pubsubhub.pub("error", "If one of 'wg', 'wgURI', or 'wgPatentURI' is an array, they all have to be.");
                 if ($.isArray(conf.wg)) {
                     conf.multipleWGs = conf.wg.length > 1;
                     conf.wgHTML = utils.joinAnd(conf.wg, function (wg, idx) {
@@ -502,19 +502,19 @@ define(
                     conf.multipleWGs = false;
                     conf.wgHTML = "the <a href='" + conf.wgURI + "'>" + conf.wg + "</a>";
                 }
-                if (conf.isLC && !conf.lcEnd) msg.pub("error", "Status is LC but no lcEnd is specified");
-                if (conf.specStatus === "PR" && !conf.lcEnd) msg.pub("error", "Status is PR but no lcEnd is specified (needed to indicate end of previous LC)");
+                if (conf.isLC && !conf.lcEnd) pubsubhub.pub("error", "Status is LC but no lcEnd is specified");
+                if (conf.specStatus === "PR" && !conf.lcEnd) pubsubhub.pub("error", "Status is PR but no lcEnd is specified (needed to indicate end of previous LC)");
                 conf.humanLCEnd = utils.humanDate(conf.lcEnd || "");
-                if (conf.specStatus === "CR" && !conf.crEnd) msg.pub("error", "Status is CR but no crEnd is specified");
+                if (conf.specStatus === "CR" && !conf.crEnd) pubsubhub.pub("error", "Status is CR but no crEnd is specified");
                 conf.humanCREnd = utils.humanDate(conf.crEnd || "");
-                if (conf.specStatus === "PR" && !conf.prEnd) msg.pub("error", "Status is PR but no prEnd is specified");
+                if (conf.specStatus === "PR" && !conf.prEnd) pubsubhub.pub("error", "Status is PR but no prEnd is specified");
                 conf.humanPREnd = utils.humanDate(conf.prEnd || "");
                 conf.humanPEREnd = utils.humanDate(conf.perEnd || "");
-                if (conf.specStatus === "PER" && !conf.perEnd) msg.pub("error", "Status is PER but no perEnd is specified");
+                if (conf.specStatus === "PER" && !conf.perEnd) pubsubhub.pub("error", "Status is PER but no perEnd is specified");
 
                 conf.recNotExpected = (!conf.isRecTrack && conf.maturity == "WD" && conf.specStatus !== "FPWD-NOTE");
                 if (conf.isIGNote && !conf.charterDisclosureURI)
-                    msg.pub("error", "IG-NOTEs must link to charter's disclosure section using charterDisclosureURI");
+                    pubsubhub.pub("error", "IG-NOTEs must link to charter's disclosure section using charterDisclosureURI");
                 // ensure subjectPrefix is encoded before using template
                 if (conf.subjectPrefix !== "") conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
                 var sotd;
@@ -523,13 +523,12 @@ define(
                 if (sotd) $(sotd).insertAfter($("#abstract"));
 
                 if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
-                    msg.pub("error", "CR, PR, and REC documents need to have an implementationReportURI defined.");
+                    pubsubhub.pub("error", "CR, PR, and REC documents need to have an implementationReportURI defined.");
                 }
                 if (conf.isTagFinding && !conf.sotdCustomParagraph) {
-                    msg.pub("error", "ReSpec does not support automated SotD generation for TAG findings, " +
+                    pubsubhub.pub("error", "ReSpec does not support automated SotD generation for TAG findings, " +
                                      "please specify one using a <code><section></code> element with ID=sotd.");
                 }
-                msg.pub("end", "w3c/headers");
                 cb();
             }
         };

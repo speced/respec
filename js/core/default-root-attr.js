@@ -10,14 +10,12 @@ define(
     [],
     function () {
         return {
-            run:    function (config, doc, cb, msg) {
-                msg.pub("start", "core/default-root-attr");
+            run:    function (config, doc, cb) {
                 var $root = $(doc.documentElement);
                 if (!$root.attr("lang")) {
                     $root.attr("lang", "en");
                     if (!$root.attr("dir")) $root.attr("dir", "ltr");
                 }
-                msg.pub("end", "core/default-root-attr");
                 cb();
             }
         };

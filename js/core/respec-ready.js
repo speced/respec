@@ -5,29 +5,20 @@
  */
 
 "use strict";
-define([], function () {
+define(["core/pubsubhub"], function (pubsubhub) {
   var respecDone = false;
-  var doneResolver;
-  var doneRejector;
-  var respecDonePromise = new Promise(function (resolve, reject) {
-    doneResolver = resolve;
-    doneRejector = reject;
+  var respecDonePromise = new Promise(function (resolve) {
+    var opaque = pubsubhub.sub("end-all", function(conf){
+      pubsubhub.unsub(opaque);
+      respecDone = true;
+      resolve(conf);
+    });
   });
   Object.defineProperty(document, "respecDone", {
     get: function () {
       var warn = "document.respecDone is deprecated, use document.respecIsReady instead.";
-      console.warn(warn);
+      pubsubhub.pub("warn", warn);
       return respecDone;
-    },
-    set: function (value) {
-      if (typeof value === "boolean" && value) {
-        respecDone = value;
-        doneResolver(respecConfig);
-      }
-      if (value instanceof Error) {
-        doneRejector(value)
-      }
-      return value;
     }
   });
   Object.defineProperty(document, "respecIsReady", {
@@ -35,5 +26,5 @@ define([], function () {
       return respecDonePromise;
     },
   });
-  return {};
+  return respecDonePromise;
 });

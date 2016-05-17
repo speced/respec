@@ -20,8 +20,7 @@ define(
     ["tmpl!w3c/templates/permalinks.css", "core/utils"], // load this to be sure that the jQuery extensions are loaded
     function (css, utils) {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "w3c/permalinks");
+            run:    function (conf, doc, cb) {
                 if (conf.includePermalinks) {
                     var symbol = conf.permalinkSymbol || '§';
                     var style = "<style>" + css(conf) + "</style>";
@@ -78,7 +77,6 @@ define(
                         }
                     });
                 };
-                msg.pub("end", "w3c/permalinks");
                 cb();
             }
         };

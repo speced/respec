@@ -23,15 +23,9 @@ define(
         return value;
       }
       return {
-        run: function(conf, doc, cb, msg) { //jshint ignore:line
-          msg.pub("start", "core/override-configuration");
-          var done = function() {
-            msg.pub("end", "core/override-configuration");
-            cb();
-          };
-
+        run: function(conf, doc, cb) { //jshint ignore:line
           if (!location.search) {
-            return done();
+            return cb();
           }
 
           location.search
@@ -59,7 +53,7 @@ define(
               conf[keyValue[0]] = keyValue[1];
               return conf;
             }, conf);
-          done();
+          cb();
         }
       };
     }
