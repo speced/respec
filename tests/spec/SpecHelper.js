@@ -1,5 +1,5 @@
 /*exported pickRandomsFromList, makeRSDoc, flushIframes,
- makeStandardOps, makeDefaultBody, makeBasicConfig, isPhantom*/
+ makeStandardOps, makeDefaultBody, makeBasicConfig*/
 "use strict";
 var iframes = [];
 
@@ -110,10 +110,6 @@ function pickRandomsFromList(list, howMany) {
     randList.push(list[next]);
     return randList;
   }, []);
-}
-
-function isPhantom() {
-  return window.callPhantom || window._phantom;
 }
 
 function makeBasicConfig() {
