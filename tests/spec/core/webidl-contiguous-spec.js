@@ -203,28 +203,30 @@ describe("Core - Contiguous WebIDL", function() {
     var $target = $("#attr-basic", doc);
     var text = "interface AttrBasic {\n" +
       "    // 1\n" +
-      "                attribute DOMString          regular;\n" +
+      "                attribute DOMString              regular;\n" +
       "    // 2\n" +
-      "    readonly    attribute DOMString          ro;\n" +
+      "    readonly    attribute DOMString              ro;\n" +
       "    // 2.2\n" +
-      "    readonly    attribute DOMString          _readonly;\n" +
+      "    readonly    attribute DOMString              _readonly;\n" +
       "    // 2.5\n" +
-      "    inherit     attribute DOMString          in;\n" +
+      "    inherit     attribute DOMString              in;\n" +
       "    // 2.7\n" +
-      "    stringifier attribute DOMString          st;\n" +
+      "    stringifier attribute DOMString              st;\n" +
       "    // 3\n" +
       "    [Something]\n" +
-      "    readonly    attribute DOMString          ext;\n" +
+      "    readonly    attribute DOMString              ext;\n" +
       "    // 3.5\n" +
-      "                attribute Date[]             dates;\n" +
+      "                attribute Date[]                 dates;\n" +
+      "    // 3.10.31\n" +
+      "                attribute FrozenArray<DOMString> alist;\n" +
       "    // 4.0\n" +
-      "                attribute Promise<DOMString> operation;\n" +
+      "                attribute Promise<DOMString>     operation;\n" +
       //"                attribute Promise<Superstar>[] wouldBeStars;\n" +
       "};";
     expect($target.text())
       .toEqual(text);
     expect($target.find(".idlAttribute").length)
-      .toEqual(8);
+      .toEqual(9);
     var $at = $target.find(".idlAttribute").first();
     expect($at.find(".idlAttrType").text())
       .toEqual("DOMString");
@@ -236,7 +238,10 @@ describe("Core - Contiguous WebIDL", function() {
     var $seq = $target.find(".idlAttribute").eq(6);
     expect($seq.find(".idlAttrType").text())
       .toEqual("Date[]");
-    var $promise = $target.find(".idlAttribute").eq(7);
+    var $frozen = $target.find(".idlAttribute").eq(7);
+    expect($frozen.find(".idlAttrType").text())
+      .toEqual("FrozenArray<DOMString>");
+    var $promise = $target.find(".idlAttribute").eq(8);
     expect($promise.find(".idlAttrType").text())
       .toEqual("Promise<DOMString>");
     // Links and IDs.

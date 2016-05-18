@@ -1,5 +1,5 @@
 /*global respecEvents */
-
+/*jshint laxcomma: true*/
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
@@ -14,21 +14,76 @@ define(
                 msg.pub("end", "core/utils");
                 cb();
             }
+        ,   calculateLeftPad: function(text) {
+                var spaceOrTab = /^[\ |\t]*/;
+                // Find smallest padding value
+                var leftPad = text
+                    .split("\n")
+                    .filter(function (item){
+                        return item;
+                    })
+                    .map(function(item){
+                        var match = item.match(spaceOrTab)[0] || "";
+                        return (match) ? match.length : 0;
+                    })
+                    .sort()
+                    .shift(1);
+                return leftPad || 0;
+            }
+        /**
+         * Makes a ES conforming iterator allowing objects to be used with
+         * methods that can interface with Iterators (Array.from(), etc.).
+         *
+         * @param  {Function} nextLikeFunction A function that returns a next value;
+         * @return {Object} An object that implements the Iterator prop.
+         */
+        ,   toESIterable: function(nextLikeFunction) {
+                if (!(nextLikeFunction instanceof Function)) {
+                    throw TypeError("Expected a function");
+                }
+                var next = function() {
+                  return {
+                    value: nextLikeFunction(),
+                    get done() {
+                      return this.value === null
+                    }
+                  };
+                };
+                // We structure the iterator like this, or else
+                // RequireJS gets upset.
+                var iterator = {};
+                iterator[Symbol.iterator] = function() {
+                  return {
+                    next: next
+                  };
+                };
+                return iterator;
+        }
         ,   normalizePadding: function (text) {
                 if (!text) {
                     return "";
                 }
+
                 if (typeof text !== "string") {
                     throw TypeError("Invalid input");
                 }
 
-                function calculateLeftPad(text) {
-                    var spaceOrTab = /^[\ |\t]*/;
-                    var textToCheck = text.replace(/\n/gm, "");
-                    return (!textToCheck) ? 0 : textToCheck.match(spaceOrTab)[0].length;
+                function isEmpty(node) {
+                    return node.textContent === "";
                 }
 
-                function filterTextNodes(node) {
+                function isWhiteSpace(node) {
+                    return !/\S/gm.test(node.textContent);
+                }
+
+                function filterLastChildIsPadding(node) {
+                    if (node.parentElement.lastChild === node && (isWhiteSpace(node) || isEmpty(node))) {
+                        return NodeFilter.FILTER_ACCEPT;
+                    }
+                    return NodeFilter.FILTER_REJECT;
+                }
+
+                function isTextNode(node) {
                     return node.nodeType === Node.TEXT_NODE;
                 }
 
@@ -45,28 +100,54 @@ define(
                 // Force into body
                 var parserInput = "<body>" + text;
                 var doc = new DOMParser().parseFromString(parserInput, "text/html");
+
                 var firstPaddedLine = Array
                     .from(doc.body.childNodes)
-                    .filter(filterTextNodes)
-                    .find(function(textNode) {
-                        return textNode.textContent
-                            .replace(/\n/gm, "")
-                            .startsWith(" ");
-                    });
+                    .filter(isTextNode)
+                    .map(function(textNode) {
+                        return textNode.textContent;
+                    })
+                    .reduce(function(collector, textContent) {
+                        if (collector) {
+                            return collector;
+                        }
+                        var result = textContent
+                            .split("\n")
+                            .find(function(text) {
+                                var result = /^[\s|\w]+/gm.test(text);
+                                return result;
+                            });
+                        return result || "";
+                    }, "");
+                var baseCol = this.calculateLeftPad(firstPaddedLine);
 
-                var baseText = (firstPaddedLine) ? firstPaddedLine.textContent.replace(/\n/g, "") : "";
-                var baseCol = calculateLeftPad(baseText);
-
+                // With only the text nodes that are not children of pre elements,
+                // we left align all those text nodes.
                 Array
                     .from(doc.body.childNodes)
-                    .filter(filterTextNodes)
+                    .filter(isTextNode)
                     .filter(function(textNode) {
                         // 🎵 Hey, processor! Leave those pre's alone! 🎵
                         return !filterParentIsPre(textNode);
                     })
+                    .filter(function(textNode) {
+                        // we don't care about last nodes that are just white space
+                        var isLastChild = textNode.parentElement.lastChild === textNode;
+                        var isJustWS = isWhiteSpace(textNode);
+                        return !(isLastChild && isJustWS);
+                    })
                     .map(function toTrimmedTextNode(textNode) {
                         var rawText = textNode.textContent;
-                        var trimBy = calculateLeftPad(rawText) || baseCol;
+                        // We remove tailing space on the right, which is just there
+                        // to pad out tags like:
+                        // <div>
+                        //   <div>
+                        //    Next line has 2 spaces hidden!
+                        // __</div>
+                        // </div>
+                        //
+                        var trimmedRight = rawText.trimRight();
+                        var trimBy = this.calculateLeftPad(trimmedRight) || baseCol;
                         if (!trimBy) {
                             return null; //nothing to do
                         }
@@ -79,7 +160,7 @@ define(
                             oldNode: textNode,
                             newNode: newNode,
                         };
-                    })
+                    }.bind(this))
                     .filter(function(nodes) {
                         return nodes;
                     })
@@ -88,7 +169,16 @@ define(
                         var newNode = nodes.newNode;
                         oldNode.parentElement.replaceChild(newNode, oldNode);
                     });
-                return doc.body.innerHTML;
+                var nodeIterator = doc.createNodeIterator(doc.body, NodeFilter.SHOW_TEXT, filterLastChildIsPadding);
+                var iterable = this.toESIterable(nodeIterator.nextNode.bind(nodeIterator));
+                // Remove trailing whitespace nodes
+                Array
+                    .from(iterable)
+                    .forEach(function(node) {
+                        node.remove();
+                    });
+                var result = doc.body.innerHTML;
+                return result;
             }
 
             // --- RESPEC STUFF -------------------------------------------------------------------------------

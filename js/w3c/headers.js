@@ -86,11 +86,9 @@
 //      - "w3c", currently the default (restrictive) license
 //      - "cc-by", which is experimentally available in some groups (but likely to be phased out).
 //          Note that this is a dual licensing regime.
-//      - "cc0", an extremely permissive license. This only works with the webspecs specStatus,
-//          and it is only recommended if you are working on a document that is intended to be
-//          pushed to the WHATWG
-//      - "w3c-software", a permissive and attributions license (but GPL-compatible). This is only
-//          available with webspecs and is the recommended value. It is the default for webspecs.
+//      - "cc0", an extremely permissive license. It is only recommended if you are working on a document that is
+//          intended to be pushed to the WHATWG.
+//      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", the W3C Software and Document License
 //            http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
 
@@ -103,7 +101,6 @@ define(
     ,   "tmpl!w3c/templates/sotd.html"
     ,   "tmpl!w3c/templates/cgbg-headers.html"
     ,   "tmpl!w3c/templates/cgbg-sotd.html"
-    ,   "tmpl!w3c/templates/webspecs-headers.html"
     ],
     function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl, wsHeadersTmpl) {
         hb.registerHelper("showPeople", function (name, items) {
@@ -317,11 +314,9 @@ define(
                 conf.isCGBG = $.inArray(conf.specStatus, this.cgbg) >= 0;
                 conf.isCGFinal = conf.isCGBG && /G-FINAL$/.test(conf.specStatus);
                 conf.isBasic = (conf.specStatus === "base");
-                conf.isWebSpec = (conf.specStatus === "webspec");
-                conf.isRegular = (!conf.isCGBG && !conf.isBasic && !conf.isWebSpec);
+                conf.isRegular = (!conf.isCGBG && !conf.isBasic);
                 if (!conf.specStatus) msg.pub("error", "Missing required configuration: specStatus");
                 if (conf.isRegular && !conf.shortName) msg.pub("error", "Missing required configuration: shortName");
-                if (conf.isWebSpec && !conf.repository) msg.pub("error", "Missing required configuration: repository (as in 'darobin/respec')");
                 conf.title = doc.title || "No Title";
                 if (!conf.subtitle) conf.subtitle = "";
                 if (!conf.publishDate) {
@@ -370,7 +365,7 @@ define(
                     else if (conf.isCGBG) {
                         conf.prevVersion = conf.prevVersion || "";
                     }
-                    else if (conf.isBasic || conf.isWebSpec) {
+                    else if (conf.isBasic) {
                         conf.prevVersion = "";
                     }
                     else {
@@ -468,7 +463,6 @@ define(
                 // insert into document and mark with microformat
                 var bp;
                 if (conf.isCGBG) bp = cgbgHeadersTmpl(conf);
-                else if (conf.isWebSpec) bp = wsHeadersTmpl(conf);
                 else bp = headersTmpl(conf);
                 $("body", doc).prepend($(bp)).addClass("h-entry");
 
@@ -525,7 +519,6 @@ define(
                 if (conf.subjectPrefix !== "") conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
                 var sotd;
                 if (conf.isCGBG) sotd = cgbgSotdTmpl(conf);
-                else if (conf.isWebSpec) sotd = null;
                 else sotd = sotdTmpl(conf);
                 if (sotd) $(sotd).insertAfter($("#abstract"));
 

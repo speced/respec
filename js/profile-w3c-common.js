@@ -8,10 +8,21 @@ require.config({
     Promise: {
       exports: "Promise"
     },
+    highlight:{
+      exports: "hljs"
+    },
+    beautify:{
+      exports: "beautify"
+    }
   },
   paths: {
+    "beautify": "/node_modules/js-beautify/js/lib/beautify",
+    "beautify-css": "/node_modules/js-beautify/js/lib/beautify-css",
+    "beautify-html": "/node_modules/js-beautify/js/lib/beautify-html",
     "fetch": "/node_modules/whatwg-fetch/fetch",
     "handlebars": "/node_modules/handlebars/dist/handlebars",
+    "highlight": "/node_modules/highlightjs/highlight.pack.min",
+    "highlightStyles": "/node_modules/highlightjs/styles/",
     "jquery": "/node_modules/jquery/dist/jquery",
     "marked": "/node_modules/marked/lib/marked",
     "Promise": "/node_modules/promise-polyfill/promise",
