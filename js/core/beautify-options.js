@@ -11,6 +11,6 @@ define([], function() {
     'indent_size': 2,
     'max_preserve_newlines': 5,
     'preserve_newlines': true,
-    'wrap_line_length': 80,
+    'wrap_line_length': 0,
   });
 });
