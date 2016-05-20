@@ -186,9 +186,9 @@ describe("W3C — Headers", function() {
       expect(twitterAnchor.parentNode.className)
         .toEqual("twitter");
       // check that extra items with no name are ignored
-      expect(document.querySelector("a[href='http://not-valid']"))
+      expect(doc.querySelector("a[href='http://not-valid']"))
         .toEqual(null);
-      expect(document.querySelector("a[href='http://empty-name']"))
+      expect(doc.querySelector("a[href='http://empty-name']"))
         .toEqual(null);
     }).then(done);
   });
