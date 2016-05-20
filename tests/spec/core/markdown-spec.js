@@ -13,7 +13,7 @@ describe("Core - Markdown", function() {
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
       Array
-        .from(document.querySelectorAll(".removeOnSave"))
+        .from(doc.querySelectorAll(".removeOnSave"))
         .forEach(function(elem){
           elem.remove();
         });
