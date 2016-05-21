@@ -235,11 +235,13 @@ define([
     return process(fragment);
   }
 
-  function substituteWithTextNodes(elements){
-    for(var element of elements){
-      var textNode = element.ownerDocument.createTextNode(element.textContent);
-      element.parentElement.replaceChild(textNode, element);
-    }
+  function substituteWithTextNodes(elements) {
+    Array
+      .from(elements)
+      .forEach(function(element) {
+        var textNode = element.ownerDocument.createTextNode(element.textContent);
+        element.parentElement.replaceChild(textNode, element);
+      });
   }
 
   var processBlockLevelElements = processElements("section, .issue, .note, .req");
