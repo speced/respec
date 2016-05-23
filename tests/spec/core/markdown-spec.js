@@ -13,7 +13,7 @@ describe("Core - Markdown", function() {
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
       Array
-        .from(document.querySelectorAll(".removeOnSave"))
+        .from(doc.querySelectorAll(".removeOnSave"))
         .forEach(function(elem){
           elem.remove();
         });
@@ -199,5 +199,44 @@ describe("Core - Markdown", function() {
       expect(doc.body.contains(bar)).toBeTruthy();
       expect(foo.contains(bar)).toBeFalsy();
     }).then(done);
+  });
+
+  describe("nolinks options", function() {
+    it("automatically links URLs in pre when missing (smoke test)", function(done) {
+      var ops = {
+        config: makeBasicConfig(),
+        body: makeDefaultBody() +
+          "<pre id=testElem>\n" +
+          "\t this won't link \n" +
+          "\t this will link: http://no-links-foo.com \n" +
+          "\t so will this: http://no-links-bar.com \n" +
+          "<pre>\n\n\n"
+      };
+      ops.config.format = "markdown";
+      makeRSDoc(ops, function(doc) {
+        var anchors = doc.querySelectorAll("#testElem a");
+        expect(anchors.length).toEqual(2);
+        expect(anchors.item(0).href).toEqual("http://no-links-foo.com/");
+        expect(anchors.item(1).href).toEqual("http://no-links-bar.com/");
+      }).then(done);
+    });
+
+    it("replaces HTMLAnchors when present", function(done) {
+      var ops = {
+        config: makeBasicConfig(),
+        body: makeDefaultBody() +
+          "<pre id=testElem class=nolinks>\n" +
+          "\t http://no-links-foo.com \n" +
+          "\t http://no-links-bar.com \n" +
+          "<pre>\n\n\n"
+      };
+      ops.config.format = "markdown";
+      makeRSDoc(ops, function(doc) {
+        var anchors = doc.querySelectorAll("#testElem a");
+        expect(anchors.length).toEqual(0);
+        expect(doc.querySelector("a[href='http://no-links-foo.com']")).toBeFalsy();
+        expect(doc.querySelector("a[href='http://no-links-bar.com']")).toBeFalsy();
+      }).then(done);
+    });
   });
 });

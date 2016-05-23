@@ -14,6 +14,35 @@ define(
                 msg.pub("end", "core/utils");
                 cb();
             }
+        ,
+        /**
+         * Allows a node to be swapped into a different document at
+         * some insertion point(Element). This function is useful for
+         * opportunistic insertion of DOM nodes into a document, without
+         * first knowing if that is the final document where the node will
+         * reside.
+         *
+         * @param  {Node} node The node to be swapped.
+         * @return {Function} A function that takes a document and a new
+         *                    insertion point (element). When called,
+         *                    node gets inserted into doc at before a given
+         *                    insertion point (node) - or just appended, if
+         *                    the element has no children.
+         */
+            makeOwnerSwapper: function(node) {
+                if(!(node instanceof Node)){
+                    throw TypeError();
+                }
+                return function(doc, insertionPoint) {
+                    node.remove();
+                    doc.adoptNode(node);
+                    if (insertionPoint.firstElementChild) {
+                        insertionPoint.insertBefore(node, insertionPoint.firstElementChild);
+                        return;
+                    }
+                    insertionPoint.appendChild(node);
+                };
+            }
         ,   calculateLeftPad: function(text) {
                 var spaceOrTab = /^[\ |\t]*/;
                 // Find smallest padding value
@@ -45,7 +74,7 @@ define(
                   return {
                     value: nextLikeFunction(),
                     get done() {
-                      return this.value === null
+                      return this.value === null;
                     }
                   };
                 };
@@ -286,10 +315,20 @@ define(
             // take a document and either a link or an array of links to CSS and appends a <link/> element
             // to the head pointing to each
         ,   linkCSS:  function (doc, styles) {
-                if (!$.isArray(styles)) styles = [styles];
-                $.each(styles, function (i, css) {
-                    $('head', doc).append($("<link/>").attr({ rel: 'stylesheet', href: css }));
-                });
+                if (!Array.isArray(styles)) {
+                    styles = [styles];
+                }
+                styles
+                    .map(function (url) {
+                      var link = doc.createElement("link");
+                      link.rel = "stylesheet";
+                      link.href = url;
+                      return link;
+                    })
+                    .reduce(function(elem, nextLink) {
+                      elem.appendChild(nextLink);
+                      return elem;
+                    }, doc.head);
             }
 
             // --- TRANSFORMATIONS ------------------------------------------------------------------------------

@@ -58,7 +58,7 @@ if (window.console) {
         console.warn(details);
     });
     respecEvents.sub("error", function (details) {
-        console.error(details);
+        console.error(details.stack || details);
     });
     respecEvents.sub("start", function (details) {
         if (respecConfig && respecConfig.trace) console.log(">>> began: " + details);

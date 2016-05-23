@@ -8,6 +8,66 @@ describe("Core - Utils", function() {
     });
   });
 
+  describe("makeOwnerSwapper()", function() {
+    it("throws if passed something that is not a node", function(done) {
+      expect(function() {
+        utils.toESIterable(function() {});
+      }).not.toThrow();
+      expect(function() {
+        utils.toESIterable("");
+      }).toThrow();
+      expect(function() {
+        utils.toESIterable(null);
+      }).toThrow();
+      expect(function() {
+        utils.toESIterable([]);
+      }).toThrow();
+      expect(function() {
+        utils.toESIterable(undefined);
+      }).toThrow();
+      done();
+    });
+
+    it("returns a function", function() {
+      var testNode = document.createTextNode("test");
+      var testFunction = utils.makeOwnerSwapper(testNode);
+      expect(testFunction instanceof Function).toBe(true);
+    });
+
+    it("removes the original node from the its owner document", function() {
+      var testNode = document.createTextNode("test");
+      var swapTestNode = utils.makeOwnerSwapper(testNode);
+      var newDoc = document.implementation.createHTMLDocument("test");
+      document.body.appendChild(testNode);
+      expect(document.body.contains(testNode)).toBe(true);
+      swapTestNode(newDoc, newDoc.body);
+      expect(document.body.contains(testNode)).toBe(false);
+      expect(testNode.ownerDocument).toEqual(newDoc);
+    });
+
+    it("appends the node into a new document", function() {
+      var testNode = document.createElement("link");
+      var swapTestNode = utils.makeOwnerSwapper(testNode);
+      var newDoc = document.implementation.createHTMLDocument("test");
+      expect(document.head.contains(testNode)).toBe(false);
+      swapTestNode(newDoc, newDoc.head);
+      expect(newDoc.head.contains(testNode)).toBe(true);
+      expect(testNode.ownerDocument).toEqual(newDoc);
+    });
+
+    it("prepends the node into a new document at the right place", function() {
+      var testNode = document.createElement("link");
+      var swapTestNode = utils.makeOwnerSwapper(testNode);
+      var newDoc = document.implementation.createHTMLDocument("test");
+      var metaElem = newDoc.createElement("meta");
+      newDoc.head.appendChild(metaElem);
+      swapTestNode(newDoc, newDoc.head);
+      expect(newDoc.head.firstChild).toEqual(testNode);
+      expect(newDoc.head.lastChild).toEqual(metaElem);
+    });
+  });
+
+
   describe("toESIterable() method", function() {
 
     it("throws if passed something that is not a function", function(done) {

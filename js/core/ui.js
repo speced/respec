@@ -14,7 +14,7 @@
 define(
     ["shortcut", "core/jquery-enhanced"],
     function (shortcut) {
-        var $menu = $("<div></div>")
+        var $menu = $("<div id=respec-menu></div>")
                         .css({
                             background:     "#fff"
                         ,   border:         "1px solid #000"
@@ -125,11 +125,17 @@ define(
                                     ,   border:         "1px solid #ccc"
                                     ,   borderRadius:   "5px"
                                     })
-                                    .click(function () {
+                                    .click(function (e) {
+                                        e.stopPropagation();
                                         $menu.toggle();
                                     })
                                     .appendTo($div)
                                     ;
+                doc.firstElementChild.addEventListener("click", function(ev){
+                    if(window.getComputedStyle($menu[0]).display === "block"){
+                        $menu.fadeOut(200);
+                    }
+                });
                 $menu.appendTo($div);
                 shortcut.add("Esc", function () {
                     ui.closeModal();

@@ -235,6 +235,15 @@ define([
     return process(fragment);
   }
 
+  function substituteWithTextNodes(elements) {
+    Array
+      .from(elements)
+      .forEach(function(element) {
+        var textNode = element.ownerDocument.createTextNode(element.textContent);
+        element.parentElement.replaceChild(textNode, element);
+      });
+  }
+
   var processBlockLevelElements = processElements("section, .issue, .note, .req");
 
   return {
@@ -256,6 +265,8 @@ define([
         var cleanHTML = dirtyHTML.replace(/<p>\s*<\/p>/gm, "");
         var beautifulHTML = beautify.html_beautify(cleanHTML, beautifyOps);
         newBody.innerHTML = beautifulHTML;
+        // Remove links where class pre.nolinks
+        substituteWithTextNodes(newBody.querySelectorAll("pre.nolinks a[href]"));
         // Restructure the document properly
         var fragment = structure(newBody, doc);
         // Frankenstein the whole thing back together
