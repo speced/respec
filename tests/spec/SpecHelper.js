@@ -11,19 +11,27 @@ function makeRSDoc(opts, cb, src, style) {
     var timeoutId = setTimeout(function() {
       reject(new Error("Timed out waiting on " + src));
     }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
-    ifr.addEventListener("load", function () {
+    ifr.addEventListener("load", function() {
       var doc = this.contentDocument;
       decorateDocument(doc, opts);
-      window.addEventListener("message", function msgHandler(ev){
-        if (doc && doc === ev.source.document && ev.data.topic === "end-all") {
-          window.removeEventListener("message", msgHandler);
-          cb(doc);
-          resove();
-          clearTimeout(timeoutId);
+      window.addEventListener("message", function msgHandler(ev) {
+        if (!doc || !ev.source || doc !== ev.source.document || ev.data.topic !== "end-all") {
+          return;
         }
+        window.removeEventListener("message", msgHandler);
+        cb(doc);
+        resove();
+        clearTimeout(timeoutId);
       });
     });
-    ifr.style = (style) ? style : "display: none";
+    ifr.style.display = "none";
+    if (style) {
+      try {
+        ifr.style = style;
+      } catch (err) {
+        console.warn("Could not override iframe style: " + style + " (" + err.message + ")");
+      }
+    }
     ifr.src = (src) ? src : "about:blank";
     // trigger load
     document.body.appendChild(ifr);
@@ -31,13 +39,13 @@ function makeRSDoc(opts, cb, src, style) {
   });
 }
 
-function decorateDocument(doc, opts){
-  function intoAttributes(element, key){
+function decorateDocument(doc, opts) {
+  function intoAttributes(element, key) {
     element.setAttribute(key, this[key]);
     return element;
   }
 
-  function decorateHead(opts){
+  function decorateHead(opts) {
     var path = opts.jsPath || "../js/";
     var loader = this.ownerDocument.createElement("script");
     var config = this.ownerDocument.createElement("script");
@@ -56,13 +64,12 @@ function decorateDocument(doc, opts){
     this.appendChild(loader);
   }
 
-  function decorateBody(opts){
-    // We only need to use jQuery to polyfill ParentElement.append()
-    var body = (this.append) ? this : $(this);
-    body.append(opts.abstract || "<section id='abstract'><p>test abstract</p></section>");
+  function decorateBody(opts) {
+    var bodyText = opts.abstract || "<section id='abstract'><p>test abstract</p></section>";
     if (opts.body) {
-      body.append(opts.body);
+      bodyText = bodyText.concat(opts.body);
     }
+    this.innerHTML = this.innerHTML.concat(bodyText);
   }
 
   if (opts.htmlAttrs) {
