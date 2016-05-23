@@ -42,7 +42,7 @@
   "shadow": false,
   "sub": false,
   "supernew": false,
-  "validthis": false,
+  "validthis": true,
   "browser": true,
   "browserify": false,
   "couch": false,
@@ -63,7 +63,7 @@
   "worker": false,
   "wsh": false,
   "yui": false,
-  "predef": [ "makeStandardOps", "makeDefaultBody", "makeRSDoc", "flushIframes", "isPhantom", "makeBasicConfig", "require", "pickRandomsFromList" ],
+  "predef": [ "makeStandardOps", "makeDefaultBody", "makeRSDoc", "flushIframes", "makeBasicConfig", "require", "pickRandomsFromList" ],
   "globals": {
     "expect": true
   },
