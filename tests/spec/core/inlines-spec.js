@@ -17,12 +17,12 @@ describe("Core - Inlines", function() {
     };
     ops.config.localBiblio = {
       "DAHU": {
-	title: "One short leg. How I learned to overcome.",
-	publisher: "Publishers Inc."
+        title: "One short leg. How I learned to overcome.",
+        publisher: "Publishers Inc."
       },
       "REX": {
-	title: "Am I a dinosaur or a failed technology?",
-	publisher: "Publishers Inc."
+        title: "Am I a dinosaur or a failed technology?",
+        publisher: "Publishers Inc."
       },
     };
     makeRSDoc(ops, function(doc) {
