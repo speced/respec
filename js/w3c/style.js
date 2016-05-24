@@ -6,8 +6,8 @@
 //  - specStatus: the short code for the specification's maturity level or type (required)
 "use strict";
 define(
-    ["core/utils"],
-    function(utils) {
+    ["core/utils", "core/pubsubhub"],
+    function(utils, pubsubhub) {
       function attachFixupScript(doc, version){
         var script = doc.createElement("script");
         script.async = true;
@@ -46,13 +46,12 @@ define(
       }
 
       return {
-        run: function(conf, doc, cb, msg) {
-          msg.pub("start", "w3c/style");
+        run: function(conf, doc, cb) {
 
           if (!conf.specStatus) {
             var warn = "'specStatus' missing from ReSpec config. Defaulting to 'base'.";
             conf.specStatus = "base";
-            msg.pub("warn", warn);
+            pubsubhub.pub("warn", warn);
           }
 
           var styleBaseURL = "https://www.w3.org/StyleSheets/TR/{version}";
@@ -99,9 +98,9 @@ define(
 
           // Attach W3C fixup script after we are done.
           if (version) {
-            var subscribeKey = window.respecEvents.sub("end-all", function (){
+            var subscribeKey = pubsubhub.sub("end-all", function (){
               attachFixupScript(doc, version);
-              window.respecEvents.unsub("end-all", subscribeKey);
+              pubsubhub.unsub(subscribeKey);
             });
           }
           var finalVersionPath = (version) ? version + "/" : "";
@@ -109,7 +108,6 @@ define(
           finalStyleURL += styleFile;
 
           utils.linkCSS(doc, finalStyleURL);
-          msg.pub("end", "w3c/style");
           cb();
         }
       };

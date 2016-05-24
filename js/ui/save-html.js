@@ -6,9 +6,10 @@ define(
     [
         "beautify-html",
         "core/beautify-options",
+        "core/pubsubhub",
         "core/utils",
     ],
-    function (beautify, beautifyOpts, utils) {
+    function (beautify, beautifyOpts, pubsubhub, utils) {
         var msg, doc, conf;
         var cleanup = function (rootEl) {
             $(".removeOnSave", rootEl).remove();
@@ -17,8 +18,8 @@ define(
             utils.removeReSpec(rootEl);
         };
         return {
-            show:   function (ui, _conf, _doc, _msg) {
-                msg = _msg, doc = _doc, conf = _conf;
+            show:   function (ui, _conf, _doc) {
+                doc = _doc, conf = _conf;
                 if (!conf.diffTool) conf.diffTool = "http://www5.aptest.com/standards/htmldiff/htmldiff.pl";
                 var supportsDownload = Object
                     .getOwnPropertyNames(HTMLAnchorElement.prototype)
@@ -142,7 +143,7 @@ define(
             }
             // convert the document to a string (HTML)
         ,   toString:    function () {
-                respecEvents.pub("save", "toString")
+                pubsubhub.pub("save", "toString")
                 var str = "<!DOCTYPE html"
                 ,   dt = doc.doctype;
                 if (dt && dt.publicId) str += " PUBLIC '" + dt.publicId + "' '" + dt.systemId + "'";
@@ -163,7 +164,7 @@ define(
             }
             // convert the document to XML, pass 5 as mode for XHTML5
         ,   toXML:        function (mode) {
-                respecEvents.pub("save", "toXML" + mode)
+                pubsubhub.pub("save", "toXML" + mode)
                 var rootEl = doc.documentElement.cloneNode(true);
                 cleanup(rootEl);
                 if (mode !== 5) {
@@ -239,7 +240,7 @@ define(
                     }
                     // we don't handle other types
                     else {
-                        msg.pub("warning", "Cannot handle serialising nodes of type: " + node.nodeType);
+                        pubsubhub.pub("warning", "Cannot handle serialising nodes of type: " + node.nodeType);
                     }
                     return out;
                 };
@@ -252,7 +253,7 @@ define(
             // data needed for diff marking - submit the form so that the response populates
             // page with the diff marked version
         ,   toDiffHTML:  function () {
-                respecEvents.pub("save", "toDiffHTML")
+                pubsubhub.pub("save", "toDiffHTML")
                 var base = window.location.href.replace(/\/[^\/]*$/, "/")
                 ,   str = "<!DOCTYPE html>\n<html>\n" +
                           "<head><title>Diff form</title></head>\n" +

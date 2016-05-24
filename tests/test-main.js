@@ -26,10 +26,11 @@ require.config({
   // Karma serves files under /base, which is the basePath from your config file
   baseUrl: "/base/",
   paths: {
-    "jquery": "/base/node_modules/jquery/dist/jquery",
-    "core/utils": "js/core/utils",
     "core/jquery-enhanced": "js/core/jquery-enhanced",
+    "core/pubsubhub": "js/core/pubsubhub",
+    "core/utils": "js/core/utils",
     "fetch": "/base/node_modules/whatwg-fetch/fetch",
+    "jquery": "/base/node_modules/jquery/dist/jquery",
     "marked": "/base/node_modules/marked/lib/marked.js",
   },
   // dynamically load all test files and other deps

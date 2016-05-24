@@ -33,6 +33,7 @@ require.config({
     "jquery",
     "Promise",
     "core/jquery-enhanced",
+    "core/respec-ready",
   ],
 });
 

@@ -5,11 +5,10 @@
 // Best practices are marked up with span.practicelab.
 
 define(
-    ["text!core/css/bp.css"],
-    function (css) {
+    ["text!core/css/bp.css", "core/pubsubhub"],
+    function (css, pubsubhub) {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/best-practices");
+            run:    function (conf, doc, cb) {
                 var num = 0
                 ,   $bps = $("span.practicelab", doc)
                 ,   $content = $("<div><h2>Best Practices Summary</h2><ul></ul></div>")
@@ -28,11 +27,9 @@ define(
                     if ($("#bp-summary")) $("#bp-summary").append($content.contents());
                 }
                 else if ($("#bp-summary").length) {
-                    msg.pub("warn", "Using best practices summary (#bp-summary) but no best practices found.");
+                    pubsubhub.pub("warn", "Using best practices summary (#bp-summary) but no best practices found.");
                     $("#bp-summary").remove();
                 }
-
-                msg.pub("end", "core/best-practices");
                 cb();
             }
         };

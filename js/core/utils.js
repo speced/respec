@@ -1,12 +1,11 @@
-/*global respecEvents */
 /*jshint laxcomma: true*/
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
 "use strict";
 define(
-    [],
-    function () {
+    ["core/pubsubhub"],
+    function (pubsubhub) {
         var utils = {
             // --- SET UP
             run:    function (conf, doc, cb, msg) {
@@ -351,7 +350,7 @@ define(
                                 content = window[meth].apply(this, args);
                             }
                             catch (e) {
-                                respecEvents.pub("warn", "call to " + meth + "() failed with " + e) ;
+                                pubsubhub.pub("warn", "call to " + meth + "() failed with " + e) ;
                             }
                         }
                     }

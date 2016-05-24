@@ -4,18 +4,19 @@
 "use strict";
 define(
   [
+    "core/pubsubhub",
     "core/utils",
     "highlight",
     "text!highlightStyles/github.css",
   ],
-  function(utils, hljs, ghCss) {
+  function(pubsubhub, utils, hljs, ghCss) {
     // Opportunistically insert the style into the head to reduce FOUC.
     var codeStyle = document.createElement("style");
     codeStyle.textContent = ghCss;
     var swapStyleOwner = utils.makeOwnerSwapper(codeStyle);
     swapStyleOwner(document, document.head);
     return {
-      run: function(conf, doc, cb, msg) {
+      run: function(conf, doc, cb) {
         // Nothing to do
         if (conf.noHighlightCSS) {
           return cb();
@@ -26,7 +27,7 @@ define(
         }
 
         if (doc.querySelector("highlight")) {
-          msg.pub("warn", "pre elements don't need a 'highlight' class anymore.");
+          pubsubhub.pub("warn", "pre elements don't need a 'highlight' class anymore.");
         }
 
         Array
