@@ -76,11 +76,11 @@
 //  - subjectPrefix: the string that is expected to be used as a subject prefix when posting to the mailing
 //      list of the group.
 //  - otherLinks: an array of other links that you might want in the header (e.g., link github, twitter, etc).
-//         Example of usage: [{key: "foo", href:"http://b"}, {key: "bar", href:"http://"}].
+//         Example of usage: [{key: "foo", href:"https://b"}, {key: "bar", href:"https://"}].
 //         Allowed values are:
 //          - key: the key for the <dt> (e.g., "Bug Tracker"). Required.
 //          - value: The value that will appear in the <dd> (e.g., "GitHub"). Optional.
-//          - href: a URL for the value (e.g., "http://foo.com/issues"). Optional.
+//          - href: a URL for the value (e.g., "https://foo.com/issues"). Optional.
 //          - class: a string representing CSS classes. Optional.
 //  - license: can be one of the following
 //      - "w3c", currently the default (restrictive) license
@@ -90,7 +90,7 @@
 //          intended to be pushed to the WHATWG.
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", the W3C Software and Document License
-//            http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+//            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
 
 "use strict";
 define(
@@ -281,22 +281,22 @@ define(
                 cc0: {
                   name: "Creative Commons 0 Public Domain Dedication",
                   short: "CC0",
-                  url: "http://creativecommons.org/publicdomain/zero/1.0/",
+                  url: "https://creativecommons.org/publicdomain/zero/1.0/",
                 },
                 "w3c-software": {
                   name: "W3C Software Notice and License",
                   short: "W3C Software",
-                  url: "http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231",
+                  url: "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231",
                 },
                 "w3c-software-doc": {
                   name: "W3C Software and Document Notice and License",
                   short: "W3C Software and Document",
-                  url: "http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
+                  url: "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
                 },
                 "cc-by": {
                   name: "Creative Commons Attribution 4.0 International Public License",
                   short: "CC-BY",
-                  url: "http://creativecommons.org/licenses/by/4.0/legalcode",
+                  url: "https://creativecommons.org/licenses/by/4.0/legalcode",
                 }
             }
         ,   run:    function (conf, doc, cb) {
@@ -342,14 +342,14 @@ define(
                 var publishSpace = "TR";
                 if (conf.specStatus === "Member-SUBM") publishSpace = "Submission";
                 else if (conf.specStatus === "Team-SUBM") publishSpace = "TeamSubmission";
-                if (conf.isRegular) conf.thisVersion =  "http://www.w3.org/" + publishSpace + "/" +
+                if (conf.isRegular) conf.thisVersion =  "https://www.w3.org/" + publishSpace + "/" +
                                                           conf.publishDate.getFullYear() + "/" +
                                                           conf.maturity + "-" + conf.shortName + "-" +
                                                           utils.concatDate(conf.publishDate) + "/";
                 if (conf.specStatus === "ED") conf.thisVersion = conf.edDraftURI;
-                if (conf.isRegular) conf.latestVersion = "http://www.w3.org/" + publishSpace + "/" + conf.shortName + "/";
+                if (conf.isRegular) conf.latestVersion = "https://www.w3.org/" + publishSpace + "/" + conf.shortName + "/";
                 if (conf.isTagFinding) {
-                    conf.latestVersion = "http://www.w3.org/2001/tag/doc/" + conf.shortName;
+                    conf.latestVersion = "https://www.w3.org/2001/tag/doc/" + conf.shortName;
                     conf.thisVersion = conf.latestVersion + "-" + utils.concatDate(conf.publishDate, "-");
                 }
                 if (conf.previousPublishDate) {
@@ -369,7 +369,7 @@ define(
                         conf.prevVersion = "";
                     }
                     else {
-                        conf.prevVersion = "http://www.w3.org/TR/" + conf.previousPublishDate.getFullYear() + "/" + pmat + "-" +
+                        conf.prevVersion = "https://www.w3.org/TR/" + conf.previousPublishDate.getFullYear() + "/" + pmat + "-" +
                                            conf.shortName + "-" + utils.concatDate(conf.previousPublishDate) + "/";
                     }
                 }
@@ -378,7 +378,7 @@ define(
                         pubsubhub.pub("error", "Document on track but no previous version: Add previousMaturity previousPublishDate to ReSpec's config.");
                     if (!conf.prevVersion) conf.prevVersion = "";
                 }
-                if (conf.prevRecShortname && !conf.prevRecURI) conf.prevRecURI = "http://www.w3.org/TR/" + conf.prevRecShortname;
+                if (conf.prevRecShortname && !conf.prevRecURI) conf.prevRecURI = "https://www.w3.org/TR/" + conf.prevRecShortname;
                 if (!conf.editors || conf.editors.length === 0) pubsubhub.pub("error", "At least one editor is required");
                 var peopCheck = function (it) {
                     if (!it.name) pubsubhub.pub("error", "All authors and editors must have a name.");

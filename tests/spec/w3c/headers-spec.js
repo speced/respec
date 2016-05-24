@@ -327,7 +327,7 @@ describe("W3C — Headers", function() {
       expect(licenses.item(0).tagName)
         .toEqual("A");
       expect(licenses.item(0).href)
-        .toEqual("http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document");
+        .toEqual("https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document");
     }).then(done);
   });
 
@@ -512,7 +512,7 @@ describe("W3C — Headers", function() {
       expect($sotd.find("a:contains('subscribe')").attr("href"))
         .toEqual("mailto:WGLIST-request@w3.org?subject=subscribe");
       expect($sotd.find("a:contains('archives')").attr("href"))
-        .toEqual("http://lists.w3.org/Archives/Public/WGLIST/");
+        .toEqual("https://lists.w3.org/Archives/Public/WGLIST/");
       expect($sotd.find("a:contains('disclosures')").attr("href"))
         .toEqual("WGPATENT");
     }, simpleSpecURL).then(done);
@@ -661,7 +661,7 @@ describe("W3C — Headers", function() {
       expect($sotd.find("a:contains('subscribe')").attr("href"))
         .toEqual("mailto:WGLIST-request@w3.org?subject=subscribe");
       expect($sotd.find("a:contains('archives')").attr("href"))
-        .toEqual("http://lists.w3.org/Archives/Public/WGLIST/");
+        .toEqual("https://lists.w3.org/Archives/Public/WGLIST/");
     }).then(done);
   });
 
@@ -710,7 +710,7 @@ describe("W3C — Headers", function() {
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
-      expect($(".head img[src='http://www.w3.org/Icons/member_subm']", doc).length)
+      expect($(".head img[src='https://www.w3.org/Icons/member_subm']", doc).length)
         .toEqual(1);
     }).then(done);
   });
@@ -748,7 +748,7 @@ describe("W3C — Headers", function() {
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
-      expect($(".head img[src='http://www.w3.org/Icons/team_subm']", doc).length)
+      expect($(".head img[src='https://www.w3.org/Icons/team_subm']", doc).length)
         .toEqual(1);
     }).then(done);
   });
@@ -760,7 +760,7 @@ describe("W3C — Headers", function() {
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
       var $sotd = $("#sotd", doc);
-      expect($sotd.find("a[href='http://www.w3.org/TeamSubmission/']").length)
+      expect($sotd.find("a[href='https://www.w3.org/TeamSubmission/']").length)
         .toEqual(1);
     }).then(done);
   });
