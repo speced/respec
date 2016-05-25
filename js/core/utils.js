@@ -13,7 +13,6 @@ define(
                 msg.pub("end", "core/utils");
                 cb();
             }
-        ,
         /**
          * Allows a node to be swapped into a different document at
          * some insertion point(Element). This function is useful for
@@ -28,7 +27,7 @@ define(
          *                    insertion point (node) - or just appended, if
          *                    the element has no children.
          */
-            makeOwnerSwapper: function(node) {
+        ,   makeOwnerSwapper: function(node) {
                 if(!(node instanceof Node)){
                     throw TypeError();
                 }
@@ -43,21 +42,27 @@ define(
                 };
             }
         ,   calculateLeftPad: function(text) {
+                if (typeof text !== "string") {
+                    throw new TypeError("Invalid input");
+                }
                 var spaceOrTab = /^[\ |\t]*/;
                 // Find smallest padding value
                 var leftPad = text
                     .split("\n")
-                    .filter(function (item){
+                    .filter(function(item) {
                         return item;
                     })
-                    .map(function(item){
+                    .reduce(function(smallest, item) {
+                        // can't go smaller than 0
+                        if (smallest === 0) {
+                            return smallest;
+                        }
                         var match = item.match(spaceOrTab)[0] || "";
-                        return (match) ? match.length : 0;
-                    })
-                    .sort()
-                    .shift(1);
-                return leftPad || 0;
-            }
+                        return (match.length < smallest) ? match.length : smallest;
+                    }, +Infinity);
+                return (leftPad === +Infinity) ? 0 : leftPad;
+        }
+
         /**
          * Makes a ES conforming iterator allowing objects to be used with
          * methods that can interface with Iterators (Array.from(), etc.).
@@ -94,6 +99,10 @@ define(
 
                 if (typeof text !== "string") {
                     throw TypeError("Invalid input");
+                }
+
+                if(text === "\n"){
+                    return "\n";
                 }
 
                 function isEmpty(node) {
@@ -135,68 +144,68 @@ define(
                     .map(function(textNode) {
                         return textNode.textContent;
                     })
-                    .reduce(function(collector, textContent) {
-                        if (collector) {
-                            return collector;
-                        }
-                        var result = textContent
-                            .split("\n")
-                            .find(function(text) {
-                                var result = /^[\s|\w]+/gm.test(text);
-                                return result;
-                            });
-                        return result || "";
-                    }, "");
-                var baseCol = this.calculateLeftPad(firstPaddedLine);
+                    .find(function(textContent) {
+                        var result = /^[\#|\s|\w]+/gm.test(textContent);  
+                        return result;
+                    });
+                // There is no padding, so just return what we started with.
+                if (!firstPaddedLine) {
+                    return text;
+                }
 
+                var baseColumn = this.calculateLeftPad(firstPaddedLine);
+
+                // Only if we have a baseColumn to work with ... 
                 // With only the text nodes that are not children of pre elements,
                 // we left align all those text nodes.
-                Array
-                    .from(doc.body.childNodes)
-                    .filter(isTextNode)
-                    .filter(function(textNode) {
-                        // 🎵 Hey, processor! Leave those pre's alone! 🎵
-                        return !filterParentIsPre(textNode);
-                    })
-                    .filter(function(textNode) {
-                        // we don't care about last nodes that are just white space
-                        var isLastChild = textNode.parentElement.lastChild === textNode;
-                        var isJustWS = isWhiteSpace(textNode);
-                        return !(isLastChild && isJustWS);
-                    })
-                    .map(function toTrimmedTextNode(textNode) {
-                        var rawText = textNode.textContent;
-                        // We remove tailing space on the right, which is just there
-                        // to pad out tags like:
-                        // <div>
-                        //   <div>
-                        //    Next line has 2 spaces hidden!
-                        // __</div>
-                        // </div>
-                        //
-                        var trimmedRight = rawText.trimRight();
-                        var trimBy = this.calculateLeftPad(trimmedRight) || baseCol;
-                        if (!trimBy) {
-                            return null; //nothing to do
-                        }
-                        var exp = "^ {" + trimBy + "}";
-                        var startTrim = new RegExp(exp, "gm");
-                        var trimmedText = (trimBy) ? rawText.replace(startTrim, "") : rawText;
-                        var newNode = textNode.ownerDocument.createTextNode(trimmedText);
-                        // We can then swap the old with the new
-                        return {
-                            oldNode: textNode,
-                            newNode: newNode,
-                        };
-                    }.bind(this))
-                    .filter(function(nodes) {
-                        return nodes;
-                    })
-                    .forEach(function(nodes) {
-                        var oldNode = nodes.oldNode;
-                        var newNode = nodes.newNode;
-                        oldNode.parentElement.replaceChild(newNode, oldNode);
-                    });
+                if(baseColumn){
+                    Array
+                        .from(doc.body.childNodes)
+                        .filter(isTextNode)
+                        .filter(function(textNode) {
+                            // 🎵 Hey, processor! Leave those pre's alone! 🎵
+                            return !filterParentIsPre(textNode);
+                        })
+                        .filter(function(textNode) {
+                            // we don't care about last nodes that are just white space
+                            var isLastChild = textNode.parentElement.lastChild === textNode;
+                            var isJustWS = isWhiteSpace(textNode);
+                            return !(isLastChild && isJustWS);
+                        })
+                        .map(function toTrimmedTextNode(textNode) {
+                            var rawText = textNode.textContent;
+                            // We remove tailing space on the right, which is just there
+                            // to pad out tags like:
+                            // <div>
+                            //   <div>
+                            //    Next line has 2 spaces hidden!
+                            // __</div>
+                            // </div>
+                            //
+                            var trimmedRight = rawText.trimRight();
+                            var trimBy = this.calculateLeftPad(trimmedRight) || baseColumn;
+                            if (!trimBy) {
+                                return null; //nothing to do
+                            }
+                            var exp = "^ {" + trimBy + "}";
+                            var startTrim = new RegExp(exp, "gm");
+                            var trimmedText = (trimBy) ? rawText.replace(startTrim, "") : rawText;
+                            var newNode = textNode.ownerDocument.createTextNode(trimmedText);
+                            // We can then swap the old with the new
+                            return {
+                                oldNode: textNode,
+                                newNode: newNode,
+                            };
+                        }.bind(this))
+                        .filter(function(nodes) {
+                            return nodes;
+                        })
+                        .forEach(function(nodes) {
+                            var oldNode = nodes.oldNode;
+                            var newNode = nodes.newNode;
+                            oldNode.parentElement.replaceChild(newNode, oldNode);
+                        });
+                }
                 var nodeIterator = doc.createNodeIterator(doc.body, NodeFilter.SHOW_TEXT, filterLastChildIsPadding);
                 var iterable = this.toESIterable(nodeIterator.nextNode.bind(nodeIterator));
                 // Remove trailing whitespace nodes
