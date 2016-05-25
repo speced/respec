@@ -261,7 +261,11 @@ define([
         processBlockLevelElements(newBody);
         var dirtyHTML = toHTML(newBody.innerHTML);
         // Markdown parsing sometimes inserts empty p tags
-        var cleanHTML = dirtyHTML.replace(/<p>\s*<\/p>/gm, "");
+        var cleanHTML = dirtyHTML
+          .replace(/<p>\s*<\/p>/gm, "")
+          // beautifer has a bad time with "\n&quot;<element"
+          // https://github.com/beautify-web/js-beautify/issues/943
+          .replace(/\n&quot;</mg, " &quot;<");
         var beautifulHTML = beautify.html_beautify(cleanHTML, beautifyOps);
         newBody.innerHTML = beautifulHTML;
         // Remove links where class pre.nolinks
