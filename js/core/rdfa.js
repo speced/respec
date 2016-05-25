@@ -8,8 +8,7 @@ define(
     [],
     function () {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/rdfa");
+            run:    function (conf, doc, cb) {
                 if (conf.doRDFa) {
                     $("section,nav").each(function () {
                         var $sec = $(this)
@@ -54,7 +53,6 @@ define(
                         }
                     });
                 }
-                msg.pub("end", "core/rdfa");
                 cb();
             }
         };

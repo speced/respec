@@ -7,8 +7,8 @@
 // be used by a containing shell to extract all examples.
 
 define(
-    ["text!core/css/examples.css"],
-    function (css) {
+    ["text!core/css/examples.css", "core/pubsubhub"],
+    function (css, pubsubhub) {
         var makeTitle = function (conf, $el, num, report) {
             var txt = (num > 0) ? " " + num : ""
             ,   $tit = $("<div class='example-title'><span>Example" + txt + "</span></div>");
@@ -22,8 +22,7 @@ define(
         };
 
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/examples");
+            run:    function (conf, doc, cb) {
                 var $exes = $("pre.example, pre.illegal-example, aside.example")
                 ,   num = 0
                 ;
@@ -37,7 +36,7 @@ define(
                             num++;
                             var $tit = makeTitle(conf, $ex, num, report);
                             $ex.prepend($tit);
-                            msg.pub("example", report);
+                            pubsubhub.pub("example", report);
                         }
                         else {
                             var inAside = !!$ex.parents("aside").length;
@@ -63,11 +62,10 @@ define(
                             $div.append($tit);
                             $div.append($ex.clone());
                             $ex.replaceWith($div);
-                            if (!inAside) msg.pub("example", report);
+                            if (!inAside) pubsubhub.pub("example", report);
                         }
                     });
                 }
-                msg.pub("end", "core/examples");
                 cb();
             }
         };

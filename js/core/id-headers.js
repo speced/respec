@@ -7,8 +7,7 @@ define(
     [],
     function () {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/id-headers");
+            run:    function (conf, doc, cb) {
                 $("h2, h3, h4, h5, h6").each(function () {
                     var $h = $(this);
                     if (!$h.attr("id")) {
@@ -16,7 +15,6 @@ define(
                         $h.makeID();
                     }
                 });
-                msg.pub("end", "core/id-headers");
                 cb();
             }
         };

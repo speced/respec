@@ -6,8 +6,7 @@ define(
     ["core/utils"], // load this to be sure that the jQuery extensions are loaded
     function (utils) {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "w3c/aria");
+            run:    function (conf, doc, cb) {
                 // ensure head section is labelled
                 $('body', doc).attr('role', 'document') ;
                 $('body', doc).attr('id', 'respecDocument') ;
@@ -39,7 +38,6 @@ define(
                         $item.makeID('h', "note" + noteCount) ;
                     }
                 });
-                msg.pub("end", "w3c/aria");
                 cb();
             }
         };

@@ -7,12 +7,10 @@
 // to be found as well as normalise the titles of figures.
 
 define(
-    [],
-    function () {
+    ["core/pubsubhub"],
+    function (pubsubhub) {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/figures");
-
+            run:    function (conf, doc, cb) {
                 // Move old syntax to new syntax
                 $(".figure", doc).each(function (i, figure) {
                     var $figure = $(figure)
@@ -25,12 +23,12 @@ define(
 
                     // change old syntax to something HTML5 compatible
                     if ($figure.is("div")) {
-                        msg.pub("warn", "You are using the deprecated div.figure syntax; please switch to <figure>.");
+                        pubsubhub.pub("warn", "You are using the deprecated div.figure syntax; please switch to <figure>.");
                         $figure.append($caption);
                         $figure.renameElement("figure");
                     }
                     else {
-                        msg.pub("warn", "You are using the deprecated img.figure syntax; please switch to <figure>.");
+                        pubsubhub.pub("warn", "You are using the deprecated img.figure syntax; please switch to <figure>.");
                         $figure.wrap("<figure></figure>");
                         $figure.parent().append($caption);
                     }
@@ -43,7 +41,7 @@ define(
                     ,   $cap = $fig.find("figcaption")
                     ,   tit = $cap.text()
                     ,   id = $fig.makeID("fig", tit);
-                    if (!$cap.length) msg.pub("warn", "A <figure> should contain a <figcaption>.");
+                    if (!$cap.length) pubsubhub.pub("warn", "A <figure> should contain a <figcaption>.");
 
                     // set proper caption title
                     num++;
@@ -93,7 +91,6 @@ define(
                     var $ul = $tof.find("ul");
                     while (tof.length) $ul.append(tof.shift());
                 }
-                msg.pub("end", "core/figures");
                 cb();
             }
         };

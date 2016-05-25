@@ -72,11 +72,9 @@ define(
         l10n["zh-cn"] = l10n.zh;
 
         return {
-            run:    function (config, doc, cb, msg) {
-                msg.pub("start", "w3c/l10n");
+            run:    function (config, doc, cb) {
                 var lang = $(doc.documentElement).attr("lang") || "en";
                 config.l10n = l10n[lang] ? l10n[lang] : l10n.en;
-                msg.pub("end", "w3c/l10n");
                 cb();
             }
         };

@@ -12,15 +12,10 @@
 // manually numbered, a link to the issue is created using issueBase and the issue number
 "use strict";
 define(
-  ["text!core/css/issues-notes.css", "github"],
-  function(css, github) {
+  ["text!core/css/issues-notes.css", "github", "core/pubsubhub"],
+  function(css, github, pubsubhub) {
     return {
-      run: function(conf, doc, cb, msg) {
-        function onEnd() {
-          msg.pub("end", "core/issues-notes");
-          cb();
-        }
-
+      run: function(conf, doc, cb) {
         function handleIssues($ins, ghIssues, issueBase) {
           $(doc).find("head link").first().before($("<style/>").text(css));
           var hasDataNum = $(".issue[data-number]").length > 0,
@@ -98,16 +93,15 @@ define(
               }
               $div.append(body);
             }
-            msg.pub(report.type, report);
+            pubsubhub.pub(report.type, report);
           });
           if ($(".issue").length) {
             if ($("#issue-summary")) $("#issue-summary").append($issueSummary.contents());
           } else if ($("#issue-summary").length) {
-            msg.pub("warn", "Using issue summary (#issue-summary) but no issues found.");
+            pubsubhub.pub("warn", "Using issue summary (#issue-summary) but no issues found.");
             $("#issue-summary").remove();
           }
         }
-        msg.pub("start", "core/issues-notes");
         var $ins = $(".issue, .note, .warning, .ednote"),
           ghIssues = {},
           issueBase = conf.issueBase;
@@ -127,14 +121,14 @@ define(
                 ghIssues[issue.number] = issue;
               });
               handleIssues($ins, ghIssues, issueBase);
-              onEnd();
+              cb();
             });
           } else {
             handleIssues($ins, ghIssues, issueBase);
-            onEnd();
+            cb();
           }
         } else {
-          onEnd();
+          cb();
         }
       }
     };

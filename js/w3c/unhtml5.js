@@ -8,8 +8,7 @@ define(
     ["core/utils"], // load this to be sure that the jQuery extensions are loaded
     function (utils) {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "w3c/unhtml5");
+            run:    function (conf, doc, cb) {
                 $.each("section figcaption figure".split(" "), function (i, item) {
                     $(item, doc).renameElement("div").addClass(item);
                 });
@@ -17,7 +16,6 @@ define(
                 $("div[role]").removeAttr('role').removeAttr('aria-level') ;
                 $("style:not([type])").attr("type", "text/css");
                 $("script:not([type])").attr("type", "text/javascript");
-                msg.pub("end", "w3c/unhtml5");
                 cb();
             }
         };

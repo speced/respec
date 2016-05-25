@@ -100,7 +100,7 @@ const tasks = {
       const isRespecDoc = yield nightmare
         .wait(function(){
           return document.readyState === "complete";
-        }) 
+        })
         .evaluate(function(){
           if(document.hasOwnProperty("respecIsReady")){
             return true;

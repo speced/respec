@@ -5,8 +5,7 @@ define(
     [],
     function () {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/dfn");
+            run:    function (conf, doc, cb) {
                 doc.normalize();
                 $("[dfn-for]").each(function() {
                     this.setAttribute("data-dfn-for", this.getAttribute("dfn-for").toLowerCase());
@@ -29,7 +28,6 @@ define(
                         conf.definitionMap[item].push($(dfn[0]));
                         });
                 });
-                msg.pub("end", "core/dfn");
                 cb();
             }
         };

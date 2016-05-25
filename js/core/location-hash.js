@@ -6,8 +6,7 @@ define(
     [],
     function () {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/location-hash");
+            run:    function (conf, doc, cb) {
                 var hash = window.location.hash;
 
                 // Number of pixels that the document has already been
@@ -22,7 +21,6 @@ define(
                     window.location.hash = "";
                     window.location.hash = hash;
                 }
-                msg.pub("end", "core/location-hash");
                 cb();
             }
         };
