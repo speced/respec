@@ -220,21 +220,16 @@ async.task(function * () {
     }
     // 2. Bump the version in `package.json`.
     const version = yield Promps.askBumpVersion();
-    const file = rel(`../builds/respec-w3c-common-${version}.js`);
     yield Promps.askBuildAddCommitMergeTag();
     // 3. Run the build script (node tools/build-w3c-common.js).
-    yield w3cBuild.buildW3C("latest", version);
-    // 4. Add the new build (git add builds/respec-w3c-common-3.x.y.js).
-    const basename = path.basename(file, ".js");
-    const mapfile = rel(`../builds/${basename}.build.js.map`);
-    yield git(`add ${file} ${mapfile}`);
-    // 5. Commit your changes (git commit -am v3.x.y)
+    yield w3cBuild.buildW3C("latest");
+    // 4. Commit your changes (git commit -am v3.x.y)
     yield git(`commit -am v${version}`);
-    // 6. Merge to gh-pages (git checkout gh-pages; git merge develop)
+    // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
     yield git(`checkout gh-pages`);
     yield git(`merge develop`);
     yield git(`checkout develop`);
-    // 7. Tag the release (git tag v3.x.y)
+    // 6. Tag the release (git tag v3.x.y)
     yield git(`tag -m v${version} v${version}`);
     yield Promps.askPushAll();
     console.log(colors.info(" 📡  Pushing everything back to server..."));
