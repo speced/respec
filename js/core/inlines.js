@@ -16,11 +16,10 @@
 //    the counter is not used.
 
 define(
-    [],
-    function () {
+    ["core/pubsubhub"],
+    function (pubsubhub) {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/inlines");
+            run:    function (conf, doc, cb) {
                 doc.normalize();
                 if (!conf.normativeReferences) conf.normativeReferences = {};
                 if (!conf.informativeReferences) conf.informativeReferences = {};
@@ -98,13 +97,12 @@ define(
                             }
                             // FAIL -- not sure that this can really happen
                             else {
-                                msg.pub("error", "Found token '" + matched + "' but it does not correspond to anything");
+                                pubsubhub.pub("error", "Found token '" + matched + "' but it does not correspond to anything");
                             }
                         }
                     }
                     txt.parentNode.replaceChild(df, txt);
                 }
-                msg.pub("end", "core/inlines");
                 cb();
             }
         };

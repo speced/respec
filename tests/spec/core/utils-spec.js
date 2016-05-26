@@ -8,6 +8,37 @@ describe("Core - Utils", function() {
     });
   });
 
+  describe("calculateLeftPad()", function(){
+    it("throws given invalid input", function(){
+      expect(function(){
+        expect(utils.calculateLeftPad());
+      }).toThrow();
+      expect(function(){
+        expect(utils.calculateLeftPad({}));
+      }).toThrow();
+      expect(function(){
+        expect(utils.calculateLeftPad(123));
+      }).toThrow();
+      expect(function(){
+        expect(utils.calculateLeftPad(null));
+      }).toThrow();
+    });
+    it("calculates the smallest left padding of multiline text", function(done){
+      expect(utils.calculateLeftPad("")).toEqual(0);
+      expect(utils.calculateLeftPad("\n    \n  ")).toEqual(2);
+      expect(utils.calculateLeftPad("                         ")).toEqual(25);
+      expect(utils.calculateLeftPad(" a                        ")).toEqual(1);
+      expect(utils.calculateLeftPad("  \n a                        ")).toEqual(1);
+      expect(utils.calculateLeftPad(" \n   a ")).toEqual(1);
+      expect(utils.calculateLeftPad("\n    \n      \n    ")).toEqual(4);
+      expect(utils.calculateLeftPad("\n    \n      \n  ")).toEqual(2);
+      expect(utils.calculateLeftPad("\n   \n      \n  \n    ")).toEqual(2);
+      expect(utils.calculateLeftPad("\n\n\n\n\n\n\n\n\n\n")).toEqual(0);
+      expect(utils.calculateLeftPad("    \n\n\n\n\n  \n\n\n\n\n   ")).toEqual(2);
+      done();
+    });
+  });
+
   describe("makeOwnerSwapper()", function() {
     it("throws if passed something that is not a node", function(done) {
       expect(function() {

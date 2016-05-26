@@ -2,12 +2,11 @@
 // Inject's the document's configuration into the head as JSON.
 
 define(
-  [],
-  function () {
+  ["core/pubsubhub"],
+  function (pubsubhub) {
     'use strict';
     return {
-      run: function (conf, doc, cb, msg) {
-        msg.pub('start', 'core/include-config');
+      run: function (conf, doc, cb) {
         var initialUserConfig;
         try {
           if (Object.assign) {
@@ -18,7 +17,7 @@ define(
         } catch (err) {
           initialUserConfig = {};
         }
-        msg.sub('end-all', function () {
+        pubsubhub.sub('end-all', function () {
           var script = doc.createElement('script');
           script.id = 'initialUserConfig';
           var confFilter = function (key, val) {
@@ -42,7 +41,6 @@ define(
           doc.head.appendChild(script);
           conf.initialUserConfig = initialUserConfig;
         });
-        msg.pub('end', 'core/include-config');
         cb();
       }
     };

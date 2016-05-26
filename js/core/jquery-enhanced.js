@@ -1,4 +1,4 @@
-define(["jquery","core/utils"], function($, utils) {
+define(["jquery","core/utils", "core/pubsubhub"], function($, utils, pubsubhub) {
   // --- JQUERY EXTRAS -----------------------------------------------------------------------
   // Applies to any jQuery object containing elements, changes their name to the one give, and
   // return a jQuery object containing the new elements
@@ -61,7 +61,7 @@ define(["jquery","core/utils"], function($, utils) {
       // allow @title for backward compatibility
       titleString = this.attr("title");
       theAttr = "title";
-      respecEvents.pub("warn", "Using deprecated attribute @title for '" + this.text() + "': see http://w3.org/respec/guide.html#definitions-and-linking");
+      pubsubhub.pub("warn", "Using deprecated attribute @title for '" + this.text() + "': see http://w3.org/respec/guide.html#definitions-and-linking");
     } else if (this.contents().length == 1 && this.children("abbr, acronym").length == 1 && this.find(":first-child").attr("title")) {
       titleString = this.find(":first-child").attr("title");
     } else {

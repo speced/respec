@@ -2,11 +2,10 @@
 // Module core/link-to-dfn
 // Gives definitions in conf.definitionMap IDs and links <a> tags to the matching definitions.
 define(
-    [],
-    function () {
+    ["core/pubsubhub"],
+    function (pubsubhub) {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/link-to-dfn");
+            run:    function (conf, doc, cb) {
                 doc.normalize();
                 var titles = {};
                 Object.keys(conf.definitionMap).forEach(function(title) {
@@ -26,7 +25,7 @@ define(
                             if (oldIsDfn && newIsDfn) {
                                 // Only complain if the user provides 2 <dfn>s
                                 // for the same term.
-                                msg.pub("error", "Duplicate definition of '" + (dfn_for ? dfn_for + "/" : "") + title + "'");
+                                pubsubhub.pub("error", "Duplicate definition of '" + (dfn_for ? dfn_for + "/" : "") + title + "'");
                             }
                             if (oldIsDfn) {
                                 // Don't overwrite <dfn> definitions.
@@ -74,7 +73,7 @@ define(
                         if (!$ant.parents(".idl, dl.methods, dl.attributes, dl.constants, dl.constructors, dl.fields, dl.dictionary-members, span.idlMemberType, span.idlTypedefType, div.idlImplementsDesc").length) {
                             var link_for = linkTargets[0].for_;
                             var title = linkTargets[0].title;
-                            msg.pub("warn", "Found linkless <a> element " + (link_for ? "for '" + link_for + "' " : "") + "with text '" + title + "' but no matching <dfn>.");
+                            pubsubhub.pub("warn", "Found linkless <a> element " + (link_for ? "for '" + link_for + "' " : "") + "with text '" + title + "' but no matching <dfn>.");
                         }
                         $ant.replaceWith($ant.contents());
                     }
@@ -96,7 +95,6 @@ define(
 
                 var linkForList = doc.querySelectorAll("*[link-for]");
                 Array.prototype.forEach.call(linkForList, attrToDataAttr("link-for"));
-                msg.pub("end", "core/link-to-dfn");
                 cb();
             }
         };

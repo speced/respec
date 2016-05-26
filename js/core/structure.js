@@ -74,18 +74,12 @@ define(
         ;
 
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/structure");
+            run:    function (conf, doc, cb) {
                 if (!conf.tocIntroductory) conf.tocIntroductory = false;
                 if (!conf.maxTocLevel) conf.maxTocLevel = 0;
                 var $secs = $("section:not(.introductory)", doc)
-                                .find("h1:first, h2:first, h3:first, h4:first, h5:first, h6:first")
-                ,   finish = function () {
-                        msg.pub("end", "core/structure");
-                        cb();
-                    }
-                ;
-                if (!$secs.length) return finish();
+                                .find("h1:first, h2:first, h3:first, h4:first, h5:first, h6:first");
+                if (!$secs.length) return cb();
                 $secs.each(function () {
                     var depth = $(this).parents("section").length + 1;
                     if (depth > 6) depth = 6;
@@ -122,7 +116,7 @@ define(
                     }
                 });
 
-                finish();
+                cb();
             }
         };
     }

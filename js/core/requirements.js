@@ -11,18 +11,16 @@
 //     and a class of "reqRef".
 
 define(
-    [],
-    function () {
+    ["core/pubsubhub"],
+    function (pubsubhub) {
         return {
-            run: function (conf, doc, cb, msg) {
-                msg.pub("start", "core/requirements");
-
+            run: function (conf, doc, cb) {
                 $(".req").each(function (i) {
                     i++;
                     var $req = $(this)
                     ,   title = "Req. " + i
                     ;
-                    msg.pub("req", {
+                    pubsubhub.pub("req", {
                         type: "req",
                         number: i,
                         content: $req.html(),
@@ -46,12 +44,10 @@ define(
                     }
                     else {
                         txt = "Req. not found '" + id + "'";
-                        msg.pub("error", "Requirement not found in a.reqRef: " + id);
+                        pubsubhub.pub("error", "Requirement not found in a.reqRef: " + id);
                     }
                     $ref.text(txt);
                 });
-
-                msg.pub("end", "core/requirements");
                 cb();
             }
         };

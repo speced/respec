@@ -10,7 +10,8 @@
 var sn;
 define(
     [
-        "handlebars"
+        "core/pubsubhub"
+    ,   "handlebars"
     ,   "tmpl!core/css/webidl-oldschool.css"
     ,   "tmpl!core/templates/webidl/module.html"
     ,   "tmpl!core/templates/webidl/typedef.html"
@@ -33,7 +34,7 @@ define(
     ,   "tmpl!core/templates/webidl/exception.html"
     ,   "tmpl!core/templates/webidl/interface.html"
     ],
-    function (hb, css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
+    function (pubsubhub, hb, css, idlModuleTmpl, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
                    idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl,
               idlConstructorTmpl, idlAttributeTmpl, idlSerializerTmpl, idlIterableTmpl, idlMaplikeTmpl, idlCommentTmpl, idlFieldTmpl, idlExceptionTmpl, idlInterfaceTmpl) {
         var WebIDLProcessor = function (cfg) {
@@ -167,7 +168,7 @@ define(
                     obj.params.push(p);
                 }
                 else {
-                    this.msg.pub("error", "Expected parameter list, got: " + prm);
+                    pubsubhub.pub("error", "Expected parameter list, got: " + prm);
                     return false;
                 }
                 return prm;
@@ -196,13 +197,13 @@ define(
                 var def = { children: [] }
                 ,   str = $idl.attr("title")
                 ,   id = $idl.attr("id");
-                if (!str) this.msg.pub("error", "No IDL definition in element.");
+                if (!str) pubsubhub.pub("error", "No IDL definition in element.");
                 str = this.parseExtendedAttributes(str, def);
                 if (str.indexOf("partial") === 0) { // Could be interface or dictionary
                     var defType = str.slice(8);
                     if  (defType.indexOf("interface") === 0)        this.processInterface(def, str, $idl, { partial : true });
                     else if (defType.indexOf("dictionary") === 0)   this.dictionary(def, defType, $idl, { partial : true });
-                    else    this.msg.pub("error", "Expected definition, got: " + str);
+                    else    pubsubhub.pub("error", "Expected definition, got: " + str);
                 }
                 else if      (str.indexOf("interface") === 0 ||
                          /^callback\s+interface\b/.test(str))   this.processInterface(def, str, $idl);
@@ -212,7 +213,7 @@ define(
                 else if (str.indexOf("enum") === 0)             this.processEnum(def, str, $idl);
                 else if (str.indexOf("typedef") === 0)          this.typedef(def, str, $idl);
                 else if (/\bimplements\b/.test(str))            this.processImplements(def, str, $idl);
-                else    this.msg.pub("error", "Expected definition, got: " + str);
+                else    pubsubhub.pub("error", "Expected definition, got: " + str);
                 this.parent.children.push(def);
                 this.processMembers(def, $idl);
                 if (id) def.htmlID = id;
@@ -231,7 +232,7 @@ define(
                     if ($idl.attr('data-merge')) obj.merge = $idl.attr('data-merge').split(' ');
                     if (match[3]) obj.superclasses = match[3].split(/\s*,\s*/);
                 }
-                else this.msg.pub("error", "Expected interface, got: " + str);
+                else pubsubhub.pub("error", "Expected interface, got: " + str);
                 return obj;
             },
 
@@ -253,7 +254,7 @@ define(
                     this.setID(obj, match[1]);
                     if (match[2]) obj.superclasses = match[2].split(/\s*,\s*/);
                 }
-                else this.msg.pub("error", "Expected " + type + ", got: " + str);
+                else pubsubhub.pub("error", "Expected " + type + ", got: " + str);
                 return obj;
             },
 
@@ -265,7 +266,7 @@ define(
                     var type = match[2];
                     this.parseDatatype(obj, type);
                 }
-                else this.msg.pub("error", "Expected callback, got: " + str);
+                else pubsubhub.pub("error", "Expected callback, got: " + str);
                 return obj;
             },
 
@@ -273,7 +274,7 @@ define(
                 obj.type = "enum";
                 var match = /^\s*enum\s+([A-Za-z][A-Za-z0-9]*)\s*$/.exec(str);
                 if (match) this.setID(obj, match[1]);
-                else this.msg.pub("error", "Expected enum, got: " + str);
+                else pubsubhub.pub("error", "Expected enum, got: " + str);
                 return obj;
             },
 
@@ -288,7 +289,7 @@ define(
                     this.setID(obj, match[2]);
                     obj.description = $idl.contents();
                 }
-                else this.msg.pub("error", "Expected typedef, got: " + str);
+                else pubsubhub.pub("error", "Expected typedef, got: " + str);
                 return obj;
             },
 
@@ -300,7 +301,7 @@ define(
                     obj.datatype = match[2];
                     obj.description = $idl.contents();
                 }
-                else this.msg.pub("error", "Expected implements, got: " + str);
+                else pubsubhub.pub("error", "Expected implements, got: " + str);
                 return obj;
             },
 
@@ -358,7 +359,7 @@ define(
                 }
 
                 // NOTHING MATCHED
-                this.msg.pub("error", "Expected exception member, got: " + str);
+                pubsubhub.pub("error", "Expected exception member, got: " + str);
             },
 
             dictionaryMember:    function ($dt, $dd) {
@@ -381,7 +382,7 @@ define(
                 }
 
                 // NOTHING MATCHED
-                this.msg.pub("error", "Expected dictionary member, got: " + str);
+                pubsubhub.pub("error", "Expected dictionary member, got: " + str);
             },
 
             callbackMember:    function ($dt, $dd) {
@@ -403,7 +404,7 @@ define(
                 }
 
                 // NOTHING MATCHED
-                this.msg.pub("error", "Expected callback member, got: " + str);
+                pubsubhub.pub("error", "Expected callback member, got: " + str);
             },
 
             processEnumMember:    function ($dt, $dd) {
@@ -462,7 +463,7 @@ define(
                             exc.description = $el.contents().clone();
                         }
                         else {
-                            this.msg.pub("error", "Do not know what to do with exceptions being raised defined outside of a div or dl.");
+                            pubsubhub.pub("error", "Do not know what to do with exceptions being raised defined outside of a div or dl.");
                         }
                         $el.remove();
                         obj.raises.push(exc);
@@ -590,7 +591,7 @@ define(
                 }
 
                 // NOTHING MATCHED
-                this.msg.pub("error", "Expected interface member, got: " + str);
+                pubsubhub.pub("error", "Expected interface member, got: " + str);
             },
 
             methodMember:   function (obj, $excepts, $extPrm, prm) {
@@ -614,7 +615,7 @@ define(
                         exc.description = $el.contents().clone();
                     }
                     else {
-                        this.msg.pub("error", "Do not know what to do with exceptions being raised defined outside of a div or dl.");
+                        pubsubhub.pub("error", "Do not know what to do with exceptions being raised defined outside of a div or dl.");
                     }
                     $el.remove();
                     obj.raises.push(exc);
@@ -959,11 +960,11 @@ define(
             writeAsHTML:    function (obj) {
                 if (obj.type == "module") {
                     if (obj.id == "outermost") {
-                        if (obj.children.length > 1) this.msg.pub("error", "We currently only support one structural level per IDL fragment");
+                        if (obj.children.length > 1) pubsubhub.pub("error", "We currently only support one structural level per IDL fragment");
                         return this.writeAsHTML(obj.children[0]);
                     }
                     else {
-                        this.msg.pub("warn", "No HTML can be generated for module definitions.");
+                        pubsubhub.pub("warn", "No HTML can be generated for module definitions.");
                         return $("<span></span>");
                     }
                 }
@@ -1482,29 +1483,24 @@ define(
 
 
         return {
-            showDeprecationWarning: function(msg){
+            showDeprecationWarning: function(){
                 var deprecationWarn = "Defining WebIDL in `dl` elements is deprecated. "
                     + "Please use Contiguous IDL instead: "
                     + "https://www.w3.org/respec/guide.html#contiguous-idl";
-                msg.pub("warn", deprecationWarn);
+                pubsubhub.pub("warn", deprecationWarn);
             },
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/webidl");
+            run:    function (conf, doc, cb) {
                 if (!conf.noIDLSorting) conf.noIDLSorting = false;
                 if (!conf.noIDLSectionTitle) conf.noIDLSectionTitle = false;
                 sn = new simpleNode(document);
                 var $idl = $(".idl", doc).not("pre")
-                ,   finish = function () {
-                        msg.pub("end", "core/webidl");
-                        cb();
-                    };
-                if (!$idl.length) return finish();
-                this.showDeprecationWarning(msg);
+                if (!$idl.length) return cb();
+                this.showDeprecationWarning();
                 $(doc).find("head link").first().before($("<style/>").text(css));
 
                 var infNames = [];
                 $idl.each(function () {
-                    var w = new WebIDLProcessor({ noIDLSorting: conf.noIDLSorting, msg: msg, doc: doc, conf: conf })
+                    var w = new WebIDLProcessor({ noIDLSorting: conf.noIDLSorting, doc: doc, conf: conf })
                     ,   inf = w.definition($(this))
                     ,   $df = w.makeMarkup(inf.htmlID);
                     $(this).replaceWith($df);
@@ -1521,7 +1517,7 @@ define(
                             .html("<code>" + name + "</code>");
                     }
                 });
-                finish();
+                cb();
             }
         };
     }

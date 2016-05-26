@@ -9,7 +9,8 @@
 
 define(
     [
-        "handlebars"
+        "core/pubsubhub"
+    ,   "handlebars"
     ,   "webidl2"
     ,   "tmpl!core/css/webidl-oldschool.css"
     ,   "tmpl!core/templates/webidl-contiguous/typedef.html"
@@ -32,12 +33,12 @@ define(
     ,   "tmpl!core/templates/webidl-contiguous/extended-attribute.html"
     ,   "tmpl!core/templates/webidl-contiguous/interface.html"
     ],
-    function (hb, webidl2, css, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
+    function (pubsubhub, hb, webidl2, css, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
                    idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl,
               idlAttributeTmpl, idlSerializerTmpl, idlMaplikeTmpl, idlLineCommentTmpl, idlMultiLineCommentTmpl, idlFieldTmpl, idlExceptionTmpl,
               idlExtAttributeTmpl, idlInterfaceTmpl) {
         "use strict";
-        function registerHelpers (msg) {
+        function registerHelpers () {
             hb.registerHelper("extAttr", function (obj, indent) {
                 return extAttr(obj.extAttrs, indent, /*singleLine=*/false);
             });
@@ -92,7 +93,7 @@ define(
                     case "sequence":
                         return JSON.stringify(value.value);
                     default:
-                        msg.pub("error", "Unexpected constant value type: " + value.type);
+                        pubsubhub.pub("error", "Unexpected constant value type: " + value.type);
                         return "<Unknown>";
                 }
             });
@@ -315,16 +316,16 @@ define(
         }
 
         // Takes the result of WebIDL2.parse(), an array of definitions.
-        function makeMarkup (conf, parse, msg) {
+        function makeMarkup (conf, parse) {
             var attr = { "class": "def idl" };
             var $pre = $("<pre></pre>").attr(attr);
             $pre.html(parse.filter(function(defn) { return !typeIsWhitespace(defn.type); })
-                           .map(function(defn) { return writeDefinition(defn, -1, msg); })
+                           .map(function(defn) { return writeDefinition(defn, -1); })
                            .join('\n\n'));
             return $pre;
         }
 
-        function writeDefinition (obj, indent, msg) {
+        function writeDefinition (obj, indent) {
             indent++;
             var opt = { indent: indent, obj: obj };
             switch (obj.type) {
@@ -451,7 +452,7 @@ define(
                     }
                     return idlEnumTmpl({obj: obj, indent: indent, children: children });
                 default:
-                    msg.pub("error", "Unexpected object type " + obj.type + " in " + JSON.stringify(obj));
+                    pubsubhub.pub("error", "Unexpected object type " + obj.type + " in " + JSON.stringify(obj));
                     return "";
             }
         }
@@ -650,7 +651,7 @@ define(
         // element defining each entity and attaches it to the entity's
         // 'refTitle' property, and records that it describes an IDL entity by
         // adding a [data-idl] attribute.
-        function linkDefinitions(parse, definitionMap, parent, msg) {
+        function linkDefinitions(parse, definitionMap, parent) {
             parse.forEach(function(defn) {
                 var name;
                 switch (defn.type) {
@@ -668,7 +669,7 @@ define(
                             partialIdx = "-partial-" + idlPartials[defn.name].length;
                         }
 
-                        linkDefinitions(defn.members, definitionMap, defn.name, msg);
+                        linkDefinitions(defn.members, definitionMap, defn.name);
                         name = defn.name;
                         defn.idlId = "idl-def-" + name.toLowerCase() + partialIdx;
                         break;
@@ -678,7 +679,7 @@ define(
                         defn.values.forEach(function(v,i) {
                             if (v.type === undefined) {
                                 defn.values[i] = { toString: function() {return v;},
-                                                   dfn: findDfn(name, v, definitionMap, msg)
+                                                   dfn: findDfn(name, v, definitionMap)
                                                  };
                             }
                         });
@@ -746,13 +747,13 @@ define(
                         // Nothing to link here.
                         return;
                     default:
-                        msg.pub("error", "Unexpected type when computing refTitles: " + defn.type);
+                        pubsubhub.pub("error", "Unexpected type when computing refTitles: " + defn.type);
                         return;
                 }
                 if (parent) {
                     defn.linkFor = parent;
                 }
-                defn.dfn = findDfn(parent, name, definitionMap, msg);
+                defn.dfn = findDfn(parent, name, definitionMap);
             });
         }
 
@@ -765,7 +766,7 @@ define(
         // When a matching <dfn> is found, it's given <code> formatting,
         // marked as an IDL definition, and returned.  If no <dfn> is found,
         // the function returns 'undefined'.
-        function findDfn(parent, name, definitionMap, msg) {
+        function findDfn(parent, name, definitionMap) {
             parent = parent.toLowerCase();
             name = name.toLowerCase();
             var dfnForArray = definitionMap[name];
@@ -800,7 +801,7 @@ define(
                 }
             }
             if (dfns.length > 1) {
-                msg.pub("error", "Multiple <dfn>s for " + name + (parent ? " in " + parent : ""));
+                pubsubhub.pub("error", "Multiple <dfn>s for " + name + (parent ? " in " + parent : ""));
             }
             if (dfns.length === 0) {
                 return undefined;
@@ -816,12 +817,11 @@ define(
         }
 
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/webidl-contiguous");
-                registerHelpers(msg);
+            run:    function (conf, doc, cb) {
+                registerHelpers();
                 var $idl = $("pre.idl", doc)
                 ,   finish = function () {
-                        msg.pub("end", "core/webidl-contiguous");
+                        pubsubhub.pub("end", "core/webidl-contiguous");
                         cb();
                     };
                 if (!$idl.length) return finish();
@@ -834,12 +834,12 @@ define(
                     try {
                         parse = window.WebIDL2.parse($(this).text(), {ws: true});
                     } catch(e) {
-                        msg.pub("error", "Failed to parse <pre>" + $idl.text() + "</pre> as IDL: " + (e.stack || e));
+                        pubsubhub.pub("error", "Failed to parse <pre>" + $idl.text() + "</pre> as IDL: " + (e.stack || e));
                         // Skip this <pre> and move on to the next one.
                         return;
                     }
-                    linkDefinitions(parse, conf.definitionMap, "", msg);
-                    var $df = makeMarkup(conf, parse, msg);
+                    linkDefinitions(parse, conf.definitionMap, "");
+                    var $df = makeMarkup(conf, parse);
                     $df.attr({id: this.id});
                     $df.find('.idlAttribute,.idlCallback,.idlConst,.idlDictionary,.idlEnum,.idlException,.idlField,.idlInterface,.idlMember,.idlMethod,.idlSerializer,.idlMaplike,.idlTypedef')
                         .each(function() {
