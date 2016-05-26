@@ -95,6 +95,9 @@ define(
 
                 var linkForList = doc.querySelectorAll("*[link-for]");
                 Array.prototype.forEach.call(linkForList, attrToDataAttr("link-for"));
+                // Added message for legacy compat with Aria specs
+                // See https://github.com/w3c/respec/issues/793
+                pubsubhub.pub("end", "core/link-to-dfn");
                 cb();
             }
         };

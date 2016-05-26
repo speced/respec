@@ -19,9 +19,12 @@ define([], function() {
         .slice(1);
       // we take a copy, because subscribers can unsubscribe themselves
       // leading to race conditions
-      for (var cb of Array.from(subscriptions.get(topic))) {
-        cb.apply(null, restParams);
-      }
+      Array
+        .from(subscriptions.get(topic))
+        .forEach(function(cb) {
+          cb.apply(null, restParams);
+        });
+
       // If this is an iframe, postMessage parent (used in testing).
       if (window.parent === window.self) {
         return;
@@ -57,18 +60,18 @@ define([], function() {
     }
   };
 
-  PubSubHub.sub("error", function(err){
+  PubSubHub.sub("error", function(err) {
     console.error(err.stack || err);
   });
 
-  PubSubHub.sub("warn", function(str){
+  PubSubHub.sub("warn", function(str) {
     console.warn(str);
   });
 
   // Add deprecation warning
   Object.defineProperty(window, "respecEvents", {
-    get: function(){
-      var warning = "window.respecEvents() is deprecated. Use 'require(\"core\\pubsubhub\", aFunction)' instead.";
+    get: function() {
+      var warning = "window.respecEvents() is deprecated. Use 'require([\"core/pubsubhub\"], function(){...})' instead.";
       PubSubHub.pub("warn", warning);
       return PubSubHub;
     }

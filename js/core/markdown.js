@@ -265,7 +265,7 @@ define([
           .replace(/<p>\s*<\/p>/gm, "")
           // beautifer has a bad time with "\n&quot;<element"
           // https://github.com/beautify-web/js-beautify/issues/943
-          .replace(/\n&quot;</mg, " &quot;<");
+          .replace(/\n\s*&quot;</mg, " &quot;<");
         var beautifulHTML = beautify.html_beautify(cleanHTML, beautifyOps);
         newBody.innerHTML = beautifulHTML;
         // Remove links where class pre.nolinks
