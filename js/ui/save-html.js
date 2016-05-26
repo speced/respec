@@ -17,6 +17,12 @@ define(
             $("body", rootEl).removeClass('toc-sidebar');
             utils.removeReSpec(rootEl);
         };
+
+        // Clean up markup to overcome bugs in beautifier
+        function preBeautify(str){
+            return str
+                .replace(/\n\s*\(</mg, " (<");
+        }
         return {
             show:   function (ui, _conf, _doc) {
                 doc = _doc, conf = _conf;
@@ -159,7 +165,8 @@ define(
                 cleanup(rootEl);
                 str += rootEl.innerHTML;
                 str += "</html>";
-                var beautifulHTML = beautify.html_beautify(str, beautifyOpts);
+                var uglyHTML = preBeautify(str);
+                var beautifulHTML = beautify.html_beautify(uglyHTML, beautifyOpts);
                 return beautifulHTML;
             }
             // convert the document to XML, pass 5 as mode for XHTML5
@@ -245,7 +252,8 @@ define(
                     return out;
                 };
                 str += dumpNode(rootEl) + "</html>";
-                var beautifulXML = beautify.html_beautify(str, beautifyOpts);
+                var uglyHTML = preBeautify(str);
+                var beautifulXML = beautify.html_beautify(uglyHTML, beautifyOpts);
                 return beautifulXML;
             }
             // create a diff marked version against the previousURI
