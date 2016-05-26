@@ -9,6 +9,21 @@
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
 "use strict";
+
+// Quick polyfill for browser broken by lack of ElementTraversal APIs on the document object.
+if (!document.firstElementChild) {
+    Object.defineProperty(Document.prototype, "firstElementChild", { 
+        enumerable: true, configurable: true, get: function () { 
+            var child = this.firstChild;
+            while (child && child.nodeType != 1/*element node*/)
+                child = child.nextSibling;
+            return child;
+        }
+    });
+}
+// lastElementChild does not seem to be used in this codebase. Same for nextElementSibling, 
+// previousElementSibling, childElementCount, and document.children. So, skipping the polyfill for those.
+
 define(
     [
         "shortcut",
