@@ -71,7 +71,7 @@ define([], function() {
   // Add deprecation warning
   Object.defineProperty(window, "respecEvents", {
     get: function() {
-      var warning = "window.respecEvents() is deprecated. Use 'require(\"core\\pubsubhub\", aFunction)' instead.";
+      var warning = "window.respecEvents() is deprecated. Use 'require([\"core/pubsubhub\"], function(){...})' instead.";
       PubSubHub.pub("warn", warning);
       return PubSubHub;
     }
