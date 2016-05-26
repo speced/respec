@@ -1,9 +1,9 @@
 "use strict";
-/* ReSpec 3.2.126
+/* ReSpec 3.2.127
 Created by Robin Berjon, http://berjon.com/ (@robinberjon)
 Documentation: http://w3.org/respec/.
 See original source for licenses: https://github.com/w3c/respec */
-window.respecVersion = "3.2.126";
+window.respecVersion = "3.2.127";
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.2.0 Copyright jQuery Foundation and other contributors.
  * Released under MIT license, http://github.com/requirejs/requirejs/LICENSE
@@ -19517,7 +19517,7 @@ define('core/markdown',[
           .replace(/<p>\s*<\/p>/gm, "")
           // beautifer has a bad time with "\n&quot;<element"
           // https://github.com/beautify-web/js-beautify/issues/943
-          .replace(/\n&quot;</mg, " &quot;<");
+          .replace(/\n\s*&quot;</mg, " &quot;<");
         var beautifulHTML = beautify.html_beautify(cleanHTML, beautifyOps);
         newBody.innerHTML = beautifulHTML;
         // Remove links where class pre.nolinks
