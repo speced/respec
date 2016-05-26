@@ -213,7 +213,7 @@ async.task(function * () {
       case "up-to-date":
         break;
       case "needs to push":
-        var err = `There are unpushed commits on ${MAIN_BRANCH}! Don't do work on ${MAIN_BRANCH}.`;
+        var err = `Found unpushed commits on "${MAIN_BRANCH}" branch! Can't proceed.`;
         throw new Error(err);
       default:
         throw new Error(`Your branch is not up-to-date. It ${branchState}.`);
@@ -243,7 +243,7 @@ async.task(function * () {
       yield Promps.askSwitchToBranch(MAIN_BRANCH, initialBranch);
     }
   } catch (err) {
-    console.error(colors.red(err.stack));
+    console.error(colors.red(`\n ☠️ ${err.message}`));
     const currentBranch = getCurrentBranch();
     if(initialBranch !== currentBranch){
       yield git(`checkout ${initialBranch}`);
@@ -253,5 +253,5 @@ async.task(function * () {
 }).then(
   () => process.exit(0)
 ).catch(
-  err => console.error(err)
+  err => console.error(err.stack)
 );
