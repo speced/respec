@@ -26,6 +26,8 @@ function replaceMapFilename(respecJs, outPath){
     const currentMapFilename = respecJs.match(findSourceMapName)[1];
     source = respecJs.replace(currentMapFilename, newMapFilename);
   } else {
+    const warn = " ⚠️ The source map is missing. Something has probably gone wrong.";
+    console.warn(warn);
     source = respecJs;
   }
   const mapPath = pth.resolve(outPath, `../${newMapFilename}`);
@@ -105,6 +107,7 @@ var Builder = {
           "webidl2": "../node_modules/webidl2/lib/webidl2",
         },
         name: "profile-w3c-common",
+        logLevel: 2, // Show uglify warnings and errors.
         deps: [
           "core/jquery-enhanced",
           "jquery",
