@@ -132,7 +132,7 @@ define(
                                     })
                                     .appendTo($div)
                                     ;
-                doc.firstElementChild.addEventListener("click", function(){
+                doc.documentElement.addEventListener("click", function(){
                     if(window.getComputedStyle($menu[0]).display === "block"){
                         $menu.fadeOut(200);
                     }
