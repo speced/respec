@@ -16,6 +16,22 @@ define(
             $("#toc-nav", rootEl).remove() ;
             $("body", rootEl).removeClass('toc-sidebar');
             utils.removeReSpec(rootEl);
+
+            // Move meta viewport, as it controls the rendering on mobile
+            var head = rootEl.querySelector("head");
+            var metaViewport = rootEl.querySelector("meta[name='viewport']");
+            if(metaViewport){
+                head.insertBefore(metaViewport, head.firstChild);
+            }
+
+            // Move charset to top, because it needs to be in the first 512 bytes
+            var metaCharset = rootEl.querySelector("meta[charset=utf-8], meta[content*='charset=utf-8']");
+            if(!metaCharset){
+                pubsubhub.pub("warn", "Document lacks a 'meta charset' declaration. Exporting as utf-8.");
+                metaCharset = doc.createElement("meta");
+                metaCharset.setAttribute("charset", "utf-8");
+            }
+            head.insertBefore(metaCharset, head.firstChild);
         };
 
         // Clean up markup to overcome bugs in beautifier
