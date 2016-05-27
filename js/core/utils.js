@@ -34,13 +34,35 @@ define(
                 return function(doc, insertionPoint) {
                     node.remove();
                     doc.adoptNode(node);
-                    if (insertionPoint.firstElementChild) {
-                        insertionPoint.insertBefore(node, insertionPoint.firstElementChild);
+                    var firstElementChild = this.findFirstElementChild(insertionPoint);
+                    if (firstElementChild) {
+                        insertionPoint.insertBefore(node, firstElementChild);
                         return;
                     }
                     insertionPoint.appendChild(node);
-                };
+                }.bind(this);
             }
+        /**
+         * Finds the first Element child, given a node. Provides support for
+         * Microsoft Edge's missing support of .firstElementChild.
+         *
+         * @param  {Node} node The node to be traversed.
+         * @return {Element}   The first Element in the child list.
+         */
+        ,   findFirstElementChild: function(node){
+            if(!node.hasChildNodes()){
+                return null;
+            }
+            // We have native support
+            if(node.firstElementChild){
+                return node.firstElementChild;
+            }
+            return Array
+                .from(node.childNodes)
+                .find(function(node){
+                    return node.nodeType === Node.ELEMENT_NODE;
+                });
+        }
         ,   calculateLeftPad: function(text) {
                 if (typeof text !== "string") {
                     throw new TypeError("Invalid input");
