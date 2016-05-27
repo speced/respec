@@ -227,6 +227,7 @@ async.task(function * () {
     yield git(`commit -am v${version}`);
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
     yield git(`checkout gh-pages`);
+    yield git(`pull gh-pages`);
     yield git(`merge develop`);
     yield git(`checkout develop`);
     // 6. Tag the release (git tag v3.x.y)
