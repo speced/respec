@@ -75,7 +75,6 @@ define([
     "core/id-headers",
     "core/rdfa",
     "w3c/aria",
-    "core/shiv",
     "core/remove-respec",
     "core/location-hash",
     "ui/about-respec",
