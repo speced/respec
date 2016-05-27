@@ -98,6 +98,20 @@ describe("Core - Utils", function() {
     });
   });
 
+  describe("findFirstElementChild() method", function(){
+    it("doesn't find elements when there are none to find", function(done){
+      var textNode = document.createTextNode("text");
+      expect(utils.findFirstElementChild(textNode)).toBe(null);
+      done();
+    });
+    it("finds the first Element child amongst a list of nodes", function(done){
+      var div = document.createElement("div");
+      div.innerHTML = "text <span>pass</span> text <span>fail</span> text";
+      expect(utils.findFirstElementChild(div)).toBeTruthy();
+      expect(utils.findFirstElementChild(div).textContent).toEqual("pass");
+      done();
+    });
+  });
 
   describe("toESIterable() method", function() {
 
