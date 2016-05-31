@@ -1,8 +1,6 @@
-/*global respecEvents */
-
 // Module core/ui
 // Handles the ReSpec UI
-
+/*jshint laxcomma:true*/
 // XXX TODO
 //  - look at other UI things to add
 //      - list issues
@@ -10,11 +8,15 @@
 //      - save to GitHub
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
-
+"use strict";
 define(
-    ["jquery", "shortcut"],
-    function ($, shortcut) {
-        var $menu = $("<div></div>")
+    [
+        "shortcut",
+        "core/pubsubhub",
+        "core/jquery-enhanced",
+    ],
+    function (shortcut, pubsubhub) {
+        var $menu = $("<div id=respec-menu></div>")
                         .css({
                             background:     "#fff"
                         ,   border:         "1px solid #000"
@@ -31,6 +33,7 @@ define(
         ,   warnings = []
         ,   buttons = {}
         ,   $respecButton
+        ,   $respecUI
         ,   errWarn = function (msg, arr, butName, bg, title) {
                 arr.push(msg);
                 if (!buttons[butName]) {
@@ -96,12 +99,17 @@ define(
                 buttons[butName].text(arr.length);
             }
         ;
-        var conf, doc, msg;
+        var conf, doc;
         var ui = {
-            run:    function (_conf, _doc, cb, _msg) {
-                conf = _conf, doc = _doc, msg = _msg;
-                msg.pub("start", "core/ui");
-                var $div = $("<div id='respec-ui' class='removeOnSave'></div>", doc)
+            show:   function(){
+                $respecUI[0].classList.remove("respec-hidden");
+            },
+            hide:   function(){
+                $respecUI[0].classList.add("respec-hidden");
+            },
+            run:    function (_conf, _doc, cb) {
+                conf = _conf, doc = _doc;
+                var $div = $respecUI = $("<div id='respec-ui' class='removeOnSave'></div>", doc)
                                 .css({
                                     position:   "fixed"
                                 ,   top:        "20px"
@@ -111,18 +119,24 @@ define(
                                 })
                                 .appendTo($("body", doc))
                                 ;
-                $respecButton = $("<button>ReSpec</button>")
+                $respecButton = $("<button id='respec-pill'>ReSpec</button>")
                                     .css({
                                         background:     "#fff"
                                     ,   fontWeight:     "bold"
                                     ,   border:         "1px solid #ccc"
                                     ,   borderRadius:   "5px"
                                     })
-                                    .click(function () {
+                                    .click(function (e) {
+                                        e.stopPropagation();
                                         $menu.toggle();
                                     })
                                     .appendTo($div)
                                     ;
+                doc.documentElement.addEventListener("click", function(){
+                    if(window.getComputedStyle($menu[0]).display === "block"){
+                        $menu.fadeOut(200);
+                    }
+                });
                 $menu.appendTo($div);
                 shortcut.add("Esc", function () {
                     ui.closeModal();
@@ -133,17 +147,19 @@ define(
                 shortcut.add("Ctrl+Alt+Shift+W", function () {
                     if (buttons.warning) buttons.warning.click();
                 });
-                msg.pub("end", "core/ui");
+                this.hide();
                 cb();
             }
         ,   addCommand: function (label, module, keyShort) {
                 var handler = function () {
                     $menu.hide();
                     require([module], function (mod) {
-                        mod.show(ui, conf, doc, msg);
+                        mod.show(ui, conf, doc);
                     });
                 };
+		var id = "respec-modal-" + label.toLowerCase().replace(/\s+/, "-");
                 $("<button></button>")
+		    .attr({id: id})
                     .css({
                         background:     "#fff"
                     ,   border:         "none"
@@ -217,10 +233,11 @@ define(
                     ;
             }
         };
-        if (window.respecEvents) respecEvents.sub("error", function (details) {
+        window.respecUI = ui;
+        pubsubhub.sub("error", function (details) {
             ui.error(details);
         });
-        if (window.respecEvents) respecEvents.sub("warn", function (details) {
+        pubsubhub.sub("warn", function (details) {
             ui.warning(details);
         });
         return ui;

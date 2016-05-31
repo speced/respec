@@ -3,11 +3,13 @@
 // Resets window.location.hash to jump to the right point in the document
 
 define(
-    [],
-    function () {
+    ["core/pubsubhub"],
+    function (pubsubhub) {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/location-hash");
+            run:    function (conf, doc, cb) {
+                // Added message for legacy compat with Aria specs
+                // See https://github.com/w3c/respec/issues/793
+                pubsubhub.pub("start", "core/location-hash");
                 var hash = window.location.hash;
 
                 // Number of pixels that the document has already been
@@ -22,7 +24,6 @@ define(
                     window.location.hash = "";
                     window.location.hash = hash;
                 }
-                msg.pub("end", "core/location-hash");
                 cb();
             }
         };

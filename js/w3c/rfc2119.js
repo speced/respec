@@ -5,8 +5,7 @@ define(
     ["core/utils"],
     function (utils) {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "w3c/rfc2119");
+            run:    function (conf, doc, cb) {
                 var $confo = $("#respecRFC2119");
                 if ($confo.length) {
                     // do we have a list of used RFC2119 items in
@@ -35,7 +34,6 @@ define(
                         $confo.remove() ;
                     }
                 }
-                msg.pub("end", "w3c/rfc2119");
                 cb();
             }
         };

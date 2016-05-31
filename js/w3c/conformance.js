@@ -3,14 +3,15 @@
 // Handle the conformance section properly.
 
 define(
-    ["tmpl!w3c/templates/conformance.html"],
-    function (confoTmpl) {
+    ["tmpl!w3c/templates/conformance.html", "core/pubsubhub"],
+    function (confoTmpl, pubsubhub) {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "w3c/conformance");
+            run:    function (conf, doc, cb) {
                 var $confo = $("#conformance");
                 if ($confo.length) $confo.prepend(confoTmpl(conf));
-                msg.pub("end", "w3c/conformance");
+                // Added message for legacy compat with Aria specs
+                // See https://github.com/w3c/respec/issues/793
+                pubsubhub.pub("end", "w3c/conformance");
                 cb();
             }
         };

@@ -1,115 +1,243 @@
-/*global respecEvents */
-
+/*jshint laxcomma: true*/
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
-
+"use strict";
 define(
-    ["jquery"],
-    function ($) {
-        // --- JQUERY EXTRAS -----------------------------------------------------------------------
-        // Applies to any jQuery object containing elements, changes their name to the one give, and
-        // return a jQuery object containing the new elements
-        $.fn.renameElement = function (name) {
-            var arr = [];
-            this.each(function () {
-                var $newEl = $(this.ownerDocument.createElement(name));
-                // I forget why this didn't work, maybe try again
-                // $newEl.attr($(this).attr());
-                for (var i = 0, n = this.attributes.length; i < n; i++) {
-                    var at = this.attributes[i];
-                    $newEl[0].setAttributeNS(at.namespaceURI, at.name, at.value);
-                }
-                $(this).contents().appendTo($newEl);
-                $(this).replaceWith($newEl);
-                arr.push($newEl[0]);
-            });
-            return $(arr);
-        };
-
-        // For any element, returns a title string that applies the algorithm used for determining the
-        // actual title of a <dfn> element (but can apply to other as well).
-        $.fn.dfnTitle = function () {
-            var title;
-            if (this.attr("title")) title = this.attr("title");
-            else if (this.contents().length == 1 && this.children("abbr, acronym").length == 1 &&
-                     this.find(":first-child").attr("title")) title = this.find(":first-child").attr("title");
-            else title = this.text();
-            return title.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
-        };
-
-        // For any element (usually <a>), returns an array of targets that
-        // element might refer to, of the form
-        // {for_: 'interfacename', title: 'membername'}.
-        //
-        // For an element like:
-        //  <p link-for="Int1"><a for="Int2">Int3.member</a></p>
-        // we'll return:
-        //  * {for_: "int2", title: "int3.member"}
-        //  * {for_: "int3", title: "member"}
-        //  * {for_: "", title: "int3.member"}
-        $.fn.linkTargets = function () {
-            var elem = this;
-            var link_for = (elem.attr("for") || elem.closest("[link-for]").attr("link-for") || "").toLowerCase();
-            var title = elem.dfnTitle();
-            var result = [{for_: link_for, title: title}];
-            var split = title.split('.');
-            if (split.length === 2) {
-                // If there are multiple '.'s, this won't match an
-                // Interface/member pair anyway.
-                result.push({for_: split[0], title: split[1]});
-            }
-            result.push({for_:"", title: title});
-            return result;
-        };
-
-
-        // Applied to an element, sets an ID for it (and returns it), using a specific prefix
-        // if provided, and a specific text if given.
-        $.fn.makeID = function (pfx, txt, noLC) {
-            if (this.attr("id")) return this.attr("id");
-            if (!txt) txt = this.attr("title") ? this.attr("title") : this.text();
-            txt = txt.replace(/^\s+/, "").replace(/\s+$/, "");
-            var id = noLC ? txt : txt.toLowerCase();
-            id = id.split(/[^\-.0-9a-z_]+/i).join("-").replace(/^-+/, "").replace(/-+$/, "");
-            if (/\.$/.test(id)) id += "x"; // trailing . doesn't play well with jQuery
-            if (id.length > 0 && /^[^a-z]/i.test(id)) id = "x" + id;
-            if (id.length === 0) id = "generatedID";
-            if (pfx) id = pfx + "-" + id;
-            var inc = 1
-            ,   doc = this[0].ownerDocument;
-            if ($("#" + id, doc).length) {
-                while ($("#" + id + "-" + inc, doc).length) inc++;
-                id += "-" + inc;
-            }
-            this.attr("id", id);
-            return id;
-        };
-
-        // Returns all the descendant text nodes of an element. Note that those nodes aren't
-        // returned as a jQuery array since I'm not sure if that would make too much sense.
-        $.fn.allTextNodes = function (exclusions) {
-            var textNodes = [],
-                excl = {};
-            for (var i = 0, n = exclusions.length; i < n; i++) excl[exclusions[i]] = true;
-            function getTextNodes (node) {
-                if (node.nodeType === 1 && excl[node.localName.toLowerCase()]) return;
-                if (node.nodeType === 3) textNodes.push(node);
-                else {
-                    for (var i = 0, len = node.childNodes.length; i < len; ++i) getTextNodes(node.childNodes[i]);
-                }
-            }
-            getTextNodes(this[0]);
-            return textNodes;
-        };
-        
-        
+    ["core/pubsubhub"],
+    function (pubsubhub) {
         var utils = {
             // --- SET UP
             run:    function (conf, doc, cb, msg) {
                 msg.pub("start", "core/utils");
                 msg.pub("end", "core/utils");
                 cb();
+            }
+        /**
+         * Allows a node to be swapped into a different document at
+         * some insertion point(Element). This function is useful for
+         * opportunistic insertion of DOM nodes into a document, without
+         * first knowing if that is the final document where the node will
+         * reside.
+         *
+         * @param  {Node} node The node to be swapped.
+         * @return {Function} A function that takes a document and a new
+         *                    insertion point (element). When called,
+         *                    node gets inserted into doc at before a given
+         *                    insertion point (node) - or just appended, if
+         *                    the element has no children.
+         */
+        ,   makeOwnerSwapper: function(node) {
+                if(!(node instanceof Node)){
+                    throw TypeError();
+                }
+                return function(doc, insertionPoint) {
+                    node.remove();
+                    doc.adoptNode(node);
+                    var firstElementChild = this.findFirstElementChild(insertionPoint);
+                    if (firstElementChild) {
+                        insertionPoint.insertBefore(node, firstElementChild);
+                        return;
+                    }
+                    insertionPoint.appendChild(node);
+                }.bind(this);
+            }
+        /**
+         * Finds the first Element child, given a node. Provides support for
+         * Microsoft Edge's missing support of .firstElementChild.
+         *
+         * @param  {Node} node The node to be traversed.
+         * @return {Element}   The first Element in the child list.
+         */
+        ,   findFirstElementChild: function(node){
+            if(!node.hasChildNodes()){
+                return null;
+            }
+            // We have native support
+            if(node.firstElementChild){
+                return node.firstElementChild;
+            }
+            return Array
+                .from(node.childNodes)
+                .find(function(node){
+                    return node.nodeType === Node.ELEMENT_NODE;
+                });
+        }
+        ,   calculateLeftPad: function(text) {
+                if (typeof text !== "string") {
+                    throw new TypeError("Invalid input");
+                }
+                var spaceOrTab = /^[\ |\t]*/;
+                // Find smallest padding value
+                var leftPad = text
+                    .split("\n")
+                    .filter(function(item) {
+                        return item;
+                    })
+                    .reduce(function(smallest, item) {
+                        // can't go smaller than 0
+                        if (smallest === 0) {
+                            return smallest;
+                        }
+                        var match = item.match(spaceOrTab)[0] || "";
+                        return Math.min(match.length, smallest);
+                    }, +Infinity);
+                return (leftPad === +Infinity) ? 0 : leftPad;
+        }
+
+        /**
+         * Makes a ES conforming iterator allowing objects to be used with
+         * methods that can interface with Iterators (Array.from(), etc.).
+         *
+         * @param  {Function} nextLikeFunction A function that returns a next value;
+         * @return {Object} An object that implements the Iterator prop.
+         */
+        ,   toESIterable: function(nextLikeFunction) {
+                if (!(nextLikeFunction instanceof Function)) {
+                    throw TypeError("Expected a function");
+                }
+                var next = function() {
+                  return {
+                    value: nextLikeFunction(),
+                    get done() {
+                      return this.value === null;
+                    }
+                  };
+                };
+                // We structure the iterator like this, or else
+                // RequireJS gets upset.
+                var iterator = {};
+                iterator[Symbol.iterator] = function() {
+                  return {
+                    next: next
+                  };
+                };
+                return iterator;
+        }
+        ,   normalizePadding: function (text) {
+                if (!text) {
+                    return "";
+                }
+
+                if (typeof text !== "string") {
+                    throw TypeError("Invalid input");
+                }
+
+                if(text === "\n"){
+                    return "\n";
+                }
+
+                function isEmpty(node) {
+                    return node.textContent === "";
+                }
+
+                function isWhiteSpace(node) {
+                    return !/\S/gm.test(node.textContent);
+                }
+
+                function filterLastChildIsPadding(node) {
+                    if (node.parentElement.lastChild === node && (isWhiteSpace(node) || isEmpty(node))) {
+                        return NodeFilter.FILTER_ACCEPT;
+                    }
+                    return NodeFilter.FILTER_REJECT;
+                }
+
+                function isTextNode(node) {
+                    return node.nodeType === Node.TEXT_NODE;
+                }
+
+                function parentIs(type) {
+                    return function checkParent(node) {
+                        if (!node) {
+                            return false;
+                        }
+                        var match = node.parentNode && node.parentNode.localName === type;
+                        return (!match) ? checkParent(node.parentNode) : true;
+                    };
+                }
+                var filterParentIsPre = parentIs("pre");
+                // Force into body
+                var parserInput = "<body>" + text;
+                var doc = new DOMParser().parseFromString(parserInput, "text/html");
+
+                var firstPaddedLine = Array
+                    .from(doc.body.childNodes)
+                    .filter(isTextNode)
+                    .map(function(textNode) {
+                        return textNode.textContent;
+                    })
+                    .find(function(textContent) {
+                        var result = /^[\#|\s|\w]+/gm.test(textContent);  
+                        return result;
+                    });
+                // There is no padding, so just return what we started with.
+                if (!firstPaddedLine) {
+                    return text;
+                }
+
+                var baseColumn = this.calculateLeftPad(firstPaddedLine);
+
+                // Only if we have a baseColumn to work with ... 
+                // With only the text nodes that are not children of pre elements,
+                // we left align all those text nodes.
+                if(baseColumn){
+                    Array
+                        .from(doc.body.childNodes)
+                        .filter(isTextNode)
+                        .filter(function(textNode) {
+                            // 🎵 Hey, processor! Leave those pre's alone! 🎵
+                            return !filterParentIsPre(textNode);
+                        })
+                        .filter(function(textNode) {
+                            // we don't care about last nodes that are just white space
+                            var isLastChild = textNode.parentElement.lastChild === textNode;
+                            var isJustWS = isWhiteSpace(textNode);
+                            return !(isLastChild && isJustWS);
+                        })
+                        .map(function toTrimmedTextNode(textNode) {
+                            var rawText = textNode.textContent;
+                            // We remove tailing space on the right, which is just there
+                            // to pad out tags like:
+                            // <div>
+                            //   <div>
+                            //    Next line has 2 spaces hidden!
+                            // __</div>
+                            // </div>
+                            //
+                            var trimmedRight = rawText.trimRight();
+                            var trimBy = this.calculateLeftPad(trimmedRight) || baseColumn;
+                            if (!trimBy) {
+                                return null; //nothing to do
+                            }
+                            var exp = "^ {" + trimBy + "}";
+                            var startTrim = new RegExp(exp, "gm");
+                            var trimmedText = (trimBy) ? rawText.replace(startTrim, "") : rawText;
+                            var newNode = textNode.ownerDocument.createTextNode(trimmedText);
+                            // We can then swap the old with the new
+                            return {
+                                oldNode: textNode,
+                                newNode: newNode,
+                            };
+                        }.bind(this))
+                        .filter(function(nodes) {
+                            return nodes;
+                        })
+                        .forEach(function(nodes) {
+                            var oldNode = nodes.oldNode;
+                            var newNode = nodes.newNode;
+                            oldNode.parentElement.replaceChild(newNode, oldNode);
+                        });
+                }
+                var nodeIterator = doc.createNodeIterator(doc.body, NodeFilter.SHOW_TEXT, filterLastChildIsPadding);
+                var iterable = this.toESIterable(nodeIterator.nextNode.bind(nodeIterator));
+                // Remove trailing whitespace nodes
+                Array
+                    .from(iterable)
+                    .forEach(function(node) {
+                        node.remove();
+                    });
+                var result = doc.body.innerHTML;
+                return result;
             }
 
             // --- RESPEC STUFF -------------------------------------------------------------------------------
@@ -136,7 +264,6 @@ define(
                 }
                 return ret;
             }
-
             // Takes a string, applies some XML escapes, and returns the escaped string.
             // Note that overall using either Handlebars' escaped output or jQuery is much
             // preferred to operating on strings directly.
@@ -152,7 +279,7 @@ define(
                 return str.replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
             }
 
-            
+
             // --- DATE HELPERS -------------------------------------------------------------------------------
             // Takes a Date object and an optional separator and returns the year,month,day representation with
             // the custom separator (defaulting to none) and proper 0-padding
@@ -166,7 +293,7 @@ define(
                 str = "" + str;
                 return (str.length == 1) ? "0" + str : str;
             }
-            
+
             // takes a YYYY-MM-DD date and returns a Date object for it
         ,   parseSimpleDate:    function (str) {
                 return new Date(str.substr(0, 4), (str.substr(5, 2) - 1), str.substr(8, 2));
@@ -182,7 +309,7 @@ define(
             // list of human names for months (in English)
         ,   humanMonths: ["January", "February", "March", "April", "May", "June", "July",
                           "August", "September", "October", "November", "December"]
-        
+
             // given either a Date object or a date in YYYY-MM-DD format, return a human-formatted
             // date suitable for use in a W3C specification
         ,   humanDate:  function (date) {
@@ -196,16 +323,42 @@ define(
                 // return "" + date.getUTCFullYear() +'-'+ this.lead0(date.getUTCMonth() + 1)+'-' + this.lead0(date.getUTCDate()) +'T'+this.lead0(date.getUTCHours())+':'+this.lead0(date.getUTCMinutes()) +":"+this.lead0(date.getUTCSeconds())+'+0000';
                 return date.toISOString() ;
             }
-            
-            
+
+            // Given an object, it converts it to a key value pair separated by
+            // ("=", configurable) and a delimiter (" ," configurable).
+            // for example, {"foo": "bar", "baz": 1} becomes "foo=bar, baz=1"
+        ,   toKeyValuePairs: function(obj, delimiter, separator) {
+                if(!separator){
+                    separator = "=";
+                }
+                if(!delimiter){
+                    delimiter = ", ";
+                }
+                return Object.getOwnPropertyNames(obj)
+                    .map(function(key){
+                        return key + separator + JSON.stringify(obj[key]);
+                    })
+                    .join(delimiter);
+            }
+
             // --- STYLE HELPERS ------------------------------------------------------------------------------
             // take a document and either a link or an array of links to CSS and appends a <link/> element
             // to the head pointing to each
         ,   linkCSS:  function (doc, styles) {
-                if (!$.isArray(styles)) styles = [styles];
-                $.each(styles, function (i, css) {
-                    $('head', doc).append($("<link/>").attr({ rel: 'stylesheet', href: css }));
-                });
+                if (!Array.isArray(styles)) {
+                    styles = [styles];
+                }
+                styles
+                    .map(function (url) {
+                      var link = doc.createElement("link");
+                      link.rel = "stylesheet";
+                      link.href = url;
+                      return link;
+                    })
+                    .reduce(function(elem, nextLink) {
+                      elem.appendChild(nextLink);
+                      return elem;
+                    }, doc.head);
             }
 
             // --- TRANSFORMATIONS ------------------------------------------------------------------------------
@@ -228,7 +381,7 @@ define(
                                 content = window[meth].apply(this, args);
                             }
                             catch (e) {
-                                respecEvents.pub("warn", "call to " + meth + "() failed with " + e) ;
+                                pubsubhub.pub("warn", "call to " + meth + "() failed with " + e) ;
                             }
                         }
                     }

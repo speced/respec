@@ -5,14 +5,13 @@ define(
     [],
     function () {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/dfn");
+            run:    function (conf, doc, cb) {
                 doc.normalize();
                 $("[dfn-for]").each(function() {
                     this.setAttribute("data-dfn-for", this.getAttribute("dfn-for").toLowerCase());
                     this.removeAttribute("dfn-for");
                 });
-                if (!conf.definitionMap) conf.definitionMap = {};
+                if (!conf.definitionMap) conf.definitionMap = Object.create(null);
                 $("dfn").each(function () {
                     var dfn = $(this);
                     if (dfn.attr("for")) {
@@ -21,13 +20,14 @@ define(
                     } else {
                         dfn.attr("data-dfn-for", (dfn.closest("[data-dfn-for]").attr("data-dfn-for") || "").toLowerCase());
                     }
-                    var title = dfn.dfnTitle();
-                    if (!conf.definitionMap[title]) {
-                        conf.definitionMap[title] = [];
-                    }
-                    conf.definitionMap[title].push(dfn);
+                    var titles = dfn.getDfnTitles( { isDefinition: true } );
+                    titles.forEach( function( item ) {
+                        if (!conf.definitionMap[item]) {
+                            conf.definitionMap[item] = [];
+                        }
+                        conf.definitionMap[item].push($(dfn[0]));
+                        });
                 });
-                msg.pub("end", "core/dfn");
                 cb();
             }
         };

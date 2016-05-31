@@ -6,8 +6,7 @@ define(
     ["core/utils"], // load this to be sure that the jQuery extensions are loaded
     function (utils) {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "w3c/aria");
+            run:    function (conf, doc, cb) {
                 // ensure head section is labelled
                 $('body', doc).attr('role', 'document') ;
                 $('body', doc).attr('id', 'respecDocument') ;
@@ -15,12 +14,8 @@ define(
                 $('div.head', doc).attr('id', 'respecHeader') ;
                 if (!conf.noTOC) {
                     // ensure toc is labelled
-                    var toc = $('section#toc', doc)
-                                  .find("ul:first");
+                    var toc = $('nav#toc', doc).find("ul:first") ;
                     toc.attr('role', 'directory') ;
-                    if (!toc.attr("id")) {
-                        toc.attr('id', 'respecContents') ;
-                    }
                 }
                 // mark issues and notes with heading
                 var noteCount = 0 ; var issueCount = 0 ; var ednoteCount = 0;
@@ -43,7 +38,6 @@ define(
                         $item.makeID('h', "note" + noteCount) ;
                     }
                 });
-                msg.pub("end", "w3c/aria");
                 cb();
             }
         };

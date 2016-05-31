@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Testing Respec References</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <script src='/node_modules/requirejs/require.js' data-main='/js/profile-w3c-common' async class='remove'></script>
+
+    <script type="text/javascript" class="remove">
+     var respecConfig = {
+       // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
+       specStatus: "Member-SUBM",
+       specVersion: "v42.0",
+       shortName:  "my-test-spec",
+       publishDate: "2015-11-06",
+
+      // if the specification's copyright date is a range of years, specify
+      // the start date here:
+      copyrightStart: "2015",
+
+       // editors, add as many as you like
+       // only "name" is required
+       editors:  [
+         { name: "This Guy" }
+       , { name: "That Guy" }
+       , { name: "The Other Guy" }
+       ],
+       // authors, add as many as you like.
+       // This is optional, uncomment if you have authors as well as editors.
+       // only "name" is required. Same format as editors.
+
+     authors:  [
+      { name: "Author Guy" }
+     ]
+     };
+    </script>
+    <script type='text/javascript' class='remove'>
+    (function () {
+
+    respecConfig.localBiblio = {
+        "TestRef": {
+            title: "If this reference starts with a title followed by an author and a publisher, Respec works",
+            href: "http://www.w3.org/2001/06/manual/#ref-section",
+            authors: ["William Shakespeare"],
+            publisher: "Publishers Inc."
+        },
+        "TestRef2": {
+            title: "Second test",
+            href: "http://test.com",
+            authors: ["Another author"],
+            publisher: "Testing 123"
+        },
+        "TestRef3": {
+          title: "Third test",
+          href: "http://test.com",
+          publisher: "Publisher Here"
+        },
+    };
+
+    })();
+
+    </script>
+
+</head>
+
+<body>
+
+<section id='abstract'>
+  This spec shows publishers in the References sections: [[!TestRef]], [[TestRef2]], [[!TestRef3]].
+</section>
+<section id='sotd'>
+  Foo.
+</section>
+</body>

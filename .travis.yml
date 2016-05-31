@@ -1,5 +1,23 @@
 language: node_js
+sudo: false
 node_js:
-  - 0.10
-before_script:  node tools/test-build.js
-# env: TRACE=1
+  - v6.2
+before_install:
+  - "export DISPLAY=:99.0"
+  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16 -extension RANDR"
+  - sh -e /etc/init.d/xvfb start
+
+before_script:
+  - export CHROME_URL=https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64
+  - export CHROME_REV=$(curl -s ${CHROME_URL}/LAST_CHANGE)
+  - curl ${CHROME_URL}/${CHROME_REV}/chrome-linux.zip --create-dirs -o out/chrome-linux.zip
+  - unzip out/chrome-linux.zip -d out
+  - export CHROME_CANARY_BIN=$PWD/out/chrome-linux/chrome
+
+addons:
+  firefox: "latest"
+
+script:
+  - npm run pretest
+  - npm run test:headless
+  - karma start --single-run --reporters mocha karma.conf.js

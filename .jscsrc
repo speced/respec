@@ -1,0 +1,8 @@
+{
+  "fileExtensions": [".js"],
+  "validateQuoteMarks": true,
+  "maximumLineLength": 120,
+  "excludeFiles": [
+    "node_modules/**"
+  ]
+}

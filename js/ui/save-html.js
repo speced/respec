@@ -3,18 +3,49 @@
 // Saves content to HTML when asked to
 
 define(
-    ["jquery", "core/utils"],
-    function ($, utils) {
+    [
+        "beautify-html",
+        "core/beautify-options",
+        "core/pubsubhub",
+        "core/utils",
+    ],
+    function (beautify, beautifyOpts, pubsubhub, utils) {
         var msg, doc, conf;
         var cleanup = function (rootEl) {
             $(".removeOnSave", rootEl).remove();
+            $("#toc-nav", rootEl).remove() ;
+            $("body", rootEl).removeClass('toc-sidebar');
             utils.removeReSpec(rootEl);
+
+            // Move meta viewport, as it controls the rendering on mobile
+            var head = rootEl.querySelector("head");
+            var metaViewport = rootEl.querySelector("meta[name='viewport']");
+            if(metaViewport){
+                head.insertBefore(metaViewport, head.firstChild);
+            }
+
+            // Move charset to top, because it needs to be in the first 512 bytes
+            var metaCharset = rootEl.querySelector("meta[charset=utf-8], meta[content*='charset=utf-8']");
+            if(!metaCharset){
+                pubsubhub.pub("warn", "Document lacks a 'meta charset' declaration. Exporting as utf-8.");
+                metaCharset = doc.createElement("meta");
+                metaCharset.setAttribute("charset", "utf-8");
+            }
+            head.insertBefore(metaCharset, head.firstChild);
         };
+
+        // Clean up markup to overcome bugs in beautifier
+        function preBeautify(str){
+            return str
+                .replace(/\n\s*\(</mg, " (<");
+        }
         return {
-            show:   function (ui, _conf, _doc, _msg) {
-                msg = _msg, doc = _doc, conf = _conf;
+            show:   function (ui, _conf, _doc) {
+                doc = _doc, conf = _conf;
                 if (!conf.diffTool) conf.diffTool = "http://www5.aptest.com/standards/htmldiff/htmldiff.pl";
-                var supportsDownload = $("<a href='foo' download='x'>A</a>")[0].download === "x"
+                var supportsDownload = Object
+                    .getOwnPropertyNames(HTMLAnchorElement.prototype)
+                    .indexOf("download") > -1
                 ,   self = this
                 ;
                 var $div = $("<div></div>")
@@ -31,15 +62,17 @@ define(
                     ,   textAlign:      "center"
                     ,   fontSize:       "inherit"
                     }
-                ,   addButton = function (title, content, fileName, popupContent) {
+                ,   addButton = function (options) {
                         if (supportsDownload) {
                             $("<a></a>")
                                 .appendTo($div)
-                                .text(title)
+                                .text(options.title)
                                 .css(buttonCSS)
                                 .attr({
-                                    href:   "data:text/html;charset=utf-8," + encodeURIComponent(content)
-                                ,   download:   fileName
+                    id: options.id
+                ,   href: options.url
+                                ,   download: options.fileName
+                                ,   type: options.type || ""
                                 })
                                 .click(function () {
                                     ui.closeModal();
@@ -49,10 +82,10 @@ define(
                         else {
                             $("<button></button>")
                                 .appendTo($div)
-                                .text(title)
+                                .text(options.title)
                                 .css(buttonCSS)
                                 .click(function () {
-                                    popupContent();
+                                    options.popupContent();
                                     ui.closeModal();
                                 })
                                 ;
@@ -60,9 +93,51 @@ define(
 
                     }
                 ;
-                addButton("Save as HTML", self.toString(), "Overview.html", function () { self.toHTMLSource(); });
-                addButton("Save as XHTML5", self.toXML(5), "Overview.xhtml", function () { self.toXHTMLSource(5); });
-                addButton("Save as XHTML 1.0", self.toXML(1), "Overview.xhtml", function () { self.toXHTMLSource(1); });
+
+                // HTML
+                addButton({
+            id: "respec-save-as-html",
+                    title: "Save as HTML",
+                    url: this.htmlToDataURL(this.toString()),
+                    popupContent: function () { self.toHTMLSource(); },
+                    fileName: "index.html",
+                });
+
+                // XHTML5
+                addButton({
+            id: "respec-save-as-xhtml5",
+                    fileName: "index.xhtml",
+                    popupContent: function () {
+                        self.toXHTMLSource(5);
+                    },
+                    title: "Save as XHTML5",
+                    url: this.htmlToDataURL(this.toXML(5)),
+                });
+
+                // XHTML 1.0
+                addButton({
+            id: "respec-save-as-xhtml",
+                    fileName: "index.xhtml",
+                    popupContent: function () {
+                        self.toXHTMLSource(1);
+                    },
+                    title: "Save as XHTML 1.0",
+                    url: this.htmlToDataURL(this.toXML(1)),
+                });
+
+                // ePub
+                addButton({
+            id: "respec-save-as-epub",
+                    fileName: "spec.epub",
+                    popupContent: function () {
+                        window.open(self.makeEPubHref(), "_blank");
+                    },
+                    title: "Save as EPUB 3",
+                    type: "application/epub+zip",
+                    url: this.makeEPubHref(),
+                });
+
+
                 if (conf.diffTool && (conf.previousDiffURI || conf.previousURI)) {
                     $("<button>Diff</button>")
                         .appendTo($div)
@@ -75,9 +150,22 @@ define(
                 }
                 ui.freshModal("Save Snapshot", $div);
             }
+        ,   htmlToDataURL: function(data){
+                data = encodeURIComponent(data);
+                return "data:text/html;charset=utf-8," + data;
+            }
+        // Create and download an EPUB 3 version of the content
+        // Using (by default) the EPUB 3 conversion service set up at labs.w3.org/epub-generator
+        // For more details on that service, see https://github.com/iherman/respec2epub
+        ,   makeEPubHref: function(){
+                var EPUB_GEN_HREF = "https://labs.w3.org/epub-generator/cgi-bin/epub-generator.py";
+                var finalURL = EPUB_GEN_HREF + "?type=respec&";
+                finalURL += "url=" + encodeURIComponent(doc.location.href);
+                return finalURL;
+            }
             // convert the document to a string (HTML)
         ,   toString:    function () {
-                respecEvents.pub("save", "toString")
+                pubsubhub.pub("save", "toString")
                 var str = "<!DOCTYPE html"
                 ,   dt = doc.doctype;
                 if (dt && dt.publicId) str += " PUBLIC '" + dt.publicId + "' '" + dt.systemId + "'";
@@ -93,11 +181,13 @@ define(
                 cleanup(rootEl);
                 str += rootEl.innerHTML;
                 str += "</html>";
-                return str;
+                var uglyHTML = preBeautify(str);
+                var beautifulHTML = beautify.html_beautify(uglyHTML, beautifyOpts);
+                return beautifulHTML;
             }
             // convert the document to XML, pass 5 as mode for XHTML5
         ,   toXML:        function (mode) {
-                respecEvents.pub("save", "toXML" + mode)
+                pubsubhub.pub("save", "toXML" + mode)
                 var rootEl = doc.documentElement.cloneNode(true);
                 cleanup(rootEl);
                 if (mode !== 5) {
@@ -173,19 +263,21 @@ define(
                     }
                     // we don't handle other types
                     else {
-                        msg.pub("warning", "Cannot handle serialising nodes of type: " + node.nodeType);
+                        pubsubhub.pub("warning", "Cannot handle serialising nodes of type: " + node.nodeType);
                     }
                     return out;
                 };
                 str += dumpNode(rootEl) + "</html>";
-                return str;
+                var uglyHTML = preBeautify(str);
+                var beautifulXML = beautify.html_beautify(uglyHTML, beautifyOpts);
+                return beautifulXML;
             }
             // create a diff marked version against the previousURI
             // strategy - open a window in which there is a form with the
             // data needed for diff marking - submit the form so that the response populates
             // page with the diff marked version
         ,   toDiffHTML:  function () {
-                respecEvents.pub("save", "toDiffHTML")
+                pubsubhub.pub("save", "toDiffHTML")
                 var base = window.location.href.replace(/\/[^\/]*$/, "/")
                 ,   str = "<!DOCTYPE html>\n<html>\n" +
                           "<head><title>Diff form</title></head>\n" +

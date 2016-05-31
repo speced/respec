@@ -1,12 +1,15 @@
-
 // Module core/biblio
 // Handles bibliographic references
 // Configuration:
 //  - localBiblio: override or supplement the official biblio with your own.
 
+/*jshint jquery: true*/
+/*globals console*/
+"use strict";
+
 define(
-    [],
-    function () {
+    ["core/pubsubhub"],
+    function (pubsubhub) {
         var getRefKeys = function (conf) {
             var informs = conf.informativeReferences
             ,   norms = conf.normativeReferences
@@ -44,6 +47,14 @@ define(
                 if (ref.etAl) output += " et al";
                 output += ". ";
             }
+            if(ref.publisher){
+                output += ref.publisher;
+                if(/\.$/.test(ref.publisher)){
+                    output += " ";
+                }else{
+                    output += ". ";
+                }
+            }
             if (ref.href) output += '<a href="' + ref.href + '"><cite>' + ref.title + "</cite></a>. ";
             else output += '<cite>' + ref.title + '</cite>. ';
             if (ref.date) output += ref.date + ". ";
@@ -51,7 +62,7 @@ define(
             if (ref.href) output += 'URL: <a href="' + ref.href + '">' + ref.href + "</a>";
             return output;
         };
-        var bibref = function (conf, msg) {
+        var bibref = function (conf) {
             // this is in fact the bibref processing portion
             var badrefs = {}
             ,   refs = getRefKeys(conf)
@@ -72,7 +83,7 @@ define(
                 var $sec = $("<section><h3></h3></section>")
                                 .appendTo($refsec)
                                 .find("h3")
-                                    .text(type + " references")
+                                .text(type + " references")
                                 .end()
                                 ;
                 $sec.makeID(null, type + " references");
@@ -94,7 +105,7 @@ define(
                     while (refcontent && refcontent.aliasOf) {
                         if (circular[refcontent.aliasOf]) {
                             refcontent = null;
-                            msg.pub("error", "Circular reference in biblio DB between [" + ref + "] and [" + key + "].");
+                            pubsubhub.pub("error", "Circular reference in biblio DB between [" + ref + "] and [" + key + "].");
                         }
                         else {
                             key = refcontent.aliasOf;
@@ -120,56 +131,71 @@ define(
             }
             for (var k in aliases) {
                 if (aliases[k].length > 1) {
-                    msg.pub("warn", "[" + k + "] is referenced in " + aliases[k].length + " ways (" + aliases[k].join(", ") + "). This causes duplicate entries in the reference section.");
+                    pubsubhub.pub("warn", "[" + k + "] is referenced in " + aliases[k].length + " ways (" + aliases[k].join(", ") + "). This causes duplicate entries in the reference section.");
                 }
             }
             for (var item in badrefs) {
-                if (badrefs.hasOwnProperty(item)) msg.pub("error", "Bad reference: [" + item + "] (appears " + badrefs[item] + " times)");
+                if (badrefs.hasOwnProperty(item)) pubsubhub.pub("error", "Bad reference: [" + item + "] (appears " + badrefs[item] + " times)");
             }
         };
 
         return {
             stringifyRef: stringifyRef,
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/biblio");
-                var refs = getRefKeys(conf)
-                ,   localAliases = []
-                ,   finish = function () {
-                        msg.pub("end", "core/biblio");
-                        cb();
-                    }
-                ;
-                if (conf.localBiblio) {
-                    for (var k in conf.localBiblio) {
-                        if (typeof conf.localBiblio[k].aliasOf !== "undefined") {
-                            localAliases.push(conf.localBiblio[k].aliasOf);
-                        }
-                    }
+            run: function (conf, doc, cb) {
+                if(!conf.localBiblio){
+                    conf.localBiblio = {};
                 }
-                refs = refs.normativeReferences
-                                .concat(refs.informativeReferences)
-                                .concat(localAliases);
-                if (refs.length) {
-                    var url = "https://labs.w3.org/specrefs/bibrefs?refs=" + refs.join(",");
-                    $.ajax({
-                        dataType:   "json"
-                    ,   url:        url
-                    ,   success:    function (data) {
-                            conf.biblio = data || {};
-                            // override biblio data
-                            if (conf.localBiblio) {
-                                for (var k in conf.localBiblio) conf.biblio[k] = conf.localBiblio[k];
-                            }
-                            bibref(conf, msg);
-                            finish();
-                        }
-                    ,   error:      function (xhr, status, error) {
-                            msg.pub("error", "Error loading references from '" + url + "': " + status + " (" + error + ")");
-                            finish();
-                        }
+                if(conf.biblio){
+                    var warn = "Overriding `.biblio` in config. Please use `.localBiblio` for custom biblio entries.";
+                    pubsubhub.pub("warn", warn);
+                }
+                conf.biblio = {};
+                var localAliases = Array
+                    .from(Object.keys(conf.localBiblio))
+                    .filter(function(key){
+                        return conf.localBiblio[key].hasOwnProperty("aliasOf");
+                    })
+                    .map(function(key){
+                        return conf.localBiblio[key].aliasOf;
                     });
+
+                var allRefs = getRefKeys(conf);
+                var externalRefs = allRefs.normativeReferences
+                    .concat(allRefs.informativeReferences)
+                    // Filter, as to not go to network for local refs
+                    .filter(function(key){
+                        return !conf.localBiblio.hasOwnProperty(key);
+                    })
+                    // but include local aliases, in case they refer to external specs
+                    .concat(localAliases)
+                    // remove duplicates
+                    .reduce(function(collector, item){
+                        if(collector.indexOf(item) === -1){
+                            collector.push(item);
+                        }
+                        return collector;
+                    }, [])
+                    .sort();
+                // If we don't need to go to network, just use internal biblio
+                if (!externalRefs.length) {
+                    Object.assign(conf.biblio, conf.localBiblio);
+                    bibref(conf);
+                    cb();
+                    return;
                 }
-                else finish();
+                var url = "https://labs.w3.org/specrefs/bibrefs?refs=" + externalRefs.join(",");
+                fetch(url)
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        Object.assign(conf.biblio, data, conf.localBiblio);
+                        bibref(conf);
+                    })
+                    .catch(function(err) {
+                        console.error(err);
+                    })
+                    .then(cb);
             }
         };
     }

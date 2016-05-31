@@ -8,7 +8,7 @@
           "<scr" + "ipt " +
           ((typeof window.callPhantom === 'function') ?
                 "src='/builds/respec-w3c-common.js'" :
-                "src='/js/require.js' data-main='/js/profile-w3c-common'") +
+                "src='/node_modules/requirejs/require.js' data-main='/js/profile-w3c-common'") +
           " class='remove'></scr"+"ipt>"
       );
     </script>
@@ -194,7 +194,7 @@
         };
       </pre>
       <p id="const-basic-doc">
-        <dfn for="ConstTest">rambaldi</dfn> is a constant and so are <dfn for="ConstTest">why</dfn> and <dfn for="ConstTest" title="inf">this other thing</dfn>.
+        <dfn for="ConstTest">rambaldi</dfn> is a constant and so are <dfn for="ConstTest">why</dfn> and <dfn for="ConstTest" data-lt="inf">this other thing</dfn>.
       </p>
     </section>
     <section>
@@ -218,6 +218,8 @@
           [Something] readonly attribute DOMString ext;
           // 3.5
           attribute Date[] dates;
+          // 3.10.31
+          attribute FrozenArray&lt;DOMString&gt; alist;
           // 4.0
           attribute Promise&lt;DOMString&gt; operation;<!--
           // 4.5
@@ -271,7 +273,7 @@
      -->};
       </pre>
       <p id="meth-basic-doc" dfn-for="MethBasic">
-        <dfn>ull</dfn> is a method.
+        <dfn>ull</dfn> is a method. Its <dfn data-lt="ull!overload-1">overloaded form</dfn> returns a <code>SuperStar/</code>
       </p>
     </section>
     <section>
@@ -386,7 +388,7 @@
       </pre>
       <p id="ex-fields-doc" dfn-for="ExFields"><dfn>ExFields</dfn> contains <dfn>value</dfn> and <dfn>floats</dfn></p>
     </section>
-    <section>
+    <section id="enumerations">
       <h2>Enumerations</h2>
       <p>
         Basic enumeration.
@@ -405,9 +407,9 @@
         };
       </pre>
       <p id="enum-basic-doc"><dfn>EnumBasic</dfn></p>
-      <!--
-        XXX extattr?
-       -->
+      <p dfn-for="EnumBasic"><dfn>one</dfn> is first.</p>
+      <p link-for="EnumBasic"><a>one</a> is referenced with a <code>[link-for]</code> attribute.</p>
+      <p id="enum-ref-without-link-for"><a>EnumBasic.one</a> may also be referenced with fully-qualified name.</p>
     </section>
     <section>
       <h2>Callbacks</h2>

@@ -12,7 +12,7 @@
    To publish this document, see instructions in README
    -->
 
-   <script src='../js/require.js' data-main='../js/profile-w3c-common' async class='remove'></script>
+   <script src='/node_modules/requirejs/require.js' data-main='/js/profile-w3c-common' async class='remove'></script>
   <script class="remove" src="getusermedia.js" type="text/javascript">
   <!-- keep this comment -->
   </script>
@@ -118,7 +118,7 @@
           the track is ended for any reason.</p>
 
           <p>On the <code><a>MediaStreamTrack</a></code> object,
-          sources are represented by a <code><a>sourceType</a></code>
+          sources are represented by a <code>sourceType</code>
           attribute. The behavior of APIs associated with the source's
           capabilities and state change depending on the source
           type.</p>
@@ -132,7 +132,7 @@
           the same answer).</p>
         </dd>
 
-        <dt><dfn title="state">State (Source State)</dfn></dt>
+        <dt><dfn data-lt="state">State (Source State)</dfn></dt>
         <dd>
           <p>State refers to the immediate, current value of the
           source's (optionally constrained) capabilities. State is
@@ -155,7 +155,7 @@
           defined in this spec.</p>
         </dd>
 
-        <dt><dfn title="capabilities"
+        <dt><dfn
         id="dfn-capabilities">Capabilities</dfn></dt>
         <dd>
           <p>Source capabilities are the intrinsic "features" of a
@@ -178,7 +178,7 @@
           session.</p>
         </dd>
 
-        <dt><dfn title="constraints"
+        <dt><dfn
         id="dfn-constraints">Constraints</dfn></dt>
 
         <dd>
@@ -541,7 +541,7 @@
 
               <li>
                 <p>If <var>track</var> has no source attached
-                (<code><a>sourceType</a></code> is "none") or if the source is
+                (<code>sourceType</code> is "none") or if the source is
                 provided by an <code>RTCPeerConnection</code>, then abort these
                 steps.</p>
               </li>
@@ -600,7 +600,7 @@
             track).  Once a track enters this state, it never exits it.</p>
 
             <p>For example, a video track in a
-            <code><a>MediaStream</a></code> ends if the user unplugs the
+            <code>MediaStream</code> ends if the user unplugs the
             USB web camera that acts as the track's media source.</p>
           </dd>
         </dl>
@@ -610,7 +610,7 @@
         <h2>Track Source Types</h2>
 
         <dl class="idl" title="enum SourceTypeEnum">
-	  
+
           <dt>none</dt>
 
 	  <dd>This track has no source. This is the case when the
@@ -620,21 +620,21 @@
           <dt>camera</dt>
 
 	  <dd>A valid source type only for
-	  <code><a>VideoStreamTrack</a></code>s. The source is a local
+	  <code>VideoStreamTrack</code>s. The source is a local
 	  video-producing camera source.</dd>
 
           <dt>microphone</dt>
 
 	  <dd>A valid source type only for
-	  <code><a>AudioStreamTrack</a></code>s. The source is a local
+	  <code>AudioStreamTrack</code>s. The source is a local
 	  audio-producing microphone source.</dd>
-	  
+
         </dl>
       </section>
 
       <section>
         <h2>Source Info</h2>
- 
+
         <dl class="idl" title=
         "callback SourceInfoCallback = void">
           <dt>sequence&lt;SourceInfo&gt; sourceInfoList</dt>
@@ -646,9 +646,9 @@
         </dl>
 
         <dl class="idl" title="dictionary SourceInfo">
-	  
+
           <dt>DOMString sourceId</dt>
-	  
+
           <dd>The unique id for this source as described in the
           <code><a>MediaSourceStates</a></code> dictionary.</dd>
 
@@ -686,7 +686,7 @@
 
       <section>
         <h2>Isolated Media Streams</h2>
-        
+
         <p>When either the "noaccess" or "peerIdentity" constraints is
           applied to a MediaStreamTrack, the track shall be isolated so that its
           content is not accessible to the content JS. An isolated media stream
@@ -719,9 +719,9 @@
         is connect to another PeerConenction in the same application, the
         application could get access to the data. We sugest this should be changed
         from "may be added" to "may not be added". This will allow noaccess=true
-        to be used for things like hair check dialogs. 
+        to be used for things like hair check dialogs.
         </p>
-        
+
         <p>
           When the peerIdentity=foo constraint applies to a track, then
           that track may be added only to PeerConnections with compatible
@@ -734,6 +734,6 @@
         </p>
       </section>
     </section>
-  
+
 </body>
 </html>

@@ -6,21 +6,16 @@
 // Spec editors get filtered out automatically.
 
 define(
-    ["github"],
-    function (github) {
+    ["github", "core/pubsubhub"],
+    function (github, pubsubhub) {
         return {
-            run: function (conf, doc, cb, msg) {
-                function theEnd () {
-                    msg.pub("end", "core/contrib");
-                    cb();
-                }
-                
+            run: function (conf, doc, cb) {
                 function prop(prop) {
                     return function (o) {
                         return o[prop];
                     };
                 }
-                
+
                 function slice(args) {
                     return Array.prototype.slice.call(args, 0)
                 }
@@ -35,7 +30,7 @@ define(
                         });
                     });
                     return Object.keys(users);
-                }  
+                }
 
                 function join(things) {
                     if (!things.length) {
@@ -70,21 +65,20 @@ define(
                     });
                 }
 
-                msg.pub("start", "core/contrib");
                 var $commenters = doc.querySelector("#gh-commenters");
                 var $contributors = doc.querySelector("#gh-contributors");
 
                 if (!$commenters && !$contributors) {
-                    theEnd();
+                    cb();
                     return;
                 }
 
                 if (!conf.githubAPI) {
                     var elements = [];
-                    if ($commenters) elements.push("#" + $commenters.id); 
+                    if ($commenters) elements.push("#" + $commenters.id);
                     if ($contributors) elements.push("#" + $contributors.id);
-                    msg.pub("error", "Requested list of contributors and/or commenters from GitHub (" + elements.join(" and ") + ") but config.githubAPI is not set.");
-                    theEnd();
+                    pubsubhub.pub("error", "Requested list of contributors and/or commenters from GitHub (" + elements.join(" and ") + ") but config.githubAPI is not set.");
+                    cb();
                     return;
                 }
 
@@ -102,9 +96,9 @@ define(
                         toHTML(commenters, editors, $commenters),
                         toHTML(contributors, editors, $contributors)
                     );
-                }).then(theEnd, function(error) {
-                    msg.pub("error", "Error loading contributors and/or commenters from GitHub. Error: " + error);
-                    theEnd();
+                }).then(cb, function(error) {
+                    pubsubhub.pub("error", "Error loading contributors and/or commenters from GitHub. Error: " + error);
+                    cb();
                 });
             }
         };

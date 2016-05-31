@@ -8,10 +8,9 @@ define(
     [],
     function () {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/rdfa");
+            run:    function (conf, doc, cb) {
                 if (conf.doRDFa) {
-                    $("section").each(function () {
+                    $("section,nav").each(function () {
                         var $sec = $(this)
                         ,   resource = ""
                         ,   $fc = $sec.children("h1,h2,h3,h4,h5,h6").first()
@@ -54,7 +53,6 @@ define(
                         }
                     });
                 }
-                msg.pub("end", "core/rdfa");
                 cb();
             }
         };

@@ -7,27 +7,26 @@
 // be used by a containing shell to extract all examples.
 
 define(
-    ["text!core/css/examples.css", "text!core/css/examples-webspecs.css"],
-    function (css, cssKraken) {
-        var makeTitle = function ($el, num, report) {
+    ["text!core/css/examples.css", "core/pubsubhub"],
+    function (css, pubsubhub) {
+        var makeTitle = function (conf, $el, num, report) {
             var txt = (num > 0) ? " " + num : ""
             ,   $tit = $("<div class='example-title'><span>Example" + txt + "</span></div>");
             report.title = $el.attr("title");
             if (report.title) {
-                $tit.append($el[0].ownerDocument.createTextNode(": " + report.title));
+                $tit.append($("<span style='text-transform: none'>: " + report.title + "</span>"));
                 $el.removeAttr("title");
             }
+            $tit.addClass("marker") ;
             return $tit;
         };
 
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/examples");
+            run:    function (conf, doc, cb) {
                 var $exes = $("pre.example, pre.illegal-example, aside.example")
                 ,   num = 0
                 ;
                 if ($exes.length) {
-                    if (conf.specStatus === "webspec") css += cssKraken;
                     $(doc).find("head link").first().before($("<style/>").text(css));
                     $exes.each(function (i, ex) {
                         var $ex = $(ex)
@@ -35,9 +34,9 @@ define(
                         ;
                         if ($ex.is("aside")) {
                             num++;
-                            var $tit = makeTitle($ex, num, report);
+                            var $tit = makeTitle(conf, $ex, num, report);
                             $ex.prepend($tit);
-                            msg.pub("example", report);
+                            pubsubhub.pub("example", report);
                         }
                         else {
                             var inAside = !!$ex.parents("aside").length;
@@ -55,18 +54,18 @@ define(
                             }
                             report.content = lines.join("\n");
                             $ex.html(lines.join("\n"));
+                            $ex.removeClass("example illegal-example");
                             // wrap
                             var $div = $("<div class='example'></div>")
-                            ,   $tit = makeTitle($ex, inAside ? 0 : num, report)
+                            ,   $tit = makeTitle(conf, $ex, inAside ? 0 : num, report)
                             ;
                             $div.append($tit);
                             $div.append($ex.clone());
                             $ex.replaceWith($div);
-                            if (!inAside) msg.pub("example", report);
+                            if (!inAside) pubsubhub.pub("example", report);
                         }
                     });
                 }
-                msg.pub("end", "core/examples");
                 cb();
             }
         };

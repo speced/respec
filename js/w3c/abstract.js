@@ -3,11 +3,10 @@
 // Handle the abstract section properly.
 
 define(
-    [],
-    function () {
+    ["core/pubsubhub"],
+    function (pubsubhub) {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "w3c/abstract");
+            run:    function (conf, doc, cb) {
                 var $abs = $("#abstract");
                 if ($abs.length) {
                     if ($abs.find("p").length === 0) $abs.contents().wrapAll($("<p></p>"));
@@ -20,8 +19,7 @@ define(
                         $abs.attr({ property: rel });
                     }
                 }
-                else msg.pub("error", "Document must have one element with ID 'abstract'");
-                msg.pub("end", "w3c/abstract");
+                else pubsubhub.pub("error", "Document must have one element with ID 'abstract'");
                 cb();
             }
         };

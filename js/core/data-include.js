@@ -17,11 +17,10 @@
 //  entail performance issues.
 
 define(
-    ["core/utils"],
-    function (utils) {
+    ["core/utils", "core/pubsubhub"],
+    function (utils, pubsubhub) {
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "w3c/data-include");
+            run:    function (conf, doc, cb) {
                 var $incs = $("[data-include]")
                 ,   len = $incs.length
                 ,   finish = function ($el) {
@@ -32,14 +31,12 @@ define(
                         $el.removeAttr("data-include-sync");
                         len--;
                         if (len <= 0) {
-                            msg.pub("end", "w3c/data-include");
-                            cb();
+                            return cb();
                         }
                     }
                 ;
                 if (!len) {
-                    msg.pub("end", "w3c/data-include");
-                    cb();
+                    return cb();
                 }
                 $incs.each(function () {
                     var $el = $(this)
@@ -62,7 +59,7 @@ define(
                             finish($el);
                         }
                     ,   error:      function (xhr, status, error) {
-                            msg.pub("error", "Error including URI=" + uri + ": " + status + " (" + error + ")");
+                            pubsubhub.pub("error", "Error including URI=" + uri + ": " + status + " (" + error + ")");
                             finish($el);
                         }
                     });

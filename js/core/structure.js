@@ -36,7 +36,7 @@ define(
                     ;
                     $kidsHolder.find("a").renameElement("span").attr("class", "formerLink").removeAttr("href");
                     $kidsHolder.find("dfn").renameElement("span").removeAttr("id");
-                    var id = $sec.makeID(null, title);
+                    var id = h.id ? h.id : $sec.makeID(null, title);
 
                     if (!isIntro) current[current.length - 1]++;
                     var secnos = current.slice();
@@ -74,18 +74,12 @@ define(
         ;
 
         return {
-            run:    function (conf, doc, cb, msg) {
-                msg.pub("start", "core/structure");
+            run:    function (conf, doc, cb) {
                 if (!conf.tocIntroductory) conf.tocIntroductory = false;
                 if (!conf.maxTocLevel) conf.maxTocLevel = 0;
                 var $secs = $("section:not(.introductory)", doc)
-                                .find("h1:first, h2:first, h3:first, h4:first, h5:first, h6:first")
-                ,   finish = function () {
-                        msg.pub("end", "core/structure");
-                        cb();
-                    }
-                ;
-                if (!$secs.length) return finish();
+                                .find("h1:first, h2:first, h3:first, h4:first, h5:first, h6:first");
+                if (!$secs.length) return cb();
                 $secs.each(function () {
                     var depth = $(this).parents("section").length + 1;
                     if (depth > 6) depth = 6;
@@ -97,13 +91,18 @@ define(
                 if (!conf.noTOC) {
                     var $ul = makeTOCAtLevel($("body", doc), doc, [0], 1, conf);
                     if (!$ul) return;
-                    var $sec = $("<section id='toc'/>").append("<h2 class='introductory'>" + conf.l10n.toc + "</h2>")
-                                                       .append($ul)
+                    var w = "nav";
+                    var $sec = $("<" + w + " id='toc'/>")
+                        .append("<h2 class='introductory'>" + conf.l10n.toc + "</h2>")
+                        .append($ul)
                     ,   $ref = $("#toc", doc), replace = false;
                     if ($ref.length) replace = true;
                     if (!$ref.length) $ref = $("#sotd", doc);
                     if (!$ref.length) $ref = $("#abstract", doc);
                     replace ? $ref.replaceWith($sec) : $ref.after($sec);
+
+                    var $link = $("<p role='navigation' id='back-to-top'><a href='#toc'><abbr title='Back to Top'>&uarr;</abbr></p>");
+                    $("body").append($link);;
                 }
 
                 // Update all anchors with empty content that reference a section ID
@@ -117,7 +116,7 @@ define(
                     }
                 });
 
-                finish();
+                cb();
             }
         };
     }

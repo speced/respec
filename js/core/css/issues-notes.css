@@ -39,9 +39,7 @@ span.note, span.ednote, span.issue, span.warning { padding: .1em .5em .15em; }
 
 .warning {
     border-color: #f11;
-    border-right-width: .2em;
-    border-top-width: .2em;
-    border-bottom-width: .2em;
+    border-width: .2em;
     border-style: solid;
     background: #fbe9e9;
 }
