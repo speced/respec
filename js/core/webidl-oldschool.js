@@ -754,7 +754,7 @@ define(
             },
 
             writeIterableAsHTML: function (parent, iterable) {
-                var members = '"entries", "keys", "values" and @@iterator methods';
+                var members = '"entries", "keys", "values", "forEach" and @@iterator methods';
 
                 var p = sn.element("p", {}, parent);
                 sn.text("This interface has " + members + " brought by ", p);
