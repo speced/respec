@@ -44,7 +44,7 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-safaritechpreview-launcher": "0.0.4",
     "karma-verbose-summary-reporter": "0.0.1",
-    "marcosc-async": "^1.1.3",
+    "marcosc-async": "^2.0.0",
     "mocha": "^2.5.3",
     "moment": "^2.13.0",
     "mozilla-download": "^1.1.1",
