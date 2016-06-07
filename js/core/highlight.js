@@ -32,7 +32,7 @@ define(
 
         Array
           .from(
-            doc.querySelectorAll("pre")
+            doc.querySelectorAll("pre:not(.idl)")
           )
           .forEach(function(element) {
             hljs.highlightBlock(element);
