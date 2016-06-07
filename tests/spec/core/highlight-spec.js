@@ -5,6 +5,23 @@ describe("Core — Highlight", function() {
     done();
   });
 
+  it("should't highlight idl blocks", function(done){
+    var ops = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody() +
+        "<section><pre class=idl>"+
+          "[Constructor]interface Dahut : Mammal {" +
+          "  const unsigned short DEXTROGYROUS = 1;" +
+          "  Dahut turnAround(float angle, boolean fall);" +
+          "};</pre></section>"
+    };
+    makeRSDoc(ops, function(doc) {
+      var pre = doc.querySelector("pre");
+      expect(pre.classList.contains("hljs")).toBeFalsy();
+      expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
+    }).then(done);
+  });
+
   it("should automatically highlight", function(done) {
     var ops = {
       config: makeBasicConfig(),
