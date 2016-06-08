@@ -11,48 +11,33 @@
 define(
     [],
     function() {
-      function castToType(value) {
-        switch (value.trim()) {
-        case "true":
-          return true;
-        case "false":
-          return false;
-        case "null":
-          return null;
-        }
-        return value;
-      }
       return {
         run: function(conf, doc, cb) { //jshint ignore:line
           if (!location.search) {
             return cb();
           }
-
-          location.search
+          var overrideProps = doc.location.search
             //Remove "?" from search
             .replace(/^\?/, "")
             // The default separator is ";" for key/value pairs
             .split(";")
             .filter(function removeEmpties(item) {
-              return Boolean(item);
+              return item.trim();
             })
-            .map(function decodeKeyValues(item) {
+            .reduce(function decodeKeyValues(collector, item) {
               var keyValue = item.split("=", 2);
-              var key = decodeURI(keyValue[0]);
-              var value = decodeURI(keyValue[1].replace(/%3D/g, "="));
-              value = castToType(value)
+              var key = decodeURIComponent(keyValue[0]);
+              var value = decodeURIComponent(keyValue[1].replace(/%3D/g, "="));
+              var parsedValue;
               try {
-                value = JSON.parse(keyValue[1]);
+                parsedValue = JSON.parse(value);
               } catch (err) {
-                value = keyValue[1];
+                parsedValue = value;
               }
-              return [key, value];
-            })
-            // Override the conf properties by reducing
-            .reduce(function reduceIntoConfig(conf, keyValue) {
-              conf[keyValue[0]] = keyValue[1];
-              return conf;
-            }, conf);
+              collector[key] = parsedValue;
+              return collector;
+            }, {});
+          Object.assign(conf, overrideProps);
           cb();
         }
       };

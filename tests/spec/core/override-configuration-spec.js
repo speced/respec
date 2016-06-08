@@ -14,4 +14,13 @@ describe("Core — Override Configuration", function() {
     };
     makeRSDoc(makeStandardOps(), test, url);
   });
+  it("decodes URL key/values strings correctly", function(done) {
+    var url = "spec/core/simple.html?additionalCopyrightHolders=Internet%20Engineering%20Task%20Force";
+    var test = function(doc) {
+      var copyrightText = doc.querySelector(".copyright").textContent;
+      expect(copyrightText).toMatch(/Internet Engineering Task Force/);
+      done();
+    };
+    makeRSDoc(makeStandardOps(), test, url);
+  });
 });

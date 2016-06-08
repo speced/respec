@@ -42,7 +42,7 @@ define(
         return {
             show:   function (ui, _conf, _doc) {
                 doc = _doc, conf = _conf;
-                if (!conf.diffTool) conf.diffTool = "http://www5.aptest.com/standards/htmldiff/htmldiff.pl";
+                if (!conf.diffTool) conf.diffTool = "https://www5.aptest.com/standards/htmldiff/htmldiff.pl";
                 var supportsDownload = Object
                     .getOwnPropertyNames(HTMLAnchorElement.prototype)
                     .indexOf("download") > -1
