@@ -44,6 +44,7 @@ const optionList = [{
 }, {
   alias: "t",
   defaultValue: 10,
+  description: "How long to wait before timing out (in seconds).",
   name: "timeout",
   type: Number,
 }, {
@@ -86,7 +87,7 @@ async.task(function* run() {
     parsedArgs = commandLineArgs(optionList);
   } catch (err) {
     console.info(getUsage(usageSections));
-    console.error(colors.red(err.message));
+    console.error(colors.error(err.message));
     return process.exit(127);
   }
   if (!parsedArgs.src) {
