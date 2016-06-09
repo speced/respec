@@ -8,14 +8,14 @@
 define(
     ["core/utils", "core/pubsubhub"],
     function(utils, pubsubhub) {
-      function attachFixupScript(doc, version){
-        var script = doc.createElement("script");
-        script.async = true;
-        script.defer = true;
+      function attachFixupScript(version){
+        var script = document.createElement("script");
+        script.async = false;
+        script.defer = false;
         var helperScript = "https://www.w3.org/scripts/TR/{version}/fixup.js"
           .replace("{version}", version);
         script.src = helperScript;
-        doc.body.appendChild(script);
+        document.body.appendChild(script);
       }
 
       // Make a best effort to attach meta viewport at the top of the head.
@@ -104,7 +104,7 @@ define(
           // Attach W3C fixup script after we are done.
           if (version) {
             var subscribeKey = pubsubhub.sub("end-all", function (){
-              attachFixupScript(doc, version);
+              attachFixupScript(version);
               pubsubhub.unsub(subscribeKey);
             });
           }
