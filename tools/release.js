@@ -94,7 +94,7 @@ const Promps = {
       try {
         yield this.askQuestion(promptOps);
       } catch (err) {
-        const warning = colors.warn("Make sure to run `git up; git checkout develop`");
+        const warning = colors.warn("🚨 Make sure to run `git up; git checkout develop`");
         console.warn(warning);
         throw err;
       }

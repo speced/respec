@@ -176,7 +176,7 @@ function makeConsoleMsgHandler(nightmare) {
         if (/document\.respecDone/.test(message)) {
           return;
         }
-        console.error(colors.warn(`😳 ${output}`));
+        console.warn(colors.warn(`🚨 ${output}`));
         break;
       }
       if (abortOnError || abortOnWarning) {
