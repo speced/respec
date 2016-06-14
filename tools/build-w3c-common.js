@@ -36,7 +36,9 @@ const buildW3C = async(function*() {
 
 if (require.main === module) {
   buildW3C("latest")
-    .catch((err) => console.log(colors.error(err.stack)));
+    .catch(
+      err => console.error(`☠️ ${colors.error(err.stack)}`)
+    );
 }
 
 exports.buildW3C = buildW3C;

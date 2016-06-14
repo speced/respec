@@ -26,7 +26,7 @@ function replaceMapFilename(respecJs, outPath){
     const currentMapFilename = respecJs.match(findSourceMapName)[1];
     source = respecJs.replace(currentMapFilename, newMapFilename);
   } else {
-    const warn = " ⚠️ The source map is missing. Something has probably gone wrong.";
+    const warn = "🚨️ The source map is missing. Something has probably gone wrong.";
     console.warn(warn);
     source = respecJs;
   }
