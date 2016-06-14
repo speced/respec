@@ -17,7 +17,11 @@ colors.setTheme({
   verbose: "cyan",
   warn: "yellow",
 });
-const optionDefinitions = [{
+
+const commandLineArgs = require("command-line-args");
+const getUsage = require("command-line-usage");
+// Command line output
+const optionList = [{
   alias: "h",
   defaultValue: false,
   description: "Display this usage guide.",
@@ -40,47 +44,59 @@ const optionDefinitions = [{
 }, {
   alias: "t",
   defaultValue: 10,
+  description: "How long to wait before timing out (in seconds).",
   name: "timeout",
   type: Number,
 }, {
   alias: "e",
   default: false,
-  description: "Report ReSpec errors on stderr.",
+  description: "Abort if the spec has any errors.",
   name: "haltonerror",
   type: Boolean,
 }, {
   alias: "w",
   default: false,
-  description: "Report ReSpec warnings on stderr.",
+  description: "Abort if ReSpec generates warnings.",
   name: "haltonwarn",
   type: Boolean,
 }];
 
-const tasks = {
-  showHelp() {
-    const getUsage = require("command-line-usage");
-    const appDetails = {
-      title: "respec2html",
-      description: "Converts a ReSpec source file to HTML and prints to std out.",
-      footer: "Project home: [underline]{https://github.com/w3c/respec}"
-    };
-    console.log(getUsage(optionDefinitions, appDetails));
-  },
-};
+const usageSections = [{
+  header: "respec2html",
+  content: "Converts a ReSpec source file to HTML and prints to std out.",
+}, {
+  header: "Options",
+  optionList,
+}, {
+  header: "Examples",
+  content: [{
+    desc: "1. Output to a file. ",
+    example: "$ ./respec2html.js --src http://example.com/spec.html --out spec.html"
+  }, {
+    desc: "2. Halt on errors or warning ",
+    example: "$ ./respec2html.js -e -w --src http://example.com/spec.html --out spec.html"
+  },]
+}, {
+  content: "Project home: [underline]{https://github.com/w3c/respec}",
+  raw: true,
+}];
 
 async.task(function* run() {
-  const cli = require("command-line-args")(optionDefinitions);
   let parsedArgs;
   try {
-    parsedArgs = cli.parse();
+    parsedArgs = commandLineArgs(optionList);
   } catch (err) {
-    console.error(err.stack);
-    tasks.showHelp();
-    process.exit(2);
+    console.info(getUsage(usageSections));
+    console.error(colors.error(err.message));
+    return process.exit(127);
   }
-  if (parsedArgs.help || !parsedArgs.src) {
-    tasks.showHelp();
-    return;
+  if (!parsedArgs.src) {
+    console.info(getUsage(usageSections));
+    return process.exit(2);
+  }
+  if (parsedArgs.help) {
+    console.info(getUsage(usageSections));
+    return process.exit(0);
   }
   const src = parsedArgs.src;
   const whenToHalt = {
@@ -92,7 +108,7 @@ async.task(function* run() {
   try {
     yield fetchAndWrite(src, out, whenToHalt, timeout);
   } catch (err) {
-    console.error(colors.red(err.stack));
+    console.error(colors.error(err.message));
     return process.exit(1);
   }
   process.exit(0);
