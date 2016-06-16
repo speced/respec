@@ -183,7 +183,7 @@ define(
                     cb();
                     return;
                 }
-                var url = "https://labs.w3.org/specrefs/bibrefs?refs=" + externalRefs.join(",");
+                var url = "https://specref.herokuapp.com/bibrefs?refs=" + externalRefs.join(",");
                 fetch(url)
                     .then(function(response) {
                         return response.json();
