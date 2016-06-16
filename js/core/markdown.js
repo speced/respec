@@ -46,7 +46,7 @@
 define([
   "marked",
   "core/utils",
-  "highlight",
+  "deps/highlight",
   "beautify-html",
   "core/beautify-options",
 ], function(marked, utils, hljs, beautify, beautifyOps) {
