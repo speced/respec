@@ -11,9 +11,12 @@
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
 "use strict";
-define(
-  ["text!core/css/issues-notes.css", "github", "core/pubsubhub"],
-  function(css, github, pubsubhub) {
+define([
+    "core/pubsubhub",
+    "deps/text!core/css/issues-notes.css",
+    "github",
+  ],
+  function(pubsubhub, css, github) {
     return {
       run: function(conf, doc, cb) {
         function handleIssues($ins, ghIssues, issueBase) {

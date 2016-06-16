@@ -21,22 +21,14 @@ module.exports = function(config) {
     detectBrowsers: {
       enabled: true,
       usePhantomJS: false,
-      postDetection: function(browsers) {
+      postDetection(browsers){
         return browsers;
       }
     },
 
     // list of files / patterns to load in the browser
     files: [{
-        pattern: "js/**/*.js",
-        included: false,
-        served: true,
-      }, {
-        pattern: "js/**/*.css",
-        included: false,
-        served: true,
-      }, {
-        pattern: "js/**/*.html",
+        pattern: "js/**/*.*",
         included: false,
         served: true,
       }, {
@@ -47,41 +39,8 @@ module.exports = function(config) {
         pattern: "tests/**/*.html",
         included: false,
         served: true,
-      }, {
-        pattern: "node_modules/requirejs/require.js",
-        included: false,
-        served: true,
-      }, {
-        pattern: "node_modules/promise-polyfill/promise.js",
-        included: false,
-        served: true,
-      }, {
-        pattern: "node_modules/jquery/dist/jquery.js",
-        included: true,
-        served: true,
-      }, {
-        pattern: "node_modules/handlebars/dist/**/*.js",
-        included: false,
-        served: true,
-      }, {
-        pattern: "node_modules/webidl2/lib/*.js",
-        included: false,
-        served: true,
-      },{
-        pattern: "./node_modules/whatwg-fetch/fetch.js",
-        included: false,
-        served: true,
       },
-      {
-        pattern: "./node_modules/marked/lib/marked.js",
-        included: false,
-        served: true,
-      },
-      {
-        pattern: "./node_modules/js-beautify/js/lib/*.js",
-        included: false,
-        served: true,
-      },
+      "js/deps/jquery.js",
       "tests/spec/SpecHelper.js",
       "tests/test-main.js",
     ],
@@ -97,7 +56,6 @@ module.exports = function(config) {
       "/js/": "/base/js/",
       "/tests/": "/base/tests/",
       "/spec/": "/base/tests/spec/",
-      "/node_modules/": "/base/node_modules/",
     },
 
     // preprocess matching files before serving them to the browser

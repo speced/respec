@@ -7,7 +7,7 @@ define(
     "core/pubsubhub",
     "core/utils",
     "deps/highlight",
-    "text!core/css/github.css",
+    "deps/text!core/css/github.css",
   ],
   function(pubsubhub, utils, hljs, ghCss) {
     // Opportunistically insert the style into the head to reduce FOUC.

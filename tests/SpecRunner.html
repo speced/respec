@@ -10,10 +10,10 @@
     <script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
     <script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
     <script src="/node_modules/jasmine-core/lib/jasmine-core/boot.js"></script>
+    <script src="/js/deps/fetch.js"></script>
+    <script src="/js/deps/jquery.js"></script>
     <script src="spec/SpecHelper.js"></script>
-
-    <script src='/node_modules/requirejs/require.js'></script>
-    <script src="/node_modules/whatwg-fetch/fetch.js"></script>
+    <script src='/js/deps/require.js'></script>
     <script>
     "use strict";
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
@@ -23,14 +23,12 @@
         return res.json();
       })
       .then(function(testFiles) {
-        var allDeps = ["core/jquery-enhanced"]
-          .concat(testFiles);
         require.config({
           baseUrl: "/js/",
           paths: {
-            "jquery": "/node_modules/jquery/dist/jquery",
+            "jquery": "deps/jquery",
           },
-          deps: allDeps,
+          deps: testFiles,
           callback: function() {
             jasmine.getEnv().execute();
           }

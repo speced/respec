@@ -16,30 +16,22 @@ require.config({
     }
   },
   paths: {
-    "beautify": "/node_modules/js-beautify/js/lib/beautify",
-    "beautify-css": "/node_modules/js-beautify/js/lib/beautify-css",
-    "beautify-html": "/node_modules/js-beautify/js/lib/beautify-html",
-    "fetch": "/node_modules/whatwg-fetch/fetch",
-    "handlebars": "/node_modules/handlebars/dist/handlebars",
-    "jquery": "/node_modules/jquery/dist/jquery",
-    "marked": "/node_modules/marked/lib/marked",
-    "Promise": "/node_modules/promise-polyfill/promise",
-    "webidl2": "/node_modules/webidl2/lib/webidl2",
+    "beautify-css": "deps/beautify-css",
+    "beautify-html": "deps/beautify-html",
   },
   deps: [
-    "fetch",
-    "jquery",
-    "Promise",
-    "core/jquery-enhanced",
-    "core/respec-ready",
+    "deps/fetch",
+    "deps/Promise",
+    "deps/jquery",
   ],
 });
 
 define([
     // order is significant
-    "domReady",
+    "deps/domReady",
     "core/base-runner",
     "core/ui",
+    "core/respec-ready",
     "core/include-config",
     "core/override-configuration",
     "core/default-root-attr",
