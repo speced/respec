@@ -53,9 +53,12 @@ define([
   var defaultLanguages = Object.freeze([
     "css",
     "html",
+    "http",
     "js",
     "json",
+    "markdown",
     "xml",
+    "xquery",
   ]);
 
   hljs.configure({
