@@ -12,7 +12,7 @@ describe("W3C — Bibliographic References", function() {
     var fetchOps = {
       method: "HEAD"
     };
-    fetch("https://labs.w3.org/specrefs/bibrefs", fetchOps)
+    fetch("https://specref.herokuapp.com/bibrefs", fetchOps)
       .then(function(res) {
         isSpecRefAvailable = res.ok;
         expect(res.ok).toBeTruthy();

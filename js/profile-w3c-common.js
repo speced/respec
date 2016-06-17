@@ -21,8 +21,6 @@ require.config({
     "beautify-html": "/node_modules/js-beautify/js/lib/beautify-html",
     "fetch": "/node_modules/whatwg-fetch/fetch",
     "handlebars": "/node_modules/handlebars/dist/handlebars",
-    "highlight": "/node_modules/highlightjs/highlight.pack.min",
-    "highlightStyles": "/node_modules/highlightjs/styles/",
     "jquery": "/node_modules/jquery/dist/jquery",
     "marked": "/node_modules/marked/lib/marked",
     "Promise": "/node_modules/promise-polyfill/promise",

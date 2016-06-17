@@ -42,7 +42,7 @@ define(
                         try {
                             respecConfig.preProcess[i].apply(this); }
                         catch (e) {
-                            window.console.error(e);
+                            window.console.error(e.stack || JSON.stringify(e));
                         }
                     }
                 }

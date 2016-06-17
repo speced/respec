@@ -46,16 +46,19 @@
 define([
   "marked",
   "core/utils",
-  "highlight",
+  "deps/highlight",
   "beautify-html",
   "core/beautify-options",
 ], function(marked, utils, hljs, beautify, beautifyOps) {
   var defaultLanguages = Object.freeze([
     "css",
     "html",
+    "http",
     "js",
     "json",
+    "markdown",
     "xml",
+    "xquery",
   ]);
 
   hljs.configure({

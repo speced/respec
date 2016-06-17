@@ -78,16 +78,6 @@ module.exports = function(config) {
         served: true,
       },
       {
-        pattern: "./node_modules/highlightjs/*.js",
-        included: false,
-        served: true,
-      },
-      {
-        pattern: "./node_modules/highlightjs/styles/*.css",
-        included: false,
-        served: true,
-      },
-      {
         pattern: "./node_modules/js-beautify/js/lib/*.js",
         included: false,
         served: true,
