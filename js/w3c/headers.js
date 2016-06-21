@@ -95,7 +95,7 @@
 "use strict";
 define(
     [
-        "handlebars"
+        "deps/handlebars"
     ,   "core/utils"
     ,   "tmpl!w3c/templates/headers.html"
     ,   "tmpl!w3c/templates/sotd.html"

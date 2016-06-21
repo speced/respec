@@ -44,10 +44,10 @@
  **/
 "use strict";
 define([
-  "marked",
+  "deps/marked",
   "core/utils",
   "deps/highlight",
-  "beautify-html",
+  "deps/beautify-html",
   "core/beautify-options",
 ], function(marked, utils, hljs, beautify, beautifyOps) {
   var defaultLanguages = Object.freeze([

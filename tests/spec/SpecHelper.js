@@ -53,7 +53,7 @@ function decorateDocument(doc, opts) {
     config.classList.add("remove");
     config.innerText = configText;
     var loadAttr = {
-      src: "/node_modules/requirejs/require.js",
+      src: "/js/deps/require.js",
       "data-main": path + (opts.profile || "profile-w3c-common")
     };
     Object

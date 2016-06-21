@@ -7,8 +7,11 @@
 // be used by a containing shell to extract all examples.
 
 define(
-    ["text!core/css/examples.css", "core/pubsubhub"],
-    function (css, pubsubhub) {
+    [
+        "core/pubsubhub",
+        "deps/text!core/css/examples.css",
+    ],
+    function (pubsubhub, css) {
         var makeTitle = function (conf, $el, num, report) {
             var txt = (num > 0) ? " " + num : ""
             ,   $tit = $("<div class='example-title'><span>Example" + txt + "</span></div>");

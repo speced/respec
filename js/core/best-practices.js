@@ -5,7 +5,7 @@
 // Best practices are marked up with span.practicelab.
 
 define(
-    ["text!core/css/bp.css", "core/pubsubhub"],
+    ["deps/text!core/css/bp.css", "core/pubsubhub"],
     function (css, pubsubhub) {
         return {
             run:    function (conf, doc, cb) {

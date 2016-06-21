@@ -11,7 +11,7 @@ var sn;
 define(
     [
         "core/pubsubhub"
-    ,   "handlebars"
+    ,   "deps/handlebars"
     ,   "tmpl!core/css/webidl-oldschool.css"
     ,   "tmpl!core/templates/webidl/module.html"
     ,   "tmpl!core/templates/webidl/typedef.html"

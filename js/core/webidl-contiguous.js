@@ -10,8 +10,8 @@
 define(
     [
         "core/pubsubhub"
-    ,   "handlebars"
-    ,   "webidl2"
+    ,   "deps/handlebars"
+    ,   "deps/webidl2"
     ,   "tmpl!core/css/webidl-oldschool.css"
     ,   "tmpl!core/templates/webidl-contiguous/typedef.html"
     ,   "tmpl!core/templates/webidl-contiguous/implements.html"
