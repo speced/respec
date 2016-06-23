@@ -48,19 +48,25 @@ define(
         return version;
       }
 
-      // Opportunistically preconnect to w3c server for styles and script
-      var preconnectLink = document.createElement("link");
-      preconnectLink.rel = "preconnect";
-      preconnectLink.href = "https://www.w3.org";
-      preconnectLink.crossorigin = true;
-      document.head.appendChild(preconnectLink);
+      // Opportunistically preconnect to w3c server for styles and scripts
+      var preconnectW3C = utils.createResourceHint({
+        hint: "preconnect",
+        href: "https://www.w3.org",
+      });
+      document.head.appendChild(preconnectW3C);
 
-      // Opportunistically preload fixup, as we attach it on end-all
-      var preloadLink = document.createElement("link");
-      preloadLink.rel = "preload";
-      preloadLink.href = "https://www.w3.org/scripts/TR/2016/fixup.js"
-      preloadLink.as = "script";
-      document.head.appendChild(preloadLink);
+      // Opportunistically preload fixup.js, as we attach it on end-all
+      var preloadFixupjs = utils.createResourceHint({
+        hint: "preload",
+        href: "https://www.w3.org/scripts/TR/2016/fixup.js",
+        as: "script",
+      });
+      document.head.appendChild(preloadFixupjs);
+
+      // Attach meta viewport, as needed
+      if (!document.head.querySelector("meta[name=viewport]")) {
+        attachMetaViewport(document);
+      }
 
       return {
         run: function(conf, doc, cb) {
@@ -107,11 +113,6 @@ define(
 
           // Select between released styles and experimental style.
           var version = selectStyleVersion(conf.useExperimentalStyles || "2016");
-
-          // Make spec mobile friendly by attaching meta viewport
-          if (!doc.head.querySelector("meta[name=viewport]")) {
-            attachMetaViewport(doc);
-          }
 
           // Attach W3C fixup script after we are done.
           if (version) {
