@@ -10,8 +10,6 @@ define(
     function(utils, pubsubhub) {
       function attachFixupScript(doc, version){
         var script = doc.createElement("script");
-        script.async = true;
-        script.defer = true;
         var helperScript = "https://www.w3.org/scripts/TR/{version}/fixup.js"
           .replace("{version}", version);
         script.src = helperScript;
@@ -49,6 +47,20 @@ define(
         }
         return version;
       }
+
+      // Opportunistically preconnect to w3c server for styles and script
+      var preconnectLink = document.createElement("link");
+      preconnectLink.rel = "preconnect";
+      preconnectLink.href = "https://www.w3.org";
+      preconnectLink.crossorigin = true;
+      document.head.appendChild(preconnectLink);
+
+      // Opportunistically preload fixup, as we attach it on end-all
+      var preloadLink = document.createElement("link");
+      preloadLink.rel = "preload";
+      preloadLink.href = "https://www.w3.org/scripts/TR/2016/fixup.js"
+      preloadLink.as = "script";
+      document.head.appendChild(preloadLink);
 
       return {
         run: function(conf, doc, cb) {
