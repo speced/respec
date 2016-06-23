@@ -7,12 +7,6 @@ define(
   ["core/pubsubhub"],
   function(pubsubhub) {
     var utils = {
-      // --- SET UP
-      run: function(conf, doc, cb, msg) {
-        msg.pub("start", "core/utils");
-        msg.pub("end", "core/utils");
-        cb();
-      },
       /**
        * Allows a node to be swapped into a different document at
        * some insertion point(Element). This function is useful for
