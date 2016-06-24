@@ -143,6 +143,23 @@ describe("Core - Utils", function() {
       expect(link.crossOrigin).toEqual("anonymous");
       done();
     });
+    it("marks the link element for removal on save by default", function(done){
+      var link = utils.createResourceHint({
+        href: "https://example.com",
+        hint: "preconnect",
+      });
+      expect(link.classList.contains("removeOnSave")).toEqual(true);
+      done();
+    });
+    it("repects leaving a hint in the spec when told to", function(done){
+      var link = utils.createResourceHint({
+        href: "https://example.com",
+        hint: "preconnect",
+        dontRemove: true,
+      });
+      expect(link.classList.contains("removeOnSave")).toEqual(false);
+      done();
+    });
   });
 
   describe("calculateLeftPad()", function(){
