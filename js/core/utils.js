@@ -110,6 +110,7 @@ define(
        * @param {URL|String} opts.href The URL for the resource or origin.
        * @param {String} [opts.corsMode] Optional, the CORS mode to use (see HTML spec).
        * @param {String} [opts.as] Optional, fetch destination type (see fetchDestinations).
+       * @param {Bool} [opts.dontRemove] If the hint should remain in the spec after processing.
        * @return {HTMLLinkElement} A link element ready to use.
        */
       createResourceHint: function(opts) {
@@ -144,10 +145,11 @@ define(
           break;
         }
         linkElem.href = href;
+        if (!opts.dontRemove) {
+          linkElem.classList.add("removeOnSave");
+        }
         return linkElem;
       },
-
-
       /**
        * Makes a ES conforming iterator allowing objects to be used with
        * methods that can interface with Iterators (Array.from(), etc.).
