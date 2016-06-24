@@ -18,7 +18,7 @@ define(
           initialUserConfig = {};
         }
         pubsubhub.sub('end-all', function () {
-          var script = doc.createElement('script');
+          var script = document.createElement('script');
           script.id = 'initialUserConfig';
           var confFilter = function (key, val) {
             // DefinitionMap contains array of DOM elements that aren't serializable
@@ -38,7 +38,7 @@ define(
           };
           script.innerHTML = JSON.stringify(initialUserConfig, confFilter, 2);
           script.type = 'application/json';
-          doc.head.appendChild(script);
+          document.head.appendChild(script);
           conf.initialUserConfig = initialUserConfig;
         });
         cb();

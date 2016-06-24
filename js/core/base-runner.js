@@ -50,12 +50,14 @@ define(
                 var pipeline = Promise.resolve();
                 // the first in the plugs is going to be us
                 plugs.shift();
+                document.documentElement.setAttribute("aria-busy", "true");
+                var docClone = document.cloneNode(true);
                 plugs.forEach(function(plug) {
                     pipeline = pipeline.then(function () {
                         if (plug.run) {
                             return new Promise(function runPlugin(resolve) {
                                 // We send pubsubhub in to retain backwards
-                                var result = plug.run.call(plug, respecConfig, document, resolve, deprecated);
+                                var result = plug.run.call(plug, respecConfig, docClone, resolve, deprecated);
                                 // If the plugin returns a promise, have that
                                 // control the end of the plugin's run.
                                 // Otherwise, assume it'll call resolve() as a
@@ -73,7 +75,10 @@ define(
                 return pipeline
                     .then(function(){
                         var resultingConfig = Object.assign({}, window.respecConfig);
+                        var adoptedNode = document.adoptNode(docClone.documentElement);
+                        document.replaceChild(adoptedNode, document.documentElement);
                         pubsubhub.pub("end-all", resultingConfig);
+                        document.documentElement.setAttribute("aria-busy", "false")
                     })
                     .then(function() {
                         if (respecConfig.postProcess) {
