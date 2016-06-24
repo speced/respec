@@ -106,9 +106,10 @@ define(
        * Creates a link element to use as a resource hint.
        *
        * @param {Object} opts Configure the resource hint.
-       * @param {String} opts.hint The type of hint.
+       * @param {String} opts.hint The type of hint (see resourceHints).
        * @param {URL|String} opts.href The URL for the resource or origin.
-       * @param {String} [opts.corsMode] Optional, the CORS mode to use.
+       * @param {String} [opts.corsMode] Optional, the CORS mode to use (see HTML spec).
+       * @param {String} [opts.as] Optional, fetch destination type (see fetchDestinations).
        * @return {HTMLLinkElement} A link element ready to use.
        */
       createResourceHint: function(opts) {
