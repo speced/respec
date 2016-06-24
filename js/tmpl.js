@@ -1,6 +1,9 @@
 /*global Handlebars*/
 
-define(["handlebars", "text"], function (hb, text) {
+define([
+    "deps/handlebars",
+    "deps/text",
+], function (hb, text) {
     var buildMap = {};
     return {
         load:   function (name, req, onLoad, config) {
@@ -13,7 +16,7 @@ define(["handlebars", "text"], function (hb, text) {
             if (moduleName in buildMap) {
                 var content = text.jsEscape(buildMap[moduleName]);
                 write("define('" + pluginName + "!" + moduleName  +
-                      "', ['handlebars'], function (hb) { return hb.compile('" + content + "');});\n");
+                      "', ['deps/handlebars'], function (hb) { return hb.compile('" + content + "');});\n");
             }
         }
     };

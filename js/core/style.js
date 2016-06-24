@@ -11,7 +11,7 @@
 "use strict";
 define(
   [
-    "text!core/css/respec2.css",
+    "deps/text!core/css/respec2.css",
     "core/utils",
   ],
   function(css, utils) {

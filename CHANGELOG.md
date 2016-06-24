@@ -1,11 +1,57 @@
 # Change Log
 
+## [v3.3.2](https://github.com/w3c/respec/tree/v3.3.2) (2016-06-14)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.2.134...v3.3.2)
+
+**Fixed bugs:**
+
+- No URL decoding from URL params  [\#807](https://github.com/w3c/respec/issues/807)
+
+**Merged pull requests:**
+
+- Update jquery to version 3.0.0 🚀 [\#823](https://github.com/w3c/respec/pull/823) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Fix\(override-configuration\):decode URL params correctly \(closes \#807\) [\#816](https://github.com/w3c/respec/pull/816) ([marcoscaceres](https://github.com/marcoscaceres))
+- Feat\(respec2html\): upgrade to command-line-usage V3 [\#815](https://github.com/w3c/respec/pull/815) ([marcoscaceres](https://github.com/marcoscaceres))
+- Changed default diff tool URI to use https [\#813](https://github.com/w3c/respec/pull/813) ([halindrome](https://github.com/halindrome))
+- Update marcosc-async to version 2.0.0 🚀 [\#812](https://github.com/w3c/respec/pull/812) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+
+## [v3.2.134](https://github.com/w3c/respec/tree/v3.2.134) (2016-06-07)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.2.133...v3.2.134)
+
+**Fixed bugs:**
+
+- Syntax highlighting issue for interfaces with a "Constructor" [\#806](https://github.com/w3c/respec/issues/806)
+
+**Merged pull requests:**
+
+- Dont hightlight idl [\#811](https://github.com/w3c/respec/pull/811) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v3.2.133](https://github.com/w3c/respec/tree/v3.2.133) (2016-06-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.2.132...v3.2.133)
+
+**Merged pull requests:**
+
+- Add forEach to iterable methods list [\#804](https://github.com/w3c/respec/pull/804) ([mwatson2](https://github.com/mwatson2))
+- Update command-line-usage to version 3.0.1 🚀 [\#802](https://github.com/w3c/respec/pull/802) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+
+## [v3.2.132](https://github.com/w3c/respec/tree/v3.2.132) (2016-05-27)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.2.131...v3.2.132)
+
+**Fixed bugs:**
+
+- Inserted stylesheets move charset declaration too far down [\#791](https://github.com/w3c/respec/issues/791)
+
+**Merged pull requests:**
+
+- nightmare@2.5.0 breaks build 🚨 [\#800](https://github.com/w3c/respec/pull/800) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Fix\(ui,utils\): firstElementChild not in Edge \(closes \#798\) [\#799](https://github.com/w3c/respec/pull/799) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v3.2.131](https://github.com/w3c/respec/tree/v3.2.131) (2016-05-27)
 [Full Changelog](https://github.com/w3c/respec/compare/v3.2.129...v3.2.131)
 
 **Fixed bugs:**
 
-- Inserted stylesheets move charset declaration too far down [\#791](https://github.com/w3c/respec/issues/791)
+- firstElementChild is affecting MS Edge  [\#798](https://github.com/w3c/respec/issues/798)
 
 **Merged pull requests:**
 
@@ -59,16 +105,7 @@
 [Full Changelog](https://github.com/w3c/respec/compare/v3.2.124...v3.2.125)
 
 ## [v3.2.124](https://github.com/w3c/respec/tree/v3.2.124) (2016-05-23)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.3.0...v3.2.124)
-
-**Merged pull requests:**
-
-- Fix\(ui\): close ui when doc is clicked \(closes \#772\) [\#774](https://github.com/w3c/respec/pull/774) ([marcoscaceres](https://github.com/marcoscaceres))
-- Fix \(SpecHelper\): reduce dependece on jQuery [\#770](https://github.com/w3c/respec/pull/770) ([marcoscaceres](https://github.com/marcoscaceres))
-- Fix\(style\): reduce ReSpec FOUC \(relates to \#326\) [\#768](https://github.com/w3c/respec/pull/768) ([marcoscaceres](https://github.com/marcoscaceres))
-
-## [v3.3.0](https://github.com/w3c/respec/tree/v3.3.0) (2016-05-22)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.2.123...v3.3.0)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.2.123...v3.2.124)
 
 **Implemented enhancements:**
 
@@ -89,6 +126,9 @@
 
 - Fix bad tests [\#779](https://github.com/w3c/respec/pull/779) ([marcoscaceres](https://github.com/marcoscaceres))
 - Feat\(markdown\): disable md linking via 'nolinks' class \(closes \#777\) [\#778](https://github.com/w3c/respec/pull/778) ([marcoscaceres](https://github.com/marcoscaceres))
+- Fix\(ui\): close ui when doc is clicked \(closes \#772\) [\#774](https://github.com/w3c/respec/pull/774) ([marcoscaceres](https://github.com/marcoscaceres))
+- Fix \(SpecHelper\): reduce dependece on jQuery [\#770](https://github.com/w3c/respec/pull/770) ([marcoscaceres](https://github.com/marcoscaceres))
+- Fix\(style\): reduce ReSpec FOUC \(relates to \#326\) [\#768](https://github.com/w3c/respec/pull/768) ([marcoscaceres](https://github.com/marcoscaceres))
 - Feat\(hightlight\): use new highlighter [\#767](https://github.com/w3c/respec/pull/767) ([marcoscaceres](https://github.com/marcoscaceres))
 - Feat\(utils\): add makeOwnerSwapper\(\) [\#766](https://github.com/w3c/respec/pull/766) ([marcoscaceres](https://github.com/marcoscaceres))
 - Beautify \(X\)HTML output [\#761](https://github.com/w3c/respec/pull/761) ([marcoscaceres](https://github.com/marcoscaceres))
@@ -1607,7 +1647,10 @@
 - Add ref for: WEBAPPS-MANIFEST-API [\#41](https://github.com/w3c/respec/pull/41) ([tobie](https://github.com/tobie))
 
 ## [v3.1.1](https://github.com/w3c/respec/tree/v3.1.1) (2012-06-18)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.1.0...v3.1.1)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.3.1...v3.1.1)
+
+## [v3.3.1](https://github.com/w3c/respec/tree/v3.3.1) (2012-06-18)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.1.0...v3.3.1)
 
 **Fixed bugs:**
 

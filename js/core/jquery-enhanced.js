@@ -1,4 +1,8 @@
-define(["jquery","core/utils", "core/pubsubhub"], function($, utils, pubsubhub) {
+define([
+  "core/pubsubhub",
+  "core/utils",
+  "deps/jquery",
+], function(pubsubhub, utils) {
   // --- JQUERY EXTRAS -----------------------------------------------------------------------
   // Applies to any jQuery object containing elements, changes their name to the one give, and
   // return a jQuery object containing the new elements

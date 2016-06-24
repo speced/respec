@@ -4,7 +4,7 @@
 
 define(
     [
-        "beautify-html",
+        "deps/beautify-html",
         "core/beautify-options",
         "core/pubsubhub",
         "core/utils",

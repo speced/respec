@@ -1,8 +1,9 @@
 "use strict";
 describe("Core - jquery enhanced", function() {
   beforeAll(function(done){
-    // Prevent Safari from having a race condition
-    setTimeout(done, 100);
+    require(["core/jquery-enhanced"], function(){
+      done();
+    });
   });
 
   it("should be in global scope", function(done) {
