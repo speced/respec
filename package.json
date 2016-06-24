@@ -32,7 +32,7 @@
     "js-beautify": "^1.6.2",
     "jscs": "^3.0.5",
     "jshint": "^2.9.2",
-    "karma": "^0.13.22",
+    "karma": "^1.0.0",
     "karma-chrome-launcher": "^1.0.1",
     "karma-detect-browsers": "^2.1.0",
     "karma-firefox-launcher": "^1.0.0",
