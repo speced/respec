@@ -68,6 +68,7 @@
     "postinstall": "npm run build:highlight",
     "prepublish": "npm run snyk-protect",
     "pretest": "npm run jshint && npm run jscs",
+    "server": "python -m SimpleHTTPServer",
     "snyk-protect": "snyk protect",
     "test": "npm run test:headless; npm run test:karma",
     "test:appveyor": "npm run pretest",
