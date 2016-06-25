@@ -412,10 +412,8 @@ define(
       // take a document and either a link or an array of links to CSS and appends a <link/> element
       // to the head pointing to each
       linkCSS: function(doc, styles) {
-        if (!Array.isArray(styles)) {
-          styles = [styles];
-        }
-        styles
+        var stylesArray = Array.isArray(styles) ? [].concat(styles) : [styles];
+        var frag = stylesArray
           .map(function(url) {
             var link = doc.createElement("link");
             link.rel = "stylesheet";
@@ -425,7 +423,8 @@ define(
           .reduce(function(elem, nextLink) {
             elem.appendChild(nextLink);
             return elem;
-          }, doc.head);
+          }, doc.createDocumentFragment());
+        doc.head.appendChild(frag);
       },
 
       // TRANSFORMATIONS

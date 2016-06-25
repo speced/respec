@@ -48,12 +48,14 @@ define(
         return version;
       }
 
+      var resourceHints = document.createDocumentFragment();
+
       // Opportunistically preconnect to w3c server for styles and scripts
       var preconnectW3C = utils.createResourceHint({
         hint: "preconnect",
         href: "https://www.w3.org",
       });
-      document.head.appendChild(preconnectW3C);
+      resourceHints.appendChild(preconnectW3C);
 
       // Opportunistically preload fixup.js, as we attach it on end-all
       var preloadFixupjs = utils.createResourceHint({
@@ -61,7 +63,7 @@ define(
         href: "https://www.w3.org/scripts/TR/2016/fixup.js",
         as: "script",
       });
-      document.head.appendChild(preloadFixupjs);
+      resourceHints.appendChild(preloadFixupjs);
 
       // Opportunistically preload base.css, as all specs styles depend on it
       var preloadBaseCss = utils.createResourceHint({
@@ -69,7 +71,7 @@ define(
         href: "https://www.w3.org/StyleSheets/TR/2016/base.css",
         as: "style",
       });
-      document.head.appendChild(preloadBaseCss);
+      resourceHints.appendChild(preloadBaseCss);
 
       // Opportunistically preload logo, as all specs styles depend on it
       var preloadLogo = utils.createResourceHint({
@@ -77,7 +79,10 @@ define(
         href: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
         as: "image",
       });
-      document.head.appendChild(preloadLogo);
+      resourceHints.appendChild(preloadLogo);
+
+      // Add collected hints to document.
+      document.head.appendChild(resourceHints);
 
       // Attach meta viewport, as needed
       if (!document.head.querySelector("meta[name=viewport]")) {

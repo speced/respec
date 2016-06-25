@@ -76,10 +76,6 @@ define([
   function(domReady, runner, ui) {
     var args = Array.from(arguments);
     domReady(function() {
-      ui.addCommand("Save Snapshot", "ui/save-html", "Ctrl+Shift+Alt+S");
-      ui.addCommand("About ReSpec", "ui/about-respec", "Ctrl+Shift+Alt+A");
-      ui.addCommand("Definition List", "ui/dfn-list", "Ctrl+Shift+Alt+D");
-      ui.addCommand("Search Specref DB", "ui/search-specref", "Ctrl+Shift+Alt+space");
       runner
         .runAll(args)
         .then(document.respecIsReady)
@@ -88,7 +84,11 @@ define([
           console.error(err);
           // even if things go critically bad, we should still try to show the UI
           ui.show();
-        })
+        });
+      ui.addCommand("Save Snapshot", "ui/save-html", "Ctrl+Shift+Alt+S");
+      ui.addCommand("About ReSpec", "ui/about-respec", "Ctrl+Shift+Alt+A");
+      ui.addCommand("Definition List", "ui/dfn-list", "Ctrl+Shift+Alt+D");
+      ui.addCommand("Search Specref DB", "ui/search-specref", "Ctrl+Shift+Alt+space");
     });
   }
 );
