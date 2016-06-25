@@ -63,6 +63,22 @@ define(
       });
       document.head.appendChild(preloadFixupjs);
 
+      // Opportunistically preload base.css, as all specs styles depend on it
+      var preloadBaseCss = utils.createResourceHint({
+        hint: "preload",
+        href: "https://www.w3.org/StyleSheets/TR/2016/base.css",
+        as: "style",
+      });
+      document.head.appendChild(preloadBaseCss);
+
+      // Opportunistically preload logo, as all specs styles depend on it
+      var preloadLogo = utils.createResourceHint({
+        hint: "preload",
+        href: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
+        as: "image",
+      });
+      document.head.appendChild(preloadLogo);
+
       // Attach meta viewport, as needed
       if (!document.head.querySelector("meta[name=viewport]")) {
         attachMetaViewport(document);
