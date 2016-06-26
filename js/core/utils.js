@@ -258,9 +258,9 @@ define(
         if (arr.length === 1) return mapper(arr[0], 0);
         for (var i = 0, n = arr.length; i < n; i++) {
           if (i > 0) {
-            if (n === 2) ret += ' ';
-            else ret += ', ';
-            if (i == n - 1) ret += 'and ';
+            if (n === 2) ret += " ";
+            else ret += ", ";
+            if (i == n - 1) ret += "and ";
           }
           ret += mapper(arr[i], i);
         }
@@ -322,7 +322,6 @@ define(
       // date suitable for use in a xsd:datetime item
       isoDate: function(date) {
         if (!(date instanceof Date)) date = this.parseSimpleDate(date);
-        // return "" + date.getUTCFullYear() +'-'+ this.lead0(date.getUTCMonth() + 1)+'-' + this.lead0(date.getUTCDate()) +'T'+this.lead0(date.getUTCHours())+':'+this.lead0(date.getUTCMinutes()) +":"+this.lead0(date.getUTCSeconds())+'+0000';
         return date.toISOString();
       },
 
