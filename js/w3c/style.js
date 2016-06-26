@@ -5,9 +5,10 @@
 // CONFIGURATION
 //  - specStatus: the short code for the specification's maturity level or type (required)
 "use strict";
-define(
-    ["core/utils", "core/pubsubhub"],
-    function(utils, pubsubhub) {
+define([
+    "core/utils", 
+    "core/pubsubhub",
+  ], function(utils, pubsubhub) {
       function attachFixupScript(doc, version){
         var script = doc.createElement("script");
         var helperScript = "https://www.w3.org/scripts/TR/{version}/fixup.js"
@@ -126,7 +127,7 @@ define(
             case "FINDING":
             case "FINDING-DRAFT":
             case "BASE":
-              styleFile = "base";
+              styleFile = "base.css";
               break;
             default:
               styleFile += conf.specStatus;
