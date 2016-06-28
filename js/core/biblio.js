@@ -7,8 +7,10 @@
 /*globals console*/
 "use strict";
 
-define(
-    ["core/pubsubhub", "core/utils"],
+define([
+    "core/pubsubhub",
+    "core/utils",
+    ],
     function (pubsubhub, utils) {
         var bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
         var getRefKeys = function (conf) {
