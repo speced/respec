@@ -8,6 +8,160 @@ describe("Core - Utils", function() {
     });
   });
 
+  describe("createResourceHint", function(){
+    it("returns a link element", function(done){
+      var link = utils.createResourceHint({
+        href: "https://example.com",
+        hint: "preconnect",
+      });
+      expect(link instanceof HTMLLinkElement).toEqual(true);
+      done();
+    });
+    it("throws given invalid opts", function(done){
+      expect(function(){
+        utils.createResourceHint();
+      }).toThrow();
+
+      expect(function(){
+        utils.createResourceHint(null);
+      }).toThrow();
+
+      expect(function(){
+        utils.createResourceHint("throw");
+      }).toThrow();
+
+      expect(function(){
+        utils.createResourceHint({
+          href: "https://example.com",
+          hint: "preconnect",
+        });
+      }).not.toThrow();
+      done();
+    });
+    it("throws given an unknown hint", function(done){
+      expect(function(){
+        utils.createResourceHint({ hint: null });
+      }).toThrow();
+      expect(function(){
+        utils.createResourceHint({ hint: "not a real hint" });
+      }).toThrow();
+      expect(function(){
+        utils.createResourceHint({ hint: "preconnect" });
+      }).not.toThrow();
+      done();
+    });
+    it("throws given an invalid URL", function(done){
+      expect(function(){
+        utils.createResourceHint({
+          hint: "preconnect",
+          href: "http://[unvalid:url:///",
+        });
+      }).toThrow();
+      expect(function(){
+        utils.createResourceHint({
+          hint: "preconnect",
+          href: "http://this/is/ok/tho",
+        });
+      }).not.toThrow();
+      done();
+    });
+    it("normalizes a URL intended for dns-prefetch to an origin", function(done) {
+      var link = utils.createResourceHint({
+        hint: "dns-prefetch",
+        href: "http://origin:8080/./../test",
+      });
+      expect(link.href).toEqual("http://origin:8080/");
+      done();
+    });
+    it("normalizes a URL intended for preconnect to an origin", function(done) {
+      var link = utils.createResourceHint({
+        hint: "preconnect",
+        href: "http://origin:8080/./../test",
+      });
+      expect(link.href).toEqual("http://origin:8080/");
+      done();
+    });
+    it("ignores 'as' member on dns-prefetch", function(done) {
+      var link = utils.createResourceHint({
+        hint: "dns-prefetch",
+        href: "https://example.com",
+        as: "media",
+      });
+      expect(link.hasAttribute("as")).toEqual(false);
+      done();
+    });
+    it("ignores 'as' member on preconnect", function(done) {
+      var link = utils.createResourceHint({
+        hint: "preconnect",
+        href: "https://example.com",
+        as: "style",
+      });
+      expect(link.hasAttribute("as")).toEqual(false);
+      done();
+    });
+    it("respects 'as' member on preload", function(done){
+      var link = utils.createResourceHint({
+        hint: "preload",
+        href: "https://example.com",
+        as: "style",
+      });
+      expect(link.hasAttribute("as")).toEqual(true);
+      expect(link.getAttribute("as")).toEqual("style");
+      done();
+    });
+    it("respects override of the CORS mode", function(done){
+      var link = utils.createResourceHint({
+        hint: "preconnect",
+        href: "https://other.origin.com",
+        corsMode: "use-credentials",
+      });
+      expect(link.crossOrigin).toEqual("use-credentials");
+      done();
+    });
+    it("allows the browser to recover from bogus CORS mode", function(done){
+      var link = utils.createResourceHint({
+        hint: "preconnect",
+        href: "https://other.origin.com",
+        corsMode: "this will magically become anonymous!",
+      });
+      expect(link.crossOrigin).toEqual("anonymous");
+      done();
+    });
+    it("automatically detects cross-origin requests for dns-prefetch", function(done){
+      var link = utils.createResourceHint({
+        hint: "dns-prefetch",
+        href: "https://other.origin.com",
+      });
+      expect(link.crossOrigin).toEqual("anonymous");
+      done();
+    });
+    it("automatically detects cross-origin requests for preconnect", function(done){
+      var link = utils.createResourceHint({
+        hint: "preconnect",
+        href: "https://other.origin.com",
+      });
+      expect(link.crossOrigin).toEqual("anonymous");
+      done();
+    });
+    it("marks the link element for removal on save by default", function(done){
+      var link = utils.createResourceHint({
+        href: "https://example.com",
+        hint: "preconnect",
+      });
+      expect(link.classList.contains("removeOnSave")).toEqual(true);
+      done();
+    });
+    it("repects leaving a hint in the spec when told to", function(done){
+      var link = utils.createResourceHint({
+        href: "https://example.com",
+        hint: "preconnect",
+        dontRemove: true,
+      });
+      expect(link.classList.contains("removeOnSave")).toEqual(false);
+      done();
+    });
+  });
+
   describe("calculateLeftPad()", function(){
     it("throws given invalid input", function(){
       expect(function(){

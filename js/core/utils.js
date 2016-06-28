@@ -1,4 +1,5 @@
-/*jshint laxcomma: true*/
+/*jshint browser: true */
+/*globals console*/
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
@@ -6,13 +7,30 @@
 define(
   ["core/pubsubhub"],
   function(pubsubhub) {
+    var resourceHints = new Set([
+      "dns-prefetch",
+      "preconnect",
+      "preload",
+      "prerender",
+    ]);
+    var fetchDestinations = new Set([
+      "document",
+      "embed",
+      "font",
+      "image",
+      "manifest",
+      "media",
+      "object",
+      "report",
+      "script",
+      "serviceworker",
+      "sharedworker",
+      "style",
+      "worker",
+      "xslt",
+      "",
+    ]);
     var utils = {
-      // --- SET UP
-      run: function(conf, doc, cb, msg) {
-        msg.pub("start", "core/utils");
-        msg.pub("end", "core/utils");
-        cb();
-      },
       /**
        * Allows a node to be swapped into a different document at
        * some insertion point(Element). This function is useful for
@@ -84,7 +102,54 @@ define(
           }, +Infinity);
         return (leftPad === +Infinity) ? 0 : leftPad;
       },
-
+      /**
+       * Creates a link element that represents a resource hint.
+       *
+       * @param {Object} opts Configure the resource hint.
+       * @param {String} opts.hint The type of hint (see resourceHints).
+       * @param {URL|String} opts.href The URL for the resource or origin.
+       * @param {String} [opts.corsMode] Optional, the CORS mode to use (see HTML spec).
+       * @param {String} [opts.as] Optional, fetch destination type (see fetchDestinations).
+       * @param {Bool} [opts.dontRemove] If the hint should remain in the spec after processing.
+       * @return {HTMLLinkElement} A link element ready to use.
+       */
+      createResourceHint: function(opts) {
+        if (!opts || typeof opts !== "object") {
+          throw new TypeError("Missing options");
+        }
+        if (!resourceHints.has(opts.hint)) {
+          throw new TypeError("Invalid resources hint");
+        }
+        var url = new URL(opts.href, document.location);
+        var linkElem = document.createElement("link");
+        var href = url.href;
+        linkElem.rel = opts.hint;
+        switch (linkElem.rel) {
+        case "dns-prefetch":
+        case "preconnect":
+          href = url.origin;
+          if (opts.corsMode || url.origin !== document.location.origin) {
+            linkElem.crossOrigin = opts.corsMode || "anonymous";
+          }
+          break;
+        case "preload":
+          if ("as" in opts && typeof opts.as === "string") {
+            if (!fetchDestinations.has(opts.as)) {
+              console.warn("Unknown request destination: " + opts.as);
+            }
+            linkElem.setAttribute("as", opts.as);
+          }
+          break;
+        case "prerender":
+          href = url.href;
+          break;
+        }
+        linkElem.href = href;
+        if (!opts.dontRemove) {
+          linkElem.classList.add("removeOnSave");
+        }
+        return linkElem;
+      },
       /**
        * Makes a ES conforming iterator allowing objects to be used with
        * methods that can interface with Iterators (Array.from(), etc.).
@@ -346,10 +411,8 @@ define(
       // take a document and either a link or an array of links to CSS and appends a <link/> element
       // to the head pointing to each
       linkCSS: function(doc, styles) {
-        if (!Array.isArray(styles)) {
-          styles = [styles];
-        }
-        styles
+        var stylesArray = Array.isArray(styles) ? [].concat(styles) : [styles];
+        var frag = stylesArray
           .map(function(url) {
             var link = doc.createElement("link");
             link.rel = "stylesheet";
@@ -359,7 +422,8 @@ define(
           .reduce(function(elem, nextLink) {
             elem.appendChild(nextLink);
             return elem;
-          }, doc.head);
+          }, doc.createDocumentFragment());
+        doc.head.appendChild(frag);
       },
 
       // TRANSFORMATIONS

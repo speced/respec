@@ -1,7 +1,7 @@
 "use strict";
 describe("W3C — Bibliographic References", function() {
   var isSpecRefAvailable = true;
-
+  var bibRefsURL = new URL("https://specref.herokuapp.com/bibrefs");
   afterAll(function(done) {
     flushIframes();
     done();
@@ -12,7 +12,7 @@ describe("W3C — Bibliographic References", function() {
     var fetchOps = {
       method: "HEAD"
     };
-    fetch("https://specref.herokuapp.com/bibrefs", fetchOps)
+    fetch(bibRefsURL, fetchOps)
       .then(function(res) {
         isSpecRefAvailable = res.ok;
         expect(res.ok).toBeTruthy();
@@ -53,6 +53,19 @@ describe("W3C — Bibliographic References", function() {
       },
     }
   };
+
+  it("includes a dns-prefetch to bibref server", function(done) {
+    var ops = {
+      config: customConfig,
+      body: "<section id='sotd'><p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p></section>",
+    };
+    makeRSDoc(ops, function(doc) {
+      var host = bibRefsURL.host;
+      var link = doc.querySelector("link[rel='dns-prefetch'][href*='" + host + "']");
+      expect(link).toBeTruthy();
+      expect(link.classList.contains("removeOnSave")).toBeTruthy();
+    }).then(done).catch(done);
+  });
 
   it("should display the publisher when present", function(done) {
     var ops = {

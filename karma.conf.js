@@ -41,6 +41,7 @@ module.exports = function(config) {
         served: true,
       },
       "js/deps/jquery.js",
+      "js/deps/fetch.js",
       "tests/spec/SpecHelper.js",
       "tests/test-main.js",
     ],
