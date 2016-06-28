@@ -103,7 +103,7 @@ define(
         return (leftPad === +Infinity) ? 0 : leftPad;
       },
       /**
-       * Creates a link element to use as a resource hint.
+       * Creates a link element that represents a resource hint.
        *
        * @param {Object} opts Configure the resource hint.
        * @param {String} opts.hint The type of hint (see resourceHints).
