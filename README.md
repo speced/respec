@@ -39,4 +39,4 @@ Bibliographical references have been moved out of ReSpec. You want to use
 the [documentation repository](https://github.com/w3c/respec-docs) for the sources.
 
 ## Contribute
-See our [contribution guidelines](.github/CONTRIBUTOR.md).
+Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.

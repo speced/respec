@@ -7,13 +7,13 @@ var specStatus = [{
   expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WD",
 }, {
   status: "finding",
-  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base",
+  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css",
 }, {
   status: "unofficial",
   expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-UD",
 }, {
   status: "base",
-  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base",
+  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css",
 }, {
   status: "RSCND",
   expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-RSCND",
@@ -102,7 +102,7 @@ describe("W3C - Style", function() {
   });
 
   it("should default to base when specStatus is missing", function(done) {
-    loadWithStatus("", "https://www.w3.org/StyleSheets/TR/{version}base").then(done);
+    loadWithStatus("", "https://www.w3.org/StyleSheets/TR/{version}base.css").then(done);
   });
 
   it("should style according to spec status", function(done) {
