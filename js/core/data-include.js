@@ -28,7 +28,6 @@ define(
                         $el.removeAttr("data-oninclude");
                         $el.removeAttr("data-include-format");
                         $el.removeAttr("data-include-replace");
-                        $el.removeAttr("data-include-sync");
                         len--;
                         if (len <= 0) {
                             return cb();
@@ -43,12 +42,10 @@ define(
                     ,   uri = $el.attr("data-include")
                     ,   format = $el.attr("data-include-format") || "html"
                     ,   replace = !!$el.attr("data-include-replace")
-                    ,   sync = !!$el.attr("data-include-sync")
                     ;
                     $.ajax({
                         dataType:   format
                     ,   url:        uri
-                    ,   async:      !sync
                     ,   success:    function (data) {
                             if (data) {
                                 var flist = $el.attr("data-oninclude");

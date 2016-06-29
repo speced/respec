@@ -1,5 +1,32 @@
 # Change Log
 
+## [v3.4.0](https://github.com/w3c/respec/tree/v3.4.0) (2016-06-28)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.3.3...v3.4.0)
+
+**Merged pull requests:**
+
+- command-line-usage@3.0.2 breaks build 🚨 [\#843](https://github.com/w3c/respec/pull/843) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Add CoC to project [\#842](https://github.com/w3c/respec/pull/842) ([marcoscaceres](https://github.com/marcoscaceres))
+- Feat\(w3c/style\): preload for css, scripts \(see \#663\) [\#838](https://github.com/w3c/respec/pull/838) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v3.3.3](https://github.com/w3c/respec/tree/v3.3.3) (2016-06-24)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.3.2...v3.3.3)
+
+**Closed issues:**
+
+- PSA: Disabled Appveyor [\#834](https://github.com/w3c/respec/issues/834)
+- Investigate sym-linking depedencies [\#633](https://github.com/w3c/respec/issues/633)
+
+**Merged pull requests:**
+
+- Update snyk to version 1.16.0 🚀 [\#841](https://github.com/w3c/respec/pull/841) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Update karma to version 1.0.0 🚀 [\#840](https://github.com/w3c/respec/pull/840) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- \[Snyk\] Fix for 1 vulnerable dependency path [\#839](https://github.com/w3c/respec/pull/839) ([snyk-bot](https://github.com/snyk-bot))
+- jscs@3.0.5 breaks build 🚨 [\#837](https://github.com/w3c/respec/pull/837) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- jasmine-reporters@2.2.0 breaks build ⚠️ [\#833](https://github.com/w3c/respec/pull/833) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- chore\(deps\): move dependencies to js/deps \(closes \#633\) [\#832](https://github.com/w3c/respec/pull/832) ([marcoscaceres](https://github.com/marcoscaceres))
+- Hljs update [\#830](https://github.com/w3c/respec/pull/830) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v3.3.2](https://github.com/w3c/respec/tree/v3.3.2) (2016-06-14)
 [Full Changelog](https://github.com/w3c/respec/compare/v3.2.134...v3.3.2)
 

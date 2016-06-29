@@ -35,8 +35,7 @@ Bibliographical references have been moved out of ReSpec. You want to use
 
 ## Want to see complete documentation?
 
-[Documentation for ReSpec](http://www.w3.org/respec) is available. Also see
-the [documentation repository](https://github.com/w3c/respec-docs) for the sources.
+[Documentation for ReSpec](http://github.com/w3c/respec/wiki/) is available in our wiki.
 
 ## Contribute
 Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
