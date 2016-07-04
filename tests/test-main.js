@@ -30,3 +30,6 @@ require.config({
     "deps/jquery": "/base/js/deps/jquery",
   },
 });
+
+// Attempt to reduce timeout errors
+jasmine.DEFAULT_TIMEOUT_INTERVAL = jasmine.DEFAULT_TIMEOUT_INTERVAL * 2;
