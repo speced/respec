@@ -47,7 +47,7 @@
     "karma-verbose-summary-reporter": "0.0.1",
     "marcosc-async": "^2.0.3",
     "mocha": "^2.5.3",
-    "moment": "^2.14.0",
+    "moment": "^2.14.1",
     "mozilla-download": "^1.1.1",
     "nightmare": "^2.5.2",
     "promise-polyfill": "^5.2.1",
