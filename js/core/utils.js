@@ -158,7 +158,7 @@ define(
        * @return {Object} An object that implements the Iterator prop.
        */
       toESIterable: function(nextLikeFunction) {
-        if (!(nextLikeFunction instanceof Function)) {
+        if (typeof nextLikeFunction !== "function") {
           throw TypeError("Expected a function");
         }
         var next = function() {
