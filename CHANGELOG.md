@@ -1,5 +1,33 @@
 # Change Log
 
+## [Unreleased](https://github.com/w3c/respec/tree/HEAD)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v4.0.1...HEAD)
+
+**Merged pull requests:**
+
+- nightmare@2.5.3 breaks build 🚨 [\#862](https://github.com/w3c/respec/pull/862) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Update snyk to version 1.17.0 🚀 [\#860](https://github.com/w3c/respec/pull/860) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+
+## [v4.0.1](https://github.com/w3c/respec/tree/v4.0.1) (2016-07-04)
+[Full Changelog](https://github.com/w3c/respec/compare/v4.0.0...v4.0.1)
+
+**Merged pull requests:**
+
+- moment@2.14.1 breaks build 🚨 [\#856](https://github.com/w3c/respec/pull/856) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- fix\(tests\): prevent FF from timing out [\#855](https://github.com/w3c/respec/pull/855) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update marcosc-async to version 3.0.0 🚀 [\#854](https://github.com/w3c/respec/pull/854) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- moment@2.14.0 breaks build 🚨 [\#853](https://github.com/w3c/respec/pull/853) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- jscs@3.0.6 breaks build 🚨 [\#850](https://github.com/w3c/respec/pull/850) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Update marcosc-async to version 2.0.3 🚀 [\#849](https://github.com/w3c/respec/pull/849) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+
+## [v4.0.0](https://github.com/w3c/respec/tree/v4.0.0) (2016-06-29)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.4.0...v4.0.0)
+
+**Merged pull requests:**
+
+- feat\(data-include\): deprecate data-include-sync [\#845](https://github.com/w3c/respec/pull/845) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v3.4.0](https://github.com/w3c/respec/tree/v3.4.0) (2016-06-28)
 [Full Changelog](https://github.com/w3c/respec/compare/v3.3.3...v3.4.0)
 
