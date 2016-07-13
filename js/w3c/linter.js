@@ -21,21 +21,50 @@ define(["core/pubsubhub"], function(pubsubhub) {
       });
   }
 
+  function findHTTPProps(conf, base) {
+    return Object.getOwnPropertyNames(conf)
+      .filter(function(key) {
+        return key.endsWith("URI") || key === "prevED";
+      })
+      .filter(function(key) {
+        return new URL(conf[key], base).href.startsWith("http://");
+      });
+  }
+
   return {
     run: function(conf, doc, cb) {
-      if (!conf.lint) {
+      if (!conf.lint || conf.status === "unofficial") {
         return cb();
       }
+      var warnings = [];
+      var warn = "";
+
+      // Warn if no privacy and/or security considerations section
       if (!hasPriSecConsiderations(doc)) {
-        var warn = "This specification doesn't appear to have any 'Privacy' " +
+        warn = "This specification doesn't appear to have any 'Privacy' " +
           " or 'Security' considerations sections. Please consider adding one" +
           ", see https://w3ctag.github.io/security-questionnaire/";
-        pubsubhub.pub("warning", warn);
+        warnings.push(warn);
       }
+
+      // Warn about HTTP URLs used in respecConfig
+      var httpURLs = findHTTPProps(conf, doc.location.href);
+      if (httpURLs.length) {
+        warn = "There are insecure URLs in your respecConfig! Please change " +
+          "the following properties to use 'https://': " + httpURLs.join(", ") + ".";
+        warnings.push(warn);
+      }
+
+      // Publish warnings
+      warnings.map(function(warn) {
+        pubsubhub.pub("warning", warn);
+      });
+
       cb();
     },
     // Convenience methods, for quickly testing rules.
     rules: {
+      "findHTTPProps": findHTTPProps,
       "hasPriSecConsiderations": hasPriSecConsiderations,
     },
   };
