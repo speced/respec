@@ -263,7 +263,7 @@ define(
                     }
                     // we don't handle other types
                     else {
-                        pubsubhub.pub("warning", "Cannot handle serialising nodes of type: " + node.nodeType);
+                        pubsubhub.pub("warn", "Cannot handle serialising nodes of type: " + node.nodeType);
                     }
                     return out;
                 };
