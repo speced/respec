@@ -15,7 +15,7 @@
   },
   "author": "Robin Berjon",
   "devDependencies": {
-    "async": "^2.0.0-rc.6",
+    "async": "^2.0.0",
     "chai": "^3.5.0",
     "colors": "^1.1.2",
     "command-line-args": "^3.0.0",
