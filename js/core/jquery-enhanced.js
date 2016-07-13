@@ -65,7 +65,7 @@ define([
       // allow @title for backward compatibility
       titleString = this.attr("title");
       theAttr = "title";
-      pubsubhub.pub("warn", "Using deprecated attribute @title for '" + this.text() + "': see http://w3.org/respec/guide.html#definitions-and-linking");
+      pubsubhub.pub("warn", "Using deprecated attribute title for '" + this.text() + "': see https://github.com/w3c/respec/wiki/User's-Guide#definitions-and-linking");
     } else if (this.contents().length == 1 && this.children("abbr, acronym").length == 1 && this.find(":first-child").attr("title")) {
       titleString = this.find(":first-child").attr("title");
     } else {
