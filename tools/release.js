@@ -153,7 +153,7 @@ const Promps = {
       .filter(line => line)
       // drop the hash
       .map(line => line.substr(line.indexOf(" ") + 1))
-      .some(line => /^feat/.test(line))
+      .some(line => /^feat/.test(line));
     let [major, minor, patch] = version.split(".").map(value => parseInt(value));
 
     if (isMinor) {
@@ -162,7 +162,7 @@ const Promps = {
     } else {
       patch++;
     }
-    return `${major}.${minor}.${patch}`
+    return `${major}.${minor}.${patch}`;
   },
 
   askBumpVersion() {
@@ -175,7 +175,7 @@ const Promps = {
       if (!version) {
         throw new Error("Version string not found in package.json");
       }
-      const newVersion = this.suggestSemVersion(commits, version)
+      const newVersion = this.suggestSemVersion(commits, version);
       const packagePath = rel("../package.json");
       const data = yield fsp.readFile(packagePath, "utf8");
       const pack = JSON.parse(data);
