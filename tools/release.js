@@ -26,6 +26,13 @@ colors.setTheme({
   prompt: "grey",
   verbose: "cyan",
   warn: "yellow",
+  docs: "grey",
+  chore: "grey",
+  fix: "red",
+  style: "grey",
+  refactor: "green",
+  test: "grey",
+  feat: "green",
 });
 
 function rel(f) {
@@ -101,15 +108,74 @@ const Promps = {
     }, this);
   },
 
+  stylelizeCommits(commits) {
+    const iconMap = new Map([
+      ["docs", "📖"],
+      ["chore", "🔨"],
+      ["fix", "🐞"],
+      ["style", "🖌"],
+      ["refactor", "💃"],
+      ["test", "👍"],
+      ["feat", "⭐️"],
+    ]);
+    const commitHints = /^docs|^chore|^fix|^style|^refactor|^test|^feat/i;
+    return commits
+      .split("\n")
+      .filter(line => line)
+      // drop the hash
+      .map(line => line.substr(line.indexOf(" ") + 1))
+      // colorize/iconify
+      .map(line => {
+        const match = commitHints.test(line) ? commitHints.exec(line)[0].toLowerCase() : "";
+        let result = line;
+        let icon = (match && iconMap.has(match)) ? iconMap.get(match) : "❓";
+        // colorize
+        if (match) {
+          result = result.replace(match, colors[match](match));
+        }
+        return `  ${icon} ${result}`;
+      })
+      .sort()
+      .join("\n");
+  },
+  /**
+   * Try to guess the version, based on the commits.
+   * Given a version number MAJOR.MINOR.PATCH, increment the:
+   *
+   *  - MAJOR version when you make incompatible API changes,
+   *  - MINOR version when you add functionality in a backwards-compatible manner, and
+   *  - PATCH version when you make backwards-compatible bug fixes.
+   */
+  suggestSemVersion(commits, version) {
+    // We can only guess at MINOR, based on feat. Otherwise, it's just a patch
+    const isMinor = commits
+      .split("\n")
+      .filter(line => line)
+      // drop the hash
+      .map(line => line.substr(line.indexOf(" ") + 1))
+      .some(line => /^feat/.test(line))
+    let [major, minor, patch] = version.split(".").map(value => parseInt(value));
+
+    if (isMinor) {
+      minor++;
+      patch = 0;
+    } else {
+      patch++;
+    }
+    return `${major}.${minor}.${patch}`
+  },
+
   askBumpVersion() {
     return async.task(function * () {
       const version = yield Builder.getRespecVersion();
+      const commits = yield git("log `git describe --tags --abbrev=0`..HEAD --oneline");
+      const stylizedCommits = this.stylelizeCommits(commits);
+      console.log(`\n ## Commits since ${version}`);
+      console.log(stylizedCommits, "\n");
       if (!version) {
         throw new Error("Version string not found in package.json");
       }
-      const newVersion = version.split(".")
-        .map((value, index) => (index === 2) ? parseInt(value) + 1 : value)
-        .join(".");
+      const newVersion = this.suggestSemVersion(commits, version)
       const packagePath = rel("../package.json");
       const data = yield fsp.readFile(packagePath, "utf8");
       const pack = JSON.parse(data);
