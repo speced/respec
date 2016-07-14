@@ -57,7 +57,7 @@ define(["core/pubsubhub"], function(pubsubhub) {
 
       // Publish warnings
       warnings.map(function(warn) {
-        pubsubhub.pub("warning", warn);
+        pubsubhub.pub("warn", warn);
       });
 
       cb();
