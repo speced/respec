@@ -1,5 +1,24 @@
 # Change Log
 
+## [v4.1.0](https://github.com/w3c/respec/tree/v4.1.0) (2016-07-14)
+[Full Changelog](https://github.com/w3c/respec/compare/v4.0.2...v4.1.0)
+
+**Fixed bugs:**
+
+- Warning still pointing to guide [\#869](https://github.com/w3c/respec/issues/869)
+
+**Closed issues:**
+
+- Deprecate data-include-sync [\#844](https://github.com/w3c/respec/issues/844)
+- Warn if URLs are not TLS [\#814](https://github.com/w3c/respec/issues/814)
+- \*URI options [\#810](https://github.com/w3c/respec/issues/810)
+
+**Merged pull requests:**
+
+- Support iterable for contiguous IDL [\#871](https://github.com/w3c/respec/pull/871) ([mwatson2](https://github.com/mwatson2))
+- Changed warning pointer for use of @title. [\#870](https://github.com/w3c/respec/pull/870) ([halindrome](https://github.com/halindrome))
+- feat\(linter\): Respec linter [\#866](https://github.com/w3c/respec/pull/866) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v4.0.2](https://github.com/w3c/respec/tree/v4.0.2) (2016-07-13)
 [Full Changelog](https://github.com/w3c/respec/compare/v4.0.1...v4.0.2)
 
