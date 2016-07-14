@@ -1,11 +1,17 @@
 # Change Log
 
-## [Unreleased](https://github.com/w3c/respec/tree/HEAD)
+## [v4.0.2](https://github.com/w3c/respec/tree/v4.0.2) (2016-07-13)
+[Full Changelog](https://github.com/w3c/respec/compare/v4.0.1...v4.0.2)
 
-[Full Changelog](https://github.com/w3c/respec/compare/v4.0.1...HEAD)
+**Closed issues:**
+
+- ToC characters seem messed up [\#867](https://github.com/w3c/respec/issues/867)
+- Check on function in utils.toESIterable makes spec loading with jsdom fail [\#861](https://github.com/w3c/respec/issues/861)
 
 **Merged pull requests:**
 
+- async@2.0.0 breaks build 🚨 [\#868](https://github.com/w3c/respec/pull/868) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- fix\(utils\): toESIterable jsdom compat \(closes \#861\) [\#865](https://github.com/w3c/respec/pull/865) ([marcoscaceres](https://github.com/marcoscaceres))
 - nightmare@2.5.3 breaks build 🚨 [\#862](https://github.com/w3c/respec/pull/862) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
 - Update snyk to version 1.17.0 🚀 [\#860](https://github.com/w3c/respec/pull/860) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
 
