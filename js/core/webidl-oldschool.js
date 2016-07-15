@@ -1486,7 +1486,7 @@ define(
             showDeprecationWarning: function(){
                 var deprecationWarn = "Defining WebIDL in `dl` elements is deprecated. "
                     + "Please use Contiguous IDL instead: "
-                    + "https://www.w3.org/respec/guide.html#contiguous-idl";
+                    + "https://github.com/w3c/respec/wiki/User's-Guide#webidl-support";
                 pubsubhub.pub("warn", deprecationWarn);
             },
             run:    function (conf, doc, cb) {
