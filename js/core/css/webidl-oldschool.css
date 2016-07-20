@@ -210,13 +210,12 @@ table.parameters { border-bottom:  1px solid #90b8de; }
 table.exceptions { border-bottom:  1px solid #deb890; }
 
 .parameters th, .exceptions th {
-    color:  #fff;
+    color:  inherit;
     padding:    3px 5px;
     text-align: left;
     font-weight:    normal;
-    text-shadow:    #666 1px 1px 0;
 }
-.parameters th { background: #90b8de; }
+.parameters th { color: #fff; background: #005a9c; }
 .exceptions th { background: #deb890; }
 
 .parameters td, .exceptions td {
