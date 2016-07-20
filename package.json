@@ -50,7 +50,7 @@
     "moment": "^2.14.1",
     "mozilla-download": "^1.1.1",
     "nightmare": "^2.5.2",
-    "promise-polyfill": "^5.2.1",
+    "promise-polyfill": "^6.0.0",
     "prompt": "^1.0.0",
     "requirejs": "^2.2.0",
     "text": "github:requirejs/text",
