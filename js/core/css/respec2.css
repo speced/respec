@@ -49,6 +49,10 @@ code {
     color:  #C83500;
 }
 
+th code {
+  color: inherit;
+}
+
 /* --- TOC --- */
 .toc a, .tof a {
     text-decoration:    none;
