@@ -46,6 +46,7 @@ const excludedFiles = new Set([
   "starter.html",
   "basic.built.html",
   "manifest.html",
+  "contiguous.html",
 ]);
 
 const runRespec2html = async(function* (server) {
