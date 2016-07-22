@@ -31,7 +31,11 @@ define(
                 metaCharset = doc.createElement("meta");
                 metaCharset.setAttribute("charset", "utf-8");
             }
-            head.insertBefore(metaCharset, head.firstChild);
+            // Add meta generator
+            var metaGenerator = doc.createElement("meta");
+            metaGenerator.name = "generator";
+            metaGenerator.content = "ReSpec " + window.respecVersion || "Developer Channel";
+            head.insertBefore(metaGenerator, head.lastChild);
         };
 
         // Clean up markup to overcome bugs in beautifier
