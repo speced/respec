@@ -49,7 +49,7 @@ function git(cmd) {
 
 cmdPrompt.start();
 
-const Promps = {
+const Prompts = {
   askQuestion(promptOps) {
     return new Promise((resolve, reject) => {
       cmdPrompt.get(promptOps, (err, res) => {
@@ -269,12 +269,12 @@ async.task(function*() {
     console.log(colors.info(" 📡  Performing Git remote update..."));
     yield git(`remote update`);
     if (initialBranch !== MAIN_BRANCH) {
-      yield Promps.askSwitchToBranch(initialBranch, MAIN_BRANCH);
+      yield Prompts.askSwitchToBranch(initialBranch, MAIN_BRANCH);
     }
     const branchState = yield getBranchState();
     switch (branchState) {
       case "needs a pull":
-        yield Promps.askToPullBranch(MAIN_BRANCH);
+        yield Prompts.askToPullBranch(MAIN_BRANCH);
         break;
       case "up-to-date":
         break;
@@ -285,8 +285,8 @@ async.task(function*() {
         throw new Error(`Your branch is not up-to-date. It ${branchState}.`);
     }
     // 2. Bump the version in `package.json`.
-    const version = yield Promps.askBumpVersion();
-    yield Promps.askBuildAddCommitMergeTag();
+    const version = yield Prompts.askBumpVersion();
+    yield Prompts.askBuildAddCommitMergeTag();
     // 3. Run the build script (node tools/build-w3c-common.js).
     yield w3cBuild.buildW3C("latest");
     // 4. Commit your changes (git commit -am v3.x.y)
@@ -298,7 +298,7 @@ async.task(function*() {
     yield git(`checkout develop`);
     // 6. Tag the release (git tag v3.x.y)
     yield git(`tag -m v${version} v${version}`);
-    yield Promps.askPushAll();
+    yield Prompts.askPushAll();
     console.log(colors.info(" 📡  Pushing everything back to server..."));
     yield git("push origin develop");
     yield git("push origin gh-pages");
@@ -307,7 +307,7 @@ async.task(function*() {
     // We give npm publish 1 minute to time out, as it can be slow.
     yield toExecPromise("npm publish", 60000);
     if (initialBranch !== MAIN_BRANCH) {
-      yield Promps.askSwitchToBranch(MAIN_BRANCH, initialBranch);
+      yield Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
     }
   } catch (err) {
     console.error(colors.red(`\n ☠️ ${err.message}`));
