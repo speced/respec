@@ -42,10 +42,11 @@ function toExecutable(cmd) {
 }
 
 const excludedFiles = new Set([
-  "embedder.html",
-  "starter.html",
   "basic.built.html",
+  "embedder.html",
   "manifest.html",
+  "starter.html",
+  "webidl-contiguous.html",
 ]);
 
 const runRespec2html = async(function* (server) {

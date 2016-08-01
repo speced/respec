@@ -4,10 +4,19 @@
 const async = require("marcosc-async");
 const fsp = require("fs-promise");
 const path = require("path");
-const exec = require("child_process").exec;
+const { exec } = require("child_process");
 const testsPath = path.resolve(__dirname, "../tests");
 
-async.task(function * () {
+function toJSON(files) {
+  const pathMatcher = new RegExp(`${testsPath}/`, "g");
+  const paths = files
+    .split("\n")
+    .map(path => path.replace(pathMatcher, ""))
+    .filter(path => path);
+  return JSON.stringify(paths, null, 2);
+}
+
+async.task(function* () {
   const fileName = `${testsPath}/testFiles.json`;
   const cmd = `find ${testsPath} -name "*-spec.js"`;
   const files = yield toExecPromise(cmd);
@@ -18,16 +27,6 @@ async.task(function * () {
   console.error(err);
   process.exit(1);
 });
-
-function toJSON(files) {
-  const pathMatcher = new RegExp(`${testsPath}/`, "g");
-  const paths = files
-    .split("\n")
-    .map(path => path.replace(pathMatcher, ""))
-    .filter(path => path);
-  const data = JSON.stringify(paths, null, 2);
-  return data;
-}
 
 function toExecPromise(cmd) {
   return new Promise((resolve, reject) => {

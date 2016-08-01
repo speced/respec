@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "4.1.2",
+  "version": "4.3.0",
   "license": "W3C",
   "description": "Specification Edition Support Tool.",
   "engines": {
@@ -32,14 +32,14 @@
     "js-beautify": "^1.6.3",
     "jscs": "^3.0.6",
     "jshint": "^2.9.2",
-    "karma": "^1.1.0",
+    "karma": "^1.1.2",
     "karma-chrome-launcher": "^1.0.1",
     "karma-detect-browsers": "^2.1.0",
     "karma-firefox-launcher": "^1.0.0",
     "karma-ie-launcher": "^1.0.0",
     "karma-jasmine": "^1.0.2",
     "karma-mocha": "^1.1.1",
-    "karma-mocha-reporter": "^2.0.4",
+    "karma-mocha-reporter": "^2.1.0",
     "karma-opera-launcher": "^1.0.0",
     "karma-requirejs": "^1.0.0",
     "karma-safari-launcher": "^1.0.0",
@@ -85,7 +85,7 @@
     "marcosc-async": "^3.0.0",
     "marked": "^0.3.5",
     "nightmare": "^2.5.3",
-    "snyk": "1.17.1"
+    "snyk": "1.17.5"
   },
   "snyk": true
 }

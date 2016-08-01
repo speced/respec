@@ -31,7 +31,11 @@ define(
                 metaCharset = doc.createElement("meta");
                 metaCharset.setAttribute("charset", "utf-8");
             }
-            head.insertBefore(metaCharset, head.firstChild);
+            // Add meta generator
+            var metaGenerator = doc.createElement("meta");
+            metaGenerator.name = "generator";
+            metaGenerator.content = "ReSpec " + window.respecVersion || "Developer Channel";
+            head.insertBefore(metaGenerator, head.lastChild);
         };
 
         // Clean up markup to overcome bugs in beautifier
@@ -207,9 +211,9 @@ define(
                 else if (mode !== 5) {
                     if (conf.doRDFa) {
                         // use the standard RDFa 1.1 doctype
-                        str += " PUBLIC '-//W3C//DTD XHTML+RDFa 1.1//EN' 'http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd'";
+                        str += " PUBLIC '-//W3C//DTD XHTML+RDFa 1.1//EN' 'https://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd'";
                     } else {
-                        str += " PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'";
+                        str += " PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'";
                     }
                 }
                 str += ">\n<html";
