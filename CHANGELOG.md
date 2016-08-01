@@ -1,5 +1,51 @@
 # Change Log
 
+## [v4.3.0](https://github.com/w3c/respec/tree/v4.3.0) (2016-08-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v4.1.2...v4.3.0)
+
+**Implemented enhancements:**
+
+- Add ReSpec version when generating [\#805](https://github.com/w3c/respec/issues/805)
+
+**Closed issues:**
+
+- Support for https in /TR [\#749](https://github.com/w3c/respec/issues/749)
+
+**Merged pull requests:**
+
+- karma-mocha-reporter@2.1.0 breaks build 🚨 [\#895](https://github.com/w3c/respec/pull/895) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Update snyk to version 1.17.5 🚀 [\#894](https://github.com/w3c/respec/pull/894) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- karma-mocha-reporter@2.0.5 breaks build 🚨 [\#892](https://github.com/w3c/respec/pull/892) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Update snyk to version 1.17.4 🚀 [\#891](https://github.com/w3c/respec/pull/891) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Update snyk to version 1.17.3 🚀 [\#890](https://github.com/w3c/respec/pull/890) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- karma@1.1.2 breaks build 🚨 [\#889](https://github.com/w3c/respec/pull/889) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Update snyk to version 1.17.2 🚀 [\#888](https://github.com/w3c/respec/pull/888) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- feat\(save-html\): Add meta tag generator \(closes \#805\) [\#887](https://github.com/w3c/respec/pull/887) ([marcoscaceres](https://github.com/marcoscaceres))
+- Feat\(global\): link to HTTPS urls \(closes \#749\) [\#782](https://github.com/w3c/respec/pull/782) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v4.1.2](https://github.com/w3c/respec/tree/v4.1.2) (2016-07-21)
+[Full Changelog](https://github.com/w3c/respec/compare/v4.1.1...v4.1.2)
+
+**Fixed bugs:**
+
+- More granular styles for "table.simple th code" with better legibility/contrast [\#877](https://github.com/w3c/respec/issues/877)
+
+**Closed issues:**
+
+- Change fugly-looking styling in .parameters th and .exceptions th? [\#882](https://github.com/w3c/respec/issues/882)
+
+**Merged pull requests:**
+
+- increase contrast for .parameters th and .exceptions th text [\#883](https://github.com/w3c/respec/pull/883) ([patrickhlauke](https://github.com/patrickhlauke))
+- Update promise-polyfill to version 6.0.0 🚀 [\#881](https://github.com/w3c/respec/pull/881) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- fix\(respec2.css\): th code inherit color \(closes \#877\) [\#880](https://github.com/w3c/respec/pull/880) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update snyk to version 1.17.1 🚀 [\#876](https://github.com/w3c/respec/pull/876) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Deprecation warning should point to wiki [\#875](https://github.com/w3c/respec/pull/875) ([marcoscaceres](https://github.com/marcoscaceres))
+- Fix figures so more than one link can be made to figures [\#822](https://github.com/w3c/respec/pull/822) ([nickevansuk](https://github.com/nickevansuk))
+
+## [v4.1.1](https://github.com/w3c/respec/tree/v4.1.1) (2016-07-14)
+[Full Changelog](https://github.com/w3c/respec/compare/v4.1.0...v4.1.1)
+
 ## [v4.1.0](https://github.com/w3c/respec/tree/v4.1.0) (2016-07-14)
 [Full Changelog](https://github.com/w3c/respec/compare/v4.0.2...v4.1.0)
 
