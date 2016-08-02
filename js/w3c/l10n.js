@@ -67,6 +67,26 @@ define(
                 ,   open_parens:                "（"
                 ,   close_parens:               "）"
             }
+            ,   ja: {
+                    this_version:               "このバージョン："
+                ,   latest_published_version:   "最新バージョン："
+                ,   latest_editors_draft:       "Latest editor's draft:"
+                ,   editor:                     "編者："
+                ,   editors:                    "編者："
+                ,   author:                     "Author:"
+                ,   authors:                    "Authors:"
+                ,   abstract:                   "要約"
+                ,   sotd:                       "この文書の位置付け"
+                ,   status_at_publication:      "This section describes the status of this document at the time of its publication. Other documents may supersede this document. A list of current W3C publications and the latest revision of this technical report can be found in the <a href='https://www.w3.org/TR/'>W3C technical reports index</a> at https://www.w3.org/TR/."
+                ,   toc:                        "目次"
+                ,   note:                       "注"
+                ,   fig:                        "図"
+                ,   bug_tracker:                "Bug tracker："
+                ,   file_a_bug:                 "File a bug"
+                ,   open_bugs:                  "Open bugs"
+                ,   open_parens:                "（"
+                ,   close_parens:               "）"
+            }
         };
         l10n["zh-hans"] = l10n.zh;
         l10n["zh-cn"] = l10n.zh;
