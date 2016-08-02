@@ -31,6 +31,7 @@ define(
                 metaCharset = doc.createElement("meta");
                 metaCharset.setAttribute("charset", "utf-8");
             }
+            head.insertBefore(metaCharset, head.firstChild);
             // Add meta generator
             var metaGenerator = doc.createElement("meta");
             metaGenerator.name = "generator";
