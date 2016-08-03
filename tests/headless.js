@@ -1,4 +1,4 @@
-#!/usr/local/bin/node
+#!/usr/bin/env node
 
 /*jshint strict: true, node:true*/
 "use strict";
