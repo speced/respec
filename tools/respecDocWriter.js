@@ -83,7 +83,7 @@ const tasks = {
         webPreferences: {
           "images": false,
           "defaultEncoding": "utf-8",
-          partition: 'nopersist',
+          partition: "nopersist",
           userData,
         }
       });
