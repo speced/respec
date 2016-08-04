@@ -21,7 +21,7 @@ define(
                 var $secs = $parent.children(conf.tocIntroductory ? "section" : "section:not(.introductory)");
 
                 if ($secs.length === 0) return null;
-                var $ul = $("<ul class='toc'></ul>");
+                var $ul = $("<ol class='toc'></ol>");
                 for (var i = 0; i < $secs.length; i++) {
                     var $sec = $($secs[i], doc)
                     ,   isIntro = $sec.hasClass("introductory")
