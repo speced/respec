@@ -13,9 +13,9 @@ define(
                 $('div.head', doc).attr('role', 'contentinfo') ;
                 $('div.head', doc).attr('id', 'respecHeader') ;
                 if (!conf.noTOC) {
-                    // ensure toc is labelled
-                    var toc = $('nav#toc', doc).find("ul:first") ;
-                    toc.attr('role', 'directory') ;
+                    // ensure toc is labeled
+                    var toc = doc.querySelector('#toc ol:first-of-type');
+                    toc.setAttribute('role', 'directory') ;
                 }
                 // mark issues and notes with heading
                 var noteCount = 0 ; var issueCount = 0 ; var ednoteCount = 0;
