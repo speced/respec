@@ -27,7 +27,8 @@ define([],
         var noteCount = 1;
         var issueCount = 1;
         var ednoteCount = 1;
-        doc.querySelectorAll(".note-title, .ednote-title, .issue-title")
+        Array
+          .from(doc.querySelectorAll(".note-title, .ednote-title, .issue-title"))
           .forEach(function(element) {
             var $element = $(element);
             var isIssue = element.classList.contains("issue-title");
