@@ -12,9 +12,9 @@ define(
                 $('body', doc).attr('id', 'respecDocument') ;
                 $('div.head', doc).attr('role', 'contentinfo') ;
                 $('div.head', doc).attr('id', 'respecHeader') ;
-                if (!conf.noTOC) {
+                var toc = doc.querySelector('#toc ol:first-of-type');
+                if (toc) {
                     // ensure toc is labeled
-                    var toc = doc.querySelector('#toc ol:first-of-type');
                     toc.setAttribute('role', 'directory') ;
                 }
                 // mark issues and notes with heading
