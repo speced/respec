@@ -22,7 +22,7 @@ define(
       if ($secs.length === 0) {
         return null;
       }
-      var $ul = $("<ul class='toc'></ul>");
+      var $ol = $("<ol class='toc'></ol>");
       for (var i = 0; i < $secs.length; i++) {
         var $sec = $($secs[i], doc);
         var isIntro = $sec.hasClass("introductory");
@@ -70,9 +70,9 @@ define(
 
         var $a = $("<a/>").attr({ href: "#" + id, "class": "tocxref" })
           .append(isIntro ? "" : $span.clone())
-          .append($kidsHolder.contents()),
-          $item = $("<li class='tocline'/>").append($a);
-        if (conf.maxTocLevel === 0 || level <= conf.maxTocLevel) $ul.append($item);
+          .append($kidsHolder.contents());
+        var $item = $("<li class='tocline'/>").append($a);
+        if (conf.maxTocLevel === 0 || level <= conf.maxTocLevel) $ol.append($item);
         current.push(0);
         var $sub = makeTOCAtLevel($sec, doc, current, level + 1, conf);
         if ($sub) {
@@ -80,15 +80,15 @@ define(
         }
         current.pop();
       }
-      return $ul;
+      return $ol;
     }
 
     return {
       run: function(conf, doc, cb) {
-        if (!conf.tocIntroductory) {
+        if ("tocIntroductory" in conf === false) {
           conf.tocIntroductory = false;
         }
-        if (!conf.maxTocLevel) {
+        if ("maxTocLevel" in conf === false) {
           conf.maxTocLevel = 0;
         }
         var $secs = $("section:not(.introductory)", doc)
@@ -105,14 +105,14 @@ define(
 
         // makeTOC
         if (!conf.noTOC) {
-          var $ul = makeTOCAtLevel($("body", doc), doc, [0], 1, conf);
-          if (!$ul) return;
-          var w = "nav";
-          var $sec = $("<" + w + " id='toc'/>")
-            .append("<h2 class='introductory'>" + conf.l10n.toc + "</h2>")
-            .append($ul),
-            $ref = $("#toc", doc),
-            replace = false;
+          var $ol = makeTOCAtLevel($("body", doc), doc, [0], 1, conf);
+          if (!$ol) return;
+          var nav = doc.createElement("nav");
+          nav.id = "toc";
+          nav.innerHTML = "<h2 class='introductory'>" + conf.l10n.toc + "</h2>";
+          nav.appendChild($ol[0]);
+          var $ref = $("#toc", doc);
+          var replace = false;
           if ($ref.length) {
             replace = true;
           }
@@ -123,12 +123,12 @@ define(
             $ref = $("#abstract", doc);
           }
           if (replace) {
-            $ref.replaceWith($sec);
+            $ref.replaceWith(nav);
           } else {
-            $ref.after($sec);
+            $ref.after(nav);
           }
 
-          var $link = $("<p role='navigation' id='back-to-top'><a href='#toc'><abbr title='Back to Top'>&uarr;</abbr></p>");
+          var $link = $("<p role='navigation' id='back-to-top'><a href='#toc'><abbr title='Back to Top'>&uarr;</abbr></a></p>");
           $("body").append($link);
         }
 
