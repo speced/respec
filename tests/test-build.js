@@ -1,4 +1,4 @@
-#!/usr/local/bin/mocha
+#!/usr/bin/env mocha
 
 "use strict";
 const async = require("marcosc-async");
