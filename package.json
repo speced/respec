@@ -40,7 +40,6 @@
     "karma-verbose-summary-reporter": "0.0.1",
     "mocha": "^3.0.1",
     "moment": "^2.14.1",
-    "mozilla-download": "^1.1.1",
     "promise-polyfill": "^6.0.1",
     "prompt": "^1.0.0",
     "requirejs": "^2.2.0",
