@@ -1,5 +1,6 @@
 "use strict";
 describe("Core - Structure", function() {
+  this.retries(2);
   var body = "";
   beforeAll(function(done){
     body = makeDefaultBody() +

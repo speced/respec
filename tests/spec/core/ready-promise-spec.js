@@ -1,5 +1,6 @@
 "use strict";
 describe("respecIsReady promise", function() {
+  this.retries(2);
   it("should settle when processing is done", function(done) {
     var ops = makeStandardOps();
     makeRSDoc(ops, function(doc) {

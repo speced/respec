@@ -1,6 +1,7 @@
 "use strict";
 
 describe("Core - Ui", function () {
+  this.retries(2);
   afterAll(function (done) {
     flushIframes();
     done();

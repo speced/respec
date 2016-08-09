@@ -1,5 +1,6 @@
 "use strict";
 describe("Core — Informative", function() {
+  this.retries(2);
   afterAll(function(done) {
     flushIframes();
     done();

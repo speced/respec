@@ -1,5 +1,6 @@
 "use strict";
 describe("Core - Utils", function() {
+  this.retries(2);
   var utils;
   beforeAll(function(done) {
     require(["core/utils"], function(u) {

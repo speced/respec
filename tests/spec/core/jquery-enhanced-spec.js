@@ -1,5 +1,6 @@
 "use strict";
 describe("Core - jquery enhanced", function() {
+  this.retries(2);
   beforeAll(function(done){
     require(["core/jquery-enhanced"], function(){
       done();
