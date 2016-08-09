@@ -1,5 +1,6 @@
 "use strict";
 describe("W3C — Bibliographic References", function() {
+  this.retries(2);
   var isSpecRefAvailable = true;
   var bibRefsURL = new URL("https://specref.herokuapp.com/bibrefs");
   afterAll(function(done) {

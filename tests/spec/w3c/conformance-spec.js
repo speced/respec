@@ -1,5 +1,6 @@
 "use strict";
 describe("W3C — Conformance", function() {
+  this.retries(2);
   afterAll(function(done) {
     flushIframes();
     done();

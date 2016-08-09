@@ -1,5 +1,6 @@
 "use strict";
 describe("W3C — Headers", function() {
+  this.retries(2);
   afterEach(function(done) {
     flushIframes();
     done();

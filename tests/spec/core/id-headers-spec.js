@@ -1,5 +1,6 @@
 "use strict";
 describe("Core - ID headers", function() {
+  this.retries(2);
   afterAll(function(done) {
     flushIframes();
     done();
