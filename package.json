@@ -2,7 +2,7 @@
   "name": "respec",
   "version": "4.4.1",
   "license": "W3C",
-  "description": "Specification Edition Support Tool.",
+  "description": "A technical specification pre-processor.",
   "engines": {
     "node": ">=5"
   },
