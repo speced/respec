@@ -4,3 +4,14 @@ examples/
 karma.conf.js
 node_modules/
 tests/
+.DS_Store
+.csslintrc
+.eslintignore
+.gitignore
+.jshintrc
+.snyk
+.codeclimate.yml
+.editorconfig
+.eslintrc
+.jscsrc
+.travis.yml
