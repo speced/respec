@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "4.4.3",
+  "version": "4.4.4",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -52,8 +52,8 @@
     "jscs:fix": "jscs --esnext --fix tests",
     "jshint": "jshint karma.conf.js tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js",
     "karma": "karma start --single-run",
-    "postinstall": "npm run build:highlight",
-    "prepublish": "npm run snyk-protect",
+    "prepublish": "npm run build:highlight; npm run copydeps; npm run snyk-protect",
+    "copydeps": "./tools/copydeps.sh",
     "pretest": "npm run jshint && npm run jscs",
     "server": "python -m SimpleHTTPServer",
     "snyk-protect": "snyk protect",
