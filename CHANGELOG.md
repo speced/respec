@@ -1,5 +1,91 @@
 # Change Log
 
+## [Unreleased](https://github.com/w3c/respec/tree/HEAD)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v4.4.2...HEAD)
+
+**Fixed bugs:**
+
+- define where vocabulary in webidl should link [\#910](https://github.com/w3c/respec/issues/910)
+
+**Closed issues:**
+
+- support `data-for` attribute for WebIDL [\#863](https://github.com/w3c/respec/issues/863)
+- Include lodash [\#747](https://github.com/w3c/respec/issues/747)
+
+## [v4.4.2](https://github.com/w3c/respec/tree/v4.4.2) (2016-08-10)
+[Full Changelog](https://github.com/w3c/respec/compare/v4.4.1...v4.4.2)
+
+**Merged pull requests:**
+
+- More Japanese boilerplate text for l10n.js [\#913](https://github.com/w3c/respec/pull/913) ([r12a](https://github.com/r12a))
+
+## [v4.4.1](https://github.com/w3c/respec/tree/v4.4.1) (2016-08-08)
+[Full Changelog](https://github.com/w3c/respec/compare/v4.4.0...v4.4.1)
+
+**Closed issues:**
+
+- msg should only be included as needed.  [\#746](https://github.com/w3c/respec/issues/746)
+- TR CSS versioning into the document? [\#552](https://github.com/w3c/respec/issues/552)
+
+## [v4.4.0](https://github.com/w3c/respec/tree/v4.4.0) (2016-08-05)
+[Full Changelog](https://github.com/w3c/respec/compare/v4.3.4...v4.4.0)
+
+**Implemented enhancements:**
+
+- Linter should check editors and authors URLs [\#901](https://github.com/w3c/respec/issues/901)
+- Changed TOC requirements [\#835](https://github.com/w3c/respec/issues/835)
+
+**Fixed bugs:**
+
+- specberus issuing a warning on respec output [\#831](https://github.com/w3c/respec/issues/831)
+
+**Closed issues:**
+
+- lint option is not documented [\#885](https://github.com/w3c/respec/issues/885)
+
+**Merged pull requests:**
+
+- feat: use ol in ToC \(closes \#835\) [\#909](https://github.com/w3c/respec/pull/909) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update snyk to version 1.18.0 🚀 [\#908](https://github.com/w3c/respec/pull/908) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+
+## [v4.3.4](https://github.com/w3c/respec/tree/v4.3.4) (2016-08-04)
+[Full Changelog](https://github.com/w3c/respec/compare/v4.3.3...v4.3.4)
+
+**Merged pull requests:**
+
+- Ensure respec2html doesn't cache old respec versions in long-running processes [\#903](https://github.com/w3c/respec/pull/903) ([dontcallmedom](https://github.com/dontcallmedom))
+
+## [v4.3.3](https://github.com/w3c/respec/tree/v4.3.3) (2016-08-03)
+[Full Changelog](https://github.com/w3c/respec/compare/v4.3.2...v4.3.3)
+
+**Implemented enhancements:**
+
+- Build scripts hardcode location of node [\#899](https://github.com/w3c/respec/issues/899)
+
+**Merged pull requests:**
+
+- fix: generalize nodejs location \(closes \#899\) [\#902](https://github.com/w3c/respec/pull/902) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v4.3.2](https://github.com/w3c/respec/tree/v4.3.2) (2016-08-02)
+[Full Changelog](https://github.com/w3c/respec/compare/v4.3.1...v4.3.2)
+
+**Fixed bugs:**
+
+- Inserted stylesheets move charset declaration too far down [\#791](https://github.com/w3c/respec/issues/791)
+
+**Merged pull requests:**
+
+- Move charset declaration at the top when saving [\#898](https://github.com/w3c/respec/pull/898) ([dontcallmedom](https://github.com/dontcallmedom))
+
+## [v4.3.1](https://github.com/w3c/respec/tree/v4.3.1) (2016-08-02)
+[Full Changelog](https://github.com/w3c/respec/compare/v4.3.0...v4.3.1)
+
+**Merged pull requests:**
+
+- Update l10n.js [\#897](https://github.com/w3c/respec/pull/897) ([r12a](https://github.com/r12a))
+- Update mocha to version 3.0.0 🚀 [\#896](https://github.com/w3c/respec/pull/896) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+
 ## [v4.3.0](https://github.com/w3c/respec/tree/v4.3.0) (2016-08-01)
 [Full Changelog](https://github.com/w3c/respec/compare/v4.1.2...v4.3.0)
 
@@ -162,10 +248,6 @@
 
 ## [v3.2.132](https://github.com/w3c/respec/tree/v3.2.132) (2016-05-27)
 [Full Changelog](https://github.com/w3c/respec/compare/v3.2.131...v3.2.132)
-
-**Fixed bugs:**
-
-- Inserted stylesheets move charset declaration too far down [\#791](https://github.com/w3c/respec/issues/791)
 
 **Merged pull requests:**
 
@@ -1758,7 +1840,7 @@
 - If abstract and SotD are in the wrong order, strange things happen [\#37](https://github.com/w3c/respec/issues/37)
 
 ## [v3.1.2](https://github.com/w3c/respec/tree/v3.1.2) (2012-06-19)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.1.1...v3.1.2)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.3.1...v3.1.2)
 
 **Implemented enhancements:**
 
@@ -1772,11 +1854,11 @@
 
 - Add ref for: WEBAPPS-MANIFEST-API [\#41](https://github.com/w3c/respec/pull/41) ([tobie](https://github.com/tobie))
 
-## [v3.1.1](https://github.com/w3c/respec/tree/v3.1.1) (2012-06-18)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.3.1...v3.1.1)
-
 ## [v3.3.1](https://github.com/w3c/respec/tree/v3.3.1) (2012-06-18)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.1.0...v3.3.1)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.1.1...v3.3.1)
+
+## [v3.1.1](https://github.com/w3c/respec/tree/v3.1.1) (2012-06-18)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.1.0...v3.1.1)
 
 **Fixed bugs:**
 

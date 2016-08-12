@@ -11,6 +11,11 @@ well.
 
 If you are just interested in writing a spec, you can grab the [starter spec](examples/starter.html).
 
+We have extensive documentation on [how to use ReSpec](https://github.com/w3c/respec/wiki) in our wiki, including:  
+
+  * [User's guide](https://github.com/w3c/respec/wiki/User's-Guide)
+  * [WebIDL guide](https://github.com/w3c/respec/wiki/WebIDL-Guide)
+
 **You don't need to check-out or fork this repository.**
 
 If you are new to spec writing, we strongly encourage you to read:
