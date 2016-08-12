@@ -14,7 +14,7 @@ define(
     var codeStyle = document.createElement("style");
     codeStyle.textContent = ghCss;
     var swapStyleOwner = utils.makeOwnerSwapper(codeStyle);
-    swapStyleOwner(document, document.head);
+    swapStyleOwner(document.head);
     return {
       run: function(conf, doc, cb) {
         // Nothing to do
@@ -23,7 +23,7 @@ define(
         }
 
         if (codeStyle.ownerDocument !== doc) {
-          swapStyleOwner(doc, doc.head);
+          swapStyleOwner(doc.head);
         }
 
         if (doc.querySelector("highlight")) {
