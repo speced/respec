@@ -4,7 +4,6 @@
 rm ./js/deps/*.* ./js/core/css/github.css
 
 # Copy them again
-cp ./node_modules/promise-polyfill/promise.js ./js/deps/
 cp ./node_modules/js-beautify/js/lib/beautify-css.js ./js/deps/
 cp ./node_modules/js-beautify/js/lib/beautify-html.js ./js/deps/
 cp ./node_modules/js-beautify/js/lib/beautify.js ./js/deps/
