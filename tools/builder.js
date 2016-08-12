@@ -97,7 +97,7 @@ var Builder = {
         deps: [
           "core/jquery-enhanced",
           "deps/fetch",
-          "deps/Promise",
+          "deps/promise",
           "deps/require",
         ],
         inlineText: true,
