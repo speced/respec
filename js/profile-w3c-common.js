@@ -21,7 +21,6 @@ require.config({
   },
   deps: [
     "deps/fetch",
-    "deps/Promise",
     "deps/jquery",
   ],
 });

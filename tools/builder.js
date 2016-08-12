@@ -95,9 +95,6 @@ var Builder = {
         name: "profile-w3c-common",
         logLevel: 2, // Show uglify warnings and errors.
         deps: [
-          "core/jquery-enhanced",
-          "deps/fetch",
-          "deps/Promise",
           "deps/require",
         ],
         inlineText: true,
