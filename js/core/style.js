@@ -20,13 +20,13 @@ define(
     styleElement.id = "respec-mainstyle";
     styleElement.textContent = css;
     var swapStyleOwner = utils.makeOwnerSwapper(styleElement);
-    swapStyleOwner(document, document.head);
+    swapStyleOwner(document.head);
     return {
       run: function(conf, doc, cb) {
         if (conf.noReSpecCSS) {
           styleElement.remove();
         } else if (styleElement.ownerDocument !== doc) {
-          swapStyleOwner(doc, doc.head);
+          swapStyleOwner(doc.head);
         }
         cb();
       },

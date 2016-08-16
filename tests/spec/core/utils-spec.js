@@ -225,7 +225,7 @@ describe("Core - Utils", function() {
       var newDoc = document.implementation.createHTMLDocument("test");
       document.body.appendChild(testNode);
       expect(document.body.contains(testNode)).toBe(true);
-      swapTestNode(newDoc, newDoc.body);
+      swapTestNode(newDoc.body);
       expect(document.body.contains(testNode)).toBe(false);
       expect(testNode.ownerDocument).toEqual(newDoc);
     });
@@ -235,7 +235,7 @@ describe("Core - Utils", function() {
       var swapTestNode = utils.makeOwnerSwapper(testNode);
       var newDoc = document.implementation.createHTMLDocument("test");
       expect(document.head.contains(testNode)).toBe(false);
-      swapTestNode(newDoc, newDoc.head);
+      swapTestNode(newDoc.head);
       expect(newDoc.head.contains(testNode)).toBe(true);
       expect(testNode.ownerDocument).toEqual(newDoc);
     });
@@ -246,24 +246,9 @@ describe("Core - Utils", function() {
       var newDoc = document.implementation.createHTMLDocument("test");
       var metaElem = newDoc.createElement("meta");
       newDoc.head.appendChild(metaElem);
-      swapTestNode(newDoc, newDoc.head);
+      swapTestNode(newDoc.head);
       expect(newDoc.head.firstChild).toEqual(testNode);
       expect(newDoc.head.lastChild).toEqual(metaElem);
-    });
-  });
-
-  describe("findFirstElementChild() method", function(){
-    it("doesn't find elements when there are none to find", function(done){
-      var textNode = document.createTextNode("text");
-      expect(utils.findFirstElementChild(textNode)).toBe(null);
-      done();
-    });
-    it("finds the first Element child amongst a list of nodes", function(done){
-      var div = document.createElement("div");
-      div.innerHTML = "text <span>pass</span> text <span>fail</span> text";
-      expect(utils.findFirstElementChild(div)).toBeTruthy();
-      expect(utils.findFirstElementChild(div).textContent).toEqual("pass");
-      done();
     });
   });
 

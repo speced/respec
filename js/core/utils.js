@@ -39,47 +39,24 @@ define(
        * reside.
        *
        * @param  {Node} node The node to be swapped.
-       * @return {Function} A function that takes a document and a new
-       *                    insertion point (element). When called,
+       * @return {Function} A function that takes a new
+       *                    insertion point (Node). When called,
        *                    node gets inserted into doc at before a given
-       *                    insertion point (node) - or just appended, if
+       *                    insertion point (Node) - or just appended, if
        *                    the element has no children.
        */
       makeOwnerSwapper: function(node) {
         if (!(node instanceof Node)) {
-          throw TypeError();
+          throw new TypeError("Expected instance of Node.");
         }
-        return function(doc, insertionPoint) {
+        return function(insertionPoint) {
           node.remove();
-          doc.adoptNode(node);
-          var firstElementChild = this.findFirstElementChild(insertionPoint);
-          if (firstElementChild) {
-            insertionPoint.insertBefore(node, firstElementChild);
-            return;
+          insertionPoint.ownerDocument.adoptNode(node);
+          if (insertionPoint.firstElementChild) {
+            return insertionPoint.insertBefore(node, insertionPoint.firstElementChild);
           }
           insertionPoint.appendChild(node);
-        }.bind(this);
-      },
-      /**
-       * Finds the first Element child, given a node. Provides support for
-       * Microsoft Edge's missing support of .firstElementChild.
-       *
-       * @param  {Node} node The node to be traversed.
-       * @return {Element}   The first Element in the child list.
-       */
-      findFirstElementChild: function(node) {
-        if (!node.hasChildNodes()) {
-          return null;
-        }
-        // We have native support
-        if (node.firstElementChild) {
-          return node.firstElementChild;
-        }
-        return Array
-          .from(node.childNodes)
-          .find(function(node) {
-            return node.nodeType === Node.ELEMENT_NODE;
-          });
+        };
       },
       calculateLeftPad: function(text) {
         if (typeof text !== "string") {
