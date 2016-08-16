@@ -131,7 +131,7 @@ const Prompts = {
         let icon = (match && iconMap.has(match)) ? iconMap.get(match) : "❓";
         // colorize
         if (match) {
-          result = result.replace(match, colors[match](match));
+          result = result.replace(match.toLowerCase(), colors[match](match));
         }
         return `  ${icon} ${result}`;
       })
