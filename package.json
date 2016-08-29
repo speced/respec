@@ -76,7 +76,7 @@
     "marked": "^0.3.6",
     "nightmare": "^2.6.1",
     "prompt": "^1.0.0",
-    "snyk": "1.18.1"
+    "snyk": "1.19.1"
   },
   "snyk": true
 }
