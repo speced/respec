@@ -1,8 +1,33 @@
 # Change Log
 
-## [Unreleased](https://github.com/w3c/respec/tree/HEAD)
+## [v5.0.0](https://github.com/w3c/respec/tree/v5.0.0) (2016-08-16)
+[Full Changelog](https://github.com/w3c/respec/compare/v4.4.5...v5.0.0)
 
-[Full Changelog](https://github.com/w3c/respec/compare/v4.4.2...HEAD)
+**Closed issues:**
+
+- CG specs should not require a mailing list [\#918](https://github.com/w3c/respec/issues/918)
+- Remove dead code [\#801](https://github.com/w3c/respec/issues/801)
+
+**Merged pull requests:**
+
+- refactor\(utils\): ownerSwapper only takes Nodes \(close \#801\) [\#917](https://github.com/w3c/respec/pull/917) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v4.4.5](https://github.com/w3c/respec/tree/v4.4.5) (2016-08-12)
+[Full Changelog](https://github.com/w3c/respec/compare/v4.4.4...v4.4.5)
+
+**Closed issues:**
+
+- Drop promise poly [\#751](https://github.com/w3c/respec/issues/751)
+
+**Merged pull requests:**
+
+- feat: remove promise polyfill \(close \#751\) [\#916](https://github.com/w3c/respec/pull/916) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v4.4.4](https://github.com/w3c/respec/tree/v4.4.4) (2016-08-12)
+[Full Changelog](https://github.com/w3c/respec/compare/v4.4.3...v4.4.4)
+
+## [v4.4.3](https://github.com/w3c/respec/tree/v4.4.3) (2016-08-12)
+[Full Changelog](https://github.com/w3c/respec/compare/v4.4.2...v4.4.3)
 
 **Fixed bugs:**
 
@@ -10,7 +35,9 @@
 
 **Closed issues:**
 
+- https not used for patent links [\#914](https://github.com/w3c/respec/issues/914)
 - support `data-for` attribute for WebIDL [\#863](https://github.com/w3c/respec/issues/863)
+- Need WebIDL docs [\#847](https://github.com/w3c/respec/issues/847)
 - Include lodash [\#747](https://github.com/w3c/respec/issues/747)
 
 ## [v4.4.2](https://github.com/w3c/respec/tree/v4.4.2) (2016-08-10)
@@ -1840,7 +1867,7 @@
 - If abstract and SotD are in the wrong order, strange things happen [\#37](https://github.com/w3c/respec/issues/37)
 
 ## [v3.1.2](https://github.com/w3c/respec/tree/v3.1.2) (2012-06-19)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.3.1...v3.1.2)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.1.1...v3.1.2)
 
 **Implemented enhancements:**
 
@@ -1854,11 +1881,11 @@
 
 - Add ref for: WEBAPPS-MANIFEST-API [\#41](https://github.com/w3c/respec/pull/41) ([tobie](https://github.com/tobie))
 
-## [v3.3.1](https://github.com/w3c/respec/tree/v3.3.1) (2012-06-18)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.1.1...v3.3.1)
-
 ## [v3.1.1](https://github.com/w3c/respec/tree/v3.1.1) (2012-06-18)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.1.0...v3.1.1)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.3.1...v3.1.1)
+
+## [v3.3.1](https://github.com/w3c/respec/tree/v3.3.1) (2012-06-18)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.1.0...v3.3.1)
 
 **Fixed bugs:**
 
