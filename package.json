@@ -37,7 +37,7 @@
     "karma-safaritechpreview-launcher": "0.0.4",
     "karma-verbose-summary-reporter": "0.0.1",
     "mocha": "^3.0.2",
-    "moment": "^2.14.1",
+    "moment": "^2.15.0",
     "promise-polyfill": "^6.0.1",
     "requirejs": "^2.2.0",
     "text": "github:requirejs/text",
