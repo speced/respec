@@ -18,12 +18,12 @@ const r = require("requirejs");
 
 function replaceMapFilename(respecJs, outPath){
   // Capture group 1 is the name
-  const findSourceMapName = /\/\/# sourceMappingURL=(.+)/gm;
+  const findSourceMapName = /\/\/# sourceMappingURL=(.+)/;
   const basename = pth.basename(outPath, ".js");
   const newMapFilename = basename + ".build.js.map";
   let source;
   if(findSourceMapName.test(respecJs)){
-    const currentMapFilename = respecJs.match(findSourceMapName)[1];
+    const currentMapFilename = findSourceMapName.exec(respecJs)[1];
     source = respecJs.replace(currentMapFilename, newMapFilename);
   } else {
     const warn = "🚨️ The source map is missing. Something has probably gone wrong.";
