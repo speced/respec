@@ -1,5 +1,37 @@
 # Change Log
 
+## [v5.0.3](https://github.com/w3c/respec/tree/v5.0.3) (2016-09-20)
+[Full Changelog](https://github.com/w3c/respec/compare/v5.0.2...v5.0.3)
+
+## [v5.0.2](https://github.com/w3c/respec/tree/v5.0.2) (2016-09-20)
+[Full Changelog](https://github.com/w3c/respec/compare/v5.0.1...v5.0.2)
+
+**Closed issues:**
+
+- respecIsReady is not documented [\#930](https://github.com/w3c/respec/issues/930)
+
+**Merged pull requests:**
+
+- jasmine-core@2.5.2 breaks build 🚨 [\#932](https://github.com/w3c/respec/pull/932) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- moment@2.15.0 breaks build 🚨 [\#929](https://github.com/w3c/respec/pull/929) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+
+## [v5.0.1](https://github.com/w3c/respec/tree/v5.0.1) (2016-09-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v5.0.0...v5.0.1)
+
+**Implemented enhancements:**
+
+- Auto Conformance section - words are not complete [\#927](https://github.com/w3c/respec/issues/927)
+
+**Fixed bugs:**
+
+- Auto Conformance section - words are not complete [\#927](https://github.com/w3c/respec/issues/927)
+
+**Merged pull requests:**
+
+- Update snyk to version 1.19.1 🚀 [\#926](https://github.com/w3c/respec/pull/926) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Update snyk to version 1.18.1 🚀 [\#922](https://github.com/w3c/respec/pull/922) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Update karma-chrome-launcher to version 2.0.0 🚀 [\#920](https://github.com/w3c/respec/pull/920) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+
 ## [v5.0.0](https://github.com/w3c/respec/tree/v5.0.0) (2016-08-16)
 [Full Changelog](https://github.com/w3c/respec/compare/v4.4.5...v5.0.0)
 
