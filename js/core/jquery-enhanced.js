@@ -1,3 +1,4 @@
+"use strict";
 define([
   "core/pubsubhub",
   "core/utils",
@@ -14,7 +15,14 @@ define([
       // $newEl.attr($(this).attr());
       for (var i = 0, n = this.attributes.length; i < n; i++) {
         var at = this.attributes[i];
-        $newEl[0].setAttributeNS(at.namespaceURI, at.name, at.value);
+        try {
+          $newEl[0].setAttributeNS(at.namespaceURI, at.name, at.value);
+        } catch (err) {
+          var msg = "Your HTML markup is malformed. Error in: \n";
+          msg += this.outerHTML;
+          pubsubhub.pub("error", msg);
+          break; // no point in continuing with this element
+        }
       }
       $(this).contents().appendTo($newEl);
       $(this).replaceWith($newEl);
