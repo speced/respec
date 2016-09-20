@@ -987,7 +987,7 @@ hljs.registerLanguage('javascript', function(hljs) {
     ],
     relevance: 0
   };
-  PARAMS_CONTAINS = [
+  var PARAMS_CONTAINS = [
     hljs.APOS_STRING_MODE,
     hljs.QUOTE_STRING_MODE,
     NUMBER,
