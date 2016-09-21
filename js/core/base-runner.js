@@ -64,6 +64,7 @@ define(
                                     resolve(result);
                                 }
                             }).catch(function(e) {
+                                console.error(e, e.stack);
                                 throw e;
                             });
                         }
