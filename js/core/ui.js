@@ -9,173 +9,137 @@
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
 "use strict";
-define(
-  [
+define([
     "shortcut",
     "core/pubsubhub",
     "core/jquery-enhanced",
   ],
   function(shortcut, pubsubhub) {
-    var $menu = $("<div id=respec-menu></div>")
-      .css({
-        background: "#fff",
-        border: "1px solid #000",
-        width: "200px",
-        display: "none",
-        textAlign: "left",
-        marginTop: "5px",
-        marginRight: "5px"
-      });
-    var $modal, $overlay, errors = [],
-      warnings = [],
-      buttons = {},
-      $respecButton, $respecUI, errWarn = function(msg, arr, butName, bg, title) {
-        arr.push(msg);
-        if (!buttons[butName]) {
-          buttons[butName] = $("<button></button>")
-            .css({
-              background: bg,
-              color: "#fff",
-              fontWeight: "bold",
-              border: "none",
-              borderRadius: "5px",
-              marginLeft: "5px"
-            })
-            .insertAfter($respecButton)
-            .click(function() {
-              var $ul = $("<ol></ol>");
-              for (var i = 0, n = arr.length; i < n; i++) {
-                var err = arr[i];
-                if (err instanceof Error) {
-                  $("<li><span></span> <a>\u229e</a><pre></pre></li>")
-                    .appendTo($ul)
-                    .find("span")
-                    .text("[" + err.name + "] " + err.message)
-                    .end()
-                    .find("a")
-                    .css({
-                      fontSize: "1.1em",
-                      color: "#999",
-                      cursor: "pointer"
-                    })
-                    .click(function() {
-                      var $a = $(this),
-                        state = $a.text(),
-                        $pre = $a.parent().find("pre");
-                      if (state === "\u229e") {
-                        $a.text("\u229f");
-                        $pre.show();
-                      } else {
-                        $a.text("\u229e");
-                        $pre.hide();
-                      }
-                    })
-                    .end()
-                    .find("pre")
-                    .text(err.stack)
-                    .css({
-                      marginLeft: "0",
-                      maxWidth: "100%",
-                      overflowY: "hidden",
-                      overflowX: "scroll"
-                    })
-                    .hide()
-                    .end();
-                } else {
-                  $("<li></li>").text(err).appendTo($ul);
-                }
-              }
-              ui.freshModal(title, $ul);
-            });
-        }
+    const $menu = $("<div id=respec-menu></div>");
+    let $modal;
+    let $overlay;
+    const errors = [];
+    const warnings = [];
+    const buttons = {};
+
+    // Respec UI - add early
+    const $respecUI = $(
+        "<div id='respec-ui' class='removeOnSave respec-hidden'></div>", document)
+      .appendTo($("body", document));
+
+    const $respecPill = $("<button id='respec-pill' disabled>ReSpec</button>")
+      .click((e) => {
+        e.stopPropagation();
+        $menu.toggle();
+      })
+      .appendTo($respecUI);
+    document.documentElement.addEventListener("click", () => {
+      if (window.getComputedStyle($menu[0]).display === "block") {
+        $menu.fadeOut(200);
+      }
+    });
+    $menu.appendTo($respecUI);
+
+    function errWarn(msg, arr, butName, title) {
+      arr.push(msg);
+      if (buttons.hasOwnProperty(butName)) {
         buttons[butName].text(arr.length);
-      };
-    var conf, doc;
-    var ui = {
-      show: function() {
+        return;
+      }
+      buttons[butName] = $(`
+          <button
+            class='respec-info-button respec-pill-${butName}'>
+            ${arr.length}
+          </button>
+        `)
+        .insertBefore($respecPill)
+        .click(function() {
+          var $ul = $("<ol></ol>");
+          for (var i = 0, n = arr.length; i < n; i++) {
+            var err = arr[i];
+            if (err instanceof Error) {
+              $("<li><span></span> <a>\u229e</a><pre></pre></li>")
+                .appendTo($ul)
+                .find("span")
+                .text("[" + err.name + "] " + err.message)
+                .end()
+                .find("a")
+                .css({
+                  fontSize: "1.1em",
+                  color: "#999",
+                  cursor: "pointer"
+                })
+                .click(function() {
+                  var $a = $(this),
+                    state = $a.text(),
+                    $pre = $a.parent().find("pre");
+                  if (state === "\u229e") {
+                    $a.text("\u229f");
+                    $pre.show();
+                  } else {
+                    $a.text("\u229e");
+                    $pre.hide();
+                  }
+                })
+                .end()
+                .find("pre")
+                .text(err.stack)
+                .css({
+                  marginLeft: "0",
+                  maxWidth: "100%",
+                  overflowY: "hidden",
+                  overflowX: "scroll"
+                })
+                .hide()
+                .end();
+            } else {
+              $("<li></li>").text(err).appendTo($ul);
+            }
+          }
+          ui.freshModal(title, $ul);
+        });
+    };
+    const ui = {
+      show() {
         $respecUI[0].classList.remove("respec-hidden");
       },
-      hide: function() {
+      hide() {
         $respecUI[0].classList.add("respec-hidden");
       },
-      run: function(_conf, _doc, cb) {
-        conf = _conf, doc = _doc;
-        var $div = $respecUI = $("<div id='respec-ui' class='removeOnSave'></div>", doc)
-          .css({
-            position: "fixed",
-            top: "20px",
-            right: "20px",
-            width: "202px",
-            textAlign: "right"
-          })
-          .appendTo($("body", doc));
-        $respecButton = $("<button id='respec-pill'>ReSpec</button>")
-          .css({
-            background: "#fff",
-            fontWeight: "bold",
-            border: "1px solid #ccc",
-            borderRadius: "5px"
-          })
-          .click(function(e) {
-            e.stopPropagation();
-            $menu.toggle();
-          })
-          .appendTo($div);
-        doc.documentElement.addEventListener("click", function() {
-          if (window.getComputedStyle($menu[0]).display === "block") {
-            $menu.fadeOut(200);
-          }
-        });
-        $menu.appendTo($div);
-        shortcut.add("Esc", function() {
-          ui.closeModal();
-        });
-        shortcut.add("Ctrl+Alt+Shift+E", function() {
-          if (buttons.error) buttons.error.click();
-        });
-        shortcut.add("Ctrl+Alt+Shift+W", function() {
-          if (buttons.warning) buttons.warning.click();
-        });
-        this.hide();
-        cb();
+      enable() {
+        $respecPill[0].removeAttribute("disabled");
       },
-      addCommand: function(label, module, keyShort) {
-        var handler = function() {
+      addCommand(label, module, keyShort, icon = "") {
+        var handler = () => {
           $menu.hide();
-          require([module], function(mod) {
-            mod.show(ui, conf, doc);
+          require([module], (mod) => {
+            mod.show();
           });
         };
         var id = "respec-modal-" + label.toLowerCase().replace(/\s+/, "-");
-        $("<button></button>")
-          .attr({ id: id })
-          .css({
-            background: "#fff",
-            border: "none",
-            borderBottom: "1px solid #ccc",
-            width: "100%",
-            textAlign: "left",
-            fontSize: "inherit"
-          })
-          .text(label)
+        $(`<button id="${id}" class="respec-option" title="${keyShort}">
+            <span class="respec-cmd-icon">${icon}</span> ${label}…
+          </button>`)
           .click(handler)
           .appendTo($menu);
         if (keyShort) shortcut.add(keyShort, handler);
       },
-      error: function(msg) {
-        errWarn(msg, errors, "error", "#c00", "Errors");
+      error(msg) {
+        errWarn(msg, errors, "error", "Errors");
       },
-      warning: function(msg) {
-        errWarn(msg, warnings, "warning", "#f60", "Warnings");
+      warning(msg) {
+        errWarn(msg, warnings, "warning", "Warnings");
       },
-      closeModal: function() {
-        if ($overlay) $overlay.fadeOut(200, function() { $overlay.remove();
-          $overlay = null; });
+      closeModal() {
+        if ($overlay) $overlay.fadeOut(200, function() {
+          $overlay.remove();
+          $overlay = null;
+        });
         if (!$modal) return;
         $modal.remove();
         $modal = null;
       },
-      freshModal: function(title, content) {
+      freshModal(title, content) {
         if ($modal) $modal.remove();
         if ($overlay) $overlay.remove();
         var width = 500;
@@ -220,6 +184,15 @@ define(
           .fadeTo(200, 1);
       }
     };
+    shortcut.add("Esc", () => {
+      ui.closeModal();
+    });
+    shortcut.add("Ctrl+Alt+Shift+E", () => {
+      if (buttons.error) buttons.error.click();
+    });
+    shortcut.add("Ctrl+Alt+Shift+W", () => {
+      if (buttons.warning) buttons.warning.click();
+    });
     window.respecUI = ui;
     pubsubhub.sub("error", function(details) {
       ui.error(details);

@@ -8,9 +8,11 @@ define(
         "core/beautify-options",
         "core/pubsubhub",
         "core/utils",
+        "core/ui",
     ],
-    function (beautify, beautifyOpts, pubsubhub, utils) {
-        var msg, doc, conf;
+    function (beautify, beautifyOpts, pubsubhub, utils, ui) {
+        var msg, doc = document, conf = window.respecConfig;
+        ui.addCommand("Save Snapshot", "ui/save-html", "Ctrl+Shift+Alt+S", "💾");
         var cleanup = function (rootEl) {
             $(".removeOnSave", rootEl).remove();
             $("#toc-nav", rootEl).remove() ;
@@ -45,8 +47,7 @@ define(
                 .replace(/\n\s*\(</mg, " (<");
         }
         return {
-            show:   function (ui, _conf, _doc) {
-                doc = _doc, conf = _conf;
+            show() {
                 if (!conf.diffTool) conf.diffTool = "https://www5.aptest.com/standards/htmldiff/htmldiff.pl";
                 var supportsDownload = Object
                     .getOwnPropertyNames(HTMLAnchorElement.prototype)
@@ -54,25 +55,11 @@ define(
                 ,   self = this
                 ;
                 var $div = $("<div></div>")
-                ,   buttonCSS = {
-                        background:     "#eee"
-                    ,   border:         "1px solid #000"
-                    ,   borderRadius:   "5px"
-                    ,   padding:        "5px"
-                    ,   margin:         "5px"
-                    ,   display:        "block"
-                    ,   width:          "100%"
-                    ,   color:          "#000"
-                    ,   textDecoration: "none"
-                    ,   textAlign:      "center"
-                    ,   fontSize:       "inherit"
-                    }
                 ,   addButton = function (options) {
                         if (supportsDownload) {
-                            $("<a></a>")
+                            $("<a class='respec-save-button'></a>")
                                 .appendTo($div)
                                 .text(options.title)
-                                .css(buttonCSS)
                                 .attr({
                     id: options.id
                 ,   href: options.url
@@ -85,10 +72,9 @@ define(
                                 ;
                         }
                         else {
-                            $("<button></button>")
+                            $("<button class='respec-save-button'></button>")
                                 .appendTo($div)
                                 .text(options.title)
-                                .css(buttonCSS)
                                 .click(function () {
                                     options.popupContent();
                                     ui.closeModal();
