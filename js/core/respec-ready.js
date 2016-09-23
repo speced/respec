@@ -3,28 +3,29 @@
  * The property returns a promise that settles when ReSpec finishes
  * processing the document.
  */
-
 "use strict";
-define(["core/pubsubhub"], function (pubsubhub) {
-  var respecDone = false;
-  var respecDonePromise = new Promise(function (resolve) {
-    var opaque = pubsubhub.sub("end-all", function(conf){
+define(["core/pubsubhub"], (pubsubhub) => {
+  let respecDone = false;
+  const respecDonePromise = new Promise(resolve => {
+    const opaque = pubsubhub.sub("end-all", conf => {
       pubsubhub.unsub(opaque);
       respecDone = true;
       resolve(conf);
     });
   });
-  Object.defineProperty(document, "respecDone", {
-    get: function () {
-      var warn = "document.respecDone is deprecated, use document.respecIsReady instead.";
-      pubsubhub.pub("warn", warn);
-      return respecDone;
-    }
-  });
-  Object.defineProperty(document, "respecIsReady", {
-    get: function () {
-      return respecDonePromise;
+  Object.defineProperties(document, {
+    "respecDone": {
+      get() {
+        const warn = "document.respecDone is deprecated, use" +
+          " document.respecIsReady instead.";
+        pubsubhub.pub("warn", warn);
+        return respecDone;
+      },
+    },
+    "respecIsReady": {
+      get() {
+        return respecDonePromise;
+      },
     },
   });
-  return respecDonePromise;
 });
