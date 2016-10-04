@@ -72,6 +72,7 @@ define([
     "ui/save-html",
     "ui/search-specref",
     "w3c/linter",
+    "core/seo",
   ],
   function(domReady, runner, ui) {
     var args = Array.from(arguments);
