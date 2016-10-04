@@ -5,7 +5,7 @@ var testCanonical = function(uri) {
       var $canLink = $("link[rel='canonical']", doc);
       expect($canLink.attr("href")).toEqual(uri);
     };
-}
+};
 
 describe("Core - SEO", function() {
   afterAll(function(done) {
