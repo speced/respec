@@ -4,6 +4,7 @@
 define(
   ["core/ui"],
   function(ui) {
+    window.respecVersion = window.respecVersion || "Developer Edition"
     const $halp = $(`
       <div>
         <p>ReSpec is a document production toolchain, with a notable focus on W3C specifications.</p>
@@ -14,7 +15,7 @@ define(
     ui.addCommand("About ReSpec", "ui/about-respec", "Ctrl+Shift+Alt+A", "ℹ️");
     return {
       show() {
-        ui.freshModal("About ReSpec", $halp);
+        ui.freshModal(`About ReSpec - ${window.respecVersion}`, $halp);
       }
     };
   }
