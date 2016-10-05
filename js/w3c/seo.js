@@ -31,9 +31,7 @@ define(
               if (/^https?:/.test(conf.canonicalURI)) {
                 uri = conf.canonicalURI;
               } else {
-                pubsubhub.pub("warn", "Canonical URI configured, " +
-                  "but the value does not start with " +
-                  "http: or https:");
+                pubsubhub.pub("warn", "The CanonicalURI needs to start with https://");
               }
             } else if (trLatestUri) {
               uri = trLatestUri;
