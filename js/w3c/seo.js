@@ -1,4 +1,4 @@
-// Module core/seo
+// Module w3c/seo
 // Manages SEO information for documents
 // e.g. set the canonical URL for the document if configured
 
