@@ -1,51 +1,51 @@
 // Module w3c/seo
 // Manages SEO information for documents
 // e.g. set the canonical URL for the document if configured
-
+"use strict";
 define(
   ["core/pubsubhub"],
   function(pubsubhub) {
     return {
       run: function(conf, doc, cb) {
-        var uri;
-        var trLatestUri = conf.shortName ? 'https://www.w3.org/TR/' + conf.shortName + '/' : undefined;
+        var trLatestUri = conf.shortName ? 'https://www.w3.org/TR/' + conf.shortName + '/' : null;
         switch (conf.canonicalURI) {
           case "edDraft":
             if (conf.edDraftURI) {
-              uri = conf.edDraftURI;
+              conf.canonicalURI = new URL(conf.edDraftURI, doc.location).href;
             } else {
               pubsubhub.pub("warn", "Canonical URI set to edDraft, " +
                 "but no edDraftURI is set in configuration");
+              conf.canonicalURI = null;
             }
             break;
           case "TR":
             if (trLatestUri) {
-              uri = trLatestUri;
+              conf.canonicalURI = trLatestUri;
             } else {
               pubsubhub.pub("warn", "Canonical URI set to TR, but " +
                 "no shortName is set in configuration");
+              conf.canonicalURI = null;
             }
             break;
           default:
             if (conf.canonicalURI) {
-              if (/^https?:/.test(conf.canonicalURI)) {
-                uri = conf.canonicalURI;
-              } else {
-                pubsubhub.pub("warn", "Canonical URI configured, " +
-                  "but the value does not start with " +
-                  "http: or https:");
+              try {
+                conf.canonicalURI = new URL(conf.canonicalURI, doc.location).href;
+              } catch (err) {
+                pubsubhub.pub("warn", "CanonicalURI is an invalid URL: " +
+                  err.message);
+                conf.canonicalURI = null;
               }
             } else if (trLatestUri) {
-              uri = trLatestUri;
+              conf.canonicalURI = trLatestUri;
             }
         }
-        if (uri) {
+        if (conf.canonicalURI) {
           var linkElem = doc.createElement("link");
           linkElem.setAttribute("rel", "canonical");
-          linkElem.setAttribute("href", uri);
+          linkElem.setAttribute("href", conf.canonicalURI);
           doc.head.appendChild(linkElem);
         }
-
         cb();
       }
     };
