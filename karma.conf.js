@@ -101,7 +101,7 @@ module.exports = function(config) {
 
     customLaunchers: {
       chrome_canary_travis: {
-        base: "ChromeCanary",
+        base: "Chrome",
         flags: ["--no-sandbox"]
       },
     },
