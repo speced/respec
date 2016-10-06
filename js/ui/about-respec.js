@@ -14,7 +14,7 @@ define(
     );
     ui.addCommand("About ReSpec", "ui/about-respec", "Ctrl+Shift+Alt+A", "ℹ️");
     return {
-      show() {
+      show: function() {
         ui.freshModal("About ReSpec - " + window.respecVersion, $halp);
       }
     };
