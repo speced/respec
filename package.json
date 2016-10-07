@@ -17,7 +17,6 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "domReady": "github:requirejs/domReady",
-    "google-closure-compiler": "^20160911.0.0",
     "handlebars": "^4.0.5",
     "jasmine-core": "^2.5.2",
     "jasmine-reporters": "^2.2.0",
