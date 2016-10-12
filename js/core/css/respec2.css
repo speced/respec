@@ -121,6 +121,127 @@ table.simple {
     display: none;
 }
 
+#respec-ui {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 202px;
+    text-align: right;
+}
+
+#respec-pill, .respec-info-button {
+    background: #fff;
+    height: 2.5em;
+    color: rgb(120, 120, 120);
+    border: 1px solid #ccc;
+    box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, .5);
+}
+
+.respec-info-button {
+    border: none;
+    border-radius: 2em;
+    margin-right: 1em;
+    min-width: 3.5em;
+}
+
+#respec-pill:disabled{
+    margin: 10px auto;
+    font-size: 2.8px;
+    position: relative;
+    text-indent: -9999em;
+    border-top: 1.1em solid rgba(40, 40, 40, 0.2);
+    border-right: 1.1em solid rgba(40, 40, 40, 0.2);
+    border-bottom: 1.1em solid rgba(40, 40, 40, 0.2);
+    border-left: 1.1em solid #ffffff;
+    transform: translateZ(0);
+    animation: respec-spin 1.1s infinite linear;
+    box-shadow: none;
+}
+
+#respec-pill:disabled,
+#respec-pill:disabled:after {
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+}
+
+@keyframes respec-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+#respec-pill:hover, #respec-pill:focus  {
+    color: rgb(0, 0, 0);
+    transition: color .2s
+}
+
+#respec-menu {
+    font-family: sans-serif;
+    background: #fff;
+    box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, .5);
+    width: 200px;
+    display: none;
+    text-align: left;
+    margin-top: 5px;
+    font-size: .8em;
+}
+
+.respec-save-button {
+    background: #fff;
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    display: block;
+    width: 100%;
+    color: #000;
+    text-decoration: none;
+    text-align: center;
+    font-size: inherit;
+}
+
+
+#respec-ui button:focus, #respec-pill:focus, .respec-option:focus {
+    outline:0;
+    outline-style: none;
+}
+
+#respec-ui button.respec-pill-error {
+    background-color: red;
+    color: white;
+}
+
+#respec-ui button.respec-pill-warning {
+    background-color: orange;
+    color: white;
+}
+
+#respec-menu button.respec-option {
+    background: white;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font-size: inherit;
+    padding: 1.2em 1.2em;
+}
+
+#respec-menu button.respec-option:hover {
+    background-color: #eeeeee;
+}
+
+.respec-cmd-icon {
+    padding-right: .5em;
+}
+
+#respec-ui button.respec-option:last-child {
+    border: none;
+    border-radius: inherit;
+}
+
 @media print {
     .removeOnSave {
         display: none;

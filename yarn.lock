@@ -2131,13 +2131,13 @@ map-obj@^1.0.0, map-obj@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/map-obj/-/map-obj-1.0.1.tgz#d933ceb9205d82bdcf4886f6742bdc2b4dea146d"
 
+marcosc-async:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/marcosc-async/-/marcosc-async-3.0.3.tgz#5dc7daaaa2d5aceebd7d2ae8b69e7c15fef48541"
+
 marcosc-async@^1.1.3:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/marcosc-async/-/marcosc-async-1.1.4.tgz#03634101497311b3d3c5760b859d1ffc8e241c66"
-
-marcosc-async@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/marcosc-async/-/marcosc-async-3.0.2.tgz#f50370476aca0b29cd4970a953f6b267a403108e"
 
 marked@^0.3.6:
   version "0.3.6"
@@ -3537,7 +3537,7 @@ typical@^2.3.0, typical@^2.4.2, typical@^2.5.0, typical@^2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/typical/-/typical-2.6.0.tgz#89d51554ab139848a65bcc2c8772f8fb450c40ed"
 
-uglify-js@^2.6:
+uglify-js@^2.6, "uglify-js@git://github.com/mishoo/UglifyJS2#harmony":
   version "2.7.3"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-2.7.3.tgz#39b3a7329b89f5ec507e344c6e22568698ef4868"
   dependencies:
