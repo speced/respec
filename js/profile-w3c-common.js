@@ -71,6 +71,8 @@ define([
     "ui/dfn-list",
     "ui/save-html",
     "ui/search-specref",
+    "w3c/seo",
+    /*Linter must be the last thing to run*/
     "w3c/linter",
   ],
   function(domReady, runner, ui) {
