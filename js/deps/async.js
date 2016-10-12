@@ -1,5 +1,5 @@
 /*jshint  -W082 */
-/*globals define*/
+/*globals define, self*/
 'use strict';
 {
   // async function takes a generator, and optional "this"
@@ -10,31 +10,21 @@
     // returns returns a function asyncFunction that returns promise
     // It is called with zero or more arguments...
     return function asyncFunction(...args) {
-      return new Promise((resolve, reject) => {
-        let gen;
-        if (func.constructor.name === 'GeneratorFunction') {
-          gen = func.call(self, ...args);
-        } else { // Wrap it
-          gen = (function*() {
-            return func.call(self, ...args);
-          }());
-        }
-
-        step(gen.next());
-
-        function step({value, done}) {
-          if (done) {
-            return resolve(value);
-          }
-          Promise
-            .resolve(value) // Normalize thenable
-            .then(
-              result => step(gen.next(result)),
-              error => step(gen.throw(error))
-            )
-            .catch(reject);
-        }
-      });
+      const gen = (function*() {
+        return (func.constructor.name === 'GeneratorFunction') ?
+          yield* func.call(self, ...args) : func.call(self, ...args);
+      }());
+      try {
+        return step(gen.next());
+      } catch (err) {
+        return Promise.reject(err);
+      }
+      function step({value, done}) {
+        const p = Promise.resolve(value); // Normalize thenables
+        return (done) ? p : p
+          .then(result => step(gen.next(result)))
+          .catch(error => step(gen.throw(error)));
+      }
     };
   }
 
