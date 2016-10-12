@@ -76,7 +76,8 @@
     "marked": "^0.3.6",
     "nightmare": "^2.7.0",
     "prompt": "^1.0.0",
-    "snyk": "1.19.1"
+    "snyk": "1.19.1",
+    "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony"
   },
   "snyk": true
 }
