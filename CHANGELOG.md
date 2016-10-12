@@ -1,5 +1,27 @@
 # Change Log
 
+## [v5.1.0](https://github.com/w3c/respec/tree/v5.1.0) (2016-10-12)
+[Full Changelog](https://github.com/w3c/respec/compare/v5.0.5...v5.1.0)
+
+**Merged pull requests:**
+
+- Allow configurable canonical URIs for documents [\#938](https://github.com/w3c/respec/pull/938) ([dontcallmedom](https://github.com/dontcallmedom))
+
+## [v5.0.5](https://github.com/w3c/respec/tree/v5.0.5) (2016-10-12)
+[Full Changelog](https://github.com/w3c/respec/compare/v5.0.4...v5.0.5)
+
+## [v5.0.4](https://github.com/w3c/respec/tree/v5.0.4) (2016-09-21)
+[Full Changelog](https://github.com/w3c/respec/compare/v5.0.3...v5.0.4)
+
+**Closed issues:**
+
+- Respec2html could provide better feedback [\#933](https://github.com/w3c/respec/issues/933)
+- respec-w3c-common  has a bug [\#928](https://github.com/w3c/respec/issues/928)
+
+**Merged pull requests:**
+
+- Better error reporting [\#934](https://github.com/w3c/respec/pull/934) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v5.0.3](https://github.com/w3c/respec/tree/v5.0.3) (2016-09-20)
 [Full Changelog](https://github.com/w3c/respec/compare/v5.0.2...v5.0.3)
 
