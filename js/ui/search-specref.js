@@ -1,9 +1,9 @@
 // Module ui/search-specref
 // Search Specref database
-
+"use strict";
 define(
-    ["core/biblio"],
-    function (biblio) {
+    ["core/biblio", "core/ui"],
+    function (biblio, ui) {
         function pluralize (count, sing, plur) {
             return count + ' ' + (count == 1 ? sing : plur);
         }
@@ -21,9 +21,9 @@ define(
 
         function msg(query, count) {
             if (count) {
-                return 'We found ' + pluralize(count, 'result', 'results') + ' for your search for "' + query + '".';
+                return "We found " + pluralize(count, 'result', 'results') + " for your search for '" + query + "'.";
             }
-            return 'Your search for "' + query + '" did not match any references in the Specref database.<br>Sorry. :\'(';
+            return "Your search for '" + query + "' did not match any references in the Specref database.<br>Sorry. 😢";
         }
 
         function highlight(txt, searchString) {
@@ -33,9 +33,9 @@ define(
                 return "<strong style='font-weight: inherit; background-color: yellow'>" + txt + "</strong>";
             });
         }
-
+        ui.addCommand("Search Specref DB", "ui/search-specref", "Ctrl+Shift+Alt+space", "🔎");
         return {
-            show: function (ui) {
+            show: function() {
                 var $halp = $("<div><form><p><input name=q type=search> <input type=submit value=search /></p></form></div");
                 var $search = $halp.find("input[type=search]");
                 var $status = $("<p style='font-size: smaller'></p>");

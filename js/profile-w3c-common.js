@@ -77,20 +77,17 @@ define([
   ],
   function(domReady, runner, ui) {
     var args = Array.from(arguments);
+    ui.show();
     domReady(function() {
       runner
         .runAll(args)
         .then(document.respecIsReady)
-        .then(ui.show)
+        .then(ui.enable)
         .catch(function(err){
           console.error(err);
           // even if things go critically bad, we should still try to show the UI
-          ui.show();
+          ui.enable();
         });
-      ui.addCommand("Save Snapshot", "ui/save-html", "Ctrl+Shift+Alt+S");
-      ui.addCommand("About ReSpec", "ui/about-respec", "Ctrl+Shift+Alt+A");
-      ui.addCommand("Definition List", "ui/dfn-list", "Ctrl+Shift+Alt+D");
-      ui.addCommand("Search Specref DB", "ui/search-specref", "Ctrl+Shift+Alt+space");
     });
   }
 );
