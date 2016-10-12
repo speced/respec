@@ -33,6 +33,7 @@
   "spec/w3c/local-aliases-spec.js",
   "spec/w3c/permalinks-spec.js",
   "spec/w3c/rdfa-spec.js",
+  "spec/w3c/seo-spec.js",
   "spec/w3c/style-spec.js",
   "spec/w3c/unhtml5-spec.js"
 ]
