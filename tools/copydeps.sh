@@ -17,3 +17,5 @@ cp ./node_modules/requirejs/require.js ./js/deps/
 cp ./node_modules/text/text.js ./js/deps/
 cp ./node_modules/webidl2/lib/webidl2.js ./js/deps/
 cp ./node_modules/highlight.js/src/styles/github.css ./js/core/css/
+cp ./node_modules/text/text.js ./js/deps/
+cp ./node_modules/marcosc-async/lib/async.js js/deps/

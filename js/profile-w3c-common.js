@@ -1,3 +1,4 @@
+/*globals console*/
 "use strict";
 // this is only set in a build, not at all in the dev environment
 require.config({
@@ -8,10 +9,10 @@ require.config({
     Promise: {
       exports: "Promise"
     },
-    highlight:{
+    highlight: {
       exports: "hljs"
     },
-    beautify:{
+    beautify: {
       exports: "beautify"
     }
   },
@@ -20,6 +21,7 @@ require.config({
     "beautify-html": "deps/beautify-html",
   },
   deps: [
+    "deps/async",
     "deps/fetch",
     "deps/jquery",
   ],
@@ -27,6 +29,7 @@ require.config({
 
 define([
     // order is significant
+    "deps/async",
     "deps/domReady",
     "core/base-runner",
     "core/ui",
@@ -67,30 +70,26 @@ define([
     "core/shiv",
     "core/remove-respec",
     "core/location-hash",
-    "ui/about-respec",
-    "ui/dfn-list",
+    "w3c/linter",
     "ui/save-html",
+    "ui/dfn-list",
     "ui/search-specref",
+    "ui/about-respec",
     "w3c/seo",
     /*Linter must be the last thing to run*/
     "w3c/linter",
   ],
-  function(domReady, runner, ui) {
-    var args = Array.from(arguments);
-    domReady(function() {
-      runner
-        .runAll(args)
-        .then(document.respecIsReady)
-        .then(ui.show)
-        .catch(function(err){
+  (async, domReady, runner, ui, ...plugins) => {
+    ui.show();
+    domReady(() => {
+      async.task(function*() {
+        try {
+          yield runner.runAll(plugins);
+        } catch (err) {
           console.error(err);
-          // even if things go critically bad, we should still try to show the UI
-          ui.show();
-        });
-      ui.addCommand("Save Snapshot", "ui/save-html", "Ctrl+Shift+Alt+S");
-      ui.addCommand("About ReSpec", "ui/about-respec", "Ctrl+Shift+Alt+A");
-      ui.addCommand("Definition List", "ui/dfn-list", "Ctrl+Shift+Alt+D");
-      ui.addCommand("Search Specref DB", "ui/search-specref", "Ctrl+Shift+Alt+space");
+        }
+        ui.enable();
+      });
     });
   }
 );
