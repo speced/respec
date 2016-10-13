@@ -1,5 +1,15 @@
 # Change Log
 
+## [v6.0.0](https://github.com/w3c/respec/tree/v6.0.0) (2016-10-12)
+[Full Changelog](https://github.com/w3c/respec/compare/v5.1.0...v6.0.0)
+
+**Merged pull requests:**
+
+- feat\(ui\): update ReSpec UI  [\#944](https://github.com/w3c/respec/pull/944) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(async.js\): add marcosc-async as dep [\#943](https://github.com/w3c/respec/pull/943) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(respect2.css\): add new UI styles [\#942](https://github.com/w3c/respec/pull/942) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor: use uglify-harmony in build process [\#941](https://github.com/w3c/respec/pull/941) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v5.1.0](https://github.com/w3c/respec/tree/v5.1.0) (2016-10-12)
 [Full Changelog](https://github.com/w3c/respec/compare/v5.0.5...v5.1.0)
 
