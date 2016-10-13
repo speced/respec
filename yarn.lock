@@ -199,8 +199,8 @@ babel-runtime@^6.9.2:
     regenerator-runtime "^0.9.5"
 
 babylon@^6.8.1:
-  version "6.11.4"
-  resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.11.4.tgz#75e1f52187efa0cde5a541a7f7fdda38f6eb5bd2"
+  version "6.11.6"
+  resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.11.6.tgz#56dc52e624882841c7fe095257fbcb4a5bb61ae1"
 
 backo2@1.0.2:
   version "1.0.2"
@@ -943,9 +943,9 @@ entities@1.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/entities/-/entities-1.0.0.tgz#b2987aa3821347fcde642b24fdfc9e4fb712bf26"
 
-epipebomb@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/epipebomb/-/epipebomb-0.1.1.tgz#aca7cc380881854142abe64b6723c792676e00b2"
+epipebomb@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/epipebomb/-/epipebomb-1.0.0.tgz#57d1deda1d6bc81622b118a75fe6b5a7d34f6d88"
 
 error-ex@^1.2.0:
   version "1.3.0"
@@ -1433,7 +1433,7 @@ hawk@~3.1.3:
 
 "highlight.js@github:isagalaev/highlight.js":
   version "9.7.0"
-  resolved "https://codeload.github.com/isagalaev/highlight.js/tar.gz/67b939f730fb470e7b3b0290843dd78be6838d4e"
+  resolved "https://codeload.github.com/isagalaev/highlight.js/tar.gz/9e23bc5880d821fbd6f15a66d9f001bbddc0999d"
 
 hoek@2.x.x:
   version "2.16.3"
@@ -2131,13 +2131,13 @@ map-obj@^1.0.0, map-obj@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/map-obj/-/map-obj-1.0.1.tgz#d933ceb9205d82bdcf4886f6742bdc2b4dea146d"
 
-marcosc-async:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/marcosc-async/-/marcosc-async-3.0.3.tgz#5dc7daaaa2d5aceebd7d2ae8b69e7c15fef48541"
-
 marcosc-async@^1.1.3:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/marcosc-async/-/marcosc-async-1.1.4.tgz#03634101497311b3d3c5760b859d1ffc8e241c66"
+
+marcosc-async@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/marcosc-async/-/marcosc-async-3.0.3.tgz#5dc7daaaa2d5aceebd7d2ae8b69e7c15fef48541"
 
 marked@^0.3.6:
   version "0.3.6"
