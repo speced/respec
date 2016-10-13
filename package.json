@@ -46,7 +46,7 @@
   },
   "scripts": {
     "build": "npm run build:highlight; npm run build:respec-w3c-common",
-    "build:highlight": "cd node_modules/highlight.js/; npm install; npm update; node ./tools/build.js -n xml javascript css http markdown xquery; cd ../../",
+    "build:highlight": "cd node_modules/highlight.js/; yarn; node ./tools/build.js -n xml javascript css http markdown xquery; cd ../../",
     "build:respec-w3c-common": "./tools/build-w3c-common.js",
     "jscs": "jscs --esnext tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js",
     "jscs:fix": "jscs --esnext --fix tests",
@@ -76,8 +76,7 @@
     "marked": "^0.3.6",
     "nightmare": "^2.7.0",
     "prompt": "^1.0.0",
-    "snyk": "1.19.1",
-    "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony"
+    "snyk": "1.19.1"
   },
   "snyk": true
 }
