@@ -132,7 +132,6 @@ define(
                 if (conf.diffTool && (conf.previousDiffURI || conf.previousURI)) {
                     $("<button>Diff</button>")
                         .appendTo($div)
-                        .css(buttonCSS)
                         .click(function () {
                             self.toDiffHTML();
                             ui.closeModal();
