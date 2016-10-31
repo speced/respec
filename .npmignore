@@ -16,3 +16,4 @@ karma.conf.js
 node_modules/
 tests/
 tools/copydeps.sh
+yarn.lock
