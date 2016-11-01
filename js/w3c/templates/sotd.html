@@ -54,7 +54,6 @@
                 href='https://lists.w3.org/Archives/Public/{{wgPublicList}}/'>archives</a>){{#if subjectPrefix}}
                 with <code>{{subjectPrefix}}</code> at the start of your email's subject{{/if}}.
             {{/unless}}
-            {{#if isLC}}The Last Call period ends {{humanLCEnd}}.{{/if}}
             {{#if isCR}}
               W3C publishes a Candidate Recommendation to indicate that the document is believed to be
               stable and to encourage implementation by the developer community. This Candidate
@@ -79,8 +78,8 @@
                 <a href='https://lists.w3.org/Archives/Public/{{wgPublicList}}/'>archives</a>)
                 through {{humanPREnd}}. Advisory Committee Representatives should consult their
                 <a href='https://www.w3.org/2002/09/wbs/myQuestionnaires'>WBS questionnaires</a>.
-                Note that substantive technical comments were expected during the Last Call review
-                period that ended {{humanLCEnd}}.
+                Note that substantive technical comments were expected during the Candidate Recommendation
+                review period that ended {{humanCREnd}}.
             {{else}}
               {{#unless isPER}}
               All comments are welcome.
@@ -113,13 +112,6 @@
               document. W3C's role in making the Recommendation is to draw attention to the
               specification and to promote its widespread deployment. This enhances the functionality
               and interoperability of the Web.
-            </p>
-          {{/if}}
-          {{#if isLC}}
-            <p>
-              This is a Last Call Working Draft and thus the Working Group has determined that this
-              document has satisfied the relevant technical requirements and is sufficiently stable to
-              advance through the Technical Recommendation process.
             </p>
           {{/if}}
           <p>
