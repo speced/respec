@@ -28,6 +28,7 @@
     "karma-chrome-launcher": "^2.0.0",
     "karma-detect-browsers": "^2.1.0",
     "karma-firefox-launcher": "^1.0.0",
+    "karma-ie-launcher": "^1.0.0",
     "karma-jasmine": "^1.0.2",
     "karma-mocha": "^1.2.0",
     "karma-mocha-reporter": "^2.2.0",
@@ -45,24 +46,24 @@
     "whatwg-fetch": "^1.0.0"
   },
   "scripts": {
-    "build": "npm run build:highlight; npm run build:respec-w3c-common",
-    "build:highlight": "cd node_modules/highlight.js/; yarn; node ./tools/build.js -n xml javascript css http markdown xquery; cd ../../",
+    "build": "npm run build:highlight && npm run build:respec-w3c-common",
+    "build:highlight": "cd node_modules/highlight.js/ && yarn && node ./tools/build.js -n xml javascript css http markdown xquery && cd ../../",
     "build:respec-w3c-common": "./tools/build-w3c-common.js",
     "jscs": "jscs --esnext tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js",
     "jscs:fix": "jscs --esnext --fix tests",
     "jshint": "jshint karma.conf.js tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js",
     "karma": "karma start --single-run",
-    "prepublish": "npm run build:highlight; npm run copydeps; npm run snyk-protect",
+    "prepublish": "npm run build:highlight && npm run copydeps && npm run snyk-protect",
     "copydeps": "node ./tools/copydeps.js",
     "pretest": "npm run jshint && npm run jscs",
     "server": "python -m SimpleHTTPServer",
     "snyk-protect": "snyk protect",
-    "test": "npm run test:headless; npm run test:karma",
+    "test": "npm run test:headless && npm run test:karma",
     "test:appveyor": "npm run pretest",
     "test:build": "mocha ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
     "test:karma": "npm run karma",
-    "test:travis": "npm run pretest; npm run test:build; karma start --single-run --reporters progress karma.conf.js; npm run test:headless"
+    "test:travis": "npm run pretest && npm run test:build && karma start --single-run --reporters progress karma.conf.js && npm run test:headless"
   },
   "dependencies": {
     "colors": "^1.1.2",
