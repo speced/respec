@@ -53,7 +53,7 @@
     "jshint": "jshint karma.conf.js tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js",
     "karma": "karma start --single-run",
     "prepublish": "npm run build:highlight; npm run copydeps; npm run snyk-protect",
-    "copydeps": "./tools/copydeps.sh",
+    "copydeps": "node ./tools/copydeps.js",
     "pretest": "npm run jshint && npm run jscs",
     "server": "python -m SimpleHTTPServer",
     "snyk-protect": "snyk protect",
