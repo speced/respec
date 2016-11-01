@@ -500,14 +500,14 @@ combined-stream@^1.0.5, combined-stream@~1.0.5:
     delayed-stream "~1.0.0"
 
 command-line-args@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/command-line-args/-/command-line-args-3.0.1.tgz#617bac0a15d34ae848eda2aa513ed76efdc48af5"
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/command-line-args/-/command-line-args-3.0.2.tgz#eb4e203f936c10a20b5143667bdeaf08c933638f"
   dependencies:
     array-back "^1.0.3"
     core-js "^2.4.1"
     feature-detect-es6 "^1.3.1"
     find-replace "^1.0.2"
-    typical "^2.5.0"
+    typical "^2.6.0"
 
 command-line-tool@~0.6.4:
   version "0.6.4"
@@ -1879,6 +1879,12 @@ karma-firefox-launcher@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/karma-firefox-launcher/-/karma-firefox-launcher-1.0.0.tgz#e08af3ce42e39860c2952ea7b7eaa64d63508bdc"
 
+karma-ie-launcher@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/karma-ie-launcher/-/karma-ie-launcher-1.0.0.tgz#497986842c490190346cd89f5494ca9830c6d59c"
+  dependencies:
+    lodash "^4.6.1"
+
 karma-jasmine@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/karma-jasmine/-/karma-jasmine-1.0.2.tgz#c0b3ab327bf207db60e17fa27db37cfdef5d8e6c"
@@ -2068,9 +2074,9 @@ lodash@^3.5.0, lodash@^3.7.0, lodash@^3.8.0, lodash@~3.10.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@^4.0.0, lodash@^4.3.0, lodash@^4.5.0:
-  version "4.16.4"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.16.4.tgz#01ce306b9bad1319f2a5528674f88297aeb70127"
+lodash@^4.0.0, lodash@^4.3.0, lodash@^4.5.0, lodash@^4.6.1:
+  version "4.16.5"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.16.5.tgz#77d88feac548009b1a5c4ca7b49ac431ce346ae8"
 
 lodash@3.0.x:
   version "3.0.1"
