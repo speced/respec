@@ -23,7 +23,6 @@ define([
   // meta viewport to the top of the head - so to make sure it's the first
   // thing the browser sees. See js/ui/save-html.js.
   function createMetaViewport() {
-
     var meta = document.createElement("meta");
     meta.name = "viewport";
     var contentProps = {
@@ -33,6 +32,14 @@ define([
     };
     meta.content = utils.toKeyValuePairs(contentProps).replace(/\"/g, "")
     return meta;
+  }
+
+  function createBaseStyle() {
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://www.w3.org/StyleSheets/TR/2016/base.css";
+    link.classList.add("removeOnSave");
+    return link;
   }
 
   function selectStyleVersion(styleVersion) {
@@ -76,15 +83,18 @@ define([
   }
   // Collect elements for insertion
   var elements = createResourceHints();
+
+  // Opportunistically apply base style
+  elements.appendChild(createBaseStyle());
   if (!document.head.querySelector("meta[name=viewport]")) {
     // Make meta viewport the first element in the head.
     elements.insertBefore(createMetaViewport(), elements.firstChild);
   }
+
   document.head.insertBefore(elements, document.head.firstChild);
 
   return {
     run: function(conf, doc, cb) {
-
       if (!conf.specStatus) {
         var warn = "'specStatus' missing from ReSpec config. Defaulting to 'base'.";
         conf.specStatus = "base";

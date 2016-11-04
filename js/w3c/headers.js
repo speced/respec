@@ -435,7 +435,6 @@ define(
                 conf.isUnofficial = conf.specStatus === "unofficial";
                 conf.prependW3C = !conf.isUnofficial;
                 conf.isED = (conf.specStatus === "ED");
-                conf.isLC = (conf.specStatus === "LC" || conf.specStatus === "FPLC");
                 conf.isCR = (conf.specStatus === "CR");
                 conf.isPR = (conf.specStatus === "PR");
                 conf.isPER = (conf.specStatus === "PER");
@@ -502,9 +501,7 @@ define(
                     conf.multipleWGs = false;
                     conf.wgHTML = "the <a href='" + conf.wgURI + "'>" + conf.wg + "</a>";
                 }
-                if (conf.isLC && !conf.lcEnd) pubsubhub.pub("error", "Status is LC but no lcEnd is specified");
-                if (conf.specStatus === "PR" && !conf.lcEnd) pubsubhub.pub("error", "Status is PR but no lcEnd is specified (needed to indicate end of previous LC)");
-                conf.humanLCEnd = utils.humanDate(conf.lcEnd || "");
+                if (conf.specStatus === "PR" && !conf.crEnd) pubsubhub.pub("error", "Status is PR but no crEnd is specified (needed to indicate end of previous CR)");
                 if (conf.specStatus === "CR" && !conf.crEnd) pubsubhub.pub("error", "Status is CR but no crEnd is specified");
                 conf.humanCREnd = utils.humanDate(conf.crEnd || "");
                 if (conf.specStatus === "PR" && !conf.prEnd) pubsubhub.pub("error", "Status is PR but no prEnd is specified");

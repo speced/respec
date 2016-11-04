@@ -15,5 +15,5 @@ examples/
 karma.conf.js
 node_modules/
 tests/
-tools/copydeps.sh
+tools/copydeps.js
 yarn.lock
