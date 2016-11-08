@@ -76,7 +76,7 @@ const tasks = {
    */
   fetchAndWrite(src, out, whenToHalt, timeout) {
     return async.task(function* () {
-      const userData = yield this.makeTempDir(os.tmpDir() + "/respec2html-");
+      const userData = yield this.makeTempDir(os.tmpdir() + "/respec2html-");
       const nightmare = new Nightmare({
         show: false,
         timeout,
