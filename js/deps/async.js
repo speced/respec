@@ -9,19 +9,20 @@
     }
     // returns returns a function asyncFunction that returns promise
     // It is called with zero or more arguments...
-    return function asyncFunction(...args) {
+    return function asyncFunction() {
+      const args = Array.from(arguments);
       const gen = (function*() {
         return (func.constructor.name === 'GeneratorFunction') ?
-          yield* func.call(self, ...args) : func.call(self, ...args);
+          yield* func.apply(self, args) : func.apply(self, args);
       }());
       try {
         return step(gen.next());
       } catch (err) {
         return Promise.reject(err);
       }
-      function step({value, done}) {
-        const p = Promise.resolve(value); // Normalize thenables
-        return (done) ? p : p
+      function step(resultObj) {
+        const p = Promise.resolve(resultObj.value); // Normalize thenables
+        return (resultObj.done) ? p : p
           .then(result => step(gen.next(result)))
           .catch(error => step(gen.throw(error)));
       }
