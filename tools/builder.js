@@ -17,7 +17,7 @@ const UglifyJS = require("uglify-js");
 * @return {Promise} Resolves when done writing the files.
 */
 function appendBoilerplate(outPath, version) {
-  return async(function*(optimizedJs) {
+  return async(function*(optimizedJs, sourceMap) {
     const respecJs = `"use strict";
 /* ReSpec ${version}
 Created by Robin Berjon, http://berjon.com/ (@robinberjon)
@@ -32,7 +32,7 @@ require(['profile-w3c-common']);`;
     });
     const mapPath = pth.dirname(outPath) + "/respec-w3c-common.build.js.map";
     const promiseToWriteJs = fsp.writeFile(outPath, result.code , "utf-8");
-    const promiseToWriteMap = fsp.writeFile( mapPath, result.map , "utf-8");
+    const promiseToWriteMap = fsp.writeFile( mapPath, sourceMap , "utf-8");
     yield Promise.all([promiseToWriteJs, promiseToWriteMap]);
   }, Builder);
 }
@@ -62,10 +62,10 @@ var Builder = {
       const version = options.version || (yield this.getRespecVersion());
       const outputWritter = appendBoilerplate(options.out, version);
       const config = {
-        generateSourceMaps: false,
+        generateSourceMaps: true,
         mainConfigFile: "js/profile-w3c-common.js",
         baseUrl: pth.join(__dirname, "../js/"),
-        optimize: options.optimize || "none",
+        optimize: options.optimize || "uglify",
         name: "profile-w3c-common",
         logLevel: 2, // Show uglify warnings and errors.
         deps: [
@@ -76,8 +76,8 @@ var Builder = {
         useStrict: true,
       };
       const promiseToWrite = new Promise((resolve, reject)=>{
-        config.out = (concatinatedJS) => {
-          outputWritter(concatinatedJS)
+        config.out = (concatinatedJS, sourceMap) => {
+          outputWritter(concatinatedJS, sourceMap)
             .then(resolve)
             .catch(reject);
         };
