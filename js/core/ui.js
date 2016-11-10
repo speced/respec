@@ -96,7 +96,11 @@ define([
     }
     const ui = {
       show: function() {
-        $respecUI[0].classList.remove("respec-hidden");
+        try {
+          $respecUI[0].classList.remove("respec-hidden");
+        } catch (err) {
+          console.error(err);
+        }
       },
       hide: function() {
         $respecUI[0].classList.add("respec-hidden");
