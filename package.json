@@ -74,7 +74,7 @@
     "command-line-usage": "^3.0.3",
     "epipebomb": "^1.0.0",
     "express": "^4.14.0",
-    "fs-promise": "^0.5.0",
+    "fs-promise": "^1.0.0",
     "highlight.js": "github:isagalaev/highlight.js",
     "marcosc-async": "^3.0.3",
     "marked": "^0.3.6",
