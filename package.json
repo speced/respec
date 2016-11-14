@@ -45,7 +45,7 @@
     "text": "github:requirejs/text",
     "uglify-js": "^2.7.4",
     "webidl2": "^2.0.11",
-    "whatwg-fetch": "^1.0.0"
+    "whatwg-fetch": "^1.1.0"
   },
   "scripts": {
     "build": "npm run build:highlight && npm run build:respec-w3c-common",
