@@ -4,8 +4,7 @@ node_js:
   - v6.7
 
 install:
-  - npm install -g yarn
-  - yarn
+  - npm install
 
 before_install:
   - "export DISPLAY=:99.0"
