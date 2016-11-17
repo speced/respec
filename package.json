@@ -75,7 +75,7 @@
     "epipebomb": "^1.0.0",
     "express": "^4.14.0",
     "fs-promise": "^1.0.0",
-    "highlight.js": "git+ssh://git@github.com/isagalaev/highlight.js",
+    "highlight.js": "github:isagalaev/highlight.js",
     "marcosc-async": "^3.0.4",
     "marked": "^0.3.6",
     "nightmare": "^2.8.1",
