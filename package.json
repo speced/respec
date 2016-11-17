@@ -16,7 +16,7 @@
   "author": "Robin Berjon",
   "devDependencies": {
     "chai": "^3.5.0",
-    "domReady": "git+ssh://git@github.com/requirejs/domReady.git",
+    "domReady": "github:requirejs/domReady",
     "handlebars": "^4.0.5",
     "http-server": "^0.9.0",
     "jasmine-core": "^2.5.2",
@@ -42,7 +42,7 @@
     "moment": "^2.15.2",
     "promise-polyfill": "^6.0.2",
     "requirejs": "^2.3.2",
-    "text": "git+ssh://git@github.com/requirejs/text.git",
+    "text": "github:requirejs/text",
     "uglify-js": "^2.7.4",
     "webidl2": "^2.0.11",
     "whatwg-fetch": "^2.0.0"
