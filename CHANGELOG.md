@@ -1,5 +1,75 @@
 # Change Log
 
+## [v6.1.4](https://github.com/w3c/respec/tree/v6.1.4) (2016-11-17)
+[Full Changelog](https://github.com/w3c/respec/compare/v6.1.3...v6.1.4)
+
+**Implemented enhancements:**
+
+- Updated W3C translations link [\#973](https://github.com/w3c/respec/pull/973) ([plehegar](https://github.com/plehegar))
+
+## [v6.1.3](https://github.com/w3c/respec/tree/v6.1.3) (2016-11-17)
+[Full Changelog](https://github.com/w3c/respec/compare/v6.1.2...v6.1.3)
+
+**Fixed bugs:**
+
+- Travis and git+ssh: github uris [\#972](https://github.com/w3c/respec/issues/972)
+
+## [v6.1.2](https://github.com/w3c/respec/tree/v6.1.2) (2016-11-10)
+[Full Changelog](https://github.com/w3c/respec/compare/v6.1.1...v6.1.2)
+
+**Merged pull requests:**
+
+- Update fs-promise to version 1.0.0 🚀 [\#968](https://github.com/w3c/respec/pull/968) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- karma-detect-browsers@2.2.2 breaks build 🚨 [\#967](https://github.com/w3c/respec/pull/967) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+
+## [v6.1.1](https://github.com/w3c/respec/tree/v6.1.1) (2016-11-08)
+[Full Changelog](https://github.com/w3c/respec/compare/v6.1.0...v6.1.1)
+
+## [v6.1.0](https://github.com/w3c/respec/tree/v6.1.0) (2016-11-04)
+[Full Changelog](https://github.com/w3c/respec/compare/v6.0.2...v6.1.0)
+
+**Fixed bugs:**
+
+- Deprecate lc related things [\#953](https://github.com/w3c/respec/issues/953)
+
+**Closed issues:**
+
+- "Unable to test GitHub repository" on Snyk site [\#960](https://github.com/w3c/respec/issues/960)
+- Example style gets broken [\#958](https://github.com/w3c/respec/issues/958)
+- Make copydeps.sh Windows compatible [\#954](https://github.com/w3c/respec/issues/954)
+- Add developers guide [\#931](https://github.com/w3c/respec/issues/931)
+- Ol' school web idl deprecation warning is pointing to wrong palce [\#874](https://github.com/w3c/respec/issues/874)
+- User's guide needs cleanup [\#858](https://github.com/w3c/respec/issues/858)
+- About ReSpec should use package.json [\#642](https://github.com/w3c/respec/issues/642)
+
+**Merged pull requests:**
+
+- BREAKING CHANGE: remove LC as status \(closes \#953\) [\#962](https://github.com/w3c/respec/pull/962) ([marcoscaceres](https://github.com/marcoscaceres))
+- Use http-server in the start and server scripts [\#961](https://github.com/w3c/respec/pull/961) ([nickmccurdy](https://github.com/nickmccurdy))
+- Fixes for Windows testing [\#959](https://github.com/w3c/respec/pull/959) ([nickmccurdy](https://github.com/nickmccurdy))
+- refactor\(copydeps\): convert to nodejs script \(closes \#954\) [\#957](https://github.com/w3c/respec/pull/957) ([marcoscaceres](https://github.com/marcoscaceres))
+- Style optimization [\#955](https://github.com/w3c/respec/pull/955) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v6.0.2](https://github.com/w3c/respec/tree/v6.0.2) (2016-10-31)
+[Full Changelog](https://github.com/w3c/respec/compare/v6.0.1...v6.0.2)
+
+**Merged pull requests:**
+
+- fix\(save-html\): buttonCSS variable was undefined [\#956](https://github.com/w3c/respec/pull/956) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v6.0.1](https://github.com/w3c/respec/tree/v6.0.1) (2016-10-31)
+[Full Changelog](https://github.com/w3c/respec/compare/v6.0.0...v6.0.1)
+
+**Closed issues:**
+
+- Using respec for non-w3c specs [\#950](https://github.com/w3c/respec/issues/950)
+- Safari no longer rendering ReSpec and gives an error [\#949](https://github.com/w3c/respec/issues/949)
+
+**Merged pull requests:**
+
+- feat\(.travis.yml\): use yarn instead of npm for install [\#947](https://github.com/w3c/respec/pull/947) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update epipebomb to version 1.0.0 🚀 [\#946](https://github.com/w3c/respec/pull/946) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+
 ## [v6.0.0](https://github.com/w3c/respec/tree/v6.0.0) (2016-10-12)
 [Full Changelog](https://github.com/w3c/respec/compare/v5.1.0...v6.0.0)
 
