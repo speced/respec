@@ -22,9 +22,9 @@ module.exports = function(config) {
       enabled: true,
       usePhantomJS: false,
       postDetection(browsers){
-        var ieIndex = browsers.indexOf('IE');
-        if (ieIndex !== -1) browsers.splice(ieIndex, 1);
-        return browsers;
+        return browsers
+          // Remove IE
+          .filter(browser => browser !== 'IE');
       }
     },
 
