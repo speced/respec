@@ -3,8 +3,9 @@
 // Handle the conformance section properly.
 
 define(
-    ["tmpl!w3c/templates/conformance.html", "core/pubsubhub"],
-    function (confoTmpl, pubsubhub) {
+    ["w3c/templates/compiled", "core/pubsubhub"],
+    function (tmpls, pubsubhub) {
+        var confoTmpl = tmpls["conformance.html"];
         return {
             run:    function (conf, doc, cb) {
                 var $confo = $("#conformance");

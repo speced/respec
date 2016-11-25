@@ -40,7 +40,6 @@
     "karma-verbose-summary-reporter": "0.0.1",
     "mocha": "^3.1.2",
     "moment": "^2.16.0",
-    "promise-polyfill": "^6.0.2",
     "requirejs": "^2.3.2",
     "text": "github:requirejs/text",
     "uglify-js": "^2.7.4",
@@ -48,7 +47,7 @@
     "whatwg-fetch": "^2.0.1"
   },
   "scripts": {
-    "build": "npm run build:highlight && npm run build:respec-w3c-common",
+    "build": "npm run copydeps && npm run hb:build && npm run build:highlight && npm run build:respec-w3c-common",
     "build:highlight": "cd node_modules/highlight.js/ && npm install && node ./tools/build.js -n xml javascript css http markdown xquery && cd ../../",
     "build:respec-w3c-common": "./tools/build-w3c-common.js",
     "jscs": "jscs --esnext tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js",
@@ -66,7 +65,11 @@
     "test:build": "mocha ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
     "test:karma": "npm run karma",
-    "test:travis": "npm run pretest && npm run test:build && karma start --single-run --reporters progress karma.conf.js && npm run test:headless"
+    "test:travis": "npm run pretest && npm run test:build && karma start --single-run --reporters progress karma.conf.js && npm run test:headless",
+    "handlebars": "handlebars",
+    "hb:w3c": "handlebars -a js/w3c/templates/*.html js/w3c/templates/*.css -f js/w3c/templates/compiled.js",
+    "hb:webidlcontiguous": "handlebars -a js/core/templates/webidl-contiguous/*.html -f js/core/templates/webidl-contiguous/compiled.js",
+    "hb:build": "npm run hb:w3c && npm run hb:webidlcontiguous"
   },
   "dependencies": {
     "colors": "^1.1.2",
