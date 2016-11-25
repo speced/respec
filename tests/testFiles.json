@@ -25,7 +25,6 @@
   "spec/core/ui-spec.js",
   "spec/core/utils-spec.js",
   "spec/core/webidl-contiguous-spec.js",
-  "spec/core/webidl-oldschool-spec.js",
   "spec/w3c/abstract-spec.js",
   "spec/w3c/conformance-spec.js",
   "spec/w3c/headers-spec.js",
