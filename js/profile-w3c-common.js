@@ -5,9 +5,6 @@ require.config({
     shortcut: {
       exports: "shortcut"
     },
-    Promise: {
-      exports: "Promise"
-    },
     highlight:{
       exports: "hljs"
     },
@@ -18,6 +15,7 @@ require.config({
   paths: {
     "beautify-css": "deps/beautify-css",
     "beautify-html": "deps/beautify-html",
+    "handlebars.runtime": "deps/handlebars",
   },
   deps: [
     "deps/fetch",
