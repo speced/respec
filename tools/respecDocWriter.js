@@ -96,6 +96,7 @@ const tasks = {
       if (response.code !== 200) {
         const warn = colors.warn(`📡 HTTP Error ${response.code}:`);
         const msg = `${warn} ${colors.debug(url)}`;
+        nightmare.proc.kill();
         throw new Error(msg);
       }
       const isRespecDoc = yield nightmare
@@ -113,6 +114,7 @@ const tasks = {
         });
       if(!isRespecDoc){
         const msg = `${colors.warn("💣 Not a ReSpec source document?")} ${colors.debug(url)}`;
+        nightmare.proc.kill();
         throw new Error(msg);
       }
       const html = yield nightmare
