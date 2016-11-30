@@ -22,7 +22,9 @@ module.exports = function(config) {
       enabled: true,
       usePhantomJS: false,
       postDetection(browsers){
-        return browsers;
+        return browsers
+          // Remove IE
+          .filter(browser => browser !== 'IE');
       }
     },
 
