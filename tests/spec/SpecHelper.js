@@ -136,7 +136,7 @@ function makeBasicConfig() {
 }
 
 function makeDefaultBody() {
-  return "<section id='sotd'><p>foo</p></section>";
+  return "<section id='sotd'><p>foo</p></section><section id='toc'></section>";
 }
 
 function makeStandardOps() {
