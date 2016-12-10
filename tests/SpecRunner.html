@@ -7,6 +7,7 @@
     <link rel="shortcut icon" type="image/png" href="/node_modules/jasmine-core/lib/jasmine-core/jasmine_favicon.png">
     <link rel="stylesheet" href="/node_modules/jasmine-core/lib/jasmine-core/jasmine.css">
 
+    <script src="/js/deps/async.js"></script>
     <script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
     <script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
     <script src="/node_modules/jasmine-core/lib/jasmine-core/boot.js"></script>
@@ -17,23 +18,21 @@
     <script>
     "use strict";
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
-     // Get a list of all the test files to include
-    fetch("testFiles.json")
-      .then(function(res) {
-        return res.json();
-      })
-      .then(function(testFiles) {
-        require.config({
-          baseUrl: "/js/",
-          paths: {
-            "jquery": "deps/jquery",
-          },
-          deps: testFiles,
-          callback: function() {
-            jasmine.getEnv().execute();
-          }
-        });
+    const runner = window.onload;
+    window.onload = null;
+    // Get a list of all the test files to include
+    async.task(function*(){
+      const res = yield fetch("testFiles.json");
+      const testFiles = yield res.json();
+      require.config({
+        baseUrl: "/js/",
+        paths: {
+          "jquery": "deps/jquery",
+        },
+        deps: testFiles,
+        callback: runner,
       });
+    });
     </script>
   </head>
   <body>
