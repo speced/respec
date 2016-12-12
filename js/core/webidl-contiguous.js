@@ -872,7 +872,10 @@ define(
       if (dfns.length > 1) {
         pubsubhub.pub("error", "Multiple <dfn>s for " + name + (parent ? " in " + parent : ""));
       }
-      if (dfns.length === 0) {
+
+      if (dfns.length === 0 && name !== "serializer" && name !== "stringifier") {
+        const msg = "No <dfn> for " + name + (parent ? " in " + parent : "") + ".";
+        pubsubhub.pub("warn", msg);
         return undefined;
       }
       var dfn = dfns[0];
