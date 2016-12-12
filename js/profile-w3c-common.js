@@ -51,6 +51,7 @@ define([
     "core/figures",
     "core/biblio",
     "core/webidl-contiguous",
+    "core/webidl-index",
     "core/webidl-oldschool",
     "core/link-to-dfn",
     "core/highlight",
