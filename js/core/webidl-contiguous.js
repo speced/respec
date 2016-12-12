@@ -884,10 +884,17 @@ define(
         dfn.wrapInner("<code></code>");
       return dfn;
     }
-
+    var resolveDone;
+    const done = new Promise(function(resolve) {
+      resolveDone = resolve;
+    });
     return {
+      get done() {
+        return done;
+      },
       run: function(conf, doc, cb) {
         var finish = function() {
+          resolveDone();
           pubsubhub.pub("end", "core/webidl-contiguous");
           cb();
         };
