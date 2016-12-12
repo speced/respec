@@ -40,27 +40,22 @@
     </section>
     <section>
       <h2>Clash here</h2>
-      <dl title='enum Test' class='idl'>
-        <dt></dt><dd>empty</dd>
-        <dt>a</dt><dd>a</dd>
-      </dl>
+      <pre class="idl">
+        enum Test {
+          "a",
+        };
+      </pre>
     </section>
     <section>
       <h2>Type Unions</h2>
       <section>
         <h2>Two</h2>
-        <dl class="idl" title="interface MutableCapabilities : Capabilities">
-          <dt>(DOMString or sequence&lt;long>) bar()</dt>
-          <dd>without default</dd>
-          <dt>void foo((unsigned long or sequence&lt;unsigned long>) value1)</dt>
-          <dd>without default</dd>
-          <!-- <dt>void foo(boolean value1, DOMString other1)</dt>
-          <dd>without default</dd>
-          <dt>void bar(boolean value2 = true, DOMString other2)</dt>
-          <dd>with default</dd>
-          <dt>void bar(unsigned long value3 = 8.2, DOMString other3 = "something else")</dt>
-          <dd>with default</dd> -->
-        </dl>
+        <pre class="idl">
+          interface MutableCapabilities : Capabilities{
+            (DOMString or sequence<long>) bar();
+            void foo((unsigned long or sequence<unsigned long>) value1);
+          };
+        </pre>
       </section>
     </section>
   </body>

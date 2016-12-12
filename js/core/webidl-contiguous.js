@@ -9,34 +9,33 @@
 define(
   [
     "core/pubsubhub",
-    "deps/handlebars",
     "deps/webidl2",
-    "tmpl!core/css/webidl-oldschool.css",
-    "tmpl!core/templates/webidl-contiguous/typedef.html",
-    "tmpl!core/templates/webidl-contiguous/implements.html",
-    "tmpl!core/templates/webidl-contiguous/dict-member.html",
-    "tmpl!core/templates/webidl-contiguous/dictionary.html",
-    "tmpl!core/templates/webidl-contiguous/enum-item.html",
-    "tmpl!core/templates/webidl-contiguous/enum.html",
-    "tmpl!core/templates/webidl-contiguous/const.html",
-    "tmpl!core/templates/webidl-contiguous/param.html",
-    "tmpl!core/templates/webidl-contiguous/callback.html",
-    "tmpl!core/templates/webidl-contiguous/method.html",
-    "tmpl!core/templates/webidl-contiguous/attribute.html",
-    "tmpl!core/templates/webidl-contiguous/serializer.html",
-    "tmpl!core/templates/webidl-contiguous/maplike.html",
-    "tmpl!core/templates/webidl-contiguous/iterable.html",
-    "tmpl!core/templates/webidl-contiguous/line-comment.html",
-    "tmpl!core/templates/webidl-contiguous/multiline-comment.html",
-    "tmpl!core/templates/webidl-contiguous/field.html",
-    "tmpl!core/templates/webidl-contiguous/exception.html",
-    "tmpl!core/templates/webidl-contiguous/extended-attribute.html",
-    "tmpl!core/templates/webidl-contiguous/interface.html"
+    "handlebars.runtime",
+    "deps/text!core/css/webidl-oldschool.css",
+    "core/templates/webidl-contiguous/compiled",
   ],
-  function(pubsubhub, hb, webidl2, css, idlTypedefTmpl, idlImplementsTmpl, idlDictMemberTmpl, idlDictionaryTmpl,
-    idlEnumItemTmpl, idlEnumTmpl, idlConstTmpl, idlParamTmpl, idlCallbackTmpl, idlMethodTmpl, idlAttributeTmpl,
-    idlSerializerTmpl, idlMaplikeTmpl, idlIterableTmpl, idlLineCommentTmpl, idlMultiLineCommentTmpl, idlFieldTmpl,
-    idlExceptionTmpl, idlExtAttributeTmpl, idlInterfaceTmpl) {
+  function(pubsubhub, webidl2, hb, css, tmpls) {
+
+    var idlAttributeTmpl = tmpls["attribute.html"];
+    var idlCallbackTmpl = tmpls["callback.html"];
+    var idlConstTmpl = tmpls["const.html"];
+    var idlDictionaryTmpl = tmpls["dictionary.html"];
+    var idlDictMemberTmpl = tmpls["dict-member.html"];
+    var idlEnumItemTmpl = tmpls["enum-item.html"];
+    var idlEnumTmpl = tmpls["enum.html"];
+    var idlExceptionTmpl = tmpls["exception.html"];
+    var idlExtAttributeTmpl = tmpls["extended-attribute.html"];
+    var idlFieldTmpl = tmpls["field.html"];
+    var idlImplementsTmpl = tmpls["implements.html"];
+    var idlInterfaceTmpl = tmpls["interface.html"];
+    var idlIterableTmpl = tmpls["iterable.html"];
+    var idlLineCommentTmpl = tmpls["line-comment.html"];
+    var idlMaplikeTmpl = tmpls["maplike.html"];
+    var idlMethodTmpl = tmpls["method.html"];
+    var idlMultiLineCommentTmpl = tmpls["multiline-comment.html"];
+    var idlParamTmpl = tmpls["param.html"];
+    var idlSerializerTmpl = tmpls["serializer.html"];
+    var idlTypedefTmpl = tmpls["typedef.html"];
 
     function registerHelpers() {
       hb.registerHelper("extAttr", function(obj, indent) {
@@ -746,7 +745,8 @@ define(
               if (v.type === undefined) {
                 defn.values[i] = {
                   toString: function() {
-                    return v; },
+                    return v;
+                  },
                   dfn: findDfn(name, v, definitionMap)
                 };
               }
@@ -892,7 +892,7 @@ define(
           cb();
         };
         var $idl = $("pre.idl", doc);
-        if (!$idl.length){
+        if (!$idl.length) {
           return finish();
         }
         registerHelpers();

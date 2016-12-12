@@ -40,7 +40,7 @@ describe("Core - Structure", function() {
     // test with noTOC
     var ops = {
       config: makeBasicConfig(),
-      body: body,
+      body: "<section class='sotd'><p>.</p></section>",
     };
     ops.config.noTOC = true;
     makeRSDoc(ops, function(doc) {

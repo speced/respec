@@ -95,15 +95,17 @@
 "use strict";
 define(
     [
-        "deps/handlebars"
+        "handlebars.runtime"
     ,   "core/utils"
-    ,   "tmpl!w3c/templates/headers.html"
-    ,   "tmpl!w3c/templates/sotd.html"
-    ,   "tmpl!w3c/templates/cgbg-headers.html"
-    ,   "tmpl!w3c/templates/cgbg-sotd.html"
     ,   "core/pubsubhub"
+    ,   "w3c/templates/compiled"
     ],
-    function (hb, utils, headersTmpl, sotdTmpl, cgbgHeadersTmpl, cgbgSotdTmpl, pubsubhub) {
+    function (hb, utils, pubsubhub, tmpls) {
+        var cgbgHeadersTmpl = tmpls["cgbg-headers.html"];
+        var cgbgSotdTmpl = tmpls["cgbg-sotd.html"];
+        var headersTmpl = tmpls["headers.html"];
+        var sotdTmpl = tmpls["sotd.html"];
+
         hb.registerHelper("showPeople", function (name, items) {
             // stuff to handle RDFa
             var re = "", rp = "", rm = "", rn = "", rwu = "", rpu = "", bn = "",
