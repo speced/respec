@@ -3,10 +3,10 @@
 
 define(
   ["core/pubsubhub"],
-  function (pubsubhub) {
+  function(pubsubhub) {
     'use strict';
     return {
-      run: function (conf, doc, cb) {
+      run: function(conf, doc, cb) {
         var initialUserConfig;
         try {
           if (Object.assign) {
@@ -17,18 +17,18 @@ define(
         } catch (err) {
           initialUserConfig = {};
         }
-        pubsubhub.sub('end-all', function () {
+        pubsubhub.sub('end-all', function() {
           var script = doc.createElement('script');
           script.id = 'initialUserConfig';
-          var confFilter = function (key, val) {
+          var confFilter = function(key, val) {
             // DefinitionMap contains array of DOM elements that aren't serializable
             // we replace them by their id
             if (key === 'definitionMap') {
               var ret = {};
               Object
                 .keys(val)
-                .forEach(function (k) {
-                  ret[k] = val[k].map(function (d) {
+                .forEach(function(k) {
+                  ret[k] = val[k].map(function(d) {
                     return d[0].id;
                   });
                 });
