@@ -1,5 +1,67 @@
 # Change Log
 
+## [v7.1.1](https://github.com/w3c/respec/tree/v7.1.1) (2016-12-22)
+[Full Changelog](https://github.com/w3c/respec/compare/v7.1.0...v7.1.1)
+
+**Fixed bugs:**
+
+- Support markdown includes [\#993](https://github.com/w3c/respec/issues/993)
+
+**Merged pull requests:**
+
+- fix\(profile-w3c-common\): do includes before markdown proc \(closes \#993\) [\#994](https://github.com/w3c/respec/pull/994) ([marcoscaceres](https://github.com/marcoscaceres))
+- Add IDL-index support \(closes \#159\) [\#990](https://github.com/w3c/respec/pull/990) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v7.1.0](https://github.com/w3c/respec/tree/v7.1.0) (2016-12-20)
+[Full Changelog](https://github.com/w3c/respec/compare/v7.0.0...v7.1.0)
+
+**Implemented enhancements:**
+
+- Nudging/warnings/prompts for Privacy and Security Considerations sections [\#539](https://github.com/w3c/respec/issues/539)
+
+**Fixed bugs:**
+
+- Nullable promise parameter not parsed correctly [\#390](https://github.com/w3c/respec/issues/390)
+
+**Closed issues:**
+
+- Error trying to install a local copy of Respec [\#992](https://github.com/w3c/respec/issues/992)
+- Warn when IDL members don't have a dfn [\#935](https://github.com/w3c/respec/issues/935)
+- Add interface summary to appendix [\#159](https://github.com/w3c/respec/issues/159)
+
+**Merged pull requests:**
+
+- Update snyk to version 1.22.1 🚀 [\#995](https://github.com/w3c/respec/pull/995) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- feat\(webidl-contiguous\): Warn if IDL member lacks dfn \(closes \#935\) [\#991](https://github.com/w3c/respec/pull/991) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v7.0.0](https://github.com/w3c/respec/tree/v7.0.0) (2016-12-12)
+[Full Changelog](https://github.com/w3c/respec/compare/v6.1.5...v7.0.0)
+
+**Closed issues:**
+
+- Precompile templates [\#233](https://github.com/w3c/respec/issues/233)
+
+**Merged pull requests:**
+
+- perf: compile handlebars templates \(closes \#233\) [\#988](https://github.com/w3c/respec/pull/988) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(examples\): use new school WebIDL [\#987](https://github.com/w3c/respec/pull/987) ([marcoscaceres](https://github.com/marcoscaceres))
+- karma-jasmine@1.1.0 breaks build 🚨 [\#986](https://github.com/w3c/respec/pull/986) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Remove ye olde idl [\#984](https://github.com/w3c/respec/pull/984) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v6.1.5](https://github.com/w3c/respec/tree/v6.1.5) (2016-11-30)
+[Full Changelog](https://github.com/w3c/respec/compare/v6.1.4...v6.1.5)
+
+**Fixed bugs:**
+
+- \[respecDocWriter\] electron not closed properly if the document doesn't exist or is not a respec document [\#977](https://github.com/w3c/respec/pull/977) ([deniak](https://github.com/deniak))
+
+**Merged pull requests:**
+
+- Update snyk to version 1.21.2 🚀 [\#980](https://github.com/w3c/respec/pull/980) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Update snyk to version 1.21.1 🚀 [\#979](https://github.com/w3c/respec/pull/979) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Update snyk to version 1.20.0 🚀 [\#974](https://github.com/w3c/respec/pull/974) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Fix using karma-edge-launcher on local tests [\#963](https://github.com/w3c/respec/pull/963) ([nickmccurdy](https://github.com/nickmccurdy))
+
 ## [v6.1.4](https://github.com/w3c/respec/tree/v6.1.4) (2016-11-17)
 [Full Changelog](https://github.com/w3c/respec/compare/v6.1.3...v6.1.4)
 

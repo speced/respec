@@ -9,6 +9,7 @@
   "spec/core/fix-headers-spec.js",
   "spec/core/highlight-spec.js",
   "spec/core/id-headers-spec.js",
+  "spec/core/idl-index-spec.js",
   "spec/core/include-config-spec.js",
   "spec/core/informative-spec.js",
   "spec/core/inlines-spec.js",
