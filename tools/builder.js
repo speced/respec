@@ -83,7 +83,14 @@ var Builder = {
         };
       });
       r.optimize(config);
+      const buildDir = pth.resolve(__dirname, '../builds/');
+      const workerDir = pth.resolve(__dirname, '../worker/');
+      //console.log(buildDir, workerDir);
       yield promiseToWrite;
+      // copy respec-worker
+      fsp
+        .createReadStream(`${workerDir}/respec-worker.js`)
+        .pipe(fsp.createWriteStream(`${buildDir}/respec-worker.js`));
     }, this);
   },
 };
