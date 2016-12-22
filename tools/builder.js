@@ -8,14 +8,14 @@ const r = require("requirejs");
 const UglifyJS = require("uglify-js");
 
 /**
-* Async function that appends the boilerplate to the generated script
-* and writes out the result. It also creates the source map file.
-*
-* @private
-* @param  {String} outPath Where to write the output to.
-* @param  {String} version The version of the script.
-* @return {Promise} Resolves when done writing the files.
-*/
+ * Async function that appends the boilerplate to the generated script
+ * and writes out the result. It also creates the source map file.
+ *
+ * @private
+ * @param  {String} outPath Where to write the output to.
+ * @param  {String} version The version of the script.
+ * @return {Promise} Resolves when done writing the files.
+ */
 function appendBoilerplate(outPath, version) {
   return async(function*(optimizedJs, sourceMap) {
     const respecJs = `"use strict";
@@ -31,8 +31,8 @@ require(['profile-w3c-common']);`;
       outSourceMap: "respec-w3c-common.build.js.map",
     });
     const mapPath = pth.dirname(outPath) + "/respec-w3c-common.build.js.map";
-    const promiseToWriteJs = fsp.writeFile(outPath, result.code , "utf-8");
-    const promiseToWriteMap = fsp.writeFile( mapPath, sourceMap , "utf-8");
+    const promiseToWriteJs = fsp.writeFile(outPath, result.code, "utf-8");
+    const promiseToWriteMap = fsp.writeFile(mapPath, sourceMap, "utf-8");
     yield Promise.all([promiseToWriteJs, promiseToWriteMap]);
   }, Builder);
 }
@@ -75,7 +75,7 @@ var Builder = {
         preserveLicenseComments: false,
         useStrict: true,
       };
-      const promiseToWrite = new Promise((resolve, reject)=>{
+      const promiseToWrite = new Promise((resolve, reject) => {
         config.out = (concatinatedJS, sourceMap) => {
           outputWritter(concatinatedJS, sourceMap)
             .then(resolve)
@@ -83,7 +83,14 @@ var Builder = {
         };
       });
       r.optimize(config);
+      const buildDir = pth.resolve(__dirname, "../builds/");
+      const workerDir = pth.resolve(__dirname, "../worker/");
+      //console.log(buildDir, workerDir);
       yield promiseToWrite;
+      // copy respec-worker
+      fsp
+        .createReadStream(`${workerDir}/respec-worker.js`)
+        .pipe(fsp.createWriteStream(`${buildDir}/respec-worker.js`));
     }, this);
   },
 };
