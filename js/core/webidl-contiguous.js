@@ -840,6 +840,8 @@ define(
     // marked as an IDL definition, and returned.  If no <dfn> is found,
     // the function returns 'undefined'.
     function findDfn(parent, name, definitionMap) {
+      var originalParent = parent;
+      var originalName = name;
       parent = parent.toLowerCase();
       name = name.toLowerCase();
       if (unlinkable.has(name)){
@@ -877,10 +879,10 @@ define(
         }
       }
       if (dfns.length > 1) {
-        pubsubhub.pub("error", "Multiple <dfn>s for " + name + (parent ? " in " + parent : ""));
+        pubsubhub.pub("error", "Multiple <dfn>s for " + originalName + (originalParent ? " in " + originalParent : ""));
       }
       if (dfns.length === 0) {
-        const msg = "No <dfn> for " + name + (parent ? " in " + parent : "") + ".";
+        const msg = "No <dfn> for " + originalName + (originalParent ? " in " + originalParent : "") + ".";
         pubsubhub.pub("warn", msg);
         return undefined;
       }
