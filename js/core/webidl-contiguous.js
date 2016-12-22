@@ -36,6 +36,10 @@ define(
     var idlParamTmpl = tmpls["param.html"];
     var idlSerializerTmpl = tmpls["serializer.html"];
     var idlTypedefTmpl = tmpls["typedef.html"];
+    // TODO: make these linkable somehow.
+    // https://github.com/w3c/respec/issues/999
+    // https://github.com/w3c/respec/issues/982
+    var unlinkable = new Set(["maplike", "setlike", "stringifier"])
 
     function registerHelpers() {
       hb.registerHelper("extAttr", function(obj, indent) {
@@ -838,6 +842,9 @@ define(
     function findDfn(parent, name, definitionMap) {
       parent = parent.toLowerCase();
       name = name.toLowerCase();
+      if (unlinkable.has(name)){
+        return;
+      }
       var dfnForArray = definitionMap[name];
       var dfns = [];
       if (dfnForArray) {
@@ -872,8 +879,7 @@ define(
       if (dfns.length > 1) {
         pubsubhub.pub("error", "Multiple <dfn>s for " + name + (parent ? " in " + parent : ""));
       }
-
-      if (dfns.length === 0 && name !== "serializer" && name !== "stringifier") {
+      if (dfns.length === 0) {
         const msg = "No <dfn> for " + name + (parent ? " in " + parent : "") + ".";
         pubsubhub.pub("warn", msg);
         return undefined;
