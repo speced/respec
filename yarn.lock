@@ -713,17 +713,11 @@ debug@0.7.4:
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/debug/-/debug-0.7.4.tgz#06e1ea8082c2cb14e39806e22e2f6f757f92af39"
 
-debug@2.2.0, debug@~2.2.0:
+debug@2.2.0, debug@^2.1.3, debug@^2.2.0, debug@~2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.2.0.tgz#f87057e995b1a1f6ae6a4960664137bc56f039da"
   dependencies:
     ms "0.7.1"
-
-debug@^2.1.3, debug@^2.2.0:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-2.3.2.tgz#94cb466ef7d6d2c7e5245cdd6e4104f2d0d70d30"
-  dependencies:
-    ms "0.7.2"
 
 decamelize@^1.0.0, decamelize@^1.1.1, decamelize@^1.1.2:
   version "1.2.0"
@@ -795,9 +789,9 @@ dom-serializer@0:
     domelementtype "~1.1.1"
     entities "~1.1.1"
 
-"domReady@git+ssh://git@github.com/requirejs/domReady.git":
+"domReady@github:requirejs/domReady":
   version "2.0.1"
-  resolved "git+ssh://git@github.com/requirejs/domReady.git#d85bdc38a6df868ead52ab3e80715aaf60e68765"
+  resolved "https://codeload.github.com/requirejs/domReady/tar.gz/d85bdc38a6df868ead52ab3e80715aaf60e68765"
 
 domelementtype@1:
   version "1.3.0"
@@ -855,6 +849,10 @@ ecstatic@^1.4.0:
     mime "^1.2.11"
     minimist "^1.1.0"
     url-join "^1.0.0"
+
+edge-launcher@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/edge-launcher/-/edge-launcher-1.0.1.tgz#eb6b60b724d45b128a9c7b0ed3b034c684742bdb"
 
 editorconfig@^0.13.2:
   version "0.13.2"
@@ -1392,7 +1390,7 @@ growl@1.9.2:
   version "1.9.2"
   resolved "https://registry.yarnpkg.com/growl/-/growl-1.9.2.tgz#0ea7743715db8d8de2c5ede1775e1b45ac85c02f"
 
-handlebars@^4.0.5:
+handlebars@^4.0.6:
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.0.6.tgz#2ce4484850537f9c97a8026d5399b935c4ed4ed7"
   dependencies:
@@ -1464,9 +1462,9 @@ he@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/he/-/he-0.5.0.tgz#2c05ffaef90b68e860f3fd2b54ef580989277ee2"
 
-"highlight.js@git+ssh://git@github.com/isagalaev/highlight.js":
-  version "9.8.0"
-  resolved "git+ssh://git@github.com/isagalaev/highlight.js#89155183b3b3c787ec5e0187dae5de6c7ea59f37"
+"highlight.js@github:isagalaev/highlight.js":
+  version "9.9.0"
+  resolved "https://codeload.github.com/isagalaev/highlight.js/tar.gz/44b2e46196ac633b82b69ebf389c9bcf213941fc"
 
 hoek@2.x.x:
   version "2.16.3"
@@ -1917,30 +1915,29 @@ karma-chrome-launcher@^2.0.0:
     fs-access "^1.0.0"
     which "^1.2.1"
 
-karma-detect-browsers@^2.2.2:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/karma-detect-browsers/-/karma-detect-browsers-2.2.3.tgz#508e6b46d05efe1c139f53d3ac8cf7fd7a82daba"
+karma-detect-browsers@^2.2.3:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/karma-detect-browsers/-/karma-detect-browsers-2.2.4.tgz#3ba25334a02998743d2d27fa4cebcd50c606c2de"
   dependencies:
-    resolve "^1.1.7"
     which "^1.2.4"
+
+karma-edge-launcher@^0.1.1:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/karma-edge-launcher/-/karma-edge-launcher-0.1.2.tgz#9d7a70b3c8c5e2166934a93ca9946ccb16ab0f01"
+  dependencies:
+    edge-launcher "1.0.1"
 
 karma-firefox-launcher@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/karma-firefox-launcher/-/karma-firefox-launcher-1.0.0.tgz#e08af3ce42e39860c2952ea7b7eaa64d63508bdc"
 
-karma-ie-launcher@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/karma-ie-launcher/-/karma-ie-launcher-1.0.0.tgz#497986842c490190346cd89f5494ca9830c6d59c"
-  dependencies:
-    lodash "^4.6.1"
+karma-jasmine@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/karma-jasmine/-/karma-jasmine-1.1.0.tgz#22e4c06bf9a182e5294d1f705e3733811b810acf"
 
-karma-jasmine@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/karma-jasmine/-/karma-jasmine-1.0.2.tgz#c0b3ab327bf207db60e17fa27db37cfdef5d8e6c"
-
-karma-mocha-reporter@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/karma-mocha-reporter/-/karma-mocha-reporter-2.2.0.tgz#20367b93f6651cd2c0d06b10d4eea3b81181fb4e"
+karma-mocha-reporter@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/karma-mocha-reporter/-/karma-mocha-reporter-2.2.1.tgz#8508b2f0925433a6417f0c528e53fcb411745758"
   dependencies:
     chalk "1.1.3"
 
@@ -2133,7 +2130,7 @@ lodash@^3.5.0, lodash@^3.7.0, lodash@^3.8.0, lodash@~3.10.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@^4.0.0, lodash@^4.3.0, lodash@^4.5.0, lodash@^4.6.1:
+lodash@^4.0.0, lodash@^4.3.0, lodash@^4.5.0:
   version "4.17.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.1.tgz#e75eaf17a34730c6491d9956f4d81f3a044f01bf"
 
@@ -2269,17 +2266,13 @@ minimatch@3.0.2:
   dependencies:
     brace-expansion "^1.0.0"
 
-minimist@0.0.8:
+minimist@0.0.8, minimist@~0.0.1:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.0.8.tgz#857fcabfc3397d2625b8228262e86aa7a011b05d"
 
 minimist@1.2.0, minimist@^1.1.0, minimist@^1.1.3, minimist@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
-
-minimist@~0.0.1:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.0.10.tgz#de3f98543dbf96082be48ad1a0c7cda836301dcf"
 
 minstache@^1.2.0:
   version "1.2.0"
@@ -2315,17 +2308,13 @@ mocha@^3.1.2:
     mkdirp "0.5.1"
     supports-color "3.1.2"
 
-moment@^2.15.2:
-  version "2.16.0"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.16.0.tgz#f38f2c97c9889b0ee18fc6cc392e1e443ad2da8e"
+moment@^2.16.0:
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.17.1.tgz#fed9506063f36b10f066c8b59a144d7faebe1d82"
 
 ms@0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.1.tgz#9cd13c03adbff25b65effde7ce864ee952017098"
-
-ms@0.7.2:
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.2.tgz#ae25cf2512b3885a1d95d7f037868d8431124765"
 
 mute-stream@0.0.6, mute-stream@~0.0.4:
   version "0.0.6"
@@ -2413,7 +2402,7 @@ node-status-codes@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/node-status-codes/-/node-status-codes-1.0.0.tgz#5ae5541d024645d32a58fcddc9ceecea7ae3ac2f"
 
-node-uuid@^1.4.3, node-uuid@~1.4.7:
+node-uuid@~1.4.7:
   version "1.4.7"
   resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.4.7.tgz#6da5a17668c4b3dd59623bda11cf7fa4c1f60a6f"
 
@@ -2712,10 +2701,6 @@ progress-stream@^1.1.0:
     speedometer "~0.1.2"
     through2 "~0.2.3"
 
-promise-polyfill@^6.0.2:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/promise-polyfill/-/promise-polyfill-6.0.2.tgz#d9c86d3dc4dc2df9016e88946defd69b49b41162"
-
 "promise@>=3.2 <8":
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/promise/-/promise-7.1.1.tgz#489654c692616b8aa55b0724fa809bb7db49c5bf"
@@ -2851,7 +2836,7 @@ readable-stream@1.1, readable-stream@~1.1.9:
     isarray "0.0.1"
     string_decoder "~0.10.x"
 
-readable-stream@^2.0.0, "readable-stream@^2.0.0 || ^1.1.13", readable-stream@~2.1.4:
+readable-stream@^2.0.0, "readable-stream@^2.0.0 || ^1.1.13", readable-stream@^2.0.5, readable-stream@~2.1.4:
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.1.5.tgz#66fa8b720e1438b364681f2ad1a63c618448c9d0"
   dependencies:
@@ -2863,7 +2848,7 @@ readable-stream@^2.0.0, "readable-stream@^2.0.0 || ^1.1.13", readable-stream@~2.
     string_decoder "~0.10.x"
     util-deprecate "~1.0.1"
 
-readable-stream@^2.0.2, readable-stream@^2.0.4, readable-stream@^2.0.5, readable-stream@~2.0.0:
+readable-stream@^2.0.2, readable-stream@^2.0.4, readable-stream@~2.0.0:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.0.6.tgz#8f90341e68a53ccc928788dacfcd11b36eb9b78e"
   dependencies:
@@ -2991,7 +2976,7 @@ reserved-words@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/reserved-words/-/reserved-words-0.1.1.tgz#6f7c15e5e5614c50da961630da46addc87c0cef2"
 
-resolve@^1.1.6, resolve@^1.1.7:
+resolve@^1.1.6:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.1.7.tgz#203114d82ad2c5ed9e8e0411b3932875e889e97b"
 
@@ -3134,9 +3119,9 @@ snyk-module@1.7.0, snyk-module@^1.6.0:
     hosted-git-info "^2.1.4"
     validate-npm-package-name "^2.2.2"
 
-snyk-policy@1.5.2:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/snyk-policy/-/snyk-policy-1.5.2.tgz#498420c7d240d5818ed73c19e1e17e4969d778f1"
+snyk-policy@1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/snyk-policy/-/snyk-policy-1.7.0.tgz#2151c751ab1edc040fc6b94a872aa989db492324"
   dependencies:
     debug "^2.2.0"
     es6-promise "^3.1.2"
@@ -3186,7 +3171,7 @@ snyk-tree@^1.0.0:
   dependencies:
     archy "^1.0.0"
 
-snyk-try-require@^1.0.0, snyk-try-require@^1.1.1:
+snyk-try-require@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/snyk-try-require/-/snyk-try-require-1.1.1.tgz#1d3781834414d338cc9090c7b039eafea85c0ac1"
   dependencies:
@@ -3196,9 +3181,19 @@ snyk-try-require@^1.0.0, snyk-try-require@^1.1.1:
     lru-cache "^4.0.0"
     then-fs "^2.0.0"
 
-snyk@1.19.1:
-  version "1.19.1"
-  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.19.1.tgz#d3dda1d50a34b4a09af58392a3ffc411a6ae20bd"
+snyk-try-require@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/snyk-try-require/-/snyk-try-require-1.2.0.tgz#30fc2b11c07064591ee35780c826be91312f2144"
+  dependencies:
+    debug "^2.2.0"
+    es6-promise "^3.1.2"
+    lodash.clonedeep "^4.3.0"
+    lru-cache "^4.0.0"
+    then-fs "^2.0.0"
+
+snyk@1.22.1:
+  version "1.22.1"
+  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.22.1.tgz#11cbac142bb506ed3e4951f388cfe49c8da5183f"
   dependencies:
     abbrev "^1.0.7"
     ansi-escapes "^1.3.0"
@@ -3208,24 +3203,24 @@ snyk@1.19.1:
     es6-promise "^3.0.2"
     hasbin "^1.2.3"
     inquirer "1.0.3"
-    node-uuid "^1.4.3"
     open "^0.0.5"
     os-name "^1.0.3"
     request "^2.74.0"
     semver "^5.1.0"
     snyk-config "1.0.1"
     snyk-module "1.7.0"
-    snyk-policy "1.5.2"
+    snyk-policy "1.7.0"
     snyk-recursive-readdir "^2.0.0"
     snyk-resolve "1.0.0"
     snyk-resolve-deps "1.7.0"
     snyk-tree "^1.0.0"
-    snyk-try-require "^1.0.0"
+    snyk-try-require "^1.2.0"
     tempfile "^1.1.1"
     then-fs "^2.0.0"
     undefsafe "0.0.3"
     update-notifier "^0.5.0"
     url "^0.11.0"
+    uuid "^3.0.1"
 
 socket.io-adapter@0.4.0:
   version "0.4.0"
@@ -3476,9 +3471,9 @@ test-value@^2.0.0:
     array-back "^1.0.3"
     typical "^2.6.0"
 
-"text@git+ssh://git@github.com/requirejs/text.git":
+"text@github:requirejs/text":
   version "2.0.15"
-  resolved "git+ssh://git@github.com/requirejs/text.git#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f"
+  resolved "https://codeload.github.com/requirejs/text/tar.gz/d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f"
 
 then-fs@^2.0.0:
   version "2.0.0"
@@ -3714,6 +3709,10 @@ uuid@^2.0.1, uuid@^2.0.2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-2.0.3.tgz#67e2e863797215530dff318e5bf9dcebfd47b21a"
 
+uuid@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.1.tgz#6544bba2dfda8c1cf17e629a3a305e2bb1fee6c1"
+
 validate-npm-package-license@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/validate-npm-package-license/-/validate-npm-package-license-3.0.1.tgz#2804babe712ad3379459acfbe24746ab2c303fbc"
@@ -3764,9 +3763,9 @@ webidl2@^2.0.11:
   version "2.0.11"
   resolved "https://registry.yarnpkg.com/webidl2/-/webidl2-2.0.11.tgz#788ba6daad0a14e20fc396b860296a07b55b8a17"
 
-whatwg-fetch@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.0.tgz#cde428ac2b1dab717c96bc6785feb557619b249e"
+whatwg-fetch@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.1.tgz#078b9461bbe91cea73cbce8bb122a05f9e92b772"
 
 which-module@^1.0.0:
   version "1.0.0"
