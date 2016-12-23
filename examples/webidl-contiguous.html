@@ -30,6 +30,12 @@
       </p>
     </section>
     <pre class="idl">
+interface interface_identifier {
+  readonly maplike&lt;key_type, value_type>;
+  maplike&lt;key_type, value_type>;
+};
+    </pre>
+    <pre class="idl">
 interface Foo {
   attribute DOMString attr;
 };
@@ -37,6 +43,34 @@ interface Foo {
     <p link-for="Foo">The <dfn data-for="Foo">attr</dfn> attribute's getter must...</p>
     <section>
       <h2>Introduction</h2>
+<section data-dfn-for="PresentationRequest">
+  <h2><dfn>PresentationRequest</dfn> interface</h2>
+  <pre class="idl">
+  interface PresentationRequest : EventTarget {
+    Promise&lt;PresentationConnection> start();
+    stringifier DOMString();
+  };
+  </pre>
+  <section link-for="PresentationRequest">
+    <h3><dfn>start</dfn> method</h3>
+    <p>The <a>PresentationRequest.start</a> method.
+    <p>Or <a>start</a> method...</p>
+  </section>
+  <section link-for="PresentationRequest">
+    <h3><dfn>stringifier</dfn></h3>
+    <p>The <a>PresentationRequest.start</a> method.
+    <p>Or <a>start</a> method...</p>
+  </section>
+</section>
+
+<section data-dfn-for="PresentationConnection">
+  <h2><dfn>PresentationConnection</dfn> interface</h2>
+  <pre class="idl">
+  interface PresentationConnection : EventTarget {
+      
+  };
+  </pre>
+</section>
 
       <p>
         To document an interface using contiguous IDL, first write your WebIDL in a <code>&lt;pre class="idl"></code> block:
@@ -353,7 +387,7 @@ interface Foo {
           serializer = { foo, bar };
         };
       </pre>
-      <p id='serializer-map-doc'><dfn for="SerializerMap">serializer</dfn> serializes a SerializerMap.</p>
+      <p id='serializer-map-doc'><dfn data-dfn-for="SerializerMap">serializer</dfn> serializes a SerializerMap.</p>
     </section>
     <section>
       <h2>Comments</h2>
