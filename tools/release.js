@@ -304,8 +304,8 @@ async.task(function*() {
     yield git("push origin gh-pages");
     yield git("push --tags");
     console.log(colors.info(" 📡  Publishing to npm..."));
-    // We give npm publish 1 minute to time out, as it can be slow.
-    yield toExecPromise("npm publish", 60000);
+    // We give npm publish 2 minute to time out, as it can be slow.
+    yield toExecPromise("npm publish", 120000);
     if (initialBranch !== MAIN_BRANCH) {
       yield Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
     }
