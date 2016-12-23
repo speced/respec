@@ -157,19 +157,18 @@ const Prompts = {
       .filter(line => line)
       // drop the hash
       .map(line => line.substr(line.indexOf(" ") + 1))
-      .map((affectedPart, line) => {
+      .map(line => {
         if (/^breaking/i.test(line)) {
           return "major";
         }
         if(/^feat/i.test(line)){
           return "minor";
-        };
+        }
         return "patch";
       })
       .reduce(
         (collector, item) => collector.add(item), new Set()
       );
-    console.log(changes);
     if (changes.has("major")) {
       major++;
       minor = 0;
