@@ -110,15 +110,16 @@ const Prompts = {
 
   stylelizeCommits(commits) {
     const iconMap = new Map([
-      ["docs", "📖"],
+      ["breaking change", "🚨"],
       ["chore", "🔨"],
-      ["fix", "🐞"],
-      ["style", "🖌"],
-      ["refactor", "💃"],
-      ["test", "👍"],
+      ["docs", "📖"],
       ["feat", "⭐️"],
+      ["fix", "🐞"],
+      ["refactor", "💃"],
+      ["style", "🖌"],
+      ["test", "👍"],
     ]);
-    const commitHints = /^docs|^chore|^fix|^style|^refactor|^test|^feat/i;
+    const commitHints = /^docs|^chore|^fix|^style|^refactor|^test|^feat|^breaking\schange/i;
     return commits
       .split("\n")
       .filter(line => line)
@@ -147,18 +148,34 @@ const Prompts = {
    *  - PATCH version when you make backwards-compatible bug fixes.
    */
   suggestSemVersion(commits, version) {
-    // We can only guess at MINOR, based on feat. Otherwise, it's just a patch
-    const isMinor = commits
+    let [major, minor, patch] = version
+      .split(".")
+      .map(value => parseInt(value));
+    // We can guess at MINOR, based on feat. Otherwise, it's just a patch
+    const changes = commits
       .split("\n")
       .filter(line => line)
       // drop the hash
       .map(line => line.substr(line.indexOf(" ") + 1))
-      .some(line => /^feat/.test(line));
-    let [major, minor, patch] = version.split(".").map(value => parseInt(value));
-
-    if (isMinor) {
-      minor++;
+      .map(line => {
+        if (/^breaking/i.test(line)) {
+          return "major";
+        }
+        if(/^feat/i.test(line)){
+          return "minor";
+        }
+        return "patch";
+      })
+      .reduce(
+        (collector, item) => collector.add(item), new Set()
+      );
+    if (changes.has("major")) {
+      major++;
+      minor = 0;
       patch = 0;
+    } else if(changes.has("minor")) {
+      minor++;
+      patch = 0;       
     } else {
       patch++;
     }
@@ -304,8 +321,8 @@ async.task(function*() {
     yield git("push origin gh-pages");
     yield git("push --tags");
     console.log(colors.info(" 📡  Publishing to npm..."));
-    // We give npm publish 1 minute to time out, as it can be slow.
-    yield toExecPromise("npm publish", 60000);
+    // We give npm publish 2 minute to time out, as it can be slow.
+    yield toExecPromise("npm publish", 120000);
     if (initialBranch !== MAIN_BRANCH) {
       yield Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
     }
