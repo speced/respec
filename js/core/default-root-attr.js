@@ -8,15 +8,13 @@
 define(
   [],
   function() {
-    return {
-      run: function(config, doc, cb) {
-        var $root = $(doc.documentElement);
-        if (!$root.attr("lang")) {
-          $root.attr("lang", "en");
-          if (!$root.attr("dir")) $root.attr("dir", "ltr");
-        }
-        cb();
-      }
-    };
+    const html = document.querySelector("html");
+    if (!html.hasAttribute("lang")) {
+      html.lang = "en";
+      if (!html.hasAttribute("dir")) {
+        html.dir = "ltr";
+      };
+    }
+    return {};
   }
 );
