@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "7.3.1",
+  "version": "7.3.2",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -28,7 +28,7 @@
     "karma": "^1.3.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-detect-browsers": "^2.2.3",
-    "karma-edge-launcher": "^0.1.1",
+    "karma-edge-launcher": "^0.2.0",
     "karma-firefox-launcher": "^1.0.0",
     "karma-jasmine": "^1.1.0",
     "karma-mocha": "^1.3.0",
@@ -52,7 +52,7 @@
     "build:respec-w3c-common": "./tools/build-w3c-common.js",
     "jscs": "jscs --esnext tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js",
     "jscs:fix": "jscs --esnext --fix tests",
-    "jshint": "jshint karma.conf.js tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js",
+    "jshint": "jshint karma.conf.js tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js js/core/data-include.js",
     "karma": "karma start --single-run",
     "prepublish": "npm run build:highlight && npm run copydeps && npm run snyk-protect",
     "copydeps": "node ./tools/copydeps.js",

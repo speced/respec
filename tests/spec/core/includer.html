@@ -7,7 +7,7 @@
     </script>
     <script class='remove'>
       var respecConfig = {
-              specStatus:   "WD"
+              specStatus:   "ED"
           ,   shortName:    "includer"
           ,   editors:      [{ name: "Robin Berjon", url: "http://berjon.com/" }]
           ,   wg:           "ReSpec Hackin' Gang"
@@ -15,6 +15,7 @@
           ,   wgPublicList: "none"
           ,   wgPatentURI:  "XXX"
           ,   edDraftURI:   "http://darobin.github.com/respec"
+          ,   format: "markdown"
         };
     </script>
   </head>
@@ -27,8 +28,33 @@
         CUSTOM PARAGRAPH
       </p>
     </section>
+    <section id="empty-include" data-include></section>
     <section id='includes'>
-      <div data-include='/tests/spec/core/inc.html'></div>
+      <div data-include='/tests/spec/core/inc.html'
+        data-include-format
+        data-dont-remove="pass"></div>
+    </section>
+    <section id='includes-replace'>
+      <!--
+      The data URL is equivalent to:
+      <section id="replacement-test"><h3>Replacement</h3></section>
+      -->
+      <div
+        id="this-should-be-missing"
+        data-include-replace
+        data-include='data:text/html;charset=utf-8,%3Csection%20id%3D%22replacement-test%22%3E%3Ch3%3EReplacement%3C%2Fh3%3E%3C%2Fsection%3E'>
+        </div>
+    </section>
+    <section id='includes-text'>
+      <!--
+      The data URL is equivalent to:
+      <p>pass</p>
+      -->
+      <div
+        id='no-replace'
+        data-include-format='text'
+        data-include='data:text/plain;charset=utf-8,%3Cp%3Epass%3C%2Fp%3E'>
+        </div>
     </section>
   </body>
 </html>
