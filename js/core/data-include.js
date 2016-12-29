@@ -1,3 +1,4 @@
+/*globals console*/
 // Module core/data-include
 // Support for the data-include attribute. Causes external content to be included inside an
 // element that has data-include='some URI'. There is also a data-oninclude attribute that
@@ -8,62 +9,83 @@
 //  This module only really works when you are in an HTTP context, and will most likely
 //  fail if you are editing your documents on your local drive. That is due to security
 //  restrictions in the browser.
-//  It is also important to note that this module performs synchronous requests (which is
-//  required since subsequent modules need to apply to the included content) and can therefore
-//  entail performance issues.
 "use strict";
 define(
   ["core/utils", "core/pubsubhub"],
   function(utils, pubsubhub) {
+    function processResponse(response, el) {
+      return response
+        .text()
+        .then(function(rawData) {
+          var data = utils.runTransforms(rawData, el.dataset.oninclude, response.url);
+          var replace = typeof el.dataset.includeReplace === "string";
+          var replacementNode;
+          switch (el.dataset.includeFormat) {
+            case "text":
+              if (replace) {
+                replacementNode = document.createTextNode(data);
+                el.parentNode.replaceChild(replacementNode, el);
+              } else {
+                el.textContent = data;
+              }
+              break;
+            default: // html, which is just using "innerHTML"
+              el.innerHTML = data;
+              if (replace) {
+                replacementNode = document.createDocumentFragment();
+                while (el.hasChildNodes()) {
+                  replacementNode.append(el.removeChild(el.firstChild));
+                }
+                el.parentNode.replaceChild(replacementNode, el);
+              }
+          }
+          // If still in the dom tree, clean up
+          if (el.parentNode) {
+            cleanUp(el);
+          }
+        });
+    }
+    /**
+     * Removes attributes after they are used for inclusion, if present.
+     *
+     * @param {Element} el The element to clean up.
+     */
+    function cleanUp(el) {
+      [
+        "data-include",
+        "data-include-format",
+        "data-include-replace",
+        "oninclude",
+      ].forEach(function(attr) {
+        el.removeAttribute(attr);
+      });
+    }
+
     return {
       run: function(conf, doc, cb) {
-        var $incs = $("[data-include]");
-        var len = $incs.length;
-        var finish = function($el) {
-          $el.removeAttr("data-include");
-          $el.removeAttr("data-oninclude");
-          $el.removeAttr("data-include-format");
-          $el.removeAttr("data-include-replace");
-          len--;
-          if (len <= 0) {
-            return cb();
-          }
-        };
-        if (!len) {
-          return cb();
-        }
-        $incs.each(function() {
-          var $el = $(this);
-          var uri = $el.attr("data-include");
-          var format = $el.attr("data-include-format") || "html";
-          var replace = !!$el.attr("data-include-replace");
-          $.ajax({
-            dataType: format,
-            url: uri,
-            success: function(data) {
-              if (data) {
-                var flist = $el.attr("data-oninclude");
-                if (flist) {
-                  data = utils.runTransforms(data, flist, uri);
-                }
-                if (replace) {
-                  $el.replaceWith(format === "text" ? doc.createTextNode(data) : data);
-                } else {
-                  if (format === "text") {
-                    $el.text(data);
-                  } else {
-                    $el.html(data);
-                  }
-                }
-              }
-              finish($el);
-            },
-            error: function(xhr, status, error) {
-              pubsubhub.pub("error", "Error including URI=" + uri + ": " + status + " (" + error + ")");
-              finish($el);
+        const promisesToInclude = Array
+          .from(
+            doc.querySelectorAll("[data-include]")
+          )
+          .map(function(el) {
+            var url = el.dataset.include;
+            if (!url) {
+              return Promise.resolve(); // just skip it
             }
+            return fetch(url)
+              .then(function(response) {
+                return processResponse(response, el);
+              })
+              .catch(function(err) {
+                var msg = "data-include failed: " + url;
+                msg += " (" + err.message + ") See dev console for more details.";
+                console.error("data-include failed for element: ", el, err);
+                pubsubhub.pub("error", msg);
+              });
           });
-        });
+        Promise
+          .all(promisesToInclude)
+          .then(cb);
       }
     };
   }

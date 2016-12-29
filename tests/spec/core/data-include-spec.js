@@ -12,7 +12,56 @@ describe("Core — Data Include", function() {
       var p = doc.querySelector("#includes > div > p");
       expect(p).toBeTruthy();
       expect(p.textContent).toEqual("INCLUDED");
-      expect(doc.querySelectorAll("*[data-include]").length).toBe(0);
+      var div = doc.querySelector("#includes > div");
+      expect(div.dataset.include).toBe(undefined);
+      expect(div.dataset.includeFormat).toBe(undefined);
+      expect(div.dataset.dontRemove).toBe("pass");
+    };
+    var ops = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody(),
+    };
+    makeRSDoc(ops, theTest, url)
+      .then(done);
+  });
+  it("replaces sections when data-include-replace is present", function(done) {
+    var url = "/tests/spec/core/includer.html";
+    var theTest = function(doc) {
+      var missing = doc.querySelector("#this-should-be-missing");
+      expect(missing).toEqual(null);
+      var included = doc.querySelector("#replacement-test");
+      expect(included).toBeTruthy();
+      var heading = doc.querySelector("#replacement-test > h3");
+      expect(heading).toBeTruthy();
+      expect(heading.textContent).toBe("Replacement");
+    };
+    var ops = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody(),
+    };
+    makeRSDoc(ops, theTest, url)
+      .then(done);
+  });
+  it("gracefully handles empty data-includes", function(done) {
+    var url = "/tests/spec/core/includer.html";
+    var theTest = function(doc) {
+      var container = doc.querySelector("#empty-include");
+      expect(container).toBeTruthy();
+      expect(container.textContent).toBe("");
+    };
+    var ops = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody(),
+    };
+    makeRSDoc(ops, theTest, url)
+      .then(done);
+  });
+  it("includes text when data-include-format is 'text'", function(done) {
+    var url = "/tests/spec/core/includer.html";
+    var theTest = function(doc) {
+      var container = doc.querySelector("#no-replace");
+      expect(container).toBeTruthy();
+      expect(container.textContent).toBe("<p>pass</p>");
     };
     var ops = {
       config: makeBasicConfig(),
@@ -39,4 +88,5 @@ describe("Core — Data Include", function() {
     makeRSDoc(ops, theTest)
       .then(done);
   });
+
 });
