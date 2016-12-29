@@ -1,4 +1,3 @@
-
 // Module w3c/data-transform
 // Support for the data-transform attribute
 // Any element in the tree that has a data-transform attribute is processed here.
@@ -14,25 +13,24 @@
 //  in the test suite, and therefore could easily break.
 
 define(
-    ["core/utils"],
-    function (utils) {
-        return {
-            run:    function (conf, doc, cb) {
-                $("[data-transform]", doc).each(function (i, node) {
-                    var $n = $(node);
-                    var flist = $n.attr('data-transform');
-                    $n.removeAttr('data-transform') ;
-                    var content;
-                    try {
-                        content = utils.runTransforms($n.html(), flist);
-                    }
-                    catch (e) {
-                        console.error(e);
-                    }
-                    if (content) $n.html(content);
-                });
-                cb();
-            }
-        };
-    }
+  ["core/utils"],
+  function(utils) {
+    return {
+      run: function(conf, doc, cb) {
+        $("[data-transform]", doc).each(function(i, node) {
+          var $n = $(node);
+          var flist = $n.attr('data-transform');
+          $n.removeAttr('data-transform');
+          var content;
+          try {
+            content = utils.runTransforms($n.html(), flist);
+          } catch (e) {
+            console.error(e);
+          }
+          if (content) $n.html(content);
+        });
+        cb();
+      }
+    };
+  }
 );
