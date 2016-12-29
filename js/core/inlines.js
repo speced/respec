@@ -26,12 +26,9 @@ define(
 
         // PRE-PROCESSING
         var abbrMap = {};
-        var acroMap = {};
         $("abbr[title]", doc).each(function() { abbrMap[$(this).text()] = $(this).attr("title"); });
-        $("acronym[title]", doc).each(function() { acroMap[$(this).text()] = $(this).attr("title"); });
         var aKeys = [];
         for (var k in abbrMap) aKeys.push(k);
-        for (var k in acroMap) aKeys.push(k);
         aKeys.sort(function(a, b) {
           if (b.length < a.length) return -1;
           if (a.length < b.length) return 1;
@@ -88,11 +85,6 @@ define(
               else if (abbrMap[matched]) {
                 if ($(txt).parents("abbr").length) df.appendChild(doc.createTextNode(matched));
                 else df.appendChild($("<abbr/>").attr({ title: abbrMap[matched] }).text(matched)[0]);
-              }
-              // ACRO
-              else if (acroMap[matched]) {
-                if ($(txt).parents("acronym").length) df.appendChild(doc.createTextNode(matched));
-                else df.appendChild($("<acronym/>").attr({ title: acroMap[matched] }).text(matched)[0]);
               }
               // FAIL -- not sure that this can really happen
               else {
