@@ -6,7 +6,6 @@
 /*jshint jquery: true*/
 /*globals console*/
 "use strict";
-
 define([
     "core/pubsubhub",
     "core/utils",
@@ -18,11 +17,11 @@ define([
       var informs = conf.informativeReferences;
       var norms = conf.normativeReferences;
       var del = [];
-      for (var k in informs){
+      for (var k in informs) {
         if (norms[k]) del.push(k);
       }
-      for (var i = 0; i < del.length; i++){
-       delete informs[del[i]];
+      for (var i = 0; i < del.length; i++) {
+        delete informs[del[i]];
       }
       return {
         informativeReferences: Object.keys(informs),
@@ -30,19 +29,20 @@ define([
       };
     }
 
-    var REF_STATUSES = {
-      "NOTE": "W3C Note",
-      "WG-NOTE": "W3C Working Group Note",
-      "ED": "W3C Editor's Draft",
-      "FPWD": "W3C First Public Working Draft",
-      "WD": "W3C Working Draft",
-      "LCWD": "W3C Last Call Working Draft",
-      "CR": "W3C Candidate Recommendation",
-      "PR": "W3C Proposed Recommendation",
-      "PER": "W3C Proposed Edited Recommendation",
-      "REC": "W3C Recommendation"
-    };
-    var stringifyRef = function(ref) {
+    const REF_STATUSES = new Map([
+      ["CR", "W3C Candidate Recommendation"],
+      ["ED", "W3C Editor's Draft"],
+      ["FPWD", "W3C First Public Working Draft"],
+      ["LCWD", "W3C Last Call Working Draft"],
+      ["NOTE", "W3C Note"],
+      ["PER", "W3C Proposed Edited Recommendation"],
+      ["PR", "W3C Proposed Recommendation"],
+      ["REC", "W3C Recommendation"],
+      ["WD", "W3C Working Draft"],
+      ["WG-NOTE", "W3C Working Group Note"],
+    ]);
+
+    function stringifyRef(ref) {
       if (typeof ref === "string") return ref;
       var output = "";
       if (ref.authors && ref.authors.length) {
@@ -61,17 +61,18 @@ define([
       if (ref.href) output += '<a href="' + ref.href + '"><cite>' + ref.title + "</cite></a>. ";
       else output += '<cite>' + ref.title + '</cite>. ';
       if (ref.date) output += ref.date + ". ";
-      if (ref.status) output += (REF_STATUSES[ref.status] || ref.status) + ". ";
+      if (ref.status) output += (REF_STATUSES.get(ref.status) || ref.status) + ". ";
       if (ref.href) output += 'URL: <a href="' + ref.href + '">' + ref.href + "</a>";
       return output;
-    };
-    var bibref = function(conf) {
+    }
+
+    function bibref(conf) {
       // this is in fact the bibref processing portion
-      var badrefs = {},
-        refs = getRefKeys(conf),
-        informs = refs.informativeReferences,
-        norms = refs.normativeReferences,
-        aliases = {};
+      var badrefs = {};
+      var refs = getRefKeys(conf);
+      var informs = refs.informativeReferences;
+      var norms = refs.normativeReferences;
+      var aliases = {};
 
       if (!informs.length && !norms.length && !conf.refNote) return;
       var $refsec = $("<section id='references' class='appendix'><h2>References</h2></section>").appendTo($("body"));
@@ -79,8 +80,8 @@ define([
 
       var types = ["Normative", "Informative"];
       for (var i = 0; i < types.length; i++) {
-        var type = types[i],
-          refs = (type == "Normative") ? norms : informs;
+        var type = types[i];
+        var refs = (type == "Normative") ? norms : informs;
         if (!refs.length) continue;
         var $sec = $("<section><h3></h3></section>")
           .appendTo($refsec)
@@ -98,9 +99,9 @@ define([
             .text("[" + ref + "]")
             .appendTo($dl);
           var $dd = $("<dd></dd>").appendTo($dl);
-          var refcontent = conf.biblio[ref],
-            circular = {},
-            key = ref;
+          var refcontent = conf.biblio[ref];
+          var circular = {};
+          var key = ref;
           circular[ref] = true;
           while (refcontent && refcontent.aliasOf) {
             if (circular[refcontent.aliasOf]) {
@@ -135,7 +136,7 @@ define([
       for (var item in badrefs) {
         if (badrefs.hasOwnProperty(item)) pubsubhub.pub("error", "Bad reference: [" + item + "] (appears " + badrefs[item] + " times)");
       }
-    };
+    }
     // Opportunistically dns-prefetch to bibref server, as we don't know yet
     // if we will actually need to download references yet.
     var link = utils.createResourceHint({
