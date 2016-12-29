@@ -52,7 +52,7 @@
     "build:respec-w3c-common": "./tools/build-w3c-common.js",
     "jscs": "jscs --esnext tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js",
     "jscs:fix": "jscs --esnext --fix tests",
-    "jshint": "jshint karma.conf.js tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js js/core/data-include.js js/core/data-transform.js",
+    "jshint": "jshint karma.conf.js tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js js/core/data-include.js js/core/dfn.js js/core/data-transform.js",
     "karma": "karma start --single-run",
     "prepublish": "npm run build:highlight && npm run copydeps && npm run snyk-protect",
     "copydeps": "node ./tools/copydeps.js",
