@@ -3,7 +3,7 @@
 "use strict";
 var iframes = [];
 
-function makeRSDoc(opts, cb, src, style) {
+function makeRSDoc(opts = {}, cb = () => {}, src = "about:blank", style = "") {
   return new Promise(function(resove, reject) {
     var ifr = document.createElement("iframe");
     opts = opts || {};
@@ -20,7 +20,7 @@ function makeRSDoc(opts, cb, src, style) {
         }
         window.removeEventListener("message", msgHandler);
         cb(doc);
-        resove();
+        resove(doc);
         clearTimeout(timeoutId);
       });
     });
@@ -32,7 +32,7 @@ function makeRSDoc(opts, cb, src, style) {
         console.warn("Could not override iframe style: " + style + " (" + err.message + ")");
       }
     }
-    ifr.src = (src) ? src : "about:blank";
+    ifr.src = src;
     // trigger load
     document.body.appendChild(ifr);
     iframes.push(ifr);
