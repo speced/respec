@@ -12,20 +12,28 @@ define([
   ],
   function(pubsubhub, utils) {
     var bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
+    var doneResolver;
+    const done = new Promise(function(resolve) {
+      doneResolver = resolve;
+    });
+    // Normative references take precedence over informative ones,
+    // so any duplicates ones are removed from the informative set.
+    function normalizeReferences(conf) {
+      Array
+        .from(conf.informativeReferences)
+        .filter(function(key) {
+          return conf.normativeReferences.has(key);
+        })
+        .reduce(function(informs, redundantKey) {
+          informs.delete(redundantKey);
+          return informs;
+        }, conf.informativeReferences);
+    }
 
     function getRefKeys(conf) {
-      var informs = conf.informativeReferences;
-      var norms = conf.normativeReferences;
-      var del = [];
-      for (var k in informs) {
-        if (norms[k]) del.push(k);
-      }
-      for (var i = 0; i < del.length; i++) {
-        delete informs[del[i]];
-      }
       return {
-        informativeReferences: Object.keys(informs),
-        normativeReferences: Object.keys(norms)
+        informativeReferences: Array.from(conf.informativeReferences),
+        normativeReferences: Array.from(conf.normativeReferences),
       };
     }
 
@@ -145,13 +153,39 @@ define([
     });
     document.head.appendChild(link);
     return {
+      get done() {
+        return done;
+      },
+      resolveRef: function(key) {
+        return new Promise(function(resolve) {
+          this.done.then(function(biblio) {
+            if (!biblio.hasOwnProperty(key)) {
+              return resolve(null);
+            }
+            var entry = biblio[key];
+            if (entry.aliasOf) {
+              return this
+                .resolveRef(entry.aliasOf)
+                .then(function(entry) {
+                  resolve(entry);
+                });
+            }
+            resolve(entry);
+          }.bind(this));
+        }.bind(this));
+      },
       stringifyRef: stringifyRef,
       run: function(conf, doc, cb) {
+        var finish = function() {
+          doneResolver(conf.biblio);
+          cb();
+        };
         if (!conf.localBiblio) {
           conf.localBiblio = {};
         }
         if (conf.biblio) {
-          var warn = "Overriding `.biblio` in config. Please use `.localBiblio` for custom biblio entries.";
+          var warn = "Overriding `.biblio` in config. Please use ";
+          warn += "`.localBiblio` for custom biblio entries.";
           pubsubhub.pub("warn", warn);
         }
         conf.biblio = {};
@@ -163,7 +197,7 @@ define([
           .map(function(key) {
             return conf.localBiblio[key].aliasOf;
           });
-
+        normalizeReferences(conf);
         var allRefs = getRefKeys(conf);
         var externalRefs = allRefs.normativeReferences
           .concat(allRefs.informativeReferences)
@@ -185,7 +219,7 @@ define([
         if (!externalRefs.length) {
           Object.assign(conf.biblio, conf.localBiblio);
           bibref(conf);
-          cb();
+          finish();
           return;
         }
         var url = bibrefsURL.href + externalRefs.join(",");
@@ -196,11 +230,12 @@ define([
           .then(function(data) {
             Object.assign(conf.biblio, data, conf.localBiblio);
             bibref(conf);
+            finish();
           })
           .catch(function(err) {
             console.error(err);
-          })
-          .then(cb);
+            finish();
+          });
       }
     };
   }
