@@ -20,8 +20,8 @@ define(
     return {
       run: function(conf, doc, cb) {
         doc.normalize();
-        if (!conf.normativeReferences) conf.normativeReferences = {};
-        if (!conf.informativeReferences) conf.informativeReferences = {};
+        if (!conf.normativeReferences) conf.normativeReferences = new Set();
+        if (!conf.informativeReferences) conf.informativeReferences = new Set();
         if (!conf.respecRFC2119) conf.respecRFC2119 = {};
 
         // PRE-PROCESSING
@@ -74,8 +74,8 @@ define(
                     ref = ref.replace(/^!/, "");
                   }
                   // contrary to before, we always insert the link
-                  if (norm) conf.normativeReferences[ref] = true;
-                  else conf.informativeReferences[ref] = true;
+                  if (norm) conf.normativeReferences.add(ref);
+                  else conf.informativeReferences.add(ref);
                   df.appendChild(doc.createTextNode("["));
                   df.appendChild($("<cite/>").wrapInner($("<a/>").attr({ "class": "bibref", href: "#bib-" + ref }).text(ref))[0]);
                   df.appendChild(doc.createTextNode("]"));
