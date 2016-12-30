@@ -42,6 +42,7 @@ define([
     "w3c/conformance",
     "core/data-transform",
     "core/inlines",
+    "core/data-cite",
     "core/dfn",
     "w3c/rfc2119",
     "core/examples",
