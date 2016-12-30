@@ -16,7 +16,7 @@ let DEBUG = false;
 require("epipebomb")();
 
 colors.setTheme({
-  "BREAKING CHANGE": "red",
+  "breaking change": "red",
   chore: "grey",
   data: "grey",
   debug: "cyan",
@@ -133,6 +133,7 @@ const Prompts = {
         let icon = (match && iconMap.has(match)) ? iconMap.get(match) : "❓";
         // colorize
         if (match) {
+          console.log("MNATC", match)
           result = result.replace(match.toLowerCase(), colors[match](match));
         }
         return `  ${icon} ${result}`;
