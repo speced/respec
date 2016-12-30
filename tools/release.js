@@ -133,7 +133,6 @@ const Prompts = {
         let icon = (match && iconMap.has(match)) ? iconMap.get(match) : "❓";
         // colorize
         if (match) {
-          console.log("MNATC", match)
           result = result.replace(match.toLowerCase(), colors[match](match));
         }
         return `  ${icon} ${result}`;
