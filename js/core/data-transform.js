@@ -11,24 +11,18 @@
 //  know what you are doing, you should be using a dedicated module instead. This feature
 //  is not actively supported and support for it may be dropped. It is not accounted for
 //  in the test suite, and therefore could easily break.
-
+"use strict";
 define(
   ["core/utils"],
   function(utils) {
     return {
       run: function(conf, doc, cb) {
-        $("[data-transform]", doc).each(function(i, node) {
-          var $n = $(node);
-          var flist = $n.attr('data-transform');
-          $n.removeAttr('data-transform');
-          var content;
-          try {
-            content = utils.runTransforms($n.html(), flist);
-          } catch (e) {
-            console.error(e);
-          }
-          if (content) $n.html(content);
-        });
+        Array
+          .from(doc.querySelectorAll("[data-transform]"))
+          .forEach(function(el) {
+            el.innerHTML = utils.runTransforms(el.innerHTML, el.dataset.transform);
+            el.removeAttribute('data-transform');
+          });
         cb();
       }
     };
