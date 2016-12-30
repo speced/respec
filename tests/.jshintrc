@@ -65,7 +65,8 @@
   "yui": false,
   "predef": [ "makeStandardOps", "makeDefaultBody", "makeRSDoc", "flushIframes", "makeBasicConfig", "require", "pickRandomsFromList" ],
   "globals": {
-    "expect": true
+    "expect": true,
+    "async": true
   },
   "esnext": true
 }
