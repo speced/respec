@@ -42,6 +42,7 @@ module.exports = function(config) {
         included: false,
         served: true,
       },
+      "js/deps/async.js",
       "js/deps/jquery.js",
       "js/deps/fetch.js",
       "tests/spec/SpecHelper.js",
