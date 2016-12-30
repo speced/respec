@@ -13,14 +13,13 @@
       const args = Array.from(arguments);
       const gen = (function*() {
         return (func.constructor.name === 'GeneratorFunction') ?
-          yield * func.apply(self, args) : func.apply(self, args);
+          yield* func.apply(self, args) : func.apply(self, args);
       }());
       try {
         return step(gen.next());
       } catch (err) {
         return Promise.reject(err);
       }
-
       function step(resultObj) {
         const p = Promise.resolve(resultObj.value); // Normalize thenables
         return (resultObj.done) ? p : p
@@ -35,7 +34,7 @@
   if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     module.exports = async;
   } else if (typeof define === 'function' && define.amd) {
-    define("async", [], () => async);
+    define('async', [], () => async);
   } else {
     (self || window).async = async;
   }
