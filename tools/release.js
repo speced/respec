@@ -16,23 +16,24 @@ let DEBUG = false;
 require("epipebomb")();
 
 colors.setTheme({
+  "BREAKING CHANGE": "red",
+  chore: "grey",
   data: "grey",
   debug: "cyan",
+  docs: "grey",
   error: "red",
+  feat: "green",
+  fix: "red",
   help: "cyan",
-  info: "green",
   important: "red",
+  info: "green",
   input: "grey",
   prompt: "grey",
+  refactor: "green",
+  style: "grey",
+  test: "grey",
   verbose: "cyan",
   warn: "yellow",
-  docs: "grey",
-  chore: "grey",
-  fix: "red",
-  style: "grey",
-  refactor: "green",
-  test: "grey",
-  feat: "green",
 });
 
 function rel(f) {
