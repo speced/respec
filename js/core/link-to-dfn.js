@@ -2,8 +2,8 @@
 // Module core/link-to-dfn
 // Gives definitions in conf.definitionMap IDs and links <a> tags to the matching definitions.
 define(
-    ["core/pubsubhub"],
-    function (pubsubhub) {
+    ["core/pubsubhub", "core/data-cite"],
+    function (pubsubhub, dataCite) {
         return {
             run:    function (conf, doc, cb) {
                 doc.normalize();
@@ -42,7 +42,8 @@ define(
                         }
                     });
                 });
-                $("a:not([href])").each(function () {
+                dataCite.linkInlineCitations(doc);
+                $("a:not([href]):not([data-cite])").each(function () {
                     var $ant = $(this);
                     if ($ant.hasClass("externalDFN")) return;
                     var linkTargets = $ant.linkTargets();
