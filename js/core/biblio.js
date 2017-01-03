@@ -7,10 +7,11 @@
 /*globals console*/
 "use strict";
 define([
+    "core/biblio-db",
     "core/pubsubhub",
     "core/utils",
   ],
-  function(pubsubhub, utils) {
+  function(bibDB, pubsubhub, utils) {
     var bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
     var doneResolver;
     const done = new Promise(function(resolve) {
@@ -230,7 +231,7 @@ define([
           .then(function(data) {
             Object.assign(conf.biblio, data, conf.localBiblio);
             bibref(conf);
-            finish();
+            bibDB.addAll(conf.biblio).then(finish);
           })
           .catch(function(err) {
             console.error(err);
