@@ -49,7 +49,7 @@ function loadWithStatus(status, expectedURL, mode) {
     switch (mode) {
       case "experimental":
         config.useExperimentalStyles = true;
-        version = new Date().getFullYear() + "/";
+        version = 2016 + "/";
         break;
       default:
         if (mode) {
