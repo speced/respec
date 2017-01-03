@@ -47,7 +47,7 @@ define([
     switch (styleVersion) {
       case null:
       case true:
-        version = new Date().getFullYear().toString();
+        version = "2016";
         break;
       default:
         if (styleVersion && !isNaN(styleVersion)) {
