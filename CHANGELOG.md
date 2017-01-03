@@ -1,5 +1,64 @@
 # Change Log
 
+## [v8.0.0](https://github.com/w3c/respec/tree/v8.0.0) (2016-12-30)
+[Full Changelog](https://github.com/w3c/respec/compare/v7.3.2...v8.0.0)
+
+**Closed issues:**
+
+- Drop warnings about missing \<dfn\> for "definition" names \(interface, enum, etc.\)? [\#997](https://github.com/w3c/respec/issues/997)
+
+**Merged pull requests:**
+
+- refactor\(core/inlines\): use Sets object for references [\#1009](https://github.com/w3c/respec/pull/1009) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(core/dfn\): unjquery as much as possible [\#1007](https://github.com/w3c/respec/pull/1007) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(default-root-attr\): unjquery, run sync [\#1006](https://github.com/w3c/respec/pull/1006) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(data-transform\): unjquery [\#1005](https://github.com/w3c/respec/pull/1005) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v7.3.2](https://github.com/w3c/respec/tree/v7.3.2) (2016-12-29)
+[Full Changelog](https://github.com/w3c/respec/compare/v7.3.1...v7.3.2)
+
+**Merged pull requests:**
+
+- Unjquery data-include [\#1004](https://github.com/w3c/respec/pull/1004) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v7.3.1](https://github.com/w3c/respec/tree/v7.3.1) (2016-12-23)
+[Full Changelog](https://github.com/w3c/respec/compare/v7.3.0...v7.3.1)
+
+## [v7.3.0](https://github.com/w3c/respec/tree/v7.3.0) (2016-12-23)
+[Full Changelog](https://github.com/w3c/respec/compare/v7.2.3...v7.3.0)
+
+**Merged pull requests:**
+
+- feat\(highlight\): add JSON support [\#1003](https://github.com/w3c/respec/pull/1003) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v7.2.3](https://github.com/w3c/respec/tree/v7.2.3) (2016-12-23)
+[Full Changelog](https://github.com/w3c/respec/compare/v7.2.2...v7.2.3)
+
+## [v7.2.2](https://github.com/w3c/respec/tree/v7.2.2) (2016-12-23)
+[Full Changelog](https://github.com/w3c/respec/compare/v7.2.1...v7.2.2)
+
+**Implemented enhancements:**
+
+- Autolink IDL extended attributes [\#989](https://github.com/w3c/respec/issues/989)
+
+**Fixed bugs:**
+
+- Exclude trying to link to maplike and setlike  [\#996](https://github.com/w3c/respec/issues/996)
+
+**Closed issues:**
+
+- Tool to convert old school webidl to new school webidl [\#864](https://github.com/w3c/respec/issues/864)
+
+**Merged pull requests:**
+
+- fix\(webidl-contiguous\): don't link special IDL things \(closes \#996\) [\#1001](https://github.com/w3c/respec/pull/1001) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v7.2.1](https://github.com/w3c/respec/tree/v7.2.1) (2016-12-22)
+[Full Changelog](https://github.com/w3c/respec/compare/v7.2.0...v7.2.1)
+
+## [v7.2.0](https://github.com/w3c/respec/tree/v7.2.0) (2016-12-22)
+[Full Changelog](https://github.com/w3c/respec/compare/v7.1.1...v7.2.0)
+
 ## [v7.1.1](https://github.com/w3c/respec/tree/v7.1.1) (2016-12-22)
 [Full Changelog](https://github.com/w3c/respec/compare/v7.1.0...v7.1.1)
 
