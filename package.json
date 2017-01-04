@@ -15,6 +15,8 @@
   },
   "author": "Robin Berjon",
   "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-latest": "^6.16.0",
     "chai": "^3.5.0",
     "domReady": "github:requirejs/domReady",
     "handlebars": "^4.0.6",
@@ -47,7 +49,8 @@
     "whatwg-fetch": "^2.0.1"
   },
   "scripts": {
-    "build": "npm run copydeps && npm run hb:build && npm run build:highlight && npm run build:respec-w3c-common",
+    "build": "npm run copydeps && npm run hb:build && npm run build:highlight && npm run build:babel && npm run build:respec-w3c-common",
+    "build:babel": "babel --presets latest src -d js",
     "build:highlight": "cd node_modules/highlight.js/ && npm install && node ./tools/build.js -n xml javascript css http markdown xquery json && cd ../../",
     "build:respec-w3c-common": "./tools/build-w3c-common.js",
     "jscs": "jscs --esnext tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js",
@@ -79,7 +82,7 @@
     "express": "^4.14.0",
     "fs-promise": "^1.0.0",
     "highlight.js": "github:isagalaev/highlight.js",
-    "marcosc-async": "^3.0.5",
+    "marcosc-async": "^4.0.0",
     "marked": "^0.3.6",
     "nightmare": "^2.9.0",
     "prompt": "^1.0.0",
