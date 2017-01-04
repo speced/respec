@@ -23,5 +23,6 @@ addons:
 
 script:
   - npm run pretest
+  - npm run build
   - npm run test:headless
   - karma start --single-run --reporters mocha karma.conf.js
