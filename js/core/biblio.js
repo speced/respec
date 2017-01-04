@@ -11,7 +11,8 @@ define([
     "core/pubsubhub",
     "core/utils",
   ],
-  function(bibDB, pubsubhub, utils) {
+  function(biblioImport, pubsubhub, utils) {
+    const biblioDB = biblioImport.biblioDB;
     var bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
     var doneResolver;
     const done = new Promise(function(resolve) {
@@ -190,6 +191,7 @@ define([
           pubsubhub.pub("warn", warn);
         }
         conf.biblio = {};
+
         var localAliases = Array
           .from(Object.keys(conf.localBiblio))
           .filter(function(key) {
@@ -200,7 +202,7 @@ define([
           });
         normalizeReferences(conf);
         var allRefs = getRefKeys(conf);
-        var externalRefs = allRefs.normativeReferences
+        var neededRefs = allRefs.normativeReferences
           .concat(allRefs.informativeReferences)
           // Filter, as to not go to network for local refs
           .filter(function(key) {
@@ -216,26 +218,80 @@ define([
             return collector;
           }, [])
           .sort();
-        // If we don't need to go to network, just use internal biblio
-        if (!externalRefs.length) {
-          Object.assign(conf.biblio, conf.localBiblio);
-          bibref(conf);
-          finish();
-          return;
-        }
-        var url = bibrefsURL.href + externalRefs.join(",");
-        fetch(url)
+        // See if we have them in IDB
+        const promisesToFind = neededRefs
+          .map(function(id) {
+            return biblioDB.find(id).then(function(data) {
+              return { id: id, data: data };
+            });
+          });
+        Promise
+          .all(promisesToFind)
+          .then(function(idbRefs) {
+            const split = idbRefs
+              .reduce(function(collector, ref) {
+                if (ref.data) {
+                  collector.hasData.push(ref);
+                } else {
+                  collector.noData.push(ref);
+                }
+                return collector;
+              }, { hasData: [], noData: [] });
+            // Add the data to IDB
+            split.hasData
+              .reduce(function(collector, ref) {
+                collector[ref.id] = ref.data;
+                return collector;
+              }, conf.biblio);
+            return split.noData
+              .map(function(item) {
+                return item.id;
+              });
+          })
+          .then(function(externalRefs) {
+            // If we don't need to go to network, just use internal biblio
+            if (!externalRefs.length) {
+              Object.assign(conf.biblio, conf.localBiblio);
+              bibref(conf);
+              finish();
+              return;
+            }
+            var url = bibrefsURL.href + externalRefs.join(",");
+            return fetch(url)
+              .then(function(response) {
+                return response.json();
+              })
+              .then(function(data) {
+                Object.assign(conf.biblio, data, conf.localBiblio);
+                bibref(conf);
+                biblioDB
+                  .addAll(conf.biblio)
+                  .then(function() {
+                    return biblioDB.close();
+                  })
+                  .then(finish);
+              })
+              .catch(function(err) {
+                console.error(err);
+                finish();
+              });
+          });
+        // Update database if needed
+        fetch(bibrefsURL.href + neededRefs.join(","))
           .then(function(response) {
-            return response.json();
+            if (response.ok && response.status === 200) {
+              return response.json();
+            }
+            return null;
           })
           .then(function(data) {
-            Object.assign(conf.biblio, data, conf.localBiblio);
-            bibref(conf);
-            bibDB.addAll(conf.biblio).then(finish);
+            if (!data) {
+              return;
+            }
+            return biblioDB.addAll(data);
           })
-          .catch(function(err) {
-            console.error(err);
-            finish();
+          .then(function(){
+            return biblioDB.close();
           });
       }
     };
