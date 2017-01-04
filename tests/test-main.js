@@ -14,7 +14,8 @@ var testFiles = Object.keys(window.__karma__.files)
   .reduce(function(collector, nextFile) {
     collector.push(nextFile);
     return collector;
-  }, []);
+  }, [])
+  .concat(["js/deps/async"]);
 
 require.config({
   // Karma serves files under /base, which is the basePath from your config file
