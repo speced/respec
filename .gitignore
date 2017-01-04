@@ -7,4 +7,5 @@ examples/touchevents.html
 bevy.json
 .idea
 js/deps/
+js/**/*.map
 src/deps/*.js
