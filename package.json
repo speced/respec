@@ -16,6 +16,7 @@
   "author": "Robin Berjon",
   "devDependencies": {
     "babel-cli": "^6.18.0",
+    "babel-plugin-transform-async-to-generator": "^6.16.0",
     "babel-preset-latest": "^6.16.0",
     "chai": "^3.5.0",
     "domReady": "github:requirejs/domReady",
@@ -50,7 +51,7 @@
   },
   "scripts": {
     "build": "npm run copydeps && npm run hb:build && npm run build:highlight && npm run build:babel && npm run build:respec-w3c-common",
-    "build:babel": "babel --presets latest src -d js",
+    "build:babel": "babel --presets=latest --plugins=transform-es2015-modules-amd,transform-async-to-generator src -d js",
     "build:highlight": "cd node_modules/highlight.js/ && npm install && node ./tools/build.js -n xml javascript css http markdown xquery json && cd ../../",
     "build:respec-w3c-common": "./tools/build-w3c-common.js",
     "jscs": "jscs --esnext tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js",
@@ -62,7 +63,7 @@
     "pretest": "npm run jshint && npm run jscs",
     "server": "npm start",
     "snyk-protect": "snyk protect",
-    "start": "http-server",
+    "start": "babel --presets=latest --plugins=transform-es2015-modules-amd,transform-async-to-generator src -d js --watch --source-maps & http-server",
     "test": "npm run test:headless && npm run test:karma",
     "test:appveyor": "npm run pretest",
     "test:build": "mocha ./tests/test-build.js",
