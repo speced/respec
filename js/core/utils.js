@@ -46,7 +46,7 @@ define(
        *                    the element has no children.
        */
       makeOwnerSwapper: function(node) {
-        if (!(node instanceof Node)) {
+        if (!node) {
           throw new TypeError("Expected instance of Node.");
         }
         return function(insertionPoint) {
