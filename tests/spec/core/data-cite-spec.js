@@ -14,7 +14,6 @@ describe("Core — data-cite attribute", () => {
       `,
     };
     makeRSDoc(ops).then(doc => {
-      debugger;
       const a = doc.querySelector("#t1 > a");
       expect(a.textContent).toEqual("inline link");
       expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/");
