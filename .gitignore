@@ -9,3 +9,6 @@ bevy.json
 js/deps/
 js/**/*.map
 src/deps/*.js
+js/core/biblio.js
+js/core/biblio-db.js
+js/core/data-cite.js
