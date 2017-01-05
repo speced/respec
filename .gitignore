@@ -9,9 +9,9 @@ bevy.json
 js/deps/
 js/**/*.map
 js/core/base-runner.js
-js/core/base-runner.js
 js/core/biblio-db.js
 js/core/biblio.js
+js/core/data-cite.js
 js/core/data-include.js
 js/core/default-root-attr.js
 js/core/include-config.js
