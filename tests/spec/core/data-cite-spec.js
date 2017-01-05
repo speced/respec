@@ -1,5 +1,5 @@
 "use strict";
-fdescribe("Core — data-cite attribute", () => {
+describe("Core — data-cite attribute", () => {
   let async;
   beforeAll((done) => {
     require(["deps/async"], f => {
