@@ -30,7 +30,7 @@ require.config({
     "core/utils": "/base/js/core/utils",
     "w3c/linter": "/base/js/w3c/linter",
     "deps/jquery": "/base/js/deps/jquery",
-    "deps/async", "/base/js/deps/async",
+    "deps/async": "/base/js/deps/async",
   },
 });
 
