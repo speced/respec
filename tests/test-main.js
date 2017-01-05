@@ -28,9 +28,11 @@ require.config({
     "core/jquery-enhanced": "/base/js/core/jquery-enhanced",
     "core/pubsubhub": "/base/js/core/pubsubhub",
     "core/utils": "/base/js/core/utils",
+    "core/biblio-db": "/base/js/core/biblio-db",
     "w3c/linter": "/base/js/w3c/linter",
     "deps/jquery": "/base/js/deps/jquery",
     "deps/async": "/base/js/deps/async",
+    "deps/regenerator": "/base/js/deps/regenerator", 
   },
 });
 
