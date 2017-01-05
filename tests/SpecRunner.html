@@ -29,7 +29,7 @@
         paths: {
           "jquery": "deps/jquery",
         },
-        deps: testFiles,
+        deps: testFiles.concat(["deps/regenerator"]),
         callback: runner,
       });
     });
