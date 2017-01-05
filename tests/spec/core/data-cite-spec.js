@@ -1,27 +1,20 @@
 "use strict";
 describe("Core — data-cite attribute", () => {
-  let async;
-  beforeAll((done) => {
-    require(["deps/async"], f => {
-      async = f;
-      done();
-    });
-  });
   afterAll(done => {
     flushIframes();
     done();
   });
   it("links data-cite attributes as normative reference", done => {
-    async.task(function*() {
-      const ops = {
-        config: makeBasicConfig(),
-        body: makeDefaultBody() + `
-          <section>
-            <p id="t1"><a data-cite="!WHATWG-HTML">inline link</a></p>
-          </section>
-        `,
-      };
-      const doc = yield makeRSDoc(ops);
+    const ops = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody() + `
+        <section>
+          <p id="t1"><a data-cite="!WHATWG-HTML">inline link</a></p>
+        </section>
+      `,
+    };
+    makeRSDoc(ops).then(doc => {
+      debugger;
       const a = doc.querySelector("#t1 > a");
       expect(a.textContent).toEqual("inline link");
       expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/");
@@ -31,16 +24,15 @@ describe("Core — data-cite attribute", () => {
     }).then(done);
   });
   it("links data-cite attributes as informative reference", done => {
-    async.task(function*() {
-      const ops = {
-        config: makeBasicConfig(),
-        body: makeDefaultBody() + `
+    const ops = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody() + `
           <section>
             <p id="t1"><a data-cite="WHATWG-DOM">inline link</a></p>
           </section>
         `,
-      };
-      const doc = yield makeRSDoc(ops);
+    };
+    makeRSDoc(ops).then(doc => {
       const a = doc.querySelector("#t1 > a");
       expect(a.textContent).toEqual("inline link");
       expect(a.href).toEqual("https://dom.spec.whatwg.org/");
@@ -50,17 +42,16 @@ describe("Core — data-cite attribute", () => {
     }).then(done);
   });
   it("handles bogus data-cite values", done => {
-    async.task(function*() {
-      const ops = {
-        config: makeBasicConfig(),
-        body: makeDefaultBody() + `
+    const ops = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody() + `
           <section>
             <p id="t1"><a data-cite="no-exist-inf">link 1</a></p>
             <p id="t2"><a data-cite="!no-exist-norm">link 2</a></p>
           </section>
         `,
-      };
-      const doc = yield makeRSDoc(ops);
+    };
+    makeRSDoc(ops).then(doc => {
       const a1 = doc.querySelector("#t1 > a");
       const a2 = doc.querySelector("#t2 > a");
       expect(a1.textContent).toEqual("link 1");
