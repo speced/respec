@@ -51,7 +51,7 @@
     "whatwg-fetch": "^2.0.1"
   },
   "scripts": {
-    "build": "npm run copydeps && npm run hb:build && npm run build:highlight && npm run build:babel && npm run build:respec-w3c-common",
+    "build": "npm run hb:build && npm run build:highlight && npm run build:babel && npm run copydeps && npm run build:respec-w3c-common",
     "build:babel": "babel src -d js",
     "build:highlight": "cd node_modules/highlight.js/ && npm install && node ./tools/build.js -n xml javascript css http markdown xquery json && cd ../../",
     "build:respec-w3c-common": "./tools/build-w3c-common.js",
