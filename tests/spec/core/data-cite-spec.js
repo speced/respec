@@ -1,5 +1,12 @@
 "use strict";
-describe("Core — data-cite attribute", () => {
+fdescribe("Core — data-cite attribute", () => {
+  let async;
+  beforeAll((done) => {
+    require(["deps/async"], f => {
+      async = f;
+      done();
+    });
+  });
   afterAll(done => {
     flushIframes();
     done();
