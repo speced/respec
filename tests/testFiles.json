@@ -1,5 +1,6 @@
 [
   "spec/core/best-practices-spec.js",
+  "spec/core/biblio-db-spec.js",
   "spec/core/biblio-spec.js",
   "spec/core/data-cite-spec.js",
   "spec/core/data-include-spec.js",
