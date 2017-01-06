@@ -15,7 +15,7 @@ var testFiles = Object.keys(window.__karma__.files)
     collector.push(nextFile);
     return collector;
   }, [])
-  .concat(["js/deps/async"]);
+  .concat(["js/deps/async", "js/deps/regenerator"]);
 
 require.config({
   // Karma serves files under /base, which is the basePath from your config file
@@ -28,6 +28,7 @@ require.config({
     "core/jquery-enhanced": "/base/js/core/jquery-enhanced",
     "core/pubsubhub": "/base/js/core/pubsubhub",
     "core/utils": "/base/js/core/utils",
+    "core/biblio-db": "/base/js/core/biblio-db",
     "w3c/linter": "/base/js/w3c/linter",
     "deps/jquery": "/base/js/deps/jquery",
     "deps/async": "/base/js/deps/async",
