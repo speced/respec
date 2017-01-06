@@ -114,7 +114,7 @@ module.exports = function(config) {
     options.singleRun = true;
     options.concurrency = 1;
     options.reporters = ["mocha"];
-    options.browsers = ["FirefoxNightly"]; //"chrome_canary_travis"
+    options.browsers = ["chrome_canary_travis"]; //"FirefoxNightly"
   }
   config.set(options);
 };
