@@ -5,10 +5,10 @@ require.config({
     shortcut: {
       exports: "shortcut"
     },
-    highlight:{
+    highlight: {
       exports: "hljs"
     },
-    beautify:{
+    beautify: {
       exports: "beautify"
     }
   },
@@ -29,6 +29,7 @@ define([
     "deps/domReady",
     "core/base-runner",
     "core/ui",
+    "deps/regenerator",
     "core/respec-ready",
     "core/include-config",
     "core/override-configuration",
@@ -76,15 +77,17 @@ define([
     /*Linter must be the last thing to run*/
     "w3c/linter",
   ],
-  function(domReady, runner, ui) {
-    var args = Array.from(arguments);
+  function(domReady, runner, ui, regenerator) {
+    var args = Array.from(arguments).filter(function(item) {
+      return item;
+    });
     ui.show();
     domReady(function() {
       runner
         .runAll(args)
         .then(document.respecIsReady)
         .then(ui.enable)
-        .catch(function(err){
+        .catch(function(err) {
           console.error(err);
           // even if things go critically bad, we should still try to show the UI
           ui.enable();
