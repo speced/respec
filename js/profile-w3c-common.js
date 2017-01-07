@@ -19,8 +19,6 @@ require.config({
   },
   deps: [
     "deps/fetch",
-    "deps/jquery",
-    "deps/regenerator",
   ],
 });
 
