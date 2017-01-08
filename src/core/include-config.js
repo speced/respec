@@ -1,48 +1,26 @@
 // Module core/include-config
 // Inject's the document's configuration into the head as JSON.
+import { sub } from "core/pubsubhub";
 
-define(
-  ["core/pubsubhub"],
-  function(pubsubhub) {
-    'use strict';
-    return {
-      run: function(conf, doc, cb) {
-        var initialUserConfig;
-        try {
-          if (Object.assign) {
-            initialUserConfig = Object.assign({}, conf);
-          } else {
-            initialUserConfig = JSON.parse(JSON.stringify(conf));
-          }
-        } catch (err) {
-          initialUserConfig = {};
-        }
-        pubsubhub.sub('end-all', function() {
-          var script = doc.createElement('script');
-          script.id = 'initialUserConfig';
-          var confFilter = function(key, val) {
-            // DefinitionMap contains array of DOM elements that aren't serializable
-            // we replace them by their id
-            if (key === 'definitionMap') {
-              var ret = {};
-              Object
-                .keys(val)
-                .forEach(function(k) {
-                  ret[k] = val[k].map(function(d) {
-                    return d[0].id;
-                  });
-                });
-              return ret;
-            }
-            return val;
-          };
-          script.innerHTML = JSON.stringify(initialUserConfig, confFilter, 2);
-          script.type = 'application/json';
-          doc.head.appendChild(script);
-          conf.initialUserConfig = initialUserConfig;
-        });
-        cb();
-      }
-    };
+function confFilter(key, val) {
+  switch (key) {
+    // DefinitionMap contains array of DOM elements that aren't serializable
+    // we replace them by their id`
+    case "definitionMap":
+      return Object
+        .keys(val)
+        .reduce((ret, k) => {
+          ret[k] = val[k].map(d => d[0].id);
+        }, {});
+    default:
+      return val;
   }
-);
+};
+
+sub('start-all', config => {
+  var script = document.createElement('script');
+  script.id = 'initialUserConfig';
+  script.innerHTML = JSON.stringify(config, confFilter, 2);
+  script.type = 'application/json';
+  document.head.appendChild(script);
+}, { once: true });
