@@ -119,7 +119,7 @@ const tasks = {
       }
       const html = yield nightmare
         .wait(function () {
-          return document.respecDone;
+          return document.respecIsReady;
         })
         .wait("#respec-modal-save-snapshot")
         .click("#respec-modal-save-snapshot")
