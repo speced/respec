@@ -21,10 +21,24 @@ describe("Core — Include config as JSON", function() {
     }).then(done);
   });
   it("should have the same content for the config and the script's text", function(done) {
+    const expected = `{
+  "editors": [
+    {
+      "name": "Person Name"
+    }
+  ],
+  "specStatus": "ED",
+  "edDraftURI": "http://foo.com",
+  "shortName": "Foo",
+  "previousMaturity": "CR",
+  "previousPublishDate": "1999-01-01",
+  "errata": "https://github.com/tabatkins/bikeshed",
+  "implementationReportURI": "http://example.com/implementationReportURI",
+  "perEnd": "1999-01-01"
+}`;
     makeRSDoc(ops, function(doc) {
-      var $script = $("#initialUserConfig", doc);
-      var jsonConfig = JSON.stringify(doc.defaultView.respecConfig.initialUserConfig, null, 2);
-      expect($script[0].innerHTML).toEqual(jsonConfig);
+      var text = doc.getElementById("initialUserConfig").innerHTML;
+      expect(text).toEqual(expected);
     }).then(done);
   });
 });
