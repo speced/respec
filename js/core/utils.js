@@ -284,7 +284,12 @@ define(
 
       // RESPEC STUFF
       removeReSpec: function(doc) {
-        $(".remove, script[data-requiremodule]", doc).remove();
+        Array
+          .from(
+            doc.querySelectorAll(".remove, script[data-requiremodule]")
+          ).forEach(function(elem) {
+            elem.remove();
+          });
       },
 
       // STRING HELPERS
