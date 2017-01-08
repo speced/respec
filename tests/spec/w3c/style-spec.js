@@ -132,4 +132,18 @@ describe("W3C - Style", function() {
       });
     Promise.all(promises).then(done);
   });
+  it("shouldn't include fixup.js when noToc is set", done => {
+    var ops = makeStandardOps();
+    var newProps = {
+      noToc: true,
+    };
+    Object.assign(ops.config, newProps);
+    var theTest = function(doc) {
+      var query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
+      var elem = doc.querySelector(query);
+      expect(elem).toBe(null);
+    };
+    makeRSDoc(ops, theTest, "spec/core/simple.html")
+      .then(done);
+  });
 });
