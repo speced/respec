@@ -32,7 +32,9 @@ function makeRSDoc(opts = {}, cb = () => {}, src = "about:blank", style = "") {
         console.warn("Could not override iframe style: " + style + " (" + err.message + ")");
       }
     }
-    ifr.src = src;
+    if (src) {
+      ifr.src = src;
+    }
     // trigger load
     document.body.appendChild(ifr);
     iframes.push(ifr);

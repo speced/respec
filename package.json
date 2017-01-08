@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "8.0.1",
+  "version": "8.1.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -15,6 +15,10 @@
   },
   "author": "Robin Berjon",
   "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-plugin-transform-async-to-generator": "^6.16.0",
+    "babel-plugin-transform-es2015-modules-amd": "^6.18.0",
+    "babel-preset-latest": "^6.16.0",
     "chai": "^3.5.0",
     "domReady": "github:requirejs/domReady",
     "handlebars": "^4.0.6",
@@ -47,19 +51,20 @@
     "whatwg-fetch": "^2.0.1"
   },
   "scripts": {
-    "build": "npm run copydeps && npm run hb:build && npm run build:highlight && npm run build:respec-w3c-common",
+    "build": "npm run hb:build && npm run build:highlight && npm run build:babel && npm run copydeps && npm run build:respec-w3c-common",
+    "build:babel": "babel src -d js",
     "build:highlight": "cd node_modules/highlight.js/ && npm install && node ./tools/build.js -n xml javascript css http markdown xquery json && cd ../../",
     "build:respec-w3c-common": "./tools/build-w3c-common.js",
     "jscs": "jscs --esnext tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js",
     "jscs:fix": "jscs --esnext --fix tests",
-    "jshint": "jshint karma.conf.js tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js js/core/data-include.js js/core/dfn.js js/core/data-transform.js",
+    "jshint": "jshint karma.conf.js tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js js/core/dfn.js js/core/data-transform.js",
     "karma": "karma start --single-run",
     "prepublish": "npm run build:highlight && npm run copydeps && npm run snyk-protect",
     "copydeps": "node ./tools/copydeps.js",
     "pretest": "npm run jshint && npm run jscs",
     "server": "npm start",
     "snyk-protect": "snyk protect",
-    "start": "http-server",
+    "start": "babel src -d js --watch --source-maps & http-server",
     "test": "npm run test:headless && npm run test:karma",
     "test:appveyor": "npm run pretest",
     "test:build": "mocha ./tests/test-build.js",
@@ -79,11 +84,11 @@
     "express": "^4.14.0",
     "fs-promise": "^1.0.0",
     "highlight.js": "github:isagalaev/highlight.js",
-    "marcosc-async": "^3.0.5",
+    "marcosc-async": "^4.0.0",
     "marked": "^0.3.6",
     "nightmare": "^2.9.0",
     "prompt": "^1.0.0",
-    "snyk": "1.22.1"
+    "snyk": "1.23.2"
   },
   "snyk": true
 }

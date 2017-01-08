@@ -46,7 +46,7 @@ define(
        *                    the element has no children.
        */
       makeOwnerSwapper: function(node) {
-        if (!(node instanceof Node)) {
+        if (!node) {
           throw new TypeError("Expected instance of Node.");
         }
         return function(insertionPoint) {
@@ -284,7 +284,12 @@ define(
 
       // RESPEC STUFF
       removeReSpec: function(doc) {
-        $(".remove, script[data-requiremodule]", doc).remove();
+        Array
+          .from(
+            doc.querySelectorAll(".remove, script[data-requiremodule]")
+          ).forEach(function(elem) {
+            elem.remove();
+          });
       },
 
       // STRING HELPERS
