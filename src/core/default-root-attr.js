@@ -4,17 +4,10 @@
 // specified values).
 // Be careful in using this that these defaults make sense for the type of document you are
 // publishing.
-"use strict";
-define(
-  [],
-  function() {
-    const html = document.querySelector("html");
-    if (!html.hasAttribute("lang")) {
-      html.lang = "en";
-      if (!html.hasAttribute("dir")) {
-        html.dir = "ltr";
-      };
-    }
-    return {};
-  }
-);
+const html = document.querySelector("html");
+if (!html.hasAttribute("lang")) {
+  html.lang = "en";
+  if (!html.hasAttribute("dir")) {
+    html.dir = "ltr";
+  };
+}
