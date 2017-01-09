@@ -65,4 +65,65 @@ describe("Core — data-cite attribute", () => {
         .toEqual("normative-references");
     }).then(done);
   });
+  it("adds the fragment identifier to the link", done => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody() + `
+        <section>
+          <p id="t1"><a
+            data-cite="!WHATWG-HTML#test">inline link</a></p>
+        </section>
+      `,
+    };
+    makeRSDoc(ops).then(doc => {
+      const a = doc.querySelector("#t1 > a");
+      expect(a.textContent).toEqual("inline link");
+      expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/#test");
+      expect(a.hasAttribute("data-cite")).toEqual(false);
+      expect(doc.querySelector("#bib-WHATWG-HTML").closest("section").id)
+        .toEqual("normative-references");
+    }).then(done);
+  });
+  describe("data-cite-frag", () => {
+    it("adds the fragment identifier to the link", done => {
+      const ops = {
+        config: makeBasicConfig(),
+        body: makeDefaultBody() + `
+        <section>
+          <p id="t1"><a
+            data-cite="WHATWG-HTML"
+            data-cite-frag="pass">inline link</a></p>
+        </section>
+      `,
+      };
+      makeRSDoc(ops).then(doc => {
+        const a = doc.querySelector("#t1 > a");
+        expect(a.textContent).toEqual("inline link");
+        expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/#pass");
+        expect(a.hasAttribute("data-cite")).toEqual(false);
+        expect(doc.querySelector("#bib-WHATWG-HTML").closest("section").id)
+          .toEqual("informative-references");
+      }).then(done);
+    });
+    it("cited fragments are overridden by cite-frag", done => {
+      const ops = {
+        config: makeBasicConfig(),
+        body: makeDefaultBody() + `
+        <section>
+          <p id="t1"><a
+            data-cite="!WHATWG-HTML#fail"
+            data-cite-frag="pass">inline link</a></p>
+        </section>
+      `,
+      };
+      makeRSDoc(ops).then(doc => {
+        const a = doc.querySelector("#t1 > a");
+        expect(a.textContent).toEqual("inline link");
+        expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/#pass");
+        expect(a.hasAttribute("data-cite")).toEqual(false);
+        expect(doc.querySelector("#bib-WHATWG-HTML").closest("section").id)
+          .toEqual("normative-references");
+      }).then(done);
+    });
+  });
 });

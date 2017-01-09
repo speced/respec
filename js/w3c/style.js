@@ -137,13 +137,11 @@ define([
 
       // Select between released styles and experimental style.
       var version = selectStyleVersion(conf.useExperimentalStyles || "2016");
-
       // Attach W3C fixup script after we are done.
-      if (version) {
-        var subscribeKey = pubsubhub.sub("end-all", function() {
+      if (version && !conf.noToc) {
+        pubsubhub.sub("end-all", function() {
           attachFixupScript(doc, version);
-          pubsubhub.unsub(subscribeKey);
-        });
+        }, {once: true});
       }
       var finalVersionPath = (version) ? version + "/" : "";
       finalStyleURL = styleBaseURL.replace("{version}", finalVersionPath);
