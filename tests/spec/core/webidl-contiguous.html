@@ -37,6 +37,45 @@
         CUSTOM PARAGRAPH
       </p>
     </section>
+    <section id="sec-parenthesis-method" data-dfn-for="ParenthesisTest" data-link-for="ParenthesisTest">
+      <pre class="idl">
+      interface ParenthesisTest {
+          void basic();
+          void noParens();
+          [Something] void ext();
+          unsigned long long ull(short s);
+          unsigned long long ull(long s);
+          SuperStar[][][][] paramed(SuperStar[][]?[] one, [ExtAttrs] ByteString? ext, optional short maybe, short[] shorts, short[][][][] hypercubes, optional short defaulted = 3.5, optional DOMString defaulted2 = "one", short... variable);
+          getter float withName ();
+          setter void named ();
+          void dataLtOverride();
+      };
+      </pre>
+      <p id="meth-basic-doc" data-dfn-for="ParenthesisTest">
+        <dfn>ull</dfn> is a method. Its <dfn data-lt="ull!overload-1">overloaded form</dfn> returns a <code>SuperStar/</code>
+      </p>
+      <p><dfn data-lt="this also links">dataLtOverride()</dfn></p>
+      <p><dfn>ParenthesisTest</dfn></p>
+      <p><dfn>basic()</dfn>...</p>
+      <p><dfn>ext()</dfn>...</p>
+      <p><dfn>ull()</dfn>...</p>
+      <p><dfn>paramed()</dfn>...</p>
+      <p><dfn>withName()</dfn>...</p>
+      <p><dfn>named()</dfn>...</p>
+      <p><dfn>dfnDoesNotLinkToAnything()</dfn>...</p>
+      <p><dfn>noParens</dfn>...</p>
+      <p>1 <a>basic</a></p>
+      <p>2 <a>basic()</a></p>
+      <p>3 <a data-lt="basic">basic</a></p>
+      <p>4 <a data-lt="basic()">basic</a></p>
+      <p><a>noParens</a></p>
+      <p><a>noParens()</a></p>
+      <p><a data-lt="noParens">noParens</a></p>
+      <p><a data-lt="noParens()">noParens</a></p>
+      <p><a>noParens()</a></p>
+      <p><a data-lt="this also links">this also links</a></p>
+    </section>
+    <p><a data-lt="ParenthesisTest.basic">test qualified</a></p>
     <section>
       <h2>Unsupported</h2>
       <p>
@@ -410,6 +449,17 @@
       <p dfn-for="EnumBasic"><dfn>one</dfn> is first.</p>
       <p link-for="EnumBasic"><a>one</a> is referenced with a <code>[link-for]</code> attribute.</p>
       <p id="enum-ref-without-link-for"><a>EnumBasic.one</a> may also be referenced with fully-qualified name.</p>
+      <section id="enum-empty-sec" data-dfn-for="EmptyEnum">
+        <pre class="idl">
+        enum EmptyEnum {
+          "",
+          "not empty"
+        };
+        </pre>
+        <p><dfn>EmptyEnum</dfn></p>
+        <p><dfn>""</dfn></p>...
+        <p><dfn>not empty</dfn>...</p>
+      </section>
     </section>
     <section>
       <h2>Callbacks</h2>
