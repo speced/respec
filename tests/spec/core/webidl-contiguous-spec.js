@@ -11,6 +11,46 @@ describe("Core - Contiguous WebIDL", function() {
       doc = idlDoc;
     }, "spec/core/webidl-contiguous.html").then(done);
   });
+
+  it("links simple method names and types", done => {
+    const section = doc.querySelector("#sec-parenthesis-method");
+    [
+      "basic",
+      "ext",
+      "ull",
+      "paramed",
+      "withName",
+      "named",
+      ]
+      .map(
+        methodName => [methodName, methodName.toLowerCase()]
+      )
+      .map(
+        ([methodName, id]) => [id, methodName, doc.getElementById(`dom-parenthesistest-${id}()`)]
+      )
+      .forEach(([id, methodName, elem]) => {
+        expect(elem).toBeTruthy();
+        expect(elem.firstElementChild.localName).toEqual("code");
+        expect(elem.textContent).toEqual(`${methodName}()`);
+        expect(elem.id).toEqual(`dom-parenthesistest-${id}()`);
+        expect(elem.dataset.dfnType).toEqual("dfn");
+        expect(elem.dataset.dfnFor).toEqual("parenthesistest");
+        expect(elem.dataset.idl).toEqual("");
+        // corresponding link
+        const aElem = section.querySelector(`pre a[href="#dom-parenthesistest-${id}()"]`);
+        expect(aElem).toBeTruthy();
+        expect(aElem.textContent).toEqual(methodName);
+      });
+      const smokeTest = doc.getElementById("dom-parenthesistest-noparens");
+      expect(smokeTest).toBeTruthy();
+      expect(smokeTest.firstElementChild.localName).toEqual("code");
+      expect(smokeTest.textContent).toEqual("noParens");
+      // corresponding link
+      const aElem = section.querySelector(`pre a[href="#dom-parenthesistest-noparens"]`);
+      expect(aElem).toBeTruthy();
+      expect(aElem.textContent).toEqual("noParens");
+      done();
+  });
   it("should handle interfaces", function(done) {
     var $target = $("#if-basic", doc);
     var text = "interface SuperStar {\n};";
@@ -530,7 +570,7 @@ describe("Core - Contiguous WebIDL", function() {
     expect($target.find(".idlEnumItem").length)
       .toEqual(4);
     expect($target.find(".idlEnumItem").first().text())
-      .toEqual("one");
+      .toEqual("\"one\"");
 
     // Links and IDs.
     expect($target.find(":contains('EnumBasic')").filter("a").attr("href"))
@@ -548,6 +588,16 @@ describe("Core - Contiguous WebIDL", function() {
       .toEqual("#dom-enumbasic-one");
     expect($section.find("#enum-ref-without-link-for a:contains('one')").attr("href"))
       .toEqual("#dom-enumbasic-one");
+    done();
+  });
+
+  it("links empty-string enumeration value", done => {
+    const links = doc.querySelector(`#enum-empty-sec a[href="#dom-emptyenum-the-empty-string"]`);
+    const dfn = doc.querySelector("#dom-emptyenum-the-empty-string");
+    const smokeDfn = doc.querySelector(`#enum-empty-sec a[href="#dom-emptyenum-not empty"]`);
+    expect(links).toBeTruthy();
+    expect(dfn).toBeTruthy();
+    expect(smokeDfn).toBeTruthy();
     done();
   });
 

@@ -77,7 +77,7 @@ define([
     } else if (this.contents().length == 1 && this.children("abbr, acronym").length == 1 && this.find(":first-child").attr("title")) {
       titleString = this.find(":first-child").attr("title");
     } else {
-      titleString = this.text();
+      titleString = this.text() === "\"\"" ? "the-empty-string" : this.text();
     }
     // now we have a string of one or more titles
     titleString = utils.norm(titleString).toLowerCase();

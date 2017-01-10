@@ -130,8 +130,11 @@ define(
         var content = options.fn(this);
         if (obj.dfn) {
           var result = "<a for='" + hb.Utils.escapeExpression(obj.linkFor || "") + "'";
-          if (obj.name) {
+          if (obj.name === obj.dfn.text().trim()) {
             result += " data-lt='" + hb.Utils.escapeExpression(obj.name) + (obj.overload ? "!overload-" + obj.overload + "' data-lt-noDefault" : "'");
+          } else {
+            const lt = hb.Utils.escapeExpression(obj.dfn.text().trim()) + "|" + obj.dfn[0].dataset.lt;
+            result += " data-lt='" + lt + "' data-lt-noDefault";
           }
           result += ">" + content + "</a>";
           return result;
@@ -472,7 +475,7 @@ define(
                   }
                 }
                 children += idlEnumItemTmpl({
-                  lname: item.toString().toLowerCase(),
+                  lname: item.toString() ? item.toString() : "the-empty-string",
                   name: item.toString(),
                   parentID: obj.name.toLowerCase(),
                   indent: indent + 1,
@@ -745,13 +748,14 @@ define(
 
           case "enum":
             name = defn.name;
+
             defn.values.forEach(function(v, i) {
               if (v.type === undefined) {
                 defn.values[i] = {
                   toString: function() {
                     return v;
                   },
-                  dfn: findDfn(name, v, definitionMap)
+                  dfn: findDfn(name, v, definitionMap, defn.type)
                 };
               }
             });
@@ -826,7 +830,7 @@ define(
         if (parent) {
           defn.linkFor = parent;
         }
-        defn.dfn = findDfn(parent, name, definitionMap);
+        defn.dfn = findDfn(parent, name, definitionMap, defn.type);
       });
     }
 
@@ -837,14 +841,54 @@ define(
     // counted as matching.
     //
     // When a matching <dfn> is found, it's given <code> formatting,
-    // marked as an IDL definition, and returned.  If no <dfn> is found,
+    // marked as an IDL definition, and returned. If no <dfn> is found,
     // the function returns 'undefined'.
-    function findDfn(parent, name, definitionMap) {
+    function findDfn(parent, name, definitionMap, type) {
       var originalParent = parent;
       var originalName = name;
       parent = parent.toLowerCase();
-      name = name.toLowerCase();
-      if (unlinkable.has(name)){
+      switch (type) {
+        case "operation":
+          // ignore overloads
+          if (name.search("!overload") !== -1) {
+            break;
+          }
+          // Allow linking to both "method()" and "method" name.
+          const asMethodName = name.toLowerCase() + "()";
+          
+          if (definitionMap[asMethodName]) {
+            const dfn = findDfn(parent, asMethodName, definitionMap);
+            if (!dfn) {
+              break; // try finding dfn using name, using normal search path...
+            }
+            const lt = (dfn[0].dataset.lt) ? dfn[0].dataset.lt.split("|") : [];
+            lt.push(asMethodName, name);
+            dfn[0].dataset.lt = lt.join("|");
+            if (!definitionMap[name]) {
+              definitionMap[name] = [];
+            }
+            definitionMap[name].push(dfn);
+            return dfn;
+          };
+          // no method alias, so let's find the dfn and add it
+          const dfn = findDfn(parent, name, definitionMap);
+          if (!dfn) {
+            break;
+          }
+          const lt = (dfn[0].dataset.lt) ? dfn[0].dataset.lt.split("|") : [];
+          lt.push(asMethodName, name);
+          dfn[0].dataset.lt = lt.join("|");
+          definitionMap[asMethodName] = [dfn];
+          return dfn;
+        case "enum":
+          if (name === "") {
+            name = "the-empty-string";
+            break;
+          }
+        default:
+          name = name.toLowerCase();
+      }
+      if (unlinkable.has(name)) {
         return;
       }
       var dfnForArray = definitionMap[name];
@@ -882,9 +926,11 @@ define(
         pubsubhub.pub("error", "Multiple <dfn>s for " + originalName + (originalParent ? " in " + originalParent : ""));
       }
       if (dfns.length === 0) {
-        const msg = "No <dfn> for " + originalName + (originalParent ? " in " + originalParent : "") + ".";
-        pubsubhub.pub("warn", msg);
-        return undefined;
+        if (type) {
+          const msg = "No <dfn> for " + originalName + (originalParent ? " in " + originalParent : "") + ".";
+          pubsubhub.pub("warn", msg);
+        }
+        return;
       }
       var dfn = dfns[0];
       // Mark the definition as code.
