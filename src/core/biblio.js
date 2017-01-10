@@ -46,7 +46,7 @@ const REF_STATUSES = new Map([
   ["WG-NOTE", "W3C Working Group Note"],
 ]);
 
-function stringifyReference(ref) {
+export function stringifyReference(ref) {
   if (typeof ref === "string") return ref;
   var output = "";
   if (ref.authors && ref.authors.length) {
