@@ -74,7 +74,11 @@ define(
                         if (!$ant.parents(".idl, dl.methods, dl.attributes, dl.constants, dl.constructors, dl.fields, dl.dictionary-members, span.idlMemberType, span.idlTypedefType, div.idlImplementsDesc").length) {
                             var link_for = linkTargets[0].for_;
                             var title = linkTargets[0].title;
+                            this.classList.add("respec-offending-element");
+                            this.title = "Linking error: not matching <dfn>";
                             pubsubhub.pub("warn", "Found linkless <a> element " + (link_for ? "for '" + link_for + "' " : "") + "with text '" + title + "' but no matching <dfn>.");
+                            console.warn("Linkless element:", $ant[0]);
+                            return;
                         }
                         $ant.replaceWith($ant.contents());
                     }
