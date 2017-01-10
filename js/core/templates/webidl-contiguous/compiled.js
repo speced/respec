@@ -137,13 +137,13 @@ templates['enum-item.html'] = template({"1":function(container,depth0,helpers,pa
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function";
 
   return alias3((helpers.idn || (depth0 && depth0.idn) || alias2).call(alias1,(depth0 != null ? depth0.indent : depth0),{"name":"idn","hash":{},"data":data}))
-    + "\"<a href=\"#dom-"
+    + "<a href=\"#dom-"
     + alias3(((helper = (helper = helpers.parentID || (depth0 != null ? depth0.parentID : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"parentID","hash":{},"data":data}) : helper)))
     + "-"
     + alias3(((helper = (helper = helpers.lname || (depth0 != null ? depth0.lname : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"lname","hash":{},"data":data}) : helper)))
-    + "\" class=\"idlEnumItem\">"
+    + "\" class=\"idlEnumItem\">\""
     + alias3(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper)))
-    + "</a>\""
+    + "\"</a>"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.needsComma : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\n";
 },"useData":true});
