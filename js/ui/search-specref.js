@@ -13,7 +13,7 @@ define(
                 var obj = json[k];
                 if (!obj.aliasOf) {
                     count++;
-                    html += "<dt>[" + (obj.id || k) + "]</dt><dd><small>" + biblio.stringifyRef(obj) + "</small></dd>";
+                    html += "<dt>[" + (obj.id || k) + "]</dt><dd><small>" + biblio.stringifyReference(obj) + "</small></dd>";
                 }
             }
             return { html: html, count: count };
