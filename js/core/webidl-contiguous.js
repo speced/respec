@@ -475,7 +475,7 @@ define(
                   }
                 }
                 children += idlEnumItemTmpl({
-                  lname: item.toString() ? item.toString() : "the-empty-string",
+                  lname: item.toString() ? item.toString().toLowerCase() : "the-empty-string",
                   name: item.toString(),
                   parentID: obj.name.toLowerCase(),
                   indent: indent + 1,
