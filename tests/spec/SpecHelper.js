@@ -51,7 +51,10 @@ function decorateDocument(doc, opts) {
     var path = opts.jsPath || "../js/";
     var loader = this.ownerDocument.createElement("script");
     var config = this.ownerDocument.createElement("script");
-    var configText = "var respecConfig = " + JSON.stringify(opts.config || {}) + ";";
+    var configText = "";
+    if (opts.config) {
+      configText = "var respecConfig = " + JSON.stringify(opts.config || {}) + ";";
+    }
     config.classList.add("remove");
     config.innerText = configText;
     var loadAttr = {

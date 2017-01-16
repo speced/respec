@@ -2,8 +2,8 @@
 // The module in charge of running the whole processing pipeline.
 import { pub } from "core/pubsubhub";
 import "core/default-root-attr";
-import "core/pre-process";
-import "core/post-process"
+import { done as preProcessDone } from "core/pre-process";
+import { done as postProcessDone } from "core/post-process";
 import "core/respec-ready";
 import "core/override-configuration";
 import "core/include-config";
@@ -21,16 +21,19 @@ function toRunnable(plug) {
 }
 
 export async function runAll(plugs) {
-  pub("start-all", window.respecConfig);
+  pub("start-all", respecConfig);
+  await preProcessDone;
   const runnables = plugs
     .filter(plug => plug && typeof plug.run === "function" && plug !== this)
     .map(toRunnable);
   for (const task of runnables) {
     try {
-      await task(window.respecConfig);
+      await task(respecConfig);
     } catch (err) {
       console.error(err);
     }
   }
-  pub("end-all", window.respecConfig);
+  pub("plugins-done", respecConfig);
+  await postProcessDone;
+  pub("end-all", respecConfig);
 };
