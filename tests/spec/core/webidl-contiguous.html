@@ -26,6 +26,26 @@
     </script>
   </head>
   <body>
+<section data-dfn-for="ExampleInterface" data-link-for="ExampleInterface">
+  <h2><dfn>ExampleInterface</dfn> interface</h2>
+  <pre class="idl">
+  interface ExampleInterface {
+    void exampleMethod();
+    readonly attribute USVString url;
+  };
+  </pre>
+  <dl>
+    <dt><dfn>exampleMethod()</dfn></dt>
+    <dd>Define <a>exampleMethod</a> here...</dd>
+    <dt><dfn>url</dfn></dt>
+    <dd>Define <a>url</a> here...</dd>
+  </dl>
+</section>
+<section data-link-for="ExampleInterface">
+  <h2>Here is how you link!</h2>
+  <p>The <a>ExampleInterface</a> or the <a>ExampleInterface.exampleMethod()</a></p>
+  <p>Or like this: <a>exampleMethod</a> - which uses data-link-for</p>
+</section>
     <section id='abstract'>
       <p>
         This fake spec tried to exercise all aspects of WebIDL so as to do regression testing in this
@@ -49,6 +69,8 @@
           getter float withName ();
           setter void named ();
           void dataLtOverride();
+          void fullyQualified();
+          void fullyQualifiedNoParens();
       };
       </pre>
       <p id="meth-basic-doc" data-dfn-for="ParenthesisTest">
@@ -64,6 +86,8 @@
       <p><dfn>named()</dfn>...</p>
       <p><dfn>dfnDoesNotLinkToAnything()</dfn>...</p>
       <p><dfn>noParens</dfn>...</p>
+      <p><dfn>ParenthesisTest.fullyQualified()</dfn>...</p>
+      <p><dfn>ParenthesisTest.fullyQualifiedNoParens</dfn> ...</p>
       <p>1 <a>basic</a></p>
       <p>2 <a>basic()</a></p>
       <p>3 <a data-lt="basic">basic</a></p>
@@ -76,6 +100,10 @@
       <p><a data-lt="this also links">this also links</a></p>
     </section>
     <p><a data-lt="ParenthesisTest.basic">test qualified</a></p>
+    <p><a id="fullyQualifiedNoParens-1">ParenthesisTest.fullyQualifiedNoParens</a></p>
+    <p><a id="fullyQualifiedNoParens-2">ParenthesisTest.fullyQualifiedNoParens()</a></p>
+    <p><a id="fullyQualifiedNoParens-3" data-link-for="ParenthesisTest">fullyQualifiedNoParens()</a></p>
+    <p><a id="fullyQualifiedNoParens-4" data-link-for="ParenthesisTest">fullyQualifiedNoParens</a></p>
     <section>
       <h2>Unsupported</h2>
       <p>
