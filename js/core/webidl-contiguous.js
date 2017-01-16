@@ -779,13 +779,18 @@ define(
           case "operation":
             if (defn.name) {
               name = defn.name;
-              var qualifiedName = [parent + "." + name];
+              var qualifiedName = parent + "." + name;
+              var fullyQualifiedName = parent + "." + name + "()";
+              if (!operationNames[fullyQualifiedName]) {
+                operationNames[fullyQualifiedName] = [];
+              }
               if (!operationNames[qualifiedName]) {
                 operationNames[qualifiedName] = [];
               } else {
                 defn.overload = operationNames[qualifiedName].length;
                 name = defn.name + "!overload-" + defn.overload;
               }
+              operationNames[fullyQualifiedName].push(defn);
               operationNames[qualifiedName].push(defn);
             } else if (defn.getter || defn.setter || defn.deleter ||
               defn.legacycaller || defn.stringifier ||
@@ -855,14 +860,16 @@ define(
           }
           // Allow linking to both "method()" and "method" name.
           const asMethodName = name.toLowerCase() + "()";
+          const asFullyQualifiedName = parent + "." + name.toLowerCase() + "()";
           
-          if (definitionMap[asMethodName]) {
-            const dfn = findDfn(parent, asMethodName, definitionMap);
+          if (definitionMap[asMethodName] || definitionMap[asFullyQualifiedName]) {
+            const lookupName = (definitionMap[asMethodName]) ? asMethodName : asFullyQualifiedName;
+            const dfn = findDfn(parent, lookupName, definitionMap);
             if (!dfn) {
               break; // try finding dfn using name, using normal search path...
             }
             const lt = (dfn[0].dataset.lt) ? dfn[0].dataset.lt.split("|") : [];
-            lt.push(asMethodName, name);
+            lt.push(lookupName, name);
             dfn[0].dataset.lt = lt.join("|");
             if (!definitionMap[name]) {
               definitionMap[name] = [];
