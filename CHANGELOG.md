@@ -1,5 +1,87 @@
 # Change Log
 
+## [v8.5.0](https://github.com/w3c/respec/tree/v8.5.0) (2017-01-16)
+[Full Changelog](https://github.com/w3c/respec/compare/v8.4.2...v8.5.0)
+
+**Fixed bugs:**
+
+- Allow linking to fully qualified method name [\#1024](https://github.com/w3c/respec/issues/1024)
+
+**Closed issues:**
+
+- Allow preProcess, postProcess, afterAll to await promises [\#1034](https://github.com/w3c/respec/issues/1034)
+
+**Merged pull requests:**
+
+- fix\(webidl-contiguous\): allow linking to Parent.method\(\) \(fixes \#1024\) [\#1040](https://github.com/w3c/respec/pull/1040) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat: allow async functions for pre/postProc/afterAll \(closes \#1034\) [\#1038](https://github.com/w3c/respec/pull/1038) ([marcoscaceres](https://github.com/marcoscaceres))
+- karma@1.4.0 breaks build 🚨 [\#1037](https://github.com/w3c/respec/pull/1037) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+
+## [v8.4.2](https://github.com/w3c/respec/tree/v8.4.2) (2017-01-14)
+[Full Changelog](https://github.com/w3c/respec/compare/v8.4.1...v8.4.2)
+
+**Fixed bugs:**
+
+- Support markdown includes [\#993](https://github.com/w3c/respec/issues/993)
+
+**Merged pull requests:**
+
+- Update snyk to version 1.24.4 🚀 [\#1033](https://github.com/w3c/respec/pull/1033) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Update snyk to version 1.24.3 🚀 [\#1032](https://github.com/w3c/respec/pull/1032) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Use lowercase when linking to enum values [\#1029](https://github.com/w3c/respec/pull/1029) ([dontcallmedom](https://github.com/dontcallmedom))
+
+## [v8.4.1](https://github.com/w3c/respec/tree/v8.4.1) (2017-01-10)
+[Full Changelog](https://github.com/w3c/respec/compare/v8.4.0...v8.4.1)
+
+## [v8.4.0](https://github.com/w3c/respec/tree/v8.4.0) (2017-01-10)
+[Full Changelog](https://github.com/w3c/respec/compare/v8.3.0...v8.4.0)
+
+## [v8.3.0](https://github.com/w3c/respec/tree/v8.3.0) (2017-01-10)
+[Full Changelog](https://github.com/w3c/respec/compare/v8.2.0...v8.3.0)
+
+**Fixed bugs:**
+
+- Support linking `method\(\)` name in webIDL [\#1000](https://github.com/w3c/respec/issues/1000)
+- Link enum when empty string [\#981](https://github.com/w3c/respec/issues/981)
+
+**Merged pull requests:**
+
+- feat\(webidl-contiguous\): link method\(\) and enum "" [\#1023](https://github.com/w3c/respec/pull/1023) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update snyk to version 1.23.3 🚀 [\#1022](https://github.com/w3c/respec/pull/1022) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+
+## [v8.2.0](https://github.com/w3c/respec/tree/v8.2.0) (2017-01-09)
+[Full Changelog](https://github.com/w3c/respec/compare/v8.1.0...v8.2.0)
+
+**Implemented enhancements:**
+
+- don't include fixup.js when noToC is set [\#985](https://github.com/w3c/respec/issues/985)
+
+**Fixed bugs:**
+
+- don't include fixup.js when noToC is set [\#985](https://github.com/w3c/respec/issues/985)
+
+## [v8.1.0](https://github.com/w3c/respec/tree/v8.1.0) (2017-01-08)
+[Full Changelog](https://github.com/w3c/respec/compare/v8.0.1...v8.1.0)
+
+**Closed issues:**
+
+- Respec seems to be breaking styles and reference links in multiple specs [\#1010](https://github.com/w3c/respec/issues/1010)
+
+**Merged pull requests:**
+
+- refactor: convert various modules to ES6 [\#1021](https://github.com/w3c/respec/pull/1021) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update snyk to version 1.23.2 🚀 [\#1019](https://github.com/w3c/respec/pull/1019) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- 🎄 Goodies [\#1018](https://github.com/w3c/respec/pull/1018) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update snyk to version 1.23.1 🚀 [\#1015](https://github.com/w3c/respec/pull/1015) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Update snyk to version 1.23.0 🚀 [\#1014](https://github.com/w3c/respec/pull/1014) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+
+## [v8.0.1](https://github.com/w3c/respec/tree/v8.0.1) (2017-01-03)
+[Full Changelog](https://github.com/w3c/respec/compare/v8.0.0...v8.0.1)
+
+**Merged pull requests:**
+
+- fix: hot fixes to various bugs [\#1011](https://github.com/w3c/respec/pull/1011) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v8.0.0](https://github.com/w3c/respec/tree/v8.0.0) (2016-12-30)
 [Full Changelog](https://github.com/w3c/respec/compare/v7.3.2...v8.0.0)
 
@@ -10,6 +92,7 @@
 **Merged pull requests:**
 
 - refactor\(core/inlines\): use Sets object for references [\#1009](https://github.com/w3c/respec/pull/1009) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(data-cite\): add support for data-cite attribute [\#1008](https://github.com/w3c/respec/pull/1008) ([marcoscaceres](https://github.com/marcoscaceres))
 - refactor\(core/dfn\): unjquery as much as possible [\#1007](https://github.com/w3c/respec/pull/1007) ([marcoscaceres](https://github.com/marcoscaceres))
 - refactor\(default-root-attr\): unjquery, run sync [\#1006](https://github.com/w3c/respec/pull/1006) ([marcoscaceres](https://github.com/marcoscaceres))
 - refactor\(data-transform\): unjquery [\#1005](https://github.com/w3c/respec/pull/1005) ([marcoscaceres](https://github.com/marcoscaceres))
@@ -61,10 +144,6 @@
 
 ## [v7.1.1](https://github.com/w3c/respec/tree/v7.1.1) (2016-12-22)
 [Full Changelog](https://github.com/w3c/respec/compare/v7.1.0...v7.1.1)
-
-**Fixed bugs:**
-
-- Support markdown includes [\#993](https://github.com/w3c/respec/issues/993)
 
 **Merged pull requests:**
 
