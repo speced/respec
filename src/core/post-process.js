@@ -10,11 +10,21 @@
  */
 import { sub } from "core/pubsubhub";
 
-sub("end-all", config => {
+let doneResolver;
+export const done = new Promise(resolve => doneResolver = resolve);
+
+sub("plugins-done", async config => {
+  const result = [];
   if (Array.isArray(config.postProcess)) {
-    config.postProcess.forEach(f => f(config));
+    const values = await Promise.all(
+      config.postProcess
+        .filter(f => typeof f === "function")
+        .map(f => Promise.resolve(f(config, document)))
+    );
+    result.push(...values);
   }
   if (typeof config.afterEnd === "function") {
-    config.afterEnd();
+    result.push(await Promise.resolve(config.afterEnd(config, document)));
   }
+  doneResolver(result);
 }, { once: true });
