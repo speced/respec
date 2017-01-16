@@ -79,7 +79,7 @@
   "dependencies": {
     "colors": "^1.1.2",
     "command-line-args": "^3.0.5",
-    "command-line-usage": "^3.0.8",
+    "command-line-usage": "^4.0.0",
     "epipebomb": "^1.0.0",
     "express": "^4.14.0",
     "fs-promise": "^1.0.0",
