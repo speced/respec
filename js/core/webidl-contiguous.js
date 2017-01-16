@@ -856,6 +856,7 @@ define(
         case "operation":
           // ignore overloads
           if (name.search("!overload") !== -1) {
+              name = name.toLowerCase();
             break;
           }
           // Allow linking to both "method()" and "method" name.
