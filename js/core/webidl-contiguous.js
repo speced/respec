@@ -723,7 +723,7 @@ define(
     // element defining each entity and attaches it to the entity's
     // 'refTitle' property, and records that it describes an IDL entity by
     // adding a [data-idl] attribute.
-    function linkDefinitions(parse, definitionMap, parent) {
+    function linkDefinitions(parse, definitionMap, parent, idlElem) {
       parse.forEach(function(defn) {
         var name;
         switch (defn.type) {
@@ -741,7 +741,7 @@ define(
               partialIdx = "-partial-" + idlPartials[defn.name].length;
             }
 
-            linkDefinitions(defn.members, definitionMap, defn.name);
+            linkDefinitions(defn.members, definitionMap, defn.name, idlElem);
             name = defn.name;
             defn.idlId = "idl-def-" + name.toLowerCase() + partialIdx;
             break;
@@ -755,7 +755,7 @@ define(
                   toString: function() {
                     return v;
                   },
-                  dfn: findDfn(name, v, definitionMap, defn.type)
+                  dfn: findDfn(name, v, definitionMap, defn.type, idlElem)
                 };
               }
             });
@@ -835,7 +835,7 @@ define(
         if (parent) {
           defn.linkFor = parent;
         }
-        defn.dfn = findDfn(parent, name, definitionMap, defn.type);
+        defn.dfn = findDfn(parent, name, definitionMap, defn.type, idlElem);
       });
     }
 
@@ -848,7 +848,7 @@ define(
     // When a matching <dfn> is found, it's given <code> formatting,
     // marked as an IDL definition, and returned. If no <dfn> is found,
     // the function returns 'undefined'.
-    function findDfn(parent, name, definitionMap, type) {
+    function findDfn(parent, name, definitionMap, type, idlElem) {
       var originalParent = parent;
       var originalName = name;
       parent = parent.toLowerCase();
@@ -865,7 +865,7 @@ define(
           
           if (definitionMap[asMethodName] || definitionMap[asFullyQualifiedName]) {
             const lookupName = (definitionMap[asMethodName]) ? asMethodName : asFullyQualifiedName;
-            const dfn = findDfn(parent, lookupName, definitionMap);
+            const dfn = findDfn(parent, lookupName, definitionMap, null, idlElem);
             if (!dfn) {
               break; // try finding dfn using name, using normal search path...
             }
@@ -879,7 +879,7 @@ define(
             return dfn;
           };
           // no method alias, so let's find the dfn and add it
-          const dfn = findDfn(parent, name, definitionMap);
+          const dfn = findDfn(parent, name, definitionMap, null, idlElem);
           if (!dfn) {
             break;
           }
@@ -934,7 +934,8 @@ define(
         pubsubhub.pub("error", "Multiple <dfn>s for " + originalName + (originalParent ? " in " + originalParent : ""));
       }
       if (dfns.length === 0) {
-        if (type) {
+        const showWarnings = type && idlElem && idlElem.classList.contains("no-link-warnings") === false;
+        if (showWarnings) {
           const msg = "No <dfn> for " + originalName + (originalParent ? " in " + originalParent : "") + ".";
           pubsubhub.pub("warn", msg);
         }
@@ -981,7 +982,7 @@ define(
             // Skip this <pre> and move on to the next one.
             return;
           }
-          linkDefinitions(parse, conf.definitionMap, "");
+          linkDefinitions(parse, conf.definitionMap, "", this);
           var $df = makeMarkup(conf, parse);
           $df.attr({ id: this.id });
           $df.find(".idlAttribute,.idlCallback,.idlConst,.idlDictionary,.idlEnum,.idlException,.idlField,.idlInterface,.idlMember,.idlMethod,.idlSerializer,.idlMaplike,.idlIterable,.idlTypedef")
