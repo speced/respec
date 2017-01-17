@@ -32,12 +32,24 @@ async function toLookupRequest(elem) {
   if (frag) {
     href += frag;
   }
-  elem.href = href;
+  switch (elem.localName) {
+    case "a":
+      elem.href = href;
+      break;
+    case "dfn":
+      const a = elem.ownerDocument.createElement("a");
+      a.href = href;
+      while (elem.firstChild) {
+        a.appendChild(elem.firstChild);
+      }
+      elem.appendChild(a, elem);
+      break;
+  }
 }
 
 function cleanElement(elem) {
   ["data-cite", "data-cite-frag"]
-    .filter(attrName => elem.hasAttribute(attrName))
+  .filter(attrName => elem.hasAttribute(attrName))
     .forEach(attrName => elem.removeAttribute(attrName))
 }
 
@@ -60,7 +72,7 @@ function toCiteDetails({ dataset }) {
 
 export function run(conf, doc, cb) {
   Array
-    .from(doc.querySelectorAll(["a[data-cite]"]))
+    .from(doc.querySelectorAll(["dfn[data-cite], a[data-cite]"]))
     .filter(el => el.dataset.cite)
     .map(toCiteDetails)
     .reduce((conf, { isNormative, key }) => {
@@ -75,7 +87,7 @@ export function run(conf, doc, cb) {
 }
 
 export async function linkInlineCitations(doc) {
-  const citedSpecs = doc.querySelectorAll("a[data-cite]");
+  const citedSpecs = doc.querySelectorAll("dfn[data-cite], a[data-cite]");
   const lookupRequests = Array
     .from(citedSpecs)
     .map(toLookupRequest);

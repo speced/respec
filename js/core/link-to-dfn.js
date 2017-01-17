@@ -41,7 +41,6 @@ define(
             }
           });
         });
-        dataCite.linkInlineCitations(doc);
         $("a:not([href]):not([data-cite])").each(function() {
           var $ant = $(this);
           if ($ant.hasClass("externalDFN")) return;
@@ -49,7 +48,11 @@ define(
           var foundDfn = linkTargets.some(function(target) {
             if (titles[target.title] && titles[target.title][target.for_]) {
               var dfn = titles[target.title][target.for_];
-              $ant.attr("href", "#" + dfn.prop("id")).addClass("internalDFN");
+              if(dfn[0].dataset.cite){
+                $ant[0].dataset.cite = dfn[0].dataset.cite;
+              } else {
+                $ant.attr("href", "#" + dfn.prop("id")).addClass("internalDFN");
+              }
               // add a bikeshed style indication of the type of link
               if (!$ant.attr("data-link-type")) {
                 $ant.attr("data-link-type", "dfn");
@@ -82,6 +85,7 @@ define(
             $ant.replaceWith($ant.contents());
           }
         });
+        dataCite.linkInlineCitations(doc);
         // done linking, so clean up
         function attrToDataAttr(name) {
           return function(elem) {
