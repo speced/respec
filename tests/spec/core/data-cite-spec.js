@@ -4,6 +4,34 @@ describe("Core — data-cite attribute", () => {
     flushIframes();
     done();
   });
+  it("links directly to externally defined references", done => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody() + `
+        <section>
+          <p id="t1"><a>inline link</a></p>
+          <p id="t2"><dfn data-cite="!WHATWG-HTML#test">inline link</dfn></p>
+        </section>
+      `,
+    };
+    makeRSDoc(ops).then(doc => {
+      const a = doc.querySelector("#t1 > a");
+      expect(a.textContent).toEqual("inline link");
+      expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/#test");
+      expect(a.hasAttribute("data-cite")).toEqual(false);
+      expect(doc.querySelector("#bib-WHATWG-HTML").closest("section").id)
+        .toEqual("normative-references");
+      // Definition part
+      const dfn = doc.querySelector("#t2 > dfn");
+      expect(dfn).toBeTruthy();
+      const dfnA = doc.querySelector("#t2 > dfn > a");
+      expect(dfnA.textContent).toEqual("inline link");
+      expect(dfnA.href).toEqual("https://html.spec.whatwg.org/multipage/#test");
+      expect(dfnA.hasAttribute("data-cite")).toEqual(false);
+      expect(doc.querySelector("#bib-WHATWG-HTML").closest("section").id)
+        .toEqual("normative-references");
+    }).then(done);
+  });
   it("links data-cite attributes as normative reference", done => {
     const ops = {
       config: makeBasicConfig(),
