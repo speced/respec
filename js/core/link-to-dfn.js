@@ -48,7 +48,7 @@ define(
           var foundDfn = linkTargets.some(function(target) {
             if (titles[target.title] && titles[target.title][target.for_]) {
               var dfn = titles[target.title][target.for_];
-              if(dfn[0].dataset.cite){
+              if (dfn[0].dataset.cite) {
                 $ant[0].dataset.cite = dfn[0].dataset.cite;
               } else {
                 $ant.attr("href", "#" + dfn.prop("id")).addClass("internalDFN");
@@ -85,28 +85,28 @@ define(
             $ant.replaceWith($ant.contents());
           }
         });
-        dataCite.linkInlineCitations(doc);
-        // done linking, so clean up
-        function attrToDataAttr(name) {
-          return function(elem) {
-            var value = elem.getAttribute(name);
-            elem.removeAttribute(name);
-            elem.setAttribute("data-" + name, value);
+        dataCite.linkInlineCitations(doc).then(function() {
+          // done linking, so clean up
+          function attrToDataAttr(name) {
+            return function(elem) {
+              var value = elem.getAttribute(name);
+              elem.removeAttribute(name);
+              elem.setAttribute("data-" + name, value);
+            }
           }
-        }
+          var forList = doc.querySelectorAll("*[for]");
+          Array.prototype.forEach.call(forList, attrToDataAttr("for"));
 
-        var forList = doc.querySelectorAll("*[for]");
-        Array.prototype.forEach.call(forList, attrToDataAttr("for"));
+          var dfnForList = doc.querySelectorAll("*[dfn-for]");
+          Array.prototype.forEach.call(dfnForList, attrToDataAttr("dfn-for"));
 
-        var dfnForList = doc.querySelectorAll("*[dfn-for]");
-        Array.prototype.forEach.call(dfnForList, attrToDataAttr("dfn-for"));
-
-        var linkForList = doc.querySelectorAll("*[link-for]");
-        Array.prototype.forEach.call(linkForList, attrToDataAttr("link-for"));
-        // Added message for legacy compat with Aria specs
-        // See https://github.com/w3c/respec/issues/793
-        pubsubhub.pub("end", "core/link-to-dfn");
-        cb();
+          var linkForList = doc.querySelectorAll("*[link-for]");
+          Array.prototype.forEach.call(linkForList, attrToDataAttr("link-for"));
+          // Added message for legacy compat with Aria specs
+          // See https://github.com/w3c/respec/issues/793
+          pubsubhub.pub("end", "core/link-to-dfn");
+          cb();
+        });
       }
     };
   }
