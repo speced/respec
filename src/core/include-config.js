@@ -22,5 +22,7 @@ sub('start-all', config => {
   script.id = 'initialUserConfig';
   script.innerHTML = JSON.stringify(config, confFilter, 2);
   script.type = 'application/json';
-  document.head.appendChild(script);
+  sub('end-all', () => {
+    document.head.appendChild(script);
+  }, { once: true });
 }, { once: true });
