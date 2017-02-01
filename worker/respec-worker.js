@@ -11,7 +11,6 @@ hljs.configure({
     "json",
     "markdown",
     "xml",
-    "xquery",
   ],
 });
 
