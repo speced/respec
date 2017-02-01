@@ -270,8 +270,8 @@ define([
           .replace(/\n\s*&quot;</mg, " &quot;<");
         var beautifulHTML = beautify.html_beautify(cleanHTML, beautifyOps);
         newBody.innerHTML = beautifulHTML;
-        // Remove links where class pre.nolinks
-        substituteWithTextNodes(newBody.querySelectorAll("pre.nolinks a[href]"));
+        // Remove links where class .nolinks
+        substituteWithTextNodes(newBody.querySelectorAll(".nolinks a[href]"));
         // Restructure the document properly
         var fragment = structure(newBody, doc);
         // Frankenstein the whole thing back together

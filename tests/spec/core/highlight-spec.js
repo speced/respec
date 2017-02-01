@@ -1,19 +1,20 @@
 "use strict";
 describe("Core — Highlight", function() {
-  afterAll(function(done) {
+  afterAll(done => {
     flushIframes();
     done();
   });
 
-  it("should't highlight idl blocks", function(done){
+  it("shouldn't highlight idl blocks", done => {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "<section><pre class=idl>"+
-          "[Constructor]interface Dahut : Mammal {" +
-          "  const unsigned short DEXTROGYROUS = 1;" +
-          "  Dahut turnAround(float angle, boolean fall);" +
-          "};</pre></section>"
+      body: makeDefaultBody() + `
+        <section><pre class=idl>
+          [Constructor]interface Dahut : Mammal {
+            const unsigned short DEXTROGYROUS = 1;
+            Dahut turnAround(float angle, boolean fall);
+          };</pre>
+        </section>`
     };
     makeRSDoc(ops, function(doc) {
       var pre = doc.querySelector("pre");
@@ -22,11 +23,17 @@ describe("Core — Highlight", function() {
     }).then(done);
   });
 
-  it("should automatically highlight", function(done) {
+  it("should automatically highlight", done => {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "<section><pre class=example>function () {\n  alert('foo');\n}</pre></section>"
+        `<section>
+          <pre class=example>
+            function foo() {
+              alert('foo');
+            }
+          </pre>
+        </section>`
     };
     makeRSDoc(ops, function(doc) {
       var pre = doc.querySelector("div.example pre");
@@ -35,11 +42,17 @@ describe("Core — Highlight", function() {
     }).then(done);
   });
 
-  it("shouldn't highlight pre elements when told not to", function(done) {
+  it("shouldn't highlight pre elements when told not to", done => {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "<section><pre class='nohighlight example'>function () {\n  alert('foo');\n}</pre></section>"
+        `<section>
+          <pre class='nohighlight example'>
+            function foo() {
+              alert('foo');
+            }
+          </pre>
+        </section>`
     };
     makeRSDoc(ops, function(doc) {
       var pre = doc.querySelector("div.example pre");
@@ -48,11 +61,17 @@ describe("Core — Highlight", function() {
     }).then(done);
   });
 
-  it("should respect the noHighlightCSS by not highlighting anything", function(done) {
+  it("should respect the noHighlightCSS by not highlighting anything", done => {
     var ops = {
       config: Object.assign(makeBasicConfig(), { noHighlightCSS: true }),
       body: makeDefaultBody() +
-        "<section><pre id=test>function () {\n  alert('foo');\n}</pre></section>"
+        `<section>
+          <pre id="test">
+            function foo() {
+              alert('foo');
+            }
+          </pre>
+        </section>`
     };
     makeRSDoc(ops, function(doc) {
       var pre = doc.querySelector("#test");

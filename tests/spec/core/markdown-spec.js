@@ -205,12 +205,12 @@ describe("Core - Markdown", function() {
     it("automatically links URLs in pre when missing (smoke test)", function(done) {
       var ops = {
         config: makeBasicConfig(),
-        body: makeDefaultBody() +
-          "<pre id=testElem>\n" +
-          "\t this won't link \n" +
-          "\t this will link: http://no-links-foo.com \n" +
-          "\t so will this: http://no-links-bar.com \n" +
-          "<pre>\n\n\n"
+        body: makeDefaultBody() + `
+          <div id=testElem>
+            this won't link
+            this will link: http://no-links-foo.com
+            so will this: http://no-links-bar.com
+          </div>`
       };
       ops.config.format = "markdown";
       makeRSDoc(ops, function(doc) {
@@ -224,11 +224,12 @@ describe("Core - Markdown", function() {
     it("replaces HTMLAnchors when present", function(done) {
       var ops = {
         config: makeBasicConfig(),
-        body: makeDefaultBody() +
-          "<pre id=testElem class=nolinks>\n" +
-          "\t http://no-links-foo.com \n" +
-          "\t http://no-links-bar.com \n" +
-          "<pre>\n\n\n"
+        body: makeDefaultBody() +`
+          <div id=testElem class=nolinks>
+            http://no-links-foo.com
+            http://no-links-bar.com
+          <div>
+          `
       };
       ops.config.format = "markdown";
       makeRSDoc(ops, function(doc) {

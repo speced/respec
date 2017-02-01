@@ -16,6 +16,7 @@ require.config({
     "beautify-css": "deps/beautify-css",
     "beautify-html": "deps/beautify-html",
     "handlebars.runtime": "deps/handlebars",
+    "deps/highlight": "https://www.w3.org/Tools/respec/respec-highlight",
   },
   deps: [
     "deps/fetch",
@@ -51,7 +52,6 @@ define([
     "core/webidl-index",
     "core/webidl-oldschool",
     "core/link-to-dfn",
-    "core/highlight",
     "core/contrib",
     "core/fix-headers",
     "core/structure",
@@ -67,6 +67,7 @@ define([
     "ui/save-html",
     "ui/search-specref",
     "w3c/seo",
+    "core/highlight",
     /*Linter must be the last thing to run*/
     "w3c/linter",
   ],
