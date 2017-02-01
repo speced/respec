@@ -26,8 +26,8 @@ self.addEventListener("message", function(e) {
       } catch (err) {
         console.error("Could not transform some code?", err);
         // Post back the original unhighlighted code.
-        const fallbackData = Object.assign({}, e.data, {value: e.data.code});
-        self.postMessage(data);
+        const fallbackData = Object.assign({}, e.data, { value: e.data.code });
+        self.postMessage(fallbackData);
       }
   }
 });
