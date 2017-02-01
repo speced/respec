@@ -33,17 +33,19 @@ async function toLookupRequest(elem) {
     href += frag;
   }
   switch (elem.localName) {
-    case "a":
+    case "a":{
       elem.href = href;
       break;
-    case "dfn":
-      const a = elem.ownerDocument.createElement("a");
-      a.href = href;
-      while (elem.firstChild) {
-        a.appendChild(elem.firstChild);
+    }
+    case "dfn": {
+        const a = elem.ownerDocument.createElement("a");
+        a.href = href;
+        while (elem.firstChild) {
+          a.appendChild(elem.firstChild);
+        }
+        elem.appendChild(a, elem);
+        break;
       }
-      elem.appendChild(a, elem);
-      break;
   }
 }
 

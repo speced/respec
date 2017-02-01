@@ -36,4 +36,4 @@ export async function runAll(plugs) {
   pub("plugins-done", respecConfig);
   await postProcessDone;
   pub("end-all", respecConfig);
-};
+}

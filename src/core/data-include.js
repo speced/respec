@@ -85,4 +85,4 @@ export function run(conf, doc, cb) {
   Promise
     .all(promisesToInclude)
     .then(cb);
-};
+}

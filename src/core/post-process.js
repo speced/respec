@@ -9,9 +9,12 @@
  *  - afterEnd: final thing that is called.
  */
 import { sub } from "core/pubsubhub";
+import "deps/regenerator";
 
 let doneResolver;
-export const done = new Promise(resolve => doneResolver = resolve);
+export const done = new Promise(resolve => {
+  doneResolver = resolve;
+});
 
 sub("plugins-done", async config => {
   const result = [];

@@ -9,6 +9,7 @@
 import { biblioDB } from "core/biblio-db";
 import { pub } from "core/pubsubhub";
 import utils from "core/utils";
+import "deps/regenerator";
 
 const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
 
