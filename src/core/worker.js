@@ -7,6 +7,7 @@
 
 // Opportunistically preload syntax highlighter, which is used by the worker
 import utils from "core/utils";
+import workerScript from "deps/text!../../worker/respec-worker.js";
 // Opportunistically preload syntax highlighter
 const hint = {
   hint: "preload",
@@ -16,9 +17,5 @@ const hint = {
 const link = utils.createResourceHint(hint);
 document.head.appendChild(link);
 
-// Only shipping ReSpec has a version
-const url = (typeof window.respecVersion === "undefined" || window.respecVersion === "Developer Edition")
-  ? "/worker/respec-worker.js"
-  : "https://www.w3.org/Tools/respec/respec-worker";
-
-export const worker = new Worker(url);
+const workerURL = URL.createObjectURL(new Blob([workerScript], {type : 'application/javascript'}));
+export const worker = new Worker(workerURL);
