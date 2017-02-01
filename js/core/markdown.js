@@ -58,7 +58,6 @@ define([
     "json",
     "markdown",
     "xml",
-    "xquery",
   ]);
 
   hljs.configure({
