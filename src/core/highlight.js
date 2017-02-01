@@ -45,7 +45,7 @@ export async function run(conf, doc, cb) {
 
   const promisesToHighlight = Array
     .from(
-      doc.querySelectorAll("pre:not(.idl):not(.highlightdone)")
+      doc.querySelectorAll("pre:not(.idl):not(.nohighlight),code.highlight")
     )
     .map(element => {
       return new Promise((resolve, reject) => {
@@ -66,7 +66,9 @@ export async function run(conf, doc, cb) {
           }
           worker.removeEventListener("message", listener);
           element.innerHTML = ev.data.value;
-          element.classList.add("hljs");
+          if (element.localName === "pre") {
+            element.classList.add("hljs");
+          }
           resolve();
         });
         setTimeout(() => {
