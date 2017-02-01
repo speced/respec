@@ -57,9 +57,10 @@ function decorateDocument(doc, opts) {
     }
     config.classList.add("remove");
     config.innerText = configText;
+    var isKarma = (!!window.__karma__);
     var loadAttr = {
-      src: "/js/deps/require.js",
-      "data-main": path + (opts.profile || "profile-w3c-common")
+      src: (isKarma) ? new URL("/base/builds/respec-w3c-common.js", location).href : "/js/deps/require.js",
+      "data-main": (isKarma) ? "" : path + (opts.profile || "profile-w3c-common")
     };
     Object
       .keys(loadAttr)

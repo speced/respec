@@ -15,7 +15,7 @@ function confFilter(key, val) {
     default:
       return val;
   }
-};
+}
 
 sub('start-all', config => {
   var script = document.createElement('script');

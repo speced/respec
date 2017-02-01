@@ -6,7 +6,8 @@ scratch
 examples/touchevents.html
 bevy.json
 .idea
-js/deps/
+js/deps/*
+!js/deps/highlight.js
 js/**/*.map
 js/core/base-runner.js
 js/core/biblio-db.js
@@ -14,6 +15,7 @@ js/core/biblio.js
 js/core/data-cite.js
 js/core/data-include.js
 js/core/default-root-attr.js
+js/core/highlight.js
 js/core/include-config.js
 js/core/override-configuration.js
 js/core/post-process.js
@@ -21,4 +23,4 @@ js/core/pre-process.js
 js/core/pubsubhub.js
 js/core/remove-respec.js
 js/core/respec-ready.js
-src/deps/*.js
+js/core/worker.js

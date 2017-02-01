@@ -21,13 +21,13 @@ export function pub(topic, ...data) {
     // to structured clonable
     .map(arg => String(JSON.stringify(arg.stack || arg)));
   window.parent.postMessage({ topic, args }, window.parent.location.origin);
-};
+}
 
 export function sub(topic, cb, opts = { once: false }) {
   if (opts.once) {
     const opaque = sub(topic, (...args) => {
-      cb(...args);
       unsub(opaque);
+      return cb(...args);
     });
     return;
   }
@@ -37,7 +37,7 @@ export function sub(topic, cb, opts = { once: false }) {
     subscriptions.get(topic).push(cb);
   }
   return { topic, cb };
-};
+}
 
 export function unsub(opaque) { // opaque is whatever is returned by sub()
   var callbacks = subscriptions.get(opaque.topic);
@@ -46,7 +46,7 @@ export function unsub(opaque) { // opaque is whatever is returned by sub()
     return;
   }
   callbacks.splice(callbacks.indexOf(opaque.cb), 1);
-};
+}
 
 sub("error", err => {
   console.error(err.stack || err);

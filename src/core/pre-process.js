@@ -8,9 +8,12 @@
  *      want to be using a new module with your own profile
  */
 import { sub } from "core/pubsubhub";
+import "deps/regenerator";
 
 let doneResolver;
-export const done = new Promise(resolve => doneResolver = resolve);
+export const done = new Promise(resolve => {
+  doneResolver = resolve;
+});
 
 sub("start-all", async config => {
   const result = [];

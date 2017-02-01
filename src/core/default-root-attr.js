@@ -9,5 +9,5 @@ if (!html.hasAttribute("lang")) {
   html.lang = "en";
   if (!html.hasAttribute("dir")) {
     html.dir = "ltr";
-  };
+  }
 }

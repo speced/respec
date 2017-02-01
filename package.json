@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "8.7.1",
+  "version": "8.8.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -53,7 +53,7 @@
   "scripts": {
     "build": "npm run hb:build && npm run build:highlight && npm run build:babel && npm run copydeps && npm run build:respec-w3c-common",
     "build:babel": "babel src -d js",
-    "build:highlight": "cd node_modules/highlight.js/ && npm install && node ./tools/build.js -n xml javascript css http markdown xquery json && cd ../../",
+    "build:highlight": "cd node_modules/highlight.js/ && npm install && node ./tools/build.js -n xml javascript css http markdown json && cd ../../",
     "build:respec-w3c-common": "./tools/build-w3c-common.js",
     "jscs": "jscs --esnext tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js",
     "jscs:fix": "jscs --esnext --fix tests",
@@ -78,7 +78,7 @@
   },
   "dependencies": {
     "colors": "^1.1.2",
-    "command-line-args": "^3.0.5",
+    "command-line-args": "^4.0.0",
     "command-line-usage": "^4.0.0",
     "epipebomb": "^1.0.0",
     "express": "^4.14.1",
