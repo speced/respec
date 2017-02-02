@@ -9,6 +9,7 @@ bevy.json
 js/deps/*
 !js/deps/highlight.js
 js/**/*.map
+js/core/aria.js
 js/core/base-runner.js
 js/core/biblio-db.js
 js/core/biblio.js
