@@ -123,6 +123,8 @@ table.simple {
 
 #respec-ui {
     position: fixed;
+    display: flex;
+    flex-direction: row-reverse;
     top: 20px;
     right: 20px;
     width: 202px;
@@ -152,16 +154,14 @@ table.simple {
 
 
 #respec-pill:disabled{
-    margin: 10px auto;
     font-size: 2.8px;
-    position: relative;
     text-indent: -9999em;
     border-top: 1.1em solid rgba(40, 40, 40, 0.2);
     border-right: 1.1em solid rgba(40, 40, 40, 0.2);
     border-bottom: 1.1em solid rgba(40, 40, 40, 0.2);
     border-left: 1.1em solid #ffffff;
     transform: translateZ(0);
-    animation: respec-spin 1.1s infinite linear;
+    animation: respec-spin .5s infinite linear;
     box-shadow: none;
 }
 
@@ -188,14 +188,23 @@ table.simple {
 }
 
 #respec-menu {
+    position: absolute;
+    margin:0;
+    padding: 0;
     font-family: sans-serif;
     background: #fff;
     box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, .5);
     width: 200px;
     display: none;
     text-align: left;
-    margin-top: 5px;
+    margin-top: 32px;
     font-size: .8em;
+}
+
+#respec-menu li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 
 .respec-save-button {
@@ -218,12 +227,12 @@ table.simple {
     outline-style: none;
 }
 
-#respec-ui button.respec-pill-error {
+#respec-ui button#respec-pill-error {
     background-color: red;
     color: white;
 }
 
-#respec-ui button.respec-pill-warning {
+#respec-ui button#respec-pill-warning {
     background-color: orange;
     color: white;
 }
