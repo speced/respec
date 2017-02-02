@@ -111,6 +111,7 @@ const Prompts = {
 
   stylelizeCommits(commits) {
     const iconMap = new Map([
+      ["a11y", "♿"],
       ["breaking change", "🚨"],
       ["chore", "🔨"],
       ["docs", "📖"],
