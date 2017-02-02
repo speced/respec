@@ -227,12 +227,12 @@ table.simple {
     outline-style: none;
 }
 
-#respec-ui button#respec-pill-error {
+#respec-pill-error {
     background-color: red;
     color: white;
 }
 
-#respec-ui button#respec-pill-warning {
+#respec-pill-warning {
     background-color: orange;
     color: white;
 }
