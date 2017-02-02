@@ -139,10 +139,17 @@ table.simple {
 
 .respec-info-button {
     border: none;
+    opacity: .5;
     border-radius: 2em;
     margin-right: 1em;
     min-width: 3.5em;
 }
+
+.respec-info-button:focus {
+    opacity: 1;
+    transition: opacity .2s;
+}
+
 
 #respec-pill:disabled{
     margin: 10px auto;
@@ -174,9 +181,10 @@ table.simple {
   }
 }
 
-#respec-pill:hover, #respec-pill:focus  {
+#respec-pill:hover, #respec-pill:focus {
     color: rgb(0, 0, 0);
-    transition: color .2s
+    background-color: rgb(245,245,245);
+    transition: color .2s;
 }
 
 #respec-menu {
@@ -229,7 +237,7 @@ table.simple {
     padding: 1.2em 1.2em;
 }
 
-#respec-menu button.respec-option:hover {
+#respec-menu button.respec-option:hover, #respec-menu button:focus {
     background-color: #eeeeee;
 }
 
