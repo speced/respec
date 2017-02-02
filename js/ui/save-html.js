@@ -12,7 +12,7 @@ define(
     ],
     function (beautify, beautifyOpts, pubsubhub, utils, ui) {
         var msg, doc = document, conf = window.respecConfig;
-        ui.addCommand("Save Snapshot", "ui/save-html", "Ctrl+Shift+Alt+S", "💾");
+        const button = ui.addCommand("Save Snapshot", "ui/save-html", "Ctrl+Shift+Alt+S", "💾");
         var cleanup = function (rootEl) {
             $(".removeOnSave", rootEl).remove();
             $("#toc-nav", rootEl).remove() ;
@@ -127,7 +127,7 @@ define(
                         })
                         ;
                 }
-                ui.freshModal("Save Snapshot", $div);
+                ui.freshModal("Save Snapshot", $div, button);
             }
         ,   htmlToDataURL: function(data){
                 data = encodeURIComponent(data);

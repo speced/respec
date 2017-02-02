@@ -148,11 +148,12 @@ define([
             mod.show();
           });
         };
-        var id = "respec-buttom-" + label.toLowerCase().replace(/\s+/, "-");
-        $('<li role=menuitem><button id=\"' + id + '\" class="respec-option" title="' + keyShort + '\"><span class="respec-cmd-icon">' + icon + '</span> ' + label + '… </button></li>')
+        var id = "respec-button-" + label.toLowerCase().replace(/\s+/, "-");
+        var menuItem = $('<li role=menuitem><button id=\"' + id + '\" class="respec-option" title="' + keyShort + '\"><span class="respec-cmd-icon">' + icon + '</span> ' + label + '… </button></li>')
           .click(handler)
           .appendTo($menu);
         if (keyShort) shortcut.add(keyShort, handler);
+        return menuItem[0].querySelector("button");
       },
       error: function(msg) {
         errWarn(msg, errors, "error", "Errors");
