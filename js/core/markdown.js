@@ -46,48 +46,14 @@
 define([
   "deps/marked",
   "core/utils",
-  "deps/highlight",
   "deps/beautify-html",
   "core/beautify-options",
-], function(marked, utils, hljs, beautify, beautifyOps) {
-  var defaultLanguages = Object.freeze([
-    "css",
-    "html",
-    "http",
-    "js",
-    "json",
-    "markdown",
-    "xml",
-  ]);
-
-  hljs.configure({
-    tabReplace: "  ", // 2 spaces
-  });
+], function(marked, utils, beautify, beautifyOps) {
 
   marked.setOptions({
     sanitize: false,
     gfm: true,
-    highlight: makeHighlightHelper(),
   });
-
-  function makeHighlightHelper() {
-    var div = document.createElement("div");
-    return function(code, language) {
-      var leftPadding = utils.calculateLeftPad(code);
-      var normalizedCode;
-      if (leftPadding) {
-        var leftPaddingMatcher = new RegExp("^ {" + leftPadding + "}", "gm");
-        normalizedCode = code.replace(leftPaddingMatcher, "");
-      } else {
-        normalizedCode = code;
-      }
-      div.innerHTML = normalizedCode;
-      var cleanCode = div.textContent;
-      var possibleLanguages = [].concat(language || defaultLanguages);
-      var highlightedCode = hljs.highlightAuto(cleanCode, possibleLanguages);
-      return highlightedCode.value;
-    };
-  }
 
   function toHTML(text) {
     var normalizedLeftPad = utils.normalizePadding(text);
