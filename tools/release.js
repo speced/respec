@@ -117,6 +117,7 @@ const Prompts = {
       ["docs", "📖"],
       ["feat", "⭐️"],
       ["fix", "🐞"],
+      ["perf", "🏎"],
       ["refactor", "💃"],
       ["style", "🖌"],
       ["test", "👍"],
