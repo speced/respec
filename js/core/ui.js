@@ -15,7 +15,19 @@ define([
     "core/jquery-enhanced",
   ],
   function(shortcut, pubsubhub) {
-    const $menu = $("<div id=respec-menu></div>");
+
+    function ariaDecorate(elem, ariaMap) {
+      Array
+        .from(ariaMap.entries())
+        .reduce(function(elem, nameValue) {
+          const name = nameValue[0];
+          const value = nameValue[1];
+          elem.setAttribute("aria-" + name, value);
+          return elem;
+        }, elem);
+    }
+
+    const $menu = $("<ul id=respec-menu role=menu aria-labelledby='respec-pill'></ul>");
     var $modal;
     var $overlay;
     const errors = [];
@@ -30,6 +42,8 @@ define([
     const $respecPill = $("<button id='respec-pill' disabled>ReSpec</button>")
       .click(function(e) {
         e.stopPropagation();
+        const expand = this.getAttribute("aria-expanded") === "true" ? "false" : "true";
+        this.setAttribute("aria-expanded", expand);
         $menu.toggle();
       })
       .appendTo($respecUI);
@@ -40,15 +54,24 @@ define([
     });
     $menu.appendTo($respecUI);
 
+    const ariaMap = new Map([
+      ["controls", "respec-menu"],
+      ["expanded", "false"],
+      ["haspopup", "true"],
+      ["label", "ReSpec Menu"],
+    ]);
+    ariaDecorate($respecPill[0], ariaMap);
+
     function errWarn(msg, arr, butName, title) {
       arr.push(msg);
       if (buttons.hasOwnProperty(butName)) {
         buttons[butName].text(arr.length);
         return;
       }
-      buttons[butName] = $("<button class='respec-info-button respec-pill-" + butName + "'>" + arr.length + "</button>")
-        .insertBefore($respecPill)
+      buttons[butName] = $("<button id='respec-pill-" + butName + "' class='respec-info-button'>" + arr.length + "</button>")
+        .appendTo($respecUI)
         .click(function() {
+          this.setAttribute("aria-expanded", "true");
           var $ul = $("<ol></ol>");
           for (var i = 0, n = arr.length; i < n; i++) {
             var err = arr[i];
@@ -91,19 +114,28 @@ define([
               $("<li></li>").text(err).appendTo($ul);
             }
           }
-          ui.freshModal(title, $ul);
+          ui.freshModal(title, $ul, this);
         });
+      const ariaMap = new Map([
+        ["expanded", "false"],
+        ["haspopup", "true"],
+        ["controls", "respec-pill-" + butName + "-modal"],
+        ["label", "Document " + title.toLowerCase()],
+      ]);
+      ariaDecorate(buttons[butName][0], ariaMap);
     }
     const ui = {
       show: function() {
         try {
           $respecUI[0].classList.remove("respec-hidden");
+          $respecUI[0].setAttribute("aria-expanded", "true");
         } catch (err) {
           console.error(err);
         }
       },
       hide: function() {
         $respecUI[0].classList.add("respec-hidden");
+        $respecUI[0].setAttribute("aria-expanded", "false");
       },
       enable: function() {
         $respecPill[0].removeAttribute("disabled");
@@ -112,12 +144,12 @@ define([
         icon = icon || "";
         var handler = function() {
           $menu.hide();
-          require([module], function (mod) {
+          require([module], function(mod) {
             mod.show();
           });
         };
-        var id = "respec-modal-" + label.toLowerCase().replace(/\s+/, "-");
-        $('<button id=\"' + id + '\" class="respec-option" title="' + keyShort + '\"><span class="respec-cmd-icon">' + icon + '</span> ' + label + '… </button>')
+        var id = "respec-buttom-" + label.toLowerCase().replace(/\s+/, "-");
+        $('<li role=menuitem><button id=\"' + id + '\" class="respec-option" title="' + keyShort + '\"><span class="respec-cmd-icon">' + icon + '</span> ' + label + '… </button></li>')
           .click(handler)
           .appendTo($menu);
         if (keyShort) shortcut.add(keyShort, handler);
@@ -128,28 +160,40 @@ define([
       warning: function(msg) {
         errWarn(msg, warnings, "warning", "Warnings");
       },
-      closeModal: function() {
+      closeModal: function(owner) {
         if ($overlay) $overlay.fadeOut(200, function() {
           $overlay.remove();
           $overlay = null;
         });
+        if (owner) {
+          owner.setAttribute("aria-expanded", "false");
+        }
         if (!$modal) return;
         $modal.remove();
         $modal = null;
       },
-      freshModal: function(title, content) {
+      freshModal: function(title, content, currentOwner) {
         if ($modal) $modal.remove();
         if ($overlay) $overlay.remove();
         var width = 500;
         $overlay = $("<div id='respec-overlay' class='removeOnSave'></div>").hide();
-        $modal = $("<div id='respec-modal' class='removeOnSave'><h3></h3><div class='inside'></div></div>").hide();
-        $modal.find("h3").text(title);
+        const id = currentOwner.id + "-modal";
+        const headingId = id + "-heading"
+        $modal = $("<div id='" + id + "' class='respec-modal' role=dialog class='removeOnSave'><h3></h3><div class='inside'></div></div>").hide();
+        $modal.find("h3").text(title)
+        $modal.find("h3")[0].id = headingId;
+        const ariaMap = new Map([
+          ["labelledby", headingId],
+        ]);
+        ariaDecorate($modal[0], ariaMap);
         $modal.find(".inside").append(content);
         $("body")
           .append($overlay)
           .append($modal);
         $overlay
-          .click(this.closeModal)
+          .click(function() {
+            this.closeModal(currentOwner);
+          }.bind(this))
           .css({
             display: "block",
             opacity: 0,
