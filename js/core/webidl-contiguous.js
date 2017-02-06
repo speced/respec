@@ -178,10 +178,22 @@ define(
           idlType: idlType.idlType,
         }) + arrayStr + nullable;
       }
+      var type = "";
       if (idlType.generic) {
-        return hb.Utils.escapeExpression(idlType.generic) + "&lt;" + idlType2Html(idlType.idlType) + ">" + nullable;
+        type = standardTypes.has(idlType.generic) ? linkStandardType(idlType.generic) : idlType2Html(idlType.generic);
+        type = type + "&lt;" + idlType2Html(idlType.idlType) + ">";
+      } else {
+        type = standardTypes.has(idlType.idlType) ? linkStandardType(idlType.idlType) : idlType2Html(idlType.idlType);
       }
-      return idlType2Html(idlType.idlType) + nullable;
+      return type + nullable;
+    }
+
+    function linkStandardType(type) {
+      if (!standardTypes.has(type)) {
+        return type;
+      }
+      const safeType = hb.Utils.escapeExpression(type);
+      return "<a data-cite='" + standardTypes.get(safeType) + "'>" + safeType + "</a>";
     }
 
     function idlType2Text(idlType) {
@@ -227,6 +239,32 @@ define(
       return whitespaceTypes[webIdlType];
     }
 
+    const extenedAttributesLinks = new Map([
+      ["CEReactions", "WHATWG-HTML#cereactions"],
+      ["Clamp", "WebIDL-LS#Clamp"],
+      ["Constructor", "WebIDL-LS#Constructor"],
+      ["EnforceRange", "WebIDL-LS#EnforceRange"],
+      ["Exposed", "WebIDL-LS#Exposed"],
+      ["Global", "WebIDL-LS#Global"],
+      ["HTMLConstructor", "WHATWG-HTML#htmlconstructor"],
+      ["LegacyArrayClass", "WebIDL-LS#LegacyArrayClass"],
+      ["LegacyUnenumerableNamedProperties", "WebIDL-LS#LegacyUnenumerableNamedProperties"],
+      ["LenientSetter", "WebIDL-LS#LenientSetter"],
+      ["LenientThis", "WebIDL-LS#LenientThis"],
+      ["NamedConstructor", "WebIDL-LS#NamedConstructor"],
+      ["NewObject", "WebIDL-LS#NewObject"],
+      ["NoInterfaceObject", "WebIDL-LS#NoInterfaceObject"],
+      ["OverrideBuiltins", "WebIDL-LS#OverrideBuiltins"],
+      ["PutForwards", "WebIDL-LS#PutForwards"],
+      ["Replaceable", "WebIDL-LS#Replaceable"],
+      ["SameObject", "WebIDL-LS#SameObject"],
+      ["SecureContext", "WebIDL-LS#SecureContext"],
+      ["TreatNonObjectAsNull", "WebIDL-LS#TreatNonObjectAsNull"],
+      ["TreatNullAs", "WebIDL-LS#TreatNullAs"],
+      ["Unforgeable", "WebIDL-LS#Unforgeable"],
+      ["Unscopable", "WebIDL-LS#Unscopable"],
+    ]);
+
     function extAttr(extAttrs, indent, singleLine) {
       if (extAttrs.length === 0) {
         // If there are no extended attributes, omit the [] entirely.
@@ -238,103 +276,148 @@ define(
         sep: singleLine ? ", " : ",\n " + idn(indent),
         end: singleLine ? " " : "\n",
       };
-      return new hb.SafeString(idlExtAttributeTmpl(opt));
+      const safeString = new hb.SafeString(idlExtAttributeTmpl(opt));
+      const tmpParser = document.createElement("div");
+      tmpParser.innerHTML = safeString;
+      Array
+        .from(
+          tmpParser.querySelectorAll(".extAttrName")
+        )
+        .filter(function(elem) {
+          return extenedAttributesLinks.has(elem.textContent);
+        })
+        .forEach(function(elem) {
+          const a = elem.ownerDocument.createElement("a");
+          a.dataset.cite = extenedAttributesLinks.get(elem.textContent);
+          a.textContent = elem.textContent;
+          elem.replaceChild(a, elem.firstChild);
+        })
+      return new hb.SafeString(tmpParser.innerHTML);
     }
-    var idlKeywords = [
-        "any",
-        "attribute",
-        "boolean",
-        "byte",
-        "ByteString",
-        "callback",
-        "const",
-        "creator",
-        "Date",
-        "deleter",
-        "dictionary",
-        "DOMString",
-        "double",
-        "enum",
-        "false",
-        "float",
-        "getter",
-        "implements",
-        "Infinity",
-        "inherit",
-        "interface",
-        "iterable",
-        "legacycaller",
-        "legacyiterable",
-        "long",
-        "maplike",
-        "NaN",
-        "null",
-        "object",
-        "octet",
-        "optional",
-        "or",
-        "partial",
-        "readonly",
-        "RegExp",
-        "required",
-        "sequence",
-        "serializer",
-        "setlike",
-        "setter",
-        "short",
-        "static",
-        "stringifier",
-        "true",
-        "typedef",
-        "unrestricted",
-        "unsigned",
-        "USVString",
-        "void",
-      ],
-      ArgumentNameKeyword = [
-        "attribute",
-        "callback",
-        "const",
-        "creator",
-        "deleter",
-        "dictionary",
-        "enum",
-        "getter",
-        "implements",
-        "inherit",
-        "interface",
-        "iterable",
-        "legacycaller",
-        "legacyiterable",
-        "maplike",
-        "partial",
-        "required",
-        "serializer",
-        "setlike",
-        "setter",
-        "static",
-        "stringifier",
-        "typedef",
-        "unrestricted",
-      ],
-      AttributeNameKeyword = ["required"];
+
+    const standardTypes = new Map([
+      ["any", "WebIDL-LS#idl-any"],
+      ["boolean", "WebIDL-LS#idl-boolean"],
+      ["Buffer", "WebIDL-LS#idl-Buffer"],
+      ["byte", "WebIDL-LS#idl-byte"],
+      ["ByteString", "WebIDL-LS#idl-ByteString"],
+      ["Callback", "WebIDL-LS#idl-Callback"],
+      ["DOMException", "WebIDL-LS#idl-DOMException"],
+      ["DOMString", "WebIDL-LS#idl-DOMString"],
+      ["double", "WebIDL-LS#idl-double"],
+      ["Error", "WebIDL-LS#idl-Error"],
+      ["float", "WebIDL-LS#idl-float"],
+      ["long long", "WebIDL-LS#idl-long-long"],
+      ["long", "WebIDL-LS#idl-long"],
+      ["object", "WebIDL-LS#idl-object"],
+      ["octet", "WebIDL-LS#idl-octet"],
+      ["Promise", "WebIDL-LS#idl-promise"],
+      ["record", "WebIDL-LS#idl-record"],
+      ["sequence", "WebIDL-LS#idl-sequence"],
+      ["short", "WebIDL-LS#idl-short"],
+      ["unrestricted double", "WebIDL-LS#idl-unrestricted-double"],
+      ["unrestricted float", "WebIDL-LS#idl-unrestricted-float"],
+      ["unsigned long long", "WebIDL-LS#idl-unsigned-long-long"],
+      ["unsigned long", "WebIDL-LS#idl-unsigned-long"],
+      ["unsigned short", "WebIDL-LS#idl-unsigned-short"],
+      ["USVString", "WebIDL-LS#idl-USVString"],
+    ]);
+
+    const idlKeywords = new Set([
+      "any",
+      "attribute",
+      "boolean",
+      "byte",
+      "ByteString",
+      "callback",
+      "const",
+      "creator",
+      "Date",
+      "deleter",
+      "dictionary",
+      "DOMString",
+      "double",
+      "enum",
+      "false",
+      "float",
+      "getter",
+      "implements",
+      "Infinity",
+      "inherit",
+      "interface",
+      "iterable",
+      "legacycaller",
+      "legacyiterable",
+      "long",
+      "maplike",
+      "NaN",
+      "null",
+      "object",
+      "octet",
+      "optional",
+      "or",
+      "partial",
+      "readonly",
+      "RegExp",
+      "required",
+      "sequence",
+      "serializer",
+      "setlike",
+      "setter",
+      "short",
+      "static",
+      "stringifier",
+      "true",
+      "typedef",
+      "unrestricted",
+      "unsigned",
+      "USVString",
+      "void",
+    ]);
+    const argumentNameKeyword = new Set([
+      "attribute",
+      "callback",
+      "const",
+      "creator",
+      "deleter",
+      "dictionary",
+      "enum",
+      "getter",
+      "implements",
+      "inherit",
+      "interface",
+      "iterable",
+      "legacycaller",
+      "legacyiterable",
+      "maplike",
+      "partial",
+      "required",
+      "serializer",
+      "setlike",
+      "setter",
+      "static",
+      "stringifier",
+      "typedef",
+      "unrestricted",
+    ]);
+    const attributeNameKeyword = new Set(["required"]);
     var operationNames = {};
     var idlPartials = {};
 
     function escapeArgumentName(argumentName) {
-      if (idlKeywords.indexOf(argumentName) !== -1 && ArgumentNameKeyword.indexOf(argumentName) === -1)
+      if (idlKeywords.has(argumentName) && !argumentNameKeyword.has(argumentName))
         return "_" + argumentName;
       return argumentName;
     }
 
     function escapeAttributeName(attributeName) {
-      if (idlKeywords.indexOf(attributeName) !== -1 && AttributeNameKeyword.indexOf(attributeName) === -1)
+      if (idlKeywords.has(attributeName) && !attributeNameKeyword.has(attributeName))
         return "_" + attributeName;
       return attributeName;
     }
 
     function escapeIdentifier(identifier) {
-      if (idlKeywords.indexOf(identifier) !== -1)
+      if (idlKeywords.has(identifier))
         return "_" + identifier;
       return identifier;
     }
@@ -856,13 +939,13 @@ define(
         case "operation":
           // ignore overloads
           if (name.search("!overload") !== -1) {
-              name = name.toLowerCase();
+            name = name.toLowerCase();
             break;
           }
           // Allow linking to both "method()" and "method" name.
           const asMethodName = name.toLowerCase() + "()";
           const asFullyQualifiedName = parent + "." + name.toLowerCase() + "()";
-          
+
           if (definitionMap[asMethodName] || definitionMap[asFullyQualifiedName]) {
             const lookupName = (definitionMap[asMethodName]) ? asMethodName : asFullyQualifiedName;
             const dfn = findDfn(parent, lookupName, definitionMap, null, idlElem);
