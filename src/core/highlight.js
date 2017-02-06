@@ -3,6 +3,7 @@
  *
  * Performs syntax highlighting to all pre and code elements.
  */
+import "deps/regenerator";
 import { pub, sub } from "core/pubsubhub";
 import utils from "core/utils";
 import { worker } from "core/worker";
