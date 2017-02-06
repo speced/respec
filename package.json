@@ -47,7 +47,7 @@
     "requirejs": "^2.3.2",
     "text": "github:requirejs/text",
     "uglify-js": "^2.7.5",
-    "webidl2": "^2.0.11",
+    "webidl2": "^2.2.0",
     "whatwg-fetch": "^2.0.2"
   },
   "scripts": {
