@@ -5,7 +5,7 @@
  */
 import "deps/regenerator";
 import { pub, sub } from "core/pubsubhub";
-import utils from "core/utils";
+import { makeOwnerSwapper } from "core/utils";
 import { worker } from "core/worker";
 import ghCss from "deps/text!core/css/github.css";
 export const name = "core/highlight";
@@ -13,7 +13,7 @@ export const name = "core/highlight";
 // Opportunistically insert the style into the head to reduce FOUC.
 var codeStyle = document.createElement("style");
 codeStyle.textContent = ghCss;
-var swapStyleOwner = utils.makeOwnerSwapper(codeStyle);
+var swapStyleOwner = makeOwnerSwapper(codeStyle);
 swapStyleOwner(document.head);
 
 function getLanguageHint(classList) {

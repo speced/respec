@@ -23,4 +23,5 @@ js/core/pre-process.js
 js/core/pubsubhub.js
 js/core/remove-respec.js
 js/core/respec-ready.js
+js/core/utils.js
 js/core/worker.js
