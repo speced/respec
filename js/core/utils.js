@@ -7,6 +7,41 @@
 define(
   ["core/pubsubhub"],
   function(pubsubhub) {
+    const inlineElems = new Set([
+      "a",
+      "abbr",
+      "acronym",
+      "b",
+      "bdo",
+      "big",
+      "br",
+      "button",
+      "cite",
+      "code",
+      "dfn",
+      "em",
+      "i",
+      "img",
+      "input",
+      "kbd",
+      "label",
+      "map",
+      "object",
+      "q",
+      "samp",
+      "script",
+      "select",
+      "small",
+      "span",
+      "strong",
+      "sub",
+      "sup",
+      "textarea",
+      "time",
+      "tt",
+      "var",
+    ]);
+
     var resourceHints = new Set([
       "dns-prefetch",
       "preconnect",
@@ -102,24 +137,24 @@ define(
         var href = url.href;
         linkElem.rel = opts.hint;
         switch (linkElem.rel) {
-        case "dns-prefetch":
-        case "preconnect":
-          href = url.origin;
-          if (opts.corsMode || url.origin !== document.location.origin) {
-            linkElem.crossOrigin = opts.corsMode || "anonymous";
-          }
-          break;
-        case "preload":
-          if ("as" in opts && typeof opts.as === "string") {
-            if (!fetchDestinations.has(opts.as)) {
-              console.warn("Unknown request destination: " + opts.as);
+          case "dns-prefetch":
+          case "preconnect":
+            href = url.origin;
+            if (opts.corsMode || url.origin !== document.location.origin) {
+              linkElem.crossOrigin = opts.corsMode || "anonymous";
             }
-            linkElem.setAttribute("as", opts.as);
-          }
-          break;
-        case "prerender":
-          href = url.href;
-          break;
+            break;
+          case "preload":
+            if ("as" in opts && typeof opts.as === "string") {
+              if (!fetchDestinations.has(opts.as)) {
+                console.warn("Unknown request destination: " + opts.as);
+              }
+              linkElem.setAttribute("as", opts.as);
+            }
+            break;
+          case "prerender":
+            href = url.href;
+            break;
         }
         linkElem.href = href;
         if (!opts.dontRemove) {
@@ -160,126 +195,49 @@ define(
         if (!text) {
           return "";
         }
-
         if (typeof text !== "string") {
           throw TypeError("Invalid input");
         }
-
         if (text === "\n") {
           return "\n";
-        }
-
-        function isEmpty(node) {
-          return node.textContent === "";
-        }
-
-        function isWhiteSpace(node) {
-          return !/\S/gm.test(node.textContent);
-        }
-
-        function filterLastChildIsPadding(node) {
-          if (node.parentElement.lastChild === node && (isWhiteSpace(node) || isEmpty(node))) {
-            return NodeFilter.FILTER_ACCEPT;
-          }
-          return NodeFilter.FILTER_REJECT;
         }
 
         function isTextNode(node) {
           return node.nodeType === Node.TEXT_NODE;
         }
-
-        function parentIs(type) {
-          return function checkParent(node) {
-            if (!node) {
-              return false;
-            }
-            var match = node.parentNode && node.parentNode.localName === type;
-            return (!match) ? checkParent(node.parentNode) : true;
-          };
-        }
-        var filterParentIsPre = parentIs("pre");
         // Force into body
         var parserInput = "<body>" + text;
         var doc = new DOMParser().parseFromString(parserInput, "text/html");
-
-        var firstPaddedLine = Array
+        // Normalize block level elements children first
+        Array
+          .from(doc.body.children)
+          .filter(elem => !inlineElems.has(elem.localName))
+          .filter(elem => elem.localName !== "pre")
+          .forEach(elem => elem.innerHTML = this.normalizePadding(elem.innerHTML));
+        // Normalize root level now
+        Array
           .from(doc.body.childNodes)
-          .filter(isTextNode)
-          .map(function(textNode) {
-            return textNode.textContent;
-          })
-          .find(function(textContent) {
-            var result = /^[\#|\s|\w]+/gm.test(textContent);
-            return result;
-          });
-        // There is no padding, so just return what we started with.
-        if (!firstPaddedLine) {
-          return text;
+          .filter(node => isTextNode(node) && node.textContent.trim() === "")
+          .forEach(node => node.parentElement.replaceChild(doc.createTextNode("\n"), node));
+        // Normalize text node
+        if (!isTextNode(doc.body.firstChild)) {
+          Array
+            .from(doc.body.children)
+            .forEach(child => child.innerHTML = this.normalizePadding(child.innerHTML));
         }
-
-        var baseColumn = this.calculateLeftPad(firstPaddedLine);
-
-        // Only if we have a baseColumn to work with ...
-        // With only the text nodes that are not children of pre elements,
-        // we left align all those text nodes.
-        if (baseColumn) {
+        doc.normalize();
+        // use the first space as an indicator of how much to chop off the front
+        const firstSpace = doc.body.innerText.split("\n").filter(item => item && item.startsWith(" "))[0];
+        var chop = firstSpace ? firstSpace.match(/\ +/)[0].length : 0;
+        if (chop) {
+          const replacer = new RegExp("^\ {1," + chop + "}", "gm");
           Array
             .from(doc.body.childNodes)
+            .filter(node => node.localName !== "pre")
             .filter(isTextNode)
-            .filter(function(textNode) {
-              // 🎵 Hey, processor! Leave those pre's alone! 🎵
-              return !filterParentIsPre(textNode);
-            })
-            .filter(function(textNode) {
-              // we don't care about last nodes that are just white space
-              var isLastChild = textNode.parentElement.lastChild === textNode;
-              var isJustWS = isWhiteSpace(textNode);
-              return !(isLastChild && isJustWS);
-            })
-            .map(function toTrimmedTextNode(textNode) {
-              var rawText = textNode.textContent;
-              // We remove tailing space on the right, which is just there
-              // to pad out tags like:
-              // <div>
-              //   <div>
-              //    Next line has 2 spaces hidden!
-              // __</div>
-              // </div>
-              //
-              var trimmedRight = rawText.trimRight();
-              var trimBy = this.calculateLeftPad(trimmedRight) || baseColumn;
-              if (!trimBy) {
-                return null; //nothing to do
-              }
-              var exp = "^ {" + trimBy + "}";
-              var startTrim = new RegExp(exp, "gm");
-              var trimmedText = (trimBy) ? rawText.replace(startTrim, "") : rawText;
-              var newNode = textNode.ownerDocument.createTextNode(trimmedText);
-              // We can then swap the old with the new
-              return {
-                oldNode: textNode,
-                newNode: newNode,
-              };
-            }.bind(this))
-            .filter(function(nodes) {
-              return nodes;
-            })
-            .forEach(function(nodes) {
-              var oldNode = nodes.oldNode;
-              var newNode = nodes.newNode;
-              oldNode.parentElement.replaceChild(newNode, oldNode);
-            });
+            .forEach(node => node.textContent = node.textContent.replace(replacer, ""));
         }
-        var nodeIterator = doc.createNodeIterator(doc.body, NodeFilter.SHOW_TEXT, filterLastChildIsPadding);
-        var iterable = this.toESIterable(nodeIterator.nextNode.bind(nodeIterator));
-        // Remove trailing whitespace nodes
-        Array
-          .from(iterable)
-          .forEach(function(node) {
-            node.remove();
-          });
-        var result = doc.body.innerHTML;
-        return result;
+        return doc.body.innerHTML;
       },
 
       // RESPEC STUFF
