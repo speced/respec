@@ -5,6 +5,7 @@ importScripts("https://www.w3.org/Tools/respec/respec-highlight.js");
 hljs.configure({
   tabReplace: "  ", // 2 spaces
   languages: [
+    "abnf",
     "css",
     "http",
     "javascript",
