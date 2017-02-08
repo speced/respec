@@ -311,17 +311,17 @@ describe("Core - Utils", function() {
     });
 
     it("should normalise whitespace, but ignore white with pre tags", function(done) {
-      var str = "   trim start\n    * trim 3 from start \n <pre>trim 1\n   if(x){\n\t party()</pre>\n  foo \n    bar";
+      var str = `   trim start\n    * trim 3 from start \n <pre>trim 1\n   if(x){\n\t party()</pre>\n  foo \n    bar`;
       var testStrings = utils
         .normalizePadding(str)
         .split("\n");
       expect(testStrings[0]).toEqual("trim start");
       expect(testStrings[1]).toEqual(" * trim 3 from start ");
-      expect(testStrings[2]).toEqual(" <pre>trim 1");
+      expect(testStrings[2]).toEqual("<pre>trim 1");
       expect(testStrings[3]).toEqual("   if(x){");
       expect(testStrings[4]).toEqual("\t party()</pre>");
       expect(testStrings[5]).toEqual("foo ");
-      expect(testStrings[6]).toEqual("  bar");
+      expect(testStrings[6]).toEqual(" bar");
       done();
     });
   });
