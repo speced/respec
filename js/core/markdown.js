@@ -59,7 +59,7 @@ define([
     var normalizedLeftPad = utils.normalizePadding(text);
     // As markdown is pulled from HTML, > is already escaped and
     // so blockquotes aren't picked up by the parser. This fixes it.
-    var potentialMarkdown = normalizedLeftPad.replace(/&gt;/g, ">");
+    var potentialMarkdown = normalizedLeftPad.replace(/&gt;/gm, ">");
     var html = marked(potentialMarkdown);
     return html;
   }

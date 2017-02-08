@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "9.2.0",
+  "version": "10.0.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -55,9 +55,9 @@
     "build:babel": "babel src -d js",
     "build:highlight": "cd node_modules/highlight.js/ && npm install && node ./tools/build.js -n xml javascript css http markdown json abnf && cd ../../",
     "build:respec-w3c-common": "./tools/build-w3c-common.js",
-    "jscs": "jscs --esnext tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js",
+    "jscs": "jscs --esnext tests tools js/core/markdown.js src/core/utils.js js/w3c/linter.js",
     "jscs:fix": "jscs --esnext --fix tests",
-    "jshint": "jshint karma.conf.js tests tools js/core/markdown.js js/core/utils.js js/w3c/linter.js js/core/dfn.js js/core/data-transform.js",
+    "jshint": "jshint karma.conf.js tests tools js/core/markdown.js js/w3c/linter.js js/core/dfn.js js/core/data-transform.js",
     "karma": "karma start --single-run",
     "prepublish": "npm run build:highlight && npm run copydeps && npm run snyk-protect",
     "copydeps": "node ./tools/copydeps.js",
