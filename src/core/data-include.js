@@ -10,13 +10,13 @@
 //  fail if you are editing your documents on your local drive. That is due to security
 //  restrictions in the browser.
 
-import utils from "core/utils";
+import { runTransforms } from "core/utils";
 import { pub } from "core/pubsubhub";
 
 function processResponse(rawData, id, url) {
   const el = document.querySelector(`[data-include-id=${id}]`)
   const doc = el.ownerDocument;
-  const data = utils.runTransforms(rawData, el.dataset.oninclude, url);
+  const data = runTransforms(rawData, el.dataset.oninclude, url);
   const replace = typeof el.dataset.includeReplace === "string";
   let replacementNode;
   switch (el.dataset.includeFormat) {

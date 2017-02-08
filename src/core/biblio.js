@@ -8,7 +8,7 @@
 "use strict";
 import { biblioDB } from "core/biblio-db";
 import { pub } from "core/pubsubhub";
-import utils from "core/utils";
+import { createResourceHint } from "core/utils";
 import "deps/regenerator";
 
 const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
@@ -148,7 +148,7 @@ function bibref(conf) {
 }
 // Opportunistically dns-prefetch to bibref server, as we don't know yet
 // if we will actually need to download references yet.
-var link = utils.createResourceHint({
+var link = createResourceHint({
   hint: "dns-prefetch",
   href: bibrefsURL.origin,
 });
