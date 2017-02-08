@@ -121,8 +121,8 @@ const tasks = {
         .wait(function () {
           return document.respecIsReady;
         })
-        .wait("#respec-modal-save-snapshot")
-        .click("#respec-modal-save-snapshot")
+        .wait("#respec-button-save-snapshot")
+        .click("#respec-button-save-snapshot")
         .wait(100)
         .evaluate(function () {
           var encodedText = document.querySelector("#respec-save-as-html").href;

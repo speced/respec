@@ -29,6 +29,7 @@ define([
     "core/base-runner",
     "core/ui",
     "deps/regenerator",
+    "core/aria",
     "core/style",
     "w3c/style",
     "w3c/l10n",

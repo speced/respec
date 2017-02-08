@@ -4,7 +4,7 @@
 define(
     ["core/ui"],
     function (ui) {
-        ui.addCommand("Definition List", "ui/dfn-list", "Ctrl+Shift+Alt+D", "📔");
+        const button = ui.addCommand("Definition List", "ui/dfn-list", "Ctrl+Shift+Alt+D", "📔");
         return {
             show: function() {
                 var $halp = $("<ul></ul>");
@@ -20,7 +20,7 @@ define(
                     });
                 });
 
-                ui.freshModal("List of Definitions", $halp);
+                ui.freshModal("List of Definitions", $halp, button);
             }
         };
     }

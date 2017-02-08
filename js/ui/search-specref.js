@@ -33,7 +33,7 @@ define(
                 return "<strong style='font-weight: inherit; background-color: yellow'>" + txt + "</strong>";
             });
         }
-        ui.addCommand("Search Specref DB", "ui/search-specref", "Ctrl+Shift+Alt+space", "🔎");
+        const button = ui.addCommand("Search Specref DB", "ui/search-specref", "Ctrl+Shift+Alt+space", "🔎");
         return {
             show: function() {
                 var $halp = $("<div><form><p><input name=q type=search> <input type=submit value=search /></p></form></div");
@@ -44,7 +44,7 @@ define(
                 $status.appendTo($halp);
                 $results.appendTo($halp);
 
-                ui.freshModal("Search Specref DB", $halp);
+                ui.freshModal("Search Specref DB", $halp, button);
                 $search.focus();
                 $halp.find("form").on("submit", function() {
                     $status.html("Searching…");
