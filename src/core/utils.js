@@ -191,7 +191,7 @@ export function toESIterable(nextLikeFunction) {
   };
   return iterator;
 }
-
+const endsWithSpace = /\s+$/gm;
 export function normalizePadding(text) {
   if (!text) {
     return "";
@@ -236,9 +236,19 @@ export function normalizePadding(text) {
       .from(doc.body.childNodes)
       .filter(node => node.localName !== "pre")
       .filter(isTextNode)
-      .forEach(node => node.textContent = node.textContent.replace(replacer, ""));
+      .filter(node => {
+        // we care about text next to a block level element
+        const prevSib = node.previousElementSibling
+        const nextTo = prevSib ? prevSib.localName : node.parentElement.localName;
+        // and we care about text elements that finish on a new line
+        return !inlineElems.has(nextTo) || node.textContent.trim().includes("\n");
+      })
+      .forEach(
+        node => node.textContent = node.textContent.replace(replacer, "")
+      );
   }
-  return doc.body.innerHTML;
+  const result = endsWithSpace.test(doc.body.innerHTML) ? doc.body.innerHTML.trimRight() + "\n" : doc.body.innerHTML;
+  return result;
 }
 
 // RESPEC STUFF
