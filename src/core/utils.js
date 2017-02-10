@@ -238,14 +238,21 @@ export function normalizePadding(text) {
       .filter(isTextNode)
       .filter(node => {
         // we care about text next to a block level element
-        const prevSib = node.previousElementSibling
+        const prevSib = node.previousElementSibling;
         const nextTo = prevSib ? prevSib.localName : node.parentElement.localName;
         // and we care about text elements that finish on a new line
         return !inlineElems.has(nextTo) || node.textContent.trim().includes("\n");
       })
-      .forEach(
-        node => node.textContent = node.textContent.replace(replacer, "")
-      );
+      .forEach(node => {
+        // We need to retain white space if the text Node is next to an in-line element
+        let padding = "";
+        const prevSib = node.previousElementSibling;
+        const nextTo = prevSib ? prevSib.localName : node.parentElement.localName;
+        if (/^[\t\ ]/.test(node.textContent) && inlineElems.has(nextTo)) {
+          padding = node.textContent.match(/^\s+/)[0];
+        }
+        node.textContent = padding + node.textContent.replace(replacer, "");
+      });
   }
   const result = endsWithSpace.test(doc.body.innerHTML) ? doc.body.innerHTML.trimRight() + "\n" : doc.body.innerHTML;
   return result;
