@@ -236,9 +236,18 @@ export function normalizePadding(text) {
       .from(doc.body.childNodes)
       .filter(node => node.localName !== "pre")
       .filter(isTextNode)
-      .forEach(node => node.textContent = node.textContent.replace(replacer, ""));
+      .filter(node => {
+        // we care about text next to a block level element
+        const nextTo = node.previousElementSibling ? node.previousElementSibling.localName : node.parentElement.localName;
+        // and we care about text elements that finish on a new line
+        return !inlineElems.has(nextTo) || node.textContent.trim().includes("\n");
+      })
+      .forEach(
+        node => node.textContent = node.textContent.replace(replacer, "")
+      );
   }
-  return doc.body.innerHTML;
+  const result = doc.body.innerHTML.trimRight() + "\n"
+  return result;
 }
 
 // RESPEC STUFF
