@@ -214,7 +214,9 @@ export function normalizePadding(text) {
     .from(doc.body.children)
     .filter(elem => !inlineElems.has(elem.localName))
     .filter(elem => elem.localName !== "pre")
-    .forEach(elem => elem.innerHTML = normalizePadding(elem.innerHTML));
+    .forEach(elem => {
+      elem.innerHTML = normalizePadding(elem.innerHTML)
+    });
   // Normalize root level now
   Array
     .from(doc.body.childNodes)
@@ -224,14 +226,16 @@ export function normalizePadding(text) {
   if (!isTextNode(doc.body.firstChild)) {
     Array
       .from(doc.body.children)
-      .forEach(child => child.innerHTML = normalizePadding(child.innerHTML));
+      .forEach(child => {
+        child.innerHTML = normalizePadding(child.innerHTML)
+      });
   }
   doc.normalize();
   // use the first space as an indicator of how much to chop off the front
   const firstSpace = doc.body.innerText.split("\n").filter(item => item && item.startsWith(" "))[0];
   var chop = firstSpace ? firstSpace.match(/\ +/)[0].length : 0;
   if (chop) {
-    const replacer = new RegExp("^\ {1," + chop + "}", "gm");
+    // Chop chop from start, but leave pre elem alone
     Array
       .from(doc.body.childNodes)
       .filter(node => node.localName !== "pre")
@@ -243,7 +247,7 @@ export function normalizePadding(text) {
         // and we care about text elements that finish on a new line
         return !inlineElems.has(nextTo) || node.textContent.trim().includes("\n");
       })
-      .forEach(node => {
+      .reduce((replacer, node) => {
         // We need to retain white space if the text Node is next to an in-line element
         let padding = "";
         const prevSib = node.previousElementSibling;
@@ -252,7 +256,20 @@ export function normalizePadding(text) {
           padding = node.textContent.match(/^\s+/)[0];
         }
         node.textContent = padding + node.textContent.replace(replacer, "");
-      });
+        return replacer;
+      }, new RegExp("^\ {1," + chop + "}", "gm"));
+    // deal with pre elements... we can chop whitespace from their siblings
+    const endsWithSpace = new RegExp(`\\ {${chop}}$`, "gm");
+    Array
+      .from(doc.body.querySelectorAll("pre"))
+      .map(elem => elem.previousSibling)
+      .filter(isTextNode)
+      .reduce((chop, node) => {
+        if (endsWithSpace.test(node.textContent)) {
+          node.textContent = node.textContent.substr(0, node.textContent.length - chop);
+        }
+        return chop;
+      }, chop);
   }
   const result = endsWithSpace.test(doc.body.innerHTML) ? doc.body.innerHTML.trimRight() + "\n" : doc.body.innerHTML;
   return result;
