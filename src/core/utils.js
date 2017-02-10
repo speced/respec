@@ -191,7 +191,7 @@ export function toESIterable(nextLikeFunction) {
   };
   return iterator;
 }
-
+const endsWithSpace = /\s+$/gm;
 export function normalizePadding(text) {
   if (!text) {
     return "";
@@ -247,7 +247,7 @@ export function normalizePadding(text) {
         node => node.textContent = node.textContent.replace(replacer, "")
       );
   }
-  const result = doc.body.innerHTML.trimRight() + "\n"
+  const result = endsWithSpace.test(doc.body.innerHTML) ? doc.body.innerHTML.trimRight() + "\n" : doc.body.innerHTML;
   return result;
 }
 
