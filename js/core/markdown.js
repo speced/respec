@@ -68,10 +68,12 @@ define([
     return function (element) {
       Array
         .from(element.querySelectorAll(selector))
+        .reverse()
         .map(function (elem) {
+          elem.innerHTML = toHTML(elem.innerHTML);
           return {
             element: elem,
-            html: toHTML(elem.innerHTML)
+            html: elem.innerHTML
           };
         })
         .reduce(function (div, item) {
@@ -212,7 +214,7 @@ define([
       });
   }
 
-  var processBlockLevelElements = processElements("section, .issue, .note, .req");
+  var processBlockLevelElements = processElements("section section, body > section, .issue, .note, .req");
 
   return {
     run: function(conf, doc, cb) {
