@@ -59,6 +59,7 @@ function toHTML(text) {
   // so blockquotes aren't picked up by the parser. This fixes it.
   const potentialMarkdown = normalizedLeftPad.replace(/&gt;/gm, ">");
   const html = marked(potentialMarkdown);
+
   return html;
 }
 
@@ -210,6 +211,10 @@ export function run(conf, doc, cb) {
     .from(newBody.childNodes)
     .filter(node => node.textContent.trim() && !processedElements.includes(node))
     .forEach(node => {
+      // we need to check if it's been added later.
+      if (processedElements.includes(current)) {
+        return;
+      }
       const frag = node.ownerDocument.createDocumentFragment();
       const div = node.ownerDocument.createElement("div");
       switch (node.nodeType) {
@@ -217,11 +222,18 @@ export function run(conf, doc, cb) {
           div.innerHTML = toHTML(node.outerHTML);
           break;
         case Node.TEXT_NODE:
-          div.innerHTML = toHTML(node.textContent);
+          const range = node.ownerDocument.createElement("div");
+          let current = node;
+          while (current && !processedElements.includes(current)) {
+            processedElements.push(current);
+            range.appendChild(current.cloneNode(true));
+            current = current.nextSibling;
+          }
+          div.innerHTML = toHTML(range.innerHTML);
           break;
         default:
           div.appendChild(node);
-      } 
+      }
       while (div.firstChild) {
         frag.appendChild(div.firstChild);
       }
@@ -236,7 +248,7 @@ export function run(conf, doc, cb) {
     // beautifer has a bad time with "\n&quot;<element"
     // https://github.com/beautify-web/js-beautify/issues/943
     .replace(/\"\n\s+\</gm, "\"<")
-  
+
   newBody.innerHTML = beautifulHTML;
   // Remove links where class .nolinks
   substituteWithTextNodes(newBody.querySelectorAll(".nolinks a[href]"));
