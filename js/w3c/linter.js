@@ -31,9 +31,17 @@ define(["core/pubsubhub"], function(pubsubhub) {
       });
   }
 
+  function findHeadinglessSections(doc) {
+    return Array
+      .from(document.querySelectorAll("section"))
+      .filter(function(elem) {
+        return elem.querySelector(":scope>h2, :scope>h3, :scope>h4, :scope>h5, :scope>h6") === null
+      });
+  }
+
   return {
     run: function(conf, doc, cb) {
-      if (!conf.lint || conf.status === "unofficial") {
+      if (conf.lint || conf.status === "unofficial") {
         return cb();
       }
       var warnings = [];
@@ -42,7 +50,7 @@ define(["core/pubsubhub"], function(pubsubhub) {
       // Warn if no privacy and/or security considerations section
       if (!hasPriSecConsiderations(doc)) {
         warn = "This specification doesn't appear to have any 'Privacy' " +
-          " or 'Security' considerations sections. Please consider adding one" +
+          "or 'Security' considerations sections. Please consider adding one" +
           ", see https://w3ctag.github.io/security-questionnaire/";
         warnings.push(warn);
       }
@@ -54,6 +62,16 @@ define(["core/pubsubhub"], function(pubsubhub) {
           "the following properties to use 'https://': " + httpURLs.join(", ") + ".";
         warnings.push(warn);
       }
+
+      // Warn about sections with no headings
+      const sections = findHeadinglessSections(doc)
+        .map(function(section) {
+          console.warn("Section with no heading (maybe use a div or add a heading?):", section);
+          return section;
+        })
+      warn = "Found " + sections.length + " section elements without a heading element. Consider " +
+        "adding a heading element. See browser developer console for offending element(s).";
+      warnings.push(warn);
 
       // Publish warnings
       warnings.map(function(warn) {
