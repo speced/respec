@@ -36,4 +36,4 @@ function overrideConfig(config) {
     }, overrideProps);
   Object.assign(config, overrideProps);
 }
-sub('start-all', overrideConfig, { once: true });
+sub("start-all", overrideConfig, { once: true });
