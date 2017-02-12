@@ -70,9 +70,11 @@ define(["core/pubsubhub"], function(pubsubhub) {
           console.warn("Section with no heading (maybe use a div or add a heading?):", section);
           return section;
         });
-      warn = "Found " + sections.length + " section elements without a heading element. Consider " +
-        "adding a heading element. See browser developer console for offending element(s).";
-      warnings.push(warn);
+      if (sections.length) {
+        warn = "Found " + sections.length + " section elements without a heading element. Consider " +
+          "adding a heading element. See browser developer console for offending element(s).";
+        warnings.push(warn);
+      }
 
       // Publish warnings
       warnings.map(function(warn) {
