@@ -18,6 +18,7 @@ js/core/data-include.js
 js/core/default-root-attr.js
 js/core/highlight.js
 js/core/include-config.js
+js/core/markdown.js
 js/core/override-configuration.js
 js/core/post-process.js
 js/core/pre-process.js
