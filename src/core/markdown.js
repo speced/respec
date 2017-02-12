@@ -215,7 +215,7 @@ export function run(conf, doc, cb) {
     .html_beautify(cleanHTML, beautifyOps)
     // beautifer has a bad time with "\n&quot;<element"
     // https://github.com/beautify-web/js-beautify/issues/943
-    .replace(/\"\n\s+\</gm, "\"<")
+    .replace(/&quot;\n\s+\</gm, "\"<")
 
   newBody.innerHTML = beautifulHTML;
   // Remove links where class .nolinks
