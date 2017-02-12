@@ -207,39 +207,7 @@ export function run(conf, doc, cb) {
   // elements.
   const processedElements = processBlockLevelElements(newBody);
   // Process the rest
-  Array
-    .from(newBody.childNodes)
-    .filter(node => node.textContent.trim() && !processedElements.includes(node))
-    .forEach(node => {
-      // we need to check if it's been added later.
-      if (processedElements.includes(current)) {
-        return;
-      }
-      const frag = node.ownerDocument.createDocumentFragment();
-      const div = node.ownerDocument.createElement("div");
-      switch (node.nodeType) {
-        case Node.ELEMENT_NODE:
-          div.innerHTML = toHTML(node.outerHTML);
-          break;
-        case Node.TEXT_NODE:
-          const range = node.ownerDocument.createElement("div");
-          let current = node;
-          while (current && !processedElements.includes(current)) {
-            processedElements.push(current);
-            range.appendChild(current.cloneNode(true));
-            current = current.nextSibling;
-          }
-          div.innerHTML = toHTML(range.innerHTML);
-          break;
-        default:
-          div.appendChild(node);
-      }
-      while (div.firstChild) {
-        frag.appendChild(div.firstChild);
-      }
-      node.parentNode.replaceChild(frag, node);
-    });
-  const dirtyHTML = newBody.innerHTML;
+  const dirtyHTML = toHTML(newBody.innerHTML);
   const cleanHTML = dirtyHTML
     // Markdown parsing sometimes inserts empty p tags
     .replace(/<p>\s*<\/p>/gm, "");
