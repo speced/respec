@@ -247,7 +247,7 @@ describe("Core - Markdown", function() {
           "<p id='test-text1'>test1 text\n  &quot;<code>inner text</code>\".</p>\n" +
           "<p id='test-text2'>test2\n   \"`inner`&quot;.</p>" +
           // Pre left alone
-          "<pre id='test-text3'>test3 text\n\"<code>inner text</code>\".</pre>",
+          "<pre class=nohighlight id='test-text3'>test3 text\n\"<code>inner text</code>\".</pre>",
 
       };
       ops.config.format = "markdown";
