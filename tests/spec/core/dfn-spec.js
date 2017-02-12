@@ -40,6 +40,28 @@ describe("Core — Definitions", function() {
     }).then(done);
   });
 
+  it("links <code> for IDL, but not when text doesn't match", function(done) {
+    var ops = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody() +
+      `
+      <pre class="idl">
+        interface Test {};
+      </pre>
+      <p id="t1"><a>Test</a>
+      <p id="t2"><a data-lt="Test">not wrapped in code</a>
+      `
+    };
+    makeRSDoc(ops, doc => {
+      const code = doc.querySelector("#t1 code");
+      expect(code.textContent).toEqual("Test");
+      const t2 = doc.querySelector("#t2");
+      expect(t2.querySelector("code")).toEqual(null);
+      expect(t2.querySelector("a").textContent).toEqual("not wrapped in code");
+      expect(t2.querySelector("a").getAttribute("href")).toEqual("#idl-def-test");
+    }).then(done);
+  });
+
   it("should process aliases", function(done) {
     var ops = {
       config: makeBasicConfig(),
@@ -70,4 +92,5 @@ describe("Core — Definitions", function() {
       expect($sec.find("dfn").attr("data-dfn-type")).toEqual("myType");
     }).then(done);
   });
+
 });

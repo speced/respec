@@ -65,6 +65,10 @@ define(
               // whitespace, inside the <dfn>.
               if (dfn.closest('code,pre').length ||
                 (dfn.contents().length === 1 && dfn.children('code').length === 1)) {
+                // only add code to IDL when the definition matches
+                if (dfn[0].dataset.hasOwnProperty("idl") && dfn[0].dataset.title !== $ant[0].textContent.trim()) {
+                  return true;
+                }
                 $ant.wrapInner('<code></code>');
               }
               return true;

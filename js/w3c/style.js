@@ -11,6 +11,11 @@ define([
 ], function(utils, pubsubhub) {
   function attachFixupScript(doc, version) {
     var script = doc.createElement("script");
+    script.addEventListener("load", function() {
+      if (window.location.hash) {
+        window.location = window.location;
+      }
+    });
     var helperScript = "https://www.w3.org/scripts/TR/{version}/fixup.js"
       .replace("{version}", version);
     script.src = helperScript;
@@ -30,7 +35,7 @@ define([
       "initial-scale": "1",
       "shrink-to-fit": "no",
     };
-    meta.content = utils.toKeyValuePairs(contentProps).replace(/\"/g, "")
+    meta.content = utils.toKeyValuePairs(contentProps).replace(/\"/g, "");
     return meta;
   }
 
@@ -76,7 +81,7 @@ define([
       }]
       .map(utils.createResourceHint.bind(utils))
       .reduce(function(frag, link) {
-        frag.appendChild(link)
+        frag.appendChild(link);
         return frag;
       }, document.createDocumentFragment());
     return resourceHints;
@@ -141,7 +146,7 @@ define([
       if (version && !conf.noToc) {
         pubsubhub.sub("end-all", function() {
           attachFixupScript(doc, version);
-        }, {once: true});
+        }, { once: true });
       }
       var finalVersionPath = (version) ? version + "/" : "";
       finalStyleURL = styleBaseURL.replace("{version}", finalVersionPath);
