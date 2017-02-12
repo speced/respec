@@ -205,7 +205,7 @@ export function run(conf, doc, cb) {
   // Marked expects markdown be flush against the left margin
   // so we need to normalize the inner text of some block
   // elements.
-  const processedElements = processBlockLevelElements(newBody);
+  processBlockLevelElements(newBody);
   // Process the rest
   const dirtyHTML = toHTML(newBody.innerHTML);
   const cleanHTML = dirtyHTML
