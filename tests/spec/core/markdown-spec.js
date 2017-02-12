@@ -240,19 +240,26 @@ describe("Core - Markdown", function() {
       }).then(done);
     });
 
-    it("it correctly handles quoted elements", function(done){
+    it("handles quoted elements, including entity quotes", function(done){
       var ops = {
         config: makeBasicConfig(),
         body: makeDefaultBody() +
-          "<p id='test-text1'>outer text\n\"<code>inner text</code>\".</p>\n" +
-          "<p id='test-text2'>outer\n   \"`inner`\".</p>"
+          "<p id='test-text1'>test1 text\n  &quot;<code>inner text</code>\".</p>\n" +
+          "<p id='test-text2'>test2\n   \"`inner`&quot;.</p>" +
+          // Pre left alone
+          "<pre id='test-text3'>test3 text\n\"<code>inner text</code>\".</pre>",
+
       };
       ops.config.format = "markdown";
       makeRSDoc(ops, function(doc) {
-        var text1 = doc.getElementById("test-text1").textContent;
-        expect(text1).toEqual("outer text \"inner text\".");
-        var text2 = doc.getElementById("test-text2").innerHTML;
-        expect(text2).toEqual("outer \"<code>inner</code>\".");
+        var text1 = doc.getElementById("test-text1");
+        expect(text1.textContent).toEqual(`test1 text "inner text".`);
+        expect(text1.innerHTML).toEqual(`test1 text "<code>inner text</code>".`);
+        var text2 = doc.getElementById("test-text2");
+        expect(text2.textContent).toEqual("test2 \"inner\".");
+        expect(text2.innerHTML).toEqual("test2 \"<code>inner</code>\".");
+        var text3 = doc.getElementById("test-text3");
+        expect(text3.innerHTML).toEqual("test3 text\n\"<code>inner text</code>\".")
       }).then(done);
     });
   });
