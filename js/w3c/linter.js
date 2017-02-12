@@ -1,3 +1,4 @@
+/*globals console*/
 "use strict";
 define(["core/pubsubhub"], function(pubsubhub) {
   /**
@@ -33,9 +34,9 @@ define(["core/pubsubhub"], function(pubsubhub) {
 
   function findHeadinglessSections(doc) {
     return Array
-      .from(document.querySelectorAll("section"))
+      .from(doc.querySelectorAll("section"))
       .filter(function(elem) {
-        return elem.querySelector(":scope>h2, :scope>h3, :scope>h4, :scope>h5, :scope>h6") === null
+        return elem.querySelector(":scope>h2, :scope>h3, :scope>h4, :scope>h5, :scope>h6") === null;
       });
   }
 
@@ -68,7 +69,7 @@ define(["core/pubsubhub"], function(pubsubhub) {
         .map(function(section) {
           console.warn("Section with no heading (maybe use a div or add a heading?):", section);
           return section;
-        })
+        });
       warn = "Found " + sections.length + " section elements without a heading element. Consider " +
         "adding a heading element. See browser developer console for offending element(s).";
       warnings.push(warn);
