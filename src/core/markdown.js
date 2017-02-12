@@ -59,6 +59,7 @@ function toHTML(text) {
   // so blockquotes aren't picked up by the parser. This fixes it.
   const potentialMarkdown = normalizedLeftPad.replace(/&gt;/gm, ">");
   const html = marked(potentialMarkdown);
+
   return html;
 }
 
@@ -204,30 +205,9 @@ export function run(conf, doc, cb) {
   // Marked expects markdown be flush against the left margin
   // so we need to normalize the inner text of some block
   // elements.
-  const processedElements = processBlockLevelElements(newBody);
+  processBlockLevelElements(newBody);
   // Process the rest
-  Array
-    .from(newBody.childNodes)
-    .filter(node => node.textContent.trim() && !processedElements.includes(node))
-    .forEach(node => {
-      const frag = node.ownerDocument.createDocumentFragment();
-      const div = node.ownerDocument.createElement("div");
-      switch (node.nodeType) {
-        case Node.ELEMENT_NODE:
-          div.innerHTML = toHTML(node.outerHTML);
-          break;
-        case Node.TEXT_NODE:
-          div.innerHTML = toHTML(node.textContent);
-          break;
-        default:
-          div.appendChild(node);
-      } 
-      while (div.firstChild) {
-        frag.appendChild(div.firstChild);
-      }
-      node.parentNode.replaceChild(frag, node);
-    });
-  const dirtyHTML = newBody.innerHTML;
+  const dirtyHTML = toHTML(newBody.innerHTML);
   const cleanHTML = dirtyHTML
     // Markdown parsing sometimes inserts empty p tags
     .replace(/<p>\s*<\/p>/gm, "");
@@ -235,8 +215,8 @@ export function run(conf, doc, cb) {
     .html_beautify(cleanHTML, beautifyOps)
     // beautifer has a bad time with "\n&quot;<element"
     // https://github.com/beautify-web/js-beautify/issues/943
-    .replace(/\"\n\s+\</gm, "\"<")
-  
+    .replace(/&quot;\n\s+\</gm, "\"<")
+
   newBody.innerHTML = beautifulHTML;
   // Remove links where class .nolinks
   substituteWithTextNodes(newBody.querySelectorAll(".nolinks a[href]"));
