@@ -3,6 +3,6 @@
 import { removeReSpec } from "core/utils";
 import { sub } from "core/pubsubhub";
 
-sub('end-all', () => {
+sub("end-all", () => {
   removeReSpec(document);
 }, { once: true });

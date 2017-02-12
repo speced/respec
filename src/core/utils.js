@@ -137,24 +137,24 @@ export function createResourceHint(opts) {
   var href = url.href;
   linkElem.rel = opts.hint;
   switch (linkElem.rel) {
-    case "dns-prefetch":
-    case "preconnect":
-      href = url.origin;
-      if (opts.corsMode || url.origin !== document.location.origin) {
-        linkElem.crossOrigin = opts.corsMode || "anonymous";
+  case "dns-prefetch":
+  case "preconnect":
+    href = url.origin;
+    if (opts.corsMode || url.origin !== document.location.origin) {
+      linkElem.crossOrigin = opts.corsMode || "anonymous";
+    }
+    break;
+  case "preload":
+    if ("as" in opts && typeof opts.as === "string") {
+      if (!fetchDestinations.has(opts.as)) {
+        console.warn("Unknown request destination: " + opts.as);
       }
-      break;
-    case "preload":
-      if ("as" in opts && typeof opts.as === "string") {
-        if (!fetchDestinations.has(opts.as)) {
-          console.warn("Unknown request destination: " + opts.as);
-        }
-        linkElem.setAttribute("as", opts.as);
-      }
-      break;
-    case "prerender":
-      href = url.href;
-      break;
+      linkElem.setAttribute("as", opts.as);
+    }
+    break;
+  case "prerender":
+    href = url.href;
+    break;
   }
   linkElem.href = href;
   if (!opts.dontRemove) {
@@ -215,7 +215,7 @@ export function normalizePadding(text) {
     .filter(elem => !inlineElems.has(elem.localName))
     .filter(elem => elem.localName !== "pre")
     .forEach(elem => {
-      elem.innerHTML = normalizePadding(elem.innerHTML)
+      elem.innerHTML = normalizePadding(elem.innerHTML);
     });
   // Normalize root level now
   Array
@@ -227,7 +227,7 @@ export function normalizePadding(text) {
     Array
       .from(doc.body.children)
       .forEach(child => {
-        child.innerHTML = normalizePadding(child.innerHTML)
+        child.innerHTML = normalizePadding(child.innerHTML);
       });
   }
   doc.normalize();
