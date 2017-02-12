@@ -65,18 +65,18 @@ define([
   }
 
   function processElements(selector) {
-    return function (element) {
-      Array
-        .from(element.querySelectorAll(selector))
+    return function(element) {
+      const elementsToProcess = Array.from(element.querySelectorAll(selector));
+      elementsToProcess
         .reverse()
-        .map(function (elem) {
+        .map(function(elem) {
           elem.innerHTML = toHTML(elem.innerHTML);
           return {
             element: elem,
             html: elem.innerHTML
           };
         })
-        .reduce(function (div, item) {
+        .reduce(function(div, item) {
           var element = item.element;
           var node = div;
           div.innerHTML = item.html;
@@ -90,14 +90,15 @@ define([
           }
           return div;
         }, element.ownerDocument.createElement("div"));
+      return elementsToProcess;
     };
   }
 
   function makeBuilder(doc) {
-    var root = doc.createDocumentFragment();
-    var stack = [root];
+    const root = doc.createDocumentFragment();
+    const stack = [root];
+    const headers = /H[1-6]/;
     var current = root;
-    var headers = /H[1-6]/;
 
     function findPosition(header) {
       return parseInt(header.tagName.charAt(1), 10);
@@ -171,37 +172,31 @@ define([
 
   function structure(fragment, doc) {
     function process(root) {
-      var node;
-      var tagName;
-      var stack = makeBuilder(doc);
-
+      const stack = makeBuilder(doc);
       while (root.firstChild) {
-        node = root.firstChild;
+        const node = root.firstChild;
         if (node.nodeType !== Node.ELEMENT_NODE) {
           root.removeChild(node);
           continue;
         }
-        tagName = node.localName;
-        switch (tagName) {
-        case "h1":
-        case "h2":
-        case "h3":
-        case "h4":
-        case "h5":
-        case "h6":
-          stack.addHeader(node);
-          break;
-        case "section":
-          stack.addSection(node, process);
-          break;
-        default:
-          stack.addElement(node);
+        switch (node.localName) {
+          case "h1":
+          case "h2":
+          case "h3":
+          case "h4":
+          case "h5":
+          case "h6":
+            stack.addHeader(node);
+            break;
+          case "section":
+            stack.addSection(node, process);
+            break;
+          default:
+            stack.addElement(node);
         }
       }
-
       return stack.getRoot();
     }
-
     return process(fragment);
   }
 
@@ -219,35 +214,60 @@ define([
   return {
     run: function(conf, doc, cb) {
       if (conf.format === "markdown") {
-        // We transplant the UI to do the markdown processing
-        var rsUI = doc.getElementById("respec-ui");
-        rsUI.remove();
-        // The new body will replace the old body
-        var newBody = doc.createElement("body");
-        newBody.innerHTML = doc.body.innerHTML;
-        // Marked expects markdown be flush against the left margin
-        // so we need to normalize the inner text of some block
-        // elements.
-        processBlockLevelElements(newBody);
-        var dirtyHTML = toHTML(newBody.innerHTML);
-        // Markdown parsing sometimes inserts empty p tags
-        var cleanHTML = dirtyHTML
-          .replace(/<p>\s*<\/p>/gm, "")
-          // beautifer has a bad time with "\n&quot;<element"
-          // https://github.com/beautify-web/js-beautify/issues/943
-          .replace(/\n\s*&quot;</mg, " &quot;<");
-        var beautifulHTML = beautify.html_beautify(cleanHTML, beautifyOps);
-        newBody.innerHTML = beautifulHTML;
-        // Remove links where class .nolinks
-        substituteWithTextNodes(newBody.querySelectorAll(".nolinks a[href]"));
-        // Restructure the document properly
-        var fragment = structure(newBody, doc);
-        // Frankenstein the whole thing back together
-        newBody.appendChild(fragment);
-        newBody.appendChild(rsUI);
-        doc.body.parentNode.replaceChild(newBody, doc.body);
+        return cb();
       }
+      // We transplant the UI to do the markdown processing
+      var rsUI = doc.getElementById("respec-ui");
+      rsUI.remove();
+      // The new body will replace the old body
+      var newBody = doc.createElement("body");
+      newBody.innerHTML = doc.body.innerHTML;
+      // Marked expects markdown be flush against the left margin
+      // so we need to normalize the inner text of some block
+      // elements.
+      const processedElements = processBlockLevelElements(newBody);
+      // Process the rest
+      Array
+        .from(newBody.childNodes)
+        .filter(function(node) {
+          return !processedElements.includes(node);
+        })
+        .forEach(function(node) {
+          switch (node.nodeType) {
+            case Node.ELEMENT_NODE:
+              node.innerHTML = toHTML(node.innerHTML);
+              break;
+            case Node.TEXT_NODE:
+              if (node.textContent.trim()) {
+                const frag = node.ownerDocument.createDocumentFragment();
+                const div = node.ownerDocument.createElement("div");
+                div.innerHTML = toHTML(node.textContent);
+                while (div.firstChild) {
+                  frag.appendChild(div.firstChild);
+                }
+                node.parentNode.replaceChild(frag, node);
+              }
+              break;
+          }
+        });
+      var dirtyHTML = newBody.innerHTML;
+      // Markdown parsing sometimes inserts empty p tags
+      var cleanHTML = dirtyHTML
+        .replace(/<p>\s*<\/p>/gm, "")
+        // beautifer has a bad time with "\n&quot;<element"
+        // https://github.com/beautify-web/js-beautify/issues/943
+        .replace(/\n\s*&quot;</mg, " &quot;<");
+      var beautifulHTML = beautify.html_beautify(cleanHTML, beautifyOps);
+      newBody.innerHTML = beautifulHTML;
+      // Remove links where class .nolinks
+      substituteWithTextNodes(newBody.querySelectorAll(".nolinks a[href]"));
+      // Restructure the document properly
+      var fragment = structure(newBody, doc);
+      // Frankenstein the whole thing back together
+      newBody.appendChild(fragment);
+      newBody.appendChild(rsUI);
+      doc.body.parentNode.replaceChild(newBody, doc.body);
       cb();
-    }
+    },
   };
 });
