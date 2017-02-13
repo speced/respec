@@ -1,13 +1,4 @@
 "use strict";
-// Hide document, because we are about to change it radically.
-document.body.hidden = true;
-
-// In case everything else fails, we always want to show the document
-window.addEventListener("error", function(err) {
-  console.error(err);
-  document.body.hidden = false;
-});
-
 // this is only set in a build, not at all in the dev environment
 require.config({
   shim: {
@@ -93,8 +84,6 @@ define([
         .then(ui.enable)
         .catch(function(err) {
           console.error(err);
-          // In case processing fails, we still want to show the document.
-          document.body.hidden = false;
           // even if things go critically bad, we should still try to show the UI
           ui.enable();
         });
