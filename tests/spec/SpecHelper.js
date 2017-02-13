@@ -138,6 +138,7 @@ function makeBasicConfig() {
     errata: "https://github.com/tabatkins/bikeshed",
     implementationReportURI: "http://example.com/implementationReportURI",
     perEnd: "1999-01-01",
+    lint: false,
   };
 }
 
