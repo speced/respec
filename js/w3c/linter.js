@@ -10,15 +10,15 @@ define(["core/pubsubhub"], function(pubsubhub) {
    * @return {Boolean} Returns true if section is found.
    */
   function hasPriSecConsiderations(doc) {
+    const privOrSecRegex = /(privacy|security)/igm;
+    const considerationsRegex = /(considerations)/igm;
     return Array
       .from(doc.querySelectorAll("h2, h3, h4, h5, h6"))
       .map(function(elem) {
         return elem.textContent;
       })
       .some(function(text) {
-        var privOrSecRegex = /(privacy|security)/igm;
-        var considerationsRegex = /(considerations)/igm;
-        return privOrSecRegex.test(text) && considerationsRegex.test(text);
+        return (privOrSecRegex.test(text) && considerationsRegex.test(text)) || privOrSecRegex.test(text);
       });
   }
 
@@ -57,7 +57,7 @@ define(["core/pubsubhub"], function(pubsubhub) {
       }
 
       // Warn about HTTP URLs used in respecConfig
-      if(doc.location.href.startsWith("http")){
+      if (doc.location.href.startsWith("http")) {
         var httpURLs = findHTTPProps(conf, doc.location.href);
         if (httpURLs.length) {
           warn = "There are insecure URLs in your respecConfig! Please change " +
