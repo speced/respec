@@ -34,7 +34,7 @@ define(["core/pubsubhub"], function(pubsubhub) {
 
   function findHeadinglessSections(doc) {
     return Array
-      .from(doc.querySelectorAll("section"))
+      .from(doc.querySelectorAll("section:not(#toc)"))
       .filter(function(elem) {
         return elem.querySelector(":scope>h2, :scope>h3, :scope>h4, :scope>h5, :scope>h6") === null;
       });
@@ -57,11 +57,13 @@ define(["core/pubsubhub"], function(pubsubhub) {
       }
 
       // Warn about HTTP URLs used in respecConfig
-      var httpURLs = findHTTPProps(conf, doc.location.href);
-      if (httpURLs.length) {
-        warn = "There are insecure URLs in your respecConfig! Please change " +
-          "the following properties to use 'https://': " + httpURLs.join(", ") + ".";
-        warnings.push(warn);
+      if(doc.location.href.startsWith("http")){
+        var httpURLs = findHTTPProps(conf, doc.location.href);
+        if (httpURLs.length) {
+          warn = "There are insecure URLs in your respecConfig! Please change " +
+            "the following properties to use 'https://': " + httpURLs.join(", ") + ".";
+          warnings.push(warn);
+        }
       }
 
       // Warn about sections with no headings
