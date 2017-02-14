@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "10.1.5",
+  "version": "10.1.6",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -15,7 +15,7 @@
   },
   "author": "Robin Berjon",
   "devDependencies": {
-    "babel-cli": "^6.22.2",
+    "babel-cli": "^6.23.0",
     "babel-plugin-transform-async-to-generator": "^6.22.0",
     "babel-plugin-transform-es2015-modules-amd": "^6.22.0",
     "babel-preset-latest": "^6.22.0",
@@ -26,7 +26,7 @@
     "jasmine-core": "^2.5.2",
     "jasmine-reporters": "^2.2.0",
     "jquery": "^3.1.1",
-    "js-beautify": "^1.6.8",
+    "js-beautify": "^1.6.9",
     "jscs": "^3.0.7",
     "jshint": "^2.9.4",
     "karma": "^1.4.1",
@@ -78,11 +78,11 @@
   },
   "dependencies": {
     "colors": "^1.1.2",
-    "command-line-args": "^4.0.0",
+    "command-line-args": "^4.0.1",
     "command-line-usage": "^4.0.0",
     "epipebomb": "^1.0.0",
     "express": "^4.14.1",
-    "fs-promise": "^1.0.0",
+    "fs-promise": "^2.0.0",
     "highlight.js": "github:isagalaev/highlight.js",
     "marcosc-async": "^4.0.0",
     "marked": "^0.3.6",
