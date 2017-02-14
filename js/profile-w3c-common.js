@@ -1,6 +1,12 @@
 "use strict";
 // Hide document, because we are about to change it radically.
-document.body.hidden = true;
+if (document.body) {
+  document.body.hidden = true;
+}
+window.addEventListener("DOMContentLoaded", function() {
+  document.body.hidden = true;
+});
+
 
 // In case everything else fails, we always want to show the document
 window.addEventListener("error", function(err) {
