@@ -3,7 +3,7 @@
 if (document.body) {
   document.body.hidden = true;
 }
-window.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
   document.body.hidden = true;
 });
 
