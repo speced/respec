@@ -10,6 +10,8 @@
  *
  */
 /*globals IDBKeyRange, DOMException, console */
+import { pub } from "core/pubsubhub";
+
 const ALLOWED_TYPES = new Set(["alias", "reference"]);
 // Database initialization, tracked by "readyPromise"
 const readyPromise = new Promise((resolve, reject) => {
@@ -206,6 +208,15 @@ export const biblioDB = {
     };
     Object
       .keys(data)
+      .filter(key => {
+        if (typeof data[key] === "string") {
+          let msg = "Legacy SpecRef entries are not supported: [[" + key + "]]. ";
+          msg += "Please update it at https://github.com/tobie/specref/";
+          pub("error", msg);
+          return false;
+        }
+        return true;
+      })
       .map(
         id => Object.assign({ id }, data[id])
       )
