@@ -92,7 +92,7 @@ describe("W3C — Bibliographic References", function() {
       // Make sure publisher is shown even when there is no author
       ref = doc.querySelector("#bib-TestRef3 + dd");
       expect(ref).toBeTruthy();
-      expect(ref.textContent).toMatch(/^Publisher Here\.\s/);
+      expect(ref.textContent).toMatch(/Publisher Here\.\s/);
     }).then(done).catch(done);
   });
 });
