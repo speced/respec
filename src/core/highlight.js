@@ -19,7 +19,7 @@ swapStyleOwner(document.head);
 function getLanguageHint(classList) {
   return Array
     .from(classList)
-    .filter(item => item !== "highlight")
+    .filter(item => item !== "highlight" && item !== "nolinks")
     .map(item => item.toLowerCase());
 }
 let doneResolver;
@@ -70,9 +70,11 @@ export async function run(conf, doc, cb) {
             return; // not for us!
           }
           worker.removeEventListener("message", listener);
-          element.innerHTML = ev.data.value;
+          const { value, language } = ev.data;
+          element.innerHTML = value;
           if (element.localName === "pre") {
             element.classList.add("hljs");
+            element.classList.add(language);
           }
           resolve(element);
         });
