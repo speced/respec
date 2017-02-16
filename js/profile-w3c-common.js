@@ -2,11 +2,11 @@
 // Hide document, because we are about to change it radically.
 if (document.body) {
   document.body.hidden = true;
+} else {
+  document.addEventListener("DOMContentLoaded", function() {
+    document.body.hidden = true;
+  }, {once: true});
 }
-document.addEventListener("DOMContentLoaded", function() {
-  document.body.hidden = true;
-});
-
 
 // In case everything else fails, we always want to show the document
 window.addEventListener("error", function(err) {
