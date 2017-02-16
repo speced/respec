@@ -4,7 +4,6 @@
 const async = require("marcosc-async");
 const Builder = require("./builder").Builder;
 const colors = require("colors");
-const name = "geonovum";
 
 colors.setTheme({
   error: "red",
@@ -12,9 +11,9 @@ colors.setTheme({
 
 exports.buildGeonovum = function buildGeonovum() {
   return async.task(function*() {
-    yield Builder.build({ name });
+    yield Builder.build({ name: "geonovum" });
   });
-}
+};
 
 if (require.main === module) {
   exports.buildGeonovum()

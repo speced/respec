@@ -4,7 +4,6 @@
 const async = require("marcosc-async");
 const Builder = require("./builder").Builder;
 const colors = require("colors");
-const name = "w3c-common";
 
 colors.setTheme({
   error: "red",
