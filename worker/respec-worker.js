@@ -21,7 +21,10 @@ self.addEventListener("message", function(e) {
       const code = e.data.code;
       const langs = e.data.languages.length ? e.data.languages : undefined;
       const result = self.hljs.highlightAuto(code, langs);
-      const data = Object.assign({}, e.data, result);
+      const data = Object.assign({
+        value: result.value,
+        language: result.language
+      }, e.data);
       try {
         self.postMessage(data);
       } catch (err) {
