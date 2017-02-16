@@ -9,17 +9,15 @@ colors.setTheme({
   error: "red",
 });
 
-function buildW3C() {
+exports.buildGeonovum = function buildGeonovum() {
   return async.task(function*() {
-    yield Builder.build({ name: "w3c-common" });
+    yield Builder.build({ name: "geonovum" });
   });
-}
+};
 
 if (require.main === module) {
-  buildW3C()
+  exports.buildGeonovum()
     .catch(
       err => console.error(` ☠ ️ ${colors.error(err.stack)}`)
     );
 }
-
-exports.buildW3C = buildW3C;
