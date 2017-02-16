@@ -297,11 +297,17 @@ table.simple {
     background: #fff;
     border: 5px solid #666;
     min-width: 20%;
-    width: 70%;
+    width: 85%;
     padding: 0;
     max-height: 80%;
     overflow-y: auto;
     margin: 0 -.5cm
+}
+
+@media screen and (min-width: 78em) {
+    .respec-modal { 
+        width: 64%;
+    }   
 }
 
 .respec-modal h3 {
@@ -311,6 +317,10 @@ table.simple {
     color: black;
     background: linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(238,238,238,1) 50%,rgba(204,204,204,1) 100%);
     font-size: 1em;
+}
+
+.respec-modal .inside p {
+    padding-left: 1cm;
 }
 
 #respec-menu button.respec-option {
