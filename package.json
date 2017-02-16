@@ -84,6 +84,7 @@
     "express": "^4.14.1",
     "fs-promise": "^2.0.0",
     "highlight.js": "github:isagalaev/highlight.js",
+    "loading-indicator": "^2.0.0",
     "marcosc-async": "^4.0.0",
     "marked": "^0.3.6",
     "nightmare": "^2.9.1",
