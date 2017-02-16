@@ -237,8 +237,85 @@ table.simple {
     color: white;
 }
 
+.respec-warning-list, .respec-error-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: sans-serif;
+    background-color: rgb(255,251,230);
+    font-size: .9em;
+}
+
+.respec-warning-list li, .respec-error-list li {
+    padding: 0.4em 0.7em;
+}
+
+.respec-warning-list li::before {
+    content: "⚠️";
+    padding-right: .5em;
+}
+
+.respec-warning-list li {
+    color: rgb(92,59,0);
+    border-bottom: thin solid rgb(255,245,194);
+}
+
+.respec-error-list, .respec-error-list li {
+    background-color: rgb(255,240,240);
+}
+
+.respec-error-list li::before {
+    content: "💥";
+    padding-right: .5em;
+}
+
+.respec-error-list li {
+    padding: 0.4em 0.7em;
+    color: rgb(92,59,0);
+    border-bottom: thin solid rgb(255,215,215);
+}
+
+#respec-overlay{
+    display: block;
+    opacity: 0;
+    position: fixed;
+    zIndex: 10000;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background: #000;
+}
+
+.respec-modal {
+    display: block;
+    position: fixed;
+    opacity: 0;
+    z-index: 11000;
+    margin: auto;
+    top: 10%;
+    background: #fff;
+    border: 5px solid #666;
+    min-width: 20%;
+    width: 70%;
+    padding: 0;
+    max-height: 80%;
+    overflow-y: auto;
+    margin: 0 -.5cm
+}
+
+.respec-modal h3 {
+    margin: 0;
+    padding: .2em;
+    text-align: center;
+    color: black;
+    background: linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(238,238,238,1) 50%,rgba(204,204,204,1) 100%);
+    font-size: 1em;
+}
+
 #respec-menu button.respec-option {
     background: white;
+    padding: 0 .2cm;
     border: none;
     width: 100%;
     text-align: left;

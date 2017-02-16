@@ -72,7 +72,7 @@ define([
         .appendTo($respecUI)
         .click(function() {
           this.setAttribute("aria-expanded", "true");
-          var $ul = $("<ol></ol>");
+          var $ul = $("<ol class='respec-" + butName + "-list'></ol>");
           for (var i = 0, n = arr.length; i < n; i++) {
             var err = arr[i];
             if (err instanceof Error) {
@@ -195,35 +195,8 @@ define([
           .click(function() {
             this.closeModal(currentOwner);
           }.bind(this))
-          .css({
-            display: "block",
-            opacity: 0,
-            position: "fixed",
-            zIndex: 10000,
-            top: "0px",
-            left: "0px",
-            height: "100%",
-            width: "100%",
-            background: "#000"
-          })
           .fadeTo(200, 0.5);
         $modal
-          .css({
-            display: "block",
-            position: "fixed",
-            opacity: 0,
-            zIndex: 11000,
-            left: "50%",
-            marginLeft: -(width / 2) + "px",
-            top: "100px",
-            background: "#fff",
-            border: "5px solid #666",
-            borderRadius: "5px",
-            width: width + "px",
-            padding: "0 20px 20px 20px",
-            maxHeight: ($(window).height() - 150) + "px",
-            overflowY: "auto"
-          })
           .fadeTo(200, 1);
       }
     };
