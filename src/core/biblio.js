@@ -47,24 +47,23 @@ const REF_STATUSES = new Map([
   ["WG-NOTE", "W3C Working Group Note"],
 ]);
 
+
+
 export function stringifyReference(ref) {
   if (typeof ref === "string") return ref;
-  var output = "";
+  let output = `<cite>${ref.title}</cite>`;
+  if (ref.href) {
+    output = `<a href="${ref.href}">${output}</a>. `;
+  }
   if (ref.authors && ref.authors.length) {
     output += ref.authors.join("; ");
     if (ref.etAl) output += " et al";
-    output += ". ";
+    output += ".";
   }
   if (ref.publisher) {
-    output += ref.publisher;
-    if (/\.$/.test(ref.publisher)) {
-      output += " ";
-    } else {
-      output += ". ";
-    }
+    const publisher = ref.publisher + (/\.$/.test(ref.publisher) ? "" : ".");
+    output = `${output} ${publisher} `;
   }
-  if (ref.href) output += `<a href="${ref.href}"><cite>${ref.title}</cite></a>. `;
-  else output += `<cite>${ref.title}</cite>. `;
   if (ref.date) output += ref.date + ". ";
   if (ref.status) output += (REF_STATUSES.get(ref.status) || ref.status) + ". ";
   if (ref.href) output += `URL: <a href="${ref.href}">${ref.href}</a>`;
