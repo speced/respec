@@ -6,7 +6,7 @@ const colors = require("colors");
 const fsp = require("fs-promise");
 const loading = require("loading-indicator");
 const path = require("path");
-const presets = require('loading-indicator/presets');
+const presets = require("loading-indicator/presets");
 const r = require("requirejs");
 const UglifyJS = require("uglify-js");
 colors.setTheme({
