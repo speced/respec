@@ -66,7 +66,10 @@ define(
               if (dfn.closest('code,pre').length ||
                 (dfn.contents().length === 1 && dfn.children('code').length === 1)) {
                 // only add code to IDL when the definition matches
-                if (dfn[0].dataset.hasOwnProperty("idl") && dfn[0].dataset.title !== $ant[0].textContent.trim()) {
+                const term = $ant[0].textContent.trim();
+                const isIDL = dfn[0].dataset.hasOwnProperty("idl");
+                const isSameText = (isIDL) ? dfn[0].dataset.title === term : dfn[0].textContent.trim() === term;
+                if (isIDL && !isSameText) {
                   return true;
                 }
                 $ant.wrapInner('<code></code>');
