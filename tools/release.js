@@ -9,7 +9,6 @@ const { exec } = require("child_process");
 const fsp = require("fs-promise");
 const loading = require("loading-indicator");
 const path = require("path");
-const presets = require("loading-indicator/presets");
 const w3cBuild = require("./build-w3c-common");
 const MAIN_BRANCH = "develop";
 const DEBUG = false;
@@ -18,7 +17,7 @@ const DEBUG = false;
 require("epipebomb")();
 
 const loadOps = {
-  frames: ["🌕", "🌖", "🌗", "🌘", "🌑", "🌚", "🌚", "🌚", "🌒", "🌓", "🌔", "🌝", "🌝","🌝", "🌝"],
+  frames: ["🌕", "🌖", "🌗", "🌘", "🌑", "🌚", "🌚", "🌚", "🌒", "🌓", "🌔", "🌝", "🌝", "🌝", "🌝"],
   delay: 100,
 };
 
@@ -196,7 +195,7 @@ const Prompts = {
     return async.task(function*() {
       const version = yield Builder.getRespecVersion();
       const commits = yield git("log `git describe --tags --abbrev=0`..HEAD --oneline");
-      if(!commits){
+      if (!commits) {
         console.log(colors.warn("😢  No commits. Nothing to release."));
         return process.exit(1);
       }
@@ -321,7 +320,9 @@ async.task(function*() {
     const version = yield Prompts.askBumpVersion();
     yield Prompts.askBuildAddCommitMergeTag();
     // 3. Run the build script (node tools/build-w3c-common.js).
-    yield w3cBuild.buildW3C("latest");
+    const buildMsg = colors.info(" ⚒ Building, adding, commiting, merging, and tagging ReSpec...");
+    const buildTimer = loading.start(buildMsg, loadOps);
+    yield w3cBuild.buildW3C();
     // 4. Commit your changes (git commit -am v3.x.y)
     yield git(`commit -am v${version}`);
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
@@ -331,6 +332,7 @@ async.task(function*() {
     yield git(`checkout develop`);
     // 6. Tag the release (git tag v3.x.y)
     yield git(`tag -m v${version} v${version}`);
+    loading.stop(buildTimer);
     yield Prompts.askPushAll();
     const pushToServerMsg = colors.info(" 📡  Pushing everything back to server...");
     const pushToServerTimer = loading.start(pushToServerMsg, loadOps);
