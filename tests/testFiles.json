@@ -17,6 +17,7 @@
   "spec/core/inlines-spec.js",
   "spec/core/issues-notes-spec.js",
   "spec/core/jquery-enhanced-spec.js",
+  "spec/core/link-to-dfn-spec.js",
   "spec/core/markdown-spec.js",
   "spec/core/override-configuration-spec.js",
   "spec/core/pre-process-spec.js",
