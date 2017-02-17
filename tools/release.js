@@ -236,7 +236,7 @@ const Prompts = {
   askPushAll() {
     return async.task(function*() {
       const promptOps = {
-        description: `${colors.important("🔥 Ready to make this live? 🔥")}  (last chance!)`,
+        description: `${colors.important("🔥  Ready to make this live? 🔥")}  (last chance!)`,
         pattern: /^[yn]$/i,
         message: "Values can be 'y' or 'n'.",
         default: "y",
@@ -320,7 +320,7 @@ async.task(function*() {
     const version = yield Prompts.askBumpVersion();
     yield Prompts.askBuildAddCommitMergeTag();
     // 3. Run the build script (node tools/build-w3c-common.js).
-    const buildMsg = colors.info(" ⚒ Building, adding, commiting, merging, and tagging ReSpec...");
+    const buildMsg = colors.info(" Building, adding, commiting, merging, and tagging ReSpec... ⚒");
     const buildTimer = loading.start(buildMsg, loadOps);
     yield w3cBuild.buildW3C();
     // 4. Commit your changes (git commit -am v3.x.y)
@@ -334,17 +334,18 @@ async.task(function*() {
     yield git(`tag -m v${version} v${version}`);
     loading.stop(buildTimer);
     yield Prompts.askPushAll();
-    const pushToServerMsg = colors.info(" 📡  Pushing everything back to server...");
+    const pushToServerMsg = colors.info(" Pushing everything back to server... 📡");
     const pushToServerTimer = loading.start(pushToServerMsg, loadOps);
     yield git("push origin develop");
     yield git("push origin gh-pages");
     yield git("push --tags");
     loading.stop(pushToServerTimer);
-    const npmPublishMsg = colors.info(" 📡  Publishing to npm...");
+    const npmPublishMsg = colors.info(" Publishing to npm... 📡");
     const npmPublishTimer = loading.start(npmPublishMsg, loadOps);
     // We give npm publish 2 minute to time out, as it can be slow.
     yield toExecPromise("npm publish", 120000);
     loading.stop(npmPublishTimer);
+
     if (initialBranch !== MAIN_BRANCH) {
       yield Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
     }
