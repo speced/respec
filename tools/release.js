@@ -1,19 +1,26 @@
 #!/usr/bin/env node
 
 "use strict";
-const cmdPrompt = require("prompt");
 const async = require("marcosc-async");
-const fsp = require("fs-promise");
-const path = require("path");
-const w3cBuild = require("./build-w3c-common");
-const Builder = require("./builder").Builder;
-const exec = require("child_process").exec;
+const { Builder } = require("./builder");
+const cmdPrompt = require("prompt");
 const colors = require("colors");
+const { exec } = require("child_process");
+const fsp = require("fs-promise");
+const loading = require("loading-indicator");
+const path = require("path");
+const presets = require("loading-indicator/presets");
+const w3cBuild = require("./build-w3c-common");
 const MAIN_BRANCH = "develop";
-let DEBUG = false;
+const DEBUG = false;
 
 //See: https://github.com/w3c/respec/issues/645
 require("epipebomb")();
+
+const loadOps = {
+  frames: ["🌕", "🌖", "🌗", "🌘", "🌑", "🌚", "🌚", "🌚", "🌒", "🌓", "🌔", "🌝", "🌝","🌝", "🌝"],
+  delay: 100,
+};
 
 colors.setTheme({
   "breaking change": "red",
@@ -164,7 +171,7 @@ const Prompts = {
         if (/^breaking/i.test(line)) {
           return "major";
         }
-        if(/^feat/i.test(line)){
+        if (/^feat/i.test(line)) {
           return "minor";
         }
         return "patch";
@@ -176,9 +183,9 @@ const Prompts = {
       major++;
       minor = 0;
       patch = 0;
-    } else if(changes.has("minor")) {
+    } else if (changes.has("minor")) {
       minor++;
-      patch = 0;       
+      patch = 0;
     } else {
       patch++;
     }
@@ -189,6 +196,10 @@ const Prompts = {
     return async.task(function*() {
       const version = yield Builder.getRespecVersion();
       const commits = yield git("log `git describe --tags --abbrev=0`..HEAD --oneline");
+      if(!commits){
+        console.log(colors.warn("😢  No commits. Nothing to release."));
+        return process.exit(1);
+      }
       const stylizedCommits = this.stylelizeCommits(commits);
       console.log(`\n ## Commits since ${version}`);
       console.log(stylizedCommits, "\n");
@@ -286,8 +297,10 @@ async.task(function*() {
   const initialBranch = yield getCurrentBranch();
   try {
     // 1. Confirm maintainer is on up-to-date and on the develop branch ()
-    console.log(colors.info(" 📡  Performing Git remote update..."));
+    const remoteUpdateMsg = colors.info(" Performing Git remote update... 📡 ");
+    const remoteUpdateTimer = loading.start(remoteUpdateMsg, loadOps);
     yield git(`remote update`);
+    loading.stop(remoteUpdateTimer);
     if (initialBranch !== MAIN_BRANCH) {
       yield Prompts.askSwitchToBranch(initialBranch, MAIN_BRANCH);
     }
@@ -319,13 +332,17 @@ async.task(function*() {
     // 6. Tag the release (git tag v3.x.y)
     yield git(`tag -m v${version} v${version}`);
     yield Prompts.askPushAll();
-    console.log(colors.info(" 📡  Pushing everything back to server..."));
+    const pushToServerMsg = colors.info(" 📡  Pushing everything back to server...");
+    const pushToServerTimer = loading.start(pushToServerMsg, loadOps);
     yield git("push origin develop");
     yield git("push origin gh-pages");
     yield git("push --tags");
-    console.log(colors.info(" 📡  Publishing to npm..."));
+    loading.stop(pushToServerTimer);
+    const npmPublishMsg = colors.info(" 📡  Publishing to npm...");
+    const npmPublishTimer = loading.start(npmPublishMsg, loadOps);
     // We give npm publish 2 minute to time out, as it can be slow.
     yield toExecPromise("npm publish", 120000);
+    loading.stop(npmPublishTimer);
     if (initialBranch !== MAIN_BRANCH) {
       yield Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
     }
