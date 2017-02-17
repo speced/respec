@@ -4,12 +4,12 @@
  * Performs syntax highlighting to all pre and code elements.
  */
 import "deps/regenerator";
-import { pub, sub } from "core/pubsubhub";
-import { makeOwnerSwapper } from "core/utils";
-import { worker } from "core/worker";
 import ghCss from "deps/text!core/css/github.css";
-export const name = "core/highlight";
+import { makeOwnerSwapper } from "core/utils";
+import { pub, sub } from "core/pubsubhub";
+import { worker } from "core/worker";
 
+export const name = "core/highlight";
 // Opportunistically insert the style into the head to reduce FOUC.
 var codeStyle = document.createElement("style");
 codeStyle.textContent = ghCss;

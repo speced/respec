@@ -1,13 +1,14 @@
 // Module core/base-runner
 // The module in charge of running the whole processing pipeline.
-import { pub } from "core/pubsubhub";
 import "core/default-root-attr";
-import { done as preProcessDone } from "core/pre-process";
-import { done as postProcessDone } from "core/post-process";
-import "core/respec-ready";
-import "core/override-configuration";
 import "core/include-config";
+import "core/override-configuration";
 import "core/remove-respec";
+import "core/respec-ready";
+import "deps/regenerator";
+import { done as postProcessDone } from "core/post-process";
+import { done as preProcessDone } from "core/pre-process";
+import { pub } from "core/pubsubhub";
 
 function toRunnable(plug) {
   return config => {

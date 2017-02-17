@@ -10,8 +10,9 @@
 //  fail if you are editing your documents on your local drive. That is due to security
 //  restrictions in the browser.
 
-import { runTransforms } from "core/utils";
+import "deps/regenerator";
 import { pub } from "core/pubsubhub";
+import { runTransforms } from "core/utils";
 
 function processResponse(rawData, id, url) {
   const el = document.querySelector(`[data-include-id=${id}]`)
