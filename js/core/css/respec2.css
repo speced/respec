@@ -279,7 +279,7 @@ table.simple {
     display: block;
     opacity: 0;
     position: fixed;
-    zIndex: 10000;
+    z-index: 10000;
     top: 0px;
     left: 0px;
     height: 100%;
@@ -305,9 +305,9 @@ table.simple {
 }
 
 @media screen and (min-width: 78em) {
-    .respec-modal { 
+    .respec-modal {
         width: 64%;
-    }   
+    }
 }
 
 .respec-modal h3 {
