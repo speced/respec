@@ -292,14 +292,32 @@ function getCurrentBranch() {
   });
 }
 
+class Indicator {
+  constructor(msg) {
+    this.message = msg;
+  }
+  show() {
+    this.id = loading.start(this.message, loadOps);
+  }
+  hide() {
+    loading.stop(this.id);
+  }
+}
+
+const indicators = new Map([
+  ["remote-update", new Indicator(colors.info(" Performing Git remote update... 📡 "))],
+  ["build-merge-tag", new Indicator(colors.info(" Building, adding, commiting, merging, and tagging ReSpec... ⚒"))],
+  ["push-to-server", new Indicator(colors.info(" Pushing everything back to server... 📡"))],
+  ["npm-publish", new Indicator(colors.info(" Publishing to npm... 📡"))],
+]);
+
 async.task(function*() {
   const initialBranch = yield getCurrentBranch();
   try {
     // 1. Confirm maintainer is on up-to-date and on the develop branch ()
-    const remoteUpdateMsg = colors.info(" Performing Git remote update... 📡 ");
-    const remoteUpdateTimer = loading.start(remoteUpdateMsg, loadOps);
+    indicators.get("remote-update").show();
     yield git(`remote update`);
-    loading.stop(remoteUpdateTimer);
+    indicators.get("remote-update").hide();
     if (initialBranch !== MAIN_BRANCH) {
       yield Prompts.askSwitchToBranch(initialBranch, MAIN_BRANCH);
     }
@@ -320,8 +338,7 @@ async.task(function*() {
     const version = yield Prompts.askBumpVersion();
     yield Prompts.askBuildAddCommitMergeTag();
     // 3. Run the build script (node tools/build-w3c-common.js).
-    const buildMsg = colors.info(" Building, adding, commiting, merging, and tagging ReSpec... ⚒");
-    const buildTimer = loading.start(buildMsg, loadOps);
+    indicators.get("build-merge-tag").show();
     yield w3cBuild.buildW3C();
     // 4. Commit your changes (git commit -am v3.x.y)
     yield git(`commit -am v${version}`);
@@ -332,25 +349,23 @@ async.task(function*() {
     yield git(`checkout develop`);
     // 6. Tag the release (git tag v3.x.y)
     yield git(`tag -m v${version} v${version}`);
-    loading.stop(buildTimer);
+    indicators.get("build-merge-tag").hide();
     yield Prompts.askPushAll();
-    const pushToServerMsg = colors.info(" Pushing everything back to server... 📡");
-    const pushToServerTimer = loading.start(pushToServerMsg, loadOps);
+    indicators.get("push-to-server").show();
     yield git("push origin develop");
     yield git("push origin gh-pages");
     yield git("push --tags");
-    loading.stop(pushToServerTimer);
-    const npmPublishMsg = colors.info(" Publishing to npm... 📡");
-    const npmPublishTimer = loading.start(npmPublishMsg, loadOps);
+    indicators.get("push-to-server").hide();
+    indicators.get("npm-publish").show();
     // We give npm publish 2 minute to time out, as it can be slow.
     yield toExecPromise("npm publish", 120000);
-    loading.stop(npmPublishTimer);
+    indicators.get("npm-publish").hide();
 
     if (initialBranch !== MAIN_BRANCH) {
       yield Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
     }
   } catch (err) {
-    console.error(colors.red(`\n ☠️ ${err.message}`));
+    console.error(colors.red(`\n ☠ ${err.message}`));
     const currentBranch = getCurrentBranch();
     if (initialBranch !== currentBranch) {
       yield git(`checkout ${initialBranch}`);
