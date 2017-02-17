@@ -1,5 +1,211 @@
 # Change Log
 
+## [v10.1.9](https://github.com/w3c/respec/tree/v10.1.9) (2017-02-16)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.8...v10.1.9)
+
+**Fixed bugs:**
+
+- ReSpec should warn on unstructured/text specref entries [\#1082](https://github.com/w3c/respec/issues/1082)
+- Menu items don't adapt well on mobile  [\#755](https://github.com/w3c/respec/issues/755)
+
+**Merged pull requests:**
+
+- fix: error if bad specref entry found \(closes \#1082\) [\#1087](https://github.com/w3c/respec/pull/1087) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(respec2.css\): adapt better to mobile \(closes \#755\) [\#1086](https://github.com/w3c/respec/pull/1086) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.1.8](https://github.com/w3c/respec/tree/v10.1.8) (2017-02-16)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.7...v10.1.8)
+
+**Implemented enhancements:**
+
+- ARIA landmarks are not quite correct [\#304](https://github.com/w3c/respec/issues/304)
+- Add a template for use cases [\#60](https://github.com/w3c/respec/issues/60)
+
+**Closed issues:**
+
+- Support JSON-LD as document linked data container [\#671](https://github.com/w3c/respec/issues/671)
+- Investigate using preload for css, scripts, etc [\#663](https://github.com/w3c/respec/issues/663)
+- Subtitles should not use h2 [\#423](https://github.com/w3c/respec/issues/423)
+
+**Merged pull requests:**
+
+- fix\(biblio\): output spec title first \(closes \#857\) [\#1083](https://github.com/w3c/respec/pull/1083) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.1.7](https://github.com/w3c/respec/tree/v10.1.7) (2017-02-14)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.6...v10.1.7)
+
+## [v10.1.6](https://github.com/w3c/respec/tree/v10.1.6) (2017-02-14)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.5...v10.1.6)
+
+## [v10.1.5](https://github.com/w3c/respec/tree/v10.1.5) (2017-02-13)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.4...v10.1.5)
+
+## [v10.1.4](https://github.com/w3c/respec/tree/v10.1.4) (2017-02-13)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.3...v10.1.4)
+
+**Closed issues:**
+
+- stop FOUC [\#326](https://github.com/w3c/respec/issues/326)
+
+**Merged pull requests:**
+
+- fix: Reduce FOUC \(closes \#326\) [\#1079](https://github.com/w3c/respec/pull/1079) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.1.3](https://github.com/w3c/respec/tree/v10.1.3) (2017-02-13)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.2...v10.1.3)
+
+## [v10.1.2](https://github.com/w3c/respec/tree/v10.1.2) (2017-02-13)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.1...v10.1.2)
+
+## [v10.1.1](https://github.com/w3c/respec/tree/v10.1.1) (2017-02-12)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.0...v10.1.1)
+
+## [v10.1.0](https://github.com/w3c/respec/tree/v10.1.0) (2017-02-12)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.0.4...v10.1.0)
+
+**Implemented enhancements:**
+
+- ReSpec warn on section-less headers [\#422](https://github.com/w3c/respec/issues/422)
+- core/inlines could use Ranges [\#378](https://github.com/w3c/respec/issues/378)
+
+**Fixed bugs:**
+
+- Don't \<code\> links unless the text matches. [\#441](https://github.com/w3c/respec/issues/441)
+
+**Closed issues:**
+
+- Move Markdown parsing off main thread [\#1070](https://github.com/w3c/respec/issues/1070)
+- Crash during ui.show\(\) [\#952](https://github.com/w3c/respec/issues/952)
+- Deprecate ED status and edDraftURI [\#809](https://github.com/w3c/respec/issues/809)
+- scroll-to can happen BEFORE respec is really done [\#452](https://github.com/w3c/respec/issues/452)
+- Including a common glossary across multiple documents [\#404](https://github.com/w3c/respec/issues/404)
+- Links to IDL entities should land on \<section\> describing the entity [\#330](https://github.com/w3c/respec/issues/330)
+
+**Merged pull requests:**
+
+- fix\(core/link-to-dfn\): no \<code\> link if no IDL text match \(closes \#441\) [\#1078](https://github.com/w3c/respec/pull/1078) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.0.4](https://github.com/w3c/respec/tree/v10.0.4) (2017-02-12)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.0.3...v10.0.4)
+
+**Merged pull requests:**
+
+- Few more improvements to markdown handling [\#1077](https://github.com/w3c/respec/pull/1077) ([marcoscaceres](https://github.com/marcoscaceres))
+- style: code style fixes [\#1076](https://github.com/w3c/respec/pull/1076) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.0.3](https://github.com/w3c/respec/tree/v10.0.3) (2017-02-10)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.0.2...v10.0.3)
+
+**Merged pull requests:**
+
+- Fix more Markdown madness :\) [\#1075](https://github.com/w3c/respec/pull/1075) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.0.2](https://github.com/w3c/respec/tree/v10.0.2) (2017-02-10)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.0.1...v10.0.2)
+
+**Merged pull requests:**
+
+- fix\(core/utils\): be more careful about chopping whitespace [\#1074](https://github.com/w3c/respec/pull/1074) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.0.1](https://github.com/w3c/respec/tree/v10.0.1) (2017-02-10)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.0.0...v10.0.1)
+
+**Merged pull requests:**
+
+- fix\(core/utils\): fix markdown edge cases [\#1073](https://github.com/w3c/respec/pull/1073) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update snyk to version 1.25.0 🚀 [\#1072](https://github.com/w3c/respec/pull/1072) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+
+## [v10.0.0](https://github.com/w3c/respec/tree/v10.0.0) (2017-02-08)
+[Full Changelog](https://github.com/w3c/respec/compare/v9.2.0...v10.0.0)
+
+**Merged pull requests:**
+
+- fix\(core/markdown\): elements are not corrently positioned [\#1071](https://github.com/w3c/respec/pull/1071) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat: significantly improve ARIA support [\#1065](https://github.com/w3c/respec/pull/1065) ([marcoscaceres](https://github.com/marcoscaceres))
+- Allow additional logo in CG spec [\#821](https://github.com/w3c/respec/pull/821) ([nickevansuk](https://github.com/nickevansuk))
+
+## [v9.2.0](https://github.com/w3c/respec/tree/v9.2.0) (2017-02-08)
+[Full Changelog](https://github.com/w3c/respec/compare/v9.1.0...v9.2.0)
+
+**Closed issues:**
+
+- Create Turtle syntax highlighter for highlight.js [\#1063](https://github.com/w3c/respec/issues/1063)
+
+**Merged pull requests:**
+
+- webidl2@2.2.2 breaks build 🚨 [\#1069](https://github.com/w3c/respec/pull/1069) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+
+## [v9.1.0](https://github.com/w3c/respec/tree/v9.1.0) (2017-02-02)
+[Full Changelog](https://github.com/w3c/respec/compare/v9.0.0...v9.1.0)
+
+**Merged pull requests:**
+
+- feat\(core/markdown\): allow syntax highlight off main thread [\#1066](https://github.com/w3c/respec/pull/1066) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v9.0.0](https://github.com/w3c/respec/tree/v9.0.0) (2017-02-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v8.9.0...v9.0.0)
+
+**Closed issues:**
+
+- Deprecate XHTML 1.0 export [\#760](https://github.com/w3c/respec/issues/760)
+
+**Merged pull requests:**
+
+- perf\(core/include-config\): add script after end-all [\#1062](https://github.com/w3c/respec/pull/1062) ([marcoscaceres](https://github.com/marcoscaceres))
+- Feat\(save-html\): remove XHTML 1.0 save support [\#762](https://github.com/w3c/respec/pull/762) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v8.9.0](https://github.com/w3c/respec/tree/v8.9.0) (2017-02-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v8.8.0...v8.9.0)
+
+## [v8.8.0](https://github.com/w3c/respec/tree/v8.8.0) (2017-02-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v8.7.1...v8.8.0)
+
+**Implemented enhancements:**
+
+- Move syntax highlight to web worker.  [\#964](https://github.com/w3c/respec/issues/964)
+
+**Closed issues:**
+
+- data-cite values are case-sensitive [\#1047](https://github.com/w3c/respec/issues/1047)
+- Documentation/wiki: example for `data-merge` [\#1036](https://github.com/w3c/respec/issues/1036)
+
+**Merged pull requests:**
+
+- feat\(core/highlight\): allow highlighting code blocks [\#1061](https://github.com/w3c/respec/pull/1061) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat: do syntax highlighting in web worker \(closes \#964\) [\#1060](https://github.com/w3c/respec/pull/1060) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update command-line-args to version 4.0.0 🚀 [\#1059](https://github.com/w3c/respec/pull/1059) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Update snyk to version 1.24.6 🚀 [\#1056](https://github.com/w3c/respec/pull/1056) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Update snyk to version 1.24.5 🚀 [\#1053](https://github.com/w3c/respec/pull/1053) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- tests: run karma against build instead [\#1049](https://github.com/w3c/respec/pull/1049) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v8.7.1](https://github.com/w3c/respec/tree/v8.7.1) (2017-01-18)
+[Full Changelog](https://github.com/w3c/respec/compare/v8.7.0...v8.7.1)
+
+**Merged pull requests:**
+
+- fix\(core/link-to-dfn\): clean up after deferred linking [\#1048](https://github.com/w3c/respec/pull/1048) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v8.7.0](https://github.com/w3c/respec/tree/v8.7.0) (2017-01-17)
+[Full Changelog](https://github.com/w3c/respec/compare/v8.6.0...v8.7.0)
+
+**Merged pull requests:**
+
+- feat: enable data-cite on dfn [\#1046](https://github.com/w3c/respec/pull/1046) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v8.6.0](https://github.com/w3c/respec/tree/v8.6.0) (2017-01-17)
+[Full Changelog](https://github.com/w3c/respec/compare/v8.5.0...v8.6.0)
+
+**Closed issues:**
+
+- Non lowercase-only overloaded operations not detected [\#1042](https://github.com/w3c/respec/issues/1042)
+
+**Merged pull requests:**
+
+- feat\(webidl-contiguous\): no-link-warnings disables idl link warnings \(closes \#1027\) [\#1045](https://github.com/w3c/respec/pull/1045) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update command-line-usage to version 4.0.0 🚀 [\#1044](https://github.com/w3c/respec/pull/1044) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+- Search in lowercase for overloaded operations [\#1043](https://github.com/w3c/respec/pull/1043) ([dontcallmedom](https://github.com/dontcallmedom))
+- fix\(template/headers\): Delete link to translations page \(closes \#983\) [\#1041](https://github.com/w3c/respec/pull/1041) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v8.5.0](https://github.com/w3c/respec/tree/v8.5.0) (2017-01-16)
 [Full Changelog](https://github.com/w3c/respec/compare/v8.4.2...v8.5.0)
 
