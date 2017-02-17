@@ -945,6 +945,8 @@ define(
       // Mark the definition as code.
       dfn.attr("id", "dom-" + (parent ? parent + "-" : "") + name);
       dfn.attr("data-idl", "");
+      dfn.attr("data-title", dfn[0].textContent);
+
       dfn.attr("data-dfn-for", parent);
       if (dfn.children("code").length === 0 && dfn.parents("code").length === 0)
         dfn.wrapInner("<code></code>");
