@@ -200,7 +200,9 @@ const Prompts = {
         return process.exit(1);
       }
       const stylizedCommits = this.stylelizeCommits(commits);
-      console.log(`\n ## Commits since ${version}`);
+
+      console.log(`\n 🎁  Commits since ${version} \n`);
+
       console.log(stylizedCommits, "\n");
       if (!version) {
         throw new Error("Version string not found in package.json");
@@ -365,7 +367,7 @@ async.task(function*() {
       yield Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
     }
   } catch (err) {
-    console.error(colors.red(`\n ☠ ${err.message}`));
+    console.error(colors.red(`\n☠  ${err.message}`));
     const currentBranch = getCurrentBranch();
     if (initialBranch !== currentBranch) {
       yield git(`checkout ${initialBranch}`);
