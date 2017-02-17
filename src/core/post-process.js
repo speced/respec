@@ -8,8 +8,8 @@
  *      want to be using a new module with your own profile.
  *  - afterEnd: final thing that is called.
  */
-import { sub } from "core/pubsubhub";
 import "deps/regenerator";
+import { sub } from "core/pubsubhub";
 
 let doneResolver;
 export const done = new Promise(resolve => {

@@ -43,7 +43,6 @@ define([
     "deps/domReady",
     "core/base-runner",
     "core/ui",
-    "deps/regenerator",
     "core/aria",
     "core/style",
     "w3c/style",
@@ -87,7 +86,7 @@ define([
     /*Linter must be the last thing to run*/
     "w3c/linter",
   ],
-  function(domReady, runner, ui, regenerator) {
+  function(domReady, runner, ui) {
     var args = Array.from(arguments).filter(function(item) {
       return item;
     });

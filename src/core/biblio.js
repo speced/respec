@@ -5,11 +5,11 @@
 
 /*jshint jquery: true*/
 /*globals console*/
-"use strict";
-import { biblioDB } from "core/biblio-db";
-import { pub } from "core/pubsubhub";
-import { createResourceHint } from "core/utils";
+
 import "deps/regenerator";
+import { biblioDB } from "core/biblio-db";
+import { createResourceHint } from "core/utils";
+import { pub } from "core/pubsubhub";
 
 const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
 
