@@ -10,6 +10,7 @@
  *
  */
 /*globals IDBKeyRange, DOMException, console */
+import "deps/regenerator";
 import { pub } from "core/pubsubhub";
 
 const ALLOWED_TYPES = new Set(["alias", "reference"]);
