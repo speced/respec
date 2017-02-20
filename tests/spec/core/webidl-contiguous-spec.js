@@ -12,6 +12,33 @@ describe("Core - Contiguous WebIDL", function() {
     }, "spec/core/webidl-contiguous.html").then(done);
   });
 
+  it("links standardized IDL types to WebIDL spec", done => {
+    const idl = doc.querySelector("#linkToIDLSpec>pre");
+    // [Constructor(sequence<DOMString> methodData), SecureContext]
+    const sequences = idl.querySelectorAll(`a[href="https://heycam.github.io/webidl/#idl-sequence"]`);
+    expect(sequences.length).toEqual(1);
+    const sequence = sequences[0];
+
+    //sequence<DOMString>
+    expect(sequence.nextElementSibling.localName).toEqual("a");
+    expect(sequence.nextElementSibling.href.endsWith("#idl-DOMString")).toBe(true);
+
+    // readonly attribute DOMString? aBoolAttribute;
+    const attr = idl.querySelector("#idl-def-linkingtest-aboolattribute");
+    const domString = attr.querySelector("a");
+    expect(domString.textContent).toEqual("DOMString");
+    expect(domString.href.endsWith("#idl-DOMString")).toBe(true);
+
+    // Promise&lt;void> returnsPromise(unsigned long long argument);
+    const returnsPromise = idl.querySelector(`*[data-title="returnsPromise"]`);
+    const [promiseLink, unsignedLongLink] = returnsPromise.querySelectorAll("a");
+    expect(promiseLink.textContent).toEqual("Promise");
+    expect(promiseLink.href.endsWith("#idl-promise")).toBe(true);
+    expect(unsignedLongLink.textContent).toEqual("unsigned long long");
+    expect(unsignedLongLink.href.endsWith("#idl-unsigned-long-long")).toBe(true);
+    done();
+  });
+
   it("links to fully qualified method names", done => {
     var t1 = new URL(doc.getElementById("fullyQualifiedNoParens-1")).hash;
     expect(t1).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
