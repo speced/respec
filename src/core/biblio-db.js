@@ -6,12 +6,11 @@
  *
  * It's a standalone module that can be imported into other modules.
  *
- * It exports { biblioDB }
- *
  */
 /*globals IDBKeyRange, DOMException, console */
 import "deps/regenerator";
 import { pub } from "core/pubsubhub";
+export const name = "core/biblio-db";
 
 const ALLOWED_TYPES = new Set(["alias", "reference"]);
 // Database initialization, tracked by "readyPromise"

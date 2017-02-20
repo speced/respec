@@ -1,5 +1,5 @@
 /**
- * Module core/preProcess
+ * Module core/pre-process
  *
  * Corresponds to respecConfig.preProcess.
  *  - preProcess: an array of functions that get called
@@ -9,6 +9,8 @@
  */
 import "deps/regenerator";
 import { sub } from "core/pubsubhub";
+
+export const name = "core/pre-process";
 
 let doneResolver;
 export const done = new Promise(resolve => {

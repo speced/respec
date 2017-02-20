@@ -1,6 +1,7 @@
 // Module core/include-config
 // Inject's the document's configuration into the head as JSON.
 import { sub } from "core/pubsubhub";
+export const name = "core/include-config";
 
 function confFilter(key, val) {
   switch (key) {

@@ -1,5 +1,5 @@
 /**
- * Module core/postProcess
+ * Module core/post-process
  *
  * Corresponds to respecConfig.postProcess and config.afterEnd.
  *  - postProcess: an array of functions that get called
@@ -10,6 +10,8 @@
  */
 import "deps/regenerator";
 import { sub } from "core/pubsubhub";
+
+export const name = "core/post-process";
 
 let doneResolver;
 export const done = new Promise(resolve => {

@@ -1,5 +1,7 @@
 import { sub } from "core/pubsubhub";
 
+export const name = "core/aria";
+
 document.body.setAttribute("aria-busy", "true");
 
 sub("end-all", () => {

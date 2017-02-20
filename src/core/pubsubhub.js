@@ -6,6 +6,8 @@
  */
 const subscriptions = new Map();
 
+export const name = "core/pubsubhub";
+
 export function pub(topic, ...data) {
   if (!subscriptions.has(topic)) {
     return; // Nothing to do...

@@ -14,6 +14,8 @@ import "deps/regenerator";
 import { pub } from "core/pubsubhub";
 import { runTransforms } from "core/utils";
 
+export const name = "core/data-include";
+
 function processResponse(rawData, id, url) {
   const el = document.querySelector(`[data-include-id=${id}]`)
   const doc = el.ownerDocument;

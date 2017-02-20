@@ -11,6 +11,8 @@ import { biblioDB } from "core/biblio-db";
 import { createResourceHint } from "core/utils";
 import { pub } from "core/pubsubhub";
 
+export const name = "core/biblio";
+
 const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
 
 // Normative references take precedence over informative ones,
@@ -136,8 +138,8 @@ function bibref(conf) {
   for (var k in aliases) {
     if (aliases[k].length > 1) {
       let msg = `[${k}] is referenced in ${aliases[k].length} ways: `;
-      msg += `(${$aliases[k].map(item => `'${item}'`).join(", ")}). This causes`;
-      msg += `duplicate entries in the reference section.`;
+      msg += `(${aliases[k].map(item => `'${item}'`).join(", ")}). This causes`;
+      msg += ` duplicate entries in the reference section.`;
       pub("warn", msg);
     }
   }
