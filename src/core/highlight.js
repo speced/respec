@@ -40,10 +40,6 @@ export async function run(conf, doc, cb) {
     swapStyleOwner(doc.head);
   }
 
-  if (doc.querySelector(".highlight")) {
-    pub("warn", "pre elements don't need a 'highlight' class anymore.");
-  }
-
   const promisesToHighlight = Array
     .from(
       doc.querySelectorAll("pre:not(.idl):not(.nohighlight),code.highlight")
