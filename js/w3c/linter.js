@@ -10,15 +10,17 @@ define(["core/pubsubhub"], function(pubsubhub) {
    * @return {Boolean} Returns true if section is found.
    */
   function hasPriSecConsiderations(doc) {
-    const privOrSecRegex = /(privacy|security)/igm;
-    const considerationsRegex = /(considerations)/igm;
+    const privOrSecRegex = /(privacy|security)/im;
+    const considerationsRegex = /(considerations)/im;
     return Array
       .from(doc.querySelectorAll("h2, h3, h4, h5, h6"))
       .map(function(elem) {
         return elem.textContent;
       })
       .some(function(text) {
-        return (privOrSecRegex.test(text) && considerationsRegex.test(text)) || privOrSecRegex.test(text);
+        const saysPrivOrSec = privOrSecRegex.test(text);
+        const sayConsiderations = considerationsRegex.test(text);
+        return (saysPrivOrSec && sayConsiderations) || saysPrivOrSec;
       });
   }
 
