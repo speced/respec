@@ -229,4 +229,4 @@ export function run(conf, doc, cb) {
   newBody.appendChild(rsUI);
   doc.body.parentNode.replaceChild(newBody, doc.body);
   cb();
-};
+}
