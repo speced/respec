@@ -1019,7 +1019,7 @@ define(
       if (dfns.length === 0) {
         const showWarnings = type && idlElem && idlElem.classList.contains("no-link-warnings") === false;
         if (showWarnings) {
-          let msg = "No <dfn> for " + originalName + (originalParent ? " in " + originalParent : "") + ".";
+          var msg = "No <dfn> for " + originalName + (originalParent ? " in " + originalParent : "") + ".";
           msg += " Please define it and link to spec that declares it. See https://github.com/w3c/respec/wiki/data--cite";
           pubsubhub.pub("warn", msg);
         }
