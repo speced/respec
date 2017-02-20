@@ -302,7 +302,7 @@ export function joinAnd(arr, mapper) {
     if (i > 0) {
       if (n === 2) ret += " ";
       else ret += ", ";
-      if (i == n - 1) ret += "and ";
+      if (i === n - 1) ret += "and ";
     }
     ret += mapper(arr[i], i);
   }
@@ -335,7 +335,7 @@ export function concatDate(date, sep) {
 // takes a string, prepends a "0" if it is of length 1, does nothing otherwise
 export function lead0(str) {
   str = "" + str;
-  return (str.length == 1) ? "0" + str : str;
+  return (str.length === 1) ? "0" + str : str;
 }
 
 // takes a YYYY-MM-DD date and returns a Date object for it
