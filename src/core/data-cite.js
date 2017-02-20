@@ -16,6 +16,8 @@
 import "deps/regenerator";
 import { pub } from "core/pubsubhub";
 import { resolveRef } from "core/biblio";
+export const name = "core/data-cite";
+
 
 async function toLookupRequest(elem) {
   const originalKey = elem.dataset.cite;

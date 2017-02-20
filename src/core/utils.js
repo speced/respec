@@ -5,6 +5,8 @@
 // anywhere else.
 import { pub } from "core/pubsubhub";
 
+export const name = "core/utils";
+
 const inlineElems = new Set([
   "a",
   "abbr",

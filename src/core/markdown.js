@@ -48,6 +48,8 @@ import { normalizePadding } from "core/utils";
 import beautify from "deps/beautify-html";
 import beautifyOps from "core/beautify-options";
 
+export const name = "core/markdown";
+
 marked.setOptions({
   sanitize: false,
   gfm: true,

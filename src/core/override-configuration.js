@@ -9,6 +9,8 @@
 //  There could probably be a UI for this to make it even simpler.
 import { sub } from "core/pubsubhub";
 
+export const name = "core/override-configuration";
+
 function overrideConfig(config) {
   if (!document.location.search) {
     return;

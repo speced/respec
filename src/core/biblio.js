@@ -11,6 +11,8 @@ import { biblioDB } from "core/biblio-db";
 import { createResourceHint } from "core/utils";
 import { pub } from "core/pubsubhub";
 
+export const name = "core/biblio";
+
 const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
 
 // Normative references take precedence over informative ones,

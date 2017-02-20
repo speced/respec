@@ -10,6 +10,8 @@ import { done as postProcessDone } from "core/post-process";
 import { done as preProcessDone } from "core/pre-process";
 import { pub } from "core/pubsubhub";
 
+export const name = "core/base-runner";
+
 function toRunnable(plug) {
   return config => {
     return new Promise((resolve, reject) => {

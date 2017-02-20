@@ -4,6 +4,7 @@
  * Exports a Web Worker for ReSpec, allowing for
  * multi-threaded processing of things.
  */
+export const name = "core/worker";
 
 // Opportunistically preload syntax highlighter, which is used by the worker
 import { createResourceHint } from "core/utils";

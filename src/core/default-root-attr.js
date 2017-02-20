@@ -4,6 +4,8 @@
 // specified values).
 // Be careful in using this that these defaults make sense for the type of document you are
 // publishing.
+export const name = "core/default-root-attr";
+
 const html = document.querySelector("html");
 if (!html.hasAttribute("lang")) {
   html.lang = "en";
