@@ -8,21 +8,21 @@ describe("W3C - Linter", function() {
     });
   });
   describe("hasPriSecConsiderations", function() {
-    it("ignores just privacy sections", function() {
+    it("finds just privacy sections", function() {
       var doc = document.implementation.createHTMLDocument("test doc");
       expect(linter.rules.hasPriSecConsiderations(doc)).toEqual(false);
       var elem = doc.createElement("h2");
       elem.innerHTML = "the privacy of things";
       doc.body.appendChild(elem);
-      expect(linter.rules.hasPriSecConsiderations(doc)).toEqual(false);
+      expect(linter.rules.hasPriSecConsiderations(doc)).toEqual(true);
     });
-    it("ignores just security sections", function() {
+    it("finds just security sections", function() {
       var doc = document.implementation.createHTMLDocument("test doc");
       expect(linter.rules.hasPriSecConsiderations(doc)).toEqual(false);
       var elem = doc.createElement("h2");
       elem.innerHTML = "security of things";
       doc.body.appendChild(elem);
-      expect(linter.rules.hasPriSecConsiderations(doc)).toEqual(false);
+      expect(linter.rules.hasPriSecConsiderations(doc)).toEqual(true);
     });
     it("ignores just considerations sections", function() {
       var doc = document.implementation.createHTMLDocument("test doc");
