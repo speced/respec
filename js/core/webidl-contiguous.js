@@ -980,7 +980,7 @@ define(
           try {
             parse = webidl2.parse($(this).text(), { ws: true });
           } catch (e) {
-            pubsubhub.pub("error", "Failed to parse <pre>" + $idl.text() + "</pre> as IDL: " + (e.stack || e));
+            pubsubhub.pub("error", "Failed to parse WebIDL: \n```\n" + this.textContent + "\n```\n" + (e.message || e)) + ".";
             // Skip this <pre> and move on to the next one.
             return;
           }
