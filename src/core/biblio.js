@@ -139,7 +139,7 @@ function bibref(conf) {
     if (aliases[k].length > 1) {
       let msg = `[${k}] is referenced in ${aliases[k].length} ways: `;
       msg += `(${aliases[k].map(item => `'${item}'`).join(", ")}). This causes`;
-      msg += `duplicate entries in the reference section.`;
+      msg += ` duplicate entries in the reference section.`;
       pub("warn", msg);
     }
   }
