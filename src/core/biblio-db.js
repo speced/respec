@@ -27,7 +27,7 @@ const readyPromise = new Promise((resolve, reject) => {
   request.onsuccess = () => {
     resolve(request.result);
   };
-  request.onupgradeneeded = function() {
+  request.onupgradeneeded = async () => {
     const db = request.result;
     Array
       .from(db.objectStoreNames)
@@ -55,9 +55,7 @@ const readyPromise = new Promise((resolve, reject) => {
         }
       }),
     ];
-    Promise
-      .all(promisesToCreateSchema)
-      .catch(reject);
+    await Promise.all(promisesToCreateSchema);
   };
 });
 

@@ -75,9 +75,9 @@ export function stringifyReference(ref) {
 function bibref(conf) {
   // this is in fact the bibref processing portion
   var badrefs = {};
-  var refs = getRefKeys(conf);
-  var informs = refs.informativeReferences;
-  var norms = refs.normativeReferences;
+  var refKeys = getRefKeys(conf);
+  var informs = refKeys.informativeReferences;
+  var norms = refKeys.normativeReferences;
   var aliases = {};
 
   if (!informs.length && !norms.length && !conf.refNote) return;
