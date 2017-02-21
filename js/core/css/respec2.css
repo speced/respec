@@ -5,14 +5,11 @@
 
 
 /* Override code highlighter background */
-
 .hljs {
   background: transparent !important;
 }
 
-
 /* --- INLINES --- */
-
 em.rfc2119 {
   text-transform: lowercase;
   font-style: normal;
@@ -381,6 +378,10 @@ table.simple {
   display: inline-block;
   position: relative;
   background: url(data:image/gif;base64,R0lGODdhBAADAPEAANv///8AAP///wAAACwAAAAABAADAEACBZQjmIAFADs=) bottom repeat-x;
+}
+
+.respec-dfn-list {
+  column-count: 2;
 }
 
 @media print {
