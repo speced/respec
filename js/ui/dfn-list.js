@@ -6,7 +6,7 @@ define(
     const button = ui.addCommand("Definition List", "ui/dfn-list", "Ctrl+Shift+Alt+D", "📔");
     return {
       show: function() {
-        var $halp = $("<ul></ul>");
+        var $halp = $("<ul class='respec-dfn-list'></ul>");
         Object.keys(window.respecConfig.definitionMap).sort().forEach(function(title) {
           window.respecConfig.definitionMap[title].forEach(function(dfn) {
             // Link to definition
