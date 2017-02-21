@@ -13,12 +13,18 @@ import { pub } from "core/pubsubhub";
 export const name = "core/base-runner";
 
 function toRunnable(plug) {
+  const name = plug.hasOwnProperty("name") ? plug.name : "";
   return config => {
     return new Promise((resolve, reject) => {
-      plug.run(config, document, resolve);
-      setTimeout(() => {
-        reject(new Error("Plugin took too long."));
-      }, 5000);
+      const timerId = setTimeout(() => {
+        const msg = `Plugin ${name} took too long.`;
+        console.error(msg, plug);
+        reject(new Error(msg));
+      }, 15000);
+      plug.run(config, document, () => {
+        clearTimeout(timerId);
+        resolve();
+      });
     });
   };
 }
