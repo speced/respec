@@ -383,6 +383,9 @@ table.simple {
 .respec-dfn-list {
   column-count: 2;
 }
+.respec-dfn-list li {
+  list-style: none;
+}
 
 @media print {
   .removeOnSave {
