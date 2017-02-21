@@ -65,7 +65,7 @@
     "jscs:fix": "jscs --esnext --fix tests",
     "jshint": "jshint karma.conf.js tests tools js/w3c/linter.js js/core/dfn.js js/core/data-transform.js",
     "karma": "karma start --single-run",
-    "prepublish": "npm run build:highlight && npm run copydeps && npm run snyk-protect",
+    "prepublish": "npm run build:highlight && npm run copydeps && npm run babel:build && npm run snyk-protect",
     "pretest": "npm run jshint && npm run jscs",
     "server": "npm start",
     "snyk-protect": "snyk protect",
