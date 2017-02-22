@@ -3,6 +3,6 @@ These source files are transpiled by Babel.
 
 Run:
 
-```
-npm start
+```Bash
+npm build:babel
 ```
