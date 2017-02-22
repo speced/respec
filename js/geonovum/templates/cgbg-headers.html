@@ -1,0 +1,115 @@
+<div class='head'>
+  <p>
+    <a class='logo' href='https://www.w3.org/'><img width='72' height='48' src='https://www.w3.org/StyleSheets/TR/2016/logos/W3C' alt='W3C'></a>
+  </p>
+  {{#if logos}}
+    {{showLogos logos}}
+  {{/if}}
+  <h1 class='title p-name' id='title'{{#if doRDFa}} property='dc:title'{{/if}}>{{title}}</h1>
+  {{#if subtitle}}
+    <h2 {{#if doRDFa}}property='bibo:subtitle' {{/if}}id='subtitle'>{{subtitle}}</h2>
+  {{/if}}
+  <h2>{{longStatus}} <time {{#if doRDFa}}property="dc:issued"{{/if}}class='dt-published' datetime='{{dashDate}}'>{{publishHumanDate}}</time></h2>
+  <dl>
+    {{#if thisVersion}}
+      <dt>{{l10n.this_version}}</dt>
+      <dd><a class='u-url' href='{{thisVersion}}'>{{thisVersion}}</a></dd>
+    {{/if}}
+    {{#if latestVersion}}
+      <dt>{{l10n.latest_published_version}}</dt>
+      <dd><a href='{{latestVersion}}'>{{latestVersion}}</a></dd>
+    {{/if}}
+    {{#if edDraftURI}}
+      <dt>{{l10n.latest_editors_draft}}</dt>
+      <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
+    {{/if}}
+    {{#if testSuiteURI}}
+      <dt>Test suite:</dt>
+      <dd><a href='{{testSuiteURI}}'>{{testSuiteURI}}</a></dd>
+    {{/if}}
+    {{#if implementationReportURI}}
+      <dt>Implementation report:</dt>
+      <dd><a href='{{implementationReportURI}}'>{{implementationReportURI}}</a></dd>
+    {{/if}}
+    {{#if bugTrackerHTML}}
+      <dt>{{l10n.bug_tracker}}</dt>
+      <dd>{{{bugTrackerHTML}}}</dd>
+    {{/if}}
+    {{#if prevVersion}}
+      <dt>Previous version:</dt>
+      <dd><a {{#if doRDFa}}rel="dcterms:replaces"{{/if}} href='{{prevVersion}}'>{{prevVersion}}</a></dd>
+    {{/if}}
+    {{#unless isCGFinal}}
+      {{#if prevED}}
+        <dt>Previous editor's draft:</dt>
+        <dd><a href='{{prevED}}'>{{prevED}}</a></dd>
+      {{/if}}
+    {{/unless}}
+    <dt>{{#if multipleEditors}}{{l10n.editors}}{{else}}{{l10n.editor}}{{/if}}</dt>
+    {{showPeople "Editor" editors}}
+    {{#if authors}}
+      <dt>{{#if multipleAuthors}}{{l10n.authors}}{{else}}{{l10n.author}}{{/if}}</dt>
+      {{showPeople "Author" authors}}
+    {{/if}}
+    {{#if otherLinks}}
+      {{#each otherLinks}}
+        {{#if key}}
+          <dt {{#if class}}class="{{class}}"{{/if}}>{{key}}:</dt>
+          {{#if data}}
+             {{#each data}}
+                {{#if value}}
+                  <dd {{#if class}}class="{{class}}"{{/if}}>
+                    {{#if href}}<a href="{{href}}">{{/if}}
+                      {{value}}
+                    {{#if href}}</a>{{/if}}
+                  </dd>
+                {{else}}
+                  {{#if href}}
+                    <dd><a href="{{href}}">{{href}}</a></dd>
+                  {{/if}}
+                {{/if}}
+             {{/each}}
+          {{else}}
+            {{#if value}}
+              <dd {{#if class}}class="{{class}}"{{/if}}>
+                {{#if href}}<a href="{{href}}">{{/if}}
+                  {{value}}
+                {{#if href}}</a>{{/if}}
+              </dd>
+            {{else}}
+              {{#if href}}
+                <dd {{#if class}}class="{{class}}"{{/if}}>
+                  <a href="{{href}}">{{href}}</a>
+                </dd>
+              {{/if}}
+            {{/if}}
+          {{/if}}
+        {{/if}}
+      {{/each}}
+    {{/if}}
+  </dl>
+  {{#if alternateFormats}}
+    <p>
+      {{#if multipleAlternates}}
+        This document is also available in these non-normative formats: 
+      {{else}}
+        This document is also available in this non-normative format: 
+      {{/if}}
+      {{{alternatesHTML}}}
+    </p>
+  {{/if}}
+  <p class='copyright'>
+    <a href='https://www.w3.org/Consortium/Legal/ipr-notice#Copyright'>Copyright</a> &copy;
+    {{#if copyrightStart}}{{copyrightStart}}-{{/if}}{{publishYear}}
+    the Contributors to the {{title}} Specification, published by the
+    <a href='{{wgURI}}'>{{wg}}</a> under the
+    {{#if isCGFinal}}
+      <a href="https://www.w3.org/community/about/agreements/fsa/">W3C Community Final Specification Agreement (FSA)</a>. 
+      A human-readable <a href="https://www.w3.org/community/about/agreements/fsa-deed/">summary</a> is available.
+    {{else}}
+      <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+      A human-readable <a href="https://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available.
+    {{/if}}
+  </p>
+  <hr title="Separator for header">
+</div>
