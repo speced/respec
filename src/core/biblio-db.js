@@ -17,7 +17,7 @@ const ALLOWED_TYPES = new Set(["alias", "reference"]);
 const readyPromise = new Promise((resolve, reject) => {
   let request;
   try {
-    request = window.indexedDB.open("respec-biblio", 1);
+    request = window.indexedDB.open("respec-biblio2", 12);
   } catch (err) {
     return reject(err);
   }
@@ -27,7 +27,7 @@ const readyPromise = new Promise((resolve, reject) => {
   request.onsuccess = () => {
     resolve(request.result);
   };
-  request.onupgradeneeded = async () => {
+  request.onupgradeneeded = async() => {
     const db = request.result;
     Array
       .from(db.objectStoreNames)
@@ -40,22 +40,29 @@ const readyPromise = new Promise((resolve, reject) => {
           const store = db.createObjectStore("alias", { keyPath: "id" });
           store.createIndex("aliasOf", "aliasOf", { unique: false });
           store.transaction.oncomplete = resolve;
+          store.transaction.onerror = reject;
         } catch (err) {
           reject(err);
         }
       }),
       new Promise((resolve, reject) => {
         try {
-          db
+          const transaction = db
             .createObjectStore("reference", { keyPath: "id" })
-            .transaction
-            .oncomplete = resolve;
+            .transaction;
+          transaction.oncomplete = resolve;
+          transaction.onerror = reject;
         } catch (err) {
           reject(err);
         }
       }),
     ];
-    await Promise.all(promisesToCreateSchema);
+    try {
+      await Promise.all(promisesToCreateSchema);
+      resolve();
+    } catch (err) {
+      reject(err);
+    }
   };
 });
 
