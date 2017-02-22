@@ -1,5 +1,107 @@
 # Change Log
 
+## [v10.4.0](https://github.com/w3c/respec/tree/v10.4.0) (2017-02-21)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.3.0...v10.4.0)
+
+**Implemented enhancements:**
+
+- Better support for illegal-example [\#62](https://github.com/w3c/respec/issues/62)
+
+## [v10.3.0](https://github.com/w3c/respec/tree/v10.3.0) (2017-02-21)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.2.1...v10.3.0)
+
+**Closed issues:**
+
+- Linter should have own pill [\#1100](https://github.com/w3c/respec/issues/1100)
+- Use async evaluate\(\) in respec2html [\#951](https://github.com/w3c/respec/issues/951)
+
+**Merged pull requests:**
+
+- Refactor w3c/rfc2119  [\#1102](https://github.com/w3c/respec/pull/1102) ([marcoscaceres](https://github.com/marcoscaceres))
+- Small bug fixes... [\#1101](https://github.com/w3c/respec/pull/1101) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.2.1](https://github.com/w3c/respec/tree/v10.2.1) (2017-02-20)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.2.0...v10.2.1)
+
+**Fixed bugs:**
+
+- data-cite regression [\#1094](https://github.com/w3c/respec/issues/1094)
+
+**Merged pull requests:**
+
+- Linter priv sec again [\#1099](https://github.com/w3c/respec/pull/1099) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.2.0](https://github.com/w3c/respec/tree/v10.2.0) (2017-02-20)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.18...v10.2.0)
+
+**Implemented enhancements:**
+
+- Link \[CEReactions\], and maybe other IDL extended attributes, to their definition [\#702](https://github.com/w3c/respec/issues/702)
+
+**Closed issues:**
+
+- IDL parsing error is quite unhelpful [\#1057](https://github.com/w3c/respec/issues/1057)
+
+**Merged pull requests:**
+
+- Link to idl defs [\#1098](https://github.com/w3c/respec/pull/1098) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.1.18](https://github.com/w3c/respec/tree/v10.1.18) (2017-02-17)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.17...v10.1.18)
+
+## [v10.1.17](https://github.com/w3c/respec/tree/v10.1.17) (2017-02-17)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.16...v10.1.17)
+
+## [v10.1.16](https://github.com/w3c/respec/tree/v10.1.16) (2017-02-17)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.15...v10.1.16)
+
+## [v10.1.15](https://github.com/w3c/respec/tree/v10.1.15) (2017-02-17)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.14...v10.1.15)
+
+## [v10.1.14](https://github.com/w3c/respec/tree/v10.1.14) (2017-02-17)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.13...v10.1.14)
+
+**Fixed bugs:**
+
+- Fix a CSS property [\#1096](https://github.com/w3c/respec/pull/1096) ([tripu](https://github.com/tripu))
+
+## [v10.1.13](https://github.com/w3c/respec/tree/v10.1.13) (2017-02-17)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.12...v10.1.13)
+
+**Closed issues:**
+
+- Use monospace font for \<a\>s that link back to IDL [\#1088](https://github.com/w3c/respec/issues/1088)
+
+**Merged pull requests:**
+
+- fix: use monospace font for \<a\>s that link back to IDL [\#1095](https://github.com/w3c/respec/pull/1095) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.1.12](https://github.com/w3c/respec/tree/v10.1.12) (2017-02-17)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.11...v10.1.12)
+
+**Fixed bugs:**
+
+- Template string bug [\#1091](https://github.com/w3c/respec/issues/1091)
+
+**Merged pull requests:**
+
+- fix: import regenerator when needed makes things less racy [\#1093](https://github.com/w3c/respec/pull/1093) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/biblio\): template string \(closes \#1091\) [\#1092](https://github.com/w3c/respec/pull/1092) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.1.11](https://github.com/w3c/respec/tree/v10.1.11) (2017-02-16)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.10...v10.1.11)
+
+## [v10.1.10](https://github.com/w3c/respec/tree/v10.1.10) (2017-02-16)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.1.9...v10.1.10)
+
+**Closed issues:**
+
+- Strange bug handling \<pre\> sections... [\#1089](https://github.com/w3c/respec/issues/1089)
+
+**Merged pull requests:**
+
+- Fix highlight [\#1090](https://github.com/w3c/respec/pull/1090) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v10.1.9](https://github.com/w3c/respec/tree/v10.1.9) (2017-02-16)
 [Full Changelog](https://github.com/w3c/respec/compare/v10.1.8...v10.1.9)
 
@@ -2407,7 +2509,7 @@
 - If abstract and SotD are in the wrong order, strange things happen [\#37](https://github.com/w3c/respec/issues/37)
 
 ## [v3.1.2](https://github.com/w3c/respec/tree/v3.1.2) (2012-06-19)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.1.1...v3.1.2)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.3.1...v3.1.2)
 
 **Implemented enhancements:**
 
@@ -2421,11 +2523,11 @@
 
 - Add ref for: WEBAPPS-MANIFEST-API [\#41](https://github.com/w3c/respec/pull/41) ([tobie](https://github.com/tobie))
 
-## [v3.1.1](https://github.com/w3c/respec/tree/v3.1.1) (2012-06-18)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.3.1...v3.1.1)
-
 ## [v3.3.1](https://github.com/w3c/respec/tree/v3.3.1) (2012-06-18)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.1.0...v3.3.1)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.1.1...v3.3.1)
+
+## [v3.1.1](https://github.com/w3c/respec/tree/v3.1.1) (2012-06-18)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.1.0...v3.1.1)
 
 **Fixed bugs:**
 
