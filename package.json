@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "10.5.2",
+  "version": "10.5.3",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -58,9 +58,7 @@
     "build:respec-w3c-common": "./tools/build-w3c-common.js",
     "copydeps": "node ./tools/copydeps.js",
     "handlebars": "handlebars",
-    "hb:build": "npm run hb:w3c && npm run hb:webidlcontiguous",
-    "hb:w3c": "handlebars -a js/w3c/templates/*.html js/w3c/templates/*.css -f js/w3c/templates/compiled.js",
-    "hb:webidlcontiguous": "handlebars -a js/core/templates/webidl-contiguous/*.html -f js/core/templates/webidl-contiguous/compiled.js",
+    "hb:build": "handlebars -a js/*/templates/*.html js/*/templates/*.css js/core/templates/webidl-contiguous/*.html -f js/templates.js",
     "jscs": "jscs --esnext tests tools js/w3c/linter.js",
     "jscs:fix": "jscs --esnext --fix tests",
     "jshint": "jshint karma.conf.js tests tools js/w3c/linter.js js/core/dfn.js js/core/data-transform.js",
