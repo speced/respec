@@ -17,7 +17,7 @@
 //                         hovered over.  Defaults to false.
 
 define(
-    ["w3c/templates/compiled", "core/utils"], // load this to be sure that the jQuery extensions are loaded
+    ["templates", "core/utils"], // load this to be sure that the jQuery extensions are loaded
     function (tmpls, utils) {
         const css = tmpls["permalinks.css"]; 
         return {

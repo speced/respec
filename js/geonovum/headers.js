@@ -98,7 +98,7 @@ define(
         "handlebars.runtime"
     ,   "core/utils"
     ,   "core/pubsubhub"
-    ,   "geonovum/templates/compiled"
+    ,   "templates"
     ],
     function (hb, utils, pubsubhub, tmpls) {
         var cgbgHeadersTmpl = tmpls["cgbg-headers.html"];
