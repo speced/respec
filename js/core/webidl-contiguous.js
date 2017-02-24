@@ -12,7 +12,7 @@ define(
     "deps/webidl2",
     "handlebars.runtime",
     "deps/text!core/css/webidl-oldschool.css",
-    "core/templates/webidl-contiguous/compiled",
+    "templates",
   ],
   function(pubsubhub, webidl2, hb, css, tmpls) {
 
