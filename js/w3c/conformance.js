@@ -3,7 +3,7 @@
 // Handle the conformance section properly.
 
 define(
-    ["w3c/templates/compiled", "core/pubsubhub"],
+    ["templates", "core/pubsubhub"],
     function (tmpls, pubsubhub) {
         var confoTmpl = tmpls["conformance.html"];
         return {

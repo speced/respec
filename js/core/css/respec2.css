@@ -380,10 +380,10 @@ table.simple {
   background: url(data:image/gif;base64,R0lGODdhBAADAPEAANv///8AAP///wAAACwAAAAABAADAEACBZQjmIAFADs=) bottom repeat-x;
 }
 
-.respec-dfn-list {
+#issue-summary>ul, .respec-dfn-list {
   column-count: 2;
 }
-.respec-dfn-list li {
+#issue-summary li, .respec-dfn-list li {
   list-style: none;
 }
 
