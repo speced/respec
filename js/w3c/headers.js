@@ -445,12 +445,12 @@ define(
                 conf.dashDate = utils.concatDate(conf.publishDate, "-");
                 conf.publishISODate = utils.isoDate(conf.publishDate);
                 conf.shortISODate = conf.publishISODate.replace(/T.*/, "");
-                conf.processVersion = conf.processVersion || "2015";
-                if (conf.processVersion == "2014") {
-                    pubsubhub.pub("warn", "Process " + conf.processVersion + " has been superceded by Process 2015.");
-                    conf.processVersion = "2015";
+                conf.processVersion = conf.processVersion || "2017";
+                if (conf.processVersion == "2014" || conf.processVersion == "2015") {
+                    pubsubhub.pub("warn", "Process " + conf.processVersion + " has been superceded by Process 2017.");
+                    conf.processVersion = "2017";
                 }
-                conf.isNewProcess = conf.processVersion == "2015";
+                conf.isNewProcess = conf.processVersion == "2017";
                 // configuration done - yay!
 
                 // annotate html element with RFDa
