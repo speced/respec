@@ -17,6 +17,10 @@ define([
   function(shortcut, pubsubhub) {
 
     function ariaDecorate(elem, ariaMap) {
+      if (!elem) {
+        debugger;
+        return;
+      }
       Array
         .from(ariaMap.entries())
         .reduce(function(elem, nameValue) {
@@ -39,8 +43,8 @@ define([
         "<div id='respec-ui' class='removeOnSave respec-hidden'></div>", document)
       .appendTo($("body", document));
 
-    const $respecPill = $("<button id='respec-pill' disabled>ReSpec</button>")
-      .click(function(e) {
+    const $respecPill = $("<button id='respec-pill' disabled>ReSpec</button>");
+    $respecPill.click(function(e) {
         e.stopPropagation();
         const expand = this.getAttribute("aria-expanded") === "true" ? "false" : "true";
         this.setAttribute("aria-expanded", expand);
