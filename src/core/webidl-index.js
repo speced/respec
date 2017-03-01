@@ -43,12 +43,12 @@ export function run(conf, doc, cb) {
   Array
     .from(document.querySelectorAll("pre.def.idl"))
     .map(elem => {
-      const div = document.createElement("div");
+      const span = document.createElement("span");
       const clone = elem.cloneNode(true).firstElementChild;
-      div.appendChild(clone);
-      div.appendChild(document.createTextNode("\n"))
-      div.classList.add("respec-idl-separator");
-      return div;
+      span.appendChild(clone);
+      span.appendChild(document.createTextNode("\n"))
+      span.classList.add("respec-idl-separator");
+      return span;
     })
     .reduce((collector, elem) => {
       collector.appendChild(elem);
