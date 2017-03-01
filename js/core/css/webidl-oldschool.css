@@ -7,6 +7,7 @@ pre.idl {
 }
 
 .respec-idl-separator {
+    display: block;
     padding: 0 0 0.4cm 0;
 }
 
