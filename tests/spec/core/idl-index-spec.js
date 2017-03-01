@@ -1,6 +1,6 @@
 "use strict";
 describe("Core — IDL Index", () => {
-  afterAll( done => {
+  afterAll(done => {
     flushIframes();
     done();
   });
@@ -62,6 +62,28 @@ interface Bar {
       expect(header).not.toBe(null);
       expect(header.textContent).toEqual("1. PASS");
       expect(doc.querySelectorAll("#idl-index > h2").length).toEqual(1);
+    }).then(done);
+  });
+  it("doesn't include ids in the cloned indexed", done => {
+    const body = `
+      ${makeDefaultBody()}
+      <pre class=idl>
+      interface Test {
+
+      };
+      </pre>
+      <section id="idl-index">
+        <h2>PASS</h2>
+        <p>Custom paragraph.</p>
+      </section>
+    `;
+    var ops = {
+      config: makeBasicConfig(),
+      body,
+    };
+    makeRSDoc(ops, function(doc) {
+      const pre = doc.querySelector("#idl-index pre");
+      expect(pre.querySelectorAll("*[id]").length).toEqual(0);
     }).then(done);
   });
 });
