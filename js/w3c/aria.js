@@ -7,9 +7,6 @@ define([],
     return {
       run: function(conf, doc, cb) {
         // ensure head section is labeled
-        if (!doc.body.hasAttribute("role")) {
-          doc.body.setAttribute("role", "document");
-        }
         if (!doc.body.hasAttribute("id")) {
           doc.body.setAttribute("id", "respecDocument");
         }
