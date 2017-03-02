@@ -4,9 +4,9 @@
  * Returns a singleton that can be used for message broadcasting
  * and message receiving. Replaces legacy "msg" code in ReSpec.
  */
-const subscriptions = new Map();
-
 export const name = "core/pubsubhub";
+
+const subscriptions = new Map();
 
 export function pub(topic, ...data) {
   if (!subscriptions.has(topic)) {
@@ -14,7 +14,7 @@ export function pub(topic, ...data) {
   }
   Array
     .from(subscriptions.get(topic))
-    .forEach(cb => cb.apply(null, data));
+    .forEach(cb => cb.apply(undefined, data));
   if (window.parent === window.self) {
     return;
   }
@@ -24,30 +24,41 @@ export function pub(topic, ...data) {
     .map(arg => String(JSON.stringify(arg.stack || arg)));
   window.parent.postMessage({ topic, args }, window.parent.location.origin);
 }
-
+/**
+ * Subscribes to a message type.
+ *
+ * @param  {string} topic      The topic to subscribe to (e.g., "start-all")
+ * @param  {Function} cb       Callback function
+ * @param  {Boolean} opts.once Add prop "once" for single notification.
+ * @return {Object}            An object that should be considered opaque,
+ *                             used for unsubscribing from messages.
+ */
 export function sub(topic, cb, opts = { once: false }) {
   if (opts.once) {
-    const opaque = sub(topic, (...args) => {
-      unsub(opaque);
-      return cb(...args);
+    return sub(topic, function wrapper(...args) {
+      unsub({ topic, cb: wrapper });
+      cb(...args);
     });
-    return;
   }
-  if (!subscriptions.has(topic)) {
-    subscriptions.set(topic, [cb]);
+  if (subscriptions.has(topic)) {
+    subscriptions.get(topic).add(cb);
   } else {
-    subscriptions.get(topic).push(cb);
+    subscriptions.set(topic, new Set([cb]));
   }
   return { topic, cb };
 }
-
-export function unsub(opaque) { // opaque is whatever is returned by sub()
-  var callbacks = subscriptions.get(opaque.topic);
-  if (!callbacks || callbacks.indexOf(opaque.cb) === -1) {
-    console.warn("Already unsubscribed:", opaque.topic, opaque.cb);
-    return;
+/**
+ * Unsubscribe from messages.
+ *
+ * @param {Object} opaque The object that was returned from calling sub()
+ */
+export function unsub({ topic, cb }) { // opaque is whatever is returned by sub()
+  const callbacks = subscriptions.get(topic);
+  if (!callbacks || !callbacks.has(cb)) {
+    console.warn("Already unsubscribed:", topic, cb);
+    return false;
   }
-  callbacks.splice(callbacks.indexOf(opaque.cb), 1);
+  return callbacks.delete(cb);
 }
 
 sub("error", err => {
