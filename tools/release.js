@@ -46,6 +46,14 @@ function rel(f) {
   return path.join(__dirname, f);
 }
 
+function npm(cmd) {
+  if (DEBUG) {
+    console.log(colors.debug(`Pretending to run: ${"npm " + colors.prompt(cmd)}`));
+    return Promise.resolve("");
+  }
+  return toExecPromise(`npm ${cmd}`);
+}
+
 function git(cmd) {
   if (DEBUG) {
     console.log(colors.debug(`Pretending to run: ${"git " + colors.prompt(cmd)}`));
@@ -341,6 +349,7 @@ async.task(function*() {
     yield Prompts.askBuildAddCommitMergeTag();
     // 3. Run the build script (node tools/build-w3c-common.js).
     indicators.get("build-merge-tag").show();
+    yield npm("run hb:build");
     yield w3cBuild.buildW3C();
     // 4. Commit your changes (git commit -am v3.x.y)
     yield git(`commit -am v${version}`);
