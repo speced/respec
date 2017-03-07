@@ -397,8 +397,7 @@ describe("Core - Contiguous WebIDL", function() {
     expect(ulls.last().children("a").attr("href"))
       .toEqual("#dom-methbasic-ull!overload-1");
     expect($target.find(".idlMethod:contains('paramed')").attr("id"))
-      .toEqual("idl-def-methbasic-paramed(superstar[][]?[],bytestring?,optional-short," +
-        "short[],short[][][][],optional-short,optional-domstring,short...)");
+      .toEqual("idl-def-methbasic-paramed(one,ext,maybe,shorts,hypercubes,defaulted,defaulted2,variable)");
     expect($target.find(":contains('dates')").filter("a").length)
       .toEqual(0);
     done();
