@@ -26,6 +26,7 @@ js/core/pubsubhub.js
 js/core/remove-respec.js
 js/core/respec-ready.js
 js/core/utils.js
+js/core/webidl.js
 js/core/webidl-index.js
 js/core/worker.js
 js/templates.js

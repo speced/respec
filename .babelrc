@@ -1,4 +1,4 @@
 {
-  "presets": ["latest"],
+  "presets": ["env"],
   "plugins": ["transform-es2015-modules-amd","transform-async-to-generator"]
 }

@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "10.5.11",
+  "version": "10.5.12",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -18,9 +18,10 @@
     "babel-cli": "^6.23.0",
     "babel-plugin-transform-async-to-generator": "^6.22.0",
     "babel-plugin-transform-es2015-modules-amd": "^6.22.0",
-    "babel-preset-latest": "^6.22.0",
+    "babel-preset-env": "^1.2.1",
     "chai": "^3.5.0",
     "domReady": "github:requirejs/domReady",
+    "glob": "^7.1.1",
     "handlebars": "^4.0.6",
     "http-server": "^0.9.0",
     "jasmine-core": "^2.5.2",
@@ -33,7 +34,7 @@
     "karma-chrome-launcher": "^2.0.0",
     "karma-detect-browsers": "^2.2.4",
     "karma-edge-launcher": "^0.2.0",
-    "karma-firefox-launcher": "^1.0.0",
+    "karma-firefox-launcher": "^1.0.1",
     "karma-jasmine": "^1.1.0",
     "karma-mocha": "^1.3.0",
     "karma-mocha-reporter": "^2.2.2",
@@ -46,9 +47,9 @@
     "moment": "^2.17.1",
     "requirejs": "^2.3.3",
     "text": "github:requirejs/text",
-    "uglify-js": "^2.8.4",
+    "uglify-js": "^2.8.7",
     "webidl2": "^2.2.2",
-    "whatwg-fetch": "^2.0.2"
+    "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
     "babel:build": "babel src -d js --source-maps",
@@ -58,7 +59,7 @@
     "build:respec-w3c-common": "./tools/build-w3c-common.js",
     "copydeps": "node ./tools/copydeps.js",
     "handlebars": "handlebars",
-    "hb:build": "handlebars -a js/*/templates/*.html js/*/templates/*.css js/core/templates/webidl-contiguous/*.html -f js/templates.js",
+    "hb:build": "node ./tools/expandpaths.js -a js/*/templates/*.html js/*/templates/*.css js/core/templates/webidl-contiguous/*.html | xargs handlebars -f js/templates.js",
     "jscs": "jscs --esnext tests tools js/w3c/linter.js",
     "jscs:fix": "jscs --esnext --fix tests",
     "jshint": "jshint karma.conf.js tests tools js/w3c/linter.js js/core/dfn.js js/core/data-transform.js",
@@ -77,10 +78,10 @@
   },
   "dependencies": {
     "colors": "^1.1.2",
-    "command-line-args": "^4.0.1",
+    "command-line-args": "^4.0.2",
     "command-line-usage": "^4.0.0",
     "epipebomb": "^1.0.0",
-    "express": "^4.15.0",
+    "express": "^4.15.2",
     "fs-promise": "^2.0.0",
     "highlight.js": "github:isagalaev/highlight.js",
     "loading-indicator": "^2.0.0",
@@ -88,7 +89,7 @@
     "marked": "^0.3.6",
     "nightmare": "^2.10.0",
     "prompt": "^1.0.0",
-    "snyk": "1.25.1"
+    "snyk": "1.25.2"
   },
   "snyk": true
 }
