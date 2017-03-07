@@ -61,7 +61,7 @@ define([
     "core/requirements",
     "core/best-practices",
     "core/figures",
-    "core/webidl-contiguous",
+    "core/webidl",
     "core/data-cite",
     "core/biblio",
     "core/webidl-index",

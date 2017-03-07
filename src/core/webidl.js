@@ -1,4 +1,4 @@
-// Module core/webidl-contiguous
+// Module core/webidl
 //  Highlights and links WebIDL marked up inside <pre class="idl">.
 
 // TODO:
@@ -1052,7 +1052,7 @@ export const done = new Promise(function(resolve) {
 export function run(conf, doc, cb) {
   var finish = function() {
     resolveDone();
-    pubsubhub.pub("end", "core/webidl-contiguous");
+    pubsubhub.pub("end", "core/webidl");
     cb();
   };
   var $idl = $("pre.idl", doc);
