@@ -4,7 +4,7 @@
 // TODO:
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
-import pubsubhub from "core/pubsubhub";
+import { pub } from "core/pubsubhub";
 import webidl2 from "deps/webidl2";
 import hb from "handlebars.runtime";
 import css from "deps/text!core/css/webidl-oldschool.css";
@@ -95,7 +95,7 @@ function registerHelpers() {
       case "sequence":
         return JSON.stringify(value.value);
       default:
-        pubsubhub.pub("error", "Unexpected constant value type: " + value.type);
+        pub("error", "Unexpected constant value type: " + value.type);
         return "<Unknown>";
     }
   });
@@ -590,7 +590,7 @@ function writeDefinition(obj, indent) {
       }
       return idlEnumTmpl({ obj: obj, indent: indent, children: children });
     default:
-      pubsubhub.pub("error", "Unexpected object type " + obj.type + " in " + JSON.stringify(obj));
+      pub("error", "Unexpected object type " + obj.type + " in " + JSON.stringify(obj));
       return "";
   }
 }
@@ -919,7 +919,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
         // Nothing to link here.
         return;
       default:
-        pubsubhub.pub("error", "Unexpected type when computing refTitles: " + defn.type);
+        pub("error", "Unexpected type when computing refTitles: " + defn.type);
         return;
     }
     if (parent) {
@@ -1021,14 +1021,14 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
     }
   }
   if (dfns.length > 1) {
-    pubsubhub.pub("error", "Multiple <dfn>s for " + originalName + (originalParent ? " in " + originalParent : ""));
+    pub("error", "Multiple <dfn>s for " + originalName + (originalParent ? " in " + originalParent : ""));
   }
   if (dfns.length === 0) {
     const showWarnings = type && idlElem && idlElem.classList.contains("no-link-warnings") === false;
     if (showWarnings) {
       var msg = "No <dfn> for " + originalName + (originalParent ? " in " + originalParent : "") + ".";
       msg += " Please define it and link to spec that declares it. See https://github.com/w3c/respec/wiki/data--cite";
-      pubsubhub.pub("warn", msg);
+      pub("warn", msg);
     }
     return;
   }
@@ -1052,7 +1052,7 @@ export const done = new Promise(function(resolve) {
 export function run(conf, doc, cb) {
   var finish = function() {
     resolveDone();
-    pubsubhub.pub("end", "core/webidl");
+    pub("end", "core/webidl");
     cb();
   };
   var $idl = $("pre.idl", doc);
@@ -1069,7 +1069,7 @@ export function run(conf, doc, cb) {
     try {
       parse = webidl2.parse($(this).text(), { ws: true });
     } catch (e) {
-      pubsubhub.pub("error", "Failed to parse WebIDL: \n```\n" + this.textContent + "\n```\n" + (e.message || e)) + ".";
+      pub("error", "Failed to parse WebIDL: \n```\n" + this.textContent + "\n```\n" + (e.message || e)) + ".";
       // Skip this <pre> and move on to the next one.
       return;
     }
