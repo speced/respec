@@ -898,9 +898,7 @@ define(
               defn.arguments.filter(function(arg) {
                 return !typeIsWhitespace(arg.type);
               }).map(function(arg) {
-                var optional = arg.optional ? "optional-" : "";
-                var variadic = arg.variadic ? "..." : "";
-                return optional + idlType2Text(arg.idlType).toLowerCase() + variadic;
+                return arg.name.toLowerCase();
               }).join(",").replace(/\s/g, "_") + ")");
             break;
           case "maplike":
