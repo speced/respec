@@ -18,6 +18,28 @@ describe("Core - biblioDB", () => {
       "id": "ADD-ALL-TEST",
       "title": "ADD ALL TEST",
     },
+    "DAHU": {
+      "aliasOf": "DAHUT",
+    },
+    "DAHUT": {
+      "authors": [
+        "Robin Berjon"
+      ],
+      "etAl": true,
+      "title": "The Dahut Specification Example From the Higher Circle",
+      "date": "15 March 1977",
+      "status": "Lazy Daft (Work for progress)",
+      "href": "http://berjon.com/",
+      "versions": [
+        "DAHUT-TEST6",
+        "DAHUT-TEST5",
+        "DAHUT-TEST4",
+        "DAHUT-TEST3",
+        "DAHUT-TEST2",
+        "DAHUT-TEST1"
+      ],
+      "id": "DAHUT",
+    }
   };
   var biblioDB;
   beforeAll((done) => {
@@ -216,10 +238,10 @@ describe("Core - biblioDB", () => {
       biblioDB
         .addAll(data)
         .then(
-          () => biblioDB.find("WHATWG-DOM")
+          () => biblioDB.find("DAHU")
         )
         .then(
-          result => expect(result.id).toEqual("WHATWG-DOM")
+          result => expect(result.id).toEqual("DAHUT")
         )
         .then(
           () => biblioDB.find("whatwg-dom") // alias
@@ -243,7 +265,7 @@ describe("Core - biblioDB", () => {
         p3.catch(err => expect(err instanceof TypeError).toBe(true)),
       ]).then(done);
     });
-    it("resolves known aliases or return null when alias is unknown", (done)=>{
+    it("resolves known aliases or return null when alias is unknown", (done) => {
       biblioDB
         .addAll(data)
         .then(
