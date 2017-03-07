@@ -1,7 +1,7 @@
 /**
  * Module: core/webidl-index
  * constructs a summary of WebIDL in the document by
- * cloning all the generated contiguous WebIDL nodes and
+ * cloning all the generated WebIDL nodes and
  * appending them to pre element.
  *
  * Usage
