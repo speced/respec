@@ -18,7 +18,6 @@ define([
 
     function ariaDecorate(elem, ariaMap) {
       if (!elem) {
-        debugger;
         return;
       }
       Array
@@ -31,6 +30,7 @@ define([
         }, elem);
     }
 
+    const $respecUI = $("<div id='respec-ui' class='removeOnSave' hidden=true></div>");
     const $menu = $("<ul id=respec-menu role=menu aria-labelledby='respec-pill'></ul>");
     var $modal;
     var $overlay;
@@ -38,10 +38,12 @@ define([
     const warnings = [];
     const buttons = {};
 
-    // Respec UI - add early
-    const $respecUI = $(
-        "<div id='respec-ui' class='removeOnSave respec-hidden'></div>", document)
-      .appendTo($("body", document));
+    pubsubhub.sub("start-all", function() {
+      document.body.insertAdjacentElement("afterbegin", $respecUI[0]);
+    }, { once: true });
+    pubsubhub.sub("end-all", function() {
+      document.body.insertAdjacentElement("afterbegin", $respecUI[0]);
+    }, { once: true });
 
     const $respecPill = $("<button id='respec-pill' disabled>ReSpec</button>");
     $respecPill.click(function(e) {
@@ -131,14 +133,14 @@ define([
     const ui = {
       show: function() {
         try {
-          $respecUI[0].classList.remove("respec-hidden");
+          $respecUI[0].hidden = false;
           $respecUI[0].setAttribute("aria-expanded", "true");
         } catch (err) {
           console.error(err);
         }
       },
       hide: function() {
-        $respecUI[0].classList.add("respec-hidden");
+        $respecUI[0].hidden = true;
         $respecUI[0].setAttribute("aria-expanded", "false");
       },
       enable: function() {
@@ -180,12 +182,11 @@ define([
       freshModal: function(title, content, currentOwner) {
         if ($modal) $modal.remove();
         if ($overlay) $overlay.remove();
-        var width = 500;
         $overlay = $("<div id='respec-overlay' class='removeOnSave'></div>").hide();
         const id = currentOwner.id + "-modal";
-        const headingId = id + "-heading"
+        const headingId = id + "-heading";
         $modal = $("<div id='" + id + "' class='respec-modal' role=dialog class='removeOnSave'><h3></h3><div class='inside'></div></div>").hide();
-        $modal.find("h3").text(title)
+        $modal.find("h3").text(title);
         $modal.find("h3")[0].id = headingId;
         const ariaMap = new Map([
           ["labelledby", headingId],
