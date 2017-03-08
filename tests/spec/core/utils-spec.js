@@ -399,6 +399,20 @@ describe("Core - Utils", function() {
     done();
   });
 
+  it("should produce a human date in different languages", function(done) {
+    expect(utils.humanDate("1977-03-15", "en")).toEqual("15 March 1977");
+    var d = new Date();
+    d.setFullYear(1977);
+    d.setMonth(2);
+    d.setDate(15);
+    expect(utils.humanDate(d)).toEqual("15 March 1977");
+    expect(utils.humanDate(d, "en")).toEqual("15 March 1977");
+    expect(utils.humanDate(d, "nl")).toEqual("15 maart 1977");
+    expect(utils.humanDate(d, "fr")).toEqual("15 mars 1977");
+    expect(utils.humanDate(d, "unknown")).toEqual("15 March 1977");
+    done();
+  });
+
   // isoDate
   it("should produce an ISO date", function(done) {
     expect(utils.isoDate("2013-06-25")).toMatch(/2013-06-2[45]T/);

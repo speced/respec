@@ -1,5 +1,126 @@
 # Change Log
 
+## [v10.5.13](https://github.com/w3c/respec/tree/v10.5.13) (2017-03-08)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.5.12...v10.5.13)
+
+**Fixed bugs:**
+
+- Respec interaction button not appearing \(again... sometimes:-\( [\#1131](https://github.com/w3c/respec/issues/1131)
+
+**Merged pull requests:**
+
+- fix\(core/ui\): race inserting into body, if no body \(closes \#1131\) [\#1138](https://github.com/w3c/respec/pull/1138) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.5.12](https://github.com/w3c/respec/tree/v10.5.12) (2017-03-07)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.5.11...v10.5.12)
+
+**Fixed bugs:**
+
+- Malformed fragment identifiers [\#1120](https://github.com/w3c/respec/issues/1120)
+
+**Merged pull requests:**
+
+- Issue 1120 malformed ids [\#1135](https://github.com/w3c/respec/pull/1135) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore: switch to babel-preset-env [\#1134](https://github.com/w3c/respec/pull/1134) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(core/webidl-contiguous\): convert to ES6 module [\#1133](https://github.com/w3c/respec/pull/1133) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/webidl-contiguous\): generate valid fragments \(closes \#1120\) [\#1132](https://github.com/w3c/respec/pull/1132) ([marcoscaceres](https://github.com/marcoscaceres))
+- Expand handlebars path arguments for build to run on Windows [\#1130](https://github.com/w3c/respec/pull/1130) ([tidoust](https://github.com/tidoust))
+
+## [v10.5.11](https://github.com/w3c/respec/tree/v10.5.11) (2017-03-03)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.5.10...v10.5.11)
+
+**Fixed bugs:**
+
+- Run "npm run hb:build" before building [\#1127](https://github.com/w3c/respec/issues/1127)
+
+## [v10.5.10](https://github.com/w3c/respec/tree/v10.5.10) (2017-03-03)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.5.9...v10.5.10)
+
+**Fixed bugs:**
+
+- White screen -- sometimes [\#1113](https://github.com/w3c/respec/issues/1113)
+
+**Closed issues:**
+
+- document.body is null in respect-w3c-common:14:10169 [\#1123](https://github.com/w3c/respec/issues/1123)
+
+**Merged pull requests:**
+
+- refactor\(core/pubsubhub\): make better use of ES6 [\#1125](https://github.com/w3c/respec/pull/1125) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.5.9](https://github.com/w3c/respec/tree/v10.5.9) (2017-03-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.5.8...v10.5.9)
+
+## [v10.5.8](https://github.com/w3c/respec/tree/v10.5.8) (2017-03-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.5.7...v10.5.8)
+
+**Closed issues:**
+
+- WebIDL index generating duplicate IDs  [\#1119](https://github.com/w3c/respec/issues/1119)
+- markdown parser generating empty `p` [\#1117](https://github.com/w3c/respec/issues/1117)
+
+**Merged pull requests:**
+
+- Validator fixes [\#1122](https://github.com/w3c/respec/pull/1122) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/webidl-index\): don't clone IDs into idl-index \(closes \#1119\) [\#1121](https://github.com/w3c/respec/pull/1121) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.5.7](https://github.com/w3c/respec/tree/v10.5.7) (2017-03-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.5.6...v10.5.7)
+
+**Merged pull requests:**
+
+- refactor\(core/webidl-index\): convert to ES6 [\#1118](https://github.com/w3c/respec/pull/1118) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.5.6](https://github.com/w3c/respec/tree/v10.5.6) (2017-03-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.5.5...v10.5.6)
+
+**Merged pull requests:**
+
+- fix\(core/aria\): race condition when no body \(closes \#1113\) [\#1116](https://github.com/w3c/respec/pull/1116) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.5.5](https://github.com/w3c/respec/tree/v10.5.5) (2017-03-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.5.4...v10.5.5)
+
+## [v10.5.4](https://github.com/w3c/respec/tree/v10.5.4) (2017-03-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.5.3...v10.5.4)
+
+**Implemented enhancements:**
+
+- Use Process 2017 [\#1114](https://github.com/w3c/respec/pull/1114) ([plehegar](https://github.com/plehegar))
+
+**Merged pull requests:**
+
+- fix\(core/ui\): return early if element is not passed [\#1115](https://github.com/w3c/respec/pull/1115) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.5.3](https://github.com/w3c/respec/tree/v10.5.3) (2017-02-24)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.5.2...v10.5.3)
+
+**Closed issues:**
+
+- "Shown" should be "presented" in prose [\#1111](https://github.com/w3c/respec/issues/1111)
+
+**Merged pull requests:**
+
+- refactor\(handlebars\): generalizer handlebar generation [\#1112](https://github.com/w3c/respec/pull/1112) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.5.2](https://github.com/w3c/respec/tree/v10.5.2) (2017-02-22)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.5.1...v10.5.2)
+
+## [v10.5.1](https://github.com/w3c/respec/tree/v10.5.1) (2017-02-22)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.5.0...v10.5.1)
+
+## [v10.5.0](https://github.com/w3c/respec/tree/v10.5.0) (2017-02-22)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.4.0...v10.5.0)
+
+**Fixed bugs:**
+
+- Linking to coded defintions applies the wrong style  [\#668](https://github.com/w3c/respec/issues/668)
+
+**Closed issues:**
+
+- Why is WebIDL-LS added as an "informative" reference? [\#1105](https://github.com/w3c/respec/issues/1105)
+- Deprecate diffTool [\#808](https://github.com/w3c/respec/issues/808)
+
 ## [v10.4.0](https://github.com/w3c/respec/tree/v10.4.0) (2017-02-21)
 [Full Changelog](https://github.com/w3c/respec/compare/v10.3.0...v10.4.0)
 
@@ -427,10 +548,6 @@
 
 ## [v7.2.2](https://github.com/w3c/respec/tree/v7.2.2) (2016-12-23)
 [Full Changelog](https://github.com/w3c/respec/compare/v7.2.1...v7.2.2)
-
-**Implemented enhancements:**
-
-- Autolink IDL extended attributes [\#989](https://github.com/w3c/respec/issues/989)
 
 **Fixed bugs:**
 
@@ -2509,7 +2626,7 @@
 - If abstract and SotD are in the wrong order, strange things happen [\#37](https://github.com/w3c/respec/issues/37)
 
 ## [v3.1.2](https://github.com/w3c/respec/tree/v3.1.2) (2012-06-19)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.3.1...v3.1.2)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.1.1...v3.1.2)
 
 **Implemented enhancements:**
 
@@ -2523,11 +2640,11 @@
 
 - Add ref for: WEBAPPS-MANIFEST-API [\#41](https://github.com/w3c/respec/pull/41) ([tobie](https://github.com/tobie))
 
-## [v3.3.1](https://github.com/w3c/respec/tree/v3.3.1) (2012-06-18)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.1.1...v3.3.1)
-
 ## [v3.1.1](https://github.com/w3c/respec/tree/v3.1.1) (2012-06-18)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.1.0...v3.1.1)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.3.1...v3.1.1)
+
+## [v3.3.1](https://github.com/w3c/respec/tree/v3.3.1) (2012-06-18)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.1.0...v3.3.1)
 
 **Fixed bugs:**
 
