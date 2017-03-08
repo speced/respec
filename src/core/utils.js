@@ -139,24 +139,24 @@ export function createResourceHint(opts) {
   var href = url.href;
   linkElem.rel = opts.hint;
   switch (linkElem.rel) {
-  case "dns-prefetch":
-  case "preconnect":
-    href = url.origin;
-    if (opts.corsMode || url.origin !== document.location.origin) {
-      linkElem.crossOrigin = opts.corsMode || "anonymous";
-    }
-    break;
-  case "preload":
-    if ("as" in opts && typeof opts.as === "string") {
-      if (!fetchDestinations.has(opts.as)) {
-        console.warn("Unknown request destination: " + opts.as);
+    case "dns-prefetch":
+    case "preconnect":
+      href = url.origin;
+      if (opts.corsMode || url.origin !== document.location.origin) {
+        linkElem.crossOrigin = opts.corsMode || "anonymous";
       }
-      linkElem.setAttribute("as", opts.as);
-    }
-    break;
-  case "prerender":
-    href = url.href;
-    break;
+      break;
+    case "preload":
+      if ("as" in opts && typeof opts.as === "string") {
+        if (!fetchDestinations.has(opts.as)) {
+          console.warn("Unknown request destination: " + opts.as);
+        }
+        linkElem.setAttribute("as", opts.as);
+      }
+      break;
+    case "prerender":
+      href = url.href;
+      break;
   }
   linkElem.href = href;
   if (!opts.dontRemove) {
