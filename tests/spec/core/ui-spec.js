@@ -12,11 +12,11 @@ describe("Core - Ui", function () {
       var pillContainer = doc.querySelector("#respec-ui");
       ui.show();
       // showing it doesn't change it from showing
-      expect(pillContainer.classList.contains("respec-hidden")).toBe(false);
+      expect(pillContainer.hidden).toBe(false);
       ui.hide();
-      expect(pillContainer.classList.contains("respec-hidden")).toBe(true);
+      expect(pillContainer.hidden).toBe(true);
       ui.show();
-      expect(pillContainer.classList.contains("respec-hidden")).toBe(false);
+      expect(pillContainer.hidden).toBe(false);
     }).then(done);
   });
 
