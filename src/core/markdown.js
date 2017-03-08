@@ -226,7 +226,7 @@ export function run(conf, doc, cb) {
   var fragment = structure(newBody, doc);
   // Frankenstein the whole thing back together
   newBody.appendChild(fragment);
-  newBody.appendChild(rsUI);
+  newBody.insertAdjacentElement("afterbegin", rsUI);
   doc.body.parentNode.replaceChild(newBody, doc.body);
   cb();
 }
