@@ -18,7 +18,6 @@ define([
 
     function ariaDecorate(elem, ariaMap) {
       if (!elem) {
-        debugger;
         return;
       }
       Array
@@ -31,7 +30,7 @@ define([
         }, elem);
     }
 
-    const $respecUI = $("<div id='respec-ui' class='removeOnSave' hidden=true></div>")
+    const $respecUI = $("<div id='respec-ui' class='removeOnSave' hidden=true></div>");
     const $menu = $("<ul id=respec-menu role=menu aria-labelledby='respec-pill'></ul>");
     var $modal;
     var $overlay;
@@ -183,12 +182,11 @@ define([
       freshModal: function(title, content, currentOwner) {
         if ($modal) $modal.remove();
         if ($overlay) $overlay.remove();
-        var width = 500;
         $overlay = $("<div id='respec-overlay' class='removeOnSave'></div>").hide();
         const id = currentOwner.id + "-modal";
-        const headingId = id + "-heading"
+        const headingId = id + "-heading";
         $modal = $("<div id='" + id + "' class='respec-modal' role=dialog class='removeOnSave'><h3></h3><div class='inside'></div></div>").hide();
-        $modal.find("h3").text(title)
+        $modal.find("h3").text(title);
         $modal.find("h3")[0].id = headingId;
         const ariaMap = new Map([
           ["labelledby", headingId],
