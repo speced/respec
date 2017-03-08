@@ -139,10 +139,6 @@ table.simple {
   margin-bottom: 0;
 }
 
-.respec-hidden {
-  display: none;
-}
-
 #respec-ui {
   position: fixed;
   display: flex;
