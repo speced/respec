@@ -357,8 +357,15 @@ export const humanMonths = ["January", "February", "March", "April", "May", "Jun
 
 // given either a Date object or a date in YYYY-MM-DD format, return a human-formatted
 // date suitable for use in a W3C specification
-export function humanDate(date) {
+export function humanDate(date, lang = "en") {
   if (!(date instanceof Date)) date = parseSimpleDate(date);
+  if (window.Intl) {
+    const day = date.toLocaleString([lang, "en"], { day: "2-digit" });
+    const month = date.toLocaleString([lang, "en"], { month: "long" });
+    const year = date.toLocaleString([lang, "en"], { year: "numeric" });
+    //date month year
+    return `${day} ${month} ${year}`;
+  }
   return lead0(date.getDate()) + " " + humanMonths[date.getMonth()] + " " + date.getFullYear();
 }
 // given either a Date object or a date in YYYY-MM-DD format, return an ISO formatted
