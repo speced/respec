@@ -23,9 +23,9 @@ js/core/dfn.js
 js/core/examples.js
 js/core/figures.js
 js/core/highlight.js
+js/core/id-headers.js
 js/core/include-config.js
 js/core/markdown.js
-
 js/core/override-configuration.js
 js/core/post-process.js
 js/core/pre-process.js
@@ -33,8 +33,8 @@ js/core/pubsubhub.js
 js/core/remove-respec.js
 js/core/respec-ready.js
 js/core/utils.js
-js/core/webidl.js
 js/core/webidl-index.js
+js/core/webidl.js
 js/core/worker.js
 js/templates.js
 js/w3c/rfc2119.js
