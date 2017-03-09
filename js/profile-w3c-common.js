@@ -65,7 +65,6 @@ define([
     "core/data-cite",
     "core/biblio",
     "core/webidl-index",
-    "core/webidl-oldschool",
     "core/link-to-dfn",
     "core/contrib",
     "core/fix-headers",
