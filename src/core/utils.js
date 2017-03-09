@@ -430,7 +430,7 @@ export function runTransforms(content, flist) {
         try {
           content = window[meth].apply(this, args);
         } catch (e) {
-          pubsubhub.pub("warn", "call to " + meth + "() failed with " + e);
+          pub("warn", "call to " + meth + "() failed with " + e);
         }
       }
     }
