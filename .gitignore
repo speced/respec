@@ -22,6 +22,7 @@ js/core/default-root-attr.js
 js/core/dfn.js
 js/core/examples.js
 js/core/figures.js
+js/core/fix-headers.js
 js/core/highlight.js
 js/core/id-headers.js
 js/core/include-config.js
