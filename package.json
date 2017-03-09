@@ -62,7 +62,7 @@
     "hb:build": "node ./tools/expandpaths.js -a js/*/templates/*.html js/*/templates/*.css js/core/templates/webidl-contiguous/*.html | xargs handlebars -f js/templates.js",
     "jscs": "jscs --esnext tests tools js/w3c/linter.js",
     "jscs:fix": "jscs --esnext --fix tests",
-    "jshint": "jshint karma.conf.js tests tools js/w3c/linter.js js/core/dfn.js js/core/data-transform.js",
+    "jshint": "jshint karma.conf.js tests tools",
     "karma": "karma start --single-run",
     "prepublish": "npm run build:highlight && npm run snyk-protect && npm run copydeps && npm run babel:build",
     "pretest": "npm run jshint && npm run jscs",
