@@ -19,6 +19,7 @@ js/core/data-cite.js
 js/core/data-include.js
 js/core/data-transform.js
 js/core/default-root-attr.js
+js/core/dfn.js
 js/core/highlight.js
 js/core/include-config.js
 js/core/markdown.js
