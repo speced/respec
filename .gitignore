@@ -32,6 +32,7 @@ js/core/override-configuration.js
 js/core/post-process.js
 js/core/pre-process.js
 js/core/pubsubhub.js
+js/core/rdfa.js
 js/core/remove-respec.js
 js/core/requirements.js
 js/core/respec-ready.js
