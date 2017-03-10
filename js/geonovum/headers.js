@@ -289,7 +289,7 @@ define(
                     if (!(conf.publishDate instanceof Date)) conf.publishDate = utils.parseSimpleDate(conf.publishDate);
                 }
                 conf.publishYear = conf.publishDate.getFullYear();
-                conf.publishHumanDate = utils.humanDate(conf.publishDate);
+                conf.publishHumanDate = utils.humanDate(conf.publishDate, "nl");
                 //Version URLs
                 if (!conf.edDraftURI) {
                     conf.edDraftURI = "";
