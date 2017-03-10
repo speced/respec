@@ -7,7 +7,7 @@
 import { pub } from "core/pubsubhub";
 import webidl2 from "deps/webidl2";
 import hb from "handlebars.runtime";
-import css from "deps/text!core/css/webidl-oldschool.css";
+import css from "deps/text!core/css/webidl.css";
 import tmpls from "templates";
 
 var idlAttributeTmpl = tmpls["attribute.html"];
