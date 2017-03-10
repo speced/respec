@@ -48,7 +48,7 @@ define([
             if (!isInline) {
               var $div = $("<div class='" + report.type + (isFeatureAtRisk ? " atrisk" : "") + "'></div>"),
                 $tit = $("<div class='" + report.type + "-title'><span></span></div>"),
-                text = isIssue ? (isFeatureAtRisk ? "Feature at Risk" : "Issue") : isWarning ? "Warning" : isEdNote ? "Editor's Note" : conf.l10n.note,
+                text = isIssue ? (isFeatureAtRisk ? "Feature at Risk" : conf.l10n.issue) : isWarning ? conf.l10n.warning : isEdNote ? conf.l10n.editors_note : conf.l10n.note,
                 ghIssue;
               report.title = $inno.attr("title");
               if (isIssue) {
