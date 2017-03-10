@@ -139,24 +139,24 @@ export function createResourceHint(opts) {
   var href = url.href;
   linkElem.rel = opts.hint;
   switch (linkElem.rel) {
-  case "dns-prefetch":
-  case "preconnect":
-    href = url.origin;
-    if (opts.corsMode || url.origin !== document.location.origin) {
-      linkElem.crossOrigin = opts.corsMode || "anonymous";
-    }
-    break;
-  case "preload":
-    if ("as" in opts && typeof opts.as === "string") {
-      if (!fetchDestinations.has(opts.as)) {
-        console.warn("Unknown request destination: " + opts.as);
+    case "dns-prefetch":
+    case "preconnect":
+      href = url.origin;
+      if (opts.corsMode || url.origin !== document.location.origin) {
+        linkElem.crossOrigin = opts.corsMode || "anonymous";
       }
-      linkElem.setAttribute("as", opts.as);
-    }
-    break;
-  case "prerender":
-    href = url.href;
-    break;
+      break;
+    case "preload":
+      if ("as" in opts && typeof opts.as === "string") {
+        if (!fetchDestinations.has(opts.as)) {
+          console.warn("Unknown request destination: " + opts.as);
+        }
+        linkElem.setAttribute("as", opts.as);
+      }
+      break;
+    case "prerender":
+      href = url.href;
+      break;
   }
   linkElem.href = href;
   if (!opts.dontRemove) {
@@ -357,8 +357,15 @@ export const humanMonths = ["January", "February", "March", "April", "May", "Jun
 
 // given either a Date object or a date in YYYY-MM-DD format, return a human-formatted
 // date suitable for use in a W3C specification
-export function humanDate(date) {
+export function humanDate(date, lang = "en") {
   if (!(date instanceof Date)) date = parseSimpleDate(date);
+  if (window.Intl) {
+    const day = date.toLocaleString([lang, "en"], { day: "2-digit" });
+    const month = date.toLocaleString([lang, "en"], { month: "long" });
+    const year = date.toLocaleString([lang, "en"], { year: "numeric" });
+    //date month year
+    return `${day} ${month} ${year}`;
+  }
   return lead0(date.getDate()) + " " + humanMonths[date.getMonth()] + " " + date.getFullYear();
 }
 // given either a Date object or a date in YYYY-MM-DD format, return an ISO formatted
@@ -423,7 +430,7 @@ export function runTransforms(content, flist) {
         try {
           content = window[meth].apply(this, args);
         } catch (e) {
-          pubsubhub.pub("warn", "call to " + meth + "() failed with " + e);
+          pub("warn", "call to " + meth + "() failed with " + e);
         }
       }
     }

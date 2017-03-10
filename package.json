@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "10.5.13",
+  "version": "11.0.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -63,7 +63,7 @@
     "hb:build-geo": "node ./tools/expandpaths.js -a js/geonovum/templates/*.html js/geonovum/templates/*.css | xargs handlebars -f js/templates.js",
     "jscs": "jscs --esnext tests tools js/w3c/linter.js",
     "jscs:fix": "jscs --esnext --fix tests",
-    "jshint": "jshint karma.conf.js tests tools js/w3c/linter.js js/core/dfn.js js/core/data-transform.js",
+    "jshint": "jshint karma.conf.js tests tools",
     "karma": "karma start --single-run",
     "prepublish": "npm run build:highlight && npm run snyk-protect && npm run copydeps && npm run babel:build",
     "pretest": "npm run jshint && npm run jscs",
