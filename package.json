@@ -60,6 +60,7 @@
     "copydeps": "node ./tools/copydeps.js",
     "handlebars": "handlebars",
     "hb:build": "node ./tools/expandpaths.js -a js/*/templates/*.html js/*/templates/*.css js/core/templates/webidl-contiguous/*.html | xargs handlebars -f js/templates.js",
+    "hb:build-geo": "node ./tools/expandpaths.js -a js/geonovum/templates/*.html js/geonovum/templates/*.css | xargs handlebars -f js/templates.js",
     "jscs": "jscs --esnext tests tools js/w3c/linter.js",
     "jscs:fix": "jscs --esnext --fix tests",
     "jshint": "jshint karma.conf.js tests tools js/w3c/linter.js js/core/dfn.js js/core/data-transform.js",

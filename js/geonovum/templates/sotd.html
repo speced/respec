@@ -1,14 +1,14 @@
 <section id='sotd' class='introductory'><h2>{{l10n.sotd}}</h2>
     <p>
-        <em>{{{l10n.status_at_publication}}}</em>
+      <em>{{{l10n.status_at_publication}}}</em>
     </p>
     {{#switch specStatus}}
-        {{#case "GEO-OFF"}}
-            <p>Geonovum officiële standaard.<p>
+        {{#case "GEO-DEF"}}
+            <p>Geonovum definitieve standaard.</p>
         {{/case}}
         {{#case "GEO-ED"}}
             <p>Dit is een werkversie die op elk moment kan worden gewijzigd, verwijderd of vervangen 
-            door andere documenten. Het is geen door de werkgroep goedgekeurde consultatieversie.<p>
+            door andere documenten. Het is geen door de werkgroep goedgekeurde consultatieversie.</p>
         {{/case}}
         {{#case "GEO-WD"}}
             <p>Dit is een door de werkgroep goedgekeurde consultatieversie. Commentaar over dit 
@@ -20,8 +20,6 @@
             aanleiding van consultaties zijn doorgevoerd. De programmaraad van Geonovum beoordeelt 
             dit definitief concept. Keurt zij het goed, dan is er een nieuwe standaard.</p>
         {{/case}}
-        {{#default}}
-            <p>Geonovum basis</p>
-            {{/default}}
     {{/switch}}
+    {{{sotdCustomParagraph}}}
 </section>

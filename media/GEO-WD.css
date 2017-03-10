@@ -1,0 +1,7 @@
+/* Style for Geonovum Draft Versie */
+
+@import "base.css";
+
+body {
+  background-image: url('/media/logos/GEO-WD.svg')
+}

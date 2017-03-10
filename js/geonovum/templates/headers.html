@@ -1,72 +1,44 @@
 <div class='head'>
   <p>
-      {{#if logos}}
-        {{showLogos logos}}
-      {{else}}
-        {{#if prependW3C}}
-            <a class='logo' href='https://www.w3.org/'><img width='72' height='48' src='https://www.w3.org/StyleSheets/TR/2016/logos/W3C' alt='W3C'></a>
-            {{#if isMemberSubmission}}
-            <a href="https://www.w3.org/Submission/"> <img height="48" width="211" alt="W3C Member Submission" src="https://www.w3.org/Icons/member_subm" /></a>
-            {{/if}}
-            {{#if isTeamSubmission}}
-            <a href="https://www.w3.org/TeamSubmission/"><img height="48" width="211" alt="W3C Team Submission" src="https://www.w3.org/Icons/team_subm"/></a>
-            {{/if}}
-        {{/if}}
-      {{/if}}
-  </p>
-  <h1 class='title p-name' id='title'{{#if doRDFa}} property='dcterms:title'{{/if}}>{{title}}</h1>
-  {{#if subtitle}}
-    <h2 {{#if doRDFa}}property='bibo:subtitle' {{/if}}id='subtitle'>{{subtitle}}</h2>
-  {{/if}}
-  <h2>{{#if prependW3C}}Geonovum {{/if}}{{textStatus}} <time {{#if doRDFa}}property="dcterms:issued"{{/if}}class='dt-published' datetime='{{dashDate}}'>{{publishHumanDate}}</time></h2>
-  <dl>
+    {{#if logos}}
+      {{showLogos logos}}
+    {{else}}
+        <a class='logo' href='http://www.geonovum.nl/'>
+            <img width='157' height='79' src='/media/logos/Geonovum.png' alt='Geonovum'>
+        </a>
+    {{/if}}
+    </p>
+    <h1 class='title p-name' id='title'{{#if doRDFa}} property='dcterms:title'{{/if}}>{{title}}</h1>
+    {{#if subtitle}}
+        <h2 {{#if doRDFa}}property='bibo:subtitle' {{/if}}id='subtitle'>{{subtitle}}</h2>
+    {{/if}}
+    <h2>Geonovum {{#if isRegular}}{{typeStatus}} {{/if}}{{textStatus}} 
+    <time {{#if doRDFa}}property="dcterms:issued"{{/if}}class='dt-published' datetime='{{dashDate}}'>{{publishHumanDate}}</time></h2>
+    <dl>
     {{#unless isNoTrack}}
-      <dt>{{l10n.this_version}}</dt>
-      <dd><a class='u-url' href='{{thisVersion}}'>{{thisVersion}}</a></dd>
-      <dt>{{l10n.latest_published_version}}</dt>
-      <dd>{{#if latestVersion}}<a href='{{latestVersion}}'>{{latestVersion}}</a>{{else}}none{{/if}}</dd>
+        <dt>{{l10n.this_version}}</dt>
+        <dd><a class='u-url' href='{{thisVersion}}'>{{thisVersion}}</a></dd>
+        <dt>{{l10n.latest_published_version}}</dt>
+        <dd>{{#if latestVersion}}<a href='{{latestVersion}}'>{{latestVersion}}</a>{{else}}none{{/if}}</dd>
     {{/unless}}
-    {{#if edDraftURI}}
-      <dt>{{l10n.latest_editors_draft}}</dt>
-      <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
-    {{/if}}
-    {{#if testSuiteURI}}
-      <dt>Test suite:</dt>
-      <dd><a href='{{testSuiteURI}}'>{{testSuiteURI}}</a></dd>
-    {{/if}}
-    {{#if implementationReportURI}}
-      <dt>Implementation report:</dt>
-      <dd><a href='{{implementationReportURI}}'>{{implementationReportURI}}</a></dd>
-    {{/if}}
-    {{#if bugTrackerHTML}}
-      <dt>{{l10n.bug_tracker}}</dt>
-      <dd>{{{bugTrackerHTML}}}</dd>
-    {{/if}}
-    {{#if isED}}
-      {{#if prevED}}
-        <dt>Previous editor's draft:</dt>
-        <dd><a href='{{prevED}}'>{{prevED}}</a></dd>
-      {{/if}}
-    {{/if}}
-    {{#if showPreviousVersion}}
-      <dt>Previous version:</dt>
-      <dd><a {{#if doRDFa}}rel="dcterms:replaces"{{/if}} href='{{prevVersion}}'>{{prevVersion}}</a></dd>
-    {{/if}}
-    {{#if prevRecURI}}
-      {{#if isRec}}
-          <dt>Previous Recommendation:</dt>
-          <dd><a {{#if doRDFa}}rel="dcterms:replaces"{{/if}} href='{{prevRecURI}}'>{{prevRecURI}}</a></dd>
-      {{else}}
-          <dt>Latest Recommendation:</dt>
-          <dd><a href='{{prevRecURI}}'>{{prevRecURI}}</a></dd>
-      {{/if}}
-    {{/if}}
-    <dt>{{#if multipleEditors}}{{l10n.editors}}{{else}}{{l10n.editor}}{{/if}}</dt>
-    {{showPeople "Editor" editors}}
+    {{#unless isOfficial}}
+        {{#if edDraftURI}}
+            <dt>{{l10n.latest_editors_draft}}</dt>
+            <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
+        {{/if}}
+    {{/unless}}
+    <dt>{{#if multipleEditors}}{{l10n.editors}}{{else}}{{l10n.editor}}{{/if}}</dt>{{showPeople "Editor" editors}}
     {{#if authors}}
-      <dt>{{#if multipleAuthors}}{{l10n.authors}}{{else}}{{l10n.author}}{{/if}}</dt>
-      {{showPeople "Author" authors}}
+        <dt>{{#if multipleAuthors}}{{l10n.authors}}{{else}}{{l10n.author}}{{/if}}</dt>
+    {{showPeople "Author" authors}}
     {{/if}}
+    {{#unless isOfficial}}
+        {{#if github}}
+            <dt>Github:</dt>
+            <dd><a href='{{github}}'>Repository</a></dd>
+            <dd><a href='{{github}}/issues'>Issues</a></dd>
+        {{/if}}
+    {{/unless}}
     {{#if otherLinks}}
       {{#each otherLinks}}
         {{#if key}}
@@ -104,67 +76,13 @@
       {{/each}}
     {{/if}}
   </dl>
-  {{#if errata}}
-    <p>
-      Please check the <a href="{{errata}}"><strong>errata</strong></a> for any errors or issues
-      reported since publication.
-    </p>
-  {{/if}}
-  {{#if alternateFormats}}
-    <p>
-      {{#if multipleAlternates}}
-        This document is also available in these non-normative formats:
-      {{else}}
-        This document is also available in this non-normative format:
-      {{/if}}
-      {{{alternatesHTML}}}
-    </p>
-  {{/if}}
-  {{#if isUnofficial}}
-    {{#if additionalCopyrightHolders}}
-      <p class='copyright'>{{{additionalCopyrightHolders}}}</p>
-    {{else}}
-      {{#if overrideCopyright}}
-        {{{overrideCopyright}}}
-      {{else}}
-        <p class='copyright'>
-          This document is licensed under a
-          <a class='subfoot' href='https://creativecommons.org/licenses/by/3.0/' rel='license'>Creative Commons
-          Attribution 3.0 License</a>.
-        </p>
-      {{/if}}
-    {{/if}}
-  {{else}}
-    {{#if overrideCopyright}}
-      {{{overrideCopyright}}}
-    {{else}}
-      <p class='copyright'>
-        <a href='https://www.w3.org/Consortium/Legal/ipr-notice#Copyright'>Copyright</a> &copy;
-        {{#if copyrightStart}}{{copyrightStart}}-{{/if}}{{publishYear}}
-        {{#if additionalCopyrightHolders}} {{{additionalCopyrightHolders}}} &amp;{{/if}}
-        <a href='https://www.w3.org/'><abbr title='World Wide Web Consortium'>W3C</abbr></a><sup>&reg;</sup>
-        (<a href='https://www.csail.mit.edu/'><abbr title='Massachusetts Institute of Technology'>MIT</abbr></a>,
-        <a href='https://www.ercim.eu/'><abbr title='European Research Consortium for Informatics and Mathematics'>ERCIM</abbr></a>,
-        <a href='https://www.keio.ac.jp/'>Keio</a>, <a href="http://ev.buaa.edu.cn/">Beihang</a>).
-        {{#if isCCBY}}
-          Some Rights Reserved: this document is dual-licensed,
-          <a rel="license" href="https://creativecommons.org/licenses/by/3.0/">CC-BY</a> and
-          <a rel="license" href="https://www.w3.org/Consortium/Legal/copyright-documents">W3C Document License</a>.
-        {{/if}}
-        W3C <a href='https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer'>liability</a>,
-        <a href='https://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks'>trademark</a> and
-        {{#if isCCBY}}
-          <a rel="license" href='https://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html'>document use</a>
-        {{else}}
-          {{#if isW3CSoftAndDocLicense}}
-            <a rel="license" href='https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document'>permissive document license</a>
-          {{else}}
-            <a rel="license" href='https://www.w3.org/Consortium/Legal/copyright-documents'>document use</a>
-          {{/if}}
-        {{/if}}
-        rules apply.
-      </p>
-    {{/if}}
-  {{/if}}
+  <dt>Rechtenbeleid:</dt>  
+  <p class='copyright'>
+    <abbr title='Creative Commons Naamsvermelding 3.0 Licentie'>
+      <a href='https://creativecommons.org/licenses/by-nd/3.0/nl/'>
+        <img src='/media/logos/CC-Licentie.png' alt='Naamsvermelding-GeenAfgeleideWerken 3.0 Nederland' width='588px' height='49px'>
+      </a>
+    </abbr>
+  </p>
   <hr title="Separator for header">
 </div>

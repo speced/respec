@@ -1,0 +1,7 @@
+/* Style for Geonovum Officiële Standaard */
+
+@import "base.css";
+
+body {
+  background-image: url('/media/logos/GEO-DEF.svg')
+}

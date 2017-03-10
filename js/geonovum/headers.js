@@ -101,8 +101,6 @@ define(
     ,   "templates"
     ],
     function (hb, utils, pubsubhub, tmpls) {
-        var cgbgHeadersTmpl = tmpls["cgbg-headers.html"];
-        var cgbgSotdTmpl = tmpls["cgbg-sotd.html"];
         var headersTmpl = tmpls["headers.html"];
         var sotdTmpl = tmpls["sotd.html"];
 
@@ -219,108 +217,71 @@ define(
             ret += "</p>";
             return new hb.SafeString(ret);
         });
-
-        return {
-            status2maturity:    {
-                FPWD:           "WD"
-            ,   LC:             "WD"
-            ,   FPLC:           "WD"
-            ,   "FPWD-NOTE":    "NOTE"
-            ,   "WD-NOTE":      "WD"
-            ,   "LC-NOTE":      "LC"
-            ,   "IG-NOTE":      "NOTE"
-            ,   "WG-NOTE":      "NOTE"
-            }
-        ,   status2rdf: {
-                NOTE:           "w3p:NOTE",
-                WD:             "w3p:WD",
-                LC:             "w3p:LastCall",
-                CR:             "w3p:CR",
-                PR:             "w3p:PR",
-                REC:            "w3p:REC",
-                PER:            "w3p:PER",
-                RSCND:          "w3p:RSCND"
-            }
-        ,   status2text: {
-                NOTE:           "Working Group Note"
-            ,   "WG-NOTE":      "Working Group Note"
-            ,   "CG-NOTE":      "Co-ordination Group Note"
-            ,   "IG-NOTE":      "Interest Group Note"
-            ,   "Member-SUBM":  "Member Submission"
-            ,   "Team-SUBM":    "Team Submission"
-            ,   MO:             "Member-Only Document"
-            ,   ED:             "Editor's Draft"
-            ,   FPWD:           "First Public Working Draft"
-            ,   WD:             "Working Draft"
-            ,   "FPWD-NOTE":    "Working Group Note"
-            ,   "WD-NOTE":      "Working Draft"
-            ,   "LC-NOTE":      "Working Draft"
-            ,   FPLC:           "First Public and Last Call Working Draft"
-            ,   LC:             "Last Call Working Draft"
-            ,   CR:             "Candidate Recommendation"
-            ,   PR:             "Proposed Recommendation"
-            ,   PER:            "Proposed Edited Recommendation"
-            ,   REC:            "Recommendation"
-            ,   RSCND:          "Rescinded Recommendation"
-            ,   unofficial:     "Unofficial Draft"
-            ,   base:           "Document"
-            ,   finding:        "TAG Finding"
-            ,   "draft-finding": "Draft TAG Finding"
-            ,   "CG-DRAFT":     "Draft Community Group Report"
-            ,   "CG-FINAL":     "Final Community Group Report"
-            ,   "BG-DRAFT":     "Draft Business Group Report"
-            ,   "BG-FINAL":     "Final Business Group Report"
-            }
-        ,   status2long:    {
-                "FPWD-NOTE":    "First Public Working Group Note"
-            ,   "LC-NOTE":      "Last Call Working Draft"
-            }
-        ,   recTrackStatus: ["FPWD", "WD", "FPLC", "LC", "CR", "PR", "PER", "REC"]
-        ,   noTrackStatus:  ["MO", "unofficial", "base", "finding", "draft-finding", "CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL", "webspec"]
-        ,   cgbg:           ["CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"]
-        ,   precededByAn:   ["ED", "IG-NOTE"]
-        ,   licenses: {
-                cc0: {
-                  name: "Creative Commons 0 Public Domain Dedication",
-                  short: "CC0",
-                  url: "https://creativecommons.org/publicdomain/zero/1.0/",
-                },
-                "w3c-software": {
-                  name: "W3C Software Notice and License",
-                  short: "W3C Software",
-                  url: "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231",
-                },
-                "w3c-software-doc": {
-                  name: "W3C Software and Document Notice and License",
-                  short: "W3C Software and Document",
-                  url: "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
-                },
-                "cc-by": {
-                  name: "Creative Commons Attribution 4.0 International Public License",
-                  short: "CC-BY",
-                  url: "https://creativecommons.org/licenses/by/4.0/legalcode",
+        
+        hb.registerHelper("switch", function(value, options) {
+            this._switch_value_ = value;
+            this._switch_break_ = false;
+            var html = options.fn(this);
+            delete this._switch_break_;
+            delete this._switch_value_;
+            return html;
+        });
+        
+        hb.registerHelper("case", function(value, options) {
+            var args = Array.prototype.slice.call(arguments);
+            var options    = args.pop();
+            var caseValues = args;
+        
+            if (this._switch_break_ || caseValues.indexOf(this._switch_value_) === -1) {
+                return '';
+            } else {
+                if (options.hash.break === true) {
+                this._switch_break_ = true;
                 }
+            return options.fn(this);
             }
+        });
+        
+        hb.registerHelper("default", function(options) {
+            if (!this._switch_break_) {
+            return options.fn(this);
+            }
+        });
+        
+        return {
+            status2text: {
+                "GEO-ED":         "Werkversie"
+            ,   "GEO-WD":         "Draft Versie"
+            ,   "GEO-FD":         "Final Draft"
+            ,   "GEO-DEF":        "Definitief"
+            ,   "GEO-BASIS":      "Document"  
+            }
+        ,   type2text: {
+                "NO": "Norm" 
+            ,   "ST": "Standaard"
+            ,   "IM": "Informatiemodel"
+            ,   "PR": "Praktijkrichtlijn"
+            ,   "HR": "Handreiking"
+            ,   "WA": "Werkafspraak"
+            }
+        ,   noTrackStatus:  ["GEO-BASIS"]
         ,   run:    function (conf, doc, cb) {
-                // Default include RDFa document metadata
-                if (conf.doRDFa === undefined) conf.doRDFa = true;
-                // validate configuration and derive new configuration values
-                if (!conf.license) conf.license = (conf.specStatus === "webspec") ? "w3c-software" : "w3c";
-                conf.isCCBY = conf.license === "cc-by";
-                conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
-                if (conf.specStatus === "webspec" && !$.inArray(conf.license, ["cc0", "w3c-software"]))
-                    pubsubhub.pub("error", "You cannot use that license with WebSpecs.");
-                if (conf.specStatus !== "webspec" && !$.inArray(conf.license, ["cc-by", "w3c"]))
-                    pubsubhub.pub("error", "You cannot use that license with that type of document.");
-                conf.licenseInfo = this.licenses[conf.license];
-                conf.isCGBG = $.inArray(conf.specStatus, this.cgbg) >= 0;
-                conf.isCGFinal = conf.isCGBG && /G-FINAL$/.test(conf.specStatus);
-                conf.isBasic = (conf.specStatus === "base");
-                conf.isRegular = (!conf.isCGBG && !conf.isBasic);
+                conf.specStatus = (conf.specStatus) ? conf.specStatus.toUpperCase() : "";
+                conf.specType = (conf.specType) ? conf.specType.toUpperCase() : "";
+                conf.isBasic = (conf.specStatus === "GEO-BASIS");
+                conf.isRegular = (!conf.isBasic);
+                conf.isNoTrack = $.inArray(conf.specStatus, this.noTrackStatus) >= 0;
+                conf.isOfficial = (conf.specStatus === "GEO-DEF")
+                //Some errors
                 if (!conf.specStatus) pubsubhub.pub("error", "Missing required configuration: specStatus");
+                if (conf.isRegular && !conf.specType) pubsubhub.pub("error", "Missing required configuration: specType");
+                if (!conf.edDraftURI && !conf.isOfficial && !conf.isBasic) pubsubhub.pub("error", "Missing required configuration: edDraftURI");
                 if (conf.isRegular && !conf.shortName) pubsubhub.pub("error", "Missing required configuration: shortName");
+                if (!conf.isOfficial && !conf.github) pubsubhub.pub("error", "Missing required configuration: github")
+                //Titles
                 conf.title = doc.title || "No Title";
                 if (!conf.subtitle) conf.subtitle = "";
+                //Publishdate
                 if (!conf.publishDate) {
                     conf.publishDate = utils.parseLastModified(doc.lastModified);
                 }
@@ -329,58 +290,18 @@ define(
                 }
                 conf.publishYear = conf.publishDate.getFullYear();
                 conf.publishHumanDate = utils.humanDate(conf.publishDate);
-                conf.isNoTrack = $.inArray(conf.specStatus, this.noTrackStatus) >= 0;
-                conf.isRecTrack = conf.noRecTrack ? false : $.inArray(conf.specStatus, this.recTrackStatus) >= 0;
-                conf.isMemberSubmission = conf.specStatus === "Member-SUBM";
-                conf.isTeamSubmission = conf.specStatus === "Team-SUBM";
-                conf.isSubmission = conf.isMemberSubmission || conf.isTeamSubmission;
-                conf.anOrA = $.inArray(conf.specStatus, this.precededByAn) >= 0 ? "an" : "a";
-                conf.isTagFinding = conf.specStatus === "finding" || conf.specStatus === "draft-finding";
+                //Version URLs
                 if (!conf.edDraftURI) {
                     conf.edDraftURI = "";
-                    if (conf.specStatus === "ED") pubsubhub.pub("warn", "Editor's Drafts should set edDraftURI.");
+                    if (conf.specStatus === "GEO-ED") pubsubhub.pub("warn", "Editor's Drafts should set edDraftURI.");
                 }
-                conf.maturity = (this.status2maturity[conf.specStatus]) ? this.status2maturity[conf.specStatus] : conf.specStatus;
-                var publishSpace = "TR";
-                if (conf.specStatus === "Member-SUBM") publishSpace = "Submission";
-                else if (conf.specStatus === "Team-SUBM") publishSpace = "TeamSubmission";
-                if (conf.isRegular) conf.thisVersion =  "https://www.w3.org/" + publishSpace + "/" +
-                                                          conf.publishDate.getFullYear() + "/" +
-                                                          conf.maturity + "-" + conf.shortName + "-" +
-                                                          utils.concatDate(conf.publishDate) + "/";
-                if (conf.specStatus === "ED") conf.thisVersion = conf.edDraftURI;
-                if (conf.isRegular) conf.latestVersion = "https://www.w3.org/" + publishSpace + "/" + conf.shortName + "/";
-                if (conf.isTagFinding) {
-                    conf.latestVersion = "https://www.w3.org/2001/tag/doc/" + conf.shortName;
-                    conf.thisVersion = conf.latestVersion + "-" + utils.concatDate(conf.publishDate, "-");
-                }
-                if (conf.previousPublishDate) {
-                    if (!conf.previousMaturity && !conf.isTagFinding)
-                        pubsubhub.pub("error", "previousPublishDate is set, but not previousMaturity");
-                    if (!(conf.previousPublishDate instanceof Date))
-                        conf.previousPublishDate = utils.parseSimpleDate(conf.previousPublishDate);
-                    var pmat = (this.status2maturity[conf.previousMaturity]) ? this.status2maturity[conf.previousMaturity] :
-                                                                               conf.previousMaturity;
-                    if (conf.isTagFinding) {
-                        conf.prevVersion = conf.latestVersion + "-" + utils.concatDate(conf.previousPublishDate, "-");
-                    }
-                    else if (conf.isCGBG) {
-                        conf.prevVersion = conf.prevVersion || "";
-                    }
-                    else if (conf.isBasic) {
-                        conf.prevVersion = "";
-                    }
-                    else {
-                        conf.prevVersion = "https://www.w3.org/TR/" + conf.previousPublishDate.getFullYear() + "/" + pmat + "-" +
-                                           conf.shortName + "-" + utils.concatDate(conf.previousPublishDate) + "/";
-                    }
-                }
-                else {
-                    if (!/NOTE$/.test(conf.specStatus) && conf.specStatus !== "FPWD" && conf.specStatus !== "FPLC" && conf.specStatus !== "ED" && !conf.noRecTrack && !conf.isNoTrack && !conf.isSubmission)
-                        pubsubhub.pub("error", "Document on track but no previous version: Add previousMaturity previousPublishDate to ReSpec's config.");
-                    if (!conf.prevVersion) conf.prevVersion = "";
-                }
-                if (conf.prevRecShortname && !conf.prevRecURI) conf.prevRecURI = "https://www.w3.org/TR/" + conf.prevRecShortname;
+                var publishSpace = "st";             
+                if (conf.isRegular) conf.thisVersion =  "http://www.geostandaarden.nl/" + publishSpace + "/" +
+                                                        conf.specType.toLowerCase() + "-" + conf.shortName + "/";
+                if (conf.isRegular) conf.latestVersion = "http://www.geostandaarden.nl/" + publishSpace + "/" + 
+                                                        conf.publishDate.getFullYear() + "/" + 
+                                                        conf.specType.toLowerCase() + "-" + conf.shortName + "-" + utils.concatDate(conf.publishDate) + "/";
+                //Authors & Editors
                 if (!conf.editors || conf.editors.length === 0) pubsubhub.pub("error", "At least one editor is required");
                 var peopCheck = function (it) {
                     if (!it.name) pubsubhub.pub("error", "All authors and editors must have a name.");
@@ -393,141 +314,27 @@ define(
                 }
                 conf.multipleEditors = conf.editors && conf.editors.length > 1;
                 conf.multipleAuthors = conf.authors && conf.authors.length > 1;
-                $.each(conf.alternateFormats || [], function (i, it) {
-                    if (!it.uri || !it.label) pubsubhub.pub("error", "All alternate formats must have a uri and a label.");
-                });
-                conf.multipleAlternates = conf.alternateFormats && conf.alternateFormats.length > 1;
-                conf.alternatesHTML = utils.joinAnd(conf.alternateFormats, function (alt) {
-                    var optional = (alt.hasOwnProperty("lang") && alt.lang) ? " hreflang='" + alt.lang + "'" : "";
-                    optional += (alt.hasOwnProperty("type") && alt.type) ? " type='" + alt.type + "'" : "";
-                    return "<a rel='alternate' href='" + alt.uri + "'" + optional + ">" + alt.label + "</a>";
-                });
-                if (conf.bugTracker) {
-                    if (conf.bugTracker["new"] && conf.bugTracker.open) {
-                        conf.bugTrackerHTML = "<a href='" + conf.bugTracker["new"] + "'>" + conf.l10n.file_a_bug + "</a> " +
-                                              conf.l10n.open_parens + "<a href='" + conf.bugTracker.open + "'>" +
-                                              conf.l10n.open_bugs + "</a>" + conf.l10n.close_parens;
-                    }
-                    else if (conf.bugTracker.open) {
-                        conf.bugTrackerHTML = "<a href='" + conf.bugTracker.open + "'>open bugs</a>";
-                    }
-                    else if (conf.bugTracker["new"]) {
-                        conf.bugTrackerHTML = "<a href='" + conf.bugTracker["new"] + "'>file a bug</a>";
-                    }
-                }
-                if (conf.copyrightStart && conf.copyrightStart == conf.publishYear) conf.copyrightStart = "";
-                for (var k in this.status2text) {
-                    if (this.status2long[k]) continue;
-                    this.status2long[k] = this.status2text[k];
-                }
-                conf.longStatus = this.status2long[conf.specStatus];
                 conf.textStatus = this.status2text[conf.specStatus];
-                if (this.status2rdf[conf.specStatus]) {
-                    conf.rdfStatus = this.status2rdf[conf.specStatus];
-                }
-                conf.showThisVersion =  (!conf.isNoTrack || conf.isTagFinding);
-                conf.showPreviousVersion = (conf.specStatus !== "FPWD" && conf.specStatus !== "FPLC" && conf.specStatus !== "ED" && !conf.isNoTrack && !conf.isSubmission);
-                if (/NOTE$/.test(conf.specStatus) && !conf.prevVersion) conf.showPreviousVersion = false;
-                if (conf.isTagFinding) conf.showPreviousVersion = conf.previousPublishDate ? true : false;
-                conf.notYetRec = (conf.isRecTrack && conf.specStatus !== "REC");
-                conf.isRec = (conf.isRecTrack && conf.specStatus === "REC");
-                if (conf.isRec && !conf.errata)
-                    pubsubhub.pub("error", "Recommendations must have an errata link.");
-                conf.notRec = (conf.specStatus !== "REC");
-                conf.isUnofficial = conf.specStatus === "unofficial";
-                conf.prependW3C = !conf.isUnofficial;
-                conf.isED = (conf.specStatus === "ED");
-                conf.isCR = (conf.specStatus === "CR");
-                conf.isPR = (conf.specStatus === "PR");
-                conf.isPER = (conf.specStatus === "PER");
-                conf.isMO = (conf.specStatus === "MO");
-                conf.isIGNote = (conf.specStatus === "IG-NOTE");
-                conf.dashDate = utils.concatDate(conf.publishDate, "-");
-                conf.publishISODate = utils.isoDate(conf.publishDate);
-                conf.shortISODate = conf.publishISODate.replace(/T.*/, "");
-                conf.processVersion = conf.processVersion || "2015";
-                if (conf.processVersion == "2014") {
-                    pubsubhub.pub("warn", "Process " + conf.processVersion + " has been superceded by Process 2015.");
-                    conf.processVersion = "2015";
-                }
-                conf.isNewProcess = conf.processVersion == "2015";
-                // configuration done - yay!
-
-                // annotate html element with RFDa
+                conf.typeStatus = this.type2text[conf.specType];
+                //Annotate html element with RFDa
+                if (conf.doRDFa === undefined) conf.doRDFa = true;
                 if (conf.doRDFa) {
                     if (conf.rdfStatus) $("html").attr("typeof", "bibo:Document " + conf.rdfStatus );
                     else $("html").attr("typeof", "bibo:Document ");
                     var prefixes = "bibo: http://purl.org/ontology/bibo/ w3p: http://www.w3.org/2001/02pd/rec54#";
                     $("html").attr("prefix", prefixes);
                     $("html>head").prepend($("<meta lang='' property='dc:language' content='en'>"));
-                }
-                // insert into document and mark with microformat
+                }  
+                //headersTmpl
                 var bp;
-                if (conf.isCGBG) bp = cgbgHeadersTmpl(conf);
-                else bp = headersTmpl(conf);
+                bp = headersTmpl(conf);
                 $("body", doc).prepend($(bp)).addClass("h-entry");
-
-                // handle SotD
+                //SotD
                 var $sotd = $("#sotd");
-                if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !$sotd.length)
-                    pubsubhub.pub("error", "A custom SotD paragraph is required for your type of document.");
                 conf.sotdCustomParagraph = $sotd.html();
                 $sotd.remove();
-                // NOTE:
-                //  When arrays, wg and wgURI have to be the same length (and in the same order).
-                //  Technically wgURI could be longer but the rest is ignored.
-                //  However wgPatentURI can be shorter. This covers the case where multiple groups
-                //  publish together but some aren't used for patent policy purposes (typically this
-                //  happens when one is foolish enough to do joint work with the TAG). In such cases,
-                //  the groups whose patent policy applies need to be listed first, and wgPatentURI
-                //  can be shorter — but it still needs to be an array.
-                var wgPotentialArray = [conf.wg, conf.wgURI, conf.wgPatentURI];
-                if (
-                    wgPotentialArray.some(function (it) { return $.isArray(it); }) &&
-                    wgPotentialArray.some(function (it) { return !$.isArray(it); })
-                ) pubsubhub.pub("error", "If one of 'wg', 'wgURI', or 'wgPatentURI' is an array, they all have to be.");
-                if ($.isArray(conf.wg)) {
-                    conf.multipleWGs = conf.wg.length > 1;
-                    conf.wgHTML = utils.joinAnd(conf.wg, function (wg, idx) {
-                        return "the <a href='" + conf.wgURI[idx] + "'>" + wg + "</a>";
-                    });
-                    var pats = [];
-                    for (var i = 0, n = conf.wg.length; i < n; i++) {
-                        pats.push("a <a href='" + conf.wgPatentURI[i] + "' rel='disclosure'>"
-                                  + "public list of any patent disclosures  (" + conf.wg[i]
-                                  + ")</a>");
-                    }
-                    conf.wgPatentHTML = utils.joinAnd(pats);
-                }
-                else {
-                    conf.multipleWGs = false;
-                    conf.wgHTML = "the <a href='" + conf.wgURI + "'>" + conf.wg + "</a>";
-                }
-                if (conf.specStatus === "PR" && !conf.crEnd) pubsubhub.pub("error", "Status is PR but no crEnd is specified (needed to indicate end of previous CR)");
-                if (conf.specStatus === "CR" && !conf.crEnd) pubsubhub.pub("error", "Status is CR but no crEnd is specified");
-                conf.humanCREnd = utils.humanDate(conf.crEnd || "");
-                if (conf.specStatus === "PR" && !conf.prEnd) pubsubhub.pub("error", "Status is PR but no prEnd is specified");
-                conf.humanPREnd = utils.humanDate(conf.prEnd || "");
-                conf.humanPEREnd = utils.humanDate(conf.perEnd || "");
-                if (conf.specStatus === "PER" && !conf.perEnd) pubsubhub.pub("error", "Status is PER but no perEnd is specified");
-
-                conf.recNotExpected = (!conf.isRecTrack && conf.maturity == "WD" && conf.specStatus !== "FPWD-NOTE");
-                if (conf.isIGNote && !conf.charterDisclosureURI)
-                    pubsubhub.pub("error", "IG-NOTEs must link to charter's disclosure section using charterDisclosureURI");
-                // ensure subjectPrefix is encoded before using template
-                if (conf.subjectPrefix !== "") conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
-                var sotd;
-                if (conf.isCGBG) sotd = cgbgSotdTmpl(conf);
-                else sotd = sotdTmpl(conf);
+                var sotd = sotdTmpl(conf);
                 if (sotd) $(sotd).insertAfter($("#abstract"));
-
-                if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
-                    pubsubhub.pub("error", "CR, PR, and REC documents need to have an implementationReportURI defined.");
-                }
-                if (conf.isTagFinding && !conf.sotdCustomParagraph) {
-                    pubsubhub.pub("error", "ReSpec does not support automated SotD generation for TAG findings, " +
-                                     "please specify one using a <code><section></code> element with ID=sotd.");
-                }
                 cb();
             }
         };

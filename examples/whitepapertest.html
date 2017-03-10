@@ -7,37 +7,32 @@
     <!--<script src='https://www.w3.org/Tools/respec/respec-w3c-common' class='remove'></script>	 --> 
     <script class='remove'>
       var respecConfig = {
-        specStatus: "ED",
-        issueBase: "https://github.com/Geonovum/whitepaper-standaarden/issues/", 
-        githubAPI: "https://api.github.com/repos/Geonovum/whitepaper-standaarden",
-        noRecTrack: true,
-       // license: "cc-by",
+        specStatus: "GEO-basis",
+        specType: "pr",
         editors: [
-		{
-		  name: "Linda van den Brink",
-		  company: "Geonovum",
-		  url: "http://www.geonovum.nl/"
-		},
-		{
-		  name: "Friso Penninga",
-		  company: "Geonovum",
-		  url: "http://www.geonovum.nl/"
-		}
-		],
-        edDraftURI: "https://geonovum.github.io/whitepaper-standaarden/",
-        shortName: "wps",
-		logos: [
-		{
-		  src: "http://www.geonovum.nl/sites/all/themes/insiders/logo.png",
-		  href: "http://www.geonovum.nl/",
-		  alt: "Geonovum",
-		  width: 157,
-		  height: 79,
-		  id: "geonovum-logo"
-		}
-		],
-		subtitle: "Conceptversie in ontwikkeling."
-		};
+        {
+        name: "Linda van den Brink",
+        company: "Geonovum",
+        companyURL: "http://www.geonovum.nl/",
+        mailto: "info@geonovum.nl"
+        },
+        {
+        name: "Friso Penninga",
+        company: "Geonovum",
+        companyURL: "http://www.geonovum.nl/",
+        mailto: "info@geonovum.nl"
+        }
+        ],
+        authors: [{
+            name: "Linda van den Brink",
+            company: "Geonovum",
+            companyURL: "http://www.geonovum.nl/",
+            mailto: "info@geonovum.nl"
+        }],
+        edDraftURI: "https://geonovum.github.io/whitepaper-standaarden",
+        shortName: "whitepaper",
+        github: "https://github.com/Geonovum/whitepaper-standaarden",
+        };
     </script>
   </head>
   <body>
@@ -47,7 +42,7 @@
     <section id='sotd'>
       <p>Status van het document.</p>
     </section>
-	<section id="intro">
+    <section id="intro">
       <h2>Inleiding</h2>
       <p>Terugkijkend op tien jaar standaarden ontwikkelen en beheren, kunnen we vaststellen dat we in Nederland inmiddels een volwassen set standaarden kennen, die fungeert als de ruggegraat van de nationale spatial data infrastructure (SDI). Deze set standaarden is opgenomen op de Pas toe of leg uit-lijst van het Forum Standaardisatie. Deze set bevat het Basismodel Geo-informatie (NEN3610), het 'moedermodel' van veel informatiemodellen waarmee semantiek van datasets éénduidig wordt vastgelegd, en een aantal standaarden die vastleggen hoe we deze datasets kunnen uitwisselen (GML), ontsluiten (Nederlandse profielen op WMS en WFS) en vindbaar maken (Nederlandse metadataprofielen). Geonovum beheert de meeste van deze standaarden. </p>
       <p>Hoewel de huidige SDI met datasets als de basisregistraties en voorzieningen als PDOK niet meer weg te denken is uit de dagelijkse praktijk van het geo-inforatiewerkveld, is een SDI nooit uitontwikkeld. Technologische ontwikkelingen volgen elkaar in hoog tempo op en de maatschappelijke vragen evolueren. Waar de SDI oorspronkelijk alleen op de geo-professional gericht was, verwachten we tegenwoordig dat de SDI toegankelijk wordt voor een veel bredere gebruikersgroep, waaronder de web-ontwikkelaars. Deze beoogde verbreding komt voort uit de toegenomen aandacht voor (her)bruikbaarheid van data, waar oorspronkelijk de focus meer lag op de ontsluiting zelf. In de toekomst verwachten we meer samenhang (en consistentie) tussen individuele datasets, meer detail in datasets (overgang van 2D naar 3D) en vormen van toegang tot data die aansluiten bij de gebruikerswensen van de veel bredere gebruikersgroep van de Nederlandse SDI. </p>
@@ -77,8 +72,8 @@
         <li>Er zijn nu meerdere linked data vocabulaires voor geodata. De Best Practice geeft handvaten om hier een keuze uit te maken, maar de killer vocabulaire moet er nog komen. Waarschijnlijk wordt er bij de OGC gewerkt aan een nieuwe <em>spatial ontology</em> als opvolger voor de nu bestaande ontologie uit <a href="http://www.opengeospatial.org/standards/geosparql">GeoSPARQL</a>. </li>
         <li>Linked geodata in een triple store opslaan en dan ruimtelijke zoekvragen stellen? Dat leidt nu nog tot teleurstellingen. Enkele triple stores kunnen dit wel, maar de performance is teleurstellend. In het #geo4web testbed is hier onderzoek naar gedaan en ook Kadaster heeft ervaring met dit probleem. Hoewel Geonovum niet de aangewezen partij is om hier een oplossing voor te vinden, is het wel een praktisch probleem dat aandacht moet krijgen.</li>
         <li>
-		  <p class="note" title="Dit past beter in het Geo op het web stuk">
-		  Voor geo-metadata op het web wordt er in OGC verband gewerkt aan het standaardiseren van Geo-DCAT-AP, een geo-profiel op DCAT, een linked data vocabulaire waarmee je dataset metadata kunt beschrijven voor portalen. Maar ook een geo-update van schema.org zou een goed idee zijn. Deze vocabulaire wordt gebruikt om machine-leesbare semantiek toe te voegen aan data op het web en wordt begrepen door zoekmachines. schema.org bevat semantiek voor geo, maar deze kan hier en daar nog wel verbeterd worden.</p></li>
+          <p class="note" title="Dit past beter in het Geo op het web stuk">
+          Voor geo-metadata op het web wordt er in OGC verband gewerkt aan het standaardiseren van Geo-DCAT-AP, een geo-profiel op DCAT, een linked data vocabulaire waarmee je dataset metadata kunt beschrijven voor portalen. Maar ook een geo-update van schema.org zou een goed idee zijn. Deze vocabulaire wordt gebruikt om machine-leesbare semantiek toe te voegen aan data op het web en wordt begrepen door zoekmachines. schema.org bevat semantiek voor geo, maar deze kan hier en daar nog wel verbeterd worden.</p></li>
       </ul>
       <p>Linked data blijft naar onze verwachting ook de komende jaren wel enigszins een niche technologie. Voor het merendeel van de web developers blijft het te complex. Het blijft echter toch relevant, omdat het de meest rijke en krachtige manier is om data beschikbaar te stellen. In de context van open data is dat belangrijk. Daarnaast kan de data, ofwel door de data-eigenaar zelf, of door derden, op meer gangbare manieren beschikbaar gesteld worden. Dit kan overigens nog steeds "linked data" zijn, zonder dat het "Linked Data" is: wél elk object op het web met een eigen URI en links tussen de objecten; maar niet per sé met RDF, triple stores en SPARQL endpoints.  </p>
       <p>In het verlengde van linked data ligt het semantic web. Langzaam maar zeker werken we hier naar toe. We denken daarbij aan "shared semantics" oftewel semantische harmonisatie. Zonder de hele geowereld te willen harmoniseren, want dit zou een enorme klus zijn waarvan het praktisch nut niet vaststaat. Wel blijven we gericht, daar waar semantische harmonisatie leidt tot nieuwe mogelijkheden om data te hergebruiken en processen te optimaliseren, linked data principes toepassen om te komen tot een web van data waarin niet langer overbodig data gekopieerd wordt.</p>
@@ -108,20 +103,20 @@
     <h2>Impact op Pas toe of leg uit-standaarden</h2>
     <p>...</p>
       <section id="informatiemodellen">
-      <h3>Informatiemodel</h3>
-      <p>nieuwe manier om informatiemodellen te ontwikkelen. Een Linked Data profiel op NEN3610. En over semantische harmonisatie: niet alle semantiek willen harmoniseren om het harmoniseren, maar gericht inzetten op specifieke gevallen waar harmonisatie wat oplevert, en hier tot op data/proces niveau gaan. Bv NWB/BGT.</p>
+        <h3>Informatiemodel</h3>
+        <p>nieuwe manier om informatiemodellen te ontwikkelen. Een Linked Data profiel op NEN3610. En over semantische harmonisatie: niet alle semantiek willen harmoniseren om het harmoniseren, maar gericht inzetten op specifieke gevallen waar harmonisatie wat oplevert, en hier tot op data/proces niveau gaan. Bv NWB/BGT.</p>
       </section>     
       <section id="uitwisselformaat">
-      <h3>Uitwisselformaat</h3>
-      <p>GML ontwikkelt zich niet meer verder. We gaan nadenken over andere standaarden voor uitwisseling. GeoJSON, Spatialite, Geopackage, Linked Data… Maar hier hebben we nog niet echt een antwoord.</p>
+        <h3>Uitwisselformaat</h3>
+        <p>GML ontwikkelt zich niet meer verder. We gaan nadenken over andere standaarden voor uitwisseling. GeoJSON, Spatialite, Geopackage, Linked Data… Maar hier hebben we nog niet echt een antwoord.</p>
       </section> 
       <section id="ontsluiting">
-      <h3>Ontsluiting / webservices</h3>
-      <p>Meer api naast services</p>
+        <h3>Ontsluiting / webservices</h3>
+        <p>Meer api naast services</p>
       </section> 
       <section id="vindbaarheid">
-      <h3>Vindbaarheid / metadata</h3>
-      <p>Geo-DCAT (voor integratie portalen), schema.org (voor vindbaarheid op het web) aanbevelingen. En ook de vraag: hoeveel metadatavelden heb je nou echt nodig. Voor vindbaarheid: met name coverage. Voor beoordeling fit for purpose: nog een paar meer.</p>
+        <h3>Vindbaarheid / metadata</h3>
+        <p>Geo-DCAT (voor integratie portalen), schema.org (voor vindbaarheid op het web) aanbevelingen. En ook de vraag: hoeveel metadatavelden heb je nou echt nodig. Voor vindbaarheid: met name coverage. Voor beoordeling fit for purpose: nog een paar meer.</p>
       </section> 
     </section>
     <section id="impactwerkwijze">
@@ -131,19 +126,22 @@
     <section id="discussie">
     <h2>Discussie</h2>
     <p>hier slimme dingen zeggen, samenvatten, zekerheden en onzekerheden duiden. vervolgonderzoek noemen</p>
-	</section>
-	<div class="issue" data-number="1"/>
-	    <p>Op deze manier kunnen we open punten opnemen in de tekst</p>
-	</div>
-	<aside class="example" title='Voorbeeld code'>
+    </section>
+    <p class="issue">Op deze manier kunnen we open punten opnemen in de tekst</p>
+    <aside class="example" title='Voorbeeld code'>
       <p>Hier komt een voorbeeld.
         <pre>
         const sum = [...items]
         .map(item => item * 2)
         .reduce((sum, next) => sum + (next || 0) );
         </pre>
+      </p>
     </aside>
-	<p class="ednote" title="Voorbeeld notitie">
-    Tekst, tekst, en nog meer tekst ...<p>
+    <p class="ednote" title="Voorbeeld notitie">Tekst, tekst, en nog meer tekst ...</p>
+    <p class="warning" title="Fout">Hier zit een fout.</p>
+    <section class=appendix>
+      <h2>Appendix</h2>
+      <p>Appendix A onderdelen, nog meer tekst ...</p>
+    </section>
   </body>
 </html>

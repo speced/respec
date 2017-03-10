@@ -50,7 +50,8 @@ define([
 
     "core/aria",
     "core/style",
-    "w3c/style",
+    //"w3c/style",
+    "geonovum/style",
     //"w3c/l10n",
     "geonovum/l10n",
     "core/data-include",
@@ -58,6 +59,7 @@ define([
     // "w3c/headers",
     "geonovum/headers",
     // "w3c/abstract",
+    "geonovum/abstract",
     // "w3c/conformance",
     "core/data-transform",
     "core/inlines",

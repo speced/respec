@@ -1,0 +1,7 @@
+/* Style for Geonovum Werkversie */
+
+@import "base.css";
+
+body {
+  background-image: url('/media/logos/GEO-ED.svg')
+}
