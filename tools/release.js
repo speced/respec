@@ -40,6 +40,7 @@ colors.setTheme({
   test: "grey",
   verbose: "cyan",
   warn: "yellow",
+  l10n: "green",
 });
 
 function rel(f) {
