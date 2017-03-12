@@ -40,6 +40,7 @@ colors.setTheme({
   test: "grey",
   verbose: "cyan",
   warn: "yellow",
+  l10n: "green",
 });
 
 function rel(f) {
@@ -131,12 +132,13 @@ const Prompts = {
       ["docs", "📖"],
       ["feat", "⭐️"],
       ["fix", "🐞"],
+      ["l10n", "🌏"],
       ["perf", "🏎"],
       ["refactor", "💃"],
       ["style", "🖌"],
       ["test", "👍"],
     ]);
-    const commitHints = /^docs|^chore|^fix|^style|^refactor|^test|^feat|^breaking\schange/i;
+    const commitHints = /^l10n|^docs|^chore|^fix|^style|^refactor|^test|^feat|^breaking\schange/i;
     return commits
       .split("\n")
       .filter(line => line)
