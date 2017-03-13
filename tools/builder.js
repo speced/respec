@@ -9,9 +9,45 @@ const path = require("path");
 const presets = require("loading-indicator/presets");
 const r = require("requirejs");
 const UglifyJS = require("uglify-js");
+const commandLineArgs = require("command-line-args");
+const getUsage = require("command-line-usage");
 colors.setTheme({
+  error: "red",
   info: "green",
 });
+
+const optionList = [{
+  alias: "h",
+  defaultValue: false,
+  description: "Display this usage guide.",
+  name: "help",
+  type: Boolean,
+}, {
+  alias: "p",
+  defaultOption: true,
+  description: "Name of profile to build. Profile must be " +
+    "in the js/ folder, and start with 'profile-' (e.g., profile-w3c-common.js)",
+  multiple: false,
+  name: "profile",
+  type: String,
+}];
+
+const usageSections = [{
+  header: "builder",
+  content: "Builder builds a ReSpec profile",
+}, {
+  header: "Options",
+  optionList,
+}, {
+  header: "Examples",
+  content: [{
+    desc: "1. Build W3C Profile ",
+    example: "$ ./tools/builder.js --profile=w3c-common"
+  }, ]
+}, {
+  content: "Project home: [underline]{https://github.com/w3c/respec}",
+  raw: true,
+}];
 
 /**
  * Async function that appends the boilerplate to the generated script
@@ -43,7 +79,7 @@ require(['profile-${name}']);`;
   }, Builder);
 }
 
-var Builder = {
+const Builder = {
   /**
    * Async function that gets the current version of ReSpec from package.json
    *
@@ -63,7 +99,7 @@ var Builder = {
    * @return {[type]}         [description]
    */
   build({ name }) {
-    if (!name)  {
+    if (!name) {
       throw new TypeError("name is required");
     }
     const buildPath = path.join(__dirname, "../builds");
@@ -114,3 +150,31 @@ var Builder = {
 };
 
 exports.Builder = Builder;
+
+async.task(function* run() {
+  
+  let parsedArgs;
+  try {
+    parsedArgs = commandLineArgs(optionList);
+  } catch (err) {
+    console.info(getUsage(usageSections));
+    console.error(colors.error(err.stack));
+    return process.exit(127);
+  }
+  if (parsedArgs.help) {
+    console.info(getUsage(usageSections));
+    return process.exit(0);
+  }
+  const { profile: name } = parsedArgs;
+  if(!name){
+    console.info(getUsage(usageSections));
+    process.exit(0);
+  }
+  try {
+    yield Builder.build({ name });
+  } catch (err) {
+    console.error(colors.error(err.stack));
+    return process.exit(1);
+  }
+  process.exit(0);
+});
