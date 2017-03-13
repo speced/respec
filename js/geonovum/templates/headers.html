@@ -3,41 +3,43 @@
     {{#if logos}}
       {{showLogos logos}}
     {{else}}
-        <a class='logo' href='http://www.geonovum.nl/'>
-            <img width='157' height='79' src='/media/logos/Geonovum.png' alt='Geonovum'>
-        </a>
+      <a class='logo' href='http://www.geonovum.nl/'>
+        <img width='143' height='73' src='/media/logos/Geonovum.png' alt='Geonovum'>
+      </a>
     {{/if}}
     </p>
     <h1 class='title p-name' id='title'{{#if doRDFa}} property='dcterms:title'{{/if}}>{{title}}</h1>
     {{#if subtitle}}
-        <h2 {{#if doRDFa}}property='bibo:subtitle' {{/if}}id='subtitle'>{{subtitle}}</h2>
+      <h2 {{#if doRDFa}}property='bibo:subtitle' {{/if}}id='subtitle'>{{subtitle}}</h2>
     {{/if}}
     <h2>Geonovum {{#if isRegular}}{{typeStatus}} {{/if}}{{textStatus}} 
-    <time {{#if doRDFa}}property="dcterms:issued"{{/if}}class='dt-published' datetime='{{dashDate}}'>{{publishHumanDate}}</time></h2>
+      <time {{#if doRDFa}}property="dcterms:issued"{{/if}}class='dt-published' datetime='{{dashDate}}'>{{publishHumanDate}}</time>
+    </h2>
     <dl>
     {{#unless isNoTrack}}
-        <dt>{{l10n.this_version}}</dt>
-        <dd><a class='u-url' href='{{thisVersion}}'>{{thisVersion}}</a></dd>
-        <dt>{{l10n.latest_published_version}}</dt>
-        <dd>{{#if latestVersion}}<a href='{{latestVersion}}'>{{latestVersion}}</a>{{else}}none{{/if}}</dd>
+      <dt>{{l10n.this_version}}</dt>
+      <dd><a class='u-url' href='{{thisVersion}}'>{{thisVersion}}</a></dd>
+      <dt>{{l10n.latest_published_version}}</dt>
+      <dd>{{#if latestVersion}}<a href='{{latestVersion}}'>{{latestVersion}}</a>{{else}}none{{/if}}</dd>
     {{/unless}}
     {{#unless isOfficial}}
-        {{#if edDraftURI}}
-            <dt>{{l10n.latest_editors_draft}}</dt>
-            <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
-        {{/if}}
+      {{#if edDraftURI}}
+        <dt>{{l10n.latest_editors_draft}}</dt>
+        <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
+      {{/if}}
     {{/unless}}
-    <dt>{{#if multipleEditors}}{{l10n.editors}}{{else}}{{l10n.editor}}{{/if}}</dt>{{showPeople "Editor" editors}}
+    <dt>{{#if multipleEditors}}{{l10n.editors}}{{else}}{{l10n.editor}}{{/if}}</dt>
+    {{showPeople "Editor" editors}}
     {{#if authors}}
-        <dt>{{#if multipleAuthors}}{{l10n.authors}}{{else}}{{l10n.author}}{{/if}}</dt>
+      <dt>{{#if multipleAuthors}}{{l10n.authors}}{{else}}{{l10n.author}}{{/if}}</dt>
     {{showPeople "Author" authors}}
     {{/if}}
     {{#unless isOfficial}}
-        {{#if github}}
-            <dt>Github:</dt>
-            <dd><a href='{{github}}'>Repository</a></dd>
-            <dd><a href='{{github}}/issues'>Issues</a></dd>
-        {{/if}}
+      {{#if github}}
+        <dt>Github:</dt>
+        <dd><a href='{{github}}'>Repository</a></dd>
+        <dd><a href='{{github}}/issues'>Issues</a></dd>
+      {{/if}}
     {{/unless}}
     {{#if otherLinks}}
       {{#each otherLinks}}
@@ -78,9 +80,10 @@
   </dl>
   <dt>Rechtenbeleid:</dt>  
   <p class='copyright'>
-    <abbr title='Creative Commons Naamsvermelding 3.0 Licentie'>
+    <abbr title='Naamsvermelding-GeenAfgeleideWerken 3.0 Nederland'>
       <a href='https://creativecommons.org/licenses/by-nd/3.0/nl/'>
-        <img src='/media/logos/CC-Licentie.png' alt='Naamsvermelding-GeenAfgeleideWerken 3.0 Nederland' width='588px' height='49px'>
+        <!--<img src='/media/logos/CC-Licentie.png' alt='Naamsvermelding-GeenAfgeleideWerken 3.0 Nederland' width='588px' height='49px'> -->
+        <img src='/media/logos/CC-Licentie.png' alt='Naamsvermelding-GeenAfgeleideWerken 3.0 Nederland' width='127px' height='44px'>
       </a>
     </abbr>
   </p>
