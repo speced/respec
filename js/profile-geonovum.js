@@ -52,7 +52,7 @@ define([
     "core/style",
     //"w3c/style",
     "geonovum/style",
-    "w3c/l10n",
+    "core/l10n",
     "core/data-include",
     "core/markdown",
     // "w3c/headers",
