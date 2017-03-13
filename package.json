@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "11.0.1",
+  "version": "11.1.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -56,7 +56,7 @@
     "babel:watch": "babel src -d js --watch --source-maps",
     "build": "npm run hb:build && npm run build:highlight && npm run babel:build && npm run copydeps && npm run build:respec-w3c-common",
     "build:highlight": "cd node_modules/highlight.js/ && npm install && node ./tools/build.js -n xml javascript css http markdown json abnf && cd ../../",
-    "build:respec-w3c-common": "./tools/build-w3c-common.js",
+    "build:respec-w3c-common": "./tools/builder.js --profile=w3c-common",
     "copydeps": "node ./tools/copydeps.js",
     "handlebars": "handlebars",
     "hb:build": "node ./tools/expandpaths.js -a js/*/templates/*.html js/*/templates/*.css js/core/templates/webidl-contiguous/*.html | xargs handlebars -f js/templates.js",
