@@ -4,7 +4,7 @@
 "use strict";
 const fs = require("fs");
 const async = require("marcosc-async");
-const builder = require("../tools/build-w3c-common");
+const { Builder } = require("../tools/builder");
 const colors = require("colors");
 const exec = require("child_process").exec;
 const express = require("express");
@@ -96,7 +96,7 @@ async.task(function* () {
   app.use(express.static(dir));
   app.listen(port);
   debug(" ⏲  Building ReSpec...");
-  yield builder.buildW3C("latest");
+  yield Builder.build({ name: "w3c-common" });
   debug(" ⏲  Running ReSpec2html tests...");
   try {
     yield runRespec2html(server);

@@ -9,7 +9,6 @@ const { exec } = require("child_process");
 const fsp = require("fs-promise");
 const loading = require("loading-indicator");
 const path = require("path");
-const w3cBuild = require("./build-w3c-common");
 const MAIN_BRANCH = "develop";
 const DEBUG = false;
 
@@ -352,7 +351,7 @@ async.task(function*() {
     // 3. Run the build script (node tools/build-w3c-common.js).
     indicators.get("build-merge-tag").show();
     yield npm("run hb:build");
-    yield w3cBuild.buildW3C();
+    yield Builder.build({ name: "w3c-common" });
     // 4. Commit your changes (git commit -am v3.x.y)
     yield git(`commit -am v${version}`);
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
