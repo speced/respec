@@ -55,6 +55,7 @@
     "babel:build": "babel src -d js --source-maps",
     "babel:watch": "babel src -d js --watch --source-maps",
     "build": "npm run hb:build && npm run build:highlight && npm run babel:build && npm run copydeps && npm run build:respec-w3c-common",
+    "build:geo": "npm run hb:build-geo && npm run build:highlight && npm run babel:build && npm run copydeps && node ./tools/builder.js --profile=geonovum",
     "build:highlight": "cd node_modules/highlight.js/ && npm install && node ./tools/build.js -n xml javascript css http markdown json abnf && cd ../../",
     "build:respec-w3c-common": "./tools/builder.js --profile=w3c-common",
     "copydeps": "node ./tools/copydeps.js",
