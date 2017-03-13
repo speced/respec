@@ -166,8 +166,7 @@ async.task(function* run() {
   }
   const { profile: name } = parsedArgs;
   if (!name) {
-    console.info(getUsage(usageSections));
-    process.exit(0);
+    return;
   }
   try {
     yield Builder.build({ name });
