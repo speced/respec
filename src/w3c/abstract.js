@@ -2,7 +2,7 @@
 // Handle the abstract section properly.
 import { pub } from "core/pubsubhub";
 
-function run(conf, doc, cb) {
+export function run(conf, doc, cb) {
   var $abs = $("#abstract");
   if ($abs.length) {
     if ($abs.find("p").length === 0) $abs.contents().wrapAll($("<p></p>"));
