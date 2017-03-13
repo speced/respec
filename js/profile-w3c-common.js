@@ -5,7 +5,7 @@ if (document.body) {
 } else {
   document.addEventListener("DOMContentLoaded", function() {
     document.body.hidden = true;
-  }, {once: true});
+  }, { once: true });
 }
 
 // In case everything else fails, we always want to show the document
@@ -46,6 +46,7 @@ define([
     "core/aria",
     "core/style",
     "w3c/style",
+    "core/l10n",
     "w3c/l10n",
     "core/data-include",
     "core/markdown",
