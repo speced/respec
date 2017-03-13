@@ -44,4 +44,5 @@ js/core/webidl-index.js
 js/core/webidl.js
 js/core/worker.js
 js/templates.js
+js/w3c/aria.js
 js/w3c/rfc2119.js
