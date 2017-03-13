@@ -138,12 +138,11 @@ const Builder = {
       r.optimize(config);
       const buildDir = path.resolve(__dirname, "../builds/");
       const workerDir = path.resolve(__dirname, "../worker/");
-      //console.log(buildDir, workerDir);
-      yield promiseToWrite;
       // copy respec-worker
       fsp
         .createReadStream(`${workerDir}/respec-worker.js`)
         .pipe(fsp.createWriteStream(`${buildDir}/respec-worker.js`));
+      yield promiseToWrite;
       loading.stop(timer);
     }, this);
   },
@@ -152,7 +151,7 @@ const Builder = {
 exports.Builder = Builder;
 
 async.task(function* run() {
-  
+
   let parsedArgs;
   try {
     parsedArgs = commandLineArgs(optionList);
@@ -166,7 +165,7 @@ async.task(function* run() {
     return process.exit(0);
   }
   const { profile: name } = parsedArgs;
-  if(!name){
+  if (!name) {
     console.info(getUsage(usageSections));
     process.exit(0);
   }
