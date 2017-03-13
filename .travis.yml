@@ -25,4 +25,4 @@ script:
   - npm run pretest
   - npm run build
   - npm run test:headless
-  - karma start --single-run --reporters mocha karma.conf.js
+  - travis_retry karma start --single-run --reporters mocha karma.conf.js
