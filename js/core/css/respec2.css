@@ -5,11 +5,14 @@
 
 
 /* Override code highlighter background */
+
 .hljs {
   background: transparent !important;
 }
 
+
 /* --- INLINES --- */
+
 em.rfc2119 {
   text-transform: lowercase;
   font-style: normal;
@@ -376,10 +379,22 @@ table.simple {
   background: url(data:image/gif;base64,R0lGODdhBAADAPEAANv///8AAP///wAAACwAAAAABAADAEACBZQjmIAFADs=) bottom repeat-x;
 }
 
-#issue-summary>ul, .respec-dfn-list {
+@supports (text-decoration-style: wavy) {
+  .respec-offending-element {
+    background: none;
+    text-decoration-line: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: red;
+  }
+}
+
+#issue-summary>ul,
+.respec-dfn-list {
   column-count: 2;
 }
-#issue-summary li, .respec-dfn-list li {
+
+#issue-summary li,
+.respec-dfn-list li {
   list-style: none;
 }
 
