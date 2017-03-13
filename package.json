@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "11.1.0",
+  "version": "11.2.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -60,7 +60,7 @@
     "copydeps": "node ./tools/copydeps.js",
     "handlebars": "handlebars",
     "hb:build": "node ./tools/expandpaths.js -a js/*/templates/*.html js/*/templates/*.css js/core/templates/webidl-contiguous/*.html | xargs handlebars -f js/templates.js",
-    "jscs": "jscs --esnext tests tools js/w3c/linter.js",
+    "jscs": "jscs --esnext tests tools",
     "jscs:fix": "jscs --esnext --fix tests",
     "jshint": "jshint karma.conf.js tests tools",
     "karma": "karma start --single-run",

@@ -27,6 +27,8 @@ js/core/highlight.js
 js/core/id-headers.js
 js/core/include-config.js
 js/core/inlines.js
+js/core/jquery-enhanced.js
+js/core/l10n.js
 js/core/location-hash.js
 js/core/markdown.js
 js/core/override-configuration.js
@@ -44,4 +46,14 @@ js/core/webidl-index.js
 js/core/webidl.js
 js/core/worker.js
 js/templates.js
+js/w3c/abstract.js
+js/w3c/aria.js
+js/w3c/conformance.js
+js/w3c/headers.js
+js/w3c/informative.js
+js/w3c/l10n.js
+js/w3c/linter.js
+js/w3c/permalinks.js
 js/w3c/rfc2119.js
+js/w3c/seo.js
+js/w3c/style.js
