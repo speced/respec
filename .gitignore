@@ -46,12 +46,12 @@ js/core/worker.js
 js/templates.js
 js/w3c/abstract.js
 js/w3c/aria.js
-js/w3c/rfc2119.js
 js/w3c/conformance.js
 js/w3c/headers.js
 js/w3c/informative.js
 js/w3c/l10n.js
 js/w3c/linter.js
 js/w3c/permalinks.js
+js/w3c/rfc2119.js
 js/w3c/seo.js
 js/w3c/style.js
