@@ -1,4 +1,4 @@
-// Module w3c/aria
+// Module geonovum/aria
 // Adds wai-aria landmarks and roles to entire document.
 // Introduced by Shane McCarron (shane@aptest.com) from the W3C PFWG
 "use strict";
