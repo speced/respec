@@ -195,12 +195,10 @@ define(
             if (this._switch_break_ || caseValues.indexOf(this._switch_value_) === -1) {
                 return '';
             } else {
-                if (options.hash.break === true) {
                 this._switch_break_ = true;
                 }
             return options.fn(this);
-            }
-        });
+            });
         
         hb.registerHelper("default", function(options) {
             if (!this._switch_break_) {
