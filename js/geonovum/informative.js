@@ -1,5 +1,5 @@
 
-// Module w3c/informative
+// Module geonovum/informative
 // Mark specific sections as informative, based on CSS
 
 define(
