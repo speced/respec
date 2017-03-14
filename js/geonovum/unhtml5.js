@@ -1,5 +1,5 @@
 
-// Module w3c/unhtml5
+// Module geonovum/unhtml5
 // Removes uses of HTML5 elements (e.g. section) and replaces them with HTML4 equivalents.
 // This module is now officially deprecated for use in W3C specifications. You can however
 // still use it if you need to for some reason.
