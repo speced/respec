@@ -51,12 +51,12 @@ define(["core/pubsubhub"], function(pubsubhub) {
       var warn = "";
 
       // Warn if no privacy and/or security considerations section
-      if (!hasPriSecConsiderations(doc)) {
-        warn = "This specification doesn't appear to have any 'Privacy' " +
-          "or 'Security' considerations sections. Please consider adding one" +
-          ", see https://w3ctag.github.io/security-questionnaire/";
-        warnings.push(warn);
-      }
+      //if (!hasPriSecConsiderations(doc)) {
+      //  warn = "This specification doesn't appear to have any 'Privacy' " +
+      //    "or 'Security' considerations sections. Please consider adding one" +
+      //    ", see https://w3ctag.github.io/security-questionnaire/";
+      //  warnings.push(warn);
+      //}
 
       // Warn about HTTP URLs used in respecConfig
       if (doc.location.href.startsWith("http")) {
@@ -90,7 +90,7 @@ define(["core/pubsubhub"], function(pubsubhub) {
     // Convenience methods, for quickly testing rules.
     rules: {
       "findHTTPProps": findHTTPProps,
-      "hasPriSecConsiderations": hasPriSecConsiderations,
+      //"hasPriSecConsiderations": hasPriSecConsiderations,
     },
   };
 });
