@@ -1,5 +1,5 @@
 
-// Module w3c/conformance
+// Module geonovum/conformance
 // Handle the conformance section properly.
 
 define(
