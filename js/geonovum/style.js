@@ -1,7 +1,7 @@
 /*jshint strict: true, browser:true, jquery: true*/
 /*globals define*/
-// Module w3c/style
-// Inserts a link to the appropriate W3C style for the specification's maturity level.
+// Module geonovum/style
+// Inserts a link to the appropriate Geonovum style for the specification's maturity level.
 // CONFIGURATION
 //  - specStatus: the short code for the specification's maturity level or type (required)
 "use strict";
