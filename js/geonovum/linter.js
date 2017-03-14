@@ -9,20 +9,20 @@ define(["core/pubsubhub"], function(pubsubhub) {
    * @param  {Document} doc The document to be checked.
    * @return {Boolean} Returns true if section is found.
    */
-  function hasPriSecConsiderations(doc) {
-    const privOrSecRegex = /(privacy|security)/im;
-    const considerationsRegex = /(considerations)/im;
-    return Array
-      .from(doc.querySelectorAll("h2, h3, h4, h5, h6"))
-      .map(function(elem) {
-        return elem.textContent;
-      })
-      .some(function(text) {
-        const saysPrivOrSec = privOrSecRegex.test(text);
-        const sayConsiderations = considerationsRegex.test(text);
-        return (saysPrivOrSec && sayConsiderations) || saysPrivOrSec;
-      });
-  }
+  //function hasPriSecConsiderations(doc) {
+  //  const privOrSecRegex = /(privacy|security)/im;
+  //  const considerationsRegex = /(considerations)/im;
+  //  return Array
+  //    .from(doc.querySelectorAll("h2, h3, h4, h5, h6"))
+  //    .map(function(elem) {
+  //      return elem.textContent;
+  //    })
+  //    .some(function(text) {
+  //      const saysPrivOrSec = privOrSecRegex.test(text);
+  //      const sayConsiderations = considerationsRegex.test(text);
+  //      return (saysPrivOrSec && sayConsiderations) || saysPrivOrSec;
+  //    });
+  //}
 
   function findHTTPProps(conf, base) {
     return Object.getOwnPropertyNames(conf)
