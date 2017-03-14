@@ -1,4 +1,4 @@
-// Module w3c/permalinks
+// Module geonovum/permalinks
 // Adds "permalinks" into the document at sections with explicit IDs
 // Introduced by Shane McCarron (shane@aptest.com) from the W3C PFWG
 //
