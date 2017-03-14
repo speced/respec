@@ -1,5 +1,5 @@
 
-// Module w3c/abstract
+// Module geonovum/abstract
 // Handle the abstract section properly.
 
 define(
