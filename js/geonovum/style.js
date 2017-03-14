@@ -97,17 +97,17 @@ define([
 
       // Figure out which style file to use.
       switch (conf.specStatus.toUpperCase()) {
-        case "GEO-ED":
-          styleFile += "GEO-ED.css";
+        case "GN-WV":
+          styleFile += "GN-WV.css";
           break;
-        case "GEO-WD":
-          styleFile += "GEO-WD.css";
+        case "GN-CV":
+          styleFile += "GN-CV.css";
           break;
-        case "GEO-FD":
-          styleFile += "GEO-FD.css";
+        case "GN-VV":
+          styleFile += "GN-VV.css";
           break;
-        case "GEO-DEF":
-          styleFile += "GEO-DEF.css";
+        case "GN-DEF":
+          styleFile += "GN-DEF.css";
           break;
         default:
           styleFile = "base.css";

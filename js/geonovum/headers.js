@@ -210,11 +210,11 @@ define(
         
         return {
             status2text: {
-                "GEO-ED":         "Werkversie"
-            ,   "GEO-WD":         "Draft Versie"
-            ,   "GEO-FD":         "Final Draft"
-            ,   "GEO-DEF":        "Definitief"
-            ,   "GEO-BASIS":      "Document"  
+                "GN-WV":         "Werkversie"
+            ,   "GN-CV":         "Consultatieversie"
+            ,   "GN-VV":         "Versie ter vaststelling"
+            ,   "GN-DEF":        "Vastgestelde versie"
+            ,   "GN-BASIS":      "Document"
             }
         ,   type2text: {
                 "NO": "Norm" 
@@ -224,14 +224,14 @@ define(
             ,   "HR": "Handreiking"
             ,   "WA": "Werkafspraak"
             }
-        ,   noTrackStatus:  ["GEO-BASIS"]
+        ,   noTrackStatus:  ["GN-BASIS"]
         ,   run:    function (conf, doc, cb) {
                 conf.specStatus = (conf.specStatus) ? conf.specStatus.toUpperCase() : "";
                 conf.specType = (conf.specType) ? conf.specType.toUpperCase() : "";
-                conf.isBasic = (conf.specStatus === "GEO-BASIS");
+                conf.isBasic = (conf.specStatus === "GN-BASIS");
                 conf.isRegular = (!conf.isBasic);
                 conf.isNoTrack = $.inArray(conf.specStatus, this.noTrackStatus) >= 0;
-                conf.isOfficial = (conf.specStatus === "GEO-DEF")
+                conf.isOfficial = (conf.specStatus === "GN-DEF")
                 //Some errors
                 if (!conf.specStatus) pubsubhub.pub("error", "Missing required configuration: specStatus");
                 if (conf.isRegular && !conf.specType) pubsubhub.pub("error", "Missing required configuration: specType");
@@ -253,7 +253,7 @@ define(
                 //Version URLs
                 if (!conf.edDraftURI) {
                     conf.edDraftURI = "";
-                    if (conf.specStatus === "GEO-ED") pubsubhub.pub("warn", "Editor's Drafts should set edDraftURI.");
+                    if (conf.specStatus === "GN-WV") pubsubhub.pub("warn", "Editor's Drafts should set edDraftURI.");
                 }
                 var publishSpace = "st";             
                 if (conf.isRegular) conf.thisVersion =  "http://www.geostandaarden.nl/" + publishSpace + "/" +
