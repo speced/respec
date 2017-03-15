@@ -60,7 +60,7 @@ define([
     "core/data-transform",
     "core/inlines",
     "core/dfn",
-    //"geonovum/rfc2119",
+    // "geonovum/rfc2119",
     "core/examples",
     "core/issues-notes",
     "core/requirements",
