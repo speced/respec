@@ -52,7 +52,7 @@
     "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
-    "babel:build": "babel src -d js --source-maps",
+    "babel:build": "babel -q src -d js --source-maps",
     "babel:watch": "babel src -d js --watch --source-maps",
     "build": "npm run hb:build && npm run build:highlight && npm run babel:build && npm run copydeps && npm run build:respec-w3c-common",
     "build:highlight": "cd node_modules/highlight.js/ && npm install && node ./tools/build.js -n xml javascript css http markdown json abnf && cd ../../",
