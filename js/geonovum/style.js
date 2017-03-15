@@ -57,11 +57,11 @@ define([
         as: "script",
       }, {
         hint: "preload", // all specs include on base.css.
-        href: "http://tools.geostandaarden.nl/respec/media/base.css",
+        href: "https://tools.geostandaarden.nl/respec/media/base.css",
         as: "style",
       }, {
         hint: "preload", // all specs show the logo.
-        href: "http://tools.geostandaarden.nl/respec/media/logos/Geonovum.png",
+        href: "https://tools.geostandaarden.nl/respec/media/logos/Geonovum.png",
         as: "image",
       }]
       .map(utils.createResourceHint.bind(utils))
@@ -91,7 +91,7 @@ define([
         pubsubhub.pub("warn", warn);
       }
 
-      var styleBaseURL = "http://tools.geostandaarden.nl/respec/media/";
+      var styleBaseURL = "https://tools.geostandaarden.nl/respec/media/";
       var finalStyleURL = "";
       var styleFile = "";
 
