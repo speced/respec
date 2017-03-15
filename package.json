@@ -15,10 +15,10 @@
   },
   "author": "Robin Berjon",
   "devDependencies": {
-    "babel-cli": "^6.23.0",
+    "babel-cli": "^6.24.0",
     "babel-plugin-transform-async-to-generator": "^6.22.0",
-    "babel-plugin-transform-es2015-modules-amd": "^6.22.0",
-    "babel-preset-env": "^1.2.1",
+    "babel-plugin-transform-es2015-modules-amd": "^6.24.0",
+    "babel-preset-env": "^1.2.2",
     "chai": "^3.5.0",
     "domReady": "github:requirejs/domReady",
     "glob": "^7.1.1",
@@ -47,7 +47,7 @@
     "moment": "^2.17.1",
     "requirejs": "^2.3.3",
     "text": "github:requirejs/text",
-    "uglify-js": "^2.8.7",
+    "uglify-js": "^2.8.12",
     "webidl2": "^2.2.2",
     "whatwg-fetch": "^2.0.3"
   },
