@@ -23,7 +23,7 @@ before_script:
 
 
 addons:
-  firefox: "latest"
+  firefox: "latest-esr"
   apt:
     sources:
       - google-chrome
