@@ -12,7 +12,7 @@ define(
                 if ($confo.length) $confo.prepend(confoTmpl(conf));
                 // Added message for legacy compat with Aria specs
                 // See https://github.com/w3c/respec/issues/793
-                pubsubhub.pub("end", "w3c/conformance");
+                pubsubhub.pub("end", "geonovum/conformance");
                 cb();
             }
         };

@@ -8,7 +8,7 @@ define(
         return {
             run:    function (conf, doc, cb) {
                 $("section.informative").find("> h2:first, > h3:first, > h4:first, > h5:first, > h6:first")
-                                        .after("<p><em>This section is non-normative.</em></p>");
+                                        .after("<p><em>Dit onderdeel is niet normatief.</em></p>");
                 cb();
             }
         };
