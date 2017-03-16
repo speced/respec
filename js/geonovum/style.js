@@ -42,7 +42,7 @@ define([
   function createBaseStyle() {
     var link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "/media/base.css";
+    link.href = "https://tools.geostandaarden.nl/respec/media/base.css";
     link.classList.add("removeOnSave");
     return link;
   }
