@@ -2,7 +2,7 @@
 // Generated on Fri Feb 26 2016 13:09:51 GMT+1100 (AEDT)
 /*globals module, require, process*/
 "use strict";
-module.exports = function(config) {
+module.exports = function (config) {
   var options = {
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -42,6 +42,10 @@ module.exports = function(config) {
         served: true,
       }, {
         pattern: "tests/**/*.html",
+        included: false,
+        served: true,
+      }, {
+        pattern: "worker/*.js",
         included: false,
         served: true,
       },
@@ -116,3 +120,4 @@ module.exports = function(config) {
   }
   config.set(options);
 };
+
