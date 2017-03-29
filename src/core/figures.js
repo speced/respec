@@ -82,7 +82,7 @@ export function run(conf, doc, cb) {
         $tof.addClass("appendix");
       }
     }
-    $tof.append($("<h2>Table of Figures</h2>"));
+    $tof.append($("<h2>" + conf.l10n.table_of_fig + "</h2>"));
     $tof.append($("<ul class='tof'/>"));
     var $ul = $tof.find("ul");
     while (tof.length) $ul.append(tof.shift());

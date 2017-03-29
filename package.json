@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "11.2.2",
+  "version": "11.2.4",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -91,7 +91,7 @@
     "marked": "^0.3.6",
     "nightmare": "^2.10.0",
     "prompt": "^1.0.0",
-    "snyk": "1.26.0"
+    "snyk": "^1.26.0"
   },
   "snyk": true
 }
