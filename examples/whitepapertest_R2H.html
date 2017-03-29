@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html typeof="bibo:Document " prefix="bibo: http://purl.org/ontology/bibo/ w3p: http://www.w3.org/2001/02pd/rec54#" lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="dc:language" content="en" lang="">
+  <style>
+    /*
+
+github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+
+*/
+
+    .hljs {
+      display: block;
+      overflow-x: auto;
+      padding: 0.5em;
+      color: #333;
+      background: #f8f8f8;
+    }
+
+    .hljs-comment,
+    .hljs-quote {
+      color: #998;
+      font-style: italic;
+    }
+
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-subst {
+      color: #333;
+      font-weight: bold;
+    }
+
+    .hljs-number,
+    .hljs-literal,
+    .hljs-variable,
+    .hljs-template-variable,
+    .hljs-tag .hljs-attr {
+      color: #008080;
+    }
+
+    .hljs-string,
+    .hljs-doctag {
+      color: #d14;
+    }
+
+    .hljs-title,
+    .hljs-section,
+    .hljs-selector-id {
+      color: #900;
+      font-weight: bold;
+    }
+
+    .hljs-subst {
+      font-weight: normal;
+    }
+
+    .hljs-type,
+    .hljs-class .hljs-title {
+      color: #458;
+      font-weight: bold;
+    }
+
+    .hljs-tag,
+    .hljs-name,
+    .hljs-attribute {
+      color: #000080;
+      font-weight: normal;
+    }
+
+    .hljs-regexp,
+    .hljs-link {
+      color: #009926;
+    }
+
+    .hljs-symbol,
+    .hljs-bullet {
+      color: #990073;
+    }
+
+    .hljs-built_in,
+    .hljs-builtin-name {
+      color: #0086b3;
+    }
+
+    .hljs-meta {
+      color: #999;
+      font-weight: bold;
+    }
+
+    .hljs-deletion {
+      background: #fdd;
+    }
+
+    .hljs-addition {
+      background: #dfd;
+    }
+
+    .hljs-emphasis {
+      font-style: italic;
+    }
+
+    .hljs-strong {
+      font-weight: bold;
+    }
+  </style>
+  <style>
+    /* --- EXAMPLES --- */
+
+    div.example-title {
+      min-width: 7.5em;
+      color: #b9ab2d;
+    }
+
+    div.example-title span {
+      text-transform: uppercase;
+    }
+
+    aside.example,
+    div.example,
+    div.illegal-example {
+      padding: 0.5em;
+      margin: 1em 0;
+      position: relative;
+      clear: both;
+    }
+
+    div.illegal-example {
+      color: red
+    }
+
+    div.illegal-example p {
+      color: black
+    }
+
+    aside.example,
+    div.example {
+      padding: .5em;
+      border-left-width: .5em;
+      border-left-style: solid;
+      border-color: #e0cb52;
+      background: #fcfaee;
+    }
+
+    aside.example div.example {
+      border-left-width: .1em;
+      border-color: #999;
+      background: #fff;
+    }
+
+    aside.example div.example div.example-title {
+      color: #999;
+    }
+  </style>
+  <style>
+    /* --- ISSUES/NOTES --- */
+
+    div.issue-title,
+    div.note-title,
+    div.ednote-title,
+    div.warning-title {
+      padding-right: 1em;
+      min-width: 7.5em;
+      color: #b9ab2d;
+    }
+
+    div.issue-title {
+      color: #e05252;
+    }
+
+    div.note-title,
+    div.ednote-title {
+      color: #2b2;
+    }
+
+    div.warning-title {
+      color: #f22;
+    }
+
+    div.issue-title span,
+    div.note-title span,
+    div.ednote-title span,
+    div.warning-title span {
+      text-transform: uppercase;
+    }
+
+    div.note,
+    div.issue,
+    div.ednote,
+    div.warning {
+      margin-top: 1em;
+      margin-bottom: 1em;
+    }
+
+    .note>p:first-child,
+    .ednote>p:first-child,
+    .issue>p:first-child,
+    .warning>p:first-child {
+      margin-top: 0
+    }
+
+    .issue,
+    .note,
+    .ednote,
+    .warning {
+      padding: .5em;
+      border-left-width: .5em;
+      border-left-style: solid;
+    }
+
+    div.issue,
+    div.note,
+    div.ednote,
+    div.warning {
+      padding: 1em 1.2em 0.5em;
+      margin: 1em 0;
+      position: relative;
+      clear: both;
+    }
+
+    span.note,
+    span.ednote,
+    span.issue,
+    span.warning {
+      padding: .1em .5em .15em;
+    }
+
+    .issue {
+      border-color: #e05252;
+      background: #fbe9e9;
+    }
+
+    .note,
+    .ednote {
+      border-color: #52e052;
+      background: #e9fbe9;
+    }
+
+    .warning {
+      border-color: #f11;
+      border-width: .2em;
+      border-style: solid;
+      background: #fbe9e9;
+    }
+
+    .warning-title:before {
+      content: "⚠";
+      /*U+26A0 WARNING SIGN*/
+      font-size: 3em;
+      float: left;
+      height: 100%;
+      padding-right: .3em;
+      vertical-align: top;
+      margin-top: -0.5em;
+    }
+
+    li.task-list-item {
+      list-style: none;
+    }
+
+    input.task-list-item-checkbox {
+      margin: 0 0.35em 0.25em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+
+  <title>Whitepaper Standaarden</title>
+
+
+  <style id="respec-mainstyle">
+    /*****************************************************************
+ * ReSpec 3 CSS
+ * Robin Berjon - http://berjon.com/
+ *****************************************************************/
+    /* Override code highlighter background */
+
+    .hljs {
+      background: transparent !important;
+    }
+    /* --- INLINES --- */
+
+    em.rfc2119 {
+      text-transform: lowercase;
+      font-style: normal;
+      color: #900;
+    }
+
+    h1 acronym,
+    h2 acronym,
+    h3 acronym,
+    h4 acronym,
+    h5 acronym,
+    h6 acronym,
+    a acronym,
+    h1 abbr,
+    h2 abbr,
+    h3 abbr,
+    h4 abbr,
+    h5 abbr,
+    h6 abbr,
+    a abbr {
+      border: none;
+    }
+
+    dfn {
+      font-weight: bold;
+    }
+
+    a.internalDFN {
+      color: inherit;
+      border-bottom: 1px solid #99c;
+      text-decoration: none;
+    }
+
+    a.externalDFN {
+      color: inherit;
+      border-bottom: 1px dotted #ccc;
+      text-decoration: none;
+    }
+
+    a.bibref {
+      text-decoration: none;
+    }
+
+    cite .bibref {
+      font-style: normal;
+    }
+
+    code {
+      color: #C83500;
+    }
+
+    th code {
+      color: inherit;
+    }
+    /* --- TOC --- */
+
+    .toc a,
+    .tof a {
+      text-decoration: none;
+    }
+
+    a .secno,
+    a .figno {
+      color: #000;
+    }
+
+    ul.tof,
+    ol.tof {
+      list-style: none outside none;
+    }
+
+    .caption {
+      margin-top: 0.5em;
+      font-style: italic;
+    }
+    /* --- TABLE --- */
+
+    table.simple {
+      border-spacing: 0;
+      border-collapse: collapse;
+      border-bottom: 3px solid #005a9c;
+    }
+
+    .simple th {
+      background: #005a9c;
+      color: #fff;
+      padding: 3px 5px;
+      text-align: left;
+    }
+
+    .simple th[scope="row"] {
+      background: inherit;
+      color: inherit;
+      border-top: 1px solid #ddd;
+    }
+
+    .simple td {
+      padding: 3px 10px;
+      border-top: 1px solid #ddd;
+    }
+
+    .simple tr:nth-child(even) {
+      background: #f0f6ff;
+    }
+    /* --- DL --- */
+
+    .section dd>p:first-child {
+      margin-top: 0;
+    }
+
+    .section dd>p:last-child {
+      margin-bottom: 0;
+    }
+
+    .section dd {
+      margin-bottom: 1em;
+    }
+
+    .section dl.attrs dd,
+    .section dl.eldef dd {
+      margin-bottom: 0;
+    }
+
+    #respec-ui {
+      position: fixed;
+      display: flex;
+      flex-direction: row-reverse;
+      top: 20px;
+      right: 20px;
+      width: 202px;
+      text-align: right;
+    }
+
+    #respec-pill,
+    .respec-info-button {
+      background: #fff;
+      height: 2.5em;
+      color: rgb(120, 120, 120);
+      border: 1px solid #ccc;
+      box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, .5);
+    }
+
+    .respec-info-button {
+      border: none;
+      opacity: .5;
+      border-radius: 2em;
+      margin-right: 1em;
+      min-width: 3.5em;
+    }
+
+    .respec-info-button:focus {
+      opacity: 1;
+      transition: opacity .2s;
+    }
+
+    #respec-pill:disabled {
+      font-size: 2.8px;
+      text-indent: -9999em;
+      border-top: 1.1em solid rgba(40, 40, 40, 0.2);
+      border-right: 1.1em solid rgba(40, 40, 40, 0.2);
+      border-bottom: 1.1em solid rgba(40, 40, 40, 0.2);
+      border-left: 1.1em solid #ffffff;
+      transform: translateZ(0);
+      animation: respec-spin .5s infinite linear;
+      box-shadow: none;
+    }
+
+    #respec-pill:disabled,
+    #respec-pill:disabled:after {
+      border-radius: 50%;
+      width: 10em;
+      height: 10em;
+    }
+
+    @keyframes respec-spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    #respec-pill:hover,
+    #respec-pill:focus {
+      color: rgb(0, 0, 0);
+      background-color: rgb(245, 245, 245);
+      transition: color .2s;
+    }
+
+    #respec-menu {
+      position: absolute;
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background: #fff;
+      box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, .5);
+      width: 200px;
+      display: none;
+      text-align: left;
+      margin-top: 32px;
+      font-size: .8em;
+    }
+
+    #respec-menu li {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .respec-save-button {
+      background: #fff;
+      border: 1px solid #000;
+      border-radius: 5px;
+      padding: 5px;
+      margin: 5px;
+      display: block;
+      width: 100%;
+      color: #000;
+      text-decoration: none;
+      text-align: center;
+      font-size: inherit;
+    }
+
+    #respec-ui button:focus,
+    #respec-pill:focus,
+    .respec-option:focus {
+      outline: 0;
+      outline-style: none;
+    }
+
+    #respec-pill-error {
+      background-color: red;
+      color: white;
+    }
+
+    #respec-pill-warning {
+      background-color: orange;
+      color: white;
+    }
+
+    .respec-warning-list,
+    .respec-error-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-family: sans-serif;
+      background-color: rgb(255, 251, 230);
+      font-size: .9em;
+    }
+
+    .respec-warning-list li,
+    .respec-error-list li {
+      padding: 0.4em 0.7em;
+    }
+
+    .respec-warning-list li::before {
+      content: "⚠️";
+      padding-right: .5em;
+    }
+
+    .respec-warning-list li {
+      color: rgb(92, 59, 0);
+      border-bottom: thin solid rgb(255, 245, 194);
+    }
+
+    .respec-error-list,
+    .respec-error-list li {
+      background-color: rgb(255, 240, 240);
+    }
+
+    .respec-error-list li::before {
+      content: "💥";
+      padding-right: .5em;
+    }
+
+    .respec-error-list li {
+      padding: 0.4em 0.7em;
+      color: rgb(92, 59, 0);
+      border-bottom: thin solid rgb(255, 215, 215);
+    }
+
+    #respec-overlay {
+      display: block;
+      opacity: 0;
+      position: fixed;
+      z-index: 10000;
+      top: 0px;
+      left: 0px;
+      height: 100%;
+      width: 100%;
+      background: #000;
+    }
+
+    .respec-modal {
+      display: block;
+      position: fixed;
+      opacity: 0;
+      z-index: 11000;
+      margin: auto;
+      top: 10%;
+      background: #fff;
+      border: 5px solid #666;
+      min-width: 20%;
+      width: 85%;
+      padding: 0;
+      max-height: 80%;
+      overflow-y: auto;
+      margin: 0 -.5cm
+    }
+
+    @media screen and (min-width: 78em) {
+      .respec-modal {
+        width: 64%;
+      }
+    }
+
+    .respec-modal h3 {
+      margin: 0;
+      padding: .2em;
+      text-align: center;
+      color: black;
+      background: linear-gradient(to bottom, rgba(238, 238, 238, 1) 0%, rgba(238, 238, 238, 1) 50%, rgba(204, 204, 204, 1) 100%);
+      font-size: 1em;
+    }
+
+    .respec-modal .inside p {
+      padding-left: 1cm;
+    }
+
+    #respec-menu button.respec-option {
+      background: white;
+      padding: 0 .2cm;
+      border: none;
+      width: 100%;
+      text-align: left;
+      font-size: inherit;
+      padding: 1.2em 1.2em;
+    }
+
+    #respec-menu button.respec-option:hover,
+    #respec-menu button:focus {
+      background-color: #eeeeee;
+    }
+
+    .respec-cmd-icon {
+      padding-right: .5em;
+    }
+
+    #respec-ui button.respec-option:last-child {
+      border: none;
+      border-radius: inherit;
+    }
+
+    .respec-offending-element {
+      display: inline-block;
+      position: relative;
+      background: url(data:image/gif;base64,R0lGODdhBAADAPEAANv///8AAP///wAAACwAAAAABAADAEACBZQjmIAFADs=) bottom repeat-x;
+    }
+
+    @supports (text-decoration-style: wavy) {
+      .respec-offending-element {
+        background: none;
+        text-decoration-line: underline;
+        text-decoration-style: wavy;
+        text-decoration-color: red;
+      }
+    }
+
+    #issue-summary>ul,
+    .respec-dfn-list {
+      column-count: 2;
+    }
+
+    #issue-summary li,
+    .respec-dfn-list li {
+      list-style: none;
+    }
+
+    @media print {
+      .removeOnSave {
+        display: none;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://tools.geostandaarden.nl/respec/media/GN-VV.css">
+  <meta name="generator" content="ReSpec Developer Edition">
+  <script id="initialUserConfig" type="application/json">
+    {
+      "specStatus": "GN-VV",
+      "specType": "IM",
+      "editors": [
+      {
+        "name": "Linda van den Brink",
+        "company": "Geonovum",
+        "companyURL": "http://www.geonovum.nl/",
+        "mailto": "info@geonovum.nl"
+      },
+      {
+        "name": "Friso Penninga",
+        "company": "Geonovum",
+        "companyURL": "http://www.geonovum.nl/",
+        "mailto": "info@geonovum.nl"
+      }],
+      "authors": [
+      {
+        "name": "Linda van den Brink",
+        "company": "Geonovum",
+        "companyURL": "http://www.geonovum.nl/",
+        "mailto": "info@geonovum.nl"
+      }],
+      "edDraftURI": "https://geonovum.github.io/whitepaper-standaarden",
+      "shortName": "whitepaper",
+      "github": "https://github.com/Geonovum/whitepaper-standaarden"
+    }
+  </script>
+</head>
+<body aria-busy="false" class="h-entry" role="document" id="respecDocument">
+  <div class="head" role="contentinfo" id="respecHeader">
+    <p>
+      <a class="logo" href="http://www.geonovum.nl/">
+        <img src="https://tools.geostandaarden.nl/respec/media/logos/Geonovum.png" alt="Geonovum" height="62" width="122">
+      </a>
+    </p>
+    <h1 class="title p-name" id="title" property="dcterms:title">Whitepaper Standaarden</h1>
+    <h2 id="geonovum-versie-ter-vaststelling-29-maart-2017-informatiemodel">Geonovum Versie ter vaststelling
+      <time property="dcterms:issued" class="dt-published" datetime="">
+        29 maart 2017
+      </time>
+      <br>Informatiemodel
+    </h2>
+    <dl>
+      <dt>Deze versie:</dt>
+      <dd><a class="u-url" href="http://www.geostandaarden.nl/st/im-whitepaper/">http://www.geostandaarden.nl/st/im-whitepaper/</a></dd>
+      <dt>Laatst gepubliceerde versie:</dt>
+      <dd><a href="http://www.geostandaarden.nl/st/2017/im-whitepaper-20170329/">http://www.geostandaarden.nl/st/2017/im-whitepaper-20170329/</a></dd>
+      <dt>Laatste werkversie:</dt>
+      <dd><a href="https://geonovum.github.io/whitepaper-standaarden">https://geonovum.github.io/whitepaper-standaarden</a></dd>
+      <dt>
+      Redacteurs:
+    </dt>
+      <dd class="p-author h-card vcard" property="bibo:editor" resource="_:editor0"><span property="rdf:first" typeof="foaf:Person"><span property="foaf:name" class="p-name fn">Linda van den Brink</span>, <a property="foaf:workplaceHomepage" class="p-org org h-org h-card" href="http://www.geonovum.nl/">Geonovum</a>, <span class="ed_mailto"><a class="u-email email" property="foaf:mbox" href="mailto:info@geonovum.nl">info@geonovum.nl</a></span></span>
+        <span property="rdf:rest" resource="_:editor1"></span>
+      </dd>
+      <dd class="p-author h-card vcard" resource="_:editor1"><span property="rdf:first" typeof="foaf:Person"><span property="foaf:name" class="p-name fn">Friso Penninga</span>, <a property="foaf:workplaceHomepage" class="p-org org h-org h-card" href="http://www.geonovum.nl/">Geonovum</a>, <span class="ed_mailto"><a class="u-email email" property="foaf:mbox" href="mailto:info@geonovum.nl">info@geonovum.nl</a></span></span>
+        <span property="rdf:rest" resource="rdf:nil"></span>
+      </dd>
+
+      <dt>
+        Auteur:
+      </dt>
+      <dd class="p-author h-card vcard"><span property="dc:contributor" typeof="foaf:Person"><span property="foaf:name" class="p-name fn">Linda van den Brink</span>, <a property="foaf:workplaceHomepage" class="p-org org h-org h-card" href="http://www.geonovum.nl/">Geonovum</a>, <span class="ed_mailto"><a class="u-email email" property="foaf:mbox" href="mailto:info@geonovum.nl">info@geonovum.nl</a></span></span>
+      </dd>
+
+      <dt>Github:</dt>
+      <dd><a href="https://github.com/Geonovum/whitepaper-standaarden">Repository</a></dd>
+      <dd><a href="https://github.com/Geonovum/whitepaper-standaarden/issues">Issues</a></dd>
+    </dl>
+    <dt>Rechtenbeleid:</dt>
+    <p class="copyright">
+      <abbr title="Naamsvermelding-GeenAfgeleideWerken 3.0 Nederland">
+      <a href="https://creativecommons.org/licenses/by-nd/3.0/nl/">
+        <img src="https://tools.geostandaarden.nl/respec/media/logos/CC-Licentie.png" alt="Naamsvermelding-GeenAfgeleideWerken 3.0 Nederland" height="40px" width="115px">
+      </a>
+    </abbr>
+    </p>
+    <hr title="Separator for header">
+  </div>
+
+  <section id="abstract" class="introductory" property="dc:abstract">
+    <h2 id="h-abstract" resource="#h-abstract"><span property="xhv:role" resource="xhv:heading">Samenvatting</span></h2>
+    <p>Samenvatting van de whitepaper.</p>
+  </section>
+
+  <section id="sotd" class="introductory">
+    <h2 id="h-sotd" resource="#h-sotd"><span property="xhv:role" resource="xhv:heading">Status van dit document</span></h2>
+    <p>
+      <em>
+      Deze paragraaf beschrijft de status van dit document ten tijde van publicatie. Het is mogelijk 
+      dat er actuelere versies van dit document bestaan. Een lijst van Geonovum publicaties en de 
+      laatste gepubliceerde versie van dit document zijn te vinden op <a href="http://www.geonovum.nl/wegwijzer/standaarden">
+      http://www.geonovum.nl/wegwijzer/standaarden</a>.
+    </em>
+    </p>
+    <p>
+      Dit is een definitief concept van de nieuwe versie van de standaard. Wijzigingen naar aanleiding van consultaties zijn doorgevoerd. De programmaraad van Geonovum beoordeelt dit definitief concept. Keurt zij het goed, dan is er een nieuwe standaard.
+    </p>
+
+    <p>Status van het document.</p>
+
+  </section>
+  <nav id="toc">
+    <h2 class="introductory" id="inhoudsopgave" resource="#inhoudsopgave"><span property="xhv:role" resource="xhv:heading">Inhoudsopgave</span></h2>
+    <ol class="toc" role="directory">
+      <li class="tocline"><a href="#intro" class="tocxref"><span class="secno">1. </span>Inleiding</a>
+        <ol class="toc">
+          <li class="tocline"><a href="#conformance" class="tocxref"><span class="secno">1.1 </span>Conformiteit</a></li>
+          <li class="tocline"><a href="#leeswijzer" class="tocxref"><span class="secno">1.2 </span>Leeswijzer</a></li>
+        </ol>
+      </li>
+      <li class="tocline"><a href="#relevantetrends" class="tocxref"><span class="secno">2. </span>Relevante trends</a>
+        <ol class="toc">
+          <li class="tocline"><a href="#3D" class="tocxref"><span class="secno">2.1 </span>Meer 3D</a></li>
+          <li class="tocline"><a href="#linkeddata" class="tocxref"><span class="secno">2.2 </span>Meer linked data</a></li>
+          <li class="tocline"><a href="#sensoren" class="tocxref"><span class="secno">2.3 </span>Meer sensoren</a></li>
+          <li class="tocline"><a href="#web" class="tocxref"><span class="secno">2.4 </span>Meer gebruikers: Geo &amp; World Wide Web</a></li>
+          <li class="tocline"><a href="#platform" class="tocxref"><span class="secno">2.5 </span>Meer kanalen: platformgedachte</a></li>
+        </ol>
+      </li>
+      <li class="tocline"><a href="#impactstandaarden" class="tocxref"><span class="secno">3. </span>Impact op Pas toe of leg uit-standaarden</a>
+        <ol class="toc">
+          <li class="tocline"><a href="#informatiemodellen" class="tocxref"><span class="secno">3.1 </span>Informatiemodel</a></li>
+          <li class="tocline"><a href="#uitwisselformaat" class="tocxref"><span class="secno">3.2 </span>Uitwisselformaat</a></li>
+          <li class="tocline"><a href="#ontsluiting" class="tocxref"><span class="secno">3.3 </span>Ontsluiting / webservices</a></li>
+          <li class="tocline"><a href="#vindbaarheid" class="tocxref"><span class="secno">3.4 </span>Vindbaarheid / metadata</a></li>
+        </ol>
+      </li>
+      <li class="tocline"><a href="#impactwerkwijze" class="tocxref"><span class="secno">4. </span>Impact op werkwijze rond standaardenontwikkeling</a></li>
+      <li class="tocline"><a href="#discussie" class="tocxref"><span class="secno">5. </span>Discussie</a></li>
+      <li class="tocline"><a href="#issue-summary" class="tocxref"><span class="secno">A. </span>Lijst met issues</a></li>
+      <li class="tocline"><a href="#tof" class="tocxref"><span class="secno">B. </span>Lijst met figuren</a></li>
+      <li class="tocline"><a href="#appendix-a" class="tocxref"><span class="secno">C. </span>Appendix</a></li>
+      <li class="tocline"><a href="#references" class="tocxref"><span class="secno">D. </span>Referenties</a>
+        <ol class="toc">
+          <li class="tocline"><a href="#informative-references" class="tocxref"><span class="secno">D.1 </span>Informatieve referenties</a></li>
+        </ol>
+      </li>
+    </ol>
+  </nav>
+
+  <section id="intro" class="informative" typeof="bibo:Chapter" resource="#intro" property="bibo:hasPart">
+    <!--OddPage-->
+    <h2 id="h-intro" resource="#h-intro"><span property="xhv:role" resource="xhv:heading"><span class="secno">1. </span>Inleiding</span>
+    </h2>
+    <p><em>Dit onderdeel is niet normatief.</em></p>
+    <p>Terugkijkend op tien jaar standaarden ontwikkelen en beheren, kunnen we vaststellen dat we in Nederland inmiddels een volwassen set standaarden kennen, die fungeert als de ruggegraat van de nationale spatial data infrastructure (SDI). Deze set standaarden is opgenomen op de Pas toe of leg uit-lijst van het Forum Standaardisatie. Deze set bevat het Basismodel Geo-informatie (NEN3610), het 'moedermodel' van veel informatiemodellen waarmee semantiek van datasets éénduidig wordt vastgelegd, en een aantal standaarden die vastleggen hoe we deze datasets kunnen uitwisselen (GML), ontsluiten (Nederlandse profielen op WMS en WFS) en vindbaar maken (Nederlandse metadataprofielen). Geonovum beheert de meeste van deze standaarden. </p>
+    <p>Hoewel de huidige SDI met datasets als de basisregistraties en voorzieningen als PDOK niet meer weg te denken is uit de dagelijkse praktijk van het geo-inforatiewerkveld, is een SDI nooit uitontwikkeld. Technologische ontwikkelingen volgen elkaar in hoog tempo op en de maatschappelijke vragen evolueren. Waar de SDI oorspronkelijk alleen op de geo-professional gericht was, verwachten we tegenwoordig dat de SDI toegankelijk wordt voor een veel bredere gebruikersgroep, waaronder de web-ontwikkelaars. Deze beoogde verbreding komt voort uit de toegenomen aandacht voor (her)bruikbaarheid van data, waar oorspronkelijk de focus meer lag op de ontsluiting zelf. In de toekomst verwachten we meer samenhang (en consistentie) tussen individuele datasets, meer detail in datasets (overgang van 2D naar 3D) en vormen van toegang tot data die aansluiten bij de gebruikerswensen van de veel bredere gebruikersgroep van de Nederlandse SDI. </p>
+    <p>De Nederlandse SDI kan alleen succesvol meegaan in deze ontwikkeling, wanneer de onderliggende set standaarden dit afdoende ondersteunt. Daarom stellen we ons in deze white paper de vraag of de huidige set standaarden nog volledig voldoet. In hoeverre zijn innovaties en ontwikkelingen zo volwassen geworden, dat ze weerslag hebben op de standaarden die we nu beheren? Langs de lijn van de geostandaarden die op de Pas toe leg uit-lijst staan, schetsen we welke updates van deze standaarden er de komende 5 jaar mogelijk gaan komen. Input hiervoor komt uit ontwikkelingen die Geonovum de afgelopen jaren heeft verkend en gevolgd in de innovatieplatforms rond 3D, Linked Data, Sensoren en het Web en in internationale context. Op sommige punten kunnen we al aanbevelingen geven, op andere zijn er nog open vragen. </p>
+
+    <section id="conformance" typeof="bibo:Chapter" resource="#conformance" property="bibo:hasPart">
+      <h3 id="h-conformance" resource="#h-conformance"><span property="xhv:role" resource="xhv:heading"><span class="secno">1.1 </span>Conformiteit</span>
+      </h3>
+      <p>
+        Naast onderdelen die als niet normatief gemarkeerd zijn, zijn ook alle diagrammen, voorbeelden, en noten in dit document niet normatief. Verder is alles in dit document normatief.
+      </p>
+
+
+      <p>Informatief en normatief.</p>
+    </section>
+
+    <section id="leeswijzer" typeof="bibo:Chapter" resource="#leeswijzer" property="bibo:hasPart">
+      <h3 id="h-leeswijzer" resource="#h-leeswijzer"><span property="xhv:role" resource="xhv:heading"><span class="secno">1.2 </span>Leeswijzer</span>
+      </h3>
+      <p>...</p>
+    </section>
+    <figure id="figure-svg">
+      <img src="https://tools.geostandaarden.nl/respec/media/logos/sample.svg" alt="sample-svg" height="300" width="300">
+      <figcaption>Figuur <span class="figno">1</span> <span class="fig-title">SVG sample to test all ReSpec content.</span></figcaption>
+    </figure>
+  </section>
+
+  <section id="relevantetrends" class="informative" typeof="bibo:Chapter" resource="#relevantetrends" property="bibo:hasPart">
+    <!--OddPage-->
+    <h2 id="h-relevantetrends" resource="#h-relevantetrends"><span property="xhv:role" resource="xhv:heading"><span class="secno">2. </span>Relevante trends</span>
+    </h2>
+    <p><em>Dit onderdeel is niet normatief.</em></p>
+    <p>...</p>
+
+    <section id="3D" typeof="bibo:Chapter" resource="#3D" property="bibo:hasPart">
+      <h3 id="h-x3d" resource="#h-x3d"><span property="xhv:role" resource="xhv:heading"><span class="secno">2.1 </span>Meer 3D</span>
+      </h3>
+      <p>De meest in het oog springende ontwikkelingen op het thema 3D zijn de steeds realistischer ogende visualisatiemogelijkheden, die zeker door gadgets als de Oculus Rift Virtual Reality bril en de Microsoft Hololens Augmented Reality bril tot de verbeelding spreken. Hoewel deze gadgets zeker ook professionele toepassingen kunnen ondersteunen, schuilt in de opkomst van deze gadgets niet de reden dat ook SDI's steeds meer richting 3D gaan. De stap van een 2D model naar een 3D model is namelijk ook de stap van een grover naar een gedetailleerder model. En die gedetailleerdere modellen zijn steeds vaker nodig, omdat de maatschappij steeds gedetailleerdere ruimtelijke vragen stelt, bijvoorbeeld over de fysieke leefomgeving en de kwaliteit daarvan. “Hoeveel geluidsbelasting ondervind ik na realisatie van die nieuwe weg?”, “Zit ik straks met een slagschaduw in mijn tuin, wanneer die windmolen daadwerkelijk geplaatst wordt?”, “Is het wel veilig om hier een kinderopvang te vestigen, zo dicht bij die hogedruk aardgasleiding?”. Bovendien wordt ook de wereld waarover die vragen gesteld worden, steeds complexer. Denk bijvoorbeeld aan meervoudig ruimtegebruik, maar sowieso ook aan de druk op de schaarse ruimte in het dichtbebouwde en -bevolkte Nederland. Om dergelijke gedetailleerde vragen over een complexe werkelijkheid te kunnen blijven beantwoorden, zullen onze modellen die werkelijkheid beter moeten benaderen. En dat lukt steeds vaker niet meer in 2D. 3D is dan geen luxe, maar een noodzaak om aan de verwachtingen van de maatschappij te kunnen blijven voldoen.</p>
+      <p>Er komt meer 3D data landelijk beschikbaar en het zal meer worden gebruikt. Misschien de 3D validator verder uitwerken. </p>
+    </section>
+
+    <section id="linkeddata" typeof="bibo:Chapter" resource="#linkeddata" property="bibo:hasPart">
+      <h3 id="h-linkeddata" resource="#h-linkeddata"><span property="xhv:role" resource="xhv:heading"><span class="secno">2.2 </span>Meer linked data</span>
+      </h3>
+      <p>Samenvatting: linked data wordt belangrijk voor bijvoorbeeld het publiceren van overheidsdata – zo rijk mogelijk. En voor semantische interoperabiliteit (i.e. shared semantics).</p>
+      <p>In het <a href="http://www.pldn.nl">Platform Linked Data Nederland</a>, voorheen PiLOD, heeft Geonovum de afgelopen vier jaar samen met een actieve community onderzocht wat linked data is, hoe je het toepast, wat je eraan hebt, en hoe je geodata als linked data kunt publiceren en gebruiken. Ook het <a href="https://github.com/Geonovum/geo4web-testbed">#geo4web testbed</a> heeft inzichten hierover opgeleverd. Inmiddels hebben de eerste serieuze geo linked datasets het licht gezien, dankzij het Kadaster (<a href="https://brk.basisregistraties.overheid.nl">Kadastrale percelen (BRK)</a> en <a href="https://brt.basisregistraties.overheid.nl">Topografie (BRT)</a>).</p>
+      <p>[uitleg toevoegen waarom linked data belangrijk is voor overheidsdata. Gebruik presentatie van Erwin Folmer van 2 december.]</p>
+      <p>Er zal de komende vijf jaar veel (overheids) linked geodata gepubliceerd worden. Onder andere Ierland, Schotland, UK, Vlaanderen, Zwitserland en Finland hebben al linked geodata gepubliceerd of zijn hier mee bezig. </p>
+      <p>In 2017 schrijven we mee aan de <a href="https://www.w3.org/TR/sdw-bp/">W3C/OGC Spatial Data on the Web Best Practice</a>. Dit document gaat niet exclusief over Linked Data, maar bevat er wel veel aanbevelingen over uit de huidige praktijk. De Best Practice verzint geen nieuwe dingen, maar beveelt goede praktijken aan die op het web al te vinden zijn. Het kan als leidraad dienen voor het publiceren van linked geo data in Nederland.</p>
+      <p>Op een aantal punten is er volgens de Best Practice nog geen duidelijke, goede praktijk te ontwaren. Hier moet de komende jaren nog aan gewerkt worden: </p>
+      <ul>
+        <li>Er zijn nu meerdere linked data vocabulaires voor geodata. De Best Practice geeft handvaten om hier een keuze uit te maken, maar de killer vocabulaire moet er nog komen. Waarschijnlijk wordt er bij de OGC gewerkt aan een nieuwe <em>spatial ontology</em> als opvolger voor de nu bestaande ontologie uit <a href="http://www.opengeospatial.org/standards/geosparql">GeoSPARQL</a>. </li>
+        <li>Linked geodata in een triple store opslaan en dan ruimtelijke zoekvragen stellen? Dat leidt nu nog tot teleurstellingen. Enkele triple stores kunnen dit wel, maar de performance is teleurstellend. In het #geo4web testbed is hier onderzoek naar gedaan en ook Kadaster heeft ervaring met dit probleem. Hoewel Geonovum niet de aangewezen partij is om hier een oplossing voor te vinden, is het wel een praktisch probleem dat aandacht moet krijgen.</li>
+        <li>
+          <div class="note">
+            <div class="note-title marker" aria-level="4" role="heading" id="h-note1"><span>Noot</span><span style="text-transform: none">: Dit past beter in het Geo op het web stuk</span></div>
+            <p class="">
+              Voor geo-metadata op het web wordt er in OGC verband gewerkt aan het standaardiseren van Geo-DCAT-AP, een geo-profiel op DCAT, een linked data vocabulaire waarmee je dataset metadata kunt beschrijven voor portalen. Maar ook een geo-update van schema.org zou een goed idee zijn. Deze vocabulaire wordt gebruikt om machine-leesbare semantiek toe te voegen aan data op het web en wordt begrepen door zoekmachines. schema.org bevat semantiek voor geo, maar deze kan hier en daar nog wel verbeterd worden.</p>
+          </div>
+        </li>
+      </ul>
+      <p>Linked data blijft naar onze verwachting ook de komende jaren wel enigszins een niche technologie. Voor het merendeel van de web developers blijft het te complex. Het blijft echter toch relevant, omdat het de meest rijke en krachtige manier is om data beschikbaar te stellen. In de context van open data is dat belangrijk. Daarnaast kan de data, ofwel door de data-eigenaar zelf, of door derden, op meer gangbare manieren beschikbaar gesteld worden. Dit kan overigens nog steeds "linked data" zijn, zonder dat het "Linked Data" is: wél elk object op het web met een eigen URI en links tussen de objecten; maar niet per sé met RDF, triple stores en SPARQL endpoints. </p>
+      <p>In het verlengde van linked data ligt het semantic web. Langzaam maar zeker werken we hier naar toe. We denken daarbij aan "shared semantics" oftewel semantische harmonisatie. Zonder de hele geowereld te willen harmoniseren, want dit zou een enorme klus zijn waarvan het praktisch nut niet vaststaat. Wel blijven we gericht, daar waar semantische harmonisatie leidt tot nieuwe mogelijkheden om data te hergebruiken en processen te optimaliseren, linked data principes toepassen om te komen tot een web van data waarin niet langer overbodig data gekopieerd wordt.</p>
+    </section>
+
+    <section id="sensoren" typeof="bibo:Chapter" resource="#sensoren" property="bibo:hasPart">
+      <h3 id="h-sensoren" resource="#h-sensoren"><span property="xhv:role" resource="xhv:heading"><span class="secno">2.3 </span>Meer sensoren</span>
+      </h3>
+      <p>Wordt zeker belangrijk de komende tijd. Sensor standaarden ontwikkelen zich nu in allerlei gremia.</p>
+    </section>
+
+    <section id="web" typeof="bibo:Chapter" resource="#web" property="bibo:hasPart">
+      <h3 id="h-web" resource="#h-web"><span property="xhv:role" resource="xhv:heading"><span class="secno">2.4 </span>Meer gebruikers: Geo &amp; World Wide Web</span>
+      </h3>
+      <p>nieuwe publicatiedoelgroep. Naast SDI. Gebruik ook de visie van Peter Terhaar.</p>
+    </section>
+
+    <section id="platform" typeof="bibo:Chapter" resource="#platform" property="bibo:hasPart">
+      <h3 id="h-platform" resource="#h-platform"><span property="xhv:role" resource="xhv:heading"><span class="secno">2.5 </span>Meer kanalen: platformgedachte</span>
+      </h3>
+      <p>Alle hierboven beschreven ontwikkelingen roepen wellicht de vraag op of de huidige SDI nog wel zinvol is, en daarmee ook of de onderliggende set standaarden op de Pas toe of leg uit-lijst nog wel zinvol is. Om die vraag te kunnen beantwoorden, is een laatste ontwikkeling zeer relevant om te duiden: de opkomst van het platform. Dataplatformen kenmerken zich door de veelheid aan manieren waarop de data kan worden afgenomen: via downloads, via services, via API's of via SPARQL endpoints. De onderliggende reden voor deze veelheid is de erkenning van het gegeven dat er veel verschillende doelgroepen bestaan, met elk hun eigen toepassingen, die daarom ook elk hun data op een andere manier willen afnemen. De opkomst van platformen illustreert dat er niet langer naar een uniforme <i>one size fits all</i> aanpak wordt gestreefd, maar naar een <i>multichannel</i> aanpak, meer <i>fit for purpose</i>. Deze doelgroepspecifieke benadering is het gevolg van de focusverschuiving van ontsluiting van data naar (her)bruikbaarheid van data. </p>
+      <p> Met de opkomst van platformen, komt ook de vraag naar voren in hoeverre de huidige SDI al als platform beschouwd kan worden. Op dit moment lijkt de SDI primair gericht op de geoprofessional, inclusief standaarden uit de geowereld (OGC). Andere doelgroepen, zoals de webontwikkelaars, worden duidelijk minder goed ondersteund. Een platformbenadering zou passend zijn voor de SDI, waarmee de set standaarden uitgebreid kan worden met standaarden die lichter zijn en beter aansluiten bij de praktijk op het web. Mogelijk gaan dergelijke standaarden ook voor de geoprofessional steeds belangrijker worden, maar op korte termijn hebben de verschillende doelgroepen ook allemaal hun eigen behoeften. </p>
+      <ul>
+        <li>ontwikkelingen bij OGC (waar gewerkt wordt aan lichtgewichtere, op JSON gebaseerde standaarden)</li>
+        <li>De platform gedachte. </li>
+        <li>Data on the Web aanbevelingen voor API's</li>
+        <li>Nieuwe stijl web services voor raster data</li>
+        <li>Inzichten uit Testbed en elders om op basis van SDI nieuwe kanalen aan te bieden incl convenience APIs en Linked Data</li>
+      </ul>
+    </section>
+  </section>
+
+  <section id="impactstandaarden" class="informative" typeof="bibo:Chapter" resource="#impactstandaarden" property="bibo:hasPart">
+    <!--OddPage-->
+    <h2 id="h-impactstandaarden" resource="#h-impactstandaarden"><span property="xhv:role" resource="xhv:heading"><span class="secno">3. </span>Impact op Pas toe of leg uit-standaarden</span>
+    </h2>
+    <p><em>Dit onderdeel is niet normatief.</em></p>
+    <p>...</p>
+
+    <section id="informatiemodellen" typeof="bibo:Chapter" resource="#informatiemodellen" property="bibo:hasPart">
+      <h3 id="h-informatiemodellen" resource="#h-informatiemodellen"><span property="xhv:role" resource="xhv:heading"><span class="secno">3.1 </span>Informatiemodel</span>
+      </h3>
+      <p>nieuwe manier om informatiemodellen te ontwikkelen. Een Linked Data profiel op NEN3610. En over semantische harmonisatie: niet alle semantiek willen harmoniseren om het harmoniseren, maar gericht inzetten op specifieke gevallen waar harmonisatie wat oplevert, en hier tot op data/proces niveau gaan. Bv NWB/BGT.</p>
+    </section>
+
+    <section id="uitwisselformaat" typeof="bibo:Chapter" resource="#uitwisselformaat" property="bibo:hasPart">
+      <h3 id="h-uitwisselformaat" resource="#h-uitwisselformaat"><span property="xhv:role" resource="xhv:heading"><span class="secno">3.2 </span>Uitwisselformaat</span>
+      </h3>
+      <p>GML ontwikkelt zich niet meer verder. We gaan nadenken over andere standaarden voor uitwisseling. GeoJSON, Spatialite, Geopackage, Linked Data… Maar hier hebben we nog niet echt een antwoord.</p>
+    </section>
+
+    <section id="ontsluiting" typeof="bibo:Chapter" resource="#ontsluiting" property="bibo:hasPart">
+      <h3 id="h-ontsluiting" resource="#h-ontsluiting"><span property="xhv:role" resource="xhv:heading"><span class="secno">3.3 </span>Ontsluiting / webservices</span>
+      </h3>
+      <p>Meer api naast services</p>
+    </section>
+
+    <section id="vindbaarheid" typeof="bibo:Chapter" resource="#vindbaarheid" property="bibo:hasPart">
+      <h3 id="h-vindbaarheid" resource="#h-vindbaarheid"><span property="xhv:role" resource="xhv:heading"><span class="secno">3.4 </span>Vindbaarheid / metadata</span>
+      </h3>
+      <p>Geo-DCAT (voor integratie portalen), schema.org (voor vindbaarheid op het web) aanbevelingen. En ook de vraag: hoeveel metadatavelden heb je nou echt nodig. Voor vindbaarheid: met name coverage. Voor beoordeling fit for purpose: nog een paar meer.</p>
+    </section>
+  </section>
+
+  <section id="impactwerkwijze" class="informative" typeof="bibo:Chapter" resource="#impactwerkwijze" property="bibo:hasPart">
+    <!--OddPage-->
+    <h2 id="h-impactwerkwijze" resource="#h-impactwerkwijze"><span property="xhv:role" resource="xhv:heading"><span class="secno">4. </span>Impact op werkwijze rond standaardenontwikkeling</span>
+    </h2>
+    <p><em>Dit onderdeel is niet normatief.</em></p>
+    <p>In kortere iteraties; publiceren wat je binnen een time box hebt gedaan; open ontwikkelen; tijdens ontwikkeltraject ook implementeren. Dit kan een referentie implementatie (serieuze code die de standaard implementeert en als voorbeeld gebruikt kan worden of zelfs in toepassingen) zijn of een voorbeeldbestand of een demo (om te laten zien maar geen voorbeeld implementatie). Het is de vraag hoever we hierin willen gaan.</p>
+  </section>
+
+  <section id="discussie" class="informative" typeof="bibo:Chapter" resource="#discussie" property="bibo:hasPart">
+    <!--OddPage-->
+    <h2 id="h-discussie" resource="#h-discussie"><span property="xhv:role" resource="xhv:heading"><span class="secno">5. </span>Discussie</span>
+    </h2>
+    <p><em>Dit onderdeel is niet normatief.</em></p>
+    <p>hier slimme dingen zeggen, samenvatten, zekerheden en onzekerheden duiden. vervolgonderzoek noemen</p>
+    <p>En een korte test met <a href="https://w3ctag.github.io/design-principles/">bibliography</a> als er wordt verwezen naar een bron.</p>
+  </section>
+  <div class="issue" id="issue-1">
+    <div class="issue-title marker" aria-level="2" role="heading" id="h-issue1"><span>Issue 1</span></div>
+    <p class="">Op deze manier kunnen we open punten opnemen in de tekst</p>
+  </div>
+  <aside class="example">
+    <div class="example-title marker"><span>Voorbeeld 1</span><span style="text-transform: none">: Voorbeeld code</span></div>
+    <p>Hier komt een voorbeeld.
+    </p>
+    <pre aria-busy="false" aria-live="polite" class="hljs javascript">        <span class="hljs-keyword">const</span> sum = [...items]
+        .map(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item * <span class="hljs-number">2</span>)
+        .reduce(<span class="hljs-function">(<span class="hljs-params">sum, next</span>) =&gt;</span> sum + (next || <span class="hljs-number">0</span>) );
+        </pre>
+    <p></p>
+  </aside>
+  <div class="ednote">
+    <div class="ednote-title marker" aria-level="2" role="heading" id="h-ednote1"><span>Redactionele noot</span><span style="text-transform: none">: Voorbeeld notitie</span></div>
+    <p class="">Tekst, tekst, en nog meer tekst ...</p>
+  </div>
+  <div class="warning">
+    <div class="warning-title marker"><span>Waarschuwing</span><span style="text-transform: none">: Fout</span></div>
+    <p class="">Hier zit een fout.</p>
+  </div>
+
+  <section class="appendix" id="issue-summary" typeof="bibo:Chapter" resource="#issue-summary" property="bibo:hasPart">
+    <!--OddPage-->
+    <h2 id="h-issue-summary" resource="#h-issue-summary"><span property="xhv:role" resource="xhv:heading"><span class="secno">A. </span>Lijst met issues</span>
+    </h2>
+    <ul>
+      <li><a href="#issue-1">Issue 1</a></li>
+    </ul>
+  </section>
+
+  <section class="appendix" id="tof" typeof="bibo:Chapter" resource="#tof" property="bibo:hasPart">
+    <!--OddPage-->
+    <h2 id="h-tof" resource="#h-tof"><span property="xhv:role" resource="xhv:heading"><span class="secno">B. </span>Lijst met figuren</span>
+    </h2>
+    <ul class="tof">
+      <li class="tofline"><a class="tocxref" href="#figure-svg">Figuur <span class="figno">1</span> <span class="fig-title">SVG sample to test all ReSpec content.</span></a></li>
+    </ul>
+  </section>
+
+  <section class="appendix" id="appendix-a" typeof="bibo:Chapter" resource="#appendix-a" property="bibo:hasPart">
+    <!--OddPage-->
+    <h2 id="h-appendix-a" resource="#h-appendix-a"><span property="xhv:role" resource="xhv:heading"><span class="secno">C. </span>Appendix</span>
+    </h2>
+    <p>Appendix A onderdelen, nog meer tekst ...</p>
+  </section>
+
+
+  <script src="https://www.w3.org/scripts/TR/2016/fixup.js"></script>
+
+  <section id="references" class="appendix" typeof="bibo:Chapter" resource="#references" property="bibo:hasPart">
+    <!--OddPage-->
+    <h2 id="h-references" resource="#h-references"><span property="xhv:role" resource="xhv:heading"><span class="secno">D. </span>Referenties</span>
+    </h2>
+
+    <section id="informative-references" typeof="bibo:Chapter" resource="#informative-references" property="bibo:hasPart">
+      <h3 id="h-informative-references" resource="#h-informative-references"><span property="xhv:role" resource="xhv:heading"><span class="secno">D.1 </span>Informatieve referenties</span>
+      </h3>
+      <dl class="bibliography" resource=""><dt id="bib-API-DESIGN-PRINCIPLES">[API-DESIGN-PRINCIPLES]</dt>
+        <dd><a href="https://w3ctag.github.io/design-principles/" property="dc:references"><cite>API Design Principles</cite></a>. Domenic Denicola.29 December 2015. URL: <a href="https://w3ctag.github.io/design-principles/" property="dc:references">https://w3ctag.github.io/design-principles/</a>
+        </dd>
+      </dl>
+    </section>
+  </section>
+  <p role="navigation" id="back-to-top"><a href="#toc"><abbr title="Back to Top">↑</abbr></a></p>
+</body>
+</html>
