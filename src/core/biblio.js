@@ -81,18 +81,19 @@ function bibref(conf) {
   var aliases = {};
 
   if (!informs.length && !norms.length && !conf.refNote) return;
-  var $refsec = $("<section id='references' class='appendix'><h2>References</h2></section>").appendTo($("body"));
+  var $refsec = $("<section id='references' class='appendix'><h2>" + conf.l10n.references + "</h2></section>").appendTo($("body"));
   if (conf.refNote) $("<p></p>").html(conf.refNote).appendTo($refsec);
 
   var types = ["Normative", "Informative"];
   for (var i = 0; i < types.length; i++) {
     var type = types[i];
     var refs = (type === "Normative") ? norms : informs;
+    var l10nRefs = type === "Normative" ? conf.l10n.norm_references : conf.l10n.info_references;
     if (!refs.length) continue;
     var $sec = $("<section><h3></h3></section>")
       .appendTo($refsec)
       .find("h3")
-      .text(type + " references")
+      .text(l10nRefs)
       .end();
     $sec.makeID(null, type + " references");
     refs.sort();

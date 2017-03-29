@@ -23,7 +23,7 @@ define([
           $(doc).find("head link").first().before($("<style/>").text(css));
           var hasDataNum = $(".issue[data-number]").length > 0,
             issueNum = 0,
-            $issueSummary = $("<div><h2>Issue Summary</h2><ul></ul></div>"),
+            $issueSummary = $("<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"),
             $issueList = $issueSummary.find("ul");
           $ins.each(function(i, inno) {
             var $inno = $(inno),
@@ -75,7 +75,7 @@ define([
                     $li = $("<li><a></a></li>"),
                     $a = $li.find("a");
                   $div.attr("id", id);
-                  $a.attr("href", "#" + id).text("Issue " + report.number);
+                  $a.attr("href", "#" + id).text(conf.l10n.issue + " " + report.number);
                   if (report.title) {
                     $li.append($("<span style='text-transform: none'>: " + report.title + "</span>"));
                   }
