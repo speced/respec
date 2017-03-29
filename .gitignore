@@ -27,8 +27,10 @@ js/core/highlight.js
 js/core/id-headers.js
 js/core/include-config.js
 js/core/inlines.js
+js/core/issues-notes.js
 js/core/jquery-enhanced.js
 js/core/l10n.js
+js/core/link-to-dfn.js
 js/core/location-hash.js
 js/core/markdown.js
 js/core/override-configuration.js
