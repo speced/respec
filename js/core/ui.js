@@ -185,7 +185,7 @@ define([
         $overlay = $("<div id='respec-overlay' class='removeOnSave'></div>").hide();
         const id = currentOwner.id + "-modal";
         const headingId = id + "-heading";
-        $modal = $("<div id='" + id + "' class='respec-modal' role=dialog class='removeOnSave'><h3></h3><div class='inside'></div></div>").hide();
+        $modal = $("<div id='" + id + "' class='respec-modal removeOnSave' role='dialog'><h3></h3><div class='inside'></div></div>").hide();
         $modal.find("h3").text(title);
         $modal.find("h3")[0].id = headingId;
         const ariaMap = new Map([
