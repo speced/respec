@@ -33,8 +33,6 @@
 //          - url: the URI to the organization represented by the logo (target of <a href=>)
 //          - id: optional id for the logo, permits custom CSS (wraps logo in <span id=>)
 //          - each logo element must specifiy either src or alt
-//  - edDraftURI: the URI of the Editor's Draft for this document, if any. Required if
-//      specStatus is set to "ED".
 //  - additionalCopyrightHolders: a copyright owner in addition to W3C (or the only one if specStatus
 //      is unofficial)
 //  - overrideCopyright: provides markup to completely override the copyright
@@ -233,7 +231,6 @@ define(
                 //Some errors
                 if (!conf.specStatus) pubsubhub.pub("error", "Missing required configuration: specStatus");
                 if (conf.isRegular && !conf.specType) pubsubhub.pub("error", "Missing required configuration: specType");
-                if (!conf.edDraftURI && !conf.isOfficial && !conf.isBasic) pubsubhub.pub("error", "Missing required configuration: edDraftURI");
                 if (conf.isRegular && !conf.shortName) pubsubhub.pub("error", "Missing required configuration: shortName");
                 if (!conf.isOfficial && !conf.github) pubsubhub.pub("error", "Missing required configuration: github")
                 //Titles
@@ -249,16 +246,17 @@ define(
                 conf.publishYear = conf.publishDate.getFullYear();
                 conf.publishHumanDate = utils.humanDate(conf.publishDate, "nl");
                 //Version URLs
-                if (!conf.edDraftURI) {
-                    conf.edDraftURI = "";
-                    if (conf.specStatus === "GN-WV") pubsubhub.pub("warn", "Editor's Drafts should set edDraftURI.");
-                }
                 var publishSpace = "st";             
-                if (conf.isRegular) conf.thisVersion =  "http://www.geostandaarden.nl/" + publishSpace + "/" +
+                if (conf.isRegular) conf.thisVersion =  "https://www.geostandaarden.nl/" + publishSpace + "/" +
                                                         conf.specType.toLowerCase() + "-" + conf.shortName + "/";
-                if (conf.isRegular) conf.latestVersion = "http://www.geostandaarden.nl/" + publishSpace + "/" + 
+                if (conf.isRegular) conf.latestVersion = "https://www.geostandaarden.nl/" + publishSpace + "/" + 
                                                         conf.publishDate.getFullYear() + "/" + 
                                                         conf.specType.toLowerCase() + "-" + conf.shortName + "-" + utils.concatDate(conf.publishDate) + "/";
+                //Github
+                conf.werkversieGH = "https://{user}.github.io/{rep}/"
+                                    .replace("{user}", conf.github.split("/")[3])
+                                    .replace("{rep}", conf.github.split("/")[4])
+                                    .toLowerCase();
                 //Authors & Editors
                 if (!conf.editors || conf.editors.length === 0) pubsubhub.pub("error", "At least one editor is required");
                 var peopCheck = function (it) {

@@ -26,9 +26,9 @@
       <dd>{{#if latestVersion}}<a href='{{latestVersion}}'>{{latestVersion}}</a>{{else}}none{{/if}}</dd>
     {{/unless}}
     {{#unless isOfficial}}
-      {{#if edDraftURI}}
+      {{#if github}}
         <dt>{{l10n.latest_editors_draft}}</dt>
-        <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
+        <dd><a href='{{werkversieGH}}'>{{werkversieGH}}</a></dd>
       {{/if}}
     {{/unless}}
     <dt>
