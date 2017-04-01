@@ -1,5 +1,6 @@
 language: node_js
-sudo: false
+sudo: required
+dist: trusty
 node_js:
   - v6.10
 
@@ -21,6 +22,11 @@ before_script:
 
 addons:
   firefox: "latest"
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
 
 script:
   - npm run pretest
