@@ -13,7 +13,7 @@ describe("Core - Contiguous WebIDL", function() {
   });
 
   it("links standardized IDL types to WebIDL spec", done => {
-    const idl = doc.querySelector("#linkToIDLSpec>pre");
+    const idl = doc.querySelector("#linkToIDLSpec>div>pre");
     // [Constructor(sequence<DOMString> methodData), SecureContext]
     const sequences = idl.querySelectorAll(`a[href$="#idl-sequence"]`);
     expect(sequences.length).toEqual(1);
