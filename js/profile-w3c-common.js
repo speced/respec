@@ -9,8 +9,8 @@ if (document.body) {
 }
 
 // In case everything else fails, we always want to show the document
-window.addEventListener("error", function(err) {
-  console.error(err);
+window.addEventListener("error", function(ev) {
+  console.error(ev.error);
   document.body.hidden = false;
 });
 
@@ -82,6 +82,7 @@ define([
     "ui/search-specref",
     "w3c/seo",
     "core/highlight",
+    "core/webidl-clipboard",
     /*Linter must be the last thing to run*/
     "w3c/linter",
   ],

@@ -42,6 +42,7 @@ js/core/respec-ready.js
 js/core/structure.js
 js/core/style.js
 js/core/utils.js
+js/core/webidl-clipboard.js
 js/core/webidl-index.js
 js/core/webidl.js
 js/core/worker.js

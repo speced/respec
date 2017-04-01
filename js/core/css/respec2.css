@@ -415,6 +415,34 @@ table.simple {
   list-style: none;
 }
 
+
+.respec-button-copy-paste {
+  position: absolute;
+  display: block;
+  padding: 0px 8px;
+  height: 28px;
+  width: 40px;
+  color: #333;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: #eee;
+  background-image: linear-gradient(#fcfcfc, #eee);
+  border: 1px solid rgb(144,184,222);
+  border-radius: 0px 0px 3px 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-appearance: none;
+  margin: 0px 127px;
+  border-left: 0;
+}
+
+p + .respec-button-copy-paste {
+  margin: 1px 127px;
+}
+
 @media print {
   .removeOnSave {
     display: none;
