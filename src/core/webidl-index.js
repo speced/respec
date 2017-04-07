@@ -40,6 +40,7 @@ export function run(conf, doc, cb) {
   const virtualSummary = document.createDocumentFragment();
   const pre = document.createElement("pre");
   pre.classList.add("idl", "def");
+  pre.id = "actual-idl-index";
   Array
     .from(document.querySelectorAll("pre.def.idl"))
     .map(elem => {

@@ -21,6 +21,7 @@ const srcDesMap = new Map([
   ["./node_modules/text/text.js", "./js/deps/"],
   ["./node_modules/webidl2/lib/webidl2.js", "./js/deps/"],
   ["./node_modules/whatwg-fetch/fetch.js", "./js/deps/"],
+  ["./node_modules/clipboard/dist/clipboard.js", "./js/deps/"],
 ]);
 
 function makePathResolver(base) {
