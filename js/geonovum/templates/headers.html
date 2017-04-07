@@ -4,7 +4,7 @@
       {{showLogos logos}}
     {{else}}
       <a class='logo' href='http://www.geonovum.nl/'>
-        <img width='122' height='62' src='https://tools.geostandaarden.nl/respec/media/logos/Geonovum.svg' alt='Geonovum'>
+        <img width='132' height='67' src='https://tools.geostandaarden.nl/respec/media/logos/Geonovum.svg' alt='Geonovum'>
       </a>
     {{/if}}
     </p>
@@ -31,6 +31,10 @@
         <dd><a href='{{werkversieGH}}'>{{werkversieGH}}</a></dd>
       {{/if}}
     {{/unless}}
+    {{#if prevVersion}}
+      <dt>Vorige versie:</dt>
+      <dd><a href='{{prevVersion}}'>{{prevVersion}}</a></dd>
+    {{/if}}
     <dt>
       {{#if multipleEditors}}{{l10n.editors}}{{else}}{{l10n.editor}}{{/if}}
     </dt>
@@ -86,12 +90,15 @@
     {{/if}}
   </dl>
   <dt>Rechtenbeleid:</dt>  
-  <p class='copyright'>
+  <div class='copyright' style="display:inline-block;vertical-align:top;">
     <abbr title='Naamsvermelding-GeenAfgeleideWerken 3.0 Nederland'>
       <a href='https://creativecommons.org/licenses/by-nd/3.0/nl/'>
         <img src='https://tools.geostandaarden.nl/respec/media/logos/CC-Licentie.svg' alt='Naamsvermelding-GeenAfgeleideWerken 3.0 Nederland' width='115px' height='40px'>
       </a>
     </abbr>
-  </p>
+  </div>
+  <div style="display:inline-block;">
+    <p style="font-size: 80%;">Naamsvermelding-GeenAfgeleideWerken 3.0 Nederland<br>(CC BY-ND 3.0)</p>
+  </div>
   <hr title="Separator for header">
 </div>

@@ -246,12 +246,26 @@ define(
                 conf.publishYear = conf.publishDate.getFullYear();
                 conf.publishHumanDate = utils.humanDate(conf.publishDate, "nl");
                 //Version URLs
-                var publishSpace = "st";             
-                if (conf.isRegular) conf.thisVersion =  "https://www.geostandaarden.nl/" + publishSpace + "/" +
-                                                        conf.specType.toLowerCase() + "-" + conf.shortName + "/";
-                if (conf.isRegular) conf.latestVersion = "https://www.geostandaarden.nl/" + publishSpace + "/" + 
-                                                        conf.publishDate.getFullYear() + "/" + 
-                                                        conf.specType.toLowerCase() + "-" + conf.shortName + "-" + utils.concatDate(conf.publishDate) + "/";
+                var publishSpace = "documenten";             
+                if (conf.isRegular) conf.thisVersion = "https://register.geostandaarden.nl/" + publishSpace + "/" 
+                                                       + conf.publishDate.getFullYear() + "/" 
+                                                       + conf.specType.toLowerCase() + "-" 
+                                                       + conf.shortName + "-" 
+                                                       + utils.concatDate(conf.publishDate) + "/";
+                if (conf.isRegular) conf.latestVersion = "https://register.geostandaarden.nl/" + publishSpace + "/"
+                                                         + conf.specType.toLowerCase() + "-" 
+                                                         + conf.shortName + "/";
+                if (conf.previousPublishDate && !conf.previousStatus) pubsubhub.pub("error", "Missing configuration: previousStatus");
+                if (!conf.previousPublishDate && conf.previousStatus) pubsubhub.pub("error", "Missing configuration: previousPublishDate");
+                if (conf.previousPublishDate && conf.previousStatus) {
+                    if (!(conf.previousPublishDate instanceof Date)) conf.previousPublishDate = (0, utils.parseSimpleDate)(conf.previousPublishDate);
+                    var prevStatus = conf.previousStatus.toLowerCase();
+                    conf.prevVersion = "None" + conf.previousPublishDate;
+                    conf.prevVersion = "https://register.geostandaarden.nl/" 
+                                       + conf.previousPublishDate.getFullYear() + "/" 
+                                       + prevStatus + "-" + conf.shortName + "-" 
+                                       + (0, utils.concatDate)(conf.previousPublishDate) + "/";
+                }
                 //Github
                 conf.werkversieGH = "https://{user}.github.io/{rep}/"
                                     .replace("{user}", conf.github.split("/")[3])
