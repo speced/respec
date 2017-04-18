@@ -54,7 +54,7 @@ define(
                     .indexOf("download") > -1
                 ,   self = this
                 ;
-                var $div = $("<div></div>")
+                var $div = $("<div class='respec-save-buttons'></div>")
                 ,   addButton = function (options) {
                         if (supportsDownload) {
                             $("<a class='respec-save-button'></a>")
