@@ -90,7 +90,8 @@
     "marked": "^0.3.6",
     "nightmare": "^2.10.0",
     "prompt": "^1.0.0",
-    "snyk": "^1.28.0"
+    "snyk": "^1.28.0",
+    "webidl2": "2.3.0"
   },
   "snyk": true
 }
