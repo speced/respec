@@ -6,6 +6,8 @@ node_js:
 
 install:
   - npm install
+  - snyk protect
+  - snyk test
 
 before_install:
   - "export DISPLAY=:99.0"
@@ -33,3 +35,6 @@ script:
   - npm run build
   - npm run test:headless
   - travis_retry karma start --single-run --reporters mocha karma.conf.js
+
+after_success:
+  - snyk monitor
