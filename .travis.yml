@@ -33,3 +33,7 @@ script:
   - npm run build
   - npm run test:headless
   - travis_retry karma start --single-run --reporters mocha karma.conf.js
+
+cache:
+  directories:
+    - node_modules
