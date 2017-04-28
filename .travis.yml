@@ -5,7 +5,7 @@ node_js:
   - v6.10
 
 install:
-  - npm install
+  - yarn install
 
 before_install:
   - "export DISPLAY=:99.0"
@@ -29,11 +29,9 @@ addons:
       - google-chrome-stable
 
 script:
-  - npm run pretest
-  - npm run build
-  - npm run test:headless
+  - yarn run pretest
+  - yarn run build
+  - yarn run test:headless
   - travis_retry karma start --single-run --reporters mocha karma.conf.js
 
-cache:
-  directories:
-    - node_modules
+cache: yarn
