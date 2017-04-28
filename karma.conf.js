@@ -28,7 +28,10 @@ module.exports = function (config) {
     },
 
     // list of files / patterns to load in the browser
-    files: [{
+    files: [
+      "js/deps/jquery.js",
+      "js/deps/fetch.js",
+      {
         pattern: "builds/**/*.*",
         included: false,
         served: true,
@@ -49,8 +52,6 @@ module.exports = function (config) {
         included: false,
         served: true,
       },
-      "js/deps/jquery.js",
-      "js/deps/fetch.js",
       "tests/spec/SpecHelper.js",
       "tests/test-main.js",
     ],
