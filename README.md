@@ -37,7 +37,7 @@ content.
 ## Bibliographical references
 
 Bibliographical references have been moved out of ReSpec. You want to use
-[speref.org](http://www.specref.org/).
+[specref.org](http://www.specref.org/).
 
 ## Want to see complete documentation?
 
