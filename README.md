@@ -22,7 +22,7 @@ We have extensive documentation on [how to use ReSpec](https://github.com/w3c/re
 If you are new to spec writing, we strongly encourage you to read:
 
   * [API Design Principles](https://w3ctag.github.io/design-principles/)
-  * [Writing Promise-Using Specifications](http://www.w3.org/2001/tag/doc/promises-guide)
+  * [Writing Promise-Using Specifications](https://www.w3.org/2001/tag/doc/promises-guide)
   * [Privacy and Security Self-Review Questionnaire](https://w3ctag.github.io/security-questionnaire/)
 
 ## Getting help
@@ -41,7 +41,7 @@ Bibliographical references have been moved out of ReSpec. You want to use
 
 ## Want to see complete documentation?
 
-[Documentation for ReSpec](http://github.com/w3c/respec/wiki/) is available in our wiki.
+[Documentation for ReSpec](https://github.com/w3c/respec/wiki) is available in our wiki.
 
 ## Contribute
 Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
