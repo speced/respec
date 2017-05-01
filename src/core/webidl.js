@@ -234,13 +234,13 @@ function typeIsWhitespace(webIdlType) {
 }
 
 const extenedAttributesLinks = new Map([
-  ["CEReactions", "HTML51#cereactions"],
+  ["CEReactions", "HTML#cereactions"],
   ["Clamp", "WEBIDL#Clamp"],
   ["Constructor", "WEBIDL#Constructor"],
   ["EnforceRange", "WEBIDL#EnforceRange"],
   ["Exposed", "WEBIDL#Exposed"],
   ["Global", "WEBIDL#Global"],
-  ["HTMLConstructor", "HTML51#htmlconstructor"],
+  ["HTMLConstructor", "HTML#htmlconstructor"],
   ["LegacyArrayClass", "WEBIDL-LS#LegacyArrayClass"],
   ["LegacyUnenumerableNamedProperties", "WEBIDL-LS#LegacyUnenumerableNamedProperties"],
   ["LenientSetter", "WEBIDL-LS#LenientSetter"],

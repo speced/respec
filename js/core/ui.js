@@ -12,9 +12,18 @@
 define([
     "shortcut",
     "core/pubsubhub",
+    "deps/text!ui/ui.css",
     "core/jquery-enhanced",
   ],
-  function(shortcut, pubsubhub) {
+  function(shortcut, pubsubhub, css) {
+
+    // Opportunistically inserts the style, with the chance to reduce some FOUC
+    const styleElement = document.createElement("style");
+    styleElement.id = "respec-ui-styles";
+    styleElement.textContent = css;
+    styleElement.classList.add("removeOnSave");
+
+    document.head.appendChild(styleElement);
 
     function ariaDecorate(elem, ariaMap) {
       if (!elem) {
