@@ -16,11 +16,11 @@ describe("Core — Best Practices", function() {
     };
     makeRSDoc(ops, function(doc) {
       var pls = doc.body.querySelectorAll("span.practicelab");
-      var $bps = $("#bp-summary", doc);
+      var bps = doc.querySelector("#bp-summary");
       expect(pls.item(0).textContent).toEqual("Best Practice 1: BP1");
       expect(pls.item(1).textContent).toEqual("Best Practice 2: BP2");
-      expect($bps.find("h2, h3, h4, h5, h6").text()).toEqual("Best Practices Summary");
-      expect($bps.find("ul li").length).toEqual(2);
+      expect(bps.querySelector("h2, h3, h4, h5, h6").textContent).toEqual("Best Practices Summary");
+      expect(bps.querySelectorAll("ul li").length).toEqual(2);
     }).then(done);
   });
 });

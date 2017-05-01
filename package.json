@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "11.4.1",
+  "version": "11.4.2",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -15,23 +15,23 @@
   },
   "author": "Robin Berjon",
   "devDependencies": {
-    "babel-cli": "^6.24.0",
-    "clipboard": "^1.6.1",
-    "babel-plugin-transform-async-to-generator": "^6.22.0",
-    "babel-plugin-transform-es2015-modules-amd": "^6.24.0",
-    "babel-preset-env": "^1.3.2",
+    "babel-cli": "^6.24.1",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-es2015-modules-amd": "^6.24.1",
+    "babel-preset-env": "^1.4.0",
     "chai": "^3.5.0",
+    "clipboard": "^1.6.1",
     "domReady": "github:requirejs/domReady",
     "glob": "^7.1.1",
-    "handlebars": "^4.0.6",
+    "handlebars": "^4.0.7",
     "http-server": "^0.9.0",
-    "jasmine-core": "^2.5.2",
+    "jasmine-core": "^2.6.1",
     "jasmine-reporters": "^2.2.1",
     "jquery": "^3.2.1",
     "js-beautify": "^1.6.12",
     "jscs": "^3.0.7",
     "jshint": "^2.9.4",
-    "karma": "^1.5.0",
+    "karma": "^1.6.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-detect-browsers": "^2.2.5",
     "karma-edge-launcher": "^0.4.1",
@@ -44,12 +44,12 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-safaritechpreview-launcher": "0.0.5",
     "karma-verbose-summary-reporter": "0.0.1",
-    "mocha": "^3.2.0",
+    "mocha": "^3.3.0",
     "moment": "^2.18.1",
     "requirejs": "^2.3.3",
     "text": "github:requirejs/text",
-    "uglify-js": "^2.8.21",
-    "webidl2": "^2.3.0",
+    "uglify-js": "^2.8.22",
+    "webidl2": "2.2.0",
     "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
@@ -79,7 +79,7 @@
   },
   "dependencies": {
     "colors": "^1.1.2",
-    "command-line-args": "^4.0.2",
+    "command-line-args": "^4.0.3",
     "command-line-usage": "^4.0.0",
     "epipebomb": "^1.0.0",
     "express": "^4.15.2",
@@ -90,7 +90,7 @@
     "marked": "^0.3.6",
     "nightmare": "^2.10.0",
     "prompt": "^1.0.0",
-    "snyk": "^1.26.1"
+    "snyk": "^1.29.0"
   },
   "snyk": true
 }

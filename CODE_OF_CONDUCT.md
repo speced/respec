@@ -55,7 +55,7 @@ further defined and clarified by project maintainers.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported by contacting one of the [W3C Obuds](http://www.w3.org/Consortium/pwe/#ombuds)
+reported by contacting one of the [W3C Ombuds](https://www.w3.org/Consortium/pwe/#ombuds)
 or one of the Maintainers:
 
  * [Marcos Caceres](mailto:marcos@marcosc.com)
@@ -64,7 +64,7 @@ or one of the Maintainers:
  * [Dominique Hazaël-Massieux](mailto:dom@w3.org)
 
 All complaints will be reviewed and investigated and will result in a response that
-is deemed necessary and appropriate to the circumstances (see [Procedures](http://www.w3.org/Consortium/pwe/#Procedures)).
+is deemed necessary and appropriate to the circumstances (see [Procedures](https://www.w3.org/Consortium/pwe/#Procedures)).
 The maintainers and W3C are obligated to maintain confidentiality with regard
 to the reporter of an incident. Further details of specific enforcement policies
 may be posted separately.
