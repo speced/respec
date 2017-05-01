@@ -234,7 +234,7 @@ function typeIsWhitespace(webIdlType) {
 }
 
 const extenedAttributesLinks = new Map([
-  ["CEReactions", "HTML51#cereactions"],
+  ["CEReactions", "!custom-elements#cereactions"],
   ["Clamp", "WEBIDL#Clamp"],
   ["Constructor", "WEBIDL#Constructor"],
   ["EnforceRange", "WEBIDL#EnforceRange"],
