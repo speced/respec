@@ -57,9 +57,9 @@ marked.setOptions({
 
 function toHTML(text) {
   const normalizedLeftPad = normalizePadding(text);
-  // As markdown is pulled from HTML, > is already escaped and
+  // As markdown is pulled from HTML, > and & are already escaped and
   // so blockquotes aren't picked up by the parser. This fixes it.
-  const potentialMarkdown = normalizedLeftPad.replace(/&gt;/gm, ">");
+  const potentialMarkdown = normalizedLeftPad.replace(/&gt;/gm, ">").replace(/&amp;/gm, "&");
   const html = marked(potentialMarkdown);
 
   return html;
