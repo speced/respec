@@ -21,7 +21,7 @@ before_script:
   - export CHROME_BIN=$PWD/out/chrome-linux/chrome
 
 addons:
-  firefox: "latest"
+  firefox: "latest-esr"
   apt:
     sources:
       - google-chrome
