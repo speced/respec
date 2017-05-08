@@ -52,6 +52,11 @@
     "webidl2": "2.3.0",
     "whatwg-fetch": "^2.0.3"
   },
+  "greenkeeper": {
+    "ignore": [
+      "webidl2"
+    ]
+  },
   "scripts": {
     "babel:build": "babel src -d js --source-maps",
     "babel:watch": "babel src -d js --watch --source-maps",
