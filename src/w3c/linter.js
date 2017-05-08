@@ -100,5 +100,5 @@ export function run(conf, doc, cb) {
 // Convenience methods, for quickly testing rules.
 export const rules = {
   findHTTPProps: findHTTPProps,
-  hasPriSecConsiderations: hasPriSecConsiderations
+  hasPriSecConsiderations: hasPriSecConsiderations,
 };

@@ -2,52 +2,52 @@
 var specStatus = [
   {
     status: "FPWD",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WD"
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WD",
   },
   {
     status: "WD-NOTE",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WD"
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WD",
   },
   {
     status: "finding",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css"
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css",
   },
   {
     status: "unofficial",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-UD"
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-UD",
   },
   {
     status: "base",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css"
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css",
   },
   {
     status: "RSCND",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-RSCND"
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-RSCND",
   },
   {
     status: "FPWD-NOTE",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WG-NOTE.css"
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WG-NOTE.css",
   },
   {
     status: "FAKE-TEST-TYPE",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-FAKE-TEST-TYPE"
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-FAKE-TEST-TYPE",
   },
   {
     status: "CG-FINAL",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}cg-final"
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}cg-final",
   },
   {
     status: "CG-DRAFT",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}cg-draft"
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}cg-draft",
   },
   {
     status: "BG-FINAL",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}bg-final"
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}bg-final",
   },
   {
     status: "BG-DRAFT",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}bg-draft"
-  }
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}bg-draft",
+  },
 ];
 
 function loadWithStatus(status, expectedURL, mode) {
@@ -73,7 +73,7 @@ function loadWithStatus(status, expectedURL, mode) {
     var testedURL = expectedURL.replace("{version}", version);
     var ops = {
       config: config,
-      body: makeDefaultBody()
+      body: makeDefaultBody(),
     };
     makeRSDoc(ops, function(doc) {
       var query = "link[href^='" + testedURL + "']";
@@ -148,7 +148,7 @@ describe("W3C - Style", function() {
   it("shouldn't include fixup.js when noToc is set", done => {
     var ops = makeStandardOps();
     var newProps = {
-      noToc: true
+      noToc: true,
     };
     Object.assign(ops.config, newProps);
     var theTest = function(doc) {

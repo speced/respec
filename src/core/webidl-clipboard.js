@@ -23,7 +23,7 @@ const clipboardOps = {
       .replace(/^\ /gm, "  ")
       .replace(/^};\n/gm, "};\n")
       .trim();
-  }
+  },
 };
 
 export async function run(conf, doc, cb) {

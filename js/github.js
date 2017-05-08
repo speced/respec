@@ -40,6 +40,6 @@ define([], function() {
       // https://api.github.com/repos/user/repo/comments
       // which is what you need if you want to get the index.
       return fetchAll(url.replace(/\{[^}]+\}/, ""), options);
-    }
+    },
   };
 });

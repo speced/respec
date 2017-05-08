@@ -13,7 +13,7 @@ import workerScript from "deps/text!../../worker/respec-worker.js";
 const hint = {
   hint: "preload",
   href: "https://www.w3.org/Tools/respec/respec-highlight.js",
-  as: "script"
+  as: "script",
 };
 const link = createResourceHint(hint);
 document.head.appendChild(link);

@@ -21,7 +21,7 @@ describe("Core — Data Include", function() {
     };
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody()
+      body: makeDefaultBody(),
     };
     makeRSDoc(ops, theTest, url).then(done);
   });
@@ -38,7 +38,7 @@ describe("Core — Data Include", function() {
     };
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody()
+      body: makeDefaultBody(),
     };
     makeRSDoc(ops, theTest, url).then(done);
   });
@@ -51,7 +51,7 @@ describe("Core — Data Include", function() {
     };
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody()
+      body: makeDefaultBody(),
     };
     makeRSDoc(ops, theTest, url).then(done);
   });
@@ -64,7 +64,7 @@ describe("Core — Data Include", function() {
     };
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody()
+      body: makeDefaultBody(),
     };
     makeRSDoc(ops, theTest, url).then(done);
   });
@@ -82,7 +82,7 @@ describe("Core — Data Include", function() {
       body: makeDefaultBody() +
         "<section id='includes' data-include='" +
         testURL +
-        "'></section>"
+        "'></section>",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, theTest).then(done);

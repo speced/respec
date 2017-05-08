@@ -13,7 +13,7 @@ describe("Core - Figures", function() {
       "   <img src='IMG' title='IMGTIT' class='figure'>" +
       " </section>" +
       "<section id='tof'></section>" +
-      "</section>"
+      "</section>",
   };
   it("generates captions for figures", function(done) {
     makeRSDoc(ops, function(doc) {

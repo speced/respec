@@ -7,7 +7,7 @@ describe("Core - Markdown", function() {
   it("should process standard markdown content", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() + "\n\nFoo\n===\n"
+      body: makeDefaultBody() + "\n\nFoo\n===\n",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -23,7 +23,7 @@ describe("Core - Markdown", function() {
   it("should process markdown inside of sections", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() + "<section>\nFoo\n===\n</section>"
+      body: makeDefaultBody() + "<section>\nFoo\n===\n</section>",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -39,7 +39,7 @@ describe("Core - Markdown", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "<p class=note>_foo_</p><div class=issue>_foo_</div><ul><li class=req>\n### _foo_###\n</li></ul>"
+        "<p class=note>_foo_</p><div class=issue>_foo_</div><ul><li class=req>\n### _foo_###\n</li></ul>",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -56,7 +56,7 @@ describe("Core - Markdown", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "\n    Foo\n    ===\n      * list item 1\n      * list item 2\n        * nested list item"
+        "\n    Foo\n    ===\n      * list item 1\n      * list item 2\n        * nested list item",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -79,7 +79,7 @@ describe("Core - Markdown", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nBar\n---\n\nBaz\n---\n\n### Foobar ###\n\n#### Foobaz ####\n\nZing\n---\n\n"
+        "\n\nFoo\n===\n\nBar\n---\n\nBaz\n---\n\n### Foobar ###\n\n#### Foobaz ####\n\nZing\n---\n\n",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -119,7 +119,7 @@ describe("Core - Markdown", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nBar\n---\n\nBaz\n===\n\n### Foobar ###\n\n"
+        "\n\nFoo\n===\n\nBar\n---\n\nBaz\n===\n\n### Foobar ###\n\n",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -138,7 +138,7 @@ describe("Core - Markdown", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n===\n</section>\n"
+        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n===\n</section>\n",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -151,7 +151,7 @@ describe("Core - Markdown", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n"
+        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -168,7 +168,7 @@ describe("Core - Markdown", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n\nBaz\n===\n\nsome text\n\n"
+        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n\nBaz\n===\n\nsome text\n\n",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -184,7 +184,7 @@ describe("Core - Markdown", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "\n\nFoo\n---\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n"
+        "\n\nFoo\n---\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -198,7 +198,7 @@ describe("Core - Markdown", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nsome text\n\n<section id=bar>no header</section>\n"
+        "\n\nFoo\n===\n\nsome text\n\n<section id=bar>no header</section>\n",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -221,7 +221,7 @@ describe("Core - Markdown", function() {
             this won't link
             this will link: http://no-links-foo.com
             so will this: http://no-links-bar.com
-          </div>`
+          </div>`,
       };
       ops.config.format = "markdown";
       makeRSDoc(ops, function(doc) {
@@ -241,7 +241,7 @@ describe("Core - Markdown", function() {
             http://no-links-foo.com
             http://no-links-bar.com
           <div>
-          `
+          `,
       };
       ops.config.format = "markdown";
       makeRSDoc(ops, function(doc) {
@@ -263,7 +263,7 @@ describe("Core - Markdown", function() {
           "<p id='test-text1'>test1 text\n  &quot;<code>inner text</code>\".</p>\n" +
           "<p id='test-text2'>test2\n   \"`inner`&quot;.</p>" +
           // Pre left alone
-          "<pre class=nohighlight id='test-text3'>test3 text\n\"<code>inner text</code>\".</pre>"
+          "<pre class=nohighlight id='test-text3'>test3 text\n\"<code>inner text</code>\".</pre>",
       };
       ops.config.format = "markdown";
       makeRSDoc(ops, function(doc) {

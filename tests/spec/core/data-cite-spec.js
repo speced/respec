@@ -13,7 +13,7 @@ describe("Core — data-cite attribute", () => {
           <p id="t1"><a>inline link</a></p>
           <p id="t2"><dfn data-cite="!WHATWG-HTML#test">inline link</dfn></p>
         </section>
-      `
+      `,
     };
     makeRSDoc(ops)
       .then(doc => {
@@ -47,7 +47,7 @@ describe("Core — data-cite attribute", () => {
         <section>
           <p id="t1"><a data-cite="!WHATWG-HTML">inline link</a></p>
         </section>
-      `
+      `,
     };
     makeRSDoc(ops)
       .then(doc => {
@@ -69,7 +69,7 @@ describe("Core — data-cite attribute", () => {
           <section>
             <p id="t1"><a data-cite="WHATWG-DOM">inline link</a></p>
           </section>
-        `
+        `,
     };
     makeRSDoc(ops)
       .then(doc => {
@@ -92,7 +92,7 @@ describe("Core — data-cite attribute", () => {
             <p id="t1"><a data-cite="no-exist-inf">link 1</a></p>
             <p id="t2"><a data-cite="!no-exist-norm">link 2</a></p>
           </section>
-        `
+        `,
     };
     makeRSDoc(ops)
       .then(doc => {
@@ -122,7 +122,7 @@ describe("Core — data-cite attribute", () => {
           <p id="t1"><a
             data-cite="!WHATWG-HTML#test">inline link</a></p>
         </section>
-      `
+      `,
     };
     makeRSDoc(ops)
       .then(doc => {
@@ -147,7 +147,7 @@ describe("Core — data-cite attribute", () => {
             data-cite="WHATWG-HTML"
             data-cite-frag="pass">inline link</a></p>
         </section>
-      `
+      `,
       };
       makeRSDoc(ops)
         .then(doc => {
@@ -173,7 +173,7 @@ describe("Core — data-cite attribute", () => {
             data-cite="!WHATWG-HTML#fail"
             data-cite-frag="pass">inline link</a></p>
         </section>
-      `
+      `,
       };
       makeRSDoc(ops)
         .then(doc => {

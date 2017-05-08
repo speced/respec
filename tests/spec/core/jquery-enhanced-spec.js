@@ -28,7 +28,7 @@ describe("Core - jquery enhanced", function() {
   it("should not prepend empty dfns to data-lt", function(done) {
     var $dfn = $("<dfn data-lt='DFN|DFN2|DFN3'></dfn>").appendTo($("body"));
     var titles = $dfn.getDfnTitles({
-      isDefinition: true
+      isDefinition: true,
     });
     expect(titles[0]).toEqual("dfn");
     expect(titles[1]).toEqual("dfn2");
@@ -45,7 +45,7 @@ describe("Core - jquery enhanced", function() {
       "<dfn data-lt-noDefault data-lt='DFN|DFN2|DFN3'>FAIL</dfn>"
     ).appendTo($("body"));
     var titles = $dfn.getDfnTitles({
-      isDefinition: true
+      isDefinition: true,
     });
     expect(titles[0]).toEqual("dfn");
     expect(titles[1]).toEqual("dfn2");
@@ -61,7 +61,7 @@ describe("Core - jquery enhanced", function() {
       "<dfn data-lt='DFN|DFN2|DFN3'><abbr title='ABBR'>TEXT</abbr></dfn>"
     ).appendTo($("body"));
     var titles = $dfn.getDfnTitles({
-      isDefinition: true
+      isDefinition: true,
     });
     expect(titles[0]).toEqual("text");
     expect(titles[1]).toEqual("dfn");
@@ -81,7 +81,7 @@ describe("Core - jquery enhanced", function() {
       "<dfn lt='DFN|DFN2|DFN3'><abbr title='ABBR'>TEXT</abbr></dfn>"
     ).appendTo($("body"));
     var titles = $dfn.getDfnTitles({
-      isDefinition: true
+      isDefinition: true,
     });
     expect(titles[0]).toEqual("text");
     expect(titles[1]).toEqual("dfn");
@@ -99,7 +99,7 @@ describe("Core - jquery enhanced", function() {
   it("should return list of terms when called a second time", function(done) {
     var $dfn = $("<dfn lt='DFN|DFN2|DFN3'>TEXT</dfn>").appendTo($("body"));
     var titles = $dfn.getDfnTitles({
-      isDefinition: true
+      isDefinition: true,
     });
     expect(titles[0]).toEqual("text");
     expect(titles[1]).toEqual("dfn");

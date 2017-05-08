@@ -72,7 +72,7 @@ describe("Core - Contiguous WebIDL", function() {
       .map(([methodName, id]) => [
         id,
         methodName,
-        doc.getElementById(`dom-parenthesistest-${id}()`)
+        doc.getElementById(`dom-parenthesistest-${id}()`),
       ])
       .forEach(([id, methodName, elem]) => {
         expect(elem).toBeTruthy();

@@ -15,7 +15,7 @@ describe("Core — Highlight", function() {
             const unsigned short DEXTROGYROUS = 1;
             Dahut turnAround(float angle, boolean fall);
           };</pre>
-        </section>`
+        </section>`,
     };
     makeRSDoc(ops, function(doc) {
       var pre = doc.querySelector("pre");
@@ -34,7 +34,7 @@ describe("Core — Highlight", function() {
               alert('foo');
             }
           </pre>
-        </section>`
+        </section>`,
     };
     makeRSDoc(ops, function(doc) {
       var pre = doc.querySelector("div.example pre");
@@ -55,7 +55,7 @@ describe("Core — Highlight", function() {
               alert('foo');
             }
           </pre>
-        </section>`
+        </section>`,
     };
     makeRSDoc(ops, function(doc) {
       var pre = doc.querySelector("div.example pre");
@@ -74,7 +74,7 @@ describe("Core — Highlight", function() {
               alert('foo');
             }
           </pre>
-        </section>`
+        </section>`,
     };
     makeRSDoc(ops, function(doc) {
       var pre = doc.querySelector("#test");

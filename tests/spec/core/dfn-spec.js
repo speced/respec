@@ -8,7 +8,7 @@ describe("Core — Definitions", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "<section id='dfn'><dfn>text</dfn><a>text</a></section>"
+        "<section id='dfn'><dfn>text</dfn><a>text</a></section>",
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("#dfn", doc);
@@ -32,7 +32,7 @@ describe("Core — Definitions", function() {
         "<a>outerPre</a>" +
         "<a>innerCode</a>" +
         "<a>partial inner code</a>" +
-        "</section>"
+        "</section>",
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("#dfn", doc);
@@ -61,7 +61,7 @@ describe("Core — Definitions", function() {
       </pre>
       <p id="t1"><a>Test</a>
       <p id="t2"><a data-lt="Test">not wrapped in code</a>
-      `
+      `,
     };
     makeRSDoc(ops, doc => {
       const code = doc.querySelector("#t1 code");
@@ -82,7 +82,7 @@ describe("Core — Definitions", function() {
         "<section id='dfn'>" +
         "  <dfn title='text|text 1|text  2|text 3 '>text</dfn>" +
         "  <a>text</a>" +
-        "</section>"
+        "</section>",
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("#dfn", doc);
@@ -100,7 +100,7 @@ describe("Core — Definitions", function() {
         "<section™¡™ id='dfn'>" +
         "<dfn dfn-type='myType'>text</dfn>" +
         "<a>text</a>" +
-        "</section>"
+        "</section>",
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("#dfn", doc);

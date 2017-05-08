@@ -58,7 +58,7 @@ function cleanUp(el) {
     "data-include-format",
     "data-include-replace",
     "data-include-id",
-    "oninclude"
+    "oninclude",
   ].forEach(attr => el.removeAttribute(attr));
 }
 

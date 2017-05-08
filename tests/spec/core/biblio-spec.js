@@ -10,7 +10,7 @@ describe("W3C — Bibliographic References", function() {
   // Ping biblio service to see if it's running
   it("should reach biblio service", function(done) {
     var fetchOps = {
-      method: "HEAD"
+      method: "HEAD",
     };
     fetch(bibRefsURL, fetchOps)
       .then(function(res) {
@@ -27,8 +27,8 @@ describe("W3C — Bibliographic References", function() {
   var customConfig = {
     editors: [
       {
-        name: "Robin Berjon"
-      }
+        name: "Robin Berjon",
+      },
     ],
     shortName: "Foo",
     specStatus: "WD",
@@ -40,26 +40,26 @@ describe("W3C — Bibliographic References", function() {
         title: "Test ref title",
         href: "http://test.com",
         authors: ["William Shakespeare"],
-        publisher: "Publishers Inc."
+        publisher: "Publishers Inc.",
       },
       TestRef2: {
         title: "Second test",
         href: "http://test.com",
         authors: ["Another author"],
-        publisher: "Testing 123"
+        publisher: "Testing 123",
       },
       TestRef3: {
         title: "Third test",
         href: "http://test.com",
-        publisher: "Publisher Here"
-      }
-    }
+        publisher: "Publisher Here",
+      },
+    },
   };
 
   it("includes a dns-prefetch to bibref server", function(done) {
     var ops = {
       config: customConfig,
-      body: "<section id='sotd'><p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p></section>"
+      body: "<section id='sotd'><p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p></section>",
     };
     makeRSDoc(ops, function(doc) {
       var host = bibRefsURL.host;
@@ -76,7 +76,7 @@ describe("W3C — Bibliographic References", function() {
   it("should display the publisher when present", function(done) {
     var ops = {
       config: customConfig,
-      body: "<section id='sotd'><p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p></section>"
+      body: "<section id='sotd'><p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p></section>",
     };
     makeRSDoc(ops, function(doc) {
       // Make sure the reference is added.

@@ -2,7 +2,7 @@
 describe("Core - biblioDB", () => {
   const data = {
     "whatwg-dom": {
-      aliasOf: "WHATWG-DOM"
+      aliasOf: "WHATWG-DOM",
     },
     "WHATWG-DOM": {
       authors: ["Anne van Kesteren"],
@@ -10,14 +10,14 @@ describe("Core - biblioDB", () => {
       title: "DOM Standard",
       status: "Living Standard",
       publisher: "WHATWG",
-      id: "WHATWG-DOM"
+      id: "WHATWG-DOM",
     },
     addAllTest: {
       id: "ADD-ALL-TEST",
-      title: "ADD ALL TEST"
+      title: "ADD ALL TEST",
     },
     DAHU: {
-      aliasOf: "DAHUT"
+      aliasOf: "DAHUT",
     },
     DAHUT: {
       authors: ["Robin Berjon"],
@@ -32,10 +32,10 @@ describe("Core - biblioDB", () => {
         "DAHUT-TEST4",
         "DAHUT-TEST3",
         "DAHUT-TEST2",
-        "DAHUT-TEST1"
+        "DAHUT-TEST1",
       ],
-      id: "DAHUT"
-    }
+      id: "DAHUT",
+    },
   };
   var biblioDB;
   beforeAll(done => {
@@ -74,7 +74,7 @@ describe("Core - biblioDB", () => {
           title: "test spec",
           status: "Living Standard",
           publisher: "W3C",
-          id: "test123"
+          id: "test123",
         })
         .then(() => biblioDB.has("reference", "test123"))
         .then(result => expect(result).toBe(true))
@@ -89,7 +89,7 @@ describe("Core - biblioDB", () => {
           Promise.all([
             biblioDB.has("alias", "whatwg-dom"),
             biblioDB.has("reference", "ADD-ALL-TEST"),
-            biblioDB.has("reference", "WHATWG-DOM")
+            biblioDB.has("reference", "WHATWG-DOM"),
           ])
         )
         .then(results => expect(results.every(v => v === true)).toBe(true))
@@ -115,7 +115,7 @@ describe("Core - biblioDB", () => {
           href: "https://test/",
           title: "PASS",
           publisher: "W3C",
-          id: "get-ref-test"
+          id: "get-ref-test",
         })
         .then(() => biblioDB.get("reference", "get-ref-test"))
         .then(entry => expect(entry.title).toEqual("PASS"))
@@ -125,7 +125,7 @@ describe("Core - biblioDB", () => {
       biblioDB
         .add("alias", {
           id: "ALIAS-GET-TEST",
-          aliasOf: "PASS"
+          aliasOf: "PASS",
         })
         .then(() => biblioDB.get("alias", "ALIAS-GET-TEST"))
         .then(entry => expect(entry.aliasOf).toEqual("PASS"))
@@ -134,7 +134,7 @@ describe("Core - biblioDB", () => {
     it("returns null when it can't find an entry", done => {
       Promise.all([
         biblioDB.get("reference", "does not exist"),
-        biblioDB.get("alias", "does not exist")
+        biblioDB.get("alias", "does not exist"),
       ])
         .then(results => expect(results.every(v => v === null)).toBe(true))
         .then(done);
@@ -157,17 +157,17 @@ describe("Core - biblioDB", () => {
       Promise.all([
         biblioDB.add("reference", {
           id: "has-ref-test",
-          title: "pass"
+          title: "pass",
         }),
         biblioDB.add("alias", {
           id: "has-alias-test",
-          aliasOf: "pass"
-        })
+          aliasOf: "pass",
+        }),
       ])
         .then(() =>
           Promise.all([
             biblioDB.has("reference", "has-ref-test"),
-            biblioDB.has("alias", "has-alias-test")
+            biblioDB.has("alias", "has-alias-test"),
           ])
         )
         .then(result => expect(result.every(v => v === true)).toBe(true))
@@ -176,7 +176,7 @@ describe("Core - biblioDB", () => {
     it("returns false when entries don't exist", done => {
       Promise.all([
         biblioDB.has("reference", "does not exist"),
-        biblioDB.has("alias", "does not exist")
+        biblioDB.has("alias", "does not exist"),
       ])
         .then(result => expect(result.every(v => v === false)).toBe(true))
         .then(done);
@@ -190,7 +190,7 @@ describe("Core - biblioDB", () => {
       Promise.all([
         p1.catch(err => expect(err instanceof TypeError).toBe(true)),
         p2.catch(err => expect(err instanceof TypeError).toBe(true)),
-        p3.catch(err => expect(err instanceof TypeError).toBe(true))
+        p3.catch(err => expect(err instanceof TypeError).toBe(true)),
       ]).then(done);
     });
     it("returns true when it is an alias", done => {
@@ -215,7 +215,7 @@ describe("Core - biblioDB", () => {
       Promise.all([
         p1.catch(err => expect(err instanceof TypeError).toBe(true)),
         p2.catch(err => expect(err instanceof TypeError).toBe(true)),
-        p3.catch(err => expect(err instanceof TypeError).toBe(true))
+        p3.catch(err => expect(err instanceof TypeError).toBe(true)),
       ]).then(done);
     });
     it("finds a references and resolves aliases", done => {
@@ -238,7 +238,7 @@ describe("Core - biblioDB", () => {
       Promise.all([
         p1.catch(err => expect(err instanceof TypeError).toBe(true)),
         p2.catch(err => expect(err instanceof TypeError).toBe(true)),
-        p3.catch(err => expect(err instanceof TypeError).toBe(true))
+        p3.catch(err => expect(err instanceof TypeError).toBe(true)),
       ]).then(done);
     });
     it("resolves known aliases or return null when alias is unknown", done => {

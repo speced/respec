@@ -17,7 +17,7 @@ describe("Core - Structure", function() {
   it("should build a ToC with default values", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: body
+      body: body,
     };
     makeRSDoc(ops, function(doc) {
       // test default values
@@ -57,7 +57,7 @@ describe("Core - Structure", function() {
     // test with noTOC
     var ops = {
       config: makeBasicConfig(),
-      body: "<section class='sotd'><p>.</p></section>"
+      body: "<section class='sotd'><p>.</p></section>",
     };
     ops.config.noTOC = true;
     makeRSDoc(ops, function(doc) {
@@ -70,7 +70,7 @@ describe("Core - Structure", function() {
   ) {
     var ops = {
       config: makeBasicConfig(),
-      body: body
+      body: body,
     };
     ops.config.tocIntroductory = true;
     makeRSDoc(ops, function(doc) {
@@ -86,7 +86,7 @@ describe("Core - Structure", function() {
   it("should limit ToC depth with maxTocLevel", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: body
+      body: body,
     };
     ops.config.maxTocLevel = 4;
     makeRSDoc(ops, function(doc) {

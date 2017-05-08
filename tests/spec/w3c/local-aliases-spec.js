@@ -8,15 +8,15 @@ describe("W3C — Aliased References", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "<section id='sample'><p>foo [[!FOOBARGLOP]] bar</p></section>"
+        "<section id='sample'><p>foo [[!FOOBARGLOP]] bar</p></section>",
     };
     ops.config.localBiblio = {
       FOOBARGLOP: {
-        aliasOf: "BARBAR"
+        aliasOf: "BARBAR",
       },
       BARBAR: {
-        title: "The BARBAR Spec"
-      }
+        title: "The BARBAR Spec",
+      },
     };
     makeRSDoc(ops, function(doc) {
       var $r = $("#bib-FOOBARGLOP + dd", doc);
