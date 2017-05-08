@@ -81,15 +81,17 @@ describe("W3C - Linter", function() {
   describe("findHTTPProps", function() {
     it("checks any prop ending with 'URI' (case sensitive)", function() {
       var conf = {
-        "FAIL_uri": "http://fail",
-        "failURIfail": "http://fail",
-        "URI": "http://pass",
-        "charterDisclosureURI": "http://pass",
-        "URI_FAIL": "http://fail",
-        "uri_FAIL": "http://fail",
+        FAIL_uri: "http://fail",
+        failURIfail: "http://fail",
+        URI: "http://pass",
+        charterDisclosureURI: "http://pass",
+        URI_FAIL: "http://fail",
+        uri_FAIL: "http://fail",
       };
       var props = linter.rules.findHTTPProps(conf, document.location.href);
-      expect(props).toEqual(jasmine.arrayContaining(["URI", "charterDisclosureURI"]));
+      expect(props).toEqual(
+        jasmine.arrayContaining(["URI", "charterDisclosureURI"])
+      );
       conf.charterDisclosureURI = "https://valid";
       conf.URI = "https://valid";
       props = linter.rules.findHTTPProps(conf, document.location.href);
@@ -97,14 +99,16 @@ describe("W3C - Linter", function() {
     });
     it("checks for prevED, as special case", function() {
       var conf = {
-        "FAIL_uri": "http://fail",
-        "failURIfail": "http://fail",
-        "prevED": "http://pass",
-        "charterDisclosureURI": "http://pass",
-        "URI_FAIL": "http://fail",
+        FAIL_uri: "http://fail",
+        failURIfail: "http://fail",
+        prevED: "http://pass",
+        charterDisclosureURI: "http://pass",
+        URI_FAIL: "http://fail",
       };
       var props = linter.rules.findHTTPProps(conf, document.location.href);
-      expect(props).toEqual(jasmine.arrayContaining(["prevED", "charterDisclosureURI"]));
+      expect(props).toEqual(
+        jasmine.arrayContaining(["prevED", "charterDisclosureURI"])
+      );
       conf.prevED = "https://valid-now";
       props = linter.rules.findHTTPProps(conf, document.location.href);
       expect(props).toEqual(jasmine.arrayContaining(["charterDisclosureURI"]));
@@ -123,18 +127,20 @@ describe("W3C - Linter", function() {
         wgURI: "http://invalid",
       };
       var props = linter.rules.findHTTPProps(conf, document.location.href);
-      expect(props).toEqual(jasmine.arrayContaining([
-        "charterDisclosureURI",
-        "edDraftURI",
-        "implementationReportURI",
-        "previousDiffURI",
-        "previousMaturityURI",
-        "previousURI",
-        "prevRecURI",
-        "testSuiteURI",
-        "wgPatentURI",
-        "wgURI",
-      ]));
+      expect(props).toEqual(
+        jasmine.arrayContaining([
+          "charterDisclosureURI",
+          "edDraftURI",
+          "implementationReportURI",
+          "previousDiffURI",
+          "previousMaturityURI",
+          "previousURI",
+          "prevRecURI",
+          "testSuiteURI",
+          "wgPatentURI",
+          "wgURI",
+        ])
+      );
     });
     it("ignores well-known URIs when they are valid", function() {
       var conf = {
@@ -154,12 +160,14 @@ describe("W3C - Linter", function() {
     });
     it("lints URLs by resolving them as real URLs", function() {
       var conf = {
-        "someRelativeURI": "./foo/bar",
-        "somePathURI": "/foo/bar",
-        "someControlURI": "https://valid",
+        someRelativeURI: "./foo/bar",
+        somePathURI: "/foo/bar",
+        someControlURI: "https://valid",
       };
       var props = linter.rules.findHTTPProps(conf, "http://invalid");
-      expect(props).toEqual(jasmine.arrayContaining(["someRelativeURI", "somePathURI"]));
+      expect(props).toEqual(
+        jasmine.arrayContaining(["someRelativeURI", "somePathURI"])
+      );
       conf.someControlURI = "http://invalid";
       props = linter.rules.findHTTPProps(conf, "http://valid");
       expect(props).toEqual(jasmine.arrayContaining(["someControlURI"]));

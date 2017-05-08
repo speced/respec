@@ -73,11 +73,20 @@ window.$.fn.getDfnTitles = function(args) {
     // allow @title for backward compatibility
     titleString = this.attr("title");
     theAttr = "title";
-    pub("warn", "Using deprecated attribute title for '" + this.text() + "': see https://github.com/w3c/respec/wiki/User's-Guide#definitions-and-linking");
-  } else if (this.contents().length == 1 && this.children("abbr, acronym").length == 1 && this.find(":first-child").attr("title")) {
+    pub(
+      "warn",
+      "Using deprecated attribute title for '" +
+        this.text() +
+        "': see https://github.com/w3c/respec/wiki/User's-Guide#definitions-and-linking"
+    );
+  } else if (
+    this.contents().length == 1 &&
+    this.children("abbr, acronym").length == 1 &&
+    this.find(":first-child").attr("title")
+  ) {
     titleString = this.find(":first-child").attr("title");
   } else {
-    titleString = this.text() === "\"\"" ? "the-empty-string" : this.text();
+    titleString = this.text() === '""' ? "the-empty-string" : this.text();
   }
   // now we have a string of one or more titles
   titleString = norm(titleString).toLowerCase();
@@ -95,7 +104,7 @@ window.$.fn.getDfnTitles = function(args) {
       this.removeAttr("dfn-type");
     }
   }
-  titleString.split('|').forEach(function(item) {
+  titleString.split("|").forEach(function(item) {
     if (item != "") {
       titles.push(item);
     }
@@ -115,31 +124,35 @@ window.$.fn.getDfnTitles = function(args) {
 //  * {for_: "", title: "int3.member"}
 window.$.fn.linkTargets = function() {
   var elem = this;
-  var link_for = (elem.attr("for") || elem.attr("data-for") || elem.closest("[link-for]").attr("link-for") || elem.closest("[data-link-for]").attr("data-link-for") || "").toLowerCase();
+  var link_for = (elem.attr("for") ||
+    elem.attr("data-for") ||
+    elem.closest("[link-for]").attr("link-for") ||
+    elem.closest("[data-link-for]").attr("data-link-for") ||
+    "")
+    .toLowerCase();
   var titles = elem.getDfnTitles();
   var result = [];
   window.$.each(titles, function() {
     result.push({
       for_: link_for,
-      title: this
+      title: this,
     });
-    var split = this.split('.');
+    var split = this.split(".");
     if (split.length === 2) {
       // If there are multiple '.'s, this won't match an
       // Interface/member pair anyway.
       result.push({
         for_: split[0],
-        title: split[1]
+        title: split[1],
       });
     }
     result.push({
       for_: "",
-      title: this
+      title: this,
     });
   });
   return result;
 };
-
 
 // Applied to an element, sets an ID for it (and returns it), using a specific prefix
 // if provided, and a specific text if given.
@@ -148,15 +161,19 @@ window.$.fn.makeID = function(pfx, txt, noLC) {
   if (!txt) txt = this.attr("title") ? this.attr("title") : this.text();
   txt = txt.replace(/^\s+/, "").replace(/\s+$/, "");
   var id = noLC ? txt : txt.toLowerCase();
-  id = id.split(/[^\-.0-9a-z_]+/i).join("-").replace(/^-+/, "").replace(/-+$/, "");
+  id = id
+    .split(/[^\-.0-9a-z_]+/i)
+    .join("-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
   if (/\.$/.test(id)) id += "x"; // trailing . doesn't play well with jQuery
   if (id.length > 0 && /^[^a-z]/i.test(id)) id = "x" + id;
   if (id.length === 0) id = "generatedID";
   if (pfx) id = pfx + "-" + id;
-  var inc = 1,
-    doc = this[0].ownerDocument;
+  var inc = 1, doc = this[0].ownerDocument;
   if ($("#" + id, doc).length) {
-    while ($("#" + id + "-" + inc, doc).length) inc++;
+    while ($("#" + id + "-" + inc, doc).length)
+      inc++;
     id += "-" + inc;
   }
   this.attr("id", id);
@@ -166,15 +183,16 @@ window.$.fn.makeID = function(pfx, txt, noLC) {
 // Returns all the descendant text nodes of an element. Note that those nodes aren't
 // returned as a jQuery array since I'm not sure if that would make too much sense.
 window.$.fn.allTextNodes = function(exclusions) {
-  var textNodes = [],
-    excl = {};
-  for (var i = 0, n = exclusions.length; i < n; i++) excl[exclusions[i]] = true;
+  var textNodes = [], excl = {};
+  for (var i = 0, n = exclusions.length; i < n; i++)
+    excl[exclusions[i]] = true;
 
   function getTextNodes(node) {
     if (node.nodeType === 1 && excl[node.localName.toLowerCase()]) return;
     if (node.nodeType === 3) textNodes.push(node);
     else {
-      for (var i = 0, len = node.childNodes.length; i < len; ++i) getTextNodes(node.childNodes[i]);
+      for (var i = 0, len = node.childNodes.length; i < len; ++i)
+        getTextNodes(node.childNodes[i]);
     }
   }
   getTextNodes(this[0]);

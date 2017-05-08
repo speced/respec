@@ -18,7 +18,6 @@ import { pub } from "core/pubsubhub";
 import { resolveRef } from "core/biblio";
 export const name = "core/data-cite";
 
-
 async function toLookupRequest(elem) {
   const originalKey = elem.dataset.cite;
   let { key, frag } = toCiteDetails(elem);
@@ -36,26 +35,26 @@ async function toLookupRequest(elem) {
     href += frag;
   }
   switch (elem.localName) {
-    case "a":{
+    case "a": {
       elem.href = href;
       break;
     }
     case "dfn": {
-        const a = elem.ownerDocument.createElement("a");
-        a.href = href;
-        while (elem.firstChild) {
-          a.appendChild(elem.firstChild);
-        }
-        elem.appendChild(a, elem);
-        break;
+      const a = elem.ownerDocument.createElement("a");
+      a.href = href;
+      while (elem.firstChild) {
+        a.appendChild(elem.firstChild);
       }
+      elem.appendChild(a, elem);
+      break;
+    }
   }
 }
 
 function cleanElement(elem) {
   ["data-cite", "data-cite-frag"]
-  .filter(attrName => elem.hasAttribute(attrName))
-    .forEach(attrName => elem.removeAttribute(attrName))
+    .filter(attrName => elem.hasAttribute(attrName))
+    .forEach(attrName => elem.removeAttribute(attrName));
 }
 
 function toCiteDetails({ dataset }) {
@@ -63,7 +62,7 @@ function toCiteDetails({ dataset }) {
   const isNormative = key.startsWith("!");
   const fragPosition = key.search("#");
   if (fragPosition !== -1) {
-    frag = (!frag) ? key.substr(fragPosition) : frag;
+    frag = !frag ? key.substr(fragPosition) : frag;
     key = key.substring(0, fragPosition);
   }
   if (isNormative) {
@@ -76,8 +75,7 @@ function toCiteDetails({ dataset }) {
 }
 
 export function run(conf, doc, cb) {
-  Array
-    .from(doc.querySelectorAll(["dfn[data-cite], a[data-cite]"]))
+  Array.from(doc.querySelectorAll(["dfn[data-cite], a[data-cite]"]))
     .filter(el => el.dataset.cite)
     .map(toCiteDetails)
     .reduce((conf, { isNormative, key }) => {
@@ -93,8 +91,6 @@ export function run(conf, doc, cb) {
 
 export async function linkInlineCitations(doc) {
   const citedSpecs = doc.querySelectorAll("dfn[data-cite], a[data-cite]");
-  const lookupRequests = Array
-    .from(citedSpecs)
-    .map(toLookupRequest);
+  const lookupRequests = Array.from(citedSpecs).map(toLookupRequest);
   return await Promise.all(lookupRequests);
 }

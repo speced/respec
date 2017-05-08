@@ -26,9 +26,9 @@ export function run(conf, doc, cb) {
     // Headings on everything but boilerplate
     if (!resource.match(/#(abstract|sotd|toc)$/)) {
       $sec.attr({
-        "typeof": "bibo:Chapter",
+        typeof: "bibo:Chapter",
         resource: resource,
-        property: property
+        property: property,
       });
     }
     // create a heading triple too, as per the role spec

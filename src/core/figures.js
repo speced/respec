@@ -11,29 +11,34 @@ export function run(conf, doc, cb) {
   // Move old syntax to new syntax
   $(".figure", doc).each(function(i, figure) {
     var $figure = $(figure),
-      title = $figure.attr("title") ||
-      $figure.find("[title]").attr("title") ||
-      $figure.attr("alt") ||
-      $figure.find("[alt]").attr("alt") ||
-      "",
+      title =
+        $figure.attr("title") ||
+        $figure.find("[title]").attr("title") ||
+        $figure.attr("alt") ||
+        $figure.find("[alt]").attr("alt") ||
+        "",
       $caption = $("<figcaption/>").text(title);
 
     // change old syntax to something HTML5 compatible
     if ($figure.is("div")) {
-      pub("warn", "You are using the deprecated div.figure syntax; please switch to <figure>.");
+      pub(
+        "warn",
+        "You are using the deprecated div.figure syntax; please switch to <figure>."
+      );
       $figure.append($caption);
       $figure.renameElement("figure");
     } else {
-      pub("warn", "You are using the deprecated img.figure syntax; please switch to <figure>.");
+      pub(
+        "warn",
+        "You are using the deprecated img.figure syntax; please switch to <figure>."
+      );
       $figure.wrap("<figure></figure>");
       $figure.parent().append($caption);
     }
   });
 
   // process all figures
-  var figMap = {},
-    tof = [],
-    num = 0;
+  var figMap = {}, tof = [], num = 0;
   $("figure").each(function() {
     var $fig = $(this),
       $cap = $fig.find("figcaption"),
@@ -43,23 +48,25 @@ export function run(conf, doc, cb) {
 
     // set proper caption title
     num++;
-    $cap.wrapInner($("<span class='fig-title'/>"))
+    $cap
+      .wrapInner($("<span class='fig-title'/>"))
       .prepend(doc.createTextNode(" "))
       .prepend($("<span class='figno'>" + num + "</span>"))
       .prepend(doc.createTextNode(conf.l10n.fig));
     figMap[id] = $cap.contents();
     var $tofCap = $cap.clone();
     $tofCap.find("a").renameElement("span").removeAttr("href");
-    tof.push($("<li class='tofline'><a class='tocxref' href='#" + id + "'></a></li>")
-      .find(".tocxref")
-      .append($tofCap.contents())
-      .end());
+    tof.push(
+      $("<li class='tofline'><a class='tocxref' href='#" + id + "'></a></li>")
+        .find(".tocxref")
+        .append($tofCap.contents())
+        .end()
+    );
   });
 
   // Update all anchors with empty content that reference a figure ID
   $("a[href]", doc).each(function() {
-    var $a = $(this),
-      id = $a.attr("href");
+    var $a = $(this), id = $a.attr("href");
     if (!id) return;
     id = id.substring(1);
     if (figMap[id]) {
@@ -75,8 +82,15 @@ export function run(conf, doc, cb) {
     // if it has a class of appendix or introductory, don't touch it
     // if all the preceding section siblings are introductory, make it introductory
     // if there is a preceding section sibling which is an appendix, make it appendix
-    if (!$tof.hasClass("appendix") && !$tof.hasClass("introductory") && !$tof.parents("section").length) {
-      if ($tof.prevAll("section.introductory").length == $tof.prevAll("section").length) {
+    if (
+      !$tof.hasClass("appendix") &&
+      !$tof.hasClass("introductory") &&
+      !$tof.parents("section").length
+    ) {
+      if (
+        $tof.prevAll("section.introductory").length ==
+        $tof.prevAll("section").length
+      ) {
         $tof.addClass("introductory");
       } else if ($tof.prevAll("appendix").length) {
         $tof.addClass("appendix");
@@ -85,7 +99,8 @@ export function run(conf, doc, cb) {
     $tof.append($("<h2>" + conf.l10n.table_of_fig + "</h2>"));
     $tof.append($("<ul class='tof'/>"));
     var $ul = $tof.find("ul");
-    while (tof.length) $ul.append(tof.shift());
+    while (tof.length)
+      $ul.append(tof.shift());
   }
   cb();
 }
