@@ -16,7 +16,7 @@ describe("Core — Link to definitions", function() {
     </section>`;
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() + bodyText,
+      body: makeDefaultBody() + bodyText
     };
     makeRSDoc(ops, doc => {
       const hasCode = doc.body.querySelector("#codeWrap a");

@@ -8,7 +8,7 @@ describe("Core — Default Root Attribute", function() {
   it("should apply en and ltr defaults", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody(),
+      body: makeDefaultBody()
     };
     makeRSDoc(ops, function(doc) {
       expect(doc.querySelector("html").lang).toEqual("en");
@@ -22,7 +22,7 @@ describe("Core — Default Root Attribute", function() {
       htmlAttrs: {
         dir: "rtl"
       },
-      body: makeDefaultBody(),
+      body: makeDefaultBody()
     };
     makeRSDoc(ops, function(doc) {
       expect(doc.querySelector("html").lang).toEqual("en");
@@ -36,7 +36,7 @@ describe("Core — Default Root Attribute", function() {
       htmlAttrs: {
         lang: "fr"
       },
-      body: makeDefaultBody(),
+      body: makeDefaultBody()
     };
     makeRSDoc(ops, function(doc) {
       expect(doc.querySelector("html").lang).toEqual("fr");

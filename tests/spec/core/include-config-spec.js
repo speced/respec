@@ -5,10 +5,10 @@ describe("Core — Include config as JSON", function() {
     done();
   });
   var ops;
-  beforeAll(function(done){
-      ops = {
+  beforeAll(function(done) {
+    ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody(),
+      body: makeDefaultBody()
     };
     done();
   });
@@ -20,7 +20,9 @@ describe("Core — Include config as JSON", function() {
       expect(script.type).toEqual("application/json");
     }).then(done);
   });
-  it("should have the same content for the config and the script's text", function(done) {
+  it("should have the same content for the config and the script's text", function(
+    done
+  ) {
     const expected = JSON.stringify(makeBasicConfig(), null, 2);
     makeRSDoc(ops, function(doc) {
       var text = doc.getElementById("initialUserConfig").innerHTML;

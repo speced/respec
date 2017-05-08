@@ -1,7 +1,7 @@
 "use strict";
 describe("Core - jquery enhanced", function() {
-  beforeAll(function(done){
-    require(["core/jquery-enhanced"], function(){
+  beforeAll(function(done) {
+    require(["core/jquery-enhanced"], function() {
       done();
     });
   });
@@ -13,7 +13,9 @@ describe("Core - jquery enhanced", function() {
 
   // $.renameElement()
   it("should rename the element", function(done) {
-    var $div = $("<div><p><a></a></p><b>some text</b></div>").appendTo($("body"));
+    var $div = $("<div><p><a></a></p><b>some text</b></div>").appendTo(
+      $("body")
+    );
     $div.find("p").renameElement("span");
     $div.find("b").renameElement("i");
     expect($div.find("span").length).toEqual(1);
@@ -36,8 +38,12 @@ describe("Core - jquery enhanced", function() {
   });
 
   // $.getDfnTitles()
-  it("should not use the text content when data-lt-noDefault is present", function(done) {
-    var $dfn = $("<dfn data-lt-noDefault data-lt='DFN|DFN2|DFN3'>FAIL</dfn>").appendTo($("body"));
+  it("should not use the text content when data-lt-noDefault is present", function(
+    done
+  ) {
+    var $dfn = $(
+      "<dfn data-lt-noDefault data-lt='DFN|DFN2|DFN3'>FAIL</dfn>"
+    ).appendTo($("body"));
     var titles = $dfn.getDfnTitles({
       isDefinition: true
     });
@@ -51,7 +57,9 @@ describe("Core - jquery enhanced", function() {
 
   // $.getDfnTitles()
   it("should find the data-lts", function(done) {
-    var $dfn = $("<dfn data-lt='DFN|DFN2|DFN3'><abbr title='ABBR'>TEXT</abbr></dfn>").appendTo($("body"));
+    var $dfn = $(
+      "<dfn data-lt='DFN|DFN2|DFN3'><abbr title='ABBR'>TEXT</abbr></dfn>"
+    ).appendTo($("body"));
     var titles = $dfn.getDfnTitles({
       isDefinition: true
     });
@@ -69,7 +77,9 @@ describe("Core - jquery enhanced", function() {
 
   // $.getDfnTitles()
   it("should find the definition title", function(done) {
-    var $dfn = $("<dfn lt='DFN|DFN2|DFN3'><abbr title='ABBR'>TEXT</abbr></dfn>").appendTo($("body"));
+    var $dfn = $(
+      "<dfn lt='DFN|DFN2|DFN3'><abbr title='ABBR'>TEXT</abbr></dfn>"
+    ).appendTo($("body"));
     var titles = $dfn.getDfnTitles({
       isDefinition: true
     });
@@ -115,7 +125,9 @@ describe("Core - jquery enhanced", function() {
     expect($("<p>  A--Bé9\n C</p>").makeID()).toEqual("a--b-9-c");
     expect($("<p></p>").makeID()).toEqual("generatedID");
     expect($("<p>2017</p>").makeID()).toEqual("x2017");
-    var $div = $("<div><p id='a'></p><p id='a-1'></p><span>A</span></div>").appendTo($("body"));
+    var $div = $(
+      "<div><p id='a'></p><p id='a-1'></p><span>A</span></div>"
+    ).appendTo($("body"));
     expect($div.find("span").makeID()).toEqual("a-2");
     $div.remove();
     done();
@@ -123,7 +135,9 @@ describe("Core - jquery enhanced", function() {
 
   // $.allTextNodes()
   it("should find all the text nodes", function(done) {
-    var tns = $("<div>aa<span>bb</span><p>cc<i>dd</i></p><pre>nope</pre></div>").allTextNodes(["pre"]);
+    var tns = $(
+      "<div>aa<span>bb</span><p>cc<i>dd</i></p><pre>nope</pre></div>"
+    ).allTextNodes(["pre"]);
     expect(tns.length).toEqual(4);
     var str = "";
     for (var i = 0, n = tns.length; i < n; i++) {

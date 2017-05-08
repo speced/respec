@@ -25,7 +25,10 @@ export function run(conf, doc, cb) {
     $(doc).find("head link").first().before($("<style/>").text(css));
     if ($("#bp-summary")) $("#bp-summary").append($content.contents());
   } else if ($("#bp-summary").length) {
-    pub("warn", "Using best practices summary (#bp-summary) but no best practices found.");
+    pub(
+      "warn",
+      "Using best practices summary (#bp-summary) but no best practices found."
+    );
     $("#bp-summary").remove();
   }
   cb();

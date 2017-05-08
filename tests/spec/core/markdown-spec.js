@@ -7,16 +7,13 @@ describe("Core - Markdown", function() {
   it("should process standard markdown content", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "\n\nFoo\n===\n",
+      body: makeDefaultBody() + "\n\nFoo\n===\n"
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
-      Array
-        .from(doc.querySelectorAll(".removeOnSave"))
-        .forEach(function(elem) {
-          elem.remove();
-        });
+      Array.from(doc.querySelectorAll(".removeOnSave")).forEach(function(elem) {
+        elem.remove();
+      });
       var foo = doc.getElementById("foo");
       expect(foo).toBeTruthy();
       expect(foo.textContent).toEqual("1. Foo");
@@ -26,8 +23,7 @@ describe("Core - Markdown", function() {
   it("should process markdown inside of sections", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "<section>\nFoo\n===\n</section>",
+      body: makeDefaultBody() + "<section>\nFoo\n===\n</section>"
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -37,11 +33,13 @@ describe("Core - Markdown", function() {
     }).then(done);
   });
 
-  it("should process markdown inside of notes, issues and reqs.", function(done) {
+  it("should process markdown inside of notes, issues and reqs.", function(
+    done
+  ) {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "<p class=note>_foo_</p><div class=issue>_foo_</div><ul><li class=req>\n### _foo_###\n</li></ul>",
+        "<p class=note>_foo_</p><div class=issue>_foo_</div><ul><li class=req>\n### _foo_###\n</li></ul>"
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -52,17 +50,21 @@ describe("Core - Markdown", function() {
     }).then(done);
   });
 
-  it("should remove left padding before processing markdown content", function(done) {
+  it("should remove left padding before processing markdown content", function(
+    done
+  ) {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "\n    Foo\n    ===\n      * list item 1\n      * list item 2\n        * nested list item",
+        "\n    Foo\n    ===\n      * list item 1\n      * list item 2\n        * nested list item"
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
       expect(doc.querySelector("code")).toBeFalsy();
       expect(doc.querySelector("#foo").textContent === "Foo");
-      var listItems = doc.querySelectorAll("section > ul:not([class=toc]) > li");
+      var listItems = doc.querySelectorAll(
+        "section > ul:not([class=toc]) > li"
+      );
       expect(listItems.length).toEqual(2);
       expect(listItems[0].textContent).toEqual("list item 1");
       var nestedLi = doc.querySelector("li > ul > li");
@@ -71,11 +73,13 @@ describe("Core - Markdown", function() {
     }).then(done);
   });
 
-  it("should structure content in nested sections with appropriate titles", function(done) {
+  it("should structure content in nested sections with appropriate titles", function(
+    done
+  ) {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nBar\n---\n\nBaz\n---\n\n### Foobar ###\n\n#### Foobaz ####\n\nZing\n---\n\n",
+        "\n\nFoo\n===\n\nBar\n---\n\nBaz\n---\n\n### Foobar ###\n\n#### Foobaz ####\n\nZing\n---\n\n"
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -115,7 +119,7 @@ describe("Core - Markdown", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nBar\n---\n\nBaz\n===\n\n### Foobar ###\n\n",
+        "\n\nFoo\n===\n\nBar\n---\n\nBaz\n===\n\n### Foobar ###\n\n"
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -128,11 +132,13 @@ describe("Core - Markdown", function() {
     }).then(done);
   });
 
-  it("should nest sections according to their first header, if present", function(done) {
+  it("should nest sections according to their first header, if present", function(
+    done
+  ) {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n===\n</section>\n",
+        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n===\n</section>\n"
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -145,7 +151,7 @@ describe("Core - Markdown", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n",
+        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n"
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -156,11 +162,13 @@ describe("Core - Markdown", function() {
     }).then(done);
   });
 
-  it("should not nest content following a section inside of said section", function(done) {
+  it("should not nest content following a section inside of said section", function(
+    done
+  ) {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n\nBaz\n===\n\nsome text\n\n",
+        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n\nBaz\n===\n\nsome text\n\n"
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -176,7 +184,7 @@ describe("Core - Markdown", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "\n\nFoo\n---\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n",
+        "\n\nFoo\n---\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n"
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -190,7 +198,7 @@ describe("Core - Markdown", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nsome text\n\n<section id=bar>no header</section>\n",
+        "\n\nFoo\n===\n\nsome text\n\n<section id=bar>no header</section>\n"
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -202,10 +210,13 @@ describe("Core - Markdown", function() {
   });
 
   describe("nolinks options", function() {
-    it("automatically links URLs in pre when missing (smoke test)", function(done) {
+    it("automatically links URLs in pre when missing (smoke test)", function(
+      done
+    ) {
       var ops = {
         config: makeBasicConfig(),
-        body: makeDefaultBody() + `
+        body: makeDefaultBody() +
+          `
           <div id=testElem>
             this won't link
             this will link: http://no-links-foo.com
@@ -224,7 +235,8 @@ describe("Core - Markdown", function() {
     it("replaces HTMLAnchors when present", function(done) {
       var ops = {
         config: makeBasicConfig(),
-        body: makeDefaultBody() + `
+        body: makeDefaultBody() +
+          `
           <div id=testElem class=nolinks>
             http://no-links-foo.com
             http://no-links-bar.com
@@ -235,8 +247,12 @@ describe("Core - Markdown", function() {
       makeRSDoc(ops, function(doc) {
         var anchors = doc.querySelectorAll("#testElem a");
         expect(anchors.length).toEqual(0);
-        expect(doc.querySelector("a[href='http://no-links-foo.com']")).toBeFalsy();
-        expect(doc.querySelector("a[href='http://no-links-bar.com']")).toBeFalsy();
+        expect(
+          doc.querySelector("a[href='http://no-links-foo.com']")
+        ).toBeFalsy();
+        expect(
+          doc.querySelector("a[href='http://no-links-bar.com']")
+        ).toBeFalsy();
       }).then(done);
     });
 
@@ -247,19 +263,22 @@ describe("Core - Markdown", function() {
           "<p id='test-text1'>test1 text\n  &quot;<code>inner text</code>\".</p>\n" +
           "<p id='test-text2'>test2\n   \"`inner`&quot;.</p>" +
           // Pre left alone
-          "<pre class=nohighlight id='test-text3'>test3 text\n\"<code>inner text</code>\".</pre>",
-
+          "<pre class=nohighlight id='test-text3'>test3 text\n\"<code>inner text</code>\".</pre>"
       };
       ops.config.format = "markdown";
       makeRSDoc(ops, function(doc) {
         var text1 = doc.getElementById("test-text1");
         expect(text1.textContent).toEqual(`test1 text "inner text".`);
-        expect(text1.innerHTML).toEqual(`test1 text "<code>inner text</code>".`);
+        expect(text1.innerHTML).toEqual(
+          `test1 text "<code>inner text</code>".`
+        );
         var text2 = doc.getElementById("test-text2");
-        expect(text2.textContent).toEqual("test2 \"inner\".");
-        expect(text2.innerHTML).toEqual("test2 \"<code>inner</code>\".");
+        expect(text2.textContent).toEqual('test2 "inner".');
+        expect(text2.innerHTML).toEqual('test2 "<code>inner</code>".');
         var text3 = doc.getElementById("test-text3");
-        expect(text3.innerHTML).toEqual("test3 text\n\"<code>inner text</code>\".");
+        expect(text3.innerHTML).toEqual(
+          'test3 text\n"<code>inner text</code>".'
+        );
       }).then(done);
     });
   });
