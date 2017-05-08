@@ -10,7 +10,7 @@ describe("Core — Examples", function() {
       body: makeDefaultBody() +
         "<section>" +
         "<pre class='example' title='EX'>\n  {\n    CONTENT\n  }\n  </pre>" +
-        "</section>",
+        "</section>"
     };
     makeRSDoc(ops, function(doc) {
       var $ex = $("div.example pre", doc);

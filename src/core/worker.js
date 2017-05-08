@@ -13,10 +13,12 @@ import workerScript from "deps/text!../../worker/respec-worker.js";
 const hint = {
   hint: "preload",
   href: "https://www.w3.org/Tools/respec/respec-highlight.js",
-  as: "script",
+  as: "script"
 };
 const link = createResourceHint(hint);
 document.head.appendChild(link);
 
-const workerURL = URL.createObjectURL(new Blob([workerScript], {type : "application/javascript"}));
+const workerURL = URL.createObjectURL(
+  new Blob([workerScript], { type: "application/javascript" })
+);
 export const worker = new Worker(workerURL);

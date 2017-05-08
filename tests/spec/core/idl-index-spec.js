@@ -31,7 +31,7 @@ interface Bar {
 };\n`;
     var ops = {
       config: makeBasicConfig(),
-      body,
+      body
     };
     makeRSDoc(ops, function(doc) {
       var idlIndex = doc.querySelector("#idl-index");
@@ -52,7 +52,7 @@ interface Bar {
     `;
     var ops = {
       config: makeBasicConfig(),
-      body,
+      body
     };
     makeRSDoc(ops, function(doc) {
       var idlIndex = doc.querySelector("#idl-index");
@@ -79,7 +79,7 @@ interface Bar {
     `;
     var ops = {
       config: makeBasicConfig(),
-      body,
+      body
     };
     makeRSDoc(ops, function(doc) {
       const pre = doc.querySelector("#idl-index pre");

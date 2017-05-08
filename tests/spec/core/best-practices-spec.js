@@ -12,14 +12,16 @@ describe("Core — Best Practices", function() {
     bodyText += "<section id='sotd'><p>foo</p></section>";
     var ops = {
       config: makeBasicConfig(),
-      body: bodyText,
+      body: bodyText
     };
     makeRSDoc(ops, function(doc) {
       var pls = doc.body.querySelectorAll("span.practicelab");
       var bps = doc.querySelector("#bp-summary");
       expect(pls.item(0).textContent).toEqual("Best Practice 1: BP1");
       expect(pls.item(1).textContent).toEqual("Best Practice 2: BP2");
-      expect(bps.querySelector("h2, h3, h4, h5, h6").textContent).toEqual("Best Practices Summary");
+      expect(bps.querySelector("h2, h3, h4, h5, h6").textContent).toEqual(
+        "Best Practices Summary"
+      );
       expect(bps.querySelectorAll("ul li").length).toEqual(2);
     }).then(done);
   });

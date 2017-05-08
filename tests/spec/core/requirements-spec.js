@@ -7,8 +7,7 @@ describe("Core — Requirements", function() {
   it("should process requirements", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "<p class='req' id='req-id'>REQ</p>",
+      body: makeDefaultBody() + "<p class='req' id='req-id'>REQ</p>"
     };
     makeRSDoc(ops, function(doc) {
       var $req = $("p.req", doc);
@@ -26,7 +25,7 @@ describe("Core — Requirements", function() {
       body: makeDefaultBody() +
         "<a href='#req-id' class='reqRef'></a>" +
         "<a href='#foo' class='reqRef'></a>" +
-        "<p class='req' id='req-id'>REQ</p>",
+        "<p class='req' id='req-id'>REQ</p>"
     };
     makeRSDoc(ops, function(doc) {
       var $refs = $("a.reqRef", doc);

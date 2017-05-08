@@ -9,11 +9,15 @@ import { pub } from "core/pubsubhub";
 import css from "deps/text!core/css/examples.css";
 
 var makeTitle = function(conf, $el, num, report) {
-  var txt = (num > 0) ? " " + num : "";
-  var $tit = $(`<div class='example-title'><span>${conf.l10n.example}${txt}</span></div>`);
+  var txt = num > 0 ? " " + num : "";
+  var $tit = $(
+    `<div class='example-title'><span>${conf.l10n.example}${txt}</span></div>`
+  );
   report.title = $el.attr("title");
   if (report.title) {
-    $tit.append($("<span style='text-transform: none'>: " + report.title + "</span>"));
+    $tit.append(
+      $("<span style='text-transform: none'>: " + report.title + "</span>")
+    );
     $el.removeAttr("title");
   }
   $tit.addClass("marker");
@@ -21,8 +25,7 @@ var makeTitle = function(conf, $el, num, report) {
 };
 
 export function run(conf, doc, cb) {
-  var $exes = $("pre.example, pre.illegal-example, aside.example"),
-    num = 0;
+  var $exes = $("pre.example, pre.illegal-example, aside.example"), num = 0;
   if ($exes.length) {
     $(doc).find("head link").first().before($("<style/>").text(css));
     $exes.each(function(i, ex) {
@@ -38,8 +41,10 @@ export function run(conf, doc, cb) {
         if (!inAside) num++;
         // reindent
         var lines = $ex.html().split("\n");
-        while (lines.length && /^\s*$/.test(lines[0])) lines.shift();
-        while (lines.length && /^\s*$/.test(lines[lines.length - 1])) lines.pop();
+        while (lines.length && /^\s*$/.test(lines[0]))
+          lines.shift();
+        while (lines.length && /^\s*$/.test(lines[lines.length - 1]))
+          lines.pop();
         var matches = /^(\s+)/.exec(lines[0]);
         if (matches) {
           var rep = new RegExp("^" + matches[1]);

@@ -8,67 +8,69 @@ describe("Core - Utils", function() {
     });
   });
 
-  describe("createResourceHint", function(){
-    it("returns a link element", function(done){
+  describe("createResourceHint", function() {
+    it("returns a link element", function(done) {
       var link = utils.createResourceHint({
         href: "https://example.com",
-        hint: "preconnect",
+        hint: "preconnect"
       });
       expect(link instanceof HTMLLinkElement).toEqual(true);
       done();
     });
-    it("throws given invalid opts", function(done){
-      expect(function(){
+    it("throws given invalid opts", function(done) {
+      expect(function() {
         utils.createResourceHint();
       }).toThrow();
 
-      expect(function(){
+      expect(function() {
         utils.createResourceHint(null);
       }).toThrow();
 
-      expect(function(){
+      expect(function() {
         utils.createResourceHint("throw");
       }).toThrow();
 
-      expect(function(){
+      expect(function() {
         utils.createResourceHint({
           href: "https://example.com",
-          hint: "preconnect",
+          hint: "preconnect"
         });
       }).not.toThrow();
       done();
     });
-    it("throws given an unknown hint", function(done){
-      expect(function(){
+    it("throws given an unknown hint", function(done) {
+      expect(function() {
         utils.createResourceHint({ hint: null });
       }).toThrow();
-      expect(function(){
+      expect(function() {
         utils.createResourceHint({ hint: "not a real hint" });
       }).toThrow();
-      expect(function(){
+      expect(function() {
         utils.createResourceHint({ hint: "preconnect" });
       }).not.toThrow();
       done();
     });
-    it("throws given an invalid URL", function(done){
-      expect(function(){
+    it("throws given an invalid URL", function(done) {
+      expect(function() {
         utils.createResourceHint({
           hint: "preconnect",
-          href: "http://[unvalid:url:///",
+          href: "http://[unvalid:url:///"
         });
       }).toThrow();
-      expect(function(){
+      expect(function() {
         utils.createResourceHint({
           hint: "preconnect",
-          href: "http://this/is/ok/tho",
+          href: "http://this/is/ok/tho"
         });
       }).not.toThrow();
       done();
     });
-    it("normalizes a URL intended for dns-prefetch to an origin", function(done) {
+    it("normalizes a URL intended for dns-prefetch to an origin", function(
+      done
+    ) {
       var link = utils.createResourceHint({
         hint: "dns-prefetch",
-        href: "http://origin:8080/./../test",
+        href: "http://origin:8080/./../test"
       });
       expect(link.href).toEqual("http://origin:8080/");
       done();
@@ -76,7 +78,7 @@ describe("Core - Utils", function() {
     it("normalizes a URL intended for preconnect to an origin", function(done) {
       var link = utils.createResourceHint({
         hint: "preconnect",
-        href: "http://origin:8080/./../test",
+        href: "http://origin:8080/./../test"
       });
       expect(link.href).toEqual("http://origin:8080/");
       done();
@@ -85,7 +87,7 @@ describe("Core - Utils", function() {
       var link = utils.createResourceHint({
         hint: "dns-prefetch",
         href: "https://example.com",
-        as: "media",
+        as: "media"
       });
       expect(link.hasAttribute("as")).toEqual(false);
       done();
@@ -94,101 +96,111 @@ describe("Core - Utils", function() {
       var link = utils.createResourceHint({
         hint: "preconnect",
         href: "https://example.com",
-        as: "style",
+        as: "style"
       });
       expect(link.hasAttribute("as")).toEqual(false);
       done();
     });
-    it("respects 'as' member on preload", function(done){
+    it("respects 'as' member on preload", function(done) {
       var link = utils.createResourceHint({
         hint: "preload",
         href: "https://example.com",
-        as: "style",
+        as: "style"
       });
       expect(link.hasAttribute("as")).toEqual(true);
       expect(link.getAttribute("as")).toEqual("style");
       done();
     });
-    it("respects override of the CORS mode", function(done){
+    it("respects override of the CORS mode", function(done) {
       var link = utils.createResourceHint({
         hint: "preconnect",
         href: "https://other.origin.com",
-        corsMode: "use-credentials",
+        corsMode: "use-credentials"
       });
       expect(link.crossOrigin).toEqual("use-credentials");
       done();
     });
-    it("allows the browser to recover from bogus CORS mode", function(done){
+    it("allows the browser to recover from bogus CORS mode", function(done) {
       var link = utils.createResourceHint({
         hint: "preconnect",
         href: "https://other.origin.com",
-        corsMode: "this will magically become anonymous!",
+        corsMode: "this will magically become anonymous!"
       });
       expect(link.crossOrigin).toEqual("anonymous");
       done();
     });
-    it("automatically detects cross-origin requests for dns-prefetch", function(done){
+    it("automatically detects cross-origin requests for dns-prefetch", function(
+      done
+    ) {
       var link = utils.createResourceHint({
         hint: "dns-prefetch",
-        href: "https://other.origin.com",
+        href: "https://other.origin.com"
       });
       expect(link.crossOrigin).toEqual("anonymous");
       done();
     });
-    it("automatically detects cross-origin requests for preconnect", function(done){
+    it("automatically detects cross-origin requests for preconnect", function(
+      done
+    ) {
       var link = utils.createResourceHint({
         hint: "preconnect",
-        href: "https://other.origin.com",
+        href: "https://other.origin.com"
       });
       expect(link.crossOrigin).toEqual("anonymous");
       done();
     });
-    it("marks the link element for removal on save by default", function(done){
+    it("marks the link element for removal on save by default", function(done) {
       var link = utils.createResourceHint({
         href: "https://example.com",
-        hint: "preconnect",
+        hint: "preconnect"
       });
       expect(link.classList.contains("removeOnSave")).toEqual(true);
       done();
     });
-    it("repects leaving a hint in the spec when told to", function(done){
+    it("repects leaving a hint in the spec when told to", function(done) {
       var link = utils.createResourceHint({
         href: "https://example.com",
         hint: "preconnect",
-        dontRemove: true,
+        dontRemove: true
       });
       expect(link.classList.contains("removeOnSave")).toEqual(false);
       done();
     });
   });
 
-  describe("calculateLeftPad()", function(){
-    it("throws given invalid input", function(){
-      expect(function(){
+  describe("calculateLeftPad()", function() {
+    it("throws given invalid input", function() {
+      expect(function() {
         expect(utils.calculateLeftPad());
       }).toThrow();
-      expect(function(){
+      expect(function() {
         expect(utils.calculateLeftPad({}));
       }).toThrow();
-      expect(function(){
+      expect(function() {
         expect(utils.calculateLeftPad(123));
       }).toThrow();
-      expect(function(){
+      expect(function() {
         expect(utils.calculateLeftPad(null));
       }).toThrow();
     });
-    it("calculates the smallest left padding of multiline text", function(done){
+    it("calculates the smallest left padding of multiline text", function(
+      done
+    ) {
       expect(utils.calculateLeftPad("")).toEqual(0);
       expect(utils.calculateLeftPad("\n    \n  ")).toEqual(2);
       expect(utils.calculateLeftPad("                         ")).toEqual(25);
       expect(utils.calculateLeftPad(" a                        ")).toEqual(1);
-      expect(utils.calculateLeftPad("  \n a                        ")).toEqual(1);
+      expect(utils.calculateLeftPad("  \n a                        ")).toEqual(
+        1
+      );
       expect(utils.calculateLeftPad(" \n   a ")).toEqual(1);
       expect(utils.calculateLeftPad("\n    \n      \n    ")).toEqual(4);
       expect(utils.calculateLeftPad("\n    \n      \n  ")).toEqual(2);
       expect(utils.calculateLeftPad("\n   \n      \n  \n    ")).toEqual(2);
       expect(utils.calculateLeftPad("\n\n\n\n\n\n\n\n\n\n")).toEqual(0);
-      expect(utils.calculateLeftPad("    \n\n\n\n\n  \n\n\n\n\n   ")).toEqual(2);
+      expect(utils.calculateLeftPad("    \n\n\n\n\n  \n\n\n\n\n   ")).toEqual(
+        2
+      );
       done();
     });
   });
@@ -253,27 +265,28 @@ describe("Core - Utils", function() {
   });
 
   describe("toESIterable() method", function() {
-
     it("throws if passed something that is not a function", function(done) {
-      expect(function(){
-        utils.toESIterable(function(){});
+      expect(function() {
+        utils.toESIterable(function() {});
       }).not.toThrow();
-      expect(function(){
+      expect(function() {
         utils.toESIterable("");
       }).toThrow();
-      expect(function(){
+      expect(function() {
         utils.toESIterable(null);
       }).toThrow();
-      expect(function(){
+      expect(function() {
         utils.toESIterable([]);
       }).toThrow();
-      expect(function(){
+      expect(function() {
         utils.toESIterable(undefined);
       }).toThrow();
       done();
     });
 
-    it("creates an object that conforms to the ES iterator protocol", function(done) {
+    it("creates an object that conforms to the ES iterator protocol", function(
+      done
+    ) {
       var genericObject = {
         values: [1, 2, 3, 4],
         current: 0,
@@ -281,8 +294,12 @@ describe("Core - Utils", function() {
           return this.values[this.current++] || null;
         }
       };
-      var iterable = utils.toESIterable(genericObject.nextValue.bind(genericObject));
-      expect(Object.getOwnPropertySymbols(genericObject)).not.toContain(Symbol.iterator);
+      var iterable = utils.toESIterable(
+        genericObject.nextValue.bind(genericObject)
+      );
+      expect(Object.getOwnPropertySymbols(genericObject)).not.toContain(
+        Symbol.iterator
+      );
       expect(Object.getOwnPropertySymbols(iterable)).toContain(Symbol.iterator);
       expect(Array.from(iterable)).toEqual([1, 2, 3, 4]);
       done();
@@ -310,11 +327,11 @@ describe("Core - Utils", function() {
       done();
     });
 
-    it("should normalise whitespace, but ignore white with pre tags", function(done) {
+    it("should normalise whitespace, but ignore white with pre tags", function(
+      done
+    ) {
       var str = `   trim start\n    * trim 3 from start \n <pre>trim 1\n   if(x){\n\t party()</pre>\n  foo \n    bar`;
-      var testStrings = utils
-        .normalizePadding(str)
-        .split("\n");
+      var testStrings = utils.normalizePadding(str).split("\n");
       expect(testStrings[0]).toEqual("trim start");
       expect(testStrings[1]).toEqual(" * trim 3 from start ");
       expect(testStrings[2]).toEqual("<pre>trim 1");
@@ -343,7 +360,9 @@ describe("Core - Utils", function() {
 
   // $.renameElement()
   it("should rename the element", function(done) {
-    var $div = $("<div><p><a></a></p><b>some text</b></div>").appendTo($("body"));
+    var $div = $("<div><p><a></a></p><b>some text</b></div>").appendTo(
+      $("body")
+    );
     $div.find("p").renameElement("span");
     $div.find("b").renameElement("i");
     expect($div.find("span").length).toEqual(1);
@@ -434,15 +453,17 @@ describe("Core - Utils", function() {
     expect(utils.joinAnd(["x", "x"])).toEqual("x and x");
     expect(utils.joinAnd(["x", "x", "x"])).toEqual("x, x, and x");
     expect(utils.joinAnd(["x", "x", "x", "x"])).toEqual("x, x, x, and x");
-    expect(utils.joinAnd(["x", "x", "x", "x"], function(str) {
-      return str.toUpperCase();
-    })).toEqual("X, X, X, and X");
+    expect(
+      utils.joinAnd(["x", "x", "x", "x"], function(str) {
+        return str.toUpperCase();
+      })
+    ).toEqual("X, X, X, and X");
     done();
   });
 
   // xmlEscape
   it("should escape properly", function(done) {
-    expect(utils.xmlEscape("&<>\"")).toEqual("&amp;&lt;&gt;&quot;");
+    expect(utils.xmlEscape('&<>"')).toEqual("&amp;&lt;&gt;&quot;");
     done();
   });
 
@@ -455,49 +476,63 @@ describe("Core - Utils", function() {
   // toKeyValuePairs
   it("should convert objects to key values pairs", function(done) {
     var obj = {
-      editors: [{
-        "name": "Person Name"
-      }],
+      editors: [
+        {
+          name: "Person Name"
+        }
+      ],
       specStatus: "ED",
       edDraftURI: "http://foo.com",
       shortName: "Foo"
     };
-    var expected = "editors=[{\"name\":\"Person Name\"}], specStatus=\"ED\", " +
-      "edDraftURI=\"http://foo.com\", shortName=\"Foo\"";
+    var expected =
+      'editors=[{"name":"Person Name"}], specStatus="ED", ' +
+      'edDraftURI="http://foo.com", shortName="Foo"';
     expect(utils.toKeyValuePairs(obj)).toEqual(expected);
     done();
   });
 
-  it("should convert objects to key values pairs with different separator", function(done) {
+  it("should convert objects to key values pairs with different separator", function(
+    done
+  ) {
     var obj = {
-      editors: [{
-        "name": "Person Name"
-      }],
+      editors: [
+        {
+          name: "Person Name"
+        }
+      ],
       specStatus: "ED",
       edDraftURI: "http://foo.com",
       shortName: "Foo"
     };
-    var expected = "editors=[{\"name\":\"Person Name\"}]|||specStatus=\"ED\"|||" +
-      "edDraftURI=\"http://foo.com\"|||shortName=\"Foo\"";
+    var expected =
+      'editors=[{"name":"Person Name"}]|||specStatus="ED"|||' +
+      'edDraftURI="http://foo.com"|||shortName="Foo"';
     expect(utils.toKeyValuePairs(obj, "|||")).toEqual(expected);
     done();
   });
 
-  it("should convert objects to key values pairs with different separator and delimiter", function(done) {
+  it("should convert objects to key values pairs with different separator and delimiter", function(
+    done
+  ) {
     var obj = {
-      editors: [{
-        "name": "Person Name"
-      }],
+      editors: [
+        {
+          name: "Person Name"
+        }
+      ],
       specStatus: "ED",
       edDraftURI: "http://foo.com",
       shortName: "Foo"
     };
-    var expected = "editors;[{\"name\":\"Person Name\"}], specStatus;\"ED\", " +
-      "edDraftURI;\"http://foo.com\", shortName;\"Foo\"";
+    var expected =
+      'editors;[{"name":"Person Name"}], specStatus;"ED", ' +
+      'edDraftURI;"http://foo.com", shortName;"Foo"';
     expect(utils.toKeyValuePairs(obj, null, ";")).toEqual(expected);
 
-    expected = "editors^[{\"name\":\"Person Name\"}] % specStatus^\"ED\" % " +
-      "edDraftURI^\"http://foo.com\" % shortName^\"Foo\"";
+    expected =
+      'editors^[{"name":"Person Name"}] % specStatus^"ED" % ' +
+      'edDraftURI^"http://foo.com" % shortName^"Foo"';
     expect(utils.toKeyValuePairs(obj, " % ", "^")).toEqual(expected);
     done();
   });

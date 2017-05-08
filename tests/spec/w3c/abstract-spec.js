@@ -4,11 +4,13 @@ describe("W3C — Abstract", function() {
     flushIframes();
     done();
   });
-  it("should include an h2, set the class, and wrap the content", function(done) {
+  it("should include an h2, set the class, and wrap the content", function(
+    done
+  ) {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody(),
-      abstract: "<section id='abstract'>test abstract</section>",
+      abstract: "<section id='abstract'>test abstract</section>"
     };
     makeRSDoc(ops, function(doc) {
       var $abs = $("#abstract", doc);

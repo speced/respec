@@ -15,7 +15,12 @@ function makeRSDoc(opts = {}, cb = () => {}, src = "about:blank", style = "") {
       var doc = this.contentDocument;
       decorateDocument(doc, opts);
       window.addEventListener("message", function msgHandler(ev) {
-        if (!doc || !ev.source || doc !== ev.source.document || ev.data.topic !== "end-all") {
+        if (
+          !doc ||
+          !ev.source ||
+          doc !== ev.source.document ||
+          ev.data.topic !== "end-all"
+        ) {
           return;
         }
         window.removeEventListener("message", msgHandler);
@@ -29,7 +34,9 @@ function makeRSDoc(opts = {}, cb = () => {}, src = "about:blank", style = "") {
       try {
         ifr.style = style;
       } catch (err) {
-        console.warn("Could not override iframe style: " + style + " (" + err.message + ")");
+        console.warn(
+          "Could not override iframe style: " + style + " (" + err.message + ")"
+        );
       }
     }
     if (src) {
@@ -53,17 +60,19 @@ function decorateDocument(doc, opts) {
     var config = this.ownerDocument.createElement("script");
     var configText = "";
     if (opts.config) {
-      configText = "var respecConfig = " + JSON.stringify(opts.config || {}) + ";";
+      configText =
+        "var respecConfig = " + JSON.stringify(opts.config || {}) + ";";
     }
     config.classList.add("remove");
     config.innerText = configText;
-    var isKarma = (!!window.__karma__);
+    var isKarma = !!window.__karma__;
     var loadAttr = {
-      src: (isKarma) ? new URL("/base/builds/respec-w3c-common.js", location).href : "/js/deps/require.js",
-      "data-main": (isKarma) ? "" : path + (opts.profile || "profile-w3c-common")
+      src: isKarma
+        ? new URL("/base/builds/respec-w3c-common.js", location).href
+        : "/js/deps/require.js",
+      "data-main": isKarma ? "" : path + (opts.profile || "profile-w3c-common")
     };
-    Object
-      .keys(loadAttr)
+    Object.keys(loadAttr)
       .reduce(intoAttributes.bind(loadAttr), loader)
       .classList.add("remove");
     this.appendChild(config);
@@ -71,7 +80,8 @@ function decorateDocument(doc, opts) {
   }
 
   function decorateBody(opts) {
-    var bodyText = opts.abstract || "<section id='abstract'><p>test abstract</p></section>";
+    var bodyText =
+      opts.abstract || "<section id='abstract'><p>test abstract</p></section>";
     if (opts.body) {
       bodyText = bodyText.concat(opts.body);
     }
@@ -79,9 +89,10 @@ function decorateDocument(doc, opts) {
   }
 
   if (opts.htmlAttrs) {
-    Object
-      .keys(opts.htmlAttrs)
-      .reduce(intoAttributes.bind(opts.htmlAttrs), doc.documentElement);
+    Object.keys(opts.htmlAttrs).reduce(
+      intoAttributes.bind(opts.htmlAttrs),
+      doc.documentElement
+    );
   }
   if (opts.title) {
     doc.title = opts.title;
@@ -104,11 +115,9 @@ function pickRandomsFromList(list, howMany) {
   }
   if (howMany > list.length) {
     // Return a new list, but randomized.
-    return list
-      .slice()
-      .sort(function randomSort() {
-        return Math.round(Math.random() * (1 - (-1)) + -1);
-      });
+    return list.slice().sort(function randomSort() {
+      return Math.round(Math.random() * (1 - -1) + -1);
+    });
   }
   var collectedValues = [];
   // collect a unique set based on howMany we need.
@@ -127,9 +136,11 @@ function pickRandomsFromList(list, howMany) {
 
 function makeBasicConfig() {
   return {
-    editors: [{
-      name: "Person Name"
-    }],
+    editors: [
+      {
+        name: "Person Name"
+      }
+    ],
     specStatus: "ED",
     edDraftURI: "http://foo.com",
     shortName: "Foo",
@@ -138,7 +149,7 @@ function makeBasicConfig() {
     errata: "https://github.com/tabatkins/bikeshed",
     implementationReportURI: "http://example.com/implementationReportURI",
     perEnd: "1999-01-01",
-    lint: false,
+    lint: false
   };
 }
 
@@ -149,7 +160,6 @@ function makeDefaultBody() {
 function makeStandardOps() {
   return {
     config: makeBasicConfig(),
-    body: makeDefaultBody(),
+    body: makeDefaultBody()
   };
 }
-

@@ -11,9 +11,9 @@ describe("Core - Figures", function() {
       " <section id='figs'>" +
       "   <div class='figure'><pre title='PREFIG'>PRE</pre></div>" +
       "   <img src='IMG' title='IMGTIT' class='figure'>" +
-      " </section>"+
-      "<section id='tof'></section>"+
-      "</section>",
+      " </section>" +
+      "<section id='tof'></section>" +
+      "</section>"
   };
   it("generates captions for figures", function(done) {
     makeRSDoc(ops, function(doc) {
@@ -25,7 +25,7 @@ describe("Core - Figures", function() {
       expect(captions.item(1).textContent).toEqual("Fig. 2 IMGTIT");
     }).then(done);
   });
-  it("generates table of figures", function (done) {
+  it("generates table of figures", function(done) {
     makeRSDoc(ops, function(doc) {
       var tof = doc.getElementById("tof");
       var tofHeader = tof.querySelector("h3");

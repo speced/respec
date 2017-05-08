@@ -25,52 +25,58 @@ describe("W3C — Bibliographic References", function() {
   });
 
   var customConfig = {
-    editors: [{
-      name: "Robin Berjon"
-    }],
+    editors: [
+      {
+        name: "Robin Berjon"
+      }
+    ],
     shortName: "Foo",
     specStatus: "WD",
     prevVersion: "FPWD",
     previousMaturity: "WD",
     previousPublishDate: "2013-12-17",
     localBiblio: {
-      "TestRef1": {
+      TestRef1: {
         title: "Test ref title",
         href: "http://test.com",
         authors: ["William Shakespeare"],
         publisher: "Publishers Inc."
       },
-      "TestRef2": {
+      TestRef2: {
         title: "Second test",
         href: "http://test.com",
         authors: ["Another author"],
         publisher: "Testing 123"
       },
-      "TestRef3": {
+      TestRef3: {
         title: "Third test",
         href: "http://test.com",
         publisher: "Publisher Here"
-      },
+      }
     }
   };
 
   it("includes a dns-prefetch to bibref server", function(done) {
     var ops = {
       config: customConfig,
-      body: "<section id='sotd'><p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p></section>",
+      body: "<section id='sotd'><p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p></section>"
     };
     makeRSDoc(ops, function(doc) {
       var host = bibRefsURL.host;
-      var link = doc.querySelector("link[rel='dns-prefetch'][href*='" + host + "']");
+      var link = doc.querySelector(
+        "link[rel='dns-prefetch'][href*='" + host + "']"
+      );
       expect(link).toBeTruthy();
       expect(link.classList.contains("removeOnSave")).toBeTruthy();
-    }).then(done).catch(done);
+    })
+      .then(done)
+      .catch(done);
   });
 
   it("should display the publisher when present", function(done) {
     var ops = {
       config: customConfig,
-      body: "<section id='sotd'><p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p></section>",
+      body: "<section id='sotd'><p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p></section>"
     };
     makeRSDoc(ops, function(doc) {
       // Make sure the reference is added.
@@ -78,7 +84,9 @@ describe("W3C — Bibliographic References", function() {
       expect(ref).toBeTruthy();
       // This prevents Jasmine from taking down the whole test suite if SpecRef is down.
       if (!isSpecRefAvailable) {
-        var err = new Error("SpecRef seems to be down. Can't proceed with this spec.");
+        var err = new Error(
+          "SpecRef seems to be down. Can't proceed with this spec."
+        );
         return Promise.reject(err);
       }
       expect(ref.textContent).toMatch(/Publishers Inc\.\s/);
@@ -93,6 +101,8 @@ describe("W3C — Bibliographic References", function() {
       ref = doc.querySelector("#bib-TestRef3 + dd");
       expect(ref).toBeTruthy();
       expect(ref.textContent).toMatch(/Publisher Here\.\s/);
-    }).then(done).catch(done);
+    })
+      .then(done)
+      .catch(done);
   });
 });

@@ -20,22 +20,22 @@ export function run(conf, doc, cb) {
   var noteCount = 1;
   var issueCount = 1;
   var ednoteCount = 1;
-  Array
-    .from(doc.querySelectorAll(".note-title, .ednote-title, .issue-title"))
-    .forEach(function(element) {
-      var $element = $(element);
-      var isIssue = element.classList.contains("issue-title");
-      var isEdNote = element.classList.contains("ednote-title");
-      var level = $element.parents("section").length + 2;
-      element.setAttribute("aria-level", level);
-      element.setAttribute("role", "heading");
-      if (isIssue) {
-        $element.makeID("h", "issue" + issueCount++);
-      } else if (isEdNote) {
-        $element.makeID("h", "ednote" + ednoteCount++);
-      } else {
-        $element.makeID("h", "note" + noteCount++);
-      }
-    });
+  Array.from(
+    doc.querySelectorAll(".note-title, .ednote-title, .issue-title")
+  ).forEach(function(element) {
+    var $element = $(element);
+    var isIssue = element.classList.contains("issue-title");
+    var isEdNote = element.classList.contains("ednote-title");
+    var level = $element.parents("section").length + 2;
+    element.setAttribute("aria-level", level);
+    element.setAttribute("role", "heading");
+    if (isIssue) {
+      $element.makeID("h", "issue" + issueCount++);
+    } else if (isEdNote) {
+      $element.makeID("h", "ednote" + ednoteCount++);
+    } else {
+      $element.makeID("h", "note" + noteCount++);
+    }
+  });
   cb();
 }

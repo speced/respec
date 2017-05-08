@@ -11,11 +11,11 @@ describe("W3C — Aliased References", function() {
         "<section id='sample'><p>foo [[!FOOBARGLOP]] bar</p></section>"
     };
     ops.config.localBiblio = {
-      "FOOBARGLOP": {
-	"aliasOf": "BARBAR",
+      FOOBARGLOP: {
+        aliasOf: "BARBAR"
       },
-      "BARBAR": {
-	title: "The BARBAR Spec",
+      BARBAR: {
+        title: "The BARBAR Spec"
       }
     };
     makeRSDoc(ops, function(doc) {

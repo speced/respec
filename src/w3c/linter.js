@@ -11,8 +11,7 @@ import { pub } from "core/pubsubhub";
 function hasPriSecConsiderations(doc) {
   const privOrSecRegex = /(privacy|security)/im;
   const considerationsRegex = /(considerations)/im;
-  return Array
-    .from(doc.querySelectorAll("h2, h3, h4, h5, h6"))
+  return Array.from(doc.querySelectorAll("h2, h3, h4, h5, h6"))
     .map(function(elem) {
       return elem.textContent;
     })
@@ -34,11 +33,15 @@ function findHTTPProps(conf, base) {
 }
 
 function findHeadinglessSections(doc) {
-  return Array
-    .from(doc.querySelectorAll("section:not(#toc)"))
-    .filter(function(elem) {
-      return elem.querySelector(":scope>h2, :scope>h3, :scope>h4, :scope>h5, :scope>h6") === null;
-    });
+  return Array.from(doc.querySelectorAll("section:not(#toc)")).filter(function(
+    elem
+  ) {
+    return (
+      elem.querySelector(
+        ":scope>h2, :scope>h3, :scope>h4, :scope>h5, :scope>h6"
+      ) === null
+    );
+  });
 }
 
 export function run(conf, doc, cb) {
@@ -50,7 +53,8 @@ export function run(conf, doc, cb) {
 
   // Warn if no privacy and/or security considerations section
   if (!hasPriSecConsiderations(doc)) {
-    warn = "This specification doesn't appear to have any 'Privacy' " +
+    warn =
+      "This specification doesn't appear to have any 'Privacy' " +
       "or 'Security' considerations sections. Please consider adding one" +
       ", see https://w3ctag.github.io/security-questionnaire/";
     warnings.push(warn);
@@ -60,20 +64,28 @@ export function run(conf, doc, cb) {
   if (doc.location.href.startsWith("http")) {
     var httpURLs = findHTTPProps(conf, doc.location.href);
     if (httpURLs.length) {
-      warn = "There are insecure URLs in your respecConfig! Please change " +
-        "the following properties to use 'https://': " + httpURLs.join(", ") + ".";
+      warn =
+        "There are insecure URLs in your respecConfig! Please change " +
+        "the following properties to use 'https://': " +
+        httpURLs.join(", ") +
+        ".";
       warnings.push(warn);
     }
   }
 
   // Warn about sections with no headings
-  const sections = findHeadinglessSections(doc)
-    .map(function(section) {
-      console.warn("Section with no heading (maybe use a div or add a heading?):", section);
-      return section;
-    });
+  const sections = findHeadinglessSections(doc).map(function(section) {
+    console.warn(
+      "Section with no heading (maybe use a div or add a heading?):",
+      section
+    );
+    return section;
+  });
   if (sections.length) {
-    warn = "Found " + sections.length + " section elements without a heading element. Consider " +
+    warn =
+      "Found " +
+      sections.length +
+      " section elements without a heading element. Consider " +
       "adding a heading element. See browser developer console for offending element(s).";
     warnings.push(warn);
   }
@@ -87,6 +99,6 @@ export function run(conf, doc, cb) {
 }
 // Convenience methods, for quickly testing rules.
 export const rules = {
-  "findHTTPProps": findHTTPProps,
-  "hasPriSecConsiderations": hasPriSecConsiderations,
+  findHTTPProps: findHTTPProps,
+  hasPriSecConsiderations: hasPriSecConsiderations
 };
