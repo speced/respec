@@ -28,7 +28,7 @@ const tasks = {
    * @return {Promise}        Resolves when writing is done.
    */
   writeTo(outPath, data) {
-    return async.task(function* () {
+    return async.task(function*() {
       let newFilePath = "";
       if (path.isAbsolute(outPath)) {
         newFilePath = outPath;
@@ -54,7 +54,7 @@ const tasks = {
   makeTempDir(prefix) {
     return new Promise((resolve, reject) => {
       fs.mkdtemp(prefix, (err, folder) => {
-        return (err) ? reject(err) : resolve(folder);
+        return err ? reject(err) : resolve(folder);
       });
     });
   },
@@ -75,24 +75,23 @@ const tasks = {
    *                              Rejects on errors.
    */
   fetchAndWrite(src, out, whenToHalt, timeout) {
-    return async.task(function* () {
+    return async.task(function*() {
       const userData = yield this.makeTempDir(os.tmpdir() + "/respec2html-");
       const nightmare = new Nightmare({
         show: false,
         timeout,
         webPreferences: {
-          "images": false,
-          "defaultEncoding": "utf-8",
+          images: false,
+          defaultEncoding: "utf-8",
           partition: "nopersist",
           userData,
-        }
+        },
       });
       nightmare.useragent("respec2html");
       const url = parseURL(src).href;
       const handleConsoleMessages = makeConsoleMsgHandler(nightmare);
       handleConsoleMessages(whenToHalt);
-      const response = yield nightmare
-        .goto(url);
+      const response = yield nightmare.goto(url);
       if (response.code !== 200) {
         const warn = colors.warn(`📡 HTTP Error ${response.code}:`);
         const msg = `${warn} ${colors.debug(url)}`;
@@ -100,53 +99,57 @@ const tasks = {
         throw new Error(msg);
       }
       const isRespecDoc = yield nightmare
-        .wait(function(){
+        .wait(function() {
           return document.readyState === "complete";
         })
-        .evaluate(function(){
-          if(document.hasOwnProperty("respecIsReady")){
+        .evaluate(function() {
+          if (document.hasOwnProperty("respecIsReady")) {
             return true;
           }
           // does it try to load ReSpec locally or remotely
-          const remoteScriptQuery = "script[src='https://www.w3.org/Tools/respec/respec-w3c-common']";
+          const remoteScriptQuery =
+            "script[src='https://www.w3.org/Tools/respec/respec-w3c-common']";
           const query = `script[data-main*=profile-w3c-common], ${remoteScriptQuery}`;
-          return (document.querySelector(query)) ? true : false;
+          return document.querySelector(query) ? true : false;
         });
-      if(!isRespecDoc){
+      if (!isRespecDoc) {
         const msg = `${colors.warn("💣 Not a ReSpec source document?")} ${colors.debug(url)}`;
         nightmare.proc.kill();
         throw new Error(msg);
       }
       const html = yield nightmare
-        .wait(function () {
+        .wait(function() {
           return document.respecIsReady;
         })
         .wait("#respec-button-save-snapshot")
         .click("#respec-button-save-snapshot")
         .wait(100)
-        .evaluate(function () {
+        .evaluate(function() {
           var encodedText = document.querySelector("#respec-save-as-html").href;
           var decodedText = decodeURIComponent(encodedText);
-          var cleanedUpText = decodedText.replace(/^data:text\/html;charset=utf-8,/, "");
+          var cleanedUpText = decodedText.replace(
+            /^data:text\/html;charset=utf-8,/,
+            ""
+          );
           return cleanedUpText;
         })
         .end();
       switch (out) {
-      case null:
-        process.stdout.write(html);
-        break;
-      case "":
-        break;
-      default:
-        try {
-          yield this.writeTo(out, html);
-        } catch (err) {
-          throw err;
-        }
+        case null:
+          process.stdout.write(html);
+          break;
+        case "":
+          break;
+        default:
+          try {
+            yield this.writeTo(out, html);
+          } catch (err) {
+            throw err;
+          }
       }
       return html;
     }, this);
-  }
+  },
 };
 
 /**
@@ -171,16 +174,16 @@ function makeConsoleMsgHandler(nightmare) {
       const abortOnError = whenToHalt.haltOnError && type === "error";
       const output = `ReSpec ${type}: ${colors.debug(message)}`;
       switch (type) {
-      case "error":
-        console.error(colors.error(`😱 ${output}`));
-        break;
-      case "warn":
-        // Ignore Nightmare's poling of respecDone
-        if (/document\.respecDone/.test(message)) {
-          return;
-        }
-        console.warn(colors.warn(`🚨 ${output}`));
-        break;
+        case "error":
+          console.error(colors.error(`😱 ${output}`));
+          break;
+        case "warn":
+          // Ignore Nightmare's poling of respecDone
+          if (/document\.respecDone/.test(message)) {
+            return;
+          }
+          console.warn(colors.warn(`🚨 ${output}`));
+          break;
       }
       if (abortOnError || abortOnWarning) {
         nightmare.proc.kill();

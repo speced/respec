@@ -21,65 +21,80 @@ colors.setTheme({
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
 // Command line output
-const optionList = [{
-  alias: "h",
-  defaultValue: false,
-  description: "Display this usage guide.",
-  name: "help",
-  type: Boolean,
-}, {
-  alias: "s",
-  defaultOption: true,
-  description: "URL to ReSpec source file.",
-  multiple: false,
-  name: "src",
-  type: String,
-}, {
-  alias: "o",
-  defaultOption: false,
-  description: "Path to output file. When omitted, just stdout.",
-  multiple: false,
-  name: "out",
-  type: String,
-}, {
-  alias: "t",
-  defaultValue: 10,
-  description: "How long to wait before timing out (in seconds).",
-  name: "timeout",
-  type: Number,
-}, {
-  alias: "e",
-  default: false,
-  description: "Abort if the spec has any errors.",
-  name: "haltonerror",
-  type: Boolean,
-}, {
-  alias: "w",
-  default: false,
-  description: "Abort if ReSpec generates warnings.",
-  name: "haltonwarn",
-  type: Boolean,
-}];
+const optionList = [
+  {
+    alias: "h",
+    defaultValue: false,
+    description: "Display this usage guide.",
+    name: "help",
+    type: Boolean,
+  },
+  {
+    alias: "s",
+    defaultOption: true,
+    description: "URL to ReSpec source file.",
+    multiple: false,
+    name: "src",
+    type: String,
+  },
+  {
+    alias: "o",
+    defaultOption: false,
+    description: "Path to output file. When omitted, just stdout.",
+    multiple: false,
+    name: "out",
+    type: String,
+  },
+  {
+    alias: "t",
+    defaultValue: 10,
+    description: "How long to wait before timing out (in seconds).",
+    name: "timeout",
+    type: Number,
+  },
+  {
+    alias: "e",
+    default: false,
+    description: "Abort if the spec has any errors.",
+    name: "haltonerror",
+    type: Boolean,
+  },
+  {
+    alias: "w",
+    default: false,
+    description: "Abort if ReSpec generates warnings.",
+    name: "haltonwarn",
+    type: Boolean,
+  },
+];
 
-const usageSections = [{
-  header: "respec2html",
-  content: "Converts a ReSpec source file to HTML and prints to std out.",
-}, {
-  header: "Options",
-  optionList,
-}, {
-  header: "Examples",
-  content: [{
-    desc: "1. Output to a file. ",
-    example: "$ ./respec2html.js --src http://example.com/spec.html --out spec.html"
-  }, {
-    desc: "2. Halt on errors or warning ",
-    example: "$ ./respec2html.js -e -w --src http://example.com/spec.html --out spec.html"
-  },]
-}, {
-  content: "Project home: [underline]{https://github.com/w3c/respec}",
-  raw: true,
-}];
+const usageSections = [
+  {
+    header: "respec2html",
+    content: "Converts a ReSpec source file to HTML and prints to std out.",
+  },
+  {
+    header: "Options",
+    optionList,
+  },
+  {
+    header: "Examples",
+    content: [
+      {
+        desc: "1. Output to a file. ",
+        example: "$ ./respec2html.js --src http://example.com/spec.html --out spec.html",
+      },
+      {
+        desc: "2. Halt on errors or warning ",
+        example: "$ ./respec2html.js -e -w --src http://example.com/spec.html --out spec.html",
+      },
+    ],
+  },
+  {
+    content: "Project home: [underline]{https://github.com/w3c/respec}",
+    raw: true,
+  },
+];
 
 async.task(function* run() {
   let parsedArgs;

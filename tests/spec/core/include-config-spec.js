@@ -8,7 +8,7 @@ describe("Core — Include config as JSON", function() {
   beforeAll(function(done) {
     ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody()
+      body: makeDefaultBody(),
     };
     done();
   });

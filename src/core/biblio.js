@@ -29,7 +29,7 @@ function normalizeReferences(conf) {
 function getRefKeys(conf) {
   return {
     informativeReferences: Array.from(conf.informativeReferences),
-    normativeReferences: Array.from(conf.normativeReferences)
+    normativeReferences: Array.from(conf.normativeReferences),
   };
 }
 
@@ -43,7 +43,7 @@ const REF_STATUSES = new Map([
   ["PR", "W3C Proposed Recommendation"],
   ["REC", "W3C Recommendation"],
   ["WD", "W3C Working Draft"],
-  ["WG-NOTE", "W3C Working Group Note"]
+  ["WG-NOTE", "W3C Working Group Note"],
 ]);
 
 export function stringifyReference(ref) {
@@ -157,7 +157,7 @@ function bibref(conf) {
 // if we will actually need to download references yet.
 var link = createResourceHint({
   hint: "dns-prefetch",
-  href: bibrefsURL.origin
+  href: bibrefsURL.origin,
 });
 document.head.appendChild(link);
 let doneResolver;
@@ -227,7 +227,7 @@ export async function run(conf, doc, cb) {
   // See if we have them in IDB
   const promisesToFind = neededRefs.map(async id => ({
     id,
-    data: await biblioDB.find(id)
+    data: await biblioDB.find(id),
   }));
   const idbRefs = await Promise.all(promisesToFind);
   const split = idbRefs.reduce(

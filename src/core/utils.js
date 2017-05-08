@@ -39,14 +39,14 @@ const inlineElems = new Set([
   "textarea",
   "time",
   "tt",
-  "var"
+  "var",
 ]);
 
 const resourceHints = new Set([
   "dns-prefetch",
   "preconnect",
   "preload",
-  "prerender"
+  "prerender",
 ]);
 
 const fetchDestinations = new Set([
@@ -64,7 +64,7 @@ const fetchDestinations = new Set([
   "style",
   "worker",
   "xslt",
-  ""
+  "",
 ]);
 
 /**
@@ -183,7 +183,7 @@ export function toESIterable(nextLikeFunction) {
       value: nextLikeFunction(),
       get done() {
         return this.value === null;
-      }
+      },
     };
   };
   // We structure the iterator like this, or else
@@ -191,7 +191,7 @@ export function toESIterable(nextLikeFunction) {
   var iterator = {};
   iterator[Symbol.iterator] = function() {
     return {
-      next: next
+      next: next,
     };
   };
   return iterator;
@@ -384,7 +384,7 @@ export const humanMonths = [
   "September",
   "October",
   "November",
-  "December"
+  "December",
 ];
 
 // given either a Date object or a date in YYYY-MM-DD format, return a human-formatted

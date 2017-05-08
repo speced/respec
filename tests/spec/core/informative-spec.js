@@ -8,7 +8,7 @@ describe("Core — Informative", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "<section class='informative'><h2>TITLE</h2></section>"
+        "<section class='informative'><h2>TITLE</h2></section>",
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("div.informative, section.informative", doc);

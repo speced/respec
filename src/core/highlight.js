@@ -55,7 +55,7 @@ export async function run(conf, doc, cb) {
           action: "highlight",
           code: element.textContent,
           id: Math.random().toString(),
-          languages: getLanguageHint(element.classList)
+          languages: getLanguageHint(element.classList),
         };
         element.setAttribute("aria-live", "polite");
         worker.postMessage(msg);

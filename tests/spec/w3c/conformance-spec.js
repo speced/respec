@@ -14,7 +14,7 @@ describe("W3C — Conformance", function() {
         "</section>" +
         "<section><h2>my section</h2>" +
         "  <p>No terms are used except SHOULD.</p>" +
-        "</section>"
+        "</section>",
     };
     makeRSDoc(ops, function(doc) {
       var $c = $("#conformance", doc);
@@ -36,7 +36,7 @@ describe("W3C — Conformance", function() {
         "</section>" +
         "<section><h2>my section</h2>" +
         "  <p>Terms are MUST, SHOULD, SHOULD NOT, and SHOULD  NOT.</p>" +
-        "</section>"
+        "</section>",
     };
     makeRSDoc(ops, function(doc) {
       var $c = $("#conformance", doc);
@@ -55,7 +55,7 @@ describe("W3C — Conformance", function() {
         "</section>" +
         "<section><h2>my section</h2>" +
         "  <p>Terms are not used.</p>" +
-        "</section>"
+        "</section>",
     };
     makeRSDoc(ops, function(doc) {
       var $c = $("#conformance", doc);

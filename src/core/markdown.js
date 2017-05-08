@@ -52,7 +52,7 @@ export const name = "core/markdown";
 
 marked.setOptions({
   sanitize: false,
-  gfm: true
+  gfm: true,
 });
 
 function toHTML(text) {

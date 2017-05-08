@@ -16,38 +16,48 @@ colors.setTheme({
   info: "green",
 });
 
-const optionList = [{
-  alias: "h",
-  defaultValue: false,
-  description: "Display this usage guide.",
-  name: "help",
-  type: Boolean,
-}, {
-  alias: "p",
-  defaultOption: true,
-  description: "Name of profile to build. Profile must be " +
-    "in the js/ folder, and start with 'profile-' (e.g., profile-w3c-common.js)",
-  multiple: false,
-  name: "profile",
-  type: String,
-}];
+const optionList = [
+  {
+    alias: "h",
+    defaultValue: false,
+    description: "Display this usage guide.",
+    name: "help",
+    type: Boolean,
+  },
+  {
+    alias: "p",
+    defaultOption: true,
+    description: "Name of profile to build. Profile must be " +
+      "in the js/ folder, and start with 'profile-' (e.g., profile-w3c-common.js)",
+    multiple: false,
+    name: "profile",
+    type: String,
+  },
+];
 
-const usageSections = [{
-  header: "builder",
-  content: "Builder builds a ReSpec profile",
-}, {
-  header: "Options",
-  optionList,
-}, {
-  header: "Examples",
-  content: [{
-    desc: "1. Build W3C Profile ",
-    example: "$ ./tools/builder.js --profile=w3c-common"
-  }, ]
-}, {
-  content: "Project home: [underline]{https://github.com/w3c/respec}",
-  raw: true,
-}];
+const usageSections = [
+  {
+    header: "builder",
+    content: "Builder builds a ReSpec profile",
+  },
+  {
+    header: "Options",
+    optionList,
+  },
+  {
+    header: "Examples",
+    content: [
+      {
+        desc: "1. Build W3C Profile ",
+        example: "$ ./tools/builder.js --profile=w3c-common",
+      },
+    ],
+  },
+  {
+    content: "Project home: [underline]{https://github.com/w3c/respec}",
+    raw: true,
+  },
+];
 
 /**
  * Async function that appends the boilerplate to the generated script
@@ -116,9 +126,7 @@ const Builder = {
       const outputWritter = appendBoilerplate(outPath, buildVersion, name);
       const config = {
         baseUrl: path.join(__dirname, "../js/"),
-        deps: [
-          "deps/require",
-        ],
+        deps: ["deps/require"],
         generateSourceMaps: true,
         inlineText: true,
         logLevel: 2, // Show uglify warnings and errors.
@@ -130,9 +138,7 @@ const Builder = {
       };
       const promiseToWrite = new Promise((resolve, reject) => {
         config.out = (concatinatedJS, sourceMap) => {
-          outputWritter(concatinatedJS, sourceMap)
-            .then(resolve)
-            .catch(reject);
+          outputWritter(concatinatedJS, sourceMap).then(resolve).catch(reject);
         };
       });
       r.optimize(config);
@@ -151,7 +157,6 @@ const Builder = {
 exports.Builder = Builder;
 
 async.task(function* run() {
-
   let parsedArgs;
   try {
     parsedArgs = commandLineArgs(optionList);

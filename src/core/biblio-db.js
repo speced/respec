@@ -46,14 +46,14 @@ const readyPromise = new Promise((resolve, reject) => {
       new Promise((resolve, reject) => {
         try {
           const transaction = db.createObjectStore("reference", {
-            keyPath: "id"
+            keyPath: "id",
           }).transaction;
           transaction.oncomplete = resolve;
           transaction.onerror = reject;
         } catch (err) {
           reject(err);
         }
-      })
+      }),
     ];
     try {
       await Promise.all(promisesToCreateSchema);
@@ -203,7 +203,7 @@ export const biblioDB = {
     }
     const aliasesAndRefs = {
       alias: new Set(),
-      reference: new Set()
+      reference: new Set(),
     };
     Object.keys(data)
       .filter(key => {
@@ -270,5 +270,5 @@ export const biblioDB = {
   async close() {
     const db = await this.ready;
     db.close();
-  }
+  },
 };

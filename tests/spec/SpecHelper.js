@@ -70,7 +70,7 @@ function decorateDocument(doc, opts) {
       src: isKarma
         ? new URL("/base/builds/respec-w3c-common.js", location).href
         : "/js/deps/require.js",
-      "data-main": isKarma ? "" : path + (opts.profile || "profile-w3c-common")
+      "data-main": isKarma ? "" : path + (opts.profile || "profile-w3c-common"),
     };
     Object.keys(loadAttr)
       .reduce(intoAttributes.bind(loadAttr), loader)
@@ -138,8 +138,8 @@ function makeBasicConfig() {
   return {
     editors: [
       {
-        name: "Person Name"
-      }
+        name: "Person Name",
+      },
     ],
     specStatus: "ED",
     edDraftURI: "http://foo.com",
@@ -149,7 +149,7 @@ function makeBasicConfig() {
     errata: "https://github.com/tabatkins/bikeshed",
     implementationReportURI: "http://example.com/implementationReportURI",
     perEnd: "1999-01-01",
-    lint: false
+    lint: false,
   };
 }
 
@@ -160,6 +160,6 @@ function makeDefaultBody() {
 function makeStandardOps() {
   return {
     config: makeBasicConfig(),
-    body: makeDefaultBody()
+    body: makeDefaultBody(),
   };
 }

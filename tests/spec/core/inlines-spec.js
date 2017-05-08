@@ -12,17 +12,17 @@ describe("Core - Inlines", function() {
         "  <p><abbr title='ABBR-TIT'>ABBR</abbr> ABBR</p>" +
         "  <p>MUST and NOT RECOMMENDED</p>" +
         "  <p>[[!DAHU]] [[REX]]</p>" +
-        "</section>"
+        "</section>",
     };
     ops.config.localBiblio = {
       DAHU: {
         title: "One short leg. How I learned to overcome.",
-        publisher: "Publishers Inc."
+        publisher: "Publishers Inc.",
       },
       REX: {
         title: "Am I a dinosaur or a failed technology?",
-        publisher: "Publishers Inc."
-      }
+        publisher: "Publishers Inc.",
+      },
     };
     makeRSDoc(ops, function(doc) {
       var $inl = $("#inlines", doc);

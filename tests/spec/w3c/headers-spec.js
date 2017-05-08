@@ -11,7 +11,7 @@ describe("W3C — Headers", function() {
   ) {
     var ops = makeStandardOps();
     var newProps = {
-      prevRecURI: "URI"
+      prevRecURI: "URI",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -24,7 +24,7 @@ describe("W3C — Headers", function() {
   it("should take specStatus into account", function(done) {
     var ops = makeStandardOps();
     var newProps = {
-      specStatus: "ED"
+      specStatus: "ED",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -37,7 +37,7 @@ describe("W3C — Headers", function() {
     var ops = makeStandardOps();
     var newProps = {
       specStatus: "REC",
-      shortName: "xxx"
+      shortName: "xxx",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -64,9 +64,9 @@ describe("W3C — Headers", function() {
           companyURL: "http://COMPANY",
           mailto: "EMAIL",
           note: "NOTE",
-          w3cid: "1234"
-        }
-      ]
+          w3cid: "1234",
+        },
+      ],
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -91,12 +91,12 @@ describe("W3C — Headers", function() {
       doRDFa: false,
       editors: [
         {
-          name: "NAME1"
+          name: "NAME1",
         },
         {
-          name: "NAME2"
-        }
-      ]
+          name: "NAME2",
+        },
+      ],
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -122,11 +122,11 @@ describe("W3C — Headers", function() {
             {
               name: "0000-0003-0782-2704",
               href: "http://orcid.org/0000-0003-0782-2704",
-              class: "orcid"
-            }
-          ]
-        }
-      ]
+              class: "orcid",
+            },
+          ],
+        },
+      ],
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -150,25 +150,25 @@ describe("W3C — Headers", function() {
             {
               name: "0000-0003-0782-2704",
               href: "http://orcid.org/0000-0003-0782-2704",
-              class: "orcid"
+              class: "orcid",
             },
             {
               name: "@ivan_herman",
               href: "http://twitter.com/ivan_herman",
-              class: "twitter"
+              class: "twitter",
             },
             {
               href: "http://not-valid-missing-name",
-              class: "invalid"
+              class: "invalid",
             },
             {
               name: "\n\t  \n",
               href: "http://empty-name",
-              class: "invalid"
-            }
-          ]
-        }
-      ]
+              class: "invalid",
+            },
+          ],
+        },
+      ],
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -203,9 +203,9 @@ describe("W3C — Headers", function() {
       doRDFa: false,
       authors: [
         {
-          name: "NAME1"
-        }
-      ]
+          name: "NAME1",
+        },
+      ],
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -223,12 +223,12 @@ describe("W3C — Headers", function() {
       doRDFa: false,
       authors: [
         {
-          name: "NAME1"
+          name: "NAME1",
         },
         {
-          name: "NAME2"
-        }
-      ]
+          name: "NAME2",
+        },
+      ],
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -244,7 +244,7 @@ describe("W3C — Headers", function() {
   it("should handle missing subtitle", function(done) {
     var ops = makeStandardOps();
     var newProps = {
-      specStatus: "REC"
+      specStatus: "REC",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -256,7 +256,7 @@ describe("W3C — Headers", function() {
     var ops = makeStandardOps();
     var newProps = {
       specStatus: "REC",
-      subtitle: "SUB"
+      subtitle: "SUB",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -269,7 +269,7 @@ describe("W3C — Headers", function() {
   it("should take publishDate into account", function(done) {
     var ops = makeStandardOps();
     var newProps = {
-      publishDate: "1977-03-15"
+      publishDate: "1977-03-15",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -286,7 +286,7 @@ describe("W3C — Headers", function() {
       specStatus: "REC",
       publishDate: "2017-03-15",
       previousPublishDate: "1977-03-15",
-      previousMaturity: "CR"
+      previousMaturity: "CR",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -301,7 +301,7 @@ describe("W3C — Headers", function() {
     var ops = makeStandardOps();
     var newProps = {
       specStatus: "REC",
-      errata: "ERR"
+      errata: "ERR",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -316,7 +316,7 @@ describe("W3C — Headers", function() {
     var ops = makeStandardOps();
     var newProps = {
       specStatus: "FPWD",
-      license: "w3c-software-doc"
+      license: "w3c-software-doc",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -338,9 +338,9 @@ describe("W3C — Headers", function() {
       alternateFormats: [
         {
           uri: "URI",
-          label: "LABEL"
-        }
-      ]
+          label: "LABEL",
+        },
+      ],
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -353,7 +353,7 @@ describe("W3C — Headers", function() {
     var ops = makeStandardOps();
     var newProps = {
       specStatus: "REC",
-      testSuiteURI: "URI"
+      testSuiteURI: "URI",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -368,7 +368,7 @@ describe("W3C — Headers", function() {
     var ops = makeStandardOps();
     var newProps = {
       specStatus: "REC",
-      implementationReportURI: "URI"
+      implementationReportURI: "URI",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -383,7 +383,7 @@ describe("W3C — Headers", function() {
     var ops = makeStandardOps();
     var newProps = {
       specStatus: "WD",
-      edDraftURI: "URI"
+      edDraftURI: "URI",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -398,7 +398,7 @@ describe("W3C — Headers", function() {
     var ops = makeStandardOps();
     var newProps = {
       specStatus: "ED",
-      prevED: "URI"
+      prevED: "URI",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -412,7 +412,7 @@ describe("W3C — Headers", function() {
     var ops = makeStandardOps();
     var newProps = {
       specStatus: "REC",
-      additionalCopyrightHolders: "XXX"
+      additionalCopyrightHolders: "XXX",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -426,7 +426,7 @@ describe("W3C — Headers", function() {
     var ops = makeStandardOps();
     var newProps = {
       specStatus: "unofficial",
-      additionalCopyrightHolders: "XXX"
+      additionalCopyrightHolders: "XXX",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -440,7 +440,7 @@ describe("W3C — Headers", function() {
     var ops = makeStandardOps();
     var newProps = {
       specStatus: "REC",
-      additionalCopyrightHolders: "<span class='test'>XXX</span>"
+      additionalCopyrightHolders: "<span class='test'>XXX</span>",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -452,7 +452,7 @@ describe("W3C — Headers", function() {
   it("should take overrideCopyright into account", function(done) {
     var ops = makeStandardOps();
     var newProps = {
-      overrideCopyright: "<p class='copyright2'>XXX</p>"
+      overrideCopyright: "<p class='copyright2'>XXX</p>",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -467,7 +467,7 @@ describe("W3C — Headers", function() {
     var ops = makeStandardOps();
     var newProps = {
       publishDate: "2012-03-15",
-      copyrightStart: "1977"
+      copyrightStart: "1977",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -479,7 +479,7 @@ describe("W3C — Headers", function() {
     var ops = makeStandardOps();
     var newProps = {
       publishDate: "2012-03-15",
-      copyrightStart: "2012"
+      copyrightStart: "2012",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -495,7 +495,7 @@ describe("W3C — Headers", function() {
       wgURI: "WGURI",
       wgPatentURI: "WGPATENT",
       wgPublicList: "WGLIST",
-      subjectPrefix: "[The Prefix]"
+      subjectPrefix: "[The Prefix]",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(
@@ -531,7 +531,7 @@ describe("W3C — Headers", function() {
       wg: ["WGNAME1", "WGNAME2"],
       wgURI: ["WGURI1", "WGURI2"],
       wgPatentURI: ["WGPATENT1", "WGPATENT2"],
-      wgPublicList: "WGLIST"
+      wgPublicList: "WGLIST",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -567,7 +567,7 @@ describe("W3C — Headers", function() {
       wg: "WGNAME",
       wgURI: "WGURI",
       wgPublicList: "WGLIST",
-      subjectPrefix: "[The Prefix]"
+      subjectPrefix: "[The Prefix]",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -588,7 +588,7 @@ describe("W3C — Headers", function() {
       wgURI: "WGURI",
       wgPublicList: "WGLIST",
       subjectPrefix: "[The Prefix]",
-      implementationReportURI: ""
+      implementationReportURI: "",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(
@@ -613,7 +613,7 @@ describe("W3C — Headers", function() {
     var ops = makeStandardOps();
     var newProps = {
       specStatus: "IG-NOTE",
-      charterDisclosureURI: "URI"
+      charterDisclosureURI: "URI",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -625,7 +625,7 @@ describe("W3C — Headers", function() {
   it("should take addPatentNote into account", function(done) {
     var ops = makeStandardOps();
     var newProps = {
-      addPatentNote: "<strong>PATENTNOTE</strong>"
+      addPatentNote: "<strong>PATENTNOTE</strong>",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -641,7 +641,7 @@ describe("W3C — Headers", function() {
       wg: "WGNAME",
       wgURI: "http://WG",
       wgPublicList: "WGLIST",
-      subjectPrefix: "[The Prefix]"
+      subjectPrefix: "[The Prefix]",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -681,7 +681,7 @@ describe("W3C — Headers", function() {
       wg: "WGNAME",
       wgURI: "http://WG",
       thisVersion: "http://THIS",
-      latestVersion: "http://LATEST"
+      latestVersion: "http://LATEST",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -715,7 +715,7 @@ describe("W3C — Headers", function() {
   ) {
     var ops = makeStandardOps();
     var newProps = {
-      specStatus: "Member-SUBM"
+      specStatus: "Member-SUBM",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -727,7 +727,7 @@ describe("W3C — Headers", function() {
   ) {
     var ops = makeStandardOps();
     var newProps = {
-      specStatus: "Member-SUBM"
+      specStatus: "Member-SUBM",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -741,7 +741,7 @@ describe("W3C — Headers", function() {
   ) {
     var ops = makeStandardOps();
     var newProps = {
-      specStatus: "Member-SUBM"
+      specStatus: "Member-SUBM",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -760,7 +760,7 @@ describe("W3C — Headers", function() {
   ) {
     var ops = makeStandardOps();
     var newProps = {
-      specStatus: "Team-SUBM"
+      specStatus: "Team-SUBM",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -772,7 +772,7 @@ describe("W3C — Headers", function() {
   ) {
     var ops = makeStandardOps();
     var newProps = {
-      specStatus: "Team-SUBM"
+      specStatus: "Team-SUBM",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -786,7 +786,7 @@ describe("W3C — Headers", function() {
   ) {
     var ops = makeStandardOps();
     var newProps = {
-      specStatus: "Team-SUBM"
+      specStatus: "Team-SUBM",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
@@ -804,7 +804,7 @@ describe("W3C — Headers", function() {
       wg: "WGNAME",
       wgURI: "WGURI",
       wgPatentURI: "WGPATENT",
-      wgPublicList: "WGLIST"
+      wgPublicList: "WGLIST",
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(
@@ -830,7 +830,7 @@ describe("W3C — Headers", function() {
     var newProps = {
       noRecTrack: true,
       specStatus: "WD",
-      recNotExpected: true
+      recNotExpected: true,
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {

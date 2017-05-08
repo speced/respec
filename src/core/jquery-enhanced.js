@@ -135,7 +135,7 @@ window.$.fn.linkTargets = function() {
   window.$.each(titles, function() {
     result.push({
       for_: link_for,
-      title: this
+      title: this,
     });
     var split = this.split(".");
     if (split.length === 2) {
@@ -143,12 +143,12 @@ window.$.fn.linkTargets = function() {
       // Interface/member pair anyway.
       result.push({
         for_: split[0],
-        title: split[1]
+        title: split[1],
       });
     }
     result.push({
       for_: "",
-      title: this
+      title: this,
     });
   });
   return result;

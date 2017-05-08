@@ -13,7 +13,7 @@ describe("Core — Issues and Notes", function() {
         "<p>BLAH <span class='issue atrisk'>ATR-INLINE</span></p>" +
         "<p class='issue atrisk' title='ATR-TIT'>FEATURE AT RISK</p>" +
         "<p>BLAH <span class='note'>NOT-INLINE</span></p>" +
-        "<p class='note' title='NOT-TIT'>NOTE</p></section>"
+        "<p class='note' title='NOT-TIT'>NOTE</p></section>",
     };
     makeRSDoc(
       ops,
@@ -60,7 +60,7 @@ describe("Core — Issues and Notes", function() {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
         "<section><p>BLAH <span class='ednote'>EDNOTE-INLINE</span></p>" +
-        "<p class='ednote' title='EDNOTE-TIT'>EDNOTE</p>"
+        "<p class='ednote' title='EDNOTE-TIT'>EDNOTE</p>",
     };
     makeRSDoc(
       ops,
@@ -86,7 +86,7 @@ describe("Core — Issues and Notes", function() {
       body: makeDefaultBody() +
         "<section><p>BLAH <span class='warning'>WARN-INLINE</span></p>" +
         "<p class='warning' title='WARN-TIT'>WARNING</p>" +
-        "<p class='issue' title='ISS-TIT'>ISSUE</p></section>"
+        "<p class='issue' title='ISS-TIT'>ISSUE</p></section>",
     };
     makeRSDoc(
       ops,
@@ -108,7 +108,7 @@ describe("Core — Issues and Notes", function() {
       body: makeDefaultBody() +
         "<section><p id='i10' class='issue' data-number='10'>Numbered ISSUE</p>" +
         "<p id='i11' class='issue' title='ISS-TIT' data-number='11'>Titled and Numbered Issue</p>" +
-        "<p id='ixx' class='issue'>Unnumbered ISSUE</p></section>"
+        "<p id='ixx' class='issue'>Unnumbered ISSUE</p></section>",
     };
     makeRSDoc(
       ops,
@@ -137,17 +137,17 @@ describe("Core — Issues and Notes", function() {
     var issueBaseConfig = {
       editors: [
         {
-          name: "Gregg Kellogg"
-        }
+          name: "Gregg Kellogg",
+        },
       ],
       issueBase: "http://example.com/issues/",
       specStatus: "FPWD",
-      shortName: "foo"
+      shortName: "foo",
     };
     var ops = {
       config: issueBaseConfig,
       body: makeDefaultBody() +
-        "<section><p class='issue' data-number='10'>ISSUE</p></section>"
+        "<section><p class='issue' data-number='10'>ISSUE</p></section>",
     };
     makeRSDoc(
       ops,
@@ -174,18 +174,18 @@ describe("Core — Issues and Notes", function() {
     var atRiskBaseConfig = {
       editors: [
         {
-          name: "Markus Lanthaler"
-        }
+          name: "Markus Lanthaler",
+        },
       ],
       issueBase: "http://example.com/issues/",
       atRiskBase: "http://example.com/atrisk/",
       specStatus: "FPWD",
-      shortName: "foo"
+      shortName: "foo",
     };
     var ops = {
       config: atRiskBaseConfig,
       body: makeDefaultBody() +
-        "<section><p class='issue atrisk' data-number='10'>FEATURE AT RISK</p></section>"
+        "<section><p class='issue atrisk' data-number='10'>FEATURE AT RISK</p></section>",
     };
     makeRSDoc(
       ops,

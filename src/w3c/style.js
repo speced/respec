@@ -34,7 +34,7 @@ function createMetaViewport() {
   var contentProps = {
     width: "device-width",
     "initial-scale": "1",
-    "shrink-to-fit": "no"
+    "shrink-to-fit": "no",
   };
   meta.content = toKeyValuePairs(contentProps).replace(/\"/g, "");
   return meta;
@@ -67,23 +67,23 @@ function createResourceHints() {
   var resourceHints = [
     {
       hint: "preconnect", // for W3C styles and scripts.
-      href: "https://www.w3.org"
+      href: "https://www.w3.org",
     },
     {
       hint: "preload", // all specs need it, and we attach it on end-all.
       href: "https://www.w3.org/scripts/TR/2016/fixup.js",
-      as: "script"
+      as: "script",
     },
     {
       hint: "preload", // all specs include on base.css.
       href: "https://www.w3.org/StyleSheets/TR/2016/base.css",
-      as: "style"
+      as: "style",
     },
     {
       hint: "preload", // all specs show the logo.
       href: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
-      as: "image"
-    }
+      as: "image",
+    },
   ]
     .map(createResourceHint)
     .reduce(function(frag, link) {

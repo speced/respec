@@ -13,6 +13,6 @@ define(["deps/text"], function(text) {
         },
         config
       );
-    }
+    },
   };
 });

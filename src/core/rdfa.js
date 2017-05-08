@@ -28,7 +28,7 @@ export function run(conf, doc, cb) {
       $sec.attr({
         typeof: "bibo:Chapter",
         resource: resource,
-        property: property
+        property: property,
       });
     }
     // create a heading triple too, as per the role spec

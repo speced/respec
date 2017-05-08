@@ -86,7 +86,7 @@ describe("W3C - Linter", function() {
         URI: "http://pass",
         charterDisclosureURI: "http://pass",
         URI_FAIL: "http://fail",
-        uri_FAIL: "http://fail"
+        uri_FAIL: "http://fail",
       };
       var props = linter.rules.findHTTPProps(conf, document.location.href);
       expect(props).toEqual(
@@ -103,7 +103,7 @@ describe("W3C - Linter", function() {
         failURIfail: "http://fail",
         prevED: "http://pass",
         charterDisclosureURI: "http://pass",
-        URI_FAIL: "http://fail"
+        URI_FAIL: "http://fail",
       };
       var props = linter.rules.findHTTPProps(conf, document.location.href);
       expect(props).toEqual(
@@ -124,7 +124,7 @@ describe("W3C - Linter", function() {
         prevRecURI: "http://invalid",
         testSuiteURI: "http://invalid",
         wgPatentURI: "http://invalid",
-        wgURI: "http://invalid"
+        wgURI: "http://invalid",
       };
       var props = linter.rules.findHTTPProps(conf, document.location.href);
       expect(props).toEqual(
@@ -138,7 +138,7 @@ describe("W3C - Linter", function() {
           "prevRecURI",
           "testSuiteURI",
           "wgPatentURI",
-          "wgURI"
+          "wgURI",
         ])
       );
     });
@@ -153,7 +153,7 @@ describe("W3C - Linter", function() {
         prevRecURI: "https://valid.example",
         testSuiteURI: "https://valid.baz",
         wgPatentURI: "https://valid.bar",
-        wgURI: "https://valid.com"
+        wgURI: "https://valid.com",
       };
       var props = linter.rules.findHTTPProps(conf, document.location.href);
       expect(props.length).toEqual(0);
@@ -162,7 +162,7 @@ describe("W3C - Linter", function() {
       var conf = {
         someRelativeURI: "./foo/bar",
         somePathURI: "/foo/bar",
-        someControlURI: "https://valid"
+        someControlURI: "https://valid",
       };
       var props = linter.rules.findHTTPProps(conf, "http://invalid");
       expect(props).toEqual(

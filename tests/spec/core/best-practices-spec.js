@@ -12,7 +12,7 @@ describe("Core — Best Practices", function() {
     bodyText += "<section id='sotd'><p>foo</p></section>";
     var ops = {
       config: makeBasicConfig(),
-      body: bodyText
+      body: bodyText,
     };
     makeRSDoc(ops, function(doc) {
       var pls = doc.body.querySelectorAll("span.practicelab");

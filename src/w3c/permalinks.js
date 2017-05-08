@@ -51,14 +51,14 @@ export function run(conf, doc, cb) {
         el.attr({
           href: "#" + resourceID,
           "aria-label": "Permalink for " + ctext,
-          title: "Permalink for " + ctext
+          title: "Permalink for " + ctext,
         });
         if (conf.doRDFa) el.attr("property", "url");
         var sym = $("<span></span>");
         if (conf.doRDFa) {
           sym.attr({
             property: "title",
-            content: ctext
+            content: ctext,
           });
         }
         sym.append(symbol);

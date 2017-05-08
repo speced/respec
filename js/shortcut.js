@@ -14,7 +14,7 @@ var shortcut = {
       propagate: false,
       disable_in_input: false,
       target: document,
-      keycode: false
+      keycode: false,
     };
     if (!opt) {
       opt = default_options;
@@ -77,7 +77,7 @@ var shortcut = {
         ",": "<",
         ".": ">",
         "/": "?",
-        "\\": "|"
+        "\\": "|",
       };
       //Special Keys - and their codes
       var special_keys = {
@@ -131,14 +131,14 @@ var shortcut = {
         f9: 120,
         f10: 121,
         f11: 122,
-        f12: 123
+        f12: 123,
       };
 
       var modifiers = {
         shift: { wanted: false, pressed: false },
         ctrl: { wanted: false, pressed: false },
         alt: { wanted: false, pressed: false },
-        meta: { wanted: false, pressed: false } //Meta is Mac specific
+        meta: { wanted: false, pressed: false }, //Meta is Mac specific
       };
 
       if (e.ctrlKey) modifiers.ctrl.pressed = true;
@@ -205,13 +205,13 @@ var shortcut = {
     this.all_shortcuts[shortcut_combination] = {
       callback: func,
       target: ele,
-      event: opt["type"]
+      event: opt["type"],
     };
     //Attach the function with the event
     if (ele.addEventListener) ele.addEventListener(opt["type"], func, false);
     else if (ele.attachEvent) ele.attachEvent("on" + opt["type"], func);
     else ele["on" + opt["type"]] = func;
-  }
+  },
 
   //Remove the shortcut - just specify the shortcut and I will remove the binding
   // 'remove':function(shortcut_combination) {

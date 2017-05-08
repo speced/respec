@@ -71,7 +71,7 @@ function registerHelpers() {
       idlParamTmpl({
         obj: obj,
         optional: obj.optional ? "optional " : "",
-        variadic: obj.variadic ? "..." : ""
+        variadic: obj.variadic ? "..." : "",
       })
     );
   });
@@ -198,7 +198,7 @@ function idlType2Html(idlType) {
     return (
       idlType2Html({
         generic: idlType.generic,
-        idlType: idlType.idlType
+        idlType: idlType.idlType,
       }) +
       arrayStr +
       nullable
@@ -256,7 +256,7 @@ function idlType2Text(idlType) {
     return (
       idlType2Text({
         generic: idlType.generic,
-        idlType: idlType.idlType
+        idlType: idlType.idlType,
       }) +
       arrayStr +
       nullable
@@ -284,7 +284,7 @@ var whitespaceTypes = {
   "ws-pea": true,
   "ws-tpea": true,
   "line-comment": true,
-  "multiline-comment": true
+  "multiline-comment": true,
 };
 
 function typeIsWhitespace(webIdlType) {
@@ -302,7 +302,7 @@ const extenedAttributesLinks = new Map([
   ["LegacyArrayClass", "WEBIDL-LS#LegacyArrayClass"],
   [
     "LegacyUnenumerableNamedProperties",
-    "WEBIDL-LS#LegacyUnenumerableNamedProperties"
+    "WEBIDL-LS#LegacyUnenumerableNamedProperties",
   ],
   ["LenientSetter", "WEBIDL-LS#LenientSetter"],
   ["LenientThis", "WEBIDL#LenientThis"],
@@ -318,7 +318,7 @@ const extenedAttributesLinks = new Map([
   ["TreatNonObjectAsNull", "WEBIDL#TreatNonObjectAsNull"],
   ["TreatNullAs", "WEBIDL#TreatNullAs"],
   ["Unforgeable", "WEBIDL#Unforgeable"],
-  ["Unscopable", "WEBIDL-LS#Unscopable"]
+  ["Unscopable", "WEBIDL-LS#Unscopable"],
 ]);
 
 function extAttr(extAttrs, indent, singleLine) {
@@ -330,7 +330,7 @@ function extAttr(extAttrs, indent, singleLine) {
     extAttrs: extAttrs,
     indent: indent,
     sep: singleLine ? ", " : ",\n " + idn(indent),
-    end: singleLine ? " " : "\n"
+    end: singleLine ? " " : "\n",
   };
   const safeString = new hb.SafeString(idlExtAttributeTmpl(opt));
   const tmpParser = document.createElement("div");
@@ -386,7 +386,7 @@ const standardTypes = new Map([
   ["unsigned long long", "WEBIDL#idl-unsigned-long-long"],
   ["unsigned long", "WEBIDL#idl-unsigned-long"],
   ["unsigned short", "WEBIDL#idl-unsigned-short"],
-  ["USVString", "WEBIDL#idl-USVString"]
+  ["USVString", "WEBIDL#idl-USVString"],
 ]);
 
 const idlKeywords = new Set([
@@ -438,7 +438,7 @@ const idlKeywords = new Set([
   "unrestricted",
   "unsigned",
   "USVString",
-  "void"
+  "void",
 ]);
 const argumentNameKeyword = new Set([
   "attribute",
@@ -464,7 +464,7 @@ const argumentNameKeyword = new Set([
   "static",
   "stringifier",
   "typedef",
-  "unrestricted"
+  "unrestricted",
 ]);
 const attributeNameKeyword = new Set(["required"]);
 var operationNames = {};
@@ -590,7 +590,7 @@ function writeDefinition(obj, indent) {
         obj: obj,
         indent: indent,
         children: children,
-        partial: obj.partial ? "partial " : ""
+        partial: obj.partial ? "partial " : "",
       });
     case "callback":
       var paramObjs = obj.arguments
@@ -601,13 +601,13 @@ function writeDefinition(obj, indent) {
           return idlParamTmpl({
             obj: it,
             optional: it.optional ? "optional " : "",
-            variadic: it.variadic ? "..." : ""
+            variadic: it.variadic ? "..." : "",
           });
         });
       var callbackObj = {
         obj: obj,
         indent: indent,
-        children: paramObjs.join(", ")
+        children: paramObjs.join(", "),
       };
       var ret = idlCallbackTmpl(callbackObj);
       var line = $(ret).text();
@@ -640,7 +640,7 @@ function writeDefinition(obj, indent) {
               name: item.toString(),
               parentID: obj.name.toLowerCase(),
               indent: indent + 1,
-              needsComma: needsComma
+              needsComma: needsComma,
             });
             break;
           case "line-comment":
@@ -722,7 +722,7 @@ function writeInterfaceDefinition(opt, callback) {
     indent: indent,
     partial: obj.partial ? "partial " : "",
     callback: callback,
-    children: children
+    children: children,
   });
 }
 
@@ -731,7 +731,7 @@ function writeField(attr, max, indent) {
   return idlFieldTmpl({
     obj: attr,
     indent: indent,
-    pad: pad
+    pad: pad,
   });
 }
 
@@ -754,7 +754,7 @@ function writeAttribute(attr, max, indent, maxQualifiers) {
     obj: attr,
     indent: indent,
     qualifiers: qualifiers,
-    pad: pad
+    pad: pad,
   });
 }
 
@@ -767,7 +767,7 @@ function writeMethod(meth, max, indent) {
       return idlParamTmpl({
         obj: it,
         optional: it.optional ? "optional " : "",
-        variadic: it.variadic ? "..." : ""
+        variadic: it.variadic ? "..." : "",
       });
     });
   var params = paramObjs.join(", ");
@@ -779,7 +779,7 @@ function writeMethod(meth, max, indent) {
     "deleter",
     "legacycaller",
     "serializer",
-    "stringifier"
+    "stringifier",
   ];
   var special = "";
   for (var i in specialProps) {
@@ -796,7 +796,7 @@ function writeMethod(meth, max, indent) {
     static: meth.static ? "static " : "",
     special: special,
     pad: pad,
-    children: params
+    children: params,
   };
   var ret = idlMethodTmpl(methObj);
   var line = $(ret).text();
@@ -815,7 +815,7 @@ function writeConst(cons, max, indent) {
     obj: cons,
     indent: indent,
     pad: pad,
-    nullable: cons.nullable ? "?" : ""
+    nullable: cons.nullable ? "?" : "",
   });
 }
 
@@ -849,7 +849,7 @@ function writeMultiLineComment(comment, indent) {
     indent: indent,
     firstLine: lines[0],
     lastLine: trimInitialSpace(lines[lines.length - 1]),
-    innerLine: lines.slice(1, -1).map(trimInitialSpace)
+    innerLine: lines.slice(1, -1).map(trimInitialSpace),
   });
 }
 
@@ -865,7 +865,7 @@ function writeSerializer(serializer, indent) {
   return idlSerializerTmpl({
     obj: serializer,
     indent: indent,
-    values: values
+    values: values,
   });
 }
 
@@ -875,7 +875,7 @@ function writeMaplike(maplike, indent) {
   return idlMaplikeTmpl({
     obj: maplike,
     qualifiers: qualifiers,
-    indent: indent
+    indent: indent,
   });
 }
 
@@ -885,7 +885,7 @@ function writeIterable(iterable, indent) {
   return idlIterableTmpl({
     obj: iterable,
     qualifiers: qualifiers,
-    indent: indent
+    indent: indent,
   });
 }
 
@@ -935,7 +935,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
               toString: function() {
                 return v;
               },
-              dfn: findDfn(name, v, definitionMap, defn.type, idlElem)
+              dfn: findDfn(name, v, definitionMap, defn.type, idlElem),
             };
           }
         });

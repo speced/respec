@@ -12,7 +12,7 @@ describe("Core - Utils", function() {
     it("returns a link element", function(done) {
       var link = utils.createResourceHint({
         href: "https://example.com",
-        hint: "preconnect"
+        hint: "preconnect",
       });
       expect(link instanceof HTMLLinkElement).toEqual(true);
       done();
@@ -33,7 +33,7 @@ describe("Core - Utils", function() {
       expect(function() {
         utils.createResourceHint({
           href: "https://example.com",
-          hint: "preconnect"
+          hint: "preconnect",
         });
       }).not.toThrow();
       done();
@@ -54,13 +54,13 @@ describe("Core - Utils", function() {
       expect(function() {
         utils.createResourceHint({
           hint: "preconnect",
-          href: "http://[unvalid:url:///"
+          href: "http://[unvalid:url:///",
         });
       }).toThrow();
       expect(function() {
         utils.createResourceHint({
           hint: "preconnect",
-          href: "http://this/is/ok/tho"
+          href: "http://this/is/ok/tho",
         });
       }).not.toThrow();
       done();
@@ -70,7 +70,7 @@ describe("Core - Utils", function() {
     ) {
       var link = utils.createResourceHint({
         hint: "dns-prefetch",
-        href: "http://origin:8080/./../test"
+        href: "http://origin:8080/./../test",
       });
       expect(link.href).toEqual("http://origin:8080/");
       done();
@@ -78,7 +78,7 @@ describe("Core - Utils", function() {
     it("normalizes a URL intended for preconnect to an origin", function(done) {
       var link = utils.createResourceHint({
         hint: "preconnect",
-        href: "http://origin:8080/./../test"
+        href: "http://origin:8080/./../test",
       });
       expect(link.href).toEqual("http://origin:8080/");
       done();
@@ -87,7 +87,7 @@ describe("Core - Utils", function() {
       var link = utils.createResourceHint({
         hint: "dns-prefetch",
         href: "https://example.com",
-        as: "media"
+        as: "media",
       });
       expect(link.hasAttribute("as")).toEqual(false);
       done();
@@ -96,7 +96,7 @@ describe("Core - Utils", function() {
       var link = utils.createResourceHint({
         hint: "preconnect",
         href: "https://example.com",
-        as: "style"
+        as: "style",
       });
       expect(link.hasAttribute("as")).toEqual(false);
       done();
@@ -105,7 +105,7 @@ describe("Core - Utils", function() {
       var link = utils.createResourceHint({
         hint: "preload",
         href: "https://example.com",
-        as: "style"
+        as: "style",
       });
       expect(link.hasAttribute("as")).toEqual(true);
       expect(link.getAttribute("as")).toEqual("style");
@@ -115,7 +115,7 @@ describe("Core - Utils", function() {
       var link = utils.createResourceHint({
         hint: "preconnect",
         href: "https://other.origin.com",
-        corsMode: "use-credentials"
+        corsMode: "use-credentials",
       });
       expect(link.crossOrigin).toEqual("use-credentials");
       done();
@@ -124,7 +124,7 @@ describe("Core - Utils", function() {
       var link = utils.createResourceHint({
         hint: "preconnect",
         href: "https://other.origin.com",
-        corsMode: "this will magically become anonymous!"
+        corsMode: "this will magically become anonymous!",
       });
       expect(link.crossOrigin).toEqual("anonymous");
       done();
@@ -134,7 +134,7 @@ describe("Core - Utils", function() {
     ) {
       var link = utils.createResourceHint({
         hint: "dns-prefetch",
-        href: "https://other.origin.com"
+        href: "https://other.origin.com",
       });
       expect(link.crossOrigin).toEqual("anonymous");
       done();
@@ -144,7 +144,7 @@ describe("Core - Utils", function() {
     ) {
       var link = utils.createResourceHint({
         hint: "preconnect",
-        href: "https://other.origin.com"
+        href: "https://other.origin.com",
       });
       expect(link.crossOrigin).toEqual("anonymous");
       done();
@@ -152,7 +152,7 @@ describe("Core - Utils", function() {
     it("marks the link element for removal on save by default", function(done) {
       var link = utils.createResourceHint({
         href: "https://example.com",
-        hint: "preconnect"
+        hint: "preconnect",
       });
       expect(link.classList.contains("removeOnSave")).toEqual(true);
       done();
@@ -161,7 +161,7 @@ describe("Core - Utils", function() {
       var link = utils.createResourceHint({
         href: "https://example.com",
         hint: "preconnect",
-        dontRemove: true
+        dontRemove: true,
       });
       expect(link.classList.contains("removeOnSave")).toEqual(false);
       done();
@@ -292,7 +292,7 @@ describe("Core - Utils", function() {
         current: 0,
         nextValue: function() {
           return this.values[this.current++] || null;
-        }
+        },
       };
       var iterable = utils.toESIterable(
         genericObject.nextValue.bind(genericObject)
@@ -478,12 +478,12 @@ describe("Core - Utils", function() {
     var obj = {
       editors: [
         {
-          name: "Person Name"
-        }
+          name: "Person Name",
+        },
       ],
       specStatus: "ED",
       edDraftURI: "http://foo.com",
-      shortName: "Foo"
+      shortName: "Foo",
     };
     var expected =
       'editors=[{"name":"Person Name"}], specStatus="ED", ' +
@@ -498,12 +498,12 @@ describe("Core - Utils", function() {
     var obj = {
       editors: [
         {
-          name: "Person Name"
-        }
+          name: "Person Name",
+        },
       ],
       specStatus: "ED",
       edDraftURI: "http://foo.com",
-      shortName: "Foo"
+      shortName: "Foo",
     };
     var expected =
       'editors=[{"name":"Person Name"}]|||specStatus="ED"|||' +
@@ -518,12 +518,12 @@ describe("Core - Utils", function() {
     var obj = {
       editors: [
         {
-          name: "Person Name"
-        }
+          name: "Person Name",
+        },
       ],
       specStatus: "ED",
       edDraftURI: "http://foo.com",
-      shortName: "Foo"
+      shortName: "Foo",
     };
     var expected =
       'editors;[{"name":"Person Name"}], specStatus;"ED", ' +
