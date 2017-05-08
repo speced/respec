@@ -218,6 +218,7 @@ export function normalizePadding(text) {
   Array.from(doc.body.children)
     .filter(elem => !inlineElems.has(elem.localName))
     .filter(elem => elem.localName !== "pre")
+    .filter(elem => elem.localName !== "table")
     .forEach(elem => {
       elem.innerHTML = normalizePadding(elem.innerHTML);
     });
@@ -229,9 +230,11 @@ export function normalizePadding(text) {
     );
   // Normalize text node
   if (!isTextNode(doc.body.firstChild)) {
-    Array.from(doc.body.children).forEach(child => {
-      child.innerHTML = normalizePadding(child.innerHTML);
-    });
+    Array.from(doc.body.firstChild.children)
+      .filter(child => child.localName !== "table")
+      .forEach(child => {
+        child.innerHTML = normalizePadding(child.innerHTML);
+      });
   }
   doc.normalize();
   // use the first space as an indicator of how much to chop off the front
