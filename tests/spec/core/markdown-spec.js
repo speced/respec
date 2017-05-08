@@ -260,10 +260,10 @@ describe("Core - Markdown", function() {
       var ops = {
         config: makeBasicConfig(),
         body: makeDefaultBody() +
-          "<p id='test-text1'>test1 text\n  &quot;<code>inner text</code>\".</p>\n" +
-          "<p id='test-text2'>test2\n   \"`inner`&quot;.</p>" +
-          // Pre left alone
-          "<pre class=nohighlight id='test-text3'>test3 text\n\"<code>inner text</code>\".</pre>",
+          `<p id='test-text1'>test1 text &quot;<code>inner text</code>".</p>
+           <p id='test-text2'>test2 '<code>inner</code>&#39;.</p>
+           // Pre left alone
+           <pre class=nohighlight id='test-text3'>test3 text "<code>inner text</code>".</pre>`,
       };
       ops.config.format = "markdown";
       makeRSDoc(ops, function(doc) {
@@ -273,11 +273,11 @@ describe("Core - Markdown", function() {
           `test1 text "<code>inner text</code>".`
         );
         var text2 = doc.getElementById("test-text2");
-        expect(text2.textContent).toEqual('test2 "inner".');
-        expect(text2.innerHTML).toEqual('test2 "<code>inner</code>".');
+        expect(text2.textContent).toEqual(`test2 'inner'.`);
+        expect(text2.innerHTML).toEqual(`test2 '<code>inner</code>'.`);
         var text3 = doc.getElementById("test-text3");
         expect(text3.innerHTML).toEqual(
-          'test3 text\n"<code>inner text</code>".'
+          `test3 text "<code>inner text</code>".`
         );
       }).then(done);
     });
