@@ -9,14 +9,9 @@
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
 "use strict";
-define([
-    "shortcut",
-    "core/pubsubhub",
-    "deps/text!ui/ui.css",
-    "core/jquery-enhanced",
-  ],
+define(
+  ["shortcut", "core/pubsubhub", "deps/text!ui/ui.css", "core/jquery-enhanced"],
   function(shortcut, pubsubhub, css) {
-
     // Opportunistically inserts the style, with the chance to reduce some FOUC
     const styleElement = document.createElement("style");
     styleElement.id = "respec-ui-styles";
@@ -29,35 +24,48 @@ define([
       if (!elem) {
         return;
       }
-      Array
-        .from(ariaMap.entries())
-        .reduce(function(elem, nameValue) {
-          const name = nameValue[0];
-          const value = nameValue[1];
-          elem.setAttribute("aria-" + name, value);
-          return elem;
-        }, elem);
+      Array.from(ariaMap.entries()).reduce(function(elem, nameValue) {
+        const name = nameValue[0];
+        const value = nameValue[1];
+        elem.setAttribute("aria-" + name, value);
+        return elem;
+      }, elem);
     }
 
-    const $respecUI = $("<div id='respec-ui' class='removeOnSave' hidden=true></div>");
-    const $menu = $("<ul id=respec-menu role=menu aria-labelledby='respec-pill'></ul>");
+    const $respecUI = $(
+      "<div id='respec-ui' class='removeOnSave' hidden=true></div>"
+    );
+    const $menu = $(
+      "<ul id=respec-menu role=menu aria-labelledby='respec-pill'></ul>"
+    );
     var $modal;
     var $overlay;
     const errors = [];
     const warnings = [];
     const buttons = {};
 
-    pubsubhub.sub("start-all", function() {
-      document.body.insertAdjacentElement("afterbegin", $respecUI[0]);
-    }, { once: true });
-    pubsubhub.sub("end-all", function() {
-      document.body.insertAdjacentElement("afterbegin", $respecUI[0]);
-    }, { once: true });
+    pubsubhub.sub(
+      "start-all",
+      function() {
+        document.body.insertAdjacentElement("afterbegin", $respecUI[0]);
+      },
+      { once: true }
+    );
+    pubsubhub.sub(
+      "end-all",
+      function() {
+        document.body.insertAdjacentElement("afterbegin", $respecUI[0]);
+      },
+      { once: true }
+    );
 
     const $respecPill = $("<button id='respec-pill' disabled>ReSpec</button>");
-    $respecPill.click(function(e) {
+    $respecPill
+      .click(function(e) {
         e.stopPropagation();
-        const expand = this.getAttribute("aria-expanded") === "true" ? "false" : "true";
+        const expand = this.getAttribute("aria-expanded") === "true"
+          ? "false"
+          : "true";
         this.setAttribute("aria-expanded", expand);
         $menu.toggle();
       })
@@ -83,7 +91,13 @@ define([
         buttons[butName].text(arr.length);
         return;
       }
-      buttons[butName] = $("<button id='respec-pill-" + butName + "' class='respec-info-button'>" + arr.length + "</button>")
+      buttons[butName] = $(
+        "<button id='respec-pill-" +
+          butName +
+          "' class='respec-info-button'>" +
+          arr.length +
+          "</button>"
+      )
         .appendTo($respecUI)
         .click(function() {
           this.setAttribute("aria-expanded", "true");
@@ -100,7 +114,7 @@ define([
                 .css({
                   fontSize: "1.1em",
                   color: "#999",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 })
                 .click(function() {
                   var $a = $(this),
@@ -121,7 +135,7 @@ define([
                   marginLeft: "0",
                   maxWidth: "100%",
                   overflowY: "hidden",
-                  overflowX: "scroll"
+                  overflowX: "scroll",
                 })
                 .hide()
                 .end();
@@ -164,7 +178,17 @@ define([
           });
         };
         var id = "respec-button-" + label.toLowerCase().replace(/\s+/, "-");
-        var menuItem = $('<li role=menuitem><button id=\"' + id + '\" class="respec-option" title="' + keyShort + '\"><span class="respec-cmd-icon">' + icon + '</span> ' + label + '… </button></li>')
+        var menuItem = $(
+          '<li role=menuitem><button id="' +
+            id +
+            '" class="respec-option" title="' +
+            keyShort +
+            '"><span class="respec-cmd-icon">' +
+            icon +
+            "</span> " +
+            label +
+            "… </button></li>"
+        )
           .click(handler)
           .appendTo($menu);
         if (keyShort) shortcut.add(keyShort, handler);
@@ -177,10 +201,11 @@ define([
         errWarn(msg, warnings, "warning", "Warnings");
       },
       closeModal: function(owner) {
-        if ($overlay) $overlay.fadeOut(200, function() {
-          $overlay.remove();
-          $overlay = null;
-        });
+        if ($overlay)
+          $overlay.fadeOut(200, function() {
+            $overlay.remove();
+            $overlay = null;
+          });
         if (owner) {
           owner.setAttribute("aria-expanded", "false");
         }
@@ -191,28 +216,31 @@ define([
       freshModal: function(title, content, currentOwner) {
         if ($modal) $modal.remove();
         if ($overlay) $overlay.remove();
-        $overlay = $("<div id='respec-overlay' class='removeOnSave'></div>").hide();
+        $overlay = $(
+          "<div id='respec-overlay' class='removeOnSave'></div>"
+        ).hide();
         const id = currentOwner.id + "-modal";
         const headingId = id + "-heading";
-        $modal = $("<div id='" + id + "' class='respec-modal removeOnSave' role='dialog'><h3></h3><div class='inside'></div></div>").hide();
+        $modal = $(
+          "<div id='" +
+            id +
+            "' class='respec-modal removeOnSave' role='dialog'><h3></h3><div class='inside'></div></div>"
+        ).hide();
         $modal.find("h3").text(title);
         $modal.find("h3")[0].id = headingId;
-        const ariaMap = new Map([
-          ["labelledby", headingId],
-        ]);
+        const ariaMap = new Map([["labelledby", headingId]]);
         ariaDecorate($modal[0], ariaMap);
         $modal.find(".inside").append(content);
-        $("body")
-          .append($overlay)
-          .append($modal);
+        $("body").append($overlay).append($modal);
         $overlay
-          .click(function() {
-            this.closeModal(currentOwner);
-          }.bind(this))
+          .click(
+            function() {
+              this.closeModal(currentOwner);
+            }.bind(this)
+          )
           .fadeTo(200, 0.5);
-        $modal
-          .fadeTo(200, 1);
-      }
+        $modal.fadeTo(200, 1);
+      },
     };
     shortcut.add("Esc", function() {
       ui.closeModal();

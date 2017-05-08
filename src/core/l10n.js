@@ -29,7 +29,7 @@ export const l10n = {
     file_a_bug: "file a bug",
     open_bugs: "open bugs",
     open_parens: "(",
-    close_parens: ")"
+    close_parens: ")",
   },
   ko: {
     this_version: "현재 버전:",
@@ -57,7 +57,7 @@ export const l10n = {
     file_a_bug: "file a bug",
     open_bugs: "open bugs",
     open_parens: "(",
-    close_parens: ")"
+    close_parens: ")",
   },
   zh: {
     this_version: "本版本：",
@@ -85,7 +85,7 @@ export const l10n = {
     file_a_bug: "反馈错误",
     open_bugs: "修正中的错误",
     open_parens: "（",
-    close_parens: "）"
+    close_parens: "）",
   },
   ja: {
     this_version: "このバージョン：",
@@ -113,7 +113,7 @@ export const l10n = {
     file_a_bug: "File a bug",
     open_bugs: "改修されていないバグ",
     open_parens: "（",
-    close_parens: "）"
+    close_parens: "）",
   },
   nl: {
     this_version: "Deze versie:",
@@ -141,8 +141,8 @@ export const l10n = {
     file_a_bug: "Dien een melding in",
     open_bugs: "open meldingen",
     open_parens: "(",
-    close_parens: ")"
-  }
+    close_parens: ")",
+  },
 };
 l10n["zh-hans"] = l10n.zh;
 l10n["zh-cn"] = l10n.zh;

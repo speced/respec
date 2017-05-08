@@ -9,8 +9,7 @@ export function run(conf, doc, cb) {
     $abs.prepend("<h2>" + conf.l10n.abstract + "</h2>");
     $abs.addClass("introductory");
     if (conf.doRDFa) {
-      var rel = "dc:abstract",
-        ref = $abs.attr("property");
+      var rel = "dc:abstract", ref = $abs.attr("property");
       if (ref) rel = ref + " " + rel;
       $abs.attr({ property: rel });
     }

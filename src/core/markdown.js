@@ -59,7 +59,9 @@ function toHTML(text) {
   const normalizedLeftPad = normalizePadding(text);
   // As markdown is pulled from HTML, > and & are already escaped and
   // so blockquotes aren't picked up by the parser. This fixes it.
-  const potentialMarkdown = normalizedLeftPad.replace(/&gt;/gm, ">").replace(/&amp;/gm, "&");
+  const potentialMarkdown = normalizedLeftPad
+    .replace(/&gt;/gm, ">")
+    .replace(/&amp;/gm, "&");
   const html = marked(potentialMarkdown);
 
   return html;
@@ -70,9 +72,7 @@ function processElements(selector) {
     const elementsToProcess = Array.from(element.querySelectorAll(selector));
     elementsToProcess
       .reverse()
-      .map(
-        element => ({ element, html: toHTML(element.innerHTML) })
-      )
+      .map(element => ({ element, html: toHTML(element.innerHTML) }))
       .reduce((div, { element, html }) => {
         let node = div;
         div.innerHTML = html;
@@ -184,15 +184,15 @@ function structure(fragment, doc) {
 }
 
 function substituteWithTextNodes(elements) {
-  Array
-    .from(elements)
-    .forEach(element => {
-      const textNode = element.ownerDocument.createTextNode(element.textContent);
-      element.parentElement.replaceChild(textNode, element);
-    });
+  Array.from(elements).forEach(element => {
+    const textNode = element.ownerDocument.createTextNode(element.textContent);
+    element.parentElement.replaceChild(textNode, element);
+  });
 }
 
-const processBlockLevelElements = processElements("section section, body > section, .issue, .note, .req");
+const processBlockLevelElements = processElements(
+  "section section, body > section, .issue, .note, .req"
+);
 
 export function run(conf, doc, cb) {
   if (conf.format !== "markdown") {
@@ -217,7 +217,7 @@ export function run(conf, doc, cb) {
     .html_beautify(cleanHTML, beautifyOps)
     // beautifer has a bad time with "\n&quot;<element"
     // https://github.com/beautify-web/js-beautify/issues/943
-    .replace(/&quot;\n\s+\</gm, "\"<")
+    .replace(/&quot;\n\s+\</gm, '"<');
 
   newBody.innerHTML = beautifulHTML;
   // Remove links where class .nolinks

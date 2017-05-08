@@ -17,8 +17,7 @@ var swapStyleOwner = makeOwnerSwapper(codeStyle);
 swapStyleOwner(document.head);
 
 function getLanguageHint(classList) {
-  return Array
-    .from(classList)
+  return Array.from(classList)
     .filter(item => item !== "highlight" && item !== "nolinks")
     .map(item => item.toLowerCase());
 }
@@ -40,10 +39,9 @@ export async function run(conf, doc, cb) {
     swapStyleOwner(doc.head);
   }
 
-  const promisesToHighlight = Array
-    .from(
-      doc.querySelectorAll("pre:not(.idl):not(.nohighlight),code.highlight")
-    )
+  const promisesToHighlight = Array.from(
+    doc.querySelectorAll("pre:not(.idl):not(.nohighlight),code.highlight")
+  )
     .map(element => {
       element.setAttribute("aria-busy", "true");
       return element;
@@ -84,8 +82,8 @@ export async function run(conf, doc, cb) {
     });
   try {
     const tranformedElements = await Promise.all(promisesToHighlight);
-    tranformedElements.forEach(
-      element => element.setAttribute("aria-busy", "false")
+    tranformedElements.forEach(element =>
+      element.setAttribute("aria-busy", "false")
     );
     doneResolver();
   } catch (err) {

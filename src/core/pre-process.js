@@ -17,15 +17,19 @@ export const done = new Promise(resolve => {
   doneResolver = resolve;
 });
 
-sub("start-all", async config => {
-  const result = [];
-  if (Array.isArray(config.preProcess)) {
-    const values = await Promise.all(
-      config.preProcess
-      .filter(f => typeof f === "function")
-      .map(f => Promise.resolve(f(config, document)))
-    );
-    result.push(...values);
-  }
-  doneResolver(result);
-}, { once: true });
+sub(
+  "start-all",
+  async config => {
+    const result = [];
+    if (Array.isArray(config.preProcess)) {
+      const values = await Promise.all(
+        config.preProcess
+          .filter(f => typeof f === "function")
+          .map(f => Promise.resolve(f(config, document)))
+      );
+      result.push(...values);
+    }
+    doneResolver(result);
+  },
+  { once: true }
+);
