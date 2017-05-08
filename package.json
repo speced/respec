@@ -90,6 +90,7 @@
     "express": "^4.15.2",
     "fs-promise": "^2.0.2",
     "highlight.js": "github:isagalaev/highlight.js",
+    "hyperhtml": "^0.10.2",
     "loading-indicator": "^2.0.0",
     "marcosc-async": "^4.0.3",
     "marked": "^0.3.6",
