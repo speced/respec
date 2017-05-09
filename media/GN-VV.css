@@ -1,0 +1,7 @@
+/* Style for Geonovum Final Draft */
+
+@import "base.css";
+
+body {
+  background-image: url('https://tools.geostandaarden.nl/respec/media/logos/GN-VV.svg')
+}

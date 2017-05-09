@@ -1,0 +1,45 @@
+<section id='sotd' class='introductory'><h2>{{l10n.sotd}}</h2>
+  <p>
+    <em>
+      Deze paragraaf beschrijft de status van dit document ten tijde van publicatie. Het is mogelijk 
+      dat er actuelere versies van dit document bestaan. Een lijst van Geonovum publicaties en de 
+      laatste gepubliceerde versie van dit document zijn te vinden op <a href='http://www.geonovum.nl/wegwijzer/standaarden'>
+      http://www.geonovum.nl/wegwijzer/standaarden</a>.
+    </em>
+  </p>
+  {{#switch specStatus}}
+    {{#case "GN-DEF"}}
+      <p>
+        Dit is de definitieve versie van de standaard. Wijzigingen naar aanleiding van 
+        consultaties zijn doorgevoerd. De programmaraad van Geonovum heeft deze standaard 
+        goedgekeurd.
+      </p>
+    {{/case}}
+    {{#case "GN-WV"}}
+      <p>
+        Dit is een werkversie die op elk moment kan worden gewijzigd, verwijderd of vervangen 
+        door andere documenten. Het is geen door de werkgroep goedgekeurde consultatieversie.
+      </p>
+    {{/case}}
+    {{#case "GN-CV"}}
+      <p>
+        Dit is een door de werkgroep goedgekeurde consultatieversie. Commentaar over dit 
+        document kan gestuurd worden naar <a href="mailto:geo-standaarden@geonovum.nl">
+        geo-standaarden@geonovum.nl</a>.
+      </p>
+    {{/case}}
+    {{#case "GN-VV"}}
+      <p>
+        Dit is een definitief concept van de nieuwe versie van de standaard. Wijzigingen naar 
+        aanleiding van consultaties zijn doorgevoerd. De programmaraad van Geonovum beoordeelt 
+        dit definitief concept. Keurt zij het goed, dan is er een nieuwe standaard.
+      </p>
+    {{/case}}
+    {{#default}}
+      <p>
+        Dit is een document zonder officiële status.
+      </p>
+    {{/default}}
+  {{/switch}}
+  {{{sotdCustomParagraph}}}
+</section>

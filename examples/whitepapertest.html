@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset='utf-8'>
+      <title>Whitepaper Standaarden</title>
+      <script src='/js/deps/require.js' data-main='/js/profile-geonovum' async class='remove'></script>
+      <!--<script src='https://www.w3.org/Tools/respec/respec-w3c-common' class='remove'></script>	 --> 
+    <script class='remove'>
+      var respecConfig = {
+        specStatus: "GN-VV",
+        specType: "IM",
+        editors: [{
+            name: "Linda van den Brink",
+            company: "Geonovum",
+            companyURL: "http://www.geonovum.nl/",
+            mailto: "info@geonovum.nl"
+        },{
+            name: "Friso Penninga",
+            company: "Geonovum",
+            companyURL: "http://www.geonovum.nl/",
+            mailto: "info@geonovum.nl"
+        }],
+        authors: [{
+            name: "Linda van den Brink",
+            company: "Geonovum",
+            companyURL: "http://www.geonovum.nl/",
+            mailto: "info@geonovum.nl"
+        }],
+        edDraftURI: "https://geonovum.github.io/whitepaper-standaarden",
+        shortName: "whitepaper",
+        github: "https://github.com/Geonovum/whitepaper-standaarden",
+        };
+    </script>
+  </head>
+  <body>
+    <section id='abstract'>
+      <p>Samenvatting van de whitepaper.</p>
+    </section>
+    <section id='sotd'>
+      <p>Status van het document.</p>
+    </section>
+    <section id="intro" class="informative">
+      <h2>Inleiding</h2>
+      <p>Terugkijkend op tien jaar standaarden ontwikkelen en beheren, kunnen we vaststellen dat we in Nederland inmiddels een volwassen set standaarden kennen, die fungeert als de ruggegraat van de nationale spatial data infrastructure (SDI). Deze set standaarden is opgenomen op de Pas toe of leg uit-lijst van het Forum Standaardisatie. Deze set bevat het Basismodel Geo-informatie (NEN3610), het 'moedermodel' van veel informatiemodellen waarmee semantiek van datasets éénduidig wordt vastgelegd, en een aantal standaarden die vastleggen hoe we deze datasets kunnen uitwisselen (GML), ontsluiten (Nederlandse profielen op WMS en WFS) en vindbaar maken (Nederlandse metadataprofielen). Geonovum beheert de meeste van deze standaarden. </p>
+      <p>Hoewel de huidige SDI met datasets als de basisregistraties en voorzieningen als PDOK niet meer weg te denken is uit de dagelijkse praktijk van het geo-inforatiewerkveld, is een SDI nooit uitontwikkeld. Technologische ontwikkelingen volgen elkaar in hoog tempo op en de maatschappelijke vragen evolueren. Waar de SDI oorspronkelijk alleen op de geo-professional gericht was, verwachten we tegenwoordig dat de SDI toegankelijk wordt voor een veel bredere gebruikersgroep, waaronder de web-ontwikkelaars. Deze beoogde verbreding komt voort uit de toegenomen aandacht voor (her)bruikbaarheid van data, waar oorspronkelijk de focus meer lag op de ontsluiting zelf. In de toekomst verwachten we meer samenhang (en consistentie) tussen individuele datasets, meer detail in datasets (overgang van 2D naar 3D) en vormen van toegang tot data die aansluiten bij de gebruikerswensen van de veel bredere gebruikersgroep van de Nederlandse SDI. </p>
+      <p>De Nederlandse SDI kan alleen succesvol meegaan in deze ontwikkeling, wanneer de onderliggende set standaarden dit afdoende ondersteunt. Daarom stellen we ons in deze white paper de vraag of de huidige set standaarden nog volledig voldoet. In hoeverre zijn innovaties en ontwikkelingen zo volwassen geworden, dat ze weerslag hebben op de standaarden die we nu beheren? Langs de lijn van de geostandaarden die op de Pas toe leg uit-lijst staan, schetsen we welke updates van deze standaarden er de komende 5 jaar mogelijk gaan komen. Input hiervoor komt uit ontwikkelingen die Geonovum de afgelopen jaren heeft verkend en gevolgd in de innovatieplatforms rond 3D, Linked Data, Sensoren en het Web en in internationale context. Op sommige punten kunnen we al aanbevelingen geven, op andere zijn er nog open vragen. </p>
+      <section id="conformance">
+        <p>Informatief en normatief.</p>
+      </section>
+      <section id="leeswijzer">
+        <h3>Leeswijzer</h3>
+        <p>...</p>
+      </section>
+    </section>
+    <section id="relevantetrends" class="informative">
+        <h2>Relevante trends</h2>
+        <p>...</p>
+      <section id="3D">
+        <h3>Meer 3D</h3>
+        <p>De meest in het oog springende ontwikkelingen op het thema 3D zijn de steeds realistischer ogende visualisatiemogelijkheden, die zeker door gadgets als de Oculus Rift Virtual Reality bril en de Microsoft Hololens Augmented Reality bril tot de verbeelding spreken. Hoewel deze gadgets zeker ook professionele toepassingen kunnen ondersteunen, schuilt in de opkomst van deze gadgets niet de reden dat ook SDI's steeds meer richting 3D gaan. De stap van een 2D model naar een 3D model is namelijk ook de stap van een grover naar een gedetailleerder model. En die gedetailleerdere modellen zijn steeds vaker nodig, omdat de maatschappij steeds gedetailleerdere ruimtelijke vragen stelt, bijvoorbeeld over de fysieke leefomgeving en de kwaliteit daarvan. “Hoeveel geluidsbelasting ondervind ik na realisatie van die nieuwe weg?”, “Zit ik straks met een slagschaduw in mijn tuin, wanneer die windmolen daadwerkelijk geplaatst wordt?”, “Is het wel veilig om hier een kinderopvang te vestigen, zo dicht bij die hogedruk aardgasleiding?”. Bovendien wordt ook de wereld waarover die vragen gesteld worden, steeds complexer. Denk bijvoorbeeld aan meervoudig ruimtegebruik, maar sowieso ook aan de druk op de schaarse ruimte in het dichtbebouwde en -bevolkte Nederland. Om dergelijke gedetailleerde vragen over een complexe werkelijkheid te kunnen blijven beantwoorden, zullen onze modellen die werkelijkheid beter moeten benaderen. En dat lukt steeds vaker niet meer in 2D. 3D is dan geen luxe, maar een noodzaak om aan de verwachtingen van de maatschappij te kunnen blijven voldoen.</p>
+        <p>Er komt meer 3D data landelijk beschikbaar en het zal meer worden gebruikt. Misschien de 3D validator verder uitwerken. </p>
+      </section> 
+      <section id="linkeddata">
+        <h3>Meer linked data</h3>
+        <p>Samenvatting: linked data wordt belangrijk voor bijvoorbeeld het publiceren van overheidsdata – zo rijk mogelijk. En voor semantische interoperabiliteit (i.e. shared semantics).</p>
+        <p>In het <a href="http://www.pldn.nl">Platform Linked Data Nederland</a>, voorheen PiLOD, heeft Geonovum de afgelopen vier jaar samen met een actieve community onderzocht wat linked data is, hoe je het toepast, wat je eraan hebt, en hoe je geodata als linked data kunt publiceren en gebruiken. Ook het <a href="https://github.com/Geonovum/geo4web-testbed">#geo4web testbed</a> heeft inzichten hierover opgeleverd. Inmiddels hebben de eerste serieuze geo linked datasets het licht gezien, dankzij het Kadaster (<a href="https://brk.basisregistraties.overheid.nl">Kadastrale percelen (BRK)</a> en <a href="https://brt.basisregistraties.overheid.nl">Topografie (BRT)</a>).</p>
+        <p>[uitleg toevoegen waarom linked data belangrijk is voor overheidsdata. Gebruik presentatie van Erwin Folmer van 2 december.]</p>
+        <p>Er zal de komende vijf jaar veel (overheids) linked geodata gepubliceerd worden. Onder andere Ierland, Schotland, UK, Vlaanderen, Zwitserland en Finland hebben al linked geodata gepubliceerd of zijn hier mee bezig. </p>
+        <p>In 2017 schrijven we mee aan de <a href="https://www.w3.org/TR/sdw-bp/">W3C/OGC Spatial Data on the Web Best Practice</a>. Dit document gaat niet exclusief over Linked Data, maar bevat er wel veel aanbevelingen over uit de huidige praktijk. De Best Practice verzint geen nieuwe dingen, maar beveelt goede praktijken aan die op het web al te vinden zijn. Het kan als leidraad dienen voor het publiceren van linked geo data in Nederland.</p>
+        <p>Op een aantal punten is er volgens de Best Practice nog geen duidelijke, goede praktijk te ontwaren. Hier moet de komende jaren nog aan gewerkt worden: </p>
+        <ul>
+          <li>Er zijn nu meerdere linked data vocabulaires voor geodata. De Best Practice geeft handvaten om hier een keuze uit te maken, maar de killer vocabulaire moet er nog komen. Waarschijnlijk wordt er bij de OGC gewerkt aan een nieuwe <em>spatial ontology</em> als opvolger voor de nu bestaande ontologie uit <a href="http://www.opengeospatial.org/standards/geosparql">GeoSPARQL</a>. </li>
+          <li>Linked geodata in een triple store opslaan en dan ruimtelijke zoekvragen stellen? Dat leidt nu nog tot teleurstellingen. Enkele triple stores kunnen dit wel, maar de performance is teleurstellend. In het #geo4web testbed is hier onderzoek naar gedaan en ook Kadaster heeft ervaring met dit probleem. Hoewel Geonovum niet de aangewezen partij is om hier een oplossing voor te vinden, is het wel een praktisch probleem dat aandacht moet krijgen.</li>
+          <li>
+            <p class="note" title="Dit past beter in het Geo op het web stuk">
+            Voor geo-metadata op het web wordt er in OGC verband gewerkt aan het standaardiseren van Geo-DCAT-AP, een geo-profiel op DCAT, een linked data vocabulaire waarmee je dataset metadata kunt beschrijven voor portalen. Maar ook een geo-update van schema.org zou een goed idee zijn. Deze vocabulaire wordt gebruikt om machine-leesbare semantiek toe te voegen aan data op het web en wordt begrepen door zoekmachines. schema.org bevat semantiek voor geo, maar deze kan hier en daar nog wel verbeterd worden.</p></li>
+        </ul>
+        <p>Linked data blijft naar onze verwachting ook de komende jaren wel enigszins een niche technologie. Voor het merendeel van de web developers blijft het te complex. Het blijft echter toch relevant, omdat het de meest rijke en krachtige manier is om data beschikbaar te stellen. In de context van open data is dat belangrijk. Daarnaast kan de data, ofwel door de data-eigenaar zelf, of door derden, op meer gangbare manieren beschikbaar gesteld worden. Dit kan overigens nog steeds "linked data" zijn, zonder dat het "Linked Data" is: wél elk object op het web met een eigen URI en links tussen de objecten; maar niet per sé met RDF, triple stores en SPARQL endpoints.  </p>
+        <p>In het verlengde van linked data ligt het semantic web. Langzaam maar zeker werken we hier naar toe. We denken daarbij aan "shared semantics" oftewel semantische harmonisatie. Zonder de hele geowereld te willen harmoniseren, want dit zou een enorme klus zijn waarvan het praktisch nut niet vaststaat. Wel blijven we gericht, daar waar semantische harmonisatie leidt tot nieuwe mogelijkheden om data te hergebruiken en processen te optimaliseren, linked data principes toepassen om te komen tot een web van data waarin niet langer overbodig data gekopieerd wordt.</p>
+      </section> 
+      <section id="sensoren">
+        <h3>Meer sensoren</h3>
+        <p>Wordt zeker belangrijk de komende tijd. Sensor standaarden ontwikkelen zich nu in allerlei gremia.</p>
+      </section> 
+      <section id="web">
+        <h3>Meer gebruikers: Geo &amp; World Wide Web</h3>
+        <p>nieuwe publicatiedoelgroep. Naast SDI. Gebruik ook de visie van Peter Terhaar.</p>
+      </section> 
+      <section id="platform">
+        <h3>Meer kanalen: platformgedachte</h3>
+         <p>Alle hierboven beschreven ontwikkelingen roepen wellicht de vraag op of de huidige SDI nog wel zinvol is, en daarmee ook of de onderliggende set standaarden op de Pas toe of leg uit-lijst nog wel zinvol is. Om die vraag te kunnen beantwoorden, is een laatste ontwikkeling zeer relevant om te duiden: de opkomst van het platform. Dataplatformen kenmerken zich door de veelheid aan manieren waarop de data kan worden afgenomen: via downloads, via services, via API's of via SPARQL endpoints. De onderliggende reden voor deze veelheid is de erkenning van het gegeven dat er veel verschillende doelgroepen bestaan, met elk hun eigen toepassingen, die daarom ook elk hun data op een andere manier willen afnemen. De opkomst van platformen illustreert dat er niet langer naar een uniforme <i>one size fits all</i> aanpak wordt gestreefd, maar naar een <i>multichannel</i> aanpak, meer <i>fit for purpose</i>. Deze doelgroepspecifieke benadering is het gevolg van de focusverschuiving van ontsluiting van data naar (her)bruikbaarheid van data. </p>
+        <p> Met de opkomst van platformen, komt ook de vraag naar voren in hoeverre de huidige SDI al als platform beschouwd kan worden. Op dit moment lijkt de SDI primair gericht op de geoprofessional, inclusief standaarden uit de geowereld (OGC). Andere doelgroepen, zoals de webontwikkelaars, worden duidelijk minder goed ondersteund. Een platformbenadering zou passend zijn voor de SDI, waarmee de set standaarden uitgebreid kan worden met standaarden die lichter zijn en beter aansluiten bij de praktijk op het web. Mogelijk gaan dergelijke standaarden ook voor de geoprofessional steeds belangrijker worden, maar op korte termijn hebben de verschillende doelgroepen ook allemaal hun eigen behoeften. </p>
+        <ul>
+          <li>ontwikkelingen bij OGC (waar gewerkt wordt aan lichtgewichtere, op JSON gebaseerde standaarden)</li>
+          <li>De platform gedachte. </li>
+          <li>Data on the Web aanbevelingen voor API's</li>
+          <li>Nieuwe stijl web services voor raster data</li>
+          <li>Inzichten uit Testbed en elders om op basis van SDI nieuwe kanalen aan te bieden incl convenience APIs en Linked Data</li>
+        </ul>
+      </section> 
+    </section>
+    <section id="impactstandaarden" class="informative">
+      <h2>Impact op Pas toe of leg uit-standaarden</h2>
+      <p>...</p>
+      <section id="informatiemodellen">
+        <h3>Informatiemodel</h3>
+        <p>nieuwe manier om informatiemodellen te ontwikkelen. Een Linked Data profiel op NEN3610. En over semantische harmonisatie: niet alle semantiek willen harmoniseren om het harmoniseren, maar gericht inzetten op specifieke gevallen waar harmonisatie wat oplevert, en hier tot op data/proces niveau gaan. Bv NWB/BGT.</p>
+      </section>     
+      <section id="uitwisselformaat">
+        <h3>Uitwisselformaat</h3>
+        <p>GML ontwikkelt zich niet meer verder. We gaan nadenken over andere standaarden voor uitwisseling. GeoJSON, Spatialite, Geopackage, Linked Data… Maar hier hebben we nog niet echt een antwoord.</p>
+      </section> 
+      <section id="ontsluiting">
+        <h3>Ontsluiting / webservices</h3>
+        <p>Meer api naast services</p>
+      </section> 
+      <section id="vindbaarheid">
+        <h3>Vindbaarheid / metadata</h3>
+        <p>Geo-DCAT (voor integratie portalen), schema.org (voor vindbaarheid op het web) aanbevelingen. En ook de vraag: hoeveel metadatavelden heb je nou echt nodig. Voor vindbaarheid: met name coverage. Voor beoordeling fit for purpose: nog een paar meer.</p>
+      </section> 
+    </section>
+    <section id="impactwerkwijze" class="informative">
+      <h2>Impact op werkwijze rond standaardenontwikkeling</h2>
+      <p>In kortere iteraties; publiceren wat je binnen een time box hebt gedaan; open ontwikkelen; tijdens ontwikkeltraject ook implementeren. Dit kan een referentie implementatie (serieuze code die de standaard implementeert en als voorbeeld gebruikt kan worden of zelfs in toepassingen) zijn of een voorbeeldbestand of een demo (om te laten zien maar geen voorbeeld implementatie). Het is de vraag hoever we hierin willen gaan.</p>
+    </section>
+    <section id="catalogus" data-include="include-catalog.html" class="informative"></section>
+    <section id="discussie" class="informative">
+      <h2>Discussie</h2>
+      <p>hier slimme dingen zeggen, samenvatten, zekerheden en onzekerheden duiden. vervolgonderzoek noemen</p>
+      <p>En een korte test met <a data-cite="API-DESIGN-PRINCIPLES">bibliography</a> als er wordt verwezen naar een bron.</p>
+    </section>
+    <p class="issue">Op deze manier kunnen we open punten opnemen in de tekst</p>
+    <aside class="example" title='Voorbeeld code'>
+      <p>Hier komt een voorbeeld.
+        <pre>
+        const sum = [...items]
+        .map(item => item * 2)
+        .reduce((sum, next) => sum + (next || 0) );
+        </pre>
+      </p>
+    </aside>
+    <p class="ednote" title="Voorbeeld notitie">Tekst, tekst, en nog meer tekst ...</p>
+    <p class="warning" title="Fout">Hier zit een fout.</p>
+    <section class="appendix">
+      <h2>Appendix</h2>
+      <p>Appendix A onderdelen, nog meer tekst ...</p>
+    </section>
+    <section class="appendix" id="issue-summary">
+      <!-- A list of issues will magically appear here -->
+    </section>
+  </body>
+</html>
