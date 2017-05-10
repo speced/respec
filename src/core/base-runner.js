@@ -13,8 +13,19 @@ import { pub } from "core/pubsubhub";
 export const name = "core/base-runner";
 
 function toRunnable(plug) {
-  const name = plug.hasOwnProperty("name") ? plug.name : "";
-  return config => {
+  const name = plug.name || "";
+  return async config => {
+    // Modern plugins should just be async or normal functions
+    if (plug.run.length === 1) {
+      try {
+        await plug.run(config);
+      } catch (err) {
+        console.log(`Plugin ${name} crashed.`, err);
+      } finally {
+        return;
+      }
+    }
+    // legacy plugins
     return new Promise((resolve, reject) => {
       const timerId = setTimeout(() => {
         const msg = `Plugin ${name} took too long.`;
