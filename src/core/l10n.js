@@ -117,7 +117,6 @@ l10n["zh-cn"] = l10n.zh;
 
 const lang = document.documentElement.lang || "en";
 
-export function run(config, doc, cb) {
+export function run(config) {
   config.l10n = l10n[lang] || l10n.en;
-  cb();
 }
