@@ -48,7 +48,7 @@
     "moment": "^2.18.1",
     "requirejs": "^2.3.3",
     "text": "github:requirejs/text",
-    "uglify-js": "^3.0.3",
+    "uglify-es": "^3.0.3",
     "webidl2": "2.3.0",
     "whatwg-fetch": "^2.0.3"
   },
