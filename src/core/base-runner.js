@@ -14,18 +14,12 @@ export const name = "core/base-runner";
 
 function toRunnable(plug) {
   const name = plug.name || "";
-  return async config => {
-    // Modern plugins should just be async or normal functions
-    if (plug.run.length === 1) {
-      try {
-        await plug.run(config);
-      } catch (err) {
-        console.log(`Plugin ${name} crashed.`, err);
-      } finally {
-        return;
-      }
-    }
-    // legacy plugins
+  // Modern plugins are async or normal functions, take one argument (conf)
+  if (plug.run.length === 1) {
+    return plug.run.bind(plug);
+  }
+  // legacy plugins
+  return config => {
     return new Promise((resolve, reject) => {
       const timerId = setTimeout(() => {
         const msg = `Plugin ${name} took too long.`;
