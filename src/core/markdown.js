@@ -67,25 +67,11 @@ function toHTML(text) {
 
 function processElements(selector) {
   return element => {
-    const elementsToProcess = Array.from(element.querySelectorAll(selector));
-    elementsToProcess.reverse().reduce((div, element) => {
-      let node = div;
-      div.innerHTML = toHTML(element.innerHTML);
-      element.innerHTML = "";
-      // Don't nest "p" elements
-      if (
-        div.firstChild &&
-        element.localName === div.firstChild.localName &&
-        div.firstChild.localName === "p"
-      ) {
-        node = div.firstChild;
-      }
-      while (node.firstChild) {
-        element.appendChild(node.firstChild);
-      }
-      return div;
-    }, element.ownerDocument.createElement("div"));
-    return elementsToProcess;
+    Array.from(element.querySelectorAll(selector))
+      .reverse()
+      .forEach(element => {
+        element.innerHTML = toHTML(element.innerHTML);
+      });
   };
 }
 
@@ -190,7 +176,7 @@ function substituteWithTextNodes(elements) {
 }
 
 const processBlockLevelElements = processElements(
-  "section, div, .issue, .note, .req"
+  "section, div, address, article, aside, figure, header, main, body"
 );
 
 export function run(conf, doc, cb) {
@@ -201,31 +187,15 @@ export function run(conf, doc, cb) {
   const rsUI = doc.getElementById("respec-ui");
   rsUI.remove();
   // The new body will replace the old body
+  const newHTML = doc.createElement("html");
   const newBody = doc.createElement("body");
   newBody.innerHTML = doc.body.innerHTML;
   // Marked expects markdown be flush against the left margin
   // so we need to normalize the inner text of some block
   // elements.
-  processBlockLevelElements(newBody);
+  newHTML.appendChild(newBody);
+  processBlockLevelElements(newHTML);
   // Process root level text nodes
-
-  Array.from(newBody.childNodes)
-    .filter(
-      node => node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== ""
-    )
-    .map(node => {
-      const html = document.createElement("x-temp");
-      html.innerHTML = toHTML(node.textContent);
-      const fragment = new DocumentFragment();
-      while (html.hasChildNodes()) {
-        fragment.appendChild(html.firstChild);
-      }
-      return { node, fragment };
-    })
-    .reduce((parentNode, { node, fragment }) => {
-      parentNode.replaceChild(fragment, node);
-      return parentNode;
-    }, newBody);
   const cleanHTML = newBody.innerHTML
     // Markdown parsing sometimes inserts empty p tags
     .replace(/<p>\s*<\/p>/m, "");
