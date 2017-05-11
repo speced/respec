@@ -51,6 +51,7 @@ define(
     "w3c/style",
     "core/l10n",
     "w3c/l10n",
+    "core/github",
     "core/data-include",
     "core/markdown",
     "w3c/headers",
