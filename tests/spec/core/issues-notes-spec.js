@@ -69,7 +69,7 @@ describe("Core — Issues and Notes", function() {
         var $pnot = $not.find("p");
         expect($not.find("div.ednote-title").length).toEqual(1);
         expect($not.find("div.ednote-title").text()).toEqual(
-          "Editor's Note: EDNOTE-TIT"
+          "Editor's note: EDNOTE-TIT"
         );
         expect($pnot.attr("title")).toBeUndefined();
         expect($pnot.text()).toEqual("EDNOTE");
