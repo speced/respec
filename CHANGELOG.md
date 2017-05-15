@@ -1,5 +1,204 @@
 # Change Log
 
+## [v11.7.0](https://github.com/w3c/respec/tree/v11.7.0) (2017-05-11)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.6.0...v11.7.0)
+
+## [v11.6.0](https://github.com/w3c/respec/tree/v11.6.0) (2017-05-11)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.5.0...v11.6.0)
+
+**Closed issues:**
+
+- IE11 Object doesn't support property or method 'remove' [\#1025](https://github.com/w3c/respec/issues/1025)
+
+**Merged pull requests:**
+
+- feat\(core/github\): add github: option [\#1213](https://github.com/w3c/respec/pull/1213) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(core/base-runner\): simplify running new plugs [\#1212](https://github.com/w3c/respec/pull/1212) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/markdown\): root level processing [\#1211](https://github.com/w3c/respec/pull/1211) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(tools/make-test-file-build\): use async/await [\#1209](https://github.com/w3c/respec/pull/1209) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/base-runner\): support async plugins using promises [\#1205](https://github.com/w3c/respec/pull/1205) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v11.5.0](https://github.com/w3c/respec/tree/v11.5.0) (2017-05-08)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.4.5...v11.5.0)
+
+**Merged pull requests:**
+
+- refactor: prettier with trailing comma [\#1204](https://github.com/w3c/respec/pull/1204) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/markdown\): processing bugs [\#1202](https://github.com/w3c/respec/pull/1202) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore: run prettier over all js files [\#1201](https://github.com/w3c/respec/pull/1201) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v11.4.5](https://github.com/w3c/respec/tree/v11.4.5) (2017-05-08)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.4.4...v11.4.5)
+
+**Merged pull requests:**
+
+- Webidl js 2.3 [\#1200](https://github.com/w3c/respec/pull/1200) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(package\): update webidl2 to 2.3.0 [\#1199](https://github.com/w3c/respec/pull/1199) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v11.4.4](https://github.com/w3c/respec/tree/v11.4.4) (2017-05-03)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.4.3...v11.4.4)
+
+**Closed issues:**
+
+- Greenkeeper no longer working [\#1192](https://github.com/w3c/respec/issues/1192)
+
+**Merged pull requests:**
+
+- only request comments on wgPublicList if it exists [\#1195](https://github.com/w3c/respec/pull/1195) ([chaals](https://github.com/chaals))
+- Fix for ampersands in markdown [\#1174](https://github.com/w3c/respec/pull/1174) ([nickevansuk](https://github.com/nickevansuk))
+
+## [v11.4.3](https://github.com/w3c/respec/tree/v11.4.3) (2017-05-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.4.2...v11.4.3)
+
+**Closed issues:**
+
+- CSS validator complains of @support [\#1163](https://github.com/w3c/respec/issues/1163)
+- Add copy button to IDL [\#1104](https://github.com/w3c/respec/issues/1104)
+
+**Merged pull requests:**
+
+- fix\(respec2.css\): remove acronym styles [\#1194](https://github.com/w3c/respec/pull/1194) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(styles\): remove ReSpec UI styles on save \(closes \#1163\) [\#1193](https://github.com/w3c/respec/pull/1193) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v11.4.2](https://github.com/w3c/respec/tree/v11.4.2) (2017-05-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.4.1...v11.4.2)
+
+**Merged pull requests:**
+
+- fix\(core/webidl\): fix link to HTML spec [\#1191](https://github.com/w3c/respec/pull/1191) ([marcoscaceres](https://github.com/marcoscaceres))
+- More secure links [\#1190](https://github.com/w3c/respec/pull/1190) ([xfq](https://github.com/xfq))
+- Use Process 2017 in the starter spec [\#1189](https://github.com/w3c/respec/pull/1189) ([xfq](https://github.com/xfq))
+- Fix a typo in README.md [\#1188](https://github.com/w3c/respec/pull/1188) ([xfq](https://github.com/xfq))
+- chore\(.travis\): switch to yarn [\#1187](https://github.com/w3c/respec/pull/1187) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v11.4.1](https://github.com/w3c/respec/tree/v11.4.1) (2017-04-04)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.4.0...v11.4.1)
+
+**Implemented enhancements:**
+
+- Autolink IDL extended attributes [\#989](https://github.com/w3c/respec/issues/989)
+
+**Fixed bugs:**
+
+- Autolink IDL extended attributes [\#989](https://github.com/w3c/respec/issues/989)
+
+**Merged pull requests:**
+
+- fix\(core/webidl\): link to WEBIDL-LS for some things \(closes \#989\) [\#1178](https://github.com/w3c/respec/pull/1178) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v11.4.0](https://github.com/w3c/respec/tree/v11.4.0) (2017-04-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.3.0...v11.4.0)
+
+**Merged pull requests:**
+
+- feat: add "copy IDL to clipboard" button [\#1177](https://github.com/w3c/respec/pull/1177) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v11.3.0](https://github.com/w3c/respec/tree/v11.3.0) (2017-04-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.2.4...v11.3.0)
+
+**Closed issues:**
+
+- Example titles incorrectly unescaped [\#1173](https://github.com/w3c/respec/issues/1173)
+
+**Merged pull requests:**
+
+- test d/l chrome stable [\#1176](https://github.com/w3c/respec/pull/1176) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat: use grid for save button layout [\#1175](https://github.com/w3c/respec/pull/1175) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v11.2.4](https://github.com/w3c/respec/tree/v11.2.4) (2017-03-29)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.2.3...v11.2.4)
+
+**Implemented enhancements:**
+
+- Dutch Translations Issue Summary, TOF, References [\#1170](https://github.com/w3c/respec/issues/1170)
+
+**Merged pull requests:**
+
+- L10n translations [\#1171](https://github.com/w3c/respec/pull/1171) ([dhvenema](https://github.com/dhvenema))
+
+## [v11.2.3](https://github.com/w3c/respec/tree/v11.2.3) (2017-03-29)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.2.2...v11.2.3)
+
+**Merged pull requests:**
+
+- \[Snyk\] Fix for 1 vulnerable dependency path [\#1169](https://github.com/w3c/respec/pull/1169) ([snyk-bot](https://github.com/snyk-bot))
+
+## [v11.2.2](https://github.com/w3c/respec/tree/v11.2.2) (2017-03-29)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.2.1...v11.2.2)
+
+**Fixed bugs:**
+
+- Saving as HTML includes the save dialog in the resulting HTML [\#1164](https://github.com/w3c/respec/issues/1164)
+
+**Merged pull requests:**
+
+- tests\(karma\): switch to firefox [\#1168](https://github.com/w3c/respec/pull/1168) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/ui\): duplicate attribute \(closes \#1164\) [\#1167](https://github.com/w3c/respec/pull/1167) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v11.2.1](https://github.com/w3c/respec/tree/v11.2.1) (2017-03-13)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.2.0...v11.2.1)
+
+**Closed issues:**
+
+- Use css "wavy" when supported [\#1150](https://github.com/w3c/respec/issues/1150)
+
+**Merged pull requests:**
+
+- fix\(core/css/respec2\): use native wavy red line for errors [\#1158](https://github.com/w3c/respec/pull/1158) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v11.2.0](https://github.com/w3c/respec/tree/v11.2.0) (2017-03-13)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.1.0...v11.2.0)
+
+**Closed issues:**
+
+- Generalize l10n module  [\#1152](https://github.com/w3c/respec/issues/1152)
+- Convert AMD modules to ES6 modules [\#1143](https://github.com/w3c/respec/issues/1143)
+
+**Merged pull requests:**
+
+- Corel10n [\#1157](https://github.com/w3c/respec/pull/1157) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(tests/headless\): don't double build respec [\#1156](https://github.com/w3c/respec/pull/1156) ([marcoscaceres](https://github.com/marcoscaceres))
+- test\(.travis.yml\): try tests up to 3 times [\#1155](https://github.com/w3c/respec/pull/1155) ([marcoscaceres](https://github.com/marcoscaceres))
+- Moar es6 [\#1154](https://github.com/w3c/respec/pull/1154) ([marcoscaceres](https://github.com/marcoscaceres))
+- Moar es6 [\#1153](https://github.com/w3c/respec/pull/1153) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v11.1.0](https://github.com/w3c/respec/tree/v11.1.0) (2017-03-13)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.0.1...v11.1.0)
+
+**Merged pull requests:**
+
+- feat\(tools/builder.js\): learn to take command line args [\#1151](https://github.com/w3c/respec/pull/1151) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v11.0.1](https://github.com/w3c/respec/tree/v11.0.1) (2017-03-11)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.0.0...v11.0.1)
+
+**Merged pull requests:**
+
+- l10n: use l10n strings instead of English words [\#1149](https://github.com/w3c/respec/pull/1149) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v11.0.0](https://github.com/w3c/respec/tree/v11.0.0) (2017-03-10)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.5.14...v11.0.0)
+
+**Merged pull requests:**
+
+- BREAKING CHANGE: remove w3c/unhtml5 module [\#1147](https://github.com/w3c/respec/pull/1147) ([marcoscaceres](https://github.com/marcoscaceres))
+- Es6 moar things [\#1146](https://github.com/w3c/respec/pull/1146) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(core/webidl\): rename webidl-oldschool.css to webidl.css [\#1145](https://github.com/w3c/respec/pull/1145) ([marcoscaceres](https://github.com/marcoscaceres))
+- Bye idl oldschool and shiv [\#1144](https://github.com/w3c/respec/pull/1144) ([marcoscaceres](https://github.com/marcoscaceres))
+- Es6 moar things [\#1142](https://github.com/w3c/respec/pull/1142) ([marcoscaceres](https://github.com/marcoscaceres))
+- Es6 moar things [\#1141](https://github.com/w3c/respec/pull/1141) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v10.5.14](https://github.com/w3c/respec/tree/v10.5.14) (2017-03-08)
+[Full Changelog](https://github.com/w3c/respec/compare/v10.5.13...v10.5.14)
+
+**Implemented enhancements:**
+
+- internationalize humanDate  [\#1137](https://github.com/w3c/respec/issues/1137)
+
+**Merged pull requests:**
+
+- Intl human date [\#1139](https://github.com/w3c/respec/pull/1139) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v10.5.13](https://github.com/w3c/respec/tree/v10.5.13) (2017-03-08)
 [Full Changelog](https://github.com/w3c/respec/compare/v10.5.12...v10.5.13)
 

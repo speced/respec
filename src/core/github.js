@@ -10,16 +10,6 @@ import { pub } from "core/pubsubhub";
 
 export const name = "core/github";
 
-function isValidGitHubURL(ghURL) {
-  if (ghURL.protocol !== "https:") {
-    return false;
-  }
-  if (ghURL.origin !== "https://github.com") {
-    return false;
-  }
-  return true;
-}
-
 export async function run(conf) {
   if (!conf.hasOwnProperty("github") || !conf.github) {
     // nothing to do, bail out.
@@ -42,7 +32,7 @@ export async function run(conf) {
     pub("error", `\`respecConf.github\` is not a valid URL? (${ghURL})`);
     return;
   }
-  if (!isValidGitHubURL(ghURL)) {
+  if (ghURL.origin !== "https://github.com") {
     pub(
       "error",
       `\`respecConf.github\` must be HTTPS and pointing to GitHub. (${ghURL})`
@@ -50,9 +40,15 @@ export async function run(conf) {
     return;
   }
   const [org, repo] = ghURL.pathname.split("/").filter(item => item);
+  if (!org || !repo) {
+    pub(
+      "error",
+      `\`respecConf.github\` URL needs a path with, for example, w3c/my-spec`
+    );
+  }
   const branch = conf.github.branch || "gh-pages";
   const newProps = {
-    edDraftURI: `https://${org}.github.io/${repo}/`,
+    edDraftURI: `https://${org.toLowerCase()}.github.io/${repo}/`,
     githubAPI: `https://api.github.com/repos/${org}/${repo}`,
     issueBase: `${ghURL.href}${ghURL.pathname.endsWith("/") ? "" : "/"}issues`,
   };
