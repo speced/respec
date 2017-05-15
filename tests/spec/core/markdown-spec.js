@@ -282,4 +282,42 @@ describe("Core - Markdown", function() {
       }).then(done);
     });
   });
+  describe("data-format=markdown", () => {
+    it("replaces processes data-format=markdown sections, but leaves other sections alone", done => {
+      var ops = {
+        config: makeBasicConfig(),
+        body: makeDefaultBody() +
+          `
+          <section id=markdown1 data-format=markdown>
+            ## this is a h2
+            This is a paragraph with \`code\`.
+
+            ### heading 3
+            This is another paragraph.
+
+            ### another h3
+            This is another paragraph.
+          </section>
+          <section id=dontTouch>
+            ## this should not change
+          </section>
+          `,
+      };
+      ops.config.doRDFa = false;
+      makeRSDoc(ops, doc => {
+        const headings = Array.from(
+          doc.querySelectorAll("#markdown1 h2, #markdown1 h3")
+        );
+        expect(headings.length).toEqual(3);
+        const [h2, h3, anotherH3] = headings;
+        expect(h2.localName).toEqual("h2");
+        expect(h3.localName).toEqual("h3");
+        expect(anotherH3.localName).toEqual("h3");
+        expect(anotherH3.textContent.trim()).toEqual("1.2 another h3");
+        expect(doc.querySelector("#markdown1 code")).toBeTruthy();
+        const dontChange = doc.querySelector("#dontTouch").textContent.trim();
+        expect(dontChange).toEqual("## this should not change");
+      }).then(done);
+    });
+  });
 });

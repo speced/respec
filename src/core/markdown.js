@@ -62,16 +62,17 @@ function toHTML(text) {
   const potentialMarkdown = normalizedLeftPad
     .replace(/&gt;/gm, ">")
     .replace(/&amp;/gm, "&");
-  return marked(potentialMarkdown);
+  const result = marked(potentialMarkdown);
+  return result;
 }
 
 function processElements(selector) {
   return element => {
-    Array.from(element.querySelectorAll(selector))
-      .reverse()
-      .forEach(element => {
-        element.innerHTML = toHTML(element.innerHTML);
-      });
+    const elements = Array.from(element.querySelectorAll(selector));
+    elements.reverse().forEach(element => {
+      element.innerHTML = toHTML(element.innerHTML);
+    });
+    return elements;
   };
 }
 
@@ -175,12 +176,44 @@ function substituteWithTextNodes(elements) {
   });
 }
 
+const processMDSections = processElements("[data-format='markdown']:not(body)");
 const processBlockLevelElements = processElements(
-  "section, div, address, article, aside, figure, header, main, body"
+  "[data-format=markdown]:not(body), section, div, address, article, aside, figure, header, main, body"
 );
 
 export function run(conf, doc, cb) {
-  if (conf.format !== "markdown") {
+  const hasMDSections = !!doc.querySelector("[data-format=markdown]:not(body)");
+  const isMDFormat = conf.format === "markdown";
+  if (!isMDFormat && !hasMDSections) {
+    return cb(); // Nothing to be done
+  }
+  // Only has markdown-format sections
+  if (!isMDFormat) {
+    processMDSections(doc.body)
+      .map(elem => {
+        const structuredInternals = structure(elem, elem.ownerDocument);
+        return {
+          structuredInternals,
+          elem,
+        };
+      })
+      .forEach(({ elem, structuredInternals }) => {
+        elem.setAttribute("aria-busy", "true");
+        if (
+          structuredInternals.firstElementChild.localName === "section" &&
+          elem.localName === "section"
+        ) {
+          const section = structuredInternals.firstElementChild;
+          section.remove();
+          while (section.hasChildNodes()) {
+            elem.appendChild(section.firstChild);
+          }
+        } else {
+          elem.innerHTML = "";
+        }
+        elem.appendChild(structuredInternals);
+        elem.setAttribute("aria-busy", "false");
+      });
     return cb();
   }
   // We transplant the UI to do the markdown processing
