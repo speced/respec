@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 "use strict";
-const async = require("marcosc-async");
 const fsp = require("fs-promise");
 const path = require("path");
 const { exec } = require("child_process");
@@ -16,19 +15,19 @@ function toJSON(files) {
   return JSON.stringify(paths, null, 2);
 }
 
-async
-  .task(function*() {
-    const fileName = `${testsPath}/testFiles.json`;
-    const cmd = `find ${testsPath} -name "*-spec.js"`;
-    const files = yield toExecPromise(cmd);
-    const json = toJSON(files);
-    yield fsp.writeFile(fileName, json, "utf-8");
-    process.exit(0);
-  })
-  .catch(err => {
-    console.error(err);
-    process.exit(1);
-  });
+const run = async () => {
+  const fileName = `${testsPath}/testFiles.json`;
+  const cmd = `find ${testsPath} -name "*-spec.js"`;
+  const files = await toExecPromise(cmd);
+  const json = toJSON(files);
+  await fsp.writeFile(fileName, json, "utf-8");
+  process.exit(0);
+};
+
+run().catch(err => {
+  console.error(err);
+  process.exit(1);
+});
 
 function toExecPromise(cmd) {
   return new Promise((resolve, reject) => {
