@@ -16,17 +16,19 @@ function toJSON(files) {
   return JSON.stringify(paths, null, 2);
 }
 
-async.task(function* () {
-  const fileName = `${testsPath}/testFiles.json`;
-  const cmd = `find ${testsPath} -name "*-spec.js"`;
-  const files = yield toExecPromise(cmd);
-  const json = toJSON(files);
-  yield fsp.writeFile(fileName, json, "utf-8");
-  process.exit(0);
-}).catch(err => {
-  console.error(err);
-  process.exit(1);
-});
+async
+  .task(function*() {
+    const fileName = `${testsPath}/testFiles.json`;
+    const cmd = `find ${testsPath} -name "*-spec.js"`;
+    const files = yield toExecPromise(cmd);
+    const json = toJSON(files);
+    yield fsp.writeFile(fileName, json, "utf-8");
+    process.exit(0);
+  })
+  .catch(err => {
+    console.error(err);
+    process.exit(1);
+  });
 
 function toExecPromise(cmd) {
   return new Promise((resolve, reject) => {

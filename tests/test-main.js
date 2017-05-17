@@ -32,7 +32,7 @@ require.config({
     "w3c/linter": "/base/js/w3c/linter",
     "deps/jquery": "/base/js/deps/jquery",
     "deps/async": "/base/js/deps/async",
-    "deps/regenerator": "/base/js/deps/regenerator", 
+    "deps/regenerator": "/base/js/deps/regenerator",
   },
 });
 

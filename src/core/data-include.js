@@ -17,7 +17,7 @@ import { runTransforms } from "core/utils";
 export const name = "core/data-include";
 
 function processResponse(rawData, id, url) {
-  const el = document.querySelector(`[data-include-id=${id}]`)
+  const el = document.querySelector(`[data-include-id=${id}]`);
   const doc = el.ownerDocument;
   const data = runTransforms(rawData, el.dataset.oninclude, url);
   const replace = typeof el.dataset.includeReplace === "string";
@@ -31,7 +31,8 @@ function processResponse(rawData, id, url) {
         el.textContent = data;
       }
       break;
-    default: // html, which is just using "innerHTML"
+    default:
+      // html, which is just using "innerHTML"
       el.innerHTML = data;
       if (replace) {
         replacementNode = doc.createDocumentFragment();
@@ -58,34 +59,28 @@ function cleanUp(el) {
     "data-include-replace",
     "data-include-id",
     "oninclude",
-  ].forEach(
-    attr => el.removeAttribute(attr)
-  );
+  ].forEach(attr => el.removeAttribute(attr));
 }
 
 export function run(conf, doc, cb) {
-  const promisesToInclude = Array
-    .from(
-      doc.querySelectorAll("[data-include]")
-    )
-    .map(async el => {
-      const url = el.dataset.include;
-      if (!url) {
-        return; // just skip it
-      }
-      const id = "include-" + String(Math.random()).substr(2);
-      el.dataset.includeId = id;
-      try {
-        const response = await fetch(url);
-        const text = await response.text();
-        processResponse(text, id, url);
-      } catch (err) {
-        const msg = `data-include failed: ${url} (${err.message}). See console for details.`;
-        console.error("data-include failed for element: ", el, err);
-        pub("error", msg);
-      }
-    });
-  Promise
-    .all(promisesToInclude)
-    .then(cb);
+  const promisesToInclude = Array.from(
+    doc.querySelectorAll("[data-include]")
+  ).map(async el => {
+    const url = el.dataset.include;
+    if (!url) {
+      return; // just skip it
+    }
+    const id = "include-" + String(Math.random()).substr(2);
+    el.dataset.includeId = id;
+    try {
+      const response = await fetch(url);
+      const text = await response.text();
+      processResponse(text, id, url);
+    } catch (err) {
+      const msg = `data-include failed: ${url} (${err.message}). See console for details.`;
+      console.error("data-include failed for element: ", el, err);
+      pub("error", msg);
+    }
+  });
+  Promise.all(promisesToInclude).then(cb);
 }

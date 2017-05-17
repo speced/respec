@@ -6,7 +6,9 @@ describe("Core — Data Include", function() {
   });
   // this does not test much, someone for whom this is
   // important should provide more tests
-  it("should include an external file and remove the data-include attr", function(done) {
+  it("should include an external file and remove the data-include attr", function(
+    done
+  ) {
     var url = "/tests/spec/core/includer.html";
     var theTest = function(doc) {
       var p = doc.querySelector("#includes > div > p");
@@ -21,8 +23,7 @@ describe("Core — Data Include", function() {
       config: makeBasicConfig(),
       body: makeDefaultBody(),
     };
-    makeRSDoc(ops, theTest, url)
-      .then(done);
+    makeRSDoc(ops, theTest, url).then(done);
   });
   it("replaces sections when data-include-replace is present", function(done) {
     var url = "/tests/spec/core/includer.html";
@@ -39,8 +40,7 @@ describe("Core — Data Include", function() {
       config: makeBasicConfig(),
       body: makeDefaultBody(),
     };
-    makeRSDoc(ops, theTest, url)
-      .then(done);
+    makeRSDoc(ops, theTest, url).then(done);
   });
   it("gracefully handles empty data-includes", function(done) {
     var url = "/tests/spec/core/includer.html";
@@ -53,8 +53,7 @@ describe("Core — Data Include", function() {
       config: makeBasicConfig(),
       body: makeDefaultBody(),
     };
-    makeRSDoc(ops, theTest, url)
-      .then(done);
+    makeRSDoc(ops, theTest, url).then(done);
   });
   it("includes text when data-include-format is 'text'", function(done) {
     var url = "/tests/spec/core/includer.html";
@@ -67,8 +66,7 @@ describe("Core — Data Include", function() {
       config: makeBasicConfig(),
       body: makeDefaultBody(),
     };
-    makeRSDoc(ops, theTest, url)
-      .then(done);
+    makeRSDoc(ops, theTest, url).then(done);
   });
   it("includes a URL and processes it as markdown", function(done) {
     var theTest = function(doc) {
@@ -82,11 +80,11 @@ describe("Core — Data Include", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-        "<section id='includes' data-include='"+ testURL +"'></section>",
+        "<section id='includes' data-include='" +
+        testURL +
+        "'></section>",
     };
     ops.config.format = "markdown";
-    makeRSDoc(ops, theTest)
-      .then(done);
+    makeRSDoc(ops, theTest).then(done);
   });
-
 });

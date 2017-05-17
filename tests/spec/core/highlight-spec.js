@@ -8,13 +8,14 @@ describe("Core — Highlight", function() {
   it("shouldn't highlight idl blocks", done => {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() + `
+      body: makeDefaultBody() +
+        `
         <section><pre class=idl>
           [Constructor]interface Dahut : Mammal {
             const unsigned short DEXTROGYROUS = 1;
             Dahut turnAround(float angle, boolean fall);
           };</pre>
-        </section>`
+        </section>`,
     };
     makeRSDoc(ops, function(doc) {
       var pre = doc.querySelector("pre");
@@ -33,12 +34,14 @@ describe("Core — Highlight", function() {
               alert('foo');
             }
           </pre>
-        </section>`
+        </section>`,
     };
     makeRSDoc(ops, function(doc) {
       var pre = doc.querySelector("div.example pre");
       expect(pre.classList.contains("hljs")).toBeTruthy();
-      expect(pre.querySelectorAll("span[class^=hljs-]").length).toBeGreaterThan(0);
+      expect(pre.querySelectorAll("span[class^=hljs-]").length).toBeGreaterThan(
+        0
+      );
     }).then(done);
   });
 
@@ -52,7 +55,7 @@ describe("Core — Highlight", function() {
               alert('foo');
             }
           </pre>
-        </section>`
+        </section>`,
     };
     makeRSDoc(ops, function(doc) {
       var pre = doc.querySelector("div.example pre");
@@ -71,12 +74,11 @@ describe("Core — Highlight", function() {
               alert('foo');
             }
           </pre>
-        </section>`
+        </section>`,
     };
     makeRSDoc(ops, function(doc) {
       var pre = doc.querySelector("#test");
       expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
     }).then(done);
   });
-
 });

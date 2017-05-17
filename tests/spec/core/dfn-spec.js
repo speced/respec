@@ -7,7 +7,8 @@ describe("Core — Definitions", function() {
   it("should process definitions", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() + "<section id='dfn'><dfn>text</dfn><a>text</a></section>",
+      body: makeDefaultBody() +
+        "<section id='dfn'><dfn>text</dfn><a>text</a></section>",
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("#dfn", doc);
@@ -16,7 +17,9 @@ describe("Core — Definitions", function() {
     }).then(done);
   });
 
-  it("should make links <code> when their definitions are <code>", function(done) {
+  it("should make links <code> when their definitions are <code>", function(
+    done
+  ) {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
@@ -33,10 +36,18 @@ describe("Core — Definitions", function() {
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("#dfn", doc);
-      expect($sec.find("a:contains('outerCode')").contents()[0].nodeName).toEqual("CODE");
-      expect($sec.find("a:contains('outerPre')").contents()[0].nodeName).toEqual("CODE");
-      expect($sec.find("a:contains('innerCode')").contents()[0].nodeName).toEqual("CODE");
-      expect($sec.find("a:contains('partial')").contents()[0].nodeName).toEqual("#text");
+      expect(
+        $sec.find("a:contains('outerCode')").contents()[0].nodeName
+      ).toEqual("CODE");
+      expect(
+        $sec.find("a:contains('outerPre')").contents()[0].nodeName
+      ).toEqual("CODE");
+      expect(
+        $sec.find("a:contains('innerCode')").contents()[0].nodeName
+      ).toEqual("CODE");
+      expect($sec.find("a:contains('partial')").contents()[0].nodeName).toEqual(
+        "#text"
+      );
     }).then(done);
   });
 
@@ -44,13 +55,13 @@ describe("Core — Definitions", function() {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() +
-      `
+        `
       <pre class="idl">
         interface Test {};
       </pre>
       <p id="t1"><a>Test</a>
       <p id="t2"><a data-lt="Test">not wrapped in code</a>
-      `
+      `,
     };
     makeRSDoc(ops, doc => {
       const code = doc.querySelector("#t1 code");
@@ -58,7 +69,9 @@ describe("Core — Definitions", function() {
       const t2 = doc.querySelector("#t2");
       expect(t2.querySelector("code")).toEqual(null);
       expect(t2.querySelector("a").textContent).toEqual("not wrapped in code");
-      expect(t2.querySelector("a").getAttribute("href")).toEqual("#idl-def-test");
+      expect(t2.querySelector("a").getAttribute("href")).toEqual(
+        "#idl-def-test"
+      );
     }).then(done);
   });
 
@@ -73,7 +86,9 @@ describe("Core — Definitions", function() {
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("#dfn", doc);
-      expect($sec.find("dfn").attr("data-lt")).toEqual("text|text 1|text 2|text 3");
+      expect($sec.find("dfn").attr("data-lt")).toEqual(
+        "text|text 1|text 2|text 3"
+      );
       expect($sec.find("dfn").attr("data-dfn-type")).toEqual("dfn");
     }).then(done);
   });
@@ -92,5 +107,4 @@ describe("Core — Definitions", function() {
       expect($sec.find("dfn").attr("data-dfn-type")).toEqual("myType");
     }).then(done);
   });
-
 });

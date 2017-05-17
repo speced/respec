@@ -22,7 +22,7 @@ export function run(conf, doc, cb) {
     return cb();
   }
   const css = tmpls["permalinks.css"];
-  var symbol = conf.permalinkSymbol || '§';
+  var symbol = conf.permalinkSymbol || "§";
   var style = "<style>" + css(conf) + "</style>";
 
   $(doc).find("head link").first().before(style);
@@ -30,11 +30,11 @@ export function run(conf, doc, cb) {
   $secs.each(function(i, item) {
     var $item = $(item);
     if (!$item.hasClass("nolink")) {
-      var resourceID = $item.attr('id');
+      var resourceID = $item.attr("id");
       var $par = $item.parent();
       if ($par.is("section") || $par.is("div")) {
         if (!$par.hasClass("introductory") && !$par.hasClass("nolink")) {
-          resourceID = $par.attr('id');
+          resourceID = $par.attr("id");
         } else {
           resourceID = null;
         }
@@ -44,21 +44,21 @@ export function run(conf, doc, cb) {
         // we have an id.  add a permalink
         // right after the h* element
         var theNode = $("<span></span>");
-        theNode.attr('class', 'permalink');
-        if (conf.doRDFa) theNode.attr('typeof', 'bookmark');
+        theNode.attr("class", "permalink");
+        if (conf.doRDFa) theNode.attr("typeof", "bookmark");
         var ctext = $item.text();
         var el = $("<a></a>");
         el.attr({
-          href: '#' + resourceID,
-          'aria-label': 'Permalink for ' + ctext,
-          title: 'Permalink for ' + ctext
+          href: "#" + resourceID,
+          "aria-label": "Permalink for " + ctext,
+          title: "Permalink for " + ctext,
         });
-        if (conf.doRDFa) el.attr('property', 'url');
+        if (conf.doRDFa) el.attr("property", "url");
         var sym = $("<span></span>");
         if (conf.doRDFa) {
           sym.attr({
-            property: 'title',
-            content: ctext
+            property: "title",
+            content: ctext,
           });
         }
         sym.append(symbol);

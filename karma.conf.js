@@ -2,29 +2,26 @@
 // Generated on Fri Feb 26 2016 13:09:51 GMT+1100 (AEDT)
 /*globals module, require, process*/
 "use strict";
-module.exports = function (config) {
+module.exports = function(config) {
   var options = {
-
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: "./",
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: [
-      "jasmine",
-      "requirejs",
-      "detectBrowsers",
-    ],
+    frameworks: ["jasmine", "requirejs", "detectBrowsers"],
 
     // configuration
     detectBrowsers: {
       enabled: true,
       usePhantomJS: false,
       postDetection(browsers) {
-        return browsers
-          // Remove IE
-          .filter(browser => browser !== 'IE');
-      }
+        return (
+          browsers
+            // Remove IE
+            .filter(browser => browser !== "IE")
+        );
+      },
     },
 
     // list of files / patterns to load in the browser
@@ -35,19 +32,23 @@ module.exports = function (config) {
         pattern: "builds/**/*.*",
         included: false,
         served: true,
-      }, {
+      },
+      {
         pattern: "js/**/*.*",
         included: false,
         served: true,
-      }, {
+      },
+      {
         pattern: "tests/**/*-spec.js",
         included: false,
         served: true,
-      }, {
+      },
+      {
         pattern: "tests/**/*.html",
         included: false,
         served: true,
-      }, {
+      },
+      {
         pattern: "worker/*.js",
         included: false,
         served: true,
@@ -57,11 +58,7 @@ module.exports = function (config) {
     ],
 
     // list of files to exclude
-    exclude: [
-      "**/*.swp",
-      "*.swp",
-      ".DS_Store",
-    ],
+    exclude: ["**/*.swp", "*.swp", ".DS_Store"],
 
     proxies: {
       "/js/": "/base/js/",
@@ -107,7 +104,7 @@ module.exports = function (config) {
     customLaunchers: {
       chrome_canary_travis: {
         base: "ChromeCanary",
-        flags: ["--no-sandbox"]
+        flags: ["--no-sandbox"],
       },
     },
   };
@@ -121,4 +118,3 @@ module.exports = function (config) {
   }
   config.set(options);
 };
-

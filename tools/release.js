@@ -16,7 +16,23 @@ const DEBUG = false;
 require("epipebomb")();
 
 const loadOps = {
-  frames: ["🌕", "🌖", "🌗", "🌘", "🌑", "🌚", "🌚", "🌚", "🌒", "🌓", "🌔", "🌝", "🌝", "🌝", "🌝"],
+  frames: [
+    "🌕",
+    "🌖",
+    "🌗",
+    "🌘",
+    "🌑",
+    "🌚",
+    "🌚",
+    "🌚",
+    "🌒",
+    "🌓",
+    "🌔",
+    "🌝",
+    "🌝",
+    "🌝",
+    "🌝",
+  ],
   delay: 100,
 };
 
@@ -48,7 +64,9 @@ function rel(f) {
 
 function npm(cmd) {
   if (DEBUG) {
-    console.log(colors.debug(`Pretending to run: ${"npm " + colors.prompt(cmd)}`));
+    console.log(
+      colors.debug(`Pretending to run: ${"npm " + colors.prompt(cmd)}`)
+    );
     return Promise.resolve("");
   }
   return toExecPromise(`npm ${cmd}`);
@@ -56,7 +74,9 @@ function npm(cmd) {
 
 function git(cmd) {
   if (DEBUG) {
-    console.log(colors.debug(`Pretending to run: ${"git " + colors.prompt(cmd)}`));
+    console.log(
+      colors.debug(`Pretending to run: ${"git " + colors.prompt(cmd)}`)
+    );
     return Promise.resolve("");
   }
   return toExecPromise(`git ${cmd}`);
@@ -116,7 +136,9 @@ const Prompts = {
       try {
         yield this.askQuestion(promptOps);
       } catch (err) {
-        const warning = colors.warn("🚨 Make sure to run `git up; git checkout develop`");
+        const warning = colors.warn(
+          "🚨 Make sure to run `git up; git checkout develop`"
+        );
         console.warn(warning);
         throw err;
       }
@@ -138,24 +160,28 @@ const Prompts = {
       ["test", "👍"],
     ]);
     const commitHints = /^l10n|^docs|^chore|^fix|^style|^refactor|^test|^feat|^breaking\schange/i;
-    return commits
-      .split("\n")
-      .filter(line => line)
-      // drop the hash
-      .map(line => line.substr(line.indexOf(" ") + 1))
-      // colorize/iconify
-      .map(line => {
-        const match = commitHints.test(line) ? commitHints.exec(line)[0].toLowerCase() : "";
-        let result = line;
-        let icon = (match && iconMap.has(match)) ? iconMap.get(match) : "❓";
-        // colorize
-        if (match) {
-          result = result.replace(match.toLowerCase(), colors[match](match));
-        }
-        return `  ${icon} ${result}`;
-      })
-      .sort()
-      .join("\n");
+    return (
+      commits
+        .split("\n")
+        .filter(line => line)
+        // drop the hash
+        .map(line => line.substr(line.indexOf(" ") + 1))
+        // colorize/iconify
+        .map(line => {
+          const match = commitHints.test(line)
+            ? commitHints.exec(line)[0].toLowerCase()
+            : "";
+          let result = line;
+          let icon = match && iconMap.has(match) ? iconMap.get(match) : "❓";
+          // colorize
+          if (match) {
+            result = result.replace(match.toLowerCase(), colors[match](match));
+          }
+          return `  ${icon} ${result}`;
+        })
+        .sort()
+        .join("\n")
+    );
   },
   /**
    * Try to guess the version, based on the commits.
@@ -184,9 +210,7 @@ const Prompts = {
         }
         return "patch";
       })
-      .reduce(
-        (collector, item) => collector.add(item), new Set()
-      );
+      .reduce((collector, item) => collector.add(item), new Set());
     if (changes.has("major")) {
       major++;
       minor = 0;
@@ -203,7 +227,9 @@ const Prompts = {
   askBumpVersion() {
     return async.task(function*() {
       const version = yield Builder.getRespecVersion();
-      const commits = yield git("log `git describe --tags --abbrev=0`..HEAD --oneline");
+      const commits = yield git(
+        "log `git describe --tags --abbrev=0`..HEAD --oneline"
+      );
       if (!commits) {
         console.log(colors.warn("😢  No commits. Nothing to release."));
         return process.exit(1);
@@ -224,10 +250,14 @@ const Prompts = {
         description: `Current version is ${version}, bump it to`,
         pattern: /^\d+\.\d+\.\d+$/i,
         message: "Values must be x.y.z",
-        default: newVersion
+        default: newVersion,
       };
       pack.version = yield this.askQuestion(promptOps);
-      yield fsp.writeFile(packagePath, JSON.stringify(pack, null, 2) + "\n", "utf8");
+      yield fsp.writeFile(
+        packagePath,
+        JSON.stringify(pack, null, 2) + "\n",
+        "utf8"
+      );
       return pack.version;
     }, this);
   },
@@ -254,7 +284,7 @@ const Prompts = {
       };
       return yield this.askQuestion(promptOps);
     }, this);
-  }
+  },
 };
 
 function toExecPromise(cmd, timeout) {
@@ -290,7 +320,7 @@ function getBranchState() {
         result = "needs a pull";
         break;
       default:
-        result = (remote === base) ? "needs to push" : "has diverged";
+        result = remote === base ? "needs to push" : "has diverged";
     }
     return result;
   });
@@ -316,76 +346,88 @@ class Indicator {
 }
 
 const indicators = new Map([
-  ["remote-update", new Indicator(colors.info(" Performing Git remote update... 📡 "))],
-  ["build-merge-tag", new Indicator(colors.info(" Building, adding, commiting, merging, and tagging ReSpec... ⚒"))],
-  ["push-to-server", new Indicator(colors.info(" Pushing everything back to server... 📡"))],
+  [
+    "remote-update",
+    new Indicator(colors.info(" Performing Git remote update... 📡 ")),
+  ],
+  [
+    "build-merge-tag",
+    new Indicator(
+      colors.info(
+        " Building, adding, commiting, merging, and tagging ReSpec... ⚒"
+      )
+    ),
+  ],
+  [
+    "push-to-server",
+    new Indicator(colors.info(" Pushing everything back to server... 📡")),
+  ],
   ["npm-publish", new Indicator(colors.info(" Publishing to npm... 📡"))],
 ]);
 
-async.task(function*() {
-  const initialBranch = yield getCurrentBranch();
-  try {
-    // 1. Confirm maintainer is on up-to-date and on the develop branch ()
-    indicators.get("remote-update").show();
-    yield git(`remote update`);
-    indicators.get("remote-update").hide();
-    if (initialBranch !== MAIN_BRANCH) {
-      yield Prompts.askSwitchToBranch(initialBranch, MAIN_BRANCH);
-    }
-    const branchState = yield getBranchState();
-    switch (branchState) {
-      case "needs a pull":
-        yield Prompts.askToPullBranch(MAIN_BRANCH);
-        break;
-      case "up-to-date":
-        break;
-      case "needs to push":
-        var err = `Found unpushed commits on "${MAIN_BRANCH}" branch! Can't proceed.`;
-        throw new Error(err);
-      default:
-        throw new Error(`Your branch is not up-to-date. It ${branchState}.`);
-    }
-    // 2. Bump the version in `package.json`.
-    const version = yield Prompts.askBumpVersion();
-    yield Prompts.askBuildAddCommitMergeTag();
-    // 3. Run the build script (node tools/build-w3c-common.js).
-    indicators.get("build-merge-tag").show();
-    yield npm("run hb:build");
-    yield Builder.build({ name: "w3c-common" });
-    // 4. Commit your changes (git commit -am v3.x.y)
-    yield git(`commit -am v${version}`);
-    // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
-    yield git(`checkout gh-pages`);
-    yield git(`pull origin gh-pages`);
-    yield git(`merge develop`);
-    yield git(`checkout develop`);
-    // 6. Tag the release (git tag v3.x.y)
-    yield git(`tag -m v${version} v${version}`);
-    indicators.get("build-merge-tag").hide();
-    yield Prompts.askPushAll();
-    indicators.get("push-to-server").show();
-    yield git("push origin develop");
-    yield git("push origin gh-pages");
-    yield git("push --tags");
-    indicators.get("push-to-server").hide();
-    indicators.get("npm-publish").show();
-    // We give npm publish 2 minute to time out, as it can be slow.
-    yield toExecPromise("npm publish", 120000);
-    indicators.get("npm-publish").hide();
+async
+  .task(function*() {
+    const initialBranch = yield getCurrentBranch();
+    try {
+      // 1. Confirm maintainer is on up-to-date and on the develop branch ()
+      indicators.get("remote-update").show();
+      yield git(`remote update`);
+      indicators.get("remote-update").hide();
+      if (initialBranch !== MAIN_BRANCH) {
+        yield Prompts.askSwitchToBranch(initialBranch, MAIN_BRANCH);
+      }
+      const branchState = yield getBranchState();
+      switch (branchState) {
+        case "needs a pull":
+          yield Prompts.askToPullBranch(MAIN_BRANCH);
+          break;
+        case "up-to-date":
+          break;
+        case "needs to push":
+          var err = `Found unpushed commits on "${MAIN_BRANCH}" branch! Can't proceed.`;
+          throw new Error(err);
+        default:
+          throw new Error(`Your branch is not up-to-date. It ${branchState}.`);
+      }
+      // 2. Bump the version in `package.json`.
+      const version = yield Prompts.askBumpVersion();
+      yield Prompts.askBuildAddCommitMergeTag();
+      // 3. Run the build script (node tools/build-w3c-common.js).
+      indicators.get("build-merge-tag").show();
+      yield npm("run hb:build");
+      yield Builder.build({ name: "w3c-common" });
+      // 4. Commit your changes (git commit -am v3.x.y)
+      yield git(`commit -am v${version}`);
+      // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
+      yield git(`checkout gh-pages`);
+      yield git(`pull origin gh-pages`);
+      yield git(`merge develop`);
+      yield git(`checkout develop`);
+      // 6. Tag the release (git tag v3.x.y)
+      yield git(`tag -m v${version} v${version}`);
+      indicators.get("build-merge-tag").hide();
+      yield Prompts.askPushAll();
+      indicators.get("push-to-server").show();
+      yield git("push origin develop");
+      yield git("push origin gh-pages");
+      yield git("push --tags");
+      indicators.get("push-to-server").hide();
+      indicators.get("npm-publish").show();
+      // We give npm publish 2 minute to time out, as it can be slow.
+      yield toExecPromise("npm publish", 120000);
+      indicators.get("npm-publish").hide();
 
-    if (initialBranch !== MAIN_BRANCH) {
-      yield Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
+      if (initialBranch !== MAIN_BRANCH) {
+        yield Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
+      }
+    } catch (err) {
+      console.error(colors.red(`\n☠  ${err.message}`));
+      const currentBranch = getCurrentBranch();
+      if (initialBranch !== currentBranch) {
+        yield git(`checkout ${initialBranch}`);
+      }
+      process.exit(1);
     }
-  } catch (err) {
-    console.error(colors.red(`\n☠  ${err.message}`));
-    const currentBranch = getCurrentBranch();
-    if (initialBranch !== currentBranch) {
-      yield git(`checkout ${initialBranch}`);
-    }
-    process.exit(1);
-  }
-}).then(
-  () => process.exit(0)
-).catch(
-  err => console.error(err.stack)
-);
+  })
+  .then(() => process.exit(0))
+  .catch(err => console.error(err.stack));

@@ -86,13 +86,10 @@ function createResourceHints() {
     },
   ]
     .map(createResourceHint)
-    .reduce(
-      function(frag, link) {
-        frag.appendChild(link);
-        return frag;
-      },
-      document.createDocumentFragment()
-    );
+    .reduce(function(frag, link) {
+      frag.appendChild(link);
+      return frag;
+    }, document.createDocumentFragment());
   return resourceHints;
 }
 // Collect elements for insertion

@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "11.4.4",
+  "version": "11.5.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -49,8 +49,13 @@
     "requirejs": "^2.3.3",
     "text": "github:requirejs/text",
     "uglify-js": "^2.8.22",
-    "webidl2": "2.2.0",
+    "webidl2": "2.3.0",
     "whatwg-fetch": "^2.0.3"
+  },
+  "greenkeeper": {
+    "ignore": [
+      "webidl2"
+    ]
   },
   "scripts": {
     "babel:build": "babel src -d js --source-maps",
@@ -65,7 +70,7 @@
     "hb:build-geo": "node ./tools/expandpaths.js -a js/geonovum/templates/*.html js/geonovum/templates/*.css | xargs handlebars -f js/templates.js",
     "jscs": "jscs --esnext tests tools",
     "jscs:fix": "jscs --esnext --fix tests",
-    "jshint": "jshint karma.conf.js tests tools",
+    "jshint": "jshint karma.conf.js",
     "karma": "karma start --single-run",
     "prepublish": "npm run build:highlight && npm run snyk-protect && npm run copydeps && npm run babel:build",
     "pretest": "npm run jshint && npm run jscs",
@@ -87,6 +92,7 @@
     "express": "^4.15.2",
     "fs-promise": "^2.0.2",
     "highlight.js": "github:isagalaev/highlight.js",
+    "hyperhtml": "^0.10.2",
     "loading-indicator": "^2.0.0",
     "marcosc-async": "^4.0.3",
     "marked": "^0.3.6",
