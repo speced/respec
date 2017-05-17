@@ -106,12 +106,44 @@ const nl = {
   warning: "Waarschuwing",
 };
 
+const es = {
+  abstract: "Resumen",
+  author: "Autor:",
+  authors: "Autores:",
+  bug_tracker: "Repositorio de bugs:",
+  close_parens: ")",
+  commit_history: "Historia de cambios",
+  editor: "Editor:",
+  editors_note: "Nota de editor",
+  editors: "Editores:",
+  example: "Ejemplo",
+  fig: "Figura ",
+  file_a_bug: "Nota un bug",
+  info_references: "Referencias informativas",
+  issue_summary: "Resumen de la cuestión",
+  issue: "Cuestión",
+  latest_editors_draft: "Borrador de editor mas reciente:",
+  latest_published_version: "Versión publicada mas reciente:",
+  norm_references: "Referencias normativas",
+  note: "Nota",
+  open_bugs: "Bugs abiertos",
+  open_parens: "(",
+  participate: "Participad",
+  references: "Referencias",
+  sotd: "Estado de este Document",
+  table_of_fig: "Tabla de Figuras",
+  this_version: "Ésta versión:",
+  toc: "Tabla de Contenidos",
+  warning: "Aviso",
+};
+
 export const l10n = {
   en: Object.assign({}, base),
   ko: Object.assign({}, base, ko),
   zh: Object.assign({}, base, ko),
   ja: Object.assign({}, base, ja),
   nl: Object.assign({}, base, nl),
+  es: Object.assign({}, base, nl),
 };
 
 l10n["zh-hans"] = l10n.zh;
