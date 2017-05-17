@@ -17,7 +17,7 @@ const base = {
   editors_note: "Editor's note",
   editors: "Editors:",
   example: "Example",
-  fig: "Fig. ",
+  fig: "Figure ",
   file_a_bug: "File a bug",
   info_references: "Informative references",
   issue_summary: "Issue Summary",
