@@ -9,6 +9,7 @@
   "spec/core/examples-spec.js",
   "spec/core/figures-spec.js",
   "spec/core/fix-headers-spec.js",
+  "spec/core/github-spec.js",
   "spec/core/highlight-spec.js",
   "spec/core/id-headers-spec.js",
   "spec/core/idl-index-spec.js",
