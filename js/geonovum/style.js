@@ -1,23 +1,25 @@
-/*jshint strict: true, browser:true, jquery: true*/
-/*globals define*/
-// Module geonovum/style
-// Inserts a link to the appropriate Geonovum style for the specification's maturity level.
-// CONFIGURATION
-//  - specStatus: the short code for the specification's maturity level or type (required)
-"use strict";
-define([
-  "core/utils",
-  "core/pubsubhub",
-], function(utils, pubsubhub) {
+define(["exports", "core/utils", "core/pubsubhub"], function (exports, _utils, _pubsubhub) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.run = run;
+  /*jshint strict: true, browser:true, jquery: true*/
+  /*globals define*/
+  // Module w3c/style
+  // Inserts a link to the appropriate W3C style for the specification's maturity level.
+  // CONFIGURATION
+  //  - specStatus: the short code for the specification's maturity level or type (required)
+
   function attachFixupScript(doc, version) {
     var script = doc.createElement("script");
-    script.addEventListener("load", function() {
+    script.addEventListener("load", function () {
       if (window.location.hash) {
         window.location = window.location;
       }
     });
-    var helperScript = "https://www.w3.org/scripts/TR/{version}/fixup.js"
-      .replace("{version}", version);
+    var helperScript = "https://www.w3.org/scripts/TR/{version}/fixup.js".replace("{version}", version);
     script.src = helperScript;
     doc.body.appendChild(script);
   }
@@ -31,11 +33,11 @@ define([
     var meta = document.createElement("meta");
     meta.name = "viewport";
     var contentProps = {
-      "width": "device-width",
+      width: "device-width",
       "initial-scale": "1",
-      "shrink-to-fit": "no",
+      "shrink-to-fit": "no"
     };
-    meta.content = utils.toKeyValuePairs(contentProps).replace(/\"/g, "");
+    meta.content = (0, _utils.toKeyValuePairs)(contentProps).replace(/\"/g, "");
     return meta;
   }
 
@@ -49,26 +51,24 @@ define([
 
   function createResourceHints() {
     var resourceHints = [{
-        hint: "preconnect", // for W3C styles and scripts.
-        href: "https://www.w3.org",
-      }, {
-        hint: "preload", // all specs need it, and we attach it on end-all.
-        href: "https://www.w3.org/scripts/TR/2016/fixup.js",
-        as: "script",
-      }, {
-        hint: "preload", // all specs include on base.css.
-        href: "https://tools.geostandaarden.nl/respec/media/base.css",
-        as: "style",
-      }, {
-        hint: "preload", // all specs show the logo.
-        href: "https://tools.geostandaarden.nl/respec/media/logos/Geonovum.png",
-        as: "image",
-      }]
-      .map(utils.createResourceHint.bind(utils))
-      .reduce(function(frag, link) {
-        frag.appendChild(link);
-        return frag;
-      }, document.createDocumentFragment());
+      hint: "preconnect", // for W3C styles and scripts.
+      href: "https://www.w3.org"
+    }, {
+      hint: "preload", // all specs need it, and we attach it on end-all.
+      href: "https://www.w3.org/scripts/TR/2016/fixup.js",
+      as: "script"
+    }, {
+      hint: "preload", // all specs include on base.css.
+      href: "https://tools.geostandaarden.nl/respec/media/base.css",
+      as: "style"
+    }, {
+      hint: "preload", // all specs show the logo.
+      href: "https://tools.geostandaarden.nl/respec/media/logos/Geonovum.png",
+      as: "image"
+    }].map(_utils.createResourceHint).reduce(function (frag, link) {
+      frag.appendChild(link);
+      return frag;
+    }, document.createDocumentFragment());
     return resourceHints;
   }
   // Collect elements for insertion
@@ -83,40 +83,39 @@ define([
 
   document.head.insertBefore(elements, document.head.firstChild);
 
-  return {
-    run: function(conf, doc, cb) {
-      if (!conf.specStatus) {
-        var warn = "'specStatus' missing from ReSpec config. Defaulting to 'base'.";
-        conf.specStatus = "base";
-        pubsubhub.pub("warn", warn);
-      }
-
-      var styleBaseURL = "https://tools.geostandaarden.nl/respec/media/";
-      var finalStyleURL = "";
-      var styleFile = "";
-
-      // Figure out which style file to use.
-      switch (conf.specStatus.toUpperCase()) {
-        case "GN-WV":
-          styleFile += "GN-WV.css";
-          break;
-        case "GN-CV":
-          styleFile += "GN-CV.css";
-          break;
-        case "GN-VV":
-          styleFile += "GN-VV.css";
-          break;
-        case "GN-DEF":
-          styleFile += "GN-DEF.css";
-          break;
-        default:
-          styleFile = "base.css";
-      }
-      
-      attachFixupScript(doc, "2016")
-      finalStyleURL = styleBaseURL + styleFile
-      utils.linkCSS(doc, finalStyleURL);
-      cb();
+  function run(conf, doc, cb) {
+    if (!conf.specStatus) {
+      var warn = "'specStatus' missing from ReSpec config. Defaulting to 'base'.";
+      conf.specStatus = "base";
+      (0, _pubsubhub.pub)("warn", warn);
     }
-  };
+
+    var styleBaseURL = "https://tools.geostandaarden.nl/respec/media/";
+    var finalStyleURL = "";
+    var styleFile = "";
+
+    // Figure out which style file to use.
+    switch (conf.specStatus.toUpperCase()) {
+      case "GN-WV":
+        styleFile += "GN-WV.css";
+        break;
+      case "GN-CV":
+        styleFile += "GN-CV.css";
+        break;
+      case "GN-VV":
+        styleFile += "GN-VV.css";
+        break;
+      case "GN-DEF":
+        styleFile += "GN-DEF.css";
+        break;
+      default:
+        styleFile = "base.css";
+    }
+
+    attachFixupScript(doc, "2016");
+    finalStyleURL = styleBaseURL + styleFile;
+    (0, _utils.linkCSS)(doc, finalStyleURL);
+    cb();
+  }
 });
+//# sourceMappingURL=style.js.map

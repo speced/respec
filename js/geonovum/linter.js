@@ -1,6 +1,12 @@
-/*globals console*/
-"use strict";
-define(["core/pubsubhub"], function(pubsubhub) {
+define(["exports", "core/pubsubhub"], function (exports, _pubsubhub) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.rules = undefined;
+  exports.run = run;
+
   /**
    * Checks for privacy and security and considerations heading. If "privacy" or
    * "security", and "considerations", in any order, case-insensitive,
@@ -9,88 +15,57 @@ define(["core/pubsubhub"], function(pubsubhub) {
    * @param  {Document} doc The document to be checked.
    * @return {Boolean} Returns true if section is found.
    */
-  //function hasPriSecConsiderations(doc) {
-  //  const privOrSecRegex = /(privacy|security)/im;
-  //  const considerationsRegex = /(considerations)/im;
-  //  return Array
-  //    .from(doc.querySelectorAll("h2, h3, h4, h5, h6"))
-  //    .map(function(elem) {
-  //      return elem.textContent;
-  //    })
-  //    .some(function(text) {
-  //      const saysPrivOrSec = privOrSecRegex.test(text);
-  //      const sayConsiderations = considerationsRegex.test(text);
-  //      return (saysPrivOrSec && sayConsiderations) || saysPrivOrSec;
-  //    });
-  //}
-
   function findHTTPProps(conf, base) {
-    return Object.getOwnPropertyNames(conf)
-      .filter(function(key) {
-        return key.endsWith("URI") || key === "prevED";
-      })
-      .filter(function(key) {
-        return new URL(conf[key], base).href.startsWith("http://");
-      });
-  }
+    return Object.getOwnPropertyNames(conf).filter(function (key) {
+      return key.endsWith("URI") || key === "prevED";
+    }).filter(function (key) {
+      return new URL(conf[key], base).href.startsWith("http://");
+    });
+  } /*globals console*/
+
 
   function findHeadinglessSections(doc) {
-    return Array
-      .from(doc.querySelectorAll("section:not(#toc)"))
-      .filter(function(elem) {
-        return elem.querySelector(":scope>h2, :scope>h3, :scope>h4, :scope>h5, :scope>h6") === null;
-      });
+    return Array.from(doc.querySelectorAll("section:not(#toc)")).filter(function (elem) {
+      return elem.querySelector(":scope>h2, :scope>h3, :scope>h4, :scope>h5, :scope>h6") === null;
+    });
   }
 
-  return {
-    run: function(conf, doc, cb) {
-      if (conf.lint || conf.status === "unofficial") {
-        return cb();
-      }
-      var warnings = [];
-      var warn = "";
+  function run(conf, doc, cb) {
+    if (conf.lint || conf.status === "unofficial") {
+      return cb();
+    }
+    var warnings = [];
+    var warn = "";
 
-      // Warn if no privacy and/or security considerations section
-      //if (!hasPriSecConsiderations(doc)) {
-      //  warn = "This specification doesn't appear to have any 'Privacy' " +
-      //    "or 'Security' considerations sections. Please consider adding one" +
-      //    ", see https://w3ctag.github.io/security-questionnaire/";
-      //  warnings.push(warn);
-      //}
-
-      // Warn about HTTP URLs used in respecConfig
-      if (doc.location.href.startsWith("http")) {
-        var httpURLs = findHTTPProps(conf, doc.location.href);
-        if (httpURLs.length) {
-          warn = "There are insecure URLs in your respecConfig! Please change " +
-            "the following properties to use 'https://': " + httpURLs.join(", ") + ".";
-          warnings.push(warn);
-        }
-      }
-
-      // Warn about sections with no headings
-      const sections = findHeadinglessSections(doc)
-        .map(function(section) {
-          console.warn("Section with no heading (maybe use a div or add a heading?):", section);
-          return section;
-        });
-      if (sections.length) {
-        warn = "Found " + sections.length + " section elements without a heading element. Consider " +
-          "adding a heading element. See browser developer console for offending element(s).";
+    // Warn about HTTP URLs used in respecConfig
+    if (doc.location.href.startsWith("http")) {
+      var httpURLs = findHTTPProps(conf, doc.location.href);
+      if (httpURLs.length) {
+        warn = "There are insecure URLs in your respecConfig! Please change " + "the following properties to use 'https://': " + httpURLs.join(", ") + ".";
         warnings.push(warn);
       }
+    }
 
-      // Publish warnings
-      warnings.map(function(warn) {
-        pubsubhub.pub("warn", warn);
-      });
+    // Warn about sections with no headings
+    var sections = findHeadinglessSections(doc).map(function (section) {
+      console.warn("Section with no heading (maybe use a div or add a heading?):", section);
+      return section;
+    });
+    if (sections.length) {
+      warn = "Found " + sections.length + " section elements without a heading element. Consider " + "adding a heading element. See browser developer console for offending element(s).";
+      warnings.push(warn);
+    }
 
-      cb();
-    },
-    // Convenience methods, for quickly testing rules.
-    rules: {
-      "findHTTPProps": findHTTPProps,
-      //"hasPriSecConsiderations": hasPriSecConsiderations,
-    },
+    // Publish warnings
+    warnings.map(function (warn) {
+      (0, _pubsubhub.pub)("warn", warn);
+    });
+
+    cb();
+  }
+  // Convenience methods, for quickly testing rules.
+  var rules = exports.rules = {
+    findHTTPProps: findHTTPProps
   };
 });
+//# sourceMappingURL=linter.js.map
