@@ -23,6 +23,7 @@ js/core/dfn.js
 js/core/examples.js
 js/core/figures.js
 js/core/fix-headers.js
+js/core/github.js
 js/core/highlight.js
 js/core/id-headers.js
 js/core/include-config.js
