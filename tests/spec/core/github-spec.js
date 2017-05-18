@@ -28,7 +28,7 @@ describe("Core - Github", function() {
       expect(conf.hasOwnProperty("githubAPI")).toEqual(true);
       expect(conf.githubAPI).toEqual("https://api.github.com/repos/w3c/respec");
       expect(conf.hasOwnProperty("issueBase")).toEqual(true);
-      expect(conf.issueBase).toEqual("https://github.com/w3c/respec/issues");
+      expect(conf.issueBase).toEqual("https://github.com/w3c/respec/issues/");
       expect(conf.hasOwnProperty("edDraftURI")).toEqual(true);
       expect(conf.edDraftURI).toEqual("https://w3c.github.io/respec/");
       done();
@@ -80,7 +80,7 @@ describe("Core - Github", function() {
       );
       expect(fileABug).toBeTruthy();
       expect(fileABug.querySelector("a").href).toEqual(
-        "https://github.com/w3c/respec/issues"
+        "https://github.com/w3c/respec/issues/"
       );
       const commitHistory = Array.from(doc.querySelectorAll("dd")).find(
         elem => elem.textContent.trim() === l10n.commit_history
