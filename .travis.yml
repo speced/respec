@@ -37,7 +37,10 @@ jobs:
   include:
     - stage: Pretest
       script: yarn run pretest
+      node_js: "7"
     - stage: Headless tests
       script: yarn run test:headless
+      node_js: "7"
     - stage: Karma
       script: travis_retry karma start --single-run --reporters mocha karma.conf.js
+      node_js: "7"
