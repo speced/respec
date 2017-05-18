@@ -21,8 +21,8 @@ describe("Core - Figures", function() {
       var captions = figs.querySelectorAll("figure figcaption");
       expect(figs.querySelectorAll("figure").length).toEqual(2);
       expect(captions.length).toEqual(2);
-      expect(captions.item(0).textContent).toEqual("Fig. 1 PREFIG");
-      expect(captions.item(1).textContent).toEqual("Fig. 2 IMGTIT");
+      expect(captions.item(0).textContent).toEqual("Figure 1 PREFIG");
+      expect(captions.item(1).textContent).toEqual("Figure 2 IMGTIT");
     }).then(done);
   });
   it("generates table of figures", function(done) {
@@ -34,8 +34,8 @@ describe("Core - Figures", function() {
       expect(tofHeader).toBeTruthy();
       expect(tofHeader.textContent).toEqual("Table of Figures");
       expect(tofItems.length).toEqual(2);
-      expect(figLinks.item(0).textContent).toEqual("Fig. 1 PREFIG");
-      expect(figLinks.item(1).textContent).toEqual("Fig. 2 IMGTIT");
+      expect(figLinks.item(0).textContent).toEqual("Figure 1 PREFIG");
+      expect(figLinks.item(1).textContent).toEqual("Figure 2 IMGTIT");
     }).then(done);
   });
 });
