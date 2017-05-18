@@ -338,11 +338,6 @@ export function run(conf, doc, cb) {
       (0, concatDate)(conf.previousPublishDate) +
       "/";
   }
-  //Github
-  conf.werkversieGH = "https://{user}.github.io/{rep}/"
-    .replace("{user}", conf.github.split("/")[3])
-    .replace("{rep}", conf.github.split("/")[4])
-    .toLowerCase();
   //Authors & Editors
   if (!conf.editors || conf.editors.length === 0)
     pub("error", "At least one editor is required");

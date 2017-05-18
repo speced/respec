@@ -28,7 +28,7 @@
     {{#unless isOfficial}}
       {{#if github}}
         <dt>{{l10n.latest_editors_draft}}</dt>
-        <dd><a href='{{werkversieGH}}'>{{werkversieGH}}</a></dd>
+        <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
       {{/if}}
     {{/unless}}
     {{#if prevVersion}}
@@ -45,13 +45,6 @@
       </dt>
     {{showPeople "Author" authors}}
     {{/if}}
-    {{#unless isOfficial}}
-      {{#if github}}
-        <dt>Github:</dt>
-        <dd><a href='{{github}}'>Repository</a></dd>
-        <dd><a href='{{github}}/issues'>Issues</a></dd>
-      {{/if}}
-    {{/unless}}
     {{#if otherLinks}}
       {{#each otherLinks}}
         {{#if key}}

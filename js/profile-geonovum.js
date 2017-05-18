@@ -52,6 +52,7 @@ define([
     "core/style",
     "geonovum/style",
     "core/l10n",
+    "core/github",
     "core/data-include",
     "core/markdown",
     "geonovum/headers",
