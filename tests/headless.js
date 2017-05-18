@@ -45,7 +45,7 @@ const excludedFiles = new Set([
   "embedder.html",
   "manifest.html",
   "starter.html",
-  "webidl-contiguous.html",
+  "webidl.html",
 ]);
 
 const runRespec2html = async(function*(server) {
