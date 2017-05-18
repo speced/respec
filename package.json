@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "12.0.1",
+  "version": "12.0.2",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -51,11 +51,6 @@
     "uglify-js": "^2.8.22",
     "webidl2": "^3.0.1",
     "whatwg-fetch": "^2.0.3"
-  },
-  "greenkeeper": {
-    "ignore": [
-      "webidl2"
-    ]
   },
   "scripts": {
     "babel:build": "babel src -d js --source-maps",
