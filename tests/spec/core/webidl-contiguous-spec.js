@@ -67,7 +67,7 @@ describe("Core - Contiguous WebIDL", function() {
 
   it("links simple method names and types", done => {
     const section = doc.querySelector("#sec-parenthesis-method");
-    ["basic", "ext", "ull", "paramed", "withName", "named"]
+    ["basic", "ext", "ull", "withName", "named"]
       .map(methodName => [methodName, methodName.toLowerCase()])
       .map(([methodName, id]) => [
         id,
@@ -189,7 +189,7 @@ describe("Core - Contiguous WebIDL", function() {
     var text =
       "[Something,\n" +
       " NamedConstructor=Sun(),\n" +
-      " NamedConstructor=Sun(boolean bar, Date[][][] foo)]\n" +
+      " NamedConstructor=Sun(boolean bar, Date foo)]\n" +
       "interface SuperStar {\n" +
       "};";
     expect($target.text()).toEqual(text);
@@ -197,7 +197,7 @@ describe("Core - Contiguous WebIDL", function() {
     var $ctor1 = $target.find(".idlCtor").last();
     expect($ctor1.find(".extAttrRhs").text()).toEqual("Sun");
     expect($ctor1.find(".idlParam").length).toEqual(2);
-    expect($ctor1.find(".idlParam:contains('Date[][][]')").length).toEqual(1);
+    expect($ctor1.find(".idlParam:contains('Date')").length).toEqual(1);
     expect(
       $ctor1.find(".idlParam").first().find(".idlParamType").text()
     ).toEqual("boolean");
@@ -293,28 +293,23 @@ describe("Core - Contiguous WebIDL", function() {
       "    // 3\n" +
       "    [Something]\n" +
       "    readonly    attribute DOMString              ext;\n" +
-      "    // 3.5\n" +
-      "                attribute Date[]                 dates;\n" +
       "    // 3.10.31\n" +
       "                attribute FrozenArray<DOMString> alist;\n" +
       "    // 4.0\n" +
       "                attribute Promise<DOMString>     operation;\n" +
-      //"                attribute Promise<Superstar>[] wouldBeStars;\n" +
       "};";
     expect($target.text()).toEqual(text);
-    expect($target.find(".idlAttribute").length).toEqual(9);
+    expect($target.find(".idlAttribute").length).toEqual(8);
     var $at = $target.find(".idlAttribute").first();
     expect($at.find(".idlAttrType").text()).toEqual("DOMString");
     expect($at.find(".idlAttrName").text()).toEqual("regular");
     var $ro = $target.find(".idlAttribute").eq(2);
     expect($ro.find(".idlAttrName").text()).toEqual("_readonly");
-    var $seq = $target.find(".idlAttribute").eq(6);
-    expect($seq.find(".idlAttrType").text()).toEqual("Date[]");
-    var $frozen = $target.find(".idlAttribute").eq(7);
+    var $frozen = $target.find(".idlAttribute").eq(6);
     expect($frozen.find(".idlAttrType").text()).toEqual(
       "FrozenArray<DOMString>"
     );
-    var $promise = $target.find(".idlAttribute").eq(8);
+    var $promise = $target.find(".idlAttribute").eq(7);
     expect($promise.find(".idlAttrType").text()).toEqual("Promise<DOMString>");
     // Links and IDs.
     expect(
@@ -343,15 +338,6 @@ describe("Core - Contiguous WebIDL", function() {
       "    unsigned long long ull(short s);\n" +
       "    // 3.5\n" +
       "    SuperStar?         ull();\n" +
-      "    // 4\n" +
-      "    SuperStar[][][][]  paramed(SuperStar[][]?[] one,\n" +
-      "                               [ExtAttrs] ByteString? ext,\n" +
-      "                               optional short maybe,\n" +
-      "                               short[] shorts,\n" +
-      "                               short[][][][] hypercubes,\n" +
-      "                               optional short defaulted = 3.5,\n" +
-      '                               optional DOMString defaulted2 = "one",\n' +
-      "                               short... variable);\n" +
       "    // 5\n" +
       "    getter float       ();\n" +
       "    // 6\n" +
@@ -362,21 +348,12 @@ describe("Core - Contiguous WebIDL", function() {
       "    setter void        named();\n" +
       "};";
     expect($target.text()).toEqual(text);
-    expect($target.find(".idlMethod").length).toEqual(9);
+    expect($target.find(".idlMethod").length).toEqual(8);
     var $meth = $target.find(".idlMethod").first();
     expect($meth.find(".idlMethType").text()).toEqual("void");
     expect($meth.find(".idlMethName").text()).toEqual("basic");
     expect(
       $target.find(".idlMethType:contains('SuperStar?') a").text()
-    ).toEqual("SuperStar");
-    expect(
-      $target.find(".idlMethType:contains('SuperStar[][][][]') a").text()
-    ).toEqual("SuperStar");
-    var $lst = $target.find(".idlMethod").eq(4);
-    expect($lst.find(".idlParam").length).toEqual(8);
-    expect($lst.find(".idlParam:contains('optional')").length).toEqual(3);
-    expect(
-      $lst.find(".idlParam").first().find(".idlParamType > a").text()
     ).toEqual("SuperStar");
 
     // Links and IDs.
@@ -386,9 +363,6 @@ describe("Core - Contiguous WebIDL", function() {
     );
     expect(ulls.last().children("a").attr("href")).toEqual(
       "#dom-methbasic-ull!overload-1"
-    );
-    expect($target.find(".idlMethod:contains('paramed')").attr("id")).toEqual(
-      "idl-def-methbasic-paramed(one,ext,maybe,shorts,hypercubes,defaulted,defaulted2,variable)"
     );
     expect($target.find(":contains('dates')").filter("a").length).toEqual(0);
     done();
@@ -510,68 +484,6 @@ describe("Core - Contiguous WebIDL", function() {
     done();
   });
 
-  it("should handle exceptions", function(done) {
-    var $target = $("#ex-basic", doc);
-    var text = "exception SuperStar {\n};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlException").length).toEqual(1);
-    expect($target.find(".idlExceptionID").text()).toEqual("SuperStar");
-
-    $target = $("#ex-inherit", doc);
-    text = "exception SuperStar : HyperStar {\n};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlSuperclass").text()).toEqual("HyperStar");
-
-    $target = $("#ex-fields", doc);
-    text =
-      "exception ExFields {\n" +
-      "    // 1\n" +
-      "    [Something]\n" +
-      "    const SuperStar value = 42;\n" +
-      "    // 2\n" +
-      "    SuperStar?          message;\n" +
-      "\n" +
-      "    // 3\n" +
-      "    sequence<SuperStar> floats;\n" +
-      "    // 4\n" +
-      "    SuperStar[][]       numbers;\n" +
-      "    // 5\n" +
-      "    Promise<SuperStar>  stars;\n" +
-      "};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlConst").length).toEqual(1);
-    expect($target.find(".idlField").length).toEqual(4);
-    var $const = $target.find(".idlConst");
-    expect($const.find(".idlConstType").text()).toEqual("SuperStar");
-    expect($const.find(".idlConstName").text()).toEqual("value");
-    expect($const.find(".idlConstValue").text()).toEqual("42");
-    var $fld = $target.find(".idlField").first();
-    expect($fld.find(".idlFieldType a").text()).toEqual("SuperStar");
-    expect($fld.find(".idlFieldName").text()).toEqual("message");
-
-    // Links and IDs.
-    expect(
-      $target.find(":contains('ExFields')").filter("a").attr("href")
-    ).toEqual("#dom-exfields");
-    expect(
-      $target.find(".idlException:contains('ExFields')").attr("id")
-    ).toEqual("idl-def-exfields");
-    expect($target.find(":contains('value')").filter("a").attr("href")).toEqual(
-      "#dom-exfields-value"
-    );
-    expect($target.find(".idlConst:contains('value')").attr("id")).toEqual(
-      "idl-def-exfields-value"
-    );
-    expect(
-      $target.find(":contains('floats')").filter("a").attr("href")
-    ).toEqual("#dom-exfields-floats");
-    expect($target.find(".idlField:contains('floats')").attr("id")).toEqual(
-      "idl-def-exfields-floats"
-    );
-    expect($target.find(":contains('numbers')").filter("a").length).toEqual(0);
-    done();
-  });
-
   it("should handle enumerations", function(done) {
     var $target = $("#enum-basic", doc);
     var text =
@@ -678,7 +590,7 @@ describe("Core - Contiguous WebIDL", function() {
     expect($target.find(".idlTypedefType").text()).toEqual("DOMString");
 
     $target = $("#td-less-basic", doc);
-    text = "typedef [Something] unsigned long long? tdLessBasic;";
+    text = "typedef unsigned long long? tdLessBasic;";
     expect($target.text()).toEqual(text);
 
     // Links and IDs.

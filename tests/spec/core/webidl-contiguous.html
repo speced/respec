@@ -69,7 +69,6 @@
           [Something] void ext();
           unsigned long long ull(short s);
           unsigned long long ull(long s);
-          SuperStar[][][][] paramed(SuperStar[][]?[] one, [ExtAttrs] ByteString? ext, optional short maybe, short[] shorts, short[][][][] hypercubes, optional short defaulted = 3.5, optional DOMString defaulted2 = "one", short... variable);
           getter float withName ();
           setter void named ();
           void dataLtOverride();
@@ -141,7 +140,7 @@
         Things that still need to be done:
       </p>
       <ul>
-        <li>Check that [], sequence, Promise, ?, and other such bothersome types are tested everywhere</li>
+        <li>Check that sequence, Promise, ?, and other such bothersome types are tested everywhere</li>
       </ul>
     </section>
     <section>
@@ -212,7 +211,7 @@
       <pre id='namedctor-basic' class='idl'>
         [Something,
          NamedConstructor=Sun(),
-         NamedConstructor=Sun(boolean bar, Date[][][] foo)]
+         NamedConstructor=Sun(boolean bar, Date foo)]
         interface SuperStar {};
       </pre>
     </section>
@@ -287,14 +286,10 @@
           stringifier attribute DOMString st;
           // 3
           [Something] readonly attribute DOMString ext;
-          // 3.5
-          attribute Date[] dates;
           // 3.10.31
           attribute FrozenArray&lt;DOMString&gt; alist;
           // 4.0
           attribute Promise&lt;DOMString&gt; operation;<!--
-          // 4.5
-          attribute Promise&lt;Superstar&gt;[] wouldBeStars;
 
           // 3
            static attribute DOMString unmovable;
@@ -330,8 +325,6 @@
           unsigned long long ull(short s);
           // 3.5
           SuperStar? ull();
-          // 4
-          SuperStar[][][][] paramed(SuperStar[][]?[] one, [ExtAttrs] ByteString? ext, optional short maybe, short[] shorts, short[][][][] hypercubes, optional short defaulted = 3.5, optional DOMString defaulted2 = "one", short... variable);
           // 5
           getter float ();
           // 6
@@ -425,40 +418,6 @@
       </pre>
       <p id='dict-doc-p'><dfn>DictDocTest</dfn> contains <dfn for="DictDocTest">dictDocField</dfn> and <dfn for="DictDocTest">otherField</dfn></p>
     </section>
-    <section>
-      <h2>Exceptions</h2>
-      <p>
-        Basic exception.
-      </p>
-      <pre id='ex-basic' class='idl'>
-        exception SuperStar {};
-      </pre>
-      <p>
-        Inheriting exception.
-      </p>
-      <pre id='ex-inherit' class='idl'>
-        exception SuperStar : HyperStar {};
-      </pre>
-      <p>
-        Exception with content.
-      </p>
-      <pre id='ex-fields' class='idl'>
-        exception ExFields {
-          // 1
-          [Something]const SuperStar value = 42;
-          // 2
-          SuperStar? message;
-
-          // 3
-          sequence&lt;SuperStar> floats;
-          // 4
-          SuperStar[][] numbers;
-          // 5
-          Promise&lt;SuperStar&gt; stars;
-        };
-      </pre>
-      <p id="ex-fields-doc" dfn-for="ExFields"><dfn>ExFields</dfn> contains <dfn>value</dfn> and <dfn>floats</dfn></p>
-    </section>
     <section id="enumerations">
       <h2>Enumerations</h2>
       <p>
@@ -530,7 +489,7 @@
         Less basic typedef.
       </p>
       <pre id='td-less-basic' class='idl'>
-        typedef [Something] unsigned long long? tdLessBasic;
+        typedef unsigned long long? tdLessBasic;
       </pre>
       <p id='td-less-basic-doc'><dfn>tdLessBasic</dfn></p>
     </section>
