@@ -1,5 +1,5 @@
 "use strict";
-describe("Core - Contiguous WebIDL", function() {
+describe("Core - WebIDL", function() {
   afterAll(function(done) {
     flushIframes();
     done();
@@ -12,7 +12,7 @@ describe("Core - Contiguous WebIDL", function() {
       function(idlDoc) {
         doc = idlDoc;
       },
-      "spec/core/webidl-contiguous.html"
+      "spec/core/webidl.html"
     ).then(done);
   });
 
