@@ -12,10 +12,6 @@ const srcDesMap = new Map([
     "./node_modules/handlebars/dist/handlebars.runtime.js",
     "./js/deps/handlebars.js",
   ],
-  [
-    "./node_modules/highlight.js/build/highlight.pack.js",
-    "./js/deps/highlight.js",
-  ],
   ["./node_modules/highlight.js/src/styles/github.css", "./js/core/css/"],
   ["./node_modules/hyperhtml/hyperhtml.js", "./js/deps/"],
   ["./node_modules/jquery/dist/jquery.js", "./js/deps/"],
