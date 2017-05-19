@@ -2,7 +2,7 @@
 
 "use strict";
 const async = require("marcosc-async");
-const fsp = require("fs-promise");
+const fsp = require("fs-extra");
 const path = require("path");
 
 const srcDesMap = new Map([
@@ -11,10 +11,6 @@ const srcDesMap = new Map([
   [
     "./node_modules/handlebars/dist/handlebars.runtime.js",
     "./js/deps/handlebars.js",
-  ],
-  [
-    "./node_modules/highlight.js/build/highlight.pack.js",
-    "./js/deps/highlight.js",
   ],
   ["./node_modules/highlight.js/src/styles/github.css", "./js/core/css/"],
   ["./node_modules/hyperhtml/hyperhtml.js", "./js/deps/"],

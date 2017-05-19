@@ -10,8 +10,7 @@ const async = require("marcosc-async");
 const os = require("os");
 const Nightmare = require("nightmare");
 const colors = require("colors");
-const fsp = require("fs-promise");
-const fs = require("fs");
+const fsp = require("fs-extra");
 const path = require("path");
 const parseURL = require("url").parse;
 colors.setTheme({
@@ -44,21 +43,6 @@ const tasks = {
     });
   },
   /**
-   * Makes a temporary directory.
-   *
-   * @private
-   * @param  {String} prefix The prefix to use, to distinguish it from other tmp
-   *                         directories.
-   * @return {Promise}       Resolves if dir is created; rejects otherwise.
-   */
-  makeTempDir(prefix) {
-    return new Promise((resolve, reject) => {
-      fs.mkdtemp(prefix, (err, folder) => {
-        return err ? reject(err) : resolve(folder);
-      });
-    });
-  },
-  /**
    * Fetches a ReSpec "src" URL, processes via NightmareJS and writes it to an
    * "out" path within a given "timeout".
    *
@@ -76,7 +60,7 @@ const tasks = {
    */
   fetchAndWrite(src, out, whenToHalt, timeout) {
     return async.task(function*() {
-      const userData = yield this.makeTempDir(os.tmpdir() + "/respec2html-");
+      const userData = yield fsp.mkdtemp(os.tmpdir() + "/respec2html-");
       const nightmare = new Nightmare({
         show: false,
         timeout,
