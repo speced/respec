@@ -8,7 +8,7 @@ const loading = require("loading-indicator");
 const path = require("path");
 const presets = require("loading-indicator/presets");
 const r = require("requirejs");
-const UglifyJS = require("uglify-js");
+const UglifyJS = require("uglify-es");
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
 colors.setTheme({
@@ -79,9 +79,14 @@ window.respecVersion = "${version}";
 ${optimizedJs}
 require(['profile-${name}']);`;
     const result = UglifyJS.minify(respecJs, {
-      fromString: true,
-      outSourceMap: `respec-${name}.build.js.map`,
+      sourceMap: {
+        filename: `respec-${name}.js`,
+        url: `respec-${name}.build.js.map`,
+      },
     });
+    if ("error" in result) {
+      throw new Error(result.error);
+    }
     const mapPath = path.dirname(outPath) + `/respec-${name}.build.js.map`;
     const promiseToWriteJs = fsp.writeFile(outPath, result.code, "utf-8");
     const promiseToWriteMap = fsp.writeFile(mapPath, sourceMap, "utf-8");
