@@ -71,7 +71,6 @@
     "snyk-protect": "snyk protect",
     "start": "http-server",
     "test": "npm run test:headless && npm run test:karma",
-    "test:appveyor": "npm run pretest",
     "test:build": "mocha ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
     "test:karma": "npm run karma",
