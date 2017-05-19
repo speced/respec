@@ -3,7 +3,7 @@
 "use strict";
 const async = require("marcosc-async");
 const colors = require("colors");
-const fsp = require("fs-promise");
+const fsp = require("fs-extra");
 const path = require("path");
 const expect = require("chai").expect;
 const builder = require("../tools/build-w3c-common");
