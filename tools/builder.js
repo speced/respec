@@ -155,29 +155,30 @@ const Builder = {
 };
 
 exports.Builder = Builder;
-
-async.task(function* run() {
-  let parsedArgs;
-  try {
-    parsedArgs = commandLineArgs(optionList);
-  } catch (err) {
-    console.info(getUsage(usageSections));
-    console.error(colors.error(err.stack));
-    return process.exit(127);
-  }
-  if (parsedArgs.help) {
-    console.info(getUsage(usageSections));
-    return process.exit(0);
-  }
-  const { profile: name } = parsedArgs;
-  if (!name) {
-    return;
-  }
-  try {
-    yield Builder.build({ name });
-  } catch (err) {
-    console.error(colors.error(err.stack));
-    return process.exit(1);
-  }
-  process.exit(0);
-});
+if (require.main === module) {
+  async.task(function* run() {
+    let parsedArgs;
+    try {
+      parsedArgs = commandLineArgs(optionList);
+    } catch (err) {
+      console.info(getUsage(usageSections));
+      console.error(colors.error(err.stack));
+      return process.exit(127);
+    }
+    if (parsedArgs.help) {
+      console.info(getUsage(usageSections));
+      return process.exit(0);
+    }
+    const { profile: name } = parsedArgs;
+    if (!name) {
+      return;
+    }
+    try {
+      yield Builder.build({ name });
+    } catch (err) {
+      console.error(colors.error(err.stack));
+      return process.exit(1);
+    }
+    process.exit(0);
+  });
+}
