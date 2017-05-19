@@ -72,8 +72,7 @@
     "start": "http-server",
     "test:build": "mocha ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
-    "test:karma": "npm run karma",
-    "test:travis": "npm run pretest && npm run test:build && karma start --single-run --reporters progress karma.conf.js && npm run test:headless"
+    "test:karma": "npm run karma"
   },
   "dependencies": {
     "colors": "^1.1.2",
