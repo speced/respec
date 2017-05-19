@@ -3,7 +3,7 @@
 "use strict";
 const async = require("marcosc-async");
 const colors = require("colors");
-const fsp = require("fs-promise");
+const fsp = require("fs-extra");
 const loading = require("loading-indicator");
 const path = require("path");
 const presets = require("loading-indicator/presets");

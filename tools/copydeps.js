@@ -2,7 +2,7 @@
 
 "use strict";
 const async = require("marcosc-async");
-const fsp = require("fs-promise");
+const fsp = require("fs-extra");
 const path = require("path");
 
 const srcDesMap = new Map([

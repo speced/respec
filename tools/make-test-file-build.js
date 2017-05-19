@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 "use strict";
-const fsp = require("fs-promise");
+const fsp = require("fs-extra");
 const path = require("path");
 const { exec } = require("child_process");
 const testsPath = path.resolve(__dirname, "../tests");
