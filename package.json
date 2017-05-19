@@ -56,7 +56,7 @@
     "babel:build": "babel src -d js --source-maps",
     "babel:watch": "babel src -d js --watch --source-maps",
     "build": "npm run hb:build && npm run build:highlight && npm run babel:build && npm run copydeps && npm run build:respec-w3c-common",
-    "build:highlight": "hljs -n --output js/deps/ xml javascript css http markdown json abnf; mv ./js/deps/highlight.pack.js ./js/deps/highlight.js",
+    "build:highlight": "hljs -n --output js/deps/ xml javascript css http markdown json abnf; mv -f js/deps/highlight.pack.js js/deps/highlight.js",
     "build:respec-w3c-common": "./tools/builder.js --profile=w3c-common",
     "copydeps": "node ./tools/copydeps.js",
     "handlebars": "handlebars",
