@@ -6,7 +6,7 @@ const colors = require("colors");
 const fsp = require("fs-extra");
 const path = require("path");
 const expect = require("chai").expect;
-const builder = require("../tools/build-w3c-common");
+const { Builder } = require("../tools/builder");
 
 colors.setTheme({
   data: "grey",
@@ -27,43 +27,20 @@ function checkIfFileExists(filePath) {
   });
 }
 
-describe("build-w3c-common.js (tool)", function() {
+describe("builder (tool)", function() {
   // Generating respec + maps takes time.
   this.timeout(60000);
-
-  // These files get deleted in after().
-  let customPath = "";
-  let customMapPath = "";
-
+  const latestMap = path.join(
+    __dirname,
+    "../builds/respec-w3c-common.build.js.map"
+  );
+  const latest = path.join(__dirname, "../builds/respec-w3c-common.js");
   it(
     "should have built default respec",
     async(function*() {
-      const latest = path.join(__dirname, "../builds/respec-w3c-common.js");
-      const latestMap = path.join(
-        __dirname,
-        "../builds/respec-w3c-common.build.js.map"
-      );
-      yield builder.buildW3C();
+      yield Builder.build({ name: "w3c-common" });
       expect(yield checkIfFileExists(latest)).to.equal(true);
       expect(yield checkIfFileExists(latestMap)).to.equal(true);
-    })
-  );
-
-  it(
-    "should have built a custom version respec",
-    async(function*() {
-      const randomName = "test-" + Math.round(Math.random() * 10000000);
-      customPath = path.join(
-        __dirname,
-        `../builds/respec-w3c-common-${randomName}.js`
-      );
-      customMapPath = path.join(
-        __dirname,
-        `../builds/respec-w3c-common-${randomName}.build.js.map`
-      );
-      yield builder.buildW3C(randomName);
-      expect(yield checkIfFileExists(customPath)).to.equal(true);
-      expect(yield checkIfFileExists(customMapPath)).to.equal(true);
     })
   );
 
@@ -71,20 +48,11 @@ describe("build-w3c-common.js (tool)", function() {
     it(
       "should include the link to the sourcemap",
       async(function*() {
-        var source = yield fsp.readFile(customPath, "utf-8");
-        var mapFilename = path.basename(customMapPath);
-        expect(source.includes(mapFilename)).to.equal(true);
+        var source = yield fsp.readFile(latest, "utf-8");
+        expect(source.search("respec-w3c-common.build.js.map")).to.not.equal(
+          -1
+        );
       })
     );
   });
-
-  after(
-    async(function*() {
-      yield Promise.all([fsp.remove(customPath), fsp.remove(customMapPath)]);
-      const msg = `  Deleted test files:
-    ✓ ${colors.input(path.basename(customPath))}
-    ✓ ${colors.input(path.basename(customMapPath))}`;
-      console.log(colors.info(msg));
-    })
-  );
 });
