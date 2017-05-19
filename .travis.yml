@@ -34,9 +34,8 @@ cache: yarn
 
 jobs:
   include:
-    - stage: Pretest
+    - stage: Tests
+      script: ./tests/test-build.js
       script: yarn run pretest
-    - stage: Headless tests
       script: yarn run test:headless
-    - stage: Karma
       script: travis_retry karma start --single-run --reporters mocha karma.conf.js
