@@ -1,4 +1,4 @@
-// Module w3c/rfc2119
+// Module geonovum/rfc2119
 // update the 2119 terms section with the terms actually used
 
 import { joinAnd } from "core/utils";
