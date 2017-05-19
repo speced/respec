@@ -50,7 +50,7 @@ export async function run(conf) {
   const newProps = {
     edDraftURI: `https://${org.toLowerCase()}.github.io/${repo}/`,
     githubAPI: `https://api.github.com/repos/${org}/${repo}`,
-    issueBase: `${ghURL.href}${ghURL.pathname.endsWith("/") ? "" : "/"}issues`,
+    issueBase: `${ghURL.href}${ghURL.pathname.endsWith("/") ? "" : "/"}issues/`,
   };
   const commitsHref = `${ghURL.href}${ghURL.pathname.endsWith("/") ? "" : "/"}commits/${branch}`;
   const otherLink = {
