@@ -19,6 +19,8 @@ before_script:
   - unzip out/chrome-linux.zip -d out
   - export CHROME_CANARY_BIN=$PWD/out/chrome-linux/chrome
   - export CHROME_BIN=$PWD/out/chrome-linux/chrome
+  - yarn run build
+
 
 addons:
   firefox: "latest"
@@ -27,9 +29,6 @@ addons:
       - google-chrome
     packages:
       - google-chrome-stable
-
-script:
-  - yarn run build
 
 cache: yarn
 
