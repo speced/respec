@@ -59,7 +59,7 @@ define(["core/biblio", "core/ui"], function(biblio, ui) {
   return {
     show: function() {
       var $halp = $(
-        "<div><form><p><input name=q type=search> <input type=submit value=search /></p></form></div"
+        "<div><form><p><input name=q type=search> <input type=submit value=search /></p></form></div>"
       );
       var $search = $halp.find("input[type=search]");
       var $status = $("<p style='font-size: smaller'></p>");
