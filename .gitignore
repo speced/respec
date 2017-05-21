@@ -48,6 +48,7 @@ js/core/webidl-index.js
 js/core/webidl.js
 js/core/worker.js
 js/templates.js
+js/ui/about-respec.js
 js/w3c/abstract.js
 js/w3c/aria.js
 js/w3c/conformance.js
