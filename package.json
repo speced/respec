@@ -7,7 +7,7 @@
     "node": ">=5"
   },
   "bin": {
-    "respec2html": "./tools/respec2html.js",
+    "respec2html": "./tools/respec2html.js"
   },
   "repository": {
     "type": "git",
