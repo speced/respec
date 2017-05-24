@@ -271,8 +271,10 @@ export function run(conf, doc, cb) {
   conf.specType = conf.specType ? conf.specType.toUpperCase() : "";
   conf.isBasic = conf.specStatus === "GN-BASIS";
   conf.isRegular = !conf.isBasic;
-  conf.isNoTrack = $.inArray(conf.specStatus, this.noTrackStatus) >= 0;
+  conf.isNoTrack = $.inArray(conf.specStatus, noTrackStatus) >= 0;
   conf.isOfficial = conf.specStatus === "GN-DEF";
+  conf.textStatus = status2text[conf.specStatus];
+  conf.typeStatus = type2text[conf.specType];
   //Some errors
   if (!conf.specStatus)
     pub("error", "Missing required configuration: specStatus");
@@ -295,7 +297,7 @@ export function run(conf, doc, cb) {
   conf.publishYear = conf.publishDate.getFullYear();
   conf.publishHumanDate = humanDate(conf.publishDate, "nl");
   //Version URLs
-  var publishSpace = "documenten";
+  var publishSpace = "docs";
   if (conf.isRegular)
     conf.thisVersion =
       "https://register.geostandaarden.nl/" +
@@ -352,8 +354,30 @@ export function run(conf, doc, cb) {
   }
   conf.multipleEditors = conf.editors && conf.editors.length > 1;
   conf.multipleAuthors = conf.authors && conf.authors.length > 1;
-  conf.textStatus = status2text[conf.specStatus];
-  conf.typeStatus = type2text[conf.specType];
+  //Alternate formats
+  $.each(conf.alternateFormats || [], function(i, it) {
+    if (!it.uri || !it.label)
+      pub("error", "All alternate formats must have a uri and a label.");
+  });
+  conf.multipleAlternates =
+    conf.alternateFormats && conf.alternateFormats.length > 1;
+  conf.alternatesHTML = joinAnd(conf.alternateFormats, function(alt) {
+    var optional = alt.hasOwnProperty("lang") && alt.lang
+      ? " hreflang='" + alt.lang + "'"
+      : "";
+    optional += alt.hasOwnProperty("type") && alt.type
+      ? " type='" + alt.type + "'"
+      : "";
+    return (
+      "<a rel='alternate' href='" +
+      alt.uri +
+      "'" +
+      optional +
+      ">" +
+      alt.label +
+      "</a>"
+    );
+  });
   //Annotate html element with RFDa
   if (conf.doRDFa === undefined) conf.doRDFa = true;
   if (conf.doRDFa) {
