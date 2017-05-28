@@ -5,7 +5,6 @@
 
 /*jshint jquery: true*/
 /*globals console*/
-
 import "deps/regenerator";
 import { biblioDB } from "core/biblio-db";
 import { createResourceHint } from "core/utils";
@@ -45,6 +44,57 @@ const REF_STATUSES = new Map([
   ["WD", "W3C Working Draft"],
   ["WG-NOTE", "W3C Working Group Note"],
 ]);
+
+
+const defaultsReference = Object.freeze({
+  authors: [],
+  date: "",
+  href: "",
+  publisher: "",
+  status: "",
+  title: "",
+  etAl: false,
+});
+
+const endNormalizer = function(endStr){
+  return str => {
+    const trimmed = str.trim();
+    const result = !trimmed || trimmed.endsWith(endStr) ? trimmed : trimmed + endStr;
+    return result;
+  }
+}
+
+const endWithDot = endNormalizer(".");
+
+export function wireReference(rawRef, target="_blank") {
+  if(typeof rawRef !== "object"){
+    throw new TypeError("Only modern object refereces are allowed");
+  }
+  const ref = Object.assign({}, defaultsReference, rawRef);
+  const authors = ref.authors.join("; ") + (ref.etAl ? " et al" : "");
+  const status = REF_STATUSES.get(ref.status) || ref.status
+  return hyperHTML.wire(ref)`
+    <cite>
+      <a
+        href="${ref.href}"
+        target="${target}"
+        rel="noopener noreferrer">
+        ${ref.title.trim()}</a>.
+    </cite>
+    <span class="authors">
+      ${endWithDot(authors)}
+    </span>
+    <span class="publisher">
+      ${endWithDot(ref.publisher)}
+    </span>
+    <span class="pubDate">
+      ${endWithDot(ref.date)}
+    </span>
+    <span class="pubStatus">
+      ${endWithDot(status)}
+    </span>
+  `;
+}
 
 export function stringifyReference(ref) {
   if (typeof ref === "string") return ref;
