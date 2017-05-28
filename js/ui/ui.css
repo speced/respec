@@ -288,3 +288,96 @@
 p + .respec-button-copy-paste {
   margin: 1px 127px;
 }
+
+#specref-ui {
+  margin: 0 2%;
+  margin-bottom: .5cm;
+}
+
+#specref-ui header {
+  font-size: .7em;
+  background-color: #eee;
+  text-align: center;
+  padding: .2cm;
+  margin-bottom: .5cm;
+  border-radius: 0 0 .2cm .2cm;
+}
+
+#specref-ui header h1 {
+  padding: 0;
+  margin: 0;
+  color: black;
+}
+
+#specref-ui p {
+  padding: 0;
+  margin: 0;
+  font-size: .8em;
+  text-align: center;
+}
+
+#specref-ui p.state {
+  margin: 1cm;
+}
+
+#specref-ui .searchcomponent {
+  display: grid;
+  grid-template-columns: auto 1.6cm;
+  margin: 0 .5cm;
+}
+#specref-ui .searchcomponent:focus {
+
+}
+
+#specref-ui input,
+#specref-ui button {
+  border: 0;
+  padding: 6px 12px;
+}
+
+#specref-ui label {
+  font-size: 0.6em;
+  grid-column-end: 3;
+  text-align: right;
+  grid-column-start: 1;
+}
+
+#specref-ui input[type=search] {
+  border-radius: .1cm  0 0 .1cm;
+  border: 1px solid rgb(204,204,204);
+}
+
+#specref-ui button[type=submit]{
+  color: white;
+  border-radius: 0 .1cm .1cm 0;
+  background-color: rgb(51,122,183);
+}
+
+#specref-ui button[type=submit]:hover {
+  background-color: #286090;
+  border-color: #204d74;
+}
+
+#specref-ui .result-stats {
+  margin: 0;
+  padding: 0;
+  color: rgb(128,128,128);
+  font-size: .7em;
+  font-weight: bold;
+}
+
+#specref-ui .specref-results {
+  font-size: .8em;
+}
+
+#specref-ui .specref-results dd + dt {
+  margin-top: .51cm;
+}
+
+#specref-ui .specref-results a {
+  text-transform: capitalize;
+}
+#specref-ui .specref-results .authors {
+  display: block;
+  color: #006621;
+}
