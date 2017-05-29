@@ -62,6 +62,8 @@ js/w3c/permalinks.js
 js/w3c/rfc2119.js
 js/w3c/seo.js
 js/w3c/style.js
+js/geonovum/ui/about-respec.js
+js/geonovun/ui/dfn-list.js
 js/geonovum/abstract.js
 js/geonovum/aria.js
 js/geonovum/conformance.js
@@ -69,4 +71,5 @@ js/geonovum/headers.js
 js/geonovum/informative.js
 js/geonovum/linter.js
 js/geonovum/permalinks.js
+js/geonovum/seo.js
 js/geonovum/style.js
