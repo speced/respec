@@ -1,12 +1,10 @@
 #!/usr/bin/env node
-
 "use strict";
-const async = require("marcosc-async");
 const { Builder } = require("./builder");
 const cmdPrompt = require("prompt");
 const colors = require("colors");
 const { exec } = require("child_process");
-const fsp = require("fs-promise");
+const fsp = require("fs-extra");
 const loading = require("loading-indicator");
 const path = require("path");
 const MAIN_BRANCH = "develop";
@@ -16,7 +14,24 @@ const DEBUG = false;
 require("epipebomb")();
 
 const loadOps = {
-  frames: ["🌕", "🌖", "🌗", "🌘", "🌑", "🌚", "🌚", "🌚", "🌒", "🌓", "🌔", "🌝", "🌝", "🌝", "🌝"],
+  frames: [
+    "🌕",
+    "🌖",
+    "🌗",
+    "🌘",
+    "🌑",
+    "🌚",
+    "🌚",
+    "🌚",
+    "🌚",
+    "🌒",
+    "🌓",
+    "🌔",
+    "🌝",
+    "🌝",
+    "🌝",
+    "🌝",
+  ],
   delay: 100,
 };
 
@@ -46,21 +61,20 @@ function rel(f) {
   return path.join(__dirname, f);
 }
 
-function npm(cmd) {
-  if (DEBUG) {
-    console.log(colors.debug(`Pretending to run: ${"npm " + colors.prompt(cmd)}`));
-    return Promise.resolve("");
-  }
-  return toExecPromise(`npm ${cmd}`);
+function commandRunner(program, timeout) {
+  return cmd => {
+    if (DEBUG) {
+      console.log(
+        colors.debug(`Pretending to run: ${program} ${colors.prompt(cmd)}`)
+      );
+      return Promise.resolve("");
+    }
+    return toExecPromise(`${program} ${cmd}`, timeout);
+  };
 }
 
-function git(cmd) {
-  if (DEBUG) {
-    console.log(colors.debug(`Pretending to run: ${"git " + colors.prompt(cmd)}`));
-    return Promise.resolve("");
-  }
-  return toExecPromise(`git ${cmd}`);
-}
+const git = commandRunner("git");
+const npm = commandRunner("npm");
 
 cmdPrompt.start();
 
@@ -79,48 +93,44 @@ const Prompts = {
     });
   },
 
-  askSwitchToBranch(from, to) {
-    return async.task(function*() {
-      const promptOps = {
-        description: `You're on branch ${colors.info(from)}. Switch to ${colors.info(to)}?`,
-        pattern: /^[yn]$/i,
-        message: "Values can be 'y' or 'n'.",
-        default: "y",
-      };
-      yield this.askQuestion(promptOps);
-      yield git(`checkout ${to}`);
-    }, this);
+  async askSwitchToBranch(from, to) {
+    const promptOps = {
+      description: `You're on branch ${colors.info(from)}. Switch to ${colors.info(to)}?`,
+      pattern: /^[yn]$/i,
+      message: "Values can be 'y' or 'n'.",
+      default: "y",
+    };
+    await this.askQuestion(promptOps);
+    await git(`checkout ${to}`);
   },
 
-  askToPullBranch(branch) {
-    return async.task(function*() {
-      const promptOps = {
-        description: `Branch ${branch} needs a pull. Do you want me to do a pull?`,
-        pattern: /^[yn]$/i,
-        message: "Values can be 'y' or 'n'.",
-        default: "y",
-      };
-      yield this.askQuestion(promptOps);
-      yield git(`pull origin ${branch}`);
-    }, this);
+  async askToPullBranch(branch) {
+    const promptOps = {
+      description: `Branch ${branch} needs a pull. Do you want me to do a pull?`,
+      pattern: /^[yn]$/i,
+      message: "Values can be 'y' or 'n'.",
+      default: "y",
+    };
+    await this.askQuestion(promptOps);
+    await git(`pull origin ${branch}`);
   },
 
-  askUpToDateAndDev() {
-    return async.task(function*() {
-      const promptOps = {
-        description: "Are you up to date?",
-        pattern: /^[yn]$/i,
-        message: "Values can be 'y' or 'n'.",
-        default: "y",
-      };
-      try {
-        yield this.askQuestion(promptOps);
-      } catch (err) {
-        const warning = colors.warn("🚨 Make sure to run `git up; git checkout develop`");
-        console.warn(warning);
-        throw err;
-      }
-    }, this);
+  async askUpToDateAndDev() {
+    const promptOps = {
+      description: "Are you up to date?",
+      pattern: /^[yn]$/i,
+      message: "Values can be 'y' or 'n'.",
+      default: "y",
+    };
+    try {
+      await this.askQuestion(promptOps);
+    } catch (err) {
+      const warning = colors.warn(
+        "🚨 Make sure to run `git up; git checkout develop`"
+      );
+      console.warn(warning);
+      throw err;
+    }
   },
 
   stylelizeCommits(commits) {
@@ -138,24 +148,28 @@ const Prompts = {
       ["test", "👍"],
     ]);
     const commitHints = /^l10n|^docs|^chore|^fix|^style|^refactor|^test|^feat|^breaking\schange/i;
-    return commits
-      .split("\n")
-      .filter(line => line)
-      // drop the hash
-      .map(line => line.substr(line.indexOf(" ") + 1))
-      // colorize/iconify
-      .map(line => {
-        const match = commitHints.test(line) ? commitHints.exec(line)[0].toLowerCase() : "";
-        let result = line;
-        let icon = (match && iconMap.has(match)) ? iconMap.get(match) : "❓";
-        // colorize
-        if (match) {
-          result = result.replace(match.toLowerCase(), colors[match](match));
-        }
-        return `  ${icon} ${result}`;
-      })
-      .sort()
-      .join("\n");
+    return (
+      commits
+        .split("\n")
+        .filter(line => line)
+        // drop the hash
+        .map(line => line.substr(line.indexOf(" ") + 1))
+        // colorize/iconify
+        .map(line => {
+          const match = commitHints.test(line)
+            ? commitHints.exec(line)[0].toLowerCase()
+            : "";
+          let result = line;
+          let icon = match && iconMap.has(match) ? iconMap.get(match) : "❓";
+          // colorize
+          if (match) {
+            result = result.replace(match.toLowerCase(), colors[match](match));
+          }
+          return `  ${icon} ${result}`;
+        })
+        .sort()
+        .join("\n")
+    );
   },
   /**
    * Try to guess the version, based on the commits.
@@ -184,9 +198,7 @@ const Prompts = {
         }
         return "patch";
       })
-      .reduce(
-        (collector, item) => collector.add(item), new Set()
-      );
+      .reduce((collector, item) => collector.add(item), new Set());
     if (changes.has("major")) {
       major++;
       minor = 0;
@@ -200,67 +212,74 @@ const Prompts = {
     return `${major}.${minor}.${patch}`;
   },
 
-  askBumpVersion() {
-    return async.task(function*() {
-      const version = yield Builder.getRespecVersion();
-      const commits = yield git("log `git describe --tags --abbrev=0`..HEAD --oneline");
-      if (!commits) {
-        console.log(colors.warn("😢  No commits. Nothing to release."));
-        return process.exit(1);
-      }
-      const stylizedCommits = this.stylelizeCommits(commits);
+  async askBumpVersion() {
+    const version = await Builder.getRespecVersion();
+    const commits = await git(
+      "log `git describe --tags --abbrev=0`..HEAD --oneline"
+    );
+    if (!commits) {
+      console.log(colors.warn("😢  No commits. Nothing to release."));
+      return process.exit(1);
+    }
+    const stylizedCommits = this.stylelizeCommits(commits);
 
-      console.log(`\n 🎁  Commits since ${version} \n`);
+    console.log(`\n 🎁  Commits since ${version} \n`);
 
-      console.log(stylizedCommits, "\n");
-      if (!version) {
-        throw new Error("Version string not found in package.json");
-      }
-      const newVersion = this.suggestSemVersion(commits, version);
-      const packagePath = rel("../package.json");
-      const data = yield fsp.readFile(packagePath, "utf8");
-      const pack = JSON.parse(data);
-      const promptOps = {
-        description: `Current version is ${version}, bump it to`,
-        pattern: /^\d+\.\d+\.\d+$/i,
-        message: "Values must be x.y.z",
-        default: newVersion
-      };
-      pack.version = yield this.askQuestion(promptOps);
-      yield fsp.writeFile(packagePath, JSON.stringify(pack, null, 2) + "\n", "utf8");
-      return pack.version;
-    }, this);
+    console.log(stylizedCommits, "\n");
+    if (!version) {
+      throw new Error("Version string not found in package.json");
+    }
+    const newVersion = this.suggestSemVersion(commits, version);
+    const packagePath = rel("../package.json");
+    const data = await fsp.readFile(packagePath, "utf8");
+    const pack = JSON.parse(data);
+    const promptOps = {
+      description: `Current version is ${version}, bump it to`,
+      pattern: /^\d+\.\d+\.\d+$/i,
+      message: "Values must be x.y.z",
+      default: newVersion,
+    };
+    pack.version = await this.askQuestion(promptOps);
+    await fsp.writeFile(
+      packagePath,
+      JSON.stringify(pack, null, 2) + "\n",
+      "utf8"
+    );
+    return pack.version;
   },
 
-  askBuildAddCommitMergeTag() {
-    return async.task(function*() {
-      const promptOps = {
-        description: "Are you ready to build, add, commit, merge, and tag",
-        pattern: /^[yn]$/i,
-        message: "Values can be 'y' or 'n'.",
-        default: "y",
-      };
-      return yield this.askQuestion(promptOps);
-    }, this);
+  async askNpmUpgrade() {
+    const promptOps = {
+      description: "Run `npm upgrade` to make sure deps are up-to-date",
+      pattern: /^[yn]$/i,
+      message: "Values can be 'y' or 'n'.",
+      default: "y",
+    };
+    return await this.askQuestion(promptOps);
   },
 
-  askPushAll() {
-    return async.task(function*() {
-      const promptOps = {
-        description: `${colors.important("🔥  Ready to make this live? 🔥")}  (last chance!)`,
-        pattern: /^[yn]$/i,
-        message: "Values can be 'y' or 'n'.",
-        default: "y",
-      };
-      return yield this.askQuestion(promptOps);
-    }, this);
-  }
+  async askBuildAddCommitMergeTag() {
+    const promptOps = {
+      description: "Are you ready to build, add, commit, merge, and tag",
+      pattern: /^[yn]$/i,
+      message: "Values can be 'y' or 'n'.",
+      default: "y",
+    };
+    return await this.askQuestion(promptOps);
+  },
+
+  async askPushAll() {
+    const promptOps = {
+      description: `${colors.important("🔥  Ready to make this live? 🔥")}  (last chance!)`,
+      pattern: /^[yn]$/i,
+      message: "Values can be 'y' or 'n'.",
+      default: "y",
+    };
+    return await this.askQuestion(promptOps);
+  },
 };
 
-function toExecPromise(cmd, timeout) {
-  if (!timeout) {
-    timeout = 40000;
-  }
+function toExecPromise(cmd, timeout = 200000) {
   return new Promise((resolve, reject) => {
     const id = setTimeout(() => {
       reject(new Error(`Command took too long: ${cmd}`));
@@ -276,31 +295,27 @@ function toExecPromise(cmd, timeout) {
   });
 }
 
-function getBranchState() {
-  return async.task(function*() {
-    const local = yield git(`rev-parse @`);
-    const remote = yield git(`rev-parse @{u}`);
-    const base = yield git(`merge-base @ @{u}`);
-    let result = "";
-    switch (local) {
-      case remote:
-        result = "up-to-date";
-        break;
-      case base:
-        result = "needs a pull";
-        break;
-      default:
-        result = (remote === base) ? "needs to push" : "has diverged";
-    }
-    return result;
-  });
+async function getBranchState() {
+  const local = await git(`rev-parse @`);
+  const remote = await git(`rev-parse @{u}`);
+  const base = await git(`merge-base @ @{u}`);
+  let result = "";
+  switch (local) {
+    case remote:
+      result = "up-to-date";
+      break;
+    case base:
+      result = "needs a pull";
+      break;
+    default:
+      result = remote === base ? "needs to push" : "has diverged";
+  }
+  return result;
 }
 
-function getCurrentBranch() {
-  return async.task(function*() {
-    const branch = yield git(`rev-parse --abbrev-ref HEAD`);
-    return branch.trim();
-  });
+async function getCurrentBranch() {
+  const branch = await git(`rev-parse --abbrev-ref HEAD`);
+  return branch.trim();
 }
 
 class Indicator {
@@ -316,26 +331,40 @@ class Indicator {
 }
 
 const indicators = new Map([
-  ["remote-update", new Indicator(colors.info(" Performing Git remote update... 📡 "))],
-  ["build-merge-tag", new Indicator(colors.info(" Building, adding, commiting, merging, and tagging ReSpec... ⚒"))],
-  ["push-to-server", new Indicator(colors.info(" Pushing everything back to server... 📡"))],
+  ["npm-upgrade", new Indicator(colors.info(" Performing npm upgrade... 📦"))],
+  [
+    "remote-update",
+    new Indicator(colors.info(" Performing Git remote update... 📡 ")),
+  ],
+  [
+    "build-merge-tag",
+    new Indicator(
+      colors.info(
+        " Building, adding, commiting, merging, and tagging ReSpec... ⚒"
+      )
+    ),
+  ],
+  [
+    "push-to-server",
+    new Indicator(colors.info(" Pushing everything back to server... 📡")),
+  ],
   ["npm-publish", new Indicator(colors.info(" Publishing to npm... 📡"))],
 ]);
 
-async.task(function*() {
-  const initialBranch = yield getCurrentBranch();
+const run = async () => {
+  const initialBranch = await getCurrentBranch();
   try {
     // 1. Confirm maintainer is on up-to-date and on the develop branch ()
     indicators.get("remote-update").show();
-    yield git(`remote update`);
+    await git(`remote update`);
     indicators.get("remote-update").hide();
     if (initialBranch !== MAIN_BRANCH) {
-      yield Prompts.askSwitchToBranch(initialBranch, MAIN_BRANCH);
+      await Prompts.askSwitchToBranch(initialBranch, MAIN_BRANCH);
     }
-    const branchState = yield getBranchState();
+    const branchState = await getBranchState();
     switch (branchState) {
       case "needs a pull":
-        yield Prompts.askToPullBranch(MAIN_BRANCH);
+        await Prompts.askToPullBranch(MAIN_BRANCH);
         break;
       case "up-to-date":
         break;
@@ -345,47 +374,51 @@ async.task(function*() {
       default:
         throw new Error(`Your branch is not up-to-date. It ${branchState}.`);
     }
+    // 1.1 Run npm upgrade
+    if (await Prompts.askNpmUpgrade()) {
+      indicators.get("npm-upgrade").show();
+      await npm("update");
+      indicators.get("npm-upgrade").hide();
+    }
+
     // 2. Bump the version in `package.json`.
-    const version = yield Prompts.askBumpVersion();
-    yield Prompts.askBuildAddCommitMergeTag();
+    const version = await Prompts.askBumpVersion();
+    await Prompts.askBuildAddCommitMergeTag();
     // 3. Run the build script (node tools/build-w3c-common.js).
     indicators.get("build-merge-tag").show();
-    yield npm("run hb:build");
-    yield Builder.build({ name: "w3c-common" });
+    await npm("run hb:build");
+    await Builder.build({ name: "w3c-common" });
     // 4. Commit your changes (git commit -am v3.x.y)
-    yield git(`commit -am v${version}`);
+    await git(`commit -am v${version}`);
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
-    yield git(`checkout gh-pages`);
-    yield git(`pull origin gh-pages`);
-    yield git(`merge develop`);
-    yield git(`checkout develop`);
+    await git(`checkout gh-pages`);
+    await git(`pull origin gh-pages`);
+    await git(`merge develop`);
+    await git(`checkout develop`);
     // 6. Tag the release (git tag v3.x.y)
-    yield git(`tag -m v${version} v${version}`);
+    await git(`tag -m v${version} v${version}`);
     indicators.get("build-merge-tag").hide();
-    yield Prompts.askPushAll();
+    await Prompts.askPushAll();
     indicators.get("push-to-server").show();
-    yield git("push origin develop");
-    yield git("push origin gh-pages");
-    yield git("push --tags");
+    await git("push origin develop");
+    await git("push origin gh-pages");
+    await git("push --tags");
     indicators.get("push-to-server").hide();
     indicators.get("npm-publish").show();
-    // We give npm publish 2 minute to time out, as it can be slow.
-    yield toExecPromise("npm publish", 120000);
+    await npm("publish");
     indicators.get("npm-publish").hide();
 
     if (initialBranch !== MAIN_BRANCH) {
-      yield Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
+      await Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
     }
   } catch (err) {
     console.error(colors.red(`\n☠  ${err.message}`));
     const currentBranch = getCurrentBranch();
     if (initialBranch !== currentBranch) {
-      yield git(`checkout ${initialBranch}`);
+      await git(`checkout ${initialBranch}`);
     }
     process.exit(1);
   }
-}).then(
-  () => process.exit(0)
-).catch(
-  err => console.error(err.stack)
-);
+};
+
+run().then(() => process.exit(0)).catch(err => console.error(err.stack));

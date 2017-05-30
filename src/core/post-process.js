@@ -18,18 +18,22 @@ export const done = new Promise(resolve => {
   doneResolver = resolve;
 });
 
-sub("plugins-done", async config => {
-  const result = [];
-  if (Array.isArray(config.postProcess)) {
-    const values = await Promise.all(
-      config.postProcess
-        .filter(f => typeof f === "function")
-        .map(f => Promise.resolve(f(config, document)))
-    );
-    result.push(...values);
-  }
-  if (typeof config.afterEnd === "function") {
-    result.push(await Promise.resolve(config.afterEnd(config, document)));
-  }
-  doneResolver(result);
-}, { once: true });
+sub(
+  "plugins-done",
+  async config => {
+    const result = [];
+    if (Array.isArray(config.postProcess)) {
+      const values = await Promise.all(
+        config.postProcess
+          .filter(f => typeof f === "function")
+          .map(f => Promise.resolve(f(config, document)))
+      );
+      result.push(...values);
+    }
+    if (typeof config.afterEnd === "function") {
+      result.push(await Promise.resolve(config.afterEnd(config, document)));
+    }
+    doneResolver(result);
+  },
+  { once: true }
+);

@@ -89,7 +89,10 @@ export function makeOwnerSwapper(node) {
     node.remove();
     insertionPoint.ownerDocument.adoptNode(node);
     if (insertionPoint.firstElementChild) {
-      return insertionPoint.insertBefore(node, insertionPoint.firstElementChild);
+      return insertionPoint.insertBefore(
+        node,
+        insertionPoint.firstElementChild
+      );
     }
     insertionPoint.appendChild(node);
   };
@@ -114,7 +117,7 @@ export function calculateLeftPad(text) {
       var match = item.match(spaceOrTab)[0] || "";
       return Math.min(match.length, smallest);
     }, +Infinity);
-  return (leftPad === +Infinity) ? 0 : leftPad;
+  return leftPad === +Infinity ? 0 : leftPad;
 }
 /**
  * Creates a link element that represents a resource hint.
@@ -180,7 +183,7 @@ export function toESIterable(nextLikeFunction) {
       value: nextLikeFunction(),
       get done() {
         return this.value === null;
-      }
+      },
     };
   };
   // We structure the iterator like this, or else
@@ -188,7 +191,7 @@ export function toESIterable(nextLikeFunction) {
   var iterator = {};
   iterator[Symbol.iterator] = function() {
     return {
-      next: next
+      next: next,
     };
   };
   return iterator;
@@ -212,48 +215,57 @@ export function normalizePadding(text) {
   var parserInput = "<body>" + text;
   var doc = new DOMParser().parseFromString(parserInput, "text/html");
   // Normalize block level elements children first
-  Array
-    .from(doc.body.children)
+  Array.from(doc.body.children)
     .filter(elem => !inlineElems.has(elem.localName))
     .filter(elem => elem.localName !== "pre")
+    .filter(elem => elem.localName !== "table")
     .forEach(elem => {
       elem.innerHTML = normalizePadding(elem.innerHTML);
     });
   // Normalize root level now
-  Array
-    .from(doc.body.childNodes)
+  Array.from(doc.body.childNodes)
     .filter(node => isTextNode(node) && node.textContent.trim() === "")
-    .forEach(node => node.parentElement.replaceChild(doc.createTextNode("\n"), node));
+    .forEach(node =>
+      node.parentElement.replaceChild(doc.createTextNode("\n"), node)
+    );
   // Normalize text node
   if (!isTextNode(doc.body.firstChild)) {
-    Array
-      .from(doc.body.children)
+    Array.from(doc.body.firstChild.children)
+      .filter(child => child.localName !== "table")
       .forEach(child => {
         child.innerHTML = normalizePadding(child.innerHTML);
       });
   }
   doc.normalize();
   // use the first space as an indicator of how much to chop off the front
-  const firstSpace = doc.body.innerText.split("\n").filter(item => item && item.startsWith(" "))[0];
+  const firstSpace = doc.body.innerText
+    .replace(/^\ *\n/, "")
+    .split("\n")
+    .filter(item => item && item.startsWith(" "))[0];
   var chop = firstSpace ? firstSpace.match(/\ +/)[0].length : 0;
   if (chop) {
     // Chop chop from start, but leave pre elem alone
-    Array
-      .from(doc.body.childNodes)
+    Array.from(doc.body.childNodes)
       .filter(node => node.localName !== "pre")
       .filter(isTextNode)
       .filter(node => {
         // we care about text next to a block level element
         const prevSib = node.previousElementSibling;
-        const nextTo = prevSib ? prevSib.localName : node.parentElement.localName;
+        const nextTo = prevSib
+          ? prevSib.localName
+          : node.parentElement.localName;
         // and we care about text elements that finish on a new line
-        return !inlineElems.has(nextTo) || node.textContent.trim().includes("\n");
+        return (
+          !inlineElems.has(nextTo) || node.textContent.trim().includes("\n")
+        );
       })
       .reduce((replacer, node) => {
         // We need to retain white space if the text Node is next to an in-line element
         let padding = "";
         const prevSib = node.previousElementSibling;
-        const nextTo = prevSib ? prevSib.localName : node.parentElement.localName;
+        const nextTo = prevSib
+          ? prevSib.localName
+          : node.parentElement.localName;
         if (/^[\t\ ]/.test(node.textContent) && inlineElems.has(nextTo)) {
           padding = node.textContent.match(/^\s+/)[0];
         }
@@ -262,29 +274,32 @@ export function normalizePadding(text) {
       }, new RegExp("^\ {1," + chop + "}", "gm"));
     // deal with pre elements... we can chop whitespace from their siblings
     const endsWithSpace = new RegExp(`\\ {${chop}}$`, "gm");
-    Array
-      .from(doc.body.querySelectorAll("pre"))
+    Array.from(doc.body.querySelectorAll("pre"))
       .map(elem => elem.previousSibling)
       .filter(isTextNode)
       .reduce((chop, node) => {
         if (endsWithSpace.test(node.textContent)) {
-          node.textContent = node.textContent.substr(0, node.textContent.length - chop);
+          node.textContent = node.textContent.substr(
+            0,
+            node.textContent.length - chop
+          );
         }
         return chop;
       }, chop);
   }
-  const result = endsWithSpace.test(doc.body.innerHTML) ? doc.body.innerHTML.trimRight() + "\n" : doc.body.innerHTML;
+  const result = endsWithSpace.test(doc.body.innerHTML)
+    ? doc.body.innerHTML.trimRight() + "\n"
+    : doc.body.innerHTML;
   return result;
 }
 
 // RESPEC STUFF
 export function removeReSpec(doc) {
-  Array
-    .from(
-      doc.querySelectorAll(".remove, script[data-requiremodule]")
-    ).forEach(function(elem) {
-      elem.remove();
-    });
+  Array.from(
+    doc.querySelectorAll(".remove, script[data-requiremodule]")
+  ).forEach(function(elem) {
+    elem.remove();
+  });
 }
 
 // STRING HELPERS
@@ -293,9 +308,11 @@ export function removeReSpec(doc) {
 // joined
 export function joinAnd(arr, mapper) {
   if (!arr || !arr.length) return "";
-  mapper = mapper || function(ret) {
-    return ret;
-  };
+  mapper =
+    mapper ||
+    function(ret) {
+      return ret;
+    };
   var ret = "";
   if (arr.length === 1) return mapper(arr[0], 0);
   for (var i = 0, n = arr.length; i < n; i++) {
@@ -313,7 +330,8 @@ export function joinAnd(arr, mapper) {
 // Note that overall using either Handlebars' escaped output or jQuery is much
 // preferred to operating on strings directly.
 export function xmlEscape(s) {
-  return s.replace(/&/g, "&amp;")
+  return s
+    .replace(/&/g, "&amp;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/</g, "&lt;");
@@ -329,18 +347,25 @@ export function norm(str) {
 // the custom separator (defaulting to none) and proper 0-padding
 export function concatDate(date, sep) {
   if (!sep) sep = "";
-  return "" + date.getFullYear() + sep + lead0(date.getMonth() + 1) + sep + lead0(date.getDate());
+  return (
+    "" +
+    date.getFullYear() +
+    sep +
+    lead0(date.getMonth() + 1) +
+    sep +
+    lead0(date.getDate())
+  );
 }
 
 // takes a string, prepends a "0" if it is of length 1, does nothing otherwise
 export function lead0(str) {
   str = "" + str;
-  return (str.length === 1) ? "0" + str : str;
+  return str.length === 1 ? "0" + str : str;
 }
 
 // takes a YYYY-MM-DD date and returns a Date object for it
 export function parseSimpleDate(str) {
-  return new Date(str.substr(0, 4), (str.substr(5, 2) - 1), str.substr(8, 2));
+  return new Date(Date.parse(str));
 }
 
 // takes what document.lastModified returns and produces a Date object for it
@@ -351,8 +376,19 @@ export function parseLastModified(str) {
 }
 
 // list of human names for months (in English)
-export const humanMonths = ["January", "February", "March", "April", "May", "June", "July",
-  "August", "September", "October", "November", "December"
+export const humanMonths = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 // given either a Date object or a date in YYYY-MM-DD format, return a human-formatted
@@ -366,7 +402,13 @@ export function humanDate(date, lang = "en") {
     //date month year
     return `${day} ${month} ${year}`;
   }
-  return lead0(date.getDate()) + " " + humanMonths[date.getMonth()] + " " + date.getFullYear();
+  return (
+    lead0(date.getDate()) +
+    " " +
+    humanMonths[date.getMonth()] +
+    " " +
+    date.getFullYear()
+  );
 }
 // given either a Date object or a date in YYYY-MM-DD format, return an ISO formatted
 // date suitable for use in a xsd:datetime item

@@ -2,21 +2,25 @@
 
 "use strict";
 const async = require("marcosc-async");
-const fsp = require("fs-promise");
+const fsp = require("fs-extra");
 const path = require("path");
 
 const srcDesMap = new Map([
-  ["./node_modules/regenerator-runtime/runtime.js", "./js/deps/regenerator.js"],
+  ["./node_modules/clipboard/dist/clipboard.js", "./js/deps/"],
   ["./node_modules/domReady/domReady.js", "./js/deps/"],
-  ["./node_modules/handlebars/dist/handlebars.runtime.js", "./js/deps/handlebars.js"],
-  ["./node_modules/highlight.js/build/highlight.pack.js", "./js/deps/highlight.js"],
+  [
+    "./node_modules/handlebars/dist/handlebars.runtime.js",
+    "./js/deps/handlebars.js",
+  ],
   ["./node_modules/highlight.js/src/styles/github.css", "./js/core/css/"],
+  ["./node_modules/hyperhtml/hyperhtml.js", "./js/deps/"],
   ["./node_modules/jquery/dist/jquery.js", "./js/deps/"],
   ["./node_modules/js-beautify/js/lib/beautify-css.js", "./js/deps/"],
   ["./node_modules/js-beautify/js/lib/beautify-html.js", "./js/deps/"],
   ["./node_modules/js-beautify/js/lib/beautify.js", "./js/deps/"],
   ["./node_modules/marcosc-async/lib/async.js", "./js/deps/"],
   ["./node_modules/marked/lib/marked.js", "./js/deps/"],
+  ["./node_modules/regenerator-runtime/runtime.js", "./js/deps/regenerator.js"],
   ["./node_modules/requirejs/require.js", "./js/deps/"],
   ["./node_modules/text/text.js", "./js/deps/"],
   ["./node_modules/webidl2/lib/webidl2.js", "./js/deps/"],
@@ -24,7 +28,7 @@ const srcDesMap = new Map([
 ]);
 
 function makePathResolver(base) {
-  return (file) => toFullPath(file, base);
+  return file => toFullPath(file, base);
 }
 
 // simulate rm
@@ -56,13 +60,15 @@ const cp = async(function*(source, dest) {
   const fullSource = toFullPath(source);
   const fullDest = toFullPath(dest);
   const baseName = path.basename(fullSource);
-  const actualDestination = (path.extname(fullDest)) ? fullDest : path.resolve(fullDest, baseName);
+  const actualDestination = path.extname(fullDest)
+    ? fullDest
+    : path.resolve(fullDest, baseName);
   yield fsp.ensureFile(actualDestination);
   const readableStream = fsp.createReadStream(fullSource);
   const writableStream = fsp.createWriteStream(actualDestination);
   readableStream.setEncoding("utf8");
   readableStream.pipe(writableStream);
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     readableStream.on("end", resolve);
   });
 });
@@ -79,7 +85,6 @@ const copyDeps = async(function*() {
   }
   yield Promise.all(copyPromises);
 });
-
 
 // Delete dependent files
 rm("./js/deps/", "./js/core/css/github.css")

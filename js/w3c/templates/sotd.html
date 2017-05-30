@@ -46,14 +46,14 @@
             {{#if notYetRec}}
               This document is intended to become a W3C Recommendation.
             {{/if}}
-            {{#unless isPR}}
-              If you wish to make comments regarding this document, please send them to
+            {{#if wgPublicList}}
+              Comments regarding this document are welcome. Please send them to
               <a href='mailto:{{wgPublicList}}@w3.org{{#if subjectPrefix}}?subject={{subjectPrefixEnc}}{{/if}}'>{{wgPublicList}}@w3.org</a>
               (<a href='mailto:{{wgPublicList}}-request@w3.org?subject=subscribe'>subscribe</a>,
               <a
                 href='https://lists.w3.org/Archives/Public/{{wgPublicList}}/'>archives</a>){{#if subjectPrefix}}
                 with <code>{{subjectPrefix}}</code> at the start of your email's subject{{/if}}.
-            {{/unless}}
+            {{/if}}
             {{#if isCR}}
               W3C publishes a Candidate Recommendation to indicate that the document is believed to be
               stable and to encourage implementation by the developer community. This Candidate
@@ -81,9 +81,6 @@
                 Note that substantive technical comments were expected during the Candidate Recommendation
                 review period that ended {{humanCREnd}}.
             {{else}}
-              {{#unless isPER}}
-              All comments are welcome.
-              {{/unless}}
             {{/if}}
           </p>
           {{/unless}}

@@ -23,6 +23,7 @@ js/core/dfn.js
 js/core/examples.js
 js/core/figures.js
 js/core/fix-headers.js
+js/core/github.js
 js/core/highlight.js
 js/core/id-headers.js
 js/core/include-config.js
@@ -42,10 +43,14 @@ js/core/respec-ready.js
 js/core/structure.js
 js/core/style.js
 js/core/utils.js
+js/core/webidl-clipboard.js
 js/core/webidl-index.js
 js/core/webidl.js
 js/core/worker.js
 js/templates.js
+js/ui/about-respec.js
+js/ui/dfn-list.js
+js/ui/search-specref.js
 js/w3c/abstract.js
 js/w3c/aria.js
 js/w3c/conformance.js

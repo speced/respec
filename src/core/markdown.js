@@ -57,36 +57,22 @@ marked.setOptions({
 
 function toHTML(text) {
   const normalizedLeftPad = normalizePadding(text);
-  // As markdown is pulled from HTML, > is already escaped and
+  // As markdown is pulled from HTML, > and & are already escaped and
   // so blockquotes aren't picked up by the parser. This fixes it.
-  const potentialMarkdown = normalizedLeftPad.replace(/&gt;/gm, ">");
-  const html = marked(potentialMarkdown);
-
-  return html;
+  const potentialMarkdown = normalizedLeftPad
+    .replace(/&gt;/gm, ">")
+    .replace(/&amp;/gm, "&");
+  const result = marked(potentialMarkdown);
+  return result;
 }
 
 function processElements(selector) {
   return element => {
-    const elementsToProcess = Array.from(element.querySelectorAll(selector));
-    elementsToProcess
-      .reverse()
-      .map(
-        element => ({ element, html: toHTML(element.innerHTML) })
-      )
-      .reduce((div, { element, html }) => {
-        let node = div;
-        div.innerHTML = html;
-        // Same element, don't nest
-        if (div.firstChild && element.localName === div.firstChild.localName) {
-          node = div.firstChild;
-        }
-        element.innerHTML = "";
-        while (node.firstChild) {
-          element.appendChild(node.firstChild);
-        }
-        return div;
-      }, element.ownerDocument.createElement("div"));
-    return elementsToProcess;
+    const elements = Array.from(element.querySelectorAll(selector));
+    elements.reverse().forEach(element => {
+      element.innerHTML = toHTML(element.innerHTML);
+    });
+    return elements;
   };
 }
 
@@ -184,40 +170,74 @@ function structure(fragment, doc) {
 }
 
 function substituteWithTextNodes(elements) {
-  Array
-    .from(elements)
-    .forEach(element => {
-      const textNode = element.ownerDocument.createTextNode(element.textContent);
-      element.parentElement.replaceChild(textNode, element);
-    });
+  Array.from(elements).forEach(element => {
+    const textNode = element.ownerDocument.createTextNode(element.textContent);
+    element.parentElement.replaceChild(textNode, element);
+  });
 }
 
-const processBlockLevelElements = processElements("section section, body > section, .issue, .note, .req");
+const processMDSections = processElements("[data-format='markdown']:not(body)");
+const processBlockLevelElements = processElements(
+  "[data-format=markdown]:not(body), section, div, address, article, aside, figure, header, main, body"
+);
 
 export function run(conf, doc, cb) {
-  if (conf.format !== "markdown") {
+  const hasMDSections = !!doc.querySelector("[data-format=markdown]:not(body)");
+  const isMDFormat = conf.format === "markdown";
+  if (!isMDFormat && !hasMDSections) {
+    return cb(); // Nothing to be done
+  }
+  // Only has markdown-format sections
+  if (!isMDFormat) {
+    processMDSections(doc.body)
+      .map(elem => {
+        const structuredInternals = structure(elem, elem.ownerDocument);
+        return {
+          structuredInternals,
+          elem,
+        };
+      })
+      .forEach(({ elem, structuredInternals }) => {
+        elem.setAttribute("aria-busy", "true");
+        if (
+          structuredInternals.firstElementChild.localName === "section" &&
+          elem.localName === "section"
+        ) {
+          const section = structuredInternals.firstElementChild;
+          section.remove();
+          while (section.hasChildNodes()) {
+            elem.appendChild(section.firstChild);
+          }
+        } else {
+          elem.innerHTML = "";
+        }
+        elem.appendChild(structuredInternals);
+        elem.setAttribute("aria-busy", "false");
+      });
     return cb();
   }
   // We transplant the UI to do the markdown processing
   const rsUI = doc.getElementById("respec-ui");
   rsUI.remove();
   // The new body will replace the old body
+  const newHTML = doc.createElement("html");
   const newBody = doc.createElement("body");
   newBody.innerHTML = doc.body.innerHTML;
   // Marked expects markdown be flush against the left margin
   // so we need to normalize the inner text of some block
   // elements.
-  processBlockLevelElements(newBody);
-  // Process the rest
-  const dirtyHTML = toHTML(newBody.innerHTML);
-  const cleanHTML = dirtyHTML
+  newHTML.appendChild(newBody);
+  processBlockLevelElements(newHTML);
+  // Process root level text nodes
+  const cleanHTML = newBody.innerHTML
     // Markdown parsing sometimes inserts empty p tags
-    .replace(/<p>\s*<\/p>/gm, "");
+    .replace(/<p>\s*<\/p>/m, "");
+
   const beautifulHTML = beautify
     .html_beautify(cleanHTML, beautifyOps)
     // beautifer has a bad time with "\n&quot;<element"
     // https://github.com/beautify-web/js-beautify/issues/943
-    .replace(/&quot;\n\s+\</gm, "\"<")
+    .replace(/&quot;\n\s+\</gm, '"<');
 
   newBody.innerHTML = beautifulHTML;
   // Remove links where class .nolinks

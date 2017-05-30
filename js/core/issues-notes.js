@@ -11,11 +11,8 @@
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
 "use strict";
-define([
-    "core/pubsubhub",
-    "deps/text!core/css/issues-notes.css",
-    "github",
-  ],
+define(
+  ["core/pubsubhub", "deps/text!core/css/issues-notes.css", "github"],
   function(pubsubhub, css, github) {
     return {
       run: function(conf, doc, cb) {
@@ -23,7 +20,9 @@ define([
           $(doc).find("head link").first().before($("<style/>").text(css));
           var hasDataNum = $(".issue[data-number]").length > 0,
             issueNum = 0,
-            $issueSummary = $("<div><h2>Issue Summary</h2><ul></ul></div>"),
+            $issueSummary = $(
+              "<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"
+            ),
             $issueList = $issueSummary.find("ul");
           $ins.each(function(i, inno) {
             var $inno = $(inno),
@@ -35,9 +34,11 @@ define([
               dataNum = $inno.attr("data-number"),
               report = {
                 inline: isInline,
-                content: $inno.html()
+                content: $inno.html(),
               };
-            report.type = isIssue ? "issue" : isWarning ? "warning" : isEdNote ? "ednote" : "note";
+            report.type = isIssue
+              ? "issue"
+              : isWarning ? "warning" : isEdNote ? "ednote" : "note";
             if (isIssue && !isInline && !hasDataNum) {
               issueNum++;
               report.number = issueNum;
@@ -46,9 +47,20 @@ define([
             }
             // wrap
             if (!isInline) {
-              var $div = $("<div class='" + report.type + (isFeatureAtRisk ? " atrisk" : "") + "'></div>"),
-                $tit = $("<div class='" + report.type + "-title'><span></span></div>"),
-                text = isIssue ? (isFeatureAtRisk ? "Feature at Risk" : conf.l10n.issue) : isWarning ? conf.l10n.warning : isEdNote ? conf.l10n.editors_note : conf.l10n.note,
+              var $div = $(
+                "<div class='" +
+                  report.type +
+                  (isFeatureAtRisk ? " atrisk" : "") +
+                  "'></div>"
+              ),
+                $tit = $(
+                  "<div class='" + report.type + "-title'><span></span></div>"
+                ),
+                text = isIssue
+                  ? isFeatureAtRisk ? "Feature at Risk" : conf.l10n.issue
+                  : isWarning
+                      ? conf.l10n.warning
+                      : isEdNote ? conf.l10n.editors_note : conf.l10n.note,
                 ghIssue;
               report.title = $inno.attr("title");
               if (isIssue) {
@@ -57,9 +69,15 @@ define([
                     text += " " + dataNum;
                     // Set issueBase to cause issue to be linked to the external issue tracker
                     if (!isFeatureAtRisk && issueBase) {
-                      $tit.find("span").wrap($("<a href='" + issueBase + dataNum + "'/>"));
+                      $tit
+                        .find("span")
+                        .wrap($("<a href='" + issueBase + dataNum + "'/>"));
                     } else if (isFeatureAtRisk && conf.atRiskBase) {
-                      $tit.find("span").wrap($("<a href='" + conf.atRiskBase + dataNum + "'/>"));
+                      $tit
+                        .find("span")
+                        .wrap(
+                          $("<a href='" + conf.atRiskBase + dataNum + "'/>")
+                        );
                     }
                     ghIssue = ghIssues[dataNum];
                     if (ghIssue && !report.title) {
@@ -75,22 +93,38 @@ define([
                     $li = $("<li><a></a></li>"),
                     $a = $li.find("a");
                   $div.attr("id", id);
-                  $a.attr("href", "#" + id).text("Issue " + report.number);
+                  $a
+                    .attr("href", "#" + id)
+                    .text(conf.l10n.issue + " " + report.number);
                   if (report.title) {
-                    $li.append($("<span style='text-transform: none'>: " + report.title + "</span>"));
+                    $li.append(
+                      $(
+                        "<span style='text-transform: none'>: " +
+                          report.title +
+                          "</span>"
+                      )
+                    );
                   }
                   $issueList.append($li);
                 }
               }
               $tit.find("span").text(text);
               if (report.title) {
-                $tit.append($("<span style='text-transform: none'>: " + report.title + "</span>"));
+                $tit.append(
+                  $(
+                    "<span style='text-transform: none'>: " +
+                      report.title +
+                      "</span>"
+                  )
+                );
                 $inno.removeAttr("title");
               }
               $tit.addClass("marker");
               $div.append($tit);
               $inno.replaceWith($div);
-              var body = $inno.removeClass(report.type).removeAttr("data-number");
+              var body = $inno
+                .removeClass(report.type)
+                .removeAttr("data-number");
               if (ghIssue && !body.text().trim()) {
                 body = ghIssue.body_html;
               }
@@ -99,9 +133,13 @@ define([
             pubsubhub.pub(report.type, report);
           });
           if ($(".issue").length) {
-            if ($("#issue-summary")) $("#issue-summary").append($issueSummary.contents());
+            if ($("#issue-summary"))
+              $("#issue-summary").append($issueSummary.contents());
           } else if ($("#issue-summary").length) {
-            pubsubhub.pub("warn", "Using issue summary (#issue-summary) but no issues found.");
+            pubsubhub.pub(
+              "warn",
+              "Using issue summary (#issue-summary) but no issues found."
+            );
             $("#issue-summary").remove();
           }
         }
@@ -110,22 +148,25 @@ define([
           issueBase = conf.issueBase;
         if ($ins.length) {
           if (conf.githubAPI) {
-            github.fetch(conf.githubAPI).then(function(json) {
-              issueBase = issueBase || json.html_url + "/issues/";
-              return github.fetchIndex(json.issues_url, {
-                // Get back HTML content instead of markdown
-                // See: https://developer.github.com/v3/media/
-                headers: {
-                  Accept: "application/vnd.github.v3.html+json"
-                }
+            github
+              .fetch(conf.githubAPI)
+              .then(function(json) {
+                issueBase = issueBase || json.html_url + "/issues/";
+                return github.fetchIndex(json.issues_url, {
+                  // Get back HTML content instead of markdown
+                  // See: https://developer.github.com/v3/media/
+                  headers: {
+                    Accept: "application/vnd.github.v3.html+json",
+                  },
+                });
+              })
+              .then(function(issues) {
+                issues.forEach(function(issue) {
+                  ghIssues[issue.number] = issue;
+                });
+                handleIssues($ins, ghIssues, issueBase);
+                cb();
               });
-            }).then(function(issues) {
-              issues.forEach(function(issue) {
-                ghIssues[issue.number] = issue;
-              });
-              handleIssues($ins, ghIssues, issueBase);
-              cb();
-            });
           } else {
             handleIssues($ins, ghIssues, issueBase);
             cb();
@@ -133,7 +174,7 @@ define([
         } else {
           cb();
         }
-      }
+      },
     };
   }
 );

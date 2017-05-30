@@ -4,59 +4,61 @@
 "use strict";
 module.exports = function(config) {
   var options = {
-
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: "./",
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: [
-      "jasmine",
-      "requirejs",
-      "detectBrowsers",
-    ],
+    frameworks: ["jasmine", "requirejs", "detectBrowsers"],
 
     // configuration
     detectBrowsers: {
       enabled: true,
       usePhantomJS: false,
       postDetection(browsers) {
-        return browsers
-          // Remove IE
-          .filter(browser => browser !== 'IE');
-      }
+        return (
+          browsers
+            // Remove IE
+            .filter(browser => browser !== "IE")
+        );
+      },
     },
 
     // list of files / patterns to load in the browser
-    files: [{
+    files: [
+      "js/deps/jquery.js",
+      "js/deps/fetch.js",
+      {
         pattern: "builds/**/*.*",
         included: false,
         served: true,
-      }, {
+      },
+      {
         pattern: "js/**/*.*",
         included: false,
         served: true,
-      }, {
+      },
+      {
         pattern: "tests/**/*-spec.js",
         included: false,
         served: true,
-      }, {
+      },
+      {
         pattern: "tests/**/*.html",
         included: false,
         served: true,
       },
-      "js/deps/jquery.js",
-      "js/deps/fetch.js",
+      {
+        pattern: "worker/*.js",
+        included: false,
+        served: true,
+      },
       "tests/spec/SpecHelper.js",
       "tests/test-main.js",
     ],
 
     // list of files to exclude
-    exclude: [
-      "**/*.swp",
-      "*.swp",
-      ".DS_Store",
-    ],
+    exclude: ["**/*.swp", "*.swp", ".DS_Store"],
 
     proxies: {
       "/js/": "/base/js/",
@@ -102,7 +104,7 @@ module.exports = function(config) {
     customLaunchers: {
       chrome_canary_travis: {
         base: "ChromeCanary",
-        flags: ["--no-sandbox"]
+        flags: ["--no-sandbox"],
       },
     },
   };

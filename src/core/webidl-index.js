@@ -18,9 +18,7 @@ export function run(conf, doc, cb) {
     return cb();
   }
   // Query for decedents headings, e.g., "h2:first-child, etc.."
-  const query = [2, 3, 4, 5, 6]
-    .map(level => `h${level}:first-child`)
-    .join(",");
+  const query = [2, 3, 4, 5, 6].map(level => `h${level}:first-child`).join(",");
   if (!idlIndexSec.querySelector(query)) {
     const header = document.createElement("h2");
     if (idlIndexSec.title) {
@@ -40,13 +38,13 @@ export function run(conf, doc, cb) {
   const virtualSummary = document.createDocumentFragment();
   const pre = document.createElement("pre");
   pre.classList.add("idl", "def");
-  Array
-    .from(document.querySelectorAll("pre.def.idl"))
+  pre.id = "actual-idl-index";
+  Array.from(document.querySelectorAll("pre.def.idl"))
     .map(elem => {
       const span = document.createElement("span");
       const clone = elem.cloneNode(true).firstElementChild;
       span.appendChild(clone);
-      span.appendChild(document.createTextNode("\n"))
+      span.appendChild(document.createTextNode("\n"));
       span.classList.add("respec-idl-separator");
       return span;
     })
@@ -55,9 +53,9 @@ export function run(conf, doc, cb) {
       return collector;
     }, pre);
   // Remove duplicate IDs
-  Array
-    .from(pre.querySelectorAll("*[id]"))
-    .forEach(elem => elem.removeAttribute("id"));
+  Array.from(pre.querySelectorAll("*[id]")).forEach(elem =>
+    elem.removeAttribute("id")
+  );
   virtualSummary.appendChild(pre);
   idlIndexSec.appendChild(virtualSummary);
   cb();

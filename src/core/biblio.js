@@ -5,7 +5,6 @@
 
 /*jshint jquery: true*/
 /*globals console*/
-
 import "deps/regenerator";
 import { biblioDB } from "core/biblio-db";
 import { createResourceHint } from "core/utils";
@@ -18,11 +17,8 @@ const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
 // Normative references take precedence over informative ones,
 // so any duplicates ones are removed from the informative set.
 function normalizeReferences(conf) {
-  Array
-    .from(conf.informativeReferences)
-    .filter(
-      key => conf.normativeReferences.has(key)
-    )
+  Array.from(conf.informativeReferences)
+    .filter(key => conf.normativeReferences.has(key))
     .reduce((informs, redundantKey) => {
       informs.delete(redundantKey);
       return informs;
@@ -50,6 +46,55 @@ const REF_STATUSES = new Map([
 ]);
 
 
+const defaultsReference = Object.freeze({
+  authors: [],
+  date: "",
+  href: "",
+  publisher: "",
+  status: "",
+  title: "",
+  etAl: false,
+});
+
+const endNormalizer = function(endStr){
+  return str => {
+    const trimmed = str.trim();
+    const result = !trimmed || trimmed.endsWith(endStr) ? trimmed : trimmed + endStr;
+    return result;
+  }
+}
+
+const endWithDot = endNormalizer(".");
+
+export function wireReference(rawRef, target="_blank") {
+  if(typeof rawRef !== "object"){
+    throw new TypeError("Only modern object refereces are allowed");
+  }
+  const ref = Object.assign({}, defaultsReference, rawRef);
+  const authors = ref.authors.join("; ") + (ref.etAl ? " et al" : "");
+  const status = REF_STATUSES.get(ref.status) || ref.status
+  return hyperHTML.wire(ref)`
+    <cite>
+      <a
+        href="${ref.href}"
+        target="${target}"
+        rel="noopener noreferrer">
+        ${ref.title.trim()}</a>.
+    </cite>
+    <span class="authors">
+      ${endWithDot(authors)}
+    </span>
+    <span class="publisher">
+      ${endWithDot(ref.publisher)}
+    </span>
+    <span class="pubDate">
+      ${endWithDot(ref.date)}
+    </span>
+    <span class="pubStatus">
+      ${endWithDot(status)}
+    </span>
+  `;
+}
 
 export function stringifyReference(ref) {
   if (typeof ref === "string") return ref;
@@ -81,18 +126,25 @@ function bibref(conf) {
   var aliases = {};
 
   if (!informs.length && !norms.length && !conf.refNote) return;
-  var $refsec = $("<section id='references' class='appendix'><h2>References</h2></section>").appendTo($("body"));
+  var $refsec = $(
+    "<section id='references' class='appendix'><h2>" +
+      conf.l10n.references +
+      "</h2></section>"
+  ).appendTo($("body"));
   if (conf.refNote) $("<p></p>").html(conf.refNote).appendTo($refsec);
 
   var types = ["Normative", "Informative"];
   for (var i = 0; i < types.length; i++) {
     var type = types[i];
-    var refs = (type === "Normative") ? norms : informs;
+    var refs = type === "Normative" ? norms : informs;
+    var l10nRefs = type === "Normative"
+      ? conf.l10n.norm_references
+      : conf.l10n.info_references;
     if (!refs.length) continue;
     var $sec = $("<section><h3></h3></section>")
       .appendTo($refsec)
       .find("h3")
-      .text(type + " references")
+      .text(l10nRefs)
       .end();
     $sec.makeID(null, type + " references");
     refs.sort();
@@ -126,7 +178,10 @@ function bibref(conf) {
         $dd.html(stringifyReference(refcontent) + "\n");
         if (conf.doRDFa) {
           var $a = $dd.children("a");
-          $a.attr("property", type === "Normative" ? "dc:requires" : "dc:references");
+          $a.attr(
+            "property",
+            type === "Normative" ? "dc:requires" : "dc:references"
+          );
         }
       } else {
         if (!badrefs[ref]) badrefs[ref] = 0;
@@ -165,8 +220,8 @@ async function updateFromNetwork(refs, options = { forceUpdate: false }) {
   if (!refs.length) {
     return;
   }
-  const response = await fetch(bibrefsURL.href + refs.join(","))
-  if (!options.forceUpdate && !response.ok || response.status !== 200) {
+  const response = await fetch(bibrefsURL.href + refs.join(","));
+  if ((!options.forceUpdate && !response.ok) || response.status !== 200) {
     return null;
   }
   const data = await response.json();
@@ -200,8 +255,7 @@ export async function run(conf, doc, cb) {
     pub("warn", msg);
   }
   conf.biblio = {};
-  const localAliases = Array
-    .from(Object.keys(conf.localBiblio))
+  const localAliases = Array.from(Object.keys(conf.localBiblio))
     .filter(key => conf.localBiblio[key].hasOwnProperty("aliasOf"))
     .map(key => conf.localBiblio[key].aliasOf);
   normalizeReferences(conf);
@@ -221,24 +275,26 @@ export async function run(conf, doc, cb) {
     }, [])
     .sort();
   // See if we have them in IDB
-  const promisesToFind = neededRefs.map(
-    async id => ({ id, data: await biblioDB.find(id) })
-  );
+  const promisesToFind = neededRefs.map(async id => ({
+    id,
+    data: await biblioDB.find(id),
+  }));
   const idbRefs = await Promise.all(promisesToFind);
-  const split = idbRefs
-    .reduce((collector, ref) => {
+  const split = idbRefs.reduce(
+    (collector, ref) => {
       if (ref.data) {
         collector.hasData.push(ref);
       } else {
         collector.noData.push(ref);
       }
       return collector;
-    }, { hasData: [], noData: [] });
-  split.hasData
-    .reduce((collector, ref) => {
-      collector[ref.id] = ref.data;
-      return collector;
-    }, conf.biblio);
+    },
+    { hasData: [], noData: [] }
+  );
+  split.hasData.reduce((collector, ref) => {
+    collector[ref.id] = ref.data;
+    return collector;
+  }, conf.biblio);
   const externalRefs = split.noData.map(item => item.id);
   if (externalRefs.length) {
     // Going to the network for refs we don't have

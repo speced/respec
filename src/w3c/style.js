@@ -15,8 +15,10 @@ function attachFixupScript(doc, version) {
       window.location = window.location;
     }
   });
-  var helperScript = "https://www.w3.org/scripts/TR/{version}/fixup.js"
-    .replace("{version}", version);
+  var helperScript = "https://www.w3.org/scripts/TR/{version}/fixup.js".replace(
+    "{version}",
+    version
+  );
   script.src = helperScript;
   doc.body.appendChild(script);
 }
@@ -30,7 +32,7 @@ function createMetaViewport() {
   var meta = document.createElement("meta");
   meta.name = "viewport";
   var contentProps = {
-    "width": "device-width",
+    width: "800",
     "initial-scale": "1",
     "shrink-to-fit": "no",
   };
@@ -62,22 +64,27 @@ function selectStyleVersion(styleVersion) {
 }
 
 function createResourceHints() {
-  var resourceHints = [{
+  var resourceHints = [
+    {
       hint: "preconnect", // for W3C styles and scripts.
       href: "https://www.w3.org",
-    }, {
+    },
+    {
       hint: "preload", // all specs need it, and we attach it on end-all.
       href: "https://www.w3.org/scripts/TR/2016/fixup.js",
       as: "script",
-    }, {
+    },
+    {
       hint: "preload", // all specs include on base.css.
       href: "https://www.w3.org/StyleSheets/TR/2016/base.css",
       as: "style",
-    }, {
+    },
+    {
       hint: "preload", // all specs show the logo.
       href: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
       as: "image",
-    }]
+    },
+  ]
     .map(createResourceHint)
     .reduce(function(frag, link) {
       frag.appendChild(link);
@@ -142,11 +149,15 @@ export function run(conf, doc, cb) {
   var version = selectStyleVersion(conf.useExperimentalStyles || "2016");
   // Attach W3C fixup script after we are done.
   if (version && !conf.noToc) {
-    sub("end-all", function() {
-      attachFixupScript(doc, version);
-    }, { once: true });
+    sub(
+      "end-all",
+      function() {
+        attachFixupScript(doc, version);
+      },
+      { once: true }
+    );
   }
-  var finalVersionPath = (version) ? version + "/" : "";
+  var finalVersionPath = version ? version + "/" : "";
   finalStyleURL = styleBaseURL.replace("{version}", finalVersionPath);
   finalStyleURL += styleFile;
 

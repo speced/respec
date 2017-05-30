@@ -20,7 +20,7 @@ describe("Core — Default Root Attribute", function() {
     var ops = {
       config: makeBasicConfig(),
       htmlAttrs: {
-        dir: "rtl"
+        dir: "rtl",
       },
       body: makeDefaultBody(),
     };
@@ -34,7 +34,7 @@ describe("Core — Default Root Attribute", function() {
     var ops = {
       config: makeBasicConfig(),
       htmlAttrs: {
-        lang: "fr"
+        lang: "fr",
       },
       body: makeDefaultBody(),
     };

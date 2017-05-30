@@ -13,7 +13,12 @@ import { pub } from "core/pubsubhub";
 export const name = "core/base-runner";
 
 function toRunnable(plug) {
-  const name = plug.hasOwnProperty("name") ? plug.name : "";
+  const name = plug.name || "";
+  // Modern plugins are async or normal functions, take one argument (conf)
+  if (plug.run.length === 1) {
+    return plug.run.bind(plug);
+  }
+  // legacy plugins
   return config => {
     return new Promise((resolve, reject) => {
       const timerId = setTimeout(() => {
