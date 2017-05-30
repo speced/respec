@@ -72,5 +72,6 @@ js/geonovum/headers.js
 js/geonovum/informative.js
 js/geonovum/linter.js
 js/geonovum/permalinks.js
+js/geonovum/rfc2119.js
 js/geonovum/seo.js
 js/geonovum/style.js
