@@ -12,30 +12,26 @@ import { sub } from "core/pubsubhub";
 export const name = "core/override-configuration";
 
 function overrideConfig(config) {
-  if (!document.location.search) {
-    return;
-  }
-  const overrideProps = {};
-  document.location.search
-    //Remove "?" from search
-    .replace(/^\?/, "")
-    // The default separator is ";" for key/value pairs
-    .split(";")
-    .filter(item => item.trim())
-    //decode Key/Values
-    .reduce((collector, item) => {
-      const keyValue = item.split("=", 2);
-      const key = decodeURIComponent(keyValue[0]);
-      const value = decodeURIComponent(keyValue[1].replace(/%3D/g, "="));
-      let parsedValue;
+  const overrideProps = Array.from(
+    new URL(document.location.href.replace(/;/g, "&")).searchParams.entries()
+  )
+    .filter(([key, value]) => !!key && !!value)
+    .map(([codedKey, codedValue]) => {
+      const key = decodeURIComponent(codedKey);
+      const decodedValue = decodeURIComponent(codedValue.replace(/%3D/g, "="));
+      let value;
       try {
-        parsedValue = JSON.parse(value);
+        value = JSON.parse(decodedValue);
       } catch (err) {
-        parsedValue = value;
+        value = decodedValue;
+      } finally {
+        return { key, value };
       }
-      collector[key] = parsedValue;
+    })
+    .reduce((collector, { key, value }) => {
+      collector[key] = value;
       return collector;
-    }, overrideProps);
+    }, {});
   Object.assign(config, overrideProps);
 }
 sub("start-all", overrideConfig, { once: true });

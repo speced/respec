@@ -32,7 +32,7 @@ function createMetaViewport() {
   var meta = document.createElement("meta");
   meta.name = "viewport";
   var contentProps = {
-    width: "device-width",
+    width: "800",
     "initial-scale": "1",
     "shrink-to-fit": "no",
   };
