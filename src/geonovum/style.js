@@ -114,6 +114,9 @@ export function run(conf, doc, cb) {
     case "GN-DEF":
       styleFile += "GN-DEF.css";
       break;
+    case "GN-BASIS":
+      styleFile += "GN-BASIS.css";
+      break;
     default:
       styleFile = "base.css";
   }
