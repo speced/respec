@@ -18,7 +18,7 @@ div.innerHTML = `
 `;
 
 const button = ui.addCommand(
-  "About ReSpec",
+  "Over ReSpec",
   "geonovum/ui/about-respec",
   "Ctrl+Shift+Alt+A",
   "ℹ️"

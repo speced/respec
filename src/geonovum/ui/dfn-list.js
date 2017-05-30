@@ -4,7 +4,7 @@ import ui from "core/ui";
 import hyperHTML from "deps/hyperhtml";
 
 const button = ui.addCommand(
-  "Definition List",
+  "Lijst van Definities",
   "geonovum/ui/dfn-list",
   "Ctrl+Shift+Alt+D",
   "📔"

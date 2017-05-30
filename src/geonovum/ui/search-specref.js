@@ -22,8 +22,8 @@ function renderResults(resultMap, query, timeTaken) {
   if (!resultMap.size) {
     return resultList`
       <p class="state">
-        Your search - <strong>${query}</strong> -
-        did not match any references.
+        Zoekterm - <strong>${query}</strong> -
+        komt niet overeen met referenties.
       </p>
     `;
   }
@@ -130,8 +130,8 @@ const mast = hyperHTML.wire()`
   </header>
   <div class="searchcomponent">
     <input
-      name="zoekBox"
-      type="zoek"
+      name="searchBox"
+      type="search"
       autocomplete="off"
       placeholder="Keywords, titles, auteurs, urls…">
     <button
