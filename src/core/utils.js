@@ -365,7 +365,7 @@ export function lead0(str) {
 
 // takes a YYYY-MM-DD date and returns a Date object for it
 export function parseSimpleDate(str) {
-  return new Date(str.substr(0, 4), str.substr(5, 2) - 1, str.substr(8, 2));
+  return new Date(Date.parse(str));
 }
 
 // takes what document.lastModified returns and produces a Date object for it
