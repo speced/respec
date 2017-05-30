@@ -1,5 +1,97 @@
 # Change Log
 
+## [v12.1.1](https://github.com/w3c/respec/tree/v12.1.1) (2017-05-29)
+[Full Changelog](https://github.com/w3c/respec/compare/v12.1.0...v12.1.1)
+
+**Merged pull requests:**
+
+- refactor\(tools/release\): use async/await [\#1242](https://github.com/w3c/respec/pull/1242) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v12.1.0](https://github.com/w3c/respec/tree/v12.1.0) (2017-05-29)
+[Full Changelog](https://github.com/w3c/respec/compare/v12.0.6...v12.1.0)
+
+**Implemented enhancements:**
+
+- Better support for illegal-example [\#62](https://github.com/w3c/respec/issues/62)
+
+**Closed issues:**
+
+- ReSpec eats \<..\> sequences from WebIDL [\#1235](https://github.com/w3c/respec/issues/1235)
+
+**Merged pull requests:**
+
+- chore\(package\): update deps [\#1241](https://github.com/w3c/respec/pull/1241) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(ui/search-specref\): reimagine specref search [\#1240](https://github.com/w3c/respec/pull/1240) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v12.0.6](https://github.com/w3c/respec/tree/v12.0.6) (2017-05-21)
+[Full Changelog](https://github.com/w3c/respec/compare/v12.0.5...v12.0.6)
+
+**Merged pull requests:**
+
+- refactor: es6 + hyperHTML  [\#1234](https://github.com/w3c/respec/pull/1234) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(.travis\): combine stages into one [\#1233](https://github.com/w3c/respec/pull/1233) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v12.0.5](https://github.com/w3c/respec/tree/v12.0.5) (2017-05-19)
+[Full Changelog](https://github.com/w3c/respec/compare/v12.0.4...v12.0.5)
+
+**Closed issues:**
+
+- Missing backslash in github.js [\#1224](https://github.com/w3c/respec/issues/1224)
+
+**Merged pull requests:**
+
+- fix\(core/github\): missing backslash \(closes \#1224\) [\#1232](https://github.com/w3c/respec/pull/1232) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v12.0.4](https://github.com/w3c/respec/tree/v12.0.4) (2017-05-19)
+[Full Changelog](https://github.com/w3c/respec/compare/v12.0.3...v12.0.4)
+
+**Merged pull requests:**
+
+- chore: switch to uglify-es [\#1230](https://github.com/w3c/respec/pull/1230) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v12.0.3](https://github.com/w3c/respec/tree/v12.0.3) (2017-05-19)
+[Full Changelog](https://github.com/w3c/respec/compare/v12.0.2...v12.0.3)
+
+**Merged pull requests:**
+
+- refactor: switch from fs-promise to fs-extra [\#1229](https://github.com/w3c/respec/pull/1229) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore: use hljs from command line [\#1228](https://github.com/w3c/respec/pull/1228) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(.travis\): split into jobs/stages [\#1222](https://github.com/w3c/respec/pull/1222) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(package\): update deps [\#1218](https://github.com/w3c/respec/pull/1218) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v12.0.2](https://github.com/w3c/respec/tree/v12.0.2) (2017-05-18)
+[Full Changelog](https://github.com/w3c/respec/compare/v12.0.1...v12.0.2)
+
+**Closed issues:**
+
+- respec-w3c-common returns "undefined" [\#1225](https://github.com/w3c/respec/issues/1225)
+
+## [v12.0.1](https://github.com/w3c/respec/tree/v12.0.1) (2017-05-18)
+[Full Changelog](https://github.com/w3c/respec/compare/v12.0.0...v12.0.1)
+
+## [v12.0.0](https://github.com/w3c/respec/tree/v12.0.0) (2017-05-18)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.8.1...v12.0.0)
+
+**Merged pull requests:**
+
+- BREAKING CHANGE: upgrade WebIDL parser [\#1221](https://github.com/w3c/respec/pull/1221) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v11.8.1](https://github.com/w3c/respec/tree/v11.8.1) (2017-05-18)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.8.0...v11.8.1)
+
+**Merged pull requests:**
+
+- update l10n.js [\#1220](https://github.com/w3c/respec/pull/1220) ([chaals](https://github.com/chaals))
+- Update l10n.js [\#1219](https://github.com/w3c/respec/pull/1219) ([chaals](https://github.com/chaals))
+
+## [v11.8.0](https://github.com/w3c/respec/tree/v11.8.0) (2017-05-15)
+[Full Changelog](https://github.com/w3c/respec/compare/v11.7.0...v11.8.0)
+
+**Merged pull requests:**
+
+- feat\(core/markdown\): add data-format support [\#1216](https://github.com/w3c/respec/pull/1216) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/github\): lowercase host, origin check [\#1215](https://github.com/w3c/respec/pull/1215) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v11.7.0](https://github.com/w3c/respec/tree/v11.7.0) (2017-05-11)
 [Full Changelog](https://github.com/w3c/respec/compare/v11.6.0...v11.7.0)
 
@@ -322,10 +414,6 @@
 
 ## [v10.4.0](https://github.com/w3c/respec/tree/v10.4.0) (2017-02-21)
 [Full Changelog](https://github.com/w3c/respec/compare/v10.3.0...v10.4.0)
-
-**Implemented enhancements:**
-
-- Better support for illegal-example [\#62](https://github.com/w3c/respec/issues/62)
 
 ## [v10.3.0](https://github.com/w3c/respec/tree/v10.3.0) (2017-02-21)
 [Full Changelog](https://github.com/w3c/respec/compare/v10.2.1...v10.3.0)

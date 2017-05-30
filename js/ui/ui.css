@@ -321,9 +321,9 @@ p + .respec-button-copy-paste {
 }
 
 #specref-ui .searchcomponent {
+  font-size: 16px;
   display: grid;
-  grid-template-columns: auto 1.6cm;
-  margin: 0 .5cm;
+  grid-template-columns: auto 2cm;
 }
 #specref-ui .searchcomponent:focus {
 
@@ -343,6 +343,8 @@ p + .respec-button-copy-paste {
 }
 
 #specref-ui input[type=search] {
+  -webkit-appearance: none;
+  font-size: 16px;
   border-radius: .1cm  0 0 .1cm;
   border: 1px solid rgb(204,204,204);
 }
