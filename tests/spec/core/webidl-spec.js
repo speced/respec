@@ -657,4 +657,9 @@ describe("Core - WebIDL", function() {
       $section.find("#without-link-for a:contains('Documented')").attr("href")
     ).toEqual("#idl-def-documented");
   });
+  it("retains css classes afer processing", () => {
+    const elem = doc.getElementById("retain-css-classes");
+    const expected = ["a", "b", "c", "overlarge"];
+    expect(expected.every(item => elem.classList.contains(item))).toBe(true);
+  });
 });
