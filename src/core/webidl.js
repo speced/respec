@@ -1220,6 +1220,7 @@ export function run(conf, doc, cb) {
         conf.definitionMap[title].push(elem);
       });
     $(this).replaceWith($df);
+    $df[0].classList.add(...this.classList);
   });
   doc.normalize();
   finish();
