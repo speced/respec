@@ -1,95 +1,72 @@
 <div class='head'>
   <p>
-    {{#if logos}}
-      {{showLogos logos}}
-    {{else}}
-      <a class='logo' href='http://www.geonovum.nl/'>
+    {{#if logos}} {{showLogos logos}} {{else}}
+    <a class='logo' href='http://www.geonovum.nl/'>
         <img width='132' height='67' src='https://tools.geostandaarden.nl/respec/media/logos/Geonovum.svg' alt='Geonovum'>
-      </a>
-    {{/if}}
-    </p>
-    <h1 class='title p-name' id='title'{{#if doRDFa}} property='dcterms:title'{{/if}}>{{title}}</h1>
-    {{#if subtitle}}
-      <h2 {{#if doRDFa}}property='bibo:subtitle' {{/if}}id='subtitle'>{{subtitle}}</h2>
-    {{/if}}
-    <h2>Geonovum {{textStatus}} 
-      <time {{#if doRDFa}}property="dcterms:issued"{{/if}}class='dt-published' datetime='{{dashDate}}'>
-        {{publishHumanDate}}
-      </time>
-      <br>{{#if isRegular}}{{typeStatus}} {{/if}}
-    </h2>
-    <dl>
+      </a> {{/if}}
+  </p>
+  <h1 class='title p-name' id='title' {{#if doRDFa}} property='dcterms:title' {{/if}}>{{title}}</h1>
+  {{#if subtitle}}
+  <h2 {{#if doRDFa}}property='bibo:subtitle' {{/if}}id='subtitle'>{{subtitle}}</h2>
+  {{/if}}
+  <h2>Geonovum {{textStatus}}
+    <time {{#if doRDFa}}property="dcterms:issued" {{/if}}class='dt-published' datetime='{{dashDate}}'>
+      {{publishHumanDate}}
+    </time>
+    <br>{{#if isRegular}}{{typeStatus}} {{/if}}
+  </h2>
+  <dl>
     {{#unless isNoTrack}}
-      <dt>{{l10n.this_version}}</dt>
-      <dd><a class='u-url' href='{{thisVersion}}'>{{thisVersion}}</a></dd>
-      <dt>{{l10n.latest_published_version}}</dt>
-      <dd>{{#if latestVersion}}<a href='{{latestVersion}}'>{{latestVersion}}</a>{{else}}none{{/if}}</dd>
-    {{/unless}}
-    {{#unless isOfficial}}
-      <dt>{{l10n.latest_editors_draft}}</dt>
-      <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
-    {{/unless}}
-    {{#if prevVersion}}
-      <dt>Vorige versie:</dt>
-      <dd><a href='{{prevVersion}}'>{{prevVersion}}</a></dd>
+    <dt>{{l10n.this_version}}</dt>
+    <dd><a class='u-url' href='{{thisVersion}}'>{{thisVersion}}</a></dd>
+    <dt>{{l10n.latest_published_version}}</dt>
+    <dd>{{#if latestVersion}}<a href='{{latestVersion}}'>{{latestVersion}}</a>{{else}}none{{/if}}</dd>
+    {{/unless}} {{#unless isOfficial}}
+    <dt>{{l10n.latest_editors_draft}}</dt>
+    <dd><a href='{{edDraftURI}}'>{{edDraftURI}}</a></dd>
+    {{/unless}} {{#if prevVersion}}
+    <dt>Vorige versie:</dt>
+    <dd><a href='{{prevVersion}}'>{{prevVersion}}</a></dd>
     {{/if}}
     <dt>
       {{#if multipleEditors}}{{l10n.editors}}{{else}}{{l10n.editor}}{{/if}}
     </dt>
-    {{showPeople "Editor" editors}}
-    {{#if authors}}
-      <dt>
-        {{#if multipleAuthors}}{{l10n.authors}}{{else}}{{l10n.author}}{{/if}}
-      </dt>
-    {{showPeople "Author" authors}}
-    {{/if}}
-    {{#if otherLinks}}
-      {{#each otherLinks}}
-        {{#if key}}
-          <dt {{#if class}}class="{{class}}"{{/if}}>{{key}}:</dt>
-          {{#if data}}
-             {{#each data}}
-                {{#if value}}
-                  <dd {{#if class}}class="{{class}}"{{/if}}>
-                    {{#if href}}<a href="{{href}}">{{/if}}
+    {{showPeople "Editor" editors}} {{#if authors}}
+    <dt>
+      {{#if multipleAuthors}}{{l10n.authors}}{{else}}{{l10n.author}}{{/if}}
+    </dt>
+    {{showPeople "Author" authors}} {{/if}} {{#if otherLinks}} {{#each otherLinks}} {{#if key}}
+    <dt {{#if class}}class="{{class}}" {{/if}}>{{key}}:</dt>
+    {{#if data}} {{#each data}} {{#if value}}
+    <dd {{#if class}}class="{{class}}" {{/if}}>
+      {{#if href}}<a href="{{href}}">{{/if}}
                       {{value}}
                     {{#if href}}</a>{{/if}}
-                  </dd>
-                {{else}}
-                  {{#if href}}
-                    <dd><a href="{{href}}">{{href}}</a></dd>
-                  {{/if}}
-                {{/if}}
-             {{/each}}
-          {{else}}
-            {{#if value}}
-              <dd {{#if class}}class="{{class}}"{{/if}}>
-                {{#if href}}<a href="{{href}}">{{/if}}
+    </dd>
+    {{else}} {{#if href}}
+    <dd><a href="{{href}}">{{href}}</a></dd>
+    {{/if}} {{/if}} {{/each}} {{else}} {{#if value}}
+    <dd {{#if class}}class="{{class}}" {{/if}}>
+      {{#if href}}<a href="{{href}}">{{/if}}
                   {{value}}
                 {{#if href}}</a>{{/if}}
-              </dd>
-            {{else}}
-              {{#if href}}
-                <dd {{#if class}}class="{{class}}"{{/if}}>
-                  <a href="{{href}}">{{href}}</a>
-                </dd>
-              {{/if}}
-            {{/if}}
-          {{/if}}
-        {{/if}}
-      {{/each}}
-    {{/if}}
-  <dt>Rechtenbeleid:</dt>  
-  <div class='copyright' style="margin: 0.25em;">
-    <abbr title='Naamsvermelding-GeenAfgeleideWerken 3.0 Nederland'>
+    </dd>
+    {{else}} {{#if href}}
+    <dd {{#if class}}class="{{class}}" {{/if}}>
+      <a href="{{href}}">{{href}}</a>
+    </dd>
+    {{/if}} {{/if}} {{/if}} {{/if}} {{/each}} {{/if}}
+    <dt>Rechtenbeleid:</dt>
+    <div class='copyright' style="margin: 0.25em 0;">
+      <abbr title='Naamsvermelding-GeenAfgeleideWerken 3.0 Nederland'>
       <a href='https://creativecommons.org/licenses/by-nd/3.0/nl/'>
         <img src='https://tools.geostandaarden.nl/respec/media/logos/CC-Licentie.svg' alt='Naamsvermelding-GeenAfgeleideWerken 3.0 Nederland' width='115px' height='40px'>
       </a>
     </abbr>
-    <div style="display:inline-block; vertical-align:top">
-      <p style="font-size: small;">Naamsvermelding-GeenAfgeleideWerken 3.0 Nederland<br>(CC BY-ND 3.0)</p>
+      <div style="display:inline-block; vertical-align:top">
+        <p style="font-size: small;">Naamsvermelding-GeenAfgeleideWerken 3.0 Nederland<br>(CC BY-ND 3.0)</p>
+      </div>
     </div>
-  </div>
   </dl>
   <hr title="Separator for header">
 </div>
