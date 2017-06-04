@@ -44,7 +44,6 @@ describe("Core — data-cite attribute", () => {
       expect(t3.href).toEqual(urlSpecHref);
       expect(t4.href).toEqual(urlSpecHref);
       const fooBarHref = new URL("#test5", "https://console.spec.whatwg.org/").href;
-      console.log(t5);
       expect(t5.href).toEqual(fooBarHref);
       done();
     });
