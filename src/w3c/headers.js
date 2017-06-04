@@ -348,7 +348,8 @@ const licenses = {
   "w3c-software-doc": {
     name: "W3C Software and Document Notice and License",
     short: "W3C Software and Document",
-    url: "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
+    url:
+      "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
   },
   "cc-by": {
     name: "Creative Commons Attribution 4.0 International Public License",
@@ -609,14 +610,14 @@ export function run(conf, doc, cb) {
   $("body", doc).prepend($(bp)).addClass("h-entry");
 
   // handle SotD
-  var $sotd = $("#sotd");
-  if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !$sotd.length)
+  var sotd = document.getElementById("sotd");
+  if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !sotd) {
     pub(
       "error",
       "A custom SotD paragraph is required for your type of document."
     );
-  conf.sotdCustomParagraph = $sotd.html();
-  $sotd.remove();
+  }
+  sotd.classList.add("introductory");
   // NOTE:
   //  When arrays, wg and wgURI have to be the same length (and in the same order).
   //  Technically wgURI could be longer but the rest is ignored.
@@ -686,10 +687,33 @@ export function run(conf, doc, cb) {
   // ensure subjectPrefix is encoded before using template
   if (conf.subjectPrefix !== "")
     conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
-  var sotd;
-  if (conf.isCGBG) sotd = cgbgSotdTmpl(conf);
-  else sotd = sotdTmpl(conf);
-  if (sotd) $(sotd).insertAfter($("#abstract"));
+  const newSotdHTML = conf.isCGBG ? cgbgSotdTmpl(conf) : sotdTmpl(conf);
+  // we add custom paragraphs is, and then any sections
+  const customParas = document.createDocumentFragment();
+  const tmpElem = document.createElement("tmp");
+  tmpElem.innerHTML = newSotdHTML;
+  const insertionPoint = tmpElem.querySelector("#rs-insertion-point");
+  // We replace the insertion point with the custom paragraph(s): anything that's not a section.
+  if (insertionPoint) {
+    while (sotd.hasChildNodes) {
+      if (
+        sotd.firstChild.nodeType !== Node.ELEMENT_NODE ||
+        sotd.firstChild.localName !== "section"
+      ) {
+        customParas.appendChild(sotd.firstChild);
+        continue;
+      }
+      break;
+    }
+    tmpElem.replaceChild(customParas, insertionPoint);
+    // Then we add the remaining sections at the end
+    Array.from(sotd.childNodes).reduce((tmpElem, node) => {
+      tmpElem.appendChild(node);
+      return tmpElem;
+    }, tmpElem);
+  }
+
+  sotd.innerHTML = tmpElem.innerHTML;
 
   if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
     pub(
