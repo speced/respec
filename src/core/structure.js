@@ -101,9 +101,11 @@ export function run(conf, doc, cb) {
   if ("maxTocLevel" in conf === false) {
     conf.maxTocLevel = 0;
   }
-  var $secs = $("section:not(.introductory)", doc).find(
-    "h1:first, h2:first, h3:first, h4:first, h5:first, h6:first"
-  );
+  var $secs = $("section:not(.introductory)", doc)
+    .find("h1:first, h2:first, h3:first, h4:first, h5:first, h6:first")
+    .toArray()
+    .filter(elem => elem.closest("section.introductory") === null);
+  $secs = $($secs);
   if (!$secs.length) {
     return cb();
   }

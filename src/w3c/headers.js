@@ -104,9 +104,7 @@ import { pub } from "core/pubsubhub";
 import tmpls from "templates";
 
 const cgbgHeadersTmpl = tmpls["cgbg-headers.html"];
-const cgbgSotdTmpl = tmpls["cgbg-sotd.html"];
 const headersTmpl = tmpls["headers.html"];
-const sotdTmpl = tmpls["sotd.html"];
 
 hb.registerHelper("showPeople", function(name, items) {
   // stuff to handle RDFa
@@ -609,14 +607,16 @@ export function run(conf, doc, cb) {
   $("body", doc).prepend($(bp)).addClass("h-entry");
 
   // handle SotD
-  var $sotd = $("#sotd");
-  if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !$sotd.length)
+  var sotd =
+    document.body.querySelector("#sotd") || document.createElement("section");
+  if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !sotd.id) {
     pub(
       "error",
       "A custom SotD paragraph is required for your type of document."
     );
-  conf.sotdCustomParagraph = $sotd.html();
-  $sotd.remove();
+  }
+  sotd.id = sotd.id || "stod";
+  sotd.classList.add("introductory");
   // NOTE:
   //  When arrays, wg and wgURI have to be the same length (and in the same order).
   //  Technically wgURI could be longer but the rest is ignored.
@@ -627,17 +627,14 @@ export function run(conf, doc, cb) {
   //  can be shorter — but it still needs to be an array.
   var wgPotentialArray = [conf.wg, conf.wgURI, conf.wgPatentURI];
   if (
-    wgPotentialArray.some(function(it) {
-      return $.isArray(it);
-    }) &&
-    wgPotentialArray.some(function(it) {
-      return !$.isArray(it);
-    })
-  )
+    wgPotentialArray.some(item => Array.isArray(item)) &&
+    wgPotentialArray.every(item => Array.isArray(item))
+  ) {
     pub(
       "error",
       "If one of 'wg', 'wgURI', or 'wgPatentURI' is an array, they all have to be."
     );
+  }
   if ($.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
     conf.wgHTML = joinAnd(conf.wg, function(wg, idx) {
@@ -686,10 +683,8 @@ export function run(conf, doc, cb) {
   // ensure subjectPrefix is encoded before using template
   if (conf.subjectPrefix !== "")
     conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
-  var sotd;
-  if (conf.isCGBG) sotd = cgbgSotdTmpl(conf);
-  else sotd = sotdTmpl(conf);
-  if (sotd) $(sotd).insertAfter($("#abstract"));
+
+  sotd.innerHTML = populateSoTD(conf, sotd);
 
   if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
     pub(
@@ -697,12 +692,35 @@ export function run(conf, doc, cb) {
       "CR, PR, and REC documents need to have an implementationReportURI defined."
     );
   }
-  if (conf.isTagFinding && !conf.sotdCustomParagraph) {
+  if (conf.isTagFinding && !conf.additionalContent) {
     pub(
-      "error",
+      "warn",
       "ReSpec does not support automated SotD generation for TAG findings, " +
-        "please specify one using a <code><section></code> element with ID=sotd."
+        "please add the prerequisite content in the 'sotd' section"
     );
   }
   cb();
+}
+
+function populateSoTD(conf, sotd) {
+  const sotdClone = sotd.cloneNode(true);
+  const additionalNodes = document.createDocumentFragment();
+  const additionalContent = document.createElement("temp");
+  // we collect everything until we hit a section,
+  // that becomes the custom content.
+  while (sotdClone.hasChildNodes()) {
+    if (
+      sotdClone.firstChild.nodeType !== Node.ELEMENT_NODE ||
+      sotdClone.firstChild.localName !== "section"
+    ) {
+      additionalNodes.appendChild(sotdClone.firstChild);
+      continue;
+    }
+    break;
+  }
+  additionalContent.appendChild(additionalNodes);
+  conf.additionalContent = additionalContent.innerHTML;
+  // Whatever sections are left, we throw at the end.
+  conf.additionalSections = sotdClone.innerHTML;
+  return tmpls[conf.isCGBG ? "cgbg-sotd.html" : "sotd.html"](conf);
 }
