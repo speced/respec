@@ -7,8 +7,9 @@ describe("Core — data-cite attribute", () => {
   it("links directly to externally defined references", done => {
     const ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        `
+      body:
+        makeDefaultBody() +
+          `
         <section>
           <p id="t1"><a>inline link</a></p>
           <p id="t2"><dfn data-cite="!WHATWG-HTML#test">inline link</dfn></p>
@@ -42,8 +43,9 @@ describe("Core — data-cite attribute", () => {
   it("links data-cite attributes as normative reference", done => {
     const ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        `
+      body:
+        makeDefaultBody() +
+          `
         <section>
           <p id="t1"><a data-cite="!WHATWG-HTML">inline link</a></p>
         </section>
@@ -64,8 +66,9 @@ describe("Core — data-cite attribute", () => {
   it("links data-cite attributes as informative reference", done => {
     const ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        `
+      body:
+        makeDefaultBody() +
+          `
           <section>
             <p id="t1"><a data-cite="WHATWG-DOM">inline link</a></p>
           </section>
@@ -86,8 +89,9 @@ describe("Core — data-cite attribute", () => {
   it("handles bogus data-cite values", done => {
     const ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        `
+      body:
+        makeDefaultBody() +
+          `
           <section>
             <p id="t1"><a data-cite="no-exist-inf">link 1</a></p>
             <p id="t2"><a data-cite="!no-exist-norm">link 2</a></p>
@@ -116,8 +120,9 @@ describe("Core — data-cite attribute", () => {
   it("adds the fragment identifier to the link", done => {
     const ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        `
+      body:
+        makeDefaultBody() +
+          `
         <section>
           <p id="t1"><a
             data-cite="!WHATWG-HTML#test">inline link</a></p>
@@ -140,8 +145,9 @@ describe("Core — data-cite attribute", () => {
     it("adds the fragment identifier to the link", done => {
       const ops = {
         config: makeBasicConfig(),
-        body: makeDefaultBody() +
-          `
+        body:
+          makeDefaultBody() +
+            `
         <section>
           <p id="t1"><a
             data-cite="WHATWG-HTML"
@@ -166,8 +172,9 @@ describe("Core — data-cite attribute", () => {
     it("cited fragments are overridden by cite-frag", done => {
       const ops = {
         config: makeBasicConfig(),
-        body: makeDefaultBody() +
-          `
+        body:
+          makeDefaultBody() +
+            `
         <section>
           <p id="t1"><a
             data-cite="!WHATWG-HTML#fail"
