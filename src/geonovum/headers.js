@@ -63,7 +63,6 @@ import { pub } from "core/pubsubhub";
 import tmpls from "templates";
 
 var headersTmpl = tmpls["headers.html"];
-var sotdTmpl = tmpls["sotd.html"];
 
 hb.registerHelper("showPeople", function(name, items) {
   // stuff to handle RDFa
@@ -396,10 +395,32 @@ export function run(conf, doc, cb) {
   bp = headersTmpl(conf);
   $("body", doc).prepend($(bp)).addClass("h-entry");
   //SotD
-  var $sotd = $("#sotd");
-  conf.sotdCustomParagraph = $sotd.html();
-  $sotd.remove();
-  var sotd = sotdTmpl(conf);
-  if (sotd) $(sotd).insertAfter($("#abstract"));
+  var sotd =
+    document.body.querySelector("#sotd") || document.createElement("section");
+  sotd.id = sotd.id || "stod";
+  sotd.classList.add("introductory");
+  sotd.innerHTML = populateSoTD(conf, sotd);
+  function populateSoTD(conf, sotd) {
+    const sotdClone = sotd.cloneNode(true);
+    const additionalNodes = document.createDocumentFragment();
+    const additionalContent = document.createElement("temp");
+    // we collect everything until we hit a section,
+    // that becomes the custom content.
+    while (sotdClone.hasChildNodes()) {
+      if (
+        sotdClone.firstChild.nodeType !== Node.ELEMENT_NODE ||
+        sotdClone.firstChild.localName !== "section"
+      ) {
+        additionalNodes.appendChild(sotdClone.firstChild);
+        continue;
+      }
+      break;
+    }
+    additionalContent.appendChild(additionalNodes);
+    conf.additionalContent = additionalContent.innerHTML;
+    // Whatever sections are left, we throw at the end.
+    conf.additionalSections = sotdClone.innerHTML;
+    return tmpls[conf.isCGBG ? "cgbg-sotd.html" : "sotd.html"](conf);
+  }
   cb();
 }
