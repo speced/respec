@@ -4,7 +4,51 @@ describe("Core — data-cite attribute", () => {
     flushIframes();
     done();
   });
-  it(`treats data-cite="#foo" as self citing`, done => {
+  it(`walks up the tree to find the right reference to cite`, done => {
+    const ops = {
+      config: makeBasicConfig(),
+      body:
+        makeDefaultBody() +
+          `
+      <section data-cite="dahut">
+        <h2>test</h2>
+        <p>
+          <a id="t1" data-cite="#test">a</a>
+          <dfn id="t2" data-cite="#test">a</dfn>
+        </p>
+        <p data-cite="URL">
+          <a id="t3" data-cite="#urlspec">a</a>
+        </p>
+        <section data-cite="URL">
+          <div data-cite="#fail">
+            <p data-cite="#fail">
+              <a id="t4" data-cite="#urlspec">a</a>
+              <a id="t5" data-cite="CONSOLE#test5">a</a>
+            </p>
+          </div>
+        </section>
+      </section>
+    `,
+    };
+    ops.config.shortName = "fail";
+    makeRSDoc(ops).then(doc => {
+      const t1 = doc.getElementById("t1");
+      const t2 = doc.getElementById("t2").querySelector("a");
+      const t3 = doc.getElementById("t3");
+      const t4 = doc.getElementById("t4");
+      const t5 = doc.getElementById("t5");
+      const location = new URL("#test", "http://berjon.com/").href;
+      expect(t1.href).toEqual(location);
+      expect(t2.href).toEqual(location);
+      const urlSpecHref = new URL("#urlspec", "https://url.spec.whatwg.org/").href;
+      expect(t3.href).toEqual(urlSpecHref);
+      expect(t4.href).toEqual(urlSpecHref);
+      const fooBarHref = new URL("#test5", "https://console.spec.whatwg.org/").href;
+      expect(t5.href).toEqual(fooBarHref);
+      done();
+    });
+  });
+  it(`treats data-cite="#foo" as self citing when there is no parent data-cite`, done => {
     const ops = {
       config: makeBasicConfig(),
       body:
@@ -28,6 +72,31 @@ describe("Core — data-cite attribute", () => {
       expect(t2.href).toEqual(location);
       done();
     });
+  });
+  it("links data-cite attributes as normative/informative reference when parent is citing", done => {
+    const ops = {
+      config: makeBasicConfig(),
+      body:
+        makeDefaultBody() +
+          `
+        <section data-cite="FETCH">
+          <p><a data-cite="#fetch-thing">informative reference</a></p>
+        </section>
+        <section data-cite="!URL">
+          <p><a data-cite="#url-thing">normative reference</a></p>
+        </section>
+      `,
+    };
+    makeRSDoc(ops)
+      .then(doc => {
+        expect(
+          doc.querySelector("#bib-URL").closest("section").id
+        ).toEqual("normative-references");
+        expect(
+          doc.querySelector("#bib-FETCH").closest("section").id
+        ).toEqual("informative-references");
+      })
+      .then(done);
   });
   it("links directly to externally defined references", done => {
     const ops = {

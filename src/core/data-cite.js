@@ -74,9 +74,16 @@ function citeDetailsConverter(conf) {
     const isNormative = key.startsWith("!");
     const fragPosition = key.search("#");
     // The key is a fragment, resolve using the shortName as key
-    if (key.startsWith("#") && !frag && conf.shortName) {
-      elem.dataset.cite = conf.shortName;
-      elem.dataset.citeFrag = key;
+    if (key.startsWith("#") && !frag) {
+      // Closes data-cite not starting with "#"
+      const closest = elem.parentElement.closest(
+        `[data-cite]:not([data-cite^="#"])`
+      );
+      const { key: parentKey, isNormative: closestIsNormative } = closest
+        ? toCiteDetails(closest)
+        : { key: conf.shortName || "", isNormative: false };
+      elem.dataset.cite = closestIsNormative ? `!${parentKey}` : parentKey;
+      elem.dataset.citeFrag = key; // the key is acting as fragment
       return toCiteDetails(elem);
     }
     if (fragPosition !== -1) {
@@ -93,9 +100,9 @@ function citeDetailsConverter(conf) {
   };
 }
 
-export function run(conf, doc, cb) {
+export async function run(conf) {
   const toCiteDetails = citeDetailsConverter(conf);
-  Array.from(doc.querySelectorAll(["dfn[data-cite], a[data-cite]"]))
+  Array.from(document.querySelectorAll(["dfn[data-cite], a[data-cite]"]))
     .filter(el => el.dataset.cite)
     .map(toCiteDetails)
     .reduce((conf, { isNormative, key }) => {
@@ -106,7 +113,6 @@ export function run(conf, doc, cb) {
       }
       return conf;
     }, conf);
-  cb();
 }
 
 export async function linkInlineCitations(doc) {
