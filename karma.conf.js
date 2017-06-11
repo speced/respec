@@ -121,7 +121,7 @@ module.exports = function(config) {
     options.singleRun = true;
     options.concurrency = 1;
     options.reporters = ["mocha"];
-    options.browsers = ["Firefox"]; //"FirefoxNightly"
+    options.browsers = ["FirefoxNightly"]; //"FirefoxNightly"
   }
   config.set(options);
 };
