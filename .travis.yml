@@ -1,34 +1,17 @@
+os: osx
+osx_image: xcode8.3
 language: node_js
 sudo: required
 dist: trusty
 node_js:
-  - v6.10
+  - v7
 
 install:
   - yarn install
 
-before_install:
-  - "export DISPLAY=:99.0"
-  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16 -extension RANDR"
-  - sh -e /etc/init.d/xvfb start
-
-before_script:
-  - export CHROME_URL=https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64
-  - export CHROME_REV=$(curl -s ${CHROME_URL}/LAST_CHANGE)
-  - curl ${CHROME_URL}/${CHROME_REV}/chrome-linux.zip --create-dirs -o out/chrome-linux.zip
-  - unzip out/chrome-linux.zip -d out
-  - export CHROME_CANARY_BIN=$PWD/out/chrome-linux/chrome
-  - export CHROME_BIN=$PWD/out/chrome-linux/chrome
-  - yarn run build
-
-
 addons:
-  firefox: "latest"
-  apt:
-    sources:
-      - google-chrome
-    packages:
-      - google-chrome-stable
+  # firefox: latest-beta
+  chrome: stable
 
 cache: yarn
 

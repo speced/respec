@@ -7,6 +7,12 @@ import { pub } from "core/pubsubhub";
 
 export const name = "core/utils";
 
+export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
 const inlineElems = new Set([
   "a",
   "abbr",
@@ -271,7 +277,7 @@ export function normalizePadding(text) {
         }
         node.textContent = padding + node.textContent.replace(replacer, "");
         return replacer;
-      }, new RegExp("^\ {1," + chop + "}", "gm"));
+      }, new RegExp("^ {1," + chop + "}", "gm"));
     // deal with pre elements... we can chop whitespace from their siblings
     const endsWithSpace = new RegExp(`\\ {${chop}}$`, "gm");
     Array.from(doc.body.querySelectorAll("pre"))
@@ -357,6 +363,11 @@ export function concatDate(date, sep) {
   );
 }
 
+// formats a date to "yyyy-mm-dd"
+export function toShortIsoDate(date) {
+  return ISODate.format(date);
+}
+
 // takes a string, prepends a "0" if it is of length 1, does nothing otherwise
 export function lead0(str) {
   str = "" + str;
@@ -365,14 +376,13 @@ export function lead0(str) {
 
 // takes a YYYY-MM-DD date and returns a Date object for it
 export function parseSimpleDate(str) {
-  return new Date(Date.parse(str));
+  return new Date(str);
 }
 
 // takes what document.lastModified returns and produces a Date object for it
 export function parseLastModified(str) {
   if (!str) return new Date();
   return new Date(Date.parse(str));
-  // return new Date(str.substr(6, 4), (str.substr(0, 2) - 1), str.substr(3, 2));
 }
 
 // list of human names for months (in English)
@@ -391,29 +401,23 @@ export const humanMonths = [
   "December",
 ];
 
-// given either a Date object or a date in YYYY-MM-DD format, return a human-formatted
-// date suitable for use in a W3C specification
-export function humanDate(date, lang = "en") {
-  if (!(date instanceof Date)) date = parseSimpleDate(date);
-  if (window.Intl) {
-    const day = date.toLocaleString([lang, "en"], { day: "2-digit" });
-    const month = date.toLocaleString([lang, "en"], { month: "long" });
-    const year = date.toLocaleString([lang, "en"], { year: "numeric" });
-    //date month year
-    return `${day} ${month} ${year}`;
-  }
-  return (
-    lead0(date.getDate()) +
-    " " +
-    humanMonths[date.getMonth()] +
-    " " +
-    date.getFullYear()
-  );
+// given either a Date object or a date in YYYY-MM-DD format,
+// return a human-formatted date suitable for use in a W3C specification
+export function humanDate(
+  date = new Date(),
+  lang = document.documentElement.lang || "en"
+) {
+  if (!(date instanceof Date)) date = new Date(date);
+  const day = date.toLocaleString([lang, "en"], { day: "2-digit" });
+  const month = date.toLocaleString([lang, "en"], { month: "long" });
+  const year = date.toLocaleString([lang, "en"], { year: "numeric" });
+  //date month year
+  return `${day} ${month} ${year}`;
 }
 // given either a Date object or a date in YYYY-MM-DD format, return an ISO formatted
 // date suitable for use in a xsd:datetime item
 export function isoDate(date) {
-  if (!(date instanceof Date)) date = parseSimpleDate(date);
+  if (!(date instanceof Date)) date = new Date(date);
   return date.toISOString();
 }
 
