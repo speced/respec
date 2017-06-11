@@ -97,7 +97,7 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: 2,
+    concurrency: 1,
 
     browserNoActivityTimeout: 100000,
 
@@ -106,7 +106,7 @@ module.exports = function(config) {
     options.detectBrowsers.enabled = true;
     options.autoWatch = false;
     options.singleRun = true;
-    options.concurrency = 1;
+    options.concurrency = 2;
     options.reporters = ["mocha"];
     //options.browsers = ["FirefoxNightly"]; //"FirefoxNightly"
   }
