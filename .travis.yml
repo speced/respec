@@ -1,4 +1,5 @@
-language: objective-c
+os: osx
+language: node_js
 sudo: required
 dist: trusty
 node_js:
@@ -7,14 +8,23 @@ node_js:
 install:
   - npm install
 
+before_install:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+
+before_script:
+  - yarn run build
+
 addons:
   firefox: latest
   chrome: stable
+
+cache: yarn
 
 jobs:
   include:
     - stage: Tests
       script: ./tests/test-build.js
-      script: npm run pretest
-      script: npm run test:headless
+      script: yarn run pretest
+      script: yarn run test:headless
       script: travis_retry karma start --single-run --reporters mocha karma.conf.js
