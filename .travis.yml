@@ -5,18 +5,16 @@ node_js:
   - v7
 
 install:
-  - yarn install
+  - npm install
 
 addons:
   firefox: latest
   chrome: stable
 
-cache: yarn
-
 jobs:
   include:
     - stage: Tests
       script: ./tests/test-build.js
-      script: yarn run pretest
-      script: yarn run test:headless
+      script: npm run pretest
+      script: npm run test:headless
       script: travis_retry karma start --single-run --reporters mocha karma.conf.js
