@@ -102,7 +102,7 @@ const headersTmpl = tmpls["headers.html"];
 const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
   year: "numeric",
   month: "long",
-  day: "2-digit"
+  day: "2-digit",
 });
 
 const humanNow = W3CDate.format(new Date());
@@ -271,7 +271,7 @@ const status2maturity = {
   "WD-NOTE": "WD",
   "LC-NOTE": "LC",
   "IG-NOTE": "NOTE",
-  "WG-NOTE": "NOTE"
+  "WG-NOTE": "NOTE",
 };
 
 const status2rdf = {
@@ -282,7 +282,7 @@ const status2rdf = {
   PR: "w3p:PR",
   REC: "w3p:REC",
   PER: "w3p:PER",
-  RSCND: "w3p:RSCND"
+  RSCND: "w3p:RSCND",
 };
 const status2text = {
   NOTE: "Working Group Note",
@@ -312,11 +312,11 @@ const status2text = {
   "CG-DRAFT": "Draft Community Group Report",
   "CG-FINAL": "Final Community Group Report",
   "BG-DRAFT": "Draft Business Group Report",
-  "BG-FINAL": "Final Business Group Report"
+  "BG-FINAL": "Final Business Group Report",
 };
 const status2long = {
   "FPWD-NOTE": "First Public Working Group Note",
-  "LC-NOTE": "Last Call Working Draft"
+  "LC-NOTE": "Last Call Working Draft",
 };
 const recTrackStatus = ["FPWD", "WD", "FPLC", "LC", "CR", "PR", "PER", "REC"];
 const noTrackStatus = [
@@ -329,7 +329,7 @@ const noTrackStatus = [
   "CG-FINAL",
   "BG-DRAFT",
   "BG-FINAL",
-  "webspec"
+  "webspec",
 ];
 const cgbg = ["CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"];
 const precededByAn = ["ED", "IG-NOTE"];
@@ -337,23 +337,24 @@ const licenses = {
   cc0: {
     name: "Creative Commons 0 Public Domain Dedication",
     short: "CC0",
-    url: "https://creativecommons.org/publicdomain/zero/1.0/"
+    url: "https://creativecommons.org/publicdomain/zero/1.0/",
   },
   "w3c-software": {
     name: "W3C Software Notice and License",
     short: "W3C Software",
-    url: "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231"
+    url: "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231",
   },
   "w3c-software-doc": {
     name: "W3C Software and Document Notice and License",
     short: "W3C Software and Document",
-    url: "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
+    url:
+      "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
   },
   "cc-by": {
     name: "Creative Commons Attribution 4.0 International Public License",
     short: "CC-BY",
-    url: "https://creativecommons.org/licenses/by/4.0/legalcode"
-  }
+    url: "https://creativecommons.org/licenses/by/4.0/legalcode",
+  },
 };
 
 export function run(conf, doc, cb) {

@@ -8,9 +8,9 @@ import { pub } from "core/pubsubhub";
 export const name = "core/utils";
 
 export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
-  "year": "numeric",
-  "month": "2-digit",
-  "day": "2-digit",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
 });
 
 const inlineElems = new Set([
@@ -277,7 +277,7 @@ export function normalizePadding(text) {
         }
         node.textContent = padding + node.textContent.replace(replacer, "");
         return replacer;
-      }, new RegExp("^\ {1," + chop + "}", "gm"));
+      }, new RegExp("^ {1," + chop + "}", "gm"));
     // deal with pre elements... we can chop whitespace from their siblings
     const endsWithSpace = new RegExp(`\\ {${chop}}$`, "gm");
     Array.from(doc.body.querySelectorAll("pre"))
@@ -364,8 +364,8 @@ export function concatDate(date, sep) {
 }
 
 // formats a date to "yyyy-mm-dd"
-export function toShortIsoDate(date){
- return ISODate.format(date);
+export function toShortIsoDate(date) {
+  return ISODate.format(date);
 }
 
 // takes a string, prepends a "0" if it is of length 1, does nothing otherwise
@@ -403,7 +403,10 @@ export const humanMonths = [
 
 // given either a Date object or a date in YYYY-MM-DD format,
 // return a human-formatted date suitable for use in a W3C specification
-export function humanDate(date=new Date(), lang = document.documentElement.lang || "en") {
+export function humanDate(
+  date = new Date(),
+  lang = document.documentElement.lang || "en"
+) {
   if (!(date instanceof Date)) date = new Date(date);
   const day = date.toLocaleString([lang, "en"], { day: "2-digit" });
   const month = date.toLocaleString([lang, "en"], { month: "long" });
