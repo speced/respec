@@ -91,20 +91,21 @@
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", the W3C Software and Document License
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
-import {
-  concatDate,
-  humanDate,
-  isoDate,
-  joinAnd,
-  parseLastModified,
-  parseSimpleDate,
-} from "core/utils";
+import { concatDate, joinAnd, ISODate } from "core/utils";
 import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
 import tmpls from "templates";
 
 const cgbgHeadersTmpl = tmpls["cgbg-headers.html"];
 const headersTmpl = tmpls["headers.html"];
+
+const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
+  year: "numeric",
+  month: "long",
+  day: "2-digit",
+});
+
+const humanNow = W3CDate.format(new Date());
 
 hb.registerHelper("showPeople", function(name, items) {
   // stuff to handle RDFa
@@ -346,7 +347,8 @@ const licenses = {
   "w3c-software-doc": {
     name: "W3C Software and Document Notice and License",
     short: "W3C Software and Document",
-    url: "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
+    url:
+      "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
   },
   "cc-by": {
     name: "Creative Commons Attribution 4.0 International Public License",
@@ -384,14 +386,12 @@ export function run(conf, doc, cb) {
     pub("error", "Missing required configuration: shortName");
   conf.title = doc.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
-  if (!conf.publishDate) {
-    conf.publishDate = parseLastModified(doc.lastModified);
-  } else {
-    if (!(conf.publishDate instanceof Date))
-      conf.publishDate = parseSimpleDate(conf.publishDate);
-  }
+  conf.publishDate = conf.publishDate
+    ? new Date(conf.publishDate)
+    : new Date(doc.lastModified);
+
   conf.publishYear = conf.publishDate.getFullYear();
-  conf.publishHumanDate = humanDate(conf.publishDate);
+  conf.publishHumanDate = W3CDate.format(conf.publishDate);
   conf.isNoTrack = $.inArray(conf.specStatus, noTrackStatus) >= 0;
   conf.isRecTrack = conf.noRecTrack
     ? false
@@ -433,19 +433,19 @@ export function run(conf, doc, cb) {
   if (conf.isTagFinding) {
     conf.latestVersion = "https://www.w3.org/2001/tag/doc/" + conf.shortName;
     conf.thisVersion =
-      conf.latestVersion + "-" + concatDate(conf.publishDate, "-");
+      conf.latestVersion + "-" + ISODate.format(conf.publishDate);
   }
   if (conf.previousPublishDate) {
     if (!conf.previousMaturity && !conf.isTagFinding)
       pub("error", "previousPublishDate is set, but not previousMaturity");
     if (!(conf.previousPublishDate instanceof Date))
-      conf.previousPublishDate = parseSimpleDate(conf.previousPublishDate);
+      conf.previousPublishDate = new Date(conf.previousPublishDate);
     var pmat = status2maturity[conf.previousMaturity]
       ? status2maturity[conf.previousMaturity]
       : conf.previousMaturity;
     if (conf.isTagFinding) {
       conf.prevVersion =
-        conf.latestVersion + "-" + concatDate(conf.previousPublishDate, "-");
+        conf.latestVersion + "-" + ISODate.format(conf.previousPublishDate);
     } else if (conf.isCGBG) {
       conf.prevVersion = conf.prevVersion || "";
     } else if (conf.isBasic) {
@@ -575,8 +575,8 @@ export function run(conf, doc, cb) {
   conf.isMO = conf.specStatus === "MO";
   conf.isIGNote = conf.specStatus === "IG-NOTE";
   conf.dashDate = concatDate(conf.publishDate, "-");
-  conf.publishISODate = isoDate(conf.publishDate);
-  conf.shortISODate = conf.publishISODate.replace(/T.*/, "");
+  conf.publishISODate = conf.publishDate.toISOString();
+  conf.shortISODate = ISODate.format(conf.publishDate);
   conf.processVersion = conf.processVersion || "2017";
   if (conf.processVersion == "2014" || conf.processVersion == "2015") {
     pub(
@@ -656,20 +656,35 @@ export function run(conf, doc, cb) {
     conf.multipleWGs = false;
     conf.wgHTML = "the <a href='" + conf.wgURI + "'>" + conf.wg + "</a>";
   }
-  if (conf.specStatus === "PR" && !conf.crEnd)
+  if (conf.specStatus === "PR" && !conf.crEnd) {
     pub(
       "error",
       "Status is PR but no crEnd is specified (needed to indicate end of previous CR)"
     );
-  if (conf.specStatus === "CR" && !conf.crEnd)
+  }
+
+  if (conf.specStatus === "CR" && !conf.crEnd) {
     pub("error", "Status is CR but no crEnd is specified");
-  conf.humanCREnd = humanDate(conf.crEnd || "");
-  if (conf.specStatus === "PR" && !conf.prEnd)
+  }
+  conf.humanCREnd = conf.crEnd
+    ? W3CDate.format(new Date(conf.crEnd))
+    : humanNow;
+
+  if (conf.specStatus === "PR" && !conf.prEnd) {
     pub("error", "Status is PR but no prEnd is specified");
-  conf.humanPREnd = humanDate(conf.prEnd || "");
-  conf.humanPEREnd = humanDate(conf.perEnd || "");
-  if (conf.specStatus === "PER" && !conf.perEnd)
+    conf.prEnd = new Date();
+  }
+  conf.humanPREnd = conf.prEnd
+    ? W3CDate.format(new Date(conf.prEnd))
+    : humanNow;
+
+  if (conf.specStatus === "PER" && !conf.perEnd) {
     pub("error", "Status is PER but no perEnd is specified");
+    conf.perEnd = new Date();
+  }
+  conf.humanPEREnd = conf.perEnd
+    ? W3CDate.format(new Date(conf.perEnd))
+    : humanNow;
 
   conf.recNotExpected =
     !conf.isRecTrack &&
