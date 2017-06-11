@@ -119,9 +119,9 @@ module.exports = function(config) {
     options.detectBrowsers.enabled = false;
     options.autoWatch = false;
     options.singleRun = true;
-    options.concurrency = 2;
+    options.concurrency = 1;
     options.reporters = ["mocha"];
-    options.browsers = ["chrome_canary_travis", "Firefox"]; //"FirefoxNightly"
+    options.browsers = ["Firefox"]; //"FirefoxNightly"
   }
   config.set(options);
 };
