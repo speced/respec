@@ -104,7 +104,14 @@ module.exports = function(config) {
     customLaunchers: {
       chrome_canary_travis: {
         base: "ChromeCanary",
-        flags: ["--no-sandbox"],
+        flags: [
+          '--no-sandbox',
+          // See https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md
+          '--headless',
+          '--disable-gpu',
+          // Without a remote debugging port, Google Chrome exits immediately.
+          ' --remote-debugging-port=9222',
+        ],
       },
     },
   };
