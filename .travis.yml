@@ -9,7 +9,7 @@ install:
   - yarn install
 
 addons:
-  firefox: latest
+  firefox: latest-nightly
   chrome: stable
 
 cache: yarn
