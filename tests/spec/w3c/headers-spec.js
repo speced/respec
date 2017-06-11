@@ -498,17 +498,17 @@ describe("W3C — Headers", function() {
       subjectPrefix: "[The Prefix]",
     };
     Object.assign(ops.config, newProps);
-    makeRSDoc(
-      ops,
-      function(doc) {
+    makeRSDoc(ops,
+      (doc) => {
         var $sotd = $("#sotd", doc);
-        expect($sotd.find("p:contains('CUSTOM PARAGRAPH')").length).toEqual(1);
-        expect($sotd.find("a:contains('WGNAME')").length).toEqual(1);
-        expect($sotd.find("a:contains('WGNAME')").attr("href")).toEqual(
-          "WGURI"
-        );
-        expect($sotd.find("a:contains('WGLIST@w3.org')").length).toEqual(1);
-        expect($sotd.find("a:contains('WGLIST@w3.org')").attr("href")).toEqual(
+        const wgname = $sotd.find("a:contains('WGNAME')").length
+        expect(wgname).toEqual(1);
+        const href = $sotd.find("a:contains('WGNAME')").attr("href")
+        expect(href).toEqual("WGURI");
+        const list = $sotd.find("a:contains('WGLIST@w3.org')").length;
+        expect(list).toEqual(1);
+        const listHref = $sotd.find("a:contains('WGLIST@w3.org')").attr("href");
+        expect(listHref).toEqual(
           "mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D"
         );
         expect($sotd.find("a:contains('subscribe')").attr("href")).toEqual(
@@ -520,8 +520,7 @@ describe("W3C — Headers", function() {
         expect($sotd.find("a:contains('disclosures')").attr("href")).toEqual(
           "WGPATENT"
         );
-      },
-      simpleSpecURL
+      }
     ).then(done);
   });
 
