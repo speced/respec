@@ -1,9 +1,10 @@
 os: osx
+osx_image: xcode8.3
 language: node_js
 sudo: required
 dist: trusty
 node_js:
-  - v7
+  - v8
 
 install:
   - yarn install
