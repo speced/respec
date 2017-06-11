@@ -10,7 +10,7 @@ install:
   - yarn install
 
 addons:
-  firefox: latest-beta
+  # firefox: latest-beta
   chrome: stable
 
 cache: yarn
