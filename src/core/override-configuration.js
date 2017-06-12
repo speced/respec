@@ -7,7 +7,7 @@
 // Note that fields are separated by semicolons and not ampersands.
 // TODO
 //  There could probably be a UI for this to make it even simpler.
-import { sub } from "core/pubsubhub";
+import { sub, pub } from "core/pubsubhub";
 
 export const name = "core/override-configuration";
 
@@ -33,5 +33,6 @@ function overrideConfig(config) {
       return collector;
     }, {});
   Object.assign(config, overrideProps);
+  pub("amend-user-config", overrideProps);
 }
 sub("start-all", overrideConfig, { once: true });
