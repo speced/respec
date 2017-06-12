@@ -7,6 +7,14 @@ export function run(conf, doc, cb) {
   if (!conf.doRDFa) {
     return cb();
   }
+  // Do abstract
+  const $abs = $("#abstract", doc);
+  if ($abs.length) {
+    var rel = "dc:abstract", ref = $abs.attr("property");
+    if (ref) rel = ref + " " + rel;
+    $abs.attr({ property: rel });
+  }
+
   $("section,nav").each(function() {
     var $sec = $(this),
       resource = "",

@@ -4,8 +4,24 @@
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
 import { pub } from "core/pubsubhub";
+import marked from "deps/marked";
+marked.setOptions({
+  sanitize: false,
+  gfm: true,
+});
 
 export const name = "core/utils";
+
+export function markdownToHtml(text) {
+  const normalizedLeftPad = normalizePadding(text);
+  // As markdown is pulled from HTML, > and & are already escaped and
+  // so blockquotes aren't picked up by the parser. This fixes it.
+  const potentialMarkdown = normalizedLeftPad
+    .replace(/&gt;/gm, ">")
+    .replace(/&amp;/gm, "&");
+  const result = marked(potentialMarkdown);
+  return result;
+}
 
 export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
   year: "numeric",
@@ -476,7 +492,11 @@ export function runTransforms(content, flist) {
         try {
           content = window[meth].apply(this, args);
         } catch (e) {
-          pub("warn", "call to " + meth + "() failed with " + e);
+          pub(
+            "warn",
+            `call to \`${meth}()\` failed with: ${e}. See error console for stack trace.`
+          );
+          console.error(e);
         }
       }
     }

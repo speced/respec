@@ -19,7 +19,7 @@ window.$.fn.renameElement = function(name) {
         $newEl[0].setAttributeNS(at.namespaceURI, at.name, at.value);
       } catch (err) {
         var msg = "Your HTML markup is malformed. Error in: \n";
-        msg += this.outerHTML;
+        msg += "```HTML\n" + this.outerHTML + "\n```";
         pub("error", msg);
         break; // no point in continuing with this element
       }
