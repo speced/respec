@@ -17,7 +17,6 @@ var idlDictionaryTmpl = tmpls["dictionary.html"];
 var idlDictMemberTmpl = tmpls["dict-member.html"];
 var idlEnumItemTmpl = tmpls["enum-item.html"];
 var idlEnumTmpl = tmpls["enum.html"];
-var idlExceptionTmpl = tmpls["exception.html"];
 var idlExtAttributeTmpl = tmpls["extended-attribute.html"];
 var idlFieldTmpl = tmpls["field.html"];
 var idlImplementsTmpl = tmpls["implements.html"];
@@ -519,38 +518,6 @@ function writeDefinition(obj, indent) {
       return writeInterfaceDefinition(opt);
     case "callback interface":
       return writeInterfaceDefinition(opt, "callback ");
-    case "exception":
-      var maxAttr = 0, maxConst = 0;
-      obj.members.forEach(function(it) {
-        if (typeIsWhitespace(it.type)) {
-          return;
-        }
-        var len = idlType2Text(it.idlType).length;
-        if (it.type === "field") maxAttr = len > maxAttr ? len : maxAttr;
-        else if (it.type === "const")
-          maxConst = len > maxConst ? len : maxConst;
-      });
-      var children = obj.members
-        .map(function(ch) {
-          switch (ch.type) {
-            case "field":
-              return writeField(ch, maxAttr, indent + 1);
-            case "const":
-              return writeConst(ch, maxConst, indent + 1);
-            case "line-comment":
-              return writeLineComment(ch, indent + 1);
-            case "multiline-comment":
-              return writeMultiLineComment(ch, indent + 1);
-            case "ws":
-              return writeBlankLines(ch);
-            case "ws-pea":
-              break;
-            default:
-              throw new Error("Unexpected type in exception: " + ch.type);
-          }
-        })
-        .join("");
-      return idlExceptionTmpl({ obj: obj, indent: indent, children: children });
     case "dictionary":
       var maxQualifiers = 0, maxType = 0;
       var members = obj.members.filter(function(member) {
