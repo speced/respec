@@ -55,9 +55,8 @@ export function run(conf, doc, cb) {
   // for Rec Track docs
   if (conf.isRecTrack && !hasPriSecConsiderations(doc)) {
     warn =
-      "This specification doesn't appear to have any 'Privacy' " +
-      "or 'Security' considerations sections. Please consider adding one" +
-      ", see https://w3ctag.github.io/security-questionnaire/";
+      "No 'Privacy' or 'Security' considerations sections found. Please see " +
+      "[Self-Review Questionnaire](https://w3ctag.github.io/security-questionnaire/).";
     warnings.push(warn);
   }
 
@@ -66,9 +65,9 @@ export function run(conf, doc, cb) {
     var httpURLs = findHTTPProps(conf, doc.location.href);
     if (httpURLs.length) {
       warn =
-        "There are insecure URLs in your respecConfig! Please change " +
-        "the following properties to use 'https://': " +
-        httpURLs.join(", ") +
+        "Insecure URLs in `respecConfig`! Please change " +
+        "the following members to 'https://': \n " +
+        httpURLs.map(item => `\`${item}\``).join(", ") +
         ".";
       warnings.push(warn);
     }
