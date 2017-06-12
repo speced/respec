@@ -329,7 +329,6 @@ const noTrackStatus = [
   "CG-FINAL",
   "BG-DRAFT",
   "BG-FINAL",
-  "webspec",
 ];
 const cgbg = ["CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"];
 const precededByAn = ["ED", "IG-NOTE"];
@@ -360,22 +359,12 @@ export function run(conf, doc, cb) {
   // Default include RDFa document metadata
   if (conf.doRDFa === undefined) conf.doRDFa = true;
   // validate configuration and derive new configuration values
-  if (!conf.license)
-    conf.license = conf.specStatus === "webspec" ? "w3c-software" : "w3c";
+  if (!conf.license){
+    conf.license = "w3c-software-doc";
+  }
   conf.isCCBY = conf.license === "cc-by";
   conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
-  if (
-    conf.specStatus === "webspec" &&
-    !["cc0", "w3c-software"].includes(conf.license)
-  ) {
-    let msg = `You cannot use license "\`${conf.license}\`" with W3C Specs. `;
-    msg += `Please set \`respecConfig.license: "w3c-software-doc"\` instead.`;
-    pub("error", msg);
-  }
-  if (
-    conf.specStatus !== "webspec" &&
-    !["cc-by", "w3c"].includes(conf.license)
-  ) {
+  if (["cc-by", "w3c"].includes(conf.license)) {
     let msg = `You cannot use license "\`${conf.license}\`" with W3C Specs. `;
     msg += `Please set \`respecConfig.license: "w3c-software-doc"\` instead.`;
     pub("error", msg);
