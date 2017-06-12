@@ -4,7 +4,7 @@ import ui from "core/ui";
 import { wireReference } from "core/biblio";
 
 const button = ui.addCommand(
-  "Search for references",
+  "Search Specref",
   "ui/search-specref",
   "Ctrl+Shift+Alt+space",
   "🔎"
@@ -116,7 +116,7 @@ form.addEventListener("submit", async ev => {
 
 function show() {
   render();
-  ui.freshModal("Search for references", form, button);
+  ui.freshModal("Search Specref", form, button);
   form.querySelector("input[type=search]").focus();
 }
 
