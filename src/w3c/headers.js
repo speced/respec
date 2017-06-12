@@ -389,7 +389,6 @@ export function run(conf, doc, cb) {
   conf.publishDate = conf.publishDate
     ? new Date(conf.publishDate)
     : new Date(doc.lastModified);
-
   conf.publishYear = conf.publishDate.getFullYear();
   conf.publishHumanDate = W3CDate.format(conf.publishDate);
   conf.isNoTrack = $.inArray(conf.specStatus, noTrackStatus) >= 0;
@@ -714,6 +713,12 @@ export function run(conf, doc, cb) {
         "please add the prerequisite content in the 'sotd' section"
     );
   }
+  // Requested by https://github.com/w3c/respec/issues/504
+  // Makes a record of a few auto-generated things.
+  pub("amend-user-config", {
+    publishISODate: conf.publishISODate,
+    generatedSubtitle: `${conf.longStatus} ${conf.publishHumanDate}`,
+  });
   cb();
 }
 
