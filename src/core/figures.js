@@ -20,21 +20,20 @@ export function run(conf, doc, cb) {
       $caption = $("<figcaption/>").text(title);
 
     // change old syntax to something HTML5 compatible
+    let badSyntax = "div.figure";
     if ($figure.is("div")) {
-      pub(
-        "warn",
-        "You are using the deprecated div.figure syntax; please switch to <figure>."
-      );
       $figure.append($caption);
       $figure.renameElement("figure");
     } else {
-      pub(
-        "warn",
-        "You are using the deprecated img.figure syntax; please switch to <figure>."
-      );
+      badSyntax = "img.figure";
       $figure.wrap("<figure></figure>");
       $figure.parent().append($caption);
     }
+    pub(
+      "warn",
+      `You are using the deprecated ${badSyntax} syntax; please switch to \`<figure>\`. ` +
+        `Your document has been updated to use \`<figure>\` instead ❤️.`
+    );
   });
 
   // process all figures
@@ -44,7 +43,8 @@ export function run(conf, doc, cb) {
       $cap = $fig.find("figcaption"),
       tit = $cap.text(),
       id = $fig.makeID("fig", tit);
-    if (!$cap.length) pub("warn", "A <figure> should contain a <figcaption>.");
+    if (!$cap.length)
+      pub("warn", "A `<figure>` should contain a `<figcaption>`.");
 
     // set proper caption title
     num++;

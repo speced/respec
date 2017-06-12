@@ -43,34 +43,16 @@
  * The whitespace of pre elements are left alone.
  **/
 
-import marked from "deps/marked";
-import { normalizePadding } from "core/utils";
 import beautify from "deps/beautify-html";
 import beautifyOps from "core/beautify-options";
-
+import { markdownToHtml } from "core/utils";
 export const name = "core/markdown";
-
-marked.setOptions({
-  sanitize: false,
-  gfm: true,
-});
-
-function toHTML(text) {
-  const normalizedLeftPad = normalizePadding(text);
-  // As markdown is pulled from HTML, > and & are already escaped and
-  // so blockquotes aren't picked up by the parser. This fixes it.
-  const potentialMarkdown = normalizedLeftPad
-    .replace(/&gt;/gm, ">")
-    .replace(/&amp;/gm, "&");
-  const result = marked(potentialMarkdown);
-  return result;
-}
 
 function processElements(selector) {
   return element => {
     const elements = Array.from(element.querySelectorAll(selector));
     elements.reverse().forEach(element => {
-      element.innerHTML = toHTML(element.innerHTML);
+      element.innerHTML = markdownToHtml(element.innerHTML);
     });
     return elements;
   };

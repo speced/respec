@@ -10,8 +10,14 @@
 //  - once we have something decent, merge, ship as 3.2.0
 "use strict";
 define(
-  ["shortcut", "core/pubsubhub", "deps/text!ui/ui.css", "core/jquery-enhanced"],
-  function(shortcut, pubsubhub, css) {
+  [
+    "shortcut",
+    "core/pubsubhub",
+    "deps/text!ui/ui.css",
+    "core/utils",
+    "core/jquery-enhanced",
+  ],
+  function(shortcut, pubsubhub, css, utils) {
     // Opportunistically inserts the style, with the chance to reduce some FOUC
     const styleElement = document.createElement("style");
     styleElement.id = "respec-ui-styles";
@@ -140,7 +146,22 @@ define(
                 .hide()
                 .end();
             } else {
-              $("<li></li>").text(err).appendTo($ul);
+              const tmp = document.createElement("tmp");
+              tmp.innerHTML = utils.markdownToHtml(err);
+              const li = document.createElement("li");
+              // if it's only a single element, just copy the contents into li
+              if (tmp.firstElementChild === tmp.lastElementChild) {
+                while (
+                  tmp.firstElementChild &&
+                  tmp.firstElementChild.hasChildNodes()
+                ) {
+                  li.appendChild(tmp.firstElementChild.firstChild);
+                }
+                // Otherwise, take everything.
+              } else {
+                li.innerHTML = tmp.innerHTML;
+              }
+              $ul[0].appendChild(li);
             }
           }
           ui.freshModal(title, $ul, this);

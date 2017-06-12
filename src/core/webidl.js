@@ -9,6 +9,7 @@ import webidl2 from "deps/webidl2";
 import hb from "handlebars.runtime";
 import css from "deps/text!core/css/webidl.css";
 import tmpls from "templates";
+import { normalizePadding } from "core/utils";
 
 var idlAttributeTmpl = tmpls["attribute.html"];
 var idlCallbackTmpl = tmpls["callback.html"];
@@ -101,7 +102,7 @@ function registerHelpers() {
       case "sequence":
         return JSON.stringify(value.value);
       default:
-        pub("error", "Unexpected constant value type: " + value.type);
+        pub("error", "Unexpected constant value type: `" + value.type + "`.");
         return "<Unknown>";
     }
   });
@@ -549,7 +550,9 @@ function writeDefinition(obj, indent) {
             case "ws-pea":
               break;
             default:
-              throw new Error("Unexpected type in dictionary: " + it.type);
+              throw new Error(
+                "Unexpected type in dictionary: `" + it.type + "`."
+              );
           }
         })
         .join("");
@@ -623,14 +626,16 @@ function writeDefinition(obj, indent) {
           case "ws-pea":
             break;
           default:
-            throw new Error("Unexpected type in exception: " + item.type);
+            throw new Error(
+              "Unexpected type in exception: `" + item.type + "`."
+            );
         }
       }
       return idlEnumTmpl({ obj: obj, indent: indent, children: children });
     default:
       pub(
         "error",
-        "Unexpected object type " + obj.type + " in " + JSON.stringify(obj)
+        "Unexpected object type `" + obj.type + "` in " + JSON.stringify(obj)
       );
       return "";
   }
@@ -680,7 +685,7 @@ function writeInterfaceDefinition(opt, callback) {
         case "multiline-comment":
           return writeMultiLineComment(ch, indent + 1);
         default:
-          throw new Error("Unexpected member type: " + ch.type);
+          throw new Error("Unexpected member type: `" + ch.type + "`.");
       }
     })
     .join("");
@@ -989,7 +994,10 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
         // Nothing to link here.
         return;
       default:
-        pub("error", "Unexpected type when computing refTitles: " + defn.type);
+        pub(
+          "error",
+          "Unexpected type when computing refTitles: `" + defn.type + "`."
+        );
         return;
     }
     if (parent) {
@@ -1095,9 +1103,7 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
   if (dfns.length > 1) {
     pub(
       "error",
-      "Multiple <dfn>s for " +
-        originalName +
-        (originalParent ? " in " + originalParent : "")
+      `Multiple \`<dfn>\`s for \`${originalName}${originalParent ? ` in \`${originalParent}\`` : ""}`
     );
   }
   if (dfns.length === 0) {
@@ -1106,13 +1112,9 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
       idlElem &&
       idlElem.classList.contains("no-link-warnings") === false;
     if (showWarnings) {
-      var msg =
-        "No <dfn> for " +
-        originalName +
-        (originalParent ? " in " + originalParent : "") +
-        ".";
+      var msg = `No \`<dfn>\` for ${type} \`${originalName}\`${originalParent ? " in `" + originalParent + "`" : ""}`;
       msg +=
-        " Please define it and link to spec that declares it. See https://github.com/w3c/respec/wiki/data--cite";
+        ". [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).";
       pub("warn", msg);
     }
     return;
@@ -1156,11 +1158,11 @@ export function run(conf, doc, cb) {
     } catch (e) {
       pub(
         "error",
-        "Failed to parse WebIDL: \n```\n" +
-          this.textContent +
-          "\n```\n" +
-          (e.message || e)
-      ) + ".";
+        `Failed to parse WebIDL: \`${e.message}\`.
+        <details>
+        <pre>${normalizePadding(this.textContent)}\n ${e}</pre>
+        </details>`
+      );
       // Skip this <pre> and move on to the next one.
       return;
     }
