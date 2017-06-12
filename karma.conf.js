@@ -34,6 +34,11 @@ module.exports = function(config) {
         served: true,
       },
       {
+        pattern: "js/deps/marked.js",
+        included: false,
+        served: true,
+      },
+      {
         pattern: "js/**/*.*",
         included: false,
         served: true,
@@ -64,6 +69,10 @@ module.exports = function(config) {
       "/js/": "/base/js/",
       "/tests/": "/base/tests/",
       "/spec/": "/base/tests/spec/",
+      "/deps/": "/base/js/deps/",
+      "/js/deps/": "/base/js/deps/",
+      "/base/deps/": "/base/js/deps/",
+      "/base/deps/marked.js": "/base/js/deps/marked.js",
     },
 
     // preprocess matching files before serving them to the browser
