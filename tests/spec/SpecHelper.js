@@ -3,7 +3,7 @@
 "use strict";
 var iframes = [];
 
-function makeRSDoc(opts = {}, cb = () => {}, src = "about:blank", style = "") {
+function makeRSDoc(opts = {}, cb = () => {}, src = "about-blank.html", style = "") {
   return new Promise(function(resove, reject) {
     var ifr = document.createElement("iframe");
     opts = opts || {};
