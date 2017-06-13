@@ -49,6 +49,11 @@ module.exports = function(config) {
         served: true,
       },
       {
+        pattern: "tests/*.html",
+        included: false,
+        served: true,
+      },
+      {
         pattern: "tests/**/*.html",
         included: false,
         served: true,
@@ -66,6 +71,7 @@ module.exports = function(config) {
     exclude: ["**/*.swp", "*.swp", ".DS_Store"],
 
     proxies: {
+      "/about-blank.html": "/base/tests/about-blank.html",
       "/js/": "/base/js/",
       "/tests/": "/base/tests/",
       "/spec/": "/base/tests/spec/",
