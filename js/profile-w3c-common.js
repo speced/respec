@@ -37,7 +37,7 @@ require.config({
     "handlebars.runtime": "deps/handlebars",
     "deps/highlight": "https://www.w3.org/Tools/respec/respec-highlight",
   },
-  deps: ["deps/fetch", "deps/hyperhtml"],
+  deps: ["deps/fetch", "deps/hyperhtml", "deps/url-search-params"],
 });
 
 define(
