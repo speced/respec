@@ -394,3 +394,9 @@ p + .respec-button-copy-paste {
   display: block;
   color: #006621;
 }
+
+@media print {
+  #respec-ui {
+    display: none; 
+  }
+}
