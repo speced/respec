@@ -178,14 +178,12 @@ define(
       show: function() {
         try {
           $respecUI[0].hidden = false;
-          $respecUI[0].setAttribute("aria-expanded", "true");
         } catch (err) {
           console.error(err);
         }
       },
       hide: function() {
         $respecUI[0].hidden = true;
-        $respecUI[0].setAttribute("aria-expanded", "false");
       },
       enable: function() {
         $respecPill[0].removeAttribute("disabled");
