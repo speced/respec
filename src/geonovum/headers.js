@@ -294,19 +294,23 @@ export function run(conf, doc, cb) {
   conf.publishYear = conf.publishDate.getFullYear();
   conf.publishHumanDate = W3CDate.format(conf.publishDate, "nl");
   //Version URLs
-  var publishSpace = "domein";
+  conf.publishSpace = conf.specStatus
+    ? conf.publishSpace.toLowerCase()
+    : "domein";
+  if (!conf.publishSpace)
+    pub("error", "Missing required configuration: publishSpace");
   if (conf.isRegular)
     conf.thisVersion =
       "https://docs.geostandaarden.nl/" +
       publishSpace +
       "/" +
-      conf.specStatus.toLowerCase() +
+      conf.specStatus.substr(3).toLowerCase() +
       "-" +
       conf.specType.toLowerCase() +
       "-" +
       conf.shortName +
       "-" +
-      ISODate.format(conf.publishDate) +
+      concatDate(conf.publishDate) +
       "/";
   if (conf.isRegular)
     conf.latestVersion =
@@ -322,7 +326,7 @@ export function run(conf, doc, cb) {
   if (conf.previousPublishDate && conf.previousStatus) {
     if (!(conf.previousPublishDate instanceof Date))
       conf.previousPublishDate = new Date(conf.previousPublishDate);
-    var prevStatus = conf.previousStatus.toLowerCase();
+    var prevStatus = conf.previousStatus.substr(3).toLowerCase();
     var prevType = conf.previousType.toLowerCase();
     conf.prevVersion = "None" + conf.previousPublishDate;
     conf.prevVersion =
@@ -335,7 +339,7 @@ export function run(conf, doc, cb) {
       "-" +
       conf.shortName +
       "-" +
-      ISODate.format(conf.previousPublishDate) +
+      concatDate(conf.previousPublishDate) +
       "/";
   }
   //Authors & Editors
