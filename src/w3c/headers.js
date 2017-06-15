@@ -346,7 +346,8 @@ const licenses = {
   "w3c-software-doc": {
     name: "W3C Software and Document Notice and License",
     short: "W3C Software and Document",
-    url: "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
+    url:
+      "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
   },
   "cc-by": {
     name: "Creative Commons Attribution 4.0 International Public License",
@@ -359,7 +360,7 @@ export function run(conf, doc, cb) {
   // Default include RDFa document metadata
   if (conf.doRDFa === undefined) conf.doRDFa = true;
   // validate configuration and derive new configuration values
-  if (!conf.license){
+  if (!conf.license) {
     conf.license = "w3c-software-doc";
   }
   conf.isCCBY = conf.license === "cc-by";
@@ -382,10 +383,12 @@ export function run(conf, doc, cb) {
   }
   conf.title = doc.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
-  conf.publishDate = conf.publishDate
-    ? new Date(conf.publishDate)
-    : new Date(doc.lastModified);
-  conf.publishYear = conf.publishDate.getFullYear();
+  conf.publishDate = new Date(
+    ISODate.format(
+      new Date(conf.publishDate ? conf.publishDate : doc.lastModified)
+    )
+  );
+  conf.publishYear = conf.publishDate.getUTCFullYear();
   conf.publishHumanDate = W3CDate.format(conf.publishDate);
   conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
   conf.isRecTrack = conf.noRecTrack
@@ -413,7 +416,7 @@ export function run(conf, doc, cb) {
       "https://www.w3.org/" +
       publishSpace +
       "/" +
-      conf.publishDate.getFullYear() +
+      conf.publishDate.getUTCFullYear() +
       "/" +
       conf.maturity +
       "-" +
@@ -434,8 +437,7 @@ export function run(conf, doc, cb) {
     if (!conf.previousMaturity && !conf.isTagFinding) {
       pub("error", "`previousPublishDate` is set, but not `previousMaturity`.");
     }
-    if (!(conf.previousPublishDate instanceof Date))
-      conf.previousPublishDate = new Date(conf.previousPublishDate);
+    conf.previousPublishDate = new Date(conf.previousPublishDate);
     var pmat = status2maturity[conf.previousMaturity]
       ? status2maturity[conf.previousMaturity]
       : conf.previousMaturity;
@@ -449,7 +451,7 @@ export function run(conf, doc, cb) {
     } else {
       conf.prevVersion =
         "https://www.w3.org/TR/" +
-        conf.previousPublishDate.getFullYear() +
+        conf.previousPublishDate.getUTCFullYear() +
         "/" +
         pmat +
         "-" +
@@ -571,7 +573,7 @@ export function run(conf, doc, cb) {
   conf.isPER = conf.specStatus === "PER";
   conf.isMO = conf.specStatus === "MO";
   conf.isIGNote = conf.specStatus === "IG-NOTE";
-  conf.dashDate = concatDate(conf.publishDate, "-");
+  conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
   conf.processVersion = conf.processVersion || "2017";
