@@ -495,7 +495,7 @@
 /** General Hyperlinks ********************************************************/
 
     /* We hyperlink a lot, so make it less intrusive */
-    a[href] {
+    a[href]:not(.leaflet-top .leaflet-left) {
         color: #034575;
         text-decoration: none;
         border-bottom: 1px solid #707070;
@@ -508,14 +508,14 @@
     }
 
     /* Use distinguishing colors when user is interacting with the link */
-    a[href]:focus,
-    a[href]:hover {
+    a[href]:not(.leaflet-control-zoom .leaflet-bar .leaflet-control):focus,
+    a[href]:not(.leaflet-control-zoom .leaflet-bar .leaflet-control):hover {
         background: #f8f8f8;
         background: rgba(75%, 75%, 75%, .25);
         border-bottom-width: 3px;
         margin-bottom: -2px;
     }
-    a[href]:active {
+    a[href]:not(.leaflet-top .leaflet-left):active {
         color: #C00;
         border-color: #C00;
     }
@@ -578,6 +578,75 @@
 
     /* DL list is indented 2em, but figure inside it is not */
     dd > .figure, dd > figure { margin-left: -2em }
+    
+/******************************************************************************/
+/*                              Leaflet Figures                               */
+/******************************************************************************/
+  
+#leaflet-figure {
+    background: #FFF;
+    border: 1px solid #8C8C8C;
+    width: 100%;
+    height: 600px;
+    margin-bottom: 1em;
+}
+
+.leaflet-bar button,
+.leaflet-bar button:hover {
+  background-color: #fff;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  color: black;
+}
+
+.leaflet-bar button {
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  display: block;
+}
+
+.leaflet-bar button:hover {
+  background-color: #f4f4f4;
+}
+
+.leaflet-bar button:first-of-type {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.leaflet-bar button:last-of-type {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-bottom: none;
+}
+
+.leaflet-bar.disabled,
+.leaflet-bar button.disabled {
+  cursor: default;
+  pointer-events: none;
+  opacity: .4;
+}
+
+.easy-button-button .button-state{
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+
+.leaflet-touch .leaflet-bar button {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
 
 /******************************************************************************/
 /*                             Colored Boxes                                  */

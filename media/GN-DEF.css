@@ -1,7 +1,7 @@
-/* Style for Geonovum Officiële Standaard */
+/* Style for Geonovum OfficiÃ«le Standaard */
 
 @import "base.css";
 
 body {
-  background-image: url('https://tools.geostandaarden.nl/respec/media/logos/GN-DEF.svg')
+  background-image: url('https://tools.geostandaarden.nl/respec/style/logos/GN-DEF.svg');
 }

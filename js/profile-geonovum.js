@@ -83,6 +83,7 @@ define([
     "geonovum/aria",
     // "core/shiv",
     "core/location-hash",
+    "geonovum/leafletfigures",
     "geonovum/ui/about-respec",
     "geonovum/ui/dfn-list",
     "geonovum/ui/save-html",

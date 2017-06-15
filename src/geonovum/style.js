@@ -43,7 +43,18 @@ function createMetaViewport() {
 function createBaseStyle() {
   var link = document.createElement("link");
   link.rel = "stylesheet";
-  link.href = "https://tools.geostandaarden.nl/respec/media/base.css";
+  link.href = "https://tools.geostandaarden.nl/respec/style/base.css";
+  link.classList.add("removeOnSave");
+  return link;
+}
+
+function createStyle(css_name) {
+  var link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = "https://tools.geostandaarden.nl/respec/style/{0}.css".replace(
+    "{0}",
+    css_name
+  );
   link.classList.add("removeOnSave");
   return link;
 }
@@ -61,12 +72,12 @@ function createResourceHints() {
     },
     {
       hint: "preload", // all specs include on base.css.
-      href: "https://tools.geostandaarden.nl/respec/media/base.css",
+      href: "https://tools.geostandaarden.nl/respec/style/base.css",
       as: "style",
     },
     {
       hint: "preload", // all specs show the logo.
-      href: "https://tools.geostandaarden.nl/respec/media/logos/Geonovum.png",
+      href: "https://tools.geostandaarden.nl/respec/style/logos/Geonovum.png",
       as: "image",
     },
   ]
@@ -82,6 +93,11 @@ var elements = createResourceHints();
 
 // Opportunistically apply base style
 elements.appendChild(createBaseStyle());
+if (document.body.querySelector("figure.scalable")) {
+  // Apply leaflet style if class scalable is present
+  elements.appendChild(createStyle("leaflet"));
+  elements.appendChild(createStyle("font-awesome"));
+}
 if (!document.head.querySelector("meta[name=viewport]")) {
   // Make meta viewport the first element in the head.
   elements.insertBefore(createMetaViewport(), elements.firstChild);
@@ -92,11 +108,11 @@ document.head.insertBefore(elements, document.head.firstChild);
 export function run(conf, doc, cb) {
   if (!conf.specStatus) {
     var warn = "'specStatus' missing from ReSpec config. Defaulting to 'base'.";
-    conf.specStatus = "base";
+    conf.specStatus = "GN-BASIS";
     pub("warn", warn);
   }
 
-  var styleBaseURL = "https://tools.geostandaarden.nl/respec/media/";
+  var styleBaseURL = "https://tools.geostandaarden.nl/respec/style/";
   var finalStyleURL = "";
   var styleFile = "";
 
