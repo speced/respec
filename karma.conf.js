@@ -101,20 +101,14 @@ module.exports = function(config) {
 
     browserNoActivityTimeout: 100000,
 
-    customLaunchers: {
-      chrome_canary_travis: {
-        base: "ChromeCanary",
-        flags: ["--no-sandbox"],
-      },
-    },
   };
   if (process.env.TRAVIS) {
-    options.detectBrowsers.enabled = false;
+    options.detectBrowsers.enabled = true;
     options.autoWatch = false;
     options.singleRun = true;
-    options.concurrency = 1;
+    options.concurrency = 2;
     options.reporters = ["mocha"];
-    options.browsers = ["chrome_canary_travis"]; //"FirefoxNightly"
+    //options.browsers = ["FirefoxNightly"]; //"FirefoxNightly"
   }
   config.set(options);
 };
