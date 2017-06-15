@@ -50,19 +50,20 @@
 //          - href: a URL for the value (e.g., "https://foo.com/issues"). Optional.
 //          - class: a string representing CSS classes. Optional.
 
-import {
-  concatDate,
-  humanDate,
-  isoDate,
-  joinAnd,
-  parseLastModified,
-  parseSimpleDate,
-} from "core/utils";
+import { concatDate, joinAnd, ISODate } from "core/utils";
 import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
 import tmpls from "templates";
 
 var headersTmpl = tmpls["headers.html"];
+
+const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
+  year: "numeric",
+  month: "long",
+  day: "2-digit",
+});
+
+const humanNow = W3CDate.format(new Date());
 
 hb.registerHelper("showPeople", function(name, items) {
   // stuff to handle RDFa
@@ -287,36 +288,31 @@ export function run(conf, doc, cb) {
   conf.title = doc.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
   //Publishdate
-  if (!conf.publishDate) {
-    conf.publishDate = parseLastModified(doc.lastModified);
-  } else {
-    if (!(conf.publishDate instanceof Date))
-      conf.publishDate = parseSimpleDate(conf.publishDate);
-  }
+  conf.publishDate = conf.publishDate
+    ? new Date(conf.publishDate)
+    : new Date(doc.lastModified);
   conf.publishYear = conf.publishDate.getFullYear();
-  conf.publishHumanDate = humanDate(conf.publishDate, "nl");
+  conf.publishHumanDate = W3CDate.format(conf.publishDate, "nl");
   //Version URLs
-  var publishSpace = "docs";
+  var publishSpace = "domein";
   if (conf.isRegular)
     conf.thisVersion =
-      "https://register.geostandaarden.nl/" +
+      "https://docs.geostandaarden.nl/" +
       publishSpace +
       "/" +
-      conf.publishDate.getFullYear() +
-      "/" +
+      conf.specStatus.toLowerCase() +
+      "-" +
       conf.specType.toLowerCase() +
       "-" +
       conf.shortName +
       "-" +
-      concatDate(conf.publishDate) +
+      ISODate.format(conf.publishDate) +
       "/";
   if (conf.isRegular)
     conf.latestVersion =
-      "https://register.geostandaarden.nl/" +
+      "https://docs.geostandaarden.nl/" +
       publishSpace +
       "/" +
-      conf.specType.toLowerCase() +
-      "-" +
       conf.shortName +
       "/";
   if (conf.previousPublishDate && !conf.previousStatus)
@@ -325,18 +321,21 @@ export function run(conf, doc, cb) {
     pub("error", "Missing configuration: previousPublishDate");
   if (conf.previousPublishDate && conf.previousStatus) {
     if (!(conf.previousPublishDate instanceof Date))
-      conf.previousPublishDate = (0, parseSimpleDate)(conf.previousPublishDate);
+      conf.previousPublishDate = new Date(conf.previousPublishDate);
     var prevStatus = conf.previousStatus.toLowerCase();
+    var prevType = conf.previousType.toLowerCase();
     conf.prevVersion = "None" + conf.previousPublishDate;
     conf.prevVersion =
-      "https://register.geostandaarden.nl/" +
-      conf.previousPublishDate.getFullYear() +
+      "https://docs.geostandaarden.nl/" +
+      publishSpace +
       "/" +
       prevStatus +
       "-" +
+      prevType +
+      "-" +
       conf.shortName +
       "-" +
-      (0, concatDate)(conf.previousPublishDate) +
+      ISODate.format(conf.previousPublishDate) +
       "/";
   }
   //Authors & Editors
