@@ -12,9 +12,9 @@ import { sub, pub } from "core/pubsubhub";
 export const name = "core/override-configuration";
 
 function overrideConfig(config) {
-  const overrideProps = Array.from(
-    new URL(document.location.href.replace(/;/g, "&")).searchParams.entries()
-  )
+  const searchQuery = document.location.search.replace(/;/g, "&");
+  const param = new URLSearchParams(searchQuery);
+  const overrideProps = Array.from(param.entries())
     .filter(([key, value]) => !!key && !!value)
     .map(([codedKey, codedValue]) => {
       const key = decodeURIComponent(codedKey);
