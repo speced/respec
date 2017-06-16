@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "14.0.5",
+  "version": "14.0.6",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -19,6 +19,7 @@
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-es2015-modules-amd": "^6.24.1",
     "babel-preset-env": "^1.5.1",
+    "babel-preset-stage-3": "^6.24.1",
     "chai": "^4.0.1",
     "clipboard": "^1.7.1",
     "domReady": "github:requirejs/domReady",

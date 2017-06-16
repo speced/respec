@@ -241,26 +241,30 @@ hb.registerHelper("showPeople", function(name, items) {
   return new hb.SafeString(ret);
 });
 
-hb.registerHelper("showLogos", function(items) {
-  var ret = "<p>";
-  for (var i = 0, n = items.length; i < n; i++) {
-    var p = items[i];
-    if (p.url) ret += "<a href='" + p.url + "'>";
-    if (p.id) ret += "<span id='" + p.id + "'>";
-    if (p.src) {
-      ret += "<img src='" + p.src + "'";
-      if (p.width) ret += " width='" + p.width + "'";
-      if (p.height) ret += " height='" + p.height + "'";
-      if (p.alt) ret += " alt='" + p.alt + "'";
-      else if (items.length == 1) ret += " alt='Logo'";
-      else ret += " alt='Logo " + (i + 1) + "'";
-      ret += ">";
-    } else if (p.alt) ret += p.alt;
-    if (p.url) ret += "</a>";
-    if (p.id) ret += "</span>";
+function toLogo(obj) {
+  const a = document.createElement("a");
+  if (!obj.alt) {
+    const msg = "Found spec logo without an `alt` attribute. See dev console.";
+    a.classList.addClass("respec-offending-element");
+    pub("warn", msg);
+    console.warn("warn", msg, a);
   }
-  ret += "</p>";
-  return new hb.SafeString(ret);
+  a.href = obj.href ? obj.href : "";
+  a.classList.add("logo");
+  return hyperHTML.bind(a)`
+    <span id="${obj.id}">
+      <img
+        alt="${obj.alt}"
+        src="${obj.src}"
+        width="${obj.width}"
+        height="${obj.height}">
+    </span>`;
+}
+
+hb.registerHelper("showLogos", logos => {
+  const p = document.createElement("p");
+  hyperHTML.bind(p)`${logos.map(toLogo)}`;
+  return p.outerHTML;
 });
 
 const status2maturity = {
@@ -356,7 +360,25 @@ const licenses = {
   },
 };
 
+const baseLogo = Object.freeze({
+  id: "",
+  alt: "",
+  href: "",
+  src: "",
+  height: "48",
+  width: "72",
+});
+
 export function run(conf, doc, cb) {
+  // TODO: move to w3c defaults
+  if (!conf.logos) {
+    const W3CLogo = {
+      alt: "W3C",
+      href: "https://www.w3.org/",
+      src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
+    };
+    conf.logos = [{ ...baseLogo, ...W3CLogo }];
+  }
   // Default include RDFa document metadata
   if (conf.doRDFa === undefined) conf.doRDFa = true;
   // validate configuration and derive new configuration values
@@ -395,7 +417,25 @@ export function run(conf, doc, cb) {
     ? false
     : recTrackStatus.includes(conf.specStatus);
   conf.isMemberSubmission = conf.specStatus === "Member-SUBM";
+  if (conf.isMemberSubmission) {
+    const memSubmissionLogo = {
+      alt: "W3C Member Submission",
+      href: "https://www.w3.org/Submission/",
+      src: "https://www.w3.org/Icons/member_subm-v.svg",
+      width: "211",
+    };
+    conf.logos.push({ ...baseLogo, ...memSubmissionLogo });
+  }
   conf.isTeamSubmission = conf.specStatus === "Team-SUBM";
+  if (conf.isTeamSubmission) {
+    const teamSubmissionLogo = {
+      alt: "W3C Team Submission",
+      href: "https://www.w3.org/TeamSubmission/",
+      src: "https://www.w3.org/Icons/team_subm-v.svg",
+      width: "211",
+    };
+    conf.logos.push({ ...baseLogo, ...teamSubmissionLogo });
+  }
   conf.isSubmission = conf.isMemberSubmission || conf.isTeamSubmission;
   conf.anOrA = precededByAn.includes(conf.specStatus) ? "an" : "a";
   conf.isTagFinding =
