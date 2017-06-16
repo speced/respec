@@ -1,19 +1,5 @@
 <div class='head'>
-  <p>
-      {{#if logos}}
-        {{showLogos logos}}
-      {{else}}
-        {{#if prependW3C}}
-            <a class='logo' href='https://www.w3.org/'><img width='72' height='48' src='https://www.w3.org/StyleSheets/TR/2016/logos/W3C' alt='W3C'></a>
-            {{#if isMemberSubmission}}
-            <a href="https://www.w3.org/Submission/"> <img height="48" width="211" alt="W3C Member Submission" src="https://www.w3.org/Icons/member_subm" /></a>
-            {{/if}}
-            {{#if isTeamSubmission}}
-            <a href="https://www.w3.org/TeamSubmission/"><img height="48" width="211" alt="W3C Team Submission" src="https://www.w3.org/Icons/team_subm"/></a>
-            {{/if}}
-        {{/if}}
-      {{/if}}
-  </p>
+  {{{showLogos logos}}}
   <h1 class='title p-name' id='title'{{#if doRDFa}} property='dcterms:title'{{/if}}>{{title}}</h1>
   {{#if subtitle}}
     <h2 {{#if doRDFa}}property='bibo:subtitle' {{/if}}id='subtitle'>{{subtitle}}</h2>
