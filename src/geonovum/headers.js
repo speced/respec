@@ -263,25 +263,32 @@ export function run(conf, doc, cb) {
   conf.specType = conf.specType ? conf.specType.toUpperCase() : "";
   conf.isBasic = conf.specStatus === "GN-BASIS";
   conf.isRegular = !conf.isBasic;
-  conf.isNoTrack = $.inArray(conf.specStatus, noTrackStatus) >= 0;
+  conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
   conf.isOfficial = conf.specStatus === "GN-DEF";
   conf.textStatus = status2text[conf.specStatus];
   conf.typeStatus = type2text[conf.specType];
   //Some errors
-  if (!conf.specStatus)
+  if (!conf.specStatus) {
     pub("error", "Missing required configuration: specStatus");
-  if (conf.isRegular && !conf.specType)
+  }
+  if (conf.isRegular && !conf.specType) {
     pub("error", "Missing required configuration: specType");
-  if (conf.isRegular && !conf.shortName)
+  }
+  if (conf.isRegular && !conf.shortName) {
     pub("error", "Missing required configuration: shortName");
-  if (!conf.isOfficial && !conf.github)
+  }
+  if (!conf.isOfficial && !conf.github) {
     pub("error", "Missing required configuration: github");
-  if (conf.previousPublishDate && !conf.previousStatus)
+  }
+  if (conf.previousPublishDate && !conf.previousStatus) {
     pub("error", "Missing configuration: previousStatus");
-  if (!conf.previousPublishDate && conf.previousStatus)
+  }
+  if (!conf.previousPublishDate && conf.previousStatus) {
     pub("error", "Missing configuration: previousPublishDate");
-  if (!conf.editors || conf.editors.length === 0)
+  }
+  if (!conf.editors || conf.editors.length === 0) {
     pub("error", "At least one editor is required");
+  }
   //Titles
   conf.title = doc.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";

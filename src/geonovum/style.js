@@ -107,7 +107,7 @@ document.head.insertBefore(elements, document.head.firstChild);
 
 export function run(conf, doc, cb) {
   if (!conf.specStatus) {
-    var warn = "'specStatus' missing from ReSpec config. Defaulting to 'base'.";
+    var warn = "`respecConfig.specStatus` missing. Defaulting to 'base'.";
     conf.specStatus = "GN-BASIS";
     pub("warn", warn);
   }
