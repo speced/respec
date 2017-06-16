@@ -370,15 +370,14 @@ const baseLogo = Object.freeze({
 });
 
 export function run(conf, doc, cb) {
-  // TODO: mode to w3c defaults
+  // TODO: move to w3c defaults
   if (!conf.logos) {
-    conf.logos = [
-      Object.assign({}, baseLogo, {
-        alt: "W3C",
-        href: "https://www.w3.org/",
-        src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
-      }),
-    ];
+    const W3CLogo = {
+      alt: "W3C",
+      href: "https://www.w3.org/",
+      src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
+    };
+    conf.logos = [{ ...baseLogo, ...W3CLogo }];
   }
   // Default include RDFa document metadata
   if (conf.doRDFa === undefined) conf.doRDFa = true;
@@ -419,25 +418,23 @@ export function run(conf, doc, cb) {
     : recTrackStatus.includes(conf.specStatus);
   conf.isMemberSubmission = conf.specStatus === "Member-SUBM";
   if (conf.isMemberSubmission) {
-    conf.logos.push(
-      Object.assign({}, baseLogo, {
-        alt: "W3C Member Submission",
-        href: "https://www.w3.org/Submission/",
-        src: "https://www.w3.org/Icons/member_subm-v.svg",
-        width: "211",
-      })
-    );
+    const memSubmissionLogo = {
+      alt: "W3C Member Submission",
+      href: "https://www.w3.org/Submission/",
+      src: "https://www.w3.org/Icons/member_subm-v.svg",
+      width: "211",
+    };
+    conf.logos.push({ ...baseLogo, ...memSubmissionLogo });
   }
   conf.isTeamSubmission = conf.specStatus === "Team-SUBM";
   if (conf.isTeamSubmission) {
-    conf.logos.push(
-      Object.assign({}, baseLogo, {
-        alt: "W3C Team Submission",
-        href: "https://www.w3.org/TeamSubmission/",
-        src: "https://www.w3.org/Icons/team_subm-v.svg",
-        width: "211",
-      })
-    );
+    const teamSubmissionLogo = {
+      alt: "W3C Team Submission",
+      href: "https://www.w3.org/TeamSubmission/",
+      src: "https://www.w3.org/Icons/team_subm-v.svg",
+      width: "211",
+    };
+    conf.logos.push({ ...baseLogo, ...teamSubmissionLogo });
   }
   conf.isSubmission = conf.isMemberSubmission || conf.isTeamSubmission;
   conf.anOrA = precededByAn.includes(conf.specStatus) ? "an" : "a";
