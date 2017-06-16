@@ -423,7 +423,7 @@ export function run(conf, doc, cb) {
       Object.assign({}, baseLogo, {
         alt: "W3C Member Submission",
         href: "https://www.w3.org/Submission/",
-        src: "https://www.w3.org/Icons/member_subm",
+        src: "https://www.w3.org/Icons/member_subm-v.svg",
         width: "211",
       })
     );
@@ -434,7 +434,7 @@ export function run(conf, doc, cb) {
       Object.assign({}, baseLogo, {
         alt: "W3C Team Submission",
         href: "https://www.w3.org/TeamSubmission/",
-        src: "https://www.w3.org/Icons/team_subm",
+        src: "https://www.w3.org/Icons/team_subm-v.svg",
         width: "211",
       })
     );
