@@ -407,7 +407,9 @@ const run = async () => {
     indicators.get("npm-publish").show();
     await npm("publish");
     indicators.get("npm-publish").hide();
-
+    // publishing generates a new build, which we don't want
+    // on develop branch
+    await git("checkout builds");
     if (initialBranch !== MAIN_BRANCH) {
       await Prompts.askSwitchToBranch(MAIN_BRANCH, initialBranch);
     }

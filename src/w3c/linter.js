@@ -52,7 +52,8 @@ export function run(conf, doc, cb) {
   var warn = "";
 
   // Warn if no privacy and/or security considerations section
-  if (!hasPriSecConsiderations(doc)) {
+  // for Rec Track docs
+  if (conf.isRecTrack && !hasPriSecConsiderations(doc)) {
     warn =
       "This specification doesn't appear to have any 'Privacy' " +
       "or 'Security' considerations sections. Please consider adding one" +
