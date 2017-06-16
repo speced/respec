@@ -28,7 +28,7 @@ export function run(conf, doc, cb) {
       txt = $req.find("> a").text();
     } else {
       txt = "Req. not found '" + id + "'";
-      pub("error", "Requirement not found in a.reqRef: " + id);
+      pub("error", "Requirement not found in element `a.reqRef`: " + id);
     }
     $ref.text(txt);
   });

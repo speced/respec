@@ -45,7 +45,6 @@ const REF_STATUSES = new Map([
   ["WG-NOTE", "W3C Working Group Note"],
 ]);
 
-
 const defaultsReference = Object.freeze({
   authors: [],
   date: "",
@@ -56,23 +55,25 @@ const defaultsReference = Object.freeze({
   etAl: false,
 });
 
-const endNormalizer = function(endStr){
+const endNormalizer = function(endStr) {
   return str => {
     const trimmed = str.trim();
-    const result = !trimmed || trimmed.endsWith(endStr) ? trimmed : trimmed + endStr;
+    const result = !trimmed || trimmed.endsWith(endStr)
+      ? trimmed
+      : trimmed + endStr;
     return result;
-  }
-}
+  };
+};
 
 const endWithDot = endNormalizer(".");
 
-export function wireReference(rawRef, target="_blank") {
-  if(typeof rawRef !== "object"){
+export function wireReference(rawRef, target = "_blank") {
+  if (typeof rawRef !== "object") {
     throw new TypeError("Only modern object refereces are allowed");
   }
   const ref = Object.assign({}, defaultsReference, rawRef);
   const authors = ref.authors.join("; ") + (ref.etAl ? " et al" : "");
-  const status = REF_STATUSES.get(ref.status) || ref.status
+  const status = REF_STATUSES.get(ref.status) || ref.status;
   return hyperHTML.wire(ref)`
     <cite>
       <a
@@ -164,7 +165,7 @@ function bibref(conf) {
       while (refcontent && refcontent.aliasOf) {
         if (circular[refcontent.aliasOf]) {
           refcontent = null;
-          const msg = `Circular reference in biblio DB between [${ref}] and [${key}].`;
+          const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
           pub("error", msg);
         } else {
           key = refcontent.aliasOf;
@@ -194,12 +195,12 @@ function bibref(conf) {
     if (aliases[k].length > 1) {
       let msg = `[${k}] is referenced in ${aliases[k].length} ways: `;
       msg += `(${aliases[k].map(item => `'${item}'`).join(", ")}). This causes`;
-      msg += ` duplicate entries in the reference section.`;
+      msg += ` duplicate entries in the References section.`;
       pub("warn", msg);
     }
   }
   for (var item in badrefs) {
-    const msg = `Bad reference: [${item}] (appears ${badrefs[item]} times)`;
+    const msg = `Bad reference: [\`${item}\`] (appears ${badrefs[item]} times)`;
     if (badrefs.hasOwnProperty(item)) pub("error", msg);
   }
 }

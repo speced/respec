@@ -347,8 +347,7 @@ const licenses = {
   "w3c-software-doc": {
     name: "W3C Software and Document Notice and License",
     short: "W3C Software and Document",
-    url:
-      "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
+    url: "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
   },
   "cc-by": {
     name: "Creative Commons Attribution 4.0 International Public License",
@@ -367,23 +366,31 @@ export function run(conf, doc, cb) {
   conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
   if (
     conf.specStatus === "webspec" &&
-    !$.inArray(conf.license, ["cc0", "w3c-software"])
-  )
-    pub("error", "You cannot use that license with WebSpecs.");
+    !["cc0", "w3c-software"].includes(conf.license)
+  ) {
+    let msg = `You cannot use license "\`${conf.license}\`" with W3C Specs. `;
+    msg += `Please set \`respecConfig.license: "w3c-software-doc"\` instead.`;
+    pub("error", msg);
+  }
   if (
     conf.specStatus !== "webspec" &&
-    !$.inArray(conf.license, ["cc-by", "w3c"])
-  )
-    pub("error", "You cannot use that license with that type of document.");
+    !["cc-by", "w3c"].includes(conf.license)
+  ) {
+    let msg = `You cannot use license "\`${conf.license}\`" with W3C Specs. `;
+    msg += `Please set \`respecConfig.license: "w3c-software-doc"\` instead.`;
+    pub("error", msg);
+  }
   conf.licenseInfo = licenses[conf.license];
-  conf.isCGBG = $.inArray(conf.specStatus, cgbg) >= 0;
+  conf.isCGBG = cgbg.includes(conf.specStatus);
   conf.isCGFinal = conf.isCGBG && /G-FINAL$/.test(conf.specStatus);
   conf.isBasic = conf.specStatus === "base";
   conf.isRegular = !conf.isCGBG && !conf.isBasic;
-  if (!conf.specStatus)
-    pub("error", "Missing required configuration: specStatus");
-  if (conf.isRegular && !conf.shortName)
-    pub("error", "Missing required configuration: shortName");
+  if (!conf.specStatus) {
+    pub("error", "Missing required configuration: `specStatus`");
+  }
+  if (conf.isRegular && !conf.shortName) {
+    pub("error", "Missing required configuration: `shortName`");
+  }
   conf.title = doc.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
   conf.publishDate = conf.publishDate
@@ -391,14 +398,14 @@ export function run(conf, doc, cb) {
     : new Date(doc.lastModified);
   conf.publishYear = conf.publishDate.getFullYear();
   conf.publishHumanDate = W3CDate.format(conf.publishDate);
-  conf.isNoTrack = $.inArray(conf.specStatus, noTrackStatus) >= 0;
+  conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
   conf.isRecTrack = conf.noRecTrack
     ? false
-    : $.inArray(conf.specStatus, recTrackStatus) >= 0;
+    : recTrackStatus.includes(conf.specStatus);
   conf.isMemberSubmission = conf.specStatus === "Member-SUBM";
   conf.isTeamSubmission = conf.specStatus === "Team-SUBM";
   conf.isSubmission = conf.isMemberSubmission || conf.isTeamSubmission;
-  conf.anOrA = $.inArray(conf.specStatus, precededByAn) >= 0 ? "an" : "a";
+  conf.anOrA = precededByAn.includes(conf.specStatus) ? "an" : "a";
   conf.isTagFinding =
     conf.specStatus === "finding" || conf.specStatus === "draft-finding";
   if (!conf.edDraftURI) {
@@ -435,8 +442,9 @@ export function run(conf, doc, cb) {
       conf.latestVersion + "-" + ISODate.format(conf.publishDate);
   }
   if (conf.previousPublishDate) {
-    if (!conf.previousMaturity && !conf.isTagFinding)
-      pub("error", "previousPublishDate is set, but not previousMaturity");
+    if (!conf.previousMaturity && !conf.isTagFinding) {
+      pub("error", "`previousPublishDate` is set, but not `previousMaturity`.");
+    }
     if (!(conf.previousPublishDate instanceof Date))
       conf.previousPublishDate = new Date(conf.previousPublishDate);
     var pmat = status2maturity[conf.previousMaturity]
@@ -473,7 +481,8 @@ export function run(conf, doc, cb) {
     )
       pub(
         "error",
-        "Document on track but no previous version: Add previousMaturity previousPublishDate to ReSpec's config."
+        "Document on track but no previous version:" +
+          " Add `previousMaturity`, and `previousPublishDate` to ReSpec's config."
       );
     if (!conf.prevVersion) conf.prevVersion = "";
   }
@@ -631,10 +640,10 @@ export function run(conf, doc, cb) {
   ) {
     pub(
       "error",
-      "If one of 'wg', 'wgURI', or 'wgPatentURI' is an array, they all have to be."
+      "If one of '`wg`', '`wgURI`', or '`wgPatentURI`' is an array, they all have to be."
     );
   }
-  if ($.isArray(conf.wg)) {
+  if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
     conf.wgHTML = joinAnd(conf.wg, function(wg, idx) {
       return "the <a href='" + conf.wgURI[idx] + "'>" + wg + "</a>";
@@ -658,19 +667,22 @@ export function run(conf, doc, cb) {
   if (conf.specStatus === "PR" && !conf.crEnd) {
     pub(
       "error",
-      "Status is PR but no crEnd is specified (needed to indicate end of previous CR)"
+      `\`specStatus\` is "PR" but no \`crEnd\` is specified (needed to indicate end of previous CR).`
     );
   }
 
   if (conf.specStatus === "CR" && !conf.crEnd) {
-    pub("error", "Status is CR but no crEnd is specified");
+    pub(
+      "error",
+      `\`specStatus\` is "CR", but no \`crEnd\` is specified in Respec config.`
+    );
   }
   conf.humanCREnd = conf.crEnd
     ? W3CDate.format(new Date(conf.crEnd))
     : humanNow;
 
   if (conf.specStatus === "PR" && !conf.prEnd) {
-    pub("error", "Status is PR but no prEnd is specified");
+    pub("error", `\`specStatus\` is "PR" but no \`prEnd\` is specified.`);
     conf.prEnd = new Date();
   }
   conf.humanPREnd = conf.prEnd
@@ -692,7 +704,7 @@ export function run(conf, doc, cb) {
   if (conf.isIGNote && !conf.charterDisclosureURI)
     pub(
       "error",
-      "IG-NOTEs must link to charter's disclosure section using charterDisclosureURI"
+      "IG-NOTEs must link to charter's disclosure section using `charterDisclosureURI`."
     );
   // ensure subjectPrefix is encoded before using template
   if (conf.subjectPrefix !== "")
@@ -703,7 +715,7 @@ export function run(conf, doc, cb) {
   if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
     pub(
       "error",
-      "CR, PR, and REC documents need to have an implementationReportURI defined."
+      "CR, PR, and REC documents need to have an `implementationReportURI` defined."
     );
   }
   if (conf.isTagFinding && !conf.additionalContent) {

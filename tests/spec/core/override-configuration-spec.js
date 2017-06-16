@@ -6,7 +6,7 @@ describe("Core — Override Configuration", function() {
   });
   it("should override a simple string setting", function(done) {
     var url =
-      "spec/core/simple.html?specStatus=RSCND;previousMaturity=REC;previousPublishDate=1994-12-12";
+      "spec/core/simple.html?specStatus=RSCND&previousMaturity=REC&previousPublishDate=1994-12-12";
     var test = function(doc) {
       expect($(".head h2", doc).text()).toMatch(/W3C Rescinded Recommendation/);
       expect(
