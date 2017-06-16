@@ -103,7 +103,7 @@ define(["core/pubsubhub", "core/data-cite"], function(pubsubhub, dataCite) {
                 (link_for ? "for '" + link_for + "' " : "") +
                 "with text '" +
                 title +
-                "' but no matching <dfn>."
+                "' but no matching `<dfn>`."
             );
             console.warn("Linkless element:", $ant[0]);
             return;
