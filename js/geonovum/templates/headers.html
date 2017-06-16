@@ -1,10 +1,5 @@
 <div class='head'>
-  <p>
-    {{#if logos}} {{showLogos logos}} {{else}}
-    <a class='logo' href='http://www.geonovum.nl/'>
-        <img width='132' height='67' src='https://tools.geostandaarden.nl/respec/style/logos/Geonovum.svg' alt='Geonovum'>
-      </a> {{/if}}
-  </p>
+  {{{showLogos logos}}}
   <h1 class='title p-name' id='title' {{#if doRDFa}} property='dcterms:title' {{/if}}>{{title}}</h1>
   {{#if subtitle}}
   <h2 {{#if doRDFa}}property='bibo:subtitle' {{/if}}id='subtitle'>{{subtitle}}</h2>

@@ -191,26 +191,30 @@ hb.registerHelper("showPeople", function(name, items) {
   return new hb.SafeString(ret);
 });
 
-hb.registerHelper("showLogos", function(items) {
-  var ret = "<p>";
-  for (var i = 0, n = items.length; i < n; i++) {
-    var p = items[i];
-    if (p.url) ret += "<a href='" + p.url + "'>";
-    if (p.id) ret += "<span id='" + p.id + "'>";
-    if (p.src) {
-      ret += "<img src='" + p.src + "'";
-      if (p.width) ret += " width='" + p.width + "'";
-      if (p.height) ret += " height='" + p.height + "'";
-      if (p.alt) ret += " alt='" + p.alt + "'";
-      else if (items.length == 1) ret += " alt='Logo'";
-      else ret += " alt='Logo " + (i + 1) + "'";
-      ret += ">";
-    } else if (p.alt) ret += p.alt;
-    if (p.url) ret += "</a>";
-    if (p.id) ret += "</span>";
+function toLogo(obj) {
+  const a = document.createElement("a");
+  if (!obj.alt) {
+    const msg = "Found spec logo without an `alt` attribute. See dev console.";
+    a.classList.addClass("respec-offending-element");
+    pub("warn", msg);
+    console.warn("warn", msg, a);
   }
-  ret += "</p>";
-  return new hb.SafeString(ret);
+  a.href = obj.href ? obj.href : "";
+  a.classList.add("logo");
+  return hyperHTML.bind(a)`
+    <span id="${obj.id}">
+      <img
+        alt="${obj.alt}"
+        src="${obj.src}"
+        width="${obj.width}"
+        height="${obj.height}">
+    </span>`;
+}
+
+hb.registerHelper("showLogos", logos => {
+  const p = document.createElement("p");
+  hyperHTML.bind(p)`${logos.map(toLogo)}`;
+  return p.outerHTML;
 });
 
 hb.registerHelper("switch", function(value, options) {
@@ -257,8 +261,25 @@ const type2text = {
   WA: "Werkafspraak",
 };
 const noTrackStatus = ["GN-BASIS"];
+const baseLogo = Object.freeze({
+  id: "",
+  alt: "",
+  href: "",
+  src: "",
+  height: "67",
+  width: "132",
+});
 
 export function run(conf, doc, cb) {
+  // TODO: move to w3c defaults
+  if (!conf.logos) {
+    const GNVMLogo = {
+      alt: "Geonovum",
+      href: "http://www.geonovum.nl/",
+      src: "https://tools.geostandaarden.nl/respec/media/logos/Geonovum.svg",
+    };
+    conf.logos = [{ ...baseLogo, ...GNVMLogo }];
+  }
   conf.specStatus = conf.specStatus ? conf.specStatus.toUpperCase() : "";
   conf.specType = conf.specType ? conf.specType.toUpperCase() : "";
   conf.isBasic = conf.specStatus === "GN-BASIS";
@@ -293,10 +314,11 @@ export function run(conf, doc, cb) {
   conf.title = doc.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
   //Publishdate
-  conf.publishDate = conf.publishDate
-    ? new Date(conf.publishDate)
-    : new Date(doc.lastModified);
-  conf.publishYear = conf.publishDate.getFullYear();
+  conf.publishDate = new Date(
+    ISODate.format(
+      new Date(conf.publishDate ? conf.publishDate : doc.lastModified)
+    )
+  );
   //Version URLs
   if (conf.isRegular)
     conf.thisVersion =
@@ -313,8 +335,7 @@ export function run(conf, doc, cb) {
     conf.latestVersion =
       "https://docs.geostandaarden.nl/" + conf.shortName + "/";
   if (conf.previousPublishDate && conf.previousStatus) {
-    if (!(conf.previousPublishDate instanceof Date))
-      conf.previousPublishDate = new Date(conf.previousPublishDate);
+    conf.previousPublishDate = new Date(conf.previousPublishDate);
     var prevStatus = conf.previousStatus.substr(3).toLowerCase();
     var prevType = conf.previousType.toLowerCase();
     conf.prevVersion = "None" + conf.previousPublishDate;

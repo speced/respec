@@ -25,7 +25,6 @@ const srcDesMap = new Map([
   ["./node_modules/text/text.js", "./js/deps/"],
   ["./node_modules/url-search-params/build/url-search-params.js", "./js/deps/"],
   ["./node_modules/webidl2/lib/webidl2.js", "./js/deps/"],
-  ["./node_modules/whatwg-fetch/fetch.js", "./js/deps/"],
   ["./node_modules/leaflet/dist/leaflet.js", "./js/geonovum/deps/"],
   ["./node_modules/leaflet-easybutton/src/easy-button.js", "./js/geonovum/deps/"],
 ]);

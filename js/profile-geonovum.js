@@ -3,14 +3,18 @@
 if (document.body) {
   document.body.hidden = true;
 } else {
-  document.addEventListener("DOMContentLoaded", function() {
-    document.body.hidden = true;
-  }, { once: true });
+  document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+      document.body.hidden = true;
+    },
+    { once: true }
+  );
 }
 
 // In case everything else fails, we always want to show the document
-window.addEventListener("error", function(err) {
-  console.error(err);
+window.addEventListener("error", function(ev) {
+  console.error(ev.error);
   document.body.hidden = false;
 });
 
@@ -18,14 +22,14 @@ window.addEventListener("error", function(err) {
 require.config({
   shim: {
     shortcut: {
-      exports: "shortcut"
+      exports: "shortcut",
     },
     highlight: {
-      exports: "hljs"
+      exports: "hljs",
     },
     beautify: {
-      exports: "beautify"
-    }
+      exports: "beautify",
+    },
   },
   paths: {
     "beautify-css": "deps/beautify-css",
@@ -33,21 +37,15 @@ require.config({
     "handlebars.runtime": "deps/handlebars",
     "deps/highlight": "https://www.w3.org/Tools/respec/respec-highlight",
   },
-  deps: [
-    "deps/fetch",
-  ],
+  deps: ["deps/hyperhtml", "deps/url-search-params"],
 });
 
-define([
+define(
+  [
     // order is significant
     "deps/domReady",
     "core/base-runner",
     "core/ui",
-
-    // ********************************************
-    // Uncomment the relevant ones below...
-    // ********************************************
-
     "core/aria",
     "core/style",
     "geonovum/style",
