@@ -57,14 +57,6 @@ import tmpls from "templates";
 
 var headersTmpl = tmpls["headers.html"];
 
-const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
-  year: "numeric",
-  month: "long",
-  day: "2-digit",
-});
-
-const humanNow = W3CDate.format(new Date());
-
 hb.registerHelper("showPeople", function(name, items) {
   // stuff to handle RDFa
   var re = "",
@@ -284,6 +276,12 @@ export function run(conf, doc, cb) {
     pub("error", "Missing required configuration: shortName");
   if (!conf.isOfficial && !conf.github)
     pub("error", "Missing required configuration: github");
+  if (conf.previousPublishDate && !conf.previousStatus)
+    pub("error", "Missing configuration: previousStatus");
+  if (!conf.previousPublishDate && conf.previousStatus)
+    pub("error", "Missing configuration: previousPublishDate");
+  if (!conf.editors || conf.editors.length === 0)
+    pub("error", "At least one editor is required");
   //Titles
   conf.title = doc.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
@@ -292,18 +290,10 @@ export function run(conf, doc, cb) {
     ? new Date(conf.publishDate)
     : new Date(doc.lastModified);
   conf.publishYear = conf.publishDate.getFullYear();
-  conf.publishHumanDate = W3CDate.format(conf.publishDate, "nl");
   //Version URLs
-  conf.publishSpace = conf.specStatus
-    ? conf.publishSpace.toLowerCase()
-    : "domein";
-  if (!conf.publishSpace)
-    pub("error", "Missing required configuration: publishSpace");
   if (conf.isRegular)
     conf.thisVersion =
       "https://docs.geostandaarden.nl/" +
-      publishSpace +
-      "/" +
       conf.specStatus.substr(3).toLowerCase() +
       "-" +
       conf.specType.toLowerCase() +
@@ -314,15 +304,7 @@ export function run(conf, doc, cb) {
       "/";
   if (conf.isRegular)
     conf.latestVersion =
-      "https://docs.geostandaarden.nl/" +
-      publishSpace +
-      "/" +
-      conf.shortName +
-      "/";
-  if (conf.previousPublishDate && !conf.previousStatus)
-    pub("error", "Missing configuration: previousStatus");
-  if (!conf.previousPublishDate && conf.previousStatus)
-    pub("error", "Missing configuration: previousPublishDate");
+      "https://docs.geostandaarden.nl/" + conf.shortName + "/";
   if (conf.previousPublishDate && conf.previousStatus) {
     if (!(conf.previousPublishDate instanceof Date))
       conf.previousPublishDate = new Date(conf.previousPublishDate);
@@ -331,8 +313,6 @@ export function run(conf, doc, cb) {
     conf.prevVersion = "None" + conf.previousPublishDate;
     conf.prevVersion =
       "https://docs.geostandaarden.nl/" +
-      publishSpace +
-      "/" +
       prevStatus +
       "-" +
       prevType +
@@ -343,8 +323,6 @@ export function run(conf, doc, cb) {
       "/";
   }
   //Authors & Editors
-  if (!conf.editors || conf.editors.length === 0)
-    pub("error", "At least one editor is required");
   var peopCheck = function(it) {
     if (!it.name) pub("error", "All authors and editors must have a name.");
   };
