@@ -367,16 +367,8 @@ export function norm(str) {
 // --- DATE HELPERS -------------------------------------------------------------------------------
 // Takes a Date object and an optional separator and returns the year,month,day representation with
 // the custom separator (defaulting to none) and proper 0-padding
-export function concatDate(date, sep) {
-  if (!sep) sep = "";
-  return (
-    "" +
-    date.getFullYear() +
-    sep +
-    lead0(date.getMonth() + 1) +
-    sep +
-    lead0(date.getDate())
-  );
+export function concatDate(date, sep = "") {
+  return ISODate.format(date).replace(new RegExp("-", "g"), sep);
 }
 
 // formats a date to "yyyy-mm-dd"

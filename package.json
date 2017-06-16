@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "14.0.4",
+  "version": "14.0.6",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -19,6 +19,7 @@
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-es2015-modules-amd": "^6.24.1",
     "babel-preset-env": "^1.5.1",
+    "babel-preset-stage-3": "^6.24.1",
     "chai": "^4.0.1",
     "clipboard": "^1.7.1",
     "domReady": "github:requirejs/domReady",
@@ -42,7 +43,7 @@
     "karma-opera-launcher": "^1.0.0",
     "karma-requirejs": "^1.1.0",
     "karma-safari-launcher": "^1.0.0",
-    "karma-safaritechpreview-launcher": "0.0.5",
+    "karma-safaritechpreview-launcher": "0.0.6",
     "karma-verbose-summary-reporter": "0.0.1",
     "leaflet-easybutton": "^2.2.0",
     "mocha": "^3.4.2",

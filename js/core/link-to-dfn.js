@@ -45,7 +45,7 @@ define(["core/pubsubhub", "core/data-cite"], function(pubsubhub, dataCite) {
           }
         });
       });
-      $("a:not([href]):not([data-cite])").each(function() {
+      $('a:not([href]):not([data-cite]):not(.logo)').each(function() {
         var $ant = $(this);
         if ($ant.hasClass("externalDFN")) return;
         var linkTargets = $ant.linkTargets();

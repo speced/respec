@@ -732,7 +732,7 @@ describe("W3C — Headers", function() {
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
       expect(
-        $(".head img[src='https://www.w3.org/Icons/member_subm']", doc).length
+        $(".head img[src^='https://www.w3.org/Icons/member_subm']", doc).length
       ).toEqual(1);
     }).then(done);
   });
@@ -777,7 +777,7 @@ describe("W3C — Headers", function() {
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
       expect(
-        $(".head img[src='https://www.w3.org/Icons/team_subm']", doc).length
+        $(".head img[src^='https://www.w3.org/Icons/team_subm']", doc).length
       ).toEqual(1);
     }).then(done);
   });
