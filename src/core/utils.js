@@ -24,6 +24,7 @@ export function markdownToHtml(text) {
 }
 
 export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
+  timeZone: "UTC",
   year: "numeric",
   month: "2-digit",
   day: "2-digit",
