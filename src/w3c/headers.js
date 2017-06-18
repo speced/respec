@@ -100,6 +100,7 @@ const cgbgHeadersTmpl = tmpls["cgbg-headers.html"];
 const headersTmpl = tmpls["headers.html"];
 
 const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
+  timeZone: "UTC",
   year: "numeric",
   month: "long",
   day: "2-digit",
