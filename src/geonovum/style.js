@@ -9,17 +9,17 @@ import { toKeyValuePairs, createResourceHint, linkCSS } from "core/utils";
 import { pub, sub } from "core/pubsubhub";
 
 function attachFixupScript(doc, version) {
-  var script = doc.createElement("script");
-  script.addEventListener("load", function() {
-    if (window.location.hash) {
-      window.location = window.location;
-    }
-  });
-  var helperScript = "https://www.w3.org/scripts/TR/{version}/fixup.js".replace(
-    "{version}",
-    version
+  const script = doc.createElement("script");
+  script.addEventListener(
+    "load",
+    function() {
+      if (window.location.hash) {
+        window.location = window.location;
+      }
+    },
+    { once: true }
   );
-  script.src = helperScript;
+  script.src = `https://www.w3.org/scripts/TR/${version}/fixup.js`;
   doc.body.appendChild(script);
 }
 
@@ -29,9 +29,9 @@ function attachFixupScript(doc, version) {
 // meta viewport to the top of the head - so to make sure it's the first
 // thing the browser sees. See js/ui/save-html.js.
 function createMetaViewport() {
-  var meta = document.createElement("meta");
+  const meta = document.createElement("meta");
   meta.name = "viewport";
-  var contentProps = {
+  const contentProps = {
     width: "device-width",
     "initial-scale": "1",
     "shrink-to-fit": "no",
@@ -41,7 +41,7 @@ function createMetaViewport() {
 }
 
 function createBaseStyle() {
-  var link = document.createElement("link");
+  const link = document.createElement("link");
   link.rel = "stylesheet";
   link.href = "https://tools.geostandaarden.nl/respec/style/base.css";
   link.classList.add("removeOnSave");
@@ -49,7 +49,7 @@ function createBaseStyle() {
 }
 
 function createStyle(css_name) {
-  var link = document.createElement("link");
+  const link = document.createElement("link");
   link.rel = "stylesheet";
   link.href = "https://tools.geostandaarden.nl/respec/style/{0}.css".replace(
     "{0}",
@@ -60,7 +60,7 @@ function createStyle(css_name) {
 }
 
 function createResourceHints() {
-  var resourceHints = [
+  const resourceHints = [
     {
       hint: "preconnect", // for W3C styles and scripts.
       href: "https://www.w3.org",
@@ -89,7 +89,7 @@ function createResourceHints() {
   return resourceHints;
 }
 // Collect elements for insertion
-var elements = createResourceHints();
+const elements = createResourceHints();
 
 // Opportunistically apply base style
 elements.appendChild(createBaseStyle());
@@ -107,14 +107,12 @@ document.head.insertBefore(elements, document.head.firstChild);
 
 export function run(conf, doc, cb) {
   if (!conf.specStatus) {
-    var warn = "`respecConfig.specStatus` missing. Defaulting to 'base'.";
+    const warn = "`respecConfig.specStatus` missing. Defaulting to 'base'.";
     conf.specStatus = "GN-BASIS";
     pub("warn", warn);
   }
 
-  var styleBaseURL = "https://tools.geostandaarden.nl/respec/style/";
-  var finalStyleURL = "";
-  var styleFile = "";
+  let styleFile = "";
 
   // Figure out which style file to use.
   switch (conf.specStatus.toUpperCase()) {
@@ -138,7 +136,7 @@ export function run(conf, doc, cb) {
   }
 
   attachFixupScript(doc, "2016");
-  finalStyleURL = styleBaseURL + styleFile;
+  const finalStyleURL = `https://tools.geostandaarden.nl/respec/style/${stylefile}`;
   linkCSS(doc, finalStyleURL);
   cb();
 }
