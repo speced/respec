@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "14.0.7",
+  "version": "14.0.8",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -26,7 +26,7 @@
     "glob": "^7.1.2",
     "handlebars": "^4.0.10",
     "http-server": "^0.10.0",
-    "jasmine-core": "^2.6.2",
+    "jasmine-core": "^2.6.4",
     "jasmine-reporters": "^2.2.1",
     "jquery": "^3.2.1",
     "js-beautify": "^1.6.14",
@@ -49,7 +49,7 @@
     "moment": "^2.18.1",
     "requirejs": "^2.3.3",
     "text": "github:requirejs/text",
-    "uglify-es": "^3.0.14",
+    "uglify-es": "^3.0.18",
     "url-search-params": "^0.9.0",
     "webidl2": "^3.0.2"
   },
