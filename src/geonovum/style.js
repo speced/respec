@@ -136,7 +136,7 @@ export function run(conf, doc, cb) {
   }
 
   attachFixupScript(doc, "2016");
-  const finalStyleURL = `https://tools.geostandaarden.nl/respec/style/${stylefile}`;
+  const finalStyleURL = `https://tools.geostandaarden.nl/respec/style/${styleFile}`;
   linkCSS(doc, finalStyleURL);
   cb();
 }
