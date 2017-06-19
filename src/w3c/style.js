@@ -9,17 +9,13 @@ import { toKeyValuePairs, createResourceHint, linkCSS } from "core/utils";
 import { pub, sub } from "core/pubsubhub";
 
 function attachFixupScript(doc, version) {
-  var script = doc.createElement("script");
+  const script = doc.createElement("script");
   script.addEventListener("load", function() {
     if (window.location.hash) {
       window.location = window.location;
     }
-  });
-  var helperScript = "https://www.w3.org/scripts/TR/{version}/fixup.js".replace(
-    "{version}",
-    version
-  );
-  script.src = helperScript;
+  }, {once: true});
+  script.src = `https://www.w3.org/scripts/TR/${version}/fixup.js`;
   doc.body.appendChild(script);
 }
 
@@ -29,9 +25,9 @@ function attachFixupScript(doc, version) {
 // meta viewport to the top of the head - so to make sure it's the first
 // thing the browser sees. See js/ui/save-html.js.
 function createMetaViewport() {
-  var meta = document.createElement("meta");
+  const meta = document.createElement("meta");
   meta.name = "viewport";
-  var contentProps = {
+  const contentProps = {
     width: "device-width",
     "initial-scale": "1",
     "shrink-to-fit": "no",
@@ -41,7 +37,7 @@ function createMetaViewport() {
 }
 
 function createBaseStyle() {
-  var link = document.createElement("link");
+  const link = document.createElement("link");
   link.rel = "stylesheet";
   link.href = "https://www.w3.org/StyleSheets/TR/2016/base.css";
   link.classList.add("removeOnSave");
@@ -49,7 +45,7 @@ function createBaseStyle() {
 }
 
 function selectStyleVersion(styleVersion) {
-  var version = "";
+  let version = "";
   switch (styleVersion) {
     case null:
     case true:
@@ -64,7 +60,7 @@ function selectStyleVersion(styleVersion) {
 }
 
 function createResourceHints() {
-  var resourceHints = [
+  const resourceHints = [
     {
       hint: "preconnect", // for W3C styles and scripts.
       href: "https://www.w3.org",
@@ -92,8 +88,8 @@ function createResourceHints() {
     }, document.createDocumentFragment());
   return resourceHints;
 }
-// Collect elements for insertion
-var elements = createResourceHints();
+// Collect elements for insertion (document fragment)
+const elements = createResourceHints();
 
 // Opportunistically apply base style
 elements.appendChild(createBaseStyle());
@@ -106,14 +102,12 @@ document.head.insertBefore(elements, document.head.firstChild);
 
 export function run(conf, doc, cb) {
   if (!conf.specStatus) {
-    var warn = "`respecConfig.specStatus` missing. Defaulting to 'base'.";
+    const warn = "`respecConfig.specStatus` missing. Defaulting to 'base'.";
     conf.specStatus = "base";
     pub("warn", warn);
   }
 
-  var styleBaseURL = "https://www.w3.org/StyleSheets/TR/{version}";
-  var finalStyleURL = "";
-  var styleFile = "W3C-";
+  let styleFile = "W3C-";
 
   // Figure out which style file to use.
   switch (conf.specStatus.toUpperCase()) {
@@ -146,7 +140,7 @@ export function run(conf, doc, cb) {
   }
 
   // Select between released styles and experimental style.
-  var version = selectStyleVersion(conf.useExperimentalStyles || "2016");
+  const version = selectStyleVersion(conf.useExperimentalStyles || "2016");
   // Attach W3C fixup script after we are done.
   if (version && !conf.noToc) {
     sub(
@@ -157,9 +151,8 @@ export function run(conf, doc, cb) {
       { once: true }
     );
   }
-  var finalVersionPath = version ? version + "/" : "";
-  finalStyleURL = styleBaseURL.replace("{version}", finalVersionPath);
-  finalStyleURL += styleFile;
+  const finalVersionPath = version ? version + "/" : "";
+  const finalStyleURL = `https://www.w3.org/StyleSheets/TR/${finalVersionPath}${styleFile}`;
 
   linkCSS(doc, finalStyleURL);
   cb();
