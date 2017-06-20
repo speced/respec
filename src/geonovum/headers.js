@@ -201,14 +201,18 @@ function toLogo(obj) {
   }
   a.href = obj.href ? obj.href : "";
   a.classList.add("logo");
-  return hyperHTML.bind(a)`
-    <span id="${obj.id}">
-      <img
-        alt="${obj.alt}"
-        src="${obj.src}"
-        width="${obj.width}"
-        height="${obj.height}">
-    </span>`;
+  hyperHTML.bind(a)`
+  <img
+    id="${obj.id}"
+    alt="${obj.alt}"
+    src="${obj.src}"
+    width="${obj.width}"
+    height="${obj.height}">
+  `;
+  // avoid triggering 404 requests from dynamically generated
+  // hyperHTML attribute values
+  a.querySelector("img").src = obj.src;
+  return a;
 }
 
 hb.registerHelper("showLogos", logos => {
