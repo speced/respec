@@ -376,12 +376,7 @@ const baseLogo = Object.freeze({
 export function run(conf, doc, cb) {
   // TODO: move to w3c defaults
   if (!conf.logos) {
-    const W3CLogo = {
-      alt: "W3C",
-      href: "https://www.w3.org/",
-      src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
-    };
-    conf.logos = [{ ...baseLogo, ...W3CLogo }];
+    conf.logos = [];
   }
   // Default include RDFa document metadata
   if (conf.doRDFa === undefined) conf.doRDFa = true;
