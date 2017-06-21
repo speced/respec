@@ -277,12 +277,7 @@ const baseLogo = Object.freeze({
 export function run(conf, doc, cb) {
   // TODO: move to w3c defaults
   if (!conf.logos) {
-    const GNVMLogo = {
-      alt: "Geonovum",
-      href: "http://www.geonovum.nl/",
-      src: "https://tools.geostandaarden.nl/respec/media/logos/Geonovum.svg",
-    };
-    conf.logos = [{ ...baseLogo, ...GNVMLogo }];
+    conf.logos = [];
   }
   conf.specStatus = conf.specStatus ? conf.specStatus.toUpperCase() : "";
   conf.specType = conf.specType ? conf.specType.toUpperCase() : "";
