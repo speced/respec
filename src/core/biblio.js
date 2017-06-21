@@ -69,7 +69,7 @@ const endWithDot = endNormalizer(".");
 
 export function wireReference(rawRef, target = "_blank") {
   if (typeof rawRef !== "object") {
-    throw new TypeError("Only modern object refereces are allowed");
+    throw new TypeError("Only modern object references are allowed");
   }
   const ref = Object.assign({}, defaultsReference, rawRef);
   const authors = ref.authors.join("; ") + (ref.etAl ? " et al" : "");
@@ -226,7 +226,11 @@ async function updateFromNetwork(refs, options = { forceUpdate: false }) {
     return null;
   }
   const data = await response.json();
-  await biblioDB.addAll(data);
+  try {
+    await biblioDB.addAll(data);
+  } catch (err) {
+    console.error(err);
+  }
   return data;
 }
 
@@ -275,23 +279,27 @@ export async function run(conf, doc, cb) {
       return collector;
     }, [])
     .sort();
+  const idbRefs = [];
+
   // See if we have them in IDB
-  const promisesToFind = neededRefs.map(async id => ({
-    id,
-    data: await biblioDB.find(id),
-  }));
-  const idbRefs = await Promise.all(promisesToFind);
-  const split = idbRefs.reduce(
-    (collector, ref) => {
-      if (ref.data) {
-        collector.hasData.push(ref);
-      } else {
-        collector.noData.push(ref);
-      }
-      return collector;
-    },
-    { hasData: [], noData: [] }
-  );
+  try {
+    await biblioDB.ready; // can throw
+    const promisesToFind = neededRefs.map(async id => ({
+      id,
+      data: await biblioDB.find(id),
+    }));
+    idbRefs.push(...(await Promise.all(promisesToFind)));
+  } catch (err) {
+    // IndexedDB died, so we need to go to the network for all
+    // references
+    idbRefs.push(...neededRefs.map(id => ({ id, data: null })));
+    console.warn(err);
+  }
+  const split = { hasData: [], noData: [] };
+  idbRefs.reduce((collector, ref) => {
+    ref.data ? collector.hasData.push(ref) : collector.noData.push(ref);
+    return collector;
+  }, split);
   split.hasData.reduce((collector, ref) => {
     collector[ref.id] = ref.data;
     return collector;
