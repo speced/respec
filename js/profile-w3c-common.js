@@ -14,7 +14,7 @@ if (document.body) {
 
 // In case everything else fails, we always want to show the document
 window.addEventListener("error", function(ev) {
-  console.error(ev.error);
+  console.error(ev.error, ev.message);
   document.body.hidden = false;
 });
 
