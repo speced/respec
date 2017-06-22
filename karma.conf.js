@@ -78,6 +78,7 @@ module.exports = function(config) {
       "/js/deps/": "/base/js/deps/",
       "/base/deps/": "/base/js/deps/",
       "/base/deps/marked.js": "/base/js/deps/marked.js",
+      "/worker/respec-worker.js": "/base/worker/respec-worker.js"
     },
 
     // preprocess matching files before serving them to the browser
