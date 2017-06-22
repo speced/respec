@@ -41,7 +41,7 @@ const domReady = new Promise(function(resolve) {
     return resolve();
   }
   document.addEventListener("readystatechange", function listener() {
-    if (document.readyState !== "interactive" || document.readyState !== "complete" ) {
+    if (document.readyState === "interactive" || document.readyState === "complete" ) {
       return;
     }
     document.removeEventListener("readystatechange", listener);
