@@ -3,9 +3,13 @@
 if (document.body) {
   document.body.hidden = true;
 } else {
-  document.addEventListener("DOMContentLoaded", function() {
-    document.body.hidden = true;
-  });
+  document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+      document.body.hidden = true;
+    },
+    { once: true }
+  );
 }
 
 // In case everything else fails, we always want to show the document
@@ -37,16 +41,9 @@ require.config({
 });
 
 const domReady = new Promise(function(resolve) {
-  if (document.readyState === "interactive" || document.readyState === "complete" ) {
-    return resolve();
-  }
-  document.addEventListener("readystatechange", function listener() {
-    if (document.readyState === "interactive" || document.readyState === "complete" ) {
-      return;
-    }
-    document.removeEventListener("readystatechange", listener);
-    resolve();
-  });
+  return document.readyState === "complete"
+    ? resolve()
+    : document.addEventListener("DOMContentLoaded", resolve);
 });
 
 define(
