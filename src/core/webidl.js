@@ -299,12 +299,12 @@ const extenedAttributesLinks = new Map([
   ["Exposed", "WEBIDL#Exposed"],
   ["Global", "WEBIDL#Global"],
   ["HTMLConstructor", "HTML#htmlconstructor"],
-  ["LegacyArrayClass", "WEBIDL-LS#LegacyArrayClass"],
+  ["LegacyArrayClass", "WEBIDL#LegacyArrayClass"],
   [
     "LegacyUnenumerableNamedProperties",
-    "WEBIDL-LS#LegacyUnenumerableNamedProperties",
+    "WEBIDL#LegacyUnenumerableNamedProperties",
   ],
-  ["LenientSetter", "WEBIDL-LS#LenientSetter"],
+  ["LenientSetter", "WEBIDL#LenientSetter"],
   ["LenientThis", "WEBIDL#LenientThis"],
   ["NamedConstructor", "WEBIDL#NamedConstructor"],
   ["NewObject", "WEBIDL#NewObject"],
@@ -314,11 +314,11 @@ const extenedAttributesLinks = new Map([
   ["PutForwards", "WEBIDL#PutForwards"],
   ["Replaceable", "WEBIDL#Replaceable"],
   ["SameObject", "WEBIDL#SameObject"],
-  ["SecureContext", "WEBIDL-LS#SecureContext"],
+  ["SecureContext", "WEBIDL#SecureContext"],
   ["TreatNonObjectAsNull", "WEBIDL#TreatNonObjectAsNull"],
   ["TreatNullAs", "WEBIDL#TreatNullAs"],
   ["Unforgeable", "WEBIDL#Unforgeable"],
-  ["Unscopable", "WEBIDL-LS#Unscopable"],
+  ["Unscopable", "WEBIDL#Unscopable"],
 ]);
 
 function extAttr(extAttrs, indent, singleLine) {
@@ -365,7 +365,7 @@ const standardTypes = new Map([
   ["float", "WEBIDL#idl-float"],
   ["Float32Array", "WEBIDL#idl-Float32Array"],
   ["Float64Array", "WEBIDL#idl-Float64Array"],
-  ["FrozenArray", "WEBIDL-LS#idl-frozen-array"],
+  ["FrozenArray", "WEBIDL#idl-frozen-array"],
   ["Int16Array", "WEBIDL#idl-Int16Array"],
   ["Int32Array", "WEBIDL#idl-Int32Array"],
   ["Int8Array", "WEBIDL#idl-Int8Array"],
