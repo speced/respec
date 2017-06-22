@@ -40,7 +40,7 @@ require.config({
   deps: ["deps/hyperhtml", "deps/url-search-params"],
 });
 
-const domReady = new Promise(function(resolve){
+const domReady = new Promise(function(resolve) {
   return document.readyState === "complete"
     ? resolve()
     : document.addEventListener("DOMContentLoaded", resolve);
@@ -104,7 +104,10 @@ define(
       runner
         .runAll(args)
         .then(document.respecIsReady)
-        .then(ui.enable)
+        .then(function() {
+          ui.enable();
+          document.body.hidden = false;
+        })
         .catch(function(err) {
           console.error(err);
           // In case processing fails, we still want to show the document.
