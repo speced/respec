@@ -3,9 +3,13 @@
 if (document.body) {
   document.body.hidden = true;
 } else {
-  document.addEventListener("DOMContentLoaded", function() {
-    document.body.hidden = true;
-  });
+  document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+      document.body.hidden = true;
+    },
+    { once: true }
+  );
 }
 
 // In case everything else fails, we always want to show the document
@@ -36,22 +40,10 @@ require.config({
   deps: ["deps/hyperhtml", "deps/url-search-params"],
 });
 
-const domReady = new Promise(function(resolve) {
-  if (document.readyState === "interactive" || document.readyState === "complete" ) {
-    return resolve();
-  }
-  document.addEventListener("readystatechange", function listener() {
-    if (document.readyState !== "interactive" || document.readyState !== "complete" ) {
-      return;
-    }
-    document.removeEventListener("readystatechange", listener);
-    resolve();
-  });
-});
-
 define(
   [
     // order is significant
+    "deps/domReady",
     "core/base-runner",
     "core/ui",
     "core/aria",
@@ -98,12 +90,12 @@ define(
     /*Linter must be the last thing to run*/
     "w3c/linter",
   ],
-  function(runner, ui) {
+  function(domReady, runner, ui) {
     var args = Array.from(arguments).filter(function(item) {
       return item;
     });
     ui.show();
-    domReady.then(function() {
+    domReady(function() {
       runner
         .runAll(args)
         .then(document.respecIsReady)
