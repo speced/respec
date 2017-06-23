@@ -263,9 +263,8 @@ function idlType2Text(idlType) {
     );
   }
   if (idlType.generic) {
-    return (
-      idlType.generic + "<" + idlType2Text(idlType.idlType) + ">" + nullable
-    );
+    const types = [].concat(idlType.idlType).map(idlType2Text).join(", ");
+    return `${idlType.generic}<${types}>${nullable}`;
   }
   return idlType2Text(idlType.idlType) + nullable;
 }
