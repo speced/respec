@@ -16,6 +16,16 @@ describe("Core - WebIDL", function() {
     ).then(done);
   });
 
+  it("handles record types", done => {
+    const idl = doc.querySelector("#records pre");
+    expect(idl).toBeTruthy(idl);
+    expect(idl.querySelector(".idlMemberType:first-child").textContent).toEqual(
+      "record<DOMString, USVString>"
+    );
+    expect(idl.querySelector(".idlMemberName").textContent).toEqual("pass");
+    done();
+  });
+
   it("links standardized IDL types to WebIDL spec", done => {
     const idl = doc.querySelector("#linkToIDLSpec>div>pre");
     // [Constructor(sequence<DOMString> methodData), SecureContext]
