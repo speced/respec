@@ -21,7 +21,7 @@
   <body>
 <section data-dfn-for="ExampleInterface" data-link-for="ExampleInterface">
   <h2><dfn>ExampleInterface</dfn> interface</h2>
-  <pre class="idl">
+  <pre class="idl no-link-warnings">
   interface ExampleInterface {
     void exampleMethod();
     readonly attribute USVString url;
@@ -50,9 +50,17 @@
         CUSTOM PARAGRAPH
       </p>
     </section>
+    <section id="records">
+    <h2>Testing records</h2>
+    <pre class="idl no-link-warnings">
+    dictionary Foo {
+      record&lt;DOMString, USVString> pass;
+    };
+    </pre>
+    </section>
     <section id="linkToIDLSpec">
     <h2>Linking to WebIDL spec</h2>
-    <pre class="idl">
+    <pre class="idl no-link-warnings">
     [Constructor(sequence&lt;DOMString> methodData), SecureContext]
     interface LinkingTest {
       readonly attribute DOMString? aBoolAttribute;
@@ -62,7 +70,7 @@
     </section>
     <section id="sec-parenthesis-method" data-dfn-for="ParenthesisTest" data-link-for="ParenthesisTest">
       <h2>More linking</h2>
-      <pre class="idl">
+      <pre class="idl no-link-warnings">
       interface ParenthesisTest {
           void basic();
           void noParens();
@@ -441,7 +449,7 @@
       <p link-for="EnumBasic"><a>one</a> is referenced with a <code>[link-for]</code> attribute.</p>
       <p id="enum-ref-without-link-for"><a>EnumBasic.one</a> may also be referenced with fully-qualified name.</p>
       <section id="enum-empty-sec" data-dfn-for="EmptyEnum">
-        <pre class="idl">
+        <pre class="idl no-link-warnings">
         enum EmptyEnum {
           "",
           "not empty"
