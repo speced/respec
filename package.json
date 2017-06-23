@@ -68,6 +68,7 @@
     "karma": "karma start --single-run",
     "prepublish": "npm run snyk-protect; npm run build",
     "pretest": "npm run jshint && npm run jscs",
+    "release": "node ./tools/release.js",
     "server": "npm start",
     "snyk-protect": "snyk protect",
     "start": "http-server",
