@@ -2,6 +2,8 @@ import { pub } from "core/pubsubhub";
 import { norm } from "core/utils";
 import "deps/jquery";
 
+export const name = "core/jquery-enhanced";
+
 window.$ = $;
 
 // --- JQUERY EXTRAS -----------------------------------------------------------------------
@@ -80,8 +82,8 @@ window.$.fn.getDfnTitles = function(args) {
         "': see https://github.com/w3c/respec/wiki/User's-Guide#definitions-and-linking"
     );
   } else if (
-    this.contents().length == 1 &&
-    this.children("abbr, acronym").length == 1 &&
+    this.contents().length === 1 &&
+    this.children("abbr, acronym").length === 1 &&
     this.find(":first-child").attr("title")
   ) {
     titleString = this.find(":first-child").attr("title");
@@ -170,10 +172,10 @@ window.$.fn.makeID = function(pfx, txt, noLC) {
   if (id.length > 0 && /^[^a-z]/i.test(id)) id = "x" + id;
   if (id.length === 0) id = "generatedID";
   if (pfx) id = pfx + "-" + id;
-  var inc = 1, doc = this[0].ownerDocument;
+  var inc = 1,
+    doc = this[0].ownerDocument;
   if ($("#" + id, doc).length) {
-    while ($("#" + id + "-" + inc, doc).length)
-      inc++;
+    while ($("#" + id + "-" + inc, doc).length) inc++;
     id += "-" + inc;
   }
   this.attr("id", id);
@@ -183,9 +185,9 @@ window.$.fn.makeID = function(pfx, txt, noLC) {
 // Returns all the descendant text nodes of an element. Note that those nodes aren't
 // returned as a jQuery array since I'm not sure if that would make too much sense.
 window.$.fn.allTextNodes = function(exclusions) {
-  var textNodes = [], excl = {};
-  for (var i = 0, n = exclusions.length; i < n; i++)
-    excl[exclusions[i]] = true;
+  var textNodes = [],
+    excl = {};
+  for (var i = 0, n = exclusions.length; i < n; i++) excl[exclusions[i]] = true;
 
   function getTextNodes(node) {
     if (node.nodeType === 1 && excl[node.localName.toLowerCase()]) return;

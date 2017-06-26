@@ -207,7 +207,7 @@ const save = {
       // if the node is the document node.. process the children
       if (
         node.nodeType === 9 ||
-        (node.nodeType === 1 && node.nodeName.toLowerCase() == "html")
+        (node.nodeType === 1 && node.nodeName.toLowerCase() === "html")
       ) {
         for (var i = 0; i < node.childNodes.length; i++)
           out += dumpNode(node.childNodes[i]);

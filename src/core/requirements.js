@@ -10,6 +10,7 @@
 //     element with its href pointing to the requirement it should be referencing
 //     and a class of "reqRef".
 import { pub } from "core/pubsubhub";
+export const name = "core/requirements";
 
 export function run(conf, doc, cb) {
   $(".req").each(function(i) {
@@ -20,7 +21,11 @@ export function run(conf, doc, cb) {
   });
 
   $("a.reqRef").each(function() {
-    var $ref = $(this), href = $ref.attr("href"), id, $req, txt;
+    var $ref = $(this),
+      href = $ref.attr("href"),
+      id,
+      $req,
+      txt;
     if (!href) return;
     id = href.substring(1);
     $req = $("#" + id);
