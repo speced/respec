@@ -5,6 +5,8 @@
 import css from "deps/text!core/css/bp.css";
 import { pub } from "core/pubsubhub";
 
+export const name = "core/best-practices";
+
 export function run(conf, doc, cb) {
   var num = 0;
   var $bps = $("span.practicelab", doc);

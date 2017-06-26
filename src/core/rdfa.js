@@ -2,6 +2,7 @@
 // Support for RDFa is spread to multiple places in the code, including templates, as needed by
 // the HTML being generated in various places. This is for parts that don't fit anywhere in
 // particular
+export const name = "core/rdfa";
 
 export function run(conf, doc, cb) {
   if (!conf.doRDFa) {
@@ -10,7 +11,8 @@ export function run(conf, doc, cb) {
   // Do abstract
   const $abs = $("#abstract", doc);
   if ($abs.length) {
-    var rel = "dc:abstract", ref = $abs.attr("property");
+    var rel = "dc:abstract",
+      ref = $abs.attr("property");
     if (ref) rel = ref + " " + rel;
     $abs.attr({ property: rel });
   }

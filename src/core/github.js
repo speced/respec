@@ -27,7 +27,7 @@ export function fetch(url, options) {
   return $.ajax(url);
 }
 
-export function fetchAll(url, options, output=[]) {
+export function fetchAll(url, options, output = []) {
   var request = fetch(url, options);
   return request.then(function(resp) {
     output.push.apply(output, resp);
@@ -44,7 +44,6 @@ export function fetchIndex(url, options) {
   // which is what you need if you want to get the index.
   return fetchAll(url.replace(/\{[^}]+\}/, ""), options);
 }
-
 
 export async function run(conf) {
   if (!conf.hasOwnProperty("github") || !conf.github) {
@@ -88,7 +87,9 @@ export async function run(conf) {
     githubAPI: `https://api.github.com/repos/${org}/${repo}`,
     issueBase: `${ghURL.href}${ghURL.pathname.endsWith("/") ? "" : "/"}issues/`,
   };
-  const commitsHref = `${ghURL.href}${ghURL.pathname.endsWith("/") ? "" : "/"}commits/${branch}`;
+  const commitsHref = `${ghURL.href}${ghURL.pathname.endsWith("/")
+    ? ""
+    : "/"}commits/${branch}`;
   const otherLink = {
     key: conf.l10n.participate,
     data: [

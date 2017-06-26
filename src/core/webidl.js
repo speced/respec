@@ -11,6 +11,8 @@ import css from "deps/text!core/css/webidl.css";
 import tmpls from "templates";
 import { normalizePadding } from "core/utils";
 
+export const name = "core/webidl";
+
 var idlAttributeTmpl = tmpls["attribute.html"];
 var idlCallbackTmpl = tmpls["callback.html"];
 var idlConstTmpl = tmpls["const.html"];
@@ -274,8 +276,7 @@ function pads(num) {
   //  this might be more simply done as
   //  return Array(num + 1).join(" ")
   var str = "";
-  for (var i = 0; i < num; i++)
-    str += " ";
+  for (var i = 0; i < num; i++) str += " ";
   return str;
 }
 var whitespaceTypes = {
@@ -519,7 +520,8 @@ function writeDefinition(obj, indent) {
     case "callback interface":
       return writeInterfaceDefinition(opt, "callback ");
     case "dictionary":
-      var maxQualifiers = 0, maxType = 0;
+      var maxQualifiers = 0,
+        maxType = 0;
       var members = obj.members.filter(function(member) {
         return !typeIsWhitespace(member.type);
       });
@@ -641,8 +643,12 @@ function writeDefinition(obj, indent) {
 }
 
 function writeInterfaceDefinition(opt, callback) {
-  var obj = opt.obj, indent = opt.indent;
-  var maxAttr = 0, maxAttrQualifiers = 0, maxMeth = 0, maxConst = 0;
+  var obj = opt.obj,
+    indent = opt.indent;
+  var maxAttr = 0,
+    maxAttrQualifiers = 0,
+    maxMeth = 0,
+    maxConst = 0;
   obj.members.forEach(function(it) {
     if (
       typeIsWhitespace(it.type) ||
@@ -1102,7 +1108,9 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
   if (dfns.length > 1) {
     pub(
       "error",
-      `Multiple \`<dfn>\`s for \`${originalName}${originalParent ? ` in \`${originalParent}\`` : ""}`
+      `Multiple \`<dfn>\`s for \`${originalName}${originalParent
+        ? ` in \`${originalParent}\``
+        : ""}`
     );
   }
   if (dfns.length === 0) {
@@ -1111,7 +1119,9 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
       idlElem &&
       idlElem.classList.contains("no-link-warnings") === false;
     if (showWarnings) {
-      var msg = `No \`<dfn>\` for ${type} \`${originalName}\`${originalParent ? " in `" + originalParent + "`" : ""}`;
+      var msg = `No \`<dfn>\` for ${type} \`${originalName}\`${originalParent
+        ? " in `" + originalParent + "`"
+        : ""}`;
       msg +=
         ". [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).";
       pub("warn", msg);

@@ -1,4 +1,3 @@
-
 /// Module ui/dfn-list
 // Displays all definitions with links to the defining element.
 import { ui } from "core/ui";
@@ -21,23 +20,20 @@ ul.addEventListener("click", ev => {
 });
 
 function show() {
-  const definitionLinks = Object
-    .entries(window.respecConfig.definitionMap)
+  const definitionLinks = Object.entries(window.respecConfig.definitionMap)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([key, $dfn]) => {
       const dfn = $dfn[0];
       return window.hyperHTML.wire()`
         <li>
-          <a href="${"#" + dfn.id }">
+          <a href="${"#" + dfn.id}">
             ${key}
           </a>
         </li>
       `;
     });
-  render`${
-    definitionLinks
-  }`;
+  render`${definitionLinks}`;
   ui.freshModal("List of Definitions", ul, button);
-};
+}
 
-export { show }; 
+export { show };

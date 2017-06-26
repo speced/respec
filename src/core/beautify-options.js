@@ -1,4 +1,4 @@
-
+// Module core/beautify-options
 // See http://jsbeautifier.org/js/lib/beautify-html.js
 // For what each one means.
 export const beautifyOps = Object.freeze({

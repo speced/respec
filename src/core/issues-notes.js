@@ -14,7 +14,7 @@
 import { pub } from "core/pubsubhub";
 import css from "deps/text!core/css/issues-notes.css";
 import { fetch as ghFetch, fetchIndex } from "core/github";
-
+export const name = "core/issues-notes";
 export function run(conf, doc, cb) {
   function handleIssues($ins, ghIssues, issueBase) {
     $(doc).find("head link").first().before($("<style/>").text(css));
@@ -30,7 +30,7 @@ export function run(conf, doc, cb) {
         isWarning = $inno.hasClass("warning"),
         isEdNote = $inno.hasClass("ednote"),
         isFeatureAtRisk = $inno.hasClass("atrisk"),
-        isInline = $inno.css("display") != "block",
+        isInline = $inno.css("display") !== "block",
         dataNum = $inno.attr("data-number"),
         report = {
           inline: isInline,
@@ -130,10 +130,7 @@ export function run(conf, doc, cb) {
       if ($("#issue-summary"))
         $("#issue-summary").append($issueSummary.contents());
     } else if ($("#issue-summary").length) {
-      pub(
-        "warn",
-        "Using issue summary (#issue-summary) but no issues found."
-      );
+      pub("warn", "Using issue summary (#issue-summary) but no issues found.");
       $("#issue-summary").remove();
     }
   }

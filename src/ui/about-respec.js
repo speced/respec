@@ -24,7 +24,7 @@ const button = ui.addCommand(
   "ℹ️"
 );
 
-function  show() {
+function show() {
   ui.freshModal("About ReSpec - " + window.respecVersion, div, button);
 }
 

@@ -14,6 +14,7 @@ import { sub } from "core/pubsubhub";
 import css from "deps/text!ui/ui.css";
 import utils from "core/utils";
 import "core/jquery-enhanced";
+export const name = "core/ui";
 
 // Opportunistically inserts the style, with the chance to reduce some FOUC
 const styleElement = document.createElement("style");
@@ -272,4 +273,3 @@ sub("error", function(details) {
 sub("warn", function(details) {
   ui.warning(details);
 });
-

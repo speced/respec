@@ -1,6 +1,8 @@
 // Module core/dfn
 // Finds all <dfn> elements and populates conf.definitionMap to identify them.
 
+export const name = "core/dfn";
+
 function canonicalize(query, attributeName) {
   Array.from(document.querySelectorAll(query)).forEach(function(el) {
     el.dataset.dfnFor = el.getAttribute(attributeName).toLowerCase();

@@ -5,6 +5,7 @@
  * to manage the config.l10n object so that other parts of the system can
  * localize their text.
  */
+export const name = "core/l10n";
 // We use en-US as the base
 const base = {
   abstract: "Abstract",

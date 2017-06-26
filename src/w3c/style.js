@@ -10,11 +10,15 @@ import { pub, sub } from "core/pubsubhub";
 
 function attachFixupScript(doc, version) {
   const script = doc.createElement("script");
-  script.addEventListener("load", function() {
-    if (window.location.hash) {
-      window.location = window.location;
-    }
-  }, {once: true});
+  script.addEventListener(
+    "load",
+    function() {
+      if (window.location.hash) {
+        window.location = window.location;
+      }
+    },
+    { once: true }
+  );
   script.src = `https://www.w3.org/scripts/TR/${version}/fixup.js`;
   doc.body.appendChild(script);
 }
