@@ -54,6 +54,7 @@ js/core/worker.js
 js/templates.js
 js/ui/about-respec.js
 js/ui/dfn-list.js
+js/ui/save-html.js
 js/ui/search-specref.js
 js/w3c/abstract.js
 js/w3c/aria.js
