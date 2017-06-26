@@ -1,6 +1,6 @@
 // Module ui/about-respec
 // A simple about dialog with pointer to the help
-import ui from "core/ui";
+import { ui } from "core/ui";
 
 // window.respecVersion is added at build time (see tools/builder.js)
 window.respecVersion = window.respecVersion || "Developer Edition";
