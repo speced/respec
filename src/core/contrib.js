@@ -5,7 +5,7 @@
 // #gh-contributors: people whose PR have been merged.
 // Spec editors get filtered out automatically.
 
-import github from "github";
+import { fetch as ghFetch, fetchIndex } from "core/github";
 import { pub } from "core/pubsubhub";
 import "deps/regenerator";
 
@@ -48,7 +48,7 @@ function toHTML(urls, editors, element) {
     .apply(
       $,
       urls.map(function(url) {
-        return github.fetch(url);
+        return ghFetch(url);
       })
     )
     .then(function(...args) {
@@ -89,13 +89,12 @@ export async function run(conf, doc, cb) {
     return;
   }
 
-  github
-    .fetch(conf.githubAPI)
+  ghFetch(conf.githubAPI)
     .then(function(json) {
       return $.when(
-        github.fetchIndex(json.issues_url),
-        github.fetchIndex(json.issue_comment_url),
-        github.fetchIndex(json.contributors_url)
+        fetchIndex(json.issues_url),
+        fetchIndex(json.issue_comment_url),
+        fetchIndex(json.contributors_url)
       );
     })
     .then(function(issues, comments, contributors) {
@@ -110,8 +109,7 @@ export async function run(conf, doc, cb) {
     .then(cb, function(error) {
       pub(
         "error",
-        "Error loading contributors and/or commenters from GitHub. Error: " +
-          error
+        "Error loading contributors and/or commenters from  Error: " + error
       );
       cb();
     });
