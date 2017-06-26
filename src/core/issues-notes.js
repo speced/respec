@@ -13,7 +13,7 @@
 
 import { pub } from "core/pubsubhub";
 import css from "deps/text!core/css/issues-notes.css";
-import github from "github";
+import { fetch as ghFetch, fetchIndex } from "core/github";
 
 export function run(conf, doc, cb) {
   function handleIssues($ins, ghIssues, issueBase) {
@@ -142,11 +142,10 @@ export function run(conf, doc, cb) {
     issueBase = conf.issueBase;
   if ($ins.length) {
     if (conf.githubAPI) {
-      github
-        .fetch(conf.githubAPI)
+      ghfetch(conf.githubAPI)
         .then(function(json) {
           issueBase = issueBase || json.html_url + "/issues/";
-          return github.fetchIndex(json.issues_url, {
+          return fetchIndex(json.issues_url, {
             // Get back HTML content instead of markdown
             // See: https://developer.github.com/v3/media/
             headers: {
