@@ -10,6 +10,7 @@ define(
     "core/ui",
   ],
   function(beautify, beautifyOpts, pubsubhub, utils, ui) {
+    ui = ui.ui;
     var msg, doc = document, conf = window.respecConfig;
     const button = ui.addCommand(
       "Save Snapshot",

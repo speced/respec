@@ -1,6 +1,6 @@
 // Module ui/search-specref
 // Search Specref database
-import ui from "core/ui";
+import { ui } from "core/ui";
 import { wireReference } from "core/biblio";
 
 const button = ui.addCommand(
