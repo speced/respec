@@ -11,6 +11,7 @@ js/deps/*
 js/**/*.map
 js/core/aria.js
 js/core/base-runner.js
+js/core/beautify-options.js
 js/core/best-practices.js
 js/core/biblio-db.js
 js/core/biblio.js
