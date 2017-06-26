@@ -44,7 +44,7 @@
  **/
 
 import beautify from "deps/beautify-html";
-import beautifyOps from "core/beautify-options";
+import { beautifyOps } from "core/beautify-options";
 import { markdownToHtml } from "core/utils";
 export const name = "core/markdown";
 
