@@ -9,7 +9,7 @@
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
 
-import shortcut from "shortcut";
+import shortcut from "deps/shortcut";
 import { sub } from "core/pubsubhub";
 import css from "deps/text!ui/ui.css";
 import utils from "core/utils";

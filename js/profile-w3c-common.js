@@ -21,7 +21,7 @@ window.addEventListener("error", function(ev) {
 // this is only set in a build, not at all in the dev environment
 require.config({
   shim: {
-    shortcut: {
+    "deps/shortcut": {
       exports: "shortcut",
     },
     highlight: {
@@ -37,7 +37,7 @@ require.config({
     "handlebars.runtime": "deps/handlebars",
     "deps/highlight": "https://www.w3.org/Tools/respec/respec-highlight",
   },
-  deps: ["deps/hyperhtml", "deps/url-search-params"],
+  deps: ["deps/url-search-params"],
 });
 
 define(
