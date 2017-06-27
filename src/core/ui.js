@@ -12,7 +12,7 @@
 import shortcut from "deps/shortcut";
 import { sub } from "core/pubsubhub";
 import css from "deps/text!ui/ui.css";
-import utils from "core/utils";
+import { markdownToHtml } from "core/utils";
 import "core/jquery-enhanced";
 export const name = "core/ui";
 
@@ -145,7 +145,7 @@ function errWarn(msg, arr, butName, title) {
             .end();
         } else {
           const tmp = document.createElement("tmp");
-          tmp.innerHTML = utils.markdownToHtml(err);
+          tmp.innerHTML = markdownToHtml(err);
           const li = document.createElement("li");
           // if it's only a single element, just copy the contents into li
           if (tmp.firstElementChild === tmp.lastElementChild) {
