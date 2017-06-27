@@ -51,7 +51,7 @@
     "text": "github:requirejs/text",
     "uglify-es": "^3.0.20",
     "url-search-params": "^0.9.0",
-    "webidl2": "^3.0.2"
+    "webidl2": "^4.0.0"
   },
   "scripts": {
     "babel:build": "babel src -d js --source-maps",

@@ -30,7 +30,6 @@ var idlMaplikeTmpl = tmpls["maplike.html"];
 var idlMethodTmpl = tmpls["method.html"];
 var idlMultiLineCommentTmpl = tmpls["multiline-comment.html"];
 var idlParamTmpl = tmpls["param.html"];
-var idlSerializerTmpl = tmpls["serializer.html"];
 var idlTypedefTmpl = tmpls["typedef.html"];
 // TODO: make these linkable somehow.
 // https://github.com/w3c/respec/issues/999
@@ -427,7 +426,6 @@ const idlKeywords = new Set([
   "RegExp",
   "required",
   "sequence",
-  "serializer",
   "setlike",
   "setter",
   "short",
@@ -458,7 +456,6 @@ const argumentNameKeyword = new Set([
   "maplike",
   "partial",
   "required",
-  "serializer",
   "setlike",
   "setter",
   "static",
@@ -652,7 +649,6 @@ function writeInterfaceDefinition(opt, callback) {
   obj.members.forEach(function(it) {
     if (
       typeIsWhitespace(it.type) ||
-      it.type === "serializer" ||
       it.type === "maplike" ||
       it.type === "iterable"
     ) {
@@ -677,8 +673,6 @@ function writeInterfaceDefinition(opt, callback) {
           return writeMethod(ch, maxMeth, indent + 1);
         case "const":
           return writeConst(ch, maxConst, indent + 1);
-        case "serializer":
-          return writeSerializer(ch, indent + 1);
         case "maplike":
           return writeMaplike(ch, indent + 1);
         case "iterable":
@@ -755,7 +749,6 @@ function writeMethod(meth, max, indent) {
     "setter",
     "deleter",
     "legacycaller",
-    "serializer",
     "stringifier",
   ];
   var special = "";
@@ -827,22 +820,6 @@ function writeMultiLineComment(comment, indent) {
     firstLine: lines[0],
     lastLine: trimInitialSpace(lines[lines.length - 1]),
     innerLine: lines.slice(1, -1).map(trimInitialSpace),
-  });
-}
-
-function writeSerializer(serializer, indent) {
-  var values = "";
-  if (serializer.patternMap) {
-    values = "{" + serializer.names.join(", ") + "}";
-  } else if (serializer.patternList) {
-    values = "[" + serializer.patternList.join(", ") + "]";
-  } else if (serializer.name) {
-    values = serializer.name;
-  }
-  return idlSerializerTmpl({
-    obj: serializer,
-    indent: indent,
-    values: values,
   });
 }
 
@@ -953,8 +930,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
           defn.setter ||
           defn.deleter ||
           defn.legacycaller ||
-          defn.stringifier ||
-          defn.serializer
+          defn.stringifier
         ) {
           name = "";
         }
@@ -984,12 +960,6 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
         defn.idlId =
           "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
         break;
-      case "serializer":
-        name = "serializer";
-        defn.idlId =
-          "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
-        break;
-
       case "implements":
       case "ws":
       case "ws-pea":
@@ -1180,7 +1150,7 @@ export function run(conf, doc, cb) {
     $df.attr({ id: this.id });
     $df
       .find(
-        ".idlAttribute,.idlCallback,.idlConst,.idlDictionary,.idlEnum,.idlException,.idlField,.idlInterface,.idlMember,.idlMethod,.idlSerializer,.idlMaplike,.idlIterable,.idlTypedef"
+        ".idlAttribute,.idlCallback,.idlConst,.idlDictionary,.idlEnum,.idlException,.idlField,.idlInterface,.idlMember,.idlMethod,.idlMaplike,.idlIterable,.idlTypedef"
       )
       .each(function() {
         var elem = $(this);
