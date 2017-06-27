@@ -378,30 +378,6 @@ describe("Core - WebIDL", function() {
     done();
   });
 
-  it("should handle serializer", function(done) {
-    var $target = $("#serializer-map", doc);
-    var text =
-      "interface SerializerMap {\n" +
-      "    attribute DOMString foo;\n" +
-      "    attribute DOMString bar;\n" +
-      "    serializer = {foo, bar};\n" +
-      "};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlSerializer").length).toEqual(1);
-    var $serializer = $target.find(".idlSerializer").first();
-    expect($serializer.find(".idlSerializerValues").text()).toEqual(
-      "{foo, bar}"
-    );
-
-    // Links and IDs.
-    $serializer = $target.find(".idlSerializer:contains('serializer')");
-    expect($serializer.attr("id")).toEqual("idl-def-serializermap-serializer");
-    expect($serializer.children("a").attr("href")).toEqual(
-      "#dom-serializermap-serializer"
-    );
-    done();
-  });
-
   it("should handle comments", function(done) {
     var $target = $("#comments-basic", doc);
     var // TODO: Handle comments when WebIDL2 does.
