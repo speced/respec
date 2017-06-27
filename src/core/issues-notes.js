@@ -139,7 +139,7 @@ export function run(conf, doc, cb) {
     issueBase = conf.issueBase;
   if ($ins.length) {
     if (conf.githubAPI) {
-      ghfetch(conf.githubAPI)
+      ghFetch(conf.githubAPI)
         .then(function(json) {
           issueBase = issueBase || json.html_url + "/issues/";
           return fetchIndex(json.issues_url, {
