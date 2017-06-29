@@ -7,7 +7,7 @@
 
 import { toKeyValuePairs, createResourceHint, linkCSS } from "core/utils";
 import { pub, sub } from "core/pubsubhub";
-
+export const name = "w3c/style";
 function attachFixupScript(doc, version) {
   const script = doc.createElement("script");
   script.addEventListener(

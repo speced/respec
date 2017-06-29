@@ -3,6 +3,7 @@
 import tmpls from "templates";
 import { pub } from "core/pubsubhub";
 
+export const name = "w3c/conformance";
 const confoTmpl = tmpls["conformance.html"];
 
 export function run(conf, doc, cb) {
