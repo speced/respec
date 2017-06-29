@@ -59,7 +59,8 @@ describe("W3C — Bibliographic References", function() {
   it("includes a dns-prefetch to bibref server", function(done) {
     var ops = {
       config: customConfig,
-      body: "<section id='sotd'><p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p></section>",
+      body:
+        "<section id='sotd'><p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p></section>",
     };
     makeRSDoc(ops, function(doc) {
       var host = bibRefsURL.host;
@@ -76,7 +77,8 @@ describe("W3C — Bibliographic References", function() {
   it("should display the publisher when present", function(done) {
     var ops = {
       config: customConfig,
-      body: "<section id='sotd'><p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p></section>",
+      body:
+        "<section id='sotd'><p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p></section>",
     };
     makeRSDoc(ops, function(doc) {
       // Make sure the reference is added.

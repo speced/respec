@@ -22,13 +22,19 @@ describe("Core — Include config as JSON", function() {
     }).then(done);
   });
   it("includes config options from query parameters", done => {
-    makeRSDoc(ops, doc => {
-      const conf = JSON.parse(doc.getElementById("initialUserConfig").textContent);
-      expect(conf.foo).toEqual("bar");
-      expect(conf.bar).toEqual(123);
-      expect(conf.baz.length).toEqual(3);
-      expect(conf.baz).toEqual([1, 2, 3]);
-    }, "spec/core/simple.html?foo=bar&bar=123&baz=[1,2,3]").then(done);
+    makeRSDoc(
+      ops,
+      doc => {
+        const conf = JSON.parse(
+          doc.getElementById("initialUserConfig").textContent
+        );
+        expect(conf.foo).toEqual("bar");
+        expect(conf.bar).toEqual(123);
+        expect(conf.baz.length).toEqual(3);
+        expect(conf.baz).toEqual([1, 2, 3]);
+      },
+      "spec/core/simple.html?foo=bar&bar=123&baz=[1,2,3]"
+    ).then(done);
   });
   it("should have the same content for the config and the script's text", function(
     done

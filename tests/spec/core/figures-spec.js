@@ -6,14 +6,15 @@ describe("Core - Figures", function() {
   });
   var ops = {
     config: makeBasicConfig(),
-    body: makeDefaultBody() +
-      "<section>" +
-      " <section id='figs'>" +
-      "   <div class='figure'><pre title='PREFIG'>PRE</pre></div>" +
-      "   <img src='IMG' title='IMGTIT' class='figure'>" +
-      " </section>" +
-      "<section id='tof'></section>" +
-      "</section>",
+    body:
+      makeDefaultBody() +
+        "<section>" +
+        " <section id='figs'>" +
+        "   <div class='figure'><pre title='PREFIG'>PRE</pre></div>" +
+        "   <img src='IMG' title='IMGTIT' class='figure'>" +
+        " </section>" +
+        "<section id='tof'></section>" +
+        "</section>",
   };
   it("generates captions for figures", function(done) {
     makeRSDoc(ops, function(doc) {

@@ -22,10 +22,11 @@ describe("Core — Requirements", function() {
   it("should process requirement references", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "<a href='#req-id' class='reqRef'></a>" +
-        "<a href='#foo' class='reqRef'></a>" +
-        "<p class='req' id='req-id'>REQ</p>",
+      body:
+        makeDefaultBody() +
+          "<a href='#req-id' class='reqRef'></a>" +
+          "<a href='#foo' class='reqRef'></a>" +
+          "<p class='req' id='req-id'>REQ</p>",
     };
     makeRSDoc(ops, function(doc) {
       var $refs = $("a.reqRef", doc);

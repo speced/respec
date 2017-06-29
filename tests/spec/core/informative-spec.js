@@ -7,8 +7,9 @@ describe("Core — Informative", function() {
   it("should process informative sections", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "<section class='informative'><h2>TITLE</h2></section>",
+      body:
+        makeDefaultBody() +
+          "<section class='informative'><h2>TITLE</h2></section>",
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("div.informative, section.informative", doc);
