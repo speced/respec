@@ -38,8 +38,9 @@ describe("Core - Markdown", function() {
   ) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "<p class=note>_foo_</p><div class=issue>_foo_</div><ul><li class=req>\n### _foo_###\n</li></ul>",
+      body:
+        makeDefaultBody() +
+          "<p class=note>_foo_</p><div class=issue>_foo_</div><ul><li class=req>\n### _foo_###\n</li></ul>",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -55,8 +56,9 @@ describe("Core - Markdown", function() {
   ) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "\n    Foo\n    ===\n      * list item 1\n      * list item 2\n        * nested list item",
+      body:
+        makeDefaultBody() +
+          "\n    Foo\n    ===\n      * list item 1\n      * list item 2\n        * nested list item",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -78,8 +80,9 @@ describe("Core - Markdown", function() {
   ) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nBar\n---\n\nBaz\n---\n\n### Foobar ###\n\n#### Foobaz ####\n\nZing\n---\n\n",
+      body:
+        makeDefaultBody() +
+          "\n\nFoo\n===\n\nBar\n---\n\nBaz\n---\n\n### Foobar ###\n\n#### Foobaz ####\n\nZing\n---\n\n",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -118,8 +121,9 @@ describe("Core - Markdown", function() {
   it("should gracefully handle jumps in nested headers", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nBar\n---\n\nBaz\n===\n\n### Foobar ###\n\n",
+      body:
+        makeDefaultBody() +
+          "\n\nFoo\n===\n\nBar\n---\n\nBaz\n===\n\n### Foobar ###\n\n",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -137,8 +141,9 @@ describe("Core - Markdown", function() {
   ) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n===\n</section>\n",
+      body:
+        makeDefaultBody() +
+          "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n===\n</section>\n",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -150,8 +155,9 @@ describe("Core - Markdown", function() {
   it("should nest sections according to their headers", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n",
+      body:
+        makeDefaultBody() +
+          "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -167,8 +173,9 @@ describe("Core - Markdown", function() {
   ) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n\nBaz\n===\n\nsome text\n\n",
+      body:
+        makeDefaultBody() +
+          "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n\nBaz\n===\n\nsome text\n\n",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -183,8 +190,9 @@ describe("Core - Markdown", function() {
   it("should not nest sections with a top level header", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "\n\nFoo\n---\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n",
+      body:
+        makeDefaultBody() +
+          "\n\nFoo\n---\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -197,8 +205,9 @@ describe("Core - Markdown", function() {
   it("should not nest sections with no headers at all", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "\n\nFoo\n===\n\nsome text\n\n<section id=bar>no header</section>\n",
+      body:
+        makeDefaultBody() +
+          "\n\nFoo\n===\n\nsome text\n\n<section id=bar>no header</section>\n",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, function(doc) {
@@ -215,8 +224,9 @@ describe("Core - Markdown", function() {
     ) {
       var ops = {
         config: makeBasicConfig(),
-        body: makeDefaultBody() +
-          `
+        body:
+          makeDefaultBody() +
+            `
           <div id=testElem>
             this won't link
             this will link: http://no-links-foo.com
@@ -235,8 +245,9 @@ describe("Core - Markdown", function() {
     it("replaces HTMLAnchors when present", function(done) {
       var ops = {
         config: makeBasicConfig(),
-        body: makeDefaultBody() +
-          `
+        body:
+          makeDefaultBody() +
+            `
           <div id=testElem class=nolinks>
             http://no-links-foo.com
             http://no-links-bar.com
@@ -259,8 +270,9 @@ describe("Core - Markdown", function() {
     it("handles quoted elements, including entity quotes", function(done) {
       var ops = {
         config: makeBasicConfig(),
-        body: makeDefaultBody() +
-          `<p id='test-text1'>test1 text &quot;<code>inner text</code>".</p>
+        body:
+          makeDefaultBody() +
+            `<p id='test-text1'>test1 text &quot;<code>inner text</code>".</p>
            <p id='test-text2'>test2 '<code>inner</code>&#39;.</p>
            // Pre left alone
            <pre class=nohighlight id='test-text3'>test3 text "<code>inner text</code>".</pre>`,
@@ -286,8 +298,9 @@ describe("Core - Markdown", function() {
     it("replaces processes data-format=markdown sections, but leaves other sections alone", done => {
       var ops = {
         config: makeBasicConfig(),
-        body: makeDefaultBody() +
-          `
+        body:
+          makeDefaultBody() +
+            `
           <section id=markdown1 data-format=markdown>
             ## this is a h2
             This is a paragraph with \`code\`.

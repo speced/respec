@@ -30,7 +30,8 @@ var specStatus = [
   },
   {
     status: "FAKE-TEST-TYPE",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-FAKE-TEST-TYPE",
+    expectedURL:
+      "https://www.w3.org/StyleSheets/TR/{version}W3C-FAKE-TEST-TYPE",
   },
   {
     status: "CG-FINAL",
