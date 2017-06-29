@@ -3,7 +3,7 @@
 // to the matching definitions.
 import { linkInlineCitations } from "core/data-cite";
 import { pub } from "core/pubsubhub";
-
+export const name = "core/link-to-dfn";
 export function run(conf, doc, cb) {
   doc.normalize();
   var titles = {};
