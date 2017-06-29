@@ -190,35 +190,6 @@ export function createResourceHint(opts) {
   }
   return linkElem;
 }
-/**
- * Makes a ES conforming iterator allowing objects to be used with
- * methods that can interface with Iterators (Array.from(), etc.).
- *
- * @param  {Function} nextLikeFunction A function that returns a next value;
- * @return {Object} An object that implements the Iterator prop.
- */
-export function toESIterable(nextLikeFunction) {
-  if (typeof nextLikeFunction !== "function") {
-    throw TypeError("Expected a function");
-  }
-  var next = function() {
-    return {
-      value: nextLikeFunction(),
-      get done() {
-        return this.value === null;
-      },
-    };
-  };
-  // We structure the iterator like this, or else
-  // RequireJS gets upset.
-  var iterator = {};
-  iterator[Symbol.iterator] = function() {
-    return {
-      next: next,
-    };
-  };
-  return iterator;
-}
 const endsWithSpace = /\s+$/gm;
 export function normalizePadding(text) {
   if (!text) {
@@ -394,22 +365,6 @@ export function parseLastModified(str) {
   return new Date(Date.parse(str));
 }
 
-// list of human names for months (in English)
-export const humanMonths = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
 // given either a Date object or a date in YYYY-MM-DD format,
 // return a human-formatted date suitable for use in a W3C specification
 export function humanDate(
@@ -417,9 +372,9 @@ export function humanDate(
   lang = document.documentElement.lang || "en"
 ) {
   if (!(date instanceof Date)) date = new Date(date);
-  const day = date.toLocaleString([lang, "en"], { day: "2-digit" });
-  const month = date.toLocaleString([lang, "en"], { month: "long" });
-  const year = date.toLocaleString([lang, "en"], { year: "numeric" });
+  const day = date.toLocaleString([lang, "en"], { day: "2-digit", timeZone: "UTC"});
+  const month = date.toLocaleString([lang, "en"], { month: "long", timeZone: "UTC"});
+  const year = date.toLocaleString([lang, "en"], { year: "numeric", timeZone: "UTC"});
   //date month year
   return `${day} ${month} ${year}`;
 }

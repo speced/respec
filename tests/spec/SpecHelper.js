@@ -3,7 +3,12 @@
 "use strict";
 var iframes = [];
 
-function makeRSDoc(opts = {}, cb = () => {}, src = "about-blank.html", style = "") {
+function makeRSDoc(
+  opts = {},
+  cb = () => {},
+  src = "about-blank.html",
+  style = ""
+) {
   return new Promise(function(resove, reject) {
     var ifr = document.createElement("iframe");
     opts = opts || {};
@@ -33,10 +38,8 @@ function makeRSDoc(opts = {}, cb = () => {}, src = "about-blank.html", style = "
     if (style) {
       try {
         ifr.style = style;
-      } catch (err) {
-        console.warn(
-          "Could not override iframe style: " + style + " (" + err.message + ")"
-        );
+      } catch ({ message }) {
+        console.warn(`Could not override iframe style: ${style} (${message})`);
       }
     }
     if (src) {

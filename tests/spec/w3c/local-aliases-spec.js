@@ -7,8 +7,9 @@ describe("W3C — Aliased References", function() {
   it("aliased spec must be resolved", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "<section id='sample'><p>foo [[!FOOBARGLOP]] bar</p></section>",
+      body:
+        makeDefaultBody() +
+          "<section id='sample'><p>foo [[!FOOBARGLOP]] bar</p></section>",
     };
     ops.config.localBiblio = {
       FOOBARGLOP: {
