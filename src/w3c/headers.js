@@ -96,6 +96,8 @@ import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
 import tmpls from "templates";
 
+export const name = "w3c/headers";
+
 const cgbgHeadersTmpl = tmpls["cgbg-headers.html"];
 const headersTmpl = tmpls["headers.html"];
 

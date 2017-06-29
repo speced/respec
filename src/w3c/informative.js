@@ -1,5 +1,6 @@
 // Module w3c/informative
 // Mark specific sections as informative, based on CSS
+export const name = "w3c/informative";
 
 export function run(conf, doc, cb) {
   $("section.informative")
