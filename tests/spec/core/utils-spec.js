@@ -416,7 +416,7 @@ describe("Core - Utils", () => {
     var expected =
       'editors;[{"name":"Person Name"}], specStatus;"ED", ' +
       'edDraftURI;"http://foo.com", shortName;"Foo"';
-    expect(utils.toKeyValuePairs(obj, null, ";")).toEqual(expected);
+    expect(utils.toKeyValuePairs(obj, undefined, ";")).toEqual(expected);
 
     expected =
       'editors^[{"name":"Person Name"}] % specStatus^"ED" % ' +

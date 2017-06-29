@@ -539,7 +539,7 @@ export function run(conf, doc, cb) {
   });
   conf.multipleAlternates =
     conf.alternateFormats && conf.alternateFormats.length > 1;
-  conf.alternatesHTML = joinAnd(conf.alternateFormats, function(alt) {
+  conf.alternatesHTML = conf.alternateFormats && joinAnd(conf.alternateFormats, function(alt) {
     var optional = alt.hasOwnProperty("lang") && alt.lang
       ? " hreflang='" + alt.lang + "'"
       : "";
