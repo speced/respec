@@ -246,7 +246,7 @@ function toLogo(obj) {
   const a = document.createElement("a");
   if (!obj.alt) {
     const msg = "Found spec logo without an `alt` attribute. See dev console.";
-    a.classList.addClass("respec-offending-element");
+    a.classList.add("respec-offending-element");
     pub("warn", msg);
     console.warn("warn", msg, a);
   }
