@@ -40,15 +40,10 @@ require.config({
   deps: ["deps/hyperhtml", "deps/url-search-params"],
 });
 
-const domReady = new Promise(function(resolve){
-  return document.readyState === "complete"
-    ? resolve()
-    : document.addEventListener("DOMContentLoaded", resolve);
-});
-
 define(
   [
     // order is significant
+    "deps/domReady",
     "core/base-runner",
     "core/ui",
     "core/aria",
@@ -95,16 +90,19 @@ define(
     /*Linter must be the last thing to run*/
     "w3c/linter",
   ],
-  function(runner, ui) {
+  function(domReady, runner, ui) {
     var args = Array.from(arguments).filter(function(item) {
       return item;
     });
     ui.show();
-    domReady.then(function() {
+    domReady(function() {
       runner
         .runAll(args)
         .then(document.respecIsReady)
-        .then(ui.enable)
+        .then(function() {
+          ui.enable();
+          document.body.hidden = false;
+        })
         .catch(function(err) {
           console.error(err);
           // In case processing fails, we still want to show the document.

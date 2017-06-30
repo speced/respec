@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "14.0.15",
+  "version": "14.1.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -71,6 +71,7 @@
     "karma": "karma start --single-run",
     "prepublish": "npm run snyk-protect && npm run build",
     "pretest": "npm run jshint && npm run jscs",
+    "release": "node ./tools/release.js",
     "server": "npm start",
     "snyk-protect": "snyk protect",
     "start": "http-server",
