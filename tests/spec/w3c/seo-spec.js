@@ -30,7 +30,6 @@ describe("W3C - SEO", function() {
   it("should set the canonical URI to editors draft when so configured", function(
     done
   ) {
-    debugger;
     var ops = makeStandardOps();
     var test = makeTest("https://foo.com/");
     ops.config.canonicalURI = "edDraft";
