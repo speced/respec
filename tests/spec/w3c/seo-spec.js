@@ -30,8 +30,9 @@ describe("W3C - SEO", function() {
   it("should set the canonical URI to editors draft when so configured", function(
     done
   ) {
+    debugger;
     var ops = makeStandardOps();
-    var test = makeTest("http://foo.com/");
+    var test = makeTest("https://foo.com/");
     ops.config.canonicalURI = "edDraft";
     makeRSDoc(ops, test).then(done);
   });
@@ -48,8 +49,8 @@ describe("W3C - SEO", function() {
 
   it("should set the canonical URI if explicitly set", function(done) {
     var ops = makeStandardOps();
-    var test = makeTest("http://example.com/");
-    ops.config.canonicalURI = "http://example.com";
+    var test = makeTest("https://example.com/");
+    ops.config.canonicalURI = "https://example.com";
     makeRSDoc(ops, test).then(done);
   });
 });
