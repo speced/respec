@@ -15,18 +15,25 @@ const button = ui.addCommand(
 
 function show() {
   ui.freshModal("About ReSpec - " + window.respecVersion, div, button);
-  const entries = performance
-    .getEntriesByType("measure")
-    .sort((a, b) => b.duration - a.duration)
-    .map(({ name, duration }) => {
-      const fixedSize = duration.toFixed(2);
-      const humanDuration =
-        fixedSize > 1000
-          ? `${Math.round(fixedSize / 1000.0)} second(s)`
-          : `${fixedSize} milliseconds`;
-      return { name, duration: humanDuration };
-    })
-    .map(perfEntryToTR);
+  let entries = [];  
+  if("getEntriesByType" in performance){
+    performance
+      .getEntriesByType("measure")
+      .sort((a, b) => b.duration - a.duration)
+      .map(({ name, duration }) => {
+        const fixedSize = duration.toFixed(2);
+        const humanDuration =
+          fixedSize > 1000
+            ? `${Math.round(fixedSize / 1000.0)} second(s)`
+            : `${fixedSize} milliseconds`;
+        return { name, duration: humanDuration };
+      })
+      .map(perfEntryToTR)
+      .reduce((collector, entry) => {
+        collector.push(entry);
+        return collector;
+      }, entries);
+  }
   render`
   <p>
     ReSpec is a document production toolchain, with a notable focus on W3C specifications.
@@ -37,7 +44,7 @@ function show() {
   <p>
     Found a bug in ReSpec? <a href='https://github.com/w3c/respec/issues'>File it!</a>.
   </p>
-  <table border="1" width="100%">
+  <table border="1" width="100%" hidden="${entries.length ? false : true }">
     <caption>
       Loaded plugins
     </caption>
