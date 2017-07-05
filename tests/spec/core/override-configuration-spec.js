@@ -1,27 +1,35 @@
 "use strict";
-describe("Core — Override Configuration", function() {
-  afterAll(function(done) {
+describe("Core — Override Configuration", () => {
+  afterAll(done => {
     flushIframes();
     done();
   });
-  it("should override a simple string setting", function(done) {
-    var url =
-      "spec/core/simple.html?specStatus=RSCND&previousMaturity=REC&previousPublishDate=1994-12-12";
-    var test = function(doc) {
-      expect($(".head h2", doc).text()).toMatch(/W3C Rescinded Recommendation/);
-      expect(
-        doc.defaultView.respecConfig.previousPublishDate.getFullYear()
-      ).toEqual(1994);
-      expect(doc.defaultView.respecConfig.previousMaturity).toEqual("REC");
+  const simpleURL = new URL("./spec/core/simple.html", document.location);
+  it("overrides a simple string setting", done => {
+    const url = new URL(simpleURL.href);
+    url.searchParams.set("specStatus", "RSCND");
+    url.searchParams.set("previousMaturity", "REC");
+    url.searchParams.set("previousPublishDate", "1994-03-01");
+    const test = doc => {
+      const { respecConfig: conf } = doc.defaultView;
+      const { textContent } = doc.querySelector(".head h2");
+      expect(textContent).toMatch(/W3C Rescinded Recommendation/);
+      const month = conf.previousPublishDate.getUTCMonth();
+      expect(month).toEqual(2);
+      const { previousMaturity } = conf;
+      expect(previousMaturity).toEqual("REC");
       done();
     };
     makeRSDoc(makeStandardOps(), test, url);
   });
-  it("decodes URL key/values strings correctly", function(done) {
-    var url =
-      "spec/core/simple.html?additionalCopyrightHolders=Internet%20Engineering%20Task%20Force";
-    var test = function(doc) {
-      var copyrightText = doc.querySelector(".copyright").textContent;
+  it("decodes URL key/values strings correctly", done => {
+    const url = new URL(simpleURL.href);
+    url.searchParams.set(
+      "additionalCopyrightHolders",
+      "Internet Engineering Task Force"
+    );
+    const test = doc => {
+      const copyrightText = doc.querySelector(".copyright").textContent;
       expect(copyrightText).toMatch(/Internet Engineering Task Force/);
       done();
     };

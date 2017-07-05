@@ -5,12 +5,10 @@
 export const name = "core/id-headers";
 
 export function run(conf, doc, cb) {
-  $("h2, h3, h4, h5, h6").each(function() {
-    var $h = $(this);
-    if (!$h.attr("id")) {
-      if ($h.parent("section").attr("id") && $h.prev().length === 0) return;
-      $h.makeID();
-    }
-  });
+  document
+    .querySelectorAll("h2:not([id]), h3:not([id]), h4:not([id]), h5:not([id]), h6:not([id])")
+    .forEach(elem => {
+      $(elem).makeID();
+    });
   cb();
 }

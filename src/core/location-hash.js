@@ -3,6 +3,8 @@
 
 import { pub } from "core/pubsubhub";
 
+export const name = "core/location-hash";
+
 export function run(conf, doc, cb) {
   // Added message for legacy compat with Aria specs
   // See https://github.com/w3c/respec/issues/793

@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "15.0.2",
+  "version": "15.1.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -49,9 +49,9 @@
     "moment": "^2.18.1",
     "requirejs": "^2.3.3",
     "text": "github:requirejs/text",
-    "uglify-es": "^3.0.20",
+    "uglify-es": "^3.0.23",
     "url-search-params": "^0.9.0",
-    "webidl2": "^4.0.0"
+    "webidl2": "^4.1.0"
   },
   "scripts": {
     "babel:build": "babel src -d js --source-maps",
@@ -84,7 +84,7 @@
     "express": "^4.15.3",
     "fs-extra": "^3.0.1",
     "highlight.js": "github:marcoscaceres/highlight.js",
-    "hyperhtml": "^0.14.0",
+    "hyperhtml": "^0.15.2",
     "loading-indicator": "^2.0.0",
     "marcosc-async": "^4.0.3",
     "marked": "^0.3.6",

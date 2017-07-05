@@ -96,6 +96,8 @@ import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
 import tmpls from "templates";
 
+export const name = "w3c/headers";
+
 const cgbgHeadersTmpl = tmpls["cgbg-headers.html"];
 const headersTmpl = tmpls["headers.html"];
 
@@ -537,7 +539,7 @@ export function run(conf, doc, cb) {
   });
   conf.multipleAlternates =
     conf.alternateFormats && conf.alternateFormats.length > 1;
-  conf.alternatesHTML = joinAnd(conf.alternateFormats, function(alt) {
+  conf.alternatesHTML = conf.alternateFormats && joinAnd(conf.alternateFormats, function(alt) {
     var optional = alt.hasOwnProperty("lang") && alt.lang
       ? " hreflang='" + alt.lang + "'"
       : "";

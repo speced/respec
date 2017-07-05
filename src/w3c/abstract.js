@@ -3,6 +3,8 @@
 import "deps/regenerator";
 import { pub } from "core/pubsubhub";
 
+export const name = "w3c/abstract";
+
 export async function run(conf) {
   const abs = document.getElementById("abstract");
   if (!abs) {
