@@ -1,6 +1,6 @@
 // Module ui/search-specref
 // Search Specref database
-import ui from "core/ui";
+import { ui } from "core/ui";
 import { wireReference } from "core/biblio";
 
 const button = ui.addCommand(
@@ -95,7 +95,7 @@ form.addEventListener("submit", async ev => {
     const startTime = performance.now();
     const jsonData = await Promise.all([
       fetch(refSearch).then(response => response.json()),
-      fetch(reverseLookup).then(response => response.json())
+      fetch(reverseLookup).then(response => response.json()),
     ]);
     const { checked: includeVersions } = form.includeVersions;
     const processResults = resultProcessor({ includeVersions });
@@ -104,7 +104,7 @@ form.addEventListener("submit", async ev => {
       query,
       results,
       state: "",
-      timeTaken: Math.round(performance.now() - startTime) / 1000
+      timeTaken: Math.round(performance.now() - startTime) / 1000,
     });
   } catch (err) {
     console.error(err);
@@ -153,7 +153,9 @@ function render({ state, results, timeTaken, query } = { state: "" }) {
     <p class="state" hidden="${!state}">
       ${state}
     </p>
-    <section hidden="${!results}">${results ? renderResults(results, query, timeTaken) : hyperHTML.wire()``}</section>
+    <section hidden="${!results}">${results
+    ? renderResults(results, query, timeTaken)
+    : hyperHTML.wire()``}</section>
   `;
 }
 

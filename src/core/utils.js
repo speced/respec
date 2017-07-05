@@ -5,12 +5,12 @@
 // anywhere else.
 import { pub } from "core/pubsubhub";
 import marked from "deps/marked";
+export const name = "core/utils";
+
 marked.setOptions({
   sanitize: false,
   gfm: true,
 });
-
-export const name = "core/utils";
 
 export function markdownToHtml(text) {
   const normalizedLeftPad = normalizePadding(text);

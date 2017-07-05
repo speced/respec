@@ -1,4 +1,4 @@
-// Module w3c/data-transform
+// Module core/data-transform
 // Support for the data-transform attribute
 // Any element in the tree that has a data-transform attribute is processed here.
 // The data-transform attribute can contain a white space separated list of functions
@@ -12,6 +12,8 @@
 //  is not actively supported and support for it may be dropped. It is not accounted for
 //  in the test suite, and therefore could easily break.
 import { runTransforms } from "core/utils";
+
+export const name = "core/data-transform";
 
 export function run(conf, doc, cb) {
   Array.from(doc.querySelectorAll("[data-transform]")).forEach(el => {

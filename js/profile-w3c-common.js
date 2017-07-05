@@ -91,6 +91,7 @@ define(
     "w3c/linter",
   ],
   function(domReady, runner, ui) {
+    ui = ui.ui;
     var args = Array.from(arguments).filter(function(item) {
       return item;
     });

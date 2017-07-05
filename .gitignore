@@ -12,6 +12,7 @@ js/geonovum/deps/*
 js/**/*.map
 js/core/aria.js
 js/core/base-runner.js
+js/core/beautify-options.js
 js/core/best-practices.js
 js/core/biblio-db.js
 js/core/biblio.js
@@ -29,8 +30,10 @@ js/core/highlight.js
 js/core/id-headers.js
 js/core/include-config.js
 js/core/inlines.js
+js/core/issues-notes.js
 js/core/jquery-enhanced.js
 js/core/l10n.js
+js/core/link-to-dfn.js
 js/core/location-hash.js
 js/core/markdown.js
 js/core/override-configuration.js
@@ -43,6 +46,7 @@ js/core/requirements.js
 js/core/respec-ready.js
 js/core/structure.js
 js/core/style.js
+js/core/ui.js
 js/core/utils.js
 js/core/webidl-clipboard.js
 js/core/webidl-index.js
@@ -51,6 +55,7 @@ js/core/worker.js
 js/templates.js
 js/ui/about-respec.js
 js/ui/dfn-list.js
+js/ui/save-html.js
 js/ui/search-specref.js
 js/w3c/abstract.js
 js/w3c/aria.js
