@@ -18,7 +18,7 @@ install:
 
 addons:
   firefox: latest-nightly
-  # chrome: stable
+  chrome: stable
 
 cache: yarn
 
