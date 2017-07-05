@@ -189,7 +189,7 @@ rules:
 
   # ECMAScript 6
   arrow-body-style: 0
-  arrow-parens: 0
+  arrow-parens: "as-needed"
   arrow-spacing: 0
   constructor-super: 0
   generator-star-spacing: 0
