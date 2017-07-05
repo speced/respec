@@ -728,7 +728,13 @@
         overflow: auto;
     }
 
-    .note::before, .note > .marker,
+    .note::before, .note > .marker {
+        text-transform: uppercase;
+        color: #178217;
+        padding-right: 1em;
+        text-transform: uppercase;
+    }
+    
     details.note > summary::before,
     details.note > summary > .marker {
         text-transform: uppercase;
