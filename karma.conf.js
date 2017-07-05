@@ -118,12 +118,12 @@ module.exports = function(config) {
 
   };
   if (process.env.TRAVIS) {
-    options.detectBrowsers.enabled = true;
+    options.detectBrowsers.enabled = false;
     options.autoWatch = false;
     options.singleRun = true;
     options.concurrency = 1;
     options.reporters = ["mocha"];
-    //options.browsers = ["FirefoxNightly"]; //"FirefoxNightly"
+    options.browsers = ["FirefoxNightly"]; //"FirefoxNightly"
   }
   config.set(options);
 };
