@@ -71,6 +71,7 @@ js/geonovum/aria.js
 js/geonovum/conformance.js
 js/geonovum/headers.js
 js/geonovum/informative.js
+js/geonovum/leafletfigures.js
 js/geonovum/linter.js
 js/geonovum/permalinks.js
 js/geonovum/rfc2119.js

@@ -583,7 +583,7 @@
 /*                              Leaflet Figures                               */
 /******************************************************************************/
   
-#leaflet-figure {
+.leaflet-container {
     background: #FFF;
     border: 1px solid #8C8C8C;
     width: 100%;
