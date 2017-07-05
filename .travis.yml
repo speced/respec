@@ -11,7 +11,7 @@ install:
 
 addons:
   # firefox: latest-beta
-  chrome: stable
+  # chrome: stable
 
 cache: yarn
 
