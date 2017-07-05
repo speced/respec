@@ -17,7 +17,15 @@ function show() {
   ui.freshModal("About ReSpec - " + window.respecVersion, div, button);
   const entries = performance
     .getEntriesByType("measure")
-    .sort((a, b) => a.duration <= b.duration)
+    .sort((a, b) => b.duration - a.duration)
+    .map(({ name, duration }) => {
+      const fixedSize = duration.toFixed(2);
+      const humanDuration =
+        fixedSize > 1000
+          ? `${Math.round(fixedSize / 1000.0)} second(s)`
+          : `${fixedSize} milliseconds`;
+      return { name, duration: humanDuration };
+    })
     .map(perfEntryToTR);
   render`
   <p>
@@ -58,7 +66,7 @@ function perfEntryToTR({ name, duration }) {
       </a>
     </td>
     <td>
-      ${duration.toFixed(2)} milliseconds
+      ${duration} 
     </td>
   `;
 }
