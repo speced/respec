@@ -78,7 +78,7 @@ module.exports = function(config) {
       "/js/deps/": "/base/js/deps/",
       "/base/deps/": "/base/js/deps/",
       "/base/deps/marked.js": "/base/js/deps/marked.js",
-      "/worker/respec-worker.js": "/base/worker/respec-worker.js"
+      "/worker/respec-worker.js": "/base/worker/respec-worker.js",
     },
 
     // preprocess matching files before serving them to the browser
@@ -117,10 +117,10 @@ module.exports = function(config) {
     browserNoActivityTimeout: 100000,
     customLaunchers: {
       ff_nightly_headless: {
-        base: 'FirefoxNightly',
-        flags: ['--headless']
+        base: "FirefoxNightly",
+        flags: ["--headless"],
       },
-    }
+    },
   };
   if (process.env.TRAVIS) {
     options.detectBrowsers.enabled = false;
