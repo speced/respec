@@ -1,0 +1,6 @@
+{
+  "editor.formatOnSave": true,
+  "files.insertFinalNewline": true,
+  "prettier.trailingComma": "es5",
+  "editor.tabSize": 2
+}
