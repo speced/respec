@@ -115,7 +115,12 @@ module.exports = function(config) {
     concurrency: 1,
 
     browserNoActivityTimeout: 100000,
-
+    customLaunchers: {
+      ff_nightly_headless: {
+        base: 'FirefoxNightly',
+        flags: ['--headless']
+      },
+    }
   };
   if (process.env.TRAVIS) {
     options.detectBrowsers.enabled = false;
@@ -123,7 +128,7 @@ module.exports = function(config) {
     options.singleRun = true;
     options.concurrency = 1;
     options.reporters = ["mocha"];
-    options.browsers = ["FirefoxNightly"]; //"FirefoxNightly"
+    options.browsers = ["ff_nightly_headless"]; //"FirefoxNightly"
   }
   config.set(options);
 };
