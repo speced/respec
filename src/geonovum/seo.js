@@ -2,7 +2,7 @@
 // Manages SEO information for documents
 // e.g. set the canonical URL for the document if configured
 import { pub } from "core/pubsubhub";
-
+export const name = "geonovum/seo";
 export function run(conf, doc, cb) {
   var trLatestUri = conf.shortName
     ? "https://www.w3.org/TR/" + conf.shortName + "/"

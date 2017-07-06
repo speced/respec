@@ -7,9 +7,10 @@ describe("Core - Fix headers", function() {
   it("should have set the correct header level", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "<section id='turtles'><h1>ONE</h1><section><h1>TWO</h1><section><h1>THREE</h1><section><h1>FOUR</h1>" +
-        "<section><h1>FIVE</h1><section><h1>SIX</h1></section></section></section></section></section></section>",
+      body:
+        makeDefaultBody() +
+          "<section id='turtles'><h1>ONE</h1><section><h1>TWO</h1><section><h1>THREE</h1><section><h1>FOUR</h1>" +
+          "<section><h1>FIVE</h1><section><h1>SIX</h1></section></section></section></section></section></section>",
     };
     makeRSDoc(ops, function(doc) {
       var $s = $("#turtles", doc);

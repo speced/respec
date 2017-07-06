@@ -122,13 +122,14 @@ describe("Core - jquery enhanced", function() {
     var $p = $("<p>TEXT</p>");
     $p.makeID();
     expect($p.attr("id")).toEqual("text");
-    expect($("<p>  A--Bé9\n C</p>").makeID()).toEqual("a--b-9-c");
+    expect($("<p>  A--Bé9\n C</p>").makeID()).toEqual("a-bé9-c");
     expect($("<p></p>").makeID()).toEqual("generatedID");
     expect($("<p>2017</p>").makeID()).toEqual("x2017");
     var $div = $(
-      "<div><p id='a'></p><p id='a-1'></p><span>A</span></div>"
+      "<div><p id='a'></p><p id='a-1'></p><span>A</span><span title='a'></span></div>"
     ).appendTo($("body"));
-    expect($div.find("span").makeID()).toEqual("a-2");
+    expect($div.find("span").makeID()).toEqual("a-0");
+    expect($div.find("span[title]").makeID()).toEqual("a-2");
     $div.remove();
     done();
   });

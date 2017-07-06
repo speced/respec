@@ -55,7 +55,9 @@ import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
 import tmpls from "templates";
 
-var headersTmpl = tmpls["headers.html"];
+export const name = "geonovum/headers";
+
+const headersTmpl = tmpls["headers.html"];
 
 hb.registerHelper("showPeople", function(name, items) {
   // stuff to handle RDFa
@@ -369,12 +371,12 @@ export function run(conf, doc, cb) {
   conf.multipleAlternates =
     conf.alternateFormats && conf.alternateFormats.length > 1;
   conf.alternatesHTML = joinAnd(conf.alternateFormats, function(alt) {
-    var optional = alt.hasOwnProperty("lang") && alt.lang
-      ? " hreflang='" + alt.lang + "'"
-      : "";
-    optional += alt.hasOwnProperty("type") && alt.type
-      ? " type='" + alt.type + "'"
-      : "";
+    var optional =
+      alt.hasOwnProperty("lang") && alt.lang
+        ? " hreflang='" + alt.lang + "'"
+        : "";
+    optional +=
+      alt.hasOwnProperty("type") && alt.type ? " type='" + alt.type + "'" : "";
     return (
       "<a rel='alternate' href='" +
       alt.uri +

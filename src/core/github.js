@@ -32,7 +32,7 @@ export function fetchAll(url, options, output = []) {
   return request.then(function(resp) {
     output.push.apply(output, resp);
     var next = findNext(request.getResponseHeader("Link"));
-    return next ? _fetchAll(next, options, output) : output;
+    return next ? fetchAll(next, options, output) : output;
   });
 }
 

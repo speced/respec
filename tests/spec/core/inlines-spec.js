@@ -7,12 +7,13 @@ describe("Core - Inlines", function() {
   it("should process all in-line content", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "<section id='inlines'>" +
-        "  <p><abbr title='ABBR-TIT'>ABBR</abbr> ABBR</p>" +
-        "  <p>MUST and NOT RECOMMENDED</p>" +
-        "  <p>[[!DAHU]] [[REX]]</p>" +
-        "</section>",
+      body:
+        makeDefaultBody() +
+          "<section id='inlines'>" +
+          "  <p><abbr title='ABBR-TIT'>ABBR</abbr> ABBR</p>" +
+          "  <p>MUST and NOT RECOMMENDED</p>" +
+          "  <p>[[!DAHU]] [[REX]]</p>" +
+          "</section>",
     };
     ops.config.localBiblio = {
       DAHU: {

@@ -16,7 +16,7 @@
 //     permalinkHide:      Boolean. The symbol will be hidden until the header is
 //                         hovered over.  Defaults to false.
 import tmpls from "templates";
-
+export const name = "geonovum/permalinks";
 export function run(conf, doc, cb) {
   if (!conf.includePermalinks) {
     return cb();

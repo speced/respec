@@ -4,9 +4,7 @@ describe("W3C — Abstract", function() {
     flushIframes();
     done();
   });
-  it("should include an h2, set the class", function(
-    done
-  ) {
+  it("should include an h2, set the class", function(done) {
     var ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody(),

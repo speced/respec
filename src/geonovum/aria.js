@@ -1,6 +1,7 @@
 // Module geonovum/aria
 // Adds wai-aria landmarks and roles to entire document.
 // Introduced by Shane McCarron (shane@aptest.com) from the W3C PFWG
+export const name = "geonovum/aria";
 export function run(conf, doc, cb) {
   // ensure head section is labeled
   if (!doc.body.hasAttribute("id")) {

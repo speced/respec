@@ -1,5 +1,6 @@
 /*globals console*/
 import { pub } from "core/pubsubhub";
+export const name = "geonovum/linter";
 /**
  * Checks for privacy and security and considerations heading. If "privacy" or
  * "security", and "considerations", in any order, case-insensitive,

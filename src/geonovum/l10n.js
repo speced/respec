@@ -1,8 +1,8 @@
-// Module w3c/l10n
+// Module geonovum/l10n
 // Looks at the lang attribute on the root element and uses it to manage the config.l10n object so
 // that other parts of the system can localise their text
 import { l10n } from "core/l10n";
-
+export const name = "geonovum/l10n";
 const additions = {
   en: {
     status_at_publication:
