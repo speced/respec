@@ -213,8 +213,7 @@ export function run(conf, doc, cb) {
   // Process root level text nodes
   const cleanHTML = newBody.innerHTML
     // Markdown parsing sometimes inserts empty p tags
-    .replace(/<p>\s*<\/p>/m, "");
-
+    .replace(/<p>\s*<\/p>/gm, "");
   const beautifulHTML = beautify
     .html_beautify(cleanHTML, beautifyOps)
     // beautifer has a bad time with "\n&quot;<element"
