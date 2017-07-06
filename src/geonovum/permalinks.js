@@ -40,7 +40,7 @@ export function run(conf, doc, cb) {
         }
       }
       // if we still have resourceID
-      if (resourceID != null) {
+      if (resourceID !== null) {
         // we have an id.  add a permalink
         // right after the h* element
         var theNode = $("<span></span>");
