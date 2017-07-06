@@ -1,6 +1,6 @@
 // Module geonovum/ui/about-respec
 // A simple about dialog with pointer to the help
-import ui from "core/ui";
+import { ui } from "core/ui";
 
 // window.respecVersion is added at build time (see tools/builder.js)
 window.respecVersion = window.respecVersion || "Developer Edition";
@@ -25,7 +25,7 @@ const button = ui.addCommand(
 );
 
 function show() {
-  ui.freshModal("About ReSpec - " + window.respecVersion, div, button);
+  ui.freshModal("Over ReSpec - " + window.respecVersion, div, button);
 }
 
 export { show };

@@ -1,6 +1,6 @@
 // Module geonovum/ui/search-specref
 // Search Specref database
-import ui from "core/ui";
+import { ui } from "core/ui";
 import { wireReference } from "core/biblio";
 
 const button = ui.addCommand(
@@ -153,7 +153,9 @@ function render({ state, results, timeTaken, query } = { state: "" }) {
     <p class="state" hidden="${!state}">
       ${state}
     </p>
-    <section hidden="${!results}">${results ? renderResults(results, query, timeTaken) : hyperHTML.wire()``}</section>
+    <section hidden="${!results}">${results
+    ? renderResults(results, query, timeTaken)
+    : hyperHTML.wire()``}</section>
   `;
 }
 

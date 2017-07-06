@@ -1,6 +1,6 @@
 // Module geonovum/ui/dfn-list
 // Displays all definitions with links to the defining element.
-import ui from "core/ui";
+import { ui } from "core/ui";
 import hyperHTML from "deps/hyperhtml";
 
 const button = ui.addCommand(

@@ -14,7 +14,7 @@ if (document.body) {
 
 // In case everything else fails, we always want to show the document
 window.addEventListener("error", function(ev) {
-  console.error(ev.error);
+  console.error(ev.error, ev.message);
   document.body.hidden = false;
 });
 
@@ -37,7 +37,7 @@ require.config({
     "handlebars.runtime": "deps/handlebars",
     "deps/highlight": "https://www.w3.org/Tools/respec/respec-highlight",
   },
-  deps: ["deps/hyperhtml", "deps/url-search-params",  "geonovum/deps/leaflet"],
+  deps: ["deps/hyperhtml", "deps/url-search-params", "geonovum/deps/leaflet"],
 });
 
 define(
@@ -50,6 +50,7 @@ define(
     "core/style",
     "geonovum/style",
     "core/l10n",
+    "geonovum/l10n",
     "core/github",
     "core/data-include",
     "core/markdown",
@@ -92,6 +93,7 @@ define(
     "geonovum/linter",
   ],
   function(domReady, runner, ui) {
+    ui = ui.ui;
     var args = Array.from(arguments).filter(function(item) {
       return item;
     });
@@ -100,7 +102,10 @@ define(
       runner
         .runAll(args)
         .then(document.respecIsReady)
-        .then(ui.enable)
+        .then(function() {
+          ui.enable();
+          document.body.hidden = false;
+        })
         .catch(function(err) {
           console.error(err);
           // In case processing fails, we still want to show the document.
