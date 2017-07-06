@@ -135,6 +135,12 @@ function registerHelpers() {
   // there's another <dfn> for the object.
   hb.registerHelper("tryLink", function(obj, options) {
     var content = options.fn(this);
+    const isDefaultJSON =
+      obj.name === "toJSON" &&
+      obj.extAttrs.some(({ name }) => name === "Default");
+    if (!obj.dfn && isDefaultJSON) {
+      return `<a data-cite="WEBIDL#default-tojson-operation">${obj.name}</a>`;
+    }
     if (obj.dfn) {
       var result =
         "<a for='" + hb.Utils.escapeExpression(obj.linkFor || "") + "'";
@@ -294,6 +300,7 @@ const extenedAttributesLinks = new Map([
   ["CEReactions", "HTML#cereactions"],
   ["Clamp", "WEBIDL#Clamp"],
   ["Constructor", "WEBIDL#Constructor"],
+  ["Default", "WEBIDL#Default"],
   ["EnforceRange", "WEBIDL#EnforceRange"],
   ["Exposed", "WEBIDL#Exposed"],
   ["Global", "WEBIDL#Global"],
@@ -658,9 +665,8 @@ function writeInterfaceDefinition(opt, callback) {
     if (it.type === "attribute") {
       var qualifiersLen = writeAttributeQualifiers(it).length;
       maxAttr = len > maxAttr ? len : maxAttr;
-      maxAttrQualifiers = qualifiersLen > maxAttrQualifiers
-        ? qualifiersLen
-        : maxAttrQualifiers;
+      maxAttrQualifiers =
+        qualifiersLen > maxAttrQualifiers ? qualifiersLen : maxAttrQualifiers;
     } else if (it.type === "operation") maxMeth = len > maxMeth ? len : maxMeth;
     else if (it.type === "const") maxConst = len > maxConst ? len : maxConst;
   });
