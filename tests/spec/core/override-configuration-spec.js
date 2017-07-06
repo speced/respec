@@ -5,11 +5,15 @@ describe("Core — Override Configuration", () => {
     done();
   });
   const simpleURL = new URL("./spec/core/simple.html", document.location);
-  it("overrides a simple string setting", done => {
+  it("overrides a simple string setting and decodes URL key/values strings correctly", done => {
     const url = new URL(simpleURL.href);
     url.searchParams.set("specStatus", "RSCND");
     url.searchParams.set("previousMaturity", "REC");
     url.searchParams.set("previousPublishDate", "1994-03-01");
+    url.searchParams.set(
+      "additionalCopyrightHolders",
+      "Internet Engineering Task Force"
+    );
     const test = doc => {
       const { respecConfig: conf } = doc.defaultView;
       const { textContent } = doc.querySelector(".head h2");
@@ -18,17 +22,6 @@ describe("Core — Override Configuration", () => {
       expect(month).toEqual(2);
       const { previousMaturity } = conf;
       expect(previousMaturity).toEqual("REC");
-      done();
-    };
-    makeRSDoc(makeStandardOps(), test, url);
-  });
-  it("decodes URL key/values strings correctly", done => {
-    const url = new URL(simpleURL.href);
-    url.searchParams.set(
-      "additionalCopyrightHolders",
-      "Internet Engineering Task Force"
-    );
-    const test = doc => {
       const copyrightText = doc.querySelector(".copyright").textContent;
       expect(copyrightText).toMatch(/Internet Engineering Task Force/);
       done();
