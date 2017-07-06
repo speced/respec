@@ -342,8 +342,7 @@ describe("Core - WebIDL", function() {
       "    // 1\n" +
       "    void               basic();\n" +
       "    // 2\n" +
-      "    [Something]\n" +
-      "    void               ext();\n" +
+      "    [Something] void               ext();\n" +
       "    // 3\n" +
       "    unsigned long long ull(short s);\n" +
       "    // 3.5\n" +
@@ -647,5 +646,25 @@ describe("Core - WebIDL", function() {
     const elem = doc.getElementById("retain-css-classes");
     const expected = ["a", "b", "c", "overlarge"];
     expect(expected.every(item => elem.classList.contains(item))).toBe(true);
+  });
+  it("links `[Default] object toJSON();` automatically to IDL spec", () => {
+    const elem = doc.getElementById("AutoLinkToIDLSpec");
+    const [defaultLink, objectLink, toJSONLink] = Array.from(
+      elem.querySelectorAll("[data-title='toJSON'] a")
+    ).map(elem => new URL(elem.href));
+    expect(defaultLink.hash).toEqual("#Default");
+    expect(objectLink.hash).toEqual("#idl-object");
+    expect(toJSONLink.hash).toEqual("#default-tojson-operation");
+  });
+  it("allows toJSON() to be defined in spec", () => {
+    const elem = doc.getElementById("DefinedToJson");
+    const [defaultLink, objectLink, toJSONLink] = Array.from(
+      elem.querySelectorAll("[data-title='toJSON'] a")
+    ).map(elem => new URL(elem.href));
+    expect(defaultLink.hash).toEqual("#Default");
+    expect(objectLink.hash).toEqual("#idl-object");
+    expect(toJSONLink.pathname).toEqual(doc.location.pathname);
+    expect(toJSONLink.origin).toEqual(doc.location.origin);
+    expect(toJSONLink.hash).toEqual("#dom-definedtojson-tojson()");
   });
 });

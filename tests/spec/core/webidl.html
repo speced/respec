@@ -537,6 +537,28 @@
       <pre id='retain-css-classes' class='idl a b c overlarge'>
         interface NotTested {};
       </pre>      
+    </section>
+    <section>
+      <h2>Autolink to WebIDL spec for toJSON</h2>
+      <pre id="AutoLinkToIDLSpec" class="idl">
+        interface AutoLinkToIDLSpec {
+          [Default] object toJSON();
+        };
+      </pre>
+    </section>
+    <section id="DefinedToJson" data-dfn-for="DefinedToJson" data-link-for="DefinedToJson">
+      <h2>We can define our own toJSON()</h2>
+      <pre class="idl">
+        interface DefinedToJson {
+          readonly attribute DOMString country;
+          [Default] object toJSON();
+          void toWhatever(); 
+        };
+      </pre>
+      <section>
+      <h2><dfn>toJSON()</dfn> method</h2>
+      <p>When <a>toJSON()</a> is called, run [[!WEBIDL]]'s <a data-cite="WEBIDL#default-tojson-operation">default toJSON operation</a>.</p>
+      </section>
     </section> 
   </body>
 </html>
