@@ -36,13 +36,13 @@ function show() {
   }
   render`
   <p>
-    ReSpec is a document production toolchain, with a notable focus on W3C specifications.
+    ReSpec is een document-productie tool, met een focus op W3C specifications.
   </p>
   <p>
-    You can find more information in the <a href='https://w3.org/respec/'>documentation</a>.
+    Meer informatie is te vinden in de <a href='https://w3.org/respec/'>documentatie</a>.
   </p>
   <p>
-    Found a bug in ReSpec? <a href='https://github.com/w3c/respec/issues'>File it!</a>.
+    Een bug gevonden in ReSpec? <a href='https://github.com/w3c/respec/issues'>Meld het!</a>.
   </p>
   <table border="1" width="100%" hidden="${entries.length ? false : true}">
     <caption>
