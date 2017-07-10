@@ -1,5 +1,105 @@
 # Change Log
 
+## [v15.2.0](https://github.com/w3c/respec/tree/v15.2.0) (2017-07-06)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.1.3...v15.2.0)
+
+**Closed issues:**
+
+- Do not signal missing definitions for methods marked with \[Default\] [\#1309](https://github.com/w3c/respec/issues/1309)
+
+**Merged pull requests:**
+
+- feat\(core/webidl\): autolink toJSON to IDL spec [\#1312](https://github.com/w3c/respec/pull/1312) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.1.3](https://github.com/w3c/respec/tree/v15.1.3) (2017-07-06)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.1.2...v15.1.3)
+
+**Merged pull requests:**
+
+- refactor\(override-configuration-spec\): merge tests [\#1311](https://github.com/w3c/respec/pull/1311) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.1.2](https://github.com/w3c/respec/tree/v15.1.2) (2017-07-06)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.1.1...v15.1.2)
+
+**Merged pull requests:**
+
+- fix\(core/markdown\): eat empty p elements [\#1310](https://github.com/w3c/respec/pull/1310) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(ui/about-respec\): hide perf table when no data available [\#1308](https://github.com/w3c/respec/pull/1308) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.1.1](https://github.com/w3c/respec/tree/v15.1.1) (2017-07-05)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.1.0...v15.1.1)
+
+**Merged pull requests:**
+
+- fix\(ui/about-respec\): performance timing order [\#1307](https://github.com/w3c/respec/pull/1307) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.1.0](https://github.com/w3c/respec/tree/v15.1.0) (2017-07-05)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.0.2...v15.1.0)
+
+**Merged pull requests:**
+
+- chore\(travis\): try reducing concurreny [\#1306](https://github.com/w3c/respec/pull/1306) ([marcoscaceres](https://github.com/marcoscaceres))
+- Perftime [\#1304](https://github.com/w3c/respec/pull/1304) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(core/utils\): a few simplifications [\#1303](https://github.com/w3c/respec/pull/1303) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.0.2](https://github.com/w3c/respec/tree/v15.0.2) (2017-06-29)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.0.1...v15.0.2)
+
+**Merged pull requests:**
+
+- Refactoring and bug fixes [\#1302](https://github.com/w3c/respec/pull/1302) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.0.1](https://github.com/w3c/respec/tree/v15.0.1) (2017-06-27)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.0.0...v15.0.1)
+
+## [v15.0.0](https://github.com/w3c/respec/tree/v15.0.0) (2017-06-27)
+[Full Changelog](https://github.com/w3c/respec/compare/v14.1.0...v15.0.0)
+
+**Closed issues:**
+
+- Stable Release URL [\#1301](https://github.com/w3c/respec/issues/1301)
+
+**Merged pull requests:**
+
+- BREAKING CHANGE\(core/webidl\): deprecate serializers [\#1300](https://github.com/w3c/respec/pull/1300) ([marcoscaceres](https://github.com/marcoscaceres))
+- Moar es6 conversions... [\#1299](https://github.com/w3c/respec/pull/1299) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v14.1.0](https://github.com/w3c/respec/tree/v14.1.0) (2017-06-23)
+[Full Changelog](https://github.com/w3c/respec/compare/v14.0.18...v14.1.0)
+
+**Closed issues:**
+
+- IDL parser doesn't seem to like record\<K, V\> [\#1297](https://github.com/w3c/respec/issues/1297)
+- Respec not working today [\#1294](https://github.com/w3c/respec/issues/1294)
+
+**Merged pull requests:**
+
+- feat\(core/webidl\): handle multi-type generics [\#1298](https://github.com/w3c/respec/pull/1298) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v14.0.18](https://github.com/w3c/respec/tree/v14.0.18) (2017-06-22)
+[Full Changelog](https://github.com/w3c/respec/compare/v14.0.17...v14.0.18)
+
+**Merged pull requests:**
+
+- Revert dom ready [\#1296](https://github.com/w3c/respec/pull/1296) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v14.0.17](https://github.com/w3c/respec/tree/v14.0.17) (2017-06-22)
+[Full Changelog](https://github.com/w3c/respec/compare/v14.0.16...v14.0.17)
+
+**Merged pull requests:**
+
+- refactor\(js/profile-w3c-common\): DOMready [\#1295](https://github.com/w3c/respec/pull/1295) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v14.0.16](https://github.com/w3c/respec/tree/v14.0.16) (2017-06-22)
+[Full Changelog](https://github.com/w3c/respec/compare/v14.0.15...v14.0.16)
+
+## [v14.0.15](https://github.com/w3c/respec/tree/v14.0.15) (2017-06-22)
+[Full Changelog](https://github.com/w3c/respec/compare/v14.0.14...v14.0.15)
+
+**Merged pull requests:**
+
+- refactor\(profile-w3c-common\): smaller DOM ready [\#1277](https://github.com/w3c/respec/pull/1277) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v14.0.14](https://github.com/w3c/respec/tree/v14.0.14) (2017-06-22)
 [Full Changelog](https://github.com/w3c/respec/compare/v14.0.13...v14.0.14)
 
