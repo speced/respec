@@ -191,7 +191,7 @@ export function createResourceHint(opts) {
 }
 
 export function normalizePadding(text = "") {
-  if(!text){
+  if (!text) {
     return "";
   }
   if (typeof text !== "string") {
@@ -288,7 +288,9 @@ export function normalizePadding(text = "") {
 
 // RESPEC STUFF
 export function removeReSpec(doc) {
-  doc.querySelectorAll(".remove, script[data-requiremodule]").forEach(elem => {
+  Array.from(
+    doc.querySelectorAll(".remove, script[data-requiremodule]")
+  ).forEach(elem => {
     elem.remove();
   });
 }
