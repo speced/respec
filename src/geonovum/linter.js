@@ -20,14 +20,11 @@ function findHTTPProps(conf, base) {
 }
 
 function findHeadinglessSections(doc) {
-  return Array.from(doc.querySelectorAll("section:not(#toc)")).filter(function(
-    elem
-  ) {
-    return (
-      elem.querySelector(
-        ":scope>h2, :scope>h3, :scope>h4, :scope>h5, :scope>h6"
-      ) === null
+  return Array.from(doc.querySelectorAll("section:not(#toc)")).filter(elem => {
+    const heading = elem.querySelector(
+      "h2:first-child, h3:first-child, h4:first-child, h5:first-child, h6:first-child"
     );
+    return heading && heading.parentElement !== elem;
   });
 }
 
