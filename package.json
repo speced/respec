@@ -57,7 +57,7 @@
     "babel:build": "babel src -d js --source-maps",
     "babel:watch": "babel src -d js --watch --source-maps",
     "build:respec-w3c-common": "node ./tools/builder.js --profile=w3c-common",
-    "build": "npm run copydeps && npm run hb:build && npm run highlight:build && npm run babel:build && npm run build:respec-w3c-common",
+    "build": "npm run copydeps && npm run hb:build && npm run highlight:build && npm run babel:build",
     "copydeps": "node ./tools/copydeps.js",
     "handlebars": "handlebars",
     "hb:build": "node ./tools/expandpaths.js -a js/*/templates/*.html js/*/templates/*.css js/core/templates/webidl-contiguous/*.html | xargs handlebars -f js/templates.js",
