@@ -1,37 +1,29 @@
-// ReSpec Worker v0.1.0
+// ReSpec Worker v0.1.1
 "use strict";
-importScripts("https://www.w3.org/Tools/respec/respec-highlight.js");
+try {
+  importScripts("https://www.w3.org/Tools/respec/respec-highlight.js");
+  hljs.configure({
+    tabReplace: "  ", // 2 spaces
+    languages: ["abnf", "css", "http", "javascript", "json", "markdown", "xml"],
+  });
+} catch (err) {
+  console.error("Network error loading/configuring highlighter", err);
+}
 
-hljs.configure({
-  tabReplace: "  ", // 2 spaces
-  languages: [
-    "abnf",
-    "css",
-    "http",
-    "javascript",
-    "json",
-    "markdown",
-    "xml",
-  ],
-});
-
-self.addEventListener("message", function(e) {
-  switch (e.data.action) {
+self.addEventListener("message", ({ data: originalData }) => {
+  const data = Object.assign({}, originalData);
+  switch (data.action) {
     case "highlight":
-      const code = e.data.code;
-      const langs = e.data.languages.length ? e.data.languages : undefined;
-      const result = self.hljs.highlightAuto(code, langs);
-      const data = Object.assign({
-        value: result.value,
-        language: result.language
-      }, e.data);
+      const { code } = data;
+      const langs = data.languages.length ? data.languages : undefined;
       try {
-        self.postMessage(data);
+        const { value, language } = self.hljs.highlightAuto(code, langs);
+        Object.assign(data, { value, language });
       } catch (err) {
         console.error("Could not transform some code?", err);
-        // Post back the original unhighlighted code.
-        const fallbackData = Object.assign({}, e.data, { value: e.data.code });
-        self.postMessage(fallbackData);
+        // Post back the original code
+        Object.assign(data, { value: code, language: "" });
       }
   }
+  self.postMessage(data);
 });

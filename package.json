@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "15.2.1",
+  "version": "15.2.2",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -20,7 +20,7 @@
     "babel-plugin-transform-es2015-modules-amd": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "babel-preset-stage-3": "^6.24.1",
-    "chai": "^4.0.2",
+    "chai": "^4.1.0",
     "clipboard": "^1.7.1",
     "domReady": "github:requirejs/domReady",
     "glob": "^7.1.2",
@@ -82,9 +82,9 @@
     "command-line-usage": "^4.0.0",
     "epipebomb": "^1.0.0",
     "express": "^4.15.3",
-    "fs-extra": "^3.0.1",
+    "fs-extra": "^4.0.0",
     "highlight.js": "github:marcoscaceres/highlight.js",
-    "hyperhtml": "^0.15.2",
+    "hyperhtml": "^0.15.5",
     "loading-indicator": "^2.0.0",
     "marcosc-async": "^4.0.3",
     "marked": "^0.3.6",
