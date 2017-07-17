@@ -82,7 +82,7 @@
     "command-line-usage": "^4.0.0",
     "epipebomb": "^1.0.0",
     "express": "^4.15.3",
-    "fs-extra": "^3.0.1",
+    "fs-extra": "^4.0.0",
     "highlight.js": "github:marcoscaceres/highlight.js",
     "hyperhtml": "^0.15.2",
     "loading-indicator": "^2.0.0",
