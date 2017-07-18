@@ -143,12 +143,12 @@ const es = {
 };
 
 export const l10n = {
-  en: Object.assign({}, base),
-  ko: Object.assign({}, base, ko),
-  zh: Object.assign({}, base, ko),
-  ja: Object.assign({}, base, ja),
-  nl: Object.assign({}, base, nl),
-  es: Object.assign({}, base, es),
+  en: { ...base },
+  ko: { ...base, ...ko },
+  zh: { ...base, ...zh },
+  ja: { ...base, ...ja },
+  nl: { ...base, ...nl },
+  es: { ...base, ...es },
 };
 
 l10n["zh-hans"] = l10n.zh;
