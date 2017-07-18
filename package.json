@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "15.2.2",
+  "version": "15.3.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -50,7 +50,7 @@
     "moment": "^2.18.1",
     "requirejs": "^2.3.3",
     "text": "github:requirejs/text",
-    "uglify-es": "^3.0.24",
+    "uglify-es": "^3.0.25",
     "url-search-params": "^0.9.0",
     "webidl2": "^4.1.0"
   },
@@ -59,7 +59,7 @@
     "babel:watch": "babel src -d js --watch --source-maps",
     "build:geo": "npm run copydeps && npm run hb:build-geo && npm run highlight:build && npm run babel:build && node ./tools/builder.js --profile=geonovum",
     "build:respec-w3c-common": "node ./tools/builder.js --profile=w3c-common",
-    "build": "npm run copydeps &&  npm run hb:build && npm run highlight:build && npm run babel:build && npm run build:respec-w3c-common",
+    "build": "npm run copydeps && npm run hb:build && npm run highlight:build && npm run babel:build",
     "copydeps": "node ./tools/copydeps.js",
     "handlebars": "handlebars",
     "hb:build-geo": "node ./tools/expandpaths.js -a js/geonovum/templates/*.html js/geonovum/templates/*.css | xargs handlebars -f js/templates.js",
@@ -87,7 +87,7 @@
     "express": "^4.15.3",
     "fs-extra": "^4.0.0",
     "highlight.js": "github:marcoscaceres/highlight.js",
-    "hyperhtml": "^0.15.5",
+    "hyperhtml": "^0.15.6",
     "leaflet": "^1.0.3",
     "loading-indicator": "^2.0.0",
     "marcosc-async": "^4.0.3",
