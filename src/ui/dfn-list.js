@@ -34,7 +34,7 @@ function show() {
       `;
     });
   render`${definitionLinks}`;
-  ui.freshModal("List of Definitions", ul, button);
+  ui.freshModal(l10n[lang].list_of_definitions, ul, button);
 }
 
 export { show };
