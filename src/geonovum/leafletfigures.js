@@ -11,7 +11,7 @@ export const name = "geonovum/leafletfigures";
 export async function run(conf, doc, cb) {
   cb();
   await document.respecIsReady;
-  document.querySelectorAll("figure.scalable img").forEach(image => {
+  Array.from(doc.querySelectorAll("figure.scalable img")).forEach(image => {
     const { width, height, src } = image;
     const div = document.createElement("div");
     const map = L.map(div, {
