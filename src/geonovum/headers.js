@@ -283,8 +283,8 @@ export function run(conf, doc, cb) {
   }
   conf.specStatus = conf.specStatus ? conf.specStatus.toUpperCase() : "";
   conf.specType = conf.specType ? conf.specType.toUpperCase() : "";
-  conf.isBasic = conf.specStatus === "GN-BASIS";
-  conf.isRegular = !conf.isBasic;
+  conf.pubDomain = conf.pubDomain ? conf.pubDomain.toLowerCase() : "";
+  conf.isRegular = conf.specStatus !== "GN-BASIS";
   conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
   conf.isOfficial = conf.specStatus === "GN-DEF";
   conf.textStatus = status2text[conf.specStatus];
@@ -295,6 +295,10 @@ export function run(conf, doc, cb) {
   }
   if (conf.isRegular && !conf.specType) {
     pub("error", "Missing required configuration: specType");
+  }
+  if (conf.isRegular && !conf.pubDomain) {
+    pub("error", "Missing required configuration: pubDomain");
+    conf.pubDomain = "none";
   }
   if (conf.isRegular && !conf.shortName) {
     pub("error", "Missing required configuration: shortName");
@@ -324,6 +328,8 @@ export function run(conf, doc, cb) {
   if (conf.isRegular && conf.specStatus !== "GN-WV") {
     conf.thisVersion =
       "https://docs.geostandaarden.nl/" +
+      conf.pubDomain +
+      "/" +
       conf.specStatus.substr(3).toLowerCase() +
       "-" +
       conf.specType.toLowerCase() +
@@ -337,7 +343,11 @@ export function run(conf, doc, cb) {
   }
   if (conf.isRegular)
     conf.latestVersion =
-      "https://docs.geostandaarden.nl/" + conf.shortName + "/";
+      "https://docs.geostandaarden.nl/" +
+      conf.pubDomain +
+      "/" +
+      conf.shortName +
+      "/";
   if (conf.previousPublishDate && conf.previousStatus) {
     conf.previousPublishDate = new Date(conf.previousPublishDate);
     var prevStatus = conf.previousStatus.substr(3).toLowerCase();
@@ -345,6 +355,8 @@ export function run(conf, doc, cb) {
     conf.prevVersion = "None" + conf.previousPublishDate;
     conf.prevVersion =
       "https://docs.geostandaarden.nl/" +
+      conf.pubDomain +
+      "/" +
       prevStatus +
       "-" +
       prevType +
