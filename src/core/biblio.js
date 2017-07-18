@@ -58,9 +58,8 @@ const defaultsReference = Object.freeze({
 const endNormalizer = function(endStr) {
   return str => {
     const trimmed = str.trim();
-    const result = !trimmed || trimmed.endsWith(endStr)
-      ? trimmed
-      : trimmed + endStr;
+    const result =
+      !trimmed || trimmed.endsWith(endStr) ? trimmed : trimmed + endStr;
     return result;
   };
 };
@@ -138,9 +137,10 @@ function bibref(conf) {
   for (var i = 0; i < types.length; i++) {
     var type = types[i];
     var refs = type === "Normative" ? norms : informs;
-    var l10nRefs = type === "Normative"
-      ? conf.l10n.norm_references
-      : conf.l10n.info_references;
+    var l10nRefs =
+      type === "Normative"
+        ? conf.l10n.norm_references
+        : conf.l10n.info_references;
     if (!refs.length) continue;
     var $sec = $("<section><h3></h3></section>")
       .appendTo($refsec)
@@ -217,11 +217,17 @@ export const done = new Promise(resolve => {
 });
 
 async function updateFromNetwork(refs, options = { forceUpdate: false }) {
-  // Update database if needed
-  if (!refs.length) {
+  // Update database if needed, if we are online
+  if (!refs.length || navigator.onLine === false) {
     return;
   }
-  const response = await fetch(bibrefsURL.href + refs.join(","));
+  let response;
+  try {
+    response = await fetch(bibrefsURL.href + refs.join(","));
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
   if ((!options.forceUpdate && !response.ok) || response.status !== 200) {
     return null;
   }
