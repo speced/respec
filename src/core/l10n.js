@@ -31,6 +31,7 @@ const base = {
   open_parens: "(",
   participate: "Participate",
   references: "References",
+  save_snapshot: "Save Snapshot",
   sotd: "Status of This Document",
   table_of_fig: "Table of Figures",
   this_version: "This version:",
@@ -102,6 +103,7 @@ const nl = {
   open_bugs: "open meldingen",
   participate: "Doe mee",
   references: "Referenties",
+  save_snapshot: "Bewaar Snapshot",
   sotd: "Status van dit document",
   table_of_fig: "Lijst met figuren",
   this_version: "Deze versie:",
@@ -152,7 +154,7 @@ export const l10n = {
 l10n["zh-hans"] = l10n.zh;
 l10n["zh-cn"] = l10n.zh;
 
-const lang = document.documentElement.lang || "en";
+export const lang = document.documentElement.lang || "en";
 
 export function run(config) {
   config.l10n = l10n[lang] || l10n.en;
