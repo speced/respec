@@ -2,9 +2,10 @@
 // Displays all definitions with links to the defining element.
 import { ui } from "core/ui";
 import hyperHTML from "deps/hyperhtml";
+import { l10n, lang } from "core/l10n";
 
 const button = ui.addCommand(
-  "Definition List",
+  l10n[lang].definition_list,
   "ui/dfn-list",
   "Ctrl+Shift+Alt+D",
   "📔"
