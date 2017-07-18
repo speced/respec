@@ -321,7 +321,7 @@ export function run(conf, doc, cb) {
     )
   );
   //Version URLs
-  if (conf.isRegular)
+  if (conf.isRegular && conf.specStatus !== "GN-WV") {
     conf.thisVersion =
       "https://docs.geostandaarden.nl/" +
       conf.specStatus.substr(3).toLowerCase() +
@@ -332,6 +332,9 @@ export function run(conf, doc, cb) {
       "-" +
       concatDate(conf.publishDate) +
       "/";
+  } else {
+    conf.thisVersion = conf.edDraftURI;
+  }
   if (conf.isRegular)
     conf.latestVersion =
       "https://docs.geostandaarden.nl/" + conf.shortName + "/";
