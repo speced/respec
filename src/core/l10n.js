@@ -8,12 +8,14 @@
 export const name = "core/l10n";
 // We use en-US as the base
 const base = {
+  about_respec: "About ReSpec",
   abstract: "Abstract",
   author: "Author:",
   authors: "Authors:",
   bug_tracker: "Bug tracker:",
   close_parens: ")",
   commit_history: "Commit history",
+  definition_list: "Definition List",
   editor: "Editor:",
   editors_note: "Editor's note",
   editors: "Editors:",
@@ -83,11 +85,13 @@ const ja = {
 };
 
 const nl = {
+  about_respec: "Over ReSpec",
   abstract: "Samenvatting",
   author: "Auteur:",
   authors: "Auteurs:",
   bug_tracker: "Meldingensysteem:",
   commit_history: "Revisiehistorie",
+  definition_list: "Lijst van Definities",
   editor: "Redacteur:",
   editors_note: "Redactionele noot",
   editors: "Redacteurs:",
