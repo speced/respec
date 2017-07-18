@@ -52,6 +52,7 @@ function cleanup(rootEl) {
   metaGenerator.content =
     "ReSpec " + window.respecVersion || "Developer Channel";
   head.insertBefore(metaGenerator, head.lastChild);
+  pub("beforesave", rootEl);
 }
 
 // Clean up markup to overcome bugs in beautifier
