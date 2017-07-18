@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "15.2.2",
+  "version": "15.3.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -49,7 +49,7 @@
     "moment": "^2.18.1",
     "requirejs": "^2.3.3",
     "text": "github:requirejs/text",
-    "uglify-es": "^3.0.24",
+    "uglify-es": "^3.0.25",
     "url-search-params": "^0.9.0",
     "webidl2": "^4.1.0"
   },
@@ -57,7 +57,7 @@
     "babel:build": "babel src -d js --source-maps",
     "babel:watch": "babel src -d js --watch --source-maps",
     "build:respec-w3c-common": "node ./tools/builder.js --profile=w3c-common",
-    "build": "npm run copydeps &&  npm run hb:build && npm run highlight:build && npm run babel:build && npm run build:respec-w3c-common",
+    "build": "npm run copydeps && npm run hb:build && npm run highlight:build && npm run babel:build",
     "copydeps": "node ./tools/copydeps.js",
     "handlebars": "handlebars",
     "hb:build": "node ./tools/expandpaths.js -a js/*/templates/*.html js/*/templates/*.css js/core/templates/webidl-contiguous/*.html | xargs handlebars -f js/templates.js",
@@ -66,7 +66,6 @@
     "jscs": "jscs --esnext tests tools",
     "jshint": "jshint karma.conf.js",
     "karma": "karma start --single-run",
-    "prepublish": "npm run snyk-protect; npm run build",
     "pretest": "npm run jshint && npm run jscs",
     "release": "node ./tools/release.js",
     "server": "npm start",
@@ -84,7 +83,7 @@
     "express": "^4.15.3",
     "fs-extra": "^4.0.0",
     "highlight.js": "github:marcoscaceres/highlight.js",
-    "hyperhtml": "^0.15.5",
+    "hyperhtml": "^0.15.6",
     "loading-indicator": "^2.0.0",
     "marcosc-async": "^4.0.3",
     "marked": "^0.3.6",
