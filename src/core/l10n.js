@@ -160,7 +160,7 @@ export const l10n = {
 l10n["zh-hans"] = l10n.zh;
 l10n["zh-cn"] = l10n.zh;
 
-export const lang = document.documentElement.lang || "en";
+export const lang = document.documentElement.lang in l10n ? document.documentElement.lang : "en";
 
 export function run(config) {
   config.l10n = l10n[lang] || l10n.en;
