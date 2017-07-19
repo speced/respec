@@ -10,6 +10,7 @@ import { sub } from "core/pubsubhub";
 export const name = "geonovum/leafletfigures";
 
 export async function run(conf, doc, cb) {
+  debugger;
   sub("beforesave", addLeafletOnSave);
   cb();
   await document.respecIsReady;
@@ -50,11 +51,13 @@ function addLeafletOnSave(rootElem) {
   }
   // this script loads leaflet
   const leafletScript = doc.createElement("script");
-  leafletScript.src = "https://geonovum.server/path/to/leaflet.js";
+  leafletScript.src =
+    "https://tools.geotandaarden.nl/respec/scripts/leaflet.js";
 
   //Loads easy button
   const easyButtonScript = doc.createElement("script");
-  easyButtonScript.src = "https://geonovum.server/path/to/easy-button.js";
+  easyButtonScript.src =
+    "https://tools.geotandaarden.nl/respec/scripts/easy-button.js";
 
   // This script handles actually doing the work
   const processImagesScript = doc.createElement("script");
@@ -66,6 +69,6 @@ function addLeafletOnSave(rootElem) {
 
   // Finally, we add the scripts in order
   doc.head.appendChild(leafletScript);
-  doc.head.appendChild(easyButton);
+  doc.head.appendChild(easyButtonScript);
   doc.head.appendChild(processImagesScript);
 }
