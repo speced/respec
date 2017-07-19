@@ -78,6 +78,7 @@ define(
     "w3c/permalinks",
     "core/id-headers",
     "core/rdfa",
+    "core/lint-hrefs-ids",
     "w3c/aria",
     "core/location-hash",
     "ui/about-respec",
