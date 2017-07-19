@@ -25,7 +25,7 @@ function show() {
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([key, $dfn]) => {
       const dfn = $dfn[0];
-      return window.hyperHTML.wire()`
+      return window.hyperHTML.wire(dfn, ":li>a")`
         <li>
           <a href="${"#" + dfn.id}">
             ${key}
