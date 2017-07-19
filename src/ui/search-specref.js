@@ -22,7 +22,7 @@ function renderResults(resultMap, query, timeTaken) {
   if (!resultMap.size) {
     return resultList`
       <p class="state">
-        Your search - <strong>${query}</strong> -
+        Your search - <strong> ${query} </strong> -
         did not match any references.
       </p>
     `;
@@ -147,6 +147,7 @@ const mast = hyperHTML.wire()`
 function render({ state, results, timeTaken, query } = { state: "" }) {
   if (!results) {
     renderer`<div>${mast}</div>`;
+    return;
   }
   renderer`
     <div>${mast}</div>
@@ -155,7 +156,7 @@ function render({ state, results, timeTaken, query } = { state: "" }) {
     </p>
     <section hidden="${!results}">${results
     ? renderResults(results, query, timeTaken)
-    : hyperHTML.wire()``}</section>
+    : []}</section>
   `;
 }
 
