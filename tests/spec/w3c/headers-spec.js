@@ -910,9 +910,15 @@ describe("W3C — Headers", function() {
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, doc => {
-      const aElem = doc.querySelector(`a[href^="http://www.w3.org/2003/03/Translations/"]`);
+      const aElem = doc.querySelector(
+        `a[href^="http://www.w3.org/2003/03/Translations/"]`
+      );
       expect(aElem.href.endsWith("PASS")).toBeTruthy();
-      expect(aElem.parentElement.textContent.trim()).toEqual("See also translations.");
+      const textContent = aElem.parentElement.textContent
+        .trim()
+        .replace("\n", "")
+        .replace(/\s+/g, " ");
+      expect(textContent).toEqual("See also translations.");
     }).then(done);
   });
   it("doesn't include a translation link when it's not REC", done => {
@@ -923,7 +929,9 @@ describe("W3C — Headers", function() {
     };
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, doc => {
-      const aElem = doc.querySelector(`a[href^="http://www.w3.org/2003/03/Translations/"]`);
+      const aElem = doc.querySelector(
+        `a[href^="http://www.w3.org/2003/03/Translations/"]`
+      );
       expect(aElem).toEqual(null);
     }).then(done);
   });
