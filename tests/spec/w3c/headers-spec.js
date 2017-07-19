@@ -902,7 +902,39 @@ describe("W3C — Headers", function() {
       makeRSDoc(Object.assign({}, ops, { specStatus: "CG-DRAFT" })),
     ]).then(done);
   });
-
+  it("includes translation link when it's a REC", done => {
+    var ops = makeStandardOps();
+    var newProps = {
+      specStatus: "REC",
+      shortName: "PASS",
+    };
+    Object.assign(ops.config, newProps);
+    makeRSDoc(ops, doc => {
+      const aElem = doc.querySelector(
+        `a[href^="http://www.w3.org/2003/03/Translations/"]`
+      );
+      expect(aElem.href.endsWith("PASS")).toBeTruthy();
+      const textContent = aElem.parentElement.textContent
+        .trim()
+        .replace("\n", "")
+        .replace(/\s+/g, " ");
+      expect(textContent).toEqual("See also translations.");
+    }).then(done);
+  });
+  it("doesn't include a translation link when it's not REC", done => {
+    var ops = makeStandardOps();
+    var newProps = {
+      specStatus: "CR",
+      shortName: "FAIL",
+    };
+    Object.assign(ops.config, newProps);
+    makeRSDoc(ops, doc => {
+      const aElem = doc.querySelector(
+        `a[href^="http://www.w3.org/2003/03/Translations/"]`
+      );
+      expect(aElem).toEqual(null);
+    }).then(done);
+  });
   // See https://github.com/w3c/respec/issues/653
   xit("should state that the spec is destined to become a note", function(
     done

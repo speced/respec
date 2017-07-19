@@ -1,22 +1,27 @@
 // Module ui/about-respec
 // A simple about dialog with pointer to the help
 import { ui } from "core/ui";
+import { l10n, lang } from "core/l10n";
 
 // window.respecVersion is added at build time (see tools/builder.js)
 window.respecVersion = window.respecVersion || "Developer Edition";
 const div = document.createElement("div");
 const render = hyperHTML.bind(div);
 const button = ui.addCommand(
-  "About ReSpec",
+  l10n[lang].about_respec,
   "ui/about-respec",
   "Ctrl+Shift+Alt+A",
   "ℹ️"
 );
 
 function show() {
-  ui.freshModal("About ReSpec - " + window.respecVersion, div, button);
-  let entries = [];  
-  if("getEntriesByType" in performance){
+  ui.freshModal(
+    `${l10n[lang].about_respec} - ${window.respecVersion}`,
+    div,
+    button
+  );
+  let entries = [];
+  if ("getEntriesByType" in performance) {
     performance
       .getEntriesByType("measure")
       .sort((a, b) => b.duration - a.duration)
@@ -44,7 +49,7 @@ function show() {
   <p>
     Found a bug in ReSpec? <a href='https://github.com/w3c/respec/issues'>File it!</a>.
   </p>
-  <table border="1" width="100%" hidden="${entries.length ? false : true }">
+  <table border="1" width="100%" hidden="${entries.length ? false : true}">
     <caption>
       Loaded plugins
     </caption>
