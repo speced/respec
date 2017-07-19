@@ -100,8 +100,15 @@ function addLeafletOnSave(rootElem) {
   leafletStyle.href =
     "https://tools.geostandaarden.nl/respec/style/leaflet.css";
 
+  // add easyButton font-awesome CSS
+  const easyButtonStyle = doc.createElement("link");
+  easyButtonStyle.rel = "stylesheet";
+  easyButtonStyle.href =
+    "https://tools.geostandaarden.nl/respec/style/font-awesome.css";
+
   // Finally, we add stylesheet and the scripts in order
   head.appendChild(leafletStyle);
+  head.appendChild(easyButtonStyle);
   head.appendChild(leafletScript);
   head.appendChild(easyButtonScript);
   head.appendChild(processImagesScript);
