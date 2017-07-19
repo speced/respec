@@ -85,7 +85,7 @@ define(
     "geonovum/leafletfigures",
     "geonovum/ui/about-respec",
     "geonovum/ui/dfn-list",
-    "geonovum/ui/save-html",
+    "ui/save-html",
     "geonovum/ui/search-specref",
     // "geonovum/seo",
     "core/highlight",
