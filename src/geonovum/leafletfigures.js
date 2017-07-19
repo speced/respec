@@ -43,7 +43,9 @@ function processImages() {
 
 function addLeafletOnSave(rootElem) {
   const doc = rootElem.ownerDocument;
-
+  if (doc.querySelectorAll("figure.scalable img") === null) {
+    return; // this document doesn't need leaflet
+  }
   // this script loads leaflet
   const leafletScript = doc.createElement("script");
   leafletScript.src = "https://geonovum.server/path/to/leaflet.js";
