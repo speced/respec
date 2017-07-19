@@ -915,6 +915,18 @@ describe("W3C — Headers", function() {
       expect(aElem.parentElement.textContent.trim()).toEqual("See also translations.");
     }).then(done);
   });
+  it("doesn't include a translation link when it's not REC", done => {
+    var ops = makeStandardOps();
+    var newProps = {
+      specStatus: "CR",
+      shortName: "FAIL",
+    };
+    Object.assign(ops.config, newProps);
+    makeRSDoc(ops, doc => {
+      const aElem = doc.querySelector(`a[href^="http://www.w3.org/2003/03/Translations/"]`);
+      expect(aElem).toEqual(null);
+    }).then(done);
+  });
   // See https://github.com/w3c/respec/issues/653
   xit("should state that the spec is destined to become a note", function(
     done
