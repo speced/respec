@@ -9,6 +9,7 @@ import "deps/regenerator";
 export const name = "geonovum/leafletfigures";
 
 export async function run(conf, doc, cb) {
+  sub("beforesave", addLeafletOnSave);
   cb();
   await document.respecIsReady;
   processImages();
@@ -38,4 +39,29 @@ function processImages() {
     ].forEach(item => item.addTo(map));
     map.fitBounds(imageBounds);
   });
+}
+
+function addLeafletOnSave(rootElem) {
+  const doc = rootElem.ownerDocument;
+
+  // this script loads leaflet
+  const leafletScript = doc.createElement("script");
+  leafletScript.src = "https://geonovum.server/path/to/leaflet.js";
+
+  //Loads easy button
+  const easyButtonScript = doc.createElement("script");
+  easyButtonScript.src = "https://geonovum.server/path/to/easy-button.js";
+
+  // This script handles actually doing the work
+  const processImagesScript = doc.createElement("script");
+  processImagesScript.textContent = `
+    ${processImages.toString()};
+    // Calls processImages when the document loads
+    window.addEventListener("DOMContentLoaded", processImages);
+  `;
+
+  // Finally, we add the scripts in order
+  doc.head.appendChild(leafletScript);
+  doc.head.appendChild(easyButton);
+  doc.head.appendChild(processImagesScript);
 }
