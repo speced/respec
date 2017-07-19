@@ -2,9 +2,10 @@
 // Displays all definitions with links to the defining element.
 import { ui } from "core/ui";
 import hyperHTML from "deps/hyperhtml";
+import { l10n, lang } from "core/l10n";
 
 const button = ui.addCommand(
-  "Definition List",
+  l10n[lang].definition_list,
   "ui/dfn-list",
   "Ctrl+Shift+Alt+D",
   "📔"
@@ -24,7 +25,7 @@ function show() {
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([key, $dfn]) => {
       const dfn = $dfn[0];
-      return window.hyperHTML.wire()`
+      return window.hyperHTML.wire(dfn, ":li>a")`
         <li>
           <a href="${"#" + dfn.id}">
             ${key}
@@ -33,7 +34,7 @@ function show() {
       `;
     });
   render`${definitionLinks}`;
-  ui.freshModal("List of Definitions", ul, button);
+  ui.freshModal(l10n[lang].list_of_definitions, ul, button);
 }
 
 export { show };

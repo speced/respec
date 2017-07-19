@@ -6,6 +6,7 @@ import { beautifyOpts } from "core/beautify-options";
 import { xmlEscape, removeReSpec } from "core/utils";
 import { pub } from "core/pubsubhub";
 import { ui } from "core/ui";
+import { l10n, lang } from "core/l10n";
 
 export const name = "ui/save-html";
 
@@ -14,7 +15,7 @@ var msg,
   conf = window.respecConfig;
 
 const button = ui.addCommand(
-  "Save Snapshot",
+  l10n[lang].save_snapshot,
   "ui/save-html",
   "Ctrl+Shift+Alt+S",
   "💾"
@@ -65,9 +66,9 @@ const save = {
     if (!conf.diffTool)
       conf.diffTool = "https://www5.aptest.com/standards/htmldiff/htmldiff.pl";
     var supportsDownload =
-      Object.getOwnPropertyNames(HTMLAnchorElement.prototype).indexOf(
-        "download"
-      ) > -1,
+        Object.getOwnPropertyNames(HTMLAnchorElement.prototype).indexOf(
+          "download"
+        ) > -1,
       self = this;
     var $div = $("<div class='respec-save-buttons'></div>"),
       addButton = function(options) {
