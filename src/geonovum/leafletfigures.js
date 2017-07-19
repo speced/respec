@@ -107,8 +107,8 @@ function addLeafletOnSave(rootElem) {
     "https://tools.geostandaarden.nl/respec/style/font-awesome.css";
 
   // Finally, we add stylesheet and the scripts in order
-  head.appendChild(leafletStyle);
-  head.appendChild(easyButtonStyle);
+  head.insertAdjacentElement("afterbegin", leafletStyle);
+  head.insertAdjacentElement("afterbegin", easyButtonStyle);
   head.appendChild(leafletScript);
   head.appendChild(easyButtonScript);
   head.appendChild(processImagesScript);
