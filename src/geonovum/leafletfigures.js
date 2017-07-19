@@ -5,6 +5,7 @@
 import L from "geonovum/deps/leaflet";
 import easyButton from "geonovum/deps/easy-button";
 import "deps/regenerator";
+import { sub } from "core/pubsubhub";
 
 export const name = "geonovum/leafletfigures";
 
@@ -42,6 +43,7 @@ function processImages() {
 }
 
 function addLeafletOnSave(rootElem) {
+  debugger;
   const doc = rootElem.ownerDocument;
   if (doc.querySelector("figure.scalable img") === null) {
     return; // this document doesn't need leaflet
