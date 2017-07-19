@@ -94,7 +94,14 @@ function addLeafletOnSave(rootElem) {
     window.addEventListener("DOMContentLoaded", processImages);
   `;
 
-  // Finally, we add the scripts in order
+  // add the CSS
+  const leafletStyle = doc.createElement("link");
+  leafletStyle.rel = "stylesheet";
+  leafletStyle.href =
+    "https://tools.geostandaarden.nl/respec/style/leaflet.css";
+
+  // Finally, we add stylesheet and the scripts in order
+  head.appendChild(leafletStyle);
   head.appendChild(leafletScript);
   head.appendChild(easyButtonScript);
   head.appendChild(processImagesScript);
