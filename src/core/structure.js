@@ -13,6 +13,7 @@ var secMap = {};
 var appendixMode = false;
 var lastNonAppendix = 0;
 var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+export const name = "core/structure";
 
 function makeTOCAtLevel($parent, doc, current, level, conf) {
   var $secs = $parent.children(
@@ -29,7 +30,8 @@ function makeTOCAtLevel($parent, doc, current, level, conf) {
     if (!$sec.children().length || noToc) {
       continue;
     }
-    var h = $sec.children()[0], ln = h.localName.toLowerCase();
+    var h = $sec.children()[0],
+      ln = h.localName.toLowerCase();
     if (
       ln !== "h2" &&
       ln !== "h3" &&
@@ -60,7 +62,8 @@ function makeTOCAtLevel($parent, doc, current, level, conf) {
     if (appendixMode) {
       secnos[0] = alphabet.charAt(current[0] - lastNonAppendix);
     }
-    var secno = secnos.join("."), isTopLevel = secnos.length == 1;
+    var secno = secnos.join("."),
+      isTopLevel = secnos.length == 1;
     if (isTopLevel) {
       secno = secno + ".";
       // if this is a top level item, insert
@@ -101,9 +104,11 @@ export function run(conf, doc, cb) {
   if ("maxTocLevel" in conf === false) {
     conf.maxTocLevel = 0;
   }
-  var $secs = $("section:not(.introductory)", doc).find(
-    "h1:first, h2:first, h3:first, h4:first, h5:first, h6:first"
-  );
+  var $secs = $("section:not(.introductory)", doc)
+    .find("h1:first, h2:first, h3:first, h4:first, h5:first, h6:first")
+    .toArray()
+    .filter(elem => elem.closest("section.introductory") === null);
+  $secs = $($secs);
   if (!$secs.length) {
     return cb();
   }
@@ -111,7 +116,7 @@ export function run(conf, doc, cb) {
     var depth = $(this).parents("section").length + 1;
     if (depth > 6) depth = 6;
     var h = "h" + depth;
-    if (this.localName.toLowerCase() != h) $(this).renameElement(h);
+    if (this.localName.toLowerCase() !== h) $(this).renameElement(h);
   });
 
   // makeTOC

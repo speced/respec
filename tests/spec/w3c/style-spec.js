@@ -30,7 +30,8 @@ var specStatus = [
   },
   {
     status: "FAKE-TEST-TYPE",
-    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-FAKE-TEST-TYPE",
+    expectedURL:
+      "https://www.w3.org/StyleSheets/TR/{version}W3C-FAKE-TEST-TYPE",
   },
   {
     status: "CG-FINAL",
@@ -106,7 +107,7 @@ describe("W3C - Style", function() {
     var theTest = function(doc) {
       var elem = doc.head.querySelector("meta[name=viewport]");
       expect(elem).toBeTruthy();
-      var expectedStr = "width=800, initial-scale=1, shrink-to-fit=no";
+      var expectedStr = "width=device-width, initial-scale=1, shrink-to-fit=no";
       expect(elem.content).toEqual(expectedStr);
     };
     makeRSDoc(ops, theTest, "spec/core/simple.html").then(done);

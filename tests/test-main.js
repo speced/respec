@@ -25,14 +25,15 @@ require.config({
   // we have to kickoff jasmine, as it is asynchronous
   callback: window.__karma__.start,
   paths: {
+    "core/biblio-db": "/base/js/core/biblio-db",
     "core/jquery-enhanced": "/base/js/core/jquery-enhanced",
     "core/pubsubhub": "/base/js/core/pubsubhub",
     "core/utils": "/base/js/core/utils",
-    "core/biblio-db": "/base/js/core/biblio-db",
-    "w3c/linter": "/base/js/w3c/linter",
-    "deps/jquery": "/base/js/deps/jquery",
     "deps/async": "/base/js/deps/async",
+    "deps/jquery": "/base/js/deps/jquery",
+    "deps/marked": "/base/js/deps/marked",
     "deps/regenerator": "/base/js/deps/regenerator",
+    "w3c/linter": "/base/js/w3c/linter",
   },
 });
 

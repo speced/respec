@@ -140,23 +140,29 @@
   list-style: none;
   font-family: sans-serif;
   background-color: rgb(255, 251, 230);
-  font-size: .9em;
+  font-size: .85em;
 }
 
-.respec-warning-list li,
-.respec-error-list li {
+.respec-warning-list>li,
+.respec-error-list>li {
   padding: 0.4em 0.7em;
 }
 
-.respec-warning-list li::before {
+.respec-warning-list>li::before {
   content: "⚠️";
   padding-right: .5em;
+}
+.respec-warning-list p,
+.respec-error-list p {
+  padding: 0;
+  margin: 0;
 }
 
 .respec-warning-list li {
   color: rgb(92, 59, 0);
   border-bottom: thin solid rgb(255, 245, 194);
 }
+
 
 .respec-error-list,
 .respec-error-list li {
@@ -172,6 +178,12 @@
   padding: 0.4em 0.7em;
   color: rgb(92, 59, 0);
   border-bottom: thin solid rgb(255, 215, 215);
+}
+
+.respec-error-list li>p {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
 }
 
 #respec-overlay {
@@ -218,7 +230,7 @@
   font-size: 1em;
 }
 
-.respec-modal .inside p {
+.respec-modal .inside div p {
   padding-left: 1cm;
 }
 
@@ -260,7 +272,6 @@
     text-decoration-color: red;
   }
 }
-
 
 .respec-button-copy-paste {
   position: absolute;
@@ -382,4 +393,10 @@ p + .respec-button-copy-paste {
 #specref-ui .specref-results .authors {
   display: block;
   color: #006621;
+}
+
+@media print {
+  #respec-ui {
+    display: none; 
+  }
 }

@@ -208,9 +208,9 @@ export const biblioDB = {
     Object.keys(data)
       .filter(key => {
         if (typeof data[key] === "string") {
-          let msg =
-            "Legacy SpecRef entries are not supported: [[" + key + "]]. ";
-          msg += "Please update it at https://github.com/tobie/specref/";
+          let msg = `Legacy SpecRef entries are not supported: \`[[${key}]]\`. `;
+          msg +=
+            "Please update it to the new format at [specref repo](https://github.com/tobie/specref/)";
           pub("error", msg);
           return false;
         }

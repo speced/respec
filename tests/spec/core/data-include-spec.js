@@ -79,10 +79,11 @@ describe("Core — Data Include", function() {
     var testURL = "data:text/plain;charset=utf-8,%23%23%20PASS";
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "<section id='includes' data-include='" +
-        testURL +
-        "'></section>",
+      body:
+        makeDefaultBody() +
+          "<section id='includes' data-include='" +
+          testURL +
+          "'></section>",
     };
     ops.config.format = "markdown";
     makeRSDoc(ops, theTest).then(done);

@@ -16,6 +16,16 @@ describe("Core - WebIDL", function() {
     ).then(done);
   });
 
+  it("handles record types", done => {
+    const idl = doc.querySelector("#records pre");
+    expect(idl).toBeTruthy(idl);
+    expect(idl.querySelector(".idlMemberType:first-child").textContent).toEqual(
+      "record<DOMString, USVString>"
+    );
+    expect(idl.querySelector(".idlMemberName").textContent).toEqual("pass");
+    done();
+  });
+
   it("links standardized IDL types to WebIDL spec", done => {
     const idl = doc.querySelector("#linkToIDLSpec>div>pre");
     // [Constructor(sequence<DOMString> methodData), SecureContext]
@@ -332,8 +342,7 @@ describe("Core - WebIDL", function() {
       "    // 1\n" +
       "    void               basic();\n" +
       "    // 2\n" +
-      "    [Something]\n" +
-      "    void               ext();\n" +
+      "    [Something] void               ext();\n" +
       "    // 3\n" +
       "    unsigned long long ull(short s);\n" +
       "    // 3.5\n" +
@@ -365,30 +374,6 @@ describe("Core - WebIDL", function() {
       "#dom-methbasic-ull!overload-1"
     );
     expect($target.find(":contains('dates')").filter("a").length).toEqual(0);
-    done();
-  });
-
-  it("should handle serializer", function(done) {
-    var $target = $("#serializer-map", doc);
-    var text =
-      "interface SerializerMap {\n" +
-      "    attribute DOMString foo;\n" +
-      "    attribute DOMString bar;\n" +
-      "    serializer = {foo, bar};\n" +
-      "};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlSerializer").length).toEqual(1);
-    var $serializer = $target.find(".idlSerializer").first();
-    expect($serializer.find(".idlSerializerValues").text()).toEqual(
-      "{foo, bar}"
-    );
-
-    // Links and IDs.
-    $serializer = $target.find(".idlSerializer:contains('serializer')");
-    expect($serializer.attr("id")).toEqual("idl-def-serializermap-serializer");
-    expect($serializer.children("a").attr("href")).toEqual(
-      "#dom-serializermap-serializer"
-    );
     done();
   });
 
@@ -656,5 +641,30 @@ describe("Core - WebIDL", function() {
     expect(
       $section.find("#without-link-for a:contains('Documented')").attr("href")
     ).toEqual("#idl-def-documented");
+  });
+  it("retains css classes afer processing", () => {
+    const elem = doc.getElementById("retain-css-classes");
+    const expected = ["a", "b", "c", "overlarge"];
+    expect(expected.every(item => elem.classList.contains(item))).toBe(true);
+  });
+  it("links `[Default] object toJSON();` automatically to IDL spec", () => {
+    const elem = doc.getElementById("AutoLinkToIDLSpec");
+    const [defaultLink, objectLink, toJSONLink] = Array.from(
+      elem.querySelectorAll("[data-title='toJSON'] a")
+    ).map(elem => new URL(elem.href));
+    expect(defaultLink.hash).toEqual("#Default");
+    expect(objectLink.hash).toEqual("#idl-object");
+    expect(toJSONLink.hash).toEqual("#default-tojson-operation");
+  });
+  it("allows toJSON() to be defined in spec", () => {
+    const elem = doc.getElementById("DefinedToJson");
+    const [defaultLink, objectLink, toJSONLink] = Array.from(
+      elem.querySelectorAll("[data-title='toJSON'] a")
+    ).map(elem => new URL(elem.href));
+    expect(defaultLink.hash).toEqual("#Default");
+    expect(objectLink.hash).toEqual("#idl-object");
+    expect(toJSONLink.pathname).toEqual(doc.location.pathname);
+    expect(toJSONLink.origin).toEqual(doc.location.origin);
+    expect(toJSONLink.hash).toEqual("#dom-definedtojson-tojson()");
   });
 });

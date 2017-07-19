@@ -7,10 +7,11 @@ describe("Core — Examples", function() {
   it("should process examples", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "<section>" +
-        "<pre class='example' title='EX'>\n  {\n    CONTENT\n  }\n  </pre>" +
-        "</section>",
+      body:
+        makeDefaultBody() +
+          "<section>" +
+          "<pre class='example' title='EX'>\n  {\n    CONTENT\n  }\n  </pre>" +
+          "</section>",
     };
     makeRSDoc(ops, function(doc) {
       var $ex = $("div.example pre", doc);

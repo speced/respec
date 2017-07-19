@@ -1,4 +1,4 @@
-/*! highlight.js v9.11.0 | BSD3 License | git.io/hljslicense */
+/*! highlight.js v9.12.0 | BSD3 License | git.io/hljslicense */
 (function(factory) {
 
   // Find the global object for export to both the browser and web workers.
@@ -462,7 +462,7 @@
           if (top.className) {
             result += spanEndTag;
           }
-          if (!top.skip) {
+          if (!top.skip && !top.subLanguage) {
             relevance += top.relevance;
           }
           top = top.parent;
@@ -1284,6 +1284,10 @@ hljs.registerLanguage('xml', function(hljs) {
         relevance: 10
       },
       {
+        className: 'meta',
+        begin: /<\?xml/, end: /\?>/, relevance: 10
+      },
+      {
         begin: /<\?(php)?/, end: /\?>/,
         subLanguage: 'php',
         contains: [{begin: '/\\*', end: '\\*/', skip: true}]
@@ -1314,13 +1318,6 @@ hljs.registerLanguage('xml', function(hljs) {
           end: '\<\/script\>', returnEnd: true,
           subLanguage: ['actionscript', 'javascript', 'handlebars', 'xml']
         }
-      },
-      {
-        className: 'meta',
-        variants: [
-          {begin: /<\?xml/, end: /\?>/, relevance: 10},
-          {begin: /<\?\w+/, end: /\?>/}
-        ]
       },
       {
         className: 'tag',

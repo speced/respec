@@ -26,7 +26,9 @@ export function run(conf, doc, cb) {
     item => `<em class="rfc2119">${item}</em>`
   );
   const plural = terms.length > 1;
-  const str = `The key word${plural ? "s " : " "} ${html} ${plural ? "are" : "is"} ${confo.innerHTML}`;
+  const str = `The key word${plural ? "s " : " "} ${html} ${plural
+    ? "are"
+    : "is"} ${confo.innerHTML}`;
   confo.innerHTML = str;
   cb();
 }

@@ -91,22 +91,24 @@
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", the W3C Software and Document License
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
-import {
-  concatDate,
-  humanDate,
-  isoDate,
-  joinAnd,
-  parseLastModified,
-  parseSimpleDate,
-} from "core/utils";
+import { concatDate, joinAnd, ISODate } from "core/utils";
 import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
 import tmpls from "templates";
 
+export const name = "w3c/headers";
+
 const cgbgHeadersTmpl = tmpls["cgbg-headers.html"];
-const cgbgSotdTmpl = tmpls["cgbg-sotd.html"];
 const headersTmpl = tmpls["headers.html"];
-const sotdTmpl = tmpls["sotd.html"];
+
+const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
+  timeZone: "UTC",
+  year: "numeric",
+  month: "long",
+  day: "2-digit",
+});
+
+const humanNow = W3CDate.format(new Date());
 
 hb.registerHelper("showPeople", function(name, items) {
   // stuff to handle RDFa
@@ -242,26 +244,33 @@ hb.registerHelper("showPeople", function(name, items) {
   return new hb.SafeString(ret);
 });
 
-hb.registerHelper("showLogos", function(items) {
-  var ret = "<p>";
-  for (var i = 0, n = items.length; i < n; i++) {
-    var p = items[i];
-    if (p.url) ret += "<a href='" + p.url + "'>";
-    if (p.id) ret += "<span id='" + p.id + "'>";
-    if (p.src) {
-      ret += "<img src='" + p.src + "'";
-      if (p.width) ret += " width='" + p.width + "'";
-      if (p.height) ret += " height='" + p.height + "'";
-      if (p.alt) ret += " alt='" + p.alt + "'";
-      else if (items.length == 1) ret += " alt='Logo'";
-      else ret += " alt='Logo " + (i + 1) + "'";
-      ret += ">";
-    } else if (p.alt) ret += p.alt;
-    if (p.url) ret += "</a>";
-    if (p.id) ret += "</span>";
+function toLogo(obj) {
+  const a = document.createElement("a");
+  if (!obj.alt) {
+    const msg = "Found spec logo without an `alt` attribute. See dev console.";
+    a.classList.add("respec-offending-element");
+    pub("warn", msg);
+    console.warn("warn", msg, a);
   }
-  ret += "</p>";
-  return new hb.SafeString(ret);
+  a.href = obj.href ? obj.href : "";
+  a.classList.add("logo");
+  hyperHTML.bind(a)`
+      <img
+        id="${obj.id}"
+        alt="${obj.alt}"
+        width="${obj.width}"
+        height="${obj.height}">
+  `;
+  // avoid triggering 404 requests from dynamically generated
+  // hyperHTML attribute values
+  a.querySelector("img").src = obj.src;
+  return a;
+}
+
+hb.registerHelper("showLogos", logos => {
+  const p = document.createElement("p");
+  hyperHTML.bind(p)`${logos.map(toLogo)}`;
+  return p.outerHTML;
 });
 
 const status2maturity = {
@@ -330,7 +339,6 @@ const noTrackStatus = [
   "CG-FINAL",
   "BG-DRAFT",
   "BG-FINAL",
-  "webspec",
 ];
 const cgbg = ["CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"];
 const precededByAn = ["ED", "IG-NOTE"];
@@ -348,7 +356,8 @@ const licenses = {
   "w3c-software-doc": {
     name: "W3C Software and Document Notice and License",
     short: "W3C Software and Document",
-    url: "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
+    url:
+      "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
   },
   "cc-by": {
     name: "Creative Commons Attribution 4.0 International Public License",
@@ -357,51 +366,79 @@ const licenses = {
   },
 };
 
+const baseLogo = Object.freeze({
+  id: "",
+  alt: "",
+  href: "",
+  src: "",
+  height: "48",
+  width: "72",
+});
+
 export function run(conf, doc, cb) {
+  // TODO: move to w3c defaults
+  if (!conf.logos) {
+    conf.logos = [];
+  }
   // Default include RDFa document metadata
   if (conf.doRDFa === undefined) conf.doRDFa = true;
   // validate configuration and derive new configuration values
-  if (!conf.license)
-    conf.license = conf.specStatus === "webspec" ? "w3c-software" : "w3c";
+  if (!conf.license) {
+    conf.license = "w3c-software-doc";
+  }
   conf.isCCBY = conf.license === "cc-by";
   conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
-  if (
-    conf.specStatus === "webspec" &&
-    !$.inArray(conf.license, ["cc0", "w3c-software"])
-  )
-    pub("error", "You cannot use that license with WebSpecs.");
-  if (
-    conf.specStatus !== "webspec" &&
-    !$.inArray(conf.license, ["cc-by", "w3c"])
-  )
-    pub("error", "You cannot use that license with that type of document.");
+  if (["cc-by", "w3c"].includes(conf.license)) {
+    let msg = `You cannot use license "\`${conf.license}\`" with W3C Specs. `;
+    msg += `Please set \`respecConfig.license: "w3c-software-doc"\` instead.`;
+    pub("error", msg);
+  }
   conf.licenseInfo = licenses[conf.license];
-  conf.isCGBG = $.inArray(conf.specStatus, cgbg) >= 0;
+  conf.isCGBG = cgbg.includes(conf.specStatus);
   conf.isCGFinal = conf.isCGBG && /G-FINAL$/.test(conf.specStatus);
   conf.isBasic = conf.specStatus === "base";
   conf.isRegular = !conf.isCGBG && !conf.isBasic;
-  if (!conf.specStatus)
-    pub("error", "Missing required configuration: specStatus");
-  if (conf.isRegular && !conf.shortName)
-    pub("error", "Missing required configuration: shortName");
+  if (!conf.specStatus) {
+    pub("error", "Missing required configuration: `specStatus`");
+  }
+  if (conf.isRegular && !conf.shortName) {
+    pub("error", "Missing required configuration: `shortName`");
+  }
   conf.title = doc.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
-  if (!conf.publishDate) {
-    conf.publishDate = parseLastModified(doc.lastModified);
-  } else {
-    if (!(conf.publishDate instanceof Date))
-      conf.publishDate = parseSimpleDate(conf.publishDate);
-  }
-  conf.publishYear = conf.publishDate.getFullYear();
-  conf.publishHumanDate = humanDate(conf.publishDate);
-  conf.isNoTrack = $.inArray(conf.specStatus, noTrackStatus) >= 0;
+  conf.publishDate = new Date(
+    ISODate.format(
+      new Date(conf.publishDate ? conf.publishDate : doc.lastModified)
+    )
+  );
+  conf.publishYear = conf.publishDate.getUTCFullYear();
+  conf.publishHumanDate = W3CDate.format(conf.publishDate);
+  conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
   conf.isRecTrack = conf.noRecTrack
     ? false
-    : $.inArray(conf.specStatus, recTrackStatus) >= 0;
+    : recTrackStatus.includes(conf.specStatus);
   conf.isMemberSubmission = conf.specStatus === "Member-SUBM";
+  if (conf.isMemberSubmission) {
+    const memSubmissionLogo = {
+      alt: "W3C Member Submission",
+      href: "https://www.w3.org/Submission/",
+      src: "https://www.w3.org/Icons/member_subm-v.svg",
+      width: "211",
+    };
+    conf.logos.push({ ...baseLogo, ...memSubmissionLogo });
+  }
   conf.isTeamSubmission = conf.specStatus === "Team-SUBM";
+  if (conf.isTeamSubmission) {
+    const teamSubmissionLogo = {
+      alt: "W3C Team Submission",
+      href: "https://www.w3.org/TeamSubmission/",
+      src: "https://www.w3.org/Icons/team_subm-v.svg",
+      width: "211",
+    };
+    conf.logos.push({ ...baseLogo, ...teamSubmissionLogo });
+  }
   conf.isSubmission = conf.isMemberSubmission || conf.isTeamSubmission;
-  conf.anOrA = $.inArray(conf.specStatus, precededByAn) >= 0 ? "an" : "a";
+  conf.anOrA = precededByAn.includes(conf.specStatus) ? "an" : "a";
   conf.isTagFinding =
     conf.specStatus === "finding" || conf.specStatus === "draft-finding";
   if (!conf.edDraftURI) {
@@ -420,7 +457,7 @@ export function run(conf, doc, cb) {
       "https://www.w3.org/" +
       publishSpace +
       "/" +
-      conf.publishDate.getFullYear() +
+      conf.publishDate.getUTCFullYear() +
       "/" +
       conf.maturity +
       "-" +
@@ -435,19 +472,19 @@ export function run(conf, doc, cb) {
   if (conf.isTagFinding) {
     conf.latestVersion = "https://www.w3.org/2001/tag/doc/" + conf.shortName;
     conf.thisVersion =
-      conf.latestVersion + "-" + concatDate(conf.publishDate, "-");
+      conf.latestVersion + "-" + ISODate.format(conf.publishDate);
   }
   if (conf.previousPublishDate) {
-    if (!conf.previousMaturity && !conf.isTagFinding)
-      pub("error", "previousPublishDate is set, but not previousMaturity");
-    if (!(conf.previousPublishDate instanceof Date))
-      conf.previousPublishDate = parseSimpleDate(conf.previousPublishDate);
+    if (!conf.previousMaturity && !conf.isTagFinding) {
+      pub("error", "`previousPublishDate` is set, but not `previousMaturity`.");
+    }
+    conf.previousPublishDate = new Date(conf.previousPublishDate);
     var pmat = status2maturity[conf.previousMaturity]
       ? status2maturity[conf.previousMaturity]
       : conf.previousMaturity;
     if (conf.isTagFinding) {
       conf.prevVersion =
-        conf.latestVersion + "-" + concatDate(conf.previousPublishDate, "-");
+        conf.latestVersion + "-" + ISODate.format(conf.previousPublishDate);
     } else if (conf.isCGBG) {
       conf.prevVersion = conf.prevVersion || "";
     } else if (conf.isBasic) {
@@ -455,7 +492,7 @@ export function run(conf, doc, cb) {
     } else {
       conf.prevVersion =
         "https://www.w3.org/TR/" +
-        conf.previousPublishDate.getFullYear() +
+        conf.previousPublishDate.getUTCFullYear() +
         "/" +
         pmat +
         "-" +
@@ -476,7 +513,8 @@ export function run(conf, doc, cb) {
     )
       pub(
         "error",
-        "Document on track but no previous version: Add previousMaturity previousPublishDate to ReSpec's config."
+        "Document on track but no previous version:" +
+          " Add `previousMaturity`, and `previousPublishDate` to ReSpec's config."
       );
     if (!conf.prevVersion) conf.prevVersion = "";
   }
@@ -501,7 +539,7 @@ export function run(conf, doc, cb) {
   });
   conf.multipleAlternates =
     conf.alternateFormats && conf.alternateFormats.length > 1;
-  conf.alternatesHTML = joinAnd(conf.alternateFormats, function(alt) {
+  conf.alternatesHTML = conf.alternateFormats && joinAnd(conf.alternateFormats, function(alt) {
     var optional = alt.hasOwnProperty("lang") && alt.lang
       ? " hreflang='" + alt.lang + "'"
       : "";
@@ -576,9 +614,9 @@ export function run(conf, doc, cb) {
   conf.isPER = conf.specStatus === "PER";
   conf.isMO = conf.specStatus === "MO";
   conf.isIGNote = conf.specStatus === "IG-NOTE";
-  conf.dashDate = concatDate(conf.publishDate, "-");
-  conf.publishISODate = isoDate(conf.publishDate);
-  conf.shortISODate = conf.publishISODate.replace(/T.*/, "");
+  conf.dashDate = ISODate.format(conf.publishDate);
+  conf.publishISODate = conf.publishDate.toISOString();
+  conf.shortISODate = ISODate.format(conf.publishDate);
   conf.processVersion = conf.processVersion || "2017";
   if (conf.processVersion == "2014" || conf.processVersion == "2015") {
     pub(
@@ -609,14 +647,16 @@ export function run(conf, doc, cb) {
   $("body", doc).prepend($(bp)).addClass("h-entry");
 
   // handle SotD
-  var $sotd = $("#sotd");
-  if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !$sotd.length)
+  var sotd =
+    document.body.querySelector("#sotd") || document.createElement("section");
+  if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !sotd.id) {
     pub(
       "error",
       "A custom SotD paragraph is required for your type of document."
     );
-  conf.sotdCustomParagraph = $sotd.html();
-  $sotd.remove();
+  }
+  sotd.id = sotd.id || "stod";
+  sotd.classList.add("introductory");
   // NOTE:
   //  When arrays, wg and wgURI have to be the same length (and in the same order).
   //  Technically wgURI could be longer but the rest is ignored.
@@ -627,18 +667,15 @@ export function run(conf, doc, cb) {
   //  can be shorter — but it still needs to be an array.
   var wgPotentialArray = [conf.wg, conf.wgURI, conf.wgPatentURI];
   if (
-    wgPotentialArray.some(function(it) {
-      return $.isArray(it);
-    }) &&
-    wgPotentialArray.some(function(it) {
-      return !$.isArray(it);
-    })
-  )
+    wgPotentialArray.some(item => Array.isArray(item)) &&
+    wgPotentialArray.every(item => Array.isArray(item))
+  ) {
     pub(
       "error",
-      "If one of 'wg', 'wgURI', or 'wgPatentURI' is an array, they all have to be."
+      "If one of '`wg`', '`wgURI`', or '`wgPatentURI`' is an array, they all have to be."
     );
-  if ($.isArray(conf.wg)) {
+  }
+  if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
     conf.wgHTML = joinAnd(conf.wg, function(wg, idx) {
       return "the <a href='" + conf.wgURI[idx] + "'>" + wg + "</a>";
@@ -659,20 +696,38 @@ export function run(conf, doc, cb) {
     conf.multipleWGs = false;
     conf.wgHTML = "the <a href='" + conf.wgURI + "'>" + conf.wg + "</a>";
   }
-  if (conf.specStatus === "PR" && !conf.crEnd)
+  if (conf.specStatus === "PR" && !conf.crEnd) {
     pub(
       "error",
-      "Status is PR but no crEnd is specified (needed to indicate end of previous CR)"
+      `\`specStatus\` is "PR" but no \`crEnd\` is specified (needed to indicate end of previous CR).`
     );
-  if (conf.specStatus === "CR" && !conf.crEnd)
-    pub("error", "Status is CR but no crEnd is specified");
-  conf.humanCREnd = humanDate(conf.crEnd || "");
-  if (conf.specStatus === "PR" && !conf.prEnd)
-    pub("error", "Status is PR but no prEnd is specified");
-  conf.humanPREnd = humanDate(conf.prEnd || "");
-  conf.humanPEREnd = humanDate(conf.perEnd || "");
-  if (conf.specStatus === "PER" && !conf.perEnd)
+  }
+
+  if (conf.specStatus === "CR" && !conf.crEnd) {
+    pub(
+      "error",
+      `\`specStatus\` is "CR", but no \`crEnd\` is specified in Respec config.`
+    );
+  }
+  conf.humanCREnd = conf.crEnd
+    ? W3CDate.format(new Date(conf.crEnd))
+    : humanNow;
+
+  if (conf.specStatus === "PR" && !conf.prEnd) {
+    pub("error", `\`specStatus\` is "PR" but no \`prEnd\` is specified.`);
+    conf.prEnd = new Date();
+  }
+  conf.humanPREnd = conf.prEnd
+    ? W3CDate.format(new Date(conf.prEnd))
+    : humanNow;
+
+  if (conf.specStatus === "PER" && !conf.perEnd) {
     pub("error", "Status is PER but no perEnd is specified");
+    conf.perEnd = new Date();
+  }
+  conf.humanPEREnd = conf.perEnd
+    ? W3CDate.format(new Date(conf.perEnd))
+    : humanNow;
 
   conf.recNotExpected =
     !conf.isRecTrack &&
@@ -681,28 +736,55 @@ export function run(conf, doc, cb) {
   if (conf.isIGNote && !conf.charterDisclosureURI)
     pub(
       "error",
-      "IG-NOTEs must link to charter's disclosure section using charterDisclosureURI"
+      "IG-NOTEs must link to charter's disclosure section using `charterDisclosureURI`."
     );
   // ensure subjectPrefix is encoded before using template
   if (conf.subjectPrefix !== "")
     conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
-  var sotd;
-  if (conf.isCGBG) sotd = cgbgSotdTmpl(conf);
-  else sotd = sotdTmpl(conf);
-  if (sotd) $(sotd).insertAfter($("#abstract"));
+
+  sotd.innerHTML = populateSoTD(conf, sotd);
 
   if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
     pub(
       "error",
-      "CR, PR, and REC documents need to have an implementationReportURI defined."
+      "CR, PR, and REC documents need to have an `implementationReportURI` defined."
     );
   }
-  if (conf.isTagFinding && !conf.sotdCustomParagraph) {
+  if (conf.isTagFinding && !conf.additionalContent) {
     pub(
-      "error",
+      "warn",
       "ReSpec does not support automated SotD generation for TAG findings, " +
-        "please specify one using a <code><section></code> element with ID=sotd."
+        "please add the prerequisite content in the 'sotd' section"
     );
   }
+  // Requested by https://github.com/w3c/respec/issues/504
+  // Makes a record of a few auto-generated things.
+  pub("amend-user-config", {
+    publishISODate: conf.publishISODate,
+    generatedSubtitle: `${conf.longStatus} ${conf.publishHumanDate}`,
+  });
   cb();
+}
+
+function populateSoTD(conf, sotd) {
+  const sotdClone = sotd.cloneNode(true);
+  const additionalNodes = document.createDocumentFragment();
+  const additionalContent = document.createElement("temp");
+  // we collect everything until we hit a section,
+  // that becomes the custom content.
+  while (sotdClone.hasChildNodes()) {
+    if (
+      sotdClone.firstChild.nodeType !== Node.ELEMENT_NODE ||
+      sotdClone.firstChild.localName !== "section"
+    ) {
+      additionalNodes.appendChild(sotdClone.firstChild);
+      continue;
+    }
+    break;
+  }
+  additionalContent.appendChild(additionalNodes);
+  conf.additionalContent = additionalContent.innerHTML;
+  // Whatever sections are left, we throw at the end.
+  conf.additionalSections = sotdClone.innerHTML;
+  return tmpls[conf.isCGBG ? "cgbg-sotd.html" : "sotd.html"](conf);
 }

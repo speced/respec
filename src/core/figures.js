@@ -7,6 +7,8 @@
 
 import { pub } from "core/pubsubhub";
 
+export const name = "core/figures";
+
 export function run(conf, doc, cb) {
   // Move old syntax to new syntax
   $(".figure", doc).each(function(i, figure) {
@@ -20,31 +22,33 @@ export function run(conf, doc, cb) {
       $caption = $("<figcaption/>").text(title);
 
     // change old syntax to something HTML5 compatible
+    let badSyntax = "div.figure";
     if ($figure.is("div")) {
-      pub(
-        "warn",
-        "You are using the deprecated div.figure syntax; please switch to <figure>."
-      );
       $figure.append($caption);
       $figure.renameElement("figure");
     } else {
-      pub(
-        "warn",
-        "You are using the deprecated img.figure syntax; please switch to <figure>."
-      );
+      badSyntax = "img.figure";
       $figure.wrap("<figure></figure>");
       $figure.parent().append($caption);
     }
+    pub(
+      "warn",
+      `You are using the deprecated ${badSyntax} syntax; please switch to \`<figure>\`. ` +
+        `Your document has been updated to use \`<figure>\` instead ❤️.`
+    );
   });
 
   // process all figures
-  var figMap = {}, tof = [], num = 0;
+  var figMap = {},
+    tof = [],
+    num = 0;
   $("figure").each(function() {
     var $fig = $(this),
       $cap = $fig.find("figcaption"),
       tit = $cap.text(),
       id = $fig.makeID("fig", tit);
-    if (!$cap.length) pub("warn", "A <figure> should contain a <figcaption>.");
+    if (!$cap.length)
+      pub("warn", "A `<figure>` should contain a `<figcaption>`.");
 
     // set proper caption title
     num++;
@@ -66,7 +70,8 @@ export function run(conf, doc, cb) {
 
   // Update all anchors with empty content that reference a figure ID
   $("a[href]", doc).each(function() {
-    var $a = $(this), id = $a.attr("href");
+    var $a = $(this),
+      id = $a.attr("href");
     if (!id) return;
     id = id.substring(1);
     if (figMap[id]) {
@@ -88,7 +93,7 @@ export function run(conf, doc, cb) {
       !$tof.parents("section").length
     ) {
       if (
-        $tof.prevAll("section.introductory").length ==
+        $tof.prevAll("section.introductory").length ===
         $tof.prevAll("section").length
       ) {
         $tof.addClass("introductory");
@@ -99,8 +104,7 @@ export function run(conf, doc, cb) {
     $tof.append($("<h2>" + conf.l10n.table_of_fig + "</h2>"));
     $tof.append($("<ul class='tof'/>"));
     var $ul = $tof.find("ul");
-    while (tof.length)
-      $ul.append(tof.shift());
+    while (tof.length) $ul.append(tof.shift());
   }
   cb();
 }

@@ -8,6 +8,7 @@
 import svgClipboard from "deps/text!core/images/clipboard.svg";
 import "deps/regenerator";
 import Clipboard from "deps/clipboard";
+export const name = "core/webidl-clipboard";
 
 // This button serves a prototype that we clone as needed.
 const copyButton = document.createElement("button");

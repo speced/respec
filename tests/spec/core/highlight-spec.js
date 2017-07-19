@@ -8,8 +8,9 @@ describe("Core — Highlight", function() {
   it("shouldn't highlight idl blocks", done => {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        `
+      body:
+        makeDefaultBody() +
+          `
         <section><pre class=idl>
           [Constructor]interface Dahut : Mammal {
             const unsigned short DEXTROGYROUS = 1;
@@ -27,8 +28,9 @@ describe("Core — Highlight", function() {
   it("should automatically highlight", done => {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        `<section>
+      body:
+        makeDefaultBody() +
+          `<section>
           <pre class=example>
             function foo() {
               alert('foo');
@@ -48,8 +50,9 @@ describe("Core — Highlight", function() {
   it("shouldn't highlight pre elements when told not to", done => {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        `<section>
+      body:
+        makeDefaultBody() +
+          `<section>
           <pre class='nohighlight example'>
             function foo() {
               alert('foo');
@@ -67,8 +70,9 @@ describe("Core — Highlight", function() {
   it("should respect the noHighlightCSS by not highlighting anything", done => {
     var ops = {
       config: Object.assign(makeBasicConfig(), { noHighlightCSS: true }),
-      body: makeDefaultBody() +
-        `<section>
+      body:
+        makeDefaultBody() +
+          `<section>
           <pre id="test">
             function foo() {
               alert('foo');

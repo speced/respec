@@ -5,6 +5,7 @@
  * to manage the config.l10n object so that other parts of the system can
  * localize their text.
  */
+export const name = "core/l10n";
 // We use en-US as the base
 const base = {
   abstract: "Abstract",
@@ -85,6 +86,7 @@ const nl = {
   author: "Auteur:",
   authors: "Auteurs:",
   bug_tracker: "Meldingensysteem:",
+  commit_history: "Revisiehistorie",
   editor: "Redacteur:",
   editors_note: "Redactionele noot",
   editors: "Redacteurs:",
@@ -98,6 +100,7 @@ const nl = {
   norm_references: "Normatieve referenties",
   note: "Noot",
   open_bugs: "open meldingen",
+  participate: "Doe mee",
   references: "Referenties",
   sotd: "Status van dit document",
   table_of_fig: "Lijst met figuren",

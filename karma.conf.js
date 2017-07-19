@@ -27,9 +27,13 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       "js/deps/jquery.js",
-      "js/deps/fetch.js",
       {
         pattern: "builds/**/*.*",
+        included: false,
+        served: true,
+      },
+      {
+        pattern: "js/deps/marked.js",
         included: false,
         served: true,
       },
@@ -40,6 +44,11 @@ module.exports = function(config) {
       },
       {
         pattern: "tests/**/*-spec.js",
+        included: false,
+        served: true,
+      },
+      {
+        pattern: "tests/*.html",
         included: false,
         served: true,
       },
@@ -61,9 +70,15 @@ module.exports = function(config) {
     exclude: ["**/*.swp", "*.swp", ".DS_Store"],
 
     proxies: {
+      "/about-blank.html": "/base/tests/about-blank.html",
       "/js/": "/base/js/",
       "/tests/": "/base/tests/",
       "/spec/": "/base/tests/spec/",
+      "/deps/": "/base/js/deps/",
+      "/js/deps/": "/base/js/deps/",
+      "/base/deps/": "/base/js/deps/",
+      "/base/deps/marked.js": "/base/js/deps/marked.js",
+      "/worker/respec-worker.js": "/base/worker/respec-worker.js",
     },
 
     // preprocess matching files before serving them to the browser
@@ -100,21 +115,14 @@ module.exports = function(config) {
     concurrency: 1,
 
     browserNoActivityTimeout: 100000,
-
-    customLaunchers: {
-      chrome_canary_travis: {
-        base: "ChromeCanary",
-        flags: ["--no-sandbox"],
-      },
-    },
   };
   if (process.env.TRAVIS) {
     options.detectBrowsers.enabled = false;
     options.autoWatch = false;
     options.singleRun = true;
-    options.concurrency = 1;
+    options.concurrency = 2;
     options.reporters = ["mocha"];
-    options.browsers = ["chrome_canary_travis"]; //"FirefoxNightly"
+    options.browsers = ["Firefox", "Chrome"]; //"FirefoxNightly"
   }
   config.set(options);
 };

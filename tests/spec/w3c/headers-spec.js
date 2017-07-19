@@ -732,7 +732,7 @@ describe("W3C — Headers", function() {
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
       expect(
-        $(".head img[src='https://www.w3.org/Icons/member_subm']", doc).length
+        $(".head img[src^='https://www.w3.org/Icons/member_subm']", doc).length
       ).toEqual(1);
     }).then(done);
   });
@@ -777,7 +777,7 @@ describe("W3C — Headers", function() {
     Object.assign(ops.config, newProps);
     makeRSDoc(ops, function(doc) {
       expect(
-        $(".head img[src='https://www.w3.org/Icons/team_subm']", doc).length
+        $(".head img[src^='https://www.w3.org/Icons/team_subm']", doc).length
       ).toEqual(1);
     }).then(done);
   });
@@ -822,6 +822,87 @@ describe("W3C — Headers", function() {
       simpleSpecURL
     ).then(done);
   });
+  it("allows custom sections and custom content, not just paragraphs", done => {
+    var ops = makeStandardOps();
+    ops.body = `
+        <section>
+          <h2>PASS</h2>
+          <p>Normal section.</p>
+        </section>
+        <section id="sotd">
+          <p id="p1">
+            CUSTOM PARAGRAPH 1
+          </p>
+          <p id="p2">
+            CUSTOM PARAGRAPH 2
+          </p><!--
+          comment node
+          -->
+          text node
+          <ol id="ol">
+            <li>item 1</li>
+            <li>item 2</li>
+          </ol>
+          <section id="first-sub-section">
+            <h3>Testing</h3>
+          </section>
+          <p id="p3">
+            This is terrible, but can happen.
+          </p>
+          <section id="last-sub-section">
+            <h2>not in toc...</h2>
+          </section>
+        </section>`;
+    const theTest = doc => {
+      // the class introductory is added by script
+      const sotd = doc.querySelector("#sotd");
+      expect(sotd.classList.contains("introductory")).toBe(true);
+
+      const p1 = sotd.querySelector("#p1");
+      expect(p1).toBeTruthy();
+      expect(p1.textContent.trim()).toEqual("CUSTOM PARAGRAPH 1");
+
+      const p2 = sotd.querySelector("#p2");
+      expect(p2).toBeTruthy();
+      expect(p2.textContent.trim()).toEqual("CUSTOM PARAGRAPH 2");
+
+      const commentNode = p2.nextSibling;
+      expect(commentNode.nodeType).toEqual(Node.COMMENT_NODE);
+
+      const textNode = commentNode.nextSibling;
+      expect(textNode.nodeType).toEqual(Node.TEXT_NODE);
+
+      const ol = sotd.querySelector("#ol");
+      expect(ol).toBeTruthy();
+      expect(ol.querySelectorAll("li").length).toEqual(2);
+
+      const firstSection = sotd.querySelector("#first-sub-section");
+      expect(sotd.lastElementChild).not.toEqual(firstSection);
+
+      const lastSection = sotd.querySelector("#last-sub-section");
+      expect(sotd.lastElementChild).toEqual(lastSection);
+
+      // p3 is sadwiched in between the sections
+      const p3 = sotd.querySelector("#p3");
+      expect(p3).toBeTruthy();
+      expect(p3.previousElementSibling).toEqual(firstSection);
+      expect(p3.nextElementSibling).toEqual(lastSection);
+
+      // There should only be one thing in the ToC
+      expect(doc.querySelectorAll("#toc li").length).toEqual(1);
+      // and it should say "PASS"
+      expect(doc.querySelector("#toc li span").nextSibling.textContent).toEqual(
+        "PASS"
+      );
+    };
+    Promise.all([
+      // Test regular spec using "stod.html"
+      makeRSDoc(ops, theTest),
+      // Test CG spec, using "cg-bg-stod.html"
+      makeRSDoc(Object.assign({}, ops, { specStatus: "CG-DRAFT" })),
+    ]).then(done);
+  });
+
   // See https://github.com/w3c/respec/issues/653
   xit("should state that the spec is destined to become a note", function(
     done

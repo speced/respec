@@ -2,14 +2,16 @@ import { pub } from "core/pubsubhub";
 import { norm } from "core/utils";
 import "deps/jquery";
 
+export const name = "core/jquery-enhanced";
+
 window.$ = $;
 
 // --- JQUERY EXTRAS -----------------------------------------------------------------------
 // Applies to any jQuery object containing elements, changes their name to the one give, and
 // return a jQuery object containing the new elements
-window.$.fn.renameElement = function(name) {
+window.$.fn.renameElement = function (name) {
   var arr = [];
-  this.each(function() {
+  this.each(function () {
     var $newEl = $(this.ownerDocument.createElement(name));
     // I forget why this didn't work, maybe try again
     // $newEl.attr($(this).attr());
@@ -19,7 +21,7 @@ window.$.fn.renameElement = function(name) {
         $newEl[0].setAttributeNS(at.namespaceURI, at.name, at.value);
       } catch (err) {
         var msg = "Your HTML markup is malformed. Error in: \n";
-        msg += this.outerHTML;
+        msg += "```HTML\n" + this.outerHTML + "\n```";
         pub("error", msg);
         break; // no point in continuing with this element
       }
@@ -45,7 +47,7 @@ window.$.fn.renameElement = function(name) {
 //
 // This method will publish a warning if a title is used on a definition
 // instead of an @lt (as per specprod mailing list discussion).
-window.$.fn.getDfnTitles = function(args) {
+window.$.fn.getDfnTitles = function (args) {
   var titles = [];
   var theAttr = "";
   var titleString = "";
@@ -76,12 +78,12 @@ window.$.fn.getDfnTitles = function(args) {
     pub(
       "warn",
       "Using deprecated attribute title for '" +
-        this.text() +
-        "': see https://github.com/w3c/respec/wiki/User's-Guide#definitions-and-linking"
+      this.text() +
+      "': see https://github.com/w3c/respec/wiki/User's-Guide#definitions-and-linking"
     );
   } else if (
-    this.contents().length == 1 &&
-    this.children("abbr, acronym").length == 1 &&
+    this.contents().length === 1 &&
+    this.children("abbr, acronym").length === 1 &&
     this.find(":first-child").attr("title")
   ) {
     titleString = this.find(":first-child").attr("title");
@@ -104,7 +106,7 @@ window.$.fn.getDfnTitles = function(args) {
       this.removeAttr("dfn-type");
     }
   }
-  titleString.split("|").forEach(function(item) {
+  titleString.split("|").forEach(function (item) {
     if (item != "") {
       titles.push(item);
     }
@@ -122,7 +124,7 @@ window.$.fn.getDfnTitles = function(args) {
 //  * {for_: "int2", title: "int3.member"}
 //  * {for_: "int3", title: "member"}
 //  * {for_: "", title: "int3.member"}
-window.$.fn.linkTargets = function() {
+window.$.fn.linkTargets = function () {
   var elem = this;
   var link_for = (elem.attr("for") ||
     elem.attr("data-for") ||
@@ -132,7 +134,7 @@ window.$.fn.linkTargets = function() {
     .toLowerCase();
   var titles = elem.getDfnTitles();
   var result = [];
-  window.$.each(titles, function() {
+  window.$.each(titles, function () {
     result.push({
       for_: link_for,
       title: this,
@@ -156,36 +158,46 @@ window.$.fn.linkTargets = function() {
 
 // Applied to an element, sets an ID for it (and returns it), using a specific prefix
 // if provided, and a specific text if given.
-window.$.fn.makeID = function(pfx, txt, noLC) {
-  if (this.attr("id")) return this.attr("id");
-  if (!txt) txt = this.attr("title") ? this.attr("title") : this.text();
-  txt = txt.replace(/^\s+/, "").replace(/\s+$/, "");
+window.$.fn.makeID = function (pfx = "", txt = "", noLC = false) {
+  const elem = this[0];
+  if (elem.id) {
+    return elem.id;
+  }
+  if (!txt) {
+    txt = (elem.title ? elem.title : elem.textContent).trim();
+  }
   var id = noLC ? txt : txt.toLowerCase();
   id = id
-    .split(/[^\-.0-9a-z_]+/i)
-    .join("-")
+    .replace(/\s/gm, "-")
     .replace(/^-+/, "")
-    .replace(/-+$/, "");
-  if (/\.$/.test(id)) id += "x"; // trailing . doesn't play well with jQuery
-  if (id.length > 0 && /^[^a-z]/i.test(id)) id = "x" + id;
-  if (id.length === 0) id = "generatedID";
-  if (pfx) id = pfx + "-" + id;
-  var inc = 1, doc = this[0].ownerDocument;
-  if ($("#" + id, doc).length) {
-    while ($("#" + id + "-" + inc, doc).length)
-      inc++;
-    id += "-" + inc;
+    .replace(/-+$/, "")
+    .replace(/-+/g, "-");
+  if (!id) {
+    id = "generatedID";
+  } else if (/\.$/.test(id) || !/^[a-z]/i.test(id)) {
+    id = "x" + id; // trailing . doesn't play well with jQuery
   }
-  this.attr("id", id);
+  if (pfx) {
+    id = `${pfx}-${id}`;
+  }
+  if (elem.ownerDocument.getElementById(id)) {
+    let i = 0;
+    let nextId = id + "-" + i;
+    while (elem.ownerDocument.getElementById(nextId)) {
+      nextId = id + "-" + i++;
+    }
+    id = nextId;
+  }
+  elem.id = id;
   return id;
 };
 
 // Returns all the descendant text nodes of an element. Note that those nodes aren't
 // returned as a jQuery array since I'm not sure if that would make too much sense.
-window.$.fn.allTextNodes = function(exclusions) {
-  var textNodes = [], excl = {};
-  for (var i = 0, n = exclusions.length; i < n; i++)
-    excl[exclusions[i]] = true;
+window.$.fn.allTextNodes = function (exclusions) {
+  var textNodes = [],
+    excl = {};
+  for (var i = 0, n = exclusions.length; i < n; i++) excl[exclusions[i]] = true;
 
   function getTextNodes(node) {
     if (node.nodeType === 1 && excl[node.localName.toLowerCase()]) return;

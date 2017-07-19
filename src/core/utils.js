@@ -4,8 +4,37 @@
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
 import { pub } from "core/pubsubhub";
-
+import marked from "deps/marked";
 export const name = "core/utils";
+
+marked.setOptions({
+  sanitize: false,
+  gfm: true,
+});
+
+const spaceOrTab = /^[\ |\t]*/;
+const endsWithSpace = /\s+$/gm;
+const dashes = /\-/g;
+const gtEntity = /&gt;/gm;
+const ampEntity = /&amp;/gm;
+
+export function markdownToHtml(text) {
+  const normalizedLeftPad = normalizePadding(text);
+  // As markdown is pulled from HTML, > and & are already escaped and
+  // so blockquotes aren't picked up by the parser. This fixes it.
+  const potentialMarkdown = normalizedLeftPad
+    .replace(gtEntity, ">")
+    .replace(ampEntity, "&");
+  const result = marked(potentialMarkdown);
+  return result;
+}
+
+export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
+  timeZone: "UTC",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
 
 const inlineElems = new Set([
   "a",
@@ -85,8 +114,7 @@ export function makeOwnerSwapper(node) {
   if (!node) {
     throw new TypeError("Expected instance of Node.");
   }
-  return function(insertionPoint) {
-    node.remove();
+  return insertionPoint => {
     insertionPoint.ownerDocument.adoptNode(node);
     if (insertionPoint.firstElementChild) {
       return insertionPoint.insertBefore(
@@ -102,19 +130,16 @@ export function calculateLeftPad(text) {
   if (typeof text !== "string") {
     throw new TypeError("Invalid input");
   }
-  var spaceOrTab = /^[\ |\t]*/;
   // Find smallest padding value
   var leftPad = text
     .split("\n")
-    .filter(function(item) {
-      return item;
-    })
-    .reduce(function(smallest, item) {
+    .filter(item => item)
+    .reduce((smallest, item) => {
       // can't go smaller than 0
       if (smallest === 0) {
         return smallest;
       }
-      var match = item.match(spaceOrTab)[0] || "";
+      const match = item.match(spaceOrTab)[0] || "";
       return Math.min(match.length, smallest);
     }, +Infinity);
   return leftPad === +Infinity ? 0 : leftPad;
@@ -137,9 +162,9 @@ export function createResourceHint(opts) {
   if (!resourceHints.has(opts.hint)) {
     throw new TypeError("Invalid resources hint");
   }
-  var url = new URL(opts.href, document.location);
-  var linkElem = document.createElement("link");
-  var href = url.href;
+  const url = new URL(opts.href, document.location);
+  const linkElem = document.createElement("link");
+  let href = url.href;
   linkElem.rel = opts.hint;
   switch (linkElem.rel) {
     case "dns-prefetch":
@@ -152,13 +177,10 @@ export function createResourceHint(opts) {
     case "preload":
       if ("as" in opts && typeof opts.as === "string") {
         if (!fetchDestinations.has(opts.as)) {
-          console.warn("Unknown request destination: " + opts.as);
+          console.warn(`Unknown request destination: ${opts.as}`);
         }
         linkElem.setAttribute("as", opts.as);
       }
-      break;
-    case "prerender":
-      href = url.href;
       break;
   }
   linkElem.href = href;
@@ -167,37 +189,8 @@ export function createResourceHint(opts) {
   }
   return linkElem;
 }
-/**
- * Makes a ES conforming iterator allowing objects to be used with
- * methods that can interface with Iterators (Array.from(), etc.).
- *
- * @param  {Function} nextLikeFunction A function that returns a next value;
- * @return {Object} An object that implements the Iterator prop.
- */
-export function toESIterable(nextLikeFunction) {
-  if (typeof nextLikeFunction !== "function") {
-    throw TypeError("Expected a function");
-  }
-  var next = function() {
-    return {
-      value: nextLikeFunction(),
-      get done() {
-        return this.value === null;
-      },
-    };
-  };
-  // We structure the iterator like this, or else
-  // RequireJS gets upset.
-  var iterator = {};
-  iterator[Symbol.iterator] = function() {
-    return {
-      next: next,
-    };
-  };
-  return iterator;
-}
-const endsWithSpace = /\s+$/gm;
-export function normalizePadding(text) {
+
+export function normalizePadding(text = "") {
   if (!text) {
     return "";
   }
@@ -271,7 +264,7 @@ export function normalizePadding(text) {
         }
         node.textContent = padding + node.textContent.replace(replacer, "");
         return replacer;
-      }, new RegExp("^\ {1," + chop + "}", "gm"));
+      }, new RegExp("^ {1," + chop + "}", "gm"));
     // deal with pre elements... we can chop whitespace from their siblings
     const endsWithSpace = new RegExp(`\\ {${chop}}$`, "gm");
     Array.from(doc.body.querySelectorAll("pre"))
@@ -297,7 +290,7 @@ export function normalizePadding(text) {
 export function removeReSpec(doc) {
   Array.from(
     doc.querySelectorAll(".remove, script[data-requiremodule]")
-  ).forEach(function(elem) {
+  ).forEach(elem => {
     elem.remove();
   });
 }
@@ -306,24 +299,20 @@ export function removeReSpec(doc) {
 // Takes an array and returns a string that separates each of its items with the proper commas and
 // "and". The second argument is a mapping function that can convert the items before they are
 // joined
-export function joinAnd(arr, mapper) {
-  if (!arr || !arr.length) return "";
-  mapper =
-    mapper ||
-    function(ret) {
-      return ret;
-    };
-  var ret = "";
-  if (arr.length === 1) return mapper(arr[0], 0);
-  for (var i = 0, n = arr.length; i < n; i++) {
-    if (i > 0) {
-      if (n === 2) ret += " ";
-      else ret += ", ";
-      if (i === n - 1) ret += "and ";
-    }
-    ret += mapper(arr[i], i);
+export function joinAnd(array = [], mapper = item => item) {
+  const items = array.map(mapper);
+  switch (items.length) {
+    case 0:
+    case 1: // "x"
+      return items.toString();
+    case 2: // x and y
+      return items.join(" and ");
+    default:
+      // x, y, and z
+      const str = items.join(", ");
+      const lastComma = str.lastIndexOf(",");
+      return `${str.substr(0, lastComma + 1)} and ${str.slice(lastComma + 2)}`;
   }
-  return ret;
 }
 
 // Takes a string, applies some XML escapes, and returns the escaped string.
@@ -339,108 +328,82 @@ export function xmlEscape(s) {
 
 // Trims string at both ends and replaces all other white space with a single space
 export function norm(str) {
-  return str.replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
+  return str.trim().replace(/\s+/g, " ");
 }
 
 // --- DATE HELPERS -------------------------------------------------------------------------------
 // Takes a Date object and an optional separator and returns the year,month,day representation with
 // the custom separator (defaulting to none) and proper 0-padding
-export function concatDate(date, sep) {
-  if (!sep) sep = "";
-  return (
-    "" +
-    date.getFullYear() +
-    sep +
-    lead0(date.getMonth() + 1) +
-    sep +
-    lead0(date.getDate())
-  );
+export function concatDate(date, sep = "") {
+  return ISODate.format(date).replace(dashes, sep);
+}
+
+// formats a date to "yyyy-mm-dd"
+export function toShortIsoDate(date) {
+  return ISODate.format(date);
 }
 
 // takes a string, prepends a "0" if it is of length 1, does nothing otherwise
 export function lead0(str) {
-  str = "" + str;
-  return str.length === 1 ? "0" + str : str;
+  return String(str).length === 1 ? "0" + str : str;
 }
 
 // takes a YYYY-MM-DD date and returns a Date object for it
 export function parseSimpleDate(str) {
-  return new Date(Date.parse(str));
+  return new Date(str);
 }
 
 // takes what document.lastModified returns and produces a Date object for it
 export function parseLastModified(str) {
   if (!str) return new Date();
   return new Date(Date.parse(str));
-  // return new Date(str.substr(6, 4), (str.substr(0, 2) - 1), str.substr(3, 2));
 }
 
-// list of human names for months (in English)
-export const humanMonths = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
-// given either a Date object or a date in YYYY-MM-DD format, return a human-formatted
-// date suitable for use in a W3C specification
-export function humanDate(date, lang = "en") {
-  if (!(date instanceof Date)) date = parseSimpleDate(date);
-  if (window.Intl) {
-    const day = date.toLocaleString([lang, "en"], { day: "2-digit" });
-    const month = date.toLocaleString([lang, "en"], { month: "long" });
-    const year = date.toLocaleString([lang, "en"], { year: "numeric" });
-    //date month year
-    return `${day} ${month} ${year}`;
-  }
-  return (
-    lead0(date.getDate()) +
-    " " +
-    humanMonths[date.getMonth()] +
-    " " +
-    date.getFullYear()
-  );
+// given either a Date object or a date in YYYY-MM-DD format,
+// return a human-formatted date suitable for use in a W3C specification
+export function humanDate(
+  date = new Date(),
+  lang = document.documentElement.lang || "en"
+) {
+  if (!(date instanceof Date)) date = new Date(date);
+  const langs = [lang, "en"];
+  const day = date.toLocaleString(langs, {
+    day: "2-digit",
+    timeZone: "UTC",
+  });
+  const month = date.toLocaleString(langs, {
+    month: "long",
+    timeZone: "UTC",
+  });
+  const year = date.toLocaleString(langs, {
+    year: "numeric",
+    timeZone: "UTC",
+  });
+  //date month year
+  return `${day} ${month} ${year}`;
 }
-// given either a Date object or a date in YYYY-MM-DD format, return an ISO formatted
-// date suitable for use in a xsd:datetime item
+// given either a Date object or a date in YYYY-MM-DD format,
+// return an ISO formatted date suitable for use in a xsd:datetime item
 export function isoDate(date) {
-  if (!(date instanceof Date)) date = parseSimpleDate(date);
-  return date.toISOString();
+  return (date instanceof Date ? date : new Date(date)).toISOString();
 }
 
 // Given an object, it converts it to a key value pair separated by
 // ("=", configurable) and a delimiter (" ," configurable).
 // for example, {"foo": "bar", "baz": 1} becomes "foo=bar, baz=1"
-export function toKeyValuePairs(obj, delimiter, separator) {
-  if (!separator) {
-    separator = "=";
-  }
-  if (!delimiter) {
-    delimiter = ", ";
-  }
-  return Object.getOwnPropertyNames(obj)
-    .map(function(key) {
-      return key + separator + JSON.stringify(obj[key]);
-    })
+export function toKeyValuePairs(obj, delimiter = ", ", separator = "=") {
+  return Array.from(Object.entries(obj))
+    .map(([key, value]) => `${key}${separator}${JSON.stringify(value)}`)
     .join(delimiter);
 }
 
 // STYLE HELPERS
-// take a document and either a link or an array of links to CSS and appends a <link/> element
-// to the head pointing to each
+// take a document and either a link or an array of links to CSS and appends
+// a <link/> element to the head pointing to each
 export function linkCSS(doc, styles) {
-  var stylesArray = Array.isArray(styles) ? [].concat(styles) : [styles];
-  var frag = stylesArray
-    .map(function(url) {
+  const stylesArray = [].concat(styles);
+  const frag = stylesArray
+    .map(url => {
       var link = doc.createElement("link");
       link.rel = "stylesheet";
       link.href = url;
@@ -455,7 +418,8 @@ export function linkCSS(doc, styles) {
 
 // TRANSFORMATIONS
 // Run list of transforms over content and return result.
-// Please note that this is a legacy method that is only kept in order to maintain compatibility
+// Please note that this is a legacy method that is only kept in order
+// to maintain compatibility
 // with RSv1. It is therefore not tested and not actively supported.
 export function runTransforms(content, flist) {
   var args = [this, content];
@@ -472,7 +436,11 @@ export function runTransforms(content, flist) {
         try {
           content = window[meth].apply(this, args);
         } catch (e) {
-          pub("warn", "call to " + meth + "() failed with " + e);
+          pub(
+            "warn",
+            `call to \`${meth}()\` failed with: ${e}. See error console for stack trace.`
+          );
+          console.error(e);
         }
       }
     }

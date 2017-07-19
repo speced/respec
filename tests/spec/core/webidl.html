@@ -21,7 +21,7 @@
   <body>
 <section data-dfn-for="ExampleInterface" data-link-for="ExampleInterface">
   <h2><dfn>ExampleInterface</dfn> interface</h2>
-  <pre class="idl">
+  <pre class="idl no-link-warnings">
   interface ExampleInterface {
     void exampleMethod();
     readonly attribute USVString url;
@@ -50,9 +50,17 @@
         CUSTOM PARAGRAPH
       </p>
     </section>
+    <section id="records">
+    <h2>Testing records</h2>
+    <pre class="idl no-link-warnings">
+    dictionary Foo {
+      record&lt;DOMString, USVString> pass;
+    };
+    </pre>
+    </section>
     <section id="linkToIDLSpec">
     <h2>Linking to WebIDL spec</h2>
-    <pre class="idl">
+    <pre class="idl no-link-warnings">
     [Constructor(sequence&lt;DOMString> methodData), SecureContext]
     interface LinkingTest {
       readonly attribute DOMString? aBoolAttribute;
@@ -62,7 +70,7 @@
     </section>
     <section id="sec-parenthesis-method" data-dfn-for="ParenthesisTest" data-link-for="ParenthesisTest">
       <h2>More linking</h2>
-      <pre class="idl">
+      <pre class="idl no-link-warnings">
       interface ParenthesisTest {
           void basic();
           void noParens();
@@ -341,17 +349,6 @@
       </p>
     </section>
     <section>
-      <h2>Serializer</h2>
-      <pre id='serializer-map' class='idl'>
-        interface SerializerMap {
-          attribute DOMString foo;
-          attribute DOMString bar;
-          serializer = { foo, bar };
-        };
-      </pre>
-      <p id='serializer-map-doc'><dfn for="SerializerMap">serializer</dfn> serializes a SerializerMap.</p>
-    </section>
-    <section>
       <h2>Comments</h2>
       <pre id="comments-basic" class='idl'>
         interface SuperStar {
@@ -441,7 +438,7 @@
       <p link-for="EnumBasic"><a>one</a> is referenced with a <code>[link-for]</code> attribute.</p>
       <p id="enum-ref-without-link-for"><a>EnumBasic.one</a> may also be referenced with fully-qualified name.</p>
       <section id="enum-empty-sec" data-dfn-for="EmptyEnum">
-        <pre class="idl">
+        <pre class="idl no-link-warnings">
         enum EmptyEnum {
           "",
           "not empty"
@@ -536,5 +533,32 @@
         which broke links to it without [link-for].
       </p>
     </section>
+    <section>
+      <pre id='retain-css-classes' class='idl a b c overlarge'>
+        interface NotTested {};
+      </pre>      
+    </section>
+    <section>
+      <h2>Autolink to WebIDL spec for toJSON</h2>
+      <pre id="AutoLinkToIDLSpec" class="idl">
+        interface AutoLinkToIDLSpec {
+          [Default] object toJSON();
+        };
+      </pre>
+    </section>
+    <section id="DefinedToJson" data-dfn-for="DefinedToJson" data-link-for="DefinedToJson">
+      <h2>We can define our own toJSON()</h2>
+      <pre class="idl">
+        interface DefinedToJson {
+          readonly attribute DOMString country;
+          [Default] object toJSON();
+          void toWhatever(); 
+        };
+      </pre>
+      <section>
+      <h2><dfn>toJSON()</dfn> method</h2>
+      <p>When <a>toJSON()</a> is called, run [[!WEBIDL]]'s <a data-cite="WEBIDL#default-tojson-operation">default toJSON operation</a>.</p>
+      </section>
+    </section> 
   </body>
 </html>

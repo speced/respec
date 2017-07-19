@@ -7,8 +7,9 @@ describe("Core — Definitions", function() {
   it("should process definitions", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "<section id='dfn'><dfn>text</dfn><a>text</a></section>",
+      body:
+        makeDefaultBody() +
+          "<section id='dfn'><dfn>text</dfn><a>text</a></section>",
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("#dfn", doc);
@@ -22,17 +23,18 @@ describe("Core — Definitions", function() {
   ) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "<section id='dfn'>" +
-        "<code><dfn>outerCode</dfn></code>" +
-        "<pre><dfn>outerPre</dfn></pre>" +
-        "<dfn><code>innerCode</code></dfn>" +
-        "<dfn><code>partial</code> inner code</dfn>" +
-        "<a>outerCode</a>" +
-        "<a>outerPre</a>" +
-        "<a>innerCode</a>" +
-        "<a>partial inner code</a>" +
-        "</section>",
+      body:
+        makeDefaultBody() +
+          "<section id='dfn'>" +
+          "<code><dfn>outerCode</dfn></code>" +
+          "<pre><dfn>outerPre</dfn></pre>" +
+          "<dfn><code>innerCode</code></dfn>" +
+          "<dfn><code>partial</code> inner code</dfn>" +
+          "<a>outerCode</a>" +
+          "<a>outerPre</a>" +
+          "<a>innerCode</a>" +
+          "<a>partial inner code</a>" +
+          "</section>",
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("#dfn", doc);
@@ -54,8 +56,9 @@ describe("Core — Definitions", function() {
   it("links <code> for IDL, but not when text doesn't match", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        `
+      body:
+        makeDefaultBody() +
+          `
       <pre class="idl">
         interface Test {};
       </pre>
@@ -78,11 +81,12 @@ describe("Core — Definitions", function() {
   it("should process aliases", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "<section id='dfn'>" +
-        "  <dfn title='text|text 1|text  2|text 3 '>text</dfn>" +
-        "  <a>text</a>" +
-        "</section>",
+      body:
+        makeDefaultBody() +
+          "<section id='dfn'>" +
+          "  <dfn title='text|text 1|text  2|text 3 '>text</dfn>" +
+          "  <a>text</a>" +
+          "</section>",
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("#dfn", doc);
@@ -96,11 +100,12 @@ describe("Core — Definitions", function() {
   it("should allow defined dfn-type ", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
-        "<section™¡™ id='dfn'>" +
-        "<dfn dfn-type='myType'>text</dfn>" +
-        "<a>text</a>" +
-        "</section>",
+      body:
+        makeDefaultBody() +
+          "<section™¡™ id='dfn'>" +
+          "<dfn dfn-type='myType'>text</dfn>" +
+          "<a>text</a>" +
+          "</section>",
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("#dfn", doc);

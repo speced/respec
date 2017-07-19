@@ -14,6 +14,7 @@
 //    key word was used.  NOTE: While each member is a counter, at this time
 //    the counter is not used.
 import { pub } from "core/pubsubhub";
+export const name = "core/inlines";
 
 export function run(conf, doc, cb) {
   doc.normalize();
@@ -27,8 +28,7 @@ export function run(conf, doc, cb) {
     abbrMap[$(this).text()] = $(this).attr("title");
   });
   var aKeys = [];
-  for (var k in abbrMap)
-    aKeys.push(k);
+  for (var k in abbrMap) aKeys.push(k);
   aKeys.sort(function(a, b) {
     if (b.length < a.length) return -1;
     if (a.length < b.length) return 1;

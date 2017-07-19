@@ -16,7 +16,7 @@
 //     permalinkHide:      Boolean. The symbol will be hidden until the header is
 //                         hovered over.  Defaults to false.
 import tmpls from "templates";
-
+export const name = "w3c/permalinks";
 export function run(conf, doc, cb) {
   if (!conf.includePermalinks) {
     return cb();
@@ -40,7 +40,7 @@ export function run(conf, doc, cb) {
         }
       }
       // if we still have resourceID
-      if (resourceID != null) {
+      if (resourceID !== null) {
         // we have an id.  add a permalink
         // right after the h* element
         var theNode = $("<span></span>");
