@@ -52,12 +52,12 @@ function addLeafletOnSave(rootElem) {
   // this script loads leaflet
   const leafletScript = doc.createElement("script");
   leafletScript.src =
-    "https://tools.geotandaarden.nl/respec/scripts/leaflet.js";
+    "https://tools.geostandaarden.nl/respec/scripts/leaflet.js";
 
   //Loads easy button
   const easyButtonScript = doc.createElement("script");
   easyButtonScript.src =
-    "https://tools.geotandaarden.nl/respec/scripts/easy-button.js";
+    "https://tools.geostandaarden.nl/respec/scripts/easy-button.js";
 
   // This script handles actually doing the work
   const processImagesScript = doc.createElement("script");
