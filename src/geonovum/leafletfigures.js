@@ -50,7 +50,6 @@ const rawProcessImages = `
       const { width, height, src } = image;
       image.hidden = true;
       const div = document.createElement("div");
-      div.classList.add("removeOnSave");
       const map = L.map(div, {
         maxZoom: 4,
         minZoom: -4,
