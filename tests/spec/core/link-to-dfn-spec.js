@@ -4,6 +4,24 @@ describe("Core — Link to definitions", function() {
     flushIframes();
     done();
   });
+  it("URL-encodes fragment components", done => {
+    const bodyText = `
+    <section">
+      <h2>Test section</h2>
+      <p><dfn>[[\\test]]</dfn><a id="testAnchor">[[\\test]]</a>
+    </section>`;
+    const ops = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody() + bodyText,
+    };
+    makeRSDoc(ops, doc => {
+      const a = doc.body.querySelector("#testAnchor");
+      expect(a).toBeTruthy();
+      expect(a.hash).toEqual("#dfn-x%5B%5Btest%5D%5D");
+      const decodedHash = decodeURIComponent(a.hash);
+      expect(doc.getElementById(decodedHash.slice(1))).toBeTruthy();
+    }).then(done);
+  });
   it("links to IDL definitions and wraps in code if needed", function(done) {
     const bodyText = `
     <section data-link-for="Request">
