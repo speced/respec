@@ -12,7 +12,7 @@ export function run(conf, doc, cb) {
     .filter(({ href }) => href.startsWith('#'))
     .map(({ a, href }) => ({ a, href, id: href.slice(1) }))
     .filter(({ id }) => Boolean(id))
-    .filter(({ id }) => !doc.getElementById(id))
+    .filter(({ id }) => !doc.getElementById(id) && !doc.getElementById(decodeURIComponent(id)))
     .forEach(({ href, id }) => {
       pub("warn", `Found link with href '${href}' but no element with id '${id}'`);
     });
