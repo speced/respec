@@ -5,11 +5,10 @@
   {{#if subtitle}}
   <h2 {{#if doRDFa}}property='bibo:subtitle' {{/if}}id='subtitle'>{{subtitle}}</h2>
   {{/if}}
-  <h2>Geonovum {{textStatus}}
+  <h2>Geonovum {{#if isRegular}}{{typeStatus}}<br>{{/if}}{{textStatus}}
     <time {{#if doRDFa}}property="dcterms:issued" {{/if}}class='dt-published' datetime='{{dashDate}}'>
       {{publishHumanDate}}
     </time>
-    <br>{{#if isRegular}}{{typeStatus}} {{/if}}
   </h2>
   <dl>
     {{#unless isNoTrack}}

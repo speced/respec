@@ -59,6 +59,13 @@ export const name = "geonovum/headers";
 
 const headersTmpl = tmpls["headers.html"];
 
+const GNVMDate = new Intl.DateTimeFormat(["nl"], {
+  timeZone: "UTC",
+  year: "numeric",
+  month: "long",
+  day: "2-digit",
+});
+
 hb.registerHelper("showPeople", function(name, items) {
   // stuff to handle RDFa
   var re = "",
@@ -324,6 +331,7 @@ export function run(conf, doc, cb) {
       new Date(conf.publishDate ? conf.publishDate : doc.lastModified)
     )
   );
+  conf.publishHumanDate = GNVMDate.format(conf.publishDate);
   //Version URLs
   if (conf.isRegular && conf.specStatus !== "GN-WV") {
     conf.thisVersion =
