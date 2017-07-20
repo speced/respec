@@ -13,8 +13,14 @@ export function run(conf, doc, cb) {
     .map(({ a, href }) => ({ a, href, id: href.slice(1) }))
     .filter(({ id }) => Boolean(id))
     .filter(({ id }) => !doc.getElementById(id) && !doc.getElementById(decodeURIComponent(id)))
-    .forEach(({ href, id }) => {
-      pub("warn", `Found link with href '${href}' but no element with id '${id}'`);
+    .forEach(({ a, href, id }) => {
+      const msg = `Found an element with href '${href}' but no element with id '${id}'.`
+            + " See developer console for offending element.";
+
+      pub("warn", msg);
+      console.warn("Offending element:", a);
+      a.title = msg;
+      a.classList.add("respec-offending-element");
     });
   cb();
 }

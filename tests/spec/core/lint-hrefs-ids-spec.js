@@ -4,22 +4,30 @@ describe("Core — Lint href's matching id's", function() {
     flushIframes();
     done();
   });
+
   it("warns if can't match a fragment identifier to an id in the document", function(done) {
-    var ops = {
+    const ops = {
       config: makeBasicConfig(),
       body:
         makeDefaultBody() + `
           <section>
-            <a href='#test'>foo</a>
+            <a id='offender' href='#test'>foo</a>
           </section>
         `,
     };
+
     makeRSDoc(ops, function(doc) {
-      var ui = doc.defaultView.respecUI;
+      const ui = doc.defaultView.respecUI;
+
       expect(ui.getErrors()).toEqual([]);
       expect(ui.getWarnings().length).toEqual(1);
+
+      const offender = doc.getElementById("offender");
+
+      expect(offender.classList.contains("respec-offending-element")).toBe(true);
     }).then(done);
   });
+
   it("does not warn if fragment identifier matches an id in the document", function(done) {
     var ops = {
       config: makeBasicConfig(),
@@ -42,8 +50,10 @@ describe("Core — Lint href's matching id's", function() {
           </section>
         `,
     };
+
     makeRSDoc(ops, function(doc) {
-      var ui = doc.defaultView.respecUI;
+      const ui = doc.defaultView.respecUI;
+
       expect(ui.getErrors()).toEqual([]);
       expect(ui.getWarnings()).toEqual([]);
     }).then(done);
