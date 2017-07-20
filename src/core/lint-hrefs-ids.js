@@ -6,7 +6,6 @@ import { pub } from "core/pubsubhub";
 export const name = "core/lint-hrefs-ids";
 
 export function run(conf, doc, cb) {
-  console.log()
   Array.from(doc.querySelectorAll('a[href]'))
     .map(a => ({ a, href: a.getAttribute('href') }))
     .filter(({ href }) => Boolean(href))
