@@ -83,6 +83,7 @@ export async function run(conf) {
   }
   const branch = conf.github.branch || "gh-pages";
   const newProps = {
+    shortName: repo,
     edDraftURI: `https://${org.toLowerCase()}.github.io/${repo}/`,
     githubAPI: `https://api.github.com/repos/${org}/${repo}`,
     issueBase: `${ghURL.href}${ghURL.pathname.endsWith("/") ? "" : "/"}issues/`,
