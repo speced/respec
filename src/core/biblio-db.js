@@ -8,7 +8,6 @@
  *
  */
 /*globals IDBKeyRange, DOMException, console */
-import "deps/regenerator";
 import { pub } from "core/pubsubhub";
 export const name = "core/biblio-db";
 

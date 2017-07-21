@@ -13,7 +13,6 @@
  * Usage:
  * https://github.com/w3c/respec/wiki/data--cite
  */
-import "deps/regenerator";
 import { pub } from "core/pubsubhub";
 import { resolveRef } from "core/biblio";
 export const name = "core/data-cite";

@@ -20,7 +20,6 @@ const srcDesMap = new Map([
   ["./node_modules/js-beautify/js/lib/beautify.js", "./js/deps/"],
   ["./node_modules/marcosc-async/lib/async.js", "./js/deps/"],
   ["./node_modules/marked/lib/marked.js", "./js/deps/"],
-  ["./node_modules/regenerator-runtime/runtime.js", "./js/deps/regenerator.js"],
   ["./node_modules/requirejs/require.js", "./js/deps/"],
   ["./node_modules/text/text.js", "./js/deps/"],
   ["./node_modules/url-search-params/build/url-search-params.js", "./js/deps/"],
