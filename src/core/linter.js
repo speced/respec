@@ -3,7 +3,6 @@
  *
  * Core linter module. Exports a linter object.
  */
-import "deps/regenerator";
 import { pub } from "core/pubsubhub";
 export const name = "core/linter";
 const privates = new WeakMap();
