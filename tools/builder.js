@@ -79,6 +79,7 @@ window.respecVersion = "${version}";
 ${optimizedJs}
 require(['profile-${name}']);`;
     const result = UglifyJS.minify(respecJs, {
+      toplevel: true,
       sourceMap: {
         filename: `respec-${name}.js`,
         url: `respec-${name}.build.js.map`,
@@ -137,7 +138,7 @@ const Builder = {
         logLevel: 2, // Show uglify warnings and errors.
         mainConfigFile: `js/profile-${name}.js`,
         name: `profile-${name}`,
-        optimize: "uglify",
+        optimize: "none",
         preserveLicenseComments: false,
         useStrict: true,
       };
