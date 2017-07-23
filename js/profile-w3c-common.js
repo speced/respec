@@ -46,6 +46,7 @@ define(
     "deps/domReady",
     "core/base-runner",
     "core/ui",
+    "w3c/defaults",
     "core/aria",
     "core/style",
     "w3c/style",
@@ -89,7 +90,7 @@ define(
     "core/webidl-clipboard",
     "core/data-tests",
     /*Linter must be the last thing to run*/
-    "w3c/linter",
+    "core/linter",
   ],
   function(domReady, runner, ui) {
     ui = ui.ui;
