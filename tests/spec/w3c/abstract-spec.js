@@ -13,8 +13,6 @@ describe("W3C — Abstract", () => {
     const span = abs.querySelector("h2 span");
     expect(h2).toBeTruthy();
     expect(h2.textContent).toEqual("Abstract");
-    expect(span.getAttribute("resource")).toEqual("xhv:heading");
-    expect(span.getAttribute("property")).toEqual("xhv:role");
     expect(abs.classList.contains("introductory")).toBeTruthy();
     expect(abs.querySelector("p")).toBeTruthy();
   });
