@@ -424,8 +424,7 @@ export function run(conf, doc, cb) {
     );
   }
   //headersTmpl
-  var bp;
-  bp = headersTmpl(conf);
+  var bp = headersTmpl(conf);
   $("body", doc).prepend($(bp)).addClass("h-entry");
   //SotD
   var sotd =
@@ -453,7 +452,7 @@ export function run(conf, doc, cb) {
     conf.additionalContent = additionalContent.innerHTML;
     // Whatever sections are left, we throw at the end.
     conf.additionalSections = sotdClone.innerHTML;
-    return tmpls[conf.isCGBG ? "cgbg-sotd.html" : "sotd.html"](conf);
+    return tmpls["sotd.html"](conf);
   }
   cb();
 }
