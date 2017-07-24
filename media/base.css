@@ -43,9 +43,9 @@
  *   - ::before styled for CSS-generated issue/example/figure numbers:
  *     -> Documents wishing to use this only need to add
  *        figcaption::before,
- *        .caption::before { content: "Figure "  counter(figure);  }
- *        .example::before { content: "Example " counter(example); }
- *        .issue::before   { content: "Issue "   counter(issue);   }
+ *        .caption::before { content: "Figure "  counter(figure) " ";  }
+ *        .example::before { content: "Example " counter(example) " "; }
+ *        .issue::before   { content: "Issue "   counter(issue) " ";   }
  *
  * Header Stuff (ignore, just don't conflict with these classes)
  *   - .head for the header
@@ -97,7 +97,7 @@
 
 /** Header ********************************************************************/
 
-    div.head { margin-bottom: 1em }
+    div.head { margin-bottom: 1em; }
     div.head hr { border-style: solid; }
 
     div.head h1 {
@@ -106,7 +106,7 @@
         font-size: 220%;
     }
 
-    div.head h2 { margin-bottom: 1.5em;}
+    div.head h2 { margin-bottom: 1.5em; }
 
 /** Geonovum Logo *************************************************************/
 
@@ -120,9 +120,24 @@
         margin: 0.4rem 0 0.2rem .4rem;
     }
 
+    .head img[src*="logos/Geonovum"] {
+        display: block;
+        border: solid #1a5e9a;
+        border-width: .65rem .7rem .6rem;
+        border-radius: .4rem;
+        background: #1a5e9a;
+        color: white;
+        font-weight: bold;
+    }
+    
     .head a:hover > img[src*="logos/Geonovum"],
     .head a:focus > img[src*="logos/Geonovum"] {
         opacity: .8;
+    }
+
+    .head a:active > img[src*="logos/Geonovum"] {
+        background: #c00;
+        border-color: #c00;
     }
 
     /* see also additional rules in Link Styling section */
@@ -130,7 +145,7 @@
 /** Copyright *****************************************************************/
 
     p.copyright,
-    p.copyright small { font-size: small }
+    p.copyright small { font-size: small; }
     
     .copyright a[href],  .copyright a[href]:hover {
         border: none;
@@ -353,7 +368,7 @@
 
 /** Section divider ***********************************************************/
 
-    :not(.head) > hr {
+    :not(.head) > :not(.head) + hr {
         font-size: 1.5em;
         text-align: center;
         margin: 1em auto;
@@ -451,7 +466,7 @@
 /** Change Marking ************************************************************/
 
     del { color: red;  text-decoration: line-through; }
-    ins { color: #080; text-decoration: underline;    }
+    ins { color: #080; text-decoration: underline; }
 
 /** Miscellaneous improvements to inline formatting ***************************/
 
@@ -545,7 +560,7 @@
         text-align: center;
         margin: 2.5em 0;
     }
-    .figure img,    .sidefigure img,    figure img,
+    .figure img, .sidefigure img, figure img,
     .figure object, .sidefigure object, figure object {
         max-width: 100%;
         margin: auto;
@@ -858,10 +873,10 @@
     }
 
     /* A footnote at the bottom of a def table */
-    table.def           td.footnote {
+    table.def td.footnote {
         padding-top: 0.6em;
     }
-    table.def           td.footnote::before {
+    table.def td.footnote::before {
         content: " ";
         display: block;
         height: 0.6em;
@@ -1087,7 +1102,7 @@ Possible extra rowspan handling
     /* Index Lists: Layout */
     ul.index       { margin-left: 0; columns: 15em; text-indent: 1em hanging; }
     ul.index li    { margin-left: 0; list-style: none; break-inside: avoid; }
-    ul.index li li { margin-left: 1em }
+    ul.index li li { margin-left: 1em; }
     ul.index dl    { margin-top: 0; }
     ul.index dt    { margin: .2em 0 .2em 20px;}
     ul.index dd    { margin: .2em 0 .2em 40px;}
@@ -1097,7 +1112,8 @@ Possible extra rowspan handling
     @media not print {
         ul.index li span {
             white-space: nowrap;
-            color: transparent; }
+            color: transparent;
+        }
         ul.index li a:hover + span,
         ul.index li a:focus + span {
             color: #707070;
@@ -1153,9 +1169,7 @@ Possible extra rowspan handling
 /******************************************************************************/
 
     /* This rule is inherited from past style sheets. No idea what it's for. */
-    .hide { display: none }
-
-
+    .hide { display: none; }
 
 /******************************************************************************/
 /*                             Overflow Control                               */
