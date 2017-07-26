@@ -23,6 +23,7 @@
     "chai": "^4.1.1",
     "clipboard": "^1.7.1",
     "domReady": "github:requirejs/domReady",
+    "eslint-plugin-jasmine": "^2.8.3",
     "glob": "^7.1.2",
     "handlebars": "^4.0.10",
     "http-server": "^0.10.0",
