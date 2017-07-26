@@ -399,16 +399,10 @@ export function run(conf, doc, cb) {
   conf.isBasic = conf.specStatus === "base";
   conf.isRegular = !conf.isCGBG && !conf.isBasic;
   if (!conf.specStatus) {
-    conf.specStatus = "unofficial";
     pub("error", "Missing required configuration: `specStatus`");
   }
   if (conf.isRegular && !conf.shortName) {
     pub("error", "Missing required configuration: `shortName`");
-  }
-  if (conf.specStatus === "preview") {
-    conf.isPreview = true;
-    conf.isUnofficial = true;
-    conf.isRecTrack = false;
   }
   conf.title = doc.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
