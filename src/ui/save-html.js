@@ -12,7 +12,7 @@ export const name = "ui/save-html";
 
 var msg,
   doc = document,
-  conf = window.respecConfig;
+  conf = respecConfig;
 
 const button = ui.addCommand(
   l10n[lang].save_snapshot,
