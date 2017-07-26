@@ -114,7 +114,7 @@ export function run(conf, doc, cb) {
       $ant.replaceWith($ant.contents());
     }
   });
-  linkInlineCitations(doc).then(function() {
+  linkInlineCitations(doc, conf).then(function() {
     // done linking, so clean up
     function attrToDataAttr(name) {
       return function(elem) {

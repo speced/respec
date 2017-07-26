@@ -1,7 +1,7 @@
 /// Module ui/dfn-list
 // Displays all definitions with links to the defining element.
 import { ui } from "core/ui";
-import hyperHTML from "deps/hyperhtml";
+import "deps/hyperhtml";
 import { l10n, lang } from "core/l10n";
 
 const button = ui.addCommand(
@@ -21,7 +21,7 @@ ul.addEventListener("click", ev => {
 });
 
 function show() {
-  const definitionLinks = Object.entries(window.respecConfig.definitionMap)
+  const definitionLinks = Object.entries(respecConfig.definitionMap)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([key, $dfn]) => {
       const dfn = $dfn[0];
