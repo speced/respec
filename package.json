@@ -84,7 +84,7 @@
     "express": "^4.15.3",
     "fs-extra": "^4.0.0",
     "highlight.js": "github:marcoscaceres/highlight.js",
-    "hyperhtml": "^0.15.8",
+    "hyperhtml": "^0.16.0",
     "loading-indicator": "^2.0.0",
     "marcosc-async": "^4.0.3",
     "marked": "^0.3.6",
