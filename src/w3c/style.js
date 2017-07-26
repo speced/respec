@@ -131,6 +131,7 @@ export function run(conf, doc, cb) {
     case "FPWD-NOTE":
       styleFile += "WG-NOTE.css";
       break;
+    case "PREVIEW":
     case "UNOFFICIAL":
       styleFile += "UD";
       break;
