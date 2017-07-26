@@ -539,23 +539,27 @@ export function run(conf, doc, cb) {
   });
   conf.multipleAlternates =
     conf.alternateFormats && conf.alternateFormats.length > 1;
-  conf.alternatesHTML = conf.alternateFormats && joinAnd(conf.alternateFormats, function(alt) {
-    var optional = alt.hasOwnProperty("lang") && alt.lang
-      ? " hreflang='" + alt.lang + "'"
-      : "";
-    optional += alt.hasOwnProperty("type") && alt.type
-      ? " type='" + alt.type + "'"
-      : "";
-    return (
-      "<a rel='alternate' href='" +
-      alt.uri +
-      "'" +
-      optional +
-      ">" +
-      alt.label +
-      "</a>"
-    );
-  });
+  conf.alternatesHTML =
+    conf.alternateFormats &&
+    joinAnd(conf.alternateFormats, function(alt) {
+      var optional =
+        alt.hasOwnProperty("lang") && alt.lang
+          ? " hreflang='" + alt.lang + "'"
+          : "";
+      optional +=
+        alt.hasOwnProperty("type") && alt.type
+          ? " type='" + alt.type + "'"
+          : "";
+      return (
+        "<a rel='alternate' href='" +
+        alt.uri +
+        "'" +
+        optional +
+        ">" +
+        alt.label +
+        "</a>"
+      );
+    });
   if (conf.bugTracker) {
     if (conf.bugTracker["new"] && conf.bugTracker.open) {
       conf.bugTrackerHTML =
