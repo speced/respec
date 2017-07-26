@@ -14,6 +14,12 @@ const meta = {
     howToFix: "Add a `h2-6` to the offending section or use a `<div>`.",
     help: "See developer console.",
   },
+  nl: {
+    description: "Alle secties moeten beginnen met een `h2-6` element.",
+    howToFix:
+      "Voeg een `h2-6` toe aan de conflicterende sectie of gebruik een `<div>`.",
+    help: "Zie de developer console.",
+  },
 };
 
 // Fall back to english, if language is missing
