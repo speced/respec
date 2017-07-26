@@ -935,10 +935,10 @@ describe("W3C — Headers", function() {
       expect(aElem).toEqual(null);
     }).then(done);
   });
-  it("treats 'preview' as unoffical and adds annoying warning", done => {
+  it("adds annoying warning when isPreview", done => {
     var ops = makeStandardOps();
     var newProps = {
-      specStatus: "preview",
+      isPreview: true,
       shortName: "whatever",
     };
     Object.assign(ops.config, newProps);
