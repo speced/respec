@@ -935,6 +935,19 @@ describe("W3C — Headers", function() {
       expect(aElem).toEqual(null);
     }).then(done);
   });
+  it("treats 'preview' as unoffical and adds annoying warning", done => {
+    var ops = makeStandardOps();
+    var newProps = {
+      specStatus: "preview",
+      shortName: "whatever",
+    };
+    Object.assign(ops.config, newProps);
+    makeRSDoc(ops, doc => {
+      // has details with annoying annoying warning
+      const aElem = doc.querySelector(`#sotd details.annoying-warning[open]`);
+      expect(aElem).toBeTruthy();
+    }).then(done);
+  });
   // See https://github.com/w3c/respec/issues/653
   xit("should state that the spec is destined to become a note", function(
     done
