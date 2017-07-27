@@ -2,9 +2,10 @@
 // Search Specref database
 import { ui } from "core/ui";
 import { wireReference } from "core/biblio";
+import { l10n, lang } from "core/l10n";
 
 const button = ui.addCommand(
-  "Search Specref",
+  l10n[lang].search_specref,
   "ui/search-specref",
   "Ctrl+Shift+Alt+space",
   "🔎"
@@ -116,7 +117,7 @@ form.addEventListener("submit", async ev => {
 
 function show() {
   render();
-  ui.freshModal("Search Specref", form, button);
+  ui.freshModal(l10n[lang].search_specref, form, button);
   form.querySelector("input[type=search]").focus();
 }
 
