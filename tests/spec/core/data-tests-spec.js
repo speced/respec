@@ -59,6 +59,7 @@ describe("Core — data-tests attribute", () => {
       );
       expect(items.length).toEqual(4);
       for (let i = 0; i < items.length; i++) {
+        expect(items[i].origin).toEqual("https://wpt.fyi");
         expect(items[i].pathname.endsWith(`test${i}.html`)).toBe(true);
       }
     });
