@@ -1,6 +1,6 @@
 "use strict";
 // Hide document, because we are about to change it radically.
-if("body" in document) {
+if ("body" in document) {
   document.body.hidden = true;
 } else {
   document.addEventListener(
