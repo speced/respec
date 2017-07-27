@@ -87,6 +87,7 @@ define(
     "w3c/seo",
     "core/highlight",
     "core/webidl-clipboard",
+    "core/data-tests",
     /*Linter must be the last thing to run*/
     "w3c/linter",
   ],

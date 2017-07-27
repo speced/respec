@@ -3,13 +3,10 @@
  * Robin Berjon - http://berjon.com/
  *****************************************************************/
 
-
 /* Override code highlighter background */
-
 .hljs {
   background: transparent !important;
 }
-
 
 /* --- INLINES --- */
 
@@ -54,13 +51,12 @@ cite .bibref {
 }
 
 code {
-  color: #C83500;
+  color: #c83500;
 }
 
 th code {
   color: inherit;
 }
-
 
 /* --- TOC --- */
 
@@ -83,7 +79,6 @@ ol.tof {
   margin-top: 0.5em;
   font-style: italic;
 }
-
 
 /* --- TABLE --- */
 
@@ -115,7 +110,6 @@ table.simple {
   background: #f0f6ff;
 }
 
-
 /* --- DL --- */
 
 .section dd > p:first-child {
@@ -135,7 +129,7 @@ table.simple {
   margin-bottom: 0;
 }
 
-#issue-summary>ul,
+#issue-summary > ul,
 .respec-dfn-list {
   column-count: 2;
 }
@@ -143,6 +137,27 @@ table.simple {
 #issue-summary li,
 .respec-dfn-list li {
   list-style: none;
+}
+
+details.respec-tests-details {
+  margin-left: 1em;
+  display: inline-block;
+  vertical-align: top;
+  padding-right: 2em;
+  padding-left: .2em;
+}
+
+details.respec-tests-details[open] {
+  background-color: #eee;
+}
+
+details.respec-tests-details > ul {
+  width: 100%;
+  margin-top: -0.3em;
+}
+
+details.respec-tests-details > li {
+  padding-left: 1em;
 }
 
 @media print {
