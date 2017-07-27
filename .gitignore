@@ -73,15 +73,10 @@ js/geonovum/ui/about-respec.js
 js/geonovum/ui/dfn-list.js
 js/geonovum/ui/save-html.js
 js/geonovum/ui/search-specref.js
-js/geonovum/abstract.js
-js/geonovum/aria.js
-js/geonovum/conformance.js
 js/geonovum/headers.js
 js/geonovum/informative.js
 js/geonovum/l10n.js
 js/geonovum/leafletfigures.js
 js/geonovum/linter.js
-js/geonovum/permalinks.js
-js/geonovum/rfc2119.js
 js/geonovum/seo.js
 js/geonovum/style.js
