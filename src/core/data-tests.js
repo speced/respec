@@ -6,7 +6,7 @@
  *
  * `data-tests` takes a space separated list of URLs, e.g. data-test="foo.html bar.html".
  *
- * Docs:
+ * Docs: https://github.com/w3c/respec/wiki/data-tests
  */
 import { pub } from "core/pubsubhub";
 import { lang as defaultLang } from "core/l10n";
