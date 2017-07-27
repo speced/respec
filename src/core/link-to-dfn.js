@@ -57,7 +57,8 @@ export function run(conf, doc, cb) {
         if (dfn[0].dataset.cite) {
           $ant[0].dataset.cite = dfn[0].dataset.cite;
         } else {
-          $ant.attr("href", "#" + dfn.prop("id")).addClass("internalDFN");
+          const frag = "#" + encodeURIComponent(dfn.prop("id"));
+          $ant.attr("href", frag).addClass("internalDFN");
         }
         // add a bikeshed style indication of the type of link
         if (!$ant.attr("data-link-type")) {
@@ -113,7 +114,7 @@ export function run(conf, doc, cb) {
       $ant.replaceWith($ant.contents());
     }
   });
-  linkInlineCitations(doc).then(function() {
+  linkInlineCitations(doc, conf).then(function() {
     // done linking, so clean up
     function attrToDataAttr(name) {
       return function(elem) {

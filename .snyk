@@ -11,6 +11,10 @@ patch:
         patched: '2017-03-29T09:01:37.856Z'
     - marked:
         patched: '2017-06-07T09:43:11.088Z'
+    - marked:
+        patched: '2017-07-20T02:06:37.369Z'
   'npm:ms:20170412':
     - nightmare > electron > extract-zip > debug > ms:
         patched: '2017-06-07T09:43:11.088Z'
+    - nightmare > electron > extract-zip > debug > ms:
+        patched: '2017-07-20T02:06:37.369Z'
