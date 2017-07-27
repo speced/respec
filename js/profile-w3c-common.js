@@ -1,6 +1,6 @@
 "use strict";
 // Hide document, because we are about to change it radically.
-if (document.body) {
+if ("body" in document) {
   document.body.hidden = true;
 } else {
   document.addEventListener(
@@ -87,6 +87,7 @@ define(
     "w3c/seo",
     "core/highlight",
     "core/webidl-clipboard",
+    "core/data-tests",
     /*Linter must be the last thing to run*/
     "w3c/linter",
   ],
