@@ -1,4 +1,16 @@
 <h2>{{l10n.sotd}}</h2>
+{{#if isPreview}}
+  <details class="annoying-warning" open="">
+    <summary>This is a preview</summary>
+    <p>
+      Do not attempt to implement this version of the specification. Do not reference this
+      version as authoritative in any way.
+      {{#if edDraftURI}}
+        Instead, see <a href="{{edDraftURI}}">{{edDraftURI}}</a> for the Editor's draft.
+      {{/if}}
+    </p>
+  </details>
+{{/if}}
 {{#if isUnofficial}}
   <p>
     This document is draft of a potential specification. It has no official standing of
