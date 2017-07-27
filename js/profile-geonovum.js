@@ -87,7 +87,7 @@ define(
     "ui/dfn-list",
     "ui/save-html",
     "ui/search-specref",
-    // "geonovum/seo",
+    "geonovum/seo",
     "core/highlight",
     // /*Linter must be the last thing to run*/
     "geonovum/linter",
