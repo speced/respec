@@ -61,7 +61,7 @@ export function unsub({ topic, cb }) {
 }
 
 sub("error", err => {
-  console.error(err.stack || err);
+  console.error(err, err.stack);
 });
 
 sub("warn", str => {

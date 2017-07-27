@@ -2,7 +2,7 @@ import { sub } from "core/pubsubhub";
 
 export const name = "core/aria";
 
-if (document.body) {
+if ("body" in document) {
   document.body.setAttribute("aria-busy", "true");
 } else {
   document.addEventListener(
