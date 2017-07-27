@@ -1,6 +1,6 @@
 "use strict";
 // Hide document, because we are about to change it radically.
-if ("body" in document) {
+if ("body" in document && document.body) {
   document.body.hidden = true;
 } else {
   document.addEventListener(
@@ -79,7 +79,7 @@ define(
     "geonovum/permalinks",
     "core/id-headers",
     "core/rdfa",
-    // "geonovum/aria",
+    "w3c/aria",
     // "core/shiv",
     "core/location-hash",
     "geonovum/leafletfigures",
