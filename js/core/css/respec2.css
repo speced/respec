@@ -143,12 +143,26 @@ details.respec-tests-details {
   margin-left: 1em;
   display: inline-block;
   vertical-align: top;
+}
+
+details.respec-tests-details > * {
   padding-right: 2em;
-  padding-left: .2em;
 }
 
 details.respec-tests-details[open] {
-  background-color: #eee;
+  z-index: 999999;
+  position: absolute;
+  border: thin solid #cad3e2;
+  border-radius: .3em;
+  background-color: white;
+  padding-bottom: .5em;
+}
+
+details.respec-tests-details[open] > summary {
+  border-bottom: thin solid #cad3e2;
+  padding-left: 1em;
+  margin-bottom: 1em;
+  line-height: 2em;
 }
 
 details.respec-tests-details > ul {
