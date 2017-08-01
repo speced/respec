@@ -51,6 +51,13 @@ function createStyle(css_name) {
   return link;
 }
 
+// add favicon
+const favicon = document.createElement("link");
+favicon.rel = "shortcut icon";
+favicon.type = "image/x-icon";
+favicon.href =
+  "https://tools.geostandaarden.nl/respec/style/logos/Geonovum.ico";
+
 function createResourceHints() {
   const resourceHints = [
     {
@@ -136,5 +143,7 @@ export function run(conf, doc, cb) {
   }
   const finalStyleURL = `https://tools.geostandaarden.nl/respec/style/${styleFile}`;
   linkCSS(doc, finalStyleURL);
+  const head = doc.querySelector("head");
+  head.appendChild(favicon);
   cb();
 }
