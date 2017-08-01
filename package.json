@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "15.7.3",
+  "version": "15.7.4",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -26,7 +26,7 @@
     "glob": "^7.1.2",
     "handlebars": "^4.0.10",
     "http-server": "^0.10.0",
-    "jasmine-core": "^2.6.4",
+    "jasmine-core": "^2.7.0",
     "jasmine-reporters": "^2.2.1",
     "jquery": "^3.2.1",
     "js-beautify": "^1.6.14",
@@ -45,12 +45,12 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-safaritechpreview-launcher": "0.0.6",
     "karma-verbose-summary-reporter": "0.0.1",
-    "mocha": "^3.4.2",
+    "mocha": "^3.5.0",
     "moment": "^2.18.1",
     "requirejs": "^2.3.4",
     "text": "github:requirejs/text",
-    "uglify-es": "^3.0.26",
-    "url-search-params": "^0.9.0",
+    "uglify-es": "^3.0.27",
+    "url-search-params": "^0.10.0",
     "webidl2": "^4.1.0"
   },
   "scripts": {
@@ -82,15 +82,15 @@
     "command-line-usage": "^4.0.0",
     "epipebomb": "^1.0.0",
     "express": "^4.15.3",
-    "fs-extra": "^4.0.0",
+    "fs-extra": "^4.0.1",
     "highlight.js": "github:marcoscaceres/highlight.js",
-    "hyperhtml": "^0.16.0",
+    "hyperhtml": "^0.17.4",
     "loading-indicator": "^2.0.0",
     "marcosc-async": "^4.0.3",
     "marked": "^0.3.6",
     "nightmare": "^2.10.0",
     "prompt": "^1.0.0",
-    "snyk": "^1.36.2"
+    "snyk": "^1.37.0"
   },
   "snyk": true
 }
