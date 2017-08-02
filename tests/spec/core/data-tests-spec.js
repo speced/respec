@@ -1,7 +1,7 @@
 "use strict";
 describe("Core — data-tests attribute", () => {
   let doc;
-  beforeAll(done => {
+  beforeAll(async () => {
     const ops = {
       config: makeBasicConfig(),
       body:
@@ -16,16 +16,9 @@ describe("Core — data-tests attribute", () => {
         </section>`,
     };
     ops.config.testSuiteURI = "https://wpt.fyi/respec/";
-    makeRSDoc(ops).then(testDoc => {
-      doc = testDoc;
-      done();
-    });
+    doc = await makeRSDoc(ops);
   });
-  afterAll(done => {
-    flushIframes();
-    done();
-  });
-
+  afterAll(flushIframes);
   it("deletes the data-tests attribute after processing", () => {
     const testable = doc.getElementById("testable");
     expect(testable.hasAttribute("data-tests")).toBe(false);
@@ -34,9 +27,12 @@ describe("Core — data-tests attribute", () => {
     it("gets generated and added", () => {
       expect(doc.querySelector("#testable > details")).toBeTruthy();
     });
-    it(`includes the css class`, () => {
+    it(`includes the css classes`, () => {
       expect(
         doc.querySelector("#testable > details.respec-tests-details")
+      ).toBeTruthy();
+      expect(
+        doc.querySelector("#testable > details.removeOnSave")
       ).toBeTruthy();
     });
   });
@@ -58,10 +54,10 @@ describe("Core — data-tests attribute", () => {
         doc.querySelectorAll("#testable > .respec-tests-details > ul > li > a")
       );
       expect(items.length).toEqual(4);
-      for (let i = 0; i < items.length; i++) {
-        expect(items[i].origin).toEqual("https://wpt.fyi");
-        expect(items[i].pathname.endsWith(`test${i}.html`)).toBe(true);
-      }
+      items.forEach(({ origin, pathname }, i) => {
+        expect(origin).toEqual("https://wpt.fyi");
+        expect(pathname.endsWith(`test${i}.html`)).toBe(true);
+      });
     });
   });
 });
