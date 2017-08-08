@@ -202,7 +202,7 @@ export function normalizePadding(text = "") {
   }
 
   function isTextNode(node) {
-    return node.nodeType === Node.TEXT_NODE;
+    return node !== null && node.nodeType === Node.TEXT_NODE;
   }
   // Force into body
   var parserInput = "<body>" + text;
