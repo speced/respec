@@ -1,0 +1,37 @@
+{
+  "env": {
+    "jasmine": true,
+    "browser": true,
+    "es6": true,
+    "node": true,
+    "jquery": true,
+    "amd": true,
+    "worker": true
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 8,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "rules": {
+    "indent": 0,
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "double"],
+    "semi": ["error", "always"],
+    "no-console": 0
+  },
+  "globals": {
+    "flushIframes": true,
+    "hyperHTML": true,
+    "makeBasicConfig": true,
+    "makeDefaultBody": true,
+    "makeRSDoc": true,
+    "makeStandardOps": true,
+    "pickRandomsFromList": true,
+    "respecConfig": true
+  },
+  "plugins": ["jasmine"]
+}

@@ -24,9 +24,8 @@ function overrideConfig(config) {
         value = JSON.parse(decodedValue);
       } catch (err) {
         value = decodedValue;
-      } finally {
-        return { key, value };
       }
+      return { key, value };
     })
     .reduce((collector, { key, value }) => {
       collector[key] = value;
