@@ -10,5 +10,6 @@ describe("Core — Aria", () => {
     await doc.respecIsReady;
     expect(doc.body.getAttribute("aria-busy")).toBe("false");
     expect(doc.body.hidden).toBe(false);
+    expect(doc.body.hasAttribute("aria-live")).toBe(false);
   });
 });

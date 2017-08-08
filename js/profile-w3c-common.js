@@ -1,21 +1,7 @@
 "use strict";
-// Hide document, because we are about to change it radically.
-if ("body" in document && document.body) {
-  document.body.hidden = true;
-} else {
-  document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-      document.body.hidden = true;
-    },
-    { once: true }
-  );
-}
-
-// In case everything else fails, we always want to show the document
+// In case everything else fails, we want the error
 window.addEventListener("error", function(ev) {
-  console.error(ev.error, ev.message);
-  document.body.hidden = false;
+  console.error(ev.error, ev.message, ev);
 });
 
 // this is only set in a build, not at all in the dev environment
@@ -104,12 +90,9 @@ define(
         .then(document.respecIsReady)
         .then(function() {
           ui.enable();
-          document.body.hidden = false;
         })
         .catch(function(err) {
           console.error(err);
-          // In case processing fails, we still want to show the document.
-          document.body.hidden = false;
           // even if things go critically bad, we should still try to show the UI
           ui.enable();
         });
