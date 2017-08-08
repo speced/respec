@@ -1,5 +1,5 @@
 "use strict";
-fdescribe("Core — Aria", () => {
+describe("Core — Aria", () => {
   afterAll(flushIframes);
   it("shows the body and sets it to no longer busy after processing", async () => {
     const ops = {
