@@ -672,7 +672,7 @@ export function run(conf, doc, cb) {
   var wgPotentialArray = [conf.wg, conf.wgURI, conf.wgPatentURI];
   if (
     wgPotentialArray.some(item => Array.isArray(item)) &&
-    wgPotentialArray.every(item => Array.isArray(item))
+    !wgPotentialArray.every(item => Array.isArray(item))
   ) {
     pub(
       "error",
