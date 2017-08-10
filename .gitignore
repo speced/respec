@@ -7,6 +7,7 @@ examples/touchevents.html
 bevy.json
 .idea
 js/deps/*
+js/geonovum/deps/*
 !js/deps/highlight.js
 js/**/*.map
 js/*/linter-rules/
@@ -72,3 +73,12 @@ js/w3c/permalinks.js
 js/w3c/rfc2119.js
 js/w3c/seo.js
 js/w3c/style.js
+js/geonovum/ui/about-respec.js
+js/geonovum/ui/search-specref.js
+js/geonovum/headers.js
+js/geonovum/informative.js
+js/geonovum/l10n.js
+js/geonovum/leafletfigures.js
+js/geonovum/linter.js
+js/geonovum/seo.js
+js/geonovum/style.js

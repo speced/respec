@@ -1,0 +1,104 @@
+"use strict";
+// In case everything else fails, we always want to show the document
+window.addEventListener("error", function(ev) {
+  console.error(ev.error, ev.message, ev);
+});
+
+// this is only set in a build, not at all in the dev environment
+require.config({
+  shim: {
+    shortcut: {
+      exports: "shortcut",
+    },
+    highlight: {
+      exports: "hljs",
+    },
+    beautify: {
+      exports: "beautify",
+    },
+  },
+  paths: {
+    "beautify-css": "deps/beautify-css",
+    "beautify-html": "deps/beautify-html",
+    "handlebars.runtime": "deps/handlebars",
+    "deps/highlight": "https://www.w3.org/Tools/respec/respec-highlight",
+  },
+  deps: ["deps/hyperhtml", "deps/url-search-params", "geonovum/deps/leaflet"],
+});
+
+define(
+  [
+    // order is significant
+    "deps/domReady",
+    "core/base-runner",
+    "core/ui",
+    // "w3c/defaults",
+    "core/aria",
+    "core/style",
+    "geonovum/style",
+    "core/l10n",
+    "geonovum/l10n",
+    "core/github",
+    "core/data-include",
+    "core/markdown",
+    "geonovum/headers",
+    "w3c/abstract",
+    "w3c/conformance",
+    "core/data-transform",
+    "core/inlines",
+    "core/dfn",
+    // "w3c/rfc2119",
+    "core/examples",
+    "core/issues-notes",
+    "core/requirements",
+    "core/best-practices",
+    "core/figures",
+    // "core/webidl",
+    "core/data-cite",
+    "core/biblio",
+    // "core/webidl-index",
+    // "core/webidl-oldschool",
+    "core/link-to-dfn",
+    "core/contrib",
+    "core/fix-headers",
+    "core/structure",
+    "geonovum/informative",
+    "w3c/permalinks",
+    "core/id-headers",
+    "core/rdfa",
+    "w3c/aria",
+    // "core/shiv",
+    "core/location-hash",
+    "geonovum/leafletfigures",
+    "ui/about-respec",
+    "ui/dfn-list",
+    "ui/save-html",
+    "ui/search-specref",
+    "geonovum/seo",
+    "core/highlight",
+    // "core/webidl-clipboard",
+    // "core/data-tests",
+    /*Linter must be the last thing to run*/
+    "core/linter",
+  ],
+  function(domReady, runner, ui) {
+    ui = ui.ui;
+    var args = Array.from(arguments).filter(function(item) {
+      return item;
+    });
+    ui.show();
+    domReady(function() {
+      runner
+        .runAll(args)
+        .then(document.respecIsReady)
+        .then(function() {
+          ui.enable();
+        })
+        .catch(function(err) {
+          console.error(err);
+          // even if things go critically bad, we should still try to show the UI
+          ui.enable();
+        });
+    });
+  }
+);
