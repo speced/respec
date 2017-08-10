@@ -45,7 +45,6 @@ export function run(conf, doc, cb) {
     // Render details + ul, returns HTMLDetailsElement
     .map(elem => {
       const details = document.createElement("details");
-
       const renderer = hyperHTML.bind(details);
       const testURLs = elem.dataset.tests.split(/\s+/gm).map(url => {
         let href = "";
@@ -56,7 +55,7 @@ export function run(conf, doc, cb) {
         }
         return href;
       });
-      details.classList.add("respec-tests-details");
+      details.classList.add("respec-tests-details", "removeOnSave");
       renderer`
         <summary>
           tests: ${testURLs.length}

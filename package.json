@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "15.7.4",
+  "version": "15.8.2",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -20,9 +20,10 @@
     "babel-plugin-transform-es2015-modules-amd": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "babel-preset-stage-3": "^6.24.1",
-    "chai": "^4.1.0",
+    "chai": "^4.1.1",
     "clipboard": "^1.7.1",
     "domReady": "github:requirejs/domReady",
+    "eslint-plugin-jasmine": "^2.8.3",
     "glob": "^7.1.2",
     "handlebars": "^4.0.10",
     "http-server": "^0.10.0",
@@ -30,8 +31,6 @@
     "jasmine-reporters": "^2.2.1",
     "jquery": "^3.2.1",
     "js-beautify": "^1.6.14",
-    "jscs": "^3.0.7",
-    "jshint": "^2.9.5",
     "karma": "^1.7.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-detect-browsers": "^2.2.5",
@@ -65,12 +64,7 @@
     "hb:build-geo": "node ./tools/expandpaths.js -a js/geonovum/templates/*.html js/geonovum/templates/*.css | xargs handlebars -f js/templates.js",
     "hb:build": "node ./tools/expandpaths.js -a js/*/templates/*.html js/*/templates/*.css js/core/templates/webidl-contiguous/*.html | xargs handlebars -f js/templates.js",
     "highlight:build": "hljs -n --output js/deps/ xml javascript css http markdown json abnf && mv -f js/deps/highlight.pack.js js/deps/highlight.js",
-    "jscs:fix": "jscs --esnext --fix tests",
-    "jscs": "jscs --esnext tests tools",
-    "jshint": "jshint karma.conf.js",
     "karma": "karma start --single-run",
-    "prepublish": "npm run snyk-protect && npm run build",
-    "pretest": "npm run jshint && npm run jscs",
     "release": "node ./tools/release.js",
     "server": "npm start",
     "snyk-protect": "snyk protect",
@@ -85,7 +79,7 @@
     "command-line-args": "^4.0.6",
     "command-line-usage": "^4.0.0",
     "epipebomb": "^1.0.0",
-    "express": "^4.15.3",
+    "express": "^4.15.4",
     "fs-extra": "^4.0.1",
     "highlight.js": "github:marcoscaceres/highlight.js",
     "hyperhtml": "^0.17.4",
@@ -95,7 +89,7 @@
     "marked": "^0.3.6",
     "nightmare": "^2.10.0",
     "prompt": "^1.0.0",
-    "snyk": "^1.37.0"
+    "snyk": "^1.38.1"
   },
   "snyk": true
 }
