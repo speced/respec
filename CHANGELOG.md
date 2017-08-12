@@ -1,5 +1,120 @@
 # Change Log
 
+## [v15.7.3](https://github.com/w3c/respec/tree/v15.7.3) (2017-07-28)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.7.2...v15.7.3)
+
+**Merged pull requests:**
+
+- L10n [\#1341](https://github.com/w3c/respec/pull/1341) ([dhvenema](https://github.com/dhvenema))
+
+## [v15.7.2](https://github.com/w3c/respec/tree/v15.7.2) (2017-07-27)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.7.1...v15.7.2)
+
+**Merged pull requests:**
+
+- fix\(core/aria\): reduce chance of race condition [\#1340](https://github.com/w3c/respec/pull/1340) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.7.1](https://github.com/w3c/respec/tree/v15.7.1) (2017-07-27)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.7.0...v15.7.1)
+
+## [v15.7.0](https://github.com/w3c/respec/tree/v15.7.0) (2017-07-27)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.6.0...v15.7.0)
+
+**Fixed bugs:**
+
+- Random document.body races still occuring [\#1335](https://github.com/w3c/respec/issues/1335)
+
+**Merged pull requests:**
+
+- data-tests module [\#1338](https://github.com/w3c/respec/pull/1338) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix document.body race [\#1337](https://github.com/w3c/respec/pull/1337) ([dhvenema](https://github.com/dhvenema))
+
+## [v15.6.0](https://github.com/w3c/respec/tree/v15.6.0) (2017-07-27)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.5.1...v15.6.0)
+
+**Closed issues:**
+
+- Add special status for diff previews [\#1126](https://github.com/w3c/respec/issues/1126)
+
+**Merged pull requests:**
+
+- Adds "preview" status, for @tobie previews [\#1334](https://github.com/w3c/respec/pull/1334) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.5.1](https://github.com/w3c/respec/tree/v15.5.1) (2017-07-26)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.5.0...v15.5.1)
+
+**Closed issues:**
+
+- Convert moar things to ES6 [\#1165](https://github.com/w3c/respec/issues/1165)
+
+**Merged pull requests:**
+
+- fix: window.respecConf missing when using const [\#1333](https://github.com/w3c/respec/pull/1333) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.5.0](https://github.com/w3c/respec/tree/v15.5.0) (2017-07-21)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.4.1...v15.5.0)
+
+**Merged pull requests:**
+
+- Shortname from gh [\#1330](https://github.com/w3c/respec/pull/1330) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.4.1](https://github.com/w3c/respec/tree/v15.4.1) (2017-07-20)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.4.0...v15.4.1)
+
+**Fixed bugs:**
+
+- Fragment identifiers end up with invalid characters.  [\#1327](https://github.com/w3c/respec/issues/1327)
+
+**Merged pull requests:**
+
+- Fix linking [\#1329](https://github.com/w3c/respec/pull/1329) ([marcoscaceres](https://github.com/marcoscaceres))
+- \[Snyk\] Fix for 2 vulnerable dependency paths [\#1328](https://github.com/w3c/respec/pull/1328) ([snyk-bot](https://github.com/snyk-bot))
+
+## [v15.4.0](https://github.com/w3c/respec/tree/v15.4.0) (2017-07-19)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.3.0...v15.4.0)
+
+**Closed issues:**
+
+- No translations link? [\#1323](https://github.com/w3c/respec/issues/1323)
+
+**Merged pull requests:**
+
+- Fix bad usage of hyperHTML [\#1325](https://github.com/w3c/respec/pull/1325) ([marcoscaceres](https://github.com/marcoscaceres))
+- Add link to translations when REC [\#1324](https://github.com/w3c/respec/pull/1324) ([marcoscaceres](https://github.com/marcoscaceres))
+- L10n ui [\#1322](https://github.com/w3c/respec/pull/1322) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.3.0](https://github.com/w3c/respec/tree/v15.3.0) (2017-07-18)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.2.2...v15.3.0)
+
+**Closed issues:**
+
+- Respec License [\#1317](https://github.com/w3c/respec/issues/1317)
+
+**Merged pull requests:**
+
+- feat\(ui/save-html\): allow scripts to add things before save [\#1321](https://github.com/w3c/respec/pull/1321) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(LICENSE\): add LICENSE.md file \(closes \#1317\) [\#1320](https://github.com/w3c/respec/pull/1320) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.2.2](https://github.com/w3c/respec/tree/v15.2.2) (2017-07-17)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.2.1...v15.2.2)
+
+**Merged pull requests:**
+
+- Improve offline handling [\#1319](https://github.com/w3c/respec/pull/1319) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.2.1](https://github.com/w3c/respec/tree/v15.2.1) (2017-07-10)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.2.0...v15.2.1)
+
+**Closed issues:**
+
+- linter.js crashes on MS Edge due to use ":scope" selector [\#1314](https://github.com/w3c/respec/issues/1314)
+- Spec rendering borked in Edge due to unwrapped "querySelectorAll" calls [\#1313](https://github.com/w3c/respec/issues/1313)
+
+**Merged pull requests:**
+
+- fix\(w3c/linter\): implement alt to CSS :scope \(fixes \#1314\) [\#1316](https://github.com/w3c/respec/pull/1316) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix: wrap querySelectorAll in Array.from \(closes \#1313\) [\#1315](https://github.com/w3c/respec/pull/1315) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v15.2.0](https://github.com/w3c/respec/tree/v15.2.0) (2017-07-06)
 [Full Changelog](https://github.com/w3c/respec/compare/v15.1.3...v15.2.0)
 

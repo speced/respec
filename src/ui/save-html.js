@@ -12,7 +12,7 @@ export const name = "ui/save-html";
 
 var msg,
   doc = document,
-  conf = window.respecConfig;
+  conf = respecConfig;
 
 const button = ui.addCommand(
   l10n[lang].save_snapshot,
@@ -99,7 +99,7 @@ const save = {
     // HTML
     addButton({
       id: "respec-save-as-html",
-      title: "Save as HTML",
+      title: `${l10n[lang].save_as} HTML`,
       url: this.htmlToDataURL(this.toString()),
       popupContent() {
         self.toHTMLSource();
@@ -114,7 +114,7 @@ const save = {
       popupContent() {
         self.toXHTMLSource();
       },
-      title: "Save as XHTML5",
+      title: `${l10n[lang].save_as} XHTML5`,
       url: this.htmlToDataURL(this.toXML()),
     });
 
@@ -125,7 +125,7 @@ const save = {
       popupContent() {
         window.open(self.makeEPubHref(), "_blank");
       },
-      title: "Save as EPUB 3",
+      title: `${l10n[lang].save_as} EPUB 3`,
       type: "application/epub+zip",
       url: this.makeEPubHref(),
     });
@@ -136,7 +136,7 @@ const save = {
         ui.closeModal();
       });
     }
-    ui.freshModal("Save Snapshot", $div, button);
+    ui.freshModal(l10n[lang].save_snapshot, $div, button);
   },
   htmlToDataURL: function(data) {
     data = encodeURIComponent(data);

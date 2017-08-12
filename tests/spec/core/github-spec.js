@@ -21,7 +21,9 @@ describe("Core - Github", function() {
   };
   // these are set by makeBasicConfig(), but we are going to override them
   delete stringOpt.config.edDraftURI;
+  delete stringOpt.config.shortName;
   delete objOpt.config.edDraftURI;
+  delete objOpt.config.shortName;
   describe("respecConfig options", () => {
     function generateMembersTest(done, doc) {
       const { respecConfig: conf } = doc.defaultView;
@@ -31,6 +33,8 @@ describe("Core - Github", function() {
       expect(conf.issueBase).toEqual("https://github.com/w3c/respec/issues/");
       expect(conf.hasOwnProperty("edDraftURI")).toEqual(true);
       expect(conf.edDraftURI).toEqual("https://w3c.github.io/respec/");
+      expect(conf.hasOwnProperty("shortName")).toEqual(true);
+      expect(conf.shortName).toEqual("respec");
       done();
     }
     function doesntOverrideTest(done, doc) {
@@ -38,20 +42,22 @@ describe("Core - Github", function() {
       expect(conf.githubAPI).toEqual("https://test.com/githubAPI");
       expect(conf.issueBase).toEqual("https://test.com/issueBase");
       expect(conf.edDraftURI).toEqual("https://test.com/edDraftURI");
+      expect(conf.shortName).toEqual("dontOverrideThis");
       done();
     }
-    it("generates githubAPI, issueBase, edDraftURI members from string", done => {
+    it("generates githubAPI, issueBase, edDraftURI, shortName members from string", done => {
       makeRSDoc(stringOpt, doc => generateMembersTest(done, doc));
     });
-    it("generates githubAPI, issueBase, edDraftURI members from object", done => {
+    it("generates githubAPI, issueBase, edDraftURI, shortName members from object", done => {
       makeRSDoc(objOpt, doc => generateMembersTest(done, doc));
     });
     const dontOverrideTheseOps = {
       githubAPI: "https://test.com/githubAPI",
       issueBase: "https://test.com/issueBase",
       edDraftURI: "https://test.com/edDraftURI",
+      shortName: "dontOverrideThis",
     };
-    it("doesn't override githubAPI, issueBase, edDraftURI members if present (from string)", done => {
+    it("doesn't override githubAPI, issueBase, edDraftURI, shortName members if present (from string)", done => {
       const opts = {
         config: Object.assign(makeBasicConfig(), dontOverrideTheseOps, {
           github: "https://github.com/w3c/respec/",
@@ -59,7 +65,7 @@ describe("Core - Github", function() {
       };
       makeRSDoc(opts, doc => doesntOverrideTest(done, doc));
     });
-    it("doesn't override githubAPI, issueBase, edDraftURI members if present (from object)", done => {
+    it("doesn't override githubAPI, issueBase, edDraftURI, shortName members if present (from object)", done => {
       const opts = {
         config: Object.assign(makeBasicConfig(), dontOverrideTheseOps, {
           github: { repoURL: "https://github.com/w3c/respec/" },
