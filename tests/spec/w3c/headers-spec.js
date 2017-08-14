@@ -1,9 +1,6 @@
 "use strict";
 describe("W3C — Headers", function() {
-  afterEach(function(done) {
-    flushIframes();
-    done();
-  });
+  afterEach(flushIframes);
   var simpleSpecURL = "spec/core/simple.html";
   // prevRecShortname & prevRecURI
   it("should take prevRecShortname and prevRecURI into account", function(
@@ -275,6 +272,33 @@ describe("W3C — Headers", function() {
     makeRSDoc(ops, function(doc) {
       expect($("h2:contains('15 March 1977')", doc).length).toEqual(1);
     }).then(done);
+  });
+
+  // previousPublishDate & previousMaturity
+  it("recovers given bad date inputs", async () => {
+    let ISODate = await new Promise(resolve => {
+      require(["core/utils"], ({ ISODate }) => {
+        resolve(ISODate);
+      });
+    });
+
+    const ops = makeStandardOps();
+    const start = new Date(ISODate.format(Date.now())).valueOf();
+    const newProps = {
+      publishDate: "2117-0123-15",
+      previousPublishDate: "197-123131-15",
+      crEnd: "bad date",
+      prEnd: "next wednesday",
+      perEnd: "today",
+    };
+    Object.assign(ops.config, newProps);
+    const doc = await makeRSDoc(ops);
+    const end = Date.now();
+    const allInBetween = Object.keys(newProps).every(key => {
+      const value = doc.defaultView.respecConfig[key].valueOf();
+      return value <= end && value >= start;
+    });
+    expect(allInBetween).toBe(true);
   });
 
   // previousPublishDate & previousMaturity

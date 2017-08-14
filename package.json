@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "15.8.2",
+  "version": "15.8.3",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -23,7 +23,7 @@
     "chai": "^4.1.1",
     "clipboard": "^1.7.1",
     "domReady": "github:requirejs/domReady",
-    "eslint-plugin-jasmine": "^2.8.3",
+    "eslint-plugin-jasmine": "^2.8.4",
     "glob": "^7.1.2",
     "handlebars": "^4.0.10",
     "http-server": "^0.10.0",
@@ -73,13 +73,13 @@
   },
   "dependencies": {
     "colors": "^1.1.2",
-    "command-line-args": "^4.0.6",
-    "command-line-usage": "^4.0.0",
+    "command-line-args": "^4.0.7",
+    "command-line-usage": "^4.0.1",
     "epipebomb": "^1.0.0",
     "express": "^4.15.4",
     "fs-extra": "^4.0.1",
     "highlight.js": "github:marcoscaceres/highlight.js",
-    "hyperhtml": "^0.17.4",
+    "hyperhtml": "^1.0.2",
     "loading-indicator": "^2.0.0",
     "marcosc-async": "^4.0.3",
     "marked": "^0.3.6",
