@@ -26,12 +26,12 @@ const lang = defaultLang in meta ? defaultLang : "en";
 function lintingFunction(conf, doc) {
   // We can only really perform this check over http/https
   if (!doc.location.href.startsWith("http")) {
-    return;
+    return [];
   }
   const offendingMembers = Object.getOwnPropertyNames(conf)
     // this check is cheap, "prevED" is w3c exception.
     .filter(key => key.endsWith("URI") || key === "prevED")
-    // this check is expensive, so seperate step
+    // this check is expensive, so separate step
     .filter(key =>
       new URL(conf[key], doc.location.href).href.startsWith("http://")
     )
@@ -41,7 +41,7 @@ function lintingFunction(conf, doc) {
   }
   const result = {
     name,
-    occurances: offendingMembers.length,
+    occurrences: offendingMembers.length,
     ...meta[lang],
   };
   result.howToFix +=
