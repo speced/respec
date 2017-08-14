@@ -50,11 +50,5 @@ export function run(conf, doc, cb) {
     linkElem.setAttribute("href", conf.canonicalURI);
     doc.head.appendChild(linkElem);
   }
-  var metaDescription = doc.querySelector("#abstract p:first-of-type")
-    .textContent;
-  var metaElem = doc.createElement("meta");
-  metaElem.name = "description";
-  metaElem.content = metaDescription;
-  doc.head.appendChild(metaElem);
   cb();
 }
