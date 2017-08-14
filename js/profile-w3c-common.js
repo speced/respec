@@ -71,6 +71,7 @@ define(
     "ui/dfn-list",
     "ui/save-html",
     "ui/search-specref",
+    "core/seo",
     "w3c/seo",
     "core/highlight",
     "core/webidl-clipboard",
