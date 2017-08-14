@@ -1,5 +1,6 @@
 // Module ui/about-respec
 // A simple about dialog with pointer to the help
+import "deps/hyperhtml";
 import { ui } from "core/ui";
 import { l10n, lang } from "core/l10n";
 
