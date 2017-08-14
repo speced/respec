@@ -30,6 +30,7 @@
   "spec/core/remove-respec-spec.js",
   "spec/core/requirements-spec.js",
   "spec/core/section-refs-spec.js",
+  "spec/core/seo-spec.js",
   "spec/core/structure-spec.js",
   "spec/core/style-spec.js",
   "spec/core/ui-spec.js",
