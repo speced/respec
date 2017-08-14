@@ -1,5 +1,22 @@
 # Change Log
 
+## [v15.7.3](https://github.com/w3c/respec/tree/v15.7.3) (2017-07-28)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.7.2...v15.7.3)
+
+**Merged pull requests:**
+
+- L10n [\#1341](https://github.com/w3c/respec/pull/1341) ([dhvenema](https://github.com/dhvenema))
+
+## [v15.7.2](https://github.com/w3c/respec/tree/v15.7.2) (2017-07-27)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.7.1...v15.7.2)
+
+**Merged pull requests:**
+
+- fix\(core/aria\): reduce chance of race condition [\#1340](https://github.com/w3c/respec/pull/1340) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.7.1](https://github.com/w3c/respec/tree/v15.7.1) (2017-07-27)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.7.0...v15.7.1)
+
 ## [v15.7.0](https://github.com/w3c/respec/tree/v15.7.0) (2017-07-27)
 [Full Changelog](https://github.com/w3c/respec/compare/v15.6.0...v15.7.0)
 
