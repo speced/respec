@@ -83,8 +83,11 @@ function decorateDocument(doc, opts) {
   }
 
   function decorateBody(opts) {
-    var bodyText =
-      opts.abstract || "<section id='abstract'><p>test abstract</p></section>";
+    var bodyText = `
+      <section id='abstract'>
+        ${opts.abstract === undefined ? "<p>test abstract</p>" : opts.abstract}
+      </section>
+    `;
     if (opts.body) {
       bodyText = bodyText.concat(opts.body);
     }
