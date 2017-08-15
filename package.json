@@ -53,7 +53,7 @@
     "webidl2": "^4.1.0"
   },
   "scripts": {
-    "babel:build": "babel src -d js --source-maps",
+    "babel:build": "babel src -d js --source-maps -q",
     "babel:watch": "babel src -d js --watch --source-maps",
     "build:respec-w3c-common": "node ./tools/builder.js --profile=w3c-common",
     "build": "npm run copydeps && npm run hb:build && npm run highlight:build && npm run babel:build",
