@@ -25,6 +25,7 @@ export async function run(conf, doc, cb) {
 function makeDescriptionInserter(firstParagraph) {
   return () => {
     // Normalize whitespace: trim, remove new lines, tabs, etc.
+    const doc = firstParagraph.ownerDocument;
     const content = firstParagraph.textContent.replace(/\s+/, " ").trim();
     const metaElem = doc.createElement("meta");
     metaElem.name = "description";
