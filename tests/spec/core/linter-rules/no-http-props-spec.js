@@ -24,7 +24,7 @@ describe("Core Linter Rule - 'no-http-props'", () => {
     const [result] = results;
     expect(result).toEqual({
       name: "no-http-props",
-      occurances: 2,
+      occurrences: 2,
       description: "Insecure URLs are not allowed in `respecConfig`.",
       howToFix:
         "Please change the following properties to 'https://': `URI`, `charterDisclosureURI`.",

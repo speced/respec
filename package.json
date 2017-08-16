@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "15.8.2",
+  "version": "16.0.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -23,7 +23,7 @@
     "chai": "^4.1.1",
     "clipboard": "^1.7.1",
     "domReady": "github:requirejs/domReady",
-    "eslint-plugin-jasmine": "^2.8.3",
+    "eslint-plugin-jasmine": "^2.8.4",
     "glob": "^7.1.2",
     "handlebars": "^4.0.10",
     "http-server": "^0.10.0",
@@ -54,7 +54,7 @@
     "webidl2": "^4.1.0"
   },
   "scripts": {
-    "babel:build": "babel src -d js --source-maps",
+    "babel:build": "babel src -d js --source-maps -q",
     "babel:watch": "babel src -d js --watch --source-maps",
     "build:geo": "npm run copydeps && npm run hb:build-geo && npm run highlight:build && npm run babel:build && node ./tools/builder.js --profile=geonovum",
     "build:respec-w3c-common": "node ./tools/builder.js --profile=w3c-common",
@@ -76,20 +76,20 @@
   },
   "dependencies": {
     "colors": "^1.1.2",
-    "command-line-args": "^4.0.6",
-    "command-line-usage": "^4.0.0",
+    "command-line-args": "^4.0.7",
+    "command-line-usage": "^4.0.1",
     "epipebomb": "^1.0.0",
     "express": "^4.15.4",
     "fs-extra": "^4.0.1",
     "highlight.js": "github:marcoscaceres/highlight.js",
-    "hyperhtml": "^0.17.4",
+    "hyperhtml": "^1.0.2",
     "leaflet": "^1.0.3",
     "loading-indicator": "^2.0.0",
     "marcosc-async": "^4.0.3",
     "marked": "^0.3.6",
     "nightmare": "^2.10.0",
     "prompt": "^1.0.0",
-    "snyk": "^1.38.1"
+    "snyk": "^1.38.2"
   },
   "snyk": true
 }
