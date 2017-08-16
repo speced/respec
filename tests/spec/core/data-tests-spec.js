@@ -4,12 +4,15 @@ describe("Core — data-tests attribute", () => {
   beforeAll(async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
+      body: makeDefaultBody() +
         `
         <section>
           <h2>test</h2>
-          <p id="testable" data-tests="test0.html test1.html ./test2.html ../test3.html">
+          <p id="testable"
+            data-tests="test0.html,
+             test1.html, \t ./test2.html,
+              ../test3.html,test4.html
+            ">
             <a id="t1" data-cite="#test">a</a>
             <dfn id="t2" data-cite="#test">a</dfn>
           </p>
@@ -41,7 +44,7 @@ describe("Core — data-tests attribute", () => {
       const { textContent } = doc.querySelector(
         "#testable > details > summary"
       );
-      expect(textContent.trim()).toContain("4");
+      expect(textContent.trim()).toContain("5");
     });
   });
   describe("generated test list", () => {
@@ -53,7 +56,7 @@ describe("Core — data-tests attribute", () => {
       const items = Array.from(
         doc.querySelectorAll("#testable > .respec-tests-details > ul > li > a")
       );
-      expect(items.length).toEqual(4);
+      expect(items.length).toEqual(5);
       items.forEach(({ origin, pathname }, i) => {
         expect(origin).toEqual("https://wpt.fyi");
         expect(pathname.endsWith(`test${i}.html`)).toBe(true);
