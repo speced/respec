@@ -12,8 +12,7 @@ import { pub } from "core/pubsubhub";
 import { lang as defaultLang } from "core/l10n";
 const l10n = {
   en: {
-    missing_test_suite_uri:
-      "Found tests in your spec, but missing '" +
+    missing_test_suite_uri: "Found tests in your spec, but missing '" +
       "[`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI)' in your ReSpec config.",
     tests: "tests",
     test: "test",
@@ -46,15 +45,18 @@ export function run(conf, doc, cb) {
     .map(elem => {
       const details = document.createElement("details");
       const renderer = hyperHTML.bind(details);
-      const testURLs = elem.dataset.tests.split(/\s+/gm).map(url => {
-        let href = "";
-        try {
-          href = new URL(url, conf.testSuiteURI).href;
-        } catch (err) {
-          pub("warn", `${l10n[lang].bad_uri}: ${url}`);
-        }
-        return href;
-      });
+      const testURLs = elem.dataset.tests
+        .split(/,/gm)
+        .map(url => url.trim())
+        .map(url => {
+          let href = "";
+          try {
+            href = new URL(url, conf.testSuiteURI).href;
+          } catch (err) {
+            pub("warn", `${l10n[lang].bad_uri}: ${url}`);
+          }
+          return href;
+        });
       details.classList.add("respec-tests-details", "removeOnSave");
       renderer`
         <summary>
