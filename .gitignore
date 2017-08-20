@@ -47,6 +47,7 @@ js/core/rdfa.js
 js/core/remove-respec.js
 js/core/requirements.js
 js/core/respec-ready.js
+js/core/seo.js
 js/core/structure.js
 js/core/style.js
 js/core/ui.js
