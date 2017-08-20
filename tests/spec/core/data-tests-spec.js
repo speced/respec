@@ -4,7 +4,8 @@ describe("Core — data-tests attribute", () => {
   beforeAll(async () => {
     const ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() +
+      body:
+        makeDefaultBody() +
         `
         <section>
           <h2>test</h2>
