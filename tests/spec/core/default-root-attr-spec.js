@@ -1,46 +1,42 @@
 "use strict";
-describe("Core — Default Root Attribute", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+describe("Core — l10n", () => {
+  afterAll(flushIframes);
+  const body = makeDefaultBody();
+  const conf = makeBasicConfig();
 
-  it("should apply en and ltr defaults", function(done) {
-    var ops = {
-      config: makeBasicConfig(),
-      body: makeDefaultBody(),
+  it("uses en and ltr", async () => {
+    const ops = {
+      config,
+      body,
     };
-    makeRSDoc(ops, function(doc) {
-      expect(doc.querySelector("html").lang).toEqual("en");
-      expect(doc.querySelector("html").dir).toEqual("ltr");
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    expect(doc.documentElement.lang).toEqual("en");
+    expect(doc.documentElement.dir).toEqual("ltr");
   });
 
-  it("should not override existing dir", function(done) {
-    var ops = {
-      config: makeBasicConfig(),
+  it("shouldn't override existing dir", async () => {
+    const ops = {
+      config,
       htmlAttrs: {
         dir: "rtl",
       },
-      body: makeDefaultBody(),
+      body,
     };
-    makeRSDoc(ops, function(doc) {
-      expect(doc.querySelector("html").lang).toEqual("en");
-      expect(doc.querySelector("html").dir).toEqual("rtl");
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    expect(doc.documentElement.lang).toEqual("en");
+    expect(doc.documentElement.dir).toEqual("rtl");
   });
 
-  it("should not override existing lang and not set dir", function(done) {
-    var ops = {
-      config: makeBasicConfig(),
+  it("shouldn't override existing lang and not set dir", async () => {
+    const ops = {
+      config,
       htmlAttrs: {
         lang: "fr",
       },
-      body: makeDefaultBody(),
+      body,
     };
-    makeRSDoc(ops, function(doc) {
-      expect(doc.querySelector("html").lang).toEqual("fr");
-      expect(doc.querySelector("html").dir).toEqual("");
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    expect(doc.documentElement.lang).toEqual("fr");
+    expect(doc.documentElement.dir).toEqual("");
   });
 });
