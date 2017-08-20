@@ -19,10 +19,7 @@ const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
 function normalizeReferences(conf) {
   Array.from(conf.informativeReferences)
     .filter(key => conf.normativeReferences.has(key))
-    .reduce((informs, redundantKey) => {
-      informs.delete(redundantKey);
-      return informs;
-    }, conf.informativeReferences);
+    .forEach(redundantKey => conf.informativeReferences.delete(redundantKey));
 }
 
 function getRefKeys(conf) {
