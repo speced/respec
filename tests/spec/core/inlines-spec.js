@@ -1,9 +1,6 @@
 "use strict";
 describe("Core - Inlines", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   it("should process all in-line content", function(done) {
     var ops = {
       config: makeBasicConfig(),

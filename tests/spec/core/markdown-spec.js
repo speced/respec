@@ -1,9 +1,6 @@
 "use strict";
 describe("Core - Markdown", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   it("should process standard markdown content", function(done) {
     var ops = {
       config: makeBasicConfig(),

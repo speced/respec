@@ -1,9 +1,6 @@
 "use strict";
 describe("Core — IDL Index", () => {
-  afterAll(done => {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   it("generates an idl summary", done => {
     const body = `
       ${makeDefaultBody()}

@@ -1,9 +1,6 @@
 "use strict";
 describe("Core - Figures", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   var ops = {
     config: makeBasicConfig(),
     body:

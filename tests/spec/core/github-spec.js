@@ -1,9 +1,6 @@
 "use strict";
 describe("Core - Github", function() {
-  afterAll(done => {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   const stringOpt = {
     config: Object.assign(makeBasicConfig(), {
       github: "https://github.com/w3c/respec/",

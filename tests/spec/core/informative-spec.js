@@ -1,9 +1,6 @@
 "use strict";
 describe("Core — Informative", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   it("should process informative sections", function(done) {
     var ops = {
       config: makeBasicConfig(),

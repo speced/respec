@@ -1,9 +1,6 @@
 "use strict";
 describe("Core — Examples", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   it("should process examples", function(done) {
     var ops = {
       config: makeBasicConfig(),

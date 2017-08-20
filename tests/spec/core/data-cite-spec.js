@@ -1,9 +1,6 @@
 "use strict";
 describe("Core — data-cite attribute", () => {
-  afterAll(done => {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   it(`walks up the tree to find the right reference to cite`, done => {
     const ops = {
       config: makeBasicConfig(),

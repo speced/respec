@@ -1,9 +1,6 @@
 "use strict";
 describe("W3C — RDFa", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
 
   function makeCustomConfig() {
     return {

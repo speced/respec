@@ -1,9 +1,6 @@
 "use strict";
 describe("Core — Requirements", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   it("should process requirements", function(done) {
     var ops = {
       config: makeBasicConfig(),
