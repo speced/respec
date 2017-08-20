@@ -2,7 +2,7 @@
 describe("Core — l10n", () => {
   afterAll(flushIframes);
   const body = makeDefaultBody();
-  const conf = makeBasicConfig();
+  const config = makeBasicConfig();
 
   it("uses en and ltr", async () => {
     const ops = {
