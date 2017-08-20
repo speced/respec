@@ -6,6 +6,15 @@
  * localize their text.
  */
 export const name = "core/l10n";
+
+const html = document.documentElement;
+if (html && !html.hasAttribute("lang")) {
+  html.lang = "en";
+  if (!html.hasAttribute("dir")) {
+    html.dir = "ltr";
+  }
+}
+
 // We use en-US as the base
 const base = {
   about_respec: "About ReSpec",
@@ -164,8 +173,7 @@ export const l10n = {
 l10n["zh-hans"] = l10n.zh;
 l10n["zh-cn"] = l10n.zh;
 
-export const lang =
-  document.documentElement.lang in l10n ? document.documentElement.lang : "en";
+export const lang = html && html.lang in l10n ? html.lang : "en";
 
 export function run(config) {
   config.l10n = l10n[lang] || l10n.en;
