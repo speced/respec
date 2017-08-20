@@ -1,9 +1,6 @@
 "use strict";
 describe("Core - Section References", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   it("should have produced the section reference", function(done) {
     var ops = {
       config: makeBasicConfig(),

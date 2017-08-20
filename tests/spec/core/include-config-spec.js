@@ -1,9 +1,6 @@
 "use strict";
 describe("Core — Include config as JSON", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   var ops;
   beforeAll(function(done) {
     ops = {

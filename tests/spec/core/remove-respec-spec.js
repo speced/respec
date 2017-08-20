@@ -1,9 +1,6 @@
 "use strict";
 describe("Core — Remove ReSpec", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   it("should have removed all artifacts", function(done) {
     var ops = makeStandardOps();
     makeRSDoc(ops, function(doc) {

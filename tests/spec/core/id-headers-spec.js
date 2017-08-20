@@ -1,9 +1,6 @@
 "use strict";
 describe("Core - ID headers", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   it("should have set ID on header", function(done) {
     var ops = {
       config: makeBasicConfig(),

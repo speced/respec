@@ -1,9 +1,6 @@
 "use strict";
 describe("Core — Link to definitions", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   it("URL-encodes fragment components", done => {
     const bodyText = `
     <section">

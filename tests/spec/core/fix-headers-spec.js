@@ -1,9 +1,6 @@
 "use strict";
 describe("Core - Fix headers", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   it("should have set the correct header level", function(done) {
     var ops = {
       config: makeBasicConfig(),

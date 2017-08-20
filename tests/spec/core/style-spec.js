@@ -1,9 +1,6 @@
 "use strict";
 describe("Core — Style", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   it("should have included a style element", function(done) {
     makeRSDoc(makeStandardOps(), function(doc) {
       var $s = $("style", doc);

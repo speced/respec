@@ -1,9 +1,6 @@
 "use strict";
 describe("Core — Highlight", function() {
-  afterAll(done => {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
 
   it("shouldn't highlight idl blocks", done => {
     var ops = {
