@@ -7,10 +7,7 @@ function makeTest(uri) {
   };
 }
 describe("W3C - SEO", () => {
-  afterAll(done => {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
 
   it("defaults to TR as canonical URI", done => {
     const test = makeTest("https://www.w3.org/TR/Foo/");

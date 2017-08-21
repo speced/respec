@@ -45,7 +45,7 @@ export async function run(conf) {
       const timeoutId = setTimeout(() => {
         console.error("Timed-out waiting for highlight:", element);
         done();
-      }, 1000);
+      }, 4000);
       const msg = {
         action: "highlight",
         code: element.textContent,

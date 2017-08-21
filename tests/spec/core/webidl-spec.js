@@ -1,9 +1,6 @@
 "use strict";
 describe("Core - WebIDL", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   var doc;
   beforeAll(function(done) {
     var ops = makeStandardOps();

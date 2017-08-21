@@ -66,7 +66,7 @@ const GNVMDate = new Intl.DateTimeFormat(["nl"], {
   day: "2-digit",
 });
 
-hb.registerHelper("showPeople", function(name, items) {
+hb.registerHelper("showPeople", function(name, items = []) {
   // stuff to handle RDFa
   var re = "",
     rp = "",
@@ -283,6 +283,20 @@ const baseLogo = Object.freeze({
   width: "132",
 });
 
+function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
+  const date = conf[prop] ? new Date(conf[prop]) : new Date(fallbackDate);
+  // if date is valid
+  if (Number.isFinite(date.valueOf())) {
+    const formattedDate = ISODate.format(date);
+    return new Date(formattedDate);
+  }
+  const msg =
+    `[\`${prop}\`](https://github.com/w3c/respec/wiki/${prop}) ` +
+    `is not a valid date: "${conf[prop]}". Expected format 'YYYY-MM-DD'.`;
+  pub("error", msg);
+  return new Date(ISODate.format(new Date()));
+}
+
 export function run(conf, doc, cb) {
   // TODO: move to w3c defaults
   if (!conf.logos) {
@@ -326,10 +340,10 @@ export function run(conf, doc, cb) {
   conf.title = doc.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
   //Publishdate
-  conf.publishDate = new Date(
-    ISODate.format(
-      new Date(conf.publishDate ? conf.publishDate : doc.lastModified)
-    )
+  conf.publishDate = validateDateAndRecover(
+    conf,
+    "publishDate",
+    doc.lastModified
   );
   conf.publishHumanDate = GNVMDate.format(conf.publishDate);
   //Version URLs
@@ -357,7 +371,10 @@ export function run(conf, doc, cb) {
       conf.shortName +
       "/";
   if (conf.previousPublishDate && conf.previousStatus) {
-    conf.previousPublishDate = new Date(conf.previousPublishDate);
+    conf.previousPublishDate = validateDateAndRecover(
+      conf,
+      "previousPublishDate"
+    );
     var prevStatus = conf.previousStatus.substr(3).toLowerCase();
     var prevType = conf.previousType.toLowerCase();
     conf.prevVersion = "None" + conf.previousPublishDate;
@@ -394,20 +411,20 @@ export function run(conf, doc, cb) {
   conf.multipleAlternates =
     conf.alternateFormats && conf.alternateFormats.length > 1;
   conf.alternatesHTML = joinAnd(conf.alternateFormats, function(alt) {
-    var optional =
-      alt.hasOwnProperty("lang") && alt.lang
+    var optional = alt.hasOwnProperty("lang") && alt.lang
         ? " hreflang='" + alt.lang + "'"
         : "";
-    optional +=
-      alt.hasOwnProperty("type") && alt.type ? " type='" + alt.type + "'" : "";
-    return (
-      "<a rel='alternate' href='" +
-      alt.uri +
-      "'" +
-      optional +
-      ">" +
-      alt.label +
-      "</a>"
+      optional += alt.hasOwnProperty("type") && alt.type
+        ? " type='" + alt.type + "'"
+        : "";
+      return (
+        "<a rel='alternate' href='" +
+        alt.uri +
+        "'" +
+        optional +
+        ">" +
+        alt.label +
+        "</a>"
     );
   });
   //Annotate html element with RFDa
