@@ -15,7 +15,7 @@
   },
   "author": "Robin Berjon",
   "devDependencies": {
-    "babel-cli": "^6.24.1",
+    "babel-cli": "^6.26.0",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-es2015-modules-amd": "^6.24.1",
     "babel-preset-env": "^1.6.0",
@@ -46,9 +46,9 @@
     "karma-verbose-summary-reporter": "0.0.1",
     "mocha": "^3.5.0",
     "moment": "^2.18.1",
-    "requirejs": "^2.3.4",
+    "requirejs": "^2.3.5",
     "text": "github:requirejs/text",
-    "uglify-es": "^3.0.27",
+    "uglify-es": "^3.0.28",
     "url-search-params": "^0.10.0",
     "webidl2": "^4.1.0"
   },
@@ -79,13 +79,13 @@
     "express": "^4.15.4",
     "fs-extra": "^4.0.1",
     "highlight.js": "github:marcoscaceres/highlight.js",
-    "hyperhtml": "^1.0.2",
+    "hyperhtml": "^1.2.0",
     "loading-indicator": "^2.0.0",
     "marcosc-async": "^4.0.3",
     "marked": "^0.3.6",
     "nightmare": "^2.10.0",
     "prompt": "^1.0.0",
-    "snyk": "^1.38.2"
+    "snyk": "^1.39.0"
   },
   "snyk": true
 }
