@@ -1,10 +1,7 @@
 "use strict";
 
 describe("Core - Ui", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
 
   it("shows and hides the UI", function(done) {
     makeRSDoc(makeStandardOps(), function(doc) {

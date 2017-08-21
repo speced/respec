@@ -87,10 +87,7 @@ function loadWithStatus(status, expectedURL, mode) {
 }
 
 describe("W3C - Style", function() {
-  afterEach(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
 
   it("should include 'fixup.js'", function(done) {
     var ops = makeStandardOps();
