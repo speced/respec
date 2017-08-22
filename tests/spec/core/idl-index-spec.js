@@ -1,10 +1,7 @@
 "use strict";
 describe("Core — IDL Index", () => {
-  afterAll(done => {
-    flushIframes();
-    done();
-  });
-  it("generates an idl summary", done => {
+  afterAll(flushIframes);
+  it("generates an idl summary", async () => {
     const body = `
       ${makeDefaultBody()}
       <section>
@@ -29,20 +26,20 @@ describe("Core — IDL Index", () => {
 interface Bar {
     readonly attribute DOMString foo;
 };\n`;
-    var ops = {
+    const ops = {
       config: makeBasicConfig(),
       body,
     };
-    makeRSDoc(ops, function(doc) {
-      var idlIndex = doc.querySelector("#idl-index");
-      expect(idlIndex).not.toBe(null);
-      expect(idlIndex.querySelector("pre").textContent).toEqual(expectedIDL);
-      var header = doc.querySelector("#idl-index > h2");
-      expect(header).not.toBe(null);
-      expect(header.textContent).toEqual("1. IDL Index");
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    var idlIndex = doc.querySelector("#idl-index");
+    expect(idlIndex).not.toBe(null);
+    expect(idlIndex.querySelector("pre").textContent).toEqual(expectedIDL);
+    var header = doc.querySelector("#idl-index > h2");
+    expect(header).not.toBe(null);
+    expect(header.textContent).toEqual("1. IDL Index");
   });
-  it("allows custom content and header", done => {
+
+  it("allows custom content and header", async () => {
     const body = `
       ${makeDefaultBody()}
       <section id="idl-index">
@@ -50,21 +47,21 @@ interface Bar {
         <p>Custom paragraph.</p>
       </section>
     `;
-    var ops = {
+    const ops = {
       config: makeBasicConfig(),
       body,
     };
-    makeRSDoc(ops, function(doc) {
-      var idlIndex = doc.querySelector("#idl-index");
-      expect(idlIndex).not.toBe(null);
-      expect(idlIndex.querySelector("pre")).toEqual(null);
-      var header = doc.querySelector("#idl-index > h2");
-      expect(header).not.toBe(null);
-      expect(header.textContent).toEqual("1. PASS");
-      expect(doc.querySelectorAll("#idl-index > h2").length).toEqual(1);
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    var idlIndex = doc.querySelector("#idl-index");
+    expect(idlIndex).not.toBe(null);
+    expect(idlIndex.querySelector("pre")).toEqual(null);
+    var header = doc.querySelector("#idl-index > h2");
+    expect(header).not.toBe(null);
+    expect(header.textContent).toEqual("1. PASS");
+    expect(doc.querySelectorAll("#idl-index > h2").length).toEqual(1);
   });
-  it("doesn't include ids in the cloned indexed", done => {
+
+  it("doesn't include ids in the cloned indexed", async () => {
     const body = `
       ${makeDefaultBody()}
       <pre class=idl>
@@ -77,13 +74,12 @@ interface Bar {
         <p>Custom paragraph.</p>
       </section>
     `;
-    var ops = {
+    const ops = {
       config: makeBasicConfig(),
       body,
     };
-    makeRSDoc(ops, function(doc) {
-      const pre = doc.querySelector("#idl-index pre");
-      expect(pre.querySelectorAll("*[id]").length).toEqual(0);
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    const pre = doc.querySelector("#idl-index pre");
+    expect(pre.querySelectorAll("*[id]").length).toEqual(0);
   });
 });

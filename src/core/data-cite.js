@@ -105,14 +105,12 @@ export async function run(conf) {
   Array.from(document.querySelectorAll(["dfn[data-cite], a[data-cite]"]))
     .filter(el => el.dataset.cite)
     .map(toCiteDetails)
-    .reduce((conf, { isNormative, key }) => {
-      if (isNormative) {
-        conf.normativeReferences.add(key);
-      } else {
-        conf.informativeReferences.add(key);
-      }
-      return conf;
-    }, conf);
+    .forEach(({ isNormative, key }) => {
+      const refSink = isNormative
+        ? conf.normativeReferences
+        : conf.informativeReferences;
+      refSink.add(key);
+    });
 }
 
 export async function linkInlineCitations(doc, conf = respecConfig) {

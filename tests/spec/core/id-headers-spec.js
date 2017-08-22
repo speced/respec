@@ -1,17 +1,13 @@
 "use strict";
-describe("Core - ID headers", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
-  it("should have set ID on header", function(done) {
-    var ops = {
+describe("Core - ID headers", () => {
+  afterAll(flushIframes);
+  it("sets an id on header", async () => {
+    const ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody() + "<section><p>BLAH</p><h6>FOO</h6></section>",
     };
-    makeRSDoc(ops, function(doc) {
-      var $s = $("section h2:contains('FOO')", doc);
-      expect($s.attr("id")).toEqual("foo");
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    const $s = $("section h2:contains('FOO')", doc);
+    expect($s.attr("id")).toEqual("foo");
   });
 });

@@ -1,9 +1,6 @@
 "use strict";
 describe("Core — Override Configuration", () => {
-  afterAll(done => {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   const simpleURL = new URL("./spec/core/simple.html", document.location);
   it("overrides a simple string setting and decodes URL key/values strings correctly", done => {
     const url = new URL(simpleURL.href);

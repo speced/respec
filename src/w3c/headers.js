@@ -108,7 +108,7 @@ const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
   day: "2-digit",
 });
 
-hb.registerHelper("showPeople", function(name, items) {
+hb.registerHelper("showPeople", function(name, items = []) {
   // stuff to handle RDFa
   var re = "",
     rp = "",

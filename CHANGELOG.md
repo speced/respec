@@ -1,5 +1,72 @@
 # Change Log
 
+## [v16.0.0](https://github.com/w3c/respec/tree/v16.0.0) (2017-08-16)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.8.4...v16.0.0)
+
+**Merged pull requests:**
+
+- Test split [\#1366](https://github.com/w3c/respec/pull/1366) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.8.4](https://github.com/w3c/respec/tree/v15.8.4) (2017-08-15)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.8.3...v15.8.4)
+
+**Merged pull requests:**
+
+- refactor\(jquery-enhanced-spec\): async + cleanup [\#1365](https://github.com/w3c/respec/pull/1365) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.8.3](https://github.com/w3c/respec/tree/v15.8.3) (2017-08-14)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.8.2...v15.8.3)
+
+**Fixed bugs:**
+
+- Unknown linter warning [\#1361](https://github.com/w3c/respec/issues/1361)
+
+**Closed issues:**
+
+- RangeError: date value is not finite in DateTimeFormat.format\(\) [\#1357](https://github.com/w3c/respec/issues/1357)
+
+**Merged pull requests:**
+
+- Linter unknown warn [\#1362](https://github.com/w3c/respec/pull/1362) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix: recover when config dates are invalid \(closes \#1357\) [\#1358](https://github.com/w3c/respec/pull/1358) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.8.2](https://github.com/w3c/respec/tree/v15.8.2) (2017-08-09)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.8.1...v15.8.2)
+
+**Merged pull requests:**
+
+- Fix bug in detecting wrong configuration for multiple WGs [\#1354](https://github.com/w3c/respec/pull/1354) ([dontcallmedom](https://github.com/dontcallmedom))
+
+## [v15.8.1](https://github.com/w3c/respec/tree/v15.8.1) (2017-08-08)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.8.0...v15.8.1)
+
+**Merged pull requests:**
+
+- Avoid race conditions [\#1350](https://github.com/w3c/respec/pull/1350) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.8.0](https://github.com/w3c/respec/tree/v15.8.0) (2017-08-08)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.7.4...v15.8.0)
+
+**Closed issues:**
+
+- 2017 Process Document Operational on 1 March 2017 [\#1039](https://github.com/w3c/respec/issues/1039)
+- Automatic deployment on merge to develop branch [\#998](https://github.com/w3c/respec/issues/998)
+
+**Merged pull requests:**
+
+- fix\(core/utils\): handle nulls when checking TextNodes [\#1349](https://github.com/w3c/respec/pull/1349) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(package\): remove jscs, jshint - using prettier and eslint [\#1348](https://github.com/w3c/respec/pull/1348) ([marcoscaceres](https://github.com/marcoscaceres))
+- Refactor tests to use async [\#1346](https://github.com/w3c/respec/pull/1346) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/data-tests\): remove tests on save [\#1344](https://github.com/w3c/respec/pull/1344) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/linter\): add modular, non-blocking, linter \(closes \#20\) [\#1332](https://github.com/w3c/respec/pull/1332) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v15.7.4](https://github.com/w3c/respec/tree/v15.7.4) (2017-08-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v15.7.3...v15.7.4)
+
+**Merged pull requests:**
+
+- fix\(core/css/respec2\): less ugly test box [\#1343](https://github.com/w3c/respec/pull/1343) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v15.7.3](https://github.com/w3c/respec/tree/v15.7.3) (2017-07-28)
 [Full Changelog](https://github.com/w3c/respec/compare/v15.7.2...v15.7.3)
 
@@ -38,10 +105,15 @@
 
 **Merged pull requests:**
 
+- chore\(.eslintrc\): reconfigure eslint [\#1347](https://github.com/w3c/respec/pull/1347) ([marcoscaceres](https://github.com/marcoscaceres))
 - Adds "preview" status, for @tobie previews [\#1334](https://github.com/w3c/respec/pull/1334) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v15.5.1](https://github.com/w3c/respec/tree/v15.5.1) (2017-07-26)
 [Full Changelog](https://github.com/w3c/respec/compare/v15.5.0...v15.5.1)
+
+**Implemented enhancements:**
+
+- Add linter [\#20](https://github.com/w3c/respec/issues/20)
 
 **Closed issues:**
 

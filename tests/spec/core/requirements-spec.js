@@ -1,9 +1,6 @@
 "use strict";
 describe("Core — Requirements", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   it("should process requirements", function(done) {
     var ops = {
       config: makeBasicConfig(),
@@ -24,9 +21,9 @@ describe("Core — Requirements", function() {
       config: makeBasicConfig(),
       body:
         makeDefaultBody() +
-          "<a href='#req-id' class='reqRef'></a>" +
-          "<a href='#foo' class='reqRef'></a>" +
-          "<p class='req' id='req-id'>REQ</p>",
+        "<a href='#req-id' class='reqRef'></a>" +
+        "<a href='#foo' class='reqRef'></a>" +
+        "<p class='req' id='req-id'>REQ</p>",
     };
     makeRSDoc(ops, function(doc) {
       var $refs = $("a.reqRef", doc);

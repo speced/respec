@@ -1,16 +1,13 @@
 "use strict";
-describe("Core — Highlight", function() {
-  afterAll(done => {
-    flushIframes();
-    done();
-  });
+describe("Core — Highlight", () => {
+  afterAll(flushIframes);
 
-  it("shouldn't highlight idl blocks", done => {
+  it("shouldn't highlight idl blocks", async () => {
     var ops = {
       config: makeBasicConfig(),
       body:
         makeDefaultBody() +
-          `
+        `
         <section><pre class=idl>
           [Constructor]interface Dahut : Mammal {
             const unsigned short DEXTROGYROUS = 1;
@@ -18,19 +15,18 @@ describe("Core — Highlight", function() {
           };</pre>
         </section>`,
     };
-    makeRSDoc(ops, function(doc) {
-      var pre = doc.querySelector("pre");
-      expect(pre.classList.contains("hljs")).toBeFalsy();
-      expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    var pre = doc.querySelector("pre");
+    expect(pre.classList.contains("hljs")).toBeFalsy();
+    expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
   });
 
-  it("should automatically highlight", done => {
+  it("automatically highlights", async () => {
     var ops = {
       config: makeBasicConfig(),
       body:
         makeDefaultBody() +
-          `<section>
+        `<section>
           <pre class=example>
             function foo() {
               alert('foo');
@@ -38,21 +34,20 @@ describe("Core — Highlight", function() {
           </pre>
         </section>`,
     };
-    makeRSDoc(ops, function(doc) {
-      var pre = doc.querySelector("div.example pre");
-      expect(pre.classList.contains("hljs")).toBeTruthy();
-      expect(pre.querySelectorAll("span[class^=hljs-]").length).toBeGreaterThan(
-        0
-      );
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    var pre = doc.querySelector("div.example pre");
+    expect(pre.classList.contains("hljs")).toBeTruthy();
+    expect(pre.querySelectorAll("span[class^=hljs-]").length).toBeGreaterThan(
+      0
+    );
   });
 
-  it("shouldn't highlight pre elements when told not to", done => {
+  it("shouldn't highlight pre elements when told not to", async () => {
     var ops = {
       config: makeBasicConfig(),
       body:
         makeDefaultBody() +
-          `<section>
+        `<section>
           <pre class='nohighlight example'>
             function foo() {
               alert('foo');
@@ -60,19 +55,18 @@ describe("Core — Highlight", function() {
           </pre>
         </section>`,
     };
-    makeRSDoc(ops, function(doc) {
-      var pre = doc.querySelector("div.example pre");
-      expect(pre.classList.contains("nohighlight")).toBeTruthy();
-      expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    var pre = doc.querySelector("div.example pre");
+    expect(pre.classList.contains("nohighlight")).toBeTruthy();
+    expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
   });
 
-  it("should respect the noHighlightCSS by not highlighting anything", done => {
+  it("respects the noHighlightCSS by not highlighting anything", async () => {
     var ops = {
       config: Object.assign(makeBasicConfig(), { noHighlightCSS: true }),
       body:
         makeDefaultBody() +
-          `<section>
+        `<section>
           <pre id="test">
             function foo() {
               alert('foo');
@@ -80,9 +74,8 @@ describe("Core — Highlight", function() {
           </pre>
         </section>`,
     };
-    makeRSDoc(ops, function(doc) {
-      var pre = doc.querySelector("#test");
-      expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    var pre = doc.querySelector("#test");
+    expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
   });
 });
