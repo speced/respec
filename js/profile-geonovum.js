@@ -32,6 +32,7 @@ define(
     "deps/domReady",
     "core/base-runner",
     "core/ui",
+    "core/l10n",
     // "w3c/defaults",
     "core/aria",
     "core/style",
