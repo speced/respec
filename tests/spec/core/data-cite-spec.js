@@ -197,7 +197,7 @@ describe("Core — data-cite attribute", () => {
     ).toEqual("normative-references");
   });
 
-  it("adds the fragment identifier to the link", async () => {
+  it("adds the path and fragment identifier to the link", async () => {
     const ops = {
       config: makeBasicConfig(),
       body:
@@ -205,21 +205,21 @@ describe("Core — data-cite attribute", () => {
         `
         <section>
           <p id="t1"><a
-            data-cite="!WHATWG-HTML#test">inline link</a></p>
+            data-cite="!WHATWG-HTML/webappapis.html#test">inline link</a></p>
         </section>
       `,
     };
     const doc = await makeRSDoc(ops);
     const a = doc.querySelector("#t1 > a");
     expect(a.textContent).toEqual("inline link");
-    expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/#test");
+    expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/webappapis.html#test");
     expect(a.hasAttribute("data-cite")).toEqual(false);
     expect(doc.querySelector("#bib-WHATWG-HTML").closest("section").id).toEqual(
       "normative-references"
     );
   });
   describe("data-cite-frag", () => {
-    it("adds the fragment identifier to the link", async () => {
+    it("adds the path and the fragment identifier to the link", async () => {
       const ops = {
         config: makeBasicConfig(),
         body:
@@ -228,6 +228,7 @@ describe("Core — data-cite attribute", () => {
         <section>
           <p id="t1"><a
             data-cite="WHATWG-HTML"
+            data-cite-path="webappapis.html"
             data-cite-frag="pass">inline link</a></p>
         </section>
       `,
@@ -235,7 +236,7 @@ describe("Core — data-cite attribute", () => {
       const doc = await makeRSDoc(ops);
       const a = doc.querySelector("#t1 > a");
       expect(a.textContent).toEqual("inline link");
-      expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/#pass");
+      expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/webappapis.html#pass");
       expect(a.hasAttribute("data-cite")).toEqual(false);
       expect(
         doc.querySelector("#bib-WHATWG-HTML").closest("section").id

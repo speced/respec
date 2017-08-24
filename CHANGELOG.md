@@ -1,5 +1,22 @@
 # Change Log
 
+## [v16.1.0](https://github.com/w3c/respec/tree/v16.1.0) (2017-08-21)
+[Full Changelog](https://github.com/w3c/respec/compare/v16.0.0...v16.1.0)
+
+**Implemented enhancements:**
+
+- Logos in templates should auto-select the version of the W3C styles they use [\#640](https://github.com/w3c/respec/issues/640)
+
+**Closed issues:**
+
+- How to define a method in a partial interface?  [\#1356](https://github.com/w3c/respec/issues/1356)
+- Google getting wrong description [\#1336](https://github.com/w3c/respec/issues/1336)
+- Add w3c defaults module [\#1206](https://github.com/w3c/respec/issues/1206)
+
+**Merged pull requests:**
+
+- Races [\#1368](https://github.com/w3c/respec/pull/1368) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v16.0.0](https://github.com/w3c/respec/tree/v16.0.0) (2017-08-16)
 [Full Changelog](https://github.com/w3c/respec/compare/v15.8.4...v16.0.0)
 
@@ -13,6 +30,7 @@
 **Merged pull requests:**
 
 - refactor\(jquery-enhanced-spec\): async + cleanup [\#1365](https://github.com/w3c/respec/pull/1365) ([marcoscaceres](https://github.com/marcoscaceres))
+- Feat: add core seo module [\#1364](https://github.com/w3c/respec/pull/1364) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v15.8.3](https://github.com/w3c/respec/tree/v15.8.3) (2017-08-14)
 [Full Changelog](https://github.com/w3c/respec/compare/v15.8.2...v15.8.3)
