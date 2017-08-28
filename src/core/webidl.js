@@ -1153,6 +1153,17 @@ export function run(conf, doc, cb) {
       }
   }
 
+  // Update auto-links to WEBIDL to use the one referenced normatively
+    for (let linkmap of autoLinkMaps) {
+        for (let [k,v] of linkmap.entries()) {
+            if (v.split('#')[0] === 'WEBIDL') {
+                const webidlrefs = [...conf.normativeReferences.keys()].filter(x => x.toUpperCase().startsWith('WEBIDL'));
+                if (webidlrefs.length === 1)
+                    linkmap.set(k, webidlrefs[0] + '#' + v.split('#')[1])
+            }
+        }
+    }
+
   $idl.each(function() {
     var parse;
     try {
