@@ -56,6 +56,19 @@ describe("Core - WebIDL", function() {
     done();
   });
 
+  it("links standardized IDL types to custom specs", done => {
+    const idl = doc.querySelector("#linkToCustomSpecs>div>pre");
+    // [CEReactions]
+    const cereactionLink = idl.querySelector(`span.extAttr a`);
+    expect(cereactionLink.href).toContain('/custom-elements/');
+
+    //  attribute EventHandler onlink
+    const eventhandlerLink = idl.querySelector(`span.idlAttrType a`);
+    expect(eventhandlerLink.href).toContain('/html52/');
+    done();
+  });
+
+
   it("links to fully qualified method names", done => {
     var t1 = new URL(doc.getElementById("fullyQualifiedNoParens-1")).hash;
     expect(t1).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
