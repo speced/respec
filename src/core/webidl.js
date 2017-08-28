@@ -1136,6 +1136,16 @@ export function run(conf, doc, cb) {
     $(doc).find("head link").first().before($("<style/>").text(css));
   }
 
+  // update standardTypes based on local definitions
+  for (let k of standardTypes.keys()) {
+      if (conf.definitionMap[k.toLowerCase()]) {
+          const dfns = conf.definitionMap[k.toLowerCase()].filter(n => n.data('cite'));
+          // we only use this if there are no duplicate definitions
+          if (dfns.length === 1)
+              standardTypes.set(k, dfns[0].data('cite'));
+      }
+  }
+
   $idl.each(function() {
     var parse;
     try {
