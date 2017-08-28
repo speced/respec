@@ -2,6 +2,7 @@
 describe("Core - WebIDL", function() {
   afterAll(flushIframes);
   var doc;
+  var customWebidlDoc;
   beforeAll(function(done) {
     var ops = makeStandardOps();
     makeRSDoc(
@@ -10,6 +11,14 @@ describe("Core - WebIDL", function() {
         doc = idlDoc;
       },
       "spec/core/webidl.html"
+    ).then(() =>
+        makeRSDoc(
+            ops,
+            function(idlDoc) {
+                customWebidlDoc = idlDoc;
+            },
+            "spec/core/webidl-link.html"
+        )
     ).then(done);
   });
 
@@ -68,6 +77,15 @@ describe("Core - WebIDL", function() {
     done();
   });
 
+  it("links to a specific WebIDL version based on normative references", done => {
+      // webidl-link.html has [[!WEBIDL-1]] as its WebIDL reference
+      const idl = customWebidlDoc.querySelector("#example>div>pre");
+
+      // readonly attribute USVString url;
+      const typeLink = idl.querySelector(`span.idlAttrType a`);
+      expect(typeLink.href.toLowerCase()).toContain('webidl-1');
+      done();
+  });
 
   it("links to fully qualified method names", done => {
     var t1 = new URL(doc.getElementById("fullyQualifiedNoParens-1")).hash;

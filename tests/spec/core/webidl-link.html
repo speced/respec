@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'/>
+    <title>Custom WebIDL link</title>
+    <script class='remove' src='/js/deps/require.js' data-main='/js/profile-w3c-common'>
+    </script>
+    <script class='remove'>
+      var respecConfig = {
+              specStatus:   "ED"
+          ,   shortName:    "webidl"
+          ,   editors:      [{ name: "Robin Berjon", url: "http://berjon.com/" }]
+          ,   wg:           "ReSpec Hackin' Gang"
+          ,   wgURI:        "http://darobin.github.com/respec"
+          ,   wgPublicList: "none"
+          ,   wgPatentURI:  "XXX"
+          ,   edDraftURI:   "http://darobin.github.com/respec"
+        };
+    </script>
+  </head>
+  <body>
+    <p>This specification uses [[!WEBIDL-1]].</p>
+<section id="example" data-dfn-for="ExampleInterface" data-link-for="ExampleInterface">
+  <h2><dfn>ExampleInterface</dfn> interface</h2>
+  <pre class="idl no-link-warnings">
+  interface ExampleInterface {
+    void exampleMethod();
+    readonly attribute USVString url;
+  };
+  </pre>
+  <dl>
+    <dt><dfn>exampleMethod()</dfn></dt>
+    <dd>Define <a>exampleMethod</a> here...</dd>
+    <dt><dfn>url</dfn></dt>
+    <dd>Define <a>url</a> here...</dd>
+  </dl>
+</section>
+  </body>
+</html>
