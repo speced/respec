@@ -83,7 +83,7 @@
     "fs-extra": "^4.0.1",
     "highlight.js": "github:marcoscaceres/highlight.js",
     "hyperhtml": "^1.2.0",
-    "leaflet": "^1.0.3",
+    "leaflet": "1.0.3",
     "loading-indicator": "^2.0.0",
     "marcosc-async": "^4.0.3",
     "marked": "^0.3.6",
