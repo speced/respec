@@ -1139,30 +1139,29 @@ export function run(conf, doc, cb) {
   const autoLinkMaps = [standardTypes, extendedAttributesLinks];
 
   // update standardTypes and extendedAttributesLinks based on local definitions
-  for (let i in autoLinkMaps) {
-      const linkmap = autoLinkMaps[i];
+  autoLinkMaps.forEach((linkmap, i) => {
       // wrapping extended attributes names in [ ]
       const keyname = (k) => (i == 0 ? k : '[' + k + ']').toLowerCase();
-      for (let k of linkmap.keys()) {
+      [...linkmap.keys()].forEach(k => {
           if (conf.definitionMap[keyname(k)]) {
               const dfns = conf.definitionMap[keyname(k)].filter(n => n.data('cite'));
               // we only use this if there are no duplicate definitions
               if (dfns.length === 1)
                   linkmap.set(k, dfns[0].data('cite'));
           }
-      }
-  }
+      });
+  });
 
   // Update auto-links to WEBIDL to use the one referenced normatively
-    for (let linkmap of autoLinkMaps) {
-        for (let [k,v] of linkmap.entries()) {
+    autoLinkMaps.forEach((linkmap) => {
+        [...linkmap.entries()].forEach(([k,v]) => {
             if (v.split('#')[0] === 'WEBIDL') {
                 const webidlrefs = [...conf.normativeReferences.keys()].filter(x => x.toUpperCase().startsWith('WEBIDL'));
                 if (webidlrefs.length === 1)
                     linkmap.set(k, webidlrefs[0] + '#' + v.split('#')[1])
             }
-        }
-    }
+        });
+    });
 
   $idl.each(function() {
     var parse;
