@@ -296,7 +296,7 @@ function typeIsWhitespace(webIdlType) {
   return whitespaceTypes[webIdlType];
 }
 
-const extenedAttributesLinks = new Map([
+const extendedAttributesLinks = new Map([
   ["CEReactions", "HTML#cereactions"],
   ["Clamp", "WEBIDL#Clamp"],
   ["Constructor", "WEBIDL#Constructor"],
@@ -343,11 +343,11 @@ function extAttr(extAttrs, indent, singleLine) {
   tmpParser.innerHTML = safeString;
   Array.from(tmpParser.querySelectorAll(".extAttrName"))
     .filter(function(elem) {
-      return extenedAttributesLinks.has(elem.textContent);
+      return extendedAttributesLinks.has(elem.textContent);
     })
     .forEach(function(elem) {
       const a = elem.ownerDocument.createElement("a");
-      a.dataset.cite = extenedAttributesLinks.get(elem.textContent);
+      a.dataset.cite = extendedAttributesLinks.get(elem.textContent);
       a.textContent = elem.textContent;
       elem.replaceChild(a, elem.firstChild);
     });
@@ -1136,13 +1136,20 @@ export function run(conf, doc, cb) {
     $(doc).find("head link").first().before($("<style/>").text(css));
   }
 
-  // update standardTypes based on local definitions
-  for (let k of standardTypes.keys()) {
-      if (conf.definitionMap[k.toLowerCase()]) {
-          const dfns = conf.definitionMap[k.toLowerCase()].filter(n => n.data('cite'));
-          // we only use this if there are no duplicate definitions
-          if (dfns.length === 1)
-              standardTypes.set(k, dfns[0].data('cite'));
+  const autoLinkMaps = [standardTypes, extendedAttributesLinks];
+
+  // update standardTypes and extendedAttributesLinks based on local definitions
+  for (let i in autoLinkMaps) {
+      const linkmap = autoLinkMaps[i];
+      // wrapping extended attributes names in [ ]
+      const keyname = (k) => (i == 0 ? k : '[' + k + ']').toLowerCase();
+      for (let k of linkmap.keys()) {
+          if (conf.definitionMap[keyname(k)]) {
+              const dfns = conf.definitionMap[keyname(k)].filter(n => n.data('cite'));
+              // we only use this if there are no duplicate definitions
+              if (dfns.length === 1)
+                  linkmap.set(k, dfns[0].data('cite'));
+          }
       }
   }
 
