@@ -6,34 +6,34 @@ export const name = "geonovum/seo";
 export function run(conf, doc, cb) {
   var trLatestUri = conf.shortName
     ? "https://docs.geostandaarden.nl/" +
-      conf.specStatus +
-      "/" +
       conf.pubDomain +
       "/" +
+      conf.specStatus.substr(3).toLowerCase() +
+      "-" +
       conf.shortName +
       "/"
     : null;
-  switch (conf.canonicalURI) {
-    case "edDraft":
+  switch (conf.canonicalURI.toLowerCase()) {
+    case "wv":
       if (conf.edDraftURI) {
         conf.canonicalURI = new URL(conf.edDraftURI, doc.location).href;
       } else {
         pub(
           "warn",
-          "Canonical URI set to edDraft, " +
-            "but no edDraftURI is set in configuration"
+          "Canonical URI staat op WV, " +
+            "maar er is geen edDraftURI geconfigureerd"
         );
         conf.canonicalURI = null;
       }
       break;
-    case "TR":
+    case "def":
       if (trLatestUri) {
         conf.canonicalURI = trLatestUri;
       } else {
         pub(
           "warn",
-          "Canonical URI set to TR, but " +
-            "no shortName is set in configuration"
+          "Canonical URI staat op DEF" +
+            "maar er is geen shortName is geconfigureerd"
         );
         conf.canonicalURI = null;
       }
