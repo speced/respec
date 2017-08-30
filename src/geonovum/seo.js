@@ -15,7 +15,7 @@ export function run(conf, doc, cb) {
     : null;
   if (conf.canonicalURI) {
     switch (conf.canonicalURI.toLowerCase()) {
-      case "WV":
+      case "wv":
         if (conf.edDraftURI) {
           conf.canonicalURI = new URL(conf.edDraftURI, doc.location).href;
         } else {
@@ -27,7 +27,7 @@ export function run(conf, doc, cb) {
           conf.canonicalURI = null;
         }
         break;
-      case "DEF":
+      case "def":
         if (trLatestUri) {
           conf.canonicalURI = trLatestUri;
         } else {
