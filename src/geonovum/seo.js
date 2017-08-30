@@ -33,7 +33,7 @@ export function run(conf, doc, cb) {
         pub(
           "warn",
           "Canonical URI staat op DEF" +
-            "maar er is geen shortName is geconfigureerd"
+            "maar er is geen shortName geconfigureerd"
         );
         conf.canonicalURI = null;
       }
