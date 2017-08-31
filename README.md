@@ -1,6 +1,6 @@
 # ReSpec
 
-[![Build Status](https://travis-ci.org/w3c/respec.svg?branch=develop)](https://travis-ci.org/w3c/respec)
+[![Build Status](https://travis-ci.org/Geonovum/respec.svg?branch=develop)](https://travis-ci.org/Geonovum/respec)
 [![Known Vulnerabilities](https://snyk.io/test/github/w3c/respec/badge.svg)](https://snyk.io/test/github/w3c/respec)
 
 ReSpec is a JS library that makes it easier to write technical specifications, or documents
