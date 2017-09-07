@@ -7,27 +7,35 @@
 
 import { pub } from "core/pubsubhub";
 
+export const name = "core/figures";
+
 export function run(conf, doc, cb) {
   // Move old syntax to new syntax
   $(".figure", doc).each(function(i, figure) {
     var $figure = $(figure),
-      title = $figure.attr("title") ||
-      $figure.find("[title]").attr("title") ||
-      $figure.attr("alt") ||
-      $figure.find("[alt]").attr("alt") ||
-      "",
+      title =
+        $figure.attr("title") ||
+        $figure.find("[title]").attr("title") ||
+        $figure.attr("alt") ||
+        $figure.find("[alt]").attr("alt") ||
+        "",
       $caption = $("<figcaption/>").text(title);
 
     // change old syntax to something HTML5 compatible
+    let badSyntax = "div.figure";
     if ($figure.is("div")) {
-      pub("warn", "You are using the deprecated div.figure syntax; please switch to <figure>.");
       $figure.append($caption);
       $figure.renameElement("figure");
     } else {
-      pub("warn", "You are using the deprecated img.figure syntax; please switch to <figure>.");
+      badSyntax = "img.figure";
       $figure.wrap("<figure></figure>");
       $figure.parent().append($caption);
     }
+    pub(
+      "warn",
+      `You are using the deprecated ${badSyntax} syntax; please switch to \`<figure>\`. ` +
+        `Your document has been updated to use \`<figure>\` instead ❤️.`
+    );
   });
 
   // process all figures
@@ -39,21 +47,25 @@ export function run(conf, doc, cb) {
       $cap = $fig.find("figcaption"),
       tit = $cap.text(),
       id = $fig.makeID("fig", tit);
-    if (!$cap.length) pub("warn", "A <figure> should contain a <figcaption>.");
+    if (!$cap.length)
+      pub("warn", "A `<figure>` should contain a `<figcaption>`.");
 
     // set proper caption title
     num++;
-    $cap.wrapInner($("<span class='fig-title'/>"))
+    $cap
+      .wrapInner($("<span class='fig-title'/>"))
       .prepend(doc.createTextNode(" "))
       .prepend($("<span class='figno'>" + num + "</span>"))
       .prepend(doc.createTextNode(conf.l10n.fig));
     figMap[id] = $cap.contents();
     var $tofCap = $cap.clone();
     $tofCap.find("a").renameElement("span").removeAttr("href");
-    tof.push($("<li class='tofline'><a class='tocxref' href='#" + id + "'></a></li>")
-      .find(".tocxref")
-      .append($tofCap.contents())
-      .end());
+    tof.push(
+      $("<li class='tofline'><a class='tocxref' href='#" + id + "'></a></li>")
+        .find(".tocxref")
+        .append($tofCap.contents())
+        .end()
+    );
   });
 
   // Update all anchors with empty content that reference a figure ID
@@ -75,8 +87,15 @@ export function run(conf, doc, cb) {
     // if it has a class of appendix or introductory, don't touch it
     // if all the preceding section siblings are introductory, make it introductory
     // if there is a preceding section sibling which is an appendix, make it appendix
-    if (!$tof.hasClass("appendix") && !$tof.hasClass("introductory") && !$tof.parents("section").length) {
-      if ($tof.prevAll("section.introductory").length == $tof.prevAll("section").length) {
+    if (
+      !$tof.hasClass("appendix") &&
+      !$tof.hasClass("introductory") &&
+      !$tof.parents("section").length
+    ) {
+      if (
+        $tof.prevAll("section.introductory").length ===
+        $tof.prevAll("section").length
+      ) {
         $tof.addClass("introductory");
       } else if ($tof.prevAll("appendix").length) {
         $tof.addClass("appendix");

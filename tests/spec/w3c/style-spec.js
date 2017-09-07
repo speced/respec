@@ -1,41 +1,55 @@
 "use strict";
-var specStatus = [{
-  status: "FPWD",
-  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WD",
-}, {
-  status: "WD-NOTE",
-  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WD",
-}, {
-  status: "finding",
-  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css",
-}, {
-  status: "unofficial",
-  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-UD",
-}, {
-  status: "base",
-  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css",
-}, {
-  status: "RSCND",
-  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-RSCND",
-}, {
-  status: "FPWD-NOTE",
-  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WG-NOTE.css",
-}, {
-  status: "FAKE-TEST-TYPE",
-  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-FAKE-TEST-TYPE",
-}, {
-  status: "CG-FINAL",
-  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}cg-final",
-}, {
-  status: "CG-DRAFT",
-  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}cg-draft",
-}, {
-  status: "BG-FINAL",
-  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}bg-final",
-}, {
-  status: "BG-DRAFT",
-  expectedURL: "https://www.w3.org/StyleSheets/TR/{version}bg-draft",
-},];
+var specStatus = [
+  {
+    status: "FPWD",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WD",
+  },
+  {
+    status: "WD-NOTE",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WD",
+  },
+  {
+    status: "finding",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css",
+  },
+  {
+    status: "unofficial",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-UD",
+  },
+  {
+    status: "base",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}base.css",
+  },
+  {
+    status: "RSCND",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-RSCND",
+  },
+  {
+    status: "FPWD-NOTE",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WG-NOTE.css",
+  },
+  {
+    status: "FAKE-TEST-TYPE",
+    expectedURL:
+      "https://www.w3.org/StyleSheets/TR/{version}W3C-FAKE-TEST-TYPE",
+  },
+  {
+    status: "CG-FINAL",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}cg-final",
+  },
+  {
+    status: "CG-DRAFT",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}cg-draft",
+  },
+  {
+    status: "BG-FINAL",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}bg-final",
+  },
+  {
+    status: "BG-DRAFT",
+    expectedURL: "https://www.w3.org/StyleSheets/TR/{version}bg-draft",
+  },
+];
 
 function loadWithStatus(status, expectedURL, mode) {
   return new Promise(function(resolve) {
@@ -73,10 +87,7 @@ function loadWithStatus(status, expectedURL, mode) {
 }
 
 describe("W3C - Style", function() {
-  afterEach(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
 
   it("should include 'fixup.js'", function(done) {
     var ops = makeStandardOps();
@@ -85,8 +96,7 @@ describe("W3C - Style", function() {
       var elem = doc.querySelector(query);
       expect(elem.src).toEqual("https://www.w3.org/scripts/TR/2016/fixup.js");
     };
-    makeRSDoc(ops, theTest, "spec/core/simple.html")
-      .then(done);
+    makeRSDoc(ops, theTest, "spec/core/simple.html").then(done);
   });
 
   it("should have a meta viewport added", function(done) {
@@ -97,39 +107,40 @@ describe("W3C - Style", function() {
       var expectedStr = "width=device-width, initial-scale=1, shrink-to-fit=no";
       expect(elem.content).toEqual(expectedStr);
     };
-    makeRSDoc(ops, theTest, "spec/core/simple.html")
-      .then(done);
+    makeRSDoc(ops, theTest, "spec/core/simple.html").then(done);
   });
 
   it("should default to base when specStatus is missing", function(done) {
-    loadWithStatus("", "https://www.w3.org/StyleSheets/TR/{version}base.css").then(done);
+    loadWithStatus(
+      "",
+      "https://www.w3.org/StyleSheets/TR/{version}base.css"
+    ).then(done);
   });
 
   it("should style according to spec status", function(done) {
     // We pick random half from the list, as running the whole set is very slow
 
-    var promises = pickRandomsFromList(specStatus)
-      .map(function(test) {
-        return loadWithStatus(test.status, test.expectedURL, "2016");
-      });
+    var promises = pickRandomsFromList(specStatus).map(function(test) {
+      return loadWithStatus(test.status, test.expectedURL, "2016");
+    });
     Promise.all(promises).then(done);
   });
 
   it("should style according to experimental styles", function(done) {
     // We pick random half from the list, as running the whole set is very slow
-    var promises = pickRandomsFromList(specStatus)
-      .map(function(test) {
-        return loadWithStatus(test.status, test.expectedURL, "experimental");
-      });
+    var promises = pickRandomsFromList(specStatus).map(function(test) {
+      return loadWithStatus(test.status, test.expectedURL, "experimental");
+    });
     Promise.all(promises).then(done);
   });
 
-  it("should not use 'experimental' URL when useExperimentalStyles is false", function(done) {
+  it("should not use 'experimental' URL when useExperimentalStyles is false", function(
+    done
+  ) {
     // We pick random half from the list, as running the whole set is very slow
-    var promises = pickRandomsFromList(specStatus)
-      .map(function(test) {
-        return loadWithStatus(test.status, test.expectedURL);
-      });
+    var promises = pickRandomsFromList(specStatus).map(function(test) {
+      return loadWithStatus(test.status, test.expectedURL);
+    });
     Promise.all(promises).then(done);
   });
   it("shouldn't include fixup.js when noToc is set", done => {
@@ -143,7 +154,6 @@ describe("W3C - Style", function() {
       var elem = doc.querySelector(query);
       expect(elem).toBe(null);
     };
-    makeRSDoc(ops, theTest, "spec/core/simple.html")
-      .then(done);
+    makeRSDoc(ops, theTest, "spec/core/simple.html").then(done);
   });
 });

@@ -2,52 +2,62 @@
 // Generated on Fri Feb 26 2016 13:09:51 GMT+1100 (AEDT)
 /*globals module, require, process*/
 "use strict";
-module.exports = function (config) {
+module.exports = function(config) {
   var options = {
-
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: "./",
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: [
-      "jasmine",
-      "requirejs",
-      "detectBrowsers",
-    ],
+    frameworks: ["jasmine", "requirejs", "detectBrowsers"],
 
     // configuration
     detectBrowsers: {
       enabled: true,
       usePhantomJS: false,
       postDetection(browsers) {
-        return browsers
-          // Remove IE
-          .filter(browser => browser !== 'IE');
-      }
+        return (
+          browsers
+            // Remove IE
+            .filter(browser => browser !== "IE")
+        );
+      },
     },
 
     // list of files / patterns to load in the browser
     files: [
       "js/deps/jquery.js",
-      "js/deps/fetch.js",
       {
         pattern: "builds/**/*.*",
         included: false,
         served: true,
-      }, {
+      },
+      {
+        pattern: "js/deps/marked.js",
+        included: false,
+        served: true,
+      },
+      {
         pattern: "js/**/*.*",
         included: false,
         served: true,
-      }, {
+      },
+      {
         pattern: "tests/**/*-spec.js",
         included: false,
         served: true,
-      }, {
+      },
+      {
+        pattern: "tests/*.html",
+        included: false,
+        served: true,
+      },
+      {
         pattern: "tests/**/*.html",
         included: false,
         served: true,
-      }, {
+      },
+      {
         pattern: "worker/*.js",
         included: false,
         served: true,
@@ -57,16 +67,18 @@ module.exports = function (config) {
     ],
 
     // list of files to exclude
-    exclude: [
-      "**/*.swp",
-      "*.swp",
-      ".DS_Store",
-    ],
+    exclude: ["**/*.swp", "*.swp", ".DS_Store"],
 
     proxies: {
+      "/about-blank.html": "/base/tests/about-blank.html",
       "/js/": "/base/js/",
       "/tests/": "/base/tests/",
       "/spec/": "/base/tests/spec/",
+      "/deps/": "/base/js/deps/",
+      "/js/deps/": "/base/js/deps/",
+      "/base/deps/": "/base/js/deps/",
+      "/base/deps/marked.js": "/base/js/deps/marked.js",
+      "/worker/respec-worker.js": "/base/worker/respec-worker.js",
     },
 
     // preprocess matching files before serving them to the browser
@@ -103,22 +115,14 @@ module.exports = function (config) {
     concurrency: 1,
 
     browserNoActivityTimeout: 100000,
-
-    customLaunchers: {
-      chrome_canary_travis: {
-        base: "ChromeCanary",
-        flags: ["--no-sandbox"]
-      },
-    },
   };
   if (process.env.TRAVIS) {
     options.detectBrowsers.enabled = false;
     options.autoWatch = false;
     options.singleRun = true;
-    options.concurrency = 1;
+    options.concurrency = 2;
     options.reporters = ["mocha"];
-    options.browsers = ["chrome_canary_travis"]; //"FirefoxNightly"
+    options.browsers = ["Firefox", "Chrome"]; //"FirefoxNightly"
   }
   config.set(options);
 };
-

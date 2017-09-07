@@ -1,4 +1,16 @@
 {
-  "presets": ["env"],
-  "plugins": ["transform-es2015-modules-amd","transform-async-to-generator"]
+  "presets": [
+    "stage-3",
+    [
+      "env",
+      {
+        "modules": "amd",
+        "targets": {
+          "browsers": [
+            "last 1 versions"
+          ]
+        }
+      }
+    ]
+  ]
 }

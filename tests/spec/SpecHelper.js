@@ -3,7 +3,12 @@
 "use strict";
 var iframes = [];
 
-function makeRSDoc(opts = {}, cb = () => {}, src = "about:blank", style = "") {
+function makeRSDoc(
+  opts = {},
+  cb = () => {},
+  src = "about-blank.html",
+  style = ""
+) {
   return new Promise(function(resove, reject) {
     var ifr = document.createElement("iframe");
     opts = opts || {};
@@ -15,7 +20,12 @@ function makeRSDoc(opts = {}, cb = () => {}, src = "about:blank", style = "") {
       var doc = this.contentDocument;
       decorateDocument(doc, opts);
       window.addEventListener("message", function msgHandler(ev) {
-        if (!doc || !ev.source || doc !== ev.source.document || ev.data.topic !== "end-all") {
+        if (
+          !doc ||
+          !ev.source ||
+          doc !== ev.source.document ||
+          ev.data.topic !== "end-all"
+        ) {
           return;
         }
         window.removeEventListener("message", msgHandler);
@@ -28,8 +38,8 @@ function makeRSDoc(opts = {}, cb = () => {}, src = "about:blank", style = "") {
     if (style) {
       try {
         ifr.style = style;
-      } catch (err) {
-        console.warn("Could not override iframe style: " + style + " (" + err.message + ")");
+      } catch ({ message }) {
+        console.warn(`Could not override iframe style: ${style} (${message})`);
       }
     }
     if (src) {
@@ -51,19 +61,29 @@ function decorateDocument(doc, opts) {
     var path = opts.jsPath || "../js/";
     var loader = this.ownerDocument.createElement("script");
     var config = this.ownerDocument.createElement("script");
+    switch (Math.round(Math.random() * 2)) {
+      case 2:
+        loader.defer = true;
+        break;
+      case 1:
+        loader.async = true;
+        break;
+    }
     var configText = "";
     if (opts.config) {
-      configText = "var respecConfig = " + JSON.stringify(opts.config || {}) + ";";
+      configText =
+        "var respecConfig = " + JSON.stringify(opts.config || {}) + ";";
     }
     config.classList.add("remove");
     config.innerText = configText;
-    var isKarma = (!!window.__karma__);
+    var isKarma = !!window.__karma__;
     var loadAttr = {
-      src: (isKarma) ? new URL("/base/builds/respec-w3c-common.js", location).href : "/js/deps/require.js",
-      "data-main": (isKarma) ? "" : path + (opts.profile || "profile-w3c-common")
+      src: isKarma
+        ? new URL("/base/builds/respec-w3c-common.js", location).href
+        : "/js/deps/require.js",
+      "data-main": isKarma ? "" : path + (opts.profile || "profile-w3c-common"),
     };
-    Object
-      .keys(loadAttr)
+    Object.keys(loadAttr)
       .reduce(intoAttributes.bind(loadAttr), loader)
       .classList.add("remove");
     this.appendChild(config);
@@ -71,7 +91,11 @@ function decorateDocument(doc, opts) {
   }
 
   function decorateBody(opts) {
-    var bodyText = opts.abstract || "<section id='abstract'><p>test abstract</p></section>";
+    var bodyText = `
+      <section id='abstract'>
+        ${opts.abstract === undefined ? "<p>test abstract</p>" : opts.abstract}
+      </section>
+    `;
     if (opts.body) {
       bodyText = bodyText.concat(opts.body);
     }
@@ -79,9 +103,10 @@ function decorateDocument(doc, opts) {
   }
 
   if (opts.htmlAttrs) {
-    Object
-      .keys(opts.htmlAttrs)
-      .reduce(intoAttributes.bind(opts.htmlAttrs), doc.documentElement);
+    Object.keys(opts.htmlAttrs).reduce(
+      intoAttributes.bind(opts.htmlAttrs),
+      doc.documentElement
+    );
   }
   if (opts.title) {
     doc.title = opts.title;
@@ -104,11 +129,9 @@ function pickRandomsFromList(list, howMany) {
   }
   if (howMany > list.length) {
     // Return a new list, but randomized.
-    return list
-      .slice()
-      .sort(function randomSort() {
-        return Math.round(Math.random() * (1 - (-1)) + -1);
-      });
+    return list.slice().sort(function randomSort() {
+      return Math.round(Math.random() * (1 - -1) + -1);
+    });
   }
   var collectedValues = [];
   // collect a unique set based on howMany we need.
@@ -127,16 +150,18 @@ function pickRandomsFromList(list, howMany) {
 
 function makeBasicConfig() {
   return {
-    editors: [{
-      name: "Person Name"
-    }],
+    editors: [
+      {
+        name: "Person Name",
+      },
+    ],
     specStatus: "ED",
-    edDraftURI: "http://foo.com",
+    edDraftURI: "https://foo.com",
     shortName: "Foo",
     previousMaturity: "CR",
     previousPublishDate: "1999-01-01",
     errata: "https://github.com/tabatkins/bikeshed",
-    implementationReportURI: "http://example.com/implementationReportURI",
+    implementationReportURI: "https://example.com/implementationReportURI",
     perEnd: "1999-01-01",
     lint: false,
   };
@@ -152,4 +177,3 @@ function makeStandardOps() {
     body: makeDefaultBody(),
   };
 }
-

@@ -14,6 +14,7 @@
 //    key word was used.  NOTE: While each member is a counter, at this time
 //    the counter is not used.
 import { pub } from "core/pubsubhub";
+export const name = "core/inlines";
 
 export function run(conf, doc, cb) {
   doc.normalize();
@@ -23,7 +24,9 @@ export function run(conf, doc, cb) {
 
   // PRE-PROCESSING
   var abbrMap = {};
-  $("abbr[title]", doc).each(function() { abbrMap[$(this).text()] = $(this).attr("title"); });
+  $("abbr[title]", doc).each(function() {
+    abbrMap[$(this).text()] = $(this).attr("title");
+  });
   var aKeys = [];
   for (var k in abbrMap) aKeys.push(k);
   aKeys.sort(function(a, b) {
@@ -31,13 +34,19 @@ export function run(conf, doc, cb) {
     if (a.length < b.length) return 1;
     return 0;
   });
-  var abbrRx = aKeys.length ? "(?:\\b" + aKeys.join("\\b)|(?:\\b") + "\\b)" : null;
+  var abbrRx = aKeys.length
+    ? "(?:\\b" + aKeys.join("\\b)|(?:\\b") + "\\b)"
+    : null;
 
   // PROCESSING
   var txts = $("body", doc).allTextNodes(["pre"]);
-  var rx = new RegExp("(\\bMUST(?:\\s+NOT)?\\b|\\bSHOULD(?:\\s+NOT)?\\b|\\bSHALL(?:\\s+NOT)?\\b|" +
-    "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +
-    "(?:\\[\\[(?:!|\\\\)?[A-Za-z0-9\\.-]+\\]\\])" + (abbrRx ? "|" + abbrRx : "") + ")");
+  var rx = new RegExp(
+    "(\\bMUST(?:\\s+NOT)?\\b|\\bSHOULD(?:\\s+NOT)?\\b|\\bSHALL(?:\\s+NOT)?\\b|" +
+      "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +
+      "(?:\\[\\[(?:!|\\\\)?[A-Za-z0-9\\.-]+\\]\\])" +
+      (abbrRx ? "|" + abbrRx : "") +
+      ")"
+  );
   for (var i = 0; i < txts.length; i++) {
     var txt = txts[i];
     var subtxt = txt.data.split(rx);
@@ -51,19 +60,28 @@ export function run(conf, doc, cb) {
       df.appendChild(doc.createTextNode(t));
       if (matched) {
         // RFC 2119
-        if (/MUST(?:\s+NOT)?|SHOULD(?:\s+NOT)?|SHALL(?:\s+NOT)?|MAY|(?:NOT\s+)?REQUIRED|(?:NOT\s+)?RECOMMENDED|OPTIONAL/.test(matched)) {
+        if (
+          /MUST(?:\s+NOT)?|SHOULD(?:\s+NOT)?|SHALL(?:\s+NOT)?|MAY|(?:NOT\s+)?REQUIRED|(?:NOT\s+)?RECOMMENDED|OPTIONAL/.test(
+            matched
+          )
+        ) {
           matched = matched.split(/\s+/).join(" ");
-          df.appendChild($("<em/>").attr({ "class": "rfc2119", title: matched }).text(matched)[0]);
+          df.appendChild(
+            $("<em/>")
+              .attr({ class: "rfc2119", title: matched })
+              .text(matched)[0]
+          );
           // remember which ones were used
           conf.respecRFC2119[matched] = true;
-        }
-        // BIBREF
-        else if (/^\[\[/.test(matched)) {
+        } else if (/^\[\[/.test(matched)) {
+          // BIBREF
           var ref = matched;
           ref = ref.replace(/^\[\[/, "");
           ref = ref.replace(/\]\]$/, "");
           if (ref.indexOf("\\") === 0) {
-            df.appendChild(doc.createTextNode("[[" + ref.replace(/^\\/, "") + "]]"));
+            df.appendChild(
+              doc.createTextNode("[[" + ref.replace(/^\\/, "") + "]]")
+            );
           } else {
             var norm = false;
             if (ref.indexOf("!") === 0) {
@@ -74,18 +92,31 @@ export function run(conf, doc, cb) {
             if (norm) conf.normativeReferences.add(ref);
             else conf.informativeReferences.add(ref);
             df.appendChild(doc.createTextNode("["));
-            df.appendChild($("<cite/>").wrapInner($("<a/>").attr({ "class": "bibref", href: "#bib-" + ref }).text(ref))[0]);
+            df.appendChild(
+              $("<cite/>").wrapInner(
+                $("<a/>")
+                  .attr({ class: "bibref", href: "#bib-" + ref })
+                  .text(ref)
+              )[0]
+            );
             df.appendChild(doc.createTextNode("]"));
           }
-        }
-        // ABBR
-        else if (abbrMap[matched]) {
-          if ($(txt).parents("abbr").length) df.appendChild(doc.createTextNode(matched));
-          else df.appendChild($("<abbr/>").attr({ title: abbrMap[matched] }).text(matched)[0]);
-        }
-        // FAIL -- not sure that this can really happen
-        else {
-          pub("error", "Found token '" + matched + "' but it does not correspond to anything");
+        } else if (abbrMap[matched]) {
+          // ABBR
+          if ($(txt).parents("abbr").length)
+            df.appendChild(doc.createTextNode(matched));
+          else
+            df.appendChild(
+              $("<abbr/>").attr({ title: abbrMap[matched] }).text(matched)[0]
+            );
+        } else {
+          // FAIL -- not sure that this can really happen
+          pub(
+            "error",
+            "Found token '" +
+              matched +
+              "' but it does not correspond to anything"
+          );
         }
       }
     }

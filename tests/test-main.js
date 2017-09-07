@@ -25,14 +25,24 @@ require.config({
   // we have to kickoff jasmine, as it is asynchronous
   callback: window.__karma__.start,
   paths: {
+    "core/linter-rules/no-headingless-sections":
+      "/base/js/core/linter-rules/no-headingless-sections",
+    "core/linter-rules/no-http-props":
+      "/base/js/core/linter-rules/no-http-props",
+    "core/l10n": "/base/js/core/l10n",
+    "w3c/linter-rules/privsec-section":
+      "/base/js/w3c/linter-rules/privsec-section",
+    "w3c/l10n": "/base/js/w3c/l10n",
+    "core/LinterRule": "/base/js/core/LinterRule",
+    "core/biblio-db": "/base/js/core/biblio-db",
     "core/jquery-enhanced": "/base/js/core/jquery-enhanced",
     "core/pubsubhub": "/base/js/core/pubsubhub",
     "core/utils": "/base/js/core/utils",
-    "core/biblio-db": "/base/js/core/biblio-db",
-    "w3c/linter": "/base/js/w3c/linter",
-    "deps/jquery": "/base/js/deps/jquery",
     "deps/async": "/base/js/deps/async",
-    "deps/regenerator": "/base/js/deps/regenerator", 
+    "deps/jquery": "/base/js/deps/jquery",
+    "deps/marked": "/base/js/deps/marked",
+    "deps/regenerator": "/base/js/deps/regenerator",
+    "w3c/linter": "/base/js/w3c/linter",
   },
 });
 

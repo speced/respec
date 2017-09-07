@@ -3,12 +3,12 @@
 "use strict";
 const async = require("marcosc-async");
 const colors = require("colors");
-const fsp = require("fs-promise");
+const fsp = require("fs-extra");
 const loading = require("loading-indicator");
 const path = require("path");
 const presets = require("loading-indicator/presets");
 const r = require("requirejs");
-const UglifyJS = require("uglify-js");
+const UglifyJS = require("uglify-es");
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
 colors.setTheme({
@@ -16,38 +16,48 @@ colors.setTheme({
   info: "green",
 });
 
-const optionList = [{
-  alias: "h",
-  defaultValue: false,
-  description: "Display this usage guide.",
-  name: "help",
-  type: Boolean,
-}, {
-  alias: "p",
-  defaultOption: true,
-  description: "Name of profile to build. Profile must be " +
-    "in the js/ folder, and start with 'profile-' (e.g., profile-w3c-common.js)",
-  multiple: false,
-  name: "profile",
-  type: String,
-}];
+const optionList = [
+  {
+    alias: "h",
+    defaultValue: false,
+    description: "Display this usage guide.",
+    name: "help",
+    type: Boolean,
+  },
+  {
+    alias: "p",
+    defaultOption: true,
+    description: "Name of profile to build. Profile must be " +
+      "in the js/ folder, and start with 'profile-' (e.g., profile-w3c-common.js)",
+    multiple: false,
+    name: "profile",
+    type: String,
+  },
+];
 
-const usageSections = [{
-  header: "builder",
-  content: "Builder builds a ReSpec profile",
-}, {
-  header: "Options",
-  optionList,
-}, {
-  header: "Examples",
-  content: [{
-    desc: "1. Build W3C Profile ",
-    example: "$ ./tools/builder.js --profile=w3c-common"
-  }, ]
-}, {
-  content: "Project home: [underline]{https://github.com/w3c/respec}",
-  raw: true,
-}];
+const usageSections = [
+  {
+    header: "builder",
+    content: "Builder builds a ReSpec profile",
+  },
+  {
+    header: "Options",
+    optionList,
+  },
+  {
+    header: "Examples",
+    content: [
+      {
+        desc: "1. Build W3C Profile ",
+        example: "$ ./tools/builder.js --profile=w3c-common",
+      },
+    ],
+  },
+  {
+    content: "Project home: [underline]{https://github.com/w3c/respec}",
+    raw: true,
+  },
+];
 
 /**
  * Async function that appends the boilerplate to the generated script
@@ -69,9 +79,14 @@ window.respecVersion = "${version}";
 ${optimizedJs}
 require(['profile-${name}']);`;
     const result = UglifyJS.minify(respecJs, {
-      fromString: true,
-      outSourceMap: `respec-${name}.build.js.map`,
+      sourceMap: {
+        filename: `respec-${name}.js`,
+        url: `respec-${name}.build.js.map`,
+      },
     });
+    if ("error" in result) {
+      throw new Error(result.error);
+    }
     const mapPath = path.dirname(outPath) + `/respec-${name}.build.js.map`;
     const promiseToWriteJs = fsp.writeFile(outPath, result.code, "utf-8");
     const promiseToWriteMap = fsp.writeFile(mapPath, sourceMap, "utf-8");
@@ -116,9 +131,7 @@ const Builder = {
       const outputWritter = appendBoilerplate(outPath, buildVersion, name);
       const config = {
         baseUrl: path.join(__dirname, "../js/"),
-        deps: [
-          "deps/require",
-        ],
+        deps: ["deps/require"],
         generateSourceMaps: true,
         inlineText: true,
         logLevel: 2, // Show uglify warnings and errors.
@@ -130,9 +143,7 @@ const Builder = {
       };
       const promiseToWrite = new Promise((resolve, reject) => {
         config.out = (concatinatedJS, sourceMap) => {
-          outputWritter(concatinatedJS, sourceMap)
-            .then(resolve)
-            .catch(reject);
+          outputWritter(concatinatedJS, sourceMap).then(resolve).catch(reject);
         };
       });
       r.optimize(config);
@@ -149,30 +160,30 @@ const Builder = {
 };
 
 exports.Builder = Builder;
-
-async.task(function* run() {
-
-  let parsedArgs;
-  try {
-    parsedArgs = commandLineArgs(optionList);
-  } catch (err) {
-    console.info(getUsage(usageSections));
-    console.error(colors.error(err.stack));
-    return process.exit(127);
-  }
-  if (parsedArgs.help) {
-    console.info(getUsage(usageSections));
-    return process.exit(0);
-  }
-  const { profile: name } = parsedArgs;
-  if (!name) {
-    return;
-  }
-  try {
-    yield Builder.build({ name });
-  } catch (err) {
-    console.error(colors.error(err.stack));
-    return process.exit(1);
-  }
-  process.exit(0);
-});
+if (require.main === module) {
+  async.task(function* run() {
+    let parsedArgs;
+    try {
+      parsedArgs = commandLineArgs(optionList);
+    } catch (err) {
+      console.info(getUsage(usageSections));
+      console.error(colors.error(err.stack));
+      return process.exit(127);
+    }
+    if (parsedArgs.help) {
+      console.info(getUsage(usageSections));
+      return process.exit(0);
+    }
+    const { profile: name } = parsedArgs;
+    if (!name) {
+      return;
+    }
+    try {
+      yield Builder.build({ name });
+    } catch (err) {
+      console.error(colors.error(err.stack));
+      return process.exit(1);
+    }
+    process.exit(0);
+  });
+}

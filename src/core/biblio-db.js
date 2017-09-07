@@ -27,13 +27,11 @@ const readyPromise = new Promise((resolve, reject) => {
   request.onsuccess = () => {
     resolve(request.result);
   };
-  request.onupgradeneeded = async() => {
+  request.onupgradeneeded = async () => {
     const db = request.result;
-    Array
-      .from(db.objectStoreNames)
-      .map(
-        storeName => db.deleteObjectStore(storeName)
-      );
+    Array.from(db.objectStoreNames).map(storeName =>
+      db.deleteObjectStore(storeName)
+    );
     const promisesToCreateSchema = [
       new Promise((resolve, reject) => {
         try {
@@ -47,9 +45,9 @@ const readyPromise = new Promise((resolve, reject) => {
       }),
       new Promise((resolve, reject) => {
         try {
-          const transaction = db
-            .createObjectStore("reference", { keyPath: "id" })
-            .transaction;
+          const transaction = db.createObjectStore("reference", {
+            keyPath: "id",
+          }).transaction;
           transaction.oncomplete = resolve;
           transaction.onerror = reject;
         } catch (err) {
@@ -99,9 +97,7 @@ export const biblioDB = {
     }
     const db = await this.ready;
     return new Promise((resolve, reject) => {
-      var objectStore = db
-        .transaction([type], "readonly")
-        .objectStore(type);
+      var objectStore = db.transaction([type], "readonly").objectStore(type);
       var range = IDBKeyRange.only(id);
       var request = objectStore.openCursor(range);
       request.onsuccess = () => {
@@ -181,9 +177,7 @@ export const biblioDB = {
     }
     const db = await this.ready;
     return new Promise((resolve, reject) => {
-      var objectStore = db
-        .transaction([type], "readonly")
-        .objectStore(type);
+      var objectStore = db.transaction([type], "readonly").objectStore(type);
       var range = IDBKeyRange.only(id);
       var request = objectStore.openCursor(range);
       request.onsuccess = () => {
@@ -211,20 +205,18 @@ export const biblioDB = {
       alias: new Set(),
       reference: new Set(),
     };
-    Object
-      .keys(data)
+    Object.keys(data)
       .filter(key => {
         if (typeof data[key] === "string") {
-          let msg = "Legacy SpecRef entries are not supported: [[" + key + "]]. ";
-          msg += "Please update it at https://github.com/tobie/specref/";
+          let msg = `Legacy SpecRef entries are not supported: \`[[${key}]]\`. `;
+          msg +=
+            "Please update it to the new format at [specref repo](https://github.com/tobie/specref/)";
           pub("error", msg);
           return false;
         }
         return true;
       })
-      .map(
-        id => Object.assign({ id }, data[id])
-      )
+      .map(id => Object.assign({ id }, data[id]))
       .reduce((collector, obj) => {
         if (obj.aliasOf) {
           collector.alias.add(obj);
@@ -233,18 +225,13 @@ export const biblioDB = {
         }
         return collector;
       }, aliasesAndRefs);
-    const promisesToAdd = Object
-      .keys(aliasesAndRefs)
+    const promisesToAdd = Object.keys(aliasesAndRefs)
       .map(type => {
-        return Array
-          .from(aliasesAndRefs[type])
-          .map(
-            details => this.add(type, details)
-          );
+        return Array.from(aliasesAndRefs[type]).map(details =>
+          this.add(type, details)
+        );
       })
-      .reduce(
-        (collector, promises) => collector.concat(promises), []
-      );
+      .reduce((collector, promises) => collector.concat(promises), []);
     await Promise.all(promisesToAdd);
   },
   /**
@@ -266,9 +253,7 @@ export const biblioDB = {
     const db = await this.ready;
     const isInDB = await this.has(type, details.id);
     return new Promise((resolve, reject) => {
-      const store = db
-        .transaction([type], "readwrite")
-        .objectStore(type);
+      const store = db.transaction([type], "readwrite").objectStore(type);
       // update or add, depending of already having it in db
       var request = isInDB ? store.put(details) : store.add(details);
       request.onsuccess = resolve;

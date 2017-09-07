@@ -1,9 +1,6 @@
 "use strict";
 describe("Core - preProcess, postProcess, afterEnd", () => {
-  afterAll(done => {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
   let doc;
 
   beforeAll(done => {

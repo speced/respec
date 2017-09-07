@@ -91,24 +91,24 @@
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", the W3C Software and Document License
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
-import {
-  concatDate,
-  humanDate,
-  isoDate,
-  joinAnd,
-  parseLastModified,
-  parseSimpleDate
-} from "core/utils";
+import { concatDate, joinAnd, ISODate } from "core/utils";
 import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
 import tmpls from "templates";
 
-const cgbgHeadersTmpl = tmpls["cgbg-headers.html"];
-const cgbgSotdTmpl = tmpls["cgbg-sotd.html"];
-const headersTmpl = tmpls["headers.html"];
-const sotdTmpl = tmpls["sotd.html"];
+export const name = "w3c/headers";
 
-hb.registerHelper("showPeople", function(name, items) {
+const cgbgHeadersTmpl = tmpls["cgbg-headers.html"];
+const headersTmpl = tmpls["headers.html"];
+
+const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
+  timeZone: "UTC",
+  year: "numeric",
+  month: "long",
+  day: "2-digit",
+});
+
+hb.registerHelper("showPeople", function(name, items = []) {
   // stuff to handle RDFa
   var re = "",
     rp = "",
@@ -140,10 +140,16 @@ hb.registerHelper("showPeople", function(name, items) {
       editorid = " data-editor-id='" + parseInt(p.w3cid, 10) + "'";
     }
     if (this.doRDFa) {
-      ret += "<dd class='p-author h-card vcard' " + re + editorid + "><span" + rp + ">";
+      ret +=
+        "<dd class='p-author h-card vcard' " +
+        re +
+        editorid +
+        "><span" +
+        rp +
+        ">";
       if (name === "Editor") {
         // Update to next sequence in rdf:List
-        bn = (i < n - 1) ? ("_:editor" + (i + 1)) : "rdf:nil";
+        bn = i < n - 1 ? "_:editor" + (i + 1) : "rdf:nil";
         re = " resource='" + bn + "'";
       }
     } else {
@@ -151,18 +157,50 @@ hb.registerHelper("showPeople", function(name, items) {
     }
     if (p.url) {
       if (this.doRDFa) {
-        ret += "<meta" + rn + " content='" + p.name + "'><a class='u-url url p-name fn' " + rpu + " href='" + p.url + "'>" + p.name + "</a>";
-      } else ret += "<a class='u-url url p-name fn' href='" + p.url + "'>" + p.name + "</a>";
+        ret +=
+          "<meta" +
+          rn +
+          " content='" +
+          p.name +
+          "'><a class='u-url url p-name fn' " +
+          rpu +
+          " href='" +
+          p.url +
+          "'>" +
+          p.name +
+          "</a>";
+      } else
+        ret +=
+          "<a class='u-url url p-name fn' href='" +
+          p.url +
+          "'>" +
+          p.name +
+          "</a>";
     } else {
       ret += "<span" + rn + " class='p-name fn'>" + p.name + "</span>";
     }
     if (p.company) {
       ret += ", ";
-      if (p.companyURL) ret += "<a" + rwu + " class='p-org org h-org h-card' href='" + p.companyURL + "'>" + p.company + "</a>";
+      if (p.companyURL)
+        ret +=
+          "<a" +
+          rwu +
+          " class='p-org org h-org h-card' href='" +
+          p.companyURL +
+          "'>" +
+          p.company +
+          "</a>";
       else ret += p.company;
     }
     if (p.mailto) {
-      ret += ", <span class='ed_mailto'><a class='u-email email' " + rm + " href='mailto:" + p.mailto + "'>" + p.mailto + "</a></span>";
+      ret +=
+        ", <span class='ed_mailto'><a class='u-email email' " +
+        rm +
+        " href='mailto:" +
+        p.mailto +
+        "'>" +
+        p.mailto +
+        "</a></span>";
     }
     if (p.note) ret += " (" + p.note + ")";
     if (p.extras) {
@@ -174,55 +212,63 @@ hb.registerHelper("showPeople", function(name, items) {
         })
         // Convert to HTML
         .map(function(extra) {
-          var span = document.createElement('span');
+          var span = document.createElement("span");
           var textContainer = span;
           if (extra.class) {
             span.className = extra.class;
           }
           if (extra.href) {
-            var a = document.createElement('a');
+            var a = document.createElement("a");
             span.appendChild(a);
             a.href = extra.href;
             textContainer = a;
             if (self.doRDFa) {
-              a.setAttribute('property', 'rdfs:seeAlso');
+              a.setAttribute("property", "rdfs:seeAlso");
             }
           }
           textContainer.innerHTML = extra.name;
           return span.outerHTML;
         })
-        .join(', ');
+        .join(", ");
       ret += ", " + resultHTML;
     }
     if (this.doRDFa) {
       ret += "</span>\n";
-      if (name === "Editor") ret += "<span property='rdf:rest' resource='" + bn + "'></span>\n";
+      if (name === "Editor")
+        ret += "<span property='rdf:rest' resource='" + bn + "'></span>\n";
     }
     ret += "</dd>\n";
   }
   return new hb.SafeString(ret);
 });
 
-hb.registerHelper("showLogos", function(items) {
-  var ret = "<p>";
-  for (var i = 0, n = items.length; i < n; i++) {
-    var p = items[i];
-    if (p.url) ret += "<a href='" + p.url + "'>";
-    if (p.id) ret += "<span id='" + p.id + "'>";
-    if (p.src) {
-      ret += "<img src='" + p.src + "'";
-      if (p.width) ret += " width='" + p.width + "'";
-      if (p.height) ret += " height='" + p.height + "'";
-      if (p.alt) ret += " alt='" + p.alt + "'";
-      else if (items.length == 1) ret += " alt='Logo'";
-      else ret += " alt='Logo " + (i + 1) + "'";
-      ret += ">";
-    } else if (p.alt) ret += p.alt;
-    if (p.url) ret += "</a>";
-    if (p.id) ret += "</span>";
+function toLogo(obj) {
+  const a = document.createElement("a");
+  if (!obj.alt) {
+    const msg = "Found spec logo without an `alt` attribute. See dev console.";
+    a.classList.add("respec-offending-element");
+    pub("warn", msg);
+    console.warn("warn", msg, a);
   }
-  ret += "</p>";
-  return new hb.SafeString(ret);
+  a.href = obj.href ? obj.href : "";
+  a.classList.add("logo");
+  hyperHTML.bind(a)`
+      <img
+        id="${obj.id}"
+        alt="${obj.alt}"
+        width="${obj.width}"
+        height="${obj.height}">
+  `;
+  // avoid triggering 404 requests from dynamically generated
+  // hyperHTML attribute values
+  a.querySelector("img").src = obj.src;
+  return a;
+}
+
+hb.registerHelper("showLogos", logos => {
+  const p = document.createElement("p");
+  hyperHTML.bind(p)`${logos.map(toLogo)}`;
+  return p.outerHTML;
 });
 
 const status2maturity = {
@@ -233,7 +279,7 @@ const status2maturity = {
   "WD-NOTE": "WD",
   "LC-NOTE": "LC",
   "IG-NOTE": "NOTE",
-  "WG-NOTE": "NOTE"
+  "WG-NOTE": "NOTE",
 };
 
 const status2rdf = {
@@ -244,7 +290,7 @@ const status2rdf = {
   PR: "w3p:PR",
   REC: "w3p:REC",
   PER: "w3p:PER",
-  RSCND: "w3p:RSCND"
+  RSCND: "w3p:RSCND",
 };
 const status2text = {
   NOTE: "Working Group Note",
@@ -274,14 +320,24 @@ const status2text = {
   "CG-DRAFT": "Draft Community Group Report",
   "CG-FINAL": "Final Community Group Report",
   "BG-DRAFT": "Draft Business Group Report",
-  "BG-FINAL": "Final Business Group Report"
+  "BG-FINAL": "Final Business Group Report",
 };
 const status2long = {
   "FPWD-NOTE": "First Public Working Group Note",
-  "LC-NOTE": "Last Call Working Draft"
+  "LC-NOTE": "Last Call Working Draft",
 };
 const recTrackStatus = ["FPWD", "WD", "FPLC", "LC", "CR", "PR", "PER", "REC"];
-const noTrackStatus = ["MO", "unofficial", "base", "finding", "draft-finding", "CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL", "webspec"];
+const noTrackStatus = [
+  "MO",
+  "unofficial",
+  "base",
+  "finding",
+  "draft-finding",
+  "CG-DRAFT",
+  "CG-FINAL",
+  "BG-DRAFT",
+  "BG-FINAL",
+];
 const cgbg = ["CG-DRAFT", "CG-FINAL", "BG-DRAFT", "BG-FINAL"];
 const precededByAn = ["ED", "IG-NOTE"];
 const licenses = {
@@ -304,85 +360,184 @@ const licenses = {
     name: "Creative Commons Attribution 4.0 International Public License",
     short: "CC-BY",
     url: "https://creativecommons.org/licenses/by/4.0/legalcode",
-  }
+  },
 };
 
+const baseLogo = Object.freeze({
+  id: "",
+  alt: "",
+  href: "",
+  src: "",
+  height: "48",
+  width: "72",
+});
+
+function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
+  const date = conf[prop] ? new Date(conf[prop]) : new Date(fallbackDate);
+  // if date is valid
+  if (Number.isFinite(date.valueOf())) {
+    const formattedDate = ISODate.format(date);
+    return new Date(formattedDate);
+  }
+  const msg =
+    `[\`${prop}\`](https://github.com/w3c/respec/wiki/${prop}) ` +
+    `is not a valid date: "${conf[prop]}". Expected format 'YYYY-MM-DD'.`;
+  pub("error", msg);
+  return new Date(ISODate.format(new Date()));
+}
+
 export function run(conf, doc, cb) {
+  // TODO: move to w3c defaults
+  if (!conf.logos) {
+    conf.logos = [];
+  }
   // Default include RDFa document metadata
   if (conf.doRDFa === undefined) conf.doRDFa = true;
   // validate configuration and derive new configuration values
-  if (!conf.license) conf.license = (conf.specStatus === "webspec") ? "w3c-software" : "w3c";
+  if (!conf.license) {
+    conf.license = "w3c-software-doc";
+  }
   conf.isCCBY = conf.license === "cc-by";
   conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
-  if (conf.specStatus === "webspec" && !$.inArray(conf.license, ["cc0", "w3c-software"]))
-    pub("error", "You cannot use that license with WebSpecs.");
-  if (conf.specStatus !== "webspec" && !$.inArray(conf.license, ["cc-by", "w3c"]))
-    pub("error", "You cannot use that license with that type of document.");
+  if (["cc-by", "w3c"].includes(conf.license)) {
+    let msg = `You cannot use license "\`${conf.license}\`" with W3C Specs. `;
+    msg += `Please set \`respecConfig.license: "w3c-software-doc"\` instead.`;
+    pub("error", msg);
+  }
   conf.licenseInfo = licenses[conf.license];
-  conf.isCGBG = $.inArray(conf.specStatus, cgbg) >= 0;
+  conf.isCGBG = cgbg.includes(conf.specStatus);
   conf.isCGFinal = conf.isCGBG && /G-FINAL$/.test(conf.specStatus);
-  conf.isBasic = (conf.specStatus === "base");
-  conf.isRegular = (!conf.isCGBG && !conf.isBasic);
-  if (!conf.specStatus) pub("error", "Missing required configuration: specStatus");
-  if (conf.isRegular && !conf.shortName) pub("error", "Missing required configuration: shortName");
+  conf.isBasic = conf.specStatus === "base";
+  conf.isRegular = !conf.isCGBG && !conf.isBasic;
+  if (!conf.specStatus) {
+    pub("error", "Missing required configuration: `specStatus`");
+  }
+  if (conf.isRegular && !conf.shortName) {
+    pub("error", "Missing required configuration: `shortName`");
+  }
   conf.title = doc.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
-  if (!conf.publishDate) {
-    conf.publishDate = parseLastModified(doc.lastModified);
-  } else {
-    if (!(conf.publishDate instanceof Date)) conf.publishDate = parseSimpleDate(conf.publishDate);
-  }
-  conf.publishYear = conf.publishDate.getFullYear();
-  conf.publishHumanDate = humanDate(conf.publishDate);
-  conf.isNoTrack = $.inArray(conf.specStatus, noTrackStatus) >= 0;
-  conf.isRecTrack = conf.noRecTrack ? false : $.inArray(conf.specStatus, recTrackStatus) >= 0;
+  conf.publishDate = validateDateAndRecover(
+    conf,
+    "publishDate",
+    doc.lastModified
+  );
+  conf.publishYear = conf.publishDate.getUTCFullYear();
+  conf.publishHumanDate = W3CDate.format(conf.publishDate);
+  conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
+  conf.isRecTrack = conf.noRecTrack
+    ? false
+    : recTrackStatus.includes(conf.specStatus);
   conf.isMemberSubmission = conf.specStatus === "Member-SUBM";
+  if (conf.isMemberSubmission) {
+    const memSubmissionLogo = {
+      alt: "W3C Member Submission",
+      href: "https://www.w3.org/Submission/",
+      src: "https://www.w3.org/Icons/member_subm-v.svg",
+      width: "211",
+    };
+    conf.logos.push({ ...baseLogo, ...memSubmissionLogo });
+  }
   conf.isTeamSubmission = conf.specStatus === "Team-SUBM";
+  if (conf.isTeamSubmission) {
+    const teamSubmissionLogo = {
+      alt: "W3C Team Submission",
+      href: "https://www.w3.org/TeamSubmission/",
+      src: "https://www.w3.org/Icons/team_subm-v.svg",
+      width: "211",
+    };
+    conf.logos.push({ ...baseLogo, ...teamSubmissionLogo });
+  }
   conf.isSubmission = conf.isMemberSubmission || conf.isTeamSubmission;
-  conf.anOrA = $.inArray(conf.specStatus, precededByAn) >= 0 ? "an" : "a";
-  conf.isTagFinding = conf.specStatus === "finding" || conf.specStatus === "draft-finding";
+  conf.anOrA = precededByAn.includes(conf.specStatus) ? "an" : "a";
+  conf.isTagFinding =
+    conf.specStatus === "finding" || conf.specStatus === "draft-finding";
   if (!conf.edDraftURI) {
     conf.edDraftURI = "";
-    if (conf.specStatus === "ED") pub("warn", "Editor's Drafts should set edDraftURI.");
+    if (conf.specStatus === "ED")
+      pub("warn", "Editor's Drafts should set edDraftURI.");
   }
-  conf.maturity = (status2maturity[conf.specStatus]) ? status2maturity[conf.specStatus] : conf.specStatus;
+  conf.maturity = status2maturity[conf.specStatus]
+    ? status2maturity[conf.specStatus]
+    : conf.specStatus;
   var publishSpace = "TR";
   if (conf.specStatus === "Member-SUBM") publishSpace = "Submission";
   else if (conf.specStatus === "Team-SUBM") publishSpace = "TeamSubmission";
-  if (conf.isRegular) conf.thisVersion = "https://www.w3.org/" + publishSpace + "/" +
-    conf.publishDate.getFullYear() + "/" +
-    conf.maturity + "-" + conf.shortName + "-" +
-    concatDate(conf.publishDate) + "/";
+  if (conf.isRegular)
+    conf.thisVersion =
+      "https://www.w3.org/" +
+      publishSpace +
+      "/" +
+      conf.publishDate.getUTCFullYear() +
+      "/" +
+      conf.maturity +
+      "-" +
+      conf.shortName +
+      "-" +
+      concatDate(conf.publishDate) +
+      "/";
   if (conf.specStatus === "ED") conf.thisVersion = conf.edDraftURI;
-  if (conf.isRegular) conf.latestVersion = "https://www.w3.org/" + publishSpace + "/" + conf.shortName + "/";
+  if (conf.isRegular)
+    conf.latestVersion =
+      "https://www.w3.org/" + publishSpace + "/" + conf.shortName + "/";
   if (conf.isTagFinding) {
     conf.latestVersion = "https://www.w3.org/2001/tag/doc/" + conf.shortName;
-    conf.thisVersion = conf.latestVersion + "-" + concatDate(conf.publishDate, "-");
+    conf.thisVersion =
+      conf.latestVersion + "-" + ISODate.format(conf.publishDate);
   }
   if (conf.previousPublishDate) {
-    if (!conf.previousMaturity && !conf.isTagFinding)
-      pub("error", "previousPublishDate is set, but not previousMaturity");
-    if (!(conf.previousPublishDate instanceof Date))
-      conf.previousPublishDate = parseSimpleDate(conf.previousPublishDate);
-    var pmat = (status2maturity[conf.previousMaturity]) ? status2maturity[conf.previousMaturity] :
-      conf.previousMaturity;
+    if (!conf.previousMaturity && !conf.isTagFinding) {
+      pub("error", "`previousPublishDate` is set, but not `previousMaturity`.");
+    }
+
+    conf.previousPublishDate = validateDateAndRecover(
+      conf,
+      "previousPublishDate"
+    );
+
+    var pmat = status2maturity[conf.previousMaturity]
+      ? status2maturity[conf.previousMaturity]
+      : conf.previousMaturity;
     if (conf.isTagFinding) {
-      conf.prevVersion = conf.latestVersion + "-" + concatDate(conf.previousPublishDate, "-");
+      conf.prevVersion =
+        conf.latestVersion + "-" + ISODate.format(conf.previousPublishDate);
     } else if (conf.isCGBG) {
       conf.prevVersion = conf.prevVersion || "";
     } else if (conf.isBasic) {
       conf.prevVersion = "";
     } else {
-      conf.prevVersion = "https://www.w3.org/TR/" + conf.previousPublishDate.getFullYear() + "/" + pmat + "-" +
-        conf.shortName + "-" + concatDate(conf.previousPublishDate) + "/";
+      conf.prevVersion =
+        "https://www.w3.org/TR/" +
+        conf.previousPublishDate.getUTCFullYear() +
+        "/" +
+        pmat +
+        "-" +
+        conf.shortName +
+        "-" +
+        concatDate(conf.previousPublishDate) +
+        "/";
     }
   } else {
-    if (!/NOTE$/.test(conf.specStatus) && conf.specStatus !== "FPWD" && conf.specStatus !== "FPLC" && conf.specStatus !== "ED" && !conf.noRecTrack && !conf.isNoTrack && !conf.isSubmission)
-      pub("error", "Document on track but no previous version: Add previousMaturity previousPublishDate to ReSpec's config.");
+    if (
+      !/NOTE$/.test(conf.specStatus) &&
+      conf.specStatus !== "FPWD" &&
+      conf.specStatus !== "FPLC" &&
+      conf.specStatus !== "ED" &&
+      !conf.noRecTrack &&
+      !conf.isNoTrack &&
+      !conf.isSubmission
+    )
+      pub(
+        "error",
+        "Document on track but no previous version:" +
+          " Add `previousMaturity`, and `previousPublishDate` to ReSpec's config."
+      );
     if (!conf.prevVersion) conf.prevVersion = "";
   }
-  if (conf.prevRecShortname && !conf.prevRecURI) conf.prevRecURI = "https://www.w3.org/TR/" + conf.prevRecShortname;
-  if (!conf.editors || conf.editors.length === 0) pub("error", "At least one editor is required");
+  if (conf.prevRecShortname && !conf.prevRecURI)
+    conf.prevRecURI = "https://www.w3.org/TR/" + conf.prevRecShortname;
+  if (!conf.editors || conf.editors.length === 0)
+    pub("error", "At least one editor is required");
   var peopCheck = function(it) {
     if (!it.name) pub("error", "All authors and editors must have a name.");
   };
@@ -395,26 +550,55 @@ export function run(conf, doc, cb) {
   conf.multipleEditors = conf.editors && conf.editors.length > 1;
   conf.multipleAuthors = conf.authors && conf.authors.length > 1;
   $.each(conf.alternateFormats || [], function(i, it) {
-    if (!it.uri || !it.label) pub("error", "All alternate formats must have a uri and a label.");
+    if (!it.uri || !it.label)
+      pub("error", "All alternate formats must have a uri and a label.");
   });
-  conf.multipleAlternates = conf.alternateFormats && conf.alternateFormats.length > 1;
-  conf.alternatesHTML = joinAnd(conf.alternateFormats, function(alt) {
-    var optional = (alt.hasOwnProperty("lang") && alt.lang) ? " hreflang='" + alt.lang + "'" : "";
-    optional += (alt.hasOwnProperty("type") && alt.type) ? " type='" + alt.type + "'" : "";
-    return "<a rel='alternate' href='" + alt.uri + "'" + optional + ">" + alt.label + "</a>";
-  });
+  conf.multipleAlternates =
+    conf.alternateFormats && conf.alternateFormats.length > 1;
+  conf.alternatesHTML =
+    conf.alternateFormats &&
+    joinAnd(conf.alternateFormats, function(alt) {
+      var optional = alt.hasOwnProperty("lang") && alt.lang
+        ? " hreflang='" + alt.lang + "'"
+        : "";
+      optional += alt.hasOwnProperty("type") && alt.type
+        ? " type='" + alt.type + "'"
+        : "";
+      return (
+        "<a rel='alternate' href='" +
+        alt.uri +
+        "'" +
+        optional +
+        ">" +
+        alt.label +
+        "</a>"
+      );
+    });
   if (conf.bugTracker) {
     if (conf.bugTracker["new"] && conf.bugTracker.open) {
-      conf.bugTrackerHTML = "<a href='" + conf.bugTracker["new"] + "'>" + conf.l10n.file_a_bug + "</a> " +
-        conf.l10n.open_parens + "<a href='" + conf.bugTracker.open + "'>" +
-        conf.l10n.open_bugs + "</a>" + conf.l10n.close_parens;
+      conf.bugTrackerHTML =
+        "<a href='" +
+        conf.bugTracker["new"] +
+        "'>" +
+        conf.l10n.file_a_bug +
+        "</a> " +
+        conf.l10n.open_parens +
+        "<a href='" +
+        conf.bugTracker.open +
+        "'>" +
+        conf.l10n.open_bugs +
+        "</a>" +
+        conf.l10n.close_parens;
     } else if (conf.bugTracker.open) {
-      conf.bugTrackerHTML = "<a href='" + conf.bugTracker.open + "'>open bugs</a>";
+      conf.bugTrackerHTML =
+        "<a href='" + conf.bugTracker.open + "'>open bugs</a>";
     } else if (conf.bugTracker["new"]) {
-      conf.bugTrackerHTML = "<a href='" + conf.bugTracker["new"] + "'>file a bug</a>";
+      conf.bugTrackerHTML =
+        "<a href='" + conf.bugTracker["new"] + "'>file a bug</a>";
     }
   }
-  if (conf.copyrightStart && conf.copyrightStart == conf.publishYear) conf.copyrightStart = "";
+  if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
+    conf.copyrightStart = "";
   for (var k in status2text) {
     if (status2long[k]) continue;
     status2long[k] = status2text[k];
@@ -424,29 +608,39 @@ export function run(conf, doc, cb) {
   if (status2rdf[conf.specStatus]) {
     conf.rdfStatus = status2rdf[conf.specStatus];
   }
-  conf.showThisVersion = (!conf.isNoTrack || conf.isTagFinding);
-  conf.showPreviousVersion = (conf.specStatus !== "FPWD" && conf.specStatus !== "FPLC" && conf.specStatus !== "ED" && !conf.isNoTrack && !conf.isSubmission);
-  if (/NOTE$/.test(conf.specStatus) && !conf.prevVersion) conf.showPreviousVersion = false;
-  if (conf.isTagFinding) conf.showPreviousVersion = conf.previousPublishDate ? true : false;
-  conf.notYetRec = (conf.isRecTrack && conf.specStatus !== "REC");
-  conf.isRec = (conf.isRecTrack && conf.specStatus === "REC");
+  conf.showThisVersion = !conf.isNoTrack || conf.isTagFinding;
+  conf.showPreviousVersion =
+    conf.specStatus !== "FPWD" &&
+    conf.specStatus !== "FPLC" &&
+    conf.specStatus !== "ED" &&
+    !conf.isNoTrack &&
+    !conf.isSubmission;
+  if (/NOTE$/.test(conf.specStatus) && !conf.prevVersion)
+    conf.showPreviousVersion = false;
+  if (conf.isTagFinding)
+    conf.showPreviousVersion = conf.previousPublishDate ? true : false;
+  conf.notYetRec = conf.isRecTrack && conf.specStatus !== "REC";
+  conf.isRec = conf.isRecTrack && conf.specStatus === "REC";
   if (conf.isRec && !conf.errata)
     pub("error", "Recommendations must have an errata link.");
-  conf.notRec = (conf.specStatus !== "REC");
+  conf.notRec = conf.specStatus !== "REC";
   conf.isUnofficial = conf.specStatus === "unofficial";
   conf.prependW3C = !conf.isUnofficial;
-  conf.isED = (conf.specStatus === "ED");
-  conf.isCR = (conf.specStatus === "CR");
-  conf.isPR = (conf.specStatus === "PR");
-  conf.isPER = (conf.specStatus === "PER");
-  conf.isMO = (conf.specStatus === "MO");
-  conf.isIGNote = (conf.specStatus === "IG-NOTE");
-  conf.dashDate = concatDate(conf.publishDate, "-");
-  conf.publishISODate = isoDate(conf.publishDate);
-  conf.shortISODate = conf.publishISODate.replace(/T.*/, "");
+  conf.isED = conf.specStatus === "ED";
+  conf.isCR = conf.specStatus === "CR";
+  conf.isPR = conf.specStatus === "PR";
+  conf.isPER = conf.specStatus === "PER";
+  conf.isMO = conf.specStatus === "MO";
+  conf.isIGNote = conf.specStatus === "IG-NOTE";
+  conf.dashDate = ISODate.format(conf.publishDate);
+  conf.publishISODate = conf.publishDate.toISOString();
+  conf.shortISODate = ISODate.format(conf.publishDate);
   conf.processVersion = conf.processVersion || "2017";
   if (conf.processVersion == "2014" || conf.processVersion == "2015") {
-    pub("warn", "Process " + conf.processVersion + " has been superceded by Process 2017.");
+    pub(
+      "warn",
+      "Process " + conf.processVersion + " has been superceded by Process 2017."
+    );
     conf.processVersion = "2017";
   }
   conf.isNewProcess = conf.processVersion == "2017";
@@ -454,11 +648,15 @@ export function run(conf, doc, cb) {
 
   // annotate html element with RFDa
   if (conf.doRDFa) {
-    if (conf.rdfStatus) $("html").attr("typeof", "bibo:Document " + conf.rdfStatus);
+    if (conf.rdfStatus)
+      $("html").attr("typeof", "bibo:Document " + conf.rdfStatus);
     else $("html").attr("typeof", "bibo:Document ");
-    var prefixes = "bibo: http://purl.org/ontology/bibo/ w3p: http://www.w3.org/2001/02pd/rec54#";
+    var prefixes =
+      "bibo: http://purl.org/ontology/bibo/ w3p: http://www.w3.org/2001/02pd/rec54#";
     $("html").attr("prefix", prefixes);
-    $("html>head").prepend($("<meta lang='' property='dc:language' content='en'>"));
+    $("html>head").prepend(
+      $("<meta lang='' property='dc:language' content='en'>")
+    );
   }
   // insert into document and mark with microformat
   var bp;
@@ -467,11 +665,16 @@ export function run(conf, doc, cb) {
   $("body", doc).prepend($(bp)).addClass("h-entry");
 
   // handle SotD
-  var $sotd = $("#sotd");
-  if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !$sotd.length)
-    pub("error", "A custom SotD paragraph is required for your type of document.");
-  conf.sotdCustomParagraph = $sotd.html();
-  $sotd.remove();
+  var sotd =
+    document.body.querySelector("#sotd") || document.createElement("section");
+  if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !sotd.id) {
+    pub(
+      "error",
+      "A custom SotD paragraph is required for your type of document."
+    );
+  }
+  sotd.id = sotd.id || "stod";
+  sotd.classList.add("introductory");
   // NOTE:
   //  When arrays, wg and wgURI have to be the same length (and in the same order).
   //  Technically wgURI could be longer but the rest is ignored.
@@ -482,51 +685,119 @@ export function run(conf, doc, cb) {
   //  can be shorter — but it still needs to be an array.
   var wgPotentialArray = [conf.wg, conf.wgURI, conf.wgPatentURI];
   if (
-    wgPotentialArray.some(function(it) {
-      return $.isArray(it);
-    }) &&
-    wgPotentialArray.some(function(it) {
-      return !$.isArray(it);
-    })
-  ) pub("error", "If one of 'wg', 'wgURI', or 'wgPatentURI' is an array, they all have to be.");
-  if ($.isArray(conf.wg)) {
+    wgPotentialArray.some(item => Array.isArray(item)) &&
+    !wgPotentialArray.every(item => Array.isArray(item))
+  ) {
+    pub(
+      "error",
+      "If one of '`wg`', '`wgURI`', or '`wgPatentURI`' is an array, they all have to be."
+    );
+  }
+  if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
     conf.wgHTML = joinAnd(conf.wg, function(wg, idx) {
       return "the <a href='" + conf.wgURI[idx] + "'>" + wg + "</a>";
     });
     var pats = [];
     for (var i = 0, n = conf.wg.length; i < n; i++) {
-      pats.push("a <a href='" + conf.wgPatentURI[i] + "' rel='disclosure'>" + "public list of any patent disclosures  (" + conf.wg[i] + ")</a>");
+      pats.push(
+        "a <a href='" +
+          conf.wgPatentURI[i] +
+          "' rel='disclosure'>" +
+          "public list of any patent disclosures  (" +
+          conf.wg[i] +
+          ")</a>"
+      );
     }
     conf.wgPatentHTML = joinAnd(pats);
   } else {
     conf.multipleWGs = false;
     conf.wgHTML = "the <a href='" + conf.wgURI + "'>" + conf.wg + "</a>";
   }
-  if (conf.specStatus === "PR" && !conf.crEnd) pub("error", "Status is PR but no crEnd is specified (needed to indicate end of previous CR)");
-  if (conf.specStatus === "CR" && !conf.crEnd) pub("error", "Status is CR but no crEnd is specified");
-  conf.humanCREnd = humanDate(conf.crEnd || "");
-  if (conf.specStatus === "PR" && !conf.prEnd) pub("error", "Status is PR but no prEnd is specified");
-  conf.humanPREnd = humanDate(conf.prEnd || "");
-  conf.humanPEREnd = humanDate(conf.perEnd || "");
-  if (conf.specStatus === "PER" && !conf.perEnd) pub("error", "Status is PER but no perEnd is specified");
+  if (conf.specStatus === "PR" && !conf.crEnd) {
+    pub(
+      "error",
+      `\`specStatus\` is "PR" but no \`crEnd\` is specified (needed to indicate end of previous CR).`
+    );
+  }
 
-  conf.recNotExpected = (!conf.isRecTrack && conf.maturity == "WD" && conf.specStatus !== "FPWD-NOTE");
+  if (conf.specStatus === "CR" && !conf.crEnd) {
+    pub(
+      "error",
+      `\`specStatus\` is "CR", but no \`crEnd\` is specified in Respec config.`
+    );
+  }
+  conf.crEnd = validateDateAndRecover(conf, "crEnd");
+  conf.humanCREnd = W3CDate.format(conf.crEnd);
+
+  if (conf.specStatus === "PR" && !conf.prEnd) {
+    pub("error", `\`specStatus\` is "PR" but no \`prEnd\` is specified.`);
+  }
+  conf.prEnd = validateDateAndRecover(conf, "prEnd");
+  conf.humanPREnd = W3CDate.format(conf.prEnd);
+
+  if (conf.specStatus === "PER" && !conf.perEnd) {
+    pub("error", "Status is PER but no perEnd is specified");
+  }
+  conf.perEnd = validateDateAndRecover(conf, "perEnd");
+  conf.humanPEREnd = W3CDate.format(conf.perEnd);
+
+  conf.recNotExpected =
+    !conf.isRecTrack &&
+    conf.maturity == "WD" &&
+    conf.specStatus !== "FPWD-NOTE";
   if (conf.isIGNote && !conf.charterDisclosureURI)
-    pub("error", "IG-NOTEs must link to charter's disclosure section using charterDisclosureURI");
+    pub(
+      "error",
+      "IG-NOTEs must link to charter's disclosure section using `charterDisclosureURI`."
+    );
   // ensure subjectPrefix is encoded before using template
-  if (conf.subjectPrefix !== "") conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
-  var sotd;
-  if (conf.isCGBG) sotd = cgbgSotdTmpl(conf);
-  else sotd = sotdTmpl(conf);
-  if (sotd) $(sotd).insertAfter($("#abstract"));
+  if (conf.subjectPrefix !== "")
+    conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
+
+  sotd.innerHTML = populateSoTD(conf, sotd);
 
   if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
-    pub("error", "CR, PR, and REC documents need to have an implementationReportURI defined.");
+    pub(
+      "error",
+      "CR, PR, and REC documents need to have an `implementationReportURI` defined."
+    );
   }
-  if (conf.isTagFinding && !conf.sotdCustomParagraph) {
-    pub("error", "ReSpec does not support automated SotD generation for TAG findings, " +
-      "please specify one using a <code><section></code> element with ID=sotd.");
+  if (conf.isTagFinding && !conf.additionalContent) {
+    pub(
+      "warn",
+      "ReSpec does not support automated SotD generation for TAG findings, " +
+        "please add the prerequisite content in the 'sotd' section"
+    );
   }
+  // Requested by https://github.com/w3c/respec/issues/504
+  // Makes a record of a few auto-generated things.
+  pub("amend-user-config", {
+    publishISODate: conf.publishISODate,
+    generatedSubtitle: `${conf.longStatus} ${conf.publishHumanDate}`,
+  });
   cb();
+}
+
+function populateSoTD(conf, sotd) {
+  const sotdClone = sotd.cloneNode(true);
+  const additionalNodes = document.createDocumentFragment();
+  const additionalContent = document.createElement("temp");
+  // we collect everything until we hit a section,
+  // that becomes the custom content.
+  while (sotdClone.hasChildNodes()) {
+    if (
+      sotdClone.firstChild.nodeType !== Node.ELEMENT_NODE ||
+      sotdClone.firstChild.localName !== "section"
+    ) {
+      additionalNodes.appendChild(sotdClone.firstChild);
+      continue;
+    }
+    break;
+  }
+  additionalContent.appendChild(additionalNodes);
+  conf.additionalContent = additionalContent.innerHTML;
+  // Whatever sections are left, we throw at the end.
+  conf.additionalSections = sotdClone.innerHTML;
+  return tmpls[conf.isCGBG ? "cgbg-sotd.html" : "sotd.html"](conf);
 }

@@ -1,27 +1,30 @@
 "use strict";
 describe("W3C — RDFa", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
+  afterAll(flushIframes);
 
   function makeCustomConfig() {
     return {
-      editors: [{
-        name: "Shane McCarron",
-        url: "http://URI",
-        company: "COMPANY",
-        companyURI: "http://COMPANY",
-        mailto: "EMAIL",
-        note: "NOTE"
-      }, {
-        name: "Gregg Kellogg"
-      }],
-      authors: [{
-        name: "Gregg Kellogg"
-      }, {
-        name: "Shane McCarron"
-      }],
+      editors: [
+        {
+          name: "Shane McCarron",
+          url: "http://URI",
+          company: "COMPANY",
+          companyURI: "http://COMPANY",
+          mailto: "EMAIL",
+          note: "NOTE",
+        },
+        {
+          name: "Gregg Kellogg",
+        },
+      ],
+      authors: [
+        {
+          name: "Gregg Kellogg",
+        },
+        {
+          name: "Shane McCarron",
+        },
+      ],
       shortName: "some-spec",
       publicationDate: "2013-06-25",
       previousPublishDate: "2012-06-07",
@@ -117,7 +120,6 @@ describe("W3C — RDFa", function() {
       $spp = $sp.children("span");
       expect($spp.attr("property")).toEqual("foaf:name");
       expect($spp.text()).toEqual("Shane McCarron");
-
     }).then(done);
   });
 
@@ -134,8 +136,7 @@ describe("W3C — RDFa", function() {
   it("should describe normative references", function(done) {
     var ops = {
       config: makeCustomConfig(),
-      body: makeDefaultBody() +
-        "<section><p>[[!DAHU]] [[REX]]</p></section>",
+      body: makeDefaultBody() + "<section><p>[[!DAHU]] [[REX]]</p></section>",
     };
     makeRSDoc(ops, function(doc) {
       var $nr = $("#normative-references", doc);
@@ -157,8 +158,8 @@ describe("W3C — RDFa", function() {
   it("should mark abstract using dc:abstract", function(done) {
     var ops = {
       config: makeCustomConfig(),
-      body: makeDefaultBody() +
-        "<section id='abstract'>test abstract</section>",
+      body:
+        makeDefaultBody() + "<section id='abstract'>test abstract</section>",
     };
     makeRSDoc(ops, function(doc) {
       var $abs = $("#abstract", doc);
@@ -171,8 +172,7 @@ describe("W3C — RDFa", function() {
   it("should add bibo to chapters", function(done) {
     var ops = {
       config: makeCustomConfig(),
-      body: makeDefaultBody() +
-        "<section id='chap'><h2>Chapter</h2></section>",
+      body: makeDefaultBody() + "<section id='chap'><h2>Chapter</h2></section>",
     };
     makeRSDoc(ops, function(doc) {
       var $chap = $("#chap", doc);
@@ -184,19 +184,24 @@ describe("W3C — RDFa", function() {
 
   it("should do nothing when disabled", function(done) {
     var noConfig = {
-      editors: [{
-        name: "Shane McCarron",
-        url: "http://URI",
-        company: "COMPANY",
-        companyURI: "http://COMPANY",
-        mailto: "EMAIL",
-        note: "NOTE"
-      }],
-      authors: [{
-        name: "Gregg Kellogg"
-      }, {
-        name: "Shane McCarron"
-      }],
+      editors: [
+        {
+          name: "Shane McCarron",
+          url: "http://URI",
+          company: "COMPANY",
+          companyURI: "http://COMPANY",
+          mailto: "EMAIL",
+          note: "NOTE",
+        },
+      ],
+      authors: [
+        {
+          name: "Gregg Kellogg",
+        },
+        {
+          name: "Shane McCarron",
+        },
+      ],
       shortName: "some-spec",
       publicationDate: "2013-06-25",
       previousPublishDate: "2012-06-07",

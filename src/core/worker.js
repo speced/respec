@@ -18,5 +18,7 @@ const hint = {
 const link = createResourceHint(hint);
 document.head.appendChild(link);
 
-const workerURL = URL.createObjectURL(new Blob([workerScript], {type : "application/javascript"}));
+const workerURL = URL.createObjectURL(
+  new Blob([workerScript], { type: "application/javascript" })
+);
 export const worker = new Worker(workerURL);

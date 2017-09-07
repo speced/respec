@@ -1,24 +1,20 @@
 "use strict";
-describe("W3C — Abstract", function() {
-  afterAll(function(done) {
-    flushIframes();
-    done();
-  });
-  it("should include an h2, set the class, and wrap the content", function(done) {
-    var ops = {
+describe("W3C — Abstract", () => {
+  afterAll(flushIframes);
+  it("includes a h2 and sets the class", async () => {
+    const ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody(),
-      abstract: "<section id='abstract'>test abstract</section>",
+      abstract: "<section id='abstract'><p>test abstract</p></section>",
     };
-    makeRSDoc(ops, function(doc) {
-      var $abs = $("#abstract", doc);
-      expect($abs.find("h2").length).toBeTruthy();
-      expect($abs.find("h2").text()).toEqual("Abstract");
-      expect($abs.find("h2 span").attr("resource")).toEqual("xhv:heading");
-      expect($abs.find("h2 span").attr("property")).toEqual("xhv:role");
-      expect($abs.hasClass("introductory")).toBeTruthy();
-      expect($abs.find("p").length).toBeTruthy();
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    const abs = doc.getElementById("abstract");
+    const h2 = abs.querySelector("h2");
+    const span = abs.querySelector("h2 span");
+    expect(h2).toBeTruthy();
+    expect(h2.textContent).toEqual("Abstract");
+    expect(abs.classList.contains("introductory")).toBeTruthy();
+    expect(abs.querySelector("p")).toBeTruthy();
   });
   // XXX we should also test that an error is sent when absent
 });

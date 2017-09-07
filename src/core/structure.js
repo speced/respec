@@ -13,9 +13,12 @@ var secMap = {};
 var appendixMode = false;
 var lastNonAppendix = 0;
 var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+export const name = "core/structure";
 
 function makeTOCAtLevel($parent, doc, current, level, conf) {
-  var $secs = $parent.children(conf.tocIntroductory ? "section" : "section:not(.introductory)");
+  var $secs = $parent.children(
+    conf.tocIntroductory ? "section" : "section:not(.introductory)"
+  );
   if ($secs.length === 0) {
     return null;
   }
@@ -29,12 +32,22 @@ function makeTOCAtLevel($parent, doc, current, level, conf) {
     }
     var h = $sec.children()[0],
       ln = h.localName.toLowerCase();
-    if (ln !== "h2" && ln !== "h3" && ln !== "h4" && ln !== "h5" && ln !== "h6") {
+    if (
+      ln !== "h2" &&
+      ln !== "h3" &&
+      ln !== "h4" &&
+      ln !== "h5" &&
+      ln !== "h6"
+    ) {
       continue;
     }
     var title = h.textContent,
       $kidsHolder = $("<div></div>").append($(h).contents().clone());
-    $kidsHolder.find("a").renameElement("span").attr("class", "formerLink").removeAttr("href");
+    $kidsHolder
+      .find("a")
+      .renameElement("span")
+      .attr("class", "formerLink")
+      .removeAttr("href");
     $kidsHolder.find("dfn").renameElement("span").removeAttr("id");
     var id = h.id ? h.id : $sec.makeID(null, title);
 
@@ -62,10 +75,14 @@ function makeTOCAtLevel($parent, doc, current, level, conf) {
     if (!isIntro) {
       $(h).prepend($span);
     }
-    secMap[id] = (isIntro ? "" : "<span class='secno'>" + secno + "</span> ") +
-      "<span class='sec-title'>" + title + "</span>";
+    secMap[id] =
+      (isIntro ? "" : "<span class='secno'>" + secno + "</span> ") +
+      "<span class='sec-title'>" +
+      title +
+      "</span>";
 
-    var $a = $("<a/>").attr({ href: "#" + id, "class": "tocxref" })
+    var $a = $("<a/>")
+      .attr({ href: "#" + id, class: "tocxref" })
       .append(isIntro ? "" : $span.clone())
       .append($kidsHolder.contents());
     var $item = $("<li class='tocline'/>").append($a);
@@ -88,7 +105,10 @@ export function run(conf, doc, cb) {
     conf.maxTocLevel = 0;
   }
   var $secs = $("section:not(.introductory)", doc)
-    .find("h1:first, h2:first, h3:first, h4:first, h5:first, h6:first");
+    .find("h1:first, h2:first, h3:first, h4:first, h5:first, h6:first")
+    .toArray()
+    .filter(elem => elem.closest("section.introductory") === null);
+  $secs = $($secs);
   if (!$secs.length) {
     return cb();
   }
@@ -96,7 +116,7 @@ export function run(conf, doc, cb) {
     var depth = $(this).parents("section").length + 1;
     if (depth > 6) depth = 6;
     var h = "h" + depth;
-    if (this.localName.toLowerCase() != h) $(this).renameElement(h);
+    if (this.localName.toLowerCase() !== h) $(this).renameElement(h);
   });
 
   // makeTOC
@@ -124,7 +144,9 @@ export function run(conf, doc, cb) {
       $ref.after(nav);
     }
 
-    var $link = $("<p role='navigation' id='back-to-top'><a href='#toc'><abbr title='Back to Top'>&uarr;</abbr></a></p>");
+    var $link = $(
+      "<p role='navigation' id='back-to-top'><a href='#toc'><abbr title='Back to Top'>&uarr;</abbr></a></p>"
+    );
     $("body").append($link);
   }
 

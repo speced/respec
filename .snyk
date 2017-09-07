@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.7.0
+version: v1.7.1
 ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
@@ -9,3 +9,12 @@ patch:
   'npm:marked:20170112':
     - marked:
         patched: '2017-03-29T09:01:37.856Z'
+    - marked:
+        patched: '2017-06-07T09:43:11.088Z'
+    - marked:
+        patched: '2017-07-20T02:06:37.369Z'
+  'npm:ms:20170412':
+    - nightmare > electron > extract-zip > debug > ms:
+        patched: '2017-06-07T09:43:11.088Z'
+    - nightmare > electron > extract-zip > debug > ms:
+        patched: '2017-07-20T02:06:37.369Z'

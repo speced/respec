@@ -3,39 +3,35 @@
 // by passing them as a query string. This is useful when you just want to make a few
 // tweaks to a document before generating the snapshot, without mucking with the source.
 // For example, you can change the status and date by appending:
-//      ?specStatus=LC;publishDate=2012-03-15
+//      ?specStatus=LC&publishDate=2012-03-15
 // Note that fields are separated by semicolons and not ampersands.
 // TODO
 //  There could probably be a UI for this to make it even simpler.
-import { sub } from "core/pubsubhub";
+import { sub, pub } from "core/pubsubhub";
 
 export const name = "core/override-configuration";
 
 function overrideConfig(config) {
-  if (!document.location.search) {
-    return;
-  }
-  const overrideProps = {};
-  document.location.search
-    //Remove "?" from search
-    .replace(/^\?/, "")
-    // The default separator is ";" for key/value pairs
-    .split(";")
-    .filter(item => item.trim())
-    //decode Key/Values
-    .reduce((collector, item) => {
-      const keyValue = item.split("=", 2);
-      const key = decodeURIComponent(keyValue[0]);
-      const value = decodeURIComponent(keyValue[1].replace(/%3D/g, "="));
-      let parsedValue;
+  const searchQuery = document.location.search.replace(/;/g, "&");
+  const param = new URLSearchParams(searchQuery);
+  const overrideProps = Array.from(param.entries())
+    .filter(([key, value]) => !!key && !!value)
+    .map(([codedKey, codedValue]) => {
+      const key = decodeURIComponent(codedKey);
+      const decodedValue = decodeURIComponent(codedValue.replace(/%3D/g, "="));
+      let value;
       try {
-        parsedValue = JSON.parse(value);
+        value = JSON.parse(decodedValue);
       } catch (err) {
-        parsedValue = value;
+        value = decodedValue;
       }
-      collector[key] = parsedValue;
+      return { key, value };
+    })
+    .reduce((collector, { key, value }) => {
+      collector[key] = value;
       return collector;
-    }, overrideProps);
+    }, {});
   Object.assign(config, overrideProps);
+  pub("amend-user-config", overrideProps);
 }
 sub("start-all", overrideConfig, { once: true });

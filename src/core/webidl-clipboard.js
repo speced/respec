@@ -8,6 +8,7 @@
 import svgClipboard from "deps/text!core/images/clipboard.svg";
 import "deps/regenerator";
 import Clipboard from "deps/clipboard";
+export const name = "core/webidl-clipboard";
 
 // This button serves a prototype that we clone as needed.
 const copyButton = document.createElement("button");
@@ -18,8 +19,8 @@ copyButton.classList.add("respec-button-copy-paste", "removeOnSave");
 const clipboardOps = {
   text: trigger => {
     return document
-      .querySelector(trigger.dataset.clipboardTarget).textContent
-      .replace(/\ +/gm, " ")
+      .querySelector(trigger.dataset.clipboardTarget)
+      .textContent.replace(/\ +/gm, " ")
       .replace(/^\ /gm, "  ")
       .replace(/^};\n/gm, "};\n")
       .trim();
@@ -27,21 +28,22 @@ const clipboardOps = {
 };
 
 export async function run(conf, doc, cb) {
-  Array
-    .from(doc.querySelectorAll("pre.idl"))
+  Array.from(doc.querySelectorAll("pre.idl"))
     .map(elem => {
       const button = copyButton.cloneNode(true);
-      const definition = elem.querySelector(`span[id^="idl-def-"], span[id^="dom-"]`);
+      const definition = elem.querySelector(
+        `span[id^="idl-def-"], span[id^="dom-"]`
+      );
       let target = "#";
-      if(definition === null && elem.id === ""){
-        if(elem.parentElement.id === "idl-index"){
+      if (definition === null && elem.id === "") {
+        if (elem.parentElement.id === "idl-index") {
           target += "actual-idl-index";
         } else {
           elem.id = `idl-${String(Math.random()).substr(2)}`;
           target += elem.id;
         }
       } else {
-        target += (elem.id || definition.id);
+        target += elem.id || definition.id;
       }
       return { button, elem, target };
     })

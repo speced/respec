@@ -12,9 +12,7 @@ export function pub(topic, ...data) {
   if (!subscriptions.has(topic)) {
     return; // Nothing to do...
   }
-  Array
-    .from(subscriptions.get(topic))
-    .forEach(cb => cb.apply(undefined, data));
+  Array.from(subscriptions.get(topic)).forEach(cb => cb.apply(undefined, data));
   if (window.parent === window.self) {
     return;
   }
@@ -52,7 +50,8 @@ export function sub(topic, cb, opts = { once: false }) {
  *
  * @param {Object} opaque The object that was returned from calling sub()
  */
-export function unsub({ topic, cb }) { // opaque is whatever is returned by sub()
+export function unsub({ topic, cb }) {
+  // opaque is whatever is returned by sub()
   const callbacks = subscriptions.get(topic);
   if (!callbacks || !callbacks.has(cb)) {
     console.warn("Already unsubscribed:", topic, cb);
@@ -62,7 +61,7 @@ export function unsub({ topic, cb }) { // opaque is whatever is returned by sub(
 }
 
 sub("error", err => {
-  console.error(err.stack || err);
+  console.error(err, err.stack);
 });
 
 sub("warn", str => {

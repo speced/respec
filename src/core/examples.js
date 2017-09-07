@@ -8,12 +8,18 @@
 import { pub } from "core/pubsubhub";
 import css from "deps/text!core/css/examples.css";
 
+export const name = "core/examples";
+
 var makeTitle = function(conf, $el, num, report) {
-  var txt = (num > 0) ? " " + num : "";
-  var $tit = $(`<div class='example-title'><span>${conf.l10n.example}${txt}</span></div>`);
+  var txt = num > 0 ? " " + num : "";
+  var $tit = $(
+    `<div class='example-title'><span>${conf.l10n.example}${txt}</span></div>`
+  );
   report.title = $el.attr("title");
   if (report.title) {
-    $tit.append($("<span style='text-transform: none'>: " + report.title + "</span>"));
+    $tit.append(
+      $("<span style='text-transform: none'>: " + report.title + "</span>")
+    );
     $el.removeAttr("title");
   }
   $tit.addClass("marker");
@@ -39,7 +45,8 @@ export function run(conf, doc, cb) {
         // reindent
         var lines = $ex.html().split("\n");
         while (lines.length && /^\s*$/.test(lines[0])) lines.shift();
-        while (lines.length && /^\s*$/.test(lines[lines.length - 1])) lines.pop();
+        while (lines.length && /^\s*$/.test(lines[lines.length - 1]))
+          lines.pop();
         var matches = /^(\s+)/.exec(lines[0]);
         if (matches) {
           var rep = new RegExp("^" + matches[1]);

@@ -5,6 +5,8 @@
 import css from "deps/text!core/css/bp.css";
 import { pub } from "core/pubsubhub";
 
+export const name = "core/best-practices";
+
 export function run(conf, doc, cb) {
   var num = 0;
   var $bps = $("span.practicelab", doc);
@@ -25,7 +27,10 @@ export function run(conf, doc, cb) {
     $(doc).find("head link").first().before($("<style/>").text(css));
     if ($("#bp-summary")) $("#bp-summary").append($content.contents());
   } else if ($("#bp-summary").length) {
-    pub("warn", "Using best practices summary (#bp-summary) but no best practices found.");
+    pub(
+      "warn",
+      "Using best practices summary (#bp-summary) but no best practices found."
+    );
     $("#bp-summary").remove();
   }
   cb();
