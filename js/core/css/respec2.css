@@ -9,13 +9,6 @@
 }
 
 /* --- INLINES --- */
-
-em.rfc2119 {
-  text-transform: lowercase;
-  font-style: normal;
-  color: #900;
-}
-
 h1 abbr,
 h2 abbr,
 h3 abbr,
