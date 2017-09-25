@@ -13,7 +13,7 @@ const srcDesMap = new Map([
     "./js/deps/handlebars.js",
   ],
   ["./node_modules/highlight.js/src/styles/github.css", "./js/core/css/"],
-  ["./node_modules/hyperhtml/hyperhtml.js", "./js/deps/"],
+  ["./node_modules/hyperhtml/index.js", "./js/deps/hyperhtml.js"],
   ["./node_modules/jquery/dist/jquery.js", "./js/deps/"],
   ["./node_modules/js-beautify/js/lib/beautify-css.js", "./js/deps/"],
   ["./node_modules/js-beautify/js/lib/beautify-html.js", "./js/deps/"],
