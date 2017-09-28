@@ -270,7 +270,10 @@ function idlType2Text(idlType) {
     );
   }
   if (idlType.generic) {
-    const types = [].concat(idlType.idlType).map(idlType2Text).join(", ");
+    const types = []
+      .concat(idlType.idlType)
+      .map(idlType2Text)
+      .join(", ");
     return `${idlType.generic}<${types}>${nullable}`;
   }
   return idlType2Text(idlType.idlType) + nullable;
@@ -1084,8 +1087,8 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
   if (dfns.length > 1) {
     pub(
       "error",
-      `Multiple \`<dfn>\`s for \`${originalName}${originalParent
-        ? ` in \`${originalParent}\``
+      `Multiple \`<dfn>\`s for \`${originalName}\` ${originalParent
+        ? `in \`${originalParent}\``
         : ""}`
     );
   }
@@ -1133,7 +1136,10 @@ export function run(conf, doc, cb) {
   }
   registerHelpers();
   if (!$(".idl", doc).not("pre").length) {
-    $(doc).find("head link").first().before($("<style/>").text(css));
+    $(doc)
+      .find("head link")
+      .first()
+      .before($("<style/>").text(css));
   }
 
   $idl.each(function() {
