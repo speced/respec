@@ -8,7 +8,6 @@
  *      want to be using a new module with your own profile.
  *  - afterEnd: final thing that is called.
  */
-import "deps/regenerator";
 import { sub } from "core/pubsubhub";
 
 export const name = "core/post-process";

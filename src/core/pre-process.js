@@ -7,7 +7,6 @@
  *      tested. Use with care, if you know what you're doing. Chances are you really
  *      want to be using a new module with your own profile
  */
-import "deps/regenerator";
 import { sub } from "core/pubsubhub";
 
 export const name = "core/pre-process";

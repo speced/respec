@@ -1,6 +1,5 @@
 // Module w3c/abstract
 // Handle the abstract section properly.
-import "deps/regenerator";
 import { pub } from "core/pubsubhub";
 import { l10n, lang } from "core/l10n";
 export const name = "w3c/abstract";

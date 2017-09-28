@@ -6,7 +6,6 @@
  *
  */
 import svgClipboard from "deps/text!core/images/clipboard.svg";
-import "deps/regenerator";
 import Clipboard from "deps/clipboard";
 export const name = "core/webidl-clipboard";
 

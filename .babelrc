@@ -1,16 +1,6 @@
 {
   "presets": [
-    "stage-3",
-    [
-      "env",
-      {
-        "modules": "amd",
-        "targets": {
-          "browsers": [
-            "last 1 versions"
-          ]
-        }
-      }
-    ]
-  ]
+    "stage-3"
+  ],
+  "plugins": ["transform-es2015-modules-amd"]
 }

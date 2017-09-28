@@ -39,7 +39,7 @@ describe("Core - biblioDB", () => {
   };
   var biblioDB;
   beforeAll(done => {
-    require(["core/biblio-db", "deps/regenerator"], ({ biblioDB: db }) => {
+    require(["core/biblio-db"], ({ biblioDB: db }) => {
       biblioDB = db;
       done();
     });
