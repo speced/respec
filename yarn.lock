@@ -2424,9 +2424,9 @@ http-signature@~1.1.0:
     jsprim "^1.2.2"
     sshpk "^1.7.0"
 
-hyperhtml@^1.9.2:
-  version "1.9.2"
-  resolved "https://registry.yarnpkg.com/hyperhtml/-/hyperhtml-1.9.2.tgz#72e5663d84fe120f31e3b2bef8586e0320fd0b43"
+hyperhtml@^1.10.5:
+  version "1.10.5"
+  resolved "https://registry.yarnpkg.com/hyperhtml/-/hyperhtml-1.10.5.tgz#4318ac747cd8812b44433e0ca179fde9ec1e620e"
 
 i@0.3.x:
   version "0.3.5"
