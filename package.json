@@ -44,7 +44,7 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-safaritechpreview-launcher": "0.0.6",
     "karma-verbose-summary-reporter": "0.0.1",
-    "mocha": "^3.5.3",
+    "mocha": "^4.0.0",
     "moment": "^2.18.1",
     "requirejs": "^2.3.5",
     "text": "github:requirejs/text",
