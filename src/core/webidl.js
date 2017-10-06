@@ -138,31 +138,24 @@ function registerHelpers() {
     const isDefaultJSON =
       obj.name === "toJSON" &&
       obj.extAttrs.some(({ name }) => name === "Default");
-    if (!obj.dfn && isDefaultJSON) {
-      return `<a data-cite="WEBIDL#default-tojson-operation">${obj.name}</a>`;
-    }
-    if (obj.dfn) {
-      var result =
-        "<a for='" + hb.Utils.escapeExpression(obj.linkFor || "") + "'";
-      if (obj.name === obj.dfn.text().trim()) {
-        result +=
-          " data-lt='" +
-          hb.Utils.escapeExpression(obj.name) +
-          (obj.overload
-            ? "!overload-" + obj.overload + "' data-lt-noDefault"
-            : "'");
-      } else {
-        const lt =
-          hb.Utils.escapeExpression(obj.dfn.text().trim()) +
-          "|" +
-          obj.dfn[0].dataset.lt;
-        result += " data-lt='" + lt + "' data-lt-noDefault";
-      }
-      result += ">" + content + "</a>";
-      return result;
-    } else {
+    // nothing defines this.
+    if (!obj.dfn && !isDefaultJSON) {
       return content;
     }
+    // We are going to return a hyperlink
+    const a = document.createElement("a");
+    a.innerText = content;
+    // Let's deal with WebIDL's Default toJSON(); first.
+    if (!obj.dfn && isDefaultJSON) {
+      // If toJSON is not overridden, link directly to WebIDL spec.
+      a.dataset.cite = "WEBIDL#default-tojson-operation";
+    } else {
+      // This is an internal IDL reference.
+      a.dataset.noDefault = "";
+      a.dataset.linkFor = obj.linkFor ? hb.Utils.escapeExpression(obj.linkFor).toLowerCase() : "";
+      a.dataset.lt = obj.dfn[0].dataset.lt || "";
+    }
+    return a.outerHTML;
   });
 }
 
@@ -866,129 +859,125 @@ function writeMember(memb, maxQualifiers, maxType, indent) {
 // element defining each entity and attaches it to the entity's
 // 'refTitle' property, and records that it describes an IDL entity by
 // adding a [data-idl] attribute.
+
 function linkDefinitions(parse, definitionMap, parent, idlElem) {
-  parse.forEach(function(defn) {
-    var name;
-    switch (defn.type) {
-      // Top-level entities with linkable members.
-      case "callback interface":
-      case "dictionary":
-      case "exception":
-      case "interface":
-        var partialIdx = "";
-        if (defn.partial) {
-          if (!idlPartials[defn.name]) {
-            idlPartials[defn.name] = [];
+  parse
+    // Don't bother with any of these
+    .filter(
+      ({ type }) =>
+        [
+          "implements",
+          "ws",
+          "ws-pea",
+          "ws-tpea",
+          "line-comment",
+          "multiline-comment",
+        ].includes(type) === false
+    )
+    .forEach(function(defn) {
+      var name;
+      switch (defn.type) {
+        // Top-level entities with linkable members.
+        case "callback interface":
+        case "dictionary":
+        case "exception":
+        case "interface":
+          var partialIdx = "";
+          if (defn.partial) {
+            if (!idlPartials[defn.name]) {
+              idlPartials[defn.name] = [];
+            }
+            idlPartials[defn.name].push(defn);
+            partialIdx = "-partial-" + idlPartials[defn.name].length;
           }
-          idlPartials[defn.name].push(defn);
-          partialIdx = "-partial-" + idlPartials[defn.name].length;
-        }
-
-        linkDefinitions(defn.members, definitionMap, defn.name, idlElem);
-        name = defn.name;
-        defn.idlId = "idl-def-" + name.toLowerCase() + partialIdx;
-        break;
-
-      case "enum":
-        name = defn.name;
-
-        defn.values.forEach(function(v, i) {
-          if (v.type === undefined) {
-            defn.values[i] = {
-              toString: function() {
-                return v;
-              },
-              dfn: findDfn(name, v, definitionMap, defn.type, idlElem),
-            };
-          }
-        });
-        defn.idlId = "idl-def-" + name.toLowerCase();
-        break;
-      // Top-level entities without linkable members.
-      case "callback":
-      case "typedef":
-        name = defn.name;
-        defn.idlId = "idl-def-" + name.toLowerCase();
-        break;
-      // Members of top-level entities.
-      case "attribute":
-      case "const":
-      case "field":
-        name = defn.name;
-        defn.idlId =
-          "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
-        break;
-      case "operation":
-        if (defn.name) {
+          linkDefinitions(defn.members, definitionMap, defn.name, idlElem);
           name = defn.name;
-          var qualifiedName = parent + "." + name;
-          var fullyQualifiedName = parent + "." + name + "()";
-          if (!operationNames[fullyQualifiedName]) {
-            operationNames[fullyQualifiedName] = [];
+          defn.idlId = "idl-def-" + name.toLowerCase() + partialIdx;
+          break;
+        case "enum":
+          name = defn.name;
+          defn.values.forEach(function(v, i) {
+            if (v.type === undefined) {
+              defn.values[i] = {
+                toString: function() {
+                  return v;
+                },
+                dfn: findDfn(name, v, definitionMap, defn.type, idlElem),
+              };
+            }
+          });
+          defn.idlId = "idl-def-" + name.toLowerCase();
+          break;
+        // Top-level entities without linkable members.
+        case "callback":
+        case "typedef":
+          name = defn.name;
+          defn.idlId = "idl-def-" + name.toLowerCase();
+          break;
+        // Members of top-level entities.
+        case "attribute":
+        case "const":
+        case "field":
+          name = defn.name;
+          defn.idlId = "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
+          break;
+        case "operation":
+          if (defn.name) {
+            name = defn.name;
+            var qualifiedName = parent + "." + name;
+            var fullyQualifiedName = parent + "." + name + "()";
+            if (!operationNames[fullyQualifiedName]) {
+              operationNames[fullyQualifiedName] = [];
+            }
+            if (!operationNames[qualifiedName]) {
+              operationNames[qualifiedName] = [];
+            } else {
+              defn.overload = operationNames[qualifiedName].length;
+              name = defn.name + "!overload-" + defn.overload;
+            }
+            operationNames[fullyQualifiedName].push(defn);
+            operationNames[qualifiedName].push(defn);
+          } else if (
+            defn.getter ||
+            defn.setter ||
+            defn.deleter ||
+            defn.legacycaller ||
+            defn.stringifier
+          ) {
+            name = "";
           }
-          if (!operationNames[qualifiedName]) {
-            operationNames[qualifiedName] = [];
-          } else {
-            defn.overload = operationNames[qualifiedName].length;
-            name = defn.name + "!overload-" + defn.overload;
-          }
-          operationNames[fullyQualifiedName].push(defn);
-          operationNames[qualifiedName].push(defn);
-        } else if (
-          defn.getter ||
-          defn.setter ||
-          defn.deleter ||
-          defn.legacycaller ||
-          defn.stringifier
-        ) {
-          name = "";
-        }
-        defn.idlId =
-          "idl-def-" +
-          parent.toLowerCase() +
-          "-" +
-          name.toLowerCase() +
-          "(" +
-          defn.arguments
-            .filter(function(arg) {
-              return !typeIsWhitespace(arg.type);
-            })
-            .map(function(arg) {
-              return arg.name.toLowerCase();
-            })
-            .join(",")
-            .replace(/\s/g, "_") +
-          ")";
-        break;
-      case "maplike":
-        name = "maplike";
-        defn.idlId = ("idl-def-" + parent + "-" + name).toLowerCase();
-        break;
-      case "iterable":
-        name = "iterable";
-        defn.idlId =
-          "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
-        break;
-      case "implements":
-      case "ws":
-      case "ws-pea":
-      case "ws-tpea":
-      case "line-comment":
-      case "multiline-comment":
-        // Nothing to link here.
-        return;
-      default:
-        pub(
-          "error",
-          "Unexpected type when computing refTitles: `" + defn.type + "`."
-        );
-        return;
-    }
-    if (parent) {
-      defn.linkFor = parent;
-    }
-    defn.dfn = findDfn(parent, name, definitionMap, defn.type, idlElem);
-  });
+          const idHead = `idl-def-${parent.toLowerCase()}-${name.toLowerCase()}`;
+          const idTail =
+            defn.overload || !defn.arguments.length
+              ? ""
+              : "-" +
+                defn.arguments
+                  .filter(arg => !typeIsWhitespace(arg.type))
+                  .map(arg => arg.name.toLowerCase())
+                  .join("-")
+                  .replace(/\s/g, "_");
+          defn.idlId = idHead + idTail;
+          break;
+        case "maplike":
+          name = "maplike";
+          defn.idlId = ("idl-def-" + parent + "-" + name).toLowerCase();
+          break;
+        case "iterable":
+          name = "iterable";
+          defn.idlId = "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
+          break;
+        default:
+          pub(
+            "error",
+            new Error("ReSpec doesn't know about IDL type: `" + defn.type + "`.")
+          );
+          return;
+      }
+      if (parent) {
+        defn.linkFor = parent;
+      }
+      defn.dfn = findDfn(parent, name, definitionMap, defn.type, idlElem);
+    });
 }
 
 // This function looks for a <dfn> element whose title is 'name' and
@@ -1001,12 +990,12 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
 // marked as an IDL definition, and returned. If no <dfn> is found,
 // the function returns 'undefined'.
 function findDfn(parent, name, definitionMap, type, idlElem) {
-  var originalParent = parent;
-  var originalName = name;
+  const originalParent = parent;
+  const originalName = name;
   parent = parent.toLowerCase();
   switch (type) {
     case "operation":
-      // ignore overloads
+      // Overloads all have unique names
       if (name.search("!overload") !== -1) {
         name = name.toLowerCase();
         break;
@@ -1039,7 +1028,7 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
       }
       const lt = dfn[0].dataset.lt ? dfn[0].dataset.lt.split("|") : [];
       lt.push(asMethodName, name);
-      dfn[0].dataset.lt = lt.join("|");
+      dfn[0].dataset.lt = lt.reverse().join("|");
       definitionMap[asMethodName] = [dfn];
       return dfn;
     case "enum":
@@ -1056,11 +1045,9 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
   var dfnForArray = definitionMap[name];
   var dfns = [];
   if (dfnForArray) {
-    // Definitions that have a title and [for] that exactly match the
+    // Definitions that have a title and [data-dfn-for] that exactly match the
     // IDL entity:
-    dfns = dfnForArray.filter(function(dfn) {
-      return dfn.attr("data-dfn-for") === parent;
-    });
+    dfns = dfnForArray.filter(dfn => dfn[0].dataset.dfnFor === parent);
     // If this is a top-level entity, and we didn't find anything with
     // an explicitly empty [for], try <dfn> that inherited a [for].
     if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
@@ -1085,12 +1072,10 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
     }
   }
   if (dfns.length > 1) {
-    pub(
-      "error",
-      `Multiple \`<dfn>\`s for \`${originalName}\` ${originalParent
-        ? `in \`${originalParent}\``
-        : ""}`
-    );
+    const msg = `Multiple \`<dfn>\`s for \`${originalName}\` ${originalParent
+      ? `in \`${originalParent}\``
+      : ""}`;
+    pub("error", new Error(msg));
   }
   if (dfns.length === 0) {
     const showWarnings =
@@ -1107,16 +1092,21 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
     }
     return;
   }
-  var dfn = dfns[0];
+  const dfn = dfns[0][0]; // work on actual node, not jquery
+  const id = "dom-" + (parent ? parent + "-" : "") + name.replace(/[()]/g, "");
+  dfn.id = id;
+  dfn.dataset.idl = "";
+  dfn.dataset.title = dfn.textContent;
+  dfn.dataset.dfnFor = parent;
   // Mark the definition as code.
-  dfn.attr("id", "dom-" + (parent ? parent + "-" : "") + name);
-  dfn.attr("data-idl", "");
-  dfn.attr("data-title", dfn[0].textContent);
-
-  dfn.attr("data-dfn-for", parent);
-  if (dfn.children("code").length === 0 && dfn.parents("code").length === 0)
-    dfn.wrapInner("<code></code>");
-  return dfn;
+  if (!dfn.querySelector("code") && !dfn.closest("code") && dfn.children) {
+    const code = dfn.ownerDocument.createElement("code");
+    while (dfn.hasChildNodes()) {
+      code.appendChild(dfn.firstChild);
+    }
+    dfn.appendChild(code);
+  }
+  return dfns[0];
 }
 var resolveDone;
 
