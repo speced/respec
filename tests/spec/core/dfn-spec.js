@@ -74,16 +74,16 @@ describe("Core — Definitions", function() {
       body:
         makeDefaultBody() +
         `<section id='dfn'>
-          <dfn title='text|text 1|text  2|text 3 '>text</dfn>
+          <dfn data-lt='text|text 1|text  2|text 3 '>text</dfn>
           <a>text</a>
         </section>`,
     };
     const doc = await makeRSDoc(ops);
-    var $sec = $("#dfn", doc);
-    expect($sec.find("dfn").attr("data-lt")).toEqual(
+    const dfn = doc.querySelector("dfn[data-lt]");
+    expect(dfn.dataset.lt).toEqual(
       "text|text 1|text 2|text 3"
     );
-    expect($sec.find("dfn").attr("data-dfn-type")).toEqual("dfn");
+    expect(dfn.dataset.dfnType).toEqual("dfn");
   });
 
   it("allows defining dfn-type", async () => {
