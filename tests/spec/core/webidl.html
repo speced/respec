@@ -272,7 +272,7 @@
         };
       </pre>
       <p id="const-basic-doc">
-        <dfn for="ConstTest">rambaldi</dfn> is a constant and so are <dfn for="ConstTest">why</dfn> and <dfn for="ConstTest" data-lt="inf">this other thing</dfn>.
+        <dfn data-dfn-for="ConstTest">rambaldi</dfn> is a constant and so are <dfn data-dfn-for="ConstTest">why</dfn> and <dfn data-dfn-for="ConstTest" data-lt="inf">this other thing</dfn>.
       </p>
     </section>
     <section>
@@ -311,7 +311,7 @@
           stringifier inherit readonly attribute DOMString all;-->
         };
       </pre>
-      <p id="attr-basic-doc" dfn-for="AttrBasic"><dfn>readonly</dfn> and <dfn>regular</dfn> are attributes.</p>
+      <p id="attr-basic-doc" data-dfn-for="AttrBasic"><dfn>readonly</dfn> and <dfn>regular</dfn> are attributes.</p>
     </section>
     <section>
       <h2>Operations</h2>
@@ -344,7 +344,7 @@
 <!--        ... and other special operations
      -->};
       </pre>
-      <p id="meth-basic-doc" dfn-for="MethBasic">
+      <p id="meth-basic-doc" data-dfn-for="MethBasic">
         <dfn>ull</dfn> is a method. Its <dfn data-lt="ull!overload-1">overloaded form</dfn> returns a <code>SuperStar/</code>
       </p>
     </section>
@@ -413,7 +413,7 @@
           long undocField;
         };
       </pre>
-      <p id='dict-doc-p'><dfn>DictDocTest</dfn> contains <dfn for="DictDocTest">dictDocField</dfn> and <dfn for="DictDocTest">otherField</dfn></p>
+      <p id='dict-doc-p'><dfn>DictDocTest</dfn> contains <dfn data-dfn-for="DictDocTest">dictDocField</dfn> and <dfn data-dfn-for="DictDocTest">otherField</dfn></p>
     </section>
     <section id="enumerations">
       <h2>Enumerations</h2>
@@ -434,8 +434,8 @@
         };
       </pre>
       <p id="enum-basic-doc"><dfn>EnumBasic</dfn></p>
-      <p dfn-for="EnumBasic"><dfn>one</dfn> is first.</p>
-      <p link-for="EnumBasic"><a>one</a> is referenced with a <code>[link-for]</code> attribute.</p>
+      <p data-dfn-for="EnumBasic"><dfn>one</dfn> is first.</p>
+      <p data-link-for="EnumBasic"><a>one</a> is referenced with a <code>[link-for]</code> attribute.</p>
       <p id="enum-ref-without-link-for"><a>EnumBasic.one</a> may also be referenced with fully-qualified name.</p>
       <section id="enum-empty-sec" data-dfn-for="EmptyEnum">
         <pre class="idl no-link-warnings">
@@ -514,10 +514,10 @@
           attribute DOMString definedElsewhere;
         };
       </pre>
-      <p class='note' dfn-for="Documented">
+      <p class='note' data-dfn-for="Documented">
         <dfn>docString</dfn> is defined in a note.
       </p>
-      <p link-for="Documented">
+      <p data-link-for="Documented">
         Testing <code>[link-for]</code>:
         <dfn>Some generic term</dfn> isn't IDL.
         <a>Some generic term</a> also isn't part of <a>Documented</a>.
