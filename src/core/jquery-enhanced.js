@@ -50,7 +50,6 @@ window.$.fn.renameElement = function(name) {
 // This method will publish a warning if a title is used on a definition
 // instead of an @lt (as per specprod mailing list discussion).
 window.$.fn.getDfnTitles = function(args) {
-  var titles = [];
   var theAttr = "";
   var titleString = "";
   var normalizedText = "";
@@ -59,30 +58,19 @@ window.$.fn.getDfnTitles = function(args) {
   if (this.attr("data-lt-noDefault") === undefined) {
     normalizedText = norm(this.text()).toLowerCase();
   }
-  // allow @lt to be consistent with bikeshed
-  if (this.attr("data-lt") || this.attr("lt")) {
+  if (this.attr("data-lt")) {
     theAttr = this.attr("data-lt") ? "data-lt" : "lt";
     // prefer @data-lt for the list of title aliases
     titleString = this.attr(theAttr).toLowerCase();
     if (normalizedText !== "") {
       //Regex: starts with the "normalizedText|"
       var startsWith = new RegExp("^" + normalizedText + "\\|");
-      // Use the definition itself as first item, so to avoid
+      // Use the definition itself, so to avoid
       // having to declare the definition twice.
       if (!startsWith.test(titleString)) {
-        titleString = normalizedText + "|" + titleString;
+        titleString =  titleString + "|" + normalizedText;
       }
     }
-  } else if (this.attr("title")) {
-    // allow @title for backward compatibility
-    titleString = this.attr("title");
-    theAttr = "title";
-    pub(
-      "warn",
-      "Using deprecated attribute title for '" +
-        this.text() +
-        "': see https://github.com/w3c/respec/wiki/User's-Guide#definitions-and-linking"
-    );
   } else if (
     this.contents().length === 1 &&
     this.children("abbr, acronym").length === 1 &&
@@ -98,6 +86,8 @@ window.$.fn.getDfnTitles = function(args) {
     // if it came from an attribute, replace that with data-lt as per contract with Shepherd
     if (theAttr) {
       this.attr("data-lt", titleString);
+    }
+    if (theAttr !== "data-lt") {
       this.removeAttr(theAttr);
     }
     // if there is no pre-defined type, assume it is a 'dfn'
@@ -108,12 +98,11 @@ window.$.fn.getDfnTitles = function(args) {
       this.removeAttr("dfn-type");
     }
   }
-  titleString.split("|").forEach(function(item) {
-    if (item != "") {
-      titles.push(item);
-    }
-  });
-  return titles;
+  const titles = titleString
+    .split("|")
+    .filter(item => item !== "")
+    .reduce((collector, item) => collector.add(item), new Set());
+  return [...titles];
 };
 
 // For any element (usually <a>), returns an array of targets that
@@ -128,17 +117,13 @@ window.$.fn.getDfnTitles = function(args) {
 //  * {for_: "", title: "int3.member"}
 window.$.fn.linkTargets = function() {
   var elem = this;
-  var link_for = (elem.attr("for") ||
-    elem.attr("data-for") ||
-    elem.closest("[link-for]").attr("link-for") ||
-    elem.closest("[data-link-for]").attr("data-link-for") ||
-    ""
-  ).toLowerCase();
+  var linkForElem = this[0].closest("[data-link-for]");
+  var linkFor = linkForElem ? linkForElem.dataset.linkFor.toLowerCase() : "";
   var titles = elem.getDfnTitles();
   var result = [];
   window.$.each(titles, function() {
     result.push({
-      for_: link_for,
+      for_: linkFor,
       title: this,
     });
     var split = this.split(".");
