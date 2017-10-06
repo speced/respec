@@ -87,6 +87,7 @@ describe("Core - jquery enhanced", function() {
     ).appendTo($("body"));
     expect($div.find("span").makeID()).toEqual("a-0");
     expect($div.find("span[title]").makeID()).toEqual("a-2");
+    expect($("<p>this( )is( )a( )test()</p>").makeID()).toEqual("this-is-a-test");
     $div.remove();
   });
 
