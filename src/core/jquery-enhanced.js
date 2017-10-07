@@ -155,11 +155,9 @@ window.$.fn.makeID = function(pfx = "", txt = "", noLC = false) {
   }
   var id = noLC ? txt : txt.toLowerCase();
   id = id
-    .replace(/[()]+/g, "")
-    .replace(/\s/gm, "-")
+    .replace(/[\W]+/gmi, "-")
     .replace(/^-+/, "")
-    .replace(/-+$/, "")
-    .replace(/-+/g, "-");
+    .replace(/-+$/, "");
   if (!id) {
     id = "generatedID";
   } else if (/\.$/.test(id) || !/^[a-z]/i.test(id)) {
