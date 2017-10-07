@@ -9,9 +9,9 @@ window.$ = $;
 // --- JQUERY EXTRAS -----------------------------------------------------------------------
 // Applies to any jQuery object containing elements, changes their name to the one give, and
 // return a jQuery object containing the new elements
-window.$.fn.renameElement = function (name) {
+window.$.fn.renameElement = function(name) {
   var arr = [];
-  this.each(function () {
+  this.each(function() {
     var $newEl = $(this.ownerDocument.createElement(name));
     // I forget why this didn't work, maybe try again
     // $newEl.attr($(this).attr());
@@ -26,7 +26,9 @@ window.$.fn.renameElement = function (name) {
         break; // no point in continuing with this element
       }
     }
-    $(this).contents().appendTo($newEl);
+    $(this)
+      .contents()
+      .appendTo($newEl);
     $(this).replaceWith($newEl);
     arr.push($newEl[0]);
   });
@@ -47,7 +49,7 @@ window.$.fn.renameElement = function (name) {
 //
 // This method will publish a warning if a title is used on a definition
 // instead of an @lt (as per specprod mailing list discussion).
-window.$.fn.getDfnTitles = function (args) {
+window.$.fn.getDfnTitles = function(args) {
   var titles = [];
   var theAttr = "";
   var titleString = "";
@@ -78,8 +80,8 @@ window.$.fn.getDfnTitles = function (args) {
     pub(
       "warn",
       "Using deprecated attribute title for '" +
-      this.text() +
-      "': see https://github.com/w3c/respec/wiki/User's-Guide#definitions-and-linking"
+        this.text() +
+        "': see https://github.com/w3c/respec/wiki/User's-Guide#definitions-and-linking"
     );
   } else if (
     this.contents().length === 1 &&
@@ -106,7 +108,7 @@ window.$.fn.getDfnTitles = function (args) {
       this.removeAttr("dfn-type");
     }
   }
-  titleString.split("|").forEach(function (item) {
+  titleString.split("|").forEach(function(item) {
     if (item != "") {
       titles.push(item);
     }
@@ -124,17 +126,17 @@ window.$.fn.getDfnTitles = function (args) {
 //  * {for_: "int2", title: "int3.member"}
 //  * {for_: "int3", title: "member"}
 //  * {for_: "", title: "int3.member"}
-window.$.fn.linkTargets = function () {
+window.$.fn.linkTargets = function() {
   var elem = this;
   var link_for = (elem.attr("for") ||
     elem.attr("data-for") ||
     elem.closest("[link-for]").attr("link-for") ||
     elem.closest("[data-link-for]").attr("data-link-for") ||
-    "")
-    .toLowerCase();
+    ""
+  ).toLowerCase();
   var titles = elem.getDfnTitles();
   var result = [];
-  window.$.each(titles, function () {
+  window.$.each(titles, function() {
     result.push({
       for_: link_for,
       title: this,
@@ -158,7 +160,7 @@ window.$.fn.linkTargets = function () {
 
 // Applied to an element, sets an ID for it (and returns it), using a specific prefix
 // if provided, and a specific text if given.
-window.$.fn.makeID = function (pfx = "", txt = "", noLC = false) {
+window.$.fn.makeID = function(pfx = "", txt = "", noLC = false) {
   const elem = this[0];
   if (elem.id) {
     return elem.id;
@@ -194,7 +196,7 @@ window.$.fn.makeID = function (pfx = "", txt = "", noLC = false) {
 
 // Returns all the descendant text nodes of an element. Note that those nodes aren't
 // returned as a jQuery array since I'm not sure if that would make too much sense.
-window.$.fn.allTextNodes = function (exclusions) {
+window.$.fn.allTextNodes = function(exclusions) {
   var textNodes = [],
     excl = {};
   for (var i = 0, n = exclusions.length; i < n; i++) excl[exclusions[i]] = true;
