@@ -11,7 +11,8 @@ function toJSON(files) {
   const paths = files
     .split("\n")
     .map(path => path.replace(pathMatcher, ""))
-    .filter(path => path);
+    .filter(path => path)
+    .sort();
   return JSON.stringify(paths, null, 2);
 }
 
