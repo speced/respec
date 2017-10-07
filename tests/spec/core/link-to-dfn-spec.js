@@ -2,7 +2,7 @@
 describe("Core — Link to definitions", function() {
   afterAll(flushIframes);
 
-  it("URL-encodes fragment components", async () => {
+  it("removes non-alphanum chars from fragment components", async () => {
     const bodyText = `
       <section">
         <h2>Test section</h2>
@@ -15,7 +15,7 @@ describe("Core — Link to definitions", function() {
     const doc = await makeRSDoc(ops);
     const a = doc.body.querySelector("#testAnchor");
     expect(a).toBeTruthy();
-    expect(a.hash).toEqual("#dfn-x%5B%5Btest%5D%5D");
+    expect(a.hash).toEqual("#dfn-test");
     const decodedHash = decodeURIComponent(a.hash);
     expect(doc.getElementById(decodedHash.slice(1))).toBeTruthy();
   });
