@@ -69,7 +69,7 @@ describe("Core - jquery enhanced", function() {
   });
 
   // $.makeID()
-  it("creates the proper ID", () => {
+  it("creates an id from the content of an elements", () => {
     expect($("<p id='ID'></p>").makeID()).toEqual("ID");
     expect($("<p title='TITLE'></p>").makeID()).toEqual("title");
     expect($("<p>TEXT</p>").makeID()).toEqual("text");
@@ -79,7 +79,7 @@ describe("Core - jquery enhanced", function() {
     var $p = $("<p>TEXT</p>");
     $p.makeID();
     expect($p.attr("id")).toEqual("text");
-    expect($("<p>  A--Bé9\n C</p>").makeID()).toEqual("a-bé9-c");
+    expect($("<p>  A--Bé9\n C</p>").makeID()).toEqual("a-b-9-c");
     expect($("<p></p>").makeID()).toEqual("generatedID");
     expect($("<p>2017</p>").makeID()).toEqual("x2017");
     var $div = $(
@@ -87,7 +87,11 @@ describe("Core - jquery enhanced", function() {
     ).appendTo($("body"));
     expect($div.find("span").makeID()).toEqual("a-0");
     expect($div.find("span[title]").makeID()).toEqual("a-2");
-    expect($("<p>this( )is( )a( )test()</p>").makeID()).toEqual("this-is-a-test");
+    expect(
+      $(`<p>" ¡™£¢∞§¶•ªº
+        THIS is a ------------
+      test (it_contains [[stuff]] '123') 😎		"</p>`).makeID()
+    ).toEqual("this-is-a-test-it_contains-stuff-123");
     $div.remove();
   });
 
