@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "16.2.2",
+  "version": "17.0.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
