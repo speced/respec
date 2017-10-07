@@ -9,9 +9,9 @@ window.$ = $;
 // --- JQUERY EXTRAS -----------------------------------------------------------------------
 // Applies to any jQuery object containing elements, changes their name to the one give, and
 // return a jQuery object containing the new elements
-window.$.fn.renameElement = function (name) {
+window.$.fn.renameElement = function(name) {
   var arr = [];
-  this.each(function () {
+  this.each(function() {
     var $newEl = $(this.ownerDocument.createElement(name));
     // I forget why this didn't work, maybe try again
     // $newEl.attr($(this).attr());
@@ -26,7 +26,9 @@ window.$.fn.renameElement = function (name) {
         break; // no point in continuing with this element
       }
     }
-    $(this).contents().appendTo($newEl);
+    $(this)
+      .contents()
+      .appendTo($newEl);
     $(this).replaceWith($newEl);
     arr.push($newEl[0]);
   });
@@ -47,8 +49,7 @@ window.$.fn.renameElement = function (name) {
 //
 // This method will publish a warning if a title is used on a definition
 // instead of an @lt (as per specprod mailing list discussion).
-window.$.fn.getDfnTitles = function (args) {
-  var titles = [];
+window.$.fn.getDfnTitles = function(args) {
   var theAttr = "";
   var titleString = "";
   var normalizedText = "";
@@ -57,30 +58,19 @@ window.$.fn.getDfnTitles = function (args) {
   if (this.attr("data-lt-noDefault") === undefined) {
     normalizedText = norm(this.text()).toLowerCase();
   }
-  // allow @lt to be consistent with bikeshed
-  if (this.attr("data-lt") || this.attr("lt")) {
+  if (this.attr("data-lt")) {
     theAttr = this.attr("data-lt") ? "data-lt" : "lt";
     // prefer @data-lt for the list of title aliases
     titleString = this.attr(theAttr).toLowerCase();
     if (normalizedText !== "") {
       //Regex: starts with the "normalizedText|"
       var startsWith = new RegExp("^" + normalizedText + "\\|");
-      // Use the definition itself as first item, so to avoid
+      // Use the definition itself, so to avoid
       // having to declare the definition twice.
       if (!startsWith.test(titleString)) {
-        titleString = normalizedText + "|" + titleString;
+        titleString =  titleString + "|" + normalizedText;
       }
     }
-  } else if (this.attr("title")) {
-    // allow @title for backward compatibility
-    titleString = this.attr("title");
-    theAttr = "title";
-    pub(
-      "warn",
-      "Using deprecated attribute title for '" +
-      this.text() +
-      "': see https://github.com/w3c/respec/wiki/User's-Guide#definitions-and-linking"
-    );
   } else if (
     this.contents().length === 1 &&
     this.children("abbr, acronym").length === 1 &&
@@ -96,6 +86,8 @@ window.$.fn.getDfnTitles = function (args) {
     // if it came from an attribute, replace that with data-lt as per contract with Shepherd
     if (theAttr) {
       this.attr("data-lt", titleString);
+    }
+    if (theAttr !== "data-lt") {
       this.removeAttr(theAttr);
     }
     // if there is no pre-defined type, assume it is a 'dfn'
@@ -106,12 +98,11 @@ window.$.fn.getDfnTitles = function (args) {
       this.removeAttr("dfn-type");
     }
   }
-  titleString.split("|").forEach(function (item) {
-    if (item != "") {
-      titles.push(item);
-    }
-  });
-  return titles;
+  const titles = titleString
+    .split("|")
+    .filter(item => item !== "")
+    .reduce((collector, item) => collector.add(item), new Set());
+  return [...titles];
 };
 
 // For any element (usually <a>), returns an array of targets that
@@ -124,19 +115,15 @@ window.$.fn.getDfnTitles = function (args) {
 //  * {for_: "int2", title: "int3.member"}
 //  * {for_: "int3", title: "member"}
 //  * {for_: "", title: "int3.member"}
-window.$.fn.linkTargets = function () {
+window.$.fn.linkTargets = function() {
   var elem = this;
-  var link_for = (elem.attr("for") ||
-    elem.attr("data-for") ||
-    elem.closest("[link-for]").attr("link-for") ||
-    elem.closest("[data-link-for]").attr("data-link-for") ||
-    "")
-    .toLowerCase();
+  var linkForElem = this[0].closest("[data-link-for]");
+  var linkFor = linkForElem ? linkForElem.dataset.linkFor.toLowerCase() : "";
   var titles = elem.getDfnTitles();
   var result = [];
-  window.$.each(titles, function () {
+  window.$.each(titles, function() {
     result.push({
-      for_: link_for,
+      for_: linkFor,
       title: this,
     });
     var split = this.split(".");
@@ -158,7 +145,7 @@ window.$.fn.linkTargets = function () {
 
 // Applied to an element, sets an ID for it (and returns it), using a specific prefix
 // if provided, and a specific text if given.
-window.$.fn.makeID = function (pfx = "", txt = "", noLC = false) {
+window.$.fn.makeID = function(pfx = "", txt = "", noLC = false) {
   const elem = this[0];
   if (elem.id) {
     return elem.id;
@@ -168,10 +155,9 @@ window.$.fn.makeID = function (pfx = "", txt = "", noLC = false) {
   }
   var id = noLC ? txt : txt.toLowerCase();
   id = id
-    .replace(/\s/gm, "-")
+    .replace(/[\W]+/gmi, "-")
     .replace(/^-+/, "")
-    .replace(/-+$/, "")
-    .replace(/-+/g, "-");
+    .replace(/-+$/, "");
   if (!id) {
     id = "generatedID";
   } else if (/\.$/.test(id) || !/^[a-z]/i.test(id)) {
@@ -194,7 +180,7 @@ window.$.fn.makeID = function (pfx = "", txt = "", noLC = false) {
 
 // Returns all the descendant text nodes of an element. Note that those nodes aren't
 // returned as a jQuery array since I'm not sure if that would make too much sense.
-window.$.fn.allTextNodes = function (exclusions) {
+window.$.fn.allTextNodes = function(exclusions) {
   var textNodes = [],
     excl = {};
   for (var i = 0, n = exclusions.length; i < n; i++) excl[exclusions[i]] = true;

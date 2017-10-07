@@ -57,16 +57,16 @@ describe("Core - WebIDL", function() {
   });
 
   it("links to fully qualified method names", done => {
-    var t1 = new URL(doc.getElementById("fullyQualifiedNoParens-1")).hash;
+    var t1 = new URL(doc.getElementById("fullyQualifiedNoParens-1").href).hash;
     expect(t1).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
 
-    var t2 = new URL(doc.getElementById("fullyQualifiedNoParens-2")).hash;
+    var t2 = new URL(doc.getElementById("fullyQualifiedNoParens-2").href).hash;
     expect(t2).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
 
-    var t3 = new URL(doc.getElementById("fullyQualifiedNoParens-3")).hash;
+    var t3 = new URL(doc.getElementById("fullyQualifiedNoParens-3").href).hash;
     expect(t3).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
 
-    var t4 = new URL(doc.getElementById("fullyQualifiedNoParens-4")).hash;
+    var t4 = new URL(doc.getElementById("fullyQualifiedNoParens-4").href).hash;
     expect(t4).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
 
     done();
@@ -79,19 +79,19 @@ describe("Core - WebIDL", function() {
       .map(([methodName, id]) => [
         id,
         methodName,
-        doc.getElementById(`dom-parenthesistest-${id}()`),
+        doc.getElementById(`dom-parenthesistest-${id}`),
       ])
       .forEach(([id, methodName, elem]) => {
         expect(elem).toBeTruthy();
         expect(elem.firstElementChild.localName).toEqual("code");
         expect(elem.textContent).toEqual(`${methodName}()`);
-        expect(elem.id).toEqual(`dom-parenthesistest-${id}()`);
+        expect(elem.id).toEqual(`dom-parenthesistest-${id}`);
         expect(elem.dataset.dfnType).toEqual("dfn");
         expect(elem.dataset.dfnFor).toEqual("parenthesistest");
         expect(elem.dataset.idl).toEqual("");
         // corresponding link
         const aElem = section.querySelector(
-          `pre a[href="#dom-parenthesistest-${id}()"]`
+          `pre a[href="#dom-parenthesistest-${id}"]`
         );
         expect(aElem).toBeTruthy();
         expect(aElem.textContent).toEqual(methodName);
@@ -283,28 +283,27 @@ describe("Core - WebIDL", function() {
     done();
   });
 
-  it("should handle attributes", function(done) {
+  it("should handle attributes", function() {
     var $target = $("#attr-basic", doc);
-    var text =
-      "interface AttrBasic {\n" +
-      "    // 1\n" +
-      "                attribute DOMString              regular;\n" +
-      "    // 2\n" +
-      "    readonly    attribute DOMString              ro;\n" +
-      "    // 2.2\n" +
-      "    readonly    attribute DOMString              _readonly;\n" +
-      "    // 2.5\n" +
-      "    inherit     attribute DOMString              in;\n" +
-      "    // 2.7\n" +
-      "    stringifier attribute DOMString              st;\n" +
-      "    // 3\n" +
-      "    [Something]\n" +
-      "    readonly    attribute DOMString              ext;\n" +
-      "    // 3.10.31\n" +
-      "                attribute FrozenArray<DOMString> alist;\n" +
-      "    // 4.0\n" +
-      "                attribute Promise<DOMString>     operation;\n" +
-      "};";
+    var text =`interface AttrBasic {
+    // 1
+                attribute DOMString              regular;
+    // 2
+    readonly    attribute DOMString              ro;
+    // 2.2
+    readonly    attribute DOMString              _readonly;
+    // 2.5
+    inherit     attribute DOMString              in;
+    // 2.7
+    stringifier attribute DOMString              st;
+    // 3
+    [Something]
+    readonly    attribute DOMString              ext;
+    // 3.10.31
+                attribute FrozenArray<DOMString> alist;
+    // 4.0
+                attribute Promise<DOMString>     operation;
+};`.trim();
     expect($target.text()).toEqual(text);
     expect($target.find(".idlAttribute").length).toEqual(8);
     var $at = $target.find(".idlAttribute").first();
@@ -318,10 +317,6 @@ describe("Core - WebIDL", function() {
     );
     var $promise = $target.find(".idlAttribute").eq(7);
     expect($promise.find(".idlAttrType").text()).toEqual("Promise<DOMString>");
-    // Links and IDs.
-    expect(
-      $target.find(":contains('_readonly')").filter("a").attr("href")
-    ).toEqual("#dom-attrbasic-readonly");
     expect(
       $target.find(":contains('_readonly')").parents(".idlAttribute").attr("id")
     ).toEqual("idl-def-attrbasic-readonly");
@@ -329,7 +324,6 @@ describe("Core - WebIDL", function() {
       $target.find(":contains('regular')").filter("a").attr("href")
     ).toEqual("#dom-attrbasic-regular");
     expect($target.find(":contains('dates')").filter("a").length).toEqual(0);
-    done();
   });
 
   it("should handle operations", function(done) {
@@ -662,6 +656,6 @@ describe("Core - WebIDL", function() {
     expect(objectLink.hash).toEqual("#idl-object");
     expect(toJSONLink.pathname).toEqual(doc.location.pathname);
     expect(toJSONLink.origin).toEqual(doc.location.origin);
-    expect(toJSONLink.hash).toEqual("#dom-definedtojson-tojson()");
+    expect(toJSONLink.hash).toEqual("#dom-definedtojson-tojson");
   });
 });

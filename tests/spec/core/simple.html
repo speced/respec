@@ -1,44 +1,52 @@
 <!DOCTYPE html>
-<html xmlns='http://www.w3.org/1999/xhtml'>
-  <head>
-    <meta charset='utf-8'/>
-    <title>Simple Spec</title>
-    <script class='remove'>
-      document.write(
-          "<scr" + "ipt " +
-          ((typeof window.callPhantom === 'function') ?
-                "src='/builds/respec-w3c-common.js'" :
-                "src='/js/deps/require.js' data-main='/js/profile-w3c-common'") +
-          " class='remove'></scr"+"ipt>"
-      );
-    </script>
-    <script class='remove'>
-      var respecConfig = {
-              specStatus:   "ED"
-          ,   shortName:    "basics"
-          ,   editors:      [{ name: "Robin Berjon", url: "http://berjon.com/" }]
-          ,   wg:           "ReSpec Hackin' Gang"
-          ,   wgURI:        "http://darobin.github.com/respec"
-          ,   wgPublicList: "none"
-          ,   wgPatentURI:  "XXX"
-          ,   edDraftURI:   "http://darobin.github.com/respec"
-        };
-    </script>
-  </head>
-  <body>
-    <section id='abstract'>
-      <p>Basic doc</p>
-    </section>
-    <section id='sotd'>
-      <p>
-        CUSTOM PARAGRAPH
-      </p>
-    </section>
-    <section>
-      <h2>Some title</h2>
-      <p>
-        Some content
-      </p>
-    </section>
-  </body>
-</html>
+<html>
+<meta charset='utf-8'/>
+<title>Simple Spec</title>
+<script class='remove'>
+  const script = document.createElement("script");
+  script.dataset.main = "/js/profile-w3c-common";
+  script.classList.add("remove");
+  script.src = window.__karma__ ?
+      "/builds/respec-w3c-common.js"
+    : "/js/deps/require.js";
+  document.head.appendChild(script);
+</script>
+<script class='remove'>
+var respecConfig = {
+  specStatus: "ED",
+  shortName: "basics",
+  editors: [{ name: "Robin Berjon", url: "http://berjon.com/" }],
+  wg: "ReSpec Hackin' Gang",
+  wgURI: "https://darobin.github.com/respec",
+  wgPublicList: "none",
+  wgPatentURI: "https://XXX",
+  edDraftURI: "https://darobin.github.com/respec",
+};
+</script>
+<section id='abstract'>
+  <p>Basic doc</p>
+</section>
+<section id='sotd'>
+  <p>
+    CUSTOM PARAGRAPH
+  </p>
+</section>
+<section>
+  <h2>Some title</h2>
+  <p>
+    Some content
+  </p>
+  <p><dfn id="custom_id(¡™£¢∞§¶•ªº)">custom id</dfn></p>
+  <p><dfn>[[\escapedSlot]]</dfn> <a>[[\escapedSlot]]</a></p>
+</section>
+<section data-dfn-for="Test">
+  <h2><dfn>Test</dfn> interface</h2>
+  <pre class="idl">
+    interface Test {
+      void foo();
+    };
+  </pre>
+  <section>
+    <h3><dfn>foo()</dfn> method</h3>
+  </section>
+</section>

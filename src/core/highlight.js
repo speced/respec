@@ -3,7 +3,6 @@
  *
  * Performs syntax highlighting to all pre and code elements.
  */
-import "deps/regenerator";
 import ghCss from "deps/text!core/css/github.css";
 import { pub, sub } from "core/pubsubhub";
 import { worker } from "core/worker";

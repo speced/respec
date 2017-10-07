@@ -9,8 +9,6 @@
 //  This module only really works when you are in an HTTP context, and will most likely
 //  fail if you are editing your documents on your local drive. That is due to security
 //  restrictions in the browser.
-
-import "deps/regenerator";
 import { pub } from "core/pubsubhub";
 import { runTransforms } from "core/utils";
 

@@ -4,7 +4,6 @@
  * @see https://github.com/w3c/respec/wiki/github
  */
 
-import "deps/regenerator";
 import l10n from "core/l10n";
 import { pub } from "core/pubsubhub";
 

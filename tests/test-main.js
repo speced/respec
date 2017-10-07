@@ -41,7 +41,6 @@ require.config({
     "deps/async": "/base/js/deps/async",
     "deps/jquery": "/base/js/deps/jquery",
     "deps/marked": "/base/js/deps/marked",
-    "deps/regenerator": "/base/js/deps/regenerator",
     "w3c/linter": "/base/js/w3c/linter",
   },
 });

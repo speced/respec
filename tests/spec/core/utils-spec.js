@@ -267,19 +267,6 @@ describe("Core - Utils", () => {
     });
   });
 
-  describe("$.renameElement", () => {
-    it("renames the element", () => {
-      var $div = $("<div><p><a></a></p><b>some text</b></div>").appendTo(
-        $("body")
-      );
-      $div.find("p").renameElement("span");
-      $div.find("b").renameElement("i");
-      expect($div.find("span").length).toEqual(1);
-      expect($div.find("i").text()).toEqual("some text");
-      $div.remove();
-    });
-  });
-
   describe("lead0", () => {
     it("prepends 0 only when needed", () => {
       expect(utils.lead0("1")).toEqual("01");

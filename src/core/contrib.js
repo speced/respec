@@ -7,7 +7,6 @@
 
 import { fetch as ghFetch, fetchIndex } from "core/github";
 import { pub } from "core/pubsubhub";
-import "deps/regenerator";
 export const name = "core/contrib";
 
 function prop(prop) {

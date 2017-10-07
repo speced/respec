@@ -1,17 +1,18 @@
 # os: linux
 # osx_image: xcode9
+os: osx
 language: node_js
 sudo: required
-dist: trusty
+# dist: trusty
 node_js:
-  - v7
+  - v8
 
-before_install:
-  # see https://docs.travis-ci.com/user/gui-and-headless-browsers/#Using-xvfb-to-Run-Tests-That-Require-a-GUI
-  - "export DISPLAY=:99.0"
-  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16 -extension RANDR"
-  - export PATH="$PATH:$HOME/.rvm/bin"
-  - sleep 3
+# before_install:
+#   # see https://docs.travis-ci.com/user/gui-and-headless-browsers/#Using-xvfb-to-Run-Tests-That-Require-a-GUI
+#   - "export DISPLAY=:99.0"
+#   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16 -extension RANDR"
+#   - export PATH="$PATH:$HOME/.rvm/bin"
+#   - sleep 3
 
 install:
   - yarn install
