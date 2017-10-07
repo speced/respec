@@ -10,7 +10,7 @@ describe("Core — Location Hash", () => {
       const expectedHash = "#custom_id(¡™£¢∞§¶•ªº)";
       const testURL = `${simpleURL}${expectedHash}`;
       const doc = await makeRSDoc(ops, noOp, testURL);
-      expect(doc.location.hash).toEqual(expectedHash);
+      expect(decodeURIComponent(doc.location.hash)).toEqual(expectedHash);
     });
     it("recovers from legacy IDL methods frags", async () => {
       const testURL = `${simpleURL}#dom-test-foo()`;
