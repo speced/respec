@@ -3,19 +3,15 @@
   <head>
     <meta charset='utf-8'/>
     <title>Basic ReSpec Evolution Example</title>
-    <!-- // <script src='http://w3.dev/2009/dap/ReSpec.js/js/respec.js' class='remove'></script> -->
     <script src='/js/deps/require.js' data-main='/js/profile-w3c-common' async class='remove'></script>
-    <!-- // <script src='../builds/respec-w3c-common.js' async class='remove'></script> -->
-    <!-- // <script src='respec-debug.js' async class='remove'></script> -->
-    <!-- // <script src='//www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script> -->
-    <!-- // <script src='http://darobin.github.com/respec/builds/respec-w3c-common.js' async class='remove'></script> -->
     <script class='remove'>
       var respecConfig = {
         specStatus: "FPWD",
         editors: [{
           name: "Robin Berjon",
-          url: "http://berjon.com/",
+          url: "https://berjon.com/",
         }],
+        edDraftURI: "https://foo.com",
         processVersion: 2005,
         shortName: "dahut",
         format: "markdown",
@@ -23,49 +19,79 @@
     </script>
   </head>
   <body>
-    <section id="conformance" data-include="test.inc"></section>
-    <section id='abstract'>
-      <p>
-        This is just a very basic document. [[!REX]]
-        [[DOM4]], [[XML10]], [[\WHATEVER]]
-      </p>
-    </section>
-    <section id='sotd'>
-      <p>
-        CUSTOM PARAGRAPH
-      </p>
-    </section>
-    <section class='informative'>
-      <h2>Informative section</h2>
-      <p>blah</p>
-      <section>
-        <h2>Inner section</h2>
-        <p>blahblah</p>
-      </section>
-      <section>
-        <h2>Other inner section</h2>
-        <p>blahblah</p>
-      </section>
-    </section>
+    <section><h2>Privacy</h2></section>
+    <section id="abstract"></section>
+    <section id="sotd"><p>.</p></section>
     <section>
-      <h2>Clash here</h2>
+      <h2><dfn>Testing</dfn> interface</h2>
       <pre class="idl">
-        enum Test {
-          "a",
+        dictionary Ello {
+          DOMString test;
+        };
+        enum Things {
+          "foo",
+          "bar"
+        };
+        interface Foo : DOMString {
+          [CEReactions] readonly attribute DOMString attr;
+        };
+        interface Testing : Foo {
+          void foo(DOMString foo, Things... bar);
+        };
+        interface Bar : Testing {
         };
       </pre>
-    </section>
-    <section>
-      <h2>Type Unions</h2>
       <section>
-        <h2>Two</h2>
-        <pre class="idl">
-          interface MutableCapabilities : Capabilities{
-            (DOMString or sequence<long>) bar();
-            void foo((unsigned long or sequence<unsigned long>) value1);
-          };
-        </pre>
+        <h3><dfn>Bar</dfn></h3>
       </section>
     </section>
+    <p>
+
+    </p>
+    <code><dfn data-dfn-type="idl">Foo</dfn></code>
+    <code><dfn>Foo</dfn></code>
+    <!-- section id="invalids">
+      <dfn data-lt-no-default>
+        Invalid
+      </dfn>
+      <dfn data-lt-no-default data-lt>
+        Invalid
+      </dfn>
+      <dfn data-lt-no-default data-lt="">
+        Invalid
+      </dfn>
+      <dfn data-lt-no-default data-lt="       ">
+       Invalid
+      </dfn>
+    </section>
+    <section>
+      <h2><dfn data-pluralize data-lt="
+        alternative 1 |
+        alternative 2 |
+        alternative   3">test</dfn></h2>
+      <p>
+        <a>Alternative 1</a>
+        <a>Alternative 2</a>
+        <a>Alternative 3</a>
+        <a data-lt="Alternative 1">This is alternative 1</a>
+        <a data-lt="Alternative 1">
+          This is alternative 1
+        </a>
+        <a data-lt="ALTERNATIVE 1">
+          This is alternative 1
+        </a>
+        <a data-lt="Alternative 2">This is alternative 2</a>
+        <a data-lt="no link | AlTernaTive 3 ">This is alternative 3</a>
+        <a>test</a>
+        <a>Test</a>
+        <a>Tests</a>
+        <a>TeSt</a>
+        <a data-lt="this won't match|tests">Links to test</a>
+        <a data-lt="test">Links to test</a>.
+      </p>
+      <p>
+        <a>nothing links here</a>
+      </p>
+    </section -->
   </body>
 </html>

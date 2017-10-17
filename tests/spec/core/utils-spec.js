@@ -1,10 +1,260 @@
 "use strict";
 describe("Core - Utils", () => {
-  var utils;
-  beforeAll(done => {
-    require(["core/utils"], function(u) {
-      utils = u;
-      done();
+  let utils;
+  beforeAll(async () => {
+    utils = await new Promise(resolve => {
+      require(["core/utils"], u => resolve(u));
+    });
+  });
+  fdescribe("deriveDfnType()", () => {
+    it("checks local name of element for a dfn", () => {
+      expect(() => {
+        utils.deriveDfnType(document.createElement("dfn"));
+      }).not.toThrow();
+      expect(() => {
+        utils.deriveDfnType(document.createElement("a"));
+      }).toThrow();
+      expect(() => {
+        utils.deriveDfnType(document.createElement("div"));
+      }).toThrow();
+    });
+    it("returns the type, if already included via 'data-dfn-type'", () => {
+      const dfn = document.createElement("dfn");
+      expect(utils.deriveDfnType(dfn)).toEqual("dfn"); // default is "dfn"
+      dfn.dataset.dfnType = "pass";
+      expect(utils.deriveDfnType(dfn)).toEqual("pass");
+    });
+    it("derives the 'idl' type from the ancestor chain", () => {
+      const section = document.createElement("section");
+      section.dataset.dfnFor = "test";
+      section.innerHTML = `
+        <pre class="idl">
+          interface Test {};
+        </pre>
+        <dfn>test</dfn>
+      `;
+      const dfn = section.querySelector("dfn");
+      expect(utils.deriveDfnType(dfn)).toEqual("idl");
+    });
+  });
+
+  fdescribe("deriveAnchorType()", () => {
+    it("checks local name of element for a link", () => {
+      expect(() => {
+        utils.deriveAnchorType(document.createElement("a"));
+      }).not.toThrow();
+      expect(() => {
+        utils.deriveAnchorType(document.createElement("dfn"));
+      }).toThrow();
+      expect(() => {
+        utils.deriveAnchorType(document.createElement("div"));
+      }).toThrow();
+    });
+    it("returns the type, if already included via 'data-link-type'", () => {
+      const anchor = document.createElement("a");
+      expect(utils.deriveAnchorType(anchor)).toEqual("dfn"); // default is "dfn"
+      anchor.dataset.linkType = "pass";
+      expect(utils.deriveAnchorType(anchor)).toEqual("pass");
+    });
+    it("derives the 'idl' type from the ancestor chain", () => {
+      const section = document.createElement("section");
+      section.dataset.linkFor = "test";
+      section.innerHTML = `
+        <pre class="idl">
+          interface Test {};
+        </pre>
+        <dfn>test</dfn>
+        <a>test</a>
+      `;
+      const anchor = section.querySelector("a");
+      expect(utils.deriveAnchorType(anchor)).toEqual("idl");
+    });
+  });
+
+  fdescribe("deriveId()", () => {
+    it("generates an id, but doesn't actually assign it", () => {
+      const div = document.createElement("div");
+      utils.deriveId(div);
+      expect(div.hasAttribute("id")).toBe(false);
+    });
+    it("returns only generates a new id if the id is missing", () => {
+      const div = document.createElement("div");
+      expect(utils.deriveId(div)).toEqual("generated-id");
+      div.id = "pass";
+      expect(utils.deriveId(div)).toEqual("pass");
+    });
+    it("returns auto-generates/increment ids even when it has no text to work with", () => {
+      const doc = document.implementation.createHTMLDocument("");
+      const div = doc.createElement("div");
+      doc.body.appendChild(div);
+      div.id = "";
+      expect(utils.deriveId(div)).toEqual("generated-id");
+      div.id = "generated-id";
+      const div2 = doc.createElement("div");
+      expect(utils.deriveId(div2)).toBe("generated-id-0");
+    });
+    it("uses provided text option, otherwise falls back to text content", () => {
+      const div = document.createElement("div");
+      div.textContent = "text-content";
+      const id = utils.deriveId(div, { text: "pass" });
+      expect(id).toEqual("pass");
+      expect(utils.deriveId(div)).toEqual("text-content");
+    });
+    it("respects not converting the id to lowercase, when passed noLowerCase", () => {
+      const div = document.createElement("div");
+      const id = utils.deriveId(div, { text: "PASS", noLowerCase: true });
+      expect(id).toEqual("PASS");
+      div.innerHTML = "TeSt";
+      expect(utils.deriveId(div, { noLowerCase: true })).toBe("TeSt");
+    });
+    it("normalizes ids to lowercase when generating an id from text or content", () => {
+      const div = document.createElement("div");
+      expect(utils.deriveId(div, { text: "PASS" })).toEqual("pass");
+      div.textContent = "PASS";
+      expect(utils.deriveId(div)).toEqual("pass");
+      div.textContent = "PASS";
+      expect(utils.deriveId(div, { noLowerCase: true })).toEqual("PASS");
+    });
+    it("respects requests to prefix ids in some particular way", () => {
+      const div = document.createElement("div");
+      div.textContent = "fail";
+      expect(utils.deriveId(div, { text: "PASS", prefix: "pass" })).toEqual(
+        "pass-pass"
+      );
+      expect(utils.deriveId(div, { text: "PASS", prefix: "PREFIX" })).toEqual(
+        "PREFIX-pass"
+      );
+      expect(
+        utils.deriveId(div, { text: "PASS", prefix: "PASS", noLowerCase: true })
+      ).toEqual("PASS-PASS");
+      div.textContent = "PASS";
+      expect(
+        utils.deriveId(div, { prefix: "PASS", noLowerCase: true })
+      ).toEqual("PASS-PASS");
+      expect(
+        utils.deriveId(div, { prefix: "PASS", noLowerCase: false })
+      ).toEqual("PASS-pass");
+    });
+    it("respects requests to prefix ids, but normalizes garbage prefixes", () => {
+      const div = document.createElement("div");
+      div.textContent = "text";
+      expect(utils.deriveId(div, { prefix: "this-is-FINE" })).toEqual(
+        "this-is-FINE-text"
+      );
+      expect(
+        utils.deriveId(div, { text: "PASS", prefix: "$#@!!#@$!#%@#$$#&" })
+      ).toEqual("pass");
+    });
+    it("Replaces non-ascii chars when generating IDs", () => {
+      const doc = document.implementation.createHTMLDocument("");
+      const p = doc.createElement("p");
+      p.innerHTML = "<p>  A--Bé9\n C</p>";
+      expect(utils.deriveId(p)).toEqual("a-b-9-c");
+      p.textContent = "2017";
+      expect(utils.deriveId(p)).toEqual("x2017");
+      const div = doc.createElement("div");
+      div.innerHTML = `<p>" ¡™£¢∞§¶•ªº
+          THIS is a ------------
+        test (it_contains [[stuff]] '123') 😎		"</p>`;
+      expect(utils.deriveId(div.querySelector("p"))).toEqual(
+        "this-is-a-test-it_contains-stuff-123"
+      );
+    });
+    it("prefixes ids that start with numbers with 'x'", () => {
+      const div = document.createElement("div");
+      div.textContent = "1";
+      expect(utils.deriveId(div)).toEqual("x1");
+      expect(utils.deriveId(div, { text: "2000" })).toEqual("x2000");
+      expect(utils.deriveId(div, { text: "PASS", prefix: "2000" })).toEqual(
+        "x2000-pass"
+      );
+      expect(
+        utils.deriveId(div, { text: "PASS", prefix: "2000", noLowerCase: true })
+      ).toEqual("x2000-PASS");
+    });
+    it("gives the next possible id, if ID is taken in the document", () => {
+      const doc = document.implementation.createHTMLDocument("");
+      const div = doc.createElement("div");
+      div.innerHTML = `
+        <p id='a'></p>
+        <p id='a-1'></p>
+        <span>A</span>
+        <foo>a</foo>
+      `;
+      doc.body.appendChild(div);
+      const span = div.querySelector("span");
+      const spanId = utils.deriveId(span);
+      expect(spanId).toEqual("a-0");
+      span.id = spanId;
+      const foo = div.querySelector("foo");
+      const fooId = utils.deriveId(foo);
+      expect(fooId).toEqual("a-2");
+    });
+  });
+
+  fdescribe("getLinkedTerms()", () => {
+    it("gets an empty list if there are no linked terms for the element", () => {
+      const a = document.createElement("a");
+      const terms = utils.getLinkedTerms(a);
+      expect(terms).toEqual(jasmine.arrayWithExactContents([]));
+    });
+    it("respects `ltNoDefault`, so ignores text content of element", () => {
+      const a = document.createElement("a");
+      a.dataset.ltNoDefault = "";
+      expect(utils.getLinkedTerms(a)).toEqual(
+        jasmine.arrayWithExactContents([])
+      );
+      a.innerHTML = "FOO";
+      expect(utils.getLinkedTerms(a)).toEqual(
+        jasmine.arrayWithExactContents([])
+      );
+      a.dataset.lt = "pass";
+      expect(utils.getLinkedTerms(a)).toEqual(
+        jasmine.arrayWithExactContents(["pass"])
+      );
+      delete a.dataset.ltNoDefault;
+      expect(utils.getLinkedTerms(a)).toEqual(
+        jasmine.arrayWithExactContents(["pass", "foo"])
+      );
+    });
+    it("normalizes linked terms to lowercase and trimmed", () => {
+      const dfn = document.createElement("dfn");
+      dfn.innerHTML = "FOO";
+      dfn.dataset.lt = " \n BAR|\tBAZ | BAT  ";
+      expect(utils.getLinkedTerms(dfn)).toEqual(
+        jasmine.arrayWithExactContents(["foo", "bar", "baz", "bat"])
+      );
+    });
+    it("special-cases the empty string", () => {
+      const dfn = document.createElement("dfn");
+      dfn.innerHTML = '""';
+      expect(utils.getLinkedTerms(dfn)).toEqual(
+        jasmine.arrayWithExactContents(["the-empty-string"])
+      );
+      dfn.dataset.lt = '""';
+      dfn.innerHTML = "";
+      expect(utils.getLinkedTerms(dfn)).toEqual(
+        jasmine.arrayWithExactContents(["the-empty-string"])
+      );
+    });
+    it("pluralizes definitions when asked to via `pluralize`", () => {
+      const dfn = document.createElement("dfn");
+      dfn.innerHTML = "TeSt";
+      expect(utils.getLinkedTerms(dfn)).toEqual(
+        jasmine.arrayWithExactContents(["test"])
+      );
+      dfn.dataset.pluralize = "";
+      expect(utils.getLinkedTerms(dfn)).toEqual(
+        jasmine.arrayWithExactContents(["test", "tests"])
+      );
+    });
+    it("resolves simple entities", () => {
+      debugger;
+      const a = document.createElement("a");
+      a.dataset.lt = "parent[&quot;child&quot;]";
+      expect(utils.getLinkedTerms(a)).toEqual(
+        jasmine.arrayWithExactContents(['parent["inner"]'])
+      );
     });
   });
 

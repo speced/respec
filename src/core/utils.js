@@ -5,6 +5,7 @@
 // anywhere else.
 import { pub } from "core/pubsubhub";
 import marked from "deps/marked";
+import { plural } from "deps/pluralize";
 export const name = "core/utils";
 
 marked.setOptions({
@@ -17,6 +18,144 @@ const endsWithSpace = /\s+$/gm;
 const dashes = /\-/g;
 const gtEntity = /&gt;/gm;
 const ampEntity = /&amp;/gm;
+
+// Finds the type of an element, based on either itself, or its parent.
+function deriveType(
+  localName,
+  attrExplicitType,
+  attrName,
+  matchType,
+  defaultType = "dfn"
+) {
+  return elem => {
+    if (elem.localName !== localName) {
+      throw new TypeError(`Expected a ${localName}`);
+    }
+    // Explicit on the the element
+    if (elem.hasAttribute(attrExplicitType)) {
+      return elem.getAttribute(attrExplicitType);
+    }
+    const closest = elem.closest(`[${attrName}]`);
+    if (!closest) {
+      return defaultType;
+    }
+    if (closest === elem) {
+      return matchType;
+    }
+    // Check the ancestor chain.
+    const linkedTerms = getLinkedTerms(elem).map(term => term.toLowerCase());
+    const matched = closest
+      .getAttribute(attrName)
+      .split(" ")
+      .some(term => linkedTerms.includes(term));
+    return matched ? matchType : defaultType;
+  };
+}
+
+export const deriveDfnType = deriveType(
+  "dfn",
+  "data-dfn-type",
+  "data-dfn-for",
+  "idl"
+);
+export const deriveAnchorType = deriveType(
+  "a",
+  "data-link-type",
+  "data-link-for",
+  "idl"
+);
+
+/**
+ * Returns the alternative ways of linking to this element.
+ */
+const entities = new Map([
+  ["amp", "&"],
+  ["apos", "'"],
+  ["#x2", "'"],
+  ["#x2", "/"],
+  ["#3", "'"],
+  ["#4", "/"],
+  ["lt", "<"],
+  ["gt", ">"],
+  ["nbsp", " "],
+  ["quot", '"'],
+]);
+function decodeHTMLEntities(text) {
+  return text.replace(
+    /&([^;]+);/gm,
+    (match, entity) => entities.get(entity) || match
+  );
+}
+
+export function getLinkedTerms(elem) {
+  const keys = new Set();
+  // dataset.ltNoDefault prevents using the text content of a definition
+  // in the linked terms.
+  const content = elem.textContent.trim();
+  if (content && elem.dataset.hasOwnProperty("ltNoDefault") === false) {
+    const hasLt = Boolean(elem.dataset.lt);
+    const normalizedContent =
+      (hasLt ? elem.dataset.lt + "|" : "") + norm(content).toLowerCase();
+    elem.dataset.lt = normalizedContent;
+  }
+  if (elem.dataset.lt) {
+    elem.dataset.lt
+      .split("|")
+      .map(decodeHTMLEntities)
+      .map(item => norm(item).toLowerCase())
+      .reduce(
+        (keys, lt) =>
+          // We special case the empty string.
+          lt !== '""' ? keys.add(lt) : keys.add("the-empty-string"),
+        keys
+      );
+  }
+  if (elem.localName === "dfn" && elem.dataset.hasOwnProperty("pluralize")) {
+    const asPlural = plural(norm(elem.textContent).toLowerCase());
+    if (asPlural) {
+      keys.add(asPlural);
+    }
+  }
+  return [...keys];
+}
+
+const deriveIdOptions = Object.freeze({
+  prefix: "",
+  noLowerCase: false,
+});
+export function deriveId(elem, options = {}) {
+  let { prefix, text, noLowerCase } = Object.assign(
+    { text: elem.textContent.trim() },
+    deriveIdOptions,
+    options
+  );
+  if (elem.id) {
+    return elem.id;
+  }
+  let id = noLowerCase ? text : text.toLowerCase();
+  if (prefix) {
+    id = `${prefix}-${id}`;
+  }
+  id = id
+    .replace(/[\W]+/gim, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
+  if (!id) {
+    id = "generated-id";
+  }
+  if (id.endsWith(".") || !/^[a-z]/i.test(id)) {
+    id = "x" + id;
+  }
+  if (elem.ownerDocument.getElementById(id)) {
+    let i = 0;
+    let nextId = id + "-" + i;
+    while (elem.ownerDocument.getElementById(nextId)) {
+      nextId = id + "-" + i++;
+    }
+    id = nextId;
+  }
+  return id;
+}
 
 export function markdownToHtml(text) {
   const normalizedLeftPad = normalizePadding(text);

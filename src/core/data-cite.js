@@ -122,9 +122,10 @@ export async function run(conf) {
         : conf.informativeReferences;
       refSink.add(key);
     });
+  await linkInlineCitations(conf);
 }
 
-export async function linkInlineCitations(doc, conf = respecConfig) {
+export async function linkInlineCitations(conf, doc = document) {
   const toLookupRequest = requestLookup(conf);
   const citedSpecs = doc.querySelectorAll("dfn[data-cite], a[data-cite]");
   const lookupRequests = Array.from(citedSpecs).map(toLookupRequest);
