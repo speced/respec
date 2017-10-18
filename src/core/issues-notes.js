@@ -30,7 +30,7 @@ export function run(conf, doc, cb) {
         isWarning = $inno.hasClass("warning"),
         isEdNote = $inno.hasClass("ednote"),
         isFeatureAtRisk = $inno.hasClass("atrisk"),
-        isInline = $inno.css("display") !== "block",
+        isInline = $inno[0].localName === "span",
         dataNum = $inno.attr("data-number"),
         report = {
           inline: isInline,
