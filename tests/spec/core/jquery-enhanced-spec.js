@@ -57,53 +57,19 @@ describe("Core - jquery enhanced", function() {
     var titles = $dfn.getDfnTitles({
       isDefinition: true,
     });
-    expect(titles[0]).toEqual("text");
-    expect(titles[1]).toEqual("dfn");
-    expect(titles[2]).toEqual("dfn2");
-    expect(titles[3]).toEqual("dfn3");
+    expect(titles[0]).toEqual("dfn");
+    expect(titles[1]).toEqual("dfn2");
+    expect(titles[2]).toEqual("dfn3");
+    expect(titles[3]).toEqual("text");
     $dfn.removeAttr("data-lt");
     expect($dfn.getDfnTitles()[0]).toEqual("abbr");
     $dfn.find("abbr").removeAttr("title");
     expect($dfn.getDfnTitles()[0]).toEqual("text");
-    $dfn.remove();
-  });
-
-  // $.getDfnTitles()
-  it("finds the definition title", () => {
-    var $dfn = $(
-      "<dfn lt='DFN|DFN2|DFN3'><abbr title='ABBR'>TEXT</abbr></dfn>"
-    ).appendTo($("body"));
-    var titles = $dfn.getDfnTitles({
-      isDefinition: true,
-    });
-    expect(titles[0]).toEqual("text");
-    expect(titles[1]).toEqual("dfn");
-    expect(titles[2]).toEqual("dfn2");
-    expect(titles[3]).toEqual("dfn3");
-    $dfn.removeAttr("data-lt");
-    expect($dfn.getDfnTitles()[0]).toEqual("abbr");
-    $dfn.find("abbr").removeAttr("title");
-    expect($dfn.getDfnTitles()[0]).toEqual("text");
-    $dfn.remove();
-  });
-
-  // $.getDfnTitles()
-  it("returns list of terms when called a second time", () => {
-    var $dfn = $("<dfn lt='DFN|DFN2|DFN3'>TEXT</dfn>").appendTo($("body"));
-    var titles = $dfn.getDfnTitles({
-      isDefinition: true,
-    });
-    expect(titles[0]).toEqual("text");
-    expect(titles[1]).toEqual("dfn");
-    expect(titles[2]).toEqual("dfn2");
-    expect(titles[3]).toEqual("dfn3");
-    expect($dfn.attr("data-lt")).toEqual("text|dfn|dfn2|dfn3");
-    expect($dfn.getDfnTitles()[1]).toEqual("dfn");
     $dfn.remove();
   });
 
   // $.makeID()
-  it("creates the proper ID", () => {
+  it("creates an id from the content of an elements", () => {
     expect($("<p id='ID'></p>").makeID()).toEqual("ID");
     expect($("<p title='TITLE'></p>").makeID()).toEqual("title");
     expect($("<p>TEXT</p>").makeID()).toEqual("text");
@@ -113,7 +79,7 @@ describe("Core - jquery enhanced", function() {
     var $p = $("<p>TEXT</p>");
     $p.makeID();
     expect($p.attr("id")).toEqual("text");
-    expect($("<p>  A--Bé9\n C</p>").makeID()).toEqual("a-bé9-c");
+    expect($("<p>  A--Bé9\n C</p>").makeID()).toEqual("a-b-9-c");
     expect($("<p></p>").makeID()).toEqual("generatedID");
     expect($("<p>2017</p>").makeID()).toEqual("x2017");
     var $div = $(
@@ -121,6 +87,11 @@ describe("Core - jquery enhanced", function() {
     ).appendTo($("body"));
     expect($div.find("span").makeID()).toEqual("a-0");
     expect($div.find("span[title]").makeID()).toEqual("a-2");
+    expect(
+      $(`<p>" ¡™£¢∞§¶•ªº
+        THIS is a ------------
+      test (it_contains [[stuff]] '123') 😎		"</p>`).makeID()
+    ).toEqual("this-is-a-test-it_contains-stuff-123");
     $div.remove();
   });
 

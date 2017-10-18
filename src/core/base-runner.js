@@ -4,7 +4,6 @@ import "core/include-config";
 import "core/override-configuration";
 import "core/remove-respec";
 import "core/respec-ready";
-import "deps/regenerator";
 import { done as postProcessDone } from "core/post-process";
 import { done as preProcessDone } from "core/pre-process";
 import { pub } from "core/pubsubhub";

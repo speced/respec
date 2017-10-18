@@ -1,11 +1,8 @@
-"use strict";
-describe("Core — Style", function() {
+describe("Core — Style", () => {
   afterAll(flushIframes);
-  it("should have included a style element", function(done) {
-    makeRSDoc(makeStandardOps(), function(doc) {
-      var $s = $("style", doc);
-      expect($s.length).toBeTruthy();
-      expect($s.text()).toMatch(/rfc2119/);
-    }).then(done);
+  it("includes ReSpec's style element", async () => {
+    const doc = await makeRSDoc(makeStandardOps());
+    const style = doc.getElementById("respec-mainstyle");
+    expect(style).toBeTruthy();
   });
 });

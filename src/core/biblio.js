@@ -5,7 +5,6 @@
 
 /*jshint jquery: true*/
 /*globals console*/
-import "deps/regenerator";
 import { biblioDB } from "core/biblio-db";
 import { createResourceHint } from "core/utils";
 import { pub } from "core/pubsubhub";
