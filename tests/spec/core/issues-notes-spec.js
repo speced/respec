@@ -47,9 +47,7 @@ describe("Core — Issues and Notes", function() {
         expect($pnot.attr("title")).toBeUndefined();
         expect($pnot.text()).toEqual("NOTE");
         done();
-      },
-      null,
-      "display: block;"
+      }
     );
   });
 
@@ -73,9 +71,7 @@ describe("Core — Issues and Notes", function() {
         expect($pnot.attr("title")).toBeUndefined();
         expect($pnot.text()).toEqual("EDNOTE");
         done();
-      },
-      null,
-      "display: block;"
+      }
     );
   });
 
@@ -96,9 +92,7 @@ describe("Core — Issues and Notes", function() {
         expect($sec.find(".warning-title").length).toEqual(1);
         expect($sec.find(".warning-title").text()).toEqual("Warning: WARN-TIT");
         done();
-      },
-      null,
-      "display: block;"
+      }
     );
   });
 
@@ -128,9 +122,7 @@ describe("Core — Issues and Notes", function() {
         expect($ixx.find("div.issue-title").length).toEqual(1);
         expect($ixx.find("div.issue-title").text()).toEqual("Issue");
         done();
-      },
-      null,
-      "display: block;"
+      }
     );
   });
 
@@ -164,9 +156,7 @@ describe("Core — Issues and Notes", function() {
         expect($piss.attr("title")).toBeUndefined();
         expect($piss.text()).toEqual("ISSUE");
         done();
-      },
-      null,
-      "display: block;"
+      }
     );
   });
 
@@ -205,9 +195,7 @@ describe("Core — Issues and Notes", function() {
         expect($piss.attr("title")).toBeUndefined();
         expect($piss.text()).toEqual("FEATURE AT RISK");
         done();
-      },
-      null,
-      "display: block;"
+      }
     );
   });
 });
