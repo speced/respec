@@ -4,7 +4,6 @@
  */
 import L from "geonovum/deps/leaflet";
 import easyButton from "geonovum/deps/easy-button";
-import "deps/regenerator";
 import { sub } from "core/pubsubhub";
 
 export const name = "geonovum/leafletfigures";
