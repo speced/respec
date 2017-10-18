@@ -6,18 +6,12 @@ import { norm } from "core/utils";
 import { findDfn } from "core/dfn";
 export const name = "core/link-to-dfn";
 
-function deriveAnchorType(anchor) {
-  if("linkType" in anchor.dataset){
-    return
-  }
-}
 
 export async function run(conf, doc, cb) {
   // we find all the a
   const anchors = doc.querySelectorAll(
     "a:not([href]):not([data-cite]):not(.logo):not(.externalDFN)"
   );
-
   Array.from(anchors)
     .map(anchor => ({ dfn: findDfn(anchor), anchor }))
     .filter(({ dfn, anchor }) => {

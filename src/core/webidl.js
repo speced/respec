@@ -75,6 +75,7 @@ const xrefs = new Map([
   ["unsigned long", "WEBIDL#idl-unsigned-long"],
   ["unsigned short", "WEBIDL#idl-unsigned-short"],
   ["USVString", "WEBIDL#idl-USVString"],
+  ["void", "WEBIDL#es-void"]
 ]);
 
 const idlKeywords = new Set([
@@ -303,6 +304,10 @@ function tryLink(obj, options) {
     a.dataset.cite = xrefs.get(name);
     return a.outerHTML;
   }
+  const parents = new Set();
+  if (obj.parent) {
+    parents.add(obj.parent.name.toLowerCase());
+  }
   // linked terms - later maps to "data-lt" attribute.
   const lt = new Set();
   // This is an internal IDL reference.
@@ -327,29 +332,23 @@ function tryLink(obj, options) {
       // Interfaces can inherit, so we check if we are trying to inherit
       const isInherits = content === inheritance;
       const actualName = isInherits ? inheritance : name;
-      let normalName = hb.Utils.escapeExpression(actualName.toLowerCase());
-      if (!isInherits) {
-        a.dataset.linkFor = normalName;
-      } else if (isInherits && xrefs.has(actualName)) {
+      let normalName = actualName.toLowerCase();
+      if (isInherits && xrefs.has(actualName)) {
         a.dataset.cite = xrefs.get(actualName);
       } else {
-        a.dataset.linkFor = normalName;
+        parents.add(normalName);
       }
       break;
     }
   }
-  if (obj.parent) {
-    a.dataset.linkFor = hb.Utils.escapeExpression(
-      obj.parent.name.toLowerCase()
-    );
-  }
   if (lt.size) {
-    const linkedTerms = [...lt]
+    a.dataset.lt = [...lt]
       .map(term => term.toLowerCase())
       .filter(term => a.textContent.toLowerCase() !== term)
       .join("|");
-
-    a.dataset.lt = linkedTerms;
+  }
+  if (parents.size) {
+    a.dataset.dfnLinkFor = [...parents].join(" ");
   }
   return a.outerHTML;
 }
@@ -974,7 +973,7 @@ function writeMember(memb, maxQualifiers, maxType, indent) {
   if (memb.required) opt.qualifiers = "required ";
   else opt.qualifiers = "         ";
   opt.qualifiers = opt.qualifiers.slice(0, maxQualifiers);
-  const idlDictMemberTmpl = tmpls["dictionary.html"];
+  const idlDictMemberTmpl = tmpls["dict-member.html"];
   return idlDictMemberTmpl(opt);
 }
 

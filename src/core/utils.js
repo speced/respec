@@ -43,7 +43,7 @@ function deriveType(
       return matchType;
     }
     // Check the ancestor chain.
-    const linkedTerms = getLinkedTerms(elem).map(term => term.toLowerCase());
+    const linkedTerms = getLinkedTerms(elem);
     const matched = closest
       .getAttribute(attrName)
       .split(" ")
@@ -88,6 +88,7 @@ function decodeHTMLEntities(text) {
 }
 
 export function getLinkedTerms(elem) {
+  let linkedTerms = "";
   const keys = new Set();
   // dataset.ltNoDefault prevents using the text content of a definition
   // in the linked terms.
@@ -96,20 +97,33 @@ export function getLinkedTerms(elem) {
     const hasLt = Boolean(elem.dataset.lt);
     const normalizedContent =
       (hasLt ? elem.dataset.lt + "|" : "") + norm(content).toLowerCase();
-    elem.dataset.lt = normalizedContent;
+    linkedTerms = normalizedContent;
   }
-  if (elem.dataset.lt) {
-    elem.dataset.lt
-      .split("|")
-      .map(decodeHTMLEntities)
-      .map(item => norm(item).toLowerCase())
-      .reduce(
-        (keys, lt) =>
-          // We special case the empty string.
-          lt !== '""' ? keys.add(lt) : keys.add("the-empty-string"),
-        keys
-      );
+  debugger;
+  switch(elem.localName){
+    case "dfn": {
+      const closest = elem.closest("[data-dfn-for]");
+      if (closest) {
+        debugger;
+      }
+      break;
+    }
+    case "a": {
+      const closest = elem.closest("[data-link-for]");
+      break;
+    }
+
   }
+  linkedTerms
+    .split("|")
+    .map(decodeHTMLEntities)
+    .map(item => norm(item).toLowerCase())
+    .reduce(
+      (keys, lt) =>
+        // We special case the empty string.
+        lt !== '""' ? keys.add(lt) : keys.add("the-empty-string"),
+      keys
+    );
   if (elem.localName === "dfn" && elem.dataset.hasOwnProperty("pluralize")) {
     const asPlural = plural(norm(elem.textContent).toLowerCase());
     if (asPlural) {

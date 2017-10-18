@@ -22,7 +22,7 @@ function makeTOCAtLevel($parent, doc, current, level, conf) {
   if ($secs.length === 0) {
     return null;
   }
-  var $ol = $("<ol class='toc'></ol>");
+  var $ol = $("<ol class='toc' role='directory'></ol>");
   for (var i = 0; i < $secs.length; i++) {
     var $sec = $($secs[i], doc);
     var isIntro = $sec.hasClass("introductory");

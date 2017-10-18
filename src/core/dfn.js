@@ -36,9 +36,24 @@ function isValidDfn(dfn) {
   return true;
 }
 
+function getPrefixFromType(dfn, type){
+  switch(type){
+    case "idl":
+      const dfnFor = dfn.closest("[data-dfn-for]");
+      if(dfnFor){
+        const parents = dfnFor.dataset.dfnFor.split(" ");
+        debugger;
+      }
+      return "dom";
+    default:
+      return"";
+  }
+}
+
 function deriveDetails(dfn) {
-  const id = deriveId(dfn);
   const type = deriveDfnType(dfn);
+  const prefix = getPrefixFromType(dfn, type);
+  const id = deriveId(dfn, { prefix });
   return { id, type, dfn };
 }
 
@@ -49,6 +64,7 @@ function deriveDetails(dfn) {
  * @param {HTMLDfnElement} dfn
  */
 function canonicalizeDfn(dfn) {
+  debugger;
   const { id, type } = deriveDetails(dfn);
   dfn.id = id;
   dfn.dataset.dfnType = type;

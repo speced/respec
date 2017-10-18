@@ -4,7 +4,7 @@
 // Best practices are marked up with span.practicelab.
 import css from "deps/text!core/css/bp.css";
 import { pub } from "core/pubsubhub";
-
+import { deriveId } from "core/utils";
 export const name = "core/best-practices";
 
 export function run(conf, doc, cb) {
@@ -14,7 +14,8 @@ export function run(conf, doc, cb) {
   var $ul = $content.find("ul");
   $bps.each(function() {
     var $bp = $(this);
-    var id = $bp.makeID("bp");
+    var id = deriveId($bp[0], {prefix: "bp"});
+    bp[0].id = id;
     var $li = $("<li><a></a></li>");
     var $a = $li.find("a");
     num++;

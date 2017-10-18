@@ -10,6 +10,7 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
+import { deriveId } from "core/utils";
 import { pub } from "core/pubsubhub";
 import css from "deps/text!core/css/issues-notes.css";
 import { fetch as ghFetch, fetchIndex } from "core/github";
@@ -61,7 +62,8 @@ export function run(conf, doc, cb) {
               ? conf.l10n.warning
               : isEdNote ? conf.l10n.editors_note : conf.l10n.note,
           ghIssue;
-        $tit.makeID("h", report.type);
+        const titleId = deriveId($tit[0], { prefix: report.type });
+        $tit.attr("id", titleId);
         report.title = $inno.attr("title");
         if (isIssue) {
           if (hasDataNum) {
