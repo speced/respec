@@ -742,10 +742,11 @@ export function run(conf, doc, cb) {
   conf.perEnd = validateDateAndRecover(conf, "perEnd");
   conf.humanPEREnd = W3CDate.format(conf.perEnd);
 
-  conf.recNotExpected =
-    !conf.isRecTrack &&
-    conf.maturity == "WD" &&
-    conf.specStatus !== "FPWD-NOTE";
+  conf.recNotExpected = conf.recNotExpected
+    ? true
+    : !conf.isRecTrack &&
+        conf.maturity == "WD" &&
+        conf.specStatus !== "FPWD-NOTE";
   if (conf.isIGNote && !conf.charterDisclosureURI)
     pub(
       "error",
