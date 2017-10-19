@@ -4,7 +4,7 @@
 const path = require("path");
 const { promisify } = require("util");
 const fs = require("fs");
-const fsp = require('fs-extra');
+const fsp = require("fs-extra");
 const stat = promisify(fs.stat);
 const readdir = promisify(fs.readdir);
 const unlink = promisify(fs.unlink);
@@ -22,7 +22,6 @@ const srcDesMap = new Map([
   ["./node_modules/js-beautify/js/lib/beautify-css.js", "./js/deps/"],
   ["./node_modules/js-beautify/js/lib/beautify-html.js", "./js/deps/"],
   ["./node_modules/js-beautify/js/lib/beautify.js", "./js/deps/"],
-  ["./node_modules/marcosc-async/lib/async.js", "./js/deps/"],
   ["./node_modules/marked/lib/marked.js", "./js/deps/"],
   ["./node_modules/requirejs/require.js", "./js/deps/"],
   ["./node_modules/text/text.js", "./js/deps/"],
