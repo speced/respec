@@ -6,12 +6,19 @@ describe("W3C — Bibliographic References", () => {
         name: "Robin Berjon",
       },
     ],
+    edDraftURI: "https://foo",
     shortName: "Foo",
     specStatus: "WD",
     prevVersion: "FPWD",
     previousMaturity: "WD",
     previousPublishDate: "2013-12-17",
     localBiblio: {
+      Zzz: {
+        title: "Last Reference",
+      },
+      aaa: {
+        title: "First Reference",
+      },
       TestRef1: {
         title: "Test ref title",
         href: "http://test.com",
@@ -42,8 +49,13 @@ describe("W3C — Bibliographic References", () => {
       <p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p>
     </section>
     <section id='sample'>
+      <h2>Privacy</h2>
       <p>foo [[!FOOBARGLOP]] bar</p>
     </section>
+    <section>
+      <h2>Sorted</h2>
+      <p>From [[!Zzz]] to [[!aaa]]</p>
+    </secton>
   `;
 
   afterAll(flushIframes);
@@ -95,5 +107,15 @@ describe("W3C — Bibliographic References", () => {
     const ref = doc.querySelector("#bib-FOOBARGLOP + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/BARBAR/);
+  });
+  it("sorts references as if they were lowercase", () => {
+    const { textContent: first } = doc.querySelector(
+      "#normative-references dt:first-of-type"
+    );
+    const { textContent: last } = doc.querySelector(
+      "#normative-references dt:last-of-type"
+    );
+    expect(first).toMatch("[a]");
+    expect(last).toMatch("[Zzz]");
   });
 });
