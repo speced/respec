@@ -265,7 +265,7 @@
 }
 
 @supports (text-decoration-style: wavy) {
-  .respec-offending-element {
+  .respec-offending-element, .respec-offending-element[href] {
     background: none;
     text-decoration-line: underline;
     text-decoration-style: wavy;

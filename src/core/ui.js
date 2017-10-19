@@ -217,6 +217,12 @@ export const ui = {
   warning: function(msg) {
     errWarn(msg, warnings, "warning", "Warnings");
   },
+  getErrors: function() {
+    return errors.slice();
+  },
+  getWarnings: function() {
+    return warnings.slice();
+  },
   closeModal: function(owner) {
     if ($overlay)
       $overlay.fadeOut(200, function() {
