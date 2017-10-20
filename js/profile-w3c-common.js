@@ -27,7 +27,8 @@ define(
     "deps/domReady",
     "core/base-runner",
     "core/ui",
-    "core/l10n",
+    //"core/xrefs",
+    // "core/l10n",
     // "w3c/defaults",
     // "core/aria",
     // "core/style",
@@ -41,11 +42,11 @@ define(
     // "w3c/conformance",
     // "core/data-transform",
     // "core/inlines",
-    //"core/webidl",
+    "core/webidl",
     //"core/dfn",
     // "w3c/rfc2119",
     // "core/examples",
-    "core/issues-notes",
+    // "core/issues-notes",
     // "core/requirements",
     // "core/best-practices",
     // "core/figures",
@@ -60,7 +61,6 @@ define(
     // "w3c/permalinks",
     // "core/id-headers",
     // "core/rdfa",
-    "w3c/aria",
     // "core/location-hash",
     // "ui/about-respec",
     // "ui/dfn-list",
@@ -74,24 +74,18 @@ define(
     // /*Linter must be the last thing to run*/
     // "core/linter",
   ],
-  function(domReady, runner, ui) {
-    ui = ui.ui;
-    var args = Array.from(arguments).filter(function(item) {
-      return item;
-    });
+  function(domReady, runner, { ui }) {
+    const args = Array.from(arguments).filter(item => item);
     ui.show();
-    domReady(function() {
-      runner
-        .runAll(args)
-        .then(document.respecIsReady)
-        .then(function() {
-          ui.enable();
-        })
-        .catch(function(err) {
-          console.error(err);
-          // even if things go critically bad, we should still try to show the UI
-          ui.enable();
-        });
+    domReady(async () => {
+      try {
+        await Promise.all([runner.runAll(args), document.respecIsReady]);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        // even if things go critically bad, we should still try to show the UI
+        ui.enable();
+      }
     });
   }
 );

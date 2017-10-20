@@ -3,154 +3,21 @@
 // TODO:
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
+import { xrefs } from "core/xrefs";
 import { pub } from "core/pubsubhub";
 import webidl2 from "deps/webidl2";
 import hb from "handlebars.runtime";
 import css from "deps/text!core/css/webidl.css";
 import tmpls from "templates";
 import { normalizePadding } from "core/utils";
+import {
+  idlArgumentNameKeyword,
+  idlAttributeNameKeyword,
+  idlKeywords,
+} from "core/symbols";
 export const name = "core/webidl";
 
-const xrefs = new Map([
-  ["any", "WEBIDL#idl-any"],
-  ["ArrayBuffer", "WEBIDL#idl-ArrayBuffer"],
-  ["boolean", "WEBIDL#idl-boolean"],
-  ["Buffer", "WEBIDL#idl-Buffer"],
-  ["byte", "WEBIDL#idl-byte"],
-  ["ByteString", "WEBIDL#idl-ByteString"],
-  ["Callback", "WEBIDL#idl-Callback"],
-  ["CEReactions", "HTML#cereactions"],
-  ["Clamp", "WEBIDL#Clamp"],
-  ["Constructor", "WEBIDL#Constructor"],
-  ["DataView", "WEBIDL#idl-DataView"],
-  ["Default", "WEBIDL#Default"],
-  ["DOMException", "WEBIDL#idl-DOMException"],
-  ["DOMString", "WEBIDL#idl-DOMString"],
-  ["double", "WEBIDL#idl-double"],
-  ["EnforceRange", "WEBIDL#EnforceRange"],
-  ["Error", "WEBIDL#idl-Error"],
-  ["EventHandler", "HTML#eventhandler"],
-  ["Exposed", "WEBIDL#Exposed"],
-  ["float", "WEBIDL#idl-float"],
-  ["Float32Array", "WEBIDL#idl-Float32Array"],
-  ["Float64Array", "WEBIDL#idl-Float64Array"],
-  ["FrozenArray", "WEBIDL#idl-frozen-array"],
-  ["Global", "WEBIDL#Global"],
-  ["HTMLConstructor", "HTML#htmlconstructor"],
-  ["Int16Array", "WEBIDL#idl-Int16Array"],
-  ["Int32Array", "WEBIDL#idl-Int32Array"],
-  ["Int8Array", "WEBIDL#idl-Int8Array"],
-  ["LegacyArrayClass", "WEBIDL#LegacyArrayClass"],
-  ["LenientSetter", "WEBIDL#LenientSetter"],
-  ["LenientThis", "WEBIDL#LenientThis"],
-  ["long long", "WEBIDL#idl-long-long"],
-  ["long", "WEBIDL#idl-long"],
-  ["NamedConstructor", "WEBIDL#NamedConstructor"],
-  ["NewObject", "WEBIDL#NewObject"],
-  ["NoInterfaceObject", "WEBIDL#NoInterfaceObject"],
-  ["object", "WEBIDL#idl-object"],
-  ["octet", "WEBIDL#idl-octet"],
-  ["OverrideBuiltins", "WEBIDL#OverrideBuiltins"],
-  ["PrimaryGlobal", "WEBIDL#PrimaryGlobal"],
-  ["Promise", "WEBIDL#idl-promise"],
-  ["PutForwards", "WEBIDL#PutForwards"],
-  ["record", "WEBIDL#idl-record"],
-  ["Replaceable", "WEBIDL#Replaceable"],
-  ["SameObject", "WEBIDL#SameObject"],
-  ["SecureContext", "WEBIDL#SecureContext"],
-  ["sequence", "WEBIDL#idl-sequence"],
-  ["short", "WEBIDL#idl-short"],
-  ["toJSON", "WEBIDL#default-tojson-operation"],
-  ["TreatNonObjectAsNull", "WEBIDL#TreatNonObjectAsNull"],
-  ["TreatNullAs", "WEBIDL#TreatNullAs"],
-  ["Uint16Array", "WEBIDL#idl-Uint16Array"],
-  ["Uint32Array", "WEBIDL#idl-Uint32Array"],
-  ["Uint8Array", "WEBIDL#idl-Uint8Array"],
-  ["Uint8ClampedArray", "WEBIDL#dl-Uint8ClampedArray"],
-  ["Unforgeable", "WEBIDL#Unforgeable"],
-  ["unrestricted double", "WEBIDL#idl-unrestricted-double"],
-  ["unrestricted float", "WEBIDL#idl-unrestricted-float"],
-  ["Unscopable", "WEBIDL#Unscopable"],
-  ["unsigned long long", "WEBIDL#idl-unsigned-long-long"],
-  ["unsigned long", "WEBIDL#idl-unsigned-long"],
-  ["unsigned short", "WEBIDL#idl-unsigned-short"],
-  ["USVString", "WEBIDL#idl-USVString"],
-  ["void", "WEBIDL#es-void"]
-]);
-
-const idlKeywords = new Set([
-  "any",
-  "attribute",
-  "boolean",
-  "byte",
-  "ByteString",
-  "callback",
-  "const",
-  "creator",
-  "Date",
-  "deleter",
-  "dictionary",
-  "DOMString",
-  "double",
-  "enum",
-  "false",
-  "float",
-  "getter",
-  "implements",
-  "Infinity",
-  "inherit",
-  "interface",
-  "iterable",
-  "long",
-  "maplike",
-  "NaN",
-  "null",
-  "object",
-  "octet",
-  "optional",
-  "or",
-  "partial",
-  "readonly",
-  "RegExp",
-  "required",
-  "sequence",
-  "setlike",
-  "setter",
-  "short",
-  "static",
-  "stringifier",
-  "true",
-  "typedef",
-  "unrestricted",
-  "unsigned",
-  "USVString",
-  "void",
-]);
-
-const argumentNameKeyword = new Set([
-  "attribute",
-  "callback",
-  "const",
-  "creator",
-  "deleter",
-  "dictionary",
-  "enum",
-  "getter",
-  "implements",
-  "inherit",
-  "interface",
-  "iterable",
-  "maplike",
-  "partial",
-  "required",
-  "setlike",
-  "setter",
-  "static",
-  "stringifier",
-  "typedef",
-  "unrestricted",
-]);
-
+// Handlebars Helpers
 const helpers = new Map([
   ["escapeArgumentName", escapeArgumentName],
   ["escapeAttributeName", escapeAttributeName],
@@ -172,21 +39,17 @@ const helpers = new Map([
   ["typeExtAttrs", typeExtAttrs],
 ]);
 
-function escapeArgumentName(argumentName) {
-  if (idlKeywords.has(argumentName) && !argumentNameKeyword.has(argumentName)) {
-    return "_" + argumentName;
+function escapeArgumentName(name) {
+  if (idlKeywords.has(name) && !idlArgumentNameKeyword.has(name)) {
+    return "_" + name;
   }
-  return argumentName;
+  return name;
 }
 
-const attributeNameKeyword = new Set(["required"]);
-function escapeAttributeName(attributeName) {
-  if (
-    idlKeywords.has(attributeName) &&
-    !attributeNameKeyword.has(attributeName)
-  )
-    return "_" + attributeName;
-  return attributeName;
+function escapeAttributeName(name) {
+  if (idlKeywords.has(name) && !idlAttributeNameKeyword.has(name))
+    return "_" + name;
+  return name;
 }
 
 function idlType(obj) {
@@ -210,8 +73,7 @@ function typeExtAttrs(obj) {
 }
 
 function extAttrClassName() {
-  var extAttr = this;
-  if (extAttr.name === "Constructor" || extAttr.name === "NamedConstructor") {
+  if (["Constructor", "NamedConstructor"].includes(this.name)) {
     return "idlCtor";
   }
   return "extAttr";
@@ -229,7 +91,7 @@ function param(obj) {
   const idlParamTmpl = tmpls["param.html"];
   return new hb.SafeString(
     idlParamTmpl({
-      obj: obj,
+      obj,
       optional: obj.optional ? "optional " : "",
       variadic: obj.variadic ? "..." : "",
     })
@@ -254,7 +116,7 @@ function stringifyIdlConst(value) {
     case "sequence":
       return JSON.stringify(value.value);
     default:
-      pub("error", "Unexpected constant value type: `" + value.type + "`.");
+      pub("error", `Unexpected constant value type: \`"${value.type}"\`.`);
       return "<Unknown>";
   }
 }
@@ -265,25 +127,20 @@ function idlPads(num) {
 
 function join(arr, between, options) {
   return arr
-    .map(function(elem) {
-      return options.fn(elem);
-    })
+    .map(elem => options.fn(elem))
     .join(between);
 }
+
 function joinNonWhitespace(arr, between, options) {
   return arr
-    .filter(function(elem) {
-      return elem.type !== "ws";
-    })
-    .map(function(elem) {
-      return options.fn(elem);
-    })
+    .filter(elem => elem.type !== "ws")
+    .map(elem => options.fn(elem))
     .join(between);
 }
 
 /**
-   * Adds hyperlinks for each IDL type. Handles IDL defaults.
-   */
+ * Adds hyperlinks for each IDL type. Handles IDL defaults.
+ */
 const defaultObj = Object.freeze({
   inheritance: "",
   name: "",
@@ -356,7 +213,6 @@ function tryLink(obj, options) {
 /**
  * Dictionaries support their name, dot notation
  * and parent["name"]
- *
  */
 function deriveNamesForDictMember({ parent, name }) {
   const { name: parentName } = parent;
@@ -392,7 +248,6 @@ function deriveNamesForOperation(obj) {
     idlType: { idlType: returnType },
     parent: { name: parentName },
   } = obj;
-
   const methodId = name;
   const methodName = `${name}()`;
   const names = [
@@ -430,12 +285,9 @@ function deriveNamesForOperation(obj) {
   return names.reverse(); // most specific, to least specific
 }
 
+const TABSIZE = 4;
 function idn(lvl) {
-  var str = "";
-  for (var i = 0; i < lvl; i++) {
-    str += "    ";
-  }
-  return str;
+  return "".padStart(lvl * TABSIZE);
 }
 
 function idlType2Html(idlType) {
