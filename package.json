@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "17.1.0",
+  "version": "17.1.1",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -79,13 +79,13 @@
     "express": "^4.16.2",
     "fs-extra": "^4.0.2",
     "highlight.js": "github:marcoscaceres/highlight.js",
-    "hyperhtml": "^1.11.2",
+    "hyperhtml": "^1.11.3",
     "loading-indicator": "^2.0.0",
     "marcosc-async": "^4.0.3",
     "marked": "^0.3.6",
     "nightmare": "^2.10.0",
     "prompt": "^1.0.0",
-    "snyk": "^1.43.0"
+    "snyk": "^1.44.1"
   },
   "snyk": true
 }
