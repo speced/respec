@@ -65,7 +65,6 @@ define(
     "w3c/permalinks",
     "core/id-headers",
     "core/rdfa",
-    "w3c/aria",
     "core/location-hash",
     "ui/about-respec",
     "ui/dfn-list",

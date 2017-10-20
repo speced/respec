@@ -180,7 +180,7 @@ describe("W3C — Headers", function() {
       var orcidAnchor = doc.querySelector("a[href='" + oricdHref + "']");
       var twitterAnchor = doc.querySelector("a[href='" + twitterHref + "']");
       // general checks
-      var header = doc.querySelector("#respecHeader");
+      var header = doc.querySelector("div.head");
       [orcidAnchor, twitterAnchor].forEach(function(elem) {
         // Check parent is correct.
         expect(elem.parentNode.localName).toEqual("span");
@@ -343,7 +343,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      var licenses = doc.querySelectorAll("#respecHeader a[rel=license]");
+      var licenses = doc.querySelectorAll("div.head a[rel=license]");
       expect(licenses.length).toEqual(1);
       expect(licenses.item(0).tagName).toEqual("A");
       expect(licenses.item(0).href).toEqual(
