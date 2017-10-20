@@ -23,14 +23,6 @@ cache: yarn
 jobs:
   include:
     - stage: Test build
-      script: ./tests/test-build.js
-    # - stage: Test headless
-    #   script:
-    #     - yarn run build
-    #     - yarn run build:respec-w3c-common
-    #     - yarn run test:headless
-    - stage: Test karma
-      script:
-        - yarn run build
-        - yarn run build:respec-w3c-common
-        - travis_retry karma start --single-run --reporters mocha karma.conf.js
+      script: yarn run pretest
+      script: yarn run test:headless
+      script: travis_retry karma start --single-run --reporters mocha karma.conf.js
