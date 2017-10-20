@@ -15,7 +15,7 @@ install:
   - yarn run build
 
 addons:
-  firefox: latest
+#  firefox: latest
   chrome: stable
 
 cache: yarn
