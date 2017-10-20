@@ -4,7 +4,8 @@
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
-    "node": ">=5"
+    "node": ">=8",
+    "npm": ">=5"
   },
   "bin": {
     "respec2html": "./tools/respec2html.js"
