@@ -120,9 +120,9 @@ module.exports = function(config) {
     options.detectBrowsers.enabled = false;
     options.autoWatch = false;
     options.singleRun = true;
-    options.concurrency = 2;
+    options.concurrency = 1;
     options.reporters = ["mocha"];
-    options.browsers = ["Firefox", "Chrome"]; //"FirefoxNightly"
+    options.browsers = ["Chrome"]; //"Firefox"
   }
   config.set(options);
 };
