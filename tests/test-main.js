@@ -40,4 +40,4 @@ require.config({
 });
 
 // Attempt to reduce timeout errors
-jasmine.DEFAULT_TIMEOUT_INTERVAL = jasmine.DEFAULT_TIMEOUT_INTERVAL * 3;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = jasmine.DEFAULT_TIMEOUT_INTERVAL;
