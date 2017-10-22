@@ -104,20 +104,12 @@ async function fetchAndWrite(src, out, whenToHalt, timeout) {
     throw new Error(msg);
   }
   const html = await nightmare
-    .wait(function() {
-      return document.respecIsReady;
-    })
-    .wait("#respec-button-save-snapshot")
-    .click("#respec-button-save-snapshot")
-    .wait(100)
-    .evaluate(function() {
-      var encodedText = document.querySelector("#respec-save-as-html").href;
-      var decodedText = decodeURIComponent(encodedText);
-      var cleanedUpText = decodedText.replace(
-        /^data:text\/html;charset=utf-8,/,
-        ""
-      );
-      return cleanedUpText;
+    .evaluate(async () => {
+      const exportDocument = await new Promise(resolve => {
+        require(["ui/save-html"], ({ exportDocument }) =>
+          resolve(exportDocument));
+      });
+      return await exportDocument();
     })
     .end();
   switch (out) {
