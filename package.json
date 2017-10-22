@@ -1,10 +1,11 @@
 {
   "name": "respec",
-  "version": "17.1.1",
+  "version": "18.0.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
-    "node": ">=5"
+    "node": ">=8",
+    "npm": ">=5"
   },
   "bin": {
     "respec2html": "./tools/respec2html.js"
@@ -30,7 +31,6 @@
     "jasmine-core": "^2.8.0",
     "jasmine-reporters": "^2.2.1",
     "jquery": "^3.2.1",
-    "js-beautify": "^1.7.4",
     "karma": "^1.7.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-detect-browsers": "^2.2.5",
