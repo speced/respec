@@ -43,8 +43,6 @@
  * The whitespace of pre elements are left alone.
  **/
 
-import beautify from "deps/beautify-html";
-import { beautifyOps } from "core/beautify-options";
 import { markdownToHtml } from "core/utils";
 export const name = "core/markdown";
 
@@ -214,13 +212,7 @@ export function run(conf, doc, cb) {
   const cleanHTML = newBody.innerHTML
     // Markdown parsing sometimes inserts empty p tags
     .replace(/<p>\s*<\/p>/gm, "");
-  const beautifulHTML = beautify
-    .html_beautify(cleanHTML, beautifyOps)
-    // beautifer has a bad time with "\n&quot;<element"
-    // https://github.com/beautify-web/js-beautify/issues/943
-    .replace(/&quot;\n\s+\</gm, '"<');
-
-  newBody.innerHTML = beautifulHTML;
+  newBody.innerHTML = cleanHTML;
   // Remove links where class .nolinks
   substituteWithTextNodes(newBody.querySelectorAll(".nolinks a[href]"));
   // Restructure the document properly

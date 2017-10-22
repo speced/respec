@@ -13,13 +13,8 @@ require.config({
     highlight: {
       exports: "hljs",
     },
-    beautify: {
-      exports: "beautify",
-    },
   },
   paths: {
-    "beautify-css": "deps/beautify-css",
-    "beautify-html": "deps/beautify-html",
     "handlebars.runtime": "deps/handlebars",
     "deps/highlight": "https://www.w3.org/Tools/respec/respec-highlight",
   },
