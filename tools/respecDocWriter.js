@@ -82,36 +82,55 @@ async function fetchAndWrite(src, out, whenToHalt, timeout) {
     nightmare.proc.kill();
     throw new Error(msg);
   }
-  const isRespecDoc = await nightmare
-    .wait(function() {
-      return document.readyState === "complete";
-    })
-    .evaluate(function() {
-      if (document.hasOwnProperty("respecIsReady")) {
-        return true;
-      }
-      // does it try to load ReSpec locally or remotely
-      const remoteScriptQuery =
-        "script[src='https://www.w3.org/Tools/respec/respec-w3c-common']";
-      const query = `script[data-main*=profile-w3c-common], ${remoteScriptQuery}`;
-      return document.querySelector(query) ? true : false;
+  const isRespecDoc = await nightmare.evaluate(async () => {
+    const query = "script[data-main*='profile-'], script[src*='respec']";
+    if (document.head.querySelector(query)) {
+      return true;
+    }
+    await new Promise((resolve, reject) => {
+      document.onreadystatechange = () => {
+        if (document.readyState === "complete") {
+          resolve();
+        }
+      };
+      document.onreadystatechange();
     });
+    await new Promise(resolve => {
+      setTimeout(resolve, 2000);
+    });
+    return Boolean(document.querySelector("#respec-ui"));
+  });
   if (!isRespecDoc) {
     const msg = `${colors.warn(
-      "💣 Not a ReSpec source document?"
+      "🕵️‍♀️  That doesn't seem to be a ReSpec document. Please check manually:"
     )} ${colors.debug(url)}`;
     nightmare.proc.kill();
     throw new Error(msg);
   }
-  const html = await nightmare
-    .evaluate(async () => {
-      const exportDocument = await new Promise(resolve => {
-        require(["ui/save-html"], ({ exportDocument }) =>
-          resolve(exportDocument));
-      });
-      return await exportDocument();
-    })
-    .end();
+  let html = "";
+  try {
+    html = await nightmare
+      .wait(() => {
+        return document.hasOwnProperty("respecIsReady");
+      })
+      .evaluate(async () => {
+        await document.respecIsReady;
+        const exportDocument = await new Promise(resolve => {
+          require(["ui/save-html"], ({ exportDocument }) => {
+            resolve(exportDocument);
+          });
+        });
+        return await exportDocument();
+      })
+      .end();
+  } catch (err) {
+    const msg =
+      `\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n` +
+      colors.debug(
+        `\tYour Spec: ${url} \n\tFile a bug: https://github.com/w3c/respec/\n\n`
+      );
+    throw new Error(msg);
+  }
   switch (out) {
     case null:
       process.stdout.write(html);
