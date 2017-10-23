@@ -2,10 +2,15 @@
 "use strict";
 const port = process.env.PORT || 3000;
 const testURLs = [
-  `http://localhost:${port}/examples/basic.built.html`,
-  `http://localhost:${port}/examples/basic.html`,
+  "https://w3c.github.io/html-media-capture/",
   "https://w3c.github.io/manifest/",
   "https://w3c.github.io/payment-request/",
+  "https://w3c.github.io/resource-hints/",
+  "https://w3c.github.io/wpub/",
+  "https://webaudio.github.io/web-audio-api/",
+  "https://wicg.github.io/web-share-target/",
+  `http://localhost:${port}/examples/basic.built.html`,
+  `http://localhost:${port}/examples/basic.html`,
 ];
 const colors = require("colors");
 const { exec } = require("child_process");
