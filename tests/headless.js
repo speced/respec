@@ -1,8 +1,12 @@
 #!/usr/bin/env node
-
-/*jshint strict: true, node:true*/
 "use strict";
-const fs = require("fs");
+const port = process.env.PORT || 3000;
+const testURLs = [
+  `http://localhost:${port}/examples/basic.built.html`,
+  `http://localhost:${port}/examples/basic.html`,
+  "https://w3c.github.io/manifest/",
+  "https://w3c.github.io/payment-request/",
+];
 const colors = require("colors");
 const { exec } = require("child_process");
 const express = require("express");
@@ -39,45 +43,28 @@ function toExecutable(cmd) {
   };
 }
 
-const excludedFiles = new Set([
-  "basic.built.html",
-  "embedder.html",
-  "manifest.html",
-  "starter.html",
-  "webidl.html",
-]);
-
 async function runRespec2html(server) {
   const errors = new Set();
   const captureFile = /(\w+\.html)/;
-  // Run respec2html.js on each example file (except whatever gets filtered)
-  // and stops in error if any of them reports a warning or an error
-  let sources = fs
-    .readdirSync("examples")
-    .filter(filename => filename.match(/\.html$/))
-    .filter(filename => !excludedFiles.has(filename));
-
   // Incrementally spawn processes and add them to process counter.
-  const promisesToRun = sources
-    .map(source => {
-      let nullDevice =
-        process.platform === "win32" ? "\\\\.\\NUL" : "/dev/null";
-      let cmd = `node ./tools/respec2html.js -e --timeout 10 --src ${server}/examples/${source} --out ${nullDevice}`;
-      return cmd;
-    })
-    .map(toExecutable)
-    .map(async (exe, testCount) => {
-      const [, filename] = captureFile.exec(exe.cmd);
-      try {
-        const msg = ` 👷‍♀️  Generating ${filename} - test ${testCount+1} of ${sources.length}.`;
-        debug(msg);
-        await exe.run();
-      } catch (err) {
-        console.error(colors.error(err));
-        errors.add(filename);
-      }
-    });
-  await Promise.all(promisesToRun);
+  const executables = testURLs.map(url => {
+    const nullDevice =
+      process.platform === "win32" ? "\\\\.\\NUL" : "/dev/null";
+    const cmd = `node ./tools/respec2html.js -e --timeout 30 --src ${url} --out ${nullDevice}`;
+    return toExecutable(cmd);
+  });
+  let testCount = 1;
+  for (const exe of executables) {
+    try {
+      const testInfo = colors.info(`(test ${testCount++}/${testURLs.length})`);
+      const msg = ` 👷‍♀️  ${exe.cmd} ${testInfo}`;
+      debug(msg);
+      await exe.run();
+    } catch (err) {
+      console.error(colors.error(err));
+      errors.add(exe.cmd);
+    }
+  }
   if (errors.size) {
     const files = [...errors].join(", ");
     throw new Error(` ❌ File(s) generated errors: ${files}.`);
@@ -89,9 +76,8 @@ function debug(msg) {
 }
 
 async function run() {
-  const port = process.env.PORT || 3000;
   const server = "http://localhost:" + port;
-  debug(" ✅ Starting up Express...");
+  debug(" ✅  Starting up Express...");
   const app = express();
   const dir = require("path").join(__dirname, "..");
   app.use(express.static(dir));
