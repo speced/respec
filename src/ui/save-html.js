@@ -44,8 +44,8 @@ if (supportsDownload) {
 }
 
 function toDataURL(data, mimeType = "text/html") {
-  const url = new URL(`data:${mimeType};charset=utf-8,${data}`);
-  return url.href;
+  const encodedString = encodeURIComponent(data);
+  return `data:${mimeType};charset=utf-8,${encodedString}`;
 }
 
 function serialize(format = "html") {
@@ -149,10 +149,12 @@ const saveDialog = {
 export async function exportDocument(format, mimeType){
   await document.respecIsReady;
   const dataURL = toDataURL(serialize(format), mimeType);
-  return dataURL.replace(
+  const encodedString = dataURL.replace(
     /^data:\w+\/\w+;charset=utf-8,/,
     ""
   );
+  const decodedString = decodeURIComponent(encodedString);
+  return decodedString;
 }
 
 export function show() {
