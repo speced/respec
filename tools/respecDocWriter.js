@@ -83,6 +83,10 @@ async function fetchAndWrite(src, out, whenToHalt, timeout) {
     throw new Error(msg);
   }
   const isRespecDoc = await nightmare.evaluate(async () => {
+    const query = "script[data-main*='profile-'], script[src*='respec']";
+    if (document.head.querySelector(query)) {
+      return true;
+    }
     await new Promise((resolve, reject) => {
       document.onreadystatechange = () => {
         if (document.readyState === "complete") {
@@ -91,7 +95,10 @@ async function fetchAndWrite(src, out, whenToHalt, timeout) {
       };
       document.onreadystatechange();
     });
-    return window.hasOwnProperty("respecVersion");
+    await new Promise(resolve => {
+      setTimeout(resolve, 2000);
+    });
+    return Boolean(document.querySelector("#respec-ui"));
   });
   if (!isRespecDoc) {
     const msg = `${colors.warn(
@@ -103,7 +110,11 @@ async function fetchAndWrite(src, out, whenToHalt, timeout) {
   let html = "";
   try {
     html = await nightmare
+      .wait(() => {
+        return document.hasOwnProperty("respecIsReady");
+      })
       .evaluate(async () => {
+        await document.respecIsReady;
         const exportDocument = await new Promise(resolve => {
           require(["ui/save-html"], ({ exportDocument }) => {
             resolve(exportDocument);
@@ -113,7 +124,6 @@ async function fetchAndWrite(src, out, whenToHalt, timeout) {
       })
       .end();
   } catch (err) {
-    console.log("eeee", err);
     const msg =
       `\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n` +
       colors.debug(
