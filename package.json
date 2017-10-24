@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "18.0.2",
+  "version": "18.0.3",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -56,7 +56,7 @@
     "babel:build": "babel src -d js --source-maps -q",
     "babel:watch": "babel src -d js --watch --source-maps",
     "build:respec-w3c-common": "node ./tools/builder.js --profile=w3c-common",
-    "build": "npm run copydeps && npm run hb:build && npm run highlight:build && npm run babel:build",
+    "build": "npm run snyk-protect && npm run copydeps && npm run hb:build && npm run highlight:build && npm run babel:build",
     "copydeps": "node ./tools/copydeps.js",
     "handlebars": "handlebars",
     "hb:build": "node ./tools/expandpaths.js -a js/*/templates/*.html js/*/templates/*.css js/core/templates/webidl-contiguous/*.html | xargs handlebars -f js/templates.js",
@@ -68,8 +68,7 @@
     "start": "http-server",
     "test:build": "mocha ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
-    "test:karma": "npm run karma",
-    "prepublish": "npm run snyk-protect"
+    "test:karma": "npm run karma"
   },
   "dependencies": {
     "colors": "^1.1.2",
@@ -79,7 +78,7 @@
     "express": "^4.16.2",
     "fs-extra": "^4.0.2",
     "highlight.js": "github:marcoscaceres/highlight.js",
-    "hyperhtml": "^1.11.3",
+    "hyperhtml": "^1.12.2",
     "loading-indicator": "^2.0.0",
     "marcosc-async": "^4.0.3",
     "marked": "^0.3.6",
