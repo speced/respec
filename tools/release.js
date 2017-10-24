@@ -329,11 +329,6 @@ class Indicator {
 }
 
 const indicators = new Map([
-  ["npm-upgrade", new Indicator(colors.info(" Performing npm upgrade... 📦"))],
-  [
-    "npm-snyk-protect",
-    new Indicator(colors.info(" Running snyk-protect... 🐺")),
-  ],
   [
     "remote-update",
     new Indicator(colors.info(" Performing Git remote update... 📡 ")),
@@ -350,7 +345,6 @@ const indicators = new Map([
     "push-to-server",
     new Indicator(colors.info(" Pushing everything back to server... 📡")),
   ],
-  ["npm-publish", new Indicator(colors.info(" Publishing to npm... 📡"))],
 ]);
 
 const run = async () => {
@@ -380,14 +374,12 @@ const run = async () => {
     const version = await Prompts.askBumpVersion();
     await Prompts.askBuildAddCommitMergeTag();
     // 1.1 npm upgrade
-    indicators.get("npm-upgrade").show();
+    console.log(colors.info(" Performing npm upgrade... 📦"));
     await npm("update", { showOutput: true });
-    indicators.get("npm-upgrade").hide();
 
     // Updates could trash our previouls protection, so reprotect.
-    indicators.get("npm-snyk-protect").show();
+    colors.info(" Running snyk-protect... 🐺");
     await npm("run snyk-protect", { showOutput: true });
-    indicators.get("npm-snyk-protect").hide();
 
     // 3. Run the build script (node tools/build-w3c-common.js).
     indicators.get("build-merge-tag").show();
@@ -409,9 +401,8 @@ const run = async () => {
     await git("push origin gh-pages");
     await git("push --tags");
     indicators.get("push-to-server").hide();
-    indicators.get("npm-publish").show();
+    console.log(colors.info(" Publishing to npm... 📡"));
     await npm("publish", { showOutput: true });
-    indicators.get("npm-publish").hide();
     // publishing generates a new build, which we don't want
     // on develop branch
     await git("checkout builds");
