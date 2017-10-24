@@ -107,12 +107,33 @@ async function fetchAndWrite(src, out, whenToHalt, timeout) {
     nightmare.proc.kill();
     throw new Error(msg);
   }
+  const version = await nightmare
+    .wait(() => {
+      return window.hasOwnProperty("respecVersion");
+    })
+    .evaluate(async () => {
+      if (respecVersion === "Developer Edition") {
+        return [123456789, 0, 0];
+      }
+      const version = respecVersion.split(".").map(str => parseInt(str, 10));
+      return version;
+    });
+  const [mayor] = version;
+  // The exportDocument() method only appeared in vesion 18.
+  if (mayor < 18) {
+    let msg =
+      "👴🏽  Ye Olde ReSpec version detected! " +
+      colors.debug("Sorry, we only support ReSpec version 18.0.0 onwards.\n");
+    msg += colors.debug(
+      `The document has version: ${colors.info(version.join("."))}\n`
+    );
+    msg += colors.debug("Grab the latest ReSpec from: ");
+    msg += colors.gray.underline("https:github.com/w3c/respec/");
+    throw new Error(msg);
+  }
   let html = "";
   try {
     html = await nightmare
-      .wait(() => {
-        return document.hasOwnProperty("respecIsReady");
-      })
       .evaluate(async () => {
         await document.respecIsReady;
         const exportDocument = await new Promise(resolve => {
@@ -170,7 +191,11 @@ function makeConsoleMsgHandler(nightmare) {
       const output = `ReSpec ${type}: ${colors.debug(message)}`;
       switch (type) {
         case "error":
-          console.error(colors.error(`😱 ${output}`));
+          if (typeof message === "object") {
+            console.error(message);
+          } else {
+            console.error(colors.error(`😱 ${output}`));
+          }
           break;
         case "warn":
           // Ignore Nightmare's poling of respecDone

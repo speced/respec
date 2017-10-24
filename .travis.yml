@@ -11,21 +11,23 @@ before_install:
   - sleep 3
 
 install:
-  - yarn install
-  - yarn run build
-  - yarn run build:respec-w3c-common
+  - npm install
+  - npm run build
+  - npm run build:respec-w3c-common
 
 addons:
 #  firefox: latest
   chrome: stable
 
-cache: yarn
+cache:
+  directories:
+  - node_modules # NPM packages
 
 jobs:
   include:
-    - stage: Headless
+    - stage: Run headless
       script:
-        - yarn run test:headless
-    - stage: Karma
+        - npm run test:headless
+    - stage: Run Karma unit tests
       script:
         - travis_retry karma start --single-run --reporters mocha karma.conf.js

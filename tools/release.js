@@ -61,15 +61,15 @@ function rel(f) {
   return path.join(__dirname, f);
 }
 
-function commandRunner(program, timeout) {
-  return cmd => {
+function commandRunner(program) {
+  return (cmd, options = { showOutput: false }) => {
     if (DEBUG) {
       console.log(
         colors.debug(`Pretending to run: ${program} ${colors.prompt(cmd)}`)
       );
       return Promise.resolve("");
     }
-    return toExecPromise(`${program} ${cmd}`, timeout);
+    return toExecPromise(`${program} ${cmd}`, { ...options, timeout: 200000 });
   };
 }
 
@@ -95,7 +95,9 @@ const Prompts = {
 
   async askSwitchToBranch(from, to) {
     const promptOps = {
-      description: `You're on branch ${colors.info(from)}. Switch to ${colors.info(to)}?`,
+      description: `You're on branch ${colors.info(
+        from
+      )}. Switch to ${colors.info(to)}?`,
       pattern: /^[yn]$/i,
       message: "Values can be 'y' or 'n'.",
       default: "y",
@@ -248,16 +250,6 @@ const Prompts = {
     return pack.version;
   },
 
-  async askNpmUpgrade() {
-    const promptOps = {
-      description: "Run `npm upgrade` to make sure deps are up-to-date",
-      pattern: /^[yn]$/i,
-      message: "Values can be 'y' or 'n'.",
-      default: "y",
-    };
-    return await this.askQuestion(promptOps);
-  },
-
   async askBuildAddCommitMergeTag() {
     const promptOps = {
       description: "Are you ready to build, add, commit, merge, and tag",
@@ -270,7 +262,9 @@ const Prompts = {
 
   async askPushAll() {
     const promptOps = {
-      description: `${colors.important("🔥  Ready to make this live? 🔥")}  (last chance!)`,
+      description: `${colors.important(
+        "🔥  Ready to make this live? 🔥"
+      )}  (last chance!)`,
       pattern: /^[yn]$/i,
       message: "Values can be 'y' or 'n'.",
       default: "y",
@@ -279,7 +273,7 @@ const Prompts = {
   },
 };
 
-function toExecPromise(cmd, timeout = 200000) {
+function toExecPromise(cmd, { timeout, showOutput }) {
   return new Promise((resolve, reject) => {
     const id = setTimeout(() => {
       reject(new Error(`Command took too long: ${cmd}`));
@@ -292,6 +286,10 @@ function toExecPromise(cmd, timeout = 200000) {
       }
       resolve(stdout);
     });
+    if (showOutput) {
+      proc.stdout.pipe(process.stdout);
+      proc.stderr.pipe(process.stderr);
+    }
   });
 }
 
@@ -332,6 +330,10 @@ class Indicator {
 
 const indicators = new Map([
   ["npm-upgrade", new Indicator(colors.info(" Performing npm upgrade... 📦"))],
+  [
+    "npm-snyk-protect",
+    new Indicator(colors.info(" Running snyk-protect... 🐺")),
+  ],
   [
     "remote-update",
     new Indicator(colors.info(" Performing Git remote update... 📡 ")),
@@ -374,16 +376,19 @@ const run = async () => {
       default:
         throw new Error(`Your branch is not up-to-date. It ${branchState}.`);
     }
-    // 1.1 Run npm upgrade
-    if (await Prompts.askNpmUpgrade()) {
-      indicators.get("npm-upgrade").show();
-      await npm("update");
-      indicators.get("npm-upgrade").hide();
-    }
-
     // 2. Bump the version in `package.json`.
     const version = await Prompts.askBumpVersion();
     await Prompts.askBuildAddCommitMergeTag();
+    // 1.1 npm upgrade
+    indicators.get("npm-upgrade").show();
+    await npm("update", { showOutput: true });
+    indicators.get("npm-upgrade").hide();
+
+    // Updates could trash our previouls protection, so reprotect.
+    indicators.get("npm-snyk-protect").show();
+    await npm("run snyk-protect", { showOutput: true });
+    indicators.get("npm-snyk-protect").hide();
+
     // 3. Run the build script (node tools/build-w3c-common.js).
     indicators.get("build-merge-tag").show();
     await npm("run hb:build");
@@ -405,7 +410,7 @@ const run = async () => {
     await git("push --tags");
     indicators.get("push-to-server").hide();
     indicators.get("npm-publish").show();
-    await npm("publish");
+    await npm("publish", { showOutput: true });
     indicators.get("npm-publish").hide();
     // publishing generates a new build, which we don't want
     // on develop branch
@@ -423,4 +428,6 @@ const run = async () => {
   }
 };
 
-run().then(() => process.exit(0)).catch(err => console.error(err.stack));
+run()
+  .then(() => process.exit(0))
+  .catch(err => console.error(err.stack));
