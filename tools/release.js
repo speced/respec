@@ -282,6 +282,8 @@ function toExecPromise(cmd, timeout = 200000) {
       }
       resolve(stdout);
     });
+    proc.stdout.pipe(process.stdout);
+    proc.stderr.pipe(process.stderr);
   });
 }
 
