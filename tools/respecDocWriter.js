@@ -191,7 +191,11 @@ function makeConsoleMsgHandler(nightmare) {
       const output = `ReSpec ${type}: ${colors.debug(message)}`;
       switch (type) {
         case "error":
-          console.error(colors.error(`😱 ${output}`));
+          if (typeof message === "object") {
+            console.error(message);
+          } else {
+            console.error(colors.error(`😱 ${output}`));
+          }
           break;
         case "warn":
           // Ignore Nightmare's poling of respecDone
