@@ -248,16 +248,6 @@ const Prompts = {
     return pack.version;
   },
 
-  async askNpmUpgrade() {
-    const promptOps = {
-      description: "Run `npm upgrade` to make sure deps are up-to-date",
-      pattern: /^[yn]$/i,
-      message: "Values can be 'y' or 'n'.",
-      default: "y",
-    };
-    return await this.askQuestion(promptOps);
-  },
-
   async askBuildAddCommitMergeTag() {
     const promptOps = {
       description: "Are you ready to build, add, commit, merge, and tag",
@@ -332,6 +322,7 @@ class Indicator {
 
 const indicators = new Map([
   ["npm-upgrade", new Indicator(colors.info(" Performing npm upgrade... 📦"))],
+  ["npm-snyk-protect", new Indicator(colors.info(" Running snyk-protect... 🐺"))],
   [
     "remote-update",
     new Indicator(colors.info(" Performing Git remote update... 📡 ")),
@@ -375,11 +366,14 @@ const run = async () => {
         throw new Error(`Your branch is not up-to-date. It ${branchState}.`);
     }
     // 1.1 Run npm upgrade
-    if (await Prompts.askNpmUpgrade()) {
-      indicators.get("npm-upgrade").show();
-      await npm("update");
-      indicators.get("npm-upgrade").hide();
-    }
+    indicators.get("npm-upgrade").show();
+    await npm("update");
+    indicators.get("npm-upgrade").hide();
+
+    // 1.2 Updates could trash our previouls protection, so reprotect.
+    indicators.get("npm-snyk-protect").show();
+    await npm("snyk-protect");
+    indicators.get("npm-snyk-protect").hide();
 
     // 2. Bump the version in `package.json`.
     const version = await Prompts.askBumpVersion();
