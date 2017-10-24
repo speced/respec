@@ -1,71 +1,45 @@
 <!DOCTYPE html>
-<html xmlns='http://www.w3.org/1999/xhtml' lang="zh">
+<html>
   <head>
-    <meta charset='utf-8'/>
-    <title>Basic ReSpec Evolution Example</title>
-    <!-- // <script src='http://w3.dev/2009/dap/ReSpec.js/js/respec.js' class='remove'></script> -->
-    <script src='/js/deps/require.js' data-main='/js/profile-w3c-common' async class='remove'></script>
-    <!-- // <script src='../builds/respec-w3c-common.js' async class='remove'></script> -->
-    <!-- // <script src='respec-debug.js' async class='remove'></script> -->
-    <!-- // <script src='//www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script> -->
-    <!-- // <script src='http://darobin.github.com/respec/builds/respec-w3c-common.js' async class='remove'></script> -->
+    <meta charset='utf-8'>
+    <title>Replace me with a real title</title>
+    <script src='../js/deps/require.js' data-main='../js/profile-w3c-common' 
+      async class='remove'></script>
     <script class='remove'>
       var respecConfig = {
-        specStatus: "FPWD",
+        specStatus: "ED",
         editors: [{
-          name: "Robin Berjon",
-          url: "http://berjon.com/",
+          name: "Your Name",
+          url: "https://your-site.com",
         }],
-        processVersion: 2005,
-        shortName: "dahut",
-        format: "markdown",
+        processVersion: 2017,
+        edDraftURI: "https://some.github.repo",
+        shortName: "dahut"
       };
     </script>
   </head>
   <body>
-    <section id="conformance" data-include="test.inc"></section>
     <section id='abstract'>
       <p>
-        This is just a very basic document. [[!REX]]
-        [[DOM4]], [[XML10]], [[\WHATEVER]]
+        This is required.
       </p>
     </section>
     <section id='sotd'>
       <p>
-        CUSTOM PARAGRAPH
+        This is required.
       </p>
     </section>
-    <section class='informative'>
-      <h2>Informative section</h2>
-      <p>blah</p>
-      <section>
-        <h2>Inner section</h2>
-        <p>blahblah</p>
-      </section>
-      <section>
-        <h2>Other inner section</h2>
-        <p>blahblah</p>
-      </section>
-    </section>
-    <section>
-      <h2>Clash here</h2>
+    <section data-dfn-for="Foo">
+      <h2><dfn>Foo</dfn> interface</h2>
       <pre class="idl">
-        enum Test {
-          "a",
-        };
+      interface Foo {
+        attribute Bar bar;
+        void doTheFoo();
+      };
       </pre>
-    </section>
-    <section>
-      <h2>Type Unions</h2>
-      <section>
-        <h2>Two</h2>
-        <pre class="idl">
-          interface MutableCapabilities : Capabilities{
-            (DOMString or sequence<long>) bar();
-            void foo((unsigned long or sequence<unsigned long>) value1);
-          };
-        </pre>
-      </section>
+     <p>The <a>Foo</a> interface is nice. Lets you do stuff.</p>
+     <p>The <dfn>bar</dfn> attribute, returns 🍺.</p>
+     <p>The <dfn>doTheFoo()</dfn> method, returns nothing.</p>
     </section>
   </body>
 </html>
