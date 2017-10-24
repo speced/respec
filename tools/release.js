@@ -378,7 +378,7 @@ const run = async () => {
     await npm("update", { showOutput: true });
 
     // Updates could trash our previouls protection, so reprotect.
-    colors.info(" Running snyk-protect... 🐺");
+    console.log(colors.info(" Running snyk-protect... 🐺"));
     await npm("run snyk-protect", { showOutput: true });
 
     // 3. Run the build script (node tools/build-w3c-common.js).
