@@ -365,19 +365,19 @@ const run = async () => {
       default:
         throw new Error(`Your branch is not up-to-date. It ${branchState}.`);
     }
-    // 1.1 Run npm upgrade
+    // 2. Bump the version in `package.json`.
+    const version = await Prompts.askBumpVersion();
+    await Prompts.askBuildAddCommitMergeTag();
+    // 1.1 npm upgrade
     indicators.get("npm-upgrade").show();
     await npm("update");
     indicators.get("npm-upgrade").hide();
 
-    // 1.2 Updates could trash our previouls protection, so reprotect.
+    // Updates could trash our previouls protection, so reprotect.
     indicators.get("npm-snyk-protect").show();
-    await npm("snyk-protect");
+    await npm("run snyk-protect");
     indicators.get("npm-snyk-protect").hide();
 
-    // 2. Bump the version in `package.json`.
-    const version = await Prompts.askBumpVersion();
-    await Prompts.askBuildAddCommitMergeTag();
     // 3. Run the build script (node tools/build-w3c-common.js).
     indicators.get("build-merge-tag").show();
     await npm("run hb:build");
