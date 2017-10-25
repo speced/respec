@@ -1,6 +1,11 @@
 // Module core/dfn
 // Finds all <dfn> elements and populates definitionMap to identify them.
-import { deriveId, getLinkedTerms, deriveDfnType, deriveAnchorType } from "core/utils";
+import {
+  deriveId,
+  getLinkedTerms,
+  deriveDfnType,
+  deriveAnchorType,
+} from "core/utils";
 import { pub } from "core/pubsubhub";
 
 export const name = "core/dfn";
@@ -36,17 +41,18 @@ function isValidDfn(dfn) {
   return true;
 }
 
-function getPrefixFromType(dfn, type){
-  switch(type){
-    case "idl":
+function getPrefixFromType(dfn, type) {
+  switch (type) {
+    case "idl": {
       const dfnFor = dfn.closest("[data-dfn-for]");
-      if(dfnFor){
+      if (dfnFor) {
         const parents = dfnFor.dataset.dfnFor.split(" ");
         debugger;
       }
       return "dom";
+    }
     default:
-      return"";
+      return "";
   }
 }
 
@@ -64,7 +70,6 @@ function deriveDetails(dfn) {
  * @param {HTMLDfnElement} dfn
  */
 function canonicalizeDfn(dfn) {
-  debugger;
   const { id, type } = deriveDetails(dfn);
   dfn.id = id;
   dfn.dataset.dfnType = type;

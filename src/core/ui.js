@@ -212,10 +212,24 @@ export const ui = {
     return menuItem[0].querySelector("button");
   },
   error: function(msg) {
-    errWarn(msg, errors, "error", "Errors");
+    const show = () => {
+      errWarn(msg, errors, "error", "Errors");
+    };
+    if(requestIdleCallback){
+      requestIdleCallback(show);
+    } else {
+      show();
+    }
   },
   warning: function(msg) {
-    errWarn(msg, warnings, "warning", "Warnings");
+    const show = () => {
+      errWarn(msg, warnings, "warning", "Warnings");
+    };
+    if(requestIdleCallback){
+      requestIdleCallback(show);
+    } else {
+      show();
+    }
   },
   closeModal: function(owner) {
     if ($overlay)

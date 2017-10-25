@@ -1,5 +1,5 @@
-<span class="idlInterface" id="{{obj.idlId}}" data-idl data-name="{{obj.name}}">{{extAttr obj indent
-}}{{idn indent}}{{partial}}{{callback}}interface <span class="idlInterfaceID">{{#tryLink obj}}{{obj.name}}{{/tryLink
-}}</span>{{#if obj.inheritance}} : <span class="idlSuperclass">{{#tryLink obj}}{{obj.inheritance}}{{/tryLink
-}}</span>{{/if}} &#123;
-{{{children}}}{{idn indent}}&#125;;</span>
+{{extAttr obj indent
+}}{{idn indent}}{{partial}}{{callback}}{{obj.type}} {{#tryLink obj}}{{obj.name}}{{/tryLink
+}}{{#if obj.inheritance}} : {{#tryLink obj}}{{obj.inheritance}}{{/tryLink
+}}{{/if}} &#123;
+{{{children}}}{{idn indent}}&#125;;
