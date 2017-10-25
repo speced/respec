@@ -68,7 +68,8 @@
     "start": "http-server",
     "test:build": "mocha ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
-    "test:karma": "npm run karma"
+    "test:karma": "npm run karma",
+    "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
     "colors": "^1.1.2",
@@ -84,7 +85,7 @@
     "marked": "^0.3.6",
     "nightmare": "^2.10.0",
     "prompt": "^1.0.0",
-    "snyk": "^1.44.1"
+    "snyk": "^1.45.0"
   },
   "snyk": true
 }
