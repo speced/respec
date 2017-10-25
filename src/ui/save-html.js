@@ -146,15 +146,14 @@ const saveDialog = {
   },
 };
 
-export async function exportDocument(format, mimeType){
-  await document.respecIsReady;
-  const dataURL = toDataURL(serialize(format), mimeType);
-  const encodedString = dataURL.replace(
-    /^data:\w+\/\w+;charset=utf-8,/,
-    ""
-  );
-  const decodedString = decodeURIComponent(encodedString);
-  return decodedString;
+export function exportDocument(format, mimeType) {
+  // Bug in babel won't export async function for some reason?
+  return document.respecIsReady.then(() => {
+    const dataURL = toDataURL(serialize(format), mimeType);
+    const encodedString = dataURL.replace(/^data:\w+\/\w+;charset=utf-8,/, "");
+    const decodedString = decodeURIComponent(encodedString);
+    return decodedString;
+  });
 }
 
 export function show() {
