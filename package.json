@@ -14,12 +14,13 @@
     "type": "git",
     "url": "git://github.com/w3c/respec.git"
   },
-  "author": "Robin Berjon",
+  "contributors": [
+    "Marcos Cáceres <marcos@marcosc.com> (https://marcosc.com/)",
+    "Robin Berjon"
+  ],
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-es2015-modules-amd": "^6.24.1",
-    "babel-preset-env": "^1.6.1",
     "babel-preset-stage-3": "^6.24.1",
     "chai": "^4.1.2",
     "clipboard": "^1.7.1",
@@ -69,7 +70,7 @@
     "test:build": "mocha ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
     "test:karma": "npm run karma",
-    "prepublish": "npm run snyk-protect"
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
     "colors": "^1.1.2",
