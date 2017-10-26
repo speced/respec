@@ -21,6 +21,18 @@ colors.setTheme({
   warn: "yellow",
 });
 
+// Configuration for nightmare
+const config = {
+  show: false,
+  timeout: 3000,
+  webPreferences: {
+    images: false,
+    defaultEncoding: "utf-8",
+    partition: "nopersist",
+    userData: "",
+  },
+};
+
 /**
  * Writes "data" to a particular outPath as UTF-8.
  * @private
@@ -59,18 +71,9 @@ async function writeTo(outPath, data) {
  * @return {Promise}            Resolves with HTML when done writing.
  *                              Rejects on errors.
  */
-async function fetchAndWrite(src, out, whenToHalt, timeout) {
+async function fetchAndWrite(src, out, whenToHalt, timeout=300000) {
   const userData = await mkdtemp(os.tmpdir() + "/respec2html-");
-  const nightmare = new Nightmare({
-    show: false,
-    timeout,
-    webPreferences: {
-      images: false,
-      defaultEncoding: "utf-8",
-      partition: "nopersist",
-      userData,
-    },
-  });
+  const nightmare = new Nightmare({...config, timeout, userData});
   nightmare.useragent("respec2html");
   const url = parseURL(src).href;
   const handleConsoleMessages = makeConsoleMsgHandler(nightmare);
@@ -82,76 +85,9 @@ async function fetchAndWrite(src, out, whenToHalt, timeout) {
     nightmare.proc.kill();
     throw new Error(msg);
   }
-  const isRespecDoc = await nightmare.evaluate(async () => {
-    const query = "script[data-main*='profile-'], script[src*='respec']";
-    if (document.head.querySelector(query)) {
-      return true;
-    }
-    await new Promise((resolve, reject) => {
-      document.onreadystatechange = () => {
-        if (document.readyState === "complete") {
-          resolve();
-        }
-      };
-      document.onreadystatechange();
-    });
-    await new Promise(resolve => {
-      setTimeout(resolve, 2000);
-    });
-    return Boolean(document.querySelector("#respec-ui"));
-  });
-  if (!isRespecDoc) {
-    const msg = `${colors.warn(
-      "🕵️‍♀️  That doesn't seem to be a ReSpec document. Please check manually:"
-    )} ${colors.debug(url)}`;
-    nightmare.proc.kill();
-    throw new Error(msg);
-  }
-  const version = await nightmare
-    .wait(() => {
-      return window.hasOwnProperty("respecVersion");
-    })
-    .evaluate(async () => {
-      if (respecVersion === "Developer Edition") {
-        return [123456789, 0, 0];
-      }
-      const version = respecVersion.split(".").map(str => parseInt(str, 10));
-      return version;
-    });
-  const [mayor] = version;
-  // The exportDocument() method only appeared in vesion 18.
-  if (mayor < 18) {
-    let msg =
-      "👴🏽  Ye Olde ReSpec version detected! " +
-      colors.debug("Sorry, we only support ReSpec version 18.0.0 onwards.\n");
-    msg += colors.debug(
-      `The document has version: ${colors.info(version.join("."))}\n`
-    );
-    msg += colors.debug("Grab the latest ReSpec from: ");
-    msg += colors.gray.underline("https:github.com/w3c/respec/");
-    throw new Error(msg);
-  }
-  let html = "";
-  try {
-    html = await nightmare
-      .evaluate(async () => {
-        await document.respecIsReady;
-        const exportDocument = await new Promise(resolve => {
-          require(["ui/save-html"], ({ exportDocument }) => {
-            resolve(exportDocument);
-          });
-        });
-        return await exportDocument();
-      })
-      .end();
-  } catch (err) {
-    const msg =
-      `\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n` +
-      colors.debug(
-        `\tYour Spec: ${url} \n\tFile a bug: https://github.com/w3c/respec/\n\n`
-      );
-    throw new Error(msg);
-  }
+  await checkIfReSpec(nightmare);
+  const version = await checkReSpecVersion(nightmare);
+  const html = await generateHTML(nightmare, version, url);
   switch (out) {
     case null:
       process.stdout.write(html);
@@ -168,6 +104,105 @@ async function fetchAndWrite(src, out, whenToHalt, timeout) {
   return html;
 }
 
+async function generateHTML(nightmare, version, url){
+  try {
+    return await nightmare.evaluate(evaluateHTML).end();
+  } catch (err) {
+    const msg =
+      `\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n` +
+      colors.debug(
+        `Specification: ${url}\n` +
+          `ReSpec version: ${version.join(".")}\n` +
+          `File a bug: https://github.com/w3c/respec/\n` +
+          (err ? `Error: ${err}\n` : "")
+      );
+    throw new Error(msg);
+  }
+}
+
+
+async function checkReSpecVersion(nightmare) {
+  const version = await nightmare
+    .wait(() => {
+      return window.hasOwnProperty("respecVersion");
+    })
+    .evaluate(getVersion);
+  const [mayor] = version;
+  // The exportDocument() method only appeared in vesion 18.
+  if (mayor < 18) {
+    let msg =
+      "👴🏽  Ye Olde ReSpec version detected! " +
+      colors.debug("Sorry, we only support ReSpec version 18.0.0 onwards.\n");
+    msg += colors.debug(
+      `The document has version: ${colors.info(version.join("."))}\n`
+    );
+    msg += colors.debug("Grab the latest ReSpec from: ");
+    msg += colors.gray.underline("https:github.com/w3c/respec/");
+    throw new Error(msg);
+  }
+  return version;
+}
+
+async function checkIfReSpec(nightmare) {
+  const isRespecDoc = await nightmare.evaluate(isRespec);
+  if (!isRespecDoc) {
+    const msg = `${colors.warn(
+      "🕵️‍♀️  That doesn't seem to be a ReSpec document. Please check manually:"
+    )} ${colors.debug(url)}`;
+    nightmare.proc.kill();
+    throw new Error(msg);
+  }
+  return isRespecDoc;
+}
+
+async function isRespec() {
+  try {
+    const query = "script[data-main*='profile-'], script[src*='respec']";
+    if (document.head.querySelector(query)) {
+      return true;
+    }
+    await new Promise((resolve, reject) => {
+      document.onreadystatechange = () => {
+        if (document.readyState === "complete") {
+          resolve();
+        }
+      };
+      document.onreadystatechange();
+    });
+    await new Promise(resolve => {
+      setTimeout(resolve, 2000);
+    });
+    return Boolean(document.querySelector("#respec-ui"));
+  } catch (err) {
+    throw err.stack;
+  }
+}
+
+async function evaluateHTML() {
+  try {
+    await document.respecIsReady;
+    const exportDocument = await new Promise(resolve => {
+      require(["ui/save-html"], ({ exportDocument }) => {
+        resolve(exportDocument);
+      });
+    });
+    return exportDocument();
+  } catch (err) {
+    throw err.stack;
+  }
+}
+
+function getVersion() {
+  try {
+    if (respecVersion === "Developer Edition") {
+      return [123456789, 0, 0];
+    }
+    const version = respecVersion.split(".").map(str => parseInt(str, 10));
+    return version;
+  } catch (err) {
+    throw err.stack;
+  }
+}
 /**
  * Handles messages from the browser's Console API.
  *
