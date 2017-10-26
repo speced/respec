@@ -94,16 +94,14 @@ function cleanup(cloneDoc) {
     insertions.appendChild(metaViewport);
   }
   // Move charset to near top, as it needs to be in the first 512 bytes.
-  const hasMetaCharset = Boolean(
-    cloneDoc.querySelector(
-      "meta[charset=utf-8], meta[content*='charset=utf-8']"
-    )
+  let metaCharset = cloneDoc.querySelector(
+    "meta[charset], meta[content*='charset=']"
   );
-  if (!hasMetaCharset) {
-    const metaCharset = cloneDoc.createElement("meta");
+  if (!metaCharset) {
+    metaCharset = cloneDoc.createElement("meta");
     metaCharset.setAttribute("charset", "utf-8");
-    insertions.appendChild(metaCharset);
   }
+  insertions.appendChild(metaCharset);
   // Add meta generator
   const metaGenerator = cloneDoc.createElement("meta");
   metaGenerator.name = "generator";
