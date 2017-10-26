@@ -70,7 +70,8 @@
     "test:build": "mocha ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
     "test:karma": "npm run karma",
-    "prepare": "npm run snyk-protect"
+    "prepare": "npm run snyk-protect",
+    "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
     "colors": "^1.1.2",
