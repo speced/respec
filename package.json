@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "18.2.1",
+  "version": "18.2.2",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -70,7 +70,8 @@
     "test:build": "mocha ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
     "test:karma": "npm run karma",
-    "prepare": "npm run snyk-protect"
+    "prepare": "npm run snyk-protect",
+    "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
     "colors": "^1.1.2",
