@@ -287,9 +287,6 @@ function toExecPromise(cmd, { timeout, showOutput }) {
       if (err) {
         return reject(err);
       }
-      if (stderr) {
-        return reject(stderr);
-      }
       resolve(stdout);
     });
     if (showOutput) {
