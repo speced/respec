@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 "use strict";
+const port = process.env.PORT || 3000;
+const express = require("express");
 const { Builder } = require("./builder");
 const cmdPrompt = require("prompt");
 const colors = require("colors");
@@ -75,6 +77,7 @@ function commandRunner(program) {
 
 const git = commandRunner("git");
 const npm = commandRunner("npm");
+const node = commandRunner("node");
 
 cmdPrompt.start();
 
@@ -279,17 +282,25 @@ function toExecPromise(cmd, { timeout, showOutput }) {
       reject(new Error(`Command took too long: ${cmd}`));
       proc.kill("SIGTERM");
     }, timeout);
-    const proc = exec(cmd, (err, stdout) => {
+    const proc = exec(cmd, function(err, stdout, stderr) {
       clearTimeout(id);
       if (err) {
         return reject(err);
       }
+      if (stderr) {
+        return reject(stderr);
+      }
       resolve(stdout);
     });
     if (showOutput) {
-      proc.stdout.pipe(process.stdout);
       proc.stderr.pipe(process.stderr);
+      proc.stdout.pipe(process.stdout);
     }
+    proc.on("close", number => {
+      if (number === 1) {
+        process.exit(1);
+      }
+    });
   });
 }
 
@@ -348,6 +359,8 @@ const indicators = new Map([
 ]);
 
 const run = async () => {
+  const app = express();
+  const dir = require("path").join(__dirname, "..");
   const initialBranch = await getCurrentBranch();
   try {
     // 1. Confirm maintainer is on up-to-date and on the develop branch ()
@@ -385,6 +398,16 @@ const run = async () => {
     indicators.get("build-merge-tag").show();
     await npm("run hb:build");
     await Builder.build({ name: "w3c-common" });
+    app.use(express.static(dir));
+    app.listen(port);
+    console.log(
+      colors.info(" Making sure the generated version is ok... 🕵🏻")
+    );
+    await node(
+      "./tools/respec2html.js -e --timeout 30 --src http://localhost:3000/examples/basic.built.html --out /dev/null",
+      { showOutput: true }
+    );
+    console.log(colors.info(" Build Seems good... ✅"));
     // 4. Commit your changes (git commit -am v3.x.y)
     await git(`commit -am v${version}`);
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
