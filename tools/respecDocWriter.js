@@ -19,6 +19,7 @@ colors.setTheme({
   debug: "cyan",
   error: "red",
   warn: "yellow",
+  info: "blue",
 });
 
 // Configuration for nightmare
@@ -71,9 +72,9 @@ async function writeTo(outPath, data) {
  * @return {Promise}            Resolves with HTML when done writing.
  *                              Rejects on errors.
  */
-async function fetchAndWrite(src, out, whenToHalt, timeout=300000) {
+async function fetchAndWrite(src, out, whenToHalt, timeout = 300000) {
   const userData = await mkdtemp(os.tmpdir() + "/respec2html-");
-  const nightmare = new Nightmare({...config, timeout, userData});
+  const nightmare = new Nightmare({ ...config, timeout, userData });
   nightmare.useragent("respec2html");
   const url = parseURL(src).href;
   const handleConsoleMessages = makeConsoleMsgHandler(nightmare);
@@ -85,7 +86,7 @@ async function fetchAndWrite(src, out, whenToHalt, timeout=300000) {
     nightmare.proc.kill();
     throw new Error(msg);
   }
-  await checkIfReSpec(nightmare);
+  await checkIfReSpec(nightmare, url);
   const version = await checkReSpecVersion(nightmare);
   const html = await generateHTML(nightmare, version, url);
   switch (out) {
@@ -104,7 +105,7 @@ async function fetchAndWrite(src, out, whenToHalt, timeout=300000) {
   return html;
 }
 
-async function generateHTML(nightmare, version, url){
+async function generateHTML(nightmare, version, url) {
   try {
     return await nightmare.evaluate(evaluateHTML).end();
   } catch (err) {
@@ -119,7 +120,6 @@ async function generateHTML(nightmare, version, url){
     throw new Error(msg);
   }
 }
-
 
 async function checkReSpecVersion(nightmare) {
   const version = await nightmare
@@ -143,7 +143,7 @@ async function checkReSpecVersion(nightmare) {
   return version;
 }
 
-async function checkIfReSpec(nightmare) {
+async function checkIfReSpec(nightmare, url) {
   const isRespecDoc = await nightmare.evaluate(isRespec);
   if (!isRespecDoc) {
     const msg = `${colors.warn(
@@ -161,7 +161,7 @@ async function isRespec() {
     if (document.head.querySelector(query)) {
       return true;
     }
-    await new Promise((resolve, reject) => {
+    await new Promise(resolve => {
       document.onreadystatechange = () => {
         if (document.readyState === "complete") {
           resolve();
@@ -194,10 +194,12 @@ async function evaluateHTML() {
 
 function getVersion() {
   try {
-    if (respecVersion === "Developer Edition") {
+    if (window.respecVersion === "Developer Edition") {
       return [123456789, 0, 0];
     }
-    const version = respecVersion.split(".").map(str => parseInt(str, 10));
+    const version = window.respecVersion
+      .split(".")
+      .map(str => parseInt(str, 10));
     return version;
   } catch (err) {
     throw err.stack;
