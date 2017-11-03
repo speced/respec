@@ -36,6 +36,7 @@ require.config({
     "deps/jquery": "/base/js/deps/jquery",
     "deps/marked": "/base/js/deps/marked",
     "w3c/linter": "/base/js/w3c/linter",
+    "core/webidl-writer": "/base/js/webidl-writer",
   },
 });
 

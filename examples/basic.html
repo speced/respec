@@ -25,11 +25,18 @@
     <section>
       <h2><dfn>Testing</dfn> interface</h2>
       <pre class="idl">
-        interface Testing {
-          void foo(DOMString arg1, DOMString... arg2);
-        };
-        interface Bar {
+        interface GraphicalWindow {
+          readonly attribute unsigned long width;
+          readonly attribute unsigned long height;
+          // this is comment
+          /*
+           this is also a comment
+          */
+          attribute Paint currentPaint;
 
+          void drawRectangle(double x, double y, double width, double height);
+
+          void drawText(double x, double y, DOMString text);
         };
       </pre>
       <section>

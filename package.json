@@ -33,7 +33,7 @@
     "jquery": "^3.2.1",
     "karma": "^1.7.1",
     "karma-chrome-launcher": "^2.2.0",
-    "karma-detect-browsers": "^2.2.5",
+    "karma-detect-browsers": "^2.2.6",
     "karma-edge-launcher": "^0.4.2",
     "karma-firefox-launcher": "^1.0.1",
     "karma-jasmine": "^1.1.0",
@@ -49,9 +49,9 @@
     "pluralize": "^7.0.0",
     "requirejs": "^2.3.5",
     "text": "github:requirejs/text",
-    "uglify-es": "^3.1.5",
+    "uglify-es": "^3.1.6",
     "url-search-params": "^0.10.0",
-    "webidl2": "^6.1.0"
+    "webidl2": "8.1.0"
   },
   "scripts": {
     "babel:build": "babel src -d js --source-maps -q",
@@ -80,13 +80,13 @@
     "express": "^4.16.2",
     "fs-extra": "^4.0.2",
     "highlight.js": "github:marcoscaceres/highlight.js",
-    "hyperhtml": "^1.12.1",
+    "hyperhtml": "^1.12.5",
     "loading-indicator": "^2.0.0",
     "marcosc-async": "^4.0.3",
     "marked": "^0.3.6",
     "nightmare": "^2.10.0",
     "prompt": "^1.0.0",
-    "snyk": "^1.45.0"
+    "snyk": "^1.47.0"
   },
   "snyk": true
 }
