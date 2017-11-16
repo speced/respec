@@ -23,6 +23,7 @@
   "spec/core/link-to-dfn-spec.js",
   "spec/core/linter-rules/no-headingless-sections-spec.js",
   "spec/core/linter-rules/no-http-props-spec.js",
+  "spec/core/list-sorter-spec.js",
   "spec/core/location-hash-spec.js",
   "spec/core/markdown-spec.js",
   "spec/core/override-configuration-spec.js",
