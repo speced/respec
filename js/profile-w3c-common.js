@@ -70,6 +70,7 @@ define(
     "core/highlight",
     "core/webidl-clipboard",
     "core/data-tests",
+    "core/list-sorter",
     /*Linter must be the last thing to run*/
     "core/linter",
   ],
