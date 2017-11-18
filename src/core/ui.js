@@ -37,10 +37,10 @@ function ariaDecorate(elem, ariaMap) {
 }
 
 const $respecUI = $(
-  "<div id='respec-ui' class='removeOnSave' hidden=true></div>"
+  "<div id='respec-ui' class='removeOnSave' hidden></div>"
 );
 const $menu = $(
-  "<ul id=respec-menu role=menu aria-labelledby='respec-pill'></ul>"
+  "<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>"
 );
 var $modal;
 var $overlay;
@@ -67,16 +67,25 @@ const $respecPill = $("<button id='respec-pill' disabled>ReSpec</button>");
 $respecPill
   .click(function(e) {
     e.stopPropagation();
-    const expand = this.getAttribute("aria-expanded") === "true"
-      ? "false"
-      : "true";
-    this.setAttribute("aria-expanded", expand);
-    $menu.toggle();
+    if( $menu[0].hidden ){
+      $menu[0].classList.remove("respec-hidden");
+      $menu[0].classList.add("respec-visible");
+    } else {
+      $menu[0].classList.add("respec-hidden");
+      $menu[0].classList.remove("respec-visible");
+    }
+    this.setAttribute("aria-expanded", String($menu[0].hidden));
+    $menu[0].hidden = !$menu[0].hidden
   })
   .appendTo($respecUI);
 document.documentElement.addEventListener("click", function() {
-  if (window.getComputedStyle($menu[0]).display === "block") {
-    $menu.fadeOut(200);
+  if(!$menu[0].hidden){
+    $menu[0].classList.remove("respec-visible");
+    $menu[0].classList.add("respec-hidden");
+    $menu[0].addEventListener("transitionend", ()=>{
+      debugger
+    })
+    $menu[0].hidden = true;
   }
 });
 $menu.appendTo($respecUI);
@@ -189,7 +198,6 @@ export const ui = {
   addCommand: function(label, module, keyShort, icon) {
     icon = icon || "";
     var handler = function() {
-      $menu.hide();
       require([module], function(mod) {
         mod.show();
       });
@@ -218,11 +226,14 @@ export const ui = {
     errWarn(msg, warnings, "warning", "Warnings");
   },
   closeModal: function(owner) {
-    if ($overlay)
-      $overlay.fadeOut(200, function() {
+    if ($overlay){ 
+      $overlay[0].classList.remove("respec-show-overlay");
+      $overlay[0].classList.add("respec-hide-overlay");
+      $overlay[0].addEventListener("transitionend", ()=>{
         $overlay.remove();
         $overlay = null;
       });
+    }
     if (owner) {
       owner.setAttribute("aria-expanded", "false");
     }
@@ -233,14 +244,14 @@ export const ui = {
   freshModal: function(title, content, currentOwner) {
     if ($modal) $modal.remove();
     if ($overlay) $overlay.remove();
-    $overlay = $("<div id='respec-overlay' class='removeOnSave'></div>").hide();
+    $overlay = $("<div id='respec-overlay' class='removeOnSave'></div>");
     const id = currentOwner.id + "-modal";
     const headingId = id + "-heading";
     $modal = $(
       "<div id='" +
         id +
         "' class='respec-modal removeOnSave' role='dialog'><h3></h3><div class='inside'></div></div>"
-    ).hide();
+    );
     $modal.find("h3").text(title);
     $modal.find("h3")[0].id = headingId;
     const ariaMap = new Map([["labelledby", headingId]]);
@@ -248,13 +259,11 @@ export const ui = {
     $modal.find(".inside").append(content);
     $("body").append($overlay).append($modal);
     $overlay
-      .click(
-        function() {
-          this.closeModal(currentOwner);
-        }.bind(this)
-      )
-      .fadeTo(200, 0.5);
-    $modal.fadeTo(200, 1);
+      .click(()=>{  
+        this.closeModal(currentOwner);
+      });
+    $overlay[0].classList.toggle("respec-show-overlay");
+    $modal[0].hidden = false;
   },
 };
 shortcut.add("Esc", function() {
