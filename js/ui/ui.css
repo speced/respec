@@ -15,20 +15,21 @@
   height: 2.5em;
   color: rgb(120, 120, 120);
   border: 1px solid #ccc;
-  box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, .5);
+  box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, 0.5);
 }
 
 .respec-info-button {
   border: none;
-  opacity: .75;
+  opacity: 0.75;
   border-radius: 2em;
   margin-right: 1em;
   min-width: 3.5em;
 }
 
-.respec-info-button:focus, .respec-info-button:hover {
+.respec-info-button:focus,
+.respec-info-button:hover {
   opacity: 1;
-  transition: opacity .2s;
+  transition: opacity 0.2s;
 }
 
 #respec-pill:disabled {
@@ -39,7 +40,7 @@
   border-bottom: 1.1em solid rgba(40, 40, 40, 0.2);
   border-left: 1.1em solid #ffffff;
   transform: translateZ(0);
-  animation: respec-spin .5s infinite linear;
+  animation: respec-spin 0.5s infinite linear;
   box-shadow: none;
 }
 
@@ -59,11 +60,23 @@
   }
 }
 
+.respec-hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 0.2s, opacity 0.2s linear;
+}
+
+.respec-visible {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.2s linear;
+}
+
 #respec-pill:hover,
 #respec-pill:focus {
   color: rgb(0, 0, 0);
   background-color: rgb(245, 245, 245);
-  transition: color .2s;
+  transition: color 0.2s;
 }
 
 #respec-menu {
@@ -72,12 +85,16 @@
   padding: 0;
   font-family: sans-serif;
   background: #fff;
-  box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, .5);
+  box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, 0.5);
   width: 200px;
   display: none;
   text-align: left;
   margin-top: 32px;
-  font-size: .8em;
+  font-size: 0.8em;
+}
+
+#respec-menu:not([hidden]) {
+  display: block;
 }
 
 #respec-menu li {
@@ -89,8 +106,8 @@
 .respec-save-buttons {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(47%, 2fr));
-  grid-gap: .5cm;
-  padding: .5cm;
+  grid-gap: 0.5cm;
+  padding: 0.5cm;
 }
 
 .respec-save-button:link {
@@ -114,7 +131,6 @@
   border: 0;
   padding-top: 16px;
 }
-
 
 #respec-ui button:focus,
 #respec-pill:focus,
@@ -140,17 +156,17 @@
   list-style: none;
   font-family: sans-serif;
   background-color: rgb(255, 251, 230);
-  font-size: .85em;
+  font-size: 0.85em;
 }
 
-.respec-warning-list>li,
-.respec-error-list>li {
+.respec-warning-list > li,
+.respec-error-list > li {
   padding: 0.4em 0.7em;
 }
 
-.respec-warning-list>li::before {
+.respec-warning-list > li::before {
   content: "⚠️";
-  padding-right: .5em;
+  padding-right: 0.5em;
 }
 .respec-warning-list p,
 .respec-error-list p {
@@ -163,7 +179,6 @@
   border-bottom: thin solid rgb(255, 245, 194);
 }
 
-
 .respec-error-list,
 .respec-error-list li {
   background-color: rgb(255, 240, 240);
@@ -171,7 +186,7 @@
 
 .respec-error-list li::before {
   content: "💥";
-  padding-right: .5em;
+  padding-right: 0.5em;
 }
 
 .respec-error-list li {
@@ -180,7 +195,7 @@
   border-bottom: thin solid rgb(255, 215, 215);
 }
 
-.respec-error-list li>p {
+.respec-error-list li > p {
   margin: 0;
   padding: 0;
   display: inline-block;
@@ -188,7 +203,6 @@
 
 #respec-overlay {
   display: block;
-  opacity: 0;
   position: fixed;
   z-index: 10000;
   top: 0px;
@@ -198,10 +212,19 @@
   background: #000;
 }
 
+.respec-show-overlay {
+  transition: opacity 0.2s linear;
+  opacity: 0.5;
+}
+
+.respec-hide-overlay {
+  transition: opacity 0.2s linear;
+  opacity: 0;
+}
+
 .respec-modal {
   display: block;
   position: fixed;
-  opacity: 0;
   z-index: 11000;
   margin: auto;
   top: 10%;
@@ -212,7 +235,7 @@
   padding: 0;
   max-height: 80%;
   overflow-y: auto;
-  margin: 0 -.5cm
+  margin: 0 -0.5cm;
 }
 
 @media screen and (min-width: 78em) {
@@ -223,10 +246,15 @@
 
 .respec-modal h3 {
   margin: 0;
-  padding: .2em;
+  padding: 0.2em;
   text-align: center;
   color: black;
-  background: linear-gradient(to bottom, rgba(238, 238, 238, 1) 0%, rgba(238, 238, 238, 1) 50%, rgba(204, 204, 204, 1) 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(238, 238, 238, 1) 0%,
+    rgba(238, 238, 238, 1) 50%,
+    rgba(204, 204, 204, 1) 100%
+  );
   font-size: 1em;
 }
 
@@ -236,7 +264,7 @@
 
 #respec-menu button.respec-option {
   background: white;
-  padding: 0 .2cm;
+  padding: 0 0.2cm;
   border: none;
   width: 100%;
   text-align: left;
@@ -250,7 +278,7 @@
 }
 
 .respec-cmd-icon {
-  padding-right: .5em;
+  padding-right: 0.5em;
 }
 
 #respec-ui button.respec-option:last-child {
@@ -261,7 +289,8 @@
 .respec-offending-element {
   display: inline-block;
   position: relative;
-  background: url(data:image/gif;base64,R0lGODdhBAADAPEAANv///8AAP///wAAACwAAAAABAADAEACBZQjmIAFADs=) bottom repeat-x;
+  background: url(data:image/gif;base64,R0lGODdhBAADAPEAANv///8AAP///wAAACwAAAAABAADAEACBZQjmIAFADs=)
+    bottom repeat-x;
 }
 
 @supports (text-decoration-style: wavy) {
@@ -285,7 +314,7 @@
   cursor: pointer;
   background-color: #eee;
   background-image: linear-gradient(#fcfcfc, #eee);
-  border: 1px solid rgb(144,184,222);
+  border: 1px solid rgb(144, 184, 222);
   border-radius: 0px 0px 3px 0;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -302,16 +331,16 @@ p + .respec-button-copy-paste {
 
 #specref-ui {
   margin: 0 2%;
-  margin-bottom: .5cm;
+  margin-bottom: 0.5cm;
 }
 
 #specref-ui header {
-  font-size: .7em;
+  font-size: 0.7em;
   background-color: #eee;
   text-align: center;
-  padding: .2cm;
-  margin-bottom: .5cm;
-  border-radius: 0 0 .2cm .2cm;
+  padding: 0.2cm;
+  margin-bottom: 0.5cm;
+  border-radius: 0 0 0.2cm 0.2cm;
 }
 
 #specref-ui header h1 {
@@ -323,7 +352,7 @@ p + .respec-button-copy-paste {
 #specref-ui p {
   padding: 0;
   margin: 0;
-  font-size: .8em;
+  font-size: 0.8em;
   text-align: center;
 }
 
@@ -337,7 +366,6 @@ p + .respec-button-copy-paste {
   grid-template-columns: auto 2cm;
 }
 #specref-ui .searchcomponent:focus {
-
 }
 
 #specref-ui input,
@@ -353,20 +381,20 @@ p + .respec-button-copy-paste {
   grid-column-start: 1;
 }
 
-#specref-ui input[type=search] {
+#specref-ui input[type="search"] {
   -webkit-appearance: none;
   font-size: 16px;
-  border-radius: .1cm  0 0 .1cm;
-  border: 1px solid rgb(204,204,204);
+  border-radius: 0.1cm 0 0 0.1cm;
+  border: 1px solid rgb(204, 204, 204);
 }
 
-#specref-ui button[type=submit]{
+#specref-ui button[type="submit"] {
   color: white;
-  border-radius: 0 .1cm .1cm 0;
-  background-color: rgb(51,122,183);
+  border-radius: 0 0.1cm 0.1cm 0;
+  background-color: rgb(51, 122, 183);
 }
 
-#specref-ui button[type=submit]:hover {
+#specref-ui button[type="submit"]:hover {
   background-color: #286090;
   border-color: #204d74;
 }
@@ -374,17 +402,17 @@ p + .respec-button-copy-paste {
 #specref-ui .result-stats {
   margin: 0;
   padding: 0;
-  color: rgb(128,128,128);
-  font-size: .7em;
+  color: rgb(128, 128, 128);
+  font-size: 0.7em;
   font-weight: bold;
 }
 
 #specref-ui .specref-results {
-  font-size: .8em;
+  font-size: 0.8em;
 }
 
 #specref-ui .specref-results dd + dt {
-  margin-top: .51cm;
+  margin-top: 0.51cm;
 }
 
 #specref-ui .specref-results a {
@@ -397,6 +425,6 @@ p + .respec-button-copy-paste {
 
 @media print {
   #respec-ui {
-    display: none; 
+    display: none;
   }
 }

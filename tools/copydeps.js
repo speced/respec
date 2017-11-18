@@ -18,7 +18,7 @@ const srcDesMap = new Map([
   ],
   ["./node_modules/highlight.js/src/styles/github.css", "./js/core/css/"],
   ["./node_modules/hyperhtml/index.js", "./js/deps/hyperhtml.js"],
-  ["./node_modules/jquery/dist/jquery.js", "./js/deps/"],
+  ["./node_modules/jquery/dist/jquery.slim.js", "./js/deps/jquery.js"],
   ["./node_modules/marked/lib/marked.js", "./js/deps/"],
   ["./node_modules/requirejs/require.js", "./js/deps/"],
   ["./node_modules/text/text.js", "./js/deps/"],
