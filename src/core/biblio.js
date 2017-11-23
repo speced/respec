@@ -54,8 +54,9 @@ const defaultsReference = Object.freeze({
 const endNormalizer = function(endStr) {
   return str => {
     const trimmed = str.trim();
-    const result =
-      !trimmed || trimmed.endsWith(endStr) ? trimmed : trimmed + endStr;
+    const result = !trimmed || trimmed.endsWith(endStr)
+      ? trimmed
+      : trimmed + endStr;
     return result;
   };
 };
@@ -133,10 +134,9 @@ function bibref(conf) {
   for (var i = 0; i < types.length; i++) {
     var type = types[i];
     var refs = type === "Normative" ? norms : informs;
-    var l10nRefs =
-      type === "Normative"
-        ? conf.l10n.norm_references
-        : conf.l10n.info_references;
+    var l10nRefs = type === "Normative"
+      ? conf.l10n.norm_references
+      : conf.l10n.info_references;
     if (!refs.length) continue;
     var $sec = $("<section><h3></h3></section>")
       .appendTo($refsec)
@@ -144,7 +144,7 @@ function bibref(conf) {
       .text(l10nRefs)
       .end();
     $sec.makeID(null, type + " references");
-    refs.sort();
+    refs.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
     var $dl = $("<dl class='bibliography'></dl>").appendTo($sec);
     if (conf.doRDFa) $dl.attr("resource", "");
     for (var j = 0; j < refs.length; j++) {

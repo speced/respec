@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 "use strict";
+const port = process.env.PORT || 3000;
+const express = require("express");
 const { Builder } = require("./builder");
 const cmdPrompt = require("prompt");
 const colors = require("colors");
@@ -61,20 +63,21 @@ function rel(f) {
   return path.join(__dirname, f);
 }
 
-function commandRunner(program, timeout) {
-  return cmd => {
+function commandRunner(program) {
+  return (cmd, options = { showOutput: false }) => {
     if (DEBUG) {
       console.log(
         colors.debug(`Pretending to run: ${program} ${colors.prompt(cmd)}`)
       );
       return Promise.resolve("");
     }
-    return toExecPromise(`${program} ${cmd}`, timeout);
+    return toExecPromise(`${program} ${cmd}`, { ...options, timeout: 200000 });
   };
 }
 
 const git = commandRunner("git");
 const npm = commandRunner("npm");
+const node = commandRunner("node");
 
 cmdPrompt.start();
 
@@ -95,7 +98,9 @@ const Prompts = {
 
   async askSwitchToBranch(from, to) {
     const promptOps = {
-      description: `You're on branch ${colors.info(from)}. Switch to ${colors.info(to)}?`,
+      description: `You're on branch ${colors.info(
+        from
+      )}. Switch to ${colors.info(to)}?`,
       pattern: /^[yn]$/i,
       message: "Values can be 'y' or 'n'.",
       default: "y",
@@ -248,16 +253,6 @@ const Prompts = {
     return pack.version;
   },
 
-  async askNpmUpgrade() {
-    const promptOps = {
-      description: "Run `npm upgrade` to make sure deps are up-to-date",
-      pattern: /^[yn]$/i,
-      message: "Values can be 'y' or 'n'.",
-      default: "y",
-    };
-    return await this.askQuestion(promptOps);
-  },
-
   async askBuildAddCommitMergeTag() {
     const promptOps = {
       description: "Are you ready to build, add, commit, merge, and tag",
@@ -270,7 +265,9 @@ const Prompts = {
 
   async askPushAll() {
     const promptOps = {
-      description: `${colors.important("🔥  Ready to make this live? 🔥")}  (last chance!)`,
+      description: `${colors.important(
+        "🔥  Ready to make this live? 🔥"
+      )}  (last chance!)`,
       pattern: /^[yn]$/i,
       message: "Values can be 'y' or 'n'.",
       default: "y",
@@ -279,18 +276,27 @@ const Prompts = {
   },
 };
 
-function toExecPromise(cmd, timeout = 200000) {
+function toExecPromise(cmd, { timeout, showOutput }) {
   return new Promise((resolve, reject) => {
     const id = setTimeout(() => {
       reject(new Error(`Command took too long: ${cmd}`));
       proc.kill("SIGTERM");
     }, timeout);
-    const proc = exec(cmd, (err, stdout) => {
+    const proc = exec(cmd, function(err, stdout, stderr) {
       clearTimeout(id);
       if (err) {
         return reject(err);
       }
       resolve(stdout);
+    });
+    if (showOutput) {
+      proc.stderr.pipe(process.stderr);
+      proc.stdout.pipe(process.stdout);
+    }
+    proc.on("close", number => {
+      if (number === 1) {
+        process.exit(1);
+      }
     });
   });
 }
@@ -331,7 +337,6 @@ class Indicator {
 }
 
 const indicators = new Map([
-  ["npm-upgrade", new Indicator(colors.info(" Performing npm upgrade... 📦"))],
   [
     "remote-update",
     new Indicator(colors.info(" Performing Git remote update... 📡 ")),
@@ -348,10 +353,11 @@ const indicators = new Map([
     "push-to-server",
     new Indicator(colors.info(" Pushing everything back to server... 📡")),
   ],
-  ["npm-publish", new Indicator(colors.info(" Publishing to npm... 📡"))],
 ]);
 
 const run = async () => {
+  const app = express();
+  const dir = require("path").join(__dirname, "..");
   const initialBranch = await getCurrentBranch();
   try {
     // 1. Confirm maintainer is on up-to-date and on the develop branch ()
@@ -374,20 +380,31 @@ const run = async () => {
       default:
         throw new Error(`Your branch is not up-to-date. It ${branchState}.`);
     }
-    // 1.1 Run npm upgrade
-    if (await Prompts.askNpmUpgrade()) {
-      indicators.get("npm-upgrade").show();
-      await npm("update");
-      indicators.get("npm-upgrade").hide();
-    }
-
     // 2. Bump the version in `package.json`.
     const version = await Prompts.askBumpVersion();
     await Prompts.askBuildAddCommitMergeTag();
+    // 1.1 npm upgrade
+    console.log(colors.info(" Performing npm upgrade... 📦"));
+    await npm("update", { showOutput: true });
+
+    // Updates could trash our previouls protection, so reprotect.
+    console.log(colors.info(" Running snyk-protect... 🐺"));
+    await npm("run snyk-protect", { showOutput: true });
+
     // 3. Run the build script (node tools/build-w3c-common.js).
     indicators.get("build-merge-tag").show();
     await npm("run hb:build");
     await Builder.build({ name: "w3c-common" });
+    app.use(express.static(dir));
+    app.listen(port);
+    console.log(
+      colors.info(" Making sure the generated version is ok... 🕵🏻")
+    );
+    await node(
+      "./tools/respec2html.js -e --timeout 30 --src http://localhost:3000/examples/basic.built.html --out /dev/null",
+      { showOutput: true }
+    );
+    console.log(colors.info(" Build Seems good... ✅"));
     // 4. Commit your changes (git commit -am v3.x.y)
     await git(`commit -am v${version}`);
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
@@ -404,9 +421,8 @@ const run = async () => {
     await git("push origin gh-pages");
     await git("push --tags");
     indicators.get("push-to-server").hide();
-    indicators.get("npm-publish").show();
-    await npm("publish");
-    indicators.get("npm-publish").hide();
+    console.log(colors.info(" Publishing to npm... 📡"));
+    await npm("publish", { showOutput: true });
     // publishing generates a new build, which we don't want
     // on develop branch
     await git("checkout builds");
@@ -423,4 +439,6 @@ const run = async () => {
   }
 };
 
-run().then(() => process.exit(0)).catch(err => console.error(err.stack));
+run()
+  .then(() => process.exit(0))
+  .catch(err => console.error(err.stack));

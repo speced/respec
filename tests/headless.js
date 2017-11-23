@@ -1,11 +1,19 @@
 #!/usr/bin/env node
-
-/*jshint strict: true, node:true*/
 "use strict";
-const fs = require("fs");
-const async = require("marcosc-async");
+const port = process.env.PORT || 3000;
+const testURLs = [
+  "https://w3c.github.io/html-media-capture/",
+  "https://w3c.github.io/manifest/",
+  "https://w3c.github.io/payment-request/",
+  "https://w3c.github.io/resource-hints/",
+  "https://w3c.github.io/wpub/",
+  "https://webaudio.github.io/web-audio-api/",
+  "https://wicg.github.io/web-share-target/",
+  `http://localhost:${port}/examples/basic.built.html`,
+  `http://localhost:${port}/examples/basic.html`,
+];
 const colors = require("colors");
-const exec = require("child_process").exec;
+const { exec } = require("child_process");
 const express = require("express");
 const moment = require("moment");
 colors.setTheme({
@@ -40,75 +48,53 @@ function toExecutable(cmd) {
   };
 }
 
-const excludedFiles = new Set([
-  "basic.built.html",
-  "embedder.html",
-  "manifest.html",
-  "starter.html",
-  "webidl.html",
-]);
-
-const runRespec2html = async(function*(server) {
-  // Run respec2html.js on each example file (except whatever gets filtered)
-  // and stops in error if any of them reports a warning or an error
-  let sources = fs
-    .readdirSync("examples")
-    .filter(filename => filename.match(/\.html$/))
-    .filter(filename => !excludedFiles.has(filename));
-
-  // Incrementally spawn processes and add them to process counter.
-  const executables = sources
-    .map(source => {
-      let nullDevice = process.platform === "win32"
-        ? "\\\\.\\NUL"
-        : "/dev/null";
-      let cmd = `node ./tools/respec2html.js -e --timeout 10 --src ${server}/examples/${source} --out ${nullDevice}`;
-      return cmd;
-    })
-    .map(toExecutable);
-  let testCount = 1;
-  const errored = new Set();
+async function runRespec2html(server) {
+  const errors = new Set();
   const captureFile = /(\w+\.html)/;
+  // Incrementally spawn processes and add them to process counter.
+  const executables = testURLs.map(url => {
+    const nullDevice =
+      process.platform === "win32" ? "\\\\.\\NUL" : "/dev/null";
+    const cmd = `node ./tools/respec2html.js -e --timeout 30 --src ${url} --out ${nullDevice}`;
+    return toExecutable(cmd);
+  });
+  let testCount = 1;
   for (const exe of executables) {
-    const filename = captureFile.exec(exe.cmd)[1];
     try {
-      debug(
-        ` 🚄  Generating ${filename} - test ${testCount++} of ${sources.length}.`
-      );
-      yield exe.run();
+      const testInfo = colors.info(`(test ${testCount++}/${testURLs.length})`);
+      const msg = ` 👷‍♀️  ${exe.cmd} ${testInfo}`;
+      debug(msg);
+      await exe.run();
     } catch (err) {
       console.error(colors.error(err));
-      errored.add(filename);
+      errors.add(exe.cmd);
     }
   }
-  if (errored.size) {
-    const files = Array.from(errored).join(", ");
+  if (errors.size) {
+    const files = [...errors].join(", ");
     throw new Error(` ❌ File(s) generated errors: ${files}.`);
   }
-});
+}
 
 function debug(msg) {
   console.log(colors.debug(`${colors.input(moment().format("LTS"))} ${msg}`));
 }
 
-async
-  .task(function*() {
-    const port = process.env.PORT || 3000;
-    const server = "http://localhost:" + port;
-    debug(" ✅ Starting up Express...");
-    const app = express();
-    const dir = require("path").join(__dirname, "..");
-    app.use(express.static(dir));
-    app.listen(port);
-    debug(" ⏲  Running ReSpec2html tests...");
-    try {
-      yield runRespec2html(server);
-    } catch (err) {
-      throw err;
-    }
-  })
-  .then(() => process.exit(0))
-  .catch(err => {
+async function run() {
+  const server = "http://localhost:" + port;
+  debug(" ✅  Starting up Express...");
+  const app = express();
+  const dir = require("path").join(__dirname, "..");
+  app.use(express.static(dir));
+  app.listen(port);
+  debug(" ⏲  Running ReSpec2html tests...");
+  try {
+    await runRespec2html(server);
+  } catch (err) {
     console.error(err);
     process.exit(1);
-  });
+  }
+  process.exit(0);
+}
+
+run();

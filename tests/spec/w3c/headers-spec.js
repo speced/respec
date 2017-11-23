@@ -180,7 +180,7 @@ describe("W3C — Headers", function() {
       var orcidAnchor = doc.querySelector("a[href='" + oricdHref + "']");
       var twitterAnchor = doc.querySelector("a[href='" + twitterHref + "']");
       // general checks
-      var header = doc.querySelector("#respecHeader");
+      var header = doc.querySelector("div.head");
       [orcidAnchor, twitterAnchor].forEach(function(elem) {
         // Check parent is correct.
         expect(elem.parentNode.localName).toEqual("span");
@@ -343,7 +343,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      var licenses = doc.querySelectorAll("#respecHeader a[rel=license]");
+      var licenses = doc.querySelectorAll("div.head a[rel=license]");
       expect(licenses.length).toEqual(1);
       expect(licenses.item(0).tagName).toEqual("A");
       expect(licenses.item(0).href).toEqual(
@@ -710,74 +710,56 @@ describe("W3C — Headers", function() {
   });
 
   describe("Member-SUBM", () => {
-    it("shouldn't expose a Previous version link for Member submissions", async () => {
+    let doc;
+    beforeAll(async () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "Member-SUBM",
       };
       Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
+      doc = await makeRSDoc(ops);
+    });
+    it("shouldn't expose a Previous version link for Member submissions", async () => {
       expect($("dt:contains('Previous version:')", doc).length).toEqual(0);
     });
     it("displays the Member Submission logo for Member submissions", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "Member-SUBM",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      expect(
-        $(".head img[src^='https://www.w3.org/Icons/member_subm']", doc).length
-      ).toEqual(1);
+      const img = doc.querySelector(
+        ".head img[src^='https://www.w3.org/Icons/member_subm']"
+      );
+      expect(img).toBeTruthy();
     });
     it("uses the right SoTD boilerplate for Member submissions", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "Member-SUBM",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      var $sotd = $("#sotd", doc);
-      expect(
-        $sotd.find(
-          "p:contains('W3C acknowledges that the Submitting Members have made a formal Submission request')"
-        ).length
-      ).toEqual(1);
+      const stod = doc.getElementById("sotd").textContent.replace(/\s+/gm, " ");
+      const testString =
+        "the Submitting Members have made a formal Submission request";
+      expect(stod).toMatch(testString);
     });
   });
 
   describe("Team-SUBM", () => {
-    it("shouldn't expose a Previous version link for Team submissions", async () => {
+    let doc;
+    beforeAll(async () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "Team-SUBM",
       };
       Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
+      doc = await makeRSDoc(ops);
+    });
+    it("shouldn't expose a Previous version link for Team submissions", async () => {
       expect($("dt:contains('Previous version:')", doc).length).toEqual(0);
     });
     it("displays the Team Submission logo for Team submissions", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "Team-SUBM",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      expect(
-        $(".head img[src^='https://www.w3.org/Icons/team_subm']", doc).length
-      ).toEqual(1);
+      const img = doc.querySelector(
+        ".head img[src^='https://www.w3.org/Icons/team_subm']"
+      );
+      expect(img).toBeTruthy();
     });
     it("uses the right SoTD boilerplate for Team submissions", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "Team-SUBM",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      var $sotd = $("#sotd", doc);
-      expect(
-        $sotd.find("a[href='https://www.w3.org/TeamSubmission/']").length
-      ).toEqual(1);
+      const link = doc.querySelector(
+        "#sotd a[href='https://www.w3.org/TeamSubmission/']"
+      );
+      expect(link).toBeTruthy();
     });
   });
   describe("statusOverride", () => {
@@ -931,7 +913,7 @@ describe("W3C — Headers", function() {
     });
   });
   // See https://github.com/w3c/respec/issues/653
-  xit("states that the spec is destined to become a note", async () => {
+  it("states that the spec is destined to become a note", async () => {
     const ops = makeStandardOps();
     const newProps = {
       noRecTrack: true,
@@ -940,8 +922,11 @@ describe("W3C — Headers", function() {
     };
     Object.assign(ops.config, newProps);
     const doc = await makeRSDoc(ops);
-    var sotdText = doc.getElementById("sotd").textContent;
-    var expectedString = /It is expected to become a W3C Note/;
+    const sotdText = doc
+      .getElementById("sotd")
+      .textContent.replace(/\s+/gm, " ");
+    const expectedString =
+      "does not expect this document to become a W3C Recommendation";
     expect(sotdText).toMatch(expectedString);
   });
 });
