@@ -7,7 +7,6 @@
     <link rel="shortcut icon" type="image/png" href="/node_modules/jasmine-core/lib/jasmine-core/jasmine_favicon.png">
     <link rel="stylesheet" href="/node_modules/jasmine-core/lib/jasmine-core/jasmine.css">
 
-    <script src="/js/deps/async.js"></script>
     <script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
     <script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
     <script src="/node_modules/jasmine-core/lib/jasmine-core/boot.js"></script>
@@ -20,9 +19,9 @@
     const runner = window.onload;
     window.onload = null;
     // Get a list of all the test files to include
-    async.task(function*(){
-      const res = yield fetch("testFiles.json");
-      const testFiles = yield res.json();
+    (async () => {
+      const res = await fetch("testFiles.json");
+      const testFiles = await res.json();
       require.config({
         baseUrl: "/js/",
         paths: {
@@ -31,7 +30,7 @@
         deps: testFiles,
         callback: runner,
       });
-    });
+    })();
     </script>
   </head>
   <body>

@@ -1,7 +1,51 @@
 # Change Log
 
+## [v17.0.0](https://github.com/w3c/respec/tree/v17.0.0) (2017-10-07)
+[Full Changelog](https://github.com/w3c/respec/compare/v16.2.2...v17.0.0)
+
+**Implemented enhancements:**
+
+- Parentheses in IDs [\#1353](https://github.com/w3c/respec/issues/1353)
+
+**Closed issues:**
+
+- Readability of RFC 2119 terms [\#1380](https://github.com/w3c/respec/issues/1380)
+- Avoid misleadingly displaying RFC 2119 words in lower case [\#1183](https://github.com/w3c/respec/issues/1183)
+
+**Merged pull requests:**
+
+- Remove special chars [\#1387](https://github.com/w3c/respec/pull/1387) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update mocha to the latest version 🚀 [\#1386](https://github.com/w3c/respec/pull/1386) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- chore\(travis\): try testing OSX again [\#1385](https://github.com/w3c/respec/pull/1385) ([marcoscaceres](https://github.com/marcoscaceres))
+- \[Snyk Update\] New fixes for 1 vulnerable dependency path [\#1384](https://github.com/w3c/respec/pull/1384) ([snyk-bot](https://github.com/snyk-bot))
+- feat\(core/css/respec\): remove RFC2119 styling \(close \#1380\) [\#1383](https://github.com/w3c/respec/pull/1383) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(package\): update deps [\#1382](https://github.com/w3c/respec/pull/1382) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/webidl\): warning message typo [\#1379](https://github.com/w3c/respec/pull/1379) ([marcoscaceres](https://github.com/marcoscaceres))
+- Greenkeeper/initial [\#1378](https://github.com/w3c/respec/pull/1378) ([marcoscaceres](https://github.com/marcoscaceres))
+- BREAKING CHANGE: Move ReSpec to pure ES6 [\#1331](https://github.com/w3c/respec/pull/1331) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v16.2.2](https://github.com/w3c/respec/tree/v16.2.2) (2017-09-05)
+[Full Changelog](https://github.com/w3c/respec/compare/v16.2.1...v16.2.2)
+
+## [v16.2.1](https://github.com/w3c/respec/tree/v16.2.1) (2017-08-28)
+[Full Changelog](https://github.com/w3c/respec/compare/v16.2.0...v16.2.1)
+
+## [v16.2.0](https://github.com/w3c/respec/tree/v16.2.0) (2017-08-23)
+[Full Changelog](https://github.com/w3c/respec/compare/v16.1.0...v16.2.0)
+
+**Closed issues:**
+
+- data-cite and multi-pages spec [\#1180](https://github.com/w3c/respec/issues/1180)
+
+**Merged pull requests:**
+
+- Allow to specific path to a subpage in reference citations [\#1371](https://github.com/w3c/respec/pull/1371) ([dontcallmedom](https://github.com/dontcallmedom))
+
 ## [v16.1.0](https://github.com/w3c/respec/tree/v16.1.0) (2017-08-21)
-[Full Changelog](https://github.com/w3c/respec/compare/v16.0.0...v16.1.0)
+[Full Changelog](https://github.com/w3c/respec/compare/v16.0.1...v16.1.0)
+
+## [v16.0.1](https://github.com/w3c/respec/tree/v16.0.1) (2017-08-20)
+[Full Changelog](https://github.com/w3c/respec/compare/v16.0.0...v16.0.1)
 
 **Implemented enhancements:**
 
@@ -207,10 +251,6 @@
 
 ## [v15.2.0](https://github.com/w3c/respec/tree/v15.2.0) (2017-07-06)
 [Full Changelog](https://github.com/w3c/respec/compare/v15.1.3...v15.2.0)
-
-**Closed issues:**
-
-- Do not signal missing definitions for methods marked with \[Default\] [\#1309](https://github.com/w3c/respec/issues/1309)
 
 **Merged pull requests:**
 
@@ -3479,7 +3519,7 @@
 - If abstract and SotD are in the wrong order, strange things happen [\#37](https://github.com/w3c/respec/issues/37)
 
 ## [v3.1.2](https://github.com/w3c/respec/tree/v3.1.2) (2012-06-19)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.1.1...v3.1.2)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.3.1...v3.1.2)
 
 **Implemented enhancements:**
 
@@ -3493,11 +3533,11 @@
 
 - Add ref for: WEBAPPS-MANIFEST-API [\#41](https://github.com/w3c/respec/pull/41) ([tobie](https://github.com/tobie))
 
-## [v3.1.1](https://github.com/w3c/respec/tree/v3.1.1) (2012-06-18)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.3.1...v3.1.1)
-
 ## [v3.3.1](https://github.com/w3c/respec/tree/v3.3.1) (2012-06-18)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.1.0...v3.3.1)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.1.1...v3.3.1)
+
+## [v3.1.1](https://github.com/w3c/respec/tree/v3.1.1) (2012-06-18)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.1.0...v3.1.1)
 
 **Fixed bugs:**
 

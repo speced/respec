@@ -1,34 +1,33 @@
-# os: linux
-# osx_image: xcode9
-os: osx
 language: node_js
-sudo: required
-# dist: trusty
+dist: trusty
 node_js:
-  - v8
+  - lts/*
 
-# before_install:
-#   # see https://docs.travis-ci.com/user/gui-and-headless-browsers/#Using-xvfb-to-Run-Tests-That-Require-a-GUI
-#   - "export DISPLAY=:99.0"
-#   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16 -extension RANDR"
-#   - export PATH="$PATH:$HOME/.rvm/bin"
-#   - sleep 3
+before_install:
+  # see https://docs.travis-ci.com/user/gui-and-headless-browsers/#Using-xvfb-to-Run-Tests-That-Require-a-GUI
+  - "export DISPLAY=:99.0"
+  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16 -extension RANDR"
+  - export PATH="$PATH:$HOME/.rvm/bin"
+  - sleep 3
 
 install:
-  - yarn install
-  - yarn run build
-  - yarn run build:respec-w3c-common
+  - npm install
+  - npm run build
+  - npm run build:respec-w3c-common
 
 addons:
-  firefox: latest
+#  firefox: latest
   chrome: stable
 
-cache: yarn
+cache:
+  directories:
+  - node_modules # NPM packages
 
 jobs:
   include:
-    - stage: Tests
-      script: ./tests/test-build.js
-      script: yarn run pretest
-      script: yarn run test:headless
-      script: travis_retry karma start --single-run --reporters mocha karma.conf.js
+    - stage: Run headless
+      script:
+        - npm run test:headless
+    - stage: Run Karma unit tests
+      script:
+        - travis_retry karma start --single-run --reporters mocha karma.conf.js

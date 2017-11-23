@@ -38,6 +38,7 @@ js/core/l10n.js
 js/core/link-to-dfn.js
 js/core/linter.js
 js/core/LinterRule.js
+js/core/list-sorter.js
 js/core/location-hash.js
 js/core/markdown.js
 js/core/override-configuration.js

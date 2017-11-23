@@ -10,7 +10,6 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
-
 import { pub } from "core/pubsubhub";
 import css from "deps/text!core/css/issues-notes.css";
 import { fetch as ghFetch, fetchIndex } from "core/github";
@@ -30,7 +29,7 @@ export function run(conf, doc, cb) {
         isWarning = $inno.hasClass("warning"),
         isEdNote = $inno.hasClass("ednote"),
         isFeatureAtRisk = $inno.hasClass("atrisk"),
-        isInline = $inno.css("display") !== "block",
+        isInline = $inno[0].localName === "span",
         dataNum = $inno.attr("data-number"),
         report = {
           inline: isInline,
@@ -54,7 +53,7 @@ export function run(conf, doc, cb) {
             "'></div>"
         ),
           $tit = $(
-            "<div class='" + report.type + "-title'><span></span></div>"
+            "<div role='heading' class='" + report.type + "-title'><span></span></div>"
           ),
           text = isIssue
             ? isFeatureAtRisk ? "Feature at Risk" : conf.l10n.issue
@@ -62,6 +61,7 @@ export function run(conf, doc, cb) {
               ? conf.l10n.warning
               : isEdNote ? conf.l10n.editors_note : conf.l10n.note,
           ghIssue;
+        $tit.makeID("h", report.type);
         report.title = $inno.attr("title");
         if (isIssue) {
           if (hasDataNum) {
@@ -123,6 +123,8 @@ export function run(conf, doc, cb) {
           body = ghIssue.body_html;
         }
         $div.append(body);
+        const level = $tit.parents("section").length + 2;
+        $tit.attr("aria-level", level);
       }
       pub(report.type, report);
     });
