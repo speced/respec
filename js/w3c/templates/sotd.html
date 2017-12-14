@@ -137,7 +137,7 @@
             and interoperability of the Web.
           </p>
         {{/if}}
-        <p>
+        <p{{#if isNote}} data-deliverer="{{wgId}}"{{/if}}>
           {{#unless isIGNote}}
             This document was produced by
             {{#if multipleWGs}}
