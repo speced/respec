@@ -634,11 +634,23 @@ export function run(conf, doc, cb) {
   conf.isPR = conf.specStatus === "PR";
   conf.isPER = conf.specStatus === "PER";
   conf.isMO = conf.specStatus === "MO";
+  conf.isNote = ["FPWD-NOTE", "WG-NOTE"].includes(conf.specStatus);
   conf.isIGNote = conf.specStatus === "IG-NOTE";
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
   conf.processVersion = conf.processVersion || "2017";
+  Object.defineProperty(conf, "wgId", {
+    get() {
+      if (!this.hasOwnProperty("wgPatentURI")) {
+        return "";
+      }
+      // it's always at "pp-impl" + 1
+      const urlParts = this.wgPatentURI.split("/");
+      const pos = urlParts.findIndex(item => item === "pp-impl") + 1;
+      return urlParts[pos] || "";
+    },
+  });
   if (conf.processVersion == "2014" || conf.processVersion == "2015") {
     pub(
       "warn",
