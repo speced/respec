@@ -11,7 +11,9 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       expect(
-        $("dt:contains('Latest Recommendation:')", doc).next("dd").text()
+        $("dt:contains('Latest Recommendation:')", doc)
+          .next("dd")
+          .text()
       ).toEqual("URI");
     });
   });
@@ -36,11 +38,15 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect($("dt:contains('This version:')", doc).next("dd").text()).toMatch(
-        /\/REC-xxx-/
-      );
       expect(
-        $("dt:contains('Latest published version:')", doc).next("dd").text()
+        $("dt:contains('This version:')", doc)
+          .next("dd")
+          .text()
+      ).toMatch(/\/REC-xxx-/);
+      expect(
+        $("dt:contains('Latest published version:')", doc)
+          .next("dd")
+          .text()
       ).toMatch(/\/TR\/xxx\//);
     });
 
@@ -52,11 +58,15 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect($("dt:contains('This version:')", doc).next("dd").text()).toMatch(
-        /\/REC-xxx-/
-      );
       expect(
-        $("dt:contains('Latest published version:')", doc).next("dd").text()
+        $("dt:contains('This version:')", doc)
+          .next("dd")
+          .text()
+      ).toMatch(/\/REC-xxx-/);
+      expect(
+        $("dt:contains('Latest published version:')", doc)
+          .next("dd")
+          .text()
       ).toMatch(/\/TR\/xxx\//);
     });
   });
@@ -316,7 +326,9 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       expect(
-        $("dt:contains('Previous version:')", doc).next("dd").text()
+        $("dt:contains('Previous version:')", doc)
+          .next("dd")
+          .text()
       ).toMatch(/\/1977\/CR-[^\/]+-19770315\//);
     });
   });
@@ -378,9 +390,11 @@ describe("W3C — Headers", function() {
     };
     Object.assign(ops.config, newProps);
     const doc = await makeRSDoc(ops);
-    expect($("dt:contains('Test suite:')", doc).next("dd").text()).toEqual(
-      "URI"
-    );
+    expect(
+      $("dt:contains('Test suite:')", doc)
+        .next("dd")
+        .text()
+    ).toEqual("URI");
   });
 
   describe("implementationReportURI", () => {
@@ -393,7 +407,9 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       expect(
-        $("dt:contains('Implementation report:')", doc).next("dd").text()
+        $("dt:contains('Implementation report:')", doc)
+          .next("dd")
+          .text()
       ).toEqual("URI");
     });
   });
@@ -408,7 +424,9 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       expect(
-        $("dt:contains('Latest editor\\'s draft:')", doc).next("dd").text()
+        $("dt:contains('Latest editor\\'s draft:')", doc)
+          .next("dd")
+          .text()
       ).toEqual("URI");
     });
   });
@@ -423,7 +441,11 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       var query = "dt:contains('Previous editor\\'s draft:')";
-      expect($(query, doc).next("dd").text()).toEqual("URI");
+      expect(
+        $(query, doc)
+          .next("dd")
+          .text()
+      ).toEqual("URI");
     });
   });
 
@@ -543,18 +565,30 @@ describe("W3C — Headers", function() {
       var $sotd = $("#sotd", doc);
       expect($sotd.find("a:contains('WGNAME1')").length).toEqual(2);
       expect($sotd.find("a:contains('WGNAME2')").length).toEqual(2);
-      expect($sotd.find("a:contains('WGNAME1')").first().attr("href")).toEqual(
-        "WGURI1"
-      );
-      expect($sotd.find("a:contains('WGNAME1')").last().attr("href")).toEqual(
-        "WGPATENT1"
-      );
-      expect($sotd.find("a:contains('WGNAME2')").first().attr("href")).toEqual(
-        "WGURI2"
-      );
-      expect($sotd.find("a:contains('WGNAME2')").last().attr("href")).toEqual(
-        "WGPATENT2"
-      );
+      expect(
+        $sotd
+          .find("a:contains('WGNAME1')")
+          .first()
+          .attr("href")
+      ).toEqual("WGURI1");
+      expect(
+        $sotd
+          .find("a:contains('WGNAME1')")
+          .last()
+          .attr("href")
+      ).toEqual("WGPATENT1");
+      expect(
+        $sotd
+          .find("a:contains('WGNAME2')")
+          .first()
+          .attr("href")
+      ).toEqual("WGURI2");
+      expect(
+        $sotd
+          .find("a:contains('WGNAME2')")
+          .last()
+          .attr("href")
+      ).toEqual("WGPATENT2");
       expect($sotd.find("a:contains('disclosures')").length).toEqual(2);
     });
   });
@@ -692,11 +726,15 @@ describe("W3C — Headers", function() {
         ).length
       ).toEqual(1);
       expect($(".head h2", doc).text()).toMatch(/Final Business Group Report/);
-      expect($("dt:contains('This version:')", doc).next("dd").text()).toMatch(
-        /http:\/\/THIS/
-      );
       expect(
-        $("dt:contains('Latest published version:')", doc).next("dd").text()
+        $("dt:contains('This version:')", doc)
+          .next("dd")
+          .text()
+      ).toMatch(/http:\/\/THIS/);
+      expect(
+        $("dt:contains('Latest published version:')", doc)
+          .next("dd")
+          .text()
       ).toMatch(/http:\/\/LATEST/);
       var $sotd = $("#sotd", doc);
       expect($sotd.find("a[href='http://WG']").length).toEqual(1);
