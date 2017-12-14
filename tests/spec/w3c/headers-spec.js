@@ -521,6 +521,52 @@ describe("W3C — Headers", function() {
     });
   });
 
+  describe("wgId, data-deliverer, and isNote", () => {
+    it("derives the wgId from wgPatentURI and adds data-deliverer", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        wgPatentURI: "https://www.w3.org/pp-impl/123456/status",
+        specStatus: "WG-NOTE",
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
+      const { wgId, isNote } = doc.defaultView.respecConfig;
+      const elem = doc.querySelector("p[data-deliverer]");
+      expect(isNote).toBe(true);
+      expect(wgId).toEqual("123456");
+      expect(elem).toBeTruthy();
+      expect(elem.dataset.deliverer).toEqual("123456");
+    });
+    it("gracefully handles missing wgPatentURI", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "FPWD-NOTE",
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
+      const elem = doc.querySelector("p[data-deliverer]");
+      const { wgId, isNote } = doc.defaultView.respecConfig;
+      expect(isNote).toBe(true);
+      expect(wgId).toEqual("");
+      expect(elem).toBeTruthy();
+      expect(elem.dataset.deliverer).toEqual("");
+    });
+    it("only doesn't data-deliverer for non-notes", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        wgPatentURI: "https://www.w3.org/pp-impl/123456/status",
+        specStatus: "WD",
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
+      const elem = doc.querySelector("p[data-deliverer]");
+      const { wgId, isNote } = doc.defaultView.respecConfig;
+      expect(isNote).toBe(false);
+      expect(wgId).toEqual("123456");
+      expect(elem).toEqual(null);
+    });
+  });
+
   describe("wg, wgURI, wgPatentURI, wgPublicList", () => {
     it("takes wg configurations into account", async () => {
       const ops = makeStandardOps();
