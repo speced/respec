@@ -354,7 +354,8 @@ const licenses = {
   "w3c-software-doc": {
     name: "W3C Software and Document Notice and License",
     short: "W3C Software and Document",
-    url: "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
+    url:
+      "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
   },
   "cc-by": {
     name: "Creative Commons Attribution 4.0 International Public License",
@@ -558,12 +559,14 @@ export function run(conf, doc, cb) {
   conf.alternatesHTML =
     conf.alternateFormats &&
     joinAnd(conf.alternateFormats, function(alt) {
-      var optional = alt.hasOwnProperty("lang") && alt.lang
-        ? " hreflang='" + alt.lang + "'"
-        : "";
-      optional += alt.hasOwnProperty("type") && alt.type
-        ? " type='" + alt.type + "'"
-        : "";
+      var optional =
+        alt.hasOwnProperty("lang") && alt.lang
+          ? " hreflang='" + alt.lang + "'"
+          : "";
+      optional +=
+        alt.hasOwnProperty("type") && alt.type
+          ? " type='" + alt.type + "'"
+          : "";
       return (
         "<a rel='alternate' href='" +
         alt.uri +
@@ -631,11 +634,23 @@ export function run(conf, doc, cb) {
   conf.isPR = conf.specStatus === "PR";
   conf.isPER = conf.specStatus === "PER";
   conf.isMO = conf.specStatus === "MO";
+  conf.isNote = ["FPWD-NOTE", "WG-NOTE"].includes(conf.specStatus);
   conf.isIGNote = conf.specStatus === "IG-NOTE";
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
   conf.processVersion = conf.processVersion || "2017";
+  Object.defineProperty(conf, "wgId", {
+    get() {
+      if (!this.hasOwnProperty("wgPatentURI")) {
+        return "";
+      }
+      // it's always at "pp-impl" + 1
+      const urlParts = this.wgPatentURI.split("/");
+      const pos = urlParts.findIndex(item => item === "pp-impl") + 1;
+      return urlParts[pos] || "";
+    },
+  });
   if (conf.processVersion == "2014" || conf.processVersion == "2015") {
     pub(
       "warn",
@@ -662,7 +677,9 @@ export function run(conf, doc, cb) {
   var bp;
   if (conf.isCGBG) bp = cgbgHeadersTmpl(conf);
   else bp = headersTmpl(conf);
-  $("body", doc).prepend($(bp)).addClass("h-entry");
+  $("body", doc)
+    .prepend($(bp))
+    .addClass("h-entry");
 
   // handle SotD
   var sotd =
@@ -745,8 +762,8 @@ export function run(conf, doc, cb) {
   conf.recNotExpected = conf.recNotExpected
     ? true
     : !conf.isRecTrack &&
-        conf.maturity == "WD" &&
-        conf.specStatus !== "FPWD-NOTE";
+      conf.maturity == "WD" &&
+      conf.specStatus !== "FPWD-NOTE";
   if (conf.isIGNote && !conf.charterDisclosureURI)
     pub(
       "error",
