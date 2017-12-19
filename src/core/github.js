@@ -19,23 +19,29 @@ function findNext(header) {
 }
 
 export async function fetchAll(url, headers = {}, output = []) {
-  const request = new Request(url, { headers });
+  const urlObj = new URL(url);
+  if (urlObj.searchParams && !urlObj.searchParams.has("per_page")) {
+    urlObj.searchParams.append("per_page", "100");
+  }
+  const request = new Request(urlObj, {
+    headers,
+  });
+  request.headers.set("Accept", "application/vnd.github.v3+json");
   const response = await window.fetch(request);
   const json = await response.json();
-  output.push(...json);
+  if (Array.isArray(json)) {
+    output.push(...json);
+  }
   const next = findNext(response.headers.get("Link"));
   return next ? fetchAll(next, headers, output) : output;
 }
 
-export function fetch(url) {
-  return window.fetch(url).then(async r => {
-    if (!r.ok) {
-      throw new Error(
-        "GitHub Response not OK. Probably exceeded request limit."
-      );
-    }
-    return r.json();
-  });
+export async function fetch(url) {
+  let response = await window.fetch(url);
+  if (!response.ok) {
+    throw new Error("GitHub Response not OK. Probably exceeded request limit.");
+  }
+  return await response.json();
 }
 
 export function fetchIndex(url, headers) {
@@ -44,7 +50,7 @@ export function fetchIndex(url, headers) {
   // into:
   // https://api.github.com/repos/user/repo/comments
   // which is what you need if you want to get the index.
-  return fetchAll(url.replace(/\{[^}]+\}/, "") + "&per_page=100", headers);
+  return fetchAll(url.replace(/\{[^}]+\}/, ""), headers);
 }
 
 export async function run(conf) {
