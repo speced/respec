@@ -30,7 +30,9 @@ export async function fetchAll(url, headers = {}, output = []) {
 export function fetch(url) {
   return window.fetch(url).then(async r => {
     if (!r.ok) {
-      throw new Error("GitHub Response not OK. Probably exceeded request limit.");
+      throw new Error(
+        "GitHub Response not OK. Probably exceeded request limit."
+      );
     }
     return r.json();
   });
@@ -89,9 +91,9 @@ export async function run(conf) {
     githubAPI: `https://api.github.com/repos/${org}/${repo}`,
     issueBase: `${ghURL.href}${ghURL.pathname.endsWith("/") ? "" : "/"}issues/`,
   };
-  const commitsHref = `${ghURL.href}${ghURL.pathname.endsWith("/")
-    ? ""
-    : "/"}commits/${branch}`;
+  const commitsHref = `${ghURL.href}${
+    ghURL.pathname.endsWith("/") ? "" : "/"
+  }commits/${branch}`;
   const otherLink = {
     key: conf.l10n.participate,
     data: [
