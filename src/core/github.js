@@ -18,30 +18,39 @@ function findNext(header) {
   return (m && m[1]) || null;
 }
 
-export function fetch(url, options) {
-  if (options) {
-    options.url = url;
-    url = options;
+export async function fetchAll(url, headers = {}, output = []) {
+  const urlObj = new URL(url);
+  if (urlObj.searchParams && !urlObj.searchParams.has("per_page")) {
+    urlObj.searchParams.append("per_page", "100");
   }
-  return $.ajax(url);
-}
-
-export function fetchAll(url, options, output = []) {
-  var request = fetch(url, options);
-  return request.then(function(resp) {
-    output.push.apply(output, resp);
-    var next = findNext(request.getResponseHeader("Link"));
-    return next ? fetchAll(next, options, output) : output;
+  const request = new Request(urlObj, {
+    headers,
   });
+  request.headers.set("Accept", "application/vnd.github.v3+json");
+  const response = await window.fetch(request);
+  const json = await response.json();
+  if (Array.isArray(json)) {
+    output.push(...json);
+  }
+  const next = findNext(response.headers.get("Link"));
+  return next ? fetchAll(next, headers, output) : output;
 }
 
-export function fetchIndex(url, options) {
+export async function fetch(url) {
+  let response = await window.fetch(url);
+  if (!response.ok) {
+    throw new Error("GitHub Response not OK. Probably exceeded request limit.");
+  }
+  return await response.json();
+}
+
+export function fetchIndex(url, headers) {
   // converts URLs of the form:
   // https://api.github.com/repos/user/repo/comments{/number}
   // into:
   // https://api.github.com/repos/user/repo/comments
   // which is what you need if you want to get the index.
-  return fetchAll(url.replace(/\{[^}]+\}/, ""), options);
+  return fetchAll(url.replace(/\{[^}]+\}/, ""), headers);
 }
 
 export async function run(conf) {
@@ -82,14 +91,15 @@ export async function run(conf) {
   }
   const branch = conf.github.branch || "gh-pages";
   const newProps = {
+    otherLinks: [],
     shortName: repo,
     edDraftURI: `https://${org.toLowerCase()}.github.io/${repo}/`,
     githubAPI: `https://api.github.com/repos/${org}/${repo}`,
     issueBase: `${ghURL.href}${ghURL.pathname.endsWith("/") ? "" : "/"}issues/`,
   };
-  const commitsHref = `${ghURL.href}${ghURL.pathname.endsWith("/")
-    ? ""
-    : "/"}commits/${branch}`;
+  const commitsHref = `${ghURL.href}${
+    ghURL.pathname.endsWith("/") ? "" : "/"
+  }commits/${branch}`;
   const otherLink = {
     key: conf.l10n.participate,
     data: [
@@ -107,16 +117,7 @@ export async function run(conf) {
       },
     ],
   };
-  // Write new properties, ignoring existing ones
-  Object.getOwnPropertyNames(newProps)
-    .filter(key => !conf.hasOwnProperty(key))
-    .map(key => ({ key, value: newProps[key] }))
-    .reduce((conf, { key, value }) => {
-      conf[key] = value;
-      return conf;
-    }, conf);
-  if (!conf.hasOwnProperty("otherLinks")) {
-    conf.otherLinks = [];
-  }
+  // Assign new properties, but retain exsiting ones
+  Object.assign(conf, { ...newProps, ...conf });
   conf.otherLinks.unshift(otherLink);
 }

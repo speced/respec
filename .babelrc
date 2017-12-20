@@ -1,6 +1,6 @@
 {
   "presets": [
-    "stage-3"
+    "babel-preset-stage-3-without-async"
   ],
   "plugins": ["transform-es2015-modules-amd"]
 }
