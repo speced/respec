@@ -33,7 +33,7 @@
     "jasmine-core": "^2.8.0",
     "jasmine-reporters": "^2.2.1",
     "jquery": "^3.2.1",
-    "karma": "^1.7.1",
+    "karma": "^2.0.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-detect-browsers": "^2.2.6",
     "karma-edge-launcher": "^0.4.2",
