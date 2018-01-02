@@ -4,16 +4,13 @@
  * Performs syntax highlighting to all pre and code elements.
  */
 import ghCss from "deps/text!core/css/github.css";
-import { pub, sub } from "core/pubsubhub";
 import { worker } from "core/worker";
-
 export const name = "core/highlight";
 
 // Opportunistically insert the style into the head to reduce FOUC.
 const codeStyle = document.createElement("style");
 codeStyle.textContent = ghCss;
 document.head.appendChild(codeStyle);
-let idCounter = 0;
 function getLanguageHint(classList) {
   return Array.from(classList)
     .filter(item => item !== "highlight" && item !== "nolinks")
@@ -21,24 +18,27 @@ function getLanguageHint(classList) {
 }
 
 export async function run(conf) {
-  // Nothing to do
+  // Nothing to highlight
   if (conf.noHighlightCSS) {
+    codeStyle.remove();
     return;
   }
   const highlightables = Array.from(
     document.querySelectorAll("pre:not(.idl):not(.nohighlight), code.highlight")
   );
-  if (!highlightables.length) {
+  // Nothing to highlight
+  if (highlightables.length === 0) {
+    codeStyle.remove();
     return;
   }
-  const promisesToHighlight = highlightables.map(element => {
+  const promisesToHighlight = highlightables.map((element, i) => {
     return new Promise(resolve => {
       if (element.textContent.trim() === "") {
-        return resolve(element); // no work to do
+        return resolve(); // no work to do
       }
       const done = () => {
         element.setAttribute("aria-busy", "false");
-        resolve(element);
+        resolve();
       };
       // We always resolve, even if we couldn't actually highlight
       const timeoutId = setTimeout(() => {
@@ -48,12 +48,9 @@ export async function run(conf) {
       const msg = {
         action: "highlight",
         code: element.textContent,
-        id: "highlight:" + idCounter++,
+        id: `highlight:${i}`,
         languages: getLanguageHint(element.classList),
       };
-      element.setAttribute("aria-busy", "true");
-      element.setAttribute("aria-live", "polite");
-      worker.postMessage(msg);
       worker.addEventListener("message", function listener(ev) {
         const { data: { id, code, language, value } } = ev;
         if (id !== msg.id) {
@@ -70,6 +67,9 @@ export async function run(conf) {
         worker.removeEventListener("message", listener);
         done();
       });
+      element.setAttribute("aria-busy", "true");
+      element.setAttribute("aria-live", "polite");
+      worker.postMessage(msg);
     });
   });
   await Promise.all(promisesToHighlight);
