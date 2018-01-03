@@ -17,14 +17,14 @@ if (html && !html.hasAttribute("lang")) {
 
 // We use en-US as the base
 const base = {
-  about_respec: "About ReSpec",
+  about_respec: "About",
   abstract: "Abstract",
   author: "Author:",
   authors: "Authors:",
   bug_tracker: "Bug tracker:",
   close_parens: ")",
   commit_history: "Commit history",
-  definition_list: "Definition List",
+  definition_list: "Definitions",
   editor: "Editor:",
   editors_note: "Editor's note",
   editors: "Editors:",
@@ -44,7 +44,7 @@ const base = {
   participate: "Participate",
   references: "References",
   save_as: "Save as",
-  save_snapshot: "Save Snapshot",
+  save_snapshot: "Export",
   search_specref: "Search Specref",
   sotd: "Status of This Document",
   table_of_fig: "Table of Figures",
@@ -97,7 +97,7 @@ const ja = {
 };
 
 const nl = {
-  about_respec: "Over ReSpec",
+  about_respec: "Over",
   abstract: "Samenvatting",
   author: "Auteur:",
   authors: "Auteurs:",

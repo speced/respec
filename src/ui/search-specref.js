@@ -123,7 +123,6 @@ function show() {
 
 const mast = hyperHTML.wire()`
   <header>
-    <h1>Specref</h1>
     <p>
       An Open-Source, Community-Maintained Database of
       Web Standards & Related References.
