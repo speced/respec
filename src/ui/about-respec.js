@@ -9,7 +9,7 @@ window.respecVersion = window.respecVersion || "Developer Edition";
 const div = document.createElement("div");
 const render = hyperHTML.bind(div);
 const button = ui.addCommand(
-  l10n[lang].about_respec,
+  `About ${window.respecVersion}`,
   "ui/about-respec",
   "Ctrl+Shift+Alt+A",
   "ℹ️"
@@ -45,10 +45,8 @@ function show() {
     ReSpec is a document production toolchain, with a notable focus on W3C specifications.
   </p>
   <p>
-    You can find more information in the <a href='https://w3.org/respec/'>documentation</a>.
-  </p>
-  <p>
-    Found a bug in ReSpec? <a href='https://github.com/w3c/respec/issues'>File it!</a>.
+    <a href='https://github.com/w3c/respec/wiki'>Documentation</a>,
+    <a href='https://github.com/w3c/respec/issues'>Bugs</a>.
   </p>
   <table border="1" width="100%" hidden="${entries.length ? false : true}">
     <caption>
