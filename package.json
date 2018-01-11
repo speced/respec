@@ -29,7 +29,7 @@
     "eslint-plugin-jasmine": "^2.9.1",
     "glob": "^7.1.2",
     "handlebars": "^4.0.11",
-    "http-server": "^0.10.0",
+    "http-server": "^0.11.0",
     "jasmine-core": "^2.8.0",
     "jasmine-reporters": "^2.2.1",
     "jquery": "^3.2.1",
