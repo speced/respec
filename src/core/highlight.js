@@ -68,7 +68,6 @@ export async function run(conf) {
         done();
       });
       element.setAttribute("aria-busy", "true");
-      element.setAttribute("aria-live", "polite");
       worker.postMessage(msg);
     });
   });
