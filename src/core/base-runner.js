@@ -2,8 +2,8 @@
 // The module in charge of running the whole processing pipeline.
 import "core/include-config";
 import "core/override-configuration";
-import "core/remove-respec";
 import "core/respec-ready";
+import { removeReSpec } from "core/utils";
 import { done as postProcessDone } from "core/post-process";
 import { done as preProcessDone } from "core/pre-process";
 import { pub } from "core/pubsubhub";
@@ -53,7 +53,7 @@ export async function runAll(plugs) {
     performance.mark(name + "-start");
   }
   await preProcessDone;
-  const runnables = plugs.filter(plug => plug.run).map(toRunnable);
+  const runnables = plugs.filter(plug => plug && plug.run).map(toRunnable);
   for (const task of runnables) {
     try {
       await task(respecConfig);
@@ -64,6 +64,7 @@ export async function runAll(plugs) {
   pub("plugins-done", respecConfig);
   await postProcessDone;
   pub("end-all", respecConfig);
+  removeReSpec(document);
   if (canMeasure) {
     performance.mark(name + "-end");
     performance.measure(name, name + "-start", name + "-end");

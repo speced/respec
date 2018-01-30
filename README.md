@@ -1,9 +1,6 @@
 # ReSpec
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/w3c/respec.svg)](https://greenkeeper.io/)
-
-[![Build Status](https://travis-ci.org/w3c/respec.svg?branch=develop)](https://travis-ci.org/w3c/respec)
-[![Known Vulnerabilities](https://snyk.io/test/github/w3c/respec/badge.svg)](https://snyk.io/test/github/w3c/respec)
+[![Greenkeeper badge](https://badges.greenkeeper.io/w3c/respec.svg)](https://greenkeeper.io/) [![Build Status](https://travis-ci.org/w3c/respec.svg?branch=develop)](https://travis-ci.org/w3c/respec) [![Known Vulnerabilities](https://snyk.io/test/github/w3c/respec/badge.svg)](https://snyk.io/test/github/w3c/respec)
 
 ReSpec is a JS library that makes it easier to write technical specifications, or documents
 that tend to be technical in nature in general. It was originally designed for the purpose
@@ -46,4 +43,7 @@ Bibliographical references have been moved out of ReSpec. You want to use
 [Documentation for ReSpec](https://github.com/w3c/respec/wiki) is available in our wiki.
 
 ## Contribute
+
+Please see our [developer guide](https://github.com/w3c/respec/wiki/Developers-Guide). 
+
 Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.

@@ -1,6 +1,6 @@
 "use strict";
 // In case everything else fails, we want the error
-window.addEventListener("error", function(ev) {
+window.addEventListener("error", ev => {
   console.error(ev.error, ev.message, ev);
 });
 
@@ -61,10 +61,10 @@ define(
     "core/id-headers",
     "core/rdfa",
     "core/location-hash",
-    "ui/about-respec",
-    "ui/dfn-list",
     "ui/save-html",
     "ui/search-specref",
+    "ui/dfn-list",
+    "ui/about-respec",
     "core/seo",
     "w3c/seo",
     "core/highlight",
@@ -74,24 +74,17 @@ define(
     /*Linter must be the last thing to run*/
     "core/linter",
   ],
-  function(domReady, runner, ui) {
-    ui = ui.ui;
-    var args = Array.from(arguments).filter(function(item) {
-      return item;
-    });
+  (domReady, runner, { ui }, ...plugins) => {
     ui.show();
-    domReady(function() {
-      runner
-        .runAll(args)
-        .then(document.respecIsReady)
-        .then(function() {
-          ui.enable();
-        })
-        .catch(function(err) {
-          console.error(err);
-          // even if things go critically bad, we should still try to show the UI
-          ui.enable();
-        });
+    domReady(async () => {
+      try {
+        await runner.runAll(plugins);
+        await document.respecIsReady;
+      } catch (err) {
+        console.error(err);
+      } finally {
+        ui.enable();
+      }
     });
   }
 );
