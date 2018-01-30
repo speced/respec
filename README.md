@@ -46,4 +46,7 @@ Bibliographical references have been moved out of ReSpec. You want to use
 [Documentation for ReSpec](https://github.com/w3c/respec/wiki) is available in our wiki.
 
 ## Contribute
+
+Please see our [developer guide](https://github.com/w3c/respec/wiki/Developers-Guide). 
+
 Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
