@@ -25,12 +25,10 @@ colors.setTheme({
 // Configuration for nightmare
 const config = {
   show: false,
-  timeout: 3000,
   webPreferences: {
     images: false,
     defaultEncoding: "utf-8",
-    partition: "nopersist",
-    userData: "",
+    partition: "nopersist"
   },
 };
 
@@ -74,7 +72,7 @@ async function writeTo(outPath, data) {
  */
 async function fetchAndWrite(src, out, whenToHalt, timeout = 300000) {
   const userData = await mkdtemp(os.tmpdir() + "/respec2html-");
-  const nightmare = new Nightmare({ ...config, timeout, userData });
+  const nightmare = new Nightmare({ ...config, waitTimeout: timeout * 1000, paths: { userData } });
   nightmare.useragent("respec2html");
   const url = parseURL(src).href;
   const handleConsoleMessages = makeConsoleMsgHandler(nightmare);
