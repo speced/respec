@@ -232,7 +232,7 @@ describe("Core - WebIDL", function() {
       "    // 8\n" +
       "    const long long           veryLong = 9999999999999;\n" +
       "    // 9\n" +
-      "    const unsigned long long  soLong = 100000000000000000;\n" +
+      "    const unsigned long long  soLong = 99999999999999999;\n" +
       "    // 10\n" +
       "    const float               ationDevice = 4.2;\n" +
       "    // 11\n" +
@@ -240,7 +240,7 @@ describe("Core - WebIDL", function() {
       "    // 12\n" +
       "    const double              twice = 4.222222222;\n" +
       "    // 13\n" +
-      "    const unrestricted double rambaldi = 47;\n" +
+      "    const unrestricted double rambaldi = 47.0;\n" +
       "\n" +
       "    // 14\n" +
       "    const boolean?            why = false;\n" +
