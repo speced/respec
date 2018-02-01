@@ -232,7 +232,7 @@ describe("Core - WebIDL", function() {
       "    // 8\n" +
       "    const long long           veryLong = 9999999999999;\n" +
       "    // 9\n" +
-      "    const unsigned long long  soLong = 100000000000000000;\n" +
+      "    const unsigned long long  soLong = 99999999999999999;\n" +
       "    // 10\n" +
       "    const float               ationDevice = 4.2;\n" +
       "    // 11\n" +
