@@ -97,8 +97,9 @@ function registerHelpers() {
         return value.negative ? "-Infinity" : "Infinity";
       case "NaN":
         return "NaN";
-      case "string":
       case "number":
+        return value.value;
+      case "string":
       case "boolean":
       case "sequence":
         return JSON.stringify(value.value);
@@ -594,7 +595,7 @@ function writeDefinition(obj, indent) {
       for (var i = 0; i < obj.values.length; i++) {
         var item = obj.values[i];
         switch (item.type) {
-          case undefined:
+          case "string":
             var needsComma = false;
             for (var j = i + 1; j < obj.values.length; j++) {
               var lookahead = obj.values[j];
@@ -605,10 +606,10 @@ function writeDefinition(obj, indent) {
               }
             }
             children += idlEnumItemTmpl({
-              lname: item.toString()
-                ? item.toString().toLowerCase()
+              lname: item.value
+                ? item.value.toLowerCase()
                 : "the-empty-string",
-              name: item.toString(),
+              name: item.value,
               parentID: obj.name.toLowerCase(),
               indent: indent + 1,
               needsComma: needsComma,
@@ -896,16 +897,11 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
           break;
         case "enum":
           name = defn.name;
-          defn.values.forEach(function(v, i) {
-            if (v.type === undefined) {
-              defn.values[i] = {
-                toString: function() {
-                  return v;
-                },
-                dfn: findDfn(name, v, definitionMap, defn.type, idlElem),
-              };
+          for (const v of defn.values) {
+            if (v.type === "string") {
+              v.dfn = findDfn(name, v.value, definitionMap, defn.type, idlElem);
             }
-          });
+          }
           defn.idlId = "idl-def-" + name.toLowerCase();
           break;
         // Top-level entities without linkable members.
