@@ -97,8 +97,9 @@ function registerHelpers() {
         return value.negative ? "-Infinity" : "Infinity";
       case "NaN":
         return "NaN";
-      case "string":
       case "number":
+        return value.value;
+      case "string":
       case "boolean":
       case "sequence":
         return JSON.stringify(value.value);
