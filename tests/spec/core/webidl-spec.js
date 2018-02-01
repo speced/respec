@@ -240,7 +240,7 @@ describe("Core - WebIDL", function() {
       "    // 12\n" +
       "    const double              twice = 4.222222222;\n" +
       "    // 13\n" +
-      "    const unrestricted double rambaldi = 47;\n" +
+      "    const unrestricted double rambaldi = 47.0;\n" +
       "\n" +
       "    // 14\n" +
       "    const boolean?            why = false;\n" +
