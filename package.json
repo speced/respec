@@ -50,7 +50,7 @@
     "moment": "^2.20.1",
     "requirejs": "^2.3.5",
     "text": "github:requirejs/text",
-    "uglify-es": "^3.3.9",
+    "uglify-es": "3.2.2",
     "url-search-params": "^0.10.0",
     "webidl2": "^5.0.0"
   },
