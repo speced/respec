@@ -48,7 +48,7 @@ const licenses = new Map([
 ]);
 
 const w3cDefaults = {
-  processVersion: 2017,
+  processVersion: 2018,
   lint: {
     "no-headingless-sections": true,
     "privsec-section": true,
