@@ -48,6 +48,7 @@
     "karma-verbose-summary-reporter": "0.0.1",
     "mocha": "^5.0.0",
     "moment": "^2.20.1",
+    "parcel-bundler": "^1.5.1",
     "requirejs": "^2.3.5",
     "text": "github:requirejs/text",
     "uglify-es": "3.2.2",
@@ -72,7 +73,8 @@
     "test:headless": "node ./tests/headless.js",
     "test:karma": "npm run karma",
     "prepare": "npm run snyk-protect",
-    "prepublish": "npm run snyk-protect"
+    "prepublish": "npm run snyk-protect",
+    "parcel" : "parcel ./examples/starter.html"
   },
   "dependencies": {
     "colors": "^1.1.2",
