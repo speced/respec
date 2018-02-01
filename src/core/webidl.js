@@ -897,16 +897,11 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
           break;
         case "enum":
           name = defn.name;
-          defn.values.forEach(function(v, i) {
-            if (v.type === undefined) {
-              defn.values[i] = {
-                toString: function() {
-                  return v;
-                },
-                dfn: findDfn(name, v, definitionMap, defn.type, idlElem),
-              };
+          for (const v of defn.values) {
+            if (v.type === "string") {
+              v.dfn = findDfn(name, v.value, definitionMap, defn.type, idlElem);
             }
-          });
+          }
           defn.idlId = "idl-def-" + name.toLowerCase();
           break;
         // Top-level entities without linkable members.
