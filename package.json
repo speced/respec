@@ -51,10 +51,6 @@
     "parcel-bundler": "^1.5.1",
     "requirejs": "^2.3.5",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
-<<<<<<< HEAD
-    "uglify-es": "3.3.7",
-=======
->>>>>>> bundled builder file
     "url-search-params": "^0.10.0",
     "webidl2": "^10.2.0"
   },
