@@ -143,6 +143,14 @@ describe("Core - WebIDL", function() {
     text = "callback interface SuperStar {\n};";
     expect($target.text()).toEqual(text);
 
+    $target = $("#if-mixin", doc);
+    text = "interface mixin SuperStar {\n};";
+    expect($target.text()).toEqual(text);
+
+    $target = $("#if-partial-mixin", doc);
+    text = "partial interface mixin SuperStar {\n};";
+    expect($target.text()).toEqual(text);
+
     $target = $("#if-doc", doc);
     expect(
       $target.find(":contains('DocInterface')").filter("a").attr("href")
@@ -576,6 +584,18 @@ describe("Core - WebIDL", function() {
     expect(
       $target.find(".idlTypedef:contains('tdLessBasic')").attr("id")
     ).toEqual("idl-def-tdlessbasic");
+    done();
+  });
+
+  it("should handle includes", function(done) {
+    var $target = $("#incl-basic", doc);
+    var text = "Window includes Breakable;";
+    expect($target.text()).toEqual(text);
+    expect($target.find(".idlIncludes").length).toEqual(1);
+
+    $target = $("#incl-less-basic", doc);
+    text = "[Something]\n" + text;
+    expect($target.text()).toEqual(text);
     done();
   });
 
