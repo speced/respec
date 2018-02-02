@@ -9,7 +9,7 @@ export const name = "ui/save-html";
 const downloadLinks = [
   {
     id: "respec-save-as-html",
-    title: `${l10n[lang].save_as} HTML`,
+    title: `HTML`,
     get href() {
       return toDataURL(serialize());
     },
@@ -18,7 +18,7 @@ const downloadLinks = [
   {
     id: "respec-save-as-xml",
     fileName: "index.xhtml",
-    title: `${l10n[lang].save_as} XML`,
+    title: `XML`,
     type: "application/xml",
     get href() {
       return toDataURL(serialize("xml"), this.type);
@@ -27,7 +27,7 @@ const downloadLinks = [
   {
     id: "respec-save-as-epub",
     fileName: "spec.epub",
-    title: `${l10n[lang].save_as} EPUB 3`,
+    title: `EPUB 3`,
     type: "application/epub+zip",
     href: makeEPubHref(),
   },

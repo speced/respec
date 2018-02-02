@@ -28,17 +28,13 @@ function ariaDecorate(elem, ariaMap) {
   if (!elem) {
     return;
   }
-  Array.from(ariaMap.entries()).reduce(function(elem, nameValue) {
-    const name = nameValue[0];
-    const value = nameValue[1];
+  Array.from(ariaMap.entries()).reduce((elem, [name, value]) => {
     elem.setAttribute("aria-" + name, value);
     return elem;
   }, elem);
 }
 
-const $respecUI = $(
-  "<div id='respec-ui' class='removeOnSave' hidden></div>"
-);
+const $respecUI = $("<div id='respec-ui' class='removeOnSave' hidden></div>");
 const $menu = $(
   "<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>"
 );
@@ -50,14 +46,14 @@ const buttons = {};
 
 sub(
   "start-all",
-  function() {
+  () => {
     document.body.insertAdjacentElement("afterbegin", $respecUI[0]);
   },
   { once: true }
 );
 sub(
   "end-all",
-  function() {
+  () => {
     document.body.insertAdjacentElement("afterbegin", $respecUI[0]);
   },
   { once: true }
@@ -67,7 +63,7 @@ const $respecPill = $("<button id='respec-pill' disabled>ReSpec</button>");
 $respecPill
   .click(function(e) {
     e.stopPropagation();
-    if( $menu[0].hidden ){
+    if ($menu[0].hidden) {
       $menu[0].classList.remove("respec-hidden");
       $menu[0].classList.add("respec-visible");
     } else {
@@ -75,16 +71,13 @@ $respecPill
       $menu[0].classList.remove("respec-visible");
     }
     this.setAttribute("aria-expanded", String($menu[0].hidden));
-    $menu[0].hidden = !$menu[0].hidden
+    $menu[0].hidden = !$menu[0].hidden;
   })
   .appendTo($respecUI);
 document.documentElement.addEventListener("click", function() {
-  if(!$menu[0].hidden){
+  if (!$menu[0].hidden) {
     $menu[0].classList.remove("respec-visible");
     $menu[0].classList.add("respec-hidden");
-    $menu[0].addEventListener("transitionend", ()=>{
-      debugger
-    })
     $menu[0].hidden = true;
   }
 });
@@ -226,10 +219,10 @@ export const ui = {
     errWarn(msg, warnings, "warning", "Warnings");
   },
   closeModal: function(owner) {
-    if ($overlay){ 
+    if ($overlay) {
       $overlay[0].classList.remove("respec-show-overlay");
       $overlay[0].classList.add("respec-hide-overlay");
-      $overlay[0].addEventListener("transitionend", ()=>{
+      $overlay[0].addEventListener("transitionend", () => {
         $overlay.remove();
         $overlay = null;
       });
@@ -257,11 +250,12 @@ export const ui = {
     const ariaMap = new Map([["labelledby", headingId]]);
     ariaDecorate($modal[0], ariaMap);
     $modal.find(".inside").append(content);
-    $("body").append($overlay).append($modal);
-    $overlay
-      .click(()=>{  
-        this.closeModal(currentOwner);
-      });
+    $(document.body)
+      .append($overlay)
+      .append($modal);
+    $overlay.click(() => {
+      this.closeModal(currentOwner);
+    });
     $overlay[0].classList.toggle("respec-show-overlay");
     $modal[0].hidden = false;
   },
