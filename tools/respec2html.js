@@ -2,7 +2,6 @@
 
 /*jshint node: true, browser: false*/
 "use strict";
-const async = require("marcosc-async");
 const colors = require("colors");
 const fetchAndWrite = require("./respecDocWriter").fetchAndWrite;
 colors.setTheme({
