@@ -65,7 +65,7 @@ define(
     "w3c/permalinks",
     "core/id-headers",
     "core/rdfa",
-    "w3c/aria",
+    // "w3c/aria",
     "core/location-hash",
     "geonovum/leafletfigures",
     "ui/about-respec",
