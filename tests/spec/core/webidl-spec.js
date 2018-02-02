@@ -587,7 +587,7 @@ describe("Core - WebIDL", function() {
     done();
   });
 
-  it("should handle includes", function(done) {
+  it("should handle includes", () => {
     var $target = $("#incl-basic", doc);
     var text = "Window includes Breakable;";
     expect($target.text()).toEqual(text);
@@ -596,10 +596,9 @@ describe("Core - WebIDL", function() {
     $target = $("#incl-less-basic", doc);
     text = "[Something]\n" + text;
     expect($target.text()).toEqual(text);
-    done();
   });
 
-  it("should handle implements", function(done) {
+  it("should handle implements", () => {
     var $target = $("#impl-basic", doc);
     var text = "Window implements Breakable;";
     expect($target.text()).toEqual(text);
@@ -608,7 +607,6 @@ describe("Core - WebIDL", function() {
     $target = $("#impl-less-basic", doc);
     text = "[Something]\n" + text;
     expect($target.text()).toEqual(text);
-    done();
   });
 
   it("should link documentation", function() {
