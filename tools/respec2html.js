@@ -96,7 +96,7 @@ const usageSections = [
   },
 ];
 
-async.task(function* run() {
+(async function run() {
   let parsedArgs;
   try {
     parsedArgs = commandLineArgs(optionList);
@@ -121,10 +121,10 @@ async.task(function* run() {
   const timeout = parsedArgs.timeout;
   const out = parsedArgs.out;
   try {
-    yield fetchAndWrite(src, out, whenToHalt, timeout);
+    await fetchAndWrite(src, out, whenToHalt, timeout);
   } catch (err) {
     console.error(colors.error(err.message));
     return process.exit(1);
   }
   process.exit(0);
-});
+})();
