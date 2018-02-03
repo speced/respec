@@ -651,7 +651,7 @@ export function run(conf, doc, cb) {
       return urlParts[pos] || "";
     },
   });
-  if (conf.processVersion == "2014" || conf.processVersion == "2015" == conf.processVersion == "2017") {
+  if (conf.processVersion == "2014" || conf.processVersion == "2015" || conf.processVersion == "2017") {
     pub(
       "warn",
       "Process " + conf.processVersion + " has been superceded by Process 2018."
