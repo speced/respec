@@ -84,7 +84,6 @@
     "highlight.js": "github:marcoscaceres/highlight.js#7b144b3b83ce296d5b29c5e4fc2ea2a65e9d3f32",
     "hyperhtml": "^2.5.4",
     "loading-indicator": "^2.0.0",
-    "marcosc-async": "^4.0.3",
     "marked": "^0.3.12",
     "nightmare": "^2.10.0",
     "prompt": "^1.0.0",
