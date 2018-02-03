@@ -228,7 +228,7 @@ a.idlEnumItem {
   color: #c00;
 }
 
-.idlImplements a {
+.idlImplements a, .idlIncludes a {
   font-weight: bold;
 }
 

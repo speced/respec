@@ -189,6 +189,15 @@
       <pre id='if-callback' class='idl'>
         callback interface SuperStar {};
       </pre>
+      <p>
+        Interface mixin .
+      </p>
+      <pre id='if-mixin' class='idl'>
+        interface mixin SuperStar {};
+      </pre>
+      <pre id='if-partial-mixin' class='idl'>
+        partial interface mixin SuperStar {};
+      </pre>
       <pre id='if-doc' class='idl'>
         interface DocInterface {};
         interface DocIsNotCaseSensitive {};
@@ -503,6 +512,21 @@
       </p>
       <pre id='impl-less-basic' class='idl'>
         [Something]Window implements Breakable;
+      </pre>
+    </section>
+    <section>
+      <h2>Includes</h2>
+      <p>
+        Basic includes.
+      </p>
+      <pre id='incl-basic' class='idl'>
+        Window includes Breakable;
+      </pre>
+      <p>
+        Less basic includes.
+      </p>
+      <pre id='incl-less-basic' class='idl'>
+        [Something]Window includes Breakable;
       </pre>
     </section>
     <section id="documentation">

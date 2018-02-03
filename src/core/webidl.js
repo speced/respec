@@ -22,6 +22,7 @@ var idlEnumItemTmpl = tmpls["enum-item.html"];
 var idlEnumTmpl = tmpls["enum.html"];
 var idlExtAttributeTmpl = tmpls["extended-attribute.html"];
 var idlFieldTmpl = tmpls["field.html"];
+var idlIncludesTmpl = tmpls["includes.html"];
 var idlImplementsTmpl = tmpls["implements.html"];
 var idlInterfaceTmpl = tmpls["interface.html"];
 var idlIterableTmpl = tmpls["iterable.html"];
@@ -514,12 +515,16 @@ function writeDefinition(obj, indent) {
   switch (obj.type) {
     case "typedef":
       return idlTypedefTmpl(opt);
+    case "includes":
+      return idlIncludesTmpl(opt);
     case "implements":
       return idlImplementsTmpl(opt);
     case "interface":
       return writeInterfaceDefinition(opt);
+    case "interface mixin":
+      return writeInterfaceDefinition(opt, { mixin: true });
     case "callback interface":
-      return writeInterfaceDefinition(opt, "callback ");
+      return writeInterfaceDefinition(opt, { callback: true });
     case "dictionary":
       var maxQualifiers = 0,
         maxType = 0;
@@ -643,20 +648,20 @@ function writeDefinition(obj, indent) {
   }
 }
 
-function writeInterfaceDefinition(opt, callback) {
+function writeInterfaceDefinition(opt, fixes = {}) {
   var obj = opt.obj,
     indent = opt.indent;
   var maxAttr = 0,
     maxAttrQualifiers = 0,
     maxMeth = 0,
     maxConst = 0;
-  obj.members.forEach(function(it) {
+  for (const it of obj.members) {
     if (
       typeIsWhitespace(it.type) ||
       it.type === "maplike" ||
       it.type === "iterable"
     ) {
-      return;
+      continue;
     }
     var len = idlType2Text(it.idlType).length;
     if (it.type === "attribute") {
@@ -666,7 +671,7 @@ function writeInterfaceDefinition(opt, callback) {
         qualifiersLen > maxAttrQualifiers ? qualifiersLen : maxAttrQualifiers;
     } else if (it.type === "operation") maxMeth = len > maxMeth ? len : maxMeth;
     else if (it.type === "const") maxConst = len > maxConst ? len : maxConst;
-  });
+  }
   var children = obj.members
     .map(function(ch) {
       switch (ch.type) {
@@ -692,11 +697,12 @@ function writeInterfaceDefinition(opt, callback) {
     })
     .join("");
   return idlInterfaceTmpl({
-    obj: obj,
-    indent: indent,
+    obj,
+    indent,
     partial: obj.partial ? "partial " : "",
-    callback: callback,
-    children: children,
+    callback: fixes.callback ? "callback " : "",
+    mixin: fixes.mixin ? "mixin ": "",
+    children,
   });
 }
 
@@ -867,6 +873,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
     .filter(
       ({ type }) =>
         [
+          "includes",
           "implements",
           "ws",
           "ws-pea",
@@ -881,8 +888,8 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
         // Top-level entities with linkable members.
         case "callback interface":
         case "dictionary":
-        case "exception":
         case "interface":
+        case "interface mixin":
           var partialIdx = "";
           if (defn.partial) {
             if (!idlPartials[defn.name]) {
