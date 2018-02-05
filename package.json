@@ -50,7 +50,7 @@
     "moment": "^2.20.1",
     "requirejs": "^2.3.5",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
-    "uglify-es": "3.2.2",
+    "uglify-es": "3.3.8",
     "url-search-params": "^0.10.0",
     "webidl2": "^10.2.0"
   },
