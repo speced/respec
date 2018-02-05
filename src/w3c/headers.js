@@ -639,7 +639,7 @@ export function run(conf, doc, cb) {
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
-  conf.processVersion = conf.processVersion || "2017";
+  conf.processVersion = conf.processVersion || "2018";
   Object.defineProperty(conf, "wgId", {
     get() {
       if (!this.hasOwnProperty("wgPatentURI")) {
@@ -651,14 +651,14 @@ export function run(conf, doc, cb) {
       return urlParts[pos] || "";
     },
   });
-  if (conf.processVersion == "2014" || conf.processVersion == "2015") {
+  if (conf.processVersion == "2014" || conf.processVersion == "2015" || conf.processVersion == "2017") {
     pub(
       "warn",
-      "Process " + conf.processVersion + " has been superceded by Process 2017."
+      "Process " + conf.processVersion + " has been superceded by Process 2018."
     );
-    conf.processVersion = "2017";
+    conf.processVersion = "2018";
   }
-  conf.isNewProcess = conf.processVersion == "2017";
+  conf.isNewProcess = conf.processVersion == "2018";
   // configuration done - yay!
 
   // annotate html element with RFDa

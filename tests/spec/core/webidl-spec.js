@@ -143,6 +143,14 @@ describe("Core - WebIDL", function() {
     text = "callback interface SuperStar {\n};";
     expect($target.text()).toEqual(text);
 
+    $target = $("#if-mixin", doc);
+    text = "interface mixin SuperStar {\n};";
+    expect($target.text()).toEqual(text);
+
+    $target = $("#if-partial-mixin", doc);
+    text = "partial interface mixin SuperStar {\n};";
+    expect($target.text()).toEqual(text);
+
     $target = $("#if-doc", doc);
     expect(
       $target.find(":contains('DocInterface')").filter("a").attr("href")
@@ -232,7 +240,7 @@ describe("Core - WebIDL", function() {
       "    // 8\n" +
       "    const long long           veryLong = 9999999999999;\n" +
       "    // 9\n" +
-      "    const unsigned long long  soLong = 100000000000000000;\n" +
+      "    const unsigned long long  soLong = 99999999999999999;\n" +
       "    // 10\n" +
       "    const float               ationDevice = 4.2;\n" +
       "    // 11\n" +
@@ -240,7 +248,7 @@ describe("Core - WebIDL", function() {
       "    // 12\n" +
       "    const double              twice = 4.222222222;\n" +
       "    // 13\n" +
-      "    const unrestricted double rambaldi = 47;\n" +
+      "    const unrestricted double rambaldi = 47.0;\n" +
       "\n" +
       "    // 14\n" +
       "    const boolean?            why = false;\n" +
@@ -579,7 +587,18 @@ describe("Core - WebIDL", function() {
     done();
   });
 
-  it("should handle implements", function(done) {
+  it("should handle includes", () => {
+    var $target = $("#incl-basic", doc);
+    var text = "Window includes Breakable;";
+    expect($target.text()).toEqual(text);
+    expect($target.find(".idlIncludes").length).toEqual(1);
+
+    $target = $("#incl-less-basic", doc);
+    text = "[Something]\n" + text;
+    expect($target.text()).toEqual(text);
+  });
+
+  it("should handle implements", () => {
     var $target = $("#impl-basic", doc);
     var text = "Window implements Breakable;";
     expect($target.text()).toEqual(text);
@@ -588,7 +607,6 @@ describe("Core - WebIDL", function() {
     $target = $("#impl-less-basic", doc);
     text = "[Something]\n" + text;
     expect($target.text()).toEqual(text);
-    done();
   });
 
   it("should link documentation", function() {
