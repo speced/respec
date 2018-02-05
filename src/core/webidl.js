@@ -3,7 +3,6 @@ import { pub } from "core/pubsubhub";
 import webidl2 from "deps/webidl2";
 import { validateWebIDL } from "core/webidl-validator";
 import css from "deps/text!core/css/webidl.css";
-import tmpls from "templates";
 import { normalizePadding } from "core/utils";
 import {
   idlArgumentNameKeyword,
@@ -56,14 +55,12 @@ function getTypeFromParent({ parent }) {
 }
 
 /**
- * Dictionaries support their name, dot notation
- * and parent["name"]
+ * Dictionaries support their name and dot notation.
  */
 function deriveNamesForDictMember({ parent, name }) {
   const { name: parentName } = parent;
   return [`${parentName}.${name}`, name];
 }
-
 /**
  * Attributes can be addressed by their name directly, or by
  * dot notation.
@@ -73,7 +70,6 @@ function deriveNamesForAttribute({ parent, name }) {
   const asDotNotation = `${parentName}.${name}`;
   return [asDotNotation, name];
 }
-
 /**
  * Operations can be referenced in multiple ways
  *  - by their name
@@ -125,8 +121,6 @@ function deriveNamesForOperation(obj) {
   return names.reverse(); // most specific, to least specific
 }
 
-const TABSIZE = 2;
-
 function dedent(text) {
   const min = text
     .trimRight()
@@ -135,7 +129,7 @@ function dedent(text) {
   if (!min) {
     return text;
   }
-  const trim = `^\\s{${min}}`;
+  const trim = `^ {${min}}`;
   const trimmer = new RegExp(trim, "gm");
   const result = text.replace(trimmer, "");
   return result.trimRight();
@@ -159,7 +153,7 @@ function toIdlArray(idlElem) {
     );
   }
   // add parents
-  result.forEach(addParent);
+  result.forEach(obj => addParent(obj));
   return result;
 }
 
@@ -196,7 +190,10 @@ function toEnumValue(obj) {
   };
 }
 
-const IDLWriter = {
+class IDLWriter {
+  constructor({ indent } = { indent: 2 }) {
+    this.tabSize = indent;
+  }
   write(idl) {
     const { type } = idl;
     switch (type) {
@@ -242,23 +239,22 @@ const IDLWriter = {
         return this.writeValue(idl);
       case ",":
         return () => ",";
-      default: {
-        // no-op.
-        return ({ type }) => {
-          const msg = `Unsupported IDL type \`${type}\``;
-          pub("error", msg);
-          return "";
-        };
-      }
+      default:
+        return this.writeUnsupported.bind(this);
     }
-  },
+  }
+  writeUnsupported({ type }) {
+    const msg = `Unsupported IDL type \`${type}\``;
+    pub("error", msg);
+    return "";
+  }
   writeSourceTarget(obj) {
     const extAttrs = this.writeExtendedAttributes(obj.extAttrs);
     const source = this.makeLink({ name: obj.implements, type: "interface" });
     const target = this.makeLink({ name: obj.target, type: "interface" });
     const { type } = obj;
     return normalizeWhitespace(`${extAttrs} ${target} ${type} ${source};`);
-  },
+  }
   writeIdlType(obj) {
     const nullable = obj.nullable ? "?" : "";
     if (obj.union) {
@@ -280,7 +276,7 @@ const IDLWriter = {
     const { idlType: name } = obj;
     const link = this.makeLink({ ...obj, name });
     return `${link}${nullable}`;
-  },
+  }
   makeLink(obj, { linkedTerms } = { linkedTerms: [] }) {
     const { name, type } = obj;
     // Nothing to link.
@@ -295,14 +291,15 @@ const IDLWriter = {
     }
     const lt = linkedTerms.join("|");
     const parent = obj.parent ? obj.parent.name : "";
-    return `<a data-link-for="${parent}" data-lt="${lt}" dataset-idl-type="${idlType}">${name}</a>`;
-  },
+    const id = `ref-for-dom-${parent ? `${parent}-` : ""}${name}`;
+    return `<a id="${id}" data-link-for="${parent}" data-lt="${lt}" dataset-idl-type="${idlType}">${name}</a>`;
+  }
   writeExtendedAttributes(extAttrs) {
     const result = extAttrs
       .map(extAttr => this.writeExtendedAttribute(extAttr))
       .join(", ");
     return result ? `[${result}]` : "";
-  },
+  }
   writeExtendedAttribute(obj) {
     const { arguments: extArgs, name, rhs, parent } = obj;
     let params = extArgs
@@ -324,13 +321,13 @@ const IDLWriter = {
     const linkedName = this.makeLink({ name, parent, type }, { linkedTerms });
     const result = `${linkedName}${rightSide && `${rightSide}`}${params}`;
     return result;
-  },
+  }
   writeCallSite(args) {
     return `(${args
       .filter(nonWhitespace)
       .map(param => this.writeParam(param))
       .join(", ")})`;
-  },
+  }
   // https://github.com/w3c/webidl2.js#arguments
   writeParam(obj) {
     const extAttrs = this.writeExtendedAttributes(obj.extAttrs);
@@ -340,7 +337,7 @@ const IDLWriter = {
     const variadic = obj.variadic ? "..." : "";
     const result = `${extAttrs} ${optional} ${idlType}${variadic} ${name}`.trimLeft();
     return normalizeWhitespace(result);
-  },
+  }
   writeConst(obj) {
     const result = this.writeMember({
       ...obj,
@@ -351,14 +348,14 @@ const IDLWriter = {
       rhs: this.writeRightHandSide(obj.value),
     });
     return result;
-  },
+  }
   writeRightHandSide(obj) {
     return `= ${this.writeValue(obj)}`;
-  },
+  }
   // https://github.com/w3c/webidl2.js#default-and-const-values
   writeValue({ value, negative }) {
     return value ? `${negative ? "-" : ""}${JSON.stringify(value)}` : "";
-  },
+  }
   // https://github.com/w3c/webidl2.js#iterable-legacyiterable-maplike-setlike-declarations
   writeSpecialMember(obj) {
     const { type } = obj;
@@ -370,22 +367,22 @@ const IDLWriter = {
     const readOnly = obj.readonly ? "readonly" : "";
     const result = `${extAttrs} ${readOnly} ${type}&lt;${idlType}>;`;
     return normalizeWhitespace(result);
-  },
+  }
   writeMember(obj) {
     const { extAttrs, qualifiers, type, idlType, name, rhs } = obj;
     let result = `${extAttrs} ${qualifiers} ${type} ${idlType} ${name} ${rhs}`.trim();
     result = normalizeWhitespace(result) + ";";
     return result;
-  },
+  }
   writeEnum(obj) {
     const members = obj.values.map(toEnumValue);
     const result = this.writeContainer({ ...obj, members });
     return result;
-  },
+  }
   writeEnumValue(obj) {
     const name = this.makeLink(obj);
     return `"${name}"`;
-  },
+  }
   writeContainer(obj) {
     const defaultContainerObj = {
       callback: "",
@@ -393,32 +390,33 @@ const IDLWriter = {
     };
     const normalizedObj = { ...defaultContainerObj, ...obj };
     const partial = obj.partial ? "partial" : "";
-    let extAttrs = this.writeExtendedAttributes(obj.extAttrs);
+    const extAttrs = this.writeExtendedAttributes(obj.extAttrs);
     const inherits = obj.inheritance
       ? `: ${this.makeLink({ name: obj.inheritance, type: "inheritance" })}`
       : "";
-    debugger;
     const children = obj.members
-      .map(member => IDLWriter.write(member))
+      .map(member => this.write(member))
+      .filter(Boolean) // Empty whitespace
       .map(
         line =>
           ["\n", ","].includes(line)
             ? line
-            : `${line}`.padStart(line.length + TABSIZE)
+            : `${line}`.padStart(line.length + this.tabSize)
       )
       .join("");
-    const { callback, type, name } = normalizedObj;
+    const name = this.makeLink(normalizedObj);
+    const { callback, type } = normalizedObj;
     const preamble = `${partial} ${callback} ${type} ${name} ${inherits}`.trim();
     const result = `${extAttrs}\n${preamble} {${children
       ? `${children}`
       : ""}};`.trimLeft();
     return result;
-  },
+  }
   writeTypeDef(obj) {
     const idlType = this.writeIdlType(obj.idlType);
     const identifier = this.makeLink(obj);
     return `typedef ${idlType} ${identifier};`;
-  },
+  }
   // Dictionary members
   writeDictionaryMembers(obj) {
     const name = escapeIdentifier(obj.name);
@@ -435,7 +433,7 @@ const IDLWriter = {
         : "",
     });
     return result;
-  },
+  }
   writeAttribute(obj) {
     const name = escapeAttributeName(obj.name);
     Object.assign(obj, { name });
@@ -449,7 +447,7 @@ const IDLWriter = {
       rhs: "",
     });
     return result;
-  },
+  }
   writeQualifiers(obj) {
     const qualifiers = [
       "static",
@@ -461,7 +459,7 @@ const IDLWriter = {
       .filter(member => obj[member])
       .join(" ");
     return qualifiers;
-  },
+  }
   writeCallback(obj) {
     const name = { name: escapeIdentifier(obj.name) };
     Object.assign(obj, name);
@@ -472,7 +470,7 @@ const IDLWriter = {
     const callSite = this.writeCallSite(obj.arguments);
     const result = `${extAttrs} ${type} ${linkedName} = ${returnType} ${callSite};`;
     return normalizeWhitespace(result);
-  },
+  }
   // https://github.com/w3c/webidl2.js#operation-member
   writeOperation(obj) {
     const name = { name: escapeIdentifier(obj.name) };
@@ -487,18 +485,18 @@ const IDLWriter = {
     const returnType = this.writeIdlType(obj.idlType);
     const result = `${extAttrs} ${static_} ${special} ${returnType} ${linkedName}${callSite};`;
     return normalizeWhitespace(result);
-  },
+  }
   writeLineComment({ value }) {
-    return `//${value.trimRight()}\n`;
-  },
+    return `//${value}\n`;
+  }
   writeMultilineComment({ value }) {
     return `/*${value}*/`;
-  },
+  }
   // Writes a single blank line if whitespace includes at least one blank line.
   writeWhiteSpace({ value }) {
     return /[\n.*\n|^\n]/.test(value) ? "\n" : "";
-  },
-};
+  }
+}
 
 function nonWhitespace({ type }) {
   return "ws" !== type;
@@ -532,15 +530,18 @@ function toNormalizedSet(str = "") {
     .reduce((collector, item) => collector.add(item), new Set());
 }
 
-function toHTML({ idlArray, idlElem }) {
-  idlElem.classList.add("def");
-  const html = idlArray
-    .map(idlObj => IDLWriter.write(idlObj))
-    .filter(Boolean)
-    .map(line => (line.endsWith("\n") ? line : `${line}\n`))
-    .join("")
-    .trim();
-  return { idlElem, html };
+function makeWriter() {
+  const writer = new IDLWriter({ indent: 2 });
+  return function toHTML({ idlArray, idlElem }) {
+    idlElem.classList.add("def");
+    const html = idlArray
+      .map(idlObj => writer.write(idlObj))
+      .filter(Boolean)
+      .map(line => (line.endsWith("\n") ? line : `${line}\n`))
+      .join("")
+      .trim();
+    return { idlElem, html };
+  };
 }
 
 const styleElement = document.createElement("style");
@@ -549,12 +550,12 @@ styleElement.textContent = css;
 document.head.appendChild(styleElement);
 
 export function run(conf, doc, cb) {
-  // Find all idls
   const idls = doc.querySelectorAll("pre.idl");
   if (!idls.length) {
     styleElement.remove();
     return cb();
   }
+  const toHTML = makeWriter();
   // If we have IDL to process...
   Array.from(idls)
     .map(idlElem => ({ idlArray: toIdlArray(idlElem), idlElem }))
