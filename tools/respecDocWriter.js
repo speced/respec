@@ -116,9 +116,7 @@ async function generateHTML(page, version, url) {
 }
 
 async function checkReSpecVersion(page) {
-  if (!(await page.evaluate(() => window.hasOwnProperty("respecVersion")))) {
-    throw new Error("No respecVersion is found");
-  }
+  await page.waitForFunction(() => window.hasOwnProperty("respecVersion"));
   const version = await page.evaluate(getVersion);
   const [mayor] = version;
   // The exportDocument() method only appeared in vesion 18.
