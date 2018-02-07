@@ -85,8 +85,8 @@
     "hyperhtml": "^2.5.9",
     "loading-indicator": "^2.0.0",
     "marked": "^0.3.12",
-    "nightmare": "^2.10.0",
     "prompt": "^1.0.0",
+    "puppeteer": "^1.0.0",
     "snyk": "^1.69.6"
   },
   "snyk": true
