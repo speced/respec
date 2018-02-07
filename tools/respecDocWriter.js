@@ -76,7 +76,7 @@ async function fetchAndWrite(src, out, whenToHalt, timeout = 300000) {
       const msg = `${warn} ${colors.debug(url)}`;
       throw new Error(msg);
     }
-    await checkIfReSpec(browser, page);
+    await checkIfReSpec(page);
     const version = await checkReSpecVersion(page);
     const html = await generateHTML(page, version, url);
     switch (out) {
