@@ -70,7 +70,7 @@ async function fetchAndWrite(src, out, whenToHalt, timeout = 300000) {
     const handleConsoleMessages = makeConsoleMsgHandler(page);
     handleConsoleMessages(whenToHalt);
     if (!response.ok()) {
-      const warn = colors.warn(`📡 HTTP Error ${response.code}:`);
+      const warn = colors.warn(`📡 HTTP Error ${response.status()}:`);
       const msg = `${warn} ${colors.debug(url)}`;
       throw new Error(msg);
     }
