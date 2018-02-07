@@ -120,7 +120,7 @@ const usageSections = [
   const timeout = parsedArgs.timeout;
   const out = parsedArgs.out;
   try {
-    await fetchAndWrite(src, out, whenToHalt * 1000, timeout);
+    await fetchAndWrite(src, out, whenToHalt, timeout * 1000);
   } catch (err) {
     console.error(colors.error(err.message));
     return process.exit(1);
