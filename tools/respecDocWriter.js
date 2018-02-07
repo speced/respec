@@ -62,9 +62,7 @@ async function writeTo(outPath, data) {
  */
 async function fetchAndWrite(src, out, whenToHalt, timeout = 300000) {
   const userDataDir = await mkdtemp(os.tmpdir() + "/respec2html-");
-  const browser = await puppeteer.launch({
-    userDataDir
-  });
+  const browser = await puppeteer.launch({ userDataDir });
   try {
     const page = await browser.newPage();
     const url = parseURL(src).href;
