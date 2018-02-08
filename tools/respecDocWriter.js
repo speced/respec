@@ -7,7 +7,7 @@
 /*jshint node: true, browser: false*/
 "use strict";
 const os = require("os");
-const puppeteer = require('puppeteer');
+const puppeteer = require("puppeteer");
 const colors = require("colors");
 const { promisify } = require("util");
 const fs = require("fs");
