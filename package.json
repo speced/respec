@@ -59,7 +59,7 @@
     "babel:watch": "babel src -d js --watch --source-maps",
     "build:respec-w3c-common": "node ./tools/builder.js --profile=w3c-common",
     "build:components": "npm run copydeps && node ./tools/builddeps.js && npm run babel:build",
-    "build": "npm run snyk-protect && npm build:components",
+    "build": "npm run snyk-protect && npm run build:components",
     "copydeps": "node ./tools/copydeps.js",
     "handlebars": "handlebars",
     "karma": "karma start --single-run",
