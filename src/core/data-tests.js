@@ -23,11 +23,41 @@ export const name = "core/data-tests";
 const lang = defaultLang in l10n ? defaultLang : "en";
 
 function toListItem(href) {
-  return hyperHTML.bind(document.createElement("li"))`
+  
+  const [testFile] = new URL(href).pathname.split("/").reverse();
+  
+  const testParts = testFile.split(".");
+  const [testFileName] = testParts;
+  
+  const isSecureTest = testParts.find(part => part === "https");
+  const isManualTest = testFileName.split(".").join("-").split("-").find(part => part === "manual");
+  
+  let emojiList = document.createElement("span");
+
+  if (isSecureTest) {
+    const requiresConnectionEmoji = hyperHTML.bind(document.createElement("span"))` 🔒 `;
+    requiresConnectionEmoji.setAttribute("aria-label","requires a secure connection");
+    
+    testFileName.replace(".https","");
+    emojiList.append(requiresConnectionEmoji)
+  }
+  
+  if(isManualTest) {
+  
+    const manualPerformEmoji = hyperHTML.bind(document.createElement("span"))` 💪 `;
+    manualPerformEmoji.setAttribute("aria-label","the test must be run manually");
+  
+    testFileName.replace("-manual","");
+    emojiList.append(manualPerformEmoji)
+  }
+  
+  const testList = hyperHTML.bind(document.createElement("li"))`
     <a href="${href}">
-      ${href.split("/").pop()}
+      ${testFileName}
     </a>
   `;
+  testList.append(emojiList)
+  return testList
 }
 
 export function run(conf, doc, cb) {
