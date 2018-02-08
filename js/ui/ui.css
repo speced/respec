@@ -79,6 +79,23 @@
   transition: color 0.2s;
 }
 
+#respec-file-issue-btn {
+  height: 60px;
+  width: 50px;
+  background-color: rgb(255, 7, 5);
+  color: rgb(251, 249, 255);
+  border-radius: 5px;
+  border: none;
+  font-weight: bold;
+  position: fixed;
+  top: 200px;
+  right: 5px;
+}
+
+.respec-file-issue-hidden {
+  display: none;
+}
+
 #respec-menu {
   position: absolute;
   margin: 0;
