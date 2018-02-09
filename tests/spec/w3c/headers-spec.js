@@ -1016,11 +1016,11 @@ describe("W3C — Headers", function() {
   it("adds logos defined by configuration", async () => {
     const ops = makeStandardOps();
     const logo = {
-      src: "http://myimage",
+      src: "http://myimage/",
       alt: "this is a logo",
       height: "48",
       width: "72",
-      url: "http://hyperlink"
+      url: "http://hyperlink/"
     };
     const newProps = {
       logos: [logo]
