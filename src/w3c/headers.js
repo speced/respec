@@ -652,11 +652,11 @@ export function run(conf, doc, cb) {
       return urlParts[pos] || "";
     },
   });
-  if (W3CProcessVersion.known.includes(conf.processVersion) === false) {
+  if (!W3CProcessVersion.known.includes(conf.processVersion)) {
     const msg =
       `Unknown W3C Process Document version: "${
         conf.processVersion
-      }". Please update your ` +
+      }". ReSpec has set your document to use the ${W3CProcessVersion.current} process. Please update your ` +
       "[`processVersion`](https://github.com/w3c/respec/wiki/processVersion) configuration option " +
       `to one of: ${W3CProcessVersion.known.join(", ")}.`;
     pub("error", msg);
@@ -667,10 +667,12 @@ export function run(conf, doc, cb) {
         conf.processVersion
       } Process Document has been superceded by the ${
         W3CProcessVersion.current
-      } Process Document. Please update, or remove, your ` +
+      } Process Document. ReSpec has set your document to use the ${W3CProcessVersion.current} process. `
+      `To silence this warning, update or remove, the ` +
       "[`processVersion`](https://github.com/w3c/respec/wiki/processVersion) " +
       "configuration option.";
     pub("warn", msg);
+    conf.processVersion = W3CProcessVersion.current;
   }
   conf.isNewProcess = conf.processVersion === W3CProcessVersion.current;
   // configuration done - yay!
