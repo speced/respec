@@ -389,6 +389,10 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 }
 
 export function run(conf, doc, cb) {
+  conf.isUnofficial = conf.specStatus === "unofficial";
+  if (conf.isUnofficial) {
+    conf.logos = [];
+  }
   // Default include RDFa document metadata
   if (conf.doRDFa === undefined) conf.doRDFa = true;
   // validate configuration and derive new configuration values
@@ -624,10 +628,6 @@ export function run(conf, doc, cb) {
   if (conf.isRec && !conf.errata)
     pub("error", "Recommendations must have an errata link.");
   conf.notRec = conf.specStatus !== "REC";
-  conf.isUnofficial = conf.specStatus === "unofficial";
-  if (!conf.logos) {
-    conf.logos = conf.isUnofficial ? [] : w3cDefaults.logos;
-  }
   conf.prependW3C = !conf.isUnofficial;
   conf.isED = conf.specStatus === "ED";
   conf.isCR = conf.specStatus === "CR";

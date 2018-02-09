@@ -1028,7 +1028,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      // has details with annoying annoying warning
+      // get first logo
       const aElem = doc.querySelector(".head p:not(.copyright):first-child > a");
       const img = aElem.children[0];
       expect(img.src).toEqual(logo.src);
