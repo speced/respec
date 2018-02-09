@@ -638,7 +638,7 @@ export function run(conf, doc, cb) {
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
-  conf.processVersion = String(conf.processVersion) || "2018";
+  conf.processVersion = parseInt(conf.processVersion, 10) || 2018;
   Object.defineProperty(conf, "wgId", {
     get() {
       if (!this.hasOwnProperty("wgPatentURI")) {
@@ -650,16 +650,14 @@ export function run(conf, doc, cb) {
       return urlParts[pos] || "";
     },
   });
-  if (processVersion < "2018") {
-    const msg = "Process ${conf.processVersion} has been superceded by Process 2018." +
-      "Please update the `[processVersion]()` configuration option."
-    pub(
-      "warn",
-      ""
-    );
-    conf.processVersion = "2018";
+  if (processVersion < 2018) {
+    const msg =
+      "Process ${conf.processVersion} has been superceded by Process 2018." +
+      "Please update the `[processVersion](https://github.com/w3c/respec/wiki/processVersion)` configuration option.";
+    pub("warn", msg);
+    conf.processVersion = 2018;
   }
-  conf.isNewProcess = conf.processVersion == "2018";
+  conf.isNewProcess = conf.processVersion === 2018;
   // configuration done - yay!
 
   // annotate html element with RFDa

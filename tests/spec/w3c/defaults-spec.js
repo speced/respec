@@ -8,7 +8,7 @@ describe("W3C — Defaults", () => {
     };
     const doc = await makeRSDoc(ops);
     const rsConf = doc.defaultView.respecConfig;
-    expect(rsConf.processVersion).toEqual("2018");
+    expect(rsConf.processVersion).toEqual(2018);
     expect(rsConf.lint).toEqual({
       "no-headingless-sections": true,
       "privsec-section": true,
@@ -39,7 +39,7 @@ describe("W3C — Defaults", () => {
     };
     const doc = await makeRSDoc(ops);
     const rsConf = doc.defaultView.respecConfig;
-    expect(rsConf.processVersion).toEqual("2020");
+    expect(rsConf.processVersion).toEqual(2020);
     expect(rsConf.lint).toEqual({
       "no-headingless-sections": false,
       "privsec-section": false,
