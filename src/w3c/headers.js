@@ -95,6 +95,7 @@ import { concatDate, joinAnd, ISODate } from "core/utils";
 import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
 import tmpls from "templates";
+import { w3cDefaults } from "w3c/defaults";
 
 export const name = "w3c/headers";
 
@@ -250,7 +251,7 @@ function toLogo(obj) {
     pub("warn", msg);
     console.warn("warn", msg, a);
   }
-  a.href = obj.href ? obj.href : "";
+  a.href = obj.url || "";
   a.classList.add("logo");
   hyperHTML.bind(a)`
       <img
@@ -388,10 +389,6 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 }
 
 export function run(conf, doc, cb) {
-  // TODO: move to w3c defaults
-  if (!conf.logos) {
-    conf.logos = [];
-  }
   // Default include RDFa document metadata
   if (conf.doRDFa === undefined) conf.doRDFa = true;
   // validate configuration and derive new configuration values
@@ -628,6 +625,9 @@ export function run(conf, doc, cb) {
     pub("error", "Recommendations must have an errata link.");
   conf.notRec = conf.specStatus !== "REC";
   conf.isUnofficial = conf.specStatus === "unofficial";
+  if (!conf.logos) {
+    conf.logos = conf.isUnofficial ? [] : w3cDefaults.logos;
+  }
   conf.prependW3C = !conf.isUnofficial;
   conf.isED = conf.specStatus === "ED";
   conf.isCR = conf.specStatus === "CR";
