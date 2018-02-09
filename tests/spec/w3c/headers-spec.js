@@ -1013,29 +1013,27 @@ describe("W3C — Headers", function() {
       "does not expect this document to become a W3C Recommendation";
     expect(sotdText).toMatch(expectedString);
   });
-  describe("logos", () => {
-    it("adds logos defined by configuration", async () => {
-      const ops = makeStandardOps();
-      const logo = {
-        src: "myimage",
-        alt: "this is a logo",
-        height: "48",
-        width: "72",
-        url: "hyperlink"
-      };
-      const newProps = {
-        logos: [logo]
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      // has details with annoying annoying warning
-      const aElem = doc.querySelector(".head p:not(.copyright):first-child > a");
-      const img = aElem.children[0];
-      expect(img.src).toEqual(logo.src);
-      expect(img.alt).toEqual(logo.alt);
-      expect(img.height).toEqual(logo.height);
-      expect(img.width).toEqual(logo.width);
-      expect(aElem.href).toEqual(logo.url);
-    });
+  it("adds logos defined by configuration", async () => {
+    const ops = makeStandardOps();
+    const logo = {
+      src: "myimage",
+      alt: "this is a logo",
+      height: "48",
+      width: "72",
+      url: "hyperlink"
+    };
+    const newProps = {
+      logos: [logo]
+    };
+    Object.assign(ops.config, newProps);
+    const doc = await makeRSDoc(ops);
+    // has details with annoying annoying warning
+    const aElem = doc.querySelector(".head p:not(.copyright):first-child > a");
+    const img = aElem.children[0];
+    expect(img.src).toEqual(logo.src);
+    expect(img.alt).toEqual(logo.alt);
+    expect(img.height).toEqual(logo.height);
+    expect(img.width).toEqual(logo.width);
+    expect(aElem.href).toEqual(logo.url);
   });
 });
