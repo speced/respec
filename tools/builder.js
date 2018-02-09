@@ -7,7 +7,6 @@ const loading = require("loading-indicator");
 const path = require("path");
 const presets = require("loading-indicator/presets");
 const r = require("requirejs");
-const UglifyJS = require("uglify-es");
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
 colors.setTheme({
@@ -77,13 +76,6 @@ See original source for licenses: https://github.com/w3c/respec */
 window.respecVersion = "${version}";
 ${optimizedJs}
 require(['profile-${name}']);`;
-    const result = UglifyJS.minify(respecJs, {
-      toplevel: true,
-      sourceMap: {
-        filename: `respec-${name}.js`,
-        url: `respec-${name}.build.js.map`,
-      },
-    });
     if ("error" in result) {
       throw new Error(result.error);
     }
