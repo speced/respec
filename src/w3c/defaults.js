@@ -4,7 +4,7 @@
 export const name = "w3c/defaults";
 export const W3CProcessVersion = {
   current: 2018,
-  known: [2018, 2015, 2014, 2005],
+  known: [2018, 2017, 2015, 2014, 2005],
 };
 import linter from "core/linter";
 import { rule as noHeadinglessSectionsRule } from "core/linter-rules/no-headingless-sections";
