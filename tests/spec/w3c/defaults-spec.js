@@ -23,7 +23,7 @@ describe("W3C — Defaults", () => {
     const ops = {
       config: {
         editors: [{ name: "foo" }],
-        processVersion: 2020,
+        processVersion: "2005",
         lint: {
           "no-headingless-sections": false,
           "privsec-section": false,
@@ -39,7 +39,7 @@ describe("W3C — Defaults", () => {
     };
     const doc = await makeRSDoc(ops);
     const rsConf = doc.defaultView.respecConfig;
-    expect(rsConf.processVersion).toEqual(2020);
+    expect(rsConf.processVersion).toEqual(2005);
     expect(rsConf.lint).toEqual({
       "no-headingless-sections": false,
       "privsec-section": false,
