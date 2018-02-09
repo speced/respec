@@ -95,7 +95,7 @@ import { concatDate, joinAnd, ISODate } from "core/utils";
 import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
 import tmpls from "templates";
-import { currentW3CProcessVersion } from "w3c/defaults";
+import { W3CProcessVersion } from "w3c/defaults";
 
 export const name = "w3c/headers";
 
@@ -640,7 +640,7 @@ export function run(conf, doc, cb) {
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
   conf.processVersion =
-    parseInt(conf.processVersion, 10) || currentW3CProcessVersion;
+    parseInt(conf.processVersion, 10) || W3CProcessVersion.current;
   Object.defineProperty(conf, "wgId", {
     get() {
       if (!this.hasOwnProperty("wgPatentURI")) {
@@ -652,15 +652,26 @@ export function run(conf, doc, cb) {
       return urlParts[pos] || "";
     },
   });
-  if (conf.processVersion < currentW3CProcessVersion) {
+  if (W3CProcessVersion.known.includes(conf.processVersion) === false) {
     const msg =
-      `W3C Process Document ${
+      `Unknown W3C Process Document version: "${
         conf.processVersion
-      } has been superceded by W3C Process Document ${currentW3CProcessVersion}.` +
-      "Please update, or remove, your [`processVersion`](https://github.com/w3c/respec/wiki/processVersion) configuration option.";
+      }". Please update your ` +
+      "[`processVersion`](https://github.com/w3c/respec/wiki/processVersion) configuration option " +
+      `to one of: ${W3CProcessVersion.known.join(", ")}.`;
+    pub("error", msg);
+  } else if (conf.processVersion < W3CProcessVersion.current) {
+    const msg =
+      `The W3C's ${
+        conf.processVersion
+      } Process Document has been superceded by the ${
+        W3CProcessVersion.current
+      } Process Document. Please update, or remove, your ` +
+      "[`processVersion`](https://github.com/w3c/respec/wiki/processVersion) " +
+      "configuration option.";
     pub("warn", msg);
   }
-  conf.isNewProcess = conf.processVersion === currentW3CProcessVersion;
+  conf.isNewProcess = conf.processVersion === W3CProcessVersion.current;
   // configuration done - yay!
 
   // annotate html element with RFDa
