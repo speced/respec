@@ -13,7 +13,7 @@ module.exports = function(config) {
 
     // configuration
     detectBrowsers: {
-      enabled: true,
+      enabled: !config.browsers.length,
       usePhantomJS: false,
       postDetection(browsers) {
         return (
@@ -122,7 +122,7 @@ module.exports = function(config) {
     options.singleRun = true;
     options.concurrency = 1;
     options.reporters = ["mocha"];
-    options.browsers = ["Chrome"]; //"Firefox"
+    options.browsers = ["ChromeHeadless"]; //"Firefox"
   }
   config.set(options);
 };
