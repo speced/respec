@@ -57,7 +57,7 @@
   "scripts": {
     "babel:build": "babel src -d js --source-maps -q",
     "babel:watch": "babel src -d js --watch --source-maps",
-    "build:components": "npm run copydeps && node ./tools/build-components.js && npm run babel:build && npm run parcel",
+    "build:components": "npm run copydeps && node ./tools/build-components.js && npm run babel:build",
     "build": "npm run snyk-protect && npm run build:components",
     "copydeps": "node ./tools/copydeps.js",
     "handlebars": "handlebars",
