@@ -95,6 +95,7 @@ import { concatDate, joinAnd, ISODate } from "core/utils";
 import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
 import tmpls from "templates";
+import { currentW3CProcessVersion } from "w3c/defaults";
 
 export const name = "w3c/headers";
 
@@ -638,7 +639,8 @@ export function run(conf, doc, cb) {
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
-  conf.processVersion = parseInt(conf.processVersion, 10) || 2018;
+  conf.processVersion =
+    parseInt(conf.processVersion, 10) || currentW3CProcessVersion;
   Object.defineProperty(conf, "wgId", {
     get() {
       if (!this.hasOwnProperty("wgPatentURI")) {
@@ -650,14 +652,16 @@ export function run(conf, doc, cb) {
       return urlParts[pos] || "";
     },
   });
-  if (processVersion < 2018) {
+  if (conf.processVersion < currentW3CProcessVersion) {
     const msg =
-      "Process ${conf.processVersion} has been superceded by Process 2018." +
+      `Process ${
+        conf.processVersion
+      } has been superceded by Process ${currentW3CProcessVersion}.` +
       "Please update the `[processVersion](https://github.com/w3c/respec/wiki/processVersion)` configuration option.";
     pub("warn", msg);
-    conf.processVersion = 2018;
+    conf.processVersion = currentW3CProcessVersion;
   }
-  conf.isNewProcess = conf.processVersion === 2018;
+  conf.isNewProcess = conf.processVersion === currentW3CProcessVersion;
   // configuration done - yay!
 
   // annotate html element with RFDa

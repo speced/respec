@@ -2,6 +2,8 @@
  * Sets the defaults for W3C specs
  */
 export const name = "w3c/defaults";
+export const currentW3CProcessVersion = 2018;
+
 import linter from "core/linter";
 import { rule as noHeadinglessSectionsRule } from "core/linter-rules/no-headingless-sections";
 import { rule as noHttpPropsRule } from "core/linter-rules/no-http-props";
@@ -48,7 +50,7 @@ const licenses = new Map([
 ]);
 
 const w3cDefaults = {
-  processVersion: 2018,
+  processVersion: currentW3CProcessVersion,
   lint: {
     "no-headingless-sections": true,
     "privsec-section": true,
