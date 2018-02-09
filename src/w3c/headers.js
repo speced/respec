@@ -657,7 +657,7 @@ export function run(conf, doc, cb) {
       `Process ${
         conf.processVersion
       } has been superceded by Process ${currentW3CProcessVersion}.` +
-      "Please update the `[processVersion](https://github.com/w3c/respec/wiki/processVersion)` configuration option.";
+      "Please update the [`processVersion`](https://github.com/w3c/respec/wiki/processVersion) configuration option.";
     pub("warn", msg);
     conf.processVersion = currentW3CProcessVersion;
   }
