@@ -660,6 +660,7 @@ export function run(conf, doc, cb) {
       "[`processVersion`](https://github.com/w3c/respec/wiki/processVersion) configuration option " +
       `to one of: ${W3CProcessVersion.known.join(", ")}.`;
     pub("error", msg);
+    conf.processVersion = W3CProcessVersion.current;
   } else if (conf.processVersion < W3CProcessVersion.current) {
     const msg =
       `The W3C's ${
