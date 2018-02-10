@@ -71,7 +71,7 @@
     "test:karma": "npm run karma",
     "prepare": "npm run snyk-protect",
     "prepublish": "npm run snyk-protect",
-    "parcel": "parcel ./examples/basic.html -d ./builds"
+    "parcel": "parcel  ./builds/respec-w3c-common.js -d ./builds/output"
   },
   "dependencies": {
     "colors": "^1.1.2",
