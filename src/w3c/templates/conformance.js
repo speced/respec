@@ -1,7 +1,7 @@
 import "deps/hyperhtml";
 
 export default () => {
-  const html = hyperHTML.wire();
+  const html = (...args) => hyperHTML.wire()(...args);
   return html`<h2>Conformance</h2>
 <p>
   As well as sections marked as non-normative, all authoring guidelines, diagrams, examples,
