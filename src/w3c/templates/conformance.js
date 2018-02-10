@@ -10,5 +10,5 @@ export default () => {
 </p>
 <p id='respecRFC2119'>
   to be interpreted as described in [[!RFC2119]].
-</p>`
+</p>`;
 }

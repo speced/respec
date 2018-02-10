@@ -41,5 +41,5 @@ ${!conf.sotdAfterWGinfo ? [conf.additionalContent] : ""}
     email's subject` : ""}.</p>
   ` : ""}
 ${conf.sotdAfterWGinfo ? [conf.additionalContent] : ""}
-${[conf.additionalSections]}`
+${[conf.additionalSections]}`;
 }
