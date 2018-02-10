@@ -95,6 +95,8 @@ import { concatDate, joinAnd, ISODate } from "core/utils";
 import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
 import tmpls from "templates";
+import cgbgSotdTmpl from "w3c/templates/cgbg-sotd";
+import sotdTmpl from "w3c/templates/sotd";
 
 export const name = "w3c/headers";
 
@@ -763,7 +765,7 @@ export function run(conf, doc, cb) {
   if (conf.subjectPrefix !== "")
     conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
 
-  sotd.innerHTML = populateSoTD(conf, sotd);
+  hyperHTML.bind(sotd)`${populateSoTD(conf, sotd)}`;
 
   if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
     pub(
@@ -807,5 +809,5 @@ function populateSoTD(conf, sotd) {
   conf.additionalContent = additionalContent.innerHTML;
   // Whatever sections are left, we throw at the end.
   conf.additionalSections = sotdClone.innerHTML;
-  return tmpls[conf.isCGBG ? "cgbg-sotd.html" : "sotd.html"](conf);
+  return (conf.isCGBG ? cgbgSotdTmpl : sotdTmpl)(conf);
 }
