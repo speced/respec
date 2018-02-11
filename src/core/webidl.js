@@ -189,23 +189,6 @@ function idlType2Html(idlType) {
       nullable
     );
   }
-  if (idlType.array) {
-    var arrayStr = "";
-    for (var i = 0; i < idlType.array; ++i) {
-      if (idlType.nullableArray[i]) {
-        arrayStr += "?";
-      }
-      arrayStr += "[]";
-    }
-    return (
-      idlType2Html({
-        generic: idlType.generic,
-        idlType: idlType.idlType,
-      }) +
-      arrayStr +
-      nullable
-    );
-  }
   var type = "";
   if (idlType.generic) {
     type = standardTypes.has(idlType.generic)
@@ -244,23 +227,6 @@ function idlType2Text(idlType) {
         })
         .join(" or ") +
       ")" +
-      nullable
-    );
-  }
-  if (idlType.array) {
-    var arrayStr = "";
-    for (var i = 0; i < idlType.array; ++i) {
-      if (idlType.nullableArray[i]) {
-        arrayStr += "?";
-      }
-      arrayStr += "[]";
-    }
-    return (
-      idlType2Text({
-        generic: idlType.generic,
-        idlType: idlType.idlType,
-      }) +
-      arrayStr +
       nullable
     );
   }
