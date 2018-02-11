@@ -58,15 +58,7 @@ function registerHelpers() {
     if (rhs.type === "identifier") {
       return options.fn(rhs.value);
     }
-    return (
-      "(" +
-      rhs.value
-        .map(function(item) {
-          return options.fn(item);
-        })
-        .join(",") +
-      ")"
-    );
+    return `(${rhs.value.map(options.fn)})`;
   });
   hb.registerHelper("param", function(obj) {
     return new hb.SafeString(
@@ -117,26 +109,20 @@ function registerHelpers() {
   });
   hb.registerHelper("join", function(arr, between, options) {
     return arr
-      .map(function(elem) {
-        return options.fn(elem);
-      })
+      .map(options.fn)
       .join(between);
   });
   hb.registerHelper("joinNonWhitespace", function(arr, between, options) {
     return arr
-      .filter(function(elem) {
-        return elem.type !== "ws";
-      })
-      .map(function(elem) {
-        return options.fn(elem);
-      })
+      .filter(elem => elem.type !== "ws")
+      .map(options.fn)
       .join(between);
   });
   // A block helper that emits an <a title> around its contents
   // if obj.dfn exists. If it exists, that implies that
   // there's another <dfn> for the object.
   hb.registerHelper("tryLink", function(obj, options) {
-    var content = options.fn(this);
+    const content = options.fn(this);
     const isDefaultJSON =
       obj.name === "toJSON" &&
       obj.extAttrs.some(({ name }) => name === "Default");
@@ -162,39 +148,26 @@ function registerHelpers() {
 }
 
 function idn(lvl) {
-  var str = "";
-  for (var i = 0; i < lvl; i++) {
-    str += "    ";
-  }
-  return str;
+  return "    ".repeat(lvl);
 }
 
 function idlType2Html(idlType) {
   if (typeof idlType === "string") {
-    return "<a>" + hb.Utils.escapeExpression(idlType) + "</a>";
+    return `<a>${hb.Utils.escapeExpression(idlType)}</a>`;
   }
   if (Array.isArray(idlType)) {
     return idlType.map(idlType2Html).join(", ");
   }
-  var nullable = idlType.nullable ? "?" : "";
+  const nullable = idlType.nullable ? "?" : "";
   if (idlType.union) {
-    return (
-      "(" +
-      idlType.idlType
-        .map(function(type) {
-          return idlType2Html(type);
-        })
-        .join(" or ") +
-      ")" +
-      nullable
-    );
+    return `(${idlType.idlType.map(idlType2Html).join(" or ")})${nullable}`;
   }
-  var type = "";
+  let type = "";
   if (idlType.generic) {
     type = standardTypes.has(idlType.generic)
       ? linkStandardType(idlType.generic)
       : idlType2Html(idlType.generic);
-    type = type + "&lt;" + idlType2Html(idlType.idlType) + ">";
+    type = `${type}&lt;${idlType2Html(idlType.idlType)}>`;
   } else {
     type = standardTypes.has(idlType.idlType)
       ? linkStandardType(idlType.idlType)
@@ -208,27 +181,16 @@ function linkStandardType(type) {
     return type;
   }
   const safeType = hb.Utils.escapeExpression(type);
-  return (
-    "<a data-cite='" + standardTypes.get(safeType) + "'>" + safeType + "</a>"
-  );
+  return `<a data-cite='${standardTypes.get(safeType)}'>${safeType}</a>`;
 }
 
 function idlType2Text(idlType) {
   if (typeof idlType === "string") {
     return idlType;
   }
-  var nullable = idlType.nullable ? "?" : "";
+  const nullable = idlType.nullable ? "?" : "";
   if (idlType.union) {
-    return (
-      "(" +
-      idlType.idlType
-        .map(function(type) {
-          return idlType2Text(type);
-        })
-        .join(" or ") +
-      ")" +
-      nullable
-    );
+    return `(${idlType.idlType.map(idlType2Text).join(" or ")})${nullable}`;
   }
   if (idlType.generic) {
     const types = []
@@ -241,12 +203,7 @@ function idlType2Text(idlType) {
 }
 
 function pads(num) {
-  // XXX
-  //  this might be more simply done as
-  //  return Array(num + 1).join(" ")
-  var str = "";
-  for (var i = 0; i < num; i++) str += " ";
-  return str;
+  return " ".repeat(num);
 }
 var whitespaceTypes = {
   ws: true,
