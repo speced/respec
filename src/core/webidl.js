@@ -497,18 +497,17 @@ function writeDefinition(obj, indent) {
       var members = obj.members.filter(function(member) {
         return !typeIsWhitespace(member.type);
       });
-      obj.members.forEach(function(it) {
+      for (const it of obj.members) {
         if (typeIsWhitespace(it.type)) {
-          return;
+          continue;
         }
-        var qualifiers = "";
-        if (it.required) qualifiers += "required ";
+        const qualifiers = it.required ? "required " : "";
         if (maxQualifiers < qualifiers.length)
           maxQualifiers = qualifiers.length;
 
         var typeLen = idlType2Text(it.idlType).length;
         if (maxType < typeLen) maxType = typeLen;
-      });
+      }
       var children = obj.members
         .map(function(it) {
           switch (it.type) {
@@ -799,21 +798,17 @@ function writeMultiLineComment(comment, indent) {
 }
 
 function writeMaplike(maplike, indent) {
-  var qualifiers = "";
-  if (maplike.readonly) qualifiers += "readonly ";
   return idlMaplikeTmpl({
     obj: maplike,
-    qualifiers: qualifiers,
+    qualifiers: maplike.readonly ? "readonly " : "",
     indent: indent,
   });
 }
 
 function writeIterable(iterable, indent) {
-  var qualifiers = "";
-  if (iterable.readonly) qualifiers += "readonly ";
   return idlIterableTmpl({
     obj: iterable,
-    qualifiers: qualifiers,
+    qualifiers: iterable.readonly ? "readonly " : "",
     indent: indent,
   });
 }
