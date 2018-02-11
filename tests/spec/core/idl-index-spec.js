@@ -39,6 +39,40 @@ interface Bar {
     expect(header.textContent).toEqual("1. IDL Index");
   });
 
+  it("allows multi-block idl", async () => {
+    const body = `
+      ${makeDefaultBody()}
+      <section>
+        <pre class=idl>
+        [Constructor, Exposed=Window]
+        interface BeforeInstallPromptEvent : Event {
+            Promise&lt;PromptResponseObject&gt; prompt();
+        };
+        dictionary PromptResponseObject {
+          AppBannerPromptOutcome userChoice;
+        };
+        </pre>
+      </section>
+      <section id="idl-index"></section>
+    `;
+    const expectedIDL = `[Constructor,
+ Exposed=Window]
+interface BeforeInstallPromptEvent : Event {
+    Promise<PromptResponseObject> prompt();
+};
+dictionary PromptResponseObject {
+    AppBannerPromptOutcome userChoice;
+};\n`;
+    const ops = {
+      config: makeBasicConfig(),
+      body,
+    };
+    const doc = await makeRSDoc(ops);
+    const idlIndex = doc.querySelector("#idl-index");
+    expect(idlIndex).not.toBe(null);
+    expect(idlIndex.querySelector("pre").textContent).toEqual(expectedIDL);
+  });
+
   it("allows custom content and header", async () => {
     const body = `
       ${makeDefaultBody()}
