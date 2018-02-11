@@ -112,29 +112,6 @@ const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
 hb.registerHelper("showPeople", function(name, items = []) {
   const html = (...args) => hyperHTML.wire()(...args);
   // stuff to handle RDFa
-  var re = "",
-    rp = "",
-    rm = "",
-    rn = "",
-    rwu = "",
-    rpu = "",
-    bn = "",
-    editorid = "",
-    propSeeAlso = "";
-  if (this.doRDFa) {
-    if (name === "Editor") {
-      bn = "_:editor0";
-      re = ` property='bibo:editor' resource='${bn}'`;
-      rp = " property='rdf:first' typeof='foaf:Person'";
-    } else if (name === "Author") {
-      rp = " property='dc:contributor' typeof='foaf:Person'";
-    }
-    rn = " property='foaf:name'";
-    rm = " property='foaf:mbox'";
-    rwu = " property='foaf:workplaceHomepage'";
-    rpu = " property='foaf:homepage'";
-    propSeeAlso = " property='rdfs:seeAlso'";
-  }
   const attr = this.doRDFa ? {
     ...name === "Editor" ? {
       bn: "_:editor0",
@@ -151,34 +128,34 @@ hb.registerHelper("showPeople", function(name, items = []) {
     rpu: "foaf:homepage",
     propSeeAlso: "rdfs:seeAlso"
   } : {};
-  var ret = "";
-  for (var i = 0, n = items.length; i < n; i++) {
-    var p = items[i];
-    if (p.w3cid) {
-      editorid = ` data-editor-id='${parseInt(p.w3cid, 10)}'`;
-    }
-    if (this.doRDFa) {
-      ret += `<dd class='p-author h-card vcard' ${re}${editorid}><span${rp}>`;
-      if (name === "Editor") {
-        // Update to next sequence in rdf:List
-        attr.bn = bn = i < n - 1 ? `_:editor${i + 1}` : "rdf:nil";
-        re = ` resource='${bn}'`;
-      }
-    } else {
-      ret += `<dd class='p-author h-card vcard'${editorid}>`;
+  let ret = "";
+  for (let i = 0, n = items.length; i < n; i++) {
+    const p = items[i];
+    const editorid = p.w3cid ? parseInt(p.w3cid, 10): null;
+    const dd = html`<dd class='p-author h-card vcard'
+      property='${attr.re}' resource='${attr.bn}' data-editor-id='${editorid}'></dd>`;
+    const span = this.doRDFa ?
+      html`<span property='${attr.rp1}' typeof='${attr.rp2}'></span>` :
+      document.createDocumentFragment();
+    if (this.doRDFa && name === "Editor") {
+      // Update to next sequence in rdf:List
+      attr.bn = i < n - 1 ? `_:editor${i + 1}` : "rdf:nil";
+      attr.re = null;
     }
     const contents = [];
     if (p.url) {
       if (this.doRDFa) {
         contents.push(html`<meta property='${attr.rn}' content='${p.name}' />`);
       }
-      contents.push(html`<a class='u-url url p-name fn' property='${attr.rpu}' href='${p.url}'>${p.name}</a>`);
+      contents.push(html`<a class='u-url url p-name fn'
+        property='${attr.rpu}' href='${p.url}'>${p.name}</a>`);
     } else {
       contents.push(html`<span property='${attr.rn}' class='p-name fn'>${p.name}</span>`);
     }
     if (p.company) {
       if (p.companyURL) {
-        contents.push(html`, <a property=${attr.rwu} class='p-org org h-org h-card' href='${p.companyURL}'>${p.company}</a>`);
+        contents.push(html`, <a property='${attr.rwu}'
+          class='p-org org h-org h-card' href='${p.companyURL}'>${p.company}</a>`);
       }
       else contents.push(document.createTextNode(`, ${p.company}`));
     }
@@ -209,13 +186,12 @@ hb.registerHelper("showPeople", function(name, items = []) {
         contents.push(document.createTextNode(", "), result);
       }
     }
-    ret += hyperHTML.bind(document.createElement("div"))`${contents}`.innerHTML;
-    if (this.doRDFa) {
-      ret += "</span>\n";
-      if (name === "Editor")
-        ret += `<span property='rdf:rest' resource='${bn}'></span>\n`;
+    hyperHTML.bind(span)`${contents}`;
+    dd.appendChild(span);
+    if (this.doRDFa && name === "Editor") {
+      dd.appendChild(html`\n<span property='rdf:rest' resource='${attr.bn}'></span>\n`);
     }
-    ret += "</dd>\n";
+    ret += dd.outerHTML;
   }
   return new hb.SafeString(ret);
 });
