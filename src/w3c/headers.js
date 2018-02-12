@@ -95,7 +95,6 @@ import { concatDate, joinAnd, ISODate } from "core/utils";
 import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
 import tmpls from "templates";
-import { W3CProcessVersion } from "w3c/defaults";
 
 export const name = "w3c/headers";
 
@@ -639,8 +638,6 @@ export function run(conf, doc, cb) {
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
-  conf.processVersion =
-    parseInt(conf.processVersion, 10) || W3CProcessVersion.current;
   Object.defineProperty(conf, "wgId", {
     get() {
       if (!this.hasOwnProperty("wgPatentURI")) {
@@ -652,29 +649,6 @@ export function run(conf, doc, cb) {
       return urlParts[pos] || "";
     },
   });
-  if (!W3CProcessVersion.known.includes(conf.processVersion)) {
-    const msg =
-      `Unknown W3C Process Document version: "${
-        conf.processVersion
-      }". ReSpec has set your document to use the ${W3CProcessVersion.current} process. Please update your ` +
-      "[`processVersion`](https://github.com/w3c/respec/wiki/processVersion) configuration option " +
-      `to one of: ${W3CProcessVersion.known.join(", ")}.`;
-    pub("error", msg);
-    conf.processVersion = W3CProcessVersion.current;
-  } else if (conf.processVersion < W3CProcessVersion.current) {
-    const msg =
-      `The W3C's ${
-        conf.processVersion
-      } Process Document has been superceded by the ${
-        W3CProcessVersion.current
-      } Process Document. ReSpec has set your document to use the ${W3CProcessVersion.current} process. `
-      `To silence this warning, update or remove, the ` +
-      "[`processVersion`](https://github.com/w3c/respec/wiki/processVersion) " +
-      "configuration option.";
-    pub("warn", msg);
-    conf.processVersion = W3CProcessVersion.current;
-  }
-  conf.isNewProcess = conf.processVersion === W3CProcessVersion.current;
   // configuration done - yay!
 
   // annotate html element with RFDa
