@@ -95,7 +95,6 @@ import { concatDate, joinAnd, ISODate } from "core/utils";
 import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
 import tmpls from "templates";
-import { w3cDefaults } from "w3c/defaults";
 
 export const name = "w3c/headers";
 
