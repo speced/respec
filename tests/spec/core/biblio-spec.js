@@ -60,11 +60,12 @@ describe("W3C — Bibliographic References", () => {
 
   afterAll(flushIframes);
   const bibRefsURL = new URL("https://specref.herokuapp.com/bibrefs");
-  const specRefPing = fetch(bibRefsURL, { method: "HEAD" });
 
   let doc;
+  let specRefOk;
   beforeAll(async () => {
     doc = await makeRSDoc({ config, body });
+    specRefOk = (await fetch(bibRefsURL, { method: "HEAD" })).ok;
   });
 
   it("pings biblio service to see if it's running", async () => {
