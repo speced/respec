@@ -59,8 +59,8 @@ describe("W3C — Bibliographic References", () => {
   `;
 
   afterAll(flushIframes);
-  const specRefPing = fetch(bibRefsURL, { method: "HEAD" });
   const bibRefsURL = new URL("https://specref.herokuapp.com/bibrefs");
+  const specRefPing = fetch(bibRefsURL, { method: "HEAD" });
 
   let doc;
   beforeAll(async () => {
