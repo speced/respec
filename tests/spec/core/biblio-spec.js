@@ -68,9 +68,8 @@ describe("W3C — Bibliographic References", () => {
     specRefOk = (await fetch(bibRefsURL, { method: "HEAD" })).ok;
   });
 
-  it("pings biblio service to see if it's running", async () => {
-    const res = await specRefPing;
-    expect(res.ok).toBeTruthy();
+  it("pings biblio service to see if it's running", () => {
+    expect(specRefOk).toBeTruthy();
   });
 
   it("includes a dns-prefetch to bibref server", () => {
@@ -85,7 +84,7 @@ describe("W3C — Bibliographic References", () => {
     let ref = doc.querySelector("#bib-TestRef1 + dd");
     expect(ref).toBeTruthy();
     // This prevents Jasmine from taking down the whole test suite if SpecRef is down.
-    if (!(await specRefPing).ok) {
+    if (!specRefOk.ok) {
       throw new Error(
         "SpecRef seems to be down. Can't proceed with this spec."
       );
