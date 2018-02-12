@@ -96,6 +96,7 @@ export async function run(conf) {
     edDraftURI: `https://${org.toLowerCase()}.github.io/${repo}/`,
     githubAPI: `https://api.github.com/repos/${org}/${repo}`,
     issueBase: `${ghURL.href}${ghURL.pathname.endsWith("/") ? "" : "/"}issues/`,
+    pullBase: `${ghURL.href}${ghURL.pathname.endsWith("/") ? "" : "/"}pulls/`,
   };
   const commitsHref = `${ghURL.href}${
     ghURL.pathname.endsWith("/") ? "" : "/"
@@ -114,6 +115,10 @@ export async function run(conf) {
       {
         value: conf.l10n.commit_history,
         href: commitsHref,
+      },
+      {
+        value: conf.l10n.pull_requests,
+        href: newProps.pullBase,
       },
     ],
   };

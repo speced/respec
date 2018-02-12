@@ -31,6 +31,7 @@ const base = {
   example: "Example",
   fig: "Figure ",
   file_a_bug: "File a bug",
+  pull_requests: "Pull requests",
   info_references: "Informative references",
   issue_summary: "Issue Summary",
   issue: "Issue",

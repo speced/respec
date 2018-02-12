@@ -94,6 +94,13 @@ describe("Core - Github", () => {
       const ghLink = Array.from(doc.querySelectorAll("dd")).find(
         elem => elem.textContent.trim() === "GitHub w3c/respec"
       );
+      const pullRequests = Array.from(doc.querySelectorAll("dd")).find(
+        elem => elem.textContent.trim() === l10n.pull_requests
+      );
+      expect(pullRequests).toBeTruthy();
+      expect(pullRequests.querySelector("a").href).toEqual(
+        "https://github.com/w3c/respec/pulls/"
+      );
       expect(ghLink).toBeTruthy();
       expect(ghLink.querySelector("a").href).toEqual(
         "https://github.com/w3c/respec/"
