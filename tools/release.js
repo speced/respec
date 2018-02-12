@@ -393,7 +393,7 @@ const run = async () => {
 
     // 3. Run the build script (node tools/build-w3c-common.js).
     indicators.get("build-merge-tag").show();
-    await npm("run hb:build");
+    await npm("run build:components");
     await Builder.build({ name: "w3c-common" });
     app.use(express.static(dir));
     app.listen(port);

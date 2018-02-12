@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "19.1.1",
+  "version": "19.2.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -26,11 +26,11 @@
     "chai": "^4.1.2",
     "clipboard": "^1.7.1",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
-    "eslint-plugin-jasmine": "^2.9.1",
+    "eslint-plugin-jasmine": "^2.9.2",
     "glob": "^7.1.2",
     "handlebars": "^4.0.11",
     "http-server": "^0.11.0",
-    "jasmine-core": "^2.9.1",
+    "jasmine-core": "^3.0.0",
     "jasmine-reporters": "^2.3.0",
     "jquery": "^3.3.1",
     "karma": "^2.0.0",
@@ -58,11 +58,10 @@
     "babel:build": "babel src -d js --source-maps -q",
     "babel:watch": "babel src -d js --watch --source-maps",
     "build:respec-w3c-common": "node ./tools/builder.js --profile=w3c-common",
-    "build": "npm run snyk-protect && npm run copydeps && npm run hb:build && npm run highlight:build && npm run babel:build",
+    "build:components": "npm run copydeps && node ./tools/build-components.js && npm run babel:build",
+    "build": "npm run snyk-protect && npm run build:components",
     "copydeps": "node ./tools/copydeps.js",
     "handlebars": "handlebars",
-    "hb:build": "node ./tools/expandpaths.js -a js/*/templates/*.html js/*/templates/*.css js/core/templates/webidl-contiguous/*.html | xargs handlebars -f js/templates.js",
-    "highlight:build": "hljs -n --output js/deps/ xml javascript css http markdown json abnf && mv -f js/deps/highlight.pack.js js/deps/highlight.js",
     "karma": "karma start --single-run",
     "release": "node ./tools/release.js",
     "server": "npm start",
@@ -76,18 +75,18 @@
   },
   "dependencies": {
     "colors": "^1.1.2",
-    "command-line-args": "^5.0.0",
+    "command-line-args": "^5.0.2",
     "command-line-usage": "^4.1.0",
     "epipebomb": "^1.0.0",
     "express": "^4.16.2",
     "fs-extra": "^5.0.0",
     "highlight.js": "github:marcoscaceres/highlight.js#7b144b3b83ce296d5b29c5e4fc2ea2a65e9d3f32",
-    "hyperhtml": "^2.5.9",
+    "hyperhtml": "^2.5.10",
     "loading-indicator": "^2.0.0",
     "marked": "^0.3.12",
-    "nightmare": "^2.10.0",
     "prompt": "^1.0.0",
-    "snyk": "^1.69.6"
+    "puppeteer": "^1.0.0",
+    "snyk": "^1.69.7"
   },
   "snyk": true
 }
