@@ -84,7 +84,7 @@ describe("W3C — Bibliographic References", () => {
     let ref = doc.querySelector("#bib-TestRef1 + dd");
     expect(ref).toBeTruthy();
     // This prevents Jasmine from taking down the whole test suite if SpecRef is down.
-    if (!specRefOk.ok) {
+    if (!specRefOk) {
       throw new Error(
         "SpecRef seems to be down. Can't proceed with this spec."
       );
