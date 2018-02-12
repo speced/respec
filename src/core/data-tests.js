@@ -35,8 +35,9 @@ function toListItem(href) {
   let emojiList = document.createElement("span");
 
   if (isSecureTest) {
-    const requiresConnectionEmoji = hyperHTML.bind(document.createElement("span"))` 🔒 `;
-    requiresConnectionEmoji.setAttribute("aria-label","requires a secure connection");
+    const requiresConnectionEmoji = document.createElement("span")
+      requiresConnectionEmoji.innerHTML = `🔒`;
+      requiresConnectionEmoji.setAttribute("aria-label","requires a secure connection");
     
     testFileName.replace(".https","");
     emojiList.append(requiresConnectionEmoji)
@@ -44,9 +45,10 @@ function toListItem(href) {
   
   if(isManualTest) {
   
-    const manualPerformEmoji = hyperHTML.bind(document.createElement("span"))` 💪 `;
-    manualPerformEmoji.setAttribute("aria-label","the test must be run manually");
-  
+    const manualPerformEmoji = document.createElement("span")
+      manualPerformEmoji.innerHTML = `💪`;
+      manualPerformEmoji.setAttribute("aria-label","the test must be run manually");
+  console.log(testFileName)
     testFileName.replace("-manual","");
     emojiList.append(manualPerformEmoji)
   }
@@ -54,9 +56,8 @@ function toListItem(href) {
   const testList = hyperHTML.bind(document.createElement("li"))`
     <a href="${href}">
       ${testFileName}
-    </a>
+    </a> ${emojiList}
   `;
-  testList.append(emojiList)
   return testList
 }
 

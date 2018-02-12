@@ -3,43 +3,17 @@
   <head>
     <meta charset='utf-8'>
     <title>Replace me with a real title</title>
-    <script src='../js/deps/require.js' data-main='../js/profile-w3c-common' 
+    <script src='../js/deps/require.js' data-main='../js/profile-w3c-common'
       async class='remove'></script>
-    <script class='remove'>
-      var respecConfig = {
-        specStatus: "ED",
-        editors: [{
-          name: "Your Name",
-          url: "https://your-site.com",
-        }],
-        processVersion: 2018,
-        edDraftURI: "https://some.github.repo",
-        shortName: "dahut"
+    <script>
+      const respecConfig = {
+        testSuiteURI: "https://wpt.fyi/payment-request/",
       };
     </script>
   </head>
   <body>
-    <section id='abstract'>
-      <p>
-        This is required.
-      </p>
-    </section>
-    <section id='sotd'>
-      <p>
-        This is required.
-      </p>
-    </section>
-    <section data-dfn-for="Foo">
-      <h2><dfn>Foo</dfn> interface</h2>
-      <pre class="idl">
-      interface Foo {
-        attribute Bar bar;
-        void doTheFoo();
-      };
-      </pre>
-     <p>The <a>Foo</a> interface is nice. Lets you do stuff.</p>
-     <p>The <dfn>bar</dfn> attribute, returns 🍺.</p>
-     <p>The <dfn>doTheFoo()</dfn> method, returns nothing.</p>
-    </section>
+  <p data-tests="test-1.html, test-2.html, hello-manual.https.html, hey.https.html">
+    The user agent MUST do this stuff...
+  </p>
   </body>
 </html>
