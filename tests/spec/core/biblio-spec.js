@@ -59,7 +59,7 @@ describe("W3C — Bibliographic References", () => {
   `;
 
   afterAll(flushIframes);
-  let isSpecRefAvailable = false;
+  const specRefPing = fetch(bibRefsURL, { method: "HEAD" });
   const bibRefsURL = new URL("https://specref.herokuapp.com/bibrefs");
 
   let doc;
@@ -68,9 +68,8 @@ describe("W3C — Bibliographic References", () => {
   });
 
   it("pings biblio service to see if it's running", async () => {
-    const res = await fetch(bibRefsURL, { method: "HEAD" });
+    const res = await specRefPing;
     expect(res.ok).toBeTruthy();
-    isSpecRefAvailable = res.ok;
   });
 
   it("includes a dns-prefetch to bibref server", () => {
@@ -85,7 +84,7 @@ describe("W3C — Bibliographic References", () => {
     let ref = doc.querySelector("#bib-TestRef1 + dd");
     expect(ref).toBeTruthy();
     // This prevents Jasmine from taking down the whole test suite if SpecRef is down.
-    if (!isSpecRefAvailable) {
+    if (!(await specRefPing).ok) {
       throw new Error(
         "SpecRef seems to be down. Can't proceed with this spec."
       );
