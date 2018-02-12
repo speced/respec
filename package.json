@@ -16,7 +16,8 @@
   },
   "contributors": [
     "Marcos Cáceres <marcos@marcosc.com> (https://marcosc.com/)",
-    "Robin Berjon"
+    "Robin Berjon",
+    "Kagami Sascha Rosylight <saschaplas@outlook.com>"
   ],
   "devDependencies": {
     "babel-cli": "^6.26.0",
