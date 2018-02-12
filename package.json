@@ -26,7 +26,7 @@
     "chai": "^4.1.2",
     "clipboard": "^1.7.1",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
-    "eslint-plugin-jasmine": "^2.9.1",
+    "eslint-plugin-jasmine": "^2.9.2",
     "glob": "^7.1.2",
     "handlebars": "^4.0.11",
     "http-server": "^0.11.0",
@@ -75,18 +75,18 @@
   },
   "dependencies": {
     "colors": "^1.1.2",
-    "command-line-args": "^5.0.0",
+    "command-line-args": "^5.0.2",
     "command-line-usage": "^4.1.0",
     "epipebomb": "^1.0.0",
     "express": "^4.16.2",
     "fs-extra": "^5.0.0",
     "highlight.js": "github:marcoscaceres/highlight.js#7b144b3b83ce296d5b29c5e4fc2ea2a65e9d3f32",
-    "hyperhtml": "^2.5.9",
+    "hyperhtml": "^2.5.10",
     "loading-indicator": "^2.0.0",
     "marked": "^0.3.12",
     "prompt": "^1.0.0",
     "puppeteer": "^1.0.0",
-    "snyk": "^1.69.6"
+    "snyk": "^1.69.7"
   },
   "snyk": true
 }
