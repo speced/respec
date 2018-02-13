@@ -1,5 +1,20 @@
 # Change Log
 
+## [v19.2.1](https://github.com/w3c/respec/tree/v19.2.1) (2018-02-13)
+[Full Changelog](https://github.com/w3c/respec/compare/v19.2.0...v19.2.1)
+
+**Fixed bugs:**
+
+- No longer possible to override W3C logo in an official document? [\#1392](https://github.com/w3c/respec/issues/1392)
+
+**Closed issues:**
+
+- Releasing to another branch [\#820](https://github.com/w3c/respec/issues/820)
+
+**Merged pull requests:**
+
+- fix: add all logos in the first p element  [\#1492](https://github.com/w3c/respec/pull/1492) ([saschanaz](https://github.com/saschanaz))
+
 ## [v19.2.0](https://github.com/w3c/respec/tree/v19.2.0) (2018-02-12)
 [Full Changelog](https://github.com/w3c/respec/compare/v19.1.1...v19.2.0)
 
