@@ -42,11 +42,11 @@ export function run(conf, doc, cb) {
   Array.from(document.querySelectorAll("pre.def.idl"))
     .map(elem => {
       const span = document.createElement("span");
-      const children = elem.cloneNode(true).children;
-      for(const child of Array.from(children)) {
+      const { children } = elem.cloneNode(true);
+      for (const child of Array.from(children)) {
         span.appendChild(child);
         span.appendChild(document.createTextNode("\n"));
-      };
+      }
       span.classList.add("respec-idl-separator");
       return span;
     })
