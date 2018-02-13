@@ -91,6 +91,7 @@
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", the W3C Software and Document License
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+import "deps/hyperhtml";
 import { concatDate, joinAnd, ISODate } from "core/utils";
 import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
@@ -109,6 +110,7 @@ const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
 });
 
 hb.registerHelper("showPeople", function(name, items = []) {
+  const html = (...args) => hyperHTML.wire()(...args);
   // stuff to handle RDFa
   var re = "",
     rp = "",
@@ -175,21 +177,16 @@ hb.registerHelper("showPeople", function(name, items = []) {
         .filter(extra => extra.name && extra.name.trim())
         // Convert to HTML
         .map(extra => {
-          var span = document.createElement("span");
-          var textContainer = span;
-          if (extra.class) {
-            span.className = extra.class;
-          }
+          const span = html`<span class=${extra.class || null}></span>`
+          let textContainer = span;
           if (extra.href) {
-            var a = document.createElement("a");
-            span.appendChild(a);
-            a.href = extra.href;
-            textContainer = a;
-            if (this.doRDFa) {
-              a.setAttribute("property", "rdfs:seeAlso");
-            }
+            textContainer = html`<a
+              href=${extra.href || null}
+              property=${this.doRDFa ? "rdfs:seeAlso" : null}
+            ></a>`;
+            span.appendChild(textContainer);
           }
-          textContainer.innerHTML = extra.name;
+          textContainer.textContent = extra.name;
           return span.outerHTML;
         })
         .join(", ");
