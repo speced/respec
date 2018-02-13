@@ -63,7 +63,7 @@ const endNormalizer = function(endStr) {
 
 const endWithDot = endNormalizer(".");
 
-export function wireReference(rawRef, target = "_blank") {
+export function wireReference(rawRef, target = "_blank",style) {
   if (typeof rawRef !== "object") {
     throw new TypeError("Only modern object references are allowed");
   }
@@ -93,24 +93,61 @@ export function wireReference(rawRef, target = "_blank") {
   `;
 }
 
-export function stringifyReference(ref) {
+export function stringifyReference(ref,style) {
   if (typeof ref === "string") return ref;
-  let output = `<cite>${ref.title}</cite>`;
-  if (ref.href) {
-    output = `<a href="${ref.href}">${output}</a>. `;
+  let output = "";
+  switch (style) {
+  	case "APA": 
+  		// Author, A. (Year, Month Date of Publication). Article title. Retrieved from URL
+      	if (ref.authors && ref.authors.length) {
+    		output += ref.authors.join("; ");
+    		if (ref.etAl) output += " et al";
+    			output += ".";
+  		} 
+  		if (ref.date) output += "(" + ref.date + "). ";
+  		output += `<cite>${ref.title}</cite>`; 
+      	if (ref.href) {
+    		output += `<a href="${ref.href}">${output}</a>. `;
+  		}
+  		if (ref.href) output += `Retrieved from URL: <a href="${ref.href}">${ref.href}</a>`;
+      	break;
+    case "MLA":
+    	//Author’s Last name, First name. “Title of the Article or Individual Page.” Title of the website, Name of the publisher, Date of publication, URL.
+      	if (ref.authors && ref.authors.length) {
+    		output += ref.authors.join("; ");
+    		if (ref.etAl) output += " et al";
+    			output += ".";
+  		} 
+  		output += `<cite>${ref.title}</cite>`; 
+      	if (ref.href) {
+    		output += `<a href="${ref.href}">${output}</a>. `;
+  		}
+  		if (ref.publisher) {
+    		const publisher = ref.publisher + (/\.$/.test(ref.publisher) ? "" : ",");
+    		output = `${output} ${publisher} `;
+  		}
+  		if (ref.date) output += ref.date + ", ";
+  		if (ref.href) output += `<a href="${ref.href}">${ref.href}</a>`;
+      	break;
+    default: 
+    	// what ReSpec currently does...
+      	output = `<cite>${ref.title}</cite>`; 
+      	if (ref.href) {
+    		output = `<a href="${ref.href}">${output}</a>. `;
+  		}
+  		if (ref.authors && ref.authors.length) {
+    		output += ref.authors.join("; ");
+    		if (ref.etAl) output += " et al";
+    			output += ".";
+  		}
+  		if (ref.publisher) {
+    		const publisher = ref.publisher + (/\.$/.test(ref.publisher) ? "" : ".");
+    		output = `${output} ${publisher} `;
+  		}
+  		if (ref.date) output += ref.date + ". ";
+  		if (ref.status) output += (REF_STATUSES.get(ref.status) || ref.status) + ". ";
+  		if (ref.href) output += `URL: <a href="${ref.href}">${ref.href}</a>`;
   }
-  if (ref.authors && ref.authors.length) {
-    output += ref.authors.join("; ");
-    if (ref.etAl) output += " et al";
-    output += ".";
-  }
-  if (ref.publisher) {
-    const publisher = ref.publisher + (/\.$/.test(ref.publisher) ? "" : ".");
-    output = `${output} ${publisher} `;
-  }
-  if (ref.date) output += ref.date + ". ";
-  if (ref.status) output += (REF_STATUSES.get(ref.status) || ref.status) + ". ";
-  if (ref.href) output += `URL: <a href="${ref.href}">${ref.href}</a>`;
   return output;
 }
 
