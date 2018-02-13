@@ -127,7 +127,7 @@ const usageSections = [
   try {
     await fetchAndWrite(src, out, whenToHalt, { 
       timeout: parsedArgs.timeout * 1000,
-      disableSandbox: parsedArgs['disable-sandbox']
+      disableSandbox: parsedArgs["disable-sandbox"]
     });
   } catch (err) {
     console.error(colors.error(err.stack));
