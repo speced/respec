@@ -170,14 +170,11 @@ hb.registerHelper("showPeople", function(name, items = []) {
     }
     if (p.note) ret += ` (${p.note})`;
     if (p.extras) {
-      var self = this;
       var resultHTML = p.extras
         // Remove empty names
-        .filter(function(extra) {
-          return extra.name && extra.name.trim();
-        })
+        .filter(extra => extra.name && extra.name.trim())
         // Convert to HTML
-        .map(function(extra) {
+        .map(extra => {
           var span = document.createElement("span");
           var textContainer = span;
           if (extra.class) {
@@ -188,7 +185,7 @@ hb.registerHelper("showPeople", function(name, items = []) {
             span.appendChild(a);
             a.href = extra.href;
             textContainer = a;
-            if (self.doRDFa) {
+            if (this.doRDFa) {
               a.setAttribute("property", "rdfs:seeAlso");
             }
           }
