@@ -250,7 +250,7 @@ function toLogo(obj) {
     pub("warn", msg);
     console.warn("warn", msg, a);
   }
-  a.href = obj.href ? obj.href : "";
+  a.href = obj.url || "";
   a.classList.add("logo");
   hyperHTML.bind(a)`
       <img
@@ -388,8 +388,8 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 }
 
 export function run(conf, doc, cb) {
-  // TODO: move to w3c defaults
-  if (!conf.logos) {
+  conf.isUnofficial = conf.specStatus === "unofficial";
+  if (conf.isUnofficial) {
     conf.logos = [];
   }
   // Default include RDFa document metadata
@@ -627,7 +627,6 @@ export function run(conf, doc, cb) {
   if (conf.isRec && !conf.errata)
     pub("error", "Recommendations must have an errata link.");
   conf.notRec = conf.specStatus !== "REC";
-  conf.isUnofficial = conf.specStatus === "unofficial";
   conf.prependW3C = !conf.isUnofficial;
   conf.isED = conf.specStatus === "ED";
   conf.isCR = conf.specStatus === "CR";

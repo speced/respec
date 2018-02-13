@@ -1013,4 +1013,42 @@ describe("W3C — Headers", function() {
       "does not expect this document to become a W3C Recommendation";
     expect(sotdText).toMatch(expectedString);
   });
+  describe("logos", () => {
+    it("adds logos defined by configuration", async () => {
+      const ops = makeStandardOps();
+      const logos = [{
+        src: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
+        alt: "this is a small gif",
+        height: 765,
+        width: 346,
+        url: "http://hyperlink/"
+      }, {
+        src: "data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\"/>",
+        alt: "this is an svg",
+        height: 315,
+        width: 961,
+        url: "http://prod/"
+      }, {
+        src: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
+        alt: "this is a larger gif",
+        height: 876,
+        width: 283,
+        url: "http://shiny/"
+      }];
+      Object.assign(ops.config, { logos });
+      const doc = await makeRSDoc(ops);
+      // get logos
+      const anchors = doc.querySelectorAll(".head p:not(.copyright):first-child > a");
+      for (let i = 0; i < anchors.length; i++) {
+        const anchor = anchors[i];
+        const img = anchor.children[0];
+        const logo = logos[i];
+        expect(img.src).toEqual(logo.src);
+        expect(img.alt).toEqual(logo.alt);
+        expect(img.height).toEqual(logo.height);
+        expect(img.width).toEqual(logo.width);
+        expect(anchor.href).toEqual(logo.url);
+      }
+    });
+  });
 });
