@@ -1,5 +1,260 @@
 # Change Log
 
+## [v19.2.0](https://github.com/w3c/respec/tree/v19.2.0) (2018-02-12)
+[Full Changelog](https://github.com/w3c/respec/compare/v19.1.1...v19.2.0)
+
+**Closed issues:**
+
+- SOTD still points to 1 March 2017 W3C Process Document [\#1485](https://github.com/w3c/respec/issues/1485)
+- CI fails with a message `{}` [\#1476](https://github.com/w3c/respec/issues/1476)
+- 19.1.0 doesn't seem to support interface mixins [\#1475](https://github.com/w3c/respec/issues/1475)
+- Forked repositories cannot run karma tests on Travis? [\#1462](https://github.com/w3c/respec/issues/1462)
+- marked stripping "\*" from pre [\#1389](https://github.com/w3c/respec/issues/1389)
+- Github links should include link to pull requests [\#1373](https://github.com/w3c/respec/issues/1373)
+- Add missing aria-spec [\#906](https://github.com/w3c/respec/issues/906)
+- Better handling for when specref goes down [\#828](https://github.com/w3c/respec/issues/828)
+
+**Merged pull requests:**
+
+- fix\(tools/release\): use build:components instead [\#1501](https://github.com/w3c/respec/pull/1501) ([marcoscaceres](https://github.com/marcoscaceres))
+- docs\(examples\): use github config option [\#1500](https://github.com/w3c/respec/pull/1500) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix: ping SpecRef in ordering-safe way  [\#1499](https://github.com/w3c/respec/pull/1499) ([saschanaz](https://github.com/saschanaz))
+- chore: update dependencies [\#1498](https://github.com/w3c/respec/pull/1498) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor: remove WebIDL array support  [\#1496](https://github.com/w3c/respec/pull/1496) ([saschanaz](https://github.com/saschanaz))
+- fix: prevent unordered tests from conflicting [\#1495](https://github.com/w3c/respec/pull/1495) ([saschanaz](https://github.com/saschanaz))
+- Github links should include link to pull requests \#1373 [\#1491](https://github.com/w3c/respec/pull/1491) ([OrionStar25](https://github.com/OrionStar25))
+- Skip detectBrowsers when explicitly passing browsers [\#1490](https://github.com/w3c/respec/pull/1490) ([saschanaz](https://github.com/saschanaz))
+- refactor: use node.js api rather than unix commands  [\#1488](https://github.com/w3c/respec/pull/1488) ([saschanaz](https://github.com/saschanaz))
+- refactor: use puppeteer instead of nightmare [\#1483](https://github.com/w3c/respec/pull/1483) ([saschanaz](https://github.com/saschanaz))
+- Update jasmine-core to the latest version 🚀 [\#1481](https://github.com/w3c/respec/pull/1481) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- workaround: use sudo required on travis [\#1478](https://github.com/w3c/respec/pull/1478) ([saschanaz](https://github.com/saschanaz))
+
+## [v19.1.1](https://github.com/w3c/respec/tree/v19.1.1) (2018-02-06)
+[Full Changelog](https://github.com/w3c/respec/compare/v19.1.0...v19.1.1)
+
+## [v19.1.0](https://github.com/w3c/respec/tree/v19.1.0) (2018-02-05)
+[Full Changelog](https://github.com/w3c/respec/compare/v19.0.2...v19.1.0)
+
+**Implemented enhancements:**
+
+- Add support for WebIDL mixins [\#1423](https://github.com/w3c/respec/issues/1423)
+- New link to the Process 2018 [\#1466](https://github.com/w3c/respec/pull/1466) ([plehegar](https://github.com/plehegar))
+
+**Closed issues:**
+
+- Test failure: 'root' is deprecated, use 'global' [\#1458](https://github.com/w3c/respec/issues/1458)
+
+**Merged pull requests:**
+
+- chore\(package\): use uglify-es 3.3.7 [\#1474](https://github.com/w3c/respec/pull/1474) ([saschanaz](https://github.com/saschanaz))
+- Fix a typo in src/w3c/headers.js [\#1472](https://github.com/w3c/respec/pull/1472) ([xfq](https://github.com/xfq))
+- Migrate to ES2017 async functions [\#1471](https://github.com/w3c/respec/pull/1471) ([saschanaz](https://github.com/saschanaz))
+- feat: support interface mixins [\#1468](https://github.com/w3c/respec/pull/1468) ([saschanaz](https://github.com/saschanaz))
+- chore\(package\): update webidl2.js to version 10.2.0 [\#1465](https://github.com/w3c/respec/pull/1465) ([saschanaz](https://github.com/saschanaz))
+- workaround: add git commit hash [\#1464](https://github.com/w3c/respec/pull/1464) ([saschanaz](https://github.com/saschanaz))
+- fix: roll back to uglify-es 3.2.2 [\#1461](https://github.com/w3c/respec/pull/1461) ([saschanaz](https://github.com/saschanaz))
+- Fix Nightmare API use [\#1460](https://github.com/w3c/respec/pull/1460) ([saschanaz](https://github.com/saschanaz))
+
+## [v19.0.2](https://github.com/w3c/respec/tree/v19.0.2) (2018-01-30)
+[Full Changelog](https://github.com/w3c/respec/compare/v19.0.1...v19.0.2)
+
+**Implemented enhancements:**
+
+- Replace jQuery for slim [\#773](https://github.com/w3c/respec/issues/773)
+
+**Fixed bugs:**
+
+- Code samples should not be set to aria-live="polite" after core/highlight executes [\#1456](https://github.com/w3c/respec/issues/1456)
+- Snapshot menu not working on Firefox 57? [\#1440](https://github.com/w3c/respec/issues/1440)
+
+**Closed issues:**
+
+- viewing fails on Safari Version 10.1.2 \(10603.3.8\) [\#1453](https://github.com/w3c/respec/issues/1453)
+- "Save as HTML" is missing from the Respec menu [\#1450](https://github.com/w3c/respec/issues/1450)
+
+**Merged pull requests:**
+
+- fix: dont announce highlights \(closes \#1456\) [\#1457](https://github.com/w3c/respec/pull/1457) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update mocha to the latest version 🚀 [\#1455](https://github.com/w3c/respec/pull/1455) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- Update command-line-args to the latest version 🚀 [\#1454](https://github.com/w3c/respec/pull/1454) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- Update http-server to the latest version 🚀 [\#1452](https://github.com/w3c/respec/pull/1452) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- Cleanup various things [\#1451](https://github.com/w3c/respec/pull/1451) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update karma to the latest version 🚀 [\#1449](https://github.com/w3c/respec/pull/1449) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+
+## [v19.0.1](https://github.com/w3c/respec/tree/v19.0.1) (2017-12-19)
+[Full Changelog](https://github.com/w3c/respec/compare/v19.0.0...v19.0.1)
+
+**Merged pull requests:**
+
+- fix\(core/github\): bad URL for fetching issues [\#1447](https://github.com/w3c/respec/pull/1447) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v19.0.0](https://github.com/w3c/respec/tree/v19.0.0) (2017-12-19)
+[Full Changelog](https://github.com/w3c/respec/compare/v18.3.0...v19.0.0)
+
+**Implemented enhancements:**
+
+- Upcoming update to WG notes patent policy text [\#1443](https://github.com/w3c/respec/issues/1443)
+
+**Closed issues:**
+
+- Specref updating is either too infrequent or partially broken [\#1441](https://github.com/w3c/respec/issues/1441)
+- Serve save-html.js with a javascript mime type [\#1439](https://github.com/w3c/respec/issues/1439)
+- Sort lists [\#912](https://github.com/w3c/respec/issues/912)
+
+**Merged pull requests:**
+
+- Improve patent text on notes [\#1446](https://github.com/w3c/respec/pull/1446) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(package\): update deps [\#1444](https://github.com/w3c/respec/pull/1444) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update fs-extra to the latest version 🚀 [\#1442](https://github.com/w3c/respec/pull/1442) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- chore\(package\): update deps [\#1436](https://github.com/w3c/respec/pull/1436) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(package\): update hyperhtml to version 2.1.2 [\#1434](https://github.com/w3c/respec/pull/1434) ([marcoscaceres](https://github.com/marcoscaceres))
+- Remove more jquery [\#1432](https://github.com/w3c/respec/pull/1432) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v18.3.0](https://github.com/w3c/respec/tree/v18.3.0) (2017-11-17)
+[Full Changelog](https://github.com/w3c/respec/compare/v18.2.4...v18.3.0)
+
+**Merged pull requests:**
+
+- feat: teach ReSpec to sort lists [\#1430](https://github.com/w3c/respec/pull/1430) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v18.2.4](https://github.com/w3c/respec/tree/v18.2.4) (2017-11-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v18.2.3...v18.2.4)
+
+**Merged pull requests:**
+
+- fix\(tools/respecDocWriter\): colors.info is not a function [\#1422](https://github.com/w3c/respec/pull/1422) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v18.2.3](https://github.com/w3c/respec/tree/v18.2.3) (2017-10-27)
+[Full Changelog](https://github.com/w3c/respec/compare/v18.2.2...v18.2.3)
+
+## [v18.2.2](https://github.com/w3c/respec/tree/v18.2.2) (2017-10-27)
+[Full Changelog](https://github.com/w3c/respec/compare/v18.2.1...v18.2.2)
+
+**Closed issues:**
+
+- Named modules could be accurately timed [\#1081](https://github.com/w3c/respec/issues/1081)
+- Remove tests' depedency on specref [\#608](https://github.com/w3c/respec/issues/608)
+
+**Merged pull requests:**
+
+- \[Snyk\] Fix for 1 vulnerable dependency path [\#1420](https://github.com/w3c/respec/pull/1420) ([snyk-bot](https://github.com/snyk-bot))
+
+## [v18.2.1](https://github.com/w3c/respec/tree/v18.2.1) (2017-10-26)
+[Full Changelog](https://github.com/w3c/respec/compare/v18.2.0...v18.2.1)
+
+**Closed issues:**
+
+- Snapshot generation fails due to \<meta charset\> outside the first 1024 bytes [\#1417](https://github.com/w3c/respec/issues/1417)
+
+**Merged pull requests:**
+
+- fix\(ui/save-html\): move meta charset to top [\#1418](https://github.com/w3c/respec/pull/1418) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v18.2.0](https://github.com/w3c/respec/tree/v18.2.0) (2017-10-26)
+[Full Changelog](https://github.com/w3c/respec/compare/v18.1.3...v18.2.0)
+
+**Merged pull requests:**
+
+- chore\(package\): s/prepublish/prepare, per npm5 [\#1415](https://github.com/w3c/respec/pull/1415) ([marcoscaceres](https://github.com/marcoscaceres))
+- Babel bug [\#1414](https://github.com/w3c/respec/pull/1414) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v18.1.3](https://github.com/w3c/respec/tree/v18.1.3) (2017-10-25)
+[Full Changelog](https://github.com/w3c/respec/compare/v18.1.2...v18.1.3)
+
+**Merged pull requests:**
+
+- \[Snyk\] Fix for 3 vulnerable dependency paths [\#1413](https://github.com/w3c/respec/pull/1413) ([snyk-bot](https://github.com/snyk-bot))
+
+## [v18.1.2](https://github.com/w3c/respec/tree/v18.1.2) (2017-10-24)
+[Full Changelog](https://github.com/w3c/respec/compare/v18.1.1...v18.1.2)
+
+## [v18.1.1](https://github.com/w3c/respec/tree/v18.1.1) (2017-10-24)
+[Full Changelog](https://github.com/w3c/respec/compare/v18.1.0...v18.1.1)
+
+## [v18.1.0](https://github.com/w3c/respec/tree/v18.1.0) (2017-10-24)
+[Full Changelog](https://github.com/w3c/respec/compare/v18.0.3...v18.1.0)
+
+**Closed issues:**
+
+- Ask people to upgrade to 18 when generating specs [\#1410](https://github.com/w3c/respec/issues/1410)
+
+**Merged pull requests:**
+
+- feat\(respec2html\): error if ReSpec \< v18 \(closes  \#1410\) [\#1412](https://github.com/w3c/respec/pull/1412) ([marcoscaceres](https://github.com/marcoscaceres))
+- tests\(tests/headless\): test against real specs [\#1409](https://github.com/w3c/respec/pull/1409) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v18.0.3](https://github.com/w3c/respec/tree/v18.0.3) (2017-10-24)
+[Full Changelog](https://github.com/w3c/respec/compare/v18.0.2...v18.0.3)
+
+**Closed issues:**
+
+- PR Preview / respecDocWriter reporting issues. [\#1345](https://github.com/w3c/respec/issues/1345)
+- Need better list of specs [\#612](https://github.com/w3c/respec/issues/612)
+
+**Merged pull requests:**
+
+- security\(package\): run snyk protect with build \(closes \#1406\) [\#1411](https://github.com/w3c/respec/pull/1411) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v18.0.2](https://github.com/w3c/respec/tree/v18.0.2) (2017-10-23)
+[Full Changelog](https://github.com/w3c/respec/compare/v18.0.1...v18.0.2)
+
+**Merged pull requests:**
+
+- fix\(ui/save-html\): encoding issue [\#1408](https://github.com/w3c/respec/pull/1408) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v18.0.1](https://github.com/w3c/respec/tree/v18.0.1) (2017-10-23)
+[Full Changelog](https://github.com/w3c/respec/compare/v18.0.0...v18.0.1)
+
+**Merged pull requests:**
+
+- fix\(tools/respecDocWriter\): better error reporting [\#1407](https://github.com/w3c/respec/pull/1407) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v18.0.0](https://github.com/w3c/respec/tree/v18.0.0) (2017-10-22)
+[Full Changelog](https://github.com/w3c/respec/compare/v17.1.2...v18.0.0)
+
+## [v17.1.2](https://github.com/w3c/respec/tree/v17.1.2) (2017-10-22)
+[Full Changelog](https://github.com/w3c/respec/compare/v17.1.1...v17.1.2)
+
+**Implemented enhancements:**
+
+- Process a clone document instead of the real DOM [\#818](https://github.com/w3c/respec/issues/818)
+- Node 8 required [\#1402](https://github.com/w3c/respec/pull/1402) ([tripu](https://github.com/tripu))
+
+**Fixed bugs:**
+
+- Errors in latest Respec \(17.1.1\) when using "save as" [\#1403](https://github.com/w3c/respec/issues/1403)
+
+**Closed issues:**
+
+- ReSpec not updating on w3c server? [\#1401](https://github.com/w3c/respec/issues/1401)
+
+**Merged pull requests:**
+
+- Remove beautifier [\#1404](https://github.com/w3c/respec/pull/1404) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(.travis\): use linux [\#1398](https://github.com/w3c/respec/pull/1398) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v17.1.1](https://github.com/w3c/respec/tree/v17.1.1) (2017-10-20)
+[Full Changelog](https://github.com/w3c/respec/compare/v17.1.0...v17.1.1)
+
+## [v17.1.0](https://github.com/w3c/respec/tree/v17.1.0) (2017-10-19)
+[Full Changelog](https://github.com/w3c/respec/compare/v17.0.0...v17.1.0)
+
+**Closed issues:**
+
+- case-insensitive sorting of references [\#1396](https://github.com/w3c/respec/issues/1396)
+- Custom logos: width and height swapped in Firefox 56.0.1 [\#1391](https://github.com/w3c/respec/issues/1391)
+- Says Note but Pubrules rejects [\#653](https://github.com/w3c/respec/issues/653)
+
+**Merged pull requests:**
+
+- refactor\(core/issues-notes\): fold in w3c/aria [\#1400](https://github.com/w3c/respec/pull/1400) ([marcoscaceres](https://github.com/marcoscaceres))
+- Promisify refactor [\#1399](https://github.com/w3c/respec/pull/1399) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(biblio\): sort refs case insensitive \(closes \#1396\) [\#1397](https://github.com/w3c/respec/pull/1397) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(package\): update deps [\#1395](https://github.com/w3c/respec/pull/1395) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(issue-notes-spec\): dont need to show document [\#1393](https://github.com/w3c/respec/pull/1393) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update webidl2 to the latest version 🚀 [\#1390](https://github.com/w3c/respec/pull/1390) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- feat\(templates/sotd.html\): link to 2017 patent policy [\#1388](https://github.com/w3c/respec/pull/1388) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v17.0.0](https://github.com/w3c/respec/tree/v17.0.0) (2017-10-07)
 [Full Changelog](https://github.com/w3c/respec/compare/v16.2.2...v17.0.0)
 

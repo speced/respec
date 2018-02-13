@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "19.2.0",
+  "version": "19.2.1",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -16,7 +16,8 @@
   },
   "contributors": [
     "Marcos Cáceres <marcos@marcosc.com> (https://marcosc.com/)",
-    "Robin Berjon"
+    "Robin Berjon",
+    "Kagami Sascha Rosylight <saschaplas@outlook.com>"
   ],
   "devDependencies": {
     "babel-cli": "^6.26.0",
