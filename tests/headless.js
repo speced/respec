@@ -55,7 +55,8 @@ async function runRespec2html(server) {
   const executables = testURLs.map(url => {
     const nullDevice =
       process.platform === "win32" ? "\\\\.\\NUL" : "/dev/null";
-    const cmd = `node ./tools/respec2html.js -e --timeout 30 --src ${url} --out ${nullDevice}`;
+    const disableSandbox = process.env.TRAVIS ? " --disable-sandbox" : "";
+    const cmd = `node ./tools/respec2html.js -e${disableSandbox} --timeout 30 --src ${url} --out ${nullDevice}`;
     return toExecutable(cmd);
   });
   let testCount = 1;
