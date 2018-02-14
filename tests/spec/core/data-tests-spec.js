@@ -17,6 +17,11 @@ describe("Core — data-tests attribute", () => {
             <a id="t1" data-cite="#test">a</a>
             <dfn id="t2" data-cite="#test">a</dfn>
           </p>
+          <p id="metadata-tests"
+            data-tests="this-is-secure.https.html,
+             this-is-manual.html, this-is-secure-and-manual.https.html">
+             metadata tests
+          </p>
         </section>`,
     };
     ops.config.testSuiteURI = "https://wpt.fyi/respec/";
@@ -63,5 +68,33 @@ describe("Core — data-tests attribute", () => {
         expect(pathname.endsWith(`test${i}.html`)).toBe(true);
       });
     });
+    it(`adds emojis for manual and https related tests`, () => {
+      
+      let test = doc.querySelector("#metadata-tests ul").querySelectorAll("li")
+
+      // for test 1
+      expect(test[0].children[0].innerText.trim()).toEqual("this-is-secure");   // filename
+      expect(test[0].children[0].href).toEqual("https://wpt.fyi/respec/this-is-secure.https.html");      //link
+      expect(test[0].children[1].innerText).toEqual("🔒");      //emoji
+      expect(test[0].children[1].children[0].getAttribute('aria-label')).toEqual("requires a secure connection");       //span aria-label
+      expect(test[0].children[1].children[0].getAttribute('title')).toEqual("Test requires HTTPS");      //span title
+
+      // for test 2
+      expect(test[1].children[0].innerText.trim()).toEqual("this-is");      // filename
+      expect(test[1].children[0].href).toEqual("https://wpt.fyi/respec/this-is-manual.html");      //link
+      expect(test[1].children[1].innerText).toEqual("💪");      // span emoji
+      expect(test[1].children[1].children[0].getAttribute('aria-label')).toEqual("the test must be run manually");      //span aria-label
+      expect(test[1].children[1].children[0].getAttribute('title')).toEqual("Manual test");      //span title
+  
+      // for test 3
+      expect(test[2].children[0].innerText.trim()).toEqual("this-is-secure-and");      // filename
+      expect(test[2].children[0].href).toEqual("https://wpt.fyi/respec/this-is-secure-and-manual.https.html");       //link
+      expect(test[2].children[1].children[0].innerText).toEqual("🔒");      // span 1 emoji
+      expect(test[2].children[1].children[0].getAttribute('aria-label')).toEqual("requires a secure connection");      //span 1 aria-label
+      expect(test[2].children[1].children[0].getAttribute('title')).toEqual("Test requires HTTPS");      //span 1 title
+      expect(test[2].children[1].children[1].innerText).toEqual("💪");      // span 2 emoji
+      expect(test[2].children[1].children[1].getAttribute('aria-label')).toEqual("the test must be run manually");      //span 2 aria-label
+      expect(test[2].children[1].children[1].getAttribute('title')).toEqual("Manual test");      //span 2 title
+    })
   });
 });
