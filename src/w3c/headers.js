@@ -110,12 +110,11 @@ const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
 });
 
 hb.registerHelper("showPeople", function(name, items = []) {
+  const self = this;
   const html = (...args) => hyperHTML.wire()(...args);
   // stuff to handle RDFa
-  const attr = this.doRDFa ? {
+  const attr = Object.freeze(self.doRDFa ? {
     ...name === "Editor" ? {
-      bn: "_:editor0",
-      re: "bibo:editor",
       rp1: "rdf:first",
       rp2: "foaf:Person"
     } : name === "Author" ? {
@@ -127,24 +126,30 @@ hb.registerHelper("showPeople", function(name, items = []) {
     rwu: "foaf:workplaceHomepage",
     rpu: "foaf:homepage",
     propSeeAlso: "rdfs:seeAlso"
-  } : {};
+  } : {});
   let ret = "";
-  for (let i = 0, n = items.length; i < n; i++) {
-    const p = items[i];
+  const bns = [];
+  if (self.doRDFa && name === "Editor") {
+    bns.push(...Array.from({ length: items.length }, (_, i) => `_:editor${i}`));
+    bns[items.length] = "rdf:nil";
+  }
+  for (let i = 0; i < items.length; i++) {
+    ret += getItem(items[i], i).outerHTML;
+  }
+  return new hb.SafeString(ret);
+
+  function getItem(p, i) {
+    const bn = bns[i];
+    const re = (bn && !i) ? "bibo:editor" : null;
     const editorid = p.w3cid ? parseInt(p.w3cid, 10): null;
     const dd = html`<dd class='p-author h-card vcard'
-      property='${attr.re}' resource='${attr.bn}' data-editor-id='${editorid}'></dd>`;
-    const span = this.doRDFa ?
+      property='${re}' resource='${bn}' data-editor-id='${editorid}'></dd>`;
+    const span = self.doRDFa ?
       html`<span property='${attr.rp1}' typeof='${attr.rp2}'></span>` :
       document.createDocumentFragment();
-    if (this.doRDFa && name === "Editor") {
-      // Update to next sequence in rdf:List
-      attr.bn = i < n - 1 ? `_:editor${i + 1}` : "rdf:nil";
-      attr.re = null;
-    }
     const contents = [];
     if (p.url) {
-      if (this.doRDFa) {
+      if (self.doRDFa) {
         contents.push(html`<meta property='${attr.rn}' content='${p.name}' />`);
       }
       contents.push(html`<a class='u-url url p-name fn'
@@ -169,31 +174,32 @@ hb.registerHelper("showPeople", function(name, items = []) {
         // Remove empty names
         .filter(extra => extra.name && extra.name.trim())
         // Convert to HTML
-        .map(extra => {
-          const span = html`<span class='${extra.class || null}'></span>`
-          let textContainer = span;
-          if (extra.href) {
-            textContainer = html`<a
-              href='${extra.href || null}'
-              property='${this.doRDFa ? "rdfs:seeAlso" : null}'
-            ></a>`;
-            span.appendChild(textContainer);
-          }
-          textContainer.textContent = extra.name;
-          return span;
-        });
+        .map(getExtra);
       for (const result of results) {
         contents.push(document.createTextNode(", "), result);
       }
     }
     hyperHTML.bind(span)`${contents}`;
     dd.appendChild(span);
-    if (this.doRDFa && name === "Editor") {
-      dd.appendChild(html`\n<span property='rdf:rest' resource='${attr.bn}'></span>\n`);
+    if (self.doRDFa && name === "Editor") {
+      dd.appendChild(html`\n<span property='rdf:rest' resource='${bns[i + 1]}'></span>\n`);
     }
-    ret += dd.outerHTML;
+    return dd;
   }
-  return new hb.SafeString(ret);
+
+  function getExtra(extra) {
+    const span = html`<span class='${extra.class || null}'></span>`
+    let textContainer = span;
+    if (extra.href) {
+      textContainer = html`<a
+        href='${extra.href || null}'
+        property='${self.doRDFa ? "rdfs:seeAlso" : null}'
+      ></a>`;
+      span.appendChild(textContainer);
+    }
+    textContainer.textContent = extra.name;
+    return span;
+  }
 });
 
 function toLogo(obj) {
