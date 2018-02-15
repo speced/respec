@@ -18,6 +18,7 @@ const l10n = {
     test: "test",
   },
 };
+
 export const name = "core/data-tests";
 
 const lang = defaultLang in l10n ? defaultLang : "en";
@@ -38,7 +39,7 @@ function toListItem(href) {
     );
     requiresConnectionEmoji.setAttribute("title", "Test requires HTTPS");
     testFileName = testFileName.replace(".https", "");
-    emojiList.append(requiresConnectionEmoji);
+    emojiList.push(requiresConnectionEmoji);
   }
 
   const isManualTest = testFileName
@@ -55,7 +56,7 @@ function toListItem(href) {
     );
     manualPerformEmoji.setAttribute("title", "Manual test");
     testFileName = testFileName.replace("-manual", "");
-    emojiList.append(manualPerformEmoji);
+    emojiList.push(manualPerformEmoji);
   }
 
   const testList = hyperHTML.bind(document.createElement("li"))`
