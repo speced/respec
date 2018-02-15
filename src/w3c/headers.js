@@ -667,6 +667,7 @@ export function run(conf, doc, cb) {
   const bp = hyperHTML.bind(document.createDocumentFragment())`${
     [(conf.isCGBG ? cgbgHeadersTmpl : headersTmpl)(conf)]}`;
   document.body.insertBefore(bp, document.body.firstChild);
+  document.body.classList.add("h-entry");
 
   // handle SotD
   var sotd =
