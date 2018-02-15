@@ -19,7 +19,7 @@ describe("W3C — Defaults", () => {
     expect(rsConf.specStatus).toEqual("base");
   });
 
-  it("allows w3c defaults to be overriden", async () => {
+  it("allows w3c defaults to be overridden", async () => {
     const ops = {
       config: {
         editors: [{ name: "foo" }],
