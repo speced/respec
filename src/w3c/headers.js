@@ -663,17 +663,14 @@ export function run(conf, doc, cb) {
       $("<meta lang='' property='dc:language' content='en'>")
     );
   }
-  // insert into document and mark with microformat
-  var bp;
-  if (conf.isCGBG) bp = cgbgHeadersTmpl(conf);
-  else bp = headersTmpl(conf);
-  $("body", doc)
-    .prepend($(bp))
-    .addClass("h-entry");
+  // insert into document
+  const bp = hyperHTML.bind(document.createDocumentFragment())`${
+    [(conf.isCGBG ? cgbgHeadersTmpl : headersTmpl)(conf)]}`;
+  document.body.insertBefore(bp, document.body.firstChild);
 
   // handle SotD
   var sotd =
-    document.body.querySelector("#sotd") || document.createElement("section");
+    document.getElementById("sotd") || document.createElement("section");
   if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !sotd.id) {
     pub(
       "error",
