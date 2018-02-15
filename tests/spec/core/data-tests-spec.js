@@ -91,7 +91,6 @@ describe("Core — data-tests attribute", () => {
       expect(spanTitle).toEqual("Test requires HTTPS");
     });
     it(`adds emojis for manual tests`, () => {
-
       const li = doc.querySelector("#metadata-tests ul>li:nth-child(2)")
       const [fileElement, manualIconElement] = li.children;
 
@@ -111,8 +110,6 @@ describe("Core — data-tests attribute", () => {
       expect(spanTitle).toEqual("Manual test");
     });
     it(`adds emojis for secure manual tests`, () => {
-      const li = doc.querySelector("#metadata-tests ul>li:nth-child(3)");
-
       const li = doc.querySelector("#metadata-tests ul>li:nth-child(3)")
       const [fileElement, secureIconElement, manualIconElement] = li.children;
       
