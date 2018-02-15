@@ -63,11 +63,9 @@ window.$.fn.getDfnTitles = function(args) {
     // prefer @data-lt for the list of title aliases
     titleString = this.attr(theAttr).toLowerCase();
     if (normalizedText !== "") {
-      //Regex: starts with the "normalizedText|"
-      var startsWith = new RegExp("^" + normalizedText + "\\|");
       // Use the definition itself, so to avoid
       // having to declare the definition twice.
-      if (!startsWith.test(titleString)) {
+      if (!titleString.startsWith(`${normalizedText}|`)) {
         titleString =  titleString + "|" + normalizedText;
       }
     }
@@ -121,12 +119,12 @@ window.$.fn.linkTargets = function() {
   var linkFor = linkForElem ? linkForElem.dataset.linkFor.toLowerCase() : "";
   var titles = elem.getDfnTitles();
   var result = [];
-  window.$.each(titles, function() {
+  for (const title of titles) {
     result.push({
       for: linkFor,
-      title: this,
+      title,
     });
-    var split = this.split(".");
+    const split = title.split(".");
     if (split.length === 2) {
       // If there are multiple '.'s, this won't match an
       // Interface/member pair anyway.
@@ -137,9 +135,9 @@ window.$.fn.linkTargets = function() {
     }
     result.push({
       for: "",
-      title: this,
+      title,
     });
-  });
+  }
   return result;
 };
 
