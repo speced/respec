@@ -72,7 +72,6 @@ describe("Core — data-tests attribute", () => {
       });
     });
     it(`adds emojis for secure tests`, () => {
-  
       const li = doc.querySelector("#metadata-tests ul>li:nth-child(1)");
       const [fileElement, secureIconElement] = li.children;
       
@@ -112,6 +111,7 @@ describe("Core — data-tests attribute", () => {
       expect(spanTitle).toEqual("Manual test");
     });
     it(`adds emojis for secure manual tests`, () => {
+      const li = doc.querySelector("#metadata-tests ul>li:nth-child(3)");
 
       const li = doc.querySelector("#metadata-tests ul>li:nth-child(3)")
       const [fileElement, secureIconElement, manualIconElement] = li.children;
