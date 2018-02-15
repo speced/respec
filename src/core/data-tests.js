@@ -23,7 +23,7 @@ export const name = "core/data-tests";
 const lang = defaultLang in l10n ? defaultLang : "en";
 
 function toListItem(href) {
-  const emojiList = document.createElement("span");
+  const emojiList = [];
   const [testFile] = new URL(href).pathname.split("/").reverse();
   const testParts = testFile.split(".");
   let [testFileName] = testParts;
