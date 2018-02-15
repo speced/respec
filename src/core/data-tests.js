@@ -12,7 +12,8 @@ import { pub } from "core/pubsubhub";
 import { lang as defaultLang } from "core/l10n";
 const l10n = {
   en: {
-    missing_test_suite_uri: "Found tests in your spec, but missing '" +
+    missing_test_suite_uri:
+      "Found tests in your spec, but missing '" +
       "[`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI)' in your ReSpec config.",
     tests: "tests",
     test: "test",
@@ -30,7 +31,7 @@ function toListItem(href) {
 
   const isSecureTest = testParts.find(part => part === "https");
   if (isSecureTest) {
-    const requiresConnectionEmoji = document.createElement("span")
+    const requiresConnectionEmoji = document.createElement("span");
     requiresConnectionEmoji.innerHTML = `🔒`;
     requiresConnectionEmoji.setAttribute(
       "aria-label",
@@ -47,9 +48,9 @@ function toListItem(href) {
     .split("-")
     .find(part => part === "manual");
   if (isManualTest) {
-    const manualPerformEmoji = document.createElement("span")
-      manualPerformEmoji.innerHTML = `💪`;
-      manualPerformEmoji.setAttribute(
+    const manualPerformEmoji = document.createElement("span");
+    manualPerformEmoji.innerHTML = `💪`;
+    manualPerformEmoji.setAttribute(
       "aria-label",
       "the test must be run manually"
     );
@@ -63,7 +64,7 @@ function toListItem(href) {
       ${testFileName}
     </a> ${emojiList}
   `;
-  return testList
+  return testList;
 }
 
 export function run(conf, doc, cb) {
