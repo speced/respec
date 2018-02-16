@@ -1,14 +1,11 @@
 import "deps/hyperhtml";
-import showLogos from "./show-logos";
+import showLogo from "./show-logo";
 import showPeople from "./show-people";
 
 export default conf => {
   const html = hyperHTML;
   return html`<div class='head'>
-  <p>
-    <a class='logo' href='https://www.w3.org/'><img width='72' height='48' src='https://www.w3.org/StyleSheets/TR/2016/logos/W3C' alt='W3C'></a>
-  </p>
-  ${[showLogos(conf.logos)]}
+  ${conf.logos.map(showLogo)}
   <h1 class='title p-name' id='title' property=${conf.doRDFa ? "dc:title" : null}>${conf.title}</h1>
   ${conf.subtitle ? html`
     <h2 property=${conf.doRDFa ? "bibo:subtitle" : null} id='subtitle'>${conf.subtitle}</h2>

@@ -1,11 +1,11 @@
 import "deps/hyperhtml";
-import showLogos from "./show-logos";
+import showLogo from "./show-logo";
 import showPeople from "./show-people";
 
 export default conf => {
   const html = hyperHTML;
   return html`<div class='head'>
-  ${[showLogos(conf.logos)]}
+  ${conf.logos.map(showLogo)}
   <h1 class='title p-name' id='title' property='${conf.doRDFa ? "dcterms:title" : null}'>${conf.title}</h1>
   ${conf.subtitle ? html`
     <h2 property='${conf.doRDFa ? "bibo:subtitle" : null}' id='subtitle'>${conf.subtitle}</h2>
