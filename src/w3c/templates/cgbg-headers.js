@@ -3,7 +3,7 @@ import showLogos from "./show-logos";
 import showPeople from "./show-people";
 
 export default conf => {
-  const html = (...args) => hyperHTML.wire()(...args);
+  const html = hyperHTML;
   return html`<div class='head'>
   <p>
     <a class='logo' href='https://www.w3.org/'><img width='72' height='48' src='https://www.w3.org/StyleSheets/TR/2016/logos/W3C' alt='W3C'></a>

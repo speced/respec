@@ -3,7 +3,7 @@ import showLogos from "./show-logos";
 import showPeople from "./show-people";
 
 export default conf => {
-  const html = (...args) => hyperHTML.wire()(...args);
+  const html = hyperHTML;
   return html`<div class='head'>
   ${!conf.isUnofficial ? html`
     <p>

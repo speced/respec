@@ -1,7 +1,7 @@
 import "deps/hyperhtml";
 
 export default conf => {
-  const html = (...args) => hyperHTML.wire()(...args);
+  const html = hyperHTML;
   return html`<h2>${conf.l10n.sotd}</h2>
 ${conf.isPreview ? html`
   <details class="annoying-warning" open="">
