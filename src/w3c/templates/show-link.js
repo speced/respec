@@ -1,7 +1,12 @@
+import "deps/hyperhtml";
+import { pub } from "core/pubsubhub";
 const html = hyperHTML;
 
 export default link => {
   if (!link.key) {
+    const msg = "Found a link without `key` attribute in the configuration. See dev console.";
+    pub("warn", msg);
+    console.warn("warn", msg, link);
     return;
   }
   return html`
