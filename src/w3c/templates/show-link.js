@@ -6,17 +6,17 @@ export default link => {
   return html`
     <dt class="${link.class ? [link.class] : null}">${link.key}:</dt>
     ${link.data ? html`
-        ${link.data.map(item => html`
-          ${item.value ? html`
-            <dd class="${item.class ? [item.class] : null}">
-              ${item.href ? html`<a href="${item.href}">${item.value}</a>` : ""}
-            </dd>
-          ` : html`
-            ${item.href ? html`
-              <dd><a href="${item.href}">${item.href}</a></dd>
-            ` : ""}
-          `}
-        `)}
+      ${link.data.map(item => html`
+        ${item.value ? html`
+          <dd class="${item.class ? [item.class] : null}">
+            ${item.href ? html`<a href="${item.href}">${item.value}</a>` : ""}
+          </dd>
+        ` : html`
+          ${item.href ? html`
+            <dd><a href="${item.href}">${item.href}</a></dd>
+          ` : ""}
+        `}
+      `)}
     ` : html`
       ${link.value ? html`
         <dd class="${link.class ? [link.class] : null}">
