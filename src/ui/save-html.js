@@ -82,7 +82,7 @@ function makeEPubHref() {
 
 function cleanup(cloneDoc) {
   const { head, body, documentElement } = cloneDoc;
-  cleanupComments(documentElement);
+  cleanupHyper(documentElement);
   Array.from(
     cloneDoc.querySelectorAll(".removeOnSave, #toc-nav")
   ).forEach(elem => elem.remove());
@@ -113,9 +113,12 @@ function cleanup(cloneDoc) {
   pub("beforesave", documentElement);
 }
 
-function cleanupComments(node) {
+function cleanupHyper(node) {
   // collect first, or walker will cease too early
-  const comments = [...walkTree(node, NodeFilter.SHOW_COMMENT)];
+  const comments = [...walkTree(
+    node, NodeFilter.SHOW_COMMENT, 
+    comment => comment.textContent.startsWith("_hyper")
+  )];
   for (const comment of comments) {
     comment.parentNode.removeChild(comment);
   }
