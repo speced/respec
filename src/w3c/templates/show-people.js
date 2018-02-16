@@ -1,132 +1,91 @@
 export default (conf, name, items = []) => {
+  const html = hyperHTML;
   // stuff to handle RDFa
-  var re = "",
-    rp = "",
-    rm = "",
-    rn = "",
-    rwu = "",
-    rpu = "",
-    bn = "",
-    editorid = "",
-    propSeeAlso = "";
-  if (conf.doRDFa) {
-    if (name === "Editor") {
-      bn = "_:editor0";
-      re = " property='bibo:editor' resource='" + bn + "'";
-      rp = " property='rdf:first' typeof='foaf:Person'";
-    } else if (name === "Author") {
-      rp = " property='dc:contributor' typeof='foaf:Person'";
-    }
-    rn = " property='foaf:name'";
-    rm = " property='foaf:mbox'";
-    rwu = " property='foaf:workplaceHomepage'";
-    rpu = " property='foaf:homepage'";
-    propSeeAlso = " property='rdfs:seeAlso'";
+  const attr = Object.freeze(conf.doRDFa ? {
+    ...name === "Editor" ? {
+      rp1: "rdf:first",
+      rp2: "foaf:Person"
+    } : name === "Author" ? {
+      rp1: "dc:contributor",
+      rp2: "foaf:Person"
+    } : {},
+    rn: "foaf:name",
+    rm: "foaf:mbox",
+    rwu: "foaf:workplaceHomepage",
+    rpu: "foaf:homepage",
+    propSeeAlso: "rdfs:seeAlso"
+  } : {});
+  const bns = [];
+  if (conf.doRDFa && name === "Editor") {
+    bns.push(...Array.from({ length: items.length }, (_, i) => `_:editor${i}`));
+    bns[items.length] = "rdf:nil";
   }
-  var ret = "";
-  for (var i = 0, n = items.length; i < n; i++) {
-    var p = items[i];
-    if (p.w3cid) {
-      editorid = " data-editor-id='" + parseInt(p.w3cid, 10) + "'";
-    }
-    if (conf.doRDFa) {
-      ret +=
-        "<dd class='p-author h-card vcard' " +
-        re +
-        editorid +
-        "><span" +
-        rp +
-        ">";
-      if (name === "Editor") {
-        // Update to next sequence in rdf:List
-        bn = i < n - 1 ? "_:editor" + (i + 1) : "rdf:nil";
-        re = " resource='" + bn + "'";
-      }
-    } else {
-      ret += "<dd class='p-author h-card vcard'" + editorid + ">";
-    }
+  const results = [];
+  for (let i = 0; i < items.length; i++) {
+    results.push(getItem(items[i], i));
+  }
+  return results;
+
+  function getItem(p, i) {
+    const bn = bns[i];
+    const re = (bn && !i) ? "bibo:editor" : null;
+    const editorid = p.w3cid ? parseInt(p.w3cid, 10): null;
+    const dd = html`<dd class='p-author h-card vcard'
+      property='${re}' resource='${bn}' data-editor-id='${editorid}'></dd>`;
+    const span = conf.doRDFa ?
+      html`<span property='${attr.rp1}' typeof='${attr.rp2}'></span>` :
+      document.createDocumentFragment();
+    const contents = [];
     if (p.url) {
       if (conf.doRDFa) {
-        ret +=
-          "<meta" +
-          rn +
-          " content='" +
-          p.name +
-          "'><a class='u-url url p-name fn' " +
-          rpu +
-          " href='" +
-          p.url +
-          "'>" +
-          p.name +
-          "</a>";
-      } else
-        ret +=
-          "<a class='u-url url p-name fn' href='" +
-          p.url +
-          "'>" +
-          p.name +
-          "</a>";
+        contents.push(html`<meta property='${attr.rn}' content='${p.name}' />`);
+      }
+      contents.push(html`<a class='u-url url p-name fn'
+        property='${attr.rpu}' href='${p.url}'>${p.name}</a>`);
     } else {
-      ret += "<span" + rn + " class='p-name fn'>" + p.name + "</span>";
+      contents.push(html`<span property='${attr.rn}' class='p-name fn'>${p.name}</span>`);
     }
     if (p.company) {
-      ret += ", ";
-      if (p.companyURL)
-        ret +=
-          "<a" +
-          rwu +
-          " class='p-org org h-org h-card' href='" +
-          p.companyURL +
-          "'>" +
-          p.company +
-          "</a>";
-      else ret += p.company;
+      if (p.companyURL) {
+        contents.push(html`, <a property='${attr.rwu}'
+          class='p-org org h-org h-card' href='${p.companyURL}'>${p.company}</a>`);
+      }
+      else contents.push(document.createTextNode(`, ${p.company}`));
     }
     if (p.mailto) {
-      ret +=
-        ", <span class='ed_mailto'><a class='u-email email' " +
-        rm +
-        " href='mailto:" +
-        p.mailto +
-        "'>" +
-        p.mailto +
-        "</a></span>";
+      contents.push(html`, <span class='ed_mailto'><a class='u-email email'
+        property='${attr.rm}' href='${`mailto:${p.mailto}`}'>${p.mailto}</a></span>`);
     }
-    if (p.note) ret += " (" + p.note + ")";
+    if (p.note) contents.push(document.createTextNode(` (${p.note})`));
     if (p.extras) {
-      var resultHTML = p.extras
+      const results = p.extras
         // Remove empty names
-        .filter(function(extra) {
-          return extra.name && extra.name.trim();
-        })
+        .filter(extra => extra.name && extra.name.trim())
         // Convert to HTML
-        .map(function(extra) {
-          var span = document.createElement("span");
-          var textContainer = span;
-          if (extra.class) {
-            span.className = extra.class;
-          }
-          if (extra.href) {
-            var a = document.createElement("a");
-            span.appendChild(a);
-            a.href = extra.href;
-            textContainer = a;
-            if (conf.doRDFa) {
-              a.setAttribute("property", "rdfs:seeAlso");
-            }
-          }
-          textContainer.innerHTML = extra.name;
-          return span.outerHTML;
-        })
-        .join(", ");
-      ret += ", " + resultHTML;
+        .map(getExtra);
+      for (const result of results) {
+        contents.push(document.createTextNode(", "), result);
+      }
     }
-    if (conf.doRDFa) {
-      ret += "</span>\n";
-      if (name === "Editor")
-        ret += "<span property='rdf:rest' resource='" + bn + "'></span>\n";
+    hyperHTML.bind(span)`${contents}`;
+    dd.appendChild(span);
+    if (conf.doRDFa && name === "Editor") {
+      dd.appendChild(html`\n<span property='rdf:rest' resource='${bns[i + 1]}'></span>\n`);
     }
-    ret += "</dd>\n";
+    return dd;
   }
-  return ret;
+
+  function getExtra(extra) {
+    const span = html`<span class='${extra.class || null}'></span>`
+    let textContainer = span;
+    if (extra.href) {
+      textContainer = html`<a
+        href='${extra.href || null}'
+        property='${conf.doRDFa ? "rdfs:seeAlso" : null}'
+      ></a>`;
+      span.appendChild(textContainer);
+    }
+    textContainer.textContent = extra.name;
+    return span;
+  }
 }

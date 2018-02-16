@@ -47,10 +47,10 @@ export default conf => {
       ` : ""}
     ` : ""}
     <dt>${conf.multipleEditors ? html`${conf.l10n.editors}` : html`${conf.l10n.editor}`}</dt>
-    ${[showPeople(conf, "Editor", conf.editors)]}
+    ${showPeople(conf, "Editor", conf.editors)}
     ${conf.authors ? html`
       <dt>${conf.multipleAuthors ? html`${conf.l10n.authors}` : html`${conf.l10n.author}`}</dt>
-      ${[showPeople(conf, "Author", conf.authors)]}
+      ${showPeople(conf, "Author", conf.authors)}
     ` : ""}
     ${conf.otherLinks ? html`
       ${conf.otherLinks.map(link => html`
