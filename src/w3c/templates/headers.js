@@ -5,11 +5,6 @@ import showPeople from "./show-people";
 export default conf => {
   const html = hyperHTML;
   return html`<div class='head'>
-  ${!conf.isUnofficial ? html`
-    <p>
-      <a class='logo' href='https://www.w3.org/'><img width='72' height='48' src='https://www.w3.org/StyleSheets/TR/2016/logos/W3C' alt='W3C'></a>
-    </p>
-  ` : ""}
   ${[showLogos(conf.logos)]}
   <h1 class='title p-name' id='title' property='${conf.doRDFa ? "dcterms:title" : null}'>${conf.title}</h1>
   ${conf.subtitle ? html`
