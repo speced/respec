@@ -60,9 +60,12 @@ async function writeTo(outPath, data) {
  * @return {Promise}            Resolves with HTML when done writing.
  *                              Rejects on errors.
  */
-async function fetchAndWrite(src, out, whenToHalt, timeout = 300000) {
+async function fetchAndWrite(src, out, whenToHalt, { timeout = 300000, disableSandbox = false } = {}) {
   const userDataDir = await mkdtemp(os.tmpdir() + "/respec2html-");
-  const browser = await puppeteer.launch({ userDataDir });
+  const browser = await puppeteer.launch({
+    userDataDir,
+    args: disableSandbox && ['--no-sandbox']
+  });
   try {
     const page = await browser.newPage();
     const url = parseURL(src).href;

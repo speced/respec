@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "19.2.2",
+  "version": "19.6.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -47,7 +47,7 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-safaritechpreview-launcher": "0.0.6",
     "karma-verbose-summary-reporter": "0.0.1",
-    "mocha": "^5.0.0",
+    "mocha": "^5.0.1",
     "moment": "^2.20.1",
     "requirejs": "^2.3.5",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",

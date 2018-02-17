@@ -8,7 +8,6 @@ describe("W3C — Defaults", () => {
     };
     const doc = await makeRSDoc(ops);
     const rsConf = doc.defaultView.respecConfig;
-    expect(rsConf.processVersion).toEqual(2018);
     expect(rsConf.lint).toEqual({
       "no-headingless-sections": true,
       "privsec-section": true,
@@ -19,11 +18,10 @@ describe("W3C — Defaults", () => {
     expect(rsConf.specStatus).toEqual("base");
   });
 
-  it("allows w3c defaults to be overriden", async () => {
+  it("allows w3c defaults to be overridden", async () => {
     const ops = {
       config: {
         editors: [{ name: "foo" }],
-        processVersion: 2020,
         lint: {
           "no-headingless-sections": false,
           "privsec-section": false,
@@ -39,7 +37,6 @@ describe("W3C — Defaults", () => {
     };
     const doc = await makeRSDoc(ops);
     const rsConf = doc.defaultView.respecConfig;
-    expect(rsConf.processVersion).toEqual(2020);
     expect(rsConf.lint).toEqual({
       "no-headingless-sections": false,
       "privsec-section": false,

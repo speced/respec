@@ -65,6 +65,12 @@ const optionList = [
     name: "haltonwarn",
     type: Boolean,
   },
+  {
+    default: false,
+    description: "Disable Chromium sandboxing if needed.",
+    name: "disable-sandbox",
+    type: Boolean
+  }
 ];
 
 const usageSections = [
@@ -117,10 +123,12 @@ const usageSections = [
     haltOnError: parsedArgs.haltonerror,
     haltOnWarn: parsedArgs.haltonwarn,
   };
-  const timeout = parsedArgs.timeout;
   const out = parsedArgs.out;
   try {
-    await fetchAndWrite(src, out, whenToHalt, timeout * 1000);
+    await fetchAndWrite(src, out, whenToHalt, { 
+      timeout: parsedArgs.timeout * 1000,
+      disableSandbox: parsedArgs["disable-sandbox"]
+    });
   } catch (err) {
     console.error(colors.error(err.stack));
     return process.exit(1);
