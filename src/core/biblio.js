@@ -177,7 +177,7 @@ function bibref(conf) {
           var $a = $dd.children("a");
           $a.attr(
             "property",
-            type === "Normative" ? "dc:requires" : "dc:references"
+            type === "Normative" ? "schema:dependencies" : "schema:citation"
           );
         }
       } else {

@@ -146,8 +146,6 @@ describe("W3C — Headers", function() {
       const doc = await makeRSDoc(ops);
       var oricdHref = ops.config.editors[0].extras[0].href;
       var orcidAnchor = doc.querySelector("a[href='" + oricdHref + "']");
-      // Check that RDFa is applied
-      expect(orcidAnchor.getAttribute("property")).toEqual(null);
       expect(orcidAnchor.parentNode.className).toEqual("orcid");
     });
 
@@ -194,8 +192,6 @@ describe("W3C — Headers", function() {
       [orcidAnchor, twitterAnchor].forEach(function(elem) {
         // Check parent is correct.
         expect(elem.parentNode.localName).toEqual("span");
-        // Check that RDFa is applied
-        expect(elem.hasAttribute("property")).toEqual(true);
         // Check that it's in the header of the document
         expect(header.contains(elem)).toEqual(true);
       });
