@@ -82,6 +82,7 @@ function makeEPubHref() {
 
 function cleanup(cloneDoc) {
   const { head, body, documentElement } = cloneDoc;
+  cleanupHyper(documentElement);
   Array.from(
     cloneDoc.querySelectorAll(".removeOnSave, #toc-nav")
   ).forEach(elem => elem.remove());
@@ -110,6 +111,24 @@ function cleanup(cloneDoc) {
   insertions.appendChild(metaGenerator);
   head.insertBefore(insertions, head.firstChild);
   pub("beforesave", documentElement);
+}
+
+function cleanupHyper(node) {
+  // collect first, or walker will cease too early
+  const comments = [...walkTree(
+    node, NodeFilter.SHOW_COMMENT, 
+    comment => comment.textContent.startsWith("_hyper")
+  )];
+  for (const comment of comments) {
+    comment.parentNode.removeChild(comment);
+  }
+}
+
+function* walkTree(...args) {
+  const walker = document.createTreeWalker(...args);
+  while (walker.nextNode()) {
+    yield walker.currentNode;
+  }
 }
 
 function toDownloadLink(

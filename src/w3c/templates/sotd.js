@@ -1,40 +1,42 @@
-<h2>{{l10n.sotd}}</h2>
-{{#if isPreview}}
+import "deps/hyperhtml";
+
+export default conf => {
+  const html = hyperHTML;
+  return html`<h2>${conf.l10n.sotd}</h2>
+${conf.isPreview ? html`
   <details class="annoying-warning" open="">
     <summary>This is a preview</summary>
     <p>
       Do not attempt to implement this version of the specification. Do not reference this
       version as authoritative in any way.
-      {{#if edDraftURI}}
-        Instead, see <a href="{{edDraftURI}}">{{edDraftURI}}</a> for the Editor's draft.
-      {{/if}}
+      ${conf.edDraftURI ? html`
+        Instead, see <a href="${conf.edDraftURI}">${conf.edDraftURI}</a> for the Editor's draft.
+      ` : ""}
     </p>
   </details>
-{{/if}}
-{{#if isUnofficial}}
+` : ""}
+${conf.isUnofficial ? html`
   <p>
     This document is draft of a potential specification. It has no official standing of
     any kind and does not represent the support or consensus of any standards organisation.
   </p>
-  {{{additionalContent}}}
-{{else}}
-  {{#if isTagFinding}}
-    {{{additionalContent}}}
-  {{else}}
-    {{#if isNoTrack}}
+  ${[conf.additionalContent]}
+` : html`
+  ${conf.isTagFinding ? [conf.additionalContent] : html`
+    ${conf.isNoTrack ? html`
       <p>
-        This document is merely a W3C-internal {{#if isMO}}member-confidential{{/if}} document. It
+        This document is merely a W3C-internal ${conf.isMO ? "member-confidential" : ""} document. It
         has no official standing of any kind and does not represent consensus of the W3C
         Membership.
       </p>
-      {{{additionalContent}}}
-    {{else}}
+      ${[conf.additionalContent]}
+    ` : html`
       <p>
-        <em>{{{l10n.status_at_publication}}}</em>
+        <em>${[conf.l10n.status_at_publication]}</em>
       </p>
-      {{#if isSubmission}}
-        {{{additionalContent}}}
-        {{#if isMemberSubmission}}
+      ${conf.isSubmission ? html`
+        ${[conf.additionalContent]}
+        ${conf.isMemberSubmission ? html`
           <p>
             By publishing this document, W3C acknowledges that
             the <a href="https://www.w3.org/Submission/@@@submissiondoc@@@">Submitting Members</a>
@@ -51,83 +53,76 @@
             W3C Patent Policy</a>. Please consult the complete <a href="https://www.w3.org/Submission">list
             of acknowledged W3C Member Submissions</a>.
           </p>
-        {{else}}
-          {{#if isTeamSubmission}}
+        ` : html`
+          ${conf.isTeamSubmission ? html`
             <p>If you wish to make comments regarding this document, please send them to
-            <a href='mailto:{{wgPublicList}}@w3.org{{#if subjectPrefix}}?subject={{subjectPrefixEnc}}{{/if}}'>{{wgPublicList}}@w3.org</a>
-            (<a href='mailto:{{wgPublicList}}-request@w3.org?subject=subscribe'>subscribe</a>,
+            <a href='${`mailto:${conf.wgPublicList}@w3.org${conf.subjectPrefix ? `?subject=${conf.subjectPrefixEnc}` : [""]}`}'>${conf.wgPublicList}@w3.org</a>
+            (<a href='${`mailto:${conf.wgPublicList}-request@w3.org?subject=subscribe`}'>subscribe</a>,
             <a
-              href='https://lists.w3.org/Archives/Public/{{wgPublicList}}/'>archives</a>){{#if subjectPrefix}}
-              with <code>{{subjectPrefix}}</code> at the start of your email's subject{{/if}}.</p>
+              href='${`https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`}'>archives</a>)${conf.subjectPrefix ? html`
+              with <code>${conf.subjectPrefix}</code> at the start of your email's subject` : ""}.</p>
             <p>Please consult the complete <a href="https://www.w3.org/TeamSubmission/">list of Team Submissions</a>.</p>
-          {{/if}}
-        {{/if}}
-      {{else}}
-        {{#unless sotdAfterWGinfo}}
-        {{{additionalContent}}}
-        {{/unless}}
-        {{#unless overrideStatus}}
+          ` : ""}
+        `}
+      ` : html`
+        ${!conf.sotdAfterWGinfo ? [conf.additionalContent] : ""}
+        ${!conf.overrideStatus ? html`
         <p>
-          This document was published by {{{wgHTML}}} as {{anOrA}} {{longStatus}}.
-          {{#if notYetRec}}
-            This document is intended to become a W3C Recommendation.
-          {{/if}}
-          {{#if wgPublicList}}
+          This document was published by ${[conf.wgHTML]} as ${conf.anOrA} ${conf.longStatus}.
+          ${conf.notYetRec ? "This document is intended to become a W3C Recommendation." : ""}
+          ${conf.wgPublicList ? html`
             Comments regarding this document are welcome. Please send them to
-            <a href='mailto:{{wgPublicList}}@w3.org{{#if subjectPrefix}}?subject={{subjectPrefixEnc}}{{/if}}'>{{wgPublicList}}@w3.org</a>
-            (<a href='mailto:{{wgPublicList}}-request@w3.org?subject=subscribe'>subscribe</a>,
+            <a href='${`mailto:${conf.wgPublicList}@w3.org${conf.subjectPrefix ? `?subject=${conf.subjectPrefixEnc}` : [""]}`}'>${conf.wgPublicList}@w3.org</a>
+            (<a href='${`mailto:${conf.wgPublicList}-request@w3.org?subject=subscribe`}'>subscribe</a>,
             <a
-              href='https://lists.w3.org/Archives/Public/{{wgPublicList}}/'>archives</a>){{#if subjectPrefix}}
-              with <code>{{subjectPrefix}}</code> at the start of your email's subject{{/if}}.
-          {{/if}}
-          {{#if isCR}}
+              href='${`https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`}'>archives</a>)${conf.subjectPrefix ? html`
+              with <code>${conf.subjectPrefix}</code> at the start of your email's subject` : ""}.
+          ` : ""}
+          ${conf.isCR ? `
             W3C publishes a Candidate Recommendation to indicate that the document is believed to be
             stable and to encourage implementation by the developer community. This Candidate
             Recommendation is expected to advance to Proposed Recommendation no earlier than
-            {{humanCREnd}}.
-          {{/if}}
-          {{#if isPER}}
+            ${conf.humanCREnd}.
+          ` : ""}
+          ${conf.isPER ? html`
               W3C Advisory Committee Members are invited to
               send formal review comments on this Proposed
               Edited Recommendation to the W3C Team until
-              {{humanPEREnd}}.
+              ${conf.humanPEREnd}.
               Members of the Advisory Committee will find the
               appropriate review form for this document by
               consulting their list of current
               <a href='https://www.w3.org/2002/09/wbs/myQuestionnaires'>WBS questionnaires</a>.
-          {{/if}}
-          {{#if isPR}}
+          ` : ""}
+          ${conf.isPR ? html`
               The W3C Membership and other interested parties are invited to review the document and
               send comments to
-              <a rel='discussion' href='mailto:{{wgPublicList}}@w3.org'>{{wgPublicList}}@w3.org</a>
-              (<a href='mailto:{{wgPublicList}}-request@w3.org?subject=subscribe'>subscribe</a>,
-              <a href='https://lists.w3.org/Archives/Public/{{wgPublicList}}/'>archives</a>)
-              through {{humanPREnd}}. Advisory Committee Representatives should consult their
+              <a rel='discussion' href='${`mailto:${conf.wgPublicList}@w3.org`}'>${conf.wgPublicList}@w3.org</a>
+              (<a href='${`mailto:${conf.wgPublicList}-request@w3.org?subject=subscribe`}'>subscribe</a>,
+              <a href='${`https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`}'>archives</a>)
+              through ${conf.humanPREnd}. Advisory Committee Representatives should consult their
               <a href='https://www.w3.org/2002/09/wbs/myQuestionnaires'>WBS questionnaires</a>.
               Note that substantive technical comments were expected during the Candidate Recommendation
-              review period that ended {{humanCREnd}}.
-          {{else}}
-          {{/if}}
+              review period that ended ${conf.humanCREnd}.
+          ` : ""}
         </p>
-        {{/unless}}
-        {{#if implementationReportURI}}
+        ` : ""}
+        ${conf.implementationReportURI ? html`
           <p>
-            Please see the Working Group's  <a href='{{implementationReportURI}}'>implementation
+            Please see the Working Group's  <a href='${conf.implementationReportURI}'>implementation
             report</a>.
           </p>
-        {{/if}}
-        {{#if sotdAfterWGinfo}}
-          {{{additionalContent}}}
-        {{/if}}
-        {{#if notRec}}
+        ` : ""}
+        ${conf.sotdAfterWGinfo ? [conf.additionalContent] : ""}
+        ${conf.notRec ? html`
           <p>
-            Publication as {{anOrA}} {{textStatus}} does not imply endorsement by the W3C
+            Publication as ${conf.anOrA} ${conf.textStatus} does not imply endorsement by the W3C
             Membership. This is a draft document and may be updated, replaced or obsoleted by other
             documents at any time. It is inappropriate to cite this document as other than work in
             progress.
           </p>
-        {{/if}}
-        {{#if isRec}}
+        ` : ""}
+        ${conf.isRec ? html`
           <p>
             This document has been reviewed by W3C Members, by software developers, and by other W3C
             groups and interested parties, and is endorsed by the Director as a W3C Recommendation.
@@ -136,52 +131,42 @@
             specification and to promote its widespread deployment. This enhances the functionality
             and interoperability of the Web.
           </p>
-        {{/if}}
-        <p{{#if isNote}} data-deliverer="{{wgId}}"{{/if}}>
-          {{#unless isIGNote}}
+        ` : ""}
+        <p data-deliverer="${conf.isNote ? conf.wgId : null}">
+          ${!conf.isIGNote ? html`
             This document was produced by
-            {{#if multipleWGs}}
-            groups
-            {{else}}
-            a group
-            {{/if}} operating under the
-            <a{{#if doRDFa}} id="sotd_patent" property='w3p:patentRules'{{/if}}
+            ${conf.multipleWGs ? "groups" : "a group"}
+            operating under the
+            <a id="${conf.doRDFa ? "sotd_patent" : null}" property='${conf.doRDFa ? "w3p:patentRules" : null}'
             href='https://www.w3.org/Consortium/Patent-Policy/'>W3C Patent Policy</a>.
-          {{/unless}}
-          {{#if recNotExpected}}
-            The group does not expect this document to become a W3C Recommendation.
-          {{/if}}
-          {{#unless isIGNote}}
-            {{#if multipleWGs}}
-              W3C maintains {{{wgPatentHTML}}}
-            {{else}}
-              W3C maintains a <a href='{{wgPatentURI}}' rel='disclosure'>public list of any patent
+          ` : ""}
+          ${conf.recNotExpected ? "The group does not expect this document to become a W3C Recommendation." : ""}
+          ${!conf.isIGNote ? html`
+            ${conf.multipleWGs ? html`W3C maintains ${[conf.wgPatentHTML]}` : html`
+              W3C maintains a <a href='${[conf.wgPatentURI]}' rel='disclosure'>public list of any patent
               disclosures</a>
-            {{/if}}
+            `}
             made in connection with the deliverables of
-            {{#if multipleWGs}}
-            each group; these pages also include
-            {{else}}
-            the group; that page also includes
-            {{/if}}
+            ${conf.multipleWGs ? "each group; these pages also include" : "the group; that page also includes"}
             instructions for disclosing a patent. An individual who has actual knowledge of a patent
             which the individual believes contains
             <a href='https://www.w3.org/Consortium/Patent-Policy/#def-essential'>Essential
             Claim(s)</a> must disclose the information in accordance with
             <a href='https://www.w3.org/Consortium/Patent-Policy/#sec-Disclosure'>section
             6 of the W3C Patent Policy</a>.
-          {{/unless}}
-          {{#if isIGNote}}
+          ` : ""}
+          ${conf.isIGNote ? html`
             The disclosure obligations of the Participants of this group are described in the
-            <a href='{{charterDisclosureURI}}'>charter</a>.
-          {{/if}}
+            <a href='${conf.charterDisclosureURI}'>charter</a>.
+          ` : ""}
         </p>
         <p>This document is governed by the <a id="w3c_process_revision"
           href="https://www.w3.org/2018/Process-20180201/">1 February 2018 W3C Process Document</a>.
         </p>
-        {{#if addPatentNote}}<p>{{{addPatentNote}}}</p>{{/if}}
-      {{/if}}
-    {{/if}}
-  {{/if}}
-{{/if}}
-{{{additionalSections}}}
+        ${conf.addPatentNote ? html`<p>${[conf.addPatentNote]}</p>` : ""}
+      `}
+    `}
+  `}
+`}
+${[conf.additionalSections]}`;
+}
