@@ -95,180 +95,18 @@ import { concatDate, joinAnd, ISODate } from "core/utils";
 import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
 import tmpls from "templates";
+import cgbgSotdTmpl from "w3c/templates/cgbg-sotd";
+import sotdTmpl from "w3c/templates/sotd";
+import cgbgHeadersTmpl from "w3c/templates/cgbg-headers";
+import headersTmpl from "w3c/templates/headers";
 
 export const name = "w3c/headers";
-
-const cgbgHeadersTmpl = tmpls["cgbg-headers.html"];
-const headersTmpl = tmpls["headers.html"];
 
 const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
   timeZone: "UTC",
   year: "numeric",
   month: "long",
   day: "2-digit",
-});
-
-hb.registerHelper("showPeople", function(name, items = []) {
-  // stuff to handle RDFa
-  var re = "",
-    rp = "",
-    rm = "",
-    rn = "",
-    rwu = "",
-    rpu = "",
-    bn = "",
-    editorid = "",
-    propSeeAlso = "";
-  if (this.doRDFa) {
-    if (name === "Editor") {
-      bn = "_:editor0";
-      re = " property='bibo:editor' resource='" + bn + "'";
-      rp = " property='rdf:first' typeof='foaf:Person'";
-    } else if (name === "Author") {
-      rp = " property='dc:contributor' typeof='foaf:Person'";
-    }
-    rn = " property='foaf:name'";
-    rm = " property='foaf:mbox'";
-    rwu = " property='foaf:workplaceHomepage'";
-    rpu = " property='foaf:homepage'";
-    propSeeAlso = " property='rdfs:seeAlso'";
-  }
-  var ret = "";
-  for (var i = 0, n = items.length; i < n; i++) {
-    var p = items[i];
-    if (p.w3cid) {
-      editorid = " data-editor-id='" + parseInt(p.w3cid, 10) + "'";
-    }
-    if (this.doRDFa) {
-      ret +=
-        "<dd class='p-author h-card vcard' " +
-        re +
-        editorid +
-        "><span" +
-        rp +
-        ">";
-      if (name === "Editor") {
-        // Update to next sequence in rdf:List
-        bn = i < n - 1 ? "_:editor" + (i + 1) : "rdf:nil";
-        re = " resource='" + bn + "'";
-      }
-    } else {
-      ret += "<dd class='p-author h-card vcard'" + editorid + ">";
-    }
-    if (p.url) {
-      if (this.doRDFa) {
-        ret +=
-          "<meta" +
-          rn +
-          " content='" +
-          p.name +
-          "'><a class='u-url url p-name fn' " +
-          rpu +
-          " href='" +
-          p.url +
-          "'>" +
-          p.name +
-          "</a>";
-      } else
-        ret +=
-          "<a class='u-url url p-name fn' href='" +
-          p.url +
-          "'>" +
-          p.name +
-          "</a>";
-    } else {
-      ret += "<span" + rn + " class='p-name fn'>" + p.name + "</span>";
-    }
-    if (p.company) {
-      ret += ", ";
-      if (p.companyURL)
-        ret +=
-          "<a" +
-          rwu +
-          " class='p-org org h-org h-card' href='" +
-          p.companyURL +
-          "'>" +
-          p.company +
-          "</a>";
-      else ret += p.company;
-    }
-    if (p.mailto) {
-      ret +=
-        ", <span class='ed_mailto'><a class='u-email email' " +
-        rm +
-        " href='mailto:" +
-        p.mailto +
-        "'>" +
-        p.mailto +
-        "</a></span>";
-    }
-    if (p.note) ret += " (" + p.note + ")";
-    if (p.extras) {
-      var self = this;
-      var resultHTML = p.extras
-        // Remove empty names
-        .filter(function(extra) {
-          return extra.name && extra.name.trim();
-        })
-        // Convert to HTML
-        .map(function(extra) {
-          var span = document.createElement("span");
-          var textContainer = span;
-          if (extra.class) {
-            span.className = extra.class;
-          }
-          if (extra.href) {
-            var a = document.createElement("a");
-            span.appendChild(a);
-            a.href = extra.href;
-            textContainer = a;
-            if (self.doRDFa) {
-              a.setAttribute("property", "rdfs:seeAlso");
-            }
-          }
-          textContainer.innerHTML = extra.name;
-          return span.outerHTML;
-        })
-        .join(", ");
-      ret += ", " + resultHTML;
-    }
-    if (this.doRDFa) {
-      ret += "</span>\n";
-      if (name === "Editor")
-        ret += "<span property='rdf:rest' resource='" + bn + "'></span>\n";
-    }
-    ret += "</dd>\n";
-  }
-  return new hb.SafeString(ret);
-});
-
-function toLogo(obj) {
-  const a = document.createElement("a");
-  if (!obj.alt) {
-    const msg = "Found spec logo without an `alt` attribute. See dev console.";
-    a.classList.add("respec-offending-element");
-    pub("warn", msg);
-    console.warn("warn", msg, a);
-  }
-  a.href = obj.url || "";
-  a.classList.add("logo");
-  hyperHTML.bind(a)`
-      <img
-        id="${obj.id}"
-        alt="${obj.alt}"
-        width="${obj.width}"
-        height="${obj.height}">
-  `;
-  // avoid triggering 404 requests from dynamically generated
-  // hyperHTML attribute values
-  a.querySelector("img").src = obj.src;
-  return a;
-}
-
-hb.registerHelper("showLogos", logos => {
-  const p = document.createElement("p");
-  hyperHTML.bind(p)`${logos.map(toLogo)}`;
-  return p.outerHTML;
 });
 
 const status2maturity = {
@@ -763,7 +601,7 @@ export function run(conf, doc, cb) {
   if (conf.subjectPrefix !== "")
     conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
 
-  sotd.innerHTML = populateSoTD(conf, sotd);
+  hyperHTML.bind(sotd)`${populateSoTD(conf, sotd)}`;
 
   if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
     pub(
@@ -807,5 +645,5 @@ function populateSoTD(conf, sotd) {
   conf.additionalContent = additionalContent.innerHTML;
   // Whatever sections are left, we throw at the end.
   conf.additionalSections = sotdClone.innerHTML;
-  return tmpls[conf.isCGBG ? "cgbg-sotd.html" : "sotd.html"](conf);
+  return (conf.isCGBG ? cgbgSotdTmpl : sotdTmpl)(conf);
 }
