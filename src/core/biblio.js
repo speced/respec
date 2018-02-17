@@ -95,8 +95,11 @@ export function wireReference(rawRef, target = "_blank") {
 
 // Author, A. (Year, Month Date of Publication). Article title. Retrieved from URL
 function entryToAPA(ref) {
-	const authors = ((ref.authors && ref.authors.length) ? (ref.authors.join("; ") + (ref.etAl ? " et al." : ".")) : "");
-	const date = ref.date ?  "(" + ref.date + "). " : "";
+	const authors = "";
+	if (ref.authors && ref.authors.length) {
+		authors = ref.authors.join("; ") + (ref.etAl ? " et al." : ".");
+	}
+	const date = ref.date ?  '(${ref.date}).' : "";
 	const title = ref.href ? `<a href="${ref.href}"> <cite>${ref.title}</cite> </a>. ` : "";
 	const URL = ref.href ? `Retrieved from URL: <a href="${ref.href}">${ref.href}</a>` : "";
 
@@ -105,20 +108,32 @@ function entryToAPA(ref) {
 
 //Author’s Last name, First name. “Title of the Article or Individual Page.” Title of the website, Name of the publisher, Date of publication, URL.
 function entryToMLA(ref) {
-	const authors = ((ref.authors && ref.authors.length) ? (ref.authors.join("; ") + (ref.etAl ? " et al." : ".")) : "");
+	const authors = "";
+	if (ref.authors && ref.authors.length) {
+		authors = ref.authors.join("; ") + (ref.etAl ? " et al." : ".");
+	}
 	const date = ref.date ?  ref.date + ", " : "";
-	const title = ref.href ? `<a href="${ref.href}"> <cite>${ref.title}</cite> </a>. ` : "";
+	const title = ref.href ? `<a href="${ref.href}"> "<cite>${ref.title}</cite>" </a>. ` : "";
 	const URL = ref.href ? `<a href="${ref.href}">${ref.href}</a>` : "";
-	const publisher = ref.publisher ? ref.publisher + (/\.$/.test(ref.publisher) ? "" : ",") : "";
+	const publisher = "";
+	if (ref.publisher) {
+		publisher = ref.publisher + (ref.publisher.endsWith(".")
+	}
       	 
-  	return 	`${authors} "${title}" ${publisher} ${date} ${URL}`;
+  	return 	`${authors} ${title} ${publisher} ${date} ${URL}`;
 }
 
 // what ReSpec currently does...
 function entryToW3C(ref) {
 	const title = ref.href ? `<a href="${ref.href}"> <cite>${ref.title}</cite> </a>. ` : "";
-	const authors = ((ref.authors && ref.authors.length) ? (ref.authors.join("; ") + (ref.etAl ? " et al." : ".")) : "");
-	const publisher = ref.publisher ? ref.publisher + (/\.$/.test(ref.publisher) ? "" : ".") : "";
+	const authors = "";
+	if (ref.authors && ref.authors.length) {
+		authors = ref.authors.join("; ") + (ref.etAl ? " et al." : ".");
+	}
+	const publisher = "";
+	if (ref.publisher) {
+		publisher = ref.publisher + (ref.publisher.endsWith(".")
+	}
 	const date = ref.date ?  ref.date + ". " : "";
 	const status = ref.status ? (REF_STATUSES.get(ref.status) || ref.status) + ". " : "";
 	const URL = ref.href ? `URL: <a href="${ref.href}">${ref.href}</a>` : "";
@@ -128,16 +143,17 @@ function entryToW3C(ref) {
 
 export function stringifyReference(ref,style) {
   if (typeof ref === "string") return ref;
+  const nomarlizedRef = Object.assign({}, defaultsReference, ref); 
   let output = "";
   switch (style) {
   	case "APA": 
-  		output = entryToAPA(ref);     	
+  		output = entryToAPA(nomarlizedRef);     	
       	break;
     case "MLA":
-    	output = entryToMLA(ref);
+    	output = entryToMLA(nomarlizedRef);
       	break;
     default: 
-    	output = entryToW3C(ref);
+    	output = entryToW3C(nomarlizedRef);
   }
   return output;
 }
