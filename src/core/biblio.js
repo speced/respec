@@ -112,7 +112,7 @@ function entryToMLA(ref) {
 	if (ref.authors && ref.authors.length) {
 		authors = ref.authors.join("; ") + (ref.etAl ? " et al." : ".");
 	}
-	const date = ref.date ?  ref.date + ", " : "";
+	const date = ref.date ?  `${ref.date}, ` : "";
 	const title = ref.href ? `<a href="${ref.href}"> "<cite>${ref.title}</cite>" </a>. ` : "";
 	const URL = ref.href ? `<a href="${ref.href}">${ref.href}</a>` : "";
 	const publisher = "";
@@ -134,7 +134,7 @@ function entryToW3C(ref) {
 	if (ref.publisher) {
 		publisher = ref.publisher + (ref.publisher.endsWith(".")
 	}
-	const date = ref.date ?  ref.date + ". " : "";
+	const date = ref.date ?  `${ref.date}. ` : "";
 	const status = ref.status ? (REF_STATUSES.get(ref.status) || ref.status) + ". " : "";
 	const URL = ref.href ? `URL: <a href="${ref.href}">${ref.href}</a>` : "";
 
