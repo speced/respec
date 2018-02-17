@@ -117,7 +117,7 @@ function entryToMLA(ref) {
 	const URL = ref.href ? `<a href="${ref.href}">${ref.href}</a>` : "";
 	const publisher = "";
 	if (ref.publisher) {
-		publisher = ref.publisher + (ref.publisher.endsWith(".")
+		publisher = ref.publisher + ref.publisher.endsWith(".");
 	}
       	 
   	return 	`${authors} ${title} ${publisher} ${date} ${URL}`;
@@ -132,7 +132,7 @@ function entryToW3C(ref) {
 	}
 	const publisher = "";
 	if (ref.publisher) {
-		publisher = ref.publisher + (ref.publisher.endsWith(".")
+		publisher = ref.publisher + ref.publisher.endsWith(".");
 	}
 	const date = ref.date ?  `${ref.date}. ` : "";
 	const status = ref.status ? (REF_STATUSES.get(ref.status) || ref.status) + ". " : "";
