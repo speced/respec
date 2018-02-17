@@ -99,7 +99,7 @@ function entryToAPA(ref) {
 	if (ref.authors && ref.authors.length) {
 		authors = ref.authors.join("; ") + (ref.etAl ? " et al." : ".");
 	}
-	const date = ref.date ?  '(${ref.date}).' : "";
+	const date = ref.date ?  `(${ref.date}).` : "";
 	const title = ref.href ? `<a href="${ref.href}"> <cite>${ref.title}</cite> </a>. ` : "";
 	const URL = ref.href ? `Retrieved from URL: <a href="${ref.href}">${ref.href}</a>` : "";
 
