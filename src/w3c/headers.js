@@ -502,9 +502,10 @@ export function run(conf, doc, cb) {
     );
   }
   // insert into document
-  const bp = hyperHTML.bind(document.createDocumentFragment())`${
-    [(conf.isCGBG ? cgbgHeadersTmpl : headersTmpl)(conf)]}`;
-  document.body.insertBefore(bp, document.body.firstChild);
+  document.body.insertBefore(
+    (conf.isCGBG ? cgbgHeadersTmpl : headersTmpl)(conf),
+    document.body.firstChild
+  );
   document.body.classList.add("h-entry");
 
   // handle SotD
