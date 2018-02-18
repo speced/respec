@@ -24,7 +24,7 @@ export default (conf, name, items = []) => {
     const contents = [];
     if (p.url) {
       if (conf.doRDFa) {
-        contents.push(html`<meta property='${attr.rn}' content='${p.name}' />`);
+        contents.push(html`<meta property='${attr.rn}' content='${p.name}'>`);
       }
       contents.push(html`<a class='u-url url p-name fn'
         property='${attr.ru}' href='${p.url}'>${p.name}</a>`);
@@ -35,7 +35,7 @@ export default (conf, name, items = []) => {
       if (p.companyURL) {
         if (conf.doRDFa) {
           contents.push(html`, <span property='schema:worksFor' typeof='schema:Organization'>
-            <meta property='${attr.rn}' content='${p.company}' />
+            <meta property='${attr.rn}' content='${p.company}'>
             <a property='${attr.ru}'
             class='p-org org h-org h-card' href='${p.companyURL}'>${p.company}</a>
             </span>`);
