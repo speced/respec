@@ -63,11 +63,9 @@ window.$.fn.getDfnTitles = function(args) {
     // prefer @data-lt for the list of title aliases
     titleString = this.attr(theAttr).toLowerCase();
     if (normalizedText !== "") {
-      //Regex: starts with the "normalizedText|"
-      var startsWith = new RegExp("^" + normalizedText + "\\|");
       // Use the definition itself, so to avoid
       // having to declare the definition twice.
-      if (!startsWith.test(titleString)) {
+      if (!titleString.startsWith(`${normalizedText}|`)) {
         titleString =  titleString + "|" + normalizedText;
       }
     }
@@ -107,39 +105,39 @@ window.$.fn.getDfnTitles = function(args) {
 
 // For any element (usually <a>), returns an array of targets that
 // element might refer to, of the form
-// {for_: 'interfacename', title: 'membername'}.
+// {for: 'interfacename', title: 'membername'}.
 //
 // For an element like:
 //  <p link-for="Int1"><a for="Int2">Int3.member</a></p>
 // we'll return:
-//  * {for_: "int2", title: "int3.member"}
-//  * {for_: "int3", title: "member"}
-//  * {for_: "", title: "int3.member"}
+//  * {for: "int2", title: "int3.member"}
+//  * {for: "int3", title: "member"}
+//  * {for: "", title: "int3.member"}
 window.$.fn.linkTargets = function() {
   var elem = this;
   var linkForElem = this[0].closest("[data-link-for]");
   var linkFor = linkForElem ? linkForElem.dataset.linkFor.toLowerCase() : "";
   var titles = elem.getDfnTitles();
   var result = [];
-  window.$.each(titles, function() {
+  for (const title of titles) {
     result.push({
-      for_: linkFor,
-      title: this,
+      for: linkFor,
+      title,
     });
-    var split = this.split(".");
+    const split = title.split(".");
     if (split.length === 2) {
       // If there are multiple '.'s, this won't match an
       // Interface/member pair anyway.
       result.push({
-        for_: split[0],
+        for: split[0],
         title: split[1],
       });
     }
     result.push({
-      for_: "",
-      title: this,
+      for: "",
+      title,
     });
-  });
+  }
   return result;
 };
 
