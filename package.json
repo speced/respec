@@ -21,7 +21,6 @@
   ],
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-plugin-transform-es2015-block-scoping": "^6.26.0",
     "babel-plugin-transform-es2015-modules-amd": "^6.24.1",
     "babel-preset-stage-3": "^6.24.1",
     "babel-preset-stage-3-without-async": "^1.0.0",
@@ -76,7 +75,6 @@
     "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
-    "babel": "^6.23.0",
     "colors": "^1.1.2",
     "command-line-args": "^5.0.2",
     "command-line-usage": "^4.1.0",
