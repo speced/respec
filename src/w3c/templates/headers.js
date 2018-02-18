@@ -7,7 +7,12 @@ export default conf => {
   const html = hyperHTML;
   return html`<div class='head'>
   ${conf.logos.map(showLogo)}
-  <h1 class='title p-name' id='title' property='${conf.doRDFa ? "dcterms:title" : null}'>${conf.title}</h1>
+  <script>
+    if (document.querySelectorAll("h1") ?
+      document.write("") :
+      document.write("<h1 class='title p-name' id='title' property='${conf.doRDFa ? "dcterms:title" : null}'>${conf.title}</h1>"))
+  </script>
+  
   ${conf.subtitle ? html`
     <h2 property='${conf.doRDFa ? "bibo:subtitle" : null}' id='subtitle'>${conf.subtitle}</h2>
   ` : ""}
@@ -76,7 +81,7 @@ export default conf => {
   ` : ""}
   ${conf.alternateFormats ? html`
     <p>
-      ${conf.multipleAlternates ? 
+      ${conf.multipleAlternates ?
         "This document is also available in these non-normative formats:" :
         "This document is also available in this non-normative format:"}
       ${[conf.alternatesHTML]}
