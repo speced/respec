@@ -70,10 +70,16 @@ describe("W3C — RDFa", function() {
       var $meta = $sp.children("meta");
       expect($meta.attr("property")).toEqual("schema:name");
       expect($meta.attr("content")).toEqual("Shane McCarron");
-      var $a = $sp.children("a");
+
+      var $a = $sp.children("a.p-name");
       expect($a.attr("property")).toEqual("schema:url");
       expect($a.attr("href")).toEqual("http://URI");
-      $a = $sp.children("span").children("a");
+
+      var $spo = $sp.children("span");
+      expect($spo.attr("property")).toEqual("schema:worksFor");
+      expect($spo.attr("typeOf")).toEqual("schema:Organization");
+
+      $a = $sp.children('a.email');
       expect($a.attr("property")).toEqual("foaf:mbox");
       expect($a.attr("href")).toEqual("mailto:EMAIL");
 

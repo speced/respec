@@ -52,8 +52,8 @@ export default (conf, name, items = []) => {
       }
     }
     if (p.mailto) {
-      contents.push(html`, <span class='ed_mailto'><a class='u-email email'
-        property='${attr.rm}' href='${`mailto:${p.mailto}`}'>${p.mailto}</a></span>`);
+      contents.push(html`, <a class='ed_mailto u-email email'
+        property='${attr.rm}' href='${`mailto:${p.mailto}`}'>${p.mailto}</a>`);
     }
     if (p.note) contents.push(document.createTextNode(` (${p.note})`));
     if (p.extras) {
