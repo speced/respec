@@ -502,10 +502,8 @@ export function run(conf, doc, cb) {
     );
   }
   // insert into document
-  document.body.insertBefore(
-    (conf.isCGBG ? cgbgHeadersTmpl : headersTmpl)(conf),
-    document.body.firstChild
-  );
+  const header = (conf.isCGBG ? cgbgHeadersTmpl : headersTmpl)(conf);
+  document.body.insertBefore(header, document.body.firstChild);
   document.body.classList.add("h-entry");
 
   // handle SotD
