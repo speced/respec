@@ -1,7 +1,13 @@
 export default (conf, name, items = []) => {
   const html = hyperHTML;
   // stuff to handle RDFa
-  const rp = (name === "Editor" ? 'schema:editor' : 'schema:contributor');
+  const attr = Object.freeze(conf.doRDFa ? {
+    re: (name === "Editor" ? "schema:editor" : "schema:contributor"),
+    rp: "schema:Person",
+    rn: "schema:name",
+    rm: "foaf:mbox",
+    ru: "schema:url"
+  } : {});
   const results = [];
   for (let i = 0; i < items.length; i++) {
     results.push(getItem(items[i], i));
@@ -13,29 +19,24 @@ export default (conf, name, items = []) => {
     const dd = html`<dd class='p-author h-card vcard'
       data-editor-id='${editorid}'></dd>`;
     const span = conf.doRDFa ?
-      html`<span property='${rp}' typeof='schema:Person'></span>` :
+      html`<span property='${attr.re}' typeof='${attr.rp}'></span>` :
       document.createDocumentFragment();
     const contents = [];
     if (p.url) {
       if (conf.doRDFa) {
-        contents.push(html`<meta property='schema:name' content='${p.name}' />
-          <a class='u-url url p-name fn'
-          property='schema:url' href='${p.url}'>${p.name}</a>`);
-      } else {
-        contents.push(html`<a class='u-url url p-name fn'
-          href='${p.url}'>${p.name}</a>`);
+        contents.push(html`<meta property='${attr.rn}' content='${p.name}' />`);
       }
-    } else if (conf.doRDFa) {
-      contents.push(html`<span property='schema:name' class='p-name fn'>${p.name}</span>`);
+      contents.push(html`<a class='u-url url p-name fn'
+        property='${attr.ru}' href='${p.url}'>${p.name}</a>`);
     } else {
-      contents.push(html`<span class='p-name fn'>${p.name}</span>`);
+      contents.push(html`<span property='${attr.rn}' class='p-name fn'>${p.name}</span>`);
     }
     if (p.company) {
       if (p.companyURL) {
         if (conf.doRDFa) {
           contents.push(html`, <span property='schema:worksFor' typeof='schema:Organization'>
-            <meta property='schema:name' content='${p.company}' />
-            <a property='schema:url'
+            <meta property='${attr.rn}' content='${p.company}' />
+            <a property='${attr.ru}'
             class='p-org org h-org h-card' href='${p.companyURL}'>${p.company}</a>
             </span>`);
         } else {
@@ -51,13 +52,8 @@ export default (conf, name, items = []) => {
       }
     }
     if (p.mailto) {
-      if (conf.doRDFa) {
-        contents.push(html`, <span class='ed_mailto'><a class='u-email email'
-          property='foaf:mbox' href='${`mailto:${p.mailto}`}'>${p.mailto}</a></span>`);
-      } else {
-        contents.push(html`, <span class='ed_mailto'><a class='u-email email'
-          href='${`mailto:${p.mailto}`}'>${p.mailto}</a></span>`);
-      }
+      contents.push(html`, <span class='ed_mailto'><a class='u-email email'
+        property='${attr.rm}' href='${`mailto:${p.mailto}`}'>${p.mailto}</a></span>`);
     }
     if (p.note) contents.push(document.createTextNode(` (${p.note})`));
     if (p.extras) {
