@@ -33,19 +33,19 @@ describe("Core — JSON-LD", () => {
       localBiblio: {
         TestRef1: {
           title: "Test ref title",
-          href: "http://test.com",
+          href: "http://test.com/1",
           authors: ["William Shakespeare"],
           publisher: "Publishers Inc.",
         },
         TestRef2: {
           title: "Second test",
-          href: "http://test.com",
+          href: "http://test.com/2",
           authors: ["Another author"],
           publisher: "Testing 123",
         },
         TestRef3: {
           title: "Third test",
-          href: "http://test.com",
+          href: "http://test.com/3",
           publisher: "Publisher Here",
         },
       },
@@ -103,23 +103,29 @@ describe("Core — JSON-LD", () => {
     });
   });
 
-  it("should describe dependencies and citations", async () => {
+  it("should describe citations", async () => {
     const ops = {config, body};
     const doc = await makeRSDoc(ops);
 
     const $script = $("head>script[type='application/ld+json']", doc);
     const jsonld = JSON.parse($script.text());
-    expect(jsonld.dependencies).toContain({
-      name: 'Test ref title',
-      url: 'http://test.com'
-    });
-    expect(jsonld.dependencies).toContain({
-      name: 'Third test',
-      url: 'http://test.com'
+    expect(jsonld.citation).toContain({
+      id: "http://test.com/1",
+      type: "TechArticle",
+      name: "Test ref title",
+      url: "http://test.com/1"
     });
     expect(jsonld.citation).toContain({
-      name: 'Second test',
-      url: 'http://test.com'
+      id: "http://test.com/2",
+      type: "TechArticle",
+      name: "Second test",
+      url: "http://test.com/2"
+    });
+    expect(jsonld.citation).toContain({
+      id: "http://test.com/3",
+      type: "TechArticle",
+      name: "Third test",
+      url: "http://test.com/3"
     });
   });
 });
