@@ -39,7 +39,7 @@ export function run(conf, doc, cb) {
 
   // description from abstract
   const $abs = doc.getElementById("abstract");
-  if ($abs.textContent.length > 0) {
+  if ($abs && $abs.textContent.length > 0) {
     jsonld.description = $abs.textContent;
   }
 

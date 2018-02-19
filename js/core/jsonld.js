@@ -46,7 +46,7 @@ define(["exports"], function (exports) {
 
     // description from abstract
     const $abs = doc.getElementById("abstract");
-    if ($abs.textContent.length > 0) {
+    if ($abs && $abs.textContent.length > 0) {
       jsonld.description = $abs.textContent;
     }
 
