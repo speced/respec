@@ -38,9 +38,9 @@ export function run(conf, doc, cb) {
   if (conf.prevVersion) jsonld.isBasedOn = conf.prevVersion;
 
   // description from abstract
-  const $abs = $("#abstract", doc);
-  if ($abs.length) {
-    jsonld.description = $abs.text();
+  const $abs = doc.getElementById("abstract");
+  if ($abs.textContent.length > 0) {
+    jsonld.description = $abs.textContent;
   }
 
   // Editors
@@ -56,11 +56,9 @@ export function run(conf, doc, cb) {
     .concat(Array.from(conf.informativeReferences));
   jsonld.citation = refs.map(ref => addRef(conf, ref));
 
-  var $jsonld = $(
-    "<script type='application/ld+json'>" +
-      JSON.stringify(jsonld) +
-      "</script>"
-  ).appendTo($("head"));
+  var $jsonld = hyperHTML`<script type="application/ld+json"></script>`;
+  $jsonld.appendChild(doc.createTextNode(JSON.stringify(jsonld)));
+  doc.head.appendChild($jsonld);
 
   cb();
 }

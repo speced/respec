@@ -55,34 +55,34 @@ describe("Core — JSON-LD", () => {
     const ops = {config, body};
     const doc = await makeRSDoc(ops);
 
-    const $script = $("head>script[type='application/ld+json']", doc);
-    const jsonld = JSON.parse($script.text());
-    expect(jsonld['@context']).toContain('http://schema.org');
-    expect(jsonld.id).toEqual('https://www.w3.org/TR/2013/PER-some-spec-20130625/')
-    expect(jsonld.type).toContain('TechArticle');
-    expect(jsonld.type).toContain('w3p:PER');
-    expect(jsonld.datePublished).toEqual('2013-06-25');
-    expect(jsonld.description).toContain('Abstract');
-    expect(jsonld.inLanguage).toEqual('en');
-    expect(jsonld.isBasedOn).toEqual('https://www.w3.org/TR/2012/REC-some-spec-20120607/');
+    const $script = doc.querySelector("script[type='application/ld+json']");
+    const jsonld = JSON.parse($script.textContent);
+    expect(jsonld["@context"]).toContain("http://schema.org");
+    expect(jsonld.id).toEqual("https://www.w3.org/TR/2013/PER-some-spec-20130625/")
+    expect(jsonld.type).toContain("TechArticle");
+    expect(jsonld.type).toContain("w3p:PER");
+    expect(jsonld.datePublished).toEqual("2013-06-25");
+    expect(jsonld.description).toContain("Abstract");
+    expect(jsonld.inLanguage).toEqual("en");
+    expect(jsonld.isBasedOn).toEqual("https://www.w3.org/TR/2012/REC-some-spec-20120607/");
     expect(jsonld.license).toEqual("https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document")
-    expect(jsonld.name).toEqual($('title', doc).text());
+    expect(jsonld.name).toEqual("Basic Title");
   });
 
   it("should describe editors and contributors", async () => {
     const ops = {config, body};
     const doc = await makeRSDoc(ops);
 
-    const $script = $("head>script[type='application/ld+json']", doc);
-    const jsonld = JSON.parse($script.text());
+    const $script = doc.querySelector("script[type='application/ld+json']");
+    const jsonld = JSON.parse($script.textContent);
     expect(jsonld.editor).toContain({
-      type: 'Person',
-      name: 'Gregg Kellogg',
-      url: 'http://URI',
-      'foaf:mbox': 'EMAIL',
+      type: "Person",
+      name: "Gregg Kellogg",
+      url: "http://URI",
+      "foaf:mbox": "EMAIL",
       worksFor: {
-        name: 'COMPANY',
-        url: 'http://COMPANY'
+        name: "COMPANY",
+        url: "http://COMPANY"
       }
     });
   });
@@ -91,15 +91,15 @@ describe("Core — JSON-LD", () => {
     const ops = {config, body};
     const doc = await makeRSDoc(ops);
 
-    const $script = $("head>script[type='application/ld+json']", doc);
-    const jsonld = JSON.parse($script.text());
+    const $script = doc.querySelector("script[type='application/ld+json']");
+    const jsonld = JSON.parse($script.textContent);
     expect(jsonld.contributor).toContain({
-      type: 'Person',
-      name: 'Gregg Kellogg'
+      type: "Person",
+      name: "Gregg Kellogg"
     });
     expect(jsonld.contributor).toContain({
-      type: 'Person',
-      name: 'Shane McCarron'
+      type: "Person",
+      name: "Shane McCarron"
     });
   });
 
@@ -107,8 +107,8 @@ describe("Core — JSON-LD", () => {
     const ops = {config, body};
     const doc = await makeRSDoc(ops);
 
-    const $script = $("head>script[type='application/ld+json']", doc);
-    const jsonld = JSON.parse($script.text());
+    const $script = doc.querySelector("script[type='application/ld+json']");
+    const jsonld = JSON.parse($script.textContent);
     expect(jsonld.citation).toContain({
       id: "http://test.com/1",
       type: "TechArticle",
