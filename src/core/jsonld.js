@@ -45,15 +45,14 @@ export function run(conf, doc, cb) {
 
   // Editors
   if (conf.editors) {
-    jsonld.editor = conf.editors.map(person => addPerson(person));
+    jsonld.editor = conf.editors.map(addPerson);
   }
   if (conf.authors) {
-    jsonld.contributor = conf.authors.map(person => addPerson(person));
+    jsonld.contributor = conf.authors.map(addPerson);
   }
 
   // normative and informative references
-  const refs = Array.from(conf.normativeReferences)
-    .concat(Array.from(conf.informativeReferences));
+  const refs = [...conf.normativeReferences, ...conf.informativeReferences];
   jsonld.citation = refs.map(ref => addRef(conf, ref));
 
   var $jsonld = hyperHTML`<script type="application/ld+json"></script>`;
