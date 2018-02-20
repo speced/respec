@@ -55,8 +55,8 @@ describe("Core — JSON-LD", () => {
     const ops = {config, body};
     const doc = await makeRSDoc(ops);
 
-    const $script = doc.querySelector("script[type='application/ld+json']");
-    const jsonld = JSON.parse($script.textContent);
+    const script = doc.querySelector("script[type='application/ld+json']");
+    const jsonld = JSON.parse(script.textContent);
     expect(jsonld["@context"]).toContain("http://schema.org");
     expect(jsonld.id).toEqual("https://www.w3.org/TR/2013/PER-some-spec-20130625/")
     expect(jsonld.type).toContain("TechArticle");
@@ -67,14 +67,18 @@ describe("Core — JSON-LD", () => {
     expect(jsonld.isBasedOn).toEqual("https://www.w3.org/TR/2012/REC-some-spec-20120607/");
     expect(jsonld.license).toEqual("https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document")
     expect(jsonld.name).toEqual("Basic Title");
+    expect(jsonld.copyrightHolder).toEqual({
+      name: "World Wide Web Consortium",
+      url: "https://www.w3.org/"
+    });
   });
 
   it("should describe editors and contributors", async () => {
     const ops = {config, body};
     const doc = await makeRSDoc(ops);
 
-    const $script = doc.querySelector("script[type='application/ld+json']");
-    const jsonld = JSON.parse($script.textContent);
+    const script = doc.querySelector("script[type='application/ld+json']");
+    const jsonld = JSON.parse(script.textContent);
     expect(jsonld.editor).toContain({
       type: "Person",
       name: "Gregg Kellogg",
@@ -91,8 +95,8 @@ describe("Core — JSON-LD", () => {
     const ops = {config, body};
     const doc = await makeRSDoc(ops);
 
-    const $script = doc.querySelector("script[type='application/ld+json']");
-    const jsonld = JSON.parse($script.textContent);
+    const script = doc.querySelector("script[type='application/ld+json']");
+    const jsonld = JSON.parse(script.textContent);
     expect(jsonld.contributor).toContain({
       type: "Person",
       name: "Gregg Kellogg"
@@ -107,8 +111,8 @@ describe("Core — JSON-LD", () => {
     const ops = {config, body};
     const doc = await makeRSDoc(ops);
 
-    const $script = doc.querySelector("script[type='application/ld+json']");
-    const jsonld = JSON.parse($script.textContent);
+    const script = doc.querySelector("script[type='application/ld+json']");
+    const jsonld = JSON.parse(script.textContent);
     expect(jsonld.citation).toContain({
       id: "http://test.com/1",
       type: "TechArticle",
@@ -127,5 +131,20 @@ describe("Core — JSON-LD", () => {
       name: "Third test",
       url: "http://test.com/3"
     });
+  });
+
+  it("adds an additional copyright holder", async () => {
+    const ops = {
+      config: Object.assign({}, config, {additionalCopyrightHolders: ["ACME"]}),
+      body
+    };
+    const doc = await makeRSDoc(ops);
+
+    const script = doc.querySelector("script[type='application/ld+json']");
+    const jsonld = JSON.parse(script.textContent);
+    expect(jsonld.copyrightHolder).toEqual([{
+      name: "World Wide Web Consortium",
+      url: "https://www.w3.org/"
+    }, {name: "ACME"}]);
   });
 });
