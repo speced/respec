@@ -230,8 +230,6 @@ export function run(conf, doc, cb) {
   if (conf.isUnofficial) {
     conf.logos = [];
   }
-  // Default include RDFa document metadata
-  if (conf.doRDFa === undefined) conf.doRDFa = true;
   // validate configuration and derive new configuration values
   if (!conf.license) {
     conf.license = "w3c-software-doc";
@@ -498,7 +496,11 @@ export function run(conf, doc, cb) {
       "w3p: http://www.w3.org/2001/02pd/rec54#";
     $("html").attr("prefix", prefixes);
     $("html>head").prepend(
-      $("<meta lang='' property='schema:inLanguage' content='en'>")
+      $("<meta property='schema:inLanguage'>")
+        .attr({
+          lang: doc.documentElement.lang || "en",
+          content: doc.documentElement.lang || "en",
+        })
     );
   }
   // insert into document
