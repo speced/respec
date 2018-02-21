@@ -61,7 +61,7 @@ define(
     "core/id-headers",
     "core/rdfa",
     "core/location-hash",
-    "ui/save-html",
+    "core/save-html",
     "ui/search-specref",
     "ui/dfn-list",
     "ui/about-respec",

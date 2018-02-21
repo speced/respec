@@ -1,10 +1,10 @@
-// Module ui/save-html
+// Module core/save-html
 // Saves content to HTML when asked to
 import { xmlEscape, removeReSpec } from "core/utils";
 import { pub } from "core/pubsubhub";
 import { ui } from "core/ui";
 import { l10n, lang } from "core/l10n";
-export const name = "ui/save-html";
+export const name = "core/save-html";
 
 const downloadLinks = [
   {
@@ -37,7 +37,7 @@ let button;
 if (supportsDownload) {
   button = ui.addCommand(
     l10n[lang].save_snapshot,
-    "ui/save-html",
+    "core/save-html",
     "Ctrl+Shift+Alt+S",
     "💾"
   );

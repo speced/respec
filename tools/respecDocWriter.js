@@ -173,7 +173,7 @@ async function evaluateHTML() {
   try {
     await document.respecIsReady;
     const exportDocument = await new Promise(resolve => {
-      require(["ui/save-html"], ({ exportDocument }) => {
+      require(["core/save-html"], ({ exportDocument }) => {
         resolve(exportDocument);
       });
     });
