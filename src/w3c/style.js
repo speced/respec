@@ -27,7 +27,7 @@ function attachFixupScript(doc, version) {
 // Other plugins might subsequently push it down, but at least we start
 // at the right place. When ReSpec exports the HTML, it again moves the
 // meta viewport to the top of the head - so to make sure it's the first
-// thing the browser sees. See js/ui/save-html.js.
+// thing the browser sees. See js/core/save-html.js.
 function createMetaViewport() {
   const meta = document.createElement("meta");
   meta.name = "viewport";
