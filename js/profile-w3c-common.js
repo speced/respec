@@ -60,7 +60,7 @@ define(
     "w3c/permalinks",
     "core/id-headers",
     "core/rdfa",
-    "core/jsonld",
+    "w3c/jsonld",
     "core/location-hash",
     "ui/save-html",
     "ui/search-specref",
