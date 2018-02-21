@@ -230,8 +230,6 @@ export function run(conf, doc, cb) {
   if (conf.isUnofficial) {
     conf.logos = [];
   }
-  // Default include RDFa document metadata
-  if (conf.doRDFa === undefined) conf.doRDFa = true;
   // validate configuration and derive new configuration values
   if (!conf.license) {
     conf.license = "w3c-software-doc";
@@ -492,13 +490,17 @@ export function run(conf, doc, cb) {
   // annotate html element with RFDa
   if (conf.doRDFa) {
     if (conf.rdfStatus)
-      $("html").attr("typeof", "bibo:Document " + conf.rdfStatus);
-    else $("html").attr("typeof", "bibo:Document ");
+      $("html").attr("typeof", "schema:TechArticle " + conf.rdfStatus);
+    else $("html").attr("typeof", "schema:TechArticle ");
     var prefixes =
-      "bibo: http://purl.org/ontology/bibo/ w3p: http://www.w3.org/2001/02pd/rec54#";
+      "w3p: http://www.w3.org/2001/02pd/rec54#";
     $("html").attr("prefix", prefixes);
     $("html>head").prepend(
-      $("<meta lang='' property='dc:language' content='en'>")
+      $("<meta property='schema:inLanguage'>")
+        .attr({
+          lang: doc.documentElement.lang || "en",
+          content: doc.documentElement.lang || "en",
+        })
     );
   }
   // insert into document

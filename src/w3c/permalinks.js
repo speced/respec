@@ -40,12 +40,11 @@ export function run(conf, doc, cb) {
         }
       }
       // if we still have resourceID
-      if (resourceID !== null) {
+      if (resourceID) {
         // we have an id.  add a permalink
         // right after the h* element
         var theNode = $("<span></span>");
         theNode.attr("class", "permalink");
-        if (conf.doRDFa) theNode.attr("typeof", "bookmark");
         var ctext = $item.text();
         var el = $("<a></a>");
         el.attr({
@@ -53,11 +52,10 @@ export function run(conf, doc, cb) {
           "aria-label": "Permalink for " + ctext,
           title: "Permalink for " + ctext,
         });
-        if (conf.doRDFa) el.attr("property", "url");
         var sym = $("<span></span>");
         if (conf.doRDFa) {
           sym.attr({
-            property: "title",
+            property: "schema:name",
             content: ctext,
           });
         }
