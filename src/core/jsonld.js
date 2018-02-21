@@ -11,16 +11,19 @@ export function run(conf, doc, cb) {
   if (conf.rdfStatus) types.push(conf.rdfStatus);
 
   const jsonld = {
-    "@context": ["http://schema.org", {
-      "@vocab": "http://schema.org/",
-      "@language": "en",
-      "w3p": "http://www.w3.org/2001/02pd/rec54#",
-      "foaf": "http://xmlns.com/foaf/0.1/",
-      "datePublished": {"@type": "xsd:date"},
-      "inLanguage": {"@language": null},
-      "isBasedOn": {"@type": "@id"},
-      "license": {"@type": "@id"}
-    }],
+    "@context": [
+      "http://schema.org",
+      {
+        "@vocab": "http://schema.org/",
+        "@language": "en",
+        w3p: "http://www.w3.org/2001/02pd/rec54#",
+        foaf: "http://xmlns.com/foaf/0.1/",
+        datePublished: { "@type": "xsd:date" },
+        inLanguage: { "@language": null },
+        isBasedOn: { "@type": "@id" },
+        license: { "@type": "@id" },
+      },
+    ],
     id: conf.canonicalURI || conf.thisVersion,
     type: types,
     name: conf.title,
@@ -29,9 +32,9 @@ export function run(conf, doc, cb) {
     datePublished: conf.dashDate,
     copyrightHolder: {
       name: "World Wide Web Consortium",
-      url: "https://www.w3.org/"
+      url: "https://www.w3.org/",
     },
-    discussionUrl: conf.issueBase
+    discussionUrl: conf.issueBase,
   };
 
   // add any additional copyright holders
@@ -41,7 +44,8 @@ export function run(conf, doc, cb) {
       : [conf.additionalCopyrightHolders];
     jsonld.copyrightHolder = [
       jsonld.copyrightHolder,
-      ...addl.map(h => ({name: h}))];
+      ...addl.map(h => ({ name: h })),
+    ];
   }
 
   if (conf.subtitle) jsonld.alternativeHeadline = conf.subtitle;
@@ -69,7 +73,7 @@ export function run(conf, doc, cb) {
     .map(addRef);
 
   const script = doc.createElement("script");
-  script.type =  "application/ld+json";
+  script.type = "application/ld+json";
   script.textContent = JSON.stringify(jsonld);
   doc.head.appendChild(script);
 
@@ -82,12 +86,12 @@ function addPerson({ name, url, mailto, company, companyURL }) {
     type: "Person",
     name,
     url,
-    'foaf:mbox': mailto
+    "foaf:mbox": mailto,
   };
   if (company || companyURL) {
     ed.worksFor = {
       name: company,
-      url: companyURL
+      url: companyURL,
     };
   }
   return ed;
