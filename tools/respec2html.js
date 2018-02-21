@@ -2,6 +2,7 @@
 
 /*jshint node: true, browser: false*/
 "use strict";
+const { URL } = require('url');
 const colors = require("colors");
 const fetchAndWrite = require("./respecDocWriter").fetchAndWrite;
 colors.setTheme({
@@ -118,7 +119,7 @@ const usageSections = [
     console.info(getUsage(usageSections));
     return process.exit(0);
   }
-  const src = parsedArgs.src;
+  const src = new URL(parsedArgs.src, `file://${process.cwd()}/`).href;
   const whenToHalt = {
     haltOnError: parsedArgs.haltonerror,
     haltOnWarn: parsedArgs.haltonwarn,
