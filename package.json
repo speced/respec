@@ -84,9 +84,9 @@
     "highlight.js": "github:marcoscaceres/highlight.js#7b144b3b83ce296d5b29c5e4fc2ea2a65e9d3f32",
     "hyperhtml": "^2.5.10",
     "loading-indicator": "^2.0.0",
-    "marked": "^0.3.12",
+    "marked": "^0.3.16",
     "prompt": "^1.0.0",
-    "puppeteer": "^1.0.0",
+    "puppeteer": "^1.1.0",
     "snyk": "^1.69.7"
   },
   "snyk": true
