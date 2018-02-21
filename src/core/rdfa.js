@@ -11,7 +11,7 @@ export function run(conf, doc, cb) {
   // Do abstract
   const $abs = $("#abstract", doc);
   if ($abs.length) {
-    var rel = "dc:abstract",
+    var rel = "schema:description",
       ref = $abs.attr("property");
     if (ref) rel = ref + " " + rel;
     $abs.attr({ property: rel });
@@ -32,11 +32,11 @@ export function run(conf, doc, cb) {
         fcref = ref;
       }
     }
-    var property = "bibo:hasPart";
+    var property = "schema:hasPart";
     // Headings on everything but boilerplate
     if (!resource.match(/#(abstract|sotd|toc)$/)) {
       $sec.attr({
-        typeof: "bibo:Chapter",
+        typeof: "schema:Chapter",
         resource: resource,
         property: property,
       });
@@ -50,11 +50,6 @@ export function run(conf, doc, cb) {
         // if there is no ID on the heading itself.  Add one
         fcref = $fc.makeID("h", ref);
       }
-      // set the subject to the ID of the heading
-      $fc.attr({ resource: "#" + fcref });
-      // nest the contents in a span so we can set the predicate
-      // and object
-      $fc.wrapInner("<span property='xhv:role' resource='xhv:heading'></span>");
     }
   });
   cb();
