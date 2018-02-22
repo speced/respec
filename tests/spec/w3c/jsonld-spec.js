@@ -78,7 +78,7 @@ describe("Core — JSON-LD", () => {
     });
   });
 
-  it("should describe editors and contributors", async () => {
+  it("describes editors and contributors", async () => {
     const ops = { config, body };
     const doc = await makeRSDoc(ops);
 
@@ -96,7 +96,7 @@ describe("Core — JSON-LD", () => {
     });
   });
 
-  it("should describe contributors", async () => {
+  it("describes contributors", async () => {
     const ops = { config, body };
     const doc = await makeRSDoc(ops);
 
@@ -112,7 +112,7 @@ describe("Core — JSON-LD", () => {
     });
   });
 
-  it("should describe citations", async () => {
+  it("describes citations", async () => {
     const ops = { config, body };
     const doc = await makeRSDoc(ops);
 
