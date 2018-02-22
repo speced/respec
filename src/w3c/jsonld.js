@@ -15,10 +15,10 @@ export function run(conf, doc, cb) {
       "http://schema.org",
       {
         "@vocab": "http://schema.org/",
-        "@language": "en",
+        "@language": doc.documentElement.lang || "en",
         w3p: "http://www.w3.org/2001/02pd/rec54#",
         foaf: "http://xmlns.com/foaf/0.1/",
-        datePublished: { "@type": "xsd:date" },
+        datePublished: { "@type": "http://www.w3.org/2001/XMLSchema#date" },
         inLanguage: { "@language": null },
         isBasedOn: { "@type": "@id" },
         license: { "@type": "@id" },
