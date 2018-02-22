@@ -54,7 +54,7 @@ export async function run(conf, doc, cb) {
   }
 
   // description from meta description
-  const description = doc.head.querySelector("meta[description]");
+  const description = doc.head.querySelector("meta[name=description]");
   if (description) {
     jsonld.description = description.content;
   }
