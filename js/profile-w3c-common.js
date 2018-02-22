@@ -59,7 +59,6 @@ define(
     "w3c/informative",
     "w3c/permalinks",
     "core/id-headers",
-    "core/rdfa",
     "w3c/jsonld",
     "core/location-hash",
     "ui/save-html",

@@ -487,22 +487,6 @@ export function run(conf, doc, cb) {
   });
   // configuration done - yay!
 
-  // annotate html element with RFDa
-  if (conf.doRDFa) {
-    if (conf.rdfStatus)
-      $("html").attr("typeof", "schema:TechArticle " + conf.rdfStatus);
-    else $("html").attr("typeof", "schema:TechArticle ");
-    var prefixes =
-      "w3p: http://www.w3.org/2001/02pd/rec54#";
-    $("html").attr("prefix", prefixes);
-    $("html>head").prepend(
-      $("<meta property='schema:inLanguage'>")
-        .attr({
-          lang: doc.documentElement.lang || "en",
-          content: doc.documentElement.lang || "en",
-        })
-    );
-  }
   // insert into document
   const header = (conf.isCGBG ? cgbgHeadersTmpl : headersTmpl)(conf);
   document.body.insertBefore(header, document.body.firstChild);
