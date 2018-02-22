@@ -75,7 +75,7 @@ export async function run(conf, doc, cb) {
 
   const script = doc.createElement("script");
   script.type = "application/ld+json";
-  script.textContent = JSON.stringify(jsonld);
+  script.textContent = JSON.stringify(jsonld, null, 2);
   doc.head.appendChild(script);
 }
 
