@@ -137,8 +137,7 @@ ${conf.isUnofficial ? html`
             This document was produced by
             ${conf.multipleWGs ? "groups" : "a group"}
             operating under the
-            <a id="${conf.doRDFa ? "sotd_patent" : null}" property='${conf.doRDFa ? "w3p:patentRules" : null}'
-            href='https://www.w3.org/Consortium/Patent-Policy/'>W3C Patent Policy</a>.
+            <a href='https://www.w3.org/Consortium/Patent-Policy/'>W3C Patent Policy</a>.
           ` : ""}
           ${conf.recNotExpected ? "The group does not expect this document to become a W3C Recommendation." : ""}
           ${!conf.isIGNote ? html`

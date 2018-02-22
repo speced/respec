@@ -53,12 +53,6 @@ export function run(conf, doc, cb) {
           title: "Permalink for " + ctext,
         });
         var sym = $("<span></span>");
-        if (conf.doRDFa) {
-          sym.attr({
-            property: "schema:name",
-            content: ctext,
-          });
-        }
         sym.append(symbol);
         el.append(sym);
         theNode.append(el);

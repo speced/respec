@@ -125,35 +125,10 @@ describe("W3C — Headers", function() {
       expect($dd.next("dd").text()).toEqual("NAME2");
     });
 
-    it("shouldn't add RDFa stuff to editors extras when doRDFa is false", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "REC",
-        editors: [
-          {
-            name: "Mr foo",
-            extras: [
-              {
-                name: "0000-0003-0782-2704",
-                href: "http://orcid.org/0000-0003-0782-2704",
-                class: "orcid",
-              },
-            ],
-          },
-        ],
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      var oricdHref = ops.config.editors[0].extras[0].href;
-      var orcidAnchor = doc.querySelector("a[href='" + oricdHref + "']");
-      expect(orcidAnchor.parentNode.className).toEqual("orcid");
-    });
-
     it("takes editors extras into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "REC",
-        doRDFa: true,
         editors: [
           {
             name: "Mr foo",
