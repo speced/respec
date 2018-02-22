@@ -13,7 +13,6 @@ describe("W3C — Defaults", () => {
       "privsec-section": true,
       "no-http-props": true,
     });
-    expect(rsConf.doRDFa).toBe(false);
     expect(rsConf.license).toEqual("w3c-software-doc");
     expect(rsConf.specStatus).toEqual("base");
   });
@@ -28,7 +27,6 @@ describe("W3C — Defaults", () => {
           "no-http-props": false,
           "fake-linter-rule": "foo",
         },
-        doRDFa: true,
         license: "c0",
         specStatus: "unofficial",
         shortName: "foo",
@@ -43,7 +41,6 @@ describe("W3C — Defaults", () => {
       "no-http-props": false,
       "fake-linter-rule": "foo",
     });
-    expect(rsConf.doRDFa).toBe(true);
     expect(rsConf.license).toEqual("c0");
     expect(rsConf.specStatus).toEqual("unofficial");
   });
