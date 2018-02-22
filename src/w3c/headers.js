@@ -230,10 +230,6 @@ export function run(conf, doc, cb) {
   if (conf.isUnofficial) {
     conf.logos = [];
   }
-  // validate configuration and derive new configuration values
-  if (!conf.license) {
-    conf.license = "w3c-software-doc";
-  }
   conf.isCCBY = conf.license === "cc-by";
   conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
   if (["cc-by", "w3c"].includes(conf.license)) {
