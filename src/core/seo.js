@@ -13,22 +13,15 @@ export async function run(conf, doc, cb) {
   if (!firstParagraph) {
     return; // no abstract, so nothing to do
   }
-  const insertMetaDescription = makeDescriptionInserter(firstParagraph);
-  if (window.requestIdleCallback) {
-    window.requestIdleCallback(insertMetaDescription);
-  } else {
-    insertMetaDescription();
-  }
+  insertMetaDescription(firstParagraph);
 }
 
-function makeDescriptionInserter(firstParagraph) {
-  return () => {
-    // Normalize whitespace: trim, remove new lines, tabs, etc.
-    const doc = firstParagraph.ownerDocument;
-    const content = firstParagraph.textContent.replace(/\s+/, " ").trim();
-    const metaElem = doc.createElement("meta");
-    metaElem.name = "description";
-    metaElem.content = content;
-    doc.head.appendChild(metaElem);
-  };
+function insertMetaDescription(firstParagraph) {
+  // Normalize whitespace: trim, remove new lines, tabs, etc.
+  const doc = firstParagraph.ownerDocument;
+  const content = firstParagraph.textContent.replace(/\s+/, " ").trim();
+  const metaElem = doc.createElement("meta");
+  metaElem.name = "description";
+  metaElem.content = content;
+  doc.head.appendChild(metaElem);
 }
