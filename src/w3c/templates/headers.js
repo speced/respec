@@ -21,13 +21,10 @@ export default conf => {
       newh1.innerText = conf.title;
     }
   </script>
-  
-  
-  
   ${conf.subtitle ? html`
-    <h2 property='${conf.doRDFa ? "bibo:subtitle" : null}' id='subtitle'>${conf.subtitle}</h2>
+    <h2 id='subtitle'>${conf.subtitle}</h2>
   ` : ""}
-  <h2>${conf.prependW3C ? `W3C ` : ""}${conf.textStatus} <time property='${conf.doRDFa ? "dcterms:issued" : null}' class='dt-published' datetime='${conf.dashDate}'>${conf.publishHumanDate}</time></h2>
+  <h2>${conf.prependW3C ? `W3C ` : ""}${conf.textStatus} <time class='dt-published' datetime='${conf.dashDate}'>${conf.publishHumanDate}</time></h2>
   <dl>
     ${!conf.isNoTrack ? html`
       <dt>${conf.l10n.this_version}</dt>
@@ -59,12 +56,12 @@ export default conf => {
     ` : ""}
     ${conf.showPreviousVersion ? html`
       <dt>Previous version:</dt>
-      <dd><a rel='${conf.doRDFa ? "dcterms:replaces" : null}' href='${conf.prevVersion}'>${conf.prevVersion}</a></dd>
+      <dd><a href='${conf.prevVersion}'>${conf.prevVersion}</a></dd>
     ` : ""}
     ${conf.prevRecURI ? html`
       ${conf.isRec ? html`
           <dt>Previous Recommendation:</dt>
-          <dd><a rel='${conf.doRDFa ? "dcterms:replaces" : null}' href='${conf.prevRecURI}'>${conf.prevRecURI}</a></dd>
+          <dd><a href='${conf.prevRecURI}'>${conf.prevRecURI}</a></dd>
       ` : html`
           <dt>Latest Recommendation:</dt>
           <dd><a href='${conf.prevRecURI}'>${conf.prevRecURI}</a></dd>

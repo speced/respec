@@ -59,7 +59,6 @@ define(
     "w3c/informative",
     "w3c/permalinks",
     "core/id-headers",
-    "core/rdfa",
     "core/location-hash",
     "ui/save-html",
     "ui/search-specref",
@@ -71,6 +70,7 @@ define(
     "core/webidl-clipboard",
     "core/data-tests",
     "core/list-sorter",
+    "w3c/jsonld",
     /*Linter must be the last thing to run*/
     "core/linter",
   ],
