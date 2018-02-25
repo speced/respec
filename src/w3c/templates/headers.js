@@ -7,23 +7,13 @@ export default conf => {
   const html = hyperHTML;
   return html`<div class='head'>
   ${conf.logos.map(showLogo)}
-  <script>
-  const h1 = document.querySelector("h1#title, body>h1")
-    if (h1) {
-      conf.specTile = h1.textContent.trim();
-      h1.classList.add("title")
-      h1.id = "title"
-    } else {
-      
-      const newh1 = document.createElement("h1")
-      newh1.classList.add("title");
-      newh1.classList.add("p-name");
-      newh1.innerText = conf.title;
-    }
-  </script>
   
-  
-  
+  ${document.querySelector("h1#title, body>h1") ? (
+      conf.specTile = document.querySelector("h1#title, body>h1").textContent.trim(),
+      document.querySelector("h1#title, body>h1").classList.add("title"),
+      document.querySelector("h1#title, body>h1").id = "title")
+        :html`<h1 class="title p-name">${conf.title}</h1>`}
+
   ${conf.subtitle ? html`
     <h2 property='${conf.doRDFa ? "bibo:subtitle" : null}' id='subtitle'>${conf.subtitle}</h2>
   ` : ""}
