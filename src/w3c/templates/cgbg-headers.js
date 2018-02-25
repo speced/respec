@@ -7,11 +7,11 @@ export default conf => {
   const html = hyperHTML;
   return html`<div class='head'>
   ${conf.logos.map(showLogo)}
-  <h1 class='title p-name' id='title' property=${conf.doRDFa ? "dc:title" : null}>${conf.title}</h1>
+  <h1 class='title p-name' id='title'>${conf.title}</h1>
   ${conf.subtitle ? html`
-    <h2 property=${conf.doRDFa ? "bibo:subtitle" : null} id='subtitle'>${conf.subtitle}</h2>
+    <h2 id='subtitle'>${conf.subtitle}</h2>
   ` : ""}
-  <h2>${conf.longStatus} <time property=${conf.doRDFa ? "dc:issued" : null} class='dt-published' datetime='${conf.dashDate}'>${conf.publishHumanDate}</time></h2>
+  <h2>${conf.longStatus} <time class='dt-published' datetime='${conf.dashDate}'>${conf.publishHumanDate}</time></h2>
   <dl>
     ${conf.thisVersion ? html`
       <dt>${conf.l10n.this_version}</dt>
@@ -39,7 +39,7 @@ export default conf => {
     ` : ""}
     ${conf.prevVersion ? html`
       <dt>Previous version:</dt>
-      <dd><a rel=${conf.doRDFa ? "dcterms:replaces" : null} href='${conf.prevVersion}'>${conf.prevVersion}</a></dd>
+      <dd><a href='${conf.prevVersion}'>${conf.prevVersion}</a></dd>
     ` : ""}
     ${!conf.isCGFinal ? html`
       ${conf.prevED ? html`

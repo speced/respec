@@ -9,14 +9,11 @@ describe("Core - Fix headers", () => {
         "<section id='turtles'><h1>ONE</h1><section><h1>TWO</h1><section><h1>THREE</h1><section><h1>FOUR</h1>" +
         "<section><h1>FIVE</h1><section><h1>SIX</h1></section></section></section></section></section></section>",
     };
-    ops.config.doRDFa = true;
     const doc = await makeRSDoc(ops);
     var $s = $("#turtles", doc);
     expect($s.find("h1").length).toEqual(0);
     expect($s.find("h2").length).toEqual(1);
     expect($s.find("h2").text()).toMatch(/ONE/);
-    expect($s.find("h2 > span").attr("resource")).toEqual("xhv:heading");
-    expect($s.find("h2 > span").attr("property")).toEqual("xhv:role");
     expect($s.find("h3").length).toEqual(1);
     expect($s.find("h3").text()).toMatch(/TWO/);
     expect($s.find("h4").length).toEqual(1);

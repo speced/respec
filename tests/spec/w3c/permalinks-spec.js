@@ -21,7 +21,6 @@ describe("W3C — Permalinks", function() {
       specStatus: "PER",
       wgPatentURI: "http://www.w3.org/fake-patent-uri",
       includePermalinks: true,
-      doRDFa: 1.1,
       perEnd: "2013-06-25",
     };
   }
@@ -116,7 +115,6 @@ describe("W3C — Permalinks", function() {
       previousMaturity: "REC",
       specStatus: "PER",
       includePermalinks: false,
-      doRDFa: false,
     };
     var ops = {
       config: noConfig,
@@ -147,8 +145,6 @@ describe("W3C — Permalinks", function() {
       var $c = $("#testing", doc);
       var list = $("span.permalink a span", $c);
       expect(list.length).toEqual(1);
-      expect($(list[0]).attr("content")).toMatch(/'/);
-      expect($(list[0]).attr("content")).toMatch(/"/);
     }).then(done);
   });
 

@@ -230,12 +230,6 @@ export function run(conf, doc, cb) {
   if (conf.isUnofficial) {
     conf.logos = [];
   }
-  // Default include RDFa document metadata
-  if (conf.doRDFa === undefined) conf.doRDFa = true;
-  // validate configuration and derive new configuration values
-  if (!conf.license) {
-    conf.license = "w3c-software-doc";
-  }
   conf.isCCBY = conf.license === "cc-by";
   conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
   if (["cc-by", "w3c"].includes(conf.license)) {
@@ -489,29 +483,14 @@ export function run(conf, doc, cb) {
   });
   // configuration done - yay!
 
-  // annotate html element with RFDa
-  if (conf.doRDFa) {
-    if (conf.rdfStatus)
-      $("html").attr("typeof", "bibo:Document " + conf.rdfStatus);
-    else $("html").attr("typeof", "bibo:Document ");
-    var prefixes =
-      "bibo: http://purl.org/ontology/bibo/ w3p: http://www.w3.org/2001/02pd/rec54#";
-    $("html").attr("prefix", prefixes);
-    $("html>head").prepend(
-      $("<meta lang='' property='dc:language' content='en'>")
-    );
-  }
-  // insert into document and mark with microformat
-  var bp;
-  if (conf.isCGBG) bp = cgbgHeadersTmpl(conf);
-  else bp = headersTmpl(conf);
-  $("body", doc)
-    .prepend($(bp))
-    .addClass("h-entry");
+  // insert into document
+  const header = (conf.isCGBG ? cgbgHeadersTmpl : headersTmpl)(conf);
+  document.body.insertBefore(header, document.body.firstChild);
+  document.body.classList.add("h-entry");
 
   // handle SotD
   var sotd =
-    document.body.querySelector("#sotd") || document.createElement("section");
+    document.getElementById("sotd") || document.createElement("section");
   if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !sotd.id) {
     pub(
       "error",
