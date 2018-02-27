@@ -5,19 +5,25 @@ import showLink from "./show-link";
 
 export default conf => {
   const html = hyperHTML;
+  const specTitleElem = document.querySelector("h1#title, body>h1") || document.createElement("h1") ;
+  if (specTitleElem.parentElement) { // remove it from the DOM tree, because we are going to relocate it
+    specTitleElem.remove();
+    specTitleElem.innerText.trim();
+  } else {
+    specTitleElem.innerText = conf.title;
+  }
+  decorateSpecTitle(specTitleElem);
+  function decorateSpecTitle(specTitleElem) {
+    specTitleElem.classList.add("title", "p-name");
+    specTitleElem.id = "title";
+  }
   return html`<div class='head'>
   ${conf.logos.map(showLogo)}
-  
-  ${document.querySelector("h1#title, body>h1") ? (
-      conf.specTile = document.querySelector("h1#title, body>h1").textContent.trim(),
-      document.querySelector("h1#title, body>h1").classList.add("title"),
-      document.querySelector("h1#title, body>h1").id = "title")
-        :html`<h1 class="title p-name">${conf.title}</h1>`}
-
+  ${specTitleElem}
   ${conf.subtitle ? html`
-    <h2 id='subtitle'>${conf.subtitle}</h2>
+    <h2 property='${conf.doRDFa ? "bibo:subtitle" : null}' id='subtitle'>${conf.subtitle}</h2>
   ` : ""}
-  <h2>${conf.prependW3C ? `W3C ` : ""}${conf.textStatus} <time class='dt-published' datetime='${conf.dashDate}'>${conf.publishHumanDate}</time></h2>
+  <h2>${conf.prependW3C ? `W3C ` : ""}${conf.textStatus} <time property='${conf.doRDFa ? "dcterms:issued" : null}' class='dt-published' datetime='${conf.dashDate}'>${conf.publishHumanDate}</time></h2>
   <dl>
     ${!conf.isNoTrack ? html`
       <dt>${conf.l10n.this_version}</dt>
@@ -49,12 +55,12 @@ export default conf => {
     ` : ""}
     ${conf.showPreviousVersion ? html`
       <dt>Previous version:</dt>
-      <dd><a href='${conf.prevVersion}'>${conf.prevVersion}</a></dd>
+      <dd><a rel='${conf.doRDFa ? "dcterms:replaces" : null}' href='${conf.prevVersion}'>${conf.prevVersion}</a></dd>
     ` : ""}
     ${conf.prevRecURI ? html`
       ${conf.isRec ? html`
           <dt>Previous Recommendation:</dt>
-          <dd><a href='${conf.prevRecURI}'>${conf.prevRecURI}</a></dd>
+          <dd><a rel='${conf.doRDFa ? "dcterms:replaces" : null}' href='${conf.prevRecURI}'>${conf.prevRecURI}</a></dd>
       ` : html`
           <dt>Latest Recommendation:</dt>
           <dd><a href='${conf.prevRecURI}'>${conf.prevRecURI}</a></dd>
@@ -83,8 +89,8 @@ export default conf => {
   ${conf.alternateFormats ? html`
     <p>
       ${conf.multipleAlternates ?
-        "This document is also available in these non-normative formats:" :
-        "This document is also available in this non-normative format:"}
+    "This document is also available in these non-normative formats:" :
+    "This document is also available in this non-normative format:"}
       ${[conf.alternatesHTML]}
     </p>
   ` : ""}
