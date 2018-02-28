@@ -29,7 +29,7 @@ function join(things) {
   if (!things.length) {
     return "";
   }
-  const length = things.length;
+  const { length } = things;
   const last = things[length - 1];
   switch (length) {
     case 1:
@@ -44,7 +44,7 @@ function join(things) {
 async function toHTML(urls, editors, element) {
   const args = await Promise.all(urls.map(ghFetch));
   const names = args
-    .map(user => user[0].name || user[0].login)
+    .map(([user]) => user.name || user.login)
     .filter(name => !editors.includes(name))
     .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
   element.textContent = join(names);
