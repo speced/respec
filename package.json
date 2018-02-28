@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "19.6.0",
+  "version": "20.0.1",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -79,15 +79,14 @@
     "command-line-args": "^5.0.2",
     "command-line-usage": "^4.1.0",
     "epipebomb": "^1.0.0",
-    "express": "^4.16.2",
     "fs-extra": "^5.0.0",
     "highlight.js": "github:marcoscaceres/highlight.js#7b144b3b83ce296d5b29c5e4fc2ea2a65e9d3f32",
-    "hyperhtml": "^2.5.10",
+    "hyperhtml": "^2.5.12",
     "loading-indicator": "^2.0.0",
-    "marked": "^0.3.12",
+    "marked": "^0.3.16",
     "prompt": "^1.0.0",
-    "puppeteer": "^1.0.0",
-    "snyk": "^1.69.7"
+    "puppeteer": "^1.1.0",
+    "snyk": "^1.69.9"
   },
   "snyk": true
 }

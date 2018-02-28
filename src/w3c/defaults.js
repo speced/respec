@@ -53,7 +53,7 @@ const w3cDefaults = {
     "privsec-section": true,
     "no-http-props": true,
   },
-  doRDFa: false,
+  doJsonLd: false,
   license: "w3c-software-doc",
   specStatus: "base",
   logos: [{
