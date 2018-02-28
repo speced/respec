@@ -31,13 +31,14 @@ function join(things) {
   }
   const length = things.length;
   const last = things[length - 1];
-  if (length === 1) {
-    return last;
+  switch (length) {
+    case 1:
+      return last;
+    case 2:
+      return `${things[0]} and ${last}`;
+    default:
+      return `${things.join(", ")}, and ${last}`;
   }
-  if (length === 2) {
-    return `${things[0]} and ${last}`;
-  }
-  return `${things.join(", ")}, and ${last}`;
 }
 
 async function toHTML(urls, editors, element) {
