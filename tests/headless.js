@@ -46,7 +46,7 @@ function toExecutable(cmd) {
   };
 }
 
-async function runRespec2html(server) {
+async function runRespec2html() {
   const errors = new Set();
   const captureFile = /(\w+\.html)/;
   // Incrementally spawn processes and add them to process counter.
