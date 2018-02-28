@@ -23,11 +23,11 @@ function toRunnable(plug) {
         console.error(msg, plug);
         reject(new Error(msg));
       }, 5000);
-      // Modern plugins are async or normal functions, take one argument (conf)
       if (canMeasure) {
         performance.mark(name + "-start");
       }
       try {
+        // Modern plugins are async or normal functions, take one argument (conf)
         if (plug.run.length === 1) {
           await plug.run(config);
           resolve();
