@@ -41,7 +41,7 @@ function join(things) {
 }
 
 async function toHTML(urls, editors, element) {
-  const args = await Promise.all(...urls.map(ghFetch));
+  const args = await Promise.all(urls.map(ghFetch));
   const names = args
     .map(user => user[0].name || user[0].login)
     .filter(name => !editors.includes(name))
@@ -72,11 +72,11 @@ export async function run(conf) {
   }
 
   const json = await ghFetch(conf.githubAPI);
-  const [issues, comments, contributors] = await Promise.all(
+  const [issues, comments, contributors] = await Promise.all([
     fetchIndex(json.issues_url),
     fetchIndex(json.issue_comment_url),
     fetchIndex(json.contributors_url)
-  );
+  ]);
   const editors = respecConfig.editors.map(prop("name"));
   const commenterUrls = findUsers(issues, comments);
   const contributorUrls = contributors.map(prop("url"));
