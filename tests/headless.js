@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 "use strict";
-const port = process.env.PORT || 3000;
 const testURLs = [
   "https://w3c.github.io/html-media-capture/",
   "https://w3c.github.io/manifest/",
@@ -9,12 +8,11 @@ const testURLs = [
   "https://w3c.github.io/wpub/",
   "https://webaudio.github.io/web-audio-api/",
   "https://wicg.github.io/web-share-target/",
-  `http://localhost:${port}/examples/basic.built.html`,
-  `http://localhost:${port}/examples/basic.html`,
+  `file:///${__dirname}/../examples/basic.built.html`,
+  `file:///${__dirname}/../examples/basic.html`,
 ];
 const colors = require("colors");
 const { exec } = require("child_process");
-const express = require("express");
 const moment = require("moment");
 colors.setTheme({
   data: "grey",
@@ -48,7 +46,7 @@ function toExecutable(cmd) {
   };
 }
 
-async function runRespec2html(server) {
+async function runRespec2html() {
   const errors = new Set();
   const captureFile = /(\w+\.html)/;
   // Incrementally spawn processes and add them to process counter.
@@ -82,15 +80,9 @@ function debug(msg) {
 }
 
 async function run() {
-  const server = "http://localhost:" + port;
-  debug(" ✅  Starting up Express...");
-  const app = express();
-  const dir = require("path").join(__dirname, "..");
-  app.use(express.static(dir));
-  app.listen(port);
   debug(" ⏲  Running ReSpec2html tests...");
   try {
-    await runRespec2html(server);
+    await runRespec2html();
   } catch (err) {
     console.error(err);
     process.exit(1);

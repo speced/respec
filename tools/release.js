@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 "use strict";
-const port = process.env.PORT || 3000;
-const express = require("express");
 const { Builder } = require("./builder");
 const cmdPrompt = require("prompt");
 const colors = require("colors");
@@ -356,8 +354,6 @@ const indicators = new Map([
 ]);
 
 const run = async () => {
-  const app = express();
-  const dir = require("path").join(__dirname, "..");
   const initialBranch = await getCurrentBranch();
   try {
     // 1. Confirm maintainer is on up-to-date and on the develop branch ()
@@ -395,13 +391,11 @@ const run = async () => {
     indicators.get("build-merge-tag").show();
     await npm("run build:components");
     await Builder.build({ name: "w3c-common" });
-    app.use(express.static(dir));
-    app.listen(port);
     console.log(
       colors.info(" Making sure the generated version is ok... 🕵🏻")
     );
     await node(
-      "./tools/respec2html.js -e --timeout 30 --src http://localhost:3000/examples/basic.built.html --out /dev/null",
+      `./tools/respec2html.js -e --timeout 30 --src file:///${__dirname}/basic.built.html --out /dev/null`,
       { showOutput: true }
     );
     console.log(colors.info(" Build Seems good... ✅"));
