@@ -81,7 +81,7 @@ export async function run(conf) {
   const commenterUrls = findUsers(issues, comments);
   const contributorUrls = contributors.map(prop("url"));
   try {
-    return Promise.all(
+    await Promise.all(
       toHTML(commenterUrls, editors, ghCommenters),
       toHTML(contributorUrls, editors, ghContributors)
     );
