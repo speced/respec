@@ -50,12 +50,12 @@ async function toHTML(urls, editors, element) {
   element.id = null;
 }
 
-export async function run(conf, doc, cb) {
-  const ghCommenters = doc.getElementById("gh-commenters");
-  const ghContributors = doc.getElementById("gh-contributors");
+export async function run(conf) {
+  const ghCommenters = document.getElementById("gh-commenters");
+  const ghContributors = document.getElementById("gh-contributors");
 
   if (!ghCommenters && !ghContributors) {
-    return cb();
+    return;
   }
 
   if (!conf.githubAPI) {
@@ -68,7 +68,6 @@ export async function run(conf, doc, cb) {
         elements.join(" and ")
       }) but config.githubAPI is not set.`
     );
-    cb();
     return;
   }
 
@@ -92,8 +91,5 @@ export async function run(conf, doc, cb) {
       "error",
       "Error loading contributors and/or commenters from  Error: " + error
     );
-  }
-  finally {
-    cb();
   }
 }
