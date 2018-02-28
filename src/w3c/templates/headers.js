@@ -1,4 +1,3 @@
-"use strict"
 import "deps/hyperhtml";
 import showLogo from "./show-logo";
 import showPeople from "./show-people";
