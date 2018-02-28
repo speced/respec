@@ -300,9 +300,9 @@ function toExecPromise(cmd, { timeout, showOutput }) {
 }
 
 async function getBranchState() {
-  const local = await git(`rev-parse @`);
-  const remote = await git(`rev-parse @{u}`);
-  const base = await git(`merge-base @ @{u}`);
+  const local = await git("rev-parse @");
+  const remote = await git("rev-parse @{u}");
+  const base = await git("merge-base @ @{u}");
   let result = "";
   switch (local) {
     case remote:
@@ -318,7 +318,7 @@ async function getBranchState() {
 }
 
 async function getCurrentBranch() {
-  const branch = await git(`rev-parse --abbrev-ref HEAD`);
+  const branch = await git("rev-parse --abbrev-ref HEAD");
   return branch.trim();
 }
 
@@ -358,7 +358,7 @@ const run = async () => {
   try {
     // 1. Confirm maintainer is on up-to-date and on the develop branch ()
     indicators.get("remote-update").show();
-    await git(`remote update`);
+    await git("remote update");
     indicators.get("remote-update").hide();
     if (initialBranch !== MAIN_BRANCH) {
       await Prompts.askSwitchToBranch(initialBranch, MAIN_BRANCH);
@@ -402,10 +402,10 @@ const run = async () => {
     // 4. Commit your changes (git commit -am v3.x.y)
     await git(`commit -am v${version}`);
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
-    await git(`checkout gh-pages`);
-    await git(`pull origin gh-pages`);
-    await git(`merge develop`);
-    await git(`checkout develop`);
+    await git("checkout gh-pages");
+    await git("pull origin gh-pages");
+    await git("merge develop");
+    await git("checkout develop");
     // 6. Tag the release (git tag v3.x.y)
     await git(`tag -m v${version} v${version}`);
     indicators.get("build-merge-tag").hide();
