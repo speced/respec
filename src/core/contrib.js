@@ -78,12 +78,12 @@ export async function run(conf) {
     fetchIndex(json.contributors_url)
   );
   const editors = respecConfig.editors.map(prop("name"));
-  const commenters = findUsers(issues, comments);
-  contributors = contributors.map(prop("url"));
+  const commenterUrls = findUsers(issues, comments);
+  const contributorUrls = contributors.map(prop("url"));
   try {
     return Promise.all(
-      toHTML(commenters, editors, ghCommenters),
-      toHTML(contributors, editors, ghContributors)
+      toHTML(commenterUrls, editors, ghCommenters),
+      toHTML(contributorUrls, editors, ghContributors)
     );
   }
   catch (error) {
