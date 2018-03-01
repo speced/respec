@@ -33,7 +33,7 @@ function toListItem(href) {
   const isSecureTest = testParts.find(part => part === "https");
   if (isSecureTest) {
     const requiresConnectionEmoji = document.createElement("span");
-    requiresConnectionEmoji.innerHTML = `🔒`;
+    requiresConnectionEmoji.innerHTML = "🔒";
     requiresConnectionEmoji.setAttribute(
       "aria-label",
       "requires a secure connection"
@@ -50,7 +50,7 @@ function toListItem(href) {
     .find(part => part === "manual");
   if (isManualTest) {
     const manualPerformEmoji = document.createElement("span");
-    manualPerformEmoji.innerHTML = `💪`;
+    manualPerformEmoji.innerHTML = "💪";
     manualPerformEmoji.setAttribute(
       "aria-label",
       "the test must be run manually"
@@ -69,7 +69,7 @@ function toListItem(href) {
 }
 
 export function run(conf) {
-  const testables = doc.querySelectorAll("[data-tests]");
+  const testables = document.querySelectorAll("[data-tests]");
   if (!testables.length) {
     return;
   }
