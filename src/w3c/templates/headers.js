@@ -10,8 +10,9 @@ function decorateSpecTitle(specTitleElem) {
 
 export default conf => {
   const html = hyperHTML;
-  const specTitleElem = document.querySelector("h1#title, body>h1") || document.createElement("h1") ;
-  if (specTitleElem.parentElement) { // remove it from the DOM tree, because we are going to relocate it
+  const specTitleElem = document.querySelector("h1#title, body>h1") || document.createElement("h1");
+  if (specTitleElem.parentElement) {
+    // remove it from the DOM tree, because we are going to relocate it
     specTitleElem.remove();
     conf.specTitle = specTitleElem.innerText.trim();
   } else {
