@@ -141,42 +141,47 @@ export function run(conf, doc, cb) {
     issueBase = conf.issueBase;
   if ($ins.length) {
     if (conf.githubAPI) {
-    	doAsyncOp(conf, issueBase); 
-	} else {
+    	function fetchIssues() {
+			issueBase = issueBase || json.html_url + "/issues/";
+    		return fetchIndex(json.issues_url, {
+        		// Get back HTML content instead of markdown
+        		// See: https://developer.github.com/v3/media/
+        		Accept: "application/vnd.github.v3.html+json",    
+       		});
+		}
+
+		function manageIssues() {
+			issues.forEach(function(issue) {
+   				ghIssues[issue.number] = issue;
+   			});
+    		handleIssues($ins, ghIssues, issueBase);
+    		cb();
+		}
+
+    	async function doAsyncOp () {
+			try{
+    			const json = await ghFetch(conf.githubAPI);
+    			const issues = await fetchIssues(json, issueBase);
+    			manageIssues(issues, ghIssues);
+  			} catch (err){
+  				pub("error", err.message);
+    			handleIssues($ins, ghIssues, issueBase);
+    			cb();
+  			}
+  		}
+  		doAsyncOp();
+  	} else {
       handleIssues($ins, ghIssues, issueBase);
       cb();
     }
   } else {
     cb();
   }
-}
-
-async function doAsyncOp (conf, issueBase, ghIssues) {
-	try{
-    const json = await ghFetch(conf.githubAPI);
-    const issues = await fetchIssues(json, issueBase);
-    return manageIssues(issues, ghIssues);
-  	}catch (err) {
-  		pub("error", err.message);
-    	handleIssues($ins, ghIssues, issueBase);
-    	cb();
-  	}
 };
 
-function fetchIssues(json, issueBase) {
-	issueBase = issueBase || json.html_url + "/issues/";
-    return fetchIndex(json.issues_url, {
-        // Get back HTML content instead of markdown
-        // See: https://developer.github.com/v3/media/
-        Accept: "application/vnd.github.v3.html+json",    
-       });
-}
 
-function manageIssues(issues, ghIssues) {
-	issues.forEach(function(issue) {
-   		ghIssues[issue.number] = issue;
-   	});
-    handleIssues($ins, ghIssues, issueBase);
-    cb();
-}
+
+
+
+
 
