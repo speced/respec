@@ -14,7 +14,7 @@ export function run(conf) {
   const ul = document.createElement("ul");
   for (const bp of Array.from(bps)) {
     num++;
-    const id = window.$.fn.makeID.call(bp, "bp");
+    const id = window.$.fn.makeID.call([bp], "bp");
     const li = hyperHTML`<li><a href="${`#${id}`}">Best Practice ${num}</a>: ${bp.textContent}</li>`;
     ul.appendChild(li);
     bp.insertBefore(document.createTextNode(`Best Practice ${num}: `), bp.firstChild);
