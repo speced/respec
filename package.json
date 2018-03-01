@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "20.0.1",
+  "version": "20.0.2",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -66,6 +66,7 @@
     "karma": "karma start --single-run",
     "release": "node ./tools/release.js",
     "server": "npm start",
+    "snyk": "snyk",
     "snyk-protect": "snyk protect",
     "start": "http-server",
     "test:build": "mocha ./tests/test-build.js",
