@@ -141,7 +141,7 @@ export function run(conf, doc, cb) {
     issueBase = conf.issueBase;
   if ($ins.length) {
     if (conf.githubAPI) {
-    	function fetchIssues() {
+    	function fetchIssues(json) {
 			issueBase = issueBase || json.html_url + "/issues/";
     		return fetchIndex(json.issues_url, {
         		// Get back HTML content instead of markdown
@@ -150,7 +150,7 @@ export function run(conf, doc, cb) {
        		});
 		}
 
-		function manageIssues() {
+		function manageIssues(issues) {
 			issues.forEach(function(issue) {
    				ghIssues[issue.number] = issue;
    			});
@@ -158,11 +158,11 @@ export function run(conf, doc, cb) {
     		cb();
 		}
 
-    	async function doAsyncOp () {
+    	async function doAsyncOp() {
 			try{
     			const json = await ghFetch(conf.githubAPI);
-    			const issues = await fetchIssues(json, issueBase);
-    			manageIssues(issues, ghIssues);
+    			const issues = await fetchIssues(json);
+    			manageIssues(issues);
   			} catch (err){
   				pub("error", err.message);
     			handleIssues($ins, ghIssues, issueBase);
