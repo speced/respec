@@ -68,14 +68,14 @@ function toListItem(href) {
   return testList;
 }
 
-export function run(conf, doc, cb) {
+export function run(conf) {
   const testables = doc.querySelectorAll("[data-tests]");
   if (!testables.length) {
-    return cb();
+    return;
   }
   if (!conf.testSuiteURI) {
     pub("error", l10n[lang].missing_test_suite_uri);
-    return cb();
+    return;
   }
   Array.from(testables)
     .filter(elem => elem.dataset.tests)
@@ -108,5 +108,4 @@ export function run(conf, doc, cb) {
       delete elem.dataset.tests;
       elem.insertAdjacentElement("beforeend", details);
     });
-  cb();
 }
