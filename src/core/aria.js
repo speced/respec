@@ -10,7 +10,6 @@ sub(
   { once: true }
 );
 
-export function run(conf, doc, cb) {
-  doc.body.setAttribute("aria-busy", "true");
-  cb();
+export function run(conf) {
+  document.body.setAttribute("aria-busy", "true");
 }

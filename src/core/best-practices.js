@@ -4,34 +4,33 @@
 // Best practices are marked up with span.practicelab.
 import css from "deps/text!core/css/bp.css";
 import { pub } from "core/pubsubhub";
+import "deps/hyperhtml";
 
 export const name = "core/best-practices";
 
-export function run(conf, doc, cb) {
-  var num = 0;
-  var $bps = $("span.practicelab", doc);
-  var $content = $("<div><h2>Best Practices Summary</h2><ul></ul></div>");
-  var $ul = $content.find("ul");
-  $bps.each(function() {
-    var $bp = $(this);
-    var id = $bp.makeID("bp");
-    var $li = $("<li><a></a></li>");
-    var $a = $li.find("a");
+export function run(conf) {
+  let num = 0;
+  const bps = document.querySelectorAll("span.practicelab");
+  const ul = document.createElement("ul");
+  for (const bp of Array.from(bps)) {
     num++;
-    $a.attr("href", "#" + id).text("Best Practice " + num);
-    $li.append(doc.createTextNode(": " + $bp.text()));
-    $ul.append($li);
-    $bp.prepend(doc.createTextNode("Best Practice " + num + ": "));
-  });
-  if ($bps.length) {
-    $(doc).find("head link").first().before($("<style/>").text(css));
-    if ($("#bp-summary")) $("#bp-summary").append($content.contents());
-  } else if ($("#bp-summary").length) {
+    const id = window.$.fn.makeID.call([bp], "bp");
+    const li = hyperHTML`<li><a href="${`#${id}`}">Best Practice ${num}</a>: ${bp.textContent}</li>`;
+    ul.appendChild(li);
+    bp.insertBefore(document.createTextNode(`Best Practice ${num}: `), bp.firstChild);
+  }
+  const bpSummary = document.getElementById("bp-summary");
+  if (bps.length) {
+    document.head.insertBefore(hyperHTML`<style>${[css]}</style>`, document.head.querySelector("link"));
+    if (bpSummary) {
+      bpSummary.appendChild(hyperHTML`<h2>Best Practices Summary</h2>`);
+      bpSummary.appendChild(ul);
+    }
+  } else if (bpSummary) {
     pub(
       "warn",
       "Using best practices summary (#bp-summary) but no best practices found."
     );
-    $("#bp-summary").remove();
+    bpSummary.remove();
   }
-  cb();
 }
