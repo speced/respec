@@ -14,6 +14,7 @@
 //    key word was used.  NOTE: While each member is a counter, at this time
 //    the counter is not used.
 import { pub } from "core/pubsubhub";
+import "deps/hyperhtml";
 export const name = "core/inlines";
 
 export function run(conf) {
@@ -23,23 +24,18 @@ export function run(conf) {
   if (!conf.respecRFC2119) conf.respecRFC2119 = {};
 
   // PRE-PROCESSING
-  const abbrMap = {};
-  $("abbr[title]", document).each(function() {
-    abbrMap[$(this).text()] = $(this).attr("title");
-  });
-  const aKeys = [];
-  for (const k in abbrMap) aKeys.push(k);
-  aKeys.sort((a, b) => {
-    if (b.length < a.length) return -1;
-    if (a.length < b.length) return 1;
-    return 0;
-  });
+  const abbrMap = new Map();
+  for (const abbr of Array.from(document.querySelectorAll("abbr[title]"))) {
+    abbrMap.set(abbr.textContent, abbr.title);
+  }
+  const aKeys = [...abbrMap.keys()];
+  aKeys.sort((a, b) => b.length - a.length);
   const abbrRx = aKeys.length
     ? `(?:\\b${aKeys.join("\\b)|(?:\\b")}\\b)`
     : null;
 
   // PROCESSING
-  const txts = $("body", document).allTextNodes(["pre"]);
+  const txts = window.$.fn.allTextNodes.call([document.body], "pre");
   const rx = new RegExp(
     "(\\bMUST(?:\\s+NOT)?\\b|\\bSHOULD(?:\\s+NOT)?\\b|\\bSHALL(?:\\s+NOT)?\\b|" +
       "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +
@@ -65,11 +61,7 @@ export function run(conf) {
           )
         ) {
           matched = matched.split(/\s+/).join(" ");
-          df.appendChild(
-            $("<em/>")
-              .attr({ class: "rfc2119", title: matched })
-              .text(matched)[0]
-          );
+          df.appendChild(hyperHTML`<em class="rfc2119" title="${matched}">${matched}</em>`);
           // remember which ones were used
           conf.respecRFC2119[matched] = true;
         } else if (/^\[\[/.test(matched)) {
@@ -91,23 +83,15 @@ export function run(conf) {
             if (norm) conf.normativeReferences.add(ref);
             else conf.informativeReferences.add(ref);
             df.appendChild(document.createTextNode("["));
-            df.appendChild(
-              $("<cite/>").wrapInner(
-                $("<a/>")
-                  .attr({ class: "bibref", href: "#bib-" + ref })
-                  .text(ref)
-              )[0]
-            );
+            df.appendChild(hyperHTML`<cite><a class="bibref" href="${`#bib-${ref}`}">${ref}</a></cite>`);
             df.appendChild(document.createTextNode("]"));
           }
-        } else if (abbrMap[matched]) {
+        } else if (abbrMap.has(matched)) {
           // ABBR
           if ($(txt).parents("abbr").length)
             df.appendChild(document.createTextNode(matched));
           else
-            df.appendChild(
-              $("<abbr/>").attr({ title: abbrMap[matched] }).text(matched)[0]
-            );
+            df.appendChild(hyperHTML`<abbr title="${abbrMap.get(matched)}">${matched}</abbr>`);
         } else {
           // FAIL -- not sure that this can really happen
           pub(
