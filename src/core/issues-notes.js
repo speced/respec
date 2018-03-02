@@ -161,7 +161,7 @@ export function run(conf, doc, cb) {
           handleIssues($ins, ghIssues, issueBase);
           cb();
         }
-      })(conf.githubAPI)
+      })(conf.githubAPI);
     } else {
       handleIssues($ins, ghIssues, issueBase);
       cb();
