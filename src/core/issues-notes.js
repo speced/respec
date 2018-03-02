@@ -141,26 +141,27 @@ export function run(conf, doc, cb) {
     issueBase = conf.issueBase;
   if ($ins.length) {
     if (conf.githubAPI) {
-      ghFetch(conf.githubAPI)
-        .then(function(json) {
+      (async function(githubAPI) {
+        try {
+          let json = await ghFetch(githubAPI);
           issueBase = issueBase || json.html_url + "/issues/";
-          return fetchIndex(json.issues_url, {
+          let issues = fetchIndex(json.issues_url, {
             // Get back HTML content instead of markdown
             // See: https://developer.github.com/v3/media/
-            Accept: "application/vnd.github.v3.html+json",    
+            Accept: "application/vnd.github.v3.html+json",
           });
-        })
-        .then(function(issues) {
+          
           issues.forEach(function(issue) {
             ghIssues[issue.number] = issue;
           });
           handleIssues($ins, ghIssues, issueBase);
           cb();
-        }).catch(err => {
+        } catch(err) {
           pub("error", err.message);
           handleIssues($ins, ghIssues, issueBase);
           cb();
-        });
+        }
+      })(conf.githubAPI)
     } else {
       handleIssues($ins, ghIssues, issueBase);
       cb();
