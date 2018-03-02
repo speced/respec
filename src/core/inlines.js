@@ -23,39 +23,38 @@ export function run(conf) {
   if (!conf.respecRFC2119) conf.respecRFC2119 = {};
 
   // PRE-PROCESSING
-  var abbrMap = {};
+  const abbrMap = {};
   $("abbr[title]", document).each(function() {
     abbrMap[$(this).text()] = $(this).attr("title");
   });
-  var aKeys = [];
-  for (var k in abbrMap) aKeys.push(k);
-  aKeys.sort(function(a, b) {
+  const aKeys = [];
+  for (const k in abbrMap) aKeys.push(k);
+  aKeys.sort((a, b) => {
     if (b.length < a.length) return -1;
     if (a.length < b.length) return 1;
     return 0;
   });
-  var abbrRx = aKeys.length
-    ? "(?:\\b" + aKeys.join("\\b)|(?:\\b") + "\\b)"
+  const abbrRx = aKeys.length
+    ? `(?:\\b${aKeys.join("\\b)|(?:\\b")}\\b)`
     : null;
 
   // PROCESSING
-  var txts = $("body", document).allTextNodes(["pre"]);
-  var rx = new RegExp(
+  const txts = $("body", document).allTextNodes(["pre"]);
+  const rx = new RegExp(
     "(\\bMUST(?:\\s+NOT)?\\b|\\bSHOULD(?:\\s+NOT)?\\b|\\bSHALL(?:\\s+NOT)?\\b|" +
       "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +
       "(?:\\[\\[(?:!|\\\\)?[A-Za-z0-9\\.-]+\\]\\])" +
-      (abbrRx ? "|" + abbrRx : "") +
+      (abbrRx ? `|${abbrRx}` : "") +
       ")"
   );
-  for (var i = 0; i < txts.length; i++) {
-    var txt = txts[i];
-    var subtxt = txt.data.split(rx);
+  for (const txt of txts) {
+    const subtxt = txt.data.split(rx);
     if (subtxt.length === 1) continue;
 
-    var df = document.createDocumentFragment();
+    const df = document.createDocumentFragment();
     while (subtxt.length) {
-      var t = subtxt.shift();
-      var matched = null;
+      const t = subtxt.shift();
+      let matched = null;
       if (subtxt.length) matched = subtxt.shift();
       df.appendChild(document.createTextNode(t));
       if (matched) {
@@ -75,15 +74,15 @@ export function run(conf) {
           conf.respecRFC2119[matched] = true;
         } else if (/^\[\[/.test(matched)) {
           // BIBREF
-          var ref = matched;
+          let ref = matched;
           ref = ref.replace(/^\[\[/, "");
           ref = ref.replace(/\]\]$/, "");
           if (ref.indexOf("\\") === 0) {
             df.appendChild(
-              document.createTextNode("[[" + ref.replace(/^\\/, "") + "]]")
+              document.createTextNode(`[[${ref.replace(/^\\/, "")}]]`)
             );
           } else {
-            var norm = false;
+            let norm = false;
             if (ref.indexOf("!") === 0) {
               norm = true;
               ref = ref.replace(/^!/, "");
@@ -113,9 +112,9 @@ export function run(conf) {
           // FAIL -- not sure that this can really happen
           pub(
             "error",
-            "Found token '" +
-              matched +
-              "' but it does not correspond to anything"
+            `Found token '${
+              matched
+            }' but it does not correspond to anything`
           );
         }
       }
