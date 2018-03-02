@@ -56,6 +56,10 @@ export default conf => {
     ` : ""}
     <dt>${conf.multipleEditors ? html`${conf.l10n.editors}` : html`${conf.l10n.editor}`}</dt>
     ${showPeople(conf, "Editor", conf.editors)}
+    ${conf.formerEditors ? html`
+      <dt>${conf.multipleFormerEditors ? html`${conf.l10n.former_editors}` : html`${conf.l10n.former_editor}`}</dt>
+      ${showPeople(conf, "Editor", conf.formerEditors)}
+    ` : ""}
     ${conf.authors ? html`
       <dt>${conf.multipleAuthors ? [conf.l10n.authors] : [conf.l10n.author]}</dt>
       ${showPeople(conf, "Author", conf.authors)}

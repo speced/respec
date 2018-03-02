@@ -17,6 +17,7 @@
 //          - mailto: the person's email
 //          - note: a note on the person (e.g. former editor)
 //  - authors: an array of people who are contributing authors of the document.
+//  - formerEditors: an array of people that had earlier edited the document but no longer edit.
 //  - subtitle: a subtitle for the specification
 //  - publishDate: the date to use for the publication, default to document.lastModified, and
 //      failing that to now. The format is YYYY-MM-DD or a Date object.
@@ -377,10 +378,14 @@ export function run(conf, doc, cb) {
   if (conf.editors) {
     conf.editors.forEach(peopCheck);
   }
+  if (conf.formerEditors) {
+    conf.formerEditors.forEach(peopCheck);
+  }
   if (conf.authors) {
     conf.authors.forEach(peopCheck);
   }
   conf.multipleEditors = conf.editors && conf.editors.length > 1;
+  conf.multipleFormerEditors = conf.formerEditors && conf.formerEditors.length > 1;
   conf.multipleAuthors = conf.authors && conf.authors.length > 1;
   $.each(conf.alternateFormats || [], function(i, it) {
     if (!it.uri || !it.label)
