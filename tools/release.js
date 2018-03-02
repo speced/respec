@@ -395,7 +395,7 @@ const run = async () => {
       colors.info(" Making sure the generated version is ok... 🕵🏻")
     );
     await node(
-      `./tools/respec2html.js -e --timeout 30 --src file:///${__dirname}/../basic.built.html --out /dev/null`,
+      `./tools/respec2html.js -e --timeout 30 --src file:///${__dirname}/../examples/basic.built.html --out /dev/null`,
       { showOutput: true }
     );
     console.log(colors.info(" Build Seems good... ✅"));
