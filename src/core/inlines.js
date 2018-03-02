@@ -16,15 +16,15 @@
 import { pub } from "core/pubsubhub";
 export const name = "core/inlines";
 
-export function run(conf, doc, cb) {
-  doc.normalize();
+export function run(conf) {
+  document.normalize();
   if (!conf.normativeReferences) conf.normativeReferences = new Set();
   if (!conf.informativeReferences) conf.informativeReferences = new Set();
   if (!conf.respecRFC2119) conf.respecRFC2119 = {};
 
   // PRE-PROCESSING
   var abbrMap = {};
-  $("abbr[title]", doc).each(function() {
+  $("abbr[title]", document).each(function() {
     abbrMap[$(this).text()] = $(this).attr("title");
   });
   var aKeys = [];
@@ -39,7 +39,7 @@ export function run(conf, doc, cb) {
     : null;
 
   // PROCESSING
-  var txts = $("body", doc).allTextNodes(["pre"]);
+  var txts = $("body", document).allTextNodes(["pre"]);
   var rx = new RegExp(
     "(\\bMUST(?:\\s+NOT)?\\b|\\bSHOULD(?:\\s+NOT)?\\b|\\bSHALL(?:\\s+NOT)?\\b|" +
       "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +
@@ -52,12 +52,12 @@ export function run(conf, doc, cb) {
     var subtxt = txt.data.split(rx);
     if (subtxt.length === 1) continue;
 
-    var df = doc.createDocumentFragment();
+    var df = document.createDocumentFragment();
     while (subtxt.length) {
       var t = subtxt.shift();
       var matched = null;
       if (subtxt.length) matched = subtxt.shift();
-      df.appendChild(doc.createTextNode(t));
+      df.appendChild(document.createTextNode(t));
       if (matched) {
         // RFC 2119
         if (
@@ -80,7 +80,7 @@ export function run(conf, doc, cb) {
           ref = ref.replace(/\]\]$/, "");
           if (ref.indexOf("\\") === 0) {
             df.appendChild(
-              doc.createTextNode("[[" + ref.replace(/^\\/, "") + "]]")
+              document.createTextNode("[[" + ref.replace(/^\\/, "") + "]]")
             );
           } else {
             var norm = false;
@@ -91,7 +91,7 @@ export function run(conf, doc, cb) {
             // contrary to before, we always insert the link
             if (norm) conf.normativeReferences.add(ref);
             else conf.informativeReferences.add(ref);
-            df.appendChild(doc.createTextNode("["));
+            df.appendChild(document.createTextNode("["));
             df.appendChild(
               $("<cite/>").wrapInner(
                 $("<a/>")
@@ -99,12 +99,12 @@ export function run(conf, doc, cb) {
                   .text(ref)
               )[0]
             );
-            df.appendChild(doc.createTextNode("]"));
+            df.appendChild(document.createTextNode("]"));
           }
         } else if (abbrMap[matched]) {
           // ABBR
           if ($(txt).parents("abbr").length)
-            df.appendChild(doc.createTextNode(matched));
+            df.appendChild(document.createTextNode(matched));
           else
             df.appendChild(
               $("<abbr/>").attr({ title: abbrMap[matched] }).text(matched)[0]
@@ -122,5 +122,4 @@ export function run(conf, doc, cb) {
     }
     txt.parentNode.replaceChild(df, txt);
   }
-  cb();
 }
