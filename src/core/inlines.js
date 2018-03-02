@@ -35,7 +35,7 @@ export function run(conf) {
     : null;
 
   // PROCESSING
-  const txts = window.$.fn.allTextNodes.call([document.body], "pre");
+  const txts = window.$.fn.allTextNodes.call([document.body], ["pre"]);
   const rx = new RegExp(
     "(\\bMUST(?:\\s+NOT)?\\b|\\bSHOULD(?:\\s+NOT)?\\b|\\bSHALL(?:\\s+NOT)?\\b|" +
       "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +
@@ -88,7 +88,7 @@ export function run(conf) {
           }
         } else if (abbrMap.has(matched)) {
           // ABBR
-          if ($(txt).parents("abbr").length)
+          if (txt.parentNode.tagName === "ABBR")
             df.appendChild(document.createTextNode(matched));
           else
             df.appendChild(hyperHTML`<abbr title="${abbrMap.get(matched)}">${matched}</abbr>`);
