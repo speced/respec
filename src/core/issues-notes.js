@@ -16,7 +16,10 @@ import { fetch as ghFetch, fetchIndex } from "core/github";
 export const name = "core/issues-notes";
 export function run(conf, doc, cb) {
   function handleIssues($ins, ghIssues, issueBase) {
-    $(doc).find("head link").first().before($("<style/>").text(css));
+    $(doc)
+      .find("head link")
+      .first()
+      .before($("<style/>").text(css));
     var hasDataNum = $(".issue[data-number]").length > 0,
       issueNum = 0,
       $issueSummary = $(
@@ -33,7 +36,7 @@ export function run(conf, doc, cb) {
         dataNum = $inno.attr("data-number"),
         report = {
           inline: isInline,
-          content: $inno.html(),
+          content: $inno.html()
         };
       report.type = isIssue
         ? "issue"
@@ -47,13 +50,15 @@ export function run(conf, doc, cb) {
       // wrap
       if (!isInline) {
         var $div = $(
-          "<div class='" +
-            report.type +
-            (isFeatureAtRisk ? " atrisk" : "") +
-            "'></div>"
-        ),
+            "<div class='" +
+              report.type +
+              (isFeatureAtRisk ? " atrisk" : "") +
+              "'></div>"
+          ),
           $tit = $(
-            "<div role='heading' class='" + report.type + "-title'><span></span></div>"
+            "<div role='heading' class='" +
+              report.type +
+              "-title'><span></span></div>"
           ),
           text = isIssue
             ? isFeatureAtRisk ? "Feature at Risk" : conf.l10n.issue
@@ -139,28 +144,38 @@ export function run(conf, doc, cb) {
   var $ins = $(".issue, .note, .warning, .ednote"),
     ghIssues = {},
     issueBase = conf.issueBase;
+
+  function fetchIssues(json) {
+    issueBase = issueBase || json.html_url + "/issues/";
+    return fetchIndex(json.issues_url, {
+      // Get back HTML content instead of markdown
+      // See: https://developer.github.com/v3/media/
+      Accept: "application/vnd.github.v3.html+json"
+    });
+  }
+
+  function manageIssues(issues) {
+    issues.forEach(function(issue) {
+      ghIssues[issue.number] = issue;
+    });
+    handleIssues($ins, ghIssues, issueBase);
+    cb();
+  }
+
+  async function doAsyncOp(conf) {
+    try {
+      const json = await ghFetch(conf.githubAPI);
+      const issues = await fetchIssues(json);
+      manageIssues(issues);
+    } catch (err) {
+      pub("error", err.message);
+      handleIssues($ins, ghIssues, issueBase);
+      cb();
+    }
+  }
   if ($ins.length) {
     if (conf.githubAPI) {
-      ghFetch(conf.githubAPI)
-        .then(function(json) {
-          issueBase = issueBase || json.html_url + "/issues/";
-          return fetchIndex(json.issues_url, {
-            // Get back HTML content instead of markdown
-            // See: https://developer.github.com/v3/media/
-            Accept: "application/vnd.github.v3.html+json",    
-          });
-        })
-        .then(function(issues) {
-          issues.forEach(function(issue) {
-            ghIssues[issue.number] = issue;
-          });
-          handleIssues($ins, ghIssues, issueBase);
-          cb();
-        }).catch(err => {
-          pub("error", err.message);
-          handleIssues($ins, ghIssues, issueBase);
-          cb();
-        });
+      doAsyncOp(conf);
     } else {
       handleIssues($ins, ghIssues, issueBase);
       cb();

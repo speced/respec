@@ -1,0 +1,19 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/nodejs', '/usr/bin/npm', 'run', 'babel:', 'watch' ]
+2 info using npm@3.5.2
+3 info using node@v4.2.6
+4 verbose stack Error: missing script: babel:
+4 verbose stack     at run (/usr/share/npm/lib/run-script.js:147:19)
+4 verbose stack     at /usr/share/npm/lib/run-script.js:57:5
+4 verbose stack     at /usr/share/npm/node_modules/read-package-json/read-json.js:345:5
+4 verbose stack     at handleExists (/usr/share/npm/node_modules/read-package-json/read-json.js:318:20)
+4 verbose stack     at FSReqWrap.cb [as oncomplete] (fs.js:212:19)
+5 verbose cwd /home/orionstar/respec
+6 error Linux 4.10.0-30-generic
+7 error argv "/usr/bin/nodejs" "/usr/bin/npm" "run" "babel:" "watch"
+8 error node v4.2.6
+9 error npm  v3.5.2
+10 error missing script: babel:
+11 error If you need help, you may report this error at:
+11 error     <https://github.com/npm/npm/issues>
+12 verbose exit [ 1, true ]
