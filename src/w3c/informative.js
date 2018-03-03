@@ -3,7 +3,7 @@
 import "deps/hyperhtml";
 export const name = "w3c/informative";
 
-export function run(conf) {
+export function run() {
   Array.from(document.querySelectorAll("section.informative"))
     .map(informative => Array.from(informative.children).find(child => child instanceof HTMLHeadingElement))
     .filter(heading => heading)

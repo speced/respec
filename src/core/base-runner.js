@@ -28,7 +28,7 @@ function toRunnable(plug) {
       }
       try {
         // Modern plugins are async or normal functions, take one argument (conf)
-        if (plug.run.length === 1) {
+        if (plug.run.length <= 1) {
           await plug.run(config);
           resolve();
         } else {
