@@ -93,12 +93,12 @@ describe("W3C — Headers", function() {
       expect($("dt:contains('Editors:')", doc).length).toEqual(0);
       expect($("dt:contains('Editor:')", doc).length).toEqual(1);
       var $dd = $("dt:contains('Editor:')", doc).next("dd");
-      expect($dd.find("a[href='http://URI']").length).toEqual(1);
-      expect($dd.find("a[href='http://URI']").text()).toEqual("NAME");
       expect($dd.find("a[href='http://COMPANY']").length).toEqual(1);
       expect($dd.find("a[href='http://COMPANY']").text()).toEqual("COMPANY");
       expect($dd.find("a[href='mailto:EMAIL']").length).toEqual(1);
-      expect($dd.find("a[href='mailto:EMAIL']").text()).toEqual("EMAIL");
+      expect($dd.find("a[href='mailto:EMAIL']").text()).toEqual("NAME");
+      // if `mailto` is specified in People, `url` won't be used
+      expect($dd.find("a[href='http://URI']").length).toEqual(0);
       expect($dd.get(0).dataset.editorId).toEqual("1234");
       expect($dd.text()).toMatch(/\(NOTE\)/);
     });
