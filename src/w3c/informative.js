@@ -8,6 +8,6 @@ export function run(conf) {
     .map(informative => Array.from(informative.children).find(child => child instanceof HTMLHeadingElement))
     .filter(heading => heading)
     .forEach(heading => {
-      heading.parentNode.insertBefore(hyperHTML`<p><em>This section is non-normative.</em></p>`, heading.nextSibling)
+      heading.parentNode.insertBefore(hyperHTML`<p><em>This section is non-normative.</em></p>`, heading.nextSibling);
     });
 }
