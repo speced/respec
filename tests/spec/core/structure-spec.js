@@ -87,4 +87,15 @@ describe("Core - Structure", () => {
       expect($toc.find("a[href='#four-0']").text()).toEqual("A.1.1.1 FOUR");
     }).then(done);
   });
+
+  it("should link to title only when it exists", function(done) {
+    var ops = {
+      config: makeBasicConfig(),
+      body: "<section class='sotd'><p>.</p></section>", //make body without a title
+    };
+    ops.config.noTOC = true; //change something here
+    makeRSDoc(ops, function(doc) {
+      expect(doc.getElementById("title")).toEqual(null);
+    }).then(done);
+  });
 });
