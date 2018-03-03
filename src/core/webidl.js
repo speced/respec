@@ -217,7 +217,7 @@ function typeIsWhitespace(webIdlType) {
   return whitespaceTypes[webIdlType];
 }
 
-const extenedAttributesLinks = new Map([
+const extendedAttributesLinks = new Map([
   ["CEReactions", "HTML#cereactions"],
   ["Clamp", "WEBIDL#Clamp"],
   ["Constructor", "WEBIDL#Constructor"],
@@ -264,11 +264,11 @@ function extAttr(extAttrs, indent, singleLine) {
   tmpParser.innerHTML = safeString;
   Array.from(tmpParser.querySelectorAll(".extAttrName"))
     .filter(function(elem) {
-      return extenedAttributesLinks.has(elem.textContent);
+      return extendedAttributesLinks.has(elem.textContent);
     })
     .forEach(function(elem) {
       const a = elem.ownerDocument.createElement("a");
-      a.dataset.cite = extenedAttributesLinks.get(elem.textContent);
+      a.dataset.cite = extendedAttributesLinks.get(elem.textContent);
       a.textContent = elem.textContent;
       elem.replaceChild(a, elem.firstChild);
     });
@@ -1052,6 +1052,33 @@ export function run(conf, doc, cb) {
       .first()
       .before($("<style/>").text(css));
   }
+
+  const autoLinkMaps = [standardTypes, extendedAttributesLinks];
+
+  // update standardTypes and extendedAttributesLinks based on local definitions
+  autoLinkMaps.forEach((linkmap, i) => {
+      // wrapping extended attributes names in [ ]
+      const keyname = (k) => (i == 0 ? k : '[' + k + ']').toLowerCase();
+      [...linkmap.keys()].forEach(k => {
+          if (conf.definitionMap[keyname(k)]) {
+              const dfns = conf.definitionMap[keyname(k)].filter(n => n.data('cite'));
+              // we only use this if there are no duplicate definitions
+              if (dfns.length === 1)
+                  linkmap.set(k, dfns[0].data('cite'));
+          }
+      });
+  });
+
+  // Update auto-links to WEBIDL to use the one referenced normatively
+    autoLinkMaps.forEach((linkmap) => {
+        [...linkmap.entries()].forEach(([k,v]) => {
+            if (v.split('#')[0] === 'WEBIDL') {
+                const webidlrefs = [...conf.normativeReferences.keys()].filter(x => x.toUpperCase().startsWith('WEBIDL'));
+                if (webidlrefs.length === 1)
+                    linkmap.set(k, webidlrefs[0] + '#' + v.split('#')[1])
+            }
+        });
+    });
 
   $idl.each(function() {
     var parse;

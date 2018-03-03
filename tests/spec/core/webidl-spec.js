@@ -2,6 +2,7 @@
 describe("Core - WebIDL", function() {
   afterAll(flushIframes);
   var doc;
+  var customWebidlDoc;
   beforeAll(function(done) {
     var ops = makeStandardOps();
     makeRSDoc(
@@ -10,6 +11,14 @@ describe("Core - WebIDL", function() {
         doc = idlDoc;
       },
       "spec/core/webidl.html"
+    ).then(() =>
+        makeRSDoc(
+            ops,
+            function(idlDoc) {
+                customWebidlDoc = idlDoc;
+            },
+            "spec/core/webidl-link.html"
+        )
     ).then(done);
   });
 
@@ -54,6 +63,28 @@ describe("Core - WebIDL", function() {
       true
     );
     done();
+  });
+
+  it("links standardized IDL types to custom specs", done => {
+    const idl = doc.querySelector("#linkToCustomSpecs>div>pre");
+    // [CEReactions]
+    const cereactionLink = idl.querySelector(`span.extAttr a`);
+    expect(cereactionLink.href).toContain('/custom-elements/');
+
+    //  attribute EventHandler onlink
+    const eventhandlerLink = idl.querySelector(`span.idlAttrType a`);
+    expect(eventhandlerLink.href).toContain('/html52/');
+    done();
+  });
+
+  it("links to a specific WebIDL version based on normative references", done => {
+      // webidl-link.html has [[!WEBIDL-1]] as its WebIDL reference
+      const idl = customWebidlDoc.querySelector("#example>div>pre");
+
+      // readonly attribute USVString url;
+      const typeLink = idl.querySelector(`span.idlAttrType a`);
+      expect(typeLink.href.toLowerCase()).toContain('webidl-1');
+      done();
   });
 
   it("links to fully qualified method names", done => {

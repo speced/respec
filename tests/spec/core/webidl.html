@@ -68,6 +68,17 @@
     };
     </pre>
     </section>
+    <section id="linkToCustomSpecs">
+    <h2>Linking to custom specs for standard types / extended attributes</h2>
+    <p>We use <dfn data-cite="!HTML52#/webappapis.html#event-handler">EventHandler</dfn> from [[!HTML5.2]], and <dfn data-cite="!custom-elements#cereactions"><code>[CEReactions]</code></dfn> from [[!custom-elements]].</p>
+    <pre class="idl no-link-warnings">
+    interface CustomLinkingTest {
+      [CEReactions] attribute EventHandler onlink;
+    };
+    </pre>
+    </section>
+
+
     <section id="sec-parenthesis-method" data-dfn-for="ParenthesisTest" data-link-for="ParenthesisTest">
       <h2>More linking</h2>
       <pre class="idl no-link-warnings">
