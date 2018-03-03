@@ -64,7 +64,7 @@ async function fetchAndWrite(src, out, whenToHalt, { timeout = 300000, disableSa
   const userDataDir = await mkdtemp(os.tmpdir() + "/respec2html-");
   const browser = await puppeteer.launch({
     userDataDir,
-    args: disableSandbox && ['--no-sandbox']
+    args: disableSandbox && ["--no-sandbox"]
   });
   try {
     const page = await browser.newPage();
@@ -72,7 +72,7 @@ async function fetchAndWrite(src, out, whenToHalt, { timeout = 300000, disableSa
     const response = await page.goto(url, { timeout });
     const handleConsoleMessages = makeConsoleMsgHandler(page);
     handleConsoleMessages(whenToHalt);
-    if (!response.ok()) {
+    if (!response.ok() && response.status() /* workaround: 0 means ok for local files */) {
       const warn = colors.warn(`📡 HTTP Error ${response.status()}:`);
       const msg = `${warn} ${colors.debug(url)}`;
       throw new Error(msg);
@@ -105,11 +105,11 @@ async function generateHTML(page, version, url) {
     return await page.evaluate(evaluateHTML);
   } catch (err) {
     const msg =
-      `\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n` +
+      "\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n" +
       colors.debug(
         `Specification: ${url}\n` +
           `ReSpec version: ${version.join(".")}\n` +
-          `File a bug: https://github.com/w3c/respec/\n` +
+          "File a bug: https://github.com/w3c/respec/\n" +
           (err ? `Error: ${err}\n` : "")
       );
     throw new Error(msg);

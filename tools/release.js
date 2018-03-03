@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 "use strict";
-const port = process.env.PORT || 3000;
-const express = require("express");
 const { Builder } = require("./builder");
 const cmdPrompt = require("prompt");
 const colors = require("colors");
@@ -302,9 +300,9 @@ function toExecPromise(cmd, { timeout, showOutput }) {
 }
 
 async function getBranchState() {
-  const local = await git(`rev-parse @`);
-  const remote = await git(`rev-parse @{u}`);
-  const base = await git(`merge-base @ @{u}`);
+  const local = await git("rev-parse @");
+  const remote = await git("rev-parse @{u}");
+  const base = await git("merge-base @ @{u}");
   let result = "";
   switch (local) {
     case remote:
@@ -320,7 +318,7 @@ async function getBranchState() {
 }
 
 async function getCurrentBranch() {
-  const branch = await git(`rev-parse --abbrev-ref HEAD`);
+  const branch = await git("rev-parse --abbrev-ref HEAD");
   return branch.trim();
 }
 
@@ -356,13 +354,11 @@ const indicators = new Map([
 ]);
 
 const run = async () => {
-  const app = express();
-  const dir = require("path").join(__dirname, "..");
   const initialBranch = await getCurrentBranch();
   try {
     // 1. Confirm maintainer is on up-to-date and on the develop branch ()
     indicators.get("remote-update").show();
-    await git(`remote update`);
+    await git("remote update");
     indicators.get("remote-update").hide();
     if (initialBranch !== MAIN_BRANCH) {
       await Prompts.askSwitchToBranch(initialBranch, MAIN_BRANCH);
@@ -395,23 +391,21 @@ const run = async () => {
     indicators.get("build-merge-tag").show();
     await npm("run build:components");
     await Builder.build({ name: "w3c-common" });
-    app.use(express.static(dir));
-    app.listen(port);
     console.log(
       colors.info(" Making sure the generated version is ok... 🕵🏻")
     );
     await node(
-      "./tools/respec2html.js -e --timeout 30 --src http://localhost:3000/examples/basic.built.html --out /dev/null",
+      `./tools/respec2html.js -e --timeout 30 --src file:///${__dirname}/../examples/basic.built.html --out /dev/null`,
       { showOutput: true }
     );
     console.log(colors.info(" Build Seems good... ✅"));
     // 4. Commit your changes (git commit -am v3.x.y)
     await git(`commit -am v${version}`);
     // 5. Merge to gh-pages (git checkout gh-pages; git merge develop)
-    await git(`checkout gh-pages`);
-    await git(`pull origin gh-pages`);
-    await git(`merge develop`);
-    await git(`checkout develop`);
+    await git("checkout gh-pages");
+    await git("pull origin gh-pages");
+    await git("merge develop");
+    await git("checkout develop");
     // 6. Tag the release (git tag v3.x.y)
     await git(`tag -m v${version} v${version}`);
     indicators.get("build-merge-tag").hide();

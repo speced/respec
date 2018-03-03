@@ -33,7 +33,7 @@ function toListItem(href) {
   const isSecureTest = testParts.find(part => part === "https");
   if (isSecureTest) {
     const requiresConnectionEmoji = document.createElement("span");
-    requiresConnectionEmoji.innerHTML = `🔒`;
+    requiresConnectionEmoji.innerHTML = "🔒";
     requiresConnectionEmoji.setAttribute(
       "aria-label",
       "requires a secure connection"
@@ -50,7 +50,7 @@ function toListItem(href) {
     .find(part => part === "manual");
   if (isManualTest) {
     const manualPerformEmoji = document.createElement("span");
-    manualPerformEmoji.innerHTML = `💪`;
+    manualPerformEmoji.innerHTML = "💪";
     manualPerformEmoji.setAttribute(
       "aria-label",
       "the test must be run manually"
@@ -68,14 +68,14 @@ function toListItem(href) {
   return testList;
 }
 
-export function run(conf, doc, cb) {
-  const testables = doc.querySelectorAll("[data-tests]");
+export function run(conf) {
+  const testables = document.querySelectorAll("[data-tests]");
   if (!testables.length) {
-    return cb();
+    return;
   }
   if (!conf.testSuiteURI) {
     pub("error", l10n[lang].missing_test_suite_uri);
-    return cb();
+    return;
   }
   Array.from(testables)
     .filter(elem => elem.dataset.tests)
@@ -108,5 +108,4 @@ export function run(conf, doc, cb) {
       delete elem.dataset.tests;
       elem.insertAdjacentElement("beforeend", details);
     });
-  cb();
 }
