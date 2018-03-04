@@ -69,6 +69,7 @@ define(
     "core/webidl-clipboard",
     "core/data-tests",
     "core/list-sorter",
+    "core/highlight-vars",
     /*Linter must be the last thing to run*/
     "core/linter",
   ],

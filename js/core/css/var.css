@@ -1,0 +1,16 @@
+var:hover {
+  border-bottom: 1px dotted;
+  cursor: pointer;
+}
+
+var.respec-active {
+  background: var(--respec-background-color);
+  color: var(--respec-color);
+}
+
+@media print {
+  var.respec-active {
+    background: none;
+    color: #000;
+  }
+}
