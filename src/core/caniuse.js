@@ -61,7 +61,7 @@ function prepare(el, conf) {
 
 function canIUse(key, el, browsers = DEFAULT_BROWSERS) {
   const placeholder = createPlaceholder(key, el);
-  const handleResponse = json => showData(key, json, el, browsers, placeholder);
+  const handleResponse = json => showData(key, json, el, browsers);
   const handleError = err => showError(err, placeholder);
 
   const url = `https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/${key}.json`;
@@ -76,7 +76,7 @@ function createPlaceholder(key, parent) {
     <div class="caniuse" id="${canIUseId}">
       <div class="caniuse-title">Can I Use <code>${key}</code>? (data from caniuse.com)</div>
       <p>fetching data...</p>
-    </div>`
+    </div>`;
   return parent.parentNode.insertBefore(placeholder, parent.nextSibling);
 }
 
@@ -85,7 +85,7 @@ function showError(err, placeholder) {
   $s("p", placeholder).innerText = `Error: ${err.message}`;
 }
 
-function showData(key, json, parent, browsers, placeholder) {
+function showData(key, json, parent, browsers) {
   if (typeof browsers === "string") {
     if (browsers === "ALL") {
       browsers = Object.keys(json.stats);
@@ -104,7 +104,7 @@ function showData(key, json, parent, browsers, placeholder) {
   const createNumberedNote = (n) => {
     const html = marked.inlineLexer(json.notes_by_num[n], []);
     return `<li id=${getNoteId(n)}>${html}</li>`;
-  }
+  };
   const canIUseId = `caniuse-${key}`;
   const permalink = `http://caniuse.com/#feat=${key}`;
   const notesByNumber = Object.keys(json.notes_by_num).sort().map(createNumberedNote);

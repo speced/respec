@@ -345,7 +345,7 @@ export function semverCompare(a, b) {
     if (isNaN(na) && !isNaN(nb)) return -1;
   }
   return 0;
-};
+}
 
 // --- DATE HELPERS -------------------------------------------------------------------------------
 // Takes a Date object and an optional separator and returns the year,month,day representation with
