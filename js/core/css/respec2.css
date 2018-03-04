@@ -73,6 +73,20 @@ ol.tof {
   font-style: italic;
 }
 
+/* --- VAR --- */
+var {
+  border-bottom: 1px dotted;
+  cursor: help;
+}
+
+var.active {
+  background: yellow;
+}
+
+var.bug {
+  background: red;
+}
+
 /* --- TABLE --- */
 
 table.simple {
