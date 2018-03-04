@@ -117,7 +117,7 @@ function showData(key, json, parent, browsers) {
     const addBrowserVersion = (version) => {
       const [cl, n] = browserData[version].split("#", 2).map(norm);
       const notes = n ? `<ul>${createNoteRefs(n)}</ul>` : "";
-      return `<div class="ciu-cell ${cl}"">${notes}${version}</div>`
+      return `<div class="ciu-cell ${cl}"">${notes}${version}</div>`;
     };
 
     const browserVersions = Object.keys(browserData).sort(semverCompare).reverse();
