@@ -1,0 +1,116 @@
+.caniuse {
+  background: #f0f0f0;
+  height: 350px;
+  overflow-y: auto;
+  resize: vertical;
+  font-family: monospace;
+}
+
+.caniuse :target {
+    background: #ddd;
+}
+
+.caniuse-stats {
+  display: flex;
+  background: #ddd;
+  max-height: 250px;
+  overflow: auto;
+}
+
+.caniuse-title {
+  padding: 10px 5px;
+  background: #8bc34a;
+}
+
+.caniuse-title span {
+  float: right;
+}
+
+@media screen and (max-width: 600px) {
+  .caniuse-title span { float: none; }
+}
+
+.ciu-col {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 10px;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  min-width: 55px;
+}
+
+.ciu-cell {
+  width: 100%;
+  padding: 3px;
+  background: #fff;
+  margin: 1px;
+  position: relative;
+}
+
+.ciu-col > span {
+  border-bottom: 2px solid #555;
+  margin-bottom: 2px;
+  line-height: 1.5;
+  width: 100%;
+}
+
+/* supports */
+.ciu-cell.y {
+  background: #8bc34a;
+}
+
+/* no support */
+.ciu-cell.n {
+  background: #e53935;
+}
+
+/* not supported by default */
+.ciu-cell.d {
+  background: #ffc107;
+}
+
+.ciu-cell ul {
+  display: flex;
+  position: absolute;
+  right: 2px;
+  top: -4px;
+  padding: 0;
+  margin: 0;
+}
+
+.ciu-cell li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ciu-cell li a[href] {
+  text-decoration: none;
+  border-bottom: none;
+  padding: 0 2px;
+  font-size: 10px;
+  background: rgba(0,0,0,0.2);
+  color: #fff !important;
+}
+
+.caniuse > p,
+.caniuse > ol {
+  padding: 5px 10px;
+}
+
+.caniuse > ol {
+  margin: 0 2em;
+}
+
+.caniuse-trigger {
+  background: #8bc34a;
+  text-decoration: none;
+  display: block;
+  padding: 5px;
+  font-size: 13px;
+  border-bottom: 2px solid #4caf50;
+  font-family: monospace;
+  cursor: pointer;
+}
