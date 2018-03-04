@@ -172,3 +172,40 @@ details.respec-tests-details > li {
     display: none;
   }
 }
+
+/* --- caniuse integration  --- */
+.caniuse {
+  background: #eee;
+  display: flex;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.ciu-col {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 10px;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+}
+
+.ciu-cell {
+  width: 50px;
+  padding: 3px;
+  background: #fff;
+  margin: 1px;
+}
+
+.ciu-cell.y {
+  background: green;
+}
+
+.ciu-cell.n {
+  background: red;
+}
+
+.ciu-cell.d {
+  color: blue;
+}
