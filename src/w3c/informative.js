@@ -5,7 +5,7 @@ export const name = "w3c/informative";
 
 export function run() {
   Array.from(document.querySelectorAll("section.informative"))
-    .map(informative => Array.from(informative.children).find(child => child instanceof HTMLHeadingElement))
+    .map(informative => informative.querySelector("h2, h3, h4, h5, h6"))
     .filter(heading => heading)
     .forEach(heading => {
       heading.parentNode.insertBefore(hyperHTML`<p><em>This section is non-normative.</em></p>`, heading.nextSibling);
