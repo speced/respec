@@ -1,0 +1,18 @@
+.algorithm var:hover {
+  border-bottom: 1px dotted;
+  cursor: pointer;
+}
+
+var.active {
+  background: yellow;
+}
+
+var.bug {
+  background: red;
+}
+
+@media print {
+  var.active, var.bug {
+    background: none;
+  }
+}
