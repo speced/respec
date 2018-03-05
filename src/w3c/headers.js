@@ -225,7 +225,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   return new Date(ISODate.format(new Date()));
 }
 
-export function run(conf, doc, cb) {
+export function run(conf) {
   conf.isUnofficial = conf.specStatus === "unofficial";
   if (conf.isUnofficial) {
     conf.logos = [];
@@ -248,12 +248,12 @@ export function run(conf, doc, cb) {
   if (conf.isRegular && !conf.shortName) {
     pub("error", "Missing required configuration: `shortName`");
   }
-  conf.title = doc.title || "No Title";
+  conf.title = document.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
   conf.publishDate = validateDateAndRecover(
     conf,
     "publishDate",
-    doc.lastModified
+    document.lastModified
   );
   conf.publishYear = conf.publishDate.getUTCFullYear();
   conf.publishHumanDate = W3CDate.format(conf.publishDate);
@@ -601,7 +601,6 @@ export function run(conf, doc, cb) {
     publishISODate: conf.publishISODate,
     generatedSubtitle: `${conf.longStatus} ${conf.publishHumanDate}`,
   });
-  cb();
 }
 
 function populateSoTD(conf, sotd) {
