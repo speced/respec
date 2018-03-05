@@ -94,13 +94,13 @@ export function wireReference(rawRef, target = "_blank") {
 
 // Author, A. (Year, Month Date of Publication). Article title. Retrieved from URL
 function entryToAPA(ref) {
-  const authors = "";
-  if (ref.authors && ref.authors.length) {
-    authors = ref.authors.join("; ") + (ref.etAl ? " et al." : ".");
-  }
+  const authors =
+    ref.authors && ref.authors.length
+      ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : ""}.`
+      : "";
   const date = ref.date ? `(${ref.date}).` : "";
   const title = ref.href
-    ? `<a href="${ref.href}"> <cite>${ref.title}</cite> </a>. `
+    ? `<a href="${ref.href}"><cite>${ref.title}</cite></a>. `
     : "";
   const URL = ref.href
     ? `Retrieved from URL: <a href="${ref.href}">${ref.href}</a>`
