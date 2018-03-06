@@ -17,7 +17,7 @@ describe("Core - Structure", () => {
   it("should build a ToC with default values", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body: body,
+      body: body
     };
     const doc = await makeRSDoc(ops);
     // test default values
@@ -42,7 +42,7 @@ describe("Core - Structure", () => {
     // test with noTOC
     var ops = {
       config: makeBasicConfig(),
-      body: "<section class='sotd'><p>.</p></section>",
+      body: "<section class='sotd'><p>.</p></section>"
     };
     ops.config.noTOC = true;
     makeRSDoc(ops, function(doc) {
@@ -50,12 +50,10 @@ describe("Core - Structure", () => {
     }).then(done);
   });
 
-  it("should include introductory sections in ToC with tocIntroductory", function(
-    done
-  ) {
+  it("should include introductory sections in ToC with tocIntroductory", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: body,
+      body: body
     };
     ops.config.tocIntroductory = true;
     makeRSDoc(ops, function(doc) {
@@ -63,7 +61,12 @@ describe("Core - Structure", () => {
       expect($toc.find("h2").text()).toEqual("Table of Contents");
       expect($toc.find("> ol > li").length).toEqual(6);
       expect($toc.find("li").length).toEqual(18);
-      expect($toc.find("> ol > li a").first().text()).toEqual("Abstract");
+      expect(
+        $toc
+          .find("> ol > li a")
+          .first()
+          .text()
+      ).toEqual("Abstract");
       expect($toc.find("> ol > li a[href='#intro']").length).toEqual(1);
     }).then(done);
   });
@@ -71,7 +74,7 @@ describe("Core - Structure", () => {
   it("should limit ToC depth with maxTocLevel", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: body,
+      body: body
     };
     ops.config.maxTocLevel = 4;
     makeRSDoc(ops, function(doc) {
@@ -79,21 +82,32 @@ describe("Core - Structure", () => {
       expect($toc.find("h2").text()).toEqual("Table of Contents");
       expect($toc.find("> ol > li").length).toEqual(3);
       expect($toc.find("li").length).toEqual(11);
-      expect($toc.find("> ol > li a").first().text()).toEqual("1. ONE");
+      expect(
+        $toc
+          .find("> ol > li a")
+          .first()
+          .text()
+      ).toEqual("1. ONE");
       expect($toc.find("a[href='#four']").text()).toEqual("1.1.1.1 FOUR");
-      expect($toc.find("> ol > li").first().next().find("> a").text()).toEqual(
-        "A. ONE"
-      );
+      expect(
+        $toc
+          .find("> ol > li")
+          .first()
+          .next()
+          .find("> a")
+          .text()
+      ).toEqual("A. ONE");
       expect($toc.find("a[href='#four-0']").text()).toEqual("A.1.1.1 FOUR");
     }).then(done);
   });
 
- it("should link to the title of the document", async () => {
+  it("should link to the title of the document", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body,
+      body
     };
     const doc = await makeRSDoc(ops);
     const title = doc.getElementById("title");
     expect(title).toEqual(!null);
   });
+});
