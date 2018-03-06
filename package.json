@@ -68,7 +68,7 @@
     "server": "npm start",
     "snyk": "snyk",
     "snyk-protect": "snyk protect",
-    "start": "http-server",
+    "start": "npm run babel:build && http-server",
     "test:build": "mocha ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
     "test:karma": "npm run karma",
