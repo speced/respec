@@ -88,14 +88,12 @@ describe("Core - Structure", () => {
     }).then(done);
   });
 
-  it("should link to title only when it exists", function(done) {
-    var ops = {
+ it("should link to the title of the document", async () => {
+    const ops = {
       config: makeBasicConfig(),
-      body: "<section class='sotd'><p>.</p></section>", //make body without a title
+      body,
     };
-    ops.config.noTOC = true; //change something here
-    makeRSDoc(ops, function(doc) {
-      expect(doc.getElementById("title")).toEqual(null);
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    const title = doc.getElementById("title");
+    expect(title).toEqual(!null);
   });
-});
