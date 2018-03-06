@@ -24,7 +24,7 @@ function normalizeReferences(conf) {
 function getRefKeys(conf) {
   return {
     informativeReferences: Array.from(conf.informativeReferences),
-    normativeReferences: Array.from(conf.normativeReferences),
+    normativeReferences: Array.from(conf.normativeReferences)
   };
 }
 
@@ -38,7 +38,7 @@ const REF_STATUSES = new Map([
   ["PR", "W3C Proposed Recommendation"],
   ["REC", "W3C Recommendation"],
   ["WD", "W3C Working Draft"],
-  ["WG-NOTE", "W3C Working Group Note"],
+  ["WG-NOTE", "W3C Working Group Note"]
 ]);
 
 const defaultsReference = Object.freeze({
@@ -48,7 +48,7 @@ const defaultsReference = Object.freeze({
   publisher: "",
   status: "",
   title: "",
-  etAl: false,
+  etAl: false
 });
 
 const endNormalizer = function(endStr) {
@@ -101,53 +101,51 @@ function entryToAPA(ref) {
   const date = ref.date ? `(${ref.date}).` : "";
   const title = ref.href
     ? `<a href="${ref.href}"><cite>${ref.title}</cite></a>. `
-    : "";
-  const URL = ref.href
+    : `${ref.title}`;
+  const url = ref.href
     ? `Retrieved from URL: <a href="${ref.href}">${ref.href}</a>`
     : "";
 
-  return `${authors} ${date} ${title} ${URL}`;
+  return `${authors} ${date} ${title} ${url}`;
 }
 
 //Author’s Last name, First name. “Title of the Article or Individual Page.” Title of the website, Name of the publisher, Date of publication, URL.
 function entryToMLA(ref) {
-  const authors = "";
-  if (ref.authors && ref.authors.length) {
-    authors = ref.authors.join("; ") + (ref.etAl ? " et al." : ".");
-  }
+  const authors =
+    ref.authors && ref.authors.length
+      ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : ""}.`
+      : "";
   const date = ref.date ? `${ref.date}, ` : "";
   const title = ref.href
     ? `<a href="${ref.href}"> "<cite>${ref.title}</cite>" </a>. `
+    : `${ref.title}`;
+  const url = ref.href ? `<a href="${ref.href}">${ref.href}</a>` : "";
+  const publisher = ref.publisher
+    ? `${ref.publisher} ${ref.publisher.endsWith(".")}`
     : "";
-  const URL = ref.href ? `<a href="${ref.href}">${ref.href}</a>` : "";
-  const publisher = "";
-  if (ref.publisher) {
-    publisher = ref.publisher + ref.publisher.endsWith(".");
-  }
 
-  return `${authors} ${title} ${publisher} ${date} ${URL}`;
+  return `${authors} ${title} ${publisher} ${date} ${url}`;
 }
 
 // what ReSpec currently does...
 function entryToW3C(ref) {
   const title = ref.href
     ? `<a href="${ref.href}"> <cite>${ref.title}</cite> </a>. `
+    : `${ref.title}`;
+  const authors =
+    ref.authors && ref.authors.length
+      ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : "."}.`
+      : "";
+  const publisher = ref.publisher
+    ? `${ref.publisher} ${ref.publisher.endsWith(".")}`
     : "";
-  const authors = "";
-  if (ref.authors && ref.authors.length) {
-    authors = ref.authors.join("; ") + (ref.etAl ? " et al." : ".");
-  }
-  const publisher = "";
-  if (ref.publisher) {
-    publisher = ref.publisher + ref.publisher.endsWith(".");
-  }
   const date = ref.date ? `${ref.date}. ` : "";
   const status = ref.status
     ? (REF_STATUSES.get(ref.status) || ref.status) + ". "
     : "";
-  const URL = ref.href ? `URL: <a href="${ref.href}">${ref.href}</a>` : "";
+  const url = ref.href ? `URL: <a href="${ref.href}">${ref.href}</a>` : "";
 
-  return `${title} ${authors} ${publisher} ${date} ${status} ${URL}`;
+  return `${title} ${authors} ${publisher} ${date} ${status} ${url}`;
 }
 
 export function stringifyReference(ref, style) {
@@ -261,7 +259,7 @@ function bibref(conf) {
 // if we will actually need to download references yet.
 var link = createResourceHint({
   hint: "dns-prefetch",
-  href: bibrefsURL.origin,
+  href: bibrefsURL.origin
 });
 document.head.appendChild(link);
 let doneResolver;
@@ -345,7 +343,7 @@ export async function run(conf, doc, cb) {
     await biblioDB.ready; // can throw
     const promisesToFind = neededRefs.map(async id => ({
       id,
-      data: await biblioDB.find(id),
+      data: await biblioDB.find(id)
     }));
     idbRefs.push(...(await Promise.all(promisesToFind)));
   } catch (err) {
