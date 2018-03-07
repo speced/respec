@@ -163,11 +163,9 @@ export function run(conf, doc, cb) {
       issues.forEach(function(issue) {
         ghIssues[issue.number] = issue;
       }); 
-      handleIssues($ins, ghIssues, issueBase);
-      cb();
-      
     } catch(err) {
-        pub("error", err.message);
+        pub("error", err.message); 
+    } finally {
         handleIssues($ins, ghIssues, issueBase);
         cb();
     }
