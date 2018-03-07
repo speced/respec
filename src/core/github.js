@@ -5,9 +5,57 @@
  */
 
 import l10n from "core/l10n";
+import css from "deps/text!deps/balloon.css";
 import { pub } from "core/pubsubhub";
 
 export const name = "core/github";
+
+function enableFileIssuesOnSelect(issueBase){
+  const { body, head } = document;
+
+  const codeStyle = document.createElement("style");
+  codeStyle.textContent = css;
+  codeStyle.classList.add('removeOnSave');
+  head.appendChild(codeStyle);
+
+  var fileIssueLink = document.createElement('button');
+  fileIssueLink.setAttribute('data-balloon', 'file an issue related to the text selected');
+  fileIssueLink.setAttribute('data-balloon-pos', 'up');
+  fileIssueLink.setAttribute('id', 'respec-file-issue-btn');
+  fileIssueLink.classList.add('removeOnSave', 'respec-file-issue-hidden');
+  fileIssueLink.innerText = 'File Issue';
+  fileIssueLink.onclick = function () {
+    window.location.href = fileIssueLink.getAttribute('data-href');
+    fileIssueLink.classList.add('respec-file-issue-hidden');
+  };
+  body.appendChild(fileIssueLink);
+
+  body.addEventListener("mouseup", function () {
+    const selectionObj = window.getSelection();
+    const { top, right, left } = selectionObj.getRangeAt(0).getBoundingClientRect();
+    const textSelected = selectionObj.toString();
+    const newIssueURL = new URL('./new',issueBase);
+    const { searchParams } = newIssueURL;
+    var titleText, bodyText;
+
+    if (textSelected) {
+      if (textSelected.length > 40 ) {
+        var pos = textSelected.indexOf(" ", 40);
+        titleText = textSelected.slice(0, pos).concat("...");
+      } else {
+        titleText = textSelected;
+      }
+      bodyText = `> ${textSelected}`;
+      searchParams.set('title', `'${titleText}'`);
+      searchParams.set('body', bodyText);
+      fileIssueLink.classList.remove('respec-file-issue-hidden');
+      fileIssueLink.setAttribute('data-href', newIssueURL.href);
+    } else {
+      fileIssueLink.classList.add('respec-file-issue-hidden');
+    }
+  });
+
+}
 
 function findNext(header) {
   // Finds the next URL of paginated resources which
@@ -98,6 +146,10 @@ export async function run(conf) {
     issueBase: `${ghURL.href}${ghURL.pathname.endsWith("/") ? "" : "/"}issues/`,
     pullBase: `${ghURL.href}${ghURL.pathname.endsWith("/") ? "" : "/"}pulls/`,
   };
+  if (conf.enableIssueFeature && newProps.issueBase &&
+    '/https://github.com/'.search(newProps.issueBase) ) {
+    enableFileIssuesOnSelect(newProps.issueBase)
+  }
   const commitsHref = `${ghURL.href}${
     ghURL.pathname.endsWith("/") ? "" : "/"
   }commits/${branch}`;
