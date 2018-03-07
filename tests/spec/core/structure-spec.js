@@ -107,7 +107,9 @@ describe("Core - Structure", () => {
       body
     };
     const doc = await makeRSDoc(ops);
-    const title = doc.getElementById("title");
+    var title = doc.getElementById("title");
+    var link = doc.getElementById("back-to-top");
     expect(title).toBeTruthy();
+    expect(link.querySelector("a[href='#title']")).toBeTruthy();
   });
 });
