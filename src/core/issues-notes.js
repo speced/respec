@@ -23,7 +23,7 @@ export function run(conf, doc, cb) {
         "<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"
       ),
       $issueList = $issueSummary.find("ul");
-    $ins.each(function (i, inno) {
+    $ins.each(function(i, inno) {
       var $inno = $(inno),
         isIssue = $inno.hasClass("issue"),
         isWarning = $inno.hasClass("warning"),
@@ -47,11 +47,11 @@ export function run(conf, doc, cb) {
       // wrap
       if (!isInline) {
         var $div = $(
-          "<div class='" +
-          report.type +
-          (isFeatureAtRisk ? " atrisk" : "") +
-          "'></div>"
-        ),
+            "<div class='" +
+            report.type +
+            (isFeatureAtRisk ? " atrisk" : "") +
+            "'></div>"
+          ),
           $tit = $(
             "<div role='heading' class='" + report.type + "-title'><span></span></div>"
           ),
@@ -139,28 +139,28 @@ export function run(conf, doc, cb) {
   var $ins = $(".issue, .note, .warning, .ednote"),
     ghIssues = {},
     issueBase = conf.issueBase;
+  async function asyncFetch() {
+    try {
+      const json = await ghFetch(conf.githubAPI);
+      const issueUrl = issueBase || json.html_url + "/issues/";
+      const issues = await fetchIndex(json.issues_url, {
+        // Get back HTML content instead of markdown
+        // See: https://developer.github.com/v3/media/
+        Accept: "application/vnd.github.v3.html+json",
+      });
+      ghIssues = issues.reduce((issuesObj, issue) => {
+        issuesObj[issue.number] = issue;
+      }, {});
+    } catch (err) {
+      pub("error", err.message);
+    } finally () {
+      handleIssues($ins, ghIssues, issueUrl);
+      cb();
+    }
+  };
   if ($ins.length) {
     if (conf.githubAPI) {
-      ghFetch(conf.githubAPI)
-        .then(function (json) {
-          issueBase = issueBase || json.html_url + "/issues/";
-          return fetchIndex(json.issues_url, {
-            // Get back HTML content instead of markdown
-            // See: https://developer.github.com/v3/media/
-            Accept: "application/vnd.github.v3.html+json",
-          });
-        })
-        .then(function (issues) {
-          issues.forEach(function (issue) {
-            ghIssues[issue.number] = issue;
-          });
-          handleIssues($ins, ghIssues, issueBase);
-          cb();
-        }).catch(err => {
-          pub("error", err.message);
-          handleIssues($ins, ghIssues, issueBase);
-          cb();
-        });
+      asyncFetch();
     } else {
       handleIssues($ins, ghIssues, issueBase);
       cb();
