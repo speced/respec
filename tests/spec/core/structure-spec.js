@@ -108,6 +108,6 @@ describe("Core - Structure", () => {
     };
     const doc = await makeRSDoc(ops);
     const title = doc.getElementById("title");
-    expect(title).toEqual(!null);
+    expect(title).toBeTruthy();
   });
 });
