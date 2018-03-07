@@ -24,7 +24,7 @@ function normalizeReferences(conf) {
 function getRefKeys(conf) {
   return {
     informativeReferences: Array.from(conf.informativeReferences),
-    normativeReferences: Array.from(conf.normativeReferences),
+    normativeReferences: Array.from(conf.normativeReferences)
   };
 }
 
@@ -38,7 +38,7 @@ const REF_STATUSES = new Map([
   ["PR", "W3C Proposed Recommendation"],
   ["REC", "W3C Recommendation"],
   ["WD", "W3C Working Draft"],
-  ["WG-NOTE", "W3C Working Group Note"],
+  ["WG-NOTE", "W3C Working Group Note"]
 ]);
 
 const defaultsReference = Object.freeze({
@@ -48,15 +48,14 @@ const defaultsReference = Object.freeze({
   publisher: "",
   status: "",
   title: "",
-  etAl: false,
+  etAl: false
 });
 
 const endNormalizer = function(endStr) {
   return str => {
     const trimmed = str.trim();
-    const result = !trimmed || trimmed.endsWith(endStr)
-      ? trimmed
-      : trimmed + endStr;
+    const result =
+      !trimmed || trimmed.endsWith(endStr) ? trimmed : trimmed + endStr;
     return result;
   };
 };
@@ -93,24 +92,76 @@ export function wireReference(rawRef, target = "_blank") {
   `;
 }
 
-export function stringifyReference(ref) {
+// Author, A. (Year, Month Date of Publication). Article title. Retrieved from URL
+function entryToAPA(ref) {
+  const authors =
+    ref.authors && ref.authors.length
+      ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : ""}.`
+      : "";
+  const date = ref.date ? `(${ref.date}).` : "";
+  const title = ref.href
+    ? `<a href="${ref.href}"><cite>${ref.title}</cite></a>. `
+    : `${ref.title}`;
+  const url = ref.href
+    ? `Retrieved from URL: <a href="${ref.href}">${ref.href}</a>`
+    : "";
+
+  return `${authors} ${date} ${title} ${url}`;
+}
+
+//Author’s Last name, First name. “Title of the Article or Individual Page.” Title of the website, Name of the publisher, Date of publication, URL.
+function entryToMLA(ref) {
+  const authors =
+    ref.authors && ref.authors.length
+      ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : ""}.`
+      : "";
+  const date = ref.date ? `${ref.date}, ` : "";
+  const title = ref.href
+    ? `<a href="${ref.href}"> "<cite>${ref.title}</cite>" </a>. `
+    : `${ref.title}`;
+  const url = ref.href ? `<a href="${ref.href}">${ref.href}</a>` : "";
+  const publisher = ref.publisher
+    ? `${ref.publisher} ${ref.publisher.endsWith(".")}`
+    : "";
+
+  return `${authors} ${title} ${publisher} ${date} ${url}`;
+}
+
+// what ReSpec currently does...
+function entryToW3C(ref) {
+  const title = ref.href
+    ? `<a href="${ref.href}"> <cite>${ref.title}</cite> </a>. `
+    : `${ref.title}`;
+  const authors =
+    ref.authors && ref.authors.length
+      ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : "."}.`
+      : "";
+  const publisher = ref.publisher
+    ? `${ref.publisher} ${ref.publisher.endsWith(".")}`
+    : "";
+  const date = ref.date ? `${ref.date}. ` : "";
+  const status = ref.status
+    ? (REF_STATUSES.get(ref.status) || ref.status) + ". "
+    : "";
+  const url = ref.href ? `URL: <a href="${ref.href}">${ref.href}</a>` : "";
+
+  return `${title} ${authors} ${publisher} ${date} ${status} ${url}`;
+}
+
+export function stringifyReference(ref, style) {
   if (typeof ref === "string") return ref;
-  let output = `<cite>${ref.title}</cite>`;
-  if (ref.href) {
-    output = `<a href="${ref.href}">${output}</a>. `;
+  const nomarlizedRef = Object.assign({}, defaultsReference, ref);
+  let output = "";
+  switch (style) {
+    case "APA":
+      output = entryToAPA(nomarlizedRef);
+      break;
+    case "MLA":
+      output = entryToMLA(nomarlizedRef);
+      break;
+    default:
+      output = entryToW3C(nomarlizedRef);
   }
-  if (ref.authors && ref.authors.length) {
-    output += ref.authors.join("; ");
-    if (ref.etAl) output += " et al";
-    output += ".";
-  }
-  if (ref.publisher) {
-    const publisher = ref.publisher + (/\.$/.test(ref.publisher) ? "" : ".");
-    output = `${output} ${publisher} `;
-  }
-  if (ref.date) output += ref.date + ". ";
-  if (ref.status) output += (REF_STATUSES.get(ref.status) || ref.status) + ". ";
-  if (ref.href) output += `URL: <a href="${ref.href}">${ref.href}</a>`;
   return output;
 }
 
@@ -128,15 +179,19 @@ function bibref(conf) {
       conf.l10n.references +
       "</h2></section>"
   ).appendTo($("body"));
-  if (conf.refNote) $("<p></p>").html(conf.refNote).appendTo($refsec);
+  if (conf.refNote)
+    $("<p></p>")
+      .html(conf.refNote)
+      .appendTo($refsec);
 
   var types = ["Normative", "Informative"];
   for (var i = 0; i < types.length; i++) {
     var type = types[i];
     var refs = type === "Normative" ? norms : informs;
-    var l10nRefs = type === "Normative"
-      ? conf.l10n.norm_references
-      : conf.l10n.info_references;
+    var l10nRefs =
+      type === "Normative"
+        ? conf.l10n.norm_references
+        : conf.l10n.info_references;
     if (!refs.length) continue;
     var $sec = $("<section><h3></h3></section>")
       .appendTo($refsec)
@@ -196,7 +251,7 @@ function bibref(conf) {
 // if we will actually need to download references yet.
 var link = createResourceHint({
   hint: "dns-prefetch",
-  href: bibrefsURL.origin,
+  href: bibrefsURL.origin
 });
 document.head.appendChild(link);
 let doneResolver;
@@ -280,7 +335,7 @@ export async function run(conf, doc, cb) {
     await biblioDB.ready; // can throw
     const promisesToFind = neededRefs.map(async id => ({
       id,
-      data: await biblioDB.find(id),
+      data: await biblioDB.find(id)
     }));
     idbRefs.push(...(await Promise.all(promisesToFind)));
   } catch (err) {
