@@ -17,7 +17,7 @@ describe("Core - Structure", () => {
   it("should build a ToC with default values", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body: body
+      body: body,
     };
     const doc = await makeRSDoc(ops);
     // test default values
@@ -42,7 +42,7 @@ describe("Core - Structure", () => {
     // test with noTOC
     var ops = {
       config: makeBasicConfig(),
-      body: "<section class='sotd'><p>.</p></section>"
+      body: "<section class='sotd'><p>.</p></section>",
     };
     ops.config.noTOC = true;
     makeRSDoc(ops, function(doc) {
@@ -53,7 +53,7 @@ describe("Core - Structure", () => {
   it("should include introductory sections in ToC with tocIntroductory", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: body
+      body: body,
     };
     ops.config.tocIntroductory = true;
     makeRSDoc(ops, function(doc) {
@@ -74,7 +74,7 @@ describe("Core - Structure", () => {
   it("should limit ToC depth with maxTocLevel", function(done) {
     var ops = {
       config: makeBasicConfig(),
-      body: body
+      body: body,
     };
     ops.config.maxTocLevel = 4;
     makeRSDoc(ops, function(doc) {
@@ -104,12 +104,12 @@ describe("Core - Structure", () => {
   it("should link to the title of the document", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body
+      body,
     };
     const doc = await makeRSDoc(ops);
-    var title = doc.getElementById("title");
-    var link = doc.getElementById("back-to-top");
+    const title = doc.getElementById("title");
     expect(title).toBeTruthy();
-    expect(link.querySelector("a[href='#title']")).toBeTruthy();
+    const anchor = doc.querySelector("#back-to-top a[href='#title']");
+    expect(anchor).toBeTruthy();
   });
 });
