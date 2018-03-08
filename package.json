@@ -89,5 +89,8 @@
     "puppeteer": "^1.1.1",
     "snyk": "^1.69.10"
   },
+  "prettier": {
+    "trailingComma": "es5"
+  },
   "snyk": true
 }
