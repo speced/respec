@@ -57,7 +57,6 @@ export function run(conf, doc, cb) {
 }
 
 async function addJSONLDInfo (conf, doc) {
-  
   await doc.respecIsReady;
   // Content for JSON
   const type = ["TechArticle"];
