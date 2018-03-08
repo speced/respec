@@ -8,7 +8,7 @@ import "deps/hyperhtml";
 
 export const name = "core/best-practices";
 
-export function run(conf) {
+export function run() {
   let num = 0;
   const bps = document.querySelectorAll("span.practicelab");
   const ul = document.createElement("ul");
