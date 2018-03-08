@@ -1,59 +1,59 @@
 .caniuse {
-  background: #f0f0f0;
-  height: 350px;
-  overflow-y: auto;
-  resize: vertical;
-  font-family: monospace;
+  margin-bottom: 2rem;
 }
 
-.caniuse :target {
-    background: #ddd;
+.caniuse h3 {
+  font-size: 15px;
+  margin: 0;
+  font-weight: bold;
+  color: #000;
 }
 
-.caniuse-stats {
-  display: flex;
-  background: #ddd;
-  max-height: 250px;
-  overflow: auto;
-}
-
-.caniuse-title {
-  padding: 10px 5px;
-  background: #8bc34a;
-}
-
-.caniuse-title span {
+.caniuse h3 a {
   float: right;
 }
 
-@media screen and (max-width: 600px) {
-  .caniuse-title span { float: none; }
+.caniuse-stats {
+  width: 100%;
+  overflow: auto;
+  font-family: monospace;
+}
+
+.ciu-browser {
+  display: inline-block;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
 .ciu-col {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  padding: 10px;
-  align-items: center;
-  text-align: center;
-  height: 100%;
-  min-width: 55px;
+  position: absolute;
+  height: 30px;
+  max-height: 200px;
+  background: #fff;
+  overflow-y: hidden;
+  transition: height 0.3s ease-in-out;
 }
 
 .ciu-cell {
-  width: 100%;
+  width: 70px;
   padding: 3px;
   background: #fff;
   margin: 1px;
-  position: relative;
+  height: 23px;
 }
 
-.ciu-col > span {
-  border-bottom: 2px solid #555;
-  margin-bottom: 2px;
-  line-height: 1.5;
-  width: 100%;
+.ciu-browser > .ciu-cell:hover {
+  cursor: pointer;
+}
+
+.ciu-browser:hover .ciu-col {
+  height: 100%;
+  z-index: 99;
+  overflow-y: auto;
+ }
+
+.ciu-cell:hover {
+  opacity: 0.9;
 }
 
 /* supports */
@@ -66,8 +66,8 @@
   background: #e53935;
 }
 
-/* not supported by default */
-.ciu-cell.d {
+/* not supported by default / partial support etc */
+.ciu-cell.d, .ciu-cell.a, .ciu-cell.x, .ciu-cell.p {
   background: #ffc107;
 }
 
@@ -86,31 +86,17 @@
   margin: 0;
 }
 
-.ciu-cell li a[href] {
-  text-decoration: none;
-  border-bottom: none;
-  padding: 0 2px;
-  font-size: 10px;
-  background: rgba(0,0,0,0.2);
-  color: #fff;
-}
-
-.caniuse > p,
-.caniuse > ol {
-  padding: 5px 10px;
-}
-
-.caniuse > ol {
-  margin: 0 2em;
-}
-
 .caniuse-trigger {
-  background: #8bc34a;
+  background: #005A9C;
   text-decoration: none;
-  display: block;
+  display: inline-block;
+  margin: 0;
   padding: 5px;
-  font-size: 13px;
-  border-bottom: 2px solid #4caf50;
+  color: #fff;
+  border: 2px solid #044578;
   font-family: monospace;
   cursor: pointer;
+}
+.caniuse-trigger:hover {
+  background: #044578;
 }

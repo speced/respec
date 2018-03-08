@@ -1,17 +1,19 @@
-// Module: "core/caniuse"
-// Adds a caniuse table for a "key" #1238
-// If conf.caniuse is set to a key, the table is added below .head
-// If data-caniuse is set to a key, the table is added after first element where data-caniuse is used (on a onclick handler)
-//  .. generally, data-caniuse is defined on a <section>, so table will be added after section's first element (usually section heading)
-//
-// Optional: Set conf.caniuseBrowsers to set which browsers will be shown in the table
-//   VALUES: "ALL" or and array of caniuse supported browser names
-//   (otherwise DEFAULT_BROWSERS will be used).
+/*
+Module: "core/caniuse"
+Adds a caniuse support table for a "key" #1238
 
-// TODO: L141 (json.notes) do not render as html even after marked()
+`conf = { caniuse: key }` =>
+  .. the table is added below `.head`
+`<section data-caniuse=key>` =>
+  .. table will be added after section's first element (usually section heading)
+  .. added onclick on "button"
+Optional: Set `conf.caniuseBrowsers` to set which browsers will be shown in the table
+  VALUES: `"ALL"` or and array of caniuse supported browser names
+  (otherwise `DEFAULT_BROWSERS` will be used).
+*/
 
 import { fetch as ghFetch } from "core/github";
-import { semverCompare, norm } from "core/utils";
+import { semverCompare } from "core/utils";
 import { pub } from "core/pubsubhub";
 import marked from "deps/marked";
 import "deps/hyperhtml";
@@ -26,18 +28,16 @@ export const name = "core/caniuse";
 
 export async function run(conf) {
   if (conf.caniuse) {
-    canIUse(conf.caniuse, $s(".head"), conf.caniuseBrowsers);
+    const el = document.querySelector(".head dl");
+    canIUse(conf.caniuse, el, conf.caniuseBrowsers);
   }
-  [...$sa("section[data-caniuse]")].forEach(el => prepare(el, conf));
+  [...document.querySelectorAll("section[data-caniuse]")]
+    .forEach(el => createButton(el, conf));
 }
-
-const $s = (s, ctx = document) => ctx.querySelector(s);
-const $sa = s => document.querySelectorAll(s);
-const $id = id => document.getElementById(id);
 
 marked.setOptions({ sanitize: false, gfm: true });
 const DEFAULT_BROWSERS = ["chrome", "firefox", "ie", "edge"];
-const BROWSERS = {
+const BROWSERS = { // browser name dictionary
   chrome: "Chrome",
   firefox: "Firefox",
   ie: "IE",
@@ -50,41 +50,82 @@ const BROWSERS = {
   and_ff: "Firefox (Android)",
 };
 
-function prepare(el, conf) {
-  const t = hyperHTML`<div class="caniuse-trigger" title="Get 'Can I Use' data">Can I Use?</div>`;
-  el.insertBefore(t, el.firstChild.nextSibling);
-  t.addEventListener("click", () => {
+/**
+ * create a clickable button for each a <section[data-caniuse]> element
+ * @param  {Node} el   where to add the placeholder
+ * @param  {Object} conf respecConf
+ */
+function createButton(el, conf) {
+  const button = hyperHTML`
+  <h3 class="caniuse-trigger" title="Get 'Can I Use' data">
+    Can I Use "${el.dataset.caniuse}" API? Get Data.
+  </h3>`;
+  el.insertBefore(button, el.firstChild.nextSibling);
+  button.addEventListener("click", () => {
     canIUse(el.dataset.caniuse, el.firstChild, conf.caniuseBrowsers);
-    t.parentNode.removeChild(t);
+    button.parentNode.removeChild(button);
   });
 }
 
+/**
+ * main canIUse function
+ * @param  {String} key                         which api to look for
+ * @param  {Node} el                          add table after el
+ * @param  {Array:string} [browsers=DEFAULT_BROWSERS] list of browsers to show
+ */
 function canIUse(key, el, browsers = DEFAULT_BROWSERS) {
   const placeholder = createPlaceholder(key, el);
   const handleResponse = json => showData(key, json, el, browsers);
   const handleError = err => showError(err, placeholder);
 
   const url = `https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/${key}.json`;
+
+  // use data from localStorage data if valid and render
+  const cached = localStorage.getItem(`caniuse-${key}`);
+  if (cached) {
+    const json = JSON.parse(cached);
+    const CACHE_DURATION = 5 * 60 * 1000; // in ms
+    if (new Date() - new Date(json.cacheTime) < CACHE_DURATION) {
+      return handleResponse(json);
+    }
+  }
+  // otherwise fetch new data and render
   ghFetch(url)
     .then(handleResponse)
     .catch(handleError);
 }
 
+/**
+ * creates a placeholder while the API fetches results
+ * @param  {String} key    API name
+ * @param  {Node} parent where to create placeholder
+ * @return {Node}        inserted placeholder
+ */
 function createPlaceholder(key, parent) {
   const canIUseId = `caniuse-${key}`;
+  const permalink = `http://caniuse.com/#feat=${key}`;
   const placeholder = hyperHTML`
     <div class="caniuse" id="${canIUseId}">
-      <div class="caniuse-title">Can I Use <code>${key}</code>? (data from caniuse.com)</div>
+      <h3 class="caniuse-title">
+        Can I Use this API? (${key}) <a href="${permalink}" title="Get details on caniuse.com">More info</a>
+      </h3>
       <p>fetching data...</p>
     </div>`;
   return parent.parentNode.insertBefore(placeholder, parent.nextSibling);
 }
 
 function showError(err, placeholder) {
-  placeholder.style.height = "100px";
-  $s("p", placeholder).innerText = `Error: ${err.message}`;
+  placeholder.style.height = "40px";
+  placeholder.querySelector("p").innerText = `Error: ${err.message}`;
 }
 
+/**
+ * render the canIUse support table
+ * @param  {String} key      API name
+ * @param  {Object} json     CanIUse API results
+ * @param  {Node} parent   where to render table
+ * @param  {Array:string} browsers lost of browsers to show support for
+ */
 function showData(key, json, parent, browsers) {
   if (typeof browsers === "string") {
     if (browsers === "ALL") {
@@ -96,53 +137,55 @@ function showData(key, json, parent, browsers) {
   }
 
   // utils
-  const getNoteId = n => `caniuse-${key}-${n}`; // for anchor links
-  const createNoteRefs = (str) => { // for numbered "notes" references
-    return str.split("#").map(norm)
-      .map(i => `<li><a href=#${getNoteId(i)}>${i}</a></li>`);
-  };
-  const createNumberedNote = (n) => {
-    const html = marked.inlineLexer(json.notes_by_num[n], []);
-    return `<li id=${getNoteId(n)}>${html}</li>`;
-  };
   const canIUseId = `caniuse-${key}`;
   const permalink = `http://caniuse.com/#feat=${key}`;
-  const notesByNumber = Object.keys(json.notes_by_num).sort().map(createNumberedNote);
   // end:utils
 
-  const addBrowser = (browser) => {
-    const browserData = json.stats[browser];
-    if (!browserData) return "";
-
-    const addBrowserVersion = (version) => {
-      const [cl, n] = browserData[version].split("#", 2).map(norm);
-      const notes = n ? `<ul>${createNoteRefs(n)}</ul>` : "";
-      return `<div class="ciu-cell ${cl}"">${notes}${version}</div>`;
-    };
-
-    const browserVersions = Object.keys(browserData).sort(semverCompare).reverse();
-    return hyperHTML`
-      <div class="ciu-col">
-        <span>${BROWSERS[browser] || browser}</span>
-        ${hyperHTML`${browserVersions.map(addBrowserVersion)}`}
-      </div>`;
-  }; // end:addBrowser
+  // cache the response
+  json.cacheTime = new Date();
+  localStorage.setItem(canIUseId, JSON.stringify(json));
 
   const validBrowsers = browsers.filter(b => b in json.stats);
   if (validBrowsers.length !== browsers.length) {
     pub("warn", "Unsupported value(s) in `conf.caniuseBrowsers`");
   }
 
-  // main rendering
+  // render the support table
   const caniuse = hyperHTML`
     <div class="caniuse" id="${canIUseId}">
-    <div class="caniuse-title">Can I Use <a href="${permalink}">${json.title}</a>? (data from caniuse.com) <span>[${json.usage_perc_y}%]</span></div>
-      <div class="caniuse-stats">${validBrowsers.map(addBrowser)}</div>
-      <p><strong>Notes:</strong> ${json.notes}</p>
-      <ol>${notesByNumber}</ol>
+      <h3>Can I Use this API? (${key}) <a href="${permalink}" title="Get details on caniuse.com">More info</a></h3>
+      <div class="caniuse-stats">${validBrowsers.map(addBrowser)} </div>
     </div>`;
 
-  const old = $id(canIUseId);
+  const old = document.getElementById(canIUseId);
   if (old) old.parentNode.removeChild(old);
   parent.parentNode.insertBefore(caniuse, parent.nextSibling);
+
+  /**
+   * add a browser to table
+   * @param {String} name of browser (as in CanIUse API response)
+   * external variables:
+   *  - json: API response data
+   *  - BROWSERS: dictionary of browser names
+   */
+  function addBrowser(browser) {
+    const browserData = json.stats[browser];
+    if (!browserData) return "";
+
+    const getSupport = version =>
+      browserData[version].split("#", 1)[0].trim();
+
+    const addBrowserVersion = version =>
+      `<div class="ciu-cell ${getSupport(version)}">${version}</div>`;
+
+    const browserVersions = Object.keys(browserData).sort(semverCompare).reverse();
+    const currentVersion = `ciu-cell ${getSupport(browserVersions[0])}`;
+    return hyperHTML`
+      <div class="ciu-browser">
+        <div class="${currentVersion}">${BROWSERS[browser] || browser}</div>
+        <div class="ciu-col">
+          ${browserVersions.map(addBrowserVersion)}
+        </div>
+      </div>`;
+  } // end:addBrowser
 }
