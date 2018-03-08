@@ -70,6 +70,7 @@ define(
     "core/data-tests",
     "core/list-sorter",
     "w3c/jsonld",
+    "core/highlight-vars",
     /*Linter must be the last thing to run*/
     "core/linter",
   ],

@@ -1,10 +1,28 @@
-.algorithm var:hover {
+var:hover {
   border-bottom: 1px dotted;
   cursor: pointer;
 }
 
-var.active {
+var.col-a {
   background: yellow;
+}
+
+var.col-b {
+  background: #726012;
+  color: #fff;
+}
+
+var.col-c {
+  background: #c78e00;
+}
+
+var.col-d {
+  background: #3949ab;
+  color: #fff;
+}
+
+var.col-e {
+  background: #F720E5;
 }
 
 var.bug {
