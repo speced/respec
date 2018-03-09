@@ -6,7 +6,6 @@ const testURLs = [
   "https://w3c.github.io/payment-request/",
   "https://w3c.github.io/resource-hints/",
   "https://w3c.github.io/wpub/",
-  "https://webaudio.github.io/web-audio-api/",
   "https://wicg.github.io/web-share-target/",
   `file:///${__dirname}/../examples/basic.built.html`,
   `file:///${__dirname}/../examples/basic.html`,
