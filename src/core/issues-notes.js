@@ -133,21 +133,6 @@ function handleIssues($ins, ghIssues, conf) {
     $("#issue-summary").remove();
   }
 }
-export async function run(conf) {
-  const $ins = $(".issue, .note, .warning, .ednote");
-  const ghIssues = new Map();
-  const { issueBase } = conf;
-  if (!$ins.length) {
-    return; // nothing to do.
-  }
-  if (conf.githubAPI && document.querySelector(".issue[data-number]")) {
-    const issues = await fetchIssuesFromGithub(conf);
-    issues.reduce((ghIssues, [number, issue]) => ghIssues.set(number, issue), ghIssues);
-  }
-  const { head: headElem } = document;
-  headElem.insertBefore(hyperHTML`<style>${[css]}</style>`, headElem.querySelector("link"));
-  handleIssues($ins, ghIssues, conf);
-}
 
 async function fetchIssuesFromGithub({ githubAPI }) {
   const issues = [];
@@ -165,8 +150,26 @@ async function fetchIssuesFromGithub({ githubAPI }) {
       const issue = await response.json();
       issues.push([issueNumber, issue]);
     } catch (err) {
-      console.error(error);
+      console.error(err);
+      const msg = `There was an error fetching ${issueNumber} from GitHub. See developer console.`;
+      pub("error", msg);
+      issues.push([issueNumber, { title: "" }]);
     }
   }
   return issues;
+}
+
+export async function run(conf) {
+  const $ins = $(".issue, .note, .warning, .ednote");
+  const ghIssues = new Map();
+  if (!$ins.length) {
+    return; // nothing to do.
+  }
+  if (conf.githubAPI && document.querySelector(".issue[data-number]")) {
+    const issues = await fetchIssuesFromGithub(conf);
+    issues.reduce((ghIssues, [number, issue]) => ghIssues.set(number, issue), ghIssues);
+  }
+  const { head: headElem } = document;
+  headElem.insertBefore(hyperHTML`<style>${[css]}</style>`, headElem.querySelector("link"));
+  handleIssues($ins, ghIssues, conf);
 }
