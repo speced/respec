@@ -143,7 +143,7 @@ export async function run(conf, doc, cb) {
     if (conf.githubAPI) {
       try {
         const json = await ghFetch(conf.githubAPI);
-        const issueUrl = issueBase || json.html_url + "/issues/";
+        var issueUrl = issueBase || json.html_url + "/issues/";
         const issues = await fetchIndex(json.issues_url, {
           // Get back HTML content instead of markdown
           // See: https://developer.github.com/v3/media/
