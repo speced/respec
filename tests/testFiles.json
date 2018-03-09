@@ -41,7 +41,6 @@
   "spec/w3c/conformance-spec.js",
   "spec/w3c/defaults-spec.js",
   "spec/w3c/headers-spec.js",
-  "spec/w3c/jsonld-spec.js",
   "spec/w3c/linter-rules/privsec-section-spec.js",
   "spec/w3c/permalinks-spec.js",
   "spec/w3c/seo-spec.js",
