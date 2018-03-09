@@ -1,45 +1,30 @@
-.caniuse {
-  margin-bottom: 2rem;
-}
-
-.caniuse h3 {
-  font-size: 15px;
-  margin: 0;
-  font-weight: bold;
-  color: #000;
-}
-
-.caniuse h3 a {
-  float: right;
-}
-
 .caniuse-stats {
   width: 100%;
-  overflow: auto;
   font-family: monospace;
+}
+
+.caniuse-stats a {
+  display: inline-block;
 }
 
 .ciu-browser {
   display: inline-block;
-  margin-bottom: 1rem;
   text-align: center;
 }
 
 .ciu-col {
   position: absolute;
-  height: 30px;
-  max-height: 200px;
-  background: #fff;
+  height: 0;
+  max-height: 140px;
   overflow-y: hidden;
   transition: height 0.3s ease-in-out;
 }
 
 .ciu-cell {
-  width: 70px;
-  padding: 3px;
-  background: #fff;
+  min-width: 100px;
+  padding: 4px;
+  background: #eee; /* default, for unknown support */
   margin: 1px;
-  height: 23px;
 }
 
 .ciu-browser > .ciu-cell:hover {
@@ -49,11 +34,10 @@
 .ciu-browser:hover .ciu-col {
   height: 100%;
   z-index: 99;
-  overflow-y: auto;
  }
 
 .ciu-cell:hover {
-  opacity: 0.9;
+  font-weight: bold;
 }
 
 /* supports */
@@ -69,34 +53,4 @@
 /* not supported by default / partial support etc */
 .ciu-cell.d, .ciu-cell.a, .ciu-cell.x, .ciu-cell.p {
   background: #ffc107;
-}
-
-.ciu-cell ul {
-  display: flex;
-  position: absolute;
-  right: 2px;
-  top: -4px;
-  padding: 0;
-  margin: 0;
-}
-
-.ciu-cell li {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.caniuse-trigger {
-  background: #005A9C;
-  text-decoration: none;
-  display: inline-block;
-  margin: 0;
-  padding: 5px;
-  color: #fff;
-  border: 2px solid #044578;
-  font-family: monospace;
-  cursor: pointer;
-}
-.caniuse-trigger:hover {
-  background: #044578;
 }
