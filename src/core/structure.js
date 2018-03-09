@@ -145,7 +145,7 @@ export function run(conf, doc, cb) {
     }
 
     var $link = $(
-      "<p role='navigation' id='back-to-top'><a href='#toc'><abbr title='Back to Top'>&uarr;</abbr></a></p>"
+      "<p role='navigation' id='back-to-top'><a href='#title'><abbr title='Back to Top'>&uarr;</abbr></a></p>"
     );
     $("body").append($link);
   }
