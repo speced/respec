@@ -134,7 +134,6 @@ function handleIssues($ins, ghIssues, issueBase, conf) {
   }
 }
 export async function run(conf) {
-  debugger;
   const $ins = $(".issue, .note, .warning, .ednote");
   const ghIssues = {};
   const { issueBase } = conf;
