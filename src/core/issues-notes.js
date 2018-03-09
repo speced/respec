@@ -139,33 +139,44 @@ export function run(conf, doc, cb) {
   var $ins = $(".issue, .note, .warning, .ednote"),
     ghIssues = {},
     issueBase = conf.issueBase;
+  
   if ($ins.length) {
     if (conf.githubAPI) {
-      ghFetch(conf.githubAPI)
-        .then(function (json) {
-          issueBase = issueBase || json.html_url + "/issues/";
-          return fetchIndex(json.issues_url, {
-            // Get back HTML content instead of markdown
-            // See: https://developer.github.com/v3/media/
-            Accept: "application/vnd.github.v3.html+json",
-          });
-        })
-        .then(function (issues) {
-          issues.forEach(function (issue) {
-            ghIssues[issue.number] = issue;
-          });
-          handleIssues($ins, ghIssues, issueBase);
-          cb();
-        }).catch(err => {
-          pub("error", err.message);
-          handleIssues($ins, ghIssues, issueBase);
-          cb();
-        });
+      ghFetchAPI()
     } else {
       handleIssues($ins, ghIssues, issueBase);
       cb();
     }
   } else {
     cb();
+  }
+  
+  async function ghFetchAPI() {
+    try {
+      var JSONToBeSent = await ghFetch (conf.githubAPI)
+      var index = await getIndex (JSONToBeSent);
+      assignIndexToIssue (index);
+    } catch (err)  {
+      pub ("error", err.message);
+      handleIssues ($ins, ghIssues, issueBase);
+      cb ();
+    }
+  }
+  
+  function getIndex(json) {
+    issueBase = issueBase || json.html_url + "/issues/";
+    return fetchIndex (json.issues_url, {
+      // Get back HTML content instead of markdown
+      // See: https://developer.github.com/v3/media/
+      Accept: "application/vnd.github.v3.html+json",
+    });
+  }
+  
+  function assignIndexToIssue(issues) {
+    issues.forEach (function (issue) {
+      ghIssues[issue.number] = issue;
+    });
+    handleIssues ($ins, ghIssues, issueBase);
+    cb ();
   }
 }
