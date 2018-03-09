@@ -3,34 +3,19 @@ var:hover {
   cursor: pointer;
 }
 
-var.col-a {
-  background: yellow;
+var.respec-active {
+  background: var(--respec-background-color);
+  color: var(--respec-color);
 }
 
-var.col-b {
-  background: #726012;
-  color: #fff;
-}
-
-var.col-c {
-  background: #c78e00;
-}
-
-var.col-d {
-  background: #3949ab;
-  color: #fff;
-}
-
-var.col-e {
-  background: #F720E5;
-}
-
-var.bug {
+var.respec-bug {
   background: red;
+  color: #fff;
 }
 
 @media print {
-  var.active, var.bug {
+  var.respec-active, var.respec-bug {
     background: none;
+    color: #000;
   }
 }
