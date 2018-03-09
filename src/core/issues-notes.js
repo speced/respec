@@ -22,7 +22,7 @@ function handleIssues($ins, ghIssues, conf) {
       "<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"
     ),
     $issueList = $issueSummary.find("ul");
-  $ins.each(function(i, inno) {
+  $ins.each(function (i, inno) {
     var $inno = $(inno),
       isIssue = $inno.hasClass("issue"),
       isWarning = $inno.hasClass("warning"),
@@ -46,15 +46,15 @@ function handleIssues($ins, ghIssues, conf) {
     // wrap
     if (!isInline) {
       var $div = $(
-          "<div class='" +
-            report.type +
-            (isFeatureAtRisk ? " atrisk" : "") +
-            "'></div>"
-        ),
+        "<div class='" +
+        report.type +
+        (isFeatureAtRisk ? " atrisk" : "") +
+        "'></div>"
+      ),
         $tit = $(
           "<div role='heading' class='" +
-            report.type +
-            "-title'><span></span></div>"
+          report.type +
+          "-title'><span></span></div>"
         ),
         text = isIssue
           ? isFeatureAtRisk ? "Feature at Risk" : conf.l10n.issue
@@ -78,7 +78,7 @@ function handleIssues($ins, ghIssues, conf) {
                 .find("span")
                 .wrap($("<a href='" + conf.atRiskBase + dataNum + "'/>"));
             }
-            ghIssue = ghIssues[dataNum];
+            ghIssue = ghIssues.get(Number(dataNum));
             if (ghIssue && !report.title) {
               report.title = ghIssue.title;
             }
@@ -97,8 +97,8 @@ function handleIssues($ins, ghIssues, conf) {
             $li.append(
               $(
                 "<span style='text-transform: none'>: " +
-                  report.title +
-                  "</span>"
+                report.title +
+                "</span>"
               )
             );
           }
@@ -135,31 +135,38 @@ function handleIssues($ins, ghIssues, conf) {
 }
 export async function run(conf) {
   const $ins = $(".issue, .note, .warning, .ednote");
-  const ghIssues = {};
+  const ghIssues = new Map();
   const { issueBase } = conf;
   if (!$ins.length) {
     return; // nothing to do.
   }
   if (conf.githubAPI && document.querySelector(".issue[data-number]")) {
-    const issueNumbers = [...document.querySelectorAll(".issue[data-number]")]
-      .map(elem => Number.parseInt(elem.dataset.number, 10))
-      .filter(number => number);
-    for(const issueNumber of issueNumbers ){
-      try {
-        const issueURL = `${conf.githubAPI}/issues/${issueNumber}`;
-        const response = await fetch(issueURL, {
-          // Get back HTML content instead of markdown
-          // See: https://developer.github.com/v3/media/
-          Accept: "application/vnd.github.v3.html+json",
-        });
-        const issue = await response.json();
-        ghIssues[issueNumber] = issue;
-      } catch (err) {
-        pub("error", err.message);
-      }
-    }
+    const issues = await fetchIssuesFromGithub(conf);
+    issues.reduce((ghIssues, [number, issue]) => ghIssues.set(number, issue), ghIssues);
   }
   const { head: headElem } = document;
   headElem.insertBefore(hyperHTML`<style>${[css]}</style>`, headElem.querySelector("link"));
   handleIssues($ins, ghIssues, conf);
+}
+
+async function fetchIssuesFromGithub({ githubAPI }) {
+  const issues = [];
+  const issueNumbers = [...document.querySelectorAll(".issue[data-number]")]
+    .map(elem => Number.parseInt(elem.dataset.number, 10))
+    .filter(number => number);
+  for (const issueNumber of issueNumbers) {
+    try {
+      const issueURL = `${githubAPI}/issues/${issueNumber}`;
+      const response = await fetch(issueURL, {
+        // Get back HTML content instead of markdown
+        // See: https://developer.github.com/v3/media/
+        Accept: "application/vnd.github.v3.html+json",
+      });
+      const issue = await response.json();
+      issues.push([issueNumber, issue]);
+    } catch (err) {
+      console.error(error);
+    }
+  }
+  return issues;
 }
