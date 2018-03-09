@@ -12,7 +12,6 @@
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { pub } from "core/pubsubhub";
 import css from "deps/text!core/css/issues-notes.css";
-import { fetch as ghFetch, fetchIndex } from "core/github";
 export const name = "core/issues-notes";
 
 function handleIssues($ins, ghIssues, conf) {
