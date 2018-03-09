@@ -15,7 +15,8 @@ import css from "deps/text!core/css/issues-notes.css";
 import { fetch as ghFetch, fetchIndex } from "core/github";
 export const name = "core/issues-notes";
 
-function handleIssues($ins, ghIssues, issueBase, conf) {
+function handleIssues($ins, ghIssues, conf) {
+  const { issueBase } = conf;
   var hasDataNum = $(".issue[data-number]").length > 0,
     issueNum = 0,
     $issueSummary = $(
@@ -140,24 +141,26 @@ export async function run(conf) {
   if (!$ins.length) {
     return; // nothing to do.
   }
-  if (conf.githubAPI) {
-    try {
-      const json = await ghFetch(conf.githubAPI);
-      const issueUrl = issueBase || json.html_url + "/issues/";
-      const issues = await fetchIndex(json.issues_url, {
-        // Get back HTML content instead of markdown
-        // See: https://developer.github.com/v3/media/
-        Accept: "application/vnd.github.v3.html+json",
-      });
-      issues.reduce((issuesObj, issue) => {
-        issuesObj[issue.number] = issue;
-        return issuesObj;
-      }, ghIssues);
-    } catch (err) {
-      pub("error", err.message);
+  if (conf.githubAPI && document.querySelector(".issue[data-number]")) {
+    const issueNumbers = [...document.querySelectorAll(".issue[data-number]")]
+      .map(elem => Number.parseInt(elem.dataset.number, 10))
+      .filter(number => number);
+    for(const issueNumber of issueNumbers ){
+      try {
+        const issueURL = `${conf.githubAPI}/issues/${issueNumber}`;
+        const response = await fetch(issueURL, {
+          // Get back HTML content instead of markdown
+          // See: https://developer.github.com/v3/media/
+          Accept: "application/vnd.github.v3.html+json",
+        });
+        const issue = await response.json();
+        ghIssues[issueNumber] = issue;
+      } catch (err) {
+        pub("error", err.message);
+      }
     }
   }
   const { head: headElem } = document;
   headElem.insertBefore(hyperHTML`<style>${[css]}</style>`, headElem.querySelector("link"));
-  handleIssues($ins, ghIssues, issueBase, conf);
+  handleIssues($ins, ghIssues, conf);
 }
