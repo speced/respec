@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "20.0.3",
+  "version": "20.0.4",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -76,7 +76,7 @@
     "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
-    "colors": "^1.1.2",
+    "colors": "^1.2.0",
     "command-line-args": "^5.0.2",
     "command-line-usage": "^4.1.0",
     "epipebomb": "^1.0.0",
@@ -87,7 +87,7 @@
     "marked": "^0.3.17",
     "prompt": "^1.0.0",
     "puppeteer": "^1.1.1",
-    "snyk": "^1.69.10"
+    "snyk": "^1.69.11"
   },
   "prettier": {
     "trailingComma": "es5"
