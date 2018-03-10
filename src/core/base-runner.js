@@ -27,8 +27,8 @@ function toRunnable(plug) {
         performance.mark(name + "-start");
       }
       try {
-        // Modern plugins are async or normal functions, take one argument (conf)
-        if (plug.run.length === 1) {
+        // Modern plugins are async or normal functions, take zero or one argument (conf)
+        if (plug.run.length <= 1) {
           await plug.run(config);
           resolve();
         } else {
