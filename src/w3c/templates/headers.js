@@ -5,9 +5,16 @@ import showLink from "./show-link";
 
 export default conf => {
   const html = hyperHTML;
+  const h1 = document.getElementById("title");
+  let title = conf.title;
+  if (h1) {
+    title = html`${{html: h1.innerHTML}}`;
+    h1.remove();
+  }
   return html`<div class='head'>
   ${conf.logos.map(showLogo)}
   <h1 class='title p-name' id='title'>${conf.title}</h1>
+  <h1 class='title p-name' id='title'>${title}</h1>
   ${conf.subtitle ? html`
     <h2 id='subtitle'>${conf.subtitle}</h2>
   ` : ""}
