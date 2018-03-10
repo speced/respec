@@ -586,11 +586,16 @@ function writeInterfaceDefinition(opt, fixes = {}) {
     var len = idlType2Text(it.idlType).length;
     if (it.type === "attribute") {
       var qualifiersLen = writeAttributeQualifiers(it).length;
-      maxAttr = len > maxAttr ? len : maxAttr;
-      maxAttrQualifiers =
-        qualifiersLen > maxAttrQualifiers ? qualifiersLen : maxAttrQualifiers;
-    } else if (it.type === "operation") maxMeth = len > maxMeth ? len : maxMeth;
-    else if (it.type === "const") maxConst = len > maxConst ? len : maxConst;
+      maxAttr = Math.max(len, maxAttr);
+      maxAttrQualifiers = Math.max(qualifiersLen, maxAttrQualifiers);
+    } else if (it.type === "operation") {
+      if (it.static) {
+        len += "static ".length;
+      }
+      maxMeth = Math.max(len, maxMeth);
+    } else if (it.type === "const") {
+      maxConst = Math.max(len, maxConst);
+    }
   }
   var children = obj.members
     .map(function(ch) {
@@ -672,13 +677,12 @@ function writeMethod(meth, max, indent) {
     });
   var params = paramObjs.join(", ");
   var len = idlType2Text(meth.idlType).length;
-  if (meth.static) len += 7;
   var specialProps = [
     "getter",
     "setter",
     "deleter",
-    "legacycaller",
     "stringifier",
+    "static", // not "special op", but serves same role
   ];
   var special = "";
   for (var i in specialProps) {
@@ -692,7 +696,6 @@ function writeMethod(meth, max, indent) {
   var methObj = {
     obj: meth,
     indent: indent,
-    static: meth.static ? "static " : "",
     special: special,
     pad: pad,
     children: params,
