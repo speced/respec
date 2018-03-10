@@ -355,9 +355,13 @@ describe("Core - WebIDL", function() {
     setter void                    named();
     // 9
     static Promise<RTCCertificate> generateCertificate(AlgorithmIdentifier keygenAlgorithm);
+    // 10
+    stringifier DOMString          identifier();
+    // 11
+    stringifier DOMString          ();
 };`
     expect($target.text()).toEqual(text);
-    expect($target.find(".idlMethod").length).toEqual(9);
+    expect($target.find(".idlMethod").length).toEqual(11);
     var $meth = $target.find(".idlMethod").first();
     expect($meth.find(".idlMethType").text()).toEqual("void");
     expect($meth.find(".idlMethName").text()).toEqual("basic");
