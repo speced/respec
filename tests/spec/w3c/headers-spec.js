@@ -221,6 +221,25 @@ describe("W3C — Headers", function() {
     });
   });
 
+  describe("title", () => {
+    it("uses <h1> if already present", async () => {
+      const ops = makeStandardOps();
+      ops.body = "<h1 id='title'>Hello <code>World</code></h1>" + makeDefaultBody();
+      const doc = await makeRSDoc(ops);
+
+      const titleInHead = doc.querySelectorAll(".head .title.p-name");
+      expect(titleInHead.length).toEqual(1);
+
+      const title = doc.querySelectorAll(".title.p-name");
+      expect(title.length).toEqual(1); // original h1#title is removed
+
+      const unescapedHTML = doc.querySelectorAll("#title code");
+      expect(unescapedHTML.length).toEqual(1); // html is not escaped
+
+      expect(doc.getElementById("title").innerText).toEqual("Hello World");
+    });
+  });
+
   describe("subtitle", () => {
     /*it("handles missing subtitle", async () => {
       const ops = makeStandardOps();
