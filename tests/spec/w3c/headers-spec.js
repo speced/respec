@@ -231,10 +231,10 @@ describe("W3C — Headers", function() {
       expect(titleInHead.length).toEqual(1);
 
       const title = doc.querySelectorAll(".title.p-name");
-      expect(title.length).toEqual(1); // original h1#title is removed
+      expect(title.length).toEqual(1);
 
       const unescapedHTML = doc.querySelectorAll("#title code");
-      expect(unescapedHTML.length).toEqual(1); // html is not escaped
+      expect(unescapedHTML.length).toEqual(1);
 
       expect(doc.getElementById("title").innerText).toEqual("Hello World");
     });
@@ -254,10 +254,14 @@ describe("W3C — Headers", function() {
     it("uses existing h2#subtitle as subtitle", async () => {
       const ops = makeStandardOps();
       ops.body = "<h2 id='subtitle'>This is a pre existing subtitle</h2>" + makeDefaultBody();
+      
       const doc = await makeRSDoc(ops);
-      console.log(document.getElementById('subtitle'));
-      expect($("h2#subtitle", doc).length).toEqual(1);
-      expect($("h2#subtitle", doc).text()).toEqual("This is a pre existing subtitle");
+
+      const subTitleElement = doc.querySelector("h2#subtitle");
+      
+      expect(subTitleElement.length).toEqual(1);
+      
+      expect(subTitleElement.textContent).toEqual("This is a pre existing subtitle");
     })
 
     it("takes subtitle into account", async () => {
