@@ -241,7 +241,7 @@ describe("W3C — Headers", function() {
   });
 
   describe("subtitle", () => {
-    /*it("handles missing subtitle", async () => {
+    it("handles missing subtitle", async () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "REC",
@@ -249,7 +249,7 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       expect($("#subtitle", doc).length).toEqual(0);
-    });*/
+    });
     
     it("uses existing h2#subtitle as subtitle", async () => {
       const ops = makeStandardOps();
@@ -257,11 +257,11 @@ describe("W3C — Headers", function() {
       
       const doc = await makeRSDoc(ops);
 
-      const subTitleElement = doc.querySelector("h2#subtitle");
-      
+      const subTitleElement = doc.querySelectorAll("h2#subtitle");
       expect(subTitleElement.length).toEqual(1);
       
-      expect(subTitleElement.textContent).toEqual("This is a pre existing subtitle");
+      const [forInnerText] = subTitleElement;
+      expect(forInnerText.textContent).toEqual("This is a pre existing subtitle");
     })
 
     it("takes subtitle into account", async () => {

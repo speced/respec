@@ -20,21 +20,25 @@ export default conf => {
   }
   specTitleElem.classList.add("title", "p-name");
 
-  const specSubTitleElem =
-    document.querySelector("h2#subtitle") || document.createElement("h2");
-  if (specSubTitleElem.parentElement) {
-    specSubTitleElem.remove();
-    conf.subtitle = specSubTitleElem.textContent.trim();
-  } else {
-    specSubTitleElem.textContent = conf.subtitle;
-    specSubTitleElem.id = "subtitle";
+  var specSubTitleElem = null;
+  
+  if(conf.subtitle) {
+    specSubTitleElem =
+      document.querySelector ("h2#subtitle") || document.createElement ("h2");
+    if (specSubTitleElem.parentElement) {
+      specSubTitleElem.remove ();
+      conf.subtitle = specSubTitleElem.textContent.trim ();
+    } else {
+      specSubTitleElem.textContent = conf.subtitle;
+      specSubTitleElem.id = "subtitle";
+    }
+    specSubTitleElem.classList.add ("subtitle");
   }
-  specSubTitleElem.classList.add("subtitle");
-
+  
   return html`<div class='head'>
   ${conf.logos.map(showLogo)}
   ${specTitleElem}
-  ${specSubTitleElem}
+  ${conf.subtitle ? specSubTitleElem : ""}
   <h2>${conf.prependW3C ? `W3C ` : ""}${ conf.textStatus } <time class='dt-published' datetime='${conf.dashDate}'>${conf.publishHumanDate}</time></h2>
   <dl>
     ${!conf.isNoTrack ? html`
