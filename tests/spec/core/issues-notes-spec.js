@@ -160,6 +160,33 @@ describe("Core — Issues and Notes", function() {
     );
   });
 
+  it("removes closed issues from spec", async () => {
+    const githubConfig = {
+      github: "https://github.com/mock-company/mock-repository",
+      githubAPI: `${window.location.origin}/tests/data`
+    };
+    const ops = {
+      config: githubConfig,
+      body:
+        makeDefaultBody() +
+        "<div class='issue' id='this-should-not-exist' data-number='1548'></div>" +
+        "<div class='issue' data-number='1540'></div>" +
+        "<div class='issue' id='i-should-be-here-too'></div>" +
+        "<section id='issue-summary'></section>",
+    };
+    const doc = await makeRSDoc(ops);
+    const issueDiv1 = doc.getElementById("this-should-not-exist");
+    expect(issueDiv1).toBeFalsy();
+    const issueDiv2 = doc.getElementById("issue-1540");
+    expect(issueDiv2).toBeTruthy();
+    const issueDiv3 = doc.getElementById("i-should-be-here-too");
+    expect(issueDiv3).toBeTruthy();
+    const summarySection = doc.getElementById("issue-summary");
+    expect(summarySection).toBeTruthy();
+    const  { innerText } = summarySection.querySelector("[href='#issue-1540']");
+    expect(innerText).toBe("Issue 1540");
+  });
+
   it("should link to external issue tracker for features at risk", function(
     done
   ) {
