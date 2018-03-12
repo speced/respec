@@ -253,7 +253,7 @@ describe("W3C — Headers", function() {
     
     it("uses existing h2#subtitle as subtitle", async () => {
       const ops = makeStandardOps();
-      ops.body = "<h2 id='subtitle'>This is a pre existing subtitle</h2>" + makeDefaultBody();
+      ops.body = "<h2 id='subtitle'>This is a pre existing <code>subtitle</code></h2>" + makeDefaultBody();
       
       const doc = await makeRSDoc(ops);
 
@@ -262,6 +262,9 @@ describe("W3C — Headers", function() {
       
       const [forInnerText] = subTitleElement;
       expect(forInnerText.textContent).toEqual("This is a pre existing subtitle");
+      
+      const childElement = forInnerText.querySelector("code")
+      expect(childElement.textContent).toEqual("subtitle");
     })
 
     it("takes subtitle into account", async () => {

@@ -33,11 +33,11 @@ export default conf => {
       specSubTitleElem.id = "subtitle";
     }
     specSubTitleElem.classList.add("subtitle");
-  }  
+  }
   return html`<div class='head'>
   ${conf.logos.map(showLogo)}
   ${specTitleElem}
-  ${conf.subtitle ? specSubTitleElem : ""}
+  ${specSubTitleElem}
   <h2>${conf.prependW3C ? `W3C ` : ""}${ conf.textStatus } <time class='dt-published' datetime='${conf.dashDate}'>${conf.publishHumanDate}</time></h2>
   <dl>
     ${!conf.isNoTrack ? html`
