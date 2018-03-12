@@ -53,7 +53,7 @@ const usageSections = [
     ],
   },
   {
-    content: "Project home: [underline]{https://github.com/w3c/respec}",
+    content: "Project home: {underline https://github.com/w3c/respec}",
     raw: true,
   },
 ];
