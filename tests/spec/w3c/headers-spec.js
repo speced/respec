@@ -250,6 +250,19 @@ describe("W3C — Headers", function() {
       const doc = await makeRSDoc(ops);
       expect($("#subtitle", doc).length).toEqual(0);
     });
+    
+    it("uses existing h2#subtitle as subtitle", async () => {
+      const ops = makeStandardOps();
+      ops.body = "<h2 id='subtitle'>This is a pre existing subtitle</h2>" + makeDefaultBody();
+      
+      const doc = await makeRSDoc(ops);
+
+      const subTitleElement = doc.querySelectorAll("h2#subtitle");
+      expect(subTitleElement.length).toEqual(1);
+      
+      const [forInnerText] = subTitleElement;
+      expect(forInnerText.textContent).toEqual("This is a pre existing subtitle");
+    })
 
     it("takes subtitle into account", async () => {
       const ops = makeStandardOps();
