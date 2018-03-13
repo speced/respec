@@ -24,8 +24,9 @@ function handleIssues($ins, ghIssues, conf) {
     $issueList = $issueSummary.find("ul");
   if (githubAPI) {
     Array.from($ins)
-      .filter(({ dataset : { number : value } }) => ghIssues.get(Number(value)).state === "closed")
+      .filter(({ dataset: { number: value } }) => value !== undefined && ghIssues.get(Number(value)).state === "closed")
       .forEach(issue => {
+        debugger;
         const { dataset: { number } } = issue;
         const msg = `Github issue ${number} was closed on GitHub, so removing from spec`;
         pub("warn", msg);
