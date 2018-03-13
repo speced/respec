@@ -187,6 +187,9 @@ describe("Core — Issues and Notes", function () {
     expect(summarySection).toBeTruthy();
     const { innerText } = summarySection.querySelector("[href='#issue-1540']");
     expect(innerText).toBe("Issue 1540");
+    const issueDiv404 = doc.getElementById("this-is-404");
+    expect(issueDiv404).toBeTruthy();
+    expect(issueDiv404.textContent).toEqual("this is 404");
   });
 
   it("should link to external issue tracker for features at risk", function (
