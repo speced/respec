@@ -26,7 +26,6 @@ function handleIssues($ins, ghIssues, conf) {
     Array.from($ins)
       .filter(({ dataset: { number: value } }) => value !== undefined && ghIssues.get(Number(value)).state === "closed")
       .forEach(issue => {
-        debugger;
         const { dataset: { number } } = issue;
         const msg = `Github issue ${number} was closed on GitHub, so removing from spec`;
         pub("warn", msg);
@@ -63,11 +62,11 @@ function handleIssues($ins, ghIssues, conf) {
           report.type +
           (isFeatureAtRisk ? " atrisk" : "") +
           "'></div>"
-          ),
+        ),
           $tit = $(
-          "<div role='heading' class='" +
-          report.type +
-          "-title'><span></span></div>"
+            "<div role='heading' class='" +
+            report.type +
+            "-title'><span></span></div>"
           ),
           text = isIssue
             ? isFeatureAtRisk ? "Feature at Risk" : conf.l10n.issue
@@ -153,6 +152,7 @@ async function fetchIssuesFromGithub({ githubAPI }) {
     .map(elem => Number.parseInt(elem.dataset.number, 10))
     .filter(number => number);
   for (const issueNumber of issueNumbers) {
+    let issue = { title: "", number: issueNumber, status: "" };
     try {
       const issueURL = `${githubAPI}/issues/${issueNumber}`;
       const response = await fetch(issueURL, {
@@ -160,14 +160,22 @@ async function fetchIssuesFromGithub({ githubAPI }) {
         // See: https://developer.github.com/v3/media/
         Accept: "application/vnd.github.v3.html+json",
       });
-      const issue = await response.json();
-      issues.push([issueNumber, issue]);
+      if (!response.ok) {
+        switch (response.status) {
+          case 404:
+            throw new Error(`Couldn't find issue on Github. Check if it exist?`);
+          default:
+            throw new Error(`Network error. Github is down? or too many requests?`);
+        }
+      }
+      const json = await response.json();
+      Object.assign(issue, json);
     } catch (err) {
       console.error(err);
-      const msg = `There was an error fetching ${issueNumber} from GitHub. See developer console.`;
+      const msg = `Error fetching issue "${issueNumber}" from GitHub. ${err.message}. See developer console.`;
       pub("error", msg);
-      issues.push([issueNumber, { title: "" }]);
     }
+    issues.push([issueNumber, issue]);
   }
   return issues;
 }
