@@ -1,7 +1,7 @@
 "use strict";
-describe("Core — Issues and Notes", function() {
+describe("Core — Issues and Notes", function () {
   afterAll(flushIframes);
-  it("should process issues and notes", function(done) {
+  it("should process issues and notes", function (done) {
     var ops = {
       config: makeBasicConfig(),
       body:
@@ -15,7 +15,7 @@ describe("Core — Issues and Notes", function() {
     };
     makeRSDoc(
       ops,
-      function(doc) {
+      function (doc) {
         var $iss = $("div.issue", doc).first();
         var $atr = $("div.atrisk", doc);
         var $piss = $iss.find("p");
@@ -51,7 +51,7 @@ describe("Core — Issues and Notes", function() {
     );
   });
 
-  it("should process ednotes", function(done) {
+  it("should process ednotes", function (done) {
     var ops = {
       config: makeBasicConfig(),
       body:
@@ -61,7 +61,7 @@ describe("Core — Issues and Notes", function() {
     };
     makeRSDoc(
       ops,
-      function(doc) {
+      function (doc) {
         var $not = $("div.ednote", doc);
         var $pnot = $not.find("p");
         expect($not.find("div.ednote-title").length).toEqual(1);
@@ -75,7 +75,7 @@ describe("Core — Issues and Notes", function() {
     );
   });
 
-  it("should process warnings", function(done) {
+  it("should process warnings", function (done) {
     var ops = {
       config: makeBasicConfig(),
       body:
@@ -86,7 +86,7 @@ describe("Core — Issues and Notes", function() {
     };
     makeRSDoc(
       ops,
-      function(doc) {
+      function (doc) {
         var $sec = $("section", doc);
         expect($sec.find(".warning").length).toEqual(2);
         expect($sec.find(".warning-title").length).toEqual(1);
@@ -96,7 +96,7 @@ describe("Core — Issues and Notes", function() {
     );
   });
 
-  it("should use data-number for issue and note numbers", function(done) {
+  it("should use data-number for issue and note numbers", function (done) {
     var ops = {
       config: makeBasicConfig(),
       body:
@@ -107,7 +107,7 @@ describe("Core — Issues and Notes", function() {
     };
     makeRSDoc(
       ops,
-      function(doc) {
+      function (doc) {
         var $i10 = $("#i10", doc).parent("div");
         var $i11 = $("#i11", doc).parent("div");
         var $ixx = $("#ixx", doc).parent("div");
@@ -126,7 +126,7 @@ describe("Core — Issues and Notes", function() {
     );
   });
 
-  it("should link to external issue tracker", function(done) {
+  it("should link to external issue tracker", function (done) {
     var issueBaseConfig = {
       editors: [
         {
@@ -145,7 +145,7 @@ describe("Core — Issues and Notes", function() {
     };
     makeRSDoc(
       ops,
-      function(doc) {
+      function (doc) {
         var $iss = $("div.issue", doc);
         var $piss = $iss.find("p");
         expect($iss.find("div.issue-title").length).toEqual(1);
@@ -168,11 +168,12 @@ describe("Core — Issues and Notes", function() {
     const ops = {
       config: githubConfig,
       body:
-        makeDefaultBody() +
-        "<div class='issue' id='this-should-not-exist' data-number='1548'></div>" +
-        "<div class='issue' data-number='1540'></div>" +
-        "<div class='issue' id='i-should-be-here-too'></div>" +
-        "<section id='issue-summary'></section>",
+        makeDefaultBody() + `
+        <div class='issue' id='this-should-not-exist' data-number='1548'>issue is closed on github</div>
+        <div class='issue' data-number='1540'>issue is open on github</div>
+        <div class='issue' id='i-should-be-here-too'>regular issue</div>
+        <section id='issue-summary'></section>
+      `
     };
     const doc = await makeRSDoc(ops);
     const issueDiv1 = doc.getElementById("this-should-not-exist");
@@ -183,11 +184,11 @@ describe("Core — Issues and Notes", function() {
     expect(issueDiv3).toBeTruthy();
     const summarySection = doc.getElementById("issue-summary");
     expect(summarySection).toBeTruthy();
-    const  { innerText } = summarySection.querySelector("[href='#issue-1540']");
+    const { innerText } = summarySection.querySelector("[href='#issue-1540']");
     expect(innerText).toBe("Issue 1540");
   });
 
-  it("should link to external issue tracker for features at risk", function(
+  it("should link to external issue tracker for features at risk", function (
     done
   ) {
     var atRiskBaseConfig = {
@@ -209,7 +210,7 @@ describe("Core — Issues and Notes", function() {
     };
     makeRSDoc(
       ops,
-      function(doc) {
+      function (doc) {
         var $iss = $("div.atrisk", doc);
         var $piss = $iss.find("p");
         expect($iss.find("div.issue-title").length).toEqual(1);
