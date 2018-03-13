@@ -152,7 +152,7 @@ async function fetchIssuesFromGithub({ githubAPI }) {
     .map(elem => Number.parseInt(elem.dataset.number, 10))
     .filter(number => number);
   for (const issueNumber of issueNumbers) {
-    const issue = { title: "", number: issueNumber, status: "" };
+    let issue; // depends on how fetching goes...
     try {
       const issueURL = `${githubAPI}/issues/${issueNumber}`;
       const response = await fetch(issueURL, {
@@ -168,12 +168,12 @@ async function fetchIssuesFromGithub({ githubAPI }) {
             throw new Error("Network error. Github is down? or too many requests?");
         }
       }
-      const json = await response.json();
-      Object.assign(issue, json);
+      issue = await response.json(); // can throw too
     } catch (err) {
       console.error(err);
       const msg = `Error fetching issue "${issueNumber}" from GitHub. ${err.message}. See developer console.`;
       pub("error", msg);
+      issue = { title: "", number: issueNumber, status: "" };
     }
     issues.push([issueNumber, issue]);
   }
