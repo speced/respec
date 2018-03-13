@@ -171,7 +171,7 @@ async function fetchIssuesFromGithub({ githubAPI }) {
       issue = await response.json(); // can throw too
     } catch (err) {
       console.error(err);
-      const msg = `Error fetching issue "${issueNumber}" from GitHub. ${err.message}. See developer console.`;
+      const msg = `Error fetching issue #${issueNumber} from GitHub. ${err.message}. See developer console.`;
       pub("error", msg);
       issue = { title: "", number: issueNumber, status: "" };
     }
