@@ -36,6 +36,11 @@ describe("W3C — Bibliographic References", () => {
         href: "http://test.com",
         publisher: "Publisher Here",
       },
+      TestRef4: {
+        title: "Fourth test",
+        href: "http://test.com",
+        authors: ["And another author"],
+      },
       FOOBARGLOP: {
         aliasOf: "BARBAR",
       },
@@ -46,7 +51,7 @@ describe("W3C — Bibliographic References", () => {
   };
   const body = `
     <section id='sotd'>
-      <p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p>
+      <p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]] [[TestRef4]]</p>
     </section>
     <section id='sample'>
       <h2>Privacy</h2>
@@ -101,6 +106,18 @@ describe("W3C — Bibliographic References", () => {
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/Publisher Here\.\s/);
   });
+
+  it("displays the reference for APA citation", async() => {
+    // Make sure the reference is added.
+    let ref = doc.querySelector("#bib-TestRef4 + dd");
+    expect(ref).toBeTruthy();
+    // This prevents Jasmine from taking down the whole test suite if SpecRef is down.
+    if (!specRefOk) {
+      throw new Error(
+        "SpecRef seems to be down. Can't proceed with this spec."
+      );
+    }
+  }
 
   it("resolves a localy-aliased spec", () => {
     const ref = doc.querySelector("#bib-FOOBARGLOP + dd");
