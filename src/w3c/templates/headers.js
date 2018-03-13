@@ -21,7 +21,6 @@ export default conf => {
   specTitleElem.classList.add("title", "p-name");
 
   let specSubTitleElem = null;
-
   if (conf.subtitle) {
     specSubTitleElem =
       document.querySelector("h2#subtitle") || document.createElement("h2");
@@ -38,7 +37,7 @@ export default conf => {
   ${conf.logos.map(showLogo)}
   ${specTitleElem}
   ${specSubTitleElem}
-  <h2>${conf.prependW3C ? `W3C ` : ""}${ conf.textStatus } <time class='dt-published' datetime='${conf.dashDate}'>${conf.publishHumanDate}</time></h2>
+  <h2>${conf.prependW3C ? "W3C " : ""}${ conf.textStatus } <time class='dt-published' datetime='${conf.dashDate}'>${conf.publishHumanDate}</time></h2>
   <dl>
     ${!conf.isNoTrack ? html`
       <dt>${conf.l10n.this_version}</dt>
