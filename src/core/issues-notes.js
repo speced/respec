@@ -163,9 +163,9 @@ async function fetchIssuesFromGithub({ githubAPI }) {
       if (!response.ok) {
         switch (response.status) {
           case 404:
-            throw new Error(`Couldn't find issue on Github. Check if it exist?`);
+            throw new Error("Couldn't find issue on Github. Check if it exist?");
           default:
-            throw new Error(`Network error. Github is down? or too many requests?`);
+            throw new Error("Network error. Github is down? or too many requests?");
         }
       }
       const json = await response.json();
