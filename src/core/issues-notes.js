@@ -173,7 +173,7 @@ async function fetchIssuesFromGithub({ githubAPI }) {
       console.error(err);
       const msg = `Error fetching issue #${issueNumber} from GitHub. ${err.message}. See developer console.`;
       pub("error", msg);
-      issue = { title: "", number: issueNumber, status: "" };
+      issue = { title: "", number: issueNumber, state: "" };
     }
     issues.push([issueNumber, issue]);
   }
