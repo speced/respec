@@ -172,6 +172,7 @@ describe("Core — Issues and Notes", function () {
         <div class='issue' id='this-should-not-exist' data-number='1548'>issue is closed on github</div>
         <div class='issue' data-number='1540'>issue is open on github</div>
         <div class='issue' id='i-should-be-here-too'>regular issue</div>
+        <div class='issue' id='this-is-404' data-number='404'>this is 404</div>
         <section id='issue-summary'></section>
       `
     };
