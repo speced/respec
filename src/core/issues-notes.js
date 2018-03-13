@@ -152,7 +152,7 @@ async function fetchIssuesFromGithub({ githubAPI }) {
     .map(elem => Number.parseInt(elem.dataset.number, 10))
     .filter(number => number);
   for (const issueNumber of issueNumbers) {
-    let issue = { title: "", number: issueNumber, status: "" };
+    const issue = { title: "", number: issueNumber, status: "" };
     try {
       const issueURL = `${githubAPI}/issues/${issueNumber}`;
       const response = await fetch(issueURL, {
