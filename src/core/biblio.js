@@ -93,24 +93,76 @@ export function wireReference(rawRef, target = "_blank") {
   `;
 }
 
-export function stringifyReference(ref) {
+// Author, A. (Year, Month Date of Publication). Article title. Retrieved from URL
+function entryToAPA(ref) {
+  const authors =
+    ref.authors && ref.authors.length
+      ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : ""}.`
+      : "";
+  const date = ref.date ? `(${ref.date}).` : "";
+  const title = ref.href
+    ? `<a href="${ref.href}"><cite>${ref.title}</cite></a>. `
+    : `${ref.title}`;
+  const url = ref.href
+    ? `Retrieved from URL: <a href="${ref.href}">${ref.href}</a>`
+    : "";
+
+  return `${authors} ${date} ${title} ${url}`;
+}
+
+//Author’s Last name, First name. “Title of the Article or Individual Page.” Title of the website, Name of the publisher, Date of publication, URL.
+function entryToMLA(ref) {
+  const authors =
+    ref.authors && ref.authors.length
+      ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : ""}.`
+      : "";
+  const date = ref.date ? `${ref.date}, ` : "";
+  const title = ref.href
+    ? `<a href="${ref.href}"> "<cite>${ref.title}</cite>" </a>. `
+    : `${ref.title}`;
+  const url = ref.href ? `<a href="${ref.href}">${ref.href}</a>` : "";
+  const publisher = ref.publisher
+    ? `${ref.publisher} ${ref.publisher.endsWith(".")}`
+    : "";
+
+  return `${authors} ${title} ${publisher} ${date} ${url}`;
+}
+
+// what ReSpec currently does...
+function entryToW3C(ref) {
+  const title = ref.href
+    ? `<a href="${ref.href}"> <cite>${ref.title}</cite> </a>. `
+    : `${ref.title}`;
+  const authors =
+    ref.authors && ref.authors.length
+      ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : "."}.`
+      : "";
+  const publisher = ref.publisher
+    ? `${ref.publisher} ${ref.publisher.endsWith(".")}`
+    : "";
+  const date = ref.date ? `${ref.date}. ` : "";
+  const status = ref.status
+    ? (REF_STATUSES.get(ref.status) || ref.status) + ". "
+    : "";
+  const url = ref.href ? `URL: <a href="${ref.href}">${ref.href}</a>` : "";
+
+  return `${title} ${authors} ${publisher} ${date} ${status} ${url}`;
+}
+
+export function stringifyReference(ref, style) {
   if (typeof ref === "string") return ref;
-  let output = `<cite>${ref.title}</cite>`;
-  if (ref.href) {
-    output = `<a href="${ref.href}">${output}</a>. `;
+  const nomarlizedRef = Object.assign({}, defaultsReference, ref);
+  let output = "";
+  switch (style) {
+    case "APA":
+      output = entryToAPA(nomarlizedRef);
+      break;
+    case "MLA":
+      output = entryToMLA(nomarlizedRef);
+      break;
+    default:
+      output = entryToW3C(nomarlizedRef);
   }
-  if (ref.authors && ref.authors.length) {
-    output += ref.authors.join("; ");
-    if (ref.etAl) output += " et al";
-    output += ".";
-  }
-  if (ref.publisher) {
-    const publisher = ref.publisher + (/\.$/.test(ref.publisher) ? "" : ".");
-    output = `${output} ${publisher} `;
-  }
-  if (ref.date) output += ref.date + ". ";
-  if (ref.status) output += (REF_STATUSES.get(ref.status) || ref.status) + ". ";
-  if (ref.href) output += `URL: <a href="${ref.href}">${ref.href}</a>`;
   return output;
 }
 
@@ -154,6 +206,7 @@ function bibref(conf) {
         .appendTo($dl);
       var $dd = $("<dd></dd>").appendTo($dl);
       var refcontent = conf.biblio[ref];
+      var refstyle = conf.biblioStyle[key];
       var circular = {};
       var key = ref;
       circular[ref] = true;
@@ -165,13 +218,14 @@ function bibref(conf) {
         } else {
           key = refcontent.aliasOf;
           refcontent = conf.biblio[key];
+          refstyle = conf.biblioStyle[key];
           circular[key] = true;
         }
       }
       aliases[key] = aliases[key] || [];
       if (aliases[key].indexOf(ref) < 0) aliases[key].push(ref);
       if (refcontent) {
-        $dd.html(stringifyReference(refcontent) + "\n");
+        $dd.html(stringifyReference(refcontent, refstyle) + "\n");
       } else {
         if (!badrefs[ref]) badrefs[ref] = 0;
         badrefs[ref]++;
