@@ -263,9 +263,9 @@ describe("W3C — Headers", function() {
       const [forInnerText] = subTitleElement;
       expect(forInnerText.textContent).toEqual("This is a pre existing subtitle");
       
-      const childElement = forInnerText.querySelector("code")
+      const childElement = forInnerText.querySelector("code");
       expect(childElement.textContent).toEqual("subtitle");
-    })
+    });
 
     it("takes subtitle into account", async () => {
       const ops = makeStandardOps();
