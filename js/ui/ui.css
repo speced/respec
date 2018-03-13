@@ -93,6 +93,16 @@
   font-size: 0.8em;
 }
 
+.respec-gh-label {
+  padding: 5px;
+  margin: 0 2px 0 2px;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 4px;
+  position: relative;
+  bottom: 2px;
+}
+
 #respec-menu:not([hidden]) {
   display: block;
 }

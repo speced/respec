@@ -126,6 +126,30 @@ describe("Core — Issues and Notes", function () {
     );
   });
 
+  it("shows labels for github issues", async () => {
+    const githubConfig = {
+      github: "https://github.com/mock-company/mock-repository",
+      githubAPI: `${window.location.origin}/tests/data`
+    };
+    const ops = {
+      config: githubConfig,
+      body:
+        makeDefaultBody() + `
+        <div class='issue' data-number='1540'>issue is open on github</div>
+        <section id='issue-summary'></section>
+        `
+    };
+    const doc = await makeRSDoc(ops);
+    const issueDiv = doc.getElementById('issue-1540');
+    expect(issueDiv).toBeTruthy();
+    const label0 = doc.getElementById('1540-label-0');
+    expect(label0).toBeTruthy();
+    expect(label0.innerText).toEqual("refactor");
+    const label1 = doc.getElementById('1540-label-1');
+    expect(label1).toBeTruthy();
+    expect(label1.innerText).toEqual("bug");
+  });
+
   it("should link to external issue tracker", function (done) {
     var issueBaseConfig = {
       editors: [
@@ -174,7 +198,7 @@ describe("Core — Issues and Notes", function () {
         <div class='issue' id='i-should-be-here-too'>regular issue</div>
         <div class='issue' id='this-is-404' data-number='404'>this is 404</div>
         <section id='issue-summary'></section>
-      `
+        `
     };
     const doc = await makeRSDoc(ops);
     const issueDiv1 = doc.getElementById("this-should-not-exist");

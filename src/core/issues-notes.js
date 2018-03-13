@@ -118,7 +118,37 @@ function handleIssues($ins, ghIssues, conf) {
           }
         }
         $tit.find("span").text(text);
-        if (report.title) {
+        if (report.title && githubAPI) {
+          var labelListSpan = document.createElement('span');
+          Array.from(ghIssue.labels)
+            .forEach((label, index) => {
+              var labelSpan = document.createElement('span');
+              labelSpan.classList.add("respec-gh-label");
+              labelSpan.style.backgroundColor = `#${label.color}`;
+              labelSpan.style.textTransform = 'none';
+              labelSpan.id = `${dataNum}-label-${index}`;
+              labelSpan.innerText = label.name;
+              const color = label.color.substring(1);
+              const rgb = parseInt(color, 16);
+              const red = (rgb >> 16) & 0xff;
+              const green = (rgb >>  8) & 0xff;
+              const blue = (rgb >>  0) & 0xff;
+              const illumination = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+              if (illumination > 140) {
+                labelSpan.style.color = '#000000'
+              } else {
+                labelSpan.style.color = '#ffffff'
+              }
+              labelListSpan.appendChild(labelSpan);
+            });
+          $tit.append(
+            $(
+              "<span style='text-transform: none'>: " + report.title + labelListSpan.innerHTML
+              +"</span>"
+            )
+          );
+          $inno.removeAttr("title");
+        } else if (report.title) {
           $tit.append(
             $("<span style='text-transform: none'>: " + report.title + "</span>")
           );
@@ -163,7 +193,7 @@ async function fetchIssuesFromGithub({ githubAPI }) {
       if (!response.ok) {
         switch (response.status) {
           case 404:
-            throw new Error("Couldn't find issue on Github. Check if it exist?");
+            throw new Error("Couldn't find issue on Github. Check if it exists?");
           default:
             throw new Error("Network error. Github is down? or too many requests?");
         }
