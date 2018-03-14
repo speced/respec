@@ -1,5 +1,159 @@
 # Change Log
 
+## [Unreleased](https://github.com/w3c/respec/tree/HEAD)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v20.0.4...HEAD)
+
+**Fixed bugs:**
+
+- Issues that are closed shouldn't show up in the spec [\#670](https://github.com/w3c/respec/issues/670)
+
+**Closed issues:**
+
+- Configure Jasmine to not run in random [\#1552](https://github.com/w3c/respec/issues/1552)
+
+**Merged pull requests:**
+
+- fix\(core/issues-notes\): closed issue should be removed from spec [\#1570](https://github.com/w3c/respec/pull/1570) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(package\): update command-line-usage to version 5.0.2 [\#1569](https://github.com/w3c/respec/pull/1569) ([saschanaz](https://github.com/saschanaz))
+
+## [v20.0.4](https://github.com/w3c/respec/tree/v20.0.4) (2018-03-10)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.0.3...v20.0.4)
+
+**Implemented enhancements:**
+
+- Test process version [\#1128](https://github.com/w3c/respec/issues/1128)
+
+**Fixed bugs:**
+
+- RangeError: Invalid count value exception in idn\(\) [\#1559](https://github.com/w3c/respec/issues/1559)
+- Back to Top button doesn't work [\#1545](https://github.com/w3c/respec/issues/1545)
+
+**Closed issues:**
+
+- THIS IS A TEST ISSUE [\#1548](https://github.com/w3c/respec/issues/1548)
+- Regression: release.js exits with ERR\_FILE\_NOT\_FOUND [\#1547](https://github.com/w3c/respec/issues/1547)
+- seo and jsonld modules should be merged [\#1536](https://github.com/w3c/respec/issues/1536)
+
+**Merged pull requests:**
+
+- fix\(core/webidl\): pad static methods [\#1566](https://github.com/w3c/respec/pull/1566) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(package\): update deps [\#1564](https://github.com/w3c/respec/pull/1564) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(core/issues-notes\): use async/await + simplify [\#1560](https://github.com/w3c/respec/pull/1560) ([goelrohan6](https://github.com/goelrohan6))
+- chore\(package\): build, then start server [\#1558](https://github.com/w3c/respec/pull/1558) ([marcoscaceres](https://github.com/marcoscaceres))
+- Merged seo and jsonld modules [\#1556](https://github.com/w3c/respec/pull/1556) ([goelrohan6](https://github.com/goelrohan6))
+- refactor\(w3c/informative\): remove jQuery [\#1553](https://github.com/w3c/respec/pull/1553) ([saschanaz](https://github.com/saschanaz))
+- Link back to top to title of spec [\#1550](https://github.com/w3c/respec/pull/1550) ([OrionStar25](https://github.com/OrionStar25))
+- refactor\(core/inlines\): use ES2015+/remove jQuery [\#1549](https://github.com/w3c/respec/pull/1549) ([saschanaz](https://github.com/saschanaz))
+- Update clipboard to the latest version 🚀 [\#1542](https://github.com/w3c/respec/pull/1542) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+
+## [v20.0.3](https://github.com/w3c/respec/tree/v20.0.3) (2018-03-02)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.0.2...v20.0.3)
+
+**Closed issues:**
+
+- Github and edDraftURI [\#1223](https://github.com/w3c/respec/issues/1223)
+- Support linking to external xrefs [\#332](https://github.com/w3c/respec/issues/332)
+
+**Merged pull requests:**
+
+- fix: remove core/aria module [\#1544](https://github.com/w3c/respec/pull/1544) ([saschanaz](https://github.com/saschanaz))
+- refactor\(core/best-practices\): replace jQuery [\#1541](https://github.com/w3c/respec/pull/1541) ([saschanaz](https://github.com/saschanaz))
+
+## [v20.0.2](https://github.com/w3c/respec/tree/v20.0.2) (2018-03-01)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.0.1...v20.0.2)
+
+**Fixed bugs:**
+
+- Respec can't check local source files anymore [\#1522](https://github.com/w3c/respec/issues/1522)
+
+**Merged pull requests:**
+
+- chore\(package\): update deps [\#1540](https://github.com/w3c/respec/pull/1540) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(tools/release, tools/respecDocWriter\): use double quotes [\#1539](https://github.com/w3c/respec/pull/1539) ([saschanaz](https://github.com/saschanaz))
+- refactor\(core/contrib\): use ES2015+ [\#1538](https://github.com/w3c/respec/pull/1538) ([saschanaz](https://github.com/saschanaz))
+- fix\(tools/respecDocWriter\): allow local file requests [\#1537](https://github.com/w3c/respec/pull/1537) ([saschanaz](https://github.com/saschanaz))
+
+## [v20.0.1](https://github.com/w3c/respec/tree/v20.0.1) (2018-02-23)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.0.0...v20.0.1)
+
+**Merged pull requests:**
+
+- chore\(deps\): update hyperhtml [\#1531](https://github.com/w3c/respec/pull/1531) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(w3c/jsonld\): make async, used description [\#1528](https://github.com/w3c/respec/pull/1528) ([marcoscaceres](https://github.com/marcoscaceres))
+- jsonld uses undefined "xsd" namespace [\#1527](https://github.com/w3c/respec/pull/1527) ([gkellogg](https://github.com/gkellogg))
+- fix\(tools/respec2html\): resolve src to file URL [\#1524](https://github.com/w3c/respec/pull/1524) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v20.0.0](https://github.com/w3c/respec/tree/v20.0.0) (2018-02-22)
+[Full Changelog](https://github.com/w3c/respec/compare/v19.6.0...v20.0.0)
+
+**Closed issues:**
+
+- Typos in the Developer's Guide  [\#1512](https://github.com/w3c/respec/issues/1512)
+
+**Merged pull requests:**
+
+- BREAKING CHANGE: Remove RDFa support. [\#1526](https://github.com/w3c/respec/pull/1526) ([gkellogg](https://github.com/gkellogg))
+- refactor\(w3c/headers\): use w3c defaults [\#1525](https://github.com/w3c/respec/pull/1525) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(package\): updates puppeteer + marked [\#1523](https://github.com/w3c/respec/pull/1523) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(.gitignore\): use globs [\#1518](https://github.com/w3c/respec/pull/1518) ([saschanaz](https://github.com/saschanaz))
+- JSON-LD SEO support [\#1517](https://github.com/w3c/respec/pull/1517) ([gkellogg](https://github.com/gkellogg))
+- Update RDFa support [\#1515](https://github.com/w3c/respec/pull/1515) ([gkellogg](https://github.com/gkellogg))
+- Convert headers/sotd templates into hyperHTML [\#1514](https://github.com/w3c/respec/pull/1514) ([saschanaz](https://github.com/saschanaz))
+- refactor: small syntax changes and hyperHTML [\#1511](https://github.com/w3c/respec/pull/1511) ([saschanaz](https://github.com/saschanaz))
+
+## [v19.6.0](https://github.com/w3c/respec/tree/v19.6.0) (2018-02-15)
+[Full Changelog](https://github.com/w3c/respec/compare/v19.5.0...v19.6.0)
+
+**Closed issues:**
+
+- 💅-up linked tests   [\#1374](https://github.com/w3c/respec/issues/1374)
+
+**Merged pull requests:**
+
+- prettify linked tests : Fixes \#1374 [\#1487](https://github.com/w3c/respec/pull/1487) ([shikhar-scs](https://github.com/shikhar-scs))
+
+## [v19.5.0](https://github.com/w3c/respec/tree/v19.5.0) (2018-02-15)
+[Full Changelog](https://github.com/w3c/respec/compare/v19.4.0...v19.5.0)
+
+**Merged pull requests:**
+
+- fix: re-add sudo required [\#1509](https://github.com/w3c/respec/pull/1509) ([saschanaz](https://github.com/saschanaz))
+- feat\(w3c\): remove processVersion option [\#1480](https://github.com/w3c/respec/pull/1480) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v19.4.0](https://github.com/w3c/respec/tree/v19.4.0) (2018-02-14)
+[Full Changelog](https://github.com/w3c/respec/compare/v19.3.0...v19.4.0)
+
+**Implemented enhancements:**
+
+- Switch to some other packaging system [\#1129](https://github.com/w3c/respec/issues/1129)
+
+**Closed issues:**
+
+- Link to duplicate definition [\#1427](https://github.com/w3c/respec/issues/1427)
+
+**Merged pull requests:**
+
+- Link to duplicate dfns [\#1477](https://github.com/w3c/respec/pull/1477) ([himanish-star](https://github.com/himanish-star))
+
+## [v19.3.0](https://github.com/w3c/respec/tree/v19.3.0) (2018-02-13)
+[Full Changelog](https://github.com/w3c/respec/compare/v19.2.2...v19.3.0)
+
+**Fixed bugs:**
+
+- Missing things in IDL index [\#1479](https://github.com/w3c/respec/issues/1479)
+
+**Merged pull requests:**
+
+- feat: support --disable-sandbox on respec2html [\#1504](https://github.com/w3c/respec/pull/1504) ([saschanaz](https://github.com/saschanaz))
+
+## [v19.2.2](https://github.com/w3c/respec/tree/v19.2.2) (2018-02-13)
+[Full Changelog](https://github.com/w3c/respec/compare/v19.2.1...v19.2.2)
+
+**Merged pull requests:**
+
+- fix\(core/webidl-index\): support multiple idl blocks [\#1497](https://github.com/w3c/respec/pull/1497) ([shubhshrma](https://github.com/shubhshrma))
+
 ## [v19.2.1](https://github.com/w3c/respec/tree/v19.2.1) (2018-02-13)
 [Full Changelog](https://github.com/w3c/respec/compare/v19.2.0...v19.2.1)
 
