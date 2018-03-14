@@ -206,7 +206,7 @@ function bibref(conf) {
         .appendTo($dl);
       var $dd = $("<dd></dd>").appendTo($dl);
       var refcontent = conf.biblio[ref];
-      var refstyle = conf.biblioStyle[key];
+      var refstyle = conf.biblioStyle;
       var circular = {};
       var key = ref;
       circular[ref] = true;
@@ -218,7 +218,7 @@ function bibref(conf) {
         } else {
           key = refcontent.aliasOf;
           refcontent = conf.biblio[key];
-          refstyle = conf.biblioStyle[key];
+          refstyle = conf.biblioStyle;
           circular[key] = true;
         }
       }
