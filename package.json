@@ -60,7 +60,7 @@
   "scripts": {
     "babel:build": "babel src -d js --source-maps -q",
     "babel:watch": "babel src -d js --watch --source-maps",
-    "build:geo": "npm run copydeps && npm run hb:build-geo && npm run highlight:build && npm run babel:build && node ./tools/builder.js --profile=geonovum",
+    "build:geo": "npm run copydeps && npm run babel:build && node ./tools/builder.js --profile=geonovum",
     "build:respec-w3c-common": "node ./tools/builder.js --profile=w3c-common",
     "build:components": "npm run copydeps && node ./tools/build-components.js && npm run babel:build",
     "build": "npm run snyk-protect && npm run build:components",
@@ -82,6 +82,7 @@
     "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
+    "async": "^2.6.0",
     "colors": "^1.2.1",
     "command-line-args": "^5.0.2",
     "command-line-usage": "^5.0.2",
