@@ -177,3 +177,46 @@ function makeStandardOps() {
     body: makeDefaultBody(),
   };
 }
+
+/**
+ * partial equivalent to jquery's $(selector:contains('text'))
+ * @param {String} selector
+ * @param {String|RegExp} text text to search
+ * @param context
+ * returns: Array of valid selectors
+ * example:
+ *  selectorContains("dt", "Editors:", doc)
+ *    <=>
+ *  $("dt:contains('Editors:'", doc)
+ */
+function selectorContains(selector, text, context = document) {
+  const re = new RegExp(text);
+  return [...context.querySelectorAll(selector)]
+    .filter(element => re.test(element.textContent));
+}
+
+/**
+ * partial equivalent to jquery's `el.next([type])`
+ * @param {Node} element element whose sibling is to be found
+ * @param {String} tagname tagname of sibling.
+ * return: element's sibling which has the tagname as tagName or null
+ * default: return nextSibling (if tagname = "")
+ * example:
+ *   let el = $("dt:contains('Editor:')", doc);
+*    nextSiblingOfType(el, "dd")
+ *    <=>
+ *   el.next("dd");
+ */
+function nextSiblingOfType(element, tagname = "") {
+  if (!tagname) {
+    return element.nextSibling;
+  }
+  let temp = element.nextSibling;
+  while (temp) {
+    if (temp.tagName.toLowerCase() === tagname) {
+      return temp;
+    }
+    temp = temp.nextSibling;
+  }
+  return null;
+}
