@@ -93,6 +93,82 @@ export function wireReference(rawRef, target = "_blank") {
   `;
 }
 
+// const html = (...args) => hyperHTML.bind(doc.createDocumentFragment())(...args);
+
+// // Author, A. (Year, Month Date of Publication). Article title. Retrieved from URL
+// function entryToAPA(ref) {
+//   const { title } = ref.title;
+//   const authors =
+//     ref.authors && ref.authors.length
+//       ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : ""}.`
+//       : "";
+//   const date = ref.date ? `(${ref.date})` : "";
+//   return html`
+//     ${authors} ${date} ${
+//     ref.href
+//       ? html`<a href="${ref.href}"><cite>${title}</cite></a>.`
+//       : `${ref.title}`
+//   }
+//     ${
+//       ref.href
+//         ? html`Retrieved from URL: ${html`<a href="${ref.href}">${
+//             ref.href
+//           }</a>`}`
+//         : ""
+//     }
+//   `;
+// }
+
+// //Author’s Last name, First name. “Title of the Article or Individual Page.” Title of the website, Name of the publisher, Date of publication, URL.
+// function entryToMLA(ref) {
+//   const authors =
+//     ref.authors && ref.authors.length
+//       ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : ""}.`
+//       : "";
+//   const date = ref.date ? `${ref.date}, ` : "";
+//   const title = ref.title;
+//   const publisher = ref.publisher
+//     ? `${ref.publisher} ${ref.publisher.endsWith(".")}`
+//     : "";
+
+//   return html`
+// 	${authors} ${
+//     ref.href
+//       ? html`<a href="${ref.href}"><cite>${title}</cite></a>.`
+//       : `${ref.title}`
+//   } ${publisher} ${date} ${
+//     ref.href ? html`<a href="${ref.href}">${ref.href}</a>` : ""
+//   }`;
+// }
+
+// //what ReSpec currently does...
+// function entryToW3C(ref) {
+//   const title = ref.title;
+//   const authors =
+//     ref.authors && ref.authors.length
+//       ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : "."}.`
+//       : "";
+//   const publisher = ref.publisher
+//     ? `${ref.publisher} ${ref.publisher.endsWith(".")}`
+//     : "";
+//   const date = ref.date ? `${ref.date}. ` : "";
+//   const status = ref.status
+//     ? (REF_STATUSES.get(ref.status) || ref.status) + ". "
+//     : "";
+
+//   return html`
+//   	${
+//       ref.href
+//         ? html`<a href="${ref.href}"><cite>${title}</cite></a>.`
+//         : `${ref.title}`
+//     } ${authors} ${publisher} ${date} ${status} ${
+//     ref.href ? html`<a href="${ref.href}">${ref.href}</a>` : ""
+//   }`;
+// }
+
+
+
+
 // Author, A. (Year, Month Date of Publication). Article title. Retrieved from URL
 function entryToAPA(ref) {
   const authors =
