@@ -189,8 +189,13 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
 
-      expect(selectorContains("dt", "Former Editors:", doc).length).toEqual(0);
-      expect(selectorContains("dt", "Former Editor:", doc).length).toEqual(0);
+      const formerEditorsLabel = [...doc.querySelectorAll("dt")]
+        .find(({ textContent }) => textContent.trim() === "Former Editors:");
+      expect(formerEditorsLabel).toBeUndefined();
+
+      const formerEditorLabel = [...doc.querySelectorAll("dt")]
+        .find(({ textContent }) => textContent.trim() === "Former Editor:");
+      expect(formerEditorLabel).toBeUndefined();
     });
 
     it("takes a single former editor into account", async () => {
@@ -209,12 +214,16 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
 
-      expect(selectorContains("dt", "Former Editors:", doc).length).toEqual(0);
+      const formerEditorLabel = [...doc.querySelectorAll("dt")]
+        .find(({ textContent }) => textContent.trim() === "Former Editor:");
+      expect(formerEditorLabel).toBeDefined();
 
-      const formerEditors = selectorContains("dt", "Former Editor:", doc);
-      expect(formerEditors.length).toEqual(1);
+      const formerEditorsLabel = [...doc.querySelectorAll("dt")]
+        .find(({ textContent }) => textContent.trim() === "Former Editors:");
+      expect(formerEditorsLabel).toBeUndefined();
 
-      const $editor = nextSiblingOfType(formerEditors[0], "dd");
+      const $editor = formerEditorLabel.nextSibling;
+      expect($editor.tagName.toLowerCase()).toEqual("dd");
       expect($editor.textContent).toEqual("NAME (COMPANY)");
 
       const $editorCompany = $editor.querySelectorAll("a[href='http://COMPANY']");
@@ -249,14 +258,20 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
 
-      expect(selectorContains("dt", "Former Editor:", doc).length).toEqual(0);
+      const formerEditorLabel = [...doc.querySelectorAll("dt")]
+        .find(({ textContent }) => textContent.trim() === "Former Editor:");
+      expect(formerEditorLabel).toBeUndefined();
 
-      const formerEditors = selectorContains("dt", "Former Editors:", doc);
-      expect(formerEditors.length).toEqual(1);
+      const formerEditorsLabel = [...doc.querySelectorAll("dt")]
+        .find(({ textContent }) => textContent.trim() === "Former Editors:");
+      expect(formerEditorsLabel).toBeDefined();
 
-      const $firstEditor = nextSiblingOfType(formerEditors[0], "dd");
-      const $secondEditor = nextSiblingOfType($firstEditor, "dd");
+      const $firstEditor = formerEditorsLabel.nextSibling;
+      expect($firstEditor.tagName.toLowerCase()).toEqual("dd");
       expect($firstEditor.textContent).toEqual("NAME1");
+
+      const $secondEditor = $firstEditor.nextSibling;
+      expect($secondEditor.tagName.toLowerCase()).toEqual("dd");
       expect($secondEditor.textContent).toEqual("NAME2");
     });
   });
