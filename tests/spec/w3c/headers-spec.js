@@ -179,6 +179,88 @@ describe("W3C — Headers", function() {
     });
   });
 
+  describe("formerEditors", () => {
+    it("takes no former editor into account", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+        formerEditors: [],
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+
+      expect($("dt:contains('Former Editors:')", doc).length).toEqual(0);
+      expect($("dt:contains('Former Editor:')", doc).length).toEqual(0);
+    });
+
+    it("takes a single former editor into account", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+      specStatus: "REC",
+        formerEditors: [{
+          name: "NAME",
+          url: "http://URI",
+          company: "COMPANY",
+          companyURL: "http://COMPANY",
+          mailto: "EMAIL",
+          w3cid: "1234",
+        }],
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+
+      expect($("dt:contains('Former Editors:')", doc).length).toEqual(0);
+
+      const formerEditors = $("dt:contains('Former Editor:')", doc);
+      expect(formerEditors.length).toEqual(1);
+
+      const $editor = formerEditors.next("dd");
+      expect($editor.text()).toEqual("NAME (COMPANY)");
+
+      const $editorCompany = $editor.find("a[href='http://COMPANY']");
+      expect($editorCompany.length).toEqual(1);
+      expect($editorCompany.text()).toEqual("COMPANY");
+
+      const $editorEmail = $editor.find("a[href='mailto:EMAIL']");
+      expect($editorEmail.length).toEqual(1);
+      expect($editorEmail.text()).toEqual("NAME");
+
+      // if `mailto` is specified in People, `url` won't be used
+      const $editorUrl = $editor.find("a[href='http://URI']");
+      expect($editorUrl.length).toEqual(0);
+
+      const { editorId } = $editor.get(0).dataset;
+      expect(editorId).toEqual("1234");
+    });
+
+    it("takes multiple former editors into account", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+        formerEditors: [
+          {
+            name: "NAME1",
+          },
+          {
+            name: "NAME2",
+          },
+        ],
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+
+      expect($("dt:contains('Former Editor:')", doc).length).toEqual(0);
+
+      const formerEditors = $("dt:contains('Former Editors:')", doc);
+      expect(formerEditors.length).toEqual(1);
+
+      const $firstEditor = formerEditors.next("dd");
+      const $secondEditor = $firstEditor.next("dd");
+      expect($firstEditor.text()).toEqual("NAME1");
+      expect($secondEditor.text()).toEqual("NAME2");
+    });
+  });
+
   describe("authors", () => {
     it("takes a single author into account", async () => {
       const ops = makeStandardOps();
