@@ -154,17 +154,17 @@ function showData(key, stats, parent, browsers) {
       browserData[version].split("#", 1)[0].trim();
 
     const addBrowserVersion = version =>
-      `<div class="ciu-cell ${getSupport(version)}">${version}</div>`;
+      `<div class="caniuse-cell ${getSupport(version)}">${version}</div>`;
 
     const browserVersions = Object.keys(browserData)
       .sort(semverCompare)
       .slice(-5) // 4 browser versions back + 1 current
       .reverse();
-    const currentVersion = `ciu-cell ${getSupport(browserVersions[0])}`;
+    const currentVersion = `caniuse-cell ${getSupport(browserVersions[0])}`;
     return hyperHTML`
-      <div class="ciu-browser">
+      <div class="caniuse-browser">
         <div class="${currentVersion}">${BROWSERS[browser] || browser} ${browserVersions[0]}</div>
-        <div class="ciu-col">
+        <div class="caniuse-col">
           ${browserVersions.slice(1).map(addBrowserVersion)}
         </div>
       </div>`;

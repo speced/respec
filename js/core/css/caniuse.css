@@ -1,18 +1,21 @@
+/* container for stats */
 .caniuse-stats {
   width: 100%;
   font-family: monospace;
 }
 
 .caniuse-stats a {
-  display: inline-block;
+  white-space: nowrap;
 }
 
-.ciu-browser {
+/* wraps each browser into a separate column */
+.caniuse-browser {
   display: inline-block;
   text-align: center;
 }
 
-.ciu-col {
+/* container for older browser versions, shown on hover */
+.caniuse-col {
   position: absolute;
   height: 0;
   max-height: 140px;
@@ -20,37 +23,40 @@
   transition: height 0.3s ease-in-out;
 }
 
-.ciu-cell {
+/* a browser version */
+.caniuse-cell {
   min-width: 100px;
   padding: 4px;
   background: #eee; /* default, for unknown support */
   margin: 1px;
 }
 
-.ciu-browser > .ciu-cell:hover {
+.caniuse-browser > .caniuse-cell:hover {
   cursor: pointer;
 }
 
-.ciu-browser:hover .ciu-col {
+.caniuse-cell:hover {
+  font-weight: bold;
+}
+
+/* show older browsers on hover */
+.caniuse-browser:hover .caniuse-col {
   height: 100%;
   z-index: 99;
  }
 
-.ciu-cell:hover {
-  font-weight: bold;
-}
-
 /* supports */
-.ciu-cell.y {
+.caniuse-cell.y {
   background: #8bc34a;
 }
 
 /* no support */
-.ciu-cell.n {
+.caniuse-cell.n {
   background: #e53935;
 }
 
-/* not supported by default / partial support etc */
-.ciu-cell.d, .ciu-cell.a, .ciu-cell.x, .ciu-cell.p {
+/* not supported by default / partial support etc
+see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
+.caniuse-cell.d, .caniuse-cell.a, .caniuse-cell.x, .caniuse-cell.p {
   background: #ffc107;
 }
