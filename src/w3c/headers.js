@@ -385,7 +385,7 @@ export function run(conf, doc, cb) {
     conf.authors.forEach(peopCheck);
   }
   conf.multipleEditors = conf.editors && conf.editors.length > 1;
-  conf.multipleFormerEditors = conf.formerEditors && conf.formerEditors.length > 1;
+  conf.multipleFormerEditors = Array.isArray(conf.formerEditors) && conf.formerEditors.length > 1;
   conf.multipleAuthors = conf.authors && conf.authors.length > 1;
   $.each(conf.alternateFormats || [], function(i, it) {
     if (!it.uri || !it.label)

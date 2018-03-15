@@ -25,7 +25,7 @@ export default (conf, name, items = []) => {
       if (p.companyURL) {
         contents.push(html` (<a class='p-org org h-org h-card' href='${p.companyURL}'>${p.company}</a>)`);
       } else {
-        contents.push(document.createTextNode(` (${p.company})`));
+        contents.push(html` (${p.company})`);
       }
     }
     if (p.note) contents.push(document.createTextNode(` (${p.note})`));
