@@ -7,7 +7,7 @@
 /*jshint node: true, browser: false*/
 "use strict";
 const os = require("os");
-const Nightmare = require("nightmare");
+const puppeteer = require("puppeteer");
 const colors = require("colors");
 const { promisify } = require("util");
 const fs = require("fs");
@@ -21,18 +21,6 @@ colors.setTheme({
   warn: "yellow",
   info: "blue",
 });
-
-// Configuration for nightmare
-const config = {
-  show: false,
-  timeout: 3000,
-  webPreferences: {
-    images: false,
-    defaultEncoding: "utf-8",
-    partition: "nopersist",
-    userData: "",
-  },
-};
 
 /**
  * Writes "data" to a particular outPath as UTF-8.
@@ -72,61 +60,65 @@ async function writeTo(outPath, data) {
  * @return {Promise}            Resolves with HTML when done writing.
  *                              Rejects on errors.
  */
-async function fetchAndWrite(src, out, whenToHalt, timeout = 300000) {
-  const userData = await mkdtemp(os.tmpdir() + "/respec2html-");
-  const nightmare = new Nightmare({ ...config, timeout, userData });
-  nightmare.useragent("respec2html");
-  const url = parseURL(src).href;
-  const handleConsoleMessages = makeConsoleMsgHandler(nightmare);
-  handleConsoleMessages(whenToHalt);
-  const response = await nightmare.goto(url);
-  if (response.code !== 200) {
-    const warn = colors.warn(`📡 HTTP Error ${response.code}:`);
-    const msg = `${warn} ${colors.debug(url)}`;
-    nightmare.proc.kill();
-    throw new Error(msg);
+async function fetchAndWrite(src, out, whenToHalt, { timeout = 300000, disableSandbox = false } = {}) {
+  const userDataDir = await mkdtemp(os.tmpdir() + "/respec2html-");
+  const browser = await puppeteer.launch({
+    userDataDir,
+    args: disableSandbox && ["--no-sandbox"]
+  });
+  try {
+    const page = await browser.newPage();
+    const url = parseURL(src).href;
+    const response = await page.goto(url, { timeout });
+    const handleConsoleMessages = makeConsoleMsgHandler(page);
+    handleConsoleMessages(whenToHalt);
+    if (!response.ok() && response.status() /* workaround: 0 means ok for local files */) {
+      const warn = colors.warn(`📡 HTTP Error ${response.status()}:`);
+      const msg = `${warn} ${colors.debug(url)}`;
+      throw new Error(msg);
+    }
+    await checkIfReSpec(page);
+    const version = await checkReSpecVersion(page);
+    const html = await generateHTML(page, version, url);
+    switch (out) {
+      case null:
+        process.stdout.write(html);
+        break;
+      case "":
+        break;
+      default:
+        try {
+          await writeTo(out, html);
+        } catch (err) {
+          throw err;
+        }
+    }
+    return html;
   }
-  await checkIfReSpec(nightmare, url);
-  const version = await checkReSpecVersion(nightmare);
-  const html = await generateHTML(nightmare, version, url);
-  switch (out) {
-    case null:
-      process.stdout.write(html);
-      break;
-    case "":
-      break;
-    default:
-      try {
-        await writeTo(out, html);
-      } catch (err) {
-        throw err;
-      }
+  finally {
+    browser.close();
   }
-  return html;
 }
 
-async function generateHTML(nightmare, version, url) {
+async function generateHTML(page, version, url) {
   try {
-    return await nightmare.evaluate(evaluateHTML).end();
+    return await page.evaluate(evaluateHTML);
   } catch (err) {
     const msg =
-      `\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n` +
+      "\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n" +
       colors.debug(
         `Specification: ${url}\n` +
           `ReSpec version: ${version.join(".")}\n` +
-          `File a bug: https://github.com/w3c/respec/\n` +
+          "File a bug: https://github.com/w3c/respec/\n" +
           (err ? `Error: ${err}\n` : "")
       );
     throw new Error(msg);
   }
 }
 
-async function checkReSpecVersion(nightmare) {
-  const version = await nightmare
-    .wait(() => {
-      return window.hasOwnProperty("respecVersion");
-    })
-    .evaluate(getVersion);
+async function checkReSpecVersion(page) {
+  await page.waitForFunction(() => window.hasOwnProperty("respecVersion"));
+  const version = await page.evaluate(getVersion);
   const [mayor] = version;
   // The exportDocument() method only appeared in vesion 18.
   if (mayor < 18) {
@@ -143,13 +135,12 @@ async function checkReSpecVersion(nightmare) {
   return version;
 }
 
-async function checkIfReSpec(nightmare, url) {
-  const isRespecDoc = await nightmare.evaluate(isRespec);
+async function checkIfReSpec(page) {
+  const isRespecDoc = await page.evaluate(isRespec);
   if (!isRespecDoc) {
     const msg = `${colors.warn(
       "🕵️‍♀️  That doesn't seem to be a ReSpec document. Please check manually:"
-    )} ${colors.debug(url)}`;
-    nightmare.proc.kill();
+    )} ${colors.debug(page.url)}`;
     throw new Error(msg);
   }
   return isRespecDoc;
@@ -208,10 +199,10 @@ function getVersion() {
 /**
  * Handles messages from the browser's Console API.
  *
- * @param  {Nightmare} nightmare Instance of Nightmare to listen on.
+ * @param  {puppeteer.Page} page Instance of page to listen on.
  * @return {Function}
  */
-function makeConsoleMsgHandler(nightmare) {
+function makeConsoleMsgHandler(page) {
   /**
    * Specifies what to do when the browser emits "error" and "warn" console
    * messages.
@@ -222,28 +213,25 @@ function makeConsoleMsgHandler(nightmare) {
    * @return {Void}
    */
   return function handleConsoleMessages(whenToHalt) {
-    nightmare.on("console", (type, message) => {
+    page.on("console", message => {
+      const type = message.type();
+      const text = message.text();
       const abortOnWarning = whenToHalt.haltOnWarn && type === "warn";
       const abortOnError = whenToHalt.haltOnError && type === "error";
-      const output = `ReSpec ${type}: ${colors.debug(message)}`;
+      const output = `ReSpec ${type}: ${colors.debug(text)}`;
       switch (type) {
         case "error":
-          if (typeof message === "object") {
-            console.error(message);
-          } else {
-            console.error(colors.error(`😱 ${output}`));
-          }
+          console.error(colors.error(`😱 ${output}`));
           break;
         case "warn":
-          // Ignore Nightmare's poling of respecDone
-          if (/document\.respecDone/.test(message)) {
+          // Ignore polling of respecDone
+          if (/document\.respecDone/.test(text)) {
             return;
           }
           console.warn(colors.warn(`🚨 ${output}`));
           break;
       }
       if (abortOnError || abortOnWarning) {
-        nightmare.proc.kill();
         process.exit(1);
       }
     });

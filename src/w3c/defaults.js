@@ -48,16 +48,21 @@ const licenses = new Map([
 ]);
 
 const w3cDefaults = {
-  processVersion: 2017,
   lint: {
     "no-headingless-sections": true,
     "privsec-section": true,
     "no-http-props": true,
   },
-  doRDFa: false,
+  doJsonLd: false,
   license: "w3c-software-doc",
   specStatus: "base",
-  logos: [],
+  logos: [{
+    src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
+    alt: "W3C",
+    height: 48,
+    width: 72,
+    url: "https://www.w3.org/"
+  }],
 };
 
 function computeProps(conf) {

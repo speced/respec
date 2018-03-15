@@ -146,7 +146,6 @@ function bibref(conf) {
     $sec.makeID(null, type + " references");
     refs.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
     var $dl = $("<dl class='bibliography'></dl>").appendTo($sec);
-    if (conf.doRDFa) $dl.attr("resource", "");
     for (var j = 0; j < refs.length; j++) {
       var ref = refs[j];
       $("<dt></dt>")
@@ -173,13 +172,6 @@ function bibref(conf) {
       if (aliases[key].indexOf(ref) < 0) aliases[key].push(ref);
       if (refcontent) {
         $dd.html(stringifyReference(refcontent) + "\n");
-        if (conf.doRDFa) {
-          var $a = $dd.children("a");
-          $a.attr(
-            "property",
-            type === "Normative" ? "dc:requires" : "dc:references"
-          );
-        }
       } else {
         if (!badrefs[ref]) badrefs[ref] = 0;
         badrefs[ref]++;

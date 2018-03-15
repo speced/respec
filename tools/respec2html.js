@@ -2,7 +2,7 @@
 
 /*jshint node: true, browser: false*/
 "use strict";
-const async = require("marcosc-async");
+const { URL } = require('url');
 const colors = require("colors");
 const fetchAndWrite = require("./respecDocWriter").fetchAndWrite;
 colors.setTheme({
@@ -66,6 +66,12 @@ const optionList = [
     name: "haltonwarn",
     type: Boolean,
   },
+  {
+    default: false,
+    description: "Disable Chromium sandboxing if needed.",
+    name: "disable-sandbox",
+    type: Boolean
+  }
 ];
 
 const usageSections = [
@@ -91,12 +97,12 @@ const usageSections = [
     ],
   },
   {
-    content: "Project home: [underline]{https://github.com/w3c/respec}",
+    content: "Project home: {underline https://github.com/w3c/respec}",
     raw: true,
   },
 ];
 
-async.task(function* run() {
+(async function run() {
   let parsedArgs;
   try {
     parsedArgs = commandLineArgs(optionList);
@@ -113,18 +119,20 @@ async.task(function* run() {
     console.info(getUsage(usageSections));
     return process.exit(0);
   }
-  const src = parsedArgs.src;
+  const src = new URL(parsedArgs.src, `file://${process.cwd()}/`).href;
   const whenToHalt = {
     haltOnError: parsedArgs.haltonerror,
     haltOnWarn: parsedArgs.haltonwarn,
   };
-  const timeout = parsedArgs.timeout;
   const out = parsedArgs.out;
   try {
-    yield fetchAndWrite(src, out, whenToHalt, timeout);
+    await fetchAndWrite(src, out, whenToHalt, { 
+      timeout: parsedArgs.timeout * 1000,
+      disableSandbox: parsedArgs["disable-sandbox"]
+    });
   } catch (err) {
-    console.error(colors.error(err.message));
+    console.error(colors.error(err.stack));
     return process.exit(1);
   }
   process.exit(0);
-});
+})();

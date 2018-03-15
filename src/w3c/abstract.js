@@ -4,7 +4,7 @@ import { pub } from "core/pubsubhub";
 import { l10n, lang } from "core/l10n";
 export const name = "w3c/abstract";
 
-export async function run(conf) {
+export async function run() {
   const abs = document.getElementById("abstract");
   if (!abs) {
     pub("error", `Document must have one element with \`id="abstract"`);

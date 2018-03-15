@@ -12,18 +12,29 @@
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { pub } from "core/pubsubhub";
 import css from "deps/text!core/css/issues-notes.css";
-import { fetch as ghFetch, fetchIndex } from "core/github";
 export const name = "core/issues-notes";
-export function run(conf, doc, cb) {
-  function handleIssues($ins, ghIssues, issueBase) {
-    $(doc).find("head link").first().before($("<style/>").text(css));
-    var hasDataNum = $(".issue[data-number]").length > 0,
-      issueNum = 0,
-      $issueSummary = $(
-        "<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"
-      ),
-      $issueList = $issueSummary.find("ul");
-    $ins.each(function(i, inno) {
+
+function handleIssues($ins, ghIssues, conf) {
+  const { issueBase, githubAPI } = conf;
+  var hasDataNum = $(".issue[data-number]").length > 0,
+    issueNum = 0,
+    $issueSummary = $(
+      "<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"
+    ),
+    $issueList = $issueSummary.find("ul");
+  if (githubAPI) {
+    Array.from($ins)
+      .filter(({ dataset: { number: value } }) => value !== undefined && ghIssues.get(Number(value)).state === "closed")
+      .forEach(issue => {
+        const { dataset: { number } } = issue;
+        const msg = `Github issue ${number} was closed on GitHub, so removing from spec`;
+        pub("warn", msg);
+        issue.remove();
+      });
+  }
+  $ins
+    .filter((i, issue) => issue.parentNode)
+    .each(function (i, inno) {
       var $inno = $(inno),
         isIssue = $inno.hasClass("issue"),
         isWarning = $inno.hasClass("warning"),
@@ -48,12 +59,14 @@ export function run(conf, doc, cb) {
       if (!isInline) {
         var $div = $(
           "<div class='" +
-            report.type +
-            (isFeatureAtRisk ? " atrisk" : "") +
-            "'></div>"
+          report.type +
+          (isFeatureAtRisk ? " atrisk" : "") +
+          "'></div>"
         ),
           $tit = $(
-            "<div role='heading' class='" + report.type + "-title'><span></span></div>"
+            "<div role='heading' class='" +
+            report.type +
+            "-title'><span></span></div>"
           ),
           text = isIssue
             ? isFeatureAtRisk ? "Feature at Risk" : conf.l10n.issue
@@ -77,7 +90,7 @@ export function run(conf, doc, cb) {
                   .find("span")
                   .wrap($("<a href='" + conf.atRiskBase + dataNum + "'/>"));
               }
-              ghIssue = ghIssues[dataNum];
+              ghIssue = ghIssues.get(Number(dataNum));
               if (ghIssue && !report.title) {
                 report.title = ghIssue.title;
               }
@@ -91,15 +104,13 @@ export function run(conf, doc, cb) {
               $li = $("<li><a></a></li>"),
               $a = $li.find("a");
             $div.attr("id", id);
-            $a
-              .attr("href", "#" + id)
-              .text(conf.l10n.issue + " " + report.number);
+            $a.attr("href", "#" + id).text(conf.l10n.issue + " " + report.number);
             if (report.title) {
               $li.append(
                 $(
                   "<span style='text-transform: none'>: " +
-                    report.title +
-                    "</span>"
+                  report.title +
+                  "</span>"
                 )
               );
             }
@@ -109,9 +120,7 @@ export function run(conf, doc, cb) {
         $tit.find("span").text(text);
         if (report.title) {
           $tit.append(
-            $(
-              "<span style='text-transform: none'>: " + report.title + "</span>"
-            )
+            $("<span style='text-transform: none'>: " + report.title + "</span>")
           );
           $inno.removeAttr("title");
         }
@@ -128,44 +137,60 @@ export function run(conf, doc, cb) {
       }
       pub(report.type, report);
     });
-    if ($(".issue").length) {
-      if ($("#issue-summary"))
-        $("#issue-summary").append($issueSummary.contents());
-    } else if ($("#issue-summary").length) {
-      pub("warn", "Using issue summary (#issue-summary) but no issues found.");
-      $("#issue-summary").remove();
-    }
+  if ($(".issue").length) {
+    if ($("#issue-summary"))
+      $("#issue-summary").append($issueSummary.contents());
+  } else if ($("#issue-summary").length) {
+    pub("warn", "Using issue summary (#issue-summary) but no issues found.");
+    $("#issue-summary").remove();
   }
-  var $ins = $(".issue, .note, .warning, .ednote"),
-    ghIssues = {},
-    issueBase = conf.issueBase;
-  if ($ins.length) {
-    if (conf.githubAPI) {
-      ghFetch(conf.githubAPI)
-        .then(function(json) {
-          issueBase = issueBase || json.html_url + "/issues/";
-          return fetchIndex(json.issues_url, {
-            // Get back HTML content instead of markdown
-            // See: https://developer.github.com/v3/media/
-            Accept: "application/vnd.github.v3.html+json",    
-          });
-        })
-        .then(function(issues) {
-          issues.forEach(function(issue) {
-            ghIssues[issue.number] = issue;
-          });
-          handleIssues($ins, ghIssues, issueBase);
-          cb();
-        }).catch(err => {
-          pub("error", err.message);
-          handleIssues($ins, ghIssues, issueBase);
-          cb();
-        });
-    } else {
-      handleIssues($ins, ghIssues, issueBase);
-      cb();
+}
+
+async function fetchIssuesFromGithub({ githubAPI }) {
+  const issues = [];
+  const issueNumbers = [...document.querySelectorAll(".issue[data-number]")]
+    .map(elem => Number.parseInt(elem.dataset.number, 10))
+    .filter(number => number);
+  for (const issueNumber of issueNumbers) {
+    let issue; // depends on how fetching goes...
+    try {
+      const issueURL = `${githubAPI}/issues/${issueNumber}`;
+      const response = await fetch(issueURL, {
+        // Get back HTML content instead of markdown
+        // See: https://developer.github.com/v3/media/
+        Accept: "application/vnd.github.v3.html+json",
+      });
+      if (!response.ok) {
+        switch (response.status) {
+          case 404:
+            throw new Error("Couldn't find issue on Github. Check if it exist?");
+          default:
+            throw new Error("Network error. Github is down? or too many requests?");
+        }
+      }
+      issue = await response.json(); // can throw too
+    } catch (err) {
+      console.error(err);
+      const msg = `Error fetching issue #${issueNumber} from GitHub. ${err.message}. See developer console.`;
+      pub("error", msg);
+      issue = { title: "", number: issueNumber, state: "" };
     }
-  } else {
-    cb();
+    issues.push([issueNumber, issue]);
   }
+  return issues;
+}
+
+export async function run(conf) {
+  const $ins = $(".issue, .note, .warning, .ednote");
+  const ghIssues = new Map();
+  if (!$ins.length) {
+    return; // nothing to do.
+  }
+  if (conf.githubAPI && document.querySelector(".issue[data-number]")) {
+    const issues = await fetchIssuesFromGithub(conf);
+    issues.reduce((ghIssues, [number, issue]) => ghIssues.set(number, issue), ghIssues);
+  }
+  const { head: headElem } = document;
+  headElem.insertBefore(hyperHTML`<style>${[css]}</style>`, headElem.querySelector("link"));
+  handleIssues($ins, ghIssues, conf);
 }

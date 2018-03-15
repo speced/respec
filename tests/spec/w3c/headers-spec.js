@@ -125,37 +125,10 @@ describe("W3C — Headers", function() {
       expect($dd.next("dd").text()).toEqual("NAME2");
     });
 
-    it("shouldn't add RDFa stuff to editors extras when doRDFa is false", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "REC",
-        editors: [
-          {
-            name: "Mr foo",
-            extras: [
-              {
-                name: "0000-0003-0782-2704",
-                href: "http://orcid.org/0000-0003-0782-2704",
-                class: "orcid",
-              },
-            ],
-          },
-        ],
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      var oricdHref = ops.config.editors[0].extras[0].href;
-      var orcidAnchor = doc.querySelector("a[href='" + oricdHref + "']");
-      // Check that RDFa is applied
-      expect(orcidAnchor.getAttribute("property")).toEqual(null);
-      expect(orcidAnchor.parentNode.className).toEqual("orcid");
-    });
-
     it("takes editors extras into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "REC",
-        doRDFa: true,
         editors: [
           {
             name: "Mr foo",
@@ -194,8 +167,6 @@ describe("W3C — Headers", function() {
       [orcidAnchor, twitterAnchor].forEach(function(elem) {
         // Check parent is correct.
         expect(elem.parentNode.localName).toEqual("span");
-        // Check that RDFa is applied
-        expect(elem.hasAttribute("property")).toEqual(true);
         // Check that it's in the header of the document
         expect(header.contains(elem)).toEqual(true);
       });
@@ -1012,5 +983,43 @@ describe("W3C — Headers", function() {
     const expectedString =
       "does not expect this document to become a W3C Recommendation";
     expect(sotdText).toMatch(expectedString);
+  });
+  describe("logos", () => {
+    it("adds logos defined by configuration", async () => {
+      const ops = makeStandardOps();
+      const logos = [{
+        src: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
+        alt: "this is a small gif",
+        height: 765,
+        width: 346,
+        url: "http://hyperlink/"
+      }, {
+        src: "data:image/svg+xml,<svg%20xmlns=\"http://www.w3.org/2000/svg\"/>",
+        alt: "this is an svg",
+        height: 315,
+        width: 961,
+        url: "http://prod/"
+      }, {
+        src: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
+        alt: "this is a larger gif",
+        height: 876,
+        width: 283,
+        url: "http://shiny/"
+      }];
+      Object.assign(ops.config, { logos });
+      const doc = await makeRSDoc(ops);
+      // get logos
+      const anchors = doc.querySelectorAll(".head p:not(.copyright):first-child > a");
+      for (let i = 0; i < anchors.length; i++) {
+        const anchor = anchors[i];
+        const img = anchor.children[0];
+        const logo = logos[i];
+        expect(img.src).toEqual(logo.src);
+        expect(img.alt).toEqual(logo.alt);
+        expect(img.height).toEqual(logo.height);
+        expect(img.width).toEqual(logo.width);
+        expect(anchor.href).toEqual(logo.url);
+      }
+    });
   });
 });

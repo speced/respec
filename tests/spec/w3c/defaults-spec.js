@@ -8,29 +8,25 @@ describe("W3C — Defaults", () => {
     };
     const doc = await makeRSDoc(ops);
     const rsConf = doc.defaultView.respecConfig;
-    expect(rsConf.processVersion).toEqual(2017);
     expect(rsConf.lint).toEqual({
       "no-headingless-sections": true,
       "privsec-section": true,
       "no-http-props": true,
     });
-    expect(rsConf.doRDFa).toBe(false);
     expect(rsConf.license).toEqual("w3c-software-doc");
     expect(rsConf.specStatus).toEqual("base");
   });
 
-  it("allows w3c defaults to be overriden", async () => {
+  it("allows w3c defaults to be overridden", async () => {
     const ops = {
       config: {
         editors: [{ name: "foo" }],
-        processVersion: 2020,
         lint: {
           "no-headingless-sections": false,
           "privsec-section": false,
           "no-http-props": false,
           "fake-linter-rule": "foo",
         },
-        doRDFa: true,
         license: "c0",
         specStatus: "unofficial",
         shortName: "foo",
@@ -39,14 +35,12 @@ describe("W3C — Defaults", () => {
     };
     const doc = await makeRSDoc(ops);
     const rsConf = doc.defaultView.respecConfig;
-    expect(rsConf.processVersion).toEqual(2020);
     expect(rsConf.lint).toEqual({
       "no-headingless-sections": false,
       "privsec-section": false,
       "no-http-props": false,
       "fake-linter-rule": "foo",
     });
-    expect(rsConf.doRDFa).toBe(true);
     expect(rsConf.license).toEqual("c0");
     expect(rsConf.specStatus).toEqual("unofficial");
   });

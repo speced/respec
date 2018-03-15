@@ -11,6 +11,13 @@ describe("Core Linter Rule - 'no-headingless-sections'", () => {
     });
   });
   const doc = document.implementation.createHTMLDocument("test doc");
+  beforeEach(() => {
+    // Make sure every unordered test get an empty document
+    // See: https://github.com/w3c/respec/pull/1495
+    while (doc.body.firstChild) {
+      doc.body.removeChild(doc.body.firstChild);
+    }
+  });
   it("returns error when heading is missing section", async () => {
     const section = doc.createElement("section");
     doc.body.appendChild(section);

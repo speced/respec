@@ -95,180 +95,18 @@ import { concatDate, joinAnd, ISODate } from "core/utils";
 import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
 import tmpls from "templates";
+import cgbgSotdTmpl from "w3c/templates/cgbg-sotd";
+import sotdTmpl from "w3c/templates/sotd";
+import cgbgHeadersTmpl from "w3c/templates/cgbg-headers";
+import headersTmpl from "w3c/templates/headers";
 
 export const name = "w3c/headers";
-
-const cgbgHeadersTmpl = tmpls["cgbg-headers.html"];
-const headersTmpl = tmpls["headers.html"];
 
 const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
   timeZone: "UTC",
   year: "numeric",
   month: "long",
   day: "2-digit",
-});
-
-hb.registerHelper("showPeople", function(name, items = []) {
-  // stuff to handle RDFa
-  var re = "",
-    rp = "",
-    rm = "",
-    rn = "",
-    rwu = "",
-    rpu = "",
-    bn = "",
-    editorid = "",
-    propSeeAlso = "";
-  if (this.doRDFa) {
-    if (name === "Editor") {
-      bn = "_:editor0";
-      re = " property='bibo:editor' resource='" + bn + "'";
-      rp = " property='rdf:first' typeof='foaf:Person'";
-    } else if (name === "Author") {
-      rp = " property='dc:contributor' typeof='foaf:Person'";
-    }
-    rn = " property='foaf:name'";
-    rm = " property='foaf:mbox'";
-    rwu = " property='foaf:workplaceHomepage'";
-    rpu = " property='foaf:homepage'";
-    propSeeAlso = " property='rdfs:seeAlso'";
-  }
-  var ret = "";
-  for (var i = 0, n = items.length; i < n; i++) {
-    var p = items[i];
-    if (p.w3cid) {
-      editorid = " data-editor-id='" + parseInt(p.w3cid, 10) + "'";
-    }
-    if (this.doRDFa) {
-      ret +=
-        "<dd class='p-author h-card vcard' " +
-        re +
-        editorid +
-        "><span" +
-        rp +
-        ">";
-      if (name === "Editor") {
-        // Update to next sequence in rdf:List
-        bn = i < n - 1 ? "_:editor" + (i + 1) : "rdf:nil";
-        re = " resource='" + bn + "'";
-      }
-    } else {
-      ret += "<dd class='p-author h-card vcard'" + editorid + ">";
-    }
-    if (p.url) {
-      if (this.doRDFa) {
-        ret +=
-          "<meta" +
-          rn +
-          " content='" +
-          p.name +
-          "'><a class='u-url url p-name fn' " +
-          rpu +
-          " href='" +
-          p.url +
-          "'>" +
-          p.name +
-          "</a>";
-      } else
-        ret +=
-          "<a class='u-url url p-name fn' href='" +
-          p.url +
-          "'>" +
-          p.name +
-          "</a>";
-    } else {
-      ret += "<span" + rn + " class='p-name fn'>" + p.name + "</span>";
-    }
-    if (p.company) {
-      ret += ", ";
-      if (p.companyURL)
-        ret +=
-          "<a" +
-          rwu +
-          " class='p-org org h-org h-card' href='" +
-          p.companyURL +
-          "'>" +
-          p.company +
-          "</a>";
-      else ret += p.company;
-    }
-    if (p.mailto) {
-      ret +=
-        ", <span class='ed_mailto'><a class='u-email email' " +
-        rm +
-        " href='mailto:" +
-        p.mailto +
-        "'>" +
-        p.mailto +
-        "</a></span>";
-    }
-    if (p.note) ret += " (" + p.note + ")";
-    if (p.extras) {
-      var self = this;
-      var resultHTML = p.extras
-        // Remove empty names
-        .filter(function(extra) {
-          return extra.name && extra.name.trim();
-        })
-        // Convert to HTML
-        .map(function(extra) {
-          var span = document.createElement("span");
-          var textContainer = span;
-          if (extra.class) {
-            span.className = extra.class;
-          }
-          if (extra.href) {
-            var a = document.createElement("a");
-            span.appendChild(a);
-            a.href = extra.href;
-            textContainer = a;
-            if (self.doRDFa) {
-              a.setAttribute("property", "rdfs:seeAlso");
-            }
-          }
-          textContainer.innerHTML = extra.name;
-          return span.outerHTML;
-        })
-        .join(", ");
-      ret += ", " + resultHTML;
-    }
-    if (this.doRDFa) {
-      ret += "</span>\n";
-      if (name === "Editor")
-        ret += "<span property='rdf:rest' resource='" + bn + "'></span>\n";
-    }
-    ret += "</dd>\n";
-  }
-  return new hb.SafeString(ret);
-});
-
-function toLogo(obj) {
-  const a = document.createElement("a");
-  if (!obj.alt) {
-    const msg = "Found spec logo without an `alt` attribute. See dev console.";
-    a.classList.add("respec-offending-element");
-    pub("warn", msg);
-    console.warn("warn", msg, a);
-  }
-  a.href = obj.href ? obj.href : "";
-  a.classList.add("logo");
-  hyperHTML.bind(a)`
-      <img
-        id="${obj.id}"
-        alt="${obj.alt}"
-        width="${obj.width}"
-        height="${obj.height}">
-  `;
-  // avoid triggering 404 requests from dynamically generated
-  // hyperHTML attribute values
-  a.querySelector("img").src = obj.src;
-  return a;
-}
-
-hb.registerHelper("showLogos", logos => {
-  const p = document.createElement("p");
-  hyperHTML.bind(p)`${logos.map(toLogo)}`;
-  return p.outerHTML;
 });
 
 const status2maturity = {
@@ -387,16 +225,10 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   return new Date(ISODate.format(new Date()));
 }
 
-export function run(conf, doc, cb) {
-  // TODO: move to w3c defaults
-  if (!conf.logos) {
+export function run(conf) {
+  conf.isUnofficial = conf.specStatus === "unofficial";
+  if (conf.isUnofficial) {
     conf.logos = [];
-  }
-  // Default include RDFa document metadata
-  if (conf.doRDFa === undefined) conf.doRDFa = true;
-  // validate configuration and derive new configuration values
-  if (!conf.license) {
-    conf.license = "w3c-software-doc";
   }
   conf.isCCBY = conf.license === "cc-by";
   conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
@@ -416,12 +248,12 @@ export function run(conf, doc, cb) {
   if (conf.isRegular && !conf.shortName) {
     pub("error", "Missing required configuration: `shortName`");
   }
-  conf.title = doc.title || "No Title";
+  conf.title = document.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
   conf.publishDate = validateDateAndRecover(
     conf,
     "publishDate",
-    doc.lastModified
+    document.lastModified
   );
   conf.publishYear = conf.publishDate.getUTCFullYear();
   conf.publishHumanDate = W3CDate.format(conf.publishDate);
@@ -627,7 +459,6 @@ export function run(conf, doc, cb) {
   if (conf.isRec && !conf.errata)
     pub("error", "Recommendations must have an errata link.");
   conf.notRec = conf.specStatus !== "REC";
-  conf.isUnofficial = conf.specStatus === "unofficial";
   conf.prependW3C = !conf.isUnofficial;
   conf.isED = conf.specStatus === "ED";
   conf.isCR = conf.specStatus === "CR";
@@ -639,7 +470,6 @@ export function run(conf, doc, cb) {
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
-  conf.processVersion = conf.processVersion || "2017";
   Object.defineProperty(conf, "wgId", {
     get() {
       if (!this.hasOwnProperty("wgPatentURI")) {
@@ -651,39 +481,16 @@ export function run(conf, doc, cb) {
       return urlParts[pos] || "";
     },
   });
-  if (conf.processVersion == "2014" || conf.processVersion == "2015") {
-    pub(
-      "warn",
-      "Process " + conf.processVersion + " has been superceded by Process 2017."
-    );
-    conf.processVersion = "2017";
-  }
-  conf.isNewProcess = conf.processVersion == "2017";
   // configuration done - yay!
 
-  // annotate html element with RFDa
-  if (conf.doRDFa) {
-    if (conf.rdfStatus)
-      $("html").attr("typeof", "bibo:Document " + conf.rdfStatus);
-    else $("html").attr("typeof", "bibo:Document ");
-    var prefixes =
-      "bibo: http://purl.org/ontology/bibo/ w3p: http://www.w3.org/2001/02pd/rec54#";
-    $("html").attr("prefix", prefixes);
-    $("html>head").prepend(
-      $("<meta lang='' property='dc:language' content='en'>")
-    );
-  }
-  // insert into document and mark with microformat
-  var bp;
-  if (conf.isCGBG) bp = cgbgHeadersTmpl(conf);
-  else bp = headersTmpl(conf);
-  $("body", doc)
-    .prepend($(bp))
-    .addClass("h-entry");
+  // insert into document
+  const header = (conf.isCGBG ? cgbgHeadersTmpl : headersTmpl)(conf);
+  document.body.insertBefore(header, document.body.firstChild);
+  document.body.classList.add("h-entry");
 
   // handle SotD
   var sotd =
-    document.body.querySelector("#sotd") || document.createElement("section");
+    document.getElementById("sotd") || document.createElement("section");
   if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !sotd.id) {
     pub(
       "error",
@@ -773,7 +580,7 @@ export function run(conf, doc, cb) {
   if (conf.subjectPrefix !== "")
     conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
 
-  sotd.innerHTML = populateSoTD(conf, sotd);
+  hyperHTML.bind(sotd)`${populateSoTD(conf, sotd)}`;
 
   if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
     pub(
@@ -794,7 +601,6 @@ export function run(conf, doc, cb) {
     publishISODate: conf.publishISODate,
     generatedSubtitle: `${conf.longStatus} ${conf.publishHumanDate}`,
   });
-  cb();
 }
 
 function populateSoTD(conf, sotd) {
@@ -817,5 +623,5 @@ function populateSoTD(conf, sotd) {
   conf.additionalContent = additionalContent.innerHTML;
   // Whatever sections are left, we throw at the end.
   conf.additionalSections = sotdClone.innerHTML;
-  return tmpls[conf.isCGBG ? "cgbg-sotd.html" : "sotd.html"](conf);
+  return (conf.isCGBG ? cgbgSotdTmpl : sotdTmpl)(conf);
 }

@@ -143,6 +143,14 @@ describe("Core - WebIDL", function() {
     text = "callback interface SuperStar {\n};";
     expect($target.text()).toEqual(text);
 
+    $target = $("#if-mixin", doc);
+    text = "interface mixin SuperStar {\n};";
+    expect($target.text()).toEqual(text);
+
+    $target = $("#if-partial-mixin", doc);
+    text = "partial interface mixin SuperStar {\n};";
+    expect($target.text()).toEqual(text);
+
     $target = $("#if-doc", doc);
     expect(
       $target.find(":contains('DocInterface')").filter("a").attr("href")
@@ -232,7 +240,7 @@ describe("Core - WebIDL", function() {
       "    // 8\n" +
       "    const long long           veryLong = 9999999999999;\n" +
       "    // 9\n" +
-      "    const unsigned long long  soLong = 100000000000000000;\n" +
+      "    const unsigned long long  soLong = 99999999999999999;\n" +
       "    // 10\n" +
       "    const float               ationDevice = 4.2;\n" +
       "    // 11\n" +
@@ -240,7 +248,7 @@ describe("Core - WebIDL", function() {
       "    // 12\n" +
       "    const double              twice = 4.222222222;\n" +
       "    // 13\n" +
-      "    const unrestricted double rambaldi = 47;\n" +
+      "    const unrestricted double rambaldi = 47.0;\n" +
       "\n" +
       "    // 14\n" +
       "    const boolean?            why = false;\n" +
@@ -328,27 +336,32 @@ describe("Core - WebIDL", function() {
 
   it("should handle operations", function(done) {
     var $target = $("#meth-basic", doc);
-    var text =
-      "interface MethBasic {\n" +
-      "    // 1\n" +
-      "    void               basic();\n" +
-      "    // 2\n" +
-      "    [Something] void               ext();\n" +
-      "    // 3\n" +
-      "    unsigned long long ull(short s);\n" +
-      "    // 3.5\n" +
-      "    SuperStar?         ull();\n" +
-      "    // 5\n" +
-      "    getter float       ();\n" +
-      "    // 6\n" +
-      "    getter float       withName();\n" +
-      "    // 7\n" +
-      "    setter void        ();\n" +
-      "    // 8\n" +
-      "    setter void        named();\n" +
-      "};";
+    var text =`interface MethBasic {
+    // 1
+    void                           basic();
+    // 2
+    [Something] void                           ext();
+    // 3
+    unsigned long long             ull(short s);
+    // 3.5
+    SuperStar?                     ull();
+    // 5
+    getter float                   ();
+    // 6
+    getter float                   withName();
+    // 7
+    setter void                    ();
+    // 8
+    setter void                    named();
+    // 9
+    static Promise<RTCCertificate> generateCertificate(AlgorithmIdentifier keygenAlgorithm);
+    // 10
+    stringifier DOMString          identifier();
+    // 11
+    stringifier DOMString          ();
+};`
     expect($target.text()).toEqual(text);
-    expect($target.find(".idlMethod").length).toEqual(8);
+    expect($target.find(".idlMethod").length).toEqual(11);
     var $meth = $target.find(".idlMethod").first();
     expect($meth.find(".idlMethType").text()).toEqual("void");
     expect($meth.find(".idlMethName").text()).toEqual("basic");
@@ -579,7 +592,18 @@ describe("Core - WebIDL", function() {
     done();
   });
 
-  it("should handle implements", function(done) {
+  it("should handle includes", () => {
+    var $target = $("#incl-basic", doc);
+    var text = "Window includes Breakable;";
+    expect($target.text()).toEqual(text);
+    expect($target.find(".idlIncludes").length).toEqual(1);
+
+    $target = $("#incl-less-basic", doc);
+    text = "[Something]\n" + text;
+    expect($target.text()).toEqual(text);
+  });
+
+  it("should handle implements", () => {
     var $target = $("#impl-basic", doc);
     var text = "Window implements Breakable;";
     expect($target.text()).toEqual(text);
@@ -588,7 +612,6 @@ describe("Core - WebIDL", function() {
     $target = $("#impl-less-basic", doc);
     text = "[Something]\n" + text;
     expect($target.text()).toEqual(text);
-    done();
   });
 
   it("should link documentation", function() {

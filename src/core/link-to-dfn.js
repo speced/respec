@@ -3,12 +3,21 @@
 // to the matching definitions.
 import { linkInlineCitations } from "core/data-cite";
 import { pub } from "core/pubsubhub";
+import { lang as defaultLang } from "./l10n";
 export const name = "core/link-to-dfn";
+const l10n = {
+  en: {
+    "duplicate": "This is defined more than once in the document."
+  }
+};
+const lang = defaultLang in l10n ? defaultLang : "en";
+
 export function run(conf, doc, cb) {
   doc.normalize();
   var titles = {};
   Object.keys(conf.definitionMap).forEach(function(title) {
     titles[title] = {};
+    var listOfDuplicateDfns = [];
     conf.definitionMap[title].forEach(function(dfn) {
       if (dfn.attr("data-idl") === undefined) {
         // Non-IDL definitions aren't "for" an interface.
@@ -24,13 +33,14 @@ export function run(conf, doc, cb) {
         if (oldIsDfn && newIsDfn) {
           // Only complain if the user provides 2 <dfn>s
           // for the same term.
-          pub(
-            "error",
-            "Duplicate definition of '" +
-              (dfn_for ? dfn_for + "/" : "") +
-              title +
-              "'"
-          );
+          dfn.addClass("respec-offending-element");
+          if (dfn.attr("title") === undefined) {
+            dfn.attr("title", l10n[lang].duplicate);
+          }
+          if (dfn.attr("id") === undefined) {
+            dfn.makeID(null, title);
+          }
+          listOfDuplicateDfns.push(dfn[0]);
         }
         if (oldIsDfn) {
           // Don't overwrite <dfn> definitions.
@@ -46,14 +56,23 @@ export function run(conf, doc, cb) {
         }
       }
     });
+    if (listOfDuplicateDfns.length > 0) {
+      const dfnsList = listOfDuplicateDfns.map((elem, i) => {
+        return `[${i + 1}](#${elem.id})`;
+      }).join(", ");
+      pub(
+        "error",
+        `Duplicate definitions of '${title}' at: ${dfnsList}.`
+      );
+    }
   });
   $("a:not([href]):not([data-cite]):not(.logo)").each(function() {
     var $ant = $(this);
     if ($ant.hasClass("externalDFN")) return;
     var linkTargets = $ant.linkTargets();
     var foundDfn = linkTargets.some(function(target) {
-      if (titles[target.title] && titles[target.title][target.for_]) {
-        var dfn = titles[target.title][target.for_];
+      if (titles[target.title] && titles[target.title][target.for]) {
+        var dfn = titles[target.title][target.for];
         if (dfn[0].dataset.cite) {
           $ant[0].dataset.cite = dfn[0].dataset.cite;
         } else {
@@ -96,7 +115,7 @@ export function run(conf, doc, cb) {
           ".idl:not(.extAttr), dl.methods, dl.attributes, dl.constants, dl.constructors, dl.fields, dl.dictionary-members, span.idlMemberType, span.idlTypedefType, div.idlImplementsDesc"
         ).length
       ) {
-        var link_for = linkTargets[0].for_;
+        var link_for = linkTargets[0].for;
         var title = linkTargets[0].title;
         this.classList.add("respec-offending-element");
         this.title = "Linking error: not matching <dfn>";
