@@ -200,7 +200,7 @@ describe("W3C — Bibliographic References", () => {
   afterAll(flushIframes);
   const bibRefsURL = new URL("https://specref.herokuapp.com/bibrefs");
 
-  const doc1, doc2, doc3;
+  let doc1, doc2, doc3;
   let specRefOk;
   beforeAll(async () => {
     doc1 = await makeRSDoc({ conf1, body1 });
