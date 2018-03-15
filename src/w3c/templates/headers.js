@@ -33,6 +33,14 @@ export default conf => {
     }
     specSubTitleElem.classList.add("subtitle");
   }
+  
+  if(!conf.subtitle && document.querySelector("h2#subtitle")) {
+    specSubTitleElem = document.querySelector("h2#subtitle");
+    specSubTitleElem.remove();
+    conf.subtitle = specSubTitleElem.textContent.trim();
+    specSubTitleElem.classList.add("subtitle");
+  }
+  
   return html`<div class='head'>
   ${conf.logos.map(showLogo)}
   ${specTitleElem}

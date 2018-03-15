@@ -250,19 +250,89 @@ describe("W3C — Headers", function() {
       const doc = await makeRSDoc(ops);
       expect($("#subtitle", doc).length).toEqual(0);
     });
-    
+  
     it("uses existing h2#subtitle as subtitle", async () => {
       const ops = makeStandardOps();
       ops.body = "<h2 id='subtitle'>This is a pre existing subtitle <code>pass</code></h2>" + makeDefaultBody();
-      
+    
       const doc = await makeRSDoc(ops);
-
+      
       const subTitleElement = doc.querySelectorAll("h2#subtitle");
       expect(subTitleElement.length).toEqual(1);
-      
+    
+      const confSubTitle = doc.defaultView.respecConfig.subtitle;
+    
+      if (confSubTitle) {
+        expect(confSubTitle).toEqual("This is a pre existing subtitle pass");
+      } else {
+        expect(confSubTitle).toEqual("");
+      }
+    
       const [forInnerText] = subTitleElement;
-      expect(forInnerText.textContent).toEqual("This is a pre existing subtitle");
-      
+      expect(forInnerText.textContent).toEqual("This is a pre existing subtitle pass");
+    
+      const childElement = forInnerText.querySelector("code");
+      expect(childElement.textContent).toEqual("pass");
+    });
+  
+    it("overwrites conf.subtitle if it exists", async () => {
+      const ops = makeStandardOps();
+    
+      ops.body = "<h2 id='subtitle'>This is a pre existing subtitle <code>pass</code></h2>" + makeDefaultBody();
+    
+      const newProps = {
+        subtitle: "sub",
+      };
+    
+      Object.assign(ops.config, newProps);
+    
+      const doc = await makeRSDoc(ops);
+    
+      const initialSubtitle = doc.defaultView.respecConfig.subtitle;
+      expect(initialSubtitle).toEqual("This is a pre existing subtitle pass")
+    
+      const subTitleElement = doc.querySelectorAll("h2#subtitle");
+      expect(subTitleElement.length).toEqual(1);
+    
+      const confSubTitle = doc.defaultView.respecConfig.subtitle;
+    
+      if (confSubTitle) {
+        expect(confSubTitle).toEqual("This is a pre existing subtitle pass");
+      } else {
+        expect(confSubTitle).toEqual("");
+      }
+    
+      const [forInnerText] = subTitleElement;
+      expect(forInnerText.textContent).toEqual("This is a pre existing subtitle pass");
+    
+      const childElement = forInnerText.querySelector("code");
+      expect(childElement.textContent).toEqual("pass");
+    });
+    
+    it("introduces conf.subtitle if it doesn't exist but h2#subtitle exists", async () => {
+      const ops = makeStandardOps();
+    
+      ops.body = "<h2 id='subtitle'>This is a pre existing subtitle <code>pass</code></h2>" + makeDefaultBody();
+    
+      const doc = await makeRSDoc(ops);
+    
+      const initialSubtitle = doc.defaultView.respecConfig.subtitle;
+      expect(initialSubtitle).toEqual("This is a pre existing subtitle pass")
+    
+      const subTitleElement = doc.querySelectorAll("h2#subtitle");
+      expect(subTitleElement.length).toEqual(1);
+    
+      const confSubTitle = doc.defaultView.respecConfig.subtitle;
+    
+      if (confSubTitle) {
+        expect(confSubTitle).toEqual("This is a pre existing subtitle pass");
+      } else {
+        expect(confSubTitle).toEqual("");
+      }
+    
+      const [forInnerText] = subTitleElement;
+      expect(forInnerText.textContent).toEqual("This is a pre existing subtitle pass");
+    
       const childElement = forInnerText.querySelector("code");
       expect(childElement.textContent).toEqual("pass");
     });
