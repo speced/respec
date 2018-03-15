@@ -24,7 +24,7 @@ document.head.appendChild(codeStyle);
 
 export const name = "core/caniuse";
 
-export async function run(conf) {
+export function run(conf) {
   if (conf.caniuse) {
     const el = document.querySelector(".head dl");
     canIUse(conf.caniuse, el, conf.caniuseBrowsers);
@@ -34,6 +34,7 @@ export async function run(conf) {
   }
 }
 
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours (in ms)
 const DEFAULT_BROWSERS = ["chrome", "firefox", "ie", "edge"];
 const BROWSERS = { // browser name dictionary
   chrome: "Chrome",
@@ -54,14 +55,13 @@ const BROWSERS = { // browser name dictionary
  * @param  {Node} el                          add table after el
  * @param  {Array:string} [browsers=DEFAULT_BROWSERS] list of browsers to show
  */
-function canIUse(key, el, browsers = DEFAULT_BROWSERS) {
+async function canIUse(key, el, browsers = DEFAULT_BROWSERS) {
   const url = `https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/${key}.json`;
 
   // use data from localStorage data if valid and render
   const cached = localStorage.getItem(`caniuse-${key}`);
   if (cached) {
     const stats = JSON.parse(cached);
-    const CACHE_DURATION = 24 * 60 * 60 * 1000; // in ms
     if (new Date() - new Date(stats.$cacheTime) < CACHE_DURATION) {
       return showData(key, stats, el, browsers);
     }
@@ -70,9 +70,12 @@ function canIUse(key, el, browsers = DEFAULT_BROWSERS) {
   const placeholder = createPlaceholder(key, el);
   const handleResponse = ({ stats }) => showData(key, stats, el, browsers);
   const handleError = err => showError(err, placeholder);
-  ghFetch(url)
-    .then(handleResponse)
-    .catch(handleError);
+  try {
+    const json = await ghFetch(url);
+    handleResponse(json);
+  } catch (err) {
+    handleError(err);
+  }
 }
 
 /**
