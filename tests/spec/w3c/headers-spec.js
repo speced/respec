@@ -261,13 +261,8 @@ describe("W3C — Headers", function() {
       expect(subTitleElement.length).toEqual(1);
     
       const confSubTitle = doc.defaultView.respecConfig.subtitle;
-    
-      if (confSubTitle) {
-        expect(confSubTitle).toEqual("This is a pre existing subtitle pass");
-      } else {
-        expect(confSubTitle).toEqual("");
-      }
-    
+      expect(confSubTitle).toEqual("This is a pre existing subtitle pass");
+      
       const [forInnerText] = subTitleElement;
       expect(forInnerText.textContent).toEqual("This is a pre existing subtitle pass");
     
@@ -288,19 +283,14 @@ describe("W3C — Headers", function() {
     
       const doc = await makeRSDoc(ops);
     
-      const initialSubtitle = doc.defaultView.respecConfig.subtitle;
-      expect(initialSubtitle).toEqual("This is a pre existing subtitle pass")
+      const subtitle = doc.defaultView.respecConfig.subtitle;
+      expect(subtitle).toEqual("This is a pre existing subtitle pass")
     
       const subTitleElement = doc.querySelectorAll("h2#subtitle");
       expect(subTitleElement.length).toEqual(1);
     
       const confSubTitle = doc.defaultView.respecConfig.subtitle;
-    
-      if (confSubTitle) {
-        expect(confSubTitle).toEqual("This is a pre existing subtitle pass");
-      } else {
-        expect(confSubTitle).toEqual("");
-      }
+      expect(confSubTitle).toEqual("This is a pre existing subtitle pass");
     
       const [forInnerText] = subTitleElement;
       expect(forInnerText.textContent).toEqual("This is a pre existing subtitle pass");
@@ -316,20 +306,15 @@ describe("W3C — Headers", function() {
     
       const doc = await makeRSDoc(ops);
     
-      const initialSubtitle = doc.defaultView.respecConfig.subtitle;
-      expect(initialSubtitle).toEqual("This is a pre existing subtitle pass")
+      const subtitle = doc.defaultView.respecConfig.subtitle;
+      expect(subtitle).toEqual("This is a pre existing subtitle pass")
     
       const subTitleElement = doc.querySelectorAll("h2#subtitle");
       expect(subTitleElement.length).toEqual(1);
     
       const confSubTitle = doc.defaultView.respecConfig.subtitle;
-    
-      if (confSubTitle) {
-        expect(confSubTitle).toEqual("This is a pre existing subtitle pass");
-      } else {
-        expect(confSubTitle).toEqual("");
-      }
-    
+      expect(confSubTitle).toEqual("This is a pre existing subtitle pass");
+  
       const [forInnerText] = subTitleElement;
       expect(forInnerText.textContent).toEqual("This is a pre existing subtitle pass");
     
