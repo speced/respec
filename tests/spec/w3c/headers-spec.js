@@ -189,8 +189,8 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
 
-      expect($("dt:contains('Former Editors:')", doc).length).toEqual(0);
-      expect($("dt:contains('Former Editor:')", doc).length).toEqual(0);
+      expect(selectorContains("dt", "Former Editors:", doc).length).toEqual(0);
+      expect(selectorContains("dt", "Former Editor:", doc).length).toEqual(0);
     });
 
     it("takes a single former editor into account", async () => {
@@ -209,27 +209,27 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
 
-      expect($("dt:contains('Former Editors:')", doc).length).toEqual(0);
+      expect(selectorContains("dt", "Former Editors:", doc).length).toEqual(0);
 
-      const formerEditors = $("dt:contains('Former Editor:')", doc);
+      const formerEditors = selectorContains("dt", "Former Editor:", doc);
       expect(formerEditors.length).toEqual(1);
 
-      const $editor = formerEditors.next("dd");
-      expect($editor.text()).toEqual("NAME (COMPANY)");
+      const $editor = nextSiblingOfType(formerEditors[0], "dd");
+      expect($editor.textContent).toEqual("NAME (COMPANY)");
 
-      const $editorCompany = $editor.find("a[href='http://COMPANY']");
+      const $editorCompany = $editor.querySelectorAll("a[href='http://COMPANY']");
       expect($editorCompany.length).toEqual(1);
-      expect($editorCompany.text()).toEqual("COMPANY");
+      expect($editorCompany[0].textContent).toEqual("COMPANY");
 
-      const $editorEmail = $editor.find("a[href='mailto:EMAIL']");
+      const $editorEmail = $editor.querySelectorAll("a[href='mailto:EMAIL']");
       expect($editorEmail.length).toEqual(1);
-      expect($editorEmail.text()).toEqual("NAME");
+      expect($editorEmail[0].textContent).toEqual("NAME");
 
       // if `mailto` is specified in People, `url` won't be used
-      const $editorUrl = $editor.find("a[href='http://URI']");
+      const $editorUrl = $editor.querySelectorAll("a[href='http://URI']");
       expect($editorUrl.length).toEqual(0);
 
-      const { editorId } = $editor.get(0).dataset;
+      const { editorId } = $editor.dataset;
       expect(editorId).toEqual("1234");
     });
 
@@ -249,15 +249,15 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
 
-      expect($("dt:contains('Former Editor:')", doc).length).toEqual(0);
+      expect(selectorContains("dt", "Former Editor:", doc).length).toEqual(0);
 
-      const formerEditors = $("dt:contains('Former Editors:')", doc);
+      const formerEditors = selectorContains("dt", "Former Editors:", doc);
       expect(formerEditors.length).toEqual(1);
 
-      const $firstEditor = formerEditors.next("dd");
-      const $secondEditor = $firstEditor.next("dd");
-      expect($firstEditor.text()).toEqual("NAME1");
-      expect($secondEditor.text()).toEqual("NAME2");
+      const $firstEditor = nextSiblingOfType(formerEditors[0], "dd");
+      const $secondEditor = nextSiblingOfType($firstEditor, "dd");
+      expect($firstEditor.textContent).toEqual("NAME1");
+      expect($secondEditor.textContent).toEqual("NAME2");
     });
   });
 
