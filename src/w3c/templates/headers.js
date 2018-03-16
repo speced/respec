@@ -20,16 +20,18 @@ export default conf => {
   }
   specTitleElem.classList.add("title", "p-name");
 
-  let specSubTitleElem = document.querySelector("h2#subtitle");
+  let specSubTitleElem = document.querySelector("h2#subtitle") || null;
   if (specSubTitleElem && specSubTitleElem.parentElement) {
     specSubTitleElem.remove();
     conf.subtitle = specSubTitleElem.textContent.trim();
-  } else if(conf.subtitle) {
+  } else if (conf.subtitle) {
     specSubTitleElem = document.createElement("h2");
     specSubTitleElem.textContent = conf.subtitle;
     specSubTitleElem.id = "subtitle";
   }
-  specSubTitleElem.classList.add("subtitle");
+  if (specSubTitleElem) {
+    specSubTitleElem.classList.add("subtitle");
+  }
 
   return html`<div class='head'>
   ${conf.logos.map(showLogo)}
