@@ -20,7 +20,7 @@ export default conf => {
   }
   specTitleElem.classList.add("title", "p-name");
 
-  let specSubTitleElem = document.querySelector("h2#subtitle") || null;
+  let specSubTitleElem = document.querySelector("h2#subtitle");
   if (specSubTitleElem && specSubTitleElem.parentElement) {
     specSubTitleElem.remove();
     conf.subtitle = specSubTitleElem.textContent.trim();
