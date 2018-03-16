@@ -172,9 +172,16 @@ function makeDefaultBody() {
   return "<section id='sotd'><p>foo</p></section><section id='toc'></section>";
 }
 
-function makeStandardOps(configParams) {
+/**
+ *
+ * @param configParams
+ * @param bodyParams
+ * @returns {{config: {editors, specStatus, edDraftURI, shortName, previousMaturity, previousPublishDate, errata, implementationReportURI, perEnd, lint} & any, body: string}}
+ */
+
+function makeStandardOps(configParams, bodyParams = makeDefaultBody()) {
   return {
     config: Object.assign(makeBasicConfig(),configParams),
-    body: makeDefaultBody(),
+    body: bodyParams,
   };
 }
