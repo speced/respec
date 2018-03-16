@@ -4,8 +4,8 @@ describe("W3C — Bibliographic References", () => {
   const confDefault = {
     editors: [
       {
-        name: "Robin Berjon"
-      }
+        name: "Robin Berjon",
+      },
     ],
     edDraftURI: "https://foo",
     shortName: "Foo",
@@ -15,42 +15,42 @@ describe("W3C — Bibliographic References", () => {
     previousPublishDate: "2013-12-17",
     localBiblio: {
       Zzz: {
-        title: "Last Reference"
+        title: "Last Reference",
       },
       aaa: {
-        title: "First Reference"
+        title: "First Reference",
       },
       TestRef1: {
         title: "Test ref title",
         href: "http://test.com",
         authors: ["William Shakespeare"],
-        publisher: "Publishers Inc."
+        publisher: "Publishers Inc.",
       },
       TestRef2: {
         title: "Second test",
         href: "http://test.com",
         authors: ["Another author"],
-        publisher: "Testing 123"
+        publisher: "Testing 123",
       },
       TestRef3: {
         title: "Third test",
         href: "http://test.com",
-        publisher: "Publisher Here"
+        publisher: "Publisher Here",
       },
       TestRef5: {
-        href: "http://test.com"
+        href: "http://test.com",
       },
       TestRef6: {
         href: "http://test.com",
-        authors: ["William Shakespeare"]
+        authors: ["William Shakespeare"],
       },
       FOOBARGLOP: {
-        aliasOf: "BARBAR"
+        aliasOf: "BARBAR",
       },
       BARBAR: {
-        title: "The BARBAR Spec"
-      }
-    }
+        title: "The BARBAR Spec",
+      },
+    },
   };
 
   //Configuration for APA citation
@@ -97,7 +97,9 @@ describe("W3C — Bibliographic References", () => {
 
   it("includes a dns-prefetch to bibref server", () => {
     const host = bibRefsURL.host;
-    const link = docDefault.querySelector(`link[rel='dns-prefetch'][href*='${host}']`);
+    const link = docDefault.querySelector(
+      `link[rel='dns-prefetch'][href*='${host}']`
+    );
     expect(link).toBeTruthy();
     expect(link.classList.contains("removeOnSave")).toBeTruthy();
   });
