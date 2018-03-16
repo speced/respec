@@ -226,7 +226,7 @@ describe("W3C — Bibliographic References", () => {
   }); 
 
   //For both MLA and APA
-  it("Reference with only url", ()=>{
+  it("Reference with author and url", ()=>{
     let ref = docAPA.querySelector("#bib-RefWithOnlyHrefAndAuthor + dd");
     expect(ref).toBeTruthy();
     finalString = "William Shakespeare. (2013-12-17). Retrieved from URL: http://test.com/";
