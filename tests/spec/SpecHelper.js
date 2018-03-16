@@ -149,7 +149,6 @@ function pickRandomsFromList(list, howMany) {
 }
 
 function makeBasicConfig() {
- 
   return {
     editors: [
       {
@@ -182,6 +181,6 @@ function makeDefaultBody() {
 function makeStandardOps(config = {}, body = makeDefaultBody()) {
   return {
     body,
-    config: {...makeBasicConfig(), ...config}
+    config: { ...makeBasicConfig(), ...config },
   };
 }
