@@ -267,6 +267,9 @@ describe("W3C — Headers", function() {
       const [h2Elem] = subTitleElements;
       expect(h2Elem.textContent).toEqual("pass");
 
+      // make sure it was relocated to head
+      expect(h2Elem.closest(".head")).toBeTruthy();
+
       expect(h2Elem.firstElementChild.localName).toEqual("code");
       expect(h2Elem.firstElementChild.textContent).toEqual("pass");
     });
