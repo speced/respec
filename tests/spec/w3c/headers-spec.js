@@ -256,48 +256,32 @@ describe("W3C — Headers", function() {
     it("uses existing h2#subtitle as subtitle", async () => {
       const ops = makeStandardOps();
       ops.body = "<h2 id='subtitle'><code>pass</code></h2>" + makeDefaultBody();
-
       const doc = await makeRSDoc(ops);
 
-      const subTitleElement = doc.querySelectorAll("h2#subtitle");
-      expect(subTitleElement.length).toEqual(1);
+      const subTitleElements = doc.querySelectorAll("h2#subtitle");
+      expect(subTitleElements.length).toEqual(1);
 
       const { subtitle } = doc.defaultView.respecConfig;
       expect(subtitle).toEqual("pass");
 
-      const [forInnerText] = subTitleElement;
-      expect(forInnerText.textContent).toEqual("pass");
+      const [h2Elem] = subTitleElements;
+      expect(h2Elem.textContent).toEqual("pass");
 
-      const childElement = forInnerText.querySelector("code");
-      expect(childElement.textContent).toEqual("pass");
+      expect(h2Element.firstElementChild.localName).toEqual("code");
+      expect(h2Element.firstElementChild.textContent).toEqual("pass");
     });
 
     it("overwrites conf.subtitle if it exists", async () => {
       const ops = makeStandardOps();
-
       ops.body = "<h2 id='subtitle'><code>pass</code></h2>" + makeDefaultBody();
-
       const newProps = {
         subtitle: "fail - this should have been overridden by the <h2>",
       };
-
       Object.assign(ops.config, newProps);
-
       const doc = await makeRSDoc(ops);
 
       const { subtitle } = doc.defaultView.respecConfig;
       expect(subtitle).toEqual("pass");
-
-      const subTitleElement = doc.querySelectorAll("h2#subtitle");
-      expect(subTitleElement.length).toEqual(1);
-
-      const { subtitle } = doc.defaultView.respecConfig;
-      expect(subtitle).toEqual("pass");
-
-      const [h2Element] = subTitleElement;
-      expect(h2Element.textContent).toEqual("pass");
-      expect(h2Element.firstElementChild.localName).toEqual("code");
-      expect(h2Element.firstElementChild.textContent).toEqual("pass");
     });
 
     it("sets conf.subtitle if it doesn't exist, but h2#subtitle exists", async () => {
