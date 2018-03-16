@@ -179,9 +179,9 @@ function makeDefaultBody() {
  * @returns {{config: {editors, specStatus, edDraftURI, shortName, previousMaturity, previousPublishDate, errata, implementationReportURI, perEnd, lint} & any, body: string}}
  */
 
-function makeStandardOps(configParams, bodyParams = makeDefaultBody()) {
+function makeStandardOps(config = {}, body = makeDefaultBody()) {
   return {
-    config: Object.assign(makeBasicConfig(),configParams),
-    body: bodyParams,
+    body,
+    config: {...makeBasicConfig(), ...config}
   };
 }
