@@ -43,6 +43,7 @@
 .caniuse-browser:hover .caniuse-col {
   height: 100%;
   z-index: 99;
+  overflow-y: auto;
  }
 
 /* supports */

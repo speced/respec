@@ -6,12 +6,11 @@ Adds a caniuse support table for a "key" #1238
   .. the table is added below `.head`
 `<section data-caniuse=key>` =>
   .. table will be added after section's first element (usually section heading)
-Optional: Set `conf.caniuseBrowsers` to set which browsers will be shown in the table
+Optional: Set `conf.caniuse.browsers` to set which browsers will be shown in the table
   VALUES: `"ALL"` or and array of caniuse supported browser names
   (otherwise `DEFAULT_BROWSERS` will be used).
 */
 
-import { fetch as ghFetch } from "core/github";
 import { semverCompare } from "core/utils";
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
@@ -24,18 +23,16 @@ document.head.appendChild(codeStyle);
 
 export const name = "core/caniuse";
 
-export function run(conf) {
-  if (conf.caniuse) {
-    const el = document.querySelector(".head dl");
-    canIUse(conf.caniuse, el, conf.caniuseBrowsers);
+export function run({ caniuse }) {
+  updateConfig(caniuse);
+  if (caniuse.feature) {
+    canIUse(caniuse.feature, document.querySelector(".head dl"), caniuse);
   }
   for (const el of document.querySelectorAll("section[data-caniuse]")) {
-    canIUse(el.dataset.caniuse, el.firstChild, conf.caniuseBrowsers);
+    canIUse(el.dataset.caniuse, el.firstChild, caniuse);
   }
 }
 
-const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours (in ms)
-const DEFAULT_BROWSERS = ["chrome", "firefox", "ie", "edge"];
 const BROWSERS = { // browser name dictionary
   chrome: "Chrome",
   firefox: "Firefox",
@@ -50,25 +47,52 @@ const BROWSERS = { // browser name dictionary
 };
 
 /**
+ * MUTATES `conf.caniuse` object to hold normalized configurarion
+ * @param {Object|String} caniuse configuration settings
+ */
+function updateConfig(caniuse) {
+  const DEFAULTS = {
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours (in ms)
+    browsers: ["chrome", "firefox", "safari", "edge"],
+    versions: 4,
+  };
+
+  if (!caniuse) {
+    caniuse = DEFAULTS;
+    return;
+  }
+  if (typeof caniuse === "string") {
+    caniuse = { feature: caniuse, ...DEFAULTS };
+    return;
+  }
+  if (Array.isArray(caniuse.browsers)) {
+    caniuse.browsers = caniuse.browsers.map(b => b.toLowerCase());
+  } else if (caniuse.browsers !== "ALL") {
+    caniuse.browsers = DEFAULTS.browsers;
+  }
+  if (caniuse.maxAge === undefined) caniuse.maxAge = DEFAULTS.maxAge;
+  if (!caniuse.versions) caniuse.versions = DEFAULTS.versions;
+}
+
+/**
  * main canIUse function
  * @param  {String} key                         which api to look for
  * @param  {Node} el                          add table after el
- * @param  {Array:string} [browsers=DEFAULT_BROWSERS] list of browsers to show
  */
-async function canIUse(key, el, browsers = DEFAULT_BROWSERS) {
+async function canIUse(key, el, conf) {
   const url = `https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/${key}.json`;
 
   // use data from localStorage data if valid and render
   const cached = localStorage.getItem(`caniuse-${key}`);
   if (cached) {
     const stats = JSON.parse(cached);
-    if (new Date() - new Date(stats.$cacheTime) < CACHE_DURATION) {
-      return showData(key, stats, el, browsers);
+    if (new Date() - new Date(stats.$cacheTime) < conf.maxAge) {
+      return showData(key, stats, el, conf);
     }
   }
   // otherwise fetch new data and render
   const placeholder = createPlaceholder(key, el);
-  const handleResponse = ({ stats }) => showData(key, stats, el, browsers);
+  const handleResponse = ({ stats }) => showData(key, stats, el, conf);
   const handleError = err => showError(err, key, placeholder);
   try {
     const response = await fetch(url);
@@ -118,14 +142,10 @@ function showError(err, key, placeholder) {
  * @param  {Node} parent   where to render table
  * @param  {Array:string} browsers lost of browsers to show support for
  */
-function showData(key, stats, parent, browsers) {
-  if (typeof browsers === "string") {
-    if (browsers === "ALL") {
-      browsers = Object.keys(stats);
-    } else {
-      pub("warn", "`conf.caniuseBrowsers` is set wrong.");
-      browsers = DEFAULT_BROWSERS;
-    }
+function showData(key, stats, parent, conf) {
+  let browsers = conf.browsers;
+  if (conf.browsers === "ALL") {
+    browsers = Object.keys(stats);
   }
 
   // utils
@@ -138,7 +158,8 @@ function showData(key, stats, parent, browsers) {
 
   const validBrowsers = browsers.filter(b => b in stats);
   if (validBrowsers.length !== browsers.length) {
-    pub("warn", "Unsupported value(s) in `conf.caniuseBrowsers`");
+    pub("warn", `Unsupported value(s) in \`conf.caniuse.browsers\`.
+    The following were ignored: \`[${browsers.filter(b => !(b in stats))}]\``);
   }
 
   // render the support table
@@ -149,7 +170,7 @@ function showData(key, stats, parent, browsers) {
     </div>`;
 
   const old = document.getElementById(canIUseId);
-  if (old) old.parentNode.removeChild(old);
+  if (old) old.remove();
   parent.parentNode.insertBefore(caniuse, parent.nextSibling);
 
   /**
@@ -171,7 +192,7 @@ function showData(key, stats, parent, browsers) {
 
     const browserVersions = Object.keys(browserData)
       .sort(semverCompare)
-      .slice(-5) // 4 browser versions back + 1 current
+      .slice(-(conf.versions + 1)) // plus 1 current
       .reverse();
     const currentVersion = `caniuse-cell ${getSupport(browserVersions[0])}`;
     return hyperHTML`
