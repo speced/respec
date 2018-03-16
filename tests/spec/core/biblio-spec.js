@@ -1,7 +1,7 @@
 "use strict";
 describe("W3C — Bibliographic References", () => {
   //Configuration for default of ReSpec
-  const conf1 = {
+  const confDefault = {
     editors: [
       {
         name: "Robin Berjon"
@@ -47,18 +47,8 @@ describe("W3C — Bibliographic References", () => {
   };
 
   //Configuration for APA citation
-  const conf2 = {
-    editors: [
-      {
-        name: "Robin Berjon"
-      }
-    ],
-    edDraftURI: "https://foo",
-    shortName: "Foo",
-    specStatus: "WD",
-    prevVersion: "FPWD",
-    previousMaturity: "WD",
-    previousPublishDate: "2013-12-17",
+  const confAPA = {
+    ...confDefault,
     biblioStyle: "APA",
     localBiblio: {
       Zzz: {
@@ -67,25 +57,25 @@ describe("W3C — Bibliographic References", () => {
       aaa: {
         title: "First Reference"
       },
-      TestRef4: {
+      TestRef1: {
         title: "Test ref title",
         href: "http://test.com",
         authors: ["William Shakespeare"]
       },
-      TestRef5: {
+      TestRef2: {
         title: "Second test",
         href: "http://test.com"
       },
-      TestRef6: {
+      TestRef3: {
         title: "Third test"
       },
-      TestRef7: {
+      TestRef4: {
         authors: ["William Shakespeare"]
       },
-      TestRef8: {
+      TestRef5: {
         href: "http://test.com"
       },
-      TestRef9: {
+      TestRef6: {
         href: "http://test.com",
         authors: ["William Shakespeare"]
       },
@@ -99,18 +89,8 @@ describe("W3C — Bibliographic References", () => {
   };
 
   //Configuration for MLA citation
-  const conf3 = {
-    editors: [
-      {
-        name: "Robin Berjon"
-      }
-    ],
-    edDraftURI: "https://foo",
-    shortName: "Foo",
-    specStatus: "WD",
-    prevVersion: "FPWD",
-    previousMaturity: "WD",
-    previousPublishDate: "2013-12-17",
+  const confMLA = {
+    ...confDefault,
     biblioStyle: "MLA",
     localBiblio: {
       Zzz: {
@@ -119,30 +99,30 @@ describe("W3C — Bibliographic References", () => {
       aaa: {
         title: "First Reference"
       },
-      TestRef10: {
+      TestRef1: {
         title: "Test ref title",
         href: "http://test.com",
         authors: ["William Shakespeare"],
         publisher: "Publishers Inc."
       },
-      TestRef11: {
+      TestRef2: {
         title: "Second test",
         href: "http://test.com"
       },
-      TestRef12: {
+      TestRef3: {
         title: "Third test",
         publisher: "Publisher Here"
       },
-      TestRef13: {
+      TestRef4: {
         title: "Test ref title",
         href: "http://test.com",
         authors: ["William Shakespeare"]
       },
-      TestRef14: {
+      TestRef5: {
         title: "Test ref title",
         authors: ["William Shakespeare"]
       },
-      TestRef15: {
+      TestRef6: {
         authors: ["William Shakespeare"],
         publisher: "Publishers Inc."
       },
@@ -155,37 +135,9 @@ describe("W3C — Bibliographic References", () => {
     }
   };
 
-  const body1 = `
+  const body = `
     <section id='sotd'>
-      <p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p>
-    </section>
-    <section id='sample'>
-      <h2>Privacy</h2>
-      <p>foo [[!FOOBARGLOP]] bar</p>
-    </section>
-    <section>
-      <h2>Sorted</h2>
-      <p>From [[!Zzz]] to [[!aaa]]</p>
-    </secton>
-  `;
-
-  const body2 = `
-    <section id='sotd'>
-      <p>foo [[!TestRef4]] [[TestRef5]] [[!TestRef6]] [[TestRef7]] [[!TestRef8]] [[TestRef9]]</p>
-    </section>
-    <section id='sample'>
-      <h2>Privacy</h2>
-      <p>foo [[!FOOBARGLOP]] bar</p>
-    </section>
-    <section>
-      <h2>Sorted</h2>
-      <p>From [[!Zzz]] to [[!aaa]]</p>
-    </secton>
-  `;
-
-  const body3 = `
-    <section id='sotd'>
-      <p>foo [[!TestRef10]] [[TestRef11]] [[!TestRef12]] [[TestRef13]] [[!TestRef14]] [[TestRef15]]</p>
+      <p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]] [[!TestRef4]] [[TestRef5]] [[!TestRef6]]</p>
     </section>
     <section id='sample'>
       <h2>Privacy</h2>
@@ -200,12 +152,12 @@ describe("W3C — Bibliographic References", () => {
   afterAll(flushIframes);
   const bibRefsURL = new URL("https://specref.herokuapp.com/bibrefs");
 
-  let doc1, doc2, doc3;
+  let docDefault, docAPA, docMLA;
   let specRefOk;
   beforeAll(async () => {
-    doc1 = await makeRSDoc({ conf1, body1 });
-    doc2 = await makeRSDoc({ conf2, body2 });
-    doc3 = await makeRSDoc({ conf3, body3 });
+    docDefault = await makeRSDoc({ confDefault, body });
+    docAPA = await makeRSDoc({ confAPA, body });
+    docMLA = await makeRSDoc({ confMLA, body });
     specRefOk = (await fetch(bibRefsURL, { method: "HEAD" })).ok;
   });
 
@@ -215,14 +167,14 @@ describe("W3C — Bibliographic References", () => {
 
   it("includes a dns-prefetch to bibref server", () => {
     const host = bibRefsURL.host;
-    const link = doc1.querySelector(`link[rel='dns-prefetch'][href*='${host}']`);
+    const link = docDefault.querySelector(`link[rel='dns-prefetch'][href*='${host}']`);
     expect(link).toBeTruthy();
     expect(link.classList.contains("removeOnSave")).toBeTruthy();
   });
 
   it("displays the publisher when present", () => {
     // Make sure the reference is added.
-    let ref = doc1.querySelector("#bib-TestRef1 + dd");
+    let ref = docDefault.querySelector("#bib-TestRef1 + dd");
     expect(ref).toBeTruthy();
     // This prevents Jasmine from taking down the whole test suite if SpecRef is down.
     if (!specRefOk) {
@@ -233,47 +185,47 @@ describe("W3C — Bibliographic References", () => {
     expect(ref.textContent).toMatch(/Publishers Inc\.\s/);
     ref = null;
     // Make sure the ". " is automatically added to publisher.
-    ref = doc1.querySelector("#bib-TestRef2 + dd");
+    ref = docDefault.querySelector("#bib-TestRef2 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/Testing 123\.\s/);
     ref = null;
     // Make sure publisher is shown even when there is no author
-    ref = doc1.querySelector("#bib-TestRef3 + dd");
+    ref = docDefault.querySelector("#bib-TestRef3 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/Publisher Here\.\s/);
   });
 
   it("displays the reference for APA citation", () => {
     // Make sure the reference is added.
-    let ref = doc2.querySelector("#bib-TestRef4 + dd");
+    let ref = docAPA.querySelector("#bib-TestRef1 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/William Shakespeare\.\s/);
     expect(ref.textContent).toMatch(/Test ref title\.\s/);
     expect(ref.textContent).toMatch("Retrieved from URL: http://test.com/");
     ref = null;
     //title,url
-    ref = doc2.querySelector("#bib-TestRef5 + dd");
+    ref = docAPA.querySelector("#bib-TestRef2 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/Second test\.\s/);
     expect(ref.textContent).toMatch("Retrieved from URL: http://test.com/");
     ref = null;
     //title
-    ref = doc2.querySelector("#bib-TestRef6 + dd");
+    ref = docAPA.querySelector("#bib-TestRef3 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/Third test\.\s/);
     ref = null;
     //author
-    ref = doc2.querySelector("#bib-TestRef7 + dd");
+    ref = docAPA.querySelector("#bib-TestRef4 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/William Shakespeare\.\s/);
     ref = null;
     //url
-    ref = doc2.querySelector("#bib-TestRef8 + dd");
+    ref = docAPA.querySelector("#bib-TestRef5 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch("Retrieved from URL: http://test.com/");
     ref = null;
     //author,url
-    ref = doc2.querySelector("#bib-TestRef9 + dd");
+    ref = docAPA.querySelector("#bib-TestRef6 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/William Shakespeare\.\s/);
     expect(ref.textContent).toMatch("Retrieved from URL: http://test.com/");
@@ -281,7 +233,7 @@ describe("W3C — Bibliographic References", () => {
 
   it("displays the reference for MLA citation", () => {
     // Make sure the reference is added.
-    let ref = doc3.querySelector("#bib-TestRef10 + dd");
+    let ref = docMLA.querySelector("#bib-TestRef1 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/William Shakespeare\.\s/);
     expect(ref.textContent).toMatch(/"Test ref title\."\s/);
@@ -289,32 +241,32 @@ describe("W3C — Bibliographic References", () => {
     expect(ref.textContent).toMatch("http://test.com");
     ref = null;
     // title,url
-    ref = doc3.querySelector("#bib-TestRef11 + dd");
+    ref = docMLA.querySelector("#bib-TestRef2 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/"Second test"/);
     expect(ref.textContent).toMatch("http://test.com");
     ref = null;
     // publisher,title
-    ref = doc3.querySelector("#bib-TestRef12 + dd");
+    ref = docMLA.querySelector("#bib-TestRef3 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/Publisher Here,/);
     expect(ref.textContent).toMatch(/"Third test\."\s/);
     ref = null;
     // title,url,author
-    ref = doc3.querySelector("#bib-TestRef13 + dd");
+    ref = docMLA.querySelector("#bib-TestRef4 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/"Test ref title\."\s/);
     expect(ref.textContent).toMatch("http://test.com");
     expect(ref.textContent).toMatch(/William Shakespeare\.\s/);
     ref = null;
     // title,author
-    ref = doc3.querySelector("#bib-TestRef14 + dd");
+    ref = docMLA.querySelector("#bib-TestRef5 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/"Test ref title\."\s/);
     expect(ref.textContent).toMatch(/William Shakespeare\.\s/);
     ref = null;
     // publisher,author
-    ref = doc3.querySelector("#bib-TestRef15 + dd");
+    ref = docMLA.querySelector("#bib-TestRef6 + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/Publishers Inc\.\s/);
     expect(ref.textContent).toMatch(/William Shakespeare\.\s/);
@@ -322,15 +274,15 @@ describe("W3C — Bibliographic References", () => {
   });
 
   it("resolves a localy-aliased spec", () => {
-    const ref = doc1.querySelector("#bib-FOOBARGLOP + dd");
+    const ref = docDefault.querySelector("#bib-FOOBARGLOP + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/BARBAR/);
   });
   it("sorts references as if they were lowercase", () => {
-    const { textContent: first } = doc1.querySelector(
+    const { textContent: first } = docDefault.querySelector(
       "#normative-references dt:first-of-type"
     );
-    const { textContent: last } = doc1.querySelector(
+    const { textContent: last } = docDefault.querySelector(
       "#normative-references dt:last-of-type"
     );
     expect(first).toMatch("[a]");
