@@ -69,9 +69,17 @@ async function canIUse(key, el, browsers = DEFAULT_BROWSERS) {
   // otherwise fetch new data and render
   const placeholder = createPlaceholder(key, el);
   const handleResponse = ({ stats }) => showData(key, stats, el, browsers);
-  const handleError = err => showError(err, placeholder);
+  const handleError = err => showError(err, key, placeholder);
   try {
-    const json = await ghFetch(url);
+    const response = await fetch(url);
+    if (!response.ok) {
+      if (response.status === 404) {
+        console.error(`The resource ${ url } could not be found (HTTP 404)`);
+        throw new Error("Could not fetch GitHub resource (HTTP 404)");
+      }
+      throw new Error("GitHub Response not OK. Probably exceeded request limit.");
+    }
+    const json = await response.json();
     handleResponse(json);
   } catch (err) {
     handleError(err);
@@ -96,9 +104,11 @@ function createPlaceholder(key, parent) {
   return parent.parentNode.insertBefore(placeholder, parent.nextSibling);
 }
 
-function showError(err, placeholder) {
-  placeholder.style.height = "40px";
-  placeholder.querySelector("dd").innerText = `Error: ${err.message}`;
+function showError(err, key, placeholder) {
+  const permalink = `http://caniuse.com/#feat=${key}`;
+  hyperHTML.bind(placeholder.querySelector("dd"))`
+  Error [core/caniuse]: ${err.message}.
+  <br>Please check directly on <a href="${permalink}">${permalink}</a>.`;
 }
 
 /**
