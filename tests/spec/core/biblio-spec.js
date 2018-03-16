@@ -37,10 +37,10 @@ describe("W3C — Bibliographic References", () => {
         href: "http://test.com",
         publisher: "Publisher Here",
       },
-      TestRef5: {
+      RefWithOnlyHref: {
         href: "http://test.com",
       },
-      TestRef6: {
+      RefWithOnlyHrefAndAuthor: {
         href: "http://test.com",
         authors: ["William Shakespeare"],
       },
@@ -67,7 +67,7 @@ describe("W3C — Bibliographic References", () => {
 
   const body = `
     <section id='sotd'>
-      <p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]] [[!TestRef4]] [[TestRef5]] [[!TestRef6]]</p>
+      <p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]] [[RefWithOnlyHref]] [[!RefWithOnlyHrefAndAuthor]]</p>
     </section>
     <section id='sample'>
       <h2>Privacy</h2>
@@ -128,82 +128,126 @@ describe("W3C — Bibliographic References", () => {
   });
 
   it("displays the reference for APA citation", () => {
-    // Make sure the reference is added.
     let ref = docAPA.querySelector("#bib-TestRef1 + dd");
     expect(ref).toBeTruthy();
-    expect(ref.textContent).toMatch(/William Shakespeare\.\s/);
-    expect(ref.textContent).toMatch(/Test ref title\.\s/);
-    expect(ref.textContent).toMatch("Retrieved from URL: http://test.com/");
-    ref = null;
-    //title,url
-    ref = docAPA.querySelector("#bib-TestRef2 + dd");
-    expect(ref).toBeTruthy();
-    expect(ref.textContent).toMatch(/Second test\.\s/);
-    expect(ref.textContent).toMatch("Retrieved from URL: http://test.com/");
-    ref = null;
-    //title
+    let finalString = "William Shakespeare. (2013-12-17). Test ref title. Retrieved from URL: http://test.com/";
+    expect(ref.textContent.trim()).toEqual(finalString); 
+    //Make sure that the right things are hyperlinked
+    let anchors = ref.querySelectorAll("a");
+    expect(anchors.length).toEqual(2);
+    let [title, retrievedFrom] = [...anchors];
+    expect(title.href).toEqual("http://test.com/");
+    expect(title.firstElementChild.localName).toEqual("cite");
+    expect(title.firstElementChild.textContent).toEqual("Test ref title");
+    expect(retrievedFrom.href).toEqual("http://test.com/");
+    ref = finalString = null;
+
     ref = docAPA.querySelector("#bib-TestRef3 + dd");
     expect(ref).toBeTruthy();
-    expect(ref.textContent).toMatch(/Third test\.\s/);
-    ref = null;
-    //author
-    ref = docAPA.querySelector("#bib-TestRef4 + dd");
-    expect(ref).toBeTruthy();
-    expect(ref.textContent).toMatch(/William Shakespeare\.\s/);
-    ref = null;
-    //url
-    ref = docAPA.querySelector("#bib-TestRef5 + dd");
-    expect(ref).toBeTruthy();
-    expect(ref.textContent).toMatch("Retrieved from URL: http://test.com/");
-    ref = null;
-    //author,url
-    ref = docAPA.querySelector("#bib-TestRef6 + dd");
-    expect(ref).toBeTruthy();
-    expect(ref.textContent).toMatch(/William Shakespeare\.\s/);
-    expect(ref.textContent).toMatch("Retrieved from URL: http://test.com/");
+    finalString = "(2013-12-17). Third test. Retrieved from URL: http://test.com/";
+    expect(ref.textContent.trim()).toEqual(finalString); 
+    //Make sure that the right things are hyperlinked
+    anchors = ref.querySelectorAll("a");
+    expect(anchors.length).toEqual(2);
+    [title, retrievedFrom] = [...anchors];
+    expect(title.href).toEqual("http://test.com/");
+    expect(title.firstElementChild.localName).toEqual("cite");
+    expect(title.firstElementChild.textContent).toEqual("Third test");
+    expect(retrievedFrom.href).toEqual("http://test.com/");
   });
 
   it("displays the reference for MLA citation", () => {
-    // Make sure the reference is added.
     let ref = docMLA.querySelector("#bib-TestRef1 + dd");
     expect(ref).toBeTruthy();
-    expect(ref.textContent).toMatch(/William Shakespeare\.\s/);
-    expect(ref.textContent).toMatch(/"Test ref title\."\s/);
-    expect(ref.textContent).toMatch(/Publishers Inc,/);
-    expect(ref.textContent).toMatch("http://test.com");
-    ref = null;
-    // title,url
+    let finalString = "William Shakespeare. \"Test ref title.\" Publishers Inc., 2013-12-17, http://test.com/";
+    expect(ref.textContent.trim()).toEqual(finalString); 
+    //Make sure that the right things are hyperlinked
+    let anchors = ref.querySelectorAll("a");
+    expect(anchors.length).toEqual(2);
+    let [title, retrievedFrom] = [...anchors];
+    expect(title.href).toEqual("http://test.com/");
+    expect(title.firstElementChild.localName).toEqual("cite");
+    expect(title.firstElementChild.textContent).toEqual("\"Test ref title.\"");
+    expect(retrievedFrom.href).toEqual("http://test.com/");
+    ref = finalString = null;
+
     ref = docMLA.querySelector("#bib-TestRef2 + dd");
     expect(ref).toBeTruthy();
-    expect(ref.textContent).toMatch(/"Second test"/);
-    expect(ref.textContent).toMatch("http://test.com");
-    ref = null;
-    // publisher,title
+    finalString = "Another author. \"Second test.\" Testing 123, 2013-12-17, http://test.com/";
+    expect(ref.textContent.trim()).toEqual(finalString);
+    //Make sure that the right things are hyperlinked 
+    anchors = ref.querySelectorAll("a");
+    expect(anchors.length).toEqual(2);
+    [title, retrievedFrom] = [...anchors];
+    expect(title.href).toEqual("http://test.com/");
+    expect(title.firstElementChild.localName).toEqual("cite");
+    expect(title.firstElementChild.textContent).toEqual("\"Second test.\"");
+    expect(retrievedFrom.href).toEqual("http://test.com/");
+    ref = finalString = null;
+
     ref = docMLA.querySelector("#bib-TestRef3 + dd");
     expect(ref).toBeTruthy();
-    expect(ref.textContent).toMatch(/Publisher Here,/);
-    expect(ref.textContent).toMatch(/"Third test\."\s/);
-    ref = null;
-    // title,url,author
-    ref = docMLA.querySelector("#bib-TestRef4 + dd");
-    expect(ref).toBeTruthy();
-    expect(ref.textContent).toMatch(/"Test ref title\."\s/);
-    expect(ref.textContent).toMatch("http://test.com");
-    expect(ref.textContent).toMatch(/William Shakespeare\.\s/);
-    ref = null;
-    // title,author
-    ref = docMLA.querySelector("#bib-TestRef5 + dd");
-    expect(ref).toBeTruthy();
-    expect(ref.textContent).toMatch(/"Test ref title\."\s/);
-    expect(ref.textContent).toMatch(/William Shakespeare\.\s/);
-    ref = null;
-    // publisher,author
-    ref = docMLA.querySelector("#bib-TestRef6 + dd");
-    expect(ref).toBeTruthy();
-    expect(ref.textContent).toMatch(/Publishers Inc\.\s/);
-    expect(ref.textContent).toMatch(/William Shakespeare\.\s/);
-    ref = null;
+    finalString = "\"Third test.\" Publisher Here, 2013-12-17, http://test.com/";
+    expect(ref.textContent.trim()).toEqual(finalString); 
+    //Make sure that the right things are hyperlinked
+    anchors = ref.querySelectorAll("a");
+    expect(anchors.length).toEqual(2);
+    [title, retrievedFrom] = [...anchors];
+    expect(title.href).toEqual("http://test.com/");
+    expect(title.firstElementChild.localName).toEqual("cite");
+    expect(title.firstElementChild.textContent).toEqual("\"Third test.\"");
+    expect(retrievedFrom.href).toEqual("http://test.com/");
+    ref = finalString = null;
   });
+
+  //For both MLA and APA
+  it("Reference with only url", ()=>{
+    let ref = docAPA.querySelector("#bib-RefWithOnlyHref + dd");
+    expect(ref).toBeTruthy();
+    let finalString = "(2013-12-17). Retrieved from URL: http://test.com/";
+    expect(ref.textContent.trim()).toEqual(finalString); 
+    //Make sure that the right things are hyperlinked
+    let anchors = ref.querySelectorAll("a");
+    expect(anchors.length).toEqual(1);
+    [retrievedFrom] = [...anchors];
+    expect(retrievedFrom.href).toEqual("http://test.com/");
+    ref = finalString = null;
+
+    ref = docMLA.querySelector("#bib-RefWithOnlyHref + dd");
+    expect(ref).toBeTruthy();
+    finalString = "2013-12-17, http://test.com/";
+    expect(ref.textContent.trim()).toEqual(finalString); 
+    expect(ref.textContent.trim()).toEqual(finalString); 
+    //Make sure that the right things are hyperlinked
+    anchors = ref.querySelectorAll("a");
+    expect(anchors.length).toEqual(1);
+    [retrievedFrom] = [...anchors];
+    expect(retrievedFrom.href).toEqual("http://test.com/");
+  }); 
+
+  //For both MLA and APA
+  it("Reference with only url", ()=>{
+    let ref = docAPA.querySelector("#bib-RefWithOnlyHrefAndAuthor + dd");
+    expect(ref).toBeTruthy();
+    finalString = "William Shakespeare. (2013-12-17). Retrieved from URL: http://test.com/";
+    expect(ref.textContent.trim()).toEqual(finalString); 
+    //Make sure that the right things are hyperlinked
+    anchors = ref.querySelectorAll("a");
+    expect(anchors.length).toEqual(1);
+    [retrievedFrom] = [...anchors];
+    expect(retrievedFrom.href).toEqual("http://test.com/");
+    ref = finalString = null;
+
+    ref = docMLA.querySelector("#bib-RefWithOnlyHrefAndAuthor + dd");
+    expect(ref).toBeTruthy();
+    finalString = "William Shakespeare. 2013-12-17, http://test.com/";
+    expect(ref.textContent.trim()).toEqual(finalString); 
+    //Make sure that the right things are hyperlinked
+    anchors = ref.querySelectorAll("a");
+    expect(anchors.length).toEqual(1);
+    [retrievedFrom] = [...anchors];
+    expect(retrievedFrom.href).toEqual("http://test.com/");
+  }); 
 
   it("resolves a localy-aliased spec", () => {
     const ref = docDefault.querySelector("#bib-FOOBARGLOP + dd");

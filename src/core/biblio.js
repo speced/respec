@@ -126,7 +126,7 @@ function entryToMLA(ref) {
       ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : ""}.`
       : "";
   const date = ref.date ? `${ref.date}, ` : "";
-  const title = ref.title;
+  const title = `"${ref.title}." `;
   const publisher = ref.publisher
     ? `${ref.publisher} ${ref.publisher.endsWith(".")}`
     : "";
@@ -135,7 +135,7 @@ function entryToMLA(ref) {
 	${authors} ${
     ref.href
       ? html`<a href="${ref.href}"><cite>${title}</cite></a>.`
-      : `${ref.title}`
+      : `${title}`
   } ${publisher} ${date} ${
     ref.href ? html`<a href="${ref.href}">${ref.href}</a>` : ""
   }`;
@@ -223,7 +223,7 @@ function bibref(conf) {
         .appendTo($dl);
       var $dd = $("<dd></dd>").appendTo($dl);
       var refcontent = conf.biblio[ref];
-      var refstyle = conf.biblioStyle;
+      const { biblioStyle: refstyle }  = conf;
       var circular = {};
       var key = ref;
       circular[ref] = true;
