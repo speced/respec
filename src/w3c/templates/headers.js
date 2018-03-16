@@ -20,12 +20,13 @@ export default conf => {
   }
   specTitleElem.classList.add("title", "p-name");
 
-  const specSubTitleElem =
-    document.querySelector("h2#subtitle") || document.createElement("h2");
+  let specSubTitleElem =
+    document.querySelector("h2#subtitle") || null;
   if (specSubTitleElem.parentElement) {
     specSubTitleElem.remove();
     conf.subtitle = specSubTitleElem.textContent.trim();
-  } else {
+  } else if(conf.subtitle) {
+    specSubTitleElem = document.createElement("h2");
     specSubTitleElem.textContent = conf.subtitle;
     specSubTitleElem.id = "subtitle";
   }
