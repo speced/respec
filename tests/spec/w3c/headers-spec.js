@@ -1,4 +1,7 @@
 "use strict";
+const findContent = string => {
+  return ({ textContent }) => textContent.trim() === string;
+};
 describe("W3C — Headers", function() {
   afterEach(flushIframes);
   const simpleSpecURL = "spec/core/simple.html";
@@ -180,6 +183,8 @@ describe("W3C — Headers", function() {
   });
 
   describe("formerEditors", () => {
+    const formerEditors = findContent("Former Editors:");
+    const formerEditor = findContent("Former Editor:");
     it("takes no former editor into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
@@ -189,56 +194,55 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
 
-      const formerEditorsLabel = [...doc.querySelectorAll("dt")]
-        .find(({ textContent }) => textContent.trim() === "Former Editors:");
+      const dtElems = doc.querySelectorAll("dt");
+      const formerEditorsLabel = [...dtsElems].find(formerEditors);
       expect(formerEditorsLabel).toBeUndefined();
 
-      const formerEditorLabel = [...doc.querySelectorAll("dt")]
-        .find(({ textContent }) => textContent.trim() === "Former Editor:");
+      const formerEditorLabel = [...dtsElems].find(formerEditor);
       expect(formerEditorLabel).toBeUndefined();
     });
 
     it("takes a single former editor into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
-      specStatus: "REC",
-        formerEditors: [{
-          name: "NAME",
-          url: "http://URI",
-          company: "COMPANY",
-          companyURL: "http://COMPANY",
-          mailto: "EMAIL",
-          w3cid: "1234",
-        }],
+        specStatus: "REC",
+        formerEditors: [
+          {
+            name: "NAME",
+            url: "http://URI",
+            company: "COMPANY",
+            companyURL: "http://COMPANY",
+            mailto: "EMAIL",
+            w3cid: "1234",
+          },
+        ],
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-
-      const formerEditorLabel = [...doc.querySelectorAll("dt")]
-        .find(({ textContent }) => textContent.trim() === "Former Editor:");
+      const dtElems = doc.querySelectorAll("dt");
+      const formerEditorLabel = [...dtElems].find(formerEditor);
       expect(formerEditorLabel).toBeDefined();
 
-      const formerEditorsLabel = [...doc.querySelectorAll("dt")]
-        .find(({ textContent }) => textContent.trim() === "Former Editors:");
+      const formerEditorsLabel = [...dtElems].find(formerEditors);
       expect(formerEditorsLabel).toBeUndefined();
 
-      const $editor = formerEditorLabel.nextSibling;
-      expect($editor.tagName.toLowerCase()).toEqual("dd");
-      expect($editor.textContent).toEqual("NAME (COMPANY)");
+      const editor = formerEditorLabel.nextSibling;
+      expect(editor.localName).toEqual("dd");
+      expect(editor.textContent).toEqual("NAME (COMPANY)");
 
-      const $editorCompany = $editor.querySelectorAll("a[href='http://COMPANY']");
-      expect($editorCompany.length).toEqual(1);
-      expect($editorCompany[0].textContent).toEqual("COMPANY");
+      const editorCompany = editor.querySelectorAll("a[href='http://COMPANY']");
+      expect(editorCompany.length).toEqual(1);
+      expect(editorCompany[0].textContent).toEqual("COMPANY");
 
-      const $editorEmail = $editor.querySelectorAll("a[href='mailto:EMAIL']");
-      expect($editorEmail.length).toEqual(1);
-      expect($editorEmail[0].textContent).toEqual("NAME");
+      const editorEmail = editor.querySelectorAll("a[href='mailto:EMAIL']");
+      expect(editorEmail.length).toEqual(1);
+      expect(editorEmail[0].textContent).toEqual("NAME");
 
       // if `mailto` is specified in People, `url` won't be used
-      const $editorUrl = $editor.querySelectorAll("a[href='http://URI']");
-      expect($editorUrl.length).toEqual(0);
+      const editorUrl = editor.querySelectorAll("a[href='http://URI']");
+      expect(editorUrl.length).toEqual(0);
 
-      const { editorId } = $editor.dataset;
+      const { editorId } = editor.dataset;
       expect(editorId).toEqual("1234");
     });
 
@@ -257,22 +261,20 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-
-      const formerEditorLabel = [...doc.querySelectorAll("dt")]
-        .find(({ textContent }) => textContent.trim() === "Former Editor:");
+      const dtElems = doc.querySelectorAll("dt");
+      const formerEditorLabel = [...dtElems].find(formerEditor);
       expect(formerEditorLabel).toBeUndefined();
 
-      const formerEditorsLabel = [...doc.querySelectorAll("dt")]
-        .find(({ textContent }) => textContent.trim() === "Former Editors:");
+      const formerEditorsLabel = [...dtElems].find(formerEditors);
       expect(formerEditorsLabel).toBeDefined();
 
-      const $firstEditor = formerEditorsLabel.nextSibling;
-      expect($firstEditor.tagName.toLowerCase()).toEqual("dd");
-      expect($firstEditor.textContent).toEqual("NAME1");
+      const firstEditor = formerEditorsLabel.nextSibling;
+      expect(firstEditor.localName).toEqual("dd");
+      expect(firstEditor.textContent).toEqual("NAME1");
 
-      const $secondEditor = $firstEditor.nextSibling;
-      expect($secondEditor.tagName.toLowerCase()).toEqual("dd");
-      expect($secondEditor.textContent).toEqual("NAME2");
+      const secondEditor = firstEditor.nextSibling;
+      expect(secondEditor.localName).toEqual("dd");
+      expect(secondEditor.textContent).toEqual("NAME2");
     });
   });
 
@@ -1084,29 +1086,36 @@ describe("W3C — Headers", function() {
   describe("logos", () => {
     it("adds logos defined by configuration", async () => {
       const ops = makeStandardOps();
-      const logos = [{
-        src: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
-        alt: "this is a small gif",
-        height: 765,
-        width: 346,
-        url: "http://hyperlink/"
-      }, {
-        src: "data:image/svg+xml,<svg%20xmlns=\"http://www.w3.org/2000/svg\"/>",
-        alt: "this is an svg",
-        height: 315,
-        width: 961,
-        url: "http://prod/"
-      }, {
-        src: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
-        alt: "this is a larger gif",
-        height: 876,
-        width: 283,
-        url: "http://shiny/"
-      }];
+      const logos = [
+        {
+          src: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
+          alt: "this is a small gif",
+          height: 765,
+          width: 346,
+          url: "http://hyperlink/",
+        },
+        {
+          src: 'data:image/svg+xml,<svg%20xmlns="http://www.w3.org/2000/svg"/>',
+          alt: "this is an svg",
+          height: 315,
+          width: 961,
+          url: "http://prod/",
+        },
+        {
+          src:
+            "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
+          alt: "this is a larger gif",
+          height: 876,
+          width: 283,
+          url: "http://shiny/",
+        },
+      ];
       Object.assign(ops.config, { logos });
       const doc = await makeRSDoc(ops);
       // get logos
-      const anchors = doc.querySelectorAll(".head p:not(.copyright):first-child > a");
+      const anchors = doc.querySelectorAll(
+        ".head p:not(.copyright):first-child > a"
+      );
       for (let i = 0; i < anchors.length; i++) {
         const anchor = anchors[i];
         const img = anchor.children[0];
