@@ -1,15 +1,20 @@
 /*
 Module: "core/caniuse"
-Adds a caniuse support table for a "key" #1238
+Adds a caniuse support table for a "feature" #1238
 
-`conf = { caniuse: key }` =>
-  .. the table is added below `.head`
+`conf.caniuse = { feature: key }` =>
+  .. the table is added before Copyright
 `<section data-caniuse=key>` =>
   .. table will be added after section's first element (usually section heading)
-Optional: Set `conf.caniuse.browsers` to set which browsers will be shown in the table
-  VALUES: `"ALL"` or and array of caniuse supported browser names
-  (otherwise `DEFAULT_BROWSERS` will be used).
+Optional settings:
+  `conf.caniuse.browsers` list of caniuse supported browser names
+    to be shown in the table or "ALL"
+    default: ["chrome", "firefox", "safari", "edge"]
+  `conf.caniuse.versions` number of older browser versions to show
+  `conf.caniuse.maxAge` (in ms) local response cache duration
 */
+
+// TODO: Use IndexedDB
 
 import { semverCompare } from "core/utils";
 import { pub } from "core/pubsubhub";
@@ -24,7 +29,7 @@ document.head.appendChild(codeStyle);
 export const name = "core/caniuse";
 
 export function run({ caniuse }) {
-  updateConfig(caniuse);
+  updateConfig(caniuse); // normalize conf.caniuse
   if (caniuse.feature) {
     canIUse(caniuse.feature, document.querySelector(".head dl"), caniuse);
   }
@@ -77,9 +82,9 @@ function updateConfig(caniuse) {
 /**
  * main canIUse function
  * @param  {String} key                         which api to look for
- * @param  {Node} el                          add table after el
+ * @param  {Node} parent                          add table after parent
  */
-async function canIUse(key, el, conf) {
+async function canIUse(key, parent, conf) {
   const url = `https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/${key}.json`;
 
   // use data from localStorage data if valid and render
@@ -87,12 +92,12 @@ async function canIUse(key, el, conf) {
   if (cached) {
     const stats = JSON.parse(cached);
     if (new Date() - new Date(stats.$cacheTime) < conf.maxAge) {
-      return showData(key, stats, el, conf);
+      return showData(key, stats, parent, conf);
     }
   }
   // otherwise fetch new data and render
-  const placeholder = createPlaceholder(key, el);
-  const handleResponse = ({ stats }) => showData(key, stats, el, conf);
+  const placeholder = createPlaceholder(key, parent);
+  const handleResponse = ({ stats }) => showData(key, stats, conf, parent);
   const handleError = err => showError(err, key, placeholder);
   try {
     const response = await fetch(url);
@@ -117,9 +122,8 @@ async function canIUse(key, el, conf) {
  * @return {Node}        inserted placeholder
  */
 function createPlaceholder(key, parent) {
-  const canIUseId = `caniuse-${key}`;
   const placeholder = hyperHTML`
-    <div class="caniuse" id="${canIUseId}">
+    <div class="caniuse" id="${`caniuse-${key}`}">
       <dt class="caniuse-title">
         Can I Use this API? (${key})
       </dt>
@@ -131,18 +135,18 @@ function createPlaceholder(key, parent) {
 function showError(err, key, placeholder) {
   const permalink = `http://caniuse.com/#feat=${key}`;
   hyperHTML.bind(placeholder.querySelector("dd"))`
-  Error [core/caniuse]: ${err.message}.
-  <br>Please check directly on <a href="${permalink}">${permalink}</a>.`;
+    Error [core/caniuse]: ${err.message}.
+    <br>Please check directly on <a href="${permalink}">${permalink}</a>.`;
 }
 
 /**
  * render the canIUse support table
  * @param  {String} key      API name
  * @param  {Object} stats     CanIUse API results
+ * @param  {Object} conf   respecConfig.caniuse
  * @param  {Node} parent   where to render table
- * @param  {Array:string} browsers lost of browsers to show support for
  */
-function showData(key, stats, parent, conf) {
+function showData(key, stats, conf, parent) {
   let browsers = conf.browsers;
   if (conf.browsers === "ALL") {
     browsers = Object.keys(stats);
@@ -166,7 +170,14 @@ function showData(key, stats, parent, conf) {
   const caniuse = hyperHTML`
     <div class="caniuse" id="${canIUseId}">
       <dt>Can I Use this API? (${key})</dt>
-      <div class="caniuse-stats">${validBrowsers.map(addBrowser)} <a href="${permalink}" title="Get details on caniuse.com">More info</a></div>
+      <div class="caniuse-stats">
+        ${validBrowsers.map(browser =>
+          addBrowser(browser, conf.versions, stats[browser])
+        )}
+        <a href="${permalink}" title="Get details at caniuse.com">
+          More info
+        </a>
+      </div>
     </div>`;
 
   const old = document.getElementById(canIUseId);
@@ -174,14 +185,12 @@ function showData(key, stats, parent, conf) {
   parent.parentNode.insertBefore(caniuse, parent.nextSibling);
 
   /**
-   * add a browser to table
-   * @param {String} name of browser (as in CanIUse API response)
-   * external variables:
-   *  - stats: API response data.stats
-   *  - BROWSERS: dictionary of browser names
+   * add a browser and it's support to table
+   * @param {String} browser name of browser (as in CanIUse API response)
+   * @param {Number} numVersions number of old browser versions to show
+   * @param {Object} browserData stats data from api response
    */
-  function addBrowser(browser) {
-    const browserData = stats[browser];
+  function addBrowser(browser, numVersions, browserData) {
     if (!browserData) return "";
 
     const getSupport = version =>
@@ -192,15 +201,17 @@ function showData(key, stats, parent, conf) {
 
     const browserVersions = Object.keys(browserData)
       .sort(semverCompare)
-      .slice(-(conf.versions + 1)) // plus 1 current
+      .slice(-(numVersions + 1)) // plus 1 current
       .reverse();
-    const currentVersion = `caniuse-cell ${getSupport(browserVersions[0])}`;
+
     return hyperHTML`
-      <div class="caniuse-browser">
-        <div class="${currentVersion}">${BROWSERS[browser] || browser} ${browserVersions[0]}</div>
-        <div class="caniuse-col">
-          ${browserVersions.slice(1).map(addBrowserVersion)}
-        </div>
-      </div>`;
-  } // end:addBrowser
+    <div class="caniuse-browser">
+      <div class="${`caniuse-cell ${getSupport(browserVersions[0])}`}">
+        ${BROWSERS[browser] || browser} ${browserVersions[0]}
+      </div>
+      <div class="caniuse-col">
+        ${browserVersions.slice(1).map(addBrowserVersion)}
+      </div>
+    </div>`;
+  }
 }
