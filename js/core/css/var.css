@@ -8,13 +8,8 @@ var.respec-active {
   color: var(--respec-color);
 }
 
-var.respec-bug {
-  background: red;
-  color: #fff;
-}
-
 @media print {
-  var.respec-active, var.respec-bug {
+  var.respec-active {
     background: none;
     color: #000;
   }
