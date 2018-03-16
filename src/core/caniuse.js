@@ -14,8 +14,6 @@ Optional settings:
   `conf.caniuse.maxAge` (in ms) local response cache duration
 */
 
-// TODO: Use IndexedDB
-
 import { semverCompare } from "core/utils";
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
@@ -28,14 +26,116 @@ document.head.appendChild(codeStyle);
 
 export const name = "core/caniuse";
 
-export function run({ caniuse }) {
-  updateConfig(caniuse); // normalize conf.caniuse
+export function run(conf) {
+  normalizeConf(conf);
+  const { caniuse } = conf;
   if (caniuse.feature) {
     canIUse(caniuse.feature, document.querySelector(".head dl"), caniuse);
   }
   for (const el of document.querySelectorAll("section[data-caniuse]")) {
     canIUse(el.dataset.caniuse, el.firstChild, caniuse);
   }
+}
+
+/**
+ * MUTATES `conf.caniuse` object to hold normalized configurarion
+ * @param {Object|String} conf   configuration settings
+ */
+function normalizeConf(conf) {
+  const DEFAULTS = {
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours (in ms)
+    browsers: ["chrome", "firefox", "safari", "edge"],
+    versions: 4,
+  };
+
+  if (!conf.caniuse) {
+    conf.caniuse = DEFAULTS;
+    return;
+  }
+  if (typeof conf.caniuse === "string") {
+    conf.caniuse = { feature: conf.caniuse, ...DEFAULTS };
+    return;
+  }
+  if (Array.isArray(conf.caniuse.browsers)) {
+    conf.caniuse.browsers = conf.caniuse.browsers.map(b => b.toLowerCase());
+  } else if (conf.caniuse.browsers !== "ALL") {
+    conf.caniuse.browsers = DEFAULTS.browsers;
+  }
+  if (conf.caniuse.maxAge === undefined) conf.caniuse.maxAge = DEFAULTS.maxAge;
+  if (!conf.caniuse.versions) conf.caniuse.versions = DEFAULTS.versions;
+}
+
+/**
+ * main canIUse function
+ * @param  {String} key              which api to look for
+ * @param  {Node} parent             adds table after parent
+ * @param {Object} conf              normalized respecConfig.caniuse
+ */
+async function canIUse(key, parent, conf) {
+  const url = `https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/${key}.json`;
+
+  const cache = await IDBCache("respec-caniuse");
+
+  // use data from cache data if valid and render
+  try {
+    const cachedStats = await cache.get(key);
+    if (cachedStats
+      && new Date() - new Date(cachedStats.cacheTime) < conf.maxAge) {
+      return showData(key, cachedStats.stats, conf, parent);
+    }
+  } catch (err) {
+    console.error("[core/caniuse]", err);
+  }
+
+  // otherwise fetch new data, cache and render
+  const placeholder = createPlaceholder(key, parent);
+  try {
+    const json = await getJson(url);
+    showData(key, json.stats, conf, parent);
+    cache.set(key, { stats: json.stats, cacheTime: new Date() })
+      .catch(err => console.error("[core/caniuse] (Could not cache)", err));
+  } catch (err) {
+    showError(err, key, placeholder);
+  }
+}
+
+/**
+ * creates a placeholder while the API fetches results
+ * @param  {String} key     API feature name
+ * @param  {Node} parent    where to create placeholder
+ * @return {Node}           inserted placeholder
+ */
+function createPlaceholder(key, parent) {
+  const placeholder = hyperHTML`
+    <div class="caniuse" id="${`caniuse-${key}`}">
+      <dt class="caniuse-title">
+        Can I Use this API? (${key})
+      </dt>
+      <dd>fetching data from caniuse.com... </dl>
+    </div>`;
+  return parent.parentNode.insertBefore(placeholder, parent.nextSibling);
+}
+
+// TODO: replace with fetch in core/github ?
+async function getJson(url) {
+  const response = await window.fetch(url);
+  if (!response.ok) {
+    if (response.status === 404) {
+      console.error(`The resource ${url} could not be found (HTTP 404)`);
+      throw new Error("Could not fetch GitHub resource (HTTP 404)");
+    }
+    const errorMsg = `GitHub Response not OK. Probably exceeded request limit. (HTTP ${response.status})`;
+    console.error(`${errorMsg}. Resource = ${url}`);
+    throw new Error(errorMsg);
+  }
+  return await response.json();
+}
+
+function showError(err, key, placeholder) {
+  const permalink = `http://caniuse.com/#feat=${key}`;
+  hyperHTML.bind(placeholder.querySelector("dd"))`
+    Error [core/caniuse]: ${err.message}.
+    <br>Please check directly on <a href="${permalink}">${permalink}</a>.`;
 }
 
 const BROWSERS = { // browser name dictionary
@@ -52,99 +152,11 @@ const BROWSERS = { // browser name dictionary
 };
 
 /**
- * MUTATES `conf.caniuse` object to hold normalized configurarion
- * @param {Object|String} caniuse configuration settings
- */
-function updateConfig(caniuse) {
-  const DEFAULTS = {
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours (in ms)
-    browsers: ["chrome", "firefox", "safari", "edge"],
-    versions: 4,
-  };
-
-  if (!caniuse) {
-    caniuse = DEFAULTS;
-    return;
-  }
-  if (typeof caniuse === "string") {
-    caniuse = { feature: caniuse, ...DEFAULTS };
-    return;
-  }
-  if (Array.isArray(caniuse.browsers)) {
-    caniuse.browsers = caniuse.browsers.map(b => b.toLowerCase());
-  } else if (caniuse.browsers !== "ALL") {
-    caniuse.browsers = DEFAULTS.browsers;
-  }
-  if (caniuse.maxAge === undefined) caniuse.maxAge = DEFAULTS.maxAge;
-  if (!caniuse.versions) caniuse.versions = DEFAULTS.versions;
-}
-
-/**
- * main canIUse function
- * @param  {String} key                         which api to look for
- * @param  {Node} parent                          add table after parent
- */
-async function canIUse(key, parent, conf) {
-  const url = `https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/${key}.json`;
-
-  // use data from localStorage data if valid and render
-  const cached = localStorage.getItem(`caniuse-${key}`);
-  if (cached) {
-    const stats = JSON.parse(cached);
-    if (new Date() - new Date(stats.$cacheTime) < conf.maxAge) {
-      return showData(key, stats, parent, conf);
-    }
-  }
-  // otherwise fetch new data and render
-  const placeholder = createPlaceholder(key, parent);
-  const handleResponse = ({ stats }) => showData(key, stats, conf, parent);
-  const handleError = err => showError(err, key, placeholder);
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      if (response.status === 404) {
-        console.error(`The resource ${ url } could not be found (HTTP 404)`);
-        throw new Error("Could not fetch GitHub resource (HTTP 404)");
-      }
-      throw new Error("GitHub Response not OK. Probably exceeded request limit.");
-    }
-    const json = await response.json();
-    handleResponse(json);
-  } catch (err) {
-    handleError(err);
-  }
-}
-
-/**
- * creates a placeholder while the API fetches results
- * @param  {String} key    API name
- * @param  {Node} parent where to create placeholder
- * @return {Node}        inserted placeholder
- */
-function createPlaceholder(key, parent) {
-  const placeholder = hyperHTML`
-    <div class="caniuse" id="${`caniuse-${key}`}">
-      <dt class="caniuse-title">
-        Can I Use this API? (${key})
-      </dt>
-      <dd>fetching data from caniuse.com... </dl>
-    </div>`;
-  return parent.parentNode.insertBefore(placeholder, parent.nextSibling);
-}
-
-function showError(err, key, placeholder) {
-  const permalink = `http://caniuse.com/#feat=${key}`;
-  hyperHTML.bind(placeholder.querySelector("dd"))`
-    Error [core/caniuse]: ${err.message}.
-    <br>Please check directly on <a href="${permalink}">${permalink}</a>.`;
-}
-
-/**
  * render the canIUse support table
- * @param  {String} key      API name
+ * @param  {String} key       API name
  * @param  {Object} stats     CanIUse API results
- * @param  {Object} conf   respecConfig.caniuse
- * @param  {Node} parent   where to render table
+ * @param  {Node} parent      where to render table
+ * @param  {Object} conf      respecConfig.caniuse
  */
 function showData(key, stats, conf, parent) {
   let browsers = conf.browsers;
@@ -155,10 +167,6 @@ function showData(key, stats, conf, parent) {
   // utils
   const canIUseId = `caniuse-${key}`;
   const permalink = `http://caniuse.com/#feat=${key}`;
-
-  // cache the response
-  stats.$cacheTime = new Date();
-  localStorage.setItem(canIUseId, JSON.stringify(stats));
 
   const validBrowsers = browsers.filter(b => b in stats);
   if (validBrowsers.length !== browsers.length) {
@@ -186,9 +194,9 @@ function showData(key, stats, conf, parent) {
 
   /**
    * add a browser and it's support to table
-   * @param {String} browser name of browser (as in CanIUse API response)
-   * @param {Number} numVersions number of old browser versions to show
-   * @param {Object} browserData stats data from api response
+   * @param {String} browser      name of browser (as in CanIUse API response)
+   * @param {Number} numVersions  number of old browser versions to show
+   * @param {Object} browserData  stats data from api response
    */
   function addBrowser(browser, numVersions, browserData) {
     if (!browserData) return "";
@@ -214,4 +222,68 @@ function showData(key, stats, conf, parent) {
       </div>
     </div>`;
   }
+}
+
+// promise based interface to IDB
+// supported methods: get, set, remove, clear, keys
+async function IDBCache(name, stores = ["caniuse"], version = 1) {
+  let db = null;
+  function getDatabase() {
+    if (!db) {
+      db = new Promise((resolve, reject) => {
+        const request = window.indexedDB.open(name, version);
+        request.onerror = () => reject(request.error);
+        request.onupgradeneeded = () =>
+          stores.forEach(storeName =>
+            request.result.createObjectStore(storeName));
+        request.onsuccess = () => resolve(request.result);
+      });
+    }
+    return db;
+  }
+
+  async function getStore(store, type) {
+    const db = await getDatabase();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(store, type);
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(transaction.error);
+      return resolve(transaction.objectStore(store));
+    });
+  }
+
+  function getResponse(request) {
+    return new Promise((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async function get(key, storeName = "caniuse") {
+    const store = await getStore(storeName, "readonly");
+    return await getResponse(store.get(key));
+  }
+
+  async function set(key, value, storeName = "caniuse") {
+    const store = await getStore(storeName, "readwrite");
+    return await getResponse(store.put(value, key));
+  }
+
+  async function remove(key, storeName = "caniuse") {
+    const store = await getStore(storeName, "readwrite");
+    return await getResponse(store.delete(key));
+  }
+
+  async function clear(storeName = "caniuse") {
+    const store = await getStore(storeName, "readwrite");
+    return await getResponse(store.clear());
+  }
+
+  async function keys(storeName = "caniuse") {
+    const store = await getStore(storeName, "readonly");
+    return await getResponse(store.getAllKeys());
+  }
+
+  db = await getDatabase();
+  return { get, set, remove, clear, keys }; // export
 }
