@@ -387,12 +387,16 @@ describe("W3C — Headers", function() {
 
   describe("edDraftURI", () => {
     it("takes edDraftURI into account", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
+      const ops = makeStandardOps({
+        specStatus: "WD",
+        edDraftURI: "URI",
+      });
+      /*const newProps = {
         specStatus: "WD",
         edDraftURI: "URI",
       };
-      Object.assign(ops.config, newProps);
+      console.log(ops.config)
+      Object.assign(ops.config, newProps);*/
       const doc = await makeRSDoc(ops);
       expect(
         $("dt:contains('Latest editor\\'s draft:')", doc)
@@ -443,12 +447,15 @@ describe("W3C — Headers", function() {
     });
 
     it("handles additionalCopyrightHolders when text is markup", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
+      const ops = makeStandardOps({
+        specStatus: "REC",
+        additionalCopyrightHolders: "<span class='test'>XXX</span>",
+      });
+      /*const newProps = {
         specStatus: "REC",
         additionalCopyrightHolders: "<span class='test'>XXX</span>",
       };
-      Object.assign(ops.config, newProps);
+      Object.assign(ops.config, newProps);*/
       const doc = await makeRSDoc(ops);
       expect($(".head .copyright .test", doc).text()).toEqual("XXX");
     });

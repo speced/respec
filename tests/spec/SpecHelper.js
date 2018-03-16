@@ -149,6 +149,7 @@ function pickRandomsFromList(list, howMany) {
 }
 
 function makeBasicConfig() {
+ 
   return {
     editors: [
       {
@@ -171,9 +172,9 @@ function makeDefaultBody() {
   return "<section id='sotd'><p>foo</p></section><section id='toc'></section>";
 }
 
-function makeStandardOps() {
+function makeStandardOps(configParams) {
   return {
-    config: makeBasicConfig(),
+    config: Object.assign(makeBasicConfig(),configParams),
     body: makeDefaultBody(),
   };
 }
