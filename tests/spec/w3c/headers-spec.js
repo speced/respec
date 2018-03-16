@@ -267,8 +267,8 @@ describe("W3C — Headers", function() {
       const [h2Elem] = subTitleElements;
       expect(h2Elem.textContent).toEqual("pass");
 
-      expect(h2Element.firstElementChild.localName).toEqual("code");
-      expect(h2Element.firstElementChild.textContent).toEqual("pass");
+      expect(h2Elem.firstElementChild.localName).toEqual("code");
+      expect(h2Elem.firstElementChild.textContent).toEqual("pass");
     });
 
     it("overwrites conf.subtitle if it exists", async () => {
@@ -1058,7 +1058,7 @@ describe("W3C — Headers", function() {
           url: "http://hyperlink/",
         },
         {
-          src: 'data:image/svg+xml,<svg%20xmlns="http://www.w3.org/2000/svg"/>',
+          src: "data:image/svg+xml,<svg%20xmlns=\"http://www.w3.org/2000/svg\"/>",
           alt: "this is an svg",
           height: 315,
           width: 961,
