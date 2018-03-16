@@ -37,6 +37,13 @@ describe("W3C — Bibliographic References", () => {
         href: "http://test.com",
         publisher: "Publisher Here"
       },
+      TestRef5: {
+        href: "http://test.com"
+      },
+      TestRef6: {
+        href: "http://test.com",
+        authors: ["William Shakespeare"]
+      },
       FOOBARGLOP: {
         aliasOf: "BARBAR"
       },
@@ -50,89 +57,12 @@ describe("W3C — Bibliographic References", () => {
   const confAPA = {
     ...confDefault,
     biblioStyle: "APA",
-    localBiblio: {
-      Zzz: {
-        title: "Last Reference"
-      },
-      aaa: {
-        title: "First Reference"
-      },
-      TestRef1: {
-        title: "Test ref title",
-        href: "http://test.com",
-        authors: ["William Shakespeare"]
-      },
-      TestRef2: {
-        title: "Second test",
-        href: "http://test.com"
-      },
-      TestRef3: {
-        title: "Third test"
-      },
-      TestRef4: {
-        authors: ["William Shakespeare"]
-      },
-      TestRef5: {
-        href: "http://test.com"
-      },
-      TestRef6: {
-        href: "http://test.com",
-        authors: ["William Shakespeare"]
-      },
-      FOOBARGLOP: {
-        aliasOf: "BARBAR"
-      },
-      BARBAR: {
-        title: "The BARBAR Spec"
-      }
-    }
   };
 
   //Configuration for MLA citation
   const confMLA = {
     ...confDefault,
     biblioStyle: "MLA",
-    localBiblio: {
-      Zzz: {
-        title: "Last Reference"
-      },
-      aaa: {
-        title: "First Reference"
-      },
-      TestRef1: {
-        title: "Test ref title",
-        href: "http://test.com",
-        authors: ["William Shakespeare"],
-        publisher: "Publishers Inc."
-      },
-      TestRef2: {
-        title: "Second test",
-        href: "http://test.com"
-      },
-      TestRef3: {
-        title: "Third test",
-        publisher: "Publisher Here"
-      },
-      TestRef4: {
-        title: "Test ref title",
-        href: "http://test.com",
-        authors: ["William Shakespeare"]
-      },
-      TestRef5: {
-        title: "Test ref title",
-        authors: ["William Shakespeare"]
-      },
-      TestRef6: {
-        authors: ["William Shakespeare"],
-        publisher: "Publishers Inc."
-      },
-      FOOBARGLOP: {
-        aliasOf: "BARBAR"
-      },
-      BARBAR: {
-        title: "The BARBAR Spec"
-      }
-    }
   };
 
   const body = `
