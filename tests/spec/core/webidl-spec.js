@@ -336,27 +336,32 @@ describe("Core - WebIDL", function() {
 
   it("should handle operations", function(done) {
     var $target = $("#meth-basic", doc);
-    var text =
-      "interface MethBasic {\n" +
-      "    // 1\n" +
-      "    void               basic();\n" +
-      "    // 2\n" +
-      "    [Something] void               ext();\n" +
-      "    // 3\n" +
-      "    unsigned long long ull(short s);\n" +
-      "    // 3.5\n" +
-      "    SuperStar?         ull();\n" +
-      "    // 5\n" +
-      "    getter float       ();\n" +
-      "    // 6\n" +
-      "    getter float       withName();\n" +
-      "    // 7\n" +
-      "    setter void        ();\n" +
-      "    // 8\n" +
-      "    setter void        named();\n" +
-      "};";
+    var text =`interface MethBasic {
+    // 1
+    void                           basic();
+    // 2
+    [Something] void                           ext();
+    // 3
+    unsigned long long             ull(short s);
+    // 3.5
+    SuperStar?                     ull();
+    // 5
+    getter float                   ();
+    // 6
+    getter float                   withName();
+    // 7
+    setter void                    ();
+    // 8
+    setter void                    named();
+    // 9
+    static Promise<RTCCertificate> generateCertificate(AlgorithmIdentifier keygenAlgorithm);
+    // 10
+    stringifier DOMString          identifier();
+    // 11
+    stringifier DOMString          ();
+};`
     expect($target.text()).toEqual(text);
-    expect($target.find(".idlMethod").length).toEqual(8);
+    expect($target.find(".idlMethod").length).toEqual(11);
     var $meth = $target.find(".idlMethod").first();
     expect($meth.find(".idlMethType").text()).toEqual("void");
     expect($meth.find(".idlMethName").text()).toEqual("basic");
