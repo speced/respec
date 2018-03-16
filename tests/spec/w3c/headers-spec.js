@@ -194,11 +194,11 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
 
-      const dtElems = doc.querySelectorAll("dt");
-      const formerEditorsLabel = [...dtElems].find(formerEditors);
+      const dtElems = [...doc.querySelectorAll("dt")];
+      const formerEditorsLabel = dtElems.find(formerEditors);
       expect(formerEditorsLabel).toBeUndefined();
 
-      const formerEditorLabel = [...dtElems].find(formerEditor);
+      const formerEditorLabel = dtElems.find(formerEditor);
       expect(formerEditorLabel).toBeUndefined();
     });
 
@@ -219,11 +219,11 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      const dtElems = doc.querySelectorAll("dt");
-      const formerEditorLabel = [...dtElems].find(formerEditor);
+      const dtElems = [...doc.querySelectorAll("dt")];
+      const formerEditorLabel = dtElems.find(formerEditor);
       expect(formerEditorLabel).toBeDefined();
 
-      const formerEditorsLabel = [...dtElems].find(formerEditors);
+      const formerEditorsLabel = dtElems.find(formerEditors);
       expect(formerEditorsLabel).toBeUndefined();
 
       const editor = formerEditorLabel.nextSibling;
@@ -261,11 +261,11 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      const dtElems = doc.querySelectorAll("dt");
-      const formerEditorLabel = [...dtElems].find(formerEditor);
+      const dtElems = [...doc.querySelectorAll("dt")];
+      const formerEditorLabel = dtElems.find(formerEditor);
       expect(formerEditorLabel).toBeUndefined();
 
-      const formerEditorsLabel = [...dtElems].find(formerEditors);
+      const formerEditorsLabel = dtElems.find(formerEditors);
       expect(formerEditorsLabel).toBeDefined();
 
       const firstEditor = formerEditorsLabel.nextSibling;
