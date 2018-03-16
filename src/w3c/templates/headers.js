@@ -22,7 +22,7 @@ export default conf => {
 
   let specSubTitleElem =
     document.querySelector("h2#subtitle") || null;
-  if (specSubTitleElem.parentElement) {
+  if (specSubTitleElem && specSubTitleElem.parentElement) {
     specSubTitleElem.remove();
     conf.subtitle = specSubTitleElem.textContent.trim();
   } else if(conf.subtitle) {
