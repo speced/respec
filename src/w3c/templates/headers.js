@@ -54,10 +54,14 @@ export default conf => {
           <dd><a href='${conf.prevRecURI}'>${conf.prevRecURI}</a></dd>
       `}
     ` : ""}
-    <dt>${conf.multipleEditors ? html`${conf.l10n.editors}` : html`${conf.l10n.editor}`}</dt>
+    <dt>${conf.multipleEditors ? conf.l10n.editors : conf.l10n.editor}</dt>
     ${showPeople(conf, "Editor", conf.editors)}
+    ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0 ? html`
+      <dt>${conf.multipleFormerEditors ? conf.l10n.former_editors : conf.l10n.former_editor}</dt>
+      ${showPeople(conf, "Editor", conf.formerEditors)}
+    ` : ""}
     ${conf.authors ? html`
-      <dt>${conf.multipleAuthors ? [conf.l10n.authors] : [conf.l10n.author]}</dt>
+      <dt>${conf.multipleAuthors ? conf.l10n.authors : conf.l10n.author}</dt>
       ${showPeople(conf, "Author", conf.authors)}
     ` : ""}
     ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
