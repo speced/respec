@@ -231,7 +231,7 @@ describe("W3C — Headers", function() {
       const doc = await makeRSDoc(ops);
       expect($("#subtitle", doc).length).toEqual(0);
     });
-    
+
     it("takes subtitle into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
