@@ -305,7 +305,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      const h2Elem = h2.getElementById("subtitle");
+      const h2Elem = doc.getElementById("subtitle");
       expect(h2Elem).toBeTruthy();
       expect(h2Elem.textContent.trim()).toEqual("pass");
     });
