@@ -391,12 +391,7 @@ describe("W3C — Headers", function() {
         specStatus: "WD",
         edDraftURI: "URI",
       });
-      /*const newProps = {
-        specStatus: "WD",
-        edDraftURI: "URI",
-      };
-      console.log(ops.config)
-      Object.assign(ops.config, newProps);*/
+      
       const doc = await makeRSDoc(ops);
       expect(
         $("dt:contains('Latest editor\\'s draft:')", doc)
@@ -451,11 +446,7 @@ describe("W3C — Headers", function() {
         specStatus: "REC",
         additionalCopyrightHolders: "<span class='test'>XXX</span>",
       });
-      /*const newProps = {
-        specStatus: "REC",
-        additionalCopyrightHolders: "<span class='test'>XXX</span>",
-      };
-      Object.assign(ops.config, newProps);*/
+      
       const doc = await makeRSDoc(ops);
       expect($(".head .copyright .test", doc).text()).toEqual("XXX");
     });
