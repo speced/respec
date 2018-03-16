@@ -301,7 +301,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      const h2Elem = h2.getElementById("h2#subtitle")
+      const h2Elem = h2.getElementById("h2#subtitle");
       expect(h2Elem).toBeTruthy();
       expect(h2Elem.textContent.trim()).toEqual("pass");
     });
@@ -1058,7 +1058,7 @@ describe("W3C — Headers", function() {
           url: "http://hyperlink/",
         },
         {
-          src: "data:image/svg+xml,<svg%20xmlns=\"http://www.w3.org/2000/svg\"/>",
+          src: 'data:image/svg+xml,<svg%20xmlns="http://www.w3.org/2000/svg"/>',
           alt: "this is an svg",
           height: 315,
           width: 961,
