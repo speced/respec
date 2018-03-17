@@ -1,26 +1,24 @@
 /* container for stats */
 .caniuse-stats {
-  width: 100%;
-  font-family: monospace;
+  font-size: 90%;
 }
 
-.caniuse-stats a {
+.caniuse-stats a[href] {
   white-space: nowrap;
+}
+
+ul.caniuse-browser,
+.caniuse-col,
+.caniuse-col ul{
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 /* wraps each browser into a separate column */
 .caniuse-browser {
   display: inline-block;
   text-align: center;
-}
-
-/* container for older browser versions, shown on hover */
-.caniuse-col {
-  position: absolute;
-  height: 0;
-  max-height: 140px;
-  overflow-y: hidden;
-  transition: height 0.3s ease-in-out;
 }
 
 /* a browser version */
@@ -31,12 +29,17 @@
   margin: 1px;
 }
 
-.caniuse-browser > .caniuse-cell:hover {
-  cursor: pointer;
-}
-
 .caniuse-cell:hover {
   font-weight: bold;
+}
+
+/* container for older browser versions, shown on hover */
+.caniuse-col {
+  position: absolute;
+  height: 0;
+  max-height: 140px;
+  overflow-y: hidden;
+  transition: height 0.3s ease-in-out;
 }
 
 /* show older browsers on hover */

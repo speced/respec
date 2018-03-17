@@ -117,7 +117,7 @@ async function canIUse(key, refNode, conf) {
   });
 
   const content = hyperHTML`
-    <dd>${{
+    <dd class="caniuse-stats">${{
       any: contentPromise,
       placeholder: "fetching data from caniuse.com...",
     }}</dd>`;
@@ -179,16 +179,13 @@ function getTableHtml(key, stats, conf) {
   }
 
   // render the support table
-  const permalink = `http://caniuse.com/#feat=${key}`;
   return hyperHTML`
-    <div class="caniuse-stats">
       ${validBrowsers.map(browser =>
         addBrowser(browser, conf.versions, stats[browser])
       )}
-      <a href="${permalink}" title="Get details at caniuse.com">
+      <a href="${`http://caniuse.com/#feat=${key}`}" title="Get details at caniuse.com">
         More info
-      </a>
-    </div>`;
+      </a>`;
 
   /**
    * add a browser and it's support to table
@@ -203,7 +200,7 @@ function getTableHtml(key, stats, conf) {
       browserData[version].split("#", 1)[0].trim();
 
     const addBrowserVersion = version =>
-      `<div class="caniuse-cell ${getSupport(version)}">${version}</div>`;
+      `<li class="caniuse-cell ${getSupport(version)}">${version}</li>`;
 
     const browserVersions = Object.keys(browserData)
       .sort(semverCompare)
@@ -211,13 +208,15 @@ function getTableHtml(key, stats, conf) {
       .reverse();
 
     return hyperHTML`
-    <div class="caniuse-browser">
-      <div class="${`caniuse-cell ${getSupport(browserVersions[0])}`}">
+    <ul class="caniuse-browser">
+      <li class="${`caniuse-cell ${getSupport(browserVersions[0])}`}">
         ${BROWSERS[browser] || browser} ${browserVersions[0]}
-      </div>
-      <div class="caniuse-col">
-        ${browserVersions.slice(1).map(addBrowserVersion)}
-      </div>
-    </div>`;
+      </li>
+      <li class="caniuse-col">
+        <ul>
+          ${browserVersions.slice(1).map(addBrowserVersion)}
+        </ul>
+      </li>
+    </ul>`;
   }
 }
