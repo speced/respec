@@ -89,7 +89,7 @@ async function canIUse(key, parent, conf) {
       return showData(key, cachedStats.stats, conf, parent);
     }
   } catch (err) {
-    console.error("[core/caniuse]", err);
+    console.error(err);
   }
 
   // otherwise fetch new data, cache and render
@@ -98,7 +98,7 @@ async function canIUse(key, parent, conf) {
     const json = await getJson(url);
     showData(key, json.stats, conf, parent);
     cache.set(key, { stats: json.stats, cacheTime: new Date() })
-      .catch(err => console.error("[core/caniuse] (Could not cache)", err));
+      .catch(err => console.error("Failed to cache caniuse data.", err));
   } catch (err) {
     showError(err, key, placeholder);
   }
