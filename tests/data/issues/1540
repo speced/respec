@@ -10,6 +10,14 @@
       {
         "name": "bug",
         "color": "f4425c"
+      },
+      {
+        "name": "blank",
+        "color": ""
+      },
+      {
+        "name": "not-a-color",
+        "color": "this is not a color"
       }
     ]
 }

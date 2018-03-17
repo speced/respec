@@ -143,9 +143,15 @@ describe("Core — Issues and Notes", function () {
     const doc = await makeRSDoc(ops);
     const issueDiv = doc.getElementById('issue-1540');
     expect(issueDiv).toBeTruthy();
-    const labels = doc.querySelector('.respec-gh-label');
+    const labels = doc.getElementsByClassName('respec-gh-label');
     expect(labels[0].innerText).toEqual('refactor');
     expect(labels[1].innerText).toEqual('bug');
+    expect(labels[2].innerText).toEqual('blank');
+    expect(labels[2].style.backgroundColor).toEqual('rgb(0, 0, 0)');
+    expect(labels[2].style.color).toEqual('#fff');
+    expect(labels[3].innerText).toEqual('not-a-color');
+    expect(labels[3].style.backgroundColor).toEqual('rgb(0, 0, 0)');
+    expect(labels[3].style.color).toEqual('#fff');
     const issueDiv404 = doc.getElementById("this-is-404");
     expect(issueDiv404).toBeTruthy();
     expect(issueDiv404.textContent).toEqual("this is 404");

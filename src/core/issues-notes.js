@@ -157,12 +157,8 @@ function handleIssues($ins, ghIssues, conf) {
 }
 
 //derives the text-color-class based on the illumination score of the labelColor
-function deriveTextColorClass(labelColor) {
-  const color = labelColor.substring(1);
-  const rgb = parseInt(color, 16);
-  if (isNaN(rgb)){
-    return
-  }
+function deriveTextColorClass(hexColor) {
+  const rgb = parseInt(hexColor, 16);
   const red = (rgb >> 16) & 0xff;
   const green = (rgb >> 8) & 0xff;
   const blue = (rgb >> 0) & 0xff;
@@ -171,15 +167,19 @@ function deriveTextColorClass(labelColor) {
 }
 
 function createLabels(label) {
-  const textColorClass = deriveTextColorClass(label.color);
+  const hexColor = label.color.substring(1);
+  var textColorClass = "dark";
   var labelElement = document.createElement("a");
+  if (!isNaN(parseInt(hexColor, 16))) {
+    textColorClass = deriveTextColorClass(hexColor);
+    labelElement.style.backgroundColor = `#${label.color}`;
+  } else {
+    labelElement.style.backgroundColor = "#000";
+  }
   labelElement.classList.add("respec-gh-label");
-  labelElement.style.backgroundColor = `#${label.color}`;
-  labelElement.style.textTransform = "none";
   labelElement.href = label.url;
   labelElement.innerText = label.name;
   labelElement.classList.add(`respec-label-${textColorClass}`);
-  console.log(labelElement);
   return labelElement;
 }
 
