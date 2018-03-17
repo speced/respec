@@ -136,18 +136,19 @@ describe("Core — Issues and Notes", function () {
       body:
         makeDefaultBody() + `
         <div class='issue' data-number='1540'>issue is open on github</div>
+        <div class='issue' id='this-is-404' data-number='404'>this is 404</div>
         <section id='issue-summary'></section>
         `
     };
     const doc = await makeRSDoc(ops);
     const issueDiv = doc.getElementById('issue-1540');
     expect(issueDiv).toBeTruthy();
-    const label0 = doc.getElementById('1540-label-0');
-    expect(label0).toBeTruthy();
-    expect(label0.innerText).toEqual("refactor");
-    const label1 = doc.getElementById('1540-label-1');
-    expect(label1).toBeTruthy();
-    expect(label1.innerText).toEqual("bug");
+    const labels = doc.querySelector('.respec-gh-label');
+    expect(labels[0].innerText).toEqual('refactor');
+    expect(labels[1].innerText).toEqual('bug');
+    const issueDiv404 = doc.getElementById("this-is-404");
+    expect(issueDiv404).toBeTruthy();
+    expect(issueDiv404.textContent).toEqual("this is 404");
   });
 
   it("should link to external issue tracker", function (done) {

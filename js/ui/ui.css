@@ -97,6 +97,8 @@
   padding: 5px;
   margin: 0 2px 0 2px;
   font-size: 10px;
+  text-transform: none;
+  text-decoration: none;
   font-weight: bold;
   border-radius: 4px;
   position: relative;
@@ -333,6 +335,14 @@
   -webkit-appearance: none;
   margin: 0px 127px;
   border-left: 0;
+}
+
+.respec-label-dark {
+  color: #fff;
+}
+
+.respec-label-light {
+  color: #000;
 }
 
 p + .respec-button-copy-paste {
