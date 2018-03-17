@@ -320,6 +320,27 @@ describe("W3C — Headers", function() {
     });
   });
 
+  describe("use existing h1 element", () => {
+    it("uses <h1> if already present", async () => {
+      const ops = makeStandardOps();
+      ops.body = "<h1 id='title'><code>pass</code></h1>" + makeDefaultBody();
+      const doc = await makeRSDoc(ops);
+
+      // Title was relocated to head
+      const titleInHead = doc.querySelector(".head h1");
+      expect(titleInHead.classList.contains("p-name")).toBe(true);
+      expect(titleInHead.id).toEqual("title");
+
+      // html is not escaped
+      expect(titleInHead.firstChild.tagName).toEqual("CODE");
+      expect(titleInHead.textContent).toEqual("pass");
+
+      // the config title is overridden
+      const { title } = doc.defaultView.respecConfig;
+      expect(title).toEqual("pass");
+    });
+  });
+
   describe("subtitle", () => {
     it("handles missing subtitle", async () => {
       const ops = makeStandardOps();
@@ -328,19 +349,64 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect($("#subtitle", doc).length).toEqual(0);
+      expect(doc.getElementById("subtitle")).toEqual(null);
     });
 
-    it("takes subtitle into account", async () => {
+    it("uses existing h2#subtitle as subtitle", async () => {
+      const ops = makeStandardOps();
+      ops.body = "<h2 id='subtitle'><code>pass</code></h2>" + makeDefaultBody();
+      const doc = await makeRSDoc(ops);
+
+      const subTitleElements = doc.querySelectorAll("h2#subtitle");
+      expect(subTitleElements.length).toEqual(1);
+
+      const { subtitle } = doc.defaultView.respecConfig;
+      expect(subtitle).toEqual("pass");
+
+      const [h2Elem] = subTitleElements;
+      expect(h2Elem.textContent).toEqual("pass");
+
+      // make sure it was relocated to head
+      expect(h2Elem.closest(".head")).toBeTruthy();
+
+      expect(h2Elem.firstElementChild.localName).toEqual("code");
+      expect(h2Elem.firstElementChild.textContent).toEqual("pass");
+    });
+
+    it("overwrites conf.subtitle if it exists", async () => {
+      const ops = makeStandardOps();
+      ops.body = "<h2 id='subtitle'><code>pass</code></h2>" + makeDefaultBody();
+      const newProps = {
+        subtitle: "fail - this should have been overridden by the <h2>",
+      };
+      Object.assign(ops.config, newProps);
+
+      const doc = await makeRSDoc(ops);
+
+      const { subtitle } = doc.defaultView.respecConfig;
+      expect(subtitle).toEqual("pass");
+    });
+
+    it("sets conf.subtitle if it doesn't exist, but h2#subtitle exists", async () => {
+      const ops = makeStandardOps();
+      ops.body = "<h2 id='subtitle'><code>pass</code></h2>" + makeDefaultBody();
+      const doc = await makeRSDoc(ops);
+
+      const { subtitle } = doc.defaultView.respecConfig;
+      expect(subtitle).toEqual("pass");
+    });
+
+    it("generates a subtitle from the `subtitle` configuration option", async () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "REC",
-        subtitle: "SUB",
+        subtitle: "pass",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect($("#subtitle", doc).length).toEqual(1);
-      expect($("#subtitle", doc).text()).toEqual("SUB");
+      const h2Elem = doc.getElementById("subtitle");
+      expect(h2Elem).toBeTruthy();
+      expect(h2Elem.textContent.trim()).toEqual("pass");
     });
   });
 
