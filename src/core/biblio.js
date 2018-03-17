@@ -97,7 +97,7 @@ const html = (...args) => hyperHTML.bind(doc.createDocumentFragment())(...args);
 
 // Author, A. (Year, Month Date of Publication). Article title. Retrieved from URL
 function entryToAPA(ref) {
-  const { title } = ref.title;
+  const { title } = ref;
   const authors =
     ref.authors && ref.authors.length
       ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : ""}.`
@@ -107,7 +107,7 @@ function entryToAPA(ref) {
     ${authors} ${date} ${
     ref.href
       ? html`<a href="${ref.href}"><cite>${title}</cite></a>.`
-      : `${ref.title}`
+      : html`<cite>${title}</cite>`
   }
     ${
       ref.href
@@ -135,7 +135,7 @@ function entryToMLA(ref) {
 	${authors} ${
     ref.href
       ? html`<a href="${ref.href}"><cite>${title}</cite></a>.`
-      : `${title}`
+      : html`><cite>${title}</cite>`
   } ${publisher} ${date} ${
     ref.href ? html`<a href="${ref.href}">${ref.href}</a>` : ""
   }`;
@@ -143,7 +143,7 @@ function entryToMLA(ref) {
 
 //what ReSpec currently does...
 function entryToW3C(ref) {
-  const title = ref.title;
+  const { title } = ref;
   const authors =
     ref.authors && ref.authors.length
       ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : "."}.`
@@ -160,7 +160,7 @@ function entryToW3C(ref) {
   	${
       ref.href
         ? html`<a href="${ref.href}"><cite>${title}</cite></a>.`
-        : `${ref.title}`
+        : html`<cite>${title}</cite>`
     } ${authors} ${publisher} ${date} ${status} ${
     ref.href ? html`<a href="${ref.href}">${ref.href}</a>` : ""
   }`;
@@ -235,7 +235,7 @@ function bibref(conf) {
         } else {
           key = refcontent.aliasOf;
           refcontent = conf.biblio[key];
-          refstyle = conf.biblioStyle;
+          { biblioStyle: refstyle }  = conf;
           circular[key] = true;
         }
       }
