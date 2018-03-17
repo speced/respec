@@ -84,8 +84,8 @@ export default class IDBCache {
    * @param {string} storeName  store name
    */
   async remove(key, storeName = this.defaultStore) {
-    const store = await getStore(storeName, "readwrite");
-    return await getResponse(store.delete(key));
+    const store = await this.ready(storeName, "readwrite");
+    return await this.getResponse(store.delete(key));
   }
 
   /**
@@ -93,8 +93,8 @@ export default class IDBCache {
    * @param {string} storeName  store name
    */
   async clear(storeName = this.defaultStore) {
-    const store = await getStore(storeName, "readwrite");
-    return await getResponse(store.clear());
+    const store = await this.ready(storeName, "readwrite");
+    return await this.getResponse(store.clear());
   }
 
   /**
@@ -103,7 +103,7 @@ export default class IDBCache {
    * @param {string} storeName  store name
    */
   async keys(storeName = this.defaultStore) {
-    const store = await getStore(storeName, "readonly");
-    return await getResponse(store.getAllKeys());
+    const store = await this.ready(storeName, "readonly");
+    return await this.getResponse(store.getAllKeys());
   }
 }
