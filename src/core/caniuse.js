@@ -15,6 +15,7 @@ Optional settings:
 */
 
 import { semverCompare } from "core/utils";
+import IDBCache from "core/idb-cache";
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
 import caniuseCss from "deps/text!core/css/caniuse.css";
@@ -74,7 +75,10 @@ function normalizeConf(conf) {
 async function canIUse(key, parent, conf) {
   const url = `https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/${key}.json`;
 
-  const cache = await IDBCache("respec-caniuse");
+  const cache = await new IDBCache("respec-caniuse", ["caniuse"], {
+    version: 1,
+    defaultStore: "caniuse",
+  });
 
   // use data from cache data if valid and render
   try {
@@ -222,68 +226,4 @@ function showData(key, stats, conf, parent) {
       </div>
     </div>`;
   }
-}
-
-// promise based interface to IDB
-// supported methods: get, set, remove, clear, keys
-async function IDBCache(name, stores = ["caniuse"], version = 1) {
-  let db = null;
-  function getDatabase() {
-    if (!db) {
-      db = new Promise((resolve, reject) => {
-        const request = window.indexedDB.open(name, version);
-        request.onerror = () => reject(request.error);
-        request.onupgradeneeded = () =>
-          stores.forEach(storeName =>
-            request.result.createObjectStore(storeName));
-        request.onsuccess = () => resolve(request.result);
-      });
-    }
-    return db;
-  }
-
-  async function getStore(store, type) {
-    const db = await getDatabase();
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction(store, type);
-      transaction.oncomplete = () => resolve();
-      transaction.onerror = () => reject(transaction.error);
-      return resolve(transaction.objectStore(store));
-    });
-  }
-
-  function getResponse(request) {
-    return new Promise((resolve, reject) => {
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
-  }
-
-  async function get(key, storeName = "caniuse") {
-    const store = await getStore(storeName, "readonly");
-    return await getResponse(store.get(key));
-  }
-
-  async function set(key, value, storeName = "caniuse") {
-    const store = await getStore(storeName, "readwrite");
-    return await getResponse(store.put(value, key));
-  }
-
-  async function remove(key, storeName = "caniuse") {
-    const store = await getStore(storeName, "readwrite");
-    return await getResponse(store.delete(key));
-  }
-
-  async function clear(storeName = "caniuse") {
-    const store = await getStore(storeName, "readwrite");
-    return await getResponse(store.clear());
-  }
-
-  async function keys(storeName = "caniuse") {
-    const store = await getStore(storeName, "readonly");
-    return await getResponse(store.getAllKeys());
-  }
-
-  db = await getDatabase();
-  return { get, set, remove, clear, keys }; // export
 }
