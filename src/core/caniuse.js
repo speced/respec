@@ -12,6 +12,8 @@ Optional settings:
     default: ["chrome", "firefox", "safari", "edge"]
   `conf.caniuse.versions` number of older browser versions to show
   `conf.caniuse.maxAge` (in ms) local response cache duration
+  `conf.caniuse.apiURL` URL from where to fetch stats.
+    use {FEATURE} as placeholder in URL to replace it by a feature name
 */
 
 import { semverCompare } from "core/utils";
@@ -73,8 +75,7 @@ function normalizeConf(conf) {
  * @param {Object} conf              normalized respecConfig.caniuse
  */
 async function canIUse(key, parent, conf) {
-  const url = `https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/${key}.json`;
-
+  const url = getAPIUrl(key, conf.apiURL);
   const cache = await new IDBCache("respec-caniuse", ["caniuse"], {
     version: 1,
     defaultStore: "caniuse",
@@ -118,6 +119,12 @@ function createPlaceholder(key, parent) {
       <dd>fetching data from caniuse.com... </dl>
     </div>`;
   return parent.parentNode.insertBefore(placeholder, parent.nextSibling);
+}
+
+function getAPIUrl(feature, apiBase) {
+  return (apiBase)
+    ? apiBase.replace("{FEATURE}", feature)
+    : `https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/${feature}.json`;
 }
 
 // TODO: replace with fetch in core/github ?
