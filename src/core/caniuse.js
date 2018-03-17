@@ -10,7 +10,7 @@ Optional settings:
   `conf.caniuse.browsers` list of caniuse supported browser names
     to be shown in the table or "ALL"
     default: ["chrome", "firefox", "safari", "edge"]
-  `conf.caniuse.versions` number of older browser versions to show
+  `conf.caniuse.versions` number of browser versions to show
   `conf.caniuse.maxAge` (in ms) local response cache duration
   `conf.caniuse.apiURL` URL from where to fetch stats.
     use {FEATURE} as placeholder in URL to replace it by a feature name
@@ -33,7 +33,11 @@ export function run(conf) {
   normalizeConf(conf);
   const { caniuse } = conf;
   if (caniuse.feature) {
-    canIUse(caniuse.feature, document.querySelector(".head dl"), caniuse);
+    canIUse(
+      caniuse.feature,
+      document.querySelector(".head dl").lastChild,
+      caniuse
+    );
   }
   for (const el of document.querySelectorAll("section[data-caniuse]")) {
     canIUse(el.dataset.caniuse, el.firstChild, caniuse);
@@ -42,7 +46,7 @@ export function run(conf) {
 
 /**
  * MUTATES `conf.caniuse` object to hold normalized configurarion
- * @param {Object|String} conf   configuration settings
+ * @param {Object} conf   configuration settings
  */
 function normalizeConf(conf) {
   const DEFAULTS = {
@@ -71,54 +75,55 @@ function normalizeConf(conf) {
 /**
  * main canIUse function
  * @param  {String} key              which api to look for
- * @param  {Node} parent             adds table after parent
+ * @param  {Node} refNode            adds table after refNode
  * @param {Object} conf              normalized respecConfig.caniuse
  */
-async function canIUse(key, parent, conf) {
-  const url = getAPIUrl(key, conf.apiURL);
-  const cache = await new IDBCache("respec-caniuse", ["caniuse"], {
-    version: 1,
-    defaultStore: "caniuse",
+async function canIUse(key, refNode, conf) {
+  const title = hyperHTML`
+    <dt class="caniuse-title" id="${`caniuse-${key}`}">
+      Can I Use this API? (${key})
+    </dt>`;
+
+  const contentPromise = new Promise(async (resolve) => {
+    const cache = await new IDBCache("respec-caniuse", ["caniuse"], {
+      version: 1,
+      defaultStore: "caniuse",
+    });
+
+    // use data from cache data if valid and render
+    try {
+      const cachedStats = await cache.get(key);
+      if (cachedStats
+        && new Date() - new Date(cachedStats.cacheTime) < conf.maxAge) {
+        resolve(getTableHtml(key, cachedStats.stats, conf));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+
+    // otherwise fetch new data, cache and render
+    const url = getAPIUrl(key, conf.apiURL);
+    try {
+      const json = await getJson(url);
+      cache.set(key, { stats: json.stats, cacheTime: new Date() })
+        .catch(err => console.error("Failed to cache caniuse data.", err));
+      resolve(getTableHtml(key, json.stats, conf));
+    } catch (err) {
+      const permalink = `http://caniuse.com/#feat=${key}`;
+      resolve(hyperHTML`
+        Error [core/caniuse]: ${err.message}.
+        <br>Please check directly on <a href="${permalink}">${permalink}</a>.`);
+    }
   });
 
-  // use data from cache data if valid and render
-  try {
-    const cachedStats = await cache.get(key);
-    if (cachedStats
-      && new Date() - new Date(cachedStats.cacheTime) < conf.maxAge) {
-      return showData(key, cachedStats.stats, conf, parent);
-    }
-  } catch (err) {
-    console.error(err);
-  }
+  const content = hyperHTML`
+    <dd>${{
+      any: contentPromise,
+      placeholder: "fetching data from caniuse.com...",
+    }}</dd>`;
 
-  // otherwise fetch new data, cache and render
-  const placeholder = createPlaceholder(key, parent);
-  try {
-    const json = await getJson(url);
-    showData(key, json.stats, conf, parent);
-    cache.set(key, { stats: json.stats, cacheTime: new Date() })
-      .catch(err => console.error("Failed to cache caniuse data.", err));
-  } catch (err) {
-    showError(err, key, placeholder);
-  }
-}
-
-/**
- * creates a placeholder while the API fetches results
- * @param  {String} key     API feature name
- * @param  {Node} parent    where to create placeholder
- * @return {Node}           inserted placeholder
- */
-function createPlaceholder(key, parent) {
-  const placeholder = hyperHTML`
-    <div class="caniuse" id="${`caniuse-${key}`}">
-      <dt class="caniuse-title">
-        Can I Use this API? (${key})
-      </dt>
-      <dd>fetching data from caniuse.com... </dl>
-    </div>`;
-  return parent.parentNode.insertBefore(placeholder, parent.nextSibling);
+  refNode.parentNode.insertBefore(content, refNode.nextSibling);
+  refNode.parentNode.insertBefore(title, refNode.nextSibling);
 }
 
 function getAPIUrl(feature, apiBase) {
@@ -142,13 +147,6 @@ async function getJson(url) {
   return await response.json();
 }
 
-function showError(err, key, placeholder) {
-  const permalink = `http://caniuse.com/#feat=${key}`;
-  hyperHTML.bind(placeholder.querySelector("dd"))`
-    Error [core/caniuse]: ${err.message}.
-    <br>Please check directly on <a href="${permalink}">${permalink}</a>.`;
-}
-
 const BROWSERS = { // browser name dictionary
   chrome: "Chrome",
   firefox: "Firefox",
@@ -163,21 +161,16 @@ const BROWSERS = { // browser name dictionary
 };
 
 /**
- * render the canIUse support table
+ * get HTML element for the canIUse support table
  * @param  {String} key       API name
  * @param  {Object} stats     CanIUse API results
- * @param  {Node} parent      where to render table
  * @param  {Object} conf      respecConfig.caniuse
  */
-function showData(key, stats, conf, parent) {
+function getTableHtml(key, stats, conf) {
   let browsers = conf.browsers;
   if (conf.browsers === "ALL") {
     browsers = Object.keys(stats);
   }
-
-  // utils
-  const canIUseId = `caniuse-${key}`;
-  const permalink = `http://caniuse.com/#feat=${key}`;
 
   const validBrowsers = browsers.filter(b => b in stats);
   if (validBrowsers.length !== browsers.length) {
@@ -186,22 +179,16 @@ function showData(key, stats, conf, parent) {
   }
 
   // render the support table
-  const caniuse = hyperHTML`
-    <div class="caniuse" id="${canIUseId}">
-      <dt>Can I Use this API? (${key})</dt>
-      <div class="caniuse-stats">
-        ${validBrowsers.map(browser =>
-          addBrowser(browser, conf.versions, stats[browser])
-        )}
-        <a href="${permalink}" title="Get details at caniuse.com">
-          More info
-        </a>
-      </div>
+  const permalink = `http://caniuse.com/#feat=${key}`;
+  return hyperHTML`
+    <div class="caniuse-stats">
+      ${validBrowsers.map(browser =>
+        addBrowser(browser, conf.versions, stats[browser])
+      )}
+      <a href="${permalink}" title="Get details at caniuse.com">
+        More info
+      </a>
     </div>`;
-
-  const old = document.getElementById(canIUseId);
-  if (old) old.remove();
-  parent.parentNode.insertBefore(caniuse, parent.nextSibling);
 
   /**
    * add a browser and it's support to table
@@ -220,7 +207,7 @@ function showData(key, stats, conf, parent) {
 
     const browserVersions = Object.keys(browserData)
       .sort(semverCompare)
-      .slice(-(numVersions + 1)) // plus 1 current
+      .slice(-numVersions)
       .reverse();
 
     return hyperHTML`
