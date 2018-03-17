@@ -6,38 +6,46 @@ import { pub } from "core/pubsubhub";
 
 export default conf => {
   const html = hyperHTML;
-  const specTitleElem =
-    document.querySelector("h1#title") || document.createElement("h1");
-  if (specTitleElem.parentElement) {
-    specTitleElem.remove();
-    conf.title = specTitleElem.textContent.trim();
-  } else {
-    if (document.title !== conf.title) {
-      pub("warn", "The document's title and the `<title>` element differ.");
+  
+  function getSpecTitleElem () {
+    const specTitleElem =
+      document.querySelector("h1#title") || document.createElement("h1");
+    if (specTitleElem.parentElement) {
+      specTitleElem.remove();
+      conf.title = specTitleElem.textContent.trim();
+    } else {
+      if (document.title !== conf.title) {
+        pub("warn", "The document's title and the `<title>` element differ.");
+      }
+      specTitleElem.textContent = conf.title;
+      specTitleElem.id = "title";
     }
-    specTitleElem.textContent = conf.title;
-    specTitleElem.id = "title";
+    specTitleElem.classList.add("title", "p-name");
+    return specTitleElem;
   }
-  specTitleElem.classList.add("title", "p-name");
-
-  let specSubTitleElem = document.querySelector("h2#subtitle");
-  if (specSubTitleElem && specSubTitleElem.parentElement) {
-    specSubTitleElem.remove();
-    conf.subtitle = specSubTitleElem.textContent.trim();
-  } else if (conf.subtitle) {
-    specSubTitleElem = document.createElement("h2");
-    specSubTitleElem.textContent = conf.subtitle;
-    specSubTitleElem.id = "subtitle";
+  
+  function getSpecSubTitleElem () {
+    let specSubTitleElem = document.querySelector("h2#subtitle");
+    
+    if (specSubTitleElem && specSubTitleElem.parentElement) {
+      specSubTitleElem.remove ();
+      conf.subtitle = specSubTitleElem.textContent.trim ();
+    } else if (conf.subtitle) {
+      specSubTitleElem = document.createElement ("h2");
+      specSubTitleElem.textContent = conf.subtitle;
+      specSubTitleElem.id = "subtitle";
+    }
+    if (specSubTitleElem) {
+      specSubTitleElem.classList.add ("subtitle");
+    }
+    return specSubTitleElem;
   }
-  if (specSubTitleElem) {
-    specSubTitleElem.classList.add("subtitle");
-  }
-
+  
   return html`<div class='head'>
   ${conf.logos.map(showLogo)}
-  ${specTitleElem}
-  ${specSubTitleElem}
-  <h2>${conf.prependW3C ? "W3C " : ""}${ conf.textStatus } <time class='dt-published' datetime='${conf.dashDate}'>${conf.publishHumanDate}</time></h2>
+  ${getSpecTitleElem()}
+  ${getSpecSubTitleElem()}
+  <h2>${conf.prependW3C ? "W3C":""}${conf.textStatus}<time class='dt-published' datetime='${conf.dashDate}'>${conf.publishHumanDate}</time></h2>
   <dl>
     ${!conf.isNoTrack ? html`
       <dt>${conf.l10n.this_version}</dt>
