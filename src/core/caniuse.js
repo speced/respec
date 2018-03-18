@@ -102,7 +102,10 @@ async function canIUse(key, refNode, conf) {
     }
 
     // otherwise fetch new data, cache and render
-    const url = getAPIUrl(key, conf.apiURL);
+    const url = conf.apiURL
+      ? conf.apiURL.replace("{FEATURE}", key)
+      : `https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/${key}.json`;
+
     try {
       const json = await getJson(url);
       cache.set(key, { stats: json.stats, cacheTime: new Date() })
@@ -124,12 +127,6 @@ async function canIUse(key, refNode, conf) {
 
   refNode.parentNode.insertBefore(content, refNode.nextSibling);
   refNode.parentNode.insertBefore(title, refNode.nextSibling);
-}
-
-function getAPIUrl(feature, apiBase) {
-  return (apiBase)
-    ? apiBase.replace("{FEATURE}", feature)
-    : `https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/${feature}.json`;
 }
 
 // TODO: replace with fetch in core/github ?
@@ -181,9 +178,10 @@ function getTableHtml(key, stats, conf) {
   // render the support table
   return hyperHTML`
       ${validBrowsers.map(browser =>
-        addBrowser(browser, conf.versions, stats[browser])
-      )}
-      <a href="${`http://caniuse.com/#feat=${key}`}" title="Get details at caniuse.com">
+      addBrowser(browser, conf.versions, stats[browser])
+    )}
+      <a href="${`http://caniuse.com/#feat=${key}`}"
+        title="Get details at caniuse.com">
         More info
       </a>`;
 
@@ -208,15 +206,15 @@ function getTableHtml(key, stats, conf) {
       .reverse();
 
     return hyperHTML`
-    <ul class="caniuse-browser">
-      <li class="${`caniuse-cell ${getSupport(browserVersions[0])}`}">
-        ${BROWSERS[browser] || browser} ${browserVersions[0]}
-      </li>
-      <li class="caniuse-col">
-        <ul>
-          ${browserVersions.slice(1).map(addBrowserVersion)}
-        </ul>
-      </li>
-    </ul>`;
+      <ul class="caniuse-browser">
+        <li class="${`caniuse-cell ${getSupport(browserVersions[0])}`}">
+          ${BROWSERS[browser] || browser} ${browserVersions[0]}
+        </li>
+        <li class="caniuse-col">
+          <ul>
+            ${browserVersions.slice(1).map(addBrowserVersion)}
+          </ul>
+        </li>
+      </ul>`;
   }
 }
