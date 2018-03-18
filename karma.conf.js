@@ -48,6 +48,11 @@ module.exports = function(config) {
         served: true,
       },
       {
+        pattern: "tests/data/issues/*",
+        included: false,
+        served: true,
+      },
+      {
         pattern: "tests/*.html",
         included: false,
         served: true,

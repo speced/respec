@@ -44,9 +44,6 @@ function registerHelpers() {
   hb.registerHelper("extAttrInline", function(obj) {
     return extAttr(obj.extAttrs, 0, /*singleLine=*/ true);
   });
-  hb.registerHelper("typeExtAttrs", function(obj) {
-    return extAttr(obj.typeExtAttrs, 0, /*singleLine=*/ true);
-  });
   hb.registerHelper("extAttrClassName", function() {
     var extAttr = this;
     if (extAttr.name === "Constructor" || extAttr.name === "NamedConstructor") {
@@ -108,9 +105,7 @@ function registerHelpers() {
     return new hb.SafeString(pads(num));
   });
   hb.registerHelper("join", function(arr, between, options) {
-    return arr
-      .map(options.fn)
-      .join(between);
+    return arr.map(options.fn).join(between);
   });
   hb.registerHelper("joinNonWhitespace", function(arr, between, options) {
     return arr
@@ -140,7 +135,9 @@ function registerHelpers() {
     } else {
       // This is an internal IDL reference.
       a.dataset.noDefault = "";
-      a.dataset.linkFor = obj.linkFor ? hb.Utils.escapeExpression(obj.linkFor).toLowerCase() : "";
+      a.dataset.linkFor = obj.linkFor
+        ? hb.Utils.escapeExpression(obj.linkFor).toLowerCase()
+        : "";
       a.dataset.lt = obj.dfn[0].dataset.lt || "";
     }
     return a.outerHTML;
@@ -158,9 +155,10 @@ function idlType2Html(idlType) {
   if (Array.isArray(idlType)) {
     return idlType.map(idlType2Html).join(", ");
   }
+  const extAttrs = extAttr(idlType.extAttrs, 0, /*singleLine=*/ true);
   const nullable = idlType.nullable ? "?" : "";
   if (idlType.union) {
-    return `(${idlType.idlType.map(idlType2Html).join(" or ")})${nullable}`;
+    return `${extAttrs}(${idlType.idlType.map(idlType2Html).join(" or ")})${nullable}`;
   }
   let type = "";
   if (idlType.generic) {
@@ -173,7 +171,7 @@ function idlType2Html(idlType) {
       ? linkStandardType(idlType.idlType)
       : idlType2Html(idlType.idlType);
   }
-  return type + nullable;
+  return extAttrs + type + nullable;
 }
 
 function linkStandardType(type) {
@@ -533,9 +531,7 @@ function writeDefinition(obj, indent) {
               }
             }
             children += idlEnumItemTmpl({
-              lname: item.value
-                ? item.value.toLowerCase()
-                : "the-empty-string",
+              lname: item.value ? item.value.toLowerCase() : "the-empty-string",
               name: item.value,
               parentID: obj.name.toLowerCase(),
               indent: indent + 1,
@@ -588,11 +584,16 @@ function writeInterfaceDefinition(opt, fixes = {}) {
     var len = idlType2Text(it.idlType).length;
     if (it.type === "attribute") {
       var qualifiersLen = writeAttributeQualifiers(it).length;
-      maxAttr = len > maxAttr ? len : maxAttr;
-      maxAttrQualifiers =
-        qualifiersLen > maxAttrQualifiers ? qualifiersLen : maxAttrQualifiers;
-    } else if (it.type === "operation") maxMeth = len > maxMeth ? len : maxMeth;
-    else if (it.type === "const") maxConst = len > maxConst ? len : maxConst;
+      maxAttr = Math.max(len, maxAttr);
+      maxAttrQualifiers = Math.max(qualifiersLen, maxAttrQualifiers);
+    } else if (it.type === "operation") {
+      if (it.static) {
+        len += "static ".length;
+      }
+      maxMeth = Math.max(len, maxMeth);
+    } else if (it.type === "const") {
+      maxConst = Math.max(len, maxConst);
+    }
   }
   var children = obj.members
     .map(function(ch) {
@@ -623,7 +624,7 @@ function writeInterfaceDefinition(opt, fixes = {}) {
     indent,
     partial: obj.partial ? "partial " : "",
     callback: fixes.callback ? "callback " : "",
-    mixin: fixes.mixin ? "mixin ": "",
+    mixin: fixes.mixin ? "mixin " : "",
     children,
   });
 }
@@ -674,13 +675,12 @@ function writeMethod(meth, max, indent) {
     });
   var params = paramObjs.join(", ");
   var len = idlType2Text(meth.idlType).length;
-  if (meth.static) len += 7;
   var specialProps = [
     "getter",
     "setter",
     "deleter",
-    "legacycaller",
     "stringifier",
+    "static", // not "special op", but serves same role
   ];
   var special = "";
   for (var i in specialProps) {
@@ -694,7 +694,6 @@ function writeMethod(meth, max, indent) {
   var methObj = {
     obj: meth,
     indent: indent,
-    static: meth.static ? "static " : "",
     special: special,
     pad: pad,
     children: params,
@@ -840,7 +839,8 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
         case "const":
         case "field":
           name = defn.name;
-          defn.idlId = "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
+          defn.idlId =
+            "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
           break;
         case "operation":
           if (defn.name) {
@@ -885,12 +885,15 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
           break;
         case "iterable":
           name = "iterable";
-          defn.idlId = "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
+          defn.idlId =
+            "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
           break;
         default:
           pub(
             "error",
-            new Error("ReSpec doesn't know about IDL type: `" + defn.type + "`.")
+            new Error(
+              "ReSpec doesn't know about IDL type: `" + defn.type + "`."
+            )
           );
           return;
       }

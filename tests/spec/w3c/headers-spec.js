@@ -1,4 +1,7 @@
 "use strict";
+const findContent = string => {
+  return ({ textContent }) => textContent.trim() === string;
+};
 describe("W3C — Headers", function() {
   afterEach(flushIframes);
   const simpleSpecURL = "spec/core/simple.html";
@@ -93,12 +96,12 @@ describe("W3C — Headers", function() {
       expect($("dt:contains('Editors:')", doc).length).toEqual(0);
       expect($("dt:contains('Editor:')", doc).length).toEqual(1);
       var $dd = $("dt:contains('Editor:')", doc).next("dd");
-      expect($dd.find("a[href='http://URI']").length).toEqual(1);
-      expect($dd.find("a[href='http://URI']").text()).toEqual("NAME");
       expect($dd.find("a[href='http://COMPANY']").length).toEqual(1);
       expect($dd.find("a[href='http://COMPANY']").text()).toEqual("COMPANY");
       expect($dd.find("a[href='mailto:EMAIL']").length).toEqual(1);
-      expect($dd.find("a[href='mailto:EMAIL']").text()).toEqual("EMAIL");
+      expect($dd.find("a[href='mailto:EMAIL']").text()).toEqual("NAME");
+      // if `mailto` is specified in People, `url` won't be used
+      expect($dd.find("a[href='http://URI']").length).toEqual(0);
       expect($dd.get(0).dataset.editorId).toEqual("1234");
       expect($dd.text()).toMatch(/\(NOTE\)/);
     });
@@ -179,6 +182,102 @@ describe("W3C — Headers", function() {
     });
   });
 
+  describe("formerEditors", () => {
+    const formerEditors = findContent("Former Editors:");
+    const formerEditor = findContent("Former Editor:");
+    it("takes no former editor into account", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+        formerEditors: [],
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+
+      const dtElems = [...doc.querySelectorAll("dt")];
+      const formerEditorsLabel = dtElems.find(formerEditors);
+      expect(formerEditorsLabel).toBeUndefined();
+
+      const formerEditorLabel = dtElems.find(formerEditor);
+      expect(formerEditorLabel).toBeUndefined();
+    });
+
+    it("takes a single former editor into account", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+        formerEditors: [
+          {
+            name: "NAME",
+            url: "http://URI",
+            company: "COMPANY",
+            companyURL: "http://COMPANY",
+            mailto: "EMAIL",
+            w3cid: "1234",
+          },
+        ],
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+      const dtElems = [...doc.querySelectorAll("dt")];
+      const formerEditorLabel = dtElems.find(formerEditor);
+      expect(formerEditorLabel).toBeDefined();
+
+      const formerEditorsLabel = dtElems.find(formerEditors);
+      expect(formerEditorsLabel).toBeUndefined();
+
+      const editor = formerEditorLabel.nextSibling;
+      expect(editor.localName).toEqual("dd");
+      expect(editor.textContent).toEqual("NAME (COMPANY)");
+
+      const editorCompany = editor.querySelectorAll("a[href='http://COMPANY']");
+      expect(editorCompany.length).toEqual(1);
+      expect(editorCompany[0].textContent).toEqual("COMPANY");
+
+      const editorEmail = editor.querySelectorAll("a[href='mailto:EMAIL']");
+      expect(editorEmail.length).toEqual(1);
+      expect(editorEmail[0].textContent).toEqual("NAME");
+
+      // if `mailto` is specified in People, `url` won't be used
+      const editorUrl = editor.querySelectorAll("a[href='http://URI']");
+      expect(editorUrl.length).toEqual(0);
+
+      const { editorId } = editor.dataset;
+      expect(editorId).toEqual("1234");
+    });
+
+    it("takes multiple former editors into account", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+        formerEditors: [
+          {
+            name: "NAME1",
+          },
+          {
+            name: "NAME2",
+          },
+        ],
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+      const dtElems = [...doc.querySelectorAll("dt")];
+      const formerEditorLabel = dtElems.find(formerEditor);
+      expect(formerEditorLabel).toBeUndefined();
+
+      const formerEditorsLabel = dtElems.find(formerEditors);
+      expect(formerEditorsLabel).toBeDefined();
+
+      const firstEditor = formerEditorsLabel.nextSibling;
+      expect(firstEditor.localName).toEqual("dd");
+      expect(firstEditor.textContent).toEqual("NAME1");
+
+      const secondEditor = firstEditor.nextSibling;
+      expect(secondEditor.localName).toEqual("dd");
+      expect(secondEditor.textContent).toEqual("NAME2");
+    });
+  });
+
   describe("authors", () => {
     it("takes a single author into account", async () => {
       const ops = makeStandardOps();
@@ -221,6 +320,27 @@ describe("W3C — Headers", function() {
     });
   });
 
+  describe("use existing h1 element", () => {
+    it("uses <h1> if already present", async () => {
+      const ops = makeStandardOps();
+      ops.body = "<h1 id='title'><code>pass</code></h1>" + makeDefaultBody();
+      const doc = await makeRSDoc(ops);
+
+      // Title was relocated to head
+      const titleInHead = doc.querySelector(".head h1");
+      expect(titleInHead.classList.contains("p-name")).toBe(true);
+      expect(titleInHead.id).toEqual("title");
+
+      // html is not escaped
+      expect(titleInHead.firstChild.tagName).toEqual("CODE");
+      expect(titleInHead.textContent).toEqual("pass");
+
+      // the config title is overridden
+      const { title } = doc.defaultView.respecConfig;
+      expect(title).toEqual("pass");
+    });
+  });
+
   describe("subtitle", () => {
     it("handles missing subtitle", async () => {
       const ops = makeStandardOps();
@@ -229,19 +349,64 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect($("#subtitle", doc).length).toEqual(0);
+      expect(doc.getElementById("subtitle")).toEqual(null);
     });
 
-    it("takes subtitle into account", async () => {
+    it("uses existing h2#subtitle as subtitle", async () => {
+      const ops = makeStandardOps();
+      ops.body = "<h2 id='subtitle'><code>pass</code></h2>" + makeDefaultBody();
+      const doc = await makeRSDoc(ops);
+
+      const subTitleElements = doc.querySelectorAll("h2#subtitle");
+      expect(subTitleElements.length).toEqual(1);
+
+      const { subtitle } = doc.defaultView.respecConfig;
+      expect(subtitle).toEqual("pass");
+
+      const [h2Elem] = subTitleElements;
+      expect(h2Elem.textContent).toEqual("pass");
+
+      // make sure it was relocated to head
+      expect(h2Elem.closest(".head")).toBeTruthy();
+
+      expect(h2Elem.firstElementChild.localName).toEqual("code");
+      expect(h2Elem.firstElementChild.textContent).toEqual("pass");
+    });
+
+    it("overwrites conf.subtitle if it exists", async () => {
+      const ops = makeStandardOps();
+      ops.body = "<h2 id='subtitle'><code>pass</code></h2>" + makeDefaultBody();
+      const newProps = {
+        subtitle: "fail - this should have been overridden by the <h2>",
+      };
+      Object.assign(ops.config, newProps);
+
+      const doc = await makeRSDoc(ops);
+
+      const { subtitle } = doc.defaultView.respecConfig;
+      expect(subtitle).toEqual("pass");
+    });
+
+    it("sets conf.subtitle if it doesn't exist, but h2#subtitle exists", async () => {
+      const ops = makeStandardOps();
+      ops.body = "<h2 id='subtitle'><code>pass</code></h2>" + makeDefaultBody();
+      const doc = await makeRSDoc(ops);
+
+      const { subtitle } = doc.defaultView.respecConfig;
+      expect(subtitle).toEqual("pass");
+    });
+
+    it("generates a subtitle from the `subtitle` configuration option", async () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "REC",
-        subtitle: "SUB",
+        subtitle: "pass",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect($("#subtitle", doc).length).toEqual(1);
-      expect($("#subtitle", doc).text()).toEqual("SUB");
+      const h2Elem = doc.getElementById("subtitle");
+      expect(h2Elem).toBeTruthy();
+      expect(h2Elem.textContent.trim()).toEqual("pass");
     });
   });
 
@@ -387,12 +552,11 @@ describe("W3C — Headers", function() {
 
   describe("edDraftURI", () => {
     it("takes edDraftURI into account", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
+      const ops = makeStandardOps({
         specStatus: "WD",
         edDraftURI: "URI",
-      };
-      Object.assign(ops.config, newProps);
+      });
+      
       const doc = await makeRSDoc(ops);
       expect(
         $("dt:contains('Latest editor\\'s draft:')", doc)
@@ -443,12 +607,11 @@ describe("W3C — Headers", function() {
     });
 
     it("handles additionalCopyrightHolders when text is markup", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
+      const ops = makeStandardOps({
         specStatus: "REC",
         additionalCopyrightHolders: "<span class='test'>XXX</span>",
-      };
-      Object.assign(ops.config, newProps);
+      });
+      
       const doc = await makeRSDoc(ops);
       expect($(".head .copyright .test", doc).text()).toEqual("XXX");
     });
@@ -987,29 +1150,36 @@ describe("W3C — Headers", function() {
   describe("logos", () => {
     it("adds logos defined by configuration", async () => {
       const ops = makeStandardOps();
-      const logos = [{
-        src: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
-        alt: "this is a small gif",
-        height: 765,
-        width: 346,
-        url: "http://hyperlink/"
-      }, {
-        src: "data:image/svg+xml,<svg%20xmlns=\"http://www.w3.org/2000/svg\"/>",
-        alt: "this is an svg",
-        height: 315,
-        width: 961,
-        url: "http://prod/"
-      }, {
-        src: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
-        alt: "this is a larger gif",
-        height: 876,
-        width: 283,
-        url: "http://shiny/"
-      }];
+      const logos = [
+        {
+          src: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
+          alt: "this is a small gif",
+          height: 765,
+          width: 346,
+          url: "http://hyperlink/",
+        },
+        {
+          src: "data:image/svg+xml,<svg%20xmlns=\"http://www.w3.org/2000/svg\"/>",
+          alt: "this is an svg",
+          height: 315,
+          width: 961,
+          url: "http://prod/",
+        },
+        {
+          src:
+            "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
+          alt: "this is a larger gif",
+          height: 876,
+          width: 283,
+          url: "http://shiny/",
+        },
+      ];
       Object.assign(ops.config, { logos });
       const doc = await makeRSDoc(ops);
       // get logos
-      const anchors = doc.querySelectorAll(".head p:not(.copyright):first-child > a");
+      const anchors = doc.querySelectorAll(
+        ".head p:not(.copyright):first-child > a"
+      );
       for (let i = 0; i < anchors.length; i++) {
         const anchor = anchors[i];
         const img = anchor.children[0];

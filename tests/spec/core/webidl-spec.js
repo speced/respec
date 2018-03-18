@@ -1,16 +1,10 @@
 "use strict";
 describe("Core - WebIDL", function() {
   afterAll(flushIframes);
-  var doc;
-  beforeAll(function(done) {
-    var ops = makeStandardOps();
-    makeRSDoc(
-      ops,
-      function(idlDoc) {
-        doc = idlDoc;
-      },
-      "spec/core/webidl.html"
-    ).then(done);
+  let doc;
+  beforeAll(async () => {
+    const ops = makeStandardOps();
+    doc = await makeRSDoc(ops, () => { }, "spec/core/webidl.html");
   });
 
   it("handles record types", done => {
@@ -336,27 +330,32 @@ describe("Core - WebIDL", function() {
 
   it("should handle operations", function(done) {
     var $target = $("#meth-basic", doc);
-    var text =
-      "interface MethBasic {\n" +
-      "    // 1\n" +
-      "    void               basic();\n" +
-      "    // 2\n" +
-      "    [Something] void               ext();\n" +
-      "    // 3\n" +
-      "    unsigned long long ull(short s);\n" +
-      "    // 3.5\n" +
-      "    SuperStar?         ull();\n" +
-      "    // 5\n" +
-      "    getter float       ();\n" +
-      "    // 6\n" +
-      "    getter float       withName();\n" +
-      "    // 7\n" +
-      "    setter void        ();\n" +
-      "    // 8\n" +
-      "    setter void        named();\n" +
-      "};";
+    var text =`interface MethBasic {
+    // 1
+    void                           basic();
+    // 2
+    [Something] void                           ext();
+    // 3
+    unsigned long long             ull(short s);
+    // 3.5
+    SuperStar?                     ull();
+    // 5
+    getter float                   ();
+    // 6
+    getter float                   withName();
+    // 7
+    setter void                    ();
+    // 8
+    setter void                    named();
+    // 9
+    static Promise<RTCCertificate> generateCertificate(AlgorithmIdentifier keygenAlgorithm);
+    // 10
+    stringifier DOMString          identifier();
+    // 11
+    stringifier DOMString          ();
+};`
     expect($target.text()).toEqual(text);
-    expect($target.find(".idlMethod").length).toEqual(8);
+    expect($target.find(".idlMethod").length).toEqual(11);
     var $meth = $target.find(".idlMethod").first();
     expect($meth.find(".idlMethType").text()).toEqual("void");
     expect($meth.find(".idlMethName").text()).toEqual("basic");
@@ -565,26 +564,33 @@ describe("Core - WebIDL", function() {
     done();
   });
 
-  it("should handle typedefs", function(done) {
-    var $target = $("#td-basic", doc);
-    var text = "typedef DOMString string;";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlTypedef").length).toEqual(1);
-    expect($target.find(".idlTypedefID").text()).toEqual("string");
-    expect($target.find(".idlTypedefType").text()).toEqual("DOMString");
+  it("should handle typedefs", () => {
+    let target = doc.getElementById("td-basic");
+    let text = "typedef DOMString string;";
+    expect(target.textContent).toEqual(text);
+    expect(target.querySelectorAll(".idlTypedef").length).toEqual(1);
+    expect(target.querySelector(".idlTypedefID").textContent).toEqual("string");
+    expect(target.querySelector(".idlTypedefType").textContent).toEqual("DOMString");
 
-    $target = $("#td-less-basic", doc);
+    target = doc.getElementById("td-less-basic");
     text = "typedef unsigned long long? tdLessBasic;";
-    expect($target.text()).toEqual(text);
+    expect(target.textContent).toEqual(text);
 
     // Links and IDs.
     expect(
-      $target.find(":contains('tdLessBasic')").filter("a").attr("href")
+      target.querySelector(".idlTypedefID").children[0].getAttribute("href")
     ).toEqual("#dom-tdlessbasic");
     expect(
-      $target.find(".idlTypedef:contains('tdLessBasic')").attr("id")
+      target.querySelector(".idlTypedef").id
     ).toEqual("idl-def-tdlessbasic");
-    done();
+
+    target = doc.getElementById("td-extended-attribute");
+    text = "typedef ([Clamp] unsigned long or ConstrainULongRange) ConstrainULong;";
+    expect(target.textContent).toEqual(text);
+
+    target = doc.getElementById("td-union-extended-attribute");
+    text = "typedef [Clamp] (unsigned long or ConstrainULongRange) ConstrainULong2;";
+    expect(target.textContent).toEqual(text);
   });
 
   it("should handle includes", () => {
