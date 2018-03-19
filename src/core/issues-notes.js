@@ -121,7 +121,7 @@ function handleIssues($ins, ghIssues, conf) {
         if (report.title && githubAPI) {
           const labelsGroup = Array.from(ghIssue.labels)
             .map(createLabels)
-            .reduce((frag, labelElem) => { 
+            .reduce((frag, labelElem) => {
               frag.appendChild(labelElem);
               return frag;
             }, document.createDocumentFragment());
@@ -161,28 +161,31 @@ function handleIssues($ins, ghIssues, conf) {
 
 //derives the text-color-class based on the illumination score of the labelColor
 function deriveTextColorClass(hexColor) {
-  const rgb = parseInt(hexColor, 16);
-  const red = (rgb >> 16) & 0xff;
-  const green = (rgb >> 8) & 0xff;
-  const blue = (rgb >> 0) & 0xff;
-  const illumination = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
-  return illumination > 140 ? "light" : "dark";
+  try {
+    const rgb = parseInt(hexColor, 16);
+    if (isNaN(rgb)) {
+      throw NaN;
+    }
+    const red = (rgb >> 16) & 0xff;
+    const green = (rgb >> 8) & 0xff;
+    const blue = (rgb >> 0) & 0xff;
+    const illumination = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+    return illumination > 140 ? "light" : "dark";
+  } catch (err) {
+    console.error(err);
+    return "dark";
+  }
 }
 
 function createLabels(label) {
-  const hexColor = label.color.substring(1);
-  var textColorClass = "dark";
-  var labelElement = document.createElement("a");
-  if (!isNaN(parseInt(hexColor, 16))) {
-    textColorClass = deriveTextColorClass(hexColor);
-    labelElement.style.backgroundColor = `#${label.color}`;
-  } else {
-    labelElement.style.backgroundColor = "#000";
-  }
+  const labelColor = label.color;
+  const labelElement = document.createElement("a");
+  const textColorClass = deriveTextColorClass(labelColor);
+  labelElement.style.backgroundColor = `#${labelColor}`;
   labelElement.classList.add("respec-gh-label");
+  labelElement.classList.add(`respec-label-${textColorClass}`);
   labelElement.href = label.url;
   labelElement.innerText = label.name;
-  labelElement.classList.add(`respec-label-${textColorClass}`);
   return labelElement;
 }
 

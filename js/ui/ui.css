@@ -339,10 +339,12 @@
 
 .respec-label-dark {
   color: #fff;
+  background-color: #000;
 }
 
 .respec-label-light {
   color: #000;
+  background-color: #fff;
 }
 
 p + .respec-button-copy-paste {
