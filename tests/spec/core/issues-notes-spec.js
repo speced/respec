@@ -129,29 +129,30 @@ describe("Core — Issues and Notes", function () {
   it("shows labels for github issues", async () => {
     const githubConfig = {
       github: "https://github.com/mock-company/mock-repository",
-      githubAPI: `${window.location.origin}/tests/data`
+      githubAPI: `${window.location.origin}/tests/data`,
     };
     const ops = {
       config: githubConfig,
       body:
-        makeDefaultBody() + `
+        makeDefaultBody() +
+        `
         <div class='issue' data-number='1540'>issue is open on github</div>
         <div class='issue' id='this-is-404' data-number='404'>this is 404</div>
         <section id='issue-summary'></section>
-        `
+        `,
     };
     const doc = await makeRSDoc(ops);
-    const issueDiv = doc.getElementById('issue-1540');
+    const issueDiv = doc.getElementById("issue-1540");
     expect(issueDiv).toBeTruthy();
-    const labels = doc.getElementsByClassName('respec-gh-label');
-    expect(labels[0].innerText).toEqual('refactor');
-    expect(labels[1].innerText).toEqual('bug');
-    expect(labels[2].innerText).toEqual('blank');
-    expect(labels[2].style.backgroundColor).toEqual('rgb(0, 0, 0)');
-    expect(labels[2].style.color).toEqual('#fff');
-    expect(labels[3].innerText).toEqual('not-a-color');
-    expect(labels[3].style.backgroundColor).toEqual('rgb(0, 0, 0)');
-    expect(labels[3].style.color).toEqual('#fff');
+    const labels = doc.getElementsByClassName("respec-gh-label");
+    expect(labels[0].innerText).toEqual("refactor");
+    expect(labels[1].innerText).toEqual("bug");
+    expect(labels[2].innerText).toEqual("blank");
+    expect(labels[2].style.backgroundColor).toEqual("rgb(0, 0, 0)");
+    expect(labels[2].style.color).toEqual("#fff");
+    expect(labels[3].innerText).toEqual("not-a-color");
+    expect(labels[3].style.backgroundColor).toEqual("rgb(0, 0, 0)");
+    expect(labels[3].style.color).toEqual("#fff");
     const issueDiv404 = doc.getElementById("this-is-404");
     expect(issueDiv404).toBeTruthy();
     expect(issueDiv404.textContent).toEqual("this is 404");
