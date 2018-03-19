@@ -121,7 +121,10 @@ function handleIssues($ins, ghIssues, conf) {
         if (report.title && githubAPI) {
           const labelsGroup = Array.from(ghIssue.labels)
             .map(createLabels)
-            .reduce(groupLabels);
+            .reduce((frag, labelElem) => { 
+              frag.appendChild(label);
+              return frag;
+            }, document.createDocumentFragment());
           $tit.append(
             $(
               "<span style='text-transform: none'>: " + report.title + "</span>"
@@ -181,13 +184,6 @@ function createLabels(label) {
   labelElement.innerText = label.name;
   labelElement.classList.add(`respec-label-${textColorClass}`);
   return labelElement;
-}
-
-function groupLabels(group, label) {
-  var documentFragment = new DocumentFragment();
-  documentFragment.appendChild(group);
-  documentFragment.appendChild(label);
-  return documentFragment;
 }
 
 async function fetchIssuesFromGithub({ githubAPI }) {
