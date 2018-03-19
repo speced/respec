@@ -122,7 +122,7 @@ function handleIssues($ins, ghIssues, conf) {
           const labelsGroup = Array.from(ghIssue.labels)
             .map(createLabels)
             .reduce((frag, labelElem) => { 
-              frag.appendChild(label);
+              frag.appendChild(labelElem);
               return frag;
             }, document.createDocumentFragment());
           $tit.append(
