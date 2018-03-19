@@ -11,13 +11,15 @@ function getSpecTitleElem (conf) {
     specTitleElem.remove();
     conf.title = specTitleElem.textContent.trim();
   } else {
-    if (document.title !== conf.title) {
-      pub("warn", "The document's title and the `<title>` element differ.");
-    }
     specTitleElem.textContent = conf.title;
     specTitleElem.id = "title";
   }
   specTitleElem.classList.add("title", "p-name");
+  if (document.querySelector("title") === null) {
+    document.title = conf.title;
+  } else if (document.title !== conf.title) {
+    pub("warn", "The document's title and the `<title>` element differ.");
+  }
   return specTitleElem;
 }
 
