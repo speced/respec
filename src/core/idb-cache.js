@@ -8,53 +8,42 @@ export default class IDBCache {
   /**
    * @constructor
    * @param {string} name             name of database
-   * @param {array} stores            name of stores
+   * @param {array} stores            array of names of stores
    * @param {object} Options
    *    @param {integer} version      database version
    *    @param {string} defaultStore  name of default store
    */
-  constructor(name, stores = [], { version = 1, defaultStore }) {
+  constructor(
+    name,
+    stores,
+    { version, defaultStore } = { version: 1, defaultStore: null }
+  ) {
     this.name = name;
-    this.stores = typeof stores === "string" ? [stores] : stores;
+    if (!Array.isArray(stores) || stores.length < 1) {
+      throw new TypeError("`stores` must be an array of length atleast 1");
+    }
+    this.stores = [...stores];
     this.version = version;
     this.defaultStore = defaultStore || this.stores[0];
     if (!databases.has(name)) {
       const dbPromise = new Promise((resolve, reject) => {
         const request = window.indexedDB.open(this.name, this.version);
-        request.onerror = () => reject(request.error);
-        request.onupgradeneeded = () =>
+        request.onerror = () => {
+          reject(new DOMException(request.error.message, request.error.name));
+        };
+        request.onupgradeneeded = () => {
           this.stores.forEach(storeName =>
             request.result.createObjectStore(storeName));
+        };
         request.onsuccess = () => resolve(request.result);
       });
       databases.set(this.name, dbPromise);
     }
   }
 
-  /**
-   * @private returns a promise to get an IDBObjectStore
-   * @param {string} storeName      store name
-   * @param {string} mode           IDBTransaction.mode
-   */
-  async ready(storeName, mode) {
-    const db = await databases.get(this.name);
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction(storeName, mode);
-      transaction.onerror = () => reject(transaction.error);
-      transaction.oncomplete = () => resolve();
-      return resolve(transaction.objectStore(storeName));
-    });
-  }
-
-  /**
-   * @private returns a promise to get result of IDBRequest
-   * @param {IDBRequest} request    IDBRequest interface
-   */
-  getResponse(request) {
-    return new Promise((resolve, reject) => {
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => resolve(request.result);
-    });
+  async ready() {
+    await databases.get(this.name);
+    return;
   }
 
   /**
@@ -63,8 +52,9 @@ export default class IDBCache {
    * @param {string} storeName  store name
    */
   async get(key, storeName = this.defaultStore) {
-    const store = await this.ready(storeName, "readonly");
-    return await this.getResponse(store.get(key));
+    const db = await databases.get(this.name);
+    const store = await getStore(db, storeName, "readonly");
+    return await getResponse(store.get(key));
   }
 
   /**
@@ -74,8 +64,9 @@ export default class IDBCache {
    * @param {string} storeName  store name
    */
   async set(key, value, storeName = this.defaultStore) {
-    const store = await this.ready(storeName, "readwrite");
-    return await this.getResponse(store.put(value, key));
+    const db = await databases.get(this.name);
+    const store = await getStore(db, storeName, "readwrite");
+    return await getResponse(store.put(value, key));
   }
 
   /**
@@ -84,8 +75,9 @@ export default class IDBCache {
    * @param {string} storeName  store name
    */
   async remove(key, storeName = this.defaultStore) {
-    const store = await this.ready(storeName, "readwrite");
-    return await this.getResponse(store.delete(key));
+    const db = await databases.get(this.name);
+    const store = await getStore(db, storeName, "readwrite");
+    return await getResponse(store.delete(key));
   }
 
   /**
@@ -93,8 +85,9 @@ export default class IDBCache {
    * @param {string} storeName  store name
    */
   async clear(storeName = this.defaultStore) {
-    const store = await this.ready(storeName, "readwrite");
-    return await this.getResponse(store.clear());
+    const db = await databases.get(this.name);
+    const store = await getStore(db, storeName, "readwrite");
+    return await getResponse(store.clear());
   }
 
   /**
@@ -103,7 +96,35 @@ export default class IDBCache {
    * @param {string} storeName  store name
    */
   async keys(storeName = this.defaultStore) {
-    const store = await this.ready(storeName, "readonly");
-    return await this.getResponse(store.getAllKeys());
+    const db = await databases.get(this.name);
+    const store = await getStore(db, storeName, "readonly");
+    return await getResponse(store.getAllKeys());
   }
+}
+
+/**
+ * promises to get result of IDBRequest
+ * @param {IDBRequest} request    IDBRequest interface
+ */
+function getResponse(request) {
+  return new Promise((resolve, reject) => {
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+  });
+}
+
+/**
+ * promises to get an IDBObjectStore
+ * @param {IDBDatabase} db        IDBDatabase
+ * @param {string} storeName      store name
+ * @param {string} mode           IDBTransaction.mode
+ */
+function getStore(db, storeName, mode) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(storeName, mode);
+    transaction.onerror = () => {
+      reject(new DOMException(transaction.error.message, transaction.error.name));
+    };
+    resolve(transaction.objectStore(storeName));
+  });
 }

@@ -29,18 +29,20 @@ document.head.appendChild(codeStyle);
 
 export const name = "core/caniuse";
 
-export function run(conf) {
+export async function run(conf) {
   normalizeConf(conf);
   const { caniuse } = conf;
+  const cache = await new IDBCache("respec-caniuse", ["caniuse"]);
   if (caniuse.feature) {
     canIUse(
       caniuse.feature,
       document.querySelector(".head dl").lastChild,
+      cache,
       caniuse
     );
   }
   for (const el of document.querySelectorAll("section[data-caniuse]")) {
-    canIUse(el.dataset.caniuse, el.firstChild, caniuse);
+    canIUse(el.dataset.caniuse, el.firstChild, cache, caniuse);
   }
 }
 
@@ -76,20 +78,16 @@ function normalizeConf(conf) {
  * main canIUse function
  * @param  {String} key              which api to look for
  * @param  {Node} refNode            adds table after refNode
+ * @param {IDBCache} cache           IDB cache
  * @param {Object} conf              normalized respecConfig.caniuse
  */
-async function canIUse(key, refNode, conf) {
+async function canIUse(key, refNode, cache, conf) {
   const title = hyperHTML`
     <dt class="caniuse-title" id="${`caniuse-${key}`}">
       Can I Use this API? (${key})
     </dt>`;
 
   const contentPromise = new Promise(async (resolve) => {
-    const cache = await new IDBCache("respec-caniuse", ["caniuse"], {
-      version: 1,
-      defaultStore: "caniuse",
-    });
-
     // use data from cache data if valid and render
     try {
       const cachedStats = await cache.get(key);
