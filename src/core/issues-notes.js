@@ -178,14 +178,15 @@ function createLabels(label) {
   let textColorClass = "dark";
   try {
     textColorClass = deriveTextColorClass(color);
-  } catch(err) {
+  } catch (err) {
     console.error(err);
   }
   const cssClasses = `respec-gh-label respec-label-${textColorClass}`;
+  const style = `background-color: #${color}`;
   return hyperHTML`<a
-    class="${cssClasses}"
-    style="background-color: #${color}"
-    href="${url}">${name}</a>`;
+      class="${cssClasses}"
+      style="${style}"
+      href="${url}">${name}</a>`;
 }
 
 async function fetchIssuesFromGithub({ githubAPI }) {
