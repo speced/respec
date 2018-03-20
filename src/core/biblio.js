@@ -190,6 +190,9 @@ function bibref(conf) {
   var informs = refKeys.informativeReferences;
   var norms = refKeys.normativeReferences;
   var aliases = {};
+  
+  // the bibliographical style to use
+  const { biblioStyle: refstyle } = conf;
 
   if (!informs.length && !norms.length && !conf.refNote) return;
   var $refsec = $(
@@ -223,7 +226,6 @@ function bibref(conf) {
         .appendTo($dl);
       var $dd = $("<dd></dd>").appendTo($dl);
       var refcontent = conf.biblio[ref];
-      const { biblioStyle: refstyle }  = conf;
       var circular = {};
       var key = ref;
       circular[ref] = true;
