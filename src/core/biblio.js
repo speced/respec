@@ -235,7 +235,6 @@ function bibref(conf) {
         } else {
           key = refcontent.aliasOf;
           refcontent = conf.biblio[key];
-          { biblioStyle: refstyle }  = conf;
           circular[key] = true;
         }
       }
