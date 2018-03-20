@@ -82,7 +82,7 @@ describe("W3C — Bibliographic References", () => {
   afterAll(flushIframes);
   const bibRefsURL = new URL("https://specref.herokuapp.com/bibrefs");
 
-  let docDefault, docAPA, docMLA;
+  const docDefault, docAPA, docMLA;
   let specRefOk;
   beforeAll(async () => {
     docDefault = await makeRSDoc({ confDefault, body });
@@ -106,7 +106,7 @@ describe("W3C — Bibliographic References", () => {
 
   it("displays the publisher when present", () => {
     // Make sure the reference is added.
-    let ref = docDefault.querySelector("#bib-TestRef1 + dd");
+    const ref = docDefault.querySelector("#bib-TestRef1 + dd");
     expect(ref).toBeTruthy();
     // This prevents Jasmine from taking down the whole test suite if SpecRef is down.
     if (!specRefOk) {
@@ -115,46 +115,49 @@ describe("W3C — Bibliographic References", () => {
       );
     }
     expect(ref.textContent).toMatch(/Publishers Inc\.\s/);
-    ref = null;
-    // Make sure the ". " is automatically added to publisher.
-    ref = docDefault.querySelector("#bib-TestRef2 + dd");
-    expect(ref).toBeTruthy();
-    expect(ref.textContent).toMatch(/Testing 123\.\s/);
-    ref = null;
-    // Make sure publisher is shown even when there is no author
-    ref = docDefault.querySelector("#bib-TestRef3 + dd");
-    expect(ref).toBeTruthy();
-    expect(ref.textContent).toMatch(/Publisher Here\.\s/);
   });
 
-  it("displays the reference for APA citation", () => {
-    let ref = docAPA.querySelector("#bib-TestRef1 + dd");
+  it("makes sure the . is automatically added to publisher", () => {
+    const ref = docDefault.querySelector("#bib-TestRef2 + dd");
     expect(ref).toBeTruthy();
-    let finalString = "William Shakespeare. (2013-12-17). Test ref title. Retrieved from URL: http://test.com/";
+    expect(ref.textContent).toMatch(/Testing 123\.\s/);
+  });  
+
+  it("makes sure publisher is shown even when there is no author", () => {
+    const ref = docDefault.querySelector("#bib-TestRef3 + dd");
+    expect(ref).toBeTruthy();
+    expect(ref.textContent).toMatch(/Publisher Here\.\s/);
+  }); 
+
+  it("displays the APA citation even when unnecessary publisher is given", () => {
+    const ref = docAPA.querySelector("#bib-TestRef1 + dd");
+    expect(ref).toBeTruthy();
+    const finalString = "William Shakespeare. (2013-12-17). Test ref title. Retrieved from URL: http://test.com/";
     expect(ref.textContent.trim()).toEqual(finalString); 
     //Make sure that the right things are hyperlinked
-    let anchors = ref.querySelectorAll("a");
+    const anchors = ref.querySelectorAll("a");
     expect(anchors.length).toEqual(2);
-    let [title, retrievedFrom] = [...anchors];
+    const [title, retrievedFrom] = [...anchors];
     expect(title.href).toEqual("http://test.com/");
     expect(title.firstElementChild.localName).toEqual("cite");
     expect(title.firstElementChild.textContent).toEqual("Test ref title");
-    expect(retrievedFrom.href).toEqual("http://test.com/");
-    ref = finalString = null;
+    expect(retrievedFrom.href).toEqual("http://test.com/");    
+  });
 
-    ref = docAPA.querySelector("#bib-TestRef3 + dd");
+  it("displays the APA citation even when there is no author", () => {
+    const ref = docAPA.querySelector("#bib-TestRef3 + dd");
     expect(ref).toBeTruthy();
-    finalString = "(2013-12-17). Third test. Retrieved from URL: http://test.com/";
+    const finalString = "(2013-12-17). Third test. Retrieved from URL: http://test.com/";
     expect(ref.textContent.trim()).toEqual(finalString); 
     //Make sure that the right things are hyperlinked
-    anchors = ref.querySelectorAll("a");
+    const anchors = ref.querySelectorAll("a");
     expect(anchors.length).toEqual(2);
-    [title, retrievedFrom] = [...anchors];
+    const [title, retrievedFrom] = [...anchors];
     expect(title.href).toEqual("http://test.com/");
     expect(title.firstElementChild.localName).toEqual("cite");
     expect(title.firstElementChild.textContent).toEqual("Third test");
     expect(retrievedFrom.href).toEqual("http://test.com/");
-  });
+  }); 
 
   it("displays the reference for MLA citation", () => {
     let ref = docMLA.querySelector("#bib-TestRef1 + dd");
@@ -183,69 +186,69 @@ describe("W3C — Bibliographic References", () => {
     expect(title.firstElementChild.localName).toEqual("cite");
     expect(title.firstElementChild.textContent).toEqual("\"Second test.\"");
     expect(retrievedFrom.href).toEqual("http://test.com/");
-    ref = finalString = null;
+  });
 
-    ref = docMLA.querySelector("#bib-TestRef3 + dd");
+  it("displays the MLA citation even when there is no author", () => {
+    const ref = docMLA.querySelector("#bib-TestRef3 + dd");
     expect(ref).toBeTruthy();
-    finalString = "\"Third test.\" Publisher Here, 2013-12-17, http://test.com/";
+    const finalString = "\"Third test.\" Publisher Here, 2013-12-17, http://test.com/";
     expect(ref.textContent.trim()).toEqual(finalString); 
     //Make sure that the right things are hyperlinked
-    anchors = ref.querySelectorAll("a");
+    const anchors = ref.querySelectorAll("a");
     expect(anchors.length).toEqual(2);
-    [title, retrievedFrom] = [...anchors];
+    const [title, retrievedFrom] = [...anchors];
     expect(title.href).toEqual("http://test.com/");
     expect(title.firstElementChild.localName).toEqual("cite");
     expect(title.firstElementChild.textContent).toEqual("\"Third test.\"");
     expect(retrievedFrom.href).toEqual("http://test.com/");
-    ref = finalString = null;
-  });
+  }); 
 
-  //For both MLA and APA
-  it("Reference with only url", ()=>{
-    let ref = docAPA.querySelector("#bib-RefWithOnlyHref + dd");
+  it("displays APA citation for reference with only url", ()=>{
+    const ref = docAPA.querySelector("#bib-RefWithOnlyHref + dd");
     expect(ref).toBeTruthy();
-    let finalString = "(2013-12-17). Retrieved from URL: http://test.com/";
+    const finalString = "(2013-12-17). Retrieved from URL: http://test.com/";
     expect(ref.textContent.trim()).toEqual(finalString); 
     //Make sure that the right things are hyperlinked
-    let anchors = ref.querySelectorAll("a");
+    const anchors = ref.querySelectorAll("a");
     expect(anchors.length).toEqual(1);
-    [retrievedFrom] = [...anchors];
-    expect(retrievedFrom.href).toEqual("http://test.com/");
-    ref = finalString = null;
-
-    ref = docMLA.querySelector("#bib-RefWithOnlyHref + dd");
-    expect(ref).toBeTruthy();
-    finalString = "2013-12-17, http://test.com/";
-    expect(ref.textContent.trim()).toEqual(finalString); 
-    expect(ref.textContent.trim()).toEqual(finalString); 
-    //Make sure that the right things are hyperlinked
-    anchors = ref.querySelectorAll("a");
-    expect(anchors.length).toEqual(1);
-    [retrievedFrom] = [...anchors];
+    const [retrievedFrom] = [...anchors];
     expect(retrievedFrom.href).toEqual("http://test.com/");
   }); 
 
-  //For both MLA and APA
-  it("Reference with author and url", ()=>{
-    let ref = docAPA.querySelector("#bib-RefWithOnlyHrefAndAuthor + dd");
+  it("displays MLA citation for reference with only url", ()=>{
+    const ref = docMLA.querySelector("#bib-RefWithOnlyHref + dd");
     expect(ref).toBeTruthy();
-    finalString = "William Shakespeare. (2013-12-17). Retrieved from URL: http://test.com/";
+    const finalString = "2013-12-17, http://test.com/";
+    expect(ref.textContent.trim()).toEqual(finalString); 
     expect(ref.textContent.trim()).toEqual(finalString); 
     //Make sure that the right things are hyperlinked
-    anchors = ref.querySelectorAll("a");
+    const anchors = ref.querySelectorAll("a");
     expect(anchors.length).toEqual(1);
-    [retrievedFrom] = [...anchors];
+    const [retrievedFrom] = [...anchors];
     expect(retrievedFrom.href).toEqual("http://test.com/");
-    ref = finalString = null;
+  }); 
 
-    ref = docMLA.querySelector("#bib-RefWithOnlyHrefAndAuthor + dd");
+  it("displays APA citation for reference with author and url", ()=>{
+    const ref = docAPA.querySelector("#bib-RefWithOnlyHrefAndAuthor + dd");
     expect(ref).toBeTruthy();
-    finalString = "William Shakespeare. 2013-12-17, http://test.com/";
+    const finalString = "William Shakespeare. (2013-12-17). Retrieved from URL: http://test.com/";
     expect(ref.textContent.trim()).toEqual(finalString); 
     //Make sure that the right things are hyperlinked
-    anchors = ref.querySelectorAll("a");
+    const anchors = ref.querySelectorAll("a");
     expect(anchors.length).toEqual(1);
-    [retrievedFrom] = [...anchors];
+    const [retrievedFrom] = [...anchors];
+    expect(retrievedFrom.href).toEqual("http://test.com/");
+  }); 
+
+  it("displays MLA citation for reference with author and url", ()=>{
+    const ref = docMLA.querySelector("#bib-RefWithOnlyHrefAndAuthor + dd");
+    expect(ref).toBeTruthy();
+    const finalString = "William Shakespeare. 2013-12-17, http://test.com/";
+    expect(ref.textContent.trim()).toEqual(finalString); 
+    //Make sure that the right things are hyperlinked
+    const anchors = ref.querySelectorAll("a");
+    expect(anchors.length).toEqual(1);
+    const[retrievedFrom] = [...anchors];
     expect(retrievedFrom.href).toEqual("http://test.com/");
   }); 
 
