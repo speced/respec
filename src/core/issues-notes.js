@@ -15,8 +15,6 @@ import css from "deps/text!core/css/issues-notes.css";
 import "deps/hyperhtml";
 export const name = "core/issues-notes";
 
-// const html =
-
 function handleIssues($ins, ghIssues, conf) {
   const { issueBase, githubAPI } = conf;
   var hasDataNum = $(".issue[data-number]").length > 0,
