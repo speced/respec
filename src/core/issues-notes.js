@@ -131,7 +131,7 @@ function handleIssues($ins, ghIssues, conf) {
                 href: issuesURL.href,
               };
             })
-            .map(createLabels)
+            .map(createLabel)
             .reduce((frag, labelElem) => {
               frag.appendChild(labelElem);
               return frag;
@@ -183,7 +183,7 @@ function deriveTextColorClass(hexColor) {
   return illumination > 140 ? "light" : "dark";
 }
 
-function createLabels(label) {
+function createLabel(label) {
   const { color, href, name } = label;
   let textColorClass = "dark";
   try {
