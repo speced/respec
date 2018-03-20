@@ -12,6 +12,7 @@
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { pub } from "core/pubsubhub";
 import css from "deps/text!core/css/issues-notes.css";
+import "deps/hyperhtml";
 export const name = "core/issues-notes";
 
 function handleIssues($ins, ghIssues, conf) {
@@ -161,32 +162,30 @@ function handleIssues($ins, ghIssues, conf) {
 
 //derives the text-color-class based on the illumination score of the labelColor
 function deriveTextColorClass(hexColor) {
-  try {
-    const rgb = parseInt(hexColor, 16);
-    if (isNaN(rgb)) {
-      throw NaN;
-    }
-    const red = (rgb >> 16) & 0xff;
-    const green = (rgb >> 8) & 0xff;
-    const blue = (rgb >> 0) & 0xff;
-    const illumination = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
-    return illumination > 140 ? "light" : "dark";
-  } catch (err) {
-    console.error(err);
-    return "dark";
+  const rgb = parseInt(hexColor, 16);
+  if (isNaN(rgb)) {
+    throw new TypeError(`Invalid hex color: ${hexColor}`);
   }
+  const red = (rgb >> 16) & 0xff;
+  const green = (rgb >> 8) & 0xff;
+  const blue = (rgb >> 0) & 0xff;
+  const illumination = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+  return illumination > 140 ? "light" : "dark";
 }
 
 function createLabels(label) {
-  const labelColor = label.color;
-  const labelElement = document.createElement("a");
-  const textColorClass = deriveTextColorClass(labelColor);
-  labelElement.style.backgroundColor = `#${labelColor}`;
-  labelElement.classList.add("respec-gh-label");
-  labelElement.classList.add(`respec-label-${textColorClass}`);
-  labelElement.href = label.url;
-  labelElement.innerText = label.name;
-  return labelElement;
+  const { color, url, name } = label;
+  let textColorClass = "dark";
+  try {
+    textColorClass = deriveTextColorClass(color);
+  } catch(err) {
+    console.error(err);
+  }
+  const cssClasses = `respec-gh-label respec-label-${textColorClass}`;
+  return hyperHTML`<a
+    class="${cssClasses}"
+    style="background-color: #${color}"
+    href="${url}">${name}</a>`;
 }
 
 async function fetchIssuesFromGithub({ githubAPI }) {
