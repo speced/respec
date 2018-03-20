@@ -4,8 +4,6 @@ Adds a caniuse support table for a "feature" #1238
 
 `conf.caniuse = { feature: key }` =>
   .. the table is added before Copyright
-`<section data-caniuse=key>` =>
-  .. table will be added after section's first element (usually section heading)
 Optional settings:
   `conf.caniuse.browsers` list of caniuse supported browser names
     to be shown in the table or "ALL"
@@ -22,14 +20,17 @@ import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
 import caniuseCss from "deps/text!core/css/caniuse.css";
 
-// Opportunistically insert the style into the head to reduce FOUC.
-const codeStyle = document.createElement("style");
-codeStyle.textContent = caniuseCss;
-document.head.appendChild(codeStyle);
-
 export const name = "core/caniuse";
 
 export async function run(conf) {
+  if (!conf.caniuse) {
+    return;
+  }
+  // Opportunistically insert the style into the head to reduce FOUC.
+  const codeStyle = document.createElement("style");
+  codeStyle.textContent = caniuseCss;
+  document.head.appendChild(codeStyle);
+
   normalizeConf(conf);
   const { caniuse } = conf;
   const cache = await new IDBCache("respec-caniuse", ["caniuse"]);
@@ -40,9 +41,6 @@ export async function run(conf) {
       cache,
       caniuse
     );
-  }
-  for (const el of document.querySelectorAll("section[data-caniuse]")) {
-    canIUse(el.dataset.caniuse, el.firstChild, cache, caniuse);
   }
 }
 
@@ -57,10 +55,6 @@ function normalizeConf(conf) {
     versions: 4,
   };
 
-  if (!conf.caniuse) {
-    conf.caniuse = DEFAULTS;
-    return;
-  }
   if (typeof conf.caniuse === "string") {
     conf.caniuse = { feature: conf.caniuse, ...DEFAULTS };
     return;
