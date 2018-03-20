@@ -321,6 +321,19 @@ describe("W3C — Headers", function() {
   });
 
   describe("use existing h1 element", () => {
+    it("uses the <h1>'s value as the document's title", async () => {
+      const body = `
+        <h1 id='title'>
+          This should be <code>pass</code>.
+         </h1>` + makeDefaultBody();
+      const ops = makeStandardOps({}, body);
+      const doc = await makeRSDoc(ops);
+      expect(doc.title).toEqual("This should be pass.");
+      const titleElem = doc.querySelector("title");
+      expect(titleElem).toBeTruthy();
+      expect(titleElem.textContent).toEqual("This should be pass.");
+    });
+
     it("uses <h1> if already present", async () => {
       const ops = makeStandardOps();
       ops.body = "<h1 id='title'><code>pass</code></h1>" + makeDefaultBody();
