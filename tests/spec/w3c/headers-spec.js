@@ -329,6 +329,9 @@ describe("W3C — Headers", function() {
       const ops = makeStandardOps({}, body);
       const doc = await makeRSDoc(ops);
       expect(doc.title).toEqual("This should be pass.");
+      const titleElem = doc.querySelector("title");
+      expect(titleElem).toBeTruthy();
+      expect(titleElem.textContent).toEqual("This should be pass.");
     });
 
     it("uses <h1> if already present", async () => {
