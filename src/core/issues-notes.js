@@ -15,6 +15,8 @@ import css from "deps/text!core/css/issues-notes.css";
 import "deps/hyperhtml";
 export const name = "core/issues-notes";
 
+// const html =
+
 function handleIssues($ins, ghIssues, conf) {
   const { issueBase, githubAPI } = conf;
   var hasDataNum = $(".issue[data-number]").length > 0,
@@ -119,8 +121,16 @@ function handleIssues($ins, ghIssues, conf) {
           }
         }
         $tit.find("span").text(text);
-        if (report.title && githubAPI) {
+        if (ghIssue && report.title && githubAPI) {
           const labelsGroup = Array.from(ghIssue.labels)
+            .map(label => {
+              const issuesURL = new URL(`issues/`, conf.github);
+              issuesURL.searchParams.set("q", `is:issue is:open label:${label.name}`);
+              return {
+                ...label,
+                href: issuesURL.href,
+              };
+            })
             .map(createLabels)
             .reduce((frag, labelElem) => {
               frag.appendChild(labelElem);
@@ -174,7 +184,7 @@ function deriveTextColorClass(hexColor) {
 }
 
 function createLabels(label) {
-  const { color, url, name } = label;
+  const { color, href, name } = label;
   let textColorClass = "dark";
   try {
     textColorClass = deriveTextColorClass(color);
@@ -184,9 +194,9 @@ function createLabels(label) {
   const cssClasses = `respec-gh-label respec-label-${textColorClass}`;
   const style = `background-color: #${color}`;
   return hyperHTML`<a
-      class="${cssClasses}"
-      style="${style}"
-      href="${url}">${name}</a>`;
+    class="${cssClasses}"
+    style="${style}"
+    href="${href}">${name}</a>`;
 }
 
 async function fetchIssuesFromGithub({ githubAPI }) {
