@@ -1,23 +1,5 @@
 {
   "number": 1540,
   "title": "A mock open issue for testing",
-  "state": "open",
-  "labels": [
-      {
-        "name": "refactor",
-        "color": "47f441"
-      },
-      {
-        "name": "bug",
-        "color": "f4425c"
-      },
-      {
-        "name": "blank",
-        "color": ""
-      },
-      {
-        "name": "not-a-color",
-        "color": "this is not a color"
-      }
-    ]
+  "state": "open"
 }
