@@ -57,6 +57,7 @@ export async function run(conf, doc, cb) {
     <dd class="caniuse-stats">fetching data from caniuse.com...</dd>`);
 
   const cache = new IDBCache("respec-caniuse", ["caniuse"]);
+  await Promise.all([doc.respecIsReady, cache.ready]);
 
   hyperHTML.bind(placeholder)`${{
     any: canIUse(caniuse, cache),
@@ -136,7 +137,6 @@ async function canIUse(conf, cache) {
 
 // TODO: replace with fetch in core/github ?
 async function getJson(url) {
-  await new Promise(resolve => setTimeout(resolve, 4000)); // DEV only. remove before upload
   const response = await window.fetch(url);
   if (!response.ok) {
     if (response.status === 404) {

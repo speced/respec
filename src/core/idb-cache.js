@@ -41,9 +41,14 @@ export default class IDBCache {
     }
   }
 
-  async ready() {
-    await databases.get(this.name);
-    return;
+  get ready() {
+    return new Promise(async (resolve) => {
+      const db = await databases.get(this.name);
+      if (db instanceof IDBDatabase) {
+        return resolve();
+      }
+      throw new Error(`The database ${this.name} is gone!`);
+    });
   }
 
   /**
@@ -108,7 +113,9 @@ export default class IDBCache {
  */
 function getResponse(request) {
   return new Promise((resolve, reject) => {
-    request.onerror = () => reject(request.error);
+    request.onerror = () => {
+      reject(new DOMException(request.error.message, request.error.name));
+    }
     request.onsuccess = () => resolve(request.result);
   });
 }
