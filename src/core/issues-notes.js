@@ -122,8 +122,8 @@ function handleIssues($ins, ghIssues, conf) {
         if (ghIssue && report.title && githubAPI) {
           const labelsGroup = Array.from(ghIssue.labels)
             .map(label => {
-              const issuesURL = new URL(`issues/`, conf.github);
-              issuesURL.searchParams.set("q", `is:issue is:open label:${label.name}`);
+              const issuesURL = new URL('issues/', conf.github + '/');
+              issuesURL.searchParams.set("q", `is:issue is:open label:"${label.name}"`);
               return {
                 ...label,
                 href: issuesURL.href,

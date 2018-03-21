@@ -142,20 +142,33 @@ describe("Core — Issues and Notes", function () {
         `,
     };
     const doc = await makeRSDoc(ops);
+
     const issueDiv = doc.getElementById("issue-1540");
     expect(issueDiv).toBeTruthy();
-    const labels = doc.getElementsByClassName("respec-gh-label");
-    expect(labels[0].innerText).toEqual("refactor");
-    expect(labels[1].innerText).toEqual("bug");
-    expect(labels[2].innerText).toEqual("blank");
-    expect(labels[2].style.backgroundColor).toEqual("rgb(0, 0, 0)");
-    expect(labels[2].style.color).toEqual("#fff");
-    expect(labels[3].innerText).toEqual("not-a-color");
-    expect(labels[3].style.backgroundColor).toEqual("rgb(0, 0, 0)");
-    expect(labels[3].style.color).toEqual("#fff");
+
     const issueDiv404 = doc.getElementById("this-is-404");
     expect(issueDiv404).toBeTruthy();
-    expect(issueDiv404.textContent).toEqual("this is 404");
+    expect(issueDiv404.innerText).toEqual("this is 404");
+
+    const [refactorLabel, bugLabel, blankLabel, invalidLabel] = doc.getElementsByClassName("respec-gh-label");
+
+    expect(refactorLabel.innerText).toEqual('refactor');
+    expect(refactorLabel.classList).toContain('respec-gh-label', 'respec-label-light');
+    expect(refactorLabel.style.backgroundColor).toEqual('rgb(71, 244, 65)');
+    expect(refactorLabel.href).toEqual('https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22refactor%22');
+
+    expect(bugLabel.innerText).toEqual('bug');
+    expect(bugLabel.classList).toContain('respec-gh-label', 'respec-label-dark');
+    expect(bugLabel.style.backgroundColor).toEqual('rgb(244, 66, 92)');
+    expect(bugLabel.href).toEqual('https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22bug%22');
+
+    expect(blankLabel.innerText).toEqual('blank');
+    expect(blankLabel.classList).toContain('respec-gh-label', 'respec-label-dark');
+    expect(blankLabel.href).toEqual('https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22blank%22');
+
+    expect(invalidLabel.innerText).toEqual('not-a-color');
+    expect(invalidLabel.classList).toContain('respec-gh-label', 'respec-label-dark');
+    expect(invalidLabel.href).toEqual('https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22not-a-color%22');
   });
 
   it("should link to external issue tracker", function (done) {
