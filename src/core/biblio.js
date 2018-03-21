@@ -93,24 +93,93 @@ export function wireReference(rawRef, target = "_blank") {
   `;
 }
 
-export function stringifyReference(ref) {
+const html = (...args) => hyperHTML.bind(doc.createDocumentFragment())(...args);
+
+// Author, A. (Year, Month Date of Publication). Article title. Retrieved from URL
+function entryToAPA(ref) {
+  const { title } = ref;
+  const authors =
+    ref.authors && ref.authors.length
+      ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : ""}.`
+      : "";
+  const date = ref.date ? `(${ref.date})` : "";
+  return html`
+    ${authors} ${date} ${
+    ref.href
+      ? html`<a href="${ref.href}"><cite>${title}</cite></a>.`
+      : html`<cite>${title}</cite>`
+  }
+    ${
+      ref.href
+        ? html`Retrieved from URL: ${html`<a href="${ref.href}">${
+            ref.href
+          }</a>`}`
+        : ""
+    }
+  `;
+}
+
+//Author’s Last name, First name. “Title of the Article or Individual Page.” Title of the website, Name of the publisher, Date of publication, URL.
+function entryToMLA(ref) {
+  const authors =
+    ref.authors && ref.authors.length
+      ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : ""}.`
+      : "";
+  const date = ref.date ? `${ref.date}, ` : "";
+  const title = `"${ref.title}." `;
+  const publisher = ref.publisher
+    ? `${ref.publisher} ${ref.publisher.endsWith(".")}`
+    : "";
+
+  return html`
+	${authors} ${
+    ref.href
+      ? html`<a href="${ref.href}"><cite>${title}</cite></a>.`
+      : html`><cite>${title}</cite>`
+  } ${publisher} ${date} ${
+    ref.href ? html`<a href="${ref.href}">${ref.href}</a>` : ""
+  }`;
+}
+
+//what ReSpec currently does...
+function entryToW3C(ref) {
+  const { title } = ref;
+  const authors =
+    ref.authors && ref.authors.length
+      ? `${ref.authors.join("; ")} ${ref.etAl ? " et al" : "."}.`
+      : "";
+  const publisher = ref.publisher
+    ? `${ref.publisher} ${ref.publisher.endsWith(".")}`
+    : "";
+  const date = ref.date ? `${ref.date}. ` : "";
+  const status = ref.status
+    ? (REF_STATUSES.get(ref.status) || ref.status) + ". "
+    : "";
+
+  return html`
+  	${
+      ref.href
+        ? html`<a href="${ref.href}"><cite>${title}</cite></a>.`
+        : html`<cite>${title}</cite>`
+    } ${authors} ${publisher} ${date} ${status} ${
+    ref.href ? html`<a href="${ref.href}">${ref.href}</a>` : ""
+  }`;
+}
+
+export function stringifyReference(ref, style) {
   if (typeof ref === "string") return ref;
-  let output = `<cite>${ref.title}</cite>`;
-  if (ref.href) {
-    output = `<a href="${ref.href}">${output}</a>. `;
+  const nomarlizedRef = Object.assign({}, defaultsReference, ref);
+  let output = "";
+  switch (style) {
+    case "APA":
+      output = entryToAPA(nomarlizedRef);
+      break;
+    case "MLA":
+      output = entryToMLA(nomarlizedRef);
+      break;
+    default:
+      output = entryToW3C(nomarlizedRef);
   }
-  if (ref.authors && ref.authors.length) {
-    output += ref.authors.join("; ");
-    if (ref.etAl) output += " et al";
-    output += ".";
-  }
-  if (ref.publisher) {
-    const publisher = ref.publisher + (/\.$/.test(ref.publisher) ? "" : ".");
-    output = `${output} ${publisher} `;
-  }
-  if (ref.date) output += ref.date + ". ";
-  if (ref.status) output += (REF_STATUSES.get(ref.status) || ref.status) + ". ";
-  if (ref.href) output += `URL: <a href="${ref.href}">${ref.href}</a>`;
   return output;
 }
 
@@ -121,6 +190,9 @@ function bibref(conf) {
   var informs = refKeys.informativeReferences;
   var norms = refKeys.normativeReferences;
   var aliases = {};
+  
+  // the bibliographical style to use
+  const { biblioStyle: refstyle } = conf;
 
   if (!informs.length && !norms.length && !conf.refNote) return;
   var $refsec = $(
@@ -171,7 +243,7 @@ function bibref(conf) {
       aliases[key] = aliases[key] || [];
       if (aliases[key].indexOf(ref) < 0) aliases[key].push(ref);
       if (refcontent) {
-        $dd.html(stringifyReference(refcontent) + "\n");
+        $dd.html(stringifyReference(refcontent, refstyle) + "\n");
       } else {
         if (!badrefs[ref]) badrefs[ref] = 0;
         badrefs[ref]++;
