@@ -72,7 +72,7 @@
     "test:build": "mocha ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
     "test:karma": "npm run karma",
-    "prepare": "npm run snyk-protect && npm run copydeps && npm run build:components",
+    "prepare": "npm run snyk-protect && npm run build:components",
     "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
