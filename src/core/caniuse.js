@@ -18,6 +18,7 @@ import { semverCompare } from "core/utils";
 import IDBCache from "core/idb-cache";
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
+import { createResourceHint } from "core/utils";
 import caniuseCss from "deps/text!core/css/caniuse.css";
 
 const BROWSERS = new Map([ // browser name dictionary
@@ -45,8 +46,13 @@ export function run(conf, doc, cb) {
   if (!caniuse.feature) {
     return; // no feature to show
   }
-  // Opportunistically insert the style into the head to reduce FOUC.
-  document.head.appendChild(hyperHTML `<style>${caniuseCss}</style>`);
+
+  const link = createResourceHint({
+    hint: "preconnect",
+    href: "https://raw.githubusercontent.com",
+  });
+  document.head.appendChild(link);
+  document.head.appendChild(hyperHTML`<style>${caniuseCss}</style>`);
 
   const parent = document.querySelector(".head dl");
   parent.appendChild(hyperHTML`
