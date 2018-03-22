@@ -14,6 +14,8 @@ Optional settings:
     use {FEATURE} as placeholder in URL to replace it by a feature name
 */
 
+// TODO: simplify error handling in `fetchAndCacheJson`
+
 import { semverCompare } from "core/utils";
 import IDBCache from "core/idb-cache";
 import { pub } from "core/pubsubhub";
@@ -116,7 +118,7 @@ async function fetchAndCacheJson(conf) {
   // use data from cache data if valid and render
   await cache.ready;
   try {
-    const cached = await cache.get(url);
+    const cached = await cache.match(url);
     if (cached && new Date() - cached.cacheTime < conf.maxAge) {
       return cached.stats;
     }
@@ -147,7 +149,7 @@ async function fetchAndCacheJson(conf) {
 
   try {
     const json = await response.json();
-    cache.set(url, { stats: json.stats, cacheTime: new Date() })
+    cache.put(url, { stats: json.stats, cacheTime: new Date() })
       .catch(err => console.error("Failed to cache caniuse data.", err));
     return json.stats;
   } catch (err) {

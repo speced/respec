@@ -56,7 +56,7 @@ export default class IDBCache {
    * @param {string} key        object store record key
    * @param {string} storeName  store name
    */
-  async get(key, storeName = this.defaultStore) {
+  async match(key, storeName = this.defaultStore) {
     const db = await databases.get(this.name);
     const store = await getStore(db, storeName, "readonly");
     return await getResponse(store.get(key));
@@ -68,7 +68,7 @@ export default class IDBCache {
    * @param {any} value         value
    * @param {string} storeName  store name
    */
-  async set(key, value, storeName = this.defaultStore) {
+  async put(key, value, storeName = this.defaultStore) {
     const db = await databases.get(this.name);
     const store = await getStore(db, storeName, "readwrite");
     return await getResponse(store.put(value, key));
