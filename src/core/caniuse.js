@@ -35,7 +35,7 @@ const BROWSERS = new Map([ // browser name dictionary
 
 export const name = "core/caniuse";
 
-export async function run(conf, doc, cb) {
+export function run(conf, doc, cb) {
   cb(); // carry on with critical plugins
   if (!conf.caniuse) {
     return;
@@ -54,13 +54,12 @@ export async function run(conf, doc, cb) {
       Can I Use this API?
     </dt>`);
   const placeholder = parent.appendChild(hyperHTML`
-    <dd class="caniuse-stats">fetching data from caniuse.com...</dd>`);
-
-  const cache = new IDBCache("respec-caniuse", ["caniuse"]);
-  await Promise.all([doc.respecIsReady, cache.ready]);
+    <dd class="caniuse-stats"></dd>`);
 
   hyperHTML.bind(placeholder)`${{
-    any: canIUse(caniuse, cache),
+    any: fetchAndCacheJson(caniuse)
+      .then(stats => createTableHTML(caniuse, stats))
+      .catch(err => err),
     placeholder: "fetching data from caniuse.com...",
   }}`;
 }
@@ -103,60 +102,66 @@ function normalizeConf(conf) {
  * promises to get content for canIUse table
  * @param {Object} conf              normalized respecConfig.caniuse
  */
-async function canIUse(conf, cache) {
-  return new Promise(async (resolve) => {
+async function fetchAndCacheJson(conf) {
+  const cache = new IDBCache("respec-caniuse", ["caniuse"]);
+
+  const url = conf.apiURL ?
+    conf.apiURL.replace("{FEATURE}", conf.feature)
+    : `https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/${conf.feature}.json`;
+
+  return new Promise(async (resolve, reject) => {
     // use data from cache data if valid and render
+    await cache.ready;
     try {
-      const cachedStats = await cache.get(conf.feature);
-      if (cachedStats
-        && new Date() - new Date(cachedStats.cacheTime) < conf.maxAge) {
-        resolve(createTableHTML(conf.feature, cachedStats.stats, conf));
+      const cached = await cache.get(url);
+      if (cached && new Date() - cached.cacheTime < conf.maxAge) {
+        resolve(cached.stats);
       }
     } catch (err) {
       console.error(err);
     }
 
-    // otherwise fetch new data, cache and render
-    const url = conf.apiURL
-      ? conf.apiURL.replace("{FEATURE}", conf.feature)
-      : `https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/${conf.feature}.json`;
+    // otherwise fetch new data and cache
+    let response;
+    try {
+      response = await window.fetch(url);
+      if (!response.ok) {
+        if (response.status === 404) {
+          console.error(`The resource ${url} could not be found (HTTP 404)`);
+          throw new Error("Could not fetch GitHub resource (HTTP 404)");
+        }
+        const errorMsg = `GitHub Response not OK. Probably exceeded request limit. (HTTP ${response.status})`;
+        console.error(`${errorMsg}. Resource = ${url}`);
+        throw new Error(errorMsg);
+      }
+    } catch (err) {
+      console.error(err);
+      return reject(getErrorMsg());
+    }
 
     try {
-      const json = await getJson(url);
-      cache.set(conf.feature, { stats: json.stats, cacheTime: new Date() })
+      const json = await response.json();
+      cache.set(url, { stats: json.stats, cacheTime: new Date() })
         .catch(err => console.error("Failed to cache caniuse data.", err));
-      resolve(createTableHTML(conf.feature, json.stats, conf));
+      resolve(json.stats);
     } catch (err) {
-      const permalink = `http://caniuse.com/#feat=${conf.feature}`;
-      resolve(hyperHTML`
-        Error [core/caniuse]: ${err.message}.
-        <br>Please check directly on <a href="${permalink}">${permalink}</a>.`);
+      console.error(err);
+      reject(getErrorMsg());
     }
   });
-}
 
-// TODO: replace with fetch in core/github ?
-async function getJson(url) {
-  const response = await window.fetch(url);
-  if (!response.ok) {
-    if (response.status === 404) {
-      console.error(`The resource ${url} could not be found (HTTP 404)`);
-      throw new Error("Could not fetch GitHub resource (HTTP 404)");
-    }
-    const errorMsg = `GitHub Response not OK. Probably exceeded request limit. (HTTP ${response.status})`;
-    console.error(`${errorMsg}. Resource = ${url}`);
-    throw new Error(errorMsg);
+  function getErrorMsg() {
+    const permalink = `http://caniuse.com/#feat=${conf.feature}`;
+    return hyperHTML`Some error occured. Please check directly on <a href="${permalink}">${permalink}</a>.`;
   }
-  return await response.json();
 }
 
 /**
  * get HTML element for the canIUse support table
- * @param  {String} key       API name
  * @param  {Object} stats     CanIUse API results
  * @param  {Object} conf      respecConfig.caniuse
  */
-function createTableHTML(key, stats, conf) {
+function createTableHTML(conf, stats) {
   let browsers = conf.browsers;
   if (conf.browsers === "ALL") {
     browsers = Object.keys(stats);
@@ -167,7 +172,7 @@ function createTableHTML(key, stats, conf) {
     ${browsers.map(browser =>
       addBrowser(browser, conf.versions, stats[browser])
     )}
-    <a href="${`http://caniuse.com/#feat=${key}`}"
+    <a href="${`http://caniuse.com/#feat=${conf.feature}`}"
       title="Get details at caniuse.com">More info
     </a>`;
 
