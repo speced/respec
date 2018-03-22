@@ -132,13 +132,16 @@ async function fetchAndCacheJson(conf) {
     try {
       response = await window.fetch(url);
       if (!response.ok) {
-        if (response.status === 404) {
-          console.error(`The resource ${url} could not be found (HTTP 404)`);
-          throw new Error("Could not fetch GitHub resource (HTTP 404)");
+        switch (response.status) {
+          case 404:
+            console.error(`The resource ${url} could not be found (HTTP 404)`);
+            throw new Error("Could not fetch GitHub resource (HTTP 404)");
+          default: {
+            const errorMsg = `GitHub Response not OK. Probably exceeded request limit. (HTTP ${response.status})`;
+            console.error(`${errorMsg}. Resource = ${url}`);
+            throw new Error(errorMsg);
+          }
         }
-        const errorMsg = `GitHub Response not OK. Probably exceeded request limit. (HTTP ${response.status})`;
-        console.error(`${errorMsg}. Resource = ${url}`);
-        throw new Error(errorMsg);
       }
     } catch (err) {
       console.error(err);
