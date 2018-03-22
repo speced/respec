@@ -13,6 +13,7 @@
 import { pub } from "core/pubsubhub";
 import css from "deps/text!core/css/issues-notes.css";
 import "deps/hyperhtml";
+import { fetchAndCache } from "core/utils";
 export const name = "core/issues-notes";
 
 const MAX_GITHUB_REQUESTS = 60;
@@ -187,11 +188,14 @@ async function fetchAndStoreGithubIssues(githubAPI) {
     .filter(issueNumber => issueNumber)
     .map(async issueNumber => {
       const issueURL = `${githubAPI}/issues/${issueNumber}`;
-      const response = await fetch(issueURL, {
-        // Get back HTML content instead of markdown
-        // See: https://developer.github.com/v3/media/
-        Accept: "application/vnd.github.v3.html+json",
+      const request = new Request(issueURL, {
+        headers: {
+          // Get back HTML content instead of markdown
+          // See: https://developer.github.com/v3/media/
+          Accept: "application/vnd.github.v3.html+json",
+        },
       });
+      const response = await fetchAndCache(request);
       return processResponse(response, issueNumber);
     });
   const issues = await Promise.all(issuePromises);
