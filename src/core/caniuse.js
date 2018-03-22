@@ -20,6 +20,7 @@ import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
 import { createResourceHint } from "core/utils";
 import caniuseCss from "deps/text!core/css/caniuse.css";
+const cache = new IDBCache("respec-caniuse", ["caniuse"]);
 
 const BROWSERS = new Map([ // browser name dictionary
   ["chrome", "Chrome"],
@@ -36,8 +37,7 @@ const BROWSERS = new Map([ // browser name dictionary
 
 export const name = "core/caniuse";
 
-export function run(conf, doc, cb) {
-  cb(); // carry on with critical plugins
+export function run(conf) {
   if (!conf.caniuse) {
     return;
   }
@@ -109,55 +109,51 @@ function normalizeConf(conf) {
  * @param {Object} conf              normalized respecConfig.caniuse
  */
 async function fetchAndCacheJson(conf) {
-  const cache = new IDBCache("respec-caniuse", ["caniuse"]);
-
   const url = conf.apiURL ?
     conf.apiURL.replace("{FEATURE}", conf.feature)
     : `https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/${conf.feature}.json`;
 
-  return new Promise(async (resolve, reject) => {
-    // use data from cache data if valid and render
-    await cache.ready;
-    try {
-      const cached = await cache.get(url);
-      if (cached && new Date() - cached.cacheTime < conf.maxAge) {
-        resolve(cached.stats);
-      }
-    } catch (err) {
-      console.error(err);
+  // use data from cache data if valid and render
+  await cache.ready;
+  try {
+    const cached = await cache.get(url);
+    if (cached && new Date() - cached.cacheTime < conf.maxAge) {
+      return cached.stats;
     }
+  } catch (err) {
+    console.error(err);
+  }
 
-    // otherwise fetch new data and cache
-    let response;
-    try {
-      response = await window.fetch(url);
-      if (!response.ok) {
-        switch (response.status) {
-          case 404:
-            console.error(`The resource ${url} could not be found (HTTP 404)`);
-            throw new Error("Could not fetch GitHub resource (HTTP 404)");
-          default: {
-            const errorMsg = `GitHub Response not OK. Probably exceeded request limit. (HTTP ${response.status})`;
-            console.error(`${errorMsg}. Resource = ${url}`);
-            throw new Error(errorMsg);
-          }
+  // otherwise fetch new data and cache
+  let response;
+  try {
+    response = await window.fetch(url);
+    if (!response.ok) {
+      switch (response.status) {
+        case 404:
+          console.error(`The resource ${url} could not be found (HTTP 404)`);
+          throw new Error("Could not fetch GitHub resource (HTTP 404)");
+        default: {
+          const errorMsg = `GitHub Response not OK. Probably exceeded request limit. (HTTP ${response.status})`;
+          console.error(`${errorMsg}. Resource = ${url}`);
+          throw new Error(errorMsg);
         }
       }
-    } catch (err) {
-      console.error(err);
-      return reject(getErrorMsg());
     }
+  } catch (err) {
+    console.error(err);
+    throw getErrorMsg();
+  }
 
-    try {
-      const json = await response.json();
-      cache.set(url, { stats: json.stats, cacheTime: new Date() })
-        .catch(err => console.error("Failed to cache caniuse data.", err));
-      resolve(json.stats);
-    } catch (err) {
-      console.error(err);
-      reject(getErrorMsg());
-    }
-  });
+  try {
+    const json = await response.json();
+    cache.set(url, { stats: json.stats, cacheTime: new Date() })
+      .catch(err => console.error("Failed to cache caniuse data.", err));
+    return json.stats;
+  } catch (err) {
+    console.error(err);
+    throw getErrorMsg();
+  }
 
   function getErrorMsg() {
     const permalink = `http://caniuse.com/#feat=${conf.feature}`;
