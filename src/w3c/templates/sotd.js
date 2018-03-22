@@ -50,7 +50,7 @@ ${conf.isUnofficial ? html`
             allocating any resources to the issues addressed by it. This document is not the product
             of a chartered W3C group, but is published as potential input to
             the <a href="https://www.w3.org/Consortium/Process">W3C Process</a>.
-            A <a href="https://www.w3.org/Submission/${conf.processVersion}/<comment_no>/Comment/">W3C Team Comment</a> has been
+            A <a href="https://www.w3.org/Submission/${conf.previousPublishDate.substr(0, 4)}/<comment_no>/Comment/">W3C Team Comment</a> has been
             published in conjunction with this Member Submission. Publication of acknowledged Member Submissions
             at the W3C site is one of the benefits of <a href="https://www.w3.org/Consortium/Prospectus/Joining">
             W3C Membership</a>. Please consult the requirements associated with Member Submissions of
