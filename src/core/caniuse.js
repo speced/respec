@@ -6,7 +6,7 @@ Adds a caniuse support table for a "feature" #1238
   .. the table is added before Copyright
 Optional settings:
   `conf.caniuse.browsers` list of caniuse supported browser names
-    to be shown in the table or "ALL"
+    to be shown in the table
     default: ["chrome", "firefox", "safari", "edge"]
   `conf.caniuse.versions` number of browser versions to show
   `conf.caniuse.maxAge` (in ms) local response cache duration
@@ -111,7 +111,7 @@ function normalizeConf(conf) {
     conf.caniuse.browsers = conf.caniuse.browsers
       .map(b => b.toLowerCase())
       .filter(isValidBrowser);
-  } else if (conf.caniuse.browsers !== "ALL") {
+  } else {
     conf.caniuse.browsers = DEFAULTS.browsers;
   }
   Object.assign(conf.caniuse, DEFAULTS, { ...conf.caniuse });
@@ -166,14 +166,9 @@ async function fetchAndCacheJson(caniuseConf) {
  * @param  {Object} conf      respecConfig.caniuse
  */
 function createTableHTML(conf, stats) {
-  let browsers = conf.browsers;
-  if (conf.browsers === "ALL") {
-    browsers = Object.keys(stats);
-  }
-
   // render the support table
   return hyperHTML`
-    ${browsers.map(browser =>
+    ${conf.browsers.map(browser =>
       addBrowser(browser, conf.versions, stats[browser])
     )}
     <a href="${`http://caniuse.com/#feat=${conf.feature}`}"
