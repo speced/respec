@@ -115,7 +115,7 @@ function getResponse(request) {
   return new Promise((resolve, reject) => {
     request.onerror = () => {
       reject(new DOMException(request.error.message, request.error.name));
-    }
+    };
     request.onsuccess = () => resolve(request.result);
   });
 }

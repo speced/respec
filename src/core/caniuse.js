@@ -1,18 +1,9 @@
 /*
 Module: "core/caniuse"
 Adds a caniuse support table for a "feature" #1238
-
-`conf.caniuse = { feature: key }` =>
-  .. the table is added before Copyright
-Optional settings:
-  `conf.caniuse.browsers` list of caniuse supported browser names
-    to be shown in the table
-    default: ["chrome", "firefox", "safari", "edge"]
-  `conf.caniuse.versions` number of browser versions to show
-  `conf.caniuse.maxAge` (in ms) local response cache duration
-  `conf.caniuse.apiURL` URL from where to fetch stats.
-    use {FEATURE} as placeholder in URL to replace it by a feature name
+https://github.com/w3c/respec/wiki/caniuse
 */
+
 import { semverCompare } from "core/utils";
 import IDBCache from "core/idb-cache";
 import { pub } from "core/pubsubhub";
@@ -121,7 +112,7 @@ function normalizeConf(conf) {
     }
     pub(
       "warn",
-      `Ignoring invalid browser "\`${browser}\`" in [\`respecConfig.caniuse.browsers\`](https://github.com/w3c/respec/wiki/)`
+      `Ignoring invalid browser "\`${browser}\`" in [\`respecConfig.caniuse.browsers\`](https://github.com/w3c/respec/wiki/caniuse)`
     );
     return false;
   }
