@@ -2,8 +2,6 @@
 Module: "core/caniuse"
 Adds a caniuse support table for a "feature" #1238
 
-TODO: Move the following to the wiki, and add link here
-
 `conf.caniuse = { feature: key }` =>
   .. the table is added before Copyright
 Optional settings:
@@ -178,23 +176,61 @@ function createTableHTML(conf, stats) {
    */
   function addBrowser(browser, numVersions, browserData) {
     if (!browserData) return "";
-    const getSupport = version => browserData[version].split("#", 1)[0].trim();
-    const addBrowserVersion = version =>
-      `<li class="caniuse-cell ${getSupport(version)}">${version}</li>`;
+    const getSupport = version => {
+      const supportKeys = browserData[version]
+        .split("#", 1) // don't care about footnotes.
+        .reduce((collector, items) => collector.concat(items.split(" ")), [])
+        .filter(item => item);
+      let titles = [];
+      for (const key of supportKeys) {
+        // Keys from https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md
+        switch (key) {
+          case "y":
+            titles.push("Supported.");
+            break;
+          case "a":
+            titles.push("Almost supported (aka Partial support).");
+            break;
+          case "n":
+            titles.push("No support, or disabled by default.");
+            break;
+          case "p":
+            titles.push("No support, but has Polyfill.");
+            break;
+          case "u":
+            titles.push("Support unknown.");
+            break;
+          case "x":
+            titles.push("Requires prefix to work.");
+            break;
+          case "d":
+            titles.push("Disabled by default (needs to enabled).");
+            break;
+        }
+      }
+      return {
+        support: supportKeys.join(" "),
+        title: titles.join(" "),
+      };
+    };
+    const addBrowserVersion = version => {
+      const { support, title } = getSupport(version);
+      const cssClass = "caniuse-cell " + support;
+      return `<li class="${cssClass}" title="${title}">${version}</li>`;
+    };
 
-    const browserVersions = Object.keys(browserData)
+    const [latestVersion, ...olderVersions] = Object.keys(browserData)
       .sort(semverCompare)
       .slice(-numVersions)
       .reverse();
 
+    const { support, title } = getSupport(latestVersion);
     return hyperHTML`
       <ul class="caniuse-browser">
-        <li class="${`caniuse-cell ${getSupport(browserVersions[0])}`}">
-          ${BROWSERS.get(browser) || browser} ${browserVersions[0]}
-        </li>
-        <li class="caniuse-col">
-          <ul>
-            ${browserVersions.slice(1).map(addBrowserVersion)}
+        <li class="${"caniuse-cell " + support}" title="${title}">
+          ${BROWSERS.get(browser) || browser} ${latestVersion}
+          <ul class="caniuse-col">
+            ${olderVersions.map(addBrowserVersion)}
           </ul>
         </li>
       </ul>`;
