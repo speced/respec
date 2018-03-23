@@ -68,7 +68,7 @@ export function run(conf) {
     } catch (err) {
       console.error(err);
       content = hyperHTML`<a href="${
-        "http://caniuse.com/#feat=" + caniuse.feature
+        "https://caniuse.com/#feat=" + caniuse.feature
       }">caniuse.com</a>`;
     }
     resolve(content);
@@ -125,7 +125,7 @@ function normalizeConf(conf) {
 async function fetchAndCacheJson(caniuseConf) {
   const { apiURL, feature, maxAge } = caniuseConf;
   const url = apiURL
-    ? apiURL.replace("{FEATURE}.json", feature)
+    ? apiURL.replace("{FEATURE}", feature)
     : `${GH_USER_CONTENT_URL}${feature}.json`;
   // use data from cache data if valid and render
   const cached = await cache.match(url);
