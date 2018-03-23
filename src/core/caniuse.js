@@ -188,12 +188,9 @@ function createTableHTML(conf, stats) {
         .split("#", 1)[0] // don't care about footnotes.
         .split(" ")
         .filter(item => item);
-      let titles = [];
-      for (const key of supportKeys) {
-        if (supportTitles.has(key)) {
-          titles.push(supportTitles.get(key));
-        }
-      }
+      const titles = supportKeys
+        .filter(key => supportTitles.has(key))
+        .map(key => supportTitles.get(key));
       return {
         support: supportKeys.join(" "),
         title: titles.join(" "),
