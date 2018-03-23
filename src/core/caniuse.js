@@ -41,6 +41,17 @@ const BROWSERS = new Map([
   ["and_ff", "Firefox (Android)"],
 ]);
 
+// Keys from https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md
+const supportTitles = new Map([
+  ["y", "Supported."],
+  ["a", "Almost supported (aka Partial support)."],
+  ["n", "No support, or disabled by default."],
+  ["p", "No support, but has Polyfill."],
+  ["u", "Support unknown."],
+  ["x", "Requires prefix to work."],
+  ["d", "Disabled by default (needs to enabled)."],
+]);
+
 export function run(conf) {
   if (!conf.caniuse) {
     return; // nothing to do.
@@ -65,8 +76,8 @@ export function run(conf) {
       content = createTableHTML(caniuse, stats);
     } catch (err) {
       console.error(err);
-      content = hyperHTML`<a href="http://caniuse.com/#feat=${
-        caniuse.feature
+      content = hyperHTML`<a href="${
+        "http://caniuse.com/#feat=" + caniuse.feature
       }">caniuse.com</a>`;
     }
     resolve(content);
@@ -126,7 +137,7 @@ async function fetchAndCacheJson(caniuseConf) {
     ? apiURL.replace("{FEATURE}.json", feature)
     : `${GH_USER_CONTENT_URL}${feature}.json`;
   // use data from cache data if valid and render
-  const cached = await cache.get(url);
+  const cached = await cache.match(url);
   if (cached && new Date() - cached.cacheTime < maxAge) {
     return cached.stats;
   }
@@ -134,9 +145,10 @@ async function fetchAndCacheJson(caniuseConf) {
   const response = await window.fetch(url);
   if (!response.ok) {
     switch (response.status) {
-      case 404:
+      case 404: {
         const msg = `Couldn't find feature "${feature}" on caniuse.com? Please check the feature key on [caniuse.com](https://caniuse.com)`;
         pub("error", msg);
+      }
     }
     throw new Error(
       `Response not ok from URL ${url} (HTTP Status ${response.status})`
@@ -144,7 +156,7 @@ async function fetchAndCacheJson(caniuseConf) {
   }
   const { stats } = await response.json();
   // set it, and forget it (there is no recovery if it throws, but that's ok).
-  cache.set(url, { stats, cacheTime: new Date() }).catch(console.error);
+  cache.put(url, { stats, cacheTime: new Date() }).catch(console.error);
   return stats;
 }
 
@@ -178,34 +190,13 @@ function createTableHTML(conf, stats) {
     if (!browserData) return "";
     const getSupport = version => {
       const supportKeys = browserData[version]
-        .split("#", 1) // don't care about footnotes.
-        .reduce((collector, items) => collector.concat(items.split(" ")), [])
+        .split("#", 1)[0] // don't care about footnotes.
+        .split(" ")
         .filter(item => item);
       let titles = [];
       for (const key of supportKeys) {
-        // Keys from https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md
-        switch (key) {
-          case "y":
-            titles.push("Supported.");
-            break;
-          case "a":
-            titles.push("Almost supported (aka Partial support).");
-            break;
-          case "n":
-            titles.push("No support, or disabled by default.");
-            break;
-          case "p":
-            titles.push("No support, but has Polyfill.");
-            break;
-          case "u":
-            titles.push("Support unknown.");
-            break;
-          case "x":
-            titles.push("Requires prefix to work.");
-            break;
-          case "d":
-            titles.push("Disabled by default (needs to enabled).");
-            break;
+        if (supportTitles.has(key)) {
+          titles.push(supportTitles.get(key));
         }
       }
       return {
