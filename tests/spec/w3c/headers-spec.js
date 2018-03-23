@@ -967,32 +967,6 @@ describe("W3C — Headers", function() {
     });
   });
 
-  describe("Team-SUBM", () => {
-    let doc;
-    beforeAll(async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "Team-SUBM",
-      };
-      Object.assign(ops.config, newProps);
-      doc = await makeRSDoc(ops);
-    });
-    it("shouldn't expose a Previous version link for Team submissions", async () => {
-      expect($("dt:contains('Previous version:')", doc).length).toEqual(0);
-    });
-    it("displays the Team Submission logo for Team submissions", async () => {
-      const img = doc.querySelector(
-        ".head img[src^='https://www.w3.org/Icons/team_subm']"
-      );
-      expect(img).toBeTruthy();
-    });
-    it("uses the right SoTD boilerplate for Team submissions", async () => {
-      const link = doc.querySelector(
-        "#sotd a[href='https://www.w3.org/TeamSubmission/']"
-      );
-      expect(link).toBeTruthy();
-    });
-  });
   describe("statusOverride", () => {
     it("allows status paragraph to be overridden", async () => {
       const ops = makeStandardOps();
