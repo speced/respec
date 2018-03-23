@@ -13,18 +13,22 @@ Optional settings:
   `conf.caniuse.apiURL` URL from where to fetch stats.
     use {FEATURE} as placeholder in URL to replace it by a feature name
 */
-
-// TODO: simplify error handling in `fetchAndCacheJson`
-
 import { semverCompare } from "core/utils";
 import IDBCache from "core/idb-cache";
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
 import { createResourceHint } from "core/utils";
 import caniuseCss from "deps/text!core/css/caniuse.css";
+
+export const name = "core/caniuse";
+
 const cache = new IDBCache("respec-caniuse", ["caniuse"]);
 
-const BROWSERS = new Map([ // browser name dictionary
+const GH_USER_CONTENT_URL =
+  "https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/";
+
+const BROWSERS = new Map([
+  // browser name dictionary
   ["chrome", "Chrome"],
   ["firefox", "Firefox"],
   ["ie", "IE"],
@@ -37,18 +41,15 @@ const BROWSERS = new Map([ // browser name dictionary
   ["and_ff", "Firefox (Android)"],
 ]);
 
-export const name = "core/caniuse";
-
 export function run(conf) {
   if (!conf.caniuse) {
-    return;
+    return; // nothing to do.
   }
   normalizeConf(conf);
   const { caniuse } = conf;
   if (!caniuse.feature) {
     return; // no feature to show
   }
-
   const link = createResourceHint({
     hint: "preconnect",
     href: "https://raw.githubusercontent.com",
@@ -56,24 +57,33 @@ export function run(conf) {
   document.head.appendChild(link);
   document.head.appendChild(hyperHTML`<style>${caniuseCss}</style>`);
 
-  const parent = document.querySelector(".head dl");
-  parent.appendChild(hyperHTML`
+  const headDlElem = document.querySelector(".head dl");
+  const contentPromise = new Promise(async resolve => {
+    let content;
+    try {
+      const stats = await fetchAndCacheJson(caniuse);
+      content = createTableHTML(caniuse, stats);
+    } catch (err) {
+      console.error(err);
+      content = hyperHTML`<a href="http://caniuse.com/#feat=${
+        caniuse.feature
+      }">caniuse.com</a>`;
+    }
+    resolve(content);
+  });
+  const definitionPair = hyperHTML.bind(document.createDocumentFragment())`
     <dt class="caniuse-title" id="${`caniuse-${caniuse.feature}`}">
       Can I Use this API?
-    </dt>`);
-  const placeholder = parent.appendChild(hyperHTML`
-    <dd class="caniuse-stats"></dd>`);
-
-  hyperHTML.bind(placeholder)`${{
-    any: fetchAndCacheJson(caniuse)
-      .then(stats => createTableHTML(caniuse, stats))
-      .catch(err => err),
-    placeholder: "fetching data from caniuse.com...",
-  }}`;
+    </dt>
+    <dd class="caniuse-stats">${{
+      any: contentPromise,
+      placeholder: "Fetching data from caniuse.com...",
+    }}</dd>`;
+  headDlElem.appendChild(definitionPair);
 }
 
 /**
- * MUTATES `conf.caniuse` object to hold normalized configurarion
+ * Normalizes `conf.caniuse` object to hold normalized configuration
  * @param {Object} conf   configuration settings
  */
 function normalizeConf(conf) {
@@ -82,7 +92,6 @@ function normalizeConf(conf) {
     browsers: ["chrome", "firefox", "safari", "edge"],
     versions: 4,
   };
-
   if (typeof conf.caniuse === "string") {
     conf.caniuse = { feature: conf.caniuse, ...DEFAULTS };
     return;
@@ -94,73 +103,49 @@ function normalizeConf(conf) {
   } else if (conf.caniuse.browsers !== "ALL") {
     conf.caniuse.browsers = DEFAULTS.browsers;
   }
-  if (conf.caniuse.maxAge === undefined) conf.caniuse.maxAge = DEFAULTS.maxAge;
-  if (!conf.caniuse.versions) conf.caniuse.versions = DEFAULTS.versions;
-
+  Object.assign(conf.caniuse, DEFAULTS, { ...caniuse });
   function isValidBrowser(browser) {
     if (BROWSERS.has(browser)) {
       return true;
     }
-    pub("warn", `Ignoring invalid browser "\`${browser}\`" in \`conf.caniuse.browsers\``);
+    pub(
+      "warn",
+      `Ignoring invalid browser "\`${browser}\`" in [\`respecConfig.caniuse.browsers\`](https://github.com/w3c/respec/wiki/)`
+    );
     return false;
   }
 }
 
 /**
  * promises to get content for canIUse table
- * @param {Object} conf              normalized respecConfig.caniuse
+ * @param {Object} caniuseConf              normalized respecConfig.caniuse
  */
-async function fetchAndCacheJson(conf) {
-  const url = conf.apiURL ?
-    conf.apiURL.replace("{FEATURE}", conf.feature)
-    : `https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/${conf.feature}.json`;
-
+async function fetchAndCacheJson(caniuseConf) {
+  const { apiURL, feature, maxAge } = caniuseConf;
+  const url = apiURL
+    ? apiURL.replace("{FEATURE}.json", feature)
+    : `${GH_USER_CONTENT_URL}${feature}.json`;
   // use data from cache data if valid and render
-  await cache.ready;
-  try {
-    const cached = await cache.match(url);
-    if (cached && new Date() - cached.cacheTime < conf.maxAge) {
-      return cached.stats;
-    }
-  } catch (err) {
-    console.error(err);
+  const cached = await cache.get(url);
+  if (cached && new Date() - cached.cacheTime < maxAge) {
+    return cached.stats;
   }
-
   // otherwise fetch new data and cache
-  let response;
-  try {
-    response = await window.fetch(url);
-    if (!response.ok) {
-      switch (response.status) {
-        case 404:
-          console.error(`The resource ${url} could not be found (HTTP 404)`);
-          throw new Error("Could not fetch GitHub resource (HTTP 404)");
-        default: {
-          const errorMsg = `GitHub Response not OK. Probably exceeded request limit. (HTTP ${response.status})`;
-          console.error(`${errorMsg}. Resource = ${url}`);
-          throw new Error(errorMsg);
-        }
-      }
+  const response = await window.fetch(url);
+  if (!response.ok) {
+    switch (response.status) {
+      case 404:
+        const msg = `Couldn't find feature "${feature}" on caniuse.com? Please check the feature key on [caniuse.com](https://caniuse.com)`;
+        pub("error", msg);
     }
-  } catch (err) {
-    console.error(err);
-    throw getErrorMsg();
+    throw new Error(
+      `Response not ok from URL ${url} (HTTP Status ${response.status})`
+    );
   }
-
-  try {
-    const json = await response.json();
-    cache.put(url, { stats: json.stats, cacheTime: new Date() })
-      .catch(err => console.error("Failed to cache caniuse data.", err));
-    return json.stats;
-  } catch (err) {
-    console.error(err);
-    throw getErrorMsg();
-  }
-
-  function getErrorMsg() {
-    const permalink = `http://caniuse.com/#feat=${conf.feature}`;
-    return hyperHTML`Some error occured. Please check directly on <a href="${permalink}">${permalink}</a>.`;
-  }
+  const { stats } = await response.json();
+  // set it, and forget it (there is no recovery if it throws, but that's ok).
+  cache.set(url, { stats, cacheTime: new Date() }).catch(console.error);
+  return stats;
 }
 
 /**
@@ -191,10 +176,7 @@ function createTableHTML(conf, stats) {
    */
   function addBrowser(browser, numVersions, browserData) {
     if (!browserData) return "";
-
-    const getSupport = version =>
-      browserData[version].split("#", 1)[0].trim();
-
+    const getSupport = version => browserData[version].split("#", 1)[0].trim();
     const addBrowserVersion = version =>
       `<li class="caniuse-cell ${getSupport(version)}">${version}</li>`;
 
