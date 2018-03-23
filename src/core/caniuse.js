@@ -2,6 +2,8 @@
 Module: "core/caniuse"
 Adds a caniuse support table for a "feature" #1238
 
+TODO: Move the following to the wiki, and add link here
+
 `conf.caniuse = { feature: key }` =>
   .. the table is added before Copyright
 Optional settings:
@@ -103,7 +105,7 @@ function normalizeConf(conf) {
   } else if (conf.caniuse.browsers !== "ALL") {
     conf.caniuse.browsers = DEFAULTS.browsers;
   }
-  Object.assign(conf.caniuse, DEFAULTS, { ...caniuse });
+  Object.assign(conf.caniuse, DEFAULTS, { ...conf.caniuse });
   function isValidBrowser(browser) {
     if (BROWSERS.has(browser)) {
       return true;
