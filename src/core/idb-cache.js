@@ -20,10 +20,10 @@ export default class IDBCache {
       defaultStore,
       maxAge,
     } = {
-      version: 1,
-      defaultStore: null,
-      maxAge: 86400000, // 24 hours (in ms)
-    }
+        version: 1,
+        defaultStore: null,
+        maxAge: 86400000, // 24 hours (in ms)
+      }
   ) {
     this.name = name;
     if (!Array.isArray(stores) || stores.length < 1) {
@@ -46,17 +46,13 @@ export default class IDBCache {
         request.onsuccess = () => resolve(request.result);
       });
       databases.set(this.name, dbPromise);
+      // this.ready (read-only)
+      Object.defineProperty(this, "ready", {
+        get() {
+          return dbPromise;
+        }
+      });
     }
-  }
-
-  get ready() {
-    return new Promise(async (resolve) => {
-      const db = await databases.get(this.name);
-      if (db instanceof IDBDatabase) {
-        return resolve();
-      }
-      throw new Error(`The database ${this.name} is gone!`);
-    });
   }
 
   /**
