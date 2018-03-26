@@ -64,7 +64,7 @@ function removeHighlight(el) {
 }
 
 function highlightVars(target) {
-  const { innerText } = target;
+  const textContent = target.textContent.trim();
   const parent = target.closest("section");
   const highlightColor = getHighlightColor(target);
 
@@ -82,7 +82,7 @@ function highlightVars(target) {
   }
 
   [...parent.querySelectorAll("var")]
-    .filter(el => el.innerText === innerText)
+    .filter(el => el.textContent.trim() === textContent)
     .forEach(highlightVar);
 }
 
