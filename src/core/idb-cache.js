@@ -15,8 +15,15 @@ export default class IDBCache {
    */
   constructor(
     name,
-    stores,
-    { version, defaultStore } = { version: 1, defaultStore: null }
+    stores, {
+      version,
+      defaultStore,
+      maxAge,
+    } = {
+      version: 1,
+      defaultStore: null,
+      maxAge: 86400000, // 24 hours (in ms)
+    }
   ) {
     this.name = name;
     if (!Array.isArray(stores) || stores.length < 1) {
@@ -24,6 +31,7 @@ export default class IDBCache {
     }
     this.stores = [...stores];
     this.version = version;
+    this.maxAge = maxAge;
     this.defaultStore = defaultStore || this.stores[0];
     if (!databases.has(name)) {
       const dbPromise = new Promise((resolve, reject) => {
@@ -59,7 +67,11 @@ export default class IDBCache {
   async match(key, storeName = this.defaultStore) {
     const db = await databases.get(this.name);
     const store = await getStore(db, storeName, "readonly");
-    return await getResponse(store.get(key));
+    const data = await getResponse(store.get(key));
+    if (!data) return null;
+    return (new Date() - data.time < this.maxAge)
+      ? data.value
+      : null;
   }
 
   /**
@@ -71,7 +83,7 @@ export default class IDBCache {
   async put(key, value, storeName = this.defaultStore) {
     const db = await databases.get(this.name);
     const store = await getStore(db, storeName, "readwrite");
-    return await getResponse(store.put(value, key));
+    return await getResponse(store.put({ value, time: new Date() }, key));
   }
 
   /**
