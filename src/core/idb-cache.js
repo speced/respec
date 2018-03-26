@@ -75,11 +75,11 @@ export default class IDBCache {
   }
 
   /**
-   * @method @async remove a key-value pair from a given store
+   * @method @async delete a key-value pair from a given store
    * @param {string} key        object store record key
    * @param {string} storeName  store name
    */
-  async remove(key, storeName = this.defaultStore) {
+  async delete(key, storeName = this.defaultStore) {
     const db = await databases.get(this.name);
     const store = await getStore(db, storeName, "readwrite");
     return await getResponse(store.delete(key));
