@@ -9,9 +9,9 @@ import hlVars from "deps/text!core/css/var.css";
 
 export const name = "core/highlight-vars";
 
-export function run(conf, doc, cb) {
+export function run(conf) {
   if (!conf.highlightVars) {
-    return cb();
+    return;
   }
   const styleElement = document.createElement("style");
   styleElement.textContent = hlVars;
@@ -26,7 +26,6 @@ export function run(conf, doc, cb) {
       removeHighlight
     );
   });
-  cb();
 }
 
 // availability of highlight colors.
@@ -67,23 +66,22 @@ function highlightVars(target) {
   const textContent = target.textContent.trim();
   const parent = target.closest("section");
   const highlightColor = getHighlightColor(target);
-
-  function highlightVar(elem) {
-    if (elem.classList.contains("respec-active")) {
-      HL_COLORS.set(highlightColor, true);
-      removeHighlight(elem);
-    } else {
-      const [background, color] = highlightColor.split(",");
-      HL_COLORS.set(highlightColor, false);
-      elem.classList.add("respec-active");
-      elem.style.setProperty("--respec-background-color", background);
-      if (color) elem.style.setProperty("--respec-color", color);
-    }
-  }
-
   [...parent.querySelectorAll("var")]
     .filter(el => el.textContent.trim() === textContent)
     .forEach(highlightVar);
+}
+
+function highlightVar(elem) {
+  if (elem.classList.contains("respec-active")) {
+    HL_COLORS.set(highlightColor, true);
+    removeHighlight(elem);
+  } else {
+    const [background, color] = highlightColor.split(",");
+    HL_COLORS.set(highlightColor, false);
+    elem.classList.add("respec-active");
+    elem.style.setProperty("--respec-background-color", background);
+    if (color) elem.style.setProperty("--respec-color", color);
+  }
 }
 
 function initHighlight({ target }) {
