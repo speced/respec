@@ -25,23 +25,17 @@ const lang = defaultLang in meta ? defaultLang : "en";
  */
 function lintingFunction(conf, doc) {
   
-  const offendingMembers = Array.from(doc.querySelectorAll("p"))
+  const offendingElements = Array.from(doc.querySelectorAll("p"))
     // this gives us all paragraphs that don't end with a period
-    .filter(key => !key.textContent.trim().split("tests")[0].endsWith("."))
-    .reduce((collector, key) => collector.concat(key), []);
-  
-  if (!offendingMembers.length) {
-    return [];
-  }
+    .filter(elem => !elem.textContent.trim().split("tests")[0].endsWith("."))
+    .reduce((collector, elem) => collector.concat(elem), []);
   
   const result = {
     name,
-    occurrences: offendingMembers.length,
+    occurrences: offendingElements.length,
     ...meta[lang],
   };
-  result.howToFix +=
-    offendingMembers.map(item => "`" + item + "`").join(", ") + ".";
+  
   return result;
 }
-console.log("k")
 export const rule = new LinterRule(name, lintingFunction);
