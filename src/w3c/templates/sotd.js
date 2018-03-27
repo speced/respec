@@ -74,7 +74,7 @@ ${
             the <a href="https://www.w3.org/Consortium/Process">W3C Process</a>.
             A <a href="${`https://www.w3.org/Submission/${conf.publishDate.getUTCFullYear()}/${
               conf.submissionCommentNumber
-            }/Comment/`}">W3C Team Comment</a> has been
+            }/Comment/`}" id="comment">W3C Team Comment</a> has been
             published in conjunction with this Member Submission. Publication of acknowledged Member Submissions
             at the W3C site is one of the benefits of <a href="https://www.w3.org/Consortium/Prospectus/Joining">
             W3C Membership</a>. Please consult the requirements associated with Member Submissions of
