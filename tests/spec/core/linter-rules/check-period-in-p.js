@@ -1,27 +1,20 @@
-describe("Core Linter Rule - 'check-period-in-p'", () => {
+fdescribe("Core Linter Rule - 'check-period-in-p'", () => {
   const ruleName = "check-period-in-p";
   const config = { lint: { [ruleName]: true } };
   let rule;
   beforeAll(async () => {
-    rule = await new romise(resolve => {
+    rule = await new Promise(resolve => {
       require([`core/linter-rules/${ruleName}`], ({ rule }) => resolve(rule));
     });
   });
-  const doc = document.implementation.createHTMLDocument("test doc");
-  beforeEach(() => {
-    // Make sure every unordered test get an empty document
-    // See: https://github.com/w3c/respec/pull/1495
-    while (doc.body.firstChild) {
-      doc.body.removeChild(doc.body.firstChild);
-    }
-  });
   it("checks p ending without a period", async () => {
+    const doc = document.implementation.createHTMLDocument("test doc");
     doc.body.innerHTML = `
         <section>
           <p id="no-fullstop">Should pass</p>
           <p>Should fail.</p>
           <p id="no-fullstop-at-end">Should. pass</p>
-          <p >Should. Fail.</p>
+          <p>Should. Fail.</p>
           <p id="unnecessary-tests-after-fullstop">Should Pass. Tests</p>
         </section>
     `;
@@ -39,12 +32,13 @@ describe("Core Linter Rule - 'check-period-in-p'", () => {
     expect(result.offendingElements[2]).toEqual(unnecessaryTestsAfterFullStop);
   });
   it("checks error message for p ending without a period", async () => {
+    const doc = document.implementation.createHTMLDocument("test doc");
     doc.body.innerHTML = `
         <section>
           <p id="no-fullstop">Should pass</p>
           <p>Should fail.</p>
           <p id="no-fullstop-at-end">Should. pass</p>
-          <p >Should. Fail.</p>
+          <p>Should. Fail.</p>
           <p id="unnecessary-tests-after-fullstop">Should Pass. Tests</p>
         </section>
     `;
