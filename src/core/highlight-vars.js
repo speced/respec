@@ -21,9 +21,10 @@ export function run(conf, doc, cb) {
   document.addEventListener("click", initHighlight);
 
   // remove highlights, cleanup empty class/style attributes
-  sub("beforesave", (outputDoc) => {
-    [...outputDoc.querySelectorAll("var.respec-active")]
-      .forEach(removeHighlight);
+  sub("beforesave", outputDoc => {
+    [...outputDoc.querySelectorAll("var.respec-active")].forEach(
+      removeHighlight
+    );
   });
   cb();
 }
@@ -49,8 +50,7 @@ function getHighlightColor(target) {
   if (HL_COLORS.get("yellow") === true) return "yellow";
 
   // otherwise get some other available color
-  return [...HL_COLORS.keys()].find(c => HL_COLORS.get(c) === true)
-    || "yellow";
+  return [...HL_COLORS.keys()].find(c => HL_COLORS.get(c) === true) || "yellow";
 }
 
 function removeHighlight(el) {
@@ -73,7 +73,7 @@ function highlightVars(target) {
       HL_COLORS.set(highlightColor, true);
       removeHighlight(elem);
     } else {
-      const [ background, color ] = highlightColor.split(",");
+      const [background, color] = highlightColor.split(",");
       HL_COLORS.set(highlightColor, false);
       elem.classList.add("respec-active");
       elem.style.setProperty("--respec-background-color", background);
