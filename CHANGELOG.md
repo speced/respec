@@ -1,8 +1,31 @@
 # Change Log
 
-## [Unreleased](https://github.com/w3c/respec/tree/HEAD)
+## [v20.1.0](https://github.com/w3c/respec/tree/v20.1.0) (2018-03-19)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.0.5...v20.1.0)
 
-[Full Changelog](https://github.com/w3c/respec/compare/v20.0.4...HEAD)
+**Implemented enhancements:**
+
+- Add support for former editors [\#1097](https://github.com/w3c/respec/issues/1097)
+
+**Fixed bugs:**
+
+- problems generating h1 from title [\#460](https://github.com/w3c/respec/issues/460)
+
+**Closed issues:**
+
+- Allow makeStandardOps\(\) to take overrides [\#1576](https://github.com/w3c/respec/issues/1576)
+- Extended attribute on types in union [\#1574](https://github.com/w3c/respec/issues/1574)
+- &lt; in server-timing description [\#1568](https://github.com/w3c/respec/issues/1568)
+
+**Merged pull requests:**
+
+- fix\(core/webidl\): support extended attributes for IDL types [\#1578](https://github.com/w3c/respec/pull/1578) ([saschanaz](https://github.com/saschanaz))
+- Allow makeStandardOps\(\) to take overrides: Fixes \#1576 [\#1577](https://github.com/w3c/respec/pull/1577) ([shikhar-scs](https://github.com/shikhar-scs))
+- Add support for former editors [\#1551](https://github.com/w3c/respec/pull/1551) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(w3c/templates/headers\): use \<h1\> exists for title \(fixes \#460\) [\#1516](https://github.com/w3c/respec/pull/1516) ([shikhar-scs](https://github.com/shikhar-scs))
+
+## [v20.0.5](https://github.com/w3c/respec/tree/v20.0.5) (2018-03-14)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.0.4...v20.0.5)
 
 **Fixed bugs:**
 

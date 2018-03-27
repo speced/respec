@@ -12,7 +12,10 @@ export default (conf, name, items = []) => {
       data-editor-id='${editorid}'></dd>`;
       const span = document.createDocumentFragment();
     const contents = [];
-    if (p.url) {
+    if (p.mailto) {
+      contents.push(html`<a class='ed_mailto u-email email p-name'
+        href='${`mailto:${p.mailto}`}'>${p.name}</a>`);
+    } else if (p.url) {
       contents.push(html`<a class='u-url url p-name fn'
         href='${p.url}'>${p.name}</a>`);
     } else {
@@ -20,14 +23,10 @@ export default (conf, name, items = []) => {
     }
     if (p.company) {
       if (p.companyURL) {
-        contents.push(html`, <a class='p-org org h-org h-card' href='${p.companyURL}'>${p.company}</a>`);
+        contents.push(html` (<a class='p-org org h-org h-card' href='${p.companyURL}'>${p.company}</a>)`);
       } else {
-        contents.push(document.createTextNode(`, ${p.company}`));
+        contents.push(html` (${p.company})`);
       }
-    }
-    if (p.mailto) {
-      contents.push(html`, <a class='ed_mailto u-email email'
-        href='${`mailto:${p.mailto}`}'>${p.mailto}</a>`);
     }
     if (p.note) contents.push(document.createTextNode(` (${p.note})`));
     if (p.extras) {

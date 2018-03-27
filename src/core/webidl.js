@@ -44,9 +44,6 @@ function registerHelpers() {
   hb.registerHelper("extAttrInline", function(obj) {
     return extAttr(obj.extAttrs, 0, /*singleLine=*/ true);
   });
-  hb.registerHelper("typeExtAttrs", function(obj) {
-    return extAttr(obj.typeExtAttrs, 0, /*singleLine=*/ true);
-  });
   hb.registerHelper("extAttrClassName", function() {
     var extAttr = this;
     if (extAttr.name === "Constructor" || extAttr.name === "NamedConstructor") {
@@ -158,9 +155,10 @@ function idlType2Html(idlType) {
   if (Array.isArray(idlType)) {
     return idlType.map(idlType2Html).join(", ");
   }
+  const extAttrs = extAttr(idlType.extAttrs, 0, /*singleLine=*/ true);
   const nullable = idlType.nullable ? "?" : "";
   if (idlType.union) {
-    return `(${idlType.idlType.map(idlType2Html).join(" or ")})${nullable}`;
+    return `${extAttrs}(${idlType.idlType.map(idlType2Html).join(" or ")})${nullable}`;
   }
   let type = "";
   if (idlType.generic) {
@@ -173,7 +171,7 @@ function idlType2Html(idlType) {
       ? linkStandardType(idlType.idlType)
       : idlType2Html(idlType.idlType);
   }
-  return type + nullable;
+  return extAttrs + type + nullable;
 }
 
 function linkStandardType(type) {
