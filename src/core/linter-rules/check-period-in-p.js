@@ -9,8 +9,8 @@ const name = "period-in-p";
 
 const meta = {
   en: {
-    description: "Text content of every <\p> should end with a period",
-    howToFix: "Please put a period at the end of every <\p> tag",
+    description: "`<p>` tags should end with a period",
+    howToFix: "Please put a period at the end of this `<p>` tag",
   },
 };
 
