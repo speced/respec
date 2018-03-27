@@ -20,9 +20,9 @@ describe("Core - highlightVars", () => {
         <li><var>foo</foo>
         <li><var id="section2-bar">bar</var>
       </ol>
-    </section>`
+    </section>`;
 
-  const getBgColor = (el) => {
+  const getBgColor = el => {
     return el.style.getPropertyValue("--respec-background-color");
   };
 
@@ -40,7 +40,7 @@ describe("Core - highlightVars", () => {
     expect(doc.querySelectorAll(".respec-active").length).toBe(0);
   });
 
-  it("removes highlight when clicked outside", async() => {
+  it("removes highlight when clicked outside", async () => {
     const ops = makeStandardOps({ highlightVars: true }, testBody);
     const doc = await makeRSDoc(ops);
 
@@ -51,7 +51,7 @@ describe("Core - highlightVars", () => {
     expect(elemVar.classList.contains("respec-active")).toBe(false);
   });
 
-  it("highlights variables only in current section", async() => {
+  it("highlights variables only in current section", async () => {
     const ops = makeStandardOps({ highlightVars: true }, testBody);
     const doc = await makeRSDoc(ops);
 
