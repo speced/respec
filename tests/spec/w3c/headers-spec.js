@@ -1162,7 +1162,7 @@ describe("W3C — Headers", function() {
           url: "http://hyperlink/"
         },
         {
-          src: 'data:image/svg+xml,<svg%20xmlns="http://www.w3.org/2000/svg"/>',
+          src: "data:image/svg+xml,<svg%20xmlns=\"http://www.w3.org/2000/svg\"/>",
           alt: "this is an svg",
           height: 315,
           width: 961,
