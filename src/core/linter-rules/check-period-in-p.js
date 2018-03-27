@@ -5,7 +5,7 @@
 import { lang as defaultLang } from "core/l10n";
 import LinterRule from "core/LinterRule";
 
-const name = "period-in-p";
+const name = "check-period-in-p";
 
 const meta = {
   en: {
@@ -27,11 +27,12 @@ function lintingFunction(conf, doc) {
   
   const offendingElements = Array.from(doc.querySelectorAll("p"))
     // this gives us all paragraphs that don't end with a period
-    .filter(elem => !elem.textContent.trim().split("tests")[0].endsWith("."))
-    .reduce((collector, elem) => collector.concat(elem), []);
+    .filter(elem => !elem.textContent.trim().endsWith("."))
+
   
   const result = {
     name,
+    offendingElements,
     occurrences: offendingElements.length,
     ...meta[lang],
   };
