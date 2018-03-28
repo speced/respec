@@ -52,14 +52,13 @@ ${conf.isUnofficial
         ${conf.isMemberSubmission
           ? html`
           <p>
-            By publishing this document, W3C acknowledges that
-            the <a href="https://www.w3.org/Submission/@@@submissiondoc@@@">Submitting Members</a>
+            By publishing this document, W3C acknowledges that the <a href="${conf.thisVersion}">Submitting Members</a>
             have made a formal Submission request to W3C for discussion. Publication of this document
             by W3C indicates no endorsement of its content by W3C, nor that W3C has, is, or will be
             allocating any resources to the issues addressed by it. This document is not the product
             of a chartered W3C group, but is published as potential input to
             the <a href="https://www.w3.org/Consortium/Process">W3C Process</a>.
-            A <a href="https://www.w3.org/Submission/@@@teamcomment@@@">W3C Team Comment</a> has been
+            A <a href="${`https://www.w3.org/Submission/${conf.publishDate.getUTCFullYear()}/${conf.submissionCommentNumber}/Comment/`}">W3C Team Comment</a> has been
             published in conjunction with this Member Submission. Publication of acknowledged Member Submissions
             at the W3C site is one of the benefits of <a href="https://www.w3.org/Consortium/Prospectus/Joining">
             W3C Membership</a>. Please consult the requirements associated with Member Submissions of
