@@ -28,10 +28,10 @@ describe("Core - Figures", function() {
       config: makeBasicConfig(),
       body:
       makeDefaultBody() +
-      '<figure id="fig"> <img src="img" alt="">' +
-      '<figcaption>test figure caption</figcaption>' +
-      '</figure>' +
-      '<a id="anchor-fig" href="#fig"></a>',
+      "<figure id='fig'> <img src='img' alt=''>" +
+      "<figcaption>test figure caption</figcaption>" +
+      "</figure>" +
+      "<a id='anchor-fig' href='#fig'></a>",
     };
     const doc = await makeRSDoc(ops);
     const anchorFig = doc.getElementById("anchor-fig");
