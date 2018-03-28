@@ -240,7 +240,7 @@ ${
                 ? html`W3C maintains ${[conf.wgPatentHTML]}`
                 : html`
               W3C maintains a <a href='${[
-                conf.wgPatentURI
+                conf.wgPatentURI,
               ]}' rel='disclosure'>public list of any patent
               disclosures</a>
             `
