@@ -7,6 +7,7 @@ export default (conf, name, items = []) => {
   return results;
 
   function getItem(p, i) {
+    const personName = html`${{html: p.name}}`;
     const editorid = p.w3cid ? parseInt(p.w3cid, 10): null;
     const dd = html`<dd class='p-author h-card vcard'
       data-editor-id='${editorid}'></dd>`;
@@ -14,12 +15,12 @@ export default (conf, name, items = []) => {
     const contents = [];
     if (p.mailto) {
       contents.push(html`<a class='ed_mailto u-email email p-name'
-        href='${`mailto:${p.mailto}`}'>${p.name}</a>`);
+        href='${`mailto:${p.mailto}`}'>${personName}</a>`);
     } else if (p.url) {
       contents.push(html`<a class='u-url url p-name fn'
-        href='${p.url}'>${p.name}</a>`);
+        href='${p.url}'>${personName}</a>`);
     } else {
-      contents.push(html`<span class='p-name fn'>${p.name}</span>`);
+      contents.push(html`<span class='p-name fn'>${personName}</span>`);
     }
     if (p.company) {
       if (p.companyURL) {
