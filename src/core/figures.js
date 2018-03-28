@@ -79,7 +79,7 @@ export function run(conf, doc, cb) {
       if ($a.html() === "") {
         const $shortFigDescriptor = figMap[id].slice(0, 2).clone();
         const longFigDescriptor = figMap[id].slice(2).clone().text();
-        $a.attr("title", longFigDescriptor);
+        $a.attr("title", longFigDescriptor.trim());
         $a.append($shortFigDescriptor);
       }
     }

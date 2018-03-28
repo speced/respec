@@ -22,6 +22,23 @@ describe("Core - Figures", function() {
     expect(captions.item(0).textContent).toEqual("Figure 1 PREFIG");
     expect(captions.item(1).textContent).toEqual("Figure 2 IMGTIT");
   });
+
+  it("creates autolinks from the anchor to the figure", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body:
+      makeDefaultBody() +
+      '<figure id="fig"> <img src="img" alt="">' +
+      '<figcaption>test figure caption</figcaption>' +
+      '</figure>' +
+      '<a id="anchor-fig" href="#fig"></a>',
+    };
+    const doc = await makeRSDoc(ops);
+    const anchorFig = doc.getElementById("anchor-fig");
+    expect(anchorFig.innerText).toEqual("Figure 1");
+    expect(anchorFig.title).toEqual("test figure caption");
+  });
+
   it("generates table of figures", async () => {
     const doc = await makeRSDoc(ops);
     const tof = doc.getElementById("tof");
