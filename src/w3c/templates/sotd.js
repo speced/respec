@@ -22,11 +22,8 @@ ${conf.isPreview
 ${conf.isUnofficial
     ? html`
   <p>
-    Do not attempt to implement this version of the specification. Do not reference this version as authoritative in any way.
-    ${conf.edDraftURI
-      ? html` Instead, see
-    <a href="${conf.edDraftURI}">${conf.edDraftURI}</a> for the Editor's draft. `
-      : ""}
+    This document is draft of a potential specification. It has no official standing of
+    any kind and does not represent the support or consensus of any standards organisation.
   </p>
   ${[conf.additionalContent]}
 `
@@ -55,8 +52,7 @@ ${conf.isUnofficial
         ${conf.isMemberSubmission
           ? html`
           <p>
-            By publishing this document, W3C acknowledges that <a href="${conf.thisVersion}">
-            the Submitting Members</a>
+            By publishing this document, W3C acknowledges that the <a href="${conf.thisVersion}">Submitting Members</a>
             have made a formal Submission request to W3C for discussion. Publication of this document
             by W3C indicates no endorsement of its content by W3C, nor that W3C has, is, or will be
             allocating any resources to the issues addressed by it. This document is not the product
@@ -71,7 +67,23 @@ ${conf.isUnofficial
             of acknowledged W3C Member Submissions</a>.
           </p>
         `
-          : ""}
+          : html`
+          ${conf.isTeamSubmission
+            ? html`
+            <p>If you wish to make comments regarding this document, please send them to
+            <a href='${`mailto:${conf.wgPublicList}@w3.org${conf.subjectPrefix
+              ? `?subject=${conf.subjectPrefixEnc}`
+              : [""]}`}'>${conf.wgPublicList}@w3.org</a>
+            (<a href='${`mailto:${conf.wgPublicList}-request@w3.org?subject=subscribe`}'>subscribe</a>,
+            <a
+              href='${`https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`}'>archives</a>)${conf.subjectPrefix
+                ? html`
+              with <code>${conf.subjectPrefix}</code> at the start of your email's subject`
+                : ""}.</p>
+            <p>Please consult the complete <a href="https://www.w3.org/TeamSubmission/">list of Team Submissions</a>.</p>
+          `
+            : ""}
+        `}
       `
         : html`
         ${!conf.sotdAfterWGinfo ? [conf.additionalContent] : ""}
