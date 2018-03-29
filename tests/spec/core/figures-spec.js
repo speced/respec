@@ -1,5 +1,5 @@
 "use strict";
-describe("Core - Figures", function() {
+fdescribe("Core - Figures", function() {
   afterAll(flushIframes);
   const ops = {
     config: makeBasicConfig(),
@@ -23,23 +23,34 @@ describe("Core - Figures", function() {
     expect(captions.item(1).textContent).toEqual("Figure 2 IMGTIT");
   });
 
-  it("creates autolinks from the anchor to the figure", async () => {
+  fit("creates autolinks from the anchor to the figure", async () => {
     const ops = {
       config: makeBasicConfig(),
       body:
       makeDefaultBody() +
-      "<figure id='fig'> <img src='img' alt=''>" +
-      "<figcaption>test figure caption</figcaption>" +
-      "</figure>" +
-      "<a id='anchor-fig' href='#fig'></a>"
+      `<figure id='fig'> <img src='img' alt=''>
+        <figcaption>test figure caption</figcaption>
+       </figure>
+       <a id='anchor-fig-title-empty' title=''  href='#fig'></a>
+       <a id='anchor-fig-title-set' title='pass' href='#fig'></a>
+       <a id='anchor-fig' href='#fig'></a>`
     };
     const doc = await makeRSDoc(ops);
     const anchorFig = doc.getElementById("anchor-fig");
+    const anchorFigTitleSet = doc.getElementById("anchor-fig-title-set");
+    const anchorFigTitleEmpty = doc.getElementById("anchor-fig-title-empty");
+
     expect(anchorFig.innerText).toEqual("Figure 1");
     expect(anchorFig.title).toEqual("test figure caption");
+
+    expect(anchorFigTitleSet.innerText).toEqual("Figure 1");
+    expect(anchorFigTitleSet.title).toEqual("pass");
+
+    expect(anchorFigTitleEmpty.innerText).toEqual("Figure 1");
+    expect(anchorFigTitleEmpty.title).toEqual("");
   });
 
-  it("localizes the anchor of figure", async () => {
+  fit("localizes the anchor of figure", async () => {
     const ops = {
       config: makeBasicConfig(),
       htmlAttrs: {
@@ -47,10 +58,10 @@ describe("Core - Figures", function() {
       },
       body:
       makeDefaultBody() +
-      "<figure id='fig'> <img src='img' alt=''>" +
-      "<figcaption>漢字と仮名のサイズの示し方</figcaption>" +
-      "</figure>" +
-      "<a id='anchor-fig' href='#fig'></a>"
+      `<figure id='fig'> <img src='img' alt=''>
+        <figcaption>漢字と仮名のサイズの示し方</figcaption>
+       </figure>" +
+       <a id='anchor-fig' href='#fig'></a>`
     };
     const doc = await makeRSDoc(ops);
     const anchorFig = doc.getElementById("anchor-fig");
