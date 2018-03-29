@@ -276,6 +276,49 @@ describe("W3C — Headers", function() {
       expect(secondEditor.localName).toEqual("dd");
       expect(secondEditor.textContent).toEqual("NAME2");
     });
+
+    it("adds support for configs in different languages", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+        editors: [
+          {
+            name:
+              "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
+            company: "Microsoft",
+          },
+        ],
+        formerEditors: [
+          {
+            name:
+              "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
+            company: "Microsoft",
+          },
+        ],
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+      var spanName = document.createElement("span");
+      spanName.innerHTML = ops.config.editors[0].name;
+      var firstSpan = spanName.querySelector("span");
+      var company = " (" + ops.config.editors[0].company + ")";
+
+      expect(firstSpan.lang).toBe("ja");
+      expect(firstSpan.textContent).toBe("阿南 康宏");
+      expect(spanName.textContent + company).toEqual(
+        "阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (Microsoft)"
+      );
+
+      spanName.innerHTML = ops.config.formerEditors[0].name;
+      firstSpan = spanName.querySelector("span");
+      company = " (" + ops.config.formerEditors[0].company + ")";
+
+      expect(firstSpan.lang).toBe("ja");
+      expect(firstSpan.textContent).toBe("阿南 康宏");
+      expect(spanName.textContent + company).toEqual(
+        "阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (Microsoft)"
+      );
+    });
   });
 
   describe("authors", () => {
@@ -1162,7 +1205,7 @@ describe("W3C — Headers", function() {
           url: "http://hyperlink/",
         },
         {
-          src: "data:image/svg+xml,<svg%20xmlns=\"http://www.w3.org/2000/svg\"/>",
+          src: 'data:image/svg+xml,<svg%20xmlns="http://www.w3.org/2000/svg"/>',
           alt: "this is an svg",
           height: 315,
           width: 961,
