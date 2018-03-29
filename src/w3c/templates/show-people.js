@@ -7,7 +7,7 @@ export default (conf, name, items = []) => {
   return results;
 
   function getItem(p, i) {
-    const personName = html`${{html: p.name}}`;
+    const personName = [p.name]; // treated as opt-in HTML by hyperHTML
     const editorid = p.w3cid ? parseInt(p.w3cid, 10): null;
     const dd = html`<dd class='p-author h-card vcard'
       data-editor-id='${editorid}'></dd>`;
