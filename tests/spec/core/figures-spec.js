@@ -1,5 +1,5 @@
 "use strict";
-fdescribe("Core - Figures", function() {
+describe("Core - Figures", function() {
   afterAll(flushIframes);
   const ops = {
     config: makeBasicConfig(),
@@ -23,7 +23,7 @@ fdescribe("Core - Figures", function() {
     expect(captions.item(1).textContent).toEqual("Figure 2 IMGTIT");
   });
 
-  fit("creates autolinks from the anchor to the figure", async () => {
+  it("creates autolinks from the anchor to the figure", async () => {
     const ops = {
       config: makeBasicConfig(),
       body:
@@ -50,7 +50,7 @@ fdescribe("Core - Figures", function() {
     expect(anchorFigTitleEmpty.title).toEqual("");
   });
 
-  fit("localizes the anchor of figure", async () => {
+  it("localizes the anchor of figure", async () => {
     const ops = {
       config: makeBasicConfig(),
       htmlAttrs: {
