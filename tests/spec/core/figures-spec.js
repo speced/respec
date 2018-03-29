@@ -60,7 +60,7 @@ describe("Core - Figures", function() {
       makeDefaultBody() +
       `<figure id='fig'> <img src='img' alt=''>
         <figcaption>漢字と仮名のサイズの示し方</figcaption>
-       </figure>" +
+       </figure>
        <a id='anchor-fig' href='#fig'></a>`
     };
     const doc = await makeRSDoc(ops);
