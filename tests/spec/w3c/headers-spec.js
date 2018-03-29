@@ -322,7 +322,8 @@ describe("W3C — Headers", function() {
 
   describe("use existing h1 element", () => {
     it("uses the <h1>'s value as the document's title", async () => {
-      const body = `
+      const body =
+        `
         <h1 id='title'>
           This should be <code>pass</code>.
          </h1>` + makeDefaultBody();
@@ -569,7 +570,7 @@ describe("W3C — Headers", function() {
         specStatus: "WD",
         edDraftURI: "URI",
       });
-      
+
       const doc = await makeRSDoc(ops);
       expect(
         $("dt:contains('Latest editor\\'s draft:')", doc)
@@ -624,7 +625,7 @@ describe("W3C — Headers", function() {
         specStatus: "REC",
         additionalCopyrightHolders: "<span class='test'>XXX</span>",
       });
-      
+
       const doc = await makeRSDoc(ops);
       expect($(".head .copyright .test", doc).text()).toEqual("XXX");
     });
@@ -946,6 +947,9 @@ describe("W3C — Headers", function() {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "Member-SUBM",
+        submissionCommentNumber: "01",
+        publishDate: "2018-05-25",
+        shortName: "yolo",
       };
       Object.assign(ops.config, newProps);
       doc = await makeRSDoc(ops);
@@ -965,34 +969,20 @@ describe("W3C — Headers", function() {
         "the Submitting Members have made a formal Submission request";
       expect(stod).toMatch(testString);
     });
+    it("links the right submitting members", async () => {
+      const anchor = doc.querySelector(
+        "#sotd a[href='https://www.w3.org/Submission/2018/Member-SUBM-yolo-20180525/']"
+      );
+      expect(anchor).toBeTruthy();
+    });
+    it("shows the correct staff comments", async () => {
+      const anchor = doc.querySelector(
+        "#sotd a[href='https://www.w3.org/Submission/2018/01/Comment/']"
+      );
+      expect(anchor).toBeTruthy();
+    });
   });
 
-  describe("Team-SUBM", () => {
-    let doc;
-    beforeAll(async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "Team-SUBM",
-      };
-      Object.assign(ops.config, newProps);
-      doc = await makeRSDoc(ops);
-    });
-    it("shouldn't expose a Previous version link for Team submissions", async () => {
-      expect($("dt:contains('Previous version:')", doc).length).toEqual(0);
-    });
-    it("displays the Team Submission logo for Team submissions", async () => {
-      const img = doc.querySelector(
-        ".head img[src^='https://www.w3.org/Icons/team_subm']"
-      );
-      expect(img).toBeTruthy();
-    });
-    it("uses the right SoTD boilerplate for Team submissions", async () => {
-      const link = doc.querySelector(
-        "#sotd a[href='https://www.w3.org/TeamSubmission/']"
-      );
-      expect(link).toBeTruthy();
-    });
-  });
   describe("statusOverride", () => {
     it("allows status paragraph to be overridden", async () => {
       const ops = makeStandardOps();
