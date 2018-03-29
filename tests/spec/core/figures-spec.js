@@ -31,7 +31,7 @@ describe("Core - Figures", function() {
       `<figure id='fig'> <img src='img' alt=''>
         <figcaption>test figure caption</figcaption>
        </figure>
-       <a id='anchor-fig-title-empty' title=''  href='#fig'></a>
+       <a id='anchor-fig-title-empty' title='' href='#fig'></a>
        <a id='anchor-fig-title-set' title='pass' href='#fig'></a>
        <a id='anchor-fig' href='#fig'></a>`
     };
