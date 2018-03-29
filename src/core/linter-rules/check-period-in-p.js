@@ -24,8 +24,10 @@ const lang = defaultLang in meta ? defaultLang : "en";
  */
 function lintingFunction(conf, doc) {
   
+  const punctuatingRegExp = /[.!?:]$|^ *$/m;
+  
   const offendingElements = Array.from(doc.querySelectorAll("p"))
-    .filter((elem) => !(/[.!?:]$|^ *$/.test(elem.textContent.trim()))
+    .filter((elem) => !(punctuatingRegExp.test(elem.textContent));
   
   offendingElements.splice(-1,1); // back-to-top is always the last element.
 
