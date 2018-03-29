@@ -1,5 +1,5 @@
 "use strict";
-describe("Core - Figures", function() {
+fdescribe("Core - Figures", function() {
   afterAll(flushIframes);
   const ops = {
     config: makeBasicConfig(),
@@ -23,20 +23,39 @@ describe("Core - Figures", function() {
     expect(captions.item(1).textContent).toEqual("Figure 2 IMGTIT");
   });
 
-  it("creates autolinks from the anchor to the figure", async () => {
-    const ops = {
+  fit("creates autolinks from the anchor to the figure", async () => {
+    const opsEn = {
       config: makeBasicConfig(),
       body:
       makeDefaultBody() +
-      "<figure id='fig'> <img src='img' alt=''>" +
+      "<figure id='figEn'> <img src='img' alt=''>" +
       "<figcaption>test figure caption</figcaption>" +
       "</figure>" +
-      "<a id='anchor-fig' href='#fig'></a>",
+      "<a id='anchor-fig-en' href='#figEn'></a>"
     };
-    const doc = await makeRSDoc(ops);
-    const anchorFig = doc.getElementById("anchor-fig");
-    expect(anchorFig.innerText).toEqual("Figure 1");
-    expect(anchorFig.title).toEqual("test figure caption");
+
+    const opsJa = {
+      config: makeBasicConfig(),
+      htmlAttrs: {
+        lang: "ja",
+      },
+      body:
+      makeDefaultBody() +
+      "<figure id='figJa'> <img src='img' alt=''>" +
+      "<figcaption>漢字と仮名のサイズの示し方</figcaption>" +
+      "</figure>" +
+      "<a id='anchor-fig-ja' href='#figJa'></a>"
+    };
+
+    const docEn = await makeRSDoc(opsEn);
+    const anchorFigEn = docEn.getElementById("anchor-fig-en");
+    expect(anchorFigEn.innerText).toEqual("Figure 1");
+    expect(anchorFigEn.title).toEqual("test figure caption");
+
+    const docJa = await makeRSDoc(opsJa);
+    const anchorFigJa = docJa.getElementById("anchor-fig-ja");
+    expect(anchorFigJa.innerText).toEqual("図1");
+    expect(anchorFigJa.title).toEqual("漢字と仮名のサイズの示し方");
   });
 
   it("generates table of figures", async () => {
