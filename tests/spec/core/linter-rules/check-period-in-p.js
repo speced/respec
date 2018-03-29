@@ -26,10 +26,9 @@ fdescribe("Core Linter Rule - 'check-period-in-p'", () => {
     const results = await rule.lint(config, doc);
     const [result] = results;
     
-    expect(result.offendingElements.length).toEqual(3);
+    expect(result.offendingElements.length).toEqual(2);
     expect(result.offendingElements[0]).toEqual(noFullStop);
     expect(result.offendingElements[1]).toEqual(noFullStopAtEnd);
-    expect(result.offendingElements[2]).toEqual(unnecessaryTestsAfterFullStop);
   });
   it("checks error message for p ending without a period", async () => {
     const doc = document.implementation.createHTMLDocument("test doc");
@@ -51,12 +50,11 @@ fdescribe("Core Linter Rule - 'check-period-in-p'", () => {
     const unnecessaryTestsAfterFullStop = doc.getElementById("unnecessary-tests-after-fullstop");
 
     expect(result.name).toEqual(ruleName);
-    expect(result.occurrences).toEqual(3);
+    expect(result.occurrences).toEqual(2);
     expect(result.description).toEqual("`<p>` tags should end with a period");
     expect(result.howToFix).toEqual("Please put a period at the end of this `<p>` tag");
-    expect(result.offendingElements.length).toEqual(3);
+    expect(result.offendingElements.length).toEqual(2);
     expect(result.offendingElements[0]).toEqual(noFullStop);
     expect(result.offendingElements[1]).toEqual(noFullStopAtEnd);
-    expect(result.offendingElements[2]).toEqual(unnecessaryTestsAfterFullStop);
   })
 })
