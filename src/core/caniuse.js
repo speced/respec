@@ -5,15 +5,12 @@ https://github.com/w3c/respec/wiki/caniuse
 */
 
 import { semverCompare } from "core/utils";
-import IDBCache from "core/idb-cache";
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
 import { createResourceHint } from "core/utils";
 import caniuseCss from "deps/text!core/css/caniuse.css";
 
 export const name = "core/caniuse";
-
-const cache = new IDBCache("respec-caniuse", ["caniuse"]);
 
 const GH_USER_CONTENT_URL =
   "https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/";
@@ -128,12 +125,15 @@ async function fetchAndCacheJson(caniuseConf) {
     ? apiURL.replace("{FEATURE}", feature)
     : `${GH_USER_CONTENT_URL}${feature}.json`;
   // use data from cache data if valid and render
+  const cache = await caches.open("caniuse");
   const cached = await cache.match(url);
-  if (cached && new Date() - cached.cacheTime < maxAge) {
-    return cached.stats;
+  if (cached && new Date(cached.headers.get("Expires")) > new Date()) {
+    const { stats } = await cached.json();
+    return stats;
   }
   // otherwise fetch new data and cache
   const response = await window.fetch(url);
+  const clonedResponse = response.clone();
   if (!response.ok) {
     switch (response.status) {
       case 404: {
@@ -147,7 +147,10 @@ async function fetchAndCacheJson(caniuseConf) {
   }
   const { stats } = await response.json();
   // set it, and forget it (there is no recovery if it throws, but that's ok).
-  cache.put(url, { stats, cacheTime: new Date() }).catch(console.error);
+  const customHeaders = new Headers(response.headers);
+  customHeaders.set("Expires", new Date(new Date().valueOf() + maxAge));
+  const cacheResponse = new Response(await clonedResponse.blob(), { headers: customHeaders });
+  cache.put(url, cacheResponse).catch(console.error);
   return stats;
 }
 
