@@ -7,7 +7,7 @@ https://github.com/w3c/respec/wiki/caniuse
 import { semverCompare } from "core/utils";
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
-import { createResourceHint } from "core/utils";
+import { createResourceHint, fetchAndCache } from "core/utils";
 import caniuseCss from "deps/text!core/css/caniuse.css";
 
 export const name = "core/caniuse";
@@ -64,6 +64,8 @@ export function run(conf) {
       content = createTableHTML(caniuse, stats);
     } catch (err) {
       console.error(err);
+      const msg = `Couldn't find feature "${caniuse.feature}" on caniuse.com? Please check the feature key on [caniuse.com](https://caniuse.com)`;
+      pub("error", msg);
       content = hyperHTML`<a href="${
         "https://caniuse.com/#feat=" + caniuse.feature
       }">caniuse.com</a>`;
@@ -116,41 +118,19 @@ function normalizeConf(conf) {
 }
 
 /**
- * promises to get content for canIUse table
- * @param {Object} caniuseConf              normalized respecConfig.caniuse
+ * get stats for canIUse table
+ * @param {Object} caniuseConf    normalized respecConfig.caniuse
+ * @return {Object} Can I Use stats
+ * @throws {NetworkError} on failure
  */
 async function fetchAndCacheJson(caniuseConf) {
   const { apiURL, feature, maxAge } = caniuseConf;
   const url = apiURL
     ? apiURL.replace("{FEATURE}", feature)
     : `${GH_USER_CONTENT_URL}${feature}.json`;
-  // use data from cache data if valid and render
-  const cache = await caches.open("caniuse");
-  const cached = await cache.match(url);
-  if (cached && new Date(cached.headers.get("Expires")) > new Date()) {
-    const { stats } = await cached.json();
-    return stats;
-  }
-  // otherwise fetch new data and cache
-  const response = await window.fetch(url);
-  const clonedResponse = response.clone();
-  if (!response.ok) {
-    switch (response.status) {
-      case 404: {
-        const msg = `Couldn't find feature "${feature}" on caniuse.com? Please check the feature key on [caniuse.com](https://caniuse.com)`;
-        pub("error", msg);
-      }
-    }
-    throw new Error(
-      `Response not ok from URL ${url} (HTTP Status ${response.status})`
-    );
-  }
+  const request = new Request(url);
+  const response = await fetchAndCache(request, { maxAge });
   const { stats } = await response.json();
-  // set it, and forget it (there is no recovery if it throws, but that's ok).
-  const customHeaders = new Headers(response.headers);
-  customHeaders.set("Expires", new Date(new Date().valueOf() + maxAge));
-  const cacheResponse = new Response(await clonedResponse.blob(), { headers: customHeaders });
-  cache.put(url, cacheResponse).catch(console.error);
   return stats;
 }
 

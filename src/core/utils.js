@@ -463,3 +463,53 @@ export function runTransforms(content, flist) {
   }
   return content;
 }
+
+class NetworkError extends Error {
+  constructor(message, response) {
+    super(message);
+    Object.assign(this, "response", { get() { return response; } });
+  }
+}
+
+/**
+ * Cached request handler
+ * @param {Request} request
+ * @param {Object} maxAge cache expiration duration in ms. defaults to 24 hours (86400000 ms)
+ * @return {Response}
+ *  if a cached response is available and it's not stale, return it
+ *  else: request from network, cache and return fresh response.
+ *    If network fails, return a stale cached version if exists (else throw)
+ * @throws {NetworkError}
+ */
+export async function fetchAndCache(request, maxAge = 86400000) {
+  const url = new URL(request.url);
+
+  // use data from cache data if valid and render
+  const cache = await caches.open(url.origin);
+  const cached = await cache.match(url);
+  if (cached && new Date(cached.headers.get("Expires")) > new Date()) {
+    return cached;
+  }
+
+  // otherwise fetch new data and cache
+  const response = await window.fetch(url);
+  if (!response.ok) {
+    if (cached) { // return stale version
+      console.info(`Returning a stale cached response for ${url}`);
+      return cached;
+    }
+    const msg = `Response not OK from ${url} (HTTP Status: ${response.status})`;
+    throw new NetworkError(msg, response);
+  }
+
+  // cache response
+  const clonedResponse = response.clone();
+  const customHeaders = new Headers(response.headers);
+  const expiryDate = new Date(new Date().valueOf() + maxAge);
+  customHeaders.set("Expires", expiryDate);
+  const cacheResponse = new Response(await clonedResponse.blob(), { headers: customHeaders });
+  // put in cache, and forget it (there is no recovery if it throws, but that's ok).
+  cache.put(url, cacheResponse).catch(console.error);
+
+  return response;
+}
