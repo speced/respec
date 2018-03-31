@@ -6,9 +6,9 @@ import linter from "core/linter";
 import { rule as noHeadinglessSectionsRule } from "core/linter-rules/no-headingless-sections";
 import { rule as noHttpPropsRule } from "core/linter-rules/no-http-props";
 import { rule as privsecSectionRule } from "w3c/linter-rules/privsec-section";
-import { rule as checkPeriodInP } from "core/linter-rules/check-period-in-p";
+import { rule as checkPunctuation } from "core/linter-rules/check-punctuation";
 
-linter.register(noHttpPropsRule, privsecSectionRule, noHeadinglessSectionsRule, checkPeriodInP);
+linter.register(noHttpPropsRule, privsecSectionRule, noHeadinglessSectionsRule, checkPunctuation);
 
 const cgbg = new Set(["BG-DRAFT", "BG-FINAL", "CG-DRAFT", "CG-FINAL"]);
 const licenses = new Map([
@@ -53,7 +53,7 @@ const w3cDefaults = {
     "no-headingless-sections": true,
     "privsec-section": true,
     "no-http-props": true,
-    "check-period-in-p": true,
+    "check-punctuation": true,
   },
   doJsonLd: false,
   license: "w3c-software-doc",

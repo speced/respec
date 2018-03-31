@@ -1,5 +1,5 @@
-fdescribe("Core Linter Rule - 'check-period-in-p'", () => {
-  const ruleName = "check-period-in-p";
+fdescribe("Core Linter Rule - 'check-punctuation'", () => {
+  const ruleName = "check-punctuation";
   const config = { lint: { [ruleName]: true } };
   let rule;
   beforeAll(async () => {
@@ -7,7 +7,7 @@ fdescribe("Core Linter Rule - 'check-period-in-p'", () => {
       require([`core/linter-rules/${ruleName}`], ({ rule }) => resolve(rule));
     });
   });
-  it("checks p ending without a period", async () => {
+  it("checks p ending without a punctuation", async () => {
     const doc = document.implementation.createHTMLDocument("test doc");
     doc.body.innerHTML = `
         <section>
@@ -21,16 +21,16 @@ fdescribe("Core Linter Rule - 'check-period-in-p'", () => {
 
     const noFullStop = doc.getElementById("no-fullstop");
     const noFullStopAtEnd = doc.getElementById("no-fullstop-at-end");
-    const unnecessaryTestsAfterFullStop = doc.getElementById("unnecessary-tests-after-fullstop");
+    // const unnecessaryTestsAfterFullStop = doc.getElementById("unnecessary-tests-after-fullstop");
     
     const results = await rule.lint(config, doc);
     const [result] = results;
-    
+  
     expect(result.offendingElements.length).toEqual(2);
     expect(result.offendingElements[0]).toEqual(noFullStop);
     expect(result.offendingElements[1]).toEqual(noFullStopAtEnd);
   });
-  it("checks error message for p ending without a period", async () => {
+  it("checks error message for p ending without a punctuation", async () => {
     const doc = document.implementation.createHTMLDocument("test doc");
     doc.body.innerHTML = `
         <section>
@@ -48,13 +48,14 @@ fdescribe("Core Linter Rule - 'check-period-in-p'", () => {
     const noFullStop = doc.getElementById("no-fullstop");
     const noFullStopAtEnd = doc.getElementById("no-fullstop-at-end");
     const unnecessaryTestsAfterFullStop = doc.getElementById("unnecessary-tests-after-fullstop");
-
+    
     expect(result.name).toEqual(ruleName);
     expect(result.occurrences).toEqual(2);
-    expect(result.description).toEqual("`<p>` tags should end with a period");
-    expect(result.howToFix).toEqual("Please put a period at the end of this `<p>` tag");
+    expect(result.description).toEqual("`<p>` tags should end with either of . | : | ! | ? ");
+    expect(result.howToFix).toEqual("Please append a . | : | ! | ? at the end of this `<p>` tag");
     expect(result.offendingElements.length).toEqual(2);
     expect(result.offendingElements[0]).toEqual(noFullStop);
+
     expect(result.offendingElements[1]).toEqual(noFullStopAtEnd);
   })
 })

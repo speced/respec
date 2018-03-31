@@ -24,8 +24,8 @@ require.config({
       "/base/js/core/linter-rules/no-headingless-sections",
     "core/linter-rules/no-http-props":
       "/base/js/core/linter-rules/no-http-props",
-    "core/linter-rules/check-peiod-in-p":
-      "/base/js/core/linter-rules/check-period-in-p",
+    "core/linter-rules/check-punctuation":
+      "/base/js/core/linter-rules/check-punctuation",
     "core/l10n": "/base/js/core/l10n",
     "w3c/linter-rules/privsec-section":
       "/base/js/w3c/linter-rules/privsec-section",
