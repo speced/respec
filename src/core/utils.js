@@ -485,10 +485,16 @@ export async function fetchAndCache(request, maxAge = 86400000) {
   const url = new URL(request.url);
 
   // use data from cache data if valid and render
-  const cache = await caches.open(url.origin);
-  const cached = await cache.match(url);
-  if (cached && new Date(cached.headers.get("Expires")) > new Date()) {
-    return cached;
+  let cache;
+  let cached;
+  try {
+    cache = await caches.open(url.origin);
+    cached = await cache.match(url);
+    if (cached && new Date(cached.headers.get("Expires")) > new Date()) {
+      return cached;
+    }
+  } catch (err) {
+    console.error("Failed to use Cache API.", err);
   }
 
   // otherwise fetch new data and cache
@@ -503,13 +509,15 @@ export async function fetchAndCache(request, maxAge = 86400000) {
   }
 
   // cache response
-  const clonedResponse = response.clone();
-  const customHeaders = new Headers(response.headers);
-  const expiryDate = new Date(new Date().valueOf() + maxAge);
-  customHeaders.set("Expires", expiryDate);
-  const cacheResponse = new Response(await clonedResponse.blob(), { headers: customHeaders });
-  // put in cache, and forget it (there is no recovery if it throws, but that's ok).
-  cache.put(url, cacheResponse).catch(console.error);
+  if (cache) {
+    const clonedResponse = response.clone();
+    const customHeaders = new Headers(response.headers);
+    const expiryDate = new Date(new Date().valueOf() + maxAge);
+    customHeaders.set("Expires", expiryDate);
+    const cacheResponse = new Response(await clonedResponse.blob(), { headers: customHeaders });
+    // put in cache, and forget it (there is no recovery if it throws, but that's ok).
+    cache.put(url, cacheResponse).catch(console.error);
+  }
 
   return response;
 }
