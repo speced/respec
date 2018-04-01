@@ -44,7 +44,8 @@
 }
 
 /* show older browsers on hover */
-.caniuse-browser:hover .caniuse-cell {
+.caniuse-browser:hover .caniuse-cell,
+.caniuse-browser.hover .caniuse-cell /* .hover for testing only */ {
   display: block;
 }
 
