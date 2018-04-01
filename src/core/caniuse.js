@@ -73,9 +73,8 @@ export function run(conf) {
     resolve(content);
   });
   const definitionPair = hyperHTML.bind(document.createDocumentFragment())`
-    <dt class="caniuse-title" id="${`caniuse-${caniuse.feature}`}">
-      Can I Use this API?
-    </dt>
+    <dt class="caniuse-title"
+      id="${`caniuse-${caniuse.feature}`}">Can I Use this API?</dt>
     <dd class="caniuse-stats">${{
       any: contentPromise,
       placeholder: "Fetching data from caniuse.com...",
@@ -145,7 +144,7 @@ function createTableHTML(conf, stats) {
     ${conf.browsers.map(browser =>
       addBrowser(browser, conf.versions, stats[browser])
     )}
-    <a href="${`http://caniuse.com/#feat=${conf.feature}`}"
+    <a href="${`https://caniuse.com/#feat=${conf.feature}`}"
       title="Get details at caniuse.com">More info
     </a>`;
 
