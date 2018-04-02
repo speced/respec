@@ -142,9 +142,10 @@ async function fetchAndCacheJson(caniuseConf) {
 function createTableHTML(conf, stats) {
   // render the support table
   return hyperHTML`
-    ${conf.browsers.map(browser =>
-      addBrowser(browser, conf.versions, stats[browser])
-    )}
+    ${conf.browsers
+      .map(browser => addBrowser(browser, conf.versions, stats[browser]))
+      .filter(elem => elem)
+    }
     <a href="${`https://caniuse.com/#feat=${conf.feature}`}"
       title="Get details at caniuse.com">More info
     </a>`;
@@ -156,7 +157,7 @@ function createTableHTML(conf, stats) {
    * @param {Object} browserData  stats data from api response
    */
   function addBrowser(browser, numVersions, browserData) {
-    if (!browserData) return "";
+    if (!browserData) return;
     const getSupport = version => {
       const supportKeys = browserData[version]
         .split("#", 1)[0] // don't care about footnotes.
