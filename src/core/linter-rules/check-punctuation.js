@@ -10,8 +10,8 @@ const punctuationMarks = [".", ":", "!", "?"];
 
 const meta = {
   en: {
-    description: "`<p>` tags should end with either of ., :, !, ? ",
-    howToFix: "Please append a ., :, !, ? at the end of this `<p>` tag",
+    description: `<p> tags should end with either of ${punctuationMarks} `,
+    howToFix: `Please append ${punctuationMarks} at the end of this <p> tag`,
   },
 };
 // Fall back to english, if language is missing
@@ -28,10 +28,8 @@ function lintingFunction(conf, doc) {
   // ensures that either a string ends with one of [.!?:] or is empty
   const punctuatingRegExp = new RegExp(`[${punctuationMarks.join("")}]$|^ *$`, "m");
   
-  const offendingElements = Array.from(doc.querySelectorAll("p"))
+  const offendingElements = Array.from(doc.querySelectorAll("p:not(#back-to-top)"))
     .filter((elem) => !(punctuatingRegExp.test(elem.textContent)));
-  
-  offendingElements.splice(-1,1); // back-to-top is always the last element.
   
   const result = {
     name,

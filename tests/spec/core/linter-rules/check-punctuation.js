@@ -35,7 +35,7 @@ describe("Core Linter Rule - 'check-punctuation'", () => {
     
     const results = await rule.lint(config, doc);
     const [result] = results;
-    expect(result.offendingElements.length).toEqual(3);
+    expect(result.offendingElements.length).toEqual(4);
   });
   it("checks error message for p ending without a punctuation", async () => {
     const doc = document.implementation.createHTMLDocument("test doc");
@@ -64,9 +64,9 @@ describe("Core Linter Rule - 'check-punctuation'", () => {
     const [result] = results;
     
     expect(result.name).toEqual(ruleName);
-    expect(result.occurrences).toEqual(3);
+    expect(result.occurrences).toEqual(4);
     expect(result.description).toBeTruthy();
     expect(result.howToFix).toBeTruthy();
-    expect(result.offendingElements.length).toEqual(3);
+    expect(result.offendingElements.length).toEqual(4);
   })
 })
