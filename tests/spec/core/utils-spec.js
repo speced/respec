@@ -8,6 +8,56 @@ describe("Core - Utils", () => {
     });
   });
 
+  async function clearCaches(){
+    const keys = await caches.keys();
+    for (const key of keys) {
+      await caches.delete(key);
+    }
+  }
+
+  describe("fetchAndCache", () => {
+    beforeEach(clearCaches);
+    it("caches a requests of different type with a 1 day default", async () => {
+      const url = location.origin + "/tests/data/pass.txt";
+      const requests = [
+        url,
+        new URL(url),
+        new Request(url)
+      ]
+      for(const request of requests){
+        expect(await caches.match(request)).toBe(undefined);
+        await utils.fetchAndCache(url);
+        const cache = await caches.open(location.origin);
+        expect(cache).toBeTruthy();
+        const cachedResponse = await cache.match(url);
+        expect(cachedResponse).toBeTruthy();
+        const expires = new Date(cachedResponse.headers.get("Expires")).valueOf();
+        expect(expires).toBeGreaterThan(Date.now());
+        expect(expires).toBeGreaterThan(Date.now() + 86000000);
+        const bodyText = await cachedResponse.text();
+        expect(bodyText).toBe("PASS");
+        await clearCaches();
+      }
+    });
+
+    it("uses the origin as the cache key", async () => {
+      expect(await caches.keys()).toEqual([]);
+      const url = location.origin + "/tests/data/pass.txt";
+      await utils.fetchAndCache(url);
+      expect(await caches.keys()).toEqual([location.origin]);
+    });
+
+    it("returns a cached response when the response is not ok", async () => {
+      const url = location.origin + "/bad-request";
+      const cache = await caches.open(location.origin);
+      const goodResponse = new Response("PASS")
+      await cache.put(url, goodResponse);
+      const badRequest = new Request(url);
+      const cachedReponse = await utils.fetchAndCache(badRequest);
+      expect(await cachedReponse.text()).toBe("PASS");
+    });
+  });
+
   describe("createResourceHint", () => {
     it("returns a link element", () => {
       var link = utils.createResourceHint({
