@@ -12,7 +12,7 @@ describe("Core — Can I Use", function () {
     expect(caniuse.feature).toBe("FEATURE");
     expect(caniuse.maxAge).toBe(24 * 60 * 60 * 1000);
     expect(caniuse.versions).toBe(4);
-    expect(caniuse.browsers.join(",")).toBe(["chrome", "firefox", "safari", "edge"].join(","));
+    expect(caniuse.browsers).toEqual(["chrome", "firefox", "safari", "edge"]);
   });
 
   it("allows overriding defaults", async () => {
@@ -31,7 +31,7 @@ describe("Core — Can I Use", function () {
 
     expect(caniuse.feature).toBe("FEATURE");
     expect(caniuse.maxAge).toBe(0);
-    expect(caniuse.browsers.join(",")).toBe("firefox,chrome");
+    expect(caniuse.browsers).toEqual(["firefox", "chrome"]);
     expect(caniuse.versions).toBe(10);
   });
 
