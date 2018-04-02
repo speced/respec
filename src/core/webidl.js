@@ -1005,6 +1005,7 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
     const showWarnings =
       type &&
       idlElem &&
+      name &&
       idlElem.classList.contains("no-link-warnings") === false;
     if (showWarnings) {
       var msg = `No \`<dfn>\` for ${type} \`${originalName}\`${originalParent
