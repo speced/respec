@@ -5,9 +5,106 @@
  */
 
 import l10n from "core/l10n";
+import css from "deps/text!deps/balloon.css";
 import { pub } from "core/pubsubhub";
 
 export const name = "core/github";
+
+function getSelectionCoordinates() {
+  let doc = window.document;
+  let selection = doc.selection, range, rects, rect;
+  let x = 0, y = 0;
+  if (selection) {
+    if (selection.type !== "Control") {
+      range = selection.createRange();
+      range.collapse(false);
+      x = range.boundingLeft;
+      y = range.boundingTop;
+    }
+  } else if (window.getSelection) {
+    selection = window.getSelection();
+    if (selection.rangeCount) {
+      range = selection.getRangeAt(0).cloneRange();
+      if (range.getClientRects) {
+        range.collapse(false);
+        rects = range.getClientRects();
+        if (rects.length > 0) {
+          rect = rects[0];
+        }
+        x = rect.left;
+        y = rect.top;
+      }
+      // Fall back to inserting a temporary element
+      if (x === 0 && y === 0) {
+        const span = doc.createElement("span");
+        if (span.getClientRects) {
+          // Ensure span has dimensions and position by
+          // adding a zero-width space character
+          span.appendChild( doc.createTextNode("\u200b") );
+          range.insertNode(span);
+          rect = span.getClientRects()[0];
+          x = rect.left;
+          y = rect.top;
+          const spanParent = span.parentNode;
+          spanParent.removeChild(span);
+
+          // Glue any broken text nodes back together
+          spanParent.normalize();
+        }
+      }
+    }
+  }
+  return { x: x, y: y };
+}
+
+
+function enableFileIssuesOnSelect(issueBase){
+  const { body, head } = document;
+
+  const codeStyle = document.createElement("style");
+  codeStyle.textContent = css;
+  codeStyle.classList.add('removeOnSave');
+  head.appendChild(codeStyle);
+
+  var fileIssueLink = document.createElement('button');
+  fileIssueLink.setAttribute('data-balloon', 'file an issue related to the text selected');
+  fileIssueLink.setAttribute('data-balloon-pos', 'up');
+  fileIssueLink.setAttribute('id', 'respec-file-issue-btn');
+  fileIssueLink.classList.add('removeOnSave', 'respec-file-issue-hidden');
+  fileIssueLink.textContent = 'i';
+  fileIssueLink.addEventListener("click", () => {
+    window.location.href = fileIssueLink.dataset.href;
+    fileIssueLink.classList.add('respec-file-issue-hidden');
+  });
+  body.appendChild(fileIssueLink);
+
+  body.addEventListener("mouseup", () => {
+    const textSelected = window.getSelection().toString();
+    const newIssueURL = new URL('./new',issueBase);
+    const { searchParams } = newIssueURL;
+    let titleText;
+
+    if (textSelected) {
+      if (textSelected.length > 40) {
+        const pos = textSelected.indexOf(" ", 40);
+        titleText = textSelected.slice(0, pos).concat("...");
+      } else {
+        titleText = textSelected;
+      }
+      searchParams.set('title', `'${titleText}'`);
+      searchParams.set('body', `> ${textSelected}`);
+      fileIssueLink.classList.remove('respec-file-issue-hidden');
+      fileIssueLink.dataset.href = newIssueURL.href;
+      const { x, y } = getSelectionCoordinates();
+      fileIssueLink.style.position = "fixed";
+      fileIssueLink.style.left = `${x}px`;
+      fileIssueLink.style.top = `${y}px`;
+    } else {
+      fileIssueLink.classList.add('respec-file-issue-hidden');
+    }
+  });
+
+}
 
 function findNext(header) {
   // Finds the next URL of paginated resources which
@@ -97,6 +194,10 @@ export async function run(conf) {
     githubAPI: `https://api.github.com/repos/${org}/${repo}`,
     issueBase: `${ghURL.href}${ghURL.pathname.endsWith("/") ? "" : "/"}issues/`,
   };
+  if (conf.enableIssueFeature && newProps.issueBase &&
+    '/https://github.com/'.search(newProps.issueBase)) {
+    enableFileIssuesOnSelect(newProps.issueBase);
+  }
   const commitsHref = `${ghURL.href}${
     ghURL.pathname.endsWith("/") ? "" : "/"
   }commits/${branch}`;
