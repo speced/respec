@@ -182,7 +182,7 @@ describe("W3C — Headers", function() {
       expect(doc.querySelector("a[href='http://empty-name']")).toEqual(null);
     });
 
-    fit("adds support for editors in different languages", async () => {
+    it("adds support for editors in different languages", async () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "REC",
