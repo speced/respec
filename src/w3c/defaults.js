@@ -53,7 +53,7 @@ const w3cDefaults = {
     "no-headingless-sections": true,
     "privsec-section": true,
     "no-http-props": true,
-    "check-punctuation": true,
+    "check-punctuation": false,
   },
   doJsonLd: false,
   license: "w3c-software-doc",

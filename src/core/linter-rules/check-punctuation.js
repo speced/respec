@@ -6,11 +6,12 @@ import { lang as defaultLang } from "core/l10n";
 import LinterRule from "core/LinterRule";
 
 const name = "check-punctuation";
+const punctuationMarks = [".", ":", "!", "?"];
 
 const meta = {
   en: {
-    description: "`<p>` tags should end with either of . | : | ! | ? ",
-    howToFix: "Please append a . | : | ! | ? at the end of this `<p>` tag",
+    description: "`<p>` tags should end with either of ., :, !, ? ",
+    howToFix: "Please append a ., :, !, ? at the end of this `<p>` tag",
   },
 };
 // Fall back to english, if language is missing
@@ -25,13 +26,13 @@ const lang = defaultLang in meta ? defaultLang : "en";
 function lintingFunction(conf, doc) {
   
   // ensures that either a string ends with one of [.!?:] or is empty
-  const punctuatingRegExp = /[.!?:]$|^ *$/m;
+  const punctuatingRegExp = new RegExp(`[${punctuationMarks.join("")}]$|^ *$`, "m");
   
   const offendingElements = Array.from(doc.querySelectorAll("p"))
     .filter((elem) => !(punctuatingRegExp.test(elem.textContent)));
   
   offendingElements.splice(-1,1); // back-to-top is always the last element.
-  console.log(offendingElements)
+  
   const result = {
     name,
     offendingElements,
