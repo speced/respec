@@ -40,7 +40,7 @@ const supportTitles = new Map([
   ["d", "Disabled by default (needs to enabled)."],
 ]);
 
-export function run(conf) {
+export async function run(conf) {
   if (!conf.caniuse) {
     return; // nothing to do.
   }
@@ -80,6 +80,7 @@ export function run(conf) {
       placeholder: "Fetching data from caniuse.com...",
     }}</dd>`;
   headDlElem.appendChild(definitionPair);
+  await contentPromise;
 }
 
 /**
