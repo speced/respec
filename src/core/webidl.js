@@ -589,6 +589,12 @@ function writeInterfaceDefinition(opt, fixes = {}) {
     } else if (it.type === "operation") {
       if (it.static) {
         len += "static ".length;
+      } else if (it.stringifier) {
+        len += "stringifier ".length;
+      } else if (it.getter) {
+        len += "getter ".length;
+      } else if  (it.setter) {
+        len += "setter ".length;
       }
       maxMeth = Math.max(len, maxMeth);
     } else if (it.type === "const") {
@@ -1005,6 +1011,7 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
     const showWarnings =
       type &&
       idlElem &&
+      name &&
       idlElem.classList.contains("no-link-warnings") === false;
     if (showWarnings) {
       var msg = `No \`<dfn>\` for ${type} \`${originalName}\`${originalParent
