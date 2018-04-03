@@ -215,7 +215,8 @@ function makeConsoleMsgHandler(page) {
   return function handleConsoleMessages(whenToHalt) {
     page.on("console", async (message) => {
       const type = message.type();
-      const text = Promise.all(message.args().map(stringifyJSHandle)).join(' ');
+      const args = await Promise.all(message.args().map(stringifyJSHandle));
+      const text = args.join(' ');
       const abortOnWarning = whenToHalt.haltOnWarn && type === "warn";
       const abortOnError = whenToHalt.haltOnError && type === "error";
       const output = `ReSpec ${type}: ${colors.debug(text)}`;
