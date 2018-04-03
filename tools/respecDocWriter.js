@@ -215,7 +215,7 @@ function makeConsoleMsgHandler(page) {
   return function handleConsoleMessages(whenToHalt) {
     page.on("console", message => {
       const type = message.type();
-      const text = message.text();
+      const text = message.args().map(stringifyJSHandle).join(' ');
       const abortOnWarning = whenToHalt.haltOnWarn && type === "warn";
       const abortOnError = whenToHalt.haltOnError && type === "error";
       const output = `ReSpec ${type}: ${colors.debug(text)}`;
@@ -236,5 +236,9 @@ function makeConsoleMsgHandler(page) {
       }
     });
   };
+}
+
+function stringifyJSHandle(handle) {
+  return handle.executionContext().evaluate(o => String(o), handle)
 }
 exports.fetchAndWrite = fetchAndWrite;
