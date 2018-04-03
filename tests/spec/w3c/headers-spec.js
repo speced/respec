@@ -183,8 +183,8 @@ describe("W3C — Headers", function() {
   });
 
   describe("formerEditors", () => {
-    const formerEditors = findContent("Former Editors:");
-    const formerEditor = findContent("Former Editor:");
+    const formerEditors = findContent("Former editors:");
+    const formerEditor = findContent("Former editor:");
     it("takes no former editor into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
