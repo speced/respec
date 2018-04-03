@@ -66,7 +66,7 @@ describe("Core - Utils", () => {
       const response = await utils.fetchAndCache(url);
       expect(await response.text()).toBe("PASS");
       const cachedResponse = await cache.match(url);
-      expect(await cachedResponse.text()).toBe("PASS")
+      expect(await cachedResponse.text()).toBe("PASS");
     });
 
     it("throws a network error when the response is not ok, and there is no cached fallback.", async () => {
@@ -76,7 +76,7 @@ describe("Core - Utils", () => {
         await utils.fetchAndCache(badRequest);
         // unreachable code, the above must throw.
         expect(false).toBe(true);
-      } catch(err){
+      } catch (err) {
         expect(err.constructor.name).toBe("NetworkError");
         expect(err.response instanceof Response).toBe(true);
       }
