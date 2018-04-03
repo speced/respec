@@ -75,6 +75,7 @@ describe("W3C — Headers", function() {
   });
 
   describe("editors", () => {
+    const findEditor = findContent("Editor:");
     it("takes a single editors into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
@@ -180,6 +181,33 @@ describe("W3C — Headers", function() {
       expect(doc.querySelector("a[href='http://not-valid']")).toEqual(null);
       expect(doc.querySelector("a[href='http://empty-name']")).toEqual(null);
     });
+
+    it("treats editor's name as HTML", async () => {
+      const config = {
+        specStatus: "REC",
+        editors: [
+          {
+            name:
+              "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
+            company: "Microsoft",
+          },
+        ],
+      };
+      const ops = makeStandardOps(config);
+      const doc = await makeRSDoc(ops);
+      const dtElems = [...doc.querySelectorAll(".head dt")];
+      const dtElem = dtElems.find(findEditor);
+      const ddElem = dtElem.nextElementSibling;
+      const [personName, edition] = ddElem.querySelectorAll(
+        "span>span:nth-child(1), span>span:nth-child(2)"
+      );
+      expect(personName.lang).toBe("ja");
+      expect(personName.textContent).toBe("阿南 康宏");
+      expect(edition.textContent).toBe("第１版");
+      expect(ddElem.textContent).toEqual(
+        "阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (Microsoft)"
+      );
+    });
   });
 
   describe("formerEditors", () => {
@@ -275,6 +303,33 @@ describe("W3C — Headers", function() {
       const secondEditor = firstEditor.nextSibling;
       expect(secondEditor.localName).toEqual("dd");
       expect(secondEditor.textContent).toEqual("NAME2");
+    });
+
+    it("treats formerEditor's name as HTML", async () => {
+      const config = {
+        specStatus: "REC",
+        formerEditors: [
+          {
+            name:
+              "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
+            company: "Microsoft",
+          },
+        ],
+      };
+      const ops = makeStandardOps(config);
+      const doc = await makeRSDoc(ops);
+      const dtElems = [...doc.querySelectorAll(".head dt")];
+      const dtElem = dtElems.find(formerEditor);
+      const ddElem = dtElem.nextElementSibling;
+      const [personName, edition] = ddElem.querySelectorAll(
+        "span>span:nth-child(1), span>span:nth-child(2)"
+      );
+      expect(personName.lang).toBe("ja");
+      expect(personName.textContent).toBe("阿南 康宏");
+      expect(edition.textContent).toBe("第１版");
+      expect(ddElem.textContent).toEqual(
+        "阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (Microsoft)"
+      );
     });
   });
 
@@ -1162,7 +1217,7 @@ describe("W3C — Headers", function() {
           url: "http://hyperlink/",
         },
         {
-          src: "data:image/svg+xml,<svg%20xmlns=\"http://www.w3.org/2000/svg\"/>",
+          src: 'data:image/svg+xml,<svg%20xmlns="http://www.w3.org/2000/svg"/>',
           alt: "this is an svg",
           height: 315,
           width: 961,
