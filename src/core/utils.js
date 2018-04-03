@@ -505,7 +505,7 @@ export async function fetchAndCache(request, maxAge = 86400000) {
     customHeaders.set("Expires", expiryDate);
     const cacheResponse = new Response(await clonedResponse.blob(), { headers: customHeaders });
     // put in cache, and forget it (there is no recovery if it throws, but that's ok).
-    cache.put(request, cacheResponse).catch(console.error);
+    await cache.put(request, cacheResponse).catch(console.error);
   }
   return response;
 }
