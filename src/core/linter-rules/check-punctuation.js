@@ -7,11 +7,11 @@ import LinterRule from "core/LinterRule";
 
 const name = "check-punctuation";
 const punctuationMarks = [".", ":", "!", "?"];
-
+const humanMarks = punctuationMarks.map(mark => `"${mark}"`).join(", ");
 const meta = {
   en: {
-    description: `<p> tags should end with either of ${punctuationMarks} `,
-    howToFix: `Please append ${punctuationMarks} at the end of this <p> tag`,
+    description: "`<p>` tags should end with a punctuation mark.",
+    howToFix: `Please make sure \`<p>\` tags end with one of: ${humanMarks}.`,
   },
 };
 // Fall back to english, if language is missing
