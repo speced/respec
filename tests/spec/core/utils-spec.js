@@ -55,7 +55,7 @@ describe("Core - Utils", () => {
       expect(await cachedResponse.text()).toBe("PASS");
     });
 
-    it("returns a fresh network response when the response is expired", async () => {
+    it("returns a fresh network response when the cached response is expired", async () => {
       const url = location.origin + "/tests/data/pass.txt";
       const cache = await caches.open(location.origin);
       const yesterday = Date.now() - 86400000;
