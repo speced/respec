@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "20.3.0",
+  "version": "20.4.1",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -48,7 +48,7 @@
     "karma-safaritechpreview-launcher": "0.0.6",
     "karma-verbose-summary-reporter": "0.0.1",
     "mocha": "^5.0.5",
-    "moment": "^2.21.0",
+    "moment": "^2.22.0",
     "requirejs": "^2.3.5",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "uglify-es": "3.3.7",
@@ -68,11 +68,11 @@
     "server": "npm start",
     "snyk": "snyk",
     "snyk-protect": "snyk protect",
-    "start": "npm run babel:build && http-server",
+    "start": "npm run build:components && http-server",
     "test:build": "mocha ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
     "test:karma": "npm run karma",
-    "prepare": "npm run snyk-protect",
+    "prepare": "npm run snyk-protect && npm run build:components",
     "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
