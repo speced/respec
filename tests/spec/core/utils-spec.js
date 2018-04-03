@@ -8,7 +8,7 @@ describe("Core - Utils", () => {
     });
   });
 
-  fdescribe("fetchAndCache", () => {
+  describe("fetchAndCache", () => {
     async function clearCaches() {
       const keys = await caches.keys();
       for (const key of keys) {
@@ -67,6 +67,19 @@ describe("Core - Utils", () => {
       expect(await response.text()).toBe("PASS");
       const cachedResponse = await cache.match(url);
       expect(await cachedResponse.text()).toBe("PASS")
+    });
+
+    it("throws a network error when the response is not ok, and there is no cached fallback.", async () => {
+      const url = location.origin + "/bad-request";
+      const badRequest = new Request(url);
+      try {
+        await utils.fetchAndCache(badRequest);
+        // unreachable code, the above must throw.
+        expect(false).toBe(true);
+      } catch(err){
+        expect(err.constructor.name).toBe("NetworkError");
+        expect(err.response instanceof Response).toBe(true);
+      }
     });
   });
 
