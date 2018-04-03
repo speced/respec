@@ -8,7 +8,7 @@ describe("Core - Utils", () => {
     });
   });
 
-  fdescribe("fetchAndCache", () => {
+  describe("fetchAndCache", () => {
     async function clearCaches() {
       const keys = await caches.keys();
       for (const key of keys) {
@@ -87,15 +87,10 @@ describe("Core - Utils", () => {
       const url = location.origin + "/tests/data/pass.txt";
       const cachedResponse = await utils.fetchAndCache(url, 0);
       expect(cachedResponse.headers.has("Expires")).toBe(true);
-      const cacheTime = new Date(cachedResponse.headers.get("Expires")).valueOf();
+      const cacheTime = new Date(
+        cachedResponse.headers.get("Expires")
+      ).valueOf();
       expect(cacheTime <= Date.now()).toBe(true);
-    });
-    
-    it("allows overriding a previous cache time", async () => {
-      const url = location.origin + "/tests/data/pass.txt";
-      await utils.fetchAndCache(url); // default max age
-      const response = await utils.fetchAndCache(url, 0);
-      // TODO ???? 
     });
   });
 
