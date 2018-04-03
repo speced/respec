@@ -30,9 +30,6 @@ describe("Core Linter Rule - 'check-punctuation'", () => {
         </section>
     `;
   
-    const noFullStop = doc.getElementById("no-fullstop");
-    const noFullStopAtEnd = doc.getElementById("no-fullstop-at-end");
-    
     const results = await rule.lint(config, doc);
     const [result] = results;
     expect(result.offendingElements.length).toEqual(4);
@@ -68,5 +65,5 @@ describe("Core Linter Rule - 'check-punctuation'", () => {
     expect(result.description).toBeTruthy();
     expect(result.howToFix).toBeTruthy();
     expect(result.offendingElements.length).toEqual(4);
-  })
-})
+  });
+});
