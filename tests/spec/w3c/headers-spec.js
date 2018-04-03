@@ -198,9 +198,7 @@ describe("W3C — Headers", function() {
       const dtElems = [...doc.querySelectorAll(".head dt")];
       const dtElem = dtElems.find(findEditor);
       const ddElem = dtElem.nextElementSibling;
-      const [personName, edition] = ddElem.querySelectorAll(
-        "span>span:nth-child(1), span>span:nth-child(2)"
-      );
+      const [personName, edition] = ddElem.querySelectorAll("span>span");
       expect(personName.lang).toBe("ja");
       expect(personName.textContent).toBe("阿南 康宏");
       expect(edition.textContent).toBe("第１版");
@@ -321,9 +319,7 @@ describe("W3C — Headers", function() {
       const dtElems = [...doc.querySelectorAll(".head dt")];
       const dtElem = dtElems.find(formerEditor);
       const ddElem = dtElem.nextElementSibling;
-      const [personName, edition] = ddElem.querySelectorAll(
-        "span>span:nth-child(1), span>span:nth-child(2)"
-      );
+      const [personName, edition] = ddElem.querySelectorAll("span>span");
       expect(personName.lang).toBe("ja");
       expect(personName.textContent).toBe("阿南 康宏");
       expect(edition.textContent).toBe("第１版");
@@ -1217,7 +1213,7 @@ describe("W3C — Headers", function() {
           url: "http://hyperlink/",
         },
         {
-          src: 'data:image/svg+xml,<svg%20xmlns="http://www.w3.org/2000/svg"/>',
+          src: "data:image/svg+xml,<svg%20xmlns=\"http://www.w3.org/2000/svg\"/>",
           alt: "this is an svg",
           height: 315,
           width: 961,
