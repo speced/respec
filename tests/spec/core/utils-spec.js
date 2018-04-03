@@ -8,6 +8,92 @@ describe("Core - Utils", () => {
     });
   });
 
+  describe("fetchAndCache", () => {
+    async function clearCaches() {
+      const keys = await caches.keys();
+      for (const key of keys) {
+        await caches.delete(key);
+      }
+    }
+    beforeEach(clearCaches);
+    it("caches a requests of different type with a 1 day default", async () => {
+      const url = location.origin + "/tests/data/pass.txt";
+      const requests = [url, new URL(url), new Request(url)];
+      for (const request of requests) {
+        expect(await caches.match(request)).toBe(undefined);
+        await utils.fetchAndCache(url);
+        const cache = await caches.open(location.origin);
+        expect(cache).toBeTruthy();
+        const cachedResponse = await cache.match(url);
+        expect(cachedResponse).toBeTruthy();
+        const expires = new Date(
+          cachedResponse.headers.get("Expires")
+        ).valueOf();
+        expect(expires).toBeGreaterThan(Date.now());
+        // default is 86400000, but we give a little leeway (~1 day)
+        expect(expires).toBeGreaterThan(Date.now() + 86000000);
+        const bodyText = await cachedResponse.text();
+        expect(bodyText).toBe("PASS");
+        await clearCaches();
+      }
+    });
+
+    it("uses the origin as the cache key", async () => {
+      expect(await caches.keys()).toEqual([]);
+      const url = location.origin + "/tests/data/pass.txt";
+      await utils.fetchAndCache(url);
+      expect(await caches.keys()).toEqual([location.origin]);
+    });
+
+    it("returns a cached response when the response is not ok", async () => {
+      const url = location.origin + "/bad-request";
+      const cache = await caches.open(location.origin);
+      const goodResponse = new Response("PASS");
+      await cache.put(url, goodResponse);
+      const badRequest = new Request(url);
+      const cachedResponse = await utils.fetchAndCache(badRequest);
+      expect(await cachedResponse.text()).toBe("PASS");
+    });
+
+    it("returns a fresh network response when the cached response is expired", async () => {
+      const url = location.origin + "/tests/data/pass.txt";
+      const cache = await caches.open(location.origin);
+      const yesterday = Date.now() - 86400000;
+      const expiredResponse = new Response("FAIL", {
+        headers: { Expires: yesterday },
+      });
+      await cache.put(new Request(url), expiredResponse);
+      const response = await utils.fetchAndCache(url);
+      const body = await response.text();
+      expect(body).toBe("PASS");
+      const cachedResponse = await cache.match(url);
+      expect(await cachedResponse.text()).toBe("PASS");
+    });
+
+    it("throws a network error when the response is not ok, and there is no cached fallback.", async () => {
+      const url = location.origin + "/bad-request";
+      const badRequest = new Request(url);
+      try {
+        await utils.fetchAndCache(badRequest);
+        // unreachable code, the above must throw.
+        expect(false).toBe(true);
+      } catch (err) {
+        expect(err.constructor.name).toBe("NetworkError");
+        expect(err.response instanceof Response).toBe(true);
+      }
+    });
+
+    it("allows overriding the default cache time", async () => {
+      const url = location.origin + "/tests/data/pass.txt";
+      const cachedResponse = await utils.fetchAndCache(url, 0);
+      expect(cachedResponse.headers.has("Expires")).toBe(true);
+      const cacheTime = new Date(
+        cachedResponse.headers.get("Expires")
+      ).valueOf();
+      expect(cacheTime <= Date.now()).toBe(true);
+    });
+  });
+
   describe("createResourceHint", () => {
     it("returns a link element", () => {
       var link = utils.createResourceHint({

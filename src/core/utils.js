@@ -447,3 +447,66 @@ export function runTransforms(content, flist) {
   }
   return content;
 }
+
+class NetworkError extends Error {
+  constructor(message, response) {
+    super(message);
+    Object.defineProperty(this, "response", { get() { return response; } });
+  }
+}
+
+/**
+ * Cached request handler
+ * @param {Request} request
+ * @param {Object} maxAge cache expiration duration in ms. defaults to 24 hours (86400000 ms)
+ * @return {Response}
+ *  if a cached response is available and it's not stale, return it
+ *  else: request from network, cache and return fresh response.
+ *    If network fails, return a stale cached version if exists (else throw)
+ * @throws {NetworkError}
+ */
+export async function fetchAndCache(request, maxAge = 86400000) {
+  if (typeof request === "string" || request instanceof URL) {
+    request = new Request(request);
+  }
+  const url = new URL(request.url);
+
+  // use data from cache data if valid and render
+  let cache;
+  let cachedResponse;
+  if ("caches" in window) {
+    try {
+      cache = await caches.open(url.origin);
+      cachedResponse = await cache.match(request);
+      if (cachedResponse && new Date(cachedResponse.headers.get("Expires")) > new Date()) {
+        return cachedResponse;
+      }
+    } catch (err) {
+      console.error("Failed to use Cache API.", err);
+    }
+  }
+
+  // otherwise fetch new data and cache
+  const response = await fetch(request);
+  if (!response.ok) {
+    if (cachedResponse) { // return stale version
+      console.warn(`Returning a stale cached response for ${url}`);
+      return cachedResponse;
+    }
+    const msg = `Response not OK from ${url} (HTTP Status: ${response.status})`;
+    throw new NetworkError(msg, response);
+  }
+
+  // cache response
+  if (cache) {
+    const clonedResponse = response.clone();
+    const customHeaders = new Headers(response.headers);
+    const expiryDate = new Date(Date.now() + maxAge);
+    customHeaders.set("Expires", expiryDate);
+    const cacheResponse = new Response(await clonedResponse.blob(), { headers: customHeaders });
+    // put in cache, and forget it (there is no recovery if it throws, but that's ok).
+    await cache.put(request, cacheResponse).catch(console.error);
+    return await cache.match(request);
+  }
+  return response;
+}
