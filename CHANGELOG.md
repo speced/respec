@@ -1,5 +1,95 @@
 # Change Log
 
+## [v20.5.0](https://github.com/w3c/respec/tree/v20.5.0) (2018-04-03)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.4.1...v20.5.0)
+
+**Fixed bugs:**
+
+- Figure references [\#878](https://github.com/w3c/respec/issues/878)
+
+**Merged pull requests:**
+
+- fix\(w3c/headers\): head items should be lcase [\#1603](https://github.com/w3c/respec/pull/1603) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat: punctuation checker for paragraphs [\#1589](https://github.com/w3c/respec/pull/1589) ([shikhar-scs](https://github.com/shikhar-scs))
+
+## [v20.4.1](https://github.com/w3c/respec/tree/v20.4.1) (2018-04-02)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.4.0...v20.4.1)
+
+**Fixed bugs:**
+
+- IDL stringifier is causing RangeError [\#1599](https://github.com/w3c/respec/issues/1599)
+- RangeError: Invalid count value exception in idn\(\) [\#1559](https://github.com/w3c/respec/issues/1559)
+
+**Closed issues:**
+
+- auto normalize references [\#1535](https://github.com/w3c/respec/issues/1535)
+
+**Merged pull requests:**
+
+- fix\(core/webidl\): dont warn about nameless ops [\#1601](https://github.com/w3c/respec/pull/1601) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/webidl\): indent stringifiers [\#1600](https://github.com/w3c/respec/pull/1600) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(pacakge\): npm start builds components [\#1581](https://github.com/w3c/respec/pull/1581) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v20.4.0](https://github.com/w3c/respec/tree/v20.4.0) (2018-03-29)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.3.0...v20.4.0)
+
+**Fixed bugs:**
+
+- Allow for figure references not to include the whole caption [\#879](https://github.com/w3c/respec/issues/879)
+
+**Merged pull requests:**
+
+- feat\(core/figures\): anchor link texts to be shortened [\#1593](https://github.com/w3c/respec/pull/1593) ([himanish-star](https://github.com/himanish-star))
+
+## [v20.3.0](https://github.com/w3c/respec/tree/v20.3.0) (2018-03-28)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.2.2...v20.3.0)
+
+**Merged pull requests:**
+
+- Remove @@@ from sotd [\#1584](https://github.com/w3c/respec/pull/1584) ([OrionStar25](https://github.com/OrionStar25))
+
+## [v20.2.2](https://github.com/w3c/respec/tree/v20.2.2) (2018-03-27)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.2.1...v20.2.2)
+
+**Closed issues:**
+
+- Missing whitespace in headers between status and date [\#1590](https://github.com/w3c/respec/issues/1590)
+- Script fails on IE11 with `SCRIPT1010: Expected identifier` [\#1585](https://github.com/w3c/respec/issues/1585)
+- Support different bibliographical styles [\#857](https://github.com/w3c/respec/issues/857)
+
+**Merged pull requests:**
+
+- fix: restore whitespace between status and date [\#1591](https://github.com/w3c/respec/pull/1591) ([deniak](https://github.com/deniak))
+
+## [v20.2.1](https://github.com/w3c/respec/tree/v20.2.1) (2018-03-21)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.2.0...v20.2.1)
+
+**Closed issues:**
+
+- META: Google Summer of Code 2018 [\#1502](https://github.com/w3c/respec/issues/1502)
+
+## [v20.2.0](https://github.com/w3c/respec/tree/v20.2.0) (2018-03-21)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.1.1...v20.2.0)
+
+**Implemented enhancements:**
+
+- Show labels from github [\#674](https://github.com/w3c/respec/issues/674)
+
+**Merged pull requests:**
+
+- feat: show github issue's labels [\#1571](https://github.com/w3c/respec/pull/1571) ([himanish-star](https://github.com/himanish-star))
+
+## [v20.1.1](https://github.com/w3c/respec/tree/v20.1.1) (2018-03-20)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.1.0...v20.1.1)
+
+**Fixed bugs:**
+
+- Parsing xml in markdown gives lower case tags [\#1573](https://github.com/w3c/respec/issues/1573)
+
+**Merged pull requests:**
+
+- fix\(w3c/templates/headers\): doc.title must match conf.title [\#1579](https://github.com/w3c/respec/pull/1579) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v20.1.0](https://github.com/w3c/respec/tree/v20.1.0) (2018-03-19)
 [Full Changelog](https://github.com/w3c/respec/compare/v20.0.5...v20.1.0)
 
@@ -49,7 +139,6 @@
 
 **Fixed bugs:**
 
-- RangeError: Invalid count value exception in idn\(\) [\#1559](https://github.com/w3c/respec/issues/1559)
 - Back to Top button doesn't work [\#1545](https://github.com/w3c/respec/issues/1545)
 
 **Closed issues:**
@@ -3966,7 +4055,7 @@
 - If abstract and SotD are in the wrong order, strange things happen [\#37](https://github.com/w3c/respec/issues/37)
 
 ## [v3.1.2](https://github.com/w3c/respec/tree/v3.1.2) (2012-06-19)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.3.1...v3.1.2)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.1.1...v3.1.2)
 
 **Implemented enhancements:**
 
@@ -3980,11 +4069,11 @@
 
 - Add ref for: WEBAPPS-MANIFEST-API [\#41](https://github.com/w3c/respec/pull/41) ([tobie](https://github.com/tobie))
 
-## [v3.3.1](https://github.com/w3c/respec/tree/v3.3.1) (2012-06-18)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.1.1...v3.3.1)
-
 ## [v3.1.1](https://github.com/w3c/respec/tree/v3.1.1) (2012-06-18)
-[Full Changelog](https://github.com/w3c/respec/compare/v3.1.0...v3.1.1)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.3.1...v3.1.1)
+
+## [v3.3.1](https://github.com/w3c/respec/tree/v3.3.1) (2012-06-18)
+[Full Changelog](https://github.com/w3c/respec/compare/v3.1.0...v3.3.1)
 
 **Fixed bugs:**
 
