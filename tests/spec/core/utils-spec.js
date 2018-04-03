@@ -8,7 +8,7 @@ describe("Core - Utils", () => {
     });
   });
 
-  describe("fetchAndCache", () => {
+  fdescribe("fetchAndCache", () => {
     async function clearCaches() {
       const keys = await caches.keys();
       for (const key of keys) {
@@ -62,9 +62,10 @@ describe("Core - Utils", () => {
       const expiredResponse = new Response("FAIL", {
         headers: { Expires: yesterday },
       });
-      await cache.put(url, expiredResponse);
+      await cache.put(new Request(url), expiredResponse);
       const response = await utils.fetchAndCache(url);
-      expect(await response.text()).toBe("PASS");
+      const body = await response.text();
+      expect(body).toBe("PASS");
       const cachedResponse = await cache.match(url);
       expect(await cachedResponse.text()).toBe("PASS");
     });
@@ -80,6 +81,21 @@ describe("Core - Utils", () => {
         expect(err.constructor.name).toBe("NetworkError");
         expect(err.response instanceof Response).toBe(true);
       }
+    });
+
+    it("allows overriding the default cache time", async () => {
+      const url = location.origin + "/tests/data/pass.txt";
+      const cachedResponse = await utils.fetchAndCache(url, 0);
+      expect(cachedResponse.headers.has("Expires")).toBe(true);
+      const cacheTime = new Date(cachedResponse.headers.get("Expires")).valueOf();
+      expect(cacheTime <= Date.now()).toBe(true);
+    });
+    
+    it("allows overriding a previous cache time", async () => {
+      const url = location.origin + "/tests/data/pass.txt";
+      await utils.fetchAndCache(url); // default max age
+      const response = await utils.fetchAndCache(url, 0);
+      // TODO ???? 
     });
   });
 

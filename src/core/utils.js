@@ -477,7 +477,7 @@ export async function fetchAndCache(request, maxAge = 86400000) {
   if ("caches" in window) {
     try {
       cache = await caches.open(url.origin);
-      cachedResponse = await cache.match(url);
+      cachedResponse = await cache.match(request);
       if (cachedResponse && new Date(cachedResponse.headers.get("Expires")) > new Date()) {
         return cachedResponse;
       }
@@ -506,6 +506,7 @@ export async function fetchAndCache(request, maxAge = 86400000) {
     const cacheResponse = new Response(await clonedResponse.blob(), { headers: customHeaders });
     // put in cache, and forget it (there is no recovery if it throws, but that's ok).
     await cache.put(request, cacheResponse).catch(console.error);
+    return await cache.match(request);
   }
   return response;
 }
