@@ -75,6 +75,7 @@ describe("W3C — Headers", function() {
   });
 
   describe("editors", () => {
+  	const editors = findContent("Editors:");
     it("takes a single editors into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
@@ -180,6 +181,33 @@ describe("W3C — Headers", function() {
       expect(doc.querySelector("a[href='http://not-valid']")).toEqual(null);
       expect(doc.querySelector("a[href='http://empty-name']")).toEqual(null);
     });
+
+    it("adds support for editors in different languages", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+        editors: [
+          {
+            name:
+              "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
+            company: "Microsoft",
+          },
+        ],
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+
+      const dtElems = [...doc.querySelectorAll("dt")];
+      const editorsLabel = dtElems.find(editors);
+      expect(editorsLabel).toBeDefined();  
+
+      const firstEditor = editorsLabel.nextSibling;
+      expect(firstEditor.localName).toEqual("dd");
+      const firstSpan = firstEditor.querySelector("span").querySelector("span");
+      console.log(firstSpan);
+      expect(firstSpan.lang).toBe("ja");
+      expect(firstEditor.textContent).toEqual("阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (Microsoft)");
+    });
   });
 
   describe("formerEditors", () => {
@@ -275,6 +303,31 @@ describe("W3C — Headers", function() {
       const secondEditor = firstEditor.nextSibling;
       expect(secondEditor.localName).toEqual("dd");
       expect(secondEditor.textContent).toEqual("NAME2");
+    });
+
+    it("adds support for former editors in different languages", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+        formerEditors: [
+          {
+            name:
+              "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
+            company: "Microsoft",
+          },
+        ],
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+      const dtElems = [...doc.querySelectorAll("dt")];
+      const formerEditorsLabel = dtElems.find(formerEditor);
+      expect(formerEditorsLabel).toBeDefined();  
+
+      const editors = formerEditorsLabel.nextSibling;
+      expect(editors.localName).toEqual("dd");
+      const firstSpan = editors.querySelector("span").querySelector("span");
+      expect(firstSpan.lang).toBe("ja");
+      expect(editors.textContent).toEqual("阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (Microsoft)");
     });
   });
 
