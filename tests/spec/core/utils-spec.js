@@ -8,31 +8,29 @@ describe("Core - Utils", () => {
     });
   });
 
-  async function clearCaches(){
-    const keys = await caches.keys();
-    for (const key of keys) {
-      await caches.delete(key);
-    }
-  }
-
   describe("fetchAndCache", () => {
+    async function clearCaches() {
+      const keys = await caches.keys();
+      for (const key of keys) {
+        await caches.delete(key);
+      }
+    }
     beforeEach(clearCaches);
     it("caches a requests of different type with a 1 day default", async () => {
       const url = location.origin + "/tests/data/pass.txt";
-      const requests = [
-        url,
-        new URL(url),
-        new Request(url)
-      ]
-      for(const request of requests){
+      const requests = [url, new URL(url), new Request(url)];
+      for (const request of requests) {
         expect(await caches.match(request)).toBe(undefined);
         await utils.fetchAndCache(url);
         const cache = await caches.open(location.origin);
         expect(cache).toBeTruthy();
         const cachedResponse = await cache.match(url);
         expect(cachedResponse).toBeTruthy();
-        const expires = new Date(cachedResponse.headers.get("Expires")).valueOf();
+        const expires = new Date(
+          cachedResponse.headers.get("Expires")
+        ).valueOf();
         expect(expires).toBeGreaterThan(Date.now());
+        // default is 86400000, but we give a little leeway (~1 day)
         expect(expires).toBeGreaterThan(Date.now() + 86000000);
         const bodyText = await cachedResponse.text();
         expect(bodyText).toBe("PASS");
@@ -50,7 +48,7 @@ describe("Core - Utils", () => {
     it("returns a cached response when the response is not ok", async () => {
       const url = location.origin + "/bad-request";
       const cache = await caches.open(location.origin);
-      const goodResponse = new Response("PASS")
+      const goodResponse = new Response("PASS");
       await cache.put(url, goodResponse);
       const badRequest = new Request(url);
       const cachedReponse = await utils.fetchAndCache(badRequest);

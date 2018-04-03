@@ -48,7 +48,7 @@ module.exports = function(config) {
         served: true,
       },
       {
-        pattern: "tests/data/issues/*",
+        pattern: "tests/data/**/*",
         included: false,
         served: true,
       },
