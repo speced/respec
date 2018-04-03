@@ -8,7 +8,7 @@ describe("Core - Utils", () => {
     });
   });
 
-  describe("fetchAndCache", () => {
+  fdescribe("fetchAndCache", () => {
     async function clearCaches() {
       const keys = await caches.keys();
       for (const key of keys) {
@@ -51,8 +51,22 @@ describe("Core - Utils", () => {
       const goodResponse = new Response("PASS");
       await cache.put(url, goodResponse);
       const badRequest = new Request(url);
-      const cachedReponse = await utils.fetchAndCache(badRequest);
-      expect(await cachedReponse.text()).toBe("PASS");
+      const cachedResponse = await utils.fetchAndCache(badRequest);
+      expect(await cachedResponse.text()).toBe("PASS");
+    });
+
+    it("returns a fresh network response when the response is expired", async () => {
+      const url = location.origin + "/tests/data/pass.txt";
+      const cache = await caches.open(location.origin);
+      const yesterday = Date.now() - 86400000;
+      const expiredResponse = new Response("FAIL", {
+        headers: { Expires: yesterday },
+      });
+      await cache.put(url, expiredResponse);
+      const response = await utils.fetchAndCache(url);
+      expect(await response.text()).toBe("PASS");
+      const cachedResponse = await cache.match(url);
+      expect(await cachedResponse.text()).toBe("PASS")
     });
   });
 
