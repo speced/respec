@@ -23,6 +23,7 @@ jobs:
   include:
     - stage: Run headless
       script:
+        - if grep -q "fdescribe(\|fit(" tests/**/*.js; then exit 1; fi;
         - npm run test:headless
     - stage: Run Karma unit tests
       script:
