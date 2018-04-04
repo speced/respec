@@ -12,6 +12,7 @@ describe("W3C — Defaults", () => {
       "no-headingless-sections": true,
       "privsec-section": true,
       "no-http-props": true,
+      "check-punctuation": false,
     });
     expect(rsConf.license).toEqual("w3c-software-doc");
     expect(rsConf.specStatus).toEqual("base");
@@ -25,6 +26,7 @@ describe("W3C — Defaults", () => {
           "no-headingless-sections": false,
           "privsec-section": false,
           "no-http-props": false,
+          "check-punctuation": false,
           "fake-linter-rule": "foo",
         },
         license: "c0",
@@ -39,6 +41,7 @@ describe("W3C — Defaults", () => {
       "no-headingless-sections": false,
       "privsec-section": false,
       "no-http-props": false,
+      "check-punctuation": false,
       "fake-linter-rule": "foo",
     });
     expect(rsConf.license).toEqual("c0");
