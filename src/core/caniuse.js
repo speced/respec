@@ -1,9 +1,8 @@
-/*
-Module: "core/caniuse"
-Adds a caniuse support table for a "feature" #1238
-https://github.com/w3c/respec/wiki/caniuse
-*/
-
+/**
+ * Module: "core/caniuse"
+ * Adds a caniuse support table for a "feature" #1238
+ * Usage options: https://github.com/w3c/respec/wiki/caniuse
+ */
 import { semverCompare } from "core/utils";
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
@@ -15,8 +14,8 @@ export const name = "core/caniuse";
 const GH_USER_CONTENT_URL =
   "https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/";
 
+// browser name dictionary
 const BROWSERS = new Map([
-  // browser name dictionary
   ["chrome", "Chrome"],
   ["firefox", "Firefox"],
   ["ie", "IE"],
@@ -49,6 +48,7 @@ export async function run(conf) {
   if (!caniuse.feature) {
     return; // no feature to show
   }
+  const { feature } = caniuse;
   const link = createResourceHint({
     hint: "preconnect",
     href: "https://raw.githubusercontent.com",
@@ -64,18 +64,18 @@ export async function run(conf) {
       content = createTableHTML(caniuse, stats);
     } catch (err) {
       console.error(err);
-      const msg = `Couldn't find feature "${
-        caniuse.feature
-      }" on caniuse.com? Please check the feature key on [caniuse.com](https://caniuse.com)`;
+      const msg =
+        `Couldn't find feature "${feature}" on caniuse.com? ` +
+        "Please check the feature key on [caniuse.com](https://caniuse.com)";
       pub("error", msg);
-      content = hyperHTML`<a href="${"https://caniuse.com/#feat=" +
-        caniuse.feature}">caniuse.com</a>`;
+      const featureURL = "https://caniuse.com/#feat=" + feature;
+      content = hyperHTML`<a href="${featureURL}">caniuse.com</a>`;
     }
     resolve(content);
   });
   const definitionPair = hyperHTML.bind(document.createDocumentFragment())`
     <dt class="caniuse-title"
-      id="${`caniuse-${caniuse.feature}`}">Can I Use this API?</dt>
+      id="${`caniuse-${feature}`}">Can I Use this API?</dt>
     <dd class="caniuse-stats">${{
       any: contentPromise,
       placeholder: "Fetching data from caniuse.com...",
@@ -86,6 +86,7 @@ export async function run(conf) {
 
 /**
  * Normalizes `conf.caniuse` object to hold normalized configuration
+ *
  * @param {Object} conf   configuration settings
  */
 function normalizeConf(conf) {
@@ -112,14 +113,16 @@ function normalizeConf(conf) {
     }
     pub(
       "warn",
-      `Ignoring invalid browser "\`${browser}\`" in [\`respecConfig.caniuse.browsers\`](https://github.com/w3c/respec/wiki/caniuse)`
+      `Ignoring invalid browser "\`${browser}\`" in ` +
+        "[`respecConfig.caniuse.browsers`](https://github.com/w3c/respec/wiki/caniuse)"
     );
     return false;
   }
 }
 
 /**
- * get stats for canIUse table
+ * Get stats for canIUse table.
+ *
  * @param {Object} caniuseConf    normalized respecConfig.caniuse
  * @return {Object} Can I Use stats
  * @throws {Error} on failure
@@ -136,7 +139,8 @@ async function fetchAndCacheJson(caniuseConf) {
 }
 
 /**
- * get HTML element for the canIUse support table
+ * Get HTML element for the canIUse support table.
+ *
  * @param  {Object} stats     CanIUse API results
  * @param  {Object} conf      respecConfig.caniuse
  */
@@ -151,7 +155,8 @@ function createTableHTML(conf, stats) {
     </a>`;
 
   /**
-   * add a browser and it's support to table
+   * Add a browser and it's support to table.
+   *
    * @param {String} browser      name of browser (as in CanIUse API response)
    * @param {Number} numVersions  number of old browser versions to show
    * @param {Object} browserData  stats data from api response
