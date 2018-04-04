@@ -127,7 +127,7 @@ export async function run(conf) {
     branch,
     repoURL: ghURL.href,
   };
-  const normalizedConfig = { ...newProps, ...conf, normalizedGHObj };
+  const normalizedConfig = { ...newProps, ...conf, github: normalizedGHObj };
   Object.assign(conf, normalizedConfig);
   conf.otherLinks.unshift(otherLink);
 }
