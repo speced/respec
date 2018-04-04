@@ -129,7 +129,7 @@ async function fetchAndCacheJson(caniuseConf) {
     ? apiURL.replace("{FEATURE}", feature)
     : `${GH_USER_CONTENT_URL}${feature}.json`;
   const request = new Request(url);
-  const response = await fetchAndCache(request, { maxAge });
+  const response = await fetchAndCache(request, maxAge);
   const { stats } = await response.json();
   return stats;
 }
