@@ -64,11 +64,12 @@ export async function run(conf) {
       content = createTableHTML(caniuse, stats);
     } catch (err) {
       console.error(err);
-      const msg = `Couldn't find feature "${caniuse.feature}" on caniuse.com? Please check the feature key on [caniuse.com](https://caniuse.com)`;
+      const msg = `Couldn't find feature "${
+        caniuse.feature
+      }" on caniuse.com? Please check the feature key on [caniuse.com](https://caniuse.com)`;
       pub("error", msg);
-      content = hyperHTML`<a href="${
-        "https://caniuse.com/#feat=" + caniuse.feature
-      }">caniuse.com</a>`;
+      content = hyperHTML`<a href="${"https://caniuse.com/#feat=" +
+        caniuse.feature}">caniuse.com</a>`;
     }
     resolve(content);
   });
@@ -89,7 +90,7 @@ export async function run(conf) {
  */
 function normalizeConf(conf) {
   const DEFAULTS = {
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours (in ms)
+    maxAge: 60 * 60 * 24 * 1000, // 24 hours (in ms)
     browsers: ["chrome", "firefox", "safari", "edge"],
     versions: 4,
   };
@@ -121,7 +122,7 @@ function normalizeConf(conf) {
  * get stats for canIUse table
  * @param {Object} caniuseConf    normalized respecConfig.caniuse
  * @return {Object} Can I Use stats
- * @throws {NetworkError} on failure
+ * @throws {Error} on failure
  */
 async function fetchAndCacheJson(caniuseConf) {
   const { apiURL, feature, maxAge } = caniuseConf;
@@ -144,8 +145,7 @@ function createTableHTML(conf, stats) {
   return hyperHTML`
     ${conf.browsers
       .map(browser => addBrowser(browser, conf.versions, stats[browser]))
-      .filter(elem => elem)
-    }
+      .filter(elem => elem)}
     <a href="${`https://caniuse.com/#feat=${conf.feature}`}"
       title="Get details at caniuse.com">More info
     </a>`;
