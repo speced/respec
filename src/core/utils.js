@@ -451,7 +451,7 @@ export function runTransforms(content, flist) {
 class NetworkError extends Error {
   constructor(message, response) {
     super(message);
-    Object.defineProperty(this, "response", { get() { return response; } });
+    Object.defineProperty(this, "response", { value: response });
   }
 }
 
