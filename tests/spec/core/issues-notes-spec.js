@@ -216,9 +216,9 @@ describe("Core — Issues and Notes", function() {
     const summarySection = doc.getElementById("issue-summary");
 
     expect(summarySection).toBeTruthy();
-    const { innerText } = summarySection.querySelector("[href='#issue-1540']");
+    const { textContent } = summarySection.querySelector("[href='#issue-1540']");
 
-    expect(innerText).toBe("Issue 1540");
+    expect(textContent).toBe("Issue 1540");
     const issueDiv404 = doc.getElementById("this-is-404");
 
     expect(issueDiv404).toBeTruthy();
