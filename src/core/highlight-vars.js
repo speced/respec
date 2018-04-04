@@ -52,6 +52,27 @@ function getHighlightColor(target) {
   return [...HL_COLORS.keys()].find(c => HL_COLORS.get(c) === true) || "yellow";
 }
 
+function highlightVars(target) {
+  const textContent = target.textContent.trim();
+  const parent = target.closest("section");
+  const highlightColor = getHighlightColor(target);
+
+  const varsToHighlight = [...parent.querySelectorAll("var")]
+    .filter(el => el.textContent.trim() === textContent);
+
+  // update availability of highlight color
+  const colorStatus = varsToHighlight[0].classList.contains("respec-active");
+  HL_COLORS.set(highlightColor, colorStatus);
+
+  // highlight vars
+  const [background, color] = highlightColor.split(",");
+  if (colorStatus) {
+    varsToHighlight.forEach(removeHighlight);
+  } else {
+    varsToHighlight.forEach(el => addHighlight(el, background, color));
+  }
+}
+
 function removeHighlight(el) {
   // done so that only the respec classes are removed
   el.classList.remove("respec-active");
@@ -62,26 +83,10 @@ function removeHighlight(el) {
   if (!el.getAttribute("class")) el.removeAttribute("class");
 }
 
-function highlightVars(target) {
-  const textContent = target.textContent.trim();
-  const parent = target.closest("section");
-  const highlightColor = getHighlightColor(target);
-  [...parent.querySelectorAll("var")]
-    .filter(el => el.textContent.trim() === textContent)
-    .forEach(highlightVar);
-}
-
-function highlightVar(elem) {
-  if (elem.classList.contains("respec-active")) {
-    HL_COLORS.set(highlightColor, true);
-    removeHighlight(elem);
-  } else {
-    const [background, color] = highlightColor.split(",");
-    HL_COLORS.set(highlightColor, false);
-    elem.classList.add("respec-active");
-    elem.style.setProperty("--respec-background-color", background);
-    if (color) elem.style.setProperty("--respec-color", color);
-  }
+function addHighlight(elem, background, color) {
+  elem.classList.add("respec-active");
+  elem.style.setProperty("--respec-background-color", background);
+  if (color) elem.style.setProperty("--respec-color", color);
 }
 
 function initHighlight({ target }) {
