@@ -12,7 +12,11 @@
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { pub } from "core/pubsubhub";
 import css from "deps/text!core/css/issues-notes.css";
+import "deps/hyperhtml";
+import { fetchAndCache } from "core/utils";
 export const name = "core/issues-notes";
+
+const MAX_GITHUB_REQUESTS = 60;
 
 function handleIssues($ins, ghIssues, conf) {
   const { issueBase, githubAPI } = conf;
@@ -119,7 +123,31 @@ function handleIssues($ins, ghIssues, conf) {
         }
       }
       $tit.find("span").text(text);
-      if (report.title) {
+      if (ghIssue && report.title && githubAPI) {
+        const labelsGroup = Array.from(ghIssue.labels)
+          .map(label => {
+            const issuesURL = new URL("issues/", conf.github + "/");
+            issuesURL.searchParams.set(
+              "q",
+              `is:issue is:open label:"${label.name}"`
+            );
+            return {
+              ...label,
+              href: issuesURL.href,
+            };
+          })
+          .map(createLabel)
+          .reduce((frag, labelElem) => {
+            frag.appendChild(labelElem);
+            return frag;
+          }, document.createDocumentFragment());
+        $tit.append(
+          $(
+            "<span style='text-transform: none'>: " + report.title + "</span>"
+          ).append(labelsGroup)
+        );
+        $inno.removeAttr("title");
+      } else if (report.title) {
         $tit.append(
           $("<span style='text-transform: none'>: " + report.title + "</span>")
         );
@@ -147,59 +175,79 @@ function handleIssues($ins, ghIssues, conf) {
   }
 }
 
-async function fetchIssuesFromGithub({ githubAPI }) {
-  const issues = [];
-  const issueNumbers = [...document.querySelectorAll(".issue[data-number]")]
-    .map(elem => Number.parseInt(elem.dataset.number, 10))
-    .filter(number => number);
-  for (const issueNumber of issueNumbers) {
-    let issue; // depends on how fetching goes...
-    try {
-      const issueURL = `${githubAPI}/issues/${issueNumber}`;
-      const response = await fetch(issueURL, {
-        // Get back HTML content instead of markdown
-        // See: https://developer.github.com/v3/media/
-        Accept: "application/vnd.github.v3.html+json",
-      });
-      if (!response.ok) {
-        switch (response.status) {
-          case 404:
-            throw new Error(
-              "Couldn't find issue on Github. Check if it exist?"
-            );
-          default:
-            throw new Error(
-              "Network error. Github is down? or too many requests?"
-            );
-        }
-      }
-      issue = await response.json(); // can throw too
-    } catch (err) {
-      console.error(err);
-      const msg = `Error fetching issue #${issueNumber} from GitHub. ${
-        err.message
-      }. See developer console.`;
-      pub("error", msg);
-      issue = { title: "", number: issueNumber, state: "" };
-    }
-    issues.push([issueNumber, issue]);
+async function fetchAndStoreGithubIssues(githubAPI) {
+  const specIssues = document.querySelectorAll(".issue[data-number]");
+  if (specIssues.length > MAX_GITHUB_REQUESTS) {
+    const msg =
+      `Your spec contains ${specIssues.length} Github issues, ` +
+      `but GitHub only allows ${MAX_GITHUB_REQUESTS} requests. Some issues might not show up.`;
+    pub("warning", msg);
   }
-  return issues;
+  const issuePromises = [...specIssues]
+    .map(elem => Number.parseInt(elem.dataset.number, 10))
+    .filter(issueNumber => issueNumber)
+    .map(async issueNumber => {
+      const issueURL = `${githubAPI}/issues/${issueNumber}`;
+      const request = new Request(issueURL, {
+        headers: {
+          // Get back HTML content instead of markdown
+          // See: https://developer.github.com/v3/media/
+          Accept: "application/vnd.github.v3.html+json",
+        },
+      });
+      const response = await fetchAndCache(request);
+      return processResponse(response, issueNumber);
+    });
+  const issues = await Promise.all(issuePromises);
+  return new Map(issues);
+}
+
+function isLight(rgb) {
+  const red = (rgb >> 16) & 0xff;
+  const green = (rgb >> 8) & 0xff;
+  const blue = (rgb >> 0) & 0xff;
+  const illumination = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+  return illumination > 140;
+}
+
+function createLabel(label) {
+  const { color, href, name } = label;
+  const rgb = parseInt(color, 16);
+  const textColorClass = isNaN(rgb) || isLight(rgb) ? "dark" : "light";
+  const cssClasses = `respec-gh-label respec-label-${textColorClass}`;
+  const style = `background-color: #${color}`;
+  return hyperHTML`<a
+    class="${cssClasses}"
+    style="${style}"
+    href="${href}">${name}</a>`;
+}
+
+async function processResponse(response, issueNumber) {
+  // "message" is always error message from GitHub
+  const issue = { title: "", number: issueNumber, state: "", message: "" };
+  try {
+    const json = await response.json();
+    Object.assign(issue, json);
+  } catch (err) {
+    issue.message = `Error JSON parsing issue #${issueNumber} from GitHub.`;
+  }
+  if (!response.ok || issue.message) {
+    const msg = `Error fetching issue #${issueNumber} from GitHub. ${
+      issue.message
+    } (HTTP Status ${response.status}).`;
+    pub("error", msg);
+  }
+  return [issueNumber, issue];
 }
 
 export async function run(conf) {
   const $ins = $(".issue, .note, .warning, .ednote");
-  const ghIssues = new Map();
   if (!$ins.length) {
     return; // nothing to do.
   }
-  if (conf.githubAPI && document.querySelector(".issue[data-number]")) {
-    const issues = await fetchIssuesFromGithub(conf);
-    issues.reduce(
-      (ghIssues, [number, issue]) => ghIssues.set(number, issue),
-      ghIssues
-    );
-  }
+  const ghIssues = conf.githubAPI
+    ? await fetchAndStoreGithubIssues(conf.githubAPI)
+    : new Map();
   const { head: headElem } = document;
   headElem.insertBefore(
     hyperHTML`<style>${[css]}</style>`,
