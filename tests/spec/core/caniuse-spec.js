@@ -1,5 +1,5 @@
 "use strict";
-describe("Core — Can I Use", function () {
+describe("Core — Can I Use", function() {
   afterAll(flushIframes);
   const apiURL = `${window.location.origin}/tests/data/caniuse/{FEATURE}.json`;
 
@@ -10,7 +10,7 @@ describe("Core — Can I Use", function () {
     const { caniuse } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
-    expect(caniuse.maxAge).toBe(24 * 60 * 60 * 1000);
+    expect(caniuse.maxAge).toBe(60 * 60 * 24 * 1000);
     expect(caniuse.versions).toBe(4);
     expect(caniuse.browsers).toEqual(["chrome", "firefox", "safari", "edge"]);
   });
@@ -35,7 +35,7 @@ describe("Core — Can I Use", function () {
     expect(caniuse.versions).toBe(10);
   });
 
-  it("does nothing if caniuse is not enabled", async() => {
+  it("does nothing if caniuse is not enabled", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops);
     await doc.respecIsReady;
@@ -64,7 +64,8 @@ describe("Core — Can I Use", function () {
   });
 
   it("shows caniuse.com link on error", async () => {
-    const ops = makeStandardOps({ caniuse: {
+    const ops = makeStandardOps({
+      caniuse: {
         feature: "FEATURE",
         apiURL: "DOES-NOT-EXIST",
       },
