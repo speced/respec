@@ -17,6 +17,7 @@ describe("Core - Figures", function() {
     const doc = await makeRSDoc(ops);
     const figs = doc.getElementById("figs");
     const captions = figs.querySelectorAll("figure figcaption");
+
     expect(figs.querySelectorAll("figure").length).toEqual(2);
     expect(captions.length).toEqual(2);
     expect(captions.item(0).textContent).toEqual("Figure 1 PREFIG");
@@ -27,13 +28,13 @@ describe("Core - Figures", function() {
     const ops = {
       config: makeBasicConfig(),
       body:
-      makeDefaultBody() +
-      `<figure id='fig'> <img src='img' alt=''>
+        makeDefaultBody() +
+        `<figure id='fig'> <img src='img' alt=''>
         <figcaption>test figure caption</figcaption>
        </figure>
        <a id='anchor-fig-title-empty' title='' href='#fig'></a>
        <a id='anchor-fig-title-set' title='pass' href='#fig'></a>
-       <a id='anchor-fig' href='#fig'></a>`
+       <a id='anchor-fig' href='#fig'></a>`,
     };
     const doc = await makeRSDoc(ops);
     const anchorFig = doc.getElementById("anchor-fig");
@@ -57,14 +58,15 @@ describe("Core - Figures", function() {
         lang: "ja",
       },
       body:
-      makeDefaultBody() +
-      `<figure id='fig'> <img src='img' alt=''>
+        makeDefaultBody() +
+        `<figure id='fig'> <img src='img' alt=''>
         <figcaption>漢字と仮名のサイズの示し方</figcaption>
        </figure>
-       <a id='anchor-fig' href='#fig'></a>`
+       <a id='anchor-fig' href='#fig'></a>`,
     };
     const doc = await makeRSDoc(ops);
     const anchorFig = doc.getElementById("anchor-fig");
+
     expect(anchorFig.innerText).toEqual("図1");
     expect(anchorFig.title).toEqual("漢字と仮名のサイズの示し方");
   });
@@ -75,6 +77,7 @@ describe("Core - Figures", function() {
     const tofHeader = tof.querySelector("h3");
     const tofItems = tof.querySelectorAll("ul li");
     const figLinks = tof.querySelectorAll("ul li a");
+
     expect(tofHeader).toBeTruthy();
     expect(tofHeader.textContent).toEqual("Table of Figures");
     expect(tofItems.length).toEqual(2);

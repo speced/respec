@@ -8,7 +8,7 @@
     "amd": true,
     "worker": true
   },
-  "extends": "eslint:recommended",
+  "extends": ["eslint:recommended", "plugin:jasmine/recommended"],
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 8,
@@ -21,7 +21,7 @@
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
-    "no-console": 0
+    "no-console": 1
   },
   "globals": {
     "flushIframes": true,

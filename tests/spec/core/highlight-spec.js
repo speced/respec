@@ -17,6 +17,7 @@ describe("Core — Highlight", () => {
     };
     const doc = await makeRSDoc(ops);
     var pre = doc.querySelector("pre");
+
     expect(pre.classList.contains("hljs")).toBeFalsy();
     expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
   });
@@ -36,6 +37,7 @@ describe("Core — Highlight", () => {
     };
     const doc = await makeRSDoc(ops);
     var pre = doc.querySelector("div.example pre");
+
     expect(pre.classList.contains("hljs")).toBeTruthy();
     expect(pre.querySelectorAll("span[class^=hljs-]").length).toBeGreaterThan(
       0
@@ -57,6 +59,7 @@ describe("Core — Highlight", () => {
     };
     const doc = await makeRSDoc(ops);
     var pre = doc.querySelector("div.example pre");
+
     expect(pre.classList.contains("nohighlight")).toBeTruthy();
     expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
   });
@@ -76,6 +79,7 @@ describe("Core — Highlight", () => {
     };
     const doc = await makeRSDoc(ops);
     var pre = doc.querySelector("#test");
+
     expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
   });
 });

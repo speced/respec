@@ -10,6 +10,7 @@ describe("Core — l10n", () => {
       body,
     };
     const doc = await makeRSDoc(ops);
+
     expect(doc.documentElement.lang).toEqual("en");
     expect(doc.documentElement.dir).toEqual("ltr");
   });
@@ -23,6 +24,7 @@ describe("Core — l10n", () => {
       body,
     };
     const doc = await makeRSDoc(ops);
+
     expect(doc.documentElement.lang).toEqual("en");
     expect(doc.documentElement.dir).toEqual("rtl");
   });
@@ -36,6 +38,7 @@ describe("Core — l10n", () => {
       body,
     };
     const doc = await makeRSDoc(ops);
+
     expect(doc.documentElement.lang).toEqual("fr");
     expect(doc.documentElement.dir).toEqual("");
   });

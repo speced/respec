@@ -2,7 +2,7 @@
 describe("Core — data-cite attribute", () => {
   afterAll(flushIframes);
 
-  it(`walks up the tree to find the right reference to cite`, async () => {
+  it("walks up the tree to find the right reference to cite", async () => {
     const ops = {
       config: makeBasicConfig(),
       body:
@@ -36,18 +36,21 @@ describe("Core — data-cite attribute", () => {
     const t4 = doc.getElementById("t4");
     const t5 = doc.getElementById("t5");
     const location = new URL("#test", "http://berjon.com/").href;
+
     expect(t1.href).toEqual(location);
     expect(t2.href).toEqual(location);
     const urlSpecHref = new URL("#urlspec", "https://url.spec.whatwg.org/")
       .href;
+
     expect(t3.href).toEqual(urlSpecHref);
     expect(t4.href).toEqual(urlSpecHref);
     const fooBarHref = new URL("#test5", "https://console.spec.whatwg.org/")
       .href;
+
     expect(t5.href).toEqual(fooBarHref);
   });
 
-  it(`treats data-cite="#foo" as self citing when there is no parent data-cite`, async () => {
+  it('treats data-cite="#foo" as self citing when there is no parent data-cite', async () => {
     const ops = {
       config: makeBasicConfig(),
       body:
@@ -67,6 +70,7 @@ describe("Core — data-cite attribute", () => {
     const t1 = doc.getElementById("t1");
     const t2 = doc.getElementById("t2").querySelector("a");
     const location = new URL("#test", doc.location).href;
+
     expect(t1.href).toEqual(location);
     expect(t2.href).toEqual(location);
   });
@@ -86,9 +90,11 @@ describe("Core — data-cite attribute", () => {
       `,
     };
     const doc = await makeRSDoc(ops);
+
     expect(doc.querySelector("#bib-URL").closest("section").id).toEqual(
       "normative-references"
     );
+
     expect(doc.querySelector("#bib-FETCH").closest("section").id).toEqual(
       "informative-references"
     );
@@ -108,6 +114,7 @@ describe("Core — data-cite attribute", () => {
     };
     const doc = await makeRSDoc(ops);
     const a = doc.querySelector("#t1 > a");
+
     expect(a.textContent).toEqual("inline link");
     expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/#test");
     expect(a.hasAttribute("data-cite")).toEqual(false);
@@ -116,8 +123,10 @@ describe("Core — data-cite attribute", () => {
     );
     // Definition part
     const dfn = doc.querySelector("#t2 > dfn");
+
     expect(dfn).toBeTruthy();
     const dfnA = doc.querySelector("#t2 > dfn > a");
+
     expect(dfnA.textContent).toEqual("inline link");
     expect(dfnA.href).toEqual("https://html.spec.whatwg.org/multipage/#test");
     expect(dfnA.hasAttribute("data-cite")).toEqual(false);
@@ -139,6 +148,7 @@ describe("Core — data-cite attribute", () => {
     };
     const doc = await makeRSDoc(ops);
     const a = doc.querySelector("#t1 > a");
+
     expect(a.textContent).toEqual("inline link");
     expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/");
     expect(a.hasAttribute("data-cite")).toEqual(false);
@@ -160,6 +170,7 @@ describe("Core — data-cite attribute", () => {
     };
     const doc = await makeRSDoc(ops);
     const a = doc.querySelector("#t1 > a");
+
     expect(a.textContent).toEqual("inline link");
     expect(a.href).toEqual("https://dom.spec.whatwg.org/");
     expect(a.hasAttribute("data-cite")).toEqual(false);
@@ -183,6 +194,7 @@ describe("Core — data-cite attribute", () => {
     const doc = await makeRSDoc(ops);
     const a1 = doc.querySelector("#t1 > a");
     const a2 = doc.querySelector("#t2 > a");
+
     expect(a1.textContent).toEqual("link 1");
     expect(a2.textContent).toEqual("link 2");
     expect(a1.href).toEqual("");
@@ -192,6 +204,7 @@ describe("Core — data-cite attribute", () => {
     expect(
       doc.querySelector("#bib-no-exist-inf").closest("section").id
     ).toEqual("informative-references");
+
     expect(
       doc.querySelector("#bib-no-exist-norm").closest("section").id
     ).toEqual("normative-references");
@@ -211,13 +224,17 @@ describe("Core — data-cite attribute", () => {
     };
     const doc = await makeRSDoc(ops);
     const a = doc.querySelector("#t1 > a");
+
     expect(a.textContent).toEqual("inline link");
-    expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/webappapis.html#test");
+    expect(a.href).toEqual(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#test"
+    );
     expect(a.hasAttribute("data-cite")).toEqual(false);
     expect(doc.querySelector("#bib-WHATWG-HTML").closest("section").id).toEqual(
       "normative-references"
     );
   });
+
   describe("data-cite-frag", () => {
     it("adds the path and the fragment identifier to the link", async () => {
       const ops = {
@@ -235,8 +252,11 @@ describe("Core — data-cite attribute", () => {
       };
       const doc = await makeRSDoc(ops);
       const a = doc.querySelector("#t1 > a");
+
       expect(a.textContent).toEqual("inline link");
-      expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/webappapis.html#pass");
+      expect(a.href).toEqual(
+        "https://html.spec.whatwg.org/multipage/webappapis.html#pass"
+      );
       expect(a.hasAttribute("data-cite")).toEqual(false);
       expect(
         doc.querySelector("#bib-WHATWG-HTML").closest("section").id
@@ -259,6 +279,7 @@ describe("Core — data-cite attribute", () => {
       const doc = await makeRSDoc(ops);
 
       const a = doc.querySelector("#t1 > a");
+
       expect(a.textContent).toEqual("inline link");
       expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/#pass");
       expect(a.hasAttribute("data-cite")).toEqual(false);

@@ -5,6 +5,7 @@ describe("respecIsReady promise", () => {
   it("resolve with the resulting respecConfig", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops);
+
     expect(doc.hasOwnProperty("respecIsReady")).toBe(true);
     expect(doc.respecIsReady instanceof doc.defaultView.Promise).toBe(true);
     const conf = await doc.respecIsReady;
@@ -12,6 +13,7 @@ describe("respecIsReady promise", () => {
     // so not worth checking for equality.
     delete ops.config.previousPublishDate;
     delete ops.config.perEnd;
+
     expect(conf).toEqual(jasmine.objectContaining(ops.config));
   });
 });

@@ -1,6 +1,7 @@
 "use strict";
 describe("Core — Informative", function() {
   afterAll(flushIframes);
+
   it("should process informative sections", function(done) {
     var ops = {
       config: makeBasicConfig(),
@@ -10,6 +11,7 @@ describe("Core — Informative", function() {
     };
     makeRSDoc(ops, function(doc) {
       var $sec = $("div.informative, section.informative", doc);
+
       expect($sec.find("p").length).toEqual(1);
       expect($sec.find("p em").length).toEqual(1);
       expect($sec.find("p em").text()).toEqual(

@@ -1,6 +1,7 @@
 "use strict";
 describe("W3C — Defaults", () => {
   afterAll(flushIframes);
+
   it("sets sensible defaults for w3c specs", async () => {
     const ops = {
       config: { editors: [{ name: "foo" }] },
@@ -8,12 +9,14 @@ describe("W3C — Defaults", () => {
     };
     const doc = await makeRSDoc(ops);
     const rsConf = doc.defaultView.respecConfig;
+
     expect(rsConf.lint).toEqual({
       "no-headingless-sections": true,
       "privsec-section": true,
       "no-http-props": true,
       "check-punctuation": false,
     });
+
     expect(rsConf.license).toEqual("w3c-software-doc");
     expect(rsConf.specStatus).toEqual("base");
   });
@@ -37,6 +40,7 @@ describe("W3C — Defaults", () => {
     };
     const doc = await makeRSDoc(ops);
     const rsConf = doc.defaultView.respecConfig;
+
     expect(rsConf.lint).toEqual({
       "no-headingless-sections": false,
       "privsec-section": false,
@@ -44,6 +48,7 @@ describe("W3C — Defaults", () => {
       "check-punctuation": false,
       "fake-linter-rule": "foo",
     });
+
     expect(rsConf.license).toEqual("c0");
     expect(rsConf.specStatus).toEqual("unofficial");
   });

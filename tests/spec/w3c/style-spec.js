@@ -94,6 +94,7 @@ describe("W3C - Style", function() {
     var theTest = function(doc) {
       var query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
       var elem = doc.querySelector(query);
+
       expect(elem.src).toEqual("https://www.w3.org/scripts/TR/2016/fixup.js");
     };
     makeRSDoc(ops, theTest, "spec/core/simple.html").then(done);
@@ -103,8 +104,10 @@ describe("W3C - Style", function() {
     var ops = makeStandardOps();
     var theTest = function(doc) {
       var elem = doc.head.querySelector("meta[name=viewport]");
+
       expect(elem).toBeTruthy();
       var expectedStr = "width=device-width, initial-scale=1, shrink-to-fit=no";
+
       expect(elem.content).toEqual(expectedStr);
     };
     makeRSDoc(ops, theTest, "spec/core/simple.html").then(done);
@@ -143,6 +146,7 @@ describe("W3C - Style", function() {
     });
     Promise.all(promises).then(done);
   });
+
   it("shouldn't include fixup.js when noToc is set", done => {
     var ops = makeStandardOps();
     var newProps = {
@@ -152,6 +156,7 @@ describe("W3C - Style", function() {
     var theTest = function(doc) {
       var query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
       var elem = doc.querySelector(query);
+
       expect(elem).toBe(null);
     };
     makeRSDoc(ops, theTest, "spec/core/simple.html").then(done);

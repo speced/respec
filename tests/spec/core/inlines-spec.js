@@ -1,6 +1,7 @@
 "use strict";
 describe("Core - Inlines", function() {
   afterAll(flushIframes);
+
   it("processes all in-line content", async () => {
     const ops = {
       config: makeBasicConfig(),
@@ -26,15 +27,19 @@ describe("Core - Inlines", function() {
     var $inl = $("#inlines", doc);
     var $nr = $("#normative-references", doc);
     var $ir = $("#informative-references", doc);
+
     expect($inl.find("abbr[title='ABBR-TIT']:contains('ABBR')").length).toEqual(
       2
     );
+
     expect($inl.find("cite a:contains('DAHU')").attr("href")).toEqual(
       "#bib-DAHU"
     );
+
     expect($inl.find("cite a:contains('REX')").attr("href")).toEqual(
       "#bib-REX"
     );
+
     expect($nr.find("dl dt").length).toEqual(1);
     expect($nr.find("dl dt:contains('[DAHU]')").length).toEqual(1);
     expect($ir.find("dl dt").length).toEqual(1);
