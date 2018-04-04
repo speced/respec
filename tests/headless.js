@@ -1,12 +1,9 @@
 #!/usr/bin/env node
 "use strict";
 const testURLs = [
-  "https://w3c.github.io/html-media-capture/",
   "https://w3c.github.io/manifest/",
   "https://w3c.github.io/payment-request/",
   "https://w3c.github.io/resource-hints/",
-  "https://w3c.github.io/wpub/",
-  "https://wicg.github.io/web-share-target/",
   `file:///${__dirname}/../examples/basic.built.html`,
   `file:///${__dirname}/../examples/basic.html`,
 ];
