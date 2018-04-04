@@ -114,6 +114,7 @@ describe("Core - Utils", () => {
 
       expect(link instanceof HTMLLinkElement).toEqual(true);
     });
+
     it("throws given invalid opts", () => {
       expect(() => {
         utils.createResourceHint();
@@ -134,6 +135,7 @@ describe("Core - Utils", () => {
         });
       }).not.toThrow();
     });
+
     it("throws given an unknown hint", () => {
       expect(() => {
         utils.createResourceHint({ hint: null });
@@ -147,6 +149,7 @@ describe("Core - Utils", () => {
         utils.createResourceHint({ hint: "preconnect" });
       }).not.toThrow();
     });
+
     it("throws given an invalid URL", () => {
       expect(() => {
         utils.createResourceHint({
@@ -162,6 +165,7 @@ describe("Core - Utils", () => {
         });
       }).not.toThrow();
     });
+
     it("normalizes a URL intended for dns-prefetch to an origin", () => {
       var link = utils.createResourceHint({
         hint: "dns-prefetch",
@@ -488,7 +492,7 @@ describe("Core - Utils", () => {
 
   describe("xmlEscape", () => {
     it("escapes properly", () => {
-      expect(utils.xmlEscape('&<>"')).toEqual("&amp;&lt;&gt;&quot;");
+      expect(utils.xmlEscape("&<>\"")).toEqual("&amp;&lt;&gt;&quot;");
     });
   });
 
@@ -511,8 +515,8 @@ describe("Core - Utils", () => {
         shortName: "Foo",
       };
       var expected =
-        'editors=[{"name":"Person Name"}], specStatus="ED", ' +
-        'edDraftURI="http://foo.com", shortName="Foo"';
+        "editors=[{\"name\":\"Person Name\"}], specStatus=\"ED\", " +
+        "edDraftURI=\"http://foo.com\", shortName=\"Foo\"";
 
       expect(utils.toKeyValuePairs(obj)).toEqual(expected);
     });
@@ -530,8 +534,8 @@ describe("Core - Utils", () => {
       shortName: "Foo",
     };
     var expected =
-      'editors=[{"name":"Person Name"}]|||specStatus="ED"|||' +
-      'edDraftURI="http://foo.com"|||shortName="Foo"';
+      "editors=[{\"name\":\"Person Name\"}]|||specStatus=\"ED\"|||" +
+      "edDraftURI=\"http://foo.com\"|||shortName=\"Foo\"";
 
     expect(utils.toKeyValuePairs(obj, "|||")).toEqual(expected);
   });
@@ -548,14 +552,14 @@ describe("Core - Utils", () => {
       shortName: "Foo",
     };
     var expected =
-      'editors;[{"name":"Person Name"}], specStatus;"ED", ' +
-      'edDraftURI;"http://foo.com", shortName;"Foo"';
+      "editors;[{\"name\":\"Person Name\"}], specStatus;\"ED\", " +
+      "edDraftURI;\"http://foo.com\", shortName;\"Foo\"";
 
     expect(utils.toKeyValuePairs(obj, undefined, ";")).toEqual(expected);
 
     expected =
-      'editors^[{"name":"Person Name"}] % specStatus^"ED" % ' +
-      'edDraftURI^"http://foo.com" % shortName^"Foo"';
+      "editors^[{\"name\":\"Person Name\"}] % specStatus^\"ED\" % " +
+      "edDraftURI^\"http://foo.com\" % shortName^\"Foo\"";
 
     expect(utils.toKeyValuePairs(obj, " % ", "^")).toEqual(expected);
   });

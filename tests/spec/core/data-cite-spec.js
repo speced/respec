@@ -50,7 +50,7 @@ describe("Core — data-cite attribute", () => {
     expect(t5.href).toEqual(fooBarHref);
   });
 
-  it('treats data-cite="#foo" as self citing when there is no parent data-cite', async () => {
+  it("treats data-cite=\"#foo\" as self citing when there is no parent data-cite", async () => {
     const ops = {
       config: makeBasicConfig(),
       body:
@@ -229,6 +229,7 @@ describe("Core — data-cite attribute", () => {
     expect(a.href).toEqual(
       "https://html.spec.whatwg.org/multipage/webappapis.html#test"
     );
+
     expect(a.hasAttribute("data-cite")).toEqual(false);
     expect(doc.querySelector("#bib-WHATWG-HTML").closest("section").id).toEqual(
       "normative-references"
@@ -257,6 +258,7 @@ describe("Core — data-cite attribute", () => {
       expect(a.href).toEqual(
         "https://html.spec.whatwg.org/multipage/webappapis.html#pass"
       );
+
       expect(a.hasAttribute("data-cite")).toEqual(false);
       expect(
         doc.querySelector("#bib-WHATWG-HTML").closest("section").id

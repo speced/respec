@@ -1258,7 +1258,7 @@ describe("W3C — Headers", function() {
     Object.assign(ops.config, newProps);
     const doc = await makeRSDoc(ops);
     const aElem = doc.querySelector(
-      'a[href^="http://www.w3.org/2003/03/Translations/"]'
+      "a[href^=\"http://www.w3.org/2003/03/Translations/\"]"
     );
 
     expect(aElem.href.endsWith("PASS")).toBeTruthy();
@@ -1279,7 +1279,7 @@ describe("W3C — Headers", function() {
     Object.assign(ops.config, newProps);
     const doc = await makeRSDoc(ops);
     const aElem = doc.querySelector(
-      'a[href^="http://www.w3.org/2003/03/Translations/"]'
+      "a[href^=\"http://www.w3.org/2003/03/Translations/\"]"
     );
 
     expect(aElem).toEqual(null);
@@ -1331,7 +1331,7 @@ describe("W3C — Headers", function() {
           url: "http://hyperlink/",
         },
         {
-          src: 'data:image/svg+xml,<svg%20xmlns="http://www.w3.org/2000/svg"/>',
+          src: "data:image/svg+xml,<svg%20xmlns=\"http://www.w3.org/2000/svg\"/>",
           alt: "this is an svg",
           height: 315,
           width: 961,

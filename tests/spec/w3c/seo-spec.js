@@ -115,9 +115,11 @@ describe("W3C - SEO", () => {
     expect(jsonld.isBasedOn).toEqual(
       "https://www.w3.org/TR/2012/REC-some-spec-20120607/"
     );
+
     expect(jsonld.license).toEqual(
       "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
     );
+
     expect(jsonld.name).toEqual("Basic Title");
     expect(jsonld.copyrightHolder).toEqual({
       name: "World Wide Web Consortium",

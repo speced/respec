@@ -29,6 +29,7 @@ describe("Core - Fix headers", () => {
         .first()
         .text()
     ).toMatch(/FIVE/);
+
     expect(
       $s
         .find("h6")

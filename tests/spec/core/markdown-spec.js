@@ -276,15 +276,15 @@ describe("Core - Markdown", function() {
       const doc = await makeRSDoc(ops);
       var text1 = doc.getElementById("test-text1");
 
-      expect(text1.textContent).toEqual('test1 text "inner text".');
-      expect(text1.innerHTML).toEqual('test1 text "<code>inner text</code>".');
+      expect(text1.textContent).toEqual("test1 text \"inner text\".");
+      expect(text1.innerHTML).toEqual("test1 text \"<code>inner text</code>\".");
       var text2 = doc.getElementById("test-text2");
 
       expect(text2.textContent).toEqual("test2 'inner'.");
       expect(text2.innerHTML).toEqual("test2 '<code>inner</code>'.");
       var text3 = doc.getElementById("test-text3");
 
-      expect(text3.innerHTML).toEqual('test3 text "<code>inner text</code>".');
+      expect(text3.innerHTML).toEqual("test3 text \"<code>inner text</code>\".");
     });
   });
 

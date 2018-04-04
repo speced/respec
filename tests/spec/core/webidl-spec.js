@@ -22,7 +22,7 @@ describe("Core - WebIDL", function() {
   it("links standardized IDL types to WebIDL spec", done => {
     const idl = doc.querySelector("#linkToIDLSpec>div>pre");
     // [Constructor(sequence<DOMString> methodData), SecureContext]
-    const sequences = idl.querySelectorAll('a[href$="#idl-sequence"]');
+    const sequences = idl.querySelectorAll("a[href$=\"#idl-sequence\"]");
 
     expect(sequences.length).toEqual(1);
     const sequence = sequences[0];
@@ -41,7 +41,7 @@ describe("Core - WebIDL", function() {
     expect(domString.href.endsWith("#idl-DOMString")).toBe(true);
 
     // Promise&lt;void> returnsPromise(unsigned long long argument);
-    const returnsPromise = idl.querySelector('*[data-title="returnsPromise"]');
+    const returnsPromise = idl.querySelector("*[data-title=\"returnsPromise\"]");
     const [promiseLink, unsignedLongLink] = returnsPromise.querySelectorAll(
       "a"
     );
@@ -107,7 +107,7 @@ describe("Core - WebIDL", function() {
     expect(smokeTest.textContent).toEqual("noParens");
     // corresponding link
     const aElem = section.querySelector(
-      'pre a[href="#dom-parenthesistest-noparens"]'
+      "pre a[href=\"#dom-parenthesistest-noparens\"]"
     );
 
     expect(aElem).toBeTruthy();
@@ -141,6 +141,7 @@ describe("Core - WebIDL", function() {
         .first()
         .text()
     ).toEqual("Window");
+
     expect(
       $target
         .find(".extAttrRhs")
@@ -424,12 +425,14 @@ describe("Core - WebIDL", function() {
     expect(stringifierAnon.querySelector(".idlMethType").textContent).toBe(
       "StringPass"
     );
+
     expect(stringifierAnon.querySelector(".idlMethName").textContent).toBe("");
 
     expect(stringifierNamed).toBeTruthy();
     expect(stringifierNamed.querySelector(".idlMethType").textContent).toBe(
       "StringNamedPass"
     );
+
     expect(stringifierNamed.querySelector(".idlMethName").textContent).toBe(
       "named"
     );
@@ -443,12 +446,14 @@ describe("Core - WebIDL", function() {
     expect(getterAnon.querySelector(".idlMethType").textContent).toBe(
       "GetterPass"
     );
+
     expect(getterAnon.querySelector(".idlMethName").textContent).toBe("");
 
     expect(getterNamed).toBeTruthy();
     expect(getterNamed.querySelector(".idlMethType").textContent).toBe(
       "GetterNamedPass"
     );
+
     expect(getterNamed.querySelector(".idlMethName").textContent).toBe("named");
   });
 
@@ -460,12 +465,14 @@ describe("Core - WebIDL", function() {
     expect(setterAnon.querySelector(".idlMethType").textContent).toBe(
       "SetterPass"
     );
+
     expect(setterAnon.querySelector(".idlMethName").textContent).toBe("");
 
     expect(setterNamed).toBeTruthy();
     expect(setterNamed.querySelector(".idlMethType").textContent).toBe(
       "SetterNamedPass"
     );
+
     expect(setterNamed.querySelector(".idlMethName").textContent).toBe("named");
   });
 
@@ -580,7 +587,7 @@ describe("Core - WebIDL", function() {
       "    // 8\n" +
       "    byte               cheese = NaN;\n" +
       "    // 9\n" +
-      '    DOMString          blah = "blah blah";\n' +
+      "    DOMString          blah = \"blah blah\";\n" +
       "};";
 
     expect($target.text()).toEqual(text);
@@ -595,7 +602,7 @@ describe("Core - WebIDL", function() {
         .last()
         .find(".idlMemberValue")
         .text()
-    ).toEqual('"blah blah"');
+    ).toEqual("\"blah blah\"");
 
     $target = $("#dict-required-fields", doc);
     text =
@@ -649,14 +656,14 @@ describe("Core - WebIDL", function() {
     var text =
       "enum EnumBasic {\n" +
       "    // 1\n" +
-      '    "one",\n' +
+      "    \"one\",\n" +
       "    // 2\n" +
-      '    "two",\n' +
+      "    \"two\",\n" +
       "    // 3\n" +
-      '    "three",\n' +
+      "    \"three\",\n" +
       "\n" +
       "    // 4\n" +
-      '    "white space"\n' +
+      "    \"white space\"\n" +
       "};";
 
     expect($target.text()).toEqual(text);
@@ -668,7 +675,7 @@ describe("Core - WebIDL", function() {
         .find(".idlEnumItem")
         .first()
         .text()
-    ).toEqual('"one"');
+    ).toEqual("\"one\"");
 
     // Links and IDs.
     expect(
@@ -703,11 +710,11 @@ describe("Core - WebIDL", function() {
 
   it("links empty-string enumeration value", done => {
     const links = doc.querySelector(
-      '#enum-empty-sec a[href="#dom-emptyenum-the-empty-string"]'
+      "#enum-empty-sec a[href=\"#dom-emptyenum-the-empty-string\"]"
     );
     const dfn = doc.querySelector("#dom-emptyenum-the-empty-string");
     const smokeDfn = doc.querySelector(
-      '#enum-empty-sec a[href="#dom-emptyenum-not empty"]'
+      "#enum-empty-sec a[href=\"#dom-emptyenum-not empty\"]"
     );
 
     expect(links).toBeTruthy();
@@ -769,18 +776,21 @@ describe("Core - WebIDL", function() {
         .first()
         .text()
     ).toEqual("any");
+
     expect(
       $prm
         .find(".idlParamName")
         .first()
         .text()
     ).toEqual("a");
+
     expect(
       $prm
         .find(".idlParamType")
         .last()
         .text()
     ).toEqual("any");
+
     expect(
       $prm
         .find(".idlParamName")

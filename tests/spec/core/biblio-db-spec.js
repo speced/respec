@@ -200,7 +200,9 @@ describe("Core - biblioDB", () => {
       var p2 = biblioDB.isAlias(null);
       var p3 = biblioDB.isAlias("");
       await Promise.all([
-        p1.catch(err => expect(err instanceof TypeError).toBe(true)),
+        p1.catch(err =>
+
+        expect(err instanceof TypeError).toBe(true)),
         p2.catch(err => expect(err instanceof TypeError).toBe(true)),
         p3.catch(err => expect(err instanceof TypeError).toBe(true)),
       ]);
@@ -229,7 +231,9 @@ describe("Core - biblioDB", () => {
       var p2 = biblioDB.find(null);
       var p3 = biblioDB.find("");
       await Promise.all([
-        p1.catch(err => expect(err instanceof TypeError).toBe(true)),
+        p1.catch(err =>
+
+        expect(err instanceof TypeError).toBe(true)),
         p2.catch(err => expect(err instanceof TypeError).toBe(true)),
         p3.catch(err => expect(err instanceof TypeError).toBe(true)),
       ]);
@@ -252,7 +256,9 @@ describe("Core - biblioDB", () => {
       var p2 = biblioDB.resolveAlias(null);
       var p3 = biblioDB.resolveAlias("");
       await Promise.all([
-        p1.catch(err => expect(err instanceof TypeError).toBe(true)),
+        p1.catch(err =>
+
+        expect(err instanceof TypeError).toBe(true)),
         p2.catch(err => expect(err instanceof TypeError).toBe(true)),
         p3.catch(err => expect(err instanceof TypeError).toBe(true)),
       ]);
