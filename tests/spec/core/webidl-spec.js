@@ -328,6 +328,42 @@ describe("Core - WebIDL", function() {
     expect($target.find(":contains('dates')").filter("a").length).toEqual(0);
   });
 
+  it("handles stringifiers special operations", () => {
+    const stringifierTestElems = [...doc.querySelectorAll("#stringifiertest .idlMethod")];
+    const [stringifierAnon, stringifierNamed] = stringifierTestElems;
+    expect(stringifierAnon).toBeTruthy();
+    expect(stringifierAnon.querySelector(".idlMethType").textContent).toBe("StringPass");
+    expect(stringifierAnon.querySelector(".idlMethName").textContent).toBe("");
+    
+    expect(stringifierNamed).toBeTruthy();
+    expect(stringifierNamed.querySelector(".idlMethType").textContent).toBe("StringNamedPass");
+    expect(stringifierNamed.querySelector(".idlMethName").textContent).toBe("named");
+  });
+  
+  it("handles getter special operations", () => {
+    const getterTestElems = [...doc.querySelectorAll("#gettertest .idlMethod")];
+    const [getterAnon, getterNamed] = getterTestElems;
+    expect(getterAnon).toBeTruthy();
+    expect(getterAnon.querySelector(".idlMethType").textContent).toBe("GetterPass");
+    expect(getterAnon.querySelector(".idlMethName").textContent).toBe("");
+    
+    expect(getterNamed).toBeTruthy();
+    expect(getterNamed.querySelector(".idlMethType").textContent).toBe("GetterNamedPass");
+    expect(getterNamed.querySelector(".idlMethName").textContent).toBe("named");
+  });
+  
+  it("handles setter special operations", () => {
+    const setterTestElems = [...doc.querySelectorAll("#settertest .idlMethod")];
+    const [setterAnon, setterNamed] = setterTestElems;
+    expect(setterAnon).toBeTruthy();
+    expect(setterAnon.querySelector(".idlMethType").textContent).toBe("SetterPass");
+    expect(setterAnon.querySelector(".idlMethName").textContent).toBe("");
+    
+    expect(setterNamed).toBeTruthy();
+    expect(setterNamed.querySelector(".idlMethType").textContent).toBe("SetterNamedPass");
+    expect(setterNamed.querySelector(".idlMethName").textContent).toBe("named");
+  });
+  
   it("should handle operations", function(done) {
     var $target = $("#meth-basic", doc);
     var text =`interface MethBasic {

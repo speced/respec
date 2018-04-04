@@ -332,6 +332,24 @@
       static
       specials don't necessarily have an indentifier
        -->
+       <pre class="idl" id="stringifiertest">
+        interface StringifierTest {
+          stringifier StringPass ();
+          stringifier StringNamedPass named ();
+        };
+      </pre>
+      <pre class="idl" id="gettertest">
+        interface GetterTest {
+          getter GetterPass ();
+          getter GetterNamedPass named ();
+        };
+      </pre>
+      <pre class="idl" id="settertest">
+        interface SetterTest {
+          setter SetterPass ();
+          setter SetterNamedPass named ();
+        };
+      </pre>
       <pre id='meth-basic' class='idl'>
         interface MethBasic {
           // 1
@@ -601,6 +619,6 @@
       <h2><dfn>toJSON()</dfn> method</h2>
       <p>When <a>toJSON()</a> is called, run [[!WEBIDL]]'s <a data-cite="WEBIDL#default-tojson-operation">default toJSON operation</a>.</p>
       </section>
-    </section> 
+    </section>
   </body>
 </html>

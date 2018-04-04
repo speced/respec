@@ -76,7 +76,14 @@ export function run(conf, doc, cb) {
     id = id.substring(1);
     if (figMap[id]) {
       $a.addClass("fig-ref");
-      if ($a.html() === "") $a.append(figMap[id].clone());
+      if ($a.html() === "") {
+        const $shortFigDescriptor = figMap[id].slice(0, 2).clone();
+        if(!$a[0].hasAttribute("title")) {
+          const longFigDescriptor = figMap[id].slice(2).clone().text();
+          $a.attr("title", longFigDescriptor.trim());
+        }
+        $a.append($shortFigDescriptor);
+      }
     }
   });
 

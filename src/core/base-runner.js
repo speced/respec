@@ -22,7 +22,7 @@ function toRunnable(plug) {
         const msg = `Plugin ${name} took too long.`;
         console.error(msg, plug);
         reject(new Error(msg));
-      }, 5000);
+      }, 15000);
       if (canMeasure) {
         performance.mark(name + "-start");
       }

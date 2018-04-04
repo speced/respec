@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "20.2.1",
+  "version": "20.6.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -36,7 +36,7 @@
     "jquery": "^3.3.1",
     "karma": "^2.0.0",
     "karma-chrome-launcher": "^2.2.0",
-    "karma-detect-browsers": "^2.2.6",
+    "karma-detect-browsers": "^2.3.2",
     "karma-edge-launcher": "^0.4.2",
     "karma-firefox-launcher": "^1.1.0",
     "karma-jasmine": "^1.1.1",
@@ -47,8 +47,8 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-safaritechpreview-launcher": "0.0.6",
     "karma-verbose-summary-reporter": "0.0.1",
-    "mocha": "^5.0.4",
-    "moment": "^2.21.0",
+    "mocha": "^5.0.5",
+    "moment": "^2.22.0",
     "requirejs": "^2.3.5",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "uglify-es": "3.3.7",
@@ -68,26 +68,26 @@
     "server": "npm start",
     "snyk": "snyk",
     "snyk-protect": "snyk protect",
-    "start": "npm run babel:build && http-server",
+    "start": "npm run build:components && http-server",
     "test:build": "mocha ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
     "test:karma": "npm run karma",
-    "prepare": "npm run snyk-protect",
+    "prepare": "npm run snyk-protect && npm run build:components",
     "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
     "colors": "^1.2.1",
     "command-line-args": "^5.0.2",
-    "command-line-usage": "^5.0.2",
+    "command-line-usage": "^5.0.4",
     "epipebomb": "^1.0.0",
     "fs-extra": "^5.0.0",
     "highlight.js": "github:marcoscaceres/highlight.js#7b144b3b83ce296d5b29c5e4fc2ea2a65e9d3f32",
-    "hyperhtml": "^2.6.0",
+    "hyperhtml": "^2.7.0",
     "loading-indicator": "^2.0.0",
-    "marked": "^0.3.17",
+    "marked": "^0.3.19",
     "prompt": "^1.0.0",
     "puppeteer": "^1.2.0",
-    "snyk": "^1.70.2"
+    "snyk": "^1.71.0"
   },
   "prettier": {
     "trailingComma": "es5"

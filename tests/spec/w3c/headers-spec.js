@@ -75,6 +75,7 @@ describe("W3C — Headers", function() {
   });
 
   describe("editors", () => {
+    const findEditor = findContent("Editor:");
     it("takes a single editors into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
@@ -180,11 +181,36 @@ describe("W3C — Headers", function() {
       expect(doc.querySelector("a[href='http://not-valid']")).toEqual(null);
       expect(doc.querySelector("a[href='http://empty-name']")).toEqual(null);
     });
+
+    it("treats editor's name as HTML", async () => {
+      const config = {
+        specStatus: "REC",
+        editors: [
+          {
+            name:
+              "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
+            company: "Microsoft",
+          },
+        ],
+      };
+      const ops = makeStandardOps(config);
+      const doc = await makeRSDoc(ops);
+      const dtElems = [...doc.querySelectorAll(".head dt")];
+      const dtElem = dtElems.find(findEditor);
+      const ddElem = dtElem.nextElementSibling;
+      const [personName, edition] = ddElem.querySelectorAll("span>span");
+      expect(personName.lang).toBe("ja");
+      expect(personName.textContent).toBe("阿南 康宏");
+      expect(edition.textContent).toBe("第１版");
+      expect(ddElem.textContent).toEqual(
+        "阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (Microsoft)"
+      );
+    });
   });
 
   describe("formerEditors", () => {
-    const formerEditors = findContent("Former Editors:");
-    const formerEditor = findContent("Former Editor:");
+    const formerEditors = findContent("Former editors:");
+    const formerEditor = findContent("Former editor:");
     it("takes no former editor into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
@@ -276,6 +302,31 @@ describe("W3C — Headers", function() {
       expect(secondEditor.localName).toEqual("dd");
       expect(secondEditor.textContent).toEqual("NAME2");
     });
+
+    it("treats formerEditor's name as HTML", async () => {
+      const config = {
+        specStatus: "REC",
+        formerEditors: [
+          {
+            name:
+              "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
+            company: "Microsoft",
+          },
+        ],
+      };
+      const ops = makeStandardOps(config);
+      const doc = await makeRSDoc(ops);
+      const dtElems = [...doc.querySelectorAll(".head dt")];
+      const dtElem = dtElems.find(formerEditor);
+      const ddElem = dtElem.nextElementSibling;
+      const [personName, edition] = ddElem.querySelectorAll("span>span");
+      expect(personName.lang).toBe("ja");
+      expect(personName.textContent).toBe("阿南 康宏");
+      expect(edition.textContent).toBe("第１版");
+      expect(ddElem.textContent).toEqual(
+        "阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (Microsoft)"
+      );
+    });
   });
 
   describe("authors", () => {
@@ -322,7 +373,8 @@ describe("W3C — Headers", function() {
 
   describe("use existing h1 element", () => {
     it("uses the <h1>'s value as the document's title", async () => {
-      const body = `
+      const body =
+        `
         <h1 id='title'>
           This should be <code>pass</code>.
          </h1>` + makeDefaultBody();
@@ -569,7 +621,7 @@ describe("W3C — Headers", function() {
         specStatus: "WD",
         edDraftURI: "URI",
       });
-      
+
       const doc = await makeRSDoc(ops);
       expect(
         $("dt:contains('Latest editor\\'s draft:')", doc)
@@ -624,7 +676,7 @@ describe("W3C — Headers", function() {
         specStatus: "REC",
         additionalCopyrightHolders: "<span class='test'>XXX</span>",
       });
-      
+
       const doc = await makeRSDoc(ops);
       expect($(".head .copyright .test", doc).text()).toEqual("XXX");
     });
@@ -946,6 +998,9 @@ describe("W3C — Headers", function() {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "Member-SUBM",
+        submissionCommentNumber: "01",
+        publishDate: "2018-05-25",
+        shortName: "yolo",
       };
       Object.assign(ops.config, newProps);
       doc = await makeRSDoc(ops);
@@ -965,34 +1020,20 @@ describe("W3C — Headers", function() {
         "the Submitting Members have made a formal Submission request";
       expect(stod).toMatch(testString);
     });
+    it("links the right submitting members", async () => {
+      const anchor = doc.querySelector(
+        "#sotd a[href='https://www.w3.org/Submission/2018/Member-SUBM-yolo-20180525/']"
+      );
+      expect(anchor).toBeTruthy();
+    });
+    it("shows the correct staff comments", async () => {
+      const anchor = doc.querySelector(
+        "#sotd a[href='https://www.w3.org/Submission/2018/01/Comment/']"
+      );
+      expect(anchor).toBeTruthy();
+    });
   });
 
-  describe("Team-SUBM", () => {
-    let doc;
-    beforeAll(async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "Team-SUBM",
-      };
-      Object.assign(ops.config, newProps);
-      doc = await makeRSDoc(ops);
-    });
-    it("shouldn't expose a Previous version link for Team submissions", async () => {
-      expect($("dt:contains('Previous version:')", doc).length).toEqual(0);
-    });
-    it("displays the Team Submission logo for Team submissions", async () => {
-      const img = doc.querySelector(
-        ".head img[src^='https://www.w3.org/Icons/team_subm']"
-      );
-      expect(img).toBeTruthy();
-    });
-    it("uses the right SoTD boilerplate for Team submissions", async () => {
-      const link = doc.querySelector(
-        "#sotd a[href='https://www.w3.org/TeamSubmission/']"
-      );
-      expect(link).toBeTruthy();
-    });
-  });
   describe("statusOverride", () => {
     it("allows status paragraph to be overridden", async () => {
       const ops = makeStandardOps();
