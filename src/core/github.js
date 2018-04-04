@@ -122,7 +122,11 @@ export async function run(conf) {
       },
     ],
   };
-  // Assign new properties, but retain exsiting ones
-  Object.assign(conf, { ...newProps, ...conf });
+  // Assign new properties, but retain existing ones
+  const normalizedGHObj = {
+    branch, repoURL: ghURL.href
+  }
+  const normalizedConfig = { ...newProps, ...conf, normalizedGHObj};
+  Object.assign(conf, normalizedConfig);
   conf.otherLinks.unshift(otherLink);
 }
