@@ -1,5 +1,5 @@
 "use strict";
-fdescribe("W3C — Defaults", () => {
+describe("W3C — Defaults", () => {
   afterAll(flushIframes);
   it("sets sensible defaults for w3c specs", async () => {
     const ops = {
