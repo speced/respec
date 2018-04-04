@@ -126,7 +126,7 @@ function handleIssues($ins, ghIssues, conf) {
       if (ghIssue && report.title && githubAPI) {
         const labelsGroup = Array.from(ghIssue.labels)
           .map(label => {
-            const issuesURL = new URL("issues/", conf.github + "/");
+            const issuesURL = new URL("issues/", conf.github.repoURL + "/");
             issuesURL.searchParams.set(
               "q",
               `is:issue is:open label:"${label.name}"`
@@ -213,7 +213,7 @@ function isLight(rgb) {
 function createLabel(label) {
   const { color, href, name } = label;
   const rgb = parseInt(color, 16);
-  const textColorClass = isNaN(rgb) || isLight(rgb) ? "dark" : "light";
+  const textColorClass = isNaN(rgb) || isLight(rgb) ? "light" : "dark";
   const cssClasses = `respec-gh-label respec-label-${textColorClass}`;
   const style = `background-color: #${color}`;
   return hyperHTML`<a
