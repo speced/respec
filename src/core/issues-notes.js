@@ -195,12 +195,8 @@ async function fetchAndStoreGithubIssues(githubAPI) {
           Accept: "application/vnd.github.v3.html+json",
         },
       });
-      try {
-        const response = await fetchAndCache(request);
-        return processResponse(response, issueNumber);
-      } catch(err){
-        return processResponse(err.response, issueNumber);
-      }
+      const response = await fetchAndCache(request);
+      return processResponse(response, issueNumber);
     });
   const issues = await Promise.all(issuePromises);
   return new Map(issues);
