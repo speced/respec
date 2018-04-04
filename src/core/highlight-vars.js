@@ -1,9 +1,12 @@
-// Module core/highlight-vars
-// Highlights occurrences of a <var> within a section on click
-// Set `conf.highlightVars = true` to enable
-// removes highlights from <var> if clicked anywhere else
-// all is done while keeping in mind that exported html stays clean (removeHighlight)
 
+/**
+ * Module core/highlight-vars
+ * Highlights occurrences of a <var> within a section on click.
+ * Set `conf.highlightVars = true` to enable.
+ * Removes highlights from <var> if clicked anywhere else.
+ * All is done while keeping in mind that exported html stays clean 
+ * on export.
+ */
 import { sub } from "core/pubsubhub";
 import hlVars from "deps/text!core/css/var.css";
 
@@ -57,8 +60,9 @@ function highlightVars(target) {
   const parent = target.closest("section");
   const highlightColor = getHighlightColor(target);
 
-  const varsToHighlight = [...parent.querySelectorAll("var")]
-    .filter(el => el.textContent.trim() === textContent);
+  const varsToHighlight = [...parent.querySelectorAll("var")].filter(
+    el => el.textContent.trim() === textContent
+  );
 
   // update availability of highlight color
   const colorStatus = varsToHighlight[0].classList.contains("respec-active");
@@ -94,5 +98,5 @@ function initHighlight({ target }) {
   // else, remove highlight
   [...document.querySelectorAll("var.respec-active")].forEach(removeHighlight);
   // make all colors available
-  HL_COLORS.forEach((_, color) => HL_COLORS.set(color, true));
+  [...HL_COLORS.keys()].forEach(key => HL_COLORS.set(key, true))
 }
