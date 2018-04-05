@@ -331,6 +331,22 @@ export function norm(str) {
   return str.trim().replace(/\s+/g, " ");
 }
 
+// semverCompare
+// https://github.com/substack/semver-compare
+export function semverCompare(a, b) {
+  const pa = a.split(".");
+  const pb = b.split(".");
+  for (let i = 0; i < 3; i++) {
+    const na = Number(pa[i]);
+    const nb = Number(pb[i]);
+    if (na > nb) return 1;
+    if (nb > na) return -1;
+    if (!isNaN(na) && isNaN(nb)) return 1;
+    if (isNaN(na) && !isNaN(nb)) return -1;
+  }
+  return 0;
+}
+
 // --- DATE HELPERS -------------------------------------------------------------------------------
 // Takes a Date object and an optional separator and returns the year,month,day representation with
 // the custom separator (defaulting to none) and proper 0-padding
@@ -448,13 +464,6 @@ export function runTransforms(content, flist) {
   return content;
 }
 
-class NetworkError extends Error {
-  constructor(message, response) {
-    super(message);
-    Object.defineProperty(this, "response", { get() { return response; } });
-  }
-}
-
 /**
  * Cached request handler
  * @param {Request} request
@@ -463,7 +472,6 @@ class NetworkError extends Error {
  *  if a cached response is available and it's not stale, return it
  *  else: request from network, cache and return fresh response.
  *    If network fails, return a stale cached version if exists (else throw)
- * @throws {NetworkError}
  */
 export async function fetchAndCache(request, maxAge = 86400000) {
   if (typeof request === "string" || request instanceof URL) {
@@ -493,8 +501,6 @@ export async function fetchAndCache(request, maxAge = 86400000) {
       console.warn(`Returning a stale cached response for ${url}`);
       return cachedResponse;
     }
-    const msg = `Response not OK from ${url} (HTTP Status: ${response.status})`;
-    throw new NetworkError(msg, response);
   }
 
   // cache response
