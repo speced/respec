@@ -98,5 +98,5 @@ function initHighlight({ target }) {
   // else, remove highlight
   [...document.querySelectorAll("var.respec-active")].forEach(removeHighlight);
   // make all colors available
-  [...HL_COLORS.keys()].forEach(key => HL_COLORS.set(key, true))
+  [...HL_COLORS.keys()].forEach(key => HL_COLORS.set(key, true));
 }
