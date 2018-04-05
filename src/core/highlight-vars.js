@@ -40,7 +40,9 @@ function hightlightListener(ev) {
     hightligtedElems.forEach(removeHighlight);
     [...HL_COLORS.keys()].forEach(key => HL_COLORS.set(key, true));
   };
-  document.body.addEventListener("click", resetListener, { once: true });
+  if (hightligtedElems.length) {
+    document.body.addEventListener("click", resetListener, { once: true });
+  }
 }
 
 // availability of highlight colors.
