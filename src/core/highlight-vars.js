@@ -1,10 +1,9 @@
-
 /**
  * Module core/highlight-vars
  * Highlights occurrences of a <var> within a section on click.
  * Set `conf.highlightVars = true` to enable.
  * Removes highlights from <var> if clicked anywhere else.
- * All is done while keeping in mind that exported html stays clean 
+ * All is done while keeping in mind that exported html stays clean
  * on export.
  */
 import { sub } from "core/pubsubhub";
@@ -21,7 +20,9 @@ export function run(conf) {
   styleElement.classList.add("removeOnSave");
   document.head.appendChild(styleElement);
 
-  document.addEventListener("click", initHighlight);
+  [...document.querySelectorAll("var")].forEach(varElem =>
+    varElem.addEventListener("click", hightlightListener)
+  );
 
   // remove highlights, cleanup empty class/style attributes
   sub("beforesave", outputDoc => {
@@ -29,6 +30,17 @@ export function run(conf) {
       removeHighlight
     );
   });
+}
+
+function hightlightListener(ev) {
+  ev.stopPropagation();
+  const { target: varElem } = ev;
+  const hightligtedElems = highlightVars(varElem);
+  const resetListener = () => {
+    hightligtedElems.forEach(removeHighlight);
+    [...HL_COLORS.keys()].forEach(key => HL_COLORS.set(key, true));
+  };
+  document.body.addEventListener("click", resetListener, { once: true });
 }
 
 // availability of highlight colors.
@@ -55,10 +67,10 @@ function getHighlightColor(target) {
   return [...HL_COLORS.keys()].find(c => HL_COLORS.get(c) === true) || "yellow";
 }
 
-function highlightVars(target) {
-  const textContent = target.textContent.trim();
-  const parent = target.closest("section");
-  const highlightColor = getHighlightColor(target);
+function highlightVars(varElem) {
+  const textContent = varElem.textContent.trim();
+  const parent = varElem.closest("section");
+  const highlightColor = getHighlightColor(varElem);
 
   const varsToHighlight = [...parent.querySelectorAll("var")].filter(
     el => el.textContent.trim() === textContent
@@ -72,9 +84,11 @@ function highlightVars(target) {
   const [background, color] = highlightColor.split(",");
   if (colorStatus) {
     varsToHighlight.forEach(removeHighlight);
+    return [];
   } else {
     varsToHighlight.forEach(el => addHighlight(el, background, color));
   }
+  return varsToHighlight;
 }
 
 function removeHighlight(el) {
