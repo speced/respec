@@ -108,11 +108,3 @@ function addHighlight(elem, background, color) {
   elem.style.setProperty("--respec-background-color", background);
   if (color) elem.style.setProperty("--respec-color", color);
 }
-
-function initHighlight({ target }) {
-  if (target.localName === "var") return highlightVars(target);
-  // else, remove highlight
-  [...document.querySelectorAll("var.respec-active")].forEach(removeHighlight);
-  // make all colors available
-  [...HL_COLORS.keys()].forEach(key => HL_COLORS.set(key, true));
-}
