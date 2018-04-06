@@ -233,7 +233,7 @@ export function run(conf) {
   }
   conf.isCCBY = conf.license === "cc-by";
   conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
-  if (["cc-by", "w3c"].includes(conf.license)) {
+  if (["cc-by"].includes(conf.license)) {
     let msg = `You cannot use license "\`${conf.license}\`" with W3C Specs. `;
     msg += `Please set \`respecConfig.license: "w3c-software-doc"\` instead.`;
     pub("error", msg);
