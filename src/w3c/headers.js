@@ -249,6 +249,20 @@ export function run(conf) {
   if (conf.isRegular && !conf.shortName) {
     pub("error", "Missing required configuration: `shortName`");
   }
+  if (conf.testSuiteURI) {
+    const url = new URL(conf.testSuiteURI, document.location);
+    const { host, pathname } = url;
+    if (
+      host === "github.com" &&
+      pathname.startsWith("/w3c/web-platform-tests/")
+    ) {
+      const msg =
+        "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. " +
+        "Please update your [`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI) to point to the " +
+        `new tests repository (e.g., https://github.com/web-platform-tests/${conf.shortName} ).`;
+      pub("warn", msg);
+    }
+  }
   conf.title = document.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
   conf.publishDate = validateDateAndRecover(
@@ -385,7 +399,8 @@ export function run(conf) {
     conf.authors.forEach(peopCheck);
   }
   conf.multipleEditors = conf.editors && conf.editors.length > 1;
-  conf.multipleFormerEditors = Array.isArray(conf.formerEditors) && conf.formerEditors.length > 1;
+  conf.multipleFormerEditors =
+    Array.isArray(conf.formerEditors) && conf.formerEditors.length > 1;
   conf.multipleAuthors = conf.authors && conf.authors.length > 1;
   $.each(conf.alternateFormats || [], function(i, it) {
     if (!it.uri || !it.label)
