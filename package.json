@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "20.7.1",
+  "version": "20.7.2",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -47,13 +47,13 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-safaritechpreview-launcher": "0.0.6",
     "karma-verbose-summary-reporter": "0.0.1",
-    "mocha": "^5.0.5",
-    "moment": "^2.22.0",
+    "mocha": "^5.1.0",
+    "moment": "^2.22.1",
     "requirejs": "^2.3.5",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "uglify-es": "3.3.7",
     "url-search-params": "^0.10.0",
-    "webidl2": "^10.3.1"
+    "webidl2": "^10.3.2"
   },
   "scripts": {
     "babel:build": "babel src -d js --source-maps -q",
@@ -82,11 +82,11 @@
     "epipebomb": "^1.0.0",
     "fs-extra": "^5.0.0",
     "highlight.js": "github:marcoscaceres/highlight.js#7b144b3b83ce296d5b29c5e4fc2ea2a65e9d3f32",
-    "hyperhtml": "^2.7.1",
+    "hyperhtml": "^2.9.0",
     "loading-indicator": "^2.0.0",
     "marked": "^0.3.19",
     "prompt": "^1.0.0",
-    "puppeteer": "^1.2.0",
+    "puppeteer": "^1.3.0",
     "snyk": "^1.71.0"
   },
   "prettier": {
