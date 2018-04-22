@@ -106,22 +106,25 @@ describe("Core — Can I Use", function() {
     const firefoxVersions = firefox.querySelectorAll("li.caniuse-cell");
     expect(firefoxVersions.length).toBe(5);
 
-    // eslint-disable-next-line no-unused-vars
-    const [label, hiddenVersion, _] = firefoxVersions;
+    const visible = firefoxVersions[0];
 
-    expect(label.textContent.trim()).toBe("Firefox 61");
-    expect(label.classList.value).toBe("caniuse-cell y");
+    const button = visible.querySelector("button");
+    const hiddenVersions = visible.querySelectorAll("li.caniuse-cell");
 
-    expect(hiddenVersion.textContent.trim()).toBe("60");
-    expect(hiddenVersion.classList.value).toBe("caniuse-cell n d");
+    expect(button.textContent.trim()).toBe("Firefox 61");
+    expect(visible.classList.value).toBe("caniuse-cell y");
+
+    expect(hiddenVersions.length).toBe(4);
+    expect(hiddenVersions[0].textContent.trim()).toBe("60");
+    expect(hiddenVersions[0].classList.value).toBe("caniuse-cell n d");
 
     // test hover effects
-    let style = getComputedStyle(hiddenVersion);
+    let style = getComputedStyle(visible.querySelector("ul"));
     expect(style.getPropertyValue("display")).toBe("none");
 
     // add hover class as can't trigger a hover (https://stackoverflow.com/a/17226753/3367669)
-    firefox.classList.add("hover");
-    style = getComputedStyle(hiddenVersion);
+    firefox.classList.add("active");
+    style = getComputedStyle(visible.querySelector("ul"));
     expect(style.getPropertyValue("display")).toBe("block");
   });
 });

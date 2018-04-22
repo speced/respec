@@ -1,10 +1,15 @@
 /* container for stats */
 .caniuse-stats {
   font-size: 90%;
-  float: left;
-  width: 100%;
-  width: calc(100% - 2em);
-  height: 30px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* reset styles */
+.caniuse-stats ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .caniuse-stats a[href] {
@@ -15,38 +20,43 @@
 
 /* wraps each browser into a separate column */
 .caniuse-browser {
-  margin: 0 5px;
-  padding: 0;
-  max-width: 100px;
-  list-style: none;
-  float: left;
   text-align: center;
   position: relative;
 }
 
+.caniuse-browser button {
+  background: transparent;
+  border: none;
+  font-size: inherit;
+}
+
 /* a browser version */
 .caniuse-cell {
-  width: 100px;
+  min-width: 100px;
   padding: 4px;
-  float: left;
-  display: none;
-  margin: 1px 0 0;
   background: #eee; /* default, for unknown support */
+  margin: 1px;
 }
 
-.caniuse-cell:hover {
+/* hide older versions  */
+.caniuse-browser ul {
+  display: none;
+  position: absolute;
+  left: 0;
+  margin-top: 4px;
+  z-index: 2;
+}
+
+/* show older browsers on hover/focus/touch */
+.caniuse-browser:hover ul,
+.caniuse-browser button:focus + ul,
+.caniuse-browser.active ul /* .active for testing only */ {
+  display: block;
+}
+
+.caniuse-cell:hover button,
+.caniuse-browser ul .caniuse-cell:hover {
   font-weight: bold;
-}
-
-/* show latest version  */
-.caniuse-cell:nth-child(1) {
-  display: block;
-}
-
-/* show older browsers on hover */
-.caniuse-browser:hover .caniuse-cell,
-.caniuse-browser.hover .caniuse-cell /* .hover for testing only */ {
-  display: block;
 }
 
 /* supports */
@@ -61,6 +71,9 @@
 
 /* not supported by default / partial support etc
 see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
-.caniuse-cell.d, .caniuse-cell.a, .caniuse-cell.x, .caniuse-cell.p {
+.caniuse-cell.d,
+.caniuse-cell.a,
+.caniuse-cell.x,
+.caniuse-cell.p {
   background: #ffc107;
 }
