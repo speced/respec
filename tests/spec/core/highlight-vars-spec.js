@@ -22,22 +22,18 @@ describe("Core - highlightVars", () => {
       </ol>
     </section>`;
 
-  const getBgColor = el => {
-    return el.style.getPropertyValue("--respec-background-color");
-  };
-
   it("toggles highlight class on click", async () => {
     const ops = makeStandardOps({ highlightVars: true }, testBody);
     const doc = await makeRSDoc(ops);
     const elemVar = doc.getElementById("section1-foo");
 
     elemVar.click(); // enable
-    expect(doc.querySelectorAll(".respec-active").length).toBe(2);
-    expect(elemVar.classList.contains("respec-active")).toBe(true);
-    expect(getBgColor(elemVar)).toBe("yellow");
+    expect(doc.querySelectorAll(".respec-hl").length).toBe(2);
+    expect(elemVar.classList.contains("respec-hl")).toBe(true);
+    expect(elemVar.classList.contains("respec-hl-yellow")).toBe(true);
 
     elemVar.click(); // disable
-    expect(doc.querySelectorAll(".respec-active").length).toBe(0);
+    expect(doc.querySelectorAll(".respec-hl").length).toBe(0);
   });
 
   it("removes highlight when clicked outside", async () => {
@@ -48,7 +44,7 @@ describe("Core - highlightVars", () => {
 
     elemVar.click(); // activate
     doc.body.click(); // external click, deactivate
-    expect(elemVar.classList.contains("respec-active")).toBe(false);
+    expect(elemVar.classList.contains("respec-hl")).toBe(false);
   });
 
   it("highlights variables only in current section", async () => {
@@ -56,13 +52,13 @@ describe("Core - highlightVars", () => {
     const doc = await makeRSDoc(ops);
 
     doc.querySelector("#section1-foo").click();
-    const highlightedSec1 = doc.querySelectorAll("#section1 var.respec-active");
-    let highlightedSec2 = doc.querySelectorAll("#section2 var.respec-active");
+    const highlightedSec1 = doc.querySelectorAll("#section1 var.respec-hl");
+    let highlightedSec2 = doc.querySelectorAll("#section2 var.respec-hl");
     expect(highlightedSec1.length).toBe(2);
     expect(highlightedSec2.length).toBe(0);
 
     doc.querySelector("#section2-foo").click();
-    highlightedSec2 = doc.querySelectorAll("#section2 var.respec-active");
+    highlightedSec2 = doc.querySelectorAll("#section2 var.respec-hl");
     expect(highlightedSec2.length).toBe(2);
   });
 });

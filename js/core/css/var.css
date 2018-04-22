@@ -3,13 +3,28 @@ var:hover {
   cursor: pointer;
 }
 
-var.respec-active {
-  background: var(--respec-background-color);
-  color: var(--respec-color);
+var.respec-hl-yellow {
+  background: #f6d51f;
+}
+
+var.respec-hl-blue {
+  background: #01b4bc;
+}
+
+var.respec-hl-pink {
+  background: #fa5457;
+}
+
+var.respec-hl-green {
+  background: #5fa55a;
+}
+
+var.respec-hl-orange {
+  background: #fa8925;
 }
 
 @media print {
-  var.respec-active {
+  var.respec-hl {
     background: none;
     color: #000;
   }

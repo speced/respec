@@ -26,7 +26,7 @@ export function run(conf) {
 
   // remove highlights, cleanup empty class/style attributes
   sub("beforesave", outputDoc => {
-    [...outputDoc.querySelectorAll("var.respec-active")].forEach(
+    [...outputDoc.querySelectorAll("var.respec-hl")].forEach(
       removeHighlight
     );
   });
@@ -37,7 +37,8 @@ function hightlightListener(ev) {
   const { target: varElem } = ev;
   const hightligtedElems = highlightVars(varElem);
   const resetListener = () => {
-    hightligtedElems.forEach(removeHighlight);
+    const hlColor = getHighlightColor(varElem);
+    hightligtedElems.forEach(el => removeHighlight(el, hlColor));
     [...HL_COLORS.keys()].forEach(key => HL_COLORS.set(key, true));
   };
   if (hightligtedElems.length) {
@@ -45,28 +46,27 @@ function hightlightListener(ev) {
   }
 }
 
-// availability of highlight colors.
+// availability of highlight colors. colors from var.css
 const HL_COLORS = new Map([
-  // [ background:String, available:Boolean ]
-  // or [ background,color:String, available:Boolean ]
-  ["yellow", true],
-  ["#726012,#fff", true],
-  ["#c78e00", true],
-  ["#3949ab,#fff", true],
-  ["#F720E5", true],
+  ["respec-hl-yellow", true],
+  ["respec-hl-blue", true],
+  ["respec-hl-pink", true],
+  ["respec-hl-green", true],
+  ["respec-hl-orange", true],
 ]);
 
 function getHighlightColor(target) {
   // return current colors if applicable
-  const bg = target.style.getPropertyValue("--respec-background-color");
-  const col = target.style.getPropertyValue("--respec-color");
-  if (bg) return `${bg}${col ? `,${col}` : ""}`;
+  const { value } = target.classList;
+  const re = /respec-hl-\w+/;
+  const activeClass = re.test(value) && value.match(re);
+  if (activeClass) return activeClass[0];
 
   // first color preference
-  if (HL_COLORS.get("yellow") === true) return "yellow";
+  if (HL_COLORS.get("respec-hl-yellow") === true) return "respec-hl-yellow";
 
   // otherwise get some other available color
-  return [...HL_COLORS.keys()].find(c => HL_COLORS.get(c) === true) || "yellow";
+  return [...HL_COLORS.keys()].find(c => HL_COLORS.get(c) === true) || "respec-hl-yellow";
 }
 
 function highlightVars(varElem) {
@@ -79,32 +79,27 @@ function highlightVars(varElem) {
   );
 
   // update availability of highlight color
-  const colorStatus = varsToHighlight[0].classList.contains("respec-active");
+  const colorStatus = varsToHighlight[0].classList.contains("respec-hl");
   HL_COLORS.set(highlightColor, colorStatus);
 
   // highlight vars
-  const [background, color] = highlightColor.split(",");
   if (colorStatus) {
-    varsToHighlight.forEach(removeHighlight);
+    varsToHighlight.forEach(el => removeHighlight(el, highlightColor));
     return [];
   } else {
-    varsToHighlight.forEach(el => addHighlight(el, background, color));
+    varsToHighlight.forEach(el => addHighlight(el, highlightColor));
   }
   return varsToHighlight;
 }
 
-function removeHighlight(el) {
-  // done so that only the respec classes are removed
-  el.classList.remove("respec-active");
-  el.style.removeProperty("--respec-background-color");
-  el.style.removeProperty("--respec-color");
-  // clean up empty class/style attributes so they don't come in export
-  if (!el.getAttribute("style")) el.removeAttribute("style");
-  if (!el.getAttribute("class")) el.removeAttribute("class");
+function removeHighlight(el, highlightColor) {
+  el.classList.remove("respec-hl");
+  el.classList.remove(highlightColor);
+  // clean up empty class attributes so they don't come in export
+  if (el.classList.length == 0) el.removeAttribute("class");
 }
 
-function addHighlight(elem, background, color) {
-  elem.classList.add("respec-active");
-  elem.style.setProperty("--respec-background-color", background);
-  if (color) elem.style.setProperty("--respec-color", color);
+function addHighlight(elem, highlightColor) {
+  elem.classList.add("respec-hl");
+  elem.classList.add(highlightColor);
 }
