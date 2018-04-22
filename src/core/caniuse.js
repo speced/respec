@@ -191,9 +191,11 @@ function createTableHTML(conf, stats) {
     return hyperHTML`
       <ul class="caniuse-browser">
         <li class="${"caniuse-cell " + support}" title="${title}">
-          ${BROWSERS.get(browser) || browser} ${latestVersion}
+          <button>${BROWSERS.get(browser) || browser} ${latestVersion}</button>
+          <ul>
+            ${olderVersions.map(addBrowserVersion)}
+          </ul>
         </li>
-        ${olderVersions.map(addBrowserVersion)}
       </ul>`;
   }
 }
