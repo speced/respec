@@ -14,12 +14,16 @@ describe("Core — Override Configuration", () => {
     const test = doc => {
       const { respecConfig: conf } = doc.defaultView;
       const { textContent } = doc.querySelector(".head h2");
+
       expect(textContent).toMatch(/W3C Rescinded Recommendation/);
       const month = conf.previousPublishDate.getUTCMonth();
+
       expect(month).toEqual(2);
       const { previousMaturity } = conf;
+
       expect(previousMaturity).toEqual("REC");
       const copyrightText = doc.querySelector(".copyright").textContent;
+
       expect(copyrightText).toMatch(/Internet Engineering Task Force/);
       done();
     };

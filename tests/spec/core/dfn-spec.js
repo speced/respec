@@ -1,6 +1,7 @@
 "use strict";
 describe("Core — Definitions", function() {
   afterAll(flushIframes);
+
   it("processes definitions", async () => {
     const ops = {
       config: makeBasicConfig(),
@@ -10,6 +11,7 @@ describe("Core — Definitions", function() {
     };
     const doc = await makeRSDoc(ops);
     var $sec = $("#dfn", doc);
+
     expect($sec.find("dfn").attr("id")).toEqual("dfn-text");
     expect($sec.find("a").attr("href")).toEqual("#dfn-text");
   });
@@ -32,15 +34,19 @@ describe("Core — Definitions", function() {
     };
     const doc = await makeRSDoc(ops);
     var $sec = $("#dfn", doc);
+
     expect($sec.find("a:contains('outerCode')").contents()[0].nodeName).toEqual(
       "CODE"
     );
+
     expect($sec.find("a:contains('outerPre')").contents()[0].nodeName).toEqual(
       "CODE"
     );
+
     expect($sec.find("a:contains('innerCode')").contents()[0].nodeName).toEqual(
       "CODE"
     );
+
     expect($sec.find("a:contains('partial')").contents()[0].nodeName).toEqual(
       "#text"
     );
@@ -61,8 +67,10 @@ describe("Core — Definitions", function() {
     };
     const doc = await makeRSDoc(ops);
     const code = doc.querySelector("#t1 code");
+
     expect(code.textContent).toEqual("Test");
     const t2 = doc.querySelector("#t2");
+
     expect(t2.querySelector("code")).toEqual(null);
     expect(t2.querySelector("a").textContent).toEqual("not wrapped in code");
     expect(t2.querySelector("a").getAttribute("href")).toEqual("#idl-def-test");
@@ -80,9 +88,9 @@ describe("Core — Definitions", function() {
     };
     const doc = await makeRSDoc(ops);
     const dfn = doc.querySelector("dfn[data-lt]");
-    expect(dfn.dataset.lt).toEqual(
-      "text|text 1|text 2|text 3"
-    );
+
+    expect(dfn.dataset.lt).toEqual("text|text 1|text 2|text 3");
+
     expect(dfn.dataset.dfnType).toEqual("dfn");
   });
 
@@ -98,6 +106,7 @@ describe("Core — Definitions", function() {
     };
     const doc = await makeRSDoc(ops);
     var $sec = $("#dfn", doc);
+
     expect($sec.find("dfn").attr("data-dfn-type")).toEqual("myType");
   });
 });

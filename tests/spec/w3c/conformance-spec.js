@@ -1,6 +1,7 @@
 "use strict";
 describe("W3C — Conformance", function() {
   afterAll(flushIframes);
+
   it("includes a h2 and inject its content", async () => {
     const ops = {
       config: makeBasicConfig(),
@@ -16,14 +17,17 @@ describe("W3C — Conformance", function() {
     };
     const doc = await makeRSDoc(ops);
     const conformance = doc.getElementById("conformance");
+
     expect(conformance.querySelectorAll("h2").length).toEqual(1);
     expect(conformance.querySelector("h2").textContent).toMatch(
       /\d+\.\s+Conformance/
     );
+
     expect(conformance.querySelectorAll("p").length).toEqual(3);
     expect(conformance.querySelector("p:first-of-type").textContent).toMatch(
       "non-normative"
     );
+
     expect(conformance.querySelector("p:last-child").textContent).toMatch(
       "CONFORMANCE"
     );
@@ -44,6 +48,7 @@ describe("W3C — Conformance", function() {
     const doc = await makeRSDoc(ops);
     var $c = $("#conformance", doc);
     var $d = $(".rfc2119", $c);
+
     expect($d.length).toEqual(3);
   });
 
@@ -62,6 +67,7 @@ describe("W3C — Conformance", function() {
     const doc = await makeRSDoc(ops);
     var $c = $("#conformance", doc);
     var $d = $(".rfc2119", $c);
+
     expect($d.length).toEqual(0);
   });
 });

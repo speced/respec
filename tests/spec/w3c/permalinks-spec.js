@@ -32,14 +32,16 @@ describe("W3C — Permalinks", function() {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<section id='testing'><h2>a heading</h2><p>some content</p></section>",
+        "<section id='testing'><h2>a heading</h2><p>some content</p></section>",
     };
     makeRSDoc(ops, function(doc) {
       var $c = $("#sotd", doc);
       var list = $(".permalink", $c);
+
       expect(list.length).toEqual(0);
       $c = $("#testing", doc);
       list = $(".permalink", $c);
+
       expect(list.length).toEqual(1);
     }).then(done);
   });
@@ -51,14 +53,16 @@ describe("W3C — Permalinks", function() {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<div id='testing'><h2>a heading</h2><p>some content</p></div>",
+        "<div id='testing'><h2>a heading</h2><p>some content</p></div>",
     };
     makeRSDoc(ops, function(doc) {
       var $c = $("#sotd", doc);
       var list = $(".permalink", $c);
+
       expect(list.length).toEqual(0);
       $c = $("#testing", doc);
       list = $(".permalink", $c);
+
       expect(list.length).toEqual(1);
     }).then(done);
   });
@@ -70,13 +74,14 @@ describe("W3C — Permalinks", function() {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<section id='testing'><h2>a heading</h2><p>some content</p></section>" +
-          "<section><h2>another heading</h2><p>Other Content</p></section>",
+        "<section id='testing'><h2>a heading</h2><p>some content</p></section>" +
+        "<section><h2>another heading</h2><p>Other Content</p></section>",
     };
     makeRSDoc(ops, function(doc) {
       var $c = $("#testing", doc);
       $c = $c.nextElementSibling;
       var list = $(".permalink", $c);
+
       expect(list.length).toEqual(0);
     }).then(done);
   });
@@ -88,11 +93,12 @@ describe("W3C — Permalinks", function() {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<section class='nolink' id='testing'><h2>a heading</h2><p>some content</p></section>",
+        "<section class='nolink' id='testing'><h2>a heading</h2><p>some content</p></section>",
     };
     makeRSDoc(ops, function(doc) {
       var $c = $("#testing", doc);
       var list = $(".permalink", $c);
+
       expect(list.length).toEqual(0);
     }).then(done);
   });
@@ -120,14 +126,16 @@ describe("W3C — Permalinks", function() {
       config: noConfig,
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<section id='testing'><h2>a heading</h2><p>some content</p></section>",
+        "<section id='testing'><h2>a heading</h2><p>some content</p></section>",
     };
     makeRSDoc(ops, function(doc) {
       var $c = $("#sotd", doc);
       var list = $c.children(".permalink");
+
       expect(list.length).toEqual(0);
       var $n = $("#testing", doc);
       list = $n.children(".permalink");
+
       expect(list.length).toEqual(0);
     }).then(done);
   });
@@ -139,11 +147,12 @@ describe("W3C — Permalinks", function() {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<div id='testing'><h2>a heading with \" and '</h2><p>some content</p></div>",
+        "<div id='testing'><h2>a heading with \" and '</h2><p>some content</p></div>",
     };
     makeRSDoc(ops, function(doc) {
       var $c = $("#testing", doc);
       var list = $("span.permalink a span", $c);
+
       expect(list.length).toEqual(1);
     }).then(done);
   });
@@ -155,11 +164,12 @@ describe("W3C — Permalinks", function() {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<div id='testing'><h2>a heading with \" and '</h2><p>some content</p></div>",
+        "<div id='testing'><h2>a heading with \" and '</h2><p>some content</p></div>",
     };
     makeRSDoc(ops, function(doc) {
       var $c = $("#testing", doc);
       var list = $("h2", $c);
+
       expect(list.length).toEqual(1);
       expect(list[0].innerHTML).toMatch(/&nbsp;/);
     }).then(done);

@@ -11,8 +11,10 @@ describe("Core - Ui", function() {
       // showing it doesn't change it from showing
       expect(pillContainer.hidden).toBe(false);
       ui.hide();
+
       expect(pillContainer.hidden).toBe(true);
       ui.show();
+
       expect(pillContainer.hidden).toBe(false);
     }).then(done);
   });
@@ -22,6 +24,7 @@ describe("Core - Ui", function() {
       makeStandardOps(),
       function(doc) {
         var menu = doc.querySelector("#respec-menu");
+
         expect(window.getComputedStyle(menu).display).toEqual("none");
         doc.querySelector("#respec-pill").click();
         // spin the event loop

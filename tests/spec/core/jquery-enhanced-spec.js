@@ -17,6 +17,7 @@ describe("Core - jquery enhanced", function() {
     );
     $div.find("p").renameElement("span");
     $div.find("b").renameElement("i");
+
     expect($div.find("span").length).toEqual(1);
     expect($div.find("i").text()).toEqual("some text");
     $div.remove();
@@ -28,6 +29,7 @@ describe("Core - jquery enhanced", function() {
     var titles = $dfn.getDfnTitles({
       isDefinition: true,
     });
+
     expect(titles[0]).toEqual("dfn");
     expect(titles[1]).toEqual("dfn2");
     expect(titles[2]).toEqual("dfn3");
@@ -42,6 +44,7 @@ describe("Core - jquery enhanced", function() {
     var titles = $dfn.getDfnTitles({
       isDefinition: true,
     });
+
     expect(titles[0]).toEqual("dfn");
     expect(titles[1]).toEqual("dfn2");
     expect(titles[2]).toEqual("dfn3");
@@ -57,13 +60,16 @@ describe("Core - jquery enhanced", function() {
     var titles = $dfn.getDfnTitles({
       isDefinition: true,
     });
+
     expect(titles[0]).toEqual("dfn");
     expect(titles[1]).toEqual("dfn2");
     expect(titles[2]).toEqual("dfn3");
     expect(titles[3]).toEqual("text");
     $dfn.removeAttr("data-lt");
+
     expect($dfn.getDfnTitles()[0]).toEqual("abbr");
     $dfn.find("abbr").removeAttr("title");
+
     expect($dfn.getDfnTitles()[0]).toEqual("text");
     $dfn.remove();
   });
@@ -78,6 +84,7 @@ describe("Core - jquery enhanced", function() {
     expect($("<p>TEXT</p>").makeID("PFX")).toEqual("PFX-text");
     var $p = $("<p>TEXT</p>");
     $p.makeID();
+
     expect($p.attr("id")).toEqual("text");
     expect($("<p>  A--Bé9\n C</p>").makeID()).toEqual("a-b-9-c");
     expect($("<p></p>").makeID()).toEqual("generatedID");
@@ -85,6 +92,7 @@ describe("Core - jquery enhanced", function() {
     var $div = $(
       "<div><p id='a'></p><p id='a-1'></p><span>A</span><span title='a'></span></div>"
     ).appendTo($("body"));
+
     expect($div.find("span").makeID()).toEqual("a-0");
     expect($div.find("span[title]").makeID()).toEqual("a-2");
     expect(
@@ -100,11 +108,13 @@ describe("Core - jquery enhanced", function() {
     var tns = $(
       "<div>aa<span>bb</span><p>cc<i>dd</i></p><pre>nope</pre></div>"
     ).allTextNodes(["pre"]);
+
     expect(tns.length).toEqual(4);
     var str = "";
     for (var i = 0, n = tns.length; i < n; i++) {
       str += tns[i].nodeValue;
     }
+
     expect(str).toEqual("aabbccdd");
   });
 });

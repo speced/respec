@@ -36,6 +36,7 @@ describe("builder (tool)", function() {
     "should have built default respec",
     async() => {
       await Builder.build({ name: "w3c-common" });
+
       expect(await checkIfFileExists(latest)).to.equal(true);
       expect(await checkIfFileExists(latestMap)).to.equal(true);
     }
@@ -46,6 +47,7 @@ describe("builder (tool)", function() {
       "should include the link to the sourcemap",
       async() => {
         const source = await fsp.readFile(latest, "utf-8");
+
         expect(source.search("respec-w3c-common.build.js.map")).to.not.equal(
           -1
         );

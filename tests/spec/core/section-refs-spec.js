@@ -1,6 +1,7 @@
 "use strict";
 describe("Core - Section References", function() {
   afterAll(flushIframes);
+
   it("should have produced the section reference", function(done) {
     var ops = {
       config: makeBasicConfig(),
@@ -12,6 +13,7 @@ describe("Core - Section References", function() {
       var $one = $("#ONE", doc);
       var $two = $("#TWO", doc);
       var tit = $one.find("> :first-child").text();
+
       expect($two.find("a").text()).toEqual("section " + tit);
     }).then(done);
   });

@@ -13,6 +13,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect(
         $("dt:contains('Latest Recommendation:')", doc)
           .next("dd")
@@ -20,6 +21,7 @@ describe("W3C — Headers", function() {
       ).toEqual("URI");
     });
   });
+
   describe("specStatus", () => {
     it("takes specStatus into account", async () => {
       const ops = makeStandardOps();
@@ -28,6 +30,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect($(".head h2", doc).text()).toMatch(/W3C Editor's Draft/);
     });
   });
@@ -41,11 +44,13 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect(
         $("dt:contains('This version:')", doc)
           .next("dd")
           .text()
       ).toMatch(/\/REC-xxx-/);
+
       expect(
         $("dt:contains('Latest published version:')", doc)
           .next("dd")
@@ -61,11 +66,13 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect(
         $("dt:contains('This version:')", doc)
           .next("dd")
           .text()
       ).toMatch(/\/REC-xxx-/);
+
       expect(
         $("dt:contains('Latest published version:')", doc)
           .next("dd")
@@ -94,9 +101,11 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect($("dt:contains('Editors:')", doc).length).toEqual(0);
       expect($("dt:contains('Editor:')", doc).length).toEqual(1);
       var $dd = $("dt:contains('Editor:')", doc).next("dd");
+
       expect($dd.find("a[href='http://COMPANY']").length).toEqual(1);
       expect($dd.find("a[href='http://COMPANY']").text()).toEqual("COMPANY");
       expect($dd.find("a[href='mailto:EMAIL']").length).toEqual(1);
@@ -122,9 +131,11 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect($("dt:contains('Editors:')", doc).length).toEqual(1);
       expect($("dt:contains('Editor:')", doc).length).toEqual(0);
       var $dd = $("dt:contains('Editors:')", doc).next("dd");
+
       expect($dd.text()).toEqual("NAME1");
       expect($dd.next("dd").text()).toEqual("NAME2");
     });
@@ -199,6 +210,7 @@ describe("W3C — Headers", function() {
       const dtElem = dtElems.find(findEditor);
       const ddElem = dtElem.nextElementSibling;
       const [personName, edition] = ddElem.querySelectorAll("span>span");
+
       expect(personName.lang).toBe("ja");
       expect(personName.textContent).toBe("阿南 康宏");
       expect(edition.textContent).toBe("第１版");
@@ -222,9 +234,11 @@ describe("W3C — Headers", function() {
 
       const dtElems = [...doc.querySelectorAll("dt")];
       const formerEditorsLabel = dtElems.find(formerEditors);
+
       expect(formerEditorsLabel).toBeUndefined();
 
       const formerEditorLabel = dtElems.find(formerEditor);
+
       expect(formerEditorLabel).toBeUndefined();
     });
 
@@ -247,28 +261,35 @@ describe("W3C — Headers", function() {
       const doc = await makeRSDoc(ops);
       const dtElems = [...doc.querySelectorAll("dt")];
       const formerEditorLabel = dtElems.find(formerEditor);
+
       expect(formerEditorLabel).toBeDefined();
 
       const formerEditorsLabel = dtElems.find(formerEditors);
+
       expect(formerEditorsLabel).toBeUndefined();
 
       const editor = formerEditorLabel.nextSibling;
+
       expect(editor.localName).toEqual("dd");
       expect(editor.textContent).toEqual("NAME (COMPANY)");
 
       const editorCompany = editor.querySelectorAll("a[href='http://COMPANY']");
+
       expect(editorCompany.length).toEqual(1);
       expect(editorCompany[0].textContent).toEqual("COMPANY");
 
       const editorEmail = editor.querySelectorAll("a[href='mailto:EMAIL']");
+
       expect(editorEmail.length).toEqual(1);
       expect(editorEmail[0].textContent).toEqual("NAME");
 
       // if `mailto` is specified in People, `url` won't be used
       const editorUrl = editor.querySelectorAll("a[href='http://URI']");
+
       expect(editorUrl.length).toEqual(0);
 
       const { editorId } = editor.dataset;
+
       expect(editorId).toEqual("1234");
     });
 
@@ -289,16 +310,20 @@ describe("W3C — Headers", function() {
       const doc = await makeRSDoc(ops);
       const dtElems = [...doc.querySelectorAll("dt")];
       const formerEditorLabel = dtElems.find(formerEditor);
+
       expect(formerEditorLabel).toBeUndefined();
 
       const formerEditorsLabel = dtElems.find(formerEditors);
+
       expect(formerEditorsLabel).toBeDefined();
 
       const firstEditor = formerEditorsLabel.nextSibling;
+
       expect(firstEditor.localName).toEqual("dd");
       expect(firstEditor.textContent).toEqual("NAME1");
 
       const secondEditor = firstEditor.nextSibling;
+
       expect(secondEditor.localName).toEqual("dd");
       expect(secondEditor.textContent).toEqual("NAME2");
     });
@@ -320,6 +345,7 @@ describe("W3C — Headers", function() {
       const dtElem = dtElems.find(formerEditor);
       const ddElem = dtElem.nextElementSibling;
       const [personName, edition] = ddElem.querySelectorAll("span>span");
+
       expect(personName.lang).toBe("ja");
       expect(personName.textContent).toBe("阿南 康宏");
       expect(edition.textContent).toBe("第１版");
@@ -342,9 +368,11 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect($("dt:contains('Authors:')", doc).length).toEqual(0);
       expect($("dt:contains('Author:')", doc).length).toEqual(1);
       var $dd = $("dt:contains('Author:')", doc).next("dd");
+
       expect($dd.text()).toEqual("NAME1");
     });
 
@@ -363,9 +391,11 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect($("dt:contains('Authors:')", doc).length).toEqual(1);
       expect($("dt:contains('Author:')", doc).length).toEqual(0);
       var $dd = $("dt:contains('Authors:')", doc).next("dd");
+
       expect($dd.text()).toEqual("NAME1");
       expect($dd.next("dd").text()).toEqual("NAME2");
     });
@@ -380,8 +410,10 @@ describe("W3C — Headers", function() {
          </h1>` + makeDefaultBody();
       const ops = makeStandardOps({}, body);
       const doc = await makeRSDoc(ops);
+
       expect(doc.title).toEqual("This should be pass.");
       const titleElem = doc.querySelector("title");
+
       expect(titleElem).toBeTruthy();
       expect(titleElem.textContent).toEqual("This should be pass.");
     });
@@ -393,6 +425,7 @@ describe("W3C — Headers", function() {
 
       // Title was relocated to head
       const titleInHead = doc.querySelector(".head h1");
+
       expect(titleInHead.classList.contains("p-name")).toBe(true);
       expect(titleInHead.id).toEqual("title");
 
@@ -402,6 +435,7 @@ describe("W3C — Headers", function() {
 
       // the config title is overridden
       const { title } = doc.defaultView.respecConfig;
+
       expect(title).toEqual("pass");
     });
   });
@@ -414,6 +448,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect(doc.getElementById("subtitle")).toEqual(null);
     });
 
@@ -423,12 +458,15 @@ describe("W3C — Headers", function() {
       const doc = await makeRSDoc(ops);
 
       const subTitleElements = doc.querySelectorAll("h2#subtitle");
+
       expect(subTitleElements.length).toEqual(1);
 
       const { subtitle } = doc.defaultView.respecConfig;
+
       expect(subtitle).toEqual("pass");
 
       const [h2Elem] = subTitleElements;
+
       expect(h2Elem.textContent).toEqual("pass");
 
       // make sure it was relocated to head
@@ -449,6 +487,7 @@ describe("W3C — Headers", function() {
       const doc = await makeRSDoc(ops);
 
       const { subtitle } = doc.defaultView.respecConfig;
+
       expect(subtitle).toEqual("pass");
     });
 
@@ -458,6 +497,7 @@ describe("W3C — Headers", function() {
       const doc = await makeRSDoc(ops);
 
       const { subtitle } = doc.defaultView.respecConfig;
+
       expect(subtitle).toEqual("pass");
     });
 
@@ -470,6 +510,7 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       const h2Elem = doc.getElementById("subtitle");
+
       expect(h2Elem).toBeTruthy();
       expect(h2Elem.textContent.trim()).toEqual("pass");
     });
@@ -483,6 +524,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect($("h2:contains('15 March 1977')", doc).length).toEqual(1);
     });
   });
@@ -511,6 +553,7 @@ describe("W3C — Headers", function() {
         const value = doc.defaultView.respecConfig[key].valueOf();
         return value <= end && value >= start;
       });
+
       expect(allInBetween).toBe(true);
     });
   });
@@ -526,6 +569,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect(
         $("dt:contains('Previous version:')", doc)
           .next("dd")
@@ -543,6 +587,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect($(".head a:contains('errata')", doc).attr("href")).toEqual("ERR");
     });
   });
@@ -557,6 +602,7 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       var licenses = doc.querySelectorAll("div.head a[rel=license]");
+
       expect(licenses.length).toEqual(1);
       expect(licenses.item(0).tagName).toEqual("A");
       expect(licenses.item(0).href).toEqual(
@@ -566,6 +612,7 @@ describe("W3C — Headers", function() {
   });
 
   describe("alternateFormats", () => {});
+
   it("takes alternateFormats into account", async () => {
     const ops = makeStandardOps();
     const newProps = {
@@ -579,10 +626,12 @@ describe("W3C — Headers", function() {
     };
     Object.assign(ops.config, newProps);
     const doc = await makeRSDoc(ops);
+
     expect($(".head a:contains('LABEL')", doc).attr("href")).toEqual("URI");
   });
 
   describe("testSuiteURI", () => {});
+
   it("takes testSuiteURI into account", async () => {
     const ops = makeStandardOps();
     const newProps = {
@@ -591,6 +640,7 @@ describe("W3C — Headers", function() {
     };
     Object.assign(ops.config, newProps);
     const doc = await makeRSDoc(ops);
+
     expect(
       $("dt:contains('Test suite:')", doc)
         .next("dd")
@@ -607,6 +657,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect(
         $("dt:contains('Implementation report:')", doc)
           .next("dd")
@@ -623,6 +674,7 @@ describe("W3C — Headers", function() {
       });
 
       const doc = await makeRSDoc(ops);
+
       expect(
         $("dt:contains('Latest editor\\'s draft:')", doc)
           .next("dd")
@@ -641,6 +693,7 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       var query = "dt:contains('Previous editor\\'s draft:')";
+
       expect(
         $(query, doc)
           .next("dd")
@@ -658,8 +711,10 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect($(".head .copyright", doc).text()).toMatch(/XXX\s+&\s+W3C/);
     });
+
     it("takes additionalCopyrightHolders into account when spec is unofficial", async () => {
       const ops = makeStandardOps();
       const newProps = {
@@ -668,6 +723,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect($(".head .copyright", doc).text()).toEqual("XXX");
     });
 
@@ -678,6 +734,7 @@ describe("W3C — Headers", function() {
       });
 
       const doc = await makeRSDoc(ops);
+
       expect($(".head .copyright .test", doc).text()).toEqual("XXX");
     });
   });
@@ -690,6 +747,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect($(".head .copyright", doc).length).toEqual(0);
       expect($(".head .copyright2", doc).length).toEqual(1);
       expect($(".head .copyright2", doc).text()).toEqual("XXX");
@@ -705,6 +763,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect($(".head .copyright", doc).text()).toMatch(/1977-2012/);
     });
 
@@ -716,6 +775,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect($(".head .copyright", doc).text()).not.toMatch(/2012-2012/);
     });
   });
@@ -731,11 +791,13 @@ describe("W3C — Headers", function() {
       const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
       const { wgId, isNote } = doc.defaultView.respecConfig;
       const elem = doc.querySelector("p[data-deliverer]");
+
       expect(isNote).toBe(true);
       expect(wgId).toEqual("123456");
       expect(elem).toBeTruthy();
       expect(elem.dataset.deliverer).toEqual("123456");
     });
+
     it("gracefully handles missing wgPatentURI", async () => {
       const ops = makeStandardOps();
       const newProps = {
@@ -745,11 +807,13 @@ describe("W3C — Headers", function() {
       const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
       const elem = doc.querySelector("p[data-deliverer]");
       const { wgId, isNote } = doc.defaultView.respecConfig;
+
       expect(isNote).toBe(true);
       expect(wgId).toEqual("");
       expect(elem).toBeTruthy();
       expect(elem.dataset.deliverer).toEqual("");
     });
+
     it("only doesn't data-deliverer for non-notes", async () => {
       const ops = makeStandardOps();
       const newProps = {
@@ -760,6 +824,7 @@ describe("W3C — Headers", function() {
       const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
       const elem = doc.querySelector("p[data-deliverer]");
       const { wgId, isNote } = doc.defaultView.respecConfig;
+
       expect(isNote).toBe(false);
       expect(wgId).toEqual("123456");
       expect(elem).toEqual(null);
@@ -779,6 +844,7 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
       var $sotd = $("#sotd", doc);
+
       expect($sotd.find("p:contains('CUSTOM PARAGRAPH')").length).toEqual(1);
       expect($sotd.find("a:contains('WGNAME')").length).toEqual(1);
       expect($sotd.find("a:contains('WGNAME')").attr("href")).toEqual("WGURI");
@@ -786,12 +852,15 @@ describe("W3C — Headers", function() {
       expect($sotd.find("a:contains('WGLIST@w3.org')").attr("href")).toEqual(
         "mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D"
       );
+
       expect($sotd.find("a:contains('subscribe')").attr("href")).toEqual(
         "mailto:WGLIST-request@w3.org?subject=subscribe"
       );
+
       expect($sotd.find("a:contains('archives')").attr("href")).toEqual(
         "https://lists.w3.org/Archives/Public/WGLIST/"
       );
+
       expect($sotd.find("a:contains('disclosures')").attr("href")).toEqual(
         "WGPATENT"
       );
@@ -808,6 +877,7 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       var $sotd = $("#sotd", doc);
+
       expect($sotd.find("a:contains('WGNAME1')").length).toEqual(2);
       expect($sotd.find("a:contains('WGNAME2')").length).toEqual(2);
       expect(
@@ -816,24 +886,28 @@ describe("W3C — Headers", function() {
           .first()
           .attr("href")
       ).toEqual("WGURI1");
+
       expect(
         $sotd
           .find("a:contains('WGNAME1')")
           .last()
           .attr("href")
       ).toEqual("WGPATENT1");
+
       expect(
         $sotd
           .find("a:contains('WGNAME2')")
           .first()
           .attr("href")
       ).toEqual("WGURI2");
+
       expect(
         $sotd
           .find("a:contains('WGNAME2')")
           .last()
           .attr("href")
       ).toEqual("WGPATENT2");
+
       expect($sotd.find("a:contains('disclosures')").length).toEqual(2);
     });
   });
@@ -857,8 +931,10 @@ describe("W3C — Headers", function() {
       const doc = await makeRSDoc(ops);
       var $sotd = $("#sotd", doc);
       var $f = $($sotd.find("p:contains('Proposed Edited Recommendation')"));
+
       expect($f.length).toEqual(2);
       var $p = $f[0];
+
       expect($("a:contains('questionnaires')", $p).length).toEqual(1);
     });
   });
@@ -878,8 +954,10 @@ describe("W3C — Headers", function() {
       const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
       var $sotd = $("#sotd", doc);
       var $f = $($sotd.find("p:contains('CUSTOM PARAGRAPH')"));
+
       expect($f.length).toEqual(1);
       var $p = $f.prev();
+
       expect($("a:contains('WGNAME')", $p).length).toEqual(1);
       expect($("a:contains('WGNAME')", $p).attr("href")).toEqual("WGURI");
       expect($("a:contains('WGLIST@w3.org')", $p).attr("href")).toEqual(
@@ -897,6 +975,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect($("#sotd a:contains('charter')", doc).attr("href")).toEqual("URI");
     });
   });
@@ -909,6 +988,7 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect($("#sotd p strong", doc).text()).toEqual("PATENTNOTE");
     });
   });
@@ -926,14 +1006,17 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       var $c = $(".head .copyright", doc);
+
       expect($c.find("a[href='http://WG']").length).toEqual(1);
       expect($c.find("a:contains(WGNAME)").length).toEqual(1);
       expect(
         $c.find("a[href='https://www.w3.org/community/about/agreements/cla/']")
           .length
       ).toEqual(1);
+
       expect($(".head h2", doc).text()).toMatch(/Draft Community Group Report/);
       var $sotd = $("#sotd", doc);
+
       expect($sotd.find("a[href='http://WG']").length).toEqual(1);
       expect($sotd.find("a:contains(WGNAME)").length).toEqual(1);
       expect(
@@ -941,13 +1024,16 @@ describe("W3C — Headers", function() {
           "a[href='https://www.w3.org/community/about/agreements/cla/']"
         ).length
       ).toEqual(1);
+
       expect($sotd.find("a:contains('WGLIST@w3.org')").length).toEqual(1);
       expect($sotd.find("a:contains('WGLIST@w3.org')").attr("href")).toEqual(
         "mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D"
       );
+
       expect($sotd.find("a:contains('subscribe')").attr("href")).toEqual(
         "mailto:WGLIST-request@w3.org?subject=subscribe"
       );
+
       expect($sotd.find("a:contains('archives')").attr("href")).toEqual(
         "https://lists.w3.org/Archives/Public/WGLIST/"
       );
@@ -964,24 +1050,28 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
+
       expect(
         $(
           ".head .copyright a[href='https://www.w3.org/community/about/agreements/fsa/']",
           doc
         ).length
       ).toEqual(1);
+
       expect($(".head h2", doc).text()).toMatch(/Final Business Group Report/);
       expect(
         $("dt:contains('This version:')", doc)
           .next("dd")
           .text()
       ).toMatch(/http:\/\/THIS/);
+
       expect(
         $("dt:contains('Latest published version:')", doc)
           .next("dd")
           .text()
       ).toMatch(/http:\/\/LATEST/);
       var $sotd = $("#sotd", doc);
+
       expect($sotd.find("a[href='http://WG']").length).toEqual(1);
       expect($sotd.find("a:contains(WGNAME)").length).toEqual(1);
       expect(
@@ -1005,31 +1095,40 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       doc = await makeRSDoc(ops);
     });
+
     it("shouldn't expose a Previous version link for Member submissions", async () => {
       expect($("dt:contains('Previous version:')", doc).length).toEqual(0);
     });
+
     it("displays the Member Submission logo for Member submissions", async () => {
       const img = doc.querySelector(
         ".head img[src^='https://www.w3.org/Icons/member_subm']"
       );
+
       expect(img).toBeTruthy();
     });
+
     it("uses the right SoTD boilerplate for Member submissions", async () => {
       const stod = doc.getElementById("sotd").textContent.replace(/\s+/gm, " ");
       const testString =
         "the Submitting Members have made a formal Submission request";
+
       expect(stod).toMatch(testString);
     });
+
     it("links the right submitting members", async () => {
       const anchor = doc.querySelector(
         "#sotd a[href='https://www.w3.org/Submission/2018/Member-SUBM-yolo-20180525/']"
       );
+
       expect(anchor).toBeTruthy();
     });
+
     it("shows the correct staff comments", async () => {
       const anchor = doc.querySelector(
         "#sotd a[href='https://www.w3.org/Submission/2018/01/Comment/']"
       );
+
       expect(anchor).toBeTruthy();
     });
   });
@@ -1047,6 +1146,7 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
       var $sotd = $("#sotd", doc);
+
       expect($sotd.find("p:contains('CUSTOM PARAGRAPH')").length).toEqual(1);
       expect($sotd.find("a:contains('WGNAME')").length).toEqual(0);
       expect($sotd.find("a:contains('WGLIST@w3.org')").length).toEqual(0);
@@ -1056,6 +1156,7 @@ describe("W3C — Headers", function() {
       );
     });
   });
+
   it("allows custom sections and custom content, not just paragraphs", async () => {
     const ops = makeStandardOps();
     ops.body = `
@@ -1095,31 +1196,39 @@ describe("W3C — Headers", function() {
       expect(sotd.classList.contains("introductory")).toBe(true);
 
       const p1 = sotd.querySelector("#p1");
+
       expect(p1).toBeTruthy();
       expect(p1.textContent.trim()).toEqual("CUSTOM PARAGRAPH 1");
 
       const p2 = sotd.querySelector("#p2");
+
       expect(p2).toBeTruthy();
       expect(p2.textContent.trim()).toEqual("CUSTOM PARAGRAPH 2");
 
       const commentNode = p2.nextSibling;
+
       expect(commentNode.nodeType).toEqual(Node.COMMENT_NODE);
 
       const textNode = commentNode.nextSibling;
+
       expect(textNode.nodeType).toEqual(Node.TEXT_NODE);
 
       const ol = sotd.querySelector("#ol");
+
       expect(ol).toBeTruthy();
       expect(ol.querySelectorAll("li").length).toEqual(2);
 
       const firstSection = sotd.querySelector("#first-sub-section");
+
       expect(sotd.lastElementChild).not.toEqual(firstSection);
 
       const lastSection = sotd.querySelector("#last-sub-section");
+
       expect(sotd.lastElementChild).toEqual(lastSection);
 
       // p3 is sadwiched in between the sections
       const p3 = sotd.querySelector("#p3");
+
       expect(p3).toBeTruthy();
       expect(p3.previousElementSibling).toEqual(firstSection);
       expect(p3.nextElementSibling).toEqual(lastSection);
@@ -1139,6 +1248,7 @@ describe("W3C — Headers", function() {
     // Test CG spec, using "cg-bg-stod.html"
     theTest(await makeRSDoc(cgOpts));
   });
+
   it("includes translation link when it's a REC", async () => {
     const ops = makeStandardOps();
     const newProps = {
@@ -1148,15 +1258,18 @@ describe("W3C — Headers", function() {
     Object.assign(ops.config, newProps);
     const doc = await makeRSDoc(ops);
     const aElem = doc.querySelector(
-      `a[href^="http://www.w3.org/2003/03/Translations/"]`
+      "a[href^=\"http://www.w3.org/2003/03/Translations/\"]"
     );
+
     expect(aElem.href.endsWith("PASS")).toBeTruthy();
     const textContent = aElem.parentElement.textContent
       .trim()
       .replace("\n", "")
       .replace(/\s+/g, " ");
+
     expect(textContent).toEqual("See also translations.");
   });
+
   it("doesn't include a translation link when it's not REC", async () => {
     const ops = makeStandardOps();
     const newProps = {
@@ -1166,10 +1279,12 @@ describe("W3C — Headers", function() {
     Object.assign(ops.config, newProps);
     const doc = await makeRSDoc(ops);
     const aElem = doc.querySelector(
-      `a[href^="http://www.w3.org/2003/03/Translations/"]`
+      "a[href^=\"http://www.w3.org/2003/03/Translations/\"]"
     );
+
     expect(aElem).toEqual(null);
   });
+
   describe("isPreview", () => {
     it("adds annoying warning when isPreview", async () => {
       const ops = makeStandardOps();
@@ -1180,7 +1295,8 @@ describe("W3C — Headers", function() {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       // has details with annoying annoying warning
-      const aElem = doc.querySelector(`#sotd details.annoying-warning[open]`);
+      const aElem = doc.querySelector("#sotd details.annoying-warning[open]");
+
       expect(aElem).toBeTruthy();
     });
   });
@@ -1199,8 +1315,10 @@ describe("W3C — Headers", function() {
       .textContent.replace(/\s+/gm, " ");
     const expectedString =
       "does not expect this document to become a W3C Recommendation";
+
     expect(sotdText).toMatch(expectedString);
   });
+
   describe("logos", () => {
     it("adds logos defined by configuration", async () => {
       const ops = makeStandardOps();
@@ -1238,6 +1356,7 @@ describe("W3C — Headers", function() {
         const anchor = anchors[i];
         const img = anchor.children[0];
         const logo = logos[i];
+
         expect(img.src).toEqual(logo.src);
         expect(img.alt).toEqual(logo.alt);
         expect(img.height).toEqual(logo.height);

@@ -1,6 +1,7 @@
 "use strict";
 describe("Core — Seo", () => {
   afterAll(flushIframes);
+
   it("doesn't insert a meta description element if there is no abstract", async () => {
     const ops = {
       config: makeBasicConfig(),
@@ -13,6 +14,7 @@ describe("Core — Seo", () => {
       const check = () => {
         const hasMetaDesc = doc.querySelectorAll("meta[name=description]")
           .length;
+
         expect(hasMetaDesc).toEqual(0);
         resolve();
       };
@@ -40,8 +42,10 @@ describe("Core — Seo", () => {
           expect(true).toBe(true);
           return;
         }
+
         expect(hasMetaDesc).toEqual(1);
         const meta = doc.head.querySelector("meta[name=description]");
+
         expect(meta.content).toEqual("Pass");
         resolve();
       };

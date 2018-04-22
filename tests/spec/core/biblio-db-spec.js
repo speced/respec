@@ -48,6 +48,7 @@ describe("Core - biblioDB", () => {
   describe("ready getter", () => {
     it("resolves with a IDB database", async () => {
       const db = await biblioDB.ready;
+
       expect(db instanceof window.IDBDatabase).toBe(true);
     });
   });
@@ -79,6 +80,7 @@ describe("Core - biblioDB", () => {
         id: "test123",
       });
       const result = await biblioDB.has("reference", "test123");
+
       expect(result).toBe(true);
     });
   });
@@ -91,6 +93,7 @@ describe("Core - biblioDB", () => {
         biblioDB.has("reference", "ADD-ALL-TEST"),
         biblioDB.has("reference", "WHATWG-DOM"),
       ]);
+
       expect(results.every(v => v === true)).toBe(true);
     });
   });
@@ -121,6 +124,7 @@ describe("Core - biblioDB", () => {
       });
 
       const entry = await biblioDB.get("reference", "get-ref-test");
+
       expect(entry.title).toEqual("PASS");
     });
 
@@ -130,6 +134,7 @@ describe("Core - biblioDB", () => {
         aliasOf: "PASS",
       });
       const entry = await biblioDB.get("alias", "ALIAS-GET-TEST");
+
       expect(entry.aliasOf).toEqual("PASS");
     });
 
@@ -138,6 +143,7 @@ describe("Core - biblioDB", () => {
         biblioDB.get("reference", "does not exist"),
         biblioDB.get("alias", "does not exist"),
       ]);
+
       expect(results.every(v => v === null)).toBe(true);
     });
   });
@@ -174,6 +180,7 @@ describe("Core - biblioDB", () => {
         biblioDB.has("reference", "has-ref-test"),
         biblioDB.has("alias", "has-alias-test"),
       ]);
+
       expect(results.every(v => v === true)).toBe(true);
     });
 
@@ -182,6 +189,7 @@ describe("Core - biblioDB", () => {
         biblioDB.has("reference", "does not exist"),
         biblioDB.has("alias", "does not exist"),
       ]);
+
       expect(results.every(v => v === false)).toBe(true);
     });
   });
@@ -192,7 +200,9 @@ describe("Core - biblioDB", () => {
       var p2 = biblioDB.isAlias(null);
       var p3 = biblioDB.isAlias("");
       await Promise.all([
-        p1.catch(err => expect(err instanceof TypeError).toBe(true)),
+        p1.catch(err =>
+
+        expect(err instanceof TypeError).toBe(true)),
         p2.catch(err => expect(err instanceof TypeError).toBe(true)),
         p3.catch(err => expect(err instanceof TypeError).toBe(true)),
       ]);
@@ -204,11 +214,13 @@ describe("Core - biblioDB", () => {
         id: "test-isAlias-pass",
       });
       const result = await biblioDB.isAlias("test-isAlias-pass");
+
       expect(result).toBe(true);
     });
 
     it("returns false when it is not an alias", async () => {
       const result = await biblioDB.isAlias("not an alias");
+
       expect(result).toBe(false);
     });
   });
@@ -219,7 +231,9 @@ describe("Core - biblioDB", () => {
       var p2 = biblioDB.find(null);
       var p3 = biblioDB.find("");
       await Promise.all([
-        p1.catch(err => expect(err instanceof TypeError).toBe(true)),
+        p1.catch(err =>
+
+        expect(err instanceof TypeError).toBe(true)),
         p2.catch(err => expect(err instanceof TypeError).toBe(true)),
         p3.catch(err => expect(err instanceof TypeError).toBe(true)),
       ]);
@@ -228,8 +242,10 @@ describe("Core - biblioDB", () => {
     it("finds a references and resolves aliases", async () => {
       await biblioDB.addAll(data);
       const r1 = await biblioDB.find("DAHU");
+
       expect(r1.id).toEqual("DAHUT");
-      const r2 = await biblioDB.find("whatwg-dom"); // alias
+      const r2 = await biblioDB.find("whatwg-dom");
+
       expect(r2.title).toEqual("DOM Standard");
     });
   });
@@ -240,7 +256,9 @@ describe("Core - biblioDB", () => {
       var p2 = biblioDB.resolveAlias(null);
       var p3 = biblioDB.resolveAlias("");
       await Promise.all([
-        p1.catch(err => expect(err instanceof TypeError).toBe(true)),
+        p1.catch(err =>
+
+        expect(err instanceof TypeError).toBe(true)),
         p2.catch(err => expect(err instanceof TypeError).toBe(true)),
         p3.catch(err => expect(err instanceof TypeError).toBe(true)),
       ]);
@@ -249,8 +267,10 @@ describe("Core - biblioDB", () => {
     it("resolves known aliases or return null when alias is unknown", async () => {
       await biblioDB.addAll(data);
       const alias = await biblioDB.resolveAlias("whatwg-dom");
+
       expect(alias).toEqual("WHATWG-DOM");
       const noAlias = await biblioDB.resolveAlias("does not exist");
+
       expect(noAlias).toBe(null);
     });
   });

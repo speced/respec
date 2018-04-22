@@ -1,6 +1,7 @@
 "use strict";
 describe("Core — Issues and Notes", function() {
   afterAll(flushIframes);
+
   it("should process issues and notes", async () => {
     var ops = {
       config: makeBasicConfig(),
@@ -37,6 +38,7 @@ describe("Core — Issues and Notes", function() {
     expect($atr.find("div.issue-title").text()).toEqual(
       "Feature at Risk 2: ATR-TIT"
     );
+
     expect($patr.attr("title")).toBeUndefined();
     expect($patr.text()).toEqual("FEATURE AT RISK");
 
@@ -57,10 +59,12 @@ describe("Core — Issues and Notes", function() {
     const doc = await makeRSDoc(ops);
     var $not = $("div.ednote", doc);
     var $pnot = $not.find("p");
+
     expect($not.find("div.ednote-title").length).toEqual(1);
     expect($not.find("div.ednote-title").text()).toEqual(
       "Editor's note: EDNOTE-TIT"
     );
+
     expect($pnot.attr("title")).toBeUndefined();
     expect($pnot.text()).toEqual("EDNOTE");
   });
@@ -76,6 +80,7 @@ describe("Core — Issues and Notes", function() {
     };
     const doc = await makeRSDoc(ops);
     var $sec = $("section", doc);
+
     expect($sec.find(".warning").length).toEqual(2);
     expect($sec.find(".warning-title").length).toEqual(1);
     expect($sec.find(".warning-title").text()).toEqual("Warning: WARN-TIT");
@@ -94,6 +99,7 @@ describe("Core — Issues and Notes", function() {
     var $i10 = $("#i10", doc).parent("div");
     var $i11 = $("#i11", doc).parent("div");
     var $ixx = $("#ixx", doc).parent("div");
+
     expect($i10.find("div.issue-title").length).toEqual(1);
     expect($i10.find("div.issue-title").text()).toEqual("Issue 10");
 
@@ -169,11 +175,13 @@ describe("Core — Issues and Notes", function() {
     const doc = await makeRSDoc(ops);
     var $iss = $("div.issue", doc);
     var $piss = $iss.find("p");
+
     expect($iss.find("div.issue-title").length).toEqual(1);
     expect($iss.find("div.issue-title").text()).toEqual("Issue 10");
     expect($iss.find("div.issue-title a").attr("href")).toEqual(
       issueBaseConfig.issueBase + "10"
     );
+
     expect($piss.attr("title")).toBeUndefined();
     expect($piss.text()).toEqual("ISSUE");
   });
@@ -197,16 +205,22 @@ describe("Core — Issues and Notes", function() {
     };
     const doc = await makeRSDoc(ops);
     const issueDiv1 = doc.getElementById("this-should-not-exist");
+
     expect(issueDiv1).toBeFalsy();
     const issueDiv2 = doc.getElementById("issue-1540");
+
     expect(issueDiv2).toBeTruthy();
     const issueDiv3 = doc.getElementById("i-should-be-here-too");
+
     expect(issueDiv3).toBeTruthy();
     const summarySection = doc.getElementById("issue-summary");
+
     expect(summarySection).toBeTruthy();
     const { textContent } = summarySection.querySelector("[href='#issue-1540']");
+
     expect(textContent).toBe("Issue 1540");
     const issueDiv404 = doc.getElementById("this-is-404");
+
     expect(issueDiv404).toBeTruthy();
     expect(issueDiv404.textContent).toEqual("this is 404");
   });
@@ -232,11 +246,13 @@ describe("Core — Issues and Notes", function() {
     const doc = await makeRSDoc(ops);
     var $iss = $("div.atrisk", doc);
     var $piss = $iss.find("p");
+
     expect($iss.find("div.issue-title").length).toEqual(1);
     expect($iss.find("div.issue-title").text()).toEqual("Feature at Risk 10");
     expect($iss.find("div.issue-title a").attr("href")).toEqual(
       atRiskBaseConfig.atRiskBase + "10"
     );
+
     expect($piss.attr("title")).toBeUndefined();
     expect($piss.text()).toEqual("FEATURE AT RISK");
   });

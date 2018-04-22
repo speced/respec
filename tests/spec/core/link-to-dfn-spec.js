@@ -14,9 +14,11 @@ describe("Core — Link to definitions", function() {
     };
     const doc = await makeRSDoc(ops);
     const a = doc.body.querySelector("#testAnchor");
+
     expect(a).toBeTruthy();
     expect(a.hash).toEqual("#dfn-test");
     const decodedHash = decodeURIComponent(a.hash);
+
     expect(doc.getElementById(decodedHash.slice(1))).toBeTruthy();
   });
 
@@ -36,10 +38,12 @@ describe("Core — Link to definitions", function() {
     };
     const doc = await makeRSDoc(ops);
     const hasCode = doc.body.querySelector("#codeWrap a");
+
     expect(hasCode).toBeTruthy();
     expect(hasCode.firstElementChild.localName).toEqual("code");
     expect(hasCode.textContent).toEqual("Request");
     const noCodeWrap = doc.body.querySelector("#noCodeWrap a");
+
     expect(noCodeWrap).toBeTruthy();
     expect(noCodeWrap.querySelector("code")).toBeFalsy();
     expect(noCodeWrap.textContent).toEqual("the request interface");
@@ -62,16 +66,19 @@ describe("Core — Link to definitions", function() {
     const dfnList = doc.body.querySelectorAll("dfn");
 
     const dfn1 = dfnList[1];
+
     expect(dfn1).toBeTruthy();
     expect(dfn1.classList).toContain("respec-offending-element");
     expect(dfn1.id).toBe("duplicate-definition");
 
     const dfn2 = dfnList[2];
+
     expect(dfn2).toBeTruthy();
     expect(dfn2.classList).toContain("respec-offending-element");
     expect(dfn2.id).toBeDefined();
 
     const dfn3 = dfnList[3];
+
     expect(dfn3).toBeTruthy();
     expect(dfn3.classList).toContain("respec-offending-element");
     expect(dfn3.title).toBe("test1");

@@ -18,12 +18,15 @@ describe("Core Linter Rule - 'no-headingless-sections'", () => {
       doc.body.removeChild(doc.body.firstChild);
     }
   });
+
   it("returns error when heading is missing section", async () => {
     const section = doc.createElement("section");
     doc.body.appendChild(section);
     const results = await rule.lint(config, doc);
+
     expect(results.length).toEqual(1);
     const result = results[0];
+
     expect(result).toEqual({
       name: ruleName,
       offendingElements: [section],
@@ -34,6 +37,7 @@ describe("Core Linter Rule - 'no-headingless-sections'", () => {
     });
     section.remove();
   });
+
   it("doesn't complain when sections do have a heading", async () => {
     doc.body.innerHTML = `
         <section>
@@ -47,8 +51,10 @@ describe("Core Linter Rule - 'no-headingless-sections'", () => {
         </section>
     `;
     const results = await rule.lint(config, doc);
+
     expect(results.length).toEqual(0);
   });
+
   it("complains when a nested section doesn't have a heading", async () => {
     doc.body.innerHTML = `
         <section>
@@ -64,6 +70,7 @@ describe("Core Linter Rule - 'no-headingless-sections'", () => {
     const badone = doc.getElementById("badone");
     const results = await rule.lint(config, doc);
     const [result] = results;
+
     expect(result.offendingElements.length).toEqual(1);
     expect(result.offendingElements[0]).toEqual(badone);
   });
