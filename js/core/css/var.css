@@ -3,6 +3,10 @@ var:hover {
   cursor: pointer;
 }
 
+var.respec-hl {
+  color: #000;
+}
+
 var.respec-hl-yellow {
   background: #f6d51f;
 }
@@ -12,7 +16,7 @@ var.respec-hl-blue {
 }
 
 var.respec-hl-pink {
-  background: #fa5457;
+  background: #F9A4AF;
 }
 
 var.respec-hl-green {
