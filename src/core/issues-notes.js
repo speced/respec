@@ -33,7 +33,9 @@ function handleIssues($ins, ghIssues, conf) {
           value !== undefined && ghIssues.get(Number(value)).state === "closed"
       )
       .forEach(issue => {
-        const { dataset: { number } } = issue;
+        const {
+          dataset: { number },
+        } = issue;
         const msg = `Github issue ${number} was closed on GitHub, so removing from spec`;
         pub("warn", msg);
         issue.remove();
@@ -53,7 +55,11 @@ function handleIssues($ins, ghIssues, conf) {
       };
     report.type = isIssue
       ? "issue"
-      : isWarning ? "warning" : isEdNote ? "ednote" : "note";
+      : isWarning
+        ? "warning"
+        : isEdNote
+          ? "ednote"
+          : "note";
     if (isIssue && !isInline && !hasDataNum) {
       issueNum++;
       report.number = issueNum;
@@ -74,10 +80,14 @@ function handleIssues($ins, ghIssues, conf) {
             "-title'><span></span></div>"
         ),
         text = isIssue
-          ? isFeatureAtRisk ? "Feature at Risk" : conf.l10n.issue
+          ? isFeatureAtRisk
+            ? "Feature at Risk"
+            : conf.l10n.issue
           : isWarning
             ? conf.l10n.warning
-            : isEdNote ? conf.l10n.editors_note : conf.l10n.note,
+            : isEdNote
+              ? conf.l10n.editors_note
+              : conf.l10n.note,
         ghIssue;
       $tit.makeID("h", report.type);
       report.title = $inno.attr("title");
