@@ -10,6 +10,7 @@ import { pub } from "core/pubsubhub";
 export const name = "core/figures";
 
 export function run(conf, doc, cb) {
+  normalizeImages(doc);
   // Move old syntax to new syntax
   $(".figure", doc).each(function(i, figure) {
     var $figure = $(figure),
@@ -114,4 +115,12 @@ export function run(conf, doc, cb) {
     while (tof.length) $ul.append(tof.shift());
   }
   cb();
+}
+
+function normalizeImages(doc) {
+  [...doc.querySelectorAll(":not(picture)>img:not([width]):not([height]):not([srcset])")]
+    .forEach(img => {
+      img.height = img.naturalHeight;
+      img.width = img.naturalWidth;
+    });
 }
