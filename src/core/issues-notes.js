@@ -18,9 +18,10 @@ export const name = "core/issues-notes";
 
 const MAX_GITHUB_REQUESTS = 60;
 
-function handleIssues($ins, ghIssues, conf) {
+function handleIssues(ins, ghIssues, conf) {
+  const $ins = $(ins);
   const { issueBase, githubAPI } = conf;
-  var hasDataNum = $(".issue[data-number]").length > 0,
+  var hasDataNum = !!document.querySelector(".issue[data-number]"),
     issueNum = 0,
     $issueSummary = $(
       "<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"
@@ -51,7 +52,6 @@ function handleIssues($ins, ghIssues, conf) {
       dataNum = $inno.attr("data-number"),
       report = {
         inline: isInline,
-        content: $inno.html(),
       };
     report.type = isIssue
       ? "issue"
@@ -81,7 +81,7 @@ function handleIssues($ins, ghIssues, conf) {
         ),
         text = isIssue
           ? isFeatureAtRisk
-            ? "Feature at Risk"
+            ? conf.l10n.feature_at_risk
             : conf.l10n.issue
           : isWarning
             ? conf.l10n.warning
@@ -89,6 +89,15 @@ function handleIssues($ins, ghIssues, conf) {
               ? conf.l10n.editors_note
               : conf.l10n.note,
         ghIssue;
+      if (inno.id) {
+        $div[0].id = inno.id;
+        inno.removeAttribute("id");
+      } else {
+        $div.makeID(
+          "issue-container",
+          report.number ? `number-${report.number}` : ""
+        );
+      }
       $tit.makeID("h", report.type);
       report.title = $inno.attr("title");
       if (isIssue) {
@@ -115,11 +124,11 @@ function handleIssues($ins, ghIssues, conf) {
         }
         if (report.number !== undefined) {
           // Add entry to #issue-summary.
-          var id = "issue-" + report.number,
-            $li = $("<li><a></a></li>"),
-            $a = $li.find("a");
-          $div.attr("id", id);
-          $a.attr("href", "#" + id).text(conf.l10n.issue + " " + report.number);
+          var $li = $("<li><a></a></li>");
+          var $a = $li.find("a");
+          $a
+            .attr("href", "#" + $div[0].id)
+            .text(conf.l10n.issue + " " + report.number);
           if (report.title) {
             $li.append(
               $(
@@ -251,8 +260,10 @@ async function processResponse(response, issueNumber) {
 }
 
 export async function run(conf) {
-  const $ins = $(".issue, .note, .warning, .ednote");
-  if (!$ins.length) {
+  const issuesAndNotes = document.querySelectorAll(
+    ".issue, .note, .warning, .ednote"
+  );
+  if (!issuesAndNotes.length) {
     return; // nothing to do.
   }
   const ghIssues = conf.githubAPI
@@ -263,5 +274,5 @@ export async function run(conf) {
     hyperHTML`<style>${[css]}</style>`,
     headElem.querySelector("link")
   );
-  handleIssues($ins, ghIssues, conf);
+  handleIssues(issuesAndNotes, ghIssues, conf);
 }
