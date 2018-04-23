@@ -32,7 +32,7 @@
 
 /* a browser version */
 .caniuse-cell {
-  min-width: 100px;
+  min-width: 3cm;
   padding: 4px;
   background: #eee; /* default, for unknown support */
   margin: 1px;
@@ -45,6 +45,7 @@
   left: 0;
   margin-top: 4px;
   z-index: 2;
+  background: #fff;
 }
 
 /* show older browsers on hover/focus/touch */
