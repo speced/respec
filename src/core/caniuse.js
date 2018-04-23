@@ -76,7 +76,7 @@ export async function run(conf) {
   const definitionPair = hyperHTML.bind(document.createDocumentFragment())`
     <dt class="caniuse-title"
       id="${`caniuse-${feature}`}">Can I Use this API?</dt>
-    <dd class="caniuse-stats">${{
+    <dd class="caniuse-stats" tabindex="0">${{
       any: contentPromise,
       placeholder: "Fetching data from caniuse.com...",
     }}</dd>`;
@@ -148,7 +148,9 @@ function createTableHTML(conf, stats) {
   // render the support table
   return hyperHTML`
     ${conf.browsers
-      .map(browser => addBrowser(browser, conf.versions, stats[browser]))
+      .map((browser, i) =>
+        addBrowser(browser, conf.versions, stats[browser], i + 1)
+      )
       .filter(elem => elem)}
     <a href="${`https://caniuse.com/#feat=${conf.feature}`}"
       title="Get details at caniuse.com">More info
@@ -160,8 +162,9 @@ function createTableHTML(conf, stats) {
    * @param {String} browser      name of browser (as in CanIUse API response)
    * @param {Number} numVersions  number of old browser versions to show
    * @param {Object} browserData  stats data from api response
+   * @param {Number} tabindex
    */
-  function addBrowser(browser, numVersions, browserData) {
+  function addBrowser(browser, numVersions, browserData, tabindex) {
     if (!browserData) return;
     const getSupport = version => {
       const supportKeys = browserData[version]
@@ -193,6 +196,7 @@ function createTableHTML(conf, stats) {
         <li class="${"caniuse-cell " + support}" title="${title}">
           <button>
             ${BROWSERS.get(browser) || browser} ${latestVersion}
+            <span class="toggle-helper" tabindex="${tabindex}"></span>
           </button>
           <ul>
             ${olderVersions.map(addBrowserVersion)}

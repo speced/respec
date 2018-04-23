@@ -28,6 +28,8 @@
   background: transparent;
   border: none;
   font-size: inherit;
+  position: relative;
+  width: 100%;
 }
 
 /* a browser version */
@@ -46,13 +48,6 @@
   margin-top: 4px;
   z-index: 2;
   background: #fff;
-}
-
-/* show older browsers on hover/focus/touch */
-.caniuse-browser:hover ul,
-.caniuse-browser button:focus + ul,
-.caniuse-browser.active ul /* .active for testing only */ {
-  display: block;
 }
 
 .caniuse-cell:hover button,
@@ -77,4 +72,26 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
 .caniuse-cell.x,
 .caniuse-cell.p {
   background: #ffc107;
+}
+
+/* show older browsers
+CSS toggle is based on: https://codepen.io/altryne/pen/gwfkz/ */
+.caniuse-stats button:focus + ul,
+.caniuse-stats button.active + ul {
+  /* .active used for testing only. couldn't trigger focus. TODO. */
+  display: block;
+}
+
+.caniuse-stats .toggle-helper {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.caniuse-stats:focus .toggle-helper,
+.caniuse-stats button:focus .toggle-helper {
+  display: block;
 }
