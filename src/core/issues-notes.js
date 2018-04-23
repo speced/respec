@@ -185,8 +185,10 @@ function handleIssues($ins, ghIssues, conf) {
   }
 }
 
-async function fetchAndStoreGithubIssues(githubAPI) {
+async function fetchAndStoreGithubIssues(conf) {
+  const { githubAPI, githubUser, githubToken, github } = conf;
   const specIssues = document.querySelectorAll(".issue[data-number]");
+  let { key, user } = github;
   if (specIssues.length > MAX_GITHUB_REQUESTS) {
     const msg =
       `Your spec contains ${specIssues.length} Github issues, ` +
@@ -198,12 +200,18 @@ async function fetchAndStoreGithubIssues(githubAPI) {
     .filter(issueNumber => issueNumber)
     .map(async issueNumber => {
       const issueURL = `${githubAPI}/issues/${issueNumber}`;
+      const headers = {
+        // Get back HTML content instead of markdown
+        // See: https://developer.github.com/v3/media/
+        Accept: "application/vnd.github.v3.html+json",
+      };
+      if (githubUser && githubToken) {
+        const credentials = btoa(`${githubUser}:${githubToken}`);
+        const Authorization = `Basic ${credentials}`;
+        Object.assign(headers, { Authorization });
+      }
       const request = new Request(issueURL, {
-        headers: {
-          // Get back HTML content instead of markdown
-          // See: https://developer.github.com/v3/media/
-          Accept: "application/vnd.github.v3.html+json",
-        },
+        headers,
       });
       const response = await fetchAndCache(request);
       return processResponse(response, issueNumber);
@@ -256,7 +264,7 @@ export async function run(conf) {
     return; // nothing to do.
   }
   const ghIssues = conf.githubAPI
-    ? await fetchAndStoreGithubIssues(conf.githubAPI)
+    ? await fetchAndStoreGithubIssues(conf)
     : new Map();
   const { head: headElem } = document;
   headElem.insertBefore(
