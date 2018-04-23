@@ -188,7 +188,6 @@ function handleIssues($ins, ghIssues, conf) {
 async function fetchAndStoreGithubIssues(conf) {
   const { githubAPI, githubUser, githubToken, github } = conf;
   const specIssues = document.querySelectorAll(".issue[data-number]");
-  let { key, user } = github;
   if (specIssues.length > MAX_GITHUB_REQUESTS) {
     const msg =
       `Your spec contains ${specIssues.length} Github issues, ` +
