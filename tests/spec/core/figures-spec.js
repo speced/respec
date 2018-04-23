@@ -27,13 +27,13 @@ describe("Core - Figures", function() {
     const ops = {
       config: makeBasicConfig(),
       body:
-      makeDefaultBody() +
-      `<figure id='fig'> <img src='img' alt=''>
+        makeDefaultBody() +
+        `<figure id='fig'> <img src='img' alt=''>
         <figcaption>test figure caption</figcaption>
        </figure>
        <a id='anchor-fig-title-empty' title='' href='#fig'></a>
        <a id='anchor-fig-title-set' title='pass' href='#fig'></a>
-       <a id='anchor-fig' href='#fig'></a>`
+       <a id='anchor-fig' href='#fig'></a>`,
     };
     const doc = await makeRSDoc(ops);
     const anchorFig = doc.getElementById("anchor-fig");
@@ -57,11 +57,11 @@ describe("Core - Figures", function() {
         lang: "ja",
       },
       body:
-      makeDefaultBody() +
-      `<figure id='fig'> <img src='img' alt=''>
+        makeDefaultBody() +
+        `<figure id='fig'> <img src='img' alt=''>
         <figcaption>漢字と仮名のサイズの示し方</figcaption>
        </figure>
-       <a id='anchor-fig' href='#fig'></a>`
+       <a id='anchor-fig' href='#fig'></a>`,
     };
     const doc = await makeRSDoc(ops);
     const anchorFig = doc.getElementById("anchor-fig");
@@ -82,13 +82,12 @@ describe("Core - Figures", function() {
     expect(figLinks.item(1).textContent).toEqual("Figure 2 IMGTIT");
   });
 
-
   describe("normalize images", () => {
-    const imgDataURL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAADCAIAAADUVFKvAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gQKACEWdS72PwAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAMSURBVAjXY2AgDQAAADAAAceqhY4AAAAASUVORK5CYII=";
+    const imgDataURL =
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAADCAIAAADUVFKvAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gQKACEWdS72PwAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAMSURBVAjXY2AgDQAAADAAAceqhY4AAAAASUVORK5CYII=";
     const ops = {
       config: makeBasicConfig(),
-      body:
-        `<section>
+      body: `<section>
          <img id="image-with-no-dimensions" src="${imgDataURL}">
          <img id="image-with-dimensions" height=100 width=200 src="${imgDataURL}">
          <img id="image-with-height-only" height=100 src="${imgDataURL}">
@@ -97,7 +96,7 @@ describe("Core - Figures", function() {
          <picture>
           <img id="image-inside-picture" src="${imgDataURL}">
          </picture>
-      </section>`
+      </section>`,
     };
 
     let doc;
