@@ -1,6 +1,35 @@
 "use strict";
 describe("Core — Issues and Notes", function() {
   afterAll(flushIframes);
+  it("treats each issue as unique", async () => {
+    const body = `
+      <section>
+        <h2>Test issues</h2>
+        <div class="issue" id=override-123 data-number=123></div>
+        <div class="issue" data-number=123></div>
+        <div class="issue" data-number=123></div>
+      </section>
+      <section id="issue-summary"></section>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const issues = doc.querySelectorAll(".issue");
+    expect(issues.length).toBe(3);
+    const [
+      overriddenIdIssue,
+      firstDuplicateIssue,
+      secondDuplicateIssue,
+    ] = issues;
+    expect(overriddenIdIssue.id).toBe("override-123");
+    expect(firstDuplicateIssue.id).not.toBe(secondDuplicateIssue.id);
+
+    const issueSummaryItems = doc.querySelectorAll("#issue-summary li a");
+    expect(issueSummaryItems.length).toBe(3);
+    const [firstItem, secondItem, thirdItem] = issueSummaryItems;
+    expect(firstItem.hash).toBe(`#${overriddenIdIssue.id}`);
+    expect(secondItem.hash).toBe(`#${firstDuplicateIssue.id}`);
+    expect(thirdItem.hash).toBe(`#${secondDuplicateIssue.id}`);
+  });
   it("should process issues and notes", async () => {
     var ops = {
       config: makeBasicConfig(),

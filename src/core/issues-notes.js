@@ -115,11 +115,16 @@ function handleIssues($ins, ghIssues, conf) {
         }
         if (report.number !== undefined) {
           // Add entry to #issue-summary.
-          var id = "issue-" + report.number,
-            $li = $("<li><a></a></li>"),
-            $a = $li.find("a");
-          $div.attr("id", id);
-          $a.attr("href", "#" + id).text(conf.l10n.issue + " " + report.number);
+          var $li = $("<li><a></a></li>");
+          var $a = $li.find("a");
+          if (inno.id) {
+            $div[0].id = inno.id;
+          } else {
+            $div.makeID("issue", `number-${report.number}`);
+          }
+          $a
+            .attr("href", "#" + $div[0].id)
+            .text(conf.l10n.issue + " " + report.number);
           if (report.title) {
             $li.append(
               $(
