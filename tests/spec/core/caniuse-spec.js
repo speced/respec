@@ -122,8 +122,9 @@ describe("Core — Can I Use", function() {
     let style = getComputedStyle(visible.querySelector("ul"));
     expect(style.getPropertyValue("display")).toBe("none");
 
-    // add hover class as can't trigger a hover (https://stackoverflow.com/a/17226753/3367669)
-    firefox.classList.add("active");
+    // add active class as couldn't trigger a focus()
+    // TODO
+    button.classList.add("active");
     style = getComputedStyle(visible.querySelector("ul"));
     expect(style.getPropertyValue("display")).toBe("block");
   });
