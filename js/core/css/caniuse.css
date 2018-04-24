@@ -5,7 +5,7 @@
   flex-wrap: wrap;
   cursor: pointer;
   font-weight: bold;
-  color: rgba(0,0,0,0.8);
+  color: rgba(0, 0, 0, 0.8);
 }
 
 /* reset styles */
@@ -41,7 +41,7 @@
 }
 
 .caniuse-cell:hover {
-  color: rgba(0,0,0,1);
+  color: rgba(0, 0, 0, 1);
 }
 
 /* hide older versions  */
@@ -53,8 +53,6 @@
   z-index: 2;
   background: #fff;
 }
-
-
 
 /* supports */
 .caniuse-cell.y {
@@ -75,8 +73,8 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
   background: #ffc107;
 }
 
-.caniuse-cell:focus > ul, .caniuse-cell:hover > ul {
+.caniuse-cell:focus > ul,
+.caniuse-cell:hover > ul {
   /* .active used for testing only. couldn't trigger focus. TODO. */
   display: block;
 }
-
