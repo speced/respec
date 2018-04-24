@@ -36,6 +36,7 @@ define(
     "core/data-include",
     "core/markdown",
     "w3c/headers",
+    "core/caniuse",
     "w3c/abstract",
     "w3c/conformance",
     "core/data-transform",
@@ -69,7 +70,6 @@ define(
     "core/webidl-clipboard",
     "core/data-tests",
     "core/list-sorter",
-    "core/caniuse",
     /*Linter must be the last thing to run*/
     "core/linter",
   ],
