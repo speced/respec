@@ -17,14 +17,15 @@ const urlProp = prop("url");
 
 function findUserURLs(...thingsWithUsers) {
   const usersURLs = thingsWithUsers
-    .reduce((arr, things) => arr.concat(...things), [])
+    // shallow flatten
+    .reduce((arr, things) => [...arr, ...things], [])
     .filter(thing => thing && thing.user)
     .map(({ user }) => user.url);
   return [...new Set(usersURLs)];
 }
 
-async function toHTML(urls, editors, element) {
-  const args = await Promise.all(urls.map(fetch));
+async function toHTML(urls, editors, element, headers) {
+  const args = await Promise.all(urls.map(url => fetch(url, { headers })));
   const names = args
     .map(([user]) => user.name || user.login)
     .filter(name => !editors.includes(name))
@@ -70,14 +71,14 @@ export async function run(conf) {
     fetchIndex(contributors_url, headers),
   ]);
   const editors = conf.editors.map(nameProp);
-  const commenterUrls = findUserURLs(issues, comments);
-  const contributorUrls = contributors.map(urlProp);
+  const commenterUrls = ghCommenters ? findUserURLs(issues, comments) : [];
+  const contributorUrls = ghContributors ? contributors.map(urlProp) : [];
   try {
     await Promise.all(
-      toHTML(commenterUrls, editors, ghCommenters),
-      toHTML(contributorUrls, editors, ghContributors)
+      toHTML(commenterUrls, editors, ghCommenters, headers),
+      toHTML(contributorUrls, editors, ghContributors, headers)
     );
   } catch (error) {
-    pub("error", "Error loading contributors and/or commenters from Github.");
+    pub("error", "Error loading contributors and/or commenters from GitHub.");
   }
 }
