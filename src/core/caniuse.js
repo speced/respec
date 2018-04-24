@@ -39,7 +39,7 @@ const supportTitles = new Map([
   ["d", "Disabled by default (needs to enabled)."],
 ]);
 
-export async function run(conf, doc, cb) {
+export async function run(conf) {
   if (!conf.caniuse) {
     return; // nothing to do.
   }
@@ -53,10 +53,10 @@ export async function run(conf, doc, cb) {
     hint: "preconnect",
     href: "https://raw.githubusercontent.com",
   });
-  doc.head.appendChild(link);
-  doc.head.appendChild(hyperHTML`<style>${caniuseCss}</style>`);
+  document.head.appendChild(link);
+  document.head.appendChild(hyperHTML`<style>${caniuseCss}</style>`);
 
-  const headDlElem = doc.querySelector(".head dl");
+  const headDlElem = document.querySelector(".head dl");
   const contentPromise = new Promise(async resolve => {
     let content;
     try {
@@ -73,7 +73,7 @@ export async function run(conf, doc, cb) {
     }
     resolve(content);
   });
-  const definitionPair = hyperHTML.bind(doc.createDocumentFragment())`
+  const definitionPair = hyperHTML.bind(document.createDocumentFragment())`
     <dt class="caniuse-title"
       id="${`caniuse-${feature}`}">Can I Use this API?</dt>
     <dd class="caniuse-stats">${{
@@ -81,7 +81,6 @@ export async function run(conf, doc, cb) {
       placeholder: "Fetching data from caniuse.com...",
     }}</dd>`;
   headDlElem.appendChild(definitionPair);
-  cb();
   await contentPromise;
 }
 
