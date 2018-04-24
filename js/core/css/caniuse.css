@@ -34,6 +34,7 @@
   background: #eee; /* default, for unknown support */
   margin: 1px;
   margin-left: 0;
+  margin-top: 0;
 }
 
 .caniuse-cell:focus {
@@ -77,4 +78,5 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
 .caniuse-cell:hover > ul {
   /* .active used for testing only. couldn't trigger focus. TODO. */
   display: block;
+  padding-top: 1px;
 }
