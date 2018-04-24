@@ -33,7 +33,9 @@ function handleIssues($ins, ghIssues, conf) {
           value !== undefined && ghIssues.get(Number(value)).state === "closed"
       )
       .forEach(issue => {
-        const { dataset: { number } } = issue;
+        const {
+          dataset: { number },
+        } = issue;
         const msg = `Github issue ${number} was closed on GitHub, so removing from spec`;
         pub("warn", msg);
         issue.remove();
@@ -53,7 +55,11 @@ function handleIssues($ins, ghIssues, conf) {
       };
     report.type = isIssue
       ? "issue"
-      : isWarning ? "warning" : isEdNote ? "ednote" : "note";
+      : isWarning
+        ? "warning"
+        : isEdNote
+          ? "ednote"
+          : "note";
     if (isIssue && !isInline && !hasDataNum) {
       issueNum++;
       report.number = issueNum;
@@ -74,10 +80,14 @@ function handleIssues($ins, ghIssues, conf) {
             "-title'><span></span></div>"
         ),
         text = isIssue
-          ? isFeatureAtRisk ? "Feature at Risk" : conf.l10n.issue
+          ? isFeatureAtRisk
+            ? "Feature at Risk"
+            : conf.l10n.issue
           : isWarning
             ? conf.l10n.warning
-            : isEdNote ? conf.l10n.editors_note : conf.l10n.note,
+            : isEdNote
+              ? conf.l10n.editors_note
+              : conf.l10n.note,
         ghIssue;
       $tit.makeID("h", report.type);
       report.title = $inno.attr("title");
@@ -175,7 +185,8 @@ function handleIssues($ins, ghIssues, conf) {
   }
 }
 
-async function fetchAndStoreGithubIssues(githubAPI) {
+async function fetchAndStoreGithubIssues(conf) {
+  const { githubAPI, githubUser, githubToken } = conf;
   const specIssues = document.querySelectorAll(".issue[data-number]");
   if (specIssues.length > MAX_GITHUB_REQUESTS) {
     const msg =
@@ -188,12 +199,18 @@ async function fetchAndStoreGithubIssues(githubAPI) {
     .filter(issueNumber => issueNumber)
     .map(async issueNumber => {
       const issueURL = `${githubAPI}/issues/${issueNumber}`;
+      const headers = {
+        // Get back HTML content instead of markdown
+        // See: https://developer.github.com/v3/media/
+        Accept: "application/vnd.github.v3.html+json",
+      };
+      if (githubUser && githubToken) {
+        const credentials = btoa(`${githubUser}:${githubToken}`);
+        const Authorization = `Basic ${credentials}`;
+        Object.assign(headers, { Authorization });
+      }
       const request = new Request(issueURL, {
-        headers: {
-          // Get back HTML content instead of markdown
-          // See: https://developer.github.com/v3/media/
-          Accept: "application/vnd.github.v3.html+json",
-        },
+        headers,
       });
       const response = await fetchAndCache(request);
       return processResponse(response, issueNumber);
@@ -246,7 +263,7 @@ export async function run(conf) {
     return; // nothing to do.
   }
   const ghIssues = conf.githubAPI
-    ? await fetchAndStoreGithubIssues(conf.githubAPI)
+    ? await fetchAndStoreGithubIssues(conf)
     : new Map();
   const { head: headElem } = document;
   headElem.insertBefore(
