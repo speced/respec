@@ -6,6 +6,7 @@
   cursor: pointer;
   font-weight: bold;
   color: rgba(0, 0, 0, 0.8);
+  text-align: center;
 }
 
 /* reset styles */
@@ -21,14 +22,9 @@
   white-space: nowrap;
 }
 
-/* wraps each browser into a separate column */
-.caniuse-browser {
-  text-align: center;
-  position: relative;
-}
-
 /* a browser version */
 .caniuse-cell {
+  position: relative;
   min-width: 3cm;
   padding: 4px;
   background: #eee; /* default, for unknown support */
