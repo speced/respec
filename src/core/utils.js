@@ -486,7 +486,10 @@ export async function fetchAndCache(request, maxAge = 86400000) {
     try {
       cache = await caches.open(url.origin);
       cachedResponse = await cache.match(request);
-      if (cachedResponse && new Date(cachedResponse.headers.get("Expires")) > new Date()) {
+      if (
+        cachedResponse &&
+        new Date(cachedResponse.headers.get("Expires")) > new Date()
+      ) {
         return cachedResponse;
       }
     } catch (err) {
@@ -497,7 +500,8 @@ export async function fetchAndCache(request, maxAge = 86400000) {
   // otherwise fetch new data and cache
   const response = await fetch(request);
   if (!response.ok) {
-    if (cachedResponse) { // return stale version
+    if (cachedResponse) {
+      // return stale version
       console.warn(`Returning a stale cached response for ${url}`);
       return cachedResponse;
     }
@@ -509,7 +513,9 @@ export async function fetchAndCache(request, maxAge = 86400000) {
     const customHeaders = new Headers(response.headers);
     const expiryDate = new Date(Date.now() + maxAge);
     customHeaders.set("Expires", expiryDate);
-    const cacheResponse = new Response(await clonedResponse.blob(), { headers: customHeaders });
+    const cacheResponse = new Response(await clonedResponse.blob(), {
+      headers: customHeaders,
+    });
     // put in cache, and forget it (there is no recovery if it throws, but that's ok).
     await cache.put(request, cacheResponse).catch(console.error);
     return await cache.match(request);
