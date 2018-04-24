@@ -76,22 +76,14 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
 
 /* show older browsers
 CSS toggle is based on: https://codepen.io/altryne/pen/gwfkz/ */
-.caniuse-stats button:focus + ul,
-.caniuse-stats button.active + ul {
+.caniuse-cell:focus {
+  outline: none;
+}
+.caniuse-cell:focus > ul {
   /* .active used for testing only. couldn't trigger focus. TODO. */
   display: block;
 }
 
-.caniuse-stats .toggle-helper {
-  display: none;
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-}
-
-.caniuse-stats:focus .toggle-helper,
-.caniuse-stats button:focus .toggle-helper {
-  display: block;
+.caniuse-stats button {
+  cursor: pointer;
 }

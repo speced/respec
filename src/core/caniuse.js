@@ -39,7 +39,7 @@ const supportTitles = new Map([
   ["d", "Disabled by default (needs to enabled)."],
 ]);
 
-export async function run(conf) {
+export async function run(conf, doc, cb) {
   if (!conf.caniuse) {
     return; // nothing to do.
   }
@@ -53,10 +53,10 @@ export async function run(conf) {
     hint: "preconnect",
     href: "https://raw.githubusercontent.com",
   });
-  document.head.appendChild(link);
-  document.head.appendChild(hyperHTML`<style>${caniuseCss}</style>`);
+  doc.head.appendChild(link);
+  doc.head.appendChild(hyperHTML`<style>${caniuseCss}</style>`);
 
-  const headDlElem = document.querySelector(".head dl");
+  const headDlElem = doc.querySelector(".head dl");
   const contentPromise = new Promise(async resolve => {
     let content;
     try {
@@ -73,14 +73,15 @@ export async function run(conf) {
     }
     resolve(content);
   });
-  const definitionPair = hyperHTML.bind(document.createDocumentFragment())`
+  const definitionPair = hyperHTML.bind(doc.createDocumentFragment())`
     <dt class="caniuse-title"
       id="${`caniuse-${feature}`}">Can I Use this API?</dt>
-    <dd class="caniuse-stats" tabindex="0">${{
+    <dd class="caniuse-stats">${{
       any: contentPromise,
       placeholder: "Fetching data from caniuse.com...",
     }}</dd>`;
   headDlElem.appendChild(definitionPair);
+  cb();
   await contentPromise;
 }
 
@@ -189,19 +190,14 @@ function createTableHTML(conf, stats) {
       .sort(semverCompare)
       .slice(-numVersions)
       .reverse();
-
     const { support, title } = getSupport(latestVersion);
+    const cssClass= `caniuse-cell caniuse-browser ${support}`
     return hyperHTML`
-      <ul class="caniuse-browser">
-        <li class="${"caniuse-cell " + support}" title="${title}">
-          <button>
-            ${BROWSERS.get(browser) || browser} ${latestVersion}
-            <span class="toggle-helper" tabindex="${tabindex}"></span>
-          </button>
-          <ul>
-            ${olderVersions.map(addBrowserVersion)}
-          </ul>
-        </li>
-      </ul>`;
+      <div class="${cssClass}" title="${title}" tabindex="0" role="button">
+        ${BROWSERS.get(browser) || browser} ${latestVersion}
+        <ul>
+          ${olderVersions.map(addBrowserVersion)}
+        </ul>
+      </div>`;
   }
 }
