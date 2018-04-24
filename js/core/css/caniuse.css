@@ -3,6 +3,9 @@
   font-size: 90%;
   display: flex;
   flex-wrap: wrap;
+  cursor: pointer;
+  font-weight: bold;
+  color: rgba(0,0,0,0.8);
 }
 
 /* reset styles */
@@ -24,24 +27,25 @@
   position: relative;
 }
 
-.caniuse-browser button {
-  background: transparent;
-  border: none;
-  font-size: inherit;
-  position: relative;
-  width: 100%;
-}
-
 /* a browser version */
 .caniuse-cell {
   min-width: 3cm;
   padding: 4px;
   background: #eee; /* default, for unknown support */
   margin: 1px;
+  margin-left: 0;
+}
+
+.caniuse-cell:focus {
+  outline: none;
+}
+
+.caniuse-cell:hover {
+  color: rgba(0,0,0,1);
 }
 
 /* hide older versions  */
-.caniuse-browser ul {
+.caniuse-cell ul {
   display: none;
   position: absolute;
   left: 0;
@@ -50,10 +54,7 @@
   background: #fff;
 }
 
-.caniuse-cell:hover button,
-.caniuse-browser ul .caniuse-cell:hover {
-  font-weight: bold;
-}
+
 
 /* supports */
 .caniuse-cell.y {
@@ -74,16 +75,8 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
   background: #ffc107;
 }
 
-/* show older browsers
-CSS toggle is based on: https://codepen.io/altryne/pen/gwfkz/ */
-.caniuse-cell:focus {
-  outline: none;
-}
-.caniuse-cell:focus > ul {
+.caniuse-cell:focus > ul, .caniuse-cell:hover > ul {
   /* .active used for testing only. couldn't trigger focus. TODO. */
   display: block;
 }
 
-.caniuse-stats button {
-  cursor: pointer;
-}
