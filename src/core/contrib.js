@@ -4,93 +4,81 @@
 // #gh-commenters: people having contributed comments to issues.
 // #gh-contributors: people whose PR have been merged.
 // Spec editors get filtered out automatically.
-
-import { fetch as ghFetch, fetchIndex } from "core/github";
+import { fetchIndex } from "core/github";
 import { pub } from "core/pubsubhub";
+import { joinAnd } from "core/utils";
 export const name = "core/contrib";
 
 function prop(prop) {
   return o => o[prop];
 }
+const nameProp = prop("name");
+const urlProp = prop("url");
 
-function findUsers(...thingsToFind) {
-  const users = new Set();
-  for (const things of thingsToFind) {
-    for (const thing of things) {
-      if (thing.user) {
-        users.add(thing.user.url);
-      }
-    }
-  }
-  return [...users];
+function findUserURLs(...thingsWithUsers) {
+  const usersURLs = thingsWithUsers
+    // shallow flatten
+    .reduce((arr, things) => [...arr, ...things], [])
+    .filter(thing => thing && thing.user)
+    .map(({ user }) => user.url);
+  return [...new Set(usersURLs)];
 }
 
-function join(things) {
-  if (!things.length) {
-    return "";
-  }
-  const { length } = things;
-  const last = things[length - 1];
-  switch (length) {
-    case 1:
-      return last;
-    case 2:
-      return `${things[0]} and ${last}`;
-    default:
-      return `${things.join(", ")}, and ${last}`;
-  }
-}
-
-async function toHTML(urls, editors, element) {
-  const args = await Promise.all(urls.map(ghFetch));
+async function toHTML(urls, editors, element, headers) {
+  const args = await Promise.all(urls.map(url => fetch(url, { headers })));
   const names = args
     .map(([user]) => user.name || user.login)
     .filter(name => !editors.includes(name))
     .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
-  element.textContent = join(names);
+  element.textContent = joinAnd(names);
   element.id = null;
 }
 
 export async function run(conf) {
   const ghCommenters = document.getElementById("gh-commenters");
   const ghContributors = document.getElementById("gh-contributors");
-
   if (!ghCommenters && !ghContributors) {
     return;
   }
-
-  if (!conf.githubAPI) {
-    const elements = [];
-    if (ghCommenters) elements.push("#" + ghCommenters.id);
-    if (ghContributors) elements.push("#" + ghContributors.id);
-    pub(
-      "error",
-      `Requested list of contributors and/or commenters from GitHub (${
-        elements.join(" and ")
-      }) but config.githubAPI is not set.`
-    );
+  const headers = {};
+  const { githubAPI, githubUser, githubToken } = conf;
+  if (githubUser && githubToken) {
+    const credentials = btoa(`${githubUser}:${githubToken}`);
+    const Authorization = `Basic ${credentials}`;
+    Object.assign(headers, { Authorization });
+  }
+  if (!githubAPI) {
+    const msg =
+      "Requested list of contributors and/or commenters from GitHub, but " +
+      "[`githubAPI`](https://github.com/w3c/respec/wiki/githubAPI) is not set.";
+    pub("error", msg);
     return;
   }
+  const response = await fetch(githubAPI, { headers });
+  if (!response.ok) {
+    const msg =
+      "Error fetching repository information from GitHub. " +
+      `(HTTP Status ${response.status}).`;
+    pub("error", msg);
+    return;
+  }
+  const indexes = await response.json();
+  const { issues_url, issue_comment_url, contributors_url } = indexes;
 
-  const json = await ghFetch(conf.githubAPI);
   const [issues, comments, contributors] = await Promise.all([
-    fetchIndex(json.issues_url),
-    fetchIndex(json.issue_comment_url),
-    fetchIndex(json.contributors_url)
+    fetchIndex(issues_url, headers),
+    fetchIndex(issue_comment_url, headers),
+    fetchIndex(contributors_url, headers),
   ]);
-  const editors = respecConfig.editors.map(prop("name"));
-  const commenterUrls = findUsers(issues, comments);
-  const contributorUrls = contributors.map(prop("url"));
+  const editors = conf.editors.map(nameProp);
+  const commenterUrls = ghCommenters ? findUserURLs(issues, comments) : [];
+  const contributorUrls = ghContributors ? contributors.map(urlProp) : [];
   try {
     await Promise.all(
-      toHTML(commenterUrls, editors, ghCommenters),
-      toHTML(contributorUrls, editors, ghContributors)
+      toHTML(commenterUrls, editors, ghCommenters, headers),
+      toHTML(contributorUrls, editors, ghContributors, headers)
     );
-  }
-  catch (error) {
-    pub(
-      "error",
-      "Error loading contributors and/or commenters from  Error: " + error
-    );
+  } catch (error) {
+    pub("error", "Error loading contributors and/or commenters from GitHub.");
   }
 }

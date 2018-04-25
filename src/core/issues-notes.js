@@ -18,9 +18,10 @@ export const name = "core/issues-notes";
 
 const MAX_GITHUB_REQUESTS = 60;
 
-function handleIssues($ins, ghIssues, conf) {
+function handleIssues(ins, ghIssues, conf) {
+  const $ins = $(ins);
   const { issueBase, githubAPI } = conf;
-  var hasDataNum = $(".issue[data-number]").length > 0,
+  var hasDataNum = !!document.querySelector(".issue[data-number]"),
     issueNum = 0,
     $issueSummary = $(
       "<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"
@@ -33,7 +34,9 @@ function handleIssues($ins, ghIssues, conf) {
           value !== undefined && ghIssues.get(Number(value)).state === "closed"
       )
       .forEach(issue => {
-        const { dataset: { number } } = issue;
+        const {
+          dataset: { number },
+        } = issue;
         const msg = `Github issue ${number} was closed on GitHub, so removing from spec`;
         pub("warn", msg);
         issue.remove();
@@ -49,11 +52,14 @@ function handleIssues($ins, ghIssues, conf) {
       dataNum = $inno.attr("data-number"),
       report = {
         inline: isInline,
-        content: $inno.html(),
       };
     report.type = isIssue
       ? "issue"
-      : isWarning ? "warning" : isEdNote ? "ednote" : "note";
+      : isWarning
+        ? "warning"
+        : isEdNote
+          ? "ednote"
+          : "note";
     if (isIssue && !isInline && !hasDataNum) {
       issueNum++;
       report.number = issueNum;
@@ -74,11 +80,24 @@ function handleIssues($ins, ghIssues, conf) {
             "-title'><span></span></div>"
         ),
         text = isIssue
-          ? isFeatureAtRisk ? "Feature at Risk" : conf.l10n.issue
+          ? isFeatureAtRisk
+            ? conf.l10n.feature_at_risk
+            : conf.l10n.issue
           : isWarning
             ? conf.l10n.warning
-            : isEdNote ? conf.l10n.editors_note : conf.l10n.note,
+            : isEdNote
+              ? conf.l10n.editors_note
+              : conf.l10n.note,
         ghIssue;
+      if (inno.id) {
+        $div[0].id = inno.id;
+        inno.removeAttribute("id");
+      } else {
+        $div.makeID(
+          "issue-container",
+          report.number ? `number-${report.number}` : ""
+        );
+      }
       $tit.makeID("h", report.type);
       report.title = $inno.attr("title");
       if (isIssue) {
@@ -105,11 +124,11 @@ function handleIssues($ins, ghIssues, conf) {
         }
         if (report.number !== undefined) {
           // Add entry to #issue-summary.
-          var id = "issue-" + report.number,
-            $li = $("<li><a></a></li>"),
-            $a = $li.find("a");
-          $div.attr("id", id);
-          $a.attr("href", "#" + id).text(conf.l10n.issue + " " + report.number);
+          var $li = $("<li><a></a></li>");
+          var $a = $li.find("a");
+          $a
+            .attr("href", "#" + $div[0].id)
+            .text(conf.l10n.issue + " " + report.number);
           if (report.title) {
             $li.append(
               $(
@@ -175,7 +194,8 @@ function handleIssues($ins, ghIssues, conf) {
   }
 }
 
-async function fetchAndStoreGithubIssues(githubAPI) {
+async function fetchAndStoreGithubIssues(conf) {
+  const { githubAPI, githubUser, githubToken } = conf;
   const specIssues = document.querySelectorAll(".issue[data-number]");
   if (specIssues.length > MAX_GITHUB_REQUESTS) {
     const msg =
@@ -188,12 +208,18 @@ async function fetchAndStoreGithubIssues(githubAPI) {
     .filter(issueNumber => issueNumber)
     .map(async issueNumber => {
       const issueURL = `${githubAPI}/issues/${issueNumber}`;
+      const headers = {
+        // Get back HTML content instead of markdown
+        // See: https://developer.github.com/v3/media/
+        Accept: "application/vnd.github.v3.html+json",
+      };
+      if (githubUser && githubToken) {
+        const credentials = btoa(`${githubUser}:${githubToken}`);
+        const Authorization = `Basic ${credentials}`;
+        Object.assign(headers, { Authorization });
+      }
       const request = new Request(issueURL, {
-        headers: {
-          // Get back HTML content instead of markdown
-          // See: https://developer.github.com/v3/media/
-          Accept: "application/vnd.github.v3.html+json",
-        },
+        headers,
       });
       const response = await fetchAndCache(request);
       return processResponse(response, issueNumber);
@@ -241,17 +267,19 @@ async function processResponse(response, issueNumber) {
 }
 
 export async function run(conf) {
-  const $ins = $(".issue, .note, .warning, .ednote");
-  if (!$ins.length) {
+  const issuesAndNotes = document.querySelectorAll(
+    ".issue, .note, .warning, .ednote"
+  );
+  if (!issuesAndNotes.length) {
     return; // nothing to do.
   }
   const ghIssues = conf.githubAPI
-    ? await fetchAndStoreGithubIssues(conf.githubAPI)
+    ? await fetchAndStoreGithubIssues(conf)
     : new Map();
   const { head: headElem } = document;
   headElem.insertBefore(
     hyperHTML`<style>${[css]}</style>`,
     headElem.querySelector("link")
   );
-  handleIssues($ins, ghIssues, conf);
+  handleIssues(issuesAndNotes, ghIssues, conf);
 }
