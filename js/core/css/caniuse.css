@@ -39,6 +39,9 @@ button.caniuse-cell {
   overflow: visible;
   position: relative;
   line-height: 0.79cm;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 li.caniuse-cell {
@@ -84,6 +87,5 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
 
 .caniuse-cell:focus > ul,
 .caniuse-cell:hover > ul {
-  /* .active used for testing only. couldn't trigger focus. TODO. */
   display: block;
 }
