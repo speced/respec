@@ -1,12 +1,16 @@
 /* container for stats */
+
 .caniuse-stats {
-  font-size: 90%;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-wrap: wrap;
   cursor: pointer;
-  font-weight: bold;
-  color: rgba(0, 0, 0, 0.8);
   text-align: center;
+}
+
+button.caniuse-cell {
+  margin-top: 1px;
 }
 
 /* reset styles */
@@ -24,13 +28,21 @@
 
 /* a browser version */
 .caniuse-cell {
-  position: relative;
-  min-width: 3cm;
-  padding: 4px;
-  background: #eee; /* default, for unknown support */
-  margin: 1px;
-  margin-left: 0;
+  color: rgba(0, 0, 0, 0.8);
+  background: #eee;
+  border: none;
+  font-size: 90%;
+  height: 0.8cm;
+  margin-right: 1px;
   margin-top: 0;
+  min-width: 3cm;
+  overflow: visible;
+  position: relative;
+  line-height: 0.79cm;
+}
+
+li.caniuse-cell {
+  margin-bottom: 1px;
 }
 
 .caniuse-cell:focus {
@@ -46,9 +58,9 @@
   display: none;
   position: absolute;
   left: 0;
-  margin-top: 4px;
   z-index: 2;
   background: #fff;
+  margin-top: 1px;
 }
 
 /* supports */
@@ -74,5 +86,4 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
 .caniuse-cell:hover > ul {
   /* .active used for testing only. couldn't trigger focus. TODO. */
   display: block;
-  padding-top: 1px;
 }
