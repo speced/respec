@@ -26,9 +26,7 @@ export function run(conf) {
 
   // remove highlights, cleanup empty class/style attributes
   sub("beforesave", outputDoc => {
-    [...outputDoc.querySelectorAll("var.respec-hl")].forEach(
-      removeHighlight
-    );
+    [...outputDoc.querySelectorAll("var.respec-hl")].forEach(removeHighlight);
   });
 }
 
@@ -66,7 +64,10 @@ function getHighlightColor(target) {
   if (HL_COLORS.get("respec-hl-yellow") === true) return "respec-hl-yellow";
 
   // otherwise get some other available color
-  return [...HL_COLORS.keys()].find(c => HL_COLORS.get(c) === true) || "respec-hl-yellow";
+  return (
+    [...HL_COLORS.keys()].find(c => HL_COLORS.get(c) === true) ||
+    "respec-hl-yellow"
+  );
 }
 
 function highlightVars(varElem) {
