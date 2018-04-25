@@ -1,6 +1,35 @@
 "use strict";
 describe("Core — Issues and Notes", function() {
   afterAll(flushIframes);
+  it("treats each issue as unique", async () => {
+    const body = `
+      <section>
+        <h2>Test issues</h2>
+        <div class="issue" id=override-123 data-number=123></div>
+        <div class="issue" data-number=123></div>
+        <p class="issue" data-number=123></p>
+      </section>
+      <section id="issue-summary"></section>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const issues = doc.querySelectorAll(".issue");
+    expect(issues.length).toBe(3);
+    const [
+      overriddenIdIssue,
+      firstDuplicateIssue,
+      secondDuplicateIssue,
+    ] = issues;
+    expect(overriddenIdIssue.id).toBe("override-123");
+    expect(firstDuplicateIssue.id).not.toBe(secondDuplicateIssue.id);
+
+    const issueSummaryItems = doc.querySelectorAll("#issue-summary li a");
+    expect(issueSummaryItems.length).toBe(3);
+    const [firstItem, secondItem, thirdItem] = issueSummaryItems;
+    expect(firstItem.hash).toBe(`#${overriddenIdIssue.id}`);
+    expect(secondItem.hash).toBe(`#${firstDuplicateIssue.id}`);
+    expect(thirdItem.hash).toBe(`#${secondDuplicateIssue.id}`);
+  });
   it("should process issues and notes", async () => {
     var ops = {
       config: makeBasicConfig(),
@@ -82,26 +111,89 @@ describe("Core — Issues and Notes", function() {
   });
 
   it("should use data-number for issue and note numbers", async () => {
-    var ops = {
-      config: makeBasicConfig(),
+    const body = `
+      <section>
+        <p id='i10' class='issue' data-number='10'>Numbered ISSUE</p>
+        <p id='i11' class='issue' title='ISS-TIT' data-number='11'>Titled and Numbered Issue</p>
+        <p id='ixx' class='issue'>Unnumbered ISSUE</p>
+      </section>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const [i10, i11, ixx] = doc.querySelectorAll(".issue .issue-title");
+    expect(i10.textContent).toEqual("Issue 10");
+    expect(i11.textContent).toEqual("Issue 11: ISS-TIT");
+    expect(ixx.textContent).toEqual("Issue");
+  });
+
+  it("shows labels for github issues", async () => {
+    const githubConfig = {
+      github: "https://github.com/mock-company/mock-repository",
+      githubAPI: `${window.location.origin}/tests/data`,
+    };
+    const ops = {
+      config: githubConfig,
       body:
         makeDefaultBody() +
-        "<section><p id='i10' class='issue' data-number='10'>Numbered ISSUE</p>" +
-        "<p id='i11' class='issue' title='ISS-TIT' data-number='11'>Titled and Numbered Issue</p>" +
-        "<p id='ixx' class='issue'>Unnumbered ISSUE</p></section>",
+        `
+        <div class='issue' data-number='1540'>issue is open on github</div>
+        <div class='issue' id='this-is-404' data-number='404'>this is 404</div>
+        <section id='issue-summary'></section>
+        `,
     };
     const doc = await makeRSDoc(ops);
-    var $i10 = $("#i10", doc).parent("div");
-    var $i11 = $("#i11", doc).parent("div");
-    var $ixx = $("#ixx", doc).parent("div");
-    expect($i10.find("div.issue-title").length).toEqual(1);
-    expect($i10.find("div.issue-title").text()).toEqual("Issue 10");
+    const issueDiv = doc.querySelector(".issue");
+    expect(issueDiv).toBeTruthy();
 
-    expect($i11.find("div.issue-title").length).toEqual(1);
-    expect($i11.find("div.issue-title").text()).toEqual("Issue 11: ISS-TIT");
+    const issueDiv404 = doc.getElementById("this-is-404");
 
-    expect($ixx.find("div.issue-title").length).toEqual(1);
-    expect($ixx.find("div.issue-title").text()).toEqual("Issue");
+    expect(issueDiv404).toBeTruthy();
+    expect(issueDiv404.querySelector("div:not(.issue-title)").textContent).toEqual("this is 404");
+
+    const [
+      refactorLabel,
+      bugLabel,
+      blankLabel,
+      invalidLabel,
+    ] = doc.getElementsByClassName("respec-gh-label");
+
+    expect(refactorLabel.textContent).toEqual("refactor");
+    expect(refactorLabel.classList).toContain(
+      "respec-gh-label",
+      "respec-label-light"
+    );
+    expect(refactorLabel.style.backgroundColor).toEqual("rgb(71, 244, 65)");
+    expect(refactorLabel.href).toEqual(
+      "https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22refactor%22"
+    );
+
+    expect(bugLabel.textContent).toEqual("bug");
+    expect(bugLabel.classList).toContain(
+      "respec-gh-label",
+      "respec-label-dark"
+    );
+    expect(bugLabel.style.backgroundColor).toEqual("rgb(244, 66, 92)");
+    expect(bugLabel.href).toEqual(
+      "https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22bug%22"
+    );
+
+    expect(blankLabel.textContent).toEqual("blank");
+    expect(blankLabel.classList).toContain(
+      "respec-gh-label",
+      "respec-label-dark"
+    );
+    expect(blankLabel.href).toEqual(
+      "https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22blank%22"
+    );
+
+    expect(invalidLabel.textContent).toEqual("not-a-color");
+    expect(invalidLabel.classList).toContain(
+      "respec-gh-label",
+      "respec-label-dark"
+    );
+    expect(invalidLabel.href).toEqual(
+      "https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22not-a-color%22"
+    );
   });
 
   it("should link to external issue tracker", async () => {
@@ -153,17 +245,20 @@ describe("Core — Issues and Notes", function() {
     const doc = await makeRSDoc(ops);
     const issueDiv1 = doc.getElementById("this-should-not-exist");
     expect(issueDiv1).toBeFalsy();
-    const issueDiv2 = doc.getElementById("issue-1540");
+
+    const issueDiv2 = doc.getElementById("issue-container-number-1540");
     expect(issueDiv2).toBeTruthy();
     const issueDiv3 = doc.getElementById("i-should-be-here-too");
     expect(issueDiv3).toBeTruthy();
     const summarySection = doc.getElementById("issue-summary");
     expect(summarySection).toBeTruthy();
-    const { innerText } = summarySection.querySelector("[href='#issue-1540']");
-    expect(innerText).toBe("Issue 1540");
+    const { textContent } = summarySection.querySelector(
+      "[href='#issue-container-number-1540']"
+    );
+    expect(textContent).toBe("Issue 1540");
     const issueDiv404 = doc.getElementById("this-is-404");
     expect(issueDiv404).toBeTruthy();
-    expect(issueDiv404.textContent).toEqual("this is 404");
+    expect(issueDiv404.querySelector("div:not(.issue-title)").textContent).toEqual("this is 404");
   });
 
   it("should link to external issue tracker for features at risk", async () => {

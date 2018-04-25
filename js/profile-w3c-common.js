@@ -70,6 +70,7 @@ define(
     "core/data-tests",
     "core/list-sorter",
     "core/highlight-vars",
+    "core/caniuse",
     /*Linter must be the last thing to run*/
     "core/linter",
   ],

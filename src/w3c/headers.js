@@ -233,7 +233,7 @@ export function run(conf) {
   }
   conf.isCCBY = conf.license === "cc-by";
   conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
-  if (["cc-by", "w3c"].includes(conf.license)) {
+  if (["cc-by"].includes(conf.license)) {
     let msg = `You cannot use license "\`${conf.license}\`" with W3C Specs. `;
     msg += `Please set \`respecConfig.license: "w3c-software-doc"\` instead.`;
     pub("error", msg);
@@ -385,7 +385,8 @@ export function run(conf) {
     conf.authors.forEach(peopCheck);
   }
   conf.multipleEditors = conf.editors && conf.editors.length > 1;
-  conf.multipleFormerEditors = Array.isArray(conf.formerEditors) && conf.formerEditors.length > 1;
+  conf.multipleFormerEditors =
+    Array.isArray(conf.formerEditors) && conf.formerEditors.length > 1;
   conf.multipleAuthors = conf.authors && conf.authors.length > 1;
   $.each(conf.alternateFormats || [], function(i, it) {
     if (!it.uri || !it.label)
