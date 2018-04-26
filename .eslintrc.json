@@ -19,7 +19,7 @@
   "rules": {
     "indent": 0,
     "linebreak-style": ["error", "unix"],
-    "quotes": ["error", "double"],
+    "quotes": 0,
     "semi": ["error", "always"],
     "no-console": 0
   },
