@@ -598,7 +598,7 @@ export function run(conf) {
   if (!conf.implementationReportURI && conf.isPR) {
     pub(
       "warn",
-      `PR documents should include an ` +
+      "PR documents should include an " +
         " [`implementationReportURI`](https://github.com/w3c/respec/wiki/implementationReportURI)" +
         " that describes [implementation experience](https://www.w3.org/2018/Process-20180201/#implementation-experience)."
     );
