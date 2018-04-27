@@ -4,8 +4,8 @@
 import { removeReSpec } from "core/utils";
 import { pub } from "core/pubsubhub";
 
-export function serialize(format = "html") {
-  const cloneDoc = document.cloneNode(true);
+export function serialize(format = "html", doc = document) {
+  const cloneDoc = doc.cloneNode(true);
   cleanup(cloneDoc);
   let result = "";
   switch (format) {
@@ -22,9 +22,9 @@ export function serialize(format = "html") {
   return result;
 }
 
-export async function exportDocument(format, mimeType) {
-  await document.respecIsReady;
-  const dataURL = toDataURL(serialize(format), mimeType);
+export async function exportDocument(format, mimeType, doc = document) {
+  await doc.respecIsReady;
+  const dataURL = toDataURL(serialize(format, doc), mimeType);
   const encodedString = dataURL.replace(/^data:\w+\/\w+;charset=utf-8,/, "");
   const decodedString = decodeURIComponent(encodedString);
   return decodedString;
