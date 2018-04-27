@@ -2,12 +2,13 @@
 
 * URL to affected spec:
 * ReSpec version: Click the ReSpec pill (e.g., 20.0.1).
-* [ ] I did a "hard refresh", but it's still busted. 
+* [x] I did a "hard refresh", but it's still busted. 
 
 ## Description of problem
 
-Expected:
+What happened (e.g., it crashed)?: 
 
-But what actually happened (the bug):
+But what I was expecting?:
 
-Optional, steps to reproduce: 
+Optional, steps to reproduce:
+ 1. ...

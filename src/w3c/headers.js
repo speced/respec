@@ -385,7 +385,8 @@ export function run(conf) {
     conf.authors.forEach(peopCheck);
   }
   conf.multipleEditors = conf.editors && conf.editors.length > 1;
-  conf.multipleFormerEditors = Array.isArray(conf.formerEditors) && conf.formerEditors.length > 1;
+  conf.multipleFormerEditors =
+    Array.isArray(conf.formerEditors) && conf.formerEditors.length > 1;
   conf.multipleAuthors = conf.authors && conf.authors.length > 1;
   $.each(conf.alternateFormats || [], function(i, it) {
     if (!it.uri || !it.label)
@@ -587,12 +588,22 @@ export function run(conf) {
 
   hyperHTML.bind(sotd)`${populateSoTD(conf, sotd)}`;
 
-  if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
+  if (!conf.implementationReportURI && conf.isCR) {
     pub(
       "error",
-      "CR, PR, and REC documents need to have an `implementationReportURI` defined."
+      "CR documents must have an [`implementationReportURI`](https://github.com/w3c/respec/wiki/implementationReportURI) " +
+        "that describes [implementation experience](https://www.w3.org/2018/Process-20180201/#implementation-experience)."
     );
   }
+  if (!conf.implementationReportURI && conf.isPR) {
+    pub(
+      "warn",
+      "PR documents should include an " +
+        " [`implementationReportURI`](https://github.com/w3c/respec/wiki/implementationReportURI)" +
+        " that describes [implementation experience](https://www.w3.org/2018/Process-20180201/#implementation-experience)."
+    );
+  }
+
   if (conf.isTagFinding && !conf.additionalContent) {
     pub(
       "warn",

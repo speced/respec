@@ -224,7 +224,6 @@ const extenedAttributesLinks = new Map([
   ["Exposed", "WEBIDL#Exposed"],
   ["Global", "WEBIDL#Global"],
   ["HTMLConstructor", "HTML#htmlconstructor"],
-  ["LegacyArrayClass", "WEBIDL#LegacyArrayClass"],
   [
     "LegacyUnenumerableNamedProperties",
     "WEBIDL#LegacyUnenumerableNamedProperties",
@@ -337,8 +336,6 @@ const idlKeywords = new Set([
   "inherit",
   "interface",
   "iterable",
-  "legacycaller",
-  "legacyiterable",
   "long",
   "maplike",
   "NaN",
@@ -377,8 +374,6 @@ const argumentNameKeyword = new Set([
   "inherit",
   "interface",
   "iterable",
-  "legacycaller",
-  "legacyiterable",
   "maplike",
   "partial",
   "required",
@@ -868,7 +863,6 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
             defn.getter ||
             defn.setter ||
             defn.deleter ||
-            defn.legacycaller ||
             defn.stringifier
           ) {
             name = "";
