@@ -96,7 +96,7 @@ describe("Core — Can I Use", function() {
     expect(moreInfoLink.href).toBe("https://caniuse.com/#feat=FEATURE");
     expect(moreInfoLink.textContent.trim()).toBe("More info");
 
-    const browsers = stats.querySelectorAll("button");
+    const browsers = stats.querySelectorAll(".caniuse-browser");
     expect(browsers.length).toBe(2); // not 3, as there is no data for "opera"
     const [firefox, chrome] = browsers;
 
@@ -106,9 +106,9 @@ describe("Core — Can I Use", function() {
     const firefoxVersions = firefox.querySelectorAll("ul li.caniuse-cell");
     expect(firefoxVersions.length).toBe(4);
 
-    // TODO: somehow innerText is behaving like textContent (test fails)
-    expect(firefox.innerText).toBe("Firefox 61");
-    expect(firefox.classList.value).toBe("caniuse-cell y");
+    const firefoxButton = firefox.querySelector("button");
+    expect(firefoxButton.textContent.trim()).toBe("Firefox 61");
+    expect(firefoxButton.classList.value).toBe("caniuse-cell y");
 
     expect(firefoxVersions[0].textContent.trim()).toBe("60");
     expect(firefoxVersions[0].classList.value).toBe("caniuse-cell n d");
@@ -118,7 +118,7 @@ describe("Core — Can I Use", function() {
     expect(style.getPropertyValue("display")).toBe("none");
 
     // TODO:
-    firefox.focus();
+    firefoxButton.focus();
     style = getComputedStyle(firefox.querySelector("ul"));
     expect(style.getPropertyValue("display")).toBe("block");
   });

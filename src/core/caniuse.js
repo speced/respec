@@ -148,9 +148,7 @@ function createTableHTML(conf, stats) {
   // render the support table
   return hyperHTML`
     ${conf.browsers
-      .map((browser, i) =>
-        addBrowser(browser, conf.versions, stats[browser], i + 1)
-      )
+      .map(browser => addBrowser(browser, conf.versions, stats[browser]))
       .filter(elem => elem)}
     <a href="${`https://caniuse.com/#feat=${conf.feature}`}"
       title="Get details at caniuse.com">More info
@@ -164,7 +162,7 @@ function createTableHTML(conf, stats) {
    * @param {Object} browserData  stats data from api response
    * @param {Number} tabindex
    */
-  function addBrowser(browser, numVersions, browserData, tabindex) {
+  function addBrowser(browser, numVersions, browserData) {
     if (!browserData) return;
     const getSupport = version => {
       const supportKeys = browserData[version]
@@ -190,13 +188,15 @@ function createTableHTML(conf, stats) {
       .slice(-numVersions)
       .reverse();
     const { support, title } = getSupport(latestVersion);
-    const cssClass= `caniuse-cell ${support}`
+    const cssClass= `caniuse-cell ${support}`;
     return hyperHTML`
-      <button class="${cssClass}" title="${title}">
-        ${BROWSERS.get(browser) || browser} ${latestVersion}
+      <div class="caniuse-browser">
+        <button class="${cssClass}" title="${title}">
+          ${BROWSERS.get(browser) || browser} ${latestVersion}
+        </button>
         <ul>
           ${olderVersions.map(addBrowserVersion)}
         </ul>
-      </button>`;
+      </div>`;
   }
 }

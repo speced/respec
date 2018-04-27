@@ -11,13 +11,24 @@
 
 button.caniuse-cell {
   margin-top: 1px;
+  border: none;
 }
 
-/* reset styles */
-.caniuse-stats ul {
+.caniuse-browser {
+  position: relative;
+}
+
+/* reset styles, hide old versions by default */
+.caniuse-browser ul {
+  display: none;
   margin: 0;
   padding: 0;
   list-style: none;
+  position: absolute;
+  left: 0;
+  z-index: 2;
+  background: #fff;
+  margin-top: 1px;
 }
 
 .caniuse-stats a[href] {
@@ -30,7 +41,6 @@ button.caniuse-cell {
 .caniuse-cell {
   color: rgba(0, 0, 0, 0.8);
   background: #eee;
-  border: none;
   font-size: 90%;
   height: 0.8cm;
   margin-right: 1px;
@@ -56,16 +66,6 @@ li.caniuse-cell {
   color: rgba(0, 0, 0, 1);
 }
 
-/* hide older versions  */
-.caniuse-cell ul {
-  display: none;
-  position: absolute;
-  left: 0;
-  z-index: 2;
-  background: #fff;
-  margin-top: 1px;
-}
-
 /* supports */
 .caniuse-cell.y {
   background: #8bc34a;
@@ -85,7 +85,8 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
   background: #ffc107;
 }
 
-.caniuse-cell:focus > ul,
-.caniuse-cell:hover > ul {
+/* show rest of the browser versions */
+.caniuse-stats button:focus + ul,
+.caniuse-stats button:hover + ul {
   display: block;
 }
