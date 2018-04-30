@@ -55,26 +55,29 @@ function cleanup(cloneDoc) {
   ).forEach(elem => elem.remove());
   body.classList.remove("toc-sidebar");
   removeReSpec(documentElement);
+
   const insertions = cloneDoc.createDocumentFragment();
+
   // Move meta viewport, as it controls the rendering on mobile.
   const metaViewport = cloneDoc.querySelector("meta[name='viewport']");
   if (metaViewport && head.firstChild !== metaViewport) {
     insertions.appendChild(metaViewport);
   }
+
   // Move charset to near top, as it needs to be in the first 512 bytes.
   let metaCharset = cloneDoc.querySelector(
     "meta[charset], meta[content*='charset=']"
   );
   if (!metaCharset) {
-    metaCharset = cloneDoc.createElement("meta");
-    metaCharset.setAttribute("charset", "utf-8");
+    metaCharset = hyperHTML`<meta charset="utf-8">`;
   }
   insertions.appendChild(metaCharset);
+
   // Add meta generator
-  const metaGenerator = cloneDoc.createElement("meta");
-  metaGenerator.name = "generator";
-  metaGenerator.content =
-    "ReSpec " + window.respecVersion || "Developer Channel";
+  const respecVersion = window.respecVersion || "Developer Channel";
+  const metaGenerator = hyperHTML`
+    <meta name="generator" content="${"ReSpec " + respecVersion}">`;
+
   insertions.appendChild(metaGenerator);
   head.insertBefore(insertions, head.firstChild);
   pub("beforesave", documentElement);
