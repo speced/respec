@@ -12,7 +12,7 @@ var.respec-hl-yellow {
 }
 
 var.respec-hl-blue {
-  background: #01b4bc;
+  background: #84b6eb;
 }
 
 var.respec-hl-pink {
@@ -20,7 +20,11 @@ var.respec-hl-pink {
 }
 
 var.respec-hl-green {
-  background: #5fa55a;
+  background: #02e10c;
+}
+
+var.respec-hl-sky {
+  background: #00bfff;
 }
 
 var.respec-hl-orange {

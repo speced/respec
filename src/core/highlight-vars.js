@@ -50,6 +50,7 @@ const HL_COLORS = new Map([
   ["respec-hl-blue", true],
   ["respec-hl-pink", true],
   ["respec-hl-green", true],
+  ["respec-hl-sky", true],
   ["respec-hl-orange", true],
 ]);
 
