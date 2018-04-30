@@ -4,36 +4,39 @@ var:hover {
 }
 
 var.respec-hl {
-  color: #000;
+  color: var(--color, #000);
+  background-color: var(--bg-color);
+  box-shadow: 0 0 0px 2px var(--bg-color);
 }
 
 var.respec-hl-yellow {
-  background: #f6d51f;
+  --bg-color: #f6d51f;
 }
 
 var.respec-hl-blue {
-  background: #84b6eb;
+  --bg-color: #84b6eb;
 }
 
 var.respec-hl-pink {
-  background: #f9a4af;
+  --bg-color: #f9a4af;
 }
 
 var.respec-hl-green {
-  background: #02e10c;
+  --bg-color: #02e10c;
 }
 
 var.respec-hl-sky {
-  background: #00bfff;
+  --bg-color: #00bfff;
 }
 
 var.respec-hl-orange {
-  background: #fa8925;
+  --bg-color: #fa8925;
 }
 
 @media print {
   var.respec-hl {
     background: none;
     color: #000;
+    box-shadow: unset;
   }
 }
