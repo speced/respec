@@ -483,4 +483,46 @@ describe("Core - Utils", () => {
       'edDraftURI^"http://foo.com" % shortName^"Foo"';
     expect(utils.toKeyValuePairs(obj, " % ", "^")).toEqual(expected);
   });
+
+  describe("flatten()", () => {
+    it("flattens iterables", () => {
+      expect(utils.flatten(["pass"], [123, 456])).toEqual(["pass", 123, 456]);
+      const map = new Map([["key-fail", "pass"], ["anotherKey", 123]]);
+      expect(utils.flatten([], map)).toEqual(["pass", 123]);
+      expect(utils.flatten([], new Set(["pass", 123]))).toEqual(["pass", 123]);
+      expect(utils.flatten([], { "key-fail": "pass", other: 123 })).toEqual([
+        "pass",
+        123,
+      ]);
+    });
+
+    it("flattens nested iterables as a reducer", () => {
+      const input = [
+        new Map([["fail", "123"]]),
+        new Set([456]),
+        [7, [8, [new Set([9, 10])]]],
+        { key: "11" },
+      ];
+      const output = input.reduce(utils.flatten, ["first", 0]);
+      expect(output).toEqual(["first", 0, "123", 456, 7, 8, 9, 10, "11"]);
+    });
+
+    it("flattens sparse and arrays", () => {
+      const input = [, 1, 1, , , , 1, , 1];
+      const output = input.reduce(utils.flatten,["pass"]);
+      expect(output).toEqual([
+        "pass",
+        1,
+        1,
+        1,
+        1,
+      ]);
+    });
+
+    it("flattens dense and arrays", () => {
+      const input = new Array(10);
+      const output = input.reduce(utils.flatten,["pass"]);
+      expect(output).toEqual(["pass"]);
+    });
+  });
 });
