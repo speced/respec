@@ -42,11 +42,9 @@ export function makeEPubHref() {
   const url = new URL(
     "https://labs.w3.org/epub-generator/cgi-bin/epub-generator.py"
   );
-  const params = new URLSearchParams({
-    type: "respec",
-    url: document.location.href,
-  });
-  return `${url}?${params}`;
+  url.searchParams.append("type", "respec")
+  url.searchParams.append("url", document.location.href);
+  return url.href;
 }
 
 function cleanup(cloneDoc) {
