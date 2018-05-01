@@ -1,13 +1,20 @@
 "use strict";
-describe("Core — Can I Use", function() {
+describe("Core — Can I Use", function () {
   afterAll(flushIframes);
   const apiURL = `${window.location.origin}/tests/data/caniuse/{FEATURE}.json`;
 
   it("uses meaningful defaults", async () => {
-    const ops = makeStandardOps({ caniuse: { feature: "FEATURE", apiURL } });
+    const ops = makeStandardOps({
+      caniuse: {
+        feature: "FEATURE",
+        apiURL
+      }
+    });
     const doc = await makeRSDoc(ops);
     await doc.respecIsReady;
-    const { caniuse } = doc.defaultView.respecConfig;
+    const {
+      caniuse
+    } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
     expect(caniuse.maxAge).toBe(60 * 60 * 24 * 1000);
@@ -27,7 +34,9 @@ describe("Core — Can I Use", function() {
     });
     const doc = await makeRSDoc(ops);
     await doc.respecIsReady;
-    const { caniuse } = doc.defaultView.respecConfig;
+    const {
+      caniuse
+    } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
     expect(caniuse.maxAge).toBe(0);
@@ -39,7 +48,9 @@ describe("Core — Can I Use", function() {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops);
     await doc.respecIsReady;
-    const { caniuse } = doc.defaultView.respecConfig;
+    const {
+      caniuse
+    } = doc.defaultView.respecConfig;
 
     expect(caniuse).toBeFalsy();
     expect(doc.querySelector(".caniuse-title")).toBeFalsy();
@@ -56,7 +67,9 @@ describe("Core — Can I Use", function() {
     });
     const doc = await makeRSDoc(ops);
     await doc.respecIsReady;
-    const { caniuse } = doc.defaultView.respecConfig;
+    const {
+      caniuse
+    } = doc.defaultView.respecConfig;
 
     expect(caniuse.browsers.length).toBe(2);
     expect(caniuse.browsers).toEqual(["firefox", "opera"]);
@@ -122,5 +135,28 @@ describe("Core — Can I Use", function() {
     // firefoxButton.focus();
     // style = getComputedStyle(firefox.querySelector("ul"));
     // expect(style.getPropertyValue("display")).toBe("block");
+  });
+
+  it("removes irrelevant config for caniuse feature", async () => {
+    const expectedObj = Object.assign(makeBasicConfig(), {
+      publishDate: "1999-12-11",
+      publishISODate: "1999-12-11T00:00:00.000Z",
+      generatedSubtitle: "Editor's Draft 11 December 1999",
+      caniuse: "FEATURE",
+    });
+    const opsWithCaniuse = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody(),
+    };
+    opsWithCaniuse.config.publishDate = "1999-12-11";
+    opsWithCaniuse.config.caniuse = {
+      feature: "FEATURE",
+      apiURL: `${window.location.origin}/tests/data/caniuse/{FEATURE}.json`,
+    };
+    const doc = await makeRSDoc(opsWithCaniuse);
+    await doc.respecIsReady;
+
+    const text = doc.getElementById("initialUserConfig").textContent;
+    expect(JSON.parse(text)).toEqual(expectedObj);
   });
 });
