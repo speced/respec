@@ -4,7 +4,7 @@
  * Usage options: https://github.com/w3c/respec/wiki/caniuse
  */
 import { semverCompare } from "core/utils";
-import { pub } from "core/pubsubhub";
+import { pub, sub } from "core/pubsubhub";
 import "deps/hyperhtml";
 import { createResourceHint, fetchAndCache } from "core/utils";
 import caniuseCss from "deps/text!core/css/caniuse.css";
@@ -49,12 +49,14 @@ export async function run(conf) {
     return; // no feature to show
   }
   const { feature } = caniuse;
+  const featureURL = "https://caniuse.com/#feat=" + feature;
   const link = createResourceHint({
     hint: "preconnect",
     href: "https://raw.githubusercontent.com",
   });
   document.head.appendChild(link);
-  document.head.appendChild(hyperHTML`<style>${caniuseCss}</style>`);
+  document.head.appendChild(hyperHTML`
+    <style class="removeOnSave">${caniuseCss}</style>`);
 
   const headDlElem = document.querySelector(".head dl");
   const contentPromise = new Promise(async resolve => {
@@ -68,20 +70,24 @@ export async function run(conf) {
         `Couldn't find feature "${feature}" on caniuse.com? ` +
         "Please check the feature key on [caniuse.com](https://caniuse.com)";
       pub("error", msg);
-      const featureURL = "https://caniuse.com/#feat=" + feature;
       content = hyperHTML`<a href="${featureURL}">caniuse.com</a>`;
     }
     resolve(content);
   });
   const definitionPair = hyperHTML.bind(document.createDocumentFragment())`
-    <dt class="caniuse-title"
-      id="${`caniuse-${feature}`}">Can I Use this API?</dt>
+    <dt class="caniuse-title">Can I Use this API?</dt>
     <dd class="caniuse-stats">${{
       any: contentPromise,
       placeholder: "Fetching data from caniuse.com...",
     }}</dd>`;
   headDlElem.appendChild(definitionPair);
   await contentPromise;
+
+  // remove from export
+  sub("beforesave", outputDoc => {
+    hyperHTML.bind(outputDoc.querySelector(".caniuse-stats"))`
+      <a href="${featureURL}">caniuse.com</a>`;
+  });
 }
 
 /**
@@ -160,6 +166,7 @@ function createTableHTML(conf, stats) {
    * @param {String} browser      name of browser (as in CanIUse API response)
    * @param {Number} numVersions  number of old browser versions to show
    * @param {Object} browserData  stats data from api response
+   * @param {Number} tabindex
    */
   function addBrowser(browser, numVersions, browserData) {
     if (!browserData) return;
@@ -186,14 +193,16 @@ function createTableHTML(conf, stats) {
       .sort(semverCompare)
       .slice(-numVersions)
       .reverse();
-
     const { support, title } = getSupport(latestVersion);
+    const cssClass= `caniuse-cell ${support}`;
     return hyperHTML`
-      <ul class="caniuse-browser">
-        <li class="${"caniuse-cell " + support}" title="${title}">
+      <div class="caniuse-browser">
+        <button class="${cssClass}" title="${title}">
           ${BROWSERS.get(browser) || browser} ${latestVersion}
-        </li>
-        ${olderVersions.map(addBrowserVersion)}
-      </ul>`;
+        </button>
+        <ul>
+          ${olderVersions.map(addBrowserVersion)}
+        </ul>
+      </div>`;
   }
 }
