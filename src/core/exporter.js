@@ -1,10 +1,32 @@
 // module: exporter
-// used in ui/save-html
+// exports a ReSpec document as either HTML or XML
 
 import { removeReSpec } from "core/utils";
 import { pub } from "core/pubsubhub";
 
-export function serialize(format = "html", doc = document) {
+const mimeTypes = new Map([
+  ["text/html", "html"],
+  ["application/xml", "xml"],
+]);
+
+/**
+ * returns a stringified data-uri of document that can be saved
+ * @param {String} mimeType mimetype. one of `mimeTypes` above
+ * @param {Document} doc document to export. useful for testing purposes
+ */
+export function exportDocument(mimeType = "text/html", doc = document) {
+  Promise.resolve(doc.respecIsReady);
+  const format = mimeTypes.get(mimeType);
+  const dataURL = toDataURL(serialize(format, doc), mimeType);
+  return dataURL;
+}
+
+function toDataURL(data, mimeType = "text/html") {
+  const encodedString = encodeURIComponent(data);
+  return `data:${mimeType};charset=utf-8,${encodedString}`;
+}
+
+function serialize(format = "html", doc = document) {
   const cloneDoc = doc.cloneNode(true);
   cleanup(cloneDoc);
   let result = "";
@@ -20,31 +42,6 @@ export function serialize(format = "html", doc = document) {
     }
   }
   return result;
-}
-
-export async function exportDocument(format, mimeType, doc = document) {
-  await doc.respecIsReady;
-  const dataURL = toDataURL(serialize(format, doc), mimeType);
-  const encodedString = dataURL.replace(/^data:\w+\/\w+;charset=utf-8,/, "");
-  const decodedString = decodeURIComponent(encodedString);
-  return decodedString;
-}
-
-export function toDataURL(data, mimeType = "text/html") {
-  const encodedString = encodeURIComponent(data);
-  return `data:${mimeType};charset=utf-8,${encodedString}`;
-}
-
-// Create and download an EPUB 3 version of the content
-// Using (by default) the EPUB 3 conversion service set up at labs.w3.org/epub-generator
-// For more details on that service, see https://github.com/iherman/respec2epub
-export function makeEPubHref() {
-  const url = new URL(
-    "https://labs.w3.org/epub-generator/cgi-bin/epub-generator.py"
-  );
-  url.searchParams.append("type", "respec");
-  url.searchParams.append("url", document.location.href);
-  return url.href;
 }
 
 function cleanup(cloneDoc) {

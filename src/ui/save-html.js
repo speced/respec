@@ -3,22 +3,19 @@
 import { ui } from "core/ui";
 import { l10n, lang } from "core/l10n";
 import { pub } from "core/pubsubhub";
-import {
-  toDataURL,
-  makeEPubHref,
-  serialize,
-  exportDocument as newExportDoc,
-} from "core/exporter";
+import { exportDocument as newExportDoc } from "core/exporter";
+
 export const name = "ui/save-html";
 
 const downloadLinks = [
   {
     id: "respec-save-as-html",
-    title: "HTML",
-    get href() {
-      return toDataURL(serialize());
-    },
     fileName: "index.html",
+    title: "HTML",
+    type: "text/html",
+    get href() {
+      return newExportDoc(this.type);
+    },
   },
   {
     id: "respec-save-as-xml",
@@ -26,7 +23,7 @@ const downloadLinks = [
     title: "XML",
     type: "application/xml",
     get href() {
-      return toDataURL(serialize("xml"), this.type);
+      return newExportDoc(this.type);
     },
   },
   {
@@ -88,5 +85,17 @@ export function exportDocument(format, mimeType) {
     "Use core/exporter `exportDocument()` instead.";
   pub("warn", msg);
   console.warn(msg);
-  newExportDoc(format, mimeType);
+  newExportDoc(mimeType);
+}
+
+// Create and download an EPUB 3 version of the content
+// Using (by default) the EPUB 3 conversion service set up at labs.w3.org/epub-generator
+// For more details on that service, see https://github.com/iherman/respec2epub
+function makeEPubHref() {
+  const url = new URL(
+    "https://labs.w3.org/epub-generator/cgi-bin/epub-generator.py"
+  );
+  url.searchParams.append("type", "respec");
+  url.searchParams.append("url", document.location.href);
+  return url.href;
 }
