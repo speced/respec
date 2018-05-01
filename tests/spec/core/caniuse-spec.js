@@ -123,4 +123,27 @@ describe("Core — Can I Use", function() {
     // style = getComputedStyle(firefox.querySelector("ul"));
     // expect(style.getPropertyValue("display")).toBe("block");
   });
+
+  it("removes irrelevant config for caniuse feature", async () => {
+    const expectedObj = Object.assign(makeBasicConfig(), {
+      publishDate: "1999-12-11",
+      publishISODate: "1999-12-11T00:00:00.000Z",
+      generatedSubtitle: "Editor's Draft 11 December 1999",
+      caniuse: "FEATURE",
+    });
+    const opsWithCaniuse = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody(),
+    };
+    opsWithCaniuse.config.publishDate = "1999-12-11";
+    opsWithCaniuse.config.caniuse = {
+      feature: "FEATURE",
+      apiURL: `${window.location.origin}/tests/data/caniuse/{FEATURE}.json`,
+    };
+    const doc = await makeRSDoc(opsWithCaniuse);
+    await doc.respecIsReady;
+
+    const text = doc.getElementById("initialUserConfig").textContent;
+    expect(JSON.parse(text)).toEqual(expectedObj);
+  });
 });
