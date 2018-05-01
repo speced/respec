@@ -6,7 +6,7 @@
 // Spec editors get filtered out automatically.
 import { fetchIndex } from "core/github";
 import { pub } from "core/pubsubhub";
-import { joinAnd } from "core/utils";
+import { joinAnd, flatten } from "core/utils";
 export const name = "core/contrib";
 
 function prop(prop) {
@@ -17,8 +17,7 @@ const urlProp = prop("url");
 
 function findUserURLs(...thingsWithUsers) {
   const usersURLs = thingsWithUsers
-    // shallow flatten
-    .reduce((arr, things) => [...arr, ...things], [])
+    .reduce(flatten, [])
     .filter(thing => thing && thing.user)
     .map(({ user }) => user.url);
   return [...new Set(usersURLs)];

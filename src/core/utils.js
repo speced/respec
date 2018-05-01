@@ -522,3 +522,23 @@ export async function fetchAndCache(request, maxAge = 86400000) {
   }
   return response;
 }
+
+// --- COLLECTION/ITERABLE HELPERS ---------------
+/**
+ * Spreads one iterable into another.
+ *
+ * @param {Iterable} collector
+ * @param {any|Iterable} item
+ * @returns {Array}
+ */
+export function flatten(collector, item) {
+  const isObject = typeof item === "object";
+  const isIterable =
+    Object(item)[Symbol.iterator] && typeof item.values === "function";
+  const items = !isObject
+    ? [item]
+    : isIterable
+      ? [...item.values()].reduce(flatten, [])
+      : Object.values(item);
+  return [...collector, ...items];
+}

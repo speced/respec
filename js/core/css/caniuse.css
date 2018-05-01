@@ -1,52 +1,64 @@
 /* container for stats */
 .caniuse-stats {
-  font-size: 90%;
-  float: left;
-  width: 100%;
-  width: calc(100% - 2em);
-  height: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: baseline;
+  cursor: pointer;
 }
 
-.caniuse-stats a[href] {
-  display: inline-block;
-  margin: 4px 0 0 8px;
-  white-space: nowrap;
+button.caniuse-cell {
+  margin: 1px 1px 0 0;
+  border: none;
 }
 
-/* wraps each browser into a separate column */
 .caniuse-browser {
-  margin: 0 5px;
-  padding: 0;
-  max-width: 100px;
-  list-style: none;
-  float: left;
-  text-align: center;
   position: relative;
+}
+
+/* reset styles, hide old versions by default */
+.caniuse-browser ul {
+  display: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  position: absolute;
+  left: 0;
+  z-index: 2;
+  background: #fff;
+  margin-top: 1px;
+}
+
+.caniuse-stats a {
+  white-space: nowrap;
+  align-self: center;
+  margin-left: .5em;
 }
 
 /* a browser version */
 .caniuse-cell {
-  width: 100px;
-  padding: 4px;
-  float: left;
-  display: none;
-  margin: 1px 0 0;
-  background: #eee; /* default, for unknown support */
+  display: flex;
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 90%;
+  height: 0.8cm;
+  margin-right: 1px;
+  margin-top: 0;
+  min-width: 3cm;
+  overflow: visible;
+  justify-content: center;
+  align-items: center;
+}
+
+li.caniuse-cell {
+  margin-bottom: 1px;
+}
+
+.caniuse-cell:focus {
+  outline: none;
 }
 
 .caniuse-cell:hover {
-  font-weight: bold;
-}
-
-/* show latest version  */
-.caniuse-cell:nth-child(1) {
-  display: block;
-}
-
-/* show older browsers on hover */
-.caniuse-browser:hover .caniuse-cell,
-.caniuse-browser.hover .caniuse-cell /* .hover for testing only */ {
-  display: block;
+  color: rgba(0, 0, 0, 1);
 }
 
 /* supports */
@@ -61,6 +73,15 @@
 
 /* not supported by default / partial support etc
 see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
-.caniuse-cell.d, .caniuse-cell.a, .caniuse-cell.x, .caniuse-cell.p {
+.caniuse-cell.d,
+.caniuse-cell.a,
+.caniuse-cell.x,
+.caniuse-cell.p {
   background: #ffc107;
+}
+
+/* show rest of the browser versions */
+.caniuse-stats button:focus + ul,
+.caniuse-stats button:hover + ul {
+  display: block;
 }
