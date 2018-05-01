@@ -1,16 +1,14 @@
 /* container for stats */
-
 .caniuse-stats {
-  margin: 0;
-  padding: 0;
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: baseline;
   cursor: pointer;
-  text-align: center;
 }
 
 button.caniuse-cell {
-  margin-top: 1px;
+  margin: 1px 1px 0 0;
   border: none;
 }
 
@@ -31,25 +29,22 @@ button.caniuse-cell {
   margin-top: 1px;
 }
 
-.caniuse-stats a[href] {
-  display: inline-block;
-  margin: 4px 0 0 8px;
+.caniuse-stats a {
   white-space: nowrap;
+  align-self: center;
+  margin-left: .5em;
 }
 
 /* a browser version */
 .caniuse-cell {
+  display: flex;
   color: rgba(0, 0, 0, 0.8);
-  background: #eee;
   font-size: 90%;
   height: 0.8cm;
   margin-right: 1px;
   margin-top: 0;
   min-width: 3cm;
   overflow: visible;
-  position: relative;
-  line-height: 0.79cm;
-  display: flex;
   justify-content: center;
   align-items: center;
 }
