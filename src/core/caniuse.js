@@ -84,7 +84,6 @@ export async function run(conf) {
   await contentPromise;
 
   // remove from export
-  pub("amend-user-config", { caniuse: undefined });
   sub("beforesave", outputDoc => {
     hyperHTML.bind(outputDoc.querySelector(".caniuse-stats"))`
       <a href="${featureURL}">caniuse.com</a>`;
