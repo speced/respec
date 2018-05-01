@@ -50,9 +50,10 @@ export function makeEPubHref() {
 function cleanup(cloneDoc) {
   const { head, body, documentElement } = cloneDoc;
   cleanupHyper(cloneDoc);
-  Array.from(
-    cloneDoc.querySelectorAll(".removeOnSave, #toc-nav")
-  ).forEach(elem => elem.remove());
+
+  cloneDoc
+    .querySelectorAll(".removeOnSave, #toc-nav")
+    .forEach(elem => elem.remove());
   body.classList.remove("toc-sidebar");
   removeReSpec(documentElement);
 
@@ -83,10 +84,14 @@ function cleanup(cloneDoc) {
   pub("beforesave", documentElement);
 }
 
-function cleanupHyper({documentElement: node}) {
+function cleanupHyper({ documentElement: node }) {
   // collect first, or walker will cease too early
   const filter = comment => comment.textContent.startsWith("_hyper");
-  const walker = document.createTreeWalker(node, NodeFilter.SHOW_COMMENT, filter);
+  const walker = document.createTreeWalker(
+    node,
+    NodeFilter.SHOW_COMMENT,
+    filter
+  );
   for (const comment of [...walkTree(walker)]) {
     comment.remove();
   }
