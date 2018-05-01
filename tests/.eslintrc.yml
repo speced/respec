@@ -5,6 +5,7 @@ env:
 extends:
   - 'eslint:recommended'
   - 'plugin:jasmine/recommended'
+  - 'plugin:prettier/recommended'
 parserOptions:
   sourceType: module
 rules:
@@ -22,3 +23,4 @@ rules:
     - always
 plugins:
   - jasmine
+  - prettier
