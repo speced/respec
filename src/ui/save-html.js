@@ -2,7 +2,13 @@
 // Saves content to HTML when asked to
 import { ui } from "core/ui";
 import { l10n, lang } from "core/l10n";
-import { toDataURL, makeEPubHref, serialize } from "core/exporter";
+import { pub } from "core/pubsubhub";
+import {
+  toDataURL,
+  makeEPubHref,
+  serialize,
+  exportDocument as newExportDoc,
+} from "core/exporter";
 export const name = "ui/save-html";
 
 const downloadLinks = [
@@ -60,7 +66,7 @@ const saveDialog = {
   },
 };
 
-const supportsDownload = "download" in document.createElement("a");
+const supportsDownload = "download" in HTMLAnchorElement.prototype;
 let button;
 if (supportsDownload) {
   button = ui.addCommand(
@@ -74,4 +80,13 @@ if (supportsDownload) {
 export function show() {
   if (!supportsDownload) return;
   saveDialog.show(button);
+}
+
+export function exportDocument(format, mimeType) {
+  const msg =
+    "Exporting via ui/save-html module's `exportDocument()` is deprecated and will be removed. " +
+    "Use core/exporter `exportDocument()` instead.";
+  pub("warn", msg);
+  console.warn(msg);
+  newExportDoc(format, mimeType);
 }
