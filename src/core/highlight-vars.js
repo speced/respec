@@ -66,7 +66,7 @@ function getHighlightColor(target) {
 
   // otherwise get some other available color
   return (
-    [...HL_COLORS.keys()].find(c => HL_COLORS.get(c) === true) ||
+    [...HL_COLORS.keys()].find(c => HL_COLORS.get(c)) ||
     "respec-hl-yellow"
   );
 }
@@ -95,13 +95,11 @@ function highlightVars(varElem) {
 }
 
 function removeHighlight(el, highlightColor) {
-  el.classList.remove("respec-hl");
-  el.classList.remove(highlightColor);
+  el.classList.remove("respec-hl", highlightColor);
   // clean up empty class attributes so they don't come in export
-  if (el.classList.length == 0) el.removeAttribute("class");
+  if (!el.classList.length) el.removeAttribute("class");
 }
 
 function addHighlight(elem, highlightColor) {
-  elem.classList.add("respec-hl");
-  elem.classList.add(highlightColor);
+  elem.classList.add("respec-hl", highlightColor);
 }
