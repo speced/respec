@@ -167,6 +167,7 @@ function createTableHTML(conf, stats) {
    * @param {String} browser      name of browser (as in CanIUse API response)
    * @param {Number} numVersions  number of old browser versions to show
    * @param {Object} browserData  stats data from api response
+   * @param {Number} tabindex
    */
   function addBrowser(browser, numVersions, browserData) {
     if (!browserData) return;
@@ -193,14 +194,16 @@ function createTableHTML(conf, stats) {
       .sort(semverCompare)
       .slice(-numVersions)
       .reverse();
-
     const { support, title } = getSupport(latestVersion);
+    const cssClass= `caniuse-cell ${support}`;
     return hyperHTML`
-      <ul class="caniuse-browser">
-        <li class="${"caniuse-cell " + support}" title="${title}">
+      <div class="caniuse-browser">
+        <button class="${cssClass}" title="${title}">
           ${BROWSERS.get(browser) || browser} ${latestVersion}
-        </li>
-        ${olderVersions.map(addBrowserVersion)}
-      </ul>`;
+        </button>
+        <ul>
+          ${olderVersions.map(addBrowserVersion)}
+        </ul>
+      </div>`;
   }
 }
