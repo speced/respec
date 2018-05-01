@@ -10,6 +10,7 @@ import { pub } from "core/pubsubhub";
 export const name = "core/figures";
 
 export function run(conf, doc, cb) {
+  normalizeImages(doc);
   // Move old syntax to new syntax
   $(".figure", doc).each(function(i, figure) {
     var $figure = $(figure),
@@ -59,7 +60,10 @@ export function run(conf, doc, cb) {
       .prepend(doc.createTextNode(conf.l10n.fig));
     figMap[id] = $cap.contents();
     var $tofCap = $cap.clone();
-    $tofCap.find("a").renameElement("span").removeAttr("href");
+    $tofCap
+      .find("a")
+      .renameElement("span")
+      .removeAttr("href");
     tof.push(
       $("<li class='tofline'><a class='tocxref' href='#" + id + "'></a></li>")
         .find(".tocxref")
@@ -78,8 +82,11 @@ export function run(conf, doc, cb) {
       $a.addClass("fig-ref");
       if ($a.html() === "") {
         const $shortFigDescriptor = figMap[id].slice(0, 2).clone();
-        if(!$a[0].hasAttribute("title")) {
-          const longFigDescriptor = figMap[id].slice(2).clone().text();
+        if (!$a[0].hasAttribute("title")) {
+          const longFigDescriptor = figMap[id]
+            .slice(2)
+            .clone()
+            .text();
           $a.attr("title", longFigDescriptor.trim());
         }
         $a.append($shortFigDescriptor);
@@ -114,4 +121,15 @@ export function run(conf, doc, cb) {
     while (tof.length) $ul.append(tof.shift());
   }
   cb();
+}
+
+function normalizeImages(doc) {
+  [
+    ...doc.querySelectorAll(
+      ":not(picture)>img:not([width]):not([height]):not([srcset])"
+    ),
+  ].forEach(img => {
+    img.height = img.naturalHeight;
+    img.width = img.naturalWidth;
+  });
 }

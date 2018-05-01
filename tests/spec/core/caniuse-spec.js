@@ -96,32 +96,31 @@ describe("Core — Can I Use", function() {
     expect(moreInfoLink.href).toBe("https://caniuse.com/#feat=FEATURE");
     expect(moreInfoLink.textContent.trim()).toBe("More info");
 
-    const browsers = stats.querySelectorAll("ul.caniuse-browser");
+    const browsers = stats.querySelectorAll(".caniuse-browser");
     expect(browsers.length).toBe(2); // not 3, as there is no data for "opera"
     const [firefox, chrome] = browsers;
 
-    const chromeVersions = chrome.querySelectorAll("li.caniuse-cell");
-    expect(chromeVersions.length).toBe(3);
+    const chromeVersions = chrome.querySelectorAll("ul li.caniuse-cell");
+    expect(chromeVersions.length).toBe(2);
 
-    const firefoxVersions = firefox.querySelectorAll("li.caniuse-cell");
-    expect(firefoxVersions.length).toBe(5);
+    const firefoxVersions = firefox.querySelectorAll("ul li.caniuse-cell");
+    expect(firefoxVersions.length).toBe(4);
 
-    // eslint-disable-next-line no-unused-vars
-    const [label, hiddenVersion, _] = firefoxVersions;
+    const firefoxButton = firefox.querySelector("button");
+    expect(firefoxButton.textContent.trim()).toBe("Firefox 61");
+    expect(firefoxButton.classList.value).toBe("caniuse-cell y");
 
-    expect(label.textContent.trim()).toBe("Firefox 61");
-    expect(label.classList.value).toBe("caniuse-cell y");
+    expect(firefoxVersions[0].textContent.trim()).toBe("60");
+    expect(firefoxVersions[0].classList.value).toBe("caniuse-cell n d");
 
-    expect(hiddenVersion.textContent.trim()).toBe("60");
-    expect(hiddenVersion.classList.value).toBe("caniuse-cell n d");
+    // test dropdown
+    // let style = getComputedStyle(firefox.querySelector("ul"));
+    // expect(style.getPropertyValue("display")).toBe("none");
 
-    // test hover effects
-    let style = getComputedStyle(hiddenVersion);
-    expect(style.getPropertyValue("display")).toBe("none");
-
-    // add hover class as can't trigger a hover (https://stackoverflow.com/a/17226753/3367669)
-    firefox.classList.add("hover");
-    style = getComputedStyle(hiddenVersion);
-    expect(style.getPropertyValue("display")).toBe("block");
+    // // BUG: cannot trigger focus:
+    // see: https://github.com/w3c/respec/issues/1642
+    // firefoxButton.focus();
+    // style = getComputedStyle(firefox.querySelector("ul"));
+    // expect(style.getPropertyValue("display")).toBe("block");
   });
 });
