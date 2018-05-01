@@ -331,6 +331,22 @@ export function norm(str) {
   return str.trim().replace(/\s+/g, " ");
 }
 
+// semverCompare
+// https://github.com/substack/semver-compare
+export function semverCompare(a, b) {
+  const pa = a.split(".");
+  const pb = b.split(".");
+  for (let i = 0; i < 3; i++) {
+    const na = Number(pa[i]);
+    const nb = Number(pb[i]);
+    if (na > nb) return 1;
+    if (nb > na) return -1;
+    if (!isNaN(na) && isNaN(nb)) return 1;
+    if (isNaN(na) && !isNaN(nb)) return -1;
+  }
+  return 0;
+}
+
 // --- DATE HELPERS -------------------------------------------------------------------------------
 // Takes a Date object and an optional separator and returns the year,month,day representation with
 // the custom separator (defaulting to none) and proper 0-padding
@@ -470,7 +486,10 @@ export async function fetchAndCache(request, maxAge = 86400000) {
     try {
       cache = await caches.open(url.origin);
       cachedResponse = await cache.match(request);
-      if (cachedResponse && new Date(cachedResponse.headers.get("Expires")) > new Date()) {
+      if (
+        cachedResponse &&
+        new Date(cachedResponse.headers.get("Expires")) > new Date()
+      ) {
         return cachedResponse;
       }
     } catch (err) {
@@ -481,7 +500,8 @@ export async function fetchAndCache(request, maxAge = 86400000) {
   // otherwise fetch new data and cache
   const response = await fetch(request);
   if (!response.ok) {
-    if (cachedResponse) { // return stale version
+    if (cachedResponse) {
+      // return stale version
       console.warn(`Returning a stale cached response for ${url}`);
       return cachedResponse;
     }
@@ -493,10 +513,32 @@ export async function fetchAndCache(request, maxAge = 86400000) {
     const customHeaders = new Headers(response.headers);
     const expiryDate = new Date(Date.now() + maxAge);
     customHeaders.set("Expires", expiryDate);
-    const cacheResponse = new Response(await clonedResponse.blob(), { headers: customHeaders });
+    const cacheResponse = new Response(await clonedResponse.blob(), {
+      headers: customHeaders,
+    });
     // put in cache, and forget it (there is no recovery if it throws, but that's ok).
     await cache.put(request, cacheResponse).catch(console.error);
     return await cache.match(request);
   }
   return response;
+}
+
+// --- COLLECTION/ITERABLE HELPERS ---------------
+/**
+ * Spreads one iterable into another.
+ *
+ * @param {Iterable} collector
+ * @param {any|Iterable} item
+ * @returns {Array}
+ */
+export function flatten(collector, item) {
+  const isObject = typeof item === "object";
+  const isIterable =
+    Object(item)[Symbol.iterator] && typeof item.values === "function";
+  const items = !isObject
+    ? [item]
+    : isIterable
+      ? [...item.values()].reduce(flatten, [])
+      : Object.values(item);
+  return [...collector, ...items];
 }

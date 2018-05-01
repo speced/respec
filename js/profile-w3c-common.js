@@ -59,6 +59,7 @@ define(
     "w3c/permalinks",
     "core/id-headers",
     "core/location-hash",
+    "core/caniuse",
     "ui/save-html",
     "ui/search-specref",
     "ui/dfn-list",
