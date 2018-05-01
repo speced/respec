@@ -24,7 +24,7 @@ const lang = defaultLang in meta ? defaultLang : "en";
  * @param  {Document} doc The document to be checked.
  */
 function lintingFunction(conf, doc) {
-  // Check string ends with one of . !, ?, :, ] or is empty
+  // Check string ends with one of ., !, ?, :, ], or is empty.
   const punctuatingRegExp = new RegExp(
     `[${punctuationMarks.join("")}\\]]$|^ *$`,
     "m"
