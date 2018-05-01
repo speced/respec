@@ -109,7 +109,9 @@ ${conf.isUnofficial
               with <code>${conf.subjectPrefix}</code> at the start of your email's subject`
                 : ""}.
           `
-            : ""}
+            : html`
+            If you wish to make comments regarding this document, please raise them as <a href="${conf.issueBase}">GitHub issues</a>.
+           `}
           ${conf.isCR
             ? `
             W3C publishes a Candidate Recommendation to indicate that the document is believed to be

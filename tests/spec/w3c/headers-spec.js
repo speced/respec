@@ -797,6 +797,21 @@ describe("W3C — Headers", function() {
       );
     });
 
+    it("uses GitHub issueBase if wgPublicList is not given", async () => {
+      const ops = makeStandardOps({
+        github: "https://github.com/w3c/some-API",
+      });
+      const doc = await makeRSDoc(ops);
+      await doc.respecIsReady;
+
+      const issueLink = [...doc.querySelectorAll("#sotd a")]
+        .find(el => el.textContent === "GitHub issues");
+      expect(issueLink).toBeTruthy();
+
+      const { issueBase } = doc.defaultView.respecConfig;
+      expect(issueLink.href).toEqual(issueBase);
+    });
+
     it("takes multi-group configurations into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
