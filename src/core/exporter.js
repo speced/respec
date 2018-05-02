@@ -1,5 +1,5 @@
 /**
- * module: exporter
+ * module: core/exporter
  * Exports a ReSpec document, based on mime type, so it can be saved, etc.
  * Also performs cleanup, removing things that shouldn't be in published documents.
  * That is, elements that have a "removeOnSave" css class.
