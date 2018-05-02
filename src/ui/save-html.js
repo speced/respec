@@ -5,7 +5,9 @@ import { l10n, lang } from "core/l10n";
 import { pub } from "core/pubsubhub";
 import { rsDocToDataURL } from "core/exporter";
 import "deps/hyperhtml";
+
 export const name = "ui/save-html";
+
 // Create and download an EPUB 3 version of the content
 // Using (by default) the EPUB 3 conversion service set up at labs.w3.org/epub-generator
 // For more details on that service, see https://github.com/iherman/respec2epub
@@ -14,6 +16,7 @@ const epubURL = new URL(
 );
 epubURL.searchParams.append("type", "respec");
 epubURL.searchParams.append("url", document.location.href);
+
 const downloadLinks = [
   {
     id: "respec-save-as-html",

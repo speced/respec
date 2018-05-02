@@ -7,7 +7,7 @@
 
 import { removeReSpec } from "core/utils";
 import { pub } from "core/pubsubhub";
-import "deps/hyperHTML";
+import "deps/hyperhtml";
 
 const mimeTypes = new Map([["text/html", "html"], ["application/xml", "xml"]]);
 
@@ -19,20 +19,20 @@ const mimeTypes = new Map([["text/html", "html"], ["application/xml", "xml"]]);
  * @param {Document} doc document to export. useful for testing purposes
  * @returns a stringified data-uri of document that can be saved.
  */
-export function rsDocToDataURL(mimeType) {
+export function rsDocToDataURL(mimeType, doc = document) {
   const format = mimeTypes.get(mimeType);
   if (!format) {
     const validTypes = [...mimeTypes.values()].join(", ");
     const msg = `Invalid format: ${mimeType}. Expected one of: ${validTypes}.`;
     throw new TypeError(msg);
   }
-  const data = serialize(format);
+  const data = serialize(format, doc);
   const encodedString = encodeURIComponent(data);
   return `data:${mimeType};charset=utf-8,${encodedString}`;
 }
 
-function serialize(format) {
-  const cloneDoc = document.cloneNode(true);
+function serialize(format, doc) {
+  const cloneDoc = doc.cloneNode(true);
   cleanup(cloneDoc);
   let result = "";
   switch (format) {
