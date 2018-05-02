@@ -1,7 +1,7 @@
 /*jshint strict: true, browser:true, jquery: true*/
 /*globals define*/
-// Module geonovum/style
-// Inserts a link to the appropriate GNVM style for the specification's maturity level.
+// Module w3c/style
+// Inserts a link to the appropriate W3C style for the specification's maturity level.
 // CONFIGURATION
 //  - specStatus: the short code for the specification's maturity level or type (required)
 
@@ -56,7 +56,30 @@ const favicon = document.createElement("link");
 favicon.rel = "shortcut icon";
 favicon.type = "image/x-icon";
 favicon.href =
-  "https://tools.geostandaarden.nl/respec/style/logos/Geonovum.ico";
+"https://tools.geostandaarden.nl/respec/style/logos/Geonovum.ico";
+
+// function createBaseStyle() {
+//   const link = document.createElement("link");
+//   link.rel = "stylesheet";
+//   link.href = "https://www.w3.org/StyleSheets/TR/2016/base.css";
+//   link.classList.add("removeOnSave");
+//   return link;
+// }
+
+// function selectStyleVersion(styleVersion) {
+//   let version = "";
+//   switch (styleVersion) {
+//     case null:
+//     case true:
+//       version = "2016";
+//       break;
+//     default:
+//       if (styleVersion && !isNaN(styleVersion)) {
+//         version = styleVersion.toString().trim();
+//       }
+//   }
+//   return version;
+// }
 
 function createResourceHints() {
   const resourceHints = [
@@ -71,12 +94,12 @@ function createResourceHints() {
     },
     {
       hint: "preload", // all specs include on base.css.
-      href: "https://tools.geostandaarden.nl/respec/style/base.css",
+      href: "https://www.w3.org/StyleSheets/TR/2016/base.css",
       as: "style",
     },
     {
       hint: "preload", // all specs show the logo.
-      href: "https://tools.geostandaarden.nl/respec/style/logos/Geonovum.png",
+      href: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
       as: "image",
     },
   ]
@@ -87,7 +110,7 @@ function createResourceHints() {
     }, document.createDocumentFragment());
   return resourceHints;
 }
-// Collect elements for insertion
+// Collect elements for insertion (document fragment)
 const elements = createResourceHints();
 
 if (document.body.querySelector("figure.scalable")) {
@@ -95,6 +118,9 @@ if (document.body.querySelector("figure.scalable")) {
   elements.appendChild(createStyle("leaflet"));
   elements.appendChild(createStyle("font-awesome"));
 }
+
+// Opportunistically apply base style
+// elements.appendChild(createBaseStyle());
 if (!document.head.querySelector("meta[name=viewport]")) {
   // Make meta viewport the first element in the head.
   elements.insertBefore(createMetaViewport(), elements.firstChild);

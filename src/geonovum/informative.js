@@ -1,10 +1,13 @@
-// Module geonovum/informative
+// Module w3c/informative
 // Mark specific sections as informative, based on CSS
+import "deps/hyperhtml";
 export const name = "geonovum/informative";
 
-export function run(conf, doc, cb) {
-  $("section.informative")
-    .find("> h2:first, > h3:first, > h4:first, > h5:first, > h6:first")
-    .after("<p><em>Dit onderdeel is niet normatief.</em></p>");
-  cb();
+export function run() {
+  Array.from(document.querySelectorAll("section.informative"))
+    .map(informative => informative.querySelector("h2, h3, h4, h5, h6"))
+    .filter(heading => heading)
+    .forEach(heading => {
+      heading.parentNode.insertBefore(hyperHTML`<p><em>Dit onderdeel is niet normatief.</em></p>`, heading.nextSibling);
+    });
 }
