@@ -19,14 +19,13 @@ const mimeTypes = new Map([["text/html", "html"], ["application/xml", "xml"]]);
  * @param {Document} doc document to export. useful for testing purposes
  * @returns a stringified data-uri of document that can be saved.
  */
-export async function rsDocToDataURL(mimeType) {
+export function rsDocToDataURL(mimeType) {
   const format = mimeTypes.get(mimeType);
   if (!format) {
     const validTypes = [...mimeTypes.values()].join(", ");
-    const msg = `Invalid format: ${mimeType}. Expected one of ${validTypes}.`;
-    throw new TypeError(mimeType);
+    const msg = `Invalid format: ${mimeType}. Expected one of: ${validTypes}.`;
+    throw new TypeError(msg);
   }
-  await document.respecIsReady;
   const data = serialize(format);
   const encodedString = encodeURIComponent(data);
   return `data:${mimeType};charset=utf-8,${encodedString}`;
