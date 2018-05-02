@@ -175,7 +175,10 @@ async function evaluateHTML() {
     const { rsDocToDataURL } = await new Promise(resolve => {
       require(["core/exporter"], resolve);
     });
-    return rsDocToDataURL("text/html");
+    const dataURL = rsDocToDataURL("text/html");
+    const encodedString = dataURL.replace(/^data:\w+\/\w+;charset=utf-8,/, "");
+    const decodedString = decodeURIComponent(encodedString);
+    return decodedString;
   } catch (err) {
     throw err.stack;
   }
