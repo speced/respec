@@ -3,10 +3,17 @@
 import { ui } from "core/ui";
 import { l10n, lang } from "core/l10n";
 import { pub } from "core/pubsubhub";
-import { exportDocument as newExportDoc } from "core/exporter";
+import { rsDocToDataURL } from "core/exporter";
 
 export const name = "ui/save-html";
-
+// Create and download an EPUB 3 version of the content
+// Using (by default) the EPUB 3 conversion service set up at labs.w3.org/epub-generator
+// For more details on that service, see https://github.com/iherman/respec2epub
+const epubURL = new URL(
+  "https://labs.w3.org/epub-generator/cgi-bin/epub-generator.py"
+);
+epubURL.searchParams.append("type", "respec");
+epubURL.searchParams.append("url", document.location.href);
 const downloadLinks = [
   {
     id: "respec-save-as-html",
@@ -14,7 +21,7 @@ const downloadLinks = [
     title: "HTML",
     type: "text/html",
     get href() {
-      return newExportDoc(this.type);
+      return rsDocToDataURL(this.type);
     },
   },
   {
@@ -23,7 +30,7 @@ const downloadLinks = [
     title: "XML",
     type: "application/xml",
     get href() {
-      return newExportDoc(this.type);
+      return rsDocToDataURL(this.type);
     },
   },
   {
@@ -31,15 +38,12 @@ const downloadLinks = [
     fileName: "spec.epub",
     title: "EPUB 3",
     type: "application/epub+zip",
-    get href() {
-      return makeEPubHref();
-    },
+    href: epubURL.href,
   },
 ];
 
-function toDownloadLink(
-  { id, href, fileName, title, type = "" } = { type: "" }
-) {
+function toDownloadLink(details) {
+  const { id, href, fileName, title, type } = details;
   return hyperHTML`
     <a
       href="${href}"
@@ -52,14 +56,13 @@ function toDownloadLink(
 }
 
 const saveDialog = {
-  show(button) {
-    document.respecIsReady.then(() => {
-      const div = hyperHTML`
-        <div class="respec-save-buttons">
-          ${downloadLinks.map(toDownloadLink)}
-        </div>`;
-      ui.freshModal(l10n[lang].save_snapshot, div, button);
-    });
+  async show(button) {
+    await document.respecIsReady;
+    const div = hyperHTML`
+      <div class="respec-save-buttons">
+        ${downloadLinks.map(toDownloadLink)}
+      </div>`;
+    ui.freshModal(l10n[lang].save_snapshot, div, button);
   },
 };
 
@@ -82,20 +85,8 @@ export function show() {
 export function exportDocument(format, mimeType) {
   const msg =
     "Exporting via ui/save-html module's `exportDocument()` is deprecated and will be removed. " +
-    "Use core/exporter `exportDocument()` instead.";
+    "Use core/exporter `rsDocToDataURL()` instead.";
   pub("warn", msg);
   console.warn(msg);
-  newExportDoc(mimeType);
-}
-
-// Create and download an EPUB 3 version of the content
-// Using (by default) the EPUB 3 conversion service set up at labs.w3.org/epub-generator
-// For more details on that service, see https://github.com/iherman/respec2epub
-function makeEPubHref() {
-  const url = new URL(
-    "https://labs.w3.org/epub-generator/cgi-bin/epub-generator.py"
-  );
-  url.searchParams.append("type", "respec");
-  url.searchParams.append("url", document.location.href);
-  return url.href;
+  return rsDocToDataURL(mimeType);
 }
