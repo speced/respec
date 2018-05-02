@@ -4,7 +4,7 @@ import { ui } from "core/ui";
 import { l10n, lang } from "core/l10n";
 import { pub } from "core/pubsubhub";
 import { rsDocToDataURL } from "core/exporter";
-
+import "deps/hyperhtml";
 export const name = "ui/save-html";
 // Create and download an EPUB 3 version of the content
 // Using (by default) the EPUB 3 conversion service set up at labs.w3.org/epub-generator
