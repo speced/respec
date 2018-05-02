@@ -28,7 +28,7 @@ require.config({
       "/base/js/core/linter-rules/check-punctuation",
     "core/l10n": "/base/js/core/l10n",
     "w3c/linter-rules/privsec-section":
-      "/base/js/w3c/linter-rules/privsec-section",
+    "/base/js/w3c/linter-rules/privsec-section",
     "w3c/l10n": "/base/js/w3c/l10n",
     "core/LinterRule": "/base/js/core/LinterRule",
     "core/biblio-db": "/base/js/core/biblio-db",
@@ -38,6 +38,7 @@ require.config({
     "deps/jquery": "/base/js/deps/jquery",
     "deps/marked": "/base/js/deps/marked",
     "w3c/linter": "/base/js/w3c/linter",
+    "core/exporter": "/base/js/core/exporter",
   },
 });
 
