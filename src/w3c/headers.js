@@ -249,6 +249,20 @@ export function run(conf) {
   if (conf.isRegular && !conf.shortName) {
     pub("error", "Missing required configuration: `shortName`");
   }
+  if (conf.testSuiteURI) {
+    const url = new URL(conf.testSuiteURI, document.location);
+    const { host, pathname } = url;
+    if (
+      host === "github.com" &&
+      pathname.startsWith("/w3c/web-platform-tests/")
+    ) {
+      const msg =
+        "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. " +
+        "Please update your [`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI) to point to the " +
+        `new tests repository (e.g., https://github.com/web-platform-tests/${conf.shortName} ).`;
+      pub("warn", msg);
+    }
+  }
   conf.title = document.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
   conf.publishDate = validateDateAndRecover(
@@ -588,12 +602,22 @@ export function run(conf) {
 
   hyperHTML.bind(sotd)`${populateSoTD(conf, sotd)}`;
 
-  if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
+  if (!conf.implementationReportURI && conf.isCR) {
     pub(
       "error",
-      "CR, PR, and REC documents need to have an `implementationReportURI` defined."
+      "CR documents must have an [`implementationReportURI`](https://github.com/w3c/respec/wiki/implementationReportURI) " +
+        "that describes [implementation experience](https://www.w3.org/2018/Process-20180201/#implementation-experience)."
     );
   }
+  if (!conf.implementationReportURI && conf.isPR) {
+    pub(
+      "warn",
+      "PR documents should include an " +
+        " [`implementationReportURI`](https://github.com/w3c/respec/wiki/implementationReportURI)" +
+        " that describes [implementation experience](https://www.w3.org/2018/Process-20180201/#implementation-experience)."
+    );
+  }
+
   if (conf.isTagFinding && !conf.additionalContent) {
     pub(
       "warn",

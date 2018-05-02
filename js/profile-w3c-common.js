@@ -59,6 +59,7 @@ define(
     "w3c/permalinks",
     "core/id-headers",
     "core/location-hash",
+    "core/caniuse",
     "ui/save-html",
     "ui/search-specref",
     "ui/dfn-list",
@@ -69,7 +70,7 @@ define(
     "core/webidl-clipboard",
     "core/data-tests",
     "core/list-sorter",
-    "core/caniuse",
+    "core/highlight-vars",
     /*Linter must be the last thing to run*/
     "core/linter",
   ],

@@ -1,7 +1,96 @@
 # Change Log
 
+## [v20.9.0](https://github.com/w3c/respec/tree/v20.9.0) (2018-04-26)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.8.0...v20.9.0)
+
+## [v20.8.0](https://github.com/w3c/respec/tree/v20.8.0) (2018-04-25)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.7.2...v20.8.0)
+
+**Implemented enhancements:**
+
+- Add natural width and height to images [\#923](https://github.com/w3c/respec/issues/923)
+
+**Fixed bugs:**
+
+- don't create a new id when an issue is referenced more than once [\#1626](https://github.com/w3c/respec/issues/1626)
+
+**Closed issues:**
+
+- Investigate bug related to duplicate issue ids [\#1342](https://github.com/w3c/respec/issues/1342)
+
+**Merged pull requests:**
+
+- feat\(core/utils\): add flatten\(\) util [\#1633](https://github.com/w3c/respec/pull/1633) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat: support personal github tokens for testing [\#1630](https://github.com/w3c/respec/pull/1630) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/issue-notes\): give issues a unique ID [\#1629](https://github.com/w3c/respec/pull/1629) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/images\): add natural width and height to images\(\#923\) [\#1616](https://github.com/w3c/respec/pull/1616) ([himanish-star](https://github.com/himanish-star))
+
+## [v20.7.2](https://github.com/w3c/respec/tree/v20.7.2) (2018-04-17)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.7.1...v20.7.2)
+
+**Fixed bugs:**
+
+- Perma Link refers to \#undefined for the document [\#1445](https://github.com/w3c/respec/issues/1445)
+
+**Merged pull requests:**
+
+- chore\(package\): update dev deps [\#1623](https://github.com/w3c/respec/pull/1623) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v20.7.1](https://github.com/w3c/respec/tree/v20.7.1) (2018-04-06)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.7.0...v20.7.1)
+
+**Fixed bugs:**
+
+- The document license cannot be limited to the W3C Document License [\#1598](https://github.com/w3c/respec/issues/1598)
+
+**Merged pull requests:**
+
+- fix\(w3c/headers\): allow restrictive w3c license [\#1604](https://github.com/w3c/respec/pull/1604) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v20.7.0](https://github.com/w3c/respec/tree/v20.7.0) (2018-04-05)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.6.0...v20.7.0)
+
+**Merged pull requests:**
+
+- feat\(core/caniuse\): Add caniuse integration \#1238 [\#1555](https://github.com/w3c/respec/pull/1555) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v20.6.0](https://github.com/w3c/respec/tree/v20.6.0) (2018-04-04)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.5.1...v20.6.0)
+
+**Closed issues:**
+
+- Canonical URL not updated with anchor-navigation [\#1609](https://github.com/w3c/respec/issues/1609)
+- respec2html error is always `😱 ReSpec error: JSHandle@error` [\#1606](https://github.com/w3c/respec/issues/1606)
+
+**Merged pull requests:**
+
+- Fix a couple of small bugs.  [\#1613](https://github.com/w3c/respec/pull/1613) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/base-runner\): extend plugin life [\#1612](https://github.com/w3c/respec/pull/1612) ([marcoscaceres](https://github.com/marcoscaceres))
+- test\(headless\): reduce tested specs [\#1608](https://github.com/w3c/respec/pull/1608) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(tools/respecDocWriter\): stringify JSHandle objects from console [\#1607](https://github.com/w3c/respec/pull/1607) ([saschanaz](https://github.com/saschanaz))
+- feat\(core/utils\): Utils fetch and cache [\#1602](https://github.com/w3c/respec/pull/1602) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/issues-notes\): show github labels [\#1583](https://github.com/w3c/respec/pull/1583) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v20.5.1](https://github.com/w3c/respec/tree/v20.5.1) (2018-04-03)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.5.0...v20.5.1)
+
+**Closed issues:**
+
+- Language markup showing in Editors list [\#1594](https://github.com/w3c/respec/issues/1594)
+
+**Merged pull requests:**
+
+- fix\(show-people\): treat name as HTML [\#1595](https://github.com/w3c/respec/pull/1595) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v20.5.0](https://github.com/w3c/respec/tree/v20.5.0) (2018-04-03)
-[Full Changelog](https://github.com/w3c/respec/compare/v20.4.1...v20.5.0)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.4.2...v20.5.0)
+
+**Merged pull requests:**
+
+- feat: punctuation checker for paragraphs [\#1589](https://github.com/w3c/respec/pull/1589) ([shikhar-scs](https://github.com/shikhar-scs))
+
+## [v20.4.2](https://github.com/w3c/respec/tree/v20.4.2) (2018-04-03)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.4.1...v20.4.2)
 
 **Fixed bugs:**
 
@@ -10,7 +99,6 @@
 **Merged pull requests:**
 
 - fix\(w3c/headers\): head items should be lcase [\#1603](https://github.com/w3c/respec/pull/1603) ([marcoscaceres](https://github.com/marcoscaceres))
-- feat: punctuation checker for paragraphs [\#1589](https://github.com/w3c/respec/pull/1589) ([shikhar-scs](https://github.com/shikhar-scs))
 
 ## [v20.4.1](https://github.com/w3c/respec/tree/v20.4.1) (2018-04-02)
 [Full Changelog](https://github.com/w3c/respec/compare/v20.4.0...v20.4.1)

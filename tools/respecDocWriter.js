@@ -172,12 +172,10 @@ async function isRespec() {
 async function evaluateHTML() {
   try {
     await document.respecIsReady;
-    const exportDocument = await new Promise(resolve => {
-      require(["ui/save-html"], ({ exportDocument }) => {
-        resolve(exportDocument);
-      });
+    const { rsDocToDataURL } = await new Promise(resolve => {
+      require(["core/exporter"], resolve);
     });
-    return exportDocument();
+    return rsDocToDataURL("text/html");
   } catch (err) {
     throw err.stack;
   }

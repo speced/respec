@@ -1,13 +1,20 @@
 "use strict";
-describe("Core — Can I Use", function() {
+describe("Core — Can I Use", function () {
   afterAll(flushIframes);
   const apiURL = `${window.location.origin}/tests/data/caniuse/{FEATURE}.json`;
 
   it("uses meaningful defaults", async () => {
-    const ops = makeStandardOps({ caniuse: { feature: "FEATURE", apiURL } });
+    const ops = makeStandardOps({
+      caniuse: {
+        feature: "FEATURE",
+        apiURL
+      }
+    });
     const doc = await makeRSDoc(ops);
     await doc.respecIsReady;
-    const { caniuse } = doc.defaultView.respecConfig;
+    const {
+      caniuse
+    } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
     expect(caniuse.maxAge).toBe(60 * 60 * 24 * 1000);
@@ -27,7 +34,9 @@ describe("Core — Can I Use", function() {
     });
     const doc = await makeRSDoc(ops);
     await doc.respecIsReady;
-    const { caniuse } = doc.defaultView.respecConfig;
+    const {
+      caniuse
+    } = doc.defaultView.respecConfig;
 
     expect(caniuse.feature).toBe("FEATURE");
     expect(caniuse.maxAge).toBe(0);
@@ -39,7 +48,9 @@ describe("Core — Can I Use", function() {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops);
     await doc.respecIsReady;
-    const { caniuse } = doc.defaultView.respecConfig;
+    const {
+      caniuse
+    } = doc.defaultView.respecConfig;
 
     expect(caniuse).toBeFalsy();
     expect(doc.querySelector(".caniuse-title")).toBeFalsy();
@@ -56,7 +67,9 @@ describe("Core — Can I Use", function() {
     });
     const doc = await makeRSDoc(ops);
     await doc.respecIsReady;
-    const { caniuse } = doc.defaultView.respecConfig;
+    const {
+      caniuse
+    } = doc.defaultView.respecConfig;
 
     expect(caniuse.browsers.length).toBe(2);
     expect(caniuse.browsers).toEqual(["firefox", "opera"]);
@@ -96,32 +109,54 @@ describe("Core — Can I Use", function() {
     expect(moreInfoLink.href).toBe("https://caniuse.com/#feat=FEATURE");
     expect(moreInfoLink.textContent.trim()).toBe("More info");
 
-    const browsers = stats.querySelectorAll("ul.caniuse-browser");
+    const browsers = stats.querySelectorAll(".caniuse-browser");
     expect(browsers.length).toBe(2); // not 3, as there is no data for "opera"
     const [firefox, chrome] = browsers;
 
-    const chromeVersions = chrome.querySelectorAll("li.caniuse-cell");
-    expect(chromeVersions.length).toBe(3);
+    const chromeVersions = chrome.querySelectorAll("ul li.caniuse-cell");
+    expect(chromeVersions.length).toBe(2);
 
-    const firefoxVersions = firefox.querySelectorAll("li.caniuse-cell");
-    expect(firefoxVersions.length).toBe(5);
+    const firefoxVersions = firefox.querySelectorAll("ul li.caniuse-cell");
+    expect(firefoxVersions.length).toBe(4);
 
-    // eslint-disable-next-line no-unused-vars
-    const [label, hiddenVersion, _] = firefoxVersions;
+    const firefoxButton = firefox.querySelector("button");
+    expect(firefoxButton.textContent.trim()).toBe("Firefox 61");
+    expect(firefoxButton.classList.value).toBe("caniuse-cell y");
 
-    expect(label.textContent.trim()).toBe("Firefox 61");
-    expect(label.classList.value).toBe("caniuse-cell y");
+    expect(firefoxVersions[0].textContent.trim()).toBe("60");
+    expect(firefoxVersions[0].classList.value).toBe("caniuse-cell n d");
 
-    expect(hiddenVersion.textContent.trim()).toBe("60");
-    expect(hiddenVersion.classList.value).toBe("caniuse-cell n d");
+    // test dropdown
+    // let style = getComputedStyle(firefox.querySelector("ul"));
+    // expect(style.getPropertyValue("display")).toBe("none");
 
-    // test hover effects
-    let style = getComputedStyle(hiddenVersion);
-    expect(style.getPropertyValue("display")).toBe("none");
+    // // BUG: cannot trigger focus:
+    // see: https://github.com/w3c/respec/issues/1642
+    // firefoxButton.focus();
+    // style = getComputedStyle(firefox.querySelector("ul"));
+    // expect(style.getPropertyValue("display")).toBe("block");
+  });
 
-    // add hover class as can't trigger a hover (https://stackoverflow.com/a/17226753/3367669)
-    firefox.classList.add("hover");
-    style = getComputedStyle(hiddenVersion);
-    expect(style.getPropertyValue("display")).toBe("block");
+  it("removes irrelevant config for caniuse feature", async () => {
+    const expectedObj = Object.assign(makeBasicConfig(), {
+      publishDate: "1999-12-11",
+      publishISODate: "1999-12-11T00:00:00.000Z",
+      generatedSubtitle: "Editor's Draft 11 December 1999",
+      caniuse: "FEATURE",
+    });
+    const opsWithCaniuse = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody(),
+    };
+    opsWithCaniuse.config.publishDate = "1999-12-11";
+    opsWithCaniuse.config.caniuse = {
+      feature: "FEATURE",
+      apiURL: `${window.location.origin}/tests/data/caniuse/{FEATURE}.json`,
+    };
+    const doc = await makeRSDoc(opsWithCaniuse);
+    await doc.respecIsReady;
+
+    const text = doc.getElementById("initialUserConfig").textContent;
+    expect(JSON.parse(text)).toEqual(expectedObj);
   });
 });

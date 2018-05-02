@@ -134,9 +134,7 @@ describe("W3C - Style", function() {
     Promise.all(promises).then(done);
   });
 
-  it("should not use 'experimental' URL when useExperimentalStyles is false", function(
-    done
-  ) {
+  it("should not use 'experimental' URL when useExperimentalStyles is false", function(done) {
     // We pick random half from the list, as running the whole set is very slow
     var promises = pickRandomsFromList(specStatus).map(function(test) {
       return loadWithStatus(test.status, test.expectedURL);
