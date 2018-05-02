@@ -1,33 +1,39 @@
-// module: exporter
-// exports a ReSpec document as either HTML or XML
+/**
+ * module: exporter
+ * Exports a ReSpec document, based on mime type, so it can be saved, etc.
+ * Also performs cleanup, removing things that shouldn't be in published documents.
+ * That is, elements that have a "removeOnSave" css class.
+ */
 
 import { removeReSpec } from "core/utils";
 import { pub } from "core/pubsubhub";
+import "deps/hyperHTML";
 
-const mimeTypes = new Map([
-  ["text/html", "html"],
-  ["application/xml", "xml"],
-]);
+const mimeTypes = new Map([["text/html", "html"], ["application/xml", "xml"]]);
 
 /**
- * returns a stringified data-uri of document that can be saved
+ * Creates a dataURI from a ReSpec document. It also cleans up the document
+ * removing various things.
+ *
  * @param {String} mimeType mimetype. one of `mimeTypes` above
  * @param {Document} doc document to export. useful for testing purposes
+ * @returns a stringified data-uri of document that can be saved.
  */
-export function exportDocument(mimeType = "text/html", doc = document) {
-  Promise.resolve(doc.respecIsReady);
+export async function rsDocToDataURL(mimeType) {
   const format = mimeTypes.get(mimeType);
-  const dataURL = toDataURL(serialize(format, doc), mimeType);
-  return dataURL;
-}
-
-function toDataURL(data, mimeType = "text/html") {
+  if (!format) {
+    const validTypes = [...mimeTypes.values()].join(", ");
+    const msg = `Invalid format: ${mimeType}. Expected one of ${validTypes}.`;
+    throw new TypeError(mimeType);
+  }
+  await document.respecIsReady;
+  const data = serialize(format);
   const encodedString = encodeURIComponent(data);
   return `data:${mimeType};charset=utf-8,${encodedString}`;
 }
 
-function serialize(format = "html", doc = document) {
-  const cloneDoc = doc.cloneNode(true);
+function serialize(format) {
+  const cloneDoc = document.cloneNode(true);
   cleanup(cloneDoc);
   let result = "";
   switch (format) {
@@ -72,9 +78,10 @@ function cleanup(cloneDoc) {
   insertions.appendChild(metaCharset);
 
   // Add meta generator
-  const respecVersion = window.respecVersion || "Developer Channel";
+  const respecVersion = `ReSpec ${window.respecVersion || "Developer Channel"}`;
   const metaGenerator = hyperHTML`
-    <meta name="generator" content="${"ReSpec " + respecVersion}">`;
+    <meta name="generator" content="${respecVersion}">
+  `;
 
   insertions.appendChild(metaGenerator);
   head.insertBefore(insertions, head.firstChild);
