@@ -9,7 +9,10 @@ const glob = require("glob");
 })();
 
 async function buildHandlebars() {
-  const paths = ["js/*/templates/*.css", "js/core/templates/webidl-contiguous/*.html"]
+  const paths = [
+    "js/*/templates/*.css",
+    "js/core/templates/webidl-contiguous/*.html",
+  ]
     .map(path => glob.sync(path, { nonull: true }))
     .reduce((res, file) => res.concat(file), [])
     .join(" ");
@@ -17,6 +20,10 @@ async function buildHandlebars() {
 }
 
 async function buildHighlight() {
-  await exec("hljs -n --output js/deps/ xml javascript css http markdown json abnf");
-  await move("js/deps/highlight.pack.js", "js/deps/highlight.js", { overwrite: true });
+  await exec(
+    "hljs -n --output js/deps/ xml javascript css http markdown json abnf"
+  );
+  await move("js/deps/highlight.pack.js", "js/deps/highlight.js", {
+    overwrite: true,
+  });
 }

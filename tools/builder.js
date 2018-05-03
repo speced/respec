@@ -26,7 +26,8 @@ const optionList = [
   {
     alias: "p",
     defaultOption: true,
-    description: "Name of profile to build. Profile must be " +
+    description:
+      "Name of profile to build. Profile must be " +
       "in the js/ folder, and start with 'profile-' (e.g., profile-w3c-common.js)",
     multiple: false,
     name: "profile",
@@ -68,7 +69,7 @@ const usageSections = [
  * @return {Promise} Resolves when done writing the files.
  */
 function appendBoilerplate(outPath, version, name) {
-  return async(optimizedJs, sourceMap) => {
+  return async (optimizedJs, sourceMap) => {
     const respecJs = `"use strict";
 /* ReSpec ${version}
 Created by Robin Berjon, http://berjon.com/ (@robinberjon)
@@ -100,7 +101,7 @@ const Builder = {
    *
    * @returns {Promise<String>} The version string.
    */
-  getRespecVersion: async() => {
+  getRespecVersion: async () => {
     const packagePath = path.join(__dirname, "../package.json");
     const content = await fsp.readFile(packagePath, "utf-8");
     return JSON.parse(content).version;
@@ -125,7 +126,7 @@ const Builder = {
       frames: presets.clock,
       delay: 1,
     });
-    
+
     // optimisation settings
     const buildVersion = await this.getRespecVersion();
     const outputWritter = appendBoilerplate(outPath, buildVersion, name);
@@ -143,7 +144,9 @@ const Builder = {
     };
     const promiseToWrite = new Promise((resolve, reject) => {
       config.out = (concatinatedJS, sourceMap) => {
-        outputWritter(concatinatedJS, sourceMap).then(resolve).catch(reject);
+        outputWritter(concatinatedJS, sourceMap)
+          .then(resolve)
+          .catch(reject);
       };
     });
     r.optimize(config);
