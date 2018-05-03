@@ -14,7 +14,7 @@ const fs = require("fs");
 const writeFile = promisify(fs.writeFile);
 const mkdtemp = promisify(fs.mkdtemp);
 const path = require("path");
-const parseURL = require("url").parse;
+const { URL } = global.URL ? { URL: global.URL } : require("url");
 colors.setTheme({
   debug: "cyan",
   error: "red",
@@ -73,7 +73,7 @@ async function fetchAndWrite(
   });
   try {
     const page = await browser.newPage();
-    const url = parseURL(src).href;
+    const url = new URL(src);
     const response = await page.goto(url, { timeout });
     const handleConsoleMessages = makeConsoleMsgHandler(page);
     handleConsoleMessages(whenToHalt);
@@ -82,7 +82,9 @@ async function fetchAndWrite(
       response.status() /* workaround: 0 means ok for local files */
     ) {
       const warn = colors.warn(`📡 HTTP Error ${response.status()}:`);
-      const msg = `${warn} ${colors.debug(url)}`;
+      // don't show params, as they can contain the API key!
+      const debugURL = `${url.origin}${url.pathname}`;
+      const msg = `${warn} ${colors.debug(debugURL)}`;
       throw new Error(msg);
     }
     await checkIfReSpec(page);
