@@ -14,7 +14,7 @@ const fs = require("fs");
 const writeFile = promisify(fs.writeFile);
 const mkdtemp = promisify(fs.mkdtemp);
 const path = require("path");
-const parseURL = require("url").parse;
+const { URL } = global.URL ? { URL: global.URL } : require("url");
 colors.setTheme({
   debug: "cyan",
   error: "red",
@@ -60,21 +60,31 @@ async function writeTo(outPath, data) {
  * @return {Promise}            Resolves with HTML when done writing.
  *                              Rejects on errors.
  */
-async function fetchAndWrite(src, out, whenToHalt, { timeout = 300000, disableSandbox = false } = {}) {
+async function fetchAndWrite(
+  src,
+  out,
+  whenToHalt,
+  { timeout = 300000, disableSandbox = false } = {}
+) {
   const userDataDir = await mkdtemp(os.tmpdir() + "/respec2html-");
   const browser = await puppeteer.launch({
     userDataDir,
-    args: disableSandbox && ["--no-sandbox"]
+    args: disableSandbox && ["--no-sandbox"],
   });
   try {
     const page = await browser.newPage();
-    const url = parseURL(src).href;
+    const url = new URL(src);
     const response = await page.goto(url, { timeout });
     const handleConsoleMessages = makeConsoleMsgHandler(page);
     handleConsoleMessages(whenToHalt);
-    if (!response.ok() && response.status() /* workaround: 0 means ok for local files */) {
+    if (
+      !response.ok() &&
+      response.status() /* workaround: 0 means ok for local files */
+    ) {
       const warn = colors.warn(`📡 HTTP Error ${response.status()}:`);
-      const msg = `${warn} ${colors.debug(url)}`;
+      // don't show params, as they can contain the API key!
+      const debugURL = `${url.origin}${url.pathname}`;
+      const msg = `${warn} ${colors.debug(debugURL)}`;
       throw new Error(msg);
     }
     await checkIfReSpec(page);
@@ -94,8 +104,7 @@ async function fetchAndWrite(src, out, whenToHalt, { timeout = 300000, disableSa
         }
     }
     return html;
-  }
-  finally {
+  } finally {
     browser.close();
   }
 }
@@ -214,7 +223,7 @@ function makeConsoleMsgHandler(page) {
    * @return {Void}
    */
   return function handleConsoleMessages(whenToHalt) {
-    page.on("console", async (message) => {
+    page.on("console", async message => {
       const type = message.type();
       const args = await Promise.all(message.args().map(stringifyJSHandle));
       const text = args.join(" ");

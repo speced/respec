@@ -1,5 +1,40 @@
 # Change Log
 
+## [v20.10.1](https://github.com/w3c/respec/tree/v20.10.1) (2018-05-02)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.10.0...v20.10.1)
+
+**Merged pull requests:**
+
+- fix\(tools/respecDocWriter\): output data, not dataURL [\#1648](https://github.com/w3c/respec/pull/1648) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v20.10.0](https://github.com/w3c/respec/tree/v20.10.0) (2018-05-02)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.9.0...v20.10.0)
+
+**Closed issues:**
+
+- Missing js/deps/require.js? [\#1639](https://github.com/w3c/respec/issues/1639)
+- Implementation report not required for REC [\#1632](https://github.com/w3c/respec/issues/1632)
+- Update templates to point to new web-platform-tests location after move [\#1621](https://github.com/w3c/respec/issues/1621)
+- caniuse should export as "caniuse.com" [\#1618](https://github.com/w3c/respec/issues/1618)
+- caniuse layout and click issues on mobile  [\#1614](https://github.com/w3c/respec/issues/1614)
+- punctuation checker not working correctly [\#1605](https://github.com/w3c/respec/issues/1605)
+- Highlight variable matching in algorithm [\#1529](https://github.com/w3c/respec/issues/1529)
+- previousURI is untested [\#826](https://github.com/w3c/respec/issues/826)
+
+**Merged pull requests:**
+
+- Update fs-extra to the latest version 🚀 [\#1646](https://github.com/w3c/respec/pull/1646) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- Remove irrelevant config for caniuse feature [\#1645](https://github.com/w3c/respec/pull/1645) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(tests\): use eslint-plugin-jasmine [\#1644](https://github.com/w3c/respec/pull/1644) ([marcoscaceres](https://github.com/marcoscaceres))
+- Refactor save html [\#1641](https://github.com/w3c/respec/pull/1641) ([sidvishnoi](https://github.com/sidvishnoi))
+- Remove IDL legacy things [\#1638](https://github.com/w3c/respec/pull/1638) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(w3c/headers\): implementationReportURI CR only [\#1634](https://github.com/w3c/respec/pull/1634) ([marcoscaceres](https://github.com/marcoscaceres))
+- Fix: caniuse layout and click issues on mobile [\#1627](https://github.com/w3c/respec/pull/1627) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(w3c/headers\): warn about old WPT URL [\#1622](https://github.com/w3c/respec/pull/1622) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/caniuse\): export as "caniuse.com" [\#1619](https://github.com/w3c/respec/pull/1619) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(core/linter-rules/punctuation\): Log offending elements [\#1617](https://github.com/w3c/respec/pull/1617) ([shikhar-scs](https://github.com/shikhar-scs))
+- feat\(core/highlight-vars\): highlight vars in algos [\#1588](https://github.com/w3c/respec/pull/1588) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v20.9.0](https://github.com/w3c/respec/tree/v20.9.0) (2018-04-26)
 [Full Changelog](https://github.com/w3c/respec/compare/v20.8.0...v20.9.0)
 
