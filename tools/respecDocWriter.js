@@ -181,13 +181,27 @@ async function isRespec() {
 async function evaluateHTML() {
   try {
     await document.respecIsReady;
-    const { rsDocToDataURL } = await new Promise(resolve => {
-      require(["core/exporter"], resolve);
-    });
-    const dataURL = rsDocToDataURL("text/html");
-    const encodedString = dataURL.replace(/^data:\w+\/\w+;charset=utf-8,/, "");
-    const decodedString = decodeURIComponent(encodedString);
-    return decodedString;
+    const [mayor, minor] = (window.respecVersion === "Developer Edition") ?
+      [123456789, 0, 0] :
+      window.respecVersion.split(".").map(str => parseInt(str, 10));
+    if ((mayor < 20) || ((mayor === 20) && (minor < 10))) {
+      // Document references an older version of ReSpec that does not yet
+      // have the "core/exporter" module. Try with the old "ui/save-html"
+      // module.
+      const { exportDocument } = await new Promise((resolve, reject) => {
+        require(["ui/save-html"], resolve, reject);
+      });
+      return exportDocument("html", "text/html");
+    }
+    else {
+      const { rsDocToDataURL } = await new Promise((resolve, reject) => {
+        require(["core/exporter"], resolve, reject);
+      });
+      const dataURL = rsDocToDataURL("text/html");
+      const encodedString = dataURL.replace(/^data:\w+\/\w+;charset=utf-8,/, "");
+      const decodedString = decodeURIComponent(encodedString);
+      return decodedString;
+    }
   } catch (err) {
     throw err.stack;
   }
