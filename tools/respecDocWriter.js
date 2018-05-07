@@ -189,13 +189,13 @@ async function evaluateHTML() {
       // Document references an older version of ReSpec that does not yet
       // have the "core/exporter" module. Try with the old "ui/save-html"
       // module.
-      const { exportDocument } = await new Promise((resolve, reject) => {
-        require(["ui/save-html"], resolve, reject);
+      const { exportDocument } = await new Promise(resolve => {
+        require(["ui/save-html"], resolve);
       });
       return exportDocument("html", "text/html");
     } else {
-      const { rsDocToDataURL } = await new Promise((resolve, reject) => {
-        require(["core/exporter"], resolve, reject);
+      const { rsDocToDataURL } = await new Promise(resolve => {
+        require(["core/exporter"], resolve);
       });
       const dataURL = rsDocToDataURL("text/html");
       const encodedString = dataURL.replace(
