@@ -181,11 +181,11 @@ async function isRespec() {
 async function evaluateHTML() {
   try {
     await document.respecIsReady;
-    const [mayor, minor] =
+    const [major, minor] =
       window.respecVersion === "Developer Edition"
         ? [123456789, 0, 0]
         : window.respecVersion.split(".").map(str => parseInt(str, 10));
-    if (mayor < 20 || (mayor === 20 && minor < 10)) {
+    if (major < 20 || (major === 20 && minor < 10)) {
       // Document references an older version of ReSpec that does not yet
       // have the "core/exporter" module. Try with the old "ui/save-html"
       // module.
