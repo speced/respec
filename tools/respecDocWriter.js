@@ -186,16 +186,24 @@ async function evaluateHTML() {
         ? [123456789, 0, 0]
         : window.respecVersion.split(".").map(str => parseInt(str, 10));
     if (major < 20 || (major === 20 && minor < 10)) {
+      console.warn(
+        "👴🏽  Ye Olde ReSpec version detected! Please update to 20.10.0 or above. " +
+          `Your version: ${window.respecVersion}.`
+      );
       // Document references an older version of ReSpec that does not yet
       // have the "core/exporter" module. Try with the old "ui/save-html"
       // module.
-      const { exportDocument } = await new Promise(resolve => {
-        require(["ui/save-html"], resolve);
+      const { exportDocument } = await new Promise((resolve, reject) => {
+        require(["ui/save-html"], resolve, err => {
+          reject(new Error(err.message));
+        });
       });
       return exportDocument("html", "text/html");
     } else {
-      const { rsDocToDataURL } = await new Promise(resolve => {
-        require(["core/exporter"], resolve);
+      const { rsDocToDataURL } = await new Promise((resolve, reject) => {
+        require(["core/exporter"], resolve, err => {
+          reject(new Error(err.message));
+        });
       });
       const dataURL = rsDocToDataURL("text/html");
       const encodedString = dataURL.replace(
