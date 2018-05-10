@@ -1,0 +1,52 @@
+"use strict";
+describe("Core Linter Rule - 'warn-broken-refs'", () => {
+  const ruleName = "warn-broken-refs";
+  const config = {
+    lint: {
+      [ruleName]: true
+    },
+  };
+  let rule;
+  beforeAll(async () => {
+    rule = await new Promise(resolve => {
+      require([`core/linter-rules/${ruleName}`], ({ rule }) => resolve(rule));
+    });
+  });
+  const doc = document.implementation.createHTMLDocument("test doc");
+  beforeEach(() => {
+    // Make sure every unordered test get an empty document
+    // See: https://github.com/w3c/respec/pull/1495
+    while (doc.body.firstChild) {
+      doc.body.removeChild(doc.body.firstChild);
+    }
+  });
+
+  it("returns error when a link is broken", async () => {
+    doc.body.innerHTML = `
+      <section id="ID">M/section>
+      <a href="#ID">PASS</a>
+      <a href="#ID-NOT-EXIST">FAIL</a>
+      <a href="#ID-NOT-EXIST">FAIL</a>
+    `;
+
+    const results = await rule.lint(config, doc);
+    expect(results.length).toEqual(1);
+
+    const result = results[0];
+    expect(result.name).toEqual(ruleName);
+    expect(result.occurrences).toEqual(2);
+
+    const offendingElement = result.offendingElements[0];
+    const { hash } = new URL(offendingElement.href);
+    expect(hash).toEqual("#ID-NOT-EXIST");
+  });
+
+  it("doesn't complain when all links are fine", async () => {
+    doc.body.innerHTML = `
+      <section id="ID">PASS</section>
+      <a href="#ID">PASS</a>
+    `;
+    const results = await rule.lint(config, doc);
+    expect(results.length).toEqual(0);
+  });
+});
