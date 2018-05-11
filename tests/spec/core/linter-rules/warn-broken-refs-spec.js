@@ -3,7 +3,7 @@ describe("Core Linter Rule - 'warn-broken-refs'", () => {
   const ruleName = "warn-broken-refs";
   const config = {
     lint: {
-      [ruleName]: true
+      [ruleName]: true,
     },
   };
   let rule;
