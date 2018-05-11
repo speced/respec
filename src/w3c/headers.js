@@ -517,7 +517,7 @@ export function run(conf) {
       "A custom SotD paragraph is required for your type of document."
     );
   }
-  sotd.id = sotd.id || "stod";
+  sotd.id = sotd.id || "sotd";
   sotd.classList.add("introductory");
   // NOTE:
   //  When arrays, wg and wgURI have to be the same length (and in the same order).
