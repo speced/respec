@@ -63,12 +63,12 @@ function getHighlightColor(target) {
   if (activeClass) return activeClass[0];
 
   // first color preference
-  if (HL_COLORS.get("respec-hl-yellow") === true) return "respec-hl-yellow";
+  if (HL_COLORS.get("respec-hl-c1") === true) return "respec-hl-c1";
 
   // otherwise get some other available color
   return (
     [...HL_COLORS.keys()].find(c => HL_COLORS.get(c)) ||
-    "respec-hl-yellow"
+    "respec-hl-c1"
   );
 }
 

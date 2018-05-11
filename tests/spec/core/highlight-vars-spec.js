@@ -30,7 +30,7 @@ describe("Core - highlightVars", () => {
     elemVar.click(); // enable
     expect(doc.querySelectorAll(".respec-hl").length).toBe(2);
     expect(elemVar.classList.contains("respec-hl")).toBe(true);
-    expect(elemVar.classList.contains("respec-hl-yellow")).toBe(true);
+    expect(elemVar.classList.contains("respec-hl-c1")).toBe(true);
 
     elemVar.click(); // disable
     expect(doc.querySelectorAll(".respec-hl").length).toBe(0);
