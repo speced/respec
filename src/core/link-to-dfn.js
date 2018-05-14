@@ -108,7 +108,7 @@ export function run(conf, doc, cb) {
       }
       return false;
     });
-    if (!foundDfn && linkTargets.length != 0) {
+    if (!foundDfn && linkTargets.length !== 0) {
       // ignore WebIDL
       if (
         !$ant.parents(

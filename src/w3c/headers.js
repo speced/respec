@@ -538,7 +538,10 @@ export function run(conf) {
     );
   }
   if (conf.isCGBG && !conf.wg) {
-    pub("error", "`respecConfig.wg` is required.");
+    pub(
+      "error",
+      "[`respecConfig.wg`](https://github.com/w3c/respec/wiki/wg) configuration option is required for CG documents."
+    );
   }
   if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
