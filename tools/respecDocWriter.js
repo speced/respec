@@ -249,9 +249,20 @@ function makeConsoleMsgHandler(page) {
    */
   return function handleConsoleMessages(whenToHalt) {
     page.on("console", async message => {
+      const text = message.text();
       const type = message.type();
-      const args = await Promise.all(message.args().map(stringifyJSHandle));
-      const text = args.join(" ");
+      if (
+        type === "error" &&
+        !message.args().length && // browser errors have no arguments
+        text.startsWith("Failed to load")
+      ) {
+        // Since Puppeteer 1.4 reports _all_ errors, including CORS
+        // violations. Unfortunately, there is no way to distinguish these errors
+        // from other errors, so using this ugly hack.
+        // https://github.com/GoogleChrome/puppeteer/issues/1939
+        return;
+      }
+
       const abortOnWarning = whenToHalt.haltOnWarn && type === "warn";
       const abortOnError = whenToHalt.haltOnError && type === "error";
       const output = `ReSpec ${type}: ${colors.debug(text)}`;
@@ -274,7 +285,4 @@ function makeConsoleMsgHandler(page) {
   };
 }
 
-async function stringifyJSHandle(handle) {
-  return await handle.executionContext().evaluate(o => String(o), handle);
-}
 exports.fetchAndWrite = fetchAndWrite;
