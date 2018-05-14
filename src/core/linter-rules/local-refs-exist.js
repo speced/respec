@@ -20,16 +20,6 @@ const meta = {
 // Fall back to english, if language is missing
 const lang = defaultLang in meta ? defaultLang : "en";
 
-const isBrokenReference = ({
-  href,
-  ownerDocument: doc
-}) => {
-  const {
-    hash
-  } = new URL(href);
-  return !doc.getElementById(hash.substring(1));
-};
-
 /**
  * Runs linter rule.
  * @param {Object} config The ReSpec config.
@@ -37,7 +27,7 @@ const isBrokenReference = ({
  */
 function linterFunction(conf, doc) {
   const offendingElements = [...doc.querySelectorAll("a[href^='#']")].filter(
-    isBrokenReference
+    isBrokenHyperlink
   );
   if (!offendingElements.length) {
     return [];
@@ -51,3 +41,14 @@ function linterFunction(conf, doc) {
 }
 
 export const rule = new LinterRule(name, linterFunction);
+
+function isBrokenHyperlink(elem) {
+  const {
+    href,
+    ownerDocument: doc
+  } = elem;
+  const {
+    hash
+  } = new URL(href);
+  return !doc.getElementById(hash.substring(1));
+};
