@@ -248,7 +248,7 @@ function makeConsoleMsgHandler(page) {
    * @return {Void}
    */
   return function handleConsoleMessages(whenToHalt) {
-    page.on("console", async message => {
+    page.on("console", message => {
       const text = message.text();
       const type = message.type();
       if (
