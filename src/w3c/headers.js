@@ -537,6 +537,9 @@ export function run(conf) {
       "If one of '`wg`', '`wgURI`', or '`wgPatentURI`' is an array, they all have to be."
     );
   }
+  if (conf.isCGBG && !conf.wg) {
+    pub("error", "`respecConfig.wg` is required.");
+  }
   if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
     conf.wgHTML = joinAnd(conf.wg, function(wg, idx) {
