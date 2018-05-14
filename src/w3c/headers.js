@@ -541,7 +541,7 @@ export function run(conf) {
     pub(
       "error",
       "[`wg`](https://github.com/w3c/respec/wiki/wg)" +
-        " configuration option is required for CG documents."
+        " configuration option is required for this kind of document."
     );
   }
   if (Array.isArray(conf.wg)) {
