@@ -82,6 +82,6 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
 
 /* show rest of the browser versions */
 .caniuse-stats button:focus + ul,
-.caniuse-stats button:hover + ul {
+.caniuse-stats .caniuse-browser:hover > ul {
   display: block;
 }
