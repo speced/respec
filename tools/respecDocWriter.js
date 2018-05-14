@@ -262,15 +262,14 @@ function makeConsoleMsgHandler(page) {
         // https://github.com/GoogleChrome/puppeteer/issues/1939
         return;
       }
-
-      const abortOnWarning = whenToHalt.haltOnWarn && type === "warn";
+      const abortOnWarning = whenToHalt.haltOnWarn && type === "warning";
       const abortOnError = whenToHalt.haltOnError && type === "error";
       const output = `ReSpec ${type}: ${colors.debug(text)}`;
       switch (type) {
         case "error":
           console.error(colors.error(`😱 ${output}`));
           break;
-        case "warn":
+        case "warning":
           // Ignore polling of respecDone
           if (/document\.respecDone/.test(text)) {
             return;
@@ -284,5 +283,7 @@ function makeConsoleMsgHandler(page) {
     });
   };
 }
-
+async function stringifyJSHandle(handle) {
+  return await handle.executionContext().evaluate(o => String(o), handle);
+};
 exports.fetchAndWrite = fetchAndWrite;
