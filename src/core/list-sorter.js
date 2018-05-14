@@ -29,7 +29,7 @@ function getDirectDescendents(elem, wantedDescendentName) {
     let tempId = "";
     // We give a temporary id, to overcome lack of ":scope" support in Edge.
     if (!elem.id) {
-      tempId = `temp-${Math.random()}`;
+      tempId = `temp-${String(Math.random()).substr(2)}`;
       elem.id = tempId;
     }
     const query = `#${elem.id} > ${wantedDescendentName}`;
