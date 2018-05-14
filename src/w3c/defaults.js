@@ -3,21 +3,11 @@
  */
 export const name = "w3c/defaults";
 import linter from "core/linter";
-import {
-  rule as noHeadinglessSectionsRule
-} from "core/linter-rules/no-headingless-sections";
-import {
-  rule as noHttpPropsRule
-} from "core/linter-rules/no-http-props";
-import {
-  rule as privsecSectionRule
-} from "w3c/linter-rules/privsec-section";
-import {
-  rule as checkPunctuation
-} from "core/linter-rules/check-punctuation";
-import {
-  rule as localRefsExist
-} from "core/linter-rules/local-refs-exist";
+import { rule as noHeadinglessSectionsRule } from "core/linter-rules/no-headingless-sections";
+import { rule as noHttpPropsRule } from "core/linter-rules/no-http-props";
+import { rule as privsecSectionRule } from "w3c/linter-rules/privsec-section";
+import { rule as checkPunctuation } from "core/linter-rules/check-punctuation";
+import { rule as localRefsExist } from "core/linter-rules/local-refs-exist";
 
 linter.register(
   noHttpPropsRule,
@@ -42,7 +32,8 @@ const licenses = new Map([
     {
       name: "W3C Software Notice and License",
       short: "W3C Software",
-      url: "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231",
+      url:
+        "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231",
     },
   ],
   [
@@ -50,7 +41,8 @@ const licenses = new Map([
     {
       name: "W3C Software and Document Notice and License",
       short: "W3C Software and Document",
-      url: "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
+      url:
+        "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
     },
   ],
   [
@@ -74,13 +66,15 @@ const w3cDefaults = {
   doJsonLd: false,
   license: "w3c-software-doc",
   specStatus: "base",
-  logos: [{
-    src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
-    alt: "W3C",
-    height: 48,
-    width: 72,
-    url: "https://www.w3.org/"
-  }],
+  logos: [
+    {
+      src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
+      alt: "W3C",
+      height: 48,
+      width: 72,
+      url: "https://www.w3.org/",
+    },
+  ],
 };
 
 function computeProps(conf) {
@@ -96,8 +90,9 @@ function computeProps(conf) {
 
 export function run(conf) {
   // assign the defaults
-  Object.assign(conf, { ...w3cDefaults,
-    ...conf
+  Object.assign(conf, {
+    ...w3cDefaults,
+    ...conf,
   });
   //computed properties
   Object.assign(conf, computeProps(conf));
