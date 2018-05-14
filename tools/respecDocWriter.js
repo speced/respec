@@ -248,12 +248,14 @@ function makeConsoleMsgHandler(page) {
    * @return {Void}
    */
   return function handleConsoleMessages(whenToHalt) {
-    page.on("console", message => {
-      const text = message.text();
+    page.on("console", async message => {
+      const args = await Promise.all(message.args().map(stringifyJSHandle));
+      const msgText = message.text();
+      const text = args.filter(msg => msg !== "undefined").join(" ");
       const type = message.type();
       if (
         type === "error" &&
-        text && // browser errors have text
+        msgText && // browser errors have text
         !message.args().length // browser errors have no arguments
       ) {
         // Since Puppeteer 1.4 reports _all_ errors, including CORS
@@ -282,6 +284,10 @@ function makeConsoleMsgHandler(page) {
       }
     });
   };
+}
+
+async function stringifyJSHandle(handle) {
+  return await handle.executionContext().evaluate(o => String(o), handle);
 }
 
 exports.fetchAndWrite = fetchAndWrite;
