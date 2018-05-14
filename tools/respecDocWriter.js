@@ -253,8 +253,8 @@ function makeConsoleMsgHandler(page) {
       const type = message.type();
       if (
         type === "error" &&
-        !message.args().length && // browser errors have no arguments
-        text.startsWith("Failed to load")
+        text && // browser errors have text
+        !message.args().length // browser errors have no arguments
       ) {
         // Since Puppeteer 1.4 reports _all_ errors, including CORS
         // violations. Unfortunately, there is no way to distinguish these errors
