@@ -46,12 +46,13 @@ function hightlightListener(ev) {
 
 // availability of highlight colors. colors from var.css
 const HL_COLORS = new Map([
-  ["respec-hl-yellow", true],
-  ["respec-hl-blue", true],
-  ["respec-hl-pink", true],
-  ["respec-hl-green", true],
-  ["respec-hl-sky", true],
-  ["respec-hl-orange", true],
+  ["respec-hl-c1", true],
+  ["respec-hl-c2", true],
+  ["respec-hl-c3", true],
+  ["respec-hl-c4", true],
+  ["respec-hl-c5", true],
+  ["respec-hl-c6", true],
+  ["respec-hl-c7", true],
 ]);
 
 function getHighlightColor(target) {
@@ -62,12 +63,12 @@ function getHighlightColor(target) {
   if (activeClass) return activeClass[0];
 
   // first color preference
-  if (HL_COLORS.get("respec-hl-yellow") === true) return "respec-hl-yellow";
+  if (HL_COLORS.get("respec-hl-c1") === true) return "respec-hl-c1";
 
   // otherwise get some other available color
   return (
     [...HL_COLORS.keys()].find(c => HL_COLORS.get(c)) ||
-    "respec-hl-yellow"
+    "respec-hl-c1"
   );
 }
 
