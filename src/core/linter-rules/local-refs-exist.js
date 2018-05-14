@@ -51,4 +51,4 @@ function isBrokenHyperlink(elem) {
     hash
   } = new URL(href);
   return !doc.getElementById(hash.substring(1));
-};
+}
