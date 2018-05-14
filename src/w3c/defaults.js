@@ -16,15 +16,15 @@ import {
   rule as checkPunctuation
 } from "core/linter-rules/check-punctuation";
 import {
-  rule as warnBrokenRefs
-} from "core/linter-rules/warn-broken-refs";
+  rule as localRefsExist
+} from "core/linter-rules/local-refs-exist";
 
 linter.register(
   noHttpPropsRule,
   privsecSectionRule,
   noHeadinglessSectionsRule,
   checkPunctuation,
-  warnBrokenRefs
+  localRefsExist
 );
 
 const cgbg = new Set(["BG-DRAFT", "BG-FINAL", "CG-DRAFT", "CG-FINAL"]);
