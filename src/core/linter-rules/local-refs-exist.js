@@ -2,7 +2,9 @@
  * Linter rule "warn-local-ref".
  * Warns about href's that link to nonexistent id's in a spec
  */
-import { lang as defaultLang } from "core/l10n";
+import {
+  lang as defaultLang
+} from "core/l10n";
 import LinterRule from "core/LinterRule";
 
 const name = "local-refs-exist";
@@ -18,8 +20,13 @@ const meta = {
 // Fall back to english, if language is missing
 const lang = defaultLang in meta ? defaultLang : "en";
 
-const isBrokenReference = ({ href, ownerDocument: doc }) => {
-  const { hash } = new URL(href);
+const isBrokenReference = ({
+  href,
+  ownerDocument: doc
+}) => {
+  const {
+    hash
+  } = new URL(href);
   return !doc.getElementById(hash.substring(1));
 };
 

@@ -1,15 +1,16 @@
 "use strict";
 describe("Core Linter Rule - 'local-refs-exist'", () => {
-  const ruleName = "local-refs-exist";
   const config = {
     lint: {
-      [ruleName]: true,
+      "local-refs-exist": true,
     },
   };
   let rule;
   beforeAll(async () => {
     rule = await new Promise(resolve => {
-      require([`core/linter-rules/${ruleName}`], ({ rule }) => resolve(rule));
+      require(["core/linter-rules/local-refs-exist"], ({
+        rule
+      }) => resolve(rule));
     });
   });
   const doc = document.implementation.createHTMLDocument("test doc");
@@ -33,11 +34,13 @@ describe("Core Linter Rule - 'local-refs-exist'", () => {
     expect(results.length).toEqual(1);
 
     const result = results[0];
-    expect(result.name).toEqual(ruleName);
+    expect(result.name).toEqual("local-refs-exist");
     expect(result.occurrences).toEqual(2);
 
     const offendingElement = result.offendingElements[0];
-    const { hash } = new URL(offendingElement.href);
+    const {
+      hash
+    } = new URL(offendingElement.href);
     expect(hash).toEqual("#ID-NOT-EXIST");
   });
 
