@@ -26,6 +26,8 @@ require.config({
       "/base/js/core/linter-rules/no-http-props",
     "core/linter-rules/check-punctuation":
       "/base/js/core/linter-rules/check-punctuation",
+    "core/linter-rules/local-refs-exist":
+      "/base/js/core/linter-rules/local-refs-exist",
     "core/l10n": "/base/js/core/l10n",
     "w3c/linter-rules/privsec-section":
     "/base/js/w3c/linter-rules/privsec-section",
