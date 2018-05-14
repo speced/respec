@@ -5,12 +5,12 @@
 import { lang as defaultLang } from "core/l10n";
 import LinterRule from "core/LinterRule";
 
-const name = "warn-broken-refs";
+const name = "local-refs-exist";
 
 const meta = {
   en: {
     description: "Broken local reference found in document.",
-    howToFix: "Please fix the href attributes of the links mentioned.",
+    howToFix: "Please fix the links mentioned.",
     help: "See developer console.",
   },
 };

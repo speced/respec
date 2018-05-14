@@ -61,7 +61,7 @@ const w3cDefaults = {
     "privsec-section": true,
     "no-http-props": true,
     "check-punctuation": false,
-    "warn-broken-refs": true,
+    "local-refs-exist": false,
   },
   doJsonLd: false,
   license: "w3c-software-doc",

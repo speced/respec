@@ -12,7 +12,7 @@ describe("W3C — Defaults", () => {
       "no-headingless-sections": true,
       "privsec-section": true,
       "no-http-props": true,
-      "warn-broken-refs": true,
+      "local-refs-exist": false,
       "check-punctuation": false,
     });
     expect(rsConf.license).toEqual("w3c-software-doc");
@@ -27,7 +27,7 @@ describe("W3C — Defaults", () => {
           "no-headingless-sections": false,
           "privsec-section": false,
           "no-http-props": false,
-          "warn-broken-refs": false,
+          "local-refs-exist": false,
           "check-punctuation": false,
           "fake-linter-rule": "foo",
         },
@@ -43,7 +43,7 @@ describe("W3C — Defaults", () => {
       "no-headingless-sections": false,
       "privsec-section": false,
       "no-http-props": false,
-      "warn-broken-refs": false,
+      "local-refs-exist": false,
       "check-punctuation": false,
       "fake-linter-rule": "foo",
     });

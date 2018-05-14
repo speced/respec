@@ -1,6 +1,6 @@
 "use strict";
-describe("Core Linter Rule - 'warn-broken-refs'", () => {
-  const ruleName = "warn-broken-refs";
+describe("Core Linter Rule - 'local-refs-exist'", () => {
+  const ruleName = "local-refs-exist";
   const config = {
     lint: {
       [ruleName]: true,
