@@ -283,7 +283,5 @@ function makeConsoleMsgHandler(page) {
     });
   };
 }
-async function stringifyJSHandle(handle) {
-  return await handle.executionContext().evaluate(o => String(o), handle);
-};
+
 exports.fetchAndWrite = fetchAndWrite;
