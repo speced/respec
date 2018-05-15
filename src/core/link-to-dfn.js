@@ -67,12 +67,12 @@ export function run(conf, doc, cb) {
     }
   });
   $("a:not([href]):not([data-cite]):not(.logo)").each(function() {
-    var $ant = $(this);
+    const $ant = $(this);
     if ($ant.hasClass("externalDFN")) return;
-    var linkTargets = $ant.linkTargets();
-    var foundDfn = linkTargets.some(function(target) {
+    const linkTargets = $ant.linkTargets();
+    const foundDfn = linkTargets.some(function(target) {
       if (titles[target.title] && titles[target.title][target.for]) {
-        var dfn = titles[target.title][target.for];
+        const dfn = titles[target.title][target.for];
         if (dfn[0].dataset.cite) {
           $ant[0].dataset.cite = dfn[0].dataset.cite;
         } else {
@@ -108,15 +108,15 @@ export function run(conf, doc, cb) {
       }
       return false;
     });
-    if (!foundDfn) {
+    if (!foundDfn && linkTargets.length !== 0) {
       // ignore WebIDL
       if (
         !$ant.parents(
           ".idl:not(.extAttr), dl.methods, dl.attributes, dl.constants, dl.constructors, dl.fields, dl.dictionary-members, span.idlMemberType, span.idlTypedefType, div.idlImplementsDesc"
         ).length
       ) {
-        var link_for = linkTargets[0].for;
-        var title = linkTargets[0].title;
+        const link_for = linkTargets[0].for;
+        const title = linkTargets[0].title;
         this.classList.add("respec-offending-element");
         this.title = "Linking error: not matching <dfn>";
         pub(
