@@ -1030,10 +1030,10 @@ describe("W3C — Headers", function() {
       expect(img).toBeTruthy();
     });
     it("uses the right SoTD boilerplate for Member submissions", async () => {
-      const stod = doc.getElementById("sotd").textContent.replace(/\s+/gm, " ");
+      const sotd = doc.getElementById("sotd").textContent.replace(/\s+/gm, " ");
       const testString =
         "the Submitting Members have made a formal Submission request";
-      expect(stod).toMatch(testString);
+      expect(sotd).toMatch(testString);
     });
     it("links the right submitting members", async () => {
       const anchor = doc.querySelector(

@@ -7,8 +7,15 @@ import { rule as noHeadinglessSectionsRule } from "core/linter-rules/no-headingl
 import { rule as noHttpPropsRule } from "core/linter-rules/no-http-props";
 import { rule as privsecSectionRule } from "w3c/linter-rules/privsec-section";
 import { rule as checkPunctuation } from "core/linter-rules/check-punctuation";
+import { rule as localRefsExist } from "core/linter-rules/local-refs-exist";
 
-linter.register(noHttpPropsRule, privsecSectionRule, noHeadinglessSectionsRule, checkPunctuation);
+linter.register(
+  noHttpPropsRule,
+  privsecSectionRule,
+  noHeadinglessSectionsRule,
+  checkPunctuation,
+  localRefsExist
+);
 
 const cgbg = new Set(["BG-DRAFT", "BG-FINAL", "CG-DRAFT", "CG-FINAL"]);
 const licenses = new Map([
@@ -54,17 +61,20 @@ const w3cDefaults = {
     "privsec-section": true,
     "no-http-props": true,
     "check-punctuation": false,
+    "local-refs-exist": false,
   },
   doJsonLd: false,
   license: "w3c-software-doc",
   specStatus: "base",
-  logos: [{
-    src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
-    alt: "W3C",
-    height: 48,
-    width: 72,
-    url: "https://www.w3.org/"
-  }],
+  logos: [
+    {
+      src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
+      alt: "W3C",
+      height: 48,
+      width: 72,
+      url: "https://www.w3.org/",
+    },
+  ],
 };
 
 function computeProps(conf) {
@@ -80,7 +90,10 @@ function computeProps(conf) {
 
 export function run(conf) {
   // assign the defaults
-  Object.assign(conf, { ...w3cDefaults, ...conf });
+  Object.assign(conf, {
+    ...w3cDefaults,
+    ...conf,
+  });
   //computed properties
   Object.assign(conf, computeProps(conf));
 }

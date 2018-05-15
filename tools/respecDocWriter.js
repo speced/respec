@@ -14,7 +14,7 @@ const fs = require("fs");
 const writeFile = promisify(fs.writeFile);
 const mkdtemp = promisify(fs.mkdtemp);
 const path = require("path");
-const parseURL = require("url").parse;
+const { URL } = global.URL ? { URL: global.URL } : require("url");
 colors.setTheme({
   debug: "cyan",
   error: "red",
@@ -60,21 +60,31 @@ async function writeTo(outPath, data) {
  * @return {Promise}            Resolves with HTML when done writing.
  *                              Rejects on errors.
  */
-async function fetchAndWrite(src, out, whenToHalt, { timeout = 300000, disableSandbox = false } = {}) {
+async function fetchAndWrite(
+  src,
+  out,
+  whenToHalt,
+  { timeout = 300000, disableSandbox = false } = {}
+) {
   const userDataDir = await mkdtemp(os.tmpdir() + "/respec2html-");
   const browser = await puppeteer.launch({
     userDataDir,
-    args: disableSandbox && ["--no-sandbox"]
+    args: disableSandbox && ["--no-sandbox"],
   });
   try {
     const page = await browser.newPage();
-    const url = parseURL(src).href;
+    const url = new URL(src);
     const response = await page.goto(url, { timeout });
     const handleConsoleMessages = makeConsoleMsgHandler(page);
     handleConsoleMessages(whenToHalt);
-    if (!response.ok() && response.status() /* workaround: 0 means ok for local files */) {
+    if (
+      !response.ok() &&
+      response.status() /* workaround: 0 means ok for local files */
+    ) {
       const warn = colors.warn(`📡 HTTP Error ${response.status()}:`);
-      const msg = `${warn} ${colors.debug(url)}`;
+      // don't show params, as they can contain the API key!
+      const debugURL = `${url.origin}${url.pathname}`;
+      const msg = `${warn} ${colors.debug(debugURL)}`;
       throw new Error(msg);
     }
     await checkIfReSpec(page);
@@ -94,8 +104,7 @@ async function fetchAndWrite(src, out, whenToHalt, { timeout = 300000, disableSa
         }
     }
     return html;
-  }
-  finally {
+  } finally {
     browser.close();
   }
 }
@@ -172,12 +181,38 @@ async function isRespec() {
 async function evaluateHTML() {
   try {
     await document.respecIsReady;
-    const exportDocument = await new Promise(resolve => {
-      require(["ui/save-html"], ({ exportDocument }) => {
-        resolve(exportDocument);
+    const [major, minor] =
+      window.respecVersion === "Developer Edition"
+        ? [123456789, 0, 0]
+        : window.respecVersion.split(".").map(str => parseInt(str, 10));
+    if (major < 20 || (major === 20 && minor < 10)) {
+      console.warn(
+        "👴🏽  Ye Olde ReSpec version detected! Please update to 20.10.0 or above. " +
+          `Your version: ${window.respecVersion}.`
+      );
+      // Document references an older version of ReSpec that does not yet
+      // have the "core/exporter" module. Try with the old "ui/save-html"
+      // module.
+      const { exportDocument } = await new Promise((resolve, reject) => {
+        require(["ui/save-html"], resolve, err => {
+          reject(new Error(err.message));
+        });
       });
-    });
-    return exportDocument();
+      return exportDocument("html", "text/html");
+    } else {
+      const { rsDocToDataURL } = await new Promise((resolve, reject) => {
+        require(["core/exporter"], resolve, err => {
+          reject(new Error(err.message));
+        });
+      });
+      const dataURL = rsDocToDataURL("text/html");
+      const encodedString = dataURL.replace(
+        /^data:\w+\/\w+;charset=utf-8,/,
+        ""
+      );
+      const decodedString = decodeURIComponent(encodedString);
+      return decodedString;
+    }
   } catch (err) {
     throw err.stack;
   }
@@ -213,18 +248,30 @@ function makeConsoleMsgHandler(page) {
    * @return {Void}
    */
   return function handleConsoleMessages(whenToHalt) {
-    page.on("console", async (message) => {
-      const type = message.type();
+    page.on("console", async message => {
       const args = await Promise.all(message.args().map(stringifyJSHandle));
-      const text = args.join(" ");
-      const abortOnWarning = whenToHalt.haltOnWarn && type === "warn";
+      const msgText = message.text();
+      const text = args.filter(msg => msg !== "undefined").join(" ");
+      const type = message.type();
+      if (
+        type === "error" &&
+        msgText && // browser errors have text
+        !message.args().length // browser errors have no arguments
+      ) {
+        // Since Puppeteer 1.4 reports _all_ errors, including CORS
+        // violations. Unfortunately, there is no way to distinguish these errors
+        // from other errors, so using this ugly hack.
+        // https://github.com/GoogleChrome/puppeteer/issues/1939
+        return;
+      }
+      const abortOnWarning = whenToHalt.haltOnWarn && type === "warning";
       const abortOnError = whenToHalt.haltOnError && type === "error";
       const output = `ReSpec ${type}: ${colors.debug(text)}`;
       switch (type) {
         case "error":
           console.error(colors.error(`😱 ${output}`));
           break;
-        case "warn":
+        case "warning":
           // Ignore polling of respecDone
           if (/document\.respecDone/.test(text)) {
             return;
@@ -242,4 +289,5 @@ function makeConsoleMsgHandler(page) {
 async function stringifyJSHandle(handle) {
   return await handle.executionContext().evaluate(o => String(o), handle);
 }
+
 exports.fetchAndWrite = fetchAndWrite;
