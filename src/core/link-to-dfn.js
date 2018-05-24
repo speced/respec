@@ -7,8 +7,8 @@ import { lang as defaultLang } from "./l10n";
 export const name = "core/link-to-dfn";
 const l10n = {
   en: {
-    "duplicate": "This is defined more than once in the document."
-  }
+    duplicate: "This is defined more than once in the document.",
+  },
 };
 const lang = defaultLang in l10n ? defaultLang : "en";
 
@@ -57,13 +57,12 @@ export function run(conf, doc, cb) {
       }
     });
     if (listOfDuplicateDfns.length > 0) {
-      const dfnsList = listOfDuplicateDfns.map((elem, i) => {
-        return `[${i + 1}](#${elem.id})`;
-      }).join(", ");
-      pub(
-        "error",
-        `Duplicate definitions of '${title}' at: ${dfnsList}.`
-      );
+      const dfnsList = listOfDuplicateDfns
+        .map((elem, i) => {
+          return `[${i + 1}](#${elem.id})`;
+        })
+        .join(", ");
+      pub("error", `Duplicate definitions of '${title}' at: ${dfnsList}.`);
     }
   });
   $("a:not([href]):not([data-cite]):not(.logo)").each(function() {
