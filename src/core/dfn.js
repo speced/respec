@@ -2,31 +2,11 @@
 // Finds all <dfn> elements and populates conf.definitionMap to identify them.
 export const name = "core/dfn";
 
-import { pub } from "core/pubsubhub";
-
-function canonicalize(query, attributeName) {
-  const offendingElements = document.querySelectorAll(query);
-  const offendingMsg =
-    "The `for` and `dfn-for` attributes are deprecated. " +
-    "Please use `data-dfn-for` instead. See developer console.";
-  if (offendingElements.length) {
-    pub(offendingMsg);
-  }
-  Array.from(offendingElements).forEach(el => {
-    console.warn(offendingMsg, el);
-    el.dataset.dfnFor = el.getAttribute(attributeName).toLowerCase();
-    el.removeAttribute(attributeName);
-  });
-}
-
-export function run(conf, doc, cb) {
+export function run(conf) {
   if (!conf.hasOwnProperty("definitionMap")) {
     conf.definitionMap = Object.create(null);
   }
-  // Canonicalize "dfn-for" and "for" attributes to data-dfn-for
-  canonicalize("[dfn-for]", "dfn-for");
-  canonicalize("dfn[for]", "for");
-  Array.from(document.querySelectorAll("dfn")).forEach(dfn => {
+  document.querySelectorAll("dfn").forEach(dfn => {
     const closestDfn = dfn.closest("[data-dfn-for]");
     if (closestDfn && closestDfn !== dfn && !dfn.dataset.dfnFor) {
       dfn.dataset.dfnFor = closestDfn.dataset.dfnFor;
@@ -46,10 +26,9 @@ export function run(conf, doc, cb) {
         }
         return conf.definitionMap[dfnTitle];
       })
-      .reduce(function($dfn, dfnTitleContainer) {
+      .reduce(($dfn, dfnTitleContainer) => {
         dfnTitleContainer.push($dfn);
         return $dfn;
       }, $dfn);
   });
-  cb();
 }
