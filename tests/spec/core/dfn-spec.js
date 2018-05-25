@@ -46,6 +46,63 @@ describe("Core — Definitions", function() {
     );
   });
 
+  it("adds automatic pluralization for defined terms", async () => {
+    const body = `
+      <section id="one">
+        <dfn>foo</dfn>
+        <a>foo</a>
+        <a>foos</a>
+      </section>
+
+      <section id="two">
+        <dfn data-lt="foo baz|foo bars">foo bar</dfn>
+        <a>foo baz</a>
+        <a>foo bazs</a>
+        <a>foo bar</a>
+        <a>foo bars</a>
+      </section>
+
+      <section id="three">
+        <dfn data-lt-noPlural>baz</dfn>
+        <a>baz</a>
+        <a>bazs</a>
+      </section>
+    `;
+    const ops = makeStandardOps({ pluralize: true }, body);
+    const doc = await makeRSDoc(ops);
+    await doc.respecIsReady;
+
+    const getLinkHashes = parent =>
+      [...parent.querySelectorAll("a")].map(({ href }) => new URL(href).hash);
+
+    // case: no manual data-lt specified
+    const one = doc.getElementById("one");
+    const dfn1 = one.querySelector("dfn");
+    expect(dfn1.id).toEqual("dfn-foo");
+    const dfn1lt = dfn1.dataset.lt.split("|").sort();
+    const expectedDfn1lt = "foo|foos".split("|");
+    expect(dfn1lt).toEqual(expectedDfn1lt);
+    expect(getLinkHashes(one).every(h => h === "#dfn-foo")).toBe(true);
+
+    // case: data-lt specified. check: adds pluralization
+    const two = doc.getElementById("two");
+    const dfn2 = two.querySelector("dfn");
+    expect(dfn2.id).toEqual("dfn-foo-baz"); // uses first data-lt as `id`
+    const dfn2lt = dfn2.dataset.lt.split("|").sort();
+    const expectedDfn2lt = "foo bar|foo bars|foo baz|foo bazs".split("|");
+    expect(dfn2lt).toEqual(expectedDfn2lt); // no repeats, all pluralizations
+    expect(getLinkHashes(two).every(h => h === "#dfn-foo-baz")).toBe(true);
+
+    // case: asked to not pluralize (override)
+    const three = doc.getElementById("three");
+    const dfn3 = three.querySelector("dfn");
+    expect(dfn3.id).toEqual("dfn-baz");
+    const [validLink, invalidLink] = [...three.querySelectorAll("a")];
+    expect(new URL(validLink.href).hash).toEqual("#dfn-baz");
+    expect(invalidLink.href).toEqual("");
+    expect(invalidLink.classList.value).toEqual("respec-offending-element");
+  });
+
   it("links <code> for IDL, but not when text doesn't match", async () => {
     const ops = {
       config: makeBasicConfig(),
@@ -80,9 +137,7 @@ describe("Core — Definitions", function() {
     };
     const doc = await makeRSDoc(ops);
     const dfn = doc.querySelector("dfn[data-lt]");
-    expect(dfn.dataset.lt).toEqual(
-      "text|text 1|text 2|text 3"
-    );
+    expect(dfn.dataset.lt).toEqual("text|text 1|text 2|text 3");
     expect(dfn.dataset.dfnType).toEqual("dfn");
   });
 

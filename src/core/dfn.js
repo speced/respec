@@ -1,5 +1,8 @@
 // Module core/dfn
-// Finds all <dfn> elements and populates conf.definitionMap to identify them.
+// - Finds all <dfn> elements and populates conf.definitionMap to identify them.
+// - Adds data-lt based automatic pluralization, if enabled
+import { plural as pluralize } from "deps/pluralize";
+
 export const name = "core/dfn";
 
 export function run(conf) {
@@ -18,8 +21,19 @@ export function run(conf) {
     // Also, we should probably use weakmaps and weaksets here
     // to avoid leaks.
     const $dfn = $(dfn);
-    $dfn
-      .getDfnTitles({ isDefinition: true })
+    let dfnTitles = $dfn.getDfnTitles({ isDefinition: true });
+
+    // add automatic pluralization to `data-lt` attributes
+    // see https://github.com/w3c/respec/pull/1682
+    if (
+      conf.pluralize === true &&
+      $dfn.attr("data-lt-noPlural") === undefined
+    ) {
+      dfnTitles = [...new Set([...dfnTitles, ...dfnTitles.map(pluralize)])];
+      $dfn.attr("data-lt", dfnTitles.join("|"));
+    }
+
+    dfnTitles
       .map(dfnTitle => {
         if (!conf.definitionMap[dfnTitle]) {
           conf.definitionMap[dfnTitle] = [];

@@ -52,6 +52,7 @@
     "karma-verbose-summary-reporter": "0.0.1",
     "mocha": "^5.2.0",
     "moment": "^2.22.1",
+    "pluralize": "^7.0.0",
     "prettier": "^1.12.1",
     "requirejs": "^2.3.5",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
