@@ -46,61 +46,146 @@ describe("Core — Definitions", function() {
     );
   });
 
-  it("adds automatic pluralization for defined terms", async () => {
-    const body = `
-      <section id="one">
-        <dfn>foo</dfn>
-        <a>foo</a>
-        <a>foos</a>
-      </section>
+  describe("Automatic pluralization for <dfn>", () => {
+    const getLinkHash = ({ href }) => new URL(href).hash;
 
-      <section id="two">
-        <dfn data-lt="foo baz|foo bars">foo bar</dfn>
-        <a>foo baz</a>
-        <a>foo bazs</a>
-        <a>foo bar</a>
-        <a>foo bars</a>
-      </section>
+    it("adds pluralization when [data-lt] is not specified", async () => {
+      const body = `
+        <section id="section">
+          <dfn>foo</dfn> can be referenced as
+          <a>foo</a> or <a>foos</a>
+        </section>`;
+      const ops = makeStandardOps({ pluralize: true }, body);
+      const doc = await makeRSDoc(ops);
+      await doc.respecIsReady;
 
-      <section id="three">
-        <dfn data-lt-noPlural>baz</dfn>
-        <a>baz</a>
-        <a>bazs</a>
-      </section>
-    `;
-    const ops = makeStandardOps({ pluralize: true }, body);
-    const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
+      const dfn = doc.querySelector("#section dfn");
+      expect(dfn.id).toEqual("dfn-foo");
+      const dfnlt = dfn.dataset.lt.split("|").sort();
+      const expectedDfnlt = "foo|foos".split("|");
+      expect(dfnlt).toEqual(expectedDfnlt);
+      const links = [...doc.querySelectorAll("#one a")];
+      expect(links.every(el => getLinkHash(el) === "#dfn-foo")).toBeTruthy();
+    });
 
-    const getLinkHashes = parent =>
-      [...parent.querySelectorAll("a")].map(({ href }) => new URL(href).hash);
+    it("adds pluralization when [data-lt] is defined", async () => {
+      const body = `
+        <section id="section">
+          <dfn data-lt="baz">bar</dfn> can be referenced
+          as <a>baz</a>
+          or <a>bar</a>
+          or <a>bars</a>
+          but not as <a id="badLink">bazs</a>.
+        </section>
+      `;
+      const ops = makeStandardOps({ pluralize: true }, body);
+      const doc = await makeRSDoc(ops);
+      await doc.respecIsReady;
 
-    // case: no manual data-lt specified
-    const one = doc.getElementById("one");
-    const dfn1 = one.querySelector("dfn");
-    expect(dfn1.id).toEqual("dfn-foo");
-    const dfn1lt = dfn1.dataset.lt.split("|").sort();
-    const expectedDfn1lt = "foo|foos".split("|");
-    expect(dfn1lt).toEqual(expectedDfn1lt);
-    expect(getLinkHashes(one).every(h => h === "#dfn-foo")).toBe(true);
+      const dfn = doc.querySelector("#section dfn");
+      expect(dfn.id).toEqual("dfn-baz"); // uses first data-lt as `id`
+      const dfnlt = dfn.dataset.lt.split("|").sort();
+      const expectedDfnlt = "bar|bars|baz".split("|");
+      expect(dfnlt).toEqual(expectedDfnlt);
 
-    // case: data-lt specified. check: adds pluralization
-    const two = doc.getElementById("two");
-    const dfn2 = two.querySelector("dfn");
-    expect(dfn2.id).toEqual("dfn-foo-baz"); // uses first data-lt as `id`
-    const dfn2lt = dfn2.dataset.lt.split("|").sort();
-    const expectedDfn2lt = "foo bar|foo bars|foo baz|foo bazs".split("|");
-    expect(dfn2lt).toEqual(expectedDfn2lt); // no repeats, all pluralizations
-    expect(getLinkHashes(two).every(h => h === "#dfn-foo-baz")).toBe(true);
+      const validLinks = [...doc.querySelectorAll("#one a")].slice(3);
+      expect(
+        validLinks.every(el => getLinkHash(el) === "#dfn-baz")
+      ).toBeTruthy();
+      const badLink = doc.getElementById("badLink");
+      expect(
+        badLink.classList.contains("respec-offending-element")
+      ).toBeTruthy();
+    });
 
-    // case: asked to not pluralize (override)
-    const three = doc.getElementById("three");
-    const dfn3 = three.querySelector("dfn");
-    expect(dfn3.id).toEqual("dfn-baz");
-    const [validLink, invalidLink] = [...three.querySelectorAll("a")];
-    expect(new URL(validLink.href).hash).toEqual("#dfn-baz");
-    expect(invalidLink.href).toEqual("");
-    expect(invalidLink.classList.value).toEqual("respec-offending-element");
+    it("doesn't add pluralization when plural <dfn> exists", async () => {
+      const body = `
+        <section id="section">
+          <dfn>bar</dfn>
+          <dfn>bars</dfn>
+
+          <dfn>foo</dfn>
+          <dfn data-lt="foos">baz</dfn>
+
+          <a id="link-to-bar">bar</a>
+          <a id="link-to-bars">bars</a>
+          <a id="link-to-foo">foo</a>
+
+          The following refer to same:
+          <a class="links-to-foos">foos</a>
+          <a class="links-to-foos">baz</a>
+          <a class="links-to-foos">bazs</a>
+        </section>
+      `;
+      const ops = makeStandardOps({ pluralize: true }, body);
+      const doc = await makeRSDoc(ops);
+      await doc.respecIsReady;
+
+      const dfnBar = doc.getElementById("dfn-bar");
+      expect(dfnBar).toBeTruthy();
+      const dfnBars = doc.getElementById("dfn-bars");
+      expect(dfnBars).toBeTruthy();
+      const dfnFoo = doc.getElementById("dfn-foo");
+      expect(dfnFoo).toBeTruthy();
+      expect("lt" in dfnFoo.dataset).toBeFalsy();
+      const dfnFoos = doc.getElementById("dfn-foos");
+      expect(dfnFoos).toBeTruthy();
+      expect(dfnFoos.textContent).toEqual("baz");
+      const ltFoos = dfnFoos.dataset.lt.split("|").sort();
+      expect(ltFoos.join("|")).toEqual("baz|bazs|foos");
+
+      const linkToBar = doc.getElementById("link-to-bar");
+      const linkToBars = doc.getElementById("link-to-bars");
+      const linkToFoo = doc.getElementById("link-to-foo");
+      const linksToFoos = [...doc.querySelectorAll(".links-to-foos")];
+      expect(getLinkHash(linkToBar)).toEqual("#dfn-bar");
+      expect(getLinkHash(linkToBars)).toEqual("#dfn-bars");
+      expect(getLinkHash(linkToFoo)).toEqual("#dfn-foo");
+      expect(linksToFoos.length).toBe(3);
+      expect(
+        linksToFoos.every(el => getLinkHash(el) === "#dfn-foos")
+      ).toBeTruthy();
+    });
+
+    it("doesn't add pluralization when no <a> references plural term", async () => {
+      const body = `
+        <section id="section">
+          <dfn data-lt="baz">bar</dfn> can be referenced
+          as <a>baz</a> or <a>bar</a>
+        </section>
+      `;
+      const ops = makeStandardOps({ pluralize: true }, body);
+      const doc = await makeRSDoc(ops);
+      await doc.respecIsReady;
+
+      const dfn = doc.querySelector("#section dfn");
+      expect(dfn.id).toEqual("dfn-baz");
+      const dfnlt = dfn.dataset.lt.split("|").sort();
+      const expectedDfnlt = "bar|baz".split("|"); // no "bars" here
+      expect(dfnlt).toEqual(expectedDfnlt);
+    });
+
+    it("doesn't add pluralization with [data-lt-noPlural]", async () => {
+      const body = `
+        <section id="section">
+          <dfn data-lt-noPlural>baz</dfn> can be referenced
+          only as <a id="goodLink">baz</a>
+          and not as <a id="badLink">bazs</a>
+        </section>
+      `;
+      const ops = makeStandardOps({ pluralize: true }, body);
+      const doc = await makeRSDoc(ops);
+      await doc.respecIsReady;
+
+      const dfn = doc.querySelector("#section dfn");
+      expect(dfn.id).toEqual("dfn-baz"); // uses first data-lt as `id`
+      expect(dfn.dataset.lt).toEqual(undefined);
+      const [goodLink, badLink] = [...doc.querySelectorAll("#section a")];
+      expect(getLinkHash(goodLink)).toEqual("#dfn-baz");
+      expect(
+        badLink.classList.contains("respec-offending-element")
+      ).toBeTruthy();
+    });
   });
 
   it("links <code> for IDL, but not when text doesn't match", async () => {

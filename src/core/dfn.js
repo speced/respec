@@ -2,6 +2,7 @@
 // - Finds all <dfn> elements and populates conf.definitionMap to identify them.
 // - Adds data-lt based automatic pluralization, if enabled
 import { plural as pluralize } from "deps/pluralize";
+import { norm } from "core/utils";
 
 export const name = "core/dfn";
 
@@ -9,6 +10,7 @@ export function run(conf) {
   if (!conf.hasOwnProperty("definitionMap")) {
     conf.definitionMap = Object.create(null);
   }
+  const shouldPluralize = autoPluralizeDfns();
   document.querySelectorAll("dfn").forEach(dfn => {
     const closestDfn = dfn.closest("[data-dfn-for]");
     if (closestDfn && closestDfn !== dfn && !dfn.dataset.dfnFor) {
@@ -25,11 +27,9 @@ export function run(conf) {
 
     // add automatic pluralization to `data-lt` attributes
     // see https://github.com/w3c/respec/pull/1682
-    if (
-      conf.pluralize === true &&
-      $dfn.attr("data-lt-noPlural") === undefined
-    ) {
-      dfnTitles = [...new Set([...dfnTitles, ...dfnTitles.map(pluralize)])];
+    if (conf.pluralize === true && shouldPluralize(dfn)) {
+      const plural = pluralize(norm(dfn.textContent));
+      dfnTitles.push(plural);
       $dfn.attr("data-lt", dfnTitles.join("|"));
     }
 
@@ -45,4 +45,28 @@ export function run(conf) {
         return $dfn;
       }, $dfn);
   });
+}
+
+function autoPluralizeDfns() {
+  const links = [...document.querySelectorAll("a")];
+  const dfns = [...document.querySelectorAll("dfn")];
+
+  return function shouldPluralize(dfn) {
+    const plural = pluralize(norm(dfn.textContent));
+    if (
+      // has overridden to not do pluralization
+      dfn.hasAttribute("data-lt-noPlural") ||
+      // no <a> references the plural term
+      !links.find(({ textContent }) => norm(textContent) === plural) ||
+      // there is any dfn with plural term in data-lt or textContent
+      dfns.find(
+        ({ textContent, dataset }) =>
+          norm(textContent) === plural ||
+          (dataset.lt && dataset.lt.split("|").includes(plural))
+      )
+    ) {
+      return false;
+    }
+    return true;
+  };
 }
