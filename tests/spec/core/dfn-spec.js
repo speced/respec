@@ -112,9 +112,14 @@ describe("Core — Definitions", function() {
           <a id="link-to-foo">foo</a>
 
           The following refer to same:
-          <a class="links-to-foos">foos</a>
-          <a class="links-to-foos">baz</a>
-          <a class="links-to-foos">bazs</a>
+          <div id="links-to-foos">
+            <a>foos</a>
+            <a>baz</a>
+            <a>bazs</a>
+            <a data-lt="foos">PASS</a>
+            <a data-lt="bazs">PASS</a>
+            <a data-lt="baz">PASS</a>
+          </div>
         </section>
       `;
       const ops = makeStandardOps({ pluralize: true }, body);
@@ -137,11 +142,11 @@ describe("Core — Definitions", function() {
       const linkToBar = doc.getElementById("link-to-bar");
       const linkToBars = doc.getElementById("link-to-bars");
       const linkToFoo = doc.getElementById("link-to-foo");
-      const linksToFoos = [...doc.querySelectorAll(".links-to-foos")];
+      const linksToFoos = [...doc.querySelectorAll("#links-to-foos a")];
       expect(getLinkHash(linkToBar)).toEqual("#dfn-bar");
       expect(getLinkHash(linkToBars)).toEqual("#dfn-bars");
       expect(getLinkHash(linkToFoo)).toEqual("#dfn-foo");
-      expect(linksToFoos.length).toBe(3);
+      expect(linksToFoos.length).toBe(6);
       expect(
         linksToFoos.every(el => getLinkHash(el) === "#dfn-foos")
       ).toBeTruthy();

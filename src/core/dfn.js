@@ -10,7 +10,13 @@ export function run(conf) {
   if (!conf.hasOwnProperty("definitionMap")) {
     conf.definitionMap = Object.create(null);
   }
-  const shouldPluralize = autoPluralizeDfns();
+
+  let shouldPluralize;
+  if (conf.pluralize === true) {
+    // prevent pluralize booting overhead if not needed
+    shouldPluralize = autoPluralizeDfns();
+  }
+
   document.querySelectorAll("dfn").forEach(dfn => {
     const closestDfn = dfn.closest("[data-dfn-for]");
     if (closestDfn && closestDfn !== dfn && !dfn.dataset.dfnFor) {
@@ -23,12 +29,17 @@ export function run(conf) {
     // Also, we should probably use weakmaps and weaksets here
     // to avoid leaks.
     const $dfn = $(dfn);
-    let dfnTitles = $dfn.getDfnTitles({ isDefinition: true });
+    const dfnTitles = $dfn.getDfnTitles({ isDefinition: true });
 
     // add automatic pluralization to `data-lt` attributes
     // see https://github.com/w3c/respec/pull/1682
-    if (conf.pluralize === true && shouldPluralize(dfn)) {
-      const plural = pluralize(norm(dfn.textContent));
+    const normText = norm(dfn.textContent);
+    if (
+      conf.pluralize === true &&
+      !dfn.hasAttribute("data-lt-noPlural") &&
+      shouldPluralize(normText)
+    ) {
+      const plural = pluralize(normText);
       dfnTitles.push(plural);
       $dfn.attr("data-lt", dfnTitles.join("|"));
     }
@@ -48,25 +59,26 @@ export function run(conf) {
 }
 
 function autoPluralizeDfns() {
-  const links = [...document.querySelectorAll("a")];
-  const dfns = [...document.querySelectorAll("dfn")];
+  const links = new Set();
+  document
+    .querySelectorAll("a:not([href])")
+    .forEach(({ textContent, dataset }) => {
+      links.add(norm(textContent));
+      if (dataset.lt) {
+        links.add(dataset.lt);
+      }
+    });
 
-  return function shouldPluralize(dfn) {
-    const plural = pluralize(norm(dfn.textContent));
-    if (
-      // has overridden to not do pluralization
-      dfn.hasAttribute("data-lt-noPlural") ||
-      // no <a> references the plural term
-      !links.find(({ textContent }) => norm(textContent) === plural) ||
-      // there is any dfn with plural term in data-lt or textContent
-      dfns.find(
-        ({ textContent, dataset }) =>
-          norm(textContent) === plural ||
-          (dataset.lt && dataset.lt.split("|").includes(plural))
-      )
-    ) {
-      return false;
+  const dfnText = new Set();
+  document.querySelectorAll("dfn").forEach(({ textContent, dataset }) => {
+    dfnText.add(norm(textContent));
+    if (dataset.lt) {
+      dataset.lt.split("|").forEach(lt => dfnText.add(lt));
     }
-    return true;
+  });
+
+  return function shouldPluralize(text) {
+    const plural = pluralize(text);
+    return links.has(plural) && !dfnText.has(plural);
   };
 }
