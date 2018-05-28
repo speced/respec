@@ -8,7 +8,6 @@ bevy.json
 .idea
 js/deps/*
 !js/deps/highlight.js
-!js/deps/pluralize.js
 js/**/*.map
 js/*/linter-rules/
 js/core/*.js
