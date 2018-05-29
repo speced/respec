@@ -200,10 +200,10 @@ describe("Core — Definitions", function() {
       expect(dfnlt).toEqual(expectedDfnlt);
     });
 
-    it("doesn't add pluralization with [data-lt-noPlural]", async () => {
+    it("doesn't add pluralization with [data-lt-no-plural]", async () => {
       const body = `
         <section id="section">
-          <dfn data-lt-noPlural>baz</dfn> can be referenced
+          <dfn data-lt-no-plural>baz</dfn> can be referenced
           only as <a id="goodLink">baz</a>
           and not as <a id="badLink">bazs</a>
         </section>

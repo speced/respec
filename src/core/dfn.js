@@ -36,13 +36,13 @@ export function run(conf) {
     const normText = norm(dfn.textContent).toLowerCase();
     if (
       pluralizeDfn &&
-      !dfn.hasAttribute("data-lt-noPlural") &&
+      !dfn.hasAttribute("data-lt-no-plural") &&
       !dfn.hasAttribute("data-lt-noDefault")
     ) {
       const plural = pluralizeDfn(normText);
-      if (plural !== "") {
+      if (plural) {
         dfnTitles.push(plural);
-        dfn.setAttribute("data-lt", dfnTitles.join("|"));
+        dfn.dataset.lt = dfnTitles.join("|");
       }
     }
 
@@ -63,7 +63,8 @@ export function run(conf) {
 function autoPluralizeDfns() {
   const links = new Set();
   document.querySelectorAll("a:not([href])").forEach(el => {
-    links.add(norm(el.textContent).toLowerCase());
+    const normText = norm(el.textContent).toLowerCase();
+    links.add(normText);
     if (el.dataset.lt) {
       links.add(el.dataset.lt);
     }
@@ -73,7 +74,7 @@ function autoPluralizeDfns() {
   document.querySelectorAll("dfn:not([data-lt-noDefault])").forEach(dfn => {
     dfns.add(norm(dfn.textContent).toLowerCase());
     if (dfn.dataset.lt) {
-      dfn.dataset.lt.split("|").forEach(lt => dfns.add(lt));
+      dfn.dataset.lt.split("|").reduce((dfns, lt) => dfns.add(lt), dfns);
     }
   });
 
