@@ -57,7 +57,6 @@ describe("Core — Definitions", function() {
         </section>`;
       const ops = makeStandardOps({ pluralize: true }, body);
       const doc = await makeRSDoc(ops);
-      await doc.respecIsReady;
 
       const dfn = doc.querySelector("#section dfn");
       expect(dfn.id).toEqual("dfn-foo");
@@ -81,7 +80,6 @@ describe("Core — Definitions", function() {
       `;
       const ops = makeStandardOps({ pluralize: true }, body);
       const doc = await makeRSDoc(ops);
-      await doc.respecIsReady;
 
       const dfn = doc.querySelector("#section dfn");
       expect(dfn.id).toEqual("dfn-baz"); // uses first data-lt as `id`
@@ -102,6 +100,46 @@ describe("Core — Definitions", function() {
       expect(ignoredLink.href).toEqual(`${window.location.origin}/PASS`);
     });
 
+    it("does nothing if conf.pluralize = false", async () => {
+      const body = `
+        <section id="section">
+          <dfn>foo</dfn> can be referenced
+          as <a>foo</a>
+          but not as <a>foos</a>
+        </section>
+      `;
+      const ops = makeStandardOps({ pluralize: false }, body);
+      const doc = await makeRSDoc(ops);
+
+      const { id: dfnId } = doc.querySelector("#section dfn");
+      expect(dfnId).toBe("dfn-foo");
+      const [validLink, invalidLink] = [...doc.querySelectorAll("#section a")];
+      expect(getLinkHash(validLink)).toEqual("#dfn-foo");
+      expect(
+        invalidLink.classList.contains("respec-offending-element")
+      ).toBeTruthy();
+    });
+
+    it("does nothing if conf.pluralize is not defined", async () => {
+      const body = `
+        <section id="section">
+          <dfn>foo</dfn> can be referenced
+          as <a>foo</a>
+          but not as <a>foos</a>
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+
+      const { id: dfnId } = doc.querySelector("#section dfn");
+      expect(dfnId).toBe("dfn-foo");
+      const [validLink, invalidLink] = [...doc.querySelectorAll("#section a")];
+      expect(getLinkHash(validLink)).toEqual("#dfn-foo");
+      expect(
+        invalidLink.classList.contains("respec-offending-element")
+      ).toBeTruthy();
+    });
+
     it("doesn't pluralize when [data-lt-noDefault] is defined", async () => {
       const body = `
         <section id="section">
@@ -112,7 +150,6 @@ describe("Core — Definitions", function() {
       `;
       const ops = makeStandardOps({ pluralize: true }, body);
       const doc = await makeRSDoc(ops);
-      await doc.respecIsReady;
 
       const dfn = doc.querySelector("#section dfn");
       expect(dfn.id).toEqual("dfn-baz");
@@ -154,7 +191,6 @@ describe("Core — Definitions", function() {
       `;
       const ops = makeStandardOps({ pluralize: true }, body);
       const doc = await makeRSDoc(ops);
-      await doc.respecIsReady;
 
       const dfnBar = doc.getElementById("dfn-bar");
       expect(dfnBar).toBeTruthy();
@@ -191,7 +227,6 @@ describe("Core — Definitions", function() {
       `;
       const ops = makeStandardOps({ pluralize: true }, body);
       const doc = await makeRSDoc(ops);
-      await doc.respecIsReady;
 
       const dfn = doc.querySelector("#section dfn");
       expect(dfn.id).toEqual("dfn-baz");
@@ -210,7 +245,6 @@ describe("Core — Definitions", function() {
       `;
       const ops = makeStandardOps({ pluralize: true }, body);
       const doc = await makeRSDoc(ops);
-      await doc.respecIsReady;
 
       const dfn = doc.querySelector("#section dfn");
       expect(dfn.id).toEqual("dfn-baz"); // uses first data-lt as `id`
