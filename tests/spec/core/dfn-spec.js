@@ -75,7 +75,8 @@ describe("Core — Definitions", function() {
           as <a>baz</a>
           or <a>bar</a>
           or <a>bars</a>
-          but not as <a id="badLink">bazs</a>.
+          but not as <a id="link1">bazs</a>
+          or <a id="link2" href="PASS">bar</a>
         </section>
       `;
       const ops = makeStandardOps({ pluralize: true }, body);
@@ -88,13 +89,42 @@ describe("Core — Definitions", function() {
       const expectedDfnlt = "bar|bars|baz".split("|");
       expect(dfnlt).toEqual(expectedDfnlt);
 
-      const validLinks = [...doc.querySelectorAll("#one a")].slice(3);
+      const validLinks = [...doc.querySelectorAll("#section a")].slice(0, 3);
+      expect(validLinks.length).toEqual(3);
       expect(
         validLinks.every(el => getLinkHash(el) === "#dfn-baz")
       ).toBeTruthy();
-      const badLink = doc.getElementById("badLink");
+      const badLink = doc.getElementById("link1");
       expect(
         badLink.classList.contains("respec-offending-element")
+      ).toBeTruthy();
+      const ignoredLink = doc.getElementById("link2");
+      expect(ignoredLink.href).toEqual(`${window.location.origin}/PASS`);
+    });
+
+    it("doesn't pluralize when [data-lt-noDefault] is defined", async () => {
+      const body = `
+        <section id="section">
+          <dfn data-lt="baz" data-lt-noDefault>bar</dfn> can be referenced
+          as <a>baz</a>
+          but not as <a>bar</a> or <a>bars</a>
+        </section>
+      `;
+      const ops = makeStandardOps({ pluralize: true }, body);
+      const doc = await makeRSDoc(ops);
+      await doc.respecIsReady;
+
+      const dfn = doc.querySelector("#section dfn");
+      expect(dfn.id).toEqual("dfn-baz");
+      const [validLink, badLink1, badLink2] = [
+        ...doc.querySelectorAll("#section a"),
+      ];
+      expect(getLinkHash(validLink)).toEqual("#dfn-baz");
+      expect(
+        badLink1.classList.contains("respec-offending-element")
+      ).toBeTruthy();
+      expect(
+        badLink2.classList.contains("respec-offending-element")
       ).toBeTruthy();
     });
 

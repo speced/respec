@@ -11,10 +11,10 @@ export function run(conf) {
     conf.definitionMap = Object.create(null);
   }
 
-  let shouldPluralize;
+  let pluralizeDfn;
   if (conf.pluralize === true) {
     // prevent pluralize booting overhead if not needed
-    shouldPluralize = autoPluralizeDfns();
+    pluralizeDfn = autoPluralizeDfns();
   }
 
   document.querySelectorAll("dfn").forEach(dfn => {
@@ -33,15 +33,17 @@ export function run(conf) {
 
     // add automatic pluralization to `data-lt` attributes
     // see https://github.com/w3c/respec/pull/1682
-    const normText = norm(dfn.textContent);
+    const normText = norm(dfn.textContent).toLowerCase();
     if (
-      conf.pluralize === true &&
+      pluralizeDfn &&
       !dfn.hasAttribute("data-lt-noPlural") &&
-      shouldPluralize(normText)
+      !dfn.hasAttribute("data-lt-noDefault")
     ) {
-      const plural = pluralize(normText);
-      dfnTitles.push(plural);
-      $dfn.attr("data-lt", dfnTitles.join("|"));
+      const plural = pluralizeDfn(normText);
+      if (plural !== "") {
+        dfnTitles.push(plural);
+        dfn.setAttribute("data-lt", dfnTitles.join("|"));
+      }
     }
 
     dfnTitles
@@ -60,25 +62,24 @@ export function run(conf) {
 
 function autoPluralizeDfns() {
   const links = new Set();
-  document
-    .querySelectorAll("a:not([href])")
-    .forEach(({ textContent, dataset }) => {
-      links.add(norm(textContent));
-      if (dataset.lt) {
-        links.add(dataset.lt);
-      }
-    });
-
-  const dfnText = new Set();
-  document.querySelectorAll("dfn").forEach(({ textContent, dataset }) => {
-    dfnText.add(norm(textContent));
-    if (dataset.lt) {
-      dataset.lt.split("|").forEach(lt => dfnText.add(lt));
+  document.querySelectorAll("a:not([href])").forEach(el => {
+    links.add(norm(el.textContent).toLowerCase());
+    if (el.dataset.lt) {
+      links.add(el.dataset.lt);
     }
   });
 
-  return function shouldPluralize(text) {
+  const dfns = new Set();
+  document.querySelectorAll("dfn:not([data-lt-noDefault])").forEach(dfn => {
+    dfns.add(norm(dfn.textContent).toLowerCase());
+    if (dfn.dataset.lt) {
+      dfn.dataset.lt.split("|").forEach(lt => dfns.add(lt));
+    }
+  });
+
+  // returns pluralized term if `text` needs pluralization, "" otherwise
+  return function pluralizeDfn(text) {
     const plural = pluralize(text);
-    return links.has(plural) && !dfnText.has(plural);
+    return links.has(plural) && !dfns.has(plural) ? plural : "";
   };
 }
