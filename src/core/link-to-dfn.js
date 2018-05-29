@@ -132,23 +132,7 @@ export function run(conf, doc, cb) {
       $ant.replaceWith($ant.contents());
     }
   });
-  linkInlineCitations(doc, conf).then(function() {
-    // done linking, so clean up
-    function attrToDataAttr(name) {
-      return function(elem) {
-        var value = elem.getAttribute(name);
-        elem.removeAttribute(name);
-        elem.setAttribute("data-" + name, value);
-      };
-    }
-    var forList = doc.querySelectorAll("*[for]");
-    Array.prototype.forEach.call(forList, attrToDataAttr("for"));
-
-    var dfnForList = doc.querySelectorAll("*[dfn-for]");
-    Array.prototype.forEach.call(dfnForList, attrToDataAttr("dfn-for"));
-
-    var linkForList = doc.querySelectorAll("*[link-for]");
-    Array.prototype.forEach.call(linkForList, attrToDataAttr("link-for"));
+  linkInlineCitations(doc, conf).then(() => {
     // Added message for legacy compat with Aria specs
     // See https://github.com/w3c/respec/issues/793
     pub("end", "core/link-to-dfn");
