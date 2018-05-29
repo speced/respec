@@ -1,12 +1,17 @@
 # Change Log
 
-## [Unreleased](https://github.com/w3c/respec/tree/HEAD)
-
-[Full Changelog](https://github.com/w3c/respec/compare/v20.11.2...HEAD)
+## [v21.0.0](https://github.com/w3c/respec/tree/v21.0.0) (2018-05-29)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.11.2...v21.0.0)
 
 **Closed issues:**
 
+- Investigate automatic pluralization of defined terms [\#1351](https://github.com/w3c/respec/issues/1351)
 - Investigate switching MD parser  to Remarkable [\#1207](https://github.com/w3c/respec/issues/1207)
+
+**Merged pull requests:**
+
+- feat\(core/dfn\): add automatic pluralization support for \<dfn\> [\#1682](https://github.com/w3c/respec/pull/1682) ([sidvishnoi](https://github.com/sidvishnoi))
+- BREAKING CHANGE: Remove deprecated things [\#1681](https://github.com/w3c/respec/pull/1681) ([marcoscaceres](https://github.com/marcoscaceres))
 
 ## [v20.11.2](https://github.com/w3c/respec/tree/v20.11.2) (2018-05-25)
 [Full Changelog](https://github.com/w3c/respec/compare/v20.11.1...v20.11.2)
