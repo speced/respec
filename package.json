@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "20.11.2",
+  "version": "21.0.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -52,7 +52,8 @@
     "karma-verbose-summary-reporter": "0.0.1",
     "mocha": "^5.2.0",
     "moment": "^2.22.1",
-    "prettier": "^1.12.1",
+    "pluralize": "^7.0.0",
+    "prettier": "^1.13.2",
     "requirejs": "^2.3.5",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "uglify-es": "3.3.7",
@@ -86,7 +87,7 @@
     "epipebomb": "^1.0.0",
     "fs-extra": "^6.0.1",
     "highlight.js": "github:marcoscaceres/highlight.js#7b144b3b83ce296d5b29c5e4fc2ea2a65e9d3f32",
-    "hyperhtml": "^2.10.1",
+    "hyperhtml": "^2.10.2",
     "loading-indicator": "^2.0.0",
     "marked": "^0.4.0",
     "prompt": "^1.0.0",

@@ -63,6 +63,7 @@ const w3cDefaults = {
     "check-punctuation": false,
     "local-refs-exist": false,
   },
+  pluralize: false,
   doJsonLd: false,
   license: "w3c-software-doc",
   specStatus: "base",
