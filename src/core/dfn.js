@@ -72,7 +72,8 @@ function autoPluralizeDfns() {
 
   const dfns = new Set();
   document.querySelectorAll("dfn:not([data-lt-noDefault])").forEach(dfn => {
-    dfns.add(norm(dfn.textContent).toLowerCase());
+    const normText = norm(dfn.textContent).toLowerCase();
+    dfns.add(normText);
     if (dfn.dataset.lt) {
       dfn.dataset.lt.split("|").reduce((dfns, lt) => dfns.add(lt), dfns);
     }
