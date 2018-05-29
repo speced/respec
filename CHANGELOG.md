@@ -1,5 +1,78 @@
 # Change Log
 
+## [Unreleased](https://github.com/w3c/respec/tree/HEAD)
+
+[Full Changelog](https://github.com/w3c/respec/compare/v20.11.2...HEAD)
+
+**Closed issues:**
+
+- Investigate switching MD parser  to Remarkable [\#1207](https://github.com/w3c/respec/issues/1207)
+
+## [v20.11.2](https://github.com/w3c/respec/tree/v20.11.2) (2018-05-25)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.11.1...v20.11.2)
+
+**Closed issues:**
+
+- Nothing really checks config.format for markdown processing [\#1679](https://github.com/w3c/respec/issues/1679)
+
+**Merged pull requests:**
+
+- fix\(package\): update marked to version 0.4.0 [\#1680](https://github.com/w3c/respec/pull/1680) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v20.11.1](https://github.com/w3c/respec/tree/v20.11.1) (2018-05-15)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.11.0...v20.11.1)
+
+**Fixed bugs:**
+
+- link-to-dfn module may report a TypeError [\#1666](https://github.com/w3c/respec/issues/1666)
+
+**Merged pull requests:**
+
+- fix: link-to-dfn module may report a TypeError [\#1673](https://github.com/w3c/respec/pull/1673) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(tools/respecDocWriter\): support Puppeteer 1.4 error reporting [\#1671](https://github.com/w3c/respec/pull/1671) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v20.11.0](https://github.com/w3c/respec/tree/v20.11.0) (2018-05-14)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.10.4...v20.11.0)
+
+**Closed issues:**
+
+- "stod" typo in src/w3c/headers.js? [\#1656](https://github.com/w3c/respec/issues/1656)
+- Warn about href's that link to nonexistent id's [\#1643](https://github.com/w3c/respec/issues/1643)
+
+**Merged pull requests:**
+
+- Fix temp ID syntax in list sorter [\#1665](https://github.com/w3c/respec/pull/1665) ([tidoust](https://github.com/tidoust))
+- \(feat/lint\) Warns about href's that link to nonexistent id's in a spec [\#1664](https://github.com/w3c/respec/pull/1664) ([sidvishnoi](https://github.com/sidvishnoi))
+- Update var highlight colors [\#1663](https://github.com/w3c/respec/pull/1663) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(w3c/headers\): typo [\#1659](https://github.com/w3c/respec/pull/1659) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(headers-spec\): variable name typo [\#1658](https://github.com/w3c/respec/pull/1658) ([marcoscaceres](https://github.com/marcoscaceres))
+- Fix caniuse hover show/hide [\#1657](https://github.com/w3c/respec/pull/1657) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v20.10.4](https://github.com/w3c/respec/tree/v20.10.4) (2018-05-08)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.10.3...v20.10.4)
+
+**Merged pull requests:**
+
+- fix\(tools/respecDocWriter\): reject on require load errors [\#1654](https://github.com/w3c/respec/pull/1654) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v20.10.3](https://github.com/w3c/respec/tree/v20.10.3) (2018-05-07)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.10.2...v20.10.3)
+
+**Closed issues:**
+
+- Harmonizing var highlight colors with BikeShed [\#1649](https://github.com/w3c/respec/issues/1649)
+
+**Merged pull requests:**
+
+- Make RespecDocWriter work with older versions of ReSpec [\#1652](https://github.com/w3c/respec/pull/1652) ([tidoust](https://github.com/tidoust))
+
+## [v20.10.2](https://github.com/w3c/respec/tree/v20.10.2) (2018-05-04)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.10.1...v20.10.2)
+
+**Merged pull requests:**
+
+- sec\(tools/respecDocWriter\): dont show URL params [\#1651](https://github.com/w3c/respec/pull/1651) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v20.10.1](https://github.com/w3c/respec/tree/v20.10.1) (2018-05-02)
 [Full Changelog](https://github.com/w3c/respec/compare/v20.10.0...v20.10.1)
 
@@ -142,10 +215,6 @@
 
 - IDL stringifier is causing RangeError [\#1599](https://github.com/w3c/respec/issues/1599)
 - RangeError: Invalid count value exception in idn\(\) [\#1559](https://github.com/w3c/respec/issues/1559)
-
-**Closed issues:**
-
-- auto normalize references [\#1535](https://github.com/w3c/respec/issues/1535)
 
 **Merged pull requests:**
 

@@ -33,14 +33,18 @@ describe("Core - Markdown", function() {
       config: makeBasicConfig(),
       body:
         makeDefaultBody() +
-        "<p class=note>_foo_</p><div class=issue>_foo_</div><ul><li class=req>\n### _foo_###\n</li></ul>",
+        `
+        <div class=note>
+          _note_
+        </div>
+        <div class=issue>
+          _issue_
+        </div>`,
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
-    expect(doc.querySelector(".note em")).toBeTruthy();
-    expect(doc.querySelector(".issue em")).toBeTruthy();
-    expect(doc.querySelector(".req em")).toBeTruthy();
-    expect(doc.querySelector(".req h3")).toBeTruthy();
+    expect(doc.querySelector(".note p em")).toBeTruthy();
+    expect(doc.querySelector(".issue p em")).toBeTruthy();
   });
 
   it("removes left padding before processing markdown content", async () => {
@@ -48,7 +52,11 @@ describe("Core - Markdown", function() {
       config: makeBasicConfig(),
       body:
         makeDefaultBody() +
-        "\n    Foo\n    ===\n      * list item 1\n      * list item 2\n        * nested list item",
+        `\n
+      ## Foo
+        * list item 1
+        * list item 2
+          * nested list item`,
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
