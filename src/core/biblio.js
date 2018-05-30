@@ -99,6 +99,7 @@ export function stringifyReference(ref) {
   if (ref.href) {
     output = `<a href="${ref.href}">${output}</a>. `;
   }
+  else output = `${output}. `;
   if (ref.authors && ref.authors.length) {
     output += ref.authors.join("; ");
     if (ref.etAl) output += " et al";
