@@ -59,12 +59,11 @@ describe("Core — Definitions", function() {
       const doc = await makeRSDoc(ops);
 
       const dfn = doc.querySelector("#section dfn");
-      expect(dfn.id).toEqual("dfn-foo");
-      const dfnlt = dfn.dataset.lt.split("|").sort();
-      const expectedDfnlt = "foo|foos".split("|");
-      expect(dfnlt).toEqual(expectedDfnlt);
-      const links = [...doc.querySelectorAll("#one a")];
-      expect(links.every(el => getLinkHash(el) === "#dfn-foo")).toBeTruthy();
+      expect(dfn.id).toEqual("dfn-foos");
+      expect(dfn.dataset.lt).toEqual("foos");
+      const links = [...doc.querySelectorAll("#section a")];
+      expect(links.length).toEqual(2);
+      expect(links.every(el => getLinkHash(el) === "#dfn-foos")).toBeTruthy();
     });
 
     it("adds pluralization when [data-lt] is defined", async () => {
@@ -83,9 +82,7 @@ describe("Core — Definitions", function() {
 
       const dfn = doc.querySelector("#section dfn");
       expect(dfn.id).toEqual("dfn-baz"); // uses first data-lt as `id`
-      const dfnlt = dfn.dataset.lt.split("|").sort();
-      const expectedDfnlt = "bar|bars|baz".split("|");
-      expect(dfnlt).toEqual(expectedDfnlt);
+      expect(dfn.dataset.lt).toEqual("baz|bars");
 
       const validLinks = [...doc.querySelectorAll("#section a")].slice(0, 3);
       expect(validLinks.length).toEqual(3);
@@ -202,8 +199,7 @@ describe("Core — Definitions", function() {
       const dfnFoos = doc.getElementById("dfn-foos");
       expect(dfnFoos).toBeTruthy();
       expect(dfnFoos.textContent).toEqual("baz");
-      const ltFoos = dfnFoos.dataset.lt.split("|").sort();
-      expect(ltFoos.join("|")).toEqual("baz|bazs|foos");
+      expect(dfnFoos.dataset.lt).toEqual("foos|bazs");
 
       const linkToBar = doc.getElementById("link-to-bar");
       const linkToBars = doc.getElementById("link-to-bars");
