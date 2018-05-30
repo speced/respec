@@ -33,16 +33,25 @@ export function run(conf) {
 
     // add automatic pluralization to `data-lt` attributes
     // see https://github.com/w3c/respec/pull/1682
-    const normText = norm(dfn.textContent).toLowerCase();
     if (
       pluralizeDfn &&
       !dfn.hasAttribute("data-lt-no-plural") &&
       !dfn.hasAttribute("data-lt-noDefault")
     ) {
+      const normText = norm(dfn.textContent).toLowerCase();
       const plural = pluralizeDfn(normText);
       if (plural) {
-        dfnTitles.push(plural);
-        dfn.dataset.lt = dfnTitles.join("|");
+        if (dfnTitles[0] === normText) {
+          // if normText is first `dfnTitles`, then use plural as `id`
+          dfnTitles.unshift(plural);
+        } else {
+          // otherwise, to prevent breaking exising links,
+          //  first data-lt is used as `id`
+          dfnTitles.push(plural);
+        }
+        dfn.dataset.lt = dfnTitles
+          .filter(title => title !== normText)
+          .join("|");
       }
     }
 
