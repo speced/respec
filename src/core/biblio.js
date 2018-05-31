@@ -96,9 +96,9 @@ export function wireReference(rawRef, target = "_blank") {
 export function stringifyReference(ref) {
   if (typeof ref === "string") return ref;
   let output = `<cite>${ref.title}</cite>`;
-  if (ref.href) {
-    output = `<a href="${ref.href}">${output}</a>. `;
-  }
+  
+  output = ref.href ? `<a href="${ref.href}">${output}</a>. ` : `${output}. `;
+
   if (ref.authors && ref.authors.length) {
     output += ref.authors.join("; ");
     if (ref.etAl) output += " et al";
