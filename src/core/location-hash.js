@@ -13,12 +13,10 @@ export function run(conf, doc, cb) {
   let hash = "";
   try {
     hash = decodeURIComponent(window.location.hash).substr(1);
-  } catch (err) {
-    hash = "";
-  }
+  } catch (err) {}
   // Only scroll to the hash if the document hasn't been scrolled yet
   // this ensures that a page refresh maintains the scroll position
-  if (!hash && !document.documentElement.scrollTop) {
+  if (!hash || document.documentElement.scrollTop) {
     return cb();
   }
   // Allow some degree of recovery for legacy fragments format.
