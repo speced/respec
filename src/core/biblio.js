@@ -54,9 +54,8 @@ const defaultsReference = Object.freeze({
 const endNormalizer = function(endStr) {
   return str => {
     const trimmed = str.trim();
-    const result = !trimmed || trimmed.endsWith(endStr)
-      ? trimmed
-      : trimmed + endStr;
+    const result =
+      !trimmed || trimmed.endsWith(endStr) ? trimmed : trimmed + endStr;
     return result;
   };
 };
@@ -96,7 +95,7 @@ export function wireReference(rawRef, target = "_blank") {
 export function stringifyReference(ref) {
   if (typeof ref === "string") return ref;
   let output = `<cite>${ref.title}</cite>`;
-  
+
   output = ref.href ? `<a href="${ref.href}">${output}</a>. ` : `${output}. `;
 
   if (ref.authors && ref.authors.length) {
@@ -128,15 +127,19 @@ function bibref(conf) {
       conf.l10n.references +
       "</h2></section>"
   ).appendTo($("body"));
-  if (conf.refNote) $("<p></p>").html(conf.refNote).appendTo($refsec);
+  if (conf.refNote)
+    $("<p></p>")
+      .html(conf.refNote)
+      .appendTo($refsec);
 
   var types = ["Normative", "Informative"];
   for (var i = 0; i < types.length; i++) {
     var type = types[i];
     var refs = type === "Normative" ? norms : informs;
-    var l10nRefs = type === "Normative"
-      ? conf.l10n.norm_references
-      : conf.l10n.info_references;
+    var l10nRefs =
+      type === "Normative"
+        ? conf.l10n.norm_references
+        : conf.l10n.info_references;
     if (!refs.length) continue;
     var $sec = $("<section><h3></h3></section>")
       .appendTo($refsec)
