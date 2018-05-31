@@ -13,7 +13,9 @@ export function run(conf, doc, cb) {
   let hash = "";
   try {
     hash = decodeURIComponent(window.location.hash).substr(1);
-  } catch (err) {}
+  } catch (err) {
+    console.warn(err);
+  }
   // Only scroll to the hash if the document hasn't been scrolled yet
   // this ensures that a page refresh maintains the scroll position
   if (!hash || document.documentElement.scrollTop) {
