@@ -18,7 +18,8 @@ export function run(conf, doc, cb) {
   }
   // Only scroll to the hash if the document hasn't been scrolled yet
   // this ensures that a page refresh maintains the scroll position
-  if (!hash || document.documentElement.scrollTop) {
+  const { documentElement, body } = document;
+  if (!hash || documentElement.scrollTop || body.scrollTop) {
     return cb();
   }
   // Allow some degree of recovery for legacy fragments format.
