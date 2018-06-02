@@ -423,7 +423,7 @@ export function linkCSS(doc, styles) {
       link.href = url;
       return link;
     })
-    .reduce(function(elem, nextLink) {
+    .reduce(function (elem, nextLink) {
       elem.appendChild(nextLink);
       return elem;
     }, doc.createDocumentFragment());
@@ -537,4 +537,24 @@ export function flatten(collector, item) {
     ? [item]
     : isIterable ? [...item.values()].reduce(flatten, []) : Object.values(item);
   return [...collector, ...items];
+}
+
+/**
+ * Used to abort user actions based on scrolling.
+ */
+export class ScrollBomb {
+  constructor(msg) {
+    this.err = new Error(msg);
+  }
+  arm() {
+    return new Promise((resolve, reject) => {
+      this.resolve = resolve;
+      document.addEventListener("scroll", () => reject(this.err), {
+        once: true,
+      });
+    });
+  }
+  disarm() {
+    this.resolve();
+  }
 }
