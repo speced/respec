@@ -288,9 +288,7 @@ export function normalizePadding(text = "") {
 
 // RESPEC STUFF
 export function removeReSpec(doc) {
-  Array.from(
-    doc.querySelectorAll(".remove, script[data-requiremodule]")
-  ).forEach(elem => {
+  doc.querySelectorAll(".remove, script[data-requiremodule]").forEach(elem => {
     elem.remove();
   });
 }

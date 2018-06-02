@@ -20,17 +20,17 @@ export function run(conf) {
   styleElement.classList.add("removeOnSave");
   document.head.appendChild(styleElement);
 
-  [...document.querySelectorAll("var")].forEach(varElem =>
-    varElem.addEventListener("click", hightlightListener)
-  );
+  document
+    .querySelectorAll("var")
+    .forEach(varElem => varElem.addEventListener("click", highlightListener));
 
   // remove highlights, cleanup empty class/style attributes
   sub("beforesave", outputDoc => {
-    [...outputDoc.querySelectorAll("var.respec-hl")].forEach(removeHighlight);
+    outputDoc.querySelectorAll("var.respec-hl").forEach(removeHighlight);
   });
 }
 
-function hightlightListener(ev) {
+function highlightListener(ev) {
   ev.stopPropagation();
   const { target: varElem } = ev;
   const hightligtedElems = highlightVars(varElem);
@@ -66,10 +66,7 @@ function getHighlightColor(target) {
   if (HL_COLORS.get("respec-hl-c1") === true) return "respec-hl-c1";
 
   // otherwise get some other available color
-  return (
-    [...HL_COLORS.keys()].find(c => HL_COLORS.get(c)) ||
-    "respec-hl-c1"
-  );
+  return [...HL_COLORS.keys()].find(c => HL_COLORS.get(c)) || "respec-hl-c1";
 }
 
 function highlightVars(varElem) {
