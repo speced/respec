@@ -74,7 +74,7 @@ describe("Core — Definitions", function() {
           or <a>bar</a>
           or <a>bars</a>
           but not as <a id="link1">bazs</a>
-          or <a id="link2" href="PASS">bar</a>
+          or <a id="link2" href="/PASS">bar</a>
         </section>
       `;
       const ops = makeStandardOps({ pluralize: true }, body);
