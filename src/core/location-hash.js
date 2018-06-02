@@ -9,18 +9,17 @@ export function run(conf, doc, cb) {
   // Added message for legacy compat with Aria specs
   // See https://github.com/w3c/respec/issues/793
   pub("start", "core/location-hash");
-
-  let hash = "";
-  try {
-    hash = decodeURIComponent(window.location.hash).substr(1);
-  } catch (err) {
-    console.warn(err);
-  }
   // Only scroll to the hash if the document hasn't been scrolled yet
   // this ensures that a page refresh maintains the scroll position
   const { documentElement, body } = document;
-  if (!hash || documentElement.scrollTop || body.scrollTop) {
+  if (location.hash === "" || documentElement.scrollTop || body.scrollTop) {
     return cb();
+  }
+  let hash = "";
+  try {
+    hash = decodeURIComponent(location.hash).substr(1);
+  } catch (err) {
+    console.warn(err);
   }
   // Allow some degree of recovery for legacy fragments format.
   // See https://github.com/w3c/respec/issues/1353
@@ -35,6 +34,6 @@ export function run(conf, doc, cb) {
       hash = id;
     }
   }
-  window.location.hash = `#${hash}`;
+  location.hash = `#${hash}`;
   cb();
 }

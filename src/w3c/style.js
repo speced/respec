@@ -10,15 +10,15 @@ import { pub, sub } from "core/pubsubhub";
 export const name = "w3c/style";
 function attachFixupScript(doc, version) {
   const script = doc.createElement("script");
-  script.addEventListener(
-    "load",
-    function() {
-      if (window.location.hash) {
+  if (location.hash) {
+    script.addEventListener(
+      "load",
+      () => {
         window.location = window.location;
-      }
-    },
-    { once: true }
-  );
+      },
+      { once: true }
+    );
+  }
   script.src = `https://www.w3.org/scripts/TR/${version}/fixup.js`;
   doc.body.appendChild(script);
 }
