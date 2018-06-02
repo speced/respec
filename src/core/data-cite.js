@@ -126,7 +126,8 @@ export async function run(conf) {
 
 export async function linkInlineCitations(doc, conf = respecConfig) {
   const toLookupRequest = requestLookup(conf);
-  const citedSpecs = doc.querySelectorAll("dfn[data-cite], a[data-cite]");
-  const lookupRequests = Array.from(citedSpecs).map(toLookupRequest);
+  const lookupRequests = [
+    ...doc.querySelectorAll("dfn[data-cite], a[data-cite]"),
+  ].map(toLookupRequest);
   return await Promise.all(lookupRequests);
 }

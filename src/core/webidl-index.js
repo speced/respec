@@ -55,9 +55,7 @@ export function run(conf, doc, cb) {
       return collector;
     }, pre);
   // Remove duplicate IDs
-  Array.from(pre.querySelectorAll("*[id]")).forEach(elem =>
-    elem.removeAttribute("id")
-  );
+  pre.querySelectorAll("*[id]").forEach(elem => elem.removeAttribute("id"));
   virtualSummary.appendChild(pre);
   idlIndexSec.appendChild(virtualSummary);
   cb();
