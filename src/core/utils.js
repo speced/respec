@@ -538,26 +538,3 @@ export function flatten(collector, item) {
     : isIterable ? [...item.values()].reduce(flatten, []) : Object.values(item);
   return [...collector, ...items];
 }
-
-/**
- * Used to abort user actions based on scrolling.
- */
-export class ScrollWatcher {
-  constructor() {
-    this.state = "watching";
-    this.promise = new Promise(resolve => {
-      this.resolve = resolve;
-      const listener = () => {
-        this.state = "scrolled";
-        resolve();
-      };
-      document.addEventListener("scroll", listener, {
-        once: true,
-      });
-    });
-  }
-  stop() {
-    this.state = "stopped";
-    this.resolve();
-  }
-}

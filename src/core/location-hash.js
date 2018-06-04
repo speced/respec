@@ -2,21 +2,16 @@
 // Resets window.location.hash to jump to the right point in the document
 
 import { pub } from "core/pubsubhub";
-import { ScrollWatcher } from "core/utils";
 export const name = "core/location-hash";
 
-export function run() {
+export async function run() {
   // Added message for legacy compat with Aria specs
   // See https://github.com/w3c/respec/issues/793
   pub("start", "core/location-hash");
   if (!location.hash) {
     return;
   }
-  const scrollWatcher = new ScrollWatcher();
-  Promise.race([document.respecIsReady, scrollWatcher.promise]).then(() => {
-    if (scrollWatcher.state === "scrolled") {
-      return;
-    }
+  document.respecIsReady.then(() => {
     let hash = decodeURIComponent(location.hash).substr(1);
     const hasLink = document.getElementById(hash);
     const isLegacyFrag = /\W/.test(hash);
