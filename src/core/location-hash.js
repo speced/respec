@@ -13,23 +13,23 @@ export function run() {
     return;
   }
   const scrollWatcher = new ScrollWatcher();
-  let hash = decodeURIComponent(location.hash).substr(1);
-  const hasLink = !!document.getElementById(hash);
-  const isLegacyFrag = /\W/.test(hash);
-  // Allow some degree of recovery for legacy fragments format.
-  // See https://github.com/w3c/respec/issues/1353
-  if (!hasLink && isLegacyFrag) {
-    const id = hash
-      .replace(/[\W]+/gim, "-")
-      .replace(/^-+/, "")
-      .replace(/-+$/, "");
-    if (document.getElementById(id)) {
-      hash = id;
-    }
-  }
   Promise.race([document.respecIsReady, scrollWatcher.promise]).then(() => {
     if (scrollWatcher.state === "scrolled") {
       return;
+    }
+    let hash = decodeURIComponent(location.hash).substr(1);
+    const hasLink = document.getElementById(hash);
+    const isLegacyFrag = /\W/.test(hash);
+    // Allow some degree of recovery for legacy fragments format.
+    // See https://github.com/w3c/respec/issues/1353
+    if (!hasLink && isLegacyFrag) {
+      const id = hash
+        .replace(/[\W]+/gim, "-")
+        .replace(/^-+/, "")
+        .replace(/-+$/, "");
+      if (document.getElementById(id)) {
+        hash = id;
+      }
     }
     location.hash = `#${hash}`;
   });
