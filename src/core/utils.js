@@ -423,7 +423,7 @@ export function linkCSS(doc, styles) {
       link.href = url;
       return link;
     })
-    .reduce(function (elem, nextLink) {
+    .reduce(function(elem, nextLink) {
       elem.appendChild(nextLink);
       return elem;
     }, doc.createDocumentFragment());
