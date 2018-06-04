@@ -2,7 +2,7 @@
 // Resets window.location.hash to jump to the right point in the document
 
 import { pub } from "core/pubsubhub";
-import { ScrollBomb } from "core/utils";
+import { ScrollWatcher } from "core/utils";
 export const name = "core/location-hash";
 
 export function run() {
@@ -12,7 +12,7 @@ export function run() {
   if (!location.hash) {
     return;
   }
-  const scrollBomb = new ScrollBomb("Scroll position in user control");
+  const scrollWatcher = new ScrollWatcher();
   let hash = decodeURIComponent(location.hash).substr(1);
   const hasLink = !!document.getElementById(hash);
   const isLegacyFrag = /\W/.test(hash);
@@ -27,12 +27,10 @@ export function run() {
       hash = id;
     }
   }
-  Promise.race([document.respecIsReady, scrollBomb.arm()])
-    .then(() => {
-      scrollBomb.disarm();
-      location.hash = `#${hash}`;
-    })
-    .catch(err => {
-      console.info(err);
-    });
+  Promise.race([document.respecIsReady, scrollWatcher.promise]).then(() => {
+    if (scrollWatcher.state === "scrolled") {
+      return;
+    }
+    location.hash = `#${hash}`;
+  });
 }

@@ -542,19 +542,22 @@ export function flatten(collector, item) {
 /**
  * Used to abort user actions based on scrolling.
  */
-export class ScrollBomb {
-  constructor(msg) {
-    this.err = new Error(msg);
-  }
-  arm() {
-    return new Promise((resolve, reject) => {
+export class ScrollWatcher {
+  constructor() {
+    this.state = "watching";
+    this.promise = new Promise(resolve => {
       this.resolve = resolve;
-      document.addEventListener("scroll", () => reject(this.err), {
+      const listener = () => {
+        this.state = "scrolled";
+        resolve();
+      };
+      document.addEventListener("scroll", listener, {
         once: true,
       });
     });
   }
-  disarm() {
+  stop() {
+    this.state = "stopped";
     this.resolve();
   }
 }
