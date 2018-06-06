@@ -24,10 +24,9 @@ describe("W3C — Defaults", () => {
       config: {
         editors: [{ name: "foo" }],
         lint: {
-          "no-headingless-sections": false,
           "privsec-section": false,
           "no-http-props": false,
-          "local-refs-exist": false,
+          "local-refs-exist": true,
           "check-punctuation": false,
           "fake-linter-rule": "foo",
         },
@@ -40,10 +39,10 @@ describe("W3C — Defaults", () => {
     const doc = await makeRSDoc(ops);
     const rsConf = doc.defaultView.respecConfig;
     expect(rsConf.lint).toEqual({
-      "no-headingless-sections": false,
+      "no-headingless-sections": true,
       "privsec-section": false,
       "no-http-props": false,
-      "local-refs-exist": false,
+      "local-refs-exist": true,
       "check-punctuation": false,
       "fake-linter-rule": "foo",
     });

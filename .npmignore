@@ -1,3 +1,5 @@
+!examples/basic.html
+!examples/starter.html
 !js/deps/highlight.js
 .codeclimate.yml
 .csslintrc
@@ -16,6 +18,7 @@
 appveyor.yml
 bevy.json
 CODE_OF_CONDUCT.md
+examples/
 js/*.map
 js/**/*.map
 js/*/linter-rules/
