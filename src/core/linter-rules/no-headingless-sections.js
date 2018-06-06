@@ -28,7 +28,7 @@ const hasNoHeading = ({ firstElementChild: elem }) => {
 };
 
 function linterFunction(conf, doc) {
-  const offendingElements = Array.from(doc.querySelectorAll("section")).filter(
+  const offendingElements = [...doc.querySelectorAll("section")].filter(
     hasNoHeading
   );
   if (!offendingElements.length) {

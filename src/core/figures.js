@@ -94,12 +94,12 @@ export function run(conf, doc, cb) {
 }
 
 function normalizeImages(doc) {
-  [
-    ...doc.querySelectorAll(
+  doc
+    .querySelectorAll(
       ":not(picture)>img:not([width]):not([height]):not([srcset])"
-    ),
-  ].forEach(img => {
-    img.height = img.naturalHeight;
-    img.width = img.naturalWidth;
-  });
+    )
+    .forEach(img => {
+      img.height = img.naturalHeight;
+      img.width = img.naturalWidth;
+    });
 }

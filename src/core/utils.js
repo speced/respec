@@ -288,9 +288,7 @@ export function normalizePadding(text = "") {
 
 // RESPEC STUFF
 export function removeReSpec(doc) {
-  Array.from(
-    doc.querySelectorAll(".remove, script[data-requiremodule]")
-  ).forEach(elem => {
+  doc.querySelectorAll(".remove, script[data-requiremodule]").forEach(elem => {
     elem.remove();
   });
 }
@@ -537,8 +535,6 @@ export function flatten(collector, item) {
     Object(item)[Symbol.iterator] && typeof item.values === "function";
   const items = !isObject
     ? [item]
-    : isIterable
-      ? [...item.values()].reduce(flatten, [])
-      : Object.values(item);
+    : isIterable ? [...item.values()].reduce(flatten, []) : Object.values(item);
   return [...collector, ...items];
 }
