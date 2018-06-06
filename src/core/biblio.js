@@ -145,7 +145,9 @@ function bibref(conf) {
       </section>`;
     makeID(sec);
 
-    refs.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+    refs.sort((a, b) =>
+      a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
+    );
     sec.appendChild(hyperHTML`
       <dl class='bibliography'>
         ${refs.map(addRef)}
@@ -172,31 +174,34 @@ function bibref(conf) {
   function addRef(ref) {
     let refcontent = conf.biblio[ref];
     let key = ref;
-    const circular = {};
-    circular[ref] = true;
+    const circular = new Set([ref]);
     while (refcontent && refcontent.aliasOf) {
-      if (circular[refcontent.aliasOf]) {
+      if (circular.has(refcontent.aliasOf)) {
         refcontent = null;
         const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
         pub("error", msg);
       } else {
         key = refcontent.aliasOf;
         refcontent = conf.biblio[key];
-        circular[key] = true;
+        circular.add(key);
       }
     }
     aliases[key] = aliases[key] || [];
     if (!aliases[key].includes(ref)) aliases[key].push(ref);
     const dtId = "bib-" + ref;
-    let output = `<dt id="${dtId}">[${ref}]</dt>`;
     if (refcontent) {
-      output += `<dd>${stringifyReference(refcontent)}</dd>`;
+      return hyperHTML`
+        <dt id="${dtId}">[${ref}]</dt>
+        <dd>${{ html: stringifyReference(refcontent) }}</dd>
+      `;
     } else {
       if (!badrefs[ref]) badrefs[ref] = 0;
       badrefs[ref]++;
-      output += `<dd><em style='color: #f00'>Reference not found.</em></dd>`;
+      return hyperHTML`
+        <dt id="${dtId}">[${ref}]</dt>
+        <dd><em class="respec-offending-element">Reference not found.</em></dd>
+      `;
     }
-    return output;
   }
 }
 // Opportunistically dns-prefetch to bibref server, as we don't know yet
