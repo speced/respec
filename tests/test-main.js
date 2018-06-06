@@ -35,7 +35,6 @@ require.config({
     "core/LinterRule": "/base/js/core/LinterRule",
     "core/biblio-db": "/base/js/core/biblio-db",
     "core/jquery-enhanced": "/base/js/core/jquery-enhanced",
-    "core/dom-utils": "/base/js/core/dom-utils",
     "core/pubsubhub": "/base/js/core/pubsubhub",
     "core/utils": "/base/js/core/utils",
     "deps/jquery": "/base/js/deps/jquery",

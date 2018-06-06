@@ -6,8 +6,7 @@
 /*jshint jquery: true*/
 /*globals console*/
 import { biblioDB } from "core/biblio-db";
-import { createResourceHint } from "core/utils";
-import { makeID } from "core/dom-utils";
+import { createResourceHint, addId } from "core/utils";
 import { pub } from "core/pubsubhub";
 
 export const name = "core/biblio";
@@ -143,7 +142,7 @@ function bibref(conf) {
       <section>
         <h3>${l10nRefs}</h3>
       </section>`;
-    makeID(sec);
+    addId(sec);
 
     refs.sort((a, b) =>
       a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())

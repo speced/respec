@@ -1,6 +1,5 @@
 import { pub } from "core/pubsubhub";
-import { norm } from "core/utils";
-import { makeID } from "core/dom-utils";
+import { norm, addId } from "core/utils";
 import "deps/jquery";
 
 export const name = "core/jquery-enhanced";
@@ -146,7 +145,7 @@ window.$.fn.linkTargets = function() {
 // if provided, and a specific text if given.
 window.$.fn.makeID = function(pfx = "", txt = "", noLC = false) {
   const elem = this[0];
-  return makeID(elem, pfx, txt, noLC);
+  return addId(elem, pfx, txt, noLC);
 };
 
 // Returns all the descendant text nodes of an element. Note that those nodes aren't
