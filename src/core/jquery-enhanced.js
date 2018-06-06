@@ -1,5 +1,5 @@
 import { pub } from "core/pubsubhub";
-import { norm } from "core/utils";
+import { norm, addId } from "core/utils";
 import "deps/jquery";
 
 export const name = "core/jquery-enhanced";
@@ -145,35 +145,7 @@ window.$.fn.linkTargets = function() {
 // if provided, and a specific text if given.
 window.$.fn.makeID = function(pfx = "", txt = "", noLC = false) {
   const elem = this[0];
-  if (elem.id) {
-    return elem.id;
-  }
-  if (!txt) {
-    txt = (elem.title ? elem.title : elem.textContent).trim();
-  }
-  var id = noLC ? txt : txt.toLowerCase();
-  id = id
-    .replace(/[\W]+/gmi, "-")
-    .replace(/^-+/, "")
-    .replace(/-+$/, "");
-  if (!id) {
-    id = "generatedID";
-  } else if (/\.$/.test(id) || !/^[a-z]/i.test(id)) {
-    id = "x" + id; // trailing . doesn't play well with jQuery
-  }
-  if (pfx) {
-    id = `${pfx}-${id}`;
-  }
-  if (elem.ownerDocument.getElementById(id)) {
-    let i = 0;
-    let nextId = id + "-" + i;
-    while (elem.ownerDocument.getElementById(nextId)) {
-      nextId = id + "-" + i++;
-    }
-    id = nextId;
-  }
-  elem.id = id;
-  return id;
+  return addId(elem, pfx, txt, noLC);
 };
 
 // Returns all the descendant text nodes of an element. Note that those nodes aren't

@@ -6,7 +6,7 @@
 /*jshint jquery: true*/
 /*globals console*/
 import { biblioDB } from "core/biblio-db";
-import { createResourceHint } from "core/utils";
+import { createResourceHint, addId } from "core/utils";
 import { pub } from "core/pubsubhub";
 
 export const name = "core/biblio";
@@ -104,8 +104,7 @@ export function stringifyReference(ref) {
     output += ".";
   }
   if (ref.publisher) {
-    const publisher = ref.publisher + (/\.$/.test(ref.publisher) ? "" : ".");
-    output = `${output} ${publisher} `;
+    output = `${output} ${endWithDot(ref.publisher)} `;
   }
   if (ref.date) output += ref.date + ". ";
   if (ref.status) output += (REF_STATUSES.get(ref.status) || ref.status) + ". ";
@@ -115,84 +114,92 @@ export function stringifyReference(ref) {
 
 function bibref(conf) {
   // this is in fact the bibref processing portion
-  var badrefs = {};
-  var refKeys = getRefKeys(conf);
-  var informs = refKeys.informativeReferences;
-  var norms = refKeys.normativeReferences;
-  var aliases = {};
+  const badrefs = {};
+  const {
+    informativeReferences: informs,
+    normativeReferences: norms,
+  } = getRefKeys(conf);
+  const aliases = {};
 
   if (!informs.length && !norms.length && !conf.refNote) return;
-  var $refsec = $(
-    "<section id='references' class='appendix'><h2>" +
-      conf.l10n.references +
-      "</h2></section>"
-  ).appendTo($("body"));
-  if (conf.refNote)
-    $("<p></p>")
-      .html(conf.refNote)
-      .appendTo($refsec);
+  const refsec = hyperHTML`
+    <section id='references' class='appendix'>
+      <h2>${conf.l10n.references}</h2>
+      ${conf.refNote ? hyperHTML`<p>${conf.refNote}</p>` : ""}
+    </section>`;
 
-  var types = ["Normative", "Informative"];
-  for (var i = 0; i < types.length; i++) {
-    var type = types[i];
-    var refs = type === "Normative" ? norms : informs;
-    var l10nRefs =
+  for (const type of ["Normative", "Informative"]) {
+    const refs = type === "Normative" ? norms : informs;
+    if (!refs.length) continue;
+
+    const l10nRefs =
       type === "Normative"
         ? conf.l10n.norm_references
         : conf.l10n.info_references;
-    if (!refs.length) continue;
-    var $sec = $("<section><h3></h3></section>")
-      .appendTo($refsec)
-      .find("h3")
-      .text(l10nRefs)
-      .end();
-    $sec.makeID(null, type + " references");
-    refs.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
-    var $dl = $("<dl class='bibliography'></dl>").appendTo($sec);
-    for (var j = 0; j < refs.length; j++) {
-      var ref = refs[j];
-      $("<dt></dt>")
-        .attr({ id: "bib-" + ref })
-        .text("[" + ref + "]")
-        .appendTo($dl);
-      var $dd = $("<dd></dd>").appendTo($dl);
-      var refcontent = conf.biblio[ref];
-      var circular = {};
-      var key = ref;
-      circular[ref] = true;
-      while (refcontent && refcontent.aliasOf) {
-        if (circular[refcontent.aliasOf]) {
-          refcontent = null;
-          const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
-          pub("error", msg);
-        } else {
-          key = refcontent.aliasOf;
-          refcontent = conf.biblio[key];
-          circular[key] = true;
-        }
-      }
-      aliases[key] = aliases[key] || [];
-      if (aliases[key].indexOf(ref) < 0) aliases[key].push(ref);
-      if (refcontent) {
-        $dd.html(stringifyReference(refcontent) + "\n");
-      } else {
-        if (!badrefs[ref]) badrefs[ref] = 0;
-        badrefs[ref]++;
-        $dd.html("<em style='color: #f00'>Reference not found.</em>\n");
-      }
-    }
+
+    const sec = hyperHTML`
+      <section>
+        <h3>${l10nRefs}</h3>
+      </section>`;
+    addId(sec);
+
+    refs.sort((a, b) =>
+      a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
+    );
+    sec.appendChild(hyperHTML`
+      <dl class='bibliography'>
+        ${refs.map(addRef)}
+      </dl>`);
+
+    refsec.appendChild(sec);
   }
-  for (var k in aliases) {
+  document.body.appendChild(refsec);
+
+  for (const k in aliases) {
     if (aliases[k].length > 1) {
       let msg = `[${k}] is referenced in ${aliases[k].length} ways: `;
-      msg += `(${aliases[k].map(item => `'${item}'`).join(", ")}). This causes`;
-      msg += ` duplicate entries in the References section.`;
+      msg += `(${aliases[k].map(item => `'${item}'`).join(", ")}). `;
+      msg += `This causes duplicate entries in the References section.`;
       pub("warn", msg);
     }
   }
-  for (var item in badrefs) {
+
+  for (const item in badrefs) {
     const msg = `Bad reference: [\`${item}\`] (appears ${badrefs[item]} times)`;
     if (badrefs.hasOwnProperty(item)) pub("error", msg);
+  }
+
+  function addRef(ref) {
+    let refcontent = conf.biblio[ref];
+    let key = ref;
+    const circular = new Set([ref]);
+    while (refcontent && refcontent.aliasOf) {
+      if (circular.has(refcontent.aliasOf)) {
+        refcontent = null;
+        const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
+        pub("error", msg);
+      } else {
+        key = refcontent.aliasOf;
+        refcontent = conf.biblio[key];
+        circular.add(key);
+      }
+    }
+    aliases[key] = aliases[key] || [];
+    if (!aliases[key].includes(ref)) aliases[key].push(ref);
+    const dtId = "bib-" + ref;
+    if (refcontent) {
+      return hyperHTML`
+        <dt id="${dtId}">[${ref}]</dt>
+        <dd>${{ html: stringifyReference(refcontent) }}</dd>
+      `;
+    } else {
+      if (!badrefs[ref]) badrefs[ref] = 0;
+      badrefs[ref]++;
+      return hyperHTML`
+        <dt id="${dtId}">[${ref}]</dt>
+        <dd><em class="respec-offending-element">Reference not found.</em></dd>
+      `;
+    }
   }
 }
 // Opportunistically dns-prefetch to bibref server, as we don't know yet
