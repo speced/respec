@@ -128,8 +128,7 @@ function bibref(conf) {
       ${conf.refNote ? hyperHTML`<p>${conf.refNote}</p>` : ""}
     </section>`;
 
-  const types = ["Normative", "Informative"];
-  for (const type of types) {
+  for (const type of ["Normative", "Informative"]) {
     const refs = type === "Normative" ? norms : informs;
     if (!refs.length) continue;
 
