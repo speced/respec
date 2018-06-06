@@ -79,8 +79,6 @@ export function run(conf) {
               norm = true;
               ref = ref.replace(/^!/, "");
             }
-            console.log(ref, norm);
-
             // contrary to before, we always insert the link
             if (norm) conf.normativeReferences.add(ref);
             else conf.informativeReferences.add(ref);

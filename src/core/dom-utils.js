@@ -7,8 +7,12 @@ export function makeID(elem, pfx = "", txt = "", noLC = false) {
   if (!txt) {
     txt = (elem.title ? elem.title : elem.textContent).trim();
   }
-  var id = noLC ? txt : txt.toLowerCase();
-  id = id.replace(/[\W]+/gim, "-").replace(/-+$/, "");
+  let id = noLC ? txt : txt.toLowerCase();
+  id = id
+    .replace(/[\W]+/gim, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
+
   if (!id) {
     id = "generatedID";
   } else if (/\.$/.test(id) || !/^[a-z]/i.test(id)) {
