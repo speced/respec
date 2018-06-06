@@ -95,6 +95,10 @@ export function run(conf) {
     ...w3cDefaults,
     ...conf,
   });
+  Object.assign(conf.lint, {
+    ...w3cDefaults.lint,
+    ...conf.lint,
+  });
   //computed properties
   Object.assign(conf, computeProps(conf));
 }
