@@ -30,7 +30,9 @@ export function run(conf) {
   }
   const aKeys = [...abbrMap.keys()];
   aKeys.sort((a, b) => b.length - a.length);
-  const abbrRx = aKeys.length ? `(?:\\b${aKeys.join("\\b)|(?:\\b")}\\b)` : null;
+  const abbrRx = aKeys.length
+    ? `(?:\\b${aKeys.join("\\b)|(?:\\b")}\\b)`
+    : null;
 
   // PROCESSING
   const txts = window.$.fn.allTextNodes.call([document.body], ["pre"]);
@@ -41,7 +43,6 @@ export function run(conf) {
       (abbrRx ? `|${abbrRx}` : "") +
       ")"
   );
-
   for (const txt of txts) {
     const subtxt = txt.data.split(rx);
     if (subtxt.length === 1) continue;
@@ -60,8 +61,7 @@ export function run(conf) {
           )
         ) {
           matched = matched.split(/\s+/).join(" ");
-          df.appendChild(hyperHTML`
-            <em class="rfc2119" title="${matched}">${matched}</em>`);
+          df.appendChild(hyperHTML`<em class="rfc2119" title="${matched}">${matched}</em>`);
           // remember which ones were used
           conf.respecRFC2119[matched] = true;
         } else if (/^\[\[/.test(matched)) {
@@ -83,8 +83,7 @@ export function run(conf) {
             if (norm) conf.normativeReferences.add(ref);
             else conf.informativeReferences.add(ref);
             df.appendChild(document.createTextNode("["));
-            df.appendChild(hyperHTML`
-              <cite><a class="bibref" href="${`#bib-${ref}`}">${ref}</a></cite>`);
+            df.appendChild(hyperHTML`<cite><a class="bibref" href="${`#bib-${ref}`}">${ref}</a></cite>`);
             df.appendChild(document.createTextNode("]"));
           }
         } else if (abbrMap.has(matched)) {
@@ -92,13 +91,14 @@ export function run(conf) {
           if (txt.parentNode.tagName === "ABBR")
             df.appendChild(document.createTextNode(matched));
           else
-            df.appendChild(hyperHTML`
-              <abbr title="${abbrMap.get(matched)}">${matched}</abbr>`);
+            df.appendChild(hyperHTML`<abbr title="${abbrMap.get(matched)}">${matched}</abbr>`);
         } else {
           // FAIL -- not sure that this can really happen
           pub(
             "error",
-            `Found token '${matched}' but it does not correspond to anything`
+            `Found token '${
+              matched
+            }' but it does not correspond to anything`
           );
         }
       }
