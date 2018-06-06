@@ -119,7 +119,6 @@ function bibref(conf) {
     informativeReferences: informs,
     normativeReferences: norms,
   } = getRefKeys(conf);
-  const aliases = {};
 
   if (!informs.length && !norms.length && !conf.refNote) return;
   const refsec = hyperHTML`
@@ -129,50 +128,66 @@ function bibref(conf) {
     </section>`;
 
   for (const type of ["Normative", "Informative"]) {
-    const refs = type === "Normative" ? norms : informs;
+    let refs = type === "Normative" ? norms : informs;
     if (!refs.length) continue;
-
-    const l10nRefs =
-      type === "Normative"
-        ? conf.l10n.norm_references
-        : conf.l10n.info_references;
 
     const sec = hyperHTML`
       <section>
-        <h3>${l10nRefs}</h3>
+        <h3>${
+          type === "Normative"
+            ? conf.l10n.norm_references
+            : conf.l10n.info_references
+        }</h3>
       </section>`;
     addId(sec);
 
     refs.sort((a, b) =>
       a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
     );
+    refs = refs.map(getRefContent);
+
+    const aliases = refs.reduce((aliases, { key, ref }) => {
+      aliases[key] = aliases[key] || [];
+      if (!aliases[key].includes(ref.toLowerCase())) aliases[key].push(ref);
+      return aliases;
+    }, {});
+    const refsToAdd = refs.reduce((refsToAdd, ref) => {
+      if (!refsToAdd.find(r => r.key === ref.key)) refsToAdd.push(ref);
+      return refsToAdd;
+    }, []);
+
     sec.appendChild(hyperHTML`
       <dl class='bibliography'>
-        ${refs.map(addRef)}
+        ${refsToAdd.map(ref => showRef(ref, aliases))}
       </dl>`);
-
     refsec.appendChild(sec);
   }
   document.body.appendChild(refsec);
 
-  for (const k in aliases) {
-    if (aliases[k].length > 1) {
-      let msg = `[${k}] is referenced in ${aliases[k].length} ways: `;
-      msg += `(${aliases[k].map(item => `'${item}'`).join(", ")}). `;
-      msg += `This causes duplicate entries in the References section.`;
-      pub("warn", msg);
-    }
-  }
+  // QUESTION: DO WE STILL NEED TO EMIT WARNING?
+  // for (const k in aliases) {
+  //   if (aliases[k].length > 1) {
+  //     let msg = `[${k}] is referenced in ${aliases[k].length} ways: `;
+  //     msg += `(${aliases[k].map(item => `'${item}'`).join(", ")}). `;
+  //     msg += `This causes duplicate entries in the References section.`;
+  //     pub("warn", msg);
+  //   }
+  // }
 
   for (const item in badrefs) {
     const msg = `Bad reference: [\`${item}\`] (appears ${badrefs[item]} times)`;
     if (badrefs.hasOwnProperty(item)) pub("error", msg);
   }
 
-  function addRef(ref) {
+  /**
+   * returns refcontent and unique key for a reference among its aliases
+   * and warns about circular references
+   * @param {String} ref
+   */
+  function getRefContent(ref) {
     let refcontent = conf.biblio[ref];
-    let key = ref;
-    const circular = new Set([ref]);
+    let key = ref.toLowerCase();
+    const circular = new Set([key]);
     while (refcontent && refcontent.aliasOf) {
       if (circular.has(refcontent.aliasOf)) {
         refcontent = null;
@@ -184,19 +199,28 @@ function bibref(conf) {
         circular.add(key);
       }
     }
-    aliases[key] = aliases[key] || [];
-    if (!aliases[key].includes(ref)) aliases[key].push(ref);
-    const dtId = "bib-" + ref;
+    return { ref, key: key.toLowerCase(), refcontent };
+  }
+
+  // renders a reference
+  function showRef({ ref, key, refcontent }, aliases) {
+    const refId = "bib-" + ref.toLowerCase();
     if (refcontent) {
+      // fix biblio reference URLs
+      aliases[key].forEach(alias => {
+        document
+          .querySelectorAll(`[href="#bib-${alias.toLowerCase()}"]`)
+          .forEach(a => a.setAttribute("href", "#" + refId));
+      });
       return hyperHTML`
-        <dt id="${dtId}">[${ref}]</dt>
+        <dt id="${refId}">[${ref}]</dt>
         <dd>${{ html: stringifyReference(refcontent) }}</dd>
       `;
     } else {
       if (!badrefs[ref]) badrefs[ref] = 0;
       badrefs[ref]++;
       return hyperHTML`
-        <dt id="${dtId}">[${ref}]</dt>
+        <dt id="${refId}">[${ref}]</dt>
         <dd><em class="respec-offending-element">Reference not found.</em></dd>
       `;
     }
@@ -220,8 +244,9 @@ async function updateFromNetwork(refs, options = { forceUpdate: false }) {
     return;
   }
   let response;
+  const refsToGet = [...new Set(refs.map(ref => ref.toLowerCase()))];
   try {
-    response = await fetch(bibrefsURL.href + refs.join(","));
+    response = await fetch(bibrefsURL.href + refsToGet.join(","));
   } catch (err) {
     console.error(err);
     return null;

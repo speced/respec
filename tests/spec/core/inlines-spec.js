@@ -23,21 +23,27 @@ describe("Core - Inlines", function() {
       },
     };
     const doc = await makeRSDoc(ops);
-    var $inl = $("#inlines", doc);
-    var $nr = $("#normative-references", doc);
-    var $ir = $("#informative-references", doc);
-    expect($inl.find("abbr[title='ABBR-TIT']:contains('ABBR')").length).toEqual(
-      2
-    );
-    expect($inl.find("cite a:contains('DAHU')").attr("href")).toEqual(
-      "#bib-DAHU"
-    );
-    expect($inl.find("cite a:contains('REX')").attr("href")).toEqual(
-      "#bib-REX"
-    );
-    expect($nr.find("dl dt").length).toEqual(1);
-    expect($nr.find("dl dt:contains('[DAHU]')").length).toEqual(1);
-    expect($ir.find("dl dt").length).toEqual(1);
-    expect($ir.find("dl dt:contains('[REX]')").length).toEqual(1);
+    const inl = doc.getElementById("inlines");
+
+    const nr = doc.getElementById("normative-references");
+    const ir = doc.getElementById("informative-references");
+
+    const abbr = inl.querySelectorAll("abbr[title='ABBR-TIT']");
+    expect(abbr.length).toEqual(2);
+    expect([...abbr].every(({ textContent: t }) => t === "ABBR")).toBeTruthy();
+
+    const [linkDahu, linkRex] = [...inl.querySelectorAll("cite a")];
+    expect(linkDahu.textContent).toEqual("DAHU");
+    expect(linkDahu.getAttribute("href")).toEqual("#bib-dahu");
+    expect(linkRex.textContent).toEqual("REX");
+    expect(linkRex.getAttribute("href")).toEqual("#bib-rex");
+
+    const nrDt = [...nr.querySelectorAll("dl dt")];
+    expect(nrDt.length).toEqual(1);
+    expect(nrDt[0].textContent).toEqual("[DAHU]");
+
+    const irDt = [...ir.querySelectorAll("dl dt")];
+    expect(irDt.length).toEqual(1);
+    expect(irDt[0].textContent).toEqual("[REX]");
   });
 });
