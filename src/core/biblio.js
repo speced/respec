@@ -163,11 +163,11 @@ function bibref(conf) {
 
     // fix biblio reference URLs
     refsToAdd.forEach(({ ref, key }) => {
-      const refId = "bib-" + ref.toLowerCase();
+      const refUrl = "#bib-" + ref.toLowerCase();
       aliases[key].forEach(alias => {
         document
           .querySelectorAll(`[href="#bib-${alias.toLowerCase()}"]`)
-          .forEach(a => a.setAttribute("href", "#" + refId));
+          .forEach(a => a.setAttribute("href", refUrl));
       });
     });
 
@@ -193,7 +193,7 @@ function bibref(conf) {
    */
   function getRefContent(ref) {
     let refcontent = conf.biblio[ref];
-    let key = ref.toLowerCase();
+    let key = ref;
     const circular = new Set([key]);
     while (refcontent && refcontent.aliasOf) {
       if (circular.has(refcontent.aliasOf)) {

@@ -80,10 +80,8 @@ export function run(conf) {
               ref = ref.replace(/^!/, "");
             }
             // contrary to before, we always insert the link
-            const refs = norm
-              ? conf.normativeReferences
-              : conf.informativeReferences;
-            refs.add(ref);
+            if (norm) conf.normativeReferences.add(ref);
+            else conf.informativeReferences.add(ref);
             df.appendChild(document.createTextNode("["));
             const refHref = `#bib-${ref.toLowerCase()}`;
             df.appendChild(
