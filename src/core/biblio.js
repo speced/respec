@@ -114,7 +114,6 @@ export function stringifyReference(ref) {
 
 function bibref(conf) {
   // this is in fact the bibref processing portion
-  const badrefs = {};
   const {
     informativeReferences: informs,
     normativeReferences: norms,
@@ -158,26 +157,34 @@ function bibref(conf) {
 
     sec.appendChild(hyperHTML`
       <dl class='bibliography'>
-        ${refsToAdd.map(ref => showRef(ref, aliases))}
+        ${refsToAdd.map(showRef)}
       </dl>`);
     refsec.appendChild(sec);
+
+    // fix biblio reference URLs
+    refsToAdd.forEach(({ ref, key }) => {
+      const refId = "bib-" + ref.toLowerCase();
+      aliases[key].forEach(alias => {
+        document
+          .querySelectorAll(`[href="#bib-${alias.toLowerCase()}"]`)
+          .forEach(a => a.setAttribute("href", "#" + refId));
+      });
+    });
+
+    // warn about bad references
+    refsToAdd.filter(({ refcontent }) => !refcontent).forEach(({ ref }) => {
+      const badrefs = [
+        ...document.querySelectorAll(`[href="#bib-${ref.toLowerCase()}"]`),
+      ].filter(({ textContent: t }) => t.toLowerCase() === ref.toLowerCase());
+      const msg = `Bad reference: [\`${ref}\`] (appears ${
+        badrefs.length
+      } times)`;
+      pub("error", msg);
+      console.warn("Bad references: ", badrefs);
+    });
   }
+
   document.body.appendChild(refsec);
-
-  // QUESTION: DO WE STILL NEED TO EMIT WARNING?
-  // for (const k in aliases) {
-  //   if (aliases[k].length > 1) {
-  //     let msg = `[${k}] is referenced in ${aliases[k].length} ways: `;
-  //     msg += `(${aliases[k].map(item => `'${item}'`).join(", ")}). `;
-  //     msg += `This causes duplicate entries in the References section.`;
-  //     pub("warn", msg);
-  //   }
-  // }
-
-  for (const item in badrefs) {
-    const msg = `Bad reference: [\`${item}\`] (appears ${badrefs[item]} times)`;
-    if (badrefs.hasOwnProperty(item)) pub("error", msg);
-  }
 
   /**
    * returns refcontent and unique key for a reference among its aliases
@@ -203,22 +210,14 @@ function bibref(conf) {
   }
 
   // renders a reference
-  function showRef({ ref, key, refcontent }, aliases) {
+  function showRef({ ref, refcontent }) {
     const refId = "bib-" + ref.toLowerCase();
     if (refcontent) {
-      // fix biblio reference URLs
-      aliases[key].forEach(alias => {
-        document
-          .querySelectorAll(`[href="#bib-${alias.toLowerCase()}"]`)
-          .forEach(a => a.setAttribute("href", "#" + refId));
-      });
       return hyperHTML`
         <dt id="${refId}">[${ref}]</dt>
         <dd>${{ html: stringifyReference(refcontent) }}</dd>
       `;
     } else {
-      if (!badrefs[ref]) badrefs[ref] = 0;
-      badrefs[ref]++;
       return hyperHTML`
         <dt id="${refId}">[${ref}]</dt>
         <dd><em class="respec-offending-element">Reference not found.</em></dd>
