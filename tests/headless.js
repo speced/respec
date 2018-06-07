@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 const testURLs = [
-  `file:///${__dirname}/../examples/whitepapertest.html`,
-  `file:///${__dirname}/../examples/whitepapertest.build.html`,
+  "https://tools.geostandaarden.nl/respec/test/whitepaper/"
 ];
 const colors = require("colors");
 const { exec } = require("child_process");
