@@ -114,12 +114,10 @@ export function stringifyReference(ref) {
 
 function bibref(conf) {
   // this is in fact the bibref processing portion
-  const badrefs = {};
   const {
     informativeReferences: informs,
     normativeReferences: norms,
   } = getRefKeys(conf);
-  const aliases = {};
 
   if (!informs.length && !norms.length && !conf.refNote) return;
   const refsec = hyperHTML`
@@ -132,47 +130,78 @@ function bibref(conf) {
     const refs = type === "Normative" ? norms : informs;
     if (!refs.length) continue;
 
-    const l10nRefs =
-      type === "Normative"
-        ? conf.l10n.norm_references
-        : conf.l10n.info_references;
-
     const sec = hyperHTML`
       <section>
-        <h3>${l10nRefs}</h3>
+        <h3>${
+          type === "Normative"
+            ? conf.l10n.norm_references
+            : conf.l10n.info_references
+        }</h3>
       </section>`;
     addId(sec);
 
     refs.sort((a, b) =>
       a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
     );
+    const refObjects = refs.map(getRefContent);
+
+    const aliases = refObjects.reduce((aliases, { key, ref }) => {
+      const keys = !aliases.has(key)
+        ? aliases.set(key, []).get(key)
+        : aliases.get(key);
+      if (!keys.includes(ref.toLowerCase())) keys.push(ref);
+      return aliases;
+    }, new Map());
+    const refsToAdd = refObjects.reduce((refsToAdd, ref) => {
+      if (!refsToAdd.find(r => r.key === ref.key)) refsToAdd.push(ref);
+      return refsToAdd;
+    }, []);
+
     sec.appendChild(hyperHTML`
       <dl class='bibliography'>
-        ${refs.map(addRef)}
+        ${refsToAdd.map(showRef)}
       </dl>`);
-
     refsec.appendChild(sec);
+
+    // fix biblio reference URLs
+    refsToAdd
+      .map(({ ref, key }) => {
+        const refUrl = "#bib-" + ref.toLowerCase();
+        const selectors = aliases
+          .get(key)
+          .map(alias => `[href="#bib-${alias.toLowerCase()}"]`)
+          .join(",");
+        const elems = document.querySelectorAll(selectors);
+        return { refUrl, elems };
+      })
+      .forEach(({ refUrl, elems }) => {
+        elems.forEach(a => a.setAttribute("href", refUrl));
+      });
+
+    // warn about bad references
+    refsToAdd.filter(({ refcontent }) => !refcontent).forEach(({ ref }) => {
+      const badrefs = [
+        ...document.querySelectorAll(`[href="#bib-${ref.toLowerCase()}"]`),
+      ].filter(({ textContent: t }) => t.toLowerCase() === ref.toLowerCase());
+      const msg = `Bad reference: [\`${ref}\`] (appears ${
+        badrefs.length
+      } times)`;
+      pub("error", msg);
+      console.warn("Bad references: ", badrefs);
+    });
   }
+
   document.body.appendChild(refsec);
 
-  for (const k in aliases) {
-    if (aliases[k].length > 1) {
-      let msg = `[${k}] is referenced in ${aliases[k].length} ways: `;
-      msg += `(${aliases[k].map(item => `'${item}'`).join(", ")}). `;
-      msg += `This causes duplicate entries in the References section.`;
-      pub("warn", msg);
-    }
-  }
-
-  for (const item in badrefs) {
-    const msg = `Bad reference: [\`${item}\`] (appears ${badrefs[item]} times)`;
-    if (badrefs.hasOwnProperty(item)) pub("error", msg);
-  }
-
-  function addRef(ref) {
+  /**
+   * returns refcontent and unique key for a reference among its aliases
+   * and warns about circular references
+   * @param {String} ref
+   */
+  function getRefContent(ref) {
     let refcontent = conf.biblio[ref];
     let key = ref;
-    const circular = new Set([ref]);
+    const circular = new Set([key]);
     while (refcontent && refcontent.aliasOf) {
       if (circular.has(refcontent.aliasOf)) {
         refcontent = null;
@@ -184,19 +213,20 @@ function bibref(conf) {
         circular.add(key);
       }
     }
-    aliases[key] = aliases[key] || [];
-    if (!aliases[key].includes(ref)) aliases[key].push(ref);
-    const dtId = "bib-" + ref;
+    return { ref, key: key.toLowerCase(), refcontent };
+  }
+
+  // renders a reference
+  function showRef({ ref, refcontent }) {
+    const refId = "bib-" + ref.toLowerCase();
     if (refcontent) {
       return hyperHTML`
-        <dt id="${dtId}">[${ref}]</dt>
+        <dt id="${refId}">[${ref}]</dt>
         <dd>${{ html: stringifyReference(refcontent) }}</dd>
       `;
     } else {
-      if (!badrefs[ref]) badrefs[ref] = 0;
-      badrefs[ref]++;
       return hyperHTML`
-        <dt id="${dtId}">[${ref}]</dt>
+        <dt id="${refId}">[${ref}]</dt>
         <dd><em class="respec-offending-element">Reference not found.</em></dd>
       `;
     }
@@ -220,8 +250,9 @@ async function updateFromNetwork(refs, options = { forceUpdate: false }) {
     return;
   }
   let response;
+  const refsToFetch = [...new Set(refs.map(ref => ref.toLowerCase()))];
   try {
-    response = await fetch(bibrefsURL.href + refs.join(","));
+    response = await fetch(bibrefsURL.href + refsToFetch.join(","));
   } catch (err) {
     console.error(err);
     return null;
