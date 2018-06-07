@@ -127,7 +127,7 @@ function bibref(conf) {
     </section>`;
 
   for (const type of ["Normative", "Informative"]) {
-    let refs = type === "Normative" ? norms : informs;
+    const refs = type === "Normative" ? norms : informs;
     if (!refs.length) continue;
 
     const sec = hyperHTML`
@@ -143,14 +143,16 @@ function bibref(conf) {
     refs.sort((a, b) =>
       a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
     );
-    refs = refs.map(getRefContent);
+    const refObjects = refs.map(getRefContent);
 
-    const aliases = refs.reduce((aliases, { key, ref }) => {
-      aliases[key] = aliases[key] || [];
-      if (!aliases[key].includes(ref.toLowerCase())) aliases[key].push(ref);
+    const aliases = refObjects.reduce((aliases, { key, ref }) => {
+      const keys = !aliases.has(key)
+        ? aliases.set(key, []).get(key)
+        : aliases.get(key);
+      if (!keys.includes(ref.toLowerCase())) keys.push(ref);
       return aliases;
-    }, {});
-    const refsToAdd = refs.reduce((refsToAdd, ref) => {
+    }, new Map());
+    const refsToAdd = refObjects.reduce((refsToAdd, ref) => {
       if (!refsToAdd.find(r => r.key === ref.key)) refsToAdd.push(ref);
       return refsToAdd;
     }, []);
@@ -162,14 +164,19 @@ function bibref(conf) {
     refsec.appendChild(sec);
 
     // fix biblio reference URLs
-    refsToAdd.forEach(({ ref, key }) => {
-      const refUrl = "#bib-" + ref.toLowerCase();
-      aliases[key].forEach(alias => {
-        document
-          .querySelectorAll(`[href="#bib-${alias.toLowerCase()}"]`)
-          .forEach(a => a.setAttribute("href", refUrl));
+    refsToAdd
+      .map(({ ref, key }) => {
+        const refUrl = "#bib-" + ref.toLowerCase();
+        const selectors = aliases
+          .get(key)
+          .map(alias => `[href="#bib-${alias.toLowerCase()}"]`)
+          .join(",");
+        const elems = document.querySelectorAll(selectors);
+        return { refUrl, elems };
+      })
+      .forEach(({ refUrl, elems }) => {
+        elems.forEach(a => a.setAttribute("href", refUrl));
       });
-    });
 
     // warn about bad references
     refsToAdd.filter(({ refcontent }) => !refcontent).forEach(({ ref }) => {
@@ -243,9 +250,9 @@ async function updateFromNetwork(refs, options = { forceUpdate: false }) {
     return;
   }
   let response;
-  const refsToGet = [...new Set(refs.map(ref => ref.toLowerCase()))];
+  const refsToFetch = [...new Set(refs.map(ref => ref.toLowerCase()))];
   try {
-    response = await fetch(bibrefsURL.href + refsToGet.join(","));
+    response = await fetch(bibrefsURL.href + refsToFetch.join(","));
   } catch (err) {
     console.error(err);
     return null;

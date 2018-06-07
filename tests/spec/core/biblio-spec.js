@@ -111,7 +111,7 @@ describe("W3C — Bibliographic References", () => {
     const ops = makeStandardOps({ localBiblio }, body);
     const doc = await makeRSDoc(ops);
 
-    const refsDom = [...doc.querySelectorAll("p#refs-dom cite a")]
+    const refsDom = [...doc.querySelectorAll("p#refs-dom cite a")];
     expect(refsDom.length).toEqual(3);
     expect(refsDom[0].textContent).toEqual("DOM");
     expect(refsDom[1].textContent).toEqual("DOM4");
