@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="content-type">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel='shortcut icon' type='image/x-icon' href='https://tools.geostandaarden.nl/respec/style/logos/Geonovum.ico' />
+  <title>[Titel van het document]</title>
+  <script src="js/config.js" class="remove"></script>
+  <script src="https://tools.geostandaarden.nl/respec/test/builds/respec-geonovum.js" class="remove" async></script>
+</head>
+
+<body>
+  <section id='abstract'>
+    <p>
+      Samenvatting van het document - verplicht onderdeel.
+    </p>
+  </section>
+  <section id='sotd'>
+    <p>
+      Status van het document - verplicht onderdeel. Een deel van de tekst wordt hierin gegenereerd door ReSpec op basis van de configuratieparameter <a href="https://github.com/geonovum/respec/wiki/specStatus">specStatus</a>. Je kan dit zelf aanvullen
+      door hier wat te typen.
+    </p>
+  </section>
+  <section id="conformance">
+    <p>Informatie over conformiteit.</p>
+  </section>
+  <section id="firstchapter">
+    <h2>[Titel van eerste hoofdstuk]</h2>
+    <p>Tekst van eerste hoofdstuk.</p>
+    <p>Dit is een klein voorbeeld hoofdstuk in HTML, maar als je niet bekend bent met HTML is het gemakkelijker om in Markdown te werken. Dit template bevat voorbeelden voor HTML. Er is ook <a href="../new_respec_gn_doc/index.html">een Markdown voorbeeld</a>.
+    </p>
+    <aside class="note">
+      <p>ReSpec nummert de secties automatisch en genereert een table of contents.</p>
+    </aside>
+  </section>
+  <section id="examples">
+    <h2>HTML voorbeelden</h2>
+    <p>In dit document staan verder HTML voorbeelden voor een ReSpec document.</p>
+    <section id="baseelements">
+      <h3>Basis elementen</h3>
+      <p>Een alinea, waarna een opsomming volgt:</p>
+      <ul>
+        <li>Item in opsomming</li>
+        <li>Item in opsomming</li>
+      </ul>
+      <p>Een stukje <em>tekst met extra nadruk</em>.</p>
+      <section id="linksandreferences">
+        <h4>Links en referenties</h4>
+        <p>Alinea met een <a href="#firstchapter">interne link naar het eerste hoofdstuk</a>. Voor zo'n interne link is het wel nodig op het <code>section</code> element het <code>id</code>-attribuut in te vullen met een unieke waarde.
+          Dit is een voorbeeld van een <a href="https://example.com">link naar een externe website</a>.</p>
+        <p>
+          ReSpec ondersteunt ook een bibliografie. Voorbeeld van een referentie naar een document [[DOC-REF1]]. De details van de referentie staan in de <code>localBiblio</code> in <a href='js/config.js'>js/config.js</a>.
+        </p>
+      </section>
+      <section id="examplennonnormative" class="informative">
+        <h4>Een informatieve paragraaf</h4>
+        <p>Als binnen een normatief document een niet-normatieve / alleen informatieve paragraaf moet staan, gebruik dan de CSS class <code>informative</code> op het <code>section</code> element. Dus: (<code>&lt;section id="mijnid" class="informative"&gt;</code>).
+          Er komt dan autmatisch onder de titel te staan <em>Dit onderdeel is niet normatief.</em></p>
+      </section>
+      <section>
+        <h4>Figuren</h4>
+        <p>Er zijn verschillende soorten figuren. Statische maar ook schaalbare / in te zoomen afbeeldingen. Dit kan handig zijn voor bijvoorbeeld groteere UML schema's. Schaalbare afbeeldingen kunnen in SVG of PNG formaat zijn. Bijvoorbeeld:</p>
+        <figure>
+          <!-- TODO: link naar afbeelding maken -->
+          <img src="media/fig1.jpg" height="250">
+          <figcaption>Voorbeeld caption bij een statische afbeelding</figcaption>
+        </figure>
+        <figure id="figure-svg" class="scalable">
+          <img src="https://tools.geostandaarden.nl/respec/media/logos/sample.svg" alt="sample-svg" height="300" width="300">
+          <figcaption>SVG voorbeeld, in te zoomen.</figcaption>
+        </figure>
+        <figure id="figure-png" class="scalable">
+          <img src="https://tools.geostandaarden.nl/respec/data/dynamic/BRO%20Bodem%20en%20Grondwatertrappenkaart.png" alt="sample-png">
+          <figcaption>PNG voorbeeld, in te zoomen.</figcaption>
+        </figure>
+      </section>
+    </section>
+    <section id="specialelements">
+      <h3>Opmaak van bijzondere elementen</h3>
+      <section id="normative">
+        <h4>Normatieve elementen</h4>
+        <p>Een normatief element kan via een aparte CSS class eenvoudig opgemaakt worden:</p>
+        <p class='advisement'>Advisements are normative sections styled to evoke special attention and are set apart from other normative text with <code>class="advisement"</code></p>
+      </section>
+      <section id="code">
+        <h4>Code voorbeelden</h4>
+        <p>Alinea met wat code in de tekst: <code>korte code</code> en in een apart code blok:
+          <pre><code>
+            {
+              name: "Naam Tweede Auteur",
+              company: "Geonovum",
+              companyURL: "http://www.geonovum.nl/",
+            }</code>
+          </pre>
+        </p>
+      </section>
+      <section id="notesandissues">
+        <h4>Notities, waarschuwingen en issues</h4>
+        <p class='note' title='Titel van een notitie'>
+          Tekst van een notitie.
+        </p>
+        <p>
+          <span class='issue'>This is clearly an inline issue.</span>
+          <span class="issue"><span class="marker">ISSUE</span>This is clearly an inline issue.</span>
+          <span class='note'>This is clearly an inline note.</span>
+          <span class='note'><span class="marker">NOOT</span>This is clearly an inline note.</span>
+        </p>
+      </section>
+    </section>
+  </section>
+  <!-- Bijlage is een section met class="appendix" -->
+  <section class="appendix">
+    <h2>Een bijlage</h2>
+    <p>Alinea</p>
+  </section>
+  <!-- Table of Figures (tof). https://github.com/Geonovum/respec/wiki/table-of-figures, wordt automatisch gegenereerd. -->
+  <section class="appendix" id="tof"></section>
+</body>
+
+</html>
