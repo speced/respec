@@ -12,7 +12,7 @@ describe("W3C — Defaults", () => {
       "no-headingless-sections": true,
       "privsec-section": true,
       "no-http-props": true,
-      "local-refs-exist": false,
+      "local-refs-exist": true,
       "check-punctuation": false,
     });
     expect(rsConf.license).toEqual("w3c-software-doc");
