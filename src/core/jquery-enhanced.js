@@ -151,5 +151,5 @@ window.$.fn.makeID = function(pfx = "", txt = "", noLC = false) {
 // Returns all the descendant text nodes of an element. Note that those nodes aren't
 // returned as a jQuery array since I'm not sure if that would make too much sense.
 window.$.fn.allTextNodes = function(exclusions) {
-  return allTextNodes(this[0], exclusions);
+  return allTextNodes(this[0], new Set(exclusions));
 };

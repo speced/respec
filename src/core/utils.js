@@ -586,18 +586,19 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
 /**
  * Returns all the descendant text nodes of an element.
  * @param {Node} elem
- * @param {Array:String} exclusions node types (localName) to exclude
+ * @param {Set:String} exclusions node localName to exclude
  * @returns {Array:String}
  */
 export function allTextNodes(elem, exclusions) {
-  const excl = new Set(exclusions);
   const textNodes = [];
   getTextNodes(elem);
   return textNodes;
 
   function getTextNodes(node) {
-    if (node.nodeType === 1 && excl.has(node.localName.toLowerCase())) return;
-    if (node.nodeType === 3) {
+    if (node.nodeType === Node.ELEMENT_NODE && exclusions.has(node.localName)) {
+      return;
+    }
+    if (node.nodeType === Node.TEXT_NODE) {
       textNodes.push(node);
     } else {
       for (const child of node.childNodes) {
