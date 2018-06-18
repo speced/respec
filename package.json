@@ -37,7 +37,7 @@
     "jasmine-core": "^3.1.0",
     "jasmine-reporters": "^2.3.1",
     "jquery": "^3.3.1",
-    "karma": "^2.0.2",
+    "karma": "^2.0.3",
     "karma-chrome-launcher": "^2.2.0",
     "karma-detect-browsers": "^2.3.2",
     "karma-edge-launcher": "^0.4.2",
@@ -53,10 +53,10 @@
     "mocha": "^5.2.0",
     "moment": "^2.22.2",
     "pluralize": "^7.0.0",
-    "prettier": "^1.13.4",
+    "prettier": "^1.13.5",
     "requirejs": "^2.3.5",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
-    "uglify-es": "3.3.7",
+    "uglify-es": "3.3.9",
     "url-search-params": "^0.10.0",
     "webidl2": "^10.3.3"
   },
@@ -87,12 +87,12 @@
     "epipebomb": "^1.0.0",
     "fs-extra": "^6.0.1",
     "highlight.js": "github:marcoscaceres/highlight.js#7b144b3b83ce296d5b29c5e4fc2ea2a65e9d3f32",
-    "hyperhtml": "^2.10.6",
+    "hyperhtml": "^2.10.11",
     "loading-indicator": "^2.0.0",
     "marked": "^0.4.0",
     "prompt": "^1.0.0",
-    "puppeteer": "^1.4.0",
-    "snyk": "^1.82.1"
+    "puppeteer": "^1.5.0",
+    "snyk": "^1.83.0"
   },
   "prettier": {
     "trailingComma": "es5"
