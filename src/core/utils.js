@@ -585,25 +585,26 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
 
 /**
  * Returns all the descendant text nodes of an element.
- * @param {Node} elem
- * @param {Set:String} exclusions node localName to exclude
+ * @param {Node} el
+ * @param {Array:String} exclusions node localName to exclude
  * @returns {Array:String}
  */
-export function allTextNodes(elem, exclusions) {
+export function getTextNodes(el, exclusions = []) {
+  const acceptNode = node => {
+    return exclusions.includes(node.parentElement.localName)
+      ? NodeFilter.FILTER_REJECT
+      : NodeFilter.FILTER_ACCEPT;
+  };
+  const nodeIterator = document.createNodeIterator(
+    el,
+    NodeFilter.SHOW_TEXT,
+    { acceptNode },
+    false
+  );
   const textNodes = [];
-  getTextNodes(elem);
-  return textNodes;
-
-  function getTextNodes(node) {
-    if (node.nodeType === Node.ELEMENT_NODE && exclusions.has(node.localName)) {
-      return;
-    }
-    if (node.nodeType === Node.TEXT_NODE) {
-      textNodes.push(node);
-    } else {
-      for (const child of node.childNodes) {
-        getTextNodes(child);
-      }
-    }
+  let node;
+  while ((node = nodeIterator.nextNode())) {
+    textNodes.push(node);
   }
+  return textNodes;
 }
