@@ -64,6 +64,7 @@ const w3cDefaults = {
     "local-refs-exist": false,
   },
   pluralize: false,
+  highlightVars: true,
   doJsonLd: false,
   license: "w3c-software-doc",
   specStatus: "base",
