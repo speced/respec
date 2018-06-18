@@ -56,7 +56,7 @@
     "prettier": "^1.13.5",
     "requirejs": "^2.3.5",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
-    "uglify-es": "3.3.9",
+    "uglify-es": "3.3.7",
     "url-search-params": "^0.10.0",
     "webidl2": "^10.3.3"
   },
