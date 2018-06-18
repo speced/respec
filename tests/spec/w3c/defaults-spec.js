@@ -15,6 +15,7 @@ describe("W3C — Defaults", () => {
       "local-refs-exist": true,
       "check-punctuation": false,
     });
+    expect(rsConf.highlightVars).toEqual(true);
     expect(rsConf.license).toEqual("w3c-software-doc");
     expect(rsConf.specStatus).toEqual("base");
   });
@@ -33,6 +34,7 @@ describe("W3C — Defaults", () => {
         license: "c0",
         specStatus: "unofficial",
         shortName: "foo",
+        highlightVars: false,
       },
       body: makeDefaultBody(),
     };
@@ -46,6 +48,7 @@ describe("W3C — Defaults", () => {
       "check-punctuation": false,
       "fake-linter-rule": "foo",
     });
+    expect(rsConf.highlightVars).toEqual(false);
     expect(rsConf.license).toEqual("c0");
     expect(rsConf.specStatus).toEqual("unofficial");
   });
