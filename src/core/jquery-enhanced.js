@@ -1,5 +1,5 @@
 import { pub } from "core/pubsubhub";
-import { norm, addId } from "core/utils";
+import { norm, addId, getTextNodes } from "core/utils";
 import "deps/jquery";
 
 export const name = "core/jquery-enhanced";
@@ -151,18 +151,5 @@ window.$.fn.makeID = function(pfx = "", txt = "", noLC = false) {
 // Returns all the descendant text nodes of an element. Note that those nodes aren't
 // returned as a jQuery array since I'm not sure if that would make too much sense.
 window.$.fn.allTextNodes = function(exclusions) {
-  var textNodes = [],
-    excl = {};
-  for (var i = 0, n = exclusions.length; i < n; i++) excl[exclusions[i]] = true;
-
-  function getTextNodes(node) {
-    if (node.nodeType === 1 && excl[node.localName.toLowerCase()]) return;
-    if (node.nodeType === 3) textNodes.push(node);
-    else {
-      for (var i = 0, len = node.childNodes.length; i < len; ++i)
-        getTextNodes(node.childNodes[i]);
-    }
-  }
-  getTextNodes(this[0]);
-  return textNodes;
+  return getTextNodes(this[0], exclusions);
 };

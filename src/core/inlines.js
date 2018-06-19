@@ -15,6 +15,7 @@
 //    the counter is not used.
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
+import { getTextNodes } from "core/utils";
 export const name = "core/inlines";
 
 export function run(conf) {
@@ -33,7 +34,7 @@ export function run(conf) {
   const abbrRx = aKeys.length ? `(?:\\b${aKeys.join("\\b)|(?:\\b")}\\b)` : null;
 
   // PROCESSING
-  const txts = window.$.fn.allTextNodes.call([document.body], ["pre"]);
+  const txts = getTextNodes(document.body, ["pre"]);
   const rx = new RegExp(
     "(\\bMUST(?:\\s+NOT)?\\b|\\bSHOULD(?:\\s+NOT)?\\b|\\bSHALL(?:\\s+NOT)?\\b|" +
       "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +

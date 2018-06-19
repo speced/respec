@@ -582,3 +582,29 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
   elem.id = id;
   return id;
 }
+
+/**
+ * Returns all the descendant text nodes of an element.
+ * @param {Node} el
+ * @param {Array:String} exclusions node localName to exclude
+ * @returns {Array:String}
+ */
+export function getTextNodes(el, exclusions = []) {
+  const acceptNode = node => {
+    return exclusions.includes(node.parentElement.localName)
+      ? NodeFilter.FILTER_REJECT
+      : NodeFilter.FILTER_ACCEPT;
+  };
+  const nodeIterator = document.createNodeIterator(
+    el,
+    NodeFilter.SHOW_TEXT,
+    { acceptNode },
+    false
+  );
+  const textNodes = [];
+  let node;
+  while ((node = nodeIterator.nextNode())) {
+    textNodes.push(node);
+  }
+  return textNodes;
+}
