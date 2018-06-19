@@ -132,17 +132,16 @@ function bibref(conf) {
 
     const sec = hyperHTML`
       <section>
-        <h3>${
-          type === "Normative"
-            ? conf.l10n.norm_references
-            : conf.l10n.info_references
-        }</h3>
+        <h3>${type === "Normative"
+          ? conf.l10n.norm_references
+          : conf.l10n.info_references}</h3>
       </section>`;
     addId(sec);
 
     refs.sort((a, b) =>
       a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
     );
+    const getRefContent = makeBibKeyFinder();
     const refObjects = refs.map(getRefContent);
 
     const aliases = refObjects.reduce((aliases, { key, ref }) => {
@@ -183,9 +182,7 @@ function bibref(conf) {
       const badrefs = [
         ...document.querySelectorAll(`[href="#bib-${ref.toLowerCase()}"]`),
       ].filter(({ textContent: t }) => t.toLowerCase() === ref.toLowerCase());
-      const msg = `Bad reference: [\`${ref}\`] (appears ${
-        badrefs.length
-      } times)`;
+      const msg = `Bad reference: [\`${ref}\`] (appears ${badrefs.length} times)`;
       pub("error", msg);
       console.warn("Bad references: ", badrefs);
     });
@@ -198,22 +195,27 @@ function bibref(conf) {
    * and warns about circular references
    * @param {String} ref
    */
-  function getRefContent(ref) {
-    let refcontent = conf.biblio[ref];
-    let key = ref;
-    const circular = new Set([key]);
-    while (refcontent && refcontent.aliasOf) {
-      if (circular.has(refcontent.aliasOf)) {
-        refcontent = null;
-        const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
-        pub("error", msg);
-      } else {
-        key = refcontent.aliasOf;
-        refcontent = conf.biblio[key];
-        circular.add(key);
+  function makeBibKeyFinder() {
+    const keys = Object.keys(conf.biblio);
+    return function getRefContent(ref) {
+      let refcontent = keys.find(
+        key => key.toLocaleLowerCase() === ref.toLocaleLowerCase()
+      );
+      let key = ref;
+      const circular = new Set([key]);
+      while (refcontent && refcontent.aliasOf) {
+        if (circular.has(refcontent.aliasOf)) {
+          refcontent = null;
+          const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
+          pub("error", msg);
+        } else {
+          key = refcontent.aliasOf;
+          refcontent = conf.biblio[key];
+          circular.add(key);
+        }
       }
-    }
-    return { ref, key: key.toLowerCase(), refcontent };
+      return { ref, key: key.toLowerCase(), refcontent };
+    };
   }
 
   // renders a reference
@@ -269,9 +271,13 @@ async function updateFromNetwork(refs, options = { forceUpdate: false }) {
   return data;
 }
 
-export async function resolveRef(key) {
+export async function resolveRef(ref) {
   const biblio = await done;
-  if (!biblio.hasOwnProperty(key)) {
+  const normalRef = ref.toLocaleLowerCase();
+  const key = Object.keys(biblio).find(
+    key => key.toLocaleLowerCase() === normalRef
+  );
+  if (!key) {
     return null;
   }
   const entry = biblio[key];
