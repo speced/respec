@@ -32,6 +32,11 @@ describe("Core - Inlines", function() {
     expect(abbr.length).toEqual(2);
     expect([...abbr].every(({ textContent: t }) => t === "ABBR")).toBeTruthy();
 
+    const rfc2119 = [...inl.querySelectorAll("em.rfc2119")];
+    expect(rfc2119.length).toEqual(2);
+    expect(rfc2119[0].textContent).toEqual("MUST");
+    expect(rfc2119[1].textContent).toEqual("NOT RECOMMENDED");
+
     const [linkDahu, linkRex] = [...inl.querySelectorAll("cite a")];
     expect(linkDahu.textContent).toEqual("DAHU");
     expect(linkDahu.getAttribute("href")).toEqual("#bib-dahu");
