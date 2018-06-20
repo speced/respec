@@ -99,7 +99,8 @@ describe("W3C — Bibliographic References", () => {
 
   it("normalizes aliases", async () => {
     const body = `
-      <p id="refs-dom">[[DOM]] [[DOM4]] [[!dom]]</p>
+      <p id="refs-dom">[[DOM4]] [[DOM]] [[dom]] [[dom4]]</p>
+      <p id="refs-cssom">[[CSSOM-VIEW]] [[cssom-view]] [[cssom-view-1]]</p>
       <p id="refs-local">[[LOCAL]] <a data-cite="LOCAL">PASS<a></p>
     `;
     const localBiblio = {
@@ -112,22 +113,22 @@ describe("W3C — Bibliographic References", () => {
     const doc = await makeRSDoc(ops);
 
     const refsDom = [...doc.querySelectorAll("p#refs-dom cite a")];
-    expect(refsDom.length).toEqual(3);
-    expect(refsDom[0].textContent).toEqual("DOM");
-    expect(refsDom[1].textContent).toEqual("DOM4");
-    expect(refsDom[2].textContent).toEqual("dom");
+    expect(refsDom.length).toEqual(4);
     expect(
-      refsDom.every(a => a.getAttribute("href") === "#bib-dom")
+      refsDom.every(a => a.getAttribute("href") === "#bib-dom4")
     ).toBeTruthy();
 
-    const nr = [...doc.querySelectorAll("#normative-references dt")];
-    expect(nr.length).toEqual(1);
-    expect(nr[0].textContent).toEqual("[dom]");
+    const refsCssom = [...doc.querySelectorAll("p#refs-cssom cite a")];
+    expect(refsCssom.length).toEqual(3);
+    expect(
+      refsCssom.every(a => a.getAttribute("href") === "#bib-cssom-view")
+    ).toBeTruthy();
 
     const ir = [...doc.querySelectorAll("#informative-references dt")];
-    expect(ir.length).toEqual(2);
-    expect(ir[0].textContent).toEqual("[DOM]");
-    expect(ir[1].textContent).toEqual("[LOCAL]");
+    expect(ir.length).toEqual(3);
+    expect(ir[0].textContent).toEqual("[CSSOM-VIEW]");
+    expect(ir[1].textContent).toEqual("[DOM4]"); // first appearing [[TERM]] is used
+    expect(ir[2].textContent).toEqual("[LOCAL]");
 
     const refsLocal = [...doc.querySelectorAll("p#refs-local a")];
     expect(refsLocal[0].textContent).toEqual("LOCAL");
@@ -144,5 +145,55 @@ describe("W3C — Bibliographic References", () => {
     );
     expect(first).toMatch("[a]");
     expect(last).toMatch("[Zzz]");
+  });
+
+  it("shows error if reference doesn't exist", async () => {
+    const body = `<p id="bad-ref">[[bad-ref]]`;
+    const ops = makeStandardOps({ localBiblio }, body);
+    const doc = await makeRSDoc(ops);
+
+    const badRefLink = doc.querySelector("#bad-ref a");
+    expect(badRefLink.textContent).toEqual("bad-ref");
+    expect(badRefLink.getAttribute("href")).toEqual("#bib-bad-ref");
+    const badRef = doc.querySelector("#informative-references dd");
+    expect(badRef).toBeTruthy();
+    expect(badRef.textContent).toEqual("Reference not found.");
+  });
+
+  it("uses cached results from IDB", async () => {
+    const body = `<p id="test">[[dom]] [[DOM4]] [[DOM]] [[dom4]]</p>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const links = [...doc.querySelectorAll("#test a")];
+    expect(links.length).toEqual(4);
+    expect(
+      links.every(a => a.getAttribute("href") === "#bib-dom")
+    ).toBeTruthy();
+    const refs = doc.querySelectorAll("#references dt");
+    expect(refs.length).toEqual(1);
+    expect(refs[0].textContent).toEqual("[dom]");
+  });
+
+  it("fetches fresh results from specref", async () => {
+    const { biblioDB } = await new Promise(resolve => {
+      require(["core/biblio-db"], resolve);
+    });
+
+    await biblioDB.ready;
+    await biblioDB.clear();
+
+    const body = `<p id="test">[[dom]] [[DOM4]] [[DOM]] [[dom4]]</p>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const links = [...doc.querySelectorAll("#test a")];
+    expect(links.length).toEqual(4);
+    expect(
+      links.every(a => a.getAttribute("href") === "#bib-dom")
+    ).toBeTruthy();
+    const refs = doc.querySelectorAll("#references dt");
+    expect(refs.length).toEqual(1);
+    expect(refs[0].textContent).toEqual("[dom]");
   });
 });
