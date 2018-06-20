@@ -140,7 +140,7 @@ function bibref(conf) {
       </section>`;
     addId(sec);
 
-    const refObjects = refs.map(getRefContent).reduce(
+    const { goodRefs, badRefs } = refs.map(getRefContent).reduce(
       (refObjects, ref) => {
         const refType = ref.refcontent ? "goodRefs" : "badRefs";
         refObjects[refType].push(ref);
@@ -149,7 +149,7 @@ function bibref(conf) {
       { goodRefs: [], badRefs: [] }
     );
 
-    const aliases = refObjects.goodRefs.reduce((aliases, ref) => {
+    const aliases = goodRefs.reduce((aliases, ref) => {
       const key = ref.refcontent.id;
       const keys = !aliases.has(key)
         ? aliases.set(key, []).get(key)
@@ -159,7 +159,7 @@ function bibref(conf) {
     }, new Map());
 
     const uniqueRefs = [
-      ...refObjects.goodRefs
+      ...goodRefs
         .reduce((uniqueRefs, ref) => {
           if (!uniqueRefs.has(ref.refcontent.id)) {
             // the condition ensures that only the first used [[TERM]]
@@ -172,7 +172,7 @@ function bibref(conf) {
     ];
 
     const refsToAdd = uniqueRefs
-      .concat(refObjects.badRefs)
+      .concat(badRefs)
       .sort((a, b) =>
         a.ref.toLocaleLowerCase().localeCompare(b.ref.toLocaleLowerCase())
       );
@@ -199,7 +199,7 @@ function bibref(conf) {
       });
 
     // warn about bad references
-    refObjects.badRefs.forEach(({ ref }) => {
+    badRefs.forEach(({ ref }) => {
       const badrefs = [
         ...document.querySelectorAll(
           `a.bibref[href="#bib-${ref.toLowerCase()}"]`
