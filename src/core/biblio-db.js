@@ -270,4 +270,28 @@ export const biblioDB = {
     const db = await this.ready;
     db.close();
   },
+
+  /**
+   * Clears the underlying database
+   */
+  async clear() {
+    const db = await this.ready;
+    const storeNames = [...ALLOWED_TYPES];
+    const stores = await new Promise((resolve, reject) => {
+      const transaction = db.transaction(storeNames, "readwrite");
+      transaction.onerror = () => {
+        reject(
+          new DOMException(transaction.error.message, transaction.error.name)
+        );
+      };
+      resolve(transaction);
+    });
+    const clearStorePromises = storeNames.map(name => {
+      return new Promise(resolve => {
+        const request = stores.objectStore(name).clear();
+        request.onsuccess = resolve;
+      });
+    });
+    Promise.all(clearStorePromises);
+  },
 };
