@@ -227,6 +227,9 @@ function bibref(conf) {
         circular.add(key);
       }
     }
+    if (refcontent && !refcontent.id) {
+      refcontent.id = ref.toLowerCase();
+    }
     return { ref, refcontent };
   }
 
