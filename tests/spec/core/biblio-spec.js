@@ -159,4 +159,41 @@ describe("W3C — Bibliographic References", () => {
     expect(badRef).toBeTruthy();
     expect(badRef.textContent).toEqual("Reference not found.");
   });
+
+  it("uses cached results from IDB", async () => {
+    const body = `<p id="test">[[dom]] [[DOM4]] [[DOM]] [[dom4]]</p>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const links = [...doc.querySelectorAll("#test a")];
+    expect(links.length).toEqual(4);
+    expect(
+      links.every(a => a.getAttribute("href") === "#bib-dom")
+    ).toBeTruthy();
+    const refs = doc.querySelectorAll("#references dt");
+    expect(refs.length).toEqual(1);
+    expect(refs[0].textContent).toEqual("[dom]");
+  });
+
+  it("fetches fresh results from specref", async () => {
+    const { biblioDB } = await new Promise(resolve => {
+      require(["core/biblio-db"], resolve);
+    });
+
+    await biblioDB.ready;
+    await biblioDB.clear();
+
+    const body = `<p id="test">[[dom]] [[DOM4]] [[DOM]] [[dom4]]</p>`;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const links = [...doc.querySelectorAll("#test a")];
+    expect(links.length).toEqual(4);
+    expect(
+      links.every(a => a.getAttribute("href") === "#bib-dom")
+    ).toBeTruthy();
+    const refs = doc.querySelectorAll("#references dt");
+    expect(refs.length).toEqual(1);
+    expect(refs[0].textContent).toEqual("[dom]");
+  });
 });
