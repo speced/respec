@@ -140,22 +140,34 @@ function bibref(conf) {
       </section>`;
     addId(sec);
 
-    refs.sort((a, b) =>
-      a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
-    );
-    const refObjects = refs.map(getRefContent);
+    const refObjects = { good: [], bad: [] };
+    refs.map(getRefContent).reduce((refObjects, ref) => {
+      const refType = ref.refcontent ? "good" : "bad";
+      refObjects[refType].push(ref);
+      return refObjects;
+    }, refObjects);
 
-    const aliases = refObjects.reduce((aliases, { key, ref }) => {
+    const aliases = refObjects.good.reduce((aliases, ref) => {
+      const key = ref.refcontent.id;
       const keys = !aliases.has(key)
         ? aliases.set(key, []).get(key)
         : aliases.get(key);
-      if (!keys.includes(ref.toLowerCase())) keys.push(ref);
+      keys.push(ref.ref);
       return aliases;
     }, new Map());
-    const refsToAdd = refObjects.reduce((refsToAdd, ref) => {
-      if (!refsToAdd.find(r => r.key === ref.key)) refsToAdd.push(ref);
-      return refsToAdd;
-    }, []);
+
+    const uniqueRefs = refObjects.good.reduce((uniqueRefs, ref) => {
+      if (!uniqueRefs.has(ref.refcontent.id)) {
+        // the condition ensures that only the first used [[TERM]]
+        // shows up in #references section
+        uniqueRefs.set(ref.refcontent.id, ref);
+      }
+      return uniqueRefs;
+    }, new Map());
+
+    const refsToAdd = [...uniqueRefs.values(), ...refObjects.bad].sort((a, b) =>
+      a.ref.toLocaleLowerCase().localeCompare(b.ref.toLocaleLowerCase())
+    );
 
     sec.appendChild(hyperHTML`
       <dl class='bibliography'>
@@ -164,12 +176,12 @@ function bibref(conf) {
     refsec.appendChild(sec);
 
     // fix biblio reference URLs
-    refsToAdd
-      .map(({ ref, key }) => {
+    [...uniqueRefs.values()]
+      .map(({ ref, refcontent }) => {
         const refUrl = "#bib-" + ref.toLowerCase();
         const selectors = aliases
-          .get(key)
-          .map(alias => `[href="#bib-${alias.toLowerCase()}"]`)
+          .get(refcontent.id)
+          .map(alias => `a.bibref[href="#bib-${alias.toLowerCase()}"]`)
           .join(",");
         const elems = document.querySelectorAll(selectors);
         return { refUrl, elems };
@@ -179,9 +191,11 @@ function bibref(conf) {
       });
 
     // warn about bad references
-    refsToAdd.filter(({ refcontent }) => !refcontent).forEach(({ ref }) => {
+    refObjects.bad.forEach(({ ref }) => {
       const badrefs = [
-        ...document.querySelectorAll(`[href="#bib-${ref.toLowerCase()}"]`),
+        ...document.querySelectorAll(
+          `a.bibref[href="#bib-${ref.toLowerCase()}"]`
+        ),
       ].filter(({ textContent: t }) => t.toLowerCase() === ref.toLowerCase());
       const msg = `Bad reference: [\`${ref}\`] (appears ${
         badrefs.length
@@ -213,7 +227,7 @@ function bibref(conf) {
         circular.add(key);
       }
     }
-    return { ref, key: key.toLowerCase(), refcontent };
+    return { ref, refcontent };
   }
 
   // renders a reference
@@ -250,7 +264,7 @@ async function updateFromNetwork(refs, options = { forceUpdate: false }) {
     return;
   }
   let response;
-  const refsToFetch = [...new Set(refs.map(ref => ref.toLowerCase()))];
+  const refsToFetch = [...new Set(refs)];
   try {
     response = await fetch(bibrefsURL.href + refsToFetch.join(","));
   } catch (err) {
