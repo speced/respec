@@ -256,4 +256,21 @@ describe("Core - biblioDB", () => {
   });
 
   describe("close() method", () => {});
+
+  describe("clear() method", () => {
+    it("clears entire database", async () => {
+      await biblioDB.add("reference", {
+        title: "will be deleted",
+        id: "get-ref-test",
+      });
+
+      const entryBeforeClear = await biblioDB.has("reference", "get-ref-test");
+      expect(entryBeforeClear).toBeTruthy();
+
+      await biblioDB.clear();
+
+      const entryAfterClear = await biblioDB.has("reference", "get-ref-test");
+      expect(entryAfterClear).toBeFalsy();
+    });
+  });
 });
