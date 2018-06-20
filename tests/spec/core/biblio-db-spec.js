@@ -264,7 +264,7 @@ describe("Core - biblioDB", () => {
         id: "get-ref-test",
       });
 
-      const entryBeforeClear = await biblioDB.has("reference", "has-ref-test");
+      const entryBeforeClear = await biblioDB.has("reference", "get-ref-test");
       expect(entryBeforeClear).toBeTruthy();
 
       await biblioDB.clear();
