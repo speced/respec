@@ -287,7 +287,7 @@ export const biblioDB = {
       resolve(transaction);
     });
     const clearStorePromises = storeNames.map(name => {
-      return new Promise(async resolve => {
+      return new Promise(resolve => {
         const request = stores.objectStore(name).clear();
         request.onsuccess = resolve;
       });

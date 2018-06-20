@@ -260,16 +260,16 @@ describe("Core - biblioDB", () => {
   describe("clear() method", () => {
     it("clears entire database", async () => {
       await biblioDB.add("reference", {
-        title: "PASS",
+        title: "will be deleted",
         id: "get-ref-test",
       });
 
-      const entryBeforeClear = await biblioDB.get("reference", "get-ref-test");
+      const entryBeforeClear = await biblioDB.has("reference", "has-ref-test");
       expect(entryBeforeClear).toBeTruthy();
 
       await biblioDB.clear();
 
-      const entryAfterClear = await biblioDB.get("reference", "get-ref-test");
+      const entryAfterClear = await biblioDB.has("reference", "get-ref-test");
       expect(entryAfterClear).toBeFalsy();
     });
   });
