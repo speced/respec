@@ -374,12 +374,33 @@
           stringifier DOMString identifier();
           // 11
           stringifier DOMString ();
-<!--        ... and other special operations
-     -->};
+          // 12
+          stringifier;
+        };
       </pre>
       <p id="meth-basic-doc" data-dfn-for="MethBasic">
         <dfn>ull</dfn> is a method. Its <dfn data-lt="ull!overload-1">overloaded form</dfn> returns a <code>SuperStar/</code>
       </p>
+    </section>
+    <section>
+      <h2>iterable/maplike/setlike declarations</h2>
+      <pre id='iterable-like' class='idl'>
+        interface Yukina {
+          iterable&lt;DOMString&gt;;
+        };
+
+        interface Sayo {
+          iterable&lt;DOMString, DOMString&gt;;
+        };
+
+        interface Kasumi {
+          maplike&lt;DOMString, DOMString&gt;;
+        };
+
+        interface Arisa {
+          setlike&lt;DOMString&gt;;
+        };
+      </pre>
     </section>
     <section>
       <h2>Comments</h2>

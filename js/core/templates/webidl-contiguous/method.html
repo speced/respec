@@ -1,3 +1,3 @@
 <span class='idlMethod' id="{{obj.idlId}}" data-idl data-title='{{obj.name}}'>{{idn indent}}{{extAttrInline obj indent
-}}{{special}}<span class='idlMethType'>{{idlType obj}}</span> {{pads pad
-}}<span class='idlMethName'>{{#tryLink obj}}{{obj.name}}{{/tryLink}}</span>({{{children}}});</span>
+}}{{special}}{{#if obj.idlType}}<span class='idlMethType'>{{idlType obj}}</span> {{pads pad
+}}{{#if obj.name}}<span class='idlMethName'>{{#tryLink obj}}{{obj.name}}{{/tryLink}}</span>{{/if}}({{{children}}}){{/if}};</span>
