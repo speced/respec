@@ -663,17 +663,13 @@ function writeAttribute(attr, max, indent, maxQualifiers) {
 }
 
 function writeMethod(meth, max, indent) {
-  var paramObjs = !meth.arguments ? [] : meth.arguments
-    .filter(function(it) {
-      return !typeIsWhitespace(it.type);
-    })
-    .map(function(it) {
-      return idlParamTmpl({
-        obj: it,
-        optional: it.optional ? "optional " : "",
-        variadic: it.variadic ? "..." : "",
-      });
-    });
+  var paramObjs = (meth.arguments || [])
+    .filter(it => !typeIsWhitespace(it.type))
+    .map(it => idlParamTmpl({
+      obj: it,
+      optional: it.optional ? "optional " : "",
+      variadic: it.variadic ? "..." : "",
+    }));
   var params = paramObjs.join(", ");
   var len = meth.idlType ? idlType2Text(meth.idlType).length : 0;
   var specialProps = [
@@ -755,11 +751,12 @@ function writeMultiLineComment(comment, indent) {
 }
 
 function writeIterableLike(iterableLike, indent) {
+  const { type } = iterableLike;
   return idlIterableLikeTmpl({
     obj: iterableLike,
     qualifiers: iterableLike.readonly ? "readonly " : "",
     indent: indent,
-    className: `idl${iterableLike.type[0].toUpperCase()}${iterableLike.type.slice(1)}`
+    className: `idl${type[0].toUpperCase()}${type.slice(1)}`
   });
 }
 
