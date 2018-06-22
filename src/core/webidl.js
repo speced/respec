@@ -25,9 +25,8 @@ var idlFieldTmpl = tmpls["field.html"];
 var idlIncludesTmpl = tmpls["includes.html"];
 var idlImplementsTmpl = tmpls["implements.html"];
 var idlInterfaceTmpl = tmpls["interface.html"];
-var idlIterableTmpl = tmpls["iterable.html"];
+var idlIterableLikeTmpl = tmpls["iterable-like.html"];
 var idlLineCommentTmpl = tmpls["line-comment.html"];
-var idlMaplikeTmpl = tmpls["maplike.html"];
 var idlMethodTmpl = tmpls["method.html"];
 var idlMultiLineCommentTmpl = tmpls["multiline-comment.html"];
 var idlParamTmpl = tmpls["param.html"];
@@ -571,12 +570,13 @@ function writeInterfaceDefinition(opt, fixes = {}) {
   for (const it of obj.members) {
     if (
       typeIsWhitespace(it.type) ||
+      it.type === "iterable" ||
       it.type === "maplike" ||
-      it.type === "iterable"
+      it.type === "setlike"
     ) {
       continue;
     }
-    var len = idlType2Text(it.idlType).length;
+    var len = it.idlType ? idlType2Text(it.idlType).length : 0;
     if (it.type === "attribute") {
       var qualifiersLen = writeAttributeQualifiers(it).length;
       maxAttr = Math.max(len, maxAttr);
@@ -605,10 +605,10 @@ function writeInterfaceDefinition(opt, fixes = {}) {
           return writeMethod(ch, maxMeth, indent + 1);
         case "const":
           return writeConst(ch, maxConst, indent + 1);
-        case "maplike":
-          return writeMaplike(ch, indent + 1);
         case "iterable":
-          return writeIterable(ch, indent + 1);
+        case "maplike":
+        case "setlike":
+          return writeIterableLike(ch, indent + 1);
         case "ws":
           return writeBlankLines(ch);
         case "line-comment":
@@ -663,19 +663,17 @@ function writeAttribute(attr, max, indent, maxQualifiers) {
 }
 
 function writeMethod(meth, max, indent) {
-  var paramObjs = meth.arguments
-    .filter(function(it) {
-      return !typeIsWhitespace(it.type);
-    })
-    .map(function(it) {
-      return idlParamTmpl({
+  var paramObjs = (meth.arguments || [])
+    .filter(it => !typeIsWhitespace(it.type))
+    .map(it =>
+      idlParamTmpl({
         obj: it,
         optional: it.optional ? "optional " : "",
         variadic: it.variadic ? "..." : "",
-      });
-    });
+      })
+    );
   var params = paramObjs.join(", ");
-  var len = idlType2Text(meth.idlType).length;
+  var len = meth.idlType ? idlType2Text(meth.idlType).length : 0;
   var specialProps = [
     "getter",
     "setter",
@@ -754,19 +752,13 @@ function writeMultiLineComment(comment, indent) {
   });
 }
 
-function writeMaplike(maplike, indent) {
-  return idlMaplikeTmpl({
-    obj: maplike,
-    qualifiers: maplike.readonly ? "readonly " : "",
+function writeIterableLike(iterableLike, indent) {
+  const { type } = iterableLike;
+  return idlIterableLikeTmpl({
+    obj: iterableLike,
+    qualifiers: iterableLike.readonly ? "readonly " : "",
     indent: indent,
-  });
-}
-
-function writeIterable(iterable, indent) {
-  return idlIterableTmpl({
-    obj: iterable,
-    qualifiers: iterable.readonly ? "readonly " : "",
-    indent: indent,
+    className: `idl${type[0].toUpperCase()}${type.slice(1)}`,
   });
 }
 
@@ -869,7 +861,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
           }
           const idHead = `idl-def-${parent.toLowerCase()}-${name.toLowerCase()}`;
           const idTail =
-            defn.overload || !defn.arguments.length
+            defn.overload || !defn.arguments || !defn.arguments.length
               ? ""
               : "-" +
                 defn.arguments
@@ -879,12 +871,10 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
                   .replace(/\s/g, "_");
           defn.idlId = idHead + idTail;
           break;
-        case "maplike":
-          name = "maplike";
-          defn.idlId = ("idl-def-" + parent + "-" + name).toLowerCase();
-          break;
         case "iterable":
-          name = "iterable";
+        case "maplike":
+        case "setlike":
+          name = defn.type;
           defn.idlId =
             "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
           break;

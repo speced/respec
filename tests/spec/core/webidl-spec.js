@@ -333,7 +333,7 @@ describe("Core - WebIDL", function() {
     const [stringifierAnon, stringifierNamed] = stringifierTestElems;
     expect(stringifierAnon).toBeTruthy();
     expect(stringifierAnon.querySelector(".idlMethType").textContent).toBe("StringPass");
-    expect(stringifierAnon.querySelector(".idlMethName").textContent).toBe("");
+    expect(stringifierAnon.querySelector(".idlMethName")).toBeNull();
     
     expect(stringifierNamed).toBeTruthy();
     expect(stringifierNamed.querySelector(".idlMethType").textContent).toBe("StringNamedPass");
@@ -345,7 +345,7 @@ describe("Core - WebIDL", function() {
     const [getterAnon, getterNamed] = getterTestElems;
     expect(getterAnon).toBeTruthy();
     expect(getterAnon.querySelector(".idlMethType").textContent).toBe("GetterPass");
-    expect(getterAnon.querySelector(".idlMethName").textContent).toBe("");
+    expect(getterAnon.querySelector(".idlMethName")).toBeNull();
     
     expect(getterNamed).toBeTruthy();
     expect(getterNamed.querySelector(".idlMethType").textContent).toBe("GetterNamedPass");
@@ -357,7 +357,7 @@ describe("Core - WebIDL", function() {
     const [setterAnon, setterNamed] = setterTestElems;
     expect(setterAnon).toBeTruthy();
     expect(setterAnon.querySelector(".idlMethType").textContent).toBe("SetterPass");
-    expect(setterAnon.querySelector(".idlMethName").textContent).toBe("");
+    expect(setterAnon.querySelector(".idlMethName")).toBeNull();
     
     expect(setterNamed).toBeTruthy();
     expect(setterNamed.querySelector(".idlMethType").textContent).toBe("SetterNamedPass");
@@ -389,9 +389,12 @@ describe("Core - WebIDL", function() {
     stringifier DOMString          identifier();
     // 11
     stringifier DOMString          ();
+    // 12
+    stringifier ;
 };`
     expect($target.text()).toEqual(text);
-    expect($target.find(".idlMethod").length).toEqual(11);
+    expect($target.find(".idlMethod").length).toEqual(12);
+    expect($target.find(".idlMethName").length).toEqual(8);
     var $meth = $target.find(".idlMethod").first();
     expect($meth.find(".idlMethType").text()).toEqual("void");
     expect($meth.find(".idlMethName").text()).toEqual("basic");
@@ -409,6 +412,13 @@ describe("Core - WebIDL", function() {
     );
     expect($target.find(":contains('dates')").filter("a").length).toEqual(0);
     done();
+  });
+
+  it("should handle iterable-like interface member declarations", () => {
+    const elem = doc.getElementById("iterable-like");
+    expect(elem.getElementsByClassName("idlIterable").length).toEqual(2);
+    expect(elem.getElementsByClassName("idlMaplike").length).toEqual(1);
+    expect(elem.getElementsByClassName("idlSetlike").length).toEqual(1);
   });
 
   it("should handle comments", function(done) {
