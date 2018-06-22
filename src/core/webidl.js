@@ -665,11 +665,13 @@ function writeAttribute(attr, max, indent, maxQualifiers) {
 function writeMethod(meth, max, indent) {
   var paramObjs = (meth.arguments || [])
     .filter(it => !typeIsWhitespace(it.type))
-    .map(it => idlParamTmpl({
-      obj: it,
-      optional: it.optional ? "optional " : "",
-      variadic: it.variadic ? "..." : "",
-    }));
+    .map(it => 
+      idlParamTmpl({
+        obj: it,
+        optional: it.optional ? "optional " : "",
+        variadic: it.variadic ? "..." : "",
+      })
+    );
   var params = paramObjs.join(", ");
   var len = meth.idlType ? idlType2Text(meth.idlType).length : 0;
   var specialProps = [
