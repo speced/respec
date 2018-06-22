@@ -665,7 +665,7 @@ function writeAttribute(attr, max, indent, maxQualifiers) {
 function writeMethod(meth, max, indent) {
   var paramObjs = (meth.arguments || [])
     .filter(it => !typeIsWhitespace(it.type))
-    .map(it => 
+    .map(it =>
       idlParamTmpl({
         obj: it,
         optional: it.optional ? "optional " : "",
@@ -758,7 +758,7 @@ function writeIterableLike(iterableLike, indent) {
     obj: iterableLike,
     qualifiers: iterableLike.readonly ? "readonly " : "",
     indent: indent,
-    className: `idl${type[0].toUpperCase()}${type.slice(1)}`
+    className: `idl${type[0].toUpperCase()}${type.slice(1)}`,
   });
 }
 
