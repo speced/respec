@@ -104,20 +104,20 @@ describe("Core - WebIDL", function() {
   });
   it("should handle interfaces", function(done) {
     var $target = $("#if-basic", doc);
-    var text = "interface SuperStar {\n};";
+    var text = "interface SuperStar {};";
     expect($target.text()).toEqual(text);
     expect($target.find(".idlInterface").length).toEqual(1);
     expect($target.find(".idlInterfaceID").text()).toEqual("SuperStar");
 
     $target = $("#if-extended-attribute", doc);
-    text = "[Something,\n Constructor()]\n" + text;
+    text = "[Something,\n Constructor()] " + text;
     expect($target.text()).toEqual(text);
     expect($target.find(".extAttr").text()).toEqual("Something");
     expect($target.find(".idlCtor").text()).toEqual("Constructor()");
 
     $target = $("#if-identifier-list", doc);
     text =
-      "[Global=Window,\n Exposed=(Window,Worker)]\ninterface SuperStar {\n};";
+      "[Global=Window,\n Exposed=(Window,Worker)] interface SuperStar {};";
     expect($target.text()).toEqual(text);
     expect($target.find(".extAttrRhs").first().text()).toEqual("Window");
     expect($target.find(".extAttrRhs").last().text()).toEqual(
@@ -125,24 +125,24 @@ describe("Core - WebIDL", function() {
     );
 
     $target = $("#if-inheritance", doc);
-    text = "interface SuperStar : HyperStar {\n};";
+    text = "interface SuperStar : HyperStar {};";
     expect($target.text()).toEqual(text);
     expect($target.find(".idlSuperclass").text()).toEqual("HyperStar");
 
     $target = $("#if-partial", doc);
-    text = "partial interface SuperStar {\n};";
+    text = "partial interface SuperStar {};";
     expect($target.text()).toEqual(text);
 
     $target = $("#if-callback", doc);
-    text = "callback interface SuperStar {\n};";
+    text = "callback interface SuperStar {};";
     expect($target.text()).toEqual(text);
 
     $target = $("#if-mixin", doc);
-    text = "interface mixin SuperStar {\n};";
+    text = "interface mixin SuperStar {};";
     expect($target.text()).toEqual(text);
 
     $target = $("#if-partial-mixin", doc);
-    text = "partial interface mixin SuperStar {\n};";
+    text = "partial interface mixin SuperStar {};";
     expect($target.text()).toEqual(text);
 
     $target = $("#if-doc", doc);
@@ -174,8 +174,7 @@ describe("Core - WebIDL", function() {
       "[Something,\n" +
       " Constructor,\n" +
       " Constructor(boolean bar, sequence<double> foo, Promise<double> blah)]\n" +
-      "interface SuperStar {\n" +
-      "};";
+      "interface SuperStar {};";
     expect($target.text()).toEqual(text);
     expect($target.find(".idlCtor").length).toEqual(2);
     var $ctor1 = $target.find(".idlCtor").last();
@@ -188,7 +187,7 @@ describe("Core - WebIDL", function() {
     ).toEqual("boolean");
 
     $target = $("#ctor-noea", doc);
-    text = "[Constructor]\n" + "interface SuperStar {\n" + "};";
+    text = "[Constructor] interface SuperStar {};";
     expect($target.text()).toEqual(text);
     done();
   });
@@ -199,8 +198,7 @@ describe("Core - WebIDL", function() {
       "[Something,\n" +
       " NamedConstructor=Sun(),\n" +
       " NamedConstructor=Sun(boolean bar, Date foo)]\n" +
-      "interface SuperStar {\n" +
-      "};";
+      "interface SuperStar {};";
     expect($target.text()).toEqual(text);
     expect($target.find(".idlCtor").length).toEqual(2);
     var $ctor1 = $target.find(".idlCtor").last();
@@ -217,46 +215,45 @@ describe("Core - WebIDL", function() {
     var $target = $("#const-basic", doc);
     var text =
       "interface ConstTest {\n" +
-      "    // 1\n" +
-      "    const boolean             test = true;\n" +
-      "    // 2\n" +
-      "    const byte                bite = 8;\n" +
-      "    // 3\n" +
-      "    const octet               eight = 7;\n" +
-      "    // 4\n" +
-      "    const short               small = 42;\n" +
-      "    // 5\n" +
-      "    const unsigned short      shortish = 250;\n" +
-      "    // 6\n" +
-      "    const long                notSoLong = 99999;\n" +
-      "    // 7\n" +
-      "    const unsigned long       somewhatLong = 9999999;\n" +
-      "    // 8\n" +
-      "    const long long           veryLong = 9999999999999;\n" +
-      "    // 9\n" +
-      "    const unsigned long long  soLong = 99999999999999999;\n" +
-      "    // 10\n" +
-      "    const float               ationDevice = 4.2;\n" +
-      "    // 11\n" +
-      "    const unrestricted float  buoy = 4.2222222222;\n" +
-      "    // 12\n" +
-      "    const double              twice = 4.222222222;\n" +
-      "    // 13\n" +
-      "    const unrestricted double rambaldi = 47.0;\n" +
+      "  // 1\n" +
+      "  const boolean test = true;\n" +
+      "  // 2\n" +
+      "  const byte bite = 8;\n" +
+      "  // 3\n" +
+      "  const octet eight = 7;\n" +
+      "  // 4\n" +
+      "  const short small = 42;\n" +
+      "  // 5\n" +
+      "  const unsigned short shortish = 250;\n" +
+      "  // 6\n" +
+      "  const long notSoLong = 99999;\n" +
+      "  // 7\n" +
+      "  const unsigned long somewhatLong = 9999999;\n" +
+      "  // 8\n" +
+      "  const long long veryLong = 9999999999999;\n" +
+      "  // 9\n" +
+      "  const unsigned long long soLong = 99999999999999999;\n" +
+      "  // 10\n" +
+      "  const float ationDevice = 4.2;\n" +
+      "  // 11\n" +
+      "  const unrestricted float buoy = 4.2222222222;\n" +
+      "  // 12\n" +
+      "  const double twice = 4.222222222;\n" +
+      "  // 13\n" +
+      "  const unrestricted double rambaldi = 47.0;\n" +
       "\n" +
-      "    // 14\n" +
-      "    const boolean?            why = false;\n" +
-      "    // 15\n" +
-      "    const boolean?            notSo = null;\n" +
-      "    // 16\n" +
-      "    const short               inf = Infinity;\n" +
-      "    // 17\n" +
-      "    const short               mininf = -Infinity;\n" +
-      "    // 18\n" +
-      "    const short               cheese = NaN;\n" +
-      "    // 19\n" +
-      "    [Something]\n" +
-      "    const short               extAttr = NaN;\n" +
+      "  // 14\n" +
+      "  const boolean? why = false;\n" +
+      "  // 15\n" +
+      "  const boolean? notSo = null;\n" +
+      "  // 16\n" +
+      "  const short inf = Infinity;\n" +
+      "  // 17\n" +
+      "  const short mininf = -Infinity;\n" +
+      "  // 18\n" +
+      "  const short cheese = NaN;\n" +
+      "  // 19\n" +
+      "  [Something] const short extAttr = NaN;\n" +
       "};";
     expect($target.text()).toEqual(text);
     expect($target.find(".idlConst").length).toEqual(19);
@@ -288,23 +285,22 @@ describe("Core - WebIDL", function() {
   it("should handle attributes", function() {
     var $target = $("#attr-basic", doc);
     var text =`interface AttrBasic {
-    // 1
-                attribute DOMString              regular;
-    // 2
-    readonly    attribute DOMString              ro;
-    // 2.2
-    readonly    attribute DOMString              _readonly;
-    // 2.5
-    inherit     attribute DOMString              in;
-    // 2.7
-    stringifier attribute DOMString              st;
-    // 3
-    [Something]
-    readonly    attribute DOMString              ext;
-    // 3.10.31
-                attribute FrozenArray<DOMString> alist;
-    // 4.0
-                attribute Promise<DOMString>     operation;
+  // 1
+  attribute DOMString regular;
+  // 2
+  readonly attribute DOMString ro;
+  // 2.2
+  readonly attribute DOMString _readonly;
+  // 2.5
+  inherit attribute DOMString in;
+  // 2.7
+  stringifier attribute DOMString st;
+  // 3
+  [Something] readonly attribute DOMString ext;
+  // 3.10.31
+  attribute FrozenArray<DOMString> alist;
+  // 4.0
+  attribute Promise<DOMString> operation;
 };`.trim();
     expect($target.text()).toEqual(text);
     expect($target.find(".idlAttribute").length).toEqual(8);
@@ -367,30 +363,30 @@ describe("Core - WebIDL", function() {
   it("should handle operations", function(done) {
     var $target = $("#meth-basic", doc);
     var text =`interface MethBasic {
-    // 1
-    void                           basic();
-    // 2
-    [Something] void                           ext();
-    // 3
-    unsigned long long             ull(short s);
-    // 3.5
-    SuperStar?                     ull();
-    // 5
-    getter float                   ();
-    // 6
-    getter float                   withName();
-    // 7
-    setter void                    ();
-    // 8
-    setter void                    named();
-    // 9
-    static Promise<RTCCertificate> generateCertificate(AlgorithmIdentifier keygenAlgorithm);
-    // 10
-    stringifier DOMString          identifier();
-    // 11
-    stringifier DOMString          ();
-    // 12
-    stringifier ;
+  // 1
+  void basic();
+  // 2
+  [Something] void ext();
+  // 3
+  unsigned long long ull(short s);
+  // 3.5
+  SuperStar? ull();
+  // 5
+  getter float ();
+  // 6
+  getter float withName();
+  // 7
+  setter void ();
+  // 8
+  setter void named();
+  // 9
+  static Promise<RTCCertificate> generateCertificate(AlgorithmIdentifier keygenAlgorithm);
+  // 10
+  stringifier DOMString identifier();
+  // 11
+  stringifier DOMString ();
+  // 12
+  stringifier;
 };`
     expect($target.text()).toEqual(text);
     expect($target.find(".idlMethod").length).toEqual(12);
@@ -426,11 +422,11 @@ describe("Core - WebIDL", function() {
     var // TODO: Handle comments when WebIDL2 does.
     text =
       "interface SuperStar {\n" +
-      "    // This is a comment\n" +
-      "    // over two lines.\n" +
-      "    /* This one\n" +
-      "       has\n" +
-      "       three. */\n" +
+      "  // This is a comment\n" +
+      "  // over two lines.\n" +
+      "  /* This one\n" +
+      "     has\n" +
+      "     three. */\n" +
       "};";
     expect($target.text()).toEqual(text);
     expect($target.find(".idlSectionComment").length).toEqual(3);
@@ -439,39 +435,38 @@ describe("Core - WebIDL", function() {
 
   it("should handle dictionaries", function(done) {
     var $target = $("#dict-basic", doc);
-    var text = "dictionary SuperStar {\n};";
+    var text = "dictionary SuperStar {};";
     expect($target.text()).toEqual(text);
     expect($target.find(".idlDictionary").length).toEqual(1);
     expect($target.find(".idlDictionaryID").text()).toEqual("SuperStar");
 
     $target = $("#dict-inherit", doc);
-    text = "dictionary SuperStar : HyperStar {\n};";
+    text = "dictionary SuperStar : HyperStar {};";
     expect($target.text()).toEqual(text);
     expect($target.find(".idlSuperclass").text()).toEqual("HyperStar");
 
     $target = $("#dict-fields", doc);
     text =
       "dictionary SuperStar {\n" +
-      "    // 1\n" +
-      "    DOMString          value;\n" +
-      "    // 2\n" +
-      "    DOMString?         nullable;\n" +
-      "    // 3\n" +
-      "    [Something]\n" +
-      "    float              ext;\n" +
-      "    // 4\n" +
-      "    unsigned long long longLong;\n" +
+      "  // 1\n" +
+      "  DOMString value;\n" +
+      "  // 2\n" +
+      "  DOMString? nullable;\n" +
+      "  // 3\n" +
+      "  [Something]float ext;\n" +
+      "  // 4\n" +
+      "  unsigned long long longLong;\n" +
       "\n" +
-      "    // 5\n" +
-      "    boolean            test = true;\n" +
-      "    // 6\n" +
-      "    byte               little = 2;\n" +
-      "    // 7\n" +
-      "    byte               big = Infinity;\n" +
-      "    // 8\n" +
-      "    byte               cheese = NaN;\n" +
-      "    // 9\n" +
-      '    DOMString          blah = "blah blah";\n' +
+      "  // 5\n" +
+      "  boolean test = true;\n" +
+      "  // 6\n" +
+      "  byte little = 2;\n" +
+      "  // 7\n" +
+      "  byte big = Infinity;\n" +
+      "  // 8\n" +
+      "  byte cheese = NaN;\n" +
+      "  // 9\n" +
+      '  DOMString blah = "blah blah";\n' +
       "};";
     expect($target.text()).toEqual(text);
     expect($target.find(".idlMember").length).toEqual(9);
@@ -517,15 +512,15 @@ describe("Core - WebIDL", function() {
     var $target = $("#enum-basic", doc);
     var text =
       "enum EnumBasic {\n" +
-      "    // 1\n" +
-      '    "one",\n' +
-      "    // 2\n" +
-      '    "two",\n' +
-      "    // 3\n" +
-      '    "three",\n' +
+      "  // 1\n" +
+      '  "one",\n' +
+      "  // 2\n" +
+      '  "two"\n' +
+      "  // 3\n" +
+      ', "three",\n' +
       "\n" +
-      "    // 4\n" +
-      '    "white space"\n' +
+      "  // 4\n" +
+      '  "white space"\n' +
       "};";
     expect($target.text()).toEqual(text);
     expect($target.find(".idlEnum").length).toEqual(1);
@@ -646,7 +641,7 @@ describe("Core - WebIDL", function() {
     expect($target.find(".idlIncludes").length).toEqual(1);
 
     $target = $("#incl-less-basic", doc);
-    text = "[Something]\n" + text;
+    text = "[Something]" + text;
     expect($target.text()).toEqual(text);
   });
 
@@ -657,7 +652,7 @@ describe("Core - WebIDL", function() {
     expect($target.find(".idlImplements").length).toEqual(1);
 
     $target = $("#impl-less-basic", doc);
-    text = "[Something]\n" + text;
+    text = "[Something]" + text;
     expect($target.text()).toEqual(text);
   });
 
