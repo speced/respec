@@ -568,19 +568,17 @@ function writeMethod(meth) {
       })
     );
   var params = paramObjs.join(", ");
-  var specialProps = [
+  var modifiers = [
     "getter",
     "setter",
     "deleter",
     "stringifier",
-    "static", // not "special op", but serves same role
+    "static",
   ];
   var special = "";
-  for (const specialProp of specialProps) {
+  for (const specialProp of modifiers) {
     if (meth[specialProp]) {
       special = writeTrivia(meth[specialProp].trivia) + specialProp;
-      len += special.length;
-      break;
     }
   }
   const methObj = {
