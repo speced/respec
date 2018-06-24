@@ -28,7 +28,6 @@ var idlInterfaceTmpl = tmpls["interface.html"];
 var idlIterableLikeTmpl = tmpls["iterable-like.html"];
 var idlLineCommentTmpl = tmpls["line-comment.html"];
 var idlMethodTmpl = tmpls["method.html"];
-var idlMultiLineCommentTmpl = tmpls["multiline-comment.html"];
 var idlParamTmpl = tmpls["param.html"];
 var idlTypedefTmpl = tmpls["typedef.html"];
 // TODO: make these linkable somehow.
@@ -141,6 +140,14 @@ function registerHelpers() {
     }
     return a.outerHTML;
   });
+  hb.registerHelper("trivia", writeTrivia)
+}
+
+function writeTrivia(text) {
+  if (!text.length) {
+    return "";
+  }
+  return idlLineCommentTmpl({ text });
 }
 
 function idn(lvl) {
@@ -157,7 +164,7 @@ function idlType2Html(idlType) {
   const extAttrs = extAttr(idlType.extAttrs, 0, /*singleLine=*/ true);
   const nullable = idlType.nullable ? "?" : "";
   if (idlType.union) {
-    return `${extAttrs}(${idlType.idlType.map(idlType2Html).join(" or ")})${nullable}`;
+    return `${extAttrs}${writeTrivia(idlType.trivia.open)}(${idlType.idlType.map(idlType2Html).join(" or")})${nullable}`;
   }
   let type = "";
   if (idlType.generic) {
@@ -172,7 +179,7 @@ function idlType2Html(idlType) {
       : idlType2Html(idlType.idlType);
   }
   const trivia = idlType.prefix ? idlType.prefix.trivia : idlType.trivia.base;
-  return extAttrs + trivia + type + nullable;
+  return extAttrs + writeTrivia(trivia) + type + nullable;
 }
 
 function linkStandardType(type) {
@@ -449,7 +456,7 @@ function writeDefinition(obj) {
       return idlDictionaryTmpl({
         obj,
         children,
-        partial: obj.partial ? `${obj.partial.trivia}partial` : "",
+        partial: obj.partial ? `${writeTrivia(obj.partial.trivia)}partial` : "",
       });
     }
     case "callback": {
@@ -457,7 +464,7 @@ function writeDefinition(obj) {
         .map(it =>
           idlParamTmpl({
             obj: it,
-            optional: it.optional ? `${it.optional.trivia}optional` : "",
+            optional: it.optional ? `${writeTrivia(it.optional.trivia)}optional` : "",
             variadic: it.variadic ? "..." : "",
           })
         );
@@ -487,7 +494,7 @@ function writeDefinition(obj) {
       return idlEnumTmpl({ obj, children });
     }
     case "eof":
-      return obj.trivia;
+      return writeTrivia(obj.trivia);
     default:
       pub(
         "error",
@@ -519,9 +526,9 @@ function writeInterfaceDefinition(opt, fixes = {}) {
     .join("");
   return idlInterfaceTmpl({
     obj,
-    partial: obj.partial ? `${obj.partial.trivia}partial` : "",
-    callback: fixes.callback ? `${obj.trivia.callback}callback` : "",
-    mixin: fixes.mixin ? `${obj.trivia.mixin}mixin` : "",
+    partial: obj.partial ? `${writeTrivia(obj.partial.trivia)}partial` : "",
+    callback: fixes.callback ? `${writeTrivia(obj.trivia.callback)}callback` : "",
+    mixin: fixes.mixin ? `${writeTrivia(obj.trivia.mixin)}mixin` : "",
     children,
   });
 }
@@ -537,10 +544,10 @@ function writeField(attr, max, indent) {
 
 function writeAttributeQualifiers(attr) {
   var qualifiers = "";
-  if (attr.static) qualifiers += `${attr.static.trivia}static`;
-  if (attr.stringifier) qualifiers += `${attr.stringifier.trivia}stringifier`;
-  if (attr.inherit) qualifiers += `${attr.inherit.trivia}inherit`;
-  if (attr.readonly) qualifiers += `${attr.readonly.trivia}readonly`;
+  if (attr.static) qualifiers += `${writeTrivia(attr.static.trivia)}static`;
+  if (attr.stringifier) qualifiers += `${writeTrivia(attr.stringifier.trivia)}stringifier`;
+  if (attr.inherit) qualifiers += `${writeTrivia(attr.inherit.trivia)}inherit`;
+  if (attr.readonly) qualifiers += `${writeTrivia(attr.readonly.trivia)}readonly`;
   return qualifiers;
 }
 
@@ -580,7 +587,7 @@ function writeMethod(meth) {
   var special = "";
   for (const specialProp of specialProps) {
     if (meth[specialProp]) {
-      special = meth[specialProp].trivia + specialProp;
+      special = writeTrivia(meth[specialProp].trivia) + specialProp;
       len += special.length;
       break;
     }
@@ -607,45 +614,11 @@ function writeConst(cons, max, indent) {
   });
 }
 
-// Writes a single blank line if whitespace includes at least one blank line.
-function writeBlankLines(whitespace) {
-  if (/\n.*\n/.test(whitespace.value)) {
-    // Members end with a newline, so we only need 1 extra one to get a blank line.
-    return "\n";
-  }
-  return "";
-}
-
-function writeLineComment(comment, indent) {
-  return idlLineCommentTmpl({ indent: indent, comment: comment.value });
-}
-
-function writeMultiLineComment(comment, indent) {
-  // Split the multi-line comment into lines so we can indent it properly.
-  var lines = comment.value.split(/\r\n|\r|\n/);
-  if (lines.length === 0) {
-    return "";
-  } else if (lines.length === 1) {
-    return idlLineCommentTmpl({ indent: indent, comment: lines[0] });
-  }
-  var initialSpaces = Math.max(0, /^ */.exec(lines[1])[0].length - 3);
-
-  function trimInitialSpace(line) {
-    return line.slice(initialSpaces);
-  }
-  return idlMultiLineCommentTmpl({
-    indent: indent,
-    firstLine: lines[0],
-    lastLine: trimInitialSpace(lines[lines.length - 1]),
-    innerLine: lines.slice(1, -1).map(trimInitialSpace),
-  });
-}
-
 function writeIterableLike(iterableLike, indent) {
   const { type, readonly } = iterableLike;
   return idlIterableLikeTmpl({
     obj: iterableLike,
-    qualifiers: readonly ? `${readonly.trivia}readonly` : "",
+    qualifiers: readonly ? `${writeTrivia(readonly.trivia)}readonly` : "",
     indent: indent,
     className: `idl${type[0].toUpperCase()}${type.slice(1)}`,
   });
@@ -653,7 +626,7 @@ function writeIterableLike(iterableLike, indent) {
 
 function writeMember(memb) {
   var opt = { obj: memb, qualifiers: "" };
-  if (memb.required) opt.qualifiers = `${memb.required.trivia}required`;
+  if (memb.required) opt.qualifiers = `${writeTrivia(memb.required.trivia)}required`;
   return idlDictMemberTmpl(opt);
 }
 

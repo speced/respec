@@ -11,7 +11,7 @@ describe("Core - WebIDL", function() {
     const idl = doc.querySelector("#records pre");
     expect(idl).toBeTruthy(idl);
     expect(idl.querySelector(".idlMemberType:first-child").textContent).toEqual(
-      "record<DOMString, USVString>"
+      "\n  record<DOMString, USVString>"
     );
     expect(idl.querySelector(".idlMemberName").textContent).toEqual("pass");
     done();
@@ -258,7 +258,7 @@ describe("Core - WebIDL", function() {
     expect($target.text()).toEqual(text);
     expect($target.find(".idlConst").length).toEqual(19);
     var $const1 = $target.find(".idlConst").first();
-    expect($const1.find(".idlConstType").text()).toEqual("boolean");
+    expect($const1.find(".idlConstType").text()).toEqual(" boolean");
     expect($const1.find(".idlConstName").text()).toEqual("test");
     expect($const1.find(".idlConstValue").text()).toEqual("true");
     expect($target.find(".idlConst").last().find(".extAttr").length).toEqual(1);
@@ -305,16 +305,16 @@ describe("Core - WebIDL", function() {
     expect($target.text()).toEqual(text);
     expect($target.find(".idlAttribute").length).toEqual(8);
     var $at = $target.find(".idlAttribute").first();
-    expect($at.find(".idlAttrType").text()).toEqual("DOMString");
+    expect($at.find(".idlAttrType").text()).toEqual(" DOMString");
     expect($at.find(".idlAttrName").text()).toEqual("regular");
     var $ro = $target.find(".idlAttribute").eq(2);
     expect($ro.find(".idlAttrName").text()).toEqual("_readonly");
     var $frozen = $target.find(".idlAttribute").eq(6);
     expect($frozen.find(".idlAttrType").text()).toEqual(
-      "FrozenArray<DOMString>"
+      " FrozenArray<DOMString>"
     );
     var $promise = $target.find(".idlAttribute").eq(7);
-    expect($promise.find(".idlAttrType").text()).toEqual("Promise<DOMString>");
+    expect($promise.find(".idlAttrType").text()).toEqual(" Promise<DOMString>");
     expect(
       $target.find(":contains('_readonly')").parents(".idlAttribute").attr("id")
     ).toEqual("idl-def-attrbasic-readonly");
@@ -328,11 +328,11 @@ describe("Core - WebIDL", function() {
     const stringifierTestElems = [...doc.querySelectorAll("#stringifiertest .idlMethod")];
     const [stringifierAnon, stringifierNamed] = stringifierTestElems;
     expect(stringifierAnon).toBeTruthy();
-    expect(stringifierAnon.querySelector(".idlMethType").textContent).toBe("StringPass");
+    expect(stringifierAnon.querySelector(".idlMethType").textContent).toBe(" StringPass");
     expect(stringifierAnon.querySelector(".idlMethName")).toBeNull();
     
     expect(stringifierNamed).toBeTruthy();
-    expect(stringifierNamed.querySelector(".idlMethType").textContent).toBe("StringNamedPass");
+    expect(stringifierNamed.querySelector(".idlMethType").textContent).toBe(" StringNamedPass");
     expect(stringifierNamed.querySelector(".idlMethName").textContent).toBe("named");
   });
   
@@ -340,11 +340,11 @@ describe("Core - WebIDL", function() {
     const getterTestElems = [...doc.querySelectorAll("#gettertest .idlMethod")];
     const [getterAnon, getterNamed] = getterTestElems;
     expect(getterAnon).toBeTruthy();
-    expect(getterAnon.querySelector(".idlMethType").textContent).toBe("GetterPass");
+    expect(getterAnon.querySelector(".idlMethType").textContent).toBe(" GetterPass");
     expect(getterAnon.querySelector(".idlMethName")).toBeNull();
     
     expect(getterNamed).toBeTruthy();
-    expect(getterNamed.querySelector(".idlMethType").textContent).toBe("GetterNamedPass");
+    expect(getterNamed.querySelector(".idlMethType").textContent).toBe(" GetterNamedPass");
     expect(getterNamed.querySelector(".idlMethName").textContent).toBe("named");
   });
   
@@ -352,11 +352,11 @@ describe("Core - WebIDL", function() {
     const setterTestElems = [...doc.querySelectorAll("#settertest .idlMethod")];
     const [setterAnon, setterNamed] = setterTestElems;
     expect(setterAnon).toBeTruthy();
-    expect(setterAnon.querySelector(".idlMethType").textContent).toBe("SetterPass");
+    expect(setterAnon.querySelector(".idlMethType").textContent).toBe(" SetterPass");
     expect(setterAnon.querySelector(".idlMethName")).toBeNull();
     
     expect(setterNamed).toBeTruthy();
-    expect(setterNamed.querySelector(".idlMethType").textContent).toBe("SetterNamedPass");
+    expect(setterNamed.querySelector(".idlMethType").textContent).toBe(" SetterNamedPass");
     expect(setterNamed.querySelector(".idlMethName").textContent).toBe("named");
   });
   
@@ -392,7 +392,7 @@ describe("Core - WebIDL", function() {
     expect($target.find(".idlMethod").length).toEqual(12);
     expect($target.find(".idlMethName").length).toEqual(8);
     var $meth = $target.find(".idlMethod").first();
-    expect($meth.find(".idlMethType").text()).toEqual("void");
+    expect($meth.find(".idlMethType").text()).toEqual("\n  // 1\n  void");
     expect($meth.find(".idlMethName").text()).toEqual("basic");
     expect(
       $target.find(".idlMethType:contains('SuperStar?') a").text()
@@ -429,7 +429,7 @@ describe("Core - WebIDL", function() {
       "     three. */\n" +
       "};";
     expect($target.text()).toEqual(text);
-    expect($target.find(".idlSectionComment").length).toEqual(3);
+    expect($target.find(".idlSectionComment").length).toEqual(1);
     done();
   });
 
@@ -471,7 +471,7 @@ describe("Core - WebIDL", function() {
     expect($target.text()).toEqual(text);
     expect($target.find(".idlMember").length).toEqual(9);
     var $mem = $target.find(".idlMember").first();
-    expect($mem.find(".idlMemberType").text()).toEqual("DOMString");
+    expect($mem.find(".idlMemberType").text()).toEqual("\n  // 1\n  DOMString");
     expect($mem.find(".idlMemberName").text()).toEqual("value");
     expect(
       $target.find(".idlMember").last().find(".idlMemberValue").text()
@@ -480,8 +480,8 @@ describe("Core - WebIDL", function() {
     $target = $("#dict-required-fields", doc);
     text =
       "dictionary SuperStar {\n" +
-      "    required DOMString value;\n" +
-      "             DOMString optValue;\n" +
+      "  required DOMString value;\n" +
+      "  DOMString optValue;\n" +
       "};";
     expect($target.text()).toEqual(text);
 
@@ -572,17 +572,17 @@ describe("Core - WebIDL", function() {
     expect($target.text()).toEqual(text);
     expect($target.find(".idlCallback").length).toEqual(1);
     expect($target.find(".idlCallbackID").text()).toEqual("SuperStar");
-    expect($target.find(".idlCallbackType").text()).toEqual("void");
+    expect($target.find(".idlCallbackType").text()).toEqual(" void");
 
     $target = $("#cb-less-basic", doc);
     text = "callback CbLessBasic = unsigned long long? (optional any value);";
     expect($target.text()).toEqual(text);
     expect($target.find(".idlCallbackType").text()).toEqual(
-      "unsigned long long?"
+      " unsigned long long?"
     );
     var $prm = $target.find(".idlCallback").last().find(".idlParam");
     expect($prm.length).toEqual(1);
-    expect($prm.find(".idlParamType").text()).toEqual("any");
+    expect($prm.find(".idlParamType").text()).toEqual(" any");
     expect($prm.find(".idlParamName").text()).toEqual("value");
 
     // Links and IDs.
@@ -600,7 +600,7 @@ describe("Core - WebIDL", function() {
     expect($prm.length).toEqual(2);
     expect($prm.find(".idlParamType").first().text()).toEqual("any");
     expect($prm.find(".idlParamName").first().text()).toEqual("a");
-    expect($prm.find(".idlParamType").last().text()).toEqual("any");
+    expect($prm.find(".idlParamType").last().text()).toEqual(" any");
     expect($prm.find(".idlParamName").last().text()).toEqual("b");
     done();
   });
@@ -611,7 +611,7 @@ describe("Core - WebIDL", function() {
     expect(target.textContent).toEqual(text);
     expect(target.querySelectorAll(".idlTypedef").length).toEqual(1);
     expect(target.querySelector(".idlTypedefID").textContent).toEqual("string");
-    expect(target.querySelector(".idlTypedefType").textContent).toEqual("DOMString");
+    expect(target.querySelector(".idlTypedefType").textContent).toEqual(" DOMString");
 
     target = doc.getElementById("td-less-basic");
     text = "typedef unsigned long long? tdLessBasic;";
