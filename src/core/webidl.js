@@ -140,7 +140,7 @@ function registerHelpers() {
     }
     return a.outerHTML;
   });
-  hb.registerHelper("trivia", writeTrivia)
+  hb.registerHelper("trivia", writeTrivia);
 }
 
 function writeTrivia(text) {
@@ -164,7 +164,9 @@ function idlType2Html(idlType) {
   const extAttrs = extAttr(idlType.extAttrs, 0, /*singleLine=*/ true);
   const nullable = idlType.nullable ? "?" : "";
   if (idlType.union) {
-    return `${extAttrs}${writeTrivia(idlType.trivia.open)}(${idlType.idlType.map(idlType2Html).join(" or")})${nullable}`;
+    const subtypes = idlType.idlType.map(idlType2Html).join(" or");
+    const union = `${writeTrivia(idlType.trivia.open)}(${subtypes})`;
+    return `${extAttrs}${union}${nullable}`;
   }
   let type = "";
   if (idlType.generic) {
@@ -261,7 +263,7 @@ function extAttr(extAttrs, indent, singleLine) {
   var opt = {
     extAttrs: extAttrs,
     indent: indent,
-    sep: singleLine ? ", " : ",\n " + idn(indent)
+    sep: singleLine ? ", " : ",\n " + idn(indent),
   };
   const safeString = new hb.SafeString(idlExtAttributeTmpl(opt));
   const tmpParser = document.createElement("div");
@@ -391,27 +393,14 @@ const argumentNameKeyword = new Set([
   "typedef",
   "unrestricted",
 ]);
-const attributeNameKeyword = new Set(["required"]);
 var operationNames = {};
 var idlPartials = {};
-
-function escapeArgumentName(argumentName) {
-  if (idlKeywords.has(argumentName) && !argumentNameKeyword.has(argumentName))
-    return "_" + argumentName;
-  return argumentName;
-}
-function escapeIdentifier(identifier) {
-  if (idlKeywords.has(identifier)) return "_" + identifier;
-  return identifier;
-}
 
 // Takes the result of WebIDL2.parse(), an array of definitions.
 function makeMarkup(conf, parse) {
   var pre = document.createElement("pre");
   pre.classList.add("def", "idl");
-  pre.innerHTML = parse
-    .map(defn => writeDefinition(defn))
-    .join("");
+  pre.innerHTML = parse.map(defn => writeDefinition(defn)).join("");
   return pre;
 }
 
@@ -450,9 +439,7 @@ function writeDefinition(obj) {
     case "callback interface":
       return writeInterfaceDefinition(opt, { callback: true });
     case "dictionary": {
-      const children = obj.members
-        .map(writeMember)
-        .join("");
+      const children = obj.members.map(writeMember).join("");
       return idlDictionaryTmpl({
         obj,
         children,
@@ -460,14 +447,13 @@ function writeDefinition(obj) {
       });
     }
     case "callback": {
-      const paramObjs = obj.arguments
-        .map(it =>
-          idlParamTmpl({
-            obj: it,
-            optional: it.optional ? `${writeTrivia(it.optional.trivia)}optional` : "",
-            variadic: it.variadic ? "..." : "",
-          })
-        );
+      const paramObjs = obj.arguments.map(it =>
+        idlParamTmpl({
+          obj: it,
+          optional: it.optional ? `${writeTrivia(it.optional.trivia)}optional` : "",
+          variadic: it.variadic ? "..." : "",
+        })
+      );
       var callbackObj = {
         obj,
         children: paramObjs.join(","),
@@ -544,10 +530,14 @@ function writeField(attr, max, indent) {
 
 function writeAttributeQualifiers(attr) {
   var qualifiers = "";
-  if (attr.static) qualifiers += `${writeTrivia(attr.static.trivia)}static`;
-  if (attr.stringifier) qualifiers += `${writeTrivia(attr.stringifier.trivia)}stringifier`;
-  if (attr.inherit) qualifiers += `${writeTrivia(attr.inherit.trivia)}inherit`;
-  if (attr.readonly) qualifiers += `${writeTrivia(attr.readonly.trivia)}readonly`;
+  if (attr.static)
+    qualifiers += `${writeTrivia(attr.static.trivia)}static`;
+  if (attr.stringifier)
+    qualifiers += `${writeTrivia(attr.stringifier.trivia)}stringifier`;
+  if (attr.inherit)
+    qualifiers += `${writeTrivia(attr.inherit.trivia)}inherit`;
+  if (attr.readonly)
+    qualifiers += `${writeTrivia(attr.readonly.trivia)}readonly`;
   return qualifiers;
 }
 
@@ -566,7 +556,7 @@ function writeAttribute(attr, max, indent, maxQualifiers) {
 }
 
 function writeMethod(meth) {
-  var paramObjs = (meth.body && meth.body.arguments || [])
+  var paramObjs = ((meth.body && meth.body.arguments) || [])
     .filter(it => !typeIsWhitespace(it.type))
     .map(it =>
       idlParamTmpl({
@@ -576,7 +566,6 @@ function writeMethod(meth) {
       })
     );
   var params = paramObjs.join(", ");
-  var len = meth.body ? idlType2Text(meth.body.idlType).length : 0;
   var specialProps = [
     "getter",
     "setter",
@@ -626,7 +615,8 @@ function writeIterableLike(iterableLike, indent) {
 
 function writeMember(memb) {
   var opt = { obj: memb, qualifiers: "" };
-  if (memb.required) opt.qualifiers = `${writeTrivia(memb.required.trivia)}required`;
+  if (memb.required)
+    opt.qualifiers = `${writeTrivia(memb.required.trivia)}required`;
   return idlDictMemberTmpl(opt);
 }
 
@@ -639,16 +629,9 @@ function writeMember(memb) {
 function linkDefinitions(parse, definitionMap, parent, idlElem) {
   parse
     // Don't bother with any of these
-    .filter(
-      ({ type }) =>
-        [
-          "includes",
-          "implements",
-          "eof"
-        ].includes(type) === false
-    )
-    .forEach(function(defn) {
-      var name;
+    .filter(({ type }) => !["includes", "implements", "eof"].includes(type))
+    .forEach(defn => {
+      let name;
       switch (defn.type) {
         // Top-level entities with linkable members.
         case "callback interface":
