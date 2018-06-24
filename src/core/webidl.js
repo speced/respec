@@ -450,7 +450,9 @@ function writeDefinition(obj) {
       const paramObjs = obj.arguments.map(it =>
         idlParamTmpl({
           obj: it,
-          optional: it.optional ? `${writeTrivia(it.optional.trivia)}optional` : "",
+          optional: it.optional
+            ? `${writeTrivia(it.optional.trivia)}optional`
+            : "",
           variadic: it.variadic ? "..." : "",
         })
       );
@@ -513,7 +515,9 @@ function writeInterfaceDefinition(opt, fixes = {}) {
   return idlInterfaceTmpl({
     obj,
     partial: obj.partial ? `${writeTrivia(obj.partial.trivia)}partial` : "",
-    callback: fixes.callback ? `${writeTrivia(obj.trivia.callback)}callback` : "",
+    callback: fixes.callback
+      ? `${writeTrivia(obj.trivia.callback)}callback`
+      : "",
     mixin: fixes.mixin ? `${writeTrivia(obj.trivia.mixin)}mixin` : "",
     children,
   });
@@ -530,12 +534,10 @@ function writeField(attr, max, indent) {
 
 function writeAttributeQualifiers(attr) {
   var qualifiers = "";
-  if (attr.static)
-    qualifiers += `${writeTrivia(attr.static.trivia)}static`;
+  if (attr.static) qualifiers += `${writeTrivia(attr.static.trivia)}static`;
   if (attr.stringifier)
     qualifiers += `${writeTrivia(attr.stringifier.trivia)}stringifier`;
-  if (attr.inherit)
-    qualifiers += `${writeTrivia(attr.inherit.trivia)}inherit`;
+  if (attr.inherit) qualifiers += `${writeTrivia(attr.inherit.trivia)}inherit`;
   if (attr.readonly)
     qualifiers += `${writeTrivia(attr.readonly.trivia)}readonly`;
   return qualifiers;
