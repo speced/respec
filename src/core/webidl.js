@@ -558,7 +558,7 @@ function writeAttribute(attr, max, indent, maxQualifiers) {
 }
 
 function writeMethod(meth) {
-  var paramObjs = ((meth.body && meth.body.arguments) || [])
+  const paramObjs = ((meth.body && meth.body.arguments) || [])
     .filter(it => !typeIsWhitespace(it.type))
     .map(it =>
       idlParamTmpl({
@@ -567,15 +567,9 @@ function writeMethod(meth) {
         variadic: it.variadic ? "..." : "",
       })
     );
-  var params = paramObjs.join(", ");
-  var modifiers = [
-    "getter",
-    "setter",
-    "deleter",
-    "stringifier",
-    "static",
-  ];
-  var special = "";
+  const params = paramObjs.join(", ");
+  const modifiers = ["getter", "setter", "deleter", "stringifier", "static"];
+  let special = "";
   for (const specialProp of modifiers) {
     if (meth[specialProp]) {
       special = writeTrivia(meth[specialProp].trivia) + specialProp;
