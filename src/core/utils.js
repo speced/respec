@@ -288,9 +288,7 @@ export function normalizePadding(text = "") {
 
 // RESPEC STUFF
 export function removeReSpec(doc) {
-  Array.from(
-    doc.querySelectorAll(".remove, script[data-requiremodule]")
-  ).forEach(elem => {
+  doc.querySelectorAll(".remove, script[data-requiremodule]").forEach(elem => {
     elem.remove();
   });
 }
@@ -329,6 +327,22 @@ export function xmlEscape(s) {
 // Trims string at both ends and replaces all other white space with a single space
 export function norm(str) {
   return str.trim().replace(/\s+/g, " ");
+}
+
+// semverCompare
+// https://github.com/substack/semver-compare
+export function semverCompare(a, b) {
+  const pa = a.split(".");
+  const pb = b.split(".");
+  for (let i = 0; i < 3; i++) {
+    const na = Number(pa[i]);
+    const nb = Number(pb[i]);
+    if (na > nb) return 1;
+    if (nb > na) return -1;
+    if (!isNaN(na) && isNaN(nb)) return 1;
+    if (isNaN(na) && !isNaN(nb)) return -1;
+  }
+  return 0;
 }
 
 // --- DATE HELPERS -------------------------------------------------------------------------------
@@ -446,4 +460,151 @@ export function runTransforms(content, flist) {
     }
   }
   return content;
+}
+
+/**
+ * Cached request handler
+ * @param {Request} request
+ * @param {Object} maxAge cache expiration duration in ms. defaults to 24 hours (86400000 ms)
+ * @return {Response}
+ *  if a cached response is available and it's not stale, return it
+ *  else: request from network, cache and return fresh response.
+ *    If network fails, return a stale cached version if exists (else throw)
+ */
+export async function fetchAndCache(request, maxAge = 86400000) {
+  if (typeof request === "string" || request instanceof URL) {
+    request = new Request(request);
+  }
+  const url = new URL(request.url);
+
+  // use data from cache data if valid and render
+  let cache;
+  let cachedResponse;
+  if ("caches" in window) {
+    try {
+      cache = await caches.open(url.origin);
+      cachedResponse = await cache.match(request);
+      if (
+        cachedResponse &&
+        new Date(cachedResponse.headers.get("Expires")) > new Date()
+      ) {
+        return cachedResponse;
+      }
+    } catch (err) {
+      console.error("Failed to use Cache API.", err);
+    }
+  }
+
+  // otherwise fetch new data and cache
+  const response = await fetch(request);
+  if (!response.ok) {
+    if (cachedResponse) {
+      // return stale version
+      console.warn(`Returning a stale cached response for ${url}`);
+      return cachedResponse;
+    }
+  }
+
+  // cache response
+  if (cache) {
+    const clonedResponse = response.clone();
+    const customHeaders = new Headers(response.headers);
+    const expiryDate = new Date(Date.now() + maxAge);
+    customHeaders.set("Expires", expiryDate);
+    const cacheResponse = new Response(await clonedResponse.blob(), {
+      headers: customHeaders,
+    });
+    // put in cache, and forget it (there is no recovery if it throws, but that's ok).
+    await cache.put(request, cacheResponse).catch(console.error);
+    return await cache.match(request);
+  }
+  return response;
+}
+
+// --- COLLECTION/ITERABLE HELPERS ---------------
+/**
+ * Spreads one iterable into another.
+ *
+ * @param {Iterable} collector
+ * @param {any|Iterable} item
+ * @returns {Array}
+ */
+export function flatten(collector, item) {
+  const isObject = typeof item === "object";
+  const isIterable =
+    Object(item)[Symbol.iterator] && typeof item.values === "function";
+  const items = !isObject
+    ? [item]
+    : isIterable ? [...item.values()].reduce(flatten, []) : Object.values(item);
+  return [...collector, ...items];
+}
+
+// --- DOM HELPERS -------------------------------
+
+/**
+ * Creates and sets an ID to an element (elem)
+ * using a specific prefix if provided, and a specific text if given.
+ * @param {Element} elem element
+ * @param {String} pfx prefix
+ * @param {String} txt text
+ * @param {Boolean} noLC
+ * @returns {String} generated (or existing) id for element
+ */
+export function addId(elem, pfx = "", txt = "", noLC = false) {
+  if (elem.id) {
+    return elem.id;
+  }
+  if (!txt) {
+    txt = (elem.title ? elem.title : elem.textContent).trim();
+  }
+  let id = noLC ? txt : txt.toLowerCase();
+  id = id
+    .replace(/[\W]+/gim, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
+
+  if (!id) {
+    id = "generatedID";
+  } else if (/\.$/.test(id) || !/^[a-z]/i.test(id)) {
+    id = "x" + id; // trailing . doesn't play well with jQuery
+  }
+  if (pfx) {
+    id = `${pfx}-${id}`;
+  }
+  if (elem.ownerDocument.getElementById(id)) {
+    let i = 0;
+    let nextId = id + "-" + i;
+    while (elem.ownerDocument.getElementById(nextId)) {
+      nextId = id + "-" + i++;
+    }
+    id = nextId;
+  }
+  elem.id = id;
+  return id;
+}
+
+/**
+ * Returns all the descendant text nodes of an element.
+ * @param {Node} el
+ * @param {Array:String} exclusions node localName to exclude
+ * @returns {Array:String}
+ */
+export function getTextNodes(el, exclusions = []) {
+  const acceptNode = node => {
+    return exclusions.includes(node.parentElement.localName)
+      ? NodeFilter.FILTER_REJECT
+      : NodeFilter.FILTER_ACCEPT;
+  };
+  const nodeIterator = document.createNodeIterator(
+    el,
+    NodeFilter.SHOW_TEXT,
+    { acceptNode },
+    false
+  );
+  const textNodes = [];
+  let node;
+  while ((node = nodeIterator.nextNode())) {
+    textNodes.push(node);
+  }
+  return textNodes;
 }

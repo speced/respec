@@ -2,16 +2,52 @@ import "deps/hyperhtml";
 import showLogo from "./show-logo";
 import showPeople from "./show-people";
 import showLink from "./show-link";
+import { pub } from "core/pubsubhub";
+
+function getSpecTitleElem (conf) {
+  const specTitleElem =
+    document.querySelector("h1#title") || document.createElement("h1");
+  if (specTitleElem.parentElement) {
+    specTitleElem.remove();
+    conf.title = specTitleElem.textContent.trim();
+  } else {
+    specTitleElem.textContent = conf.title;
+    specTitleElem.id = "title";
+  }
+  specTitleElem.classList.add("title", "p-name");
+  if (document.querySelector("title") === null) {
+    document.title = conf.title;
+  } else if (document.title !== conf.title) {
+    pub("warn", "The document's title and the `<title>` element differ.");
+  }
+  return specTitleElem;
+}
+
+function getSpecSubTitleElem (conf) {
+  let specSubTitleElem = document.querySelector("h2#subtitle");
+  
+  if (specSubTitleElem && specSubTitleElem.parentElement) {
+    specSubTitleElem.remove();
+    conf.subtitle = specSubTitleElem.textContent.trim();
+  } else if (conf.subtitle) {
+    specSubTitleElem = document.createElement ("h2");
+    specSubTitleElem.textContent = conf.subtitle;
+    specSubTitleElem.id = "subtitle";
+  }
+  if (specSubTitleElem) {
+    specSubTitleElem.classList.add ("subtitle");
+  }
+  return specSubTitleElem;
+}
 
 export default conf => {
   const html = hyperHTML;
+  
   return html`<div class='head'>
   ${conf.logos.map(showLogo)}
-  <h1 class='title p-name' id='title'>${conf.title}</h1>
-  ${conf.subtitle ? html`
-    <h2 id='subtitle'>${conf.subtitle}</h2>
-  ` : ""}
-  <h2>${conf.prependW3C ? `W3C ` : ""}${conf.textStatus} <time class='dt-published' datetime='${conf.dashDate}'>${conf.publishHumanDate}</time></h2>
+  ${getSpecTitleElem(conf)}
+  ${getSpecSubTitleElem(conf)}
+  <h2>${conf.prependW3C ? "W3C " : ""}${conf.textStatus} <time class='dt-published' datetime='${conf.dashDate}'>${conf.publishHumanDate}</time></h2>
   <dl>
     ${!conf.isNoTrack ? html`
       <dt>${conf.l10n.this_version}</dt>
@@ -54,10 +90,14 @@ export default conf => {
           <dd><a href='${conf.prevRecURI}'>${conf.prevRecURI}</a></dd>
       `}
     ` : ""}
-    <dt>${conf.multipleEditors ? html`${conf.l10n.editors}` : html`${conf.l10n.editor}`}</dt>
+    <dt>${conf.multipleEditors ? conf.l10n.editors : conf.l10n.editor}</dt>
     ${showPeople(conf, "Editor", conf.editors)}
+    ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0 ? html`
+      <dt>${conf.multipleFormerEditors ? conf.l10n.former_editors : conf.l10n.former_editor}</dt>
+      ${showPeople(conf, "Editor", conf.formerEditors)}
+    ` : ""}
     ${conf.authors ? html`
-      <dt>${conf.multipleAuthors ? [conf.l10n.authors] : [conf.l10n.author]}</dt>
+      <dt>${conf.multipleAuthors ? conf.l10n.authors : conf.l10n.author}</dt>
       ${showPeople(conf, "Author", conf.authors)}
     ` : ""}
     ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
@@ -76,7 +116,7 @@ export default conf => {
   ` : ""}
   ${conf.alternateFormats ? html`
     <p>
-      ${conf.multipleAlternates ? 
+      ${conf.multipleAlternates ?
         "This document is also available in these non-normative formats:" :
         "This document is also available in this non-normative format:"}
       ${[conf.alternatesHTML]}

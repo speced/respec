@@ -1,43 +1,14 @@
 // Module core/figure
-// Handles figures in the document. This encompasses two primary operations. One is
-// converting some old syntax to use the new HTML5 figure and figcaption elements
-// (this is undone by the unhtml5 plugin, but that will soon be phased out). The other
-// is to enable the generation of a Table of Figures wherever there is a #tof element
-// to be found as well as normalise the titles of figures.
+// Handles figures in the document.
+// Adds width and height to images, if they are missing.
+// Generates a Table of Figures wherever there is a #tof element.
 
 import { pub } from "core/pubsubhub";
 
 export const name = "core/figures";
 
 export function run(conf, doc, cb) {
-  // Move old syntax to new syntax
-  $(".figure", doc).each(function(i, figure) {
-    var $figure = $(figure),
-      title =
-        $figure.attr("title") ||
-        $figure.find("[title]").attr("title") ||
-        $figure.attr("alt") ||
-        $figure.find("[alt]").attr("alt") ||
-        "",
-      $caption = $("<figcaption/>").text(title);
-
-    // change old syntax to something HTML5 compatible
-    let badSyntax = "div.figure";
-    if ($figure.is("div")) {
-      $figure.append($caption);
-      $figure.renameElement("figure");
-    } else {
-      badSyntax = "img.figure";
-      $figure.wrap("<figure></figure>");
-      $figure.parent().append($caption);
-    }
-    pub(
-      "warn",
-      `You are using the deprecated ${badSyntax} syntax; please switch to \`<figure>\`. ` +
-        `Your document has been updated to use \`<figure>\` instead ❤️.`
-    );
-  });
-
+  normalizeImages(doc);
   // process all figures
   var figMap = {},
     tof = [],
@@ -59,7 +30,10 @@ export function run(conf, doc, cb) {
       .prepend(doc.createTextNode(conf.l10n.fig));
     figMap[id] = $cap.contents();
     var $tofCap = $cap.clone();
-    $tofCap.find("a").renameElement("span").removeAttr("href");
+    $tofCap
+      .find("a")
+      .renameElement("span")
+      .removeAttr("href");
     tof.push(
       $("<li class='tofline'><a class='tocxref' href='#" + id + "'></a></li>")
         .find(".tocxref")
@@ -76,7 +50,17 @@ export function run(conf, doc, cb) {
     id = id.substring(1);
     if (figMap[id]) {
       $a.addClass("fig-ref");
-      if ($a.html() === "") $a.append(figMap[id].clone());
+      if ($a.html() === "") {
+        const $shortFigDescriptor = figMap[id].slice(0, 2).clone();
+        if (!$a[0].hasAttribute("title")) {
+          const longFigDescriptor = figMap[id]
+            .slice(2)
+            .clone()
+            .text();
+          $a.attr("title", longFigDescriptor.trim());
+        }
+        $a.append($shortFigDescriptor);
+      }
     }
   });
 
@@ -107,4 +91,15 @@ export function run(conf, doc, cb) {
     while (tof.length) $ul.append(tof.shift());
   }
   cb();
+}
+
+function normalizeImages(doc) {
+  doc
+    .querySelectorAll(
+      ":not(picture)>img:not([width]):not([height]):not([srcset])"
+    )
+    .forEach(img => {
+      img.height = img.naturalHeight;
+      img.width = img.naturalWidth;
+    });
 }

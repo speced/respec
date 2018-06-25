@@ -328,10 +328,28 @@
         Basic operations testing.
       </p>
       <!--
-      getter, setter, creator, deleter, legacycaller, stringifier, serilizer
+      getter, setter, creator, deleter, stringifier, serilizer
       static
       specials don't necessarily have an indentifier
        -->
+       <pre class="idl" id="stringifiertest">
+        interface StringifierTest {
+          stringifier StringPass ();
+          stringifier StringNamedPass named ();
+        };
+      </pre>
+      <pre class="idl" id="gettertest">
+        interface GetterTest {
+          getter GetterPass ();
+          getter GetterNamedPass named ();
+        };
+      </pre>
+      <pre class="idl" id="settertest">
+        interface SetterTest {
+          setter SetterPass ();
+          setter SetterNamedPass named ();
+        };
+      </pre>
       <pre id='meth-basic' class='idl'>
         interface MethBasic {
           // 1
@@ -504,6 +522,18 @@
         typedef unsigned long long? tdLessBasic;
       </pre>
       <p id='td-less-basic-doc'><dfn>tdLessBasic</dfn></p>
+      <p>
+        Typedef with an extended attribute.
+      </p>
+      <pre id='td-extended-attribute' class='idl'>
+        typedef ([Clamp] unsigned long or ConstrainULongRange) ConstrainULong;
+      </pre>
+      <p>
+        Typedef with an extended attribute on union type.
+      </p>
+      <pre id='td-union-extended-attribute' class='idl'>
+        typedef [Clamp] (unsigned long or ConstrainULongRange) ConstrainULong2;
+      </pre>
     </section>
     <section>
       <h2>Implements</h2>
@@ -589,6 +619,6 @@
       <h2><dfn>toJSON()</dfn> method</h2>
       <p>When <a>toJSON()</a> is called, run [[!WEBIDL]]'s <a data-cite="WEBIDL#default-tojson-operation">default toJSON operation</a>.</p>
       </section>
-    </section> 
+    </section>
   </body>
 </html>

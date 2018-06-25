@@ -12,7 +12,7 @@ export function run() {
   let num = 0;
   const bps = document.querySelectorAll("span.practicelab");
   const ul = document.createElement("ul");
-  for (const bp of Array.from(bps)) {
+  for (const bp of bps) {
     num++;
     const id = window.$.fn.makeID.call([bp], "bp");
     const li = hyperHTML`<li><a href="${`#${id}`}">Best Practice ${num}</a>: ${bp.textContent}</li>`;

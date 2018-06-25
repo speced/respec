@@ -8,7 +8,7 @@
     "amd": true,
     "worker": true
   },
-  "extends": "eslint:recommended",
+  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 8,
@@ -19,7 +19,7 @@
   "rules": {
     "indent": 0,
     "linebreak-style": ["error", "unix"],
-    "quotes": ["error", "double"],
+    "quotes": 0,
     "semi": ["error", "always"],
     "no-console": 0
   },
@@ -33,5 +33,5 @@
     "pickRandomsFromList": true,
     "respecConfig": true
   },
-  "plugins": ["jasmine"]
+  "plugins": ["jasmine", "prettier"]
 }

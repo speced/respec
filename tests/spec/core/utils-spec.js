@@ -8,6 +8,79 @@ describe("Core - Utils", () => {
     });
   });
 
+  describe("fetchAndCache", () => {
+    async function clearCaches() {
+      const keys = await caches.keys();
+      for (const key of keys) {
+        await caches.delete(key);
+      }
+    }
+    beforeEach(clearCaches);
+    it("caches a requests of different type with a 1 day default", async () => {
+      const url = location.origin + "/tests/data/pass.txt";
+      const requests = [url, new URL(url), new Request(url)];
+      for (const request of requests) {
+        expect(await caches.match(request)).toBe(undefined);
+        await utils.fetchAndCache(url);
+        const cache = await caches.open(location.origin);
+        expect(cache).toBeTruthy();
+        const cachedResponse = await cache.match(url);
+        expect(cachedResponse).toBeTruthy();
+        const expires = new Date(
+          cachedResponse.headers.get("Expires")
+        ).valueOf();
+        expect(expires).toBeGreaterThan(Date.now());
+        // default is 86400000, but we give a little leeway (~1 day)
+        expect(expires).toBeGreaterThan(Date.now() + 86000000);
+        const bodyText = await cachedResponse.text();
+        expect(bodyText).toBe("PASS");
+        await clearCaches();
+      }
+    });
+
+    it("uses the origin as the cache key", async () => {
+      expect(await caches.keys()).toEqual([]);
+      const url = location.origin + "/tests/data/pass.txt";
+      await utils.fetchAndCache(url);
+      expect(await caches.keys()).toEqual([location.origin]);
+    });
+
+    it("returns a cached response when the response is not ok", async () => {
+      const url = location.origin + "/bad-request";
+      const cache = await caches.open(location.origin);
+      const goodResponse = new Response("PASS");
+      await cache.put(url, goodResponse);
+      const badRequest = new Request(url);
+      const cachedResponse = await utils.fetchAndCache(badRequest);
+      expect(await cachedResponse.text()).toBe("PASS");
+    });
+
+    it("returns a fresh network response when the cached response is expired", async () => {
+      const url = location.origin + "/tests/data/pass.txt";
+      const cache = await caches.open(location.origin);
+      const yesterday = Date.now() - 86400000;
+      const expiredResponse = new Response("FAIL", {
+        headers: { Expires: yesterday },
+      });
+      await cache.put(new Request(url), expiredResponse);
+      const response = await utils.fetchAndCache(url);
+      const body = await response.text();
+      expect(body).toBe("PASS");
+      const cachedResponse = await cache.match(url);
+      expect(await cachedResponse.text()).toBe("PASS");
+    });
+
+    it("allows overriding the default cache time", async () => {
+      const url = location.origin + "/tests/data/pass.txt";
+      const cachedResponse = await utils.fetchAndCache(url, 0);
+      expect(cachedResponse.headers.has("Expires")).toBe(true);
+      const cacheTime = new Date(
+        cachedResponse.headers.get("Expires")
+      ).valueOf();
+      expect(cacheTime <= Date.now()).toBe(true);
+    });
+  });
+
   describe("createResourceHint", () => {
     it("returns a link element", () => {
       var link = utils.createResourceHint({
@@ -409,5 +482,63 @@ describe("Core - Utils", () => {
       'editors^[{"name":"Person Name"}] % specStatus^"ED" % ' +
       'edDraftURI^"http://foo.com" % shortName^"Foo"';
     expect(utils.toKeyValuePairs(obj, " % ", "^")).toEqual(expected);
+  });
+
+  describe("flatten()", () => {
+    it("flattens iterables", () => {
+      expect(utils.flatten(["pass"], [123, 456])).toEqual(["pass", 123, 456]);
+      const map = new Map([["key-fail", "pass"], ["anotherKey", 123]]);
+      expect(utils.flatten([], map)).toEqual(["pass", 123]);
+      expect(utils.flatten([], new Set(["pass", 123]))).toEqual(["pass", 123]);
+      expect(utils.flatten([], { "key-fail": "pass", other: 123 })).toEqual([
+        "pass",
+        123,
+      ]);
+    });
+
+    it("flattens nested iterables as a reducer", () => {
+      const input = [
+        new Map([["fail", "123"]]),
+        new Set([456]),
+        [7, [8, [new Set([9, 10])]]],
+        { key: "11" },
+      ];
+      const output = input.reduce(utils.flatten, ["first", 0]);
+      expect(output).toEqual(["first", 0, "123", 456, 7, 8, 9, 10, "11"]);
+    });
+
+    it("flattens sparse and arrays", () => {
+      const input = [, 1, 1, , , , 1, , 1];
+      const output = input.reduce(utils.flatten,["pass"]);
+      expect(output).toEqual([
+        "pass",
+        1,
+        1,
+        1,
+        1,
+      ]);
+    });
+
+    it("flattens dense and arrays", () => {
+      const input = new Array(10);
+      const output = input.reduce(utils.flatten,["pass"]);
+      expect(output).toEqual(["pass"]);
+    });
+  });
+
+  describe("DOM utils", () => {
+    // migrated from core/jquery-enhanced
+    describe("getTextNodes", () => {
+      it("finds all the text nodes", () => {
+        const node = document.createElement("div");
+        node.innerHTML =
+          "<div>aa<span>bb</span><p>cc<i>dd</i></p><pre>nope</pre></div>";
+
+        const textNodes = utils.getTextNodes(node, ["pre"]);
+        expect(textNodes.length).toEqual(4);
+        const str = textNodes.map(tn => tn.nodeValue).join("");
+        expect(str).toEqual("aabbccdd");
+      });
+    });
   });
 });

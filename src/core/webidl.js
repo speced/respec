@@ -44,9 +44,6 @@ function registerHelpers() {
   hb.registerHelper("extAttrInline", function(obj) {
     return extAttr(obj.extAttrs, 0, /*singleLine=*/ true);
   });
-  hb.registerHelper("typeExtAttrs", function(obj) {
-    return extAttr(obj.typeExtAttrs, 0, /*singleLine=*/ true);
-  });
   hb.registerHelper("extAttrClassName", function() {
     var extAttr = this;
     if (extAttr.name === "Constructor" || extAttr.name === "NamedConstructor") {
@@ -158,9 +155,10 @@ function idlType2Html(idlType) {
   if (Array.isArray(idlType)) {
     return idlType.map(idlType2Html).join(", ");
   }
+  const extAttrs = extAttr(idlType.extAttrs, 0, /*singleLine=*/ true);
   const nullable = idlType.nullable ? "?" : "";
   if (idlType.union) {
-    return `(${idlType.idlType.map(idlType2Html).join(" or ")})${nullable}`;
+    return `${extAttrs}(${idlType.idlType.map(idlType2Html).join(" or ")})${nullable}`;
   }
   let type = "";
   if (idlType.generic) {
@@ -173,7 +171,7 @@ function idlType2Html(idlType) {
       ? linkStandardType(idlType.idlType)
       : idlType2Html(idlType.idlType);
   }
-  return type + nullable;
+  return extAttrs + type + nullable;
 }
 
 function linkStandardType(type) {
@@ -226,7 +224,6 @@ const extenedAttributesLinks = new Map([
   ["Exposed", "WEBIDL#Exposed"],
   ["Global", "WEBIDL#Global"],
   ["HTMLConstructor", "HTML#htmlconstructor"],
-  ["LegacyArrayClass", "WEBIDL#LegacyArrayClass"],
   [
     "LegacyUnenumerableNamedProperties",
     "WEBIDL#LegacyUnenumerableNamedProperties",
@@ -339,8 +336,6 @@ const idlKeywords = new Set([
   "inherit",
   "interface",
   "iterable",
-  "legacycaller",
-  "legacyiterable",
   "long",
   "maplike",
   "NaN",
@@ -379,8 +374,6 @@ const argumentNameKeyword = new Set([
   "inherit",
   "interface",
   "iterable",
-  "legacycaller",
-  "legacyiterable",
   "maplike",
   "partial",
   "required",
@@ -591,6 +584,12 @@ function writeInterfaceDefinition(opt, fixes = {}) {
     } else if (it.type === "operation") {
       if (it.static) {
         len += "static ".length;
+      } else if (it.stringifier) {
+        len += "stringifier ".length;
+      } else if (it.getter) {
+        len += "getter ".length;
+      } else if  (it.setter) {
+        len += "setter ".length;
       }
       maxMeth = Math.max(len, maxMeth);
     } else if (it.type === "const") {
@@ -864,7 +863,6 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
             defn.getter ||
             defn.setter ||
             defn.deleter ||
-            defn.legacycaller ||
             defn.stringifier
           ) {
             name = "";
@@ -1007,6 +1005,7 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
     const showWarnings =
       type &&
       idlElem &&
+      name &&
       idlElem.classList.contains("no-link-warnings") === false;
     if (showWarnings) {
       var msg = `No \`<dfn>\` for ${type} \`${originalName}\`${originalParent

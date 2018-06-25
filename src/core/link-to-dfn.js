@@ -7,8 +7,8 @@ import { lang as defaultLang } from "./l10n";
 export const name = "core/link-to-dfn";
 const l10n = {
   en: {
-    "duplicate": "This is defined more than once in the document."
-  }
+    duplicate: "This is defined more than once in the document.",
+  },
 };
 const lang = defaultLang in l10n ? defaultLang : "en";
 
@@ -57,22 +57,21 @@ export function run(conf, doc, cb) {
       }
     });
     if (listOfDuplicateDfns.length > 0) {
-      const dfnsList = listOfDuplicateDfns.map((elem, i) => {
-        return `[${i + 1}](#${elem.id})`;
-      }).join(", ");
-      pub(
-        "error",
-        `Duplicate definitions of '${title}' at: ${dfnsList}.`
-      );
+      const dfnsList = listOfDuplicateDfns
+        .map((elem, i) => {
+          return `[${i + 1}](#${elem.id})`;
+        })
+        .join(", ");
+      pub("error", `Duplicate definitions of '${title}' at: ${dfnsList}.`);
     }
   });
   $("a:not([href]):not([data-cite]):not(.logo)").each(function() {
-    var $ant = $(this);
+    const $ant = $(this);
     if ($ant.hasClass("externalDFN")) return;
-    var linkTargets = $ant.linkTargets();
-    var foundDfn = linkTargets.some(function(target) {
+    const linkTargets = $ant.linkTargets();
+    const foundDfn = linkTargets.some(function(target) {
       if (titles[target.title] && titles[target.title][target.for]) {
-        var dfn = titles[target.title][target.for];
+        const dfn = titles[target.title][target.for];
         if (dfn[0].dataset.cite) {
           $ant[0].dataset.cite = dfn[0].dataset.cite;
         } else {
@@ -108,15 +107,15 @@ export function run(conf, doc, cb) {
       }
       return false;
     });
-    if (!foundDfn) {
+    if (!foundDfn && linkTargets.length !== 0) {
       // ignore WebIDL
       if (
         !$ant.parents(
           ".idl:not(.extAttr), dl.methods, dl.attributes, dl.constants, dl.constructors, dl.fields, dl.dictionary-members, span.idlMemberType, span.idlTypedefType, div.idlImplementsDesc"
         ).length
       ) {
-        var link_for = linkTargets[0].for;
-        var title = linkTargets[0].title;
+        const link_for = linkTargets[0].for;
+        const title = linkTargets[0].title;
         this.classList.add("respec-offending-element");
         this.title = "Linking error: not matching <dfn>";
         pub(
@@ -133,23 +132,7 @@ export function run(conf, doc, cb) {
       $ant.replaceWith($ant.contents());
     }
   });
-  linkInlineCitations(doc, conf).then(function() {
-    // done linking, so clean up
-    function attrToDataAttr(name) {
-      return function(elem) {
-        var value = elem.getAttribute(name);
-        elem.removeAttribute(name);
-        elem.setAttribute("data-" + name, value);
-      };
-    }
-    var forList = doc.querySelectorAll("*[for]");
-    Array.prototype.forEach.call(forList, attrToDataAttr("for"));
-
-    var dfnForList = doc.querySelectorAll("*[dfn-for]");
-    Array.prototype.forEach.call(dfnForList, attrToDataAttr("dfn-for"));
-
-    var linkForList = doc.querySelectorAll("*[link-for]");
-    Array.prototype.forEach.call(linkForList, attrToDataAttr("link-for"));
+  linkInlineCitations(doc, conf).then(() => {
     // Added message for legacy compat with Aria specs
     // See https://github.com/w3c/respec/issues/793
     pub("end", "core/link-to-dfn");

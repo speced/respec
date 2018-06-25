@@ -17,6 +17,7 @@
 //          - mailto: the person's email
 //          - note: a note on the person (e.g. former editor)
 //  - authors: an array of people who are contributing authors of the document.
+//  - formerEditors: an array of people that had earlier edited the document but no longer edit.
 //  - subtitle: a subtitle for the specification
 //  - publishDate: the date to use for the publication, default to document.lastModified, and
 //      failing that to now. The format is YYYY-MM-DD or a Date object.
@@ -232,7 +233,7 @@ export function run(conf) {
   }
   conf.isCCBY = conf.license === "cc-by";
   conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
-  if (["cc-by", "w3c"].includes(conf.license)) {
+  if (["cc-by"].includes(conf.license)) {
     let msg = `You cannot use license "\`${conf.license}\`" with W3C Specs. `;
     msg += `Please set \`respecConfig.license: "w3c-software-doc"\` instead.`;
     pub("error", msg);
@@ -247,6 +248,20 @@ export function run(conf) {
   }
   if (conf.isRegular && !conf.shortName) {
     pub("error", "Missing required configuration: `shortName`");
+  }
+  if (conf.testSuiteURI) {
+    const url = new URL(conf.testSuiteURI, document.location);
+    const { host, pathname } = url;
+    if (
+      host === "github.com" &&
+      pathname.startsWith("/w3c/web-platform-tests/")
+    ) {
+      const msg =
+        "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. " +
+        "Please update your [`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI) to point to the " +
+        `new tests repository (e.g., https://github.com/web-platform-tests/${conf.shortName} ).`;
+      pub("warn", msg);
+    }
   }
   conf.title = document.title || "No Title";
   if (!conf.subtitle) conf.subtitle = "";
@@ -377,10 +392,15 @@ export function run(conf) {
   if (conf.editors) {
     conf.editors.forEach(peopCheck);
   }
+  if (conf.formerEditors) {
+    conf.formerEditors.forEach(peopCheck);
+  }
   if (conf.authors) {
     conf.authors.forEach(peopCheck);
   }
   conf.multipleEditors = conf.editors && conf.editors.length > 1;
+  conf.multipleFormerEditors =
+    Array.isArray(conf.formerEditors) && conf.formerEditors.length > 1;
   conf.multipleAuthors = conf.authors && conf.authors.length > 1;
   $.each(conf.alternateFormats || [], function(i, it) {
     if (!it.uri || !it.label)
@@ -497,7 +517,7 @@ export function run(conf) {
       "A custom SotD paragraph is required for your type of document."
     );
   }
-  sotd.id = sotd.id || "stod";
+  sotd.id = sotd.id || "sotd";
   sotd.classList.add("introductory");
   // NOTE:
   //  When arrays, wg and wgURI have to be the same length (and in the same order).
@@ -515,6 +535,13 @@ export function run(conf) {
     pub(
       "error",
       "If one of '`wg`', '`wgURI`', or '`wgPatentURI`' is an array, they all have to be."
+    );
+  }
+  if (conf.isCGBG && !conf.wg) {
+    pub(
+      "error",
+      "[`wg`](https://github.com/w3c/respec/wiki/wg)" +
+        " configuration option is required for this kind of document."
     );
   }
   if (Array.isArray(conf.wg)) {
@@ -582,12 +609,22 @@ export function run(conf) {
 
   hyperHTML.bind(sotd)`${populateSoTD(conf, sotd)}`;
 
-  if (!conf.implementationReportURI && (conf.isCR || conf.isPR || conf.isRec)) {
+  if (!conf.implementationReportURI && conf.isCR) {
     pub(
       "error",
-      "CR, PR, and REC documents need to have an `implementationReportURI` defined."
+      "CR documents must have an [`implementationReportURI`](https://github.com/w3c/respec/wiki/implementationReportURI) " +
+        "that describes [implementation experience](https://www.w3.org/2018/Process-20180201/#implementation-experience)."
     );
   }
+  if (!conf.implementationReportURI && conf.isPR) {
+    pub(
+      "warn",
+      "PR documents should include an " +
+        " [`implementationReportURI`](https://github.com/w3c/respec/wiki/implementationReportURI)" +
+        " that describes [implementation experience](https://www.w3.org/2018/Process-20180201/#implementation-experience)."
+    );
+  }
+
   if (conf.isTagFinding && !conf.additionalContent) {
     pub(
       "warn",

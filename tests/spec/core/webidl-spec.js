@@ -1,16 +1,10 @@
 "use strict";
 describe("Core - WebIDL", function() {
   afterAll(flushIframes);
-  var doc;
-  beforeAll(function(done) {
-    var ops = makeStandardOps();
-    makeRSDoc(
-      ops,
-      function(idlDoc) {
-        doc = idlDoc;
-      },
-      "spec/core/webidl.html"
-    ).then(done);
+  let doc;
+  beforeAll(async () => {
+    const ops = makeStandardOps();
+    doc = await makeRSDoc(ops, () => { }, "spec/core/webidl.html");
   });
 
   it("handles record types", done => {
@@ -334,6 +328,42 @@ describe("Core - WebIDL", function() {
     expect($target.find(":contains('dates')").filter("a").length).toEqual(0);
   });
 
+  it("handles stringifiers special operations", () => {
+    const stringifierTestElems = [...doc.querySelectorAll("#stringifiertest .idlMethod")];
+    const [stringifierAnon, stringifierNamed] = stringifierTestElems;
+    expect(stringifierAnon).toBeTruthy();
+    expect(stringifierAnon.querySelector(".idlMethType").textContent).toBe("StringPass");
+    expect(stringifierAnon.querySelector(".idlMethName").textContent).toBe("");
+    
+    expect(stringifierNamed).toBeTruthy();
+    expect(stringifierNamed.querySelector(".idlMethType").textContent).toBe("StringNamedPass");
+    expect(stringifierNamed.querySelector(".idlMethName").textContent).toBe("named");
+  });
+  
+  it("handles getter special operations", () => {
+    const getterTestElems = [...doc.querySelectorAll("#gettertest .idlMethod")];
+    const [getterAnon, getterNamed] = getterTestElems;
+    expect(getterAnon).toBeTruthy();
+    expect(getterAnon.querySelector(".idlMethType").textContent).toBe("GetterPass");
+    expect(getterAnon.querySelector(".idlMethName").textContent).toBe("");
+    
+    expect(getterNamed).toBeTruthy();
+    expect(getterNamed.querySelector(".idlMethType").textContent).toBe("GetterNamedPass");
+    expect(getterNamed.querySelector(".idlMethName").textContent).toBe("named");
+  });
+  
+  it("handles setter special operations", () => {
+    const setterTestElems = [...doc.querySelectorAll("#settertest .idlMethod")];
+    const [setterAnon, setterNamed] = setterTestElems;
+    expect(setterAnon).toBeTruthy();
+    expect(setterAnon.querySelector(".idlMethType").textContent).toBe("SetterPass");
+    expect(setterAnon.querySelector(".idlMethName").textContent).toBe("");
+    
+    expect(setterNamed).toBeTruthy();
+    expect(setterNamed.querySelector(".idlMethType").textContent).toBe("SetterNamedPass");
+    expect(setterNamed.querySelector(".idlMethName").textContent).toBe("named");
+  });
+  
   it("should handle operations", function(done) {
     var $target = $("#meth-basic", doc);
     var text =`interface MethBasic {
@@ -570,26 +600,33 @@ describe("Core - WebIDL", function() {
     done();
   });
 
-  it("should handle typedefs", function(done) {
-    var $target = $("#td-basic", doc);
-    var text = "typedef DOMString string;";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlTypedef").length).toEqual(1);
-    expect($target.find(".idlTypedefID").text()).toEqual("string");
-    expect($target.find(".idlTypedefType").text()).toEqual("DOMString");
+  it("should handle typedefs", () => {
+    let target = doc.getElementById("td-basic");
+    let text = "typedef DOMString string;";
+    expect(target.textContent).toEqual(text);
+    expect(target.querySelectorAll(".idlTypedef").length).toEqual(1);
+    expect(target.querySelector(".idlTypedefID").textContent).toEqual("string");
+    expect(target.querySelector(".idlTypedefType").textContent).toEqual("DOMString");
 
-    $target = $("#td-less-basic", doc);
+    target = doc.getElementById("td-less-basic");
     text = "typedef unsigned long long? tdLessBasic;";
-    expect($target.text()).toEqual(text);
+    expect(target.textContent).toEqual(text);
 
     // Links and IDs.
     expect(
-      $target.find(":contains('tdLessBasic')").filter("a").attr("href")
+      target.querySelector(".idlTypedefID").children[0].getAttribute("href")
     ).toEqual("#dom-tdlessbasic");
     expect(
-      $target.find(".idlTypedef:contains('tdLessBasic')").attr("id")
+      target.querySelector(".idlTypedef").id
     ).toEqual("idl-def-tdlessbasic");
-    done();
+
+    target = doc.getElementById("td-extended-attribute");
+    text = "typedef ([Clamp] unsigned long or ConstrainULongRange) ConstrainULong;";
+    expect(target.textContent).toEqual(text);
+
+    target = doc.getElementById("td-union-extended-attribute");
+    text = "typedef [Clamp] (unsigned long or ConstrainULongRange) ConstrainULong2;";
+    expect(target.textContent).toEqual(text);
   });
 
   it("should handle includes", () => {

@@ -2,7 +2,7 @@
 
 /*jshint node: true, browser: false*/
 "use strict";
-const { URL } = require('url');
+const { URL } = require("url");
 const colors = require("colors");
 const fetchAndWrite = require("./respecDocWriter").fetchAndWrite;
 colors.setTheme({
@@ -70,8 +70,8 @@ const optionList = [
     default: false,
     description: "Disable Chromium sandboxing if needed.",
     name: "disable-sandbox",
-    type: Boolean
-  }
+    type: Boolean,
+  },
 ];
 
 const usageSections = [
@@ -88,11 +88,13 @@ const usageSections = [
     content: [
       {
         desc: "1. Output to a file. ",
-        example: "$ ./respec2html.js --src http://example.com/spec.html --out spec.html",
+        example:
+          "$ ./respec2html.js --src http://example.com/spec.html --out spec.html",
       },
       {
         desc: "2. Halt on errors or warning ",
-        example: "$ ./respec2html.js -e -w --src http://example.com/spec.html --out spec.html",
+        example:
+          "$ ./respec2html.js -e -w --src http://example.com/spec.html --out spec.html",
       },
     ],
   },
@@ -126,9 +128,9 @@ const usageSections = [
   };
   const out = parsedArgs.out;
   try {
-    await fetchAndWrite(src, out, whenToHalt, { 
+    await fetchAndWrite(src, out, whenToHalt, {
       timeout: parsedArgs.timeout * 1000,
-      disableSandbox: parsedArgs["disable-sandbox"]
+      disableSandbox: parsedArgs["disable-sandbox"],
     });
   } catch (err) {
     console.error(colors.error(err.stack));

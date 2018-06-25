@@ -1,4 +1,7 @@
 "use strict";
+const findContent = string => {
+  return ({ textContent }) => textContent.trim() === string;
+};
 describe("W3C — Headers", function() {
   afterEach(flushIframes);
   const simpleSpecURL = "spec/core/simple.html";
@@ -72,6 +75,7 @@ describe("W3C — Headers", function() {
   });
 
   describe("editors", () => {
+    const findEditor = findContent("Editor:");
     it("takes a single editors into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
@@ -93,12 +97,12 @@ describe("W3C — Headers", function() {
       expect($("dt:contains('Editors:')", doc).length).toEqual(0);
       expect($("dt:contains('Editor:')", doc).length).toEqual(1);
       var $dd = $("dt:contains('Editor:')", doc).next("dd");
-      expect($dd.find("a[href='http://URI']").length).toEqual(1);
-      expect($dd.find("a[href='http://URI']").text()).toEqual("NAME");
       expect($dd.find("a[href='http://COMPANY']").length).toEqual(1);
       expect($dd.find("a[href='http://COMPANY']").text()).toEqual("COMPANY");
       expect($dd.find("a[href='mailto:EMAIL']").length).toEqual(1);
-      expect($dd.find("a[href='mailto:EMAIL']").text()).toEqual("EMAIL");
+      expect($dd.find("a[href='mailto:EMAIL']").text()).toEqual("NAME");
+      // if `mailto` is specified in People, `url` won't be used
+      expect($dd.find("a[href='http://URI']").length).toEqual(0);
       expect($dd.get(0).dataset.editorId).toEqual("1234");
       expect($dd.text()).toMatch(/\(NOTE\)/);
     });
@@ -177,6 +181,152 @@ describe("W3C — Headers", function() {
       expect(doc.querySelector("a[href='http://not-valid']")).toEqual(null);
       expect(doc.querySelector("a[href='http://empty-name']")).toEqual(null);
     });
+
+    it("treats editor's name as HTML", async () => {
+      const config = {
+        specStatus: "REC",
+        editors: [
+          {
+            name:
+              "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
+            company: "Microsoft",
+          },
+        ],
+      };
+      const ops = makeStandardOps(config);
+      const doc = await makeRSDoc(ops);
+      const dtElems = [...doc.querySelectorAll(".head dt")];
+      const dtElem = dtElems.find(findEditor);
+      const ddElem = dtElem.nextElementSibling;
+      const [personName, edition] = ddElem.querySelectorAll("span>span");
+      expect(personName.lang).toBe("ja");
+      expect(personName.textContent).toBe("阿南 康宏");
+      expect(edition.textContent).toBe("第１版");
+      expect(ddElem.textContent).toEqual(
+        "阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (Microsoft)"
+      );
+    });
+  });
+
+  describe("formerEditors", () => {
+    const formerEditors = findContent("Former editors:");
+    const formerEditor = findContent("Former editor:");
+    it("takes no former editor into account", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+        formerEditors: [],
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+
+      const dtElems = [...doc.querySelectorAll("dt")];
+      const formerEditorsLabel = dtElems.find(formerEditors);
+      expect(formerEditorsLabel).toBeUndefined();
+
+      const formerEditorLabel = dtElems.find(formerEditor);
+      expect(formerEditorLabel).toBeUndefined();
+    });
+
+    it("takes a single former editor into account", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+        formerEditors: [
+          {
+            name: "NAME",
+            url: "http://URI",
+            company: "COMPANY",
+            companyURL: "http://COMPANY",
+            mailto: "EMAIL",
+            w3cid: "1234",
+          },
+        ],
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+      const dtElems = [...doc.querySelectorAll("dt")];
+      const formerEditorLabel = dtElems.find(formerEditor);
+      expect(formerEditorLabel).toBeDefined();
+
+      const formerEditorsLabel = dtElems.find(formerEditors);
+      expect(formerEditorsLabel).toBeUndefined();
+
+      const editor = formerEditorLabel.nextSibling;
+      expect(editor.localName).toEqual("dd");
+      expect(editor.textContent).toEqual("NAME (COMPANY)");
+
+      const editorCompany = editor.querySelectorAll("a[href='http://COMPANY']");
+      expect(editorCompany.length).toEqual(1);
+      expect(editorCompany[0].textContent).toEqual("COMPANY");
+
+      const editorEmail = editor.querySelectorAll("a[href='mailto:EMAIL']");
+      expect(editorEmail.length).toEqual(1);
+      expect(editorEmail[0].textContent).toEqual("NAME");
+
+      // if `mailto` is specified in People, `url` won't be used
+      const editorUrl = editor.querySelectorAll("a[href='http://URI']");
+      expect(editorUrl.length).toEqual(0);
+
+      const { editorId } = editor.dataset;
+      expect(editorId).toEqual("1234");
+    });
+
+    it("takes multiple former editors into account", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+        formerEditors: [
+          {
+            name: "NAME1",
+          },
+          {
+            name: "NAME2",
+          },
+        ],
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+      const dtElems = [...doc.querySelectorAll("dt")];
+      const formerEditorLabel = dtElems.find(formerEditor);
+      expect(formerEditorLabel).toBeUndefined();
+
+      const formerEditorsLabel = dtElems.find(formerEditors);
+      expect(formerEditorsLabel).toBeDefined();
+
+      const firstEditor = formerEditorsLabel.nextSibling;
+      expect(firstEditor.localName).toEqual("dd");
+      expect(firstEditor.textContent).toEqual("NAME1");
+
+      const secondEditor = firstEditor.nextSibling;
+      expect(secondEditor.localName).toEqual("dd");
+      expect(secondEditor.textContent).toEqual("NAME2");
+    });
+
+    it("treats formerEditor's name as HTML", async () => {
+      const config = {
+        specStatus: "REC",
+        formerEditors: [
+          {
+            name:
+              "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
+            company: "Microsoft",
+          },
+        ],
+      };
+      const ops = makeStandardOps(config);
+      const doc = await makeRSDoc(ops);
+      const dtElems = [...doc.querySelectorAll(".head dt")];
+      const dtElem = dtElems.find(formerEditor);
+      const ddElem = dtElem.nextElementSibling;
+      const [personName, edition] = ddElem.querySelectorAll("span>span");
+      expect(personName.lang).toBe("ja");
+      expect(personName.textContent).toBe("阿南 康宏");
+      expect(edition.textContent).toBe("第１版");
+      expect(ddElem.textContent).toEqual(
+        "阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (Microsoft)"
+      );
+    });
   });
 
   describe("authors", () => {
@@ -221,6 +371,41 @@ describe("W3C — Headers", function() {
     });
   });
 
+  describe("use existing h1 element", () => {
+    it("uses the <h1>'s value as the document's title", async () => {
+      const body =
+        `
+        <h1 id='title'>
+          This should be <code>pass</code>.
+         </h1>` + makeDefaultBody();
+      const ops = makeStandardOps({}, body);
+      const doc = await makeRSDoc(ops);
+      expect(doc.title).toEqual("This should be pass.");
+      const titleElem = doc.querySelector("title");
+      expect(titleElem).toBeTruthy();
+      expect(titleElem.textContent).toEqual("This should be pass.");
+    });
+
+    it("uses <h1> if already present", async () => {
+      const ops = makeStandardOps();
+      ops.body = "<h1 id='title'><code>pass</code></h1>" + makeDefaultBody();
+      const doc = await makeRSDoc(ops);
+
+      // Title was relocated to head
+      const titleInHead = doc.querySelector(".head h1");
+      expect(titleInHead.classList.contains("p-name")).toBe(true);
+      expect(titleInHead.id).toEqual("title");
+
+      // html is not escaped
+      expect(titleInHead.firstChild.tagName).toEqual("CODE");
+      expect(titleInHead.textContent).toEqual("pass");
+
+      // the config title is overridden
+      const { title } = doc.defaultView.respecConfig;
+      expect(title).toEqual("pass");
+    });
+  });
+
   describe("subtitle", () => {
     it("handles missing subtitle", async () => {
       const ops = makeStandardOps();
@@ -229,19 +414,64 @@ describe("W3C — Headers", function() {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect($("#subtitle", doc).length).toEqual(0);
+      expect(doc.getElementById("subtitle")).toEqual(null);
     });
 
-    it("takes subtitle into account", async () => {
+    it("uses existing h2#subtitle as subtitle", async () => {
+      const ops = makeStandardOps();
+      ops.body = "<h2 id='subtitle'><code>pass</code></h2>" + makeDefaultBody();
+      const doc = await makeRSDoc(ops);
+
+      const subTitleElements = doc.querySelectorAll("h2#subtitle");
+      expect(subTitleElements.length).toEqual(1);
+
+      const { subtitle } = doc.defaultView.respecConfig;
+      expect(subtitle).toEqual("pass");
+
+      const [h2Elem] = subTitleElements;
+      expect(h2Elem.textContent).toEqual("pass");
+
+      // make sure it was relocated to head
+      expect(h2Elem.closest(".head")).toBeTruthy();
+
+      expect(h2Elem.firstElementChild.localName).toEqual("code");
+      expect(h2Elem.firstElementChild.textContent).toEqual("pass");
+    });
+
+    it("overwrites conf.subtitle if it exists", async () => {
+      const ops = makeStandardOps();
+      ops.body = "<h2 id='subtitle'><code>pass</code></h2>" + makeDefaultBody();
+      const newProps = {
+        subtitle: "fail - this should have been overridden by the <h2>",
+      };
+      Object.assign(ops.config, newProps);
+
+      const doc = await makeRSDoc(ops);
+
+      const { subtitle } = doc.defaultView.respecConfig;
+      expect(subtitle).toEqual("pass");
+    });
+
+    it("sets conf.subtitle if it doesn't exist, but h2#subtitle exists", async () => {
+      const ops = makeStandardOps();
+      ops.body = "<h2 id='subtitle'><code>pass</code></h2>" + makeDefaultBody();
+      const doc = await makeRSDoc(ops);
+
+      const { subtitle } = doc.defaultView.respecConfig;
+      expect(subtitle).toEqual("pass");
+    });
+
+    it("generates a subtitle from the `subtitle` configuration option", async () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "REC",
-        subtitle: "SUB",
+        subtitle: "pass",
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect($("#subtitle", doc).length).toEqual(1);
-      expect($("#subtitle", doc).text()).toEqual("SUB");
+      const h2Elem = doc.getElementById("subtitle");
+      expect(h2Elem).toBeTruthy();
+      expect(h2Elem.textContent.trim()).toEqual("pass");
     });
   });
 
@@ -387,12 +617,11 @@ describe("W3C — Headers", function() {
 
   describe("edDraftURI", () => {
     it("takes edDraftURI into account", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
+      const ops = makeStandardOps({
         specStatus: "WD",
         edDraftURI: "URI",
-      };
-      Object.assign(ops.config, newProps);
+      });
+
       const doc = await makeRSDoc(ops);
       expect(
         $("dt:contains('Latest editor\\'s draft:')", doc)
@@ -443,12 +672,11 @@ describe("W3C — Headers", function() {
     });
 
     it("handles additionalCopyrightHolders when text is markup", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
+      const ops = makeStandardOps({
         specStatus: "REC",
         additionalCopyrightHolders: "<span class='test'>XXX</span>",
-      };
-      Object.assign(ops.config, newProps);
+      });
+
       const doc = await makeRSDoc(ops);
       expect($(".head .copyright .test", doc).text()).toEqual("XXX");
     });
@@ -770,6 +998,9 @@ describe("W3C — Headers", function() {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "Member-SUBM",
+        submissionCommentNumber: "01",
+        publishDate: "2018-05-25",
+        shortName: "yolo",
       };
       Object.assign(ops.config, newProps);
       doc = await makeRSDoc(ops);
@@ -784,39 +1015,25 @@ describe("W3C — Headers", function() {
       expect(img).toBeTruthy();
     });
     it("uses the right SoTD boilerplate for Member submissions", async () => {
-      const stod = doc.getElementById("sotd").textContent.replace(/\s+/gm, " ");
+      const sotd = doc.getElementById("sotd").textContent.replace(/\s+/gm, " ");
       const testString =
         "the Submitting Members have made a formal Submission request";
-      expect(stod).toMatch(testString);
+      expect(sotd).toMatch(testString);
+    });
+    it("links the right submitting members", async () => {
+      const anchor = doc.querySelector(
+        "#sotd a[href='https://www.w3.org/Submission/2018/Member-SUBM-yolo-20180525/']"
+      );
+      expect(anchor).toBeTruthy();
+    });
+    it("shows the correct staff comments", async () => {
+      const anchor = doc.querySelector(
+        "#sotd a[href='https://www.w3.org/Submission/2018/01/Comment/']"
+      );
+      expect(anchor).toBeTruthy();
     });
   });
 
-  describe("Team-SUBM", () => {
-    let doc;
-    beforeAll(async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "Team-SUBM",
-      };
-      Object.assign(ops.config, newProps);
-      doc = await makeRSDoc(ops);
-    });
-    it("shouldn't expose a Previous version link for Team submissions", async () => {
-      expect($("dt:contains('Previous version:')", doc).length).toEqual(0);
-    });
-    it("displays the Team Submission logo for Team submissions", async () => {
-      const img = doc.querySelector(
-        ".head img[src^='https://www.w3.org/Icons/team_subm']"
-      );
-      expect(img).toBeTruthy();
-    });
-    it("uses the right SoTD boilerplate for Team submissions", async () => {
-      const link = doc.querySelector(
-        "#sotd a[href='https://www.w3.org/TeamSubmission/']"
-      );
-      expect(link).toBeTruthy();
-    });
-  });
   describe("statusOverride", () => {
     it("allows status paragraph to be overridden", async () => {
       const ops = makeStandardOps();
@@ -987,29 +1204,36 @@ describe("W3C — Headers", function() {
   describe("logos", () => {
     it("adds logos defined by configuration", async () => {
       const ops = makeStandardOps();
-      const logos = [{
-        src: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
-        alt: "this is a small gif",
-        height: 765,
-        width: 346,
-        url: "http://hyperlink/"
-      }, {
-        src: "data:image/svg+xml,<svg%20xmlns=\"http://www.w3.org/2000/svg\"/>",
-        alt: "this is an svg",
-        height: 315,
-        width: 961,
-        url: "http://prod/"
-      }, {
-        src: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
-        alt: "this is a larger gif",
-        height: 876,
-        width: 283,
-        url: "http://shiny/"
-      }];
+      const logos = [
+        {
+          src: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
+          alt: "this is a small gif",
+          height: 765,
+          width: 346,
+          url: "http://hyperlink/",
+        },
+        {
+          src: "data:image/svg+xml,<svg%20xmlns=\"http://www.w3.org/2000/svg\"/>",
+          alt: "this is an svg",
+          height: 315,
+          width: 961,
+          url: "http://prod/",
+        },
+        {
+          src:
+            "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",
+          alt: "this is a larger gif",
+          height: 876,
+          width: 283,
+          url: "http://shiny/",
+        },
+      ];
       Object.assign(ops.config, { logos });
       const doc = await makeRSDoc(ops);
       // get logos
-      const anchors = doc.querySelectorAll(".head p:not(.copyright):first-child > a");
+      const anchors = doc.querySelectorAll(
+        ".head p:not(.copyright):first-child > a"
+      );
       for (let i = 0; i < anchors.length; i++) {
         const anchor = anchors[i];
         const img = anchor.children[0];
