@@ -253,18 +253,13 @@ function extAttr(extAttrs, indent, singleLine) {
     // If there are no extended attributes, omit the [] entirely.
     return "";
   }
-  var opt = {
-    extAttrs,
-    sep: ","
-  };
+  const opt = { extAttrs };
   const safeString = new hb.SafeString(idlExtAttributeTmpl(opt));
   const tmpParser = document.createElement("div");
   tmpParser.innerHTML = safeString;
   Array.from(tmpParser.querySelectorAll(".extAttrName"))
-    .filter(function(elem) {
-      return extenedAttributesLinks.has(elem.textContent);
-    })
-    .forEach(function(elem) {
+    .filter(elem => extenedAttributesLinks.has(elem.textContent))
+    .forEach(elem => {
       const a = elem.ownerDocument.createElement("a");
       a.dataset.cite = extenedAttributesLinks.get(elem.textContent);
       a.textContent = elem.textContent;
