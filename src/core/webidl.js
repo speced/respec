@@ -28,7 +28,6 @@ var idlInterfaceTmpl = tmpls["interface.html"];
 var idlIterableLikeTmpl = tmpls["iterable-like.html"];
 var idlLineCommentTmpl = tmpls["line-comment.html"];
 var idlMethodTmpl = tmpls["method.html"];
-var idlMultiLineCommentTmpl = tmpls["multiline-comment.html"];
 var idlParamTmpl = tmpls["param.html"];
 var idlTypedefTmpl = tmpls["typedef.html"];
 // TODO: make these linkable somehow.
@@ -54,7 +53,7 @@ function registerHelpers() {
     if (rhs.type === "identifier") {
       return options.fn(rhs.value);
     }
-    return `(${rhs.value.map(options.fn)})`;
+    return `(${rhs.value.map(v => options.fn(v.value))})`;
   });
   hb.registerHelper("param", function(obj) {
     return new hb.SafeString(
@@ -71,9 +70,6 @@ function registerHelpers() {
     } else {
       return options.inverse(this);
     }
-  });
-  hb.registerHelper("idn", function(indent) {
-    return new hb.SafeString(idn(indent));
   });
   hb.registerHelper("idlType", function(obj) {
     return new hb.SafeString(idlType2Html(obj.idlType));
@@ -97,9 +93,6 @@ function registerHelpers() {
         return "<Unknown>";
     }
   });
-  hb.registerHelper("escapeArgumentName", escapeArgumentName);
-  hb.registerHelper("escapeAttributeName", escapeAttributeName);
-  hb.registerHelper("escapeIdentifier", escapeIdentifier);
   hb.registerHelper("pads", function(num) {
     return new hb.SafeString(pads(num));
   });
@@ -118,8 +111,11 @@ function registerHelpers() {
   hb.registerHelper("tryLink", function(obj, options) {
     const content = options.fn(this);
     const isDefaultJSON =
-      obj.name === "toJSON" &&
-      obj.extAttrs.some(({ name }) => name === "Default");
+      obj.body &&
+      obj.body.name &&
+      obj.body.name.value === "toJSON" &&
+      obj.extAttrs &&
+      obj.extAttrs.items.some(({ name }) => name === "Default");
     // nothing defines this.
     if (!obj.dfn && !isDefaultJSON) {
       return content;
@@ -141,10 +137,14 @@ function registerHelpers() {
     }
     return a.outerHTML;
   });
+  hb.registerHelper("trivia", writeTrivia);
 }
 
-function idn(lvl) {
-  return "    ".repeat(lvl);
+function writeTrivia(text) {
+  if (!text.length) {
+    return "";
+  }
+  return idlLineCommentTmpl({ text });
 }
 
 function idlType2Html(idlType) {
@@ -152,25 +152,29 @@ function idlType2Html(idlType) {
     return `<a>${hb.Utils.escapeExpression(idlType)}</a>`;
   }
   if (Array.isArray(idlType)) {
-    return idlType.map(idlType2Html).join(", ");
+    return idlType.map(idlType2Html).join(",");
   }
   const extAttrs = extAttr(idlType.extAttrs, 0, /*singleLine=*/ true);
   const nullable = idlType.nullable ? "?" : "";
   if (idlType.union) {
-    return `${extAttrs}(${idlType.idlType.map(idlType2Html).join(" or ")})${nullable}`;
+    const subtypes = idlType.idlType.map(idlType2Html).join(" or");
+    const union = `${writeTrivia(idlType.trivia.open)}(${subtypes})`;
+    return `${extAttrs}${union}${nullable}`;
   }
   let type = "";
   if (idlType.generic) {
-    type = standardTypes.has(idlType.generic)
-      ? linkStandardType(idlType.generic)
-      : idlType2Html(idlType.generic);
+    const generic = idlType.generic.value;
+    type = standardTypes.has(generic)
+      ? linkStandardType(generic)
+      : idlType2Html(generic);
     type = `${type}&lt;${idlType2Html(idlType.idlType)}>`;
   } else {
     type = standardTypes.has(idlType.idlType)
       ? linkStandardType(idlType.idlType)
       : idlType2Html(idlType.idlType);
   }
-  return extAttrs + type + nullable;
+  const trivia = idlType.prefix ? idlType.prefix.trivia : idlType.trivia.base;
+  return extAttrs + writeTrivia(trivia) + type + nullable;
 }
 
 function linkStandardType(type) {
@@ -245,24 +249,17 @@ const extenedAttributesLinks = new Map([
 ]);
 
 function extAttr(extAttrs, indent, singleLine) {
-  if (extAttrs.length === 0) {
+  if (!extAttrs) {
     // If there are no extended attributes, omit the [] entirely.
     return "";
   }
-  var opt = {
-    extAttrs: extAttrs,
-    indent: indent,
-    sep: singleLine ? ", " : ",\n " + idn(indent),
-    end: singleLine ? " " : "\n",
-  };
+  const opt = { extAttrs };
   const safeString = new hb.SafeString(idlExtAttributeTmpl(opt));
   const tmpParser = document.createElement("div");
   tmpParser.innerHTML = safeString;
   Array.from(tmpParser.querySelectorAll(".extAttrName"))
-    .filter(function(elem) {
-      return extenedAttributesLinks.has(elem.textContent);
-    })
-    .forEach(function(elem) {
+    .filter(elem => extenedAttributesLinks.has(elem.textContent))
+    .forEach(elem => {
       const a = elem.ownerDocument.createElement("a");
       a.dataset.cite = extenedAttributesLinks.get(elem.textContent);
       a.textContent = elem.textContent;
@@ -383,50 +380,38 @@ const argumentNameKeyword = new Set([
   "typedef",
   "unrestricted",
 ]);
-const attributeNameKeyword = new Set(["required"]);
 var operationNames = {};
 var idlPartials = {};
 
-function escapeArgumentName(argumentName) {
-  if (idlKeywords.has(argumentName) && !argumentNameKeyword.has(argumentName))
-    return "_" + argumentName;
-  return argumentName;
-}
-
-function escapeAttributeName(attributeName) {
-  if (
-    idlKeywords.has(attributeName) &&
-    !attributeNameKeyword.has(attributeName)
-  )
-    return "_" + attributeName;
-  return attributeName;
-}
-
-function escapeIdentifier(identifier) {
-  if (idlKeywords.has(identifier)) return "_" + identifier;
-  return identifier;
-}
-
 // Takes the result of WebIDL2.parse(), an array of definitions.
 function makeMarkup(conf, parse) {
-  var attr = { class: "def idl" };
-  var $pre = $("<pre></pre>").attr(attr);
-  $pre.html(
-    parse
-      .filter(function(defn) {
-        return !typeIsWhitespace(defn.type);
-      })
-      .map(function(defn) {
-        return writeDefinition(defn, -1);
-      })
-      .join("\n\n")
-  );
-  return $pre;
+  var pre = document.createElement("pre");
+  pre.classList.add("def", "idl");
+  pre.innerHTML = parse.map(defn => writeDefinition(defn)).join("");
+  return pre;
 }
 
-function writeDefinition(obj, indent) {
-  indent++;
-  var opt = { indent: indent, obj: obj };
+/**
+ * Removes common indents across the IDL texts,
+ * so that indentation inside <pre> won't affect the rendered result.
+ * @param {string} text IDL text
+ */
+function unindentMarkup(text) {
+  if (!text) {
+    return text;
+  }
+  // TODO: use trimEnd if Edge and Firefox support it
+  const lines = text.trimRight().split("\n");
+  while (lines.length && !lines[0].trim()) {
+    lines.shift();
+  }
+  const indents = lines.filter(s => s).map(s => s.search(/[^\s]/));
+  const leastIndent = Math.min(...indents);
+  return lines.map(s => s.slice(leastIndent)).join("\n");
+}
+
+function writeDefinition(obj) {
+  const opt = { obj };
   switch (obj.type) {
     case "typedef":
       return idlTypedefTmpl(opt);
@@ -440,109 +425,40 @@ function writeDefinition(obj, indent) {
       return writeInterfaceDefinition(opt, { mixin: true });
     case "callback interface":
       return writeInterfaceDefinition(opt, { callback: true });
-    case "dictionary":
-      var maxQualifiers = 0,
-        maxType = 0;
-      var members = obj.members.filter(function(member) {
-        return !typeIsWhitespace(member.type);
-      });
-      for (const it of obj.members) {
-        if (typeIsWhitespace(it.type)) {
-          continue;
-        }
-        const qualifiers = it.required ? "required " : "";
-        if (maxQualifiers < qualifiers.length)
-          maxQualifiers = qualifiers.length;
-
-        var typeLen = idlType2Text(it.idlType).length;
-        if (maxType < typeLen) maxType = typeLen;
-      }
-      var children = obj.members
-        .map(function(it) {
-          switch (it.type) {
-            case "field":
-              return writeMember(it, maxQualifiers, maxType, indent + 1);
-            case "line-comment":
-              return writeLineComment(it, indent + 1);
-            case "multiline-comment":
-              return writeMultiLineComment(it, indent + 1);
-            case "ws":
-              return writeBlankLines(it);
-            case "ws-pea":
-              break;
-            default:
-              throw new Error(
-                "Unexpected type in dictionary: `" + it.type + "`."
-              );
-          }
-        })
-        .join("");
+    case "dictionary": {
+      const children = obj.members.map(writeMember).join("");
       return idlDictionaryTmpl({
-        obj: obj,
-        indent: indent,
-        children: children,
-        partial: obj.partial ? "partial " : "",
+        obj,
+        children,
+        partial: obj.partial ? `${writeTrivia(obj.partial.trivia)}partial` : "",
       });
-    case "callback":
-      var paramObjs = obj.arguments
-        .filter(function(it) {
-          return !typeIsWhitespace(it.type);
+    }
+    case "callback": {
+      const paramObjs = obj.arguments.map(it =>
+        idlParamTmpl({
+          obj: it,
+          optional: it.optional
+            ? `${writeTrivia(it.optional.trivia)}optional`
+            : "",
+          variadic: it.variadic ? "..." : "",
         })
-        .map(function(it) {
-          return idlParamTmpl({
-            obj: it,
-            optional: it.optional ? "optional " : "",
-            variadic: it.variadic ? "..." : "",
-          });
-        });
+      );
       var callbackObj = {
-        obj: obj,
-        indent: indent,
-        children: paramObjs.join(", "),
+        obj,
+        children: paramObjs.join(","),
       };
-      var ret = idlCallbackTmpl(callbackObj);
-      var line = $(ret).text();
-      if (line.length > 80) {
-        var paramPad = line.indexOf("(") + 1;
-        callbackObj.children = paramObjs.join(",\n" + pads(paramPad));
-
-        ret = idlCallbackTmpl(callbackObj);
-      }
-      return ret;
-    case "enum":
+      return idlCallbackTmpl(callbackObj);
+    }
+    case "enum": {
       var children = "";
-      for (var i = 0; i < obj.values.length; i++) {
-        var item = obj.values[i];
+      for (const item of obj.values) {
         switch (item.type) {
           case "string":
-            var needsComma = false;
-            for (var j = i + 1; j < obj.values.length; j++) {
-              var lookahead = obj.values[j];
-              if (lookahead.type === undefined) break;
-              if (lookahead.type === ",") {
-                needsComma = true;
-                break;
-              }
-            }
             children += idlEnumItemTmpl({
+              obj: item,
               lname: item.value ? item.value.toLowerCase() : "the-empty-string",
-              name: item.value,
               parentID: obj.name.toLowerCase(),
-              indent: indent + 1,
-              needsComma: needsComma,
             });
-            break;
-          case "line-comment":
-            children += writeLineComment(item, indent + 1);
-            break;
-          case "multiline-comment":
-            children += writeMultiLineComment(item, indent + 1);
-            break;
-          case "ws":
-            children += writeBlankLines(item);
-            break;
-          case ",":
-          case "ws-pea":
             break;
           default:
             throw new Error(
@@ -550,7 +466,10 @@ function writeDefinition(obj, indent) {
             );
         }
       }
-      return idlEnumTmpl({ obj: obj, indent: indent, children: children });
+      return idlEnumTmpl({ obj, children });
+    }
+    case "eof":
+      return writeTrivia(obj.trivia);
     default:
       pub(
         "error",
@@ -561,60 +480,20 @@ function writeDefinition(obj, indent) {
 }
 
 function writeInterfaceDefinition(opt, fixes = {}) {
-  var obj = opt.obj,
-    indent = opt.indent;
-  var maxAttr = 0,
-    maxAttrQualifiers = 0,
-    maxMeth = 0,
-    maxConst = 0;
-  for (const it of obj.members) {
-    if (
-      typeIsWhitespace(it.type) ||
-      it.type === "iterable" ||
-      it.type === "maplike" ||
-      it.type === "setlike"
-    ) {
-      continue;
-    }
-    var len = it.idlType ? idlType2Text(it.idlType).length : 0;
-    if (it.type === "attribute") {
-      var qualifiersLen = writeAttributeQualifiers(it).length;
-      maxAttr = Math.max(len, maxAttr);
-      maxAttrQualifiers = Math.max(qualifiersLen, maxAttrQualifiers);
-    } else if (it.type === "operation") {
-      if (it.static) {
-        len += "static ".length;
-      } else if (it.stringifier) {
-        len += "stringifier ".length;
-      } else if (it.getter) {
-        len += "getter ".length;
-      } else if  (it.setter) {
-        len += "setter ".length;
-      }
-      maxMeth = Math.max(len, maxMeth);
-    } else if (it.type === "const") {
-      maxConst = Math.max(len, maxConst);
-    }
-  }
-  var children = obj.members
-    .map(function(ch) {
+  const { obj } = opt;
+  const children = obj.members
+    .map(ch => {
       switch (ch.type) {
         case "attribute":
-          return writeAttribute(ch, maxAttr, indent + 1, maxAttrQualifiers);
+          return writeAttribute(ch);
         case "operation":
-          return writeMethod(ch, maxMeth, indent + 1);
+          return writeMethod(ch);
         case "const":
-          return writeConst(ch, maxConst, indent + 1);
+          return writeConst(ch);
         case "iterable":
         case "maplike":
         case "setlike":
-          return writeIterableLike(ch, indent + 1);
-        case "ws":
-          return writeBlankLines(ch);
-        case "line-comment":
-          return writeLineComment(ch, indent + 1);
-        case "multiline-comment":
-          return writeMultiLineComment(ch, indent + 1);
+          return writeIterableLike(ch);
         default:
           throw new Error("Unexpected member type: `" + ch.type + "`.");
       }
@@ -622,10 +501,11 @@ function writeInterfaceDefinition(opt, fixes = {}) {
     .join("");
   return idlInterfaceTmpl({
     obj,
-    indent,
-    partial: obj.partial ? "partial " : "",
-    callback: fixes.callback ? "callback " : "",
-    mixin: fixes.mixin ? "mixin " : "",
+    partial: obj.partial ? `${writeTrivia(obj.partial.trivia)}partial` : "",
+    callback: fixes.callback
+      ? `${writeTrivia(obj.trivia.callback)}callback`
+      : "",
+    mixin: fixes.mixin ? `${writeTrivia(obj.trivia.mixin)}mixin` : "",
     children,
   });
 }
@@ -641,10 +521,12 @@ function writeField(attr, max, indent) {
 
 function writeAttributeQualifiers(attr) {
   var qualifiers = "";
-  if (attr.static) qualifiers += "static ";
-  if (attr.stringifier) qualifiers += "stringifier ";
-  if (attr.inherit) qualifiers += "inherit ";
-  if (attr.readonly) qualifiers += "readonly ";
+  if (attr.static) qualifiers += `${writeTrivia(attr.static.trivia)}static`;
+  if (attr.stringifier)
+    qualifiers += `${writeTrivia(attr.stringifier.trivia)}stringifier`;
+  if (attr.inherit) qualifiers += `${writeTrivia(attr.inherit.trivia)}inherit`;
+  if (attr.readonly)
+    qualifiers += `${writeTrivia(attr.readonly.trivia)}readonly`;
   return qualifiers;
 }
 
@@ -662,8 +544,8 @@ function writeAttribute(attr, max, indent, maxQualifiers) {
   });
 }
 
-function writeMethod(meth, max, indent) {
-  var paramObjs = (meth.arguments || [])
+function writeMethod(meth) {
+  const paramObjs = ((meth.body && meth.body.arguments) || [])
     .filter(it => !typeIsWhitespace(it.type))
     .map(it =>
       idlParamTmpl({
@@ -672,39 +554,23 @@ function writeMethod(meth, max, indent) {
         variadic: it.variadic ? "..." : "",
       })
     );
-  var params = paramObjs.join(", ");
-  var len = meth.idlType ? idlType2Text(meth.idlType).length : 0;
-  var specialProps = [
-    "getter",
-    "setter",
-    "deleter",
-    "stringifier",
-    "static", // not "special op", but serves same role
-  ];
-  var special = "";
-  for (var i in specialProps) {
-    if (meth[specialProps[i]]) {
-      special = specialProps[i] + " ";
-      len += special.length;
-      break;
+  const params = paramObjs.join(", ");
+  const modifiers = ["getter", "setter", "deleter", "stringifier", "static"];
+  let special = "";
+  for (const specialProp of modifiers) {
+    if (meth[specialProp]) {
+      special = writeTrivia(meth[specialProp].trivia) + specialProp;
     }
   }
-  var pad = max - len;
-  var methObj = {
+  const methObj = {
     obj: meth,
-    indent: indent,
-    special: special,
-    pad: pad,
+    special,
     children: params,
   };
-  var ret = idlMethodTmpl(methObj);
-  var line = $(ret).text();
-  if (line.length > 80) {
-    var paramPad = line.indexOf("(") + 1;
-    methObj.children = paramObjs.join(",\n" + pads(paramPad));
-    ret = idlMethodTmpl(methObj);
+  if (meth.body && meth.body.name) {
+    methObj.name = meth.body.name.value;
   }
-  return ret;
+  return idlMethodTmpl(methObj);
 }
 
 function writeConst(cons, max, indent) {
@@ -718,56 +584,20 @@ function writeConst(cons, max, indent) {
   });
 }
 
-// Writes a single blank line if whitespace includes at least one blank line.
-function writeBlankLines(whitespace) {
-  if (/\n.*\n/.test(whitespace.value)) {
-    // Members end with a newline, so we only need 1 extra one to get a blank line.
-    return "\n";
-  }
-  return "";
-}
-
-function writeLineComment(comment, indent) {
-  return idlLineCommentTmpl({ indent: indent, comment: comment.value });
-}
-
-function writeMultiLineComment(comment, indent) {
-  // Split the multi-line comment into lines so we can indent it properly.
-  var lines = comment.value.split(/\r\n|\r|\n/);
-  if (lines.length === 0) {
-    return "";
-  } else if (lines.length === 1) {
-    return idlLineCommentTmpl({ indent: indent, comment: lines[0] });
-  }
-  var initialSpaces = Math.max(0, /^ */.exec(lines[1])[0].length - 3);
-
-  function trimInitialSpace(line) {
-    return line.slice(initialSpaces);
-  }
-  return idlMultiLineCommentTmpl({
-    indent: indent,
-    firstLine: lines[0],
-    lastLine: trimInitialSpace(lines[lines.length - 1]),
-    innerLine: lines.slice(1, -1).map(trimInitialSpace),
-  });
-}
-
 function writeIterableLike(iterableLike, indent) {
-  const { type } = iterableLike;
+  const { type, readonly } = iterableLike;
   return idlIterableLikeTmpl({
     obj: iterableLike,
-    qualifiers: iterableLike.readonly ? "readonly " : "",
+    qualifiers: readonly ? `${writeTrivia(readonly.trivia)}readonly` : "",
     indent: indent,
     className: `idl${type[0].toUpperCase()}${type.slice(1)}`,
   });
 }
 
-function writeMember(memb, maxQualifiers, maxType, indent) {
-  var opt = { obj: memb, indent: indent };
-  opt.typePad = maxType - idlType2Text(memb.idlType).length;
-  if (memb.required) opt.qualifiers = "required ";
-  else opt.qualifiers = "         ";
-  opt.qualifiers = opt.qualifiers.slice(0, maxQualifiers);
+function writeMember(memb) {
+  var opt = { obj: memb, qualifiers: "" };
+  if (memb.required)
+    opt.qualifiers = `${writeTrivia(memb.required.trivia)}required`;
   return idlDictMemberTmpl(opt);
 }
 
@@ -780,20 +610,9 @@ function writeMember(memb, maxQualifiers, maxType, indent) {
 function linkDefinitions(parse, definitionMap, parent, idlElem) {
   parse
     // Don't bother with any of these
-    .filter(
-      ({ type }) =>
-        [
-          "includes",
-          "implements",
-          "ws",
-          "ws-pea",
-          "ws-tpea",
-          "line-comment",
-          "multiline-comment",
-        ].includes(type) === false
-    )
-    .forEach(function(defn) {
-      var name;
+    .filter(({ type }) => !["includes", "implements", "eof"].includes(type))
+    .forEach(defn => {
+      let name;
       switch (defn.type) {
         // Top-level entities with linkable members.
         case "callback interface":
@@ -836,8 +655,8 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
             "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
           break;
         case "operation":
-          if (defn.name) {
-            name = defn.name;
+          if (defn.body && defn.body.name) {
+            name = defn.body.name.value;
             var qualifiedName = parent + "." + name;
             var fullyQualifiedName = parent + "." + name + "()";
             if (!operationNames[fullyQualifiedName]) {
@@ -847,7 +666,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
               operationNames[qualifiedName] = [];
             } else {
               defn.overload = operationNames[qualifiedName].length;
-              name = defn.name + "!overload-" + defn.overload;
+              name += "!overload-" + defn.overload;
             }
             operationNames[fullyQualifiedName].push(defn);
             operationNames[qualifiedName].push(defn);
@@ -861,10 +680,10 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
           }
           const idHead = `idl-def-${parent.toLowerCase()}-${name.toLowerCase()}`;
           const idTail =
-            defn.overload || !defn.arguments || !defn.arguments.length
+            defn.overload || !defn.body || !defn.body.arguments.length
               ? ""
               : "-" +
-                defn.arguments
+                defn.body.arguments
                   .filter(arg => !typeIsWhitespace(arg.type))
                   .map(arg => arg.name.toLowerCase())
                   .join("-")
@@ -1050,7 +869,8 @@ export function run(conf, doc, cb) {
   $idl.each(function() {
     var parse;
     try {
-      parse = webidl2.parse($(this).text(), { ws: true });
+      const idl = unindentMarkup(this.textContent);
+      parse = webidl2.parse(idl);
     } catch (e) {
       pub(
         "error",
@@ -1063,7 +883,7 @@ export function run(conf, doc, cb) {
       return;
     }
     linkDefinitions(parse, conf.definitionMap, "", this);
-    var $df = makeMarkup(conf, parse);
+    var $df = $(makeMarkup(conf, parse));
     $df.attr({ id: this.id });
     $df
       .find(
