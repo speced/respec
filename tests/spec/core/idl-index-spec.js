@@ -55,8 +55,7 @@ interface Bar {
       </section>
       <section id="idl-index"></section>
     `;
-    const expectedIDL = `[Constructor,
- Exposed=Window]
+    const expectedIDL = `[Constructor, Exposed=Window]
 interface BeforeInstallPromptEvent : Event {
     Promise<PromptResponseObject> prompt();
 };

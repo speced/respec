@@ -71,9 +71,6 @@ function registerHelpers() {
       return options.inverse(this);
     }
   });
-  hb.registerHelper("idn", function(indent) {
-    return new hb.SafeString(idn(indent));
-  });
   hb.registerHelper("idlType", function(obj) {
     return new hb.SafeString(idlType2Html(obj.idlType));
   });
@@ -148,10 +145,6 @@ function writeTrivia(text) {
     return "";
   }
   return idlLineCommentTmpl({ text });
-}
-
-function idn(lvl) {
-  return "    ".repeat(lvl);
 }
 
 function idlType2Html(idlType) {
@@ -261,9 +254,8 @@ function extAttr(extAttrs, indent, singleLine) {
     return "";
   }
   var opt = {
-    extAttrs: extAttrs,
-    indent: indent,
-    sep: singleLine ? ", " : ",\n " + idn(indent),
+    extAttrs,
+    sep: ","
   };
   const safeString = new hb.SafeString(idlExtAttributeTmpl(opt));
   const tmpParser = document.createElement("div");

@@ -110,13 +110,13 @@ describe("Core - WebIDL", function() {
     expect($target.find(".idlInterfaceID").text()).toEqual("SuperStar");
 
     $target = $("#if-extended-attribute", doc);
-    text = "[Something,\n Constructor()] " + text;
+    text = "[Something, Constructor()] " + text;
     expect($target.text()).toEqual(text);
     expect($target.find(".extAttr").text()).toEqual("Something");
     expect($target.find(".idlCtor").text()).toEqual("Constructor()");
 
     $target = $("#if-identifier-list", doc);
-    text = "[Global=Window,\n Exposed=(Window,Worker)] interface SuperStar {};";
+    text = "[Global=Window, Exposed=(Window,Worker)] interface SuperStar {};";
     expect($target.text()).toEqual(text);
     expect($target.find(".extAttrRhs").first().text()).toEqual("Window");
     expect($target.find(".extAttrRhs").last().text()).toEqual(
