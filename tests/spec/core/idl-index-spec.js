@@ -21,10 +21,10 @@ describe("Core — IDL Index", () => {
       <section id="idl-index"></section>
     `;
     const expectedIDL = `interface Foo {
-    readonly attribute DOMString bar;
+  readonly attribute DOMString bar;
 };
 interface Bar {
-    readonly attribute DOMString foo;
+  readonly attribute DOMString foo;
 };\n`;
     const ops = {
       config: makeBasicConfig(),
@@ -55,13 +55,12 @@ interface Bar {
       </section>
       <section id="idl-index"></section>
     `;
-    const expectedIDL = `[Constructor,
- Exposed=Window]
+    const expectedIDL = `[Constructor, Exposed=Window]
 interface BeforeInstallPromptEvent : Event {
     Promise<PromptResponseObject> prompt();
 };
 dictionary PromptResponseObject {
-    AppBannerPromptOutcome userChoice;
+  AppBannerPromptOutcome userChoice;
 };\n`;
     const ops = {
       config: makeBasicConfig(),
