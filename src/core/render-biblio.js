@@ -4,9 +4,33 @@
 import "deps/hyperhtml";
 import { addId } from "core/utils";
 import { pub } from "core/pubsubhub";
-import { stringifyReference } from "core/biblio";
 
 export const name = "core/render-biblio";
+
+const REF_STATUSES = new Map([
+  ["CR", "W3C Candidate Recommendation"],
+  ["ED", "W3C Editor's Draft"],
+  ["FPWD", "W3C First Public Working Draft"],
+  ["LCWD", "W3C Last Call Working Draft"],
+  ["NOTE", "W3C Note"],
+  ["PER", "W3C Proposed Edited Recommendation"],
+  ["PR", "W3C Proposed Recommendation"],
+  ["REC", "W3C Recommendation"],
+  ["WD", "W3C Working Draft"],
+  ["WG-NOTE", "W3C Working Group Note"],
+]);
+
+const defaultsReference = Object.freeze({
+  authors: [],
+  date: "",
+  href: "",
+  publisher: "",
+  status: "",
+  title: "",
+  etAl: false,
+});
+
+const endWithDot = endNormalizer(".");
 
 export function run(conf) {
   const informs = Array.from(conf.informativeReferences);
@@ -120,6 +144,65 @@ function showRef({ ref, refcontent }) {
       <dd><em class="respec-offending-element">Reference not found.</em></dd>
     `;
   }
+}
+
+function endNormalizer(endStr) {
+  return str => {
+    const trimmed = str.trim();
+    const result =
+      !trimmed || trimmed.endsWith(endStr) ? trimmed : trimmed + endStr;
+    return result;
+  };
+}
+
+export function wireReference(rawRef, target = "_blank") {
+  if (typeof rawRef !== "object") {
+    throw new TypeError("Only modern object references are allowed");
+  }
+  const ref = Object.assign({}, defaultsReference, rawRef);
+  const authors = ref.authors.join("; ") + (ref.etAl ? " et al" : "");
+  const status = REF_STATUSES.get(ref.status) || ref.status;
+  return hyperHTML.wire(ref)`
+    <cite>
+      <a
+        href="${ref.href}"
+        target="${target}"
+        rel="noopener noreferrer">
+        ${ref.title.trim()}</a>.
+    </cite>
+    <span class="authors">
+      ${endWithDot(authors)}
+    </span>
+    <span class="publisher">
+      ${endWithDot(ref.publisher)}
+    </span>
+    <span class="pubDate">
+      ${endWithDot(ref.date)}
+    </span>
+    <span class="pubStatus">
+      ${endWithDot(status)}
+    </span>
+  `;
+}
+
+export function stringifyReference(ref) {
+  if (typeof ref === "string") return ref;
+  let output = `<cite>${ref.title}</cite>`;
+
+  output = ref.href ? `<a href="${ref.href}">${output}</a>. ` : `${output}. `;
+
+  if (ref.authors && ref.authors.length) {
+    output += ref.authors.join("; ");
+    if (ref.etAl) output += " et al";
+    output += ".";
+  }
+  if (ref.publisher) {
+    output = `${output} ${endWithDot(ref.publisher)} `;
+  }
+  if (ref.date) output += ref.date + ". ";
+  if (ref.status) output += (REF_STATUSES.get(ref.status) || ref.status) + ". ";
+  if (ref.href) output += `URL: <a href="${ref.href}">${ref.href}</a>`;
+  return output;
 }
 
 // get aliases for a reference "key"

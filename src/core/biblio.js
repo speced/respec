@@ -9,6 +9,9 @@ import { biblioDB } from "core/biblio-db";
 import { createResourceHint } from "core/utils";
 import { pub } from "core/pubsubhub";
 
+// for backward compatibity
+export { wireReference, stringifyReference } from "core/render-biblio";
+
 export const name = "core/biblio";
 
 const bibrefsURL = new URL("https://specref.herokuapp.com/bibrefs?refs=");
@@ -26,90 +29,6 @@ function getRefKeys(conf) {
     informativeReferences: Array.from(conf.informativeReferences),
     normativeReferences: Array.from(conf.normativeReferences),
   };
-}
-
-const REF_STATUSES = new Map([
-  ["CR", "W3C Candidate Recommendation"],
-  ["ED", "W3C Editor's Draft"],
-  ["FPWD", "W3C First Public Working Draft"],
-  ["LCWD", "W3C Last Call Working Draft"],
-  ["NOTE", "W3C Note"],
-  ["PER", "W3C Proposed Edited Recommendation"],
-  ["PR", "W3C Proposed Recommendation"],
-  ["REC", "W3C Recommendation"],
-  ["WD", "W3C Working Draft"],
-  ["WG-NOTE", "W3C Working Group Note"],
-]);
-
-const defaultsReference = Object.freeze({
-  authors: [],
-  date: "",
-  href: "",
-  publisher: "",
-  status: "",
-  title: "",
-  etAl: false,
-});
-
-const endNormalizer = function(endStr) {
-  return str => {
-    const trimmed = str.trim();
-    const result =
-      !trimmed || trimmed.endsWith(endStr) ? trimmed : trimmed + endStr;
-    return result;
-  };
-};
-
-const endWithDot = endNormalizer(".");
-
-export function wireReference(rawRef, target = "_blank") {
-  if (typeof rawRef !== "object") {
-    throw new TypeError("Only modern object references are allowed");
-  }
-  const ref = Object.assign({}, defaultsReference, rawRef);
-  const authors = ref.authors.join("; ") + (ref.etAl ? " et al" : "");
-  const status = REF_STATUSES.get(ref.status) || ref.status;
-  return hyperHTML.wire(ref)`
-    <cite>
-      <a
-        href="${ref.href}"
-        target="${target}"
-        rel="noopener noreferrer">
-        ${ref.title.trim()}</a>.
-    </cite>
-    <span class="authors">
-      ${endWithDot(authors)}
-    </span>
-    <span class="publisher">
-      ${endWithDot(ref.publisher)}
-    </span>
-    <span class="pubDate">
-      ${endWithDot(ref.date)}
-    </span>
-    <span class="pubStatus">
-      ${endWithDot(status)}
-    </span>
-  `;
-}
-
-export function stringifyReference(ref) {
-  if (typeof ref === "string") return ref;
-  let output = `<cite>${ref.title}</cite>`;
-
-  output = ref.href ? `<a href="${ref.href}">${output}</a>. ` : `${output}. `;
-
-  if (ref.authors && ref.authors.length) {
-    output += ref.authors.join("; ");
-    if (ref.etAl) output += " et al";
-    output += ".";
-  }
-  if (ref.publisher) {
-    output = `${output} ${endWithDot(ref.publisher)} `;
-  }
-  if (ref.date) output += ref.date + ". ";
-  if (ref.status) output += (REF_STATUSES.get(ref.status) || ref.status) + ". ";
-  if (ref.href) output += `URL: <a href="${ref.href}">${ref.href}</a>`;
-  return output;
 }
 
 // Opportunistically dns-prefetch to bibref server, as we don't know yet
