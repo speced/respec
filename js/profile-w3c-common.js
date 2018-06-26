@@ -53,7 +53,6 @@ define(
     "core/biblio",
     "core/webidl-index",
     "core/link-to-dfn",
-    "core/render-biblio",
     "core/contrib",
     "core/fix-headers",
     "core/structure",
