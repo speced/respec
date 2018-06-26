@@ -367,7 +367,7 @@ describe("Core - WebIDL", function() {
   // 2
   [Something] void ext();
   // 3
-  unsigned long long ull(short s);
+  unsigned long long ull(short s, short n);
   // 3.5
   SuperStar? ull();
   // 5
