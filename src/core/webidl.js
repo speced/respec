@@ -554,7 +554,7 @@ function writeMethod(meth) {
         variadic: it.variadic ? "..." : "",
       })
     );
-  const params = paramObjs.join(", ");
+  const params = paramObjs.join(",");
   const modifiers = ["getter", "setter", "deleter", "stringifier", "static"];
   let special = "";
   for (const specialProp of modifiers) {
