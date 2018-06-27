@@ -14,7 +14,7 @@
  * https://github.com/w3c/respec/wiki/data--cite
  */
 import { pub } from "core/pubsubhub";
-import { resolveRef } from "core/biblio";
+import { resolveRef, updateFromNetwork } from "core/biblio";
 export const name = "core/data-cite";
 
 function requestLookup(conf) {
@@ -126,8 +126,21 @@ export async function run(conf) {
 
 export async function linkInlineCitations(doc, conf = respecConfig) {
   const toLookupRequest = requestLookup(conf);
-  const lookupRequests = [
-    ...doc.querySelectorAll("dfn[data-cite], a[data-cite]"),
-  ].map(toLookupRequest);
+  const elems = [...doc.querySelectorAll("dfn[data-cite], a[data-cite]")];
+  const citeConverter = citeDetailsConverter(conf);
+  const promisesForMissingEntries = elems
+    .map(citeConverter)
+    .map(async entry => {
+      const result = await resolveRef(entry);
+      return { entry, result };
+    });
+  const bibEntries = await Promise.all(promisesForMissingEntries);
+  const missingBibEntries = bibEntries
+    .filter(({ result }) => result === null)
+    .map(({ entry: { key } }) => key);
+  // we now go to network
+  const newEntries = await updateFromNetwork(missingBibEntries);
+  Object.assign(conf.biblio, newEntries);
+  const lookupRequests = elems.map(toLookupRequest);
   return await Promise.all(lookupRequests);
 }
