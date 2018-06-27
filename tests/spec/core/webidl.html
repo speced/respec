@@ -467,6 +467,16 @@
           long undocField;
         };
       </pre>
+      <pre class="idl" id="multiple-dictionaries">
+        dictionary OneThing {
+          int x;
+        };
+
+
+        partial dictionary AnotherThing {
+          int y;
+        };
+      </pre>
       <p id='dict-doc-p'><dfn>DictDocTest</dfn> contains <dfn data-dfn-for="DictDocTest">dictDocField</dfn> and <dfn data-dfn-for="DictDocTest">otherField</dfn></p>
     </section>
     <section id="enumerations">
