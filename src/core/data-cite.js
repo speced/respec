@@ -128,6 +128,7 @@ export async function linkInlineCitations(doc, conf = respecConfig) {
   const toLookupRequest = requestLookup(conf);
   const elems = [...doc.querySelectorAll("dfn[data-cite], a[data-cite]")];
   const citeConverter = citeDetailsConverter(conf);
+
   const promisesForMissingEntries = elems
     .map(citeConverter)
     .map(async entry => {
@@ -135,12 +136,15 @@ export async function linkInlineCitations(doc, conf = respecConfig) {
       return { entry, result };
     });
   const bibEntries = await Promise.all(promisesForMissingEntries);
+
   const missingBibEntries = bibEntries
     .filter(({ result }) => result === null)
     .map(({ entry: { key } }) => key);
-  // we now go to network
+
+  // we now go to network to fetch missing entries
   const newEntries = await updateFromNetwork(missingBibEntries);
   Object.assign(conf.biblio, newEntries);
+
   const lookupRequests = elems.map(toLookupRequest);
   return await Promise.all(lookupRequests);
 }
