@@ -20,7 +20,10 @@ export async function run(conf, elems) {
   const xrefMap = createXrefMap(elems);
 
   const query = createXrefQuery(xrefMap);
-  const apiURL = (typeof xref === "object" && new URL(xref.url)) || API_URL;
+  const apiURL = xref.url || API_URL;
+  if (!(apiURL instanceof URL)) {
+    throw new TypeError("respecConfig.xref.url must be a valid URL instance");
+  }
   const results = await fetchXrefs(query, apiURL);
 
   addDataCiteToTerms(results, xrefMap, conf);
@@ -55,7 +58,7 @@ function createXrefQuery(xrefs) {
 // fetch from network
 async function fetchXrefs(query, url) {
   const options = {
-    method: url.host === location.host ? "GET" : "POST",
+    method: "POST",
     body: JSON.stringify(query),
     headers: {
       "Content-Type": "application/json",
