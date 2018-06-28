@@ -507,6 +507,21 @@ describe("Core - WebIDL", function() {
     done();
   });
 
+  it("handles multiple dictionaries", async () => {
+    const idl = doc.getElementById("multiple-dictionaries");
+    const expected = `
+dictionary OneThing {
+  int x;
+};
+
+
+partial dictionary AnotherThing {
+  int y;
+};`.trim();
+    expect(idl.textContent).toEqual(expected);
+    expect(idl.querySelector(".idlSectionComment")).toBeNull();
+  });
+
   it("should handle enumerations", function(done) {
     var $target = $("#enum-basic", doc);
     var text =
