@@ -4,16 +4,23 @@
 import { norm } from "core/utils";
 import { pub } from "core/pubsubhub";
 
+const API_URL = new URL(
+  "https://wt-466c7865b463a6c4cbb820b42dde9e58-0.sandbox.auth0-extend.com/xref-proto-2"
+);
+
 /**
  * main external reference driver
  * @param {Object} conf respecConfig
  * @param {Array:Elements} elems possibleExternalLinks
  */
 export async function run(conf, elems) {
+  const { xref } = conf;
   const xrefMap = createXrefMap(elems);
 
   const query = createXrefQuery(xrefMap);
-  const results = await fetchXrefs(query, conf.xref.url);
+  const apiURL =
+    (xref && typeof xref === "object" && new URL(xref.url)) || API_URL;
+  const results = await fetchXrefs(query, apiURL);
 
   addDataCiteToTerms(results, xrefMap, conf);
 }
@@ -46,7 +53,15 @@ function createXrefQuery(xrefs) {
 
 // fetch from network
 async function fetchXrefs(query, url) {
-  return await simulateShepherd(query, url);
+  const options = {
+    method: url.host === location.host ? "GET" : "POST",
+    body: JSON.stringify(query),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const json = await fetch(url, options);
+  return await json.json();
 }
 
 /**
@@ -97,38 +112,5 @@ function disambiguate(data, context, term) {
     elem.setAttribute("title", msg);
     pub("warn", msg + " See develper console for details.");
     console.warn(msg, elem);
-  }
-}
-
-// just a network simulation for prototype ignore.
-async function simulateShepherd(query, url) {
-  const result = {};
-  const data = await (await fetch(url)).json();
-  for (const key of query.keys) {
-    const { term } = key;
-    result[term] = result[term] || [];
-    if (term in data) {
-      for (const item of data[term]) {
-        if (
-          filterFn(item, key) &&
-          !result[term].find(t => t.uri === item.uri)
-        ) {
-          result[term].push(item);
-        }
-      }
-    }
-    if (!result[term].length) delete result[term];
-  }
-  return result;
-
-  function filterFn(item, { specs, types }) {
-    let valid = true;
-    if (Array.isArray(specs) && specs.length) {
-      valid = specs.includes(item.spec);
-    }
-    if (Array.isArray(types) && types.length) {
-      valid = valid && types.includes(item.type);
-    }
-    return valid;
   }
 }
