@@ -39,6 +39,13 @@ a.bibref {
   text-decoration: none;
 }
 
+a.bibref:target {
+  background: #e2e2e2;
+  box-shadow: 0 0 5px;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
 cite .bibref {
   font-style: normal;
 }
