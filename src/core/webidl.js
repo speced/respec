@@ -141,8 +141,8 @@ function registerHelpers() {
 }
 
 function writeTrivia(text) {
-  if (!text.length) {
-    return "";
+  if (!text.trim().length) {
+    return text;
   }
   return idlLineCommentTmpl({ text });
 }
