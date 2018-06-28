@@ -18,7 +18,6 @@ const API_URL = new URL(
 export async function run(conf, elems) {
   const { xref } = conf;
   const xrefMap = createXrefMap(elems);
-
   const query = createXrefQuery(xrefMap);
   const apiURL = new URL(xref.url, location.href) || API_URL;
   if (!(apiURL instanceof URL)) {
