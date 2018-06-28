@@ -20,12 +20,11 @@ export async function run(conf, elems) {
   const xrefMap = createXrefMap(elems);
 
   const query = createXrefQuery(xrefMap);
-  const apiURL = xref.url || API_URL;
+  const apiURL = new URL(xref.url, location.href) || API_URL;
   if (!(apiURL instanceof URL)) {
     throw new TypeError("respecConfig.xref.url must be a valid URL instance");
   }
   const results = await fetchXrefs(query, apiURL);
-
   addDataCiteToTerms(results, xrefMap, conf);
 }
 

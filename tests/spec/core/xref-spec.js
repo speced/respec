@@ -2,7 +2,7 @@
 describe("Core — xref", () => {
   afterAll(flushIframes);
 
-  const apiURL = new URL(`${window.location.origin}/tests/data/xref.json`);
+  const apiURL = location.origin + "/tests/data/xref.json";
 
   it("does nothing if xref is not enabled", async () => {
     const body = `<a id="external-link">EventHandler</a>`;

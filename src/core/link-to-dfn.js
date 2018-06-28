@@ -124,25 +124,36 @@ export async function run(conf, doc, cb) {
       $ant.replaceWith($ant.contents());
     }
   });
+
   if (conf.xref) {
-    await addExternalReferences(conf, possibleExternalLinks);
+    try {
+      await addExternalReferences(conf, possibleExternalLinks);
+    } catch (error) {
+      console.error(error);
+      handleXrefFail(possibleExternalLinks);
+    }
   } else {
-    possibleExternalLinks.forEach(elem => {
-      elem.classList.add("respec-offending-element");
-      elem.title = "Linking error: not matching <dfn>";
-      pub(
-        "warn",
-        `Found linkless <a> element with text ${
-          elem.textContent
-        } but no matching \`<dfn>\`.`
-      );
-      console.warn("Linkless element:", elem);
-    });
+    handleXrefFail(possibleExternalLinks);
   }
+
   linkInlineCitations(doc, conf).then(() => {
     // Added message for legacy compat with Aria specs
     // See https://github.com/w3c/respec/issues/793
     pub("end", "core/link-to-dfn");
     cb();
+  });
+}
+
+function handleXrefFail(elems) {
+  elems.forEach(elem => {
+    elem.classList.add("respec-offending-element");
+    elem.title = "Linking error: not matching <dfn>";
+    pub(
+      "warn",
+      `Found linkless <a> element with text ${
+        elem.textContent
+      } but no matching \`<dfn>\`.`
+    );
+    console.warn("Linkless element:", elem);
   });
 }
