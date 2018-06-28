@@ -1,5 +1,5 @@
 {
-  "data": [
+  "event handler": [
     {
       "spec": "html",
       "type": "dfn",
@@ -7,7 +7,9 @@
       "uri": "webappapis.html#event-handlers",
       "title": "event handler",
       "comment": "all lowercase dfn title"
-    },
+    }
+  ],
+  "URL parser": [
     {
       "spec": "url",
       "type": "dfn",
@@ -15,7 +17,9 @@
       "uri": "#concept-url-parser",
       "title": "URL parser",
       "comment": "mixed case dfn title"
-    },
+    }
+  ],
+  "fetch": [
     {
       "spec": "fetch",
       "type": "dfn",
