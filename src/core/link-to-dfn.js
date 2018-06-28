@@ -150,9 +150,9 @@ function handleXrefFail(elems) {
     elem.title = "Linking error: not matching <dfn>";
     pub(
       "warn",
-      `Found linkless <a> element with text ${
+      `Found linkless \`<a>\` element with text "${
         elem.textContent
-      } but no matching \`<dfn>\`.`
+      }" but no matching \`<dfn>\`.`
     );
     console.warn("Linkless element:", elem);
   });
