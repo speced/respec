@@ -1,7 +1,10 @@
-// Automatically adds external refernces
+// Automatically adds external references.
+// Looks for the terms which do not have a definition locally on Shepherd API
+// For each returend result, adds `data-cite` attributes to respective elements,
+//   so later they can be handled by core/link-to-dfn.
 // https://github.com/w3c/respec/issues/1662
 
-import { norm } from "core/utils";
+import { norm as normalize } from "core/utils";
 import { pub } from "core/pubsubhub";
 
 const API_URL = new URL(
@@ -32,7 +35,7 @@ export async function run(conf, elems) {
  */
 function createXrefMap(elems) {
   return elems.reduce((map, elem) => {
-    const term = norm(elem.textContent);
+    const term = normalize(elem.textContent);
     const xrefsForTerm = map.has(term) ? map.get(term) : [];
     xrefsForTerm.push({ elem });
     return map.set(term, xrefsForTerm);
