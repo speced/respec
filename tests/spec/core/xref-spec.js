@@ -24,6 +24,11 @@ describe("Core — xref", () => {
       "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
     );
     expect(link.classList.contains("respec-offending-element")).toBeFalsy();
+
+    // test: adds citation in references section
+    const ref = doc.querySelector("#references dt");
+    expect(ref).toBeTruthy();
+    expect(ref.textContent.toLowerCase()).toEqual("[html]");
   });
 
   it("fails to add link to non-existing terms", async () => {
