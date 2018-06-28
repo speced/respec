@@ -126,6 +126,18 @@ export async function run(conf, doc, cb) {
   });
   if (conf.xref) {
     await addExternalReferences(conf, possibleExternalLinks);
+  } else {
+    possibleExternalLinks.forEach(elem => {
+      elem.classList.add("respec-offending-element");
+      elem.title = "Linking error: not matching <dfn>";
+      pub(
+        "warn",
+        `Found linkless <a> element with text ${
+          elem.textContent
+        } but no matching \`<dfn>\`.`
+      );
+      console.warn("Linkless element:", elem);
+    });
   }
   linkInlineCitations(doc, conf).then(() => {
     // Added message for legacy compat with Aria specs
