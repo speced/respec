@@ -4,8 +4,7 @@
 //   so later they can be handled by core/link-to-dfn.
 // https://github.com/w3c/respec/issues/1662
 
-import { norm as normalize } from "core/utils";
-import { pub } from "core/pubsubhub";
+import { norm as normalize, showInlineError } from "core/utils";
 
 const API_URL = new URL(
   "https://wt-466c7865b463a6c4cbb820b42dde9e58-0.sandbox.auth0-extend.com/xref-proto-2"
@@ -98,7 +97,7 @@ function disambiguate(data, context, term) {
 
   if (!data || !data.length) {
     const msg = `No external reference data found for term \`${term}\`.`;
-    showError(msg, elem);
+    showInlineError(elem, msg);
     return null;
   }
 
@@ -107,13 +106,6 @@ function disambiguate(data, context, term) {
   }
 
   const msg = `Ambiguity in data found for term \`${term}\`.`;
-  showError(msg, elem);
+  showInlineError(elem, msg);
   return null;
-
-  function showError(msg, elem) {
-    elem.classList.add("respec-offending-element");
-    elem.setAttribute("title", msg);
-    pub("warn", msg + " See develper console for details.");
-    console.warn(msg, elem);
-  }
 }

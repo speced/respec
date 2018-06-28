@@ -293,6 +293,13 @@ export function removeReSpec(doc) {
   });
 }
 
+export function showInlineError(elem, msg) {
+  elem.classList.add("respec-offending-element");
+  elem.setAttribute("title", msg);
+  pub("warn", msg + " See develper console for details.");
+  console.warn(msg, elem);
+}
+
 // STRING HELPERS
 // Takes an array and returns a string that separates each of its items with the proper commas and
 // "and". The second argument is a mapping function that can convert the items before they are
