@@ -23,5 +23,20 @@ describe("Core — xref", () => {
     expect(link.href).toEqual(
       "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
     );
+    expect(link.classList.contains("respec-offending-element")).toBeFalsy();
+  });
+
+  it("fails to add link to non-existing terms", async () => {
+    const body = `<a id="external-link">NOT_FOUND</a>`;
+    const config = { xref: { url: apiURL } };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const link = doc.getElementById("external-link");
+    expect(link.classList.contains("respec-offending-element")).toBeTruthy();
+    expect(link.getAttribute("href")).toBeFalsy();
+    expect(link.title).toEqual(
+      "No external reference data found for term `NOT_FOUND`."
+    );
   });
 });
