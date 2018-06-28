@@ -20,8 +20,7 @@ export async function run(conf, elems) {
   const xrefMap = createXrefMap(elems);
 
   const query = createXrefQuery(xrefMap);
-  const apiURL =
-    (xref && typeof xref === "object" && new URL(xref.url)) || API_URL;
+  const apiURL = (typeof xref === "object" && new URL(xref.url)) || API_URL;
   const results = await fetchXrefs(query, apiURL);
 
   addDataCiteToTerms(results, xrefMap, conf);
