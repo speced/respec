@@ -36,7 +36,12 @@ function createXrefMap(elems) {
   return elems.reduce((map, elem) => {
     const term = normalize(elem.textContent);
     const datacite = elem.closest("[data-cite]");
-    const specs = datacite ? datacite.dataset.cite.split(" ") : [];
+    const specs = datacite
+      ? datacite.dataset.cite
+          .toLowerCase()
+          .replace(/!/g, "")
+          .split(" ")
+      : [];
     const xrefsForTerm = map.has(term) ? map.get(term) : [];
     xrefsForTerm.push({ elem, specs });
     return map.set(term, xrefsForTerm);
@@ -107,7 +112,7 @@ function disambiguate(data, context, term) {
       `Couldn't match "**${term}**" to anything in the document or to any other spec. ` +
       "Please provide a [`data-cite`](https://github.com/w3c/respec/wiki/data--cite) attribute for it.";
     const title = "Error: No matching dfn found.";
-    showInlineError(elems, msg, title);
+    showInlineError(elems.filter(el => !el.dataset.cite), msg, title);
     return null;
   }
 

@@ -301,6 +301,7 @@ export function removeReSpec(doc) {
  */
 export function showInlineError(elems, msg, title) {
   if (!Array.isArray(elems)) elems = [elems];
+  if (!elems.length) return;
   if (!title) title = msg;
   elems.forEach(elem => {
     elem.classList.add("respec-offending-element");

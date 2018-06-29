@@ -125,6 +125,10 @@ export async function run(conf, doc, cb) {
     }
   });
 
+  possibleExternalLinks.push(
+    ...document.querySelectorAll("a[data-cite]:not([data-cite*='#'])")
+  );
+
   if (conf.xref) {
     try {
       await addExternalReferences(conf, possibleExternalLinks);

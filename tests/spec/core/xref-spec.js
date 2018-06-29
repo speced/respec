@@ -12,6 +12,10 @@ describe("Core — xref", () => {
       href: "https://www.w3.org/TR/service-workers-1/",
       id: "service-workers-1",
     },
+    infra: {
+      href: "https://infra.spec.whatwg.org/",
+      id: "INFRA",
+    },
   };
 
   it("does nothing if xref is not enabled", async () => {
@@ -55,8 +59,12 @@ describe("Core — xref", () => {
 
   it("uses data-cite to disambiguate results", async () => {
     const body = `
-      <section data-cite="service-workers">
-        <a id="link">fetch</a> is defined in service-workers and fetch spec.
+      <section data-cite="service-workers" id="links">
+        <p><a>fetch</a> is defined in service-workers and fetch spec. It uses parent's data-cite.</p>
+
+        <p>As <a data-cite="!infra">ASCII uppercase</a> is valid dfn, it resolves to fragment. a local data-cite (infra) overrides parent's datacite.</p>
+
+        <p>As <a data-cite="!infra">ASCII uppercasing</a> doesn't exist in INFRA, it resolves to spec only.</p>
       </section>
     `;
     // using default API url here as xref.json cannot disambiguate
@@ -64,14 +72,30 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const link = doc.getElementById("link");
-    expect(link.getAttribute("href")).toEqual(
+    const [link1, link2, link3] = [...doc.querySelectorAll("#links a")];
+
+    expect(link1.classList.contains("respec-offending-element")).toBeFalsy();
+    expect(link1.getAttribute("href")).toEqual(
       "https://www.w3.org/TR/service-workers-1/#service-worker-global-scope-fetch-event"
     );
-    expect(link.classList.contains("respec-offending-element")).toBeFalsy();
+
+    expect(link2.classList.contains("respec-offending-element")).toBeFalsy();
+    expect(link2.getAttribute("href")).toEqual(
+      "https://infra.spec.whatwg.org/#ascii-uppercase"
+    );
+
+    expect(link3.classList.contains("respec-offending-element")).toBeFalsy();
+    expect(link3.getAttribute("href")).toEqual(
+      "https://infra.spec.whatwg.org/"
+    );
+
+    const refs = [...doc.querySelectorAll("#references dt")];
+    expect(refs.length).toEqual(2);
+    expect(refs[0].textContent).toEqual("[infra]");
+    expect(refs[1].textContent).toEqual("[service-workers]");
   });
 
-  it("gives error if cannot resolve by data-cite", async () => {
+  it("shows error if cannot resolve by data-cite", async () => {
     const body = `
       <section data-cite="fetch">
         <a id="link">fetch</a> is defined in service-workers and fetch spec.
