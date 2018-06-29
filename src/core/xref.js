@@ -19,7 +19,7 @@ export async function run(conf, elems) {
   const { xref } = conf;
   const xrefMap = createXrefMap(elems);
   const query = createXrefQuery(xrefMap);
-  const apiURL = (xref.url && new URL(xref.url, location.href)) || API_URL;
+  const apiURL = xref.url ? new URL(xref.url, location.href) : API_URL;
   if (!(apiURL instanceof URL)) {
     throw new TypeError("respecConfig.xref.url must be a valid URL instance");
   }
