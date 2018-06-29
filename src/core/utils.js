@@ -294,16 +294,17 @@ export function removeReSpec(doc) {
 }
 
 /**
- * Adds error class of each element while emitting a warning
+ * Adds error class to each element while emitting a warning
  * @param {Element|Array:Elements} elems
  * @param {String} msg message to show in warning
  * @param {String} title error message to add on each element
  */
 export function showInlineError(elems, msg, title) {
   if (!Array.isArray(elems)) elems = [elems];
+  if (!title) title = msg;
   elems.forEach(elem => {
     elem.classList.add("respec-offending-element");
-    elem.setAttribute("title", title || msg);
+    elem.setAttribute("title", title);
   });
   pub("warn", msg + " See developer console for details.");
   console.warn(msg, elems);
