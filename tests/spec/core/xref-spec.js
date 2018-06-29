@@ -40,8 +40,6 @@ describe("Core — xref", () => {
     const link = doc.getElementById("external-link");
     expect(link.classList.contains("respec-offending-element")).toBeTruthy();
     expect(link.getAttribute("href")).toBeFalsy();
-    expect(link.title).toEqual(
-      "No external reference data found for term `NOT_FOUND`."
-    );
+    expect(link.title).toEqual("Error: No matching dfn found.");
   });
 });
