@@ -24,7 +24,7 @@ export async function run(conf, elems) {
     throw new TypeError("respecConfig.xref.url must be a valid URL instance");
   }
   const results = await fetchXrefs(query, apiURL);
-  addDataCiteToTerms(results, xrefMap, conf);
+  addDataCiteToTerms(query, results, xrefMap, conf);
 }
 
 /**
@@ -73,14 +73,14 @@ async function fetchXrefs(query, url) {
  * @param {Map} xrefMap xrefMap
  * @param {Object} conf respecConfig
  */
-function addDataCiteToTerms(results, xrefMap, conf) {
-  for (const [term, entries] of xrefMap) {
+function addDataCiteToTerms(query, results, xrefMap, conf) {
+  for (const { term } of query.keys) {
+    const entries = xrefMap.get(term);
+    const result = disambiguate(results[term], entries, term);
+    if (!result) continue;
+
     entries.forEach(entry => {
       const { elem } = entry;
-
-      const result = disambiguate(results[term], entry, term);
-      if (!result) return;
-
       const { uri, spec: cite, normative } = result;
       const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
       const [citePath, citeFrag] = path.split("#");
@@ -93,14 +93,13 @@ function addDataCiteToTerms(results, xrefMap, conf) {
 
 // disambiguate fetched results based on context
 function disambiguate(data, context, term) {
-  const { elem } = context;
-
+  const elems = context.map(c => c.elem);
   if (!data || !data.length) {
     const msg =
       `Couldn't match "**${term}**" to anything in the document or to any other spec. ` +
       "Please provide a [`data-cite`](https://github.com/w3c/respec/wiki/data--cite) attribute for it.";
     const title = "Error: No matching dfn found.";
-    showInlineError(elem, msg, title);
+    showInlineError(elems, msg, title);
     return null;
   }
 
@@ -117,6 +116,6 @@ function disambiguate(data, context, term) {
       .map(s => `**${s}**`)
       .join(", ")}.`;
   const title = "Error: Linking an ambiguous dfn.";
-  showInlineError(elem, msg, title);
+  showInlineError(elems, msg, title);
   return null;
 }

@@ -293,11 +293,20 @@ export function removeReSpec(doc) {
   });
 }
 
-export function showInlineError(elem, msg, title) {
-  elem.classList.add("respec-offending-element");
-  elem.setAttribute("title", title || msg);
+/**
+ * Adds error class of each element while emitting a warning
+ * @param {Element|Array:Elements} elems
+ * @param {String} msg message to show in warning
+ * @param {String} title error message to add on each element
+ */
+export function showInlineError(elems, msg, title) {
+  if (!Array.isArray(elems)) elems = [elems];
+  elems.forEach(elem => {
+    elem.classList.add("respec-offending-element");
+    elem.setAttribute("title", title || msg);
+  });
   pub("warn", msg + " See developer console for details.");
-  console.warn(msg, elem);
+  console.warn(msg, elems);
 }
 
 // STRING HELPERS
