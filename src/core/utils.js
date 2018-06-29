@@ -296,7 +296,7 @@ export function removeReSpec(doc) {
 export function showInlineError(elem, msg, title) {
   elem.classList.add("respec-offending-element");
   elem.setAttribute("title", title || msg);
-  pub("warn", msg + " See develper console for details.");
+  pub("warn", msg + " See developer console for details.");
   console.warn(msg, elem);
 }
 
