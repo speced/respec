@@ -35,8 +35,10 @@ export async function run(conf, elems) {
 function createXrefMap(elems) {
   return elems.reduce((map, elem) => {
     const term = normalize(elem.textContent);
+    const datacite = elem.closest("[data-cite]");
+    const specs = datacite ? datacite.dataset.cite.split(" ") : [];
     const xrefsForTerm = map.has(term) ? map.get(term) : [];
-    xrefsForTerm.push({ elem });
+    xrefsForTerm.push({ elem, specs });
     return map.set(term, xrefsForTerm);
   }, new Map());
 }
@@ -47,9 +49,15 @@ function createXrefMap(elems) {
  * @returns {Object} { keys: [{ term }] }
  */
 function createXrefQuery(xrefs) {
-  const queryKeys = [...xrefs.keys()].reduce((queryKeys, term) => {
-    return queryKeys.add(JSON.stringify({ term }));
-  }, new Set());
+  const queryKeys = [...xrefs.entries()].reduce(
+    (queryKeys, [term, entries]) => {
+      entries.forEach(({ specs }) => {
+        queryKeys.add(JSON.stringify({ term, specs })); // only unique
+      });
+      return queryKeys;
+    },
+    new Set()
+  );
   return { keys: [...queryKeys].map(JSON.parse) };
 }
 
