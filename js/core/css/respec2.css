@@ -39,7 +39,7 @@ a.bibref {
   text-decoration: none;
 }
 
-#references:target {
+#references :target {
   background: #eaf3ff;
 }
 
