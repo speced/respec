@@ -293,11 +293,21 @@ export function removeReSpec(doc) {
   });
 }
 
-export function showInlineError(elem, msg) {
-  elem.classList.add("respec-offending-element");
-  elem.setAttribute("title", msg);
-  pub("warn", msg + " See develper console for details.");
-  console.warn(msg, elem);
+/**
+ * Adds error class to each element while emitting a warning
+ * @param {Element|Array:Elements} elems
+ * @param {String} msg message to show in warning
+ * @param {String} title error message to add on each element
+ */
+export function showInlineError(elems, msg, title) {
+  if (!Array.isArray(elems)) elems = [elems];
+  if (!title) title = msg;
+  elems.forEach(elem => {
+    elem.classList.add("respec-offending-element");
+    elem.setAttribute("title", title);
+  });
+  pub("warn", msg + " See developer console for details.");
+  console.warn(msg, elems);
 }
 
 // STRING HELPERS
