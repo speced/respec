@@ -99,7 +99,7 @@ function disambiguate(data, context, term) {
     const msg =
       `Couldn't match "**${term}**" to anything in the document or to any other spec. ` +
       "Please provide a [`data-cite`](https://github.com/w3c/respec/wiki/data--cite) attribute for it.";
-    const title = `Error: No matching dfn found.`;
+    const title = "Error: No matching dfn found.";
     showInlineError(elem, msg, title);
     return null;
   }
