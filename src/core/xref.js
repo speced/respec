@@ -113,7 +113,9 @@ function disambiguate(data, context, term) {
     `The term "**${term}**" is defined in ${ambiguousSpecs.length} ` +
     `spec(s) in ${data.length} ways, so it's ambiguous. ` +
     "To disambiguate, you need to add a [`data-cite`](https://github.com/w3c/respec/wiki/data--cite) attribute. " +
-    `The specs where it's defined are: ${ambiguousSpecs.join(", ")}.`;
+    `The specs where it's defined are: ${ambiguousSpecs
+      .map(s => `**${s}**`)
+      .join(", ")}.`;
   const title = "Error: Linking an ambiguous dfn.";
   showInlineError(elem, msg, title);
   return null;

@@ -31,10 +31,10 @@ function requestLookup(conf) {
       const entry = await resolveRef(key);
       cleanElement(elem);
       if (!entry) {
-        var msg = `Couldn't find a match for 'data-cite=${originalKey}'.`;
-        console.warn(msg, elem);
-        msg += " Please check developer console for offending element.";
+        let msg = `Couldn't find a match for "${originalKey}". Please check developer console for offending element.`;
         pub("warn", msg);
+        msg = `Couldn't find a match for "${originalKey}".`;
+        console.warn(msg, elem);
         return;
       }
       href = entry.href;
