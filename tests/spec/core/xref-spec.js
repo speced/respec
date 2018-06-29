@@ -60,7 +60,7 @@ describe("Core — xref", () => {
   it("uses data-cite to disambiguate results", async () => {
     const body = `
       <section data-cite="service-workers" id="links">
-        <p><a>fetch</a> is defined in service-workers and fetch spec. It uses parent's data-cite.</p>
+        <p><a>fetch</a> is defined once in service-workers and twice in fetch spec. It uses parent's data-cite.</p>
 
         <p>As <a data-cite="!infra">ASCII uppercase</a> is valid dfn, it resolves to fragment. a local data-cite (infra) overrides parent's datacite.</p>
 
@@ -98,7 +98,7 @@ describe("Core — xref", () => {
   it("shows error if cannot resolve by data-cite", async () => {
     const body = `
       <section data-cite="fetch">
-        <a id="link">fetch</a> is defined in service-workers and fetch spec.
+        <a id="link">fetch</a> is defined once in service-workers and twice in fetch spec.
       </section>
     `;
     const config = { xref: { url: apiURL }, localBiblio };
