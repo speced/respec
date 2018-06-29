@@ -13,8 +13,8 @@
  * Usage:
  * https://github.com/w3c/respec/wiki/data--cite
  */
-import { pub } from "core/pubsubhub";
 import { resolveRef, updateFromNetwork } from "core/biblio";
+import { showInlineError } from "core/utils";
 export const name = "core/data-cite";
 
 function requestLookup(conf) {
@@ -31,10 +31,7 @@ function requestLookup(conf) {
       const entry = await resolveRef(key);
       cleanElement(elem);
       if (!entry) {
-        let msg = `Couldn't find a match for "${originalKey}". Please check developer console for offending element.`;
-        pub("warn", msg);
-        msg = `Couldn't find a match for "${originalKey}".`;
-        console.warn(msg, elem);
+        showInlineError(elem, `Couldn't find a match for "${originalKey}".`);
         return;
       }
       href = entry.href;
