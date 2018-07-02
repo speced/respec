@@ -1208,12 +1208,12 @@ describe("W3C — Headers", function() {
         {
           src: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
           alt: "Logo 1",
-          id: "logo1"
+          id: "logo1",
         },
         {
           src: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
           alt: "Logo 2",
-          id: "logo2"
+          id: "logo2",
         },
       ];
       Object.assign(ops.config, { logos, specStatus: "unofficial" });
@@ -1233,7 +1233,7 @@ describe("W3C — Headers", function() {
           url: "http://hyperlink/",
         },
         {
-          src: "data:image/svg+xml,<svg%20xmlns=\"http://www.w3.org/2000/svg\"/>",
+          src: 'data:image/svg+xml,<svg%20xmlns="http://www.w3.org/2000/svg"/>',
           alt: "this is an svg",
           height: 315,
           width: 961,
