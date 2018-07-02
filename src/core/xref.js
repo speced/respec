@@ -56,9 +56,9 @@ function createXrefMap(elems) {
 function createXrefQuery(xrefs) {
   const queryKeys = [...xrefs.entries()].reduce(
     (queryKeys, [term, entries]) => {
-      entries.forEach(({ specs }) => {
+      for (const { specs } of entries) {
         queryKeys.add(JSON.stringify({ term, specs })); // only unique
-      });
+      }
       return queryKeys;
     },
     new Set()
