@@ -43,7 +43,10 @@ export const done = new Promise(resolve => {
   doneResolver = resolve;
 });
 
-async function updateFromNetwork(refs, options = { forceUpdate: false }) {
+export async function updateFromNetwork(
+  refs,
+  options = { forceUpdate: false }
+) {
   // Update database if needed, if we are online
   if (!refs.length || navigator.onLine === false) {
     return;

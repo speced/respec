@@ -293,6 +293,24 @@ export function removeReSpec(doc) {
   });
 }
 
+/**
+ * Adds error class to each element while emitting a warning
+ * @param {Element|Array:Elements} elems
+ * @param {String} msg message to show in warning
+ * @param {String} title error message to add on each element
+ */
+export function showInlineError(elems, msg, title) {
+  if (!Array.isArray(elems)) elems = [elems];
+  if (!elems.length) return;
+  if (!title) title = msg;
+  elems.forEach(elem => {
+    elem.classList.add("respec-offending-element");
+    elem.setAttribute("title", title);
+  });
+  pub("warn", msg + " See developer console for details.");
+  console.warn(msg, elems);
+}
+
 // STRING HELPERS
 // Takes an array and returns a string that separates each of its items with the proper commas and
 // "and". The second argument is a mapping function that can convert the items before they are

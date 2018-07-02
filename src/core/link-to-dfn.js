@@ -4,6 +4,7 @@
 import { linkInlineCitations } from "core/data-cite";
 import { pub } from "core/pubsubhub";
 import { lang as defaultLang } from "./l10n";
+import { run as addExternalReferences } from "core/xref";
 export const name = "core/link-to-dfn";
 const l10n = {
   en: {
@@ -12,7 +13,7 @@ const l10n = {
 };
 const lang = defaultLang in l10n ? defaultLang : "en";
 
-export function run(conf, doc, cb) {
+export async function run(conf, doc, cb) {
   doc.normalize();
   var titles = {};
   Object.keys(conf.definitionMap).forEach(function(title) {
@@ -65,6 +66,9 @@ export function run(conf, doc, cb) {
       pub("error", `Duplicate definitions of '${title}' at: ${dfnsList}.`);
     }
   });
+
+  const possibleExternalLinks = [];
+
   $("a:not([href]):not([data-cite]):not(.logo)").each(function() {
     const $ant = $(this);
     if ($ant.hasClass("externalDFN")) return;
@@ -114,28 +118,46 @@ export function run(conf, doc, cb) {
           ".idl:not(.extAttr), dl.methods, dl.attributes, dl.constants, dl.constructors, dl.fields, dl.dictionary-members, span.idlMemberType, span.idlTypedefType, div.idlImplementsDesc"
         ).length
       ) {
-        const link_for = linkTargets[0].for;
-        const title = linkTargets[0].title;
-        this.classList.add("respec-offending-element");
-        this.title = "Linking error: not matching <dfn>";
-        pub(
-          "warn",
-          "Found linkless <a> element " +
-            (link_for ? "for '" + link_for + "' " : "") +
-            "with text '" +
-            title +
-            "' but no matching `<dfn>`."
-        );
-        console.warn("Linkless element:", $ant[0]);
+        possibleExternalLinks.push($ant[0]);
         return;
       }
       $ant.replaceWith($ant.contents());
     }
   });
+
+  possibleExternalLinks.push(
+    ...document.querySelectorAll("a[data-cite]:not([data-cite*='#'])")
+  );
+
+  if (conf.xref) {
+    try {
+      await addExternalReferences(conf, possibleExternalLinks);
+    } catch (error) {
+      console.error(error);
+      handleXrefFail(possibleExternalLinks);
+    }
+  } else {
+    handleXrefFail(possibleExternalLinks);
+  }
+
   linkInlineCitations(doc, conf).then(() => {
     // Added message for legacy compat with Aria specs
     // See https://github.com/w3c/respec/issues/793
     pub("end", "core/link-to-dfn");
     cb();
+  });
+}
+
+function handleXrefFail(elems) {
+  elems.forEach(elem => {
+    elem.classList.add("respec-offending-element");
+    elem.title = "Linking error: not matching <dfn>";
+    pub(
+      "warn",
+      `Found linkless \`<a>\` element with text "${
+        elem.textContent
+      }" but no matching \`<dfn>\`.`
+    );
+    console.warn("Linkless element:", elem);
   });
 }
