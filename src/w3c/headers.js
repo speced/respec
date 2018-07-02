@@ -228,7 +228,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 
 export function run(conf) {
   conf.isUnofficial = conf.specStatus === "unofficial";
-  if (conf.isUnofficial) {
+  if (conf.isUnofficial && !Array.isArray(conf.logos)) {
     conf.logos = [];
   }
   conf.isCCBY = conf.license === "cc-by";
