@@ -65,14 +65,6 @@ describe("Core — xref", () => {
         <p>As <a data-cite="!infra">ASCII uppercase</a> is valid dfn, it resolves to fragment. a local data-cite (infra) overrides parent's datacite.</p>
 
         <p>As <a data-cite="!infra">ASCII uppercasing</a> doesn't exist in INFRA, it resolves to spec only.</p>
-
-        <!-- local links with empty parent data-cite -->
-        <section data-cite="">
-          <dfn>local dfn</dfn>
-          This should be a local link: <a>local dfn</a>.
-        </section>
-
-        <p>This is also a local: <a data-cite="">local dfn</a></p>
       </section>
     `;
     // using default API url here as xref.json cannot disambiguate
@@ -80,9 +72,7 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const [link1, link2, link3, local1, local2] = [
-      ...doc.querySelectorAll("#links a"),
-    ];
+    const [link1, link2, link3] = [...doc.querySelectorAll("#links a")];
 
     expect(link1.classList.contains("respec-offending-element")).toBeFalsy();
     expect(link1.getAttribute("href")).toEqual(
@@ -99,15 +89,54 @@ describe("Core — xref", () => {
       "https://infra.spec.whatwg.org/"
     );
 
-    expect(local1.getAttribute("href")).toEqual("#dfn-local-dfn");
-    expect(local1.classList.contains("respec-offending-element")).toBeFalsy();
-    expect(local2.getAttribute("href")).toEqual("#dfn-local-dfn");
-    expect(local2.classList.contains("respec-offending-element")).toBeFalsy();
-
     const refs = [...doc.querySelectorAll("#references dt")];
     expect(refs.length).toEqual(2);
     expect(refs[0].textContent).toEqual("[infra]");
     expect(refs[1].textContent).toEqual("[service-workers]");
+  });
+
+  it("doesn't lookup for local links externally", async () => {
+    const body = `
+      <section id="test">
+        <!-- local links have empty el.closest() data-cite -->
+        <section data-cite="">
+          <dfn>local dfn</dfn>
+          This should be a local link: <a id="local1">local dfn</a>.
+          External link: <a id="external1" data-cite="url">URL parser</a>.
+        </section>
+        This is also a local: <a data-cite="" id="local2">local dfn</a>.
+        <section>
+          <a id="local3">local dfn</a>.
+          Another external link: <a id="external2">event handler</a>.
+        </section>
+      </section>
+    `;
+    const config = { xref: { url: apiURL }, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const local1 = doc.getElementById("local1");
+    const local2 = doc.getElementById("local2");
+    const local3 = doc.getElementById("local3");
+    const external1 = doc.getElementById("external1");
+    const external2 = doc.getElementById("external2");
+
+    const links = [...doc.querySelectorAll("#test a")];
+    expect(
+      links.every(
+        link => link.classList.contains("respec-offending-element") === false
+      )
+    ).toBeTruthy();
+
+    expect(local1.getAttribute("href")).toEqual("#dfn-local-dfn");
+    expect(local2.getAttribute("href")).toEqual("#dfn-local-dfn");
+    expect(local3.getAttribute("href")).toEqual("#dfn-local-dfn");
+    expect(external1.getAttribute("href")).toEqual(
+      "https://url.spec.whatwg.org/#concept-url-parser"
+    );
+    expect(external2.getAttribute("href")).toEqual(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+    );
   });
 
   it("shows error if cannot resolve by data-cite", async () => {
