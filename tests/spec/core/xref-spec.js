@@ -95,6 +95,50 @@ describe("Core — xref", () => {
     expect(refs[1].textContent).toEqual("[service-workers]");
   });
 
+  it("doesn't lookup for local links externally", async () => {
+    const body = `
+      <section id="test">
+        <!-- local links have empty el.closest() data-cite -->
+        <section data-cite="">
+          <dfn>local dfn</dfn>
+          This should be a local link: <a id="local1">local dfn</a>.
+          External link: <a id="external1" data-cite="url">URL parser</a>.
+        </section>
+        This is also a local: <a data-cite="" id="local2">local dfn</a>.
+        <section>
+          <a id="local3">local dfn</a>.
+          Another external link: <a id="external2">event handler</a>.
+        </section>
+      </section>
+    `;
+    const config = { xref: { url: apiURL }, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const local1 = doc.getElementById("local1");
+    const local2 = doc.getElementById("local2");
+    const local3 = doc.getElementById("local3");
+    const external1 = doc.getElementById("external1");
+    const external2 = doc.getElementById("external2");
+
+    const links = [...doc.querySelectorAll("#test a")];
+    expect(
+      links.every(
+        link => link.classList.contains("respec-offending-element") === false
+      )
+    ).toBeTruthy();
+
+    expect(local1.getAttribute("href")).toEqual("#dfn-local-dfn");
+    expect(local2.getAttribute("href")).toEqual("#dfn-local-dfn");
+    expect(local3.getAttribute("href")).toEqual("#dfn-local-dfn");
+    expect(external1.getAttribute("href")).toEqual(
+      "https://url.spec.whatwg.org/#concept-url-parser"
+    );
+    expect(external2.getAttribute("href")).toEqual(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+    );
+  });
+
   it("shows error if cannot resolve by data-cite", async () => {
     const body = `
       <section data-cite="fetch">
