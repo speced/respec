@@ -874,7 +874,7 @@ export function run(conf, doc, cb) {
     } catch (e) {
       pub(
         "error",
-        `Failed to parse WebIDL: \`${e.message}\`.
+        `Failed to parse WebIDL: ${e.message}.
         <details>
         <pre>${normalizePadding(this.textContent)}\n ${e}</pre>
         </details>`
