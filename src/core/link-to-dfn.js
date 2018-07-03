@@ -127,7 +127,10 @@ export async function run(conf, doc, cb) {
     }
   });
 
-  const additionaExternalLinks = [
+  const additionalExternalLinks = [
+    // These are additional references that need to be looked up externally.
+    // The `possibleExternalLinks` above doesn't include references that
+    //   match selectors like `a[data-cite="spec"]`
     ...document.querySelectorAll(
       "a[data-cite]:not([data-cite='']):not([data-cite*='#'])"
     ),
@@ -137,7 +140,7 @@ export async function run(conf, doc, cb) {
   });
 
   if (conf.xref) {
-    possibleExternalLinks.push(...additionaExternalLinks);
+    possibleExternalLinks.push(...additionalExternalLinks);
     try {
       await addExternalReferences(conf, possibleExternalLinks);
     } catch (error) {
