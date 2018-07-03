@@ -65,6 +65,14 @@ describe("Core — xref", () => {
         <p>As <a data-cite="!infra">ASCII uppercase</a> is valid dfn, it resolves to fragment. a local data-cite (infra) overrides parent's datacite.</p>
 
         <p>As <a data-cite="!infra">ASCII uppercasing</a> doesn't exist in INFRA, it resolves to spec only.</p>
+
+        <!-- local links with empty parent data-cite -->
+        <section data-cite="">
+          <dfn>local dfn</dfn>
+          This should be a local link: <a>local dfn</a>.
+        </section>
+
+        <p>This is also a local: <a data-cite="">local dfn</a></p>
       </section>
     `;
     // using default API url here as xref.json cannot disambiguate
@@ -72,7 +80,9 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const [link1, link2, link3] = [...doc.querySelectorAll("#links a")];
+    const [link1, link2, link3, local1, local2] = [
+      ...doc.querySelectorAll("#links a"),
+    ];
 
     expect(link1.classList.contains("respec-offending-element")).toBeFalsy();
     expect(link1.getAttribute("href")).toEqual(
@@ -88,6 +98,11 @@ describe("Core — xref", () => {
     expect(link3.getAttribute("href")).toEqual(
       "https://infra.spec.whatwg.org/"
     );
+
+    expect(local1.getAttribute("href")).toEqual("#dfn-local-dfn");
+    expect(local1.classList.contains("respec-offending-element")).toBeFalsy();
+    expect(local2.getAttribute("href")).toEqual("#dfn-local-dfn");
+    expect(local2.classList.contains("respec-offending-element")).toBeFalsy();
 
     const refs = [...doc.querySelectorAll("#references dt")];
     expect(refs.length).toEqual(2);

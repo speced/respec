@@ -69,7 +69,9 @@ export async function run(conf, doc, cb) {
 
   const possibleExternalLinks = [];
 
-  $("a:not([href]):not([data-cite]):not(.logo)").each(function() {
+  const localLinkSelector =
+    "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo)";
+  $(localLinkSelector).each(function() {
     const $ant = $(this);
     if ($ant.hasClass("externalDFN")) return;
     const linkTargets = $ant.linkTargets();
@@ -125,10 +127,17 @@ export async function run(conf, doc, cb) {
     }
   });
 
+  const additionaExternalLinks = [
+    ...document.querySelectorAll(
+      "a[data-cite]:not([data-cite='']):not([data-cite*='#'])"
+    ),
+  ].filter(el => {
+    const closest = el.closest("[data-cite]");
+    return !closest || closest.dataset.cite !== "";
+  });
+
   if (conf.xref) {
-    possibleExternalLinks.push(
-      ...document.querySelectorAll("a[data-cite]:not([data-cite*='#'])")
-    );
+    possibleExternalLinks.push(...additionaExternalLinks);
     try {
       await addExternalReferences(conf, possibleExternalLinks);
     } catch (error) {
