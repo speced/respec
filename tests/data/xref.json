@@ -1,0 +1,52 @@
+{
+  "event handler": [
+    {
+      "spec": "html",
+      "type": "dfn",
+      "normative": true,
+      "uri": "webappapis.html#event-handlers",
+      "title": "event handler",
+      "comment": "all lowercase dfn title"
+    }
+  ],
+  "URL parser": [
+    {
+      "spec": "url",
+      "type": "dfn",
+      "normative": true,
+      "uri": "#concept-url-parser",
+      "title": "URL parser",
+      "comment": "mixed case dfn title"
+    }
+  ],
+  "fetch": [
+    {
+      "spec": "fetch",
+      "type": "dfn",
+      "for": [
+        "fetch record"
+      ],
+      "normative": true,
+      "uri": "#concept-fetch-record-fetch",
+      "title": "fetch",
+      "comment": "ambiguous dfn title"
+    },
+    {
+      "spec": "fetch",
+      "type": "dfn",
+      "normative": true,
+      "uri": "#concept-fetch",
+      "title": "fetch"
+    },
+    {
+      "spec": "service-workers",
+      "type": "event",
+      "for": [
+        "ServiceWorkerGlobalScope"
+      ],
+      "normative": true,
+      "uri": "#service-worker-global-scope-fetch-event",
+      "title": "fetch"
+    }
+  ]
+}

@@ -12,9 +12,10 @@ describe("W3C — Defaults", () => {
       "no-headingless-sections": true,
       "privsec-section": true,
       "no-http-props": true,
-      "local-refs-exist": false,
+      "local-refs-exist": true,
       "check-punctuation": false,
     });
+    expect(rsConf.highlightVars).toEqual(true);
     expect(rsConf.license).toEqual("w3c-software-doc");
     expect(rsConf.specStatus).toEqual("base");
   });
@@ -24,29 +25,30 @@ describe("W3C — Defaults", () => {
       config: {
         editors: [{ name: "foo" }],
         lint: {
-          "no-headingless-sections": false,
           "privsec-section": false,
           "no-http-props": false,
-          "local-refs-exist": false,
+          "local-refs-exist": true,
           "check-punctuation": false,
           "fake-linter-rule": "foo",
         },
         license: "c0",
         specStatus: "unofficial",
         shortName: "foo",
+        highlightVars: false,
       },
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops);
     const rsConf = doc.defaultView.respecConfig;
     expect(rsConf.lint).toEqual({
-      "no-headingless-sections": false,
+      "no-headingless-sections": true,
       "privsec-section": false,
       "no-http-props": false,
-      "local-refs-exist": false,
+      "local-refs-exist": true,
       "check-punctuation": false,
       "fake-linter-rule": "foo",
     });
+    expect(rsConf.highlightVars).toEqual(false);
     expect(rsConf.license).toEqual("c0");
     expect(rsConf.specStatus).toEqual("unofficial");
   });

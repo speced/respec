@@ -1,5 +1,5 @@
 // Module core/biblio
-// Handles bibliographic references
+// Pre-processes bibliographic references
 // Configuration:
 //  - localBiblio: override or supplement the official biblio with your own.
 
@@ -8,6 +8,9 @@
 import { biblioDB } from "core/biblio-db";
 import { createResourceHint } from "core/utils";
 import { pub } from "core/pubsubhub";
+
+// for backward compatibity
+export { wireReference, stringifyReference } from "core/render-biblio";
 
 export const name = "core/biblio";
 
@@ -28,170 +31,6 @@ function getRefKeys(conf) {
   };
 }
 
-const REF_STATUSES = new Map([
-  ["CR", "W3C Candidate Recommendation"],
-  ["ED", "W3C Editor's Draft"],
-  ["FPWD", "W3C First Public Working Draft"],
-  ["LCWD", "W3C Last Call Working Draft"],
-  ["NOTE", "W3C Note"],
-  ["PER", "W3C Proposed Edited Recommendation"],
-  ["PR", "W3C Proposed Recommendation"],
-  ["REC", "W3C Recommendation"],
-  ["WD", "W3C Working Draft"],
-  ["WG-NOTE", "W3C Working Group Note"],
-]);
-
-const defaultsReference = Object.freeze({
-  authors: [],
-  date: "",
-  href: "",
-  publisher: "",
-  status: "",
-  title: "",
-  etAl: false,
-});
-
-const endNormalizer = function(endStr) {
-  return str => {
-    const trimmed = str.trim();
-    const result = !trimmed || trimmed.endsWith(endStr)
-      ? trimmed
-      : trimmed + endStr;
-    return result;
-  };
-};
-
-const endWithDot = endNormalizer(".");
-
-export function wireReference(rawRef, target = "_blank") {
-  if (typeof rawRef !== "object") {
-    throw new TypeError("Only modern object references are allowed");
-  }
-  const ref = Object.assign({}, defaultsReference, rawRef);
-  const authors = ref.authors.join("; ") + (ref.etAl ? " et al" : "");
-  const status = REF_STATUSES.get(ref.status) || ref.status;
-  return hyperHTML.wire(ref)`
-    <cite>
-      <a
-        href="${ref.href}"
-        target="${target}"
-        rel="noopener noreferrer">
-        ${ref.title.trim()}</a>.
-    </cite>
-    <span class="authors">
-      ${endWithDot(authors)}
-    </span>
-    <span class="publisher">
-      ${endWithDot(ref.publisher)}
-    </span>
-    <span class="pubDate">
-      ${endWithDot(ref.date)}
-    </span>
-    <span class="pubStatus">
-      ${endWithDot(status)}
-    </span>
-  `;
-}
-
-export function stringifyReference(ref) {
-  if (typeof ref === "string") return ref;
-  let output = `<cite>${ref.title}</cite>`;
-  if (ref.href) {
-    output = `<a href="${ref.href}">${output}</a>. `;
-  }
-  if (ref.authors && ref.authors.length) {
-    output += ref.authors.join("; ");
-    if (ref.etAl) output += " et al";
-    output += ".";
-  }
-  if (ref.publisher) {
-    const publisher = ref.publisher + (/\.$/.test(ref.publisher) ? "" : ".");
-    output = `${output} ${publisher} `;
-  }
-  if (ref.date) output += ref.date + ". ";
-  if (ref.status) output += (REF_STATUSES.get(ref.status) || ref.status) + ". ";
-  if (ref.href) output += `URL: <a href="${ref.href}">${ref.href}</a>`;
-  return output;
-}
-
-function bibref(conf) {
-  // this is in fact the bibref processing portion
-  var badrefs = {};
-  var refKeys = getRefKeys(conf);
-  var informs = refKeys.informativeReferences;
-  var norms = refKeys.normativeReferences;
-  var aliases = {};
-
-  if (!informs.length && !norms.length && !conf.refNote) return;
-  var $refsec = $(
-    "<section id='references' class='appendix'><h2>" +
-      conf.l10n.references +
-      "</h2></section>"
-  ).appendTo($("body"));
-  if (conf.refNote) $("<p></p>").html(conf.refNote).appendTo($refsec);
-
-  var types = ["Normative", "Informative"];
-  for (var i = 0; i < types.length; i++) {
-    var type = types[i];
-    var refs = type === "Normative" ? norms : informs;
-    var l10nRefs = type === "Normative"
-      ? conf.l10n.norm_references
-      : conf.l10n.info_references;
-    if (!refs.length) continue;
-    var $sec = $("<section><h3></h3></section>")
-      .appendTo($refsec)
-      .find("h3")
-      .text(l10nRefs)
-      .end();
-    $sec.makeID(null, type + " references");
-    refs.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
-    var $dl = $("<dl class='bibliography'></dl>").appendTo($sec);
-    for (var j = 0; j < refs.length; j++) {
-      var ref = refs[j];
-      $("<dt></dt>")
-        .attr({ id: "bib-" + ref })
-        .text("[" + ref + "]")
-        .appendTo($dl);
-      var $dd = $("<dd></dd>").appendTo($dl);
-      var refcontent = conf.biblio[ref];
-      var circular = {};
-      var key = ref;
-      circular[ref] = true;
-      while (refcontent && refcontent.aliasOf) {
-        if (circular[refcontent.aliasOf]) {
-          refcontent = null;
-          const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
-          pub("error", msg);
-        } else {
-          key = refcontent.aliasOf;
-          refcontent = conf.biblio[key];
-          circular[key] = true;
-        }
-      }
-      aliases[key] = aliases[key] || [];
-      if (aliases[key].indexOf(ref) < 0) aliases[key].push(ref);
-      if (refcontent) {
-        $dd.html(stringifyReference(refcontent) + "\n");
-      } else {
-        if (!badrefs[ref]) badrefs[ref] = 0;
-        badrefs[ref]++;
-        $dd.html("<em style='color: #f00'>Reference not found.</em>\n");
-      }
-    }
-  }
-  for (var k in aliases) {
-    if (aliases[k].length > 1) {
-      let msg = `[${k}] is referenced in ${aliases[k].length} ways: `;
-      msg += `(${aliases[k].map(item => `'${item}'`).join(", ")}). This causes`;
-      msg += ` duplicate entries in the References section.`;
-      pub("warn", msg);
-    }
-  }
-  for (var item in badrefs) {
-    const msg = `Bad reference: [\`${item}\`] (appears ${badrefs[item]} times)`;
-    if (badrefs.hasOwnProperty(item)) pub("error", msg);
-  }
-}
 // Opportunistically dns-prefetch to bibref server, as we don't know yet
 // if we will actually need to download references yet.
 var link = createResourceHint({
@@ -204,14 +43,18 @@ export const done = new Promise(resolve => {
   doneResolver = resolve;
 });
 
-async function updateFromNetwork(refs, options = { forceUpdate: false }) {
+export async function updateFromNetwork(
+  refs,
+  options = { forceUpdate: false }
+) {
   // Update database if needed, if we are online
   if (!refs.length || navigator.onLine === false) {
     return;
   }
   let response;
+  const refsToFetch = [...new Set(refs)];
   try {
-    response = await fetch(bibrefsURL.href + refs.join(","));
+    response = await fetch(bibrefsURL.href + refsToFetch.join(","));
   } catch (err) {
     console.error(err);
     return null;
@@ -305,7 +148,6 @@ export async function run(conf, doc, cb) {
     Object.assign(conf.biblio, data);
   }
   Object.assign(conf.biblio, conf.localBiblio);
-  bibref(conf);
-  finish();
   await updateFromNetwork(neededRefs);
+  finish();
 }

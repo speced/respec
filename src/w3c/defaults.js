@@ -61,8 +61,10 @@ const w3cDefaults = {
     "privsec-section": true,
     "no-http-props": true,
     "check-punctuation": false,
-    "local-refs-exist": false,
+    "local-refs-exist": true,
   },
+  pluralize: false,
+  highlightVars: true,
   doJsonLd: false,
   license: "w3c-software-doc",
   specStatus: "base",
@@ -93,6 +95,10 @@ export function run(conf) {
   Object.assign(conf, {
     ...w3cDefaults,
     ...conf,
+  });
+  Object.assign(conf.lint, {
+    ...w3cDefaults.lint,
+    ...conf.lint,
   });
   //computed properties
   Object.assign(conf, computeProps(conf));

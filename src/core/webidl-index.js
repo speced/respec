@@ -45,8 +45,8 @@ export function run(conf, doc, cb) {
       const { children } = elem.cloneNode(true);
       for (const child of Array.from(children)) {
         span.appendChild(child);
-        span.appendChild(document.createTextNode("\n"));
       }
+      span.appendChild(document.createTextNode("\n"));
       span.classList.add("respec-idl-separator");
       return span;
     })
@@ -55,9 +55,7 @@ export function run(conf, doc, cb) {
       return collector;
     }, pre);
   // Remove duplicate IDs
-  Array.from(pre.querySelectorAll("*[id]")).forEach(elem =>
-    elem.removeAttribute("id")
-  );
+  pre.querySelectorAll("*[id]").forEach(elem => elem.removeAttribute("id"));
   virtualSummary.appendChild(pre);
   idlIndexSec.appendChild(virtualSummary);
   cb();

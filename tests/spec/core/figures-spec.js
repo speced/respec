@@ -1,28 +1,6 @@
 "use strict";
 describe("Core - Figures", function() {
   afterAll(flushIframes);
-  const ops = {
-    config: makeBasicConfig(),
-    body:
-      makeDefaultBody() +
-      `<section>
-         <section id='figs'>
-           <div class='figure'><pre title='PREFIG'>PRE</pre></div>
-           <img src='IMG' title='IMGTIT' class='figure'>
-         </section>
-        <section id='tof'></section>
-        </section>`,
-  };
-  it("generates captions for figures", async () => {
-    const doc = await makeRSDoc(ops);
-    const figs = doc.getElementById("figs");
-    const captions = figs.querySelectorAll("figure figcaption");
-    expect(figs.querySelectorAll("figure").length).toEqual(2);
-    expect(captions.length).toEqual(2);
-    expect(captions.item(0).textContent).toEqual("Figure 1 PREFIG");
-    expect(captions.item(1).textContent).toEqual("Figure 2 IMGTIT");
-  });
-
   it("creates autolinks from the anchor to the figure", async () => {
     const ops = {
       config: makeBasicConfig(),
@@ -70,16 +48,30 @@ describe("Core - Figures", function() {
   });
 
   it("generates table of figures", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body:
+        makeDefaultBody() +
+        `<figure>
+          <img src='img' alt=''>
+          <figcaption>test 1</figcaption>
+        </figure>
+        <figure>
+          <img src='img' alt=''>
+          <figcaption>test 2</figcaption>
+        </figure>
+        <section id=tof></section>`,
+    };
     const doc = await makeRSDoc(ops);
     const tof = doc.getElementById("tof");
-    const tofHeader = tof.querySelector("h3");
+    const tofHeader = tof.querySelector("h2");
     const tofItems = tof.querySelectorAll("ul li");
     const figLinks = tof.querySelectorAll("ul li a");
     expect(tofHeader).toBeTruthy();
-    expect(tofHeader.textContent).toEqual("Table of Figures");
+    expect(tofHeader.textContent).toEqual("1. Table of Figures");
     expect(tofItems.length).toEqual(2);
-    expect(figLinks.item(0).textContent).toEqual("Figure 1 PREFIG");
-    expect(figLinks.item(1).textContent).toEqual("Figure 2 IMGTIT");
+    expect(figLinks.item(0).textContent).toEqual("Figure 1 test 1");
+    expect(figLinks.item(1).textContent).toEqual("Figure 2 test 2");
   });
 
   describe("normalize images", () => {

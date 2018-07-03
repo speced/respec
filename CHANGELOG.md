@@ -1,5 +1,155 @@
 # Change Log
 
+## [v22.0.0](https://github.com/w3c/respec/tree/v22.0.0) (2018-06-26)
+[Full Changelog](https://github.com/w3c/respec/compare/v21.3.0...v22.0.0)
+
+**Merged pull requests:**
+
+- BREAKING CHANGE: split biblio in pre-processing and rendering parts [\#1715](https://github.com/w3c/respec/pull/1715) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/webidl\): prevent duplicated whitespace after comma [\#1714](https://github.com/w3c/respec/pull/1714) ([saschanaz](https://github.com/saschanaz))
+-  refactor\(core/biblio\): split into pre-processing and rendering parts [\#1712](https://github.com/w3c/respec/pull/1712) ([sidvishnoi](https://github.com/sidvishnoi))
+- Update eslint to the latest version 🚀 [\#1709](https://github.com/w3c/respec/pull/1709) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+
+## [v21.3.0](https://github.com/w3c/respec/tree/v21.3.0) (2018-06-25)
+[Full Changelog](https://github.com/w3c/respec/compare/v21.2.0...v21.3.0)
+
+**Fixed bugs:**
+
+- IDL writer doesn't support setlike\<\> [\#1705](https://github.com/w3c/respec/issues/1705)
+- IDL writer doesn't support bodyless stringifier [\#1704](https://github.com/w3c/respec/issues/1704)
+
+**Closed issues:**
+
+- Anonymous IDL operations cause empty idlMethName spans [\#1707](https://github.com/w3c/respec/issues/1707)
+
+**Merged pull requests:**
+
+- Update to webidl2.js 14 [\#1710](https://github.com/w3c/respec/pull/1710) ([saschanaz](https://github.com/saschanaz))
+- Support setlike and bodyless stringifier [\#1708](https://github.com/w3c/respec/pull/1708) ([saschanaz](https://github.com/saschanaz))
+
+## [v21.2.0](https://github.com/w3c/respec/tree/v21.2.0) (2018-06-20)
+[Full Changelog](https://github.com/w3c/respec/compare/v21.1.0...v21.2.0)
+
+**Merged pull requests:**
+
+- feat\(core/biblio-db\): add clear database method [\#1706](https://github.com/w3c/respec/pull/1706) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/biblio\): normalize references [\#1703](https://github.com/w3c/respec/pull/1703) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v21.1.0](https://github.com/w3c/respec/tree/v21.1.0) (2018-06-19)
+[Full Changelog](https://github.com/w3c/respec/compare/v21.0.2...v21.1.0)
+
+**Closed issues:**
+
+- Large images appear stretched [\#1678](https://github.com/w3c/respec/issues/1678)
+- auto normalize references [\#1535](https://github.com/w3c/respec/issues/1535)
+- Warn when href points to undefined id [\#1318](https://github.com/w3c/respec/issues/1318)
+- caniuse integration  [\#1238](https://github.com/w3c/respec/issues/1238)
+
+**Merged pull requests:**
+
+- refactor\(core/jquery-enhanced\): migrate $.allTextNodes to vanilla js [\#1698](https://github.com/w3c/respec/pull/1698) ([sidvishnoi](https://github.com/sidvishnoi))
+- chore\(package.json\) update dependencies [\#1697](https://github.com/w3c/respec/pull/1697) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(w3c/defaults\): enable local-refs-exist lint rule [\#1696](https://github.com/w3c/respec/pull/1696) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(w3c/defaults\): enable highlightVars [\#1695](https://github.com/w3c/respec/pull/1695) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/biblio\):  auto normalize references [\#1692](https://github.com/w3c/respec/pull/1692) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/biblio\): replace jQuery with hyperHTML [\#1691](https://github.com/w3c/respec/pull/1691) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v21.0.2](https://github.com/w3c/respec/tree/v21.0.2) (2018-06-06)
+[Full Changelog](https://github.com/w3c/respec/compare/v21.0.1...v21.0.2)
+
+**Merged pull requests:**
+
+- perf: dont create arrays unnecessarily [\#1690](https://github.com/w3c/respec/pull/1690) ([marcoscaceres](https://github.com/marcoscaceres))
+- perf\(core/location-hash\): avoid recalculating styles [\#1689](https://github.com/w3c/respec/pull/1689) ([marcoscaceres](https://github.com/marcoscaceres))
+- Add a period and space to unlinked references [\#1688](https://github.com/w3c/respec/pull/1688) ([michael-n-cooper](https://github.com/michael-n-cooper))
+- fix\(w3c/defaults\): allow lint rules override [\#1687](https://github.com/w3c/respec/pull/1687) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/dfn\): improve backwards compat [\#1686](https://github.com/w3c/respec/pull/1686) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v21.0.1](https://github.com/w3c/respec/tree/v21.0.1) (2018-05-29)
+[Full Changelog](https://github.com/w3c/respec/compare/v21.0.0...v21.0.1)
+
+**Merged pull requests:**
+
+- perf\(core/location-hash\) improve performance [\#1685](https://github.com/w3c/respec/pull/1685) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v21.0.0](https://github.com/w3c/respec/tree/v21.0.0) (2018-05-29)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.11.2...v21.0.0)
+
+**Closed issues:**
+
+- Investigate automatic pluralization of defined terms [\#1351](https://github.com/w3c/respec/issues/1351)
+- Investigate switching MD parser  to Remarkable [\#1207](https://github.com/w3c/respec/issues/1207)
+
+**Merged pull requests:**
+
+- feat\(core/dfn\): add automatic pluralization support for \<dfn\> [\#1682](https://github.com/w3c/respec/pull/1682) ([sidvishnoi](https://github.com/sidvishnoi))
+- BREAKING CHANGE: Remove deprecated things [\#1681](https://github.com/w3c/respec/pull/1681) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v20.11.2](https://github.com/w3c/respec/tree/v20.11.2) (2018-05-25)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.11.1...v20.11.2)
+
+**Closed issues:**
+
+- Nothing really checks config.format for markdown processing [\#1679](https://github.com/w3c/respec/issues/1679)
+
+**Merged pull requests:**
+
+- fix\(package\): update marked to version 0.4.0 [\#1680](https://github.com/w3c/respec/pull/1680) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v20.11.1](https://github.com/w3c/respec/tree/v20.11.1) (2018-05-15)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.11.0...v20.11.1)
+
+**Fixed bugs:**
+
+- link-to-dfn module may report a TypeError [\#1666](https://github.com/w3c/respec/issues/1666)
+
+**Merged pull requests:**
+
+- fix: link-to-dfn module may report a TypeError [\#1673](https://github.com/w3c/respec/pull/1673) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(tools/respecDocWriter\): support Puppeteer 1.4 error reporting [\#1671](https://github.com/w3c/respec/pull/1671) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v20.11.0](https://github.com/w3c/respec/tree/v20.11.0) (2018-05-14)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.10.4...v20.11.0)
+
+**Closed issues:**
+
+- "stod" typo in src/w3c/headers.js? [\#1656](https://github.com/w3c/respec/issues/1656)
+- Warn about href's that link to nonexistent id's [\#1643](https://github.com/w3c/respec/issues/1643)
+
+**Merged pull requests:**
+
+- Fix temp ID syntax in list sorter [\#1665](https://github.com/w3c/respec/pull/1665) ([tidoust](https://github.com/tidoust))
+- \(feat/lint\) Warns about href's that link to nonexistent id's in a spec [\#1664](https://github.com/w3c/respec/pull/1664) ([sidvishnoi](https://github.com/sidvishnoi))
+- Update var highlight colors [\#1663](https://github.com/w3c/respec/pull/1663) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(w3c/headers\): typo [\#1659](https://github.com/w3c/respec/pull/1659) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(headers-spec\): variable name typo [\#1658](https://github.com/w3c/respec/pull/1658) ([marcoscaceres](https://github.com/marcoscaceres))
+- Fix caniuse hover show/hide [\#1657](https://github.com/w3c/respec/pull/1657) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v20.10.4](https://github.com/w3c/respec/tree/v20.10.4) (2018-05-08)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.10.3...v20.10.4)
+
+**Merged pull requests:**
+
+- fix\(tools/respecDocWriter\): reject on require load errors [\#1654](https://github.com/w3c/respec/pull/1654) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v20.10.3](https://github.com/w3c/respec/tree/v20.10.3) (2018-05-07)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.10.2...v20.10.3)
+
+**Closed issues:**
+
+- Harmonizing var highlight colors with BikeShed [\#1649](https://github.com/w3c/respec/issues/1649)
+
+**Merged pull requests:**
+
+- Make RespecDocWriter work with older versions of ReSpec [\#1652](https://github.com/w3c/respec/pull/1652) ([tidoust](https://github.com/tidoust))
+
+## [v20.10.2](https://github.com/w3c/respec/tree/v20.10.2) (2018-05-04)
+[Full Changelog](https://github.com/w3c/respec/compare/v20.10.1...v20.10.2)
+
+**Merged pull requests:**
+
+- sec\(tools/respecDocWriter\): dont show URL params [\#1651](https://github.com/w3c/respec/pull/1651) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v20.10.1](https://github.com/w3c/respec/tree/v20.10.1) (2018-05-02)
 [Full Changelog](https://github.com/w3c/respec/compare/v20.10.0...v20.10.1)
 
@@ -142,10 +292,6 @@
 
 - IDL stringifier is causing RangeError [\#1599](https://github.com/w3c/respec/issues/1599)
 - RangeError: Invalid count value exception in idn\(\) [\#1559](https://github.com/w3c/respec/issues/1559)
-
-**Closed issues:**
-
-- auto normalize references [\#1535](https://github.com/w3c/respec/issues/1535)
 
 **Merged pull requests:**
 

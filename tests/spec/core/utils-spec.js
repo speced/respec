@@ -525,4 +525,20 @@ describe("Core - Utils", () => {
       expect(output).toEqual(["pass"]);
     });
   });
+
+  describe("DOM utils", () => {
+    // migrated from core/jquery-enhanced
+    describe("getTextNodes", () => {
+      it("finds all the text nodes", () => {
+        const node = document.createElement("div");
+        node.innerHTML =
+          "<div>aa<span>bb</span><p>cc<i>dd</i></p><pre>nope</pre></div>";
+
+        const textNodes = utils.getTextNodes(node, ["pre"]);
+        expect(textNodes.length).toEqual(4);
+        const str = textNodes.map(tn => tn.nodeValue).join("");
+        expect(str).toEqual("aabbccdd");
+      });
+    });
+  });
 });

@@ -39,6 +39,10 @@ a.bibref {
   text-decoration: none;
 }
 
+#references :target {
+  background: #eaf3ff;
+}
+
 cite .bibref {
   font-style: normal;
 }
@@ -146,9 +150,9 @@ details.respec-tests-details[open] {
   z-index: 999999;
   position: absolute;
   border: thin solid #cad3e2;
-  border-radius: .3em;
+  border-radius: 0.3em;
   background-color: white;
-  padding-bottom: .5em;
+  padding-bottom: 0.5em;
 }
 
 details.respec-tests-details[open] > summary {

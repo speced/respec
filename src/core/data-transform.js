@@ -16,7 +16,7 @@ import { runTransforms } from "core/utils";
 export const name = "core/data-transform";
 
 export function run(conf, doc, cb) {
-  Array.from(doc.querySelectorAll("[data-transform]")).forEach(el => {
+  doc.querySelectorAll("[data-transform]").forEach(el => {
     el.innerHTML = runTransforms(el.innerHTML, el.dataset.transform);
     el.removeAttribute("data-transform");
   });
