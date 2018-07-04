@@ -65,6 +65,11 @@ describe("Core — xref", () => {
         <p>As <a data-cite="!infra">ASCII uppercase</a> is valid dfn, it resolves to fragment. a local data-cite (infra) overrides parent's datacite.</p>
 
         <p>As <a data-cite="!infra">ASCII uppercasing</a> doesn't exist in INFRA, it resolves to spec only.</p>
+
+        <p id="dfns">external dfn:
+          <dfn data-cite="!html">event handler</dfn> exists in html.
+          Cannot find <dfn>URL parser</dfn> in service-workers.
+        </p>
       </section>
     `;
     // using default API url here as xref.json cannot disambiguate
@@ -89,18 +94,34 @@ describe("Core — xref", () => {
       "https://infra.spec.whatwg.org/"
     );
 
-    const refs = [...doc.querySelectorAll("#references dt")];
-    expect(refs.length).toEqual(2);
-    expect(refs[0].textContent).toEqual("[infra]");
-    expect(refs[1].textContent).toEqual("[service-workers]");
+    const [dfn1, dfn2] = [...doc.querySelectorAll("#dfns dfn")];
+    const dfn1link = dfn1.querySelector("a");
+    expect(dfn1link).toBeTruthy();
+    expect(dfn1link.getAttribute("href")).toEqual(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+    );
+    expect(dfn1.classList.contains("respec-offending-element")).toBeFalsy();
+
+    const dfn2link = dfn2.querySelector("a");
+    expect(dfn2link).toBeFalsy();
+    expect(dfn2.classList.contains("respec-offending-element")).toBeTruthy();
+
+    const refs = [...doc.querySelectorAll("#references dt")].map(
+      dt => dt.textContent
+    );
+    expect(refs.length).toEqual(3);
+    expect(refs.sort()).toEqual(["[html]", "[infra]", "[service-workers]"]);
   });
 
-  it("doesn't lookup for local links externally", async () => {
+  it("doesn't lookup for local references externally", async () => {
     const body = `
       <section id="test">
         <!-- local links have empty el.closest() data-cite -->
         <section data-cite="">
           <dfn>local dfn</dfn>
+          <p id="externalDfn1">
+            External DFN <dfn data-cite="webidl">dictionary</dfn>
+          </p>
           This should be a local link: <a id="local1">local dfn</a>.
           External link: <a id="external1" data-cite="url">URL parser</a>.
         </section>
@@ -108,18 +129,19 @@ describe("Core — xref", () => {
         <section>
           <a id="local3">local dfn</a>.
           Another external link: <a id="external2">event handler</a>.
+          <p id="externalDfn2">
+            Another external dfn: <dfn>fully active</dfn> from html.
+          </p>
         </section>
       </section>
     `;
-    const config = { xref: { url: apiURL }, localBiblio };
+    const config = { xref: true, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
     const local1 = doc.getElementById("local1");
     const local2 = doc.getElementById("local2");
     const local3 = doc.getElementById("local3");
-    const external1 = doc.getElementById("external1");
-    const external2 = doc.getElementById("external2");
 
     const links = [...doc.querySelectorAll("#test a")];
     expect(
@@ -131,11 +153,25 @@ describe("Core — xref", () => {
     expect(local1.getAttribute("href")).toEqual("#dfn-local-dfn");
     expect(local2.getAttribute("href")).toEqual("#dfn-local-dfn");
     expect(local3.getAttribute("href")).toEqual("#dfn-local-dfn");
+
+    const external1 = doc.getElementById("external1");
+    const external2 = doc.getElementById("external2");
     expect(external1.getAttribute("href")).toEqual(
       "https://url.spec.whatwg.org/#concept-url-parser"
     );
     expect(external2.getAttribute("href")).toEqual(
       "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+    );
+
+    const externalDfn1 = doc.querySelector("#externalDfn1 dfn");
+    const externalDfn2 = doc.querySelector("#externalDfn2 dfn");
+    expect(externalDfn1.querySelector("a")).toBeTruthy();
+    expect(externalDfn1.querySelector("a").getAttribute("href")).toEqual(
+      "https://heycam.github.io/webidl/#dfn-dictionary"
+    );
+    expect(externalDfn2.querySelector("a")).toBeTruthy();
+    expect(externalDfn2.querySelector("a").getAttribute("href")).toEqual(
+      "https://html.spec.whatwg.org/multipage/browsers.html#fully-active"
     );
   });
 
