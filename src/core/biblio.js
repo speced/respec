@@ -48,6 +48,7 @@ export async function updateFromNetwork(
   options = { forceUpdate: false }
 ) {
   // Update database if needed, if we are online
+  refs = refs.filter(ref => ref.trim());
   if (!refs.length || navigator.onLine === false) {
     return;
   }
