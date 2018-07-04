@@ -132,10 +132,8 @@ export async function run(conf, doc, cb) {
     // The `possibleExternalLinks` above doesn't include references that
     //   match selectors like `a[data-cite="spec"]`
     ...document.querySelectorAll(
-      [
-        "a[data-cite]:not([data-cite='']):not([data-cite*='#'])",
-        "dfn:not([data-cite='']):not([data-cite*='#'])",
-      ].join(", ")
+      "a[data-cite]:not([data-cite='']):not([data-cite*='#']), " +
+        "dfn:not([data-cite='']):not([data-cite*='#'])"
     ),
   ].filter(el => {
     const closest = el.closest("[data-cite]");
