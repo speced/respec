@@ -4,6 +4,7 @@
 import { linkInlineCitations } from "core/data-cite";
 import { pub } from "core/pubsubhub";
 import { lang as defaultLang } from "./l10n";
+import { plural as pluralOf } from "deps/pluralize";
 import { run as addExternalReferences } from "core/xref";
 export const name = "core/link-to-dfn";
 const l10n = {
@@ -80,6 +81,16 @@ export async function run(conf, doc, cb) {
         const dfn = titles[target.title][target.for];
         if (dfn[0].dataset.cite) {
           $ant[0].dataset.cite = dfn[0].dataset.cite;
+        } else if (
+          conf.xref &&
+          dfn[0].dataset.lt &&
+          dfn[0].dataset.lt.includes($ant[0].textContent.toLowerCase())
+        ) {
+          const lt = dfn[0].dataset.lt.split("|");
+          const txt = $ant[0].textContent.toLowerCase();
+          const key = dfn[0].textContent.toLowerCase();
+          $ant[0].classList.add("xref");
+          $ant[0].dataset.xref = lt[0] === pluralOf(txt) ? key : lt[0];
         } else {
           const frag = "#" + encodeURIComponent(dfn.prop("id"));
           $ant.attr("href", frag).addClass("internalDFN");
@@ -120,7 +131,9 @@ export async function run(conf, doc, cb) {
           ".idl:not(.extAttr), dl.methods, dl.attributes, dl.constants, dl.constructors, dl.fields, dl.dictionary-members, span.idlMemberType, span.idlTypedefType, div.idlImplementsDesc"
         ).length
       ) {
-        possibleExternalLinks.push($ant[0]);
+        if (!$ant[0].classList.contains("xref")) {
+          possibleExternalLinks.push($ant[0]);
+        }
         return;
       }
       $ant.replaceWith($ant.contents());

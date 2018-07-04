@@ -5,6 +5,7 @@
 // https://github.com/w3c/respec/issues/1662
 
 import { norm as normalize, showInlineError } from "core/utils";
+import { plural as pluralOf } from "deps/pluralize";
 
 const API_URL = new URL(
   "https://wt-466c7865b463a6c4cbb820b42dde9e58-0.sandbox.auth0-extend.com/xref-proto-2"
@@ -35,7 +36,10 @@ export async function run(conf, elems) {
 function createXrefMap(elems) {
   return elems.reduce((map, elem) => {
     let term = elem.textContent;
-    if (elem.dataset.lt) term = elem.dataset.lt.split("|", 1)[0];
+    if (elem.dataset.lt) {
+      const lt = elem.dataset.lt.split("|", 1)[0];
+      if (pluralOf(term.toLowerCase()) !== lt) term = lt;
+    }
     term = normalize(term);
 
     const datacite = elem.closest("[data-cite]");
@@ -102,6 +106,12 @@ function addDataCiteToTerms(query, results, xrefMap, conf) {
       const [citePath, citeFrag] = path.split("#");
       Object.assign(elem.dataset, { cite, citePath, citeFrag });
 
+      const sel = `.xref[data-xref="${term.toLowerCase()}"]`;
+      document.querySelectorAll(sel).forEach(el => {
+        // el.classList.remove("xref");
+        // el.removeAttribute("data-xref");
+        Object.assign(el.dataset, { cite, citePath, citeFrag });
+      });
       if (normative == true) conf.normativeReferences.add(cite);
     });
   }
