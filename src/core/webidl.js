@@ -456,7 +456,9 @@ function writeDefinition(obj) {
           case "string":
             children += idlEnumItemTmpl({
               obj: item,
-              lname: item.value ? item.value.toLowerCase() : "the-empty-string",
+              lname: item.value
+                ? item.value.toLowerCase().replace(/\s/g, "-")
+                : "the-empty-string",
               parentID: obj.name.toLowerCase(),
             });
             break;
@@ -827,7 +829,10 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
     return;
   }
   const dfn = dfns[0][0]; // work on actual node, not jquery
-  const id = "dom-" + (parent ? parent + "-" : "") + name.replace(/[()]/g, "");
+  const id =
+    "dom-" +
+    (parent ? parent + "-" : "") +
+    name.replace(/[()]/g, "").replace(/\s/g, "-");
   dfn.id = id;
   dfn.dataset.idl = "";
   dfn.dataset.title = dfn.textContent;

@@ -623,7 +623,9 @@ partial dictionary AnotherThing {
         .first()
         .text()
     ).toEqual('"one"');
-
+    expect(
+      doc.querySelector("a[href='#dom-enumbasic-white-space']")
+    ).toBeTruthy();
     // Links and IDs.
     expect(
       $target
@@ -657,7 +659,7 @@ partial dictionary AnotherThing {
     );
     const dfn = doc.querySelector("#dom-emptyenum-the-empty-string");
     const smokeDfn = doc.querySelector(
-      `#enum-empty-sec a[href="#dom-emptyenum-not empty"]`
+      `#enum-empty-sec a[href="#dom-emptyenum-not-empty"]`
     );
     expect(links).toBeTruthy();
     expect(dfn).toBeTruthy();
