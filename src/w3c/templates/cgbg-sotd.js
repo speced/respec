@@ -39,7 +39,9 @@ ${!conf.sotdAfterWGinfo ? [conf.additionalContent] : ""}
       href='${`https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`}'>archives</a>)${conf.subjectPrefix ? html`
     with <code>${conf.subjectPrefix}</code> at the start of your
     email's subject` : ""}.</p>
-  ` : ""}
+  ` : html`
+   <p>If you wish to make comments regarding this document, please raise them as <a href="${conf.issueBase}">GitHub issues</a>.</p>
+  `}
 ${conf.sotdAfterWGinfo ? [conf.additionalContent] : ""}
 ${[conf.additionalSections]}`;
-}
+};
