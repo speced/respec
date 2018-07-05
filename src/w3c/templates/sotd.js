@@ -30,7 +30,7 @@ ${
       ? html`
   <p>
     This document is draft of a potential specification. It has no official standing of
-    any kind and does not represent the support or consensus of any standards organisation.
+    any kind and does not represent the support or consensus of any standards organization.
   </p>
   ${[conf.additionalContent]}
 `
@@ -125,78 +125,107 @@ ${
               ? "This document is intended to become a W3C Recommendation."
               : ""
           }
+          </p>
           ${
-            conf.wgPublicList
+            conf.github || conf.wgPublicList
               ? html`
-            Comments regarding this document are welcome. Please send them to
-            <a href='${`mailto:${conf.wgPublicList}@w3.org${
-              conf.subjectPrefix ? `?subject=${conf.subjectPrefixEnc}` : [""]
-            }`}'>${conf.wgPublicList}@w3.org</a>
-            (<a href='${`mailto:${
+            <p>
+            ${
+              conf.github
+                ? html`
+                  <a href="${conf.github.repoURL +
+                    "/issues"}">GitHub Issues</a> are
+                  preferred for discussion of this specification.
+              `
+                : ""
+            }
+            ${
               conf.wgPublicList
-            }-request@w3.org?subject=subscribe`}'>subscribe</a>,
-            <a
-              href='${`https://lists.w3.org/Archives/Public/${
-                conf.wgPublicList
-              }/`}'>archives</a>)${
+                ? html`
+              ${
+                conf.github && conf.wgPublicList
+                  ? html`
+                Alternatively, you can send comments to our mailing list.
+              `
+                  : "Comments regarding this document are welcome."
+              }
+              Please send them to
+              <a href='${`mailto:${conf.wgPublicList}@w3.org${
+                conf.subjectPrefix ? `?subject=${conf.subjectPrefixEnc}` : [""]
+              }`}'>${conf.wgPublicList}@w3.org</a>
+              (<a
+                href='${`https://lists.w3.org/Archives/Public/${
+                  conf.wgPublicList
+                }/`}'>archives</a>)${
+                    conf.subjectPrefix
+                      ? html`
+                with <code>${
                   conf.subjectPrefix
-                    ? html`
-              with <code>${
-                conf.subjectPrefix
-              }</code> at the start of your email's subject`
+                }</code> at the start of your email's subject`
+                      : ""
+                  }.
+            `
+                : ""
+            }
+            </p>
+          `
+              : ""
+          }
+          ${
+            conf.isCR || conf.isPER || conf.isPR
+              ? html`
+              <p>
+                ${
+                  conf.isCR
+                    ? `
+                  W3C publishes a Candidate Recommendation to indicate that the document is believed to be
+                  stable and to encourage implementation by the developer community. This Candidate
+                  Recommendation is expected to advance to Proposed Recommendation no earlier than
+                  ${conf.humanCREnd}.
+                `
                     : ""
-                }.
+                }
+                ${
+                  conf.isPER
+                    ? html`
+                    W3C Advisory Committee Members are invited to
+                    send formal review comments on this Proposed
+                    Edited Recommendation to the W3C Team until
+                    ${conf.humanPEREnd}.
+                    Members of the Advisory Committee will find the
+                    appropriate review form for this document by
+                    consulting their list of current
+                    <a href='https://www.w3.org/2002/09/wbs/myQuestionnaires'>WBS questionnaires</a>.
+                `
+                    : ""
+                }
+                ${
+                  conf.isPR
+                    ? html`
+                    The W3C Membership and other interested parties are invited to review the document and
+                    send comments to
+                    <a rel='discussion' href='${`mailto:${
+                      conf.wgPublicList
+                    }@w3.org`}'>${conf.wgPublicList}@w3.org</a>
+                    (<a href='${`mailto:${
+                      conf.wgPublicList
+                    }-request@w3.org?subject=subscribe`}'>subscribe</a>,
+                    <a href='${`https://lists.w3.org/Archives/Public/${
+                      conf.wgPublicList
+                    }/`}'>archives</a>)
+                    through ${
+                      conf.humanPREnd
+                    }. Advisory Committee Representatives should consult their
+                    <a href='https://www.w3.org/2002/09/wbs/myQuestionnaires'>WBS questionnaires</a>.
+                    Note that substantive technical comments were expected during the Candidate Recommendation
+                    review period that ended ${conf.humanCREnd}.
+                `
+                    : ""
+                }
+              </p>
           `
               : ""
           }
-          ${
-            conf.isCR
-              ? `
-            W3C publishes a Candidate Recommendation to indicate that the document is believed to be
-            stable and to encourage implementation by the developer community. This Candidate
-            Recommendation is expected to advance to Proposed Recommendation no earlier than
-            ${conf.humanCREnd}.
-          `
-              : ""
-          }
-          ${
-            conf.isPER
-              ? html`
-              W3C Advisory Committee Members are invited to
-              send formal review comments on this Proposed
-              Edited Recommendation to the W3C Team until
-              ${conf.humanPEREnd}.
-              Members of the Advisory Committee will find the
-              appropriate review form for this document by
-              consulting their list of current
-              <a href='https://www.w3.org/2002/09/wbs/myQuestionnaires'>WBS questionnaires</a>.
-          `
-              : ""
-          }
-          ${
-            conf.isPR
-              ? html`
-              The W3C Membership and other interested parties are invited to review the document and
-              send comments to
-              <a rel='discussion' href='${`mailto:${
-                conf.wgPublicList
-              }@w3.org`}'>${conf.wgPublicList}@w3.org</a>
-              (<a href='${`mailto:${
-                conf.wgPublicList
-              }-request@w3.org?subject=subscribe`}'>subscribe</a>,
-              <a href='${`https://lists.w3.org/Archives/Public/${
-                conf.wgPublicList
-              }/`}'>archives</a>)
-              through ${
-                conf.humanPREnd
-              }. Advisory Committee Representatives should consult their
-              <a href='https://www.w3.org/2002/09/wbs/myQuestionnaires'>WBS questionnaires</a>.
-              Note that substantive technical comments were expected during the Candidate Recommendation
-              review period that ended ${conf.humanCREnd}.
-          `
-              : ""
-          }
-        </p>
         `
             : ""
         }
