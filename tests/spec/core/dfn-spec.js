@@ -47,8 +47,6 @@ describe("Core — Definitions", function() {
   });
 
   describe("Automatic pluralization for <dfn>", () => {
-    const getLinkHash = ({ href }) => new URL(href).hash;
-
     it("adds pluralization when [data-lt] is not specified", async () => {
       const body = `
         <section id="section">
@@ -59,11 +57,14 @@ describe("Core — Definitions", function() {
       const doc = await makeRSDoc(ops);
 
       const dfn = doc.querySelector("#section dfn");
-      expect(dfn.id).toEqual("dfn-foos");
-      expect(dfn.dataset.lt).toEqual("foos");
+      expect(dfn.id).toEqual("dfn-foo");
+      expect(dfn.dataset.lt).toBeFalsy();
+      expect(dfn.dataset.plurals).toEqual("foos");
       const links = [...doc.querySelectorAll("#section a")];
       expect(links.length).toEqual(2);
-      expect(links.every(el => getLinkHash(el) === "#dfn-foos")).toBeTruthy();
+      expect(
+        links.every(el => el.getAttribute("href") === "#dfn-foo")
+      ).toBeTruthy();
     });
 
     it("adds pluralization when [data-lt] is defined", async () => {
@@ -73,8 +74,8 @@ describe("Core — Definitions", function() {
           as <a>baz</a>
           or <a>bar</a>
           or <a>bars</a>
-          but not as <a id="link1">bazs</a>
-          or <a id="link2" href="/PASS">bar</a>
+          or <a>bazs</a>
+          but not as <a id="ignored-link" href="/PASS">bar</a>
         </section>
       `;
       const ops = makeStandardOps({ pluralize: true }, body);
@@ -82,18 +83,14 @@ describe("Core — Definitions", function() {
 
       const dfn = doc.querySelector("#section dfn");
       expect(dfn.id).toEqual("dfn-baz"); // uses first data-lt as `id`
-      expect(dfn.dataset.lt).toEqual("baz|bars");
-
-      const validLinks = [...doc.querySelectorAll("#section a")].slice(0, 3);
-      expect(validLinks.length).toEqual(3);
+      expect(dfn.dataset.lt).toEqual("baz|bar");
+      expect(dfn.dataset.plurals.split("|").sort()).toEqual(["bars", "bazs"]);
+      const validLinks = [...doc.querySelectorAll("#section a[href^='#']")];
+      expect(validLinks.length).toEqual(4);
       expect(
-        validLinks.every(el => getLinkHash(el) === "#dfn-baz")
+        validLinks.every(el => el.getAttribute("href") === "#dfn-baz")
       ).toBeTruthy();
-      const badLink = doc.getElementById("link1");
-      expect(
-        badLink.classList.contains("respec-offending-element")
-      ).toBeTruthy();
-      const ignoredLink = doc.getElementById("link2");
+      const ignoredLink = doc.getElementById("ignored-link");
       expect(ignoredLink.href).toEqual(`${window.location.origin}/PASS`);
     });
 
@@ -111,7 +108,7 @@ describe("Core — Definitions", function() {
       const { id: dfnId } = doc.querySelector("#section dfn");
       expect(dfnId).toBe("dfn-foo");
       const [validLink, invalidLink] = [...doc.querySelectorAll("#section a")];
-      expect(getLinkHash(validLink)).toEqual("#dfn-foo");
+      expect(validLink.getAttribute("href")).toEqual("#dfn-foo");
       expect(
         invalidLink.classList.contains("respec-offending-element")
       ).toBeTruthy();
@@ -131,7 +128,7 @@ describe("Core — Definitions", function() {
       const { id: dfnId } = doc.querySelector("#section dfn");
       expect(dfnId).toBe("dfn-foo");
       const [validLink, invalidLink] = [...doc.querySelectorAll("#section a")];
-      expect(getLinkHash(validLink)).toEqual("#dfn-foo");
+      expect(validLink.getAttribute("href")).toEqual("#dfn-foo");
       expect(
         invalidLink.classList.contains("respec-offending-element")
       ).toBeTruthy();
@@ -153,7 +150,7 @@ describe("Core — Definitions", function() {
       const [validLink, badLink1, badLink2] = [
         ...doc.querySelectorAll("#section a"),
       ];
-      expect(getLinkHash(validLink)).toEqual("#dfn-baz");
+      expect(validLink.getAttribute("href")).toEqual("#dfn-baz");
       expect(
         badLink1.classList.contains("respec-offending-element")
       ).toBeTruthy();
@@ -199,18 +196,19 @@ describe("Core — Definitions", function() {
       const dfnFoos = doc.getElementById("dfn-foos");
       expect(dfnFoos).toBeTruthy();
       expect(dfnFoos.textContent).toEqual("baz");
-      expect(dfnFoos.dataset.lt).toEqual("foos|bazs");
+      expect(dfnFoos.dataset.lt).toEqual("foos|baz");
+      expect(dfnFoos.dataset.plurals).toEqual("bazs");
 
       const linkToBar = doc.getElementById("link-to-bar");
       const linkToBars = doc.getElementById("link-to-bars");
       const linkToFoo = doc.getElementById("link-to-foo");
       const linksToFoos = [...doc.querySelectorAll("#links-to-foos a")];
-      expect(getLinkHash(linkToBar)).toEqual("#dfn-bar");
-      expect(getLinkHash(linkToBars)).toEqual("#dfn-bars");
-      expect(getLinkHash(linkToFoo)).toEqual("#dfn-foo");
+      expect(linkToBar.getAttribute("href")).toEqual("#dfn-bar");
+      expect(linkToBars.getAttribute("href")).toEqual("#dfn-bars");
+      expect(linkToFoo.getAttribute("href")).toEqual("#dfn-foo");
       expect(linksToFoos.length).toBe(6);
       expect(
-        linksToFoos.every(el => getLinkHash(el) === "#dfn-foos")
+        linksToFoos.every(el => el.getAttribute("href") === "#dfn-foos")
       ).toBeTruthy();
     });
 
@@ -246,7 +244,7 @@ describe("Core — Definitions", function() {
       expect(dfn.id).toEqual("dfn-baz"); // uses first data-lt as `id`
       expect(dfn.dataset.lt).toEqual(undefined);
       const [goodLink, badLink] = [...doc.querySelectorAll("#section a")];
-      expect(getLinkHash(goodLink)).toEqual("#dfn-baz");
+      expect(goodLink.getAttribute("href")).toEqual("#dfn-baz");
       expect(
         badLink.classList.contains("respec-offending-element")
       ).toBeTruthy();
