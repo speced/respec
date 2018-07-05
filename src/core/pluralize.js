@@ -31,6 +31,10 @@ export function run(conf) {
 
       if (plurals.length) {
         dfn.dataset.plurals = plurals.join("|");
+        dfn.dataset.lt = dfn.dataset.lt
+          ? [...dfn.dataset.lt.split("|"), ...plurals].join("|")
+          : plurals.join("|");
+
         plurals.reduce((defMap, plural) => {
           if (!defMap[plural]) defMap[plural] = [];
           defMap[plural].push($(dfn));
