@@ -5,7 +5,6 @@
 // https://github.com/w3c/respec/issues/1662
 
 import { norm as normalize, showInlineError } from "core/utils";
-import { plural as pluralOf } from "deps/pluralize";
 
 const API_URL = new URL(
   "https://wt-466c7865b463a6c4cbb820b42dde9e58-0.sandbox.auth0-extend.com/xref-proto-2"
@@ -105,8 +104,8 @@ function addDataCiteToTerms(query, results, xrefMap, conf) {
       const [citePath, citeFrag] = path.split("#");
       Object.assign(elem.dataset, { cite, citePath, citeFrag });
 
-      const sel = `[data-dfn-type="xref"][data-xref="${term.toLowerCase()}"]`;
-      document.querySelectorAll(sel).forEach(el => {
+      const indirectLinksSelector = `[data-dfn-type="xref"][data-xref="${term.toLowerCase()}"]`;
+      document.querySelectorAll(indirectLinksSelector).forEach(el => {
         // el.removeAttribute("data-xref");
         Object.assign(el.dataset, { cite, citePath, citeFrag });
       });

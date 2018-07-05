@@ -4,7 +4,6 @@
 import { linkInlineCitations } from "core/data-cite";
 import { pub } from "core/pubsubhub";
 import { lang as defaultLang } from "./l10n";
-import { plural as pluralOf } from "deps/pluralize";
 import { run as addExternalReferences } from "core/xref";
 export const name = "core/link-to-dfn";
 const l10n = {
