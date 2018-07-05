@@ -37,8 +37,7 @@ function createXrefMap(elems) {
   return elems.reduce((map, elem) => {
     let term = elem.textContent;
     if (elem.dataset.lt) {
-      const lt = elem.dataset.lt.split("|", 1)[0];
-      if (pluralOf(term.toLowerCase()) !== lt) term = lt;
+      term = elem.dataset.lt.split("|", 1)[0];;
     }
     term = normalize(term);
 
@@ -106,9 +105,8 @@ function addDataCiteToTerms(query, results, xrefMap, conf) {
       const [citePath, citeFrag] = path.split("#");
       Object.assign(elem.dataset, { cite, citePath, citeFrag });
 
-      const sel = `.xref[data-xref="${term.toLowerCase()}"]`;
+      const sel = `[data-dfn-type="xref"][data-xref="${term.toLowerCase()}"]`;
       document.querySelectorAll(sel).forEach(el => {
-        // el.classList.remove("xref");
         // el.removeAttribute("data-xref");
         Object.assign(el.dataset, { cite, citePath, citeFrag });
       });
