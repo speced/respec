@@ -819,9 +819,9 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
     if (showWarnings) {
       const thingName =
         type === "operation" ? `${originalName}()` : originalName;
-      let msg = "Missing `<dfn>` for ";
-      if (originalParent) msg += `\`${originalParent}\`'s `;
-      msg += `\`${thingName}\` ${type}`;
+      let msg = `Missing \`<dfn>\` for ${
+        originalParent ? `\`${originalParent}\`'s` : ""
+      } \`${thingName}\` ${type}`;
       msg +=
         ". [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).";
       pub("warn", msg);
