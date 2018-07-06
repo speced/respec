@@ -376,6 +376,8 @@
           stringifier DOMString ();
           // 12
           stringifier;
+          Promise&lt;void> complete(optional PaymentComplete result = "unknown");
+          Promise&lt;void> another(optional  /*trivia*/  PaymentComplete result = "unknown");
         };
       </pre>
       <p id="meth-basic-doc" data-dfn-for="MethBasic">
