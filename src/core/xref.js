@@ -87,6 +87,7 @@ async function fetchXrefs(query, url) {
 /**
  * adds data-cite attributes to elems
  * for each term from conf.xref[term] for which results are found.
+ * @param {Object} query query sent to server
  * @param {Object} results parsed JSON results returned from API
  * @param {Map} xrefMap xrefMap
  * @param {Object} conf respecConfig
@@ -102,17 +103,17 @@ function addDataCiteToTerms(query, results, xrefMap, conf) {
       const { uri, spec: cite, normative } = result;
       const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
       const [citePath, citeFrag] = path.split("#");
-      Object.assign(elem.dataset, { cite, citePath, citeFrag });
+      const citeObj = { cite, citePath, citeFrag };
+      Object.assign(elem.dataset, citeObj);
 
       // update indirect links (data-lt, data-plurals)
-      document
-        .querySelectorAll(
-          `[data-dfn-type="xref"][data-xref="${term.toLowerCase()}"]`
-        )
-        .forEach(el => {
-          el.removeAttribute("data-xref");
-          Object.assign(el.dataset, { cite, citePath, citeFrag });
-        });
+      const indirectLinks = document.querySelectorAll(
+        `[data-dfn-type="xref"][data-xref="${term.toLowerCase()}"]`
+      );
+      indirectLinks.forEach(el => {
+        el.removeAttribute("data-xref");
+        Object.assign(el.dataset, citeObj);
+      });
 
       if (normative == true) conf.normativeReferences.add(cite);
     });
