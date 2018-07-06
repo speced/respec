@@ -12,7 +12,7 @@ export function run(conf) {
   if (!conf.pluralize) return;
 
   const pluralizeDfn = getPluralizer();
-  
+
   document
     .querySelectorAll("dfn:not([data-lt-no-plural]):not([data-lt-noDefault])")
     .forEach(dfn => {
