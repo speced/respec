@@ -11,11 +11,8 @@ export const name = "core/pluralize";
 export function run(conf) {
   if (!conf.pluralize) return;
 
-  if (!conf.hasOwnProperty("definitionMap")) {
-    conf.definitionMap = Object.create(null);
-  }
-  const pluralizeDfn = pluralizer();
-
+  const pluralizeDfn = getPluralizer();
+  
   document
     .querySelectorAll("dfn:not([data-lt-no-plural]):not([data-lt-noDefault])")
     .forEach(dfn => {
@@ -30,8 +27,12 @@ export function run(conf) {
       );
 
       if (plurals.length) {
-        dfn.dataset.plurals = plurals.join("|");
-        plurals.reduce((defMap, plural) => {
+        const userDefinedPlurals = dfn.dataset.plurals
+          ? dfn.dataset.plurals.split("|")
+          : [];
+        const uniquePlurals = [...new Set([...userDefinedPlurals, ...plurals])];
+        dfn.dataset.plurals = uniquePlurals.join("|");
+        uniquePlurals.reduce((defMap, plural) => {
           if (!defMap[plural]) defMap[plural] = [];
           defMap[plural].push($(dfn));
           return defMap;
@@ -40,7 +41,7 @@ export function run(conf) {
     });
 }
 
-function pluralizer() {
+function getPluralizer() {
   const links = new Set();
   document.querySelectorAll("a:not([href])").forEach(el => {
     const normText = normalize(el.textContent).toLowerCase();

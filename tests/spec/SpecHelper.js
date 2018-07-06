@@ -164,6 +164,7 @@ function makeBasicConfig() {
     implementationReportURI: "https://example.com/implementationReportURI",
     perEnd: "1999-01-01",
     lint: false,
+    definitionMap: {},
   };
 }
 
