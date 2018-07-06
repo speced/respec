@@ -104,11 +104,16 @@ function addDataCiteToTerms(query, results, xrefMap, conf) {
       const [citePath, citeFrag] = path.split("#");
       Object.assign(elem.dataset, { cite, citePath, citeFrag });
 
-      const indirectLinksSelector = `[data-dfn-type="xref"][data-xref="${term.toLowerCase()}"]`;
-      document.querySelectorAll(indirectLinksSelector).forEach(el => {
-        // el.removeAttribute("data-xref");
-        Object.assign(el.dataset, { cite, citePath, citeFrag });
-      });
+      // update indirect links (data-lt, data-plurals)
+      document
+        .querySelectorAll(
+          `[data-dfn-type="xref"][data-xref="${term.toLowerCase()}"]`
+        )
+        .forEach(el => {
+          el.removeAttribute("data-xref");
+          Object.assign(el.dataset, { cite, citePath, citeFrag });
+        });
+
       if (normative == true) conf.normativeReferences.add(cite);
     });
   }
