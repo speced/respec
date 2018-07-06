@@ -74,7 +74,7 @@ export async function run(conf, doc, cb) {
   $(localLinkSelector).each(function() {
     const $ant = $(this);
     const ant = $ant[0];
-    if ($ant.hasClass("externalDFN")) return;
+    if (ant.classList.contains("externalDFN")) return;
     const linkTargets = $ant.linkTargets();
     const foundDfn = linkTargets.some(function(target) {
       if (titles[target.title] && titles[target.title][target.for]) {
@@ -92,12 +92,13 @@ export async function run(conf, doc, cb) {
           // data-lt[0] serves as unique id for the dfn which this element references
           ant.dataset.xref = lt[0];
         } else {
-          const frag = "#" + encodeURIComponent($dfn.prop("id"));
-          $ant.attr("href", frag).addClass("internalDFN");
+          const frag = "#" + encodeURIComponent(dfn.id);
+          ant.setAttribute("href", frag);
+          ant.classList.add("internalDFN");
         }
         // add a bikeshed style indication of the type of link
-        if (!$ant.attr("data-link-type")) {
-          $ant.attr("data-link-type", "dfn");
+        if (!ant.hasAttribute("data-link-type")) {
+          ant.setAttribute("data-link-type", "dfn");
         }
         // If a definition is <code>, links to it should
         // also be <code>.
@@ -106,15 +107,16 @@ export async function run(conf, doc, cb) {
         // definitions that have either other text, or other
         // whitespace, inside the <dfn>.
         if (
-          $dfn.closest("code,pre").length ||
-          ($dfn.contents().length === 1 && $dfn.children("code").length === 1)
+          dfn.closest("code,pre") ||
+          ($dfn.contents().length === 1 &&
+            [...dfn.children].filter(el => el.matches("code")).length === 1)
         ) {
           // only add code to IDL when the definition matches
-          const term = $ant[0].textContent.trim();
-          const isIDL = $dfn[0].dataset.hasOwnProperty("idl");
+          const term = ant.textContent.trim();
+          const isIDL = dfn.dataset.hasOwnProperty("idl");
           const isSameText = isIDL
-            ? $dfn[0].dataset.title === term
-            : $dfn[0].textContent.trim() === term;
+            ? dfn.dataset.title === term
+            : dfn.textContent.trim() === term;
           if (isIDL && !isSameText) {
             return true;
           }
