@@ -42,6 +42,7 @@ define(
     "core/data-transform",
     "core/inlines",
     "core/dfn",
+    "core/pluralize",
     "w3c/rfc2119",
     "core/examples",
     "core/issues-notes",
