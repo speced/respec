@@ -59,7 +59,7 @@ function registerHelpers() {
     return new hb.SafeString(
       idlParamTmpl({
         obj: obj,
-        optional: obj.optional ? "optional " : "",
+        optional: obj.optional ? "optional" : "",
         variadic: obj.variadic ? "..." : "",
       })
     );
@@ -550,7 +550,7 @@ function writeMethod(meth) {
     .map(it =>
       idlParamTmpl({
         obj: it,
-        optional: it.optional ? "optional " : "",
+        optional: it.optional ? "optional" : "",
         variadic: it.variadic ? "..." : "",
       })
     );
@@ -805,9 +805,9 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
     }
   }
   if (dfns.length > 1) {
-    const msg = `Multiple \`<dfn>\`s for \`${originalName}\` ${
-      originalParent ? `in \`${originalParent}\`` : ""
-    }`;
+    const msg = `Multiple \`<dfn>\`s for \`${originalName}\` ${originalParent
+      ? `in \`${originalParent}\``
+      : ""}`;
     pub("error", new Error(msg));
   }
   if (dfns.length === 0) {
@@ -817,9 +817,9 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
       name &&
       idlElem.classList.contains("no-link-warnings") === false;
     if (showWarnings) {
-      var msg = `No \`<dfn>\` for ${type} \`${originalName}\`${
-        originalParent ? " in `" + originalParent + "`" : ""
-      }`;
+      var msg = `No \`<dfn>\` for ${type} \`${originalName}\`${originalParent
+        ? " in `" + originalParent + "`"
+        : ""}`;
       msg +=
         ". [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).";
       pub("warn", msg);
