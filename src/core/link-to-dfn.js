@@ -89,6 +89,7 @@ export async function run(conf, doc, cb) {
           ant.dataset.cite = dfn.dataset.cite;
         } else if (conf.xref && (lt.includes(txt) || plurals.includes(txt))) {
           ant.dataset.dfnType = "xref";
+          // data-lt[0] serves as unique id for the dfn which this element references
           ant.dataset.xref = lt[0];
         } else {
           const frag = "#" + encodeURIComponent($dfn.prop("id"));

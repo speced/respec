@@ -34,10 +34,9 @@ export async function run(conf, elems) {
  */
 function createXrefMap(elems) {
   return elems.reduce((map, elem) => {
-    let term = elem.textContent;
-    if (elem.dataset.lt) {
-      term = elem.dataset.lt.split("|", 1)[0];
-    }
+    let term = elem.dataset.lt
+      ? elem.dataset.lt.split("|", 1)[0]
+      : elem.textContent;
     term = normalize(term);
 
     const datacite = elem.closest("[data-cite]");
