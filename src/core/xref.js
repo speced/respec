@@ -36,7 +36,7 @@ function createXrefMap(elems) {
   return elems.reduce((map, elem) => {
     let term = elem.textContent;
     if (elem.dataset.lt) {
-      term = elem.dataset.lt.split("|", 1)[0];;
+      term = elem.dataset.lt.split("|", 1)[0];
     }
     term = normalize(term);
 
