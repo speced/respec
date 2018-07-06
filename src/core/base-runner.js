@@ -50,7 +50,9 @@ function toRunnable(plug) {
 export async function runAll(plugs) {
   pub("start-all", respecConfig);
   // TODO: assign defaults properly
-  if (!respecConfig.definitionMap) respecConfig.definitionMap = Object.create(null);
+  if (!respecConfig.definitionMap) {
+    respecConfig.definitionMap = Object.create(null);
+  }
   if (canMeasure) {
     performance.mark(name + "-start");
   }
