@@ -59,7 +59,7 @@ function registerHelpers() {
     return new hb.SafeString(
       idlParamTmpl({
         obj: obj,
-        optional: obj.optional ? "optional " : "",
+        optional: obj.optional ? "optional" : "",
         variadic: obj.variadic ? "..." : "",
       })
     );
@@ -552,7 +552,7 @@ function writeMethod(meth) {
     .map(it =>
       idlParamTmpl({
         obj: it,
-        optional: it.optional ? "optional " : "",
+        optional: it.optional ? "optional" : "",
         variadic: it.variadic ? "..." : "",
       })
     );
