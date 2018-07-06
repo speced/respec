@@ -109,7 +109,7 @@ export async function run(conf, doc, cb) {
         if (
           dfn.closest("code,pre") ||
           ($dfn.contents().length === 1 &&
-            [...dfn.children].filter(el => el.matches("code")).length === 1)
+            [...dfn.children].filter(c => c.localName === "code").length === 1)
         ) {
           // only add code to IDL when the definition matches
           const term = ant.textContent.trim();
