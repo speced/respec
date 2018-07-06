@@ -11,7 +11,7 @@ export const name = "core/pluralize";
 export function run(conf) {
   if (!conf.pluralize) return;
 
-  const pluralizeDfn = pluralizer();
+  const pluralizeDfn = getPluralizer();
 
   document
     .querySelectorAll("dfn:not([data-lt-no-plural]):not([data-lt-noDefault])")
@@ -41,7 +41,7 @@ export function run(conf) {
     });
 }
 
-function pluralizer() {
+function getPluralizer() {
   const links = new Set();
   document.querySelectorAll("a:not([href])").forEach(el => {
     const normText = normalize(el.textContent).toLowerCase();
