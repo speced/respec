@@ -11,10 +11,6 @@ import { pub } from "core/pubsubhub";
 export const name = "core/base-runner";
 const canMeasure = performance.mark && performance.measure;
 
-const respecDefaults = {
-  definitionMap: Object.create(null),
-};
-
 function toRunnable(plug) {
   const name = plug.name || "";
   if (!name) {
@@ -52,8 +48,8 @@ function toRunnable(plug) {
 }
 
 export async function runAll(plugs) {
-  Object.assign(respecConfig, respecDefaults);
   pub("start-all", respecConfig);
+  respecConfig.definitionMap = Object.create(null);
   if (canMeasure) {
     performance.mark(name + "-start");
   }
