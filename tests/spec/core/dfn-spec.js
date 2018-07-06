@@ -94,6 +94,31 @@ describe("Core — Definitions", function() {
       expect(ignoredLink.href).toEqual(`${window.location.origin}/PASS`);
     });
 
+    it("handles pluralization when data-plurals are defined", async () => {
+      const body = `
+        <section id="test">
+          <dfn data-lt="yeast" data-plurals="fungi">fungus</dfn>
+          <a>fungus</a>
+          <a>fungi</a>
+          <a>yeast</a>
+          <a>yeasts</a>
+        </section>
+      `;
+      const ops = makeStandardOps({ pluralize: true }, body);
+      const doc = await makeRSDoc(ops);
+
+      const dfn = doc.querySelector("#test dfn");
+      expect(dfn.id).toEqual("dfn-yeast");
+      const { lt, plurals } = dfn.dataset;
+      expect(lt).toEqual("yeast|fungus");
+      expect(plurals.split("|").sort()).toEqual(["fungi", "yeasts"]);
+      const links = [...doc.querySelectorAll("#test a[href^='#']")];
+      expect(links.length).toEqual(4);
+      expect(
+        links.every(el => el.getAttribute("href") === "#dfn-yeast")
+      ).toBeTruthy();
+    });
+
     it("does nothing if conf.pluralize = false", async () => {
       const body = `
         <section id="section">
