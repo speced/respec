@@ -52,8 +52,8 @@ function toRunnable(plug) {
 }
 
 export async function runAll(plugs) {
+  Object.assign(respecConfig, respecDefaults);
   pub("start-all", respecConfig);
-  const conf = { ...respecDefaults, ...window.respecConfig };
   if (canMeasure) {
     performance.mark(name + "-start");
   }
@@ -61,14 +61,14 @@ export async function runAll(plugs) {
   const runnables = plugs.filter(plug => plug && plug.run).map(toRunnable);
   for (const task of runnables) {
     try {
-      await task(conf);
+      await task(respecConfig);
     } catch (err) {
       console.error(err);
     }
   }
-  pub("plugins-done", conf);
+  pub("plugins-done", respecConfig);
   await postProcessDone;
-  pub("end-all", conf);
+  pub("end-all", respecConfig);
   removeReSpec(document);
   if (canMeasure) {
     performance.mark(name + "-end");
