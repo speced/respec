@@ -4,10 +4,6 @@
 export const name = "core/dfn";
 
 export function run(conf) {
-  if (!conf.hasOwnProperty("definitionMap")) {
-    conf.definitionMap = Object.create(null);
-  }
-
   document.querySelectorAll("dfn").forEach(dfn => {
     const closestDfn = dfn.closest("[data-dfn-for]");
     if (closestDfn && closestDfn !== dfn && !dfn.dataset.dfnFor) {

@@ -11,9 +11,6 @@ export const name = "core/pluralize";
 export function run(conf) {
   if (!conf.pluralize) return;
 
-  if (!conf.hasOwnProperty("definitionMap")) {
-    conf.definitionMap = Object.create(null);
-  }
   const pluralizeDfn = pluralizer();
 
   document
