@@ -123,7 +123,11 @@ export async function run(conf) {
 
 export async function linkInlineCitations(doc, conf = respecConfig) {
   const toLookupRequest = requestLookup(conf);
-  const elems = [...doc.querySelectorAll("dfn[data-cite], a[data-cite]")];
+  const elems = [
+    ...doc.querySelectorAll(
+      "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
+    ),
+  ];
   const citeConverter = citeDetailsConverter(conf);
 
   const promisesForMissingEntries = elems

@@ -47,12 +47,12 @@ export async function updateFromNetwork(
   refs,
   options = { forceUpdate: false }
 ) {
+  const refsToFetch = [...new Set(refs)].filter(ref => ref.trim());
   // Update database if needed, if we are online
-  if (!refs.length || navigator.onLine === false) {
+  if (!refsToFetch.length || navigator.onLine === false) {
     return;
   }
   let response;
-  const refsToFetch = [...new Set(refs)];
   try {
     response = await fetch(bibrefsURL.href + refsToFetch.join(","));
   } catch (err) {
