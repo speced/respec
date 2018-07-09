@@ -92,13 +92,12 @@ export async function run(conf, doc, cb) {
           // data-lt[0] serves as unique id for the dfn which this element references
           ant.dataset.xref = lt[0];
         } else {
-          const frag = "#" + encodeURIComponent(dfn.id);
-          ant.setAttribute("href", frag);
+          ant.href = "#" + dfn.id;
           ant.classList.add("internalDFN");
         }
         // add a bikeshed style indication of the type of link
         if (!ant.hasAttribute("data-link-type")) {
-          ant.setAttribute("data-link-type", "dfn");
+          ant.dataset.linkType = "dfn";
         }
         // If a definition is <code>, links to it should
         // also be <code>.
@@ -106,6 +105,7 @@ export async function run(conf, doc, cb) {
         // Note that contents().length===1 excludes
         // definitions that have either other text, or other
         // whitespace, inside the <dfn>.
+        // TODO: un-jquery-fy
         if (
           dfn.closest("code,pre") ||
           ($dfn.contents().length === 1 &&
