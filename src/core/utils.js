@@ -626,3 +626,69 @@ export function getTextNodes(el, exclusions = []) {
   }
   return textNodes;
 }
+
+/**
+ * For any element, returns an array of title strings that applies
+ *   the algorithm used for determining the actual title of a
+ *   <dfn> element (but can apply to other as well).
+ * if args.isDefinition is true, then the element is a definition, not a
+ *   reference to a definition. Any @title or @lt will be replaced with
+ *   @data-lt to be consistent with Bikeshed / Shepherd.
+ * This method now *prefers* the data-lt attribute for the list of
+ *   titles. That attribute is added by this method to dfn elements, so
+ *   subsequent calls to this method will return the data-lt based list.
+ * @param {Element} elem
+ * @param {Object} args
+ * @returns {Array:String} array of title strings
+ */
+export function getDfnTitles(elem, args) {
+  let theAttr = "";
+  let titleString = "";
+  let normText = "";
+  //data-lt-noDefault avoid using the text content of a definition
+  //in the definition list.
+  if (!elem.hasAttribute("data-lt-noDefault")) {
+    normText = norm(elem.textContent).toLowerCase();
+  }
+  if (elem.getAttribute("data-lt")) {
+    // prefer @data-lt for the list of title aliases
+    theAttr = elem.dataset.lt ? "data-lt" : "lt";
+    titleString = elem.getAttribute(theAttr).toLowerCase();
+    if (normText !== "" && !titleString.startsWith(`${normText}|`)) {
+      // Use the definition itself, so to avoid having to declare the definition twice.
+      titleString = titleString + "|" + normText;
+    }
+  } else if (
+    elem.childNodes.length === 1 &&
+    [...elem.children].filter(el => el.matches("abbr, acronym")).length === 1 &&
+    elem.querySelector(":first-child").getAttribute("title")
+  ) {
+    titleString = elem.querySelector(":first-child").getAttribute("title");
+  } else {
+    titleString =
+      elem.textContent === '""' ? "the-empty-string" : elem.textContent;
+  }
+  // now we have a string of one or more titles
+  titleString = norm(titleString).toLowerCase();
+  if (args && args.isDefinition === true) {
+    // if it came from an attribute, replace that with data-lt as per contract with Shepherd
+    if (theAttr) {
+      elem.dataset.lt = titleString;
+    }
+    if (theAttr !== "data-lt") {
+      elem.removeAttribute(theAttr);
+    }
+    // if there is no pre-defined type, assume it is a 'dfn'
+    if (!elem.getAttribute("dfn-type")) {
+      elem.dataset.dfnType = "dfn";
+    } else {
+      elem.dataset.dfnType = elem.getAttribute("dfn-type");
+      elem.removeAttribute("dfn-type");
+    }
+  }
+  const titles = titleString
+    .split("|")
+    .filter(item => item !== "")
+    .reduce((collector, item) => collector.add(item), new Set());
+  return [...titles];
+}
