@@ -653,5 +653,15 @@
       <p>When <a>toJSON()</a> is called, run [[!WEBIDL]]'s <a data-cite="WEBIDL#default-tojson-operation">default toJSON operation</a>.</p>
       </section>
     </section>
+    <section>
+      <h2>Optionals and trivia</h2>
+      <pre class="idl" id="optional-trivia">
+        [Constructor(X x, optional Y y, /*trivia*/ Z y)]
+        interface Foo {
+          void foo(X x, optional Y y, /*trivia*/ optional Z z);
+        };
+        callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
+      </pre>
+    </section>
   </body>
 </html>
