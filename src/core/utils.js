@@ -639,7 +639,7 @@ export function getTextNodes(el, exclusions = []) {
  *   subsequent calls to this method will return the data-lt based list.
  * @param {Element} elem
  * @param {Object} args
- * @returns {Array:String} array of title strings
+ * @returns {String[]} array of title strings
  */
 export function getDfnTitles(elem, args) {
   let titleString = "";
@@ -658,10 +658,10 @@ export function getDfnTitles(elem, args) {
     }
   } else if (
     elem.childNodes.length === 1 &&
-    [...elem.children].filter(el => el.matches("abbr, acronym")).length === 1 &&
-    elem.querySelector(":first-child").getAttribute("title")
+    elem.querySelectorAll("abbr, acronym").length === 1 &&
+    elem.children[0].title
   ) {
-    titleString = elem.querySelector(":first-child").getAttribute("title");
+    titleString = elem.children[0].title;
   } else {
     titleString =
       elem.textContent === '""' ? "the-empty-string" : elem.textContent;
