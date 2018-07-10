@@ -46,6 +46,14 @@ function createXrefMap(elems) {
           .replace(/!/g, "")
           .split(" ")
       : [];
+    const inlineContext = elem.parentElement.querySelectorAll("a.bibref");
+    if (inlineContext) {
+      const inlineContextSpecs = [...inlineContext].map(el =>
+        el.textContent.toLowerCase().replace(/^!/, "")
+      );
+      specs.push(...inlineContextSpecs);
+    }
+
     const xrefsForTerm = map.has(term) ? map.get(term) : [];
     xrefsForTerm.push({ elem, specs });
     return map.set(term, xrefsForTerm);
