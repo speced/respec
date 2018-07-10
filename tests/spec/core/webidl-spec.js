@@ -669,6 +669,20 @@ partial dictionary AnotherThing {
     done();
   });
 
+  it("handles optional and trivia", () => {
+    const expected = `
+[Constructor(X x, optional Y y, /*trivia*/ Z y)]
+interface Foo {
+  void foo(X x, optional Y y, /*trivia*/ optional Z z);
+};
+callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
+    `.trim();
+    const idlElem = doc.getElementById("optional-trivia");
+    expect(idlElem.textContent).toEqual(expected);
+    const trivaComments = idlElem.querySelectorAll("span.idlSectionComment");
+    expect(trivaComments.length).toEqual(3);
+  });
+
   it("should handle callbacks", function(done) {
     var $target = $("#cb-basic", doc);
     var text = "callback SuperStar = void ();";
