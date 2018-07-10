@@ -35,28 +35,26 @@ export function run(conf, doc, cb) {
     idlIndexSec.appendChild(noIDLFound);
     return cb();
   }
-  const virtualSummary = document.createDocumentFragment();
   const pre = document.createElement("pre");
   pre.classList.add("idl", "def");
   pre.id = "actual-idl-index";
   Array.from(document.querySelectorAll("pre.def.idl"))
     .map(elem => {
-      const span = document.createElement("span");
-      const { children } = elem.cloneNode(true);
-      for (const child of Array.from(children)) {
-        span.appendChild(child);
+      const fragment = document.createDocumentFragment();
+      for (const child of elem.children) {
+        fragment.appendChild(child.cloneNode(true));
       }
-      span.appendChild(document.createTextNode("\n"));
-      span.classList.add("respec-idl-separator");
-      return span;
+      return fragment;
     })
     .reduce((collector, elem) => {
+      if (collector.lastChild) {
+        collector.appendChild(document.createTextNode("\n\n"));
+      }
       collector.appendChild(elem);
       return collector;
     }, pre);
   // Remove duplicate IDs
   pre.querySelectorAll("*[id]").forEach(elem => elem.removeAttribute("id"));
-  virtualSummary.appendChild(pre);
-  idlIndexSec.appendChild(virtualSummary);
+  idlIndexSec.appendChild(pre);
   cb();
 }
