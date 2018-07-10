@@ -83,19 +83,4 @@ describe("Core — Definitions", function() {
     expect(dfn.dataset.lt).toEqual("text|text 1|text 2|text 3");
     expect(dfn.dataset.dfnType).toEqual("dfn");
   });
-
-  it("allows defining dfn-type", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `<section id='dfn'>
-          <dfn dfn-type='myType'>text</dfn>
-          <a>text</a>
-        </section>`,
-    };
-    const doc = await makeRSDoc(ops);
-    var $sec = $("#dfn", doc);
-    expect($sec.find("dfn").attr("data-dfn-type")).toEqual("myType");
-  });
 });

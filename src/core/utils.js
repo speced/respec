@@ -642,7 +642,6 @@ export function getTextNodes(el, exclusions = []) {
  * @returns {Array:String} array of title strings
  */
 export function getDfnTitles(elem, args) {
-  let theAttr = "";
   let titleString = "";
   let normText = "";
   //data-lt-noDefault avoid using the text content of a definition
@@ -650,10 +649,9 @@ export function getDfnTitles(elem, args) {
   if (!elem.hasAttribute("data-lt-noDefault")) {
     normText = norm(elem.textContent).toLowerCase();
   }
-  if (elem.getAttribute("data-lt")) {
+  if (elem.dataset.lt) {
     // prefer @data-lt for the list of title aliases
-    theAttr = elem.dataset.lt ? "data-lt" : "lt";
-    titleString = elem.getAttribute(theAttr).toLowerCase();
+    titleString = elem.dataset.lt.toLowerCase();
     if (normText !== "" && !titleString.startsWith(`${normText}|`)) {
       // Use the definition itself, so to avoid having to declare the definition twice.
       titleString = titleString + "|" + normText;
@@ -668,24 +666,17 @@ export function getDfnTitles(elem, args) {
     titleString =
       elem.textContent === '""' ? "the-empty-string" : elem.textContent;
   }
+
   // now we have a string of one or more titles
   titleString = norm(titleString).toLowerCase();
   if (args && args.isDefinition === true) {
-    // if it came from an attribute, replace that with data-lt as per contract with Shepherd
-    if (theAttr) {
+    if (elem.dataset.lt) {
       elem.dataset.lt = titleString;
     }
-    if (theAttr !== "data-lt") {
-      elem.removeAttribute(theAttr);
-    }
     // if there is no pre-defined type, assume it is a 'dfn'
-    if (!elem.getAttribute("dfn-type")) {
-      elem.dataset.dfnType = "dfn";
-    } else {
-      elem.dataset.dfnType = elem.getAttribute("dfn-type");
-      elem.removeAttribute("dfn-type");
-    }
+    if (!elem.dataset.dfnType) elem.dataset.dfnType = "dfn";
   }
+
   const titles = titleString
     .split("|")
     .filter(item => item !== "")
