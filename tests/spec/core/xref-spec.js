@@ -258,4 +258,33 @@ describe("Core — xref", () => {
       )
     ).toBeTruthy();
   });
+
+  it("uses inline references to provide context", async () => {
+    const body = `
+      <section id="test">
+        <p>Uses [[WEBIDL]] to create context for <a id="one">object</a></p>
+        <p>Uses [[html]] to create context for <a id="two">object</a></p>
+        <p>Uses [[html]] and [[webidl]] to create context for <a id="three">object</a>. It fails as it's defined in both.</p>
+      </section>
+    `;
+    const config = { xref: true, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const expectedLink1 = "https://heycam.github.io/webidl/#idl-object";
+    const expectedLink2 =
+      "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-object-element";
+
+    const link1 = doc.getElementById("one");
+    const link2 = doc.getElementById("two");
+    const link3 = doc.getElementById("three");
+
+    expect(link1.href).toEqual(expectedLink1);
+    expect(link2.href).toEqual(expectedLink2);
+    expect(link3.href).toBeFalsy();
+
+    expect(link1.classList.contains("respec-offending-class")).toBeFalsy();
+    expect(link2.classList.contains("respec-offending-class")).toBeFalsy();
+    expect(link3.classList.contains("respec-offending-class")).toBeTruthy();
+  });
 });
