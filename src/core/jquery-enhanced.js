@@ -64,10 +64,9 @@ window.$.fn.getDfnTitles = function(args) {
 //  * {for: "int3", title: "member"}
 //  * {for: "", title: "int3.member"}
 window.$.fn.linkTargets = function() {
-  var elem = this;
   var linkForElem = this[0].closest("[data-link-for]");
   var linkFor = linkForElem ? linkForElem.dataset.linkFor.toLowerCase() : "";
-  var titles = elem.getDfnTitles();
+  var titles = getDfnTitles(this[0]);
   var result = [];
   for (const title of titles) {
     result.push({

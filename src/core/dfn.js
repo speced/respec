@@ -1,6 +1,8 @@
 // Module core/dfn
 // - Finds all <dfn> elements and populates conf.definitionMap to identify them.
 
+import { getDfnTitles } from "core/utils";
+
 export const name = "core/dfn";
 
 export function run(conf) {
@@ -12,21 +14,17 @@ export function run(conf) {
     if (dfn.dataset.dfnFor) {
       dfn.dataset.dfnFor = dfn.dataset.dfnFor.toLowerCase();
     }
-    // TODO: dfn's are tragically jquery'ed and stored. Should fix this.
-    // Also, we should probably use weakmaps and weaksets here
-    // to avoid leaks.
-    const $dfn = $(dfn);
-    $dfn
-      .getDfnTitles({ isDefinition: true })
+    // TODO: we should probably use weakmaps and weaksets here to avoid leaks.
+    getDfnTitles(dfn, { isDefinition: true })
       .map(dfnTitle => {
         if (!conf.definitionMap[dfnTitle]) {
           conf.definitionMap[dfnTitle] = [];
         }
         return conf.definitionMap[dfnTitle];
       })
-      .reduce(($dfn, dfnTitleContainer) => {
-        dfnTitleContainer.push($dfn);
-        return $dfn;
-      }, $dfn);
+      .reduce((dfn, dfnTitleContainer) => {
+        dfnTitleContainer.push(dfn);
+        return dfn;
+      }, dfn);
   });
 }
