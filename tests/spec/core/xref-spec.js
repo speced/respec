@@ -29,6 +29,11 @@ describe("Core — xref", () => {
     ],
     ["uppercase", "https://infra.spec.whatwg.org/#ascii-uppercase"],
     ["url parser", "https://url.spec.whatwg.org/#concept-url-parser"],
+    ["object-idl", "https://heycam.github.io/webidl/#idl-object"],
+    [
+      "object-html",
+      "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-object-element"
+    ],
   ]);
 
   it("does nothing if xref is not enabled", async () => {
@@ -200,19 +205,36 @@ describe("Core — xref", () => {
   it("disambiguates response based on context", async () => {
     // https://github.com/w3c/respec/pull/1750
     const body = `
-      <p data-cite="webidl"><a id="one">object</a></p>
-      <p data-cite="html"><a id="two">object</a></p>
+      <section id="test">
+        <p data-cite="webidl"><a id="one">object</a></p>
+        <p data-cite="html"><a id="two">object</a></p>
+        <p data-cite="html">
+          <a id="three" data-cite="webidl">object</a> (overrides parent)
+          <a id="four">object</a> (uses parent's data-cite)
+        </p>
+        <a id="five" data-cite="">object</a> (should have a local dfn)
+        <a id="six" data-cite="NOT-FOUND">object</a>
+      </section>
     `;
     const config = { xref: { url: apiURL }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    expect(doc.getElementById("one").href).toEqual(
-      "https://heycam.github.io/webidl/#idl-object"
-    );
-    expect(doc.getElementById("two").href).toEqual(
-      "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-object-element"
-    );
+    const [one, two, three, four, five, six] = [
+      ...doc.querySelectorAll("#test a"),
+    ];
+
+    expect(one.href).toEqual(expectedLinks.get("object-idl"));
+    expect(two.href).toEqual(expectedLinks.get("object-html"));
+    expect(three.href).toEqual(expectedLinks.get("object-idl"));
+    expect(four.href).toEqual(expectedLinks.get("object-html"));
+
+    expect(five.href).toEqual("");
+    expect(five.classList.contains("respec-offending-element")).toBeTruthy();
+    expect(five.title).toEqual("Error: No matching dfn found.");
+    expect(six.href).toEqual("");
+    expect(six.classList.contains("respec-offending-element")).toBeTruthy();
+    expect(six.title).toEqual(`Couldn't find a match for "NOT-FOUND".`);
   });
 
   it("takes data-lt into account", async () => {
