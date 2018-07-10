@@ -14,7 +14,9 @@ export function run(conf) {
     if (dfn.dataset.dfnFor) {
       dfn.dataset.dfnFor = dfn.dataset.dfnFor.toLowerCase();
     }
+    // TODO: un-jquery stored $dfn
     // TODO: we should probably use weakmaps and weaksets here to avoid leaks.
+    const $dfn = $(dfn);
     getDfnTitles(dfn, { isDefinition: true })
       .map(dfnTitle => {
         if (!conf.definitionMap[dfnTitle]) {
@@ -22,9 +24,9 @@ export function run(conf) {
         }
         return conf.definitionMap[dfnTitle];
       })
-      .reduce((dfn, dfnTitleContainer) => {
-        dfnTitleContainer.push(dfn);
-        return dfn;
-      }, dfn);
+      .reduce(($dfn, dfnTitleContainer) => {
+        dfnTitleContainer.push($dfn);
+        return $dfn;
+      }, $dfn);
   });
 }
