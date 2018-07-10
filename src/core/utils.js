@@ -658,7 +658,7 @@ export function getDfnTitles(elem, args) {
     }
   } else if (
     elem.childNodes.length === 1 &&
-    elem.querySelectorAll("abbr, acronym").length === 1 &&
+    elem.getElementsByTagName("abbr").length === 1 &&
     elem.children[0].title
   ) {
     titleString = elem.children[0].title;
