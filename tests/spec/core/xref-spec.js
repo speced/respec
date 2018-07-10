@@ -197,6 +197,24 @@ describe("Core — xref", () => {
     expect(link.title).toEqual("Error: Linking an ambiguous dfn.");
   });
 
+  it("disambiguates response based on context", async () => {
+    // https://github.com/w3c/respec/pull/1750
+    const body = `
+      <p data-cite="webidl"><a id="one">object</a></p>
+      <p data-cite="html"><a id="two">object</a></p>
+    `;
+    const config = { xref: { url: apiURL }, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    expect(doc.getElementById("one").href).toEqual(
+      "https://heycam.github.io/webidl/#idl-object"
+    );
+    expect(doc.getElementById("two").href).toEqual(
+      "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-object-element"
+    );
+  });
+
   it("takes data-lt into account", async () => {
     const body = `
       <section id="test1">
