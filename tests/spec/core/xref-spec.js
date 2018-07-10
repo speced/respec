@@ -265,6 +265,7 @@ describe("Core — xref", () => {
         <p>Uses [[WEBIDL]] to create context for <a id="one">object</a></p>
         <p>Uses [[html]] to create context for <a id="two">object</a></p>
         <p>Uses [[html]] and [[webidl]] to create context for <a id="three">object</a>. It fails as it's defined in both.</p>
+        <p>But data-cite on element itself wins. <a id="four">object</a> uses [[webidl]], whereas <a data-cite="html" id="five">object</a> uses html.</p>
       </section>
     `;
     const config = { xref: true, localBiblio };
@@ -278,13 +279,19 @@ describe("Core — xref", () => {
     const link1 = doc.getElementById("one");
     const link2 = doc.getElementById("two");
     const link3 = doc.getElementById("three");
+    const link4 = doc.getElementById("four");
+    const link5 = doc.getElementById("five");
 
     expect(link1.href).toEqual(expectedLink1);
     expect(link2.href).toEqual(expectedLink2);
     expect(link3.href).toBeFalsy();
+    expect(link4.href).toEqual(expectedLink1);
+    expect(link5.href).toEqual(expectedLink2);
 
     expect(link1.classList.contains("respec-offending-class")).toBeFalsy();
     expect(link2.classList.contains("respec-offending-class")).toBeFalsy();
     expect(link3.classList.contains("respec-offending-class")).toBeTruthy();
+    expect(link4.classList.contains("respec-offending-class")).toBeFalsy();
+    expect(link5.classList.contains("respec-offending-class")).toBeFalsy();
   });
 });
