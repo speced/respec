@@ -602,42 +602,32 @@ partial dictionary AnotherThing {
   });
 
   it("should handle enumerations", function(done) {
-    var $target = $("#enum-basic", doc);
-    var text =
-      "enum EnumBasic {\n" +
-      "  // 1\n" +
-      '  "one",\n' +
-      "  // 2\n" +
-      '  "two"\n' +
-      "  // 3\n" +
-      ', "three",\n' +
-      "\n" +
-      "  // 4\n" +
-      '  "white space"\n' +
-      "};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlEnum").length).toEqual(1);
-    expect($target.find(".idlEnumID").text()).toEqual("EnumBasic");
-    expect($target.find(".idlEnumItem").length).toEqual(4);
+    var target = doc.getElementById("enum-basic");
+    var text = `
+enum EnumBasic {
+  // 1
+  "one",
+  // 2
+  "two"
+  // 3
+  , "three",
+
+  // 4
+  "white space"
+}; `.trim();
+    expect(target.textContent).toEqual(text);
+    expect(target.querySelector(".idlEnum")).toBeTruthy();
+    expect(target.querySelector(".idlEnumID").textContent).toEqual("EnumBasic");
+    expect(target.querySelectorAll(".idlEnumItem").length).toEqual(4);
+    expect(target.querySelector(".idlEnumItem").textContent).toEqual('"one"');
     expect(
-      $target
-        .find(".idlEnumItem")
-        .first()
-        .text()
-    ).toEqual('"one"');
-    expect(
-      doc.querySelector("a[href='#dom-enumbasic-white-space']")
+      target.querySelector("a[href='#dom-enumbasic-white-space']")
     ).toBeTruthy();
     // Links and IDs.
-    expect(
-      $target
-        .find(":contains('EnumBasic')")
-        .filter("a")
-        .attr("href")
-    ).toEqual("#dom-enumbasic");
-    expect($target.find(".idlEnum:contains('EnumBasic')").attr("id")).toEqual(
-      "idl-def-enumbasic"
+    expect(target.querySelector(".idlEnumID a").getAttribute("href")).toEqual(
+      "#dom-enumbasic"
     );
+    expect(target.querySelector("#idl-def-enumbasic")).toBeTruthy();
     done();
   });
 
