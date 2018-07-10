@@ -56,10 +56,11 @@ function registerHelpers() {
     return `(${rhs.value.map(v => options.fn(v.value))})`;
   });
   hb.registerHelper("param", function(obj) {
+    const trivia = obj.optional ? obj.optional.trivia : "";
     return new hb.SafeString(
       idlParamTmpl({
         obj: obj,
-        optional: obj.optional ? "optional" : "",
+        optional: obj.optional ? `${writeTrivia(trivia)}optional` : "",
         variadic: obj.variadic ? "..." : "",
       })
     );
@@ -456,7 +457,9 @@ function writeDefinition(obj) {
           case "string":
             children += idlEnumItemTmpl({
               obj: item,
-              lname: item.value ? item.value.toLowerCase() : "the-empty-string",
+              lname: item.value
+                ? item.value.toLowerCase().replace(/\s/g, "-")
+                : "the-empty-string",
               parentID: obj.name.toLowerCase(),
             });
             break;
@@ -547,13 +550,14 @@ function writeAttribute(attr, max, indent, maxQualifiers) {
 function writeMethod(meth) {
   const paramObjs = ((meth.body && meth.body.arguments) || [])
     .filter(it => !typeIsWhitespace(it.type))
-    .map(it =>
-      idlParamTmpl({
+    .map(it => {
+      const trivia = it.optional ? it.optional.trivia : "";
+      return idlParamTmpl({
         obj: it,
-        optional: it.optional ? "optional" : "",
+        optional: it.optional ? `${writeTrivia(trivia)}optional` : "",
         variadic: it.variadic ? "..." : "",
-      })
-    );
+      });
+    });
   const params = paramObjs.join(",");
   const modifiers = ["getter", "setter", "deleter", "stringifier", "static"];
   let special = "";
@@ -827,7 +831,10 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
     return;
   }
   const dfn = dfns[0][0]; // work on actual node, not jquery
-  const id = "dom-" + (parent ? parent + "-" : "") + name.replace(/[()]/g, "");
+  const id =
+    "dom-" +
+    (parent ? parent + "-" : "") +
+    name.replace(/[()]/g, "").replace(/\s/g, "-");
   dfn.id = id;
   dfn.dataset.idl = "";
   dfn.dataset.title = dfn.textContent;

@@ -625,7 +625,9 @@ partial dictionary AnotherThing {
         .first()
         .text()
     ).toEqual('"one"');
-
+    expect(
+      doc.querySelector("a[href='#dom-enumbasic-white-space']")
+    ).toBeTruthy();
     // Links and IDs.
     expect(
       $target
@@ -659,12 +661,26 @@ partial dictionary AnotherThing {
     );
     const dfn = doc.querySelector("#dom-emptyenum-the-empty-string");
     const smokeDfn = doc.querySelector(
-      `#enum-empty-sec a[href="#dom-emptyenum-not empty"]`
+      `#enum-empty-sec a[href="#dom-emptyenum-not-empty"]`
     );
     expect(links).toBeTruthy();
     expect(dfn).toBeTruthy();
     expect(smokeDfn).toBeTruthy();
     done();
+  });
+
+  it("handles optional and trivia", () => {
+    const expected = `
+[Constructor(X x, optional Y y, /*trivia*/ Z y)]
+interface Foo {
+  void foo(X x, optional Y y, /*trivia*/ optional Z z);
+};
+callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
+    `.trim();
+    const idlElem = doc.getElementById("optional-trivia");
+    expect(idlElem.textContent).toEqual(expected);
+    const trivaComments = idlElem.querySelectorAll("span.idlSectionComment");
+    expect(trivaComments.length).toEqual(3);
   });
 
   it("should handle callbacks", function(done) {

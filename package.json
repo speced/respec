@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "22.1.1",
+  "version": "22.2.1",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -27,10 +27,10 @@
     "chai": "^4.1.2",
     "clipboard": "^2.0.1",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
-    "eslint": "^5.0.0",
+    "eslint": "^5.1.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-jasmine": "^2.10.1",
-    "eslint-plugin-prettier": "^2.6.1",
+    "eslint-plugin-prettier": "^2.6.2",
     "glob": "^7.1.2",
     "handlebars": "^4.0.11",
     "http-server": "^0.11.1",
@@ -92,7 +92,7 @@
     "marked": "^0.4.0",
     "prompt": "^1.0.0",
     "puppeteer": "^1.5.0",
-    "snyk": "^1.88.1"
+    "snyk": "^1.88.2"
   },
   "prettier": {
     "trailingComma": "es5"
