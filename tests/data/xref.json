@@ -9,6 +9,16 @@
       "comment": "all lowercase dfn title"
     }
   ],
+  "list": [
+    {
+      "spec": "infra",
+      "type": "dfn",
+      "normative": true,
+      "uri": "#list",
+      "title": "list",
+      "comment": "another all lower case title"
+    }
+  ],
   "URL parser": [
     {
       "spec": "url",

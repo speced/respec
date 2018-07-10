@@ -17,6 +17,19 @@ describe("Core — xref", () => {
       id: "INFRA",
     },
   };
+  const expectedLinks = new Map([
+    [
+      "event handler",
+      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers",
+    ],
+    ["list", "https://infra.spec.whatwg.org/#list"],
+    [
+      "sw-fetch",
+      "https://www.w3.org/TR/service-workers-1/#service-worker-global-scope-fetch-event",
+    ],
+    ["uppercase", "https://infra.spec.whatwg.org/#ascii-uppercase"],
+    ["url parser", "https://url.spec.whatwg.org/#concept-url-parser"],
+  ]);
 
   it("does nothing if xref is not enabled", async () => {
     const body = `<a id="external-link">event handler</a>`;
@@ -34,9 +47,7 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     const link = doc.getElementById("external-link");
-    expect(link.href).toEqual(
-      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
-    );
+    expect(link.href).toEqual(expectedLinks.get("event handler"));
     expect(link.classList.contains("respec-offending-element")).toBeFalsy();
 
     // test: adds citation in references section
@@ -80,14 +91,10 @@ describe("Core — xref", () => {
     const [link1, link2, link3] = [...doc.querySelectorAll("#links a")];
 
     expect(link1.classList.contains("respec-offending-element")).toBeFalsy();
-    expect(link1.getAttribute("href")).toEqual(
-      "https://www.w3.org/TR/service-workers-1/#service-worker-global-scope-fetch-event"
-    );
+    expect(link1.getAttribute("href")).toEqual(expectedLinks.get("sw-fetch"));
 
     expect(link2.classList.contains("respec-offending-element")).toBeFalsy();
-    expect(link2.getAttribute("href")).toEqual(
-      "https://infra.spec.whatwg.org/#ascii-uppercase"
-    );
+    expect(link2.getAttribute("href")).toEqual(expectedLinks.get("uppercase"));
 
     expect(link3.classList.contains("respec-offending-element")).toBeFalsy();
     expect(link3.getAttribute("href")).toEqual(
@@ -98,7 +105,7 @@ describe("Core — xref", () => {
     const dfn1link = dfn1.querySelector("a");
     expect(dfn1link).toBeTruthy();
     expect(dfn1link.getAttribute("href")).toEqual(
-      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+      expectedLinks.get("event handler")
     );
     expect(dfn1.classList.contains("respec-offending-element")).toBeFalsy();
 
@@ -157,10 +164,10 @@ describe("Core — xref", () => {
     const external1 = doc.getElementById("external1");
     const external2 = doc.getElementById("external2");
     expect(external1.getAttribute("href")).toEqual(
-      "https://url.spec.whatwg.org/#concept-url-parser"
+      expectedLinks.get("url parser")
     );
     expect(external2.getAttribute("href")).toEqual(
-      "https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers"
+      expectedLinks.get("event handler")
     );
 
     const externalDfn1 = doc.querySelector("#externalDfn1 dfn");
@@ -188,5 +195,67 @@ describe("Core — xref", () => {
     const link = doc.getElementById("link");
     expect(link.classList.contains("respec-offending-element")).toBeTruthy();
     expect(link.title).toEqual("Error: Linking an ambiguous dfn.");
+  });
+
+  it("takes data-lt into account", async () => {
+    const body = `
+      <section id="test1">
+        <a data-lt="list">list stuff</a>
+      </section>
+      <section id="test2">
+        <dfn data-lt="event handler|foo">handling event</dfn>
+        <a>event handler</a>
+        <a>handling event</a>
+        <a>foo</a>
+      </section>
+    `;
+    const config = { xref: { url: apiURL }, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const link = doc.querySelector("#test1 a");
+    expect(link.getAttribute("href")).toEqual(expectedLinks.get("list"));
+
+    const dfn = doc.querySelector("#test2 dfn");
+    expect(dfn.id).toEqual("dfn-event-handler");
+    const links = [...doc.querySelectorAll("#test2 a")];
+    expect(links.length).toEqual(4);
+    expect(
+      links.every(link => link.href === expectedLinks.get("event handler"))
+    ).toBeTruthy();
+    expect(
+      links.every(
+        link => link.classList.contains("respec-offending-element") === false
+      )
+    ).toBeTruthy();
+  });
+
+  it("takes pluralization into account", async () => {
+    const body = `
+      <section id="test">
+        <dfn data-lt="event handler|event handling">handling event</dfn>
+        <a>event handler</a>
+        <a>event handlers</a>
+        <a>handling event</a>
+        <a>handling events</a>
+        <a>event handling</a>
+      </section>
+    `;
+    const config = { xref: { url: apiURL }, localBiblio, pluralize: true };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const dfn = doc.querySelector("#test dfn");
+    expect(dfn.id).toEqual("dfn-event-handler");
+    const links = [...doc.querySelectorAll("#test a")];
+    expect(links.length).toEqual(6);
+    expect(
+      links.every(link => link.href === expectedLinks.get("event handler"))
+    ).toBeTruthy();
+    expect(
+      links.every(
+        link => link.classList.contains("respec-offending-element") === false
+      )
+    ).toBeTruthy();
   });
 });
