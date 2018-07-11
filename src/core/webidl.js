@@ -38,15 +38,11 @@ function registerHelpers() {
   hb.registerHelper("extAttr", function(obj) {
     return extAttr(obj.extAttrs);
   });
-  hb.registerHelper("extAttrInline", function(obj) {
-    return extAttr(obj.extAttrs);
-  });
   hb.registerHelper("extAttrClassName", function() {
-    var extAttr = this;
-    if (extAttr.name === "Constructor" || extAttr.name === "NamedConstructor") {
-      return "idlCtor";
-    }
-    return "extAttr";
+    const { name } = this;
+    return ["Constructor", "NamedConstructor"].includes(name)
+      ? "idlCtor"
+      : "extAttr";
   });
   hb.registerHelper("extAttrRhs", function(rhs, options) {
     if (rhs.type === "identifier") {
@@ -65,11 +61,7 @@ function registerHelpers() {
     );
   });
   hb.registerHelper("jsIf", function(condition, options) {
-    if (condition) {
-      return options.fn(this);
-    } else {
-      return options.inverse(this);
-    }
+    return condition ? options.fn(this) : options.inverse(this);
   });
   hb.registerHelper("idlType", function(obj) {
     return new hb.SafeString(idlType2Html(obj.idlType));
@@ -182,37 +174,16 @@ function linkStandardType(type) {
   return `<a data-cite='${standardTypes.get(safeType)}'>${safeType}</a>`;
 }
 
-function idlType2Text(idlType) {
-  if (typeof idlType === "string") {
-    return idlType;
-  }
-  const nullable = idlType.nullable ? "?" : "";
-  if (idlType.union) {
-    return `(${idlType.idlType.map(idlType2Text).join(" or ")})${nullable}`;
-  }
-  if (idlType.generic) {
-    const types = []
-      .concat(idlType.idlType)
-      .map(idlType2Text)
-      .join(", ");
-    return `${idlType.generic}<${types}>${nullable}`;
-  }
-  return idlType2Text(idlType.idlType) + nullable;
-}
-
-var whitespaceTypes = {
-  ws: true,
-  "ws-pea": true,
-  "ws-tpea": true,
-  "line-comment": true,
-  "multiline-comment": true,
-};
-
-function typeIsWhitespace(webIdlType) {
-  return whitespaceTypes[webIdlType];
-}
+const whitespaceTypes = new Set([
+  "ws",
+  "ws-pea",
+  "ws-tpea",
+  "line-comment",
+  "multiline-comment",
+]);
 
 const extenedAttributesLinks = new Map([
+  ["AllowShared", "WEBIDL#AllowShared"],
   ["CEReactions", "HTML#cereactions"],
   ["Clamp", "WEBIDL#Clamp"],
   ["Constructor", "WEBIDL#Constructor"],
@@ -225,13 +196,13 @@ const extenedAttributesLinks = new Map([
     "LegacyUnenumerableNamedProperties",
     "WEBIDL#LegacyUnenumerableNamedProperties",
   ],
+  ["LegacyWindowAlias", "WEBIDL#LegacyWindowAlias"],
   ["LenientSetter", "WEBIDL#LenientSetter"],
   ["LenientThis", "WEBIDL#LenientThis"],
   ["NamedConstructor", "WEBIDL#NamedConstructor"],
   ["NewObject", "WEBIDL#NewObject"],
   ["NoInterfaceObject", "WEBIDL#NoInterfaceObject"],
   ["OverrideBuiltins", "WEBIDL#OverrideBuiltins"],
-  ["PrimaryGlobal", "WEBIDL#PrimaryGlobal"],
   ["PutForwards", "WEBIDL#PutForwards"],
   ["Replaceable", "WEBIDL#Replaceable"],
   ["SameObject", "WEBIDL#SameObject"],
@@ -451,13 +422,13 @@ function writeAttribute(attr) {
   var qualifiers = writeAttributeQualifiers(attr);
   return idlAttributeTmpl({
     obj: attr,
-    qualifiers: qualifiers,
+    qualifiers,
   });
 }
 
 function writeMethod(meth) {
   const paramObjs = ((meth.body && meth.body.arguments) || [])
-    .filter(it => !typeIsWhitespace(it.type))
+    .filter(it => !whitespaceTypes.has(it.type))
     .map(it => {
       const trivia = it.optional ? it.optional.trivia : "";
       return idlParamTmpl({
@@ -591,7 +562,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
               ? ""
               : "-" +
                 defn.body.arguments
-                  .filter(arg => !typeIsWhitespace(arg.type))
+                  .filter(arg => !whitespaceTypes.has(arg.type))
                   .map(arg => arg.name.toLowerCase())
                   .join("-")
                   .replace(/\s/g, "_");
