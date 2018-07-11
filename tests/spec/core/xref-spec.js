@@ -216,7 +216,7 @@ describe("Core — xref", () => {
         <a id="six" data-cite="NOT-FOUND">object</a>
       </section>
     `;
-    const config = { xref: true, localBiblio };
+    const config = { xref: { url: apiURL }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
