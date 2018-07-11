@@ -309,7 +309,8 @@ describe("Core — xref", () => {
           <p>Uses [[html]] to create context for <a id="two">object</a></p>
         </section>
         <section>
-          <p>Uses [[html]] and [[webidl]] to create context for <a id="three">object</a>. It fails as it's defined in both.</p>
+          <p>Uses [[html]] and [[webidl]] to create context for <a id="three">object</a>.
+          It fails as it's defined in both.</p>
         </section>
         <section>
           <p>But data-cite on element itself wins. <a id="four">object</a> uses [[webidl]],
