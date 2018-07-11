@@ -48,11 +48,9 @@ function createXrefMap(elems) {
       : [];
     if (datacite !== elem) {
       // if element itself contains data-cite, we don't take inline context into account
-      const inlineContext = elem
-        .closest("section")
-        .querySelectorAll("a.bibref");
-      if (inlineContext) {
-        const inlineContextSpecs = [...inlineContext].map(el =>
+      const refs = elem.closest("section").querySelectorAll("a.bibref");
+      if (refs) {
+        const inlineContextSpecs = [...refs].map(el =>
           el.textContent.toLowerCase().replace(/^!/, "")
         );
         specs.push(...inlineContextSpecs);
