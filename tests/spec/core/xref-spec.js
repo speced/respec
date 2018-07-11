@@ -324,7 +324,7 @@ describe("Core — xref", () => {
 
     expect(link1.href).toEqual(expectedLink1);
     expect(link2.href).toEqual(expectedLink2);
-    expect(link3.href).toBeFalsy();
+    expect(link3.href).toEqual("");
     expect(link4.href).toEqual(expectedLink1);
     expect(link5.href).toEqual(expectedLink2);
 
