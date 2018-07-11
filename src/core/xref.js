@@ -46,7 +46,7 @@ function createXrefMap(elems) {
           .replace(/!/g, "")
           .split(" ")
       : [];
-    if (datacite != elem) {
+    if (datacite !== elem) {
       // if element itself contains data-cite, we don't take inline context into account
       const inlineContext = elem.parentElement.querySelectorAll("a.bibref");
       if (inlineContext) {
