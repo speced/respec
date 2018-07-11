@@ -328,10 +328,10 @@ describe("Core — xref", () => {
     expect(link4.href).toEqual(expectedLink1);
     expect(link5.href).toEqual(expectedLink2);
 
-    expect(link1.classList.contains("respec-offending-class")).toBeFalsy();
-    expect(link2.classList.contains("respec-offending-class")).toBeFalsy();
-    expect(link3.classList.contains("respec-offending-class")).toBeTruthy();
-    expect(link4.classList.contains("respec-offending-class")).toBeFalsy();
-    expect(link5.classList.contains("respec-offending-class")).toBeFalsy();
+    expect(link1.classList.contains("respec-offending-element")).toBeFalsy();
+    expect(link2.classList.contains("respec-offending-element")).toBeFalsy();
+    expect(link3.classList.contains("respec-offending-element")).toBeTruthy();
+    expect(link4.classList.contains("respec-offending-element")).toBeFalsy();
+    expect(link5.classList.contains("respec-offending-element")).toBeFalsy();
   });
 });
