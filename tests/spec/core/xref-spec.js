@@ -46,7 +46,7 @@ describe("Core — xref", () => {
   });
 
   it("adds link to unique <a> terms", async () => {
-    const body = `<a id="external-link">event handler</a>`;
+    const body = `<section><a id="external-link">event handler</a></section>`;
     const config = { xref: { url: apiURL }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
@@ -62,7 +62,7 @@ describe("Core — xref", () => {
   });
 
   it("fails to add link to non-existing terms", async () => {
-    const body = `<a id="external-link">NOT_FOUND</a>`;
+    const body = `<section><a id="external-link">NOT_FOUND</a></section>`;
     const config = { xref: { url: apiURL } };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
@@ -302,10 +302,19 @@ describe("Core — xref", () => {
   it("uses inline references to provide context", async () => {
     const body = `
       <section id="test">
-        <p>Uses [[WEBIDL]] to create context for <a id="one">object</a></p>
-        <p>Uses [[html]] to create context for <a id="two">object</a></p>
-        <p>Uses [[html]] and [[webidl]] to create context for <a id="three">object</a>. It fails as it's defined in both.</p>
-        <p>But data-cite on element itself wins. <a id="four">object</a> uses [[webidl]], whereas <a data-cite="html" id="five">object</a> uses html.</p>
+        <section>
+          <p>Uses [[WEBIDL]] to create context for <a id="one">object</a></p>
+        </section>
+        <section>
+          <p>Uses [[html]] to create context for <a id="two">object</a></p>
+        </section>
+        <section>
+          <p>Uses [[html]] and [[webidl]] to create context for <a id="three">object</a>. It fails as it's defined in both.</p>
+        </section>
+        <section>
+          <p>But data-cite on element itself wins. <a id="four">object</a> uses [[webidl]],
+          whereas <a data-cite="html" id="five">object</a> uses html.</p>
+        </section>
       </section>
     `;
     const config = { xref: true, localBiblio };
