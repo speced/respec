@@ -112,7 +112,17 @@ function addDataCiteToTerms(query, results, xrefMap, conf) {
         Object.assign(el.dataset, citeObj);
       });
 
-      if (normative == true) conf.normativeReferences.add(cite);
+      if (elem.closest(".informative, .note, figure, .example")) {
+        conf.informativeReferences.add(cite);
+      } else {
+        if (normative) {
+          conf.normativeReferences.add(cite);
+        } else {
+          const msg = `Adding an informative reference to "${cite}" in a normative section`;
+          const title = "Error: Informative reference in normative section";
+          showInlineError(entry.elem, msg, title);
+        }
+      }
     });
   }
 }

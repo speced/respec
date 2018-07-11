@@ -16,6 +16,10 @@ describe("Core — xref", () => {
       href: "https://infra.spec.whatwg.org/",
       id: "INFRA",
     },
+    local: {
+      href: "https://example.com/",
+      id: "local",
+    },
   };
   const expectedLinks = new Map([
     [
@@ -297,5 +301,50 @@ describe("Core — xref", () => {
         link => link.classList.contains("respec-offending-element") === false
       )
     ).toBeTruthy();
+  });
+
+  it("adds normative and informative references", async () => {
+    const body = `
+      <section class="informative">
+        normative reference: <a id="valid1">list</a>
+        informative reference: <a id="valid2">fake informative ref</a>
+      </section>
+      <section>
+        an informative reference: <a id="invalid">bearing angle</a> in normative section
+        an normative reference: <a id="valid3">URL parser</a>
+      </section>
+    `;
+
+    const config = { xref: { url: apiURL }, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const link1 = doc.getElementById("valid1");
+    const link2 = doc.getElementById("valid2");
+    const link3 = doc.getElementById("valid3");
+    const badLink = doc.getElementById("invalid");
+
+    expect(link1.href).toEqual(expectedLinks.get("list"));
+    expect(link1.classList.contains("respec-offending-element")).toBeFalsy();
+    expect(link2.href).toEqual("https://example.com/#fake-informative-ref");
+    expect(link2.classList.contains("respec-offending-element")).toBeFalsy();
+    expect(link3.href).toEqual(expectedLinks.get("url parser"));
+    expect(link3.classList.contains("respec-offending-element")).toBeFalsy();
+
+    expect(badLink.href).toEqual(
+      "https://www.w3.org/TR/css-values-3/#bearing-angle"
+    );
+    expect(badLink.classList.contains("respec-offending-element")).toBeTruthy();
+    expect(badLink.title).toEqual(
+      "Error: Informative reference in normative section"
+    );
+
+    const normRefs = [...doc.querySelectorAll("#normative-references dt")];
+    expect(normRefs.length).toEqual(1); // excludes `css-values` of `#invalid`
+    expect(normRefs.map(r => r.textContent)).toEqual(["[url]"]);
+
+    const informRefs = [...doc.querySelectorAll("#informative-references dt")];
+    expect(informRefs.length).toEqual(2);
+    expect(informRefs.map(r => r.textContent)).toEqual(["[infra]", "[local]"]);
   });
 });

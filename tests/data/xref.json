@@ -47,6 +47,26 @@
       "comment": "easy disambiguate with data-cite"
     }
   ],
+  "bearing angle": [
+    {
+      "spec": "css-values",
+      "type": "dfn",
+      "normative": false,
+      "uri": "#bearing-angle",
+      "title": "bearing angle",
+      "comment": "non normative"
+    }
+  ],
+  "fake informative ref": [
+    {
+      "spec": "local",
+      "type": "dfn",
+      "normative": false,
+      "uri": "#fake-informative-ref",
+      "title": "fake informative ref",
+      "comment": "is fake. for testing only. non normative"
+    }
+  ],
   "fetch": [
     {
       "spec": "fetch",
