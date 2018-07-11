@@ -1,5 +1,5 @@
 import { pub } from "core/pubsubhub";
-import { norm, addId, getTextNodes } from "core/utils";
+import { addId, getTextNodes, getDfnTitles } from "core/utils";
 import "deps/jquery";
 
 export const name = "core/jquery-enhanced";
@@ -50,57 +50,7 @@ window.$.fn.renameElement = function(name) {
 // This method will publish a warning if a title is used on a definition
 // instead of an @lt (as per specprod mailing list discussion).
 window.$.fn.getDfnTitles = function(args) {
-  var theAttr = "";
-  var titleString = "";
-  var normalizedText = "";
-  //data-lt-noDefault avoid using the text content of a definition
-  //in the definition list.
-  if (this.attr("data-lt-noDefault") === undefined) {
-    normalizedText = norm(this.text()).toLowerCase();
-  }
-  if (this.attr("data-lt")) {
-    theAttr = this.attr("data-lt") ? "data-lt" : "lt";
-    // prefer @data-lt for the list of title aliases
-    titleString = this.attr(theAttr).toLowerCase();
-    if (normalizedText !== "") {
-      // Use the definition itself, so to avoid
-      // having to declare the definition twice.
-      if (!titleString.startsWith(`${normalizedText}|`)) {
-        titleString =  titleString + "|" + normalizedText;
-      }
-    }
-  } else if (
-    this.contents().length === 1 &&
-    this.children("abbr, acronym").length === 1 &&
-    this.find(":first-child").attr("title")
-  ) {
-    titleString = this.find(":first-child").attr("title");
-  } else {
-    titleString = this.text() === '""' ? "the-empty-string" : this.text();
-  }
-  // now we have a string of one or more titles
-  titleString = norm(titleString).toLowerCase();
-  if (args && args.isDefinition === true) {
-    // if it came from an attribute, replace that with data-lt as per contract with Shepherd
-    if (theAttr) {
-      this.attr("data-lt", titleString);
-    }
-    if (theAttr !== "data-lt") {
-      this.removeAttr(theAttr);
-    }
-    // if there is no pre-defined type, assume it is a 'dfn'
-    if (!this.attr("dfn-type")) {
-      this.attr("data-dfn-type", "dfn");
-    } else {
-      this.attr("data-dfn-type", this.attr("dfn-type"));
-      this.removeAttr("dfn-type");
-    }
-  }
-  const titles = titleString
-    .split("|")
-    .filter(item => item !== "")
-    .reduce((collector, item) => collector.add(item), new Set());
-  return [...titles];
+  return getDfnTitles(this[0], args);
 };
 
 // For any element (usually <a>), returns an array of targets that
@@ -114,10 +64,9 @@ window.$.fn.getDfnTitles = function(args) {
 //  * {for: "int3", title: "member"}
 //  * {for: "", title: "int3.member"}
 window.$.fn.linkTargets = function() {
-  var elem = this;
   var linkForElem = this[0].closest("[data-link-for]");
   var linkFor = linkForElem ? linkForElem.dataset.linkFor.toLowerCase() : "";
-  var titles = elem.getDfnTitles();
+  var titles = getDfnTitles(this[0]);
   var result = [];
   for (const title of titles) {
     result.push({
