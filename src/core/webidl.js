@@ -695,9 +695,9 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
       name &&
       idlElem.classList.contains("no-link-warnings") === false;
     if (showWarnings) {
-      var msg = `No \`<dfn>\` for ${type} \`${originalName}\`${
-        originalParent ? " in `" + originalParent + "`" : ""
-      }`;
+      const name = type === "operation" ? `${originalName}()` : originalName;
+      const parentName = originalParent ? ` \`${originalParent}\`'s` : "";
+      let msg = `Missing \`<dfn>\` for${parentName} \`${name}\` ${type}`;
       msg +=
         ". [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).";
       pub("warn", msg);
