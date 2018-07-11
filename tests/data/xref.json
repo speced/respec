@@ -29,6 +29,24 @@
       "comment": "mixed case dfn title"
     }
   ],
+  "object": [
+    {
+      "spec": "html",
+      "type": "element",
+      "normative": true,
+      "uri": "iframe-embed-object.html#the-object-element",
+      "title": "object",
+      "comment": "easy disambiguate with data-cite"
+    },
+    {
+      "spec": "webidl",
+      "type": "interface",
+      "normative": true,
+      "uri": "#idl-object",
+      "title": "object",
+      "comment": "easy disambiguate with data-cite"
+    }
+  ],
   "fetch": [
     {
       "spec": "fetch",
