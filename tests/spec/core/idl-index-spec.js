@@ -23,9 +23,10 @@ describe("Core — IDL Index", () => {
     const expectedIDL = `interface Foo {
   readonly attribute DOMString bar;
 };
+
 interface Bar {
   readonly attribute DOMString foo;
-};\n`;
+};`;
     const ops = {
       config: makeBasicConfig(),
       body,
@@ -61,7 +62,7 @@ interface BeforeInstallPromptEvent : Event {
 };
 dictionary PromptResponseObject {
   AppBannerPromptOutcome userChoice;
-};\n`;
+};`;
     const ops = {
       config: makeBasicConfig(),
       body,
