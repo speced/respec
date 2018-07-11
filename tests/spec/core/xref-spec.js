@@ -32,7 +32,7 @@ describe("Core — xref", () => {
     ["object-idl", "https://heycam.github.io/webidl/#idl-object"],
     [
       "object-html",
-      "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-object-element"
+      "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-object-element",
     ],
   ]);
 
