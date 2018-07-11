@@ -601,9 +601,9 @@ partial dictionary AnotherThing {
     expect(idl.querySelector(".idlSectionComment")).toBeNull();
   });
 
-  it("should handle enumerations", function(done) {
-    var target = doc.getElementById("enum-basic");
-    var text = `
+  it("handles enumerations", () => {
+    const target = doc.getElementById("enum-basic");
+    const text = `
 enum EnumBasic {
   // 1
   "one",
@@ -628,7 +628,6 @@ enum EnumBasic {
       "#dom-enumbasic"
     );
     expect(target.querySelector("#idl-def-enumbasic")).toBeTruthy();
-    done();
   });
 
   it("should handle enumeration value definitions", function(done) {
