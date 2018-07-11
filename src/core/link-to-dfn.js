@@ -73,20 +73,31 @@ export async function run(conf, doc, cb) {
     "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo)";
   $(localLinkSelector).each(function() {
     const $ant = $(this);
-    if ($ant.hasClass("externalDFN")) return;
+    const ant = $ant[0];
+    if (ant.classList.contains("externalDFN")) return;
     const linkTargets = $ant.linkTargets();
     const foundDfn = linkTargets.some(function(target) {
       if (titles[target.title] && titles[target.title][target.for]) {
-        const dfn = titles[target.title][target.for];
-        if (dfn[0].dataset.cite) {
-          $ant[0].dataset.cite = dfn[0].dataset.cite;
+        const $dfn = titles[target.title][target.for];
+        const dfn = $dfn[0];
+        const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
+        const plurals = dfn.dataset.plurals
+          ? dfn.dataset.plurals.split("|")
+          : [];
+        const txt = ant.textContent.toLowerCase();
+        if (dfn.dataset.cite) {
+          ant.dataset.cite = dfn.dataset.cite;
+        } else if (conf.xref && (lt.includes(txt) || plurals.includes(txt))) {
+          ant.dataset.dfnType = "xref";
+          // data-lt[0] serves as unique id for the dfn which this element references
+          ant.dataset.xref = lt[0];
         } else {
-          const frag = "#" + encodeURIComponent(dfn.prop("id"));
-          $ant.attr("href", frag).addClass("internalDFN");
+          ant.href = "#" + dfn.id;
+          ant.classList.add("internalDFN");
         }
         // add a bikeshed style indication of the type of link
-        if (!$ant.attr("data-link-type")) {
-          $ant.attr("data-link-type", "dfn");
+        if (!ant.hasAttribute("data-link-type")) {
+          ant.dataset.linkType = "dfn";
         }
         // If a definition is <code>, links to it should
         // also be <code>.
@@ -94,16 +105,18 @@ export async function run(conf, doc, cb) {
         // Note that contents().length===1 excludes
         // definitions that have either other text, or other
         // whitespace, inside the <dfn>.
+        // TODO: un-jquery-fy
         if (
-          dfn.closest("code,pre").length ||
-          (dfn.contents().length === 1 && dfn.children("code").length === 1)
+          dfn.closest("code,pre") ||
+          ($dfn.contents().length === 1 &&
+            [...dfn.children].filter(c => c.localName === "code").length === 1)
         ) {
           // only add code to IDL when the definition matches
-          const term = $ant[0].textContent.trim();
-          const isIDL = dfn[0].dataset.hasOwnProperty("idl");
+          const term = ant.textContent.trim();
+          const isIDL = dfn.dataset.hasOwnProperty("idl");
           const isSameText = isIDL
-            ? dfn[0].dataset.title === term
-            : dfn[0].textContent.trim() === term;
+            ? dfn.dataset.title === term
+            : dfn.textContent.trim() === term;
           if (isIDL && !isSameText) {
             return true;
           }
@@ -120,7 +133,9 @@ export async function run(conf, doc, cb) {
           ".idl:not(.extAttr), dl.methods, dl.attributes, dl.constants, dl.constructors, dl.fields, dl.dictionary-members, span.idlMemberType, span.idlTypedefType, div.idlImplementsDesc"
         ).length
       ) {
-        possibleExternalLinks.push($ant[0]);
+        if (ant.dataset.dfnType !== "xref") {
+          possibleExternalLinks.push(ant);
+        }
         return;
       }
       $ant.replaceWith($ant.contents());
