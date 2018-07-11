@@ -92,12 +92,10 @@ async function fetchXrefs(query, url) {
  * @param {Object} conf respecConfig
  */
 function addDataCiteToTerms(query, results, xrefMap, conf) {
-  for (const { term } of query.keys) {
-    const entries = xrefMap.get(term);
-    const result = disambiguate(results[term], entries, term);
-    if (!result) continue;
-
+  for (const [term, entries] of xrefMap) {
     entries.forEach(entry => {
+      const result = disambiguate(results[term], entry, term);
+      if (!result) return;
       const { elem } = entry;
       const { uri, spec: cite, normative } = result;
       const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
@@ -120,14 +118,19 @@ function addDataCiteToTerms(query, results, xrefMap, conf) {
 }
 
 // disambiguate fetched results based on context
-function disambiguate(data, context, term) {
-  const elems = context.map(c => c.elem);
-  if (!data || !data.length) {
+function disambiguate(fetchedData, context, term) {
+  const { elem } = context;
+  const specs = context.specs || [];
+  const data = (fetchedData || []).filter(entry => {
+    return !specs.length || specs.includes(entry.spec);
+  });
+
+  if (!data.length) {
     const msg =
       `Couldn't match "**${term}**" to anything in the document or to any other spec. ` +
       "Please provide a [`data-cite`](https://github.com/w3c/respec/wiki/data--cite) attribute for it.";
     const title = "Error: No matching dfn found.";
-    showInlineError(elems.filter(el => !el.dataset.cite), msg, title);
+    if (!elem.dataset.cite) showInlineError(elem, msg, title);
     return null;
   }
 
@@ -144,6 +147,6 @@ function disambiguate(data, context, term) {
       .map(s => `**${s}**`)
       .join(", ")}.`;
   const title = "Error: Linking an ambiguous dfn.";
-  showInlineError(elems, msg, title);
+  showInlineError(elem, msg, title);
   return null;
 }
