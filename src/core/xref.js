@@ -120,7 +120,27 @@ function addDataCiteToTerms(query, results, xrefMap, conf) {
         Object.assign(el.dataset, citeObj);
       });
 
-      if (normative == true) conf.normativeReferences.add(cite);
+      // add specs for citation (references section)
+      const closestInform = elem.closest(
+        ".informative, .note, figure, .example, .issue"
+      );
+      if (
+        closestInform &&
+        (!elem.closest(".normative") ||
+          !closestInform.querySelector(".normative"))
+      ) {
+        conf.informativeReferences.add(cite);
+      } else {
+        if (normative) {
+          conf.normativeReferences.add(cite);
+        } else {
+          const msg =
+            `Adding an informative reference to "${term}" from "${cite}" ` +
+            "in a normative section";
+          const title = "Error: Informative reference in normative section";
+          showInlineError(entry.elem, msg, title);
+        }
+      }
     });
   }
 }

@@ -19,6 +19,24 @@
       "comment": "another all lower case title"
     }
   ],
+  "ascii alphanumeric": [
+    {
+      "spec": "infra",
+      "type": "dfn",
+      "normative": true,
+      "uri": "#ascii-alphanumeric",
+      "title": "ascii alphanumeric"
+    }
+  ],
+  "dictionary": [
+    {
+      "spec": "webidl",
+      "type": "dfn",
+      "normative": true,
+      "uri": "#dfn-dictionary",
+      "title": "dictionary"
+    }
+  ],
   "URL parser": [
     {
       "spec": "url",
@@ -45,6 +63,53 @@
       "uri": "#idl-object",
       "title": "object",
       "comment": "easy disambiguate with data-cite"
+    }
+  ],
+  "bearing angle": [
+    {
+      "spec": "css-values",
+      "type": "dfn",
+      "normative": false,
+      "uri": "#bearing-angle",
+      "title": "bearing angle",
+      "comment": "non normative"
+    }
+  ],
+  "fake inform 1": [
+    {
+      "spec": "local-1",
+      "type": "dfn",
+      "normative": false,
+      "uri": "#fake-inform-1",
+      "title": "fake Inform 1",
+      "comment": "is fake. for testing only. non normative"
+    }
+  ],
+  "fake inform 2": [
+    {
+      "spec": "local-2",
+      "type": "dfn",
+      "normative": false,
+      "uri": "#fake-inform-2",
+      "title": "fake inform 2"
+    }
+  ],
+  "fake inform 3": [
+    {
+      "spec": "local-3",
+      "type": "dfn",
+      "normative": false,
+      "uri": "#fake-inform-3",
+      "title": "fake inform 3"
+    }
+  ],
+  "fake inform 4": [
+    {
+      "spec": "local-4",
+      "type": "dfn",
+      "normative": false,
+      "uri": "#fake-inform-4",
+      "title": "fake inform 4"
     }
   ],
   "fetch": [
