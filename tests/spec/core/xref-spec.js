@@ -46,7 +46,7 @@ describe("Core — xref", () => {
   });
 
   it("adds link to unique <a> terms", async () => {
-    const body = `<a id="external-link">event handler</a>`;
+    const body = `<section><a id="external-link">event handler</a></section>`;
     const config = { xref: { url: apiURL }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
@@ -62,7 +62,7 @@ describe("Core — xref", () => {
   });
 
   it("fails to add link to non-existing terms", async () => {
-    const body = `<a id="external-link">NOT_FOUND</a>`;
+    const body = `<section><a id="external-link">NOT_FOUND</a></section>`;
     const config = { xref: { url: apiURL } };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
@@ -297,6 +297,52 @@ describe("Core — xref", () => {
         link => link.classList.contains("respec-offending-element") === false
       )
     ).toBeTruthy();
+  });
+
+  it("uses inline references to provide context", async () => {
+    const body = `
+      <section id="test">
+        <section>
+          <p>Uses [[WEBIDL]] to create context for <a id="one">object</a></p>
+        </section>
+        <section>
+          <p>Uses [[html]] to create context for <a id="two">object</a></p>
+        </section>
+        <section>
+          <p>Uses [[html]] and [[webidl]] to create context for <a id="three">object</a>.
+          It fails as it's defined in both.</p>
+        </section>
+        <section>
+          <p>But data-cite on element itself wins. <a id="four">object</a> uses [[webidl]],
+          whereas <a data-cite="html" id="five">object</a> uses html.</p>
+        </section>
+      </section>
+    `;
+    const config = { xref: true, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+
+    const expectedLink1 = "https://heycam.github.io/webidl/#idl-object";
+    const expectedLink2 =
+      "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-object-element";
+
+    const link1 = doc.getElementById("one");
+    const link2 = doc.getElementById("two");
+    const link3 = doc.getElementById("three");
+    const link4 = doc.getElementById("four");
+    const link5 = doc.getElementById("five");
+
+    expect(link1.href).toEqual(expectedLink1);
+    expect(link2.href).toEqual(expectedLink2);
+    expect(link3.href).toEqual("");
+    expect(link4.href).toEqual(expectedLink1);
+    expect(link5.href).toEqual(expectedLink2);
+
+    expect(link1.classList.contains("respec-offending-element")).toBeFalsy();
+    expect(link2.classList.contains("respec-offending-element")).toBeFalsy();
+    expect(link3.classList.contains("respec-offending-element")).toBeTruthy();
+    expect(link4.classList.contains("respec-offending-element")).toBeFalsy();
+    expect(link5.classList.contains("respec-offending-element")).toBeFalsy();
   });
 
   it("adds normative and informative references", async () => {
