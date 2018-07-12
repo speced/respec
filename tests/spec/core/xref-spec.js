@@ -311,16 +311,17 @@ describe("Core — xref", () => {
     const body = `
       <section class="informative">
         <section>
-          normative reference: <a id="valid1">list</a>
-          informative reference: <a id="valid2">fake informative ref</a>
+          <p>normative reference: <a id="valid1">list</a></p>
+          <p>informative reference: <a id="valid2">fake informative ref</a></p>
         </section>
         <section class="normative">
-          an informative reference: <a id="invalid">bearing angle</a> in normative section
-          <div class="note">
-            informative in nested informative section:
-            <a id="valid4">another fake informative ref</a>
-          </div>
-          an normative reference: <a id="valid3">URL parser</a>
+          <p>an informative reference: <a id="invalid">bearing angle</a> in normative section</p>
+          <section>
+            <div class="note">
+              <p>informative in nested informative section: <a id="valid4">another fake informative ref</a></p>
+            </div>
+          </section>
+          <p>an normative reference: <a id="valid3">URL parser</a></p>
         </section>
       </section>
     `;
