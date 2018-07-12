@@ -13,41 +13,36 @@ import { normalizePadding } from "core/utils";
 
 export const name = "core/webidl";
 
-var idlAttributeTmpl = tmpls["attribute.html"];
-var idlCallbackTmpl = tmpls["callback.html"];
-var idlConstTmpl = tmpls["const.html"];
-var idlDictionaryTmpl = tmpls["dictionary.html"];
-var idlDictMemberTmpl = tmpls["dict-member.html"];
-var idlEnumItemTmpl = tmpls["enum-item.html"];
-var idlEnumTmpl = tmpls["enum.html"];
-var idlExtAttributeTmpl = tmpls["extended-attribute.html"];
-var idlFieldTmpl = tmpls["field.html"];
-var idlIncludesTmpl = tmpls["includes.html"];
-var idlImplementsTmpl = tmpls["implements.html"];
-var idlInterfaceTmpl = tmpls["interface.html"];
-var idlIterableLikeTmpl = tmpls["iterable-like.html"];
-var idlLineCommentTmpl = tmpls["line-comment.html"];
-var idlMethodTmpl = tmpls["method.html"];
-var idlParamTmpl = tmpls["param.html"];
-var idlTypedefTmpl = tmpls["typedef.html"];
+const idlAttributeTmpl = tmpls["attribute.html"];
+const idlCallbackTmpl = tmpls["callback.html"];
+const idlConstTmpl = tmpls["const.html"];
+const idlDictionaryTmpl = tmpls["dictionary.html"];
+const idlDictMemberTmpl = tmpls["dict-member.html"];
+const idlEnumItemTmpl = tmpls["enum-item.html"];
+const idlEnumTmpl = tmpls["enum.html"];
+const idlExtAttributeTmpl = tmpls["extended-attribute.html"];
+const idlIncludesTmpl = tmpls["includes.html"];
+const idlImplementsTmpl = tmpls["implements.html"];
+const idlInterfaceTmpl = tmpls["interface.html"];
+const idlIterableLikeTmpl = tmpls["iterable-like.html"];
+const idlLineCommentTmpl = tmpls["line-comment.html"];
+const idlMethodTmpl = tmpls["method.html"];
+const idlParamTmpl = tmpls["param.html"];
+const idlTypedefTmpl = tmpls["typedef.html"];
 // TODO: make these linkable somehow.
 // https://github.com/w3c/respec/issues/999
 // https://github.com/w3c/respec/issues/982
-var unlinkable = new Set(["maplike", "setlike", "stringifier"]);
+const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
 
 function registerHelpers() {
-  hb.registerHelper("extAttr", function(obj, indent) {
-    return extAttr(obj.extAttrs, indent, /*singleLine=*/ false);
-  });
-  hb.registerHelper("extAttrInline", function(obj) {
-    return extAttr(obj.extAttrs, 0, /*singleLine=*/ true);
+  hb.registerHelper("extAttr", function(obj) {
+    return extAttr(obj.extAttrs);
   });
   hb.registerHelper("extAttrClassName", function() {
-    var extAttr = this;
-    if (extAttr.name === "Constructor" || extAttr.name === "NamedConstructor") {
-      return "idlCtor";
-    }
-    return "extAttr";
+    const { name } = this;
+    return ["Constructor", "NamedConstructor"].includes(name)
+      ? "idlCtor"
+      : "extAttr";
   });
   hb.registerHelper("extAttrRhs", function(rhs, options) {
     if (rhs.type === "identifier") {
@@ -66,11 +61,7 @@ function registerHelpers() {
     );
   });
   hb.registerHelper("jsIf", function(condition, options) {
-    if (condition) {
-      return options.fn(this);
-    } else {
-      return options.inverse(this);
-    }
+    return condition ? options.fn(this) : options.inverse(this);
   });
   hb.registerHelper("idlType", function(obj) {
     return new hb.SafeString(idlType2Html(obj.idlType));
@@ -93,9 +84,6 @@ function registerHelpers() {
         pub("error", "Unexpected constant value type: `" + value.type + "`.");
         return "<Unknown>";
     }
-  });
-  hb.registerHelper("pads", function(num) {
-    return new hb.SafeString(pads(num));
   });
   hb.registerHelper("join", function(arr, between, options) {
     return arr.map(options.fn).join(between);
@@ -155,7 +143,7 @@ function idlType2Html(idlType) {
   if (Array.isArray(idlType)) {
     return idlType.map(idlType2Html).join(",");
   }
-  const extAttrs = extAttr(idlType.extAttrs, 0, /*singleLine=*/ true);
+  const extAttrs = extAttr(idlType.extAttrs);
   const nullable = idlType.nullable ? "?" : "";
   if (idlType.union) {
     const subtypes = idlType.idlType.map(idlType2Html).join(" or");
@@ -186,40 +174,16 @@ function linkStandardType(type) {
   return `<a data-cite='${standardTypes.get(safeType)}'>${safeType}</a>`;
 }
 
-function idlType2Text(idlType) {
-  if (typeof idlType === "string") {
-    return idlType;
-  }
-  const nullable = idlType.nullable ? "?" : "";
-  if (idlType.union) {
-    return `(${idlType.idlType.map(idlType2Text).join(" or ")})${nullable}`;
-  }
-  if (idlType.generic) {
-    const types = []
-      .concat(idlType.idlType)
-      .map(idlType2Text)
-      .join(", ");
-    return `${idlType.generic}<${types}>${nullable}`;
-  }
-  return idlType2Text(idlType.idlType) + nullable;
-}
-
-function pads(num) {
-  return " ".repeat(num);
-}
-var whitespaceTypes = {
-  ws: true,
-  "ws-pea": true,
-  "ws-tpea": true,
-  "line-comment": true,
-  "multiline-comment": true,
-};
-
-function typeIsWhitespace(webIdlType) {
-  return whitespaceTypes[webIdlType];
-}
+const whitespaceTypes = new Set([
+  "ws",
+  "ws-pea",
+  "ws-tpea",
+  "line-comment",
+  "multiline-comment",
+]);
 
 const extenedAttributesLinks = new Map([
+  ["AllowShared", "WEBIDL#AllowShared"],
   ["CEReactions", "HTML#cereactions"],
   ["Clamp", "WEBIDL#Clamp"],
   ["Constructor", "WEBIDL#Constructor"],
@@ -232,13 +196,13 @@ const extenedAttributesLinks = new Map([
     "LegacyUnenumerableNamedProperties",
     "WEBIDL#LegacyUnenumerableNamedProperties",
   ],
+  ["LegacyWindowAlias", "WEBIDL#LegacyWindowAlias"],
   ["LenientSetter", "WEBIDL#LenientSetter"],
   ["LenientThis", "WEBIDL#LenientThis"],
   ["NamedConstructor", "WEBIDL#NamedConstructor"],
   ["NewObject", "WEBIDL#NewObject"],
   ["NoInterfaceObject", "WEBIDL#NoInterfaceObject"],
   ["OverrideBuiltins", "WEBIDL#OverrideBuiltins"],
-  ["PrimaryGlobal", "WEBIDL#PrimaryGlobal"],
   ["PutForwards", "WEBIDL#PutForwards"],
   ["Replaceable", "WEBIDL#Replaceable"],
   ["SameObject", "WEBIDL#SameObject"],
@@ -249,7 +213,7 @@ const extenedAttributesLinks = new Map([
   ["Unscopable", "WEBIDL#Unscopable"],
 ]);
 
-function extAttr(extAttrs, indent, singleLine) {
+function extAttr(extAttrs) {
   if (!extAttrs) {
     // If there are no extended attributes, omit the [] entirely.
     return "";
@@ -310,77 +274,6 @@ const standardTypes = new Map([
   ["USVString", "WEBIDL#idl-USVString"],
 ]);
 
-const idlKeywords = new Set([
-  "any",
-  "attribute",
-  "boolean",
-  "byte",
-  "ByteString",
-  "callback",
-  "const",
-  "creator",
-  "Date",
-  "deleter",
-  "dictionary",
-  "DOMString",
-  "double",
-  "enum",
-  "false",
-  "float",
-  "getter",
-  "implements",
-  "Infinity",
-  "inherit",
-  "interface",
-  "iterable",
-  "long",
-  "maplike",
-  "NaN",
-  "null",
-  "object",
-  "octet",
-  "optional",
-  "or",
-  "partial",
-  "readonly",
-  "RegExp",
-  "required",
-  "sequence",
-  "setlike",
-  "setter",
-  "short",
-  "static",
-  "stringifier",
-  "true",
-  "typedef",
-  "unrestricted",
-  "unsigned",
-  "USVString",
-  "void",
-]);
-const argumentNameKeyword = new Set([
-  "attribute",
-  "callback",
-  "const",
-  "creator",
-  "deleter",
-  "dictionary",
-  "enum",
-  "getter",
-  "implements",
-  "inherit",
-  "interface",
-  "iterable",
-  "maplike",
-  "partial",
-  "required",
-  "setlike",
-  "setter",
-  "static",
-  "stringifier",
-  "typedef",
-  "unrestricted",
-]);
 var operationNames = {};
 var idlPartials = {};
 
@@ -469,6 +362,7 @@ function writeDefinition(obj) {
             );
         }
       }
+
       return idlEnumTmpl({ obj, children });
     }
     case "eof":
@@ -513,15 +407,6 @@ function writeInterfaceDefinition(opt, fixes = {}) {
   });
 }
 
-function writeField(attr, max, indent) {
-  var pad = max - idlType2Text(attr.idlType).length;
-  return idlFieldTmpl({
-    obj: attr,
-    indent: indent,
-    pad: pad,
-  });
-}
-
 function writeAttributeQualifiers(attr) {
   var qualifiers = "";
   if (attr.static) qualifiers += `${writeTrivia(attr.static.trivia)}static`;
@@ -533,23 +418,17 @@ function writeAttributeQualifiers(attr) {
   return qualifiers;
 }
 
-function writeAttribute(attr, max, indent, maxQualifiers) {
-  var len = idlType2Text(attr.idlType).length;
-  var pad = max - len;
+function writeAttribute(attr) {
   var qualifiers = writeAttributeQualifiers(attr);
-  qualifiers += pads(maxQualifiers);
-  qualifiers = qualifiers.slice(0, maxQualifiers);
   return idlAttributeTmpl({
     obj: attr,
-    indent: indent,
-    qualifiers: qualifiers,
-    pad: pad,
+    qualifiers,
   });
 }
 
 function writeMethod(meth) {
   const paramObjs = ((meth.body && meth.body.arguments) || [])
-    .filter(it => !typeIsWhitespace(it.type))
+    .filter(it => !whitespaceTypes.has(it.type))
     .map(it => {
       const trivia = it.optional ? it.optional.trivia : "";
       return idlParamTmpl({
@@ -577,23 +456,18 @@ function writeMethod(meth) {
   return idlMethodTmpl(methObj);
 }
 
-function writeConst(cons, max, indent) {
-  var pad = max - idlType2Text(cons.idlType).length;
-  if (cons.nullable) pad--;
+function writeConst(cons) {
   return idlConstTmpl({
     obj: cons,
-    indent: indent,
-    pad: pad,
     nullable: cons.nullable ? "?" : "",
   });
 }
 
-function writeIterableLike(iterableLike, indent) {
+function writeIterableLike(iterableLike) {
   const { type, readonly } = iterableLike;
   return idlIterableLikeTmpl({
     obj: iterableLike,
     qualifiers: readonly ? `${writeTrivia(readonly.trivia)}readonly` : "",
-    indent: indent,
     className: `idl${type[0].toUpperCase()}${type.slice(1)}`,
   });
 }
@@ -658,7 +532,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
           defn.idlId =
             "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
           break;
-        case "operation":
+        case "operation": {
           if (defn.body && defn.body.name) {
             name = defn.body.name.value;
             var qualifiedName = parent + "." + name;
@@ -688,12 +562,13 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
               ? ""
               : "-" +
                 defn.body.arguments
-                  .filter(arg => !typeIsWhitespace(arg.type))
+                  .filter(arg => !whitespaceTypes.has(arg.type))
                   .map(arg => arg.name.toLowerCase())
                   .join("-")
                   .replace(/\s/g, "_");
           defn.idlId = idHead + idTail;
           break;
+        }
         case "iterable":
         case "maplike":
         case "setlike":
@@ -731,7 +606,7 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
   const originalName = name;
   parent = parent.toLowerCase();
   switch (type) {
-    case "operation":
+    case "operation": {
       // Overloads all have unique names
       if (name.search("!overload") !== -1) {
         name = name.toLowerCase();
@@ -768,11 +643,10 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
       dfn[0].dataset.lt = lt.reverse().join("|");
       definitionMap[asMethodName] = [dfn];
       return dfn;
+    }
     case "enum":
-      if (name === "") {
-        name = "the-empty-string";
-        break;
-      }
+      name = name === "" ? "the-empty-string" : name.toLowerCase();
+      break;
     default:
       name = name.toLowerCase();
   }
@@ -809,9 +683,9 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
     }
   }
   if (dfns.length > 1) {
-    const msg = `Multiple \`<dfn>\`s for \`${originalName}\` ${originalParent
-      ? `in \`${originalParent}\``
-      : ""}`;
+    const msg = `Multiple \`<dfn>\`s for \`${originalName}\` ${
+      originalParent ? `in \`${originalParent}\`` : ""
+    }`;
     pub("error", new Error(msg));
   }
   if (dfns.length === 0) {
@@ -821,9 +695,9 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
       name &&
       idlElem.classList.contains("no-link-warnings") === false;
     if (showWarnings) {
-      var msg = `No \`<dfn>\` for ${type} \`${originalName}\`${originalParent
-        ? " in `" + originalParent + "`"
-        : ""}`;
+      const name = type === "operation" ? `${originalName}()` : originalName;
+      const parentName = originalParent ? ` \`${originalParent}\`'s` : "";
+      let msg = `Missing \`<dfn>\` for${parentName} \`${name}\` ${type}`;
       msg +=
         ". [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).";
       pub("warn", msg);

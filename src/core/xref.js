@@ -34,7 +34,11 @@ export async function run(conf, elems) {
  */
 function createXrefMap(elems) {
   return elems.reduce((map, elem) => {
-    const term = normalize(elem.textContent);
+    let term = elem.dataset.lt
+      ? elem.dataset.lt.split("|", 1)[0]
+      : elem.textContent;
+    term = normalize(term);
+
     const datacite = elem.closest("[data-cite]");
     const specs = datacite
       ? datacite.dataset.cite
@@ -42,6 +46,14 @@ function createXrefMap(elems) {
           .replace(/!/g, "")
           .split(" ")
       : [];
+    // if element itself contains data-cite, we don't take inline context into account
+    if (datacite !== elem) {
+      const refs = [
+        ...elem.closest("section").querySelectorAll("a.bibref"),
+      ].map(el => el.textContent.toLowerCase());
+      specs.push(...refs);
+    }
+
     const xrefsForTerm = map.has(term) ? map.get(term) : [];
     xrefsForTerm.push({ elem, specs });
     return map.set(term, xrefsForTerm);
@@ -82,37 +94,71 @@ async function fetchXrefs(query, url) {
 /**
  * adds data-cite attributes to elems
  * for each term from conf.xref[term] for which results are found.
+ * @param {Object} query query sent to server
  * @param {Object} results parsed JSON results returned from API
  * @param {Map} xrefMap xrefMap
  * @param {Object} conf respecConfig
  */
 function addDataCiteToTerms(query, results, xrefMap, conf) {
-  for (const { term } of query.keys) {
-    const entries = xrefMap.get(term);
-    const result = disambiguate(results[term], entries, term);
-    if (!result) continue;
-
+  for (const [term, entries] of xrefMap) {
     entries.forEach(entry => {
+      const result = disambiguate(results[term], entry, term);
+      if (!result) return;
       const { elem } = entry;
       const { uri, spec: cite, normative } = result;
       const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
       const [citePath, citeFrag] = path.split("#");
-      Object.assign(elem.dataset, { cite, citePath, citeFrag });
+      const citeObj = { cite, citePath, citeFrag };
+      Object.assign(elem.dataset, citeObj);
 
-      if (normative == true) conf.normativeReferences.add(cite);
+      // update indirect links (data-lt, data-plurals)
+      const indirectLinks = document.querySelectorAll(
+        `[data-dfn-type="xref"][data-xref="${term.toLowerCase()}"]`
+      );
+      indirectLinks.forEach(el => {
+        el.removeAttribute("data-xref");
+        Object.assign(el.dataset, citeObj);
+      });
+
+      // add specs for citation (references section)
+      const closestInform = elem.closest(
+        ".informative, .note, figure, .example, .issue"
+      );
+      if (
+        closestInform &&
+        (!elem.closest(".normative") ||
+          !closestInform.querySelector(".normative"))
+      ) {
+        conf.informativeReferences.add(cite);
+      } else {
+        if (normative) {
+          conf.normativeReferences.add(cite);
+        } else {
+          const msg =
+            `Adding an informative reference to "${term}" from "${cite}" ` +
+            "in a normative section";
+          const title = "Error: Informative reference in normative section";
+          showInlineError(entry.elem, msg, title);
+        }
+      }
     });
   }
 }
 
 // disambiguate fetched results based on context
-function disambiguate(data, context, term) {
-  const elems = context.map(c => c.elem);
-  if (!data || !data.length) {
+function disambiguate(fetchedData, context, term) {
+  const { elem } = context;
+  const specs = context.specs || [];
+  const data = (fetchedData || []).filter(entry => {
+    return !specs.length || specs.includes(entry.spec);
+  });
+
+  if (!data.length) {
     const msg =
       `Couldn't match "**${term}**" to anything in the document or to any other spec. ` +
       "Please provide a [`data-cite`](https://github.com/w3c/respec/wiki/data--cite) attribute for it.";
     const title = "Error: No matching dfn found.";
-    showInlineError(elems.filter(el => !el.dataset.cite), msg, title);
+    if (!elem.dataset.cite) showInlineError(elem, msg, title);
     return null;
   }
 
@@ -129,6 +175,6 @@ function disambiguate(data, context, term) {
       .map(s => `**${s}**`)
       .join(", ")}.`;
   const title = "Error: Linking an ambiguous dfn.";
-  showInlineError(elems, msg, title);
+  showInlineError(elem, msg, title);
   return null;
 }
