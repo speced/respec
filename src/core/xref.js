@@ -113,7 +113,7 @@ function addDataCiteToTerms(query, results, xrefMap, conf) {
       });
 
       const closestInform = elem.closest(
-        ".informative, .note, figure, .example"
+        ".informative, .note, figure, .example, .issue"
       );
       if (
         closestInform &&

@@ -4,26 +4,16 @@ describe("Core — xref", () => {
 
   const apiURL = location.origin + "/tests/data/xref.json";
   const localBiblio = {
-    html: {
-      href: "https://html.spec.whatwg.org/multipage/",
-      id: "HTML",
-    },
+    html: { id: "HTML", href: "https://html.spec.whatwg.org/multipage/" },
     "service-workers": {
-      href: "https://www.w3.org/TR/service-workers-1/",
       id: "service-workers-1",
+      href: "https://www.w3.org/TR/service-workers-1/",
     },
-    infra: {
-      href: "https://infra.spec.whatwg.org/",
-      id: "INFRA",
-    },
-    local: {
-      href: "https://example.com/",
-      id: "local",
-    },
-    "local-alt": {
-      href: "https://example.com/",
-      id: "local-alt",
-    },
+    infra: { id: "INFRA", href: "https://infra.spec.whatwg.org/" },
+    "local-1": { id: "local-1", href: "https://example.com/" },
+    "local-2": { id: "local-2", href: "https://example.com/" },
+    "local-3": { id: "local-3", href: "https://example.com/" },
+    "local-4": { id: "local-4", href: "https://example.com/" },
   };
   const expectedLinks = new Map([
     [
@@ -38,6 +28,8 @@ describe("Core — xref", () => {
     ["uppercase", "https://infra.spec.whatwg.org/#ascii-uppercase"],
     ["url parser", "https://url.spec.whatwg.org/#concept-url-parser"],
     ["object-idl", "https://heycam.github.io/webidl/#idl-object"],
+    ["dictionary", "https://heycam.github.io/webidl/#dfn-dictionary"],
+    ["alphanumeric", "https://infra.spec.whatwg.org/#ascii-alphanumeric"],
     [
       "object-html",
       "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-object-element",
@@ -187,7 +179,7 @@ describe("Core — xref", () => {
     const externalDfn2 = doc.querySelector("#externalDfn2 dfn");
     expect(externalDfn1.querySelector("a")).toBeTruthy();
     expect(externalDfn1.querySelector("a").getAttribute("href")).toEqual(
-      "https://heycam.github.io/webidl/#dfn-dictionary"
+      expectedLinks.get("dictionary")
     );
     expect(externalDfn2.querySelector("a")).toBeTruthy();
     expect(externalDfn2.querySelector("a").getAttribute("href")).toEqual(
@@ -311,17 +303,27 @@ describe("Core — xref", () => {
     const body = `
       <section class="informative">
         <section>
-          <p>normative reference: <a id="valid1">list</a></p>
-          <p>informative reference: <a id="valid2">fake informative ref</a></p>
+          <p>informative reference: <a id="valid1">fake inform 1</a></p>
+          <p>normative reference: <a id="valid1n">list</a></p>
         </section>
         <section class="normative">
           <p>an informative reference: <a id="invalid">bearing angle</a> in normative section</p>
+          <p><a id="valid5n">URL parser</a></p>
           <section>
-            <div class="note">
-              <p>informative in nested informative section: <a id="valid4">another fake informative ref</a></p>
+            <div class="example">
+              <p><a id="valid2">fake inform 2</a></p>
+              <p><a id="valid2n">event handler</a></p>
             </div>
+            <div class="note">
+              <p><a id="valid3">fake inform 3</a></p>
+              <p><a id="valid3n">dictionary</a></p>
+            </div>
+            <div class="issue">
+              <p><a id="valid4">fake inform 4</a></p>
+              <p><a id="valid4n">ascii alphanumeric</a></p>
+            </div>
+            <p><a id="valid6n">URL parser</a></p>
           </section>
-          <p>an normative reference: <a id="valid3">URL parser</a></p>
         </section>
       </section>
     `;
@@ -330,23 +332,38 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const link1 = doc.getElementById("valid1");
-    const link2 = doc.getElementById("valid2");
-    const link3 = doc.getElementById("valid3");
-    const link4 = doc.getElementById("valid4");
+    const valid1 = doc.getElementById("valid1");
+    expect(valid1.href).toEqual("https://example.com/#fake-inform-1");
+    expect(valid1.classList.contains("respec-offending-element")).toBeFalsy();
+    const valid1n = doc.getElementById("valid1n");
+    expect(valid1n.href).toEqual(expectedLinks.get("list"));
+    expect(valid1n.classList.contains("respec-offending-element")).toBeFalsy();
+    const valid2 = doc.getElementById("valid2");
+    expect(valid2.href).toEqual("https://example.com/#fake-inform-2");
+    expect(valid2.classList.contains("respec-offending-element")).toBeFalsy();
+    const valid2n = doc.getElementById("valid2n");
+    expect(valid2n.href).toEqual(expectedLinks.get("event handler"));
+    expect(valid2n.classList.contains("respec-offending-element")).toBeFalsy();
+    const valid3 = doc.getElementById("valid3");
+    expect(valid3.href).toEqual("https://example.com/#fake-inform-3");
+    expect(valid3.classList.contains("respec-offending-element")).toBeFalsy();
+    const valid3n = doc.getElementById("valid3n");
+    expect(valid3n.href).toEqual(expectedLinks.get("dictionary"));
+    expect(valid3n.classList.contains("respec-offending-element")).toBeFalsy();
+    const valid4 = doc.getElementById("valid4");
+    expect(valid4.href).toEqual("https://example.com/#fake-inform-4");
+    expect(valid4.classList.contains("respec-offending-element")).toBeFalsy();
+    const valid4n = doc.getElementById("valid4n");
+    expect(valid4n.href).toEqual(expectedLinks.get("alphanumeric"));
+    expect(valid4n.classList.contains("respec-offending-element")).toBeFalsy();
+    const valid5n = doc.getElementById("valid5n");
+    expect(valid5n.href).toEqual(expectedLinks.get("url parser"));
+    expect(valid5n.classList.contains("respec-offending-element")).toBeFalsy();
+    const valid6n = doc.getElementById("valid6n");
+    expect(valid6n.href).toEqual(expectedLinks.get("url parser"));
+    expect(valid6n.classList.contains("respec-offending-element")).toBeFalsy();
+
     const badLink = doc.getElementById("invalid");
-
-    expect(link1.href).toEqual(expectedLinks.get("list"));
-    expect(link1.classList.contains("respec-offending-element")).toBeFalsy();
-    expect(link2.href).toEqual("https://example.com/#fake-informative-ref");
-    expect(link2.classList.contains("respec-offending-element")).toBeFalsy();
-    expect(link3.href).toEqual(expectedLinks.get("url parser"));
-    expect(link3.classList.contains("respec-offending-element")).toBeFalsy();
-    expect(link4.href).toEqual(
-      "https://example.com/#another-fake-informative-ref"
-    );
-    expect(link4.classList.contains("respec-offending-element")).toBeFalsy();
-
     expect(badLink.href).toEqual(
       "https://www.w3.org/TR/css-values-3/#bearing-angle"
     );
@@ -360,9 +377,9 @@ describe("Core — xref", () => {
     expect(normRefs.map(r => r.textContent)).toEqual(["[url]"]);
 
     const informRefs = [...doc.querySelectorAll("#informative-references dt")];
-    expect(informRefs.length).toEqual(3);
+    expect(informRefs.length).toEqual(7);
     expect(informRefs.map(r => r.textContent).join()).toEqual(
-      "[infra],[local],[local-alt]"
+      "[html],[infra],[local-1],[local-2],[local-3],[local-4],[webidl]"
     );
   });
 });
