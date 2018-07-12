@@ -112,6 +112,7 @@ function addDataCiteToTerms(query, results, xrefMap, conf) {
         Object.assign(el.dataset, citeObj);
       });
 
+      // add specs for citation (references section)
       const closestInform = elem.closest(
         ".informative, .note, figure, .example, .issue"
       );
