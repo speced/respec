@@ -46,12 +46,12 @@ function createXrefMap(elems) {
           .replace(/!/g, "")
           .split(" ")
       : [];
+    // if element itself contains data-cite, we don't take inline context into account
     if (datacite !== elem) {
-      // if element itself contains data-cite, we don't take inline context into account
-      const refs = elem.closest("section").querySelectorAll("a.bibref");
-      if (refs) {
-        specs.push(...[...refs].map(el => el.textContent.toLowerCase()));
-      }
+      const refs = [
+        ...elem.closest("section").querySelectorAll("a.bibref"),
+      ].map(el => el.textContent.toLowerCase());
+      specs.push(...refs);
     }
 
     const xrefsForTerm = map.has(term) ? map.get(term) : [];

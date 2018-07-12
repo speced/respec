@@ -344,7 +344,7 @@ describe("Core — xref", () => {
     expect(link4.classList.contains("respec-offending-element")).toBeFalsy();
     expect(link5.classList.contains("respec-offending-element")).toBeFalsy();
   });
-  
+
   it("adds normative and informative references", async () => {
     const body = `
       <section class="informative">
