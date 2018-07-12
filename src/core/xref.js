@@ -126,7 +126,9 @@ function addDataCiteToTerms(query, results, xrefMap, conf) {
         if (normative) {
           conf.normativeReferences.add(cite);
         } else {
-          const msg = `Adding an informative reference to "${cite}" in a normative section`;
+          const msg =
+            `Adding an informative reference to "${term}" from "${cite}" ` +
+            "in a normative section";
           const title = "Error: Informative reference in normative section";
           showInlineError(entry.elem, msg, title);
         }

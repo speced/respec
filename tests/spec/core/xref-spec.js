@@ -307,7 +307,9 @@ describe("Core — xref", () => {
           <p>normative reference: <a id="valid1n">list</a></p>
         </section>
         <section class="normative">
-          <p>an informative reference: <a id="invalid">bearing angle</a> in normative section</p>
+          <p>an informative reference:
+            <a id="invalid">bearing angle</a> in normative section
+          </p>
           <p><a id="valid5n">URL parser</a></p>
           <section>
             <div class="example">
