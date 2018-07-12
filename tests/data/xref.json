@@ -67,6 +67,16 @@
       "comment": "is fake. for testing only. non normative"
     }
   ],
+  "another fake informative ref": [
+    {
+      "spec": "local-alt",
+      "type": "dfn",
+      "normative": false,
+      "uri": "#another-fake-informative-ref",
+      "title": "another fake informative ref",
+      "comment": "is fake. for testing only. non normative"
+    }
+  ],
   "fetch": [
     {
       "spec": "fetch",

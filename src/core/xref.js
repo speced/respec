@@ -112,9 +112,13 @@ function addDataCiteToTerms(query, results, xrefMap, conf) {
         Object.assign(el.dataset, citeObj);
       });
 
+      const closestInform = elem.closest(
+        ".informative, .note, figure, .example"
+      );
       if (
-        elem.closest(".informative, .note, figure, .example") &&
-        !elem.closest(".normative")
+        closestInform &&
+        (!elem.closest(".normative") ||
+          !closestInform.querySelector(".normative"))
       ) {
         conf.informativeReferences.add(cite);
       } else {

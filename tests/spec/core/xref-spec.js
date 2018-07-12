@@ -20,6 +20,10 @@ describe("Core — xref", () => {
       href: "https://example.com/",
       id: "local",
     },
+    "local-alt": {
+      href: "https://example.com/",
+      id: "local-alt",
+    },
   };
   const expectedLinks = new Map([
     [
@@ -306,12 +310,18 @@ describe("Core — xref", () => {
   it("adds normative and informative references", async () => {
     const body = `
       <section class="informative">
-        normative reference: <a id="valid1">list</a>
-        informative reference: <a id="valid2">fake informative ref</a>
-      </section>
-      <section>
-        an informative reference: <a id="invalid">bearing angle</a> in normative section
-        an normative reference: <a id="valid3">URL parser</a>
+        <section>
+          normative reference: <a id="valid1">list</a>
+          informative reference: <a id="valid2">fake informative ref</a>
+        </section>
+        <section class="normative">
+          an informative reference: <a id="invalid">bearing angle</a> in normative section
+          <div class="note">
+            informative in nested informative section:
+            <a id="valid4">another fake informative ref</a>
+          </div>
+          an normative reference: <a id="valid3">URL parser</a>
+        </section>
       </section>
     `;
 
@@ -322,6 +332,7 @@ describe("Core — xref", () => {
     const link1 = doc.getElementById("valid1");
     const link2 = doc.getElementById("valid2");
     const link3 = doc.getElementById("valid3");
+    const link4 = doc.getElementById("valid4");
     const badLink = doc.getElementById("invalid");
 
     expect(link1.href).toEqual(expectedLinks.get("list"));
@@ -330,6 +341,10 @@ describe("Core — xref", () => {
     expect(link2.classList.contains("respec-offending-element")).toBeFalsy();
     expect(link3.href).toEqual(expectedLinks.get("url parser"));
     expect(link3.classList.contains("respec-offending-element")).toBeFalsy();
+    expect(link4.href).toEqual(
+      "https://example.com/#another-fake-informative-ref"
+    );
+    expect(link4.classList.contains("respec-offending-element")).toBeFalsy();
 
     expect(badLink.href).toEqual(
       "https://www.w3.org/TR/css-values-3/#bearing-angle"
@@ -344,7 +359,9 @@ describe("Core — xref", () => {
     expect(normRefs.map(r => r.textContent)).toEqual(["[url]"]);
 
     const informRefs = [...doc.querySelectorAll("#informative-references dt")];
-    expect(informRefs.length).toEqual(2);
-    expect(informRefs.map(r => r.textContent)).toEqual(["[infra]", "[local]"]);
+    expect(informRefs.length).toEqual(3);
+    expect(informRefs.map(r => r.textContent).join()).toEqual(
+      "[infra],[local],[local-alt]"
+    );
   });
 });
