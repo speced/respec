@@ -45,6 +45,7 @@ function createXrefMap(elems) {
           .toLowerCase()
           .replace(/!/g, "")
           .split(" ")
+          .filter(spec => spec.trim())
       : [];
     // if element itself contains data-cite, we don't take inline context into account
     if (datacite !== elem) {

@@ -34,6 +34,7 @@ describe("Core — xref", () => {
       "object-html",
       "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-object-element",
     ],
+    ["exception", "https://heycam.github.io/webidl/#dfn-exception"],
   ]);
 
   it("does nothing if xref is not enabled", async () => {
@@ -45,20 +46,23 @@ describe("Core — xref", () => {
     expect(link.getAttribute("href")).toBeFalsy();
   });
 
-  it("adds link to unique <a> terms", async () => {
-    const body = `<section><a id="external-link">event handler</a></section>`;
+  it("adds link to unique external terms", async () => {
+    const body = `
+      <section>
+        <p id="external-link"><a>event handler</a><p>
+        <p id="external-dfn"><dfn class="externalDFN">URL parser</dfn></p>
+      </section>`;
     const config = { xref: { url: apiURL }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const link = doc.getElementById("external-link");
+    const link = doc.querySelector("#external-link a");
     expect(link.href).toEqual(expectedLinks.get("event handler"));
     expect(link.classList.contains("respec-offending-element")).toBeFalsy();
 
-    // test: adds citation in references section
-    const ref = doc.querySelector("#references dt");
-    expect(ref).toBeTruthy();
-    expect(ref.textContent.toLowerCase()).toEqual("[html]");
+    const dfn = doc.querySelector("#external-dfn dfn a");
+    expect(dfn.href).toEqual(expectedLinks.get("url parser"));
+    expect(dfn.classList.contains("respec-offending-element")).toBeFalsy();
   });
 
   it("fails to add link to non-existing terms", async () => {
@@ -81,11 +85,10 @@ describe("Core — xref", () => {
         <p>As <a data-cite="!infra">ASCII uppercase</a> is valid dfn, it resolves to fragment. a local data-cite (infra) overrides parent's datacite.</p>
 
         <p>As <a data-cite="!infra">ASCII uppercasing</a> doesn't exist in INFRA, it resolves to spec only.</p>
-
-        <p id="dfns">external dfn:
-          <dfn data-cite="!html">event handler</dfn> exists in html.
-          Cannot find <dfn>URL parser</dfn> in service-workers.
-        </p>
+      </section>
+      <section id="dfns" data-cite="service-workers">
+        <p><dfn data-cite="!html">event handler</dfn> exists in html</p>
+        <p>Cannot find <dfn class="externalDFN">URL parser</dfn> in service-workers.</p>
       </section>
     `;
     // using default API url here as xref.json cannot disambiguate
@@ -107,43 +110,41 @@ describe("Core — xref", () => {
     );
 
     const [dfn1, dfn2] = [...doc.querySelectorAll("#dfns dfn")];
+
+    expect(dfn1.classList.contains("respec-offending-element")).toBeFalsy();
     const dfn1link = dfn1.querySelector("a");
     expect(dfn1link).toBeTruthy();
     expect(dfn1link.getAttribute("href")).toEqual(
       expectedLinks.get("event handler")
     );
-    expect(dfn1.classList.contains("respec-offending-element")).toBeFalsy();
 
+    expect(dfn2.classList.contains("respec-offending-element")).toBeTruthy();
+    expect(dfn2.title).toEqual("Error: No matching dfn found.");
     const dfn2link = dfn2.querySelector("a");
     expect(dfn2link).toBeFalsy();
-    expect(dfn2.classList.contains("respec-offending-element")).toBeTruthy();
-
-    const refs = [...doc.querySelectorAll("#references dt")].map(
-      dt => dt.textContent
-    );
-    expect(refs.length).toEqual(3);
-    expect(refs.sort()).toEqual(["[html]", "[infra]", "[service-workers]"]);
   });
 
   it("doesn't lookup for local references externally", async () => {
     const body = `
       <section id="test">
-        <!-- local links have empty el.closest() data-cite -->
-        <section data-cite="">
-          <dfn>local dfn</dfn>
-          <p id="externalDfn1">
-            External DFN <dfn data-cite="webidl">dictionary</dfn>
-          </p>
-          This should be a local link: <a id="local1">local dfn</a>.
-          External link: <a id="external1" data-cite="url">URL parser</a>.
+        <section data-cite=""> <!-- empty data-cite on parent -->
+          <p id="local-dfn-1"><dfn>local one</dfn></p>
+          <p id="local-dfn-2"><dfn data-cite="html#hello">hello</dfn></p>
+          <p id="external-dfn-1"><dfn data-cite="webidl">dictionary</dfn></p>
+          <p id="external-dfn-2"><dfn class="externalDFN">exception</dfn></p>
+          <p id="local-link-1"><a>local one</a></p>
+          <p id="external-link-1"><a data-cite="url">URL parser</a></p>
         </section>
-        This is also a local: <a data-cite="" id="local2">local dfn</a>.
-        <section>
-          <a id="local3">local dfn</a>.
-          Another external link: <a id="external2">event handler</a>.
-          <p id="externalDfn2">
-            Another external dfn: <dfn>fully active</dfn> from html.
+        <section> <!-- no empty data-cite on parent -->
+          <p id="local-dfn-3"><dfn>local two</dfn></p>
+          <p id="local-dfn-4"><dfn data-cite="html#world">world</dfn></p>
+          <p id="external-dfn-3"><dfn class="externalDFN">queue a task</dfn></p>
+          <p id="external-dfn-4"><dfn data-cite="infra">list</dfn></p>
+          <p id="local-link-2" data-cite="html">
+            <a data-cite="">local two</a>
           </p>
+          <p id="local-link-3"><a>local two</a></p>
+          <p id="external-link-2"><a>event handler</a></p>
         </section>
       </section>
     `;
@@ -151,40 +152,46 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const local1 = doc.getElementById("local1");
-    const local2 = doc.getElementById("local2");
-    const local3 = doc.getElementById("local3");
-
-    const links = [...doc.querySelectorAll("#test a")];
-    expect(
-      links.every(
-        link => link.classList.contains("respec-offending-element") === false
-      )
-    ).toBeTruthy();
-
-    expect(local1.getAttribute("href")).toEqual("#dfn-local-dfn");
-    expect(local2.getAttribute("href")).toEqual("#dfn-local-dfn");
-    expect(local3.getAttribute("href")).toEqual("#dfn-local-dfn");
-
-    const external1 = doc.getElementById("external1");
-    const external2 = doc.getElementById("external2");
-    expect(external1.getAttribute("href")).toEqual(
-      expectedLinks.get("url parser")
+    const offendingElements = doc.querySelectorAll(
+      "#test .respec-offending-element"
     );
-    expect(external2.getAttribute("href")).toEqual(
-      expectedLinks.get("event handler")
-    );
+    expect(offendingElements.length).toEqual(0);
 
-    const externalDfn1 = doc.querySelector("#externalDfn1 dfn");
-    const externalDfn2 = doc.querySelector("#externalDfn2 dfn");
-    expect(externalDfn1.querySelector("a")).toBeTruthy();
-    expect(externalDfn1.querySelector("a").getAttribute("href")).toEqual(
-      expectedLinks.get("dictionary")
+    const localDfn1 = doc.querySelector("#local-dfn-1");
+    const localDfn2 = doc.querySelector("#local-dfn-2 a");
+    const externalDfn1 = doc.querySelector("#external-dfn-1 a");
+    const externalDfn2 = doc.querySelector("#external-dfn-2 a");
+    const localLink1 = doc.querySelector("#local-link-1 a");
+    const externalLink1 = doc.querySelector("#external-link-1 a");
+    const localDfn3 = doc.querySelector("#local-dfn-3");
+    const localDfn4 = doc.querySelector("#local-dfn-4 a");
+    const externalDfn3 = doc.querySelector("#external-dfn-3 a");
+    const externalDfn4 = doc.querySelector("#external-dfn-4 a");
+    const localLink2 = doc.querySelector("#local-link-2 a");
+    const localLink3 = doc.querySelector("#local-link-3 a");
+    const externalLink2 = doc.querySelector("#external-link-2 a");
+
+    expect(localDfn1.querySelector("a")).toBeFalsy();
+    expect(localDfn1.querySelector("dfn").id).toEqual("dfn-local-one");
+    expect(localDfn2.href).toEqual(
+      "https://html.spec.whatwg.org/multipage/#hello"
     );
-    expect(externalDfn2.querySelector("a")).toBeTruthy();
-    expect(externalDfn2.querySelector("a").getAttribute("href")).toEqual(
-      "https://html.spec.whatwg.org/multipage/browsers.html#fully-active"
+    expect(externalDfn1.href).toEqual(expectedLinks.get("dictionary"));
+    expect(externalDfn2.href).toEqual(expectedLinks.get("exception"));
+    expect(localLink1.getAttribute("href")).toEqual("#dfn-local-one");
+    expect(externalLink1.href).toEqual(expectedLinks.get("url parser"));
+    expect(localDfn3.querySelector("a")).toBeFalsy();
+    expect(localDfn3.querySelector("dfn").id).toEqual("dfn-local-two");
+    expect(localDfn4.href).toEqual(
+      "https://html.spec.whatwg.org/multipage/#world"
     );
+    expect(externalDfn3.href).toEqual(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#queue-a-task"
+    );
+    expect(externalDfn4.href).toEqual(expectedLinks.get("list"));
+    expect(localLink2.getAttribute("href")).toEqual("#dfn-local-two");
+    expect(localLink3.getAttribute("href")).toEqual("#dfn-local-two");
+    expect(externalLink2.href).toEqual(expectedLinks.get("event handler"));
   });
 
   it("shows error if cannot resolve by data-cite", async () => {
@@ -231,7 +238,7 @@ describe("Core — xref", () => {
 
     expect(five.href).toEqual("");
     expect(five.classList.contains("respec-offending-element")).toBeTruthy();
-    expect(five.title).toEqual("Error: No matching dfn found.");
+    expect(five.title).toEqual("Linking error: not matching <dfn>");
     expect(six.href).toEqual("");
     expect(six.classList.contains("respec-offending-element")).toBeTruthy();
     expect(six.title).toEqual(`Couldn't find a match for "NOT-FOUND".`);
@@ -243,7 +250,7 @@ describe("Core — xref", () => {
         <a data-lt="list">list stuff</a>
       </section>
       <section id="test2">
-        <dfn data-lt="event handler|foo">handling event</dfn>
+        <dfn data-lt="event handler|foo" class="externalDFN">handling event</dfn>
         <a>event handler</a>
         <a>handling event</a>
         <a>foo</a>
@@ -256,24 +263,18 @@ describe("Core — xref", () => {
     const link = doc.querySelector("#test1 a");
     expect(link.getAttribute("href")).toEqual(expectedLinks.get("list"));
 
-    const dfn = doc.querySelector("#test2 dfn");
-    expect(dfn.id).toEqual("dfn-event-handler");
     const links = [...doc.querySelectorAll("#test2 a")];
     expect(links.length).toEqual(4);
-    expect(
-      links.every(link => link.href === expectedLinks.get("event handler"))
-    ).toBeTruthy();
-    expect(
-      links.every(
-        link => link.classList.contains("respec-offending-element") === false
-      )
-    ).toBeTruthy();
+    for (const link of links) {
+      expect(link.href).toEqual(expectedLinks.get("event handler"));
+      expect(link.classList.contains("respec-offending-element")).toBeFalsy();
+    }
   });
 
   it("takes pluralization into account", async () => {
     const body = `
       <section id="test">
-        <dfn data-lt="event handler|event handling">handling event</dfn>
+        <dfn class="externalDFN" data-lt="event handler|event handling">handling event</dfn>
         <a>event handler</a>
         <a>event handlers</a>
         <a>handling event</a>
