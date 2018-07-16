@@ -22,7 +22,7 @@ export async function run(conf, elems) {
   const cache = new IDBCache("xref", ["xrefs"]);
   const { xref } = conf;
   const xrefMap = createXrefMap(elems);
-  const allTerms = collectTerms(xrefMap);
+  const allKeys = collectKeys(xrefMap);
   const apiURL = xref.url ? new URL(xref.url, location.href) : API_URL;
   if (!(apiURL instanceof URL)) {
     throw new TypeError("respecConfig.xref.url must be a valid URL instance");
@@ -31,7 +31,7 @@ export async function run(conf, elems) {
   const {
     found: resultsFromCache,
     notFound: termsToLook,
-  } = await resolveFromCache(allTerms, cache);
+  } = await resolveFromCache(allKeys, cache);
   let fetchedResults = {};
   if (termsToLook.length) {
     fetchedResults = await fetchFromNetwork(termsToLook, apiURL);
@@ -77,11 +77,11 @@ function createXrefMap(elems) {
 }
 
 /**
- * collects terms in a form more usable for querying
+ * collects xref keys in a form more usable for querying
  * @param {Map} xrefs
  * @returns {Array} =[{ term, specs[] }]
  */
-function collectTerms(xrefs) {
+function collectKeys(xrefs) {
   const queryKeys = [...xrefs.entries()].reduce(
     (queryKeys, [term, entries]) => {
       for (const { specs } of entries) {
