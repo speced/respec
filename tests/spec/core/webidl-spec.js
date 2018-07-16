@@ -492,6 +492,7 @@ describe("Core - WebIDL", function() {
       "  /* This one\n" +
       "     has\n" +
       "     three. */\n" +
+      "  \n" +
       "};";
     expect($target.text()).toEqual(text);
     expect($target.find(".idlSectionComment").length).toEqual(1);
