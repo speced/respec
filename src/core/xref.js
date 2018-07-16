@@ -34,8 +34,7 @@ export async function run(conf, elems) {
   } = await resolveFromCache(allTerms, cache);
   let fetchedResults = {};
   if (termsToLook.length) {
-    const fetchQuery = { keys: termsToLook };
-    fetchedResults = await fetchXrefs(fetchQuery, apiURL);
+    fetchedResults = await fetchFromNetwork(termsToLook, apiURL);
     await cacheResults(fetchedResults, cache);
   }
 
@@ -154,7 +153,8 @@ async function resolveFromCache(keys, cache) {
 }
 
 // fetch from network
-async function fetchXrefs(query, url) {
+async function fetchFromNetwork(keys, url) {
+  const query = { keys }; // TODO: add `query.options`
   const options = {
     method: "POST",
     body: JSON.stringify(query),
