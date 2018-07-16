@@ -5,10 +5,13 @@
 // https://github.com/w3c/respec/issues/1662
 
 import { norm as normalize, showInlineError } from "core/utils";
+import IDBCache from "core/idb-cache";
+import merge from "deps/deepmerge";
 
 const API_URL = new URL(
   "https://wt-466c7865b463a6c4cbb820b42dde9e58-0.sandbox.auth0-extend.com/xref-proto-2"
 );
+const CACHE_MAX_AGE = 86400000; // 24 hours
 
 /**
  * main external reference driver
@@ -16,15 +19,28 @@ const API_URL = new URL(
  * @param {Array:Elements} elems possibleExternalLinks
  */
 export async function run(conf, elems) {
+  const cache = new IDBCache("xref", ["xrefs"]);
   const { xref } = conf;
   const xrefMap = createXrefMap(elems);
-  const query = createXrefQuery(xrefMap);
+  const allTerms = collectTerms(xrefMap);
   const apiURL = xref.url ? new URL(xref.url, location.href) : API_URL;
   if (!(apiURL instanceof URL)) {
     throw new TypeError("respecConfig.xref.url must be a valid URL instance");
   }
-  const results = await fetchXrefs(query, apiURL);
-  addDataCiteToTerms(query, results, xrefMap, conf);
+
+  const {
+    found: resultsFromCache,
+    notFound: termsToLook,
+  } = await resolveFromCache(allTerms, cache);
+  let fetchedResults = {};
+  if (termsToLook.length) {
+    const fetchQuery = { keys: termsToLook };
+    fetchedResults = await fetchXrefs(fetchQuery, apiURL);
+    await cacheResults(fetchedResults, cache);
+  }
+
+  const results = merge(fetchedResults, resultsFromCache);
+  addDataCiteToTerms(results, xrefMap, conf);
 }
 
 /**
@@ -37,7 +53,7 @@ function createXrefMap(elems) {
     let term = elem.dataset.lt
       ? elem.dataset.lt.split("|", 1)[0]
       : elem.textContent;
-    term = normalize(term);
+    term = normalize(term).toLowerCase();
 
     let specs = [];
     const datacite = elem.closest("[data-cite]");
@@ -62,11 +78,11 @@ function createXrefMap(elems) {
 }
 
 /**
- * creates a body for POST request to API
+ * collects terms in a form more usable for querying
  * @param {Map} xrefs
- * @returns {Object} { keys: [{ term }] }
+ * @returns {Array} =[{ term, specs[] }]
  */
-function createXrefQuery(xrefs) {
+function collectTerms(xrefs) {
   const queryKeys = [...xrefs.entries()].reduce(
     (queryKeys, [term, entries]) => {
       for (const { specs } of entries) {
@@ -76,7 +92,65 @@ function createXrefQuery(xrefs) {
     },
     new Set()
   );
-  return { keys: [...queryKeys].map(JSON.parse) };
+  return [...queryKeys].map(JSON.parse);
+}
+
+// adds data to cache
+async function cacheResults(data, cache) {
+  await cache.ready;
+  const promises = Object.entries(data).map(([key, value]) =>
+    cache.put(key.toLowerCase(), value)
+  );
+  await cache.put("__CACHE_TIME__", new Date());
+  await Promise.all(promises);
+}
+
+/**
+ * looks for keys in cache and resolves them
+ * @param {Array} keys query keys
+ * @param {IDBCache} cache
+ * @returns {Object}
+ *  @property {Object} found resolved data from cache
+ *  @property {Array} notFound keys not found in cache
+ */
+async function resolveFromCache(keys, cache) {
+  await cache.ready;
+
+  const cacheTime = await cache.match("__CACHE_TIME__");
+  const bustCache = cacheTime && new Date() - cacheTime > CACHE_MAX_AGE;
+  if (bustCache) {
+    await cache.clear();
+    return { found: {}, notFound: keys };
+  }
+
+  const promises = keys.map(({ term }) => cache.match(term.toLowerCase()));
+  const cachedData = await Promise.all(promises);
+  return keys.reduce(resolve, { found: {}, notFound: [] });
+
+  function resolve(collector, key, i) {
+    const data = cachedData[i];
+    if (data && data.length) {
+      const fromCache = data.filter(entry => cacheFilter(entry, key));
+      if (fromCache.length) {
+        const term = key.term.toLowerCase();
+        if (!collector.found[term]) collector.found[term] = [];
+        collector.found[term].push(...fromCache);
+      } else {
+        collector.notFound.push(key);
+      }
+    } else {
+      collector.notFound.push(key);
+    }
+    return collector;
+  }
+
+  function cacheFilter(cacheEntry, key) {
+    let accept = cacheEntry.title.toLowerCase() === key.term.toLowerCase();
+    if (accept && key.specs && key.specs.length) {
+      accept = key.specs.includes(cacheEntry.spec);
+    }
+    return accept;
+  }
 }
 
 // fetch from network
@@ -100,7 +174,7 @@ async function fetchXrefs(query, url) {
  * @param {Map} xrefMap xrefMap
  * @param {Object} conf respecConfig
  */
-function addDataCiteToTerms(query, results, xrefMap, conf) {
+function addDataCiteToTerms(results, xrefMap, conf) {
   for (const [term, entries] of xrefMap) {
     entries.forEach(entry => {
       const result = disambiguate(results[term], entry, term);
