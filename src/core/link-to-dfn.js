@@ -68,6 +68,7 @@ export async function run(conf, doc, cb) {
   });
 
   const possibleExternalLinks = [];
+  const badLinks = [];
 
   const localLinkSelector =
     "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo)";
@@ -133,7 +134,9 @@ export async function run(conf, doc, cb) {
           ".idl:not(.extAttr), dl.methods, dl.attributes, dl.constants, dl.constructors, dl.fields, dl.dictionary-members, span.idlMemberType, span.idlTypedefType, div.idlImplementsDesc"
         ).length
       ) {
-        if (ant.dataset.dfnType !== "xref") {
+        if (ant.dataset.cite === "") {
+          badLinks.push(ant);
+        } else if (ant.dataset.dfnType !== "xref") {
           possibleExternalLinks.push(ant);
         }
         return;
@@ -142,18 +145,22 @@ export async function run(conf, doc, cb) {
     }
   });
 
+  showLinkingError(badLinks);
+
+  // These are additional references that need to be looked up externally.
+  // The `possibleExternalLinks` above doesn't include references that match selectors like
+  //   a[data-cite="spec"], dfn[data-cite="spec"], dfn.externalDFN
   const additionalExternalLinks = [
-    // These are additional references that need to be looked up externally.
-    // The `possibleExternalLinks` above doesn't include references that
-    //   match selectors like `a[data-cite="spec"]`
     ...document.querySelectorAll(
       "a[data-cite]:not([data-cite='']):not([data-cite*='#']), " +
-        "dfn:not([data-cite='']):not([data-cite*='#'])"
+        "dfn[data-cite]:not([data-cite='']):not([data-cite*='#'])"
     ),
-  ].filter(el => {
-    const closest = el.closest("[data-cite]");
-    return !closest || closest.dataset.cite !== "";
-  });
+  ]
+    .filter(el => {
+      const closest = el.closest("[data-cite]");
+      return !closest || closest.dataset.cite !== "";
+    })
+    .concat([...document.querySelectorAll("dfn.externalDFN")]);
 
   if (conf.xref) {
     possibleExternalLinks.push(...additionalExternalLinks);
@@ -161,10 +168,10 @@ export async function run(conf, doc, cb) {
       await addExternalReferences(conf, possibleExternalLinks);
     } catch (error) {
       console.error(error);
-      handleXrefFail(possibleExternalLinks);
+      showLinkingError(possibleExternalLinks);
     }
   } else {
-    handleXrefFail(possibleExternalLinks);
+    showLinkingError(possibleExternalLinks);
   }
 
   linkInlineCitations(doc, conf).then(() => {
@@ -175,7 +182,7 @@ export async function run(conf, doc, cb) {
   });
 }
 
-function handleXrefFail(elems) {
+function showLinkingError(elems) {
   elems.forEach(elem => {
     elem.classList.add("respec-offending-element");
     elem.title = "Linking error: not matching <dfn>";

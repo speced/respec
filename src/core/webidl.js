@@ -294,12 +294,12 @@ function unindentMarkup(text) {
   if (!text) {
     return text;
   }
-  // TODO: use trimEnd if Edge and Firefox support it
+  // TODO: use trimEnd when Edge supports it
   const lines = text.trimRight().split("\n");
   while (lines.length && !lines[0].trim()) {
     lines.shift();
   }
-  const indents = lines.filter(s => s).map(s => s.search(/[^\s]/));
+  const indents = lines.filter(s => s.trim()).map(s => s.search(/[^\s]/));
   const leastIndent = Math.min(...indents);
   return lines.map(s => s.slice(leastIndent)).join("\n");
 }

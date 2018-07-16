@@ -39,13 +39,14 @@ function createXrefMap(elems) {
       : elem.textContent;
     term = normalize(term);
 
+    let specs = [];
     const datacite = elem.closest("[data-cite]");
-    const specs = datacite
-      ? datacite.dataset.cite
-          .toLowerCase()
-          .replace(/!/g, "")
-          .split(" ")
-      : [];
+    if (datacite && datacite.dataset.cite) {
+      specs = datacite.dataset.cite
+        .toLowerCase()
+        .replace(/!/g, "")
+        .split(/\s+/);
+    }
     // if element itself contains data-cite, we don't take inline context into account
     if (datacite !== elem) {
       const refs = [
