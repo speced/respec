@@ -34,7 +34,7 @@ export async function run(conf, elems) {
   const fetchedResults = Object.create(null);
   if (termsToLook.length) {
     Object.assign(fetchedResults, await fetchFromNetwork(termsToLook, apiURL));
-    await cacheResults(fetchedResults, cache);
+    cacheResults(fetchedResults, cache);
   }
 
   // merge results
