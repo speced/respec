@@ -38,15 +38,16 @@ export async function run(conf, elems) {
   }
 
   // merge results
-  const results = Object.keys(resultsFromCache)
-    .concat(Object.keys(fetchedResults))
-    .reduce((results, key) => {
-      const data = (resultsFromCache[key] || []).concat(
-        fetchedResults[key] || []
-      );
-      results[key] = [...new Set(data.map(JSON.stringify))].map(JSON.parse);
-      return results;
-    }, Object.create(null));
+  const uniqueKeys = new Set(
+    Object.keys(resultsFromCache).concat(Object.keys(fetchedResults))
+  );
+  const results = [...uniqueKeys].reduce((results, key) => {
+    const data = (resultsFromCache[key] || []).concat(
+      fetchedResults[key] || []
+    );
+    results[key] = [...new Set(data.map(JSON.stringify))].map(JSON.parse);
+    return results;
+  }, Object.create(null));
 
   addDataCiteToTerms(results, xrefMap, conf);
 }
