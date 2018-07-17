@@ -6,7 +6,6 @@
 
 import { norm as normalize, showInlineError } from "core/utils";
 import IDBCache from "core/idb-cache";
-import merge from "deps/deepmerge";
 
 const API_URL = new URL(
   "https://wt-466c7865b463a6c4cbb820b42dde9e58-0.sandbox.auth0-extend.com/xref-proto-2"
@@ -38,7 +37,17 @@ export async function run(conf, elems) {
     await cacheResults(fetchedResults, cache);
   }
 
-  const results = merge(fetchedResults, resultsFromCache);
+  // merge results
+  const results = Object.keys(resultsFromCache)
+    .concat(Object.keys(fetchedResults))
+    .reduce((results, key) => {
+      const data = (resultsFromCache[key] || []).concat(
+        fetchedResults[key] || []
+      );
+      results[key] = [...new Set(data.map(JSON.stringify))].map(JSON.parse);
+      return results;
+    }, Object.create(null));
+
   addDataCiteToTerms(results, xrefMap, conf);
 }
 
