@@ -1,6 +1,13 @@
 "use strict";
 describe("Core — xref", () => {
   afterAll(flushIframes);
+  beforeEach(async () => {
+    const { Store, clear } = await new Promise(resolve => {
+      require(["deps/idb"], resolve);
+    });
+    const cache = new Store("xref", "xrefs");
+    await clear(cache);
+  });
 
   const apiURL = location.origin + "/tests/data/xref.json";
   const localBiblio = {
