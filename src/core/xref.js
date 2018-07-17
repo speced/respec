@@ -106,7 +106,6 @@ function collectKeys(xrefs) {
 
 // adds data to cache
 async function cacheResults(data, cache) {
-  await cache.ready;
   const promisesToSet = Object.entries(data).map(([key, value]) =>
     IDB.set(key.toLowerCase(), value, cache)
   );
@@ -123,8 +122,6 @@ async function cacheResults(data, cache) {
  *  @property {Array} notFound keys not found in cache
  */
 async function resolveFromCache(keys, cache) {
-  await cache.ready;
-
   const cacheTime = await IDB.get("__CACHE_TIME__", cache);
   const bustCache = cacheTime && new Date() - cacheTime > CACHE_MAX_AGE;
   if (bustCache) {
