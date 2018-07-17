@@ -31,9 +31,9 @@ export async function run(conf, elems) {
     found: resultsFromCache,
     notFound: termsToLook,
   } = await resolveFromCache(allKeys, cache);
-  let fetchedResults = {};
+  const fetchedResults = Object.create(null);
   if (termsToLook.length) {
-    fetchedResults = await fetchFromNetwork(termsToLook, apiURL);
+    Object.assign(fetchedResults, await fetchFromNetwork(termsToLook, apiURL));
     await cacheResults(fetchedResults, cache);
   }
 
@@ -106,11 +106,11 @@ function collectKeys(xrefs) {
 // adds data to cache
 async function cacheResults(data, cache) {
   await cache.ready;
-  const promises = Object.entries(data).map(([key, value]) =>
+  const promisesToSet = Object.entries(data).map(([key, value]) =>
     cache.put(key.toLowerCase(), value)
   );
   await cache.put("__CACHE_TIME__", new Date());
-  await Promise.all(promises);
+  await Promise.all(promisesToSet);
 }
 
 /**
@@ -128,14 +128,14 @@ async function resolveFromCache(keys, cache) {
   const bustCache = cacheTime && new Date() - cacheTime > CACHE_MAX_AGE;
   if (bustCache) {
     await cache.clear();
-    return { found: {}, notFound: keys };
+    return { found: Object.create(null), notFound: keys };
   }
 
-  const promises = keys.map(({ term }) => cache.match(term.toLowerCase()));
-  const cachedData = await Promise.all(promises);
-  return keys.reduce(resolve, { found: {}, notFound: [] });
+  const promisesToGet = keys.map(({ term }) => cache.match(term.toLowerCase()));
+  const cachedData = await Promise.all(promisesToGet);
+  return keys.reduce(separate, { found: Object.create(null), notFound: [] });
 
-  function resolve(collector, key, i) {
+  function separate(collector, key, i) {
     const data = cachedData[i];
     if (data && data.length) {
       const fromCache = data.filter(entry => cacheFilter(entry, key));
