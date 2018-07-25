@@ -62,7 +62,7 @@ export async function runAll(plugs) {
     try {
       await task(respecConfig);
     } catch (err) {
-      pub("error", err);
+      console.error(err);
     }
   }
   pub("plugins-done", respecConfig);
