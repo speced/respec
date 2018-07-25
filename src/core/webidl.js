@@ -723,25 +723,15 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
   }
   return dfns[0];
 }
-var resolveDone;
 
-export const done = new Promise(function(resolve) {
-  resolveDone = resolve;
-});
-
-export function run(conf, doc, cb) {
-  var finish = function() {
-    resolveDone();
-    pub("end", "core/webidl");
-    cb();
-  };
-  var $idl = $("pre.idl", doc);
+export function run(conf) {
+  var $idl = $("pre.idl", document);
   if (!$idl.length) {
-    return finish();
+    return;
   }
   registerHelpers();
-  if (!$(".idl", doc).not("pre").length) {
-    $(doc)
+  if (!$(".idl", document).not("pre").length) {
+    $(document)
       .find("head link")
       .first()
       .before($("<style/>").text(css));
@@ -788,6 +778,5 @@ export function run(conf, doc, cb) {
     $(this).replaceWith($df);
     $df[0].classList.add(...this.classList);
   });
-  doc.normalize();
-  finish();
+  document.normalize();
 }
