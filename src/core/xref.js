@@ -34,10 +34,12 @@ export async function run(conf, elems) {
  */
 function createXrefMap(elems) {
   return elems.reduce((map, elem) => {
+    const isIDL = elem.classList.contains("respec-idl-xref");
     let term = elem.dataset.lt
       ? elem.dataset.lt.split("|", 1)[0]
       : elem.textContent;
     term = normalize(term);
+    if (!isIDL) term = term.toLowerCase();
 
     let specs = [];
     const datacite = elem.closest("[data-cite]");
@@ -55,8 +57,11 @@ function createXrefMap(elems) {
       specs.push(...refs);
     }
 
+    const types = isIDL ? [elem.dataset.xrefType || "idl"] : ["dfn"];
+    const forContext = elem.dataset.xrefFor;
+
     const xrefsForTerm = map.has(term) ? map.get(term) : [];
-    xrefsForTerm.push({ elem, specs });
+    xrefsForTerm.push({ elem, specs, for: forContext, types });
     return map.set(term, xrefsForTerm);
   }, new Map());
 }
@@ -69,8 +74,8 @@ function createXrefMap(elems) {
 function createXrefQuery(xrefs) {
   const queryKeys = [...xrefs.entries()].reduce(
     (queryKeys, [term, entries]) => {
-      for (const { specs } of entries) {
-        queryKeys.add(JSON.stringify({ term, specs })); // only unique
+      for (const { specs, types, for: forContext } of entries) {
+        queryKeys.add(JSON.stringify({ term, specs, types, for: forContext })); // only unique
       }
       return queryKeys;
     },
@@ -148,10 +153,19 @@ function addDataCiteToTerms(query, results, xrefMap, conf) {
 
 // disambiguate fetched results based on context
 function disambiguate(fetchedData, context, term) {
-  const { elem } = context;
-  const specs = context.specs || [];
+  const { elem, specs, types, for: contextFor } = context;
   const data = (fetchedData || []).filter(entry => {
-    return !specs.length || specs.includes(entry.spec);
+    let valid = true;
+    if (specs.length) {
+      valid = specs.includes(entry.spec);
+    }
+    if (valid && types.length && !types.includes("idl")) {
+      valid = types.includes(entry.type);
+    }
+    if (valid && contextFor) {
+      valid = entry.for.includes(contextFor);
+    }
+    return valid;
   });
 
   if (!data.length) {

@@ -18,6 +18,8 @@ import "deps/hyperhtml";
 import { getTextNodes } from "core/utils";
 export const name = "core/inlines";
 
+// const inlineIdlRegex = /^([\w\.]*)\.(\w+)(?:\((.*)\))?$/;
+
 export function run(conf) {
   document.normalize();
   if (!conf.normativeReferences) conf.normativeReferences = new Set();
@@ -38,6 +40,7 @@ export function run(conf) {
   const rx = new RegExp(
     "(\\bMUST(?:\\s+NOT)?\\b|\\bSHOULD(?:\\s+NOT)?\\b|\\bSHALL(?:\\s+NOT)?\\b|" +
       "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +
+      "(?:{{3}.*}{3})|" +
       "(?:\\[\\[(?:!|\\\\)?[A-Za-z0-9\\.-]+\\]\\])" +
       (abbrRx ? `|${abbrRx}` : "") +
       ")"
@@ -65,6 +68,19 @@ export function run(conf) {
           );
           // remember which ones were used
           conf.respecRFC2119[matched] = true;
+        } else if (conf.xref && matched.startsWith("{{{")) {
+          // External IDL references (xref)
+          const ref = matched
+            .replace(/^\{{3}/, "")
+            .replace(/\}{3}$/, "")
+            .trim();
+          if (ref.startsWith("\\")) {
+            df.appendChild(
+              document.createTextNode(`{{{${ref.replace(/^\\/, "")}}}}`)
+            );
+          } else {
+            df.appendChild(generateIDLMarkup(ref));
+          }
         } else if (matched.startsWith("[[")) {
           // BIBREF
           let ref = matched;
@@ -108,4 +124,57 @@ export function run(conf) {
     }
     txt.parentNode.replaceChild(df, txt);
   }
+}
+
+function generateIDLMarkup(ref) {
+  const { type, base, member, args } = parseInlineIDL(ref);
+
+  if (!type) {
+    return hyperHTML`<code><a class="respec-idl-xref">${base}</a></code>`;
+  }
+
+  const code = hyperHTML`<code><a
+      class="respec-idl-xref">${base}</a>.<a
+      data-xref-type="${type}"
+      data-xref-for="${base}"
+      class="respec-idl-xref">${member}</a></code>`;
+
+  // type: base.attribute
+  if (type === "attribute") return code;
+
+  // base.method(args)
+  if (type === "method") {
+    code.appendChild(document.createTextNode("("));
+    args.forEach((arg, i, all) => {
+      code.appendChild(hyperHTML`<var>${arg}</var>`);
+      if (i !== all.length - 1) {
+        code.appendChild(document.createTextNode(", "));
+      }
+    });
+    code.appendChild(document.createTextNode(")"));
+  }
+  return code;
+}
+
+function parseInlineIDL(str) {
+  const result = Object.create(null);
+  let splitted = str.split("(", 1);
+  if (splitted.length > 1) {
+    // is method
+    result.args = splitted
+      .pop()
+      .replace(/\)$/, "")
+      .split(/,\s*/)
+      .filter(s => s);
+    splitted = splitted.join("").split(".");
+    result.type = "method";
+    result.member = splitted.pop();
+  }
+  splitted = splitted.join("").split(".");
+  if (!result.member && splitted.length > 1) {
+    result.member = splitted.pop();
+    result.type = "attribute";
+  }
+  result.base = splitted.join(".");
+  return result;
 }
