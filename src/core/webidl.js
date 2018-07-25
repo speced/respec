@@ -765,8 +765,9 @@ export function run(conf) {
       .forEach(elem => {
         const title = elem.dataset.title.toLowerCase();
         // Select the nearest ancestor element that can contain members.
-        const parent = elem.parentElement
-          .closest(".idlDictionary,.idlEnum,.idlException,.idlInterface");
+        const parent = elem.parentElement.closest(
+          ".idlDictionary,.idlEnum,.idlException,.idlInterface"
+        );
         if (parent) {
           elem.dataset.dfnFor = parent.dataset.title.toLowerCase();
         }
