@@ -10,6 +10,12 @@ describe("Core — xref", () => {
       href: "https://www.w3.org/TR/service-workers-1/",
     },
     infra: { id: "INFRA", href: "https://infra.spec.whatwg.org/" },
+    "credential-management": { aliasOf: "credential-management-1" },
+    "credential-management-1": {
+      href: "https://www.w3.org/TR/credential-management-1/",
+      title: "Credential Management Level 1",
+      id: "credential-management-1",
+    },
     "local-1": { id: "local-1", href: "https://example.com/" },
     "local-2": { id: "local-2", href: "https://example.com/" },
     "local-3": { id: "local-3", href: "https://example.com/" },
@@ -35,6 +41,38 @@ describe("Core — xref", () => {
       "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-object-element",
     ],
     ["exception", "https://heycam.github.io/webidl/#dfn-exception"],
+    [
+      "Window",
+      "https://html.spec.whatwg.org/multipage/window-object.html#window",
+    ],
+    ["Window.event", "https://dom.spec.whatwg.org/#dom-window-event"],
+    [
+      "PermissionStatus.[[query]]",
+      "https://www.w3.org/TR/permissions/#dom-permissionstatus-query-slot",
+    ],
+    ["PermissionStatus", "https://www.w3.org/TR/permissions/#permissionstatus"],
+    [
+      "EventTarget.addEventListener",
+      "https://dom.spec.whatwg.org/#dom-eventtarget-addeventlistener",
+    ],
+    ["EventTarget", "https://dom.spec.whatwg.org/#eventtarget"],
+    [
+      "Credential.[[type]]",
+      "https://www.w3.org/TR/credential-management-1/#dom-credential-type-slot",
+    ],
+    ["Credential", "https://www.w3.org/TR/credential-management-1/#credential"],
+    [
+      "Credential.[[CollectFromCredentialStore]]",
+      "https://www.w3.org/TR/credential-management-1/#dom-credential-collectfromcredentialstore-slot",
+    ],
+    [
+      "PublicKeyCredential.[[type]]",
+      "https://www.w3.org/TR/webauthn/#dom-publickeycredential-type-slot",
+    ],
+    [
+      "PublicKeyCredential",
+      "https://www.w3.org/TR/webauthn/#publickeycredential",
+    ],
   ]);
 
   it("does nothing if xref is not enabled", async () => {
@@ -417,5 +455,114 @@ describe("Core — xref", () => {
     expect(informRefs.map(r => r.textContent).join()).toEqual(
       "[html],[infra],[local-1],[local-2],[local-3],[local-4],[webidl]"
     );
+  });
+
+  describe("inline IDL references", () => {
+    it("ignores inlines starting with backslash", async () => {
+      const body = `<section><p id="test">{{{\\PASS }}}</p></section>`;
+      const config = { xref: { url: apiURL } };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+      const el = doc.getElementById("test");
+      expect(el.querySelector("code a")).toBeFalsy();
+      expect(el.textContent).toEqual("{{{PASS}}}");
+    });
+
+    it("links inline IDL references", async () => {
+      const body = `
+      <section id="test">
+        <p id="link1">{{{ Window }}}</p>
+        <p id="link2">{{{ [[query]] }}}</p>
+        <p id="link3">{{{ [[type]] }}} is ambiguous.</p>
+      </section>
+      `;
+      const config = { xref: { url: apiURL }, localBiblio };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+
+      const link1 = doc.querySelector("#link1 code a");
+      expect(link1.href).toEqual(expectedLinks.get("Window"));
+
+      const link2 = doc.querySelector("#link2 code a");
+      expect(link2.href).toEqual(
+        expectedLinks.get("PermissionStatus.[[query]]")
+      );
+      expect(link2.textContent).toEqual("[[query]]");
+
+      const link3 = doc.querySelector("#link3 code a");
+      expect(link3.href).toBeFalsy();
+      expect(link3.title).toEqual("Error: Linking an ambiguous dfn.");
+    });
+
+    it("links methods", async () => {
+      const body = `
+      <section id="test">
+        <p id="link1">{{{ addEventListener(type, callback) }}}</p>
+        <p id="link2">{{{ EventTarget.addEventListener(type, callback) }}}</p>
+        <p id="link3">{{{ [[CollectFromCredentialStore]](options, sameOriginWithAncestors) }}} is ambiguous</p>
+        <p id="link4">{{{ Credential.[[CollectFromCredentialStore]](options, sameOriginWithAncestors) }}}</p>
+      </section>
+      `;
+      const config = { xref: { url: apiURL }, localBiblio };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+
+      const link1 = doc.querySelector("#link1 code a");
+      expect(link1.href).toEqual(
+        expectedLinks.get("EventTarget.addEventListener")
+      );
+      const vars1 = [...doc.querySelectorAll("#link1 var")];
+      expect(vars1.length).toEqual(2);
+      expect(vars1[0].textContent).toEqual("type");
+      expect(vars1[1].textContent).toEqual("callback");
+
+      const [link2a, link2b] = [...doc.querySelectorAll("#link2 code a")];
+      expect(link2a.href).toEqual(expectedLinks.get("EventTarget"));
+      expect(link2b.href).toEqual(
+        expectedLinks.get("EventTarget.addEventListener")
+      );
+      const vars2 = [...doc.querySelectorAll("#link2 var")];
+      expect(vars2.length).toEqual(2);
+      expect(vars2[0].textContent).toEqual("type");
+      expect(vars2[1].textContent).toEqual("callback");
+
+      const link3 = doc.querySelector("#link3 code a");
+      expect(link3.href).toEqual("");
+      expect(link3.title).toEqual("Error: Linking an ambiguous dfn.");
+
+      const [link4a, link4b] = [...doc.querySelectorAll("#link4 code a")];
+      expect(link4a.href).toEqual(expectedLinks.get("Credential"));
+      expect(link4b.href).toEqual(
+        expectedLinks.get("Credential.[[CollectFromCredentialStore]]")
+      );
+    });
+
+    it("links attributes", async () => {
+      const body = `
+      <section>
+        <p id="link1">{{{Window.event}}}</p>
+        <p id="link2">{{{ Credential.[[type]] }}}</p>
+        <p id="link3">{{{ PublicKeyCredential.[[type]] }}}</p>
+      </section>
+      `;
+      const config = { xref: { url: apiURL }, localBiblio };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+
+      const [link1a, link1b] = [...doc.querySelectorAll("#link1 code a")];
+      expect(link1a.href).toEqual(expectedLinks.get("Window"));
+      expect(link1b.href).toEqual(expectedLinks.get("Window.event"));
+
+      // the base "Credential" is used to disambiguate as "forContext"
+      const [link2a, link2b] = [...doc.querySelectorAll("#link2 code a")];
+      expect(link2a.href).toEqual(expectedLinks.get("Credential"));
+      expect(link2b.href).toEqual(expectedLinks.get("Credential.[[type]]"));
+
+      const [link3a, link3b] = [...doc.querySelectorAll("#link3 code a")];
+      expect(link3a.href).toEqual(expectedLinks.get("PublicKeyCredential"));
+      expect(link3b.href).toEqual(
+        expectedLinks.get("PublicKeyCredential.[[type]]")
+      );
+    });
   });
 });

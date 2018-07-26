@@ -37,14 +37,13 @@
       "title": "dictionary"
     }
   ],
-  "URL parser": [
+  "url parser": [
     {
       "spec": "url",
       "type": "dfn",
       "normative": true,
       "uri": "#concept-url-parser",
-      "title": "URL parser",
-      "comment": "mixed case dfn title"
+      "title": "URL parser"
     }
   ],
   "object": [
@@ -55,6 +54,14 @@
       "uri": "iframe-embed-object.html#the-object-element",
       "title": "object",
       "comment": "easy disambiguate with data-cite"
+    },
+    {
+      "spec": "url",
+      "type": "dfn",
+      "for": ["url"],
+      "normative": true,
+      "uri": "#concept-url-object",
+      "title": "object"
     },
     {
       "spec": "webidl",
@@ -140,6 +147,125 @@
       "normative": true,
       "uri": "#service-worker-global-scope-fetch-event",
       "title": "fetch"
+    }
+  ],
+  "Window": [
+    {
+      "spec": "html",
+      "type": "interface",
+      "normative": true,
+      "uri": "window-object.html#window",
+      "title": "Window"
+    }
+  ],
+  "event": [
+    {
+      "spec": "dom",
+      "type": "attribute",
+      "for": ["Window"],
+      "normative": true,
+      "uri": "#dom-window-event",
+      "title": "event"
+    }
+  ],
+  "[[query]]": [
+    {
+      "spec": "permissions",
+      "type": "attribute",
+      "for": ["PermissionStatus"],
+      "normative": true,
+      "uri": "#dom-permissionstatus-query-slot",
+      "title": "[[query]]"
+    }
+  ],
+  "PermissionStatus": [
+    {
+      "spec": "permissions",
+      "type": "interface",
+      "normative": true,
+      "uri": "#permissionstatus",
+      "title": "PermissionStatus"
+    }
+  ],
+  "addEventListener(type, callback)": [
+    {
+      "spec": "dom",
+      "type": "method",
+      "for": ["EventTarget"],
+      "normative": true,
+      "uri": "#dom-eventtarget-addeventlistener",
+      "title": "addEventListener(type, callback)"
+    }
+  ],
+  "EventTarget": [
+    {
+      "spec": "dom",
+      "type": "interface",
+      "normative": true,
+      "uri": "#eventtarget",
+      "title": "EventTarget"
+    }
+  ],
+  "[[type]]": [
+    {
+      "spec": "credential-management",
+      "type": "attribute",
+      "for": ["Credential"],
+      "normative": true,
+      "uri": "#dom-credential-type-slot",
+      "title": "[[type]]"
+    },
+    {
+      "spec": "webauthn",
+      "type": "attribute",
+      "for": ["PublicKeyCredential"],
+      "normative": true,
+      "uri": "#dom-publickeycredential-type-slot",
+      "title": "[[type]]"
+    }
+  ],
+  "Credential": [
+    {
+      "spec": "credential-management",
+      "type": "interface",
+      "normative": true,
+      "uri": "#credential",
+      "title": "Credential"
+    }
+  ],
+  "PublicKeyCredential": [
+    {
+      "spec": "webauthn",
+      "type": "interface",
+      "normative": true,
+      "uri": "#publickeycredential",
+      "title": "PublicKeyCredential"
+    }
+  ],
+  "[[CollectFromCredentialStore]](options, sameOriginWithAncestors)": [
+    {
+      "spec": "credential-management",
+      "type": "method",
+      "for": ["Credential"],
+      "normative": true,
+      "uri": "#dom-credential-collectfromcredentialstore-slot",
+      "title": "[[CollectFromCredentialStore]](options, sameOriginWithAncestors)"
+    },
+    {
+      "spec": "credential-management",
+      "type": "method",
+      "for": ["PasswordCredential"],
+      "normative": true,
+      "uri": "#dom-passwordcredential-collectfromcredentialstore-slot",
+      "title": "[[CollectFromCredentialStore]](options, sameOriginWithAncestors)"
+    },
+    {
+      "spec": "credential-management",
+      "type": "method",
+      "for": ["FederatedCredential"],
+      "normative": true,
+      "uri": "#dom-federatedcredential-collectfromcredentialstore-slot",
+      "title": "[[CollectFromCredentialStore]](options, sameOriginWithAncestors)"
     }
   ]
 }
