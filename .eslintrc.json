@@ -11,10 +11,7 @@
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 8,
-    "ecmaFeatures": {
-      "experimentalObjectRestSpread": true
-    }
+    "ecmaVersion": 2018
   },
   "rules": {
     "indent": 0,
