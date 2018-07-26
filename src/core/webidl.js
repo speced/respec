@@ -278,10 +278,10 @@ var operationNames = {};
 var idlPartials = {};
 
 // Takes the result of WebIDL2.parse(), an array of definitions.
-function makeMarkup(conf, parse) {
+function makeMarkup(parse) {
   var pre = document.createElement("pre");
   pre.classList.add("def", "idl");
-  pre.innerHTML = parse.map(defn => writeDefinition(defn)).join("");
+  pre.innerHTML = parse.map(writeDefinition).join("");
   return pre;
 }
 
@@ -723,71 +723,61 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
   }
   return dfns[0];
 }
-var resolveDone;
 
-export const done = new Promise(function(resolve) {
-  resolveDone = resolve;
-});
-
-export function run(conf, doc, cb) {
-  var finish = function() {
-    resolveDone();
-    pub("end", "core/webidl");
-    cb();
-  };
-  var $idl = $("pre.idl", doc);
-  if (!$idl.length) {
-    return finish();
+export function run(conf) {
+  const idls = document.querySelectorAll("pre.idl");
+  if (!idls.length) {
+    return;
   }
   registerHelpers();
-  if (!$(".idl", doc).not("pre").length) {
-    $(doc)
-      .find("head link")
-      .first()
-      .before($("<style/>").text(css));
+  if (!document.querySelector(".idl:not(pre)")) {
+    const link = document.querySelector("head link");
+    if (link) {
+      const style = document.createElement("style");
+      style.textContent = css;
+      link.parentElement.insertBefore(style, link);
+    }
   }
 
-  $idl.each(function() {
-    var parse;
+  idls.forEach(idlElement => {
+    let parse;
     try {
-      const idl = unindentMarkup(this.textContent);
+      const idl = unindentMarkup(idlElement.textContent);
       parse = webidl2.parse(idl);
     } catch (e) {
       pub(
         "error",
         `Failed to parse WebIDL: ${e.message}.
         <details>
-        <pre>${normalizePadding(this.textContent)}\n ${e}</pre>
+        <pre>${normalizePadding(idlElement.textContent)}\n ${e}</pre>
         </details>`
       );
       // Skip this <pre> and move on to the next one.
       return;
     }
-    linkDefinitions(parse, conf.definitionMap, "", this);
-    var $df = $(makeMarkup(conf, parse));
-    $df.attr({ id: this.id });
-    $df
-      .find(
+    linkDefinitions(parse, conf.definitionMap, "", idlElement);
+    const newElement = makeMarkup(parse);
+    newElement.setAttribute("id", idlElement.id);
+    newElement
+      .querySelectorAll(
         ".idlAttribute,.idlCallback,.idlConst,.idlDictionary,.idlEnum,.idlException,.idlField,.idlInterface,.idlMember,.idlMethod,.idlMaplike,.idlIterable,.idlTypedef"
       )
-      .each(function() {
-        var elem = $(this);
-        var title = elem.attr("data-title").toLowerCase();
+      .forEach(elem => {
+        const title = elem.dataset.title.toLowerCase();
         // Select the nearest ancestor element that can contain members.
-        var parent = elem
-          .parent()
-          .closest(".idlDictionary,.idlEnum,.idlException,.idlInterface");
-        if (parent.length) {
-          elem.attr("data-dfn-for", parent.attr("data-title").toLowerCase());
+        const parent = elem.parentElement.closest(
+          ".idlDictionary,.idlEnum,.idlException,.idlInterface"
+        );
+        if (parent) {
+          elem.dataset.dfnFor = parent.dataset.title.toLowerCase();
         }
         if (!conf.definitionMap[title]) {
           conf.definitionMap[title] = [];
         }
-        conf.definitionMap[title].push(elem);
+        conf.definitionMap[title].push($(elem));
       });
-    $(this).replaceWith($df);
-    $df[0].classList.add(...this.classList);
+    idlElement.parentElement.replaceChild(newElement, idlElement);
+    newElement.classList.add(...idlElement.classList);
   });
-  doc.normalize();
-  finish();
+  document.normalize();
 }
