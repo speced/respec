@@ -9,6 +9,17 @@ import { norm as normalize, showInlineError } from "core/utils";
 const API_URL = new URL(
   "https://wt-466c7865b463a6c4cbb820b42dde9e58-0.sandbox.auth0-extend.com/xref-proto-2"
 );
+const IDL_TYPES = new Set([
+  "attribute",
+  "dict-member",
+  "dictionary",
+  "enum",
+  "enum-value",
+  "interface",
+  "method",
+  "_IDL_",
+]);
+const CONCEPT_TYPES = new Set(["dfn", "event", "element", "_CONCEPT_"]);
 
 /**
  * main external reference driver
@@ -57,8 +68,8 @@ function createXrefMap(elems) {
       specs.push(...refs);
     }
 
-    const types = isIDL ? [elem.dataset.xrefType || "idl"] : ["dfn"];
-    const forContext = elem.dataset.xrefFor;
+    const types = [isIDL ? elem.dataset.xrefType || "_IDL_" : "_CONCEPT_"];
+    const { xrefFor: forContext } = elem.dataset;
 
     const xrefsForTerm = map.has(term) ? map.get(term) : [];
     xrefsForTerm.push({ elem, specs, for: forContext, types });
@@ -159,8 +170,12 @@ function disambiguate(fetchedData, context, term) {
     if (specs.length) {
       valid = specs.includes(entry.spec);
     }
-    if (valid && types.length && !types.includes("idl")) {
+    if (valid && types.length) {
       valid = types.includes(entry.type);
+      if (!valid) {
+        const validTypes = types.includes("_IDL_") ? IDL_TYPES : CONCEPT_TYPES;
+        valid = [...validTypes].some(type => type === entry.type);
+      }
     }
     if (valid && contextFor) {
       valid = entry.for.includes(contextFor);

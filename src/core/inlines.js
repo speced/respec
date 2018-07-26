@@ -18,8 +18,6 @@ import "deps/hyperhtml";
 import { getTextNodes } from "core/utils";
 export const name = "core/inlines";
 
-// const inlineIdlRegex = /^([\w\.]*)\.(\w+)(?:\((.*)\))?$/;
-
 export function run(conf) {
   document.normalize();
   if (!conf.normativeReferences) conf.normativeReferences = new Set();
@@ -39,8 +37,8 @@ export function run(conf) {
   const txts = getTextNodes(document.body, ["pre"]);
   const rx = new RegExp(
     "(\\bMUST(?:\\s+NOT)?\\b|\\bSHOULD(?:\\s+NOT)?\\b|\\bSHALL(?:\\s+NOT)?\\b|" +
-      "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +
-      "(?:{{3}.*}{3})|" +
+    "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +
+    "(?:{{3}.*}{3})|" + // inline IDL external references (core/xref)
       "(?:\\[\\[(?:!|\\\\)?[A-Za-z0-9\\.-]+\\]\\])" +
       (abbrRx ? `|${abbrRx}` : "") +
       ")"
@@ -127,23 +125,32 @@ export function run(conf) {
 }
 
 function generateIDLMarkup(ref) {
-  const { type, base, member, args } = parseInlineIDL(ref);
+  const { base, attribute, method, args } = parseInlineIDL(ref);
 
-  if (!type) {
+  if (!method && !attribute) {
     return hyperHTML`<code><a class="respec-idl-xref">${base}</a></code>`;
   }
 
-  const code = hyperHTML`<code><a
-      class="respec-idl-xref">${base}</a>.<a
-      data-xref-type="${type}"
-      data-xref-for="${base}"
-      class="respec-idl-xref">${member}</a></code>`;
+  const code = hyperHTML`<code></code>`;
 
-  // type: base.attribute
-  if (type === "attribute") return code;
+  if (base) {
+    code.appendChild(hyperHTML`<a class="respec-idl-xref">${base}</a>`);
+    code.appendChild(document.createTextNode("."));
+  }
 
-  // base.method(args)
-  if (type === "method") {
+  if (attribute) {
+    // type: base.attribute
+    code.appendChild(hyperHTML`<a class="respec-idl-xref"
+      data-xref-type="attribute" data-xref-for="${base}">${attribute}</a>`);
+    return code;
+  }
+
+  if (method) {
+    // base.method(args)
+    const methodName = method.split("(", 1)[0];
+    code.appendChild(hyperHTML`<a class="respec-idl-xref"
+      data-xref-type="method" data-xref-for="${base}"
+      data-lt="${method}">${methodName}</a>`);
     code.appendChild(document.createTextNode("("));
     args.forEach((arg, i, all) => {
       code.appendChild(hyperHTML`<var>${arg}</var>`);
@@ -152,28 +159,21 @@ function generateIDLMarkup(ref) {
       }
     });
     code.appendChild(document.createTextNode(")"));
+    return code;
   }
+
   return code;
 }
 
 function parseInlineIDL(str) {
   const result = Object.create(null);
-  let splitted = str.split("(", 1);
-  if (splitted.length > 1) {
-    // is method
-    result.args = splitted
-      .pop()
-      .replace(/\)$/, "")
-      .split(/,\s*/)
-      .filter(s => s);
-    splitted = splitted.join("").split(".");
-    result.type = "method";
-    result.member = splitted.pop();
+  const splitted = str.split(".");
+  if (/\(.*\)$/.test(splitted[splitted.length - 1])) {
+    result.method = splitted.pop();
+    result.args = result.method.match(/\((.*)\)/)[1].split(/,\s*/);
   }
-  splitted = splitted.join("").split(".");
-  if (!result.member && splitted.length > 1) {
-    result.member = splitted.pop();
-    result.type = "attribute";
+  if (splitted.length > 1 && !result.method) {
+    result.attribute = splitted.pop();
   }
   result.base = splitted.join(".");
   return result;

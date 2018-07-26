@@ -33,7 +33,7 @@ describe("Core — xref", () => {
     ],
     ["uppercase", "https://infra.spec.whatwg.org/#ascii-uppercase"],
     ["url parser", "https://url.spec.whatwg.org/#concept-url-parser"],
-    ["object-idl", "https://heycam.github.io/webidl/#idl-object"],
+    ["object@url", "https://url.spec.whatwg.org/#concept-url-object"],
     ["dictionary", "https://heycam.github.io/webidl/#dfn-dictionary"],
     ["alphanumeric", "https://infra.spec.whatwg.org/#ascii-alphanumeric"],
     [
@@ -167,10 +167,10 @@ describe("Core — xref", () => {
     // https://github.com/w3c/respec/pull/1750
     const body = `
       <section id="test">
-        <p data-cite="webidl"><a id="one">object</a></p>
+        <p data-cite="url"><a id="one">object</a></p>
         <p data-cite="html"><a id="two">object</a></p>
         <p data-cite="html">
-          <a id="three" data-cite="webidl">object</a> (overrides parent)
+          <a id="three" data-cite="url">object</a> (overrides parent)
           <a id="four">object</a> (uses parent's data-cite - html)
         </p>
         <p><a id="five" data-cite="NOT-FOUND">object</a></p>
@@ -181,13 +181,13 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     expect(doc.getElementById("one").href).toEqual(
-      expectedLinks.get("object-idl")
+      expectedLinks.get("object@url")
     );
     expect(doc.getElementById("two").href).toEqual(
       expectedLinks.get("object-html")
     );
     expect(doc.getElementById("three").href).toEqual(
-      expectedLinks.get("object-idl")
+      expectedLinks.get("object@url")
     );
     expect(doc.getElementById("four").href).toEqual(
       expectedLinks.get("object-html")
@@ -334,19 +334,19 @@ describe("Core — xref", () => {
     const body = `
       <section id="test">
         <section>
-          <p>Uses [[WEBIDL]] to create context for <a id="one">object</a></p>
+          <p>Uses [[url]] to create context for <a id="one">object</a></p>
         </section>
         <section>
           <p>Uses [[html]] to create context for <a id="two">object</a></p>
         </section>
         <section>
-          <p>Uses [[html]] and [[webidl]] to create context for
+          <p>Uses [[html]] and [[url]] to create context for
             <a id="three">object</a>. It fails as it's defined in both.
           </p>
         </section>
         <section>
           <p>But data-cite on element itself wins.
-            <a id="four">object</a> uses [[webidl]],
+            <a id="four">object</a> uses [[url]],
             whereas <a data-cite="html" id="five">object</a> uses html.
           </p>
         </section>
@@ -356,7 +356,7 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const expectedLink1 = "https://heycam.github.io/webidl/#idl-object";
+    const expectedLink1 = "https://url.spec.whatwg.org/#concept-url-object";
     const expectedLink2 =
       "https://html.spec.whatwg.org/multipage/iframe-embed-object.html" +
       "#the-object-element";
