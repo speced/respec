@@ -73,7 +73,7 @@
     "server": "npm start",
     "snyk": "snyk",
     "snyk-protect": "snyk protect",
-    "start": "npm run build:components && http-server",
+    "start": "npm run build:components && http-server -c-1",
     "test:build": "mocha ./tests/test-build.js",
     "test:headless": "node ./tests/headless.js",
     "test:karma": "npm run karma",
