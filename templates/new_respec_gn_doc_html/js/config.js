@@ -20,7 +20,8 @@ var respecConfig = {
   github: "https://github.com/Geonovum/whitepaper-standaarden",
   issueBase: "https://github.com/Geonovum/whitepaper-standaarden/issues/",
   license: 'cc-by-nd',
-  // logos: [], // Geef een lege array op voor logo's
+  // logos: [], // Geef een lege array op als er geen Geonovum logo moet staan
+  doJsonLd: true,
   localBiblio: {
     "DOC-REF1": {
       href: "http://example.com",
