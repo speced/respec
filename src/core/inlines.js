@@ -167,7 +167,7 @@ function generateIDLMarkup(ref) {
 
 function parseInlineIDL(str) {
   const result = Object.create(null);
-  const splitted = str.split(".");
+  const splitted = str.split(/\b\.\b|\.(?=\[\[)/);
   if (/\(.*\)$/.test(splitted[splitted.length - 1])) {
     result.method = splitted.pop();
     result.args = result.method.match(/\((.*)\)/)[1].split(/,\s*/);
