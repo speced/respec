@@ -11,7 +11,6 @@ const unlink = promisify(fs.unlink);
 
 const srcDesMap = new Map([
   ["./node_modules/clipboard/dist/clipboard.js", "./js/deps/"],
-  ["./node_modules/domReady/domReady.js", "./js/deps/"],
   [
     "./node_modules/handlebars/dist/handlebars.runtime.js",
     "./js/deps/handlebars.js",
