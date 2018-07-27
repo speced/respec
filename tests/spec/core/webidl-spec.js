@@ -208,9 +208,9 @@ describe("Core - WebIDL", function() {
     ).toEqual("boolean");
   });
 
-  it("should handle constants", function(done) {
-    var $target = $("#const-basic", doc);
-    var text =
+  it("should handle constants", () => {
+    const target = doc.getElementById("const-basic");
+    const text =
       "interface ConstTest {\n" +
       "  // 1\n" +
       "  const boolean test = true;\n" +
@@ -252,48 +252,46 @@ describe("Core - WebIDL", function() {
       "  // 19\n" +
       "  [Something] const short extAttr = NaN;\n" +
       "};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlConst").length).toEqual(19);
-    var $const1 = $target.find(".idlConst").first();
-    expect($const1.find(".idlConstType").text()).toEqual(" boolean");
-    expect($const1.find(".idlConstName").text()).toEqual("test");
-    expect($const1.find(".idlConstValue").text()).toEqual("true");
+    expect(target.textContent).toEqual(text);
+    const consts = [...target.getElementsByClassName("idlConst")];
+    expect(consts.length).toEqual(19);
+    const const1 = target.querySelector(".idlConst");
+    expect(const1.querySelector(".idlConstType").textContent).toEqual(" boolean");
+    expect(const1.querySelector(".idlConstName").textContent).toEqual("test");
+    expect(const1.querySelector(".idlConstValue").textContent).toEqual("true");
     expect(
-      $target
-        .find(".idlConst")
-        .last()
-        .find(".extAttr").length
+      consts[consts.length - 1].querySelectorAll(".extAttr").length
     ).toEqual(1);
 
     // Links and IDs.
     expect(
-      $target
-        .find(":contains('rambaldi')")
-        .filter("a")
-        .attr("href")
+      consts
+        .filter(c => c.textContent.includes("rambaldi"))[0]
+        .querySelector(".idlConstName a")
+        .getAttribute("href")
     ).toEqual("#dom-consttest-rambaldi");
     expect(
-      $target
-        .find(":contains('rambaldi')")
-        .parents(".idlConst")
-        .attr("id")
+      consts
+        .filter(c => c.textContent.includes("rambaldi"))[0]
+        .getAttribute("id")
     ).toEqual("idl-def-consttest-rambaldi");
     expect(
-      $target
-        .find(":contains('why')")
-        .filter("a")
-        .attr("href")
+      consts
+        .filter(c => c.textContent.includes("why"))[0]
+        .querySelector(".idlConstName a")
+        .getAttribute("href")
     ).toEqual("#dom-consttest-why");
     expect(
-      $target
-        .find(":contains('inf')")
-        .filter("a")
-        .attr("href")
+      consts
+        .filter(c => c.textContent.includes("inf"))[0]
+        .querySelector(".idlConstName a")
+        .getAttribute("href")
     ).toEqual("#dom-consttest-inf");
-    expect($target.find(":contains('ationDevice')").filter("a").length).toEqual(
-      0
-    );
-    done();
+    expect(
+      consts
+        .filter(c => c.textContent.includes("ationDevice"))[0]
+        .querySelector(".idlConstName a")
+    ).toBeNull();
   });
 
   it("should handle attributes", function() {
