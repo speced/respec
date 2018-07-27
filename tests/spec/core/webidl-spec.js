@@ -294,9 +294,9 @@ describe("Core - WebIDL", function() {
     ).toBeNull();
   });
 
-  it("should handle attributes", function() {
-    var $target = $("#attr-basic", doc);
-    var text = `interface AttrBasic {
+  it("should handle attributes", () => {
+    const target = doc.getElementById("attr-basic");
+    const text = `interface AttrBasic {
   // 1
   attribute DOMString regular;
   // 2
@@ -313,33 +313,37 @@ describe("Core - WebIDL", function() {
   attribute FrozenArray<DOMString> alist;
   // 4.0
   attribute Promise<DOMString> operation;
-};`.trim();
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlAttribute").length).toEqual(8);
-    var $at = $target.find(".idlAttribute").first();
-    expect($at.find(".idlAttrType").text()).toEqual(" DOMString");
-    expect($at.find(".idlAttrName").text()).toEqual("regular");
-    var $ro = $target.find(".idlAttribute").eq(2);
-    expect($ro.find(".idlAttrName").text()).toEqual("_readonly");
-    var $frozen = $target.find(".idlAttribute").eq(6);
-    expect($frozen.find(".idlAttrType").text()).toEqual(
+};`;
+    expect(target.textContent).toEqual(text);
+    const attrs = [...target.getElementsByClassName("idlAttribute")];
+    expect(attrs.length).toEqual(8);
+    const at = attrs[0];
+    expect(at.querySelector(".idlAttrType").textContent).toEqual(" DOMString");
+    expect(at.querySelector(".idlAttrName").textContent).toEqual("regular");
+    const ro = attrs[2];
+    expect(ro.querySelector(".idlAttrName").textContent).toEqual("_readonly");
+    const frozen = attrs[6];
+    expect(frozen.querySelector(".idlAttrType").textContent).toEqual(
       " FrozenArray<DOMString>"
     );
-    var $promise = $target.find(".idlAttribute").eq(7);
-    expect($promise.find(".idlAttrType").text()).toEqual(" Promise<DOMString>");
+    const promise = attrs[7];
+    expect(promise.querySelector(".idlAttrType").textContent).toEqual(" Promise<DOMString>");
     expect(
-      $target
-        .find(":contains('_readonly')")
-        .parents(".idlAttribute")
-        .attr("id")
+      attrs
+        .filter(c => c.textContent.includes("_readonly"))[0]
+        .getAttribute("id")
     ).toEqual("idl-def-attrbasic-readonly");
     expect(
-      $target
-        .find(":contains('regular')")
-        .filter("a")
-        .attr("href")
+      attrs
+        .filter(c => c.textContent.includes("regular"))[0]
+        .querySelector(".idlAttrName a")
+        .getAttribute("href")
     ).toEqual("#dom-attrbasic-regular");
-    expect($target.find(":contains('dates')").filter("a").length).toEqual(0);
+    expect(
+      attrs
+        .filter(c => c.textContent.includes("alist"))[0]
+        .querySelector(".idlAttrName a")
+    ).toBeNull();
   });
 
   it("handles stringifiers special operations", () => {
