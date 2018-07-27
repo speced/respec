@@ -102,80 +102,65 @@ describe("Core - WebIDL", function() {
     expect(aElem.textContent).toEqual("noParens");
     done();
   });
-  it("should handle interfaces", function(done) {
-    var $target = $("#if-basic", doc);
-    var text = "interface SuperStar {};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlInterface").length).toEqual(1);
-    expect($target.find(".idlInterfaceID").text()).toEqual("SuperStar");
+  it("should handle interfaces", () => {
+    let target = doc.getElementById("if-basic");
+    let text = "interface SuperStar {};";
+    expect(target.textContent).toEqual(text);
+    expect(target.querySelectorAll(".idlInterface").length).toEqual(1);
+    expect(target.querySelector(".idlInterfaceID").textContent).toEqual("SuperStar");
 
-    $target = $("#if-extended-attribute", doc);
+    target = doc.getElementById("if-extended-attribute");
     text = "[Something, Constructor()] " + text;
-    expect($target.text()).toEqual(text);
-    expect($target.find(".extAttr").text()).toEqual("Something");
-    expect($target.find(".idlCtor").text()).toEqual("Constructor()");
+    expect(target.textContent).toEqual(text);
+    expect(target.querySelector(".extAttr").textContent).toEqual("Something");
+    expect(target.querySelector(".idlCtor").textContent).toEqual("Constructor()");
 
-    $target = $("#if-identifier-list", doc);
+    target = doc.getElementById("if-identifier-list");
     text = "[Global=Window, Exposed=(Window,Worker)] interface SuperStar {};";
-    expect($target.text()).toEqual(text);
-    expect(
-      $target
-        .find(".extAttrRhs")
-        .first()
-        .text()
-    ).toEqual("Window");
-    expect(
-      $target
-        .find(".extAttrRhs")
-        .last()
-        .text()
-    ).toEqual("(Window,Worker)");
+    const rhs = target.querySelectorAll(".extAttrRhs");
+    expect(target.textContent).toEqual(text);
+    expect(rhs[0].textContent).toEqual("Window");
+    expect(rhs[1].textContent).toEqual("(Window,Worker)");
 
-    $target = $("#if-inheritance", doc);
+    target = doc.getElementById("if-inheritance");
     text = "interface SuperStar : HyperStar {};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlSuperclass").text()).toEqual("HyperStar");
+    expect(target.textContent).toEqual(text);
+    expect(target.querySelector(".idlSuperclass").textContent).toEqual("HyperStar");
 
-    $target = $("#if-partial", doc);
+    target = doc.getElementById("if-partial");
     text = "partial interface SuperStar {};";
-    expect($target.text()).toEqual(text);
+    expect(target.textContent).toEqual(text);
 
-    $target = $("#if-callback", doc);
+    target = doc.getElementById("if-callback");
     text = "callback interface SuperStar {};";
-    expect($target.text()).toEqual(text);
+    expect(target.textContent).toEqual(text);
 
-    $target = $("#if-mixin", doc);
+    target = doc.getElementById("if-mixin");
     text = "interface mixin SuperStar {};";
-    expect($target.text()).toEqual(text);
+    expect(target.textContent).toEqual(text);
 
-    $target = $("#if-partial-mixin", doc);
+    target = doc.getElementById("if-partial-mixin");
     text = "partial interface mixin SuperStar {};";
-    expect($target.text()).toEqual(text);
+    expect(target.textContent).toEqual(text);
 
-    $target = $("#if-doc", doc);
+    target = doc.getElementById("if-doc");
+    const interfaces = target.querySelectorAll(".idlInterface");
     expect(
-      $target
-        .find(":contains('DocInterface')")
-        .filter("a")
-        .attr("href")
+      interfaces[0].querySelector(".idlInterfaceID a").getAttribute("href")
     ).toEqual("#dom-docinterface");
     expect(
-      $target
-        .find(":contains('DocIsNotCaseSensitive')")
-        .filter("a")
-        .attr("href")
+      interfaces[1].querySelector(".idlInterfaceID a").getAttribute("href")
     ).toEqual("#dom-docisnotcasesensitive");
-    expect($target.find(".idlInterface")[0].id).toEqual("idl-def-docinterface");
-    expect($target.find(".idlInterface")[1].id).toEqual(
+    expect(interfaces[0].id).toEqual("idl-def-docinterface");
+    expect(interfaces[1].id).toEqual(
       "idl-def-docisnotcasesensitive"
     );
-    expect($target.find(".idlInterface")[2].id).toEqual(
+    expect(interfaces[2].id).toEqual(
       "idl-def-undocinterface"
     );
     expect(
-      $target.find(":contains('UndocInterface')").filter("a").length
-    ).toEqual(0);
-    done();
+      interfaces[2].querySelector(".idlInterfaceID a")
+    ).toBeNull();
   });
 
   it("should handle constructors", function(done) {
