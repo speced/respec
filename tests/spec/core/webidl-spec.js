@@ -266,30 +266,30 @@ describe("Core - WebIDL", function() {
     // Links and IDs.
     expect(
       consts
-        .filter(c => c.textContent.includes("rambaldi"))[0]
+        .find(c => c.textContent.includes("rambaldi"))
         .querySelector(".idlConstName a")
         .getAttribute("href")
     ).toEqual("#dom-consttest-rambaldi");
     expect(
       consts
-        .filter(c => c.textContent.includes("rambaldi"))[0]
+        .find(c => c.textContent.includes("rambaldi"))
         .getAttribute("id")
     ).toEqual("idl-def-consttest-rambaldi");
     expect(
       consts
-        .filter(c => c.textContent.includes("why"))[0]
+        .find(c => c.textContent.includes("why"))
         .querySelector(".idlConstName a")
         .getAttribute("href")
     ).toEqual("#dom-consttest-why");
     expect(
       consts
-        .filter(c => c.textContent.includes("inf"))[0]
+        .find(c => c.textContent.includes("inf"))
         .querySelector(".idlConstName a")
         .getAttribute("href")
     ).toEqual("#dom-consttest-inf");
     expect(
       consts
-        .filter(c => c.textContent.includes("ationDevice"))[0]
+        .find(c => c.textContent.includes("ationDevice"))
         .querySelector(".idlConstName a")
     ).toBeNull();
   });
@@ -330,18 +330,18 @@ describe("Core - WebIDL", function() {
     expect(promise.querySelector(".idlAttrType").textContent).toEqual(" Promise<DOMString>");
     expect(
       attrs
-        .filter(c => c.textContent.includes("_readonly"))[0]
+        .find(c => c.textContent.includes("_readonly"))
         .getAttribute("id")
     ).toEqual("idl-def-attrbasic-readonly");
     expect(
       attrs
-        .filter(c => c.textContent.includes("regular"))[0]
+        .find(c => c.textContent.includes("regular"))
         .querySelector(".idlAttrName a")
         .getAttribute("href")
     ).toEqual("#dom-attrbasic-regular");
     expect(
       attrs
-        .filter(c => c.textContent.includes("alist"))[0]
+        .find(c => c.textContent.includes("alist"))
         .querySelector(".idlAttrName a")
     ).toBeNull();
   });
