@@ -117,11 +117,10 @@ describe("Core - WebIDL", function() {
 
     target = doc.getElementById("if-identifier-list");
     text = "[Global=Window, Exposed=(Window,Worker)] interface SuperStar {};";
+    const rhs = target.querySelectorAll(".extAttrRhs");
     expect(target.textContent).toEqual(text);
-    expect(target.querySelector(".extAttrRhs").textContent).toEqual("Window");
-    expect(
-      target.querySelector(".extAttrRhs:last-of-type").textContent
-    ).toEqual("(Window,Worker)");
+    expect(rhs[0].textContent).toEqual("Window");
+    expect(rhs[1].textContent).toEqual("(Window,Worker)");
 
     target = doc.getElementById("if-inheritance");
     text = "interface SuperStar : HyperStar {};";
