@@ -127,42 +127,27 @@ export function run(conf) {
 function generateIDLMarkup(ref) {
   const { base, attribute, method, args } = parseInlineIDL(ref);
 
-  if (!method && !attribute) {
-    return hyperHTML`<code><a class="respec-idl-xref">${base}</a></code>`;
-  }
-
-  const code = hyperHTML`<code></code>`;
-
-  if (base) {
-    code.appendChild(hyperHTML`<a class="respec-idl-xref">${base}</a>`);
-    code.appendChild(document.createTextNode("."));
-  }
+  const baseHtml = base
+    ? hyperHTML`<a class="respec-idl-xref">${base}</a>.`
+    : "";
 
   if (attribute) {
     // type: base.attribute
-    code.appendChild(hyperHTML`<a class="respec-idl-xref"
-      data-xref-type="attribute" data-xref-for="${base}">${attribute}</a>`);
-    return code;
+    return hyperHTML`<code>${baseHtml}<a class="respec-idl-xref"
+      data-xref-type="attribute" data-xref-for="${base}">${attribute}</a></code>`;
   }
 
   if (method) {
     // base.method(args)
-    const methodName = method.split("(", 1)[0];
-    code.appendChild(hyperHTML`<a class="respec-idl-xref"
+    const [methodName] = method.split("(", 1);
+    return hyperHTML`<code>${baseHtml}<a class="respec-idl-xref"
       data-xref-type="method" data-xref-for="${base}"
-      data-lt="${method}">${methodName}</a>`);
-    code.appendChild(document.createTextNode("("));
-    args.forEach((arg, i, all) => {
-      code.appendChild(hyperHTML`<var>${arg}</var>`);
-      if (i !== all.length - 1) {
-        code.appendChild(document.createTextNode(", "));
-      }
-    });
-    code.appendChild(document.createTextNode(")"));
-    return code;
+      data-lt="${method}">${methodName}</a>(${{
+      html: args.map(arg => `<var>${arg}</var>`).join(", "),
+    }})</code>`;
   }
 
-  return code;
+  return hyperHTML`<code><a class="respec-idl-xref">${base}</a></code>`;
 }
 
 function parseInlineIDL(str) {
