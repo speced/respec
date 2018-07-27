@@ -275,14 +275,13 @@ describe("Core - WebIDL", function() {
 
     // Links and IDs.
     expect(
-      consts.find(c => c.textContent.includes("rambaldi"))
+      consts
+        .find(c => c.textContent.includes("rambaldi"))
         .querySelector(".idlConstName a")
         .getAttribute("href")
     ).toEqual("#dom-consttest-rambaldi");
     expect(
-      consts
-        .find(c => c.textContent.includes("rambaldi"))
-        .getAttribute("id")
+      consts.find(c => c.textContent.includes("rambaldi")).getAttribute("id")
     ).toEqual("idl-def-consttest-rambaldi");
     expect(
       consts
@@ -340,8 +339,7 @@ describe("Core - WebIDL", function() {
       " Promise<DOMString>"
     );
     expect(
-      attrs.find(c => c.textContent.includes("_readonly"))
-        .getAttribute("id")
+      attrs.find(c => c.textContent.includes("_readonly")).getAttribute("id")
     ).toEqual("idl-def-attrbasic-readonly");
     expect(
       attrs
