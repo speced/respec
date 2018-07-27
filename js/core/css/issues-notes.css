@@ -32,6 +32,10 @@ span.note, span.ednote, span.issue, span.warning { padding: .1em .5em .15em; }
     border-color: #e05252;
     background: #fbe9e9;
 }
+.issue.closed span.issue-number {
+    text-decoration: line-through;
+}
+
 .note, .ednote {
     border-color: #52e052;
     background: #e9fbe9;
