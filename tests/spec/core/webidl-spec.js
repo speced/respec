@@ -163,55 +163,49 @@ describe("Core - WebIDL", function() {
     ).toBeNull();
   });
 
-  it("should handle constructors", function(done) {
-    var $target = $("#ctor-basic", doc);
-    var text =
+  it("should handle constructors", () => {
+    let target = doc.getElementById("ctor-basic");
+    let text =
       "[Something,\n" +
       " Constructor,\n" +
       " Constructor(boolean bar, sequence<double> foo, Promise<double> blah)]\n" +
       "interface SuperStar {};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlCtor").length).toEqual(2);
-    var $ctor1 = $target.find(".idlCtor").last();
-    expect($ctor1.find(".extAttrName").text()).toEqual("Constructor");
-    expect($ctor1.find(".idlParam").length).toEqual(3);
-    expect($ctor1.find(".idlParam:contains('sequence')").length).toEqual(1);
-    expect($ctor1.find(".idlParam:contains('Promise')").length).toEqual(1);
+    expect(target.textContent).toEqual(text);
+    const ctors = target.getElementsByClassName("idlCtor");
+    expect(ctors.length).toEqual(2);
+    const ctor = ctors[1];
+    expect(ctor.querySelector(".extAttrName").textContent).toEqual("Constructor");
+    const params = [...ctor.getElementsByClassName("idlParam")];
+    expect(params.length).toEqual(3);
+    expect(params.filter(p => p.textContent.includes("sequence")).length).toEqual(1);
+    expect(params.filter(p => p.textContent.includes("Promise")).length).toEqual(1);
     expect(
-      $ctor1
-        .find(".idlParam")
-        .first()
-        .find(".idlParamType")
-        .text()
+      ctor.querySelector(".idlParam .idlParamType").textContent
     ).toEqual("boolean");
 
-    $target = $("#ctor-noea", doc);
+    target = doc.getElementById("ctor-noea");
     text = "[Constructor] interface SuperStar {};";
-    expect($target.text()).toEqual(text);
-    done();
+    expect(target.textContent).toEqual(text);
   });
 
-  it("should handle named constructors", function(done) {
-    var $target = $("#namedctor-basic", doc);
-    var text =
+  it("should handle named constructors", () => {
+    const target = doc.getElementById("namedctor-basic");
+    const text =
       "[Something,\n" +
       " NamedConstructor=Sun(),\n" +
       " NamedConstructor=Sun(boolean bar, Date foo)]\n" +
       "interface SuperStar {};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlCtor").length).toEqual(2);
-    var $ctor1 = $target.find(".idlCtor").last();
-    expect($ctor1.find(".extAttrRhs").text()).toEqual("Sun");
-    expect($ctor1.find(".idlParam").length).toEqual(2);
-    expect($ctor1.find(".idlParam:contains('Date')").length).toEqual(1);
+    expect(target.textContent).toEqual(text);
+    const ctors = target.getElementsByClassName("idlCtor");
+    expect(ctors.length).toEqual(2);
+    const ctor = ctors[1];
+    expect(ctor.querySelector(".extAttrRhs").textContent).toEqual("Sun");
+    const params = [...ctor.getElementsByClassName("idlParam")];
+    expect(params.length).toEqual(2);
+    expect(params.filter(p => p.textContent.includes("Date")).length).toEqual(1);
     expect(
-      $ctor1
-        .find(".idlParam")
-        .first()
-        .find(".idlParamType")
-        .text()
+      ctor.querySelector(".idlParam .idlParamType").textContent
     ).toEqual("boolean");
-    done();
   });
 
   it("should handle constants", function(done) {
