@@ -174,11 +174,17 @@ describe("Core - WebIDL", function() {
     const ctors = target.getElementsByClassName("idlCtor");
     expect(ctors.length).toEqual(2);
     const ctor = ctors[1];
-    expect(ctor.querySelector(".extAttrName").textContent).toEqual("Constructor");
+    expect(ctor.querySelector(".extAttrName").textContent).toEqual(
+      "Constructor"
+    );
     const params = [...ctor.getElementsByClassName("idlParam")];
     expect(params.length).toEqual(3);
-    expect(params.filter(p => p.textContent.includes("sequence")).length).toEqual(1);
-    expect(params.filter(p => p.textContent.includes("Promise")).length).toEqual(1);
+    expect(
+      params.filter(p => p.textContent.includes("sequence")).length
+    ).toEqual(1);
+    expect(
+      params.filter(p => p.textContent.includes("Promise")).length
+    ).toEqual(1);
     expect(
       ctor.querySelector(".idlParam .idlParamType").textContent
     ).toEqual("boolean");
@@ -202,7 +208,9 @@ describe("Core - WebIDL", function() {
     expect(ctor.querySelector(".extAttrRhs").textContent).toEqual("Sun");
     const params = [...ctor.getElementsByClassName("idlParam")];
     expect(params.length).toEqual(2);
-    expect(params.filter(p => p.textContent.includes("Date")).length).toEqual(1);
+    expect(params.filter(p => p.textContent.includes("Date")).length).toEqual(
+      1
+    );
     expect(
       ctor.querySelector(".idlParam .idlParamType").textContent
     ).toEqual("boolean");
@@ -256,7 +264,9 @@ describe("Core - WebIDL", function() {
     const consts = [...target.getElementsByClassName("idlConst")];
     expect(consts.length).toEqual(19);
     const const1 = target.querySelector(".idlConst");
-    expect(const1.querySelector(".idlConstType").textContent).toEqual(" boolean");
+    expect(const1.querySelector(".idlConstType").textContent).toEqual(
+      " boolean"
+    );
     expect(const1.querySelector(".idlConstName").textContent).toEqual("test");
     expect(const1.querySelector(".idlConstValue").textContent).toEqual("true");
     expect(
@@ -265,8 +275,7 @@ describe("Core - WebIDL", function() {
 
     // Links and IDs.
     expect(
-      consts
-        .find(c => c.textContent.includes("rambaldi"))
+      consts.find(c => c.textContent.includes("rambaldi"))
         .querySelector(".idlConstName a")
         .getAttribute("href")
     ).toEqual("#dom-consttest-rambaldi");
@@ -327,10 +336,11 @@ describe("Core - WebIDL", function() {
       " FrozenArray<DOMString>"
     );
     const promise = attrs[7];
-    expect(promise.querySelector(".idlAttrType").textContent).toEqual(" Promise<DOMString>");
+    expect(promise.querySelector(".idlAttrType").textContent).toEqual(
+      " Promise<DOMString>"
+    );
     expect(
-      attrs
-        .find(c => c.textContent.includes("_readonly"))
+      attrs.find(c => c.textContent.includes("_readonly"))
         .getAttribute("id")
     ).toEqual("idl-def-attrbasic-readonly");
     expect(
