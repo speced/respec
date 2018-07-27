@@ -27,21 +27,6 @@ function handleIssues(ins, ghIssues, conf) {
       "<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"
     ),
     $issueList = $issueSummary.find("ul");
-  if (githubAPI) {
-    Array.from($ins)
-      .filter(
-        ({ dataset: { number: value } }) =>
-          value !== undefined && ghIssues.get(Number(value)).state === "closed"
-      )
-      .forEach(issue => {
-        const {
-          dataset: { number },
-        } = issue;
-        const msg = `Github issue ${number} was closed on GitHub, so removing from spec`;
-        pub("warn", msg);
-        issue.remove();
-      });
-  }
   $ins.filter((i, issue) => issue.parentNode).each(function(i, inno) {
     var $inno = $(inno),
       isIssue = $inno.hasClass("issue"),
@@ -114,6 +99,7 @@ function handleIssues(ins, ghIssues, conf) {
                 .find("span")
                 .wrap($("<a href='" + conf.atRiskBase + dataNum + "'/>"));
             }
+            $tit.find("span")[0].classList.add("issue-number");
             ghIssue = ghIssues.get(Number(dataNum));
             if (ghIssue && !report.title) {
               report.title = ghIssue.title;
@@ -143,7 +129,8 @@ function handleIssues(ins, ghIssues, conf) {
       }
       $tit.find("span").text(text);
       if (ghIssue && report.title && githubAPI) {
-        const labelsGroup = Array.from(ghIssue.labels)
+        if (ghIssue.state === "closed") $div[0].classList.add("closed");
+        const labelsGroup = Array.from(ghIssue.labels || [])
           .map(label => {
             const issuesURL = new URL("issues/", conf.github.repoURL + "/");
             issuesURL.searchParams.set(
