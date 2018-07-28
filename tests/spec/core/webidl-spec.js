@@ -31,7 +31,7 @@ describe("Core - WebIDL", function() {
     );
 
     // readonly attribute DOMString? aBoolAttribute;
-    const attr = idl.querySelector("#idl-def-linkingtest-aboolattribute");
+    const attr = doc.getElementById("idl-def-linkingtest-aboolattribute");
     const domString = attr.querySelector("a");
     expect(domString.textContent).toEqual("DOMString");
     expect(domString.href.endsWith("#idl-DOMString")).toBe(true);
@@ -67,7 +67,7 @@ describe("Core - WebIDL", function() {
   });
 
   it("links simple method names and types", done => {
-    const section = doc.querySelector("#sec-parenthesis-method");
+    const section = doc.getElementById("sec-parenthesis-method");
     ["basic", "ext", "ull", "withName", "named"]
       .map(methodName => [methodName, methodName.toLowerCase()])
       .map(([methodName, id]) => [
@@ -406,9 +406,9 @@ describe("Core - WebIDL", function() {
     expect(setterNamed.querySelector(".idlMethName").textContent).toBe("named");
   });
 
-  it("should handle operations", function(done) {
-    var $target = $("#meth-basic", doc);
-    var text = `interface MethBasic {
+  it("should handle operations", () => {
+    const target = doc.getElementById("meth-basic");
+    const text = `interface MethBasic {
   // 1
   void basic();
   // 2
@@ -436,32 +436,32 @@ describe("Core - WebIDL", function() {
   Promise<void> complete(optional PaymentComplete result = "unknown");
   Promise<void> another(optional  /*trivia*/  PaymentComplete result = "unknown");
 };`;
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlMethod").length).toEqual(14);
-    expect($target.find(".idlMethName").length).toEqual(10);
-    var $meth = $target.find(".idlMethod").first();
-    expect($meth.find(".idlMethType").text()).toEqual("\n  // 1\n  void");
-    expect($meth.find(".idlMethName").text()).toEqual("basic");
+    expect(target.textContent).toEqual(text);
+    const methods = [...target.getElementsByClassName("idlMethod")];
+    expect(methods.length).toEqual(14);
+    expect(target.getElementsByClassName("idlMethName").length).toEqual(10);
+    const first = methods[0];
     expect(
-      $target.find(".idlMethType:contains('SuperStar?') a").text()
+      first.querySelector(".idlMethType").textContent
+    ).toEqual("\n  // 1\n  void");
+    expect(first.querySelector(".idlMethName").textContent).toEqual("basic");
+    expect(
+      methods
+        .find(m => m.textContent.includes("SuperStar?"))
+        .querySelector(".idlMethType a").textContent
     ).toEqual("SuperStar");
 
     // Links and IDs.
-    var ulls = $target.find(".idlMethName:contains('ull')");
+    const ulls = methods
+      .filter(m => m.textContent.includes("ull"))
+      .map(m => m.querySelector(".idlMethName a").getAttribute("href"));
+    expect(ulls[0]).toEqual("#dom-methbasic-ull");
+    expect(ulls[ulls.length - 1]).toEqual("#dom-methbasic-ull!overload-1");
     expect(
-      ulls
-        .first()
-        .children("a")
-        .attr("href")
-    ).toEqual("#dom-methbasic-ull");
-    expect(
-      ulls
-        .last()
-        .children("a")
-        .attr("href")
-    ).toEqual("#dom-methbasic-ull!overload-1");
-    expect($target.find(":contains('dates')").filter("a").length).toEqual(0);
-    done();
+      methods
+        .find(m => m.textContent.includes("withName"))
+        .querySelector(".idlMethName a")
+    ).toBeNull();
   });
 
   it("should handle iterable-like interface member declarations", () => {
@@ -471,10 +471,9 @@ describe("Core - WebIDL", function() {
     expect(elem.getElementsByClassName("idlSetlike").length).toEqual(1);
   });
 
-  it("should handle comments", function(done) {
-    var $target = $("#comments-basic", doc);
-    var // TODO: Handle comments when WebIDL2 does.
-    text =
+  it("should handle comments", () => {
+    const target = doc.getElementById("comments-basic");
+    const text =
       "interface SuperStar {\n" +
       "  // This is a comment\n" +
       "  // over two lines.\n" +
@@ -483,9 +482,10 @@ describe("Core - WebIDL", function() {
       "     three. */\n" +
       "  \n" +
       "};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlSectionComment").length).toEqual(1);
-    done();
+    expect(target.textContent).toEqual(text);
+    expect(
+      target.getElementsByClassName("idlSectionComment").length
+    ).toEqual(1);
   });
 
   it("should handle dictionaries", function(done) {
