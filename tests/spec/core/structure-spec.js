@@ -1,6 +1,6 @@
 "use strict";
 describe("Core - Structure", () => {
-  const body = 
+  const body =
     makeDefaultBody() +
     "<section class='introductory'><h2>INTRO</h2></section>" +
     "<section><h2>ONE</h2><section><h2>TWO</h2><section><h2>THREE</h2><section><h2>FOUR</h2>" +

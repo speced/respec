@@ -17,7 +17,10 @@ describe("Core — Include config as JSON", () => {
     expect(script.type).toEqual("application/json");
   });
   it("includes config options from query parameters", async () => {
-    const doc = await makeRSDoc(ops, "spec/core/simple.html?foo=bar&bar=123&baz=[1,2,3]");
+    const doc = await makeRSDoc(
+      ops,
+      "spec/core/simple.html?foo=bar&bar=123&baz=[1,2,3]"
+    );
     const conf = JSON.parse(
       doc.getElementById("initialUserConfig").textContent
     );

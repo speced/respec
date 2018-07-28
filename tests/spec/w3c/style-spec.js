@@ -120,8 +120,8 @@ describe("W3C - Style", () => {
 
   it("should style according to experimental styles", async () => {
     // We pick random half from the list, as running the whole set is very slow
-    const promises = pickRandomsFromList(specStatus).map(
-      test => loadWithStatus(test.status, test.expectedURL, "experimental")
+    const promises = pickRandomsFromList(specStatus).map(test =>
+      loadWithStatus(test.status, test.expectedURL, "experimental")
     );
     await Promise.all(promises);
   });
