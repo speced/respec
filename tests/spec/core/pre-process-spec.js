@@ -3,14 +3,10 @@ describe("Core - preProcess, postProcess, afterEnd", () => {
   afterAll(flushIframes);
   let doc;
 
-  beforeAll(done => {
+  beforeAll(async () => {
     const ops = makeStandardOps();
     ops.config = null; // use src doc's config
-    const cb = iframe => {
-      doc = iframe;
-      done();
-    };
-    makeRSDoc(ops, cb, "spec/core/pre-process-spec.html");
+    doc = await makeRSDoc(ops, undefined, "spec/core/pre-process-spec.html");
   });
 
   it("runs the preProcess and postProces arrays", () => {

@@ -14,33 +14,32 @@ describe("W3C - SEO", () => {
     makeRSDoc(makeStandardOps(), test).then(done);
   });
 
-  it("sets the canonical URI to TR URI when so configured", done => {
+  it("sets the canonical URI to TR URI when so configured", async () => {
     const test = makeTest("https://www.w3.org/TR/Foo/");
     const ops = makeStandardOps();
     ops.config.canonicalURI = "TR";
-    makeRSDoc(ops, test).then(done);
+    test(await makeRSDoc(ops));
   });
 
-  it("sets the canonical URI to editors draft when so configured", done => {
+  it("sets the canonical URI to editors draft when so configured", async () => {
     const test = makeTest("https://foo.com/");
     const ops = makeStandardOps();
     ops.config.canonicalURI = "edDraft";
-    makeRSDoc(ops, test).then(done);
+    test(await makeRSDoc(ops));
   });
 
-  it("shouldn't set any canonical URI if no shortname is defined", done => {
+  it("shouldn't set any canonical URI if no shortname is defined", async () => {
     const ops = makeStandardOps();
     ops.config.shortName = undefined;
-    makeRSDoc(ops, doc => {
-      expect(doc.querySelector("link[rel='canonical']")).toEqual(null);
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    expect(doc.querySelector("link[rel='canonical']")).toEqual(null);
   });
 
-  it("sets the canonical URI if explicitly set", done => {
+  it("sets the canonical URI if explicitly set", async () => {
     const test = makeTest("https://example.com/");
     const ops = makeStandardOps();
     ops.config.canonicalURI = "https://example.com";
-    makeRSDoc(ops, test).then(done);
+    test(await makeRSDoc(ops));
   });
 
   const body = `
