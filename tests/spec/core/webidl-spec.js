@@ -493,7 +493,9 @@ describe("Core - WebIDL", function() {
     let text = "dictionary SuperStar {};";
     expect(target.textContent).toEqual(text);
     expect(target.querySelectorAll(".idlDictionary").length).toEqual(1);
-    expect(target.querySelector(".idlDictionaryID").textContent).toEqual("SuperStar");
+    expect(target.querySelector(".idlDictionaryID").textContent).toEqual(
+      "SuperStar"
+    );
 
     target = doc.getElementById("dict-inherit");
     text = "dictionary SuperStar : HyperStar {};";
@@ -527,12 +529,12 @@ describe("Core - WebIDL", function() {
     const members = target.querySelectorAll(".idlMember");
     expect(members.length).toEqual(9);
     const member = members[0];
-    expect(member.querySelector(".idlMemberType").textContent).toEqual("\n  // 1\n  DOMString");
+    expect(member.querySelector(".idlMemberType").textContent).toEqual(
+      "\n  // 1\n  DOMString"
+    );
     expect(member.querySelector(".idlMemberName").textContent).toEqual("value");
     expect(
-      members[members.length - 1]
-        .querySelector(".idlMemberValue")
-        .textContent
+      members[members.length - 1].querySelector(".idlMemberValue").textContent
     ).toEqual('"blah blah"');
 
     target = doc.getElementById("dict-required-fields");
@@ -554,9 +556,7 @@ describe("Core - WebIDL", function() {
     const mems = [...dictDocTest.querySelectorAll(".idlMember")];
     const dictDocField = mems.find(m => m.textContent.includes("dictDocField"));
     expect(
-      dictDocField
-        .querySelector(".idlMemberName a")
-        .getAttribute("href")
+      dictDocField.querySelector(".idlMemberName a").getAttribute("href")
     ).toEqual("#dom-dictdoctest-dictdocfield");
     expect(
       mems
