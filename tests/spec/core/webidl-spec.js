@@ -326,7 +326,7 @@ describe("Core - WebIDL", function() {
 };`.trim();
     expect(target.textContent).toEqual(text);
     const attrs = [...target.getElementsByClassName("idlAttribute")];
-    expect(attrs.length).toEqual(8);
+    expect(attrs.length).toEqual(9);
     const at = attrs[0];
     expect(at.querySelector(".idlAttrType").textContent).toEqual(" DOMString");
     expect(at.querySelector(".idlAttrName").textContent).toEqual("regular");
@@ -354,18 +354,18 @@ describe("Core - WebIDL", function() {
         .find(c => c.textContent.includes("alist"))
         .querySelector(".idlAttrName a")
     ).toBeNull();
+
     const performanceIterfaceLink = Array.from(
       target.querySelectorAll("a")
     ).find(({ textContent }) => textContent === "Performance");
-    const performanceAttrLink = Array.from(
-      $target[0].querySelectorAll("a")
-    ).find(({ textContent }) => textContent === "performance");
-
     expect(performanceIterfaceLink).toBeTruthy();
     expect(performanceIterfaceLink.getAttribute("href")).toEqual(
       "#dfn-performance"
     );
 
+    const performanceAttrLink = Array.from(target.querySelectorAll("a")).find(
+      ({ textContent }) => textContent === "performance"
+    );
     expect(performanceAttrLink).toBeTruthy();
     expect(performanceAttrLink.getAttribute("href")).toEqual(
       "#dom-attrbasic-performance"
@@ -453,10 +453,11 @@ describe("Core - WebIDL", function() {
   stringifier;
   Promise<void> complete(optional PaymentComplete result = "unknown");
   Promise<void> another(optional  /*trivia*/  PaymentComplete result = "unknown");
+  Performance performance();
 };`;
     expect($target.text()).toEqual(text);
-    expect($target.find(".idlMethod").length).toEqual(14);
-    expect($target.find(".idlMethName").length).toEqual(10);
+    expect($target.find(".idlMethod").length).toEqual(15);
+    expect($target.find(".idlMethName").length).toEqual(11);
     var $meth = $target.find(".idlMethod").first();
     expect($meth.find(".idlMethType").text()).toEqual("\n  // 1\n  void");
     expect($meth.find(".idlMethName").text()).toEqual("basic");
@@ -479,6 +480,22 @@ describe("Core - WebIDL", function() {
         .attr("href")
     ).toEqual("#dom-methbasic-ull!overload-1");
     expect($target.find(":contains('dates')").filter("a").length).toEqual(0);
+
+    const target = $target[0];
+    const performanceTypeLink = Array.from(target.querySelectorAll("a")).find(
+      ({ textContent }) => textContent === "Performance"
+    );
+    expect(performanceTypeLink).toBeTruthy();
+    expect(performanceTypeLink.getAttribute("href")).toEqual(
+      "#dfn-performance"
+    );
+    const performanceMethodLink = Array.from(target.querySelectorAll("a")).find(
+      ({ textContent }) => textContent === "performance"
+    );
+    expect(performanceMethodLink).toBeTruthy();
+    expect(performanceMethodLink.getAttribute("href")).toEqual(
+      "#dom-methbasic-performance"
+    );
     done();
   });
 

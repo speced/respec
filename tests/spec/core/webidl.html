@@ -357,6 +357,9 @@
           setter SetterNamedPass named ();
         };
       </pre>
+      <p data-dfn-for="MethBasic">
+        <dfn>performance()</dfn> method.
+      </p>
       <pre id='meth-basic' class='idl'>
         interface MethBasic {
           // 1
@@ -385,6 +388,7 @@
           stringifier;
           Promise&lt;void> complete(optional PaymentComplete result = "unknown");
           Promise&lt;void> another(optional  /*trivia*/  PaymentComplete result = "unknown");
+          Performance performance();
         };
       </pre>
       <p id="meth-basic-doc" data-dfn-for="MethBasic">
