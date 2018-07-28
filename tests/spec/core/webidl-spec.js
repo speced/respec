@@ -441,13 +441,14 @@ describe("Core - WebIDL", function() {
     expect(methods.length).toEqual(14);
     expect(target.getElementsByClassName("idlMethName").length).toEqual(10);
     const first = methods[0];
-    expect(first.querySelector(".idlMethType").textContent).toEqual("\n  // 1\n  void");
+    expect(
+      first.querySelector(".idlMethType").textContent
+    ).toEqual("\n  // 1\n  void");
     expect(first.querySelector(".idlMethName").textContent).toEqual("basic");
     expect(
       methods
         .find(m => m.textContent.includes("SuperStar?"))
-        .querySelector(".idlMethType a")
-        .textContent
+        .querySelector(".idlMethType a").textContent
     ).toEqual("SuperStar");
 
     // Links and IDs.
@@ -458,8 +459,8 @@ describe("Core - WebIDL", function() {
     expect(ulls[ulls.length - 1]).toEqual("#dom-methbasic-ull!overload-1");
     expect(
       methods
-      .find(m => m.textContent.includes("withName"))
-      .querySelector(".idlMethName a")
+        .find(m => m.textContent.includes("withName"))
+        .querySelector(".idlMethName a")
     ).toBeNull();
   });
 
@@ -482,7 +483,9 @@ describe("Core - WebIDL", function() {
       "  \n" +
       "};";
     expect(target.textContent).toEqual(text);
-    expect(target.getElementsByClassName("idlSectionComment").length).toEqual(1);
+    expect(
+      target.getElementsByClassName("idlSectionComment").length
+    ).toEqual(1);
   });
 
   it("should handle dictionaries", function(done) {
