@@ -120,6 +120,10 @@ module.exports = function(config) {
     concurrency: 1,
 
     browserNoActivityTimeout: 100000,
+
+    client: {
+      args: ["--grep", config.grep],
+    },
   };
   if (process.env.TRAVIS) {
     options.detectBrowsers.enabled = false;
