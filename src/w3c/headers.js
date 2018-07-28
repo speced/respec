@@ -259,7 +259,9 @@ export function run(conf) {
       const msg =
         "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. " +
         "Please update your [`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI) to point to the " +
-        `new tests repository (e.g., https://github.com/web-platform-tests/${conf.shortName} ).`;
+        `new tests repository (e.g., https://github.com/web-platform-tests/${
+          conf.shortName
+        } ).`;
       pub("warn", msg);
     }
   }

@@ -30,7 +30,10 @@ export function run(conf, doc, cb) {
   var $exes = $("pre.example, pre.illegal-example, aside.example"),
     num = 0;
   if ($exes.length) {
-    $(doc).find("head link").first().before($("<style/>").text(css));
+    $(doc)
+      .find("head link")
+      .first()
+      .before($("<style/>").text(css));
     $exes.each(function(i, ex) {
       var $ex = $(ex),
         report = { number: num, illegal: $ex.hasClass("illegal-example") };

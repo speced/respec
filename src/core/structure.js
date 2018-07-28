@@ -42,13 +42,20 @@ function makeTOCAtLevel($parent, doc, current, level, conf) {
       continue;
     }
     var title = h.textContent,
-      $kidsHolder = $("<div></div>").append($(h).contents().clone());
+      $kidsHolder = $("<div></div>").append(
+        $(h)
+          .contents()
+          .clone()
+      );
     $kidsHolder
       .find("a")
       .renameElement("span")
       .attr("class", "formerLink")
       .removeAttr("href");
-    $kidsHolder.find("dfn").renameElement("span").removeAttr("id");
+    $kidsHolder
+      .find("dfn")
+      .renameElement("span")
+      .removeAttr("id");
     var id = h.id ? h.id : $sec.makeID(null, title);
 
     if (!isIntro) {
