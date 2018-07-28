@@ -289,6 +289,12 @@
       <p>
         Basic attributes testing.
       </p>
+      <p>
+        The <code><dfn>Performance</dfn></code> interface.
+      </p>
+      <p data-dfn-for="AttrBasic">
+        The <dfn>performance</dfn> attribute.
+      </p>
       <pre id='attr-basic' class='idl'>
         interface AttrBasic {
           // 1
@@ -306,8 +312,9 @@
           // 3.10.31
           attribute FrozenArray&lt;DOMString&gt; alist;
           // 4.0
-          attribute Promise&lt;DOMString&gt; operation;<!--
-
+          attribute Promise&lt;DOMString&gt; operation;
+          // 5.0
+          readonly attribute Performance performance;<!--
           // 3
            static attribute DOMString unmovable;
           // 4

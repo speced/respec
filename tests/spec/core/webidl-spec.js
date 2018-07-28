@@ -336,9 +336,11 @@ describe("Core - WebIDL", function() {
   attribute FrozenArray<DOMString> alist;
   // 4.0
   attribute Promise<DOMString> operation;
+  // 5.0
+  readonly attribute Performance performance;
 };`.trim();
     expect($target.text()).toEqual(text);
-    expect($target.find(".idlAttribute").length).toEqual(8);
+    expect($target.find(".idlAttribute").length).toEqual(9);
     var $at = $target.find(".idlAttribute").first();
     expect($at.find(".idlAttrType").text()).toEqual(" DOMString");
     expect($at.find(".idlAttrName").text()).toEqual("regular");
@@ -363,6 +365,22 @@ describe("Core - WebIDL", function() {
         .attr("href")
     ).toEqual("#dom-attrbasic-regular");
     expect($target.find(":contains('dates')").filter("a").length).toEqual(0);
+    const performanceIterfaceLink = Array.from(
+      $target[0].querySelectorAll("a")
+    ).find(({ textContent }) => textContent === "Performance");
+    const performanceAttrLink = Array.from(
+      $target[0].querySelectorAll("a")
+    ).find(({ textContent }) => textContent === "performance");
+
+    expect(performanceIterfaceLink).toBeTruthy();
+    expect(performanceIterfaceLink.getAttribute("href")).toEqual(
+      "#dfn-performance"
+    );
+
+    expect(performanceAttrLink).toBeTruthy();
+    expect(performanceAttrLink.getAttribute("href")).toEqual(
+      "#dom-attrbasic-performance"
+    );
   });
 
   it("handles stringifiers special operations", () => {
