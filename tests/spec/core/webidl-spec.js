@@ -323,7 +323,7 @@ describe("Core - WebIDL", function() {
   attribute Promise<DOMString> operation;
   // 5.0
   readonly attribute Performance performance;
-};`.trim();
+};`;
     expect(target.textContent).toEqual(text);
     const attrs = [...target.getElementsByClassName("idlAttribute")];
     expect(attrs.length).toEqual(9);
