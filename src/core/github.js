@@ -4,7 +4,6 @@
  * @see https://github.com/w3c/respec/wiki/github
  */
 
-import l10n from "core/l10n";
 import { pub } from "core/pubsubhub";
 
 export const name = "core/github";

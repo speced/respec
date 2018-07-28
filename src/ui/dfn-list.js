@@ -23,7 +23,7 @@ ul.addEventListener("click", ev => {
 function show() {
   const definitionLinks = Object.entries(respecConfig.definitionMap)
     .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
-    .map(([key, $dfns]) => {
+    .map(([_key, $dfns]) => {
       const [dfn] = $dfns[0];
       return window.hyperHTML.wire(dfn, ":li>a")`
         <li>

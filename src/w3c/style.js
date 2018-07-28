@@ -36,7 +36,7 @@ function createMetaViewport() {
     "initial-scale": "1",
     "shrink-to-fit": "no",
   };
-  meta.content = toKeyValuePairs(contentProps).replace(/\"/g, "");
+  meta.content = toKeyValuePairs(contentProps).replace(/"/g, "");
   return meta;
 }
 

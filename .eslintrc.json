@@ -17,7 +17,8 @@
     "indent": 0,
     "quotes": 0,
     "semi": ["error", "always"],
-    "no-console": 0
+    "no-console": 0,
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
   },
   "globals": {
     "flushIframes": true,

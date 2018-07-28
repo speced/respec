@@ -1,12 +1,12 @@
 export default (conf, name, items = []) => {
   const html = hyperHTML;
   const results = [];
-  for (let i = 0; i < items.length; i++) {
-    results.push(getItem(items[i], i));
+  for (const item of items) {
+    results.push(getItem(item));
   }
   return results;
 
-  function getItem(p, i) {
+  function getItem(p) {
     const personName = [p.name]; // treated as opt-in HTML by hyperHTML
     const editorid = p.w3cid ? parseInt(p.w3cid, 10) : null;
     const dd = html`<dd class='p-author h-card vcard'

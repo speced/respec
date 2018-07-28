@@ -12,9 +12,9 @@ marked.setOptions({
   gfm: true,
 });
 
-const spaceOrTab = /^[\ |\t]*/;
+const spaceOrTab = /^[ |\t]*/;
 const endsWithSpace = /\s+$/gm;
-const dashes = /\-/g;
+const dashes = /-/g;
 const gtEntity = /&gt;/gm;
 const ampEntity = /&amp;/gm;
 
@@ -232,10 +232,10 @@ export function normalizePadding(text = "") {
   doc.normalize();
   // use the first space as an indicator of how much to chop off the front
   const firstSpace = doc.body.innerText
-    .replace(/^\ *\n/, "")
+    .replace(/^ *\n/, "")
     .split("\n")
     .filter(item => item && item.startsWith(" "))[0];
-  var chop = firstSpace ? firstSpace.match(/\ +/)[0].length : 0;
+  var chop = firstSpace ? firstSpace.match(/ +/)[0].length : 0;
   if (chop) {
     // Chop chop from start, but leave pre elem alone
     Array.from(doc.body.childNodes)
@@ -259,7 +259,7 @@ export function normalizePadding(text = "") {
         const nextTo = prevSib
           ? prevSib.localName
           : node.parentElement.localName;
-        if (/^[\t\ ]/.test(node.textContent) && inlineElems.has(nextTo)) {
+        if (/^[\t ]/.test(node.textContent) && inlineElems.has(nextTo)) {
           padding = node.textContent.match(/^\s+/)[0];
         }
         node.textContent = padding + node.textContent.replace(replacer, "");
@@ -323,11 +323,12 @@ export function joinAnd(array = [], mapper = item => item) {
       return items.toString();
     case 2: // x and y
       return items.join(" and ");
-    default:
+    default: {
       // x, y, and z
       const str = items.join(", ");
       const lastComma = str.lastIndexOf(",");
       return `${str.substr(0, lastComma + 1)} and ${str.slice(lastComma + 2)}`;
+    }
   }
 }
 

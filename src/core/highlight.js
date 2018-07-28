@@ -53,7 +53,7 @@ export async function run(conf) {
       };
       worker.addEventListener("message", function listener(ev) {
         const {
-          data: { id, code, language, value },
+          data: { id, language, value },
         } = ev;
         if (id !== msg.id) {
           return; // not for us!
