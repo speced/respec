@@ -23,7 +23,7 @@ jobs:
   include:
     - stage: Run eslint
       script:
-        - npx eslint src/**/*.js
+        - npm run lint
     - stage: Run headless
       script:
         - npm run test:headless
