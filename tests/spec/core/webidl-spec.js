@@ -470,10 +470,9 @@ describe("Core - WebIDL", function() {
     expect(elem.getElementsByClassName("idlSetlike").length).toEqual(1);
   });
 
-  it("should handle comments", function(done) {
-    var $target = $("#comments-basic", doc);
-    var // TODO: Handle comments when WebIDL2 does.
-    text =
+  it("should handle comments", () => {
+    const target = doc.getElementById("comments-basic");
+    const text =
       "interface SuperStar {\n" +
       "  // This is a comment\n" +
       "  // over two lines.\n" +
@@ -482,9 +481,8 @@ describe("Core - WebIDL", function() {
       "     three. */\n" +
       "  \n" +
       "};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlSectionComment").length).toEqual(1);
-    done();
+    expect(target.textContent).toEqual(text);
+    expect(target.getElementsByClassName("idlSectionComment").length).toEqual(1);
   });
 
   it("should handle dictionaries", function(done) {
