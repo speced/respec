@@ -488,19 +488,21 @@ describe("Core - WebIDL", function() {
     ).toEqual(1);
   });
 
-  it("should handle dictionaries", function(done) {
-    var $target = $("#dict-basic", doc);
-    var text = "dictionary SuperStar {};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlDictionary").length).toEqual(1);
-    expect($target.find(".idlDictionaryID").text()).toEqual("SuperStar");
+  it("should handle dictionaries", () => {
+    let target = doc.getElementById("dict-basic");
+    let text = "dictionary SuperStar {};";
+    expect(target.textContent).toEqual(text);
+    expect(target.querySelectorAll(".idlDictionary").length).toEqual(1);
+    expect(target.querySelector(".idlDictionaryID").textContent).toEqual(
+      "SuperStar"
+    );
 
-    $target = $("#dict-inherit", doc);
+    target = doc.getElementById("dict-inherit");
     text = "dictionary SuperStar : HyperStar {};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlSuperclass").text()).toEqual("HyperStar");
+    expect(target.textContent).toEqual(text);
+    expect(target.querySelector(".idlSuperclass").textContent).toEqual("HyperStar");
 
-    $target = $("#dict-fields", doc);
+    target = doc.getElementById("dict-fields");
     text =
       "dictionary SuperStar {\n" +
       "  // 1\n" +
@@ -523,57 +525,53 @@ describe("Core - WebIDL", function() {
       "  // 9\n" +
       '  DOMString blah = "blah blah";\n' +
       "};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlMember").length).toEqual(9);
-    var $mem = $target.find(".idlMember").first();
-    expect($mem.find(".idlMemberType").text()).toEqual("\n  // 1\n  DOMString");
-    expect($mem.find(".idlMemberName").text()).toEqual("value");
+    expect(target.textContent).toEqual(text);
+    const members = target.querySelectorAll(".idlMember");
+    expect(members.length).toEqual(9);
+    const member = members[0];
+    expect(member.querySelector(".idlMemberType").textContent).toEqual(
+      "\n  // 1\n  DOMString"
+    );
+    expect(member.querySelector(".idlMemberName").textContent).toEqual("value");
     expect(
-      $target
-        .find(".idlMember")
-        .last()
-        .find(".idlMemberValue")
-        .text()
+      members[members.length - 1].querySelector(".idlMemberValue").textContent
     ).toEqual('"blah blah"');
 
-    $target = $("#dict-required-fields", doc);
+    target = doc.getElementById("dict-required-fields");
     text =
       "dictionary SuperStar {\n" +
       "  required DOMString value;\n" +
       "  DOMString optValue;\n" +
       "};";
-    expect($target.text()).toEqual(text);
+    expect(target.textContent).toEqual(text);
 
     // Links and IDs.
-    $target = $("#dict-doc", doc);
+    const dictDocTest = doc
+      .getElementById("dict-doc")
+      .querySelector(".idlDictionary");
     expect(
-      $target
-        .find(":contains('DictDocTest')")
-        .filter("a")
-        .attr("href")
+      dictDocTest.querySelector(".idlDictionaryID a").getAttribute("href")
     ).toEqual("#dom-dictdoctest");
+    expect(dictDocTest.getAttribute("id")).toEqual("idl-def-dictdoctest");
+    const mems = [...dictDocTest.querySelectorAll(".idlMember")];
+    const dictDocField = mems.find(m => m.textContent.includes("dictDocField"));
     expect(
-      $target.find(".idlDictionary:contains('DictDocTest')").attr("id")
-    ).toEqual("idl-def-dictdoctest");
-    expect(
-      $target
-        .find(":contains('dictDocField')")
-        .filter("a")
-        .attr("href")
+      dictDocField.querySelector(".idlMemberName a").getAttribute("href")
     ).toEqual("#dom-dictdoctest-dictdocfield");
     expect(
-      $target
-        .find(":contains('otherField')")
-        .filter("a")
-        .attr("href")
+      mems
+        .find(m => m.textContent.includes("otherField"))
+        .querySelector(".idlMemberName a")
+        .getAttribute("href")
     ).toEqual("#dom-dictdoctest-otherfield");
-    expect(
-      $target.find(".idlMember:contains('dictDocField')").attr("id")
-    ).toEqual("idl-def-dictdoctest-dictdocfield");
-    expect($target.find(":contains('undocField')").filter("a").length).toEqual(
-      0
+    expect(dictDocField.getAttribute("id")).toEqual(
+      "idl-def-dictdoctest-dictdocfield"
     );
-    done();
+    expect(
+      mems
+        .find(m => m.textContent.includes("undocField"))
+        .querySelector(".idlMemberName a")
+    ).toBeNull();
   });
 
   it("handles multiple dictionaries", async () => {
@@ -620,18 +618,23 @@ enum EnumBasic {
     expect(target.querySelector("#idl-def-enumbasic")).toBeTruthy();
   });
 
-  it("should handle enumeration value definitions", function(done) {
-    var $section = $("#enumerations", doc);
-    expect($section.find("dfn:contains('one')").attr("id")).toEqual(
-      "dom-enumbasic-one"
-    );
+  it("should handle enumeration value definitions", () => {
+    const section = doc.getElementById("enumerations");
     expect(
-      $section.find("p[data-link-for] a:contains('one')").attr("href")
+      [...section.getElementsByTagName("dfn")]
+        .find(el => el.textContent.includes("one"))
+        .getAttribute("id")
+    ).toEqual("dom-enumbasic-one");
+    expect(
+      [...section.querySelectorAll("p[data-link-for] a")]
+        .find(el => el.textContent.includes("one"))
+        .getAttribute("href")
     ).toEqual("#dom-enumbasic-one");
     expect(
-      $section.find("#enum-ref-without-link-for a:contains('one')").attr("href")
+      [...section.querySelectorAll("#enum-ref-without-link-for a")]
+        .find(el => el.textContent.includes("one"))
+        .getAttribute("href")
     ).toEqual("#dom-enumbasic-one");
-    done();
   });
 
   it("links empty-string enumeration value", done => {
