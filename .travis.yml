@@ -17,10 +17,13 @@ addons:
 
 cache:
   directories:
-  - node_modules # NPM packages
+    - node_modules # NPM packages
 
 jobs:
   include:
+    - stage: Run eslint
+      script:
+        - npm run lint
     - stage: Run headless
       script:
         - npm run test:headless

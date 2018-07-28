@@ -11,7 +11,7 @@ export default obj => {
   }
   a.href = obj.url || "";
   a.classList.add("logo");
-  hyperHTML.bind(a) `
+  hyperHTML.bind(a)`
       <img
         id="${obj.id}"
         alt="${obj.alt}"
@@ -22,4 +22,4 @@ export default obj => {
   // hyperHTML attribute values
   a.querySelector("img").src = obj.src;
   return a;
-}
+};

@@ -112,9 +112,9 @@ function handleIssues(ins, ghIssues, conf) {
           // Add entry to #issue-summary.
           var $li = $("<li><a></a></li>");
           var $a = $li.find("a");
-          $a
-            .attr("href", "#" + $div[0].id)
-            .text(conf.l10n.issue + " " + report.number);
+          $a.attr("href", "#" + $div[0].id).text(
+            conf.l10n.issue + " " + report.number
+          );
           if (report.title) {
             $li.append(
               $(

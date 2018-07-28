@@ -4,7 +4,6 @@
  * @see https://github.com/w3c/respec/wiki/github
  */
 
-import l10n from "core/l10n";
 import { pub } from "core/pubsubhub";
 
 export const name = "core/github";
@@ -74,7 +73,8 @@ export async function run(conf) {
   }
   const [org, repo] = ghURL.pathname.split("/").filter(item => item);
   if (!org || !repo) {
-    const msg = "`respecConf.github` URL needs a path with, for example, w3c/my-spec";
+    const msg =
+      "`respecConf.github` URL needs a path with, for example, w3c/my-spec";
     pub("error", msg);
     return;
   }

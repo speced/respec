@@ -1,7 +1,6 @@
 /*jshint
     forin: false
 */
-/*global hb*/
 
 // Module w3c/headers
 // Generate the headers material based on the provided configuration.
@@ -93,9 +92,7 @@
 //      - "w3c-software-doc", the W3C Software and Document License
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
 import { concatDate, joinAnd, ISODate } from "core/utils";
-import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
-import tmpls from "templates";
 import cgbgSotdTmpl from "w3c/templates/cgbg-sotd";
 import sotdTmpl from "w3c/templates/sotd";
 import cgbgHeadersTmpl from "w3c/templates/cgbg-headers";
@@ -259,7 +256,9 @@ export function run(conf) {
       const msg =
         "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. " +
         "Please update your [`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI) to point to the " +
-        `new tests repository (e.g., https://github.com/web-platform-tests/${conf.shortName} ).`;
+        `new tests repository (e.g., https://github.com/web-platform-tests/${
+          conf.shortName
+        } ).`;
       pub("warn", msg);
     }
   }

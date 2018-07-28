@@ -52,7 +52,9 @@ export async function run(conf) {
         languages: getLanguageHint(element.classList),
       };
       worker.addEventListener("message", function listener(ev) {
-        const { data: { id, code, language, value } } = ev;
+        const {
+          data: { id, language, value },
+        } = ev;
         if (id !== msg.id) {
           return; // not for us!
         }
