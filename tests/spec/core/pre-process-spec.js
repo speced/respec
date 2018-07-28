@@ -6,7 +6,7 @@ describe("Core - preProcess, postProcess, afterEnd", () => {
   beforeAll(async () => {
     const ops = makeStandardOps();
     ops.config = null; // use src doc's config
-    doc = await makeRSDoc(ops, undefined, "spec/core/pre-process-spec.html");
+    doc = await makeRSDoc(ops, "spec/core/pre-process-spec.html");
   });
 
   it("runs the preProcess and postProces arrays", () => {
