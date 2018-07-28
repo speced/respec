@@ -618,18 +618,23 @@ enum EnumBasic {
     expect(target.querySelector("#idl-def-enumbasic")).toBeTruthy();
   });
 
-  it("should handle enumeration value definitions", function(done) {
-    var $section = $("#enumerations", doc);
-    expect($section.find("dfn:contains('one')").attr("id")).toEqual(
-      "dom-enumbasic-one"
-    );
+  it("should handle enumeration value definitions", () => {
+    const section = doc.getElementById("enumerations");
     expect(
-      $section.find("p[data-link-for] a:contains('one')").attr("href")
+      [...section.getElementsByTagName("dfn")]
+        .find(el => el.textContent.includes("one"))
+        .getAttribute("id")
+    ).toEqual("dom-enumbasic-one");
+    expect(
+      [...section.querySelectorAll("p[data-link-for] a")]
+        .find(el => el.textContent.includes("one"))
+        .getAttribute("href")
     ).toEqual("#dom-enumbasic-one");
     expect(
-      $section.find("#enum-ref-without-link-for a:contains('one')").attr("href")
+      [...section.querySelectorAll("#enum-ref-without-link-for a")]
+        .find(el => el.textContent.includes("one"))
+        .getAttribute("href")
     ).toEqual("#dom-enumbasic-one");
-    done();
   });
 
   it("links empty-string enumeration value", done => {
