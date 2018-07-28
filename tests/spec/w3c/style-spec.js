@@ -128,8 +128,8 @@ describe("W3C - Style", () => {
 
   it("should not use 'experimental' URL when useExperimentalStyles is false", async () => {
     // We pick random half from the list, as running the whole set is very slow
-    const promises = pickRandomsFromList(specStatus).map(
-      test => loadWithStatus(test.status, test.expectedURL)
+    const promises = pickRandomsFromList(specStatus).map(test =>
+      loadWithStatus(test.status, test.expectedURL)
     );
     await Promise.all(promises);
   });
