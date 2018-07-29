@@ -615,7 +615,7 @@ enum EnumBasic {
     expect(target.querySelector(".idlEnumID a").getAttribute("href")).toEqual(
       "#dom-enumbasic"
     );
-    expect(target.getElementById("idl-def-enumbasic")).toBeTruthy();
+    expect(doc.getElementById("idl-def-enumbasic")).toBeTruthy();
   });
 
   it("should handle enumeration value definitions", () => {
