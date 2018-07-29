@@ -19,7 +19,7 @@ export const name = "core/data-cite";
 
 function requestLookup(conf) {
   const toCiteDetails = citeDetailsConverter(conf);
-  return async function(elem) {
+  return async elem => {
     const originalKey = elem.dataset.cite;
     const { key, frag, path } = toCiteDetails(elem);
     let href = "";

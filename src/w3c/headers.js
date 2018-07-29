@@ -401,7 +401,7 @@ export function run(conf) {
   conf.multipleFormerEditors =
     Array.isArray(conf.formerEditors) && conf.formerEditors.length > 1;
   conf.multipleAuthors = conf.authors && conf.authors.length > 1;
-  $.each(conf.alternateFormats || [], function(i, it) {
+  $.each(conf.alternateFormats || [], (i, it) => {
     if (!it.uri || !it.label)
       pub("error", "All alternate formats must have a uri and a label.");
   });
@@ -409,7 +409,7 @@ export function run(conf) {
     conf.alternateFormats && conf.alternateFormats.length > 1;
   conf.alternatesHTML =
     conf.alternateFormats &&
-    joinAnd(conf.alternateFormats, function(alt) {
+    joinAnd(conf.alternateFormats, alt => {
       var optional =
         alt.hasOwnProperty("lang") && alt.lang
           ? " hreflang='" + alt.lang + "'"
@@ -545,7 +545,7 @@ export function run(conf) {
   }
   if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
-    conf.wgHTML = joinAnd(conf.wg, function(wg, idx) {
+    conf.wgHTML = joinAnd(conf.wg, (wg, idx) => {
       return "the <a href='" + conf.wgURI[idx] + "'>" + wg + "</a>";
     });
     var pats = [];

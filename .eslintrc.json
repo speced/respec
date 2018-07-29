@@ -19,6 +19,7 @@
     "semi": ["error", "always"],
     "no-console": 0,
     "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "prefer-arrow-callback": 2,
     "prefer-const": 2
   },
   "globals": {
