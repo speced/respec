@@ -1,6 +1,5 @@
 {
   "env": {
-    "jasmine": true,
     "browser": true,
     "es6": true,
     "node": true,
@@ -18,7 +17,9 @@
     "quotes": 0,
     "semi": ["error", "always"],
     "no-console": 0,
-    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "prefer-arrow-callback": 2,
+    "prefer-const": 2
   },
   "globals": {
     "flushIframes": true,
@@ -30,5 +31,5 @@
     "pickRandomsFromList": true,
     "respecConfig": true
   },
-  "plugins": ["jasmine", "prettier"]
+  "plugins": ["prettier"]
 }

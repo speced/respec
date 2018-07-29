@@ -86,7 +86,7 @@ function createResourceHints() {
     },
   ]
     .map(createResourceHint)
-    .reduce(function(frag, link) {
+    .reduce((frag, link) => {
       frag.appendChild(link);
       return frag;
     }, document.createDocumentFragment());
@@ -149,7 +149,7 @@ export function run(conf, doc, cb) {
   if (version && !conf.noToc) {
     sub(
       "end-all",
-      function() {
+      () => {
         attachFixupScript(doc, version);
       },
       { once: true }

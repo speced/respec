@@ -43,10 +43,10 @@ export function run(conf, doc, cb) {
         $ex.prepend($tit);
         pub("example", report);
       } else {
-        let inAside = !!$ex.parents("aside").length;
+        const inAside = !!$ex.parents("aside").length;
         if (!inAside) num++;
         // reindent
-        let lines = $ex.html().split("\n");
+        const lines = $ex.html().split("\n");
         while (lines.length && /^\s*$/.test(lines[0])) lines.shift();
         while (lines.length && /^\s*$/.test(lines[lines.length - 1]))
           lines.pop();

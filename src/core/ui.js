@@ -74,7 +74,7 @@ $respecPill
     $menu[0].hidden = !$menu[0].hidden;
   })
   .appendTo($respecUI);
-document.documentElement.addEventListener("click", function() {
+document.documentElement.addEventListener("click", () => {
   if (!$menu[0].hidden) {
     $menu[0].classList.remove("respec-visible");
     $menu[0].classList.add("respec-hidden");
@@ -191,7 +191,7 @@ export const ui = {
   addCommand: function(label, module, keyShort, icon) {
     icon = icon || "";
     var handler = function() {
-      require([module], function(mod) {
+      require([module], mod => {
         mod.show();
       });
     };
@@ -260,19 +260,19 @@ export const ui = {
     $modal[0].hidden = false;
   },
 };
-shortcut.add("Esc", function() {
+shortcut.add("Esc", () => {
   ui.closeModal();
 });
-shortcut.add("Ctrl+Alt+Shift+E", function() {
+shortcut.add("Ctrl+Alt+Shift+E", () => {
   if (buttons.error) buttons.error.click();
 });
-shortcut.add("Ctrl+Alt+Shift+W", function() {
+shortcut.add("Ctrl+Alt+Shift+W", () => {
   if (buttons.warning) buttons.warning.click();
 });
 window.respecUI = ui;
-sub("error", function(details) {
+sub("error", details => {
   ui.error(details);
 });
-sub("warn", function(details) {
+sub("warn", details => {
   ui.warning(details);
 });
