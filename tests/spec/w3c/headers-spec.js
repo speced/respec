@@ -728,7 +728,7 @@ describe("W3C — Headers", function() {
         specStatus: "WG-NOTE",
       };
       Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
+      const doc = await makeRSDoc(ops, simpleSpecURL);
       const { wgId, isNote } = doc.defaultView.respecConfig;
       const elem = doc.querySelector("p[data-deliverer]");
       expect(isNote).toBe(true);
@@ -742,7 +742,7 @@ describe("W3C — Headers", function() {
         specStatus: "FPWD-NOTE",
       };
       Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
+      const doc = await makeRSDoc(ops, simpleSpecURL);
       const elem = doc.querySelector("p[data-deliverer]");
       const { wgId, isNote } = doc.defaultView.respecConfig;
       expect(isNote).toBe(true);
@@ -757,7 +757,7 @@ describe("W3C — Headers", function() {
         specStatus: "WD",
       };
       Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
+      const doc = await makeRSDoc(ops, simpleSpecURL);
       const elem = doc.querySelector("p[data-deliverer]");
       const { wgId, isNote } = doc.defaultView.respecConfig;
       expect(isNote).toBe(false);
@@ -777,7 +777,7 @@ describe("W3C — Headers", function() {
         subjectPrefix: "[The Prefix]",
       };
       Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
+      const doc = await makeRSDoc(ops, simpleSpecURL);
       var $sotd = $("#sotd", doc);
       expect($sotd.find("p:contains('CUSTOM PARAGRAPH')").length).toEqual(1);
       expect($sotd.find("a:contains('WGNAME')").length).toEqual(1);
@@ -875,7 +875,7 @@ describe("W3C — Headers", function() {
         implementationReportURI: "",
       };
       Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
+      const doc = await makeRSDoc(ops, simpleSpecURL);
       var $sotd = $("#sotd", doc);
       var $f = $($sotd.find("p:contains('CUSTOM PARAGRAPH')"));
       expect($f.length).toEqual(1);
@@ -1045,7 +1045,7 @@ describe("W3C — Headers", function() {
         wgPublicList: "WGLIST",
       };
       Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
+      const doc = await makeRSDoc(ops, simpleSpecURL);
       var $sotd = $("#sotd", doc);
       expect($sotd.find("p:contains('CUSTOM PARAGRAPH')").length).toEqual(1);
       expect($sotd.find("a:contains('WGNAME')").length).toEqual(0);

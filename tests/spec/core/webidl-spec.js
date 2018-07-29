@@ -4,7 +4,7 @@ describe("Core - WebIDL", function() {
   let doc;
   beforeAll(async () => {
     const ops = makeStandardOps();
-    doc = await makeRSDoc(ops, () => {}, "spec/core/webidl.html");
+    doc = await makeRSDoc(ops, "spec/core/webidl.html");
   });
 
   it("handles record types", done => {

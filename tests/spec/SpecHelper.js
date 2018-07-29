@@ -5,7 +5,6 @@ var iframes = [];
 
 function makeRSDoc(
   opts = {},
-  cb = () => {},
   src = "about-blank.html",
   style = ""
 ) {
@@ -29,7 +28,6 @@ function makeRSDoc(
           return;
         }
         window.removeEventListener("message", msgHandler);
-        cb(doc);
         resove(doc);
         clearTimeout(timeoutId);
       });

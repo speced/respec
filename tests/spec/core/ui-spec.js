@@ -1,48 +1,41 @@
 "use strict";
 
-describe("Core - Ui", function() {
+describe("Core - UI", () => {
   afterAll(flushIframes);
 
-  it("shows and hides the UI", function(done) {
-    makeRSDoc(makeStandardOps(), function(doc) {
-      var ui = doc.defaultView.respecUI;
-      var pillContainer = doc.querySelector("#respec-ui");
-      ui.show();
-      // showing it doesn't change it from showing
-      expect(pillContainer.hidden).toBe(false);
-      ui.hide();
-      expect(pillContainer.hidden).toBe(true);
-      ui.show();
-      expect(pillContainer.hidden).toBe(false);
-    }).then(done);
+  it("shows and hides the UI", async () => {
+    const doc = await makeRSDoc(makeStandardOps());
+    const ui = doc.defaultView.respecUI;
+    const pillContainer = doc.querySelector("#respec-ui");
+    ui.show();
+    // showing it doesn't change it from showing
+    expect(pillContainer.hidden).toBe(false);
+    ui.hide();
+    expect(pillContainer.hidden).toBe(true);
+    ui.show();
+    expect(pillContainer.hidden).toBe(false);
   });
 
-  it("hides the UI when document is clicked", function(done) {
-    makeRSDoc(
-      makeStandardOps(),
-      function(doc) {
-        var menu = doc.querySelector("#respec-menu");
+  it("hides the UI when document is clicked", async () => {
+    const doc = await makeRSDoc(makeStandardOps(), null, "display: block");
+    const menu = doc.querySelector("#respec-menu");
+    expect(window.getComputedStyle(menu).display).toEqual("none");
+    doc.querySelector("#respec-pill").click();
+    // spin the event loop
+    await new Promise(resolve => {
+      setTimeout(() => {
+        expect(window.getComputedStyle(menu).display).toEqual("block");
+        doc.body.click();
+        resolve();
+      }, 500);
+    });
+    // Allow time to fade in
+    await new Promise(resolve => {
+      setTimeout(() => {
         expect(window.getComputedStyle(menu).display).toEqual("none");
-        doc.querySelector("#respec-pill").click();
-        // spin the event loop
-        new Promise(function(resolve) {
-          setTimeout(function() {
-            expect(window.getComputedStyle(menu).display).toEqual("block");
-            doc.body.click();
-            resolve();
-          }, 500);
-        })
-          // Allow time to fade in
-          .then(function() {
-            setTimeout(function() {
-              expect(window.getComputedStyle(menu).display).toEqual("none");
-              done();
-            }, 500);
-          });
-        // give it time to fade out
-      },
-      null,
-      "display: block"
-    );
+        resolve();
+      }, 500);
+    });
+    // give it time to fade out
   });
 });
