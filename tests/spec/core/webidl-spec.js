@@ -7,17 +7,16 @@ describe("Core - WebIDL", () => {
     doc = await makeRSDoc(ops, "spec/core/webidl.html");
   });
 
-  it("handles record types", done => {
+  it("handles record types", () => {
     const idl = doc.querySelector("#records pre");
     expect(idl).toBeTruthy(idl);
     expect(idl.querySelector(".idlMemberType:first-child").textContent).toEqual(
       "\n  record<DOMString, USVString>"
     );
     expect(idl.querySelector(".idlMemberName").textContent).toEqual("pass");
-    done();
   });
 
-  it("links standardized IDL types to WebIDL spec", done => {
+  it("links standardized IDL types to WebIDL spec", () => {
     const idl = doc.querySelector("#linkToIDLSpec>div>pre");
     // [Constructor(sequence<DOMString> methodData), SecureContext]
     const sequences = idl.querySelectorAll(`a[href$="#idl-sequence"]`);
@@ -47,10 +46,9 @@ describe("Core - WebIDL", () => {
     expect(unsignedLongLink.href.endsWith("#idl-unsigned-long-long")).toBe(
       true
     );
-    done();
   });
 
-  it("links to fully qualified method names", done => {
+  it("links to fully qualified method names", () => {
     var t1 = new URL(doc.getElementById("fullyQualifiedNoParens-1").href).hash;
     expect(t1).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
 
@@ -62,11 +60,9 @@ describe("Core - WebIDL", () => {
 
     var t4 = new URL(doc.getElementById("fullyQualifiedNoParens-4").href).hash;
     expect(t4).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
-
-    done();
   });
 
-  it("links simple method names and types", done => {
+  it("links simple method names and types", () => {
     const section = doc.getElementById("sec-parenthesis-method");
     ["basic", "ext", "ull", "withName", "named"]
       .map(methodName => [methodName, methodName.toLowerCase()])
@@ -100,7 +96,6 @@ describe("Core - WebIDL", () => {
     );
     expect(aElem).toBeTruthy();
     expect(aElem.textContent).toEqual("noParens");
-    done();
   });
   it("should handle interfaces", () => {
     let target = doc.getElementById("if-basic");
@@ -639,7 +634,7 @@ enum EnumBasic {
     ).toEqual("#dom-enumbasic-one");
   });
 
-  it("links empty-string enumeration value", done => {
+  it("links empty-string enumeration value", () => {
     const links = doc.querySelector(
       `#enum-empty-sec a[href="#dom-emptyenum-the-empty-string"]`
     );
@@ -650,7 +645,6 @@ enum EnumBasic {
     expect(links).toBeTruthy();
     expect(dfn).toBeTruthy();
     expect(smokeDfn).toBeTruthy();
-    done();
   });
 
   it("handles optional and trivia", () => {
@@ -667,7 +661,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(trivaComments.length).toEqual(3);
   });
 
-  it("should handle callbacks", done => {
+  it("should handle callbacks", () => {
     var $target = $("#cb-basic", doc);
     var text = "callback SuperStar = void ();";
     expect($target.text()).toEqual(text);
@@ -732,7 +726,6 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         .last()
         .text()
     ).toEqual("b");
-    done();
   });
 
   it("should handle typedefs", () => {

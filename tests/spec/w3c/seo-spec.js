@@ -9,11 +9,9 @@ function makeTest(uri) {
 describe("W3C - SEO", () => {
   afterAll(flushIframes);
 
-  it("defaults to TR as canonical URI", done => {
+  it("defaults to TR as canonical URI", async () => {
     const test = makeTest("https://www.w3.org/TR/Foo/");
-    makeRSDoc(makeStandardOps(), test)
-      .then(done)
-      .catch(done.fail);
+    test(await makeRSDoc(makeStandardOps()));
   });
 
   it("sets the canonical URI to TR URI when so configured", async () => {
