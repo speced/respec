@@ -615,7 +615,7 @@ enum EnumBasic {
     expect(target.querySelector(".idlEnumID a").getAttribute("href")).toEqual(
       "#dom-enumbasic"
     );
-    expect(target.querySelector("#idl-def-enumbasic")).toBeTruthy();
+    expect(target.getElementById("idl-def-enumbasic")).toBeTruthy();
   });
 
   it("should handle enumeration value definitions", () => {
@@ -641,7 +641,7 @@ enum EnumBasic {
     const links = doc.querySelector(
       `#enum-empty-sec a[href="#dom-emptyenum-the-empty-string"]`
     );
-    const dfn = doc.querySelector("#dom-emptyenum-the-empty-string");
+    const dfn = doc.getElementById("dom-emptyenum-the-empty-string");
     const smokeDfn = doc.querySelector(
       `#enum-empty-sec a[href="#dom-emptyenum-not-empty"]`
     );

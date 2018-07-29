@@ -51,13 +51,13 @@ describe("Core - highlightVars", () => {
     const ops = makeStandardOps({ highlightVars: true }, testBody);
     const doc = await makeRSDoc(ops);
 
-    doc.querySelector("#section1-foo").click();
+    doc.getElementById("section1-foo").click();
     const highlightedSec1 = doc.querySelectorAll("#section1 var.respec-hl");
     let highlightedSec2 = doc.querySelectorAll("#section2 var.respec-hl");
     expect(highlightedSec1.length).toBe(2);
     expect(highlightedSec2.length).toBe(0);
 
-    doc.querySelector("#section2-foo").click();
+    doc.getElementById("section2-foo").click();
     highlightedSec2 = doc.querySelectorAll("#section2 var.respec-hl");
     expect(highlightedSec2.length).toBe(2);
   });

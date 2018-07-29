@@ -62,7 +62,7 @@ describe("Core — Definitions", function() {
     const doc = await makeRSDoc(ops);
     const code = doc.querySelector("#t1 code");
     expect(code.textContent).toEqual("Test");
-    const t2 = doc.querySelector("#t2");
+    const t2 = doc.getElementById("t2");
     expect(t2.querySelector("code")).toEqual(null);
     expect(t2.querySelector("a").textContent).toEqual("not wrapped in code");
     expect(t2.querySelector("a").getAttribute("href")).toEqual("#idl-def-test");

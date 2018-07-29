@@ -86,10 +86,10 @@ describe("Core — data-cite attribute", () => {
       `,
     };
     const doc = await makeRSDoc(ops);
-    expect(doc.querySelector("#bib-url").closest("section").id).toEqual(
+    expect(doc.getElementById("bib-url").closest("section").id).toEqual(
       "normative-references"
     );
-    expect(doc.querySelector("#bib-fetch").closest("section").id).toEqual(
+    expect(doc.getElementById("bib-fetch").closest("section").id).toEqual(
       "informative-references"
     );
   });
@@ -111,7 +111,7 @@ describe("Core — data-cite attribute", () => {
     expect(a.textContent).toEqual("inline link");
     expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/#test");
     expect(a.hasAttribute("data-cite")).toEqual(false);
-    expect(doc.querySelector("#bib-whatwg-html").closest("section").id).toEqual(
+    expect(doc.getElementById("bib-whatwg-html").closest("section").id).toEqual(
       "normative-references"
     );
     // Definition part
@@ -121,7 +121,7 @@ describe("Core — data-cite attribute", () => {
     expect(dfnA.textContent).toEqual("inline link");
     expect(dfnA.href).toEqual("https://html.spec.whatwg.org/multipage/#test");
     expect(dfnA.hasAttribute("data-cite")).toEqual(false);
-    expect(doc.querySelector("#bib-whatwg-html").closest("section").id).toEqual(
+    expect(doc.getElementById("bib-whatwg-html").closest("section").id).toEqual(
       "normative-references"
     );
   });
@@ -142,7 +142,7 @@ describe("Core — data-cite attribute", () => {
     expect(a.textContent).toEqual("inline link");
     expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/");
     expect(a.hasAttribute("data-cite")).toEqual(false);
-    expect(doc.querySelector("#bib-whatwg-html").closest("section").id).toEqual(
+    expect(doc.getElementById("bib-whatwg-html").closest("section").id).toEqual(
       "normative-references"
     );
   });
@@ -163,7 +163,7 @@ describe("Core — data-cite attribute", () => {
     expect(a.textContent).toEqual("inline link");
     expect(a.href).toEqual("https://dom.spec.whatwg.org/");
     expect(a.hasAttribute("data-cite")).toEqual(false);
-    expect(doc.querySelector("#bib-whatwg-dom").closest("section").id).toEqual(
+    expect(doc.getElementById("bib-whatwg-dom").closest("section").id).toEqual(
       "informative-references"
     );
   });
@@ -190,10 +190,10 @@ describe("Core — data-cite attribute", () => {
     expect(a1.hasAttribute("data-cite")).toEqual(false);
     expect(a2.hasAttribute("data-cite")).toEqual(false);
     expect(
-      doc.querySelector("#bib-no-exist-inf").closest("section").id
+      doc.getElementById("bib-no-exist-inf").closest("section").id
     ).toEqual("informative-references");
     expect(
-      doc.querySelector("#bib-no-exist-norm").closest("section").id
+      doc.getElementById("bib-no-exist-norm").closest("section").id
     ).toEqual("normative-references");
   });
 
@@ -214,7 +214,7 @@ describe("Core — data-cite attribute", () => {
     expect(a.textContent).toEqual("inline link");
     expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/webappapis.html#test");
     expect(a.hasAttribute("data-cite")).toEqual(false);
-    expect(doc.querySelector("#bib-whatwg-html").closest("section").id).toEqual(
+    expect(doc.getElementById("bib-whatwg-html").closest("section").id).toEqual(
       "normative-references"
     );
   });
@@ -239,7 +239,7 @@ describe("Core — data-cite attribute", () => {
       expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/webappapis.html#pass");
       expect(a.hasAttribute("data-cite")).toEqual(false);
       expect(
-        doc.querySelector("#bib-whatwg-html").closest("section").id
+        doc.getElementById("bib-whatwg-html").closest("section").id
       ).toEqual("informative-references");
     });
 
@@ -263,7 +263,7 @@ describe("Core — data-cite attribute", () => {
       expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/#pass");
       expect(a.hasAttribute("data-cite")).toEqual(false);
       expect(
-        doc.querySelector("#bib-whatwg-html").closest("section").id
+        doc.getElementById("bib-whatwg-html").closest("section").id
       ).toEqual("normative-references");
     });
   });

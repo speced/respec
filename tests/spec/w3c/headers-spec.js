@@ -1094,11 +1094,11 @@ describe("W3C — Headers", function() {
 
       expect(sotd.classList.contains("introductory")).toBe(true);
 
-      const p1 = sotd.querySelector("#p1");
+      const p1 = sotd.getElementById("p1");
       expect(p1).toBeTruthy();
       expect(p1.textContent.trim()).toEqual("CUSTOM PARAGRAPH 1");
 
-      const p2 = sotd.querySelector("#p2");
+      const p2 = sotd.getElementById("p2");
       expect(p2).toBeTruthy();
       expect(p2.textContent.trim()).toEqual("CUSTOM PARAGRAPH 2");
 
@@ -1108,18 +1108,18 @@ describe("W3C — Headers", function() {
       const textNode = commentNode.nextSibling;
       expect(textNode.nodeType).toEqual(Node.TEXT_NODE);
 
-      const ol = sotd.querySelector("#ol");
+      const ol = sotd.getElementById("ol");
       expect(ol).toBeTruthy();
       expect(ol.querySelectorAll("li").length).toEqual(2);
 
-      const firstSection = sotd.querySelector("#first-sub-section");
+      const firstSection = sotd.getElementById("first-sub-section");
       expect(sotd.lastElementChild).not.toEqual(firstSection);
 
-      const lastSection = sotd.querySelector("#last-sub-section");
+      const lastSection = sotd.getElementById("last-sub-section");
       expect(sotd.lastElementChild).toEqual(lastSection);
 
       // p3 is sadwiched in between the sections
-      const p3 = sotd.querySelector("#p3");
+      const p3 = sotd.getElementById("p3");
       expect(p3).toBeTruthy();
       expect(p3.previousElementSibling).toEqual(firstSection);
       expect(p3.nextElementSibling).toEqual(lastSection);

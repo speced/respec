@@ -6,7 +6,7 @@ describe("Core - UI", () => {
   it("shows and hides the UI", async () => {
     const doc = await makeRSDoc(makeStandardOps());
     const ui = doc.defaultView.respecUI;
-    const pillContainer = doc.querySelector("#respec-ui");
+    const pillContainer = doc.getElementById("respec-ui");
     ui.show();
     // showing it doesn't change it from showing
     expect(pillContainer.hidden).toBe(false);
@@ -18,9 +18,9 @@ describe("Core - UI", () => {
 
   it("hides the UI when document is clicked", async () => {
     const doc = await makeRSDoc(makeStandardOps(), null, "display: block");
-    const menu = doc.querySelector("#respec-menu");
+    const menu = doc.getElementById("respec-menu");
     expect(window.getComputedStyle(menu).display).toEqual("none");
-    doc.querySelector("#respec-pill").click();
+    doc.getElementById("respec-pill").click();
     // spin the event loop
     await new Promise(resolve => {
       setTimeout(() => {

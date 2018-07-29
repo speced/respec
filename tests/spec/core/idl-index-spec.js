@@ -32,7 +32,7 @@ interface Bar {
       body,
     };
     const doc = await makeRSDoc(ops);
-    var idlIndex = doc.querySelector("#idl-index");
+    var idlIndex = doc.getElementById("idl-index");
     expect(idlIndex).not.toBe(null);
     expect(idlIndex.querySelector("pre").textContent).toEqual(expectedIDL);
     var header = doc.querySelector("#idl-index > h2");
@@ -68,7 +68,7 @@ dictionary PromptResponseObject {
       body,
     };
     const doc = await makeRSDoc(ops);
-    const idlIndex = doc.querySelector("#idl-index");
+    const idlIndex = doc.getElementById("idl-index");
     expect(idlIndex).not.toBe(null);
     expect(idlIndex.querySelector("pre").textContent).toEqual(expectedIDL);
   });
@@ -86,7 +86,7 @@ dictionary PromptResponseObject {
       body,
     };
     const doc = await makeRSDoc(ops);
-    var idlIndex = doc.querySelector("#idl-index");
+    var idlIndex = doc.getElementById("idl-index");
     expect(idlIndex).not.toBe(null);
     expect(idlIndex.querySelector("pre")).toEqual(null);
     var header = doc.querySelector("#idl-index > h2");

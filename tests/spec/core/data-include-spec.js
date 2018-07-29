@@ -26,9 +26,9 @@ describe("Core — Data Include", function() {
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops, url);
-    var missing = doc.querySelector("#this-should-be-missing");
+    var missing = doc.getElementById("this-should-be-missing");
     expect(missing).toEqual(null);
-    var included = doc.querySelector("#replacement-test");
+    var included = doc.getElementById("replacement-test");
     expect(included).toBeTruthy();
     var heading = doc.querySelector("#replacement-test > h3");
     expect(heading).toBeTruthy();
@@ -41,7 +41,7 @@ describe("Core — Data Include", function() {
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops, url);
-    var container = doc.querySelector("#empty-include");
+    var container = doc.getElementById("empty-include");
     expect(container).toBeTruthy();
     expect(container.textContent).toBe("");
   });
@@ -52,7 +52,7 @@ describe("Core — Data Include", function() {
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops, url);
-    var container = doc.querySelector("#no-replace");
+    var container = doc.getElementById("no-replace");
     expect(container).toBeTruthy();
     expect(container.textContent).toBe("<p>pass</p>");
   });
