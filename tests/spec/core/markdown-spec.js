@@ -61,7 +61,7 @@ describe("Core - Markdown", function() {
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
     expect(doc.querySelector("code")).toBeFalsy();
-    expect(doc.getElementById("foo").textContent).toBe("Foo");
+    expect(doc.getElementById("foo").textContent).toBe("1. Foo");
     var listItems = doc.querySelectorAll("section > ul:not([class=toc]) > li");
     expect(listItems.length).toEqual(2);
     expect(listItems[0].textContent).toEqual("list item 1");
