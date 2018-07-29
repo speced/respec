@@ -9,5 +9,7 @@ rules:
   no-sparse-arrays: 0
   jasmine/new-line-before-expect: 0
   jasmine/new-line-between-declarations: 0
+  jasmine/no-spec-dupes: ["error", "branch"]
+  jasmine/prefer-jasmine-matcher: 2
 plugins:
   - jasmine

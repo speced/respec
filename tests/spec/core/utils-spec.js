@@ -77,7 +77,7 @@ describe("Core - Utils", () => {
       const cacheTime = new Date(
         cachedResponse.headers.get("Expires")
       ).valueOf();
-      expect(cacheTime <= Date.now()).toBe(true);
+      expect(cacheTime).toBeLessThanOrEqual(Date.now());
     });
   });
 
@@ -222,18 +222,10 @@ describe("Core - Utils", () => {
 
   describe("calculateLeftPad()", () => {
     it("throws given invalid input", () => {
-      expect(() => {
-        expect(utils.calculateLeftPad());
-      }).toThrow();
-      expect(() => {
-        expect(utils.calculateLeftPad({}));
-      }).toThrow();
-      expect(() => {
-        expect(utils.calculateLeftPad(123));
-      }).toThrow();
-      expect(() => {
-        expect(utils.calculateLeftPad(null));
-      }).toThrow();
+      expect(() => utils.calculateLeftPad()).toThrow();
+      expect(() => utils.calculateLeftPad({})).toThrow();
+      expect(() => utils.calculateLeftPad(123)).toThrow();
+      expect(() => utils.calculateLeftPad(null)).toThrow();
     });
     it("calculates the smallest left padding of multiline text", () => {
       expect(utils.calculateLeftPad("")).toEqual(0);

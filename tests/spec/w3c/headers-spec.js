@@ -508,7 +508,7 @@ describe("W3C — Headers", () => {
         $("dt:contains('Previous version:')", doc)
           .next("dd")
           .text()
-      ).toMatch(/\/1977\/CR-[^\/]+-19770315\//);
+      ).toMatch(/\/1977\/CR-[^/]+-19770315\//);
     });
   });
 
