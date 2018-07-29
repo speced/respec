@@ -52,26 +52,6 @@ describe("W3C — Headers", () => {
           .text()
       ).toMatch(/\/TR\/xxx\//);
     });
-
-    it("takes shortName into account", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "REC",
-        shortName: "xxx",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      expect(
-        $("dt:contains('This version:')", doc)
-          .next("dd")
-          .text()
-      ).toMatch(/\/REC-xxx-/);
-      expect(
-        $("dt:contains('Latest published version:')", doc)
-          .next("dd")
-          .text()
-      ).toMatch(/\/TR\/xxx\//);
-    });
   });
 
   describe("editors", () => {
