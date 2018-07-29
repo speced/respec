@@ -1,23 +1,13 @@
 env:
   jasmine: true
-  browser: true
-  es6: true
+  node: false
 extends:
-  - 'eslint:recommended'
   - 'plugin:jasmine/recommended'
-  - 'plugin:prettier/recommended'
 parserOptions:
-  sourceType: module
+  sourceType: script
 rules:
-  no-useless-escape: 0
   no-sparse-arrays: 0
-  no-console: 0
-  indent: 0
   jasmine/new-line-before-expect: 0
   jasmine/new-line-between-declarations: 0
-  semi:
-    - error
-    - always
 plugins:
   - jasmine
-  - prettier
