@@ -18,7 +18,8 @@
     "quotes": 0,
     "semi": ["error", "always"],
     "no-console": 0,
-    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "prefer-const": 2
   },
   "globals": {
     "flushIframes": true,

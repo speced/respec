@@ -21,7 +21,7 @@ function requestLookup(conf) {
   const toCiteDetails = citeDetailsConverter(conf);
   return async function(elem) {
     const originalKey = elem.dataset.cite;
-    let { key, frag, path } = toCiteDetails(elem);
+    const { key, frag, path } = toCiteDetails(elem);
     let href = "";
     // This is just referring to this document
     if (key === conf.shortName) {
