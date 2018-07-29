@@ -1,5 +1,5 @@
 "use strict";
-describe("Core — Data Include", function() {
+describe("Core — Data Include", () => {
   afterAll(flushIframes);
   // this does not test much, someone for whom this is
   // important should provide more tests

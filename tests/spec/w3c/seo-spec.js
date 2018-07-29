@@ -11,7 +11,9 @@ describe("W3C - SEO", () => {
 
   it("defaults to TR as canonical URI", done => {
     const test = makeTest("https://www.w3.org/TR/Foo/");
-    makeRSDoc(makeStandardOps(), test).then(done);
+    makeRSDoc(makeStandardOps(), test)
+      .then(done)
+      .catch(done.fail);
   });
 
   it("sets the canonical URI to TR URI when so configured", async () => {

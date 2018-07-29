@@ -212,7 +212,9 @@ describe("Core — data-cite attribute", () => {
     const doc = await makeRSDoc(ops);
     const a = doc.querySelector("#t1 > a");
     expect(a.textContent).toEqual("inline link");
-    expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/webappapis.html#test");
+    expect(a.href).toEqual(
+      "https://html.spec.whatwg.org/multipage/webappapis.html#test"
+    );
     expect(a.hasAttribute("data-cite")).toEqual(false);
     expect(doc.getElementById("bib-whatwg-html").closest("section").id).toEqual(
       "normative-references"
@@ -236,7 +238,9 @@ describe("Core — data-cite attribute", () => {
       const doc = await makeRSDoc(ops);
       const a = doc.querySelector("#t1 > a");
       expect(a.textContent).toEqual("inline link");
-      expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/webappapis.html#pass");
+      expect(a.href).toEqual(
+        "https://html.spec.whatwg.org/multipage/webappapis.html#pass"
+      );
       expect(a.hasAttribute("data-cite")).toEqual(false);
       expect(
         doc.getElementById("bib-whatwg-html").closest("section").id

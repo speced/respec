@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/*eslint-env node*/
 "use strict";
 const testURLs = [
   `file:///${__dirname}/../examples/basic.built.html`,

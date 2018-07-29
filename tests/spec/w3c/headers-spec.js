@@ -2,7 +2,7 @@
 const findContent = string => {
   return ({ textContent }) => textContent.trim() === string;
 };
-describe("W3C — Headers", function() {
+describe("W3C — Headers", () => {
   afterEach(flushIframes);
   const simpleSpecURL = "spec/core/simple.html";
   describe("prevRecShortname & prevRecURI", () => {
@@ -168,7 +168,7 @@ describe("W3C — Headers", function() {
       var twitterAnchor = doc.querySelector("a[href='" + twitterHref + "']");
       // general checks
       var header = doc.querySelector("div.head");
-      [orcidAnchor, twitterAnchor].forEach(function(elem) {
+      [orcidAnchor, twitterAnchor].forEach(elem => {
         // Check parent is correct.
         expect(elem.parentNode.localName).toEqual("span");
         // Check that it's in the header of the document
@@ -489,7 +489,7 @@ describe("W3C — Headers", function() {
 
   describe("previousPublishDate & previousMaturity", () => {
     it("recovers given bad date inputs", async () => {
-      let ISODate = await new Promise(resolve => {
+      const ISODate = await new Promise(resolve => {
         require(["core/utils"], ({ ISODate }) => {
           resolve(ISODate);
         });

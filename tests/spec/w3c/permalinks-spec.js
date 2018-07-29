@@ -1,5 +1,5 @@
 "use strict";
-describe("W3C — Permalinks", function() {
+describe("W3C — Permalinks", () => {
   afterAll(flushIframes);
 
   function makeCustomConfig() {
@@ -30,7 +30,7 @@ describe("W3C — Permalinks", function() {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<section id='testing'><h2>a heading</h2><p>some content</p></section>",
+        "<section id='testing'><h2>a heading</h2><p>some content</p></section>",
     };
     const doc = await makeRSDoc(ops);
     let $c = $("#sotd", doc);
@@ -46,7 +46,7 @@ describe("W3C — Permalinks", function() {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<div id='testing'><h2>a heading</h2><p>some content</p></div>",
+        "<div id='testing'><h2>a heading</h2><p>some content</p></div>",
     };
     const doc = await makeRSDoc(ops);
     let $c = $("#sotd", doc);
@@ -62,8 +62,8 @@ describe("W3C — Permalinks", function() {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<section id='testing'><h2>a heading</h2><p>some content</p></section>" +
-          "<section><h2>another heading</h2><p>Other Content</p></section>",
+        "<section id='testing'><h2>a heading</h2><p>some content</p></section>" +
+        "<section><h2>another heading</h2><p>Other Content</p></section>",
     };
     const doc = await makeRSDoc(ops);
     const $c = $("#testing", doc).nextElementSibling;
@@ -76,7 +76,7 @@ describe("W3C — Permalinks", function() {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<section class='nolink' id='testing'><h2>a heading</h2><p>some content</p></section>",
+        "<section class='nolink' id='testing'><h2>a heading</h2><p>some content</p></section>",
     };
     const doc = await makeRSDoc(ops);
     const $c = $("#testing", doc);
@@ -107,7 +107,7 @@ describe("W3C — Permalinks", function() {
       config: noConfig,
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<section id='testing'><h2>a heading</h2><p>some content</p></section>",
+        "<section id='testing'><h2>a heading</h2><p>some content</p></section>",
     };
     const doc = await makeRSDoc(ops);
     const $c = $("#sotd", doc);
@@ -123,7 +123,7 @@ describe("W3C — Permalinks", function() {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<div id='testing'><h2>a heading with \" and '</h2><p>some content</p></div>",
+        "<div id='testing'><h2>a heading with \" and '</h2><p>some content</p></div>",
     };
     const doc = await makeRSDoc(ops);
     const $c = $("#testing", doc);
@@ -136,7 +136,7 @@ describe("W3C — Permalinks", function() {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<div id='testing'><h2>a heading with \" and '</h2><p>some content</p></div>",
+        "<div id='testing'><h2>a heading with \" and '</h2><p>some content</p></div>",
     };
     const doc = await makeRSDoc(ops);
     const $c = $("#testing", doc);

@@ -1,5 +1,5 @@
 "use strict";
-describe("Core — Link to definitions", function() {
+describe("Core — Link to definitions", () => {
   afterAll(flushIframes);
 
   it("removes non-alphanum chars from fragment components", async () => {

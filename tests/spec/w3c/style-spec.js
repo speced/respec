@@ -112,7 +112,7 @@ describe("W3C - Style", () => {
 
   it("should style according to spec status", async () => {
     // We pick random half from the list, as running the whole set is very slow
-    const promises = pickRandomsFromList(specStatus).map(function(test) {
+    const promises = pickRandomsFromList(specStatus).map(test => {
       return loadWithStatus(test.status, test.expectedURL, "2016");
     });
     await Promise.all(promises);

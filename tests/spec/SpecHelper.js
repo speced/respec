@@ -3,16 +3,12 @@
 "use strict";
 var iframes = [];
 
-function makeRSDoc(
-  opts = {},
-  src = "about-blank.html",
-  style = ""
-) {
-  return new Promise(function(resove, reject) {
+function makeRSDoc(opts = {}, src = "about-blank.html", style = "") {
+  return new Promise((resove, reject) => {
     var ifr = document.createElement("iframe");
     opts = opts || {};
     // reject when DEFAULT_TIMEOUT_INTERVAL passes
-    var timeoutId = setTimeout(function() {
+    var timeoutId = setTimeout(() => {
       reject(new Error("Timed out waiting on " + src));
     }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
     ifr.addEventListener("load", function() {
@@ -127,7 +123,7 @@ function pickRandomsFromList(list, howMany) {
   }
   if (howMany > list.length) {
     // Return a new list, but randomized.
-    return list.slice().sort(function randomSort() {
+    return list.slice().sort(() => {
       return Math.round(Math.random() * (1 - -1) + -1);
     });
   }
@@ -140,7 +136,7 @@ function pickRandomsFromList(list, howMany) {
     }
   }
   // Reduce the collectedValues into a new list
-  return collectedValues.reduce(function(randList, next) {
+  return collectedValues.reduce((randList, next) => {
     randList.push(list[next]);
     return randList;
   }, []);

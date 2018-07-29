@@ -1,5 +1,5 @@
 "use strict";
-describe("Core - Figures", function() {
+describe("Core - Figures", () => {
   afterAll(flushIframes);
   it("creates autolinks from the anchor to the figure", async () => {
     const ops = {

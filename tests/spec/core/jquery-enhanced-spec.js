@@ -1,5 +1,5 @@
 "use strict";
-describe("Core - jquery enhanced", function() {
+describe("Core - jquery enhanced", () => {
   beforeAll(async () => {
     await new Promise(resolve => {
       require(["core/jquery-enhanced"], resolve);

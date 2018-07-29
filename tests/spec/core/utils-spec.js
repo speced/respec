@@ -2,7 +2,7 @@
 describe("Core - Utils", () => {
   var utils;
   beforeAll(done => {
-    require(["core/utils"], function(u) {
+    require(["core/utils"], u => {
       utils = u;
       done();
     });
@@ -189,7 +189,7 @@ describe("Core - Utils", () => {
       });
       expect(link.crossOrigin).toEqual("anonymous");
     });
-    it("automatically detects cross-origin requests for dns-prefetch", function() {
+    it("automatically detects cross-origin requests for dns-prefetch", () => {
       var link = utils.createResourceHint({
         hint: "dns-prefetch",
         href: "https://other.origin.com",
@@ -407,7 +407,7 @@ describe("Core - Utils", () => {
       expect(utils.joinAnd(["x", "x", "x"])).toEqual("x, x, and x");
       expect(utils.joinAnd(["x", "x", "x", "x"])).toEqual("x, x, x, and x");
       expect(
-        utils.joinAnd(["x", "x", "x", "x"], function(str) {
+        utils.joinAnd(["x", "x", "x", "x"], str => {
           return str.toUpperCase();
         })
       ).toEqual("X, X, X, and X");
@@ -462,7 +462,7 @@ describe("Core - Utils", () => {
     expect(utils.toKeyValuePairs(obj, "|||")).toEqual(expected);
   });
 
-  it("converts objects to key values pairs with different separator and delimiter", function() {
+  it("converts objects to key values pairs with different separator and delimiter", () => {
     var obj = {
       editors: [
         {
@@ -509,19 +509,13 @@ describe("Core - Utils", () => {
 
     it("flattens sparse and arrays", () => {
       const input = [, 1, 1, , , , 1, , 1];
-      const output = input.reduce(utils.flatten,["pass"]);
-      expect(output).toEqual([
-        "pass",
-        1,
-        1,
-        1,
-        1,
-      ]);
+      const output = input.reduce(utils.flatten, ["pass"]);
+      expect(output).toEqual(["pass", 1, 1, 1, 1]);
     });
 
     it("flattens dense and arrays", () => {
       const input = new Array(10);
-      const output = input.reduce(utils.flatten,["pass"]);
+      const output = input.reduce(utils.flatten, ["pass"]);
       expect(output).toEqual(["pass"]);
     });
   });

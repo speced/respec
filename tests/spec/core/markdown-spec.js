@@ -1,5 +1,5 @@
 "use strict";
-describe("Core - Markdown", function() {
+describe("Core - Markdown", () => {
   afterAll(flushIframes);
   it("processes standard markdown content", async () => {
     const ops = {
@@ -8,7 +8,7 @@ describe("Core - Markdown", function() {
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
-    Array.from(doc.querySelectorAll(".removeOnSave")).forEach(function(elem) {
+    Array.from(doc.querySelectorAll(".removeOnSave")).forEach(elem => {
       elem.remove();
     });
     const foo = doc.getElementById("foo");
@@ -200,7 +200,7 @@ describe("Core - Markdown", function() {
     expect(foo.contains(bar)).toBeFalsy();
   });
 
-  describe("nolinks options", function() {
+  describe("nolinks options", () => {
     it("automatically links URLs in pre when missing (smoke test)", async () => {
       const ops = {
         config: makeBasicConfig(),
