@@ -217,8 +217,8 @@ describe("Core - Markdown", function() {
       const doc = await makeRSDoc(ops);
       var anchors = doc.querySelectorAll("#testElem a");
       expect(anchors.length).toEqual(2);
-      expect(anchors.item(0).href).toEqual("http://no-links-foo.com/");
-      expect(anchors.item(1).href).toEqual("http://no-links-bar.com/");
+      expect(anchors[0].href).toEqual("http://no-links-foo.com/");
+      expect(anchors[1].href).toEqual("http://no-links-bar.com/");
     });
 
     it("replaces HTMLAnchors when present", async () => {

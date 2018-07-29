@@ -558,8 +558,8 @@ describe("W3C — Headers", function() {
       const doc = await makeRSDoc(ops);
       var licenses = doc.querySelectorAll("div.head a[rel=license]");
       expect(licenses.length).toEqual(1);
-      expect(licenses.item(0).tagName).toEqual("A");
-      expect(licenses.item(0).href).toEqual(
+      expect(licenses[0].tagName).toEqual("A");
+      expect(licenses[0].href).toEqual(
         "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
       );
     });
