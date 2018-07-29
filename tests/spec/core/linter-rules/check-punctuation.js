@@ -29,7 +29,7 @@ describe("Core Linter Rule - 'check-punctuation'", () => {
           </p>
         </section>
     `;
-  
+
     const results = await rule.lint(config, doc);
     const [result] = results;
     expect(result.offendingElements.length).toEqual(4);
@@ -56,10 +56,10 @@ describe("Core Linter Rule - 'check-punctuation'", () => {
           </p>
         </section>
     `;
-  
+
     const results = await rule.lint(config, doc);
     const [result] = results;
-    
+
     expect(result.name).toEqual(ruleName);
     expect(result.occurrences).toEqual(4);
     expect(result.description).toBeTruthy();

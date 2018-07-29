@@ -1,5 +1,5 @@
 "use strict";
-describe("Core - WebIDL", function() {
+describe("Core - WebIDL", () => {
   afterAll(flushIframes);
   let doc;
   beforeAll(async () => {
@@ -7,17 +7,16 @@ describe("Core - WebIDL", function() {
     doc = await makeRSDoc(ops, "spec/core/webidl.html");
   });
 
-  it("handles record types", done => {
+  it("handles record types", () => {
     const idl = doc.querySelector("#records pre");
     expect(idl).toBeTruthy(idl);
     expect(idl.querySelector(".idlMemberType:first-child").textContent).toEqual(
       "\n  record<DOMString, USVString>"
     );
     expect(idl.querySelector(".idlMemberName").textContent).toEqual("pass");
-    done();
   });
 
-  it("links standardized IDL types to WebIDL spec", done => {
+  it("links standardized IDL types to WebIDL spec", () => {
     const idl = doc.querySelector("#linkToIDLSpec>div>pre");
     // [Constructor(sequence<DOMString> methodData), SecureContext]
     const sequences = idl.querySelectorAll(`a[href$="#idl-sequence"]`);
@@ -47,10 +46,9 @@ describe("Core - WebIDL", function() {
     expect(unsignedLongLink.href.endsWith("#idl-unsigned-long-long")).toBe(
       true
     );
-    done();
   });
 
-  it("links to fully qualified method names", done => {
+  it("links to fully qualified method names", () => {
     var t1 = new URL(doc.getElementById("fullyQualifiedNoParens-1").href).hash;
     expect(t1).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
 
@@ -62,11 +60,9 @@ describe("Core - WebIDL", function() {
 
     var t4 = new URL(doc.getElementById("fullyQualifiedNoParens-4").href).hash;
     expect(t4).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
-
-    done();
   });
 
-  it("links simple method names and types", done => {
+  it("links simple method names and types", () => {
     const section = doc.getElementById("sec-parenthesis-method");
     ["basic", "ext", "ull", "withName", "named"]
       .map(methodName => [methodName, methodName.toLowerCase()])
@@ -100,20 +96,23 @@ describe("Core - WebIDL", function() {
     );
     expect(aElem).toBeTruthy();
     expect(aElem.textContent).toEqual("noParens");
-    done();
   });
   it("should handle interfaces", () => {
     let target = doc.getElementById("if-basic");
     let text = "interface SuperStar {};";
     expect(target.textContent).toEqual(text);
     expect(target.querySelectorAll(".idlInterface").length).toEqual(1);
-    expect(target.querySelector(".idlInterfaceID").textContent).toEqual("SuperStar");
+    expect(target.querySelector(".idlInterfaceID").textContent).toEqual(
+      "SuperStar"
+    );
 
     target = doc.getElementById("if-extended-attribute");
     text = "[Something, Constructor()] " + text;
     expect(target.textContent).toEqual(text);
     expect(target.querySelector(".extAttr").textContent).toEqual("Something");
-    expect(target.querySelector(".idlCtor").textContent).toEqual("Constructor()");
+    expect(target.querySelector(".idlCtor").textContent).toEqual(
+      "Constructor()"
+    );
 
     target = doc.getElementById("if-identifier-list");
     text = "[Global=Window, Exposed=(Window,Worker)] interface SuperStar {};";
@@ -125,7 +124,9 @@ describe("Core - WebIDL", function() {
     target = doc.getElementById("if-inheritance");
     text = "interface SuperStar : HyperStar {};";
     expect(target.textContent).toEqual(text);
-    expect(target.querySelector(".idlSuperclass").textContent).toEqual("HyperStar");
+    expect(target.querySelector(".idlSuperclass").textContent).toEqual(
+      "HyperStar"
+    );
 
     target = doc.getElementById("if-partial");
     text = "partial interface SuperStar {};";
@@ -152,15 +153,9 @@ describe("Core - WebIDL", function() {
       interfaces[1].querySelector(".idlInterfaceID a").getAttribute("href")
     ).toEqual("#dom-docisnotcasesensitive");
     expect(interfaces[0].id).toEqual("idl-def-docinterface");
-    expect(interfaces[1].id).toEqual(
-      "idl-def-docisnotcasesensitive"
-    );
-    expect(interfaces[2].id).toEqual(
-      "idl-def-undocinterface"
-    );
-    expect(
-      interfaces[2].querySelector(".idlInterfaceID a")
-    ).toBeNull();
+    expect(interfaces[1].id).toEqual("idl-def-docisnotcasesensitive");
+    expect(interfaces[2].id).toEqual("idl-def-undocinterface");
+    expect(interfaces[2].querySelector(".idlInterfaceID a")).toBeNull();
   });
 
   it("should handle constructors", () => {
@@ -185,9 +180,9 @@ describe("Core - WebIDL", function() {
     expect(
       params.filter(p => p.textContent.includes("Promise")).length
     ).toEqual(1);
-    expect(
-      ctor.querySelector(".idlParam .idlParamType").textContent
-    ).toEqual("boolean");
+    expect(ctor.querySelector(".idlParam .idlParamType").textContent).toEqual(
+      "boolean"
+    );
 
     target = doc.getElementById("ctor-noea");
     text = "[Constructor] interface SuperStar {};";
@@ -211,9 +206,9 @@ describe("Core - WebIDL", function() {
     expect(params.filter(p => p.textContent.includes("Date")).length).toEqual(
       1
     );
-    expect(
-      ctor.querySelector(".idlParam .idlParamType").textContent
-    ).toEqual("boolean");
+    expect(ctor.querySelector(".idlParam .idlParamType").textContent).toEqual(
+      "boolean"
+    );
   });
 
   it("should handle constants", () => {
@@ -441,9 +436,9 @@ describe("Core - WebIDL", function() {
     expect(methods.length).toEqual(14);
     expect(target.getElementsByClassName("idlMethName").length).toEqual(10);
     const first = methods[0];
-    expect(
-      first.querySelector(".idlMethType").textContent
-    ).toEqual("\n  // 1\n  void");
+    expect(first.querySelector(".idlMethType").textContent).toEqual(
+      "\n  // 1\n  void"
+    );
     expect(first.querySelector(".idlMethName").textContent).toEqual("basic");
     expect(
       methods
@@ -483,9 +478,9 @@ describe("Core - WebIDL", function() {
       "  \n" +
       "};";
     expect(target.textContent).toEqual(text);
-    expect(
-      target.getElementsByClassName("idlSectionComment").length
-    ).toEqual(1);
+    expect(target.getElementsByClassName("idlSectionComment").length).toEqual(
+      1
+    );
   });
 
   it("should handle dictionaries", () => {
@@ -500,7 +495,9 @@ describe("Core - WebIDL", function() {
     target = doc.getElementById("dict-inherit");
     text = "dictionary SuperStar : HyperStar {};";
     expect(target.textContent).toEqual(text);
-    expect(target.querySelector(".idlSuperclass").textContent).toEqual("HyperStar");
+    expect(target.querySelector(".idlSuperclass").textContent).toEqual(
+      "HyperStar"
+    );
 
     target = doc.getElementById("dict-fields");
     text =
@@ -637,7 +634,7 @@ enum EnumBasic {
     ).toEqual("#dom-enumbasic-one");
   });
 
-  it("links empty-string enumeration value", done => {
+  it("links empty-string enumeration value", () => {
     const links = doc.querySelector(
       `#enum-empty-sec a[href="#dom-emptyenum-the-empty-string"]`
     );
@@ -648,7 +645,6 @@ enum EnumBasic {
     expect(links).toBeTruthy();
     expect(dfn).toBeTruthy();
     expect(smokeDfn).toBeTruthy();
-    done();
   });
 
   it("handles optional and trivia", () => {
@@ -665,7 +661,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(trivaComments.length).toEqual(3);
   });
 
-  it("should handle callbacks", function(done) {
+  it("should handle callbacks", () => {
     var $target = $("#cb-basic", doc);
     var text = "callback SuperStar = void ();";
     expect($target.text()).toEqual(text);
@@ -730,7 +726,6 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         .last()
         .text()
     ).toEqual("b");
-    done();
   });
 
   it("should handle typedefs", () => {
@@ -788,7 +783,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect($target.text()).toEqual(text);
   });
 
-  it("should link documentation", function() {
+  it("should link documentation", () => {
     var $section = $("#documentation", doc);
     var $target = $("#doc-iface", doc);
 

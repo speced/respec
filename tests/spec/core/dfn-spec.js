@@ -1,5 +1,5 @@
 "use strict";
-describe("Core — Definitions", function() {
+describe("Core — Definitions", () => {
   afterAll(flushIframes);
   it("processes definitions", async () => {
     const ops = {

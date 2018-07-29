@@ -1,5 +1,5 @@
 "use strict";
-describe("Core — Issues and Notes", function() {
+describe("Core — Issues and Notes", () => {
   afterAll(flushIframes);
   it("treats each issue as unique", async () => {
     const body = `
@@ -148,7 +148,9 @@ describe("Core — Issues and Notes", function() {
     const issueDiv404 = doc.getElementById("this-is-404");
 
     expect(issueDiv404).toBeTruthy();
-    expect(issueDiv404.querySelector("div:not(.issue-title)").textContent).toEqual("this is 404");
+    expect(
+      issueDiv404.querySelector("div:not(.issue-title)").textContent
+    ).toEqual("this is 404");
 
     const [
       refactorLabel,
@@ -259,7 +261,9 @@ describe("Core — Issues and Notes", function() {
     expect(textContent).toBe("Issue 1540");
     const issueDiv404 = doc.getElementById("this-is-404");
     expect(issueDiv404).toBeTruthy();
-    expect(issueDiv404.querySelector("div:not(.issue-title)").textContent).toEqual("this is 404");
+    expect(
+      issueDiv404.querySelector("div:not(.issue-title)").textContent
+    ).toEqual("this is 404");
   });
 
   it("should link to external issue tracker for features at risk", async () => {

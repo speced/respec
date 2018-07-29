@@ -3,7 +3,7 @@ describe("Core — Location Hash", () => {
   afterAll(flushIframes);
   var ops = makeStandardOps();
   const simpleURL = "/tests/spec/core/simple.html";
-  
+
   describe("legacy fragment format", () => {
     it("leaves editor defined id alone, even if they include illegal chars", async () => {
       const expectedHash = "#custom_id(¡™£¢∞§¶•ªº)";

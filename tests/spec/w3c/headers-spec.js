@@ -2,7 +2,7 @@
 const findContent = string => {
   return ({ textContent }) => textContent.trim() === string;
 };
-describe("W3C — Headers", function() {
+describe("W3C — Headers", () => {
   afterEach(flushIframes);
   const simpleSpecURL = "spec/core/simple.html";
   describe("prevRecShortname & prevRecURI", () => {
@@ -33,26 +33,6 @@ describe("W3C — Headers", function() {
   });
 
   describe("shortName", () => {
-    it("takes shortName into account", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "REC",
-        shortName: "xxx",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      expect(
-        $("dt:contains('This version:')", doc)
-          .next("dd")
-          .text()
-      ).toMatch(/\/REC-xxx-/);
-      expect(
-        $("dt:contains('Latest published version:')", doc)
-          .next("dd")
-          .text()
-      ).toMatch(/\/TR\/xxx\//);
-    });
-
     it("takes shortName into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
@@ -168,7 +148,7 @@ describe("W3C — Headers", function() {
       var twitterAnchor = doc.querySelector("a[href='" + twitterHref + "']");
       // general checks
       var header = doc.querySelector("div.head");
-      [orcidAnchor, twitterAnchor].forEach(function(elem) {
+      [orcidAnchor, twitterAnchor].forEach(elem => {
         // Check parent is correct.
         expect(elem.parentNode.localName).toEqual("span");
         // Check that it's in the header of the document
@@ -489,7 +469,7 @@ describe("W3C — Headers", function() {
 
   describe("previousPublishDate & previousMaturity", () => {
     it("recovers given bad date inputs", async () => {
-      let ISODate = await new Promise(resolve => {
+      const ISODate = await new Promise(resolve => {
         require(["core/utils"], ({ ISODate }) => {
           resolve(ISODate);
         });
@@ -513,9 +493,7 @@ describe("W3C — Headers", function() {
       });
       expect(allInBetween).toBe(true);
     });
-  });
 
-  describe("previousPublishDate & previousMaturity", () => {
     it("takes previousPublishDate and previousMaturity into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
@@ -530,7 +508,7 @@ describe("W3C — Headers", function() {
         $("dt:contains('Previous version:')", doc)
           .next("dd")
           .text()
-      ).toMatch(/\/1977\/CR-[^\/]+-19770315\//);
+      ).toMatch(/\/1977\/CR-[^/]+-19770315\//);
     });
   });
 
