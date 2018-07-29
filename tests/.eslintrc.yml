@@ -15,9 +15,6 @@ rules:
   indent: 0
   jasmine/new-line-before-expect: 0
   jasmine/new-line-between-declarations: 0
-  linebreak-style:
-    - error
-    - unix
   semi:
     - error
     - always

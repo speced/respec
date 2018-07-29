@@ -1,6 +1,5 @@
 {
   "env": {
-    "jasmine": true,
     "browser": true,
     "es6": true,
     "node": true,
@@ -32,5 +31,5 @@
     "pickRandomsFromList": true,
     "respecConfig": true
   },
-  "plugins": ["jasmine", "prettier"]
+  "plugins": ["prettier"]
 }
