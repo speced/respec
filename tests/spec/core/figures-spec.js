@@ -70,8 +70,8 @@ describe("Core - Figures", function() {
     expect(tofHeader).toBeTruthy();
     expect(tofHeader.textContent).toEqual("1. Table of Figures");
     expect(tofItems.length).toEqual(2);
-    expect(figLinks.item(0).textContent).toEqual("Figure 1 test 1");
-    expect(figLinks.item(1).textContent).toEqual("Figure 2 test 2");
+    expect(figLinks[0].textContent).toEqual("Figure 1 test 1");
+    expect(figLinks[1].textContent).toEqual("Figure 2 test 2");
   });
 
   describe("normalize images", () => {

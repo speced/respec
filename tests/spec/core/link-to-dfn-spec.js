@@ -13,7 +13,7 @@ describe("Core — Link to definitions", function() {
       body: makeDefaultBody() + bodyText,
     };
     const doc = await makeRSDoc(ops);
-    const a = doc.body.querySelector("#testAnchor");
+    const a = doc.getElementById("testAnchor");
     expect(a).toBeTruthy();
     expect(a.hash).toEqual("#dfn-test");
     const decodedHash = decodeURIComponent(a.hash);

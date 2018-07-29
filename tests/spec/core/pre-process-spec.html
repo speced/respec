@@ -5,26 +5,26 @@
 function noOp() {}
 
 function preSyncFunc() {
-  document.querySelector("#pre-sync").innerHTML = "pass";
+  document.getElementById("pre-sync").innerHTML = "pass";
 }
 
 function preAsyncFunc() {
   return new Promise(resolve => {
     setTimeout(() => {
-      document.querySelector("#pre-async").innerHTML = "pass";
+      document.getElementById("pre-async").innerHTML = "pass";
       resolve();
     }, 4);
   });
 }
 
 function postSyncFunc() {
-  document.querySelector("#post-sync").innerHTML = "pass";
+  document.getElementById("post-sync").innerHTML = "pass";
 }
 
 function postAsyncFunc() {
   return new Promise(resolve => {
     setTimeout(() => {
-      document.querySelector("#post-async").innerHTML = "pass";
+      document.getElementById("post-async").innerHTML = "pass";
       resolve();
     }, 4);
   });
@@ -33,7 +33,7 @@ function postAsyncFunc() {
 function afterEnd() {
   return new Promise(resolve => {
     setTimeout(() => {
-      document.querySelector("#afterend").innerHTML = "pass";
+      document.getElementById("afterend").innerHTML = "pass";
       resolve();
     }, 4);
   });
