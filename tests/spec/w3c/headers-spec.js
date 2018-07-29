@@ -493,9 +493,7 @@ describe("W3C — Headers", () => {
       });
       expect(allInBetween).toBe(true);
     });
-  });
 
-  describe("previousPublishDate & previousMaturity", () => {
     it("takes previousPublishDate and previousMaturity into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
