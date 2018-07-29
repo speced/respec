@@ -17,7 +17,7 @@
     "quotes": 0,
     "semi": ["error", "always"],
     "no-console": 0,
-    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "no-unused-vars": 2,
     "prefer-arrow-callback": 2,
     "prefer-const": 2
   },
