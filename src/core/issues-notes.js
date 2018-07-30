@@ -21,23 +21,23 @@ const MAX_GITHUB_REQUESTS = 60;
 function handleIssues(ins, ghIssues, conf) {
   const $ins = $(ins);
   const { issueBase, githubAPI } = conf;
-  var hasDataNum = !!document.querySelector(".issue[data-number]"),
-    issueNum = 0,
-    $issueSummary = $(
-      "<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"
-    ),
-    $issueList = $issueSummary.find("ul");
+  var hasDataNum = !!document.querySelector(".issue[data-number]");
+  var issueNum = 0;
+  var $issueSummary = $(
+    "<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"
+  );
+  var $issueList = $issueSummary.find("ul");
   $ins.filter((i, issue) => issue.parentNode).each((i, inno) => {
-    var $inno = $(inno),
-      isIssue = $inno.hasClass("issue"),
-      isWarning = $inno.hasClass("warning"),
-      isEdNote = $inno.hasClass("ednote"),
-      isFeatureAtRisk = $inno.hasClass("atrisk"),
-      isInline = $inno[0].localName === "span",
-      dataNum = $inno.attr("data-number"),
-      report = {
-        inline: isInline,
-      };
+    var $inno = $(inno);
+    var isIssue = $inno.hasClass("issue");
+    var isWarning = $inno.hasClass("warning");
+    var isEdNote = $inno.hasClass("ednote");
+    var isFeatureAtRisk = $inno.hasClass("atrisk");
+    var isInline = $inno[0].localName === "span";
+    var dataNum = $inno.attr("data-number");
+    var report = {
+      inline: isInline,
+    };
     report.type = isIssue
       ? "issue"
       : isWarning
@@ -54,26 +54,26 @@ function handleIssues(ins, ghIssues, conf) {
     // wrap
     if (!isInline) {
       var $div = $(
-          "<div class='" +
-            report.type +
-            (isFeatureAtRisk ? " atrisk" : "") +
-            "'></div>"
-        ),
-        $tit = $(
-          "<div role='heading' class='" +
-            report.type +
-            "-title'><span></span></div>"
-        ),
-        text = isIssue
-          ? isFeatureAtRisk
-            ? conf.l10n.feature_at_risk
-            : conf.l10n.issue
-          : isWarning
-            ? conf.l10n.warning
-            : isEdNote
-              ? conf.l10n.editors_note
-              : conf.l10n.note,
-        ghIssue;
+        "<div class='" +
+          report.type +
+          (isFeatureAtRisk ? " atrisk" : "") +
+          "'></div>"
+      );
+      var $tit = $(
+        "<div role='heading' class='" +
+          report.type +
+          "-title'><span></span></div>"
+      );
+      var text = isIssue
+        ? isFeatureAtRisk
+          ? conf.l10n.feature_at_risk
+          : conf.l10n.issue
+        : isWarning
+          ? conf.l10n.warning
+          : isEdNote
+            ? conf.l10n.editors_note
+            : conf.l10n.note;
+      var ghIssue;
       if (inno.id) {
         $div[0].id = inno.id;
         inno.removeAttribute("id");

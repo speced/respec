@@ -123,9 +123,9 @@ function errWarn(msg, arr, butName, title) {
               cursor: "pointer",
             })
             .click(function() {
-              var $a = $(this),
-                state = $a.text(),
-                $pre = $a.parent().find("pre");
+              var $a = $(this);
+              var state = $a.text();
+              var $pre = $a.parent().find("pre");
               if (state === "\u229e") {
                 $a.text("\u229f");
                 $pre.show();

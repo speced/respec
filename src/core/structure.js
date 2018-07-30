@@ -30,8 +30,8 @@ function makeTOCAtLevel($parent, doc, current, level, conf) {
     if (!$sec.children().length || noToc) {
       continue;
     }
-    var h = $sec.children()[0],
-      ln = h.localName.toLowerCase();
+    var h = $sec.children()[0];
+    var ln = h.localName.toLowerCase();
     if (
       ln !== "h2" &&
       ln !== "h3" &&
@@ -41,12 +41,12 @@ function makeTOCAtLevel($parent, doc, current, level, conf) {
     ) {
       continue;
     }
-    var title = h.textContent,
-      $kidsHolder = $("<div></div>").append(
-        $(h)
-          .contents()
-          .clone()
-      );
+    var title = h.textContent;
+    var $kidsHolder = $("<div></div>").append(
+      $(h)
+        .contents()
+        .clone()
+    );
     $kidsHolder
       .find("a")
       .renameElement("span")
@@ -69,8 +69,8 @@ function makeTOCAtLevel($parent, doc, current, level, conf) {
     if (appendixMode) {
       secnos[0] = alphabet.charAt(current[0] - lastNonAppendix);
     }
-    var secno = secnos.join("."),
-      isTopLevel = secnos.length == 1;
+    var secno = secnos.join(".");
+    var isTopLevel = secnos.length == 1;
     if (isTopLevel) {
       secno = secno + ".";
       // if this is a top level item, insert

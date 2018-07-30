@@ -21,11 +21,11 @@ export function run(conf, doc, cb) {
   });
 
   $("a.reqRef").each(function() {
-    var $ref = $(this),
-      href = $ref.attr("href"),
-      id,
-      $req,
-      txt;
+    var $ref = $(this);
+    var href = $ref.attr("href");
+    var id;
+    var $req;
+    var txt;
     if (!href) return;
     id = href.substring(1);
     $req = $("#" + id);

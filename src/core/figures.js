@@ -10,14 +10,14 @@ export const name = "core/figures";
 export function run(conf, doc, cb) {
   normalizeImages(doc);
   // process all figures
-  var figMap = {},
-    tof = [],
-    num = 0;
+  var figMap = {};
+  var tof = [];
+  var num = 0;
   $("figure").each(function() {
-    var $fig = $(this),
-      $cap = $fig.find("figcaption"),
-      tit = $cap.text(),
-      id = $fig.makeID("fig", tit);
+    var $fig = $(this);
+    var $cap = $fig.find("figcaption");
+    var tit = $cap.text();
+    var id = $fig.makeID("fig", tit);
     if (!$cap.length)
       pub("warn", "A `<figure>` should contain a `<figcaption>`.");
 
@@ -44,8 +44,8 @@ export function run(conf, doc, cb) {
 
   // Update all anchors with empty content that reference a figure ID
   $("a[href]", doc).each(function() {
-    var $a = $(this),
-      id = $a.attr("href");
+    var $a = $(this);
+    var id = $a.attr("href");
     if (!id) return;
     id = id.substring(1);
     if (figMap[id]) {
