@@ -4,6 +4,7 @@
 import { linkInlineCitations } from "core/data-cite";
 import { pub } from "core/pubsubhub";
 import { lang as defaultLang } from "./l10n";
+import { getLinkTargets } from "core/utils";
 import { run as addExternalReferences } from "core/xref";
 export const name = "core/link-to-dfn";
 const l10n = {
@@ -76,7 +77,7 @@ export async function run(conf, doc, cb) {
     const $ant = $(this);
     const ant = $ant[0];
     if (ant.classList.contains("externalDFN")) return;
-    const linkTargets = $ant.linkTargets();
+    const linkTargets = getLinkTargets(ant);
     const foundDfn = linkTargets.some(target => {
       if (titles[target.title] && titles[target.title][target.for]) {
         const $dfn = titles[target.title][target.for];
