@@ -183,7 +183,7 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const localDfn1 = doc.querySelector("#local-dfn-1");
+    const localDfn1 = doc.getElementById("local-dfn-1");
     expect(localDfn1.querySelector("a")).toBeFalsy();
     expect(localDfn1.querySelector("dfn").id).toEqual("dfn-local-one");
     const localDfn2 = doc.querySelector("#local-dfn-2 a");

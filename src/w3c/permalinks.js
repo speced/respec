@@ -22,16 +22,19 @@ export function run(conf, doc, cb) {
     return cb();
   }
   const css = tmpls["permalinks.css"];
-  var symbol = conf.permalinkSymbol || "§";
-  var style = "<style>" + css(conf) + "</style>";
+  const symbol = conf.permalinkSymbol || "§";
+  const style = "<style>" + css(conf) + "</style>";
 
-  $(doc).find("head link").first().before(style);
-  var $secs = $(doc).find("h2, h3, h4, h5, h6");
-  $secs.each(function(i, item) {
-    var $item = $(item);
+  $(doc)
+    .find("head link")
+    .first()
+    .before(style);
+  const $secs = $(doc).find("h2, h3, h4, h5, h6");
+  $secs.each((i, item) => {
+    const $item = $(item);
     if (!$item.hasClass("nolink")) {
-      var resourceID = $item.attr("id");
-      var $par = $item.parent();
+      let resourceID = $item.attr("id");
+      const $par = $item.parent();
       if ($par.is("section") || $par.is("div")) {
         if (!$par.hasClass("introductory") && !$par.hasClass("nolink")) {
           resourceID = $par.attr("id");
@@ -43,16 +46,16 @@ export function run(conf, doc, cb) {
       if (resourceID) {
         // we have an id.  add a permalink
         // right after the h* element
-        var theNode = $("<span></span>");
+        const theNode = $("<span></span>");
         theNode.attr("class", "permalink");
-        var ctext = $item.text();
-        var el = $("<a></a>");
+        const ctext = $item.text();
+        const el = $("<a></a>");
         el.attr({
           href: "#" + resourceID,
           "aria-label": "Permalink for " + ctext,
           title: "Permalink for " + ctext,
         });
-        var sym = $("<span></span>");
+        const sym = $("<span></span>");
         sym.append(symbol);
         el.append(sym);
         theNode.append(el);

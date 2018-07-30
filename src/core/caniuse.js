@@ -195,7 +195,7 @@ function createTableHTML(conf, stats) {
       .slice(-numVersions)
       .reverse();
     const { support, title } = getSupport(latestVersion);
-    const cssClass= `caniuse-cell ${support}`;
+    const cssClass = `caniuse-cell ${support}`;
     return hyperHTML`
       <div class="caniuse-browser">
         <button class="${cssClass}" title="${title}">

@@ -75,7 +75,9 @@ describe("Core - Github", () => {
   });
   describe("the definition list items (localized)", () => {
     function definitionListTest(doc) {
-      const { respecConfig: { l10n } } = doc.defaultView;
+      const {
+        respecConfig: { l10n },
+      } = doc.defaultView;
       const participate = Array.from(doc.querySelectorAll("dt")).find(
         node => node.textContent === l10n.participate + ":"
       );

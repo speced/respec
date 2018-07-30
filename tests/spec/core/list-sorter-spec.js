@@ -71,7 +71,7 @@ describe("Core — list-sorter", () => {
     };
     doc = await makeRSDoc(ops);
   });
-  describe("Ordered and unordered lists", ()=>{
+  describe("Ordered and unordered lists", () => {
     it("sorts ordered lists in ascending order", () => {
       const list = doc.querySelector("ol[data-sort='ascending']");
       const first = list.querySelector("li:first-of-type");
@@ -79,7 +79,7 @@ describe("Core — list-sorter", () => {
       expect(first.textContent).toEqual("a");
       expect(last.textContent).toEqual("Z");
     });
-    
+
     it("sorts unordered lists in descending order", () => {
       const list = doc.querySelector("ul[data-sort='descending']");
       const first = list.querySelector("li:first-of-type");
@@ -87,22 +87,22 @@ describe("Core — list-sorter", () => {
       expect(first.textContent).toEqual("Z");
       expect(last.textContent).toEqual("a");
     });
-    
+
     it("defaults to sorting in ascending order", () => {
-      const list = doc.querySelector("#ol-default");
+      const list = doc.getElementById("ol-default");
       expect(list.firstElementChild.textContent).toEqual("a");
       expect(list.lastElementChild.textContent).toEqual("Z");
     });
-    
-    it("sorts nested lists", ()=>{
-      const list = doc.querySelector("#nested-list");
+
+    it("sorts nested lists", () => {
+      const list = doc.getElementById("nested-list");
       const first = list.querySelector("li:first-of-type");
       const last = list.querySelector("li:last-of-type");
       expect(first.textContent).toEqual("z");
       expect(last.firstChild.textContent.startsWith("A")).toBe(true);
     });
   });
-  describe("Definition lists", ()=>{
+  describe("Definition lists", () => {
     it("sorts definition lists in ascending order", () => {
       const list = doc.querySelector("dl[data-sort='ascending']");
       const firstDt = list.querySelector("dt:first-of-type");
@@ -128,13 +128,13 @@ describe("Core — list-sorter", () => {
     });
 
     it("defaults to sorting in definition lists in ascending order", () => {
-      const list = doc.querySelector("#default-sort");
+      const list = doc.getElementById("default-sort");
       expect(list.firstElementChild.textContent).toEqual("1");
       expect(list.lastElementChild.textContent).toEqual("9");
     });
 
     it("leaves unmarked lists alone", () => {
-      const list = doc.querySelector("#dont-sort");
+      const list = doc.getElementById("dont-sort");
       expect(list.firstElementChild.textContent).toEqual("dont");
       expect(list.lastElementChild.textContent).toEqual("me");
     });

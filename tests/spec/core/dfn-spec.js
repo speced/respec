@@ -1,5 +1,5 @@
 "use strict";
-describe("Core — Definitions", function() {
+describe("Core — Definitions", () => {
   afterAll(flushIframes);
   it("processes definitions", async () => {
     const ops = {
@@ -9,7 +9,7 @@ describe("Core — Definitions", function() {
         "<section id='dfn'><dfn>text</dfn><a>text</a></section>",
     };
     const doc = await makeRSDoc(ops);
-    var $sec = $("#dfn", doc);
+    const $sec = $("#dfn", doc);
     expect($sec.find("dfn").attr("id")).toEqual("dfn-text");
     expect($sec.find("a").attr("href")).toEqual("#dfn-text");
   });
@@ -31,7 +31,7 @@ describe("Core — Definitions", function() {
         </section>`,
     };
     const doc = await makeRSDoc(ops);
-    var $sec = $("#dfn", doc);
+    const $sec = $("#dfn", doc);
     expect($sec.find("a:contains('outerCode')").contents()[0].nodeName).toEqual(
       "CODE"
     );
@@ -62,7 +62,7 @@ describe("Core — Definitions", function() {
     const doc = await makeRSDoc(ops);
     const code = doc.querySelector("#t1 code");
     expect(code.textContent).toEqual("Test");
-    const t2 = doc.querySelector("#t2");
+    const t2 = doc.getElementById("t2");
     expect(t2.querySelector("code")).toEqual(null);
     expect(t2.querySelector("a").textContent).toEqual("not wrapped in code");
     expect(t2.querySelector("a").getAttribute("href")).toEqual("#idl-def-test");

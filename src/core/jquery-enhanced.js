@@ -10,17 +10,17 @@ window.$ = $;
 // Applies to any jQuery object containing elements, changes their name to the one give, and
 // return a jQuery object containing the new elements
 window.$.fn.renameElement = function(name) {
-  var arr = [];
+  const arr = [];
   this.each(function() {
-    var $newEl = $(this.ownerDocument.createElement(name));
+    const $newEl = $(this.ownerDocument.createElement(name));
     // I forget why this didn't work, maybe try again
     // $newEl.attr($(this).attr());
-    for (var i = 0, n = this.attributes.length; i < n; i++) {
-      var at = this.attributes[i];
+    for (let i = 0, n = this.attributes.length; i < n; i++) {
+      const at = this.attributes[i];
       try {
         $newEl[0].setAttributeNS(at.namespaceURI, at.name, at.value);
       } catch (err) {
-        var msg = "Your HTML markup is malformed. Error in: \n";
+        let msg = "Your HTML markup is malformed. Error in: \n";
         msg += "```HTML\n" + this.outerHTML + "\n```";
         pub("error", msg);
         break; // no point in continuing with this element
@@ -64,10 +64,10 @@ window.$.fn.getDfnTitles = function(args) {
 //  * {for: "int3", title: "member"}
 //  * {for: "", title: "int3.member"}
 window.$.fn.linkTargets = function() {
-  var linkForElem = this[0].closest("[data-link-for]");
-  var linkFor = linkForElem ? linkForElem.dataset.linkFor.toLowerCase() : "";
-  var titles = getDfnTitles(this[0]);
-  var result = [];
+  const linkForElem = this[0].closest("[data-link-for]");
+  const linkFor = linkForElem ? linkForElem.dataset.linkFor.toLowerCase() : "";
+  const titles = getDfnTitles(this[0]);
+  const result = [];
   for (const title of titles) {
     result.push({
       for: linkFor,

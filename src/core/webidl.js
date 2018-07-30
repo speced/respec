@@ -35,7 +35,7 @@ const idlTypedefTmpl = tmpls["typedef.html"];
 const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
 
 function registerHelpers() {
-  hb.registerHelper("extAttr", function(obj) {
+  hb.registerHelper("extAttr", obj => {
     return extAttr(obj.extAttrs);
   });
   hb.registerHelper("extAttrClassName", function() {
@@ -44,13 +44,13 @@ function registerHelpers() {
       ? "idlCtor"
       : "extAttr";
   });
-  hb.registerHelper("extAttrRhs", function(rhs, options) {
+  hb.registerHelper("extAttrRhs", (rhs, options) => {
     if (rhs.type === "identifier") {
       return options.fn(rhs.value);
     }
     return `(${rhs.value.map(v => options.fn(v.value))})`;
   });
-  hb.registerHelper("param", function(obj) {
+  hb.registerHelper("param", obj => {
     const trivia = obj.optional ? obj.optional.trivia : "";
     return new hb.SafeString(
       idlParamTmpl({
@@ -63,10 +63,10 @@ function registerHelpers() {
   hb.registerHelper("jsIf", function(condition, options) {
     return condition ? options.fn(this) : options.inverse(this);
   });
-  hb.registerHelper("idlType", function(obj) {
+  hb.registerHelper("idlType", obj => {
     return new hb.SafeString(idlType2Html(obj.idlType));
   });
-  hb.registerHelper("stringifyIdlConst", function(value) {
+  hb.registerHelper("stringifyIdlConst", value => {
     switch (value.type) {
       case "null":
         return "null";
@@ -85,10 +85,10 @@ function registerHelpers() {
         return "<Unknown>";
     }
   });
-  hb.registerHelper("join", function(arr, between, options) {
+  hb.registerHelper("join", (arr, between, options) => {
     return arr.map(options.fn).join(between);
   });
-  hb.registerHelper("joinNonWhitespace", function(arr, between, options) {
+  hb.registerHelper("joinNonWhitespace", (arr, between, options) => {
     return arr
       .filter(elem => elem.type !== "ws")
       .map(options.fn)
@@ -138,7 +138,7 @@ function writeTrivia(text) {
 
 function idlType2Html(idlType) {
   if (typeof idlType === "string") {
-    return `<a>${hb.Utils.escapeExpression(idlType)}</a>`;
+    return `<a data-link-for="">${hb.Utils.escapeExpression(idlType)}</a>`;
   }
   if (Array.isArray(idlType)) {
     return idlType.map(idlType2Html).join(",");
@@ -274,14 +274,14 @@ const standardTypes = new Map([
   ["USVString", "WEBIDL#idl-USVString"],
 ]);
 
-var operationNames = {};
-var idlPartials = {};
+const operationNames = {};
+const idlPartials = {};
 
 // Takes the result of WebIDL2.parse(), an array of definitions.
-function makeMarkup(conf, parse) {
-  var pre = document.createElement("pre");
+function makeMarkup(parse) {
+  const pre = document.createElement("pre");
   pre.classList.add("def", "idl");
-  pre.innerHTML = parse.map(defn => writeDefinition(defn)).join("");
+  pre.innerHTML = parse.map(writeDefinition).join("");
   return pre;
 }
 
@@ -337,14 +337,14 @@ function writeDefinition(obj) {
           variadic: it.variadic ? "..." : "",
         })
       );
-      var callbackObj = {
+      const callbackObj = {
         obj,
         children: paramObjs.join(","),
       };
       return idlCallbackTmpl(callbackObj);
     }
     case "enum": {
-      var children = "";
+      let children = "";
       for (const item of obj.values) {
         switch (item.type) {
           case "string":
@@ -408,7 +408,7 @@ function writeInterfaceDefinition(opt, fixes = {}) {
 }
 
 function writeAttributeQualifiers(attr) {
-  var qualifiers = "";
+  let qualifiers = "";
   if (attr.static) qualifiers += `${writeTrivia(attr.static.trivia)}static`;
   if (attr.stringifier)
     qualifiers += `${writeTrivia(attr.stringifier.trivia)}stringifier`;
@@ -419,7 +419,7 @@ function writeAttributeQualifiers(attr) {
 }
 
 function writeAttribute(attr) {
-  var qualifiers = writeAttributeQualifiers(attr);
+  const qualifiers = writeAttributeQualifiers(attr);
   return idlAttributeTmpl({
     obj: attr,
     qualifiers,
@@ -473,7 +473,7 @@ function writeIterableLike(iterableLike) {
 }
 
 function writeMember(memb) {
-  var opt = { obj: memb, qualifiers: "" };
+  const opt = { obj: memb, qualifiers: "" };
   if (memb.required)
     opt.qualifiers = `${writeTrivia(memb.required.trivia)}required`;
   return idlDictMemberTmpl(opt);
@@ -496,8 +496,8 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
         case "callback interface":
         case "dictionary":
         case "interface":
-        case "interface mixin":
-          var partialIdx = "";
+        case "interface mixin": {
+          let partialIdx = "";
           if (defn.partial) {
             if (!idlPartials[defn.name]) {
               idlPartials[defn.name] = [];
@@ -509,6 +509,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
           name = defn.name;
           defn.idlId = "idl-def-" + name.toLowerCase() + partialIdx;
           break;
+        }
         case "enum":
           name = defn.name;
           for (const v of defn.values) {
@@ -535,8 +536,8 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
         case "operation": {
           if (defn.body && defn.body.name) {
             name = defn.body.name.value;
-            var qualifiedName = parent + "." + name;
-            var fullyQualifiedName = parent + "." + name + "()";
+            const qualifiedName = parent + "." + name;
+            const fullyQualifiedName = parent + "." + name + "()";
             if (!operationNames[fullyQualifiedName]) {
               operationNames[fullyQualifiedName] = [];
             }
@@ -653,8 +654,8 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
   if (unlinkable.has(name)) {
     return;
   }
-  var dfnForArray = definitionMap[name];
-  var dfns = [];
+  let dfnForArray = definitionMap[name];
+  let dfns = [];
   if (dfnForArray) {
     // Definitions that have a title and [data-dfn-for] that exactly match the
     // IDL entity:
@@ -668,7 +669,7 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
   // If we haven't found any definitions with explicit [for]
   // and [title], look for a dotted definition, "parent.name".
   if (dfns.length === 0 && parent !== "") {
-    var dottedName = parent + "." + name;
+    const dottedName = parent + "." + name;
     dfnForArray = definitionMap[dottedName];
     if (dfnForArray !== undefined && dfnForArray.length === 1) {
       dfns = dfnForArray;
@@ -723,71 +724,61 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
   }
   return dfns[0];
 }
-var resolveDone;
 
-export const done = new Promise(function(resolve) {
-  resolveDone = resolve;
-});
-
-export function run(conf, doc, cb) {
-  var finish = function() {
-    resolveDone();
-    pub("end", "core/webidl");
-    cb();
-  };
-  var $idl = $("pre.idl", doc);
-  if (!$idl.length) {
-    return finish();
+export function run(conf) {
+  const idls = document.querySelectorAll("pre.idl");
+  if (!idls.length) {
+    return;
   }
   registerHelpers();
-  if (!$(".idl", doc).not("pre").length) {
-    $(doc)
-      .find("head link")
-      .first()
-      .before($("<style/>").text(css));
+  if (!document.querySelector(".idl:not(pre)")) {
+    const link = document.querySelector("head link");
+    if (link) {
+      const style = document.createElement("style");
+      style.textContent = css;
+      link.parentElement.insertBefore(style, link);
+    }
   }
 
-  $idl.each(function() {
-    var parse;
+  idls.forEach(idlElement => {
+    let parse;
     try {
-      const idl = unindentMarkup(this.textContent);
+      const idl = unindentMarkup(idlElement.textContent);
       parse = webidl2.parse(idl);
     } catch (e) {
       pub(
         "error",
         `Failed to parse WebIDL: ${e.message}.
         <details>
-        <pre>${normalizePadding(this.textContent)}\n ${e}</pre>
+        <pre>${normalizePadding(idlElement.textContent)}\n ${e}</pre>
         </details>`
       );
       // Skip this <pre> and move on to the next one.
       return;
     }
-    linkDefinitions(parse, conf.definitionMap, "", this);
-    var $df = $(makeMarkup(conf, parse));
-    $df.attr({ id: this.id });
-    $df
-      .find(
+    linkDefinitions(parse, conf.definitionMap, "", idlElement);
+    const newElement = makeMarkup(parse);
+    newElement.setAttribute("id", idlElement.id);
+    newElement
+      .querySelectorAll(
         ".idlAttribute,.idlCallback,.idlConst,.idlDictionary,.idlEnum,.idlException,.idlField,.idlInterface,.idlMember,.idlMethod,.idlMaplike,.idlIterable,.idlTypedef"
       )
-      .each(function() {
-        var elem = $(this);
-        var title = elem.attr("data-title").toLowerCase();
+      .forEach(elem => {
+        const title = elem.dataset.title.toLowerCase();
         // Select the nearest ancestor element that can contain members.
-        var parent = elem
-          .parent()
-          .closest(".idlDictionary,.idlEnum,.idlException,.idlInterface");
-        if (parent.length) {
-          elem.attr("data-dfn-for", parent.attr("data-title").toLowerCase());
+        const parent = elem.parentElement.closest(
+          ".idlDictionary,.idlEnum,.idlException,.idlInterface"
+        );
+        if (parent) {
+          elem.dataset.dfnFor = parent.dataset.title.toLowerCase();
         }
         if (!conf.definitionMap[title]) {
           conf.definitionMap[title] = [];
         }
-        conf.definitionMap[title].push(elem);
+        conf.definitionMap[title].push($(elem));
       });
-    $(this).replaceWith($df);
-    $df[0].classList.add(...this.classList);
+    idlElement.parentElement.replaceChild(newElement, idlElement);
+    newElement.classList.add(...idlElement.classList);
   });
-  doc.normalize();
-  finish();
+  document.normalize();
 }

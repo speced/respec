@@ -154,9 +154,9 @@ function render({ state, results, timeTaken, query } = { state: "" }) {
     <p class="state" hidden="${!state}">
       ${state}
     </p>
-    <section hidden="${!results}">${results
-    ? renderResults(results, query, timeTaken)
-    : []}</section>
+    <section hidden="${!results}">${
+    results ? renderResults(results, query, timeTaken) : []
+  }</section>
   `;
 }
 
