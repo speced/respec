@@ -10,7 +10,7 @@ describe("Core - Fix headers", () => {
         "<section><h1>FIVE</h1><section><h1>SIX</h1></section></section></section></section></section></section>",
     };
     const doc = await makeRSDoc(ops);
-    var $s = $("#turtles", doc);
+    const $s = $("#turtles", doc);
     expect($s.find("h1").length).toEqual(0);
     expect($s.find("h2").length).toEqual(1);
     expect($s.find("h2").text()).toMatch(/ONE/);
