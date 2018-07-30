@@ -1,5 +1,5 @@
 import { pub } from "core/pubsubhub";
-import { addId, getTextNodes, getDfnTitles } from "core/utils";
+import { addId, getTextNodes, getDfnTitles, getLinkTargets } from "core/utils";
 import "deps/jquery";
 
 export const name = "core/jquery-enhanced";
@@ -64,30 +64,7 @@ window.$.fn.getDfnTitles = function(args) {
 //  * {for: "int3", title: "member"}
 //  * {for: "", title: "int3.member"}
 window.$.fn.linkTargets = function() {
-  var linkForElem = this[0].closest("[data-link-for]");
-  var linkFor = linkForElem ? linkForElem.dataset.linkFor.toLowerCase() : "";
-  var titles = getDfnTitles(this[0]);
-  var result = [];
-  for (const title of titles) {
-    result.push({
-      for: linkFor,
-      title,
-    });
-    const split = title.split(".");
-    if (split.length === 2) {
-      // If there are multiple '.'s, this won't match an
-      // Interface/member pair anyway.
-      result.push({
-        for: split[0],
-        title: split[1],
-      });
-    }
-    result.push({
-      for: "",
-      title,
-    });
-  }
-  return result;
+  return getLinkTargets(this[0]);
 };
 
 // Applied to an element, sets an ID for it (and returns it), using a specific prefix
