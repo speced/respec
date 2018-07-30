@@ -4,7 +4,7 @@
 import { pub } from "core/pubsubhub";
 export const name = "w3c/seo";
 export function run(conf, doc, cb) {
-  var trLatestUri = conf.shortName
+  const trLatestUri = conf.shortName
     ? "https://www.w3.org/TR/" + conf.shortName + "/"
     : null;
   switch (conf.canonicalURI) {
@@ -45,7 +45,7 @@ export function run(conf, doc, cb) {
       }
   }
   if (conf.canonicalURI) {
-    var linkElem = doc.createElement("link");
+    const linkElem = doc.createElement("link");
     linkElem.setAttribute("rel", "canonical");
     linkElem.setAttribute("href", conf.canonicalURI);
     doc.head.appendChild(linkElem);

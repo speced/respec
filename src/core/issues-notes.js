@@ -21,21 +21,21 @@ const MAX_GITHUB_REQUESTS = 60;
 function handleIssues(ins, ghIssues, conf) {
   const $ins = $(ins);
   const { issueBase, githubAPI } = conf;
-  var hasDataNum = !!document.querySelector(".issue[data-number]");
-  var issueNum = 0;
-  var $issueSummary = $(
+  const hasDataNum = !!document.querySelector(".issue[data-number]");
+  let issueNum = 0;
+  const $issueSummary = $(
     "<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"
   );
-  var $issueList = $issueSummary.find("ul");
+  const $issueList = $issueSummary.find("ul");
   $ins.filter((i, issue) => issue.parentNode).each((i, inno) => {
-    var $inno = $(inno);
-    var isIssue = $inno.hasClass("issue");
-    var isWarning = $inno.hasClass("warning");
-    var isEdNote = $inno.hasClass("ednote");
-    var isFeatureAtRisk = $inno.hasClass("atrisk");
-    var isInline = $inno[0].localName === "span";
-    var dataNum = $inno.attr("data-number");
-    var report = {
+    const $inno = $(inno);
+    const isIssue = $inno.hasClass("issue");
+    const isWarning = $inno.hasClass("warning");
+    const isEdNote = $inno.hasClass("ednote");
+    const isFeatureAtRisk = $inno.hasClass("atrisk");
+    const isInline = $inno[0].localName === "span";
+    const dataNum = $inno.attr("data-number");
+    const report = {
       inline: isInline,
     };
     report.type = isIssue
@@ -53,18 +53,18 @@ function handleIssues(ins, ghIssues, conf) {
     }
     // wrap
     if (!isInline) {
-      var $div = $(
+      const $div = $(
         "<div class='" +
           report.type +
           (isFeatureAtRisk ? " atrisk" : "") +
           "'></div>"
       );
-      var $tit = $(
+      const $tit = $(
         "<div role='heading' class='" +
           report.type +
           "-title'><span></span></div>"
       );
-      var text = isIssue
+      let text = isIssue
         ? isFeatureAtRisk
           ? conf.l10n.feature_at_risk
           : conf.l10n.issue
@@ -73,7 +73,7 @@ function handleIssues(ins, ghIssues, conf) {
           : isEdNote
             ? conf.l10n.editors_note
             : conf.l10n.note;
-      var ghIssue;
+      let ghIssue;
       if (inno.id) {
         $div[0].id = inno.id;
         inno.removeAttribute("id");
@@ -110,8 +110,8 @@ function handleIssues(ins, ghIssues, conf) {
         }
         if (report.number !== undefined) {
           // Add entry to #issue-summary.
-          var $li = $("<li><a></a></li>");
-          var $a = $li.find("a");
+          const $li = $("<li><a></a></li>");
+          const $a = $li.find("a");
           $a.attr("href", "#" + $div[0].id).text(
             conf.l10n.issue + " " + report.number
           );
@@ -162,7 +162,7 @@ function handleIssues(ins, ghIssues, conf) {
       $tit.addClass("marker");
       $div.append($tit);
       $inno.replaceWith($div);
-      var body = $inno.removeClass(report.type).removeAttr("data-number");
+      let body = $inno.removeClass(report.type).removeAttr("data-number");
       if (ghIssue && !body.text().trim()) {
         body = ghIssue.body_html;
       }

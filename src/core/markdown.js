@@ -216,7 +216,7 @@ export function run(conf, doc, cb) {
   // Remove links where class .nolinks
   substituteWithTextNodes(newBody.querySelectorAll(".nolinks a[href]"));
   // Restructure the document properly
-  var fragment = structure(newBody, doc);
+  const fragment = structure(newBody, doc);
   // Frankenstein the whole thing back together
   newBody.appendChild(fragment);
   newBody.insertAdjacentElement("afterbegin", rsUI);

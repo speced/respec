@@ -1,7 +1,7 @@
 "use strict";
 describe("Core — Location Hash", () => {
   afterAll(flushIframes);
-  var ops = makeStandardOps();
+  const ops = makeStandardOps();
   const simpleURL = "/tests/spec/core/simple.html";
 
   describe("legacy fragment format", () => {

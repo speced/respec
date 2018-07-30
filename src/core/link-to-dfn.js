@@ -15,22 +15,22 @@ const lang = defaultLang in l10n ? defaultLang : "en";
 
 export async function run(conf, doc, cb) {
   doc.normalize();
-  var titles = {};
+  const titles = {};
   Object.keys(conf.definitionMap).forEach(title => {
     titles[title] = {};
-    var listOfDuplicateDfns = [];
+    const listOfDuplicateDfns = [];
     conf.definitionMap[title].forEach(dfn => {
       if (dfn.attr("data-idl") === undefined) {
         // Non-IDL definitions aren't "for" an interface.
         dfn.removeAttr("data-dfn-for");
       }
-      var dfn_for = dfn.attr("data-dfn-for") || "";
+      const dfn_for = dfn.attr("data-dfn-for") || "";
       if (dfn_for in titles[title]) {
         // We want <dfn> definitions to take precedence over
         // definitions from WebIDL. WebIDL definitions wind
         // up as <span>s instead of <dfn>.
-        var oldIsDfn = titles[title][dfn_for].filter("dfn").length !== 0;
-        var newIsDfn = dfn.filter("dfn").length !== 0;
+        const oldIsDfn = titles[title][dfn_for].filter("dfn").length !== 0;
+        const newIsDfn = dfn.filter("dfn").length !== 0;
         if (oldIsDfn && newIsDfn) {
           // Only complain if the user provides 2 <dfn>s
           // for the same term.

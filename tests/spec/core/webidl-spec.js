@@ -50,16 +50,20 @@ describe("Core - WebIDL", () => {
   });
 
   it("links to fully qualified method names", () => {
-    var t1 = new URL(doc.getElementById("fullyQualifiedNoParens-1").href).hash;
+    const t1 = new URL(doc.getElementById("fullyQualifiedNoParens-1").href)
+      .hash;
     expect(t1).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
 
-    var t2 = new URL(doc.getElementById("fullyQualifiedNoParens-2").href).hash;
+    const t2 = new URL(doc.getElementById("fullyQualifiedNoParens-2").href)
+      .hash;
     expect(t2).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
 
-    var t3 = new URL(doc.getElementById("fullyQualifiedNoParens-3").href).hash;
+    const t3 = new URL(doc.getElementById("fullyQualifiedNoParens-3").href)
+      .hash;
     expect(t3).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
 
-    var t4 = new URL(doc.getElementById("fullyQualifiedNoParens-4").href).hash;
+    const t4 = new URL(doc.getElementById("fullyQualifiedNoParens-4").href)
+      .hash;
     expect(t4).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
   });
 
