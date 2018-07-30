@@ -131,7 +131,7 @@ export function calculateLeftPad(text) {
     throw new TypeError("Invalid input");
   }
   // Find smallest padding value
-  var leftPad = text
+  const leftPad = text
     .split("\n")
     .filter(item => item)
     .reduce((smallest, item) => {
@@ -205,8 +205,8 @@ export function normalizePadding(text = "") {
     return node !== null && node.nodeType === Node.TEXT_NODE;
   }
   // Force into body
-  var parserInput = "<body>" + text;
-  var doc = new DOMParser().parseFromString(parserInput, "text/html");
+  const parserInput = "<body>" + text;
+  const doc = new DOMParser().parseFromString(parserInput, "text/html");
   // Normalize block level elements children first
   Array.from(doc.body.children)
     .filter(elem => !inlineElems.has(elem.localName))
@@ -235,7 +235,7 @@ export function normalizePadding(text = "") {
     .replace(/^ *\n/, "")
     .split("\n")
     .filter(item => item && item.startsWith(" "))[0];
-  var chop = firstSpace ? firstSpace.match(/ +/)[0].length : 0;
+  const chop = firstSpace ? firstSpace.match(/ +/)[0].length : 0;
   if (chop) {
     // Chop chop from start, but leave pre elem alone
     Array.from(doc.body.childNodes)
@@ -437,7 +437,7 @@ export function linkCSS(doc, styles) {
   const stylesArray = [].concat(styles);
   const frag = stylesArray
     .map(url => {
-      var link = doc.createElement("link");
+      const link = doc.createElement("link");
       link.rel = "stylesheet";
       link.href = url;
       return link;
@@ -455,15 +455,15 @@ export function linkCSS(doc, styles) {
 // to maintain compatibility
 // with RSv1. It is therefore not tested and not actively supported.
 export function runTransforms(content, flist) {
-  var args = [this, content];
-  var funcArgs = Array.from(arguments);
+  let args = [this, content];
+  const funcArgs = Array.from(arguments);
   funcArgs.shift();
   funcArgs.shift();
   args = args.concat(funcArgs);
   if (flist) {
-    var methods = flist.split(/\s+/);
-    for (var j = 0; j < methods.length; j++) {
-      var meth = methods[j];
+    const methods = flist.split(/\s+/);
+    for (let j = 0; j < methods.length; j++) {
+      const meth = methods[j];
       if (window[meth]) {
         // the initial call passed |this| directly, so we keep it that way
         try {

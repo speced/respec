@@ -3,7 +3,7 @@ describe("Core — Highlight", () => {
   afterAll(flushIframes);
 
   it("shouldn't highlight idl blocks", async () => {
-    var ops = {
+    const ops = {
       config: makeBasicConfig(),
       body:
         makeDefaultBody() +
@@ -16,13 +16,13 @@ describe("Core — Highlight", () => {
         </section>`,
     };
     const doc = await makeRSDoc(ops);
-    var pre = doc.querySelector("pre");
+    const pre = doc.querySelector("pre");
     expect(pre.classList.contains("hljs")).toBeFalsy();
     expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
   });
 
   it("automatically highlights", async () => {
-    var ops = {
+    const ops = {
       config: makeBasicConfig(),
       body:
         makeDefaultBody() +
@@ -35,7 +35,7 @@ describe("Core — Highlight", () => {
         </section>`,
     };
     const doc = await makeRSDoc(ops);
-    var pre = doc.querySelector("div.example pre");
+    const pre = doc.querySelector("div.example pre");
     expect(pre.classList.contains("hljs")).toBeTruthy();
     expect(pre.querySelectorAll("span[class^=hljs-]").length).toBeGreaterThan(
       0
@@ -43,7 +43,7 @@ describe("Core — Highlight", () => {
   });
 
   it("shouldn't highlight pre elements when told not to", async () => {
-    var ops = {
+    const ops = {
       config: makeBasicConfig(),
       body:
         makeDefaultBody() +
@@ -56,13 +56,13 @@ describe("Core — Highlight", () => {
         </section>`,
     };
     const doc = await makeRSDoc(ops);
-    var pre = doc.querySelector("div.example pre");
+    const pre = doc.querySelector("div.example pre");
     expect(pre.classList.contains("nohighlight")).toBeTruthy();
     expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
   });
 
   it("respects the noHighlightCSS by not highlighting anything", async () => {
-    var ops = {
+    const ops = {
       config: Object.assign(makeBasicConfig(), { noHighlightCSS: true }),
       body:
         makeDefaultBody() +
@@ -75,7 +75,7 @@ describe("Core — Highlight", () => {
         </section>`,
     };
     const doc = await makeRSDoc(ops);
-    var pre = doc.getElementById("test");
+    const pre = doc.getElementById("test");
     expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
   });
 });

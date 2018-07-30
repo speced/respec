@@ -1,5 +1,5 @@
 "use strict";
-var specStatus = [
+const specStatus = [
   {
     status: "FPWD",
     expectedURL: "https://www.w3.org/StyleSheets/TR/{version}W3C-WD",
@@ -77,7 +77,7 @@ async function loadWithStatus(status, expectedURL, mode) {
   };
   const doc = await makeRSDoc(ops);
   const query = `link[href^='${testedURL}']`;
-  var elem = doc.querySelector(query);
+  const elem = doc.querySelector(query);
   expect(elem).toBeTruthy();
   expect(elem.href).toEqual(testedURL);
   return doc;

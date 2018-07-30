@@ -35,8 +35,8 @@ export function run(conf, doc, cb) {
       .first()
       .before($("<style/>").text(css));
     $exes.each((i, ex) => {
-      const $ex = $(ex),
-        report = { number: num, illegal: $ex.hasClass("illegal-example") };
+      const $ex = $(ex);
+      const report = { number: num, illegal: $ex.hasClass("illegal-example") };
       if ($ex.is("aside")) {
         num++;
         const $tit = makeTitle(conf, $ex, num, report);
