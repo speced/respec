@@ -138,7 +138,7 @@ function writeTrivia(text) {
 
 function idlType2Html(idlType) {
   if (typeof idlType === "string") {
-    return `<a>${hb.Utils.escapeExpression(idlType)}</a>`;
+    return `<a data-link-for="">${hb.Utils.escapeExpression(idlType)}</a>`;
   }
   if (Array.isArray(idlType)) {
     return idlType.map(idlType2Html).join(",");
