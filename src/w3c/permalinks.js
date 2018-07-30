@@ -25,9 +25,12 @@ export function run(conf, doc, cb) {
   var symbol = conf.permalinkSymbol || "§";
   var style = "<style>" + css(conf) + "</style>";
 
-  $(doc).find("head link").first().before(style);
+  $(doc)
+    .find("head link")
+    .first()
+    .before(style);
   var $secs = $(doc).find("h2, h3, h4, h5, h6");
-  $secs.each(function(i, item) {
+  $secs.each((i, item) => {
     var $item = $(item);
     if (!$item.hasClass("nolink")) {
       var resourceID = $item.attr("id");

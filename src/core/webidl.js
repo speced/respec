@@ -35,7 +35,7 @@ const idlTypedefTmpl = tmpls["typedef.html"];
 const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
 
 function registerHelpers() {
-  hb.registerHelper("extAttr", function(obj) {
+  hb.registerHelper("extAttr", obj => {
     return extAttr(obj.extAttrs);
   });
   hb.registerHelper("extAttrClassName", function() {
@@ -44,13 +44,13 @@ function registerHelpers() {
       ? "idlCtor"
       : "extAttr";
   });
-  hb.registerHelper("extAttrRhs", function(rhs, options) {
+  hb.registerHelper("extAttrRhs", (rhs, options) => {
     if (rhs.type === "identifier") {
       return options.fn(rhs.value);
     }
     return `(${rhs.value.map(v => options.fn(v.value))})`;
   });
-  hb.registerHelper("param", function(obj) {
+  hb.registerHelper("param", obj => {
     const trivia = obj.optional ? obj.optional.trivia : "";
     return new hb.SafeString(
       idlParamTmpl({
@@ -63,10 +63,10 @@ function registerHelpers() {
   hb.registerHelper("jsIf", function(condition, options) {
     return condition ? options.fn(this) : options.inverse(this);
   });
-  hb.registerHelper("idlType", function(obj) {
+  hb.registerHelper("idlType", obj => {
     return new hb.SafeString(idlType2Html(obj.idlType));
   });
-  hb.registerHelper("stringifyIdlConst", function(value) {
+  hb.registerHelper("stringifyIdlConst", value => {
     switch (value.type) {
       case "null":
         return "null";
@@ -85,10 +85,10 @@ function registerHelpers() {
         return "<Unknown>";
     }
   });
-  hb.registerHelper("join", function(arr, between, options) {
+  hb.registerHelper("join", (arr, between, options) => {
     return arr.map(options.fn).join(between);
   });
-  hb.registerHelper("joinNonWhitespace", function(arr, between, options) {
+  hb.registerHelper("joinNonWhitespace", (arr, between, options) => {
     return arr
       .filter(elem => elem.type !== "ws")
       .map(options.fn)

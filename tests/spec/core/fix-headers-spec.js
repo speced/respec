@@ -21,7 +21,17 @@ describe("Core - Fix headers", () => {
     expect($s.find("h5").length).toEqual(1);
     expect($s.find("h5").text()).toMatch(/FOUR/);
     expect($s.find("h6").length).toEqual(2);
-    expect($s.find("h6").first().text()).toMatch(/FIVE/);
-    expect($s.find("h6").last().text()).toMatch(/SIX/);
+    expect(
+      $s
+        .find("h6")
+        .first()
+        .text()
+    ).toMatch(/FIVE/);
+    expect(
+      $s
+        .find("h6")
+        .last()
+        .text()
+    ).toMatch(/SIX/);
   });
 });

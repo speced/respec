@@ -1,5 +1,5 @@
 "use strict";
-describe("Core — Issues and Notes", function() {
+describe("Core — Issues and Notes", () => {
   afterAll(flushIframes);
   it("treats each issue as unique", async () => {
     const body = `
@@ -148,7 +148,9 @@ describe("Core — Issues and Notes", function() {
     const issueDiv404 = doc.getElementById("this-is-404");
 
     expect(issueDiv404).toBeTruthy();
-    expect(issueDiv404.querySelector("div:not(.issue-title)").textContent).toEqual("this is 404");
+    expect(
+      issueDiv404.querySelector("div:not(.issue-title)").textContent
+    ).toEqual("this is 404");
 
     const [
       refactorLabel,
@@ -225,7 +227,7 @@ describe("Core — Issues and Notes", function() {
     expect($piss.text()).toEqual("ISSUE");
   });
 
-  it("removes closed issues from spec", async () => {
+  it("marks closed issues as closed in the spec", async () => {
     const githubConfig = {
       github: "https://github.com/mock-company/mock-repository",
       githubAPI: `${window.location.origin}/tests/data`,
@@ -235,7 +237,7 @@ describe("Core — Issues and Notes", function() {
       body:
         makeDefaultBody() +
         `
-        <div class='issue' id='this-should-not-exist' data-number='1548'>issue is closed on github</div>
+        <div class='issue' id='this-should-exist' data-number='1548'>issue is closed on github</div>
         <div class='issue' data-number='1540'>issue is open on github</div>
         <div class='issue' id='i-should-be-here-too'>regular issue</div>
         <div class='issue' id='this-is-404' data-number='404'>this is 404</div>
@@ -243,8 +245,9 @@ describe("Core — Issues and Notes", function() {
       `,
     };
     const doc = await makeRSDoc(ops);
-    const issueDiv1 = doc.getElementById("this-should-not-exist");
-    expect(issueDiv1).toBeFalsy();
+    const issueDiv1 = doc.getElementById("this-should-exist");
+    expect(issueDiv1).toBeTruthy();
+    expect(issueDiv1.classList.contains("closed")).toBeTruthy();
 
     const issueDiv2 = doc.getElementById("issue-container-number-1540");
     expect(issueDiv2).toBeTruthy();
@@ -258,7 +261,9 @@ describe("Core — Issues and Notes", function() {
     expect(textContent).toBe("Issue 1540");
     const issueDiv404 = doc.getElementById("this-is-404");
     expect(issueDiv404).toBeTruthy();
-    expect(issueDiv404.querySelector("div:not(.issue-title)").textContent).toEqual("this is 404");
+    expect(
+      issueDiv404.querySelector("div:not(.issue-title)").textContent
+    ).toEqual("this is 404");
   });
 
   it("should link to external issue tracker for features at risk", async () => {

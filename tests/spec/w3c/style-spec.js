@@ -51,107 +51,97 @@ var specStatus = [
   },
 ];
 
-function loadWithStatus(status, expectedURL, mode) {
-  return new Promise(function(resolve) {
-    var config = makeBasicConfig();
-    config.useExperimentalStyles = false;
-    config.specStatus = status;
-    config.prevVersion = "FPWD";
-    config.previousMaturity = "WD";
-    config.previousPublishDate = "2013-12-17";
-    var version = "2016/";
-    switch (mode) {
-      case "experimental":
-        config.useExperimentalStyles = true;
-        version = 2016 + "/";
-        break;
-      default:
-        if (mode) {
-          config.useExperimentalStyles = mode;
-          version = mode + "/";
-        }
-    }
-    var testedURL = expectedURL.replace("{version}", version);
-    var ops = {
-      config: config,
-      body: makeDefaultBody(),
-    };
-    makeRSDoc(ops, function(doc) {
-      var query = "link[href^='" + testedURL + "']";
-      var elem = doc.querySelector(query);
-      expect(elem).toBeTruthy();
-      expect(elem.href).toEqual(testedURL);
-      resolve(doc);
-    });
-  });
+async function loadWithStatus(status, expectedURL, mode) {
+  const config = makeBasicConfig();
+  config.useExperimentalStyles = false;
+  config.specStatus = status;
+  config.prevVersion = "FPWD";
+  config.previousMaturity = "WD";
+  config.previousPublishDate = "2013-12-17";
+  let version = "2016/";
+  switch (mode) {
+    case "experimental":
+      config.useExperimentalStyles = true;
+      version = 2016 + "/";
+      break;
+    default:
+      if (mode) {
+        config.useExperimentalStyles = mode;
+        version = mode + "/";
+      }
+  }
+  const testedURL = expectedURL.replace("{version}", version);
+  const ops = {
+    config,
+    body: makeDefaultBody(),
+  };
+  const doc = await makeRSDoc(ops);
+  const query = `link[href^='${testedURL}']`;
+  var elem = doc.querySelector(query);
+  expect(elem).toBeTruthy();
+  expect(elem.href).toEqual(testedURL);
+  return doc;
 }
 
-describe("W3C - Style", function() {
+describe("W3C - Style", () => {
   afterAll(flushIframes);
 
-  it("should include 'fixup.js'", function(done) {
-    var ops = makeStandardOps();
-    var theTest = function(doc) {
-      var query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
-      var elem = doc.querySelector(query);
-      expect(elem.src).toEqual("https://www.w3.org/scripts/TR/2016/fixup.js");
-    };
-    makeRSDoc(ops, theTest, "spec/core/simple.html").then(done);
+  it("should include 'fixup.js'", async () => {
+    const ops = makeStandardOps();
+    const doc = await makeRSDoc(ops, "spec/core/simple.html");
+    const query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
+    const elem = doc.querySelector(query);
+    expect(elem.src).toEqual("https://www.w3.org/scripts/TR/2016/fixup.js");
   });
 
-  it("should have a meta viewport added", function(done) {
-    var ops = makeStandardOps();
-    var theTest = function(doc) {
-      var elem = doc.head.querySelector("meta[name=viewport]");
-      expect(elem).toBeTruthy();
-      var expectedStr = "width=device-width, initial-scale=1, shrink-to-fit=no";
-      expect(elem.content).toEqual(expectedStr);
-    };
-    makeRSDoc(ops, theTest, "spec/core/simple.html").then(done);
+  it("should have a meta viewport added", async () => {
+    const ops = makeStandardOps();
+    const doc = await makeRSDoc(ops, "spec/core/simple.html");
+    const elem = doc.head.querySelector("meta[name=viewport]");
+    expect(elem).toBeTruthy();
+    const expectedStr = "width=device-width, initial-scale=1, shrink-to-fit=no";
+    expect(elem.content).toEqual(expectedStr);
   });
 
-  it("should default to base when specStatus is missing", function(done) {
-    loadWithStatus(
+  it("should default to base when specStatus is missing", async () => {
+    await loadWithStatus(
       "",
       "https://www.w3.org/StyleSheets/TR/{version}base.css"
-    ).then(done);
+    );
   });
 
-  it("should style according to spec status", function(done) {
+  it("should style according to spec status", async () => {
     // We pick random half from the list, as running the whole set is very slow
-
-    var promises = pickRandomsFromList(specStatus).map(function(test) {
+    const promises = pickRandomsFromList(specStatus).map(test => {
       return loadWithStatus(test.status, test.expectedURL, "2016");
     });
-    Promise.all(promises).then(done);
+    await Promise.all(promises);
   });
 
-  it("should style according to experimental styles", function(done) {
+  it("should style according to experimental styles", async () => {
     // We pick random half from the list, as running the whole set is very slow
-    var promises = pickRandomsFromList(specStatus).map(function(test) {
-      return loadWithStatus(test.status, test.expectedURL, "experimental");
-    });
-    Promise.all(promises).then(done);
+    const promises = pickRandomsFromList(specStatus).map(test =>
+      loadWithStatus(test.status, test.expectedURL, "experimental")
+    );
+    await Promise.all(promises);
   });
 
-  it("should not use 'experimental' URL when useExperimentalStyles is false", function(done) {
+  it("should not use 'experimental' URL when useExperimentalStyles is false", async () => {
     // We pick random half from the list, as running the whole set is very slow
-    var promises = pickRandomsFromList(specStatus).map(function(test) {
-      return loadWithStatus(test.status, test.expectedURL);
-    });
-    Promise.all(promises).then(done);
+    const promises = pickRandomsFromList(specStatus).map(test =>
+      loadWithStatus(test.status, test.expectedURL)
+    );
+    await Promise.all(promises);
   });
-  it("shouldn't include fixup.js when noToc is set", done => {
-    var ops = makeStandardOps();
-    var newProps = {
+  it("shouldn't include fixup.js when noToc is set", async () => {
+    const ops = makeStandardOps();
+    const newProps = {
       noToc: true,
     };
     Object.assign(ops.config, newProps);
-    var theTest = function(doc) {
-      var query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
-      var elem = doc.querySelector(query);
-      expect(elem).toBe(null);
-    };
-    makeRSDoc(ops, theTest, "spec/core/simple.html").then(done);
+    const doc = await makeRSDoc(ops, "spec/core/simple.html");
+    const query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
+    const elem = doc.querySelector(query);
+    expect(elem).toBe(null);
   });
 });

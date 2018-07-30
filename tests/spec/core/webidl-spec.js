@@ -1,23 +1,22 @@
 "use strict";
-describe("Core - WebIDL", function() {
+describe("Core - WebIDL", () => {
   afterAll(flushIframes);
   let doc;
   beforeAll(async () => {
     const ops = makeStandardOps();
-    doc = await makeRSDoc(ops, () => {}, "spec/core/webidl.html");
+    doc = await makeRSDoc(ops, "spec/core/webidl.html");
   });
 
-  it("handles record types", done => {
+  it("handles record types", () => {
     const idl = doc.querySelector("#records pre");
     expect(idl).toBeTruthy(idl);
     expect(idl.querySelector(".idlMemberType:first-child").textContent).toEqual(
       "\n  record<DOMString, USVString>"
     );
     expect(idl.querySelector(".idlMemberName").textContent).toEqual("pass");
-    done();
   });
 
-  it("links standardized IDL types to WebIDL spec", done => {
+  it("links standardized IDL types to WebIDL spec", () => {
     const idl = doc.querySelector("#linkToIDLSpec>div>pre");
     // [Constructor(sequence<DOMString> methodData), SecureContext]
     const sequences = idl.querySelectorAll(`a[href$="#idl-sequence"]`);
@@ -31,7 +30,7 @@ describe("Core - WebIDL", function() {
     );
 
     // readonly attribute DOMString? aBoolAttribute;
-    const attr = idl.querySelector("#idl-def-linkingtest-aboolattribute");
+    const attr = doc.getElementById("idl-def-linkingtest-aboolattribute");
     const domString = attr.querySelector("a");
     expect(domString.textContent).toEqual("DOMString");
     expect(domString.href.endsWith("#idl-DOMString")).toBe(true);
@@ -47,10 +46,9 @@ describe("Core - WebIDL", function() {
     expect(unsignedLongLink.href.endsWith("#idl-unsigned-long-long")).toBe(
       true
     );
-    done();
   });
 
-  it("links to fully qualified method names", done => {
+  it("links to fully qualified method names", () => {
     var t1 = new URL(doc.getElementById("fullyQualifiedNoParens-1").href).hash;
     expect(t1).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
 
@@ -62,12 +60,10 @@ describe("Core - WebIDL", function() {
 
     var t4 = new URL(doc.getElementById("fullyQualifiedNoParens-4").href).hash;
     expect(t4).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
-
-    done();
   });
 
-  it("links simple method names and types", done => {
-    const section = doc.querySelector("#sec-parenthesis-method");
+  it("links simple method names and types", () => {
+    const section = doc.getElementById("sec-parenthesis-method");
     ["basic", "ext", "ull", "withName", "named"]
       .map(methodName => [methodName, methodName.toLowerCase()])
       .map(([methodName, id]) => [
@@ -100,138 +96,124 @@ describe("Core - WebIDL", function() {
     );
     expect(aElem).toBeTruthy();
     expect(aElem.textContent).toEqual("noParens");
-    done();
   });
-  it("should handle interfaces", function(done) {
-    var $target = $("#if-basic", doc);
-    var text = "interface SuperStar {};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlInterface").length).toEqual(1);
-    expect($target.find(".idlInterfaceID").text()).toEqual("SuperStar");
+  it("should handle interfaces", () => {
+    let target = doc.getElementById("if-basic");
+    let text = "interface SuperStar {};";
+    expect(target.textContent).toEqual(text);
+    expect(target.querySelectorAll(".idlInterface").length).toEqual(1);
+    expect(target.querySelector(".idlInterfaceID").textContent).toEqual(
+      "SuperStar"
+    );
 
-    $target = $("#if-extended-attribute", doc);
+    target = doc.getElementById("if-extended-attribute");
     text = "[Something, Constructor()] " + text;
-    expect($target.text()).toEqual(text);
-    expect($target.find(".extAttr").text()).toEqual("Something");
-    expect($target.find(".idlCtor").text()).toEqual("Constructor()");
+    expect(target.textContent).toEqual(text);
+    expect(target.querySelector(".extAttr").textContent).toEqual("Something");
+    expect(target.querySelector(".idlCtor").textContent).toEqual(
+      "Constructor()"
+    );
 
-    $target = $("#if-identifier-list", doc);
+    target = doc.getElementById("if-identifier-list");
     text = "[Global=Window, Exposed=(Window,Worker)] interface SuperStar {};";
-    expect($target.text()).toEqual(text);
-    expect(
-      $target
-        .find(".extAttrRhs")
-        .first()
-        .text()
-    ).toEqual("Window");
-    expect(
-      $target
-        .find(".extAttrRhs")
-        .last()
-        .text()
-    ).toEqual("(Window,Worker)");
+    const rhs = target.querySelectorAll(".extAttrRhs");
+    expect(target.textContent).toEqual(text);
+    expect(rhs[0].textContent).toEqual("Window");
+    expect(rhs[1].textContent).toEqual("(Window,Worker)");
 
-    $target = $("#if-inheritance", doc);
+    target = doc.getElementById("if-inheritance");
     text = "interface SuperStar : HyperStar {};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlSuperclass").text()).toEqual("HyperStar");
+    expect(target.textContent).toEqual(text);
+    expect(target.querySelector(".idlSuperclass").textContent).toEqual(
+      "HyperStar"
+    );
 
-    $target = $("#if-partial", doc);
+    target = doc.getElementById("if-partial");
     text = "partial interface SuperStar {};";
-    expect($target.text()).toEqual(text);
+    expect(target.textContent).toEqual(text);
 
-    $target = $("#if-callback", doc);
+    target = doc.getElementById("if-callback");
     text = "callback interface SuperStar {};";
-    expect($target.text()).toEqual(text);
+    expect(target.textContent).toEqual(text);
 
-    $target = $("#if-mixin", doc);
+    target = doc.getElementById("if-mixin");
     text = "interface mixin SuperStar {};";
-    expect($target.text()).toEqual(text);
+    expect(target.textContent).toEqual(text);
 
-    $target = $("#if-partial-mixin", doc);
+    target = doc.getElementById("if-partial-mixin");
     text = "partial interface mixin SuperStar {};";
-    expect($target.text()).toEqual(text);
+    expect(target.textContent).toEqual(text);
 
-    $target = $("#if-doc", doc);
+    target = doc.getElementById("if-doc");
+    const interfaces = target.querySelectorAll(".idlInterface");
     expect(
-      $target
-        .find(":contains('DocInterface')")
-        .filter("a")
-        .attr("href")
+      interfaces[0].querySelector(".idlInterfaceID a").getAttribute("href")
     ).toEqual("#dom-docinterface");
     expect(
-      $target
-        .find(":contains('DocIsNotCaseSensitive')")
-        .filter("a")
-        .attr("href")
+      interfaces[1].querySelector(".idlInterfaceID a").getAttribute("href")
     ).toEqual("#dom-docisnotcasesensitive");
-    expect($target.find(".idlInterface")[0].id).toEqual("idl-def-docinterface");
-    expect($target.find(".idlInterface")[1].id).toEqual(
-      "idl-def-docisnotcasesensitive"
-    );
-    expect($target.find(".idlInterface")[2].id).toEqual(
-      "idl-def-undocinterface"
-    );
-    expect(
-      $target.find(":contains('UndocInterface')").filter("a").length
-    ).toEqual(0);
-    done();
+    expect(interfaces[0].id).toEqual("idl-def-docinterface");
+    expect(interfaces[1].id).toEqual("idl-def-docisnotcasesensitive");
+    expect(interfaces[2].id).toEqual("idl-def-undocinterface");
+    expect(interfaces[2].querySelector(".idlInterfaceID a")).toBeNull();
   });
 
-  it("should handle constructors", function(done) {
-    var $target = $("#ctor-basic", doc);
-    var text =
+  it("should handle constructors", () => {
+    let target = doc.getElementById("ctor-basic");
+    let text =
       "[Something,\n" +
       " Constructor,\n" +
       " Constructor(boolean bar, sequence<double> foo, Promise<double> blah)]\n" +
       "interface SuperStar {};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlCtor").length).toEqual(2);
-    var $ctor1 = $target.find(".idlCtor").last();
-    expect($ctor1.find(".extAttrName").text()).toEqual("Constructor");
-    expect($ctor1.find(".idlParam").length).toEqual(3);
-    expect($ctor1.find(".idlParam:contains('sequence')").length).toEqual(1);
-    expect($ctor1.find(".idlParam:contains('Promise')").length).toEqual(1);
+    expect(target.textContent).toEqual(text);
+    const ctors = target.getElementsByClassName("idlCtor");
+    expect(ctors.length).toEqual(2);
+    const ctor = ctors[1];
+    expect(ctor.querySelector(".extAttrName").textContent).toEqual(
+      "Constructor"
+    );
+    const params = [...ctor.getElementsByClassName("idlParam")];
+    expect(params.length).toEqual(3);
     expect(
-      $ctor1
-        .find(".idlParam")
-        .first()
-        .find(".idlParamType")
-        .text()
-    ).toEqual("boolean");
+      params.filter(p => p.textContent.includes("sequence")).length
+    ).toEqual(1);
+    expect(
+      params.filter(p => p.textContent.includes("Promise")).length
+    ).toEqual(1);
+    expect(ctor.querySelector(".idlParam .idlParamType").textContent).toEqual(
+      "boolean"
+    );
 
-    $target = $("#ctor-noea", doc);
+    target = doc.getElementById("ctor-noea");
     text = "[Constructor] interface SuperStar {};";
-    expect($target.text()).toEqual(text);
-    done();
+    expect(target.textContent).toEqual(text);
   });
 
-  it("should handle named constructors", function(done) {
-    var $target = $("#namedctor-basic", doc);
-    var text =
+  it("should handle named constructors", () => {
+    const target = doc.getElementById("namedctor-basic");
+    const text =
       "[Something,\n" +
       " NamedConstructor=Sun(),\n" +
       " NamedConstructor=Sun(boolean bar, Date foo)]\n" +
       "interface SuperStar {};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlCtor").length).toEqual(2);
-    var $ctor1 = $target.find(".idlCtor").last();
-    expect($ctor1.find(".extAttrRhs").text()).toEqual("Sun");
-    expect($ctor1.find(".idlParam").length).toEqual(2);
-    expect($ctor1.find(".idlParam:contains('Date')").length).toEqual(1);
-    expect(
-      $ctor1
-        .find(".idlParam")
-        .first()
-        .find(".idlParamType")
-        .text()
-    ).toEqual("boolean");
-    done();
+    expect(target.textContent).toEqual(text);
+    const ctors = target.getElementsByClassName("idlCtor");
+    expect(ctors.length).toEqual(2);
+    const ctor = ctors[1];
+    expect(ctor.querySelector(".extAttrRhs").textContent).toEqual("Sun");
+    const params = [...ctor.getElementsByClassName("idlParam")];
+    expect(params.length).toEqual(2);
+    expect(params.filter(p => p.textContent.includes("Date")).length).toEqual(
+      1
+    );
+    expect(ctor.querySelector(".idlParam .idlParamType").textContent).toEqual(
+      "boolean"
+    );
   });
 
-  it("should handle constants", function(done) {
-    var $target = $("#const-basic", doc);
-    var text =
+  it("should handle constants", () => {
+    const target = doc.getElementById("const-basic");
+    const text =
       "interface ConstTest {\n" +
       "  // 1\n" +
       "  const boolean test = true;\n" +
@@ -273,53 +255,51 @@ describe("Core - WebIDL", function() {
       "  // 19\n" +
       "  [Something] const short extAttr = NaN;\n" +
       "};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlConst").length).toEqual(19);
-    var $const1 = $target.find(".idlConst").first();
-    expect($const1.find(".idlConstType").text()).toEqual(" boolean");
-    expect($const1.find(".idlConstName").text()).toEqual("test");
-    expect($const1.find(".idlConstValue").text()).toEqual("true");
+    expect(target.textContent).toEqual(text);
+    const consts = [...target.getElementsByClassName("idlConst")];
+    expect(consts.length).toEqual(19);
+    const const1 = target.querySelector(".idlConst");
+    expect(const1.querySelector(".idlConstType").textContent).toEqual(
+      " boolean"
+    );
+    expect(const1.querySelector(".idlConstName").textContent).toEqual("test");
+    expect(const1.querySelector(".idlConstValue").textContent).toEqual("true");
     expect(
-      $target
-        .find(".idlConst")
-        .last()
-        .find(".extAttr").length
+      consts[consts.length - 1].querySelectorAll(".extAttr").length
     ).toEqual(1);
 
     // Links and IDs.
     expect(
-      $target
-        .find(":contains('rambaldi')")
-        .filter("a")
-        .attr("href")
+      consts
+        .find(c => c.textContent.includes("rambaldi"))
+        .querySelector(".idlConstName a")
+        .getAttribute("href")
     ).toEqual("#dom-consttest-rambaldi");
     expect(
-      $target
-        .find(":contains('rambaldi')")
-        .parents(".idlConst")
-        .attr("id")
+      consts.find(c => c.textContent.includes("rambaldi")).getAttribute("id")
     ).toEqual("idl-def-consttest-rambaldi");
     expect(
-      $target
-        .find(":contains('why')")
-        .filter("a")
-        .attr("href")
+      consts
+        .find(c => c.textContent.includes("why"))
+        .querySelector(".idlConstName a")
+        .getAttribute("href")
     ).toEqual("#dom-consttest-why");
     expect(
-      $target
-        .find(":contains('inf')")
-        .filter("a")
-        .attr("href")
+      consts
+        .find(c => c.textContent.includes("inf"))
+        .querySelector(".idlConstName a")
+        .getAttribute("href")
     ).toEqual("#dom-consttest-inf");
-    expect($target.find(":contains('ationDevice')").filter("a").length).toEqual(
-      0
-    );
-    done();
+    expect(
+      consts
+        .find(c => c.textContent.includes("ationDevice"))
+        .querySelector(".idlConstName a")
+    ).toBeNull();
   });
 
-  it("should handle attributes", function() {
-    var $target = $("#attr-basic", doc);
-    var text = `interface AttrBasic {
+  it("should handle attributes", () => {
+    const target = doc.getElementById("attr-basic");
+    const text = `interface AttrBasic {
   // 1
   attribute DOMString regular;
   // 2
@@ -336,33 +316,37 @@ describe("Core - WebIDL", function() {
   attribute FrozenArray<DOMString> alist;
   // 4.0
   attribute Promise<DOMString> operation;
-};`.trim();
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlAttribute").length).toEqual(8);
-    var $at = $target.find(".idlAttribute").first();
-    expect($at.find(".idlAttrType").text()).toEqual(" DOMString");
-    expect($at.find(".idlAttrName").text()).toEqual("regular");
-    var $ro = $target.find(".idlAttribute").eq(2);
-    expect($ro.find(".idlAttrName").text()).toEqual("_readonly");
-    var $frozen = $target.find(".idlAttribute").eq(6);
-    expect($frozen.find(".idlAttrType").text()).toEqual(
+};`;
+    expect(target.textContent).toEqual(text);
+    const attrs = [...target.getElementsByClassName("idlAttribute")];
+    expect(attrs.length).toEqual(8);
+    const at = attrs[0];
+    expect(at.querySelector(".idlAttrType").textContent).toEqual(" DOMString");
+    expect(at.querySelector(".idlAttrName").textContent).toEqual("regular");
+    const ro = attrs[2];
+    expect(ro.querySelector(".idlAttrName").textContent).toEqual("_readonly");
+    const frozen = attrs[6];
+    expect(frozen.querySelector(".idlAttrType").textContent).toEqual(
       " FrozenArray<DOMString>"
     );
-    var $promise = $target.find(".idlAttribute").eq(7);
-    expect($promise.find(".idlAttrType").text()).toEqual(" Promise<DOMString>");
+    const promise = attrs[7];
+    expect(promise.querySelector(".idlAttrType").textContent).toEqual(
+      " Promise<DOMString>"
+    );
     expect(
-      $target
-        .find(":contains('_readonly')")
-        .parents(".idlAttribute")
-        .attr("id")
+      attrs.find(c => c.textContent.includes("_readonly")).getAttribute("id")
     ).toEqual("idl-def-attrbasic-readonly");
     expect(
-      $target
-        .find(":contains('regular')")
-        .filter("a")
-        .attr("href")
+      attrs
+        .find(c => c.textContent.includes("regular"))
+        .querySelector(".idlAttrName a")
+        .getAttribute("href")
     ).toEqual("#dom-attrbasic-regular");
-    expect($target.find(":contains('dates')").filter("a").length).toEqual(0);
+    expect(
+      attrs
+        .find(c => c.textContent.includes("alist"))
+        .querySelector(".idlAttrName a")
+    ).toBeNull();
   });
 
   it("handles stringifiers special operations", () => {
@@ -417,9 +401,9 @@ describe("Core - WebIDL", function() {
     expect(setterNamed.querySelector(".idlMethName").textContent).toBe("named");
   });
 
-  it("should handle operations", function(done) {
-    var $target = $("#meth-basic", doc);
-    var text = `interface MethBasic {
+  it("should handle operations", () => {
+    const target = doc.getElementById("meth-basic");
+    const text = `interface MethBasic {
   // 1
   void basic();
   // 2
@@ -447,32 +431,32 @@ describe("Core - WebIDL", function() {
   Promise<void> complete(optional PaymentComplete result = "unknown");
   Promise<void> another(optional  /*trivia*/  PaymentComplete result = "unknown");
 };`;
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlMethod").length).toEqual(14);
-    expect($target.find(".idlMethName").length).toEqual(10);
-    var $meth = $target.find(".idlMethod").first();
-    expect($meth.find(".idlMethType").text()).toEqual("\n  // 1\n  void");
-    expect($meth.find(".idlMethName").text()).toEqual("basic");
+    expect(target.textContent).toEqual(text);
+    const methods = [...target.getElementsByClassName("idlMethod")];
+    expect(methods.length).toEqual(14);
+    expect(target.getElementsByClassName("idlMethName").length).toEqual(10);
+    const first = methods[0];
+    expect(first.querySelector(".idlMethType").textContent).toEqual(
+      "\n  // 1\n  void"
+    );
+    expect(first.querySelector(".idlMethName").textContent).toEqual("basic");
     expect(
-      $target.find(".idlMethType:contains('SuperStar?') a").text()
+      methods
+        .find(m => m.textContent.includes("SuperStar?"))
+        .querySelector(".idlMethType a").textContent
     ).toEqual("SuperStar");
 
     // Links and IDs.
-    var ulls = $target.find(".idlMethName:contains('ull')");
+    const ulls = methods
+      .filter(m => m.textContent.includes("ull"))
+      .map(m => m.querySelector(".idlMethName a").getAttribute("href"));
+    expect(ulls[0]).toEqual("#dom-methbasic-ull");
+    expect(ulls[ulls.length - 1]).toEqual("#dom-methbasic-ull!overload-1");
     expect(
-      ulls
-        .first()
-        .children("a")
-        .attr("href")
-    ).toEqual("#dom-methbasic-ull");
-    expect(
-      ulls
-        .last()
-        .children("a")
-        .attr("href")
-    ).toEqual("#dom-methbasic-ull!overload-1");
-    expect($target.find(":contains('dates')").filter("a").length).toEqual(0);
-    done();
+      methods
+        .find(m => m.textContent.includes("withName"))
+        .querySelector(".idlMethName a")
+    ).toBeNull();
   });
 
   it("should handle iterable-like interface member declarations", () => {
@@ -482,10 +466,9 @@ describe("Core - WebIDL", function() {
     expect(elem.getElementsByClassName("idlSetlike").length).toEqual(1);
   });
 
-  it("should handle comments", function(done) {
-    var $target = $("#comments-basic", doc);
-    var // TODO: Handle comments when WebIDL2 does.
-    text =
+  it("should handle comments", () => {
+    const target = doc.getElementById("comments-basic");
+    const text =
       "interface SuperStar {\n" +
       "  // This is a comment\n" +
       "  // over two lines.\n" +
@@ -494,24 +477,29 @@ describe("Core - WebIDL", function() {
       "     three. */\n" +
       "  \n" +
       "};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlSectionComment").length).toEqual(1);
-    done();
+    expect(target.textContent).toEqual(text);
+    expect(target.getElementsByClassName("idlSectionComment").length).toEqual(
+      1
+    );
   });
 
-  it("should handle dictionaries", function(done) {
-    var $target = $("#dict-basic", doc);
-    var text = "dictionary SuperStar {};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlDictionary").length).toEqual(1);
-    expect($target.find(".idlDictionaryID").text()).toEqual("SuperStar");
+  it("should handle dictionaries", () => {
+    let target = doc.getElementById("dict-basic");
+    let text = "dictionary SuperStar {};";
+    expect(target.textContent).toEqual(text);
+    expect(target.querySelectorAll(".idlDictionary").length).toEqual(1);
+    expect(target.querySelector(".idlDictionaryID").textContent).toEqual(
+      "SuperStar"
+    );
 
-    $target = $("#dict-inherit", doc);
+    target = doc.getElementById("dict-inherit");
     text = "dictionary SuperStar : HyperStar {};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlSuperclass").text()).toEqual("HyperStar");
+    expect(target.textContent).toEqual(text);
+    expect(target.querySelector(".idlSuperclass").textContent).toEqual(
+      "HyperStar"
+    );
 
-    $target = $("#dict-fields", doc);
+    target = doc.getElementById("dict-fields");
     text =
       "dictionary SuperStar {\n" +
       "  // 1\n" +
@@ -534,57 +522,53 @@ describe("Core - WebIDL", function() {
       "  // 9\n" +
       '  DOMString blah = "blah blah";\n' +
       "};";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlMember").length).toEqual(9);
-    var $mem = $target.find(".idlMember").first();
-    expect($mem.find(".idlMemberType").text()).toEqual("\n  // 1\n  DOMString");
-    expect($mem.find(".idlMemberName").text()).toEqual("value");
+    expect(target.textContent).toEqual(text);
+    const members = target.querySelectorAll(".idlMember");
+    expect(members.length).toEqual(9);
+    const member = members[0];
+    expect(member.querySelector(".idlMemberType").textContent).toEqual(
+      "\n  // 1\n  DOMString"
+    );
+    expect(member.querySelector(".idlMemberName").textContent).toEqual("value");
     expect(
-      $target
-        .find(".idlMember")
-        .last()
-        .find(".idlMemberValue")
-        .text()
+      members[members.length - 1].querySelector(".idlMemberValue").textContent
     ).toEqual('"blah blah"');
 
-    $target = $("#dict-required-fields", doc);
+    target = doc.getElementById("dict-required-fields");
     text =
       "dictionary SuperStar {\n" +
       "  required DOMString value;\n" +
       "  DOMString optValue;\n" +
       "};";
-    expect($target.text()).toEqual(text);
+    expect(target.textContent).toEqual(text);
 
     // Links and IDs.
-    $target = $("#dict-doc", doc);
+    const dictDocTest = doc
+      .getElementById("dict-doc")
+      .querySelector(".idlDictionary");
     expect(
-      $target
-        .find(":contains('DictDocTest')")
-        .filter("a")
-        .attr("href")
+      dictDocTest.querySelector(".idlDictionaryID a").getAttribute("href")
     ).toEqual("#dom-dictdoctest");
+    expect(dictDocTest.getAttribute("id")).toEqual("idl-def-dictdoctest");
+    const mems = [...dictDocTest.querySelectorAll(".idlMember")];
+    const dictDocField = mems.find(m => m.textContent.includes("dictDocField"));
     expect(
-      $target.find(".idlDictionary:contains('DictDocTest')").attr("id")
-    ).toEqual("idl-def-dictdoctest");
-    expect(
-      $target
-        .find(":contains('dictDocField')")
-        .filter("a")
-        .attr("href")
+      dictDocField.querySelector(".idlMemberName a").getAttribute("href")
     ).toEqual("#dom-dictdoctest-dictdocfield");
     expect(
-      $target
-        .find(":contains('otherField')")
-        .filter("a")
-        .attr("href")
+      mems
+        .find(m => m.textContent.includes("otherField"))
+        .querySelector(".idlMemberName a")
+        .getAttribute("href")
     ).toEqual("#dom-dictdoctest-otherfield");
-    expect(
-      $target.find(".idlMember:contains('dictDocField')").attr("id")
-    ).toEqual("idl-def-dictdoctest-dictdocfield");
-    expect($target.find(":contains('undocField')").filter("a").length).toEqual(
-      0
+    expect(dictDocField.getAttribute("id")).toEqual(
+      "idl-def-dictdoctest-dictdocfield"
     );
-    done();
+    expect(
+      mems
+        .find(m => m.textContent.includes("undocField"))
+        .querySelector(".idlMemberName a")
+    ).toBeNull();
   });
 
   it("handles multiple dictionaries", async () => {
@@ -628,35 +612,39 @@ enum EnumBasic {
     expect(target.querySelector(".idlEnumID a").getAttribute("href")).toEqual(
       "#dom-enumbasic"
     );
-    expect(target.querySelector("#idl-def-enumbasic")).toBeTruthy();
+    expect(doc.getElementById("idl-def-enumbasic")).toBeTruthy();
   });
 
-  it("should handle enumeration value definitions", function(done) {
-    var $section = $("#enumerations", doc);
-    expect($section.find("dfn:contains('one')").attr("id")).toEqual(
-      "dom-enumbasic-one"
-    );
+  it("should handle enumeration value definitions", () => {
+    const section = doc.getElementById("enumerations");
     expect(
-      $section.find("p[data-link-for] a:contains('one')").attr("href")
+      [...section.getElementsByTagName("dfn")]
+        .find(el => el.textContent.includes("one"))
+        .getAttribute("id")
+    ).toEqual("dom-enumbasic-one");
+    expect(
+      [...section.querySelectorAll("p[data-link-for] a")]
+        .find(el => el.textContent.includes("one"))
+        .getAttribute("href")
     ).toEqual("#dom-enumbasic-one");
     expect(
-      $section.find("#enum-ref-without-link-for a:contains('one')").attr("href")
+      [...section.querySelectorAll("#enum-ref-without-link-for a")]
+        .find(el => el.textContent.includes("one"))
+        .getAttribute("href")
     ).toEqual("#dom-enumbasic-one");
-    done();
   });
 
-  it("links empty-string enumeration value", done => {
+  it("links empty-string enumeration value", () => {
     const links = doc.querySelector(
       `#enum-empty-sec a[href="#dom-emptyenum-the-empty-string"]`
     );
-    const dfn = doc.querySelector("#dom-emptyenum-the-empty-string");
+    const dfn = doc.getElementById("dom-emptyenum-the-empty-string");
     const smokeDfn = doc.querySelector(
       `#enum-empty-sec a[href="#dom-emptyenum-not-empty"]`
     );
     expect(links).toBeTruthy();
     expect(dfn).toBeTruthy();
     expect(smokeDfn).toBeTruthy();
-    done();
   });
 
   it("handles optional and trivia", () => {
@@ -673,7 +661,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(trivaComments.length).toEqual(3);
   });
 
-  it("should handle callbacks", function(done) {
+  it("should handle callbacks", () => {
     var $target = $("#cb-basic", doc);
     var text = "callback SuperStar = void ();";
     expect($target.text()).toEqual(text);
@@ -738,7 +726,6 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         .last()
         .text()
     ).toEqual("b");
-    done();
   });
 
   it("should handle typedefs", () => {
@@ -796,7 +783,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect($target.text()).toEqual(text);
   });
 
-  it("should link documentation", function() {
+  it("should link documentation", () => {
     var $section = $("#documentation", doc);
     var $target = $("#doc-iface", doc);
 

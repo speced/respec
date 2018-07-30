@@ -1,7 +1,6 @@
 /*jshint
     forin: false
 */
-/*global hb*/
 
 // Module w3c/headers
 // Generate the headers material based on the provided configuration.
@@ -93,9 +92,7 @@
 //      - "w3c-software-doc", the W3C Software and Document License
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
 import { concatDate, joinAnd, ISODate } from "core/utils";
-import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
-import tmpls from "templates";
 import cgbgSotdTmpl from "w3c/templates/cgbg-sotd";
 import sotdTmpl from "w3c/templates/sotd";
 import cgbgHeadersTmpl from "w3c/templates/cgbg-headers";
@@ -259,7 +256,9 @@ export function run(conf) {
       const msg =
         "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. " +
         "Please update your [`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI) to point to the " +
-        `new tests repository (e.g., https://github.com/web-platform-tests/${conf.shortName} ).`;
+        `new tests repository (e.g., https://github.com/web-platform-tests/${
+          conf.shortName
+        } ).`;
       pub("warn", msg);
     }
   }
@@ -402,7 +401,7 @@ export function run(conf) {
   conf.multipleFormerEditors =
     Array.isArray(conf.formerEditors) && conf.formerEditors.length > 1;
   conf.multipleAuthors = conf.authors && conf.authors.length > 1;
-  $.each(conf.alternateFormats || [], function(i, it) {
+  $.each(conf.alternateFormats || [], (i, it) => {
     if (!it.uri || !it.label)
       pub("error", "All alternate formats must have a uri and a label.");
   });
@@ -410,7 +409,7 @@ export function run(conf) {
     conf.alternateFormats && conf.alternateFormats.length > 1;
   conf.alternatesHTML =
     conf.alternateFormats &&
-    joinAnd(conf.alternateFormats, function(alt) {
+    joinAnd(conf.alternateFormats, alt => {
       var optional =
         alt.hasOwnProperty("lang") && alt.lang
           ? " hreflang='" + alt.lang + "'"
@@ -546,7 +545,7 @@ export function run(conf) {
   }
   if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
-    conf.wgHTML = joinAnd(conf.wg, function(wg, idx) {
+    conf.wgHTML = joinAnd(conf.wg, (wg, idx) => {
       return "the <a href='" + conf.wgURI[idx] + "'>" + wg + "</a>";
     });
     var pats = [];

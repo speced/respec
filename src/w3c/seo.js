@@ -56,7 +56,7 @@ export function run(conf, doc, cb) {
   }
 }
 
-async function addJSONLDInfo (conf, doc) {
+async function addJSONLDInfo(conf, doc) {
   await doc.respecIsReady;
   // Content for JSON
   const type = ["TechArticle"];
@@ -126,7 +126,6 @@ async function addJSONLDInfo (conf, doc) {
   script.type = "application/ld+json";
   script.textContent = JSON.stringify(jsonld, null, 2);
   doc.head.appendChild(script);
-  
 }
 
 // Turn editors and authors into a list of JSON-LD relationships

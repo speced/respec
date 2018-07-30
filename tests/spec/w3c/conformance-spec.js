@@ -1,5 +1,5 @@
 "use strict";
-describe("W3C — Conformance", function() {
+describe("W3C — Conformance", () => {
   afterAll(flushIframes);
   it("includes a h2 and inject its content", async () => {
     const ops = {

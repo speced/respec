@@ -2,7 +2,7 @@
 const findContent = string => {
   return ({ textContent }) => textContent.trim() === string;
 };
-describe("W3C — Headers", function() {
+describe("W3C — Headers", () => {
   afterEach(flushIframes);
   const simpleSpecURL = "spec/core/simple.html";
   describe("prevRecShortname & prevRecURI", () => {
@@ -33,26 +33,6 @@ describe("W3C — Headers", function() {
   });
 
   describe("shortName", () => {
-    it("takes shortName into account", async () => {
-      const ops = makeStandardOps();
-      const newProps = {
-        specStatus: "REC",
-        shortName: "xxx",
-      };
-      Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops);
-      expect(
-        $("dt:contains('This version:')", doc)
-          .next("dd")
-          .text()
-      ).toMatch(/\/REC-xxx-/);
-      expect(
-        $("dt:contains('Latest published version:')", doc)
-          .next("dd")
-          .text()
-      ).toMatch(/\/TR\/xxx\//);
-    });
-
     it("takes shortName into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
@@ -168,7 +148,7 @@ describe("W3C — Headers", function() {
       var twitterAnchor = doc.querySelector("a[href='" + twitterHref + "']");
       // general checks
       var header = doc.querySelector("div.head");
-      [orcidAnchor, twitterAnchor].forEach(function(elem) {
+      [orcidAnchor, twitterAnchor].forEach(elem => {
         // Check parent is correct.
         expect(elem.parentNode.localName).toEqual("span");
         // Check that it's in the header of the document
@@ -489,7 +469,7 @@ describe("W3C — Headers", function() {
 
   describe("previousPublishDate & previousMaturity", () => {
     it("recovers given bad date inputs", async () => {
-      let ISODate = await new Promise(resolve => {
+      const ISODate = await new Promise(resolve => {
         require(["core/utils"], ({ ISODate }) => {
           resolve(ISODate);
         });
@@ -513,9 +493,7 @@ describe("W3C — Headers", function() {
       });
       expect(allInBetween).toBe(true);
     });
-  });
 
-  describe("previousPublishDate & previousMaturity", () => {
     it("takes previousPublishDate and previousMaturity into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
@@ -530,7 +508,7 @@ describe("W3C — Headers", function() {
         $("dt:contains('Previous version:')", doc)
           .next("dd")
           .text()
-      ).toMatch(/\/1977\/CR-[^\/]+-19770315\//);
+      ).toMatch(/\/1977\/CR-[^/]+-19770315\//);
     });
   });
 
@@ -558,8 +536,8 @@ describe("W3C — Headers", function() {
       const doc = await makeRSDoc(ops);
       var licenses = doc.querySelectorAll("div.head a[rel=license]");
       expect(licenses.length).toEqual(1);
-      expect(licenses.item(0).tagName).toEqual("A");
-      expect(licenses.item(0).href).toEqual(
+      expect(licenses[0].tagName).toEqual("A");
+      expect(licenses[0].href).toEqual(
         "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
       );
     });
@@ -728,7 +706,7 @@ describe("W3C — Headers", function() {
         specStatus: "WG-NOTE",
       };
       Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
+      const doc = await makeRSDoc(ops, simpleSpecURL);
       const { wgId, isNote } = doc.defaultView.respecConfig;
       const elem = doc.querySelector("p[data-deliverer]");
       expect(isNote).toBe(true);
@@ -742,7 +720,7 @@ describe("W3C — Headers", function() {
         specStatus: "FPWD-NOTE",
       };
       Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
+      const doc = await makeRSDoc(ops, simpleSpecURL);
       const elem = doc.querySelector("p[data-deliverer]");
       const { wgId, isNote } = doc.defaultView.respecConfig;
       expect(isNote).toBe(true);
@@ -757,7 +735,7 @@ describe("W3C — Headers", function() {
         specStatus: "WD",
       };
       Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
+      const doc = await makeRSDoc(ops, simpleSpecURL);
       const elem = doc.querySelector("p[data-deliverer]");
       const { wgId, isNote } = doc.defaultView.respecConfig;
       expect(isNote).toBe(false);
@@ -777,7 +755,7 @@ describe("W3C — Headers", function() {
         subjectPrefix: "[The Prefix]",
       };
       Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
+      const doc = await makeRSDoc(ops, simpleSpecURL);
       var $sotd = $("#sotd", doc);
       expect($sotd.find("p:contains('CUSTOM PARAGRAPH')").length).toEqual(1);
       expect($sotd.find("a:contains('WGNAME')").length).toEqual(1);
@@ -875,7 +853,7 @@ describe("W3C — Headers", function() {
         implementationReportURI: "",
       };
       Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
+      const doc = await makeRSDoc(ops, simpleSpecURL);
       var $sotd = $("#sotd", doc);
       var $f = $($sotd.find("p:contains('CUSTOM PARAGRAPH')"));
       expect($f.length).toEqual(1);
@@ -1045,7 +1023,7 @@ describe("W3C — Headers", function() {
         wgPublicList: "WGLIST",
       };
       Object.assign(ops.config, newProps);
-      const doc = await makeRSDoc(ops, () => {}, simpleSpecURL);
+      const doc = await makeRSDoc(ops, simpleSpecURL);
       var $sotd = $("#sotd", doc);
       expect($sotd.find("p:contains('CUSTOM PARAGRAPH')").length).toEqual(1);
       expect($sotd.find("a:contains('WGNAME')").length).toEqual(0);
@@ -1094,11 +1072,11 @@ describe("W3C — Headers", function() {
 
       expect(sotd.classList.contains("introductory")).toBe(true);
 
-      const p1 = sotd.querySelector("#p1");
+      const p1 = doc.getElementById("p1");
       expect(p1).toBeTruthy();
       expect(p1.textContent.trim()).toEqual("CUSTOM PARAGRAPH 1");
 
-      const p2 = sotd.querySelector("#p2");
+      const p2 = doc.getElementById("p2");
       expect(p2).toBeTruthy();
       expect(p2.textContent.trim()).toEqual("CUSTOM PARAGRAPH 2");
 
@@ -1108,18 +1086,18 @@ describe("W3C — Headers", function() {
       const textNode = commentNode.nextSibling;
       expect(textNode.nodeType).toEqual(Node.TEXT_NODE);
 
-      const ol = sotd.querySelector("#ol");
+      const ol = doc.getElementById("ol");
       expect(ol).toBeTruthy();
       expect(ol.querySelectorAll("li").length).toEqual(2);
 
-      const firstSection = sotd.querySelector("#first-sub-section");
+      const firstSection = doc.getElementById("first-sub-section");
       expect(sotd.lastElementChild).not.toEqual(firstSection);
 
-      const lastSection = sotd.querySelector("#last-sub-section");
+      const lastSection = doc.getElementById("last-sub-section");
       expect(sotd.lastElementChild).toEqual(lastSection);
 
       // p3 is sadwiched in between the sections
-      const p3 = sotd.querySelector("#p3");
+      const p3 = doc.getElementById("p3");
       expect(p3).toBeTruthy();
       expect(p3.previousElementSibling).toEqual(firstSection);
       expect(p3.nextElementSibling).toEqual(lastSection);
