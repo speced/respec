@@ -33,7 +33,7 @@ function getRefKeys(conf) {
 
 // Opportunistically dns-prefetch to bibref server, as we don't know yet
 // if we will actually need to download references yet.
-var link = createResourceHint({
+const link = createResourceHint({
   hint: "dns-prefetch",
   href: bibrefsURL.origin,
 });

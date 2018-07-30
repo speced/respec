@@ -13,7 +13,7 @@ function findNext(header) {
   // is available in the Link header. Link headers look like this:
   // Link: <url1>; rel="next", <url2>; rel="foo"; bar="baz"
   // More info here: https://developer.github.com/v3/#link-header
-  var m = (header || "").match(/<([^>]+)>\s*;\s*rel="next"/);
+  const m = (header || "").match(/<([^>]+)>\s*;\s*rel="next"/);
   return (m && m[1]) || null;
 }
 

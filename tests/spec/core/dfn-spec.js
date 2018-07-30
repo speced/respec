@@ -9,7 +9,7 @@ describe("Core — Definitions", () => {
         "<section id='dfn'><dfn>text</dfn><a>text</a></section>",
     };
     const doc = await makeRSDoc(ops);
-    var $sec = $("#dfn", doc);
+    const $sec = $("#dfn", doc);
     expect($sec.find("dfn").attr("id")).toEqual("dfn-text");
     expect($sec.find("a").attr("href")).toEqual("#dfn-text");
   });
@@ -31,7 +31,7 @@ describe("Core — Definitions", () => {
         </section>`,
     };
     const doc = await makeRSDoc(ops);
-    var $sec = $("#dfn", doc);
+    const $sec = $("#dfn", doc);
     expect($sec.find("a:contains('outerCode')").contents()[0].nodeName).toEqual(
       "CODE"
     );

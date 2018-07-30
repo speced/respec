@@ -50,16 +50,20 @@ describe("Core - WebIDL", () => {
   });
 
   it("links to fully qualified method names", () => {
-    var t1 = new URL(doc.getElementById("fullyQualifiedNoParens-1").href).hash;
+    const t1 = new URL(doc.getElementById("fullyQualifiedNoParens-1").href)
+      .hash;
     expect(t1).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
 
-    var t2 = new URL(doc.getElementById("fullyQualifiedNoParens-2").href).hash;
+    const t2 = new URL(doc.getElementById("fullyQualifiedNoParens-2").href)
+      .hash;
     expect(t2).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
 
-    var t3 = new URL(doc.getElementById("fullyQualifiedNoParens-3").href).hash;
+    const t3 = new URL(doc.getElementById("fullyQualifiedNoParens-3").href)
+      .hash;
     expect(t3).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
 
-    var t4 = new URL(doc.getElementById("fullyQualifiedNoParens-4").href).hash;
+    const t4 = new URL(doc.getElementById("fullyQualifiedNoParens-4").href)
+      .hash;
     expect(t4).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
   });
 
@@ -317,10 +321,12 @@ describe("Core - WebIDL", () => {
   attribute FrozenArray<DOMString> alist;
   // 4.0
   attribute Promise<DOMString> operation;
+  // 5.0
+  readonly attribute Performance performance;
 };`;
     expect(target.textContent).toEqual(text);
     const attrs = [...target.getElementsByClassName("idlAttribute")];
-    expect(attrs.length).toEqual(8);
+    expect(attrs.length).toEqual(9);
     const at = attrs[0];
     expect(at.querySelector(".idlAttrType").textContent).toEqual(" DOMString");
     expect(at.querySelector(".idlAttrName").textContent).toEqual("regular");
@@ -348,6 +354,22 @@ describe("Core - WebIDL", () => {
         .find(c => c.textContent.includes("alist"))
         .querySelector(".idlAttrName a")
     ).toBeNull();
+
+    const performanceInterfaceLink = Array.from(
+      target.querySelectorAll("a")
+    ).find(({ textContent }) => textContent === "Performance");
+    expect(performanceInterfaceLink).toBeTruthy();
+    expect(performanceInterfaceLink.getAttribute("href")).toEqual(
+      "#dfn-performance"
+    );
+
+    const performanceAttrLink = Array.from(target.querySelectorAll("a")).find(
+      ({ textContent }) => textContent === "performance"
+    );
+    expect(performanceAttrLink).toBeTruthy();
+    expect(performanceAttrLink.getAttribute("href")).toEqual(
+      "#dom-attrbasic-performance"
+    );
   });
 
   it("handles stringifiers special operations", () => {
@@ -431,11 +453,12 @@ describe("Core - WebIDL", () => {
   stringifier;
   Promise<void> complete(optional PaymentComplete result = "unknown");
   Promise<void> another(optional  /*trivia*/  PaymentComplete result = "unknown");
+  Performance performance();
 };`;
     expect(target.textContent).toEqual(text);
     const methods = [...target.getElementsByClassName("idlMethod")];
-    expect(methods.length).toEqual(14);
-    expect(target.getElementsByClassName("idlMethName").length).toEqual(10);
+    expect(methods.length).toEqual(15);
+    expect(target.getElementsByClassName("idlMethName").length).toEqual(11);
     const first = methods[0];
     expect(first.querySelector(".idlMethType").textContent).toEqual(
       "\n  // 1\n  void"
@@ -458,6 +481,21 @@ describe("Core - WebIDL", () => {
         .find(m => m.textContent.includes("withName"))
         .querySelector(".idlMethName a")
     ).toBeNull();
+
+    const performanceTypeLink = Array.from(target.querySelectorAll("a")).find(
+      ({ textContent }) => textContent === "Performance"
+    );
+    expect(performanceTypeLink).toBeTruthy();
+    expect(performanceTypeLink.getAttribute("href")).toEqual(
+      "#dfn-performance"
+    );
+    const performanceMethodLink = Array.from(target.querySelectorAll("a")).find(
+      ({ textContent }) => textContent === "performance"
+    );
+    expect(performanceMethodLink).toBeTruthy();
+    expect(performanceMethodLink.getAttribute("href")).toEqual(
+      "#dom-methbasic-performance"
+    );
   });
 
   it("should handle iterable-like interface member declarations", () => {
