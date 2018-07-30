@@ -38,8 +38,8 @@ const $respecUI = $("<div id='respec-ui' class='removeOnSave' hidden></div>");
 const $menu = $(
   "<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>"
 );
-var $modal;
-var $overlay;
+let $modal;
+let $overlay;
 const errors = [];
 const warnings = [];
 const buttons = {};
@@ -107,9 +107,9 @@ function errWarn(msg, arr, butName, title) {
     .appendTo($respecUI)
     .click(function() {
       this.setAttribute("aria-expanded", "true");
-      var $ul = $("<ol class='respec-" + butName + "-list'></ol>");
-      for (var i = 0, n = arr.length; i < n; i++) {
-        var err = arr[i];
+      const $ul = $("<ol class='respec-" + butName + "-list'></ol>");
+      for (let i = 0, n = arr.length; i < n; i++) {
+        const err = arr[i];
         if (err instanceof Error) {
           $("<li><span></span> <a>\u229e</a><pre></pre></li>")
             .appendTo($ul)
@@ -123,9 +123,9 @@ function errWarn(msg, arr, butName, title) {
               cursor: "pointer",
             })
             .click(function() {
-              var $a = $(this),
-                state = $a.text(),
-                $pre = $a.parent().find("pre");
+              const $a = $(this);
+              const state = $a.text();
+              const $pre = $a.parent().find("pre");
               if (state === "\u229e") {
                 $a.text("\u229f");
                 $pre.show();
@@ -190,13 +190,13 @@ export const ui = {
   },
   addCommand: function(label, module, keyShort, icon) {
     icon = icon || "";
-    var handler = function() {
+    const handler = function() {
       require([module], mod => {
         mod.show();
       });
     };
-    var id = "respec-button-" + label.toLowerCase().replace(/\s+/, "-");
-    var menuItem = $(
+    const id = "respec-button-" + label.toLowerCase().replace(/\s+/, "-");
+    const menuItem = $(
       '<li role=menuitem><button id="' +
         id +
         '" class="respec-option" title="' +

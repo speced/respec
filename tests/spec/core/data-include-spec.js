@@ -11,10 +11,10 @@ describe("Core — Data Include", () => {
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops, url);
-    var p = doc.querySelector("#includes > div > p");
+    const p = doc.querySelector("#includes > div > p");
     expect(p).toBeTruthy();
     expect(p.textContent).toEqual("INCLUDED");
-    var div = doc.querySelector("#includes > div");
+    const div = doc.querySelector("#includes > div");
     expect(div.dataset.include).toBe(undefined);
     expect(div.dataset.includeFormat).toBe(undefined);
     expect(div.dataset.dontRemove).toBe("pass");
@@ -26,11 +26,11 @@ describe("Core — Data Include", () => {
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops, url);
-    var missing = doc.getElementById("this-should-be-missing");
+    const missing = doc.getElementById("this-should-be-missing");
     expect(missing).toEqual(null);
-    var included = doc.getElementById("replacement-test");
+    const included = doc.getElementById("replacement-test");
     expect(included).toBeTruthy();
-    var heading = doc.querySelector("#replacement-test > h3");
+    const heading = doc.querySelector("#replacement-test > h3");
     expect(heading).toBeTruthy();
     expect(heading.textContent).toBe("Replacement");
   });
@@ -41,7 +41,7 @@ describe("Core — Data Include", () => {
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops, url);
-    var container = doc.getElementById("empty-include");
+    const container = doc.getElementById("empty-include");
     expect(container).toBeTruthy();
     expect(container.textContent).toBe("");
   });
@@ -52,7 +52,7 @@ describe("Core — Data Include", () => {
       body: makeDefaultBody(),
     };
     const doc = await makeRSDoc(ops, url);
-    var container = doc.getElementById("no-replace");
+    const container = doc.getElementById("no-replace");
     expect(container).toBeTruthy();
     expect(container.textContent).toBe("<p>pass</p>");
   });

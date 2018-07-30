@@ -1,7 +1,7 @@
 "use strict";
 describe("Core — Include config as JSON", () => {
   afterAll(flushIframes);
-  var ops;
+  let ops;
   beforeAll(() => {
     ops = {
       config: makeBasicConfig(),

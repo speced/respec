@@ -307,7 +307,7 @@ export function run(conf) {
   conf.maturity = status2maturity[conf.specStatus]
     ? status2maturity[conf.specStatus]
     : conf.specStatus;
-  var publishSpace = "TR";
+  let publishSpace = "TR";
   if (conf.specStatus === "Member-SUBM") publishSpace = "Submission";
   else if (conf.specStatus === "Team-SUBM") publishSpace = "TeamSubmission";
   if (conf.isRegular)
@@ -342,7 +342,7 @@ export function run(conf) {
       "previousPublishDate"
     );
 
-    var pmat = status2maturity[conf.previousMaturity]
+    const pmat = status2maturity[conf.previousMaturity]
       ? status2maturity[conf.previousMaturity]
       : conf.previousMaturity;
     if (conf.isTagFinding) {
@@ -385,7 +385,7 @@ export function run(conf) {
     conf.prevRecURI = "https://www.w3.org/TR/" + conf.prevRecShortname;
   if (!conf.editors || conf.editors.length === 0)
     pub("error", "At least one editor is required");
-  var peopCheck = function(it) {
+  const peopCheck = function(it) {
     if (!it.name) pub("error", "All authors and editors must have a name.");
   };
   if (conf.editors) {
@@ -410,7 +410,7 @@ export function run(conf) {
   conf.alternatesHTML =
     conf.alternateFormats &&
     joinAnd(conf.alternateFormats, alt => {
-      var optional =
+      let optional =
         alt.hasOwnProperty("lang") && alt.lang
           ? " hreflang='" + alt.lang + "'"
           : "";
@@ -453,7 +453,7 @@ export function run(conf) {
   }
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
-  for (var k in status2text) {
+  for (const k in status2text) {
     if (status2long[k]) continue;
     status2long[k] = status2text[k];
   }
@@ -508,7 +508,7 @@ export function run(conf) {
   document.body.classList.add("h-entry");
 
   // handle SotD
-  var sotd =
+  const sotd =
     document.getElementById("sotd") || document.createElement("section");
   if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !sotd.id) {
     pub(
@@ -526,7 +526,7 @@ export function run(conf) {
   //  happens when one is foolish enough to do joint work with the TAG). In such cases,
   //  the groups whose patent policy applies need to be listed first, and wgPatentURI
   //  can be shorter — but it still needs to be an array.
-  var wgPotentialArray = [conf.wg, conf.wgURI, conf.wgPatentURI];
+  const wgPotentialArray = [conf.wg, conf.wgURI, conf.wgPatentURI];
   if (
     wgPotentialArray.some(item => Array.isArray(item)) &&
     !wgPotentialArray.every(item => Array.isArray(item))
@@ -548,8 +548,8 @@ export function run(conf) {
     conf.wgHTML = joinAnd(conf.wg, (wg, idx) => {
       return "the <a href='" + conf.wgURI[idx] + "'>" + wg + "</a>";
     });
-    var pats = [];
-    for (var i = 0, n = conf.wg.length; i < n; i++) {
+    const pats = [];
+    for (let i = 0, n = conf.wg.length; i < n; i++) {
       pats.push(
         "a <a href='" +
           conf.wgPatentURI[i] +

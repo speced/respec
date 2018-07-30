@@ -76,7 +76,7 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       expect($("dt:contains('Editors:')", doc).length).toEqual(0);
       expect($("dt:contains('Editor:')", doc).length).toEqual(1);
-      var $dd = $("dt:contains('Editor:')", doc).next("dd");
+      const $dd = $("dt:contains('Editor:')", doc).next("dd");
       expect($dd.find("a[href='http://COMPANY']").length).toEqual(1);
       expect($dd.find("a[href='http://COMPANY']").text()).toEqual("COMPANY");
       expect($dd.find("a[href='mailto:EMAIL']").length).toEqual(1);
@@ -104,7 +104,7 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       expect($("dt:contains('Editors:')", doc).length).toEqual(1);
       expect($("dt:contains('Editor:')", doc).length).toEqual(0);
-      var $dd = $("dt:contains('Editors:')", doc).next("dd");
+      const $dd = $("dt:contains('Editors:')", doc).next("dd");
       expect($dd.text()).toEqual("NAME1");
       expect($dd.next("dd").text()).toEqual("NAME2");
     });
@@ -142,12 +142,12 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      var oricdHref = ops.config.editors[0].extras[0].href;
-      var twitterHref = ops.config.editors[0].extras[1].href;
-      var orcidAnchor = doc.querySelector("a[href='" + oricdHref + "']");
-      var twitterAnchor = doc.querySelector("a[href='" + twitterHref + "']");
+      const oricdHref = ops.config.editors[0].extras[0].href;
+      const twitterHref = ops.config.editors[0].extras[1].href;
+      const orcidAnchor = doc.querySelector("a[href='" + oricdHref + "']");
+      const twitterAnchor = doc.querySelector("a[href='" + twitterHref + "']");
       // general checks
-      var header = doc.querySelector("div.head");
+      const header = doc.querySelector("div.head");
       [orcidAnchor, twitterAnchor].forEach(elem => {
         // Check parent is correct.
         expect(elem.parentNode.localName).toEqual("span");
@@ -324,7 +324,7 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       expect($("dt:contains('Authors:')", doc).length).toEqual(0);
       expect($("dt:contains('Author:')", doc).length).toEqual(1);
-      var $dd = $("dt:contains('Author:')", doc).next("dd");
+      const $dd = $("dt:contains('Author:')", doc).next("dd");
       expect($dd.text()).toEqual("NAME1");
     });
 
@@ -345,7 +345,7 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       expect($("dt:contains('Authors:')", doc).length).toEqual(1);
       expect($("dt:contains('Author:')", doc).length).toEqual(0);
-      var $dd = $("dt:contains('Authors:')", doc).next("dd");
+      const $dd = $("dt:contains('Authors:')", doc).next("dd");
       expect($dd.text()).toEqual("NAME1");
       expect($dd.next("dd").text()).toEqual("NAME2");
     });
@@ -534,7 +534,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      var licenses = doc.querySelectorAll("div.head a[rel=license]");
+      const licenses = doc.querySelectorAll("div.head a[rel=license]");
       expect(licenses.length).toEqual(1);
       expect(licenses[0].tagName).toEqual("A");
       expect(licenses[0].href).toEqual(
@@ -618,7 +618,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      var query = "dt:contains('Previous editor\\'s draft:')";
+      const query = "dt:contains('Previous editor\\'s draft:')";
       expect(
         $(query, doc)
           .next("dd")
@@ -756,7 +756,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops, simpleSpecURL);
-      var $sotd = $("#sotd", doc);
+      const $sotd = $("#sotd", doc);
       expect($sotd.find("p:contains('CUSTOM PARAGRAPH')").length).toEqual(1);
       expect($sotd.find("a:contains('WGNAME')").length).toEqual(1);
       expect($sotd.find("a:contains('WGNAME')").attr("href")).toEqual("WGURI");
@@ -785,7 +785,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      var $sotd = $("#sotd", doc);
+      const $sotd = $("#sotd", doc);
       expect($sotd.find("a:contains('WGNAME1')").length).toEqual(2);
       expect($sotd.find("a:contains('WGNAME2')").length).toEqual(2);
       expect(
@@ -833,10 +833,10 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      var $sotd = $("#sotd", doc);
-      var $f = $($sotd.find("p:contains('Proposed Edited Recommendation')"));
+      const $sotd = $("#sotd", doc);
+      const $f = $($sotd.find("p:contains('Proposed Edited Recommendation')"));
       expect($f.length).toEqual(2);
-      var $p = $f[0];
+      const $p = $f[0];
       expect($("a:contains('questionnaires')", $p).length).toEqual(1);
     });
   });
@@ -854,10 +854,10 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops, simpleSpecURL);
-      var $sotd = $("#sotd", doc);
-      var $f = $($sotd.find("p:contains('CUSTOM PARAGRAPH')"));
+      const $sotd = $("#sotd", doc);
+      const $f = $($sotd.find("p:contains('CUSTOM PARAGRAPH')"));
       expect($f.length).toEqual(1);
-      var $p = $f.prev();
+      const $p = $f.prev();
       expect($("a:contains('WGNAME')", $p).length).toEqual(1);
       expect($("a:contains('WGNAME')", $p).attr("href")).toEqual("WGURI");
       expect($("a:contains('WGLIST@w3.org')", $p).attr("href")).toEqual(
@@ -903,7 +903,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      var $c = $(".head .copyright", doc);
+      const $c = $(".head .copyright", doc);
       expect($c.find("a[href='http://WG']").length).toEqual(1);
       expect($c.find("a:contains(WGNAME)").length).toEqual(1);
       expect(
@@ -911,7 +911,7 @@ describe("W3C — Headers", () => {
           .length
       ).toEqual(1);
       expect($(".head h2", doc).text()).toMatch(/Draft Community Group Report/);
-      var $sotd = $("#sotd", doc);
+      const $sotd = $("#sotd", doc);
       expect($sotd.find("a[href='http://WG']").length).toEqual(1);
       expect($sotd.find("a:contains(WGNAME)").length).toEqual(1);
       expect(
@@ -959,7 +959,7 @@ describe("W3C — Headers", () => {
           .next("dd")
           .text()
       ).toMatch(/http:\/\/LATEST/);
-      var $sotd = $("#sotd", doc);
+      const $sotd = $("#sotd", doc);
       expect($sotd.find("a[href='http://WG']").length).toEqual(1);
       expect($sotd.find("a:contains(WGNAME)").length).toEqual(1);
       expect(
@@ -1024,7 +1024,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops, simpleSpecURL);
-      var $sotd = $("#sotd", doc);
+      const $sotd = $("#sotd", doc);
       expect($sotd.find("p:contains('CUSTOM PARAGRAPH')").length).toEqual(1);
       expect($sotd.find("a:contains('WGNAME')").length).toEqual(0);
       expect($sotd.find("a:contains('WGLIST@w3.org')").length).toEqual(0);

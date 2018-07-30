@@ -1,18 +1,18 @@
 /*exported pickRandomsFromList, makeRSDoc, flushIframes,
  makeStandardOps, makeDefaultBody, makeBasicConfig*/
 "use strict";
-var iframes = [];
+const iframes = [];
 
 function makeRSDoc(opts = {}, src = "about-blank.html", style = "") {
   return new Promise((resove, reject) => {
-    var ifr = document.createElement("iframe");
+    const ifr = document.createElement("iframe");
     opts = opts || {};
     // reject when DEFAULT_TIMEOUT_INTERVAL passes
-    var timeoutId = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       reject(new Error("Timed out waiting on " + src));
     }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
     ifr.addEventListener("load", function() {
-      var doc = this.contentDocument;
+      const doc = this.contentDocument;
       decorateDocument(doc, opts);
       window.addEventListener("message", function msgHandler(ev) {
         if (
@@ -52,9 +52,9 @@ function decorateDocument(doc, opts) {
   }
 
   function decorateHead(opts) {
-    var path = opts.jsPath || "../js/";
-    var loader = this.ownerDocument.createElement("script");
-    var config = this.ownerDocument.createElement("script");
+    const path = opts.jsPath || "../js/";
+    const loader = this.ownerDocument.createElement("script");
+    const config = this.ownerDocument.createElement("script");
     switch (Math.round(Math.random() * 2)) {
       case 2:
         loader.defer = true;
@@ -63,15 +63,15 @@ function decorateDocument(doc, opts) {
         loader.async = true;
         break;
     }
-    var configText = "";
+    let configText = "";
     if (opts.config) {
       configText =
         "var respecConfig = " + JSON.stringify(opts.config || {}) + ";";
     }
     config.classList.add("remove");
     config.innerText = configText;
-    var isKarma = !!window.__karma__;
-    var loadAttr = {
+    const isKarma = !!window.__karma__;
+    const loadAttr = {
       src: isKarma
         ? new URL("/base/builds/respec-w3c-common.js", location).href
         : "/js/deps/require.js",
@@ -85,7 +85,7 @@ function decorateDocument(doc, opts) {
   }
 
   function decorateBody(opts) {
-    var bodyText = `
+    let bodyText = `
       <section id='abstract'>
         ${opts.abstract === undefined ? "<p>test abstract</p>" : opts.abstract}
       </section>
@@ -127,10 +127,10 @@ function pickRandomsFromList(list, howMany) {
       return Math.round(Math.random() * (1 - -1) + -1);
     });
   }
-  var collectedValues = [];
+  const collectedValues = [];
   // collect a unique set based on howMany we need.
   while (collectedValues.length < howMany) {
-    var potentialValue = Math.floor(Math.random() * list.length);
+    const potentialValue = Math.floor(Math.random() * list.length);
     if (collectedValues.indexOf(potentialValue) === -1) {
       collectedValues.push(potentialValue);
     }
