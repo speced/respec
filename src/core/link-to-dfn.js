@@ -16,10 +16,10 @@ const lang = defaultLang in l10n ? defaultLang : "en";
 export async function run(conf, doc, cb) {
   doc.normalize();
   var titles = {};
-  Object.keys(conf.definitionMap).forEach(function(title) {
+  Object.keys(conf.definitionMap).forEach(title => {
     titles[title] = {};
     var listOfDuplicateDfns = [];
-    conf.definitionMap[title].forEach(function(dfn) {
+    conf.definitionMap[title].forEach(dfn => {
       if (dfn.attr("data-idl") === undefined) {
         // Non-IDL definitions aren't "for" an interface.
         dfn.removeAttr("data-dfn-for");
@@ -77,7 +77,7 @@ export async function run(conf, doc, cb) {
     const ant = $ant[0];
     if (ant.classList.contains("externalDFN")) return;
     const linkTargets = $ant.linkTargets();
-    const foundDfn = linkTargets.some(function(target) {
+    const foundDfn = linkTargets.some(target => {
       if (titles[target.title] && titles[target.title][target.for]) {
         const $dfn = titles[target.title][target.for];
         const dfn = $dfn[0];

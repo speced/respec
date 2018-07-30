@@ -21,7 +21,7 @@ function show() {
     div,
     button
   );
-  let entries = [];
+  const entries = [];
   if ("getEntriesByType" in performance) {
     performance
       .getEntriesByType("measure")

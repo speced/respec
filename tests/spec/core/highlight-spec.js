@@ -75,7 +75,7 @@ describe("Core — Highlight", () => {
         </section>`,
     };
     const doc = await makeRSDoc(ops);
-    var pre = doc.querySelector("#test");
+    var pre = doc.getElementById("test");
     expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
   });
 });

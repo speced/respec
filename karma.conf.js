@@ -122,7 +122,7 @@ module.exports = function(config) {
     browserNoActivityTimeout: 100000,
 
     client: {
-      args: ["--grep", config.grep],
+      args: ["--grep", config.grep || ""],
     },
   };
   if (process.env.TRAVIS) {

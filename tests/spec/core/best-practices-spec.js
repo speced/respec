@@ -20,9 +20,9 @@ describe("Core — Best Practices", () => {
     };
     const doc = await makeRSDoc(ops);
     const pls = doc.body.querySelectorAll("span.practicelab");
-    const bps = doc.querySelector("#bp-summary");
-    expect(pls.item(0).textContent).toEqual("Best Practice 1: BP1");
-    expect(pls.item(1).textContent).toEqual("Best Practice 2: BP2");
+    const bps = doc.getElementById("bp-summary");
+    expect(pls[0].textContent).toEqual("Best Practice 1: BP1");
+    expect(pls[1].textContent).toEqual("Best Practice 2: BP2");
     expect(bps.querySelector("h2, h3, h4, h5, h6").textContent).toEqual(
       "Best Practices Summary"
     );

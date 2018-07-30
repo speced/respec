@@ -1,5 +1,5 @@
 "use strict";
-describe("Core - Markdown", function() {
+describe("Core - Markdown", () => {
   afterAll(flushIframes);
   it("processes standard markdown content", async () => {
     const ops = {
@@ -8,7 +8,7 @@ describe("Core - Markdown", function() {
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
-    Array.from(doc.querySelectorAll(".removeOnSave")).forEach(function(elem) {
+    Array.from(doc.querySelectorAll(".removeOnSave")).forEach(elem => {
       elem.remove();
     });
     const foo = doc.getElementById("foo");
@@ -61,7 +61,7 @@ describe("Core - Markdown", function() {
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
     expect(doc.querySelector("code")).toBeFalsy();
-    expect(doc.querySelector("#foo").textContent === "Foo");
+    expect(doc.getElementById("foo").textContent).toBe("1. Foo");
     var listItems = doc.querySelectorAll("section > ul:not([class=toc]) > li");
     expect(listItems.length).toEqual(2);
     expect(listItems[0].textContent).toEqual("list item 1");
@@ -200,7 +200,7 @@ describe("Core - Markdown", function() {
     expect(foo.contains(bar)).toBeFalsy();
   });
 
-  describe("nolinks options", function() {
+  describe("nolinks options", () => {
     it("automatically links URLs in pre when missing (smoke test)", async () => {
       const ops = {
         config: makeBasicConfig(),
@@ -217,8 +217,8 @@ describe("Core - Markdown", function() {
       const doc = await makeRSDoc(ops);
       var anchors = doc.querySelectorAll("#testElem a");
       expect(anchors.length).toEqual(2);
-      expect(anchors.item(0).href).toEqual("http://no-links-foo.com/");
-      expect(anchors.item(1).href).toEqual("http://no-links-bar.com/");
+      expect(anchors[0].href).toEqual("http://no-links-foo.com/");
+      expect(anchors[1].href).toEqual("http://no-links-bar.com/");
     });
 
     it("replaces HTMLAnchors when present", async () => {
@@ -300,7 +300,7 @@ describe("Core - Markdown", function() {
       expect(anotherH3.localName).toEqual("h3");
       expect(anotherH3.textContent.trim()).toEqual("1.2 another h3");
       expect(doc.querySelector("#markdown1 code")).toBeTruthy();
-      const dontChange = doc.querySelector("#dontTouch").textContent.trim();
+      const dontChange = doc.getElementById("dontTouch").textContent.trim();
       expect(dontChange).toEqual("## this should not change");
     });
   });

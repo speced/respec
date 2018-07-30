@@ -27,7 +27,7 @@ function handleIssues(ins, ghIssues, conf) {
       "<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"
     ),
     $issueList = $issueSummary.find("ul");
-  $ins.filter((i, issue) => issue.parentNode).each(function(i, inno) {
+  $ins.filter((i, issue) => issue.parentNode).each((i, inno) => {
     var $inno = $(inno),
       isIssue = $inno.hasClass("issue"),
       isWarning = $inno.hasClass("warning"),
@@ -112,9 +112,9 @@ function handleIssues(ins, ghIssues, conf) {
           // Add entry to #issue-summary.
           var $li = $("<li><a></a></li>");
           var $a = $li.find("a");
-          $a
-            .attr("href", "#" + $div[0].id)
-            .text(conf.l10n.issue + " " + report.number);
+          $a.attr("href", "#" + $div[0].id).text(
+            conf.l10n.issue + " " + report.number
+          );
           if (report.title) {
             $li.append(
               $(
