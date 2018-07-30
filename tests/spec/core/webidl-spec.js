@@ -1,6 +1,7 @@
 "use strict";
 describe("Core - WebIDL", () => {
   afterAll(flushIframes);
+  /** @type {Document} */
   let doc;
   beforeAll(async () => {
     const ops = makeStandardOps();
@@ -662,70 +663,45 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
   });
 
   it("should handle callbacks", () => {
-    var $target = $("#cb-basic", doc);
-    var text = "callback SuperStar = void ();";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlCallback").length).toEqual(1);
-    expect($target.find(".idlCallbackID").text()).toEqual("SuperStar");
-    expect($target.find(".idlCallbackType").text()).toEqual(" void");
+    let target = doc.getElementById("cb-basic");
+    let text = "callback SuperStar = void ();";
+    expect(target.textContent).toEqual(text);
+    expect(target.getElementsByClassName("idlCallback").length).toEqual(1);
+    expect(target.querySelector(".idlCallbackID").textContent).toEqual(
+      "SuperStar"
+    );
+    expect(target.querySelector(".idlCallbackType").textContent).toEqual(
+      " void"
+    );
 
-    $target = $("#cb-less-basic", doc);
+    target = doc.getElementById("cb-less-basic");
     text = "callback CbLessBasic = unsigned long long? (optional any value);";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlCallbackType").text()).toEqual(
+    expect(target.textContent).toEqual(text);
+    expect(target.querySelector(".idlCallbackType").textContent).toEqual(
       " unsigned long long?"
     );
-    var $prm = $target
-      .find(".idlCallback")
-      .last()
-      .find(".idlParam");
-    expect($prm.length).toEqual(1);
-    expect($prm.find(".idlParamType").text()).toEqual(" any");
-    expect($prm.find(".idlParamName").text()).toEqual("value");
+    let prm = target.querySelectorAll(".idlCallback .idlParam");
+    expect(prm.length).toEqual(1);
+    expect(prm[0].querySelector(".idlParamType").textContent).toEqual(" any");
+    expect(prm[0].querySelector(".idlParamName").textContent).toEqual("value");
 
     // Links and IDs.
     expect(
-      $target
-        .find(":contains('CbLessBasic')")
-        .filter("a")
-        .attr("href")
-    ).toEqual("#dom-cblessbasic");
-    expect(
-      $target.find(".idlCallback:contains('CbLessBasic')").attr("id")
-    ).toEqual("idl-def-cblessbasic");
+      target.querySelector("a[href='#dom-cblessbasic']").textContent
+    ).toEqual("CbLessBasic");
+    expect(target.querySelector(".idlCallback").getAttribute("id")).toEqual(
+      "idl-def-cblessbasic"
+    );
 
-    $target = $("#cb-mult-args", doc);
+    target = doc.getElementById("cb-mult-args");
     text = "callback SortCallback = void (any a, any b);";
-    expect($target.text()).toEqual(text);
-    $prm = $target
-      .find(".idlCallback")
-      .last()
-      .find(".idlParam");
-    expect($prm.length).toEqual(2);
-    expect(
-      $prm
-        .find(".idlParamType")
-        .first()
-        .text()
-    ).toEqual("any");
-    expect(
-      $prm
-        .find(".idlParamName")
-        .first()
-        .text()
-    ).toEqual("a");
-    expect(
-      $prm
-        .find(".idlParamType")
-        .last()
-        .text()
-    ).toEqual(" any");
-    expect(
-      $prm
-        .find(".idlParamName")
-        .last()
-        .text()
-    ).toEqual("b");
+    expect(target.textContent).toEqual(text);
+    prm = target.querySelectorAll(".idlCallback .idlParam");
+    expect(prm.length).toEqual(2);
+    expect(prm[0].querySelector(".idlParamType").textContent).toEqual("any");
+    expect(prm[0].querySelector(".idlParamName").textContent).toEqual("a");
+    expect(prm[1].querySelector(".idlParamType").textContent).toEqual(" any");
+    expect(prm[1].querySelector(".idlParamName").textContent).toEqual("b");
   });
 
   it("should handle typedefs", () => {
