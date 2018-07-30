@@ -768,11 +768,11 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         .textContent
     ).toEqual("docString");
     expect(
-      section.querySelector("dfn[id='dom-documented-docstring']").textContent
+      section.querySelector("dfn#dom-documented-docstring").textContent
     ).toEqual("docString");
 
     expect(
-      section.querySelector("dfn[id='dfn-some-generic-term']").textContent
+      section.querySelector("dfn#dfn-some-generic-term").textContent
     ).toEqual("Some generic term");
     expect(
       section.querySelector("a[href='#dfn-some-generic-term']").textContent
@@ -783,7 +783,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
       ).textContent
     ).toEqual("docString");
     const notDefinedAttr = target.querySelectorAll(
-      ".idlAttribute[id='idl-def-documented-notdefined'] .idlAttrName"
+      ".idlAttribute#idl-def-documented-notdefined .idlAttrName"
     );
     expect(notDefinedAttr.length).toEqual(1);
     expect(notDefinedAttr[0].getElementsByTagName("a").length).toEqual(0);
@@ -795,7 +795,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     ).toEqual("notDefined");
 
     const definedElsewhere = section.querySelector(
-      "dfn[id='dom-documented-definedelsewhere']"
+      "dfn#dom-documented-definedelsewhere"
     );
     const linkFromElsewhere = section.querySelector(
       "p:not([data-link-for]) a[href='#dom-documented-docstring']"
