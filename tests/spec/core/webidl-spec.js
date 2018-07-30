@@ -453,8 +453,8 @@ describe("Core - WebIDL", () => {
 };`;
     expect(target.textContent).toEqual(text);
     const methods = [...target.getElementsByClassName("idlMethod")];
-    expect(methods.length).toEqual(14);
-    expect(target.getElementsByClassName("idlMethName").length).toEqual(10);
+    expect(methods.length).toEqual(15);
+    expect(target.getElementsByClassName("idlMethName").length).toEqual(11);
     const first = methods[0];
     expect(first.querySelector(".idlMethType").textContent).toEqual(
       "\n  // 1\n  void"
@@ -477,6 +477,21 @@ describe("Core - WebIDL", () => {
         .find(m => m.textContent.includes("withName"))
         .querySelector(".idlMethName a")
     ).toBeNull();
+
+    const performanceTypeLink = Array.from(target.querySelectorAll("a")).find(
+      ({ textContent }) => textContent === "Performance"
+    );
+    expect(performanceTypeLink).toBeTruthy();
+    expect(performanceTypeLink.getAttribute("href")).toEqual(
+      "#dfn-performance"
+    );
+    const performanceMethodLink = Array.from(target.querySelectorAll("a")).find(
+      ({ textContent }) => textContent === "performance"
+    );
+    expect(performanceMethodLink).toBeTruthy();
+    expect(performanceMethodLink.getAttribute("href")).toEqual(
+      "#dom-methbasic-performance"
+    );
   });
 
   it("should handle iterable-like interface member declarations", () => {
