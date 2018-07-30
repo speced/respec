@@ -738,25 +738,25 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
   });
 
   it("should handle includes", () => {
-    var $target = $("#incl-basic", doc);
-    var text = "Window includes Breakable;";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlIncludes").length).toEqual(1);
+    let target = doc.getElementById("incl-basic");
+    let text = "Window includes Breakable;";
+    expect(target.textContent).toEqual(text);
+    expect(target.getElementsByClassName("idlIncludes").length).toEqual(1);
 
-    $target = $("#incl-less-basic", doc);
+    target = doc.getElementById("incl-less-basic");
     text = "[Something]" + text;
-    expect($target.text()).toEqual(text);
+    expect(target.textContent).toEqual(text);
   });
 
   it("should handle implements", () => {
-    var $target = $("#impl-basic", doc);
-    var text = "Window implements Breakable;";
-    expect($target.text()).toEqual(text);
-    expect($target.find(".idlImplements").length).toEqual(1);
+    let target = doc.getElementById("impl-basic");
+    let text = "Window implements Breakable;";
+    expect(target.textContent).toEqual(text);
+    expect(target.getElementsByClassName("idlImplements").length).toEqual(1);
 
-    $target = $("#impl-less-basic", doc);
+    target = doc.getElementById("impl-less-basic");
     text = "[Something]" + text;
-    expect($target.text()).toEqual(text);
+    expect(target.textContent).toEqual(text);
   });
 
   it("should link documentation", () => {
