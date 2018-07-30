@@ -760,46 +760,58 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
   });
 
   it("should link documentation", () => {
-    var $section = $("#documentation", doc);
-    var $target = $("#doc-iface", doc);
+    const section = doc.getElementById("documentation");
+    const target = doc.getElementById("doc-iface");
 
     expect(
-      $target.find(".idlAttrName:contains('docString') a").attr("href")
-    ).toEqual("#dom-documented-docstring");
-    expect($section.find("dfn:contains('docString')").attr("id")).toEqual(
-      "dom-documented-docstring"
+      target.querySelector(".idlAttrName a[href='#dom-documented-docstring']")
+        .textContent
+    ).toEqual("docString");
+    expect(
+      section.querySelector("dfn[id='dom-documented-docstring']").textContent
+    ).toEqual("docString");
+
+    expect(
+      section.querySelector("dfn[id='dfn-some-generic-term']").textContent
+    ).toEqual("Some generic term");
+    expect(
+      section.querySelector("a[href='#dfn-some-generic-term']").textContent
+    ).toEqual("Some generic term");
+    expect(
+      section.querySelector(
+        "p[data-link-for] a[href='#dom-documented-docstring']"
+      ).textContent
+    ).toEqual("docString");
+    const notDefinedAttr = target.querySelectorAll(
+      ".idlAttribute[id='idl-def-documented-notdefined'] .idlAttrName"
     );
+    expect(notDefinedAttr.length).toEqual(1);
+    expect(notDefinedAttr[0].getElementsByTagName("a").length).toEqual(0);
+    expect(notDefinedAttr[0].textContent).toEqual("notDefined");
+    expect(
+      section.querySelector(
+        "p[data-link-for] a[href='#idl-def-documented-notdefined']"
+      ).textContent
+    ).toEqual("notDefined");
 
-    expect(
-      $section.find("dfn:contains('Some generic term')").attr("id")
-    ).toEqual("dfn-some-generic-term");
-    expect(
-      $section.find("a:contains('Some generic term')").attr("href")
-    ).toEqual("#dfn-some-generic-term");
-    expect(
-      $section.find("p[data-link-for] a:contains('docString')").attr("href")
-    ).toEqual("#dom-documented-docstring");
-    var notDefinedAttr = $target.find(".idlAttribute:contains('notDefined')");
-    expect(notDefinedAttr.find(".idlAttrName").length).toEqual(1);
-    expect(notDefinedAttr.find(".idlAttrName").find("a").length).toEqual(0);
-    expect(notDefinedAttr.attr("id")).toEqual("idl-def-documented-notdefined");
-    expect(
-      $section.find("p[data-link-for] a:contains('notDefined')").attr("href")
-    ).toEqual("#idl-def-documented-notdefined");
-
-    var definedElsewhere = $section.find("dfn:contains('definedElsewhere')");
-    var linkFromElsewhere = $section.find("a:contains('Documented.docString')");
-    expect(definedElsewhere.prop("id")).toEqual(
-      "dom-documented-definedelsewhere"
+    const definedElsewhere = section.querySelector(
+      "dfn[id='dom-documented-definedelsewhere']"
     );
+    const linkFromElsewhere = section.querySelector(
+      "p:not([data-link-for]) a[href='#dom-documented-docstring']"
+    );
+    expect(definedElsewhere.textContent).toEqual("Documented.definedElsewhere");
     expect(
-      $target.find(".idlAttrName:contains('definedElsewhere') a").attr("href")
-    ).toEqual("#dom-documented-definedelsewhere");
-    expect(linkFromElsewhere.attr("href")).toEqual("#dom-documented-docstring");
+      target.querySelector(
+        ".idlAttrName a[href='#dom-documented-definedelsewhere']"
+      ).textContent
+    ).toEqual("definedElsewhere");
+    expect(linkFromElsewhere.textContent).toEqual("Documented.docString");
 
     expect(
-      $section.find("#without-link-for a:contains('Documented')").attr("href")
-    ).toEqual("#idl-def-documented");
+      section.querySelector("#without-link-for a[href='#idl-def-documented']")
+        .textContent
+    ).toEqual("Documented");
   });
   it("retains css classes afer processing", () => {
     const elem = doc.getElementById("retain-css-classes");
