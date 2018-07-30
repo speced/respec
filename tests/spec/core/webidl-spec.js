@@ -350,11 +350,11 @@ describe("Core - WebIDL", () => {
         .querySelector(".idlAttrName a")
     ).toBeNull();
 
-    const performanceIterfaceLink = Array.from(
+    const performanceInterfaceLink = Array.from(
       target.querySelectorAll("a")
     ).find(({ textContent }) => textContent === "Performance");
-    expect(performanceIterfaceLink).toBeTruthy();
-    expect(performanceIterfaceLink.getAttribute("href")).toEqual(
+    expect(performanceInterfaceLink).toBeTruthy();
+    expect(performanceInterfaceLink.getAttribute("href")).toEqual(
       "#dfn-performance"
     );
 
