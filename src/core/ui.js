@@ -38,8 +38,8 @@ const $respecUI = $("<div id='respec-ui' class='removeOnSave' hidden></div>");
 const $menu = $(
   "<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>"
 );
-var $modal;
-var $overlay;
+let $modal;
+let $overlay;
 const errors = [];
 const warnings = [];
 const buttons = {};
@@ -74,7 +74,7 @@ $respecPill
     $menu[0].hidden = !$menu[0].hidden;
   })
   .appendTo($respecUI);
-document.documentElement.addEventListener("click", function() {
+document.documentElement.addEventListener("click", () => {
   if (!$menu[0].hidden) {
     $menu[0].classList.remove("respec-visible");
     $menu[0].classList.add("respec-hidden");
@@ -107,9 +107,9 @@ function errWarn(msg, arr, butName, title) {
     .appendTo($respecUI)
     .click(function() {
       this.setAttribute("aria-expanded", "true");
-      var $ul = $("<ol class='respec-" + butName + "-list'></ol>");
-      for (var i = 0, n = arr.length; i < n; i++) {
-        var err = arr[i];
+      const $ul = $("<ol class='respec-" + butName + "-list'></ol>");
+      for (let i = 0, n = arr.length; i < n; i++) {
+        const err = arr[i];
         if (err instanceof Error) {
           $("<li><span></span> <a>\u229e</a><pre></pre></li>")
             .appendTo($ul)
@@ -123,9 +123,9 @@ function errWarn(msg, arr, butName, title) {
               cursor: "pointer",
             })
             .click(function() {
-              var $a = $(this),
-                state = $a.text(),
-                $pre = $a.parent().find("pre");
+              const $a = $(this);
+              const state = $a.text();
+              const $pre = $a.parent().find("pre");
               if (state === "\u229e") {
                 $a.text("\u229f");
                 $pre.show();
@@ -190,13 +190,13 @@ export const ui = {
   },
   addCommand: function(label, module, keyShort, icon) {
     icon = icon || "";
-    var handler = function() {
-      require([module], function(mod) {
+    const handler = function() {
+      require([module], mod => {
         mod.show();
       });
     };
-    var id = "respec-button-" + label.toLowerCase().replace(/\s+/, "-");
-    var menuItem = $(
+    const id = "respec-button-" + label.toLowerCase().replace(/\s+/, "-");
+    const menuItem = $(
       '<li role=menuitem><button id="' +
         id +
         '" class="respec-option" title="' +
@@ -260,19 +260,19 @@ export const ui = {
     $modal[0].hidden = false;
   },
 };
-shortcut.add("Esc", function() {
+shortcut.add("Esc", () => {
   ui.closeModal();
 });
-shortcut.add("Ctrl+Alt+Shift+E", function() {
+shortcut.add("Ctrl+Alt+Shift+E", () => {
   if (buttons.error) buttons.error.click();
 });
-shortcut.add("Ctrl+Alt+Shift+W", function() {
+shortcut.add("Ctrl+Alt+Shift+W", () => {
   if (buttons.warning) buttons.warning.click();
 });
 window.respecUI = ui;
-sub("error", function(details) {
+sub("error", details => {
   ui.error(details);
 });
-sub("warn", function(details) {
+sub("warn", details => {
   ui.warning(details);
 });

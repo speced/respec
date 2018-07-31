@@ -1,5 +1,5 @@
 "use strict";
-describe("W3C — Permalinks", function() {
+describe("W3C — Permalinks", () => {
   afterAll(flushIframes);
 
   function makeCustomConfig() {
@@ -25,80 +25,67 @@ describe("W3C — Permalinks", function() {
     };
   }
 
-  it("permalinks data should be added when section or h* have an id", function(
-    done
-  ) {
-    var ops = {
+  it("permalinks data should be added when section or h* have an id", async () => {
+    const ops = {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<section id='testing'><h2>a heading</h2><p>some content</p></section>",
+        "<section id='testing'><h2>a heading</h2><p>some content</p></section>",
     };
-    makeRSDoc(ops, function(doc) {
-      var $c = $("#sotd", doc);
-      var list = $(".permalink", $c);
-      expect(list.length).toEqual(0);
-      $c = $("#testing", doc);
-      list = $(".permalink", $c);
-      expect(list.length).toEqual(1);
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    let $c = $("#sotd", doc);
+    let list = $(".permalink", $c);
+    expect(list.length).toEqual(0);
+    $c = $("#testing", doc);
+    list = $(".permalink", $c);
+    expect(list.length).toEqual(1);
   });
 
-  it("permalinks data should be added when div or h* have an id", function(
-    done
-  ) {
-    var ops = {
+  it("permalinks data should be added when div or h* have an id", async () => {
+    const ops = {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<div id='testing'><h2>a heading</h2><p>some content</p></div>",
+        "<div id='testing'><h2>a heading</h2><p>some content</p></div>",
     };
-    makeRSDoc(ops, function(doc) {
-      var $c = $("#sotd", doc);
-      var list = $(".permalink", $c);
-      expect(list.length).toEqual(0);
-      $c = $("#testing", doc);
-      list = $(".permalink", $c);
-      expect(list.length).toEqual(1);
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    let $c = $("#sotd", doc);
+    let list = $(".permalink", $c);
+    expect(list.length).toEqual(0);
+    $c = $("#testing", doc);
+    list = $(".permalink", $c);
+    expect(list.length).toEqual(1);
   });
 
-  it("permalinks data should not be added when section or h* have no id", function(
-    done
-  ) {
-    var ops = {
+  it("permalinks data should not be added when section or h* have no id", async () => {
+    const ops = {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<section id='testing'><h2>a heading</h2><p>some content</p></section>" +
-          "<section><h2>another heading</h2><p>Other Content</p></section>",
+        "<section id='testing'><h2>a heading</h2><p>some content</p></section>" +
+        "<section><h2>another heading</h2><p>Other Content</p></section>",
     };
-    makeRSDoc(ops, function(doc) {
-      var $c = $("#testing", doc);
-      $c = $c.nextElementSibling;
-      var list = $(".permalink", $c);
-      expect(list.length).toEqual(0);
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    const $c = $("#testing", doc).nextElementSibling;
+    const list = $(".permalink", $c);
+    expect(list.length).toEqual(0);
   });
 
-  it("permalinks data should not be added when section has a class of nolink", function(
-    done
-  ) {
-    var ops = {
+  it("permalinks data should not be added when section has a class of nolink", async () => {
+    const ops = {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<section class='nolink' id='testing'><h2>a heading</h2><p>some content</p></section>",
+        "<section class='nolink' id='testing'><h2>a heading</h2><p>some content</p></section>",
     };
-    makeRSDoc(ops, function(doc) {
-      var $c = $("#testing", doc);
-      var list = $(".permalink", $c);
-      expect(list.length).toEqual(0);
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    const $c = $("#testing", doc);
+    const list = $(".permalink", $c);
+    expect(list.length).toEqual(0);
   });
 
-  it("should do nothing when disabled", function(done) {
-    var noConfig = {
+  it("should do nothing when disabled", async () => {
+    const noConfig = {
       editors: [
         {
           name: "Shane McCarron",
@@ -116,52 +103,45 @@ describe("W3C — Permalinks", function() {
       specStatus: "PER",
       includePermalinks: false,
     };
-    var ops = {
+    const ops = {
       config: noConfig,
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<section id='testing'><h2>a heading</h2><p>some content</p></section>",
+        "<section id='testing'><h2>a heading</h2><p>some content</p></section>",
     };
-    makeRSDoc(ops, function(doc) {
-      var $c = $("#sotd", doc);
-      var list = $c.children(".permalink");
-      expect(list.length).toEqual(0);
-      var $n = $("#testing", doc);
-      list = $n.children(".permalink");
-      expect(list.length).toEqual(0);
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    const $c = $("#sotd", doc);
+    let list = $c.children(".permalink");
+    expect(list.length).toEqual(0);
+    const $n = $("#testing", doc);
+    list = $n.children(".permalink");
+    expect(list.length).toEqual(0);
   });
 
-  it("permalinks content attribute should have special characters escaped", function(
-    done
-  ) {
-    var ops = {
+  it("permalinks content attribute should have special characters escaped", async () => {
+    const ops = {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<div id='testing'><h2>a heading with \" and '</h2><p>some content</p></div>",
+        "<div id='testing'><h2>a heading with \" and '</h2><p>some content</p></div>",
     };
-    makeRSDoc(ops, function(doc) {
-      var $c = $("#testing", doc);
-      var list = $("span.permalink a span", $c);
-      expect(list.length).toEqual(1);
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    const $c = $("#testing", doc);
+    const list = $("span.permalink a span", $c);
+    expect(list.length).toEqual(1);
   });
 
-  it("permalinks not on edge will have non-breaking space after heading", function(
-    done
-  ) {
-    var ops = {
+  it("permalinks not on edge will have non-breaking space after heading", async () => {
+    const ops = {
       config: makeCustomConfig(),
       body:
         "<section class='introductory' id='sotd'>Some unique SOTD content</section>" +
-          "<div id='testing'><h2>a heading with \" and '</h2><p>some content</p></div>",
+        "<div id='testing'><h2>a heading with \" and '</h2><p>some content</p></div>",
     };
-    makeRSDoc(ops, function(doc) {
-      var $c = $("#testing", doc);
-      var list = $("h2", $c);
-      expect(list.length).toEqual(1);
-      expect(list[0].innerHTML).toMatch(/&nbsp;/);
-    }).then(done);
+    const doc = await makeRSDoc(ops);
+    const $c = $("#testing", doc);
+    const list = $("h2", $c);
+    expect(list.length).toEqual(1);
+    expect(list[0].innerHTML).toMatch(/&nbsp;/);
   });
 });

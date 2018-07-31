@@ -4,6 +4,7 @@
 import { linkInlineCitations } from "core/data-cite";
 import { pub } from "core/pubsubhub";
 import { lang as defaultLang } from "./l10n";
+import { getLinkTargets } from "core/utils";
 import { run as addExternalReferences } from "core/xref";
 export const name = "core/link-to-dfn";
 const l10n = {
@@ -15,22 +16,22 @@ const lang = defaultLang in l10n ? defaultLang : "en";
 
 export async function run(conf, doc, cb) {
   doc.normalize();
-  var titles = {};
-  Object.keys(conf.definitionMap).forEach(function(title) {
+  const titles = {};
+  Object.keys(conf.definitionMap).forEach(title => {
     titles[title] = {};
-    var listOfDuplicateDfns = [];
-    conf.definitionMap[title].forEach(function(dfn) {
+    const listOfDuplicateDfns = [];
+    conf.definitionMap[title].forEach(dfn => {
       if (dfn.attr("data-idl") === undefined) {
         // Non-IDL definitions aren't "for" an interface.
         dfn.removeAttr("data-dfn-for");
       }
-      var dfn_for = dfn.attr("data-dfn-for") || "";
+      const dfn_for = dfn.attr("data-dfn-for") || "";
       if (dfn_for in titles[title]) {
         // We want <dfn> definitions to take precedence over
         // definitions from WebIDL. WebIDL definitions wind
         // up as <span>s instead of <dfn>.
-        var oldIsDfn = titles[title][dfn_for].filter("dfn").length !== 0;
-        var newIsDfn = dfn.filter("dfn").length !== 0;
+        const oldIsDfn = titles[title][dfn_for].filter("dfn").length !== 0;
+        const newIsDfn = dfn.filter("dfn").length !== 0;
         if (oldIsDfn && newIsDfn) {
           // Only complain if the user provides 2 <dfn>s
           // for the same term.
@@ -76,8 +77,8 @@ export async function run(conf, doc, cb) {
     const $ant = $(this);
     const ant = $ant[0];
     if (ant.classList.contains("externalDFN")) return;
-    const linkTargets = $ant.linkTargets();
-    const foundDfn = linkTargets.some(function(target) {
+    const linkTargets = getLinkTargets(ant);
+    const foundDfn = linkTargets.some(target => {
       if (titles[target.title] && titles[target.title][target.for]) {
         const $dfn = titles[target.title][target.for];
         const dfn = $dfn[0];

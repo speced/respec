@@ -289,6 +289,12 @@
       <p>
         Basic attributes testing.
       </p>
+      <p>
+        The <code><dfn>Performance</dfn></code> interface.
+      </p>
+      <p data-dfn-for="AttrBasic">
+        The <dfn>performance</dfn> attribute.
+      </p>
       <pre id='attr-basic' class='idl'>
         interface AttrBasic {
           // 1
@@ -306,8 +312,9 @@
           // 3.10.31
           attribute FrozenArray&lt;DOMString&gt; alist;
           // 4.0
-          attribute Promise&lt;DOMString&gt; operation;<!--
-
+          attribute Promise&lt;DOMString&gt; operation;
+          // 5.0
+          readonly attribute Performance performance;<!--
           // 3
            static attribute DOMString unmovable;
           // 4
@@ -350,6 +357,9 @@
           setter SetterNamedPass named ();
         };
       </pre>
+      <p data-dfn-for="MethBasic">
+        <dfn>performance()</dfn> method.
+      </p>
       <pre id='meth-basic' class='idl'>
         interface MethBasic {
           // 1
@@ -378,6 +388,7 @@
           stringifier;
           Promise&lt;void> complete(optional PaymentComplete result = "unknown");
           Promise&lt;void> another(optional  /*trivia*/  PaymentComplete result = "unknown");
+          Performance performance();
         };
       </pre>
       <p id="meth-basic-doc" data-dfn-for="MethBasic">
@@ -630,7 +641,7 @@
     <section>
       <pre id='retain-css-classes' class='idl a b c overlarge'>
         interface NotTested {};
-      </pre>      
+      </pre>
     </section>
     <section>
       <h2>Autolink to WebIDL spec for toJSON</h2>
@@ -646,7 +657,7 @@
         interface DefinedToJson {
           readonly attribute DOMString country;
           [Default] object toJSON();
-          void toWhatever(); 
+          void toWhatever();
         };
       </pre>
       <section>

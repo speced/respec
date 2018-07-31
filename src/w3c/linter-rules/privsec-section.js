@@ -23,13 +23,13 @@ const meta = {
 const lang = defaultLang in meta ? defaultLang : "en";
 
 function hasPriSecConsiderations(doc) {
-  return Array.from(
-    doc.querySelectorAll("h2, h3, h4, h5, h6")
-  ).some(({ textContent: text }) => {
-    const saysPrivOrSec = /(privacy|security)/im.test(text);
-    const saysConsiderations = /(considerations)/im.test(text);
-    return (saysPrivOrSec && saysConsiderations) || saysPrivOrSec;
-  });
+  return Array.from(doc.querySelectorAll("h2, h3, h4, h5, h6")).some(
+    ({ textContent: text }) => {
+      const saysPrivOrSec = /(privacy|security)/im.test(text);
+      const saysConsiderations = /(considerations)/im.test(text);
+      return (saysPrivOrSec && saysConsiderations) || saysPrivOrSec;
+    }
+  );
 }
 
 function lintingFunction(conf, doc) {

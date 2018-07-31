@@ -1,5 +1,5 @@
 "use strict";
-describe("Core — Issues and Notes", function() {
+describe("Core — Issues and Notes", () => {
   afterAll(flushIframes);
   it("treats each issue as unique", async () => {
     const body = `
@@ -31,7 +31,7 @@ describe("Core — Issues and Notes", function() {
     expect(thirdItem.hash).toBe(`#${secondDuplicateIssue.id}`);
   });
   it("should process issues and notes", async () => {
-    var ops = {
+    const ops = {
       config: makeBasicConfig(),
       body:
         makeDefaultBody() +
@@ -43,15 +43,15 @@ describe("Core — Issues and Notes", function() {
         "<p class='note' title='NOT-TIT'>NOTE</p></section>",
     };
     const doc = await makeRSDoc(ops);
-    var $iss = $("div.issue", doc).first();
-    var $atr = $("div.atrisk", doc);
-    var $piss = $iss.find("p");
-    var $patr = $atr.find("p");
-    var $spiss = $("span.issue", doc);
-    var $spatr = $("span.atrisk", doc);
-    var $not = $("div.note", doc);
-    var $pnot = $not.find("p");
-    var $spnot = $("span.note", doc);
+    const $iss = $("div.issue", doc).first();
+    const $atr = $("div.atrisk", doc);
+    const $piss = $iss.find("p");
+    const $patr = $atr.find("p");
+    const $spiss = $("span.issue", doc);
+    const $spatr = $("span.atrisk", doc);
+    const $not = $("div.note", doc);
+    const $pnot = $not.find("p");
+    const $spnot = $("span.note", doc);
 
     expect($spiss.parent("div").length).toEqual(0);
     expect($spatr.parent("div").length).toEqual(0);
@@ -76,7 +76,7 @@ describe("Core — Issues and Notes", function() {
   });
 
   it("should process ednotes", async () => {
-    var ops = {
+    const ops = {
       config: makeBasicConfig(),
       body:
         makeDefaultBody() +
@@ -84,8 +84,8 @@ describe("Core — Issues and Notes", function() {
         "<p class='ednote' title='EDNOTE-TIT'>EDNOTE</p>",
     };
     const doc = await makeRSDoc(ops);
-    var $not = $("div.ednote", doc);
-    var $pnot = $not.find("p");
+    const $not = $("div.ednote", doc);
+    const $pnot = $not.find("p");
     expect($not.find("div.ednote-title").length).toEqual(1);
     expect($not.find("div.ednote-title").text()).toEqual(
       "Editor's note: EDNOTE-TIT"
@@ -95,7 +95,7 @@ describe("Core — Issues and Notes", function() {
   });
 
   it("should process warnings", async () => {
-    var ops = {
+    const ops = {
       config: makeBasicConfig(),
       body:
         makeDefaultBody() +
@@ -104,7 +104,7 @@ describe("Core — Issues and Notes", function() {
         "<p class='issue' title='ISS-TIT'>ISSUE</p></section>",
     };
     const doc = await makeRSDoc(ops);
-    var $sec = $("section", doc);
+    const $sec = $("section", doc);
     expect($sec.find(".warning").length).toEqual(2);
     expect($sec.find(".warning-title").length).toEqual(1);
     expect($sec.find(".warning-title").text()).toEqual("Warning: WARN-TIT");
@@ -148,7 +148,9 @@ describe("Core — Issues and Notes", function() {
     const issueDiv404 = doc.getElementById("this-is-404");
 
     expect(issueDiv404).toBeTruthy();
-    expect(issueDiv404.querySelector("div:not(.issue-title)").textContent).toEqual("this is 404");
+    expect(
+      issueDiv404.querySelector("div:not(.issue-title)").textContent
+    ).toEqual("this is 404");
 
     const [
       refactorLabel,
@@ -197,7 +199,7 @@ describe("Core — Issues and Notes", function() {
   });
 
   it("should link to external issue tracker", async () => {
-    var issueBaseConfig = {
+    const issueBaseConfig = {
       editors: [
         {
           name: "Gregg Kellogg",
@@ -207,15 +209,15 @@ describe("Core — Issues and Notes", function() {
       specStatus: "FPWD",
       shortName: "foo",
     };
-    var ops = {
+    const ops = {
       config: issueBaseConfig,
       body:
         makeDefaultBody() +
         "<section><p class='issue' data-number='10'>ISSUE</p></section>",
     };
     const doc = await makeRSDoc(ops);
-    var $iss = $("div.issue", doc);
-    var $piss = $iss.find("p");
+    const $iss = $("div.issue", doc);
+    const $piss = $iss.find("p");
     expect($iss.find("div.issue-title").length).toEqual(1);
     expect($iss.find("div.issue-title").text()).toEqual("Issue 10");
     expect($iss.find("div.issue-title a").attr("href")).toEqual(
@@ -259,11 +261,13 @@ describe("Core — Issues and Notes", function() {
     expect(textContent).toBe("Issue 1540");
     const issueDiv404 = doc.getElementById("this-is-404");
     expect(issueDiv404).toBeTruthy();
-    expect(issueDiv404.querySelector("div:not(.issue-title)").textContent).toEqual("this is 404");
+    expect(
+      issueDiv404.querySelector("div:not(.issue-title)").textContent
+    ).toEqual("this is 404");
   });
 
   it("should link to external issue tracker for features at risk", async () => {
-    var atRiskBaseConfig = {
+    const atRiskBaseConfig = {
       editors: [
         {
           name: "Markus Lanthaler",
@@ -274,15 +278,15 @@ describe("Core — Issues and Notes", function() {
       specStatus: "FPWD",
       shortName: "foo",
     };
-    var ops = {
+    const ops = {
       config: atRiskBaseConfig,
       body:
         makeDefaultBody() +
         "<section><p class='issue atrisk' data-number='10'>FEATURE AT RISK</p></section>",
     };
     const doc = await makeRSDoc(ops);
-    var $iss = $("div.atrisk", doc);
-    var $piss = $iss.find("p");
+    const $iss = $("div.atrisk", doc);
+    const $piss = $iss.find("p");
     expect($iss.find("div.issue-title").length).toEqual(1);
     expect($iss.find("div.issue-title").text()).toEqual("Feature at Risk 10");
     expect($iss.find("div.issue-title a").attr("href")).toEqual(

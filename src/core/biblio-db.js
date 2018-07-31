@@ -96,9 +96,9 @@ export const biblioDB = {
     }
     const db = await this.ready;
     return new Promise((resolve, reject) => {
-      var objectStore = db.transaction([type], "readonly").objectStore(type);
-      var range = IDBKeyRange.only(id);
-      var request = objectStore.openCursor(range);
+      const objectStore = db.transaction([type], "readonly").objectStore(type);
+      const range = IDBKeyRange.only(id);
+      const request = objectStore.openCursor(range);
       request.onsuccess = () => {
         resolve(!!request.result);
       };
@@ -119,11 +119,11 @@ export const biblioDB = {
     }
     const db = await this.ready;
     return new Promise((resolve, reject) => {
-      var objectStore = db
+      const objectStore = db
         .transaction(["alias"], "readonly")
         .objectStore("alias");
-      var range = IDBKeyRange.only(id);
-      var request = objectStore.openCursor(range);
+      const range = IDBKeyRange.only(id);
+      const request = objectStore.openCursor(range);
       request.onsuccess = () => {
         resolve(!!request.result);
       };
@@ -144,11 +144,11 @@ export const biblioDB = {
     }
     const db = await this.ready;
     return new Promise((resolve, reject) => {
-      var objectStore = db
+      const objectStore = db
         .transaction("alias", "readonly")
         .objectStore("alias");
-      var range = IDBKeyRange.only(id);
-      var request = objectStore.openCursor(range);
+      const range = IDBKeyRange.only(id);
+      const request = objectStore.openCursor(range);
       request.onsuccess = () => {
         if (request.result === null) {
           return resolve(null);
@@ -176,9 +176,9 @@ export const biblioDB = {
     }
     const db = await this.ready;
     return new Promise((resolve, reject) => {
-      var objectStore = db.transaction([type], "readonly").objectStore(type);
-      var range = IDBKeyRange.only(id);
-      var request = objectStore.openCursor(range);
+      const objectStore = db.transaction([type], "readonly").objectStore(type);
+      const range = IDBKeyRange.only(id);
+      const request = objectStore.openCursor(range);
       request.onsuccess = () => {
         if (request.result === null) {
           return resolve(null);
@@ -254,7 +254,7 @@ export const biblioDB = {
     return new Promise((resolve, reject) => {
       const store = db.transaction([type], "readwrite").objectStore(type);
       // update or add, depending of already having it in db
-      var request = isInDB ? store.put(details) : store.add(details);
+      const request = isInDB ? store.put(details) : store.add(details);
       request.onsuccess = resolve;
       request.onerror = () => {
         reject(new DOMException(request.error.message, request.error.name));
