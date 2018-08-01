@@ -8,6 +8,7 @@ export default (conf, name, items = []) => {
 
   function getItem(p) {
     const personName = [p.name]; // treated as opt-in HTML by hyperHTML
+    const company = [p.company];
     const editorid = p.w3cid ? parseInt(p.w3cid, 10) : null;
     const dd = html`<dd class='p-author h-card vcard'
       data-editor-id='${editorid}'></dd>`;
@@ -26,11 +27,11 @@ export default (conf, name, items = []) => {
       if (p.companyURL) {
         contents.push(
           html` (<a class='p-org org h-org h-card' href='${p.companyURL}'>${
-            p.company
+            company
           }</a>)`
         );
       } else {
-        contents.push(html` (${p.company})`);
+        contents.push(html` (${company})`);
       }
     }
     if (p.note) contents.push(document.createTextNode(` (${p.note})`));
