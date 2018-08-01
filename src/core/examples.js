@@ -11,7 +11,6 @@ import css from "deps/text!core/css/examples.css";
 import { unindentMarkup } from "core/utils";
 
 export const name = "core/examples";
-const isEmpty = str => /^\s*$/.test(str);
 
 function makeTitle(conf, elem, num, report) {
   report.title = elem.title;
