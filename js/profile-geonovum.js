@@ -36,7 +36,7 @@ define(
     "core/l10n",
     // "w3c/defaults",
     "geonovum/defaults",
-    "core/aria",
+    // "core/aria",
     "core/style",
     "geonovum/style",
     "geonovum/l10n",
@@ -63,12 +63,12 @@ define(
     "core/contrib",
     "core/fix-headers",
     "core/structure",
-    "geonovum/informative",
-    "geonovum/permalinks",
+    "geonovum/informative", // TODO: check: voor een niet normatieve tekst is een apart script opgenomen. Is dit nog nodig? Of naar i10n vertalen?
+    "geonovum/permalinks", // TODO: check wat die nu nog precies doet, kan nodig zijn dat dit custom Geonovum is
     "core/id-headers",
-    "core/rdfa",
+    // "core/rdfa",
     // "w3c/aria",
-    "geonovum/leafletfigures",
+    "geonovum/leafletfigures", // TODO: opnemen in docs: eigen Geonovum doc
     "ui/about-respec",
     "ui/dfn-list",
     "ui/save-html",
