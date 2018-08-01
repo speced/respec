@@ -8,6 +8,7 @@
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
 import css from "deps/text!core/css/examples.css";
+import { unindentMarkup } from "core/utils";
 
 export const name = "core/examples";
 const isEmpty = str => /^\s*$/.test(str);
@@ -49,19 +50,8 @@ export function run(conf) {
       const inAside = !!example.closest("aside");
       if (!inAside) ++number;
 
-      // reindent
-      const lines = example.innerHTML.split("\n");
-      // remove empty lines from top and bottom
-      while (lines.length && isEmpty(lines[0])) lines.shift();
-      while (lines.length && isEmpty(lines[lines.length - 1])) lines.pop();
-      const matches = /^(\s+)/.exec(lines[0]);
-      if (matches) {
-        const rep = new RegExp("^" + matches[1]);
-        for (let j = 0; j < lines.length; j++) {
-          lines[j] = lines[j].replace(rep, "");
-        }
-      }
-      example.innerHTML = report.content = lines.join("\n");
+      const reindentedHtml = unindentMarkup(example.innerHTML);
+      example.innerHTML = report.content = reindentedHtml;
 
       // wrap
       example.classList.remove("example", "illegal-example");
