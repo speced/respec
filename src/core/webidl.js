@@ -9,7 +9,7 @@ import webidl2 from "deps/webidl2";
 import hb from "handlebars.runtime";
 import css from "deps/text!core/css/webidl.css";
 import tmpls from "templates";
-import { normalizePadding, unindentMarkup } from "core/utils";
+import { normalizePadding, reindent } from "core/utils";
 
 export const name = "core/webidl";
 
@@ -724,7 +724,7 @@ export function run(conf) {
   idls.forEach(idlElement => {
     let parse;
     try {
-      const idl = unindentMarkup(idlElement.textContent);
+      const idl = reindent(idlElement.textContent);
       parse = webidl2.parse(idl);
     } catch (e) {
       pub(

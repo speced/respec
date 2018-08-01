@@ -8,7 +8,7 @@
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
 import css from "deps/text!core/css/examples.css";
-import { unindentMarkup } from "core/utils";
+import { reindent } from "core/utils";
 
 export const name = "core/examples";
 
@@ -49,7 +49,7 @@ export function run(conf) {
       const inAside = !!example.closest("aside");
       if (!inAside) ++number;
 
-      const reindentedHtml = unindentMarkup(example.innerHTML);
+      const reindentedHtml = reindent(example.innerHTML);
       example.innerHTML = report.content = reindentedHtml;
 
       // wrap

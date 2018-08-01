@@ -291,7 +291,7 @@ export function normalizePadding(text = "") {
  * so that indentation inside <pre> won't affect the rendered result.
  * @param {string} text IDL text
  */
-export function unindentMarkup(text) {
+export function reindent(text) {
   if (!text) {
     return text;
   }
