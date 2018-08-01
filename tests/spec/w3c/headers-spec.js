@@ -178,7 +178,9 @@ describe("W3C — Headers", () => {
       const dtElems = [...doc.querySelectorAll(".head dt")];
       const dtElem = dtElems.find(findEditor);
       const ddElem = dtElem.nextElementSibling;
-      const [personName, edition, company] = ddElem.querySelectorAll("span[lang=ja]");
+      const [personName, edition, company] = ddElem.querySelectorAll(
+        "span[lang=ja]"
+      );
       expect(personName.lang).toBe("ja");
       expect(personName.textContent).toBe("阿南 康宏");
       expect(edition.textContent).toBe("第１版");

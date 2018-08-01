@@ -26,9 +26,9 @@ export default (conf, name, items = []) => {
     if (p.company) {
       if (p.companyURL) {
         contents.push(
-          html` (<a class='p-org org h-org h-card' href='${p.companyURL}'>${
-            company
-          }</a>)`
+          html` (<a class='p-org org h-org h-card' href='${
+            p.companyURL
+          }'>${company}</a>)`
         );
       } else {
         contents.push(html` (${company})`);
