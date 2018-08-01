@@ -162,14 +162,14 @@ describe("W3C — Headers", () => {
       expect(doc.querySelector("a[href='http://empty-name']")).toEqual(null);
     });
 
-    it("treats editor's name as HTML", async () => {
+    it("treats editor's info as HTML", async () => {
       const config = {
         specStatus: "REC",
         editors: [
           {
             name:
               "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
-            company: "Microsoft",
+            company: "<span lang='ja'>マイクロソフト</span> (Microsoft)",
           },
         ],
       };
@@ -178,12 +178,15 @@ describe("W3C — Headers", () => {
       const dtElems = [...doc.querySelectorAll(".head dt")];
       const dtElem = dtElems.find(findEditor);
       const ddElem = dtElem.nextElementSibling;
-      const [personName, edition] = ddElem.querySelectorAll("span>span");
+      const [personName, edition, company] = ddElem.querySelectorAll(
+        "span[lang=ja]"
+      );
       expect(personName.lang).toBe("ja");
       expect(personName.textContent).toBe("阿南 康宏");
       expect(edition.textContent).toBe("第１版");
+      expect(company.textContent).toBe("マイクロソフト");
       expect(ddElem.textContent).toEqual(
-        "阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (Microsoft)"
+        "阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (マイクロソフト (Microsoft))"
       );
     });
   });
