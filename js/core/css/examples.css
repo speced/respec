@@ -1,12 +1,5 @@
 /* --- EXAMPLES --- */
-div.example-title {
-    min-width: 7.5em;
-    color: #b9ab2d;
-}
-div.example-title span:nth-child(1) {
-  text-transform: uppercase;
-}
-div.example-title span:nth-child(2) {
+span.example-title {
     text-transform: none;
 }
 aside.example, div.example, div.illegal-example {
@@ -30,6 +23,6 @@ aside.example div.example {
     border-color: #999;
     background: #fff;
 }
-aside.example div.example div.example-title {
+aside.example div.example span.example-title {
     color: #999;
 }

@@ -18,8 +18,10 @@ function makeTitle(conf, elem, num, report) {
   const number = num > 0 ? " " + num : "";
 
   return hyperHTML`
-  <div class='marker example-title'><span>${conf.l10n.example}${number}</span>${
-    report.title ? hyperHTML`<span>: ${report.title}</span>` : ""
+  <div class="marker"><span>${conf.l10n.example}${number}</span>${
+    report.title
+      ? hyperHTML`<span class="example-title">: ${report.title}</span>`
+      : ""
   }</div>`;
 }
 
