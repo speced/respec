@@ -96,7 +96,7 @@ import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
 import tmpls from "templates";
 
-// Thijs for Geonovum: customize in the geonovum/templates directory
+// Thijs Brentjens: customize in the geonovum/templates directory
 import sotdTmpl from "geonovum/templates/sotd";
 import headersTmpl from "geonovum/templates/headers";
 
@@ -114,6 +114,8 @@ const GNVMDate = new Intl.DateTimeFormat(["nl"], {
 const status2maturity = {
 };
 
+// Thijs Brentjens: added Geonovum statusses
+// https://github.com/Geonovum/respec/wiki/specStatus
 const status2text = {
   "GN-WV": "Werkversie",
   "GN-CV": "Consultatieversie",
@@ -121,7 +123,8 @@ const status2text = {
   "GN-DEF": "Vastgestelde versie",
   "GN-BASIS": "Document",
 };
-// Thijs: added
+// Thijs Brentjens: added Geonovum types
+// https://github.com/Geonovum/respec/wiki/specType
 const type2text = {
   NO: "Norm",
   ST: "Standaard",
@@ -137,6 +140,7 @@ const status2long = {
 };
 
 const noTrackStatus = []; // empty? or only "GN-BASIS"?
+// Thijs Brentjens: default licenses for Geonovum to version 4.0
 const licenses = {
   cc0: {
     name: "Creative Commons 0 Public Domain Dedication",
@@ -170,7 +174,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 }
 
 export function run(conf) {
-  // Thijs: TODO: by default unofficial?
+  // Thijs Brentjens: TODO: decide by default unofficial?
   // conf.isUnofficial = conf.specStatus === "unofficial";
   conf.isUnofficial = true;
   if (!conf.logos) { // conf.isUnofficial
@@ -179,7 +183,8 @@ export function run(conf) {
   conf.specStatus = conf.specStatus ? conf.specStatus.toUpperCase() : "";
   conf.specType = conf.specType ? conf.specType.toUpperCase() : "";
   conf.pubDomain = conf.pubDomain ? conf.pubDomain.toLowerCase() : "";
-  // Thijs: TODO: license types for Geonovum
+  conf.hasBeenPublished = conf.publishDate ? true : false
+  // Thijs Brentjens: TODO: document license types for Geonovum
   conf.isCCBY = conf.license === "cc-by";
   conf.isCCBYND = conf.license === "cc-by-nd";
 
@@ -222,9 +227,8 @@ export function run(conf) {
       pub("warn", "Editor's Drafts should set edDraftURI.");
   }
   // Version URLs
-  // Thijs: changed this to Geonovum specific format
+  // Thijs Brentjens: changed this to Geonovum specific format. See https://github.com/Geonovum/respec/issues/126
   if (conf.isRegular && conf.specStatus !== "GN-WV") {
-    // Is this format okay for geonovum?
     conf.thisVersion =
       "https://docs.geostandaarden.nl/" +
       conf.pubDomain +
@@ -241,14 +245,13 @@ export function run(conf) {
     conf.thisVersion = conf.edDraftURI;
   }
 
-  if (conf.isRegular)
+  // Only show latestVersion if a publishDate has been set. see issue https://github.com/Geonovum/respec/issues/93
+  if (conf.isRegular && conf.hasBeenPublished)
+    // Thijs Brentjens: see
     conf.latestVersion =
       "https://docs.geostandaarden.nl/" +
       conf.pubDomain +
       "/" +
-      // Thijs Brentjens: add only specStatus to the document or also specType?
-      conf.specStatus.substr(3).toLowerCase() +
-      "-" +
       conf.shortName +
       "/";
 
