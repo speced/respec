@@ -49,6 +49,15 @@ describe("Core - WebIDL", () => {
     );
   });
 
+  it("links interface definitions in different sections", () => {
+    const dfn = doc.getElementById("dfn#dom-bar");
+    expect(dfn).toBeTruthy();
+    const a = doc.querySelector(
+      "#idl-def-parenthesistest-bar a[href='#dom-bar']"
+    );
+    expect(a).toBeTruthy();
+  });
+
   it("links to fully qualified method names", () => {
     const t1 = new URL(doc.getElementById("fullyQualifiedNoParens-1").href)
       .hash;

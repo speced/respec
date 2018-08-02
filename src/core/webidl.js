@@ -664,6 +664,11 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
     // an explicitly empty [for], try <dfn> that inherited a [for].
     if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
       dfns = dfnForArray;
+    } else if (type === "interface" && dfnForArray.length) {
+      const dfn = dfnForArray.find(
+        ([dfn]) => dfn.textContent.trim() === originalName
+      );
+      if (dfn) dfns = [dfn];
     }
   }
   // If we haven't found any definitions with explicit [for]
