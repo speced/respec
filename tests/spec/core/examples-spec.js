@@ -18,7 +18,9 @@ describe("Core — Examples", () => {
     const markers = div.querySelectorAll("div.marker");
     expect(markers.length).toEqual(1);
     expect(markers[0].textContent).toEqual("Example 1: EX");
-    expect(markers[0].querySelector(".example-title").textContent).toEqual(": EX");
+    expect(markers[0].querySelector(".example-title").textContent).toEqual(
+      ": EX"
+    );
     expect(example.getAttribute("title")).toBeNull();
     expect(example.textContent).toEqual("{\n  CONTENT\n}");
   });
