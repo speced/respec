@@ -9,7 +9,7 @@ import webidl2 from "deps/webidl2";
 import hb from "handlebars.runtime";
 import css from "deps/text!core/css/webidl.css";
 import tmpls from "templates";
-import { normalizePadding } from "core/utils";
+import { normalizePadding, reindent } from "core/utils";
 
 export const name = "core/webidl";
 
@@ -283,25 +283,6 @@ function makeMarkup(parse) {
   pre.classList.add("def", "idl");
   pre.innerHTML = parse.map(writeDefinition).join("");
   return pre;
-}
-
-/**
- * Removes common indents across the IDL texts,
- * so that indentation inside <pre> won't affect the rendered result.
- * @param {string} text IDL text
- */
-function unindentMarkup(text) {
-  if (!text) {
-    return text;
-  }
-  // TODO: use trimEnd when Edge supports it
-  const lines = text.trimRight().split("\n");
-  while (lines.length && !lines[0].trim()) {
-    lines.shift();
-  }
-  const indents = lines.filter(s => s.trim()).map(s => s.search(/[^\s]/));
-  const leastIndent = Math.min(...indents);
-  return lines.map(s => s.slice(leastIndent)).join("\n");
 }
 
 function writeDefinition(obj) {
@@ -743,7 +724,7 @@ export function run(conf) {
   idls.forEach(idlElement => {
     let parse;
     try {
-      const idl = unindentMarkup(idlElement.textContent);
+      const idl = reindent(idlElement.textContent);
       parse = webidl2.parse(idl);
     } catch (e) {
       pub(
