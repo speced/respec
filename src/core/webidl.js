@@ -33,6 +33,15 @@ const idlTypedefTmpl = tmpls["typedef.html"];
 // https://github.com/w3c/respec/issues/999
 // https://github.com/w3c/respec/issues/982
 const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
+const topLevelEntities = new Set([
+  "callback interface",
+  "callback",
+  "dictionary",
+  "enum",
+  "interface mixin",
+  "interface",
+  "typedef",
+]);
 
 function registerHelpers() {
   hb.registerHelper("extAttr", obj => {
@@ -664,7 +673,7 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
     // an explicitly empty [for], try <dfn> that inherited a [for].
     if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
       dfns = dfnForArray;
-    } else if (type === "interface" && dfnForArray.length) {
+    } else if (topLevelEntities.has(type) && dfnForArray.length) {
       const dfn = dfnForArray.find(
         ([dfn]) => dfn.textContent.trim() === originalName
       );
