@@ -476,7 +476,7 @@ function writeIterableLike(iterableLike) {
   const { type, readonly } = iterableLike;
   return idlIterableLikeTmpl({
     obj: iterableLike,
-    qualifiers: readonly ? `${writeTrivia(readonly.trivia)}readonly` : "",
+    qualifiers: readonly ? `${writeTrivia(readonly.trivia)}readonly ` : "",
     className: `idl${type[0].toUpperCase()}${type.slice(1)}`,
   });
 }
