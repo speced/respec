@@ -79,6 +79,7 @@ export async function run(conf, doc, cb) {
     if (ant.classList.contains("externalDFN")) return;
     const linkTargets = getLinkTargets(ant);
     const foundDfn = linkTargets.some(target => {
+      if (ant.classList.contains("respec-idl-xref")) return false;
       if (titles[target.title] && titles[target.title][target.for]) {
         const $dfn = titles[target.title][target.for];
         const dfn = $dfn[0];

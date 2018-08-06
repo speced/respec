@@ -126,6 +126,11 @@ export function run(conf) {
 
 function generateIDLMarkup(ref) {
   const { base, attribute, method, args } = parseInlineIDL(ref);
+  const isInternalSlot = str => /^\[\[.+\]\]$/.test(str);
+
+  if (isInternalSlot(base)) {
+    return hyperHTML`<code><a>${base}</a></code>`;
+  }
 
   const baseHtml = base
     ? hyperHTML`<a class="respec-idl-xref">${base}</a>.`
@@ -150,6 +155,8 @@ function generateIDLMarkup(ref) {
   return hyperHTML`<code><a class="respec-idl-xref">${base}</a></code>`;
 }
 
+// breaks an inline IDL text into it's components such as
+// method+args, attributes, base
 function parseInlineIDL(str) {
   const result = Object.create(null);
   const splitted = str.split(/\b\.\b|\.(?=\[\[)/);
