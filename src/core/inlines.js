@@ -125,7 +125,7 @@ export function run(conf) {
 }
 
 function generateIDLMarkup(ref) {
-  const { base, attribute, method, args } = parseInlineIDL(ref);
+  const { base, attribute, member, method, args } = parseInlineIDL(ref);
   const isInternalSlot = str => /^\[\[.+\]\]$/.test(str);
 
   if (isInternalSlot(base)) {
@@ -135,6 +135,14 @@ function generateIDLMarkup(ref) {
   const baseHtml = base
     ? hyperHTML`<a class="respec-idl-xref">${base}</a>.`
     : "";
+
+  if (member) {
+    // type: Dictionary["member"]
+    return hyperHTML`<code><a
+    class="respec-idl-xref" data-xref-type="dictionary">${base}</a>["<a
+    class="respec-idl-xref" data-xref-type="dict-member"
+    data-xref-for="${base}" data-lt="${member}">${member}</a>"]</code>`;
+  }
 
   if (attribute) {
     // type: base.attribute
@@ -167,6 +175,14 @@ function parseInlineIDL(str) {
   if (splitted.length > 1 && !result.method) {
     result.attribute = splitted.pop();
   }
-  result.base = splitted.join(".");
+  const dictionaryRegex = /(\w+)\["(\w+)"\]/;
+  const remaining = splitted.join(".");
+  if (dictionaryRegex.test(remaining)) {
+    const [, base, member] = remaining.match(dictionaryRegex);
+    result.base = base;
+    result.member = member;
+  } else {
+    result.base = remaining;
+  }
   return result;
 }
