@@ -24,6 +24,8 @@ export function run(conf) {
   if (!conf.informativeReferences) conf.informativeReferences = new Set();
   if (!conf.respecRFC2119) conf.respecRFC2119 = {};
 
+  const generateIDLMarkup = initInlineIdlParser();
+
   // PRE-PROCESSING
   const abbrMap = new Map();
   for (const abbr of Array.from(document.querySelectorAll("abbr[title]"))) {
@@ -124,65 +126,70 @@ export function run(conf) {
   }
 }
 
-function generateIDLMarkup(ref) {
-  const { base, attribute, member, method, args } = parseInlineIDL(ref);
-  const isInternalSlot = str => /^\[\[.+\]\]$/.test(str);
-
-  if (isInternalSlot(base)) {
-    return hyperHTML`<code><a>${base}</a></code>`;
-  }
-
-  const baseHtml = base
-    ? hyperHTML`<a class="respec-idl-xref">${base}</a>.`
-    : "";
-
-  if (member) {
-    // type: Dictionary["member"]
-    return hyperHTML`<code><a
-    class="respec-idl-xref" data-xref-type="dictionary">${base}</a>["<a
-    class="respec-idl-xref" data-xref-type="dict-member"
-    data-xref-for="${base}" data-lt="${member}">${member}</a>"]</code>`;
-  }
-
-  if (attribute) {
-    // type: base.attribute
-    return hyperHTML`<code>${baseHtml}<a class="respec-idl-xref"
-      data-xref-type="attribute" data-xref-for="${base}">${attribute}</a></code>`;
-  }
-
-  if (method) {
-    // base.method(args)
-    const [methodName] = method.split("(", 1);
-    return hyperHTML`<code>${baseHtml}<a class="respec-idl-xref"
-      data-xref-type="method" data-xref-for="${base}"
-      data-lt="${method}">${methodName}</a>(${{
-      html: args.map(arg => `<var>${arg}</var>`).join(", "),
-    }})</code>`;
-  }
-
-  return hyperHTML`<code><a class="respec-idl-xref">${base}</a></code>`;
-}
-
-// breaks an inline IDL text into it's components such as
-// method+args, attributes, base
-function parseInlineIDL(str) {
-  const result = Object.create(null);
-  const splitted = str.split(/\b\.\b|\.(?=\[\[)/);
-  if (/\(.*\)$/.test(splitted[splitted.length - 1])) {
-    result.method = splitted.pop();
-    result.args = result.method.match(/\((.*)\)/)[1].split(/,\s*/);
-  }
-  if (splitted.length > 1 && !result.method) {
-    result.attribute = splitted.pop();
-  }
+function initInlineIdlParser() {
+  const internalSlotRegex = /^\[\[.+\]\]$/;
+  const methodRegex = /\((.*)\)$/;
+  const idlSplitRegex = /\b\.\b|\.(?=\[\[)/;
   const dictionaryRegex = /(\w+)\["(\w+)"\]/;
-  const remaining = splitted.join(".");
-  if (dictionaryRegex.test(remaining)) {
-    const [, base, member] = remaining.match(dictionaryRegex);
-    result.base = base;
-    result.member = member;
-  } else {
-    result.base = remaining;
+
+  // breaks an inline IDL text into it's components such as
+  // method+args, attributes, base
+  function parseInlineIDL(str) {
+    const result = Object.create(null);
+    const splitted = str.split(idlSplitRegex);
+    if (methodRegex.test(splitted[splitted.length - 1])) {
+      result.method = splitted.pop();
+      result.args = result.method.match(methodRegex)[1].split(/,\s*/);
+    }
+    if (splitted.length > 1 && !result.method) {
+      result.attribute = splitted.pop();
+    }
+    const remaining = splitted.join(".");
+    if (dictionaryRegex.test(remaining)) {
+      const [, base, member] = remaining.match(dictionaryRegex);
+      result.base = base;
+      result.member = member;
+    } else {
+      result.base = remaining;
+    }
+    return result;
   }
-  return result;
+
+  return function generateIDLMarkup(ref) {
+    const { base, attribute, member, method, args } = parseInlineIDL(ref);
+
+    if (internalSlotRegex.test(base)) {
+      return hyperHTML`<code><a>${base}</a></code>`;
+    }
+
+    const baseHtml = base
+      ? hyperHTML`<a class="respec-idl-xref">${base}</a>.`
+      : "";
+
+    if (member) {
+      // type: Dictionary["member"]
+      return hyperHTML`<code><a
+      class="respec-idl-xref" data-xref-type="dictionary">${base}</a>["<a
+      class="respec-idl-xref" data-xref-type="dict-member"
+      data-xref-for="${base}" data-lt="${member}">${member}</a>"]</code>`;
+    }
+
+    if (attribute) {
+      // type: base.attribute
+      return hyperHTML`<code>${baseHtml}<a class="respec-idl-xref"
+        data-xref-type="attribute" data-xref-for="${base}">${attribute}</a></code>`;
+    }
+
+    if (method) {
+      // base.method(args)
+      const [methodName] = method.split("(", 1);
+      return hyperHTML`<code>${baseHtml}<a class="respec-idl-xref"
+        data-xref-type="method" data-xref-for="${base}"
+        data-lt="${method}">${methodName}</a>(${{
+        html: args.map(arg => `<var>${arg}</var>`).join(", "),
+      }})</code>`;
+    }
+
+    return hyperHTML`<code><a class="respec-idl-xref">${base}</a></code>`;
+  };
 }
