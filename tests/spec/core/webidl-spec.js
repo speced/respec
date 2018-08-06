@@ -49,13 +49,68 @@ describe("Core - WebIDL", () => {
     );
   });
 
-  it("links interface definitions in different sections", () => {
-    const dfn = doc.getElementById("dfn#dom-bar");
-    expect(dfn).toBeTruthy();
-    const a = doc.querySelector(
-      "#idl-def-parenthesistest-bar a[href='#dom-bar']"
+  it("distinguishes between types and identifiers when linking", async () => {
+    const similarlyNamedInterface = doc.querySelector(
+      "#similar-names #idl-def-similarlynamed"
     );
-    expect(a).toBeTruthy();
+    expect(similarlyNamedInterface).toBeTruthy();
+    const [
+      // attribute TestInterface testInterface;
+      testInterface,
+      // attribute TestCBInterface testCBInterface;
+      testCBInterface,
+      // attribute TestDictionary testDictionary;
+      testDictionary,
+      // attribute TestEnum testEnum;
+      testEnum,
+      // attribute TestTypedef testTypedef;
+      testTypedef,
+      // readonly maplike<SimilarlyNamed, SimilarlyNamed>;
+      mapLike,
+    ] = similarlyNamedInterface.querySelectorAll(".idlAttribute, .idlMaplike");
+    const typeQuery = "span.idlAttrType a";
+    const nameQuery = "span.idlAttrName a";
+    // attribute TestInterface testInterface;
+    expect(testInterface.querySelector(typeQuery).getAttribute("href")).toBe(
+      "#dom-testinterface"
+    );
+    expect(testInterface.querySelector(nameQuery).getAttribute("href")).toBe(
+      "#idl-def-similarlynamed-testinterface"
+    );
+    // attribute TestCBInterface testCBInterface;
+    expect(testCBInterface.querySelector(typeQuery).getAttribute("href")).toBe(
+      "#dom-testcbinterface"
+    );
+    expect(testCBInterface.querySelector(nameQuery).getAttribute("href")).toBe(
+      "#dom-similarlynamed-testcbinterface"
+    );
+    // attribute TestDictionary testDictionary;
+    expect(testDictionary.querySelector(typeQuery).getAttribute("href")).toBe(
+      "#dom-testdictionary"
+    );
+    expect(testDictionary.querySelector(nameQuery).getAttribute("href")).toBe(
+      "#dom-similarlynamed-testdictionary"
+    );
+    // attribute TestTypedef testTypedef;
+    expect(testEnum.querySelector(typeQuery).getAttribute("href")).toBe(
+      "#dom-testenum"
+    );
+    expect(testEnum.querySelector(nameQuery).getAttribute("href")).toBe(
+      "#dom-similarlynamed-testenum"
+    );
+    // attribute TestTypedef testTypedef;
+    expect(testTypedef.querySelector(typeQuery).getAttribute("href")).toBe(
+      "#dom-testtypedef"
+    );
+    expect(testTypedef.querySelector(nameQuery).getAttribute("href")).toBe(
+      "#dom-similarlynamed-testtypedef"
+    );
+    // readonly maplike<SimilarlyNamed, SimilarlyNamed>;
+    expect(
+      Array.from(mapLike.querySelectorAll("a")).every(
+        a => a.getAttribute("href") === "#dom-similarlynamed"
+      )
+    ).toBeTruthy();
   });
 
   it("links to fully qualified method names", () => {
@@ -512,6 +567,24 @@ describe("Core - WebIDL", () => {
     expect(elem.getElementsByClassName("idlIterable").length).toEqual(2);
     expect(elem.getElementsByClassName("idlMaplike").length).toEqual(1);
     expect(elem.getElementsByClassName("idlSetlike").length).toEqual(1);
+  });
+
+  it("outputs map/set-like interface member declarations", () => {
+    const { textContent } = doc.getElementById("map-set-readonly");
+    const expected = `
+interface MapLikeInterface {
+  maplike<MapLikeInterface, MapLikeInterface>;
+};
+interface ReadOnlyMapLike { 
+  readonly maplike<ReadOnlyMapLike, ReadOnlyMapLike>;
+};
+interface SetLikeInterface {
+  setlike<SetLikeInterface>;
+};
+interface ReadOnlySetLike { 
+  readonly setlike<ReadOnlySetLike>;
+};`.trim();
+    expect(textContent).toBe(expected);
   });
 
   it("should handle comments", () => {

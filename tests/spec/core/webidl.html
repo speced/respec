@@ -68,6 +68,18 @@
     };
     </pre>
     </section>
+    <section>
+      <h2>Section with definitions</h2>
+      <p>
+        <dfn>TestInterface</dfn> interface
+        <dfn>TestCBInterface</dfn> interface
+        <dfn>TestDictionary</dfn> dictionary
+        <dfn>TestEnum</dfn> enum
+        <dfn>TestMixin</dfn> mixin interface
+        <dfn>TestCallBack</dfn> callback
+        <dfn>TestTypedef</dfn> typedef
+      </p>
+    </section>
     <section id="sec-parenthesis-method" data-dfn-for="ParenthesisTest" data-link-for="ParenthesisTest">
       <h2>More linking</h2>
       <pre class="idl no-link-warnings">
@@ -82,11 +94,42 @@
           void dataLtOverride();
           void fullyQualified();
           void fullyQualifiedNoParens();
-          attribute Bar bar;
+          void doTheFoo();
+      };
+      </pre>
+      <pre class="idl" id="similar-names">
+      // makes sure that types and identifiers are not confused
+      interface SimilarlyNamed {
+        attribute TestInterface testInterface;
+        attribute TestCBInterface testCBInterface;
+        attribute TestDictionary testDictionary;
+        attribute TestEnum testEnum;
+        attribute TestTypedef testTypedef;
+        readonly maplike&lt;SimilarlyNamed, SimilarlyNamed>;
+      };
+      TestInterface includes TestMixin;
+      interface TestInterface {};
+      callback interface TestCBInterface {};
+      typedef (TestInterface or TestCBInterface) TestTypedef;
+      callback TestCallBack = TestCallBack ();
+      dictionary TestDictionary {};
+      enum TestEnum { "value" };
+      interface mixin TestMixin {
+        attribute Bar bar;
       };
       interface Bar {};
       </pre>
-      <p><dfn>bar</dfn> attribute</p>
+      <section data-dfn-for="SimilarlyNamed">
+        <h3><dfn>SimilarlyNamed</dfn> interface</h3>
+        <p>
+          <dfn>testInterface</dfn> attribute;
+          <dfn>testCBInterface</dfn> attribute;
+          <dfn>testDictionary</dfn> attribute;
+          <dfn>testEnum</dfn> attribute;
+          <dfn>testTypedef</dfn> attribute;
+        </p>
+      </section>
+      <p data-dfn-for="TestMixin"><dfn>bar</dfn> attribute of TestMixin</p>
       <p id="meth-basic-doc" data-dfn-for="ParenthesisTest">
         <dfn>ull()</dfn> is a method. Its <dfn data-lt="ull!overload-1">overloaded form</dfn> returns a <code>SuperStar/</code>
       </p>
@@ -94,7 +137,6 @@
       <p><dfn>ParenthesisTest</dfn></p>
       <p><dfn>basic()</dfn>...</p>
       <p><dfn>ext()</dfn>...</p>
-      <p><dfn>ull()</dfn>...</p>
       <p><dfn>paramed()</dfn>...</p>
       <p><dfn>withName()</dfn>...</p>
       <p><dfn>named()</dfn>...</p>
@@ -420,6 +462,30 @@
           setlike&lt;DOMString&gt;;
         };
       </pre>
+      <pre class="idl" id='map-set-readonly'>
+        interface MapLikeInterface {
+          maplike&lt;MapLikeInterface, MapLikeInterface&gt;;
+        };
+        interface ReadOnlyMapLike {
+          readonly maplike&lt;ReadOnlyMapLike, ReadOnlyMapLike&gt;;
+        };
+        interface SetLikeInterface {
+          setlike&lt;SetLikeInterface&gt;;
+        };
+        interface ReadOnlySetLike {
+          readonly setlike&lt;ReadOnlySetLike&gt;;
+        };
+      </pre>
+      <p>
+        <dfn>Yukina</dfn> interface
+        <dfn>Sayo</dfn> interface
+        <dfn>Kasumi</dfn> interface
+        <dfn>Arisa</dfn> interface
+        <dfn>MapLikeInterface</dfn> interface
+        <dfn>ReadOnlyMapLike</dfn> interface
+        <dfn>SetLikeInterface</dfn> interface
+        <dfn>ReadOnlySetLike</dfn> interface
+      </p>
     </section>
     <section>
       <h2>Comments</h2>
