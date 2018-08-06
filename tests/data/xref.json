@@ -72,6 +72,27 @@
       "comment": "easy disambiguate with data-cite"
     }
   ],
+  "TextDecoderOptions": [
+    {
+      "spec": "encoding",
+      "type": "dictionary",
+      "normative": true,
+      "uri": "#textdecoderoptions",
+      "title": "TextDecoderOptions"
+    }
+  ],
+  "fatal": [
+    {
+      "spec": "encoding",
+      "type": "dict-member",
+      "for": [
+        "TextDecoderOptions"
+      ],
+      "normative": true,
+      "uri": "#dom-textdecoderoptions-fatal",
+      "title": "fatal"
+    }
+  ],
   "bearing angle": [
     {
       "spec": "css-values",
