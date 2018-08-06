@@ -159,11 +159,11 @@ function initInlineIdlParser() {
     const { base, attribute, member, method, args } = parseInlineIDL(ref);
 
     if (internalSlotRegex.test(base)) {
-      return hyperHTML`<code><a>${base}</a></code>`;
+      return hyperHTML`<code><a data-xref-type="attribute">${base}</a></code>`;
     }
 
     const baseHtml = base
-      ? hyperHTML`<a class="respec-idl-xref">${base}</a>.`
+      ? hyperHTML`<a data-xref-type="_IDL_">${base}</a>.`
       : "";
 
     if (member) {
@@ -190,6 +190,6 @@ function initInlineIdlParser() {
       }})</code>`;
     }
 
-    return hyperHTML`<code><a class="respec-idl-xref">${base}</a></code>`;
+    return hyperHTML`<code><a data-xref-type="_IDL_">${base}</a></code>`;
   };
 }

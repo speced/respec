@@ -45,7 +45,7 @@ export async function run(conf, elems) {
  */
 function createXrefMap(elems) {
   return elems.reduce((map, elem) => {
-    const isIDL = elem.classList.contains("respec-idl-xref");
+    const isIDL = "xrefType" in elem.dataset;
     let term = elem.dataset.lt
       ? elem.dataset.lt.split("|", 1)[0]
       : elem.textContent;
