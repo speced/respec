@@ -16,6 +16,12 @@ describe("Core — xref", () => {
       title: "Credential Management Level 1",
       id: "credential-management-1",
     },
+    encoding: { aliasOf: "ENCODING" },
+    ENCODING: {
+      href: "https://encoding.spec.whatwg.org/",
+      title: "Encoding Standard",
+      id: "ENCODING",
+    },
     "local-1": { id: "local-1", href: "https://example.com/" },
     "local-2": { id: "local-2", href: "https://example.com/" },
     "local-3": { id: "local-3", href: "https://example.com/" },
@@ -72,6 +78,14 @@ describe("Core — xref", () => {
     [
       "PublicKeyCredential",
       "https://www.w3.org/TR/webauthn/#publickeycredential",
+    ],
+    [
+      "TextDecoderOptions",
+      "https://encoding.spec.whatwg.org/#textdecoderoptions",
+    ],
+    [
+      `TextDecoderOptions["fatal"]`,
+      "https://encoding.spec.whatwg.org/#dom-textdecoderoptions-fatal",
     ],
   ]);
 
@@ -562,6 +576,46 @@ describe("Core — xref", () => {
       expect(link3a.href).toEqual(expectedLinks.get("PublicKeyCredential"));
       expect(link3b.href).toEqual(
         expectedLinks.get("PublicKeyCredential.[[type]]")
+      );
+    });
+
+    it("links internalSlots", async () => {
+      const body = `
+      <section>
+        <p><dfn>[[\\type]]</dfn></p>
+        <p id="link1">{{{ [[type]] }}}</p>
+        <p id="link2">{{{ Credential.[[type]] }}}</p>
+      </section>
+      `;
+      const config = { xref: { url: apiURL }, localBiblio };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+
+      // as base == [[type]], it is treated as a local internal slot
+      const link1 = doc.querySelector("#link1 a");
+      expect(link1.getAttribute("href")).toEqual("#dfn-type");
+
+      // the base "Credential" is used as "forContext" for [[type]]
+      const [link2a, link2b] = [...doc.querySelectorAll("#link2 code a")];
+      expect(link2a.href).toEqual(expectedLinks.get("Credential"));
+      expect(link2b.href).toEqual(expectedLinks.get("Credential.[[type]]"));
+    });
+
+    it("links dictionary members", async () => {
+      const body = `
+      <section>
+        <p id="link1">{{{ TextDecoderOptions["fatal"] }}}</p>
+      </section>
+      `;
+      const config = { xref: { url: apiURL }, localBiblio };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+
+      // "TextDecoderOptions" is dictionary and "fatal" is dict-member
+      const [link1a, link1b] = [...doc.querySelectorAll("#link1 code a")];
+      expect(link1a.href).toEqual(expectedLinks.get("TextDecoderOptions"));
+      expect(link1b.href).toEqual(
+        expectedLinks.get(`TextDecoderOptions["fatal"]`)
       );
     });
   });
