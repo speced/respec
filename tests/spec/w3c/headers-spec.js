@@ -836,7 +836,11 @@ describe("W3C — Headers", () => {
       const $sotd = $("#sotd", doc);
       const $f = $($sotd.find("p:contains('Proposed Edited Recommendation')"));
       expect($f.length).toEqual(2);
-      const questionnaires = doc.getElementById("sotd").querySelector("a[href='https://www.w3.org/2002/09/wbs/myQuestionnaires']");
+      const questionnaires = doc
+        .getElementById("sotd")
+        .querySelector(
+          "a[href='https://www.w3.org/2002/09/wbs/myQuestionnaires']"
+        );
       expect(questionnaires).toBeTruthy();
     });
   });
