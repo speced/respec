@@ -40,6 +40,7 @@ require.config({
     "core/utils": "/base/js/core/utils",
     "deps/jquery": "/base/js/deps/jquery",
     "deps/marked": "/base/js/deps/marked",
+    "deps/idb": "/base/js/deps/idb",
     "w3c/linter": "/base/js/w3c/linter",
     "core/exporter": "/base/js/core/exporter",
   },
