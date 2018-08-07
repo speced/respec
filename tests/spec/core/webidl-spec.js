@@ -49,6 +49,70 @@ describe("Core - WebIDL", () => {
     );
   });
 
+  it("distinguishes between types and identifiers when linking", async () => {
+    const similarlyNamedInterface = doc.querySelector(
+      "#similar-names #idl-def-similarlynamed"
+    );
+    expect(similarlyNamedInterface).toBeTruthy();
+    const [
+      // attribute TestInterface testInterface;
+      testInterface,
+      // attribute TestCBInterface testCBInterface;
+      testCBInterface,
+      // attribute TestDictionary testDictionary;
+      testDictionary,
+      // attribute TestEnum testEnum;
+      testEnum,
+      // attribute TestTypedef testTypedef;
+      testTypedef,
+      // readonly maplike<SimilarlyNamed, SimilarlyNamed>;
+      mapLike,
+    ] = similarlyNamedInterface.querySelectorAll(".idlAttribute, .idlMaplike");
+    const typeQuery = "span.idlAttrType a";
+    const nameQuery = "span.idlAttrName a";
+    // attribute TestInterface testInterface;
+    expect(testInterface.querySelector(typeQuery).getAttribute("href")).toBe(
+      "#dom-testinterface"
+    );
+    expect(testInterface.querySelector(nameQuery).getAttribute("href")).toBe(
+      "#dom-similarlynamed-testinterface"
+    );
+    // attribute TestCBInterface testCBInterface;
+    expect(testCBInterface.querySelector(typeQuery).getAttribute("href")).toBe(
+      "#dom-testcbinterface"
+    );
+    expect(testCBInterface.querySelector(nameQuery).getAttribute("href")).toBe(
+      "#dom-similarlynamed-testcbinterface"
+    );
+    // attribute TestDictionary testDictionary;
+    expect(testDictionary.querySelector(typeQuery).getAttribute("href")).toBe(
+      "#dom-testdictionary"
+    );
+    expect(testDictionary.querySelector(nameQuery).getAttribute("href")).toBe(
+      "#dom-similarlynamed-testdictionary"
+    );
+    // attribute TestTypedef testTypedef;
+    expect(testEnum.querySelector(typeQuery).getAttribute("href")).toBe(
+      "#dom-testenum"
+    );
+    expect(testEnum.querySelector(nameQuery).getAttribute("href")).toBe(
+      "#dom-similarlynamed-testenum"
+    );
+    // attribute TestTypedef testTypedef;
+    expect(testTypedef.querySelector(typeQuery).getAttribute("href")).toBe(
+      "#dom-testtypedef"
+    );
+    expect(testTypedef.querySelector(nameQuery).getAttribute("href")).toBe(
+      "#dom-similarlynamed-testtypedef"
+    );
+    // readonly maplike<SimilarlyNamed, SimilarlyNamed>;
+    expect(
+      Array.from(mapLike.querySelectorAll("a")).every(
+        a => a.getAttribute("href") === "#dom-similarlynamed"
+      )
+    ).toBeTruthy();
+  });
+
   it("links to fully qualified method names", () => {
     const t1 = new URL(doc.getElementById("fullyQualifiedNoParens-1").href)
       .hash;
@@ -505,6 +569,24 @@ describe("Core - WebIDL", () => {
     expect(elem.getElementsByClassName("idlSetlike").length).toEqual(1);
   });
 
+  it("outputs map/set-like interface member declarations", () => {
+    const { textContent } = doc.getElementById("map-set-readonly");
+    const expected = `
+interface MapLikeInterface {
+  maplike<MapLikeInterface, MapLikeInterface>;
+};
+interface ReadOnlyMapLike {
+  readonly maplike<ReadOnlyMapLike, ReadOnlyMapLike>;
+};
+interface SetLikeInterface {
+  setlike<SetLikeInterface>;
+};
+interface ReadOnlySetLike {
+  readonly setlike<ReadOnlySetLike>;
+};`.trim();
+    expect(textContent).toBe(expected);
+  });
+
   it("should handle comments", () => {
     const target = doc.getElementById("comments-basic");
     const text =
@@ -772,6 +854,11 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     target = doc.getElementById("td-union-extended-attribute");
     text =
       "typedef [Clamp] (unsigned long or ConstrainULongRange) ConstrainULong2;";
+    expect(target.textContent).toEqual(text);
+
+    target = doc.getElementById("td-trivia");
+    text =
+      "/* test1 */ typedef /* test2 */ [Clamp] /* test3 */ (/* test4 */ unsigned long /* test5 */ or /* test6 */ ConstrainULongRange /* test7 */ ) /* test8 */ ConstrainULong3 /* test9 */;";
     expect(target.textContent).toEqual(text);
   });
 

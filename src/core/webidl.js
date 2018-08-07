@@ -9,7 +9,7 @@ import webidl2 from "deps/webidl2";
 import hb from "handlebars.runtime";
 import css from "deps/text!core/css/webidl.css";
 import tmpls from "templates";
-import { normalizePadding } from "core/utils";
+import { normalizePadding, reindent } from "core/utils";
 
 export const name = "core/webidl";
 
@@ -33,6 +33,15 @@ const idlTypedefTmpl = tmpls["typedef.html"];
 // https://github.com/w3c/respec/issues/999
 // https://github.com/w3c/respec/issues/982
 const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
+const topLevelEntities = new Set([
+  "callback interface",
+  "callback",
+  "dictionary",
+  "enum",
+  "interface mixin",
+  "interface",
+  "typedef",
+]);
 
 function registerHelpers() {
   hb.registerHelper("extAttr", obj => {
@@ -141,13 +150,14 @@ function idlType2Html(idlType) {
     return `<a data-link-for="">${hb.Utils.escapeExpression(idlType)}</a>`;
   }
   if (Array.isArray(idlType)) {
-    return idlType.map(idlType2Html).join(",");
+    return idlType.map(idlType2Html).join("");
   }
   const extAttrs = extAttr(idlType.extAttrs);
   const nullable = idlType.nullable ? "?" : "";
   if (idlType.union) {
-    const subtypes = idlType.idlType.map(idlType2Html).join(" or");
-    const union = `${writeTrivia(idlType.trivia.open)}(${subtypes})`;
+    const subtypes = idlType.idlType.map(idlType2Html).join("");
+    const { open, close } = idlType.trivia;
+    const union = `${writeTrivia(open)}(${subtypes}${writeTrivia(close)})`;
     return `${extAttrs}${union}${nullable}`;
   }
   let type = "";
@@ -163,7 +173,12 @@ function idlType2Html(idlType) {
       : idlType2Html(idlType.idlType);
   }
   const trivia = idlType.prefix ? idlType.prefix.trivia : idlType.trivia.base;
-  return extAttrs + writeTrivia(trivia) + type + nullable;
+  let separator = "";
+  if (idlType.separator && idlType.separator.value) {
+    const { value, trivia } = idlType.separator;
+    separator = `${writeTrivia(trivia)}${value}`;
+  }
+  return extAttrs + writeTrivia(trivia) + type + nullable + separator;
 }
 
 function linkStandardType(type) {
@@ -283,25 +298,6 @@ function makeMarkup(parse) {
   pre.classList.add("def", "idl");
   pre.innerHTML = parse.map(writeDefinition).join("");
   return pre;
-}
-
-/**
- * Removes common indents across the IDL texts,
- * so that indentation inside <pre> won't affect the rendered result.
- * @param {string} text IDL text
- */
-function unindentMarkup(text) {
-  if (!text) {
-    return text;
-  }
-  // TODO: use trimEnd when Edge supports it
-  const lines = text.trimRight().split("\n");
-  while (lines.length && !lines[0].trim()) {
-    lines.shift();
-  }
-  const indents = lines.filter(s => s.trim()).map(s => s.search(/[^\s]/));
-  const leastIndent = Math.min(...indents);
-  return lines.map(s => s.slice(leastIndent)).join("\n");
 }
 
 function writeDefinition(obj) {
@@ -664,6 +660,11 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
     // an explicitly empty [for], try <dfn> that inherited a [for].
     if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
       dfns = dfnForArray;
+    } else if (topLevelEntities.has(type) && dfnForArray.length) {
+      const dfn = dfnForArray.find(
+        ([dfn]) => dfn.textContent.trim() === originalName
+      );
+      if (dfn) dfns = [dfn];
     }
   }
   // If we haven't found any definitions with explicit [for]
@@ -743,7 +744,7 @@ export function run(conf) {
   idls.forEach(idlElement => {
     let parse;
     try {
-      const idl = unindentMarkup(idlElement.textContent);
+      const idl = reindent(idlElement.textContent);
       parse = webidl2.parse(idl);
     } catch (e) {
       pub(
