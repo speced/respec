@@ -90,4 +90,7 @@ async function copyDeps() {
 // Delete dependent files
 rm("./js/deps/", "./js/core/css/github.css")
   .then(copyDeps)
-  .catch(err => console.error(err));
+  .catch(err => {
+    console.error(err.stack);
+    process.exit(1);
+  });
