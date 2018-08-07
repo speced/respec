@@ -481,6 +481,7 @@ describe("Core — xref", () => {
 
   describe("inline IDL references", () => {
     it("ignores inlines starting with backslash", async () => {
+      // whitespace inside {{{ }}} doesn't matter
       const body = `<section><p id="test">{{{\\PASS }}}</p></section>`;
       const config = { xref: { url: apiURL } };
       const ops = makeStandardOps(config, body);
@@ -488,6 +489,16 @@ describe("Core — xref", () => {
       const el = doc.getElementById("test");
       expect(el.querySelector("code a")).toBeFalsy();
       expect(el.textContent).toEqual("{{{PASS}}}");
+    });
+
+    it("ignores malformed syntax", async () => {
+      const body = `<section><p id="test">{ { { PASS }}}</p></section>`;
+      const config = { xref: { url: apiURL } };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+      const el = doc.getElementById("test");
+      expect(el.querySelector("code a")).toBeFalsy();
+      expect(el.textContent).toEqual("{ { {PASS}}}");
     });
 
     it("links inline IDL references", async () => {
