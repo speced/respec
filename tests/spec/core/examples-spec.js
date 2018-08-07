@@ -11,12 +11,17 @@ describe("Core — Examples", () => {
         </section>`,
     };
     const doc = await makeRSDoc(ops);
-    const $ex = $("div.example pre", doc);
-    const $div = $ex.parent("div");
-    expect($div.hasClass("example")).toBeTruthy();
-    expect($div.find("div.example-title").length).toEqual(1);
-    expect($div.find("div.example-title").text()).toEqual("Example 1: EX");
-    expect($ex.attr("title")).toBeUndefined();
-    expect($ex.text()).toEqual("{\n  CONTENT\n}");
+    const example = doc.querySelector("div.example pre");
+    const div = example.closest("div");
+    expect(div.classList.contains("example")).toBeTruthy();
+
+    const markers = div.querySelectorAll("div.marker");
+    expect(markers.length).toEqual(1);
+    expect(markers[0].textContent).toEqual("Example 1: EX");
+    expect(markers[0].querySelector(".example-title").textContent).toEqual(
+      ": EX"
+    );
+    expect(example.getAttribute("title")).toBeNull();
+    expect(example.textContent).toEqual("{\n  CONTENT\n}");
   });
 });

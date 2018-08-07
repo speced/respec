@@ -162,14 +162,14 @@ describe("W3C — Headers", () => {
       expect(doc.querySelector("a[href='http://empty-name']")).toEqual(null);
     });
 
-    it("treats editor's name as HTML", async () => {
+    it("treats editor's info as HTML", async () => {
       const config = {
         specStatus: "REC",
         editors: [
           {
             name:
               "<span lang='ja'>阿南 康宏</span> (Yasuhiro Anan), (<span lang='ja'>第１版</span> 1st edition)",
-            company: "Microsoft",
+            company: "<span lang='ja'>マイクロソフト</span> (Microsoft)",
           },
         ],
       };
@@ -178,12 +178,15 @@ describe("W3C — Headers", () => {
       const dtElems = [...doc.querySelectorAll(".head dt")];
       const dtElem = dtElems.find(findEditor);
       const ddElem = dtElem.nextElementSibling;
-      const [personName, edition] = ddElem.querySelectorAll("span>span");
+      const [personName, edition, company] = ddElem.querySelectorAll(
+        "span[lang=ja]"
+      );
       expect(personName.lang).toBe("ja");
       expect(personName.textContent).toBe("阿南 康宏");
       expect(edition.textContent).toBe("第１版");
+      expect(company.textContent).toBe("マイクロソフト");
       expect(ddElem.textContent).toEqual(
-        "阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (Microsoft)"
+        "阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (マイクロソフト (Microsoft))"
       );
     });
   });
@@ -764,9 +767,6 @@ describe("W3C — Headers", () => {
       expect($sotd.find("a:contains('WGLIST@w3.org')").attr("href")).toEqual(
         "mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D"
       );
-      expect($sotd.find("a:contains('subscribe')").attr("href")).toEqual(
-        "mailto:WGLIST-request@w3.org?subject=subscribe"
-      );
       expect($sotd.find("a:contains('archives')").attr("href")).toEqual(
         "https://lists.w3.org/Archives/Public/WGLIST/"
       );
@@ -817,7 +817,7 @@ describe("W3C — Headers", () => {
   });
 
   describe("perEnd", () => {
-    it("correctlys flag a PER", async () => {
+    it("correctly flags a PER", async () => {
       const ops = makeStandardOps();
       const newProps = {
         previousMaturity: "REC",
@@ -836,8 +836,12 @@ describe("W3C — Headers", () => {
       const $sotd = $("#sotd", doc);
       const $f = $($sotd.find("p:contains('Proposed Edited Recommendation')"));
       expect($f.length).toEqual(2);
-      const $p = $f[0];
-      expect($("a:contains('questionnaires')", $p).length).toEqual(1);
+      const questionnaires = doc
+        .getElementById("sotd")
+        .querySelector(
+          "a[href='https://www.w3.org/2002/09/wbs/myQuestionnaires']"
+        );
+      expect(questionnaires).toBeTruthy();
     });
   });
 
@@ -858,11 +862,7 @@ describe("W3C — Headers", () => {
       const $f = $($sotd.find("p:contains('CUSTOM PARAGRAPH')"));
       expect($f.length).toEqual(1);
       const $p = $f.prev();
-      expect($("a:contains('WGNAME')", $p).length).toEqual(1);
-      expect($("a:contains('WGNAME')", $p).attr("href")).toEqual("WGURI");
-      expect($("a:contains('WGLIST@w3.org')", $p).attr("href")).toEqual(
-        "mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D"
-      );
+      expect($("a:contains('WGLIST')", $p).length).toEqual(1);
     });
   });
 

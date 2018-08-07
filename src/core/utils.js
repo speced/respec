@@ -286,6 +286,25 @@ export function normalizePadding(text = "") {
   return result;
 }
 
+/**
+ * Removes common indents across the IDL texts,
+ * so that indentation inside <pre> won't affect the rendered result.
+ * @param {string} text IDL text
+ */
+export function reindent(text) {
+  if (!text) {
+    return text;
+  }
+  // TODO: use trimEnd when Edge supports it
+  const lines = text.trimRight().split("\n");
+  while (lines.length && !lines[0].trim()) {
+    lines.shift();
+  }
+  const indents = lines.filter(s => s.trim()).map(s => s.search(/[^\s]/));
+  const leastIndent = Math.min(...indents);
+  return lines.map(s => s.slice(leastIndent)).join("\n");
+}
+
 // RESPEC STUFF
 export function removeReSpec(doc) {
   doc.querySelectorAll(".remove, script[data-requiremodule]").forEach(elem => {
@@ -685,4 +704,36 @@ export function getDfnTitles(elem, args) {
     .filter(item => item !== "")
     .reduce((collector, item) => collector.add(item), new Set());
   return [...titles];
+}
+
+/**
+ * For an element (usually <a>), returns an array of targets that
+ * element might refer to, of the form
+ * @typedef {for: 'interfacename', title: 'membername'} LinkTarget
+ *
+ * For an element like:
+ *  <p link-for="Int1"><a for="Int2">Int3.member</a></p>
+ * we'll return:
+ *  * {for: "int2", title: "int3.member"}
+ *  * {for: "int3", title: "member"}
+ *  * {for: "", title: "int3.member"}
+ * @param {Element} elem
+ * @returns {LinkTarget[]}
+ */
+export function getLinkTargets(elem) {
+  const linkForElem = elem.closest("[data-link-for]");
+  const linkFor = linkForElem ? linkForElem.dataset.linkFor.toLowerCase() : "";
+  const titles = getDfnTitles(elem);
+
+  return titles.reduce((result, title) => {
+    result.push({ for: linkFor, title });
+    const split = title.split(".");
+    if (split.length === 2) {
+      // If there are multiple '.'s, this won't match an
+      // Interface/member pair anyway.
+      result.push({ for: split[0], title: split[1] });
+    }
+    result.push({ for: "", title });
+    return result;
+  }, []);
 }
