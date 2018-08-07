@@ -16,6 +16,7 @@
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
 import { getTextNodes } from "core/utils";
+import { idlStringToHtml } from "core/inline-idl-parser";
 export const name = "core/inlines";
 
 export function run(conf) {
@@ -23,8 +24,6 @@ export function run(conf) {
   if (!conf.normativeReferences) conf.normativeReferences = new Set();
   if (!conf.informativeReferences) conf.informativeReferences = new Set();
   if (!conf.respecRFC2119) conf.respecRFC2119 = {};
-
-  const generateIDLMarkup = initInlineIdlParser();
 
   // PRE-PROCESSING
   const abbrMap = new Map();
@@ -79,7 +78,7 @@ export function run(conf) {
               document.createTextNode(`{{{${ref.replace(/^\\/, "")}}}}`)
             );
           } else {
-            df.appendChild(generateIDLMarkup(ref));
+            df.appendChild(idlStringToHtml(ref));
           }
         } else if (matched.startsWith("[[")) {
           // BIBREF
@@ -124,72 +123,4 @@ export function run(conf) {
     }
     txt.parentNode.replaceChild(df, txt);
   }
-}
-
-function initInlineIdlParser() {
-  const internalSlotRegex = /^\[\[.+\]\]$/;
-  const methodRegex = /\((.*)\)$/;
-  const idlSplitRegex = /\b\.\b|\.(?=\[\[)/;
-  const dictionaryRegex = /(\w+)\["(\w+)"\]/;
-
-  // breaks an inline IDL text into it's components such as
-  // method+args, attributes, base
-  function parseInlineIDL(str) {
-    const result = Object.create(null);
-    const splitted = str.split(idlSplitRegex);
-    if (methodRegex.test(splitted[splitted.length - 1])) {
-      result.method = splitted.pop();
-      result.args = result.method.match(methodRegex)[1].split(/,\s*/);
-    }
-    if (splitted.length > 1 && !result.method) {
-      result.attribute = splitted.pop();
-    }
-    const remaining = splitted.join(".");
-    if (dictionaryRegex.test(remaining)) {
-      const [, base, member] = remaining.match(dictionaryRegex);
-      result.base = base;
-      result.member = member;
-    } else {
-      result.base = remaining;
-    }
-    return result;
-  }
-
-  return function generateIDLMarkup(ref) {
-    const { base, attribute, member, method, args } = parseInlineIDL(ref);
-
-    if (internalSlotRegex.test(base)) {
-      return hyperHTML`<code><a data-xref-type="attribute">${base}</a></code>`;
-    }
-
-    const baseHtml = base
-      ? hyperHTML`<a data-xref-type="_IDL_">${base}</a>.`
-      : "";
-
-    if (member) {
-      // type: Dictionary["member"]
-      return hyperHTML`<code><a
-      class="respec-idl-xref" data-xref-type="dictionary">${base}</a>["<a
-      class="respec-idl-xref" data-xref-type="dict-member"
-      data-xref-for="${base}" data-lt="${member}">${member}</a>"]</code>`;
-    }
-
-    if (attribute) {
-      // type: base.attribute
-      return hyperHTML`<code>${baseHtml}<a class="respec-idl-xref"
-        data-xref-type="attribute" data-xref-for="${base}">${attribute}</a></code>`;
-    }
-
-    if (method) {
-      // base.method(args)
-      const [methodName] = method.split("(", 1);
-      return hyperHTML`<code>${baseHtml}<a class="respec-idl-xref"
-        data-xref-type="method" data-xref-for="${base}"
-        data-lt="${method}">${methodName}</a>(${{
-        html: args.map(arg => `<var>${arg}</var>`).join(", "),
-      }})</code>`;
-    }
-
-    return hyperHTML`<code><a data-xref-type="_IDL_">${base}</a></code>`;
-  };
 }
