@@ -2,8 +2,6 @@
 
 "use strict";
 const path = require("path");
-const { promisify } = require("util");
-const fs = require("fs");
 const fsp = require("fs-extra");
 
 const srcDesMap = [
@@ -25,7 +23,10 @@ const srcDesMap = [
 ];
 
 const deprecated = [
-  ["./node_modules/domReady/domReady.js", "Use standard DOMContentLoaded and document.readyState instead."]
+  [
+    "./node_modules/domReady/domReady.js",
+    "Use standard DOMContentLoaded and document.readyState instead.",
+  ],
 ];
 
 async function cp(source, dest) {
@@ -61,8 +62,7 @@ async function copyDeprecated() {
     await fsp.remove("./js/core/css/github.css");
     await copyDeps();
     await copyDeprecated();
-  }
-  catch (err) {
+  } catch (err) {
     console.error(err.stack);
     process.exit(1);
   }
