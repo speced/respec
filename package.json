@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "22.3.5",
+  "version": "22.4.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -34,6 +34,7 @@
     "glob": "^7.1.2",
     "handlebars": "^4.0.11",
     "http-server": "^0.11.1",
+    "idb-keyval": "^3.1.0",
     "jasmine-core": "^3.1.0",
     "jasmine-reporters": "^2.3.2",
     "jquery": "^3.3.1",

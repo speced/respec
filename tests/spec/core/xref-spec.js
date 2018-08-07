@@ -1,6 +1,13 @@
 "use strict";
 describe("Core — xref", () => {
   afterAll(flushIframes);
+  beforeEach(async () => {
+    const { Store, clear } = await new Promise(resolve => {
+      require(["deps/idb"], resolve);
+    });
+    const cache = new Store("xref", "xrefs");
+    await clear(cache);
+  });
 
   const apiURL = location.origin + "/tests/data/xref.json";
   const localBiblio = {
@@ -417,5 +424,62 @@ describe("Core — xref", () => {
     expect(informRefs.map(r => r.textContent).join()).toEqual(
       "[html],[infra],[local-1],[local-2],[local-3],[local-4],[webidl]"
     );
+  });
+
+  it("caches results and uses cached results when available", async () => {
+    const IDB = await new Promise(resolve => {
+      require(["deps/idb"], resolve);
+    });
+    const cache = new IDB.Store("xref", "xrefs");
+    const config = { xref: true, localBiblio };
+    let cacheKeys;
+
+    const body1 = `
+      <section>
+        <p><a id="link">dictionary</a><p>
+      </section>`;
+
+    const preLoadTime = await IDB.get("__CACHE_TIME__", cache);
+    expect(preLoadTime instanceof Date).toBeFalsy();
+    cacheKeys = (await IDB.keys(cache)).sort();
+    expect(cacheKeys).toEqual([]);
+
+    const preCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
+    expect(preCacheDoc.getElementById("link").href).toEqual(
+      expectedLinks.get("dictionary")
+    );
+    const preCacheTime = await IDB.get("__CACHE_TIME__", cache);
+    expect(preCacheTime instanceof Date).toBeTruthy();
+    cacheKeys = (await IDB.keys(cache)).sort();
+    expect(cacheKeys).toEqual(["__CACHE_TIME__", "dictionary"]);
+
+    // no new data was requested from server, cache shoudln't change
+    const postCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
+    expect(postCacheDoc.getElementById("link").href).toEqual(
+      expectedLinks.get("dictionary")
+    );
+    const postCacheTime = await IDB.get("__CACHE_TIME__", cache);
+    expect(postCacheTime).toEqual(preCacheTime);
+    cacheKeys = (await IDB.keys(cache)).sort();
+    expect(cacheKeys).toEqual(["__CACHE_TIME__", "dictionary"]);
+
+    // new data was requested from server, cache should change
+    const body2 = `
+      <section>
+        <p><a id="link-1">dictionary</a><p>
+        <p><a id="link-2">URL parser</a><p>
+      </section>
+    `;
+    const updatedCacheDoc = await makeRSDoc(makeStandardOps(config, body2));
+    expect(updatedCacheDoc.getElementById("link-1").href).toEqual(
+      expectedLinks.get("dictionary")
+    );
+    expect(updatedCacheDoc.getElementById("link-2").href).toEqual(
+      expectedLinks.get("url parser")
+    );
+    const updatedCacheTime = await IDB.get("__CACHE_TIME__", cache);
+    expect(updatedCacheTime).toBeGreaterThan(preCacheTime);
+    cacheKeys = (await IDB.keys(cache)).sort();
+    expect(cacheKeys).toEqual(["__CACHE_TIME__", "dictionary", "url parser"]);
   });
 });
