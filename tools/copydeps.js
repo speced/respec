@@ -6,7 +6,7 @@ const { promisify } = require("util");
 const fs = require("fs");
 const fsp = require("fs-extra");
 
-const srcDesMap = new Map([
+const srcDesMap = [
   ["./node_modules/clipboard/dist/clipboard.js", "./js/deps/"],
   ["./node_modules/domReady/domReady.js", "./js/deps/"],
   [
@@ -23,7 +23,7 @@ const srcDesMap = new Map([
   ["./node_modules/webidl2/lib/webidl2.js", "./js/deps/"],
   ["./node_modules/pluralize/pluralize.js", "./js/deps/"],
   ["./node_modules/idb-keyval/dist/idb-keyval-amd.min.js", "./js/deps/idb.js"],
-]);
+];
 
 async function cp(source, dest) {
   const baseName = path.basename(source);
@@ -35,10 +35,7 @@ async function cp(source, dest) {
 
 // Copy them again
 async function copyDeps() {
-  const copyPromises = [];
-  for (const [source, dest] of srcDesMap.entries()) {
-    copyPromises.push(cp(source, dest));
-  }
+  const copyPromises = srcDesMap.map(([source, dest]) => cp(source, dest));
   await Promise.all(copyPromises);
 }
 
