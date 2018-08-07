@@ -150,13 +150,14 @@ function idlType2Html(idlType) {
     return `<a data-link-for="">${hb.Utils.escapeExpression(idlType)}</a>`;
   }
   if (Array.isArray(idlType)) {
-    return idlType.map(idlType2Html).join(",");
+    return idlType.map(idlType2Html).join("");
   }
   const extAttrs = extAttr(idlType.extAttrs);
   const nullable = idlType.nullable ? "?" : "";
   if (idlType.union) {
-    const subtypes = idlType.idlType.map(idlType2Html).join(" or");
-    const union = `${writeTrivia(idlType.trivia.open)}(${subtypes})`;
+    const subtypes = idlType.idlType.map(idlType2Html).join("");
+    const { open, close } = idlType.trivia;
+    const union = `${writeTrivia(open)}(${subtypes}${writeTrivia(close)})`;
     return `${extAttrs}${union}${nullable}`;
   }
   let type = "";
@@ -172,7 +173,12 @@ function idlType2Html(idlType) {
       : idlType2Html(idlType.idlType);
   }
   const trivia = idlType.prefix ? idlType.prefix.trivia : idlType.trivia.base;
-  return extAttrs + writeTrivia(trivia) + type + nullable;
+  let separator = "";
+  if (idlType.separator && idlType.separator.value) {
+    const { value, trivia } = idlType.separator;
+    separator = `${writeTrivia(trivia)}${value}`;
+  }
+  return extAttrs + writeTrivia(trivia) + type + nullable + separator;
 }
 
 function linkStandardType(type) {

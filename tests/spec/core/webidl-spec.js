@@ -75,7 +75,7 @@ describe("Core - WebIDL", () => {
       "#dom-testinterface"
     );
     expect(testInterface.querySelector(nameQuery).getAttribute("href")).toBe(
-      "#idl-def-similarlynamed-testinterface"
+      "#dom-similarlynamed-testinterface"
     );
     // attribute TestCBInterface testCBInterface;
     expect(testCBInterface.querySelector(typeQuery).getAttribute("href")).toBe(
@@ -575,13 +575,13 @@ describe("Core - WebIDL", () => {
 interface MapLikeInterface {
   maplike<MapLikeInterface, MapLikeInterface>;
 };
-interface ReadOnlyMapLike { 
+interface ReadOnlyMapLike {
   readonly maplike<ReadOnlyMapLike, ReadOnlyMapLike>;
 };
 interface SetLikeInterface {
   setlike<SetLikeInterface>;
 };
-interface ReadOnlySetLike { 
+interface ReadOnlySetLike {
   readonly setlike<ReadOnlySetLike>;
 };`.trim();
     expect(textContent).toBe(expected);
@@ -854,6 +854,11 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     target = doc.getElementById("td-union-extended-attribute");
     text =
       "typedef [Clamp] (unsigned long or ConstrainULongRange) ConstrainULong2;";
+    expect(target.textContent).toEqual(text);
+
+    target = doc.getElementById("td-trivia");
+    text =
+      "/* test1 */ typedef /* test2 */ [Clamp] /* test3 */ (/* test4 */ unsigned long /* test5 */ or /* test6 */ ConstrainULongRange /* test7 */ ) /* test8 */ ConstrainULong3 /* test9 */;";
     expect(target.textContent).toEqual(text);
   });
 
