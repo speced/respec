@@ -33,6 +33,15 @@ const idlTypedefTmpl = tmpls["typedef.html"];
 // https://github.com/w3c/respec/issues/999
 // https://github.com/w3c/respec/issues/982
 const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
+const topLevelEntities = new Set([
+  "callback interface",
+  "callback",
+  "dictionary",
+  "enum",
+  "interface mixin",
+  "interface",
+  "typedef",
+]);
 
 function registerHelpers() {
   hb.registerHelper("extAttr", obj => {
@@ -141,13 +150,14 @@ function idlType2Html(idlType) {
     return `<a data-link-for="">${hb.Utils.escapeExpression(idlType)}</a>`;
   }
   if (Array.isArray(idlType)) {
-    return idlType.map(idlType2Html).join(",");
+    return idlType.map(idlType2Html).join("");
   }
   const extAttrs = extAttr(idlType.extAttrs);
   const nullable = idlType.nullable ? "?" : "";
   if (idlType.union) {
-    const subtypes = idlType.idlType.map(idlType2Html).join(" or");
-    const union = `${writeTrivia(idlType.trivia.open)}(${subtypes})`;
+    const subtypes = idlType.idlType.map(idlType2Html).join("");
+    const { open, close } = idlType.trivia;
+    const union = `${writeTrivia(open)}(${subtypes}${writeTrivia(close)})`;
     return `${extAttrs}${union}${nullable}`;
   }
   let type = "";
@@ -163,7 +173,12 @@ function idlType2Html(idlType) {
       : idlType2Html(idlType.idlType);
   }
   const trivia = idlType.prefix ? idlType.prefix.trivia : idlType.trivia.base;
-  return extAttrs + writeTrivia(trivia) + type + nullable;
+  let separator = "";
+  if (idlType.separator && idlType.separator.value) {
+    const { value, trivia } = idlType.separator;
+    separator = `${writeTrivia(trivia)}${value}`;
+  }
+  return extAttrs + writeTrivia(trivia) + type + nullable + separator;
 }
 
 function linkStandardType(type) {
@@ -645,6 +660,11 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
     // an explicitly empty [for], try <dfn> that inherited a [for].
     if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
       dfns = dfnForArray;
+    } else if (topLevelEntities.has(type) && dfnForArray.length) {
+      const dfn = dfnForArray.find(
+        ([dfn]) => dfn.textContent.trim() === originalName
+      );
+      if (dfn) dfns = [dfn];
     }
   }
   // If we haven't found any definitions with explicit [for]
