@@ -3,7 +3,7 @@
 // seemingly a better idea to orthogonalise them. The issue is that processing text nodes
 // is harder to orthogonalise, and in some browsers can also be particularly slow.
 // Things that are recognised are <abbr>/<acronym> which when used once are applied
-// throughout the document, [[REFERENCES]]/[[!REFERENCES]], and RFC2119 keywords.
+// throughout the document, [[REFERENCES]]/[[!REFERENCES]], {{{ IDL }}} and RFC2119 keywords.
 // CONFIGURATION:
 //  These options do not configure the behaviour of this module per se, rather this module
 //  manipulates them (oftentimes being the only source to set them) so that other modules
@@ -16,7 +16,7 @@
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
 import { getTextNodes } from "core/utils";
-import { idlStringToHtml } from "core/inline-idl-parser";
+import { parseInlineIDL } from "core/inline-idl-parser";
 export const name = "core/inlines";
 
 export function run(conf) {
@@ -123,4 +123,48 @@ export function run(conf) {
     }
     txt.parentNode.replaceChild(df, txt);
   }
+}
+
+/**
+ * Generates HTML by parsing an IDL string
+ * @param {String} str IDL string
+ * @return {Node} html output
+ */
+function idlStringToHtml(str) {
+  const { base, attribute, member, method, args } = parseInlineIDL(str);
+
+  if (base.startsWith("[[") && base.endsWith("]]")) {
+    // is internal slot (possibly local)
+    return hyperHTML`<code><a data-xref-type="attribute">${base}</a></code>`;
+  }
+
+  const baseHtml = base
+    ? hyperHTML`<a data-xref-type="_IDL_">${base}</a>.`
+    : "";
+
+  if (member) {
+    // type: Dictionary["member"]
+    return hyperHTML`<code><a
+    class="respec-idl-xref" data-xref-type="dictionary">${base}</a>["<a
+    class="respec-idl-xref" data-xref-type="dict-member"
+    data-xref-for="${base}" data-lt="${member}">${member}</a>"]</code>`;
+  }
+
+  if (attribute) {
+    // type: base.attribute
+    return hyperHTML`<code>${baseHtml}<a class="respec-idl-xref"
+      data-xref-type="attribute" data-xref-for="${base}">${attribute}</a></code>`;
+  }
+
+  if (method) {
+    // base.method(args)
+    const [methodName] = method.split("(", 1);
+    return hyperHTML`<code>${baseHtml}<a class="respec-idl-xref"
+      data-xref-type="method" data-xref-for="${base}"
+      data-lt="${method}">${methodName}</a>(${{
+      html: args.map(arg => `<var>${arg}</var>`).join(", "),
+    }})</code>`;
+  }
+
+  return hyperHTML`<code><a data-xref-type="_IDL_">${base}</a></code>`;
 }
