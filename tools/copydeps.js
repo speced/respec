@@ -25,7 +25,7 @@ const srcDesMap = new Map([
   ["./node_modules/url-search-params/build/url-search-params.js", "./js/deps/"],
   ["./node_modules/webidl2/lib/webidl2.js", "./js/deps/"],
   ["./node_modules/pluralize/pluralize.js", "./js/deps/"],
-  ["./node_modules/idb-keyval/dist/idb-keyval-cjs.js", "./js/deps/idb.js"],
+  ["./node_modules/idb-keyval/dist/idb-keyval-amd.min.js", "./js/deps/idb.js"],
 ]);
 
 function makePathResolver(base) {
