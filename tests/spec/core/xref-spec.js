@@ -94,6 +94,7 @@ describe("Core — xref", () => {
       `TextDecoderOptions["fatal"]`,
       "https://encoding.spec.whatwg.org/#dom-textdecoderoptions-fatal",
     ],
+    ["EventTarget", "https://dom.spec.whatwg.org/#eventtarget"]
   ]);
 
   it("does nothing if xref is not enabled", async () => {
@@ -495,6 +496,10 @@ describe("Core — xref", () => {
         <p id="link1">{{{ Window }}}</p>
         <p id="link2">{{{ [[query]] }}}</p>
         <p id="link3">{{{ [[type]] }}} is ambiguous.</p>
+        <p id="link4"> This should work {{{
+              EventTarget
+
+        }}} , i.e. should trim the whitespace.</p>
       </section>
       `;
       const config = { xref: { url: apiURL }, localBiblio };
@@ -513,6 +518,10 @@ describe("Core — xref", () => {
       const link3 = doc.querySelector("#link3 code a");
       expect(link3.href).toBeFalsy();
       expect(link3.title).toEqual("Error: Linking an ambiguous dfn.");
+
+      const link4 = doc.querySelector("#link4 code a");
+      expect(link4.href).toEqual(expectedLinks.get("EventTarget"));
+      expect(link4.textContent).toEqual("EventTarget");
     });
 
     it("links methods", async () => {

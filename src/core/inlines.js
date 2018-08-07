@@ -39,7 +39,7 @@ export function run(conf) {
   const rx = new RegExp(
     "(\\bMUST(?:\\s+NOT)?\\b|\\bSHOULD(?:\\s+NOT)?\\b|\\bSHALL(?:\\s+NOT)?\\b|" +
     "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +
-    "(?:{{3}.*}{3})|" + // inline IDL external references (core/xref)
+    "(?:{{3}\\s*.*\\s*}{3})|" + // inline IDL references
       "(?:\\[\\[(?:!|\\\\)?[A-Za-z0-9\\.-]+\\]\\])" +
       (abbrRx ? `|${abbrRx}` : "") +
       ")"
