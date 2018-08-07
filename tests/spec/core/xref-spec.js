@@ -94,7 +94,7 @@ describe("Core — xref", () => {
       `TextDecoderOptions["fatal"]`,
       "https://encoding.spec.whatwg.org/#dom-textdecoderoptions-fatal",
     ],
-    ["EventTarget", "https://dom.spec.whatwg.org/#eventtarget"]
+    ["EventTarget", "https://dom.spec.whatwg.org/#eventtarget"],
   ]);
 
   it("does nothing if xref is not enabled", async () => {
