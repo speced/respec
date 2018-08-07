@@ -5,9 +5,6 @@ const path = require("path");
 const { promisify } = require("util");
 const fs = require("fs");
 const fsp = require("fs-extra");
-const stat = promisify(fs.stat);
-const readdir = promisify(fs.readdir);
-const unlink = promisify(fs.unlink);
 
 const srcDesMap = new Map([
   ["./node_modules/clipboard/dist/clipboard.js", "./js/deps/"],
@@ -58,24 +55,11 @@ async function rm(...files) {
 }
 
 async function cp(source, dest) {
-  const fullSource = toFullPath(source);
-  const fullDest = toFullPath(dest);
-  const baseName = path.basename(fullSource);
-  const actualDestination = path.extname(fullDest)
-    ? fullDest
-    : path.resolve(fullDest, baseName);
-  await fsp.ensureFile(actualDestination);
-  const readableStream = fs.createReadStream(fullSource);
-  const writableStream = fs.createWriteStream(actualDestination);
-  readableStream.setEncoding("utf8");
-  readableStream.pipe(writableStream);
-  return new Promise(resolve => {
-    readableStream.on("end", resolve);
-  });
-}
-
-function toFullPath(p, base = process.cwd()) {
-  return path.isAbsolute(p) ? p : path.normalize(path.resolve(`${base}/${p}`));
+  const baseName = path.basename(source);
+  const actualDestination = path.extname(dest)
+    ? dest
+    : path.resolve(dest, baseName);
+  await fsp.copy(source, actualDestination);
 }
 
 // Copy them again
