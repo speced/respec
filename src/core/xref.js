@@ -122,8 +122,8 @@ function collectKeys(xrefs) {
 
 // adds data to cache
 async function cacheResults(data, cache) {
-  const promisesToSet = Object.entries(data).map(([key, value]) =>
-    IDB.set(key.toLowerCase(), value, cache)
+  const promisesToSet = Object.entries(data).map(([term, results]) =>
+    IDB.set(term, results, cache)
   );
   await IDB.set("__CACHE_TIME__", new Date(), cache);
   await Promise.all(promisesToSet);
@@ -145,9 +145,7 @@ async function resolveFromCache(keys, cache) {
     return { found: Object.create(null), notFound: keys };
   }
 
-  const promisesToGet = keys.map(({ term }) =>
-    IDB.get(term.toLowerCase(), cache)
-  );
+  const promisesToGet = keys.map(({ term }) => IDB.get(term, cache));
   const cachedData = await Promise.all(promisesToGet);
   return keys.reduce(separate, { found: Object.create(null), notFound: [] });
 
@@ -156,7 +154,7 @@ async function resolveFromCache(keys, cache) {
     if (data && data.length) {
       const fromCache = data.filter(entry => cacheFilter(entry, key));
       if (fromCache.length) {
-        const term = key.term.toLowerCase();
+        const { term } = key;
         if (!collector.found[term]) collector.found[term] = [];
         collector.found[term].push(...fromCache);
       } else {
@@ -169,7 +167,7 @@ async function resolveFromCache(keys, cache) {
   }
 
   function cacheFilter(cacheEntry, key) {
-    let accept = cacheEntry.title.toLowerCase() === key.term.toLowerCase();
+    let accept = cacheEntry.title === key.term;
     if (accept && key.specs && key.specs.length) {
       accept = key.specs.includes(cacheEntry.spec);
     }
