@@ -759,7 +759,7 @@ export function run(conf) {
     }
     linkDefinitions(parse, conf.definitionMap, "", idlElement);
     const newElement = makeMarkup(parse);
-    newElement.setAttribute("id", idlElement.id);
+    if (idlElement.id) newElement.setAttribute("id", idlElement.id);
     newElement
       .querySelectorAll(
         ".idlAttribute,.idlCallback,.idlConst,.idlDictionary,.idlEnum,.idlException,.idlField,.idlInterface,.idlMember,.idlMethod,.idlMaplike,.idlIterable,.idlTypedef"
