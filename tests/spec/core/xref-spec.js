@@ -625,6 +625,7 @@ describe("Core — xref", () => {
         expectedLinks.get(`TextDecoderOptions["fatal"]`)
       );
     });
+  });
 
   it("caches results and uses cached results when available", async () => {
     const IDB = await new Promise(resolve => {
