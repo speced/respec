@@ -1,6 +1,5 @@
 {
   "env": {
-    "jasmine": true,
     "browser": true,
     "es6": true,
     "node": true,
@@ -11,17 +10,18 @@
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 8,
-    "ecmaFeatures": {
-      "experimentalObjectRestSpread": true
-    }
+    "ecmaVersion": 2018
   },
   "rules": {
     "indent": 0,
-    "linebreak-style": ["error", "unix"],
     "quotes": 0,
     "semi": ["error", "always"],
-    "no-console": 0
+    "no-console": 0,
+    "no-unused-vars": 2,
+    "no-var": 2,
+    "one-var": ["error", "never"],
+    "prefer-arrow-callback": 2,
+    "prefer-const": 2
   },
   "globals": {
     "flushIframes": true,
@@ -33,5 +33,5 @@
     "pickRandomsFromList": true,
     "respecConfig": true
   },
-  "plugins": ["jasmine", "prettier"]
+  "plugins": ["prettier"]
 }

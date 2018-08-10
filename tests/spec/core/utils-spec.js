@@ -1,8 +1,8 @@
 "use strict";
 describe("Core - Utils", () => {
-  var utils;
+  let utils;
   beforeAll(done => {
-    require(["core/utils"], function(u) {
+    require(["core/utils"], u => {
       utils = u;
       done();
     });
@@ -77,13 +77,13 @@ describe("Core - Utils", () => {
       const cacheTime = new Date(
         cachedResponse.headers.get("Expires")
       ).valueOf();
-      expect(cacheTime <= Date.now()).toBe(true);
+      expect(cacheTime).toBeLessThanOrEqual(Date.now());
     });
   });
 
   describe("createResourceHint", () => {
     it("returns a link element", () => {
-      var link = utils.createResourceHint({
+      const link = utils.createResourceHint({
         href: "https://example.com",
         hint: "preconnect",
       });
@@ -135,21 +135,21 @@ describe("Core - Utils", () => {
       }).not.toThrow();
     });
     it("normalizes a URL intended for dns-prefetch to an origin", () => {
-      var link = utils.createResourceHint({
+      const link = utils.createResourceHint({
         hint: "dns-prefetch",
         href: "http://origin:8080/./../test",
       });
       expect(link.href).toEqual("http://origin:8080/");
     });
     it("normalizes a URL intended for preconnect to an origin", () => {
-      var link = utils.createResourceHint({
+      const link = utils.createResourceHint({
         hint: "preconnect",
         href: "http://origin:8080/./../test",
       });
       expect(link.href).toEqual("http://origin:8080/");
     });
     it("ignores 'as' member on dns-prefetch", () => {
-      var link = utils.createResourceHint({
+      const link = utils.createResourceHint({
         hint: "dns-prefetch",
         href: "https://example.com",
         as: "media",
@@ -157,7 +157,7 @@ describe("Core - Utils", () => {
       expect(link.hasAttribute("as")).toEqual(false);
     });
     it("ignores 'as' member on preconnect", () => {
-      var link = utils.createResourceHint({
+      const link = utils.createResourceHint({
         hint: "preconnect",
         href: "https://example.com",
         as: "style",
@@ -165,7 +165,7 @@ describe("Core - Utils", () => {
       expect(link.hasAttribute("as")).toEqual(false);
     });
     it("respects 'as' member on preload", () => {
-      var link = utils.createResourceHint({
+      const link = utils.createResourceHint({
         hint: "preload",
         href: "https://example.com",
         as: "style",
@@ -174,7 +174,7 @@ describe("Core - Utils", () => {
       expect(link.getAttribute("as")).toEqual("style");
     });
     it("respects override of the CORS mode", () => {
-      var link = utils.createResourceHint({
+      const link = utils.createResourceHint({
         hint: "preconnect",
         href: "https://other.origin.com",
         corsMode: "use-credentials",
@@ -182,36 +182,36 @@ describe("Core - Utils", () => {
       expect(link.crossOrigin).toEqual("use-credentials");
     });
     it("allows the browser to recover from bogus CORS mode", () => {
-      var link = utils.createResourceHint({
+      const link = utils.createResourceHint({
         hint: "preconnect",
         href: "https://other.origin.com",
         corsMode: "this will magically become anonymous!",
       });
       expect(link.crossOrigin).toEqual("anonymous");
     });
-    it("automatically detects cross-origin requests for dns-prefetch", function() {
-      var link = utils.createResourceHint({
+    it("automatically detects cross-origin requests for dns-prefetch", () => {
+      const link = utils.createResourceHint({
         hint: "dns-prefetch",
         href: "https://other.origin.com",
       });
       expect(link.crossOrigin).toEqual("anonymous");
     });
     it("automatically detects cross-origin requests for preconnect", () => {
-      var link = utils.createResourceHint({
+      const link = utils.createResourceHint({
         hint: "preconnect",
         href: "https://other.origin.com",
       });
       expect(link.crossOrigin).toEqual("anonymous");
     });
     it("marks the link element for removal on save by default", () => {
-      var link = utils.createResourceHint({
+      const link = utils.createResourceHint({
         href: "https://example.com",
         hint: "preconnect",
       });
       expect(link.classList.contains("removeOnSave")).toEqual(true);
     });
     it("repects leaving a hint in the spec when told to", () => {
-      var link = utils.createResourceHint({
+      const link = utils.createResourceHint({
         href: "https://example.com",
         hint: "preconnect",
         dontRemove: true,
@@ -222,18 +222,10 @@ describe("Core - Utils", () => {
 
   describe("calculateLeftPad()", () => {
     it("throws given invalid input", () => {
-      expect(() => {
-        expect(utils.calculateLeftPad());
-      }).toThrow();
-      expect(() => {
-        expect(utils.calculateLeftPad({}));
-      }).toThrow();
-      expect(() => {
-        expect(utils.calculateLeftPad(123));
-      }).toThrow();
-      expect(() => {
-        expect(utils.calculateLeftPad(null));
-      }).toThrow();
+      expect(() => utils.calculateLeftPad()).toThrow();
+      expect(() => utils.calculateLeftPad({})).toThrow();
+      expect(() => utils.calculateLeftPad(123)).toThrow();
+      expect(() => utils.calculateLeftPad(null)).toThrow();
     });
     it("calculates the smallest left padding of multiline text", () => {
       expect(utils.calculateLeftPad("")).toEqual(0);
@@ -256,15 +248,15 @@ describe("Core - Utils", () => {
 
   describe("makeOwnerSwapper()", () => {
     it("returns a function", () => {
-      var testNode = document.createTextNode("test");
-      var testFunction = utils.makeOwnerSwapper(testNode);
+      const testNode = document.createTextNode("test");
+      const testFunction = utils.makeOwnerSwapper(testNode);
       expect(testFunction instanceof Function).toBe(true);
     });
 
     it("removes the original node from the its owner document", () => {
-      var testNode = document.createTextNode("test");
-      var swapTestNode = utils.makeOwnerSwapper(testNode);
-      var newDoc = document.implementation.createHTMLDocument("test");
+      const testNode = document.createTextNode("test");
+      const swapTestNode = utils.makeOwnerSwapper(testNode);
+      const newDoc = document.implementation.createHTMLDocument("test");
       document.body.appendChild(testNode);
       expect(document.body.contains(testNode)).toBe(true);
       swapTestNode(newDoc.body);
@@ -273,9 +265,9 @@ describe("Core - Utils", () => {
     });
 
     it("appends the node into a new document", () => {
-      var testNode = document.createElement("link");
-      var swapTestNode = utils.makeOwnerSwapper(testNode);
-      var newDoc = document.implementation.createHTMLDocument("test");
+      const testNode = document.createElement("link");
+      const swapTestNode = utils.makeOwnerSwapper(testNode);
+      const newDoc = document.implementation.createHTMLDocument("test");
       expect(document.head.contains(testNode)).toBe(false);
       swapTestNode(newDoc.head);
       expect(newDoc.head.contains(testNode)).toBe(true);
@@ -283,10 +275,10 @@ describe("Core - Utils", () => {
     });
 
     it("prepends the node into a new document at the right place", () => {
-      var testNode = document.createElement("link");
-      var swapTestNode = utils.makeOwnerSwapper(testNode);
-      var newDoc = document.implementation.createHTMLDocument("test");
-      var metaElem = newDoc.createElement("meta");
+      const testNode = document.createElement("link");
+      const swapTestNode = utils.makeOwnerSwapper(testNode);
+      const newDoc = document.implementation.createHTMLDocument("test");
+      const metaElem = newDoc.createElement("meta");
       newDoc.head.appendChild(metaElem);
       swapTestNode(newDoc.head);
       expect(newDoc.head.firstChild).toEqual(testNode);
@@ -314,8 +306,8 @@ describe("Core - Utils", () => {
     });
 
     it("normalises whitespace, but ignore white with pre tags", () => {
-      var str = `   trim start\n    * trim 3 from start \n <pre>trim 1\n   if(x){\n\t party()</pre>\n  foo \n    bar`;
-      var testStrings = utils.normalizePadding(str).split("\n");
+      const str = `   trim start\n    * trim 3 from start \n <pre>trim 1\n   if(x){\n\t party()</pre>\n  foo \n    bar`;
+      const testStrings = utils.normalizePadding(str).split("\n");
       expect(testStrings[0]).toEqual("trim start");
       expect(testStrings[1]).toEqual(" * trim 3 from start ");
       expect(testStrings[2]).toEqual("<pre>trim 1");
@@ -349,7 +341,7 @@ describe("Core - Utils", () => {
 
   describe("concatDate", () => {
     it("formats the date as needed", () => {
-      var d = new Date("1977-03-01");
+      const d = new Date("1977-03-01");
       expect(utils.concatDate(d)).toEqual("19770301");
       expect(utils.concatDate(d, "-")).toEqual("1977-03-01");
     });
@@ -376,13 +368,13 @@ describe("Core - Utils", () => {
   describe("humanDate", () => {
     it("produces a human date", () => {
       expect(utils.humanDate("1977-03-15")).toEqual("15 March 1977");
-      var d = new Date("1977-03-15");
+      const d = new Date("1977-03-15");
       expect(utils.humanDate(d)).toEqual("15 March 1977");
     });
 
     it("produces a human date in different languages", () => {
       expect(utils.humanDate("1977-03-15", "en")).toEqual("15 March 1977");
-      var d = new Date("1977-03-15");
+      const d = new Date("1977-03-15");
       expect(utils.humanDate(d)).toEqual("15 March 1977");
       expect(utils.humanDate(d, "en")).toEqual("15 March 1977");
       expect(utils.humanDate(d, "nl")).toEqual("15 maart 1977");
@@ -394,7 +386,7 @@ describe("Core - Utils", () => {
   describe("isoDate", () => {
     it("produces an ISO date", () => {
       expect(utils.isoDate("2013-06-25")).toMatch(/2013-06-2[45]T/);
-      var d = new Date("2013-09-25");
+      const d = new Date("2013-09-25");
       expect(utils.isoDate(d)).toMatch(/2013-09-2[45]T/);
     });
   });
@@ -407,7 +399,7 @@ describe("Core - Utils", () => {
       expect(utils.joinAnd(["x", "x", "x"])).toEqual("x, x, and x");
       expect(utils.joinAnd(["x", "x", "x", "x"])).toEqual("x, x, x, and x");
       expect(
-        utils.joinAnd(["x", "x", "x", "x"], function(str) {
+        utils.joinAnd(["x", "x", "x", "x"], str => {
           return str.toUpperCase();
         })
       ).toEqual("X, X, X, and X");
@@ -428,7 +420,7 @@ describe("Core - Utils", () => {
 
   describe("toKeyValuePairs", () => {
     it("converts objects to key values pairs", () => {
-      var obj = {
+      const obj = {
         editors: [
           {
             name: "Person Name",
@@ -438,7 +430,7 @@ describe("Core - Utils", () => {
         edDraftURI: "http://foo.com",
         shortName: "Foo",
       };
-      var expected =
+      const expected =
         'editors=[{"name":"Person Name"}], specStatus="ED", ' +
         'edDraftURI="http://foo.com", shortName="Foo"';
       expect(utils.toKeyValuePairs(obj)).toEqual(expected);
@@ -446,7 +438,7 @@ describe("Core - Utils", () => {
   });
 
   it("converts objects to key values pairs with different separator", () => {
-    var obj = {
+    const obj = {
       editors: [
         {
           name: "Person Name",
@@ -456,14 +448,14 @@ describe("Core - Utils", () => {
       edDraftURI: "http://foo.com",
       shortName: "Foo",
     };
-    var expected =
+    const expected =
       'editors=[{"name":"Person Name"}]|||specStatus="ED"|||' +
       'edDraftURI="http://foo.com"|||shortName="Foo"';
     expect(utils.toKeyValuePairs(obj, "|||")).toEqual(expected);
   });
 
-  it("converts objects to key values pairs with different separator and delimiter", function() {
-    var obj = {
+  it("converts objects to key values pairs with different separator and delimiter", () => {
+    const obj = {
       editors: [
         {
           name: "Person Name",
@@ -473,7 +465,7 @@ describe("Core - Utils", () => {
       edDraftURI: "http://foo.com",
       shortName: "Foo",
     };
-    var expected =
+    let expected =
       'editors;[{"name":"Person Name"}], specStatus;"ED", ' +
       'edDraftURI;"http://foo.com", shortName;"Foo"';
     expect(utils.toKeyValuePairs(obj, undefined, ";")).toEqual(expected);
@@ -509,19 +501,13 @@ describe("Core - Utils", () => {
 
     it("flattens sparse and arrays", () => {
       const input = [, 1, 1, , , , 1, , 1];
-      const output = input.reduce(utils.flatten,["pass"]);
-      expect(output).toEqual([
-        "pass",
-        1,
-        1,
-        1,
-        1,
-      ]);
+      const output = input.reduce(utils.flatten, ["pass"]);
+      expect(output).toEqual(["pass", 1, 1, 1, 1]);
     });
 
     it("flattens dense and arrays", () => {
       const input = new Array(10);
-      const output = input.reduce(utils.flatten,["pass"]);
+      const output = input.reduce(utils.flatten, ["pass"]);
       expect(output).toEqual(["pass"]);
     });
   });

@@ -1,5 +1,5 @@
 "use strict";
-describe("W3C — Conformance", function() {
+describe("W3C — Conformance", () => {
   afterAll(flushIframes);
   it("includes a h2 and inject its content", async () => {
     const ops = {
@@ -42,8 +42,8 @@ describe("W3C — Conformance", function() {
         </section>`,
     };
     const doc = await makeRSDoc(ops);
-    var $c = $("#conformance", doc);
-    var $d = $(".rfc2119", $c);
+    const $c = $("#conformance", doc);
+    const $d = $(".rfc2119", $c);
     expect($d.length).toEqual(3);
   });
 
@@ -60,8 +60,8 @@ describe("W3C — Conformance", function() {
         </section>`,
     };
     const doc = await makeRSDoc(ops);
-    var $c = $("#conformance", doc);
-    var $d = $(".rfc2119", $c);
+    const $c = $("#conformance", doc);
+    const $d = $(".rfc2119", $c);
     expect($d.length).toEqual(0);
   });
 });

@@ -1,5 +1,5 @@
 "use strict";
-describe("Core - jquery enhanced", function() {
+describe("Core - jquery enhanced", () => {
   beforeAll(async () => {
     await new Promise(resolve => {
       require(["core/jquery-enhanced"], resolve);
@@ -12,7 +12,7 @@ describe("Core - jquery enhanced", function() {
 
   // $.renameElement()
   it("renames the element", () => {
-    var $div = $("<div><p><a></a></p><b>some text</b></div>").appendTo(
+    const $div = $("<div><p><a></a></p><b>some text</b></div>").appendTo(
       $("body")
     );
     $div.find("p").renameElement("span");
@@ -24,8 +24,8 @@ describe("Core - jquery enhanced", function() {
 
   // $.getDfnTitles()
   it("doesn't prepend empty dfns to data-lt", () => {
-    var $dfn = $("<dfn data-lt='DFN|DFN2|DFN3'></dfn>").appendTo($("body"));
-    var titles = $dfn.getDfnTitles({
+    const $dfn = $("<dfn data-lt='DFN|DFN2|DFN3'></dfn>").appendTo($("body"));
+    const titles = $dfn.getDfnTitles({
       isDefinition: true,
     });
     expect(titles[0]).toEqual("dfn");
@@ -36,10 +36,10 @@ describe("Core - jquery enhanced", function() {
 
   // $.getDfnTitles()
   it("doesn't use the text content when data-lt-noDefault is present", () => {
-    var $dfn = $(
+    const $dfn = $(
       "<dfn data-lt-noDefault data-lt='DFN|DFN2|DFN3'>FAIL</dfn>"
     ).appendTo($("body"));
-    var titles = $dfn.getDfnTitles({
+    const titles = $dfn.getDfnTitles({
       isDefinition: true,
     });
     expect(titles[0]).toEqual("dfn");
@@ -51,10 +51,10 @@ describe("Core - jquery enhanced", function() {
 
   // $.getDfnTitles()
   it("finds the data-lts", () => {
-    var $dfn = $(
+    const $dfn = $(
       "<dfn data-lt='DFN|DFN2|DFN3'><abbr title='ABBR'>TEXT</abbr></dfn>"
     ).appendTo($("body"));
-    var titles = $dfn.getDfnTitles({
+    const titles = $dfn.getDfnTitles({
       isDefinition: true,
     });
     expect(titles[0]).toEqual("dfn");
@@ -76,13 +76,13 @@ describe("Core - jquery enhanced", function() {
     expect($("<p></p>").makeID(null, "PASSED")).toEqual("passed");
     expect($("<p></p>").makeID("PFX", "PASSED")).toEqual("PFX-passed");
     expect($("<p>TEXT</p>").makeID("PFX")).toEqual("PFX-text");
-    var $p = $("<p>TEXT</p>");
+    const $p = $("<p>TEXT</p>");
     $p.makeID();
     expect($p.attr("id")).toEqual("text");
     expect($("<p>  A--Bé9\n C</p>").makeID()).toEqual("a-b-9-c");
     expect($("<p></p>").makeID()).toEqual("generatedID");
     expect($("<p>2017</p>").makeID()).toEqual("x2017");
-    var $div = $(
+    const $div = $(
       "<div><p id='a'></p><p id='a-1'></p><span>A</span><span title='a'></span></div>"
     ).appendTo($("body"));
     expect($div.find("span").makeID()).toEqual("a-0");
@@ -97,12 +97,12 @@ describe("Core - jquery enhanced", function() {
 
   // $.allTextNodes()
   it("finds all the text nodes", () => {
-    var tns = $(
+    const tns = $(
       "<div>aa<span>bb</span><p>cc<i>dd</i></p><pre>nope</pre></div>"
     ).allTextNodes(["pre"]);
     expect(tns.length).toEqual(4);
-    var str = "";
-    for (var i = 0, n = tns.length; i < n; i++) {
+    let str = "";
+    for (let i = 0, n = tns.length; i < n; i++) {
       str += tns[i].nodeValue;
     }
     expect(str).toEqual("aabbccdd");

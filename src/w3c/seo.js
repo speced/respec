@@ -4,7 +4,7 @@
 import { pub } from "core/pubsubhub";
 export const name = "w3c/seo";
 export function run(conf, doc, cb) {
-  var trLatestUri = conf.shortName
+  const trLatestUri = conf.shortName
     ? "https://www.w3.org/TR/" + conf.shortName + "/"
     : null;
   switch (conf.canonicalURI) {
@@ -45,7 +45,7 @@ export function run(conf, doc, cb) {
       }
   }
   if (conf.canonicalURI) {
-    var linkElem = doc.createElement("link");
+    const linkElem = doc.createElement("link");
     linkElem.setAttribute("rel", "canonical");
     linkElem.setAttribute("href", conf.canonicalURI);
     doc.head.appendChild(linkElem);
@@ -56,7 +56,7 @@ export function run(conf, doc, cb) {
   }
 }
 
-async function addJSONLDInfo (conf, doc) {
+async function addJSONLDInfo(conf, doc) {
   await doc.respecIsReady;
   // Content for JSON
   const type = ["TechArticle"];
@@ -126,7 +126,6 @@ async function addJSONLDInfo (conf, doc) {
   script.type = "application/ld+json";
   script.textContent = JSON.stringify(jsonld, null, 2);
   doc.head.appendChild(script);
-  
 }
 
 // Turn editors and authors into a list of JSON-LD relationships

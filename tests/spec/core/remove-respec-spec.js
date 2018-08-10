@@ -1,13 +1,10 @@
 "use strict";
-describe("Core — Remove ReSpec", function() {
+describe("Core — Remove ReSpec", () => {
   afterAll(flushIframes);
-  it("should have removed all artifacts", function(done) {
-    var ops = makeStandardOps();
-    makeRSDoc(ops, function(doc) {
-      expect(doc.querySelectorAll(".remove").length).toEqual(0);
-      expect(doc.querySelectorAll("script[data-requiremodule]").length).toEqual(
-        0
-      );
-    }).then(done);
+  it("should have removed all artifacts", async () => {
+    const ops = makeStandardOps();
+    const doc = await makeRSDoc(ops);
+    expect(doc.querySelector(".remove")).toBeNull();
+    expect(doc.querySelector("script[data-requiremodule]")).toBeNull();
   });
 });

@@ -96,7 +96,7 @@ module.exports = function(config) {
     reporters: ["mocha"],
 
     // web server port
-    port: 9876,
+    port: config.port || 9876,
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,
@@ -120,6 +120,10 @@ module.exports = function(config) {
     concurrency: 1,
 
     browserNoActivityTimeout: 100000,
+
+    client: {
+      args: ["--grep", config.grep || ""],
+    },
   };
   if (process.env.TRAVIS) {
     options.detectBrowsers.enabled = false;

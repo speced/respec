@@ -172,7 +172,7 @@ async function isRespec() {
     await new Promise(resolve => {
       setTimeout(resolve, 2000);
     });
-    return Boolean(document.querySelector("#respec-ui"));
+    return Boolean(document.getElementById("respec-ui"));
   } catch (err) {
     throw err.stack;
   }
