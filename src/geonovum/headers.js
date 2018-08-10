@@ -96,7 +96,7 @@ import hb from "handlebars.runtime";
 import { pub } from "core/pubsubhub";
 import tmpls from "templates";
 
-// Thijs for Geonovum: customize in the geonovum/templates directory
+// Thijs Brentjens: customize in the geonovum/templates directory
 import sotdTmpl from "geonovum/templates/sotd";
 import headersTmpl from "geonovum/templates/headers";
 
@@ -114,6 +114,8 @@ const GNVMDate = new Intl.DateTimeFormat(["nl"], {
 const status2maturity = {
 };
 
+// Thijs Brentjens: added Geonovum statusses
+// https://github.com/Geonovum/respec/wiki/specStatus
 const status2text = {
   "GN-WV": "Werkversie",
   "GN-CV": "Consultatieversie",
@@ -121,7 +123,8 @@ const status2text = {
   "GN-DEF": "Vastgestelde versie",
   "GN-BASIS": "Document",
 };
-// Thijs: added
+// Thijs Brentjens: added Geonovum types
+// https://github.com/Geonovum/respec/wiki/specType
 const type2text = {
   NO: "Norm",
   ST: "Standaard",
@@ -136,7 +139,8 @@ const status2long = {
   // "LC-NOTE": "Last Call Working Draft",
 };
 
-const noTrackStatus = ["GN-BASIS"];
+const noTrackStatus = []; // empty? or only "GN-BASIS"?
+// Thijs Brentjens: default licenses for Geonovum to version 4.0
 const licenses = {
   cc0: {
     name: "Creative Commons 0 Public Domain Dedication",
@@ -170,7 +174,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
 }
 
 export function run(conf) {
-  // Thijs: TODO: by default unofficial?
+  // Thijs Brentjens: TODO: decide by default unofficial?
   // conf.isUnofficial = conf.specStatus === "unofficial";
   conf.isUnofficial = true;
   if (!conf.logos) { // conf.isUnofficial
@@ -179,13 +183,17 @@ export function run(conf) {
   conf.specStatus = conf.specStatus ? conf.specStatus.toUpperCase() : "";
   conf.specType = conf.specType ? conf.specType.toUpperCase() : "";
   conf.pubDomain = conf.pubDomain ? conf.pubDomain.toLowerCase() : "";
-  // Thijs: TODO: license types for Geonovum
+  conf.hasBeenPublished = conf.publishDate ? true : false
+  // Thijs Brentjens: TODO: document license types for Geonovum
   conf.isCCBY = conf.license === "cc-by";
   conf.isCCBYND = conf.license === "cc-by-nd";
 
   conf.licenseInfo = licenses[conf.license];
   conf.isBasic = conf.specStatus === "base";
-  conf.isRegular = conf.specStatus !== "GN-BASIS";
+  // Thijs Brentjens: TODO: for a GN-BASIS document, is it neceassry to deal differently with URIs? Especially for "Laatst gepubliceerde versie"
+  // Deal with all current GN specStatusses the same. This is mostly seen in the links in the header for Last editor's draft etc
+  // conf.isRegular = conf.specStatus !== "GN-BASIS";
+  conf.isRegular = true;
   conf.isOfficial = conf.specStatus === "GN-DEF";
 
   if (!conf.specStatus) {
@@ -207,11 +215,19 @@ export function run(conf) {
 
   if (!conf.edDraftURI) {
     conf.edDraftURI = "";
+    // Thijs Brentjens: deal with editors draft links based on Github URIs
+    if (conf.github) {
+      // parse the org and repo name to construct a github.io URI if a github URI is provided
+      // https://github.com/Geonovum/respec/issues/141
+      // https://github.com/{org}/{repo} should be rewritten to https://{org}.github.io/{repo}/
+      var githubParts = conf.github.split('github.com/')[1].split('/');
+      conf.edDraftURI = "https://" + githubParts[0] + ".github.io/" + githubParts[1];
+    }
     if (conf.specStatus === "ED")
       pub("warn", "Editor's Drafts should set edDraftURI.");
   }
   // Version URLs
-  // Thijs: changed this to Geonovum specific format
+  // Thijs Brentjens: changed this to Geonovum specific format. See https://github.com/Geonovum/respec/issues/126
   if (conf.isRegular && conf.specStatus !== "GN-WV") {
     conf.thisVersion =
       "https://docs.geostandaarden.nl/" +
@@ -228,7 +244,10 @@ export function run(conf) {
   } else {
     conf.thisVersion = conf.edDraftURI;
   }
-  if (conf.isRegular)
+
+  // Only show latestVersion if a publishDate has been set. see issue https://github.com/Geonovum/respec/issues/93
+  if (conf.isRegular && conf.hasBeenPublished)
+    // Thijs Brentjens: see
     conf.latestVersion =
       "https://docs.geostandaarden.nl/" +
       conf.pubDomain +
@@ -236,13 +255,24 @@ export function run(conf) {
       conf.shortName +
       "/";
 
+  // Thijs Brentjens: support previousMaturity as previousStatus
+  if (conf.previousMaturity && !conf.previousStatus) conf.previousStatus = conf.previousMaturity
+  // Thijs Brentjens: default to current specStatus if previousStatus is not provided
+  if (conf.previousPublishDate && !conf.previousStatus) conf.previousStatus = conf.specStatus
   if (conf.previousPublishDate && conf.previousStatus) {
     conf.previousPublishDate = validateDateAndRecover(
       conf,
       "previousPublishDate"
     );
     var prevStatus = conf.previousStatus.substr(3).toLowerCase();
-    var prevType = conf.previousType.toLowerCase();
+    // Thijs Brentjens: default to current spectype
+    // TODO: should the prev-/spectype always be in the WP URL too?
+    var prevType="";
+    if (conf.previousType) {
+      prevType = conf.previousType.toLowerCase();
+    } else {
+      prevType = conf.specType.toLowerCase();
+    }
     conf.prevVersion = "None" + conf.previousPublishDate;
     conf.prevVersion =
       "https://docs.geostandaarden.nl/" +
@@ -331,11 +361,13 @@ export function run(conf) {
   conf.typeStatus = type2text[conf.specType];
 
   conf.showThisVersion = !conf.isNoTrack; // || conf.isTagFinding;
-  // Thijs: adapted for Geonovum document tyoes
+  // Thijs Brentjens: adapted for Geonovum document tyoes
+  // TODO: add an extra check, because now it seems that showPreviousVersion is true in (too) many cases?
   conf.showPreviousVersion =
     !conf.isNoTrack &&
     !conf.isSubmission;
-  if (/NOTE$/.test(conf.specStatus) && !conf.prevVersion)
+  // Thijs Brentjens: only show if prevVersion is available
+  if (!conf.prevVersion)
     conf.showPreviousVersion = false;
   // Thijs: get specStatus from Geonovum list https://github.com/Geonovum/respec/wiki/specStatus
   conf.isGNDEF = conf.specStatus === "GN-DEF";

@@ -30,6 +30,10 @@ export default conf => {
       <dt>Vorige versie:</dt>
       <dd><a href='${conf.prevVersion}'>${conf.prevVersion}</a></dd>
     ` : ""}
+    ${conf.edDraftURI ? html`
+      <dt>${conf.l10n.latest_editors_draft}</dt>
+      <dd><a href='${conf.edDraftURI}'>${conf.edDraftURI}</a></dd>
+    ` : ""}
     <dt>${conf.multipleEditors ? html`${conf.l10n.editors}` : html`${conf.l10n.editor}`}</dt>
     ${showPeople(conf, "Editor", conf.editors)}
     ${conf.authors ? html`
@@ -55,17 +59,19 @@ export default conf => {
       <p class='copyright'>${[conf.additionalCopyrightHolders]}</p>
     ` : html`
       ${conf.overrideCopyright ? [conf.overrideCopyright] : html`
-        <dt>Rechtenbeleid:</dt>
-        <dd>
-        <div class='copyright' style="margin: 0.25em 0;">
-          <abbr title='${[conf.licenseInfo.name]}'>
-          <a href='${[conf.licenseInfo.url]}'><img src='https://tools.geostandaarden.nl/respec/style/logos/CC-Licentie.svg' alt='${[conf.licenseInfo.name]}' width='115px' height='40px'></a>
-        </abbr>
-          <div style="display:inline-block; vertical-align:top">
-            <p style="font-size: small;">${[conf.licenseInfo.name]}<br>(${[conf.licenseInfo.short]})</p>
-          </div>
-        </div>
-        </dd>
+        <dl>
+          <dt>Rechtenbeleid:</dt>
+          <dd>
+            <div class='copyright' style="margin: 0.25em 0;">
+              <abbr title='${[conf.licenseInfo.name]}'>
+              <a href='${[conf.licenseInfo.url]}'><img src='https://tools.geostandaarden.nl/respec/style/logos/CC-Licentie.svg' alt='${[conf.licenseInfo.name]}' width='115' height='40'></a>
+            </abbr>
+              <div style="display:inline-block; vertical-align:top">
+                <p style="font-size: small;">${[conf.licenseInfo.name]}<br>(${[conf.licenseInfo.short]})</p>
+              </div>
+            </div>
+          </dd>
+        </dl>
       `}
     `}
   <hr title="Separator for header">
