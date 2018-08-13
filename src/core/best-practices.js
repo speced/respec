@@ -15,13 +15,21 @@ export function run() {
   for (const bp of bps) {
     num++;
     const id = window.$.fn.makeID.call([bp], "bp");
-    const li = hyperHTML`<li><a href="${`#${id}`}">Best Practice ${num}</a>: ${bp.textContent}</li>`;
+    const li = hyperHTML`<li><a href="${`#${id}`}">Best Practice ${num}</a>: ${
+      bp.textContent
+    }</li>`;
     ul.appendChild(li);
-    bp.insertBefore(document.createTextNode(`Best Practice ${num}: `), bp.firstChild);
+    bp.insertBefore(
+      document.createTextNode(`Best Practice ${num}: `),
+      bp.firstChild
+    );
   }
   const bpSummary = document.getElementById("bp-summary");
   if (bps.length) {
-    document.head.insertBefore(hyperHTML`<style>${[css]}</style>`, document.head.querySelector("link"));
+    document.head.insertBefore(
+      hyperHTML`<style>${[css]}</style>`,
+      document.head.querySelector("link")
+    );
     if (bpSummary) {
       bpSummary.appendChild(hyperHTML`<h2>Best Practices Summary</h2>`);
       bpSummary.appendChild(ul);

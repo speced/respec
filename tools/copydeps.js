@@ -27,6 +27,7 @@ const srcDesMap = new Map([
   ["./node_modules/leaflet/dist/leaflet.js", "./js/geonovum/deps/"],
   ["./node_modules/leaflet-easybutton/src/easy-button.js", "./js/geonovum/deps/"],
   ["./node_modules/pluralize/pluralize.js", "./js/deps/"],
+  ["./node_modules/idb-keyval/dist/idb-keyval-amd.min.js", "./js/deps/idb.js"],
 ]);
 
 function makePathResolver(base) {

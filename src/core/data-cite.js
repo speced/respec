@@ -13,15 +13,15 @@
  * Usage:
  * https://github.com/w3c/respec/wiki/data--cite
  */
-import { pub } from "core/pubsubhub";
-import { resolveRef } from "core/biblio";
+import { resolveRef, updateFromNetwork } from "core/biblio";
+import { showInlineError } from "core/utils";
 export const name = "core/data-cite";
 
 function requestLookup(conf) {
   const toCiteDetails = citeDetailsConverter(conf);
-  return async function(elem) {
+  return async elem => {
     const originalKey = elem.dataset.cite;
-    let { key, frag, path } = toCiteDetails(elem);
+    const { key, frag, path } = toCiteDetails(elem);
     let href = "";
     // This is just referring to this document
     if (key === conf.shortName) {
@@ -31,10 +31,7 @@ function requestLookup(conf) {
       const entry = await resolveRef(key);
       cleanElement(elem);
       if (!entry) {
-        var msg = `Couldn't find a match for 'data-cite=${originalKey}'.`;
-        console.warn(msg, elem);
-        msg += " Please check developer console for offending element.";
-        pub("warn", msg);
+        showInlineError(elem, `Couldn't find a match for "${originalKey}".`);
         return;
       }
       href = entry.href;
@@ -126,8 +123,29 @@ export async function run(conf) {
 
 export async function linkInlineCitations(doc, conf = respecConfig) {
   const toLookupRequest = requestLookup(conf);
-  const lookupRequests = [
-    ...doc.querySelectorAll("dfn[data-cite], a[data-cite]"),
-  ].map(toLookupRequest);
+  const elems = [
+    ...doc.querySelectorAll(
+      "dfn[data-cite]:not([data-cite='']), a[data-cite]:not([data-cite=''])"
+    ),
+  ];
+  const citeConverter = citeDetailsConverter(conf);
+
+  const promisesForMissingEntries = elems
+    .map(citeConverter)
+    .map(async entry => {
+      const result = await resolveRef(entry);
+      return { entry, result };
+    });
+  const bibEntries = await Promise.all(promisesForMissingEntries);
+
+  const missingBibEntries = bibEntries
+    .filter(({ result }) => result === null)
+    .map(({ entry: { key } }) => key);
+
+  // we now go to network to fetch missing entries
+  const newEntries = await updateFromNetwork(missingBibEntries);
+  Object.assign(conf.biblio, newEntries);
+
+  const lookupRequests = elems.map(toLookupRequest);
   return await Promise.all(lookupRequests);
 }

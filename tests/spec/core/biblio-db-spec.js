@@ -37,7 +37,7 @@ describe("Core - biblioDB", () => {
       id: "DAHUT",
     },
   };
-  var biblioDB;
+  let biblioDB;
   beforeAll(done => {
     require(["core/biblio-db"], ({ biblioDB: db }) => {
       biblioDB = db;
@@ -188,9 +188,9 @@ describe("Core - biblioDB", () => {
 
   describe("isAlias() method", () => {
     it("rejects if passed a bad id", async () => {
-      var p1 = biblioDB.isAlias();
-      var p2 = biblioDB.isAlias(null);
-      var p3 = biblioDB.isAlias("");
+      const p1 = biblioDB.isAlias();
+      const p2 = biblioDB.isAlias(null);
+      const p3 = biblioDB.isAlias("");
       await Promise.all([
         p1.catch(err => expect(err instanceof TypeError).toBe(true)),
         p2.catch(err => expect(err instanceof TypeError).toBe(true)),
@@ -215,9 +215,9 @@ describe("Core - biblioDB", () => {
 
   describe("find() method", () => {
     it("rejects if passed a bad id", async () => {
-      var p1 = biblioDB.find();
-      var p2 = biblioDB.find(null);
-      var p3 = biblioDB.find("");
+      const p1 = biblioDB.find();
+      const p2 = biblioDB.find(null);
+      const p3 = biblioDB.find("");
       await Promise.all([
         p1.catch(err => expect(err instanceof TypeError).toBe(true)),
         p2.catch(err => expect(err instanceof TypeError).toBe(true)),
@@ -236,9 +236,9 @@ describe("Core - biblioDB", () => {
 
   describe("resolveAlias() method", () => {
     it("rejects if passed a bad id", async () => {
-      var p1 = biblioDB.resolveAlias();
-      var p2 = biblioDB.resolveAlias(null);
-      var p3 = biblioDB.resolveAlias("");
+      const p1 = biblioDB.resolveAlias();
+      const p2 = biblioDB.resolveAlias(null);
+      const p3 = biblioDB.resolveAlias("");
       await Promise.all([
         p1.catch(err => expect(err instanceof TypeError).toBe(true)),
         p2.catch(err => expect(err instanceof TypeError).toBe(true)),

@@ -1,5 +1,5 @@
 "use strict";
-describe("Core - Inlines", function() {
+describe("Core - Inlines", () => {
   afterAll(flushIframes);
   it("processes all in-line content", async () => {
     const ops = {

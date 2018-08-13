@@ -17,7 +17,7 @@ export function pub(topic, ...data) {
     return;
   }
   // If this is an iframe, postMessage parent (used in testing).
-  var args = data
+  const args = data
     // to structured clonable
     .map(arg => String(JSON.stringify(arg.stack || arg)));
   window.parent.postMessage({ topic, args }, window.parent.location.origin);

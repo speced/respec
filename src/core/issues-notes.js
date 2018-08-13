@@ -21,38 +21,23 @@ const MAX_GITHUB_REQUESTS = 60;
 function handleIssues(ins, ghIssues, conf) {
   const $ins = $(ins);
   const { issueBase, githubAPI } = conf;
-  var hasDataNum = !!document.querySelector(".issue[data-number]"),
-    issueNum = 0,
-    $issueSummary = $(
-      "<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"
-    ),
-    $issueList = $issueSummary.find("ul");
-  if (githubAPI) {
-    Array.from($ins)
-      .filter(
-        ({ dataset: { number: value } }) =>
-          value !== undefined && ghIssues.get(Number(value)).state === "closed"
-      )
-      .forEach(issue => {
-        const {
-          dataset: { number },
-        } = issue;
-        const msg = `Github issue ${number} was closed on GitHub, so removing from spec`;
-        pub("warn", msg);
-        issue.remove();
-      });
-  }
-  $ins.filter((i, issue) => issue.parentNode).each(function(i, inno) {
-    var $inno = $(inno),
-      isIssue = $inno.hasClass("issue"),
-      isWarning = $inno.hasClass("warning"),
-      isEdNote = $inno.hasClass("ednote"),
-      isFeatureAtRisk = $inno.hasClass("atrisk"),
-      isInline = $inno[0].localName === "span",
-      dataNum = $inno.attr("data-number"),
-      report = {
-        inline: isInline,
-      };
+  const hasDataNum = !!document.querySelector(".issue[data-number]");
+  let issueNum = 0;
+  const $issueSummary = $(
+    "<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"
+  );
+  const $issueList = $issueSummary.find("ul");
+  $ins.filter((i, issue) => issue.parentNode).each((i, inno) => {
+    const $inno = $(inno);
+    const isIssue = $inno.hasClass("issue");
+    const isWarning = $inno.hasClass("warning");
+    const isEdNote = $inno.hasClass("ednote");
+    const isFeatureAtRisk = $inno.hasClass("atrisk");
+    const isInline = $inno[0].localName === "span";
+    const dataNum = $inno.attr("data-number");
+    const report = {
+      inline: isInline,
+    };
     report.type = isIssue
       ? "issue"
       : isWarning
@@ -68,27 +53,27 @@ function handleIssues(ins, ghIssues, conf) {
     }
     // wrap
     if (!isInline) {
-      var $div = $(
-          "<div class='" +
-            report.type +
-            (isFeatureAtRisk ? " atrisk" : "") +
-            "'></div>"
-        ),
-        $tit = $(
-          "<div role='heading' class='" +
-            report.type +
-            "-title'><span></span></div>"
-        ),
-        text = isIssue
-          ? isFeatureAtRisk
-            ? conf.l10n.feature_at_risk
-            : conf.l10n.issue
-          : isWarning
-            ? conf.l10n.warning
-            : isEdNote
-              ? conf.l10n.editors_note
-              : conf.l10n.note,
-        ghIssue;
+      const $div = $(
+        "<div class='" +
+          report.type +
+          (isFeatureAtRisk ? " atrisk" : "") +
+          "'></div>"
+      );
+      const $tit = $(
+        "<div role='heading' class='" +
+          report.type +
+          "-title'><span></span></div>"
+      );
+      let text = isIssue
+        ? isFeatureAtRisk
+          ? conf.l10n.feature_at_risk
+          : conf.l10n.issue
+        : isWarning
+          ? conf.l10n.warning
+          : isEdNote
+            ? conf.l10n.editors_note
+            : conf.l10n.note;
+      let ghIssue;
       if (inno.id) {
         $div[0].id = inno.id;
         inno.removeAttribute("id");
@@ -114,6 +99,7 @@ function handleIssues(ins, ghIssues, conf) {
                 .find("span")
                 .wrap($("<a href='" + conf.atRiskBase + dataNum + "'/>"));
             }
+            $tit.find("span")[0].classList.add("issue-number");
             ghIssue = ghIssues.get(Number(dataNum));
             if (ghIssue && !report.title) {
               report.title = ghIssue.title;
@@ -124,11 +110,11 @@ function handleIssues(ins, ghIssues, conf) {
         }
         if (report.number !== undefined) {
           // Add entry to #issue-summary.
-          var $li = $("<li><a></a></li>");
-          var $a = $li.find("a");
-          $a
-            .attr("href", "#" + $div[0].id)
-            .text(conf.l10n.issue + " " + report.number);
+          const $li = $("<li><a></a></li>");
+          const $a = $li.find("a");
+          $a.attr("href", "#" + $div[0].id).text(
+            conf.l10n.issue + " " + report.number
+          );
           if (report.title) {
             $li.append(
               $(
@@ -143,7 +129,8 @@ function handleIssues(ins, ghIssues, conf) {
       }
       $tit.find("span").text(text);
       if (ghIssue && report.title && githubAPI) {
-        const labelsGroup = Array.from(ghIssue.labels)
+        if (ghIssue.state === "closed") $div[0].classList.add("closed");
+        const labelsGroup = Array.from(ghIssue.labels || [])
           .map(label => {
             const issuesURL = new URL("issues/", conf.github.repoURL + "/");
             issuesURL.searchParams.set(
@@ -175,7 +162,7 @@ function handleIssues(ins, ghIssues, conf) {
       $tit.addClass("marker");
       $div.append($tit);
       $inno.replaceWith($div);
-      var body = $inno.removeClass(report.type).removeAttr("data-number");
+      let body = $inno.removeClass(report.type).removeAttr("data-number");
       if (ghIssue && !body.text().trim()) {
         body = ghIssue.body_html;
       }
