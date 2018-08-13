@@ -15,20 +15,18 @@ export const name = "core/requirements";
 export function run(conf, doc, cb) {
   $(".req").each(function(i) {
     i++;
-    var $req = $(this);
-    var title = "Req. " + i;
+    const $req = $(this);
+    const title = "Req. " + i;
     $req.prepend("<a href='#" + $req.attr("id") + "'>" + title + "</a>: ");
   });
 
   $("a.reqRef").each(function() {
-    var $ref = $(this),
-      href = $ref.attr("href"),
-      id,
-      $req,
-      txt;
+    const $ref = $(this);
+    const href = $ref.attr("href");
+    let txt;
     if (!href) return;
-    id = href.substring(1);
-    $req = $("#" + id);
+    const id = href.substring(1);
+    const $req = $("#" + id);
     if ($req.length) {
       txt = $req.find("> a").text();
     } else {

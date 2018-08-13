@@ -21,20 +21,21 @@ describe("Core — IDL Index", () => {
       <section id="idl-index"></section>
     `;
     const expectedIDL = `interface Foo {
-    readonly attribute DOMString bar;
+  readonly attribute DOMString bar;
 };
+
 interface Bar {
-    readonly attribute DOMString foo;
-};\n`;
+  readonly attribute DOMString foo;
+};`;
     const ops = {
       config: makeBasicConfig(),
       body,
     };
     const doc = await makeRSDoc(ops);
-    var idlIndex = doc.querySelector("#idl-index");
+    const idlIndex = doc.getElementById("idl-index");
     expect(idlIndex).not.toBe(null);
     expect(idlIndex.querySelector("pre").textContent).toEqual(expectedIDL);
-    var header = doc.querySelector("#idl-index > h2");
+    const header = doc.querySelector("#idl-index > h2");
     expect(header).not.toBe(null);
     expect(header.textContent).toEqual("1. IDL Index");
   });
@@ -55,20 +56,19 @@ interface Bar {
       </section>
       <section id="idl-index"></section>
     `;
-    const expectedIDL = `[Constructor,
- Exposed=Window]
+    const expectedIDL = `[Constructor, Exposed=Window]
 interface BeforeInstallPromptEvent : Event {
     Promise<PromptResponseObject> prompt();
 };
 dictionary PromptResponseObject {
-    AppBannerPromptOutcome userChoice;
-};\n`;
+  AppBannerPromptOutcome userChoice;
+};`;
     const ops = {
       config: makeBasicConfig(),
       body,
     };
     const doc = await makeRSDoc(ops);
-    const idlIndex = doc.querySelector("#idl-index");
+    const idlIndex = doc.getElementById("idl-index");
     expect(idlIndex).not.toBe(null);
     expect(idlIndex.querySelector("pre").textContent).toEqual(expectedIDL);
   });
@@ -86,10 +86,10 @@ dictionary PromptResponseObject {
       body,
     };
     const doc = await makeRSDoc(ops);
-    var idlIndex = doc.querySelector("#idl-index");
+    const idlIndex = doc.getElementById("idl-index");
     expect(idlIndex).not.toBe(null);
     expect(idlIndex.querySelector("pre")).toEqual(null);
-    var header = doc.querySelector("#idl-index > h2");
+    const header = doc.querySelector("#idl-index > h2");
     expect(header).not.toBe(null);
     expect(header.textContent).toEqual("1. PASS");
     expect(doc.querySelectorAll("#idl-index > h2").length).toEqual(1);

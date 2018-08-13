@@ -1,4 +1,5 @@
 #!/usr/bin/env mocha
+/*eslint-env node*/
 
 "use strict";
 const colors = require("colors");
@@ -32,24 +33,16 @@ describe("builder (tool)", function() {
     "../builds/respec-w3c-common.build.js.map"
   );
   const latest = path.join(__dirname, "../builds/respec-w3c-common.js");
-  it(
-    "should have built default respec",
-    async() => {
-      await Builder.build({ name: "w3c-common" });
-      expect(await checkIfFileExists(latest)).to.equal(true);
-      expect(await checkIfFileExists(latestMap)).to.equal(true);
-    }
-  );
+  it("should have built default respec", async () => {
+    await Builder.build({ name: "w3c-common" });
+    expect(await checkIfFileExists(latest)).to.equal(true);
+    expect(await checkIfFileExists(latestMap)).to.equal(true);
+  });
 
-  describe("respec-w3c-common.build.js", function() {
-    it(
-      "should include the link to the sourcemap",
-      async() => {
-        const source = await fsp.readFile(latest, "utf-8");
-        expect(source.search("respec-w3c-common.build.js.map")).to.not.equal(
-          -1
-        );
-      }
-    );
+  describe("respec-w3c-common.build.js", () => {
+    it("should include the link to the sourcemap", async () => {
+      const source = await fsp.readFile(latest, "utf-8");
+      expect(source.search("respec-w3c-common.build.js.map")).to.not.equal(-1);
+    });
   });
 });

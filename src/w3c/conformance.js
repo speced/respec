@@ -6,7 +6,7 @@ import { pub } from "core/pubsubhub";
 export const name = "w3c/conformance";
 
 export function run(conf, doc, cb) {
-  var $confo = $("#conformance");
+  const $confo = $("#conformance");
   if ($confo.length) $confo.prepend(confoTmpl(conf).childNodes);
   // Added message for legacy compat with Aria specs
   // See https://github.com/w3c/respec/issues/793

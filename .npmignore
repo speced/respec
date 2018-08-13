@@ -1,6 +1,7 @@
 !examples/basic.html
 !examples/starter.html
 !js/deps/highlight.js
+.vs
 .codeclimate.yml
 .csslintrc
 .DS_Store

@@ -19,8 +19,8 @@ const clipboardOps = {
   text: trigger => {
     return document
       .querySelector(trigger.dataset.clipboardTarget)
-      .textContent.replace(/\ +/gm, " ")
-      .replace(/^\ /gm, "  ")
+      .textContent.replace(/ +/gm, " ")
+      .replace(/^ /gm, "  ")
       .replace(/^};\n/gm, "};\n")
       .trim();
   },
