@@ -17,7 +17,7 @@ const methodRegex = /\((.*)\)$/;
 const idlSplitRegex = /\b\.\b|\.(?=\[\[)/;
 const dictionaryRegex = /(\w+)\["(\w+)"\]/;
 
-export function parseInlineIDL(str) {
+function parseInlineIDL(str) {
   const result = Object.create(null);
   const splitted = str.split(idlSplitRegex);
   if (methodRegex.test(splitted[splitted.length - 1])) {
@@ -36,4 +36,48 @@ export function parseInlineIDL(str) {
     result.base = remaining;
   }
   return result;
+}
+
+/**
+ * Generates HTML by parsing an IDL string
+ * @param {String} str IDL string
+ * @return {Node} html output
+ */
+export function idlStringToHtml(str) {
+  const { base, attribute, member, method, args } = parseInlineIDL(str);
+
+  if (base.startsWith("[[") && base.endsWith("]]")) {
+    // is internal slot (possibly local)
+    return hyperHTML`<code><a data-xref-type="attribute">${base}</a></code>`;
+  }
+
+  const baseHtml = base
+    ? hyperHTML`<a data-xref-type="_IDL_">${base}</a>.`
+    : "";
+
+  if (member) {
+    // type: Dictionary["member"]
+    return hyperHTML`<code><a
+    class="respec-idl-xref" data-xref-type="dictionary">${base}</a>["<a
+    class="respec-idl-xref" data-xref-type="dict-member"
+    data-xref-for="${base}" data-lt="${member}">${member}</a>"]</code>`;
+  }
+
+  if (attribute) {
+    // type: base.attribute
+    return hyperHTML`<code>${baseHtml}<a class="respec-idl-xref"
+      data-xref-type="attribute" data-xref-for="${base}">${attribute}</a></code>`;
+  }
+
+  if (method) {
+    // base.method(args)
+    const [methodName] = method.split("(", 1);
+    return hyperHTML`<code>${baseHtml}<a class="respec-idl-xref"
+      data-xref-type="method" data-xref-for="${base}"
+      data-lt="${method}">${methodName}</a>(${{
+      html: args.map(arg => `<var>${arg}</var>`).join(", "),
+    }})</code>`;
+  }
+
+  return hyperHTML`<code><a data-xref-type="_IDL_">${base}</a></code>`;
 }
