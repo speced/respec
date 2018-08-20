@@ -737,3 +737,35 @@ export function getLinkTargets(elem) {
     return result;
   }, []);
 }
+
+/**
+ * Changes name of a DOM Element
+ * @param {Element} elem element to rename
+ * @param {String} newName new element name
+ * @returns {Element} new renamed element
+ */
+export function renameElement(elem, newName) {
+  const newElement = elem.ownerDocument.createElement(newName);
+
+  // copy attributes
+  for (let i = 0, n = elem.attributes.length; i < n; i++) {
+    const attr = elem.attributes[i];
+    try {
+      newElement.setAttributeNS(attr.namespaceURI, attr.name, attr.value);
+    } catch (err) {
+      let msg = "Your HTML markup is malformed. Error in: \n";
+      msg += "```HTML\n" + this.outerHTML + "\n```";
+      pub("error", msg);
+      break; // no point in continuing with this element
+    }
+  }
+
+  // copy child nodes
+  do {
+    newElement.appendChild(elem.firstChild);
+  } while (elem.firstChild);
+
+  // TODO: replace with ChildNode.replaceWith, when available in Safari
+  elem.parentNode.replaceChild(newElement, elem);
+  return newElement;
+}
