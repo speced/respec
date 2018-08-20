@@ -754,7 +754,7 @@ export function renameElement(elem, newName) {
       newElement.setAttributeNS(attr.namespaceURI, attr.name, attr.value);
     } catch (err) {
       let msg = "Your HTML markup is malformed. Error in: \n";
-      msg += "```HTML\n" + this.outerHTML + "\n```";
+      msg += "```HTML\n" + elem.outerHTML + "\n```";
       pub("error", msg);
       break; // no point in continuing with this element
     }
