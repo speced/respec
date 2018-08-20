@@ -749,15 +749,8 @@ export function renameElement(elem, newName) {
 
   // copy attributes
   for (let i = 0, n = elem.attributes.length; i < n; i++) {
-    const attr = elem.attributes[i];
-    try {
-      newElement.setAttributeNS(attr.namespaceURI, attr.name, attr.value);
-    } catch (err) {
-      let msg = "Your HTML markup is malformed. Error in: \n";
-      msg += "```HTML\n" + elem.outerHTML + "\n```";
-      pub("error", msg);
-      break; // no point in continuing with this element
-    }
+    const { name, value } = elem.attributes[i];
+    newElement.setAttribute(name, value);
   }
 
   // copy child nodes
