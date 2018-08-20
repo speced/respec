@@ -59,9 +59,11 @@ export async function run(conf) {
     pub("error", msg);
     return;
   }
+  let tempURL = conf.github.repoURL || conf.github;
+  if (!tempURL.endsWith("/")) tempURL += "/";
   let ghURL;
   try {
-    ghURL = new URL(conf.github.repoURL || conf.github, "https://github.com");
+    ghURL = new URL(tempURL, "https://github.com");
   } catch (err) {
     pub("error", `\`respecConf.github\` is not a valid URL? (${ghURL})`);
     return;
