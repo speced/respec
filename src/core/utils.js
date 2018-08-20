@@ -745,6 +745,7 @@ export function getLinkTargets(elem) {
  * @returns {Element} new renamed element
  */
 export function renameElement(elem, newName) {
+  if (elem.localName === newName) return elem;
   const newElement = elem.ownerDocument.createElement(newName);
 
   // copy attributes
