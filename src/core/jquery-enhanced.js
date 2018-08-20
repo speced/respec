@@ -1,10 +1,9 @@
-import { pub } from "core/pubsubhub";
 import {
   addId,
   getTextNodes,
   getDfnTitles,
   getLinkTargets,
-  renameElement
+  renameElement,
 } from "core/utils";
 import "deps/jquery";
 
