@@ -41,7 +41,6 @@ function linterFunction(conf, doc) {
 export const rule = new LinterRule(name, linterFunction);
 
 function isBrokenHyperlink(elem) {
-  const { ownerDocument: doc } = elem;
-  const hash = elem.getAttribute("href");
-  return !doc.getElementById(hash.substring(1));
+  const id = elem.getAttribute("href").substring(1);
+  return !elem.ownerDocument.getElementById(id);
 }
