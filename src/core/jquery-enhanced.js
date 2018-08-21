@@ -1,5 +1,10 @@
-import { pub } from "core/pubsubhub";
-import { addId, getTextNodes, getDfnTitles, getLinkTargets } from "core/utils";
+import {
+  addId,
+  getTextNodes,
+  getDfnTitles,
+  getLinkTargets,
+  renameElement,
+} from "core/utils";
 import "deps/jquery";
 
 export const name = "core/jquery-enhanced";
@@ -12,25 +17,9 @@ window.$ = $;
 window.$.fn.renameElement = function(name) {
   const arr = [];
   this.each(function() {
-    const $newEl = $(this.ownerDocument.createElement(name));
-    // I forget why this didn't work, maybe try again
-    // $newEl.attr($(this).attr());
-    for (let i = 0, n = this.attributes.length; i < n; i++) {
-      const at = this.attributes[i];
-      try {
-        $newEl[0].setAttributeNS(at.namespaceURI, at.name, at.value);
-      } catch (err) {
-        let msg = "Your HTML markup is malformed. Error in: \n";
-        msg += "```HTML\n" + this.outerHTML + "\n```";
-        pub("error", msg);
-        break; // no point in continuing with this element
-      }
-    }
-    $(this)
-      .contents()
-      .appendTo($newEl);
-    $(this).replaceWith($newEl);
-    arr.push($newEl[0]);
+    const elem = this;
+    const newElem = renameElement(elem, name);
+    arr.push(newElem);
   });
   return $(arr);
 };

@@ -737,3 +737,29 @@ export function getLinkTargets(elem) {
     return result;
   }, []);
 }
+
+/**
+ * Changes name of a DOM Element
+ * @param {Element} elem element to rename
+ * @param {String} newName new element name
+ * @returns {Element} new renamed element
+ */
+export function renameElement(elem, newName) {
+  if (elem.localName === newName) return elem;
+  const newElement = elem.ownerDocument.createElement(newName);
+
+  // copy attributes
+  for (let i = 0, n = elem.attributes.length; i < n; i++) {
+    const { name, value } = elem.attributes[i];
+    newElement.setAttribute(name, value);
+  }
+
+  // copy child nodes
+  do {
+    newElement.appendChild(elem.firstChild);
+  } while (elem.firstChild);
+
+  // TODO: replace with ChildNode.replaceWith, when available in Safari
+  elem.parentNode.replaceChild(newElement, elem);
+  return newElement;
+}

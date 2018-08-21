@@ -67,9 +67,10 @@ async function fetchAndWrite(
   { timeout = 300000, disableSandbox = false } = {}
 ) {
   const userDataDir = await mkdtemp(os.tmpdir() + "/respec2html-");
+  const args = disableSandbox ? ["--no-sandbox"] : undefined;
   const browser = await puppeteer.launch({
     userDataDir,
-    args: disableSandbox && ["--no-sandbox"],
+    args,
   });
   try {
     const page = await browser.newPage();
