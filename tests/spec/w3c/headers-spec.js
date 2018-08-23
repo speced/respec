@@ -1074,47 +1074,45 @@ describe("W3C — Headers", () => {
 
       const p1 = doc.getElementById("p1");
       expect(p1).toBeTruthy();
-      expect(p1.textContent.trim()).toEqual("CUSTOM PARAGRAPH 1");
+      expect(p1.textContent.trim()).toBe("CUSTOM PARAGRAPH 1");
 
       const p2 = doc.getElementById("p2");
       expect(p2).toBeTruthy();
-      expect(p2.textContent.trim()).toEqual("CUSTOM PARAGRAPH 2");
+      expect(p2.textContent.trim()).toBe("CUSTOM PARAGRAPH 2");
 
       const commentNode = p2.nextSibling;
-      expect(commentNode.nodeType).toEqual(Node.COMMENT_NODE);
+      expect(commentNode.nodeType).toBe(Node.COMMENT_NODE);
 
       const textNode = commentNode.nextSibling;
-      expect(textNode.nodeType).toEqual(Node.TEXT_NODE);
+      expect(textNode.nodeType).toBe(Node.TEXT_NODE);
 
       const ol = doc.getElementById("ol");
       expect(ol).toBeTruthy();
-      expect(ol.querySelectorAll("li").length).toEqual(2);
-
+      expect(ol.querySelectorAll("li").length).toBe(2);
       const firstSection = doc.getElementById("first-sub-section");
-      expect(sotd.lastElementChild).not.toEqual(firstSection);
+
+      expect(sotd.lastElementChild).not.toBe(firstSection);
 
       const lastSection = doc.getElementById("last-sub-section");
-      expect(sotd.lastElementChild).toEqual(lastSection);
+      expect(sotd.lastElementChild).toBe(lastSection);
 
       // p3 is sadwiched in between the sections
       const p3 = doc.getElementById("p3");
       expect(p3).toBeTruthy();
-      expect(p3.previousElementSibling).toEqual(firstSection);
-      expect(p3.nextElementSibling).toEqual(lastSection);
+      expect(p3.previousElementSibling).toBe(firstSection);
+      expect(p3.nextElementSibling).toBe(lastSection);
 
       // There should only be one thing in the ToC
-      expect(doc.querySelectorAll("#toc li").length).toEqual(1);
+      expect(doc.querySelectorAll("#toc li").length).toBe(1);
       // and it should say "PASS"
-      expect(doc.querySelector("#toc li span").nextSibling.textContent).toEqual(
+      expect(doc.querySelector("#toc li span").nextSibling.textContent).toBe(
         "PASS"
       );
     };
+    theTest(await makeRSDoc(ops));
     const cgOpts = Object.assign({}, ops, {
       config: { specStatus: "CG-DRAFT" },
     });
-    // Test regular spec using "stod.html"
-    theTest(await makeRSDoc(ops));
-    // Test CG spec, using "cg-bg-stod.html"
     theTest(await makeRSDoc(cgOpts));
   });
   it("includes translation link when it's a REC", async () => {
