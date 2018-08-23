@@ -8,7 +8,7 @@
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
 import css from "deps/text!core/css/examples.css";
-import { reindent } from "core/utils";
+import { reindent, addId } from "core/utils";
 
 export const name = "core/examples";
 
@@ -47,6 +47,7 @@ export function run(conf) {
       pub("example", report);
     } else {
       const inAside = !!example.closest("aside");
+      const title = example.title;
       if (!inAside) ++number;
 
       const reindentedHtml = reindent(example.innerHTML);
@@ -60,6 +61,7 @@ export function run(conf) {
           ${example.cloneNode(true)}
         </div>
       `;
+      addId(div, 'ex-' + number, title);
       example.parentElement.replaceChild(div, example);
       if (!inAside) pub("example", report);
     }

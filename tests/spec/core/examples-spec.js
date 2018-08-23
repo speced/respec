@@ -14,6 +14,7 @@ describe("Core — Examples", () => {
     const example = doc.querySelector("div.example pre");
     const div = example.closest("div");
     expect(div.classList.contains("example")).toBeTruthy();
+    expect(div.id).toEqual('ex-1-ex');
 
     const markers = div.querySelectorAll("div.marker");
     expect(markers.length).toEqual(1);
