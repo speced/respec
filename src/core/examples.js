@@ -40,14 +40,15 @@ export function run(conf) {
   examples.forEach(example => {
     const illegal = example.classList.contains("illegal-example");
     const report = { number, illegal };
+    const title = example.title;
     if (example.localName === "aside") {
       ++number;
-      const title = makeTitle(conf, example, number, report);
-      example.insertBefore(title, example.firstChild);
+      const div = makeTitle(conf, example, number, report);
+      example.insertBefore(div, example.firstChild);
+      addId(example, "ex-" + number, title);
       pub("example", report);
     } else {
       const inAside = !!example.closest("aside");
-      const title = example.title;
       if (!inAside) ++number;
 
       const reindentedHtml = reindent(example.innerHTML);

@@ -25,4 +25,27 @@ describe("Core — Examples", () => {
     expect(example.getAttribute("title")).toBeNull();
     expect(example.textContent).toEqual("{\n  CONTENT\n}");
   });
+
+  it("processes aside examples", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body:
+        makeDefaultBody() +
+        `<article>
+            <aside class='example' title='EX'>\n{\n  CONTENT\n}\n  </aside>
+        </article>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const example = doc.querySelector("aside.example");
+    expect(example.id).toEqual("ex-1-ex");
+
+    const markers = example.querySelectorAll("div.marker");
+    expect(markers.length).toEqual(1);
+    expect(markers[0].textContent).toEqual("Example 1: EX");
+    expect(markers[0].querySelector(".example-title").textContent).toEqual(
+      ": EX"
+    );
+    expect(example.getAttribute("title")).toBeNull();
+    expect(example.textContent).toEqual("Example 1: EX\n{\n  CONTENT\n}\n  ");
+  });
 });
