@@ -61,7 +61,7 @@ export function run(conf) {
           ${example.cloneNode(true)}
         </div>
       `;
-      addId(div, 'ex-' + number, title);
+      addId(div, "ex-" + number, title);
       example.parentElement.replaceChild(div, example);
       if (!inAside) pub("example", report);
     }
