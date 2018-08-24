@@ -7,23 +7,25 @@ describe("Core — Examples", () => {
       body:
         makeDefaultBody() +
         `<section>
-            <pre class='example' title='EX'>\n  {\n    CONTENT\n  }\n  </pre>
+          <pre class='example' title='EX'>\n  {\n    CONTENT\n  }\n  </pre>
         </section>`,
     };
     const doc = await makeRSDoc(ops);
     const example = doc.querySelector("div.example pre");
     const div = example.closest("div");
     expect(div.classList.contains("example")).toBeTruthy();
-    expect(div.id).toEqual("ex-1-ex");
+    expect(div.id).toBe("ex-1-ex");
 
     const markers = div.querySelectorAll("div.marker");
-    expect(markers.length).toEqual(1);
-    expect(markers[0].textContent).toEqual("Example 1: EX");
-    expect(markers[0].querySelector(".example-title").textContent).toEqual(
+    expect(markers.length).toBe(1);
+
+    const marker = markers[0];
+    expect(marker.textContent).toBe("Example 1: EX");
+    expect(marker.querySelector(".example-title").textContent).toBe(
       ": EX"
     );
     expect(example.getAttribute("title")).toBeNull();
-    expect(example.textContent).toEqual("{\n  CONTENT\n}");
+    expect(example.textContent).toBe("{\n  CONTENT\n}");
   });
 
   it("processes aside examples", async () => {
@@ -32,20 +34,20 @@ describe("Core — Examples", () => {
       body:
         makeDefaultBody() +
         `<article>
-            <aside class='example' title='EX'>\n{\n  CONTENT\n}\n  </aside>
-        </article>`,
+              <aside class='example' title='EX'>\n{\n  CONTENT\n}\n  </aside>
+          </article>`,
     };
     const doc = await makeRSDoc(ops);
     const example = doc.querySelector("aside.example");
-    expect(example.id).toEqual("ex-1-ex");
+    expect(example.id).toBe("ex-1-ex");
 
     const markers = example.querySelectorAll("div.marker");
-    expect(markers.length).toEqual(1);
-    expect(markers[0].textContent).toEqual("Example 1: EX");
-    expect(markers[0].querySelector(".example-title").textContent).toEqual(
-      ": EX"
-    );
+    expect(markers.length).toBe(1);
+
+    const [marker] = markers;
+    expect(marker.textContent).toBe("Example 1: EX");
+    expect(markers.querySelector(".example-title").textContent).toBe(": EX");
     expect(example.getAttribute("title")).toBeNull();
-    expect(example.textContent).toEqual("Example 1: EX\n{\n  CONTENT\n}\n  ");
+    expect(example.textContent).toBe("Example 1: EX\n{\n  CONTENT\n}\n  ");
   });
 });
