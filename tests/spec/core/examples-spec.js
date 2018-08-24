@@ -34,8 +34,8 @@ describe("Core — Examples", () => {
       body:
         makeDefaultBody() +
         `<article>
-              <aside class='example' title='EX'>\n{\n  CONTENT\n}\n  </aside>
-          </article>`,
+           <aside class='example' title='EX'>\n{\n  CONTENT\n}\n  </aside>
+         </article>`,
     };
     const doc = await makeRSDoc(ops);
     const example = doc.querySelector("aside.example");
