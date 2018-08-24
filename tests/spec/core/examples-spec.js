@@ -21,9 +21,7 @@ describe("Core — Examples", () => {
 
     const marker = markers[0];
     expect(marker.textContent).toBe("Example 1: EX");
-    expect(marker.querySelector(".example-title").textContent).toBe(
-      ": EX"
-    );
+    expect(marker.querySelector(".example-title").textContent).toBe(": EX");
     expect(example.getAttribute("title")).toBeNull();
     expect(example.textContent).toBe("{\n  CONTENT\n}");
   });
