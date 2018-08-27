@@ -8,7 +8,7 @@
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
 import css from "deps/text!core/css/examples.css";
-import { reindent } from "core/utils";
+import { reindent, addId } from "core/utils";
 
 export const name = "core/examples";
 
@@ -40,10 +40,12 @@ export function run(conf) {
   examples.forEach(example => {
     const illegal = example.classList.contains("illegal-example");
     const report = { number, illegal };
+    const title = example.title;
     if (example.localName === "aside") {
       ++number;
-      const title = makeTitle(conf, example, number, report);
-      example.insertBefore(title, example.firstChild);
+      const div = makeTitle(conf, example, number, report);
+      example.insertBefore(div, example.firstChild);
+      addId(example, "ex-" + number, title);
       pub("example", report);
     } else {
       const inAside = !!example.closest("aside");
@@ -60,6 +62,7 @@ export function run(conf) {
           ${example.cloneNode(true)}
         </div>
       `;
+      addId(div, "ex-" + number, title);
       example.parentElement.replaceChild(div, example);
       if (!inAside) pub("example", report);
     }
