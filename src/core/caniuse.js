@@ -24,8 +24,10 @@ const BROWSERS = new Map([
   ["safari", "Safari"],
   ["opera", "Opera"],
   ["bb", "Blackberry"],
+  ["and_chr", "Chrome (Android)"],
   ["and_uc", "UC (Android)"],
   ["and_ff", "Firefox (Android)"],
+  ["ios_saf", "Safari (iOS)"],
 ]);
 
 // Keys from https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md
