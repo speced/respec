@@ -601,8 +601,8 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
   id = id
     .trim()
     .normalize("NFD")
-    .replace(/[\s]+/gim, "-")
     .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\W+/gim, "-")
     .replace(/^-+/, "")
     .replace(/-+$/, "");
 
