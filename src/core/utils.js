@@ -599,7 +599,10 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
   }
   let id = noLC ? txt : txt.toLowerCase();
   id = id
-    .replace(/[\W]+/gim, "-")
+    .trim()
+    .normalize("NFD")
+    .replace(/[\s]+/gim, "-")
+    .replace(/[\u0300-\u036f]/g, "")
     .replace(/^-+/, "")
     .replace(/-+$/, "");
 
