@@ -707,6 +707,17 @@ partial dictionary AnotherThing {
     expect(idl.querySelector(".idlSectionComment")).toBeNull();
   });
 
+  it("uniquely links to enum values", () => {
+    const target = doc.getElementById("multipleEnums");
+    const idlLinks = target.querySelectorAll("a[data-link-for]");
+    expect(idlLinks.length).toBe(2);
+    const [a1, a2] = idlLinks;
+    expect(a1.getAttribute("href")).toBe("#dom-test1-enum");
+    expect(a2.getAttribute("href")).toBe("#dom-test2-enum");
+    expect(doc.getElementById("dom-test1-enum")).toBeTruthy();
+    expect(doc.getElementById("dom-test2-enum")).toBeTruthy();
+  });
+
   it("handles enumerations", () => {
     const target = doc.getElementById("enum-basic");
     const text = `

@@ -121,17 +121,28 @@ function registerHelpers() {
     // We are going to return a hyperlink
     const a = document.createElement("a");
     a.innerText = content;
-    // Let's deal with WebIDL's Default toJSON(); first.
-    if (!obj.dfn && isDefaultJSON) {
+    const dfn = obj.dfn && obj.dfn.length === 1 ? obj.dfn[0] : null;
+    // unambiguous match
+    if (dfn) {
+      a.dataset.noDefault = "";
+      a.dataset.linkFor = obj.linkFor ? obj.linkFor.toLowerCase() : "";
+      a.dataset.lt = dfn.dataset.lt ? dfn.dataset.lt : "";
+      // handle the empty string for enum values
+      if (obj.idlType === "enum-value" && content === "") {
+        a.href = "#" + dfn.id;
+      }
+    } else if (isDefaultJSON) {
       // If toJSON is not overridden, link directly to WebIDL spec.
       a.dataset.cite = "WEBIDL#default-tojson-operation";
     } else {
-      // This is an internal IDL reference.
+      // ambiguous match
       a.dataset.noDefault = "";
-      a.dataset.linkFor = obj.linkFor
-        ? hb.Utils.escapeExpression(obj.linkFor).toLowerCase()
-        : "";
-      a.dataset.lt = obj.dfn[0].dataset.lt || "";
+      a.dataset.linkFor = obj.linkFor ? obj.linkFor.toLowerCase() : "";
+      a.dataset.lt = obj.dfn
+        .toArray()
+        .filter(({ dataset }) => dataset && dataset.lt)
+        .map(({ dataset: { lt } }) => lt)
+        .join("|");
     }
     return a.outerHTML;
   });
@@ -147,7 +158,7 @@ function writeTrivia(text) {
 
 function idlType2Html(idlType) {
   if (typeof idlType === "string") {
-    return `<a data-link-for="">${hb.Utils.escapeExpression(idlType)}</a>`;
+    return `<a data-link-for="">${idlType}</a>`;
   }
   if (Array.isArray(idlType)) {
     return idlType.map(idlType2Html).join("");
@@ -340,25 +351,17 @@ function writeDefinition(obj) {
       return idlCallbackTmpl(callbackObj);
     }
     case "enum": {
-      let children = "";
-      for (const item of obj.values) {
-        switch (item.type) {
-          case "string":
-            children += idlEnumItemTmpl({
-              obj: item,
-              lname: item.value
-                ? item.value.toLowerCase().replace(/\s/g, "-")
-                : "the-empty-string",
-              parentID: obj.name.toLowerCase(),
-            });
-            break;
-          default:
-            throw new Error(
-              "Unexpected type in exception: `" + item.type + "`."
-            );
-        }
-      }
-
+      const linkFor = obj.name.toLowerCase();
+      const children = obj.values
+        .map(enumItem => {
+          const obj = {
+            ...enumItem,
+            linkFor,
+            idlType: "enum-value",
+          };
+          return idlEnumItemTmpl({ obj });
+        })
+        .join("");
       return idlEnumTmpl({ obj, children });
     }
     case "eof":
@@ -510,7 +513,13 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
           name = defn.name;
           for (const v of defn.values) {
             if (v.type === "string") {
-              v.dfn = findDfn(name, v.value, definitionMap, defn.type, idlElem);
+              v.dfn = findDfn(
+                name,
+                v.value,
+                definitionMap,
+                "enum-value",
+                idlElem
+              );
             }
           }
           defn.idlId = "idl-def-" + name.toLowerCase();
@@ -641,7 +650,7 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
       definitionMap[asMethodName] = [dfn];
       return dfn;
     }
-    case "enum":
+    case "enum-value":
       name = name === "" ? "the-empty-string" : name.toLowerCase();
       break;
     default:
@@ -655,7 +664,9 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
   if (dfnForArray) {
     // Definitions that have a title and [data-dfn-for] that exactly match the
     // IDL entity:
-    dfns = dfnForArray.filter(dfn => dfn[0].dataset.dfnFor === parent);
+    dfns = dfnForArray.filter(dfn =>
+      dfn[0].closest(`[data-dfn-for="${parent}"]`)
+    );
     // If this is a top-level entity, and we didn't find anything with
     // an explicitly empty [for], try <dfn> that inherited a [for].
     if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
@@ -707,11 +718,13 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
     return;
   }
   const dfn = dfns[0][0]; // work on actual node, not jquery
-  const id =
-    "dom-" +
-    (parent ? parent + "-" : "") +
-    name.replace(/[()]/g, "").replace(/\s/g, "-");
-  dfn.id = id;
+  if (!dfn.id) {
+    const id =
+      "dom-" +
+      (parent ? parent + "-" : "") +
+      name.replace(/[()]/g, "").replace(/\s/g, "-");
+    dfn.id = id;
+  }
   dfn.dataset.idl = "";
   dfn.dataset.title = dfn.textContent;
   dfn.dataset.dfnFor = parent;
