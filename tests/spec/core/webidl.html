@@ -587,6 +587,7 @@
       <p data-dfn-for="EnumBasic"><dfn>one</dfn> is first.</p>
       <p data-link-for="EnumBasic"><a>one</a> is referenced with a <code>[link-for]</code> attribute.</p>
       <p id="enum-ref-without-link-for"><a>EnumBasic.one</a> may also be referenced with fully-qualified name.</p>
+      <p><dfn data-dfn-for="EnumBasic">white space</dfn></p>
       <section id="enum-empty-sec" data-dfn-for="EmptyEnum">
         <pre class="idl no-link-warnings">
         enum EmptyEnum {
@@ -598,6 +599,19 @@
         <p><dfn>""</dfn></p>...
         <p><dfn>not empty</dfn>...</p>
       </section>
+    </section>
+    <section id="multipleEnums" data-dfn-for="Test2">
+      <h2>Multiple unique enums</h2>
+      <pre class="idl">
+        enum Test1 { "enum" };
+        enum Test2 { "enum" };
+      </pre>
+      <p>
+        <!-- Test1's enum -->
+        <dfn data-dfn-for="Test1">enum</dfn>
+        <!-- Test2's enum -->
+        <dfn>enum</dfn>
+      </p>
     </section>
     <section>
       <h2>Callbacks</h2>
