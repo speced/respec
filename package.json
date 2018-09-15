@@ -59,7 +59,6 @@
     "requirejs": "^2.3.6",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "uglify-es": "3.3.7",
-    "url-search-params": "^1.1.0",
     "webidl2": "^14.0.1"
   },
   "scripts": {
@@ -93,7 +92,6 @@
     "hyperhtml": "^2.14.0",
     "loading-indicator": "^2.0.0",
     "marked": "^0.5.0",
-    "npm-check-updates": "^2.14.2",
     "prompt": "^1.0.0",
     "puppeteer": "^1.8.0",
     "snyk": "^1.95.3"
