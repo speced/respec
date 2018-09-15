@@ -48,7 +48,7 @@ describe("Core — Examples", () => {
     expect(example.getAttribute("title")).toBeNull();
     expect(example.textContent).toBe("Example 1: EX\n{\n  CONTENT\n}\n  ");
   });
-  it("self-links examples", async () => {
+  it("self-links examples made from asides", async () => {
     const body = `
       <aside class="example"></aside>
       <aside class="example" id="pass"></aside>
@@ -57,6 +57,21 @@ describe("Core — Examples", () => {
     const ops = makeStandardOps({}, body);
     const doc = await makeRSDoc(ops);
     const exampleLinks = doc.querySelectorAll("aside.example a.self-link");
+    expect(exampleLinks.length).toBe(3);
+    const [example1, example2, example3] = exampleLinks;
+    expect(example1.getAttribute("href")).toBe("#ex-1-example-1");
+    expect(example2.getAttribute("href")).toBe("#pass");
+    expect(example3.getAttribute("href")).toBe("#ex-3-pass");
+  });
+  it("self-links examples made from pre", async () => {
+    const body = `
+      <pre class="example"></pre>
+      <pre class="example" id="pass"></pre>
+      <pre class="example" title="pass"></pre>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const exampleLinks = doc.querySelectorAll("div.example a.self-link");
     expect(exampleLinks.length).toBe(3);
     const [example1, example2, example3] = exampleLinks;
     expect(example1.getAttribute("href")).toBe("#ex-1-example-1");
