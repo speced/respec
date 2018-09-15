@@ -67,7 +67,10 @@ export function run(conf) {
           ${example.cloneNode(true)}
         </div>
       `;
-      addId(div, "ex-" + number, title);
+      if (example.id) div.id = example.id;
+      const id = addId(div, "ex-" + number, title);
+      const selfLink = div.querySelector("a.self-link");
+      selfLink.href = `#${id}`;
       example.parentElement.replaceChild(div, example);
       if (!inAside) pub("example", report);
     }
