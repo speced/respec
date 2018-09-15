@@ -48,4 +48,19 @@ describe("Core — Examples", () => {
     expect(example.getAttribute("title")).toBeNull();
     expect(example.textContent).toBe("Example 1: EX\n{\n  CONTENT\n}\n  ");
   });
+  it("self-links examples", async () => {
+    const body = `
+      <aside class="example"></aside>
+      <aside class="example" id="pass"></aside>
+      <aside class="example" title="pass"></aside>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const exampleLinks = doc.querySelectorAll("aside.example a.self-link");
+    expect(exampleLinks.length).toBe(3);
+    const [example1, example2, example3] = exampleLinks;
+    expect(example1.getAttribute("href")).toBe("#ex-1-example-1");
+    expect(example2.getAttribute("href")).toBe("#pass");
+    expect(example3.getAttribute("href")).toBe("#ex-3-pass");
+  });
 });

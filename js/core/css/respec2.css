@@ -185,6 +185,10 @@ h6 {
   position: relative;
 }
 
+aside.example .marker > a.self-link {
+  color: inherit;
+}
+
 h2>a.self-link,
 h3>a.self-link,
 h4>a.self-link,
