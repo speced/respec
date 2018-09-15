@@ -25,10 +25,8 @@ export function run(conf) {
 
 function addSectionLink(h) {
   const section = h.closest("section[id]");
-  const a = document.createElement("a");
-  a.classList.add("self-link");
   const id = section ? section.id : h.id;
-  a.href = `#${id}`;
-  a.setAttribute("aria-label", "§");
-  h.insertAdjacentElement("beforeend", a);
+  h.appendChild(hyperHTML`
+    <a href="${"#" + id}" class="self-link" aria-label="§"></a>
+  `);
 }
