@@ -9,10 +9,7 @@ describe("Core - ID headers", () => {
     <section><h2>Pass</h2></section>
   `;
   beforeAll(async () => {
-    const conf = {
-      addSectionLinks: true,
-    };
-    const ops = makeStandardOps(conf, body);
+    const ops = makeStandardOps({ addSectionLinks: false }, body);
     doc = await makeRSDoc(ops);
   });
 
