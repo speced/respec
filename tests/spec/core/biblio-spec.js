@@ -33,6 +33,7 @@ describe("W3C — Bibliographic References", () => {
   };
   const body = `
     <section id='sotd'>
+      <p>[[!DOM]] [[dom]] [[fetch]] [[!FeTcH]] [[FETCh]] [[fetCH]]
       <p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p>
     </section>
     <section id='sample'>
@@ -145,6 +146,17 @@ describe("W3C — Bibliographic References", () => {
     );
     expect(first).toMatch("[a]");
     expect(last).toMatch("[Zzz]");
+  });
+
+  it("makes sure that normative references win irrespective of case", () => {
+    expect(doc.querySelectorAll("#bib-dom").length).toBe(1);
+    const domRef = doc.querySelector("#bib-dom");
+    expect(domRef.closest("section").id).toBe("normative-references");
+
+    expect(doc.querySelectorAll("#bib-fetch").length).toBe(1);
+    const fetchRef = doc.querySelector("#bib-fetch");
+    expect(fetchRef.closest("section").id).toBe("normative-references");
+    expect(fetchRef.textContent.trim()).toBe("[FeTcH]");
   });
 
   it("shows error if reference doesn't exist", async () => {
