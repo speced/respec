@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "22.7.2",
+  "version": "23.0.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -16,8 +16,9 @@
   },
   "contributors": [
     "Marcos Cáceres <marcos@marcosc.com> (https://marcosc.com/)",
-    "Robin Berjon",
-    "Kagami Sascha Rosylight <saschaplas@outlook.com>"
+    "Kagami Sascha Rosylight <saschaplas@outlook.com>",
+    "Sid Vishnoi <sidvishnoi8@gmail.com>",
+    "Robin Berjon"
   ],
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -27,7 +28,7 @@
     "chai": "^4.1.2",
     "clipboard": "^2.0.1",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
-    "eslint": "^5.5.0",
+    "eslint": "^5.6.0",
     "eslint-config-prettier": "^3.0.1",
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-prettier": "^2.6.2",
@@ -40,7 +41,7 @@
     "jquery": "^3.3.1",
     "karma": "^3.0.0",
     "karma-chrome-launcher": "^2.2.0",
-    "karma-detect-browsers": "^2.3.2",
+    "karma-detect-browsers": "^2.3.3",
     "karma-edge-launcher": "^0.4.2",
     "karma-firefox-launcher": "^1.1.0",
     "karma-jasmine": "^1.1.2",
@@ -58,7 +59,6 @@
     "requirejs": "^2.3.6",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "uglify-es": "3.3.7",
-    "url-search-params": "^1.0.0",
     "webidl2": "^14.0.1"
   },
   "scripts": {
@@ -89,12 +89,12 @@
     "epipebomb": "^1.0.0",
     "fs-extra": "^7.0.0",
     "highlight.js": "github:marcoscaceres/highlight.js#7b144b3b83ce296d5b29c5e4fc2ea2a65e9d3f32",
-    "hyperhtml": "^2.13.0",
+    "hyperhtml": "^2.14.0",
     "loading-indicator": "^2.0.0",
     "marked": "^0.5.0",
     "prompt": "^1.0.0",
-    "puppeteer": "^1.7.0",
-    "snyk": "^1.94.0"
+    "puppeteer": "^1.8.0",
+    "snyk": "^1.95.3"
   },
   "prettier": {
     "trailingComma": "es5"
