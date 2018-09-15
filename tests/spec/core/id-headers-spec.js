@@ -29,10 +29,12 @@ describe("Core - ID headers", () => {
     });
 
     it("doesn't add sections links when addSectionLinks is false", async () => {
-      const conf = {
-        addSectionLinks: false,
-      };
-      const ops = makeStandardOps(conf, body);
+      const ops = makeStandardOps(
+        {
+          addSectionLinks: false,
+        },
+        body
+      );
       const doc = await makeRSDoc(ops);
       expect(doc.querySelector("h2 > a.self-link")).toBeFalsy();
     });
