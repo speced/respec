@@ -77,6 +77,7 @@ const w3cDefaults = {
       url: "https://www.w3.org/",
     },
   ],
+  addSectionLinks: true,
 };
 
 function computeProps(conf) {
