@@ -61,6 +61,6 @@ describe("Core — Examples", () => {
     const [example1, example2, example3] = exampleLinks;
     expect(example1.getAttribute("href")).toBe("#ex-1-example-1");
     expect(example2.getAttribute("href")).toBe("#pass");
-    expect(example3.getAttribute("href")).toBe("#ex-2-example-3'");
+    expect(example3.getAttribute("href")).toBe("#ex-3-pass");
   });
 });
