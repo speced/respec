@@ -18,7 +18,7 @@ function makeTitle(conf, elem, num, report) {
   const number = num > 0 ? " " + num : "";
 
   return hyperHTML`
-  <div class="marker"><span>${conf.l10n.example}${number}</span>${
+  <div class="marker"><a class="self-link">${conf.l10n.example}${number}</a>${
     report.title
       ? hyperHTML`<span class="example-title">: ${report.title}</span>`
       : ""
@@ -39,13 +39,18 @@ export function run(conf) {
   let number = 0;
   examples.forEach(example => {
     const illegal = example.classList.contains("illegal-example");
-    const report = { number, illegal };
+    const report = {
+      number,
+      illegal,
+    };
     const title = example.title;
     if (example.localName === "aside") {
       ++number;
       const div = makeTitle(conf, example, number, report);
       example.insertBefore(div, example.firstChild);
-      addId(example, "ex-" + number, title);
+      const id = addId(example, "ex-" + number, title);
+      const selfLink = div.querySelector("a.self-link");
+      selfLink.href = `#${id}`;
       pub("example", report);
     } else {
       const inAside = !!example.closest("aside");
