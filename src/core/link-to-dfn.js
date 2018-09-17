@@ -117,10 +117,16 @@ export async function run(conf, doc, cb) {
           // only add code to IDL when the definition matches
           const term = ant.textContent.trim();
           const isIDL = dfn.dataset.hasOwnProperty("idl");
-          const isSameText = isIDL
-            ? dfn.dataset.title === term
-            : dfn.textContent.trim() === term;
-          if (isIDL && !isSameText) {
+          const { dataset } = dfn;
+          let needsCode = false;
+          if (dfn.textContent.trim() === term) {
+            needsCode = true;
+          } else if (dataset.title === term) {
+            needsCode = true;
+          } else if (dataset.lt) {
+            needsCode = dataset.lt.split("|").includes(term.toLowerCase());
+          }
+          if (isIDL && !needsCode) {
             return true;
           }
           $ant.wrapInner("<code></code>");
