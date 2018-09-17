@@ -246,6 +246,15 @@ describe("Core - Utils", () => {
     });
   });
 
+  describe("addID()", () => {
+    it("removes diacritical marks", () => {
+      const elem = document.createElement("h2");
+      elem.innerHTML = "Systém jednotné trigonometrické sítě katastrální";
+      utils.addId(elem);
+      expect(elem.id).toBe("system-jednotne-trigonometricke-site-katastralni");
+    });
+  });
+
   describe("makeOwnerSwapper()", () => {
     it("returns a function", () => {
       const testNode = document.createTextNode("test");

@@ -16,16 +16,21 @@ const GH_USER_CONTENT_URL =
 
 // browser name dictionary
 const BROWSERS = new Map([
+  ["and_chr", "Chrome (Android)"],
+  ["and_ff", "Firefox (Android)"],
+  ["and_uc", "UC Browser (Android)"],
+  ["android", "Android"],
+  ["bb", "Blackberry"],
   ["chrome", "Chrome"],
+  ["edge", "Edge"],
   ["firefox", "Firefox"],
   ["ie", "IE"],
-  ["edge", "Edge"],
-  ["android", "Android"],
-  ["safari", "Safari"],
+  ["ios_saf", "Safari (iOS)"],
+  ["op_mini", "Opera Mini"],
+  ["op_mob", "Opera Mobile"],
   ["opera", "Opera"],
-  ["bb", "Blackberry"],
-  ["and_uc", "UC (Android)"],
-  ["and_ff", "Firefox (Android)"],
+  ["safari", "Safari"],
+  ["samsung", "Samsung Internet"],
 ]);
 
 // Keys from https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md

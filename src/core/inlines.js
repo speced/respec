@@ -3,7 +3,7 @@
 // seemingly a better idea to orthogonalise them. The issue is that processing text nodes
 // is harder to orthogonalise, and in some browsers can also be particularly slow.
 // Things that are recognised are <abbr>/<acronym> which when used once are applied
-// throughout the document, [[REFERENCES]]/[[!REFERENCES]], and RFC2119 keywords.
+// throughout the document, [[REFERENCES]]/[[!REFERENCES]], {{{ IDL }}} and RFC2119 keywords.
 // CONFIGURATION:
 //  These options do not configure the behaviour of this module per se, rather this module
 //  manipulates them (oftentimes being the only source to set them) so that other modules
@@ -16,6 +16,7 @@
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
 import { getTextNodes } from "core/utils";
+import { idlStringToHtml } from "core/inline-idl-parser";
 export const name = "core/inlines";
 
 export function run(conf) {
@@ -37,7 +38,8 @@ export function run(conf) {
   const txts = getTextNodes(document.body, ["pre"]);
   const rx = new RegExp(
     "(\\bMUST(?:\\s+NOT)?\\b|\\bSHOULD(?:\\s+NOT)?\\b|\\bSHALL(?:\\s+NOT)?\\b|" +
-      "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +
+    "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +
+    "(?:{{3}\\s*.*\\s*}{3})|" + // inline IDL references
       "(?:\\[\\[(?:!|\\\\)?[A-Za-z0-9\\.-]+\\]\\])" +
       (abbrRx ? `|${abbrRx}` : "") +
       ")"
@@ -65,6 +67,19 @@ export function run(conf) {
           );
           // remember which ones were used
           conf.respecRFC2119[matched] = true;
+        } else if (matched.startsWith("{{{")) {
+          // External IDL references (xref)
+          const ref = matched
+            .replace(/^\{{3}/, "")
+            .replace(/\}{3}$/, "")
+            .trim();
+          if (ref.startsWith("\\")) {
+            df.appendChild(
+              document.createTextNode(`{{{${ref.replace(/^\\/, "")}}}}`)
+            );
+          } else {
+            df.appendChild(idlStringToHtml(ref));
+          }
         } else if (matched.startsWith("[[")) {
           // BIBREF
           let ref = matched;

@@ -17,6 +17,18 @@ describe("Core — xref", () => {
       href: "https://www.w3.org/TR/service-workers-1/",
     },
     infra: { id: "INFRA", href: "https://infra.spec.whatwg.org/" },
+    "credential-management": { aliasOf: "credential-management-1" },
+    "credential-management-1": {
+      href: "https://www.w3.org/TR/credential-management-1/",
+      title: "Credential Management Level 1",
+      id: "credential-management-1",
+    },
+    encoding: { aliasOf: "ENCODING" },
+    ENCODING: {
+      href: "https://encoding.spec.whatwg.org/",
+      title: "Encoding Standard",
+      id: "ENCODING",
+    },
     "local-1": { id: "local-1", href: "https://example.com/" },
     "local-2": { id: "local-2", href: "https://example.com/" },
     "local-3": { id: "local-3", href: "https://example.com/" },
@@ -34,7 +46,7 @@ describe("Core — xref", () => {
     ],
     ["uppercase", "https://infra.spec.whatwg.org/#ascii-uppercase"],
     ["url parser", "https://url.spec.whatwg.org/#concept-url-parser"],
-    ["object-idl", "https://heycam.github.io/webidl/#idl-object"],
+    ["object@url", "https://url.spec.whatwg.org/#concept-url-object"],
     ["dictionary", "https://heycam.github.io/webidl/#dfn-dictionary"],
     ["alphanumeric", "https://infra.spec.whatwg.org/#ascii-alphanumeric"],
     [
@@ -42,6 +54,47 @@ describe("Core — xref", () => {
       "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-object-element",
     ],
     ["exception", "https://heycam.github.io/webidl/#dfn-exception"],
+    [
+      "Window",
+      "https://html.spec.whatwg.org/multipage/window-object.html#window",
+    ],
+    ["Window.event", "https://dom.spec.whatwg.org/#dom-window-event"],
+    [
+      "PermissionStatus.[[query]]",
+      "https://www.w3.org/TR/permissions/#dom-permissionstatus-query-slot",
+    ],
+    ["PermissionStatus", "https://www.w3.org/TR/permissions/#permissionstatus"],
+    [
+      "EventTarget.addEventListener",
+      "https://dom.spec.whatwg.org/#dom-eventtarget-addeventlistener",
+    ],
+    ["EventTarget", "https://dom.spec.whatwg.org/#eventtarget"],
+    [
+      "Credential.[[type]]",
+      "https://www.w3.org/TR/credential-management-1/#dom-credential-type-slot",
+    ],
+    ["Credential", "https://www.w3.org/TR/credential-management-1/#credential"],
+    [
+      "Credential.[[CollectFromCredentialStore]]",
+      "https://www.w3.org/TR/credential-management-1/#dom-credential-collectfromcredentialstore-slot",
+    ],
+    [
+      "PublicKeyCredential.[[type]]",
+      "https://www.w3.org/TR/webauthn/#dom-publickeycredential-type-slot",
+    ],
+    [
+      "PublicKeyCredential",
+      "https://www.w3.org/TR/webauthn/#publickeycredential",
+    ],
+    [
+      "TextDecoderOptions",
+      "https://encoding.spec.whatwg.org/#textdecoderoptions",
+    ],
+    [
+      `TextDecoderOptions["fatal"]`,
+      "https://encoding.spec.whatwg.org/#dom-textdecoderoptions-fatal",
+    ],
+    ["EventTarget", "https://dom.spec.whatwg.org/#eventtarget"],
   ]);
 
   it("does nothing if xref is not enabled", async () => {
@@ -136,10 +189,10 @@ describe("Core — xref", () => {
     // https://github.com/w3c/respec/pull/1750
     const body = `
       <section id="test">
-        <p data-cite="webidl"><a id="one">object</a></p>
+        <p data-cite="url"><a id="one">object</a></p>
         <p data-cite="html"><a id="two">object</a></p>
         <p data-cite="html">
-          <a id="three" data-cite="webidl">object</a> (overrides parent)
+          <a id="three" data-cite="url">object</a> (overrides parent)
           <a id="four">object</a> (uses parent's data-cite - html)
         </p>
         <p><a id="five" data-cite="NOT-FOUND">object</a></p>
@@ -150,13 +203,13 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     expect(doc.getElementById("one").href).toEqual(
-      expectedLinks.get("object-idl")
+      expectedLinks.get("object@url")
     );
     expect(doc.getElementById("two").href).toEqual(
       expectedLinks.get("object-html")
     );
     expect(doc.getElementById("three").href).toEqual(
-      expectedLinks.get("object-idl")
+      expectedLinks.get("object@url")
     );
     expect(doc.getElementById("four").href).toEqual(
       expectedLinks.get("object-html")
@@ -303,19 +356,19 @@ describe("Core — xref", () => {
     const body = `
       <section id="test">
         <section>
-          <p>Uses [[WEBIDL]] to create context for <a id="one">object</a></p>
+          <p>Uses [[url]] to create context for <a id="one">object</a></p>
         </section>
         <section>
           <p>Uses [[html]] to create context for <a id="two">object</a></p>
         </section>
         <section>
-          <p>Uses [[html]] and [[webidl]] to create context for
+          <p>Uses [[html]] and [[url]] to create context for
             <a id="three">object</a>. It fails as it's defined in both.
           </p>
         </section>
         <section>
           <p>But data-cite on element itself wins.
-            <a id="four">object</a> uses [[webidl]],
+            <a id="four">object</a> uses [[url]],
             whereas <a data-cite="html" id="five">object</a> uses html.
           </p>
         </section>
@@ -325,7 +378,7 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const expectedLink1 = "https://heycam.github.io/webidl/#idl-object";
+    const expectedLink1 = "https://url.spec.whatwg.org/#concept-url-object";
     const expectedLink2 =
       "https://html.spec.whatwg.org/multipage/iframe-embed-object.html" +
       "#the-object-element";
@@ -424,6 +477,174 @@ describe("Core — xref", () => {
     expect(informRefs.map(r => r.textContent).join()).toEqual(
       "[html],[infra],[local-1],[local-2],[local-3],[local-4],[webidl]"
     );
+  });
+
+  describe("inline IDL references", () => {
+    it("ignores inlines starting with backslash", async () => {
+      // whitespace inside {{{ }}} doesn't matter
+      const body = `<section><p id="test">{{{\\PASS }}}</p></section>`;
+      const config = { xref: { url: apiURL } };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+      const el = doc.getElementById("test");
+      expect(el.querySelector("code a")).toBeFalsy();
+      expect(el.textContent).toEqual("{{{PASS}}}");
+    });
+
+    it("ignores malformed syntax", async () => {
+      const body = `<section><p id="test">{ { { PASS }}}</p></section>`;
+      const config = { xref: { url: apiURL } };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+      const el = doc.getElementById("test");
+      expect(el.querySelector("code a")).toBeFalsy();
+      expect(el.textContent).toEqual("{ { { PASS }}}");
+    });
+
+    it("links inline IDL references", async () => {
+      const body = `
+      <section id="test">
+        <p id="link1">{{{ Window }}}</p>
+        <p id="link2">{{{ [[query]] }}}</p>
+        <p id="link3">{{{ [[type]] }}} is ambiguous.</p>
+        <p id="link4"> This should work {{{
+              EventTarget
+
+        }}} , i.e. should trim the whitespace.</p>
+      </section>
+      `;
+      const config = { xref: { url: apiURL }, localBiblio };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+
+      const link1 = doc.querySelector("#link1 code a");
+      expect(link1.href).toEqual(expectedLinks.get("Window"));
+
+      const link2 = doc.querySelector("#link2 code a");
+      expect(link2.href).toEqual(
+        expectedLinks.get("PermissionStatus.[[query]]")
+      );
+      expect(link2.textContent).toEqual("[[query]]");
+
+      const link3 = doc.querySelector("#link3 code a");
+      expect(link3.href).toBeFalsy();
+      expect(link3.title).toEqual("Error: Linking an ambiguous dfn.");
+
+      const link4 = doc.querySelector("#link4 code a");
+      expect(link4.href).toEqual(expectedLinks.get("EventTarget"));
+      expect(link4.textContent).toEqual("EventTarget");
+    });
+
+    it("links methods", async () => {
+      const body = `
+      <section id="test">
+        <p id="link1">{{{ addEventListener(type, callback) }}}</p>
+        <p id="link2">{{{ EventTarget.addEventListener(type, callback) }}}</p>
+        <p id="link3">{{{ [[CollectFromCredentialStore]](options, sameOriginWithAncestors) }}} is ambiguous</p>
+        <p id="link4">{{{ Credential.[[CollectFromCredentialStore]](options, sameOriginWithAncestors) }}}</p>
+      </section>
+      `;
+      const config = { xref: { url: apiURL }, localBiblio };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+
+      const link1 = doc.querySelector("#link1 code a");
+      expect(link1.href).toEqual(
+        expectedLinks.get("EventTarget.addEventListener")
+      );
+      const vars1 = [...doc.querySelectorAll("#link1 var")];
+      expect(vars1.length).toEqual(2);
+      expect(vars1[0].textContent).toEqual("type");
+      expect(vars1[1].textContent).toEqual("callback");
+
+      const [link2a, link2b] = [...doc.querySelectorAll("#link2 code a")];
+      expect(link2a.href).toEqual(expectedLinks.get("EventTarget"));
+      expect(link2b.href).toEqual(
+        expectedLinks.get("EventTarget.addEventListener")
+      );
+      const vars2 = [...doc.querySelectorAll("#link2 var")];
+      expect(vars2.length).toEqual(2);
+      expect(vars2[0].textContent).toEqual("type");
+      expect(vars2[1].textContent).toEqual("callback");
+
+      const link3 = doc.querySelector("#link3 code a");
+      expect(link3.href).toEqual("");
+      expect(link3.title).toEqual("Error: Linking an ambiguous dfn.");
+
+      const [link4a, link4b] = [...doc.querySelectorAll("#link4 code a")];
+      expect(link4a.href).toEqual(expectedLinks.get("Credential"));
+      expect(link4b.href).toEqual(
+        expectedLinks.get("Credential.[[CollectFromCredentialStore]]")
+      );
+    });
+
+    it("links attributes", async () => {
+      const body = `
+      <section>
+        <p id="link1">{{{Window.event}}}</p>
+        <p id="link2">{{{ Credential.[[type]] }}}</p>
+        <p id="link3">{{{ PublicKeyCredential.[[type]] }}}</p>
+      </section>
+      `;
+      const config = { xref: { url: apiURL }, localBiblio };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+
+      const [link1a, link1b] = [...doc.querySelectorAll("#link1 code a")];
+      expect(link1a.href).toEqual(expectedLinks.get("Window"));
+      expect(link1b.href).toEqual(expectedLinks.get("Window.event"));
+
+      // the base "Credential" is used to disambiguate as "forContext"
+      const [link2a, link2b] = [...doc.querySelectorAll("#link2 code a")];
+      expect(link2a.href).toEqual(expectedLinks.get("Credential"));
+      expect(link2b.href).toEqual(expectedLinks.get("Credential.[[type]]"));
+
+      const [link3a, link3b] = [...doc.querySelectorAll("#link3 code a")];
+      expect(link3a.href).toEqual(expectedLinks.get("PublicKeyCredential"));
+      expect(link3b.href).toEqual(
+        expectedLinks.get("PublicKeyCredential.[[type]]")
+      );
+    });
+
+    it("links internalSlots", async () => {
+      const body = `
+      <section>
+        <p><dfn>[[\\type]]</dfn></p>
+        <p id="link1">{{{ [[type]] }}}</p>
+        <p id="link2">{{{ Credential.[[type]] }}}</p>
+      </section>
+      `;
+      const config = { xref: { url: apiURL }, localBiblio };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+
+      // as base == [[type]], it is treated as a local internal slot
+      const link1 = doc.querySelector("#link1 a");
+      expect(link1.getAttribute("href")).toEqual("#dfn-type");
+
+      // the base "Credential" is used as "forContext" for [[type]]
+      const [link2a, link2b] = [...doc.querySelectorAll("#link2 code a")];
+      expect(link2a.href).toEqual(expectedLinks.get("Credential"));
+      expect(link2b.href).toEqual(expectedLinks.get("Credential.[[type]]"));
+    });
+
+    it("links dictionary members", async () => {
+      const body = `
+      <section>
+        <p id="link1">{{{ TextDecoderOptions["fatal"] }}}</p>
+      </section>
+      `;
+      const config = { xref: { url: apiURL }, localBiblio };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+
+      // "TextDecoderOptions" is dictionary and "fatal" is dict-member
+      const [link1a, link1b] = [...doc.querySelectorAll("#link1 code a")];
+      expect(link1a.href).toEqual(expectedLinks.get("TextDecoderOptions"));
+      expect(link1b.href).toEqual(
+        expectedLinks.get(`TextDecoderOptions["fatal"]`)
+      );
+    });
   });
 
   it("caches results and uses cached results when available", async () => {

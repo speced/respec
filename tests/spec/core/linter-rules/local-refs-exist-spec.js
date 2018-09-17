@@ -49,4 +49,13 @@ describe("Core Linter Rule - 'local-refs-exist'", () => {
     const results = await rule.lint(config, doc);
     expect(results.length).toEqual(0);
   });
+
+  it("handles unicode characters in ID", async () => {
+    doc.body.innerHTML = `
+      <section id="přehled">PASS</section>
+      <a href="#přehled">PASS</a>
+    `;
+    const results = await rule.lint(config, doc);
+    expect(results.length).toEqual(0);
+  });
 });

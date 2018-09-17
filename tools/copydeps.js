@@ -2,16 +2,10 @@
 
 "use strict";
 const path = require("path");
-const { promisify } = require("util");
-const fs = require("fs");
 const fsp = require("fs-extra");
-const stat = promisify(fs.stat);
-const readdir = promisify(fs.readdir);
-const unlink = promisify(fs.unlink);
 
-const srcDesMap = new Map([
+const srcDesMap = [
   ["./node_modules/clipboard/dist/clipboard.js", "./js/deps/"],
-  ["./node_modules/domReady/domReady.js", "./js/deps/"],
   [
     "./node_modules/handlebars/dist/handlebars.runtime.js",
     "./js/deps/handlebars.js",
@@ -22,74 +16,55 @@ const srcDesMap = new Map([
   ["./node_modules/marked/lib/marked.js", "./js/deps/"],
   ["./node_modules/requirejs/require.js", "./js/deps/"],
   ["./node_modules/text/text.js", "./js/deps/"],
-  ["./node_modules/url-search-params/build/url-search-params.js", "./js/deps/"],
   ["./node_modules/webidl2/lib/webidl2.js", "./js/deps/"],
   ["./node_modules/leaflet/dist/leaflet.js", "./js/geonovum/deps/"],
   ["./node_modules/leaflet-easybutton/src/easy-button.js", "./js/geonovum/deps/"],
   ["./node_modules/pluralize/pluralize.js", "./js/deps/"],
   ["./node_modules/idb-keyval/dist/idb-keyval-amd.min.js", "./js/deps/idb.js"],
-]);
+];
 
-function makePathResolver(base) {
-  return file => toFullPath(file, base);
-}
-
-// simulate rm
-async function rm(...files) {
-  for (const file of files) {
-    const fullPath = toFullPath(file);
-    const resolveToThisPath = makePathResolver(fullPath);
-    let lstat;
-    try {
-      lstat = await stat(fullPath);
-    } catch (err) {
-      if (err.code !== "ENOENT") {
-        throw new Error(err.message);
-      }
-      console.warn("File not found: " + fullPath);
-      continue;
-    }
-    if (lstat.isDirectory()) {
-      const innerFiles = await readdir(fullPath);
-      const paths = innerFiles.map(resolveToThisPath);
-      await rm(...paths);
-      continue;
-    }
-    await unlink(fullPath);
-  }
-}
+const deprecated = [
+  [
+    "./node_modules/domReady/domReady.js",
+    "Use standard DOMContentLoaded and document.readyState instead.",
+  ],
+];
 
 async function cp(source, dest) {
-  const fullSource = toFullPath(source);
-  const fullDest = toFullPath(dest);
-  const baseName = path.basename(fullSource);
-  const actualDestination = path.extname(fullDest)
-    ? fullDest
-    : path.resolve(fullDest, baseName);
-  await fsp.ensureFile(actualDestination);
-  const readableStream = fs.createReadStream(fullSource);
-  const writableStream = fs.createWriteStream(actualDestination);
-  readableStream.setEncoding("utf8");
-  readableStream.pipe(writableStream);
-  return new Promise(resolve => {
-    readableStream.on("end", resolve);
-  });
-}
-
-function toFullPath(p, base = process.cwd()) {
-  return path.isAbsolute(p) ? p : path.normalize(path.resolve(`${base}/${p}`));
+  const baseName = path.basename(source);
+  const actualDestination = path.extname(dest)
+    ? dest
+    : path.resolve(dest, baseName);
+  await fsp.copy(source, actualDestination);
 }
 
 // Copy them again
 async function copyDeps() {
-  const copyPromises = [];
-  for (const [source, dest] of srcDesMap.entries()) {
-    copyPromises.push(cp(source, dest));
-  }
+  const copyPromises = srcDesMap.map(([source, dest]) => cp(source, dest));
   await Promise.all(copyPromises);
 }
 
+async function copyDeprecated() {
+  const promises = deprecated.map(async ([dep, guide]) => {
+    const basename = path.basename(dep, ".js");
+    await cp(dep, `./js/deps/_${basename}.js`);
+
+    const message = `The dependency \`deps/${basename}\` is deprecated. ${guide}`;
+    const wrapper = `define(["deps/_${basename}"], dep => { console.warn("${message}"); return dep; });`;
+    await fsp.writeFile(`./js/deps/${basename}.js`, wrapper);
+  });
+  await Promise.all(promises);
+}
+
 // Delete dependent files
-rm("./js/deps/", "./js/core/css/github.css")
-  .then(copyDeps)
-  .catch(err => console.error(err));
+(async () => {
+  try {
+    await fsp.remove("./js/deps/");
+    await fsp.remove("./js/core/css/github.css");
+    await copyDeps();
+    await copyDeprecated();
+  } catch (err) {
+    console.error(err.stack);
+    process.exit(1);
+  }
+})();

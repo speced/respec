@@ -707,6 +707,17 @@ partial dictionary AnotherThing {
     expect(idl.querySelector(".idlSectionComment")).toBeNull();
   });
 
+  it("uniquely links to enum values", () => {
+    const target = doc.getElementById("multipleEnums");
+    const idlLinks = target.querySelectorAll("a[data-link-for]");
+    expect(idlLinks.length).toBe(2);
+    const [a1, a2] = idlLinks;
+    expect(a1.getAttribute("href")).toBe("#dom-test1-enum");
+    expect(a2.getAttribute("href")).toBe("#dom-test2-enum");
+    expect(doc.getElementById("dom-test1-enum")).toBeTruthy();
+    expect(doc.getElementById("dom-test2-enum")).toBeTruthy();
+  });
+
   it("handles enumerations", () => {
     const target = doc.getElementById("enum-basic");
     const text = `
@@ -962,5 +973,22 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(toJSONLink.pathname).toEqual(doc.location.pathname);
     expect(toJSONLink.origin).toEqual(doc.location.origin);
     expect(toJSONLink.hash).toEqual("#dom-definedtojson-tojson");
+  });
+  it("puts code elements around both IDL definitions and links", () => {
+    const things = [
+      ...document.querySelectorAll("#coded-things > a, #coded-things > dfn"),
+    ];
+    expect(things.every(elem => elem.parentElement.localName === "code")).toBe(
+      true
+    );
+    const linksToTheFoo = doc.querySelectorAll(
+      "#coded-things a[href='#dom-codedthings-dothefoo']"
+    );
+    expect(linksToTheFoo.length).toBe(4);
+
+    const linkToBarBarAttr = doc.querySelectorAll(
+      "#coded-things a[href='#dom-codedthings-barbar']"
+    );
+    expect(linkToBarBarAttr.length).toBe(2);
   });
 });

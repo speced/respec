@@ -132,7 +132,7 @@ function handleIssues(ins, ghIssues, conf) {
         if (ghIssue.state === "closed") $div[0].classList.add("closed");
         const labelsGroup = Array.from(ghIssue.labels || [])
           .map(label => {
-            const issuesURL = new URL("issues/", conf.github.repoURL + "/");
+            const issuesURL = new URL("./issues/", conf.github.repoURL);
             issuesURL.searchParams.set(
               "q",
               `is:issue is:open label:"${label.name}"`

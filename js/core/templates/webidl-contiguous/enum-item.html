@@ -1,2 +1,3 @@
-{{{trivia obj.trivia}}}<a href="#dom-{{parentID}}-{{lname}}" class="idlEnumItem">"{{obj.value}}"</a>{{#if
-obj.separator}}{{{trivia obj.separator.trivia}}},{{/if}}
+{{{trivia obj.trivia}}}<span class="idlEnumItem">"{{#tryLink
+  obj}}{{obj.value}}{{/tryLink}}"</span>{{#if
+obj.separator}}{{{trivia obj.separator.trivia}}}{{obj.separator.value}}{{/if}}
