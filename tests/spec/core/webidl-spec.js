@@ -974,4 +974,21 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(toJSONLink.origin).toEqual(doc.location.origin);
     expect(toJSONLink.hash).toEqual("#dom-definedtojson-tojson");
   });
+  it("puts code elements around both IDL definitions and links", () => {
+    const things = [
+      ...document.querySelectorAll("#coded-things > a, #coded-things > dfn"),
+    ];
+    expect(things.every(elem => elem.parentElement.localName === "code")).toBe(
+      true
+    );
+    const linksToTheFoo = doc.querySelectorAll(
+      "#coded-things a[href='#dom-codedthings-dothefoo']"
+    );
+    expect(linksToTheFoo.length).toBe(4);
+
+    const linkToBarBarAttr = doc.querySelectorAll(
+      "#coded-things a[href='#dom-codedthings-barbar']"
+    );
+    expect(linkToBarBarAttr.length).toBe(2);
+  });
 });

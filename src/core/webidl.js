@@ -612,6 +612,21 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
   const originalName = name;
   parent = parent.toLowerCase();
   switch (type) {
+    case "attribute": {
+      const asLocalName = name.toLowerCase();
+      const asQualifiedName = parent + "." + asLocalName;
+      let dfn;
+      if (definitionMap[asQualifiedName] || definitionMap[asLocalName]) {
+        dfn = findDfn(parent, asLocalName, definitionMap, null, idlElem);
+      }
+      if (!dfn) {
+        break; // try finding dfn using name, using normal search path...
+      }
+      const lt = dfn[0].dataset.lt ? dfn[0].dataset.lt.split("|") : [];
+      lt.push(asQualifiedName, asLocalName);
+      dfn[0].dataset.lt = [...new Set(lt)].join("|");
+      return dfn;
+    }
     case "operation": {
       // Overloads all have unique names
       if (name.search("!overload") !== -1) {
@@ -619,10 +634,15 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
         break;
       }
       // Allow linking to both "method()" and "method" name.
-      const asMethodName = name.toLowerCase() + "()";
-      const asFullyQualifiedName = parent + "." + name.toLowerCase() + "()";
+      const asLocalName = name.toLowerCase();
+      const asMethodName = asLocalName + "()";
+      const asQualifiedName = parent + "." + asLocalName;
+      const asFullyQualifiedName = asQualifiedName + "()";
 
-      if (definitionMap[asMethodName] || definitionMap[asFullyQualifiedName]) {
+      if (
+        definitionMap[asMethodName] ||
+        definitionMap[asFullyQualifiedName.toLowerCase()]
+      ) {
         const lookupName = definitionMap[asMethodName]
           ? asMethodName
           : asFullyQualifiedName;
@@ -631,12 +651,12 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
           break; // try finding dfn using name, using normal search path...
         }
         const lt = dfn[0].dataset.lt ? dfn[0].dataset.lt.split("|") : [];
-        lt.push(lookupName, name);
+        lt.push(asFullyQualifiedName, asQualifiedName, lookupName, asLocalName);
         dfn[0].dataset.lt = lt.join("|");
-        if (!definitionMap[name]) {
-          definitionMap[name] = [];
+        if (!definitionMap[asLocalName]) {
+          definitionMap[asLocalName] = [];
         }
-        definitionMap[name].push(dfn);
+        definitionMap[asLocalName].push(dfn);
         return dfn;
       }
       // no method alias, so let's find the dfn and add it

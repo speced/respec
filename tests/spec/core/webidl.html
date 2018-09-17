@@ -764,5 +764,29 @@
         callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
       </pre>
     </section>
+    <section data-dfn-for="CodedThings">
+        <h2><dfn>CodedThings</dfn> interface</h2>
+        <pre class="idl">
+        interface CodedThings {
+          attribute DOMString definedElsewhere;
+          attribute Bar barBar;
+          void doTheFoo();
+        };
+        </pre>
+        <dfn>doTheFoo()</dfn>
+        <dfn>barBar</dfn>
+      </section>
+      <section data-link-for="CodedThings">
+        <h2>All these things surrounded by code elements</h2>
+        <ol id="coded-things">
+          <li><dfn>CodedThings.definedElsewhere</dfn>
+          <li><a>CodedThings.barBar</a>
+          <li><a>barBar</a>
+          <li><a>CodedThings.doTheFoo()</a>
+          <li><a>CodedThings.doTheFoo</a>
+          <li><a>doTheFoo()</a>
+          <li><a>doTheFoo</a>
+        </ol>
+      </section>
   </body>
 </html>
