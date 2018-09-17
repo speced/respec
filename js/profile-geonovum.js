@@ -23,7 +23,7 @@ require.config({
     "handlebars.runtime": "deps/handlebars",
     "deps/highlight": "https://www.w3.org/Tools/respec/respec-highlight",
   },
-  deps: ["deps/hyperhtml", "deps/url-search-params", "geonovum/deps/leaflet"],
+  deps: ["deps/hyperhtml", "geonovum/deps/leaflet"],
 });
 
 define(
