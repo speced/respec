@@ -94,6 +94,15 @@ describe("Core - Structure", () => {
     expect($toc.find("a[href='#four-0']").text()).toEqual("A.1.1.1 FOUR");
   });
 
+  it("gives the toc's heading an id", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body,
+    };
+    const doc = await makeRSDoc(ops);
+    expect(doc.querySelector("#toc > h2").id).toBeTruthy();
+  });
+
   it("should link to the title of the document", async () => {
     const ops = {
       config: makeBasicConfig(),

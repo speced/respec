@@ -14,6 +14,7 @@ let appendixMode = false;
 let lastNonAppendix = 0;
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 export const name = "core/structure";
+import { addId } from "core/utils";
 
 function makeTOCAtLevel($parent, doc, current, level, conf) {
   const $secs = $parent.children(
@@ -132,7 +133,8 @@ export function run(conf, doc, cb) {
     if (!$ol) return;
     const nav = doc.createElement("nav");
     nav.id = "toc";
-    nav.innerHTML = "<h2 class='introductory'>" + conf.l10n.toc + "</h2>";
+    nav.innerHTML = `<h2 class="introductory">${conf.l10n.toc}</h2>`;
+    addId(nav.querySelector("h2"));
     nav.appendChild($ol[0]);
     let $ref = $("#toc", doc);
     let replace = false;
