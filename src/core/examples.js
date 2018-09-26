@@ -63,7 +63,7 @@ export function run(conf) {
       example.classList.remove("example", "illegal-example");
       // relocate the id to the div
       const id = example.id ? example.id : null;
-      if (id !== "") {
+      if (id !== "" && id !== null) {
         example.removeAttribute("id");
       }
       const div = hyperHTML`
