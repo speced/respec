@@ -61,7 +61,7 @@ describe("Core - Markdown", () => {
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
     expect(doc.querySelector("code")).toBeFalsy();
-    expect(doc.getElementById("foo").textContent).toBe("1. Foo");
+    expect(doc.querySelector("#foo h2").textContent).toBe("1. Foo");
     const listItems = doc.querySelectorAll(
       "section > ul:not([class=toc]) > li"
     );
@@ -72,42 +72,84 @@ describe("Core - Markdown", () => {
     expect(nestedLi.textContent).toEqual("nested list item");
   });
 
+  it("assigns unique ids to headers", async () => {
+    const body = `
+    <section data-format="markdown" id="test-section">
+      Section title
+      =========
+
+      Section title
+      ------------------------------
+      First sub-section with this title.
+
+      Section title
+      ------------------------------
+      Second sub-section with the same title.
+    </section>`;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+
+    const h2s = doc.querySelectorAll("#test-section h2");
+    expect(h2s.length).toBe(1);
+    const [h2] = h2s;
+    expect(h2.id).toBe("x1-section-title");
+    const h3s = doc.querySelectorAll("#test-section h3");
+    expect(h3s.length).toBe(2);
+    const [firstH3, secondH3] = h3s;
+    expect(firstH3.id).not.toBe(secondH3);
+    for (const elem of [h2, firstH3, secondH3]) {
+      expect(doc.querySelectorAll("#" + elem.id).length).toBe(1);
+    }
+  });
+
   it("structures content in nested sections with appropriate titles", async () => {
     const ops = {
       config: makeBasicConfig(),
       body:
         makeDefaultBody() +
-        "\n\nFoo\n===\n\nBar\n---\n\nBaz\n---\n\n### Foobar ###\n\n#### Foobaz ####\n\nZing\n---\n\n",
+        `
+
+        Foo
+        ===
+
+        Bar
+        ---
+
+        Baz
+        ---
+
+        ### Foobar ###
+
+        #### Foobaz ####
+
+        Zing
+        ----
+
+        `,
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
-    const foo = doc.getElementById("foo");
-    expect(foo.localName).toEqual("h2");
+    const foo = doc.querySelector("#foo h2");
     expect(foo.textContent).toEqual("1. Foo");
     expect(foo.parentElement.localName).toEqual("section");
 
-    const bar = doc.getElementById("bar");
-    expect(bar.localName).toEqual("h3");
+    const bar = doc.querySelector("#bar h3");
     expect(bar.textContent).toEqual("1.1 Bar");
     expect(bar.parentElement.localName).toEqual("section");
 
-    const baz = doc.getElementById("baz");
-    expect(baz.localName).toEqual("h3");
+    const baz = doc.querySelector("#baz h3");
     expect(baz.textContent).toEqual("1.2 Baz");
     expect(baz.parentElement.localName).toEqual("section");
 
-    const foobar = doc.getElementById("foobar");
-    expect(foobar.localName).toEqual("h4");
+    const foobar = doc.querySelector("#foobar h4");
     expect(foobar.textContent).toEqual("1.2.1 Foobar");
     expect(foobar.parentElement.localName).toEqual("section");
 
-    const foobaz = doc.getElementById("foobaz");
-    expect(foobaz.localName).toEqual("h5");
+    const foobaz = doc.querySelector("#foobaz h5");
     expect(foobaz.textContent).toEqual("1.2.1.1 Foobaz");
     expect(foobaz.parentElement.localName).toEqual("section");
 
-    const zing = doc.getElementById("zing");
-    expect(zing.localName).toEqual("h3");
+    const zing = doc.querySelector("#zing h3");
     expect(zing.textContent).toEqual("1.3 Zing");
     expect(zing.parentElement.localName).toEqual("section");
   });
@@ -162,13 +204,31 @@ describe("Core - Markdown", () => {
       config: makeBasicConfig(),
       body:
         makeDefaultBody() +
-        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n\nBaz\n===\n\nsome text\n\n",
+        `
+
+        Foo
+        ===
+        some text
+
+        <section>
+
+        Bar
+        ---
+
+        </section>
+
+        Baz
+        ===
+
+        some text
+
+        `,
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
-    const baz = doc.getElementById("baz");
+    const baz = doc.querySelector("#baz h2");
     expect(baz.textContent).toEqual("2. Baz");
-    const bar = doc.getElementById("bar");
+    const bar = doc.querySelector("#bar h3");
     expect(bar.parentElement.contains(baz)).toBeFalsy();
     expect(baz.parentElement.contains(bar)).toBeFalsy();
   });
