@@ -78,4 +78,16 @@ describe("Core — Examples", () => {
     expect(example2.getAttribute("href")).toBe("#pass");
     expect(example3.getAttribute("href")).toBe("#ex-3-pass");
   });
+  it("relocates ids and doesn't duplicate them", async () => {
+    const body = `
+      <pre class="example" id="this-is-unique"></pre>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const examples = doc.querySelectorAll("#this-is-unique");
+    expect(examples.length).toBe(1);
+    const [example] = examples;
+    // id got relocated from the pre to the div
+    expect(example.localName).toBe("div");
+  });
 });

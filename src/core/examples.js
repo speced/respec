@@ -61,16 +61,18 @@ export function run(conf) {
 
       // wrap
       example.classList.remove("example", "illegal-example");
+      // relocate the id to the div
+      const id = example.id ? example.id : null;
+      if (id) example.removeAttribute("id");
       const div = hyperHTML`
-        <div class='example'>
+        <div class='example' id="${id}">
           ${makeTitle(conf, example, inAside ? 0 : number, report)}
           ${example.cloneNode(true)}
         </div>
       `;
-      if (example.id) div.id = example.id;
-      const id = addId(div, "ex-" + number, title);
+      addId(div, "ex-" + number, title);
       const selfLink = div.querySelector("a.self-link");
-      selfLink.href = `#${id}`;
+      selfLink.href = `#${div.id}`;
       example.parentElement.replaceChild(div, example);
       if (!inAside) pub("example", report);
     }
