@@ -63,9 +63,7 @@ export function run(conf) {
       example.classList.remove("example", "illegal-example");
       // relocate the id to the div
       const id = example.id ? example.id : null;
-      if (id !== "" && id !== null) {
-        example.removeAttribute("id");
-      }
+      if (id) example.removeAttribute("id");
       const div = hyperHTML`
         <div class='example' id="${id}">
           ${makeTitle(conf, example, inAside ? 0 : number, report)}
