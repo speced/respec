@@ -8,6 +8,36 @@ describe("Core - Utils", () => {
     });
   });
 
+  describe("renameElement", () => {
+    it("renames empty elements", () => {
+      const a = document.createElement("a");
+      a.id = "this-is-a-div";
+      document.body.appendChild(a);
+      const div = utils.renameElement(a, "div");
+      expect(div instanceof HTMLDivElement).toBe(true);
+      expect(div.id).toBe("this-is-a-div");
+      expect(document.querySelector("a#this-is-a-div")).toBeFalsy();
+      expect(document.querySelector("div#this-is-a-div")).toBeTruthy();
+      div.remove();
+      a.remove();
+    });
+    it("renames elements with children", () => {
+      const a = document.createElement("a");
+      a.id = "this-is-a-div";
+      a.innerHTML = "<span id='inner-pass'>pass</span>";
+      document.body.appendChild(a);
+      const div = utils.renameElement(a, "div");
+      expect(div instanceof HTMLDivElement).toBe(true);
+      expect(div.id).toBe("this-is-a-div");
+      expect(document.querySelector("a#this-is-a-div")).toBeFalsy();
+      const inner = document.querySelector("div#this-is-a-div #inner-pass");
+      expect(inner).toBeTruthy();
+      expect(inner.textContent).toBe("pass");
+      div.remove();
+      a.remove();
+    });
+  });
+
   describe("fetchAndCache", () => {
     async function clearCaches() {
       const keys = await caches.keys();
