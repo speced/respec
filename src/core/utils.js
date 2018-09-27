@@ -10,6 +10,7 @@ export const name = "core/utils";
 marked.setOptions({
   sanitize: false,
   gfm: true,
+  headerIds: false,
 });
 
 const spaceOrTab = /^[ |\t]*/;

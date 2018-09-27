@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "23.0.2",
+  "version": "23.0.4",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -29,7 +29,7 @@
     "clipboard": "^2.0.1",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
     "eslint": "^5.6.0",
-    "eslint-config-prettier": "^3.0.1",
+    "eslint-config-prettier": "^3.1.0",
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-prettier": "^2.6.2",
     "glob": "^7.1.3",
@@ -57,7 +57,7 @@
     "mocha": "^5.2.0",
     "moment": "^2.22.2",
     "pluralize": "^7.0.0",
-    "prettier": "^1.14.2",
+    "prettier": "^1.14.3",
     "requirejs": "^2.3.6",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "uglify-es": "3.3.7",
@@ -97,10 +97,10 @@
     "highlight.js": "github:marcoscaceres/highlight.js#7b144b3b83ce296d5b29c5e4fc2ea2a65e9d3f32",
     "hyperhtml": "^2.14.0",
     "loading-indicator": "^2.0.0",
-    "marked": "^0.5.0",
+    "marked": "^0.5.1",
     "prompt": "^1.0.0",
     "puppeteer": "^1.8.0",
-    "snyk": "^1.95.3"
+    "snyk": "^1.99.0"
   },
   "prettier": {
     "trailingComma": "es5"
