@@ -751,19 +751,15 @@ export function getLinkTargets(elem) {
 export function renameElement(elem, newName) {
   if (elem.localName === newName) return elem;
   const newElement = elem.ownerDocument.createElement(newName);
-
   // copy attributes
-  for (let i = 0, n = elem.attributes.length; i < n; i++) {
-    const { name, value } = elem.attributes[i];
+  for (const attribute of [...elem.attributes]) {
+    const { name, value } = attribute;
     newElement.setAttribute(name, value);
   }
-
   // copy child nodes
-  do {
+  while (elem.firstChild) {
     newElement.appendChild(elem.firstChild);
-  } while (elem.firstChild);
-
-  // TODO: replace with ChildNode.replaceWith, when available in Safari
-  elem.parentNode.replaceChild(newElement, elem);
+  }
+  elem.replaceWith(newElement);
   return newElement;
 }
