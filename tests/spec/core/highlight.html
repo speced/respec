@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>Replace me with a real title</title>
+    <script class='remove' src='/js/deps/require.js' data-main='/js/profile-w3c-common'>
+    </script>
+    <script class='remove'>
+      async function loadSolidity() {
+        const worker = await new Promise(resolve => {
+          require(["core/worker"], ({ worker }) => resolve(worker));
+        });
+        const action = "highlight-load-lang";
+        const langURL = new URL("../../support-files/hljs-testlang.js", window.location).href;
+        const propName = "testLang";
+        const lang = "testlang";
+        worker.postMessage({ action, langURL, propName, lang });
+        return new Promise(resolve => {
+          worker.addEventListener("message", function listener({ data }) {
+            const { action: responseAction, lang: responseLang } = data;
+            if (responseAction === action && responseLang === lang) {
+              worker.removeEventListener("message", listener);
+              resolve();
+            }
+          });
+        });
+      }
+      var respecConfig = {
+        preProcess: [loadSolidity],
+        specStatus: "ED",
+        editors: [
+          {
+            name: "Your Name",
+            url: "https://your-site.com",
+          },
+        ],
+        github: "https://github.com/w3c/some-API/",
+      };
+    </script>
+  </head>
+  <body>
+    <section id='abstract'>
+      <p>
+        This is required.
+      </p>
+    </section>
+    <section id='sotd'>
+      <p>
+        This is required.
+      </p>
+      <pre class="example testlang">
+        funkyFunction
+      </pre>
+    </section>
+  </body>
+</html>

@@ -43,5 +43,6 @@ require.config({
     "deps/idb": "/base/js/deps/idb",
     "w3c/linter": "/base/js/w3c/linter",
     "core/exporter": "/base/js/core/exporter",
+    "deps/hyperhtml": "/base/js/deps/hyperhtml",
   },
 });
