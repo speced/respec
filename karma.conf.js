@@ -3,7 +3,7 @@
 /*globals module, require, process*/
 "use strict";
 module.exports = function(config) {
-  var options = {
+  const options = {
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: "./",
 
@@ -27,6 +27,11 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       "js/deps/jquery.js",
+      {
+        pattern: "tests/support-files/**/*",
+        included: false,
+        served: true,
+      },
       {
         pattern: "builds/**/*.*",
         included: false,
