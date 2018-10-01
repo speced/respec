@@ -78,22 +78,20 @@ export async function run(conf, doc, cb) {
     const ant = $ant[0];
     if (ant.classList.contains("externalDFN")) return;
     const linkTargets = getLinkTargets(ant);
+    const { linkFor } = ant.dataset;
     const foundDfn = linkTargets.some(target => {
-      if (ant.classList.contains("respec-idl-xref")) return false;
       if (titles[target.title] && titles[target.title][target.for]) {
         const $dfn = titles[target.title][target.for];
         const dfn = $dfn[0];
-        const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-        const plurals = dfn.dataset.plurals
-          ? dfn.dataset.plurals.split("|")
-          : [];
-        const txt = ant.textContent.toLowerCase();
         if (dfn.dataset.cite) {
           ant.dataset.cite = dfn.dataset.cite;
-        } else if (conf.xref && (lt.includes(txt) || plurals.includes(txt))) {
-          ant.dataset.dfnType = "xref";
+        } else if (linkFor && !titles[linkFor.toLowerCase()]) {
+          possibleExternalLinks.push(ant);
+        } else if (dfn.classList.contains("externalDFN")) {
           // data-lt[0] serves as unique id for the dfn which this element references
-          ant.dataset.xref = lt[0];
+          const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
+          ant.dataset.lt = lt[0];
+          possibleExternalLinks.push(ant);
         } else {
           ant.href = "#" + dfn.id;
           ant.classList.add("internalDFN");
@@ -144,7 +142,7 @@ export async function run(conf, doc, cb) {
       ) {
         if (ant.dataset.cite === "") {
           badLinks.push(ant);
-        } else if (ant.dataset.dfnType !== "xref") {
+        } else {
           possibleExternalLinks.push(ant);
         }
         return;

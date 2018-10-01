@@ -94,7 +94,7 @@ function createXrefMap(elems) {
     }
 
     const types = [isIDL ? elem.dataset.xrefType || "_IDL_" : "_CONCEPT_"];
-    const { xrefFor: forContext } = elem.dataset;
+    const { linkFor: forContext } = elem.dataset;
 
     const xrefsForTerm = map.has(term) ? map.get(term) : [];
     xrefsForTerm.push({ elem, specs, for: forContext, types });
