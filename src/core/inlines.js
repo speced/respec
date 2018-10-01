@@ -92,10 +92,10 @@ export function run(conf) {
           } else {
             const { informative, illegal } = isInformative(ref, txt.parentNode);
             ref = ref.replace(/^(!|\?)/, "");
-            if (!informative) {
-              conf.normativeReferences.add(ref);
-            } else {
+            if (informative) {
               conf.informativeReferences.add(ref);
+            } else {
+              conf.normativeReferences.add(ref);
             }
 
             df.appendChild(document.createTextNode("["));
