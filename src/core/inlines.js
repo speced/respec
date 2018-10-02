@@ -92,7 +92,7 @@ export function run(conf) {
           } else {
             const { informative, illegal } = isInformative(ref, txt.parentNode);
             ref = ref.replace(/^(!|\?)/, "");
-            if (informative) {
+            if (informative && !illegal) {
               conf.informativeReferences.add(ref);
             } else {
               conf.normativeReferences.add(ref);
@@ -100,16 +100,9 @@ export function run(conf) {
 
             df.appendChild(document.createTextNode("["));
             const refHref = `#bib-${ref.toLowerCase()}`;
-            const cite = df.appendChild(
+            df.appendChild(
               hyperHTML`<cite><a class="bibref" href="${refHref}">${ref}</a></cite>`
             );
-            if (illegal) {
-              const errorMsg = `Error: Normative reference \`${matched}\` in a non-normative section.`;
-              cite.title = errorMsg;
-              cite.classList.add("respec-offending-element");
-              pub("warn", errorMsg);
-              console.warn(cite);
-            }
             df.appendChild(document.createTextNode("]"));
           }
         } else if (abbrMap.has(matched)) {

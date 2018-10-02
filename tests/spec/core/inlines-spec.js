@@ -10,28 +10,23 @@ describe("Core - Inlines", () => {
       </section>
       <section class="informative">
         <p>[[webidl]] is informative.</p>
-        <p id="illegal">A normative reference in informative section [[!svg]] is illegal.</p>
+        <p id="illegal">A normative reference in informative section [[!svg]] is illegal. But we keep it as normative. No warning.</p>
       </section>
     `;
     const ops = makeStandardOps({}, body);
     const doc = await makeRSDoc(ops);
 
-    const norm = [...doc.querySelectorAll("#normative-references dt")]
-    expect(norm.length).toEqual(2);
-    expect(norm.map(el => el.textContent)).toEqual(["[dom]", "[html]"]);
-
-    const inform = [...doc.querySelectorAll("#informative-references dt")]
-    expect(inform.length).toEqual(3);
-    expect(inform.map(el => el.textContent)).toEqual([
-      "[infra]",
+    const norm = [...doc.querySelectorAll("#normative-references dt")];
+    expect(norm.length).toEqual(3);
+    expect(norm.map(el => el.textContent)).toEqual([
+      "[dom]",
+      "[html]",
       "[svg]",
-      "[webidl]",
     ]);
 
-    const illegalCite = doc.querySelector("#illegal cite");
-    expect(
-      illegalCite.classList.contains("respec-offending-element")
-    ).toBeTruthy();
+    const inform = [...doc.querySelectorAll("#informative-references dt")];
+    expect(inform.length).toEqual(2);
+    expect(inform.map(el => el.textContent)).toEqual(["[infra]", "[webidl]"]);
 
     const links = [...doc.querySelectorAll("section cite a")];
     expect(links.length).toEqual(5);
