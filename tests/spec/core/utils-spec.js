@@ -609,7 +609,8 @@ describe("Core - Utils", () => {
         expect(addId(elem)).toEqual("x2017");
 
         const div = document.createElement("div");
-        div.innerHTML = "<p id='a'></p><p id='a-1'></p><span>A</span><span title='a'></span>";
+        div.innerHTML =
+          "<p id='a'></p><p id='a-1'></p><span>A</span><span title='a'></span>";
         document.body.appendChild(div);
         const span = div.querySelector("span");
         expect(addId(span)).toEqual("a-0");
