@@ -132,12 +132,9 @@ function isInformative(ref, parentNode) {
   let informative = false;
   if (closestInformative) {
     // check if parent is not normative
-    if (!parentNode.closest(".normative")) {
-      informative = true;
-    }
-    if (!closestInformative.querySelector(".normative")) {
-      informative = true;
-    }
+    informative =
+      !parentNode.closest(".normative") ||
+      !closestInformative.querySelector(".normative");
   }
 
   // prefixes `!` and `?` override section behaviour
