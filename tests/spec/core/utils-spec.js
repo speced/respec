@@ -8,36 +8,6 @@ describe("Core - Utils", () => {
     });
   });
 
-  describe("renameElement", () => {
-    it("renames empty elements", () => {
-      const a = document.createElement("a");
-      a.id = "this-is-a-div";
-      document.body.appendChild(a);
-      const div = utils.renameElement(a, "div");
-      expect(div instanceof HTMLDivElement).toBe(true);
-      expect(div.id).toBe("this-is-a-div");
-      expect(document.querySelector("a#this-is-a-div")).toBeFalsy();
-      expect(document.querySelector("div#this-is-a-div")).toBeTruthy();
-      div.remove();
-      a.remove();
-    });
-    it("renames elements with children", () => {
-      const a = document.createElement("a");
-      a.id = "this-is-a-div";
-      a.innerHTML = "<span id='inner-pass'>pass</span>";
-      document.body.appendChild(a);
-      const div = utils.renameElement(a, "div");
-      expect(div instanceof HTMLDivElement).toBe(true);
-      expect(div.id).toBe("this-is-a-div");
-      expect(document.querySelector("a#this-is-a-div")).toBeFalsy();
-      const inner = document.querySelector("div#this-is-a-div #inner-pass");
-      expect(inner).toBeTruthy();
-      expect(inner.textContent).toBe("pass");
-      div.remove();
-      a.remove();
-    });
-  });
-
   describe("fetchAndCache", () => {
     async function clearCaches() {
       const keys = await caches.keys();
@@ -563,6 +533,146 @@ describe("Core - Utils", () => {
         expect(textNodes.length).toEqual(4);
         const str = textNodes.map(tn => tn.nodeValue).join("");
         expect(str).toEqual("aabbccdd");
+      });
+    });
+
+    describe("renameElement", () => {
+      it("renames empty elements", () => {
+        const a = document.createElement("a");
+        a.id = "this-is-a-div";
+        document.body.appendChild(a);
+        const div = utils.renameElement(a, "div");
+        expect(div instanceof HTMLDivElement).toBe(true);
+        expect(div.id).toBe("this-is-a-div");
+        expect(document.querySelector("a#this-is-a-div")).toBeFalsy();
+        expect(document.querySelector("div#this-is-a-div")).toBeTruthy();
+        div.remove();
+        a.remove();
+      });
+
+      it("renames elements with children", () => {
+        const a = document.createElement("a");
+        a.id = "this-is-a-div";
+        a.innerHTML = "<span id='inner-pass'>pass</span>";
+        document.body.appendChild(a);
+        const div = utils.renameElement(a, "div");
+        expect(div instanceof HTMLDivElement).toBe(true);
+        expect(div.id).toBe("this-is-a-div");
+        expect(document.querySelector("a#this-is-a-div")).toBeFalsy();
+        const inner = document.querySelector("div#this-is-a-div #inner-pass");
+        expect(inner).toBeTruthy();
+        expect(inner.textContent).toBe("pass");
+        div.remove();
+        a.remove();
+      });
+    });
+
+    describe("addId", () => {
+      it("addId - creates an id from the content of an elements", () => {
+        const { addId } = utils;
+        let elem = document.createElement("p");
+        elem.id = "ID";
+        expect(addId(elem)).toEqual("ID");
+
+        elem = document.createElement("p");
+        elem.title = "TITLE";
+        expect(addId(elem)).toEqual("title");
+
+        elem = document.createElement("p");
+        elem.textContent = "TEXT";
+        expect(addId(elem)).toEqual("text");
+
+        elem = document.createElement("p");
+        expect(addId(elem, null, "PASSED")).toEqual("passed");
+
+        elem = document.createElement("p");
+        expect(addId(elem, "PFX", "PASSED")).toEqual("PFX-passed");
+
+        elem = document.createElement("p");
+        elem.textContent = "TEXT";
+        expect(addId(elem, "PFX")).toEqual("PFX-text");
+
+        elem = document.createElement("p");
+        elem.textContent = "TEXT";
+        addId(elem);
+        expect(elem.id).toEqual("text");
+
+        elem = document.createElement("p");
+        elem.textContent = "  A--Bé9\n C";
+        expect(addId(elem)).toEqual("a-be9-c");
+
+        elem = document.createElement("p");
+        expect(addId(elem)).toEqual("generatedID");
+
+        elem = document.createElement("p");
+        elem.textContent = "2017";
+        expect(addId(elem)).toEqual("x2017");
+
+        const div = document.createElement("div");
+        div.innerHTML = "<p id='a'></p><p id='a-1'></p><span>A</span><span title='a'></span>";
+        document.body.appendChild(div);
+        const span = div.querySelector("span");
+        expect(addId(span)).toEqual("a-0");
+        const spanWithTitle = div.querySelector("span[title]");
+        expect(addId(spanWithTitle)).toEqual("a-2");
+        div.remove();
+
+        elem = document.createElement("p");
+        elem.textContent = ` ¡™£¢∞§¶•ªº
+        THIS is a ------------
+      test (it_contains [[stuff]] '123') 😎		`;
+        expect(addId(elem)).toEqual("this-is-a-test-it_contains-stuff-123");
+      });
+    });
+
+    describe("getDfnTitles", () => {
+      it("doesn't prepend empty dfns to data-lt", () => {
+        const dfn = document.createElement("dfn");
+        dfn.dataset.lt = "DFN|DFN2|DFN3";
+        document.body.appendChild(dfn);
+
+        const titles = utils.getDfnTitles(dfn, { isDefinition: true });
+        expect(titles[0]).toEqual("dfn");
+        expect(titles[1]).toEqual("dfn2");
+        expect(titles[2]).toEqual("dfn3");
+
+        dfn.remove();
+      });
+
+      it("doesn't use the text content when data-lt-noDefault is present", () => {
+        const dfn = document.createElement("dfn");
+        dfn.dataset.lt = "DFN|DFN2|DFN3";
+        dfn.setAttribute("data-lt-noDefault", true);
+        document.body.appendChild(dfn);
+
+        const titles = utils.getDfnTitles(dfn, { isDefinition: true });
+        expect(titles[0]).toEqual("dfn");
+        expect(titles[1]).toEqual("dfn2");
+        expect(titles[2]).toEqual("dfn3");
+        expect(titles[3]).toEqual(undefined);
+
+        dfn.remove();
+      });
+
+      it("finds the data-lts", () => {
+        const dfn = document.createElement("dfn");
+        dfn.dataset.lt = "DFN|DFN2|DFN3";
+        dfn.innerHTML = "<abbr title='ABBR'>TEXT</abbr>";
+        document.body.appendChild(dfn);
+
+        const titles = utils.getDfnTitles(dfn, { isDefinition: true });
+        expect(titles[0]).toEqual("dfn");
+        expect(titles[1]).toEqual("dfn2");
+        expect(titles[2]).toEqual("dfn3");
+        expect(titles[3]).toEqual("text");
+
+        dfn.removeAttribute("data-lt");
+        expect(utils.getDfnTitles(dfn)[0]).toEqual("abbr");
+
+        dfn.querySelector("abbr").removeAttribute("title");
+        expect(utils.getDfnTitles(dfn)[0]).toEqual("text");
+
+        dfn.remove();
       });
     });
   });

@@ -60,20 +60,20 @@ export function idlStringToHtml(str) {
     return hyperHTML`<code><a
     class="respec-idl-xref" data-xref-type="dictionary">${base}</a>["<a
     class="respec-idl-xref" data-xref-type="dict-member"
-    data-xref-for="${base}" data-lt="${member}">${member}</a>"]</code>`;
+    data-link-for="${base}" data-lt="${member}">${member}</a>"]</code>`;
   }
 
   if (attribute) {
     // type: base.attribute
     return hyperHTML`<code>${baseHtml}<a class="respec-idl-xref"
-      data-xref-type="attribute" data-xref-for="${base}">${attribute}</a></code>`;
+      data-xref-type="attribute" data-link-for="${base}">${attribute}</a></code>`;
   }
 
   if (method) {
     // base.method(args)
     const [methodName] = method.split("(", 1);
     return hyperHTML`<code>${baseHtml}<a class="respec-idl-xref"
-      data-xref-type="method" data-xref-for="${base}"
+      data-xref-type="method" data-link-for="${base}"
       data-lt="${method}">${methodName}</a>(${{
       html: args.map(arg => `<var>${arg}</var>`).join(", "),
     }})</code>`;
