@@ -125,11 +125,11 @@ describe("W3C — Bibliographic References", () => {
       refsCssom.every(a => a.getAttribute("href") === "#bib-cssom-view")
     ).toBeTruthy();
 
-    const ir = [...doc.querySelectorAll("#informative-references dt")];
-    expect(ir.length).toEqual(3);
-    expect(ir[0].textContent).toEqual("[CSSOM-VIEW]");
-    expect(ir[1].textContent).toEqual("[DOM4]"); // first appearing [[TERM]] is used
-    expect(ir[2].textContent).toEqual("[LOCAL]");
+    const nr = [...doc.querySelectorAll("#normative-references dt")];
+    expect(nr.length).toEqual(3);
+    expect(nr[0].textContent).toEqual("[CSSOM-VIEW]");
+    expect(nr[1].textContent).toEqual("[DOM4]"); // first appearing [[TERM]] is used
+    expect(nr[2].textContent).toEqual("[LOCAL]");
 
     const refsLocal = [...doc.querySelectorAll("p#refs-local a")];
     expect(refsLocal[0].textContent).toEqual("LOCAL");
@@ -156,7 +156,7 @@ describe("W3C — Bibliographic References", () => {
     expect(doc.querySelectorAll("#bib-fetch").length).toBe(1);
     const fetchRef = doc.querySelector("#bib-fetch");
     expect(fetchRef.closest("section").id).toBe("normative-references");
-    expect(fetchRef.textContent.trim()).toBe("[FeTcH]");
+    expect(fetchRef.textContent.trim()).toBe("[fetch]");
   });
 
   it("shows error if reference doesn't exist", async () => {
@@ -167,7 +167,7 @@ describe("W3C — Bibliographic References", () => {
     const badRefLink = doc.querySelector("#bad-ref a");
     expect(badRefLink.textContent).toEqual("bad-ref");
     expect(badRefLink.getAttribute("href")).toEqual("#bib-bad-ref");
-    const badRef = doc.querySelector("#informative-references dd");
+    const badRef = doc.querySelector("#normative-references dd");
     expect(badRef).toBeTruthy();
     expect(badRef.textContent).toEqual("Reference not found.");
   });
