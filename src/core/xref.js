@@ -18,6 +18,7 @@ const IDL_TYPES = new Set([
   "enum-value",
   "interface",
   "method",
+  "typedef",
   "_IDL_",
 ]);
 const CONCEPT_TYPES = new Set(["dfn", "event", "element", "_CONCEPT_"]);
