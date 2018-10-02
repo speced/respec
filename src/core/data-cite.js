@@ -14,7 +14,7 @@
  * https://github.com/w3c/respec/wiki/data--cite
  */
 import { resolveRef, updateFromNetwork } from "core/biblio";
-import { showInlineError } from "core/utils";
+import { showInlineError, refDetailsFromContext } from "core/utils";
 export const name = "core/data-cite";
 
 function requestLookup(conf) {
@@ -70,7 +70,7 @@ function citeDetailsConverter(conf) {
   return function toCiteDetails(elem) {
     const { dataset } = elem;
     let { cite: key, citeFrag: frag, citePath: path } = dataset;
-    const isNormative = key.startsWith("!");
+    let isNormative = key.startsWith("!");
     const pathPosition = key.search("/");
     const fragPosition = key.search("#");
     // The key is a fragment, resolve using the shortName as key
@@ -96,6 +96,9 @@ function citeDetailsConverter(conf) {
     }
     if (isNormative) {
       key = key.substr(1);
+    } else {
+      const { type } = refDetailsFromContext(key, elem);
+      isNormative = type === "normative";
     }
     if (frag && !frag.startsWith("#")) {
       frag = "#" + frag;

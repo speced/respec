@@ -15,7 +15,7 @@
 //    the counter is not used.
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
-import { getTextNodes } from "core/utils";
+import { getTextNodes, refDetailsFromContext } from "core/utils";
 import { idlStringToHtml } from "core/inline-idl-parser";
 export const name = "core/inlines";
 
@@ -90,9 +90,12 @@ export function run(conf) {
               document.createTextNode(`[[${ref.replace(/^\\/, "")}]]`)
             );
           } else {
-            const { informative, illegal } = isInformative(ref, txt.parentNode);
+            const { type, illegal } = refDetailsFromContext(
+              ref,
+              txt.parentNode
+            );
             ref = ref.replace(/^(!|\?)/, "");
-            if (informative && !illegal) {
+            if (type === "informative" && !illegal) {
               conf.informativeReferences.add(ref);
             } else {
               conf.normativeReferences.add(ref);
@@ -123,29 +126,4 @@ export function run(conf) {
     }
     txt.parentNode.replaceChild(df, txt);
   }
-}
-
-function isInformative(ref, parentNode) {
-  const informSelectors = ".informative, .note, figure, .example, .issue";
-  const closestInformative = parentNode.closest(informSelectors);
-
-  let informative = false;
-  if (closestInformative) {
-    // check if parent is not normative
-    informative =
-      !parentNode.closest(".normative") ||
-      !closestInformative.querySelector(".normative");
-  }
-
-  // prefixes `!` and `?` override section behaviour
-  if (ref.startsWith("!")) {
-    if (informative) {
-      // A (forced) normative reference in informative section is illegal
-      return { informative, illegal: true };
-    }
-    informative = false;
-  } else if (ref.startsWith("?")) {
-    informative = true;
-  }
-  return { informative, illegal: false };
 }
