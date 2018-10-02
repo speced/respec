@@ -513,7 +513,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
           name = defn.name;
           for (const v of defn.values) {
             if (v.type === "string") {
-              v.dfn = findDfn(
+              v.dfn = findDfn(defn, 
                 name,
                 v.value,
                 definitionMap,
@@ -594,7 +594,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
       if (parent) {
         defn.linkFor = parent;
       }
-      defn.dfn = findDfn(parent, name, definitionMap, defn.type, idlElem);
+      defn.dfn = findDfn(defn, parent, name, definitionMap, defn.type, idlElem);
     });
 }
 
@@ -607,7 +607,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
 // When a matching <dfn> is found, it's given <code> formatting,
 // marked as an IDL definition, and returned. If no <dfn> is found,
 // the function returns 'undefined'.
-function findDfn(parent, name, definitionMap, type, idlElem) {
+function findDfn(defn, parent, name, definitionMap, type, idlElem) {
   const originalParent = parent;
   const originalName = name;
   parent = parent.toLowerCase();
@@ -617,7 +617,7 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
       const asQualifiedName = parent + "." + asLocalName;
       let dfn;
       if (definitionMap[asQualifiedName] || definitionMap[asLocalName]) {
-        dfn = findDfn(parent, asLocalName, definitionMap, null, idlElem);
+        dfn = findDfn(defn, parent, asLocalName, definitionMap, null, idlElem);
       }
       if (!dfn) {
         break; // try finding dfn using name, using normal search path...
@@ -646,7 +646,14 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
         const lookupName = definitionMap[asMethodName]
           ? asMethodName
           : asFullyQualifiedName;
-        const dfn = findDfn(parent, lookupName, definitionMap, null, idlElem);
+        const dfn = findDfn(
+          defn,
+          parent,
+          lookupName,
+          definitionMap,
+          null,
+          idlElem
+        );
         if (!dfn) {
           break; // try finding dfn using name, using normal search path...
         }
@@ -660,7 +667,7 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
         return dfn;
       }
       // no method alias, so let's find the dfn and add it
-      const dfn = findDfn(parent, name, definitionMap, null, idlElem);
+      const dfn = findDfn(defn, parent, name, definitionMap, null, idlElem);
       if (!dfn) {
         break;
       }
@@ -716,10 +723,11 @@ function findDfn(parent, name, definitionMap, type, idlElem) {
     }
   }
   if (dfns.length > 1) {
+    debugger;
     const msg = `Multiple \`<dfn>\`s for \`${originalName}\` ${
       originalParent ? `in \`${originalParent}\`` : ""
     }`;
-    pub("error", new Error(msg));
+    pub("error", msg);
   }
   if (dfns.length === 0) {
     const showWarnings =
