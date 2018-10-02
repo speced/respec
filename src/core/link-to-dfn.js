@@ -90,7 +90,7 @@ export async function run(conf, doc, cb) {
         } else if (dfn.classList.contains("externalDFN")) {
           // data-lt[0] serves as unique id for the dfn which this element references
           const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-          ant.dataset.lt = lt[0];
+          ant.dataset.lt = lt[0] || dfn.textContent;
           possibleExternalLinks.push(ant);
         } else {
           ant.href = "#" + dfn.id;
