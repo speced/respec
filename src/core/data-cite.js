@@ -91,11 +91,11 @@ function citeDetailsConverter(conf) {
       const { key: parentKey, isNormative: closestIsNormative } = closest
         ? toCiteDetails(closest)
         : { key: conf.shortName || "", isNormative: false };
-      dataset.cite = closestIsNormative ? `!${parentKey}` : parentKey;
-      dataset.citeFrag = rawKey; // the key is acting as fragment
+      dataset.cite = closestIsNormative ? parentKey : `?${parentKey}`;
+      dataset.citeFrag = rawKey.replace("#", ""); // the key is acting as fragment
       return toCiteDetails(elem);
     }
-    const frag = citeFrag || findFrag(rawKey);
+    const frag = citeFrag ? "#" + citeFrag : findFrag(rawKey);
     const path = citePath || findPath(rawKey).split("#")[0];
     const { type } = refDetailsFromContext(rawKey, elem);
     const isNormative = type === "normative";

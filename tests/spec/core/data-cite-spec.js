@@ -231,7 +231,7 @@ describe("Core — data-cite attribute", () => {
           <p id="t1"><a
             data-cite="WHATWG-HTML"
             data-cite-path="webappapis.html"
-            data-cite-frag="#pass">inline link</a></p>
+            data-cite-frag="pass">inline link</a></p>
         </section>
       `,
       };
@@ -256,7 +256,7 @@ describe("Core — data-cite attribute", () => {
         <section>
           <p id="t1"><a
             data-cite="!WHATWG-HTML#fail"
-            data-cite-frag="#pass">inline link</a></p>
+            data-cite-frag="pass">inline link</a></p>
         </section>
       `,
       };
