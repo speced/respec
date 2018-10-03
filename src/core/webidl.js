@@ -513,7 +513,8 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
           name = defn.name;
           for (const v of defn.values) {
             if (v.type === "string") {
-              v.dfn = findDfn(defn, 
+              v.dfn = findDfn(
+                defn,
                 name,
                 v.value,
                 definitionMap,
@@ -723,7 +724,6 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
     }
   }
   if (dfns.length > 1) {
-    debugger;
     const msg = `Multiple \`<dfn>\`s for \`${originalName}\` ${
       originalParent ? `in \`${originalParent}\`` : ""
     }`;
