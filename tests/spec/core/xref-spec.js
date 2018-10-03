@@ -337,6 +337,10 @@ describe("Core — xref", () => {
         <a>handling event</a> <a>handling events</a>
         <a>event handling</a>
       </section>
+      <section id="test2">
+        <dfn class="externalDFN">event handler</dfn>
+        <a>event handler</a> <a>event handlers</a>
+      </section>
     `;
     const config = { xref: { url: apiURL }, localBiblio, pluralize: true };
     const ops = makeStandardOps(config, body);
@@ -347,6 +351,13 @@ describe("Core — xref", () => {
     const links = [...doc.querySelectorAll("#test a")];
     expect(links.length).toEqual(6);
     for (const link of links) {
+      expect(link.href).toEqual(expectedLinks.get("event handler"));
+      expect(link.classList.contains("respec-offending-element")).toBeFalsy();
+    }
+
+    const test2Links = [...doc.querySelectorAll("#test2 a")];
+    expect(test2Links.length).toEqual(3);
+    for (const link of test2Links) {
       expect(link.href).toEqual(expectedLinks.get("event handler"));
       expect(link.classList.contains("respec-offending-element")).toBeFalsy();
     }
@@ -644,6 +655,45 @@ describe("Core — xref", () => {
       expect(link1b.href).toEqual(
         expectedLinks.get(`TextDecoderOptions["fatal"]`)
       );
+    });
+
+    it("links local definitions first", async () => {
+      const body = `
+        <section data-dfn-for="PaymentAddress" data-link-for="PaymentAddress">
+          <h2><dfn>PaymentAddress</dfn> interface</h2>
+          <pre class="idl">
+            interface PaymentAddress {
+              attribute DOMString languageCode;
+            };
+          </pre>
+          <dfn>languageCode</dfn> attribute of PaymentAddress.
+        </section>
+        <section id="test">
+          <h2>Ignore</h2>
+          <p>Some other <dfn>languageCode</dfn> definiton.</p>
+          <p id="link-internal">{{{ PaymentAddress.languageCode }}} links to PaymentAddress definitons.</p>
+          <p id="link-internal-dfn">{{{ languageCode }}} links to some other definiton.</p>
+          <p id="link-external">{{{ Window.event }}} links to html spec.</p>
+        </section>
+      `;
+      const config = { xref: { url: apiURL }, localBiblio };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+
+      const externalLinks = [...doc.querySelectorAll("#link-external a")];
+      expect(externalLinks[0].href).toEqual(expectedLinks.get("Window"));
+      expect(externalLinks[1].href).toEqual(expectedLinks.get("Window.event"));
+
+      const paymentAddressLinks = [...doc.querySelectorAll("#link-internal a")];
+      expect(paymentAddressLinks[0].getAttribute("href")).toEqual(
+        "#dom-paymentaddress"
+      );
+      expect(paymentAddressLinks[1].getAttribute("href")).toEqual(
+        "#dom-paymentaddress-languagecode"
+      );
+
+      const internalLink = doc.querySelector("#link-internal-dfn a");
+      expect(internalLink.getAttribute("href")).toEqual("#dfn-languagecode");
     });
   });
 

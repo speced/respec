@@ -18,7 +18,6 @@
   "spec/core/informative-spec.js",
   "spec/core/inlines-spec.js",
   "spec/core/issues-notes-spec.js",
-  "spec/core/jquery-enhanced-spec.js",
   "spec/core/l10n-spec.js",
   "spec/core/link-to-dfn-spec.js",
   "spec/core/linter-rules/check-punctuation.js",

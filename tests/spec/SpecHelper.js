@@ -81,6 +81,11 @@ function decorateDocument(doc, opts) {
       .reduce(intoAttributes.bind(loadAttr), loader)
       .classList.add("remove");
     this.appendChild(config);
+    // "preProcess" gets destroyed by JSON.stringify above... so we need to recreate it
+    if (opts.config && Array.isArray(opts.config.preProcess)) {
+      const window = config.ownerDocument.defaultView;
+      window.respecConfig.preProcess = opts.config.preProcess;
+    }
     this.appendChild(loader);
   }
 
