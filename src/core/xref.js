@@ -18,6 +18,7 @@ const IDL_TYPES = new Set([
   "enum-value",
   "interface",
   "method",
+  "typedef",
   "_IDL_",
 ]);
 const CONCEPT_TYPES = new Set(["dfn", "event", "element", "_CONCEPT_"]);
@@ -94,7 +95,7 @@ function createXrefMap(elems) {
     }
 
     const types = [isIDL ? elem.dataset.xrefType || "_IDL_" : "_CONCEPT_"];
-    const { xrefFor: forContext } = elem.dataset;
+    const { linkFor: forContext } = elem.dataset;
 
     const xrefsForTerm = map.has(term) ? map.get(term) : [];
     xrefsForTerm.push({ elem, specs, for: forContext, types });

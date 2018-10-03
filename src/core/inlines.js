@@ -40,7 +40,7 @@ export function run(conf) {
     "(\\bMUST(?:\\s+NOT)?\\b|\\bSHOULD(?:\\s+NOT)?\\b|\\bSHALL(?:\\s+NOT)?\\b|" +
     "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +
     "(?:{{3}\\s*.*\\s*}{3})|" + // inline IDL references
-      "(?:\\[\\[(?:!|\\\\)?[A-Za-z0-9\\.-]+\\]\\])" +
+      "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])" +
       (abbrRx ? `|${abbrRx}` : "") +
       ")"
   );
@@ -90,14 +90,14 @@ export function run(conf) {
               document.createTextNode(`[[${ref.replace(/^\\/, "")}]]`)
             );
           } else {
-            let norm = false;
-            if (ref.startsWith("!")) {
-              norm = true;
-              ref = ref.replace(/^!/, "");
+            const { informative, illegal } = isInformative(ref, txt.parentNode);
+            ref = ref.replace(/^(!|\?)/, "");
+            if (informative && !illegal) {
+              conf.informativeReferences.add(ref);
+            } else {
+              conf.normativeReferences.add(ref);
             }
-            // contrary to before, we always insert the link
-            if (norm) conf.normativeReferences.add(ref);
-            else conf.informativeReferences.add(ref);
+
             df.appendChild(document.createTextNode("["));
             const refHref = `#bib-${ref.toLowerCase()}`;
             df.appendChild(
@@ -123,4 +123,29 @@ export function run(conf) {
     }
     txt.parentNode.replaceChild(df, txt);
   }
+}
+
+function isInformative(ref, parentNode) {
+  const informSelectors = ".informative, .note, figure, .example, .issue";
+  const closestInformative = parentNode.closest(informSelectors);
+
+  let informative = false;
+  if (closestInformative) {
+    // check if parent is not normative
+    informative =
+      !parentNode.closest(".normative") ||
+      !closestInformative.querySelector(".normative");
+  }
+
+  // prefixes `!` and `?` override section behaviour
+  if (ref.startsWith("!")) {
+    if (informative) {
+      // A (forced) normative reference in informative section is illegal
+      return { informative, illegal: true };
+    }
+    informative = false;
+  } else if (ref.startsWith("?")) {
+    informative = true;
+  }
+  return { informative, illegal: false };
 }
