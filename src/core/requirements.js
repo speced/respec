@@ -10,30 +10,33 @@
 //     element with its href pointing to the requirement it should be referencing
 //     and a class of "reqRef".
 import { pub } from "core/pubsubhub";
+import "deps/hyperhtml";
+
 export const name = "core/requirements";
 
-export function run(conf, doc, cb) {
-  $(".req").each(function(i) {
-    i++;
-    const $req = $(this);
-    const title = "Req. " + i;
-    $req.prepend("<a href='#" + $req.attr("id") + "'>" + title + "</a>: ");
+export function run() {
+  let num = 1;
+  document.querySelectorAll(".req").forEach(req => {
+    const href = `#${req.getAttribute("id")}`;
+    const el = hyperHTML`<a href="${href}">Req. ${num}</a>`;
+    req.prepend(el, ": ");
+    num++;
   });
 
-  $("a.reqRef").each(function() {
-    const $ref = $(this);
-    const href = $ref.attr("href");
+  document.querySelectorAll("a.reqRef").forEach(ref => {
+    const href = ref.getAttribute("href");
+    if (!href) {
+      return;
+    }
+    const id = href.substring(1); // href looks like `#id`
+    const req = document.getElementById(id);
     let txt;
-    if (!href) return;
-    const id = href.substring(1);
-    const $req = $("#" + id);
-    if ($req.length) {
-      txt = $req.find("> a").text();
+    if (req) {
+      txt = req.querySelector("a:first-child").textContent;
     } else {
       txt = "Req. not found '" + id + "'";
       pub("error", "Requirement not found in element `a.reqRef`: " + id);
     }
-    $ref.text(txt);
+    ref.textContent = txt;
   });
-  cb();
 }
