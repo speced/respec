@@ -35,7 +35,9 @@ describe("Core - Inlines", () => {
     expect(links[4].getAttribute("href")).toEqual("#bib-svg");
 
     const illegalCite = doc.querySelector("#illegal cite");
-    expect(illegalCite.classList.contains("respec-offending-element")).toBe(true);
+    expect(illegalCite.classList.contains("respec-offending-element")).toBe(
+      true
+    );
   });
 
   it("processes abbr and rfc2119 content", async () => {
