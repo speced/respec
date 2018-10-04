@@ -1,7 +1,6 @@
 "use strict";
 describe("Core - Inlines", () => {
   afterAll(flushIframes);
-
   it("processes inline cite content", async () => {
     const body = `
       <section>
@@ -34,6 +33,11 @@ describe("Core - Inlines", () => {
     expect(links[0].getAttribute("href")).toEqual("#bib-dom");
     expect(links[4].textContent).toEqual("svg");
     expect(links[4].getAttribute("href")).toEqual("#bib-svg");
+
+    const illegalCite = doc.querySelector("#illegal cite");
+    expect(illegalCite.classList.contains("respec-offending-element")).toBe(
+      true
+    );
   });
 
   it("processes abbr and rfc2119 content", async () => {
