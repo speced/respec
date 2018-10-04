@@ -18,6 +18,7 @@ describe("W3C — Defaults", () => {
     expect(rsConf.highlightVars).toEqual(true);
     expect(rsConf.license).toEqual("w3c-software-doc");
     expect(rsConf.specStatus).toEqual("base");
+    expect(rsConf.addSectionLinks).toBe(true);
   });
 
   it("allows w3c defaults to be overridden", async () => {

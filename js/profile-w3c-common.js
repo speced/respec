@@ -18,7 +18,7 @@ require.config({
     "handlebars.runtime": "deps/handlebars",
     "deps/highlight": "https://www.w3.org/Tools/respec/respec-highlight",
   },
-  deps: ["deps/hyperhtml", "deps/url-search-params"],
+  deps: ["deps/hyperhtml"],
 });
 
 define([
@@ -57,7 +57,6 @@ define([
   "core/fix-headers",
   "core/structure",
   "w3c/informative",
-  "w3c/permalinks",
   "core/id-headers",
   "core/caniuse",
   "ui/save-html",

@@ -10,6 +10,17 @@ import * as IDB from "deps/idb";
 const API_URL = new URL(
   "https://wt-466c7865b463a6c4cbb820b42dde9e58-0.sandbox.auth0-extend.com/xref-proto-2"
 );
+const IDL_TYPES = new Set([
+  "attribute",
+  "dict-member",
+  "dictionary",
+  "enum",
+  "enum-value",
+  "interface",
+  "method",
+  "_IDL_",
+]);
+const CONCEPT_TYPES = new Set(["dfn", "event", "element", "_CONCEPT_"]);
 const CACHE_MAX_AGE = 86400000; // 24 hours
 
 /**
@@ -59,10 +70,12 @@ export async function run(conf, elems) {
  */
 function createXrefMap(elems) {
   return elems.reduce((map, elem) => {
+    const isIDL = "xrefType" in elem.dataset;
     let term = elem.dataset.lt
       ? elem.dataset.lt.split("|", 1)[0]
       : elem.textContent;
-    term = normalize(term).toLowerCase();
+    term = normalize(term);
+    if (!isIDL) term = term.toLowerCase();
 
     let specs = [];
     const datacite = elem.closest("[data-cite]");
@@ -80,8 +93,11 @@ function createXrefMap(elems) {
       specs.push(...refs);
     }
 
+    const types = [isIDL ? elem.dataset.xrefType || "_IDL_" : "_CONCEPT_"];
+    const { xrefFor: forContext } = elem.dataset;
+
     const xrefsForTerm = map.has(term) ? map.get(term) : [];
-    xrefsForTerm.push({ elem, specs });
+    xrefsForTerm.push({ elem, specs, for: forContext, types });
     return map.set(term, xrefsForTerm);
   }, new Map());
 }
@@ -94,8 +110,8 @@ function createXrefMap(elems) {
 function collectKeys(xrefs) {
   const queryKeys = [...xrefs.entries()].reduce(
     (queryKeys, [term, entries]) => {
-      for (const { specs } of entries) {
-        queryKeys.add(JSON.stringify({ term, specs })); // only unique
+      for (const { specs, types, for: forContext } of entries) {
+        queryKeys.add(JSON.stringify({ term, specs, types, for: forContext })); // only unique
       }
       return queryKeys;
     },
@@ -106,8 +122,8 @@ function collectKeys(xrefs) {
 
 // adds data to cache
 async function cacheResults(data, cache) {
-  const promisesToSet = Object.entries(data).map(([key, value]) =>
-    IDB.set(key.toLowerCase(), value, cache)
+  const promisesToSet = Object.entries(data).map(([term, results]) =>
+    IDB.set(term, results, cache)
   );
   await IDB.set("__CACHE_TIME__", new Date(), cache);
   await Promise.all(promisesToSet);
@@ -129,9 +145,7 @@ async function resolveFromCache(keys, cache) {
     return { found: Object.create(null), notFound: keys };
   }
 
-  const promisesToGet = keys.map(({ term }) =>
-    IDB.get(term.toLowerCase(), cache)
-  );
+  const promisesToGet = keys.map(({ term }) => IDB.get(term, cache));
   const cachedData = await Promise.all(promisesToGet);
   return keys.reduce(separate, { found: Object.create(null), notFound: [] });
 
@@ -140,7 +154,7 @@ async function resolveFromCache(keys, cache) {
     if (data && data.length) {
       const fromCache = data.filter(entry => cacheFilter(entry, key));
       if (fromCache.length) {
-        const term = key.term.toLowerCase();
+        const { term } = key;
         if (!collector.found[term]) collector.found[term] = [];
         collector.found[term].push(...fromCache);
       } else {
@@ -153,7 +167,7 @@ async function resolveFromCache(keys, cache) {
   }
 
   function cacheFilter(cacheEntry, key) {
-    let accept = cacheEntry.title.toLowerCase() === key.term.toLowerCase();
+    let accept = cacheEntry.title === key.term;
     if (accept && key.specs && key.specs.length) {
       accept = key.specs.includes(cacheEntry.spec);
     }
@@ -231,10 +245,23 @@ function addDataCiteToTerms(results, xrefMap, conf) {
 
 // disambiguate fetched results based on context
 function disambiguate(fetchedData, context, term) {
-  const { elem } = context;
-  const specs = context.specs || [];
+  const { elem, specs, types, for: contextFor } = context;
   const data = (fetchedData || []).filter(entry => {
-    return !specs.length || specs.includes(entry.spec);
+    let valid = true;
+    if (specs.length) {
+      valid = specs.includes(entry.spec);
+    }
+    if (valid && types.length) {
+      valid = types.includes(entry.type);
+      if (!valid) {
+        const validTypes = types.includes("_IDL_") ? IDL_TYPES : CONCEPT_TYPES;
+        valid = [...validTypes].some(type => type === entry.type);
+      }
+    }
+    if (valid && contextFor) {
+      valid = entry.for.includes(contextFor);
+    }
+    return valid;
   });
 
   if (!data.length) {

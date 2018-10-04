@@ -599,7 +599,10 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
   }
   let id = noLC ? txt : txt.toLowerCase();
   id = id
-    .replace(/[\W]+/gim, "-")
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\W+/gim, "-")
     .replace(/^-+/, "")
     .replace(/-+$/, "");
 
@@ -736,4 +739,30 @@ export function getLinkTargets(elem) {
     result.push({ for: "", title });
     return result;
   }, []);
+}
+
+/**
+ * Changes name of a DOM Element
+ * @param {Element} elem element to rename
+ * @param {String} newName new element name
+ * @returns {Element} new renamed element
+ */
+export function renameElement(elem, newName) {
+  if (elem.localName === newName) return elem;
+  const newElement = elem.ownerDocument.createElement(newName);
+
+  // copy attributes
+  for (let i = 0, n = elem.attributes.length; i < n; i++) {
+    const { name, value } = elem.attributes[i];
+    newElement.setAttribute(name, value);
+  }
+
+  // copy child nodes
+  do {
+    newElement.appendChild(elem.firstChild);
+  } while (elem.firstChild);
+
+  // TODO: replace with ChildNode.replaceWith, when available in Safari
+  elem.parentNode.replaceChild(newElement, elem);
+  return newElement;
 }

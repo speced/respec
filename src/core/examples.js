@@ -8,7 +8,7 @@
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
 import css from "deps/text!core/css/examples.css";
-import { reindent } from "core/utils";
+import { reindent, addId } from "core/utils";
 
 export const name = "core/examples";
 
@@ -18,7 +18,7 @@ function makeTitle(conf, elem, num, report) {
   const number = num > 0 ? " " + num : "";
 
   return hyperHTML`
-  <div class="marker"><span>${conf.l10n.example}${number}</span>${
+  <div class="marker"><a class="self-link">${conf.l10n.example}${number}</a>${
     report.title
       ? hyperHTML`<span class="example-title">: ${report.title}</span>`
       : ""
@@ -39,11 +39,18 @@ export function run(conf) {
   let number = 0;
   examples.forEach(example => {
     const illegal = example.classList.contains("illegal-example");
-    const report = { number, illegal };
+    const report = {
+      number,
+      illegal,
+    };
+    const title = example.title;
     if (example.localName === "aside") {
       ++number;
-      const title = makeTitle(conf, example, number, report);
-      example.insertBefore(title, example.firstChild);
+      const div = makeTitle(conf, example, number, report);
+      example.insertBefore(div, example.firstChild);
+      const id = addId(example, "ex-" + number, title);
+      const selfLink = div.querySelector("a.self-link");
+      selfLink.href = `#${id}`;
       pub("example", report);
     } else {
       const inAside = !!example.closest("aside");
@@ -60,6 +67,10 @@ export function run(conf) {
           ${example.cloneNode(true)}
         </div>
       `;
+      if (example.id) div.id = example.id;
+      const id = addId(div, "ex-" + number, title);
+      const selfLink = div.querySelector("a.self-link");
+      selfLink.href = `#${id}`;
       example.parentElement.replaceChild(div, example);
       if (!inAside) pub("example", report);
     }

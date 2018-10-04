@@ -79,7 +79,7 @@ describe("Core - jquery enhanced", () => {
     const $p = $("<p>TEXT</p>");
     $p.makeID();
     expect($p.attr("id")).toEqual("text");
-    expect($("<p>  A--Bé9\n C</p>").makeID()).toEqual("a-b-9-c");
+    expect($("<p>  A--Bé9\n C</p>").makeID()).toEqual("a-be9-c");
     expect($("<p></p>").makeID()).toEqual("generatedID");
     expect($("<p>2017</p>").makeID()).toEqual("x2017");
     const $div = $(
