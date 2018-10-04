@@ -15,7 +15,7 @@
 //    the counter is not used.
 import { pub } from "core/pubsubhub";
 import "deps/hyperhtml";
-import { getTextNodes, refDetailsFromContext } from "core/utils";
+import { getTextNodes, refTypeFromContext } from "core/utils";
 import { idlStringToHtml } from "core/inline-idl-parser";
 export const name = "core/inlines";
 
@@ -90,23 +90,30 @@ export function run(conf) {
               document.createTextNode(`[[${ref.replace(/^\\/, "")}]]`)
             );
           } else {
-            const { type, illegal } = refDetailsFromContext(
-              ref,
-              txt.parentNode
-            );
+            const { type, illegal } = refTypeFromContext(ref, txt.parentNode);
             ref = ref.replace(/^(!|\?)/, "");
             if (type === "informative" && !illegal) {
               conf.informativeReferences.add(ref);
             } else {
               conf.normativeReferences.add(ref);
             }
-
             df.appendChild(document.createTextNode("["));
             const refHref = `#bib-${ref.toLowerCase()}`;
-            df.appendChild(
-              hyperHTML`<cite><a class="bibref" href="${refHref}">${ref}</a></cite>`
-            );
+            const cite = hyperHTML`<cite><a class="bibref" href="${refHref}">${ref}</a></cite>`
+            df.appendChild(cite);
             df.appendChild(document.createTextNode("]"));
+            if (illegal) {
+              cite.classList.add("respec-offending-element");
+              const msg =
+                "Normative references in informative sections are not allowed. " +
+                `Remove '!' from the start of the reference \`[[!${ref}]]\`. `;
+              pub(
+                "warn",
+                msg + "See developer console to find offending element."
+              );
+              cite.title = msg;
+              console.log(msg, cite);
+            }
           }
         } else if (abbrMap.has(matched)) {
           // ABBR

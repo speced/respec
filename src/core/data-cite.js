@@ -14,7 +14,7 @@
  * https://github.com/w3c/respec/wiki/data--cite
  */
 import { resolveRef, updateFromNetwork } from "core/biblio";
-import { showInlineError, refDetailsFromContext } from "core/utils";
+import { showInlineError, refTypeFromContext } from "core/utils";
 export const name = "core/data-cite";
 
 function requestLookup(conf) {
@@ -69,10 +69,7 @@ function cleanElement(elem) {
 function makeComponentFinder(component) {
   return key => {
     const position = key.search(component);
-    if (position !== -1) {
-      return key.substring(position);
-    }
-    return "";
+    return position !== -1 ? key.substring(position) : "";
   };
 }
 
@@ -96,14 +93,11 @@ function citeDetailsConverter(conf) {
       return toCiteDetails(elem);
     }
     const frag = citeFrag ? "#" + citeFrag : findFrag(rawKey);
-    const path = citePath || findPath(rawKey).split("#")[0];
-    const { type } = refDetailsFromContext(rawKey, elem);
+    const path = citePath || findPath(rawKey).split("#")[0]; // path is always before "#"
+    const { type } = refTypeFromContext(rawKey, elem);
     const isNormative = type === "normative";
-    // key is before "/" and "#" but after "!" or "?"
-    const key = rawKey
-      .split("/")[0]
-      .split("#")[0]
-      .substring(/^[?|!]/.test(rawKey));
+    // key is before "/" and "#" but after "!" or "?" (e.g., ?key/path#frag)
+    const key = rawKey.split(/[/|#]/)[0].substring(/^[?|!]/.test(rawKey));
     const details = { key, isNormative, frag, path };
     return details;
   };
