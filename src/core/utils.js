@@ -763,3 +763,27 @@ export function renameElement(elem, newName) {
   elem.replaceWith(newElement);
   return newElement;
 }
+
+export function refTypeFromContext(ref, element) {
+  const informSelectors = ".informative, .note, figure, .example, .issue";
+  const closestInformative = element.closest(informSelectors);
+  let isInformative = false;
+  if (closestInformative) {
+    // check if parent is not normative
+    isInformative =
+      !element.closest(".normative") ||
+      !closestInformative.querySelector(".normative");
+  }
+  // prefixes `!` and `?` override section behavior
+  if (ref.startsWith("!")) {
+    if (isInformative) {
+      // A (forced) normative reference in informative section is illegal
+      return { type: "informative", illegal: true };
+    }
+    isInformative = false;
+  } else if (ref.startsWith("?")) {
+    isInformative = true;
+  }
+  const type = isInformative ? "informative" : "normative";
+  return { type, illegal: false };
+}

@@ -14,7 +14,7 @@
  * https://github.com/w3c/respec/wiki/data--cite
  */
 import { resolveRef, updateFromNetwork } from "core/biblio";
-import { showInlineError } from "core/utils";
+import { showInlineError, refTypeFromContext } from "core/utils";
 export const name = "core/data-cite";
 
 function requestLookup(conf) {
@@ -66,15 +66,21 @@ function cleanElement(elem) {
     .forEach(attrName => elem.removeAttribute(attrName));
 }
 
+function makeComponentFinder(component) {
+  return key => {
+    const position = key.search(component);
+    return position !== -1 ? key.substring(position) : "";
+  };
+}
+
 function citeDetailsConverter(conf) {
+  const findFrag = makeComponentFinder("#");
+  const findPath = makeComponentFinder("/");
   return function toCiteDetails(elem) {
     const { dataset } = elem;
-    let { cite: key, citeFrag: frag, citePath: path } = dataset;
-    const isNormative = key.startsWith("!");
-    const pathPosition = key.search("/");
-    const fragPosition = key.search("#");
+    const { cite: rawKey, citeFrag, citePath } = dataset;
     // The key is a fragment, resolve using the shortName as key
-    if (key.startsWith("#") && !frag) {
+    if (rawKey.startsWith("#") && !citeFrag) {
       // Closes data-cite not starting with "#"
       const closest = elem.parentElement.closest(
         `[data-cite]:not([data-cite^="#"])`
@@ -82,29 +88,18 @@ function citeDetailsConverter(conf) {
       const { key: parentKey, isNormative: closestIsNormative } = closest
         ? toCiteDetails(closest)
         : { key: conf.shortName || "", isNormative: false };
-      elem.dataset.cite = closestIsNormative ? `!${parentKey}` : parentKey;
-      elem.dataset.citeFrag = key; // the key is acting as fragment
+      dataset.cite = closestIsNormative ? parentKey : `?${parentKey}`;
+      dataset.citeFrag = rawKey.replace("#", ""); // the key is acting as fragment
       return toCiteDetails(elem);
     }
-    if (fragPosition !== -1) {
-      frag = !frag ? key.substr(fragPosition) : frag;
-      key = key.substring(0, fragPosition);
-    }
-    if (pathPosition !== -1) {
-      path = !path ? key.substr(pathPosition) : path;
-      key = key.substring(0, pathPosition);
-    }
-    if (isNormative) {
-      key = key.substr(1);
-    }
-    if (frag && !frag.startsWith("#")) {
-      frag = "#" + frag;
-    }
-    // remove head / for URL resolution
-    if (path && path.startsWith("/")) {
-      path = path.substr(1);
-    }
-    return { key, isNormative, frag, path };
+    const frag = citeFrag ? "#" + citeFrag : findFrag(rawKey);
+    const path = citePath || findPath(rawKey).split("#")[0]; // path is always before "#"
+    const { type } = refTypeFromContext(rawKey, elem);
+    const isNormative = type === "normative";
+    // key is before "/" and "#" but after "!" or "?" (e.g., ?key/path#frag)
+    const key = rawKey.split(/[/|#]/)[0].substring(/^[?|!]/.test(rawKey));
+    const details = { key, isNormative, frag, path };
+    return details;
   };
 }
 

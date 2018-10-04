@@ -77,7 +77,7 @@ describe("Core — data-cite attribute", () => {
       body:
         makeDefaultBody() +
         `
-        <section data-cite="FETCH">
+        <section class="informative" data-cite="FETCH">
           <p><a data-cite="#fetch-thing">informative reference</a></p>
         </section>
         <section data-cite="!URL">
@@ -154,7 +154,7 @@ describe("Core — data-cite attribute", () => {
         makeDefaultBody() +
         `
           <section>
-            <p id="t1"><a data-cite="WHATWG-DOM">inline link</a></p>
+            <p id="t1"><a data-cite="?WHATWG-DOM">inline link</a></p>
           </section>
         `,
     };
@@ -175,7 +175,7 @@ describe("Core — data-cite attribute", () => {
         makeDefaultBody() +
         `
           <section>
-            <p id="t1"><a data-cite="no-exist-inf">link 1</a></p>
+            <p id="t1"><a data-cite="?no-exist-inf">link 1</a></p>
             <p id="t2"><a data-cite="!no-exist-norm">link 2</a></p>
           </section>
         `,
@@ -205,7 +205,7 @@ describe("Core — data-cite attribute", () => {
         `
         <section>
           <p id="t1"><a
-            data-cite="!WHATWG-HTML/webappapis.html#test">inline link</a></p>
+            data-cite="!WHATWG-HTML/multipage/webappapis.html#scripting">inline link</a></p>
         </section>
       `,
     };
@@ -213,7 +213,7 @@ describe("Core — data-cite attribute", () => {
     const a = doc.querySelector("#t1 > a");
     expect(a.textContent).toEqual("inline link");
     expect(a.href).toEqual(
-      "https://html.spec.whatwg.org/multipage/webappapis.html#test"
+      "https://html.spec.whatwg.org/multipage/webappapis.html#scripting"
     );
     expect(a.hasAttribute("data-cite")).toEqual(false);
     expect(doc.getElementById("bib-whatwg-html").closest("section").id).toEqual(
@@ -227,7 +227,7 @@ describe("Core — data-cite attribute", () => {
         body:
           makeDefaultBody() +
           `
-        <section>
+        <section class="informative">
           <p id="t1"><a
             data-cite="WHATWG-HTML"
             data-cite-path="webappapis.html"

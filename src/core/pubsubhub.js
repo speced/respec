@@ -12,7 +12,17 @@ export function pub(topic, ...data) {
   if (!subscriptions.has(topic)) {
     return; // Nothing to do...
   }
-  Array.from(subscriptions.get(topic)).forEach(cb => cb.apply(undefined, data));
+  Array.from(subscriptions.get(topic)).forEach(cb => {
+    try {
+      cb.apply(undefined, data);
+    } catch (err) {
+      pub(
+        "error",
+        `Error when calling function ${cb.name}. See developer console.`
+      );
+      console.error(err);
+    }
+  });
   if (window.parent === window.self) {
     return;
   }
