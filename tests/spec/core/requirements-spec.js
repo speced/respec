@@ -18,9 +18,9 @@ describe("Core — Requirements", () => {
 
   it("should process requirement references", async () => {
     const body = `
-      <a href='#req-id' class='reqRef'></a>"
-      <a href='#foo' class='reqRef'></a>"
-      <p class='req' id='req-id'>REQ</p>"
+      <a href='#req-id' class='reqRef'></a>
+      <a href='#foo' class='reqRef'></a>
+      <p class='req' id='req-id'>REQ</p>
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
