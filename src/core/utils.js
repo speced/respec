@@ -764,10 +764,9 @@ export function renameElement(elem, newName) {
   return newElement;
 }
 
-export function refDetailsFromContext(ref, element) {
+export function refTypeFromContext(ref, element) {
   const informSelectors = ".informative, .note, figure, .example, .issue";
   const closestInformative = element.closest(informSelectors);
-
   let isInformative = false;
   if (closestInformative) {
     // check if parent is not normative
@@ -775,7 +774,6 @@ export function refDetailsFromContext(ref, element) {
       !element.closest(".normative") ||
       !closestInformative.querySelector(".normative");
   }
-
   // prefixes `!` and `?` override section behavior
   if (ref.startsWith("!")) {
     if (isInformative) {
