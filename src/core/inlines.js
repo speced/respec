@@ -112,7 +112,7 @@ export function run(conf) {
                 msg + "See developer console to find offending element."
               );
               cite.title = msg;
-              console.log(msg, cite);
+              console.warn(msg, cite);
             }
           }
         } else if (abbrMap.has(matched)) {
