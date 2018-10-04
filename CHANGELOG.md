@@ -1,5 +1,381 @@
 # Change Log
 
+## [v23.2.0](https://github.com/w3c/respec/tree/v23.2.0) (2018-10-04)
+[Full Changelog](https://github.com/w3c/respec/compare/v23.1.1...v23.2.0)
+
+**Closed issues:**
+
+- Export crashes on the editor's draft of JSON-LD [\#1842](https://github.com/w3c/respec/issues/1842)
+
+**Merged pull requests:**
+
+- feat\(core/pubsubhub\): show error if callback fails [\#1844](https://github.com/w3c/respec/pull/1844) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/data-cite\): support contextual citing [\#1841](https://github.com/w3c/respec/pull/1841) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v23.1.1](https://github.com/w3c/respec/tree/v23.1.1) (2018-10-03)
+[Full Changelog](https://github.com/w3c/respec/compare/v23.1.0...v23.1.1)
+
+## [v23.1.0](https://github.com/w3c/respec/tree/v23.1.0) (2018-10-02)
+[Full Changelog](https://github.com/w3c/respec/compare/v23.0.5...v23.1.0)
+
+**Closed issues:**
+
+- IDL link to local members in same document [\#1811](https://github.com/w3c/respec/issues/1811)
+- Change the way references are defined as informative or normative [\#1754](https://github.com/w3c/respec/issues/1754)
+
+**Merged pull requests:**
+
+- chore\(package\): Replace http-server with serve [\#1840](https://github.com/w3c/respec/pull/1840) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(core/inlines\): change the way inline references are used [\#1839](https://github.com/w3c/respec/pull/1839) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(tests/utils\): migrate jquery-enhanced-spec to utils-spec [\#1838](https://github.com/w3c/respec/pull/1838) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/xref\): search locally first [\#1837](https://github.com/w3c/respec/pull/1837) ([sidvishnoi](https://github.com/sidvishnoi))
+- Update eslint-plugin-prettier to the latest version 🚀 [\#1836](https://github.com/w3c/respec/pull/1836) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- feat\(respec-worker\): dynamically load highlight.js languages [\#1835](https://github.com/w3c/respec/pull/1835) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v23.0.5](https://github.com/w3c/respec/tree/v23.0.5) (2018-09-28)
+[Full Changelog](https://github.com/w3c/respec/compare/v23.0.4...v23.0.5)
+
+**Merged pull requests:**
+
+- fix\(core/utils\): renameElement throws unexpected error [\#1833](https://github.com/w3c/respec/pull/1833) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v23.0.4](https://github.com/w3c/respec/tree/v23.0.4) (2018-09-26)
+[Full Changelog](https://github.com/w3c/respec/compare/v23.0.3...v23.0.4)
+
+**Closed issues:**
+
+- Duplicate ids are generated for sections with the same title in Markdown docs [\#1830](https://github.com/w3c/respec/issues/1830)
+- Do not signal missing definitions for methods marked with \[Default\] [\#1309](https://github.com/w3c/respec/issues/1309)
+- Consider moving to semantic-release [\#1186](https://github.com/w3c/respec/issues/1186)
+
+**Merged pull requests:**
+
+- fix\(core/example\): duplicate ids [\#1832](https://github.com/w3c/respec/pull/1832) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/utils\): disable auto headerIds in marked [\#1831](https://github.com/w3c/respec/pull/1831) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v23.0.3](https://github.com/w3c/respec/tree/v23.0.3) (2018-09-17)
+[Full Changelog](https://github.com/w3c/respec/compare/v23.0.2...v23.0.3)
+
+**Closed issues:**
+
+- No ID for section: Table of Contents [\#1828](https://github.com/w3c/respec/issues/1828)
+
+**Merged pull requests:**
+
+- fix\(core/structure\): toc heading must have id [\#1829](https://github.com/w3c/respec/pull/1829) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v23.0.2](https://github.com/w3c/respec/tree/v23.0.2) (2018-09-17)
+[Full Changelog](https://github.com/w3c/respec/compare/v23.0.1...v23.0.2)
+
+**Implemented enhancements:**
+
+- Figure out how to test in Edge [\#723](https://github.com/w3c/respec/issues/723)
+- Write a pre-commit hook that checks that `fdescribe` and `fit` are not present in tests [\#622](https://github.com/w3c/respec/issues/622)
+
+**Fixed bugs:**
+
+- Fully qualified method names are not coded [\#1437](https://github.com/w3c/respec/issues/1437)
+- Line breaks in WebIDL pre sections are ignored/replaced [\#1162](https://github.com/w3c/respec/issues/1162)
+- Permalink text is misleading and links should be moved outside of the heading element [\#827](https://github.com/w3c/respec/issues/827)
+
+**Closed issues:**
+
+- Linking warnings should not show normalized form [\#1676](https://github.com/w3c/respec/issues/1676)
+- Use npm version on release [\#1653](https://github.com/w3c/respec/issues/1653)
+- Run tests sync and async [\#1140](https://github.com/w3c/respec/issues/1140)
+- Experiment with progressive rendering [\#1080](https://github.com/w3c/respec/issues/1080)
+- Do processing on a hidden node to fix screen reader and permalink problems [\#971](https://github.com/w3c/respec/issues/971)
+- webidl-contiguous incorrectly links to non-idl definition [\#836](https://github.com/w3c/respec/issues/836)
+- Allow people to deploy ReSpec as a dependency [\#824](https://github.com/w3c/respec/issues/824)
+- Permalinks should be outside of headers [\#425](https://github.com/w3c/respec/issues/425)
+
+**Merged pull requests:**
+
+- fix\(core/webidl\): fully qualified names not coded [\#1827](https://github.com/w3c/respec/pull/1827) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v23.0.1](https://github.com/w3c/respec/tree/v23.0.1) (2018-09-15)
+[Full Changelog](https://github.com/w3c/respec/compare/v23.0.0...v23.0.1)
+
+**Merged pull requests:**
+
+- fix\(core/example\): self-link pre-based examples [\#1826](https://github.com/w3c/respec/pull/1826) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v23.0.0](https://github.com/w3c/respec/tree/v23.0.0) (2018-09-15)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.7.2...v23.0.0)
+
+**Closed issues:**
+
+- Add self-links to headings \(§ hyperlink anchor\) [\#1821](https://github.com/w3c/respec/issues/1821)
+
+**Merged pull requests:**
+
+- BREAKING CHANGE: remove old permalink code [\#1825](https://github.com/w3c/respec/pull/1825) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(package\): update dep, add Sid as contributor [\#1824](https://github.com/w3c/respec/pull/1824) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/examples\): self-link examples [\#1823](https://github.com/w3c/respec/pull/1823) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/id-headers\): add section links [\#1822](https://github.com/w3c/respec/pull/1822) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v22.7.2](https://github.com/w3c/respec/tree/v22.7.2) (2018-09-15)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.7.1...v22.7.2)
+
+**Closed issues:**
+
+- improved UX: normative and informative references should link directly, to correspond to web best practices and user expectations [\#1820](https://github.com/w3c/respec/issues/1820)
+- npm start doesn't build all components [\#1580](https://github.com/w3c/respec/issues/1580)
+
+**Merged pull requests:**
+
+- fix\(core/biblio\): avoid dup refs when case differs [\#1819](https://github.com/w3c/respec/pull/1819) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v22.7.1](https://github.com/w3c/respec/tree/v22.7.1) (2018-09-06)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.7.0...v22.7.1)
+
+**Closed issues:**
+
+- data-dfn-for ignored for duplicate IDL enum terms [\#1814](https://github.com/w3c/respec/issues/1814)
+
+**Merged pull requests:**
+
+- fix\(webIDL\): unambiguously link emum values [\#1816](https://github.com/w3c/respec/pull/1816) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v22.7.0](https://github.com/w3c/respec/tree/v22.7.0) (2018-09-05)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.6.0...v22.7.0)
+
+**Closed issues:**
+
+- Autogenerated \(section\) IDs omit unicode characters [\#1813](https://github.com/w3c/respec/issues/1813)
+- Small-caps is not appropriate for `\<code\>` [\#1812](https://github.com/w3c/respec/issues/1812)
+
+**Merged pull requests:**
+
+- feat\(core/caniuse\): add more browser keys [\#1818](https://github.com/w3c/respec/pull/1818) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/utils\): generate ids without diacritical marks [\#1817](https://github.com/w3c/respec/pull/1817) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/caniuse\): add mobile Chrome and Safari [\#1815](https://github.com/w3c/respec/pull/1815) ([christianliebel](https://github.com/christianliebel))
+
+## [v22.6.0](https://github.com/w3c/respec/tree/v22.6.0) (2018-08-27)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.5.2...v22.6.0)
+
+**Merged pull requests:**
+
+- Give examples IDs based on example number and title [\#1810](https://github.com/w3c/respec/pull/1810) ([gkellogg](https://github.com/gkellogg))
+
+## [v22.5.2](https://github.com/w3c/respec/tree/v22.5.2) (2018-08-23)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.5.1...v22.5.2)
+
+## [v22.5.1](https://github.com/w3c/respec/tree/v22.5.1) (2018-08-21)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.5.0...v22.5.1)
+
+**Fixed bugs:**
+
+- ‘File a bug’ link broken despite correct GitHub config [\#1803](https://github.com/w3c/respec/issues/1803)
+
+**Closed issues:**
+
+- Linter reports false errors on "local-refs-exist" when href contains unicode symbols [\#1808](https://github.com/w3c/respec/issues/1808)
+
+**Merged pull requests:**
+
+- fix\(lint/local-refs-exist\): handle unicode characters in IDs [\#1809](https://github.com/w3c/respec/pull/1809) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/fix-headers\): remove jQuery dependencies [\#1807](https://github.com/w3c/respec/pull/1807) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/jquery-enhanced\): migrate $renameElement to vanilla js [\#1806](https://github.com/w3c/respec/pull/1806) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/github\): Support conf.github without trailing slash [\#1805](https://github.com/w3c/respec/pull/1805) ([sidvishnoi](https://github.com/sidvishnoi))
+- Update marked to the latest version 🚀 [\#1802](https://github.com/w3c/respec/pull/1802) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+
+## [v22.5.0](https://github.com/w3c/respec/tree/v22.5.0) (2018-08-16)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.4.0...v22.5.0)
+
+**Closed issues:**
+
+- \[META\] Summary - Google Summer of Code 2018 [\#1799](https://github.com/w3c/respec/issues/1799)
+- No space after readonly in "readonly maplike" definitions [\#1794](https://github.com/w3c/respec/issues/1794)
+- Replace `deps/domReady` with a wrapper for deprecation notice [\#1793](https://github.com/w3c/respec/issues/1793)
+- standard way to mark fingerprinting surface vectors [\#1788](https://github.com/w3c/respec/issues/1788)
+- Use eslint on Travis [\#1711](https://github.com/w3c/respec/issues/1711)
+
+**Merged pull requests:**
+
+- Update eslint-config-prettier to the latest version 🚀 [\#1801](https://github.com/w3c/respec/pull/1801) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- Update eslint-config-prettier to the latest version 🚀 [\#1800](https://github.com/w3c/respec/pull/1800) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- Update karma to the latest version 🚀 [\#1798](https://github.com/w3c/respec/pull/1798) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+- Mark deps/domReady as deprecated [\#1797](https://github.com/w3c/respec/pull/1797) ([saschanaz](https://github.com/saschanaz))
+- \(core/xref\): support inline IDL [\#1765](https://github.com/w3c/respec/pull/1765) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v22.4.0](https://github.com/w3c/respec/tree/v22.4.0) (2018-08-07)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.3.5...v22.4.0)
+
+**Fixed bugs:**
+
+- Multiple dfn with the same name [\#1768](https://github.com/w3c/respec/issues/1768)
+
+**Merged pull requests:**
+
+- fix\(core/webidl\): only set pre id when needed [\#1796](https://github.com/w3c/respec/pull/1796) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/xref\): cache results [\#1758](https://github.com/w3c/respec/pull/1758) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(w3c/templates/sotd\): prefer github [\#1740](https://github.com/w3c/respec/pull/1740) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v22.3.5](https://github.com/w3c/respec/tree/v22.3.5) (2018-08-07)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.3.4...v22.3.5)
+
+**Closed issues:**
+
+- \<dfn\> for Gamepad is being ignored [\#1789](https://github.com/w3c/respec/issues/1789)
+
+**Merged pull requests:**
+
+- fix\(core/webidl\): find interface dfn in section [\#1792](https://github.com/w3c/respec/pull/1792) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(core/examples\): refactor and remove jQuery [\#1787](https://github.com/w3c/respec/pull/1787) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v22.3.4](https://github.com/w3c/respec/tree/v22.3.4) (2018-08-02)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.3.3...v22.3.4)
+
+**Fixed bugs:**
+
+- Language tags exposed in editor list company names [\#1786](https://github.com/w3c/respec/issues/1786)
+
+**Closed issues:**
+
+- Language markup showing in Editors list [\#1594](https://github.com/w3c/respec/issues/1594)
+
+**Merged pull requests:**
+
+- fix\(templates/show-people\): allow HTML for company field [\#1790](https://github.com/w3c/respec/pull/1790) ([saschanaz](https://github.com/saschanaz))
+
+## [v22.3.3](https://github.com/w3c/respec/tree/v22.3.3) (2018-07-31)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.3.2...v22.3.3)
+
+**Merged pull requests:**
+
+-  refactor\(core/jquery-enhanced\): migrate $linkTargets to vanilla js [\#1785](https://github.com/w3c/respec/pull/1785) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor: remove `var` [\#1784](https://github.com/w3c/respec/pull/1784) ([saschanaz](https://github.com/saschanaz))
+- refactor\(tests/spec/core/webidl-spec\): remove remaining jQuery [\#1783](https://github.com/w3c/respec/pull/1783) ([saschanaz](https://github.com/saschanaz))
+- Lint tests [\#1782](https://github.com/w3c/respec/pull/1782) ([saschanaz](https://github.com/saschanaz))
+- refactor: use const and arrow functions [\#1781](https://github.com/w3c/respec/pull/1781) ([saschanaz](https://github.com/saschanaz))
+- refactor: use getElementById whenever possible [\#1780](https://github.com/w3c/respec/pull/1780) ([saschanaz](https://github.com/saschanaz))
+- refactor: use await for makeRSDoc\(\) [\#1779](https://github.com/w3c/respec/pull/1779) ([saschanaz](https://github.com/saschanaz))
+- fix\(karma.conf.js\): grep causes incorrect skips [\#1778](https://github.com/w3c/respec/pull/1778) ([saschanaz](https://github.com/saschanaz))
+- Force eslint [\#1777](https://github.com/w3c/respec/pull/1777) ([saschanaz](https://github.com/saschanaz))
+- fix\(core/idl\): linking attribute id/type with same name [\#1776](https://github.com/w3c/respec/pull/1776) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor\(tests/spec/core/webidl-spec\): remove jQuery from dict/enum tests [\#1775](https://github.com/w3c/respec/pull/1775) ([saschanaz](https://github.com/saschanaz))
+- refactor\(tests/spec/core/webidl-spec\): remove jQuery from op/comment tests [\#1774](https://github.com/w3c/respec/pull/1774) ([saschanaz](https://github.com/saschanaz))
+- refactor\(tests/spec/core/webidl-spec\): remove jQuery from ctor/const/attr tests [\#1773](https://github.com/w3c/respec/pull/1773) ([saschanaz](https://github.com/saschanaz))
+- refactor\(tests/spec/core/webidl-spec\): remove jQuery from interface tests [\#1772](https://github.com/w3c/respec/pull/1772) ([saschanaz](https://github.com/saschanaz))
+
+## [v22.3.2](https://github.com/w3c/respec/tree/v22.3.2) (2018-07-27)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.3.1...v22.3.2)
+
+**Closed issues:**
+
+- \[FEATURE REQUEST [\#1761](https://github.com/w3c/respec/issues/1761)
+
+**Merged pull requests:**
+
+- fix\(core/issues-notes\): don't remove closed issues [\#1771](https://github.com/w3c/respec/pull/1771) ([marcoscaceres](https://github.com/marcoscaceres))
+- chore\(package\): disable http cache for dev server [\#1770](https://github.com/w3c/respec/pull/1770) ([marcoscaceres](https://github.com/marcoscaceres))
+- refactor: remove domReady dependency [\#1767](https://github.com/w3c/respec/pull/1767) ([saschanaz](https://github.com/saschanaz))
+- refactor\(core/webidl\): modernize run\(\) [\#1766](https://github.com/w3c/respec/pull/1766) ([saschanaz](https://github.com/saschanaz))
+- docs\(example/starter\): Fix closing heading tag [\#1763](https://github.com/w3c/respec/pull/1763) ([HolgerPeters](https://github.com/HolgerPeters))
+- Update fs-extra to the latest version 🚀 [\#1759](https://github.com/w3c/respec/pull/1759) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+
+## [v22.3.1](https://github.com/w3c/respec/tree/v22.3.1) (2018-07-16)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.3.0...v22.3.1)
+
+**Merged pull requests:**
+
+- fix\(core/webidl\): unindentMarkup\(\) should work with space-only lines [\#1756](https://github.com/w3c/respec/pull/1756) ([saschanaz](https://github.com/saschanaz))
+- fix\(core/xref\): explicit external dfn lookup [\#1755](https://github.com/w3c/respec/pull/1755) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v22.3.0](https://github.com/w3c/respec/tree/v22.3.0) (2018-07-12)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.2.1...v22.3.0)
+
+**Closed issues:**
+
+- IDL Index looks too condensed [\#1745](https://github.com/w3c/respec/issues/1745)
+- Another somewhat unhelpful error [\#1742](https://github.com/w3c/respec/issues/1742)
+
+**Merged pull requests:**
+
+- feat\(core/xref\): add normative, informative references [\#1753](https://github.com/w3c/respec/pull/1753) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(core/xref\): use inline references to provide context [\#1751](https://github.com/w3c/respec/pull/1751) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/xref\): use context to disambiguate [\#1750](https://github.com/w3c/respec/pull/1750) ([sidvishnoi](https://github.com/sidvishnoi))
+- refactor\(core/webidl\): remove dead code, unjquery [\#1749](https://github.com/w3c/respec/pull/1749) ([marcoscaceres](https://github.com/marcoscaceres))
+- Add spaces between IDL [\#1748](https://github.com/w3c/respec/pull/1748) ([saschanaz](https://github.com/saschanaz))
+- refactor\(core/jquery-enhanced\): move getDfnTitles to vanilla js [\#1746](https://github.com/w3c/respec/pull/1746) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/webidl\): improve warning msg for operation [\#1744](https://github.com/w3c/respec/pull/1744) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(core/xref\): support data-lt attributes [\#1736](https://github.com/w3c/respec/pull/1736) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v22.2.1](https://github.com/w3c/respec/tree/v22.2.1) (2018-07-10)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.2.0...v22.2.1)
+
+**Merged pull requests:**
+
+- fix\(core/webidl\): include optional's trivia [\#1747](https://github.com/w3c/respec/pull/1747) ([marcoscaceres](https://github.com/marcoscaceres))
+
+## [v22.2.0](https://github.com/w3c/respec/tree/v22.2.0) (2018-07-09)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.1.1...v22.2.0)
+
+**Fixed bugs:**
+
+- Two spaces between optional and identifier [\#1737](https://github.com/w3c/respec/issues/1737)
+
+**Closed issues:**
+
+- Prevent SpecRef request if there are no refs [\#1726](https://github.com/w3c/respec/issues/1726)
+- WebIDL and data-dfn-for creates fragments with whitespace [\#1650](https://github.com/w3c/respec/issues/1650)
+- Shepherd integration [\#1424](https://github.com/w3c/respec/issues/1424)
+
+**Merged pull requests:**
+
+- refactor\(core/pluralize\): separate pluralization from data-lt [\#1739](https://github.com/w3c/respec/pull/1739) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/webidl\): extra space between optional and identifier [\#1738](https://github.com/w3c/respec/pull/1738) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/webidl\): normalize enum value ids [\#1735](https://github.com/w3c/respec/pull/1735) ([marcoscaceres](https://github.com/marcoscaceres))
+- fix\(core/biblio\): prevent SpecRef request if there are no refs [\#1734](https://github.com/w3c/respec/pull/1734) ([sidvishnoi](https://github.com/sidvishnoi))
+- feat\(core/xref\): support external dfn [\#1733](https://github.com/w3c/respec/pull/1733) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/xref\): use empty data-cite for local references [\#1732](https://github.com/w3c/respec/pull/1732) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v22.1.1](https://github.com/w3c/respec/tree/v22.1.1) (2018-07-03)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.1.0...v22.1.1)
+
+**Fixed bugs:**
+
+- Recent ReSpec update broke WebIDL parsing for WoT defintitions [\#1728](https://github.com/w3c/respec/issues/1728)
+
+**Closed issues:**
+
+- Ugly IDL errors [\#1674](https://github.com/w3c/respec/issues/1674)
+
+**Merged pull requests:**
+
+- fix\(core/link-to-dfn\): avoid xref warning if xref disabled [\#1731](https://github.com/w3c/respec/pull/1731) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/webidl\): improve display of errors [\#1730](https://github.com/w3c/respec/pull/1730) ([marcoscaceres](https://github.com/marcoscaceres))
+- Update url-search-params to the latest version 🚀 [\#1729](https://github.com/w3c/respec/pull/1729) ([greenkeeper[bot]](https://github.com/apps/greenkeeper))
+
+## [v22.1.0](https://github.com/w3c/respec/tree/v22.1.0) (2018-07-02)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.0.1...v22.1.0)
+
+**Closed issues:**
+
+- W3C logo showing up in unofficial drafts?  [\#1725](https://github.com/w3c/respec/issues/1725)
+- Add CSS for :target [\#1683](https://github.com/w3c/respec/issues/1683)
+
+**Merged pull requests:**
+
+- fix: allow multiple logos when unofficial [\#1727](https://github.com/w3c/respec/pull/1727) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/xref\): use data-cite to disambiguate [\#1723](https://github.com/w3c/respec/pull/1723) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/xref\): Improve error messages [\#1722](https://github.com/w3c/respec/pull/1722) ([sidvishnoi](https://github.com/sidvishnoi))
+- fix\(core/link-to-dfn\): bad markdown [\#1721](https://github.com/w3c/respec/pull/1721) ([marcoscaceres](https://github.com/marcoscaceres))
+- feat\(core/css/respec\): add :target highlight \#1683 [\#1720](https://github.com/w3c/respec/pull/1720) ([Jigar3](https://github.com/Jigar3))
+- feat\(core/xref\): Add support for automatically linking external refs [\#1719](https://github.com/w3c/respec/pull/1719) ([sidvishnoi](https://github.com/sidvishnoi))
+
+## [v22.0.1](https://github.com/w3c/respec/tree/v22.0.1) (2018-06-28)
+[Full Changelog](https://github.com/w3c/respec/compare/v22.0.0...v22.0.1)
+
+**Closed issues:**
+
+- WebIDL rendering adds "\<span class='idlSectionComment'\>" to output [\#1717](https://github.com/w3c/respec/issues/1717)
+
+**Merged pull requests:**
+
+- fix\(core/webidl\): idl not rendering correctly [\#1718](https://github.com/w3c/respec/pull/1718) ([marcoscaceres](https://github.com/marcoscaceres))
+
 ## [v22.0.0](https://github.com/w3c/respec/tree/v22.0.0) (2018-06-26)
 [Full Changelog](https://github.com/w3c/respec/compare/v21.3.0...v22.0.0)
 
@@ -258,10 +634,6 @@
 
 ## [v20.5.1](https://github.com/w3c/respec/tree/v20.5.1) (2018-04-03)
 [Full Changelog](https://github.com/w3c/respec/compare/v20.5.0...v20.5.1)
-
-**Closed issues:**
-
-- Language markup showing in Editors list [\#1594](https://github.com/w3c/respec/issues/1594)
 
 **Merged pull requests:**
 
