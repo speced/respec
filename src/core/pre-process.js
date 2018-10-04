@@ -7,7 +7,7 @@
  *      tested. Use with care, if you know what you're doing. Chances are you really
  *      want to be using a new module with your own profile
  */
-import { sub } from "core/pubsubhub";
+import { sub, pub } from "core/pubsubhub";
 
 export const name = "core/pre-process";
 
@@ -21,11 +21,28 @@ sub(
   async config => {
     const result = [];
     if (Array.isArray(config.preProcess)) {
-      const values = await Promise.all(
-        config.preProcess
-          .filter(f => typeof f === "function")
-          .map(f => Promise.resolve(f(config, document)))
-      );
+      const promises = config.preProcess
+        .filter(f => {
+          const isFunction = typeof f === "function";
+          if (!isFunction) {
+            pub("error", "Every item in `preProcess` must be a JS function.");
+          }
+          return isFunction;
+        })
+        .map(async f => {
+          try {
+            return await f(config, document);
+          } catch (err) {
+            pub(
+              "error",
+              `Function ${
+                f.name
+              } threw an error during \`preProcess\`. See developer console.`
+            );
+            console.error(err);
+          }
+        });
+      const values = await Promise.all(promises);
       result.push(...values);
     }
     doneResolver(result);
