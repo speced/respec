@@ -4,17 +4,14 @@ export default conf => {
   const html = hyperHTML;
   return html`<h2>${conf.l10n.sotd}</h2>
 ${
-    conf.isPreview
+    config.isPreview
       ? html`
   <details class="annoying-warning" open="">
-  ${
-    config.prNumber
-    ? html`
-    <summary>This is a preview of pull request #<a href="${conf.prUrl}">${conf.prNumber}</a></summary>
-    ` : html`
-    <summary> This is a preview </summary>
-    `
-  }
+  <summary>This is a preview${
+    conf.prUrl && conf.prNumber
+      ? html` of pull request <a href="${conf.prUrl}">#${conf.prNumber}</a>`
+      : ""
+  }</summary>
     <p>
       Do not attempt to implement this version of the specification. Do not reference this
       version as authoritative in any way.
