@@ -99,7 +99,7 @@ export function run(conf) {
             }
             df.appendChild(document.createTextNode("["));
             const refHref = `#bib-${ref.toLowerCase()}`;
-            const cite = hyperHTML`<cite><a class="bibref" href="${refHref}">${ref}</a></cite>`
+            const cite = hyperHTML`<cite><a class="bibref" href="${refHref}">${ref}</a></cite>`;
             df.appendChild(cite);
             df.appendChild(document.createTextNode("]"));
             if (illegal) {
