@@ -38,12 +38,77 @@ function parseInlineIDL(str) {
   return result;
 }
 
+function findMarchingVar(varName, contextNode) {
+  if (!contextNode) return null;
+  const potentialVars = [
+    ...contextNode.parentElement
+      .closest("section, body")
+      .querySelectorAll("var[data-type]"),
+  ];
+  const matchedVar = potentialVars.find(
+    ({ textContent }) => textContent.trim() === varName
+  );
+  return matchedVar ? matchedVar : null;
+}
+
+function renderMember(member, baseHTML, idlType, matchedVar) {
+  // type: Dictionary["member"]
+  const memberHTML = hyperHTML`[<code>"<a
+    class="respec-idl-xref" data-xref-type="dict-member"
+    data-link-for="${idlType}" data-lt="${member}">${member}</a>"</code>]`;
+  const render = hyperHTML(document.createDocumentFragment());
+  if (matchedVar) {
+    return render`${[baseHTML]}${[memberHTML]}`;
+  }
+  return render`<code>${[baseHTML]}</code>${[memberHTML]}`;
+}
+
+function renderAttribute(attribute, baseHTML, idlType, matchedVar) {
+  // type: base.attribute
+  const attributeHTML = hyperHTML`<a 
+      class="respec-idl-xref"
+      data-xref-type="attribute" 
+      data-link-for="${idlType}">${attribute}</a>`;
+  if (matchedVar) {
+    const render = hyperHTML(document.createDocumentFragment());
+    return render`${baseHTML}.<code>${attributeHTML}</code>`;
+  }
+  return hyperHTML`<code>${baseHTML}.${attributeHTML}</code>`;
+}
+
+function renderMethod(method, args, baseHTML, idlType, matchedVar) {
+  // base.method(args)
+  const [methodName] = method.split("(", 1);
+  const argsHTML = args
+    .map(arg => {
+      // Are we passing a local variable to the method?
+      const argMatch = findMarchingVar(arg, matchedVar);
+      const argType = argMatch ? argMatch.dataset.type : undefined;
+      return { argType, arg };
+    })
+    .map(
+      ({ arg, argType }) =>
+        `<var${argType ? ` data-type="${argType}"` : ""}>${arg}</var>`
+    )
+    .join(", ");
+  const methodHTML = `<a 
+    class="respec-idl-xref"
+    data-xref-type="method" 
+    data-link-for="${idlType}"
+    data-lt="${idlType}.${method}">${methodName}</a>(${argsHTML})`;
+  const render = hyperHTML(document.createDocumentFragment());
+  if (matchedVar) {
+    return render`${[baseHTML]}.<code>${[methodHTML]}</code>`;
+  }
+  return render`<code>${[baseHTML]}</code>.${[methodHTML]}`;
+}
+
 /**
  * Generates HTML by parsing an IDL string
  * @param {String} str IDL string
  * @return {Node} html output
  */
-export function idlStringToHtml(str) {
+export function idlStringToHtml(str, contextNode) {
   const { base, attribute, member, method, args } = parseInlineIDL(str);
 
   if (base.startsWith("[[") && base.endsWith("]]")) {
@@ -51,33 +116,26 @@ export function idlStringToHtml(str) {
     return hyperHTML`<code><a data-xref-type="attribute">${base}</a></code>`;
   }
 
-  const baseHtml = base
-    ? hyperHTML`<a data-xref-type="_IDL_">${base}</a>.`
-    : "";
-
+  // Check if base is a local variable
+  const matchedVar = findMarchingVar(base, contextNode);
+  const idlType = matchedVar ? matchedVar.dataset.type : base;
+  let baseHTML;
+  if (matchedVar) {
+    baseHTML = hyperHTML`<var data-type="${idlType}">${base}</var>`;
+  } else {
+    baseHTML = base
+      ? hyperHTML`<a data-xref-type="_IDL_">${base}</a>`
+      : hyperHTML``;
+  }
+  let html;
   if (member) {
-    // type: Dictionary["member"]
-    return hyperHTML`<code><a
-    class="respec-idl-xref" data-xref-type="dictionary">${base}</a>["<a
-    class="respec-idl-xref" data-xref-type="dict-member"
-    data-link-for="${base}" data-lt="${member}">${member}</a>"]</code>`;
+    html = renderMember(member, baseHTML, idlType, matchedVar);
+  } else if (attribute) {
+    html = renderAttribute(attribute, baseHTML, idlType, matchedVar);
+  } else if (method) {
+    html = renderMethod(method, args, baseHTML, idlType, matchedVar);
+  } else {
+    html = hyperHTML`<code><a data-xref-type="_IDL_">${base}</a></code>`;
   }
-
-  if (attribute) {
-    // type: base.attribute
-    return hyperHTML`<code>${baseHtml}<a class="respec-idl-xref"
-      data-xref-type="attribute" data-link-for="${base}">${attribute}</a></code>`;
-  }
-
-  if (method) {
-    // base.method(args)
-    const [methodName] = method.split("(", 1);
-    return hyperHTML`<code>${baseHtml}<a class="respec-idl-xref"
-      data-xref-type="method" data-link-for="${base}"
-      data-lt="${method}">${methodName}</a>(${{
-      html: args.map(arg => `<var>${arg}</var>`).join(", "),
-    }})</code>`;
-  }
-
-  return hyperHTML`<code><a data-xref-type="_IDL_">${base}</a></code>`;
+  return html;
 }

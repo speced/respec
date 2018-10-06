@@ -78,7 +78,7 @@ export function run(conf) {
               document.createTextNode(`{{{${ref.replace(/^\\/, "")}}}}`)
             );
           } else {
-            df.appendChild(idlStringToHtml(ref));
+            df.appendChild(idlStringToHtml(ref, txt));
           }
         } else if (matched.startsWith("[[")) {
           // BIBREF
