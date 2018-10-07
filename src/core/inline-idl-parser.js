@@ -13,32 +13,62 @@
  *  { base: "Dictionary", member: "member" }
  */
 
-const methodRegex = /\((.*)\)$/;
-const idlSplitRegex = /\b\.\b|\.(?=\[\[)/;
-const dictionaryRegex = /(\w+)\["(\w+)"\]/;
-
+const methodRegex = /(\w+)\((.*)\)$/;
+const dictionaryRegex = /(\w+)+\["(\w+)"\]$/;
+const slotRegex = /\[\[(\w+)\]\]$/;
+const attributeRegex = /^(\w+)$/;
 function parseInlineIDL(str) {
-  const result = Object.create(null);
-  const splitted = str.split(idlSplitRegex);
-  if (methodRegex.test(splitted[splitted.length - 1])) {
-    result.method = splitted.pop();
-    result.args = result.method.match(methodRegex)[1].split(/,\s*/);
+  //if (!str) return [];
+  const tokens = str.split(".");
+  // ends with method
+  const results = [];
+  while (tokens.length) {
+    const value = tokens.pop();
+    // Method
+    if (methodRegex.test(value)) {
+      const [, identifier, allArgs] = value.match(methodRegex);
+      const args = allArgs.split(/,\s*/).filter(arg => arg);
+      results.push({ type: "method", identifier, args });
+      continue;
+    }
+    // internal slot
+    if (slotRegex.test(value)) {
+      const [, identifier] = value.match(slotRegex);
+      results.push({ type: "internal-slot", identifier });
+      continue;
+    }
+    // dictionary
+    if (dictionaryRegex.test(value)) {
+      const [, identifier, member] = value.match(dictionaryRegex);
+      results.push({ type: "dictionary", identifier, member });
+      continue;
+    }
+    // attribute
+    if (attributeRegex.test(value) && tokens.length) {
+      const [, identifier] = value.match(attributeRegex);
+      results.push({ type: "attribute", identifier });
+      continue;
+    }
+    // base
+    results.push({ type: "base", identifier: value });
   }
-  if (splitted.length > 1 && !result.method) {
-    result.attribute = splitted.pop();
-  }
-  const remaining = splitted.join(".");
-  if (dictionaryRegex.test(remaining)) {
-    const [, base, member] = remaining.match(dictionaryRegex);
-    result.base = base;
-    result.member = member;
-  } else {
-    result.base = remaining;
-  }
-  return result;
+  // link the list
+  results.forEach((item, i, list) => {
+    item.parent = list[i + 1] || null;
+  });
+  // return them in the order we found them...
+  return results.reverse();
 }
 
-function findMarchingVar(varName, contextNode) {
+function findDfnType(varName) {
+  const potentialElems = [...document.body.querySelectorAll("dfn[data-type]")];
+  const match = potentialElems.find(
+    ({ textContent }) => textContent.trim() === varName
+  );
+  return match ? match.dataset.type : null;
+}
+
+function findMarchingVarType(varName, contextNode) {
   if (!contextNode) return null;
   const potentialVars = [
     ...contextNode.parentElement
@@ -48,59 +78,80 @@ function findMarchingVar(varName, contextNode) {
   const matchedVar = potentialVars.find(
     ({ textContent }) => textContent.trim() === varName
   );
-  return matchedVar ? matchedVar : null;
+  return matchedVar ? matchedVar.dataset.type : null;
 }
 
-function renderMember(member, baseHTML, idlType, matchedVar) {
-  // type: Dictionary["member"]
-  const memberHTML = hyperHTML`[<code>"<a
-    class="respec-idl-xref" data-xref-type="dict-member"
-    data-link-for="${idlType}" data-lt="${member}">${member}</a>"</code>]`;
-  const render = hyperHTML(document.createDocumentFragment());
-  if (matchedVar) {
-    return render`${[baseHTML]}${[memberHTML]}`;
-  }
-  return render`<code>${[baseHTML]}</code>${[memberHTML]}`;
+function renderBase(details, contextNode) {
+  // Check if base is a local variable in a section
+  const { identifier } = details;
+  details.idlType = findMarchingVarType(identifier, contextNode);
+  const html = details.idlType
+    ? hyperHTML`<var data-type="${details.idlType}">${identifier}</var>`
+    : hyperHTML`<a data-xref-type="_IDL_"><code>${identifier}<code></a>`;
+  // we can use the identifier as the base type
+  if (!details.idlType) details.idlType = identifier;
+  return html;
 }
 
-function renderAttribute(attribute, baseHTML, idlType, matchedVar) {
-  // type: base.attribute
-  const attributeHTML = hyperHTML`<a 
+// Dictionary: .identifier["member"], identifier["member"]
+function renderDictionary(details, contextNode) {
+  const { member, parent, identifier } = details;
+  debugger
+  const memberHTML = parent
+    ? renderBase(details, contextNode) // it's on its own, as base
+    : renderAttribute(details);
+  const idlType = parent ? parent.idlType : identifier;
+  const html = hyperHTML`${memberHTML}["<a 
+    class="respec-idl-xref"
+    data-xref-type="dict-member"
+    data-link-for="${idlType}"
+  >${member}</a>"</code>]`;
+  // can't go any deeper with type
+  return html;
+}
+
+// Internal slot: .[[identifer]]
+function renderInternalSlot(details) {
+  const { identifier, type } = details;
+  details.idlType = findDfnType(`[[${identifier}]]`);
+  const lt = `[[${identifier}]]`;
+  const html = hyperHTML`.[[<code><a
+    class="respec-idl-xref"
+    data-xref-type="${type}"
+    data-type="${details.idlType}"
+    data-lt="${lt}">${identifier}</a></code>]]`;
+  return html;
+}
+
+// Attribute: .identifier
+function renderAttribute(details) {
+  const { parent, identifier, type } = details;
+  const idlType = parent ? parent.idlType : null;
+  const html = hyperHTML`.<a 
       class="respec-idl-xref"
-      data-xref-type="attribute" 
-      data-link-for="${idlType}">${attribute}</a>`;
-  if (matchedVar) {
-    const render = hyperHTML(document.createDocumentFragment());
-    return render`${baseHTML}.<code>${attributeHTML}</code>`;
-  }
-  return hyperHTML`<code>${baseHTML}.${attributeHTML}</code>`;
+      data-xref-type="${type}" 
+      data-link-for="${idlType}"><code>${identifier}</code></a>`;
+  return html;
 }
 
-function renderMethod(method, args, baseHTML, idlType, matchedVar) {
-  // base.method(args)
-  const [methodName] = method.split("(", 1);
-  const argsHTML = args
+// Method: .identifier(arg1, arg2, ...)
+function renderMethod(details, contextNode) {
+  const { args, identifier, type, parent } = details;
+  const { idlType } = parent;
+  const argsText = args
     .map(arg => {
       // Are we passing a local variable to the method?
-      const argMatch = findMarchingVar(arg, matchedVar);
-      const argType = argMatch ? argMatch.dataset.type : undefined;
-      return { argType, arg };
+      const type = findMarchingVarType(arg, contextNode);
+      return { type, arg };
     })
-    .map(
-      ({ arg, argType }) =>
-        `<var${argType ? ` data-type="${argType}"` : ""}>${arg}</var>`
-    )
+    .map(({ arg, type }) => `<var data-type="${type}">${arg}</var>`)
     .join(", ");
-  const methodHTML = `<a 
+  const html = hyperHTML`.<a 
     class="respec-idl-xref"
-    data-xref-type="method" 
+    data-xref-type="${type}" 
     data-link-for="${idlType}"
-    data-lt="${idlType}.${method}">${methodName}</a>(${argsHTML})`;
-  const render = hyperHTML(document.createDocumentFragment());
-  if (matchedVar) {
-    return render`${[baseHTML]}.<code>${[methodHTML]}</code>`;
-  }
-  return render`<code>${[baseHTML]}</code>.${[methodHTML]}`;
+    >${identifier}</a>(${[argsText]})`;
+  return html;
 }
 
 /**
@@ -109,33 +160,31 @@ function renderMethod(method, args, baseHTML, idlType, matchedVar) {
  * @return {Node} html output
  */
 export function idlStringToHtml(str, contextNode) {
-  const { base, attribute, member, method, args } = parseInlineIDL(str);
-
-  if (base.startsWith("[[") && base.endsWith("]]")) {
-    // is internal slot (possibly local)
-    return hyperHTML`<code><a data-xref-type="attribute">${base}</a></code>`;
+  const results = parseInlineIDL(str);
+  if (!results) return;
+  const render = hyperHTML(document.createDocumentFragment());
+  const output = [];
+  for (const details of results) {
+    switch (details.type) {
+      case "base":
+        output.push(renderBase(details, contextNode));
+        break;
+      case "dictionary":
+        output.push(renderDictionary(details, contextNode));
+        break;
+      case "attribute":
+        output.push(renderAttribute(details));
+        break;
+      case "internal-slot":
+        output.push(renderInternalSlot(details));
+        break;
+      case "method":
+        output.push(renderMethod(details, contextNode));
+        break;
+      default:
+        throw new Error("Unknown type.");
+    }
   }
-
-  // Check if base is a local variable
-  const matchedVar = findMarchingVar(base, contextNode);
-  const idlType = matchedVar ? matchedVar.dataset.type : base;
-  let baseHTML;
-  if (matchedVar) {
-    baseHTML = hyperHTML`<var data-type="${idlType}">${base}</var>`;
-  } else {
-    baseHTML = base
-      ? hyperHTML`<a data-xref-type="_IDL_">${base}</a>`
-      : hyperHTML``;
-  }
-  let html;
-  if (member) {
-    html = renderMember(member, baseHTML, idlType, matchedVar);
-  } else if (attribute) {
-    html = renderAttribute(attribute, baseHTML, idlType, matchedVar);
-  } else if (method) {
-    html = renderMethod(method, args, baseHTML, idlType, matchedVar);
-  } else {
-    html = hyperHTML`<code><a data-xref-type="_IDL_">${base}</a></code>`;
-  }
-  return html;
+  const result = render`${output}`;
+  return result;
 }
