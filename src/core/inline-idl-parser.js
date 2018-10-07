@@ -9,12 +9,9 @@
  *  { base: "Foo.bar", method: "baz()", args: [] }
  * Foo.baz(arg1, arg2) ->
  *  { base: "Foo", method: "baz(arg1, arg2)", args: ["arg1", "arg2"] }
- * Dictionary["member"] ->
- *  { base: "Dictionary", member: "member" }
  */
 
 const methodRegex = /(\w+)\((.*)\)$/;
-const dictionaryRegex = /(\w+)+\["(\w+)"\]$/;
 const slotRegex = /\[\[(\w+)\]\]$/;
 const attributeRegex = /^(\w+)$/;
 function parseInlineIDL(str) {
@@ -35,12 +32,6 @@ function parseInlineIDL(str) {
     if (slotRegex.test(value)) {
       const [, identifier] = value.match(slotRegex);
       results.push({ type: "internal-slot", identifier });
-      continue;
-    }
-    // dictionary
-    if (dictionaryRegex.test(value)) {
-      const [, identifier, member] = value.match(dictionaryRegex);
-      results.push({ type: "dictionary", identifier, member });
       continue;
     }
     // attribute
@@ -90,23 +81,6 @@ function renderBase(details, contextNode) {
     : hyperHTML`<a data-xref-type="_IDL_"><code>${identifier}<code></a>`;
   // we can use the identifier as the base type
   if (!details.idlType) details.idlType = identifier;
-  return html;
-}
-
-// Dictionary: .identifier["member"], identifier["member"]
-function renderDictionary(details, contextNode) {
-  const { member, parent, identifier } = details;
-  debugger
-  const memberHTML = parent
-    ? renderBase(details, contextNode) // it's on its own, as base
-    : renderAttribute(details);
-  const idlType = parent ? parent.idlType : identifier;
-  const html = hyperHTML`${memberHTML}["<a 
-    class="respec-idl-xref"
-    data-xref-type="dict-member"
-    data-link-for="${idlType}"
-  >${member}</a>"</code>]`;
-  // can't go any deeper with type
   return html;
 }
 
@@ -168,9 +142,6 @@ export function idlStringToHtml(str, contextNode) {
     switch (details.type) {
       case "base":
         output.push(renderBase(details, contextNode));
-        break;
-      case "dictionary":
-        output.push(renderDictionary(details, contextNode));
         break;
       case "attribute":
         output.push(renderAttribute(details));
