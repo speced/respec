@@ -753,9 +753,19 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
       name.replace(/[()]/g, "").replace(/\s/g, "-");
     dfn.id = id;
   }
-  dfn.dataset.idl = "";
+  dfn.dataset.idl = type === "enum-value" ? type : defn.type;
   dfn.dataset.title = dfn.textContent;
   dfn.dataset.dfnFor = parent;
+  // Derive the data-type for dictionary members, interface attributes,
+  // and methods
+  switch (defn.type) {
+    case "operation":
+    case "attribute":
+    case "field":
+      dfn.dataset.type = getDataType(defn);
+      break;
+  }
+
   // Mark the definition as code.
   if (!dfn.querySelector("code") && !dfn.closest("code") && dfn.children) {
     const code = dfn.ownerDocument.createElement("code");
@@ -765,6 +775,16 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
     dfn.appendChild(code);
   }
   return dfns[0];
+}
+
+function getDataType(idlStruct) {
+  const { idlType, baseName, generic, type, body, union } = idlStruct;
+  if (typeof idlType === "string") return idlType;
+  if (generic) return generic.value;
+  if (type === "operation") return getDataType(body.idlType);
+  // join on "|" handles for "unsigned short" etc.
+  if (union) return idlType.map(getDataType).join("|");
+  return baseName ? baseName : getDataType(idlType);
 }
 
 export function run(conf) {
