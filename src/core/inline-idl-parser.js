@@ -14,6 +14,8 @@
 const methodRegex = /(\w+)\((.*)\)$/;
 const slotRegex = /\[\[(\w+)\]\]$/;
 const attributeRegex = /^(\w+)$/;
+const enumRegex = /^(\w+)\["([\w ]+)"\]$/;
+
 function parseInlineIDL(str) {
   //if (!str) return [];
   const tokens = str.split(".");
@@ -38,6 +40,12 @@ function parseInlineIDL(str) {
     if (attributeRegex.test(value) && tokens.length) {
       const [, identifier] = value.match(attributeRegex);
       results.push({ type: "attribute", identifier });
+      continue;
+    }
+    // enum
+    if (enumRegex.test(value)) {
+      const [, identifier, enumValue] = value.match(enumRegex);
+      results.push({ type: "enum", identifier, enumValue });
       continue;
     }
     // base
@@ -101,9 +109,9 @@ function renderInternalSlot(details) {
 function renderAttribute(details) {
   const { parent, identifier, type } = details;
   const idlType = parent ? parent.idlType : null;
-  const html = hyperHTML`.<a 
+  const html = hyperHTML`.<a
       class="respec-idl-xref"
-      data-xref-type="${type}" 
+      data-xref-type="${type}"
       data-link-for="${idlType}"><code>${identifier}</code></a>`;
   return html;
 }
@@ -120,11 +128,22 @@ function renderMethod(details, contextNode) {
     })
     .map(({ arg, type }) => `<var data-type="${type}">${arg}</var>`)
     .join(", ");
-  const html = hyperHTML`.<a 
+  const html = hyperHTML`.<a
     class="respec-idl-xref"
-    data-xref-type="${type}" 
+    data-xref-type="${type}"
     data-link-for="${idlType}"
     >${identifier}</a>(${[argsText]})`;
+  return html;
+}
+
+// Enum: "enumValue"
+function renderEnum(details) {
+  const { identifier, type, enumValue } = details;
+  const html = hyperHTML`"<a
+      class="respec-idl-xref"
+      data-xref-type="${type}"
+      data-link-for="${identifier}"
+      >${enumValue}</a>"`;
   return html;
 }
 
@@ -151,6 +170,9 @@ export function idlStringToHtml(str, contextNode) {
         break;
       case "method":
         output.push(renderMethod(details, contextNode));
+        break;
+      case "enum":
+        output.push(renderEnum(details));
         break;
       default:
         throw new Error("Unknown type.");
