@@ -147,7 +147,7 @@ describe("Core - WebIDL", () => {
         expect(elem.id).toEqual(`dom-parenthesistest-${id}`);
         expect(elem.dataset.dfnType).toEqual("dfn");
         expect(elem.dataset.dfnFor).toEqual("parenthesistest");
-        expect(elem.dataset.idl).toEqual("");
+        expect(elem.dataset.idl).toEqual("operation");
         // corresponding link
         const aElem = section.querySelector(
           `pre a[href="#dom-parenthesistest-${id}"]`
@@ -990,5 +990,40 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
       "#coded-things a[href='#dom-codedthings-barbar']"
     );
     expect(linkToBarBarAttr.length).toBe(2);
+  });
+  it("sets the IDL type for each type of IDL token", () => {
+    const section = doc.getElementById("idl-dfn-types");
+
+    //interface InterfaceType
+    const interfaceType = section.querySelector("#dom-interfacetype");
+    expect(interfaceType.dataset.idl).toBe("interface");
+
+    // attribute attributeType;
+    const attributeType = section.querySelector(
+      "#dom-interfacetype-attributetype"
+    );
+    expect(attributeType.dataset.idl).toBe("attribute");
+
+    // operationType();
+    const operationType = section.querySelector(
+      "#dom-interfacetype-operationtype"
+    );
+    expect(operationType.dataset.idl).toBe("operation");
+
+    // DictionaryType
+    const dictionaryType = section.querySelector("#dom-dictionarytype");
+    expect(dictionaryType.dataset.idl).toBe("dictionary");
+
+    // fieldType member (field)
+    const fieldType = section.querySelector("#dom-dictionarytype-fieldtype");
+    expect(fieldType.dataset.idl).toBe("field");
+
+    // enum EnumType
+    const enumType = section.querySelector("#dom-enumtype");
+    expect(enumType.dataset.idl).toBe("enum");
+
+    // "enumValueType"
+    const enumValueType = section.querySelector("#dom-enumtype-enumvaluetype");
+    expect(enumValueType.dataset.idl).toBe("enum-value");
   });
 });

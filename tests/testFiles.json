@@ -6,6 +6,7 @@
   "spec/core/data-cite-spec.js",
   "spec/core/data-include-spec.js",
   "spec/core/data-tests-spec.js",
+  "spec/core/data-type-spec.js",
   "spec/core/dfn-spec.js",
   "spec/core/examples-spec.js",
   "spec/core/figures-spec.js",
