@@ -511,20 +511,18 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
         }
         case "enum":
           name = defn.name;
-          for (const v of defn.values) {
-            // TODO: fix when this lands https://github.com/w3c/webidl2.js/pull/232
-            // when 232 lands, the type will be correct, so this check is not needed.
-            if (v.type === "string") {
-              v.dfn = findDfn(
+          defn.values
+            .filter(({ type }) => type === "enum-value")
+            .forEach(enumValue => {
+              enumValue.dfn = findDfn(
                 defn,
                 name,
-                v.value,
+                enumValue.value,
                 definitionMap,
                 "enum-value",
                 idlElem
               );
-            }
-          }
+            });
           defn.idlId = "idl-def-" + name.toLowerCase();
           break;
         // Top-level entities without linkable members.
@@ -755,9 +753,7 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
       name.replace(/[()]/g, "").replace(/\s/g, "-");
     dfn.id = id;
   }
-  // TODO: fix when https://github.com/w3c/webidl2.js/pull/232
-  // Fix will just be: dfn.dataset.idl = defn.type;
-  dfn.dataset.idl = type === "enum-value" ? type : defn.type;
+  dfn.dataset.idl = type || defn.type;
   dfn.dataset.title = dfn.textContent;
   dfn.dataset.dfnFor = parent;
   // Derive the data-type for dictionary members, interface attributes,
