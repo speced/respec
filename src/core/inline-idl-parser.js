@@ -17,9 +17,7 @@ const attributeRegex = /^(\w+)$/;
 const enumRegex = /^(\w+)\["([\w ]+)"\]$/;
 
 function parseInlineIDL(str) {
-  //if (!str) return [];
   const tokens = str.split(".");
-  // ends with method
   const results = [];
   while (tokens.length) {
     const value = tokens.pop();
@@ -45,7 +43,7 @@ function parseInlineIDL(str) {
     // enum
     if (enumRegex.test(value)) {
       const [, identifier, enumValue] = value.match(enumRegex);
-      results.push({ type: "enum", identifier, enumValue });
+      results.push({ type: "enum-value", identifier, enumValue });
       continue;
     }
     // base
@@ -86,7 +84,7 @@ function renderBase(details, contextNode) {
   details.idlType = findMarchingVarType(identifier, contextNode);
   const html = details.idlType
     ? hyperHTML`<var data-type="${details.idlType}">${identifier}</var>`
-    : hyperHTML`<a data-xref-type="_IDL_"><code>${identifier}<code></a>`;
+    : hyperHTML`<a data-xref-type="_IDL_">${identifier}</a>`;
   // we can use the identifier as the base type
   if (!details.idlType) details.idlType = identifier;
   return html;
@@ -112,7 +110,7 @@ function renderAttribute(details) {
   const html = hyperHTML`.<a
       class="respec-idl-xref"
       data-xref-type="${type}"
-      data-link-for="${idlType}"><code>${identifier}</code></a>`;
+      data-link-for="${idlType}">${identifier}</code></a>`;
   return html;
 }
 
@@ -136,7 +134,7 @@ function renderMethod(details, contextNode) {
   return html;
 }
 
-// Enum: "enumValue"
+// Enum: "enum value"
 function renderEnum(details) {
   const { identifier, type, enumValue } = details;
   const html = hyperHTML`"<a
@@ -171,7 +169,7 @@ export function idlStringToHtml(str, contextNode) {
       case "method":
         output.push(renderMethod(details, contextNode));
         break;
-      case "enum":
+      case "enum-value":
         output.push(renderEnum(details));
         break;
       default:
