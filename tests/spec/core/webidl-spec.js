@@ -884,17 +884,6 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(target.textContent).toEqual(text);
   });
 
-  it("should handle implements", () => {
-    let target = doc.getElementById("impl-basic");
-    let text = "Window implements Breakable;";
-    expect(target.textContent).toEqual(text);
-    expect(target.getElementsByClassName("idlImplements").length).toEqual(1);
-
-    target = doc.getElementById("impl-less-basic");
-    text = "[Something]" + text;
-    expect(target.textContent).toEqual(text);
-  });
-
   it("should link documentation", () => {
     const section = doc.getElementById("documentation");
     const target = doc.getElementById("doc-iface");
