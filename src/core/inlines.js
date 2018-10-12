@@ -92,16 +92,12 @@ export function run(conf) {
           } else {
             const { type, illegal } = refTypeFromContext(ref, txt.parentNode);
             ref = ref.replace(/^(!|\?)/, "");
-            if (type === "informative" && !illegal) {
-              conf.informativeReferences.add(ref);
-            } else {
-              conf.normativeReferences.add(ref);
-            }
             df.appendChild(document.createTextNode("["));
             const refHref = `#bib-${ref.toLowerCase()}`;
             const cite = hyperHTML`<cite><a class="bibref" href="${refHref}">${ref}</a></cite>`;
             df.appendChild(cite);
             df.appendChild(document.createTextNode("]"));
+
             if (illegal && !conf.normativeReferences.has(ref)) {
               cite.classList.add("respec-offending-element");
               const msg =
@@ -113,6 +109,12 @@ export function run(conf) {
               );
               cite.title = msg;
               console.warn(msg, cite);
+            }
+
+            if (type === "informative" && !illegal) {
+              conf.informativeReferences.add(ref);
+            } else {
+              conf.normativeReferences.add(ref);
             }
           }
         } else if (abbrMap.has(matched)) {
