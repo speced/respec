@@ -11,16 +11,17 @@
  *  { base: "Foo", method: "baz(arg1, arg2)", args: ["arg1", "arg2"] }
  */
 
-const methodRegex = /(\w+)\((.*)\)$/;
-const slotRegex = /\[\[(\w+)\]\]$/;
-const attributeRegex = /^(\w+)$/;
-const enumRegex = /^(\w+)\["([\w ]+)"\]$/;
-
 function parseInlineIDL(str) {
+  const methodRegex = /(\w+)\((.*)\)$/;
+  const slotRegex = /$\[\[(\w+)\]\]$/;
+  const attributeRegex = /^(\w+)$/;
+  const enumRegex = /^(\w+)\["([\w ]+)"\]$/;
   const tokens = str.split(".");
+  let count = tokens.length;
   const results = [];
   while (tokens.length) {
     const value = tokens.pop();
+    count--;
     // Method
     if (methodRegex.test(value)) {
       const [, identifier, allArgs] = value.match(methodRegex);
@@ -34,20 +35,26 @@ function parseInlineIDL(str) {
       results.push({ type: "internal-slot", identifier });
       continue;
     }
-    // attribute
-    if (attributeRegex.test(value) && tokens.length) {
-      const [, identifier] = value.match(attributeRegex);
-      results.push({ type: "attribute", identifier });
-      continue;
-    }
     // enum
     if (enumRegex.test(value)) {
       const [, identifier, enumValue] = value.match(enumRegex);
       results.push({ type: "enum-value", identifier, enumValue });
       continue;
     }
-    // base
-    results.push({ type: "base", identifier: value });
+    // attribute
+    if (attributeRegex.test(value) && tokens.length) {
+      const [, identifier] = value.match(attributeRegex);
+      results.push({ type: "attribute", identifier });
+      continue;
+    }
+    // base, always final token
+    if (attributeRegex.test(value) && tokens.length === 0) {
+      results.push({ type: "base", identifier: value });
+      continue;
+    }
+    throw new SyntaxError(
+      `IDL micro-syntax error parsing token: "${value}" at token ${++count}.`
+    );
   }
   // link the list
   results.forEach((item, i, list) => {
