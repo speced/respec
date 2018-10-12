@@ -53,7 +53,7 @@ function parseInlineIDL(str) {
       continue;
     }
     throw new SyntaxError(
-      `IDL micro-syntax error parsing token: "${value}" at token ${++count}.`
+      `IDL micro-syntax parsing error: "${value}" at token ${++count}.`
     );
   }
   // link the list
