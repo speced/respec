@@ -102,7 +102,7 @@ export function run(conf) {
             const cite = hyperHTML`<cite><a class="bibref" href="${refHref}">${ref}</a></cite>`;
             df.appendChild(cite);
             df.appendChild(document.createTextNode("]"));
-            if (illegal) {
+            if (illegal && !conf.normativeReferences.has(ref)) {
               cite.classList.add("respec-offending-element");
               const msg =
                 "Normative references in informative sections are not allowed. " +
