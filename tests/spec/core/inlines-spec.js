@@ -9,7 +9,10 @@ describe("Core - Inlines", () => {
       </section>
       <section class="informative">
         <p>[[webidl]] is informative.</p>
-        <p id="illegal">A normative reference in informative section [[!svg]] is illegal. But we keep it as normative. No warning.</p>
+        <p id="illegal">A normative reference in informative section [[!svg]] is illegal.
+        But we keep it as normative and emit a warning.</p>
+        <p id="illegal-no-warn">A normative reference in informative section [[dom]] is illegal.
+        But as it is already declared as normative above, we keep it as normative and do not emit warning.</p>
       </section>
     `;
     const ops = makeStandardOps({}, body);
@@ -28,7 +31,7 @@ describe("Core - Inlines", () => {
     expect(inform.map(el => el.textContent)).toEqual(["[infra]", "[webidl]"]);
 
     const links = [...doc.querySelectorAll("section cite a")];
-    expect(links.length).toEqual(5);
+    expect(links.length).toEqual(6);
     expect(links[0].textContent).toEqual("dom");
     expect(links[0].getAttribute("href")).toEqual("#bib-dom");
     expect(links[4].textContent).toEqual("svg");
@@ -38,6 +41,11 @@ describe("Core - Inlines", () => {
     expect(illegalCite.classList.contains("respec-offending-element")).toBe(
       true
     );
+
+    const illegalCiteNoWarn = doc.querySelector("#illegal-no-warn cite");
+    expect(
+      illegalCiteNoWarn.classList.contains("respec-offending-element")
+    ).toBe(false);
   });
 
   it("processes abbr and rfc2119 content", async () => {
