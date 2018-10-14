@@ -1,32 +1,34 @@
 "use strict";
 describe("Core — Requirements", () => {
   afterAll(flushIframes);
+
   it("should process requirements", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: makeDefaultBody() + "<p class='req' id='req-id'>REQ</p>",
-    };
+    const body = "<p class='req' id='req-id'>REQ</p>";
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    const $req = $("p.req", doc);
-    const $a = $req.find("a");
-    expect($req.text()).toEqual("Req. 1: REQ");
-    expect($a.length).toEqual(1);
-    expect($a.text()).toEqual("Req. 1");
-    expect($a.attr("href")).toEqual("#req-id");
+
+    const req = doc.querySelector("p.req");
+    expect(req.textContent).toEqual("Req. 1: REQ");
+    const refs = req.querySelectorAll("a");
+    expect(refs.length).toEqual(1);
+    const [ref] = refs;
+    expect(ref.textContent).toEqual("Req. 1");
+    expect(ref.getAttribute("href")).toEqual("#req-id");
   });
 
   it("should process requirement references", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        "<a href='#req-id' class='reqRef'></a>" +
-        "<a href='#foo' class='reqRef'></a>" +
-        "<p class='req' id='req-id'>REQ</p>",
-    };
+    const body = `
+      <a href='#req-id' class='reqRef'></a>
+      <a href='#foo' class='reqRef'></a>
+      <p class='req' id='req-id'>REQ</p>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    const $refs = $("a.reqRef", doc);
-    expect($refs.first().text()).toEqual("Req. 1");
-    expect($refs.last().text()).toEqual("Req. not found 'foo'");
+
+    const refs = doc.querySelectorAll("a.reqRef");
+    expect(refs.length).toEqual(2);
+    const [validRef, invalidRef] = refs;
+    expect(validRef.textContent).toEqual("Req. 1");
+    expect(invalidRef.textContent).toEqual("Req. not found 'foo'");
   });
 });

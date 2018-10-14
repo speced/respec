@@ -670,21 +670,6 @@
       </pre>
     </section>
     <section>
-      <h2>Implements</h2>
-      <p>
-        Basic implements.
-      </p>
-      <pre id='impl-basic' class='idl'>
-        Window implements Breakable;
-      </pre>
-      <p>
-        Less basic implements.
-      </p>
-      <pre id='impl-less-basic' class='idl'>
-        [Something]Window implements Breakable;
-      </pre>
-    </section>
-    <section>
       <h2>Includes</h2>
       <p>
         Basic includes.
@@ -787,6 +772,30 @@
           <li><a>doTheFoo()</a>
           <li><a>doTheFoo</a>
         </ol>
+      </section>
+      <section id="idl-dfn-types">
+        <h2>It gives definitions the right idl type</h2>
+        <pre class="idl">
+          interface InterfaceType {
+            readonly attribute DOMString attributeType;
+            void operationType();
+          };
+          dictionary DictionaryType {
+            DOMString fieldType;
+          };
+          enum EnumType {
+            "enumValueType"
+          };
+        </pre>
+        <p>
+          <dfn>InterfaceType</dfn>
+          <dfn data-dfn-for="InterfaceType">attributeType</dfn>
+          <dfn data-dfn-for="InterfaceType">operationType</dfn>
+          <dfn>DictionaryType</dfn>
+          <dfn data-dfn-for="DictionaryType">fieldType</dfn>
+          <dfn>EnumType</dfn>
+          <dfn data-dfn-for="EnumType">enumValueType</dfn>
+        </p>
       </section>
   </body>
 </html>
