@@ -37,7 +37,9 @@ function requestLookup(conf) {
       href = entry.href;
     }
     if (path) {
-      href = new URL(path, href).href;
+      // See: https://github.com/w3c/respec/issues/1856#issuecomment-429579475
+      const relPath = path.startsWith("/") ? `.${path}` : path;
+      href = new URL(relPath, href).href;
     }
     if (frag) {
       href = new URL(frag, href).href;
