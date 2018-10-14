@@ -205,7 +205,7 @@ describe("Core — data-cite attribute", () => {
         `
         <section>
           <p id="t1"><a
-            data-cite="!WHATWG-HTML/multipage/webappapis.html#scripting">inline link</a></p>
+            data-cite="!WHATWG-HTML/webappapis.html#scripting">inline link</a></p>
         </section>
       `,
     };
@@ -245,6 +245,17 @@ describe("Core — data-cite attribute", () => {
       expect(
         doc.getElementById("bib-whatwg-html").closest("section").id
       ).toEqual("informative-references");
+    });
+
+    it("resolves paths relative to the cited spec, even when path is abosolute", async () => {
+      const body = `<a data-cite="HTML51/subpage.html#section">text</a>`;
+      const ops = makeStandardOps({}, body);
+      const doc = await makeRSDoc(ops);
+      expect(
+        doc.querySelector(
+          "a[href='https://www.w3.org/TR/html51/subpage.html#section']"
+        )
+      ).toBeTruthy();
     });
 
     it("cited fragments are overridden by cite-frag", async () => {

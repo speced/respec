@@ -37,7 +37,12 @@ function requestLookup(conf) {
       href = entry.href;
     }
     if (path) {
-      href = new URL(path, href).href;
+      // We resolve absolute paths relative to the spec
+      // so "html/foo.html#bar" becomes:
+      // "./foo.html", and base is "http://.../TR/html"
+      // giving us http://.../TR/html/foo.html"
+      const relPath = path.startsWith("/") ? `.${path}` : path;
+      href = new URL(relPath, href).href;
     }
     if (frag) {
       href = new URL(frag, href).href;
