@@ -247,7 +247,7 @@ describe("Core — data-cite attribute", () => {
       ).toEqual("informative-references");
     });
 
-    it("resolves paths relative to the cited spec, even when path is abosolute", async () => {
+    it("resolves paths relative to the cited spec, even when path is absolute", async () => {
       const body = `<a data-cite="HTML51/subpage.html#section">text</a>`;
       const ops = makeStandardOps({}, body);
       const doc = await makeRSDoc(ops);
