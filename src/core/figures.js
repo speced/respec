@@ -99,6 +99,7 @@ function normalizeImages(doc) {
       ":not(picture)>img:not([width]):not([height]):not([srcset])"
     )
     .forEach(img => {
+      if (img.naturalHeight === 0 || img.naturalWidth === 0) return;
       img.height = img.naturalHeight;
       img.width = img.naturalWidth;
     });
