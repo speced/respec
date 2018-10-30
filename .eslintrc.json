@@ -21,7 +21,9 @@
     "no-var": 2,
     "one-var": ["error", "never"],
     "prefer-arrow-callback": 2,
-    "prefer-const": 2
+    "prefer-const": 2,
+    "no-eval": "error",
+    "no-implied-eval": "error"
   },
   "globals": {
     "flushIframes": true,
