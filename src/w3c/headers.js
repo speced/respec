@@ -108,6 +108,8 @@ const W3CDate = new Intl.DateTimeFormat(["en-AU"], {
 });
 
 const status2maturity = {
+  LS: "WD",
+  LD: "WD",
   FPWD: "WD",
   LC: "WD",
   FPLC: "WD",
@@ -137,6 +139,8 @@ const status2text = {
   "Team-SUBM": "Team Submission",
   MO: "Member-Only Document",
   ED: "Editor's Draft",
+  LS: "Living Standard",
+  LD: "Living Document",
   FPWD: "First Public Working Draft",
   WD: "Working Draft",
   "FPWD-NOTE": "Working Group Note",
