@@ -24,7 +24,7 @@ function requestLookup(conf) {
     const { key, frag, path } = toCiteDetails(elem);
     let href = "";
     // This is just referring to this document
-    if (key === conf.shortName) {
+    if (key.toLowerCase() === conf.shortName.toLowerCase()) {
       href = document.location.href;
     } else {
       // Let's go look it up in spec ref...
@@ -110,6 +110,10 @@ export async function run(conf) {
   Array.from(document.querySelectorAll(["dfn[data-cite], a[data-cite]"]))
     .filter(el => el.dataset.cite)
     .map(toCiteDetails)
+    // it's not the same spec
+    .filter(({ key }) => {
+      key.toLowerCase() !== (conf.shortName || "").toLowerCase();
+    })
     .forEach(({ isNormative, key }) => {
       const refSink = isNormative
         ? conf.normativeReferences
