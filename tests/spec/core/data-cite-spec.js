@@ -284,7 +284,16 @@ describe("Core — data-cite attribute", () => {
   });
 
   it("does not create bibliography reference to itself", async () => {
-    const ops = {
+    const body = `
+      <section>
+        <h2>test</h2>
+        <p>
+          <a data-cite="dahut#test">a</a>
+          <a data-cite="DaHuT#test">a</a>
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps({ shortName: "dahut" }, body);
       config: makeBasicConfig(),
       body:
         makeDefaultBody() +
