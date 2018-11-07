@@ -137,8 +137,7 @@ ${
             ${
               conf.github
                 ? html`
-                  <a href="${conf.github.repoURL +
-                    "/issues"}">GitHub Issues</a> are
+                  <a href="${conf.issueBase}">GitHub Issues</a> are
                   preferred for discussion of this specification.
               `
                 : ""
