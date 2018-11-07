@@ -112,7 +112,7 @@ export async function run(conf) {
     .map(toCiteDetails)
     // it's not the same spec
     .filter(({ key }) => {
-      key.toLowerCase() !== (conf.shortName || "").toLowerCase();
+      return key.toLowerCase() !== (conf.shortName || "").toLowerCase();
     })
     .forEach(({ isNormative, key }) => {
       const refSink = isNormative
