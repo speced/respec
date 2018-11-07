@@ -294,20 +294,6 @@ describe("Core — data-cite attribute", () => {
       </section>
     `;
     const ops = makeStandardOps({ shortName: "dahut" }, body);
-      config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `
-          <section>
-            <h2>test</h2>
-            <p>
-              <a data-cite="dahut#test">a</a>
-              <a data-cite="DaHuT#test">a</a>
-            </p>
-          </section>
-        `,
-    };
-    ops.config.shortName = "dahut";
     const doc = await makeRSDoc(ops);
     const dahut = doc.getElementById("bib-dahut");
     expect(dahut).toBe(null);
