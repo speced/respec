@@ -641,6 +641,46 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       expect($(".head .copyright", doc).text()).toMatch(/XXX\s+&\s+W3C/);
     });
+    it("takes additionalCopyrightHolders into account for CG drafts", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "CG-DRAFT",
+        additionalCopyrightHolders: "XXX",
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+      expect($(".head .copyright", doc).text()).toMatch(/XXX\s+&\s+the\s+Contributors\s+to\s+the/);
+    });
+    it("takes additionalCopyrightHolders into account for CG final reports", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "CG-FINAL",
+        additionalCopyrightHolders: "XXX",
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+      expect($(".head .copyright", doc).text()).toMatch(/XXX\s+&\s+the\s+Contributors\s+to\s+the/);
+    });
+    it("takes additionalCopyrightHolders into account for BG drafts", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "BG-DRAFT",
+        additionalCopyrightHolders: "XXX",
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+      expect($(".head .copyright", doc).text()).toMatch(/XXX\s+&\s+the\s+Contributors\s+to\s+the/);
+    });
+    it("takes additionalCopyrightHolders into account for BG final reports", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "BG-FINAL",
+        additionalCopyrightHolders: "XXX",
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+      expect($(".head .copyright", doc).text()).toMatch(/XXX\s+&\s+the\s+Contributors\s+to\s+the/);
+    });
     it("takes additionalCopyrightHolders into account when spec is unofficial", async () => {
       const ops = makeStandardOps();
       const newProps = {

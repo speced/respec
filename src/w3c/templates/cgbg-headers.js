@@ -133,7 +133,14 @@ export default conf => {
   }
   <p class='copyright'>
     <a href='https://www.w3.org/Consortium/Legal/ipr-notice#Copyright'>Copyright</a> &copy;
-    ${conf.copyrightStart ? `${conf.copyrightStart}-` : ""}${conf.publishYear}
+    ${conf.copyrightStart ? `${conf.copyrightStart}-` : ""}${
+        conf.publishYear
+      }
+    ${
+      conf.additionalCopyrightHolders
+        ? html` ${[conf.additionalCopyrightHolders]} &amp;`
+        : ""
+    }
     the Contributors to the ${conf.title} Specification, published by the
     <a href='${conf.wgURI}'>${conf.wg}</a> under the
     ${
