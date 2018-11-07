@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "23.4.0",
+  "version": "23.5.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -54,7 +54,7 @@
     "mocha": "^5.2.0",
     "moment": "^2.22.2",
     "pluralize": "^7.0.0",
-    "prettier": "^1.14.3",
+    "prettier": "^1.15.1",
     "requirejs": "^2.3.6",
     "serve": "^10.0.2",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
@@ -89,7 +89,7 @@
     "epipebomb": "^1.0.0",
     "fs-extra": "^7.0.0",
     "highlight.js": "github:marcoscaceres/highlight.js#7b144b3b83ce296d5b29c5e4fc2ea2a65e9d3f32",
-    "hyperhtml": "^2.16.3",
+    "hyperhtml": "^2.16.4",
     "loading-indicator": "^2.0.0",
     "marked": "^0.5.1",
     "prompt": "^1.0.0",
