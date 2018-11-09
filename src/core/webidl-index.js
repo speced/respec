@@ -12,7 +12,7 @@
  */
 export const name = "core/webidl-index";
 
-export function run(conf) {
+export function run() {
   const idlIndexSec = document.querySelector("section#idl-index");
   if (!idlIndexSec) {
     return;
