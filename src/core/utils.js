@@ -575,8 +575,8 @@ export function flatten(collector, item) {
   const items = !isObject
     ? [item]
     : isIterable
-      ? [...item.values()].reduce(flatten, [])
-      : Object.values(item);
+    ? [...item.values()].reduce(flatten, [])
+    : Object.values(item);
   return [...collector, ...items];
 }
 
