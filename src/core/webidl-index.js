@@ -12,10 +12,10 @@
  */
 export const name = "core/webidl-index";
 
-export function run(conf, doc, cb) {
-  const idlIndexSec = doc.querySelector("section#idl-index");
+export function run() {
+  const idlIndexSec = document.querySelector("section#idl-index");
   if (!idlIndexSec) {
-    return cb();
+    return;
   }
   // Query for decedents headings, e.g., "h2:first-child, etc.."
   const query = [2, 3, 4, 5, 6].map(level => `h${level}:first-child`).join(",");
@@ -33,7 +33,7 @@ export function run(conf, doc, cb) {
     const text = "This specification doesn't declare any Web IDL.";
     const noIDLFound = document.createTextNode(text);
     idlIndexSec.appendChild(noIDLFound);
-    return cb();
+    return;
   }
   const pre = document.createElement("pre");
   pre.classList.add("idl", "def");
@@ -56,5 +56,4 @@ export function run(conf, doc, cb) {
   // Remove duplicate IDs
   pre.querySelectorAll("*[id]").forEach(elem => elem.removeAttribute("id"));
   idlIndexSec.appendChild(pre);
-  cb();
 }
