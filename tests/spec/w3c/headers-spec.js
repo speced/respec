@@ -17,6 +17,7 @@ describe("W3C — Headers", () => {
         $("dt:contains('Latest Recommendation:')", doc)
           .next("dd")
           .text()
+          .trim()
       ).toEqual("URI");
     });
   });
@@ -185,7 +186,7 @@ describe("W3C — Headers", () => {
       expect(personName.textContent).toBe("阿南 康宏");
       expect(edition.textContent).toBe("第１版");
       expect(company.textContent).toBe("マイクロソフト");
-      expect(ddElem.textContent).toEqual(
+      expect(ddElem.textContent.replace(/\s\s+/g, " ").trim()).toEqual(
         "阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (マイクロソフト (Microsoft))"
       );
     });
@@ -237,7 +238,9 @@ describe("W3C — Headers", () => {
 
       const editor = formerEditorLabel.nextSibling;
       expect(editor.localName).toEqual("dd");
-      expect(editor.textContent).toEqual("NAME (COMPANY)");
+      expect(editor.textContent.replace(/\s+/gm, " ").trim()).toEqual(
+        "NAME (COMPANY)"
+      );
 
       const editorCompany = editor.querySelectorAll("a[href='http://COMPANY']");
       expect(editorCompany.length).toEqual(1);
@@ -306,7 +309,7 @@ describe("W3C — Headers", () => {
       expect(personName.lang).toBe("ja");
       expect(personName.textContent).toBe("阿南 康宏");
       expect(edition.textContent).toBe("第１版");
-      expect(ddElem.textContent).toEqual(
+      expect(ddElem.textContent.replace(/\s\s+/g, " ").trim()).toEqual(
         "阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (Microsoft)"
       );
     });
@@ -588,11 +591,11 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(
-        $("dt:contains('Implementation report:')", doc)
-          .next("dd")
-          .text()
-      ).toEqual("URI");
+      const dt = Array.from(doc.querySelectorAll("dt")).find(
+        ({ textContent }) => /Implementation report:/.test(textContent)
+      );
+      const dd = dt.nextElementSibling;
+      expect(dd.textContent.trim()).toEqual("URI");
     });
   });
 
@@ -697,7 +700,11 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect($(".head .copyright", doc).text()).toEqual("XXX");
+      expect(
+        $(".head .copyright", doc)
+          .text()
+          .trim()
+      ).toEqual("XXX");
     });
 
     it("handles additionalCopyrightHolders when text is markup", async () => {
