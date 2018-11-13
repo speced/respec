@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "23.5.1",
+  "version": "23.6.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -26,7 +26,7 @@
     "babel-preset-stage-3": "^6.24.1",
     "babel-preset-stage-3-without-async": "^1.0.0",
     "chai": "^4.2.0",
-    "clipboard": "^2.0.3",
+    "clipboard": "^2.0.4",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
     "eslint": "^5.9.0",
     "eslint-config-prettier": "^3.3.0",
@@ -56,7 +56,7 @@
     "pluralize": "^7.0.0",
     "prettier": "^1.15.2",
     "requirejs": "^2.3.6",
-    "serve": "^10.0.2",
+    "serve": "^10.1.1",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "uglify-es": "3.3.7",
     "webidl2": "^15.0.0"
