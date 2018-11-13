@@ -26,17 +26,25 @@
         This is required.
       </p>
     </section>
-    <section data-dfn-for="Foo" data-link-for="Foo">
+    <section data-dfn-for="Foo">
       <h2><dfn>Foo</dfn> interface</h2>
       <pre class="idl">
+      [Constructor]
       interface Foo {
         attribute Bar bar;
         void doTheFoo();
       };
       </pre>
-     <p>The <a>Foo</a> interface is nice. Lets you do stuff.</p>
-     <p>The <dfn>bar</dfn> attribute, returns 🍺.</p>
-     <p>The <dfn>doTheFoo()</dfn> method, returns nothing.</p>
+      <p>The <a>Foo</a> interface is nice. Lets you do stuff.</p>
+      <p>The <dfn>bar</dfn> attribute, returns 🍺.</p>
+      <p>The <dfn>doTheFoo()</dfn> method, returns nothing.</p>
+      <pre class="js example" title="Usage example">
+        const foo = new Foo();
+        if (foo.bar === "my bar") {
+          foo.doTheBar();
+        }
+      </pre>
     </section>
   </body>
 </html>
+
