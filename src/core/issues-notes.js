@@ -208,6 +208,9 @@ async function fetchAndStoreGithubIssues(conf) {
         const credentials = btoa(`${githubUser}:${githubToken}`);
         const Authorization = `Basic ${credentials}`;
         Object.assign(headers, { Authorization });
+      } else if (githubToken) {
+        const Authorization = `token ${githubToken}`;
+        Object.assign(headers, { Authorization });
       }
       const request = new Request(issueURL, {
         mode: "cors",
