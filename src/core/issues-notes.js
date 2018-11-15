@@ -210,6 +210,8 @@ async function fetchAndStoreGithubIssues(conf) {
         Object.assign(headers, { Authorization });
       }
       const request = new Request(issueURL, {
+        mode: "cors",
+        referrerPolicy: "no-referrer",
         headers,
       });
       const response = await fetchAndCache(request);
