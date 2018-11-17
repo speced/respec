@@ -433,10 +433,10 @@ export function run(conf) {
       );
     });
   if (conf.bugTracker) {
-    if (conf.bugTracker["new"] && conf.bugTracker.open) {
+    if (conf.bugTracker.new && conf.bugTracker.open) {
       conf.bugTrackerHTML =
         "<a href='" +
-        conf.bugTracker["new"] +
+        conf.bugTracker.new +
         "'>" +
         conf.l10n.file_a_bug +
         "</a> " +
@@ -450,9 +450,9 @@ export function run(conf) {
     } else if (conf.bugTracker.open) {
       conf.bugTrackerHTML =
         "<a href='" + conf.bugTracker.open + "'>open bugs</a>";
-    } else if (conf.bugTracker["new"]) {
+    } else if (conf.bugTracker.new) {
       conf.bugTrackerHTML =
-        "<a href='" + conf.bugTracker["new"] + "'>file a bug</a>";
+        "<a href='" + conf.bugTracker.new + "'>file a bug</a>";
     }
   }
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
