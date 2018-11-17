@@ -6,11 +6,13 @@
 //  - don't use generated content in the CSS!
 import { pub } from "./pubsubhub";
 import webidl2 from "../deps/webidl2";
+import webidl2writer from "../deps/webidl2writer";
 import hb from "handlebars.runtime";
 import css from "../deps/text!core/css/webidl.css";
 import tmpls from "templates";
 import { normalizePadding, reindent } from "./utils";
 import { findDfn } from "./dfn-finder";
+import "../deps/hyperhtml";
 
 export const name = "core/webidl";
 
@@ -253,10 +255,13 @@ const idlPartials = {};
 
 // Takes the result of WebIDL2.parse(), an array of definitions.
 function makeMarkup(parse) {
-  const pre = document.createElement("pre");
-  pre.classList.add("def", "idl");
-  pre.innerHTML = parse.map(writeDefinition).join("");
-  return pre;
+  return hyperHTML`<pre def="idl">${webidl2writer.write(parse, {
+    templates: {
+      container: (strs, ...args) =>
+        args.length ? hyperHTML.wire()(strs, ...args) : strs[0],
+      reference: name => hyperHTML`<a>${name}</a>`,
+    },
+  })}</pre>`;
 }
 
 function writeDefinition(obj) {
