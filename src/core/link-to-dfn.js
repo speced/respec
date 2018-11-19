@@ -135,11 +135,7 @@ export async function run(conf, doc, cb) {
     });
     if (!foundDfn && linkTargets.length !== 0) {
       // ignore WebIDL
-      if (
-        !$ant.parents(
-          ".idl:not(.extAttr), dl.methods, dl.attributes, dl.constants, dl.constructors, dl.fields, dl.dictionary-members, span.idlMemberType, span.idlTypedefType, div.idlImplementsDesc"
-        ).length
-      ) {
+      if (!ant.closest("pre.idl, span.idlMemberType, span.idlTypedefType")) {
         if (ant.dataset.cite === "") {
           badLinks.push(ant);
         } else {
