@@ -137,7 +137,7 @@ export async function run(conf, doc, cb) {
       // ignore WebIDL
       if (
         !$ant.parents(
-          ".idl:not(.extAttr), dl.methods, dl.attributes, dl.constants, dl.constructors, dl.fields, dl.dictionary-members, span.idlMemberType, span.idlTypedefType, div.idlImplementsDesc"
+          "pre.idl, span.idlMemberType, span.idlTypedefType"
         ).length
       ) {
         if (ant.dataset.cite === "") {
