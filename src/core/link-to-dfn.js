@@ -136,9 +136,7 @@ export async function run(conf, doc, cb) {
     if (!foundDfn && linkTargets.length !== 0) {
       // ignore WebIDL
       if (
-        !$ant.parents(
-          "pre.idl, span.idlMemberType, span.idlTypedefType"
-        ).length
+        !$ant.parents("pre.idl, span.idlMemberType, span.idlTypedefType").length
       ) {
         if (ant.dataset.cite === "") {
           badLinks.push(ant);
