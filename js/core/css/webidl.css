@@ -23,6 +23,10 @@ pre.idl::before {
   line-height: 28px;  
 }
 
+.idlType {
+  color: #005a9c;
+}
+
 /*.idlInterface*/
 
 .idlInterfaceID,
@@ -47,12 +51,6 @@ a.idlEnumItem {
 
 /*.idlAttribute*/
 
-.idlAttrType,
-.idlFieldType,
-.idlMemberType {
-  color: #005a9c;
-}
-
 .idlAttrName,
 .idlFieldName,
 .idlMemberName {
@@ -69,11 +67,6 @@ a.idlEnumItem {
 
 
 /*.idlMethod*/
-
-.idlMethType,
-.idlCallbackType {
-  color: #005a9c;
-}
 
 .idlMethName {
   color: #ff4500;
@@ -101,10 +94,6 @@ a.idlEnumItem {
 
 /*.idlParam*/
 
-.idlParamType {
-  color: #005a9c;
-}
-
 .idlParamName,
 .idlDefaultValue {
   font-style: italic;
@@ -124,10 +113,6 @@ a.idlEnumItem {
 
 /*.idlConst*/
 
-.idlConstType {
-  color: #005a9c;
-}
-
 .idlConstName {
   color: #ff4500;
 }
@@ -138,8 +123,7 @@ a.idlEnumItem {
   text-decoration: none;
 }
 
-.idlTypedefID,
-.idlTypedefType {
+.idlTypedefID {
   color: #005a9c;
 }
 
