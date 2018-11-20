@@ -14,7 +14,9 @@ describe("Core - WebIDL", () => {
     expect(idl.querySelector(".idlType:first-child").textContent).toEqual(
       "\n  record<DOMString, USVString>"
     );
-    expect(idl.querySelector(".idlMember .idlName").textContent).toEqual("pass");
+    expect(idl.querySelector(".idlMember .idlName").textContent).toEqual(
+      "pass"
+    );
   });
 
   it("links standardized IDL types to WebIDL spec", () => {
