@@ -70,7 +70,7 @@
     "copydeps": "node ./tools/copydeps.js",
     "handlebars": "handlebars",
     "karma": "karma start --single-run",
-    "lint": "npx eslint src/**/*.js tests/**/*.js tools/*.js",
+    "lint": "eslint src/**/*.js tests/**/*.js tools/*.js",
     "release": "node ./tools/release.js",
     "server": "npm start",
     "snyk": "snyk",
