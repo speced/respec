@@ -32,6 +32,16 @@ pre.idl::before {
   color: #005a9c;
 }
 
+.idlName {
+  color: #ff4500;
+}
+
+.idlName a {
+  color: #ff4500;
+  border-bottom: 1px dotted #ff4500;
+  text-decoration: none;
+}
+
 a.idlEnumItem {
   color: #000;
   border-bottom: 1px dotted #ccc;
@@ -41,49 +51,6 @@ a.idlEnumItem {
 .idlSuperclass {
   font-style: italic;
   color: #005a9c;
-}
-
-
-/*.idlAttribute*/
-
-.idlAttrName,
-.idlFieldName,
-.idlMemberName {
-  color: #ff4500;
-}
-
-.idlAttrName a,
-.idlFieldName a,
-.idlMemberName a {
-  color: #ff4500;
-  border-bottom: 1px dotted #ff4500;
-  text-decoration: none;
-}
-
-
-/*.idlMethod*/
-
-.idlMethName {
-  color: #ff4500;
-}
-
-.idlMethName a {
-  color: #ff4500;
-  border-bottom: 1px dotted #ff4500;
-  text-decoration: none;
-}
-
-
-/*.idlCtor*/
-
-.idlCtorName {
-  color: #ff4500;
-}
-
-.idlCtorName a {
-  color: #ff4500;
-  border-bottom: 1px dotted #ff4500;
-  text-decoration: none;
 }
 
 
@@ -103,19 +70,6 @@ a.idlEnumItem {
 
 .idlSectionComment {
   color: gray;
-}
-
-
-/*.idlConst*/
-
-.idlConstName {
-  color: #ff4500;
-}
-
-.idlConstName a {
-  color: #ff4500;
-  border-bottom: 1px dotted #ff4500;
-  text-decoration: none;
 }
 
 .idlIncludes a {
