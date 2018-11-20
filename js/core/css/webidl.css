@@ -23,17 +23,12 @@ pre.idl::before {
   line-height: 28px;  
 }
 
-.idlType {
+.idlID {
+  font-weight: bold;
   color: #005a9c;
 }
 
-/*.idlInterface*/
-
-.idlInterfaceID,
-.idlDictionaryID,
-.idlCallbackID,
-.idlEnumID {
-  font-weight: bold;
+.idlType {
   color: #005a9c;
 }
 
@@ -121,10 +116,6 @@ a.idlEnumItem {
   color: #ff4500;
   border-bottom: 1px dotted #ff4500;
   text-decoration: none;
-}
-
-.idlTypedefID {
-  color: #005a9c;
 }
 
 .idlIncludes a {
