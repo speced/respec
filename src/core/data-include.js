@@ -60,9 +60,9 @@ function cleanUp(el) {
   ].forEach(attr => el.removeAttribute(attr));
 }
 
-export function run(conf, doc, cb) {
+export async function run() {
   const promisesToInclude = Array.from(
-    doc.querySelectorAll("[data-include]")
+    document.querySelectorAll("[data-include]")
   ).map(async el => {
     const url = el.dataset.include;
     if (!url) {
@@ -82,5 +82,5 @@ export function run(conf, doc, cb) {
       pub("error", msg);
     }
   });
-  Promise.all(promisesToInclude).then(cb);
+  await Promise.all(promisesToInclude);
 }

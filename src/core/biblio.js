@@ -42,7 +42,7 @@ const link = createResourceHint({
 });
 document.head.appendChild(link);
 let doneResolver;
-export const done = new Promise(resolve => {
+const done = new Promise(resolve => {
   doneResolver = resolve;
 });
 
@@ -86,10 +86,9 @@ export async function resolveRef(key) {
   return entry;
 }
 
-export async function run(conf, doc, cb) {
+export async function run(conf) {
   const finish = () => {
     doneResolver(conf.biblio);
-    cb();
   };
   if (!conf.localBiblio) {
     conf.localBiblio = {};

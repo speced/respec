@@ -161,15 +161,15 @@ const processBlockLevelElements = processElements(
   "[data-format=markdown]:not(body), section, div, address, article, aside, figure, header, main, body"
 );
 
-export function run(conf, doc, cb) {
-  const hasMDSections = !!doc.querySelector("[data-format=markdown]:not(body)");
+export function run(conf) {
+  const hasMDSections = !!document.querySelector("[data-format=markdown]:not(body)");
   const isMDFormat = conf.format === "markdown";
   if (!isMDFormat && !hasMDSections) {
-    return cb(); // Nothing to be done
+    return; // Nothing to be done
   }
   // Only has markdown-format sections
   if (!isMDFormat) {
-    processMDSections(doc.body)
+    processMDSections(document.body)
       .map(elem => {
         const structuredInternals = structure(elem, elem.ownerDocument);
         return {
@@ -194,15 +194,14 @@ export function run(conf, doc, cb) {
         elem.appendChild(structuredInternals);
         elem.setAttribute("aria-busy", "false");
       });
-    return cb();
   }
   // We transplant the UI to do the markdown processing
-  const rsUI = doc.getElementById("respec-ui");
+  const rsUI = document.getElementById("respec-ui");
   rsUI.remove();
   // The new body will replace the old body
-  const newHTML = doc.createElement("html");
-  const newBody = doc.createElement("body");
-  newBody.innerHTML = doc.body.innerHTML;
+  const newHTML = document.createElement("html");
+  const newBody = document.createElement("body");
+  newBody.innerHTML = document.body.innerHTML;
   // Marked expects markdown be flush against the left margin
   // so we need to normalize the inner text of some block
   // elements.
@@ -216,10 +215,10 @@ export function run(conf, doc, cb) {
   // Remove links where class .nolinks
   substituteWithTextNodes(newBody.querySelectorAll(".nolinks a[href]"));
   // Restructure the document properly
-  const fragment = structure(newBody, doc);
+  const fragment = structure(newBody, document);
   // Frankenstein the whole thing back together
   newBody.appendChild(fragment);
   newBody.insertAdjacentElement("afterbegin", rsUI);
-  doc.body.parentNode.replaceChild(newBody, doc.body);
+  document.body.parentNode.replaceChild(newBody, document.body);
   cb();
 }
