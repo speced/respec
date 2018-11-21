@@ -121,7 +121,7 @@ function registerHelpers() {
     // We are going to return a hyperlink
     const a = document.createElement("a");
     a.innerText = content;
-    const dfn = obj.dfn && obj.dfn.length === 1 ? obj.dfn[0] : null;
+    const { dfn } = obj;
     // unambiguous match
     if (dfn) {
       a.dataset.noDefault = "";
@@ -623,9 +623,9 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
       if (!dfn) {
         break; // try finding dfn using name, using normal search path...
       }
-      const lt = dfn[0].dataset.lt ? dfn[0].dataset.lt.split("|") : [];
+      const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
       lt.push(asQualifiedName, asLocalName);
-      dfn[0].dataset.lt = [...new Set(lt)].join("|");
+      dfn.dataset.lt = [...new Set(lt)].join("|");
       return dfn;
     }
     case "operation": {
@@ -658,13 +658,13 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
         if (!dfn) {
           break; // try finding dfn using name, using normal search path...
         }
-        const lt = dfn[0].dataset.lt ? dfn[0].dataset.lt.split("|") : [];
+        const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
         lt.push(asFullyQualifiedName, asQualifiedName, lookupName, asLocalName);
-        dfn[0].dataset.lt = lt.join("|");
+        dfn.dataset.lt = lt.join("|");
         if (!definitionMap[asLocalName]) {
           definitionMap[asLocalName] = [];
         }
-        definitionMap[asLocalName].push(dfn);
+        definitionMap[asLocalName].push($(dfn));
         return dfn;
       }
       // no method alias, so let's find the dfn and add it
@@ -672,9 +672,9 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
       if (!dfn) {
         break;
       }
-      const lt = dfn[0].dataset.lt ? dfn[0].dataset.lt.split("|") : [];
+      const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
       lt.push(asMethodName, name);
-      dfn[0].dataset.lt = lt.reverse().join("|");
+      dfn.dataset.lt = lt.reverse().join("|");
       definitionMap[asMethodName] = [dfn];
       return dfn;
     }
@@ -774,7 +774,7 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
     }
     dfn.appendChild(code);
   }
-  return dfns[0];
+  return dfn;
 }
 
 function getDataType(idlStruct) {
