@@ -664,7 +664,7 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
         if (!definitionMap[asLocalName]) {
           definitionMap[asLocalName] = [];
         }
-        definitionMap[asLocalName].push($(dfn));
+        definitionMap[asLocalName].push(dfn);
         return dfn;
       }
       // no method alias, so let's find the dfn and add it
@@ -675,7 +675,7 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
       const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
       lt.push(asMethodName, name);
       dfn.dataset.lt = lt.reverse().join("|");
-      definitionMap[asMethodName] = [$(dfn)];
+      definitionMap[asMethodName] = [dfn];
       return dfn;
     }
     case "enum-value":
@@ -693,7 +693,7 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
     // Definitions that have a title and [data-dfn-for] that exactly match the
     // IDL entity:
     dfns = dfnForArray.filter(dfn =>
-      dfn[0].closest(`[data-dfn-for="${parent}"]`)
+      dfn.closest(`[data-dfn-for="${parent}"]`)
     );
     // If this is a top-level entity, and we didn't find anything with
     // an explicitly empty [for], try <dfn> that inherited a [for].
@@ -701,7 +701,7 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
       dfns = dfnForArray;
     } else if (topLevelEntities.has(type) && dfnForArray.length) {
       const dfn = dfnForArray.find(
-        ([dfn]) => dfn.textContent.trim() === originalName
+        dfn => dfn.textContent.trim() === originalName
       );
       if (dfn) dfns = [dfn];
     }
@@ -715,8 +715,8 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
       dfns = dfnForArray;
       // Found it: update the definition to specify its [for] and data-lt.
       delete definitionMap[dottedName];
-      dfns[0].attr("data-dfn-for", parent);
-      dfns[0].attr("data-lt", name);
+      dfns[0].dataset.dfnFor = parent;
+      dfns[0].dataset.lt = name;
       if (definitionMap[name] === undefined) {
         definitionMap[name] = [];
       }
@@ -745,7 +745,7 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
     }
     return;
   }
-  const dfn = dfns[0][0]; // work on actual node, not jquery
+  const [dfn] = dfns;
   if (!dfn.id) {
     const id =
       "dom-" +
@@ -837,7 +837,7 @@ export function run(conf) {
         if (!conf.definitionMap[title]) {
           conf.definitionMap[title] = [];
         }
-        conf.definitionMap[title].push($(elem));
+        conf.definitionMap[title].push(elem);
       });
     idlElement.parentElement.replaceChild(newElement, idlElement);
     newElement.classList.add(...idlElement.classList);
