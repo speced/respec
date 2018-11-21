@@ -675,7 +675,7 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
       const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
       lt.push(asMethodName, name);
       dfn.dataset.lt = lt.reverse().join("|");
-      definitionMap[asMethodName] = [dfn];
+      definitionMap[asMethodName] = [$(dfn)];
       return dfn;
     }
     case "enum-value":
