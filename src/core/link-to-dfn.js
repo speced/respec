@@ -4,7 +4,7 @@
 import { linkInlineCitations } from "core/data-cite";
 import { pub } from "core/pubsubhub";
 import { lang as defaultLang } from "./l10n";
-import { addId, getLinkTargets } from "core/utils";
+import { addId, getLinkTargets, wrapInner } from "core/utils";
 import { run as addExternalReferences } from "core/xref";
 export const name = "core/link-to-dfn";
 const l10n = {
@@ -123,11 +123,7 @@ export async function run(conf) {
           if (isIDL && !needsCode) {
             return true;
           }
-          const code = document.createElement("code");
-          while (ant.firstChild) {
-            code.appendChild(ant.firstChild);
-          }
-          ant.appendChild(code);
+          wrapInner(ant, document.createElement("code"));
         }
         return true;
       }

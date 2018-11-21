@@ -787,3 +787,16 @@ export function refTypeFromContext(ref, element) {
   const type = isInformative ? "informative" : "normative";
   return { type, illegal: false };
 }
+
+/**
+ * Wraps inner contents with the wrapper element
+ * @param {Node} outer 
+ * @param {Node} wrapper 
+ */
+export function wrapInner(outer, wrapper) {
+  while (outer.firstChild) {
+    wrapper.appendChild(outer.firstChild);
+  }
+  outer.appendChild(wrapper);
+  return outer;
+}
