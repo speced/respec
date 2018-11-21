@@ -196,6 +196,7 @@ export function run(conf) {
         elem.appendChild(structuredInternals);
         elem.setAttribute("aria-busy", "false");
       });
+    return;
   }
   // We transplant the UI to do the markdown processing
   const rsUI = document.getElementById("respec-ui");
