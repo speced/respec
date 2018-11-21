@@ -692,9 +692,7 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
   if (dfnForArray) {
     // Definitions that have a title and [data-dfn-for] that exactly match the
     // IDL entity:
-    dfns = dfnForArray.filter(dfn =>
-      dfn.closest(`[data-dfn-for="${parent}"]`)
-    );
+    dfns = dfnForArray.filter(dfn => dfn.closest(`[data-dfn-for="${parent}"]`));
     // If this is a top-level entity, and we didn't find anything with
     // an explicitly empty [for], try <dfn> that inherited a [for].
     if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
