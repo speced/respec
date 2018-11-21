@@ -823,13 +823,13 @@ export function run(conf) {
     if (idlElement.id) newElement.id = idlElement.id;
     newElement
       .querySelectorAll(
-        ".idlAttribute,.idlCallback,.idlConst,.idlDictionary,.idlEnum,.idlException,.idlField,.idlInterface,.idlMember,.idlMethod,.idlMaplike,.idlIterable,.idlTypedef"
+        ".idlAttribute,.idlCallback,.idlConst,.idlDictionary,.idlEnum,.idlField,.idlInterface,.idlMember,.idlMethod,.idlMaplike,.idlIterable,.idlTypedef"
       )
       .forEach(elem => {
         const title = elem.dataset.title.toLowerCase();
         // Select the nearest ancestor element that can contain members.
         const parent = elem.parentElement.closest(
-          ".idlDictionary,.idlEnum,.idlException,.idlInterface"
+          ".idlDictionary,.idlEnum,.idlInterface"
         );
         if (parent) {
           elem.dataset.dfnFor = parent.dataset.title.toLowerCase();
