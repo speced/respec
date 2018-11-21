@@ -23,14 +23,23 @@ pre.idl::before {
   line-height: 28px;  
 }
 
-/*.idlInterface*/
-
-.idlInterfaceID,
-.idlDictionaryID,
-.idlCallbackID,
-.idlEnumID {
+.idlID {
   font-weight: bold;
   color: #005a9c;
+}
+
+.idlType {
+  color: #005a9c;
+}
+
+.idlName {
+  color: #ff4500;
+}
+
+.idlName a {
+  color: #ff4500;
+  border-bottom: 1px dotted #ff4500;
+  text-decoration: none;
 }
 
 a.idlEnumItem {
@@ -45,65 +54,7 @@ a.idlEnumItem {
 }
 
 
-/*.idlAttribute*/
-
-.idlAttrType,
-.idlFieldType,
-.idlMemberType {
-  color: #005a9c;
-}
-
-.idlAttrName,
-.idlFieldName,
-.idlMemberName {
-  color: #ff4500;
-}
-
-.idlAttrName a,
-.idlFieldName a,
-.idlMemberName a {
-  color: #ff4500;
-  border-bottom: 1px dotted #ff4500;
-  text-decoration: none;
-}
-
-
-/*.idlMethod*/
-
-.idlMethType,
-.idlCallbackType {
-  color: #005a9c;
-}
-
-.idlMethName {
-  color: #ff4500;
-}
-
-.idlMethName a {
-  color: #ff4500;
-  border-bottom: 1px dotted #ff4500;
-  text-decoration: none;
-}
-
-
-/*.idlCtor*/
-
-.idlCtorName {
-  color: #ff4500;
-}
-
-.idlCtorName a {
-  color: #ff4500;
-  border-bottom: 1px dotted #ff4500;
-  text-decoration: none;
-}
-
-
 /*.idlParam*/
-
-.idlParamType {
-  color: #005a9c;
-}
 
 .idlParamName,
 .idlDefaultValue {
@@ -119,28 +70,6 @@ a.idlEnumItem {
 
 .idlSectionComment {
   color: gray;
-}
-
-
-/*.idlConst*/
-
-.idlConstType {
-  color: #005a9c;
-}
-
-.idlConstName {
-  color: #ff4500;
-}
-
-.idlConstName a {
-  color: #ff4500;
-  border-bottom: 1px dotted #ff4500;
-  text-decoration: none;
-}
-
-.idlTypedefID,
-.idlTypedefType {
-  color: #005a9c;
 }
 
 .idlIncludes a {
