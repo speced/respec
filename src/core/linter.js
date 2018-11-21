@@ -65,15 +65,17 @@ async function toLinterWarning(promiseToLint) {
     });
 }
 
-export async function run(conf, doc, cb) {
-  cb(); // return early, continue processing other things
+export function run(conf) {
   if (conf.lint === false) {
     return; // nothing to do
   }
-  await document.respecReady;
-  try {
-    await linter.lint(conf, doc);
-  } catch (err) {
-    console.error("Error ocurred while running the linter", err);
-  }
+  // return early, continue processing other things
+  (async () => {
+    await document.respecIsReady;
+    try {
+      await linter.lint(conf, document);
+    } catch (err) {
+      console.error("Error ocurred while running the linter", err);
+    }
+  })();
 }
