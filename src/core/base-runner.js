@@ -32,7 +32,7 @@ function toRunnable(plug) {
           resolve();
         } else {
           console.warn(
-            `Plugin ${name} uses a deprecated callback signature. Return a Promise instead.`
+            `Plugin ${name} uses a deprecated callback signature. Return a Promise instead. Read more at: https://github.com/w3c/respec/wiki/Developers-Guide#plugins`
           );
           plug.run(config, document, resolve);
         }
