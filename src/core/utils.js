@@ -789,9 +789,9 @@ export function refTypeFromContext(ref, element) {
 }
 
 /**
- * Wraps inner contents with the wrapper element
- * @param {Node} outer 
- * @param {Node} wrapper 
+ * Wraps inner contents with the wrapper node
+ * @param {Node} outer outer node to be modified
+ * @param {Node} wrapper wrapper node to be appended
  */
 export function wrapInner(outer, wrapper) {
   while (outer.firstChild) {
