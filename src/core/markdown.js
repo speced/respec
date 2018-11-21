@@ -162,7 +162,9 @@ const processBlockLevelElements = processElements(
 );
 
 export function run(conf) {
-  const hasMDSections = !!document.querySelector("[data-format=markdown]:not(body)");
+  const hasMDSections = !!document.querySelector(
+    "[data-format=markdown]:not(body)"
+  );
   const isMDFormat = conf.format === "markdown";
   if (!isMDFormat && !hasMDSections) {
     return; // Nothing to be done
@@ -220,5 +222,4 @@ export function run(conf) {
   newBody.appendChild(fragment);
   newBody.insertAdjacentElement("afterbegin", rsUI);
   document.body.parentNode.replaceChild(newBody, document.body);
-  cb();
 }

@@ -31,7 +31,9 @@ function toRunnable(plug) {
           await plug.run(config);
           resolve();
         } else {
-          console.warn(`Plugin ${name} uses a deprecated callback signature. Use Promise instead.`)
+          console.warn(
+            `Plugin ${name} uses a deprecated callback signature. Return a Promise instead.`
+          );
           plug.run(config, document, resolve);
         }
       } catch (err) {

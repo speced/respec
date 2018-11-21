@@ -35,7 +35,10 @@ export function run(conf) {
     default:
       if (conf.canonicalURI) {
         try {
-          conf.canonicalURI = new URL(conf.canonicalURI, document.location).href;
+          conf.canonicalURI = new URL(
+            conf.canonicalURI,
+            document.location
+          ).href;
         } catch (err) {
           pub("warn", "CanonicalURI is an invalid URL: " + err.message);
           conf.canonicalURI = null;
