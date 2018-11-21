@@ -14,8 +14,8 @@ const l10n = {
 };
 const lang = defaultLang in l10n ? defaultLang : "en";
 
-export async function run(conf, doc, cb) {
-  doc.normalize();
+export async function run(conf) {
+  document.normalize();
   const titles = {};
   Object.keys(conf.definitionMap).forEach(title => {
     titles[title] = {};
@@ -176,12 +176,10 @@ export async function run(conf, doc, cb) {
     showLinkingError(possibleExternalLinks);
   }
 
-  linkInlineCitations(doc, conf).then(() => {
-    // Added message for legacy compat with Aria specs
-    // See https://github.com/w3c/respec/issues/793
-    pub("end", "core/link-to-dfn");
-    cb();
-  });
+  await linkInlineCitations(document, conf);
+  // Added message for legacy compat with Aria specs
+  // See https://github.com/w3c/respec/issues/793
+  pub("end", "core/link-to-dfn");
 }
 
 function showLinkingError(elems) {
