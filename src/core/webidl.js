@@ -208,7 +208,7 @@ const whitespaceTypes = new Set([
   "multiline-comment",
 ]);
 
-const extenedAttributesLinks = new Map([
+const extendedAttributesLinks = new Map([
   ["AllowShared", "WEBIDL#AllowShared"],
   ["CEReactions", "HTML#cereactions"],
   ["Clamp", "WEBIDL#Clamp"],
@@ -249,10 +249,10 @@ function extAttr(extAttrs) {
   const tmpParser = document.createElement("div");
   tmpParser.innerHTML = safeString;
   Array.from(tmpParser.querySelectorAll(".extAttrName"))
-    .filter(elem => extenedAttributesLinks.has(elem.textContent))
+    .filter(elem => extendedAttributesLinks.has(elem.textContent))
     .forEach(elem => {
       const a = elem.ownerDocument.createElement("a");
-      a.dataset.cite = extenedAttributesLinks.get(elem.textContent);
+      a.dataset.cite = extendedAttributesLinks.get(elem.textContent);
       a.textContent = elem.textContent;
       elem.replaceChild(a, elem.firstChild);
     });
