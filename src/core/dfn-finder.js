@@ -16,7 +16,97 @@ const topLevelEntities = new Set([
 // https://github.com/w3c/respec/issues/982
 const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
 
-export function findDfn_(defn, { parent, name, definitionMap, idlElem }) {
+// This function looks for a <dfn> element whose title is 'name' and
+// that is "for" 'parent', which is the empty string when 'name'
+// refers to a top-level entity. For top-level entities, <dfn>
+// elements that inherit a non-empty [dfn-for] attribute are also
+// counted as matching.
+//
+// When a matching <dfn> is found, it's given <code> formatting,
+// marked as an IDL definition, and returned. If no <dfn> is found,
+// the function returns 'undefined'.
+export function findDfn(defn, parent, name, definitionMap, idlElem) {
+  return (
+    findAttributeDfn(defn, parent, name, definitionMap, idlElem) ||
+    findOperationDfn(defn, parent, name, definitionMap, idlElem) ||
+    findGeneralDfn(defn, parent, name, definitionMap, idlElem)
+  );
+}
+
+function findAttributeDfn(defn, parent, name, definitionMap, idlElem) {
+  if (defn.type !== "attribute") {
+    return;
+  }
+  parent = parent.toLowerCase();
+  const asLocalName = name.toLowerCase();
+  const asQualifiedName = parent + "." + asLocalName;
+  let dfn;
+  if (definitionMap[asQualifiedName] || definitionMap[asLocalName]) {
+    dfn = findGeneralDfn(defn, parent, asLocalName, definitionMap, idlElem);
+  }
+  if (!dfn) {
+    return; // try finding dfn using name, using normal search path...
+  }
+  const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
+  lt.push(asQualifiedName, asLocalName);
+  dfn.dataset.lt = [...new Set(lt)].join("|");
+  return dfn;
+}
+
+function findOperationDfn(defn, parent, name, definitionMap, idlElem) {
+  if (defn.type !== "operation") {
+    return;
+  }
+  // Overloads all have unique names
+  if (name.search("!overload") !== -1) {
+    return;
+  }
+  parent = parent.toLowerCase();
+  // Allow linking to both "method()" and "method" name.
+  const asLocalName = name.toLowerCase();
+  const asMethodName = asLocalName + "()";
+  const asQualifiedName = parent + "." + asLocalName;
+  const asFullyQualifiedName = asQualifiedName + "()";
+
+  if (
+    definitionMap[asMethodName] ||
+    definitionMap[asFullyQualifiedName.toLowerCase()]
+  ) {
+    const lookupName = definitionMap[asMethodName]
+      ? asMethodName
+      : asFullyQualifiedName;
+    const dfn = findGeneralDfn(
+      defn,
+      parent,
+      lookupName,
+      definitionMap,
+      idlElem
+    );
+    if (!dfn) {
+      return; // try finding dfn using name, using normal search path...
+    }
+    const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
+    lt.push(asFullyQualifiedName, asQualifiedName, lookupName, asLocalName);
+    dfn.dataset.lt = lt.join("|");
+    if (!definitionMap[asLocalName]) {
+      definitionMap[asLocalName] = [];
+    }
+    definitionMap[asLocalName].push(dfn);
+    return dfn;
+  }
+  // no method alias, so let's find the dfn and add it
+  const dfn = findGeneralDfn(defn, parent, name, definitionMap, idlElem);
+  if (!dfn) {
+    return;
+  }
+  const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
+  lt.push(asMethodName, name);
+  dfn.dataset.lt = lt.reverse().join("|");
+  definitionMap[asMethodName] = [dfn];
+  return dfn;
+}
+
+function findGeneralDfn(defn, parent, name, definitionMap, idlElem) {
   if (unlinkable.has(name)) {
     return;
   }
