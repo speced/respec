@@ -58,7 +58,8 @@ export function findDfn_(defn, { parent, name, definitionMap, idlElem }) {
       name &&
       idlElem.classList.contains("no-link-warnings") === false;
     if (showWarnings) {
-      const name = defn.type === "operation" ? `${originalName}()` : originalName;
+      const name =
+        defn.type === "operation" ? `${originalName}()` : originalName;
       const parentName = originalParent ? ` \`${originalParent}\`'s` : "";
       let msg = `Missing \`<dfn>\` for${parentName} \`${name}\` ${defn.type}`;
       msg +=

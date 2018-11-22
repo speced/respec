@@ -499,16 +499,15 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
         }
         case "enum":
           name = defn.name;
-          defn.values
-            .forEach(enumValue => {
-              enumValue.dfn = findDfn(
-                enumValue,
-                name,
-                enumValue.value,
-                definitionMap,
-                idlElem
-              );
-            });
+          defn.values.forEach(enumValue => {
+            enumValue.dfn = findDfn(
+              enumValue,
+              name,
+              enumValue.value,
+              definitionMap,
+              idlElem
+            );
+          });
           defn.idlId = "idl-def-" + name.toLowerCase();
           break;
         // Top-level entities without linkable members.
