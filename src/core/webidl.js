@@ -9,7 +9,7 @@ import webidl2 from "../deps/webidl2";
 import hb from "handlebars.runtime";
 import css from "../deps/text!core/css/webidl.css";
 import tmpls from "templates";
-import { normalizePadding, reindent } from "./utils";
+import { normalizePadding, reindent, wrapInner } from "./utils";
 
 export const name = "core/webidl";
 
@@ -766,11 +766,7 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
 
   // Mark the definition as code.
   if (!dfn.querySelector("code") && !dfn.closest("code") && dfn.children) {
-    const code = dfn.ownerDocument.createElement("code");
-    while (dfn.hasChildNodes()) {
-      code.appendChild(dfn.firstChild);
-    }
-    dfn.appendChild(code);
+    wrapInner(dfn, dfn.ownerDocument.createElement("code"));
   }
   return dfn;
 }
