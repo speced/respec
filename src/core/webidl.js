@@ -506,7 +506,6 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
                 name,
                 enumValue.value,
                 definitionMap,
-                "enum-value",
                 idlElem
               );
             });
@@ -582,7 +581,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
       if (parent) {
         defn.linkFor = parent;
       }
-      defn.dfn = findDfn(defn, parent, name, definitionMap, defn.type, idlElem);
+      defn.dfn = findDfn(defn, parent, name, definitionMap, idlElem);
     });
 }
 
@@ -595,11 +594,11 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
 // When a matching <dfn> is found, it's given <code> formatting,
 // marked as an IDL definition, and returned. If no <dfn> is found,
 // the function returns 'undefined'.
-function findDfn(defn, parent, name, definitionMap, type, idlElem) {
+function findDfn(defn, parent, name, definitionMap, idlElem) {
   return (
     findAttributeDfn(defn, parent, name, definitionMap, idlElem) ||
     findOperationDfn(defn, parent, name, definitionMap, idlElem) ||
-    findDfn_(defn, { parent, name, definitionMap, type, idlElem })
+    findDfn_(defn, { parent, name, definitionMap, idlElem })
   );
 }
 

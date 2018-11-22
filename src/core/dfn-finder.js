@@ -16,7 +16,7 @@ const topLevelEntities = new Set([
 // https://github.com/w3c/respec/issues/982
 const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
 
-export function findDfn_(defn, { parent, name, definitionMap, type, idlElem }) {
+export function findDfn_(defn, { parent, name, definitionMap, idlElem }) {
   if (unlinkable.has(name)) {
     return;
   }
@@ -28,7 +28,7 @@ export function findDfn_(defn, { parent, name, definitionMap, type, idlElem }) {
       ? "the-empty-string"
       : name.toLowerCase();
   let dfnForArray = definitionMap[name];
-  let dfns = getDfns(dfnForArray, parent, originalName, type);
+  let dfns = getDfns(dfnForArray, parent, originalName, defn.type);
   // If we haven't found any definitions with explicit [for]
   // and [title], look for a dotted definition, "parent.name".
   if (dfns.length === 0 && parent !== "") {
@@ -54,21 +54,20 @@ export function findDfn_(defn, { parent, name, definitionMap, type, idlElem }) {
   }
   if (dfns.length === 0) {
     const showWarnings =
-      type &&
       idlElem &&
       name &&
       idlElem.classList.contains("no-link-warnings") === false;
     if (showWarnings) {
-      const name = type === "operation" ? `${originalName}()` : originalName;
+      const name = defn.type === "operation" ? `${originalName}()` : originalName;
       const parentName = originalParent ? ` \`${originalParent}\`'s` : "";
-      let msg = `Missing \`<dfn>\` for${parentName} \`${name}\` ${type}`;
+      let msg = `Missing \`<dfn>\` for${parentName} \`${name}\` ${defn.type}`;
       msg +=
         ". [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).";
       pub("warn", msg);
     }
     return;
   }
-  return decorateDfn(dfns[0], defn, parent, name, type);
+  return decorateDfn(dfns[0], defn, parent, name, defn.type);
 }
 
 function decorateDfn(dfn, defn, parent, name, type) {
