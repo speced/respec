@@ -5,9 +5,9 @@
  * That is, elements that have a "removeOnSave" css class.
  */
 
-import { removeReSpec } from "core/utils";
-import { pub } from "core/pubsubhub";
-import "deps/hyperhtml";
+import { removeReSpec } from "./utils";
+import { pub } from "./pubsubhub";
+import "../deps/hyperhtml";
 
 const mimeTypes = new Map([["text/html", "html"], ["application/xml", "xml"]]);
 

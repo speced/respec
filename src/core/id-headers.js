@@ -3,7 +3,7 @@
 // This is currently in core though it comes from a W3C rule. It may move in the future.
 
 export const name = "core/id-headers";
-import { addId } from "core/utils";
+import { addId } from "./utils";
 
 export function run(conf) {
   document

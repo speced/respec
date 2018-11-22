@@ -1,12 +1,12 @@
 // Module core/base-runner
 // The module in charge of running the whole processing pipeline.
-import "core/include-config";
-import "core/override-configuration";
-import "core/respec-ready";
-import { removeReSpec } from "core/utils";
-import { done as postProcessDone } from "core/post-process";
-import { done as preProcessDone } from "core/pre-process";
-import { pub } from "core/pubsubhub";
+import "./include-config";
+import "./override-configuration";
+import "./respec-ready";
+import { removeReSpec } from "./utils";
+import { done as postProcessDone } from "./post-process";
+import { done as preProcessDone } from "./pre-process";
+import { pub } from "./pubsubhub";
 
 export const name = "core/base-runner";
 const canMeasure = performance.mark && performance.measure;
