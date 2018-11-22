@@ -1,4 +1,4 @@
-import { pub } from "core/pubsubhub";
+import { pub } from "./pubsubhub";
 export const name = "core/list-sorter";
 
 function makeSorter(direction) {

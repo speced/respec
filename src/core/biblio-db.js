@@ -8,7 +8,7 @@
  *
  */
 /*globals IDBKeyRange, DOMException, console */
-import { pub } from "core/pubsubhub";
+import { pub } from "./pubsubhub";
 export const name = "core/biblio-db";
 
 const ALLOWED_TYPES = new Set(["alias", "reference"]);

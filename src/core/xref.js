@@ -4,8 +4,8 @@
 //   so later they can be handled by core/link-to-dfn.
 // https://github.com/w3c/respec/issues/1662
 
-import { norm as normalize, showInlineError } from "core/utils";
-import * as IDB from "deps/idb";
+import { norm as normalize, showInlineError } from "./utils";
+import * as IDB from "../deps/idb";
 
 const API_URL = new URL(
   "https://wt-466c7865b463a6c4cbb820b42dde9e58-0.sandbox.auth0-extend.com/xref-proto-2"

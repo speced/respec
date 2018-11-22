@@ -3,7 +3,7 @@
 // Adds width and height to images, if they are missing.
 // Generates a Table of Figures wherever there is a #tof element.
 
-import { pub } from "core/pubsubhub";
+import { pub } from "./pubsubhub";
 
 export const name = "core/figures";
 

@@ -7,7 +7,7 @@
  *      tested. Use with care, if you know what you're doing. Chances are you really
  *      want to be using a new module with your own profile
  */
-import { sub, pub } from "core/pubsubhub";
+import { sub, pub } from "./pubsubhub";
 
 export const name = "core/pre-process";
 

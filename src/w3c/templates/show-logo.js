@@ -1,5 +1,5 @@
-import "deps/hyperhtml";
-import { pub } from "core/pubsubhub";
+import "../../deps/hyperhtml";
+import { pub } from "../../core/pubsubhub";
 
 export default obj => {
   const a = document.createElement("a");

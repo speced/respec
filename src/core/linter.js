@@ -3,7 +3,7 @@
  *
  * Core linter module. Exports a linter object.
  */
-import { pub } from "core/pubsubhub";
+import { pub } from "./pubsubhub";
 export const name = "core/linter";
 const privates = new WeakMap();
 

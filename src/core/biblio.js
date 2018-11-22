@@ -5,12 +5,12 @@
 
 /*jshint jquery: true*/
 /*globals console*/
-import { biblioDB } from "core/biblio-db";
-import { createResourceHint } from "core/utils";
-import { pub } from "core/pubsubhub";
+import { biblioDB } from "./biblio-db";
+import { createResourceHint } from "./utils";
+import { pub } from "./pubsubhub";
 
 // for backward compatibity
-export { wireReference, stringifyReference } from "core/render-biblio";
+export { wireReference, stringifyReference } from "./render-biblio";
 
 export const name = "core/biblio";
 

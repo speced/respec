@@ -5,8 +5,8 @@
  * well-formatted IDL to the clipboard.
  *
  */
-import svgClipboard from "deps/text!core/images/clipboard.svg";
-import Clipboard from "deps/clipboard";
+import svgClipboard from "../deps/text!core/images/clipboard.svg";
+import Clipboard from "../deps/clipboard";
 export const name = "core/webidl-clipboard";
 
 // This button serves a prototype that we clone as needed.

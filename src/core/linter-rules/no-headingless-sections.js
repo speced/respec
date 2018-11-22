@@ -4,7 +4,7 @@
  * Checks that there are no sections in the document that don't start
  * with a heading element (h1-6).
  */
-import LinterRule from "core/LinterRule";
+import LinterRule from "../LinterRule";
 import { lang as defaultLang } from "../l10n";
 const name = "no-headingless-sections";
 const meta = {

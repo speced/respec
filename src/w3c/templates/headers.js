@@ -1,8 +1,8 @@
-import "deps/hyperhtml";
+import "../../deps/hyperhtml";
 import showLogo from "./show-logo";
 import showPeople from "./show-people";
 import showLink from "./show-link";
-import { pub } from "core/pubsubhub";
+import { pub } from "../../core/pubsubhub";
 
 function getSpecTitleElem(conf) {
   const specTitleElem =

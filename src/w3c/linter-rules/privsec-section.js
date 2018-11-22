@@ -6,8 +6,8 @@
  * case-insensitive, multi-line check.
  *
  */
-import LinterRule from "core/LinterRule";
-import { lang as defaultLang } from "../l10n";
+import LinterRule from "../../core/LinterRule";
+import { lang as defaultLang } from "../../core/l10n";
 const name = "privsec-section";
 const meta = {
   en: {

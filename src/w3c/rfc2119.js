@@ -1,7 +1,7 @@
 // Module w3c/rfc2119
 // update the 2119 terms section with the terms actually used
 
-import { joinAnd } from "core/utils";
+import { joinAnd } from "../core/utils";
 
 export const name = "w3c/rfc2119";
 
