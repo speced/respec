@@ -4,7 +4,7 @@
 import { linkInlineCitations } from "core/data-cite";
 import { pub } from "core/pubsubhub";
 import { lang as defaultLang } from "./l10n";
-import { getLinkTargets } from "core/utils";
+import { addId, getLinkTargets, wrapInner } from "core/utils";
 import { run as addExternalReferences } from "core/xref";
 export const name = "core/link-to-dfn";
 const l10n = {
@@ -20,41 +20,41 @@ export async function run(conf) {
   Object.keys(conf.definitionMap).forEach(title => {
     titles[title] = {};
     const listOfDuplicateDfns = [];
-    conf.definitionMap[title].forEach(dfn => {
-      if (dfn.attr("data-idl") === undefined) {
+    conf.definitionMap[title].forEach(([dfn]) => {
+      if (dfn.dataset.idl === undefined) {
         // Non-IDL definitions aren't "for" an interface.
-        dfn.removeAttr("data-dfn-for");
+        delete dfn.dataset.dfnFor;
       }
-      const dfn_for = dfn.attr("data-dfn-for") || "";
-      if (dfn_for in titles[title]) {
+      const { dfnFor = "" } = dfn.dataset;
+      if (dfnFor in titles[title]) {
         // We want <dfn> definitions to take precedence over
         // definitions from WebIDL. WebIDL definitions wind
         // up as <span>s instead of <dfn>.
-        const oldIsDfn = titles[title][dfn_for].filter("dfn").length !== 0;
-        const newIsDfn = dfn.filter("dfn").length !== 0;
-        if (oldIsDfn && newIsDfn) {
+        const oldIsDfn = titles[title][dfnFor].localName === "dfn";
+        const newIsDfn = dfn.localName === "dfn";
+        if (oldIsDfn) {
+          if (!newIsDfn) {
+            // Don't overwrite <dfn> definitions.
+            return;
+          }
           // Only complain if the user provides 2 <dfn>s
           // for the same term.
-          dfn.addClass("respec-offending-element");
-          if (dfn.attr("title") === undefined) {
-            dfn.attr("title", l10n[lang].duplicate);
+          dfn.classList.add("respec-offending-element");
+          if (!dfn.title) {
+            dfn.title = l10n[lang].duplicate;
           }
-          if (dfn.attr("id") === undefined) {
-            dfn.makeID(null, title);
+          if (!dfn.id) {
+            addId(dfn, null, title);
           }
-          listOfDuplicateDfns.push(dfn[0]);
-        }
-        if (oldIsDfn) {
-          // Don't overwrite <dfn> definitions.
-          return;
+          listOfDuplicateDfns.push(dfn);
         }
       }
-      titles[title][dfn_for] = dfn;
-      if (dfn.attr("id") === undefined) {
-        if (dfn.attr("data-idl")) {
-          dfn.makeID("dom", (dfn_for ? dfn_for + "-" : "") + title);
+      titles[title][dfnFor] = dfn;
+      if (!dfn.id) {
+        if (dfn.dataset.idl) {
+          addId(dfn, "dom", (dfnFor ? dfnFor + "-" : "") + title);
         } else {
-          dfn.makeID("dfn", title);
+          addId(dfn, "dfn", title);
         }
       }
     });
@@ -73,16 +73,13 @@ export async function run(conf) {
 
   const localLinkSelector =
     "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo)";
-  $(localLinkSelector).each(function() {
-    const $ant = $(this);
-    const ant = $ant[0];
+  document.querySelectorAll(localLinkSelector).forEach(ant => {
     if (ant.classList.contains("externalDFN")) return;
     const linkTargets = getLinkTargets(ant);
     const { linkFor } = ant.dataset;
     const foundDfn = linkTargets.some(target => {
       if (titles[target.title] && titles[target.title][target.for]) {
-        const $dfn = titles[target.title][target.for];
-        const dfn = $dfn[0];
+        const dfn = titles[target.title][target.for];
         if (dfn.dataset.cite) {
           ant.dataset.cite = dfn.dataset.cite;
         } else if (linkFor && !titles[linkFor.toLowerCase()]) {
@@ -103,13 +100,12 @@ export async function run(conf) {
         // If a definition is <code>, links to it should
         // also be <code>.
         //
-        // Note that contents().length===1 excludes
+        // Note that childNodes.length === 1 excludes
         // definitions that have either other text, or other
         // whitespace, inside the <dfn>.
-        // TODO: un-jquery-fy
         if (
           dfn.closest("code,pre") ||
-          ($dfn.contents().length === 1 &&
+          (dfn.childNodes.length === 1 &&
             [...dfn.children].filter(c => c.localName === "code").length === 1)
         ) {
           // only add code to IDL when the definition matches
@@ -127,7 +123,7 @@ export async function run(conf) {
           if (isIDL && !needsCode) {
             return true;
           }
-          $ant.wrapInner("<code></code>");
+          wrapInner(ant, document.createElement("code"));
         }
         return true;
       }
@@ -143,7 +139,7 @@ export async function run(conf) {
         }
         return;
       }
-      $ant.replaceWith($ant.contents());
+      ant.replaceWith(...ant.childNodes);
     }
   });
 
