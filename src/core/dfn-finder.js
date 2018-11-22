@@ -16,22 +16,7 @@ export function findDfn_(
   { parent, name, originalParent, originalName, definitionMap, type, idlElem }
 ) {
   let dfnForArray = definitionMap[name];
-  let dfns = [];
-  if (dfnForArray) {
-    // Definitions that have a title and [data-dfn-for] that exactly match the
-    // IDL entity:
-    dfns = dfnForArray.filter(dfn => dfn.closest(`[data-dfn-for="${parent}"]`));
-    // If this is a top-level entity, and we didn't find anything with
-    // an explicitly empty [for], try <dfn> that inherited a [for].
-    if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
-      dfns = dfnForArray;
-    } else if (topLevelEntities.has(type) && dfnForArray.length) {
-      const dfn = dfnForArray.find(
-        dfn => dfn.textContent.trim() === originalName
-      );
-      if (dfn) dfns = [dfn];
-    }
-  }
+  let dfns = getDfns(dfnForArray, parent, originalName, type);
   // If we haven't found any definitions with explicit [for]
   // and [title], look for a dotted definition, "parent.name".
   if (dfns.length === 0 && parent !== "") {
@@ -97,6 +82,28 @@ export function findDfn_(
     wrapInner(dfn, dfn.ownerDocument.createElement("code"));
   }
   return dfn;
+}
+
+function getDfns(dfnForArray, parent, originalName, type) {
+  if (!dfnForArray) {
+    return [];
+  }
+  // Definitions that have a title and [data-dfn-for] that exactly match the
+  // IDL entity:
+  const dfns = dfnForArray.filter(dfn =>
+    dfn.closest(`[data-dfn-for="${parent}"]`)
+  );
+  // If this is a top-level entity, and we didn't find anything with
+  // an explicitly empty [for], try <dfn> that inherited a [for].
+  if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
+    return dfnForArray;
+  } else if (topLevelEntities.has(type) && dfnForArray.length) {
+    const dfn = dfnForArray.find(
+      dfn => dfn.textContent.trim() === originalName
+    );
+    if (dfn) return [dfn];
+  }
+  return dfns;
 }
 
 function getDataType(idlStruct) {
