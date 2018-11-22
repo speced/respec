@@ -34,7 +34,7 @@ export function run(conf) {
         dfn.dataset.plurals = uniquePlurals.join("|");
         uniquePlurals.reduce((defMap, plural) => {
           if (!defMap[plural]) defMap[plural] = [];
-          defMap[plural].push($(dfn));
+          defMap[plural].push(dfn);
           return defMap;
         }, conf.definitionMap);
       }

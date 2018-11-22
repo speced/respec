@@ -20,7 +20,7 @@ export async function run(conf) {
   Object.keys(conf.definitionMap).forEach(title => {
     titles[title] = {};
     const listOfDuplicateDfns = [];
-    conf.definitionMap[title].forEach(([dfn]) => {
+    conf.definitionMap[title].forEach(dfn => {
       if (dfn.dataset.idl === undefined) {
         // Non-IDL definitions aren't "for" an interface.
         delete dfn.dataset.dfnFor;
