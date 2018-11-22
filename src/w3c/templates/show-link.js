@@ -22,8 +22,8 @@ function showLinkData(data) {
       ${
         data.href
           ? html`
-        <a href="${data.href}">${data.value || data.href}</a>
-      `
+              <a href="${data.href}">${data.value || data.href}</a>
+            `
           : ""
       }
     </dd>

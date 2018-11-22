@@ -23,27 +23,23 @@ pre.idl::before {
   line-height: 28px;  
 }
 
-.idlType {
-  color: #ff4500;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-
-/*.idlModule*/
-
-
-/*.idlModuleID*/
-
-
-/*.idlInterface*/
-
-.idlInterfaceID,
-.idlDictionaryID,
-.idlCallbackID,
-.idlEnumID {
+.idlID {
   font-weight: bold;
   color: #005a9c;
+}
+
+.idlType {
+  color: #005a9c;
+}
+
+.idlName {
+  color: #ff4500;
+}
+
+.idlName a {
+  color: #ff4500;
+  border-bottom: 1px dotted #ff4500;
+  text-decoration: none;
 }
 
 a.idlEnumItem {
@@ -58,65 +54,7 @@ a.idlEnumItem {
 }
 
 
-/*.idlAttribute*/
-
-.idlAttrType,
-.idlFieldType,
-.idlMemberType {
-  color: #005a9c;
-}
-
-.idlAttrName,
-.idlFieldName,
-.idlMemberName {
-  color: #ff4500;
-}
-
-.idlAttrName a,
-.idlFieldName a,
-.idlMemberName a {
-  color: #ff4500;
-  border-bottom: 1px dotted #ff4500;
-  text-decoration: none;
-}
-
-
-/*.idlMethod*/
-
-.idlMethType,
-.idlCallbackType {
-  color: #005a9c;
-}
-
-.idlMethName {
-  color: #ff4500;
-}
-
-.idlMethName a {
-  color: #ff4500;
-  border-bottom: 1px dotted #ff4500;
-  text-decoration: none;
-}
-
-
-/*.idlCtor*/
-
-.idlCtorName {
-  color: #ff4500;
-}
-
-.idlCtorName a {
-  color: #ff4500;
-  border-bottom: 1px dotted #ff4500;
-  text-decoration: none;
-}
-
-
 /*.idlParam*/
-
-.idlParamType {
-  color: #005a9c;
-}
 
 .idlParamName,
 .idlDefaultValue {
@@ -134,221 +72,8 @@ a.idlEnumItem {
   color: gray;
 }
 
-
-/*.idlIterable*/
-
-.idlIterableKeyType,
-.idlIterableValueType {
-  color: #005a9c;
-}
-
-
-/*.idlMaplike*/
-
-.idlMaplikeKeyType,
-.idlMaplikeValueType {
-  color: #005a9c;
-}
-
-
-/*.idlConst*/
-
-.idlConstType {
-  color: #005a9c;
-}
-
-.idlConstName {
-  color: #ff4500;
-}
-
-.idlConstName a {
-  color: #ff4500;
-  border-bottom: 1px dotted #ff4500;
-  text-decoration: none;
-}
-
-
-/*.idlException*/
-
-.idlExceptionID {
+.idlIncludes a {
   font-weight: bold;
-  color: #c00;
-}
-
-.idlTypedefID,
-.idlTypedefType {
-  color: #005a9c;
-}
-
-.idlRaises,
-.idlRaises a.idlType,
-.idlRaises a.idlType code,
-.excName a,
-.excName a code {
-  color: #c00;
-  font-weight: normal;
-}
-
-.excName a {
-  font-family: monospace;
-}
-
-.idlRaises a.idlType,
-.excName a.idlType {
-  border-bottom: 1px dotted #c00;
-}
-
-.excGetSetTrue,
-.excGetSetFalse,
-.prmNullTrue,
-.prmNullFalse,
-.prmOptTrue,
-.prmOptFalse {
-  width: 45px;
-  text-align: center;
-}
-
-.excGetSetTrue,
-.prmNullTrue,
-.prmOptTrue {
-  color: #0c0;
-}
-
-.excGetSetFalse,
-.prmNullFalse,
-.prmOptFalse {
-  color: #c00;
-}
-
-.idlImplements a, .idlIncludes a {
-  font-weight: bold;
-}
-
-dl.attributes,
-dl.methods,
-dl.constants,
-dl.constructors,
-dl.fields,
-dl.dictionary-members {
-  margin-left: 2em;
-}
-
-.attributes dt,
-.methods dt,
-.constants dt,
-.constructors dt,
-.fields dt,
-.dictionary-members dt {
-  font-weight: normal;
-}
-
-.attributes dt code,
-.methods dt code,
-.constants dt code,
-.constructors dt code,
-.fields dt code,
-.dictionary-members dt code {
-  font-weight: bold;
-  color: #000;
-  font-family: monospace;
-}
-
-.attributes dt code,
-.fields dt code,
-.dictionary-members dt code {
-  background: #ffffd2;
-}
-
-.attributes dt .idlAttrType code,
-.fields dt .idlFieldType code,
-.dictionary-members dt .idlMemberType code {
-  color: #005a9c;
-  background: transparent;
-  font-family: inherit;
-  font-weight: normal;
-  font-style: italic;
-}
-
-.methods dt code {
-  background: #d9e6f8;
-}
-
-.constants dt code {
-  background: #ddffd2;
-}
-
-.constructors dt code {
-  background: #cfc;
-}
-
-.attributes dd,
-.methods dd,
-.constants dd,
-.constructors dd,
-.fields dd,
-.dictionary-members dd {
-  margin-bottom: 1em;
-}
-
-table.parameters,
-table.exceptions {
-  border-spacing: 0;
-  border-collapse: collapse;
-  margin: 0.5em 0;
-  width: 100%;
-}
-
-table.parameters {
-  border-bottom: 1px solid #90b8de;
-}
-
-table.exceptions {
-  border-bottom: 1px solid #deb890;
-}
-
-.parameters th,
-.exceptions th {
-  color: inherit;
-  padding: 3px 5px;
-  text-align: left;
-  font-weight: normal;
-}
-
-.parameters th {
-  color: #fff;
-  background: #005a9c;
-}
-
-.exceptions th {
-  background: #deb890;
-}
-
-.parameters td,
-.exceptions td {
-  padding: 3px 10px;
-  border-top: 1px solid #ddd;
-  vertical-align: top;
-}
-
-.parameters tr:first-child td,
-.exceptions tr:first-child td {
-  border-top: none;
-}
-
-.parameters td.prmName,
-.exceptions td.excName,
-.exceptions td.excCodeName {
-  width: 100px;
-}
-
-.parameters td.prmType {
-  width: 120px;
-}
-
-table.exceptions table {
-  border-spacing: 0;
-  border-collapse: collapse;
-  width: 100%;
 }
 
 .respec-button-copy-paste:focus {

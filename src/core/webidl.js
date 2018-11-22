@@ -121,7 +121,7 @@ function registerHelpers() {
     // We are going to return a hyperlink
     const a = document.createElement("a");
     a.innerText = content;
-    const dfn = obj.dfn && obj.dfn.length === 1 ? obj.dfn[0] : null;
+    const { dfn } = obj;
     // unambiguous match
     if (dfn) {
       a.dataset.noDefault = "";
@@ -208,7 +208,7 @@ const whitespaceTypes = new Set([
   "multiline-comment",
 ]);
 
-const extenedAttributesLinks = new Map([
+const extendedAttributesLinks = new Map([
   ["AllowShared", "WEBIDL#AllowShared"],
   ["CEReactions", "HTML#cereactions"],
   ["Clamp", "WEBIDL#Clamp"],
@@ -249,10 +249,10 @@ function extAttr(extAttrs) {
   const tmpParser = document.createElement("div");
   tmpParser.innerHTML = safeString;
   Array.from(tmpParser.querySelectorAll(".extAttrName"))
-    .filter(elem => extenedAttributesLinks.has(elem.textContent))
+    .filter(elem => extendedAttributesLinks.has(elem.textContent))
     .forEach(elem => {
       const a = elem.ownerDocument.createElement("a");
-      a.dataset.cite = extenedAttributesLinks.get(elem.textContent);
+      a.dataset.cite = extendedAttributesLinks.get(elem.textContent);
       a.textContent = elem.textContent;
       elem.replaceChild(a, elem.firstChild);
     });
@@ -623,9 +623,9 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
       if (!dfn) {
         break; // try finding dfn using name, using normal search path...
       }
-      const lt = dfn[0].dataset.lt ? dfn[0].dataset.lt.split("|") : [];
+      const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
       lt.push(asQualifiedName, asLocalName);
-      dfn[0].dataset.lt = [...new Set(lt)].join("|");
+      dfn.dataset.lt = [...new Set(lt)].join("|");
       return dfn;
     }
     case "operation": {
@@ -658,9 +658,9 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
         if (!dfn) {
           break; // try finding dfn using name, using normal search path...
         }
-        const lt = dfn[0].dataset.lt ? dfn[0].dataset.lt.split("|") : [];
+        const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
         lt.push(asFullyQualifiedName, asQualifiedName, lookupName, asLocalName);
-        dfn[0].dataset.lt = lt.join("|");
+        dfn.dataset.lt = lt.join("|");
         if (!definitionMap[asLocalName]) {
           definitionMap[asLocalName] = [];
         }
@@ -672,9 +672,9 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
       if (!dfn) {
         break;
       }
-      const lt = dfn[0].dataset.lt ? dfn[0].dataset.lt.split("|") : [];
+      const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
       lt.push(asMethodName, name);
-      dfn[0].dataset.lt = lt.reverse().join("|");
+      dfn.dataset.lt = lt.reverse().join("|");
       definitionMap[asMethodName] = [dfn];
       return dfn;
     }
@@ -692,16 +692,14 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
   if (dfnForArray) {
     // Definitions that have a title and [data-dfn-for] that exactly match the
     // IDL entity:
-    dfns = dfnForArray.filter(dfn =>
-      dfn[0].closest(`[data-dfn-for="${parent}"]`)
-    );
+    dfns = dfnForArray.filter(dfn => dfn.closest(`[data-dfn-for="${parent}"]`));
     // If this is a top-level entity, and we didn't find anything with
     // an explicitly empty [for], try <dfn> that inherited a [for].
     if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
       dfns = dfnForArray;
     } else if (topLevelEntities.has(type) && dfnForArray.length) {
       const dfn = dfnForArray.find(
-        ([dfn]) => dfn.textContent.trim() === originalName
+        dfn => dfn.textContent.trim() === originalName
       );
       if (dfn) dfns = [dfn];
     }
@@ -715,8 +713,8 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
       dfns = dfnForArray;
       // Found it: update the definition to specify its [for] and data-lt.
       delete definitionMap[dottedName];
-      dfns[0].attr("data-dfn-for", parent);
-      dfns[0].attr("data-lt", name);
+      dfns[0].dataset.dfnFor = parent;
+      dfns[0].dataset.lt = name;
       if (definitionMap[name] === undefined) {
         definitionMap[name] = [];
       }
@@ -745,7 +743,7 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
     }
     return;
   }
-  const dfn = dfns[0][0]; // work on actual node, not jquery
+  const [dfn] = dfns;
   if (!dfn.id) {
     const id =
       "dom-" +
@@ -774,7 +772,7 @@ function findDfn(defn, parent, name, definitionMap, type, idlElem) {
     }
     dfn.appendChild(code);
   }
-  return dfns[0];
+  return dfn;
 }
 
 function getDataType(idlStruct) {
@@ -823,13 +821,13 @@ export function run(conf) {
     if (idlElement.id) newElement.id = idlElement.id;
     newElement
       .querySelectorAll(
-        ".idlAttribute,.idlCallback,.idlConst,.idlDictionary,.idlEnum,.idlException,.idlField,.idlInterface,.idlMember,.idlMethod,.idlMaplike,.idlIterable,.idlTypedef"
+        ".idlAttribute,.idlCallback,.idlConst,.idlDictionary,.idlEnum,.idlField,.idlInterface,.idlMember,.idlMethod,.idlMaplike,.idlIterable,.idlTypedef"
       )
       .forEach(elem => {
         const title = elem.dataset.title.toLowerCase();
         // Select the nearest ancestor element that can contain members.
         const parent = elem.parentElement.closest(
-          ".idlDictionary,.idlEnum,.idlException,.idlInterface"
+          ".idlDictionary,.idlEnum,.idlInterface"
         );
         if (parent) {
           elem.dataset.dfnFor = parent.dataset.title.toLowerCase();
@@ -837,7 +835,7 @@ export function run(conf) {
         if (!conf.definitionMap[title]) {
           conf.definitionMap[title] = [];
         }
-        conf.definitionMap[title].push($(elem));
+        conf.definitionMap[title].push(elem);
       });
     idlElement.parentElement.replaceChild(newElement, idlElement);
     newElement.classList.add(...idlElement.classList);

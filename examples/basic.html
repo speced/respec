@@ -3,7 +3,7 @@
   <head>
     <meta charset='utf-8'>
     <title>Replace me with a real title</title>
-    <script src='../js/deps/require.js' data-main='../js/profile-w3c-common' 
+    <script src='../js/deps/require.js' data-main='../js/profile-w3c-common'
       async class='remove'></script>
     <script class='remove'>
       var respecConfig = {
@@ -30,6 +30,7 @@
     <section data-dfn-for="Foo">
       <h2><dfn>Foo</dfn> interface</h2>
       <pre class="idl">
+      [Constructor]
       interface Foo {
         attribute Bar bar;
         void doTheFoo();
@@ -38,6 +39,12 @@
       <p>The <a>Foo</a> interface is nice. Lets you do stuff.</p>
       <p>The <dfn>bar</dfn> attribute, returns 🍺.</p>
       <p>The <dfn>doTheFoo()</dfn> method, returns nothing.</p>
+      <pre class="js example" title="Usage example">
+        const foo = new Foo();
+        if (foo.bar === "my bar") {
+          foo.doTheBar();
+        }
+      </pre>
     </section>
   </body>
 </html>

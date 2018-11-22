@@ -163,7 +163,7 @@ const Prompts = {
             ? commitHints.exec(line)[0].toLowerCase()
             : "";
           let result = line;
-          let icon = match && iconMap.has(match) ? iconMap.get(match) : "❓";
+          const icon = match && iconMap.has(match) ? iconMap.get(match) : "❓";
           // colorize
           if (match) {
             result = result.replace(match.toLowerCase(), colors[match](match));
@@ -280,7 +280,7 @@ function toExecPromise(cmd, { timeout, showOutput }) {
       reject(new Error(`Command took too long: ${cmd}`));
       proc.kill("SIGTERM");
     }, timeout);
-    const proc = exec(cmd, function(err, stdout, stderr) {
+    const proc = exec(cmd, (err, stdout) => {
       clearTimeout(id);
       if (err) {
         return reject(err);
@@ -371,8 +371,9 @@ const run = async () => {
       case "up-to-date":
         break;
       case "needs to push":
-        var err = `Found unpushed commits on "${MAIN_BRANCH}" branch! Can't proceed.`;
-        throw new Error(err);
+        throw new Error(
+          `Found unpushed commits on "${MAIN_BRANCH}" branch! Can't proceed.`
+        );
       default:
         throw new Error(`Your branch is not up-to-date. It ${branchState}.`);
     }
@@ -391,9 +392,7 @@ const run = async () => {
     indicators.get("build-merge-tag").show();
     await npm("run build:components");
     await Builder.build({ name: "w3c-common" });
-    console.log(
-      colors.info(" Making sure the generated version is ok... 🕵🏻")
-    );
+    console.log(colors.info(" Making sure the generated version is ok... 🕵🏻"));
     await node(
       `./tools/respec2html.js -e --timeout 30 --src file:///${__dirname}/../examples/basic.built.html --out /dev/null`,
       { showOutput: true }

@@ -17,9 +17,8 @@ styleElement.id = "respec-mainstyle";
 styleElement.textContent = css;
 document.head.appendChild(styleElement);
 
-export function run(conf, doc, cb) {
+export function run(conf) {
   if (conf.noReSpecCSS) {
     styleElement.remove();
   }
-  cb();
 }

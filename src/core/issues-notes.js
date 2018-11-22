@@ -27,151 +27,155 @@ function handleIssues(ins, ghIssues, conf) {
     "<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"
   );
   const $issueList = $issueSummary.find("ul");
-  $ins.filter((i, issue) => issue.parentNode).each((i, inno) => {
-    const $inno = $(inno);
-    const isIssue = $inno.hasClass("issue");
-    const isWarning = $inno.hasClass("warning");
-    const isEdNote = $inno.hasClass("ednote");
-    const isFeatureAtRisk = $inno.hasClass("atrisk");
-    const isInline = $inno[0].localName === "span";
-    const dataNum = $inno.attr("data-number");
-    const report = {
-      inline: isInline,
-    };
-    report.type = isIssue
-      ? "issue"
-      : isWarning
+  $ins
+    .filter((i, issue) => issue.parentNode)
+    .each((i, inno) => {
+      const $inno = $(inno);
+      const isIssue = $inno.hasClass("issue");
+      const isWarning = $inno.hasClass("warning");
+      const isEdNote = $inno.hasClass("ednote");
+      const isFeatureAtRisk = $inno.hasClass("atrisk");
+      const isInline = $inno[0].localName === "span";
+      const dataNum = $inno.attr("data-number");
+      const report = {
+        inline: isInline,
+      };
+      report.type = isIssue
+        ? "issue"
+        : isWarning
         ? "warning"
         : isEdNote
-          ? "ednote"
-          : "note";
-    if (isIssue && !isInline && !hasDataNum) {
-      issueNum++;
-      report.number = issueNum;
-    } else if (dataNum) {
-      report.number = dataNum;
-    }
-    // wrap
-    if (!isInline) {
-      const $div = $(
-        "<div class='" +
-          report.type +
-          (isFeatureAtRisk ? " atrisk" : "") +
-          "'></div>"
-      );
-      const $tit = $(
-        "<div role='heading' class='" +
-          report.type +
-          "-title'><span></span></div>"
-      );
-      let text = isIssue
-        ? isFeatureAtRisk
-          ? conf.l10n.feature_at_risk
-          : conf.l10n.issue
-        : isWarning
+        ? "ednote"
+        : "note";
+      if (isIssue && !isInline && !hasDataNum) {
+        issueNum++;
+        report.number = issueNum;
+      } else if (dataNum) {
+        report.number = dataNum;
+      }
+      // wrap
+      if (!isInline) {
+        const $div = $(
+          "<div class='" +
+            report.type +
+            (isFeatureAtRisk ? " atrisk" : "") +
+            "'></div>"
+        );
+        const $tit = $(
+          "<div role='heading' class='" +
+            report.type +
+            "-title'><span></span></div>"
+        );
+        let text = isIssue
+          ? isFeatureAtRisk
+            ? conf.l10n.feature_at_risk
+            : conf.l10n.issue
+          : isWarning
           ? conf.l10n.warning
           : isEdNote
-            ? conf.l10n.editors_note
-            : conf.l10n.note;
-      let ghIssue;
-      if (inno.id) {
-        $div[0].id = inno.id;
-        inno.removeAttribute("id");
-      } else {
-        $div.makeID(
-          "issue-container",
-          report.number ? `number-${report.number}` : ""
-        );
-      }
-      $tit.makeID("h", report.type);
-      report.title = $inno.attr("title");
-      if (isIssue) {
-        if (hasDataNum) {
-          if (dataNum) {
-            text += " " + dataNum;
-            // Set issueBase to cause issue to be linked to the external issue tracker
-            if (!isFeatureAtRisk && issueBase) {
-              $tit
-                .find("span")
-                .wrap($("<a href='" + issueBase + dataNum + "'/>"));
-            } else if (isFeatureAtRisk && conf.atRiskBase) {
-              $tit
-                .find("span")
-                .wrap($("<a href='" + conf.atRiskBase + dataNum + "'/>"));
-            }
-            $tit.find("span")[0].classList.add("issue-number");
-            ghIssue = ghIssues.get(Number(dataNum));
-            if (ghIssue && !report.title) {
-              report.title = ghIssue.title;
-            }
-          }
+          ? conf.l10n.editors_note
+          : conf.l10n.note;
+        let ghIssue;
+        if (inno.id) {
+          $div[0].id = inno.id;
+          inno.removeAttribute("id");
         } else {
-          text += " " + issueNum;
-        }
-        if (report.number !== undefined) {
-          // Add entry to #issue-summary.
-          const $li = $("<li><a></a></li>");
-          const $a = $li.find("a");
-          $a.attr("href", "#" + $div[0].id).text(
-            conf.l10n.issue + " " + report.number
+          $div.makeID(
+            "issue-container",
+            report.number ? `number-${report.number}` : ""
           );
-          if (report.title) {
-            $li.append(
-              $(
-                "<span style='text-transform: none'>: " +
-                  report.title +
-                  "</span>"
-              )
-            );
-          }
-          $issueList.append($li);
         }
-      }
-      $tit.find("span").text(text);
-      if (ghIssue && report.title && githubAPI) {
-        if (ghIssue.state === "closed") $div[0].classList.add("closed");
-        const labelsGroup = Array.from(ghIssue.labels || [])
-          .map(label => {
-            const issuesURL = new URL("./issues/", conf.github.repoURL);
-            issuesURL.searchParams.set(
-              "q",
-              `is:issue is:open label:"${label.name}"`
+        $tit.makeID("h", report.type);
+        report.title = $inno.attr("title");
+        if (isIssue) {
+          if (hasDataNum) {
+            if (dataNum) {
+              text += " " + dataNum;
+              // Set issueBase to cause issue to be linked to the external issue tracker
+              if (!isFeatureAtRisk && issueBase) {
+                $tit
+                  .find("span")
+                  .wrap($("<a href='" + issueBase + dataNum + "'/>"));
+              } else if (isFeatureAtRisk && conf.atRiskBase) {
+                $tit
+                  .find("span")
+                  .wrap($("<a href='" + conf.atRiskBase + dataNum + "'/>"));
+              }
+              $tit.find("span")[0].classList.add("issue-number");
+              ghIssue = ghIssues.get(Number(dataNum));
+              if (ghIssue && !report.title) {
+                report.title = ghIssue.title;
+              }
+            }
+          } else {
+            text += " " + issueNum;
+          }
+          if (report.number !== undefined) {
+            // Add entry to #issue-summary.
+            const $li = $("<li><a></a></li>");
+            const $a = $li.find("a");
+            $a.attr("href", "#" + $div[0].id).text(
+              conf.l10n.issue + " " + report.number
             );
-            return {
-              ...label,
-              href: issuesURL.href,
-            };
-          })
-          .map(createLabel)
-          .reduce((frag, labelElem) => {
-            frag.appendChild(labelElem);
-            return frag;
-          }, document.createDocumentFragment());
-        $tit.append(
-          $(
-            "<span style='text-transform: none'>: " + report.title + "</span>"
-          ).append(labelsGroup)
-        );
-        $inno.removeAttr("title");
-      } else if (report.title) {
-        $tit.append(
-          $("<span style='text-transform: none'>: " + report.title + "</span>")
-        );
-        $inno.removeAttr("title");
+            if (report.title) {
+              $li.append(
+                $(
+                  "<span style='text-transform: none'>: " +
+                    report.title +
+                    "</span>"
+                )
+              );
+            }
+            $issueList.append($li);
+          }
+        }
+        $tit.find("span").text(text);
+        if (ghIssue && report.title && githubAPI) {
+          if (ghIssue.state === "closed") $div[0].classList.add("closed");
+          const labelsGroup = Array.from(ghIssue.labels || [])
+            .map(label => {
+              const issuesURL = new URL("./issues/", conf.github.repoURL);
+              issuesURL.searchParams.set(
+                "q",
+                `is:issue is:open label:"${label.name}"`
+              );
+              return {
+                ...label,
+                href: issuesURL.href,
+              };
+            })
+            .map(createLabel)
+            .reduce((frag, labelElem) => {
+              frag.appendChild(labelElem);
+              return frag;
+            }, document.createDocumentFragment());
+          $tit.append(
+            $(
+              "<span style='text-transform: none'>: " + report.title + "</span>"
+            ).append(labelsGroup)
+          );
+          $inno.removeAttr("title");
+        } else if (report.title) {
+          $tit.append(
+            $(
+              "<span style='text-transform: none'>: " + report.title + "</span>"
+            )
+          );
+          $inno.removeAttr("title");
+        }
+        $tit.addClass("marker");
+        $div.append($tit);
+        $inno.replaceWith($div);
+        let body = $inno.removeClass(report.type).removeAttr("data-number");
+        if (ghIssue && !body.text().trim()) {
+          body = ghIssue.body_html;
+        }
+        $div.append(body);
+        const level = $tit.parents("section").length + 2;
+        $tit.attr("aria-level", level);
       }
-      $tit.addClass("marker");
-      $div.append($tit);
-      $inno.replaceWith($div);
-      let body = $inno.removeClass(report.type).removeAttr("data-number");
-      if (ghIssue && !body.text().trim()) {
-        body = ghIssue.body_html;
-      }
-      $div.append(body);
-      const level = $tit.parents("section").length + 2;
-      $tit.attr("aria-level", level);
-    }
-    pub(report.type, report);
-  });
+      pub(report.type, report);
+    });
   if ($(".issue").length) {
     if ($("#issue-summary"))
       $("#issue-summary").append($issueSummary.contents());
@@ -204,8 +208,13 @@ async function fetchAndStoreGithubIssues(conf) {
         const credentials = btoa(`${githubUser}:${githubToken}`);
         const Authorization = `Basic ${credentials}`;
         Object.assign(headers, { Authorization });
+      } else if (githubToken) {
+        const Authorization = `token ${githubToken}`;
+        Object.assign(headers, { Authorization });
       }
       const request = new Request(issueURL, {
+        mode: "cors",
+        referrerPolicy: "no-referrer",
         headers,
       });
       const response = await fetchAndCache(request);
