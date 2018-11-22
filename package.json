@@ -21,10 +21,9 @@
     "Robin Berjon"
   ],
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-transform-es2015-modules-amd": "^6.24.1",
-    "babel-preset-stage-3": "^6.24.1",
-    "babel-preset-stage-3-without-async": "^1.0.0",
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
     "chai": "^4.2.0",
     "clipboard": "^2.0.4",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
