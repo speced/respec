@@ -56,7 +56,10 @@ export function findDfn_(
     }
     return;
   }
-  const [dfn] = dfns;
+  return decorateDfn(dfns[0], defn, parent, name, type);
+}
+
+function decorateDfn(dfn, defn, parent, name, type) {
   if (!dfn.id) {
     const id =
       "dom-" +
