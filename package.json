@@ -57,8 +57,8 @@
     "prettier": "^1.15.2",
     "requirejs": "^2.3.6",
     "serve": "^10.1.1",
+    "terser": "^3.10.12",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
-    "uglify-es": "3.3.7",
     "webidl2": "^15.0.0"
   },
   "scripts": {
