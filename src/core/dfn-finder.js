@@ -11,10 +11,22 @@ const topLevelEntities = new Set([
   "typedef",
 ]);
 
-export function findDfn_(
-  defn,
-  { parent, name, originalParent, originalName, definitionMap, type, idlElem }
-) {
+// TODO: make these linkable somehow.
+// https://github.com/w3c/respec/issues/999
+// https://github.com/w3c/respec/issues/982
+const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
+
+export function findDfn_(defn, { parent, name, definitionMap, type, idlElem }) {
+  if (unlinkable.has(name)) {
+    return;
+  }
+  const originalParent = parent;
+  const originalName = name;
+  parent = parent.toLowerCase();
+  name =
+    defn.type === "enum-value" && name === ""
+      ? "the-empty-string"
+      : name.toLowerCase();
   let dfnForArray = definitionMap[name];
   let dfns = getDfns(dfnForArray, parent, originalName, type);
   // If we haven't found any definitions with explicit [for]

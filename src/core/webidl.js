@@ -30,10 +30,6 @@ const idlLineCommentTmpl = tmpls["line-comment.html"];
 const idlMethodTmpl = tmpls["method.html"];
 const idlParamTmpl = tmpls["param.html"];
 const idlTypedefTmpl = tmpls["typedef.html"];
-// TODO: make these linkable somehow.
-// https://github.com/w3c/respec/issues/999
-// https://github.com/w3c/respec/issues/982
-const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
 
 function registerHelpers() {
   hb.registerHelper("extAttr", obj => {
@@ -504,10 +500,9 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
         case "enum":
           name = defn.name;
           defn.values
-            .filter(({ type }) => type === "enum-value")
             .forEach(enumValue => {
               enumValue.dfn = findDfn(
-                defn,
+                enumValue,
                 name,
                 enumValue.value,
                 definitionMap,
@@ -601,92 +596,83 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
 // marked as an IDL definition, and returned. If no <dfn> is found,
 // the function returns 'undefined'.
 function findDfn(defn, parent, name, definitionMap, type, idlElem) {
-  const originalParent = parent;
-  const originalName = name;
-  parent = parent.toLowerCase();
-  switch (type) {
-    case "attribute": {
-      const asLocalName = name.toLowerCase();
-      const asQualifiedName = parent + "." + asLocalName;
-      let dfn;
-      if (definitionMap[asQualifiedName] || definitionMap[asLocalName]) {
-        dfn = findDfn(defn, parent, asLocalName, definitionMap, null, idlElem);
-      }
-      if (!dfn) {
-        break; // try finding dfn using name, using normal search path...
-      }
-      const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-      lt.push(asQualifiedName, asLocalName);
-      dfn.dataset.lt = [...new Set(lt)].join("|");
-      return dfn;
-    }
-    case "operation": {
-      // Overloads all have unique names
-      if (name.search("!overload") !== -1) {
-        name = name.toLowerCase();
-        break;
-      }
-      // Allow linking to both "method()" and "method" name.
-      const asLocalName = name.toLowerCase();
-      const asMethodName = asLocalName + "()";
-      const asQualifiedName = parent + "." + asLocalName;
-      const asFullyQualifiedName = asQualifiedName + "()";
+  return (
+    findAttributeDfn(defn, parent, name, definitionMap, idlElem) ||
+    findOperationDfn(defn, parent, name, definitionMap, idlElem) ||
+    findDfn_(defn, { parent, name, definitionMap, type, idlElem })
+  );
+}
 
-      if (
-        definitionMap[asMethodName] ||
-        definitionMap[asFullyQualifiedName.toLowerCase()]
-      ) {
-        const lookupName = definitionMap[asMethodName]
-          ? asMethodName
-          : asFullyQualifiedName;
-        const dfn = findDfn(
-          defn,
-          parent,
-          lookupName,
-          definitionMap,
-          null,
-          idlElem
-        );
-        if (!dfn) {
-          break; // try finding dfn using name, using normal search path...
-        }
-        const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-        lt.push(asFullyQualifiedName, asQualifiedName, lookupName, asLocalName);
-        dfn.dataset.lt = lt.join("|");
-        if (!definitionMap[asLocalName]) {
-          definitionMap[asLocalName] = [];
-        }
-        definitionMap[asLocalName].push(dfn);
-        return dfn;
-      }
-      // no method alias, so let's find the dfn and add it
-      const dfn = findDfn(defn, parent, name, definitionMap, null, idlElem);
-      if (!dfn) {
-        break;
-      }
-      const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-      lt.push(asMethodName, name);
-      dfn.dataset.lt = lt.reverse().join("|");
-      definitionMap[asMethodName] = [dfn];
-      return dfn;
-    }
-    case "enum-value":
-      name = name === "" ? "the-empty-string" : name.toLowerCase();
-      break;
-    default:
-      name = name.toLowerCase();
+function findAttributeDfn(defn, parent, name, definitionMap, idlElem) {
+  if (defn.type !== "attribute") {
+    return;
   }
-  if (!unlinkable.has(name)) {
-    return findDfn_(defn, {
+  parent = parent.toLowerCase();
+  const asLocalName = name.toLowerCase();
+  const asQualifiedName = parent + "." + asLocalName;
+  let dfn;
+  if (definitionMap[asQualifiedName] || definitionMap[asLocalName]) {
+    dfn = findDfn_(defn, { parent, name: asLocalName, definitionMap, idlElem });
+  }
+  if (!dfn) {
+    return; // try finding dfn using name, using normal search path...
+  }
+  const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
+  lt.push(asQualifiedName, asLocalName);
+  dfn.dataset.lt = [...new Set(lt)].join("|");
+  return dfn;
+}
+
+function findOperationDfn(defn, parent, name, definitionMap, idlElem) {
+  if (defn.type !== "operation") {
+    return;
+  }
+  // Overloads all have unique names
+  if (name.search("!overload") !== -1) {
+    return;
+  }
+  parent = parent.toLowerCase();
+  // Allow linking to both "method()" and "method" name.
+  const asLocalName = name.toLowerCase();
+  const asMethodName = asLocalName + "()";
+  const asQualifiedName = parent + "." + asLocalName;
+  const asFullyQualifiedName = asQualifiedName + "()";
+
+  if (
+    definitionMap[asMethodName] ||
+    definitionMap[asFullyQualifiedName.toLowerCase()]
+  ) {
+    const lookupName = definitionMap[asMethodName]
+      ? asMethodName
+      : asFullyQualifiedName;
+    const dfn = findDfn_(defn, {
       parent,
-      name,
-      originalParent,
-      originalName,
+      name: lookupName,
       definitionMap,
-      type,
       idlElem,
     });
+    if (!dfn) {
+      return; // try finding dfn using name, using normal search path...
+    }
+    const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
+    lt.push(asFullyQualifiedName, asQualifiedName, lookupName, asLocalName);
+    dfn.dataset.lt = lt.join("|");
+    if (!definitionMap[asLocalName]) {
+      definitionMap[asLocalName] = [];
+    }
+    definitionMap[asLocalName].push(dfn);
+    return dfn;
   }
+  // no method alias, so let's find the dfn and add it
+  const dfn = findDfn_(defn, { parent, name, definitionMap, idlElem });
+  if (!dfn) {
+    return;
+  }
+  const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
+  lt.push(asMethodName, name);
+  dfn.dataset.lt = lt.reverse().join("|");
+  definitionMap[asMethodName] = [dfn];
+  return dfn;
 }
 
 export function run(conf) {
