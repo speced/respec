@@ -33,13 +33,21 @@ const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
  * @param {HTMLElement} idlElem
  */
 export function findDfn(defn, parent, name, definitionMap, idlElem) {
-  switch (defn.type) {
-    case "attribute":
-      return findAttributeDfn(defn, parent, name, definitionMap, idlElem);
-    case "operation":
-      return findOperationDfn(defn, parent, name, definitionMap, idlElem);
-    default:
-      return findNormalDfn(defn, parent, name, definitionMap, idlElem);
+  const dfn = tryFindDfn(defn, parent, name, definitionMap);
+  if (dfn) {
+    return dfn;
+  }
+  const showWarnings =
+    idlElem && name && !idlElem.classList.contains("no-link-warnings");
+  if (showWarnings) {
+    const styledName = defn.type === "operation" ? `${name}()` : name;
+    const ofParent = parent ? ` \`${parent}\`'s` : "";
+    pub(
+      "warn",
+      `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${
+        defn.type
+      }. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`
+    );
   }
 }
 
@@ -48,19 +56,35 @@ export function findDfn(defn, parent, name, definitionMap, idlElem) {
  * @param {string} parent
  * @param {string} name
  * @param {Record<string, HTMLElement[]>} definitionMap
- * @param {HTMLElement} idlElem
  */
-function findAttributeDfn(defn, parent, name, definitionMap, idlElem) {
+function tryFindDfn(defn, parent, name, definitionMap) {
+  switch (defn.type) {
+    case "attribute":
+      return findAttributeDfn(defn, parent, name, definitionMap);
+    case "operation":
+      return findOperationDfn(defn, parent, name, definitionMap);
+    default:
+      return findNormalDfn(defn, parent, name, definitionMap);
+  }
+}
+
+/**
+ * @param {*} defn
+ * @param {string} parent
+ * @param {string} name
+ * @param {Record<string, HTMLElement[]>} definitionMap
+ */
+function findAttributeDfn(defn, parent, name, definitionMap) {
   const parentLow = parent.toLowerCase();
   const asLocalName = name.toLowerCase();
   const asQualifiedName = parentLow + "." + asLocalName;
   let dfn;
   if (definitionMap[asQualifiedName] || definitionMap[asLocalName]) {
-    dfn = findNormalDfn(defn, parent, asLocalName, definitionMap, idlElem);
+    dfn = findNormalDfn(defn, parent, asLocalName, definitionMap);
   }
   if (!dfn) {
     // try finding dfn using name, using normal search path...
-    return findNormalDfn(defn, parent, name, definitionMap, idlElem);
+    return findNormalDfn(defn, parent, name, definitionMap);
   }
   const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
   lt.push(asQualifiedName, asLocalName);
@@ -73,12 +97,11 @@ function findAttributeDfn(defn, parent, name, definitionMap, idlElem) {
  * @param {string} parent
  * @param {string} name
  * @param {Record<string, HTMLElement[]>} definitionMap
- * @param {HTMLElement} idlElem
  */
-function findOperationDfn(defn, parent, name, definitionMap, idlElem) {
+function findOperationDfn(defn, parent, name, definitionMap) {
   // Overloads all have unique names
   if (name.includes("!overload")) {
-    return findNormalDfn(defn, parent, name, definitionMap, idlElem);
+    return findNormalDfn(defn, parent, name, definitionMap);
   }
   const parentLow = parent.toLowerCase();
   // Allow linking to both "method()" and "method" name.
@@ -94,10 +117,10 @@ function findOperationDfn(defn, parent, name, definitionMap, idlElem) {
     const lookupName = definitionMap[asMethodName]
       ? asMethodName
       : asFullyQualifiedName;
-    const dfn = findNormalDfn(defn, parent, lookupName, definitionMap, idlElem);
+    const dfn = findNormalDfn(defn, parent, lookupName, definitionMap);
     if (!dfn) {
       // try finding dfn using name, using normal search path...
-      return findNormalDfn(defn, parent, name, definitionMap, idlElem);
+      return findNormalDfn(defn, parent, name, definitionMap);
     }
     const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
     lt.push(asFullyQualifiedName, asQualifiedName, lookupName, asLocalName);
@@ -109,7 +132,7 @@ function findOperationDfn(defn, parent, name, definitionMap, idlElem) {
     return dfn;
   }
   // no method alias, so let's find the dfn and add it
-  const dfn = findNormalDfn(defn, parent, name, definitionMap, idlElem);
+  const dfn = findNormalDfn(defn, parent, name, definitionMap);
   if (!dfn) {
     return;
   }
@@ -125,9 +148,8 @@ function findOperationDfn(defn, parent, name, definitionMap, idlElem) {
  * @param {string} parent
  * @param {string} name
  * @param {Record<string, HTMLElement[]>} definitionMap
- * @param {HTMLElement} idlElem
  */
-function findNormalDfn(defn, parent, name, definitionMap, idlElem) {
+function findNormalDfn(defn, parent, name, definitionMap) {
   if (unlinkable.has(name)) {
     return;
   }
@@ -161,22 +183,9 @@ function findNormalDfn(defn, parent, name, definitionMap, idlElem) {
     }`;
     pub("error", msg);
   }
-  if (dfns.length === 0) {
-    const showWarnings =
-      idlElem && nameLow && !idlElem.classList.contains("no-link-warnings");
-    if (showWarnings) {
-      const styledName = defn.type === "operation" ? `${name}()` : name;
-      const ofParent = parent ? ` \`${parent}\`'s` : "";
-      pub(
-        "warn",
-        `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${
-          defn.type
-        }. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`
-      );
-    }
-    return;
+  if (dfns.length) {
+    return decorateDfn(dfns[0], defn, parentLow, nameLow);
   }
-  return decorateDfn(dfns[0], defn, parentLow, nameLow);
 }
 
 /**
