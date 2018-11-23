@@ -617,7 +617,7 @@ export function run(conf) {
         }
         conf.definitionMap[title].push(elem);
       });
-    idlElement.parentElement.replaceChild(newElement, idlElement);
+    idlElement.replaceWith(newElement);
     newElement.classList.add(...idlElement.classList);
   });
   document.normalize();
