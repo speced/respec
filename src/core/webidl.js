@@ -23,7 +23,6 @@ const idlEnumItemTmpl = tmpls["enum-item.html"];
 const idlEnumTmpl = tmpls["enum.html"];
 const idlExtAttributeTmpl = tmpls["extended-attribute.html"];
 const idlIncludesTmpl = tmpls["includes.html"];
-const idlImplementsTmpl = tmpls["implements.html"];
 const idlInterfaceTmpl = tmpls["interface.html"];
 const idlIterableLikeTmpl = tmpls["iterable-like.html"];
 const idlLineCommentTmpl = tmpls["line-comment.html"];
@@ -292,8 +291,6 @@ function writeDefinition(obj) {
       return idlTypedefTmpl(opt);
     case "includes":
       return idlIncludesTmpl(opt);
-    case "implements":
-      return idlImplementsTmpl(opt);
     case "interface":
       return writeInterfaceDefinition(opt);
     case "interface mixin":
@@ -459,7 +456,7 @@ function writeMember(memb) {
 function linkDefinitions(parse, definitionMap, parent, idlElem) {
   parse
     // Don't bother with any of these
-    .filter(({ type }) => !["includes", "implements", "eof"].includes(type))
+    .filter(({ type }) => !["includes", "eof"].includes(type))
     .forEach(defn => {
       let name;
       switch (defn.type) {
