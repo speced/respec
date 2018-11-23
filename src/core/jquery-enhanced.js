@@ -4,8 +4,8 @@ import {
   getDfnTitles,
   getLinkTargets,
   renameElement,
-} from "core/utils";
-import "deps/jquery";
+} from "./utils";
+import "../deps/jquery";
 
 export const name = "core/jquery-enhanced";
 

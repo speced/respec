@@ -1,4 +1,4 @@
-import { pub } from "core/pubsubhub";
+import { pub } from "./pubsubhub";
 export const name = "core/list-sorter";
 
 function makeSorter(direction) {
@@ -72,7 +72,7 @@ export function sortDefinitionTerms(dl, dir) {
   return sortedElements;
 }
 
-export function run(conf, doc, cb) {
+export function run() {
   for (const elem of document.querySelectorAll("[data-sort]")) {
     let sortedElems;
     const dir = elem.dataset.sort || "ascending";
@@ -94,5 +94,4 @@ export function run(conf, doc, cb) {
       elem.appendChild(sortedElems);
     }
   }
-  cb();
 }

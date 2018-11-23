@@ -3,8 +3,8 @@
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
-import { pub } from "core/pubsubhub";
-import marked from "deps/marked";
+import { pub } from "./pubsubhub";
+import marked from "../deps/marked";
 export const name = "core/utils";
 
 marked.setOptions({
@@ -786,4 +786,17 @@ export function refTypeFromContext(ref, element) {
   }
   const type = isInformative ? "informative" : "normative";
   return { type, illegal: false };
+}
+
+/**
+ * Wraps inner contents with the wrapper node
+ * @param {Node} outer outer node to be modified
+ * @param {Node} wrapper wrapper node to be appended
+ */
+export function wrapInner(outer, wrapper) {
+  while (outer.firstChild) {
+    wrapper.appendChild(outer.firstChild);
+  }
+  outer.appendChild(wrapper);
+  return outer;
 }

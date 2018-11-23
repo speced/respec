@@ -5,8 +5,8 @@
 // CONFIGURATION
 //  - specStatus: the short code for the specification's maturity level or type (required)
 
-import { toKeyValuePairs, createResourceHint, linkCSS } from "core/utils";
-import { pub, sub } from "core/pubsubhub";
+import { toKeyValuePairs, createResourceHint, linkCSS } from "../core/utils";
+import { pub, sub } from "../core/pubsubhub";
 export const name = "w3c/style";
 function attachFixupScript(doc, version) {
   const script = doc.createElement("script");
@@ -104,7 +104,7 @@ if (!document.head.querySelector("meta[name=viewport]")) {
 
 document.head.insertBefore(elements, document.head.firstChild);
 
-export function run(conf, doc, cb) {
+export function run(conf) {
   if (!conf.specStatus) {
     const warn = "`respecConfig.specStatus` missing. Defaulting to 'base'.";
     conf.specStatus = "base";
@@ -150,7 +150,7 @@ export function run(conf, doc, cb) {
     sub(
       "end-all",
       () => {
-        attachFixupScript(doc, version);
+        attachFixupScript(document, version);
       },
       { once: true }
     );
@@ -158,6 +158,5 @@ export function run(conf, doc, cb) {
   const finalVersionPath = version ? version + "/" : "";
   const finalStyleURL = `https://www.w3.org/StyleSheets/TR/${finalVersionPath}${styleFile}`;
 
-  linkCSS(doc, finalStyleURL);
-  cb();
+  linkCSS(document, finalStyleURL);
 }

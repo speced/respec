@@ -8,8 +8,8 @@
  *
  * Docs: https://github.com/w3c/respec/wiki/data-tests
  */
-import { pub } from "core/pubsubhub";
-import { lang as defaultLang } from "core/l10n";
+import { pub } from "./pubsubhub";
+import { lang as defaultLang } from "./l10n";
 const l10n = {
   en: {
     missing_test_suite_uri:

@@ -3,8 +3,8 @@
 //   plurals of it are automatically added to `data-plurals`.
 // The linking is done in core/link-to-dfn
 
-import { plural as pluralOf } from "deps/pluralize";
-import { norm as normalize } from "core/utils";
+import { plural as pluralOf } from "../deps/pluralize";
+import { norm as normalize } from "./utils";
 
 export const name = "core/pluralize";
 
@@ -34,7 +34,7 @@ export function run(conf) {
         dfn.dataset.plurals = uniquePlurals.join("|");
         uniquePlurals.reduce((defMap, plural) => {
           if (!defMap[plural]) defMap[plural] = [];
-          defMap[plural].push($(dfn));
+          defMap[plural].push(dfn);
           return defMap;
         }, conf.definitionMap);
       }

@@ -11,14 +11,13 @@
 //  know what you are doing, you should be using a dedicated module instead. This feature
 //  is not actively supported and support for it may be dropped. It is not accounted for
 //  in the test suite, and therefore could easily break.
-import { runTransforms } from "core/utils";
+import { runTransforms } from "./utils";
 
 export const name = "core/data-transform";
 
-export function run(conf, doc, cb) {
-  doc.querySelectorAll("[data-transform]").forEach(el => {
+export function run() {
+  document.querySelectorAll("[data-transform]").forEach(el => {
     el.innerHTML = runTransforms(el.innerHTML, el.dataset.transform);
     el.removeAttribute("data-transform");
   });
-  cb();
 }

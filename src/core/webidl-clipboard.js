@@ -5,8 +5,8 @@
  * well-formatted IDL to the clipboard.
  *
  */
-import svgClipboard from "deps/text!core/images/clipboard.svg";
-import Clipboard from "deps/clipboard";
+import svgClipboard from "../deps/text!core/images/clipboard.svg";
+import Clipboard from "../deps/clipboard";
 export const name = "core/webidl-clipboard";
 
 // This button serves a prototype that we clone as needed.
@@ -26,8 +26,8 @@ const clipboardOps = {
   },
 };
 
-export async function run(conf, doc, cb) {
-  Array.from(doc.querySelectorAll("pre.idl"))
+export async function run() {
+  Array.from(document.querySelectorAll("pre.idl"))
     .map(elem => {
       const button = copyButton.cloneNode(true);
       const definition = elem.querySelector(
@@ -47,7 +47,7 @@ export async function run(conf, doc, cb) {
       return { button, elem, target };
     })
     .forEach(({ elem, button, target }) => {
-      const wrapper = doc.createElement("div");
+      const wrapper = document.createElement("div");
       button.dataset.clipboardTarget = target;
       elem.parentElement.replaceChild(wrapper, elem);
       wrapper.appendChild(button);
@@ -55,5 +55,4 @@ export async function run(conf, doc, cb) {
     });
   const clipboard = new Clipboard(".respec-button-copy-paste", clipboardOps);
   clipboard.on("success", e => e.clearSelection());
-  cb();
 }

@@ -3,12 +3,12 @@
 // Adds width and height to images, if they are missing.
 // Generates a Table of Figures wherever there is a #tof element.
 
-import { pub } from "core/pubsubhub";
+import { pub } from "./pubsubhub";
 
 export const name = "core/figures";
 
-export function run(conf, doc, cb) {
-  normalizeImages(doc);
+export function run(conf) {
+  normalizeImages(document);
   // process all figures
   const figMap = {};
   const tof = [];
@@ -25,9 +25,9 @@ export function run(conf, doc, cb) {
     num++;
     $cap
       .wrapInner($("<span class='fig-title'/>"))
-      .prepend(doc.createTextNode(" "))
+      .prepend(document.createTextNode(" "))
       .prepend($("<span class='figno'>" + num + "</span>"))
-      .prepend(doc.createTextNode(conf.l10n.fig));
+      .prepend(document.createTextNode(conf.l10n.fig));
     figMap[id] = $cap.contents();
     const $tofCap = $cap.clone();
     $tofCap
@@ -43,7 +43,7 @@ export function run(conf, doc, cb) {
   });
 
   // Update all anchors with empty content that reference a figure ID
-  $("a[href]", doc).each(function() {
+  $("a[href]").each(function() {
     const $a = $(this);
     let id = $a.attr("href");
     if (!id) return;
@@ -65,7 +65,7 @@ export function run(conf, doc, cb) {
   });
 
   // Create a Table of Figures if a section with id 'tof' exists.
-  const $tof = $("#tof", doc);
+  const $tof = $("#tof");
   if (tof.length && $tof.length) {
     // if it has a parent section, don't touch it
     // if it has a class of appendix or introductory, don't touch it
@@ -90,7 +90,6 @@ export function run(conf, doc, cb) {
     const $ul = $tof.find("ul");
     while (tof.length) $ul.append(tof.shift());
   }
-  cb();
 }
 
 function normalizeImages(doc) {

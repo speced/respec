@@ -10,10 +10,10 @@
 //  - once we have something decent, merge, ship as 3.2.0
 
 import shortcut from "shortcut";
-import { sub } from "core/pubsubhub";
-import css from "deps/text!ui/ui.css";
-import { markdownToHtml } from "core/utils";
-import "core/jquery-enhanced";
+import { sub } from "./pubsubhub";
+import css from "../deps/text!ui/ui.css";
+import { markdownToHtml } from "./utils";
+import "./jquery-enhanced";
 export const name = "core/ui";
 
 // Opportunistically inserts the style, with the chance to reduce some FOUC

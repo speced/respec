@@ -13,6 +13,8 @@
     "ecmaVersion": 2018
   },
   "rules": {
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
+    "dot-notation": "error",
     "indent": 0,
     "quotes": 0,
     "semi": ["error", "always"],

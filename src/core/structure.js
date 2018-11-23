@@ -14,7 +14,7 @@ let appendixMode = false;
 let lastNonAppendix = 0;
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 export const name = "core/structure";
-import { addId } from "core/utils";
+import { addId } from "./utils";
 
 function makeTOCAtLevel($parent, doc, current, level, conf) {
   const $secs = $parent.children(
@@ -105,20 +105,20 @@ function makeTOCAtLevel($parent, doc, current, level, conf) {
   return $ol;
 }
 
-export function run(conf, doc, cb) {
+export function run(conf) {
   if ("tocIntroductory" in conf === false) {
     conf.tocIntroductory = false;
   }
   if ("maxTocLevel" in conf === false) {
     conf.maxTocLevel = 0;
   }
-  let $secs = $("section:not(.introductory)", doc)
+  let $secs = $("section:not(.introductory)")
     .find("h1:first, h2:first, h3:first, h4:first, h5:first, h6:first")
     .toArray()
     .filter(elem => elem.closest("section.introductory") === null);
   $secs = $($secs);
   if (!$secs.length) {
-    return cb();
+    return;
   }
   $secs.each(function() {
     let depth = $(this).parents("section").length + 1;
@@ -129,23 +129,23 @@ export function run(conf, doc, cb) {
 
   // makeTOC
   if (!conf.noTOC) {
-    const $ol = makeTOCAtLevel($("body", doc), doc, [0], 1, conf);
+    const $ol = makeTOCAtLevel($("body"), document, [0], 1, conf);
     if (!$ol) return;
-    const nav = doc.createElement("nav");
+    const nav = document.createElement("nav");
     nav.id = "toc";
     nav.innerHTML = `<h2 class="introductory">${conf.l10n.toc}</h2>`;
     addId(nav.querySelector("h2"));
     nav.appendChild($ol[0]);
-    let $ref = $("#toc", doc);
+    let $ref = $("#toc");
     let replace = false;
     if ($ref.length) {
       replace = true;
     }
     if (!$ref.length) {
-      $ref = $("#sotd", doc);
+      $ref = $("#sotd");
     }
     if (!$ref.length) {
-      $ref = $("#abstract", doc);
+      $ref = $("#abstract");
     }
     if (replace) {
       $ref.replaceWith(nav);
@@ -160,7 +160,7 @@ export function run(conf, doc, cb) {
   }
 
   // Update all anchors with empty content that reference a section ID
-  $("a[href^='#']:not(.tocxref)", doc).each(function() {
+  $("a[href^='#']:not(.tocxref)").each(function() {
     const $a = $(this);
     if ($a.html() !== "") return;
     const id = $a.attr("href").slice(1);
@@ -169,6 +169,4 @@ export function run(conf, doc, cb) {
       $a.html(($a.hasClass("sectionRef") ? "section " : "") + secMap[id]);
     }
   });
-
-  cb();
 }

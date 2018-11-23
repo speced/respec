@@ -1,14 +1,14 @@
 // Module w3c/rfc2119
 // update the 2119 terms section with the terms actually used
 
-import { joinAnd } from "core/utils";
+import { joinAnd } from "../core/utils";
 
 export const name = "w3c/rfc2119";
 
-export function run(conf, doc, cb) {
-  const confo = doc.getElementById("respecRFC2119");
+export function run(conf) {
+  const confo = document.getElementById("respecRFC2119");
   if (!confo) {
-    return cb();
+    return;
   }
   // do we have a list of used RFC2119 items in
   // conf.respecRFC2119
@@ -17,7 +17,7 @@ export function run(conf, doc, cb) {
   // there are no terms used - remove the clause
   if (terms.length === 0) {
     confo.remove();
-    return cb();
+    return;
   }
 
   // put in the 2119 clause and reference
@@ -30,5 +30,4 @@ export function run(conf, doc, cb) {
     plural ? "are" : "is"
   } ${confo.innerHTML}`;
   confo.innerHTML = str;
-  cb();
 }
