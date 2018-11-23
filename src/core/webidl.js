@@ -10,6 +10,7 @@ import hb from "handlebars.runtime";
 import css from "../deps/text!core/css/webidl.css";
 import tmpls from "templates";
 import { normalizePadding, reindent } from "./utils";
+import { findDfn } from "./dfn-finder";
 
 export const name = "core/webidl";
 
@@ -29,19 +30,6 @@ const idlLineCommentTmpl = tmpls["line-comment.html"];
 const idlMethodTmpl = tmpls["method.html"];
 const idlParamTmpl = tmpls["param.html"];
 const idlTypedefTmpl = tmpls["typedef.html"];
-// TODO: make these linkable somehow.
-// https://github.com/w3c/respec/issues/999
-// https://github.com/w3c/respec/issues/982
-const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
-const topLevelEntities = new Set([
-  "callback interface",
-  "callback",
-  "dictionary",
-  "enum",
-  "interface mixin",
-  "interface",
-  "typedef",
-]);
 
 function registerHelpers() {
   hb.registerHelper("extAttr", obj => {
@@ -511,18 +499,15 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
         }
         case "enum":
           name = defn.name;
-          defn.values
-            .filter(({ type }) => type === "enum-value")
-            .forEach(enumValue => {
-              enumValue.dfn = findDfn(
-                defn,
-                name,
-                enumValue.value,
-                definitionMap,
-                "enum-value",
-                idlElem
-              );
-            });
+          defn.values.forEach(enumValue => {
+            enumValue.dfn = findDfn(
+              enumValue,
+              name,
+              enumValue.value,
+              definitionMap,
+              idlElem
+            );
+          });
           defn.idlId = "idl-def-" + name.toLowerCase();
           break;
         // Top-level entities without linkable members.
@@ -595,194 +580,8 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
       if (parent) {
         defn.linkFor = parent;
       }
-      defn.dfn = findDfn(defn, parent, name, definitionMap, defn.type, idlElem);
+      defn.dfn = findDfn(defn, parent, name, definitionMap, idlElem);
     });
-}
-
-// This function looks for a <dfn> element whose title is 'name' and
-// that is "for" 'parent', which is the empty string when 'name'
-// refers to a top-level entity. For top-level entities, <dfn>
-// elements that inherit a non-empty [dfn-for] attribute are also
-// counted as matching.
-//
-// When a matching <dfn> is found, it's given <code> formatting,
-// marked as an IDL definition, and returned. If no <dfn> is found,
-// the function returns 'undefined'.
-function findDfn(defn, parent, name, definitionMap, type, idlElem) {
-  const originalParent = parent;
-  const originalName = name;
-  parent = parent.toLowerCase();
-  switch (type) {
-    case "attribute": {
-      const asLocalName = name.toLowerCase();
-      const asQualifiedName = parent + "." + asLocalName;
-      let dfn;
-      if (definitionMap[asQualifiedName] || definitionMap[asLocalName]) {
-        dfn = findDfn(defn, parent, asLocalName, definitionMap, null, idlElem);
-      }
-      if (!dfn) {
-        break; // try finding dfn using name, using normal search path...
-      }
-      const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-      lt.push(asQualifiedName, asLocalName);
-      dfn.dataset.lt = [...new Set(lt)].join("|");
-      return dfn;
-    }
-    case "operation": {
-      // Overloads all have unique names
-      if (name.search("!overload") !== -1) {
-        name = name.toLowerCase();
-        break;
-      }
-      // Allow linking to both "method()" and "method" name.
-      const asLocalName = name.toLowerCase();
-      const asMethodName = asLocalName + "()";
-      const asQualifiedName = parent + "." + asLocalName;
-      const asFullyQualifiedName = asQualifiedName + "()";
-
-      if (
-        definitionMap[asMethodName] ||
-        definitionMap[asFullyQualifiedName.toLowerCase()]
-      ) {
-        const lookupName = definitionMap[asMethodName]
-          ? asMethodName
-          : asFullyQualifiedName;
-        const dfn = findDfn(
-          defn,
-          parent,
-          lookupName,
-          definitionMap,
-          null,
-          idlElem
-        );
-        if (!dfn) {
-          break; // try finding dfn using name, using normal search path...
-        }
-        const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-        lt.push(asFullyQualifiedName, asQualifiedName, lookupName, asLocalName);
-        dfn.dataset.lt = lt.join("|");
-        if (!definitionMap[asLocalName]) {
-          definitionMap[asLocalName] = [];
-        }
-        definitionMap[asLocalName].push(dfn);
-        return dfn;
-      }
-      // no method alias, so let's find the dfn and add it
-      const dfn = findDfn(defn, parent, name, definitionMap, null, idlElem);
-      if (!dfn) {
-        break;
-      }
-      const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-      lt.push(asMethodName, name);
-      dfn.dataset.lt = lt.reverse().join("|");
-      definitionMap[asMethodName] = [dfn];
-      return dfn;
-    }
-    case "enum-value":
-      name = name === "" ? "the-empty-string" : name.toLowerCase();
-      break;
-    default:
-      name = name.toLowerCase();
-  }
-  if (unlinkable.has(name)) {
-    return;
-  }
-  let dfnForArray = definitionMap[name];
-  let dfns = [];
-  if (dfnForArray) {
-    // Definitions that have a title and [data-dfn-for] that exactly match the
-    // IDL entity:
-    dfns = dfnForArray.filter(dfn => dfn.closest(`[data-dfn-for="${parent}"]`));
-    // If this is a top-level entity, and we didn't find anything with
-    // an explicitly empty [for], try <dfn> that inherited a [for].
-    if (dfns.length === 0 && parent === "" && dfnForArray.length === 1) {
-      dfns = dfnForArray;
-    } else if (topLevelEntities.has(type) && dfnForArray.length) {
-      const dfn = dfnForArray.find(
-        dfn => dfn.textContent.trim() === originalName
-      );
-      if (dfn) dfns = [dfn];
-    }
-  }
-  // If we haven't found any definitions with explicit [for]
-  // and [title], look for a dotted definition, "parent.name".
-  if (dfns.length === 0 && parent !== "") {
-    const dottedName = parent + "." + name;
-    dfnForArray = definitionMap[dottedName];
-    if (dfnForArray !== undefined && dfnForArray.length === 1) {
-      dfns = dfnForArray;
-      // Found it: update the definition to specify its [for] and data-lt.
-      delete definitionMap[dottedName];
-      dfns[0].dataset.dfnFor = parent;
-      dfns[0].dataset.lt = name;
-      if (definitionMap[name] === undefined) {
-        definitionMap[name] = [];
-      }
-      definitionMap[name].push(dfns[0]);
-    }
-  }
-  if (dfns.length > 1) {
-    const msg = `Multiple \`<dfn>\`s for \`${originalName}\` ${
-      originalParent ? `in \`${originalParent}\`` : ""
-    }`;
-    pub("error", msg);
-  }
-  if (dfns.length === 0) {
-    const showWarnings =
-      type &&
-      idlElem &&
-      name &&
-      idlElem.classList.contains("no-link-warnings") === false;
-    if (showWarnings) {
-      const name = type === "operation" ? `${originalName}()` : originalName;
-      const parentName = originalParent ? ` \`${originalParent}\`'s` : "";
-      let msg = `Missing \`<dfn>\` for${parentName} \`${name}\` ${type}`;
-      msg +=
-        ". [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).";
-      pub("warn", msg);
-    }
-    return;
-  }
-  const [dfn] = dfns;
-  if (!dfn.id) {
-    const id =
-      "dom-" +
-      (parent ? parent + "-" : "") +
-      name.replace(/[()]/g, "").replace(/\s/g, "-");
-    dfn.id = id;
-  }
-  dfn.dataset.idl = type || defn.type;
-  dfn.dataset.title = dfn.textContent;
-  dfn.dataset.dfnFor = parent;
-  // Derive the data-type for dictionary members, interface attributes,
-  // and methods
-  switch (defn.type) {
-    case "operation":
-    case "attribute":
-    case "field":
-      dfn.dataset.type = getDataType(defn);
-      break;
-  }
-
-  // Mark the definition as code.
-  if (!dfn.querySelector("code") && !dfn.closest("code") && dfn.children) {
-    const code = dfn.ownerDocument.createElement("code");
-    while (dfn.hasChildNodes()) {
-      code.appendChild(dfn.firstChild);
-    }
-    dfn.appendChild(code);
-  }
-  return dfn;
-}
-
-function getDataType(idlStruct) {
-  const { idlType, baseName, generic, type, body, union } = idlStruct;
-  if (typeof idlType === "string") return idlType;
-  if (generic) return generic.value;
-  if (type === "operation") return getDataType(body.idlType);
-  // join on "|" handles for "unsigned short" etc.
-  if (union) return idlType.map(getDataType).join("|");
-  return baseName ? baseName : getDataType(idlType);
 }
 
 export function run(conf) {
