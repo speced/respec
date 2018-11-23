@@ -55,7 +55,7 @@ function findAttributeDfn(defn, parent, name, definitionMap, idlElem) {
 
 function findOperationDfn(defn, parent, name, definitionMap, idlElem) {
   // Overloads all have unique names
-  if (name.search("!overload") !== -1) {
+  if (name.includes("!overload")) {
     return findNormalDfn(defn, parent, name, definitionMap, idlElem);
   }
   const parentLow = parent.toLowerCase();
