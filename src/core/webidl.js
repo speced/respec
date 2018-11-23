@@ -23,7 +23,6 @@ const idlEnumItemTmpl = tmpls["enum-item.html"];
 const idlEnumTmpl = tmpls["enum.html"];
 const idlExtAttributeTmpl = tmpls["extended-attribute.html"];
 const idlIncludesTmpl = tmpls["includes.html"];
-const idlImplementsTmpl = tmpls["implements.html"];
 const idlInterfaceTmpl = tmpls["interface.html"];
 const idlIterableLikeTmpl = tmpls["iterable-like.html"];
 const idlLineCommentTmpl = tmpls["line-comment.html"];
@@ -84,12 +83,6 @@ function registerHelpers() {
   });
   hb.registerHelper("join", (arr, between, options) => {
     return arr.map(options.fn).join(between);
-  });
-  hb.registerHelper("joinNonWhitespace", (arr, between, options) => {
-    return arr
-      .filter(elem => elem.type !== "ws")
-      .map(options.fn)
-      .join(between);
   });
   // A block helper that emits an <a title> around its contents
   // if obj.dfn exists. If it exists, that implies that
@@ -188,14 +181,6 @@ function linkStandardType(type) {
   return `<a data-cite='${standardTypes.get(safeType)}'>${safeType}</a>`;
 }
 
-const whitespaceTypes = new Set([
-  "ws",
-  "ws-pea",
-  "ws-tpea",
-  "line-comment",
-  "multiline-comment",
-]);
-
 const extendedAttributesLinks = new Map([
   ["AllowShared", "WEBIDL#AllowShared"],
   ["CEReactions", "HTML#cereactions"],
@@ -254,7 +239,6 @@ const standardTypes = new Map([
   ["Buffer", "WEBIDL#idl-Buffer"],
   ["byte", "WEBIDL#idl-byte"],
   ["ByteString", "WEBIDL#idl-ByteString"],
-  ["Callback", "WEBIDL#idl-Callback"],
   ["DataView", "WEBIDL#idl-DataView"],
   ["DOMException", "WEBIDL#idl-DOMException"],
   ["DOMString", "WEBIDL#idl-DOMString"],
@@ -306,8 +290,6 @@ function writeDefinition(obj) {
       return idlTypedefTmpl(opt);
     case "includes":
       return idlIncludesTmpl(opt);
-    case "implements":
-      return idlImplementsTmpl(opt);
     case "interface":
       return writeInterfaceDefinition(opt);
     case "interface mixin":
@@ -414,16 +396,14 @@ function writeAttribute(attr) {
 }
 
 function writeMethod(meth) {
-  const paramObjs = ((meth.body && meth.body.arguments) || [])
-    .filter(it => !whitespaceTypes.has(it.type))
-    .map(it => {
-      const trivia = it.optional ? it.optional.trivia : "";
-      return idlParamTmpl({
-        obj: it,
-        optional: it.optional ? `${writeTrivia(trivia)}optional` : "",
-        variadic: it.variadic ? "..." : "",
-      });
+  const paramObjs = ((meth.body && meth.body.arguments) || []).map(it => {
+    const trivia = it.optional ? it.optional.trivia : "";
+    return idlParamTmpl({
+      obj: it,
+      optional: it.optional ? `${writeTrivia(trivia)}optional` : "",
+      variadic: it.variadic ? "..." : "",
     });
+  });
   const params = paramObjs.join(",");
   const modifiers = ["getter", "setter", "deleter", "stringifier", "static"];
   let special = "";
@@ -475,7 +455,7 @@ function writeMember(memb) {
 function linkDefinitions(parse, definitionMap, parent, idlElem) {
   parse
     // Don't bother with any of these
-    .filter(({ type }) => !["includes", "implements", "eof"].includes(type))
+    .filter(({ type }) => !["includes", "eof"].includes(type))
     .forEach(defn => {
       let name;
       switch (defn.type) {
@@ -525,6 +505,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
             "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
           break;
         case "operation": {
+          let overload;
           if (defn.body && defn.body.name) {
             name = defn.body.name.value;
             const qualifiedName = parent + "." + name;
@@ -535,8 +516,8 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
             if (!operationNames[qualifiedName]) {
               operationNames[qualifiedName] = [];
             } else {
-              defn.overload = operationNames[qualifiedName].length;
-              name += "!overload-" + defn.overload;
+              overload = operationNames[qualifiedName].length;
+              name += "!overload-" + overload;
             }
             operationNames[fullyQualifiedName].push(defn);
             operationNames[qualifiedName].push(defn);
@@ -550,11 +531,10 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
           }
           const idHead = `idl-def-${parent.toLowerCase()}-${name.toLowerCase()}`;
           const idTail =
-            defn.overload || !defn.body || !defn.body.arguments.length
+            overload || !defn.body || !defn.body.arguments.length
               ? ""
               : "-" +
                 defn.body.arguments
-                  .filter(arg => !whitespaceTypes.has(arg.type))
                   .map(arg => arg.name.toLowerCase())
                   .join("-")
                   .replace(/\s/g, "_");
@@ -636,7 +616,7 @@ export function run(conf) {
         }
         conf.definitionMap[title].push(elem);
       });
-    idlElement.parentElement.replaceChild(newElement, idlElement);
+    idlElement.replaceWith(newElement);
     newElement.classList.add(...idlElement.classList);
   });
   document.normalize();

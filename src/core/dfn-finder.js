@@ -1,3 +1,4 @@
+// @ts-check
 import { pub } from "./pubsubhub";
 import { wrapInner } from "./utils";
 
