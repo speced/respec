@@ -75,13 +75,7 @@ function findOperationDfn(defn, parent, name, definitionMap, idlElem) {
     const lookupName = definitionMap[asMethodName]
       ? asMethodName
       : asFullyQualifiedName;
-    const dfn = findNormalDfn(
-      defn,
-      parent,
-      lookupName,
-      definitionMap,
-      idlElem
-    );
+    const dfn = findNormalDfn(defn, parent, lookupName, definitionMap, idlElem);
     if (!dfn) {
       return; // try finding dfn using name, using normal search path...
     }
