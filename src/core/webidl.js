@@ -239,7 +239,6 @@ const standardTypes = new Map([
   ["Buffer", "WEBIDL#idl-Buffer"],
   ["byte", "WEBIDL#idl-byte"],
   ["ByteString", "WEBIDL#idl-ByteString"],
-  ["Callback", "WEBIDL#idl-Callback"],
   ["DataView", "WEBIDL#idl-DataView"],
   ["DOMException", "WEBIDL#idl-DOMException"],
   ["DOMString", "WEBIDL#idl-DOMString"],
