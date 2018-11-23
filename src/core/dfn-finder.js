@@ -25,6 +25,13 @@ const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
 // When a matching <dfn> is found, it's given <code> formatting,
 // marked as an IDL definition, and returned. If no <dfn> is found,
 // the function returns 'undefined'.
+/**
+ * @param {WebIDL2.IDLTypeDescription} defn
+ * @param {string} parent
+ * @param {string} name
+ * @param {Record<string, HTMLElement[]>} definitionMap
+ * @param {HTMLElement} idlElem
+ */
 export function findDfn(defn, parent, name, definitionMap, idlElem) {
   switch (defn.type) {
     case "attribute":
@@ -36,6 +43,13 @@ export function findDfn(defn, parent, name, definitionMap, idlElem) {
   }
 }
 
+/**
+ * @param {WebIDL2.IDLTypeDescription} defn
+ * @param {string} parent
+ * @param {string} name
+ * @param {Record<string, HTMLElement[]>} definitionMap
+ * @param {HTMLElement} idlElem
+ */
 function findAttributeDfn(defn, parent, name, definitionMap, idlElem) {
   const parentLow = parent.toLowerCase();
   const asLocalName = name.toLowerCase();
@@ -45,6 +59,7 @@ function findAttributeDfn(defn, parent, name, definitionMap, idlElem) {
     dfn = findNormalDfn(defn, parent, asLocalName, definitionMap, idlElem);
   }
   if (!dfn) {
+    // try finding dfn using name, using normal search path...
     return findNormalDfn(defn, parent, name, definitionMap, idlElem);
   }
   const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
@@ -53,6 +68,13 @@ function findAttributeDfn(defn, parent, name, definitionMap, idlElem) {
   return dfn;
 }
 
+/**
+ * @param {WebIDL2.IDLTypeDescription} defn
+ * @param {string} parent
+ * @param {string} name
+ * @param {Record<string, HTMLElement[]>} definitionMap
+ * @param {HTMLElement} idlElem
+ */
 function findOperationDfn(defn, parent, name, definitionMap, idlElem) {
   // Overloads all have unique names
   if (name.includes("!overload")) {
@@ -98,6 +120,13 @@ function findOperationDfn(defn, parent, name, definitionMap, idlElem) {
   return dfn;
 }
 
+/**
+ * @param {WebIDL2.IDLTypeDescription} defn
+ * @param {string} parent
+ * @param {string} name
+ * @param {Record<string, HTMLElement[]>} definitionMap
+ * @param {HTMLElement} idlElem
+ */
 function findNormalDfn(defn, parent, name, definitionMap, idlElem) {
   if (unlinkable.has(name)) {
     return;
@@ -147,10 +176,16 @@ function findNormalDfn(defn, parent, name, definitionMap, idlElem) {
     }
     return;
   }
-  return decorateDfn(dfns[0], defn, parentLow, nameLow, defn.type);
+  return decorateDfn(dfns[0], defn, parentLow, nameLow);
 }
 
-function decorateDfn(dfn, defn, parent, name, type) {
+/**
+ * @param {HTMLElement} dfn 
+ * @param {WebIDL2.IDLTypeDescription} defn 
+ * @param {string} parent 
+ * @param {string} name 
+ */
+function decorateDfn(dfn, defn, parent, name) {
   if (!dfn.id) {
     const id =
       "dom-" +
@@ -158,7 +193,7 @@ function decorateDfn(dfn, defn, parent, name, type) {
       name.replace(/[()]/g, "").replace(/\s/g, "-");
     dfn.id = id;
   }
-  dfn.dataset.idl = type || defn.type;
+  dfn.dataset.idl = defn.type;
   dfn.dataset.title = dfn.textContent;
   dfn.dataset.dfnFor = parent;
   // Derive the data-type for dictionary members, interface attributes,
@@ -178,6 +213,12 @@ function decorateDfn(dfn, defn, parent, name, type) {
   return dfn;
 }
 
+/**
+ * @param {HTMLElement[]} dfnForArray 
+ * @param {string} parent 
+ * @param {string} originalName 
+ * @param {string} type
+ */
 function getDfns(dfnForArray, parent, originalName, type) {
   if (!dfnForArray) {
     return [];
@@ -200,6 +241,9 @@ function getDfns(dfnForArray, parent, originalName, type) {
   return dfns;
 }
 
+/** 
+ * @return {string}
+ */
 function getDataType(idlStruct) {
   const { idlType, baseName, generic, type, body, union } = idlStruct;
   if (typeof idlType === "string") return idlType;
