@@ -34,21 +34,21 @@ const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
  */
 export function findDfn(defn, parent, name, definitionMap, idlElem) {
   const dfn = tryFindDfn(defn, parent, name, definitionMap);
-  if (!dfn) {
-    const showWarnings =
-      idlElem && name && !idlElem.classList.contains("no-link-warnings");
-    if (showWarnings) {
-      const styledName = defn.type === "operation" ? `${name}()` : name;
-      const ofParent = parent ? ` \`${parent}\`'s` : "";
-      pub(
-        "warn",
-        `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${
-          defn.type
-        }. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`
-      );
-    }
+  if (dfn) {
+    return dfn;
   }
-  return dfn;
+  const showWarnings =
+    idlElem && name && !idlElem.classList.contains("no-link-warnings");
+  if (showWarnings) {
+    const styledName = defn.type === "operation" ? `${name}()` : name;
+    const ofParent = parent ? ` \`${parent}\`'s` : "";
+    pub(
+      "warn",
+      `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${
+        defn.type
+      }. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`
+    );
+  }
 }
 
 /**
