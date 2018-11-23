@@ -26,7 +26,7 @@ const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
 // marked as an IDL definition, and returned. If no <dfn> is found,
 // the function returns 'undefined'.
 /**
- * @param {WebIDL2.IDLTypeDescription} defn
+ * @param {*} defn
  * @param {string} parent
  * @param {string} name
  * @param {Record<string, HTMLElement[]>} definitionMap
@@ -44,7 +44,7 @@ export function findDfn(defn, parent, name, definitionMap, idlElem) {
 }
 
 /**
- * @param {WebIDL2.IDLTypeDescription} defn
+ * @param {*} defn
  * @param {string} parent
  * @param {string} name
  * @param {Record<string, HTMLElement[]>} definitionMap
@@ -69,7 +69,7 @@ function findAttributeDfn(defn, parent, name, definitionMap, idlElem) {
 }
 
 /**
- * @param {WebIDL2.IDLTypeDescription} defn
+ * @param {*} defn
  * @param {string} parent
  * @param {string} name
  * @param {Record<string, HTMLElement[]>} definitionMap
@@ -121,7 +121,7 @@ function findOperationDfn(defn, parent, name, definitionMap, idlElem) {
 }
 
 /**
- * @param {WebIDL2.IDLTypeDescription} defn
+ * @param {*} defn
  * @param {string} parent
  * @param {string} name
  * @param {Record<string, HTMLElement[]>} definitionMap
@@ -180,10 +180,10 @@ function findNormalDfn(defn, parent, name, definitionMap, idlElem) {
 }
 
 /**
- * @param {HTMLElement} dfn 
- * @param {WebIDL2.IDLTypeDescription} defn 
- * @param {string} parent 
- * @param {string} name 
+ * @param {HTMLElement} dfn
+ * @param {*} defn
+ * @param {string} parent
+ * @param {string} name
  */
 function decorateDfn(dfn, defn, parent, name) {
   if (!dfn.id) {
@@ -214,9 +214,9 @@ function decorateDfn(dfn, defn, parent, name) {
 }
 
 /**
- * @param {HTMLElement[]} dfnForArray 
- * @param {string} parent 
- * @param {string} originalName 
+ * @param {HTMLElement[]} dfnForArray
+ * @param {string} parent
+ * @param {string} originalName
  * @param {string} type
  */
 function getDfns(dfnForArray, parent, originalName, type) {
@@ -241,7 +241,7 @@ function getDfns(dfnForArray, parent, originalName, type) {
   return dfns;
 }
 
-/** 
+/**
  * @return {string}
  */
 function getDataType(idlStruct) {
