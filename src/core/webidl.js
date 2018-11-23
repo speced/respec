@@ -400,15 +400,14 @@ function writeAttribute(attr) {
 }
 
 function writeMethod(meth) {
-  const paramObjs = ((meth.body && meth.body.arguments) || [])
-    .map(it => {
-      const trivia = it.optional ? it.optional.trivia : "";
-      return idlParamTmpl({
-        obj: it,
-        optional: it.optional ? `${writeTrivia(trivia)}optional` : "",
-        variadic: it.variadic ? "..." : "",
-      });
+  const paramObjs = ((meth.body && meth.body.arguments) || []).map(it => {
+    const trivia = it.optional ? it.optional.trivia : "";
+    return idlParamTmpl({
+      obj: it,
+      optional: it.optional ? `${writeTrivia(trivia)}optional` : "",
+      variadic: it.variadic ? "..." : "",
     });
+  });
   const params = paramObjs.join(",");
   const modifiers = ["getter", "setter", "deleter", "stringifier", "static"];
   let special = "";
