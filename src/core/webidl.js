@@ -521,7 +521,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
               operationNames[qualifiedName] = [];
             } else {
               overload = operationNames[qualifiedName].length;
-              name += "!overload-" + defn.overload;
+              name += "!overload-" + overload;
             }
             operationNames[fullyQualifiedName].push(defn);
             operationNames[qualifiedName].push(defn);
