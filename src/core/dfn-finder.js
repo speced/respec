@@ -16,16 +16,16 @@ const topLevelEntities = new Set([
 // https://github.com/w3c/respec/issues/982
 const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
 
-// This function looks for a <dfn> element whose title is 'name' and
-// that is "for" 'parent', which is the empty string when 'name'
-// refers to a top-level entity. For top-level entities, <dfn>
-// elements that inherit a non-empty [dfn-for] attribute are also
-// counted as matching.
-//
-// When a matching <dfn> is found, it's given <code> formatting,
-// marked as an IDL definition, and returned. If no <dfn> is found,
-// the function returns 'undefined'.
 /**
+ * This function looks for a <dfn> element whose title is 'name' and
+ * that is "for" 'parent', which is the empty string when 'name'
+ * refers to a top-level entity. For top-level entities, <dfn>
+ * elements that inherit a non-empty [dfn-for] attribute are also
+ * counted as matching.
+ *
+ * When a matching <dfn> is found, it's given <code> formatting,
+ * marked as an IDL definition, and returned. If no <dfn> is found,
+ * the function returns 'undefined'.
  * @param {*} defn
  * @param {string} parent
  * @param {string} name
