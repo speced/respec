@@ -85,12 +85,6 @@ function registerHelpers() {
   hb.registerHelper("join", (arr, between, options) => {
     return arr.map(options.fn).join(between);
   });
-  hb.registerHelper("joinNonWhitespace", (arr, between, options) => {
-    return arr
-      .filter(elem => elem.type !== "ws")
-      .map(options.fn)
-      .join(between);
-  });
   // A block helper that emits an <a title> around its contents
   // if obj.dfn exists. If it exists, that implies that
   // there's another <dfn> for the object.
@@ -187,14 +181,6 @@ function linkStandardType(type) {
   const safeType = hb.Utils.escapeExpression(type);
   return `<a data-cite='${standardTypes.get(safeType)}'>${safeType}</a>`;
 }
-
-const whitespaceTypes = new Set([
-  "ws",
-  "ws-pea",
-  "ws-tpea",
-  "line-comment",
-  "multiline-comment",
-]);
 
 const extendedAttributesLinks = new Map([
   ["AllowShared", "WEBIDL#AllowShared"],
@@ -415,7 +401,6 @@ function writeAttribute(attr) {
 
 function writeMethod(meth) {
   const paramObjs = ((meth.body && meth.body.arguments) || [])
-    .filter(it => !whitespaceTypes.has(it.type))
     .map(it => {
       const trivia = it.optional ? it.optional.trivia : "";
       return idlParamTmpl({
@@ -525,6 +510,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
             "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
           break;
         case "operation": {
+          let overload;
           if (defn.body && defn.body.name) {
             name = defn.body.name.value;
             const qualifiedName = parent + "." + name;
@@ -535,7 +521,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
             if (!operationNames[qualifiedName]) {
               operationNames[qualifiedName] = [];
             } else {
-              defn.overload = operationNames[qualifiedName].length;
+              overload = operationNames[qualifiedName].length;
               name += "!overload-" + defn.overload;
             }
             operationNames[fullyQualifiedName].push(defn);
@@ -550,11 +536,10 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
           }
           const idHead = `idl-def-${parent.toLowerCase()}-${name.toLowerCase()}`;
           const idTail =
-            defn.overload || !defn.body || !defn.body.arguments.length
+            overload || !defn.body || !defn.body.arguments.length
               ? ""
               : "-" +
                 defn.body.arguments
-                  .filter(arg => !whitespaceTypes.has(arg.type))
                   .map(arg => arg.name.toLowerCase())
                   .join("-")
                   .replace(/\s/g, "_");
