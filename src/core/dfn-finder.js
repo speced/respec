@@ -29,7 +29,7 @@ export function findDfn(defn, parent, name, definitionMap, idlElem) {
   return (
     findAttributeDfn(defn, parent, name, definitionMap, idlElem) ||
     findOperationDfn(defn, parent, name, definitionMap, idlElem) ||
-    findGeneralDfn(defn, parent, name, definitionMap, idlElem)
+    findNormalDfn(defn, parent, name, definitionMap, idlElem)
   );
 }
 
@@ -42,7 +42,7 @@ function findAttributeDfn(defn, parent, name, definitionMap, idlElem) {
   const asQualifiedName = parent + "." + asLocalName;
   let dfn;
   if (definitionMap[asQualifiedName] || definitionMap[asLocalName]) {
-    dfn = findGeneralDfn(defn, parent, asLocalName, definitionMap, idlElem);
+    dfn = findNormalDfn(defn, parent, asLocalName, definitionMap, idlElem);
   }
   if (!dfn) {
     return; // try finding dfn using name, using normal search path...
@@ -75,7 +75,7 @@ function findOperationDfn(defn, parent, name, definitionMap, idlElem) {
     const lookupName = definitionMap[asMethodName]
       ? asMethodName
       : asFullyQualifiedName;
-    const dfn = findGeneralDfn(
+    const dfn = findNormalDfn(
       defn,
       parent,
       lookupName,
@@ -95,7 +95,7 @@ function findOperationDfn(defn, parent, name, definitionMap, idlElem) {
     return dfn;
   }
   // no method alias, so let's find the dfn and add it
-  const dfn = findGeneralDfn(defn, parent, name, definitionMap, idlElem);
+  const dfn = findNormalDfn(defn, parent, name, definitionMap, idlElem);
   if (!dfn) {
     return;
   }
@@ -106,7 +106,7 @@ function findOperationDfn(defn, parent, name, definitionMap, idlElem) {
   return dfn;
 }
 
-function findGeneralDfn(defn, parent, name, definitionMap, idlElem) {
+function findNormalDfn(defn, parent, name, definitionMap, idlElem) {
   if (unlinkable.has(name)) {
     return;
   }
