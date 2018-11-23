@@ -26,26 +26,26 @@ const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
 // marked as an IDL definition, and returned. If no <dfn> is found,
 // the function returns 'undefined'.
 export function findDfn(defn, parent, name, definitionMap, idlElem) {
-  return (
-    findAttributeDfn(defn, parent, name, definitionMap, idlElem) ||
-    findOperationDfn(defn, parent, name, definitionMap, idlElem) ||
-    findNormalDfn(defn, parent, name, definitionMap, idlElem)
-  );
+  switch (defn.type) {
+    case "attribute":
+      return findAttributeDfn(defn, parent, name, definitionMap, idlElem);
+    case "operation":
+      return findOperationDfn(defn, parent, name, definitionMap, idlElem);
+    default:
+      return findNormalDfn(defn, parent, name, definitionMap, idlElem);
+  }
 }
 
 function findAttributeDfn(defn, parent, name, definitionMap, idlElem) {
-  if (defn.type !== "attribute") {
-    return;
-  }
-  parent = parent.toLowerCase();
+  const parentLow = parent.toLowerCase();
   const asLocalName = name.toLowerCase();
-  const asQualifiedName = parent + "." + asLocalName;
+  const asQualifiedName = parentLow + "." + asLocalName;
   let dfn;
   if (definitionMap[asQualifiedName] || definitionMap[asLocalName]) {
     dfn = findNormalDfn(defn, parent, asLocalName, definitionMap, idlElem);
   }
   if (!dfn) {
-    return; // try finding dfn using name, using normal search path...
+    return findNormalDfn(defn, parent, name, definitionMap, idlElem);
   }
   const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
   lt.push(asQualifiedName, asLocalName);
@@ -54,18 +54,15 @@ function findAttributeDfn(defn, parent, name, definitionMap, idlElem) {
 }
 
 function findOperationDfn(defn, parent, name, definitionMap, idlElem) {
-  if (defn.type !== "operation") {
-    return;
-  }
   // Overloads all have unique names
   if (name.search("!overload") !== -1) {
-    return;
+    return findNormalDfn(defn, parent, name, definitionMap, idlElem);
   }
-  parent = parent.toLowerCase();
+  const parentLow = parent.toLowerCase();
   // Allow linking to both "method()" and "method" name.
   const asLocalName = name.toLowerCase();
   const asMethodName = asLocalName + "()";
-  const asQualifiedName = parent + "." + asLocalName;
+  const asQualifiedName = parentLow + "." + asLocalName;
   const asFullyQualifiedName = asQualifiedName + "()";
 
   if (
@@ -77,7 +74,8 @@ function findOperationDfn(defn, parent, name, definitionMap, idlElem) {
       : asFullyQualifiedName;
     const dfn = findNormalDfn(defn, parent, lookupName, definitionMap, idlElem);
     if (!dfn) {
-      return; // try finding dfn using name, using normal search path...
+      // try finding dfn using name, using normal search path...
+      return findNormalDfn(defn, parent, name, definitionMap, idlElem);
     }
     const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
     lt.push(asFullyQualifiedName, asQualifiedName, lookupName, asLocalName);
@@ -104,55 +102,52 @@ function findNormalDfn(defn, parent, name, definitionMap, idlElem) {
   if (unlinkable.has(name)) {
     return;
   }
-  const originalParent = parent;
-  const originalName = name;
-  parent = parent.toLowerCase();
-  name =
+  const parentLow = parent.toLowerCase();
+  const nameLow =
     defn.type === "enum-value" && name === ""
       ? "the-empty-string"
       : name.toLowerCase();
-  let dfnForArray = definitionMap[name];
-  let dfns = getDfns(dfnForArray, parent, originalName, defn.type);
+  let dfnForArray = definitionMap[nameLow];
+  let dfns = getDfns(dfnForArray, parentLow, name, defn.type);
   // If we haven't found any definitions with explicit [for]
   // and [title], look for a dotted definition, "parent.name".
-  if (dfns.length === 0 && parent !== "") {
-    const dottedName = parent + "." + name;
+  if (dfns.length === 0 && parentLow !== "") {
+    const dottedName = parentLow + "." + nameLow;
     dfnForArray = definitionMap[dottedName];
     if (dfnForArray !== undefined && dfnForArray.length === 1) {
       dfns = dfnForArray;
       // Found it: update the definition to specify its [for] and data-lt.
       delete definitionMap[dottedName];
-      dfns[0].dataset.dfnFor = parent;
-      dfns[0].dataset.lt = name;
-      if (definitionMap[name] === undefined) {
-        definitionMap[name] = [];
+      dfns[0].dataset.dfnFor = parentLow;
+      dfns[0].dataset.lt = nameLow;
+      if (definitionMap[nameLow] === undefined) {
+        definitionMap[nameLow] = [];
       }
-      definitionMap[name].push(dfns[0]);
+      definitionMap[nameLow].push(dfns[0]);
     }
   }
   if (dfns.length > 1) {
-    const msg = `Multiple \`<dfn>\`s for \`${originalName}\` ${
-      originalParent ? `in \`${originalParent}\`` : ""
+    const msg = `Multiple \`<dfn>\`s for \`${name}\` ${
+      parent ? `in \`${parent}\`` : ""
     }`;
     pub("error", msg);
   }
   if (dfns.length === 0) {
     const showWarnings =
-      idlElem &&
-      name &&
-      idlElem.classList.contains("no-link-warnings") === false;
+      idlElem && nameLow && !idlElem.classList.contains("no-link-warnings");
     if (showWarnings) {
-      const name =
-        defn.type === "operation" ? `${originalName}()` : originalName;
-      const parentName = originalParent ? ` \`${originalParent}\`'s` : "";
-      let msg = `Missing \`<dfn>\` for${parentName} \`${name}\` ${defn.type}`;
-      msg +=
-        ". [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).";
-      pub("warn", msg);
+      const styledName = defn.type === "operation" ? `${name}()` : name;
+      const ofParent = parent ? ` \`${parent}\`'s` : "";
+      pub(
+        "warn",
+        `Missing \`<dfn>\` for${ofParent} \`${styledName}\` ${
+          defn.type
+        }. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).`
+      );
     }
     return;
   }
-  return decorateDfn(dfns[0], defn, parent, name, defn.type);
+  return decorateDfn(dfns[0], defn, parentLow, nameLow, defn.type);
 }
 
 function decorateDfn(dfn, defn, parent, name, type) {
