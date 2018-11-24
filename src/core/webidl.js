@@ -487,16 +487,16 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
             const qualifiedName = parent + "." + name;
             const fullyQualifiedName = qualifiedName + "()";
             if (!operationNames[fullyQualifiedName]) {
-              operationNames[fullyQualifiedName] = [];
+              operationNames[fullyQualifiedName] = 0;
             }
             if (!operationNames[qualifiedName]) {
-              operationNames[qualifiedName] = [];
+              operationNames[qualifiedName] = 0;
             } else {
-              overload = operationNames[qualifiedName].length;
+              overload = operationNames[qualifiedName];
               name += "!overload-" + overload;
             }
-            operationNames[fullyQualifiedName].push(defn);
-            operationNames[qualifiedName].push(defn);
+            operationNames[fullyQualifiedName] += 1;
+            operationNames[qualifiedName] += 1;
           }
           if (!overload && defn.body && defn.body.arguments.length) {
             idlId += "-" +
