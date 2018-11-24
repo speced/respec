@@ -449,13 +449,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
         case "dictionary":
         case "interface":
         case "interface mixin": {
-          if (defn.partial) {
-            if (!idlPartials[defn.name]) {
-              idlPartials[defn.name] = [];
-            }
-            idlPartials[defn.name].push(defn);
-            idlId += "-partial-" + idlPartials[defn.name].length;
-          }
+          idl += resolvePartial(defn);
           linkDefinitions(defn.members, definitionMap, defn.name, idlElem);
           break;
         }
@@ -519,6 +513,17 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
       defn.dfn = findDfn(defn, parent, name, definitionMap, idlElem);
       defn.idlId = idlId;
     });
+}
+
+function resolvePartial(defn) {
+  if (!defn.partial) {
+    return "";
+  }
+  if (!idlPartials[defn.name]) {
+    idlPartials[defn.name] = 0;
+  }
+  idlPartials[defn.name] += 1;
+  return "-partial-" + idlPartials[defn.name];
 }
 
 function getIdlId(name, parentName) {
