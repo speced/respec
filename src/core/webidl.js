@@ -488,21 +488,6 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
           }
           break;
         }
-        case "callback":
-        case "typedef":
-        case "attribute":
-        case "const":
-        case "field":
-        case "iterable":
-        case "maplike":
-        case "setlike":
-          break;
-        default:
-          pub(
-            "error",
-            new Error(`ReSpec doesn't know about IDL type: \`${defn.type}\`.`)
-          );
-          return;
       }
       if (parent) {
         defn.linkFor = parent;
