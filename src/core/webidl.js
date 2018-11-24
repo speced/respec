@@ -47,7 +47,6 @@ function registerHelpers() {
     return `(${rhs.value.map(v => options.fn(v.value))})`;
   });
   hb.registerHelper("param", obj => {
-    const trivia = obj.optional ? obj.optional.trivia : "";
     return new hb.SafeString(
       idlParamTmpl({
         obj: obj,
@@ -389,7 +388,6 @@ function writeAttribute(attr) {
 
 function writeMethod(meth) {
   const paramObjs = ((meth.body && meth.body.arguments) || []).map(it => {
-    const trivia = it.optional ? it.optional.trivia : "";
     return idlParamTmpl({
       obj: it,
       optional: writeToken(it.optional, "optional"),
