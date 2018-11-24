@@ -47,12 +47,11 @@ function registerHelpers() {
     return `(${rhs.value.map(v => options.fn(v.value))})`;
   });
   hb.registerHelper("param", obj => {
-    const trivia = obj.optional ? obj.optional.trivia : "";
     return new hb.SafeString(
       idlParamTmpl({
         obj: obj,
-        optional: obj.optional ? `${writeTrivia(trivia)}optional` : "",
-        variadic: obj.variadic ? "..." : "",
+        optional: writeToken(obj.optional, "optional"),
+        variadic: writeToken(obj.variadic, "..."),
       })
     );
   });
@@ -301,17 +300,15 @@ function writeDefinition(obj) {
       return idlDictionaryTmpl({
         obj,
         children,
-        partial: obj.partial ? `${writeTrivia(obj.partial.trivia)}partial` : "",
+        partial: writeToken(obj.partial, "partial"),
       });
     }
     case "callback": {
       const paramObjs = obj.arguments.map(it =>
         idlParamTmpl({
           obj: it,
-          optional: it.optional
-            ? `${writeTrivia(it.optional.trivia)}optional`
-            : "",
-          variadic: it.variadic ? "..." : "",
+          optional: writeToken(it.optional, "optional"),
+          variadic: writeToken(it.variadic, "..."),
         })
       );
       const callbackObj = {
@@ -345,6 +342,10 @@ function writeDefinition(obj) {
   }
 }
 
+function writeToken(t, value) {
+  return t ? writeTrivia(t.trivia) + (value || t.value) : "";
+}
+
 function writeInterfaceDefinition(opt, fixes = {}) {
   const { obj } = opt;
   const children = obj.members
@@ -367,7 +368,7 @@ function writeInterfaceDefinition(opt, fixes = {}) {
     .join("");
   return idlInterfaceTmpl({
     obj,
-    partial: obj.partial ? `${writeTrivia(obj.partial.trivia)}partial` : "",
+    partial: writeToken(obj.partial, "partial"),
     callback: fixes.callback
       ? `${writeTrivia(obj.trivia.callback)}callback`
       : "",
@@ -376,19 +377,9 @@ function writeInterfaceDefinition(opt, fixes = {}) {
   });
 }
 
-function writeAttributeQualifiers(attr) {
-  let qualifiers = "";
-  if (attr.static) qualifiers += `${writeTrivia(attr.static.trivia)}static`;
-  if (attr.stringifier)
-    qualifiers += `${writeTrivia(attr.stringifier.trivia)}stringifier`;
-  if (attr.inherit) qualifiers += `${writeTrivia(attr.inherit.trivia)}inherit`;
-  if (attr.readonly)
-    qualifiers += `${writeTrivia(attr.readonly.trivia)}readonly`;
-  return qualifiers;
-}
-
 function writeAttribute(attr) {
-  const qualifiers = writeAttributeQualifiers(attr);
+  const qualifiers =
+    writeToken(attr.special) + writeToken(attr.readonly, "readonly");
   return idlAttributeTmpl({
     obj: attr,
     qualifiers,
@@ -397,21 +388,14 @@ function writeAttribute(attr) {
 
 function writeMethod(meth) {
   const paramObjs = ((meth.body && meth.body.arguments) || []).map(it => {
-    const trivia = it.optional ? it.optional.trivia : "";
     return idlParamTmpl({
       obj: it,
-      optional: it.optional ? `${writeTrivia(trivia)}optional` : "",
-      variadic: it.variadic ? "..." : "",
+      optional: writeToken(it.optional, "optional"),
+      variadic: writeToken(it.variadic, "..."),
     });
   });
   const params = paramObjs.join(",");
-  const modifiers = ["getter", "setter", "deleter", "stringifier", "static"];
-  let special = "";
-  for (const specialProp of modifiers) {
-    if (meth[specialProp]) {
-      special = writeTrivia(meth[specialProp].trivia) + specialProp;
-    }
-  }
+  const special = writeToken(meth.special);
   const methObj = {
     obj: meth,
     special,
@@ -431,10 +415,10 @@ function writeConst(cons) {
 }
 
 function writeIterableLike(iterableLike) {
-  const { type, readonly } = iterableLike;
+  const { type } = iterableLike;
   return idlIterableLikeTmpl({
     obj: iterableLike,
-    qualifiers: readonly ? `${writeTrivia(readonly.trivia)}readonly` : "",
+    qualifiers: writeToken(iterableLike.readonly, "readonly"),
     className: `idl${type[0].toUpperCase()}${type.slice(1)}`,
   });
 }
@@ -521,12 +505,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
             }
             operationNames[fullyQualifiedName].push(defn);
             operationNames[qualifiedName].push(defn);
-          } else if (
-            defn.getter ||
-            defn.setter ||
-            defn.deleter ||
-            defn.stringifier
-          ) {
+          } else {
             name = "";
           }
           const idHead = `idl-def-${parent.toLowerCase()}-${name.toLowerCase()}`;
