@@ -51,8 +51,8 @@ function registerHelpers() {
     return new hb.SafeString(
       idlParamTmpl({
         obj: obj,
-        optional: obj.optional ? `${writeTrivia(trivia)}optional` : "",
-        variadic: obj.variadic ? "..." : "",
+        optional: writeToken(obj.optional, "optional"),
+        variadic: writeToken(obj.variadic, "..."),
       })
     );
   });
@@ -301,17 +301,15 @@ function writeDefinition(obj) {
       return idlDictionaryTmpl({
         obj,
         children,
-        partial: obj.partial ? `${writeTrivia(obj.partial.trivia)}partial` : "",
+        partial: writeToken(obj.partial, "partial"),
       });
     }
     case "callback": {
       const paramObjs = obj.arguments.map(it =>
         idlParamTmpl({
           obj: it,
-          optional: it.optional
-            ? `${writeTrivia(it.optional.trivia)}optional`
-            : "",
-          variadic: it.variadic ? "..." : "",
+          optional: writeToken(it.optional, "optional"),
+          variadic: writeToken(it.variadic, "..."),
         })
       );
       const callbackObj = {
@@ -371,7 +369,7 @@ function writeInterfaceDefinition(opt, fixes = {}) {
     .join("");
   return idlInterfaceTmpl({
     obj,
-    partial: obj.partial ? `${writeTrivia(obj.partial.trivia)}partial` : "",
+    partial: writeToken(obj.partial, "partial"),
     callback: fixes.callback
       ? `${writeTrivia(obj.trivia.callback)}callback`
       : "",
@@ -394,8 +392,8 @@ function writeMethod(meth) {
     const trivia = it.optional ? it.optional.trivia : "";
     return idlParamTmpl({
       obj: it,
-      optional: it.optional ? `${writeTrivia(trivia)}optional` : "",
-      variadic: it.variadic ? "..." : "",
+      optional: writeToken(it.optional, "optional"),
+      variadic: writeToken(it.variadic, "..."),
     });
   });
   const params = paramObjs.join(",");
@@ -419,10 +417,10 @@ function writeConst(cons) {
 }
 
 function writeIterableLike(iterableLike) {
-  const { type, readonly } = iterableLike;
+  const { type } = iterableLike;
   return idlIterableLikeTmpl({
     obj: iterableLike,
-    qualifiers: readonly ? `${writeTrivia(readonly.trivia)}readonly` : "",
+    qualifiers: writeToken(iterableLike.readonly, "readonly"),
     className: `idl${type[0].toUpperCase()}${type.slice(1)}`,
   });
 }
