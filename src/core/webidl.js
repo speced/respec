@@ -441,28 +441,19 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
     // Don't bother with any of these
     .filter(({ type }) => !["includes", "eof"].includes(type))
     .forEach(defn => {
-      let name;
+      let name = getDefnName(defn);
+      let idlId = getIdlId(name, parent);
       switch (defn.type) {
         // Top-level entities with linkable members.
         case "callback interface":
         case "dictionary":
         case "interface":
         case "interface mixin": {
-          let partialIdx = "";
-          if (defn.partial) {
-            if (!idlPartials[defn.name]) {
-              idlPartials[defn.name] = [];
-            }
-            idlPartials[defn.name].push(defn);
-            partialIdx = "-partial-" + idlPartials[defn.name].length;
-          }
+          idlId += resolvePartial(defn);
           linkDefinitions(defn.members, definitionMap, defn.name, idlElem);
-          name = defn.name;
-          defn.idlId = "idl-def-" + name.toLowerCase() + partialIdx;
           break;
         }
         case "enum":
-          name = defn.name;
           defn.values.forEach(enumValue => {
             enumValue.dfn = findDfn(
               enumValue,
@@ -472,75 +463,66 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
               idlElem
             );
           });
-          defn.idlId = "idl-def-" + name.toLowerCase();
-          break;
-        // Top-level entities without linkable members.
-        case "callback":
-        case "typedef":
-          name = defn.name;
-          defn.idlId = "idl-def-" + name.toLowerCase();
-          break;
-        // Members of top-level entities.
-        case "attribute":
-        case "const":
-        case "field":
-          name = defn.name;
-          defn.idlId =
-            "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
           break;
         case "operation": {
           let overload;
-          if (defn.body && defn.body.name) {
-            name = defn.body.name.value;
+          if (name) {
             const qualifiedName = parent + "." + name;
-            const fullyQualifiedName = parent + "." + name + "()";
+            const fullyQualifiedName = qualifiedName + "()";
             if (!operationNames[fullyQualifiedName]) {
-              operationNames[fullyQualifiedName] = [];
+              operationNames[fullyQualifiedName] = 0;
             }
             if (!operationNames[qualifiedName]) {
-              operationNames[qualifiedName] = [];
+              operationNames[qualifiedName] = 0;
             } else {
-              overload = operationNames[qualifiedName].length;
+              overload = operationNames[qualifiedName];
               name += "!overload-" + overload;
             }
-            operationNames[fullyQualifiedName].push(defn);
-            operationNames[qualifiedName].push(defn);
-          } else {
-            name = "";
+            operationNames[fullyQualifiedName] += 1;
+            operationNames[qualifiedName] += 1;
           }
-          const idHead = `idl-def-${parent.toLowerCase()}-${name.toLowerCase()}`;
-          const idTail =
-            overload || !defn.body || !defn.body.arguments.length
-              ? ""
-              : "-" +
-                defn.body.arguments
-                  .map(arg => arg.name.toLowerCase())
-                  .join("-")
-                  .replace(/\s/g, "_");
-          defn.idlId = idHead + idTail;
+          if (!overload && defn.body && defn.body.arguments.length) {
+            idlId +=
+              "-" +
+              defn.body.arguments.map(arg => arg.name.toLowerCase()).join("-");
+          }
           break;
         }
-        case "iterable":
-        case "maplike":
-        case "setlike":
-          name = defn.type;
-          defn.idlId =
-            "idl-def-" + parent.toLowerCase() + "-" + name.toLowerCase();
-          break;
-        default:
-          pub(
-            "error",
-            new Error(
-              "ReSpec doesn't know about IDL type: `" + defn.type + "`."
-            )
-          );
-          return;
       }
       if (parent) {
         defn.linkFor = parent;
       }
       defn.dfn = findDfn(defn, parent, name, definitionMap, idlElem);
+      defn.idlId = idlId;
     });
+}
+
+function resolvePartial(defn) {
+  if (!defn.partial) {
+    return "";
+  }
+  if (!idlPartials[defn.name]) {
+    idlPartials[defn.name] = 0;
+  }
+  idlPartials[defn.name] += 1;
+  return "-partial-" + idlPartials[defn.name];
+}
+
+function getIdlId(name, parentName) {
+  if (!parentName) {
+    return `idl-def-${name.toLowerCase()}`;
+  }
+  return `idl-def-${parentName.toLowerCase()}-${name.toLowerCase()}`;
+}
+
+function getDefnName(defn) {
+  if (defn.type !== "operation") {
+    return defn.name || defn.type;
+  }
+  if (defn.body && defn.body.name) {
+    return defn.body.name.value;
+  }
+  return "";
 }
 
 export function run(conf) {
