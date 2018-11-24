@@ -345,6 +345,10 @@ function writeDefinition(obj) {
   }
 }
 
+function writeToken(t, value) {
+  return t ? writeTrivia(t.trivia) + (value || t.value) : "";
+}
+
 function writeInterfaceDefinition(opt, fixes = {}) {
   const { obj } = opt;
   const children = obj.members
@@ -376,19 +380,9 @@ function writeInterfaceDefinition(opt, fixes = {}) {
   });
 }
 
-function writeAttributeQualifiers(attr) {
-  let qualifiers = "";
-  if (attr.static) qualifiers += `${writeTrivia(attr.static.trivia)}static`;
-  if (attr.stringifier)
-    qualifiers += `${writeTrivia(attr.stringifier.trivia)}stringifier`;
-  if (attr.inherit) qualifiers += `${writeTrivia(attr.inherit.trivia)}inherit`;
-  if (attr.readonly)
-    qualifiers += `${writeTrivia(attr.readonly.trivia)}readonly`;
-  return qualifiers;
-}
-
 function writeAttribute(attr) {
-  const qualifiers = writeAttributeQualifiers(attr);
+  const qualifiers =
+    writeToken(attr.special) + writeToken(attr.readonly, "readonly");
   return idlAttributeTmpl({
     obj: attr,
     qualifiers,
@@ -405,13 +399,7 @@ function writeMethod(meth) {
     });
   });
   const params = paramObjs.join(",");
-  const modifiers = ["getter", "setter", "deleter", "stringifier", "static"];
-  let special = "";
-  for (const specialProp of modifiers) {
-    if (meth[specialProp]) {
-      special = writeTrivia(meth[specialProp].trivia) + specialProp;
-    }
-  }
+  const special = writeToken(meth.special);
   const methObj = {
     obj: meth,
     special,
@@ -521,12 +509,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
             }
             operationNames[fullyQualifiedName].push(defn);
             operationNames[qualifiedName].push(defn);
-          } else if (
-            defn.getter ||
-            defn.setter ||
-            defn.deleter ||
-            defn.stringifier
-          ) {
+          } else {
             name = "";
           }
           const idHead = `idl-def-${parent.toLowerCase()}-${name.toLowerCase()}`;
