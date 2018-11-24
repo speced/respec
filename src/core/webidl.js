@@ -449,7 +449,7 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
         case "dictionary":
         case "interface":
         case "interface mixin": {
-          idl += resolvePartial(defn);
+          idlId += resolvePartial(defn);
           linkDefinitions(defn.members, definitionMap, defn.name, idlElem);
           break;
         }
@@ -463,17 +463,6 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
               idlElem
             );
           });
-          break;
-        // Top-level entities without linkable members.
-        case "callback":
-        case "typedef":
-        // Members of top-level entities.
-        case "attribute":
-        case "const":
-        case "field":
-        case "iterable":
-        case "maplike":
-        case "setlike":
           break;
         case "operation": {
           let overload;
@@ -493,13 +482,21 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
             operationNames[qualifiedName] += 1;
           }
           if (!overload && defn.body && defn.body.arguments.length) {
-            idlId += "-" +
-              defn.body.arguments
-                .map(arg => arg.name.toLowerCase())
-                .join("-");
+            idlId +=
+              "-" +
+              defn.body.arguments.map(arg => arg.name.toLowerCase()).join("-");
           }
           break;
         }
+        case "callback":
+        case "typedef":
+        case "attribute":
+        case "const":
+        case "field":
+        case "iterable":
+        case "maplike":
+        case "setlike":
+          break;
         default:
           pub(
             "error",
