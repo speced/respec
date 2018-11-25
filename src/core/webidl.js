@@ -264,10 +264,13 @@ function makeMarkup(parse) {
       trivia: t =>
         t.trim() ? hyperHTML`<span class='idlSectionComment'>${t}</span>` : t,
       reference: name => hyperHTML`<a>${name}</a>`,
-      interface: (contents, { data }) =>
-        hyperHTML`<span class='idlInterface' id='{{obj.idlId}}' data-idl data-title='${
+      interface: (contents, { data }) => {
+        const name = getDefnName(data);
+        const idlId = getIdlId(name);
+        return hyperHTML`<span class='idlInterface' id='${idlId}' data-idl data-title='${
           data.name
-        }'>${contents}</span>`,
+        }'>${contents}</span>`;
+      },
       includes: contents =>
         hyperHTML`<span class='idlIncludes'>${contents}</span>`,
     },
