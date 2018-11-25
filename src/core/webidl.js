@@ -114,15 +114,6 @@ function registerHelpers() {
     } else if (isDefaultJSON) {
       // If toJSON is not overridden, link directly to WebIDL spec.
       a.dataset.cite = "WEBIDL#default-tojson-operation";
-    } else {
-      // ambiguous match
-      a.dataset.noDefault = "";
-      a.dataset.linkFor = obj.linkFor ? obj.linkFor.toLowerCase() : "";
-      a.dataset.lt = obj.dfn
-        .toArray()
-        .filter(({ dataset }) => dataset && dataset.lt)
-        .map(({ dataset: { lt } }) => lt)
-        .join("|");
     }
     return a.outerHTML;
   });

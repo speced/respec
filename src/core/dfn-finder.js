@@ -34,6 +34,9 @@ const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
  * @param {HTMLElement} idlElem
  */
 export function findDfn(defn, parent, name, definitionMap, idlElem) {
+  if (unlinkable.has(name)) {
+    return;
+  }
   const dfn = tryFindDfn(defn, parent, name, definitionMap);
   if (dfn) {
     return dfn;
@@ -151,9 +154,6 @@ function findOperationDfn(defn, parent, name, definitionMap) {
  * @param {Record<string, HTMLElement[]>} definitionMap
  */
 function findNormalDfn(defn, parent, name, definitionMap) {
-  if (unlinkable.has(name)) {
-    return;
-  }
   const parentLow = parent.toLowerCase();
   const nameLow =
     defn.type === "enum-value" && name === ""
