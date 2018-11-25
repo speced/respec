@@ -454,37 +454,16 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
           break;
         }
         case "enum":
-          defn.values.forEach(enumValue => {
-            enumValue.dfn = findDfn(
-              enumValue,
-              name,
-              enumValue.value,
-              definitionMap,
-              idlElem
-            );
-          });
+          linkDefinitions(defn.values, definitionMap, defn.name, idlElem);
           break;
         case "operation": {
-          let overload;
-          if (name) {
-            const qualifiedName = parent + "." + name;
-            const fullyQualifiedName = qualifiedName + "()";
-            if (!operationNames[fullyQualifiedName]) {
-              operationNames[fullyQualifiedName] = 0;
-            }
-            if (!operationNames[qualifiedName]) {
-              operationNames[qualifiedName] = 0;
-            } else {
-              overload = operationNames[qualifiedName];
-              name += "!overload-" + overload;
-            }
-            operationNames[fullyQualifiedName] += 1;
-            operationNames[qualifiedName] += 1;
-          }
-          if (!overload && defn.body && defn.body.arguments.length) {
-            idlId +=
-              "-" +
-              defn.body.arguments.map(arg => arg.name.toLowerCase()).join("-");
+          const overload = resolveOverload(name, parent);
+          if (overload) {
+            name += overload;
+          } else if (defn.body && defn.body.arguments.length) {
+            idlId += defn.body.arguments
+              .map(arg => `-${arg.name.toLowerCase()}`)
+              .join("");
           }
           break;
         }
@@ -508,6 +487,23 @@ function resolvePartial(defn) {
   return "-partial-" + idlPartials[defn.name];
 }
 
+function resolveOverload(name, parentName) {
+  const qualifiedName = parentName + "." + name;
+  const fullyQualifiedName = qualifiedName + "()";
+  let overload;
+  if (!operationNames[fullyQualifiedName]) {
+    operationNames[fullyQualifiedName] = 0;
+  }
+  if (!operationNames[qualifiedName]) {
+    operationNames[qualifiedName] = 0;
+  } else {
+    overload = "!overload-" + operationNames[qualifiedName];
+  }
+  operationNames[fullyQualifiedName] += 1;
+  operationNames[qualifiedName] += 1;
+  return overload || "";
+}
+
 function getIdlId(name, parentName) {
   if (!parentName) {
     return `idl-def-${name.toLowerCase()}`;
@@ -516,10 +512,11 @@ function getIdlId(name, parentName) {
 }
 
 function getDefnName(defn) {
-  if (defn.type !== "operation") {
+  if (defn.type === "enum-value") {
+    return defn.value;
+  } else if (defn.type !== "operation") {
     return defn.name || defn.type;
-  }
-  if (defn.body && defn.body.name) {
+  } else if (defn.body && defn.body.name) {
     return defn.body.name.value;
   }
   return "";
