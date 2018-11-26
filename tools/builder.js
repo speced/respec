@@ -71,17 +71,10 @@ const usageSections = [
 function appendBoilerplate(outPath, version, name) {
   return async (optimizedJs, sourceMap) => {
     const respecJs = `"use strict";
-/* ReSpec ${version}
-Created by Robin Berjon, http://berjon.com/ (@robinberjon)
-Documentation: http://w3.org/respec/.
-See original source for licenses: https://github.com/w3c/respec */
 window.respecVersion = "${version}";
 ${optimizedJs}
 require(['profile-${name}']);`;
-    const respecJsMap = sourceMap.replace(
-      `"mappings": "`,
-      `"mappings": ";;;;;;`
-    );
+    const respecJsMap = sourceMap.replace(`"mappings": "`, `"mappings": ";;`);
     const result = terser.minify(respecJs, {
       toplevel: true,
       sourceMap: {
