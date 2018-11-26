@@ -78,7 +78,10 @@ See original source for licenses: https://github.com/w3c/respec */
 window.respecVersion = "${version}";
 ${optimizedJs}
 require(['profile-${name}']);`;
-    const respecJsMap = sourceMap.replace(`"mappings": "`, `"mappings": ";;;;;;`);
+    const respecJsMap = sourceMap.replace(
+      `"mappings": "`,
+      `"mappings": ";;;;;;`
+    );
     const result = terser.minify(respecJs, {
       toplevel: true,
       sourceMap: {
