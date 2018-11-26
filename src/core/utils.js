@@ -591,15 +591,15 @@ export function flatten(collector, item) {
  * @param {Boolean} noLC do not convert to lowercase
  * @returns {String} generated (or existing) id for element
  */
-export function addId(elem, pfx = "", txt = "") {
+export function addId(elem, pfx = "", txt = "", noLC = false) {
   if (elem.id) {
     return elem.id;
   }
   if (!txt) {
     txt = (elem.title ? elem.title : elem.textContent).trim();
   }
-  let id = txt
-    .toLowerCase()
+  let id = noLC ? txt : txt.toLowerCase();
+  id = id
     .trim()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
