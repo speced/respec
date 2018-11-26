@@ -58,9 +58,8 @@ window.$.fn.linkTargets = function() {
 
 // Applied to an element, sets an ID for it (and returns it), using a specific prefix
 // if provided, and a specific text if given.
-window.$.fn.makeID = function(pfx = "", txt = "", noLC = false) {
-  const elem = this[0];
-  return addId(elem, pfx, txt, noLC);
+window.$.fn.makeID = function(pfx = "", txt = "") {
+  return addId(this[0], pfx, txt);
 };
 
 // Returns all the descendant text nodes of an element. Note that those nodes aren't

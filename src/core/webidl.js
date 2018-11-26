@@ -104,7 +104,6 @@ function registerHelpers() {
     const { dfn } = obj;
     // unambiguous match
     if (dfn) {
-      a.dataset.noDefault = "";
       a.dataset.linkFor = obj.linkFor ? obj.linkFor.toLowerCase() : "";
       a.dataset.lt = dfn.dataset.lt ? dfn.dataset.lt : "";
       // handle the empty string for enum values

@@ -588,18 +588,18 @@ export function flatten(collector, item) {
  * @param {Element} elem element
  * @param {String} pfx prefix
  * @param {String} txt text
- * @param {Boolean} noLC
+ * @param {Boolean} noLC do not convert to lowercase
  * @returns {String} generated (or existing) id for element
  */
-export function addId(elem, pfx = "", txt = "", noLC = false) {
+export function addId(elem, pfx = "", txt = "") {
   if (elem.id) {
     return elem.id;
   }
   if (!txt) {
     txt = (elem.title ? elem.title : elem.textContent).trim();
   }
-  let id = noLC ? txt : txt.toLowerCase();
-  id = id
+  let id = txt
+    .toLowerCase()
     .trim()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -658,7 +658,7 @@ export function getTextNodes(el, exclusions = []) {
  *   the algorithm used for determining the actual title of a
  *   <dfn> element (but can apply to other as well).
  * if args.isDefinition is true, then the element is a definition, not a
- *   reference to a definition. Any @title or @lt will be replaced with
+ *   reference to a definition. Any @title will be replaced with
  *   @data-lt to be consistent with Bikeshed / Shepherd.
  * This method now *prefers* the data-lt attribute for the list of
  *   titles. That attribute is added by this method to dfn elements, so
@@ -713,7 +713,7 @@ export function getDfnTitles(elem, args) {
 /**
  * For an element (usually <a>), returns an array of targets that
  * element might refer to, of the form
- * @typedef {for: 'interfacename', title: 'membername'} LinkTarget
+ * @typedef {{for: string, title: string}} LinkTarget
  *
  * For an element like:
  *  <p link-for="Int1"><a for="Int2">Int3.member</a></p>
