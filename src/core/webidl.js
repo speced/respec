@@ -105,11 +105,7 @@ function registerHelpers() {
     // unambiguous match
     if (dfn) {
       a.dataset.linkFor = obj.linkFor ? obj.linkFor.toLowerCase() : "";
-      a.dataset.lt = dfn.dataset.lt ? dfn.dataset.lt : "";
-      // handle the empty string for enum values
-      if (obj.idlType === "enum-value" && content === "") {
-        a.href = "#" + dfn.id;
-      }
+      a.dataset.lt = dfn.dataset.lt || "";
     } else if (isDefaultJSON) {
       // If toJSON is not overridden, link directly to WebIDL spec.
       a.dataset.cite = "WEBIDL#default-tojson-operation";

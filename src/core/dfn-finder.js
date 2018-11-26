@@ -155,23 +155,20 @@ function findOperationDfn(defn, parent, name, definitionMap) {
  */
 function findNormalDfn(defn, parent, name, definitionMap) {
   const parentLow = parent.toLowerCase();
-  const nameLow =
-    defn.type === "enum-value" && name === ""
-      ? "the-empty-string"
-      : name.toLowerCase();
+  let resolvedName =
+    defn.type === "enum-value" && name === "" ? "the-empty-string" : name;
+  const nameLow = resolvedName.toLowerCase();
   let dfnForArray = definitionMap[nameLow];
   let dfns = getDfns(dfnForArray, parentLow, name, defn.type);
   // If we haven't found any definitions with explicit [for]
   // and [title], look for a dotted definition, "parent.name".
   if (dfns.length === 0 && parentLow !== "") {
-    const dottedName = parentLow + "." + nameLow;
-    dfnForArray = definitionMap[dottedName];
+    resolvedName = parentLow + "." + nameLow;
+    dfnForArray = definitionMap[resolvedName];
     if (dfnForArray !== undefined && dfnForArray.length === 1) {
       dfns = dfnForArray;
-      // Found it: update the definition to specify its [for] and data-lt.
-      delete definitionMap[dottedName];
-      dfns[0].dataset.dfnFor = parentLow;
-      dfns[0].dataset.lt = nameLow;
+      // Found it: register with its local name
+      delete definitionMap[resolvedName];
       if (definitionMap[nameLow] === undefined) {
         definitionMap[nameLow] = [];
       }
@@ -185,6 +182,9 @@ function findNormalDfn(defn, parent, name, definitionMap) {
     pub("error", msg);
   }
   if (dfns.length) {
+    if (name !== resolvedName) {
+      dfns[0].dataset.lt = resolvedName;
+    }
     return decorateDfn(dfns[0], defn, parentLow, nameLow);
   }
 }
