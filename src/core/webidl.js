@@ -254,7 +254,7 @@ const operationNames = {};
 const idlPartials = {};
 
 // Takes the result of WebIDL2.parse(), an array of definitions.
-function makeMarkup(parse) {
+function makeMarkup(parse, definitionMap, suppressWarnings) {
   return hyperHTML`<pre class="def idl">${webidl2writer.write(parse, {
     templates: {
       wrap: items =>
@@ -263,7 +263,31 @@ function makeMarkup(parse) {
           .map(x => (typeof x === "string" ? new Text(x) : x)),
       trivia: t =>
         t.trim() ? hyperHTML`<span class='idlSectionComment'>${t}</span>` : t,
-      reference: name => hyperHTML`<a>${name}</a>`,
+      reference: name => {
+        if (standardTypes.has(name)) {
+          return hyperHTML`<a data-cite='${standardTypes.get(name)}'>${name}</a>`;
+        }
+        return hyperHTML`<a data-link-for="">${name}</a>`;
+      },
+      name: (n, { data, parent }) => {
+        const defnName = getDefnName(data);
+        const parentName = parent ? parent.name : "";
+        const className = parent ? "idlName" : "idlID";
+        const dfn = findDfn(data, parentName, defnName, definitionMap, suppressWarnings);
+        if (dfn) {
+          return hyperHTML`<span class="${className}"><a data-link-for="${parentName.toLowerCase()}" data-lt="${dfn.dataset.lt || ""}">${n}</a></span>`;
+        }
+        const isDefaultJSON =
+          data.body &&
+          data.body.name &&
+          data.body.name.value === "toJSON" &&
+          data.extAttrs &&
+          data.extAttrs.items.some(({ name }) => name === "Default");
+        if (isDefaultJSON) {
+          return hyperHTML`<span class="${className}"><a data-cite="WEBIDL#default-tojson-operation">${n}</a></span>`
+        }
+        return hyperHTML`<span class="${className}">${n}</span>`;
+      },
       interface: (contents, { data }) => {
         const name = getDefnName(data);
         const idlId = getIdlId(name);
@@ -549,7 +573,7 @@ export function run(conf) {
       return;
     }
     linkDefinitions(parse, conf.definitionMap, "", idlElement);
-    const newElement = makeMarkup(parse);
+    const newElement = makeMarkup(parse, conf.definitionMap, idlElement.classList.contains("no-link-warnings"));
     if (idlElement.id) newElement.id = idlElement.id;
     newElement
       .querySelectorAll(

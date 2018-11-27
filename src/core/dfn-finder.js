@@ -31,9 +31,9 @@ const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
  * @param {string} parent
  * @param {string} name
  * @param {Record<string, HTMLElement[]>} definitionMap
- * @param {HTMLElement} idlElem
+ * @param {boolean} suppressWarnings
  */
-export function findDfn(defn, parent, name, definitionMap, idlElem) {
+export function findDfn(defn, parent, name, definitionMap, suppressWarnings) {
   if (unlinkable.has(name)) {
     return;
   }
@@ -41,8 +41,7 @@ export function findDfn(defn, parent, name, definitionMap, idlElem) {
   if (dfn) {
     return dfn;
   }
-  const showWarnings =
-    idlElem && name && !idlElem.classList.contains("no-link-warnings");
+  const showWarnings = name && !suppressWarnings;
   if (showWarnings) {
     const styledName = defn.type === "operation" ? `${name}()` : name;
     const ofParent = parent ? ` \`${parent}\`'s` : "";
