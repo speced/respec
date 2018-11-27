@@ -270,10 +270,10 @@ function makeMarkup(parse, definitionMap, suppressWarnings) {
         return hyperHTML`<span class="idlType"><a data-link-for="">${wrapped}</a></span>`;
       },
       name: (n, { data, parent }) => {
-        const defnName = getDefnName(data);
         const parentName = parent ? parent.name : "";
         const className = parent ? "idlName" : "idlID";
-        const dfn = findDfn(data, parentName, defnName, definitionMap, suppressWarnings);
+        const { name } = getNameAndId(data, parentName);
+        const dfn = findDfn(data, parentName, name, definitionMap, suppressWarnings);
         if (dfn) {
           return hyperHTML`<span class="${className}"><a data-link-for="${parentName.toLowerCase()}" data-lt="${dfn.dataset.lt || ""}">${n}</a></span>`;
         }
@@ -289,21 +289,65 @@ function makeMarkup(parse, definitionMap, suppressWarnings) {
         return hyperHTML`<span class="${className}">${n}</span>`;
       },
       interface: (contents, { data }) => {
-        const name = getDefnName(data);
-        const idlId = getIdlId(name);
+        const { name, idlId } = getNameAndId(data);
         return hyperHTML`<span class='idlInterface' id='${idlId}' data-idl data-title='${
-          data.name
+          name
         }'>${contents}</span>`;
       },
-      operation: (contents, { data }) => {
-        const name = getDefnName(data);
-        const idlId = getIdlId(name);
-        return hyperHTML`<span class='idlMethod' id='${idlId}' data-idl data-title='${
-          name || null
+      callbackInterface: (contents, { data }) => {
+        const { name, idlId } = getNameAndId(data);
+        return hyperHTML`<span class='idlInterface' id='${idlId}' data-idl data-title='${
+          name
         }'>${contents}</span>`;
       },
       includes: contents =>
         hyperHTML`<span class='idlIncludes'>${contents}</span>`,
+      attribute: (contents, { data, parent }) => {
+        const { name, idlId } = getNameAndId(data, parent.name);
+        return hyperHTML`<span class='idlAttribute' id='${idlId}' data-idl data-title='${
+          name
+        }'>${contents}</span>`;
+      }, 
+      operation: (contents, { data, parent }) => {
+        const { name, idlId } = getNameAndId(data, parent.name);
+        return hyperHTML`<span class='idlMethod' id='${idlId}' data-idl data-title='${
+          name
+        }'>${contents}</span>`;
+      },
+      argument: contents => 
+        hyperHTML`<span class='idlParam'>${contents}</span>`,
+      dictionary: (contents, { data }) => {
+        const { name, idlId } = getNameAndId(data);
+        return hyperHTML`<span class='idlDictionary' id='${idlId}' data-idl data-title='${
+          name
+        }'>${contents}</span>`;
+      },
+      field: (contents, { data, parent }) => {
+        const { name, idlId } = getNameAndId(data, parent.name);
+        return hyperHTML`<span class='idlMember' id='${idlId}' data-idl data-title='${
+          name
+        }'>${contents}</span>`;
+      },
+      enum: (contents, { data }) => {
+        const { name, idlId } = getNameAndId(data);
+        return hyperHTML`<span class='idlEnum' id='${idlId}' data-idl data-title='${
+          name
+        }'>${contents}</span>`;
+      },
+      enumValue: contents =>
+        hyperHTML`<span class='idlEnumItem'>${contents}</span>`,
+      callbackFunction: (contents, { data }) => {
+        const { name, idlId } = getNameAndId(data);
+        return hyperHTML`<span class='idlCallback' id='${idlId}' data-idl data-title='${
+          name
+        }'>${contents}</span>`;
+      },
+      typedef: (contents, { data }) => {
+        const { name, idlId } = getNameAndId(data);
+        return hyperHTML`<span class='idlCallback' id='${idlId}' data-idl data-title='${
+          name
+        }'>${contents}</span>`;
+      },
     },
   })}</pre>`;
 }
@@ -502,6 +546,43 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
     });
 }
 
+const nameResolverMap = new WeakMap();
+function getNameAndId(defn, parent = "") {
+  if (nameResolverMap.has(defn)) {
+    return nameResolverMap.get(defn);
+  }
+  const result = resolveNameAndId(defn, parent);
+  nameResolverMap.set(defn, result);
+  return result;
+}
+
+function resolveNameAndId(defn, parent) {
+  let name = getDefnName(defn);
+  let idlId = getIdlId(name, parent);
+  switch (defn.type) {
+    // Top-level entities with linkable members.
+    case "callback interface":
+    case "dictionary":
+    case "interface":
+    case "interface mixin": {
+      idlId += resolvePartial(defn);
+      break;
+    }
+    case "operation": {
+      const overload = resolveOverload(name, parent);
+      if (overload) {
+        name += overload;
+      } else if (defn.body && defn.body.arguments.length) {
+        idlId += defn.body.arguments
+          .map(arg => `-${arg.name.toLowerCase()}`)
+          .join("");
+      }
+      break;
+    }
+  }
+  return { name, idlId };
+}
+
 function resolvePartial(defn) {
   if (!defn.partial) {
     return "";
@@ -579,7 +660,7 @@ export function run(conf) {
       // Skip this <pre> and move on to the next one.
       return;
     }
-    linkDefinitions(parse, conf.definitionMap, "", idlElement);
+    // linkDefinitions(parse, conf.definitionMap, "", idlElement);
     const newElement = makeMarkup(parse, conf.definitionMap, idlElement.classList.contains("no-link-warnings"));
     if (idlElement.id) newElement.id = idlElement.id;
     newElement
