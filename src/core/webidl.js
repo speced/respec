@@ -263,11 +263,11 @@ function makeMarkup(parse, definitionMap, suppressWarnings) {
           .map(x => (typeof x === "string" ? new Text(x) : x)),
       trivia: t =>
         t.trim() ? hyperHTML`<span class='idlSectionComment'>${t}</span>` : t,
-      reference: name => {
+      reference: (wrapped, name) => {
         if (standardTypes.has(name)) {
-          return hyperHTML`<a data-cite='${standardTypes.get(name)}'>${name}</a>`;
+          return hyperHTML`<span class="idlType"><a data-cite='${standardTypes.get(name)}'>${wrapped}</a></span>`;
         }
-        return hyperHTML`<a data-link-for="">${name}</a>`;
+        return hyperHTML`<span class="idlType"><a data-link-for="">${wrapped}</a></span>`;
       },
       name: (n, { data, parent }) => {
         const defnName = getDefnName(data);
@@ -293,6 +293,13 @@ function makeMarkup(parse, definitionMap, suppressWarnings) {
         const idlId = getIdlId(name);
         return hyperHTML`<span class='idlInterface' id='${idlId}' data-idl data-title='${
           data.name
+        }'>${contents}</span>`;
+      },
+      operation: (contents, { data }) => {
+        const name = getDefnName(data);
+        const idlId = getIdlId(name);
+        return hyperHTML`<span class='idlMethod' id='${idlId}' data-idl data-title='${
+          name || null
         }'>${contents}</span>`;
       },
       includes: contents =>
