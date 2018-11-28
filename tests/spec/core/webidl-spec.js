@@ -325,7 +325,6 @@ describe("Core - WebIDL", () => {
     const const1 = target.querySelector(".idlConst");
     expect(const1.querySelector(".idlType").textContent).toEqual(" boolean");
     expect(const1.querySelector(".idlName").textContent).toEqual("test");
-    expect(const1.querySelector(".idlConstValue").textContent).toEqual("true");
     expect(
       consts[consts.length - 1].querySelectorAll(".extAttr").length
     ).toEqual(1);
@@ -642,9 +641,6 @@ interface ReadOnlySetLike {
       "\n  // 1\n  DOMString"
     );
     expect(member.querySelector(".idlName").textContent).toEqual("value");
-    expect(
-      members[members.length - 1].querySelector(".idlMemberValue").textContent
-    ).toEqual('"blah blah"');
 
     target = doc.getElementById("dict-required-fields");
     text =
