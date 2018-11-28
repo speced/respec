@@ -178,10 +178,9 @@ describe("Core - WebIDL", () => {
     target = doc.getElementById("if-extended-attribute");
     text = "[Something, Constructor()] " + text;
     expect(target.textContent).toEqual(text);
-    expect(target.querySelector(".extAttr").textContent).toEqual("Something");
-    expect(target.querySelector(".idlCtor").textContent).toEqual(
-      "Constructor()"
-    );
+    const extAttrs = target.querySelectorAll(".extAttr");
+    expect(extAttrs[0].textContent).toEqual("Something");
+    expect(extAttrs[1].textContent).toEqual("Constructor()");
 
     target = doc.getElementById("if-identifier-list");
     text = "[Global=Window, Exposed=(Window,Worker)] interface SuperStar {};";
@@ -235,9 +234,9 @@ describe("Core - WebIDL", () => {
       " Constructor(boolean bar, sequence<double> foo, Promise<double> blah)]\n" +
       "interface SuperStar {};";
     expect(target.textContent).toEqual(text);
-    const ctors = target.getElementsByClassName("idlCtor");
-    expect(ctors.length).toEqual(2);
-    const ctor = ctors[1];
+    const ctors = target.getElementsByClassName("extAttr");
+    expect(ctors.length).toEqual(3);
+    const ctor = ctors[2];
     expect(ctor.querySelector(".extAttrName").textContent).toEqual(
       "Constructor"
     );
@@ -266,9 +265,9 @@ describe("Core - WebIDL", () => {
       " NamedConstructor=Sun(boolean bar, Date foo)]\n" +
       "interface SuperStar {};";
     expect(target.textContent).toEqual(text);
-    const ctors = target.getElementsByClassName("idlCtor");
-    expect(ctors.length).toEqual(2);
-    const ctor = ctors[1];
+    const ctors = target.getElementsByClassName("extAttr");
+    expect(ctors.length).toEqual(3);
+    const ctor = ctors[2];
     expect(ctor.textContent).toEqual("NamedConstructor=Sun(boolean bar, Date foo)");
     const params = [...ctor.getElementsByClassName("idlParam")];
     expect(params.length).toEqual(2);

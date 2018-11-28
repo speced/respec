@@ -34,12 +34,6 @@ function registerHelpers() {
   hb.registerHelper("extAttr", obj => {
     return extAttr(obj.extAttrs);
   });
-  hb.registerHelper("extAttrClassName", function() {
-    const { name } = this;
-    return ["Constructor", "NamedConstructor"].includes(name)
-      ? "idlCtor"
-      : "extAttr";
-  });
   hb.registerHelper("extAttrRhs", (rhs, options) => {
     if (rhs.type === "identifier") {
       return options.fn(rhs.value);

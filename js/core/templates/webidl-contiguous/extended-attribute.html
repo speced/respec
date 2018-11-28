@@ -1,6 +1,6 @@
 {{!-- extAttrs should match the structure at https://github.com/darobin/webidl2.js#extended-attributes.
 --}}{{{trivia extAttrs.trivia.open}}}[{{#join extAttrs.items ","
-}}{{{trivia trivia.name}}}<span class='{{extAttrClassName}}'><span class="extAttrName">{{name
+}}{{{trivia trivia.name}}}<span class='extAttr'><span class="extAttrName">{{name
 }}</span>{{#if rhs}}={{#extAttrRhs rhs}}{{ this }}{{/extAttrRhs}}{{/if
 }}{{#jsIf signature}}({{#join signature.arguments ","}}{{param this}}{{/join}}){{/jsIf
 }}</span>{{/join}}]
