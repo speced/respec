@@ -22,8 +22,8 @@ var respecConfig =
   //specType: "NO",                   // Norm
   //specType: "ST",                   // Standaard
   //specType: "IM",                   // Informatie Model
-  specType: "PR",                     // Praktijk Richtlijn
-  //specType: "HR",                   // HandReiking
+  //specType: "PR",                     // Praktijk Richtlijn
+  specType: "HR",                   // HandReiking
   //specType: "WA",                   // Werkafspraak
   //-- format is verplicht! -----------------------------------------------------------
   format: "markdown",                 // altijd "markdown"     
@@ -32,6 +32,8 @@ var respecConfig =
   //publishDate: "2018-09-18",  	    // Format is "YYY-MM-DD"
   //-- de namen van de Editor(s) ------------------------------------------------------
   //-- vul in: per Editor: name:, company:, companyURL: -------------------------------
+  //-- de github repository waar je documentn in staat --------------------------------
+  github: "https://github.com/geonovum/respec/examples/md_example",
   editors: 
   [
     {
@@ -88,7 +90,7 @@ var respecConfig =
   //-- shortName is verplicht! (komt in de URL: kies logische naam) --------------------
   shortName: "clue",  	            // Wordt gebruikt in de document URL
   //-- pubDomain is verplicht! (komt in de URL: Activeer 1 van de volgende) ------------
-  pubDomain: "clue", 	              // Metamodel Informatie Modellering
+  pubDomain: "mim", 	              // Metamodel Informatie Modellering
   //pubDomain: "bor", 	            // Beheer Openbare Ruimte
   //pubDomain: "bro", 	            // Basisregistratie Ondergrond
   //pubDomain: "imgeo", 	          // IMGeo / BGT

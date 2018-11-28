@@ -5,12 +5,15 @@ testcases voorhanden te hebben die na elke wijziging aan de code kunnen worden u
 Hiermee wordt geborgd dat de code backwards compatible blijft, en wordt
 automatisch testen mogelijk.
 
+Een uitgebreid voorbeeld met alle mogelijkheden van Markdown in combinatie met ReSpec is
+handig voor gebruikers.
+
 ## Toepassingsgebied
 
 Geonovum Respec fork
 
 ## Doelgroep
 
-Repec DEVOPS team
-
+- ReSpec DEVOPS team
+- ReSpec gebruikers bij Geonovum
 

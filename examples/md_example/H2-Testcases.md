@@ -4,21 +4,17 @@ Hieronder de testcases
 
 # Titels
 
-Een hoofdstuk titel maak je met één #
+Een hoofdstuk titel maak je met één # (met een spatie erachter)
 
 ```
 # Titel-1
 ```
-voorbeeld
-
 ## Titel-2
 
 Een Paragraaf van niveau 2 maak je met twee ##
 ```
 ## Titel-2
 ```
-voorbeeld
-
 ### Titel-3
 
 Een Paragraaf van niveau 3 maak je met drie ###
@@ -26,8 +22,6 @@ Een Paragraaf van niveau 3 maak je met drie ###
 ```
 ### Titel-3
 ```
-voorbeeld
-
 #### Titel-4
 
 Een Paragraaf van niveau 4 maak je met vier ####
@@ -35,8 +29,6 @@ Een Paragraaf van niveau 4 maak je met vier ####
 ```
 #### Titel-4
 ```
-voorbeeld
-
 ##### Titel-5
 
 Een Paragraaf van niveau 5 maak je met vijf #####
@@ -44,8 +36,6 @@ Een Paragraaf van niveau 5 maak je met vijf #####
 ```
 ##### Titel-5
 ```
-voorbeeld
-
 ###### Titel-6
 
 Een Paragraaf van niveau 6 maak je met zes ######
@@ -53,39 +43,55 @@ Een Paragraaf van niveau 6 maak je met zes ######
 ```
 ### Titel-6
 ```
-voorbeeld
 
+<div class="note">
+- Meer dan zes niveaus zijn er niet!
+- Je kunt het aantal heading niveaus dat in de table of contents terecht komt, regelen in [config.js](./config.js) met de 'maxTocLevel' parameter.</div>
 
 ## Tekst benadrukken
 
-```
+Code:
+
+```*Deze tekst staat cursief*```
+
+Geeft:
+
 *Deze tekst staat cursief*
-```
-*Deze tekst staat cursief*
 
-```
+Code:
+
+```_Deze tekst staat ook cursief_```
+
+Geeft: 
+
 _Deze tekst staat ook cursief_
-```
-_Deze tekst staat ook cursief_
 
-```
-*Deze tekst is vetgedrukt*
-```
-*Deze tekst is vetgedrukt*
+Code:
 
-```
+```**Deze tekst is vetgedrukt**```
+
+Geeft: 
+
+**Deze tekst is vetgedrukt**
+
+Code:
+
+```__Deze tekst is ook vetgedrukt__```
+
+Geeft: 
+
 __Deze tekst is ook vetgedrukt__
-```
-__Deze tekst is ook vetgedrukt__
 
-```
-*Je **mag** dit ook combineren* 
-```
+Code:
+
+```*Je **mag** dit ook combineren*```
+
+Geeft: 
 
 *Je **mag** dit ook combineren*  
 
 ## Blok Quotes
-
+Code:
 ```
 Dr. Green zei:
 > Het was ...
@@ -94,6 +100,8 @@ Dr. Green zei:
 > de Bibliotheek.
 ```
 
+Geeft: 
+<!-- werkt niet -->
 Dr. Green zei:
 > Het was ...
 > Met de Kandelaar
@@ -104,6 +112,8 @@ Dr. Green zei:
 
 ### Ongesorteerd
 
+Code: 
+
 ```
 * Keuken
 * Hal
@@ -111,7 +121,7 @@ Dr. Green zei:
  * Kandelaar
  * Touw
 ```
-
+ Wordt:
 * Keuken
 * Hal
 * Bibiotheek
@@ -119,7 +129,7 @@ Dr. Green zei:
  * Touw
 
 ### Gesorteerd
-
+Code:
 ```
 1. Keuken
 2. Hal
@@ -128,6 +138,7 @@ Dr. Green zei:
  * Touw
 ```
 
+Wordt:
 1. Keuken
 2. Hal
 3. Bibiotheek
@@ -135,22 +146,36 @@ Dr. Green zei:
  * Touw
 
 ### Taken/vinklijst
-
+Code:
 ```
 - [x] Gedaan
 - [ ] Te doen
-- [x] @mentions, #refs, [links](),**formatting**, en <del>tags</del> worden ondersteund
+- [x] @mentions, #refs, [links](),**formatting**, en <del>tags</del>  worden ondersteund
 ```
+
+Wordt:
 - [x] Gedaan
 - [ ] Te doen
-- [x] @mentions, #refs, [links](),**formats**, en <del>tags</del> worden ondersteund
-
+- [x] @mentions, #refs, [links](),**formatting**, en <del>tags</del>   worden ondersteund
 
 ## Tabellen
 
 Tabellen maak je met **|** en **-**
 
 ### Een tabel met **Vette** kopregels
+
+Code:
+<pre>
+| *RijKop*   | *Kolomkop-1*   | **Kolomkop-2** | **Kolomkop-3** | **Kolomkop-4** |
+|------------|----------------|----------------|----------------|----------------|
+| Rij-1      | Waarde         | Waarde         | Waarde         | Waarde         |
+| Rij-2      | Waarde         | Waarde         | Waarde         | Waarde         |
+| Rij-3      | Waarde         | Waarde         | Waarde         | Waarde         |
+| Rij-4      | Waarde         | Waarde         | Waarde         | Waarde         |
+| Rij-5      | Waarde         | Waarde         | Waarde         | Waarde         |
+</pre>
+
+Geeft:
 
 | *RijKop*   | *Kolomkop-1*   | **Kolomkop-2** | **Kolomkop-3** | **Kolomkop-4** |
 |------------|----------------|----------------|----------------|----------------|
@@ -162,8 +187,19 @@ Tabellen maak je met **|** en **-**
 
 
 ### Een tabel met **Lege** cellen
+Code:
+<pre>
+| *RijKop*   | *Kolomkop-1*   | **Kolomkop-2** | **Kolomkop-3** | **Kolomkop-4** |
+|------------|----------------|----------------|----------------|----------------|
+| Rij-1      |                | Waarde         | Waarde         | Waarde         |
+| Rij-2      | Waarde         |                | Waarde         | Waarde         |
+| Rij-3      | Waarde         | Waarde         | Waarde         | Waarde         |
+| Rij-4      | Waarde         | Waarde         | Waarde         |                |
+| Rij-5      | Waarde         | Waarde         | Waarde         | Waarde         |
+</pre>
+Geeft: 
 
-| *RijKop*   | *Kolomkop-1*   | **Kolomkop-2** | **Kolomkop-3** | **Kolomkop-4** |                   
+| *RijKop*   | *Kolomkop-1*   | **Kolomkop-2** | **Kolomkop-3** | **Kolomkop-4** |
 |------------|----------------|----------------|----------------|----------------|
 | Rij-1      |                | Waarde         | Waarde         | Waarde         |
 | Rij-2      | Waarde         |                | Waarde         | Waarde         |
@@ -171,96 +207,65 @@ Tabellen maak je met **|** en **-**
 | Rij-4      | Waarde         | Waarde         | Waarde         |                |
 | Rij-5      | Waarde         | Waarde         | Waarde         | Waarde         |
 
+## Noten
 
+Respec kent een mooie manier om een tekstblok in een noot te zetten:
+<pre>
+&lt;div class='note'>
+    Het was Reverend Green in de Hal
+&lt;/div>
+</pre>
+
+Of 
+
+<pre>
+&lt;aside class='note'>
+    Het was Reverend Green in de Hal
+&lt;/aside> 
+</pre>
+
+Of 
+
+<pre>
+&lt;p class='note'>
+    Het was Reverend Green in de Hal
+&lt;/p> 
+</pre>
+
+geeft dit resultaat:
+
+<aside class='note'>
+    Het was Reverend Green in de Hal
+</aside>
+
+Om een tekstdeel in een lopende tekst als noot te markeren gebruik je een span:
+
+<pre>
+Een highlight in de tekst &lt;span class='note'>Dr. Orchid&lt;/span> zie je hier.
+</pre>
+
+Een highlight in de tekst <span class='note'>Dr. Orchid</span> zie je hier.
+
+Ditzelfde kan ook met een voorbeeld door `<span class="example">` te gebruiken.
 
 ## Voorbeelden/Examples
 
-In je document maak je gebruikl van voorbeelden, dat doe je zo:
-```
-<div class='example'>
-    <span>Het was Colonel Mustard</span>
-</div>
-```
+In je document maak je gebruik van voorbeelden. ReSpec heeft hier een aparte stijl voor en maakt voorbeelden automatisch linkbaar. Een voorbeeld invoegen doe je zo (in plaats van `div` kun je ook hier `aside` of `p` gebruiken):
+<pre>
+&lt;div class='example'>
+Het was Colonel Mustard
+&lt;/div>
+</pre>
+
 en dat geeft dit resultaat:
-<div class='example'>
-    <span>Het was Colonel Mustard</span>
-</div>
-
-
-## (Voet)noten
-
-### Met eigen HTML
-
-```
-Testen van een Verwijzing<a href="#fn1-1" id="fn1-1ref"><sup>1-1</sup></a> die in een tekst is  
-opgenomen, en oh, ook nog een tweede<a href="#fn1-2" id="fn1-2ref"><sup>1-2</sup></a> om zeker
-te weten dat het werkt.
-```
-Testen van een Verwijzing<a href="#fn1-1" id="fn1-1ref"><sup>1-1</sup></a> die in een tekst is  
-opgenomen, en oh, ook nog een tweede<a href="#fn1-2" id="fn1-2ref"><sup>1-2</sup></a> om zeker
-te weten dat het werkt.
-
-**En de noten zelf**
-
-```
-<a id="fn1-1" href="#fn1-1ref"><sup>1-1</sup></a>: Verwijzing tekst 1, klik erop om terug te keren  
-<a id="fn1-2" href="#fn1-2ref"><sup>1-2</sup></a>: Verwijzing tekst 2, klik erop om terug te keren
-```
-<a id="fn1-1" href="#fn1-1ref"><sup>1-1</sup></a>: Verwijzing tekst 1, klik erop om terug te keren  
-<a id="fn1-2" href="#fn1-2ref"><sup>1-2</sup></a>: Verwijzing tekst 2, klik erop om terug te keren
-
-### Standaard Respec 
-
-Respec kent een mooiaantal e manier om een stuk tekst in een noot te zetten:
-```
-<div class='note'>
-    <span>Het was Reverend Green in de Hal</span>
-</div>
-```
-geeft dit resultaat:
-
-<div class='note'>
-    <span>Het was Reverend Green in de Hal</span>
-</div>
-
-Of (Let op dat de tekst in de note nu met hoofdletters is geschreven)
-```
-<div class='note'>
-    <div class='note-title'>
-        <span>Het was Miss Scarlet in de Keuken<span>
-    </div>
-</div>
-```
-<div class='note'>
-    <div class='note-title'>
-        <span>Het was Miss Scarlet in de Keuken<span>
-    </div>
-</div>
-
-### met class='note' in aside of span
-
-aside geeft een separaat tekstblok
-```
-<aside class='note'>
-    Het was Dr. Orchid, hij is de dader....
-</aside>  
-```
-geeft:
-<aside class='note'>
-    Het was Dr. Orchid, hij is de dader....
-</aside>  
-
-terwijl span een highlighted tekst in een andere tekst geeft   
-
-```
-Een highlight in de tekst <span class='note'>Dr. Orchid</span> zie je hier.
-```
-Een highlight in de tekst <span class='note'>Dr. Orchid</span> zie je hier.
-
+<aside class='example'>
+    Het was Colonel Mustard
+</aside>
 
 ## Verwijzigingen
 
 ### kruisverwijzing
+<!-- doet het niet -->
 ```
 Ik heb hier een tekstverwijzing [^1] naar daar staan.
 ```
@@ -277,10 +282,18 @@ en de verwijzing zelf:
 [^1]: waar is daar? nou: hier.
 
 ### verwijzing naar hoofdstuk of paragraaf
+Je kunt een klikbare link naar een hoofdstuk of paragraaf uit je document maken door:
+- de tekst die je zichtbaar als link tekst wilt hebben tussen blokhaken te zetten, en daarachter
+- tusse haakjes en achter een # teken de titel van het hoofdstuk of paragraaf waar je heen wilt linken, zonder hoofdletters en met streepjes in plaats van spaties.
+
+Code:
 ```
-Een interne verwijzing naar een hoofdstuk doe je [zo](#titels)
+Lees verder in het hoofdstuk over [Code blokken](#code-blokken).
 ```
-Een interne verwijzing naar bijvoorbeeld *Titels* doe je [zo](#titels)
+
+Geeft:
+
+Lees verder in het hoofdstuk over [Code blokken](#code-blokken).
 
 ## Code blokken
 
@@ -304,23 +317,66 @@ function WhoDunnit()
 }
 ```
 
+## Issues
+ReSpec heeft een aparte stijl voor het markeren van een blok tekst als een issue. 
+
+Code: 
+<pre>
+&lt;aside class="issue">Hierover is nog discussie.&lt;/aside>
+</pre>
+
+Geeft: 
+<aside class="issue">Hierover is nog discussie.</aside>
+
+Het issue kan gelinkt worden naar een bestaand Github issue door het issue nummer in `data-number` op te nemen. ReSpec haalt dan de titel, label en tekst van het issue automatisch op. 
+
+Code: 
+<pre>
+&lt;aside class="issue" data-number="94">Met extra tekst.&lt;/aside>
+</pre>
+
+Geeft: 
+<aside class="issue" data-number="94">Met extra tekst.</aside>
+
 ## Afbeeldingen
+Code:
 
 ```
 ![Dit is geen willekeurige afbeelding](media/cluedo.jpg)
 ```
+Geeft: 
+
 ![Dit is geen willekeurige afbeelding](media/cluedo.jpg)
 
 ## Hyperlinks
+Code:
 ```
 hyperlinks werken vanzelf, bijvoorbeeld www.geonovum.nl
 ```
+Geeft: 
+
 hyperlinks werken vanzelf, bijvoorbeeld www.geonovum.nl
 
 ## Referenties
-```
-Een paar verwijzingen naar de localBiblio staan hier [[GIF]]  
-zie vooral ook [[KANDELAAR]] voor het alternatief gebruik van Kandelaars
-```
-Een paar verwijzingen naar de localBiblio staan hier [[GIF]]  
-zie vooral ook [[KANDELAAR]] voor het alternatief gebruik van Kandelaars
+ReSpec kan een bibliografie voor je genereren onderaan het document. Zet een afkorting van het document waar je naar wilt verwijzen tussen dubbele blokhaken in je tekst. De afkorting wordt klikbaar, en de volledige bibliografische informatie van het document komt in appendix A te staan. De afkorting moet óf bekend zijn bij [SpecRef](https://www.specref.org/) (de bibliografische database van W3C, te raadplegen via de ReSpec knop rechtsboven in je document), óf in je [config.js](./config.js) zijn opgenomen als bibliografisch gegeven. 
+
+Code:
+<pre>
+Een paar verwijzingen naar de localBiblio staan hier [[GIF]]
+zie vooral ook [[!KANDELAAR]] voor het alternatief gebruik van Kandelaars
+</pre>
+
+Waarbij het gebruik van een uitroepteken aangeeft dat een verwijzing normatief is. 
+
+Geeft: 
+
+Een paar verwijzingen naar de localBiblio staan hier [[GIF]]
+
+zie vooral ook [[!KANDELAAR]] voor het alternatief gebruik van Kandelaars
+
+## Meer lezen
+Dit voorbeelddocument is niet uitputtend. Meer lezen? Zie: 
+- [W3C ReSpec instructies](https://github.com/geonovum/respec/wiki), aangevuld met instructies specifiek voor Geonovum
+- Documentatie over [Markdown support in ReSpec](https://github.com/w3c/respec/wiki/format)
+- [Meer over Markdown](https://github.github.com/gfm/)
+
