@@ -185,10 +185,10 @@ describe("Core - WebIDL", () => {
 
     target = doc.getElementById("if-identifier-list");
     text = "[Global=Window, Exposed=(Window,Worker)] interface SuperStar {};";
-    const rhs = target.querySelectorAll(".extAttrRhs");
+    const rhs = target.querySelectorAll(".extAttr");
     expect(target.textContent).toEqual(text);
-    expect(rhs[0].textContent).toEqual("Window");
-    expect(rhs[1].textContent).toEqual("(Window,Worker)");
+    expect(rhs[0].textContent).toEqual("Global=Window");
+    expect(rhs[1].textContent).toEqual("Exposed=(Window,Worker)");
 
     target = doc.getElementById("if-inheritance");
     text = "interface SuperStar : HyperStar {};";
@@ -269,7 +269,7 @@ describe("Core - WebIDL", () => {
     const ctors = target.getElementsByClassName("idlCtor");
     expect(ctors.length).toEqual(2);
     const ctor = ctors[1];
-    expect(ctor.querySelector(".extAttrRhs").textContent).toEqual("Sun");
+    expect(ctor.textContent).toEqual("NamedConstructor=Sun(boolean bar, Date foo)");
     const params = [...ctor.getElementsByClassName("idlParam")];
     expect(params.length).toEqual(2);
     expect(params.filter(p => p.textContent.includes("Date")).length).toEqual(
