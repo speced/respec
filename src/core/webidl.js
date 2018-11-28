@@ -200,13 +200,10 @@ function extAttr(extAttrs) {
   const safeString = new hb.SafeString(idlExtAttributeTmpl(opt));
   const tmpParser = document.createElement("div");
   tmpParser.innerHTML = safeString;
-  Array.from(tmpParser.querySelectorAll(".extAttrName"))
+  Array.from(tmpParser.getElementsByTagName("a"))
     .filter(elem => extendedAttributesLinks.has(elem.textContent))
-    .forEach(elem => {
-      const a = elem.ownerDocument.createElement("a");
-      a.dataset.cite = extendedAttributesLinks.get(elem.textContent);
-      a.textContent = elem.textContent;
-      elem.replaceChild(a, elem.firstChild);
+    .forEach(a => {
+      a.dataset.cite = extendedAttributesLinks.get(a.textContent);
     });
   return new hb.SafeString(tmpParser.innerHTML);
 }

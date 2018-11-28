@@ -237,9 +237,7 @@ describe("Core - WebIDL", () => {
     const ctors = target.getElementsByClassName("extAttr");
     expect(ctors.length).toEqual(3);
     const ctor = ctors[2];
-    expect(ctor.querySelector(".extAttrName").textContent).toEqual(
-      "Constructor"
-    );
+    expect(ctor.querySelector("a").textContent).toEqual("Constructor");
     const params = [...ctor.getElementsByClassName("idlParam")];
     expect(params.length).toEqual(3);
     expect(
@@ -268,7 +266,9 @@ describe("Core - WebIDL", () => {
     const ctors = target.getElementsByClassName("extAttr");
     expect(ctors.length).toEqual(3);
     const ctor = ctors[2];
-    expect(ctor.textContent).toEqual("NamedConstructor=Sun(boolean bar, Date foo)");
+    expect(ctor.textContent).toEqual(
+      "NamedConstructor=Sun(boolean bar, Date foo)"
+    );
     const params = [...ctor.getElementsByClassName("idlParam")];
     expect(params.length).toEqual(2);
     expect(params.filter(p => p.textContent.includes("Date")).length).toEqual(
