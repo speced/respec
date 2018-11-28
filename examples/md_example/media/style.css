@@ -1,0 +1,100 @@
+﻿/*-------------------------------------------------------------------------------------
+//-- File. . . :  style.css
+//-- Bevat . . :  Template voor de  stylesheet voor respec  
+//--              Gebaseerd op https://github.com/Geonovum/respec/wiki
+//--              Deze file mag worden neergezet in de root-directory van de 
+//--              betreffende standaard, maar ook 1 niveau lager in de map "media"
+//--              gedefinieerde stijlen overschrijven de default stijlen.  
+//-- Door. . . :  Jan van Gelder
+//-------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------
+//-- Log . . . :  20181009 - JvG - Initiele versie 
+//-----------------------------------------------------------------------------------*/
+
+/*-- Definitie van Image ------------------------------------------------------------*/
+img 
+{
+  max-width: 100%;
+  height: auto;
+  width: auto;
+}
+
+/*-- Definite van het Geonovum Logo bovenaan Respec document ------------------------*/
+img#Geonovum
+{
+  width:132px;
+  height: 67px;
+}
+
+/*-- Definite van BlockQuotes (uitgelichte tekstblokken) ----------------------------*/
+blockquote 
+{
+  /* margin-left: 20px !important; */
+  font-family:  'Esteban', serif !important;
+  font-style: italic;
+  border-color: transparent !important;
+  border-style: none !important;
+  background-color: darkgray;
+  color: white;
+}
+
+/*-- Optioneel een symbool voor de blockquote --------------------------------------*/
+blockquote:before 
+{
+  display: block;
+  height: 0;
+  /* content: "|"; */   
+  margin-left: -0.95em;
+  font: italic 400%/1 Esteban, serif;
+  color: grey;
+}
+
+/*-- Definite van tabellen ---------------------------------------------------------*/
+table
+{
+  empty-cells: show;
+  min-width: 90%;
+  border-color: grey;
+  border-style: solid;
+}
+
+/*-- Definite van de kopregel van een tabel ----------------------------------------*/
+thead
+{
+  background-color: grey;
+  color: white;
+}
+/*-- Definite van de body van een tabel --------------------------------------------*/
+tbody
+{
+  border-color: darkolivegreen;
+  background-color: lightgrey
+}
+
+/*-- Definite van de tabel-rij (deze zorgt voor 2 kleuren in de rijen) -------------*/
+tr:nth-child(even) 
+{
+  background-color:  darkgrey;
+}
+
+/*-- Definite van de tabel-cel (data) ----------------------------------------------*/
+td 
+{
+  min-width: 100px;     /* lege kolommen hebben deze minimale breedte */
+}
+
+/*-- Definite van rode tekst -------------------------------------------------------*/
+r
+{
+  color: red;
+}
+
+/*-- Definite van rose tekstblok ---------------------------------------------------*/
+div#remark
+{
+  border-color: darkblue;
+  border-style: solid;
+  background-color:  rosybrown;
+  color: darkblue;
+}
+

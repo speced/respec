@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!--------------------------------------------------------------------------------------------------
+//-- File. . . :  index.html
+//-- Bevat . . :  Template voor de index.html die verplicht is voor respec  
+//--              Gebaseerd op https://github.com/Geonovum/respec/wiki
+//--              Deze file moet worden neergezet in de root-directory van de 
+//--              betreffende standaard. 
+//-- Door. . . :  Jan van Gelder
+//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+//-- Log . . . :  20181015 - JvG - Initiele versie 
+//
+----------------------------------------------------------------------------------------------------
+0        1         2         3         4         5         6         7         8         9         0
+1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+--------------------------------------------------------------------------------------------------->
+<html lang='nl'>
+    <!-- HTML-Header ------------------------------------------------------------------------------>
+    <head>
+        <meta charset='utf-8'>
+        <!-- Invullen: de titel van de standaard of het document ---------------------------------->
+        <title>Respec en Markdown cases</title>    
+        <!-- Invullen: de naam van de lokale CSS file --------------------------------------------->
+        <link rel="stylesheet" type="text/css" href="./media/style.css">
+        <link rel='shortcut icon' type='image/x-icon' href='https://tools.geostandaarden.nl/respec/style/logos/Geonovum.ico' />
+        <script class="remove" src="./config.js"></script>
+        <script class='remove' src='https://tools.geostandaarden.nl/respec/builds/respec-geonovum.js' async></script>
+    </head>
+    <!-- HTML-Body -------------------------------------------------------------------------------->
+    <body>
+        <section id='abstract' data-format="markdown" data-include="Samenvatting.md"><h2>Samenvatting</h2></section>        
+        <section id='sotd'><p></p></section>
+
+        <!-- vanaf hier per hoofdstuk een sectie of een div in het document ----------------------->
+        <!-- Secties komen in de inhoudsopgave div's niet ----------------------------------------->
+        <!-- Secties hebben verplicht <h2> tags, div's niet --------------------------------------->
+
+        <!-- Voorbeelden: ------------------------------------------------------------------------->
+        <!-- <div id='H00' data-format="markdown" data-include="filenaam.md"></div> --------------->
+        <!-- voor een nieuw hoofdstuk kopieer je een regel, en voegt die toe ---------------------->
+        <section id='H01' data-format="markdown" data-include="H1-Doel.md"><h2>Inleiding</h2></section>        
+        <section id='H02' data-format="markdown" data-include="H2-Testcases.md"><h2>Metamodel</h2></section>
+        <section id='B00' data-format="markdown" data-include="Bijlagen.md"><h2>Bijlagen</h2></section>
+    </body>
+</html>
