@@ -178,17 +178,16 @@ describe("Core - WebIDL", () => {
     target = doc.getElementById("if-extended-attribute");
     text = "[Something, Constructor()] " + text;
     expect(target.textContent).toEqual(text);
-    expect(target.querySelector(".extAttr").textContent).toEqual("Something");
-    expect(target.querySelector(".idlCtor").textContent).toEqual(
-      "Constructor()"
-    );
+    const extAttrs = target.querySelectorAll(".extAttr");
+    expect(extAttrs[0].textContent).toEqual("Something");
+    expect(extAttrs[1].textContent).toEqual("Constructor()");
 
     target = doc.getElementById("if-identifier-list");
     text = "[Global=Window, Exposed=(Window,Worker)] interface SuperStar {};";
-    const rhs = target.querySelectorAll(".extAttrRhs");
+    const rhs = target.querySelectorAll(".extAttr");
     expect(target.textContent).toEqual(text);
-    expect(rhs[0].textContent).toEqual("Window");
-    expect(rhs[1].textContent).toEqual("(Window,Worker)");
+    expect(rhs[0].textContent).toEqual("Global=Window");
+    expect(rhs[1].textContent).toEqual("Exposed=(Window,Worker)");
 
     target = doc.getElementById("if-inheritance");
     text = "interface SuperStar : HyperStar {};";
@@ -235,13 +234,11 @@ describe("Core - WebIDL", () => {
       " Constructor(boolean bar, sequence<double> foo, Promise<double> blah)]\n" +
       "interface SuperStar {};";
     expect(target.textContent).toEqual(text);
-    const ctors = target.getElementsByClassName("idlCtor");
-    expect(ctors.length).toEqual(2);
-    const ctor = ctors[1];
-    expect(ctor.querySelector(".extAttrName").textContent).toEqual(
-      "Constructor"
-    );
-    const params = [...ctor.getElementsByClassName("idlParam")];
+    const ctors = target.getElementsByClassName("extAttr");
+    expect(ctors.length).toEqual(3);
+    const ctor = ctors[2];
+    expect(ctor.querySelector("a").textContent).toEqual("Constructor");
+    const params = [...ctor.getElementsByClassName("idlType")];
     expect(params.length).toEqual(3);
     expect(
       params.filter(p => p.textContent.includes("sequence")).length
@@ -249,9 +246,7 @@ describe("Core - WebIDL", () => {
     expect(
       params.filter(p => p.textContent.includes("Promise")).length
     ).toEqual(1);
-    expect(ctor.querySelector(".idlParam .idlType").textContent).toEqual(
-      "boolean"
-    );
+    expect(params[0].textContent).toEqual("boolean");
 
     target = doc.getElementById("ctor-noea");
     text = "[Constructor] interface SuperStar {};";
@@ -266,18 +261,18 @@ describe("Core - WebIDL", () => {
       " NamedConstructor=Sun(boolean bar, Date foo)]\n" +
       "interface SuperStar {};";
     expect(target.textContent).toEqual(text);
-    const ctors = target.getElementsByClassName("idlCtor");
-    expect(ctors.length).toEqual(2);
-    const ctor = ctors[1];
-    expect(ctor.querySelector(".extAttrRhs").textContent).toEqual("Sun");
-    const params = [...ctor.getElementsByClassName("idlParam")];
+    const ctors = target.getElementsByClassName("extAttr");
+    expect(ctors.length).toEqual(3);
+    const ctor = ctors[2];
+    expect(ctor.textContent).toEqual(
+      "NamedConstructor=Sun(boolean bar, Date foo)"
+    );
+    const params = [...ctor.getElementsByClassName("idlType")];
     expect(params.length).toEqual(2);
     expect(params.filter(p => p.textContent.includes("Date")).length).toEqual(
       1
     );
-    expect(ctor.querySelector(".idlParam .idlType").textContent).toEqual(
-      "boolean"
-    );
+    expect(params[0].textContent).toEqual("boolean");
   });
 
   it("should handle constants", () => {
@@ -330,7 +325,6 @@ describe("Core - WebIDL", () => {
     const const1 = target.querySelector(".idlConst");
     expect(const1.querySelector(".idlType").textContent).toEqual(" boolean");
     expect(const1.querySelector(".idlName").textContent).toEqual("test");
-    expect(const1.querySelector(".idlConstValue").textContent).toEqual("true");
     expect(
       consts[consts.length - 1].querySelectorAll(".extAttr").length
     ).toEqual(1);
@@ -647,9 +641,6 @@ interface ReadOnlySetLike {
       "\n  // 1\n  DOMString"
     );
     expect(member.querySelector(".idlName").textContent).toEqual("value");
-    expect(
-      members[members.length - 1].querySelector(".idlMemberValue").textContent
-    ).toEqual('"blah blah"');
 
     target = doc.getElementById("dict-required-fields");
     text =
@@ -803,10 +794,10 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(target.querySelector(".idlType").textContent).toEqual(
       " unsigned long long?"
     );
-    let prm = target.querySelectorAll(".idlCallback .idlParam");
+    let prm = target.querySelectorAll(".idlParamName");
     expect(prm.length).toEqual(1);
-    expect(prm[0].querySelector(".idlType").textContent).toEqual(" any");
-    expect(prm[0].querySelector(".idlParamName").textContent).toEqual("value");
+    expect(target.querySelectorAll(".idlType")[1].textContent).toEqual(" any");
+    expect(prm[0].textContent).toEqual("value");
 
     // Links and IDs.
     expect(
@@ -819,12 +810,13 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     target = doc.getElementById("cb-mult-args");
     text = "callback SortCallback = void (any a, any b);";
     expect(target.textContent).toEqual(text);
-    prm = target.querySelectorAll(".idlCallback .idlParam");
+    prm = target.querySelectorAll(".idlParamName");
     expect(prm.length).toEqual(2);
-    expect(prm[0].querySelector(".idlType").textContent).toEqual("any");
-    expect(prm[0].querySelector(".idlParamName").textContent).toEqual("a");
-    expect(prm[1].querySelector(".idlType").textContent).toEqual(" any");
-    expect(prm[1].querySelector(".idlParamName").textContent).toEqual("b");
+    const idlTypes = target.getElementsByClassName("idlType");
+    expect(idlTypes[1].textContent).toEqual("any");
+    expect(prm[0].textContent).toEqual("a");
+    expect(idlTypes[2].textContent).toEqual(" any");
+    expect(prm[1].textContent).toEqual("b");
   });
 
   it("should handle typedefs", () => {
