@@ -782,7 +782,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
 
   it("should handle callbacks", () => {
     let target = doc.getElementById("cb-basic");
-    let text = "callback SuperStar = void ();";
+    let text = "callback SuperStar = void();";
     expect(target.textContent).toEqual(text);
     expect(target.getElementsByClassName("idlCallback").length).toEqual(1);
     expect(target.querySelector(".idlID").textContent).toEqual("SuperStar");

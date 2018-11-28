@@ -288,68 +288,34 @@ function makeMarkup(parse, definitionMap, suppressWarnings) {
         }
         return hyperHTML`<span class="${className}">${n}</span>`;
       },
-      interface: (contents, { data }) => {
-        const { name, idlId } = getNameAndId(data);
-        return hyperHTML`<span class='idlInterface' id='${idlId}' data-idl data-title='${
-          name
-        }'>${contents}</span>`;
-      },
-      callbackInterface: (contents, { data }) => {
-        const { name, idlId } = getNameAndId(data);
-        return hyperHTML`<span class='idlInterface' id='${idlId}' data-idl data-title='${
-          name
-        }'>${contents}</span>`;
-      },
+      interface: idlMemberElementCreator("idlInterface"),
+      callbackInterface: idlMemberElementCreator("idlInterface"),
       includes: contents =>
         hyperHTML`<span class='idlIncludes'>${contents}</span>`,
-      attribute: (contents, { data, parent }) => {
-        const { name, idlId } = getNameAndId(data, parent.name);
-        return hyperHTML`<span class='idlAttribute' id='${idlId}' data-idl data-title='${
-          name
-        }'>${contents}</span>`;
-      }, 
-      operation: (contents, { data, parent }) => {
-        const { name, idlId } = getNameAndId(data, parent.name);
-        return hyperHTML`<span class='idlMethod' id='${idlId}' data-idl data-title='${
-          name
-        }'>${contents}</span>`;
-      },
+      const: idlMemberElementCreator("idlConst"),
+      attribute: idlMemberElementCreator("idlAttribute"),
+      operation: idlMemberElementCreator("idlMethod"),
       argument: contents => 
         hyperHTML`<span class='idlParam'>${contents}</span>`,
-      dictionary: (contents, { data }) => {
-        const { name, idlId } = getNameAndId(data);
-        return hyperHTML`<span class='idlDictionary' id='${idlId}' data-idl data-title='${
-          name
-        }'>${contents}</span>`;
-      },
-      field: (contents, { data, parent }) => {
-        const { name, idlId } = getNameAndId(data, parent.name);
-        return hyperHTML`<span class='idlMember' id='${idlId}' data-idl data-title='${
-          name
-        }'>${contents}</span>`;
-      },
-      enum: (contents, { data }) => {
-        const { name, idlId } = getNameAndId(data);
-        return hyperHTML`<span class='idlEnum' id='${idlId}' data-idl data-title='${
-          name
-        }'>${contents}</span>`;
-      },
+      dictionary: idlMemberElementCreator("idlDictionary"),
+      field: idlMemberElementCreator("idlMember"),
+      enum: idlMemberElementCreator("idlEnum"),
       enumValue: contents =>
         hyperHTML`<span class='idlEnumItem'>${contents}</span>`,
-      callbackFunction: (contents, { data }) => {
-        const { name, idlId } = getNameAndId(data);
-        return hyperHTML`<span class='idlCallback' id='${idlId}' data-idl data-title='${
-          name
-        }'>${contents}</span>`;
-      },
-      typedef: (contents, { data }) => {
-        const { name, idlId } = getNameAndId(data);
-        return hyperHTML`<span class='idlCallback' id='${idlId}' data-idl data-title='${
-          name
-        }'>${contents}</span>`;
-      },
+      callbackFunction: idlMemberElementCreator("idlCallback"),
+      typedef: idlMemberElementCreator("idlTypedef")
     },
   })}</pre>`;
+}
+
+function idlMemberElementCreator(className) {
+  return (contents, { data, parent }) => {
+    const parentName = parent ? parent.name : "";
+    const { name, idlId } = getNameAndId(data, parentName);
+    return hyperHTML`<span class='${className}' id='${idlId}' data-idl data-title='${
+      name
+    }'>${contents}</span>`;
+  };
 }
 
 function writeDefinition(obj) {
