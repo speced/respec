@@ -238,7 +238,7 @@ describe("Core - WebIDL", () => {
     expect(ctors.length).toEqual(3);
     const ctor = ctors[2];
     expect(ctor.querySelector("a").textContent).toEqual("Constructor");
-    const params = [...ctor.getElementsByClassName("idlParam")];
+    const params = [...ctor.getElementsByClassName("idlType")];
     expect(params.length).toEqual(3);
     expect(
       params.filter(p => p.textContent.includes("sequence")).length
@@ -246,9 +246,7 @@ describe("Core - WebIDL", () => {
     expect(
       params.filter(p => p.textContent.includes("Promise")).length
     ).toEqual(1);
-    expect(ctor.querySelector(".idlParam .idlType").textContent).toEqual(
-      "boolean"
-    );
+    expect(params[0].textContent).toEqual("boolean");
 
     target = doc.getElementById("ctor-noea");
     text = "[Constructor] interface SuperStar {};";
@@ -269,14 +267,12 @@ describe("Core - WebIDL", () => {
     expect(ctor.textContent).toEqual(
       "NamedConstructor=Sun(boolean bar, Date foo)"
     );
-    const params = [...ctor.getElementsByClassName("idlParam")];
+    const params = [...ctor.getElementsByClassName("idlType")];
     expect(params.length).toEqual(2);
     expect(params.filter(p => p.textContent.includes("Date")).length).toEqual(
       1
     );
-    expect(ctor.querySelector(".idlParam .idlType").textContent).toEqual(
-      "boolean"
-    );
+    expect(params[0].textContent).toEqual("boolean");
   });
 
   it("should handle constants", () => {
@@ -802,10 +798,10 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(target.querySelector(".idlType").textContent).toEqual(
       " unsigned long long?"
     );
-    let prm = target.querySelectorAll(".idlCallback .idlParam");
+    let prm = target.querySelectorAll(".idlParamName");
     expect(prm.length).toEqual(1);
-    expect(prm[0].querySelector(".idlType").textContent).toEqual(" any");
-    expect(prm[0].querySelector(".idlParamName").textContent).toEqual("value");
+    expect(target.querySelectorAll(".idlType")[1].textContent).toEqual(" any");
+    expect(prm[0].textContent).toEqual("value");
 
     // Links and IDs.
     expect(
@@ -818,12 +814,13 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     target = doc.getElementById("cb-mult-args");
     text = "callback SortCallback = void (any a, any b);";
     expect(target.textContent).toEqual(text);
-    prm = target.querySelectorAll(".idlCallback .idlParam");
+    prm = target.querySelectorAll(".idlParamName");
     expect(prm.length).toEqual(2);
-    expect(prm[0].querySelector(".idlType").textContent).toEqual("any");
-    expect(prm[0].querySelector(".idlParamName").textContent).toEqual("a");
-    expect(prm[1].querySelector(".idlType").textContent).toEqual(" any");
-    expect(prm[1].querySelector(".idlParamName").textContent).toEqual("b");
+    const idlTypes = target.getElementsByClassName("idlType");
+    expect(idlTypes[1].textContent).toEqual("any");
+    expect(prm[0].textContent).toEqual("a");
+    expect(idlTypes[2].textContent).toEqual(" any");
+    expect(prm[1].textContent).toEqual("b");
   });
 
   it("should handle typedefs", () => {
