@@ -534,15 +534,11 @@ export function run(conf) {
     const newElement = makeMarkup(parse);
     if (idlElement.id) newElement.id = idlElement.id;
     newElement
-      .querySelectorAll(
-        ".idlAttribute,.idlCallback,.idlConst,.idlDictionary,.idlEnum,.idlField,.idlInterface,.idlMember,.idlMethod,.idlMaplike,.idlIterable,.idlTypedef"
-      )
+      .querySelectorAll("[data-idl]")
       .forEach(elem => {
         const title = elem.dataset.title.toLowerCase();
         // Select the nearest ancestor element that can contain members.
-        const parent = elem.parentElement.closest(
-          ".idlDictionary,.idlEnum,.idlInterface"
-        );
+        const parent = elem.parentElement.closest("[data-idl][data-title]");
         if (parent) {
           elem.dataset.dfnFor = parent.dataset.title.toLowerCase();
         }
