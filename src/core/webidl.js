@@ -112,15 +112,10 @@ function makeMarkup(parse, definitionMap, { suppressWarnings } = {}) {
         }
         const parentName = parent ? parent.name : "";
         const { name } = getNameAndId(data, parentName);
-        const dfn = findDfn(
-          data,
-          name,
-          definitionMap,
-          {
-            parent: parentName,
-            suppressWarnings
-          }
-        );
+        const dfn = findDfn(data, name, definitionMap, {
+          parent: parentName,
+          suppressWarnings,
+        });
         const idlAnchor = createIdlAnchor(n, data, parentName, dfn);
         const className = parent ? "idlName" : "idlID";
         if (data.type === "enum-value") {
@@ -307,13 +302,9 @@ export function run(conf) {
       return;
     }
     // linkDefinitions(parse, conf.definitionMap, "", idlElement);
-    const newElement = makeMarkup(
-      parse,
-      conf.definitionMap,
-      {
-        suppressWarnings: idlElement.classList.contains("no-link-warnings")
-      }
-    );
+    const newElement = makeMarkup(parse, conf.definitionMap, {
+      suppressWarnings: idlElement.classList.contains("no-link-warnings"),
+    });
     if (idlElement.id) newElement.id = idlElement.id;
     newElement.querySelectorAll("[data-idl]").forEach(elem => {
       const title = elem.dataset.title.toLowerCase();
