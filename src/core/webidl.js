@@ -448,7 +448,10 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
       if (parent) {
         defn.linkFor = parent;
       }
-      defn.dfn = findDfn(defn, parent, name, definitionMap, idlElem);
+      defn.dfn = findDfn(defn, name, definitionMap, {
+        parent,
+        suppressWarnings: idlElem.classList.contains("no-link-warnings"),
+      });
       defn.idlId = idlId;
     });
 }
