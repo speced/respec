@@ -6,10 +6,6 @@ const fsp = require("fs-extra");
 
 const srcDesMap = [
   ["./node_modules/clipboard/dist/clipboard.js", "./js/deps/"],
-  [
-    "./node_modules/handlebars/dist/handlebars.runtime.js",
-    "./js/deps/handlebars.js",
-  ],
   ["./node_modules/highlight.js/src/styles/github.css", "./js/core/css/"],
   ["./node_modules/hyperhtml/index.js", "./js/deps/hyperhtml.js"],
   ["./node_modules/jquery/dist/jquery.slim.js", "./js/deps/jquery.js"],
