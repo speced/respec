@@ -494,13 +494,13 @@ describe("Core - WebIDL", () => {
   // 5
   getter float ();
   // 6
-  getter float withName();
+  getter float withName ();
   // 7
   setter void ();
   // 8
-  setter void named();
+  setter void named ();
   // 9
-  static Promise<RTCCertificate> generateCertificate(AlgorithmIdentifier keygenAlgorithm);
+  static Promise<RTCCertificate>  generateCertificate(AlgorithmIdentifier keygenAlgorithm);
   // 10
   stringifier DOMString identifier();
   // 11
@@ -789,7 +789,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(target.querySelector(".idlType").textContent).toEqual(" void");
 
     target = doc.getElementById("cb-less-basic");
-    text = "callback CbLessBasic = unsigned long long? (optional any value);";
+    text = "callback CbLessBasic = unsigned long long?(optional any value);";
     expect(target.textContent).toEqual(text);
     expect(target.querySelector(".idlType").textContent).toEqual(
       " unsigned long long?"

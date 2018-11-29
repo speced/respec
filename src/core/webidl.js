@@ -265,57 +265,95 @@ function makeMarkup(parse, definitionMap, suppressWarnings) {
         t.trim() ? hyperHTML`<span class='idlSectionComment'>${t}</span>` : t,
       reference: (wrapped, name) => {
         if (standardTypes.has(name)) {
-          return hyperHTML`<span class="idlType"><a data-cite='${standardTypes.get(name)}'>${wrapped}</a></span>`;
+          return hyperHTML`<a data-cite='${standardTypes.get(
+            name
+          )}'>${wrapped}</a>`;
         }
-        return hyperHTML`<span class="idlType"><a data-link-for="">${wrapped}</a></span>`;
+        return hyperHTML`<a data-link-for="">${wrapped}</a>`;
       },
       name: (n, { data, parent }) => {
+        if (data.idlType && data.idlType.type === "argument-type") {
+          return hyperHTML`<span class="idlParamName">${n}</span>`;
+        }
         const parentName = parent ? parent.name : "";
-        const className = parent ? "idlName" : "idlID";
         const { name } = getNameAndId(data, parentName);
-        const dfn = findDfn(data, parentName, name, definitionMap, suppressWarnings);
-        if (dfn) {
-          return hyperHTML`<span class="${className}"><a data-link-for="${parentName.toLowerCase()}" data-lt="${dfn.dataset.lt || ""}">${n}</a></span>`;
+        const dfn = findDfn(
+          data,
+          parentName,
+          name,
+          definitionMap,
+          suppressWarnings
+        );
+        const idlAnchor = createIdlAnchor(n, data, parentName, dfn);
+        const className = parent ? "idlName" : "idlID";
+        if (data.type === "enum-value") {
+          return idlAnchor;
         }
-        const isDefaultJSON =
-          data.body &&
-          data.body.name &&
-          data.body.name.value === "toJSON" &&
-          data.extAttrs &&
-          data.extAttrs.items.some(({ name }) => name === "Default");
-        if (isDefaultJSON) {
-          return hyperHTML`<span class="${className}"><a data-cite="WEBIDL#default-tojson-operation">${n}</a></span>`
-        }
-        return hyperHTML`<span class="${className}">${n}</span>`;
+        return hyperHTML`<span class="${className}">${idlAnchor}</span>`;
       },
-      interface: idlMemberElementCreator("idlInterface"),
-      callbackInterface: idlMemberElementCreator("idlInterface"),
-      includes: contents =>
-        hyperHTML`<span class='idlIncludes'>${contents}</span>`,
-      const: idlMemberElementCreator("idlConst"),
-      attribute: idlMemberElementCreator("idlAttribute"),
-      operation: idlMemberElementCreator("idlMethod"),
-      argument: contents => 
-        hyperHTML`<span class='idlParam'>${contents}</span>`,
-      dictionary: idlMemberElementCreator("idlDictionary"),
-      field: idlMemberElementCreator("idlMember"),
-      enum: idlMemberElementCreator("idlEnum"),
-      enumValue: contents =>
-        hyperHTML`<span class='idlEnumItem'>${contents}</span>`,
-      callbackFunction: idlMemberElementCreator("idlCallback"),
-      typedef: idlMemberElementCreator("idlTypedef")
+      type: contents => hyperHTML`<span class="idlType">${contents}</span>`,
+      inheritance: contents =>
+        hyperHTML`<span class="idlSuperclass">${contents}</span>`,
+      definition: idlElementCreator(),
+      extendedAttribute: contents =>
+        hyperHTML`<span class="extAttr">${contents}</span>`,
+      extendedAttributeReference: name => {
+        if (!extendedAttributesLinks.has(name)) {
+          return hyperHTML`<a>${name}</a>`;
+        }
+        return hyperHTML`<a data-cite="${extendedAttributesLinks.get(
+          name
+        )}">${name}</a>`;
+      },
     },
   })}</pre>`;
 }
 
-function idlMemberElementCreator(className) {
+function createIdlAnchor(n, data, parentName, dfn) {
+  if (dfn) {
+    return hyperHTML`<a data-link-for="${parentName.toLowerCase()}" data-lt="${dfn
+      .dataset.lt || ""}">${n}</a>`;
+  }
+  const isDefaultJSON =
+    data.body &&
+    data.body.name &&
+    data.body.name.value === "toJSON" &&
+    data.extAttrs &&
+    data.extAttrs.items.some(({ name }) => name === "Default");
+  if (isDefaultJSON) {
+    return hyperHTML`<a data-cite="WEBIDL#default-tojson-operation">${n}</a>`;
+  }
+  return n;
+}
+
+function idlElementCreator() {
   return (contents, { data, parent }) => {
+    const className = getIdlDefinitionClassName(data);
+    switch (data.type) {
+      case "includes":
+      case "enum-value":
+        return hyperHTML`<span class='${className}'>${contents}</span>`;
+    }
     const parentName = parent ? parent.name : "";
     const { name, idlId } = getNameAndId(data, parentName);
-    return hyperHTML`<span class='${className}' id='${idlId}' data-idl data-title='${
-      name
-    }'>${contents}</span>`;
+    return hyperHTML`<span class='${className}' id='${idlId}' data-idl data-title='${name}'>${contents}</span>`;
   };
+}
+
+function getIdlDefinitionClassName(defn) {
+  switch (defn.type) {
+    case "callback interface":
+      return "idlInterface";
+    case "operation":
+      return "idlMethod";
+    case "field":
+      return "idlMember";
+    case "enum-value":
+      return "idlEnumItem";
+    case "callback function":
+      return "idlCallback";
+  }
+  return `idl${defn.type[0].toUpperCase()}${defn.type.slice(1)}`;
 }
 
 function writeDefinition(obj) {
@@ -627,7 +665,11 @@ export function run(conf) {
       return;
     }
     // linkDefinitions(parse, conf.definitionMap, "", idlElement);
-    const newElement = makeMarkup(parse, conf.definitionMap, idlElement.classList.contains("no-link-warnings"));
+    const newElement = makeMarkup(
+      parse,
+      conf.definitionMap,
+      idlElement.classList.contains("no-link-warnings")
+    );
     if (idlElement.id) newElement.id = idlElement.id;
     newElement
       .querySelectorAll(
