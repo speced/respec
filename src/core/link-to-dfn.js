@@ -131,7 +131,7 @@ export async function run(conf) {
     });
     if (!foundDfn && linkTargets.length !== 0) {
       // ignore WebIDL
-      if (!ant.closest("pre.idl, span.idlMemberType, span.idlTypedefType")) {
+      if (!ant.closest("pre.idl")) {
         if (ant.dataset.cite === "") {
           badLinks.push(ant);
         } else {
