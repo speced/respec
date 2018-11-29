@@ -89,7 +89,9 @@ function cleanup(cloneDoc) {
 
 function cleanupHyper({ documentElement: node }) {
   // collect first, or walker will cease too early
-  const filter = comment => comment.textContent.startsWith("_hyper");
+  /** @param {Comment} comment */
+  const filter = comment =>
+    comment.textContent.startsWith("-") && comment.textContent.endsWith("%");
   const walker = document.createTreeWalker(
     node,
     NodeFilter.SHOW_COMMENT,
@@ -100,6 +102,9 @@ function cleanupHyper({ documentElement: node }) {
   }
 }
 
+/**
+ * @param {TreeWalker} walker
+ */
 function* walkTree(walker) {
   while (walker.nextNode()) {
     yield walker.currentNode;
