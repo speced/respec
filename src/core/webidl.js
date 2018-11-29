@@ -533,20 +533,18 @@ export function run(conf) {
     linkDefinitions(parse, conf.definitionMap, "", idlElement);
     const newElement = makeMarkup(parse);
     if (idlElement.id) newElement.id = idlElement.id;
-    newElement
-      .querySelectorAll("[data-idl]")
-      .forEach(elem => {
-        const title = elem.dataset.title.toLowerCase();
-        // Select the nearest ancestor element that can contain members.
-        const parent = elem.parentElement.closest("[data-idl][data-title]");
-        if (parent) {
-          elem.dataset.dfnFor = parent.dataset.title.toLowerCase();
-        }
-        if (!conf.definitionMap[title]) {
-          conf.definitionMap[title] = [];
-        }
-        conf.definitionMap[title].push(elem);
-      });
+    newElement.querySelectorAll("[data-idl]").forEach(elem => {
+      const title = elem.dataset.title.toLowerCase();
+      // Select the nearest ancestor element that can contain members.
+      const parent = elem.parentElement.closest("[data-idl][data-title]");
+      if (parent) {
+        elem.dataset.dfnFor = parent.dataset.title.toLowerCase();
+      }
+      if (!conf.definitionMap[title]) {
+        conf.definitionMap[title] = [];
+      }
+      conf.definitionMap[title].push(elem);
+    });
     idlElement.replaceWith(newElement);
     newElement.classList.add(...idlElement.classList);
   });
