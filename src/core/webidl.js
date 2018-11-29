@@ -89,7 +89,7 @@ const operationNames = {};
 const idlPartials = {};
 
 // Takes the result of WebIDL2.parse(), an array of definitions.
-function makeMarkup(parse, definitionMap, suppressWarnings) {
+function makeMarkup(parse, definitionMap, { suppressWarnings } = {}) {
   return hyperHTML`<pre class="def idl">${webidl2writer.write(parse, {
     templates: {
       wrap: items =>
@@ -114,10 +114,12 @@ function makeMarkup(parse, definitionMap, suppressWarnings) {
         const { name } = getNameAndId(data, parentName);
         const dfn = findDfn(
           data,
-          parentName,
           name,
           definitionMap,
-          suppressWarnings
+          {
+            parent: parentName,
+            suppressWarnings
+          }
         );
         const idlAnchor = createIdlAnchor(n, data, parentName, dfn);
         const className = parent ? "idlName" : "idlID";
@@ -308,7 +310,9 @@ export function run(conf) {
     const newElement = makeMarkup(
       parse,
       conf.definitionMap,
-      idlElement.classList.contains("no-link-warnings")
+      {
+        suppressWarnings: idlElement.classList.contains("no-link-warnings")
+      }
     );
     if (idlElement.id) newElement.id = idlElement.id;
     newElement.querySelectorAll("[data-idl]").forEach(elem => {

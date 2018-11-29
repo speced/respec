@@ -28,12 +28,16 @@ const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
  * marked as an IDL definition, and returned. If no <dfn> is found,
  * the function returns 'undefined'.
  * @param {*} defn
- * @param {string} parent
  * @param {string} name
  * @param {Record<string, HTMLElement[]>} definitionMap
- * @param {boolean} suppressWarnings
+ * @param {{ parent?: string; suppressWarnings?: boolean }} options
  */
-export function findDfn(defn, parent, name, definitionMap, suppressWarnings) {
+export function findDfn(
+  defn,
+  name,
+  definitionMap,
+  { parent = "", suppressWarnings = false } = {}
+) {
   if (unlinkable.has(name)) {
     return;
   }
