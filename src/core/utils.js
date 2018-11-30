@@ -748,8 +748,7 @@ export function renameElement(elem, newName) {
   if (elem.localName === newName) return elem;
   const newElement = elem.ownerDocument.createElement(newName);
   // copy attributes
-  for (const attribute of [...elem.attributes]) {
-    const { name, value } = attribute;
+  for (const { name, value } of elem.attributes) {
     newElement.setAttribute(name, value);
   }
   // copy child nodes
