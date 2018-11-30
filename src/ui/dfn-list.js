@@ -1,8 +1,8 @@
 /// Module ui/dfn-list
 // Displays all definitions with links to the defining element.
-import { ui } from "core/ui";
-import "deps/hyperhtml";
-import { l10n, lang } from "core/l10n";
+import { ui } from "../core/ui";
+import "../deps/hyperhtml";
+import { l10n, lang } from "../core/l10n";
 
 const button = ui.addCommand(
   l10n[lang].definition_list,
