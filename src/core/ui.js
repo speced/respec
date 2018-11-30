@@ -157,20 +157,20 @@ function errWarn(msg, arr, butName, title) {
   ariaDecorate(buttons[butName][0], ariaMap);
 }
 export const ui = {
-  show: function() {
+  show() {
     try {
       respecUI.hidden = false;
     } catch (err) {
       console.error(err);
     }
   },
-  hide: function() {
+  hide() {
     respecUI.hidden = true;
   },
-  enable: function() {
+  enable() {
     respecPill.removeAttribute("disabled");
   },
-  addCommand: function(label, module, keyShort, icon) {
+  addCommand(label, module, keyShort, icon) {
     icon = icon || "";
     const handler = function() {
       require([module], mod => {
@@ -194,13 +194,13 @@ export const ui = {
     if (keyShort) shortcut.add(keyShort, handler);
     return menuItem[0].querySelector("button");
   },
-  error: function(msg) {
+  error(msg) {
     errWarn(msg, errors, "error", "Errors");
   },
-  warning: function(msg) {
+  warning(msg) {
     errWarn(msg, warnings, "warning", "Warnings");
   },
-  closeModal: function(owner) {
+  closeModal(owner) {
     if ($overlay) {
       $overlay[0].classList.remove("respec-show-overlay");
       $overlay[0].classList.add("respec-hide-overlay");
@@ -216,7 +216,7 @@ export const ui = {
     $modal.remove();
     $modal = null;
   },
-  freshModal: function(title, content, currentOwner) {
+  freshModal(title, content, currentOwner) {
     if ($modal) $modal.remove();
     if ($overlay) $overlay.remove();
     $overlay = $("<div id='respec-overlay' class='removeOnSave'></div>");
