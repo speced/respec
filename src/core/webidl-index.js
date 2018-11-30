@@ -29,7 +29,12 @@ export function run() {
     }
     idlIndexSec.insertAdjacentElement("afterbegin", header);
   }
-  if (!document.querySelector("pre.idl")) {
+  //filter out the IDL marked with class="idlExclude" and the IDL in non-normative sections
+  const idlIndex = Array.from(document.querySelectorAll("pre.def.idl"))
+    .filter(elem => !elem.classList.contains("idlExclude"))
+    .filter(elem => !elem.parentElement.classList.contains("informative"));
+
+  if (!document.querySelector("pre.idl") || idlIndex.length === 0) {
     const text = "This specification doesn't declare any Web IDL.";
     const noIDLFound = document.createTextNode(text);
     idlIndexSec.appendChild(noIDLFound);
@@ -38,7 +43,7 @@ export function run() {
   const pre = document.createElement("pre");
   pre.classList.add("idl", "def");
   pre.id = "actual-idl-index";
-  Array.from(document.querySelectorAll("pre.def.idl"))
+  idlIndex
     .map(elem => {
       const fragment = document.createDocumentFragment();
       for (const child of elem.children) {
@@ -55,5 +60,6 @@ export function run() {
     }, pre);
   // Remove duplicate IDs
   pre.querySelectorAll("*[id]").forEach(elem => elem.removeAttribute("id"));
+  pre.querySelectorAll("idlExclude").forEach(elem => elem.removeAttribute());
   idlIndexSec.appendChild(pre);
 }
