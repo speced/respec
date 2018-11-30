@@ -4,6 +4,7 @@
 
 export const name = "core/id-headers";
 import { addId } from "./utils";
+import hyperHTML from "../deps/hyperhtml";
 
 export function run(conf) {
   document

@@ -4,7 +4,7 @@
 // Best practices are marked up with span.practicelab.
 import css from "../deps/text!core/css/bp.css";
 import { pub } from "./pubsubhub";
-import "../deps/hyperhtml";
+import hyperHTML from "../deps/hyperhtml";
 
 export const name = "core/best-practices";
 

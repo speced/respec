@@ -27,7 +27,7 @@ export function run() {
     } else {
       header.innerHTML = "IDL Index";
     }
-    idlIndexSec.insertAdjacentElement("afterbegin", header);
+    idlIndexSec.prepend(header);
   }
   if (!document.querySelector("pre.idl")) {
     const text = "This specification doesn't declare any Web IDL.";
