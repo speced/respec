@@ -1,8 +1,8 @@
 import {
   addId,
-  getTextNodes,
   getDfnTitles,
   getLinkTargets,
+  getTextNodes,
   renameElement,
 } from "./utils";
 import "../deps/jquery";

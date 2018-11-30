@@ -91,7 +91,7 @@
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", the W3C Software and Document License
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
-import { concatDate, joinAnd, ISODate } from "../core/utils";
+import { ISODate, concatDate, joinAnd } from "../core/utils";
 import { pub } from "../core/pubsubhub";
 import cgbgSotdTmpl from "./templates/cgbg-sotd";
 import sotdTmpl from "./templates/sotd";

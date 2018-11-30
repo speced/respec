@@ -6,7 +6,7 @@
 // Spec editors get filtered out automatically.
 import { fetchIndex } from "./github";
 import { pub } from "./pubsubhub";
-import { joinAnd, flatten } from "./utils";
+import { flatten, joinAnd } from "./utils";
 export const name = "core/contrib";
 
 function prop(prop) {
