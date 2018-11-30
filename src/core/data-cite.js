@@ -13,8 +13,8 @@
  * Usage:
  * https://github.com/w3c/respec/wiki/data--cite
  */
-import { resolveRef, updateFromNetwork } from "./biblio";
 import { refTypeFromContext, showInlineError } from "./utils";
+import { resolveRef, updateFromNetwork } from "./biblio";
 export const name = "core/data-cite";
 
 function requestLookup(conf) {

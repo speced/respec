@@ -3,10 +3,10 @@
 import "./include-config";
 import "./override-configuration";
 import "./respec-ready";
-import { removeReSpec } from "./utils";
 import { done as postProcessDone } from "./post-process";
 import { done as preProcessDone } from "./pre-process";
 import { pub } from "./pubsubhub";
+import { removeReSpec } from "./utils";
 
 export const name = "core/base-runner";
 const canMeasure = performance.mark && performance.measure;
