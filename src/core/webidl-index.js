@@ -29,10 +29,21 @@ export function run() {
     }
     idlIndexSec.insertAdjacentElement("afterbegin", header);
   }
+
   //filter out the IDL marked with class="idlExclude" and the IDL in non-normative sections
-  const idlIndex = Array.from(document.querySelectorAll("pre.def.idl"))
-    .filter(elem => !elem.classList.contains("idlExclude"))
-    .filter(elem => !elem.parentElement.classList.contains("informative"));
+  function idlFilter(idl) {
+    if (
+      idl.classList.contains("idlExclude") ||
+      idl.parentElement.classList.contains("informative")
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  const idlIndex = Array.from(document.querySelectorAll("pre.def.idl")).filter(
+    idlFilter
+  );
 
   if (!document.querySelector("pre.idl") || idlIndex.length === 0) {
     const text = "This specification doesn't declare any Web IDL.";
