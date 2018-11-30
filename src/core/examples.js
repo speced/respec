@@ -6,7 +6,7 @@
 // be used by a containing shell to extract all examples.
 
 import { pub } from "./pubsubhub";
-import "../deps/hyperhtml";
+import hyperHTML from "../deps/hyperhtml";
 import css from "../deps/text!core/css/examples.css";
 import { reindent, addId } from "./utils";
 

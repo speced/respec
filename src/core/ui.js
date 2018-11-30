@@ -14,7 +14,7 @@ import { sub } from "./pubsubhub";
 import css from "../deps/text!ui/ui.css";
 import { markdownToHtml } from "./utils";
 import "./jquery-enhanced";
-import "../deps/hyperhtml";
+import hyperHTML from "../deps/hyperhtml";
 export const name = "core/ui";
 
 // Opportunistically inserts the style, with the chance to reduce some FOUC

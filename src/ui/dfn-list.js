@@ -1,7 +1,7 @@
 /// Module ui/dfn-list
 // Displays all definitions with links to the defining element.
 import { ui } from "../core/ui";
-import "../deps/hyperhtml";
+import hyperHTML from "../deps/hyperhtml";
 import { l10n, lang } from "../core/l10n";
 
 const button = ui.addCommand(
@@ -13,7 +13,7 @@ const button = ui.addCommand(
 
 const ul = document.createElement("ul");
 ul.classList.add("respec-dfn-list");
-const render = window.hyperHTML.bind(ul);
+const render = hyperHTML.bind(ul);
 
 ul.addEventListener("click", ev => {
   ui.closeModal();
@@ -24,7 +24,7 @@ function show() {
   const definitionLinks = Object.entries(respecConfig.definitionMap)
     .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
     .map(([, dfn]) => {
-      return window.hyperHTML.wire(dfn, ":li>a")`
+      return hyperHTML.wire(dfn, ":li>a")`
         <li>
           <a href="${"#" + dfn.id}">
             ${dfn.textContent}

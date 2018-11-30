@@ -4,7 +4,7 @@ import { ui } from "../core/ui";
 import { l10n, lang } from "../core/l10n";
 import { pub } from "../core/pubsubhub";
 import { rsDocToDataURL } from "../core/exporter";
-import "../deps/hyperhtml";
+import hyperHTML from "../deps/hyperhtml";
 
 export const name = "ui/save-html";
 

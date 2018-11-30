@@ -10,6 +10,7 @@
  */
 import { pub } from "./pubsubhub";
 import { lang as defaultLang } from "./l10n";
+import hyperHTML from "../deps/hyperhtml";
 const l10n = {
   en: {
     missing_test_suite_uri:
