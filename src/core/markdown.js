@@ -187,9 +187,7 @@ export function run(conf) {
         ) {
           const section = structuredInternals.firstElementChild;
           section.remove();
-          while (section.hasChildNodes()) {
-            elem.appendChild(section.firstChild);
-          }
+          elem.append(...section.childNodes);
         } else {
           elem.innerHTML = "";
         }

@@ -137,12 +137,7 @@ function errWarn(msg, arr, butName, title) {
           const li = document.createElement("li");
           // if it's only a single element, just copy the contents into li
           if (tmp.firstElementChild === tmp.lastElementChild) {
-            while (
-              tmp.firstElementChild &&
-              tmp.firstElementChild.hasChildNodes()
-            ) {
-              li.appendChild(tmp.firstElementChild.firstChild);
-            }
+            li.append(...tmp.firstElementChild.childNodes);
             // Otherwise, take everything.
           } else {
             li.innerHTML = tmp.innerHTML;
