@@ -13,8 +13,9 @@
  * Usage:
  * https://github.com/w3c/respec/wiki/data--cite
  */
-import { refTypeFromContext, showInlineError } from "./utils";
+import { refTypeFromContext, showInlineError, wrapInner } from "./utils";
 import { resolveRef, updateFromNetwork } from "./biblio";
+import hyperHTML from "../deps/hyperhtml";
 export const name = "core/data-cite";
 
 function requestLookup(conf) {
@@ -50,12 +51,7 @@ function requestLookup(conf) {
         break;
       }
       case "dfn": {
-        const a = elem.ownerDocument.createElement("a");
-        a.href = href;
-        while (elem.firstChild) {
-          a.appendChild(elem.firstChild);
-        }
-        elem.appendChild(a, elem);
+        wrapInner(elem, hyperHTML`<a href="${href}"></a>`);
         break;
       }
     }

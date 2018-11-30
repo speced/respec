@@ -748,14 +748,11 @@ export function renameElement(elem, newName) {
   if (elem.localName === newName) return elem;
   const newElement = elem.ownerDocument.createElement(newName);
   // copy attributes
-  for (const attribute of [...elem.attributes]) {
-    const { name, value } = attribute;
+  for (const { name, value } of elem.attributes) {
     newElement.setAttribute(name, value);
   }
   // copy child nodes
-  while (elem.firstChild) {
-    newElement.appendChild(elem.firstChild);
-  }
+  newElement.append(...elem.childNodes);
   elem.replaceWith(newElement);
   return newElement;
 }
@@ -790,9 +787,7 @@ export function refTypeFromContext(ref, element) {
  * @param {Node} wrapper wrapper node to be appended
  */
 export function wrapInner(outer, wrapper) {
-  while (outer.firstChild) {
-    wrapper.appendChild(outer.firstChild);
-  }
+  wrapper.append(...outer.childNodes);
   outer.appendChild(wrapper);
   return outer;
 }
