@@ -564,20 +564,16 @@ export async function fetchAndCache(request, maxAge = 86400000) {
 /**
  * Spreads one iterable into another.
  *
- * @param {Iterable} collector
- * @param {any|Iterable} item
+ * @param {Array} collector
+ * @param {any|Array} item
  * @returns {Array}
  */
 export function flatten(collector, item) {
-  const isObject = typeof item === "object";
-  const isIterable =
-    Object(item)[Symbol.iterator] && typeof item.values === "function";
-  const items = !isObject
+  const items = !Array.isArray(item)
     ? [item]
-    : isIterable
-    ? [...item.values()].reduce(flatten, [])
-    : Object.values(item);
-  return [...collector, ...items];
+    : [...item.values()].reduce(flatten, []);
+  collector.push(...items);
+  return collector;
 }
 
 // --- DOM HELPERS -------------------------------

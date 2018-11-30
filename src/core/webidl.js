@@ -448,7 +448,10 @@ function linkDefinitions(parse, definitionMap, parent, idlElem) {
       if (parent) {
         defn.linkFor = parent;
       }
-      defn.dfn = findDfn(defn, parent, name, definitionMap, idlElem);
+      defn.dfn = findDfn(defn, name, definitionMap, {
+        parent,
+        suppressWarnings: idlElem.classList.contains("no-link-warnings"),
+      });
       defn.idlId = idlId;
     });
 }
@@ -533,24 +536,18 @@ export function run(conf) {
     linkDefinitions(parse, conf.definitionMap, "", idlElement);
     const newElement = makeMarkup(parse);
     if (idlElement.id) newElement.id = idlElement.id;
-    newElement
-      .querySelectorAll(
-        ".idlAttribute,.idlCallback,.idlConst,.idlDictionary,.idlEnum,.idlField,.idlInterface,.idlMember,.idlMethod,.idlMaplike,.idlIterable,.idlTypedef"
-      )
-      .forEach(elem => {
-        const title = elem.dataset.title.toLowerCase();
-        // Select the nearest ancestor element that can contain members.
-        const parent = elem.parentElement.closest(
-          ".idlDictionary,.idlEnum,.idlInterface"
-        );
-        if (parent) {
-          elem.dataset.dfnFor = parent.dataset.title.toLowerCase();
-        }
-        if (!conf.definitionMap[title]) {
-          conf.definitionMap[title] = [];
-        }
-        conf.definitionMap[title].push(elem);
-      });
+    newElement.querySelectorAll("[data-idl]").forEach(elem => {
+      const title = elem.dataset.title.toLowerCase();
+      // Select the nearest ancestor element that can contain members.
+      const parent = elem.parentElement.closest("[data-idl][data-title]");
+      if (parent) {
+        elem.dataset.dfnFor = parent.dataset.title.toLowerCase();
+      }
+      if (!conf.definitionMap[title]) {
+        conf.definitionMap[title] = [];
+      }
+      conf.definitionMap[title].push(elem);
+    });
     idlElement.replaceWith(newElement);
     newElement.classList.add(...idlElement.classList);
   });
