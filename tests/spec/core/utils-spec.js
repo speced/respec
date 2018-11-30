@@ -504,7 +504,16 @@ describe("Core - Utils", () => {
         { key: "11" },
       ];
       const output = input.reduce(utils.flatten, ["first", 0]);
-      expect(output).toEqual(["first", 0, input[0], input[1], 7, 8, input[2][1][1][0], input[3]]);
+      expect(output).toEqual([
+        "first",
+        0,
+        input[0],
+        input[1],
+        7,
+        8,
+        input[2][1][1][0],
+        input[3],
+      ]);
     });
 
     it("flattens sparse and arrays", () => {

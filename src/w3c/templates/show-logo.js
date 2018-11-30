@@ -1,4 +1,4 @@
-import "../../deps/hyperhtml";
+import hyperHTML from "../../deps/hyperhtml";
 import { pub } from "../../core/pubsubhub";
 
 export default obj => {

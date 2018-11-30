@@ -5,7 +5,7 @@
  */
 import { semverCompare } from "./utils";
 import { pub, sub } from "./pubsubhub";
-import "../deps/hyperhtml";
+import hyperHTML from "../deps/hyperhtml";
 import { createResourceHint, fetchAndCache } from "./utils";
 import caniuseCss from "../deps/text!core/css/caniuse.css";
 
