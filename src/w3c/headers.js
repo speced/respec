@@ -97,6 +97,7 @@ import cgbgSotdTmpl from "./templates/cgbg-sotd";
 import sotdTmpl from "./templates/sotd";
 import cgbgHeadersTmpl from "./templates/cgbg-headers";
 import headersTmpl from "./templates/headers";
+import hyperHTML from "../deps/hyperhtml";
 
 export const name = "w3c/headers";
 

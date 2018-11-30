@@ -1,7 +1,7 @@
 // Module core/render-biblio
 // renders the biblio data pre-processed in core/biblio
 
-import "../deps/hyperhtml";
+import hyperHTML from "../deps/hyperhtml";
 import { addId } from "./utils";
 import { pub } from "./pubsubhub";
 

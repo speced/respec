@@ -11,7 +11,7 @@ const srcDesMap = [
     "./js/deps/handlebars.js",
   ],
   ["./node_modules/highlight.js/src/styles/github.css", "./js/core/css/"],
-  ["./node_modules/hyperhtml/index.js", "./js/deps/hyperhtml.js"],
+  ["./node_modules/hyperhtml/umd.js", "./js/deps/hyperhtml.js"],
   ["./node_modules/jquery/dist/jquery.slim.js", "./js/deps/jquery.js"],
   ["./node_modules/marked/lib/marked.js", "./js/deps/"],
   ["./node_modules/requirejs/require.js", "./js/deps/"],
