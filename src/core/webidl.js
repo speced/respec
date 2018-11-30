@@ -43,7 +43,7 @@ function registerHelpers() {
   hb.registerHelper("param", obj => {
     return new hb.SafeString(
       idlParamTmpl({
-        obj: obj,
+        obj,
         optional: writeToken(obj.optional, "optional"),
         variadic: writeToken(obj.variadic, "..."),
       })
