@@ -36,9 +36,7 @@ function ariaDecorate(elem, ariaMap) {
 }
 
 const respecUI = hyperHTML`<div id='respec-ui' class='removeOnSave' hidden></div>`;
-const $menu = $(
-  "<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>"
-);
+const menu = hyperHTML`<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>`;
 let $modal;
 let $overlay;
 const errors = [];
@@ -52,24 +50,24 @@ const $respecPill = $("<button id='respec-pill' disabled>ReSpec</button>");
 respecUI.appendChild($respecPill[0]);
 $respecPill.click(function(e) {
   e.stopPropagation();
-  if ($menu[0].hidden) {
-    $menu[0].classList.remove("respec-hidden");
-    $menu[0].classList.add("respec-visible");
+  if (menu.hidden) {
+    menu.classList.remove("respec-hidden");
+    menu.classList.add("respec-visible");
   } else {
-    $menu[0].classList.add("respec-hidden");
-    $menu[0].classList.remove("respec-visible");
+    menu.classList.add("respec-hidden");
+    menu.classList.remove("respec-visible");
   }
-  this.setAttribute("aria-expanded", String($menu[0].hidden));
-  $menu[0].hidden = !$menu[0].hidden;
+  this.setAttribute("aria-expanded", String(menu.hidden));
+  menu.hidden = !menu.hidden;
 });
 document.documentElement.addEventListener("click", () => {
-  if (!$menu[0].hidden) {
-    $menu[0].classList.remove("respec-visible");
-    $menu[0].classList.add("respec-hidden");
-    $menu[0].hidden = true;
+  if (!menu.hidden) {
+    menu.classList.remove("respec-visible");
+    menu.classList.add("respec-hidden");
+    menu.hidden = true;
   }
 });
-respecUI.appendChild($menu[0]);
+respecUI.appendChild(menu);
 
 const ariaMap = new Map([
   ["controls", "respec-menu"],
@@ -196,7 +194,7 @@ export const ui = {
         "… </button></li>"
     )
       .click(handler)
-      .appendTo($menu);
+      .appendTo(menu);
     if (keyShort) shortcut.add(keyShort, handler);
     return menuItem[0].querySelector("button");
   },
