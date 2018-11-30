@@ -46,9 +46,9 @@ const buttons = {};
 sub("start-all", () => document.body.prepend(respecUI), { once: true });
 sub("end-all", () => document.body.prepend(respecUI), { once: true });
 
-const $respecPill = $("<button id='respec-pill' disabled>ReSpec</button>");
-respecUI.appendChild($respecPill[0]);
-$respecPill.click(function(e) {
+const respecPill = hyperHTML`<button id='respec-pill' disabled>ReSpec</button>`;
+respecUI.appendChild(respecPill);
+respecPill.addEventListener("click", function(e) {
   e.stopPropagation();
   if (menu.hidden) {
     menu.classList.remove("respec-hidden");
@@ -75,7 +75,7 @@ const ariaMap = new Map([
   ["haspopup", "true"],
   ["label", "ReSpec Menu"],
 ]);
-ariaDecorate($respecPill[0], ariaMap);
+ariaDecorate(respecPill, ariaMap);
 
 function errWarn(msg, arr, butName, title) {
   arr.push(msg);
@@ -167,7 +167,7 @@ export const ui = {
     respecUI.hidden = true;
   },
   enable: function() {
-    $respecPill[0].removeAttribute("disabled");
+    respecPill.removeAttribute("disabled");
   },
   addCommand: function(label, module, keyShort, icon) {
     icon = icon || "";
