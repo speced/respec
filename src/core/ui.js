@@ -132,15 +132,16 @@ function errWarn(msg, arr, butName, title) {
             .hide()
             .end();
         } else {
-          const tmp = document.createElement("tmp");
-          tmp.innerHTML = markdownToHtml(err);
+          const fragment = document
+            .createRange()
+            .createContextualFragment(markdownToHtml(err));
           const li = document.createElement("li");
           // if it's only a single element, just copy the contents into li
-          if (tmp.firstElementChild === tmp.lastElementChild) {
-            li.append(...tmp.firstElementChild.childNodes);
+          if (fragment.firstElementChild === fragment.lastElementChild) {
+            li.append(...fragment.firstElementChild.childNodes);
             // Otherwise, take everything.
           } else {
-            li.innerHTML = tmp.innerHTML;
+            li.appendChild(fragment);
           }
           $ul[0].appendChild(li);
         }
