@@ -60,6 +60,5 @@ export function run() {
     }, pre);
   // Remove duplicate IDs
   pre.querySelectorAll("*[id]").forEach(elem => elem.removeAttribute("id"));
-  pre.querySelectorAll("idlExclude").forEach(elem => elem.removeAttribute());
   idlIndexSec.appendChild(pre);
 }
