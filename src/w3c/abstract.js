@@ -17,5 +17,5 @@ export async function run() {
   }
   abstractHeading = document.createElement("h2");
   abstractHeading.innerText = l10n[lang].abstract;
-  abs.insertAdjacentElement("afterbegin", abstractHeading);
+  abs.prepend(abstractHeading);
 }

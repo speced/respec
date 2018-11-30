@@ -106,6 +106,6 @@ export function run(conf) {
     })
     .forEach(({ elem, details }) => {
       delete elem.dataset.tests;
-      elem.insertAdjacentElement("beforeend", details);
+      elem.append(details);
     });
 }

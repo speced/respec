@@ -44,20 +44,8 @@ const errors = [];
 const warnings = [];
 const buttons = {};
 
-sub(
-  "start-all",
-  () => {
-    document.body.insertAdjacentElement("afterbegin", $respecUI[0]);
-  },
-  { once: true }
-);
-sub(
-  "end-all",
-  () => {
-    document.body.insertAdjacentElement("afterbegin", $respecUI[0]);
-  },
-  { once: true }
-);
+sub("start-all", () => document.body.prepend($respecUI[0]), { once: true });
+sub("end-all", () => document.body.prepend($respecUI[0]), { once: true });
 
 const $respecPill = $("<button id='respec-pill' disabled>ReSpec</button>");
 $respecPill
