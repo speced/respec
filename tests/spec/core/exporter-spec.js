@@ -37,8 +37,9 @@ describe("Core - exporter", () => {
       comments.push(walker.currentNode);
     }
 
-    const hyperComments = comments.filter(comment =>
-      comment.textContent.startsWith("-") && comment.textContent.endsWith("%")
+    const hyperComments = comments.filter(
+      comment =>
+        comment.textContent.startsWith("-") && comment.textContent.endsWith("%")
     );
     expect(hyperComments.length).toBe(0);
 
