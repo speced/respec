@@ -93,60 +93,22 @@ function errWarn(msg, arr, butName, title) {
     .appendTo(respecUI)
     .click(function() {
       this.setAttribute("aria-expanded", "true");
-      const $ul = $("<ol class='respec-" + butName + "-list'></ol>");
-      for (let i = 0, n = arr.length; i < n; i++) {
-        const err = arr[i];
-        if (err instanceof Error) {
-          $("<li><span></span> <a>\u229e</a><pre></pre></li>")
-            .appendTo($ul)
-            .find("span")
-            .text("[" + err.name + "] " + err.message)
-            .end()
-            .find("a")
-            .css({
-              fontSize: "1.1em",
-              color: "#999",
-              cursor: "pointer",
-            })
-            .click(function() {
-              const $a = $(this);
-              const state = $a.text();
-              const $pre = $a.parent().find("pre");
-              if (state === "\u229e") {
-                $a.text("\u229f");
-                $pre.show();
-              } else {
-                $a.text("\u229e");
-                $pre.hide();
-              }
-            })
-            .end()
-            .find("pre")
-            .text(err.stack)
-            .css({
-              marginLeft: "0",
-              maxWidth: "100%",
-              overflowY: "hidden",
-              overflowX: "scroll",
-            })
-            .hide()
-            .end();
+      const ol = hyperHTML`<ol class='${`respec-${butName}-list`}'></ol>`
+      for (const err of arr) {
+        const fragment = document
+          .createRange()
+          .createContextualFragment(markdownToHtml(err));
+        const li = document.createElement("li");
+        // if it's only a single element, just copy the contents into li
+        if (fragment.firstElementChild === fragment.lastElementChild) {
+          li.append(...fragment.firstElementChild.childNodes);
+          // Otherwise, take everything.
         } else {
-          const fragment = document
-            .createRange()
-            .createContextualFragment(markdownToHtml(err));
-          const li = document.createElement("li");
-          // if it's only a single element, just copy the contents into li
-          if (fragment.firstElementChild === fragment.lastElementChild) {
-            li.append(...fragment.firstElementChild.childNodes);
-            // Otherwise, take everything.
-          } else {
-            li.appendChild(fragment);
-          }
-          $ul[0].appendChild(li);
+          li.appendChild(fragment);
         }
+        ol.appendChild(li);
       }
-      ui.freshModal(title, $ul, this);
+      ui.freshModal(title, ol, this);
     });
   const ariaMap = new Map([
     ["expanded", "false"],
