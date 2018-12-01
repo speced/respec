@@ -204,9 +204,7 @@ export const ui = {
     $modal[0].hidden = false;
   },
 };
-shortcut.add("Esc", () => {
-  ui.closeModal();
-});
+shortcut.add("Esc", () => ui.closeModal());
 shortcut.add("Ctrl+Alt+Shift+E", () => {
   if (buttons.error) buttons.error.click();
 });
@@ -214,9 +212,5 @@ shortcut.add("Ctrl+Alt+Shift+W", () => {
   if (buttons.warning) buttons.warning.click();
 });
 window.respecUI = ui;
-sub("error", details => {
-  ui.error(details);
-});
-sub("warn", details => {
-  ui.warning(details);
-});
+sub("error", details => ui.error(details));
+sub("warn", details => ui.warning(details));
