@@ -110,9 +110,9 @@ function makeMarkup(parse, definitionMap, { suppressWarnings } = {}) {
       }
       return hyperHTML`<a data-link-for="">${wrapped}</a>`;
     },
-    name(n, { data, parent }) {
+    name(escaped, { data, parent }) {
       if (data.idlType && data.idlType.type === "argument-type") {
-        return hyperHTML`<span class="idlParamName">${n}</span>`;
+        return hyperHTML`<span class="idlParamName">${escaped}</span>`;
       }
       const parentName = parent ? parent.name : "";
       const { name } = getNameAndId(data, parentName);
@@ -120,7 +120,7 @@ function makeMarkup(parse, definitionMap, { suppressWarnings } = {}) {
         parent: parentName,
         suppressWarnings,
       });
-      const idlAnchor = createIdlAnchor(n, data, parentName, dfn);
+      const idlAnchor = createIdlAnchor(escaped, data, parentName, dfn);
       const className = parent ? "idlName" : "idlID";
       if (data.type === "enum-value") {
         return idlAnchor;
@@ -146,10 +146,10 @@ function makeMarkup(parse, definitionMap, { suppressWarnings } = {}) {
   return hyperHTML`<pre class="def idl">${result}</pre>`;
 }
 
-function createIdlAnchor(n, data, parentName, dfn) {
+function createIdlAnchor(escaped, data, parentName, dfn) {
   if (dfn) {
     return hyperHTML`<a data-link-for="${parentName.toLowerCase()}" data-lt="${dfn
-      .dataset.lt || ""}">${n}</a>`;
+      .dataset.lt || ""}">${escaped}</a>`;
   }
   const isDefaultJSON =
     data.body &&
@@ -158,9 +158,9 @@ function createIdlAnchor(n, data, parentName, dfn) {
     data.extAttrs &&
     data.extAttrs.items.some(({ name }) => name === "Default");
   if (isDefaultJSON) {
-    return hyperHTML`<a data-cite="WEBIDL#default-tojson-operation">${n}</a>`;
+    return hyperHTML`<a data-cite="WEBIDL#default-tojson-operation">${escaped}</a>`;
   }
-  return n;
+  return escaped;
 }
 
 function createIdlElement(contents, { data, parent }) {
