@@ -3,11 +3,10 @@
  * Adds a caniuse support table for a "feature" #1238
  * Usage options: https://github.com/w3c/respec/wiki/caniuse
  */
-import { semverCompare } from "./utils";
+import { createResourceHint, fetchAndCache, semverCompare } from "./utils";
 import { pub, sub } from "./pubsubhub";
-import hyperHTML from "../deps/hyperhtml";
-import { createResourceHint, fetchAndCache } from "./utils";
 import caniuseCss from "../deps/text!core/css/caniuse.css";
+import hyperHTML from "../deps/hyperhtml";
 
 export const name = "core/caniuse";
 

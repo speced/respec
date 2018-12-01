@@ -9,12 +9,12 @@
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
 
+import "./jquery-enhanced";
+import css from "../deps/text!ui/ui.css";
+import hyperHTML from "../deps/hyperhtml";
+import { markdownToHtml } from "./utils";
 import shortcut from "shortcut";
 import { sub } from "./pubsubhub";
-import css from "../deps/text!ui/ui.css";
-import { markdownToHtml } from "./utils";
-import "./jquery-enhanced";
-import hyperHTML from "../deps/hyperhtml";
 export const name = "core/ui";
 
 // Opportunistically inserts the style, with the chance to reduce some FOUC

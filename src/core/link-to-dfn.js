@@ -1,11 +1,11 @@
 // Module core/link-to-dfn
 // Gives definitions in conf.definitionMap IDs and links <a> tags
 // to the matching definitions.
-import { linkInlineCitations } from "./data-cite";
-import { pub } from "./pubsubhub";
-import { lang as defaultLang } from "./l10n";
 import { addId, getLinkTargets, wrapInner } from "./utils";
 import { run as addExternalReferences } from "./xref";
+import { lang as defaultLang } from "./l10n";
+import { linkInlineCitations } from "./data-cite";
+import { pub } from "./pubsubhub";
 export const name = "core/link-to-dfn";
 const l10n = {
   en: {
