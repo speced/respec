@@ -37,8 +37,8 @@ function ariaDecorate(elem, ariaMap) {
 
 const respecUI = hyperHTML`<div id='respec-ui' class='removeOnSave' hidden></div>`;
 const menu = hyperHTML`<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>`;
-let $modal;
-let $overlay;
+let modal;
+let overlay;
 const errors = [];
 const warnings = [];
 const buttons = {};
@@ -140,21 +140,14 @@ export const ui = {
       });
     };
     const id = "respec-button-" + label.toLowerCase().replace(/\s+/, "-");
-    const menuItem = $(
-      '<li role=menuitem><button id="' +
-        id +
-        '" class="respec-option" title="' +
-        keyShort +
-        '"><span class="respec-cmd-icon">' +
-        icon +
-        "</span> " +
-        label +
-        "… </button></li>"
-    )
-      .click(handler)
-      .appendTo(menu);
+    const button = hyperHTML`<button id="${id}" class="respec-option" title="${keyShort}">
+      <span class="respec-cmd-icon">${icon}</span> ${label}…
+    </button>`;
+    const menuItem = hyperHTML`<li role=menuitem>${button}</li>`;
+    menuItem.addEventListener("click", handler);
+    menu.appendChild(menuItem);
     if (keyShort) shortcut.add(keyShort, handler);
-    return menuItem[0].querySelector("button");
+    return button;
   },
   error(msg) {
     errWarn(msg, errors, "error", "Errors");
@@ -163,45 +156,37 @@ export const ui = {
     errWarn(msg, warnings, "warning", "Warnings");
   },
   closeModal(owner) {
-    if ($overlay) {
-      $overlay[0].classList.remove("respec-show-overlay");
-      $overlay[0].classList.add("respec-hide-overlay");
-      $overlay[0].addEventListener("transitionend", () => {
-        $overlay.remove();
-        $overlay = null;
+    if (overlay) {
+      overlay.classList.remove("respec-show-overlay");
+      overlay.classList.add("respec-hide-overlay");
+      overlay.addEventListener("transitionend", () => {
+        overlay.remove();
+        overlay = null;
       });
     }
     if (owner) {
       owner.setAttribute("aria-expanded", "false");
     }
-    if (!$modal) return;
-    $modal.remove();
-    $modal = null;
+    if (!modal) return;
+    modal.remove();
+    modal = null;
   },
   freshModal(title, content, currentOwner) {
-    if ($modal) $modal.remove();
-    if ($overlay) $overlay.remove();
-    $overlay = $("<div id='respec-overlay' class='removeOnSave'></div>");
+    if (modal) modal.remove();
+    if (overlay) overlay.remove();
+    overlay = hyperHTML`<div id='respec-overlay' class='removeOnSave'></div>`;
     const id = currentOwner.id + "-modal";
     const headingId = id + "-heading";
-    $modal = $(
-      "<div id='" +
-        id +
-        "' class='respec-modal removeOnSave' role='dialog'><h3></h3><div class='inside'></div></div>"
-    );
-    $modal.find("h3").text(title);
-    $modal.find("h3")[0].id = headingId;
+    modal = hyperHTML`<div id='${id}' class='respec-modal removeOnSave' role='dialog'>
+      <h3 id="${headingId}">${title}</h3>
+      <div class='inside'>${content}</div>
+    </div>`;
     const ariaMap = new Map([["labelledby", headingId]]);
-    ariaDecorate($modal[0], ariaMap);
-    $modal.find(".inside").append(content);
-    $(document.body)
-      .append($overlay)
-      .append($modal);
-    $overlay.click(() => {
-      this.closeModal(currentOwner);
-    });
-    $overlay[0].classList.toggle("respec-show-overlay");
-    $modal[0].hidden = false;
+    ariaDecorate(modal, ariaMap);
+    document.body.append(overlay, modal);
+    overlay.addEventListener("click", () => this.closeModal(currentOwner));
+    overlay.classList.toggle("respec-show-overlay");
+    modal.hidden = false;
   },
 };
 shortcut.add("Esc", () => ui.closeModal());
