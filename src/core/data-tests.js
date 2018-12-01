@@ -8,9 +8,9 @@
  *
  * Docs: https://github.com/w3c/respec/wiki/data-tests
  */
-import { pub } from "./pubsubhub";
 import { lang as defaultLang } from "./l10n";
 import hyperHTML from "../deps/hyperhtml";
+import { pub } from "./pubsubhub";
 const l10n = {
   en: {
     missing_test_suite_uri:

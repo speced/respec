@@ -4,13 +4,13 @@
 // TODO:
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
-import { pub } from "./pubsubhub";
-import webidl2 from "../deps/webidl2";
-import hb from "handlebars.runtime";
-import css from "../deps/text!core/css/webidl.css";
-import tmpls from "templates";
 import { normalizePadding, reindent } from "./utils";
+import css from "../deps/text!core/css/webidl.css";
 import { findDfn } from "./dfn-finder";
+import hb from "handlebars.runtime";
+import { pub } from "./pubsubhub";
+import tmpls from "templates";
+import webidl2 from "../deps/webidl2";
 
 export const name = "core/webidl";
 
@@ -43,7 +43,7 @@ function registerHelpers() {
   hb.registerHelper("param", obj => {
     return new hb.SafeString(
       idlParamTmpl({
-        obj: obj,
+        obj,
         optional: writeToken(obj.optional, "optional"),
         variadic: writeToken(obj.variadic, "..."),
       })

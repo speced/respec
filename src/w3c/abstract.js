@@ -1,7 +1,7 @@
 // Module w3c/abstract
 // Handle the abstract section properly.
-import { pub } from "../core/pubsubhub";
 import { l10n, lang } from "../core/l10n";
+import { pub } from "../core/pubsubhub";
 export const name = "w3c/abstract";
 
 export async function run() {

@@ -3,8 +3,8 @@
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
-import { pub } from "./pubsubhub";
 import marked from "../deps/marked";
+import { pub } from "./pubsubhub";
 export const name = "core/utils";
 
 marked.setOptions({
@@ -748,14 +748,11 @@ export function renameElement(elem, newName) {
   if (elem.localName === newName) return elem;
   const newElement = elem.ownerDocument.createElement(newName);
   // copy attributes
-  for (const attribute of [...elem.attributes]) {
-    const { name, value } = attribute;
+  for (const { name, value } of elem.attributes) {
     newElement.setAttribute(name, value);
   }
   // copy child nodes
-  while (elem.firstChild) {
-    newElement.appendChild(elem.firstChild);
-  }
+  newElement.append(...elem.childNodes);
   elem.replaceWith(newElement);
   return newElement;
 }
@@ -790,9 +787,7 @@ export function refTypeFromContext(ref, element) {
  * @param {Node} wrapper wrapper node to be appended
  */
 export function wrapInner(outer, wrapper) {
-  while (outer.firstChild) {
-    wrapper.appendChild(outer.firstChild);
-  }
+  wrapper.append(...outer.childNodes);
   outer.appendChild(wrapper);
   return outer;
 }

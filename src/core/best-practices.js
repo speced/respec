@@ -3,8 +3,8 @@
 // The summary is generated if there is a section in the document with ID bp-summary.
 // Best practices are marked up with span.practicelab.
 import css from "../deps/text!core/css/bp.css";
-import { pub } from "./pubsubhub";
 import hyperHTML from "../deps/hyperhtml";
+import { pub } from "./pubsubhub";
 
 export const name = "core/best-practices";
 
