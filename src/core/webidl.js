@@ -126,7 +126,7 @@ function makeMarkup(parse, definitionMap, { suppressWarnings } = {}) {
       type: contents => hyperHTML`<span class="idlType">${contents}</span>`,
       inheritance: contents =>
         hyperHTML`<span class="idlSuperclass">${contents}</span>`,
-      definition: idlElementCreator(),
+      definition: createIdlElement,
       extendedAttribute: contents =>
         hyperHTML`<span class="extAttr">${contents}</span>`,
       extendedAttributeReference: name => {
@@ -158,18 +158,16 @@ function createIdlAnchor(n, data, parentName, dfn) {
   return n;
 }
 
-function idlElementCreator() {
-  return (contents, { data, parent }) => {
-    const className = getIdlDefinitionClassName(data);
-    switch (data.type) {
-      case "includes":
-      case "enum-value":
-        return hyperHTML`<span class='${className}'>${contents}</span>`;
-    }
-    const parentName = parent ? parent.name : "";
-    const { name, idlId } = getNameAndId(data, parentName);
-    return hyperHTML`<span class='${className}' id='${idlId}' data-idl data-title='${name}'>${contents}</span>`;
-  };
+function createIdlElement(contents, { data, parent }) {
+  const className = getIdlDefinitionClassName(data);
+  switch (data.type) {
+    case "includes":
+    case "enum-value":
+      return hyperHTML`<span class='${className}'>${contents}</span>`;
+  }
+  const parentName = parent ? parent.name : "";
+  const { name, idlId } = getNameAndId(data, parentName);
+  return hyperHTML`<span class='${className}' id='${idlId}' data-idl data-title='${name}'>${contents}</span>`;
 }
 
 function getIdlDefinitionClassName(defn) {
