@@ -13,6 +13,8 @@
  *  { base: "Dictionary", member: "member" }
  */
 
+import hyperHTML from "../deps/hyperhtml";
+
 const methodRegex = /\((.*)\)$/;
 const idlSplitRegex = /\b\.\b|\.(?=\[\[)/;
 const dictionaryRegex = /(\w+)\["(\w+)"\]/;

@@ -14,6 +14,7 @@ import { sub } from "./pubsubhub";
 import css from "../deps/text!ui/ui.css";
 import { markdownToHtml } from "./utils";
 import "./jquery-enhanced";
+import hyperHTML from "../deps/hyperhtml";
 export const name = "core/ui";
 
 // Opportunistically inserts the style, with the chance to reduce some FOUC
@@ -34,54 +35,39 @@ function ariaDecorate(elem, ariaMap) {
   }, elem);
 }
 
-const $respecUI = $("<div id='respec-ui' class='removeOnSave' hidden></div>");
-const $menu = $(
-  "<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>"
-);
+const respecUI = hyperHTML`<div id='respec-ui' class='removeOnSave' hidden></div>`;
+const menu = hyperHTML`<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>`;
 let $modal;
 let $overlay;
 const errors = [];
 const warnings = [];
 const buttons = {};
 
-sub(
-  "start-all",
-  () => {
-    document.body.insertAdjacentElement("afterbegin", $respecUI[0]);
-  },
-  { once: true }
-);
-sub(
-  "end-all",
-  () => {
-    document.body.insertAdjacentElement("afterbegin", $respecUI[0]);
-  },
-  { once: true }
-);
+sub("start-all", () => document.body.prepend(respecUI), { once: true });
+sub("end-all", () => document.body.prepend(respecUI), { once: true });
 
-const $respecPill = $("<button id='respec-pill' disabled>ReSpec</button>");
-$respecPill
-  .click(function(e) {
-    e.stopPropagation();
-    if ($menu[0].hidden) {
-      $menu[0].classList.remove("respec-hidden");
-      $menu[0].classList.add("respec-visible");
-    } else {
-      $menu[0].classList.add("respec-hidden");
-      $menu[0].classList.remove("respec-visible");
-    }
-    this.setAttribute("aria-expanded", String($menu[0].hidden));
-    $menu[0].hidden = !$menu[0].hidden;
-  })
-  .appendTo($respecUI);
+const respecPill = hyperHTML`<button id='respec-pill' disabled>ReSpec</button>`;
+respecUI.appendChild(respecPill);
+respecPill.addEventListener("click", function(e) {
+  e.stopPropagation();
+  if (menu.hidden) {
+    menu.classList.remove("respec-hidden");
+    menu.classList.add("respec-visible");
+  } else {
+    menu.classList.add("respec-hidden");
+    menu.classList.remove("respec-visible");
+  }
+  this.setAttribute("aria-expanded", String(menu.hidden));
+  menu.hidden = !menu.hidden;
+});
 document.documentElement.addEventListener("click", () => {
-  if (!$menu[0].hidden) {
-    $menu[0].classList.remove("respec-visible");
-    $menu[0].classList.add("respec-hidden");
-    $menu[0].hidden = true;
+  if (!menu.hidden) {
+    menu.classList.remove("respec-visible");
+    menu.classList.add("respec-hidden");
+    menu.hidden = true;
   }
 });
-$menu.appendTo($respecUI);
+respecUI.appendChild(menu);
 
 const ariaMap = new Map([
   ["controls", "respec-menu"],
@@ -89,7 +75,7 @@ const ariaMap = new Map([
   ["haspopup", "true"],
   ["label", "ReSpec Menu"],
 ]);
-ariaDecorate($respecPill[0], ariaMap);
+ariaDecorate(respecPill, ariaMap);
 
 function errWarn(msg, arr, butName, title) {
   arr.push(msg);
@@ -104,7 +90,7 @@ function errWarn(msg, arr, butName, title) {
       arr.length +
       "</button>"
   )
-    .appendTo($respecUI)
+    .appendTo(respecUI)
     .click(function() {
       this.setAttribute("aria-expanded", "true");
       const $ul = $("<ol class='respec-" + butName + "-list'></ol>");
@@ -146,20 +132,16 @@ function errWarn(msg, arr, butName, title) {
             .hide()
             .end();
         } else {
-          const tmp = document.createElement("tmp");
-          tmp.innerHTML = markdownToHtml(err);
+          const fragment = document
+            .createRange()
+            .createContextualFragment(markdownToHtml(err));
           const li = document.createElement("li");
           // if it's only a single element, just copy the contents into li
-          if (tmp.firstElementChild === tmp.lastElementChild) {
-            while (
-              tmp.firstElementChild &&
-              tmp.firstElementChild.hasChildNodes()
-            ) {
-              li.appendChild(tmp.firstElementChild.firstChild);
-            }
+          if (fragment.firstElementChild === fragment.lastElementChild) {
+            li.append(...fragment.firstElementChild.childNodes);
             // Otherwise, take everything.
           } else {
-            li.innerHTML = tmp.innerHTML;
+            li.appendChild(fragment);
           }
           $ul[0].appendChild(li);
         }
@@ -175,20 +157,20 @@ function errWarn(msg, arr, butName, title) {
   ariaDecorate(buttons[butName][0], ariaMap);
 }
 export const ui = {
-  show: function() {
+  show() {
     try {
-      $respecUI[0].hidden = false;
+      respecUI.hidden = false;
     } catch (err) {
       console.error(err);
     }
   },
-  hide: function() {
-    $respecUI[0].hidden = true;
+  hide() {
+    respecUI.hidden = true;
   },
-  enable: function() {
-    $respecPill[0].removeAttribute("disabled");
+  enable() {
+    respecPill.removeAttribute("disabled");
   },
-  addCommand: function(label, module, keyShort, icon) {
+  addCommand(label, module, keyShort, icon) {
     icon = icon || "";
     const handler = function() {
       require([module], mod => {
@@ -208,17 +190,17 @@ export const ui = {
         "… </button></li>"
     )
       .click(handler)
-      .appendTo($menu);
+      .appendTo(menu);
     if (keyShort) shortcut.add(keyShort, handler);
     return menuItem[0].querySelector("button");
   },
-  error: function(msg) {
+  error(msg) {
     errWarn(msg, errors, "error", "Errors");
   },
-  warning: function(msg) {
+  warning(msg) {
     errWarn(msg, warnings, "warning", "Warnings");
   },
-  closeModal: function(owner) {
+  closeModal(owner) {
     if ($overlay) {
       $overlay[0].classList.remove("respec-show-overlay");
       $overlay[0].classList.add("respec-hide-overlay");
@@ -234,7 +216,7 @@ export const ui = {
     $modal.remove();
     $modal = null;
   },
-  freshModal: function(title, content, currentOwner) {
+  freshModal(title, content, currentOwner) {
     if ($modal) $modal.remove();
     if ($overlay) $overlay.remove();
     $overlay = $("<div id='respec-overlay' class='removeOnSave'></div>");

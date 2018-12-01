@@ -7,7 +7,7 @@
 
 import { removeReSpec } from "./utils";
 import { pub } from "./pubsubhub";
-import "../deps/hyperhtml";
+import hyperHTML from "../deps/hyperhtml";
 
 const mimeTypes = new Map([["text/html", "html"], ["application/xml", "xml"]]);
 
