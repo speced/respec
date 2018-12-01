@@ -90,55 +90,60 @@ const idlPartials = {};
 
 // Takes the result of WebIDL2.parse(), an array of definitions.
 function makeMarkup(parse, definitionMap, { suppressWarnings } = {}) {
-  return hyperHTML`<pre class="def idl">${webidl2writer.write(parse, {
-    templates: {
-      wrap: items =>
-        items
-          .reduce(flatten, [])
-          .map(x => (typeof x === "string" ? new Text(x) : x)),
-      trivia: t =>
-        t.trim() ? hyperHTML`<span class='idlSectionComment'>${t}</span>` : t,
-      reference: (wrapped, name) => {
-        if (standardTypes.has(name)) {
-          return hyperHTML`<a data-cite='${standardTypes.get(
-            name
-          )}'>${wrapped}</a>`;
-        }
-        return hyperHTML`<a data-link-for="">${wrapped}</a>`;
-      },
-      name: (n, { data, parent }) => {
-        if (data.idlType && data.idlType.type === "argument-type") {
-          return hyperHTML`<span class="idlParamName">${n}</span>`;
-        }
-        const parentName = parent ? parent.name : "";
-        const { name } = getNameAndId(data, parentName);
-        const dfn = findDfn(data, name, definitionMap, {
-          parent: parentName,
-          suppressWarnings,
-        });
-        const idlAnchor = createIdlAnchor(n, data, parentName, dfn);
-        const className = parent ? "idlName" : "idlID";
-        if (data.type === "enum-value") {
-          return idlAnchor;
-        }
-        return hyperHTML`<span class="${className}">${idlAnchor}</span>`;
-      },
-      type: contents => hyperHTML`<span class="idlType">${contents}</span>`,
-      inheritance: contents =>
-        hyperHTML`<span class="idlSuperclass">${contents}</span>`,
-      definition: createIdlElement,
-      extendedAttribute: contents =>
-        hyperHTML`<span class="extAttr">${contents}</span>`,
-      extendedAttributeReference: name => {
-        if (!extendedAttributesLinks.has(name)) {
-          return hyperHTML`<a>${name}</a>`;
-        }
-        return hyperHTML`<a data-cite="${extendedAttributesLinks.get(
-          name
-        )}">${name}</a>`;
-      },
+  const templates = {
+    wrap(items) {
+      return items
+        .reduce(flatten, [])
+        .map(x => (typeof x === "string" ? new Text(x) : x));
     },
-  })}</pre>`;
+    trivia(t) {
+      if (!t.trim()) {
+        return t;
+      }
+      return hyperHTML`<span class='idlSectionComment'>${t}</span>`;
+    },
+    reference(wrapped, name) {
+      if (standardTypes.has(name)) {
+        return hyperHTML`<a data-cite='${standardTypes.get(
+          name
+        )}'>${wrapped}</a>`;
+      }
+      return hyperHTML`<a data-link-for="">${wrapped}</a>`;
+    },
+    name(n, { data, parent }) {
+      if (data.idlType && data.idlType.type === "argument-type") {
+        return hyperHTML`<span class="idlParamName">${n}</span>`;
+      }
+      const parentName = parent ? parent.name : "";
+      const { name } = getNameAndId(data, parentName);
+      const dfn = findDfn(data, name, definitionMap, {
+        parent: parentName,
+        suppressWarnings,
+      });
+      const idlAnchor = createIdlAnchor(n, data, parentName, dfn);
+      const className = parent ? "idlName" : "idlID";
+      if (data.type === "enum-value") {
+        return idlAnchor;
+      }
+      return hyperHTML`<span class="${className}">${idlAnchor}</span>`;
+    },
+    type: contents => hyperHTML`<span class="idlType">${contents}</span>`,
+    inheritance: contents =>
+      hyperHTML`<span class="idlSuperclass">${contents}</span>`,
+    definition: createIdlElement,
+    extendedAttribute: contents =>
+      hyperHTML`<span class="extAttr">${contents}</span>`,
+    extendedAttributeReference(name) {
+      if (!extendedAttributesLinks.has(name)) {
+        return hyperHTML`<a>${name}</a>`;
+      }
+      return hyperHTML`<a data-cite="${extendedAttributesLinks.get(
+        name
+      )}">${name}</a>`;
+    },
+  };
+  const result = webidl2writer.write(parse, { templates });
+  return hyperHTML`<pre class="def idl">${result}</pre>`;
 }
 
 function createIdlAnchor(n, data, parentName, dfn) {
