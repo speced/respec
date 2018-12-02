@@ -13,10 +13,10 @@
 //  - respecRFC2119: a list of the number of times each RFC2119
 //    key word was used.  NOTE: While each member is a counter, at this time
 //    the counter is not used.
-import { pub } from "./pubsubhub";
-import "../deps/hyperhtml";
 import { getTextNodes, refTypeFromContext } from "./utils";
+import hyperHTML from "../deps/hyperhtml";
 import { idlStringToHtml } from "./inline-idl-parser";
+import { pub } from "./pubsubhub";
 export const name = "core/inlines";
 
 export function run(conf) {

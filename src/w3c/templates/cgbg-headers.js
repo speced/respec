@@ -1,7 +1,7 @@
-import "../../deps/hyperhtml";
+import hyperHTML from "../../deps/hyperhtml";
+import showLink from "./show-link";
 import showLogo from "./show-logo";
 import showPeople from "./show-people";
-import showLink from "./show-link";
 
 export default conf => {
   const html = hyperHTML;

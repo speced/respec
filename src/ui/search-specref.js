@@ -1,8 +1,9 @@
 // Module ui/search-specref
 // Search Specref database
-import { ui } from "core/ui";
-import { wireReference } from "core/biblio";
-import { l10n, lang } from "core/l10n";
+import { l10n, lang } from "../core/l10n";
+import hyperHTML from "../deps/hyperhtml";
+import { ui } from "../core/ui";
+import { wireReference } from "../core/biblio";
 
 const button = ui.addCommand(
   l10n[lang].search_specref,
@@ -14,7 +15,7 @@ const specrefURL = "https://specref.herokuapp.com/";
 const refSearchURL = `${specrefURL}search-refs`;
 const reveseLookupURL = `${specrefURL}reverse-lookup`;
 const form = document.createElement("form");
-const renderer = window.hyperHTML.bind(form);
+const renderer = hyperHTML.bind(form);
 const resultList = hyperHTML.bind(document.createElement("div"));
 
 form.id = "specref-ui";
