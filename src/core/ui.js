@@ -79,45 +79,45 @@ ariaDecorate(respecPill, ariaMap);
 
 function errWarn(msg, arr, butName, title) {
   arr.push(msg);
-  if (buttons.hasOwnProperty(butName)) {
-    buttons[butName].text(arr.length);
-    return;
+  if (!buttons.hasOwnProperty(butName)) {
+    buttons[butName] = createWarnButton(butName, arr, title);
+    respecUI.appendChild(buttons[butName]);
   }
-  buttons[butName] = $(
-    "<button id='respec-pill-" +
-      butName +
-      "' class='respec-info-button'>" +
-      arr.length +
-      "</button>"
-  )
-    .appendTo(respecUI)
-    .click(function() {
-      this.setAttribute("aria-expanded", "true");
-      const ol = hyperHTML`<ol class='${`respec-${butName}-list`}'></ol>`;
-      for (const err of arr) {
-        const fragment = document
-          .createRange()
-          .createContextualFragment(markdownToHtml(err));
-        const li = document.createElement("li");
-        // if it's only a single element, just copy the contents into li
-        if (fragment.firstElementChild === fragment.lastElementChild) {
-          li.append(...fragment.firstElementChild.childNodes);
-          // Otherwise, take everything.
-        } else {
-          li.appendChild(fragment);
-        }
-        ol.appendChild(li);
+  buttons[butName].textContent = arr.length;
+}
+
+function createWarnButton(butName, arr, title) {
+  const buttonId = `respec-pill-${butName}`;
+  const button = hyperHTML`<button id='${buttonId}' class='respec-info-button'>`;
+  button.addEventListener("click", function() {
+    this.setAttribute("aria-expanded", "true");
+    const ol = hyperHTML`<ol class='${`respec-${butName}-list`}'></ol>`;
+    for (const err of arr) {
+      const fragment = document
+        .createRange()
+        .createContextualFragment(markdownToHtml(err));
+      const li = document.createElement("li");
+      // if it's only a single element, just copy the contents into li
+      if (fragment.firstElementChild === fragment.lastElementChild) {
+        li.append(...fragment.firstElementChild.childNodes);
+        // Otherwise, take everything.
+      } else {
+        li.appendChild(fragment);
       }
-      ui.freshModal(title, ol, this);
-    });
+      ol.appendChild(li);
+    }
+    ui.freshModal(title, ol, this);
+  });
   const ariaMap = new Map([
     ["expanded", "false"],
     ["haspopup", "true"],
     ["controls", "respec-pill-" + butName + "-modal"],
     ["label", "Document " + title.toLowerCase()],
   ]);
-  ariaDecorate(buttons[butName][0], ariaMap);
+  ariaDecorate(button, ariaMap);
+  return button;
 }
+
 export const ui = {
   show() {
     try {
