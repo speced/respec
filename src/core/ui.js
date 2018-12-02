@@ -93,7 +93,7 @@ function errWarn(msg, arr, butName, title) {
     .appendTo(respecUI)
     .click(function() {
       this.setAttribute("aria-expanded", "true");
-      const ol = hyperHTML`<ol class='${`respec-${butName}-list`}'></ol>`
+      const ol = hyperHTML`<ol class='${`respec-${butName}-list`}'></ol>`;
       for (const err of arr) {
         const fragment = document
           .createRange()
