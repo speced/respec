@@ -84,11 +84,19 @@ __Deze tekst is ook vetgedrukt__
 
 Code:
 
-```*Je **mag** dit ook combineren*```
+```~Deze tekst is doorgehaald~```
 
 Geeft: 
 
-*Je **mag** dit ook combineren*  
+~Deze tekst is doorgehaald~
+
+Code:
+
+```*Je **mag** deze ~formaten~ formats ook combineren*```
+
+Geeft: 
+
+*Je **mag** deze ~formaten~ formats ook combineren*
 
 ## Blok Quotes
 Code:
