@@ -1,6 +1,5 @@
 /*eslint-env node*/
 "use strict";
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 // Get a list of all the test files to include
 const testFiles = Object.keys(window.__karma__.files)
   // ends with "-spec.js"
