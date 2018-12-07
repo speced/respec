@@ -133,12 +133,13 @@ module.exports = function(config) {
     },
   };
   if (process.env.TRAVIS) {
+    process.env.CHROME_BIN = require("puppeteer").executablePath();
     options.detectBrowsers.enabled = false;
     options.autoWatch = false;
     options.singleRun = true;
     options.concurrency = 1;
     options.reporters = ["mocha"];
-    options.browsers = ["ChromeHeadless"]; //"Firefox"
+    options.browsers = ["ChromeHeadless"];
   }
   config.set(options);
 };
