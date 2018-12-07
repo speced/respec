@@ -50,7 +50,7 @@ describe("Core - UI", () => {
       dfnListButton.click();
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      const dfns = doc.querySelectorAll("ul.respec-dfn-list li");
+      const dfns = doc.querySelectorAll("ul.respec-dfn-list li a");
       expect(dfns.length).toEqual(2);
 
       const [dfnBar, dfnFoo] = dfns;
