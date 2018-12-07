@@ -40,6 +40,34 @@ interface Bar {
     expect(header.textContent).toEqual("1. IDL Index");
   });
 
+  fit("generates an idl summary, but excludes things the editor doesn't want", async () => {
+    const body = `
+      ${makeDefaultBody()}
+      <section>
+        <pre class="idl idlExclude">
+        interface Foo {
+          readonly attribute DOMString bar;
+        };
+        </pre>
+      </section>
+      <section>
+        <pre class=idl>
+        interface Bar {
+          readonly attribute DOMString foo;
+        };
+        </pre>
+      </section>
+      <section id="idl-index"></section>
+    `;
+    const ops = {
+      config: makeBasicConfig(),
+      body,
+    };
+    const doc = await makeRSDoc(ops);
+    const idlIndex = doc.getElementById("idl-index");
+    expect(idlIndex.innerText.includes("Foo")).toEqual(false);
+  });
+
   it("allows multi-block idl", async () => {
     const body = `
       ${makeDefaultBody()}
