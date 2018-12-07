@@ -21,9 +21,9 @@
     "Robin Berjon"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.1.5",
-    "@babel/core": "^7.1.6",
-    "@babel/preset-env": "^7.1.6",
+    "@babel/cli": "^7.2.0",
+    "@babel/core": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
     "chai": "^4.2.0",
     "clipboard": "^2.0.4",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
@@ -56,7 +56,7 @@
     "prettier": "^1.15.3",
     "requirejs": "^2.3.6",
     "serve": "^10.1.1",
-    "terser": "^3.10.13",
+    "terser": "^3.11.0",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "webidl2": "^16.1.0"
   },
@@ -87,12 +87,12 @@
     "epipebomb": "^1.0.0",
     "fs-extra": "^7.0.1",
     "highlight.js": "github:marcoscaceres/highlight.js#7b144b3b83ce296d5b29c5e4fc2ea2a65e9d3f32",
-    "hyperhtml": "^2.20.1",
+    "hyperhtml": "^2.20.2",
     "loading-indicator": "^2.0.0",
     "marked": "^0.5.2",
     "prompt": "^1.0.0",
-    "puppeteer": "1.11.0",
-    "snyk": "^1.112.0"
+    "puppeteer": "^1.11.0",
+    "snyk": "^1.115.0"
   },
   "prettier": {
     "trailingComma": "es5"
