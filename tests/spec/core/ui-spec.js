@@ -38,4 +38,26 @@ describe("Core - UI", () => {
     });
     // give it time to fade out
   });
+
+  describe("ui/dfn-list", () => {
+    it("shows a list of definitions and links them", async () => {
+      const body = "<p><dfn>foo</dfn> <dfn>bar()</dfn></p>";
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+
+      // open list and wait for loading
+      const dfnListButton = doc.getElementById("respec-button-definitions");
+      dfnListButton.click();
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      const dfns = doc.querySelectorAll("ul.respec-dfn-list li");
+      expect(dfns.length).toEqual(2);
+
+      const [dfnFoo, dfnBar] = dfns;
+      expect(dfnFoo.textContent.trim()).toEqual("foo");
+      expect(dfnFoo.href).toEqual("#dfn-foo");
+      expect(dfnBar.textContent.trim()).toEqual("bar()");
+      expect(dfnBar.href).toEqual("#dfn-bar");
+    });
+  });
 });
