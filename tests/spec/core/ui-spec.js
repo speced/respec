@@ -55,9 +55,9 @@ describe("Core - UI", () => {
 
       const [dfnBar, dfnFoo] = dfns;
       expect(dfnBar.textContent.trim()).toEqual("bar()");
-      expect(dfnBar.href).toEqual("#dfn-bar");
+      expect(dfnBar.getAttribute("href")).toEqual("#dfn-bar");
       expect(dfnFoo.textContent.trim()).toEqual("foo");
-      expect(dfnFoo.href).toEqual("#dfn-foo");
+      expect(dfnFoo.getAttribute("href")).toEqual("#dfn-foo");
     });
   });
 });
