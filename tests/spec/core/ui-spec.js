@@ -41,7 +41,7 @@ describe("Core - UI", () => {
 
   describe("ui/dfn-list", () => {
     it("shows a list of definitions and links them", async () => {
-      const body = "<p><dfn>foo</dfn> <dfn>bar()</dfn></p>";
+      const body = "<p><dfn>bar()</dfn> <dfn>foo</dfn></p>";
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
 
@@ -53,11 +53,11 @@ describe("Core - UI", () => {
       const dfns = doc.querySelectorAll("ul.respec-dfn-list li");
       expect(dfns.length).toEqual(2);
 
-      const [dfnFoo, dfnBar] = dfns;
-      expect(dfnFoo.textContent.trim()).toEqual("foo");
-      expect(dfnFoo.href).toEqual("#dfn-foo");
+      const [dfnBar, dfnFoo] = dfns;
       expect(dfnBar.textContent.trim()).toEqual("bar()");
       expect(dfnBar.href).toEqual("#dfn-bar");
+      expect(dfnFoo.textContent.trim()).toEqual("foo");
+      expect(dfnFoo.href).toEqual("#dfn-foo");
     });
   });
 });
