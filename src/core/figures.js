@@ -16,7 +16,7 @@ export function run(conf) {
   const tof = [];
   document.querySelectorAll("figure").forEach((fig, i) => {
     const caption = fig.querySelector("figcaption");
-    const title = caption.textContent;
+    const title = caption ? caption.textContent : "";
     const id = addId(fig, "fig", title);
 
     if (caption) {
