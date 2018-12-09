@@ -4,7 +4,7 @@
 // Generates a Table of Figures wherever there is a #tof element.
 
 import { pub } from "./pubsubhub";
-import hyperHTML from "hyperhtml";
+import hyperHTML from "../deps/hyperhtml";
 import { addId, wrapInner, renameElement } from "./utils";
 
 export const name = "core/figures";
@@ -29,7 +29,7 @@ export function run(conf) {
       );
     } else pub("warn", "A `<figure>` should contain a `<figcaption>`.");
 
-    figMap[id] = caption ? [...caption.childNodes] : [];
+    figMap[id] = $(caption ? [...caption.childNodes] : []);
     const tofCaption = caption.cloneNode(true);
     tofCaption.querySelectorAll("a").forEach(anchor => {
       renameElement(anchor, "span").removeAttribute("href");
