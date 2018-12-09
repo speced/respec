@@ -36,7 +36,7 @@ export function run(conf) {
     });
     tof.push(
       hyperHTML`<li class='tofline'>
-        <a class='tocxref' href='${`#${id}`}'>${tofCaption}</a>
+        <a class='tocxref' href='${`#${caption.id}`}'>${tofCaption}</a>
       </li>`
     );
   });
