@@ -18,7 +18,7 @@ export function run(conf) {
     const caption = fig.querySelector("figcaption");
 
     if (caption) {
-      const title = caption ? caption.textContent : "";
+      const title = caption.textContent;
       const id = addId(fig, "fig", title);
       // set proper caption title
       wrapInner(caption, hyperHTML`<span class='fig-title'>`);
