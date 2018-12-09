@@ -4,6 +4,8 @@
 // Generates a Table of Figures wherever there is a #tof element.
 
 import { pub } from "./pubsubhub";
+import hyperHTML from "hyperhtml";
+import { addId, wrapInner, renameElement } from "./utils";
 
 export const name = "core/figures";
 
@@ -12,33 +14,30 @@ export function run(conf) {
   // process all figures
   const figMap = {};
   const tof = [];
-  let num = 0;
-  $("figure").each(function() {
-    const $fig = $(this);
-    const $cap = $fig.find("figcaption");
-    const tit = $cap.text();
-    const id = $fig.makeID("fig", tit);
-    if (!$cap.length)
-      pub("warn", "A `<figure>` should contain a `<figcaption>`.");
+  document.querySelectorAll("figure").forEach((fig, i) => {
+    const caption = fig.querySelector("figcaption");
+    const title = caption.textContent;
+    const id = addId(fig, "fig", title);
 
-    // set proper caption title
-    num++;
-    $cap
-      .wrapInner($("<span class='fig-title'/>"))
-      .prepend(document.createTextNode(" "))
-      .prepend($("<span class='figno'>" + num + "</span>"))
-      .prepend(document.createTextNode(conf.l10n.fig));
-    figMap[id] = $cap.contents();
-    const $tofCap = $cap.clone();
-    $tofCap
-      .find("a")
-      .renameElement("span")
-      .removeAttr("href");
+    if (caption) {
+      // set proper caption title
+      wrapInner(caption, hyperHTML`<span class='fig-title'>`);
+      caption.prepend(
+        conf.l10n.fig,
+        hyperHTML`<span class='figno'>${i + 1}</span>`,
+        " "
+      );
+    } else pub("warn", "A `<figure>` should contain a `<figcaption>`.");
+
+    figMap[id] = caption ? [...caption.childNodes] : [];
+    const tofCaption = caption.cloneNode(true);
+    tofCaption.querySelectorAll("a").forEach(anchor => {
+      renameElement(anchor, "span").removeAttribute("href");
+    });
     tof.push(
-      $("<li class='tofline'><a class='tocxref' href='#" + id + "'></a></li>")
-        .find(".tocxref")
-        .append($tofCap.contents())
-        .end()
+      hyperHTML`<li class='tofline'>
+        <a class='tocxref' href='${`#${id}`}'>${tofCaption}</a>
+      </li>`
     );
   });
 
