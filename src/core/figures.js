@@ -18,27 +18,11 @@ export function run(conf) {
     const caption = fig.querySelector("figcaption");
 
     if (caption) {
-      const title = caption.textContent;
-      const id = addId(fig, "fig", title);
-      // set proper caption title
-      wrapInner(caption, hyperHTML`<span class='fig-title'>`);
-      caption.prepend(
-        conf.l10n.fig,
-        hyperHTML`<span class='figno'>${i + 1}</span>`,
-        " "
-      );
-      figMap[id] = $(caption.childNodes);
+      decorateFigure(fig, caption, i, conf);
+      figMap[fig.id] = $(caption.childNodes);
     } else pub("warn", "A `<figure>` should contain a `<figcaption>`.");
 
-    const tofCaption = caption.cloneNode(true);
-    tofCaption.querySelectorAll("a").forEach(anchor => {
-      renameElement(anchor, "span").removeAttribute("href");
-    });
-    tof.push(
-      hyperHTML`<li class='tofline'>
-        <a class='tocxref' href='${`#${caption.id}`}'>${tofCaption}</a>
-      </li>`
-    );
+    tof.push(getTableOfFiguresListItem(fig.id, caption));
   });
 
   // Update all anchors with empty content that reference a figure ID
@@ -89,6 +73,39 @@ export function run(conf) {
     const $ul = $tof.find("ul");
     while (tof.length) $ul.append(tof.shift());
   }
+}
+
+/**
+ * @param {HTMLElement} figure
+ * @param {HTMLElement} caption
+ * @param {number} i
+ * @param {*} conf
+ */
+function decorateFigure(figure, caption, i, conf) {
+  const title = caption.textContent;
+  addId(figure, "fig", title);
+  // set proper caption title
+  wrapInner(caption, hyperHTML`<span class='fig-title'>`);
+  caption.prepend(
+    conf.l10n.fig,
+    hyperHTML`<span class='figno'>${i + 1}</span>`,
+    " "
+  );
+}
+
+/**
+ * @param {string} figureId
+ * @param {HTMLElement} caption
+ * @return {HTMLElement}
+ */
+function getTableOfFiguresListItem(figureId, caption) {
+  const tofCaption = caption.cloneNode(true);
+  tofCaption.querySelectorAll("a").forEach(anchor => {
+    renameElement(anchor, "span").removeAttribute("href");
+  });
+  return hyperHTML`<li class='tofline'>
+    <a class='tocxref' href='${`#${figureId}`}'>${tofCaption}</a>
+  </li>`;
 }
 
 function normalizeImages(doc) {
