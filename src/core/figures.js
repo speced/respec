@@ -3,9 +3,9 @@
 // Adds width and height to images, if they are missing.
 // Generates a Table of Figures wherever there is a #tof element.
 
-import { pub } from "./pubsubhub";
+import { addId, renameElement, wrapInner } from "./utils";
 import hyperHTML from "../deps/hyperhtml";
-import { addId, wrapInner, renameElement } from "./utils";
+import { pub } from "./pubsubhub";
 
 export const name = "core/figures";
 
