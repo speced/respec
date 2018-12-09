@@ -16,10 +16,10 @@ export function run(conf) {
   const tof = [];
   document.querySelectorAll("figure").forEach((fig, i) => {
     const caption = fig.querySelector("figcaption");
-    const title = caption ? caption.textContent : "";
-    const id = addId(fig, "fig", title);
 
     if (caption) {
+      const title = caption ? caption.textContent : "";
+      const id = addId(fig, "fig", title);
       // set proper caption title
       wrapInner(caption, hyperHTML`<span class='fig-title'>`);
       caption.prepend(
@@ -27,9 +27,9 @@ export function run(conf) {
         hyperHTML`<span class='figno'>${i + 1}</span>`,
         " "
       );
+      figMap[id] = $(caption.childNodes);
     } else pub("warn", "A `<figure>` should contain a `<figcaption>`.");
 
-    figMap[id] = $(caption ? [...caption.childNodes] : []);
     const tofCaption = caption.cloneNode(true);
     tofCaption.querySelectorAll("a").forEach(anchor => {
       renameElement(anchor, "span").removeAttribute("href");
