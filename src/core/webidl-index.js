@@ -32,18 +32,15 @@ export function run() {
 
   //filter out the IDL marked with class="idlExclude" and the IDL in non-normative sections
   function idlFilter(idl) {
-    if (
-      idl.classList.contains("idlExclude") ||
-      idl.parentElement.classList.contains("informative")
-    ) {
+    if (idl.closest(".informative")) {
       return false;
     }
     return true;
   }
 
-  const idlIndex = Array.from(document.querySelectorAll("pre.def.idl")).filter(
-    idlFilter
-  );
+  const idlIndex = Array.from(
+    document.querySelectorAll("pre.def.idl:not(.exclude)")
+  ).filter(idlFilter);
 
   if (!document.querySelector("pre.idl") || idlIndex.length === 0) {
     const text = "This specification doesn't declare any Web IDL.";

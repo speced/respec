@@ -44,7 +44,7 @@ interface Bar {
     const body = `
       ${makeDefaultBody()}
       <section>
-        <pre class="idl idlExclude">
+        <pre class="idl exclude">
         interface Foo {
           readonly attribute DOMString bar;
         };
@@ -56,6 +56,13 @@ interface Bar {
           readonly attribute DOMString foo;
         };
         </pre>
+        </section>
+      <section class="informative">
+        <pre class="idl">
+        interface Baz {
+          readonly attribute DOMString baz;
+        };
+        </pre>
       </section>
       <section id="idl-index"></section>
     `;
@@ -65,7 +72,9 @@ interface Bar {
     };
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
+    console.log(idlIndex.innerText);
     expect(idlIndex.innerText.includes("Foo")).toEqual(false);
+    expect(idlIndex.innerText.includes("Baz")).toEqual(false);
   });
 
   it("allows multi-block idl", async () => {
