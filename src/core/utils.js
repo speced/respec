@@ -321,11 +321,13 @@ export function removeReSpec(doc) {
  */
 export function showInlineWarning(elems, msg, title) {
   if (!Array.isArray(elems)) elems = [elems];
-  const links = elems.map((element, i) => {
-    markAsOffending(element, msg, title);
-    return generateMarkdownLink(element, i);
-  }).join(", ");
-  pub("warn", msg + `at: ${links}.`);
+  const links = elems
+    .map((element, i) => {
+      markAsOffending(element, msg, title);
+      return generateMarkdownLink(element, i);
+    })
+    .join(", ");
+  pub("warn", msg + ` at: ${links}.`);
   console.warn(msg, elems);
 }
 
@@ -337,11 +339,13 @@ export function showInlineWarning(elems, msg, title) {
  */
 export function showInlineError(elems, msg, title) {
   if (!Array.isArray(elems)) elems = [elems];
-  const links = elems.map((element, i) => {
-    markAsOffending(element, msg, title);
-    return generateMarkdownLink(element, i);
-  }).join(", ");
-  pub("error", msg + `at: ${links}.`);
+  const links = elems
+    .map((element, i) => {
+      markAsOffending(element, msg, title);
+      return generateMarkdownLink(element, i);
+    })
+    .join(", ");
+  pub("error", msg + ` at: ${links}.`);
   console.error(msg, elems);
 }
 
@@ -355,7 +359,7 @@ function markAsOffending(elem, msg, title) {
   elem.classList.add("respec-offending-element");
   elem.setAttribute("title", title || msg);
   if (!elem.id) {
-    addId(elem, "respecOffender");
+    addId(elem, "respec-offender");
   }
 }
 

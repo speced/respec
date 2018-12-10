@@ -1,7 +1,13 @@
 // Module core/link-to-dfn
 // Gives definitions in conf.definitionMap IDs and links <a> tags
 // to the matching definitions.
-import { addId, getLinkTargets, wrapInner } from "./utils";
+import {
+  addId,
+  getLinkTargets,
+  showInlineError,
+  showInlineWarning,
+  wrapInner,
+} from "./utils";
 import { run as addExternalReferences } from "./xref";
 import { lang as defaultLang } from "./l10n";
 import { linkInlineCitations } from "./data-cite";
@@ -32,20 +38,7 @@ export async function run(conf) {
         // up as <span>s instead of <dfn>.
         const oldIsDfn = titles[title][dfnFor].localName === "dfn";
         const newIsDfn = dfn.localName === "dfn";
-        if (oldIsDfn) {
-          if (!newIsDfn) {
-            // Don't overwrite <dfn> definitions.
-            return;
-          }
-          // Only complain if the user provides 2 <dfn>s
-          // for the same term.
-          dfn.classList.add("respec-offending-element");
-          if (!dfn.title) {
-            dfn.title = l10n[lang].duplicate;
-          }
-          if (!dfn.id) {
-            addId(dfn, null, title);
-          }
+        if (oldIsDfn && newIsDfn) {
           listOfDuplicateDfns.push(dfn);
         }
       }
@@ -59,12 +52,11 @@ export async function run(conf) {
       }
     });
     if (listOfDuplicateDfns.length > 0) {
-      const dfnsList = listOfDuplicateDfns
-        .map((elem, i) => {
-          return `[${i + 1}](#${elem.id})`;
-        })
-        .join(", ");
-      pub("error", `Duplicate definitions of '${title}' at: ${dfnsList}.`);
+      showInlineError(
+        listOfDuplicateDfns,
+        `Duplicate definitions of '${title}'`,
+        l10n[lang].duplicate
+      );
     }
   });
 
@@ -180,14 +172,12 @@ export async function run(conf) {
 
 function showLinkingError(elems) {
   elems.forEach(elem => {
-    elem.classList.add("respec-offending-element");
-    elem.title = "Linking error: not matching <dfn>";
-    pub(
-      "warn",
+    showInlineWarning(
+      elem,
       `Found linkless \`<a>\` element with text "${
         elem.textContent
-      }" but no matching \`<dfn>\`.`
+      }" but no matching \`<dfn>\``,
+      "Linking error: not matching <dfn>"
     );
-    console.warn("Linkless element:", elem);
   });
 }
