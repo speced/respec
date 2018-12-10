@@ -357,7 +357,9 @@ export function showInlineError(elems, msg, title) {
  */
 function markAsOffending(elem, msg, title) {
   elem.classList.add("respec-offending-element");
-  elem.setAttribute("title", title || msg);
+  if (!elem.hasAttribute("title")) {
+    elem.setAttribute("title", title || msg);
+  }
   if (!elem.id) {
     addId(elem, "respec-offender");
   }

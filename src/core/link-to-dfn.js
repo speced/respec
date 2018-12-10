@@ -38,7 +38,11 @@ export async function run(conf) {
         // up as <span>s instead of <dfn>.
         const oldIsDfn = titles[title][dfnFor].localName === "dfn";
         const newIsDfn = dfn.localName === "dfn";
-        if (oldIsDfn && newIsDfn) {
+        if (oldIsDfn) {
+          if (!newIsDfn) {
+            // Don't overwrite <dfn> definitions.
+            return;
+          }
           listOfDuplicateDfns.push(dfn);
         }
       }
