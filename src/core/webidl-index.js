@@ -30,7 +30,7 @@ export function run() {
     idlIndexSec.insertAdjacentElement("afterbegin", header);
   }
 
-  //filter out the IDL marked with class="idlExclude" and the IDL in non-normative sections
+  //filter out the IDL marked with class="exclude" and the IDL in non-normative sections
   function idlFilter(idl) {
     if (idl.closest(".informative")) {
       return false;

@@ -40,7 +40,7 @@ interface Bar {
     expect(header.textContent).toEqual("1. IDL Index");
   });
 
-  fit("generates an idl summary, but excludes things the editor doesn't want", async () => {
+  it("generates an idl summary, but excludes things the editor doesn't want", async () => {
     const body = `
       ${makeDefaultBody()}
       <section>
@@ -72,7 +72,6 @@ interface Bar {
     };
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
-    console.log(idlIndex.innerText);
     expect(idlIndex.innerText.includes("Foo")).toEqual(false);
     expect(idlIndex.innerText.includes("Baz")).toEqual(false);
   });
