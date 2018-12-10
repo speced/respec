@@ -345,7 +345,6 @@ export function showInlineError(elems, msg, title) {
   console.error(msg, elems);
 }
 
-let offenders = 0;
 /**
  * Adds error class to each element while emitting a warning
  * @param {Element} elem
@@ -356,9 +355,8 @@ function markAsOffending(elem, msg, title) {
   elem.classList.add("respec-offending-element");
   elem.setAttribute("title", title || msg);
   if (!elem.id) {
-    elem.id = `respecOffender${offenders}`;
+    addId(elem, "respecOffender");
   }
-  offenders += 1;
 }
 
 /**
