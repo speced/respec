@@ -53,11 +53,11 @@ async function toLinterWarning(promiseToLint) {
       occurrences,
       offendingElements,
     } = output;
-    const message = `Linter (${name}): ${description} ${howToFix} ${help} (x ${occurrences})`;
+    const message = `Linter (${name}): ${description} ${howToFix} ${help}`;
     if (offendingElements.length) {
-      showInlineWarning(offendingElements, message);
+      showInlineWarning(offendingElements, `${message} Occured`);
     } else {
-      pub("warn", message);
+      pub("warn", `${message} (Count: ${occurrences})`);
     }
   });
 }
