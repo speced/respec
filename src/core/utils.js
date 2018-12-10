@@ -320,8 +320,12 @@ export function removeReSpec(doc) {
  * @param {String} title error message to add on each element
  */
 export function showInlineWarning(elems, msg, title) {
-  markAsOffending(elems, msg, title);
-  pub("warn", msg + " See developer console for details.");
+  if (!Array.isArray(elems)) elems = [elems];
+  const links = elems.map((element, i) => {
+    markAsOffending(element, msg, title);
+    return generateMarkdownLink(element, i);
+  }).join(", ");
+  pub("warn", msg + `at: ${links}.`);
   console.warn(msg, elems);
 }
 
@@ -332,23 +336,37 @@ export function showInlineWarning(elems, msg, title) {
  * @param {String} title error message to add on each element
  */
 export function showInlineError(elems, msg, title) {
-  markAsOffending(elems, msg, title);
-  pub("error", msg + " See developer console for details.");
+  if (!Array.isArray(elems)) elems = [elems];
+  const links = elems.map((element, i) => {
+    markAsOffending(element, msg, title);
+    return generateMarkdownLink(element, i);
+  }).join(", ");
+  pub("error", msg + `at: ${links}.`);
   console.error(msg, elems);
 }
 
+let offenders = 0;
 /**
  * Adds error class to each element while emitting a warning
- * @param {Element|Element[]} elems
+ * @param {Element} elem
  * @param {String} msg message to show in warning
  * @param {String} title error message to add on each element
  */
-function markAsOffending(elems, msg, title) {
-  if (!Array.isArray(elems)) elems = [elems];
-  elems.forEach(elem => {
-    elem.classList.add("respec-offending-element");
-    elem.setAttribute("title", title || msg);
-  });
+function markAsOffending(elem, msg, title) {
+  elem.classList.add("respec-offending-element");
+  elem.setAttribute("title", title || msg);
+  if (!elem.id) {
+    elem.id = `respecOffender${offenders}`;
+  }
+  offenders += 1;
+}
+
+/**
+ * @param {Element} element
+ * @param {number} i
+ */
+function generateMarkdownLink(element, i) {
+  return `[${i + 1}](#${element.id})`;
 }
 
 // STRING HELPERS
@@ -646,8 +664,8 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
 /**
  * Returns all the descendant text nodes of an element.
  * @param {Node} el
- * @param {Array:String} exclusions node localName to exclude
- * @returns {Array:String}
+ * @param {string[]} exclusions node localName to exclude
+ * @returns {string[]}
  */
 export function getTextNodes(el, exclusions = []) {
   const acceptNode = node => {
