@@ -4,10 +4,7 @@ import { showInlineWarning } from "../../core/utils";
 export default obj => {
   const a = document.createElement("a");
   if (!obj.alt) {
-    showInlineWarning(
-      a,
-      "Found spec logo without an `alt` attribute"
-    );
+    showInlineWarning(a, "Found spec logo without an `alt` attribute");
   }
   a.href = obj.url || "";
   a.classList.add("logo");
