@@ -315,20 +315,40 @@ export function removeReSpec(doc) {
 
 /**
  * Adds error class to each element while emitting a warning
- * @param {Element|Array:Elements} elems
+ * @param {Element|Element[]} elems
+ * @param {String} msg message to show in warning
+ * @param {String} title error message to add on each element
+ */
+export function showInlineWarning(elems, msg, title) {
+  markAsOffending(elems, msg, title);
+  pub("warn", msg + " See developer console for details.");
+  console.warn(msg, elems);
+}
+
+/**
+ * Adds error class to each element while emitting a warning
+ * @param {Element|Element[]} elems
  * @param {String} msg message to show in warning
  * @param {String} title error message to add on each element
  */
 export function showInlineError(elems, msg, title) {
+  markAsOffending(elems, msg, title);
+  pub("error", msg + " See developer console for details.");
+  console.error(msg, elems);
+}
+
+/**
+ * Adds error class to each element while emitting a warning
+ * @param {Element|Element[]} elems
+ * @param {String} msg message to show in warning
+ * @param {String} title error message to add on each element
+ */
+function markAsOffending(elems, msg, title) {
   if (!Array.isArray(elems)) elems = [elems];
-  if (!elems.length) return;
-  if (!title) title = msg;
   elems.forEach(elem => {
     elem.classList.add("respec-offending-element");
-    elem.setAttribute("title", title);
+    elem.setAttribute("title", title || msg);
   });
-  pub("warn", msg + " See developer console for details.");
-  console.warn(msg, elems);
 }
 
 // STRING HELPERS

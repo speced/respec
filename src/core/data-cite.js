@@ -13,7 +13,7 @@
  * Usage:
  * https://github.com/w3c/respec/wiki/data--cite
  */
-import { refTypeFromContext, showInlineError, wrapInner } from "./utils";
+import { refTypeFromContext, showInlineWarning, wrapInner } from "./utils";
 import { resolveRef, updateFromNetwork } from "./biblio";
 import hyperHTML from "../deps/hyperhtml";
 export const name = "core/data-cite";
@@ -32,7 +32,7 @@ function requestLookup(conf) {
       const entry = await resolveRef(key);
       cleanElement(elem);
       if (!entry) {
-        showInlineError(elem, `Couldn't find a match for "${originalKey}".`);
+        showInlineWarning(elem, `Couldn't find a match for "${originalKey}".`);
         return;
       }
       href = entry.href;
