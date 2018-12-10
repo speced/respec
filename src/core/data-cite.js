@@ -32,7 +32,7 @@ function requestLookup(conf) {
       const entry = await resolveRef(key);
       cleanElement(elem);
       if (!entry) {
-        showInlineWarning(elem, `Couldn't find a match for "${originalKey}".`);
+        showInlineWarning(elem, `Couldn't find a match for "${originalKey}"`);
         return;
       }
       href = entry.href;
