@@ -74,6 +74,22 @@ describe("Core - Figures", () => {
     expect(figLinks[1].textContent).toEqual("Figure 2 test 2");
   });
 
+  it("warns when no <figcaption>", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      htmlAttrs: {
+        lang: "ja",
+      },
+      body:
+        makeDefaultBody() + `<figure id='fig'><img src='img' alt=''></figure>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const anchorFig = doc.getElementById("fig");
+    expect(
+      anchorFig.classList.contains("respec-offending-element")
+    ).toBeTruthy();
+  });
+
   describe("normalize images", () => {
     const imgDataURL =
       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAADCAIAAADUVFKvAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gQKACEWdS72PwAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAMSURBVAjXY2AgDQAAADAAAceqhY4AAAAASUVORK5CYII=";
