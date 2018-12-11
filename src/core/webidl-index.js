@@ -33,7 +33,10 @@ export function run() {
   //filter out the IDL marked with class="exclude" and the IDL in non-normative sections
   const idlIndex = Array.from(
     document.querySelectorAll("pre.def.idl:not(.exclude)")
-  ).filter(idl => !idl.closest(".informative"));
+  ).filter(
+    idl =>
+      !idl.closest(".informative, .note, .issue, .example, .ednote, .practice")
+  );
 
   if (idlIndex.length === 0) {
     const text = "This specification doesn't declare any Web IDL.";
@@ -41,6 +44,7 @@ export function run() {
     idlIndexSec.appendChild(noIDLFound);
     return;
   }
+
   const pre = document.createElement("pre");
   pre.classList.add("idl", "def");
   pre.id = "actual-idl-index";
