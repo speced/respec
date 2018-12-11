@@ -19,7 +19,8 @@ export function run(conf) {
     if (caption) {
       decorateFigure(fig, caption, i, conf);
       figMap[fig.id] = $(caption.childNodes);
-    } else showInlineWarning(fig, "Found a `<figure>` without a `<figcaption>`");
+    } else
+      showInlineWarning(fig, "Found a `<figure>` without a `<figcaption>`");
 
     tof.push(getTableOfFiguresListItem(fig.id, caption));
   });

@@ -81,12 +81,13 @@ describe("Core - Figures", () => {
         lang: "ja",
       },
       body:
-        makeDefaultBody() +
-        `<figure id='fig'><img src='img' alt=''></figure>`,
+        makeDefaultBody() + `<figure id='fig'><img src='img' alt=''></figure>`,
     };
     const doc = await makeRSDoc(ops);
     const anchorFig = doc.getElementById("fig");
-    expect(anchorFig.classList.contains("respec-offending-element")).toBeTruthy();
+    expect(
+      anchorFig.classList.contains("respec-offending-element")
+    ).toBeTruthy();
   });
 
   describe("normalize images", () => {
