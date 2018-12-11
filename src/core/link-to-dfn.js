@@ -160,21 +160,28 @@ function findLinkTarget(target, ant, titles, possibleExternalLinks) {
     // only add code to IDL when the definition matches
     const term = ant.textContent.trim();
     const isIDL = dfn.dataset.hasOwnProperty("idl");
-    const { dataset } = dfn;
-    let needsCode = false;
-    if (dfn.textContent.trim() === term) {
-      needsCode = true;
-    } else if (dataset.title === term) {
-      needsCode = true;
-    } else if (dataset.lt) {
-      needsCode = dataset.lt.split("|").includes(term.toLowerCase());
+    const needsCode = shouldWrapByCode(dfn, term);
+    if (!isIDL || needsCode) {
+      wrapInner(ant, document.createElement("code"));
     }
-    if (isIDL && !needsCode) {
-      return true;
-    }
-    wrapInner(ant, document.createElement("code"));
   }
   return true;
+}
+
+/**
+ * @param {HTMLElement} dfn
+ * @param {string} term
+ */
+function shouldWrapByCode(dfn, term) {
+  const { dataset } = dfn;
+  if (dfn.textContent.trim() === term) {
+    return true;
+  } else if (dataset.title === term) {
+    return true;
+  } else if (dataset.lt) {
+    return dataset.lt.split("|").includes(term.toLowerCase());
+  }
+  return false;
 }
 
 function showLinkingError(elems) {
