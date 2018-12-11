@@ -155,8 +155,7 @@ function findLinkTarget(target, ant, titles, possibleExternalLinks) {
   // whitespace, inside the <dfn>.
   if (
     dfn.closest("code,pre") ||
-    (dfn.childNodes.length === 1 &&
-      [...dfn.children].filter(c => c.localName === "code").length === 1)
+    (dfn.childNodes.length === 1 && dfn.childNodes[0].localName === "code")
   ) {
     // only add code to IDL when the definition matches
     const term = ant.textContent.trim();
