@@ -35,7 +35,7 @@ export function run() {
     document.querySelectorAll("pre.def.idl:not(.exclude)")
   ).filter(idl => !idl.closest(".informative"));
 
-  if (!document.querySelector("pre.idl") || idlIndex.length === 0) {
+  if (idlIndex.length === 0) {
     const text = "This specification doesn't declare any Web IDL.";
     const noIDLFound = document.createTextNode(text);
     idlIndexSec.appendChild(noIDLFound);
