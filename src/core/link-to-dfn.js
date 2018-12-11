@@ -150,25 +150,45 @@ function findLinkTarget(target, ant, titles, possibleExternalLinks) {
   if (!ant.hasAttribute("data-link-type")) {
     ant.dataset.linkType = "dfn";
   }
-  // If a definition is <code>, links to it should
-  // also be <code>.
-  //
+  
+  if (isCode(dfn)) {
+    wrapAsCode(ant, dfn);
+  }
+  return true;
+}
+
+/**
+ * Check if a definition is a code
+ * @param {HTMLElement} dfn a definition
+ */
+function isCode(dfn) {
+  if (dfn.closest("code,pre")) {
+    return true;
+  }
   // Note that childNodes.length === 1 excludes
   // definitions that have either other text, or other
   // whitespace, inside the <dfn>.
-  if (
-    dfn.closest("code,pre") ||
-    (dfn.childNodes.length === 1 && dfn.childNodes[0].localName === "code")
-  ) {
-    // only add code to IDL when the definition matches
-    const term = ant.textContent.trim();
-    const isIDL = dfn.dataset.hasOwnProperty("idl");
-    const needsCode = shouldWrapByCode(dfn, term);
-    if (!isIDL || needsCode) {
-      wrapInner(ant, document.createElement("code"));
-    }
+  if (dfn.childNodes.length !== 1) {
+    return false;
   }
-  return true;
+  const [first] = /** @type {NodeListOf<HTMLElement>} */(dfn.childNodes);
+  return first.localName === "code";
+}
+
+
+/**
+ * Wrap links by <code>.
+ * @param {HTMLAnchorElement} ant a link
+ * @param {HTMLElement} dfn a definition
+ */
+function wrapAsCode(ant, dfn) {
+  // only add code to IDL when the definition matches
+  const term = ant.textContent.trim();
+  const isIDL = dfn.dataset.hasOwnProperty("idl");
+  const needsCode = shouldWrapByCode(dfn, term);
+  if (!isIDL || needsCode) {
+    wrapInner(ant, document.createElement("code"));
+  }
 }
 
 /**
