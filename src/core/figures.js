@@ -3,9 +3,8 @@
 // Adds width and height to images, if they are missing.
 // Generates a Table of Figures wherever there is a #tof element.
 
-import { addId, renameElement, wrapInner } from "./utils";
+import { addId, renameElement, showInlineWarning, wrapInner } from "./utils";
 import hyperHTML from "../deps/hyperhtml";
-import { pub } from "./pubsubhub";
 
 export const name = "core/figures";
 
@@ -20,7 +19,7 @@ export function run(conf) {
     if (caption) {
       decorateFigure(fig, caption, i, conf);
       figMap[fig.id] = $(caption.childNodes);
-    } else pub("warn", "A `<figure>` should contain a `<figcaption>`.");
+    } else showInlineWarning(fig, "Found a `<figure>` without a `<figcaption>`");
 
     tof.push(getTableOfFiguresListItem(fig.id, caption));
   });
