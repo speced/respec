@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/link-to-dfn
 // Gives definitions in conf.definitionMap IDs and links <a> tags
 // to the matching definitions.
@@ -69,7 +70,9 @@ export async function run(conf) {
 
   const localLinkSelector =
     "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo)";
-  document.querySelectorAll(localLinkSelector).forEach(ant => {
+  document.querySelectorAll(localLinkSelector).forEach((
+    /** @type {HTMLAnchorElement} */ ant
+  ) => {
     if (ant.classList.contains("externalDFN")) return;
     const linkTargets = getLinkTargets(ant);
     const foundDfn = linkTargets.some(target => {
@@ -101,7 +104,7 @@ export async function run(conf) {
     ),
   ]
     .filter(el => {
-      const closest = el.closest("[data-cite]");
+      const closest = /** @type {HTMLElement} */ (el.closest("[data-cite]"));
       return !closest || closest.dataset.cite !== "";
     })
     .concat([...document.querySelectorAll("dfn.externalDFN")]);
