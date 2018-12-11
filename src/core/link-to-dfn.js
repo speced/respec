@@ -150,7 +150,7 @@ function findLinkTarget(target, ant, titles, possibleExternalLinks) {
   if (!ant.hasAttribute("data-link-type")) {
     ant.dataset.linkType = "dfn";
   }
-  
+
   if (isCode(dfn)) {
     wrapAsCode(ant, dfn);
   }
@@ -171,10 +171,9 @@ function isCode(dfn) {
   if (dfn.childNodes.length !== 1) {
     return false;
   }
-  const [first] = /** @type {NodeListOf<HTMLElement>} */(dfn.childNodes);
+  const [first] = /** @type {NodeListOf<HTMLElement>} */ (dfn.childNodes);
   return first.localName === "code";
 }
-
 
 /**
  * Wrap links by <code>.
