@@ -56,7 +56,7 @@ interface Bar {
           readonly attribute DOMString foo;
         };
         </pre>
-        </section>
+      </section>
       <section class="informative">
         <pre class="idl">
         interface Baz {
