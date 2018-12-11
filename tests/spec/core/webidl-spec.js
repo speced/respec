@@ -224,6 +224,10 @@ describe("Core - WebIDL", () => {
     expect(interfaces[1].id).toEqual("idl-def-docisnotcasesensitive");
     expect(interfaces[2].id).toEqual("idl-def-undocinterface");
     expect(interfaces[2].querySelector(".idlID a")).toBeNull();
+    const namespace = target.querySelector(".idlNamespace");
+    expect(
+      namespace.querySelector(".idlID a").getAttribute("href")
+    ).toEqual("#dom-afterglow");
   });
 
   it("should handle constructors", () => {
@@ -494,13 +498,13 @@ describe("Core - WebIDL", () => {
   // 5
   getter float ();
   // 6
-  getter float withName();
+  getter float withName ();
   // 7
   setter void ();
   // 8
-  setter void named();
+  setter void named ();
   // 9
-  static Promise<RTCCertificate> generateCertificate(AlgorithmIdentifier keygenAlgorithm);
+  static Promise<RTCCertificate>  generateCertificate(AlgorithmIdentifier keygenAlgorithm);
   // 10
   stringifier DOMString identifier();
   // 11
@@ -782,14 +786,14 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
 
   it("should handle callbacks", () => {
     let target = doc.getElementById("cb-basic");
-    let text = "callback SuperStar = void ();";
+    let text = "callback SuperStar = void();";
     expect(target.textContent).toEqual(text);
     expect(target.getElementsByClassName("idlCallback").length).toEqual(1);
     expect(target.querySelector(".idlID").textContent).toEqual("SuperStar");
     expect(target.querySelector(".idlType").textContent).toEqual(" void");
 
     target = doc.getElementById("cb-less-basic");
-    text = "callback CbLessBasic = unsigned long long? (optional any value);";
+    text = "callback CbLessBasic = unsigned long long?(optional any value);";
     expect(target.textContent).toEqual(text);
     expect(target.querySelector(".idlType").textContent).toEqual(
       " unsigned long long?"

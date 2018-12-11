@@ -3,8 +3,8 @@
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
-import { pub } from "./pubsubhub";
 import marked from "../deps/marked";
+import { pub } from "./pubsubhub";
 export const name = "core/utils";
 
 marked.setOptions({
@@ -315,20 +315,62 @@ export function removeReSpec(doc) {
 
 /**
  * Adds error class to each element while emitting a warning
- * @param {Element|Array:Elements} elems
+ * @param {Element|Element[]} elems
+ * @param {String} msg message to show in warning
+ * @param {String} title error message to add on each element
+ */
+export function showInlineWarning(elems, msg, title) {
+  if (!Array.isArray(elems)) elems = [elems];
+  const links = elems
+    .map((element, i) => {
+      markAsOffending(element, msg, title);
+      return generateMarkdownLink(element, i);
+    })
+    .join(", ");
+  pub("warn", msg + ` at: ${links}.`);
+  console.warn(msg, elems);
+}
+
+/**
+ * Adds error class to each element while emitting a warning
+ * @param {Element|Element[]} elems
  * @param {String} msg message to show in warning
  * @param {String} title error message to add on each element
  */
 export function showInlineError(elems, msg, title) {
   if (!Array.isArray(elems)) elems = [elems];
-  if (!elems.length) return;
-  if (!title) title = msg;
-  elems.forEach(elem => {
-    elem.classList.add("respec-offending-element");
-    elem.setAttribute("title", title);
-  });
-  pub("warn", msg + " See developer console for details.");
-  console.warn(msg, elems);
+  const links = elems
+    .map((element, i) => {
+      markAsOffending(element, msg, title);
+      return generateMarkdownLink(element, i);
+    })
+    .join(", ");
+  pub("error", msg + ` at: ${links}.`);
+  console.error(msg, elems);
+}
+
+/**
+ * Adds error class to each element while emitting a warning
+ * @param {Element} elem
+ * @param {String} msg message to show in warning
+ * @param {String} title error message to add on each element
+ */
+function markAsOffending(elem, msg, title) {
+  elem.classList.add("respec-offending-element");
+  if (!elem.hasAttribute("title")) {
+    elem.setAttribute("title", title || msg);
+  }
+  if (!elem.id) {
+    addId(elem, "respec-offender");
+  }
+}
+
+/**
+ * @param {Element} element
+ * @param {number} i
+ */
+function generateMarkdownLink(element, i) {
+  return `[${i + 1}](#${element.id})`;
 }
 
 // STRING HELPERS
@@ -564,20 +606,16 @@ export async function fetchAndCache(request, maxAge = 86400000) {
 /**
  * Spreads one iterable into another.
  *
- * @param {Iterable} collector
- * @param {any|Iterable} item
+ * @param {Array} collector
+ * @param {any|Array} item
  * @returns {Array}
  */
 export function flatten(collector, item) {
-  const isObject = typeof item === "object";
-  const isIterable =
-    Object(item)[Symbol.iterator] && typeof item.values === "function";
-  const items = !isObject
+  const items = !Array.isArray(item)
     ? [item]
-    : isIterable
-    ? [...item.values()].reduce(flatten, [])
-    : Object.values(item);
-  return [...collector, ...items];
+    : [...item.values()].reduce(flatten, []);
+  collector.push(...items);
+  return collector;
 }
 
 // --- DOM HELPERS -------------------------------
@@ -630,8 +668,8 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
 /**
  * Returns all the descendant text nodes of an element.
  * @param {Node} el
- * @param {Array:String} exclusions node localName to exclude
- * @returns {Array:String}
+ * @param {string[]} exclusions node localName to exclude
+ * @returns {string[]}
  */
 export function getTextNodes(el, exclusions = []) {
   const acceptNode = node => {
@@ -752,14 +790,11 @@ export function renameElement(elem, newName) {
   if (elem.localName === newName) return elem;
   const newElement = elem.ownerDocument.createElement(newName);
   // copy attributes
-  for (const attribute of [...elem.attributes]) {
-    const { name, value } = attribute;
+  for (const { name, value } of elem.attributes) {
     newElement.setAttribute(name, value);
   }
   // copy child nodes
-  while (elem.firstChild) {
-    newElement.appendChild(elem.firstChild);
-  }
+  newElement.append(...elem.childNodes);
   elem.replaceWith(newElement);
   return newElement;
 }
@@ -794,9 +829,7 @@ export function refTypeFromContext(ref, element) {
  * @param {Node} wrapper wrapper node to be appended
  */
 export function wrapInner(outer, wrapper) {
-  while (outer.firstChild) {
-    wrapper.appendChild(outer.firstChild);
-  }
+  wrapper.append(...outer.childNodes);
   outer.appendChild(wrapper);
   return outer;
 }

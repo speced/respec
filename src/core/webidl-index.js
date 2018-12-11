@@ -27,7 +27,7 @@ export function run() {
     } else {
       header.innerHTML = "IDL Index";
     }
-    idlIndexSec.insertAdjacentElement("afterbegin", header);
+    idlIndexSec.prepend(header);
   }
 
   //filter out the IDL marked with class="exclude" and the IDL in non-normative sections

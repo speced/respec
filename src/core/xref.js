@@ -4,8 +4,8 @@
 //   so later they can be handled by core/link-to-dfn.
 // https://github.com/w3c/respec/issues/1662
 
-import { norm as normalize, showInlineError } from "./utils";
 import * as IDB from "../deps/idb";
+import { norm as normalize, showInlineWarning } from "./utils";
 
 const API_URL = new URL(
   "https://wt-466c7865b463a6c4cbb820b42dde9e58-0.sandbox.auth0-extend.com/xref-proto-2"
@@ -237,7 +237,7 @@ function addDataCiteToTerms(results, xrefMap, conf) {
             `Adding an informative reference to "${term}" from "${cite}" ` +
             "in a normative section";
           const title = "Error: Informative reference in normative section";
-          showInlineError(entry.elem, msg, title);
+          showInlineWarning(entry.elem, msg, title);
         }
       }
     });
@@ -270,7 +270,7 @@ function disambiguate(fetchedData, context, term) {
       `Couldn't match "**${term}**" to anything in the document or to any other spec. ` +
       "Please provide a [`data-cite`](https://github.com/w3c/respec/wiki/data--cite) attribute for it.";
     const title = "Error: No matching dfn found.";
-    if (!elem.dataset.cite) showInlineError(elem, msg, title);
+    if (!elem.dataset.cite) showInlineWarning(elem, msg, title);
     return null;
   }
 
@@ -287,6 +287,6 @@ function disambiguate(fetchedData, context, term) {
       .map(s => `**${s}**`)
       .join(", ")}.`;
   const title = "Error: Linking an ambiguous dfn.";
-  showInlineError(elem, msg, title);
+  showInlineWarning(elem, msg, title);
   return null;
 }

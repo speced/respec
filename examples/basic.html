@@ -2,17 +2,23 @@
 <html>
   <head>
     <meta charset='utf-8'>
-    <title>Replace me with a real title</title>
+    <title>
+      Replace me with a real title
+    </title>
     <script src='../js/deps/require.js' data-main='../js/profile-w3c-common'
-      async class='remove'></script>
+    async class='remove'></script>
     <script class='remove'>
       var respecConfig = {
         specStatus: "ED",
+        subtitle: "Subtitle",
+        shortName: "shortname-api",
         editors: [{
           name: "Your Name",
           url: "https://your-site.com",
         }],
         github: "https://github.com/w3c/some-API/",
+        testSuiteURI: "https://w3c-test.org/some-API/",
+        implementationReportURI: "https://w3c.github.io/test-results/some-API",
       };
     </script>
   </head>
@@ -27,8 +33,30 @@
         This is required.
       </p>
     </section>
+    <section class="introductory" id="overview">
+      <h2>
+        Overview
+      </h2>
+      <p>
+        This section has a CSS class "<code>introductory</code>", which means
+        it will not appear in the <abbr title="Table of Contents">TOC</abbr>.
+        Example Link to Section <a href="#logo"></a>.
+      </p>
+    </section>
+    <section class="informative" id="intro">
+      <h2>
+        Introduction
+      </h2>
+      <p>
+        This section has a CSS class "<code>informative</code>", so it is
+        listed in the TOC. ReSpec will list this reference as non-normative
+        since this is an informative section [[DOM]].
+      </p>
+    </section>
     <section data-dfn-for="Foo">
-      <h2><dfn>Foo</dfn> interface</h2>
+      <h2>
+        <dfn>Foo</dfn> interface
+      </h2>
       <pre class="idl">
       [Constructor]
       interface Foo {
@@ -36,9 +64,22 @@
         void doTheFoo();
       };
       </pre>
-      <p>The <a>Foo</a> interface is nice. Lets you do stuff.</p>
-      <p>The <dfn>bar</dfn> attribute, returns 🍺.</p>
-      <p>The <dfn>doTheFoo()</dfn> method, returns nothing.</p>
+      <p>
+        The <a>Foo</a> interface is nice. Lets you do stuff.
+      </p>
+      <p>
+        The <dfn>bar</dfn> attribute, returns 🍺.
+      </p>
+      <p>
+        The <dfn>doTheFoo()</dfn> method, returns nothing.
+      </p>
+      <p>
+        ReSpec will list this reference as normative [[ECMASCRIPT]].
+      </p>
+      <p>
+        This is an example of a non-normative reference in a normative section
+        [[?HTML]]
+      </p>
       <pre class="js example" title="Usage example">
         const foo = new Foo();
         if (foo.bar === "my bar") {
@@ -46,5 +87,28 @@
         }
       </pre>
     </section>
+    <section id="logo">
+      <h2>
+        Figure
+      </h2>
+      <figure id="figure">
+        <img src="figure.svg" alt="W3C Logo">
+        <figcaption>
+          The W3C logo
+        </figcaption>
+      </figure>
+      <p>
+        Link to <a href="#figure"></a>
+      </p>
+    </section>
+    <section id="idl-index" class="appendix">
+      <h2>
+        IDL Index
+      </h2>
+      <p>
+        All the Web IDL in this specification is collected in this section.
+      </p>
+    </section>
+    <section id="tof" class="informative appendix"></section>
   </body>
 </html>

@@ -1,11 +1,17 @@
 // Module core/link-to-dfn
 // Gives definitions in conf.definitionMap IDs and links <a> tags
 // to the matching definitions.
+import {
+  addId,
+  getLinkTargets,
+  showInlineError,
+  showInlineWarning,
+  wrapInner,
+} from "./utils";
+import { run as addExternalReferences } from "./xref";
+import { lang as defaultLang } from "./l10n";
 import { linkInlineCitations } from "./data-cite";
 import { pub } from "./pubsubhub";
-import { lang as defaultLang } from "./l10n";
-import { addId, getLinkTargets, wrapInner } from "./utils";
-import { run as addExternalReferences } from "./xref";
 export const name = "core/link-to-dfn";
 const l10n = {
   en: {
@@ -37,15 +43,6 @@ export async function run(conf) {
             // Don't overwrite <dfn> definitions.
             return;
           }
-          // Only complain if the user provides 2 <dfn>s
-          // for the same term.
-          dfn.classList.add("respec-offending-element");
-          if (!dfn.title) {
-            dfn.title = l10n[lang].duplicate;
-          }
-          if (!dfn.id) {
-            addId(dfn, null, title);
-          }
           listOfDuplicateDfns.push(dfn);
         }
       }
@@ -59,12 +56,11 @@ export async function run(conf) {
       }
     });
     if (listOfDuplicateDfns.length > 0) {
-      const dfnsList = listOfDuplicateDfns
-        .map((elem, i) => {
-          return `[${i + 1}](#${elem.id})`;
-        })
-        .join(", ");
-      pub("error", `Duplicate definitions of '${title}' at: ${dfnsList}.`);
+      showInlineError(
+        listOfDuplicateDfns,
+        `Duplicate definitions of '${title}'`,
+        l10n[lang].duplicate
+      );
     }
   });
 
@@ -131,7 +127,7 @@ export async function run(conf) {
     });
     if (!foundDfn && linkTargets.length !== 0) {
       // ignore WebIDL
-      if (!ant.closest("pre.idl, span.idlMemberType, span.idlTypedefType")) {
+      if (!ant.closest("pre.idl")) {
         if (ant.dataset.cite === "") {
           badLinks.push(ant);
         } else {
@@ -180,14 +176,12 @@ export async function run(conf) {
 
 function showLinkingError(elems) {
   elems.forEach(elem => {
-    elem.classList.add("respec-offending-element");
-    elem.title = "Linking error: not matching <dfn>";
-    pub(
-      "warn",
+    showInlineWarning(
+      elem,
       `Found linkless \`<a>\` element with text "${
         elem.textContent
-      }" but no matching \`<dfn>\`.`
+      }" but no matching \`<dfn>\``,
+      "Linking error: not matching <dfn>"
     );
-    console.warn("Linkless element:", elem);
   });
 }

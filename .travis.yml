@@ -8,13 +8,6 @@ install:
   - npm run build
   - npm run build:respec-w3c-common
 
-# use sudo to workaround https://github.com/w3c/respec/issues/1462 
-sudo: required
-
-addons:
-#  firefox: latest
-  chrome: stable
-
 cache:
   directories:
     - node_modules # NPM packages

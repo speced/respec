@@ -486,18 +486,17 @@ describe("Core - Utils", () => {
   });
 
   describe("flatten()", () => {
-    it("flattens iterables", () => {
+    it("flattens arrays", () => {
       expect(utils.flatten(["pass"], [123, 456])).toEqual(["pass", 123, 456]);
       const map = new Map([["key-fail", "pass"], ["anotherKey", 123]]);
-      expect(utils.flatten([], map)).toEqual(["pass", 123]);
-      expect(utils.flatten([], new Set(["pass", 123]))).toEqual(["pass", 123]);
-      expect(utils.flatten([], { "key-fail": "pass", other: 123 })).toEqual([
-        "pass",
-        123,
-      ]);
+      expect(utils.flatten([], map)).toEqual([map]);
+      const set = new Set(["pass", 123]);
+      expect(utils.flatten([], set)).toEqual([set]);
+      const object = { "key-fail": "pass", other: 123 };
+      expect(utils.flatten([], object)).toEqual([object]);
     });
 
-    it("flattens nested iterables as a reducer", () => {
+    it("flattens nested arrays as a reducer", () => {
       const input = [
         new Map([["fail", "123"]]),
         new Set([456]),
@@ -505,7 +504,16 @@ describe("Core - Utils", () => {
         { key: "11" },
       ];
       const output = input.reduce(utils.flatten, ["first", 0]);
-      expect(output).toEqual(["first", 0, "123", 456, 7, 8, 9, 10, "11"]);
+      expect(output).toEqual([
+        "first",
+        0,
+        input[0],
+        input[1],
+        7,
+        8,
+        input[2][1][1][0],
+        input[3],
+      ]);
     });
 
     it("flattens sparse and arrays", () => {

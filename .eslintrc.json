@@ -16,16 +16,19 @@
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "dot-notation": "error",
     "indent": 0,
-    "quotes": 0,
-    "semi": ["error", "always"],
     "no-console": 0,
+    "no-duplicate-imports": 2,
+    "no-eval": "error",
+    "no-implied-eval": "error",
     "no-unused-vars": 2,
     "no-var": 2,
+    "object-shorthand": 2,
     "one-var": ["error", "never"],
     "prefer-arrow-callback": 2,
     "prefer-const": 2,
-    "no-eval": "error",
-    "no-implied-eval": "error"
+    "quotes": 0,
+    "semi": ["error", "always"],
+    "sort-imports": 2
   },
   "globals": {
     "flushIframes": true,

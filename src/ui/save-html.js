@@ -1,10 +1,10 @@
 // Module ui/save-html
 // Saves content to HTML when asked to
-import { ui } from "core/ui";
-import { l10n, lang } from "core/l10n";
-import { pub } from "core/pubsubhub";
-import { rsDocToDataURL } from "core/exporter";
-import "deps/hyperhtml";
+import { l10n, lang } from "../core/l10n";
+import hyperHTML from "../deps/hyperhtml";
+import { pub } from "../core/pubsubhub";
+import { rsDocToDataURL } from "../core/exporter";
+import { ui } from "../core/ui";
 
 export const name = "ui/save-html";
 

@@ -9,10 +9,7 @@ const glob = require("glob");
 })();
 
 async function buildHandlebars() {
-  const paths = [
-    "js/*/templates/*.css",
-    "js/core/templates/webidl-contiguous/*.html",
-  ]
+  const paths = ["js/*/templates/*.css"]
     .map(path => glob.sync(path, { nonull: true }))
     .reduce((res, file) => res.concat(file), [])
     .join(" ");

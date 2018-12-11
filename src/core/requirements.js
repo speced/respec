@@ -9,8 +9,8 @@
 // 2.  It allows referencing requirements by their ID simply using an empty <a>
 //     element with its href pointing to the requirement it should be referencing
 //     and a class of "reqRef".
+import hyperHTML from "../deps/hyperhtml";
 import { pub } from "./pubsubhub";
-import "../deps/hyperhtml";
 
 export const name = "core/requirements";
 
