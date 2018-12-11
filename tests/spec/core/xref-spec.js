@@ -218,7 +218,7 @@ describe("Core — xref", () => {
     const five = doc.getElementById("five");
     expect(five.href).toEqual("");
     expect(five.classList.contains("respec-offending-element")).toBeTruthy();
-    expect(five.title).toEqual(`Couldn't find a match for "NOT-FOUND".`);
+    expect(five.title).toEqual(`Couldn't find a match for "NOT-FOUND"`);
   });
 
   it("treats terms as local if empty data-cite on parent", async () => {

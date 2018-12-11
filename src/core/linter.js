@@ -4,6 +4,7 @@
  * Core linter module. Exports a linter object.
  */
 import { pub } from "./pubsubhub";
+import { showInlineWarning } from "./utils";
 export const name = "core/linter";
 const privates = new WeakMap();
 
@@ -41,28 +42,24 @@ const baseResult = {
 
 async function toLinterWarning(promiseToLint) {
   const results = await promiseToLint;
-  results
-    .map(async resultPromise => {
-      const result = await resultPromise;
-      const output = { ...baseResult, ...result };
-      const {
-        description,
-        help,
-        howToFix,
-        name,
-        occurrences,
-        offendingElements,
-      } = output;
-      const msg = `${description} ${howToFix} ${help} ("${name}" x ${occurrences})`;
-      offendingElements.forEach(elem => {
-        elem.classList.add("respec-offending-element");
-      });
-      console.warn(`Linter (${name}):`, description, ...offendingElements);
-      return msg;
-    })
-    .forEach(async msgPromise => {
-      pub("warn", await msgPromise);
-    });
+  results.forEach(async resultPromise => {
+    const result = await resultPromise;
+    const output = { ...baseResult, ...result };
+    const {
+      description,
+      help,
+      howToFix,
+      name,
+      occurrences,
+      offendingElements,
+    } = output;
+    const message = `Linter (${name}): ${description} ${howToFix} ${help}`;
+    if (offendingElements.length) {
+      showInlineWarning(offendingElements, `${message} Occured`);
+    } else {
+      pub("warn", `${message} (Count: ${occurrences})`);
+    }
+  });
 }
 
 export function run(conf) {

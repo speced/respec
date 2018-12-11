@@ -13,7 +13,7 @@
 //  - respecRFC2119: a list of the number of times each RFC2119
 //    key word was used.  NOTE: While each member is a counter, at this time
 //    the counter is not used.
-import { getTextNodes, refTypeFromContext } from "./utils";
+import { getTextNodes, refTypeFromContext, showInlineWarning } from "./utils";
 import hyperHTML from "../deps/hyperhtml";
 import { idlStringToHtml } from "./inline-idl-parser";
 import { pub } from "./pubsubhub";
@@ -99,16 +99,11 @@ export function run(conf) {
             df.appendChild(document.createTextNode("]"));
 
             if (illegal && !conf.normativeReferences.has(ref)) {
-              cite.classList.add("respec-offending-element");
-              const msg =
+              showInlineWarning(
+                cite,
                 "Normative references in informative sections are not allowed. " +
-                `Remove '!' from the start of the reference \`[[!${ref}]]\`. `;
-              pub(
-                "warn",
-                msg + "See developer console to find offending element."
+                  `Remove '!' from the start of the reference \`[[!${ref}]]\``
               );
-              cite.title = msg;
-              console.warn(msg, cite);
             }
 
             if (type === "informative" && !illegal) {
