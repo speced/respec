@@ -23,49 +23,12 @@ const lang = defaultLang in l10n ? defaultLang : "en";
 
 export async function run(conf) {
   document.normalize();
-  const titles = {};
-  Object.keys(conf.definitionMap).forEach(title => {
-    titles[title] = {};
-    const listOfDuplicateDfns = [];
-    conf.definitionMap[title].forEach(dfn => {
-      if (dfn.dataset.idl === undefined) {
-        // Non-IDL definitions aren't "for" an interface.
-        delete dfn.dataset.dfnFor;
-      }
-      const { dfnFor = "" } = dfn.dataset;
-      if (dfnFor in titles[title]) {
-        // We want <dfn> definitions to take precedence over
-        // definitions from WebIDL. WebIDL definitions wind
-        // up as <span>s instead of <dfn>.
-        const oldIsDfn = titles[title][dfnFor].localName === "dfn";
-        const newIsDfn = dfn.localName === "dfn";
-        if (oldIsDfn) {
-          if (!newIsDfn) {
-            // Don't overwrite <dfn> definitions.
-            return;
-          }
-          listOfDuplicateDfns.push(dfn);
-        }
-      }
-      titles[title][dfnFor] = dfn;
-      if (!dfn.id) {
-        if (dfn.dataset.idl) {
-          addId(dfn, "dom", (dfnFor ? dfnFor + "-" : "") + title);
-        } else {
-          addId(dfn, "dfn", title);
-        }
-      }
-    });
-    if (listOfDuplicateDfns.length > 0) {
-      showInlineError(
-        listOfDuplicateDfns,
-        `Duplicate definitions of '${title}'`,
-        l10n[lang].duplicate
-      );
-    }
-  });
 
+  const titles = extractTitles(conf.definitionMap);
+
+  /** @type {Element[]} */
   const possibleExternalLinks = [];
+  /** @type {HTMLAnchorElement[]} */
   const badLinks = [];
 
   const localLinkSelector =
@@ -127,6 +90,61 @@ export async function run(conf) {
   pub("end", "core/link-to-dfn");
 }
 
+/**
+ * @param {Record<string, HTMLElement[]>} definitionMap
+ */
+function extractTitles(definitionMap) {
+  /** @type {Record<string, Record<string, HTMLElement>>} */
+  const titles = {};
+  Object.keys(definitionMap).forEach(title => {
+    titles[title] = {};
+    const listOfDuplicateDfns = [];
+    definitionMap[title].forEach(dfn => {
+      if (dfn.dataset.idl === undefined) {
+        // Non-IDL definitions aren't "for" an interface.
+        delete dfn.dataset.dfnFor;
+      }
+      const { dfnFor = "" } = dfn.dataset;
+      if (dfnFor in titles[title]) {
+        // We want <dfn> definitions to take precedence over
+        // definitions from WebIDL. WebIDL definitions wind
+        // up as <span>s instead of <dfn>.
+        const oldIsDfn = titles[title][dfnFor].localName === "dfn";
+        const newIsDfn = dfn.localName === "dfn";
+        if (oldIsDfn) {
+          if (!newIsDfn) {
+            // Don't overwrite <dfn> definitions.
+            return;
+          }
+          listOfDuplicateDfns.push(dfn);
+        }
+      }
+      titles[title][dfnFor] = dfn;
+      if (!dfn.id) {
+        if (dfn.dataset.idl) {
+          addId(dfn, "dom", (dfnFor ? dfnFor + "-" : "") + title);
+        } else {
+          addId(dfn, "dfn", title);
+        }
+      }
+    });
+    if (listOfDuplicateDfns.length > 0) {
+      showInlineError(
+        listOfDuplicateDfns,
+        `Duplicate definitions of '${title}'`,
+        l10n[lang].duplicate
+      );
+    }
+  });
+  return titles;
+}
+
+/**
+ * @param {{ for: string, title: string }} target
+ * @param {HTMLAnchorElement} ant
+ * @param {Record<string, Record<string, HTMLElement>>} titles
+ * @param {Element[]} possibleExternalLinks
+ */
 function findLinkTarget(target, ant, titles, possibleExternalLinks) {
   const { linkFor } = ant.dataset;
   if (!titles[target.title] || !titles[target.title][target.for]) {
