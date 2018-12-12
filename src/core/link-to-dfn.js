@@ -84,7 +84,6 @@ function mapTitleToDfns(definitionMap) {
   Object.keys(definitionMap).forEach(title => {
     const { result, duplicates } = collectDfns(definitionMap, title);
     titleToDfns[title] = result;
-    assignDfnIds(result, title);
     if (duplicates.length > 0) {
       showInlineError(
         duplicates,
@@ -125,22 +124,22 @@ function collectDfns(definitionMap, title) {
       }
     }
     result[dfnFor] = dfn;
+    assignDfnId(dfn, title);
   });
   return { result, duplicates };
 }
 
 /**
- * @param {Record<string, HTMLElement>} dfns
+ * @param {HTMLElement} dfn
  * @param {string} title
  */
-function assignDfnIds(dfns, title) {
-  for (const [dfnFor, dfn] of Object.entries(dfns)) {
-    if (!dfn.id) {
-      if (dfn.dataset.idl) {
-        addId(dfn, "dom", (dfnFor ? dfnFor + "-" : "") + title);
-      } else {
-        addId(dfn, "dfn", title);
-      }
+function assignDfnId(dfn, title) {
+  if (!dfn.id) {
+    const { dfnFor } = dfn.dataset;
+    if (dfn.dataset.idl) {
+      addId(dfn, "dom", (dfnFor ? dfnFor + "-" : "") + title);
+    } else {
+      addId(dfn, "dfn", title);
     }
   }
 }
