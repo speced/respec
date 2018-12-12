@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/link-to-dfn
 // Gives definitions in conf.definitionMap IDs and links <a> tags
 // to the matching definitions.
@@ -69,61 +70,13 @@ export async function run(conf) {
 
   const localLinkSelector =
     "a[data-cite=''], a:not([href]):not([data-cite]):not(.logo)";
-  document.querySelectorAll(localLinkSelector).forEach(ant => {
+  document.querySelectorAll(localLinkSelector).forEach((
+    /** @type {HTMLAnchorElement} */ ant
+  ) => {
     if (ant.classList.contains("externalDFN")) return;
     const linkTargets = getLinkTargets(ant);
-    const { linkFor } = ant.dataset;
     const foundDfn = linkTargets.some(target => {
-      if (titles[target.title] && titles[target.title][target.for]) {
-        const dfn = titles[target.title][target.for];
-        if (dfn.dataset.cite) {
-          ant.dataset.cite = dfn.dataset.cite;
-        } else if (linkFor && !titles[linkFor.toLowerCase()]) {
-          possibleExternalLinks.push(ant);
-        } else if (dfn.classList.contains("externalDFN")) {
-          // data-lt[0] serves as unique id for the dfn which this element references
-          const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-          ant.dataset.lt = lt[0] || dfn.textContent;
-          possibleExternalLinks.push(ant);
-        } else {
-          ant.href = "#" + dfn.id;
-          ant.classList.add("internalDFN");
-        }
-        // add a bikeshed style indication of the type of link
-        if (!ant.hasAttribute("data-link-type")) {
-          ant.dataset.linkType = "dfn";
-        }
-        // If a definition is <code>, links to it should
-        // also be <code>.
-        //
-        // Note that childNodes.length === 1 excludes
-        // definitions that have either other text, or other
-        // whitespace, inside the <dfn>.
-        if (
-          dfn.closest("code,pre") ||
-          (dfn.childNodes.length === 1 &&
-            [...dfn.children].filter(c => c.localName === "code").length === 1)
-        ) {
-          // only add code to IDL when the definition matches
-          const term = ant.textContent.trim();
-          const isIDL = dfn.dataset.hasOwnProperty("idl");
-          const { dataset } = dfn;
-          let needsCode = false;
-          if (dfn.textContent.trim() === term) {
-            needsCode = true;
-          } else if (dataset.title === term) {
-            needsCode = true;
-          } else if (dataset.lt) {
-            needsCode = dataset.lt.split("|").includes(term.toLowerCase());
-          }
-          if (isIDL && !needsCode) {
-            return true;
-          }
-          wrapInner(ant, document.createElement("code"));
-        }
-        return true;
-      }
-      return false;
+      return findLinkTarget(target, ant, titles, possibleExternalLinks);
     });
     if (!foundDfn && linkTargets.length !== 0) {
       // ignore WebIDL
@@ -151,7 +104,7 @@ export async function run(conf) {
     ),
   ]
     .filter(el => {
-      const closest = el.closest("[data-cite]");
+      const closest = /** @type {HTMLElement} */ (el.closest("[data-cite]"));
       return !closest || closest.dataset.cite !== "";
     })
     .concat([...document.querySelectorAll("dfn.externalDFN")]);
@@ -172,6 +125,85 @@ export async function run(conf) {
   // Added message for legacy compat with Aria specs
   // See https://github.com/w3c/respec/issues/793
   pub("end", "core/link-to-dfn");
+}
+
+function findLinkTarget(target, ant, titles, possibleExternalLinks) {
+  const { linkFor } = ant.dataset;
+  if (!titles[target.title] || !titles[target.title][target.for]) {
+    return false;
+  }
+  const dfn = titles[target.title][target.for];
+  if (dfn.dataset.cite) {
+    ant.dataset.cite = dfn.dataset.cite;
+  } else if (linkFor && !titles[linkFor.toLowerCase()]) {
+    possibleExternalLinks.push(ant);
+  } else if (dfn.classList.contains("externalDFN")) {
+    // data-lt[0] serves as unique id for the dfn which this element references
+    const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
+    ant.dataset.lt = lt[0] || dfn.textContent;
+    possibleExternalLinks.push(ant);
+  } else {
+    ant.href = "#" + dfn.id;
+    ant.classList.add("internalDFN");
+  }
+  // add a bikeshed style indication of the type of link
+  if (!ant.hasAttribute("data-link-type")) {
+    ant.dataset.linkType = "dfn";
+  }
+
+  if (isCode(dfn)) {
+    wrapAsCode(ant, dfn);
+  }
+  return true;
+}
+
+/**
+ * Check if a definition is a code
+ * @param {HTMLElement} dfn a definition
+ */
+function isCode(dfn) {
+  if (dfn.closest("code,pre")) {
+    return true;
+  }
+  // Note that childNodes.length === 1 excludes
+  // definitions that have either other text, or other
+  // whitespace, inside the <dfn>.
+  if (dfn.childNodes.length !== 1) {
+    return false;
+  }
+  const [first] = /** @type {NodeListOf<HTMLElement>} */ (dfn.childNodes);
+  return first.localName === "code";
+}
+
+/**
+ * Wrap links by <code>.
+ * @param {HTMLAnchorElement} ant a link
+ * @param {HTMLElement} dfn a definition
+ */
+function wrapAsCode(ant, dfn) {
+  // only add code to IDL when the definition matches
+  const term = ant.textContent.trim();
+  const isIDL = dfn.dataset.hasOwnProperty("idl");
+  const needsCode = shouldWrapByCode(dfn, term);
+  if (!isIDL || needsCode) {
+    wrapInner(ant, document.createElement("code"));
+  }
+}
+
+/**
+ * @param {HTMLElement} dfn
+ * @param {string} term
+ */
+function shouldWrapByCode(dfn, term) {
+  const { dataset } = dfn;
+  if (dfn.textContent.trim() === term) {
+    return true;
+  } else if (dataset.title === term) {
+    return true;
+  } else if (dataset.lt) {
+    return dataset.lt.split("|").includes(term.toLowerCase());
+  }
+  return false;
 }
 
 function showLinkingError(elems) {
