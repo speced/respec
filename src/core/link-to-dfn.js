@@ -80,15 +80,15 @@ export async function run(conf) {
     });
     if (!foundDfn && linkTargets.length !== 0) {
       // ignore WebIDL
-      if (!ant.closest("pre.idl")) {
-        if (ant.dataset.cite === "") {
-          badLinks.push(ant);
-        } else {
-          possibleExternalLinks.push(ant);
-        }
+      if (ant.closest("pre.idl")) {
+        ant.replaceWith(...ant.childNodes);
         return;
       }
-      ant.replaceWith(...ant.childNodes);
+      if (ant.dataset.cite === "") {
+        badLinks.push(ant);
+      } else {
+        possibleExternalLinks.push(ant);
+      }
     }
   });
 
