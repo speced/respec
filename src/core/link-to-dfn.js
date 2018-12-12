@@ -57,23 +57,8 @@ export async function run(conf) {
 
   showLinkingError(badLinks);
 
-  // These are additional references that need to be looked up externally.
-  // The `possibleExternalLinks` above doesn't include references that match selectors like
-  //   a[data-cite="spec"], dfn[data-cite="spec"], dfn.externalDFN
-  const additionalExternalLinks = [
-    ...document.querySelectorAll(
-      "a[data-cite]:not([data-cite='']):not([data-cite*='#']), " +
-        "dfn[data-cite]:not([data-cite='']):not([data-cite*='#'])"
-    ),
-  ]
-    .filter(el => {
-      const closest = /** @type {HTMLElement} */ (el.closest("[data-cite]"));
-      return !closest || closest.dataset.cite !== "";
-    })
-    .concat([...document.querySelectorAll("dfn.externalDFN")]);
-
   if (conf.xref) {
-    possibleExternalLinks.push(...additionalExternalLinks);
+    possibleExternalLinks.push(...findExplicitExternalLinks());
     try {
       await addExternalReferences(conf, possibleExternalLinks);
     } catch (error) {
@@ -222,6 +207,22 @@ function shouldWrapByCode(dfn, term) {
     return dataset.lt.split("|").includes(term.toLowerCase());
   }
   return false;
+}
+
+/**
+ * Find additional references that need to be looked up externally.
+ * Examples: a[data-cite="spec"], dfn[data-cite="spec"], dfn.externalDFN
+ */
+function findExplicitExternalLinks() {
+  const selector =
+    "a[data-cite]:not([data-cite='']):not([data-cite*='#']), " +
+    "dfn[data-cite]:not([data-cite='']):not([data-cite*='#'])";
+  return [...document.querySelectorAll(selector)]
+    .filter(el => {
+      const closest = /** @type {HTMLElement} */ (el.closest("[data-cite]"));
+      return !closest || closest.dataset.cite !== "";
+    })
+    .concat([...document.querySelectorAll("dfn.externalDFN")]);
 }
 
 function showLinkingError(elems) {
