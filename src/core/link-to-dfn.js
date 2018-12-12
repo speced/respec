@@ -24,7 +24,7 @@ const lang = defaultLang in l10n ? defaultLang : "en";
 export async function run(conf) {
   document.normalize();
 
-  const titles = extractTitles(conf.definitionMap);
+  const titleToDfns = mapTitleToDfns(conf.definitionMap);
 
   /** @type {Element[]} */
   const possibleExternalLinks = [];
@@ -39,7 +39,7 @@ export async function run(conf) {
     if (ant.classList.contains("externalDFN")) return;
     const linkTargets = getLinkTargets(ant);
     const foundDfn = linkTargets.some(target => {
-      return findLinkTarget(target, ant, titles, possibleExternalLinks);
+      return findLinkTarget(target, ant, titleToDfns, possibleExternalLinks);
     });
     if (!foundDfn && linkTargets.length !== 0) {
       // ignore WebIDL
@@ -78,67 +78,74 @@ export async function run(conf) {
 /**
  * @param {Record<string, HTMLElement[]>} definitionMap
  */
-function extractTitles(definitionMap) {
+function mapTitleToDfns(definitionMap) {
   /** @type {Record<string, Record<string, HTMLElement>>} */
-  const titles = {};
+  const titleToDfns = {};
   Object.keys(definitionMap).forEach(title => {
-    titles[title] = {};
-    const listOfDuplicateDfns = [];
-    definitionMap[title].forEach(dfn => {
-      if (dfn.dataset.idl === undefined) {
-        // Non-IDL definitions aren't "for" an interface.
-        delete dfn.dataset.dfnFor;
-      }
-      const { dfnFor = "" } = dfn.dataset;
-      if (dfnFor in titles[title]) {
-        // We want <dfn> definitions to take precedence over
-        // definitions from WebIDL. WebIDL definitions wind
-        // up as <span>s instead of <dfn>.
-        const oldIsDfn = titles[title][dfnFor].localName === "dfn";
-        const newIsDfn = dfn.localName === "dfn";
-        if (oldIsDfn) {
-          if (!newIsDfn) {
-            // Don't overwrite <dfn> definitions.
-            return;
-          }
-          listOfDuplicateDfns.push(dfn);
-        }
-      }
-      titles[title][dfnFor] = dfn;
-      if (!dfn.id) {
-        if (dfn.dataset.idl) {
-          addId(dfn, "dom", (dfnFor ? dfnFor + "-" : "") + title);
-        } else {
-          addId(dfn, "dfn", title);
-        }
-      }
-    });
-    if (listOfDuplicateDfns.length > 0) {
+    const { result, duplicates } = collectDfns(definitionMap, title);
+    titleToDfns[title] = result;
+    if (duplicates.length > 0) {
       showInlineError(
-        listOfDuplicateDfns,
+        duplicates,
         `Duplicate definitions of '${title}'`,
         l10n[lang].duplicate
       );
     }
   });
-  return titles;
+  return titleToDfns;
+}
+
+function collectDfns(definitionMap, title) {
+  /** @type {Record<string, HTMLElement>} */
+  const result = {};
+  const duplicates = [];
+  definitionMap[title].forEach(dfn => {
+    if (dfn.dataset.idl === undefined) {
+      // Non-IDL definitions aren't "for" an interface.
+      delete dfn.dataset.dfnFor;
+    }
+    const { dfnFor = "" } = dfn.dataset;
+    if (dfnFor in result) {
+      // We want <dfn> definitions to take precedence over
+      // definitions from WebIDL. WebIDL definitions wind
+      // up as <span>s instead of <dfn>.
+      const oldIsDfn = result[dfnFor].localName === "dfn";
+      const newIsDfn = dfn.localName === "dfn";
+      if (oldIsDfn) {
+        if (!newIsDfn) {
+          // Don't overwrite <dfn> definitions.
+          return;
+        }
+        duplicates.push(dfn);
+      }
+    }
+    result[dfnFor] = dfn;
+    if (!dfn.id) {
+      if (dfn.dataset.idl) {
+        addId(dfn, "dom", (dfnFor ? dfnFor + "-" : "") + title);
+      } else {
+        addId(dfn, "dfn", title);
+      }
+    }
+  });
+  return { result, duplicates };
 }
 
 /**
  * @param {{ for: string, title: string }} target
  * @param {HTMLAnchorElement} ant
- * @param {Record<string, Record<string, HTMLElement>>} titles
+ * @param {Record<string, Record<string, HTMLElement>>} titleToDfns
  * @param {Element[]} possibleExternalLinks
  */
-function findLinkTarget(target, ant, titles, possibleExternalLinks) {
+function findLinkTarget(target, ant, titleToDfns, possibleExternalLinks) {
   const { linkFor } = ant.dataset;
-  if (!titles[target.title] || !titles[target.title][target.for]) {
+  if (!titleToDfns[target.title] || !titleToDfns[target.title][target.for]) {
     return false;
   }
-  const dfn = titles[target.title][target.for];
+  const dfn = titleToDfns[target.title][target.for];
   if (dfn.dataset.cite) {
     ant.dataset.cite = dfn.dataset.cite;
-  } else if (linkFor && !titles[linkFor.toLowerCase()]) {
+  } else if (linkFor && !titleToDfns[linkFor.toLowerCase()]) {
     possibleExternalLinks.push(ant);
   } else if (dfn.classList.contains("externalDFN")) {
     // data-lt[0] serves as unique id for the dfn which this element references
