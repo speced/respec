@@ -234,10 +234,11 @@ function shouldWrapByCode(dfn, term) {
  * Examples: a[data-cite="spec"], dfn[data-cite="spec"], dfn.externalDFN
  */
 function findExplicitExternalLinks() {
-  const selector =
+  const links = document.querySelectorAll(
     "a[data-cite]:not([data-cite='']):not([data-cite*='#']), " +
-    "dfn[data-cite]:not([data-cite='']):not([data-cite*='#'])";
-  return [...document.querySelectorAll(selector)]
+    "dfn[data-cite]:not([data-cite='']):not([data-cite*='#'])"
+  );
+  return [...links]
     .filter(el => {
       const closest = /** @type {HTMLElement} */ (el.closest("[data-cite]"));
       return !closest || closest.dataset.cite !== "";
