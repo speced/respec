@@ -236,7 +236,7 @@ function shouldWrapByCode(dfn, term) {
 function findExplicitExternalLinks() {
   const links = document.querySelectorAll(
     "a[data-cite]:not([data-cite='']):not([data-cite*='#']), " +
-    "dfn[data-cite]:not([data-cite='']):not([data-cite*='#'])"
+      "dfn[data-cite]:not([data-cite='']):not([data-cite*='#'])"
   );
   return [...links]
     .filter(el => {
