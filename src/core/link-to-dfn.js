@@ -95,6 +95,10 @@ function mapTitleToDfns(definitionMap) {
   return titleToDfns;
 }
 
+/**
+ * @param {Record<string, HTMLElement[]>} definitionMap
+ * @param {string} title
+ */
 function collectDfns(definitionMap, title) {
   /** @type {Record<string, HTMLElement>} */
   const result = {};
@@ -120,15 +124,24 @@ function collectDfns(definitionMap, title) {
       }
     }
     result[dfnFor] = dfn;
-    if (!dfn.id) {
-      if (dfn.dataset.idl) {
-        addId(dfn, "dom", (dfnFor ? dfnFor + "-" : "") + title);
-      } else {
-        addId(dfn, "dfn", title);
-      }
-    }
+    assignDfnId(dfn, title);
   });
   return { result, duplicates };
+}
+
+/**
+ * @param {HTMLElement} dfn
+ * @param {string} title
+ */
+function assignDfnId(dfn, title) {
+  if (!dfn.id) {
+    const { dfnFor } = dfn.dataset;
+    if (dfn.dataset.idl) {
+      addId(dfn, "dom", (dfnFor ? dfnFor + "-" : "") + title);
+    } else {
+      addId(dfn, "dfn", title);
+    }
+  }
 }
 
 /**
