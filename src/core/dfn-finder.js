@@ -127,7 +127,12 @@ function findOperationDfn(defn, parent, name, definitionMap) {
       // try finding dfn using name, using normal search path...
       return findNormalDfn(defn, parent, name, definitionMap);
     }
-    addAlternativeNames(dfn, [asFullyQualifiedName, asQualifiedName, lookupName, asLocalName]);
+    addAlternativeNames(dfn, [
+      asFullyQualifiedName,
+      asQualifiedName,
+      lookupName,
+      asLocalName,
+    ]);
     registerDefinitionMapping(dfn, asLocalName, definitionMap);
     return dfn;
   }
@@ -152,10 +157,10 @@ function addAlternativeNames(dfn, names) {
 }
 
 /**
- * 
- * @param {HTMLElement} dfn 
- * @param {string} name 
- * @param {Record<string, HTMLElement[]>} definitionMap 
+ *
+ * @param {HTMLElement} dfn
+ * @param {string} name
+ * @param {Record<string, HTMLElement[]>} definitionMap
  */
 function registerDefinitionMapping(dfn, name, definitionMap) {
   if (!definitionMap[name]) {
