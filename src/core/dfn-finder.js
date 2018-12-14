@@ -1,5 +1,6 @@
 // @ts-check
 import { pub } from "./pubsubhub";
+import { registerDefinitionMapping } from "./dfn";
 import { wrapInner } from "./utils";
 
 const topLevelEntities = new Set([
@@ -93,9 +94,7 @@ function findAttributeDfn(defn, parent, name, definitionMap) {
     // try finding dfn using name, using normal search path...
     return findNormalDfn(defn, parent, name, definitionMap);
   }
-  const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-  lt.push(asQualifiedName, asLocalName);
-  dfn.dataset.lt = [...new Set(lt)].join("|");
+  addAlternativeNames(dfn, [asQualifiedName, asLocalName]);
   return dfn;
 }
 
@@ -129,13 +128,13 @@ function findOperationDfn(defn, parent, name, definitionMap) {
       // try finding dfn using name, using normal search path...
       return findNormalDfn(defn, parent, name, definitionMap);
     }
-    const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-    lt.push(asFullyQualifiedName, asQualifiedName, lookupName, asLocalName);
-    dfn.dataset.lt = lt.join("|");
-    if (!definitionMap[asLocalName]) {
-      definitionMap[asLocalName] = [];
-    }
-    definitionMap[asLocalName].push(dfn);
+    addAlternativeNames(dfn, [
+      asFullyQualifiedName,
+      asQualifiedName,
+      lookupName,
+      asLocalName,
+    ]);
+    registerDefinitionMapping(dfn, asLocalName, definitionMap);
     return dfn;
   }
   // no method alias, so let's find the dfn and add it
@@ -143,11 +142,19 @@ function findOperationDfn(defn, parent, name, definitionMap) {
   if (!dfn) {
     return;
   }
-  const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
-  lt.push(asMethodName, name);
-  dfn.dataset.lt = lt.reverse().join("|");
-  definitionMap[asMethodName] = [dfn];
+  addAlternativeNames(dfn, [asMethodName, name]);
+  registerDefinitionMapping(dfn, asMethodName, definitionMap);
   return dfn;
+}
+
+/**
+ * @param {HTMLElement} dfn
+ * @param {string[]} names
+ */
+function addAlternativeNames(dfn, names) {
+  const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
+  lt.push(...names);
+  dfn.dataset.lt = [...new Set(lt)].join("|");
 }
 
 /**
@@ -172,10 +179,7 @@ function findNormalDfn(defn, parent, name, definitionMap) {
       dfns = dfnForArray;
       // Found it: register with its local name
       delete definitionMap[resolvedName];
-      if (definitionMap[nameLow] === undefined) {
-        definitionMap[nameLow] = [];
-      }
-      definitionMap[nameLow].push(dfns[0]);
+      registerDefinitionMapping(dfns[0], nameLow, definitionMap);
     }
   }
   if (dfns.length > 1) {

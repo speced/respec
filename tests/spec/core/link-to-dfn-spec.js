@@ -4,7 +4,7 @@ describe("Core — Link to definitions", () => {
 
   it("removes non-alphanum chars from fragment components", async () => {
     const bodyText = `
-      <section">
+      <section>
         <h2>Test section</h2>
         <p><dfn>[[\\test]]</dfn><a id="testAnchor">[[\\test]]</a>
       </section>`;
