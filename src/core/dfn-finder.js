@@ -1,5 +1,6 @@
 // @ts-check
 import { pub } from "./pubsubhub";
+import { registerDefinitionMapping } from "./dfn";
 import { wrapInner } from "./utils";
 
 const topLevelEntities = new Set([
@@ -154,20 +155,6 @@ function addAlternativeNames(dfn, names) {
   const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
   lt.push(...names);
   dfn.dataset.lt = [...new Set(lt)].join("|");
-}
-
-/**
- *
- * @param {HTMLElement} dfn
- * @param {string} name
- * @param {Record<string, HTMLElement[]>} definitionMap
- */
-function registerDefinitionMapping(dfn, name, definitionMap) {
-  if (!definitionMap[name]) {
-    definitionMap[name] = [dfn];
-  } else if (!definitionMap[name].includes(dfn)) {
-    definitionMap[name].push(dfn);
-  }
 }
 
 /**
