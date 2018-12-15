@@ -2,9 +2,9 @@
 // Handles the marking up of best practices, and can generate a summary of all of them.
 // The summary is generated if there is a section in the document with ID bp-summary.
 // Best practices are marked up with span.practicelab.
-import css from "deps/text!core/css/bp.css";
-import { pub } from "core/pubsubhub";
-import "deps/hyperhtml";
+import css from "../deps/text!core/css/bp.css";
+import hyperHTML from "../deps/hyperhtml";
+import { pub } from "./pubsubhub";
 
 export const name = "core/best-practices";
 

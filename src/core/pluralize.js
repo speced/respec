@@ -3,8 +3,8 @@
 //   plurals of it are automatically added to `data-plurals`.
 // The linking is done in core/link-to-dfn
 
-import { plural as pluralOf } from "deps/pluralize";
-import { norm as normalize } from "core/utils";
+import { norm as normalize } from "./utils";
+import { plural as pluralOf } from "../deps/pluralize";
 
 export const name = "core/pluralize";
 

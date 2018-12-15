@@ -1,9 +1,9 @@
 // Module core/render-biblio
 // renders the biblio data pre-processed in core/biblio
 
-import "deps/hyperhtml";
-import { addId } from "core/utils";
-import { pub } from "core/pubsubhub";
+import { addId } from "./utils";
+import hyperHTML from "../deps/hyperhtml";
+import { pub } from "./pubsubhub";
 
 export const name = "core/render-biblio";
 

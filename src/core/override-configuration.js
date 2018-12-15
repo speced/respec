@@ -7,7 +7,7 @@
 // Note that fields are separated by semicolons and not ampersands.
 // TODO
 //  There could probably be a UI for this to make it even simpler.
-import { sub, pub } from "core/pubsubhub";
+import { pub, sub } from "./pubsubhub";
 
 export const name = "core/override-configuration";
 

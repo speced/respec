@@ -8,8 +8,9 @@
  *
  * Docs: https://github.com/w3c/respec/wiki/data-tests
  */
-import { pub } from "core/pubsubhub";
-import { lang as defaultLang } from "core/l10n";
+import { lang as defaultLang } from "./l10n";
+import hyperHTML from "../deps/hyperhtml";
+import { pub } from "./pubsubhub";
 const l10n = {
   en: {
     missing_test_suite_uri:
@@ -106,6 +107,6 @@ export function run(conf) {
     })
     .forEach(({ elem, details }) => {
       delete elem.dataset.tests;
-      elem.insertAdjacentElement("beforeend", details);
+      elem.append(details);
     });
 }

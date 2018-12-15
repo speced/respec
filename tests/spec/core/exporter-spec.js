@@ -28,7 +28,7 @@ describe("Core - exporter", () => {
 
   it("cleans up hyperHTML comments", async () => {
     const ops = makeStandardOps();
-    ops.body = `<div><!--_hyper: LEAVE;-->PASS<!-- STAY --></div>`;
+    ops.body = `<div><!---LEAVE%-->PASS<!-- STAY --></div>`;
     const doc = await getExportedDoc(ops);
 
     const walker = document.createTreeWalker(doc.body, NodeFilter.SHOW_COMMENT);
@@ -37,8 +37,9 @@ describe("Core - exporter", () => {
       comments.push(walker.currentNode);
     }
 
-    const hyperComments = comments.filter(comment =>
-      comment.textContent.startsWith("_hyper")
+    const hyperComments = comments.filter(
+      comment =>
+        comment.textContent.startsWith("-") && comment.textContent.endsWith("%")
     );
     expect(hyperComments.length).toBe(0);
 

@@ -2,8 +2,8 @@
  * Linter rule "check-punctuation". Makes sure the there are no punctuations missing at the end of a <p>
  *   in the ReSpec config.
  */
-import { lang as defaultLang } from "core/l10n";
-import LinterRule from "core/LinterRule";
+import LinterRule from "../LinterRule";
+import { lang as defaultLang } from "../l10n";
 
 const name = "check-punctuation";
 const punctuationMarks = [".", ":", "!", "?"];

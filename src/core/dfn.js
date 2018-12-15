@@ -1,7 +1,7 @@
 // Module core/dfn
 // - Finds all <dfn> elements and populates conf.definitionMap to identify them.
 
-import { getDfnTitles } from "core/utils";
+import { getDfnTitles } from "./utils";
 
 export const name = "core/dfn";
 
@@ -15,16 +15,23 @@ export function run(conf) {
       dfn.dataset.dfnFor = dfn.dataset.dfnFor.toLowerCase();
     }
     // TODO: we should probably use weakmaps and weaksets here to avoid leaks.
-    getDfnTitles(dfn, { isDefinition: true })
-      .map(dfnTitle => {
-        if (!conf.definitionMap[dfnTitle]) {
-          conf.definitionMap[dfnTitle] = [];
-        }
-        return conf.definitionMap[dfnTitle];
-      })
-      .reduce((dfn, dfnTitleContainer) => {
-        dfnTitleContainer.push(dfn);
-        return dfn;
-      }, dfn);
+    const titles = getDfnTitles(dfn, { isDefinition: true });
+    titles.forEach(title => {
+      return registerDefinitionMapping(dfn, title, conf.definitionMap);
+    });
   });
+}
+
+/**
+ *
+ * @param {HTMLElement} dfn
+ * @param {string} name
+ * @param {Record<string, HTMLElement[]>} definitionMap
+ */
+export function registerDefinitionMapping(dfn, name, definitionMap) {
+  if (!definitionMap[name]) {
+    definitionMap[name] = [dfn];
+  } else if (!definitionMap[name].includes(dfn)) {
+    definitionMap[name].push(dfn);
+  }
 }

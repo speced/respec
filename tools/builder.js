@@ -7,7 +7,7 @@ const loading = require("loading-indicator");
 const path = require("path");
 const presets = require("loading-indicator/presets");
 const r = require("requirejs");
-const UglifyJS = require("uglify-es");
+const terser = require("terser");
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
 colors.setTheme({
@@ -71,17 +71,16 @@ const usageSections = [
 function appendBoilerplate(outPath, version, name) {
   return async (optimizedJs, sourceMap) => {
     const respecJs = `"use strict";
-/* ReSpec ${version}
-Created by Robin Berjon, http://berjon.com/ (@robinberjon)
-Documentation: http://w3.org/respec/.
-See original source for licenses: https://github.com/w3c/respec */
 window.respecVersion = "${version}";
 ${optimizedJs}
 require(['profile-${name}']);`;
-    const result = UglifyJS.minify(respecJs, {
+    const respecJsMap = sourceMap.replace(`"mappings": "`, `"mappings": ";;`);
+    const result = terser.minify(respecJs, {
       toplevel: true,
       sourceMap: {
         filename: `respec-${name}.js`,
+        content: respecJsMap,
+        root: "../js/",
         url: `respec-${name}.build.js.map`,
       },
     });
@@ -90,7 +89,7 @@ require(['profile-${name}']);`;
     }
     const mapPath = path.dirname(outPath) + `/respec-${name}.build.js.map`;
     const promiseToWriteJs = fsp.writeFile(outPath, result.code, "utf-8");
-    const promiseToWriteMap = fsp.writeFile(mapPath, sourceMap, "utf-8");
+    const promiseToWriteMap = fsp.writeFile(mapPath, result.map, "utf-8");
     await Promise.all([promiseToWriteJs, promiseToWriteMap]);
   };
 }

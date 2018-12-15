@@ -4,9 +4,9 @@
 // #gh-commenters: people having contributed comments to issues.
 // #gh-contributors: people whose PR have been merged.
 // Spec editors get filtered out automatically.
-import { fetchIndex } from "core/github";
-import { pub } from "core/pubsubhub";
-import { joinAnd, flatten } from "core/utils";
+import { flatten, joinAnd } from "./utils";
+import { fetchIndex } from "./github";
+import { pub } from "./pubsubhub";
 export const name = "core/contrib";
 
 function prop(prop) {

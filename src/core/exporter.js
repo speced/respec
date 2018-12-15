@@ -5,9 +5,9 @@
  * That is, elements that have a "removeOnSave" css class.
  */
 
-import { removeReSpec } from "core/utils";
-import { pub } from "core/pubsubhub";
-import "deps/hyperhtml";
+import hyperHTML from "../deps/hyperhtml";
+import { pub } from "./pubsubhub";
+import { removeReSpec } from "./utils";
 
 const mimeTypes = new Map([["text/html", "html"], ["application/xml", "xml"]]);
 
@@ -89,7 +89,9 @@ function cleanup(cloneDoc) {
 
 function cleanupHyper({ documentElement: node }) {
   // collect first, or walker will cease too early
-  const filter = comment => comment.textContent.startsWith("_hyper");
+  /** @param {Comment} comment */
+  const filter = comment =>
+    comment.textContent.startsWith("-") && comment.textContent.endsWith("%");
   const walker = document.createTreeWalker(
     node,
     NodeFilter.SHOW_COMMENT,
@@ -100,6 +102,9 @@ function cleanupHyper({ documentElement: node }) {
   }
 }
 
+/**
+ * @param {TreeWalker} walker
+ */
 function* walkTree(walker) {
   while (walker.nextNode()) {
     yield walker.currentNode;

@@ -14,7 +14,7 @@ let appendixMode = false;
 let lastNonAppendix = 0;
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 export const name = "core/structure";
-import { addId } from "core/utils";
+import { addId } from "./utils";
 
 function makeTOCAtLevel($parent, doc, current, level, conf) {
   const $secs = $parent.children(

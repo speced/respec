@@ -2,12 +2,12 @@
  * Sets the defaults for W3C specs
  */
 export const name = "w3c/defaults";
-import linter from "core/linter";
-import { rule as noHeadinglessSectionsRule } from "core/linter-rules/no-headingless-sections";
-import { rule as noHttpPropsRule } from "core/linter-rules/no-http-props";
-import { rule as privsecSectionRule } from "w3c/linter-rules/privsec-section";
-import { rule as checkPunctuation } from "core/linter-rules/check-punctuation";
-import { rule as localRefsExist } from "core/linter-rules/local-refs-exist";
+import { rule as checkPunctuation } from "../core/linter-rules/check-punctuation";
+import linter from "../core/linter";
+import { rule as localRefsExist } from "../core/linter-rules/local-refs-exist";
+import { rule as noHeadinglessSectionsRule } from "../core/linter-rules/no-headingless-sections";
+import { rule as noHttpPropsRule } from "../core/linter-rules/no-http-props";
+import { rule as privsecSectionRule } from "./linter-rules/privsec-section";
 
 linter.register(
   noHttpPropsRule,

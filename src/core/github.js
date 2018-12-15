@@ -4,7 +4,7 @@
  * @see https://github.com/w3c/respec/wiki/github
  */
 
-import { pub } from "core/pubsubhub";
+import { pub } from "./pubsubhub";
 
 export const name = "core/github";
 

@@ -1,5 +1,5 @@
-import "deps/hyperhtml";
-import { pub } from "core/pubsubhub";
+import hyperHTML from "../../deps/hyperhtml";
+import { pub } from "../../core/pubsubhub";
 const html = hyperHTML;
 
 export default link => {
