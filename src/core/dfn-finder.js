@@ -118,12 +118,11 @@ function findOperationDfn(defn, parent, name, definitionMap) {
   if (!dfn) {
     return;
   }
-  addAlternativeNames(dfn, [
-    asFullyQualifiedName,
-    asQualifiedName,
-    asMethodName,
-    asLocalName,
-  ], definitionMap);
+  addAlternativeNames(
+    dfn,
+    [asFullyQualifiedName, asQualifiedName, asMethodName, asLocalName],
+    definitionMap
+  );
   return dfn;
 }
 
