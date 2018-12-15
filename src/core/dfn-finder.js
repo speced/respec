@@ -148,6 +148,14 @@ function findOperationDfn(defn, parent, name, definitionMap) {
 }
 
 /**
+ * Creates an argument list string e.g. "(arg1, arg2)"
+ * @param {*} defn
+ */
+function getOperationNameWithArgs(defn) {
+  return `(${defn.body.arguments.map(arg => arg.name).join(", ")})`;
+}
+
+/**
  * @param {HTMLElement} dfn
  * @param {string[]} names
  */
