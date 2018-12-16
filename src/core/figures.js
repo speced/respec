@@ -10,8 +10,29 @@ export const name = "core/figures";
 
 export function run(conf) {
   normalizeImages(document);
-  // process all figures
+
+  const { figMap, tof } = collectFigures(conf);
+
+  updateEmptyAnchors(figMap);
+
+  // Create a Table of Figures if a section with id 'tof' exists.
+  const $tof = $("#tof");
+  if (tof.length && $tof.length) {
+    decorateTableOfFigures($tof[0]);
+    $tof.append($("<h2>" + conf.l10n.table_of_fig + "</h2>"));
+    $tof.append($("<ul class='tof'/>"));
+    const $ul = $tof.find("ul");
+    while (tof.length) $ul.append(tof.shift());
+  }
+}
+
+/**
+ * process all figures
+ */
+function collectFigures(conf) {
+  /** @type {Record<string, NodeList>} */
   const figMap = {};
+  /** @type {HTMLElement[]} */
   const tof = [];
   document.querySelectorAll("figure").forEach((fig, i) => {
     const caption = fig.querySelector("figcaption");
@@ -25,18 +46,7 @@ export function run(conf) {
 
     tof.push(getTableOfFiguresListItem(fig.id, caption));
   });
-
-  updateEmptyAnchors(figMap);
-
-  // Create a Table of Figures if a section with id 'tof' exists.
-  const $tof = $("#tof");
-  if (tof.length && $tof.length) {
-    decorateTableOfFigures($tof[0]);
-    $tof.append($("<h2>" + conf.l10n.table_of_fig + "</h2>"));
-    $tof.append($("<ul class='tof'/>"));
-    const $ul = $tof.find("ul");
-    while (tof.length) $ul.append(tof.shift());
-  }
+  return { figMap, tof };
 }
 
 /**
