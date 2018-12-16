@@ -67,6 +67,7 @@ describe("Core - Figures", () => {
     const tofHeader = tof.querySelector("h2");
     const tofItems = tof.querySelectorAll("ul li");
     const figLinks = tof.querySelectorAll("ul li a");
+    expect(tof.querySelector("figcaption")).toBeNull();
     expect(tofHeader).toBeTruthy();
     expect(tofHeader.textContent).toEqual("1. Table of Figures");
     expect(tofItems.length).toEqual(2);
