@@ -16,13 +16,13 @@ export function run(conf) {
   updateEmptyAnchors(figMap);
 
   // Create a Table of Figures if a section with id 'tof' exists.
-  const $tof = $("#tof");
-  if (tof.length && $tof.length) {
-    decorateTableOfFigures($tof[0]);
-    $tof.append($("<h2>" + conf.l10n.table_of_fig + "</h2>"));
-    $tof.append($("<ul class='tof'/>"));
-    const $ul = $tof.find("ul");
-    while (tof.length) $ul.append(tof.shift());
+  const tofElement = document.getElementById("tof");
+  if (tof.length && tofElement) {
+    decorateTableOfFigures(tofElement);
+    tofElement.append(
+      hyperHTML`<h2>${conf.l10n.table_of_fig}</h2>`,
+      hyperHTML`<ul class='tof'>${tof}</ul>`
+    );
   }
 }
 
