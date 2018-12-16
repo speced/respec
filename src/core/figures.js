@@ -51,24 +51,7 @@ export function run(conf) {
   // Create a Table of Figures if a section with id 'tof' exists.
   const $tof = $("#tof");
   if (tof.length && $tof.length) {
-    // if it has a parent section, don't touch it
-    // if it has a class of appendix or introductory, don't touch it
-    // if all the preceding section siblings are introductory, make it introductory
-    // if there is a preceding section sibling which is an appendix, make it appendix
-    if (
-      !$tof.hasClass("appendix") &&
-      !$tof.hasClass("introductory") &&
-      !$tof.parents("section").length
-    ) {
-      if (
-        $tof.prevAll("section.introductory").length ===
-        $tof.prevAll("section").length
-      ) {
-        $tof.addClass("introductory");
-      } else if ($tof.prevAll("appendix").length) {
-        $tof.addClass("appendix");
-      }
-    }
+    decorateTableOfFigures($tof[0]);
     $tof.append($("<h2>" + conf.l10n.table_of_fig + "</h2>"));
     $tof.append($("<ul class='tof'/>"));
     const $ul = $tof.find("ul");
@@ -119,4 +102,53 @@ function normalizeImages(doc) {
       img.height = img.naturalHeight;
       img.width = img.naturalWidth;
     });
+}
+
+/**
+ * if it has a parent section, don't touch it
+ * if it has a class of appendix or introductory, don't touch it
+ * if all the preceding section siblings are introductory, make it introductory
+ * if there is a preceding section sibling which is an appendix, make it appendix
+ * @param {Element} tofElement
+ */
+function decorateTableOfFigures(tofElement) {
+  if (
+    tofElement.classList.contains("appendix") ||
+    tofElement.classList.contains("introductory") ||
+    tofElement.closest("section")
+  ) {
+    return;
+  }
+
+  const previousSections = getPreviousSections(tofElement);
+  if (previousSections.every(sec => sec.classList.has("introductory"))) {
+    tofElement.classList.add("introductory");
+  } else if (previousSections.some(sec => sec.classList.has("appendix"))) {
+    tofElement.classList.add("appendix");
+  }
+}
+
+/**
+ * @param {Element} element
+ */
+function getPreviousSections(element) {
+  /** @type {Element[]} */
+  const sections = [];
+  for (const previous of iteratePreviousElements(element)) {
+    if (previous.localName === "section") {
+      sections.push(previous);
+    }
+  }
+  return sections;
+}
+
+/**
+ * @param {Element} element
+ */
+function* iteratePreviousElements(element) {
+  let previous = element;
+  while (previous.previousElementSibling) {
+    previous = previous.previousElementSibling;
+    yield previous;
+  }
 }
