@@ -9,12 +9,14 @@
 //  - lang: can change the generated text (supported: en, fr)
 //  - maxTocLevel: only generate a TOC so many levels deep
 
+import { addId } from "./utils";
+import hyperHTML from "../deps/hyperhtml";
+
 const secMap = {};
 let appendixMode = false;
 let lastNonAppendix = 0;
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 export const name = "core/structure";
-import { addId } from "./utils";
 
 function makeTOCAtLevel($parent, doc, current, level, conf) {
   const $secs = $parent.children(
@@ -129,37 +131,34 @@ export function run(conf) {
 
   // makeTOC
   if (!conf.noTOC) {
-    const $ol = makeTOCAtLevel($("body"), document, [0], 1, conf);
-    if (!$ol) return;
-    const nav = document.createElement("nav");
-    nav.id = "toc";
-    nav.innerHTML = `<h2 class="introductory">${conf.l10n.toc}</h2>`;
-    addId(nav.querySelector("h2"));
-    nav.appendChild($ol[0]);
-    let $ref = $("#toc");
-    let replace = false;
-    if ($ref.length) {
-      replace = true;
-    }
-    if (!$ref.length) {
-      $ref = $("#sotd");
-    }
-    if (!$ref.length) {
-      $ref = $("#abstract");
-    }
-    if (replace) {
-      $ref.replaceWith(nav);
-    } else {
-      $ref.after(nav);
-    }
-
-    const $link = $(
-      "<p role='navigation' id='back-to-top'><a href='#title'><abbr title='Back to Top'>&uarr;</abbr></a></p>"
-    );
-    $("body").append($link);
+    createTableOfContents(conf);
   }
 
   updateEmptyAnchors();
+}
+
+function createTableOfContents(conf) {
+  const $ol = makeTOCAtLevel($("body"), document, [0], 1, conf);
+  if (!$ol) {
+    return;
+  }
+  const nav = hyperHTML`<nav id="toc">`;
+  const h2 = hyperHTML`<h2 class="introductory">${conf.l10n.toc}</h2>`;
+  addId(h2);
+  nav.append(h2, $ol[0]);
+  const ref = document.getElementById("toc") ||
+    document.getElementById("sotd") ||
+    document.getElementById("abstract");
+  if (ref) {
+    if (ref.id === "toc") {
+      ref.replaceWith(nav);
+    } else {
+      ref.after(nav);
+    }
+  }
+
+  const link = hyperHTML`<p role='navigation' id='back-to-top'><a href='#title'><abbr title='Back to Top'>&uarr;</abbr></a></p>`;
+  document.body.append(link);
 }
 
 /**
