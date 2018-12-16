@@ -159,14 +159,22 @@ export function run(conf) {
     $("body").append($link);
   }
 
-  // Update all anchors with empty content that reference a section ID
-  $("a[href^='#']:not(.tocxref)").each(function() {
-    const $a = $(this);
-    if ($a.html() !== "") return;
-    const id = $a.attr("href").slice(1);
+  updateEmptyAnchors();
+}
+
+/**
+ * Update all anchors with empty content that reference a section ID
+ */
+function updateEmptyAnchors() {
+  document.querySelectorAll("a[href^='#']:not(.tocxref)").forEach(anchor => {
+    if (anchor.innerHTML !== "") {
+      return;
+    }
+    const id = anchor.getAttribute("href").slice(1);
     if (secMap[id]) {
-      $a.addClass("sec-ref");
-      $a.html(($a.hasClass("sectionRef") ? "section " : "") + secMap[id]);
+      anchor.classList.add("sec-ref");
+      const prefix = anchor.classList.contains("sectionRef") ? "section " : "";
+      anchor.innerHTML = prefix + secMap[id];
     }
   });
 }
