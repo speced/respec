@@ -10,70 +10,43 @@ export const name = "core/figures";
 
 export function run(conf) {
   normalizeImages(document);
-  // process all figures
+
+  const { figMap, tof } = collectFigures(conf);
+
+  updateEmptyAnchors(figMap);
+
+  // Create a Table of Figures if a section with id 'tof' exists.
+  const tofElement = document.getElementById("tof");
+  if (tof.length && tofElement) {
+    decorateTableOfFigures(tofElement);
+    tofElement.append(
+      hyperHTML`<h2>${conf.l10n.table_of_fig}</h2>`,
+      hyperHTML`<ul class='tof'>${tof}</ul>`
+    );
+  }
+}
+
+/**
+ * process all figures
+ */
+function collectFigures(conf) {
+  /** @type {Record<string, NodeList>} */
   const figMap = {};
+  /** @type {HTMLElement[]} */
   const tof = [];
   document.querySelectorAll("figure").forEach((fig, i) => {
     const caption = fig.querySelector("figcaption");
 
     if (caption) {
       decorateFigure(fig, caption, i, conf);
-      figMap[fig.id] = $(caption.childNodes);
+      figMap[fig.id] = caption.childNodes;
     } else {
       showInlineWarning(fig, "Found a `<figure>` without a `<figcaption>`");
     }
 
     tof.push(getTableOfFiguresListItem(fig.id, caption));
   });
-
-  // Update all anchors with empty content that reference a figure ID
-  $("a[href]").each(function() {
-    const $a = $(this);
-    let id = $a.attr("href");
-    if (!id) return;
-    id = id.substring(1);
-    if (figMap[id]) {
-      $a.addClass("fig-ref");
-      if ($a.html() === "") {
-        const $shortFigDescriptor = figMap[id].slice(0, 2).clone();
-        if (!$a[0].hasAttribute("title")) {
-          const longFigDescriptor = figMap[id]
-            .slice(2)
-            .clone()
-            .text();
-          $a.attr("title", longFigDescriptor.trim());
-        }
-        $a.append($shortFigDescriptor);
-      }
-    }
-  });
-
-  // Create a Table of Figures if a section with id 'tof' exists.
-  const $tof = $("#tof");
-  if (tof.length && $tof.length) {
-    // if it has a parent section, don't touch it
-    // if it has a class of appendix or introductory, don't touch it
-    // if all the preceding section siblings are introductory, make it introductory
-    // if there is a preceding section sibling which is an appendix, make it appendix
-    if (
-      !$tof.hasClass("appendix") &&
-      !$tof.hasClass("introductory") &&
-      !$tof.parents("section").length
-    ) {
-      if (
-        $tof.prevAll("section.introductory").length ===
-        $tof.prevAll("section").length
-      ) {
-        $tof.addClass("introductory");
-      } else if ($tof.prevAll("appendix").length) {
-        $tof.addClass("appendix");
-      }
-    }
-    $tof.append($("<h2>" + conf.l10n.table_of_fig + "</h2>"));
-    $tof.append($("<ul class='tof'/>"));
-    const $ul = $tof.find("ul");
-    while (tof.length) $ul.append(tof.shift());
-  }
+  return { figMap, tof };
 }
 
 /**
@@ -119,4 +92,95 @@ function normalizeImages(doc) {
       img.height = img.naturalHeight;
       img.width = img.naturalWidth;
     });
+}
+
+/**
+ * Update all anchors with empty content that reference a figure ID
+ * @param {Record<string, NodeList>} figMap
+ */
+function updateEmptyAnchors(figMap) {
+  document.querySelectorAll("a[href]").forEach(anchor => {
+    const href = anchor.getAttribute("href");
+    if (!href) {
+      return;
+    }
+    const nodes = figMap[href.slice(1)];
+    if (!nodes) {
+      return;
+    }
+    anchor.classList.add("fig-ref");
+    if (anchor.innerHTML !== "") {
+      return;
+    }
+    const shortFigDescriptor = nodeListToFragment(nodes, 0, 2);
+    anchor.append(shortFigDescriptor);
+    if (!anchor.hasAttribute("title")) {
+      const longFigDescriptor = nodeListToFragment(nodes, 2).textContent;
+      anchor.title = longFigDescriptor.trim();
+    }
+  });
+}
+
+/**
+ * Clones nodes into a fragment
+ * @param {NodeList} nodeList
+ * @param {number=} rangeStart
+ * @param {number=} rangeEnd
+ */
+function nodeListToFragment(nodeList, rangeStart = 0, rangeEnd) {
+  const fragment = document.createDocumentFragment();
+  const end = rangeEnd !== undefined ? rangeEnd : nodeList.length;
+  for (let i = rangeStart; i < end; i++) {
+    fragment.appendChild(nodeList[i].cloneNode(true));
+  }
+  return fragment;
+}
+
+/**
+ * if it has a parent section, don't touch it
+ * if it has a class of appendix or introductory, don't touch it
+ * if all the preceding section siblings are introductory, make it introductory
+ * if there is a preceding section sibling which is an appendix, make it appendix
+ * @param {Element} tofElement
+ */
+function decorateTableOfFigures(tofElement) {
+  if (
+    tofElement.classList.contains("appendix") ||
+    tofElement.classList.contains("introductory") ||
+    tofElement.closest("section")
+  ) {
+    return;
+  }
+
+  const previousSections = getPreviousSections(tofElement);
+  if (previousSections.every(sec => sec.classList.has("introductory"))) {
+    tofElement.classList.add("introductory");
+  } else if (previousSections.some(sec => sec.classList.has("appendix"))) {
+    tofElement.classList.add("appendix");
+  }
+}
+
+/**
+ * @param {Element} element
+ */
+function getPreviousSections(element) {
+  /** @type {Element[]} */
+  const sections = [];
+  for (const previous of iteratePreviousElements(element)) {
+    if (previous.localName === "section") {
+      sections.push(previous);
+    }
+  }
+  return sections;
+}
+
+/**
+ * @param {Element} element
+ */
+function* iteratePreviousElements(element) {
+  let previous = element;
+  while (previous.previousElementSibling) {
+    previous = previous.previousElementSibling;
+    yield previous;
+  }
 }
