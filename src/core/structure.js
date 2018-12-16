@@ -146,7 +146,8 @@ function createTableOfContents(conf) {
   const h2 = hyperHTML`<h2 class="introductory">${conf.l10n.toc}</h2>`;
   addId(h2);
   nav.append(h2, $ol[0]);
-  const ref = document.getElementById("toc") ||
+  const ref =
+    document.getElementById("toc") ||
     document.getElementById("sotd") ||
     document.getElementById("abstract");
   if (ref) {
