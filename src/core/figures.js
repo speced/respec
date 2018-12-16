@@ -18,7 +18,7 @@ export function run(conf) {
 
     if (caption) {
       decorateFigure(fig, caption, i, conf);
-      figMap[fig.id] = $(caption.childNodes);
+      figMap[fig.id] = caption.childNodes;
     } else {
       showInlineWarning(fig, "Found a `<figure>` without a `<figcaption>`");
     }
@@ -26,27 +26,7 @@ export function run(conf) {
     tof.push(getTableOfFiguresListItem(fig.id, caption));
   });
 
-  // Update all anchors with empty content that reference a figure ID
-  $("a[href]").each(function() {
-    const $a = $(this);
-    let id = $a.attr("href");
-    if (!id) return;
-    id = id.substring(1);
-    if (figMap[id]) {
-      $a.addClass("fig-ref");
-      if ($a.html() === "") {
-        const $shortFigDescriptor = figMap[id].slice(0, 2).clone();
-        if (!$a[0].hasAttribute("title")) {
-          const longFigDescriptor = figMap[id]
-            .slice(2)
-            .clone()
-            .text();
-          $a.attr("title", longFigDescriptor.trim());
-        }
-        $a.append($shortFigDescriptor);
-      }
-    }
-  });
+  updateEmptyAnchors(figMap);
 
   // Create a Table of Figures if a section with id 'tof' exists.
   const $tof = $("#tof");
@@ -102,6 +82,48 @@ function normalizeImages(doc) {
       img.height = img.naturalHeight;
       img.width = img.naturalWidth;
     });
+}
+
+/**
+ * Update all anchors with empty content that reference a figure ID
+ * @param {Record<string, NodeList>} figMap
+ */
+function updateEmptyAnchors(figMap) {
+  document.querySelectorAll("a[href]").forEach(anchor => {
+    const href = anchor.getAttribute("href");
+    if (!href) {
+      return;
+    }
+    const nodes = figMap[href.slice(1)];
+    if (!nodes) {
+      return;
+    }
+    anchor.classList.add("fig-ref");
+    if (anchor.innerHTML !== "") {
+      return;
+    }
+    const shortFigDescriptor = nodeListToFragment(nodes, 0, 2);
+    anchor.append(shortFigDescriptor);
+    if (!anchor.hasAttribute("title")) {
+      const longFigDescriptor = nodeListToFragment(nodes, 2).textContent;
+      anchor.title = longFigDescriptor.trim();
+    }
+  });
+}
+
+/**
+ * Clones nodes into a fragment
+ * @param {NodeList} nodeList
+ * @param {number=} rangeStart
+ * @param {number=} rangeEnd
+ */
+function nodeListToFragment(nodeList, rangeStart = 0, rangeEnd) {
+  const fragment = document.createDocumentFragment();
+  const end = rangeEnd !== undefined ? rangeEnd : nodeList.length;
+  for (let i = rangeStart; i < end; i++) {
+    fragment.appendChild(nodeList[i].cloneNode(true));
+  }
+  return fragment;
 }
 
 /**
