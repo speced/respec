@@ -96,7 +96,9 @@ function makeTOCAtLevel($parent, doc, current, level, conf) {
       .append(isIntro ? "" : $span.clone())
       .append($kidsHolder.contents());
     const $item = $("<li class='tocline'/>").append($a);
-    if (conf.maxTocLevel === 0 || level <= conf.maxTocLevel) $ol.append($item);
+    if (level <= conf.maxTocLevel) {
+      $ol.append($item);
+    }
     current.push(0);
     const $sub = makeTOCAtLevel($sec, doc, current, level + 1, conf);
     if ($sub) {
@@ -112,7 +114,7 @@ export function run(conf) {
     conf.tocIntroductory = false;
   }
   if ("maxTocLevel" in conf === false) {
-    conf.maxTocLevel = 0;
+    conf.maxTocLevel = Infinity;
   }
 
   renameSectionHeaders();
