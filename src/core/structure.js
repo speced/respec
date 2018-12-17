@@ -114,6 +114,18 @@ export function run(conf) {
   if ("maxTocLevel" in conf === false) {
     conf.maxTocLevel = 0;
   }
+
+  renameSectionHeaders();
+
+  // makeTOC
+  if (!conf.noTOC) {
+    createTableOfContents(conf);
+  }
+
+  updateEmptyAnchors();
+}
+
+function renameSectionHeaders() {
   const headers = getNonintroductorySectionHeaders();
   if (!headers.length) {
     return;
@@ -125,13 +137,6 @@ export function run(conf) {
       renameElement(header, h);
     }
   });
-
-  // makeTOC
-  if (!conf.noTOC) {
-    createTableOfContents(conf);
-  }
-
-  updateEmptyAnchors();
 }
 
 function getNonintroductorySectionHeaders() {
