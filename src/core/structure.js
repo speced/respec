@@ -12,6 +12,9 @@
 import { addId, parents, renameElement } from "./utils";
 import hyperHTML from "../deps/hyperhtml";
 
+const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
+const headerTags = ["h1", ...lowerHeaderTags];
+
 const secMap = {};
 let appendixMode = false;
 let lastNonAppendix = 0;
@@ -35,13 +38,7 @@ function makeTOCAtLevel($parent, doc, current, level, conf) {
     }
     const h = $sec.children()[0];
     const ln = h.localName.toLowerCase();
-    if (
-      ln !== "h2" &&
-      ln !== "h3" &&
-      ln !== "h4" &&
-      ln !== "h5" &&
-      ln !== "h6"
-    ) {
+    if (!lowerHeaderTags.includes(ln)) {
       continue;
     }
     const title = h.textContent;
@@ -142,7 +139,7 @@ function renameSectionHeaders() {
 }
 
 function getNonintroductorySectionHeaders() {
-  const headerSelector = ["h1", "h2", "h3", "h4", "h5", "h6"]
+  const headerSelector = headerTags
     .map(h => `section:not(.introductory) ${h}:first-child`)
     .join(",");
   return [...document.querySelectorAll(headerSelector)].filter(
