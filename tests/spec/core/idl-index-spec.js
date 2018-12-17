@@ -1,5 +1,5 @@
 "use strict";
-describe("Core — IDL Index", () => {
+fdescribe("Core — IDL Index", () => {
   afterAll(flushIframes);
   it("generates an idl summary", async () => {
     const body = `
@@ -75,6 +75,7 @@ interface Bar {
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
     expect(idlIndex.innerText.includes("Foo")).toEqual(false);
+    expect(idlIndex.innerText.includes("Bar")).toEqual(true);
     expect(idlIndex.innerText.includes("Baz")).toEqual(false);
   });
 
@@ -103,6 +104,13 @@ interface Bar {
       };
         </pre>
       </section>
+      <section>
+      <pre class="idl">
+    interface Qux {
+      readonly attribute DOMString qux;
+    };
+      </pre>
+    </section>
       <section id="idl-index"></section>
     `;
     const ops = {
@@ -114,6 +122,7 @@ interface Bar {
     expect(idlIndex.innerText.includes("Foo")).toEqual(false);
     expect(idlIndex.innerText.includes("Bar")).toEqual(false);
     expect(idlIndex.innerText.includes("Baz")).toEqual(false);
+    expect(idlIndex.innerText.includes("Qux")).toEqual(true);
   });
 
   // this should exclude because IDL parent section is editors note or best practice section (non-normative)
@@ -149,6 +158,7 @@ interface Bar {
     };
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
+    expect(idlIndex.innerText.includes("Foo")).toEqual(true);
     expect(idlIndex.innerText.includes("Bar")).toEqual(false);
     expect(idlIndex.innerText.includes("Baz")).toEqual(false);
   });
