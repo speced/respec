@@ -9,7 +9,7 @@
 //  - lang: can change the generated text (supported: en, fr)
 //  - maxTocLevel: only generate a TOC so many levels deep
 
-import { addId, parents, renameElement } from "./utils";
+import { addId, children, parents, renameElement } from "./utils";
 import hyperHTML from "../deps/hyperhtml";
 
 const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
@@ -21,16 +21,24 @@ let lastNonAppendix = 0;
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 export const name = "core/structure";
 
-function makeTOCAtLevel($parent, doc, current, level, conf) {
-  const $secs = $parent.children(
+/**
+ *
+ * @param {HTMLElement} parent the target element to find child sections
+ * @param {number[]} current
+ * @param {number} level
+ * @param {*} conf
+ */
+function makeTOCAtLevel(parent, current, level, conf) {
+  const sections = children(
+    parent,
     conf.tocIntroductory ? "section" : "section:not(.introductory)"
   );
-  if ($secs.length === 0) {
+  if (sections.length === 0) {
     return null;
   }
   const $ol = $("<ol class='toc'></ol>");
-  for (let i = 0; i < $secs.length; i++) {
-    const $sec = $($secs[i], doc);
+  for (const section of sections) {
+    const $sec = $(section);
     const isIntro = $sec.hasClass("introductory");
     const noToc = $sec.hasClass("notoc");
     if (!$sec.children().length || noToc) {
@@ -97,7 +105,7 @@ function makeTOCAtLevel($parent, doc, current, level, conf) {
       $ol.append($item);
     }
     current.push(0);
-    const $sub = makeTOCAtLevel($sec, doc, current, level + 1, conf);
+    const $sub = makeTOCAtLevel($sec[0], current, level + 1, conf);
     if ($sub) {
       $item.append($sub);
     }
@@ -148,7 +156,7 @@ function getNonintroductorySectionHeaders() {
 }
 
 function createTableOfContents(conf) {
-  const $ol = makeTOCAtLevel($("body"), document, [0], 1, conf);
+  const $ol = makeTOCAtLevel(document.body, [0], 1, conf);
   if (!$ol) {
     return;
   }
