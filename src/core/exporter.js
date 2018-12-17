@@ -83,7 +83,7 @@ function cleanup(cloneDoc) {
   `;
 
   insertions.appendChild(metaGenerator);
-  head.insertBefore(insertions, head.firstChild);
+  head.prepend(insertions);
   pub("beforesave", documentElement);
 }
 
