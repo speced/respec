@@ -1,5 +1,5 @@
 "use strict";
-fdescribe("Core — IDL Index", () => {
+describe("Core — IDL Index", () => {
   afterAll(flushIframes);
   it("generates an idl summary", async () => {
     const body = `
