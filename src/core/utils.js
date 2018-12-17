@@ -833,3 +833,22 @@ export function wrapInner(outer, wrapper) {
   outer.appendChild(wrapper);
   return outer;
 }
+
+/**
+ * @param {Element} element
+ * @param {string} selector
+ */
+export function parents(element, selector) {
+  /** @type {Element[]} */
+  const list = [];
+  let parent = element.parentElement;
+  while (parent) {
+    const closest = parent.closest(selector);
+    if (!closest) {
+      break;
+    }
+    list.push(closest);
+    parent = closest.parentElement;
+  }
+  return list;
+}

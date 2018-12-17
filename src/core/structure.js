@@ -9,7 +9,7 @@
 //  - lang: can change the generated text (supported: en, fr)
 //  - maxTocLevel: only generate a TOC so many levels deep
 
-import { addId } from "./utils";
+import { addId, parents, renameElement } from "./utils";
 import hyperHTML from "../deps/hyperhtml";
 
 const secMap = {};
@@ -114,19 +114,16 @@ export function run(conf) {
   if ("maxTocLevel" in conf === false) {
     conf.maxTocLevel = 0;
   }
-  let $secs = $("section:not(.introductory)")
-    .find("h1:first, h2:first, h3:first, h4:first, h5:first, h6:first")
-    .toArray()
-    .filter(elem => elem.closest("section.introductory") === null);
-  $secs = $($secs);
-  if (!$secs.length) {
+  const headers = getNonintroductorySectionHeaders();
+  if (!headers.length) {
     return;
   }
-  $secs.each(function() {
-    let depth = $(this).parents("section").length + 1;
-    if (depth > 6) depth = 6;
+  headers.forEach(header => {
+    const depth = Math.min(parents(header, "section").length + 1, 6);
     const h = "h" + depth;
-    if (this.localName.toLowerCase() !== h) $(this).renameElement(h);
+    if (header.localName !== h) {
+      renameElement(header, h);
+    }
   });
 
   // makeTOC
@@ -135,6 +132,15 @@ export function run(conf) {
   }
 
   updateEmptyAnchors();
+}
+
+function getNonintroductorySectionHeaders() {
+  const headerSelector = ["h1", "h2", "h3", "h4", "h5", "h6"]
+    .map(h => `section:not(.introductory) ${h}:first-child`)
+    .join(",");
+  return [...document.querySelectorAll(headerSelector)].filter(
+    elem => !elem.closest("section.introductory")
+  );
 }
 
 function createTableOfContents(conf) {
