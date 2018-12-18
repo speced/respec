@@ -75,17 +75,15 @@ function scanSections(parent, conf, { prefix = "" } = {}) {
       // paginate the output
       h.before(document.createComment("OddPage"));
     }
-    const span = hyperHTML`<span class='secno'>${secno} </span>`;
-    if (!isIntro) {
-      h.prepend(span);
-    }
     secMap[id] = { secno: isIntro ? "" : secno, title };
 
     const anchor = hyperHTML`<a href="${`#${id}`}" class="tocxref" />`;
-    anchor.append(
-      isIntro ? "" : span.cloneNode(true),
-      ...kidsHolder.childNodes
-    );
+    if (!isIntro) {
+      const span = hyperHTML`<span class='secno'>${secno} </span>`;
+      h.prepend(span);
+      anchor.append(span.cloneNode(true));
+    }
+    anchor.append(...kidsHolder.childNodes);
     const item = hyperHTML`<li class='tocline'>${anchor}</li>`;
     const level = Math.ceil(secno.length / 2);
     if (level <= conf.maxTocLevel) {
