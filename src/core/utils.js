@@ -97,6 +97,10 @@ const fetchDestinations = new Set([
   "",
 ]);
 
+//these classes mean a section is non-normative
+export const nonNormativeClasses =
+  ".informative, .note, .issue, .example, .ednote, .practice";
+
 /**
  * Allows a node to be swapped into a different document at
  * some insertion point(Element). This function is useful for
