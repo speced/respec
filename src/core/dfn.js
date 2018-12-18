@@ -33,5 +33,5 @@ export function registerDefinitionMapping(dfn, names, definitionMap) {
     } else if (!definitionMap[name].includes(dfn)) {
       definitionMap[name].push(dfn);
     }
-  };
+  }
 }
