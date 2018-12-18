@@ -347,6 +347,8 @@ Geeft:
 <aside class="issue" data-number="94">Met extra tekst.</aside>
 
 ## Afbeeldingen
+
+### Optie 1 - Markdown
 Code:
 
 ```
@@ -355,6 +357,52 @@ Code:
 Geeft: 
 
 ![Dit is geen willekeurige afbeelding](media/cluedo.jpg)
+
+Optie 2: HTML
+
+Er is nog een manier van het opnemen van afbeeldingen in Respec. Deze manier is de HTML manier, die   
+er voor zorgt dat de afbeeldingen in een lijst met afbeeldingen terecht komen. In Index.html bepaal je waar in het document  
+die lijst terecht komt. 
+
+Code:
+
+```
+<figure id="personas">
+   <img src="media/figuren.jpg" alt="">
+   <figcaption>De spelers</figcaption>
+</figure>
+<figure id="wapens">
+   <img src="media/wapens.jpg" alt="">
+   <figcaption>De wapens</figcaption>
+</figure>
+<figure id="vloerplan">
+   <img src="media/plattegrond.jpg" alt="">
+   <figcaption>Het speelbord</figcaption>
+</figure>
+
+```
+>> zoals je ziet kunnen het id, de img src en de figcaption allemaal verschillende teksten bevatten.
+
+Geeft: 
+
+<figure id="personas">
+   <img src="media/figuren.jpg" alt="">
+   <figcaption>De spelers</figcaption>
+</figure>
+
+
+<figure id="wapens">
+   <img src="media/wapens.jpg" alt="">
+   <figcaption>De wapens</figcaption>
+</figure>
+
+
+<figure id="vloerplan">
+   <img src="media/plattegrond.jpg" alt="">
+   <figcaption>Het speelbord</figcaption>
+</figure>
+
+
 
 ## Hyperlinks
 Code:
@@ -381,6 +429,7 @@ Geeft:
 Een paar verwijzingen naar de localBiblio staan hier [[GIF]]
 
 zie vooral ook [[!KANDELAAR]] voor het alternatief gebruik van Kandelaars
+
 
 ## Meer lezen
 Dit voorbeelddocument is niet uitputtend. Meer lezen? Zie: 
