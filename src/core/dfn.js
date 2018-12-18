@@ -27,11 +27,11 @@ export function run(conf) {
  * @param {Record<string, HTMLElement[]>} definitionMap
  */
 export function registerDefinitionMapping(dfn, names, definitionMap) {
-  names.forEach(name => {
+  for (const name of names) {
     if (!definitionMap[name]) {
       definitionMap[name] = [dfn];
     } else if (!definitionMap[name].includes(dfn)) {
       definitionMap[name].push(dfn);
     }
-  });
+  };
 }
