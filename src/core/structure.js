@@ -16,20 +16,22 @@ const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
 const headerTags = ["h1", ...lowerHeaderTags];
 
 const secMap = {};
-let appendixMode = false;
-let lastNonAppendix = 0;
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 export const name = "core/structure";
 
 /**
  *
  * @param {HTMLElement} parent the target element to find child sections
- * @param {number[]} current
- * @param {number} level
  * @param {*} conf
  * @return {HTMLElement}
  */
-function makeTOCAtLevel(parent, current, level, conf) {
+function makeTOCAtLevel(parent, conf, { prefix = "" } = {}) {
+  let appendixMode = false;
+  let lastNonAppendix = 0;
+  let index = 0;
+  if (prefix.length && !prefix.endsWith(".")) {
+    prefix += ".";
+  }
   const sections = children(
     parent,
     conf.tocIntroductory ? "section" : "section:not(.introductory)"
@@ -54,22 +56,16 @@ function makeTOCAtLevel(parent, current, level, conf) {
     const id = addId(section, null, title);
 
     if (!isIntro) {
-      current[current.length - 1]++;
+      index += 1;
     }
-    const secnos = current.slice();
-    if (
-      section.classList.contains("appendix") &&
-      current.length === 1 &&
-      !appendixMode
-    ) {
-      lastNonAppendix = current[0];
+    if (section.classList.contains("appendix") && !prefix && !appendixMode) {
+      lastNonAppendix = index;
       appendixMode = true;
     }
-    if (appendixMode) {
-      secnos[0] = alphabet.charAt(current[0] - lastNonAppendix);
-    }
-    let secno = secnos.join(".");
-    const isTopLevel = secnos.length == 1;
+    let secno = appendixMode
+      ? alphabet.charAt(index - lastNonAppendix)
+      : prefix + index;
+    const isTopLevel = secno.length == 1;
     if (isTopLevel) {
       secno = secno + ".";
       // if this is a top level item, insert
@@ -93,15 +89,14 @@ function makeTOCAtLevel(parent, current, level, conf) {
       ...kidsHolder.childNodes
     );
     const item = hyperHTML`<li class='tocline'>${anchor}</li>`;
+    const level = Math.ceil(secno.length / 2);
     if (level <= conf.maxTocLevel) {
       ol.append(item);
     }
-    current.push(0);
-    const sub = makeTOCAtLevel(section, current, level + 1, conf);
+    const sub = makeTOCAtLevel(section, conf, { prefix: secno, appendixMode });
     if (sub) {
       item.append(sub);
     }
-    current.pop();
   }
   return ol;
 }
@@ -164,7 +159,7 @@ function getNonintroductorySectionHeaders() {
 }
 
 function createTableOfContents(conf) {
-  const ol = makeTOCAtLevel(document.body, [0], 1, conf);
+  const ol = makeTOCAtLevel(document.body, conf);
   if (!ol) {
     return;
   }
