@@ -117,13 +117,7 @@ export function makeOwnerSwapper(node) {
   }
   return insertionPoint => {
     insertionPoint.ownerDocument.adoptNode(node);
-    if (insertionPoint.firstElementChild) {
-      return insertionPoint.insertBefore(
-        node,
-        insertionPoint.firstElementChild
-      );
-    }
-    insertionPoint.appendChild(node);
+    insertionPoint.prepend(node);
   };
 }
 
