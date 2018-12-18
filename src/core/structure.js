@@ -30,7 +30,7 @@ function scanSections(parent, conf, { prefix = "" } = {}) {
   const secMap = {};
   let appendixMode = false;
   let lastNonAppendix = 0;
-  let index = 0;
+  let index = 1;
   if (prefix.length && !prefix.endsWith(".")) {
     prefix += ".";
   }
@@ -52,14 +52,13 @@ function scanSections(parent, conf, { prefix = "" } = {}) {
     if (!lowerHeaderTags.includes(h.localName)) {
       continue;
     }
-    if (!isIntro) {
-      index += 1;
-    }
     if (section.classList.contains("appendix") && !prefix && !appendixMode) {
       lastNonAppendix = index;
       appendixMode = true;
     }
-    let secno = appendixMode
+    let secno = isIntro
+      ? ""
+      : appendixMode
       ? alphabet.charAt(index - lastNonAppendix)
       : prefix + index;
     const level = Math.ceil(secno.length / 2);
@@ -73,7 +72,12 @@ function scanSections(parent, conf, { prefix = "" } = {}) {
 
     const title = h.textContent;
     const id = addId(section, null, title);
-    secMap[id] = { secno: isIntro ? "" : secno, title };
+    secMap[id] = { secno, title };
+
+    if (!isIntro) {
+      index += 1;
+      h.prepend(hyperHTML`<span class='secno'>${secno} </span>`);
+    }
 
     const sub = scanSections(section, conf, { prefix: secno, appendixMode });
     if (sub) {
@@ -82,10 +86,6 @@ function scanSections(parent, conf, { prefix = "" } = {}) {
 
     if (level <= conf.maxTocLevel) {
       const anchor = hyperHTML`<a href="${`#${id}`}" class="tocxref" />`;
-      if (!isIntro) {
-        const span = hyperHTML`<span class='secno'>${secno} </span>`;
-        h.prepend(span);
-      }
       anchor.append(...h.cloneNode(true).childNodes);
       filterHeader(anchor);
       const item = hyperHTML`<li class='tocline'>${anchor}</li>`;
