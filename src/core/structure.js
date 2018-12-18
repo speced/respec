@@ -15,17 +15,17 @@ import hyperHTML from "../deps/hyperhtml";
 const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
 const headerTags = ["h1", ...lowerHeaderTags];
 
-const secMap = {};
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 export const name = "core/structure";
 
 /**
- *
+ * Scans sections and generate ordered list element + ID-to-anchor-content dictionary.
  * @param {HTMLElement} parent the target element to find child sections
  * @param {*} conf
- * @return {HTMLElement}
+ * @return {{ ol: HTMLElement, secMap: Record<string, string> }}
  */
-function makeTOCAtLevel(parent, conf, { prefix = "" } = {}) {
+function scanSections(parent, conf, { prefix = "" } = {}) {
+  const secMap = {};
   let appendixMode = false;
   let lastNonAppendix = 0;
   let index = 0;
@@ -93,12 +93,13 @@ function makeTOCAtLevel(parent, conf, { prefix = "" } = {}) {
     if (level <= conf.maxTocLevel) {
       ol.append(item);
     }
-    const sub = makeTOCAtLevel(section, conf, { prefix: secno, appendixMode });
+    const sub = scanSections(section, conf, { prefix: secno, appendixMode });
     if (sub) {
-      item.append(sub);
+      item.append(sub.ol);
+      Object.assign(secMap, sub.secMap);
     }
   }
-  return ol;
+  return { ol, secMap };
 }
 
 /**
@@ -129,10 +130,10 @@ export function run(conf) {
 
   // makeTOC
   if (!conf.noTOC) {
-    createTableOfContents(conf);
+    const { ol, secMap } = scanSections(document.body, conf);
+    createTableOfContents(ol, conf);
+    updateEmptyAnchors(secMap);
   }
-
-  updateEmptyAnchors();
 }
 
 function renameSectionHeaders() {
@@ -158,8 +159,11 @@ function getNonintroductorySectionHeaders() {
   );
 }
 
-function createTableOfContents(conf) {
-  const ol = makeTOCAtLevel(document.body, conf);
+/**
+ * @param {HTMLElement} ol 
+ * @param {*} conf 
+ */
+function createTableOfContents(ol, conf) {
   if (!ol) {
     return;
   }
@@ -185,8 +189,9 @@ function createTableOfContents(conf) {
 
 /**
  * Update all anchors with empty content that reference a section ID
+ * @param {Record<string, string>} secMap
  */
-function updateEmptyAnchors() {
+function updateEmptyAnchors(secMap) {
   document.querySelectorAll("a[href^='#']:not(.tocxref)").forEach(anchor => {
     if (anchor.innerHTML !== "") {
       return;
