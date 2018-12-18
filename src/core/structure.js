@@ -19,10 +19,12 @@ const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 export const name = "core/structure";
 
 /**
+ * @typedef {{ secno: string, title: string }} SectionInfo
+ * 
  * Scans sections and generate ordered list element + ID-to-anchor-content dictionary.
  * @param {HTMLElement} parent the target element to find child sections
  * @param {*} conf
- * @return {{ ol: HTMLElement, secMap: Record<string, string> }}
+ * @return {{ ol: HTMLElement, secMap: Record<string, SectionInfo> }}
  */
 function scanSections(parent, conf, { prefix = "" } = {}) {
   const secMap = {};
@@ -77,11 +79,7 @@ function scanSections(parent, conf, { prefix = "" } = {}) {
     if (!isIntro) {
       h.prepend(span);
     }
-    secMap[id] =
-      (isIntro ? "" : "<span class='secno'>" + secno + "</span> ") +
-      "<span class='sec-title'>" +
-      title +
-      "</span>";
+    secMap[id] = { secno: isIntro ? "" : secno, title };
 
     const anchor = hyperHTML`<a href="${`#${id}`}" class="tocxref" />`;
     anchor.append(
@@ -189,7 +187,7 @@ function createTableOfContents(ol, conf) {
 
 /**
  * Update all anchors with empty content that reference a section ID
- * @param {Record<string, string>} secMap
+ * @param {Record<string, SectionInfo>} secMap
  */
 function updateEmptyAnchors(secMap) {
   document.querySelectorAll("a[href^='#']:not(.tocxref)").forEach(anchor => {
@@ -198,9 +196,15 @@ function updateEmptyAnchors(secMap) {
     }
     const id = anchor.getAttribute("href").slice(1);
     if (secMap[id]) {
+      const { secno, title } = secMap[id];
       anchor.classList.add("sec-ref");
-      const prefix = anchor.classList.contains("sectionRef") ? "section " : "";
-      anchor.innerHTML = prefix + secMap[id];
+      if (anchor.classList.contains("sectionRef")) {
+        anchor.append("section ");
+      }
+      if (secno) {
+        anchor.append(hyperHTML`<span class='secno'>${secno}</span>`, " ");
+      }
+      anchor.append(hyperHTML`<span class='sec-title'>${title}</span>`);
     }
   });
 }
