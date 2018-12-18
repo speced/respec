@@ -52,11 +52,6 @@ function scanSections(parent, conf, { prefix = "" } = {}) {
     if (!lowerHeaderTags.includes(h.localName)) {
       continue;
     }
-    const title = h.textContent;
-    const kidsHolder = hyperHTML`<div>${h.cloneNode(true).childNodes}</div>`;
-    filterHeader(kidsHolder);
-    const id = addId(section, null, title);
-
     if (!isIntro) {
       index += 1;
     }
@@ -67,32 +62,37 @@ function scanSections(parent, conf, { prefix = "" } = {}) {
     let secno = appendixMode
       ? alphabet.charAt(index - lastNonAppendix)
       : prefix + index;
-    const isTopLevel = secno.length == 1;
-    if (isTopLevel) {
+    const level = Math.ceil(secno.length / 2);
+    if (level === 1) {
       secno = secno + ".";
       // if this is a top level item, insert
       // an OddPage comment so html2ps will correctly
       // paginate the output
       h.before(document.createComment("OddPage"));
     }
+
+    const title = h.textContent;
+    const id = addId(section, null, title);
     secMap[id] = { secno: isIntro ? "" : secno, title };
 
-    const anchor = hyperHTML`<a href="${`#${id}`}" class="tocxref" />`;
-    if (!isIntro) {
-      const span = hyperHTML`<span class='secno'>${secno} </span>`;
-      h.prepend(span);
-      anchor.append(span.cloneNode(true));
-    }
-    anchor.append(...kidsHolder.childNodes);
-    const item = hyperHTML`<li class='tocline'>${anchor}</li>`;
-    const level = Math.ceil(secno.length / 2);
-    if (level <= conf.maxTocLevel) {
-      ol.append(item);
-    }
     const sub = scanSections(section, conf, { prefix: secno, appendixMode });
     if (sub) {
-      item.append(sub.ol);
       Object.assign(secMap, sub.secMap);
+    }
+
+    if (level <= conf.maxTocLevel) {
+      const anchor = hyperHTML`<a href="${`#${id}`}" class="tocxref" />`;
+      if (!isIntro) {
+        const span = hyperHTML`<span class='secno'>${secno} </span>`;
+        h.prepend(span);
+      }
+      anchor.append(...h.cloneNode(true).childNodes);
+      filterHeader(anchor);
+      const item = hyperHTML`<li class='tocline'>${anchor}</li>`;
+      if (sub) {
+        item.append(sub.ol);
+      }
+      ol.append(item);
     }
   }
   return { ol, secMap };
