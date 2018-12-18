@@ -27,6 +27,7 @@ export const name = "core/structure";
  * @param {number[]} current
  * @param {number} level
  * @param {*} conf
+ * @return {HTMLElement}
  */
 function makeTOCAtLevel(parent, current, level, conf) {
   const sections = children(
@@ -36,7 +37,7 @@ function makeTOCAtLevel(parent, current, level, conf) {
   if (sections.length === 0) {
     return null;
   }
-  const $ol = $("<ol class='toc'></ol>");
+  const ol = hyperHTML`<ol class='toc'>`;
   for (const section of sections) {
     const $sec = $(section);
     const isIntro = $sec.hasClass("introductory");
@@ -96,22 +97,23 @@ function makeTOCAtLevel(parent, current, level, conf) {
       title +
       "</span>";
 
-    const $a = $("<a/>")
-      .attr({ href: "#" + id, class: "tocxref" })
-      .append(isIntro ? "" : $span.clone())
-      .append($kidsHolder.contents());
-    const $item = $("<li class='tocline'/>").append($a);
+    const anchor = hyperHTML`<a href="${`#${id}`}" class="tocxref" />`;
+    anchor.append(
+      isIntro ? "" : $span[0].cloneNode(true),
+      ...$kidsHolder[0].childNodes
+    );
+    const item = hyperHTML`<li class='tocline'>${anchor}</li>`;
     if (level <= conf.maxTocLevel) {
-      $ol.append($item);
+      ol.append(item);
     }
     current.push(0);
-    const $sub = makeTOCAtLevel($sec[0], current, level + 1, conf);
-    if ($sub) {
-      $item.append($sub);
+    const sub = makeTOCAtLevel($sec[0], current, level + 1, conf);
+    if (sub) {
+      item.append(sub);
     }
     current.pop();
   }
-  return $ol;
+  return ol;
 }
 
 export function run(conf) {
@@ -156,14 +158,14 @@ function getNonintroductorySectionHeaders() {
 }
 
 function createTableOfContents(conf) {
-  const $ol = makeTOCAtLevel(document.body, [0], 1, conf);
-  if (!$ol) {
+  const ol = makeTOCAtLevel(document.body, [0], 1, conf);
+  if (!ol) {
     return;
   }
   const nav = hyperHTML`<nav id="toc">`;
   const h2 = hyperHTML`<h2 class="introductory">${conf.l10n.toc}</h2>`;
   addId(h2);
-  nav.append(h2, $ol[0]);
+  nav.append(h2, ol);
   const ref =
     document.getElementById("toc") ||
     document.getElementById("sotd") ||
