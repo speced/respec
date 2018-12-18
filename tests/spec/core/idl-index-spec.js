@@ -145,9 +145,9 @@ interface Bar {
       </section>
       <section class="practice">
         <pre class="idl">
-      interface Baz {
-        readonly attribute DOMString baz;
-      };
+        interface Baz {
+          readonly attribute DOMString baz;
+        };
         </pre>
       </section>
       <section id="idl-index"></section>
