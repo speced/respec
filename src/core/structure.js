@@ -85,10 +85,7 @@ function scanSections(parent, conf, { prefix = "" } = {}) {
     }
 
     if (level <= conf.maxTocLevel) {
-      const anchor = hyperHTML`<a href="${`#${id}`}" class="tocxref" />`;
-      anchor.append(...h.cloneNode(true).childNodes);
-      filterHeader(anchor);
-      const item = hyperHTML`<li class='tocline'>${anchor}</li>`;
+      const item = createTocListItem(h, id);
       if (sub) {
         item.append(sub.ol);
       }
@@ -96,6 +93,17 @@ function scanSections(parent, conf, { prefix = "" } = {}) {
     }
   }
   return { ol, secMap };
+}
+
+/**
+ * @param {HTMLElement} header
+ * @param {string} id
+ */
+function createTocListItem(header, id) {
+  const anchor = hyperHTML`<a href="${`#${id}`}" class="tocxref" />`;
+  anchor.append(...header.cloneNode(true).childNodes);
+  filterHeader(anchor);
+  return hyperHTML`<li class='tocline'>${anchor}</li>`;
 }
 
 /**
