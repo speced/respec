@@ -29,16 +29,26 @@ export function run() {
     }
     idlIndexSec.prepend(header);
   }
-  if (!document.querySelector("pre.idl")) {
+
+  //filter out the IDL marked with class="exclude" and the IDL in non-normative sections
+  const idlIndex = Array.from(
+    document.querySelectorAll("pre.def.idl:not(.exclude)")
+  ).filter(
+    idl =>
+      !idl.closest(".informative, .note, .issue, .example, .ednote, .practice")
+  );
+
+  if (idlIndex.length === 0) {
     const text = "This specification doesn't declare any Web IDL.";
     const noIDLFound = document.createTextNode(text);
     idlIndexSec.appendChild(noIDLFound);
     return;
   }
+
   const pre = document.createElement("pre");
   pre.classList.add("idl", "def");
   pre.id = "actual-idl-index";
-  Array.from(document.querySelectorAll("pre.def.idl"))
+  idlIndex
     .map(elem => {
       const fragment = document.createDocumentFragment();
       for (const child of elem.children) {
