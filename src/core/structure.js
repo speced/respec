@@ -20,7 +20,7 @@ export const name = "core/structure";
 
 /**
  * @typedef {{ secno: string, title: string }} SectionInfo
- * 
+ *
  * Scans sections and generate ordered list element + ID-to-anchor-content dictionary.
  * @param {HTMLElement} parent the target element to find child sections
  * @param {*} conf
