@@ -86,15 +86,11 @@ function findAttributeDfn(defn, parent, name, definitionMap) {
   const parentLow = parent.toLowerCase();
   const asLocalName = name.toLowerCase();
   const asQualifiedName = parentLow + "." + asLocalName;
-  let dfn;
-  if (definitionMap[asQualifiedName] || definitionMap[asLocalName]) {
-    dfn = findNormalDfn(defn, parent, asLocalName, definitionMap);
-  }
+  const dfn = findNormalDfn(defn, parent, asLocalName, definitionMap);
   if (!dfn) {
-    // try finding dfn using name, using normal search path...
-    return findNormalDfn(defn, parent, name, definitionMap);
+    return;
   }
-  addAlternativeNames(dfn, [asQualifiedName, asLocalName]);
+  addAlternativeNames(dfn, [asQualifiedName, asLocalName], definitionMap);
   return dfn;
 }
 
@@ -116,45 +112,30 @@ function findOperationDfn(defn, parent, name, definitionMap) {
   const asQualifiedName = parentLow + "." + asLocalName;
   const asFullyQualifiedName = asQualifiedName + "()";
 
-  if (
-    definitionMap[asMethodName] ||
-    definitionMap[asFullyQualifiedName.toLowerCase()]
-  ) {
-    const lookupName = definitionMap[asMethodName]
-      ? asMethodName
-      : asFullyQualifiedName;
-    const dfn = findNormalDfn(defn, parent, lookupName, definitionMap);
-    if (!dfn) {
-      // try finding dfn using name, using normal search path...
-      return findNormalDfn(defn, parent, name, definitionMap);
-    }
-    addAlternativeNames(dfn, [
-      asFullyQualifiedName,
-      asQualifiedName,
-      lookupName,
-      asLocalName,
-    ]);
-    registerDefinitionMapping(dfn, asLocalName, definitionMap);
-    return dfn;
-  }
-  // no method alias, so let's find the dfn and add it
-  const dfn = findNormalDfn(defn, parent, name, definitionMap);
+  const dfn =
+    findNormalDfn(defn, parent, asMethodName, definitionMap) ||
+    findNormalDfn(defn, parent, name, definitionMap);
   if (!dfn) {
     return;
   }
-  addAlternativeNames(dfn, [asMethodName, name]);
-  registerDefinitionMapping(dfn, asMethodName, definitionMap);
+  addAlternativeNames(
+    dfn,
+    [asFullyQualifiedName, asQualifiedName, asMethodName, asLocalName],
+    definitionMap
+  );
   return dfn;
 }
 
 /**
  * @param {HTMLElement} dfn
  * @param {string[]} names
+ * @param {Record<string, HTMLElement[]>} definitionMap
  */
-function addAlternativeNames(dfn, names) {
+function addAlternativeNames(dfn, names, definitionMap) {
   const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
   lt.push(...names);
   dfn.dataset.lt = [...new Set(lt)].join("|");
+  registerDefinitionMapping(dfn, names, definitionMap);
 }
 
 /**
@@ -179,7 +160,7 @@ function findNormalDfn(defn, parent, name, definitionMap) {
       dfns = dfnForArray;
       // Found it: register with its local name
       delete definitionMap[resolvedName];
-      registerDefinitionMapping(dfns[0], nameLow, definitionMap);
+      registerDefinitionMapping(dfns[0], [nameLow], definitionMap);
     }
   }
   if (dfns.length > 1) {

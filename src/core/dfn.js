@@ -16,22 +16,22 @@ export function run(conf) {
     }
     // TODO: we should probably use weakmaps and weaksets here to avoid leaks.
     const titles = getDfnTitles(dfn, { isDefinition: true });
-    titles.forEach(title => {
-      return registerDefinitionMapping(dfn, title, conf.definitionMap);
-    });
+    registerDefinitionMapping(dfn, titles, conf.definitionMap);
   });
 }
 
 /**
  *
  * @param {HTMLElement} dfn
- * @param {string} name
+ * @param {string[]} name
  * @param {Record<string, HTMLElement[]>} definitionMap
  */
-export function registerDefinitionMapping(dfn, name, definitionMap) {
-  if (!definitionMap[name]) {
-    definitionMap[name] = [dfn];
-  } else if (!definitionMap[name].includes(dfn)) {
-    definitionMap[name].push(dfn);
+export function registerDefinitionMapping(dfn, names, definitionMap) {
+  for (const name of names) {
+    if (!definitionMap[name]) {
+      definitionMap[name] = [dfn];
+    } else if (!definitionMap[name].includes(dfn)) {
+      definitionMap[name].push(dfn);
+    }
   }
 }
