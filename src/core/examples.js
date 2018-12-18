@@ -47,7 +47,7 @@ export function run(conf) {
     if (example.localName === "aside") {
       ++number;
       const div = makeTitle(conf, example, number, report);
-      example.insertBefore(div, example.firstChild);
+      example.prepend(div);
       const id = addId(example, "ex-" + number, title);
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${id}`;
