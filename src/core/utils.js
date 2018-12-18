@@ -117,13 +117,7 @@ export function makeOwnerSwapper(node) {
   }
   return insertionPoint => {
     insertionPoint.ownerDocument.adoptNode(node);
-    if (insertionPoint.firstElementChild) {
-      return insertionPoint.insertBefore(
-        node,
-        insertionPoint.firstElementChild
-      );
-    }
-    insertionPoint.appendChild(node);
+    insertionPoint.prepend(node);
   };
 }
 
@@ -754,7 +748,7 @@ export function getDfnTitles(elem, args) {
  * @typedef {{for: string, title: string}} LinkTarget
  *
  * For an element like:
- *  <p link-for="Int1"><a for="Int2">Int3.member</a></p>
+ *  <p data-link-for="Int1"><a data-link-for="Int2">Int3.member</a></p>
  * we'll return:
  *  * {for: "int2", title: "int3.member"}
  *  * {for: "int3", title: "member"}

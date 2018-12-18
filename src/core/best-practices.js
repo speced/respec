@@ -19,10 +19,7 @@ export function run() {
       bp.textContent
     }</li>`;
     ul.appendChild(li);
-    bp.insertBefore(
-      document.createTextNode(`Best Practice ${num}: `),
-      bp.firstChild
-    );
+    bp.prepend(document.createTextNode(`Best Practice ${num}: `));
   }
   const bpSummary = document.getElementById("bp-summary");
   if (bps.length) {
