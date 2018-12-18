@@ -39,39 +39,29 @@ function makeTOCAtLevel(parent, current, level, conf) {
   }
   const ol = hyperHTML`<ol class='toc'>`;
   for (const section of sections) {
-    const $sec = $(section);
-    const isIntro = $sec.hasClass("introductory");
-    const noToc = $sec.hasClass("notoc");
-    if (!$sec.children().length || noToc) {
+    const isIntro = section.classList.contains("introductory");
+    const noToc = section.classList.contains("notoc");
+    if (!section.children.length || noToc) {
       continue;
     }
-    const h = $sec.children()[0];
-    const ln = h.localName.toLowerCase();
-    if (!lowerHeaderTags.includes(ln)) {
+    const h = section.children[0];
+    if (!lowerHeaderTags.includes(h.localName)) {
       continue;
     }
     const title = h.textContent;
-    const $kidsHolder = $("<div></div>").append(
-      $(h)
-        .contents()
-        .clone()
-    );
-    $kidsHolder
-      .find("a")
-      .renameElement("span")
-      .attr("class", "formerLink")
-      .removeAttr("href");
-    $kidsHolder
-      .find("dfn")
-      .renameElement("span")
-      .removeAttr("id");
-    const id = h.id ? h.id : $sec.makeID(null, title);
+    const kidsHolder = hyperHTML`<div>${h.cloneNode(true).childNodes}</div>`;
+    filterHeader(kidsHolder);
+    const id = addId(section, null, title);
 
     if (!isIntro) {
       current[current.length - 1]++;
     }
     const secnos = current.slice();
-    if ($sec.hasClass("appendix") && current.length === 1 && !appendixMode) {
+    if (
+      section.classList.contains("appendix") &&
+      current.length === 1 &&
+      !appendixMode
+    ) {
       lastNonAppendix = current[0];
       appendixMode = true;
     }
@@ -85,11 +75,11 @@ function makeTOCAtLevel(parent, current, level, conf) {
       // if this is a top level item, insert
       // an OddPage comment so html2ps will correctly
       // paginate the output
-      $(h).before(document.createComment("OddPage"));
+      h.before(document.createComment("OddPage"));
     }
-    const $span = $("<span class='secno'></span>").text(secno + " ");
+    const span = hyperHTML`<span class='secno'>${secno} </span>`;
     if (!isIntro) {
-      $(h).prepend($span);
+      h.prepend(span);
     }
     secMap[id] =
       (isIntro ? "" : "<span class='secno'>" + secno + "</span> ") +
@@ -99,21 +89,37 @@ function makeTOCAtLevel(parent, current, level, conf) {
 
     const anchor = hyperHTML`<a href="${`#${id}`}" class="tocxref" />`;
     anchor.append(
-      isIntro ? "" : $span[0].cloneNode(true),
-      ...$kidsHolder[0].childNodes
+      isIntro ? "" : span.cloneNode(true),
+      ...kidsHolder.childNodes
     );
     const item = hyperHTML`<li class='tocline'>${anchor}</li>`;
     if (level <= conf.maxTocLevel) {
       ol.append(item);
     }
     current.push(0);
-    const sub = makeTOCAtLevel($sec[0], current, level + 1, conf);
+    const sub = makeTOCAtLevel(section, current, level + 1, conf);
     if (sub) {
       item.append(sub);
     }
     current.pop();
   }
   return ol;
+}
+
+/**
+ * Replaces any child <a> and <dfn> with <span>.
+ * @param {HTMLElement} h
+ */
+function filterHeader(h) {
+  h.querySelectorAll("a").forEach(anchor => {
+    const span = renameElement(anchor, "span");
+    span.className = "formerLink";
+    span.removeAttribute("href");
+  });
+  h.querySelectorAll("dfn").forEach(dfn => {
+    const span = renameElement(dfn, "span");
+    span.removeAttribute("id");
+  });
 }
 
 export function run(conf) {
