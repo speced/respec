@@ -160,8 +160,8 @@ function getNonintroductorySectionHeaders() {
 }
 
 /**
- * @param {HTMLElement} ol 
- * @param {*} conf 
+ * @param {HTMLElement} ol
+ * @param {*} conf
  */
 function createTableOfContents(ol, conf) {
   if (!ol) {
