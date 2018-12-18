@@ -15,16 +15,23 @@ export function run(conf) {
       dfn.dataset.dfnFor = dfn.dataset.dfnFor.toLowerCase();
     }
     // TODO: we should probably use weakmaps and weaksets here to avoid leaks.
-    getDfnTitles(dfn, { isDefinition: true })
-      .map(dfnTitle => {
-        if (!conf.definitionMap[dfnTitle]) {
-          conf.definitionMap[dfnTitle] = [];
-        }
-        return conf.definitionMap[dfnTitle];
-      })
-      .reduce((dfn, dfnTitleContainer) => {
-        dfnTitleContainer.push(dfn);
-        return dfn;
-      }, dfn);
+    const titles = getDfnTitles(dfn, { isDefinition: true });
+    registerDefinitionMapping(dfn, titles, conf.definitionMap);
   });
+}
+
+/**
+ *
+ * @param {HTMLElement} dfn
+ * @param {string[]} name
+ * @param {Record<string, HTMLElement[]>} definitionMap
+ */
+export function registerDefinitionMapping(dfn, names, definitionMap) {
+  for (const name of names) {
+    if (!definitionMap[name]) {
+      definitionMap[name] = [dfn];
+    } else if (!definitionMap[name].includes(dfn)) {
+      definitionMap[name].push(dfn);
+    }
+  }
 }

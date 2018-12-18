@@ -107,7 +107,7 @@ class Builder {
     node.appendChild(process(node));
 
     if (header) {
-      node.insertBefore(header, node.firstChild);
+      node.prepend(header);
     }
 
     parent.appendChild(node);

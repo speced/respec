@@ -224,6 +224,10 @@ describe("Core - WebIDL", () => {
     expect(interfaces[1].id).toEqual("idl-def-docisnotcasesensitive");
     expect(interfaces[2].id).toEqual("idl-def-undocinterface");
     expect(interfaces[2].querySelector(".idlID a")).toBeNull();
+    const namespace = target.querySelector(".idlNamespace");
+    expect(namespace.querySelector(".idlID a").getAttribute("href")).toEqual(
+      "#dom-afterglow"
+    );
   });
 
   it("should handle constructors", () => {
