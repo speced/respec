@@ -284,7 +284,7 @@ export function run(conf) {
     if (link) {
       const style = document.createElement("style");
       style.textContent = css;
-      link.parentElement.insertBefore(style, link);
+      link.before(style);
     }
   }
 

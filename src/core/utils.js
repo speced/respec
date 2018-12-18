@@ -117,13 +117,7 @@ export function makeOwnerSwapper(node) {
   }
   return insertionPoint => {
     insertionPoint.ownerDocument.adoptNode(node);
-    if (insertionPoint.firstElementChild) {
-      return insertionPoint.insertBefore(
-        node,
-        insertionPoint.firstElementChild
-      );
-    }
-    insertionPoint.appendChild(node);
+    insertionPoint.prepend(node);
   };
 }
 
@@ -832,4 +826,50 @@ export function wrapInner(outer, wrapper) {
   wrapper.append(...outer.childNodes);
   outer.appendChild(wrapper);
   return outer;
+}
+
+/**
+ * Applies the selector for all its ancestors.
+ * @param {Element} element
+ * @param {string} selector
+ */
+export function parents(element, selector) {
+  /** @type {Element[]} */
+  const list = [];
+  let parent = element.parentElement;
+  while (parent) {
+    const closest = parent.closest(selector);
+    if (!closest) {
+      break;
+    }
+    list.push(closest);
+    parent = closest.parentElement;
+  }
+  return list;
+}
+
+/**
+ * Applies the selector for direct descendants.
+ * This is a helper function for browsers without :scope support.
+ * Note that this doesn't support comma separated selectors.
+ * @param {Element} element
+ * @param {string} selector
+ */
+export function children(element, selector) {
+  try {
+    return element.querySelectorAll(`:scope > ${selector}`);
+  } catch {
+    let tempId = "";
+    // We give a temporary id, to overcome lack of ":scope" support in Edge.
+    if (!element.id) {
+      tempId = `temp-${String(Math.random()).substr(2)}`;
+      element.id = tempId;
+    }
+    const query = `#${element.id} > ${selector}`;
+    const elements = element.parentElement.querySelectorAll(query);
+    if (tempId) {
+      element.id = "";
+    }
+    return elements;
+  }
 }

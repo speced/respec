@@ -99,10 +99,10 @@ const elements = createResourceHints();
 elements.appendChild(createBaseStyle());
 if (!document.head.querySelector("meta[name=viewport]")) {
   // Make meta viewport the first element in the head.
-  elements.insertBefore(createMetaViewport(), elements.firstChild);
+  elements.prepend(createMetaViewport());
 }
 
-document.head.insertBefore(elements, document.head.firstChild);
+document.head.prepend(elements);
 
 export function run(conf) {
   if (!conf.specStatus) {
