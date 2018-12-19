@@ -97,8 +97,8 @@ const fetchDestinations = new Set([
   "",
 ]);
 
-//these classes mean a section is non-normative
-export const nonNormativeClasses =
+//CSS selector for matching elements that are non-normative
+export const nonNormativeSelector =
   ".informative, .note, .issue, .example, .ednote, .practice";
 
 /**
