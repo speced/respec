@@ -92,6 +92,10 @@ describe("Core - Structure", () => {
         .text()
     ).toEqual("A. ONE");
     expect($toc.find("a[href='#four-0']").text()).toEqual("A.1.1.1 FOUR");
+    // should still add section number to the original header
+    expect(doc.getElementById("x1-1-1-1-1-five").textContent).toBe(
+      "1.1.1.1.1 FIVE"
+    );
   });
 
   it("gives the toc's heading an id", async () => {
