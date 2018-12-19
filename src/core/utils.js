@@ -798,8 +798,7 @@ export function renameElement(elem, newName) {
 }
 
 export function refTypeFromContext(ref, element) {
-  const informSelectors = ".informative, .note, figure, .example, .issue";
-  const closestInformative = element.closest(informSelectors);
+  const closestInformative = element.closest(nonNormativeSelector);
   let isInformative = false;
   if (closestInformative) {
     // check if parent is not normative
