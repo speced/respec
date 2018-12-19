@@ -11,7 +11,7 @@
  * that is preferred.
  */
 export const name = "core/webidl-index";
-import { nonNormativeClasses } from "./utils";
+import { nonNormativeSelector } from "./utils";
 
 export function run() {
   const idlIndexSec = document.querySelector("section#idl-index");
@@ -34,7 +34,7 @@ export function run() {
   //filter out the IDL marked with class="exclude" and the IDL in non-normative sections
   const idlIndex = Array.from(
     document.querySelectorAll("pre.def.idl:not(.exclude)")
-  ).filter(idl => !idl.closest(nonNormativeClasses));
+  ).filter(idl => !idl.closest(nonNormativeSelector));
 
   if (idlIndex.length === 0) {
     const text = "This specification doesn't declare any Web IDL.";
