@@ -22,11 +22,11 @@ export const name = "core/structure";
  * @typedef {{ secno: string, title: string }} SectionInfo
  *
  * Scans sections and generate ordered list element + ID-to-anchor-content dictionary.
- * @param {HTMLElement} parent the target element to find child sections
- * @param {*} conf
+ * @param {Section[]} sections the target element to find child sections
+ * @param {number} maxTocLevel
  * @return {{ ol: HTMLElement, secMap: Record<string, SectionInfo> }}
  */
-function scanSections(parent, conf, { prefix = "" } = {}) {
+function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
   const secMap = {};
   let appendixMode = false;
   let lastNonAppendix = 0;
@@ -34,65 +34,85 @@ function scanSections(parent, conf, { prefix = "" } = {}) {
   if (prefix.length && !prefix.endsWith(".")) {
     prefix += ".";
   }
-  const sections = children(
-    parent,
-    conf.tocIntroductory ? "section" : "section:not(.introductory)"
-  );
   if (sections.length === 0) {
     return null;
   }
   const ol = hyperHTML`<ol class='toc'>`;
   for (const section of sections) {
-    const isIntro = section.classList.contains("introductory");
-    const noToc = section.classList.contains("notoc");
-    if (!section.children.length || noToc) {
-      continue;
-    }
-    const h = section.children[0];
-    if (!lowerHeaderTags.includes(h.localName)) {
-      continue;
-    }
-    if (section.classList.contains("appendix") && !prefix && !appendixMode) {
+    if (section.isAppendix && !prefix && !appendixMode) {
       lastNonAppendix = index;
       appendixMode = true;
     }
-    let secno = isIntro
+    let secno = section.isIntro
       ? ""
       : appendixMode
       ? alphabet.charAt(index - lastNonAppendix)
       : prefix + index;
     const level = Math.ceil(secno.length / 2);
     if (level === 1) {
-      secno = secno + ".";
+      secno += ".";
       // if this is a top level item, insert
       // an OddPage comment so html2ps will correctly
       // paginate the output
-      h.before(document.createComment("OddPage"));
+      section.header.before(document.createComment("OddPage"));
     }
 
-    const title = h.textContent;
-    const id = addId(section, null, title);
-    secMap[id] = { secno, title };
+    secMap[section.element.id] = { secno, title: section.title };
 
-    if (!isIntro) {
+    if (!section.isIntro) {
       index += 1;
-      h.prepend(hyperHTML`<span class='secno'>${secno} </span>`);
+      section.header.prepend(hyperHTML`<span class='secno'>${secno} </span>`);
     }
 
-    const sub = scanSections(section, conf, { prefix: secno, appendixMode });
-    if (sub) {
-      Object.assign(secMap, sub.secMap);
-    }
-
-    if (level <= conf.maxTocLevel) {
-      const item = createTocListItem(h, id);
+    if (level <= maxTocLevel) {
+      const item = createTocListItem(section.header, section.element.id);
+      const sub = scanSections(section.subsections, maxTocLevel, {
+        prefix: secno,
+      });
       if (sub) {
+        Object.assign(secMap, sub.secMap);
         item.append(sub.ol);
       }
       ol.append(item);
     }
   }
   return { ol, secMap };
+}
+
+/**
+ * @typedef {{ element: HTMLElement, header: HTMLElement, title: string, isIntro: boolean, isAppendix: boolean, subsections: Section[] }} Section
+ *
+ * @param {HTMLElement} parent
+ */
+function getSectionTree(parent, { tocIntroductory = false } = {}) {
+  const sectionElements = children(
+    parent,
+    tocIntroductory ? "section" : "section:not(.introductory)"
+  );
+  /** @type {Section[]} */
+  const sections = [];
+
+  for (const section of sectionElements) {
+    const noToc = section.classList.contains("notoc");
+    if (!section.children.length || noToc) {
+      continue;
+    }
+    const header = section.children[0];
+    if (!lowerHeaderTags.includes(header.localName)) {
+      continue;
+    }
+    const title = header.textContent;
+    addId(section, null, title);
+    sections.push({
+      element: section,
+      header,
+      title,
+      isIntro: section.classList.contains("introductory"),
+      isAppendix: section.classList.contains("appendix"),
+      subsections: getSectionTree(section, { tocIntroductory }),
+    });
+  }
+  return sections;
 }
 
 /**
@@ -134,7 +154,10 @@ export function run(conf) {
 
   // makeTOC
   if (!conf.noTOC) {
-    const { ol, secMap } = scanSections(document.body, conf);
+    const sectionTree = getSectionTree(document.body, {
+      tocIntroductory: conf.tocIntroductory,
+    });
+    const { ol, secMap } = scanSections(sectionTree, conf.maxTocLevel);
     createTableOfContents(ol, conf);
     updateEmptyAnchors(secMap);
   }
