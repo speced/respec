@@ -97,7 +97,7 @@ const fetchDestinations = new Set([
   "",
 ]);
 
-//CSS selector for matching elements that are non-normative
+// CSS selector for matching elements that are non-normative
 export const nonNormativeSelector =
   ".informative, .note, .issue, .example, .ednote, .practice";
 
