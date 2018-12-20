@@ -5,7 +5,11 @@
 // https://github.com/w3c/respec/issues/1662
 
 import "../deps/idb";
-import { norm as normalize, showInlineWarning } from "./utils";
+import {
+  nonNormativeSelector,
+  norm as normalize,
+  showInlineWarning,
+} from "./utils";
 
 const API_URL = new URL(
   "https://wt-466c7865b463a6c4cbb820b42dde9e58-0.sandbox.auth0-extend.com/xref-proto-2"
@@ -224,9 +228,7 @@ function addDataCiteToTerms(results, xrefMap, conf) {
       });
 
       // add specs for citation (references section)
-      const closestInform = elem.closest(
-        ".informative, .note, figure, .example, .issue"
-      );
+      const closestInform = elem.closest(nonNormativeSelector);
       if (
         closestInform &&
         (!elem.closest(".normative") ||
