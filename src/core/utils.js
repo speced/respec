@@ -115,16 +115,6 @@ export const nonNormativeSelector =
  *                    insertion point (Node) - or just appended, if
  *                    the element has no children.
  */
-export function makeOwnerSwapper(node) {
-  if (!node) {
-    throw new TypeError("Expected instance of Node.");
-  }
-  return insertionPoint => {
-    insertionPoint.ownerDocument.adoptNode(node);
-    insertionPoint.prepend(node);
-  };
-}
-
 export function calculateLeftPad(text) {
   if (typeof text !== "string") {
     throw new TypeError("Invalid input");

@@ -255,46 +255,6 @@ describe("Core - Utils", () => {
     });
   });
 
-  describe("makeOwnerSwapper()", () => {
-    it("returns a function", () => {
-      const testNode = document.createTextNode("test");
-      const testFunction = utils.makeOwnerSwapper(testNode);
-      expect(testFunction instanceof Function).toBe(true);
-    });
-
-    it("removes the original node from the its owner document", () => {
-      const testNode = document.createTextNode("test");
-      const swapTestNode = utils.makeOwnerSwapper(testNode);
-      const newDoc = document.implementation.createHTMLDocument("test");
-      document.body.appendChild(testNode);
-      expect(document.body.contains(testNode)).toBe(true);
-      swapTestNode(newDoc.body);
-      expect(document.body.contains(testNode)).toBe(false);
-      expect(testNode.ownerDocument).toEqual(newDoc);
-    });
-
-    it("appends the node into a new document", () => {
-      const testNode = document.createElement("link");
-      const swapTestNode = utils.makeOwnerSwapper(testNode);
-      const newDoc = document.implementation.createHTMLDocument("test");
-      expect(document.head.contains(testNode)).toBe(false);
-      swapTestNode(newDoc.head);
-      expect(newDoc.head.contains(testNode)).toBe(true);
-      expect(testNode.ownerDocument).toEqual(newDoc);
-    });
-
-    it("prepends the node into a new document at the right place", () => {
-      const testNode = document.createElement("link");
-      const swapTestNode = utils.makeOwnerSwapper(testNode);
-      const newDoc = document.implementation.createHTMLDocument("test");
-      const metaElem = newDoc.createElement("meta");
-      newDoc.head.appendChild(metaElem);
-      swapTestNode(newDoc.head);
-      expect(newDoc.head.firstChild).toEqual(testNode);
-      expect(newDoc.head.lastChild).toEqual(metaElem);
-    });
-  });
-
   describe("normalizePadding() method", () => {
     it("throws given an argument that is not a string", () => {
       expect(() => {
