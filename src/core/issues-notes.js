@@ -10,8 +10,8 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
+import { addId, fetchAndCache } from "./utils";
 import css from "../deps/text!core/css/issues-notes.css";
-import { fetchAndCache } from "./utils";
 import hyperHTML from "../deps/hyperhtml";
 import { pub } from "./pubsubhub";
 export const name = "core/issues-notes";
@@ -19,19 +19,17 @@ export const name = "core/issues-notes";
 const MAX_GITHUB_REQUESTS = 60;
 
 function handleIssues(ins, ghIssues, conf) {
-  window.ins = ins;
-  window.ghIssues = ghIssues;
-  window.conf = conf;
   const { issueBase, githubAPI } = conf;
   const hasDataNum = !!document.querySelector(".issue[data-number]");
   let issueNum = 0;
-  const issueSummary = htmlToElement(
-    "<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"
-  );
-  const issueList = issueSummary.querySelectorAll("ul")[0];
-  Array.prototype.slice.call(ins)
+  const issueSummary = hyperHTML`<div><h2>${
+    conf.l10n.issue_summary
+  }</h2><ul></ul></div>`;
+  const issueList = issueSummary.querySelector("ul");
+  Array.prototype.slice
+    .call(ins)
     .filter(issue => issue.parentElement)
-    .forEach((inno, i) => {
+    .forEach(inno => {
       const isIssue = inno.classList.contains("issue");
       const isWarning = inno.classList.contains("warning");
       const isEdNote = inno.classList.contains("ednote");
@@ -56,18 +54,10 @@ function handleIssues(ins, ghIssues, conf) {
       }
       // wrap
       if (!isInline) {
-        const div = htmlToElement(
-          "<div class='" +
-            report.type +
-            (isFeatureAtRisk ? " atrisk" : "") +
-            "'></div>"
-        );
-        const tit = htmlToElement(
-          "<div role='heading' class='" +
-            report.type +
-            "-title'><span></span></div>"
-        );
-        console.log(tit);
+        const div = hyperHTML`<div class='${report.type +
+          (isFeatureAtRisk ? " atrisk" : "")}'></div>`;
+        const tit = hyperHTML`<div role='heading' class='${report.type +
+          "-title"}'><span></span></div>`;
         let text = isIssue
           ? isFeatureAtRisk
             ? conf.l10n.feature_at_risk
@@ -82,19 +72,18 @@ function handleIssues(ins, ghIssues, conf) {
           div.id = inno.id;
           inno.removeAttribute("id");
         } else {
-          $(div).makeID(
+          addId(
+            div,
             "issue-container",
             report.number ? `number-${report.number}` : ""
           );
         }
-        $(tit).makeID("h", report.type);
+        addId(div, "h", report.type);
         report.title = inno.getAttribute("title");
         if (isIssue) {
           if (hasDataNum) {
             if (dataNum) {
               text += " " + dataNum;
-              let $tit = $(tit);
-              console.log(tit);
               // Set issueBase to cause issue to be linked to the external issue tracker
               if (!isFeatureAtRisk && issueBase) {
                 tit.querySelector(".issue-number").innerHTMl =
@@ -114,17 +103,15 @@ function handleIssues(ins, ghIssues, conf) {
           }
           if (report.number !== undefined) {
             // Add entry to #issue-summary.
-            const li = htmlToElement("<li><a></a></li>");
-            const a = li.querySelectorAll("a")[0];
+            const li = hyperHTML`<li><a></a></li>`;
+            const a = li.querySelector("a");
             a.setAttribute("href", "#" + div.id);
             a.append(conf.l10n.issue + " " + report.number);
             if (report.title) {
               li.appendChild(
-                htmlToElement(
-                  "<span style='text-transform: none'>: " +
-                    report.title +
-                    "</span>"
-                )
+                hyperHTML`<span style='text-transform: none'>: ${
+                  report.title
+                }</span>`
               );
             }
             issueList.appendChild(li);
@@ -151,22 +138,21 @@ function handleIssues(ins, ghIssues, conf) {
               return frag;
             }, document.createDocumentFragment());
           tit.appendChild(
-            htmlToElement(
-              "<span style='text-transform: none'>: " + report.title + "</span>"
-            ).append(labelsGroup)
+            hyperHTML`<span style='text-transform: none'>: ${
+              report.title
+            }</span>`.append(labelsGroup)
           );
           inno.removeAttribute("title");
         } else if (report.title) {
           tit.appendChild(
-            htmlToElement(
-              "<span style='text-transform: none'>: " + report.title + "</span>"
-            )
+            hyperHTML`<span style='text-transform: none'>: ${
+              report.title
+            }</span>`
           );
           inno.removeAttribute("title");
         }
         tit.classList.add("marker");
         div.appendChild(tit);
-        window.inno = inno;
         let body = inno;
         inno.replaceWith(div);
         body.classList.remove(report.type);
@@ -174,7 +160,6 @@ function handleIssues(ins, ghIssues, conf) {
         if (ghIssue && !body.innerHTML().trim()) {
           body = ghIssue.body_html;
         }
-        window.div = div;
         div.appendChild(body);
         const level = getCount(tit);
         tit.setAttribute("aria-level", level);
@@ -183,7 +168,8 @@ function handleIssues(ins, ghIssues, conf) {
     });
   const issueSummaryElement = document.getElementById("issue-summary");
   if (document.querySelectorAll(".issue").length) {
-    if (issueSummaryElement) issueSummaryElement.innerHTML = issueSummary.innerHTML;
+    if (issueSummaryElement)
+      issueSummaryElement.innerHTML = issueSummary.innerHTML;
   } else if (issueSummaryElement) {
     pub("warn", "Using issue summary (#issue-summary) but no issues found.");
     issueSummaryElement.parentNode.removeChild(issueSummaryElement);
@@ -249,22 +235,14 @@ function createLabel(label) {
     href="${href}">${name}</a>`;
 }
 
-function htmlToElement(html) {
-  let template = document.createElement('template');
-  html = html.trim(); // Never return a text node of whitespace as the result
-  template.innerHTML = html;
-  return template.content.firstChild;
-}
-
 function getCount(currentEl) {
-
   let el = currentEl;
   let count = 0;
-  while (el !== null){
+  while (el !== null) {
     if (el.tagName === "SECTION") count++;
     el = el.parentElement;
   }
-  return count+2;
+  return count + 2;
 }
 
 async function processResponse(response, issueNumber) {
