@@ -117,7 +117,7 @@ function handleIssues(ins, ghIssues, conf) {
             const li = htmlToElement("<li><a></a></li>");
             const a = li.querySelectorAll("a")[0];
             a.setAttribute("href", "#" + div.id);
-            a.innerHtml = conf.l10n.issue + " " + report.number;
+            a.append(conf.l10n.issue + " " + report.number);
             if (report.title) {
               li.appendChild(
                 htmlToElement(
