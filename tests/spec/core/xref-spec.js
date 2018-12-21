@@ -3,8 +3,8 @@ describe("Core — xref", () => {
   afterAll(flushIframes);
   beforeEach(async () => {
     // clear idb cache before each
-    await new Promise(resolve => require(["deps/idb"], resolve));
-    const cache = await window.idb.open("xref", 1, upgradeDB => {
+    const idb = await new Promise(resolve => require(["deps/idb"], resolve));
+    const cache = await idb.open("xref", 1, upgradeDB => {
       upgradeDB.createObjectStore("xrefs");
     });
     const tx = cache.transaction("xrefs", "readwrite");
@@ -701,9 +701,9 @@ describe("Core — xref", () => {
   });
 
   it("caches results and uses cached results when available", async () => {
-    await new Promise(resolve => require(["deps/idb"], resolve));
+    const idb = await new Promise(resolve => require(["deps/idb"], resolve));
     const IDB = {
-      db: await window.idb.open("xref", 1, upgradeDB => {
+      db: await idb.open("xref", 1, upgradeDB => {
         upgradeDB.createObjectStore("xrefs");
       }),
       get(key) {

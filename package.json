@@ -33,7 +33,7 @@
     "eslint-plugin-prettier": "^3.0.0",
     "glob": "^7.1.3",
     "handlebars": "^4.0.12",
-    "idb": "^2.1.3",
+    "idb": "git+https://github.com/sidvishnoi/idb.git",
     "jasmine-core": "^3.3.0",
     "jasmine-reporters": "^2.3.2",
     "jquery": "^3.3.1",

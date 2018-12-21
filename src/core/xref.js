@@ -4,7 +4,7 @@
 //   so later they can be handled by core/link-to-dfn.
 // https://github.com/w3c/respec/issues/1662
 
-import "../deps/idb";
+import * as idb from "../deps/idb";
 import {
   nonNormativeSelector,
   norm as normalize,
@@ -34,7 +34,7 @@ const CACHE_MAX_AGE = 86400000; // 24 hours
  * @param {Array:Elements} elems possibleExternalLinks
  */
 export async function run(conf, elems) {
-  const cache = await window.idb.open("xref", 1, upgradeDB => {
+  const cache = await idb.open("xref", 1, upgradeDB => {
     upgradeDB.createObjectStore("xrefs");
   });
   const { xref } = conf;
