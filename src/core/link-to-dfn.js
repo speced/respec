@@ -9,9 +9,9 @@ import {
   showInlineWarning,
   wrapInner,
 } from "./utils";
-import { definitionMap } from "./dfn-map";
 import { run as addExternalReferences } from "./xref";
 import { lang as defaultLang } from "./l10n";
+import { definitionMap } from "./dfn-map";
 import { linkInlineCitations } from "./data-cite";
 import { pub } from "./pubsubhub";
 export const name = "core/link-to-dfn";
