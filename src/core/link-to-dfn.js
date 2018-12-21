@@ -9,6 +9,7 @@ import {
   showInlineWarning,
   wrapInner,
 } from "./utils";
+import { definitionMap } from "./dfn-map";
 import { run as addExternalReferences } from "./xref";
 import { lang as defaultLang } from "./l10n";
 import { linkInlineCitations } from "./data-cite";
@@ -24,7 +25,7 @@ const lang = defaultLang in l10n ? defaultLang : "en";
 export async function run(conf) {
   document.normalize();
 
-  const titleToDfns = mapTitleToDfns(conf.definitionMap);
+  const titleToDfns = mapTitleToDfns();
 
   /** @type {Element[]} */
   const possibleExternalLinks = [];
@@ -75,14 +76,11 @@ export async function run(conf) {
   pub("end", "core/link-to-dfn");
 }
 
-/**
- * @param {Record<string, HTMLElement[]>} definitionMap
- */
-function mapTitleToDfns(definitionMap) {
+function mapTitleToDfns() {
   /** @type {Record<string, Record<string, HTMLElement>>} */
   const titleToDfns = {};
   Object.keys(definitionMap).forEach(title => {
-    const { result, duplicates } = collectDfns(definitionMap, title);
+    const { result, duplicates } = collectDfns(title);
     titleToDfns[title] = result;
     if (duplicates.length > 0) {
       showInlineError(
@@ -96,10 +94,9 @@ function mapTitleToDfns(definitionMap) {
 }
 
 /**
- * @param {Record<string, HTMLElement[]>} definitionMap
  * @param {string} title
  */
-function collectDfns(definitionMap, title) {
+function collectDfns(title) {
   /** @type {Record<string, HTMLElement>} */
   const result = {};
   const duplicates = [];

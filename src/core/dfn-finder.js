@@ -1,6 +1,6 @@
 // @ts-check
+import { definitionMap, registerDefinition } from "./dfn-map";
 import { pub } from "./pubsubhub";
-import { registerDefinitionMapping } from "./dfn";
 import { wrapInner } from "./utils";
 
 const topLevelEntities = new Set([
@@ -30,19 +30,17 @@ const unlinkable = new Set(["maplike", "setlike", "stringifier"]);
  * the function returns 'undefined'.
  * @param {*} defn
  * @param {string} name
- * @param {Record<string, HTMLElement[]>} definitionMap
  * @param {{ parent?: string; suppressWarnings?: boolean }} options
  */
 export function findDfn(
   defn,
   name,
-  definitionMap,
   { parent = "", suppressWarnings = false } = {}
 ) {
   if (unlinkable.has(name)) {
     return;
   }
-  const dfn = tryFindDfn(defn, parent, name, definitionMap);
+  const dfn = tryFindDfn(defn, parent, name);
   if (dfn) {
     return dfn;
   }
@@ -63,16 +61,15 @@ export function findDfn(
  * @param {*} defn
  * @param {string} parent
  * @param {string} name
- * @param {Record<string, HTMLElement[]>} definitionMap
  */
-function tryFindDfn(defn, parent, name, definitionMap) {
+function tryFindDfn(defn, parent, name) {
   switch (defn.type) {
     case "attribute":
-      return findAttributeDfn(defn, parent, name, definitionMap);
+      return findAttributeDfn(defn, parent, name);
     case "operation":
-      return findOperationDfn(defn, parent, name, definitionMap);
+      return findOperationDfn(defn, parent, name);
     default:
-      return findNormalDfn(defn, parent, name, definitionMap);
+      return findNormalDfn(defn, parent, name);
   }
 }
 
@@ -80,17 +77,16 @@ function tryFindDfn(defn, parent, name, definitionMap) {
  * @param {*} defn
  * @param {string} parent
  * @param {string} name
- * @param {Record<string, HTMLElement[]>} definitionMap
  */
-function findAttributeDfn(defn, parent, name, definitionMap) {
+function findAttributeDfn(defn, parent, name) {
   const parentLow = parent.toLowerCase();
   const asLocalName = name.toLowerCase();
   const asQualifiedName = parentLow + "." + asLocalName;
-  const dfn = findNormalDfn(defn, parent, asLocalName, definitionMap);
+  const dfn = findNormalDfn(defn, parent, asLocalName);
   if (!dfn) {
     return;
   }
-  addAlternativeNames(dfn, [asQualifiedName, asLocalName], definitionMap);
+  addAlternativeNames(dfn, [asQualifiedName, asLocalName]);
   return dfn;
 }
 
@@ -98,12 +94,11 @@ function findAttributeDfn(defn, parent, name, definitionMap) {
  * @param {*} defn
  * @param {string} parent
  * @param {string} name
- * @param {Record<string, HTMLElement[]>} definitionMap
  */
-function findOperationDfn(defn, parent, name, definitionMap) {
+function findOperationDfn(defn, parent, name) {
   // Overloads all have unique names
   if (name.includes("!overload")) {
-    return findNormalDfn(defn, parent, name, definitionMap);
+    return findNormalDfn(defn, parent, name);
   }
   const parentLow = parent.toLowerCase();
   // Allow linking to both "method()" and "method" name.
@@ -113,38 +108,37 @@ function findOperationDfn(defn, parent, name, definitionMap) {
   const asFullyQualifiedName = asQualifiedName + "()";
 
   const dfn =
-    findNormalDfn(defn, parent, asMethodName, definitionMap) ||
-    findNormalDfn(defn, parent, name, definitionMap);
+    findNormalDfn(defn, parent, asMethodName) ||
+    findNormalDfn(defn, parent, name);
   if (!dfn) {
     return;
   }
-  addAlternativeNames(
-    dfn,
-    [asFullyQualifiedName, asQualifiedName, asMethodName, asLocalName],
-    definitionMap
-  );
+  addAlternativeNames(dfn, [
+    asFullyQualifiedName,
+    asQualifiedName,
+    asMethodName,
+    asLocalName,
+  ]);
   return dfn;
 }
 
 /**
  * @param {HTMLElement} dfn
  * @param {string[]} names
- * @param {Record<string, HTMLElement[]>} definitionMap
  */
-function addAlternativeNames(dfn, names, definitionMap) {
+function addAlternativeNames(dfn, names) {
   const lt = dfn.dataset.lt ? dfn.dataset.lt.split("|") : [];
   lt.push(...names);
   dfn.dataset.lt = [...new Set(lt)].join("|");
-  registerDefinitionMapping(dfn, names, definitionMap);
+  registerDefinition(dfn, names);
 }
 
 /**
  * @param {*} defn
  * @param {string} parent
  * @param {string} name
- * @param {Record<string, HTMLElement[]>} definitionMap
  */
-function findNormalDfn(defn, parent, name, definitionMap) {
+function findNormalDfn(defn, parent, name) {
   const parentLow = parent.toLowerCase();
   let resolvedName =
     defn.type === "enum-value" && name === "" ? "the-empty-string" : name;
@@ -160,7 +154,7 @@ function findNormalDfn(defn, parent, name, definitionMap) {
       dfns = dfnForArray;
       // Found it: register with its local name
       delete definitionMap[resolvedName];
-      registerDefinitionMapping(dfns[0], [nameLow], definitionMap);
+      registerDefinition(dfns[0], [nameLow]);
     }
   }
   if (dfns.length > 1) {
