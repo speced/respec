@@ -19,24 +19,25 @@ export const name = "core/issues-notes";
 const MAX_GITHUB_REQUESTS = 60;
 
 function handleIssues(ins, ghIssues, conf) {
-  const $ins = $(ins);
+  window.ins = ins;
+  window.ghIssues = ghIssues;
+  window.conf = conf;
   const { issueBase, githubAPI } = conf;
   const hasDataNum = !!document.querySelector(".issue[data-number]");
   let issueNum = 0;
-  const $issueSummary = $(
+  const issueSummary = htmlToElement(
     "<div><h2>" + conf.l10n.issue_summary + "</h2><ul></ul></div>"
   );
-  const $issueList = $issueSummary.find("ul");
-  $ins
-    .filter((i, issue) => issue.parentNode)
-    .each((i, inno) => {
-      const $inno = $(inno);
-      const isIssue = $inno.hasClass("issue");
-      const isWarning = $inno.hasClass("warning");
-      const isEdNote = $inno.hasClass("ednote");
-      const isFeatureAtRisk = $inno.hasClass("atrisk");
-      const isInline = $inno[0].localName === "span";
-      const dataNum = $inno.attr("data-number");
+  const issueList = issueSummary.querySelectorAll("ul")[0];
+  Array.prototype.slice.call(ins)
+    .filter(issue => issue.parentElement)
+    .forEach((inno, i) => {
+      const isIssue = inno.classList.contains("issue");
+      const isWarning = inno.classList.contains("warning");
+      const isEdNote = inno.classList.contains("ednote");
+      const isFeatureAtRisk = inno.classList.contains("atrisk");
+      const isInline = inno.localName === "span";
+      const dataNum = inno.getAttribute("data-number");
       const report = {
         inline: isInline,
       };
@@ -55,17 +56,18 @@ function handleIssues(ins, ghIssues, conf) {
       }
       // wrap
       if (!isInline) {
-        const $div = $(
+        const div = htmlToElement(
           "<div class='" +
             report.type +
             (isFeatureAtRisk ? " atrisk" : "") +
             "'></div>"
         );
-        const $tit = $(
+        const tit = htmlToElement(
           "<div role='heading' class='" +
             report.type +
             "-title'><span></span></div>"
         );
+        console.log(tit);
         let text = isIssue
           ? isFeatureAtRisk
             ? conf.l10n.feature_at_risk
@@ -77,31 +79,31 @@ function handleIssues(ins, ghIssues, conf) {
           : conf.l10n.note;
         let ghIssue;
         if (inno.id) {
-          $div[0].id = inno.id;
+          div.id = inno.id;
           inno.removeAttribute("id");
         } else {
-          $div.makeID(
+          $(div).makeID(
             "issue-container",
             report.number ? `number-${report.number}` : ""
           );
         }
-        $tit.makeID("h", report.type);
-        report.title = $inno.attr("title");
+        $(tit).makeID("h", report.type);
+        report.title = inno.getAttribute("title");
         if (isIssue) {
           if (hasDataNum) {
             if (dataNum) {
               text += " " + dataNum;
+              let $tit = $(tit);
+              console.log(tit);
               // Set issueBase to cause issue to be linked to the external issue tracker
               if (!isFeatureAtRisk && issueBase) {
-                $tit
-                  .find("span")
-                  .wrap($("<a href='" + issueBase + dataNum + "'/>"));
+                tit.querySelector(".issue-number").innerHTMl =
+                  "<a href='" + issueBase + dataNum + "'/>";
               } else if (isFeatureAtRisk && conf.atRiskBase) {
-                $tit
-                  .find("span")
-                  .wrap($("<a href='" + conf.atRiskBase + dataNum + "'/>"));
+                tit.querySelector(".issue-number").innerHTML =
+                  "<a href='" + conf.atRiskBase + dataNum + "'/>";
               }
-              $tit.find("span")[0].classList.add("issue-number");
+              tit.querySelector("span").classList.add("issue-number");
               ghIssue = ghIssues.get(Number(dataNum));
               if (ghIssue && !report.title) {
                 report.title = ghIssue.title;
@@ -112,26 +114,25 @@ function handleIssues(ins, ghIssues, conf) {
           }
           if (report.number !== undefined) {
             // Add entry to #issue-summary.
-            const $li = $("<li><a></a></li>");
-            const $a = $li.find("a");
-            $a.attr("href", "#" + $div[0].id).text(
-              conf.l10n.issue + " " + report.number
-            );
+            const li = htmlToElement("<li><a></a></li>");
+            const a = li.querySelectorAll("a")[0];
+            a.setAttribute("href", "#" + div.id);
+            a.innerHtml = conf.l10n.issue + " " + report.number;
             if (report.title) {
-              $li.append(
-                $(
+              li.appendChild(
+                htmlToElement(
                   "<span style='text-transform: none'>: " +
                     report.title +
                     "</span>"
                 )
               );
             }
-            $issueList.append($li);
+            issueList.appendChild(li);
           }
         }
-        $tit.find("span").text(text);
+        tit.querySelector("span").innerHTML = text;
         if (ghIssue && report.title && githubAPI) {
-          if (ghIssue.state === "closed") $div[0].classList.add("closed");
+          if (ghIssue.state === "closed") div.classList.add("closed");
           const labelsGroup = Array.from(ghIssue.labels || [])
             .map(label => {
               const issuesURL = new URL("./issues/", conf.github.repoURL);
@@ -149,39 +150,43 @@ function handleIssues(ins, ghIssues, conf) {
               frag.appendChild(labelElem);
               return frag;
             }, document.createDocumentFragment());
-          $tit.append(
-            $(
+          tit.appendChild(
+            htmlToElement(
               "<span style='text-transform: none'>: " + report.title + "</span>"
             ).append(labelsGroup)
           );
-          $inno.removeAttr("title");
+          inno.removeAttribute("title");
         } else if (report.title) {
-          $tit.append(
-            $(
+          tit.appendChild(
+            htmlToElement(
               "<span style='text-transform: none'>: " + report.title + "</span>"
             )
           );
-          $inno.removeAttr("title");
+          inno.removeAttribute("title");
         }
-        $tit.addClass("marker");
-        $div.append($tit);
-        $inno.replaceWith($div);
-        let body = $inno.removeClass(report.type).removeAttr("data-number");
-        if (ghIssue && !body.text().trim()) {
+        tit.classList.add("marker");
+        div.appendChild(tit);
+        window.inno = inno;
+        let body = inno;
+        inno.replaceWith(div);
+        body.classList.remove(report.type);
+        body.removeAttribute("data-number");
+        if (ghIssue && !body.innerHTML().trim()) {
           body = ghIssue.body_html;
         }
-        $div.append(body);
-        const level = $tit.parents("section").length + 2;
-        $tit.attr("aria-level", level);
+        window.div = div;
+        div.appendChild(body);
+        const level = getCount(tit);
+        tit.setAttribute("aria-level", level);
       }
       pub(report.type, report);
     });
-  if ($(".issue").length) {
-    if ($("#issue-summary"))
-      $("#issue-summary").append($issueSummary.contents());
-  } else if ($("#issue-summary").length) {
+  const issueSummaryElement = document.getElementById("issue-summary");
+  if (document.querySelectorAll(".issue").length) {
+    if (issueSummaryElement) issueSummaryElement.innerHTML = issueSummary.innerHTML;
+  } else if (issueSummaryElement) {
     pub("warn", "Using issue summary (#issue-summary) but no issues found.");
-    $("#issue-summary").remove();
+    issueSummaryElement.parentNode.removeChild(issueSummaryElement);
   }
 }
 
@@ -242,6 +247,24 @@ function createLabel(label) {
     class="${cssClasses}"
     style="${style}"
     href="${href}">${name}</a>`;
+}
+
+function htmlToElement(html) {
+  let template = document.createElement('template');
+  html = html.trim(); // Never return a text node of whitespace as the result
+  template.innerHTML = html;
+  return template.content.firstChild;
+}
+
+function getCount(currentEl) {
+
+  let el = currentEl;
+  let count = 0;
+  while (el !== null){
+    if (el.tagName === "SECTION") count++;
+    el = el.parentElement;
+  }
+  return count+2;
 }
 
 async function processResponse(response, issueNumber) {
