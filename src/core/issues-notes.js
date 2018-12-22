@@ -86,11 +86,17 @@ function handleIssues(ins, ghIssues, conf) {
               text += " " + dataNum;
               // Set issueBase to cause issue to be linked to the external issue tracker
               if (!isFeatureAtRisk && issueBase) {
-                tit.querySelector(".issue-number").innerHTMl =
-                  "<a href='" + issueBase + dataNum + "'/>";
+                const span = tit.querySelector("span");
+                const a = hyperHTML`<a href='${issueBase + dataNum}'/>`;
+                span.parentNode.insertBefore(a, span);
+                a.append(span);
+                console.log(a.parentNode);
               } else if (isFeatureAtRisk && conf.atRiskBase) {
-                tit.querySelector(".issue-number").innerHTML =
-                  "<a href='" + conf.atRiskBase + dataNum + "'/>";
+                const span = tit.querySelector("span");
+                const a = hyperHTML`<a href='${conf.atRiskBase + dataNum}'/>`;
+                span.parentNode.insertBefore(a, span);
+                a.append(span);
+                console.log(a.parentNode);
               }
               tit.querySelector("span").classList.add("issue-number");
               ghIssue = ghIssues.get(Number(dataNum));
@@ -108,13 +114,13 @@ function handleIssues(ins, ghIssues, conf) {
             a.setAttribute("href", "#" + div.id);
             a.append(conf.l10n.issue + " " + report.number);
             if (report.title) {
-              li.appendChild(
+              li.append(
                 hyperHTML`<span style='text-transform: none'>: ${
                   report.title
                 }</span>`
               );
             }
-            issueList.appendChild(li);
+            issueList.append(li);
           }
         }
         tit.querySelector("span").innerHTML = text;
@@ -134,17 +140,18 @@ function handleIssues(ins, ghIssues, conf) {
             })
             .map(createLabel)
             .reduce((frag, labelElem) => {
-              frag.appendChild(labelElem);
+              frag.append(labelElem);
               return frag;
             }, document.createDocumentFragment());
-          tit.appendChild(
-            hyperHTML`<span style='text-transform: none'>: ${
-              report.title
-            }</span>`.append(labelsGroup)
-          );
+          const node = hyperHTML`<span style='text-transform: none'>: ${
+            report.title
+          }</span>`;
+          node.append(labelsGroup);
+
+          tit.append(node);
           inno.removeAttribute("title");
         } else if (report.title) {
-          tit.appendChild(
+          tit.append(
             hyperHTML`<span style='text-transform: none'>: ${
               report.title
             }</span>`
@@ -152,15 +159,16 @@ function handleIssues(ins, ghIssues, conf) {
           inno.removeAttribute("title");
         }
         tit.classList.add("marker");
-        div.appendChild(tit);
+        div.append(tit);
         let body = inno;
         inno.replaceWith(div);
         body.classList.remove(report.type);
         body.removeAttribute("data-number");
-        if (ghIssue && !body.innerHTML().trim()) {
-          body = ghIssue.body_html;
+        if (ghIssue && !body.innerHTML.trim()) {
+          body = hyperHTML`${ghIssue.body_html}`;
         }
-        div.appendChild(body);
+        console.log(body);
+        div.append(body);
         const level = getCount(tit);
         tit.setAttribute("aria-level", level);
       }
