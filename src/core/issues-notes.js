@@ -119,29 +119,9 @@ function handleIssues(ins, ghIssues, conf) {
       tit.querySelector("span").textContent = text;
       if (ghIssue && report.title && githubAPI) {
         if (ghIssue.state === "closed") div.classList.add("closed");
-        const labelsGroup = Array.from(ghIssue.labels || [])
-          .map(label => {
-            const issuesURL = new URL("./issues/", conf.github.repoURL);
-            issuesURL.searchParams.set(
-              "q",
-              `is:issue is:open label:"${label.name}"`
-            );
-            return {
-              ...label,
-              href: issuesURL.href,
-            };
-          })
-          .map(createLabel)
-          .reduce((frag, labelElem) => {
-            frag.append(labelElem);
-            return frag;
-          }, document.createDocumentFragment());
-        const node = hyperHTML`<span style='text-transform: none'>: ${
-          report.title
-        }</span>`;
-        node.append(labelsGroup);
-
-        tit.append(node);
+        tit.append(
+          createLabelsGroup(ghIssue.labels, report.title, conf.github.repoURL)
+        );
         inno.removeAttribute("title");
       } else if (report.title) {
         tit.append(
@@ -172,6 +152,20 @@ function handleIssues(ins, ghIssues, conf) {
     pub("warn", "Using issue summary (#issue-summary) but no issues found.");
     issueSummaryElement.remove();
   }
+}
+
+function createLabelsGroup(labels, title, repoURL) {
+  const labelsGroup = Array.from(labels || [])
+    .map(label => {
+      const issuesURL = new URL("./issues/", repoURL);
+      issuesURL.searchParams.set("q", `is:issue is:open label:"${label.name}"`);
+      return {
+        ...label,
+        href: issuesURL.href,
+      };
+    })
+    .map(createLabel);
+  return hyperHTML`<span style='text-transform: none'>: ${title}${labelsGroup}</span>`;
 }
 
 async function fetchAndStoreGithubIssues(conf) {
