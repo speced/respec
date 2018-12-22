@@ -140,12 +140,13 @@ function handleIssues(ins, ghIssues, conf) {
     pub(report.type, report);
   });
   const issueSummaryElement = document.getElementById("issue-summary");
-  if (document.querySelectorAll(".issue").length) {
-    if (issueSummaryElement)
+  if (issueSummaryElement) {
+    if (document.querySelectorAll(".issue").length) {
       issueSummaryElement.innerHTML = issueSummary.innerHTML;
-  } else if (issueSummaryElement) {
-    pub("warn", "Using issue summary (#issue-summary) but no issues found.");
-    issueSummaryElement.remove();
+    } else {
+      pub("warn", "Using issue summary (#issue-summary) but no issues found.");
+      issueSummaryElement.remove();
+    }
   }
 }
 
