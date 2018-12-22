@@ -14,7 +14,6 @@ require.config({
       exports: "hljs",
     },
   },
-  deps: ["deps/hyperhtml"],
 });
 
 define([
