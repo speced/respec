@@ -53,8 +53,9 @@ function handleIssues(ins, ghIssues, conf) {
     if (!isInline) {
       const div = hyperHTML`<div class='${report.type +
         (isFeatureAtRisk ? " atrisk" : "")}'></div>`;
-      const tit = hyperHTML`<div role='heading' class='${report.type +
-        "-title"}'><span></span></div>`;
+      const title = document.createElement("span");
+      const titleParent = hyperHTML`
+        <div role='heading' class='${report.type + "-title"}'>${title}</div>`;
       let text = isIssue
         ? isFeatureAtRisk
           ? conf.l10n.feature_at_risk
@@ -84,17 +85,15 @@ function handleIssues(ins, ghIssues, conf) {
           text += " " + dataNum;
           // Set issueBase to cause issue to be linked to the external issue tracker
           if (!isFeatureAtRisk && issueBase) {
-            const span = tit.querySelector("span");
             const a = hyperHTML`<a href='${issueBase + dataNum}'/>`;
-            span.before(a);
-            a.append(span);
+            title.before(a);
+            a.append(title);
           } else if (isFeatureAtRisk && conf.atRiskBase) {
-            const span = tit.querySelector("span");
             const a = hyperHTML`<a href='${conf.atRiskBase + dataNum}'/>`;
-            span.before(a);
-            a.append(span);
+            title.before(a);
+            a.append(title);
           }
-          tit.querySelector("span").classList.add("issue-number");
+          title.classList.add("issue-number");
           ghIssue = ghIssues.get(Number(dataNum));
           if (ghIssue && !report.title) {
             report.title = ghIssue.title;
@@ -107,7 +106,7 @@ function handleIssues(ins, ghIssues, conf) {
           );
         }
       }
-      tit.querySelector("span").textContent = text;
+      title.textContent = text;
       if (report.title) {
         inno.removeAttribute("title");
         let labels = [];
@@ -116,10 +115,10 @@ function handleIssues(ins, ghIssues, conf) {
           if (ghIssue.state === "closed") div.classList.add("closed");
           labels = ghIssue.labels;
         }
-        tit.append(createLabelsGroup(labels, report.title, repoURL));
+        titleParent.append(createLabelsGroup(labels, report.title, repoURL));
       }
-      tit.classList.add("marker");
-      div.append(tit);
+      titleParent.classList.add("marker");
+      div.append(titleParent);
       let body = inno;
       inno.replaceWith(div);
       body.classList.remove(report.type);
@@ -128,8 +127,8 @@ function handleIssues(ins, ghIssues, conf) {
         body = hyperHTML`${ghIssue.body_html}`;
       }
       div.append(body);
-      const level = parents(tit, "section").length + 2;
-      tit.setAttribute("aria-level", level);
+      const level = parents(titleParent, "section").length + 2;
+      titleParent.setAttribute("aria-level", level);
     }
     pub(report.type, report);
   });
