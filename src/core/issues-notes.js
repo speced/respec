@@ -102,16 +102,7 @@ function handleIssues(ins, ghIssues, conf) {
         }
         if (report.number !== undefined) {
           // Add entry to #issue-summary.
-          const issueNumberText = `${conf.l10n.issue} ${report.number}`;
-          const title = report.title
-            ? hyperHTML`
-              <span style="text-transform: none">: ${report.title}</span>`
-            : "";
-          issueList.append(
-            hyperHTML`
-              <li><a href="${"#" + div.id}">${issueNumberText}</a>${title}</li>
-            `
-          );
+          issueList.append(createIssueSummaryEntry(conf.l10n.issue, report));
         }
       }
       tit.querySelector("span").textContent = text;
@@ -151,6 +142,25 @@ function handleIssues(ins, ghIssues, conf) {
   }
 }
 
+/**
+ * @param {string} l10nIssue
+ * @param {*} report
+ */
+function createIssueSummaryEntry(l10nIssue, report) {
+  const issueNumberText = `${l10nIssue} ${report.number}`;
+  const title = report.title
+    ? hyperHTML`<span style="text-transform: none">: ${report.title}</span>`
+    : "";
+  return hyperHTML`
+    <li><a href="${"#" + div.id}">${issueNumberText}</a>${title}</li>
+  `;
+}
+
+/**
+ * @param {*[]} labels
+ * @param {string} title
+ * @param {string} repoURL
+ */
 function createLabelsGroup(labels, title, repoURL) {
   const labelsGroup = Array.from(labels || [])
     .map(label => {
