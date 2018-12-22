@@ -106,10 +106,13 @@ function handleIssues(ins, ghIssues, conf) {
           // Add entry to #issue-summary.
           const issueNumberText = `${conf.l10n.issue} ${report.number}`;
           const title = report.title
-            ? hyperHTML`<span style="text-transform: none">: ${report.title}</span>`
-            : ""
+            ? hyperHTML`
+              <span style="text-transform: none">: ${report.title}</span>`
+            : "";
           issueList.append(
-            hyperHTML`<li><a href="${"#" + div.id}">${issueNumberText}</a>${title}</li>`
+            hyperHTML`
+              <li><a href="${"#" + div.id}">${issueNumberText}</a>${title}</li>
+            `
           );
         }
       }
