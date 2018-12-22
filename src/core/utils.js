@@ -97,29 +97,9 @@ const fetchDestinations = new Set([
   "",
 ]);
 
-/**
- * Allows a node to be swapped into a different document at
- * some insertion point(Element). This function is useful for
- * opportunistic insertion of DOM nodes into a document, without
- * first knowing if that is the final document where the node will
- * reside.
- *
- * @param  {Node} node The node to be swapped.
- * @return {Function} A function that takes a new
- *                    insertion point (Node). When called,
- *                    node gets inserted into doc at before a given
- *                    insertion point (Node) - or just appended, if
- *                    the element has no children.
- */
-export function makeOwnerSwapper(node) {
-  if (!node) {
-    throw new TypeError("Expected instance of Node.");
-  }
-  return insertionPoint => {
-    insertionPoint.ownerDocument.adoptNode(node);
-    insertionPoint.prepend(node);
-  };
-}
+// CSS selector for matching elements that are non-normative
+export const nonNormativeSelector =
+  ".informative, .note, .issue, .example, .ednote, .practice";
 
 export function calculateLeftPad(text) {
   if (typeof text !== "string") {
@@ -794,8 +774,7 @@ export function renameElement(elem, newName) {
 }
 
 export function refTypeFromContext(ref, element) {
-  const informSelectors = ".informative, .note, figure, .example, .issue";
-  const closestInformative = element.closest(informSelectors);
+  const closestInformative = element.closest(nonNormativeSelector);
   let isInformative = false;
   if (closestInformative) {
     // check if parent is not normative

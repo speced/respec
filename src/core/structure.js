@@ -15,95 +15,116 @@ import hyperHTML from "../deps/hyperhtml";
 const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
 const headerTags = ["h1", ...lowerHeaderTags];
 
-const secMap = {};
-let appendixMode = false;
-let lastNonAppendix = 0;
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 export const name = "core/structure";
 
 /**
+ * @typedef {{ secno: string, title: string }} SectionInfo
  *
- * @param {HTMLElement} parent the target element to find child sections
- * @param {number[]} current
- * @param {number} level
- * @param {*} conf
- * @return {HTMLElement}
+ * Scans sections and generate ordered list element + ID-to-anchor-content dictionary.
+ * @param {Section[]} sections the target element to find child sections
+ * @param {number} maxTocLevel
+ * @return {{ ol: HTMLElement, secMap: Record<string, SectionInfo> }}
  */
-function makeTOCAtLevel(parent, current, level, conf) {
-  const sections = children(
-    parent,
-    conf.tocIntroductory ? "section" : "section:not(.introductory)"
-  );
+function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
+  /** @type {Record<string, SectionInfo>} */
+  const secMap = {};
+  let appendixMode = false;
+  let lastNonAppendix = 0;
+  let index = 1;
+  if (prefix.length && !prefix.endsWith(".")) {
+    prefix += ".";
+  }
   if (sections.length === 0) {
     return null;
   }
   const ol = hyperHTML`<ol class='toc'>`;
   for (const section of sections) {
-    const isIntro = section.classList.contains("introductory");
+    if (section.isAppendix && !prefix && !appendixMode) {
+      lastNonAppendix = index;
+      appendixMode = true;
+    }
+    let secno = section.isIntro
+      ? ""
+      : appendixMode
+      ? alphabet.charAt(index - lastNonAppendix)
+      : prefix + index;
+    const level = Math.ceil(secno.length / 2);
+    if (level === 1) {
+      secno += ".";
+      // if this is a top level item, insert
+      // an OddPage comment so html2ps will correctly
+      // paginate the output
+      section.header.before(document.createComment("OddPage"));
+    }
+
+    secMap[section.element.id] = { secno, title: section.title };
+
+    if (!section.isIntro) {
+      index += 1;
+      section.header.prepend(hyperHTML`<span class='secno'>${secno} </span>`);
+    }
+
+    if (level <= maxTocLevel) {
+      const item = createTocListItem(section.header, section.element.id);
+      const sub = scanSections(section.subsections, maxTocLevel, {
+        prefix: secno,
+      });
+      if (sub) {
+        Object.assign(secMap, sub.secMap);
+        item.append(sub.ol);
+      }
+      ol.append(item);
+    }
+  }
+  return { ol, secMap };
+}
+
+/**
+ * @typedef {{ element: Element, header: Element, title: string, isIntro: boolean, isAppendix: boolean, subsections: Section[] }} Section
+ *
+ * @param {Element} parent
+ */
+function getSectionTree(parent, { tocIntroductory = false } = {}) {
+  const sectionElements = children(
+    parent,
+    tocIntroductory ? "section" : "section:not(.introductory)"
+  );
+  /** @type {Section[]} */
+  const sections = [];
+
+  for (const section of sectionElements) {
     const noToc = section.classList.contains("notoc");
     if (!section.children.length || noToc) {
       continue;
     }
-    const h = section.children[0];
-    if (!lowerHeaderTags.includes(h.localName)) {
+    const header = section.children[0];
+    if (!lowerHeaderTags.includes(header.localName)) {
       continue;
     }
-    const title = h.textContent;
-    const kidsHolder = hyperHTML`<div>${h.cloneNode(true).childNodes}</div>`;
-    filterHeader(kidsHolder);
-    const id = addId(section, null, title);
-
-    if (!isIntro) {
-      current[current.length - 1]++;
-    }
-    const secnos = current.slice();
-    if (
-      section.classList.contains("appendix") &&
-      current.length === 1 &&
-      !appendixMode
-    ) {
-      lastNonAppendix = current[0];
-      appendixMode = true;
-    }
-    if (appendixMode) {
-      secnos[0] = alphabet.charAt(current[0] - lastNonAppendix);
-    }
-    let secno = secnos.join(".");
-    const isTopLevel = secnos.length == 1;
-    if (isTopLevel) {
-      secno = secno + ".";
-      // if this is a top level item, insert
-      // an OddPage comment so html2ps will correctly
-      // paginate the output
-      h.before(document.createComment("OddPage"));
-    }
-    const span = hyperHTML`<span class='secno'>${secno} </span>`;
-    if (!isIntro) {
-      h.prepend(span);
-    }
-    secMap[id] =
-      (isIntro ? "" : "<span class='secno'>" + secno + "</span> ") +
-      "<span class='sec-title'>" +
-      title +
-      "</span>";
-
-    const anchor = hyperHTML`<a href="${`#${id}`}" class="tocxref" />`;
-    anchor.append(
-      isIntro ? "" : span.cloneNode(true),
-      ...kidsHolder.childNodes
-    );
-    const item = hyperHTML`<li class='tocline'>${anchor}</li>`;
-    if (level <= conf.maxTocLevel) {
-      ol.append(item);
-    }
-    current.push(0);
-    const sub = makeTOCAtLevel(section, current, level + 1, conf);
-    if (sub) {
-      item.append(sub);
-    }
-    current.pop();
+    const title = header.textContent;
+    addId(section, null, title);
+    sections.push({
+      element: section,
+      header,
+      title,
+      isIntro: section.classList.contains("introductory"),
+      isAppendix: section.classList.contains("appendix"),
+      subsections: getSectionTree(section, { tocIntroductory }),
+    });
   }
-  return ol;
+  return sections;
+}
+
+/**
+ * @param {Element} header
+ * @param {string} id
+ */
+function createTocListItem(header, id) {
+  const anchor = hyperHTML`<a href="${`#${id}`}" class="tocxref" />`;
+  anchor.append(...header.cloneNode(true).childNodes);
+  filterHeader(anchor);
+  return hyperHTML`<li class='tocline'>${anchor}</li>`;
 }
 
 /**
@@ -134,10 +155,15 @@ export function run(conf) {
 
   // makeTOC
   if (!conf.noTOC) {
-    createTableOfContents(conf);
+    const sectionTree = getSectionTree(document.body, {
+      tocIntroductory: conf.tocIntroductory,
+    });
+    const result = scanSections(sectionTree, conf.maxTocLevel);
+    if (result) {
+      createTableOfContents(result.ol, conf);
+      updateEmptyAnchors(result.secMap);
+    }
   }
-
-  updateEmptyAnchors();
 }
 
 function renameSectionHeaders() {
@@ -163,8 +189,11 @@ function getNonintroductorySectionHeaders() {
   );
 }
 
-function createTableOfContents(conf) {
-  const ol = makeTOCAtLevel(document.body, [0], 1, conf);
+/**
+ * @param {HTMLElement} ol
+ * @param {*} conf
+ */
+function createTableOfContents(ol, conf) {
   if (!ol) {
     return;
   }
@@ -190,17 +219,24 @@ function createTableOfContents(conf) {
 
 /**
  * Update all anchors with empty content that reference a section ID
+ * @param {Record<string, SectionInfo>} secMap
  */
-function updateEmptyAnchors() {
+function updateEmptyAnchors(secMap) {
   document.querySelectorAll("a[href^='#']:not(.tocxref)").forEach(anchor => {
     if (anchor.innerHTML !== "") {
       return;
     }
     const id = anchor.getAttribute("href").slice(1);
     if (secMap[id]) {
+      const { secno, title } = secMap[id];
       anchor.classList.add("sec-ref");
-      const prefix = anchor.classList.contains("sectionRef") ? "section " : "";
-      anchor.innerHTML = prefix + secMap[id];
+      if (anchor.classList.contains("sectionRef")) {
+        anchor.append("section ");
+      }
+      if (secno) {
+        anchor.append(hyperHTML`<span class='secno'>${secno}</span>`, " ");
+      }
+      anchor.append(hyperHTML`<span class='sec-title'>${title}</span>`);
     }
   });
 }
