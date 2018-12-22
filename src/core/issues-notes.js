@@ -26,8 +26,7 @@ function handleIssues(ins, ghIssues, conf) {
     conf.l10n.issue_summary
   }</h2><ul></ul></div>`;
   const issueList = issueSummary.querySelector("ul");
-  Array.prototype.slice
-    .call(ins)
+  [...ins]
     .filter(issue => issue.parentElement)
     .forEach(inno => {
       const isIssue = inno.classList.contains("issue");
@@ -35,7 +34,7 @@ function handleIssues(ins, ghIssues, conf) {
       const isEdNote = inno.classList.contains("ednote");
       const isFeatureAtRisk = inno.classList.contains("atrisk");
       const isInline = inno.localName === "span";
-      const dataNum = inno.getAttribute("data-number");
+      const { number: dataNum } = inno.dataset;
       const report = {
         inline: isInline,
       };
@@ -90,13 +89,11 @@ function handleIssues(ins, ghIssues, conf) {
                 const a = hyperHTML`<a href='${issueBase + dataNum}'/>`;
                 span.parentNode.insertBefore(a, span);
                 a.append(span);
-                console.log(a.parentNode);
               } else if (isFeatureAtRisk && conf.atRiskBase) {
                 const span = tit.querySelector("span");
                 const a = hyperHTML`<a href='${conf.atRiskBase + dataNum}'/>`;
                 span.parentNode.insertBefore(a, span);
                 a.append(span);
-                console.log(a.parentNode);
               }
               tit.querySelector("span").classList.add("issue-number");
               ghIssue = ghIssues.get(Number(dataNum));
@@ -167,7 +164,6 @@ function handleIssues(ins, ghIssues, conf) {
         if (ghIssue && !body.innerHTML.trim()) {
           body = hyperHTML`${ghIssue.body_html}`;
         }
-        console.log(body);
         div.append(body);
         const level = getCount(tit);
         tit.setAttribute("aria-level", level);
