@@ -10,7 +10,7 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
-import { addId, fetchAndCache } from "./utils";
+import { addId, fetchAndCache, parents } from "./utils";
 import css from "../deps/text!core/css/issues-notes.css";
 import hyperHTML from "../deps/hyperhtml";
 import { pub } from "./pubsubhub";
@@ -120,7 +120,7 @@ function handleIssues(ins, ghIssues, conf) {
             issueList.append(li);
           }
         }
-        tit.querySelector("span").innerHTML = text;
+        tit.querySelector("span").textContent = text;
         if (ghIssue && report.title && githubAPI) {
           if (ghIssue.state === "closed") div.classList.add("closed");
           const labelsGroup = Array.from(ghIssue.labels || [])
@@ -165,7 +165,7 @@ function handleIssues(ins, ghIssues, conf) {
           body = hyperHTML`${ghIssue.body_html}`;
         }
         div.append(body);
-        const level = getCount(tit);
+        const level = parents(tit, "section").length + 2;
         tit.setAttribute("aria-level", level);
       }
       pub(report.type, report);
@@ -176,7 +176,7 @@ function handleIssues(ins, ghIssues, conf) {
       issueSummaryElement.innerHTML = issueSummary.innerHTML;
   } else if (issueSummaryElement) {
     pub("warn", "Using issue summary (#issue-summary) but no issues found.");
-    issueSummaryElement.parentNode.removeChild(issueSummaryElement);
+    issueSummaryElement.remove();
   }
 }
 
@@ -237,16 +237,6 @@ function createLabel(label) {
     class="${cssClasses}"
     style="${style}"
     href="${href}">${name}</a>`;
-}
-
-function getCount(currentEl) {
-  let el = currentEl;
-  let count = 0;
-  while (el !== null) {
-    if (el.tagName === "SECTION") count++;
-    el = el.parentElement;
-  }
-  return count + 2;
 }
 
 async function processResponse(response, issueNumber) {
