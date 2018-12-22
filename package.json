@@ -58,6 +58,7 @@
     "serve": "^10.1.1",
     "terser": "^3.11.0",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
+    "typescript": "^3.2.2",
     "webidl2": "^17.0.1"
   },
   "scripts": {
