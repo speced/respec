@@ -3,7 +3,11 @@
 //   plurals of it are automatically added to `data-plurals`.
 // The linking is done in core/link-to-dfn
 
-import { plural as pluralOf, singular as singularOf } from "../deps/pluralize";
+import {
+  isSingular,
+  plural as pluralOf,
+  singular as singularOf,
+} from "../deps/pluralize";
 import { norm as normalize } from "./utils";
 import { registerDefinition } from "./dfn-map";
 
@@ -12,7 +16,7 @@ export const name = "core/pluralize";
 export function run(conf) {
   if (!conf.pluralize) return;
 
-  const { pluralizeDfn, singularizeDfn } = convertDfns();
+  const pluralizeDfn = getPluralizer();
 
   document
     .querySelectorAll("dfn:not([data-lt-no-plural]):not([data-lt-noDefault])")
@@ -26,12 +30,6 @@ export function run(conf) {
           .filter(plural => plural)
           .reduce((plurals, plural) => plurals.add(plural), new Set())
       );
-      const singulars = Array.from(
-        terms
-          .map(singularizeDfn)
-          .filter(singular => singular)
-          .reduce((singulars, singular) => singulars.add(singular), new Set())
-      );
 
       if (plurals.length) {
         const userDefinedPlurals = dfn.dataset.plurals
@@ -41,20 +39,10 @@ export function run(conf) {
         dfn.dataset.plurals = uniquePlurals.join("|");
         registerDefinition(dfn, uniquePlurals);
       }
-      if (singulars.length) {
-        const userDefinedPlurals = dfn.dataset.singulars
-          ? dfn.dataset.singulars.split("|")
-          : [];
-        const uniqueSingulars = [
-          ...new Set([...userDefinedPlurals, ...singulars]),
-        ];
-        dfn.dataset.singulars = uniqueSingulars.join("|");
-        registerDefinition(dfn, uniqueSingulars);
-      }
     });
 }
 
-function convertDfns() {
+function getPluralizer() {
   const links = new Set();
   document.querySelectorAll("a:not([href])").forEach(el => {
     const normText = normalize(el.textContent).toLowerCase();
@@ -74,16 +62,11 @@ function convertDfns() {
   });
 
   // returns pluralized term if `text` needs pluralization, "" otherwise
-  return {
-    pluralizeDfn: text => {
-      const normText = normalize(text.toLowerCase());
-      const plural = pluralOf(normText);
-      return links.has(plural) && !dfns.has(plural) ? plural : "";
-    },
-    singularizeDfn: text => {
-      const normText = normalize(text.toLowerCase());
-      const singular = singularOf(normText);
-      return links.has(singular) && !dfns.has(singular) ? singular : "";
-    },
+  return function pluralizeDfn(text) {
+    const normText = normalize(text.toLowerCase());
+    const plural = isSingular(normText)
+      ? pluralOf(normText)
+      : singularOf(normText);
+    return links.has(plural) && !dfns.has(plural) ? plural : "";
   };
 }
