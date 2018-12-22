@@ -27,6 +27,7 @@ export const name = "core/structure";
  * @return {{ ol: HTMLElement, secMap: Record<string, SectionInfo> }}
  */
 function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
+  /** @type {Record<string, SectionInfo>} */
   const secMap = {};
   let appendixMode = false;
   let lastNonAppendix = 0;
@@ -80,9 +81,9 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
 }
 
 /**
- * @typedef {{ element: HTMLElement, header: HTMLElement, title: string, isIntro: boolean, isAppendix: boolean, subsections: Section[] }} Section
+ * @typedef {{ element: Element, header: Element, title: string, isIntro: boolean, isAppendix: boolean, subsections: Section[] }} Section
  *
- * @param {HTMLElement} parent
+ * @param {Element} parent
  */
 function getSectionTree(parent, { tocIntroductory = false } = {}) {
   const sectionElements = children(
@@ -116,7 +117,7 @@ function getSectionTree(parent, { tocIntroductory = false } = {}) {
 }
 
 /**
- * @param {HTMLElement} header
+ * @param {Element} header
  * @param {string} id
  */
 function createTocListItem(header, id) {
