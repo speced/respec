@@ -157,9 +157,11 @@ export function run(conf) {
     const sectionTree = getSectionTree(document.body, {
       tocIntroductory: conf.tocIntroductory,
     });
-    const { ol, secMap } = scanSections(sectionTree, conf.maxTocLevel);
-    createTableOfContents(ol, conf);
-    updateEmptyAnchors(secMap);
+    const result = scanSections(sectionTree, conf.maxTocLevel);
+    if (result) {
+      createTableOfContents(result.ol, conf);
+      updateEmptyAnchors(result.secMap);
+    }
   }
 }
 
