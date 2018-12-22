@@ -119,18 +119,13 @@ function handleIssues(ins, ghIssues, conf) {
       tit.querySelector("span").textContent = text;
       if (report.title) {
         inno.removeAttribute("title");
+        let labels = [];
+        let { repoURL } = conf.github || {};
         if (ghIssue && githubAPI) {
           if (ghIssue.state === "closed") div.classList.add("closed");
-          tit.append(
-            createLabelsGroup(ghIssue.labels, report.title, conf.github.repoURL)
-          );
-        } else {
-          tit.append(
-            hyperHTML`
-              <span style='text-transform: none'>: ${report.title}</span>
-            `
-          );
+          labels = ghIssue.labels;
         }
+        tit.append(createLabelsGroup(labels, report.title, repoURL));
       }
       tit.classList.add("marker");
       div.append(tit);
