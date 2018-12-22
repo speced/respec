@@ -114,7 +114,6 @@ function handleIssues(ins, ghIssues, conf) {
     }
   </li>`;
           issueList.append(li);
-          issueList.append(li);
         }
       }
       tit.querySelector("span").textContent = text;
