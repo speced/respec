@@ -78,29 +78,27 @@ function handleIssues(ins, ghIssues, conf) {
       addId(div, "h", report.type);
       report.title = inno.getAttribute("title");
       if (isIssue) {
-        if (hasDataNum) {
-          if (dataNum) {
-            text += " " + dataNum;
-            // Set issueBase to cause issue to be linked to the external issue tracker
-            if (!isFeatureAtRisk && issueBase) {
-              const span = tit.querySelector("span");
-              const a = hyperHTML`<a href='${issueBase + dataNum}'/>`;
-              span.before(a);
-              a.append(span);
-            } else if (isFeatureAtRisk && conf.atRiskBase) {
-              const span = tit.querySelector("span");
-              const a = hyperHTML`<a href='${conf.atRiskBase + dataNum}'/>`;
-              span.before(a);
-              a.append(span);
-            }
-            tit.querySelector("span").classList.add("issue-number");
-            ghIssue = ghIssues.get(Number(dataNum));
-            if (ghIssue && !report.title) {
-              report.title = ghIssue.title;
-            }
-          }
-        } else {
+        if (!hasDataNum) {
           text += " " + issueNum;
+        } else if (dataNum) {
+          text += " " + dataNum;
+          // Set issueBase to cause issue to be linked to the external issue tracker
+          if (!isFeatureAtRisk && issueBase) {
+            const span = tit.querySelector("span");
+            const a = hyperHTML`<a href='${issueBase + dataNum}'/>`;
+            span.before(a);
+            a.append(span);
+          } else if (isFeatureAtRisk && conf.atRiskBase) {
+            const span = tit.querySelector("span");
+            const a = hyperHTML`<a href='${conf.atRiskBase + dataNum}'/>`;
+            span.before(a);
+            a.append(span);
+          }
+          tit.querySelector("span").classList.add("issue-number");
+          ghIssue = ghIssues.get(Number(dataNum));
+          if (ghIssue && !report.title) {
+            report.title = ghIssue.title;
+          }
         }
         if (report.number !== undefined) {
           // Add entry to #issue-summary.
