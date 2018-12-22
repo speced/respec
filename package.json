@@ -58,6 +58,7 @@
     "serve": "^10.1.1",
     "terser": "^3.11.0",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
+    "typescript": "^3.2.2",
     "webidl2": "^17.0.1"
   },
   "scripts": {
@@ -68,7 +69,7 @@
     "build": "npm run snyk-protect && npm run build:components",
     "copydeps": "node ./tools/copydeps.js",
     "karma": "karma start --single-run",
-    "lint": "eslint src/**/*.js tests/**/*.js tools/*.js",
+    "lint": "tsc -p src/jsconfig.json && eslint src/**/*.js tests/**/*.js tools/*.js",
     "release": "node ./tools/release.js",
     "server": "npm start",
     "snyk": "snyk",
