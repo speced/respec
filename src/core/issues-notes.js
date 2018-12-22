@@ -18,6 +18,13 @@ export const name = "core/issues-notes";
 
 const MAX_GITHUB_REQUESTS = 60;
 
+/**
+ * @typedef {{ type: string, inline: boolean, number: number, title: string }} Report
+ * 
+ * @param {NodeListOf<HTMLElement>} ins
+ * @param {Map<number, GitHubIssue>} ghIssues
+ * @param {*} conf
+ */
 function handleIssues(ins, ghIssues, conf) {
   const { issueBase, githubAPI } = conf;
   const hasDataNum = !!document.querySelector(".issue[data-number]");
@@ -33,6 +40,7 @@ function handleIssues(ins, ghIssues, conf) {
     const isFeatureAtRisk = inno.classList.contains("atrisk");
     const isInline = inno.localName === "span";
     const { number: dataNum } = inno.dataset;
+    /** @type {Partial<Report>} */
     const report = {
       inline: isInline,
     };
@@ -47,7 +55,7 @@ function handleIssues(ins, ghIssues, conf) {
       issueNum++;
       report.number = issueNum;
     } else if (dataNum) {
-      report.number = dataNum;
+      report.number = Number(dataNum);
     }
     // wrap
     if (!isInline) {
@@ -65,6 +73,7 @@ function handleIssues(ins, ghIssues, conf) {
         : isEdNote
         ? conf.l10n.editors_note
         : conf.l10n.note;
+      /** @type {GitHubIssue} */
       let ghIssue;
       if (inno.id) {
         div.id = inno.id;
@@ -110,7 +119,7 @@ function handleIssues(ins, ghIssues, conf) {
       if (report.title) {
         inno.removeAttribute("title");
         let labels = [];
-        const { repoURL } = conf.github || {};
+        const { repoURL = "" } = conf.github || {};
         if (ghIssue && githubAPI) {
           if (ghIssue.state === "closed") div.classList.add("closed");
           labels = ghIssue.labels;
@@ -145,7 +154,7 @@ function handleIssues(ins, ghIssues, conf) {
 
 /**
  * @param {string} l10nIssue
- * @param {*} report
+ * @param {Partial<Report>} report
  */
 function createIssueSummaryEntry(l10nIssue, report, id) {
   const issueNumberText = `${l10nIssue} ${report.number}`;
@@ -158,7 +167,7 @@ function createIssueSummaryEntry(l10nIssue, report, id) {
 }
 
 /**
- * @param {*[]} labels
+ * @param {GitHubLabel[]} labels
  * @param {string} title
  * @param {string} repoURL
  */
@@ -178,6 +187,7 @@ function createLabelsGroup(labels, title, repoURL) {
 
 async function fetchAndStoreGithubIssues(conf) {
   const { githubAPI, githubUser, githubToken } = conf;
+  /** @type {NodeListOf<HTMLElement>} */
   const specIssues = document.querySelectorAll(".issue[data-number]");
   if (specIssues.length > MAX_GITHUB_REQUESTS) {
     const msg =
@@ -236,6 +246,9 @@ function createLabel(label) {
 }
 
 /**
+ * @typedef {{ name: string }} GitHubLabel
+ * @typedef {{ title: string, number: number, state: string, message: string, body_html: string, labels: GitHubLabel[] }} GitHubIssue
+ *
  * @param {Response} response
  * @param {number} issueNumber
  */
@@ -254,7 +267,7 @@ async function processResponse(response, issueNumber) {
     } (HTTP Status ${response.status}).`;
     pub("error", msg);
   }
-  return /** @type {[number, typeof issue]} */ ([issueNumber, issue]);
+  return /** @type {[number, GitHubIssue]} */ ([issueNumber, issue]);
 }
 
 export async function run(conf) {
@@ -262,7 +275,9 @@ export async function run(conf) {
   if (!document.querySelector(query)) {
     return; // nothing to do.
   }
+  /** @type {NodeListOf<HTMLElement>} */
   const issuesAndNotes = document.querySelectorAll(query);
+  /** @type {Map<number, GitHubIssue>} */
   const ghIssues = conf.githubAPI
     ? await fetchAndStoreGithubIssues(conf)
     : new Map();
