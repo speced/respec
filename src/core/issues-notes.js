@@ -236,6 +236,10 @@ function createLabel(label) {
     href="${href}">${name}</a>`;
 }
 
+/**
+ * @param {Response} response
+ * @param {number} issueNumber
+ */
 async function processResponse(response, issueNumber) {
   // "message" is always error message from GitHub
   const issue = { title: "", number: issueNumber, state: "", message: "" };
@@ -251,7 +255,7 @@ async function processResponse(response, issueNumber) {
     } (HTTP Status ${response.status}).`;
     pub("error", msg);
   }
-  return [issueNumber, issue];
+  return /** @type {[number, typeof issue]} */ ([issueNumber, issue]);
 }
 
 export async function run(conf) {
