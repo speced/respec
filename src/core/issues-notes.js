@@ -126,7 +126,9 @@ function handleIssues(ins, ghIssues, conf) {
           );
         } else {
           tit.append(
-            hyperHTML`<span style='text-transform: none'>: ${report.title}</span>`
+            hyperHTML`
+              <span style='text-transform: none'>: ${report.title}</span>
+            `
           );
         }
       }
