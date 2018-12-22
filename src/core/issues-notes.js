@@ -85,12 +85,12 @@ function handleIssues(ins, ghIssues, conf) {
             if (!isFeatureAtRisk && issueBase) {
               const span = tit.querySelector("span");
               const a = hyperHTML`<a href='${issueBase + dataNum}'/>`;
-              span.parentNode.insertBefore(a, span);
+              span.before(a);
               a.append(span);
             } else if (isFeatureAtRisk && conf.atRiskBase) {
               const span = tit.querySelector("span");
               const a = hyperHTML`<a href='${conf.atRiskBase + dataNum}'/>`;
-              span.parentNode.insertBefore(a, span);
+              span.before(a);
               a.append(span);
             }
             tit.querySelector("span").classList.add("issue-number");
@@ -104,17 +104,16 @@ function handleIssues(ins, ghIssues, conf) {
         }
         if (report.number !== undefined) {
           // Add entry to #issue-summary.
-          const li = hyperHTML`<li><a></a></li>`;
-          const a = li.querySelector("a");
-          a.setAttribute("href", "#" + div.id);
-          a.append(conf.l10n.issue + " " + report.number);
-          if (report.title) {
-            li.append(
-              hyperHTML`<span style='text-transform: none'>: ${
-                report.title
-              }</span>`
-            );
-          }
+          const li = hyperHTML`
+  <li>
+    <a href="${"#" + div.id}">${conf.l10n.issue + " " + report.number}</a>
+    ${
+      report.title
+        ? hyperHTML`<span style="text-transform: none">: ${report.title}</span>`
+        : ""
+    }
+  </li>`;
+          issueList.append(li);
           issueList.append(li);
         }
       }
