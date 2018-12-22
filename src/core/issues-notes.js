@@ -117,17 +117,18 @@ function handleIssues(ins, ghIssues, conf) {
         }
       }
       tit.querySelector("span").textContent = text;
-      if (ghIssue && report.title && githubAPI) {
-        if (ghIssue.state === "closed") div.classList.add("closed");
-        tit.append(
-          createLabelsGroup(ghIssue.labels, report.title, conf.github.repoURL)
-        );
+      if (report.title) {
         inno.removeAttribute("title");
-      } else if (report.title) {
-        tit.append(
-          hyperHTML`<span style='text-transform: none'>: ${report.title}</span>`
-        );
-        inno.removeAttribute("title");
+        if (ghIssue && githubAPI) {
+          if (ghIssue.state === "closed") div.classList.add("closed");
+          tit.append(
+            createLabelsGroup(ghIssue.labels, report.title, conf.github.repoURL)
+          );
+        } else {
+          tit.append(
+            hyperHTML`<span style='text-transform: none'>: ${report.title}</span>`
+          );
+        }
       }
       tit.classList.add("marker");
       div.append(tit);
