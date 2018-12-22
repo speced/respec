@@ -102,7 +102,9 @@ function handleIssues(ins, ghIssues, conf) {
         }
         if (report.number !== undefined) {
           // Add entry to #issue-summary.
-          issueList.append(createIssueSummaryEntry(conf.l10n.issue, report));
+          issueList.append(
+            createIssueSummaryEntry(conf.l10n.issue, report, div.id)
+          );
         }
       }
       tit.querySelector("span").textContent = text;
@@ -146,13 +148,13 @@ function handleIssues(ins, ghIssues, conf) {
  * @param {string} l10nIssue
  * @param {*} report
  */
-function createIssueSummaryEntry(l10nIssue, report) {
+function createIssueSummaryEntry(l10nIssue, report, id) {
   const issueNumberText = `${l10nIssue} ${report.number}`;
   const title = report.title
     ? hyperHTML`<span style="text-transform: none">: ${report.title}</span>`
     : "";
   return hyperHTML`
-    <li><a href="${"#" + div.id}">${issueNumberText}</a>${title}</li>
+    <li><a href="${"#" + id}">${issueNumberText}</a>${title}</li>
   `;
 }
 
