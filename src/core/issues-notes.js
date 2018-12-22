@@ -142,7 +142,7 @@ function handleIssues(ins, ghIssues, conf) {
   const issueSummaryElement = document.getElementById("issue-summary");
   if (issueSummaryElement) {
     if (document.querySelectorAll(".issue").length) {
-      issueSummaryElement.innerHTML = issueSummary.innerHTML;
+      issueSummaryElement.append(...issueSummary.childNodes);
     } else {
       pub("warn", "Using issue summary (#issue-summary) but no issues found.");
       issueSummaryElement.remove();
