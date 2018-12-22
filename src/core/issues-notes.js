@@ -26,150 +26,146 @@ function handleIssues(ins, ghIssues, conf) {
     conf.l10n.issue_summary
   }</h2><ul></ul></div>`;
   const issueList = issueSummary.querySelector("ul");
-  [...ins]
-    .filter(issue => issue.parentElement)
-    .forEach(inno => {
-      const isIssue = inno.classList.contains("issue");
-      const isWarning = inno.classList.contains("warning");
-      const isEdNote = inno.classList.contains("ednote");
-      const isFeatureAtRisk = inno.classList.contains("atrisk");
-      const isInline = inno.localName === "span";
-      const { number: dataNum } = inno.dataset;
-      const report = {
-        inline: isInline,
-      };
-      report.type = isIssue
-        ? "issue"
+  ins.forEach(inno => {
+    const isIssue = inno.classList.contains("issue");
+    const isWarning = inno.classList.contains("warning");
+    const isEdNote = inno.classList.contains("ednote");
+    const isFeatureAtRisk = inno.classList.contains("atrisk");
+    const isInline = inno.localName === "span";
+    const { number: dataNum } = inno.dataset;
+    const report = {
+      inline: isInline,
+    };
+    report.type = isIssue
+      ? "issue"
+      : isWarning
+      ? "warning"
+      : isEdNote
+      ? "ednote"
+      : "note";
+    if (isIssue && !isInline && !hasDataNum) {
+      issueNum++;
+      report.number = issueNum;
+    } else if (dataNum) {
+      report.number = dataNum;
+    }
+    // wrap
+    if (!isInline) {
+      const div = hyperHTML`<div class='${report.type +
+        (isFeatureAtRisk ? " atrisk" : "")}'></div>`;
+      const tit = hyperHTML`<div role='heading' class='${report.type +
+        "-title"}'><span></span></div>`;
+      let text = isIssue
+        ? isFeatureAtRisk
+          ? conf.l10n.feature_at_risk
+          : conf.l10n.issue
         : isWarning
-        ? "warning"
+        ? conf.l10n.warning
         : isEdNote
-        ? "ednote"
-        : "note";
-      if (isIssue && !isInline && !hasDataNum) {
-        issueNum++;
-        report.number = issueNum;
-      } else if (dataNum) {
-        report.number = dataNum;
+        ? conf.l10n.editors_note
+        : conf.l10n.note;
+      let ghIssue;
+      if (inno.id) {
+        div.id = inno.id;
+        inno.removeAttribute("id");
+      } else {
+        addId(
+          div,
+          "issue-container",
+          report.number ? `number-${report.number}` : ""
+        );
       }
-      // wrap
-      if (!isInline) {
-        const div = hyperHTML`<div class='${report.type +
-          (isFeatureAtRisk ? " atrisk" : "")}'></div>`;
-        const tit = hyperHTML`<div role='heading' class='${report.type +
-          "-title"}'><span></span></div>`;
-        let text = isIssue
-          ? isFeatureAtRisk
-            ? conf.l10n.feature_at_risk
-            : conf.l10n.issue
-          : isWarning
-          ? conf.l10n.warning
-          : isEdNote
-          ? conf.l10n.editors_note
-          : conf.l10n.note;
-        let ghIssue;
-        if (inno.id) {
-          div.id = inno.id;
-          inno.removeAttribute("id");
+      addId(div, "h", report.type);
+      report.title = inno.getAttribute("title");
+      if (isIssue) {
+        if (hasDataNum) {
+          if (dataNum) {
+            text += " " + dataNum;
+            // Set issueBase to cause issue to be linked to the external issue tracker
+            if (!isFeatureAtRisk && issueBase) {
+              const span = tit.querySelector("span");
+              const a = hyperHTML`<a href='${issueBase + dataNum}'/>`;
+              span.parentNode.insertBefore(a, span);
+              a.append(span);
+            } else if (isFeatureAtRisk && conf.atRiskBase) {
+              const span = tit.querySelector("span");
+              const a = hyperHTML`<a href='${conf.atRiskBase + dataNum}'/>`;
+              span.parentNode.insertBefore(a, span);
+              a.append(span);
+            }
+            tit.querySelector("span").classList.add("issue-number");
+            ghIssue = ghIssues.get(Number(dataNum));
+            if (ghIssue && !report.title) {
+              report.title = ghIssue.title;
+            }
+          }
         } else {
-          addId(
-            div,
-            "issue-container",
-            report.number ? `number-${report.number}` : ""
-          );
+          text += " " + issueNum;
         }
-        addId(div, "h", report.type);
-        report.title = inno.getAttribute("title");
-        if (isIssue) {
-          if (hasDataNum) {
-            if (dataNum) {
-              text += " " + dataNum;
-              // Set issueBase to cause issue to be linked to the external issue tracker
-              if (!isFeatureAtRisk && issueBase) {
-                const span = tit.querySelector("span");
-                const a = hyperHTML`<a href='${issueBase + dataNum}'/>`;
-                span.parentNode.insertBefore(a, span);
-                a.append(span);
-              } else if (isFeatureAtRisk && conf.atRiskBase) {
-                const span = tit.querySelector("span");
-                const a = hyperHTML`<a href='${conf.atRiskBase + dataNum}'/>`;
-                span.parentNode.insertBefore(a, span);
-                a.append(span);
-              }
-              tit.querySelector("span").classList.add("issue-number");
-              ghIssue = ghIssues.get(Number(dataNum));
-              if (ghIssue && !report.title) {
-                report.title = ghIssue.title;
-              }
-            }
-          } else {
-            text += " " + issueNum;
+        if (report.number !== undefined) {
+          // Add entry to #issue-summary.
+          const li = hyperHTML`<li><a></a></li>`;
+          const a = li.querySelector("a");
+          a.setAttribute("href", "#" + div.id);
+          a.append(conf.l10n.issue + " " + report.number);
+          if (report.title) {
+            li.append(
+              hyperHTML`<span style='text-transform: none'>: ${
+                report.title
+              }</span>`
+            );
           }
-          if (report.number !== undefined) {
-            // Add entry to #issue-summary.
-            const li = hyperHTML`<li><a></a></li>`;
-            const a = li.querySelector("a");
-            a.setAttribute("href", "#" + div.id);
-            a.append(conf.l10n.issue + " " + report.number);
-            if (report.title) {
-              li.append(
-                hyperHTML`<span style='text-transform: none'>: ${
-                  report.title
-                }</span>`
-              );
-            }
-            issueList.append(li);
-          }
+          issueList.append(li);
         }
-        tit.querySelector("span").textContent = text;
-        if (ghIssue && report.title && githubAPI) {
-          if (ghIssue.state === "closed") div.classList.add("closed");
-          const labelsGroup = Array.from(ghIssue.labels || [])
-            .map(label => {
-              const issuesURL = new URL("./issues/", conf.github.repoURL);
-              issuesURL.searchParams.set(
-                "q",
-                `is:issue is:open label:"${label.name}"`
-              );
-              return {
-                ...label,
-                href: issuesURL.href,
-              };
-            })
-            .map(createLabel)
-            .reduce((frag, labelElem) => {
-              frag.append(labelElem);
-              return frag;
-            }, document.createDocumentFragment());
-          const node = hyperHTML`<span style='text-transform: none'>: ${
-            report.title
-          }</span>`;
-          node.append(labelsGroup);
-
-          tit.append(node);
-          inno.removeAttribute("title");
-        } else if (report.title) {
-          tit.append(
-            hyperHTML`<span style='text-transform: none'>: ${
-              report.title
-            }</span>`
-          );
-          inno.removeAttribute("title");
-        }
-        tit.classList.add("marker");
-        div.append(tit);
-        let body = inno;
-        inno.replaceWith(div);
-        body.classList.remove(report.type);
-        body.removeAttribute("data-number");
-        if (ghIssue && !body.innerHTML.trim()) {
-          body = hyperHTML`${ghIssue.body_html}`;
-        }
-        div.append(body);
-        const level = parents(tit, "section").length + 2;
-        tit.setAttribute("aria-level", level);
       }
-      pub(report.type, report);
-    });
+      tit.querySelector("span").textContent = text;
+      if (ghIssue && report.title && githubAPI) {
+        if (ghIssue.state === "closed") div.classList.add("closed");
+        const labelsGroup = Array.from(ghIssue.labels || [])
+          .map(label => {
+            const issuesURL = new URL("./issues/", conf.github.repoURL);
+            issuesURL.searchParams.set(
+              "q",
+              `is:issue is:open label:"${label.name}"`
+            );
+            return {
+              ...label,
+              href: issuesURL.href,
+            };
+          })
+          .map(createLabel)
+          .reduce((frag, labelElem) => {
+            frag.append(labelElem);
+            return frag;
+          }, document.createDocumentFragment());
+        const node = hyperHTML`<span style='text-transform: none'>: ${
+          report.title
+        }</span>`;
+        node.append(labelsGroup);
+
+        tit.append(node);
+        inno.removeAttribute("title");
+      } else if (report.title) {
+        tit.append(
+          hyperHTML`<span style='text-transform: none'>: ${report.title}</span>`
+        );
+        inno.removeAttribute("title");
+      }
+      tit.classList.add("marker");
+      div.append(tit);
+      let body = inno;
+      inno.replaceWith(div);
+      body.classList.remove(report.type);
+      body.removeAttribute("data-number");
+      if (ghIssue && !body.innerHTML.trim()) {
+        body = hyperHTML`${ghIssue.body_html}`;
+      }
+      div.append(body);
+      const level = parents(tit, "section").length + 2;
+      tit.setAttribute("aria-level", level);
+    }
+    pub(report.type, report);
+  });
   const issueSummaryElement = document.getElementById("issue-summary");
   if (document.querySelectorAll(".issue").length) {
     if (issueSummaryElement)
