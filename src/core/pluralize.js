@@ -61,7 +61,7 @@ function getPluralizer() {
     }
   });
 
-  // returns pluralized term if `text` needs pluralization, "" otherwise
+  // returns pluralized/singularized term if `text` needs pluralization/singularization, "" otherwise
   return function pluralizeDfn(text) {
     const normText = normalize(text.toLowerCase());
     const plural = isSingular(normText)
