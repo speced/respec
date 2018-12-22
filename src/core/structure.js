@@ -24,7 +24,6 @@ export const name = "core/structure";
  * Scans sections and generate ordered list element + ID-to-anchor-content dictionary.
  * @param {Section[]} sections the target element to find child sections
  * @param {number} maxTocLevel
- * @return {{ ol: HTMLElement, secMap: Record<string, SectionInfo> }}
  */
 function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
   /** @type {Record<string, SectionInfo>} */
@@ -38,6 +37,7 @@ function scanSections(sections, maxTocLevel, { prefix = "" } = {}) {
   if (sections.length === 0) {
     return null;
   }
+  /** @type {HTMLElement} */
   const ol = hyperHTML`<ol class='toc'>`;
   for (const section of sections) {
     if (section.isAppendix && !prefix && !appendixMode) {

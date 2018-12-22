@@ -14,11 +14,6 @@ require.config({
       exports: "hljs",
     },
   },
-  paths: {
-    "handlebars.runtime": "deps/handlebars",
-    "deps/highlight": "https://www.w3.org/Tools/respec/respec-highlight",
-  },
-  deps: ["deps/hyperhtml"],
 });
 
 define([
