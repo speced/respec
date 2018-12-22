@@ -5,6 +5,7 @@
 
 import { norm as normalize } from "./utils";
 import { plural as pluralOf } from "../deps/pluralize";
+import { registerDefinition } from "./dfn-map";
 
 export const name = "core/pluralize";
 
@@ -32,11 +33,7 @@ export function run(conf) {
           : [];
         const uniquePlurals = [...new Set([...userDefinedPlurals, ...plurals])];
         dfn.dataset.plurals = uniquePlurals.join("|");
-        uniquePlurals.reduce((defMap, plural) => {
-          if (!defMap[plural]) defMap[plural] = [];
-          defMap[plural].push(dfn);
-          return defMap;
-        }, conf.definitionMap);
+        registerDefinition(dfn, uniquePlurals);
       }
     });
 }

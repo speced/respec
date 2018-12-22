@@ -9,6 +9,7 @@ import css from "../deps/text!core/css/webidl.css";
 import { findDfn } from "./dfn-finder";
 import hyperHTML from "../deps/hyperhtml";
 import { pub } from "./pubsubhub";
+import { registerDefinition } from "./dfn-map";
 import webidl2 from "../deps/webidl2";
 import webidl2writer from "../deps/webidl2writer";
 
@@ -89,7 +90,7 @@ const operationNames = {};
 const idlPartials = {};
 
 // Takes the result of WebIDL2.parse(), an array of definitions.
-function makeMarkup(parse, definitionMap, { suppressWarnings } = {}) {
+function makeMarkup(parse, { suppressWarnings } = {}) {
   const templates = {
     wrap(items) {
       return items
@@ -116,7 +117,7 @@ function makeMarkup(parse, definitionMap, { suppressWarnings } = {}) {
       }
       const parentName = parent ? parent.name : "";
       const { name } = getNameAndId(data, parentName);
-      const dfn = findDfn(data, name, definitionMap, {
+      const dfn = findDfn(data, name, {
         parent: parentName,
         suppressWarnings,
       });
@@ -274,7 +275,7 @@ function getDefnName(defn) {
   return "";
 }
 
-export function run(conf) {
+export function run() {
   const idls = document.querySelectorAll("pre.idl");
   if (!idls.length) {
     return;
@@ -304,8 +305,7 @@ export function run(conf) {
       // Skip this <pre> and move on to the next one.
       return;
     }
-    // linkDefinitions(parse, conf.definitionMap, "", idlElement);
-    const newElement = makeMarkup(parse, conf.definitionMap, {
+    const newElement = makeMarkup(parse, {
       suppressWarnings: idlElement.classList.contains("no-link-warnings"),
     });
     if (idlElement.id) newElement.id = idlElement.id;
@@ -316,10 +316,7 @@ export function run(conf) {
       if (parent) {
         elem.dataset.dfnFor = parent.dataset.title.toLowerCase();
       }
-      if (!conf.definitionMap[title]) {
-        conf.definitionMap[title] = [];
-      }
-      conf.definitionMap[title].push(elem);
+      registerDefinition(elem, [title]);
     });
     idlElement.replaceWith(newElement);
     newElement.classList.add(...idlElement.classList);
