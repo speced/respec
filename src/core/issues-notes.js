@@ -104,23 +104,20 @@ function handleIssues(ins, ghIssues, conf) {
         }
         if (report.number !== undefined) {
           // Add entry to #issue-summary.
-          const li = hyperHTML`
-  <li>
-    <a href="${"#" + div.id}">${conf.l10n.issue + " " + report.number}</a>
-    ${
-      report.title
-        ? hyperHTML`<span style="text-transform: none">: ${report.title}</span>`
-        : ""
-    }
-  </li>`;
-          issueList.append(li);
+          const issueNumberText = `${conf.l10n.issue} ${report.number}`;
+          const title = report.title
+            ? hyperHTML`<span style="text-transform: none">: ${report.title}</span>`
+            : ""
+          issueList.append(
+            hyperHTML`<li><a href="${"#" + div.id}">${issueNumberText}</a>${title}</li>`
+          );
         }
       }
       tit.querySelector("span").textContent = text;
       if (report.title) {
         inno.removeAttribute("title");
         let labels = [];
-        let { repoURL } = conf.github || {};
+        const { repoURL } = conf.github || {};
         if (ghIssue && githubAPI) {
           if (ghIssue.state === "closed") div.classList.add("closed");
           labels = ghIssue.labels;
