@@ -270,6 +270,25 @@ describe("Core — Issues and Notes", () => {
     ).toEqual("this is 404");
   });
 
+  it("renders the original issue post in an empty issue block", async () => {
+    const githubConfig = {
+      github: "https://github.com/mock-company/mock-repository",
+      githubAPI: `${window.location.origin}/tests/data`,
+    };
+    const ops = {
+      config: githubConfig,
+      body:
+        makeDefaultBody() +
+        `<div class='issue' id='issue1540' data-number='1540'></div>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const issueDiv1 = doc.getElementById("issue1540");
+    expect(issueDiv1).toBeTruthy();
+    expect(issueDiv1.textContent).toBe(
+      "Issue 1540: A mock open issue for testing refactorbugblanknot-a-colorThe issue contentThe second paragraph"
+    );
+  });
+
   it("should link to external issue tracker for features at risk", async () => {
     const atRiskBaseConfig = {
       editors: [

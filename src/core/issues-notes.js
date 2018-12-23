@@ -107,7 +107,9 @@ function handleIssues(ins, ghIssues, conf) {
       body.classList.remove(type);
       body.removeAttribute("data-number");
       if (ghIssue && !body.innerHTML.trim()) {
-        body = hyperHTML`${ghIssue.body_html}`;
+        body = document
+          .createRange()
+          .createContextualFragment(ghIssue.body_html);
       }
       div.append(titleParent, body);
       const level = parents(titleParent, "section").length + 2;
