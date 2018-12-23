@@ -144,6 +144,8 @@ describe("Core — Issues and Notes", () => {
     const doc = await makeRSDoc(ops);
     const issueDiv = doc.querySelector(".issue");
     expect(issueDiv).toBeTruthy();
+    const issueTitle = issueDiv.querySelector(".issue-title");
+    expect(issueTitle.textContent).toBe("Issue 1540: A mock open issue for testing refactorbugblanknot-a-color")
 
     const issueDiv404 = doc.getElementById("this-is-404");
 

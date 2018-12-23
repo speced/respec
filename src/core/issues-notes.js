@@ -20,7 +20,7 @@ const MAX_GITHUB_REQUESTS = 60;
 
 /**
  * @typedef {{ type: string, inline: boolean, number: number, title: string }} Report
- * 
+ *
  * @param {NodeListOf<HTMLElement>} ins
  * @param {Map<number, GitHubIssue>} ghIssues
  * @param {*} conf
@@ -118,11 +118,11 @@ function handleIssues(ins, ghIssues, conf) {
       title.textContent = text;
       if (report.title) {
         inno.removeAttribute("title");
-        let labels = [];
         const { repoURL = "" } = conf.github || {};
-        if (ghIssue && githubAPI) {
-          if (ghIssue.state === "closed") div.classList.add("closed");
-          labels = ghIssue.labels;
+        const ghAvailable = ghIssue && githubAPI;
+        const labels = ghAvailable ? ghIssue.labels : [];
+        if (ghAvailable && ghIssue.state === "closed") {
+          div.classList.add("closed");
         }
         titleParent.append(createLabelsGroup(labels, report.title, repoURL));
       }
@@ -164,25 +164,6 @@ function createIssueSummaryEntry(l10nIssue, report, id) {
   return hyperHTML`
     <li><a href="${"#" + id}">${issueNumberText}</a>${title}</li>
   `;
-}
-
-/**
- * @param {GitHubLabel[]} labels
- * @param {string} title
- * @param {string} repoURL
- */
-function createLabelsGroup(labels, title, repoURL) {
-  const labelsGroup = Array.from(labels || [])
-    .map(label => {
-      const issuesURL = new URL("./issues/", repoURL);
-      issuesURL.searchParams.set("q", `is:issue is:open label:"${label.name}"`);
-      return {
-        ...label,
-        href: issuesURL.href,
-      };
-    })
-    .map(createLabel);
-  return hyperHTML`<span style='text-transform: none'>: ${title}${labelsGroup}</span>`;
 }
 
 async function fetchAndStoreGithubIssues(conf) {
@@ -231,6 +212,28 @@ function isLight(rgb) {
   const blue = (rgb >> 0) & 0xff;
   const illumination = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
   return illumination > 140;
+}
+
+/**
+ * @param {GitHubLabel[]} labels
+ * @param {string} title
+ * @param {string} repoURL
+ */
+function createLabelsGroup(labels, title, repoURL) {
+  const labelsGroup = Array.from(labels || [])
+    .map(label => {
+      const issuesURL = new URL("./issues/", repoURL);
+      issuesURL.searchParams.set("q", `is:issue is:open label:"${label.name}"`);
+      return {
+        ...label,
+        href: issuesURL.href,
+      };
+    })
+    .map(createLabel);
+  if (labelsGroup.length) {
+    labelsGroup.unshift(document.createTextNode(" "));
+  }
+  return hyperHTML`<span style='text-transform: none'>: ${title}${labelsGroup}</span>`;
 }
 
 function createLabel(label) {
