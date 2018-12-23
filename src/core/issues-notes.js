@@ -19,7 +19,7 @@ export const name = "core/issues-notes";
 const MAX_GITHUB_REQUESTS = 60;
 
 /**
- * @typedef {{ inline: boolean, number: number, title: string }} Report
+ * @typedef {{ type: string, inline: boolean, number: number, title: string }} Report
  *
  * @param {NodeListOf<HTMLElement>} ins
  * @param {Map<number, GitHubIssue>} ghIssues
@@ -38,6 +38,7 @@ function handleIssues(ins, ghIssues, conf) {
     const { number: dataNum } = inno.dataset;
     /** @type {Partial<Report>} */
     const report = {
+      type,
       inline: isInline,
       title: inno.title,
     };
