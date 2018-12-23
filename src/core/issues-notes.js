@@ -26,7 +26,7 @@ const MAX_GITHUB_REQUESTS = 60;
  * @param {*} conf
  */
 function handleIssues(ins, ghIssues, conf) {
-  const { issueBase, githubAPI } = conf;
+  const { issueBase } = conf;
   const hasDataNum = !!document.querySelector(".issue[data-number]");
   let issueNum = 0;
   const issueSummary = hyperHTML`<div><h2>${
@@ -119,9 +119,8 @@ function handleIssues(ins, ghIssues, conf) {
       if (report.title) {
         inno.removeAttribute("title");
         const { repoURL = "" } = conf.github || {};
-        const ghAvailable = ghIssue && githubAPI;
-        const labels = ghAvailable ? ghIssue.labels : [];
-        if (ghAvailable && ghIssue.state === "closed") {
+        const labels = ghIssue ? ghIssue.labels : [];
+        if (ghIssue && ghIssue.state === "closed") {
           div.classList.add("closed");
         }
         titleParent.append(createLabelsGroup(labels, report.title, repoURL));
