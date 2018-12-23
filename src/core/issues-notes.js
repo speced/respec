@@ -239,24 +239,21 @@ function isLight(rgb) {
  * @param {string} repoURL
  */
 function createLabelsGroup(labels, title, repoURL) {
-  const labelsGroup = Array.from(labels || [])
-    .map(label => {
-      const issuesURL = new URL("./issues/", repoURL);
-      issuesURL.searchParams.set("q", `is:issue is:open label:"${label.name}"`);
-      return {
-        ...label,
-        href: issuesURL.href,
-      };
-    })
-    .map(createLabel);
+  const labelsGroup = labels.map(label => createLabel(label, repoURL));
   if (labelsGroup.length) {
     labelsGroup.unshift(document.createTextNode(" "));
   }
   return hyperHTML`<span style='text-transform: none'>: ${title}${labelsGroup}</span>`;
 }
 
-function createLabel(label) {
-  const { color, href, name } = label;
+/**
+ * @param {GitHubLabel} label
+ * @param {string} repoURL
+ */
+function createLabel(label, repoURL) {
+  const { color, name } = label;
+  const issuesURL = new URL("./issues/", repoURL);
+  issuesURL.searchParams.set("q", `is:issue is:open label:"${label.name}"`);
   const rgb = parseInt(color, 16);
   const textColorClass = isNaN(rgb) || isLight(rgb) ? "light" : "dark";
   const cssClasses = `respec-gh-label respec-label-${textColorClass}`;
@@ -264,11 +261,11 @@ function createLabel(label) {
   return hyperHTML`<a
     class="${cssClasses}"
     style="${style}"
-    href="${href}">${name}</a>`;
+    href="${issuesURL.href}">${name}</a>`;
 }
 
 /**
- * @typedef {{ name: string }} GitHubLabel
+ * @typedef {{ color: string, name: string }} GitHubLabel
  * @typedef {{ title: string, number: number, state: string, message: string, body_html: string, labels: GitHubLabel[] }} GitHubIssue
  *
  * @param {Response} response
