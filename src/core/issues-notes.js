@@ -26,13 +26,11 @@ const MAX_GITHUB_REQUESTS = 60;
  * @param {*} conf
  */
 function handleIssues(ins, ghIssues, conf) {
-  const { issueBase } = conf;
   const hasDataNum = !!document.querySelector(".issue[data-number]");
   let issueNum = 0;
-  const issueSummary = hyperHTML`<div><h2>${
-    conf.l10n.issue_summary
-  }</h2><ul></ul></div>`;
-  const issueList = issueSummary.querySelector("ul");
+  const issueList = document.createElement("ul");
+  const issueSummary = hyperHTML`
+    <div><h2>${conf.l10n.issue_summary}</h2>${issueList}</div>`;
   ins.forEach(inno => {
     const isIssue = inno.classList.contains("issue");
     const isWarning = inno.classList.contains("warning");
@@ -93,15 +91,10 @@ function handleIssues(ins, ghIssues, conf) {
           text += " " + issueNum;
         } else if (dataNum) {
           text += " " + dataNum;
-          // Set issueBase to cause issue to be linked to the external issue tracker
-          if (!isFeatureAtRisk && issueBase) {
-            const a = hyperHTML`<a href='${issueBase + dataNum}'/>`;
-            title.before(a);
-            a.append(title);
-          } else if (isFeatureAtRisk && conf.atRiskBase) {
-            const a = hyperHTML`<a href='${conf.atRiskBase + dataNum}'/>`;
-            title.before(a);
-            a.append(title);
+          const link = linkToIssueTracker(dataNum, conf, { isFeatureAtRisk });
+          if (link) {
+            title.before(link);
+            link.append(title);
           }
           title.classList.add("issue-number");
           ghIssue = ghIssues.get(Number(dataNum));
@@ -147,6 +140,19 @@ function handleIssues(ins, ghIssues, conf) {
       pub("warn", "Using issue summary (#issue-summary) but no issues found.");
       issueSummaryElement.remove();
     }
+  }
+}
+
+/**
+ * @param {number} dataNum
+ * @param {*} conf
+ */
+function linkToIssueTracker(dataNum, conf, { isFeatureAtRisk = false } = {}) {
+  // Set issueBase to cause issue to be linked to the external issue tracker
+  if (!isFeatureAtRisk && conf.issueBase) {
+    return hyperHTML`<a href='${conf.issueBase + dataNum}'/>`;
+  } else if (isFeatureAtRisk && conf.atRiskBase) {
+    return hyperHTML`<a href='${conf.atRiskBase + dataNum}'/>`;
   }
 }
 
