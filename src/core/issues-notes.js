@@ -63,7 +63,8 @@ function handleIssues(ins, ghIssues, conf) {
         (isFeatureAtRisk ? " atrisk" : "")}'></div>`;
       const title = document.createElement("span");
       const titleParent = hyperHTML`
-        <div role='heading' class='${report.type + "-title"}'>${title}</div>`;
+        <div role='heading' class='${report.type +
+          "-title marker"}'>${title}</div>`;
       let text = isIssue
         ? isFeatureAtRisk
           ? conf.l10n.feature_at_risk
@@ -125,8 +126,6 @@ function handleIssues(ins, ghIssues, conf) {
         }
         titleParent.append(createLabelsGroup(labels, report.title, repoURL));
       }
-      titleParent.classList.add("marker");
-      div.append(titleParent);
       let body = inno;
       inno.replaceWith(div);
       body.classList.remove(report.type);
@@ -134,7 +133,7 @@ function handleIssues(ins, ghIssues, conf) {
       if (ghIssue && !body.innerHTML.trim()) {
         body = hyperHTML`${ghIssue.body_html}`;
       }
-      div.append(body);
+      div.append(titleParent, body);
       const level = parents(titleParent, "section").length + 2;
       titleParent.setAttribute("aria-level", level);
     }
