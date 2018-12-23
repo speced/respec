@@ -63,6 +63,7 @@ function handleIssues(ins, ghIssues, conf) {
       const titleParent = hyperHTML`
         <div role='heading' class='${report.type +
           "-title marker"}'>${title}</div>`;
+      addId(titleParent, "h", report.type);
       let text = isIssue
         ? isFeatureAtRisk
           ? conf.l10n.feature_at_risk
@@ -72,8 +73,6 @@ function handleIssues(ins, ghIssues, conf) {
         : isEdNote
         ? conf.l10n.editors_note
         : conf.l10n.note;
-      /** @type {GitHubIssue} */
-      let ghIssue;
       if (inno.id) {
         div.id = inno.id;
         inno.removeAttribute("id");
@@ -84,8 +83,9 @@ function handleIssues(ins, ghIssues, conf) {
           report.number ? `number-${report.number}` : ""
         );
       }
-      addId(div, "h", report.type);
       report.title = inno.getAttribute("title");
+      /** @type {GitHubIssue} */
+      let ghIssue;
       if (isIssue) {
         if (!hasDataNum) {
           text += " " + issueNum;
