@@ -291,11 +291,11 @@ async function processResponse(response, issueNumber) {
 
 export async function run(conf) {
   const query = ".issue, .note, .warning, .ednote";
-  if (!document.querySelector(query)) {
-    return; // nothing to do.
-  }
   /** @type {NodeListOf<HTMLElement>} */
   const issuesAndNotes = document.querySelectorAll(query);
+  if (!issuesAndNotes.length) {
+    return; // nothing to do.
+  }
   /** @type {Map<number, GitHubIssue>} */
   const ghIssues = conf.githubAPI
     ? await fetchAndStoreGithubIssues(conf)
