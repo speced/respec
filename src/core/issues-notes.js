@@ -19,7 +19,7 @@ export const name = "core/issues-notes";
 const MAX_GITHUB_REQUESTS = 60;
 
 /**
- * @typedef {{ type: string, inline: boolean, number: number, title: string }} Report
+ * @typedef {{ inline: boolean, number: number, title: string }} Report
  *
  * @param {NodeListOf<HTMLElement>} ins
  * @param {Map<number, GitHubIssue>} ghIssues
@@ -32,23 +32,15 @@ function handleIssues(ins, ghIssues, conf) {
   const issueSummary = hyperHTML`
     <div><h2>${conf.l10n.issue_summary}</h2>${issueList}</div>`;
   ins.forEach(inno => {
-    const isIssue = inno.classList.contains("issue");
-    const isWarning = inno.classList.contains("warning");
-    const isEdNote = inno.classList.contains("ednote");
-    const isFeatureAtRisk = inno.classList.contains("atrisk");
+    const { type, displayType, isFeatureAtRisk } = getIssueType(inno, conf);
+    const isIssue = type === "issue";
     const isInline = inno.localName === "span";
     const { number: dataNum } = inno.dataset;
     /** @type {Partial<Report>} */
     const report = {
       inline: isInline,
+      title: inno.title,
     };
-    report.type = isIssue
-      ? "issue"
-      : isWarning
-      ? "warning"
-      : isEdNote
-      ? "ednote"
-      : "note";
     if (isIssue && !isInline && !hasDataNum) {
       issueNum++;
       report.number = issueNum;
@@ -57,22 +49,13 @@ function handleIssues(ins, ghIssues, conf) {
     }
     // wrap
     if (!isInline) {
-      const div = hyperHTML`<div class='${report.type +
+      const div = hyperHTML`<div class='${type +
         (isFeatureAtRisk ? " atrisk" : "")}'></div>`;
       const title = document.createElement("span");
       const titleParent = hyperHTML`
-        <div role='heading' class='${report.type +
-          "-title marker"}'>${title}</div>`;
-      addId(titleParent, "h", report.type);
-      let text = isIssue
-        ? isFeatureAtRisk
-          ? conf.l10n.feature_at_risk
-          : conf.l10n.issue
-        : isWarning
-        ? conf.l10n.warning
-        : isEdNote
-        ? conf.l10n.editors_note
-        : conf.l10n.note;
+        <div role='heading' class='${type + "-title marker"}'>${title}</div>`;
+      addId(titleParent, "h", type);
+      let text = displayType;
       if (inno.id) {
         div.id = inno.id;
         inno.removeAttribute("id");
@@ -83,7 +66,6 @@ function handleIssues(ins, ghIssues, conf) {
           report.number ? `number-${report.number}` : ""
         );
       }
-      report.title = inno.getAttribute("title");
       /** @type {GitHubIssue} */
       let ghIssue;
       if (isIssue) {
@@ -121,7 +103,7 @@ function handleIssues(ins, ghIssues, conf) {
       }
       let body = inno;
       inno.replaceWith(div);
-      body.classList.remove(report.type);
+      body.classList.remove(type);
       body.removeAttribute("data-number");
       if (ghIssue && !body.innerHTML.trim()) {
         body = hyperHTML`${ghIssue.body_html}`;
@@ -141,6 +123,36 @@ function handleIssues(ins, ghIssues, conf) {
       issueSummaryElement.remove();
     }
   }
+}
+
+/**
+ * @typedef {{ type: string, displayType: string, isFeatureAtRisk: boolean }} IssueType
+ *
+ * @param {HTMLElement} inno
+ * @return {IssueType}
+ */
+function getIssueType(inno, conf) {
+  const isIssue = inno.classList.contains("issue");
+  const isWarning = inno.classList.contains("warning");
+  const isEdNote = inno.classList.contains("ednote");
+  const isFeatureAtRisk = inno.classList.contains("atrisk");
+  const type = isIssue
+    ? "issue"
+    : isWarning
+    ? "warning"
+    : isEdNote
+    ? "ednote"
+    : "note";
+  const displayType = isIssue
+    ? isFeatureAtRisk
+      ? conf.l10n.feature_at_risk
+      : conf.l10n.issue
+    : isWarning
+    ? conf.l10n.warning
+    : isEdNote
+    ? conf.l10n.editors_note
+    : conf.l10n.note;
+  return { type, displayType, isFeatureAtRisk };
 }
 
 /**
