@@ -1,4 +1,4 @@
-import "../deps/jquery";
+import $ from "../deps/jquery";
 import {
   addId,
   getDfnTitles,
