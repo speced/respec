@@ -8,7 +8,7 @@ export const name = "core/worker";
 
 // Opportunistically preload syntax highlighter, which is used by the worker
 import { createResourceHint } from "./utils";
-import workerScript from "../deps/text!../../worker/respec-worker.js";
+import workerScript from "text!../../worker/respec-worker.js";
 // Opportunistically preload syntax highlighter
 const hint = {
   hint: "preload",
