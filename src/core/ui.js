@@ -9,7 +9,6 @@
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
 
-import "./jquery-enhanced";
 import css from "../deps/text!ui/ui.css";
 import hyperHTML from "../deps/hyperhtml";
 import { markdownToHtml } from "./utils";
