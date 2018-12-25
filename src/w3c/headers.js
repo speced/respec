@@ -406,9 +406,10 @@ export function run(conf) {
   conf.multipleFormerEditors =
     Array.isArray(conf.formerEditors) && conf.formerEditors.length > 1;
   conf.multipleAuthors = conf.authors && conf.authors.length > 1;
-  $.each(conf.alternateFormats || [], (i, it) => {
-    if (!it.uri || !it.label)
+  (conf.alternateFormats || []).forEach(it => {
+    if (!it.uri || !it.label) {
       pub("error", "All alternate formats must have a uri and a label.");
+    }
   });
   conf.multipleAlternates =
     conf.alternateFormats && conf.alternateFormats.length > 1;

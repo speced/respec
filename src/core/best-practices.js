@@ -5,6 +5,7 @@
 import css from "text!./css/bp.css";
 import hyperHTML from "../deps/hyperhtml";
 import { pub } from "./pubsubhub";
+import { addId } from "./utils";
 
 export const name = "core/best-practices";
 
@@ -14,7 +15,7 @@ export function run() {
   const ul = document.createElement("ul");
   for (const bp of bps) {
     num++;
-    const id = window.$.fn.makeID.call([bp], "bp");
+    const id = addId(bp, "bp");
     const li = hyperHTML`<li><a href="${`#${id}`}">Best Practice ${num}</a>: ${
       bp.textContent
     }</li>`;
