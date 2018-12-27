@@ -12,6 +12,8 @@ describe("Core — Informative", () => {
     const sec = doc.querySelector("div.informative, section.informative");
     expect(sec.querySelectorAll("p").length).toEqual(1);
     expect(sec.querySelectorAll("p em").length).toEqual(1);
-    expect(sec.querySelector("p em").textContent).toEqual("This section is non-normative.");
+    expect(sec.querySelector("p em").textContent).toEqual(
+      "This section is non-normative."
+    );
   });
 });

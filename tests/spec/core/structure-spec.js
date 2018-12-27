@@ -52,17 +52,29 @@ describe("Core - Structure", () => {
     };
     ops.config.tocIntroductory = true;
     const doc = await makeRSDoc(ops);
-    const $toc = $("#toc", doc);
-    expect($toc.find("h2").text()).toEqual("Table of Contents");
-    expect($toc.find("> ol > li").length).toEqual(6);
-    expect($toc.find("li").length).toEqual(18);
+    const toc = doc.querySelector("#toc");
+    expect(toc.querySelector("h2").textContent).toEqual("Table of Contents");
+    const heirLI = Array.prototype.slice
+      .call(toc.children)
+      .reduce((result, child) => {
+        if (child.nodeName !== "OL") return result;
+        const childrenLi = [...child.children].filter(
+          element => element.nodeName === "LI"
+        );
+        return [...result, ...childrenLi];
+      }, []);
+    expect(heirLI.length).toEqual(6);
+    expect(toc.querySelectorAll("li").length).toEqual(18);
+    expect(heirLI[0].textContent).toEqual("Abstract");
     expect(
-      $toc
-        .find("> ol > li a")
-        .first()
-        .text()
-    ).toEqual("Abstract");
-    expect($toc.find("> ol > li a[href='#intro']").length).toEqual(1);
+      heirLI.reduce(
+        (result, element) => [
+          ...result,
+          ...element.querySelectorAll("a[href='#intro']"),
+        ],
+        []
+      ).length
+    ).toEqual(1);
   });
 
   it("should limit ToC depth with maxTocLevel", async () => {
@@ -72,26 +84,37 @@ describe("Core - Structure", () => {
     };
     ops.config.maxTocLevel = 4;
     const doc = await makeRSDoc(ops);
-    const $toc = $("#toc", doc);
-    expect($toc.find("h2").text()).toEqual("Table of Contents");
-    expect($toc.find("> ol > li").length).toEqual(3);
-    expect($toc.find("li").length).toEqual(11);
+    const toc = doc.querySelector("#toc");
+    expect(toc.querySelector("h2").textContent).toEqual("Table of Contents");
+    const heirLI = Array.prototype.slice
+      .call(toc.children)
+      .reduce((result, child) => {
+        if (child.nodeName !== "OL") return result;
+        const childrenLi = [...child.children].filter(
+          element => element.nodeName === "LI"
+        );
+        return [...result, ...childrenLi];
+      }, []);
+    expect(heirLI.length).toEqual(3);
+    expect(toc.querySelectorAll("li").length).toEqual(11);
     expect(
-      $toc
-        .find("> ol > li a")
-        .first()
-        .text()
+      heirLI.reduce(
+        (result, element) => [...result, ...element.querySelectorAll("a")],
+        []
+      )[0].textContent
     ).toEqual("1. ONE");
-    expect($toc.find("a[href='#four']").text()).toEqual("1.1.1.1 FOUR");
+    expect(toc.querySelector("a[href='#four']").textContent).toEqual(
+      "1.1.1.1 FOUR"
+    );
+
     expect(
-      $toc
-        .find("> ol > li")
-        .first()
-        .next()
-        .find("> a")
-        .text()
+      [...heirLI[0].nextSibling.children].filter(
+        element => element.nodeName === "A"
+      )[0].textContent
     ).toEqual("A. ONE");
-    expect($toc.find("a[href='#four-0']").text()).toEqual("A.1.1.1 FOUR");
+    expect(toc.querySelector("a[href='#four-0']").textContent).toEqual(
+      "A.1.1.1 FOUR"
+    );
     // should still add section number to the original header
     expect(doc.getElementById("x1-1-1-1-1-five").textContent).toBe(
       "1.1.1.1.1 FIVE"
