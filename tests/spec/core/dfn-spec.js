@@ -9,9 +9,9 @@ describe("Core — Definitions", () => {
         "<section id='dfn'><dfn>text</dfn><a>text</a></section>",
     };
     const doc = await makeRSDoc(ops);
-    const $sec = $("#dfn", doc);
-    expect($sec.find("dfn").attr("id")).toEqual("dfn-text");
-    expect($sec.find("a").attr("href")).toEqual("#dfn-text");
+    const sec = doc.querySelector("#dfn");
+    expect(sec.querySelector("dfn").id).toEqual("dfn-text");
+    expect(sec.querySelector("a").getAttribute("href")).toEqual("#dfn-text");
   });
 
   it("makes links <code> when their definitions are <code>", async () => {
@@ -30,17 +30,28 @@ describe("Core — Definitions", () => {
           <a>partial inner code</a>
         </section>`,
     };
+
+    const getNodeArray = NodeList => Array.prototype.slice.call(NodeList);
+
     const doc = await makeRSDoc(ops);
     const $sec = $("#dfn", doc);
-    expect($sec.find("a:contains('outerCode')").contents()[0].nodeName).toEqual(
-      "CODE"
-    );
-    expect($sec.find("a:contains('outerPre')").contents()[0].nodeName).toEqual(
-      "CODE"
-    );
-    expect($sec.find("a:contains('innerCode')").contents()[0].nodeName).toEqual(
-      "CODE"
-    );
+    const sec = doc.querySelector("#dfn");
+    const findAnchorChild = (
+      string,
+      anchorArray = getNodeArray(sec.querySelectorAll("a"))
+    ) =>
+      anchorArray.reduce((result, anchor) => {
+        const innerFind = getNodeArray(anchor.children).filter(element =>
+          element.textContent.includes(string)
+        )[0];
+        if (innerFind !== undefined) result.push(innerFind);
+        else if (anchor.textContent.includes(string)) result.push(anchor);
+        return result;
+      }, []);
+
+    expect(findAnchorChild("outerCode")[0].nodeName).toEqual("CODE");
+    expect(findAnchorChild("outerPre")[0].nodeName).toEqual("CODE");
+    expect(findAnchorChild("innerCode")[0].nodeName).toEqual("CODE");
     expect($sec.find("a:contains('partial')").contents()[0].nodeName).toEqual(
       "#text"
     );
