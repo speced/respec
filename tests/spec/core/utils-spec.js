@@ -297,7 +297,9 @@ describe("Core - Utils", () => {
     it("adds several link elements", () => {
       utils.linkCSS(document, ["BOGUS", "BOGUS", "BOGUS"]);
       expect(document.querySelectorAll("link[href='BOGUS']").length).toEqual(3);
-      [...document.querySelectorAll("link[href='BOGUS']")].forEach(element => element.remove());
+      [...document.querySelectorAll("link[href='BOGUS']")].forEach(element =>
+        element.remove()
+      );
     });
   });
 
