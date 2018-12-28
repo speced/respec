@@ -17,7 +17,7 @@ require.config({
   // we have to kickoff jasmine, as it is asynchronous
   callback: window.__karma__.start,
   paths: {
-    "core": "/base/js/core",
-    "w3c": "/base/js/w3c"
+    core: "/base/js/core",
+    w3c: "/base/js/w3c",
   },
 });
