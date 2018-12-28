@@ -9,8 +9,8 @@
 //  - lang: can change the generated text (supported: en, fr)
 //  - maxTocLevel: only generate a TOC so many levels deep
 
-import { addId, children, parents, renameElement } from "./utils";
-import hyperHTML from "../deps/hyperhtml";
+import { addId, children, parents, renameElement } from "./utils.js";
+import hyperHTML from "../deps/hyperhtml.js";
 
 const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
 const headerTags = ["h1", ...lowerHeaderTags];

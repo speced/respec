@@ -1,7 +1,7 @@
 // @ts-check
-import { definitionMap, registerDefinition } from "./dfn-map";
-import { pub } from "./pubsubhub";
-import { wrapInner } from "./utils";
+import { definitionMap, registerDefinition } from "./dfn-map.js";
+import { pub } from "./pubsubhub.js";
+import { wrapInner } from "./utils.js";
 
 const topLevelEntities = new Set([
   "callback interface",

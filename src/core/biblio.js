@@ -5,9 +5,9 @@
 
 /*jshint jquery: true*/
 /*globals console*/
-import { biblioDB } from "./biblio-db";
-import { createResourceHint } from "./utils";
-import { pub } from "./pubsubhub";
+import { biblioDB } from "./biblio-db.js";
+import { createResourceHint } from "./utils.js";
+import { pub } from "./pubsubhub.js";
 
 // for backward compatibity
 export { wireReference, stringifyReference } from "./render-biblio";

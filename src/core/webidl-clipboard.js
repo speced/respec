@@ -5,7 +5,7 @@
  * well-formatted IDL to the clipboard.
  *
  */
-import Clipboard from "../deps/clipboard";
+import Clipboard from "../deps/clipboard.js";
 import svgClipboard from "../deps/text!core/images/clipboard.svg";
 export const name = "core/webidl-clipboard";
 

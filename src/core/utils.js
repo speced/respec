@@ -3,8 +3,8 @@
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
-import marked from "../deps/marked";
-import { pub } from "./pubsubhub";
+import marked from "../deps/marked.js";
+import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
 marked.setOptions({

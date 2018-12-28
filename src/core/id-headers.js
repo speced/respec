@@ -3,8 +3,8 @@
 // This is currently in core though it comes from a W3C rule. It may move in the future.
 
 export const name = "core/id-headers";
-import { addId } from "./utils";
-import hyperHTML from "../deps/hyperhtml";
+import { addId } from "./utils.js";
+import hyperHTML from "../deps/hyperhtml.js";
 
 export function run(conf) {
   document

@@ -1,4 +1,4 @@
-import hyperHTML from "../../deps/hyperhtml";
+import hyperHTML from "../../deps/hyperhtml.js";
 
 export default conf => {
   const html = hyperHTML;

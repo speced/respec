@@ -1,7 +1,7 @@
 // Module w3c/conformance
 // Handle the conformance section properly.
-import confoTmpl from "./templates/conformance";
-import { pub } from "../core/pubsubhub";
+import confoTmpl from "./templates/conformance.js";
+import { pub } from "../core/pubsubhub.js";
 
 export const name = "w3c/conformance";
 

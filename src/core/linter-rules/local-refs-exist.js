@@ -2,8 +2,8 @@
  * Linter rule "warn-local-ref".
  * Warns about href's that link to nonexistent id's in a spec
  */
-import LinterRule from "../LinterRule";
-import { lang as defaultLang } from "../l10n";
+import LinterRule from "../LinterRule.js";
+import { lang as defaultLang } from "../l10n.js";
 
 const name = "local-refs-exist";
 

@@ -10,10 +10,10 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
-import { addId, fetchAndCache, parents } from "./utils";
+import { addId, fetchAndCache, parents } from "./utils.js";
 import css from "../deps/text!core/css/issues-notes.css";
-import hyperHTML from "../deps/hyperhtml";
-import { pub } from "./pubsubhub";
+import hyperHTML from "../deps/hyperhtml.js";
+import { pub } from "./pubsubhub.js";
 export const name = "core/issues-notes";
 
 const MAX_GITHUB_REQUESTS = 60;

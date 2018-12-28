@@ -1,5 +1,5 @@
-import hyperHTML from "../../deps/hyperhtml";
-import { showInlineWarning } from "../../core/utils";
+import hyperHTML from "../../deps/hyperhtml.js";
+import { showInlineWarning } from "../../core/utils.js";
 
 export default obj => {
   const a = document.createElement("a");

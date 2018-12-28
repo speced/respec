@@ -3,8 +3,8 @@
 // Adds width and height to images, if they are missing.
 // Generates a Table of Figures wherever there is a #tof element.
 
-import { addId, renameElement, showInlineWarning, wrapInner } from "./utils";
-import hyperHTML from "../deps/hyperhtml";
+import { addId, renameElement, showInlineWarning, wrapInner } from "./utils.js";
+import hyperHTML from "../deps/hyperhtml.js";
 
 export const name = "core/figures";
 

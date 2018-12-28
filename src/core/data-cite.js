@@ -13,9 +13,9 @@
  * Usage:
  * https://github.com/w3c/respec/wiki/data--cite
  */
-import { refTypeFromContext, showInlineWarning, wrapInner } from "./utils";
-import { resolveRef, updateFromNetwork } from "./biblio";
-import hyperHTML from "../deps/hyperhtml";
+import { refTypeFromContext, showInlineWarning, wrapInner } from "./utils.js";
+import { resolveRef, updateFromNetwork } from "./biblio.js";
+import hyperHTML from "../deps/hyperhtml.js";
 export const name = "core/data-cite";
 
 function requestLookup(conf) {

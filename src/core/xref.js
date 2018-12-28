@@ -4,7 +4,7 @@
 //   so later they can be handled by core/link-to-dfn.
 // https://github.com/w3c/respec/issues/1662
 
-import * as IDB from "../deps/idb";
+import * as IDB from "../deps/idb.js";
 import {
   nonNormativeSelector,
   norm as normalize,

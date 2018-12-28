@@ -4,7 +4,7 @@
  * Performs syntax highlighting to all pre and code elements.
  */
 import ghCss from "../deps/text!core/css/github.css";
-import { worker } from "./worker";
+import { worker } from "./worker.js";
 export const name = "core/highlight";
 
 // Opportunistically insert the style into the head to reduce FOUC.

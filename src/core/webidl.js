@@ -4,14 +4,14 @@
 // TODO:
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
-import { flatten, normalizePadding, reindent } from "./utils";
+import { flatten, normalizePadding, reindent } from "./utils.js";
 import css from "../deps/text!core/css/webidl.css";
-import { findDfn } from "./dfn-finder";
-import hyperHTML from "../deps/hyperhtml";
-import { pub } from "./pubsubhub";
-import { registerDefinition } from "./dfn-map";
-import webidl2 from "../deps/webidl2";
-import webidl2writer from "../deps/webidl2writer";
+import { findDfn } from "./dfn-finder.js";
+import hyperHTML from "../deps/hyperhtml.js";
+import { pub } from "./pubsubhub.js";
+import { registerDefinition } from "./dfn-map.js";
+import webidl2 from "../deps/webidl2.js";
+import webidl2writer from "../deps/webidl2writer.js";
 
 export const name = "core/webidl";
 
