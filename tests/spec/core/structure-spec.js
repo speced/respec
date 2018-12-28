@@ -78,12 +78,17 @@ describe("Core - Structure", () => {
     expect(toc.querySelector("h2").textContent).toEqual("Table of Contents");
     expect(doc.querySelectorAll("#toc > ol > li").length).toEqual(3);
     expect(toc.querySelectorAll("li").length).toEqual(11);
-    expect(doc.querySelector("#toc > ol > li > a").textContent).toEqual("1. ONE");
+    expect(doc.querySelector("#toc > ol > li > a").textContent).toEqual(
+      "1. ONE"
+    );
     expect(toc.querySelector("a[href='#four']").textContent).toEqual(
       "1.1.1.1 FOUR"
     );
 
-    expect(doc.querySelector("#toc > ol > li").nextSibling.querySelector("a").textContent).toEqual("A. ONE");
+    expect(
+      doc.querySelector("#toc > ol > li").nextSibling.querySelector("a")
+        .textContent
+    ).toEqual("A. ONE");
 
     expect(toc.querySelector("a[href='#four-0']").textContent).toEqual(
       "A.1.1.1 FOUR"
