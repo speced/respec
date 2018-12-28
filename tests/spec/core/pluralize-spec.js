@@ -44,11 +44,7 @@ describe("Core - Pluralize", () => {
         or <a>bars</a>
         or <a>bazs</a>
         but not as <a id="ignored-link" href="/PASS">bar</a>
-      </section>
-      <section>
-      
-</section>
-    `;
+      </section>`;
     const ops = makeStandardOps({ pluralize: true }, body);
     const doc = await makeRSDoc(ops);
 
@@ -207,35 +203,6 @@ describe("Core - Pluralize", () => {
     expect(
       linksToFoos.every(el => el.getAttribute("href") === "#dfn-foos")
     ).toBeTruthy();
-  });
-
-  it("doesn't mishandle <dfn> referring plural nouns without singulars", async () => {
-    const body = `
-      <section id="section">
-        <dfn>trousers</dfn>
-        <dfn data-lt="scissors">Scissors</dfn>
-
-        
-        Scissors Does Not have a Singular, Trousers ironically does (according to pluralize).
-        <a id="link-to-scissors">scissors</a>
-        <a id="link-to-trousers">trousers</a>
-
-      </section>
-    `;
-    const ops = makeStandardOps({ pluralize: true }, body);
-    const doc = await makeRSDoc(ops);
-
-    const dfnTrousers = doc.getElementById("dfn-trousers");
-    expect(dfnTrousers).toBeTruthy();
-    const dfnScissors = doc.getElementById("dfn-scissors");
-    expect(dfnScissors).toBeTruthy();
-    expect("lt" in dfnTrousers.dataset).toBeFalsy();
-    expect("plurals" in dfnTrousers.dataset).toBeFalsy();
-
-    const linkToScissors = doc.getElementById("link-to-scissors");
-    const linkToTrousers = doc.getElementById("link-to-trousers");
-    expect(linkToScissors.getAttribute("href")).toEqual("#dfn-scissors");
-    expect(linkToTrousers.getAttribute("href")).toEqual("#dfn-trousers");
   });
 
   it("doesn't add pluralization when no <a> references plural term", async () => {
