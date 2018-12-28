@@ -154,7 +154,7 @@ describe("Core — Issues and Notes", () => {
     expect(issueDiv).toBeTruthy();
     const issueTitle = doc.getElementById("h-issue");
     expect(issueTitle.textContent).toBe(
-      "Issue 1540: A mock open issue for testingrefactorbugblanknot-a-color"
+      "Issue 1540: A mock open issue for testing refactorbugblanknot-a-color"
     );
 
     const issueDiv404 = doc.getElementById("this-is-404");
@@ -294,7 +294,7 @@ describe("Core — Issues and Notes", () => {
     const issueDiv1 = doc.getElementById("issue1540");
     expect(issueDiv1).toBeTruthy();
     expect(issueDiv1.textContent).toBe(
-      "Issue 1540: A mock open issue for testingrefactorbugblanknot-a-colorThe issue contentThe second paragraph"
+      "Issue 1540: A mock open issue for testing refactorbugblanknot-a-colorThe issue contentThe second paragraph"
     );
   });
 
