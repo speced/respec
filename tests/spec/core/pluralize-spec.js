@@ -31,7 +31,7 @@ describe("Core - Pluralize", () => {
     const linksBars = [...doc.querySelectorAll("#barLinks a")];
     expect(linksBars.length).toEqual(2);
     expect(
-      linksBars.every(el => el.getAttribute("href") === "#dfn-foo")
+      linksBars.every(el => el.getAttribute("href") === "#dfn-bars")
     ).toBeTruthy();
   });
 
