@@ -1,5 +1,12 @@
 "use strict";
 describe("Core - Structure", () => {
+  let utils;
+  beforeAll(done => {
+    require(["core/utils"], u => {
+      utils = u;
+      done();
+    });
+  });
   const body =
     makeDefaultBody() +
     "<section class='introductory'><h2>INTRO</h2></section>" +
@@ -54,15 +61,7 @@ describe("Core - Structure", () => {
     const doc = await makeRSDoc(ops);
     const toc = doc.querySelector("#toc");
     expect(toc.querySelector("h2").textContent).toEqual("Table of Contents");
-    const heirLI = Array.prototype.slice
-      .call(toc.children)
-      .reduce((result, child) => {
-        if (child.nodeName !== "OL") return result;
-        const childrenLi = [...child.children].filter(
-          element => element.nodeName === "LI"
-        );
-        return [...result, ...childrenLi];
-      }, []);
+    const heirLI = [...utils.children(toc, "ol > li")];
     expect(heirLI.length).toEqual(6);
     expect(toc.querySelectorAll("li").length).toEqual(18);
     expect(heirLI[0].textContent).toEqual("Abstract");
@@ -84,7 +83,7 @@ describe("Core - Structure", () => {
     };
     ops.config.maxTocLevel = 4;
     const doc = await makeRSDoc(ops);
-    const toc = doc.querySelector("#toc");
+    const toc = doc.getElementById("toc");
     expect(toc.querySelector("h2").textContent).toEqual("Table of Contents");
     const heirLI = Array.prototype.slice
       .call(toc.children)
