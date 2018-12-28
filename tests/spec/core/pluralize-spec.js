@@ -38,21 +38,25 @@ describe("Core - Pluralize", () => {
   it("adds pluralization when [data-lt] is defined", async () => {
     const body = `
       <section id="section">
-        <dfn data-lt="baz">bar</dfn> can be referenced
+        <dfn data-lt="baz">bars</dfn> can be referenced
         as <a>baz</a>
         or <a>bar</a>
         or <a>bars</a>
         or <a>bazs</a>
         but not as <a id="ignored-link" href="/PASS">bar</a>
       </section>
+      <section>
+      
+</section>
     `;
     const ops = makeStandardOps({ pluralize: true }, body);
     const doc = await makeRSDoc(ops);
 
     const dfn = doc.querySelector("#section dfn");
+    console.log(doc.getElementsByTagName("section"));
     expect(dfn.id).toEqual("dfn-baz"); // uses first data-lt as `id`
-    expect(dfn.dataset.lt).toEqual("baz|bar");
-    expect(dfn.dataset.plurals.split("|").sort()).toEqual(["bars", "bazs"]);
+    expect(dfn.dataset.lt).toEqual("baz|bars");
+    expect(dfn.dataset.plurals.split("|").sort()).toEqual(["bar", "bazs"]);
     const validLinks = [...doc.querySelectorAll("#section a[href^='#']")];
     expect(validLinks.length).toEqual(4);
     expect(
