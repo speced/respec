@@ -144,6 +144,10 @@ describe("Core — Issues and Notes", () => {
     const doc = await makeRSDoc(ops);
     const issueDiv = doc.querySelector(".issue");
     expect(issueDiv).toBeTruthy();
+    const issueTitle = doc.getElementById("h-issue");
+    expect(issueTitle.textContent).toBe(
+      "Issue 1540: A mock open issue for testing refactorbugblanknot-a-color"
+    );
 
     const issueDiv404 = doc.getElementById("this-is-404");
 
@@ -264,6 +268,25 @@ describe("Core — Issues and Notes", () => {
     expect(
       issueDiv404.querySelector("div:not(.issue-title)").textContent
     ).toEqual("this is 404");
+  });
+
+  it("renders the original issue post in an empty issue block", async () => {
+    const githubConfig = {
+      github: "https://github.com/mock-company/mock-repository",
+      githubAPI: `${window.location.origin}/tests/data`,
+    };
+    const ops = {
+      config: githubConfig,
+      body:
+        makeDefaultBody() +
+        `<div class='issue' id='issue1540' data-number='1540'></div>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const issueDiv1 = doc.getElementById("issue1540");
+    expect(issueDiv1).toBeTruthy();
+    expect(issueDiv1.textContent).toBe(
+      "Issue 1540: A mock open issue for testing refactorbugblanknot-a-colorThe issue contentThe second paragraph"
+    );
   });
 
   it("should link to external issue tracker for features at risk", async () => {
