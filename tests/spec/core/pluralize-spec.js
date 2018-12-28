@@ -3,19 +3,35 @@ describe("Core - Pluralize", () => {
     const body = `
       <section id="section">
         <dfn>foo</dfn> can be referenced as
-        <a>foo</a> or <a>foos</a>
+        <span id="fooLinks">
+          <a>foo</a> or <a>foos</a>
+        </span>
+        <dfn>bars</dfn> can be referenced as
+        <span id="barLinks">
+          <a>bar</a> or <a>bars</a>
+        </span>
       </section>`;
     const ops = makeStandardOps({ pluralize: true }, body);
     const doc = await makeRSDoc(ops);
 
-    const dfn = doc.querySelector("#section dfn");
-    expect(dfn.id).toEqual("dfn-foo");
-    expect(dfn.dataset.lt).toBeFalsy();
-    expect(dfn.dataset.plurals).toEqual("foos");
-    const links = [...doc.querySelectorAll("#section a")];
-    expect(links.length).toEqual(2);
+    const dfnFoo = doc.querySelectorAll("#section dfn")[0];
+    expect(dfnFoo.id).toEqual("dfn-foo");
+    expect(dfnFoo.dataset.lt).toBeFalsy();
+    expect(dfnFoo.dataset.plurals).toEqual("foos");
+    const linksFoo = [...doc.querySelectorAll("#fooLinks a")];
+    expect(linksFoo.length).toEqual(2);
     expect(
-      links.every(el => el.getAttribute("href") === "#dfn-foo")
+      linksFoo.every(el => el.getAttribute("href") === "#dfn-foo")
+    ).toBeTruthy();
+
+    const dfnBars = doc.querySelectorAll("#section dfn")[1];
+    expect(dfnBars.id).toEqual("dfn-bars");
+    expect(dfnBars.dataset.lt).toBeFalsy();
+    expect(dfnBars.dataset.plurals).toEqual("bar");
+    const linksBars = [...doc.querySelectorAll("#barLinks a")];
+    expect(linksBars.length).toEqual(2);
+    expect(
+      linksBars.every(el => el.getAttribute("href") === "#dfn-foo")
     ).toBeTruthy();
   });
 
@@ -249,6 +265,7 @@ describe("Core - Pluralize", () => {
     expect(dfn.id).toEqual("dfn-tables");
     const dfnlt = dfn.dataset.lt.split("|").sort();
     const expectedDfnlt = "chairs|tables".split("|"); // no "table" here
+    expect(dfn.dataset.plurals).toBeUndefined(); //no pluralization
     expect(dfnlt).toEqual(expectedDfnlt);
   });
 
