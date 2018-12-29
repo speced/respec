@@ -3,6 +3,7 @@
  */
 export const name = "w3c/defaults";
 import { rule as checkPunctuation } from "../core/linter-rules/check-punctuation";
+import { rule as internalSlotWarning } from "../core/linter-rules/internal-slot-warn";
 import linter from "../core/linter";
 import { rule as localRefsExist } from "../core/linter-rules/local-refs-exist";
 import { rule as noHeadinglessSectionsRule } from "../core/linter-rules/no-headingless-sections";
@@ -14,7 +15,8 @@ linter.register(
   privsecSectionRule,
   noHeadinglessSectionsRule,
   checkPunctuation,
-  localRefsExist
+  localRefsExist,
+  internalSlotWarning
 );
 
 const cgbg = new Set(["BG-DRAFT", "BG-FINAL", "CG-DRAFT", "CG-FINAL"]);
@@ -62,6 +64,7 @@ const w3cDefaults = {
     "no-http-props": true,
     "check-punctuation": false,
     "local-refs-exist": true,
+    "internal-slot-warn": true,
   },
   pluralize: false,
   highlightVars: true,
