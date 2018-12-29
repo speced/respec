@@ -132,13 +132,8 @@ export const ui = {
   enable() {
     respecPill.removeAttribute("disabled");
   },
-  addCommand(label, module, keyShort, icon) {
+  addCommand(label, handler, keyShort, icon) {
     icon = icon || "";
-    const handler = function() {
-      require([module], mod => {
-        mod.show();
-      });
-    };
     const id = "respec-button-" + label.toLowerCase().replace(/\s+/, "-");
     const button = hyperHTML`<button id="${id}" class="respec-option" title="${keyShort}">
       <span class="respec-cmd-icon">${icon}</span> ${label}…

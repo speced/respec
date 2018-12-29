@@ -7,7 +7,7 @@ import { wireReference } from "../core/biblio";
 
 const button = ui.addCommand(
   l10n[lang].search_specref,
-  "ui/search-specref",
+  show,
   "Ctrl+Shift+Alt+space",
   "🔎"
 );
@@ -160,5 +160,3 @@ function render({ state, results, timeTaken, query } = { state: "" }) {
   }</section>
   `;
 }
-
-export { show };

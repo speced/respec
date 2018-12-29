@@ -7,7 +7,7 @@ import { ui } from "../core/ui";
 
 const button = ui.addCommand(
   l10n[lang].definition_list,
-  "ui/dfn-list",
+  show,
   "Ctrl+Shift+Alt+D",
   "📔"
 );
@@ -36,5 +36,3 @@ function show() {
   render`${definitionLinks}`;
   ui.freshModal(l10n[lang].list_of_definitions, ul, button);
 }
-
-export { show };
