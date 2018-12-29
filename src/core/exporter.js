@@ -8,6 +8,7 @@
 import hyperHTML from "../deps/hyperhtml";
 import { pub } from "./pubsubhub";
 import { removeReSpec } from "./utils";
+import { expose } from "./expose-modules";
 
 const mimeTypes = new Map([["text/html", "html"], ["application/xml", "xml"]]);
 
@@ -110,3 +111,5 @@ function* walkTree(walker) {
     yield walker.currentNode;
   }
 }
+
+expose("core/exporter", { rsDocToDataURL });

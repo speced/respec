@@ -3,7 +3,7 @@ if (!inAmd) {
   window.require = function(deps, callback) {
     const modules = deps.map(dep => {
       if (!(dep in window.require.modules)) {
-        throw new Error("Invalid dependency name");
+        throw new Error(`Unsupported dependency name: ${dep}`);
       }
       return window.require.modules[dep];
     });
