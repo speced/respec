@@ -21,11 +21,5 @@ module.exports = {
     // to import texts via e.g. "text!./css/webidl.css"
     alias: { "text": "raw-loader" }
   },
-  devtool: 'source-map',
-  plugins: [
-    // prevents generating empty 1.respec-w3c-common.js
-    new webpack.optimize.LimitChunkCountPlugin({
-      maxChunks: 1,
-    })
-  ]
+  devtool: 'source-map'
 }
