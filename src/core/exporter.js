@@ -5,10 +5,10 @@
  * That is, elements that have a "removeOnSave" css class.
  */
 
+import { expose } from "./expose-modules";
 import hyperHTML from "../deps/hyperhtml";
 import { pub } from "./pubsubhub";
 import { removeReSpec } from "./utils";
-import { expose } from "./expose-modules";
 
 const mimeTypes = new Map([["text/html", "html"], ["application/xml", "xml"]]);
 
