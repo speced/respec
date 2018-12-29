@@ -7,8 +7,8 @@ window.addEventListener("error", ev => {
 // this is only set in a build, not at all in the dev environment
 require.config({
   paths: {
-    "jquery": "deps/jquery",
-    "text": "deps/text"
+    jquery: "deps/jquery",
+    text: "deps/text",
   },
   shim: {
     shortcut: {
