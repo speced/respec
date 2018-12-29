@@ -72,7 +72,7 @@ async function appendBoilerplate(outPath, version, name) {
   const mapPath = path.dirname(outPath) + `/respec-${name}.js.map`;
   const [optimizedJs, sourceMap] = await Promise.all([
     fsp.readFile(outPath, "utf-8"),
-    fsp.readFile(mapPath, "utf-8")
+    fsp.readFile(mapPath, "utf-8"),
   ]);
   const respecJs = `"use strict";
 window.respecVersion = "${version}";
@@ -122,22 +122,22 @@ const Builder = {
       entry: require.resolve("../js/profile-w3c-common.js"),
       output: {
         path: buildPath,
-        filename: outFile
+        filename: outFile,
       },
       module: {
         rules: [
           {
             // shortcut.js uses global scope
-            test: require.resolve('../js/shortcut.js'),
-            use: 'exports-loader?shortcut'
-          }
-        ]
+            test: require.resolve("../js/shortcut.js"),
+            use: "exports-loader?shortcut",
+          },
+        ],
       },
       resolveLoader: {
         // to import texts via e.g. "text!./css/webidl.css"
-        alias: { "text": "raw-loader" }
+        alias: { text: "raw-loader" },
       },
-      devtool: 'source-map'
+      devtool: "source-map",
     };
     const buildDir = path.resolve(__dirname, "../builds/");
     const workerDir = path.resolve(__dirname, "../worker/");
