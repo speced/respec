@@ -9,7 +9,7 @@ describe("Core — Definitions", () => {
         "<section id='dfn'><dfn>text</dfn><a>text</a></section>",
     };
     const doc = await makeRSDoc(ops);
-    const sec = doc.querySelector("#dfn");
+    const sec = doc.getElementById("dfn");
     expect(sec.querySelector("dfn").id).toEqual("dfn-text");
     expect(sec.querySelector("a").getAttribute("href")).toEqual("#dfn-text");
   });
@@ -32,7 +32,7 @@ describe("Core — Definitions", () => {
     };
 
     const doc = await makeRSDoc(ops);
-    const sec = doc.querySelector("#dfn");
+    const sec = doc.getElementById("dfn");
     const anchors = [...sec.children].filter(node => node.localName === "a");
     expect(anchors[0].childNodes[0].textContent).toEqual("outerCode");
     expect(anchors[0].childNodes[0].nodeName).toEqual("CODE");
