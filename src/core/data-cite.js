@@ -26,6 +26,10 @@ function requestLookup(conf) {
     let href = "";
     // This is just referring to this document
     if (key.toLowerCase() === conf.shortName.toLowerCase()) {
+      showInlineWarning(
+        elem,
+        `couldn't cite external spec, reference ID "${key}" matches Short Name for current spec`
+      );
       href = document.location.href;
     } else {
       // Let's go look it up in spec ref...
