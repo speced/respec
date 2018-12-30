@@ -59,7 +59,7 @@ describe("Core - Structure", () => {
     };
     ops.config.tocIntroductory = true;
     const doc = await makeRSDoc(ops);
-    const toc = doc.querySelector("#toc");
+    const toc = doc.getElementById("toc");
     expect(toc.querySelector("h2").textContent).toEqual("Table of Contents");
     expect(utils.children(toc, "ol > li").length).toEqual(6);
     expect(toc.querySelectorAll("li").length).toEqual(18);
