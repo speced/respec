@@ -52,8 +52,8 @@ describe("Core - WebIDL", () => {
   });
 
   it("distinguishes between types and identifiers when linking", async () => {
-    const similarlyNamedInterface = doc.querySelector(
-      "#similar-names #idl-def-similarlynamed"
+    const similarlyNamedInterface = doc.getElementById(
+      "idl-def-similarlynamed"
     );
     expect(similarlyNamedInterface).toBeTruthy();
     const [
@@ -972,14 +972,14 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(interfaceType.dataset.idl).toBe("interface");
 
     // attribute attributeType;
-    const attributeType = section.querySelector(
-      "#dom-interfacetype-attributetype"
+    const attributeType = doc.getElementById(
+      "dom-interfacetype-attributetype"
     );
     expect(attributeType.dataset.idl).toBe("attribute");
 
     // operationType();
-    const operationType = section.querySelector(
-      "#dom-interfacetype-operationtype"
+    const operationType = doc.getElementById(
+      "dom-interfacetype-operationtype"
     );
     expect(operationType.dataset.idl).toBe("operation");
 
