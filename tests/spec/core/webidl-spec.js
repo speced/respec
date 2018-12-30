@@ -970,7 +970,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     const section = doc.getElementById("idl-dfn-types");
 
     //interface InterfaceType
-    const interfaceType = section.querySelector("#dom-interfacetype");
+    const interfaceType = section.getElementById("dom-interfacetype");
     expect(interfaceType.dataset.idl).toBe("interface");
 
     // attribute attributeType;
@@ -986,19 +986,19 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(operationType.dataset.idl).toBe("operation");
 
     // DictionaryType
-    const dictionaryType = section.querySelector("#dom-dictionarytype");
+    const dictionaryType = section.getElementById("dom-dictionarytype");
     expect(dictionaryType.dataset.idl).toBe("dictionary");
 
     // fieldType member (field)
-    const fieldType = section.querySelector("#dom-dictionarytype-fieldtype");
+    const fieldType = section.getElementById("dom-dictionarytype-fieldtype");
     expect(fieldType.dataset.idl).toBe("field");
 
     // enum EnumType
-    const enumType = section.querySelector("#dom-enumtype");
+    const enumType = section.getElementById("dom-enumtype");
     expect(enumType.dataset.idl).toBe("enum");
 
     // "enumValueType"
-    const enumValueType = section.querySelector("#dom-enumtype-enumvaluetype");
+    const enumValueType = section.getElementById("dom-enumtype-enumvaluetype");
     expect(enumValueType.dataset.idl).toBe("enum-value");
   });
 });
