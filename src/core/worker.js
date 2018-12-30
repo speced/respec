@@ -9,6 +9,7 @@ export const name = "core/worker";
 // Opportunistically preload syntax highlighter, which is used by the worker
 import { createResourceHint } from "./utils";
 import workerScript from "text!../../worker/respec-worker.js";
+import { expose } from "./expose-modules";
 // Opportunistically preload syntax highlighter
 const hint = {
   hint: "preload",
@@ -22,3 +23,5 @@ const workerURL = URL.createObjectURL(
   new Blob([workerScript], { type: "application/javascript" })
 );
 export const worker = new Worker(workerURL);
+
+expose(name, { worker });
