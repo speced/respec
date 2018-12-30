@@ -95,7 +95,7 @@
     "loading-indicator": "^2.0.0",
     "marked": "^0.5.2",
     "prompt": "^1.0.0",
-    "puppeteer-firefox": "^0.4.2",
+    "puppeteer": "^1.11.0",
     "snyk": "^1.117.1"
   },
   "prettier": {
