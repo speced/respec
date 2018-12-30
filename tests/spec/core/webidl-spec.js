@@ -972,15 +972,11 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(interfaceType.dataset.idl).toBe("interface");
 
     // attribute attributeType;
-    const attributeType = doc.getElementById(
-      "dom-interfacetype-attributetype"
-    );
+    const attributeType = doc.getElementById("dom-interfacetype-attributetype");
     expect(attributeType.dataset.idl).toBe("attribute");
 
     // operationType();
-    const operationType = doc.getElementById(
-      "dom-interfacetype-operationtype"
-    );
+    const operationType = doc.getElementById("dom-interfacetype-operationtype");
     expect(operationType.dataset.idl).toBe("operation");
 
     // DictionaryType
