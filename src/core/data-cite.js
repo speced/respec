@@ -147,6 +147,6 @@ export async function linkInlineCitations(doc, conf = respecConfig) {
   const newEntries = await updateFromNetwork(missingBibEntries);
   Object.assign(conf.biblio, newEntries);
 
-  const lookupRequests = elems.map(toLookupRequest);
+  const lookupRequests = [...new Set(elems)].map(toLookupRequest);
   return await Promise.all(lookupRequests);
 }
