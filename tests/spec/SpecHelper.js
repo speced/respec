@@ -13,6 +13,7 @@ function makeRSDoc(opts = {}, src = "about-blank.html", style = "") {
     }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
     ifr.addEventListener("load", async () => {
       const doc = ifr.contentDocument;
+      ifr.contentWindow.console = console;
       decorateDocument(doc, opts);
       if (doc.respecIsReady) {
         await doc.respecIsReady;
