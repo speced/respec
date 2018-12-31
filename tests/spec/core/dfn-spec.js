@@ -9,9 +9,9 @@ describe("Core — Definitions", () => {
         "<section id='dfn'><dfn>text</dfn><a>text</a></section>",
     };
     const doc = await makeRSDoc(ops);
-    const $sec = $("#dfn", doc);
-    expect($sec.find("dfn").attr("id")).toEqual("dfn-text");
-    expect($sec.find("a").attr("href")).toEqual("#dfn-text");
+    const sec = doc.getElementById("dfn");
+    expect(sec.querySelector("dfn").id).toEqual("dfn-text");
+    expect(sec.querySelector("a").getAttribute("href")).toEqual("#dfn-text");
   });
 
   it("makes links <code> when their definitions are <code>", async () => {
@@ -30,20 +30,18 @@ describe("Core — Definitions", () => {
           <a>partial inner code</a>
         </section>`,
     };
+
     const doc = await makeRSDoc(ops);
-    const $sec = $("#dfn", doc);
-    expect($sec.find("a:contains('outerCode')").contents()[0].nodeName).toEqual(
-      "CODE"
-    );
-    expect($sec.find("a:contains('outerPre')").contents()[0].nodeName).toEqual(
-      "CODE"
-    );
-    expect($sec.find("a:contains('innerCode')").contents()[0].nodeName).toEqual(
-      "CODE"
-    );
-    expect($sec.find("a:contains('partial')").contents()[0].nodeName).toEqual(
-      "#text"
-    );
+    const sec = doc.getElementById("dfn");
+    const anchors = [...sec.children].filter(node => node.localName === "a");
+    expect(anchors[0].childNodes[0].textContent).toEqual("outerCode");
+    expect(anchors[0].childNodes[0].nodeName).toEqual("CODE");
+    expect(anchors[1].childNodes[0].textContent).toEqual("outerPre");
+    expect(anchors[1].childNodes[0].nodeName).toEqual("CODE");
+    expect(anchors[2].childNodes[0].textContent).toEqual("innerCode");
+    expect(anchors[2].childNodes[0].nodeName).toEqual("CODE");
+    expect(anchors[3].childNodes[0].textContent).toEqual("partial inner code");
+    expect(anchors[3].childNodes[0].nodeName).toEqual("#text");
   });
 
   it("links <code> for IDL, but not when text doesn't match", async () => {

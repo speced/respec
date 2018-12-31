@@ -52,8 +52,8 @@ describe("Core - WebIDL", () => {
   });
 
   it("distinguishes between types and identifiers when linking", async () => {
-    const similarlyNamedInterface = doc.querySelector(
-      "#similar-names #idl-def-similarlynamed"
+    const similarlyNamedInterface = doc.getElementById(
+      "idl-def-similarlynamed"
     );
     expect(similarlyNamedInterface).toBeTruthy();
     const [
@@ -967,38 +967,32 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(linkToBarBarAttr.length).toBe(2);
   });
   it("sets the IDL type for each type of IDL token", () => {
-    const section = doc.getElementById("idl-dfn-types");
-
     //interface InterfaceType
-    const interfaceType = section.querySelector("#dom-interfacetype");
+    const interfaceType = doc.getElementById("dom-interfacetype");
     expect(interfaceType.dataset.idl).toBe("interface");
 
     // attribute attributeType;
-    const attributeType = section.querySelector(
-      "#dom-interfacetype-attributetype"
-    );
+    const attributeType = doc.getElementById("dom-interfacetype-attributetype");
     expect(attributeType.dataset.idl).toBe("attribute");
 
     // operationType();
-    const operationType = section.querySelector(
-      "#dom-interfacetype-operationtype"
-    );
+    const operationType = doc.getElementById("dom-interfacetype-operationtype");
     expect(operationType.dataset.idl).toBe("operation");
 
     // DictionaryType
-    const dictionaryType = section.querySelector("#dom-dictionarytype");
+    const dictionaryType = doc.getElementById("dom-dictionarytype");
     expect(dictionaryType.dataset.idl).toBe("dictionary");
 
     // fieldType member (field)
-    const fieldType = section.querySelector("#dom-dictionarytype-fieldtype");
+    const fieldType = doc.getElementById("dom-dictionarytype-fieldtype");
     expect(fieldType.dataset.idl).toBe("field");
 
     // enum EnumType
-    const enumType = section.querySelector("#dom-enumtype");
+    const enumType = doc.getElementById("dom-enumtype");
     expect(enumType.dataset.idl).toBe("enum");
 
     // "enumValueType"
-    const enumValueType = section.querySelector("#dom-enumtype-enumvaluetype");
+    const enumValueType = doc.getElementById("dom-enumtype-enumvaluetype");
     expect(enumValueType.dataset.idl).toBe("enum-value");
   });
 });

@@ -10,7 +10,7 @@ const div = document.createElement("div");
 const render = hyperHTML.bind(div);
 const button = ui.addCommand(
   `About ${window.respecVersion}`,
-  "ui/about-respec",
+  show,
   "Ctrl+Shift+Alt+A",
   "ℹ️"
 );
@@ -81,5 +81,3 @@ function perfEntryToTR({ name, duration }) {
     </td>
   `;
 }
-
-export { show };

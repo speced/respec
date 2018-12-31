@@ -74,13 +74,13 @@ let button;
 if (supportsDownload) {
   button = ui.addCommand(
     l10n[lang].save_snapshot,
-    "ui/save-html",
+    show,
     "Ctrl+Shift+Alt+S",
     "💾"
   );
 }
 
-export function show() {
+function show() {
   if (!supportsDownload) return;
   saveDialog.show(button);
 }
