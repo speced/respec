@@ -81,16 +81,8 @@ function decorateDocument(doc, opts) {
     this.appendChild(loader);
   }
 
-  function decorateBody(opts) {
-    let bodyText = `
-      <section id='abstract'>
-        ${opts.abstract === undefined ? "<p>test abstract</p>" : opts.abstract}
-      </section>
-    `;
-    if (opts.body) {
-      bodyText = bodyText.concat(opts.body);
-    }
-    this.innerHTML = this.innerHTML.concat(bodyText);
+  function decorateBody({ abstract = "<p>test abstract</p>", body = "" }) {
+    doc.body.innerHTML += `<section id='abstract'>${abstract}</section>` + body;
   }
 
   if (opts.htmlAttrs) {
@@ -102,7 +94,7 @@ function decorateDocument(doc, opts) {
   if (opts.title) {
     doc.title = opts.title;
   }
-  decorateBody.call(doc.body, opts);
+  decorateBody(opts);
   decorateHead.call(doc.head, opts);
 }
 
