@@ -14,9 +14,7 @@ function makeRSDoc(opts = {}, src = "about-blank.html", style = "") {
     ifr.addEventListener("load", async () => {
       const doc = ifr.contentDocument;
       ifr.contentWindow.console = console;
-      if (!doc.querySelector("script.remove")) {
-        decorateDocument(doc, opts);
-      }
+      decorateDocument(doc, opts);
       if (doc.respecIsReady) {
         await doc.respecIsReady;
         resolve(doc);
@@ -93,7 +91,9 @@ function decorateDocument(doc, opts) {
       const window = config.ownerDocument.defaultView;
       window.respecConfig.preProcess = opts.config.preProcess;
     }
-    this.appendChild(loader);
+    if (!document.respecIsReady) {
+      this.appendChild(loader);
+    }
   }
 
   function decorateBody(opts) {
