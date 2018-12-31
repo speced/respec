@@ -9,7 +9,7 @@ function makeRSDoc(opts = {}, src = "about-blank.html", style = "") {
     opts = opts || {};
     // reject when DEFAULT_TIMEOUT_INTERVAL passes
     const timeoutId = setTimeout(() => {
-      resolve(doc);
+      resolve(ifr.contentDocument);
     }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
     ifr.addEventListener("load", async () => {
       const doc = ifr.contentDocument;
