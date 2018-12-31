@@ -23,5 +23,6 @@ const workerURL = URL.createObjectURL(
   new Blob([workerScript], { type: "application/javascript" })
 );
 export const worker = new Worker(workerURL);
+worker.onerror = console.error;
 
 expose(name, { worker });
