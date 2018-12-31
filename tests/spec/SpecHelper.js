@@ -14,7 +14,9 @@ function makeRSDoc(opts = {}, src = "about-blank.html", style = "") {
     ifr.addEventListener("load", async () => {
       const doc = ifr.contentDocument;
       ifr.contentWindow.console = console;
-      decorateDocument(doc, opts);
+      if (!doc.querySelector("script.remove")) {
+        decorateDocument(doc, opts);
+      }
       if (doc.respecIsReady) {
         await doc.respecIsReady;
         resolve(doc);
