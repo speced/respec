@@ -14,9 +14,12 @@
         const langURL = new URL("../../support-files/hljs-testlang.js", window.location).href;
         const propName = "testLang";
         const lang = "testlang";
+        console.log({ action, langURL, propName, lang });
         worker.postMessage({ action, langURL, propName, lang });
         return new Promise(resolve => {
+          console.log("PROMISEINNER");
           worker.addEventListener("message", function listener({ data }) {
+            console.log("MESSAGEINNER", data);
             const { action: responseAction, lang: responseLang } = data;
             if (responseAction === action && responseLang === lang) {
               worker.removeEventListener("message", listener);
