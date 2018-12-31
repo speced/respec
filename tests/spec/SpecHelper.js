@@ -91,7 +91,7 @@ function decorateDocument(doc, opts) {
       const window = config.ownerDocument.defaultView;
       window.respecConfig.preProcess = opts.config.preProcess;
     }
-    if (!document.respecIsReady) {
+    if (!this.ownerDocument.querySelector("script[src]")) {
       this.appendChild(loader);
     }
   }
