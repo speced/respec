@@ -51,10 +51,25 @@ function decorateDocument(doc, opts) {
     return element;
   }
 
-  function decorateHead(opts) {
-    const path = opts.jsPath || "../js/";
-    const loader = this.ownerDocument.createElement("script");
-    const config = this.ownerDocument.createElement("script");
+  function addRespecLoader({ jsPath = "../js/" }) {
+    const loader = doc.createElement("script");
+    const isKarma = !!window.__karma__;
+    const loadAttr = {
+      src: isKarma
+        ? new URL("/base/builds/respec-w3c-common.js", location).href
+        : "/js/deps/require.js",
+      "data-main": isKarma
+        ? ""
+        : jsPath + (opts.profile || "profile-w3c-common"),
+    };
+    Object.keys(loadAttr)
+      .reduce(intoAttributes.bind(loadAttr), loader)
+      .classList.add("remove");
+    doc.head.appendChild(loader);
+  }
+
+  function addRespecConfig(opts) {
+    const config = doc.createElement("script");
     let configText = "";
     if (opts.config) {
       configText =
@@ -62,23 +77,12 @@ function decorateDocument(doc, opts) {
     }
     config.classList.add("remove");
     config.innerText = configText;
-    const isKarma = !!window.__karma__;
-    const loadAttr = {
-      src: isKarma
-        ? new URL("/base/builds/respec-w3c-common.js", location).href
-        : "/js/deps/require.js",
-      "data-main": isKarma ? "" : path + (opts.profile || "profile-w3c-common"),
-    };
-    Object.keys(loadAttr)
-      .reduce(intoAttributes.bind(loadAttr), loader)
-      .classList.add("remove");
-    this.appendChild(config);
+    doc.head.appendChild(config);
     // "preProcess" gets destroyed by JSON.stringify above... so we need to recreate it
     if (opts.config && Array.isArray(opts.config.preProcess)) {
       const window = config.ownerDocument.defaultView;
       window.respecConfig.preProcess = opts.config.preProcess;
     }
-    this.appendChild(loader);
   }
 
   function decorateBody({ abstract = "<p>test abstract</p>", body = "" }) {
@@ -95,7 +99,10 @@ function decorateDocument(doc, opts) {
     doc.title = opts.title;
   }
   decorateBody(opts);
-  decorateHead.call(doc.head, opts);
+  addRespecConfig(opts);
+  if (!doc.querySelector("script[src]")) {
+    addRespecLoader(opts);
+  }
 }
 
 function flushIframes() {
