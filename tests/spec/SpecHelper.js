@@ -4,12 +4,12 @@
 const iframes = [];
 
 function makeRSDoc(opts = {}, src = "about-blank.html", style = "") {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     const ifr = document.createElement("iframe");
     opts = opts || {};
     // reject when DEFAULT_TIMEOUT_INTERVAL passes
     const timeoutId = setTimeout(() => {
-      reject(new Error("Timed out waiting on " + src));
+      resolve(doc);
     }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
     ifr.addEventListener("load", async () => {
       const doc = ifr.contentDocument;
