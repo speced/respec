@@ -6,7 +6,7 @@ describe("Core — Highlight", () => {
     const doc = await makeRSDoc({}, "spec/core/highlight.html");
     const span = doc.querySelector("pre.testlang span[class^=hljs]");
     expect(span.innerText).toBe("funkyFunction");
-  });
+  }, 20000);
 
   it("shouldn't highlight idl blocks", async () => {
     const ops = {
