@@ -55,14 +55,6 @@ function decorateDocument(doc, opts) {
     const path = opts.jsPath || "../js/";
     const loader = this.ownerDocument.createElement("script");
     const config = this.ownerDocument.createElement("script");
-    switch (Math.round(Math.random() * 2)) {
-      case 2:
-        loader.defer = true;
-        break;
-      case 1:
-        loader.async = true;
-        break;
-    }
     let configText = "";
     if (opts.config) {
       configText =
