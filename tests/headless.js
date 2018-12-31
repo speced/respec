@@ -5,6 +5,7 @@ const port = 5000;
 const testURLs = [
   `http://localhost:${port}/examples/basic.built.html`,
   `http://localhost:${port}/examples/basic.html`,
+  `http://localhost:${port}/tests/spec/core/highlight.html`,
 ];
 const colors = require("colors");
 const { exec } = require("child_process");

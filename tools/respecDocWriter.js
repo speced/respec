@@ -264,6 +264,7 @@ function makeConsoleMsgHandler(page) {
         // violations. Unfortunately, there is no way to distinguish these errors
         // from other errors, so using this ugly hack.
         // https://github.com/GoogleChrome/puppeteer/issues/1939
+        console.error(msgText);
         return;
       }
       const abortOnWarning = whenToHalt.haltOnWarn && type === "warning";
