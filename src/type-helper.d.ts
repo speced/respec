@@ -21,6 +21,7 @@ interface Window {
 }
 
 interface Document {
+  respecIsReady: boolean;
   createNodeIterator<T>(root: Node, whatToShow?: number, filter?: (node: T) => number | null): NodeIterator<T>;
   createTreeWalker<T>(root: Node, whatToShow?: number, filter?: (node: T) => boolean | null): TreeWalker<T>;
 }
