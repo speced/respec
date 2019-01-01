@@ -152,9 +152,9 @@ describe("Core — Issues and Notes", () => {
     const issueDiv404 = doc.getElementById("this-is-404");
 
     expect(issueDiv404).toBeTruthy();
-    expect(
-      issueDiv404.querySelector("div:not(.issue-title)").textContent
-    ).toBe("this is 404");
+    expect(issueDiv404.querySelector("div:not(.issue-title)").textContent).toBe(
+      "this is 404"
+    );
 
     const [
       refactorLabel,
@@ -222,9 +222,7 @@ describe("Core — Issues and Notes", () => {
     const doc = await makeRSDoc(ops);
     const iss = doc.querySelector("div.issue");
     expect(iss.querySelectorAll("div.issue-title").length).toBe(1);
-    expect(iss.querySelector("div.issue-title").textContent).toBe(
-      "Issue 10"
-    );
+    expect(iss.querySelector("div.issue-title").textContent).toBe("Issue 10");
     expect(iss.querySelector("div.issue-title a").getAttribute("href")).toBe(
       issueBaseConfig.issueBase + "10"
     );
@@ -266,9 +264,9 @@ describe("Core — Issues and Notes", () => {
     expect(textContent).toBe("Issue 1540");
     const issueDiv404 = doc.getElementById("this-is-404");
     expect(issueDiv404).toBeTruthy();
-    expect(
-      issueDiv404.querySelector("div:not(.issue-title)").textContent
-    ).toBe("this is 404");
+    expect(issueDiv404.querySelector("div:not(.issue-title)").textContent).toBe(
+      "this is 404"
+    );
   });
 
   it("renders the original issue post in an empty issue block", async () => {
