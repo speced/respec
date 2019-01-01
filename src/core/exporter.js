@@ -5,6 +5,7 @@
  * That is, elements that have a "removeOnSave" css class.
  */
 
+import { expose } from "./expose-modules";
 import hyperHTML from "../deps/hyperhtml";
 import { pub } from "./pubsubhub";
 import { removeReSpec } from "./utils";
@@ -110,3 +111,5 @@ function* walkTree(walker) {
     yield walker.currentNode;
   }
 }
+
+expose("core/exporter", { rsDocToDataURL });

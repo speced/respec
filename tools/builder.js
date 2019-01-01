@@ -6,8 +6,8 @@ const fsp = require("fs-extra");
 const loading = require("loading-indicator");
 const path = require("path");
 const presets = require("loading-indicator/presets");
-const r = require("requirejs");
-const terser = require("terser");
+const webpack = require("webpack");
+const { promisify } = require("util");
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
 colors.setTheme({
@@ -68,30 +68,19 @@ const usageSections = [
  * @param  {String} version The version of the script.
  * @return {Promise} Resolves when done writing the files.
  */
-function appendBoilerplate(outPath, version, name) {
-  return async (optimizedJs, sourceMap) => {
-    const respecJs = `"use strict";
+async function appendBoilerplate(outPath, version, name) {
+  const mapPath = path.dirname(outPath) + `/respec-${name}.js.map`;
+  const [optimizedJs, sourceMap] = await Promise.all([
+    fsp.readFile(outPath, "utf-8"),
+    fsp.readFile(mapPath, "utf-8"),
+  ]);
+  const respecJs = `"use strict";
 window.respecVersion = "${version}";
-${optimizedJs}
-require(['profile-${name}']);`;
-    const respecJsMap = sourceMap.replace(`"mappings": "`, `"mappings": ";;`);
-    const result = terser.minify(respecJs, {
-      toplevel: true,
-      sourceMap: {
-        filename: `respec-${name}.js`,
-        content: respecJsMap,
-        root: "../js/",
-        url: `respec-${name}.build.js.map`,
-      },
-    });
-    if ("error" in result) {
-      throw new Error(result.error);
-    }
-    const mapPath = path.dirname(outPath) + `/respec-${name}.build.js.map`;
-    const promiseToWriteJs = fsp.writeFile(outPath, result.code, "utf-8");
-    const promiseToWriteMap = fsp.writeFile(mapPath, result.map, "utf-8");
-    await Promise.all([promiseToWriteJs, promiseToWriteMap]);
-  };
+${optimizedJs}`;
+  const respecJsMap = sourceMap.replace(`"mappings":"`, `"mappings":";;`);
+  const promiseToWriteJs = fsp.writeFile(outPath, respecJs, "utf-8");
+  const promiseToWriteMap = fsp.writeFile(mapPath, respecJsMap, "utf-8");
+  await Promise.all([promiseToWriteJs, promiseToWriteMap]);
 }
 
 const Builder = {
@@ -128,34 +117,38 @@ const Builder = {
 
     // optimisation settings
     const buildVersion = await this.getRespecVersion();
-    const outputWritter = appendBoilerplate(outPath, buildVersion, name);
     const config = {
-      baseUrl: path.join(__dirname, "../js/"),
-      deps: ["deps/require"],
-      generateSourceMaps: true,
-      inlineText: true,
-      logLevel: 2, // Show uglify warnings and errors.
-      mainConfigFile: `js/profile-${name}.js`,
-      name: `profile-${name}`,
-      optimize: "none",
-      preserveLicenseComments: false,
-      useStrict: true,
+      mode: "production",
+      entry: require.resolve("../js/profile-w3c-common.js"),
+      output: {
+        path: buildPath,
+        filename: outFile,
+      },
+      module: {
+        rules: [
+          {
+            // shortcut.js uses global scope
+            test: require.resolve("../js/shortcut.js"),
+            use: "exports-loader?shortcut",
+          },
+        ],
+      },
+      resolveLoader: {
+        // to import texts via e.g. "text!./css/webidl.css"
+        alias: { text: "raw-loader" },
+      },
+      devtool: "source-map",
     };
-    const promiseToWrite = new Promise((resolve, reject) => {
-      config.out = (concatinatedJS, sourceMap) => {
-        outputWritter(concatinatedJS, sourceMap)
-          .then(resolve)
-          .catch(reject);
-      };
-    });
-    r.optimize(config);
     const buildDir = path.resolve(__dirname, "../builds/");
     const workerDir = path.resolve(__dirname, "../worker/");
+    await fsp.emptyDir(buildDir);
+    await promisify(webpack)(config);
+    await appendBoilerplate(outPath, buildVersion, name);
     // copy respec-worker
-    fsp
-      .createReadStream(`${workerDir}/respec-worker.js`)
-      .pipe(fsp.createWriteStream(`${buildDir}/respec-worker.js`));
-    await promiseToWrite;
+    await fsp.copyFile(
+      `${workerDir}/respec-worker.js`,
+      `${buildDir}/respec-worker.js`
+    );
     loading.stop(timer);
   },
 };

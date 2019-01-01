@@ -5,7 +5,7 @@
  */
 import { createResourceHint, fetchAndCache, semverCompare } from "./utils";
 import { pub, sub } from "./pubsubhub";
-import caniuseCss from "../deps/text!core/css/caniuse.css";
+import caniuseCss from "text!./css/caniuse.css";
 import hyperHTML from "../deps/hyperhtml";
 
 export const name = "core/caniuse";
