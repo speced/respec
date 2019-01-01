@@ -4,16 +4,20 @@
 const iframes = [];
 
 function makeRSDoc(opts = {}, src = "about-blank.html", style = "") {
-  return new Promise((resove, reject) => {
+  return new Promise((resolve, reject) => {
     const ifr = document.createElement("iframe");
     opts = opts || {};
     // reject when DEFAULT_TIMEOUT_INTERVAL passes
     const timeoutId = setTimeout(() => {
       reject(new Error("Timed out waiting on " + src));
     }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
-    ifr.addEventListener("load", function() {
-      const doc = this.contentDocument;
+    ifr.addEventListener("load", async () => {
+      const doc = ifr.contentDocument;
       decorateDocument(doc, opts);
+      if (doc.respecIsReady) {
+        await doc.respecIsReady;
+        resolve(doc);
+      }
       window.addEventListener("message", function msgHandler(ev) {
         if (
           !doc ||
@@ -24,7 +28,7 @@ function makeRSDoc(opts = {}, src = "about-blank.html", style = "") {
           return;
         }
         window.removeEventListener("message", msgHandler);
-        resove(doc);
+        resolve(doc);
         clearTimeout(timeoutId);
       });
     });

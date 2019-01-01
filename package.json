@@ -31,6 +31,7 @@
     "eslint-config-prettier": "^3.3.0",
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-prettier": "^3.0.0",
+    "exports-loader": "^0.7.0",
     "glob": "^7.1.3",
     "handlebars": "^4.0.12",
     "idb-keyval": "^3.1.0",
@@ -54,12 +55,14 @@
     "moment": "^2.23.0",
     "pluralize": "^7.0.0",
     "prettier": "^1.15.3",
+    "raw-loader": "^1.0.0",
     "requirejs": "^2.3.6",
     "serve": "^10.1.1",
-    "terser": "^3.11.0",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "typescript": "^3.2.2",
-    "webidl2": "^17.0.1"
+    "webidl2": "^17.0.1",
+    "webpack": "^4.28.2",
+    "webpack-cli": "^3.1.2"
   },
   "scripts": {
     "babel:build": "babel src -d js --source-maps -q",
@@ -69,7 +72,7 @@
     "build": "npm run snyk-protect && npm run build:components",
     "copydeps": "node ./tools/copydeps.js",
     "karma": "karma start --single-run",
-    "lint": "tsc -p src/jsconfig.json && eslint src/**/*.js tests/**/*.js tools/*.js",
+    "lint": "tsc -p src/jsconfig.json && eslint src/**/*.js tests/**/*.js tools/*.js js/profile-w3c-common.js",
     "release": "node ./tools/release.js",
     "server": "npm start",
     "snyk": "snyk",

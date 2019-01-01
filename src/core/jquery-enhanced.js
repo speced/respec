@@ -1,4 +1,3 @@
-import "../deps/jquery";
 import {
   addId,
   getDfnTitles,
@@ -6,6 +5,7 @@ import {
   getTextNodes,
   renameElement,
 } from "./utils";
+import $ from "jquery";
 
 export const name = "core/jquery-enhanced";
 
