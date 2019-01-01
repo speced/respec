@@ -1,12 +1,5 @@
 "use strict";
 describe("Core — Issues and Notes", () => {
-  let utils;
-  beforeAll(done => {
-    require(["core/utils"], u => {
-      utils = u;
-      done();
-    });
-  });
   afterAll(flushIframes);
   it("treats each issue as unique", async () => {
     const body = `
@@ -57,10 +50,9 @@ describe("Core — Issues and Notes", () => {
     const not = doc.querySelector("div.note");
     const spnot = doc.querySelector("span.note");
 
-    expect(utils.parents(spiss, "div").length).toEqual(0);
-    expect(utils.parents(spatr, "div").length).toEqual(0);
-    expect(utils.parents(spnot, "div").length).toEqual(0);
-
+    expect(spiss.closest("div")).toBeNull();
+    expect(spatr.closest("div")).toBeNull();
+    expect(spnot.closest("div")).toBeNull();
     expect(iss.querySelectorAll("div.issue-title").length).toEqual(1);
     expect(iss.querySelector("div.issue-title").textContent).toEqual(
       "Issue 1: ISS-TIT"
@@ -92,13 +84,13 @@ describe("Core — Issues and Notes", () => {
         "<p class='ednote' title='EDNOTE-TIT'>EDNOTE</p>",
     };
     const doc = await makeRSDoc(ops);
-    const not = doc.querySelector("div.ednote");
-    expect(not.querySelectorAll("div.ednote-title").length).toEqual(1);
-    expect(not.querySelector("div.ednote-title").textContent).toEqual(
+    const edNote = doc.querySelector("div.ednote");
+    expect(edNote.querySelectorAll("div.ednote-title").length).toEqual(1);
+    expect(edNote.querySelector("div.ednote-title").textContent).toEqual(
       "Editor's note: EDNOTE-TIT"
     );
-    expect(not.querySelector("p").getAttribute("title")).toBeNull();
-    expect(not.querySelector("p").textContent).toEqual("EDNOTE");
+    expect(edNote.querySelector("p").getAttribute("title")).toBeNull();
+    expect(edNote.querySelector("p").textContent).toEqual("EDNOTE");
   });
 
   it("should process warnings", async () => {
