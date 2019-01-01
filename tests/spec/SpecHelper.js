@@ -70,13 +70,11 @@ function decorateDocument(doc, opts) {
 
   function addRespecConfig(opts) {
     const config = doc.createElement("script");
-    let configText = "";
-    if (opts.config) {
-      configText =
-        "var respecConfig = " + JSON.stringify(opts.config || {}) + ";";
-    }
+    const configText = opts.config
+      ? `var respecConfig = ${JSON.stringify(opts.config || {})};`
+      : "";
     config.classList.add("remove");
-    config.innerText = configText;
+    config.textContent = configText;
     doc.head.appendChild(config);
     // "preProcess" gets destroyed by JSON.stringify above... so we need to recreate it
     if (opts.config && Array.isArray(opts.config.preProcess)) {
