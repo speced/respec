@@ -28,7 +28,7 @@ function requestLookup(conf) {
     if (key.toLowerCase() === conf.shortName.toLowerCase()) {
       showInlineWarning(
         elem,
-        `couldn't cite external spec, reference ID "${key}" matches Short Name for current spec`
+        `Couldn't cite external document. The reference "${key}" is the same as the Short Name of current spec.`
       );
       href = document.location.href;
     } else {
