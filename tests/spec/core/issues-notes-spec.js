@@ -53,26 +53,26 @@ describe("Core — Issues and Notes", () => {
     expect(spiss.closest("div")).toBeNull();
     expect(spatr.closest("div")).toBeNull();
     expect(spnot.closest("div")).toBeNull();
-    expect(iss.querySelectorAll("div.issue-title").length).toEqual(1);
-    expect(iss.querySelector("div.issue-title").textContent).toEqual(
+    expect(iss.querySelectorAll("div.issue-title").length).toBe(1);
+    expect(iss.querySelector("div.issue-title").textContent).toBe(
       "Issue 1: ISS-TIT"
     );
     expect(iss.querySelector("p").getAttribute("title")).toBeNull();
-    expect(iss.querySelector("p").textContent).toEqual("ISSUE");
+    expect(iss.querySelector("p").textContent).toBe("ISSUE");
 
-    expect(atr.querySelectorAll("div.issue-title").length).toEqual(1);
-    expect(atr.querySelector("div.issue-title").textContent).toEqual(
+    expect(atr.querySelectorAll("div.issue-title").length).toBe(1);
+    expect(atr.querySelector("div.issue-title").textContent).toBe(
       "Feature at Risk 2: ATR-TIT"
     );
     expect(atr.querySelector("p").getAttribute("title")).toBeNull();
-    expect(atr.querySelector("p").textContent).toEqual("FEATURE AT RISK");
+    expect(atr.querySelector("p").textContent).toBe("FEATURE AT RISK");
 
-    expect(not.querySelectorAll("div.note-title").length).toEqual(1);
-    expect(not.querySelector("div.note-title").textContent).toEqual(
+    expect(not.querySelectorAll("div.note-title").length).toBe(1);
+    expect(not.querySelector("div.note-title").textContent).toBe(
       "Note: NOT-TIT"
     );
     expect(not.querySelector("p").getAttribute("title")).toBeNull();
-    expect(not.querySelector("p").textContent).toEqual("NOTE");
+    expect(not.querySelector("p").textContent).toBe("NOTE");
   });
 
   it("should process ednotes", async () => {
@@ -85,12 +85,12 @@ describe("Core — Issues and Notes", () => {
     };
     const doc = await makeRSDoc(ops);
     const edNote = doc.querySelector("div.ednote");
-    expect(edNote.querySelectorAll("div.ednote-title").length).toEqual(1);
-    expect(edNote.querySelector("div.ednote-title").textContent).toEqual(
+    expect(edNote.querySelectorAll("div.ednote-title").length).toBe(1);
+    expect(edNote.querySelector("div.ednote-title").textContent).toBe(
       "Editor's note: EDNOTE-TIT"
     );
     expect(edNote.querySelector("p").getAttribute("title")).toBeNull();
-    expect(edNote.querySelector("p").textContent).toEqual("EDNOTE");
+    expect(edNote.querySelector("p").textContent).toBe("EDNOTE");
   });
 
   it("should process warnings", async () => {
@@ -103,9 +103,9 @@ describe("Core — Issues and Notes", () => {
         "<p class='issue' title='ISS-TIT'>ISSUE</p></section>",
     };
     const doc = await makeRSDoc(ops);
-    expect(doc.querySelectorAll("section .warning").length).toEqual(2);
-    expect(doc.querySelectorAll("section .warning-title").length).toEqual(1);
-    expect(doc.querySelector("section .warning-title").textContent).toEqual(
+    expect(doc.querySelectorAll("section .warning").length).toBe(2);
+    expect(doc.querySelectorAll("section .warning-title").length).toBe(1);
+    expect(doc.querySelector("section .warning-title").textContent).toBe(
       "Warning: WARN-TIT"
     );
   });
@@ -121,9 +121,9 @@ describe("Core — Issues and Notes", () => {
     const ops = makeStandardOps({}, body);
     const doc = await makeRSDoc(ops);
     const [i10, i11, ixx] = doc.querySelectorAll(".issue .issue-title");
-    expect(i10.textContent).toEqual("Issue 10");
-    expect(i11.textContent).toEqual("Issue 11: ISS-TIT");
-    expect(ixx.textContent).toEqual("Issue");
+    expect(i10.textContent).toBe("Issue 10");
+    expect(i11.textContent).toBe("Issue 11: ISS-TIT");
+    expect(ixx.textContent).toBe("Issue");
   });
 
   it("shows labels for github issues", async () => {
@@ -154,7 +154,7 @@ describe("Core — Issues and Notes", () => {
     expect(issueDiv404).toBeTruthy();
     expect(
       issueDiv404.querySelector("div:not(.issue-title)").textContent
-    ).toEqual("this is 404");
+    ).toBe("this is 404");
 
     const [
       refactorLabel,
@@ -163,41 +163,41 @@ describe("Core — Issues and Notes", () => {
       invalidLabel,
     ] = doc.getElementsByClassName("respec-gh-label");
 
-    expect(refactorLabel.textContent).toEqual("refactor");
+    expect(refactorLabel.textContent).toBe("refactor");
     expect(refactorLabel.classList).toContain(
       "respec-gh-label",
       "respec-label-light"
     );
-    expect(refactorLabel.style.backgroundColor).toEqual("rgb(71, 244, 65)");
-    expect(refactorLabel.href).toEqual(
+    expect(refactorLabel.style.backgroundColor).toBe("rgb(71, 244, 65)");
+    expect(refactorLabel.href).toBe(
       "https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22refactor%22"
     );
 
-    expect(bugLabel.textContent).toEqual("bug");
+    expect(bugLabel.textContent).toBe("bug");
     expect(bugLabel.classList).toContain(
       "respec-gh-label",
       "respec-label-dark"
     );
-    expect(bugLabel.style.backgroundColor).toEqual("rgb(244, 66, 92)");
-    expect(bugLabel.href).toEqual(
+    expect(bugLabel.style.backgroundColor).toBe("rgb(244, 66, 92)");
+    expect(bugLabel.href).toBe(
       "https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22bug%22"
     );
 
-    expect(blankLabel.textContent).toEqual("blank");
+    expect(blankLabel.textContent).toBe("blank");
     expect(blankLabel.classList).toContain(
       "respec-gh-label",
       "respec-label-dark"
     );
-    expect(blankLabel.href).toEqual(
+    expect(blankLabel.href).toBe(
       "https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22blank%22"
     );
 
-    expect(invalidLabel.textContent).toEqual("not-a-color");
+    expect(invalidLabel.textContent).toBe("not-a-color");
     expect(invalidLabel.classList).toContain(
       "respec-gh-label",
       "respec-label-dark"
     );
-    expect(invalidLabel.href).toEqual(
+    expect(invalidLabel.href).toBe(
       "https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22not-a-color%22"
     );
   });
@@ -221,15 +221,15 @@ describe("Core — Issues and Notes", () => {
     };
     const doc = await makeRSDoc(ops);
     const iss = doc.querySelector("div.issue");
-    expect(iss.querySelectorAll("div.issue-title").length).toEqual(1);
-    expect(iss.querySelector("div.issue-title").textContent).toEqual(
+    expect(iss.querySelectorAll("div.issue-title").length).toBe(1);
+    expect(iss.querySelector("div.issue-title").textContent).toBe(
       "Issue 10"
     );
-    expect(iss.querySelector("div.issue-title a").getAttribute("href")).toEqual(
+    expect(iss.querySelector("div.issue-title a").getAttribute("href")).toBe(
       issueBaseConfig.issueBase + "10"
     );
     expect(iss.querySelector("p").getAttribute("title")).toBeNull();
-    expect(iss.querySelector("p").textContent).toEqual("ISSUE");
+    expect(iss.querySelector("p").textContent).toBe("ISSUE");
   });
 
   it("marks closed issues as closed in the spec", async () => {
@@ -268,7 +268,7 @@ describe("Core — Issues and Notes", () => {
     expect(issueDiv404).toBeTruthy();
     expect(
       issueDiv404.querySelector("div:not(.issue-title)").textContent
-    ).toEqual("this is 404");
+    ).toBe("this is 404");
   });
 
   it("renders the original issue post in an empty issue block", async () => {
@@ -310,14 +310,14 @@ describe("Core — Issues and Notes", () => {
     };
     const doc = await makeRSDoc(ops);
     const iss = doc.querySelector("div.atrisk");
-    expect(iss.querySelectorAll("div.issue-title").length).toEqual(1);
-    expect(iss.querySelector("div.issue-title").textContent).toEqual(
+    expect(iss.querySelectorAll("div.issue-title").length).toBe(1);
+    expect(iss.querySelector("div.issue-title").textContent).toBe(
       "Feature at Risk 10"
     );
-    expect(iss.querySelector("div.issue-title a").getAttribute("href")).toEqual(
+    expect(iss.querySelector("div.issue-title a").getAttribute("href")).toBe(
       atRiskBaseConfig.atRiskBase + "10"
     );
     expect(iss.querySelector("p").getAttribute("title")).toBeNull();
-    expect(iss.querySelector("p").textContent).toEqual("FEATURE AT RISK");
+    expect(iss.querySelector("p").textContent).toBe("FEATURE AT RISK");
   });
 });
