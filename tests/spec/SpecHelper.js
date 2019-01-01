@@ -51,54 +51,40 @@ function decorateDocument(doc, opts) {
     return element;
   }
 
-  function decorateHead(opts) {
-    const path = opts.jsPath || "../js/";
-    const loader = this.ownerDocument.createElement("script");
-    const config = this.ownerDocument.createElement("script");
-    switch (Math.round(Math.random() * 2)) {
-      case 2:
-        loader.defer = true;
-        break;
-      case 1:
-        loader.async = true;
-        break;
-    }
-    let configText = "";
-    if (opts.config) {
-      configText =
-        "var respecConfig = " + JSON.stringify(opts.config || {}) + ";";
-    }
-    config.classList.add("remove");
-    config.innerText = configText;
+  function addRespecLoader({ jsPath = "../js/" }) {
+    const loader = doc.createElement("script");
     const isKarma = !!window.__karma__;
     const loadAttr = {
       src: isKarma
         ? new URL("/base/builds/respec-w3c-common.js", location).href
         : "/js/deps/require.js",
-      "data-main": isKarma ? "" : path + (opts.profile || "profile-w3c-common"),
+      "data-main": isKarma
+        ? ""
+        : jsPath + (opts.profile || "profile-w3c-common"),
     };
     Object.keys(loadAttr)
       .reduce(intoAttributes.bind(loadAttr), loader)
       .classList.add("remove");
-    this.appendChild(config);
+    doc.head.appendChild(loader);
+  }
+
+  function addRespecConfig(opts) {
+    const config = doc.createElement("script");
+    const configText = opts.config
+      ? `var respecConfig = ${JSON.stringify(opts.config || {})};`
+      : "";
+    config.classList.add("remove");
+    config.textContent = configText;
+    doc.head.appendChild(config);
     // "preProcess" gets destroyed by JSON.stringify above... so we need to recreate it
     if (opts.config && Array.isArray(opts.config.preProcess)) {
       const window = config.ownerDocument.defaultView;
       window.respecConfig.preProcess = opts.config.preProcess;
     }
-    this.appendChild(loader);
   }
 
-  function decorateBody(opts) {
-    let bodyText = `
-      <section id='abstract'>
-        ${opts.abstract === undefined ? "<p>test abstract</p>" : opts.abstract}
-      </section>
-    `;
-    if (opts.body) {
-      bodyText = bodyText.concat(opts.body);
-    }
-    this.innerHTML = this.innerHTML.concat(bodyText);
+  function decorateBody({ abstract = "<p>test abstract</p>", body = "" }) {
+    doc.body.innerHTML += `<section id='abstract'>${abstract}</section>` + body;
   }
 
   if (opts.htmlAttrs) {
@@ -110,8 +96,11 @@ function decorateDocument(doc, opts) {
   if (opts.title) {
     doc.title = opts.title;
   }
-  decorateBody.call(doc.body, opts);
-  decorateHead.call(doc.head, opts);
+  decorateBody(opts);
+  addRespecConfig(opts);
+  if (!doc.querySelector("script[src]")) {
+    addRespecLoader(opts);
+  }
 }
 
 function flushIframes() {
