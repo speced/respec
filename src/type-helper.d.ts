@@ -31,3 +31,5 @@ interface TreeWalker<T extends Node> {}
 interface Node {
   cloneNode<T extends Node = this>(deep?: boolean): T;
 }
+
+declare function fetch(input: URL, init?: RequestInit): Promise<Response>;
