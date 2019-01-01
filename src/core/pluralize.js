@@ -7,7 +7,7 @@ import {
   isSingular,
   plural as pluralOf,
   singular as singularOf,
-} from "../deps/pluralize";
+} from "pluralize";
 import { norm as normalize } from "./utils";
 import { registerDefinition } from "./dfn-map";
 

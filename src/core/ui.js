@@ -10,7 +10,7 @@
 //  - once we have something decent, merge, ship as 3.2.0
 
 import css from "text!../ui/ui.css";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { markdownToHtml } from "./utils";
 import shortcut from "../shortcut";
 import { sub } from "./pubsubhub";

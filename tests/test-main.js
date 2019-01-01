@@ -19,5 +19,13 @@ require.config({
   paths: {
     core: "/base/js/core",
     w3c: "/base/js/w3c",
+    clipboard: "deps/clipboard",
+    hyperhtml: "deps/hyperhtml",
+    "idb-keyval": "deps/idb",
+    jquery: "deps/jquery",
+    marked: "deps/marked",
+    pluralize: "deps/pluralize",
+    text: "deps/text",
+    webidl2: "deps/webidl2",
   },
 });
