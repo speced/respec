@@ -177,7 +177,7 @@ export function normalizePadding(text = "") {
   }
 
   /**
-   * @param {Node} node 
+   * @param {Node} node
    * @return {node is Text}
    */
   function isTextNode(node) {
@@ -653,7 +653,7 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
  * @returns {Text[]}
  */
 export function getTextNodes(el, exclusions = []) {
-  const acceptNode = node => {
+  const acceptNode = (/** @type {Text} */ node) => {
     return exclusions.includes(node.parentElement.localName)
       ? NodeFilter.FILTER_REJECT
       : NodeFilter.FILTER_ACCEPT;
@@ -661,12 +661,13 @@ export function getTextNodes(el, exclusions = []) {
   const nodeIterator = document.createNodeIterator(
     el,
     NodeFilter.SHOW_TEXT,
-    { acceptNode }
+    acceptNode
   );
+  /** @type {Text[]} */
   const textNodes = [];
   let node;
   while ((node = nodeIterator.nextNode())) {
-    textNodes.push(/** @type {Text} */(node));
+    textNodes.push(/** @type {Text} */ (node));
   }
   return textNodes;
 }
