@@ -815,7 +815,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops, simpleSpecURL);
-      const sotd = doc.querySelector("#sotd");
+      const sotd = doc.getElementById("sotd");
       expect(contains(sotd, "p", "CUSTOM PARAGRAPH").length).toEqual(1);
       expect(contains(sotd, "a", "WGNAME").length).toEqual(1);
       expect(contains(sotd, "a", "WGNAME")[0].getAttribute("href")).toEqual(
@@ -843,7 +843,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      const sotd = doc.querySelector("#sotd");
+      const sotd = doc.getElementById("sotd");
       expect(contains(sotd, "a", "WGNAME1").length).toEqual(2);
       expect(contains(sotd, "a", "WGNAME2").length).toEqual(2);
       expect(contains(sotd, "a", "WGNAME1")[0].getAttribute("href")).toEqual(
@@ -879,7 +879,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      const sotd = doc.querySelector("#sotd");
+      const sotd = doc.getElementById("sotd");
       const f = contains(sotd, "p", "Proposed Edited Recommendation");
       expect(f.length).toEqual(2);
       const questionnaires = doc
@@ -904,7 +904,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops, simpleSpecURL);
-      const sotd = doc.querySelector("#sotd");
+      const sotd = doc.getElementById("sotd");
       const f = contains(sotd, "p", "CUSTOM PARAGRAPH");
       expect(f.length).toEqual(1);
       expect(
@@ -965,7 +965,7 @@ describe("W3C — Headers", () => {
       expect(doc.querySelector(".head h2").textContent).toMatch(
         /Draft Community Group Report/
       );
-      const sotd = doc.querySelector("#sotd");
+      const sotd = doc.getElementById("sotd");
       expect(sotd.querySelectorAll("a[href='http://WG']").length).toEqual(1);
       expect(contains(sotd, "a", "WGNAME").length).toEqual(1);
       expect(
@@ -1010,7 +1010,7 @@ describe("W3C — Headers", () => {
       expect(doc.querySelectorAll("dd")[1].textContent).toMatch(
         /http:\/\/LATEST/
       );
-      const sotd = doc.querySelector("#sotd");
+      const sotd = doc.getElementById("sotd");
       expect(sotd.querySelectorAll("a[href='http://WG']").length).toEqual(1);
       expect(contains(sotd, "a", "WGNAME").length).toEqual(1);
       expect(
@@ -1075,7 +1075,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops, simpleSpecURL);
-      const sotd = doc.querySelector("#sotd");
+      const sotd = doc.getElementById("sotd");
       expect(contains(sotd, "p", "CUSTOM PARAGRAPH").length).toEqual(1);
       expect(contains(sotd, "a", "WGNAME").length).toEqual(0);
       expect(contains(sotd, "a", "WGLIST@w3.org").length).toEqual(0);
