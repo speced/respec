@@ -4,8 +4,9 @@
 //   so later they can be handled by core/link-to-dfn.
 // https://github.com/w3c/respec/issues/1662
 
-import * as idb from "idb-keyval";
+import * as IDB from "idb";
 import {
+  IDBKeyVal,
   nonNormativeSelector,
   norm as normalize,
   showInlineWarning,
@@ -34,9 +35,10 @@ const CACHE_MAX_AGE = 86400000; // 24 hours
  * @param {Array:Elements} elems possibleExternalLinks
  */
 export async function run(conf, elems) {
-  const cache = await idb.open("xref", 1, upgradeDB => {
+  const idb = await IDB.open("xref", 1, upgradeDB => {
     upgradeDB.createObjectStore("xrefs");
   });
+  const cache = new IDBKeyVal(idb, "xrefs");
   const { xref } = conf;
   const xrefMap = createXrefMap(elems);
   const allKeys = collectKeys(xrefMap);
@@ -130,9 +132,9 @@ function collectKeys(xrefs) {
 // adds data to cache
 async function cacheResults(data, cache) {
   const promisesToSet = Object.entries(data).map(([term, results]) =>
-    idbSet(term, results, cache)
+    cache.set(term, results)
   );
-  await idbSet("__CACHE_TIME__", new Date(), cache);
+  await cache.set("__CACHE_TIME__", new Date());
   await Promise.all(promisesToSet);
 }
 
@@ -145,16 +147,14 @@ async function cacheResults(data, cache) {
  *  @property {Array} notFound keys not found in cache
  */
 async function resolveFromCache(keys, cache) {
-  const cacheTime = await idbGet("__CACHE_TIME__", cache);
+  const cacheTime = await cache.get("__CACHE_TIME__");
   const bustCache = cacheTime && new Date() - cacheTime > CACHE_MAX_AGE;
   if (bustCache) {
-    const tx = cache.transaction("xrefs", "readwrite");
-    tx.objectStore("xrefs").clear();
-    await tx.complete;
+    await cache.clear();
     return { found: Object.create(null), notFound: keys };
   }
 
-  const promisesToGet = keys.map(({ term }) => idbGet(term, cache));
+  const promisesToGet = keys.map(({ term }) => cache.get(term));
   const cachedData = await Promise.all(promisesToGet);
   return keys.reduce(separate, { found: Object.create(null), notFound: [] });
 
@@ -295,18 +295,4 @@ function disambiguate(fetchedData, context, term) {
   const title = "Error: Linking an ambiguous dfn.";
   showInlineWarning(elem, msg, title);
   return null;
-}
-
-// utility functions for using `idb` as a key-value store
-function idbGet(key, db) {
-  return db
-    .transaction("xrefs")
-    .objectStore("xrefs")
-    .get(key);
-}
-
-function idbSet(key, value, db) {
-  const tx = db.transaction("xrefs", "readwrite");
-  tx.objectStore("xrefs").put(value, key);
-  return tx.complete;
 }

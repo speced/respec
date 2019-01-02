@@ -347,6 +347,49 @@ function generateMarkdownLink(element, i) {
   return `[${i + 1}](#${element.id})`;
 }
 
+export class IDBKeyVal {
+  /**
+   * @param {{ _db: IDBDatabase }} idb the IDB
+   * @param {string} storeName
+   */
+  constructor(idb, storeName) {
+    this.idb = idb;
+    this.storeName = storeName;
+  }
+
+  /** @param {string} key */
+  async get(key) {
+    return await this.idb
+      .transaction(this.storeName)
+      .objectStore(this.storeName)
+      .get(key);
+  }
+
+  /**
+   * @param {string} key
+   * @param {any} value
+   */
+  async set(key, value) {
+    const tx = this.idb.transaction(this.storeName, "readwrite");
+    tx.objectStore(this.storeName).put(value, key);
+    return await tx.complete;
+  }
+
+  async clear() {
+    const tx = this.idb.transaction(this.storeName, "readwrite");
+    tx.objectStore(this.storeName).clear();
+    return await tx.complete;
+  }
+
+  async keys() {
+    const tx = this.idb.transaction(this.storeName);
+    /** @type {string[]} */
+    const keys = tx.objectStore(this.storeName).getAllKeys();
+    await tx.complete;
+    return keys;
+  }
+}
+
 // STRING HELPERS
 // Takes an array and returns a string that separates each of its items with the proper commas and
 // "and". The second argument is a mapping function that can convert the items before they are

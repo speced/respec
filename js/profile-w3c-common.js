@@ -9,7 +9,7 @@ require.config({
   paths: {
     clipboard: "deps/clipboard",
     hyperhtml: "deps/hyperhtml",
-    "idb-keyval": "deps/idb",
+    idb: "deps/idb",
     jquery: "deps/jquery",
     marked: "deps/marked",
     pluralize: "deps/pluralize",

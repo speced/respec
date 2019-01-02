@@ -3,13 +3,15 @@ describe("Core — xref", () => {
   afterAll(flushIframes);
   beforeEach(async () => {
     // clear idb cache before each
-    const idb = await new Promise(resolve => require(["deps/idb"], resolve));
-    const cache = await idb.open("xref", 1, upgradeDB => {
+    const IDB = await new Promise(resolve => require(["deps/idb"], resolve));
+    const { IDBKeyVal } = await new Promise(resolve =>
+      require(["core/utils"], resolve)
+    );
+    const idb = await IDB.open("xref", 1, upgradeDB => {
       upgradeDB.createObjectStore("xrefs");
     });
-    const tx = cache.transaction("xrefs", "readwrite");
-    tx.objectStore("xrefs").clear();
-    await tx.complete;
+    const cache = new IDBKeyVal(idb, "xrefs");
+    await cache.clear();
   });
 
   const apiURL = location.origin + "/tests/data/xref.json";
@@ -701,24 +703,14 @@ describe("Core — xref", () => {
   });
 
   it("caches results and uses cached results when available", async () => {
-    const idb = await new Promise(resolve => require(["deps/idb"], resolve));
-    const IDB = {
-      db: await idb.open("xref", 1, upgradeDB => {
-        upgradeDB.createObjectStore("xrefs");
-      }),
-      get(key) {
-        return this.db
-          .transaction("xrefs")
-          .objectStore("xrefs")
-          .get(key);
-      },
-      async keys() {
-        const tx = this.db.transaction("xrefs");
-        const keys = tx.objectStore("xrefs").getAllKeys();
-        await tx.complete;
-        return keys;
-      },
-    };
+    const IDB = await new Promise(resolve => require(["deps/idb"], resolve));
+    const { IDBKeyVal } = await new Promise(resolve =>
+      require(["core/utils"], resolve)
+    );
+    const idb = await IDB.open("xref", 1, upgradeDB => {
+      upgradeDB.createObjectStore("xrefs");
+    });
+    const cache = new IDBKeyVal(idb, "xrefs");
 
     const config = { xref: true, localBiblio };
     let cacheKeys;
@@ -730,7 +722,7 @@ describe("Core — xref", () => {
 
     const preLoadTime = await IDB.get("__CACHE_TIME__");
     expect(preLoadTime instanceof Date).toBeFalsy();
-    cacheKeys = (await IDB.keys()).sort();
+    cacheKeys = (await cache.keys()).sort();
     expect(cacheKeys).toEqual([]);
 
     const preCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
@@ -739,7 +731,7 @@ describe("Core — xref", () => {
     );
     const preCacheTime = await IDB.get("__CACHE_TIME__");
     expect(preCacheTime instanceof Date).toBeTruthy();
-    cacheKeys = (await IDB.keys()).sort();
+    cacheKeys = (await cache.keys()).sort();
     expect(cacheKeys).toEqual(["__CACHE_TIME__", "dictionary"]);
 
     // no new data was requested from server, cache shoudln't change
@@ -749,7 +741,7 @@ describe("Core — xref", () => {
     );
     const postCacheTime = await IDB.get("__CACHE_TIME__");
     expect(postCacheTime).toEqual(preCacheTime);
-    cacheKeys = (await IDB.keys()).sort();
+    cacheKeys = (await cache.keys()).sort();
     expect(cacheKeys).toEqual(["__CACHE_TIME__", "dictionary"]);
 
     // new data was requested from server, cache should change
