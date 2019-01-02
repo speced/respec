@@ -41,10 +41,9 @@ function linterFunction(conf, doc) {
 
 export const rule = new LinterRule(name, linterFunction);
 
-function checkElement(elem) {
-  return !(
-    elem.textContent.startsWith("[[") &&
-    elem.textContent.endsWith("]]") &&
-    elem.previousSibling.textContent === "."
-  );
+function checkElement({ previousSibling, textContent }) {
+  const potentialSlot = previousSibling.textContent + textContent;
+  // starts with dot, followed by [[ and any word
+  return !/^\.\[\[\w+/.test(potentialSlot);
+  // return true if regex test fails
 }
