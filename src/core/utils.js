@@ -137,7 +137,7 @@ export function createResourceHint(opts) {
   if (!resourceHints.has(opts.hint)) {
     throw new TypeError("Invalid resources hint");
   }
-  const url = new URL(opts.href.toString(), location.href);
+  const url = new URL(opts.href, location.href);
   const linkElem = document.createElement("link");
   let href = url.href;
   linkElem.rel = opts.hint;
