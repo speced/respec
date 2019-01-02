@@ -14,7 +14,7 @@
 //    key word was used.  NOTE: While each member is a counter, at this time
 //    the counter is not used.
 import { getTextNodes, refTypeFromContext, showInlineWarning } from "./utils";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { idlStringToHtml } from "./inline-idl-parser";
 import { pub } from "./pubsubhub";
 export const name = "core/inlines";

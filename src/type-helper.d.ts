@@ -9,3 +9,8 @@ interface Element {
    */
   closest<T extends Element>(selector: string): T | null;
 }
+
+declare module "text!*" {
+  const value: string;
+  export default value;
+}

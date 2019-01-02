@@ -1,13 +1,13 @@
 // Module ui/search-specref
 // Search Specref database
 import { l10n, lang } from "../core/l10n";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { ui } from "../core/ui";
 import { wireReference } from "../core/biblio";
 
 const button = ui.addCommand(
   l10n[lang].search_specref,
-  "ui/search-specref",
+  show,
   "Ctrl+Shift+Alt+space",
   "🔎"
 );
@@ -160,5 +160,3 @@ function render({ state, results, timeTaken, query } = { state: "" }) {
   }</section>
   `;
 }
-
-export { show };

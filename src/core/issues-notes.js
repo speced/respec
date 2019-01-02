@@ -11,8 +11,8 @@
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { addId, fetchAndCache, parents } from "./utils";
-import css from "../deps/text!core/css/issues-notes.css";
-import hyperHTML from "../deps/hyperhtml";
+import css from "text!./css/issues-notes.css";
+import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 export const name = "core/issues-notes";
 
