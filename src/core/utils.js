@@ -291,7 +291,7 @@ export function removeReSpec(doc) {
  * Adds error class to each element while emitting a warning
  * @param {Element|Element[]} elems
  * @param {String} msg message to show in warning
- * @param {String} title error message to add on each element
+ * @param {String=} title error message to add on each element
  */
 export function showInlineWarning(elems, msg, title) {
   if (!Array.isArray(elems)) elems = [elems];
@@ -646,7 +646,7 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
  * Returns all the descendant text nodes of an element.
  * @param {Node} el
  * @param {string[]} exclusions node localName to exclude
- * @returns {string[]}
+ * @returns {Text[]}
  */
 export function getTextNodes(el, exclusions = []) {
   const acceptNode = node => {
