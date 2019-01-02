@@ -2,7 +2,7 @@
 // Displays all definitions with links to the defining element.
 import { l10n, lang } from "../core/l10n";
 import { definitionMap } from "../core/dfn-map";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { ui } from "../core/ui";
 
 const button = ui.addCommand(

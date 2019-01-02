@@ -4,7 +4,7 @@
 // Generates a Table of Figures wherever there is a #tof element.
 
 import { addId, renameElement, showInlineWarning, wrapInner } from "./utils";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 
 export const name = "core/figures";
 
