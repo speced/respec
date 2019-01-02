@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<script src="/builds/respec-w3c-common.js"></script>
+<script class='remove'>
+  const respecConfig = {
+    specStatus: "unofficial",
+    shortName: "i",
+    editors: [{
+      name: "Foo",
+      url: "https://foo.com/"
+    }],
+    edDraftURI: "https://foo.com/"
+  };
+  async function domReady() {
+    if (document.readyState === "loading") {
+      await new Promise(resolve =>
+        document.addEventListener("DOMContentLoaded", resolve)
+      );
+    }
+  }
+  require(["core/pubsubhub"], respecEvents => {
+    respecEvents.sub("start-all", async () => {
+      await domReady();
+      document.getElementById("start-all").textContent = "pass";
+    });
+  });
+</script>
+<section id='abstract'>
+  <p>
+    abstract.
+  </p>
+</section>
+<section id='sotd'>
+  <p>
+    CUSTOM PARAGRAPH
+  </p>
+</section>
+<section>
+  <h2>Test</h2>
+  <p id="start-all">FAIL</p>
+</section>

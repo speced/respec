@@ -1,7 +1,7 @@
 // Module ui/search-specref
 // Search Specref database
 import { l10n, lang } from "../core/l10n";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { ui } from "../core/ui";
 import { wireReference } from "../core/biblio";
 
