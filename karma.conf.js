@@ -82,6 +82,7 @@ module.exports = function(config) {
     proxies: {
       "/about-blank.html": "/base/tests/about-blank.html",
       "/js/": "/base/js/",
+      "/builds/": "/base/builds/",
       "/tests/": "/base/tests/",
       "/spec/": "/base/tests/spec/",
       "/deps/": "/base/js/deps/",

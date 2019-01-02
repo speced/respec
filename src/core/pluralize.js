@@ -3,8 +3,12 @@
 //   plurals of it are automatically added to `data-plurals`.
 // The linking is done in core/link-to-dfn
 
+import {
+  isSingular,
+  plural as pluralOf,
+  singular as singularOf,
+} from "pluralize";
 import { norm as normalize } from "./utils";
-import { plural as pluralOf } from "../deps/pluralize";
 import { registerDefinition } from "./dfn-map";
 
 export const name = "core/pluralize";
@@ -57,10 +61,12 @@ function getPluralizer() {
     }
   });
 
-  // returns pluralized term if `text` needs pluralization, "" otherwise
+  // returns pluralized/singularized term if `text` needs pluralization/singularization, "" otherwise
   return function pluralizeDfn(text) {
     const normText = normalize(text.toLowerCase());
-    const plural = pluralOf(normText);
+    const plural = isSingular(normText)
+      ? pluralOf(normText)
+      : singularOf(normText);
     return links.has(plural) && !dfns.has(plural) ? plural : "";
   };
 }

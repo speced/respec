@@ -3,6 +3,7 @@
 import "./include-config";
 import "./override-configuration";
 import "./respec-ready";
+import "./jquery-enhanced"; // for backward compatibility
 import { done as postProcessDone } from "./post-process";
 import { done as preProcessDone } from "./pre-process";
 import { pub } from "./pubsubhub";

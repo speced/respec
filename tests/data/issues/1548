@@ -1,5 +1,6 @@
 {
   "number": 1548,
   "title": "A mock closed issue for testing",
-  "state": "closed"
+  "state": "closed",
+  "labels": []
 }

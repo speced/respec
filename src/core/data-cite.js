@@ -15,7 +15,7 @@
  */
 import { refTypeFromContext, showInlineWarning, wrapInner } from "./utils";
 import { resolveRef, updateFromNetwork } from "./biblio";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 export const name = "core/data-cite";
 
 function requestLookup(conf) {

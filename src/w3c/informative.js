@@ -1,6 +1,6 @@
 // Module w3c/informative
 // Mark specific sections as informative, based on CSS
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 export const name = "w3c/informative";
 
 export function run() {

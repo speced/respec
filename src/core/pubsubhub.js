@@ -1,3 +1,5 @@
+import { expose } from "./expose-modules";
+
 /**
  * Module core/pubsubhub
  *
@@ -77,3 +79,5 @@ sub("error", err => {
 sub("warn", str => {
   console.warn(str);
 });
+
+expose(name, { sub });

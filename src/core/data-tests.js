@@ -9,7 +9,7 @@
  * Docs: https://github.com/w3c/respec/wiki/data-tests
  */
 import { lang as defaultLang } from "./l10n";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 const l10n = {
   en: {
