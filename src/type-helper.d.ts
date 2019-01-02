@@ -16,3 +16,12 @@ declare module "text!*" {
 }
 
 declare var respecConfig: any;
+interface Window {
+  respecVersion: string;
+}
+
+interface Document {
+  createTreeWalker<T>(root: Node, whatToShow?: number, filter?: (node: T) => boolean | null): TreeWalker<T>;
+}
+
+interface TreeWalker<T extends Node> {}
