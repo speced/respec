@@ -1,8 +1,9 @@
 "use strict";
 describe("Core — xref", () => {
   afterAll(flushIframes);
-  beforeEach(async () => {
-    // clear idb cache before each
+
+  let cache;
+  beforeAll(async () => {
     const IDB = await new Promise(resolve => require(["deps/idb"], resolve));
     const { IDBKeyVal } = await new Promise(resolve =>
       require(["core/utils"], resolve)
@@ -10,7 +11,11 @@ describe("Core — xref", () => {
     const idb = await IDB.open("xref", 1, upgradeDB => {
       upgradeDB.createObjectStore("xrefs");
     });
-    const cache = new IDBKeyVal(idb, "xrefs");
+    cache = new IDBKeyVal(idb, "xrefs");
+  });
+
+  beforeEach(async () => {
+    // clear idb cache before each
     await cache.clear();
   });
 
@@ -703,15 +708,6 @@ describe("Core — xref", () => {
   });
 
   it("caches results and uses cached results when available", async () => {
-    const IDB = await new Promise(resolve => require(["deps/idb"], resolve));
-    const { IDBKeyVal } = await new Promise(resolve =>
-      require(["core/utils"], resolve)
-    );
-    const idb = await IDB.open("xref", 1, upgradeDB => {
-      upgradeDB.createObjectStore("xrefs");
-    });
-    const cache = new IDBKeyVal(idb, "xrefs");
-
     const config = { xref: true, localBiblio };
     let cacheKeys;
 
