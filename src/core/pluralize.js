@@ -1,3 +1,4 @@
+// @ts-check
 // Adds automatic pluralization to dfns
 // If a dfn is referenced as it's plural (and plural of `data-lt` attributes),
 //   plurals of it are automatically added to `data-plurals`.
@@ -18,33 +19,33 @@ export function run(conf) {
 
   const pluralizeDfn = getPluralizer();
 
-  document
-    .querySelectorAll("dfn:not([data-lt-no-plural]):not([data-lt-noDefault])")
-    .forEach(dfn => {
-      const terms = [dfn.textContent];
-      if (dfn.dataset.lt) terms.push(...dfn.dataset.lt.split("|"));
+  /** @type {NodeListOf<HTMLElement>} */
+  const dfns = document.querySelectorAll(
+    "dfn:not([data-lt-no-plural]):not([data-lt-noDefault])"
+  );
+  dfns.forEach(dfn => {
+    const terms = [dfn.textContent];
+    if (dfn.dataset.lt) terms.push(...dfn.dataset.lt.split("|"));
 
-      const plurals = Array.from(
-        terms
-          .map(pluralizeDfn)
-          .filter(plural => plural)
-          .reduce((plurals, plural) => plurals.add(plural), new Set())
-      );
+    const plurals = new Set(terms.map(pluralizeDfn).filter(plural => plural));
 
-      if (plurals.length) {
-        const userDefinedPlurals = dfn.dataset.plurals
-          ? dfn.dataset.plurals.split("|")
-          : [];
-        const uniquePlurals = [...new Set([...userDefinedPlurals, ...plurals])];
-        dfn.dataset.plurals = uniquePlurals.join("|");
-        registerDefinition(dfn, uniquePlurals);
-      }
-    });
+    if (plurals.size) {
+      const userDefinedPlurals = dfn.dataset.plurals
+        ? dfn.dataset.plurals.split("|")
+        : [];
+      const uniquePlurals = [...new Set([...userDefinedPlurals, ...plurals])];
+      dfn.dataset.plurals = uniquePlurals.join("|");
+      registerDefinition(dfn, uniquePlurals);
+    }
+  });
 }
 
 function getPluralizer() {
+  /** @type {Set<string>} */
   const links = new Set();
-  document.querySelectorAll("a:not([href])").forEach(el => {
+  /** @type {NodeListOf<HTMLAnchorElement>} */
+  const reflessAnchors = document.querySelectorAll("a:not([href])");
+  reflessAnchors.forEach(el => {
     const normText = normalize(el.textContent).toLowerCase();
     links.add(normText);
     if (el.dataset.lt) {
@@ -52,21 +53,24 @@ function getPluralizer() {
     }
   });
 
-  const dfns = new Set();
-  document.querySelectorAll("dfn:not([data-lt-noDefault])").forEach(dfn => {
+  /** @type {Set<string>} */
+  const dfnTexts = new Set();
+  /** @type {NodeListOf<HTMLElement>} */
+  const dfns = document.querySelectorAll("dfn:not([data-lt-noDefault])");
+  dfns.forEach(dfn => {
     const normText = normalize(dfn.textContent).toLowerCase();
-    dfns.add(normText);
+    dfnTexts.add(normText);
     if (dfn.dataset.lt) {
-      dfn.dataset.lt.split("|").reduce((dfns, lt) => dfns.add(lt), dfns);
+      dfn.dataset.lt.split("|").forEach(lt => dfnTexts.add(lt));
     }
   });
 
   // returns pluralized/singularized term if `text` needs pluralization/singularization, "" otherwise
-  return function pluralizeDfn(text) {
+  return function pluralizeDfn(/** @type {string} */ text) {
     const normText = normalize(text.toLowerCase());
     const plural = isSingular(normText)
       ? pluralOf(normText)
       : singularOf(normText);
-    return links.has(plural) && !dfns.has(plural) ? plural : "";
+    return links.has(plural) && !dfnTexts.has(plural) ? plural : "";
   };
 }
