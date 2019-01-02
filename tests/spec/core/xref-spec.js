@@ -720,7 +720,7 @@ describe("Core — xref", () => {
         <p><a id="link">dictionary</a><p>
       </section>`;
 
-    const preLoadTime = await IDB.get("__CACHE_TIME__");
+    const preLoadTime = await cache.get("__CACHE_TIME__");
     expect(preLoadTime instanceof Date).toBeFalsy();
     cacheKeys = (await cache.keys()).sort();
     expect(cacheKeys).toEqual([]);
@@ -729,7 +729,7 @@ describe("Core — xref", () => {
     expect(preCacheDoc.getElementById("link").href).toEqual(
       expectedLinks.get("dictionary")
     );
-    const preCacheTime = await IDB.get("__CACHE_TIME__");
+    const preCacheTime = await cache.get("__CACHE_TIME__");
     expect(preCacheTime instanceof Date).toBeTruthy();
     cacheKeys = (await cache.keys()).sort();
     expect(cacheKeys).toEqual(["__CACHE_TIME__", "dictionary"]);
@@ -739,7 +739,7 @@ describe("Core — xref", () => {
     expect(postCacheDoc.getElementById("link").href).toEqual(
       expectedLinks.get("dictionary")
     );
-    const postCacheTime = await IDB.get("__CACHE_TIME__");
+    const postCacheTime = await cache.get("__CACHE_TIME__");
     expect(postCacheTime).toEqual(preCacheTime);
     cacheKeys = (await cache.keys()).sort();
     expect(cacheKeys).toEqual(["__CACHE_TIME__", "dictionary"]);
@@ -758,9 +758,9 @@ describe("Core — xref", () => {
     expect(updatedCacheDoc.getElementById("link-2").href).toEqual(
       expectedLinks.get("url parser")
     );
-    const updatedCacheTime = await IDB.get("__CACHE_TIME__");
+    const updatedCacheTime = await cache.get("__CACHE_TIME__");
     expect(updatedCacheTime).toBeGreaterThan(preCacheTime);
-    cacheKeys = (await IDB.keys()).sort();
+    cacheKeys = (await cache.keys()).sort();
     expect(cacheKeys).toEqual(["__CACHE_TIME__", "dictionary", "url parser"]);
   });
 });
