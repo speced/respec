@@ -379,7 +379,10 @@ export function xmlEscape(s) {
     .replace(/</g, "&lt;");
 }
 
-// Trims string at both ends and replaces all other white space with a single space
+/**
+ * Trims string at both ends and replaces all other white space with a single space
+ * @param {string} str
+ */
 export function norm(str) {
   return str.trim().replace(/\s+/g, " ");
 }
