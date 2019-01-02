@@ -12,7 +12,7 @@
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { addId, fetchAndCache, parents } from "./utils";
 import css from "text!./css/issues-notes.css";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 export const name = "core/issues-notes";
 

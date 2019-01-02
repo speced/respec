@@ -6,7 +6,7 @@
  */
 
 import { expose } from "./expose-modules";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 import { removeReSpec } from "./utils";
 

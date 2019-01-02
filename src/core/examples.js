@@ -7,7 +7,7 @@
 
 import { addId, reindent } from "./utils";
 import css from "text!./css/examples.css";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 
 export const name = "core/examples";

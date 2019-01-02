@@ -95,7 +95,7 @@ import { ISODate, concatDate, joinAnd } from "../core/utils";
 import cgbgHeadersTmpl from "./templates/cgbg-headers";
 import cgbgSotdTmpl from "./templates/cgbg-sotd";
 import headersTmpl from "./templates/headers";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { pub } from "../core/pubsubhub";
 import sotdTmpl from "./templates/sotd";
 
