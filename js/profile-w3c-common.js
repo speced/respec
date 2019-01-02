@@ -7,8 +7,14 @@ window.addEventListener("error", ev => {
 // this is only set in a build, not at all in the dev environment
 require.config({
   paths: {
+    clipboard: "deps/clipboard",
+    hyperhtml: "deps/hyperhtml",
+    "idb-keyval": "deps/idb",
     jquery: "deps/jquery",
+    marked: "deps/marked",
+    pluralize: "deps/pluralize",
     text: "deps/text",
+    webidl2: "deps/webidl2",
   },
   shim: {
     shortcut: {

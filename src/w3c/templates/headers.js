@@ -1,4 +1,4 @@
-import hyperHTML from "../../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { pub } from "../../core/pubsubhub";
 import showLink from "./show-link";
 import showLogo from "./show-logo";

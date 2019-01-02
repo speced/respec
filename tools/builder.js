@@ -142,7 +142,10 @@ const Builder = {
     const buildDir = path.resolve(__dirname, "../builds/");
     const workerDir = path.resolve(__dirname, "../worker/");
     await fsp.emptyDir(buildDir);
-    await promisify(webpack)(config);
+    const stats = await promisify(webpack)(config);
+    if (stats.hasErrors()) {
+      throw new Error(stats.toJson().errors);
+    }
     await appendBoilerplate(outPath, buildVersion, name);
     // copy respec-worker
     await fsp.copyFile(

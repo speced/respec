@@ -7,10 +7,10 @@
 import { flatten, normalizePadding, reindent } from "./utils";
 import css from "text!./css/webidl.css";
 import { findDfn } from "./dfn-finder";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 import { registerDefinition } from "./dfn-map";
-import webidl2 from "../deps/webidl2";
+import webidl2 from "webidl2";
 import webidl2writer from "../deps/webidl2writer";
 
 export const name = "core/webidl";

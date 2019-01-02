@@ -3,7 +3,7 @@
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
-import marked from "../deps/marked";
+import marked from "marked";
 import { pub } from "./pubsubhub";
 export const name = "core/utils";
 
