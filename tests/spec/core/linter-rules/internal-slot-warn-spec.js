@@ -1,6 +1,6 @@
 "use strict";
-describe("Core Linter Rule - 'internal-slot-warn'", () => {
-  const ruleName = "internal-slot-warn";
+describe("Core Linter Rule - 'check-internal-slots'", () => {
+  const ruleName = "check-internal-slots";
   const config = {
     lint: { [ruleName]: true },
   };
@@ -28,7 +28,7 @@ describe("Core Linter Rule - 'internal-slot-warn'", () => {
     const results = await rule.lint(config, doc);
     expect(results.length).toEqual(1);
 
-    const result = results[0];
+    const [result] = results;
     expect(result.name).toEqual(ruleName);
     expect(result.occurrences).toEqual(1);
 

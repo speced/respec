@@ -1,10 +1,10 @@
 /**
- * Linter rule "internal-slot-warn".
+ * Linter rule "check-internal-slots".
  */
 import LinterRule from "../LinterRule";
 import { lang as defaultLang } from "../l10n";
 
-const name = "internal-slot-warn";
+const name = "check-internal-slots";
 
 const meta = {
   en: {
