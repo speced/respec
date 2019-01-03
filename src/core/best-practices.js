@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/best-practices
 // Handles the marking up of best practices, and can generate a summary of all of them.
 // The summary is generated if there is a section in the document with ID bp-summary.
