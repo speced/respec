@@ -127,7 +127,7 @@ export function calculateLeftPad(text) {
  * @param {URL|String} opts.href The URL for the resource or origin.
  * @param {String} [opts.corsMode] Optional, the CORS mode to use (see HTML spec).
  * @param {String} [opts.as] Optional, fetch destination type (see fetchDestinations).
- * @param {Bool} [opts.dontRemove] If the hint should remain in the spec after processing.
+ * @param {boolean} [opts.dontRemove] If the hint should remain in the spec after processing.
  * @return {HTMLLinkElement} A link element ready to use.
  */
 export function createResourceHint(opts) {
@@ -137,7 +137,7 @@ export function createResourceHint(opts) {
   if (!resourceHints.has(opts.hint)) {
     throw new TypeError("Invalid resources hint");
   }
-  const url = new URL(opts.href, document.location);
+  const url = new URL(opts.href, location.href);
   const linkElem = document.createElement("link");
   let href = url.href;
   linkElem.rel = opts.hint;
@@ -176,6 +176,10 @@ export function normalizePadding(text = "") {
     return "\n";
   }
 
+  /**
+   * @param {Node} node
+   * @return {node is Text}
+   */
   function isTextNode(node) {
     return node !== null && node.nodeType === Node.TEXT_NODE;
   }
@@ -291,7 +295,7 @@ export function removeReSpec(doc) {
  * Adds error class to each element while emitting a warning
  * @param {Element|Element[]} elems
  * @param {String} msg message to show in warning
- * @param {String} title error message to add on each element
+ * @param {String=} title error message to add on each element
  */
 export function showInlineWarning(elems, msg, title) {
   if (!Array.isArray(elems)) elems = [elems];
@@ -327,7 +331,7 @@ export function showInlineError(elems, msg, title) {
  * Adds error class to each element while emitting a warning
  * @param {Element} elem
  * @param {String} msg message to show in warning
- * @param {String} title error message to add on each element
+ * @param {String=} title error message to add on each element
  */
 function markAsOffending(elem, msg, title) {
   elem.classList.add("respec-offending-element");
@@ -379,7 +383,10 @@ export function xmlEscape(s) {
     .replace(/</g, "&lt;");
 }
 
-// Trims string at both ends and replaces all other white space with a single space
+/**
+ * Trims string at both ends and replaces all other white space with a single space
+ * @param {string} str
+ */
 export function norm(str) {
   return str.trim().replace(/\s+/g, " ");
 }
@@ -521,7 +528,7 @@ export function runTransforms(content, flist) {
  * Cached request handler
  * @param {Request} request
  * @param {Object} maxAge cache expiration duration in ms. defaults to 24 hours (86400000 ms)
- * @return {Response}
+ * @return {Promise<Response>}
  *  if a cached response is available and it's not stale, return it
  *  else: request from network, cache and return fresh response.
  *    If network fails, return a stale cached version if exists (else throw)
@@ -565,7 +572,7 @@ export async function fetchAndCache(request, maxAge = 86400000) {
     const clonedResponse = response.clone();
     const customHeaders = new Headers(response.headers);
     const expiryDate = new Date(Date.now() + maxAge);
-    customHeaders.set("Expires", expiryDate);
+    customHeaders.set("Expires", expiryDate.toString());
     const cacheResponse = new Response(await clonedResponse.blob(), {
       headers: customHeaders,
     });
@@ -643,10 +650,10 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
  * Returns all the descendant text nodes of an element.
  * @param {Node} el
  * @param {string[]} exclusions node localName to exclude
- * @returns {string[]}
+ * @returns {Text[]}
  */
 export function getTextNodes(el, exclusions = []) {
-  const acceptNode = node => {
+  const acceptNode = (/** @type {Text} */ node) => {
     return exclusions.includes(node.parentElement.localName)
       ? NodeFilter.FILTER_REJECT
       : NodeFilter.FILTER_ACCEPT;
@@ -654,13 +661,13 @@ export function getTextNodes(el, exclusions = []) {
   const nodeIterator = document.createNodeIterator(
     el,
     NodeFilter.SHOW_TEXT,
-    { acceptNode },
-    false
+    acceptNode
   );
+  /** @type {Text[]} */
   const textNodes = [];
   let node;
   while ((node = nodeIterator.nextNode())) {
-    textNodes.push(node);
+    textNodes.push(/** @type {Text} */ (node));
   }
   return textNodes;
 }

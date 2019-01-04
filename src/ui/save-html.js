@@ -1,3 +1,4 @@
+// @ts-check
 // Module ui/save-html
 // Saves content to HTML when asked to
 import { l10n, lang } from "../core/l10n";

@@ -49,7 +49,6 @@ describe("Core - Pluralize", () => {
     const doc = await makeRSDoc(ops);
 
     const dfn = doc.querySelector("#section dfn");
-    console.log(doc.getElementsByTagName("section"));
     expect(dfn.id).toEqual("dfn-baz"); // uses first data-lt as `id`
     expect(dfn.dataset.lt).toEqual("baz|bars");
     expect(dfn.dataset.plurals.split("|").sort()).toEqual(["bar", "bazs"]);
@@ -225,8 +224,8 @@ describe("Core - Pluralize", () => {
   it("doesn't add singularization when no <a> references singular term", async () => {
     const body = `
       <section id="section">
-        <dfn data-lt="tables">chairs</dfn> can be referenced 
-        as <a>chairs</a> or <a>tables</a> 
+        <dfn data-lt="tables">chairs</dfn> can be referenced
+        as <a>chairs</a> or <a>tables</a>
       </section>
     `;
     const ops = makeStandardOps({ pluralize: true }, body);

@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/examples
 // Manages examples, including marking them up, numbering, inserting the title,
 // and reindenting.
@@ -26,6 +27,7 @@ function makeTitle(conf, elem, num, report) {
 }
 
 export function run(conf) {
+  /** @type {NodeListOf<HTMLElement>} */
   const examples = document.querySelectorAll(
     "pre.example, pre.illegal-example, aside.example"
   );
