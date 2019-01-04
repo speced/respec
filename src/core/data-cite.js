@@ -26,7 +26,7 @@ function requestLookup(conf) {
     let href = "";
     // This is just referring to this document
     if (key.toLowerCase() === conf.shortName.toLowerCase()) {
-      showInlineWarning(
+      console.log(
         elem,
         `Couldn't cite external document. The reference "${key}" is the same as the Short Name of current spec.`
       );
