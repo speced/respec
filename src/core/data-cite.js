@@ -29,7 +29,7 @@ function requestLookup(conf) {
     if (key.toLowerCase() === conf.shortName.toLowerCase()) {
       console.log(
         elem,
-        `Couldn't cite external document. The reference "${key}" is the same as the Short Name of current spec.`
+        `The reference "${key}" is resolved into the current document per \`conf.shortName\`.`
       );
       href = document.location.href;
     } else {
