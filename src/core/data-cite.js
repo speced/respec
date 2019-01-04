@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Module core/data-cite
  *
@@ -26,6 +27,10 @@ function requestLookup(conf) {
     let href = "";
     // This is just referring to this document
     if (key.toLowerCase() === conf.shortName.toLowerCase()) {
+      console.log(
+        elem,
+        `Couldn't cite external document. The reference "${key}" is the same as the Short Name of current spec.`
+      );
       href = document.location.href;
     } else {
       // Let's go look it up in spec ref...
@@ -103,7 +108,9 @@ function citeDetailsConverter(conf) {
 
 export async function run(conf) {
   const toCiteDetails = citeDetailsConverter(conf);
-  Array.from(document.querySelectorAll(["dfn[data-cite], a[data-cite]"]))
+  /** @type {NodeListOf<HTMLElement>} */
+  const cites = document.querySelectorAll("dfn[data-cite], a[data-cite]");
+  Array.from(cites)
     .filter(el => el.dataset.cite)
     .map(toCiteDetails)
     // it's not the same spec
@@ -143,6 +150,6 @@ export async function linkInlineCitations(doc, conf = respecConfig) {
   const newEntries = await updateFromNetwork(missingBibEntries);
   Object.assign(conf.biblio, newEntries);
 
-  const lookupRequests = elems.map(toLookupRequest);
+  const lookupRequests = [...new Set(elems)].map(toLookupRequest);
   return await Promise.all(lookupRequests);
 }
