@@ -1,5 +1,5 @@
 "use strict";
-fdescribe("Core — Algorithm Lists", () => {
+describe("Core — Algorithm Lists", () => {
   afterAll(flushIframes);
   it("adds 'assert' CSS class to Assert: in ordered lists that are marked as algorithms", async () => {
     const ops = {
