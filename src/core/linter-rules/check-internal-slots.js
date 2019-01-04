@@ -20,7 +20,7 @@ const lang = defaultLang in meta ? defaultLang : "en";
 /**
  * Runs linter rule.
  * @param {Object} config The ReSpec config.
- * @param  {Document} doc The document to be checked.
+ * @param {Document} doc The document to be checked.
  */
 function linterFunction(conf, doc) {
   const offendingElements = [...doc.querySelectorAll("var+a")].filter(

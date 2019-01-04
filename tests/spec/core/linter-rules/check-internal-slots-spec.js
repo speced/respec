@@ -51,9 +51,9 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
 
   it("generates no error when the expected pattern is followed", async () => {
     doc.body.innerHTML = `
-      <var>bar</var>.<a>[[foo]]</a>
-      <var>foo</var>.<a>[[BarFoo]]</a>
-      <var></var>.<a>[[foo]]</a>
+    <var>bar</var>.<a>[[foo]]</a>
+    <var>foo</var>.<a>[[BarFoo]]</a>
+    <var></var>.<a>[[foo]]</a>
     `;
     const results = await rule.lint(config, doc);
     expect(results.length).toEqual(0);
