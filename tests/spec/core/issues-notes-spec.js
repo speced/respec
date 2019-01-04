@@ -318,4 +318,24 @@ describe("Core — Issues and Notes", () => {
     expect($piss.attr("title")).toBeUndefined();
     expect($piss.text()).toEqual("FEATURE AT RISK");
   });
+
+  it("should link to GitHub issue tracker for features at risk", async () => {
+    const config = {
+      github: "https://github.com/mock-company/mock-repository",
+      githubAPI: `${window.location.origin}/tests/data`,
+    };
+    const ops = {
+      config,
+      body:
+        makeDefaultBody() +
+        "<section><p class='issue atrisk' data-number='1540'>FEATURE AT RISK</p></section>",
+    };
+    const doc = await makeRSDoc(ops);
+    const issue = doc.querySelector("div.atrisk");
+    const issueTitles = issue.querySelectorAll("div.issue-title");
+    expect(issueTitles.length).toBe(1);
+    expect(issueTitles[0].querySelector("a").getAttribute("href")).toBe(
+      config.github + "/issues/1540"
+    );
+  });
 });
