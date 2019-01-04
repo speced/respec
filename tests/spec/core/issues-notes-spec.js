@@ -64,7 +64,7 @@ describe("Core — Issues and Notes", () => {
 
     expect($atr.find("div.issue-title").length).toEqual(1);
     expect($atr.find("div.issue-title").text()).toEqual(
-      "Feature at Risk 2: ATR-TIT"
+      "(Feature at Risk) Issue 2: ATR-TIT"
     );
     expect($patr.attr("title")).toBeUndefined();
     expect($patr.text()).toEqual("FEATURE AT RISK");
@@ -311,7 +311,7 @@ describe("Core — Issues and Notes", () => {
     const $iss = $("div.atrisk", doc);
     const $piss = $iss.find("p");
     expect($iss.find("div.issue-title").length).toEqual(1);
-    expect($iss.find("div.issue-title").text()).toEqual("Feature at Risk 10");
+    expect($iss.find("div.issue-title").text()).toEqual("(Feature at Risk) Issue 10");
     expect($iss.find("div.issue-title a").attr("href")).toEqual(
       atRiskBaseConfig.atRiskBase + "10"
     );
