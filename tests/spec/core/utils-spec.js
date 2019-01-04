@@ -290,14 +290,16 @@ describe("Core - Utils", () => {
   describe("linkCSS", () => {
     it("adds a link element", () => {
       utils.linkCSS(document, "BOGUS");
-      expect($("link[href='BOGUS']").length).toEqual(1);
-      $("link[href='BOGUS']").remove();
+      expect(document.querySelectorAll("link[href='BOGUS']").length).toEqual(1);
+      document.querySelector("link[href='BOGUS']").remove();
     });
 
     it("adds several link elements", () => {
       utils.linkCSS(document, ["BOGUS", "BOGUS", "BOGUS"]);
-      expect($("link[href='BOGUS']").length).toEqual(3);
-      $("link[href='BOGUS']").remove();
+      expect(document.querySelectorAll("link[href='BOGUS']").length).toEqual(3);
+      document
+        .querySelectorAll("link[href='BOGUS']")
+        .forEach(element => element.remove());
     });
   });
 

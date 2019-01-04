@@ -1,7 +1,8 @@
+// @ts-check
 // Module ui/save-html
 // Saves content to HTML when asked to
 import { l10n, lang } from "../core/l10n";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { pub } from "../core/pubsubhub";
 import { rsDocToDataURL } from "../core/exporter";
 import { ui } from "../core/ui";
@@ -74,13 +75,13 @@ let button;
 if (supportsDownload) {
   button = ui.addCommand(
     l10n[lang].save_snapshot,
-    "ui/save-html",
+    show,
     "Ctrl+Shift+Alt+S",
     "💾"
   );
 }
 
-export function show() {
+function show() {
   if (!supportsDownload) return;
   saveDialog.show(button);
 }

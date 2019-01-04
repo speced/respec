@@ -6,6 +6,7 @@ extends:
 parserOptions:
   sourceType: script
 rules:
+  no-console: 1
   no-sparse-arrays: 0
   jasmine/new-line-before-expect: 0
   jasmine/new-line-between-declarations: 0

@@ -1,7 +1,7 @@
 // Module ui/about-respec
 // A simple about dialog with pointer to the help
 import { l10n, lang } from "../core/l10n";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { ui } from "../core/ui";
 
 // window.respecVersion is added at build time (see tools/builder.js)
@@ -10,7 +10,7 @@ const div = document.createElement("div");
 const render = hyperHTML.bind(div);
 const button = ui.addCommand(
   `About ${window.respecVersion}`,
-  "ui/about-respec",
+  show,
   "Ctrl+Shift+Alt+A",
   "ℹ️"
 );
@@ -81,5 +81,3 @@ function perfEntryToTR({ name, duration }) {
     </td>
   `;
 }
-
-export { show };

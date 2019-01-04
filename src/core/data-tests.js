@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Module core/data-tests
  *
@@ -9,7 +10,7 @@
  * Docs: https://github.com/w3c/respec/wiki/data-tests
  */
 import { lang as defaultLang } from "./l10n";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 const l10n = {
   en: {
@@ -70,6 +71,7 @@ function toListItem(href) {
 }
 
 export function run(conf) {
+  /** @type {NodeListOf<HTMLElement>} */
   const testables = document.querySelectorAll("[data-tests]");
   if (!testables.length) {
     return;

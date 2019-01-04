@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * module: core/exporter
  * Exports a ReSpec document, based on mime type, so it can be saved, etc.
@@ -5,7 +6,8 @@
  * That is, elements that have a "removeOnSave" css class.
  */
 
-import hyperHTML from "../deps/hyperhtml";
+import { expose } from "./expose-modules";
+import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 import { removeReSpec } from "./utils";
 
@@ -103,10 +105,14 @@ function cleanupHyper({ documentElement: node }) {
 }
 
 /**
- * @param {TreeWalker} walker
+ * @template {Node} T
+ * @param {TreeWalker<T>} walker
+ * @return {IterableIterator<T>}
  */
 function* walkTree(walker) {
   while (walker.nextNode()) {
-    yield walker.currentNode;
+    yield /** @type {T} */ (walker.currentNode);
   }
 }
+
+expose("core/exporter", { rsDocToDataURL });

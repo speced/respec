@@ -150,11 +150,11 @@ describe("W3C — Bibliographic References", () => {
 
   it("makes sure that normative references win irrespective of case", () => {
     expect(doc.querySelectorAll("#bib-dom").length).toBe(1);
-    const domRef = doc.querySelector("#bib-dom");
+    const domRef = doc.getElementById("bib-dom");
     expect(domRef.closest("section").id).toBe("normative-references");
 
     expect(doc.querySelectorAll("#bib-fetch").length).toBe(1);
-    const fetchRef = doc.querySelector("#bib-fetch");
+    const fetchRef = doc.getElementById("bib-fetch");
     expect(fetchRef.closest("section").id).toBe("normative-references");
     expect(fetchRef.textContent.trim()).toBe("[fetch]");
   });

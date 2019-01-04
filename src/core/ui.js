@@ -9,11 +9,10 @@
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
 
-import "./jquery-enhanced";
-import css from "../deps/text!ui/ui.css";
-import hyperHTML from "../deps/hyperhtml";
+import css from "text!../ui/ui.css";
+import hyperHTML from "hyperhtml";
 import { markdownToHtml } from "./utils";
-import shortcut from "shortcut";
+import shortcut from "../shortcut";
 import { sub } from "./pubsubhub";
 export const name = "core/ui";
 
@@ -132,13 +131,8 @@ export const ui = {
   enable() {
     respecPill.removeAttribute("disabled");
   },
-  addCommand(label, module, keyShort, icon) {
+  addCommand(label, handler, keyShort, icon) {
     icon = icon || "";
-    const handler = function() {
-      require([module], mod => {
-        mod.show();
-      });
-    };
     const id = "respec-button-" + label.toLowerCase().replace(/\s+/, "-");
     const button = hyperHTML`<button id="${id}" class="respec-option" title="${keyShort}">
       <span class="respec-cmd-icon">${icon}</span> ${label}…

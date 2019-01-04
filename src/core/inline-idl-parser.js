@@ -11,7 +11,7 @@
  *  { base: "Foo", method: "baz(arg1, arg2)", args: ["arg1", "arg2"] }
  */
 
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 
 function parseInlineIDL(str) {
   const methodRegex = /(\w+)\((.*)\)$/;

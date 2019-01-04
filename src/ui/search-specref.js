@@ -1,13 +1,13 @@
 // Module ui/search-specref
 // Search Specref database
 import { l10n, lang } from "../core/l10n";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { ui } from "../core/ui";
 import { wireReference } from "../core/biblio";
 
 const button = ui.addCommand(
   l10n[lang].search_specref,
-  "ui/search-specref",
+  show,
   "Ctrl+Shift+Alt+space",
   "🔎"
 );
@@ -20,6 +20,11 @@ const resultList = hyperHTML.bind(document.createElement("div"));
 
 form.id = "specref-ui";
 
+/**
+ * @param {Map<string, string>} resultMap
+ * @param {string} query
+ * @param {number} timeTaken
+ */
 function renderResults(resultMap, query, timeTaken) {
   if (!resultMap.size) {
     return resultList`
@@ -119,7 +124,9 @@ form.addEventListener("submit", async ev => {
 function show() {
   render();
   ui.freshModal(l10n[lang].search_specref, form, button);
-  form.querySelector("input[type=search]").focus();
+  /** @type {HTMLElement} */
+  const input = form.querySelector("input[type=search]");
+  input.focus();
 }
 
 const mast = hyperHTML.wire()`
@@ -145,7 +152,11 @@ const mast = hyperHTML.wire()`
   </div>
 `;
 
-function render({ state, results, timeTaken, query } = { state: "" }) {
+/**
+ *
+ * @param {{ state?: string, results?: Map<string, string>, timeTaken?: number, query?: string }} options
+ */
+function render({ state = "", results, timeTaken, query } = {}) {
   if (!results) {
     renderer`<div>${mast}</div>`;
     return;
@@ -160,5 +171,3 @@ function render({ state, results, timeTaken, query } = { state: "" }) {
   }</section>
   `;
 }
-
-export { show };

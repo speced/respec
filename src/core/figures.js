@@ -1,10 +1,11 @@
+// @ts-check
 // Module core/figure
 // Handles figures in the document.
 // Adds width and height to images, if they are missing.
 // Generates a Table of Figures wherever there is a #tof element.
 
 import { addId, renameElement, showInlineWarning, wrapInner } from "./utils";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 
 export const name = "core/figures";
 
@@ -99,7 +100,9 @@ function normalizeImages(doc) {
  * @param {Record<string, NodeList>} figMap
  */
 function updateEmptyAnchors(figMap) {
-  document.querySelectorAll("a[href]").forEach(anchor => {
+  /** @type {NodeListOf<HTMLAnchorElement>} */
+  const anchors = document.querySelectorAll("a[href]");
+  anchors.forEach(anchor => {
     const href = anchor.getAttribute("href");
     if (!href) {
       return;
@@ -153,9 +156,9 @@ function decorateTableOfFigures(tofElement) {
   }
 
   const previousSections = getPreviousSections(tofElement);
-  if (previousSections.every(sec => sec.classList.has("introductory"))) {
+  if (previousSections.every(sec => sec.classList.contains("introductory"))) {
     tofElement.classList.add("introductory");
-  } else if (previousSections.some(sec => sec.classList.has("appendix"))) {
+  } else if (previousSections.some(sec => sec.classList.contains("appendix"))) {
     tofElement.classList.add("appendix");
   }
 }
