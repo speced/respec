@@ -44,6 +44,6 @@ export const rule = new LinterRule(name, linterFunction);
 function checkElement({ previousSibling, textContent }) {
   const potentialSlot = previousSibling.textContent + textContent;
   // starts with dot, followed by [[ and any word
-  return !/^\.\[\[\w+/.test(potentialSlot);
+  return !/^\.\[\[\w+\]\]/.test(potentialSlot);
   // return true if regex test fails
 }

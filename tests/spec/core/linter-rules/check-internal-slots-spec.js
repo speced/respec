@@ -19,18 +19,29 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
     }
   });
 
-  it("return error when no '.' between var and a for internal slots", async () => {
+  it("only returns an error when there is no '.' between var and an internal slot", async () => {
     doc.body.innerHTML = `
-    <var>bar1</var><a>[[foo]]</a>
-    <var>bar2</var>.<a>[[foo]]</a>
-    <var>bar3</var>.<a>[[foo]]</a>
+    <var>bar</var><a>[[foo]]</a>
+    <var>bar</var>..<a>[[foo]]</a>
+    <var>bar</var> . <a>[[foo]]</a>
+    <var>bar</var> <a>[[foo]]</a>
+    <a>[[foo]]</a><var>bar</var>
+    <var>bar</var>.<a>[foo]</a>
+    <var>bar</var>.<a>foo</a>
+    <var>bar</var>.<a>[[foo</a>
+    <var>bar</var>.<a>foo]]</a>
+    <var></var>.<a></a>
+    <var></var><a></a>
+    <var>[[foo]]</var>.<a></a>
+    <var>[[foo]]</var>.<a>bar</a>
+    <var>bar</var>.<a>[[f oo]]</a>
     `;
     const results = await rule.lint(config, doc);
     expect(results.length).toEqual(1);
 
     const [result] = results;
     expect(result.name).toEqual(ruleName);
-    expect(result.occurrences).toEqual(1);
+    expect(result.occurrences).toEqual(13);
 
     const offendingElement = result.offendingElements[0];
     const { previousSibling } = offendingElement;
@@ -38,10 +49,11 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
     expect(previousSibling.textContent).not.toEqual(".");
   });
 
-  it("no error when correct pattern is followed", async () => {
+  it("generates no error when the expected pattern is followed", async () => {
     doc.body.innerHTML = `
       <var>bar</var>.<a>[[foo]]</a>
-      <var>bar</var>.<a>[[foo]]</a>
+      <var>foo</var>.<a>[[BarFoo]]</a>
+      <var></var>.<a>[[foo]]</a>
     `;
     const results = await rule.lint(config, doc);
     expect(results.length).toEqual(0);
