@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * module: core/exporter
  * Exports a ReSpec document, based on mime type, so it can be saved, etc.
@@ -104,11 +105,13 @@ function cleanupHyper({ documentElement: node }) {
 }
 
 /**
- * @param {TreeWalker} walker
+ * @template {Node} T
+ * @param {TreeWalker<T>} walker
+ * @return {IterableIterator<T>}
  */
 function* walkTree(walker) {
   while (walker.nextNode()) {
-    yield walker.currentNode;
+    yield /** @type {T} */ (walker.currentNode);
   }
 }
 

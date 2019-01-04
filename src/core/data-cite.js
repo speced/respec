@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Module core/data-cite
  *
@@ -107,7 +108,9 @@ function citeDetailsConverter(conf) {
 
 export async function run(conf) {
   const toCiteDetails = citeDetailsConverter(conf);
-  Array.from(document.querySelectorAll(["dfn[data-cite], a[data-cite]"]))
+  /** @type {NodeListOf<HTMLElement>} */
+  const cites = document.querySelectorAll("dfn[data-cite], a[data-cite]");
+  Array.from(cites)
     .filter(el => el.dataset.cite)
     .map(toCiteDetails)
     // it's not the same spec
