@@ -32,8 +32,8 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelector(".head h2").textContent).toMatch(
-        /W3C Editor's Draft/
+      expect(doc.querySelector(".head h2").textContent).toContain(
+        "W3C Editor's Draft"
       );
     });
   });
@@ -51,10 +51,10 @@ describe("W3C — Headers", () => {
       const terms = doc.querySelectorAll("dt");
       expect(terms[0].textContent).toBe("This version:");
       expect(terms[0].nextElementSibling.localName).toBe("dd");
-      expect(terms[0].nextElementSibling.textContent).toMatch(/\/REC-xxx-/);
+      expect(terms[0].nextElementSibling.textContent).toContain("REC-xxx-");
       expect(terms[1].textContent).toBe("Latest published version:");
       expect(terms[1].nextElementSibling.localName).toBe("dd");
-      expect(terms[1].nextElementSibling.textContent).toMatch(/\/TR\/xxx\//);
+      expect(terms[1].nextElementSibling.textContent).toContain("TR/xxx");
     });
   });
 
@@ -92,7 +92,7 @@ describe("W3C — Headers", () => {
       // if `mailto` is specified in People, `url` won't be used
       expect(dd.querySelectorAll("a[href='http://URI']").length).toBe(0);
       expect(dd.dataset.editorId).toBe("1234");
-      expect(dd.textContent).toMatch(/\(NOTE\)/);
+      expect(dd.textContent).toMatch("(NOTE)");
     });
 
     it("takes multiple editors into account", async () => {
@@ -110,10 +110,13 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(contains(doc, "dt", "Editors:").length).toBe(1);
-      expect(contains(doc, "dt", "Editor:").length).toBe(0);
-      expect(doc.querySelectorAll("dd")[5].textContent).toBe("NAME1");
-      expect(doc.querySelectorAll("dd")[6].textContent).toBe("NAME2");
+      const dtEditors = contains(doc, "dt", "Editors:");
+      const dtEditor = contains(doc, "dt", "Editor:");
+      expect(dtEditors.length).toBe(1);
+      expect(dtEditor.length).toBe(0);
+      const dd = dtEditors[0].nextElementSibling;
+      expect(dd.textContent).toBe("NAME1");
+      expect(dd.nextElementSibling.textContent).toBe("NAME2");
     });
 
     it("takes editors extras into account", async () => {
@@ -334,9 +337,12 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(contains(doc, "dt", "Authors:").length).toBe(0);
-      expect(contains(doc, "dt", "Author:").length).toBe(1);
-      expect(doc.querySelectorAll("dd")[6].textContent).toBe("NAME1");
+      const dtAuthors = contains(doc, "dt", "Authors:");
+      const dtAuthor = contains(doc, "dt", "Author:");
+      expect(dtAuthors.length).toBe(0);
+      expect(dtAuthor.length).toBe(1);
+      const dd = dtAuthor[0].nextElementSibling;
+      expect(dd.textContent).toBe("NAME1");
     });
 
     it("takes multiple authors into account", async () => {
@@ -757,8 +763,8 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelector(".head .copyright").textContent).toMatch(
-        /1977-2012/
+      expect(doc.querySelector(".head .copyright").textContent).toContain(
+        "1977-2012"
       );
     });
 
@@ -770,8 +776,8 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelector(".head .copyright").textContent).not.toMatch(
-        /2012-2012/
+      expect(doc.querySelector(".head .copyright").textContent).not.toContain(
+        "2012-2012"
       );
     });
   });
@@ -877,6 +883,7 @@ describe("W3C — Headers", () => {
       expect(contains(sotd, "a", "WGNAME2")[1].getAttribute("href")).toBe(
         "WGPATENT2"
       );
+      expect(contains(sotd, "a", "disclosures").length).toBe(2);
       expect(contains(sotd, "a", "WGLIST").length).toBe(1);
     });
   });
@@ -1026,11 +1033,11 @@ describe("W3C — Headers", () => {
       const terms = doc.querySelectorAll("dt");
       expect(terms[0].textContent).toBe("This version:");
       expect(terms[0].nextElementSibling.localName).toBe("dd");
-      expect(terms[0].nextElementSibling.textContent).toMatch(/http:\/\/THIS/);
+      expect(terms[0].nextElementSibling.textContent).toMatch("http://THIS");
       expect(terms[1].textContent).toBe("Latest published version:");
       expect(terms[1].nextElementSibling.localName).toBe("dd");
-      expect(terms[1].nextElementSibling.textContent).toMatch(
-        /http:\/\/LATEST/
+      expect(terms[1].nextElementSibling.textContent).toContain(
+        "http://LATEST"
       );
       const sotd = doc.getElementById("sotd");
       expect(sotd.querySelectorAll("a[href='http://WG']").length).toBe(1);
