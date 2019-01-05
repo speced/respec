@@ -1033,7 +1033,7 @@ describe("W3C — Headers", () => {
       const terms = doc.querySelectorAll("dt");
       expect(terms[0].textContent).toBe("This version:");
       expect(terms[0].nextElementSibling.localName).toBe("dd");
-      expect(terms[0].nextElementSibling.textContent).toMatch("http://THIS");
+      expect(terms[0].nextElementSibling.textContent).toContain("http://THIS");
       expect(terms[1].textContent).toBe("Latest published version:");
       expect(terms[1].nextElementSibling.localName).toBe("dd");
       expect(terms[1].nextElementSibling.textContent).toContain(
