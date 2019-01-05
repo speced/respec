@@ -17,7 +17,13 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelectorAll("dd")[4].textContent.trim()).toEqual("URI");
+
+      const terms = doc.querySelectorAll("dt");
+      expect(terms[4].textContent).toBe("Latest Recommendation:");
+      expect(terms[4].nextElementSibling.localName).toBe("dd");
+      expect(terms[4].nextElementSibling.textContent.trim()).toBe(
+        "URI"
+      );
     });
   });
   describe("specStatus", () => {
@@ -43,10 +49,16 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelectorAll("dd")[0].textContent.trim()).toMatch(
+
+      const terms = doc.querySelectorAll("dt");
+      expect(terms[0].textContent).toBe("This version:");
+      expect(terms[0].nextElementSibling.localName).toBe("dd");
+      expect(terms[0].nextElementSibling.textContent).toMatch(
         /\/REC-xxx-/
       );
-      expect(doc.querySelectorAll("dd")[1].textContent.trim()).toMatch(
+      expect(terms[1].textContent).toBe("Latest published version:");
+      expect(terms[1].nextElementSibling.localName).toBe("dd");
+      expect(terms[1].nextElementSibling.textContent).toMatch(
         /\/TR\/xxx\//
       );
     });
@@ -333,7 +345,7 @@ describe("W3C — Headers", () => {
       expect(doc.querySelectorAll("dd")[6].textContent).toEqual("NAME1");
     });
 
-    it("takes a multiple authors into account", async () => {
+    it("takes multiple authors into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "REC",
@@ -512,7 +524,10 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelectorAll("dd")[4].textContent).toMatch(
+      const terms = doc.querySelectorAll("dt");
+      expect(terms[4].textContent).toBe("Previous version:");
+      expect(terms[4].nextElementSibling.localName).toBe("dd");
+      expect(terms[4].nextElementSibling.textContent).toMatch(
         /\/1977\/CR-[^/]+-19770315\//
       );
     });
@@ -581,7 +596,12 @@ describe("W3C — Headers", () => {
     };
     Object.assign(ops.config, newProps);
     const doc = await makeRSDoc(ops);
-    expect(doc.querySelectorAll("dd")[3].textContent).toEqual("URI");
+    const terms = doc.querySelectorAll("dt");
+    expect(terms[3].textContent).toBe("Test suite:");
+    expect(terms[3].nextElementSibling.localName).toBe("dd");
+    expect(terms[3].nextElementSibling.textContent).toBe(
+      "URI"
+    );
   });
 
   describe("implementationReportURI", () => {
@@ -609,12 +629,18 @@ describe("W3C — Headers", () => {
       });
 
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelectorAll("dd")[2].textContent).toEqual("URI");
+      const terms = doc.querySelectorAll("dt");
+
+      expect(terms[2].textContent).toBe("Latest editor's draft:");
+      expect(terms[2].nextElementSibling.localName).toBe("dd");
+      expect(terms[2].nextElementSibling.textContent).toBe(
+        "URI"
+      );
     });
   });
 
   describe("prevED", () => {
-    it("takes prevED into account", async () => {
+      it("takes prevED into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "ED",
@@ -622,7 +648,12 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelectorAll("dd")[4].textContent).toEqual("URI");
+      const terms = doc.querySelectorAll("dt");
+      expect(terms[4].textContent).toBe("Previous editor's draft:");
+      expect(terms[4].nextElementSibling.localName).toBe("dd");
+      expect(terms[4].nextElementSibling.textContent).toBe(
+        "URI"
+      );
     });
   });
 
@@ -1001,13 +1032,18 @@ describe("W3C — Headers", () => {
           ".head .copyright a[href='https://www.w3.org/community/about/agreements/fsa/']"
         ).length
       ).toEqual(1);
-      expect(doc.querySelector(".head h2").textContent).toMatch(
-        /Final Business Group Report/
+      expect(doc.querySelector(".head h2").textContent).toContain(
+        "Final Business Group Report"
       );
-      expect(doc.querySelectorAll("dd")[0].textContent).toMatch(
+      const terms = doc.querySelectorAll("dt");
+      expect(terms[0].textContent).toBe("This version:");
+      expect(terms[0].nextElementSibling.localName).toBe("dd");
+      expect(terms[0].nextElementSibling.textContent).toMatch(
         /http:\/\/THIS/
       );
-      expect(doc.querySelectorAll("dd")[1].textContent).toMatch(
+      expect(terms[1].textContent).toBe("Latest published version:");
+      expect(terms[1].nextElementSibling.localName).toBe("dd");
+      expect(terms[1].nextElementSibling.textContent).toMatch(
         /http:\/\/LATEST/
       );
       const sotd = doc.getElementById("sotd");
