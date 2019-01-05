@@ -44,10 +44,13 @@ describe("Core — Issues and Notes", () => {
     };
     const doc = await makeRSDoc(ops);
     const iss = doc.querySelector("div.issue", doc);
+    const piss = iss.querySelector("p")
     const atr = doc.querySelector("div.atrisk");
+    const patr = atr.querySelector("p")
     const spiss = doc.querySelector("span.issue");
     const spatr = doc.querySelector("span.atrisk");
     const not = doc.querySelector("div.note");
+    const pnot = not.querySelector("p");
     const spnot = doc.querySelector("span.note");
 
     expect(spiss.closest("div")).toBeNull();
@@ -57,21 +60,21 @@ describe("Core — Issues and Notes", () => {
     expect(iss.querySelector("div.issue-title").textContent).toBe(
       "Issue 1: ISS-TIT"
     );
-    expect(iss.querySelector("p").getAttribute("title")).toBeNull();
-    expect(iss.querySelector("p").textContent).toBe("ISSUE");
+    expect(piss.getAttribute("title")).toBeNull();
+    expect(piss.textContent).toBe("ISSUE");
     expect(atr.querySelectorAll("div.issue-title").length).toBe(1);
     expect(atr.querySelector("div.issue-title").textContent).toBe(
       "(Feature at Risk) Issue 2: ATR-TIT"
     );
-    expect(atr.querySelector("p").getAttribute("title")).toBeNull();
-    expect(atr.querySelector("p").textContent).toBe("FEATURE AT RISK");
+    expect(patr.getAttribute("title")).toBeNull();
+    expect(patr.textContent).toBe("FEATURE AT RISK");
 
     expect(not.querySelectorAll("div.note-title").length).toBe(1);
     expect(not.querySelector("div.note-title").textContent).toBe(
       "Note: NOT-TIT"
     );
-    expect(not.querySelector("p").getAttribute("title")).toBeNull();
-    expect(not.querySelector("p").textContent).toBe("NOTE");
+    expect(pnot.getAttribute("title")).toBeNull();
+    expect(pnot.textContent).toBe("NOTE");
   });
 
   it("should process ednotes", async () => {
@@ -84,12 +87,13 @@ describe("Core — Issues and Notes", () => {
     };
     const doc = await makeRSDoc(ops);
     const edNote = doc.querySelector("div.ednote");
+    const pnot = edNote.querySelector("p");
     expect(edNote.querySelectorAll("div.ednote-title").length).toBe(1);
     expect(edNote.querySelector("div.ednote-title").textContent).toBe(
       "Editor's note: EDNOTE-TIT"
     );
-    expect(edNote.querySelector("p").getAttribute("title")).toBeNull();
-    expect(edNote.querySelector("p").textContent).toBe("EDNOTE");
+    expect(pnot.getAttribute("title")).toBeNull();
+    expect(pnot.textContent).toBe("EDNOTE");
   });
 
   it("should process warnings", async () => {
@@ -220,13 +224,14 @@ describe("Core — Issues and Notes", () => {
     };
     const doc = await makeRSDoc(ops);
     const iss = doc.querySelector("div.issue");
+    const piss = iss.querySelector("p");
     expect(iss.querySelectorAll("div.issue-title").length).toBe(1);
     expect(iss.querySelector("div.issue-title").textContent).toBe("Issue 10");
     expect(iss.querySelector("div.issue-title a").getAttribute("href")).toBe(
       issueBaseConfig.issueBase + "10"
     );
-    expect(iss.querySelector("p").getAttribute("title")).toBeNull();
-    expect(iss.querySelector("p").textContent).toBe("ISSUE");
+    expect(piss.getAttribute("title")).toBeNull();
+    expect(piss.textContent).toBe("ISSUE");
   });
 
   it("marks closed issues as closed in the spec", async () => {
@@ -307,6 +312,7 @@ describe("Core — Issues and Notes", () => {
     };
     const doc = await makeRSDoc(ops);
     const iss = doc.querySelector("div.atrisk");
+    const piss = iss.querySelector("p");
     expect(iss.querySelectorAll("div.issue-title").length).toBe(1);
     expect(iss.querySelector("div.issue-title").textContent).toBe(
       "(Feature at Risk) Issue 10"
@@ -314,8 +320,8 @@ describe("Core — Issues and Notes", () => {
     expect(iss.querySelector("div.issue-title a").getAttribute("href")).toBe(
       atRiskBaseConfig.atRiskBase + "10"
     );
-    expect(iss.querySelector("p").getAttribute("title")).toBeNull();
-    expect(iss.querySelector("p").textContent).toBe("FEATURE AT RISK");
+    expect(piss.getAttribute("title")).toBeNull();
+    expect(piss.textContent).toBe("FEATURE AT RISK");
   });
 
   it("should link to GitHub issue tracker for features at risk", async () => {
