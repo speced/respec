@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Module core/data-tests
  *
@@ -70,6 +71,7 @@ function toListItem(href) {
 }
 
 export function run(conf) {
+  /** @type {NodeListOf<HTMLElement>} */
   const testables = document.querySelectorAll("[data-tests]");
   if (!testables.length) {
     return;

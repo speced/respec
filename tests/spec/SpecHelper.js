@@ -37,6 +37,7 @@ function makeRSDoc(opts = {}, src = "about-blank.html", style = "") {
       try {
         ifr.style = style;
       } catch ({ message }) {
+        // eslint-disable-next-line no-console
         console.warn(`Could not override iframe style: ${style} (${message})`);
       }
     }

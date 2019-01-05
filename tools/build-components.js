@@ -1,20 +1,10 @@
 const { promisify } = require("util");
 const exec = promisify(require("child_process").exec);
-const move = require("fs-extra").move;
-const glob = require("glob");
+const { move } = require("fs-extra");
 
 (async () => {
-  await buildHandlebars();
   await buildHighlight();
 })();
-
-async function buildHandlebars() {
-  const paths = ["js/*/templates/*.css"]
-    .map(path => glob.sync(path, { nonull: true }))
-    .reduce((res, file) => res.concat(file), [])
-    .join(" ");
-  await exec(`handlebars ${paths} -a -f js/templates.js`);
-}
 
 async function buildHighlight() {
   await exec(

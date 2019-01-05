@@ -59,7 +59,6 @@ describe("Core — Issues and Notes", () => {
     );
     expect(iss.querySelector("p").getAttribute("title")).toBeNull();
     expect(iss.querySelector("p").textContent).toBe("ISSUE");
-
     expect(atr.querySelectorAll("div.issue-title").length).toBe(1);
     expect(atr.querySelector("div.issue-title").textContent).toBe(
       "Feature at Risk 2: ATR-TIT"
@@ -317,5 +316,25 @@ describe("Core — Issues and Notes", () => {
     );
     expect(iss.querySelector("p").getAttribute("title")).toBeNull();
     expect(iss.querySelector("p").textContent).toBe("FEATURE AT RISK");
+  });
+
+  it("should link to GitHub issue tracker for features at risk", async () => {
+    const config = {
+      github: "https://github.com/mock-company/mock-repository",
+      githubAPI: `${window.location.origin}/tests/data`,
+    };
+    const ops = {
+      config,
+      body:
+        makeDefaultBody() +
+        "<section><p class='issue atrisk' data-number='1540'>FEATURE AT RISK</p></section>",
+    };
+    const doc = await makeRSDoc(ops);
+    const issue = doc.querySelector("div.atrisk");
+    const issueTitles = issue.querySelectorAll("div.issue-title");
+    expect(issueTitles.length).toBe(1);
+    expect(issueTitles[0].querySelector("a").getAttribute("href")).toBe(
+      config.github + "/issues/1540"
+    );
   });
 });
