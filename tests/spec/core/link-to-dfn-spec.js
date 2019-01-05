@@ -109,7 +109,7 @@ describe("Core — Link to definitions", () => {
     expect(dfn.id).toBe("dfn-test2");
   });
 
-  it("should prefer data-lt", async () => {
+  it("prefers data-lt over text content", async () => {
     const bodyText = `
       <section>
         <h2>Test Section</h2>
