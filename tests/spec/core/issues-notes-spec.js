@@ -44,9 +44,9 @@ describe("Core — Issues and Notes", () => {
     };
     const doc = await makeRSDoc(ops);
     const iss = doc.querySelector("div.issue", doc);
-    const piss = iss.querySelector("p")
+    const piss = iss.querySelector("p");
     const atr = doc.querySelector("div.atrisk");
-    const patr = atr.querySelector("p")
+    const patr = atr.querySelector("p");
     const spiss = doc.querySelector("span.issue");
     const spatr = doc.querySelector("span.atrisk");
     const not = doc.querySelector("div.note");
