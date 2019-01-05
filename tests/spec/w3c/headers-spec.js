@@ -21,9 +21,7 @@ describe("W3C — Headers", () => {
       const terms = doc.querySelectorAll("dt");
       expect(terms[4].textContent).toBe("Latest Recommendation:");
       expect(terms[4].nextElementSibling.localName).toBe("dd");
-      expect(terms[4].nextElementSibling.textContent.trim()).toBe(
-        "URI"
-      );
+      expect(terms[4].nextElementSibling.textContent.trim()).toBe("URI");
     });
   });
   describe("specStatus", () => {
@@ -53,14 +51,10 @@ describe("W3C — Headers", () => {
       const terms = doc.querySelectorAll("dt");
       expect(terms[0].textContent).toBe("This version:");
       expect(terms[0].nextElementSibling.localName).toBe("dd");
-      expect(terms[0].nextElementSibling.textContent).toMatch(
-        /\/REC-xxx-/
-      );
+      expect(terms[0].nextElementSibling.textContent).toMatch(/\/REC-xxx-/);
       expect(terms[1].textContent).toBe("Latest published version:");
       expect(terms[1].nextElementSibling.localName).toBe("dd");
-      expect(terms[1].nextElementSibling.textContent).toMatch(
-        /\/TR\/xxx\//
-      );
+      expect(terms[1].nextElementSibling.textContent).toMatch(/\/TR\/xxx\//);
     });
   });
 
@@ -84,20 +78,20 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(contains(doc, "dt", "Editors:").length).toEqual(0);
-      expect(contains(doc, "dt", "Editor:").length).toEqual(1);
+      expect(contains(doc, "dt", "Editors:").length).toBe(0);
+      expect(contains(doc, "dt", "Editor:").length).toBe(1);
       const dd = doc.querySelectorAll("dd")[5];
-      expect(dd.querySelectorAll("a[href='http://COMPANY']").length).toEqual(1);
-      expect(dd.querySelector("a[href='http://COMPANY']").textContent).toEqual(
+      expect(dd.querySelectorAll("a[href='http://COMPANY']").length).toBe(1);
+      expect(dd.querySelector("a[href='http://COMPANY']").textContent).toBe(
         "COMPANY"
       );
-      expect(dd.querySelectorAll("a[href='mailto:EMAIL']").length).toEqual(1);
-      expect(dd.querySelector("a[href='mailto:EMAIL']").textContent).toEqual(
+      expect(dd.querySelectorAll("a[href='mailto:EMAIL']").length).toBe(1);
+      expect(dd.querySelector("a[href='mailto:EMAIL']").textContent).toBe(
         "NAME"
       );
       // if `mailto` is specified in People, `url` won't be used
-      expect(dd.querySelectorAll("a[href='http://URI']").length).toEqual(0);
-      expect(dd.dataset.editorId).toEqual("1234");
+      expect(dd.querySelectorAll("a[href='http://URI']").length).toBe(0);
+      expect(dd.dataset.editorId).toBe("1234");
       expect(dd.textContent).toMatch(/\(NOTE\)/);
     });
 
@@ -116,10 +110,10 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(contains(doc, "dt", "Editors:").length).toEqual(1);
-      expect(contains(doc, "dt", "Editor:").length).toEqual(0);
-      expect(doc.querySelectorAll("dd")[5].textContent).toEqual("NAME1");
-      expect(doc.querySelectorAll("dd")[6].textContent).toEqual("NAME2");
+      expect(contains(doc, "dt", "Editors:").length).toBe(1);
+      expect(contains(doc, "dt", "Editor:").length).toBe(0);
+      expect(doc.querySelectorAll("dd")[5].textContent).toBe("NAME1");
+      expect(doc.querySelectorAll("dd")[6].textContent).toBe("NAME2");
     });
 
     it("takes editors extras into account", async () => {
@@ -163,16 +157,16 @@ describe("W3C — Headers", () => {
       const header = doc.querySelector("div.head");
       [orcidAnchor, twitterAnchor].forEach(elem => {
         // Check parent is correct.
-        expect(elem.parentNode.localName).toEqual("span");
+        expect(elem.parentNode.localName).toBe("span");
         // Check that it's in the header of the document
-        expect(header.contains(elem)).toEqual(true);
+        expect(header.contains(elem)).toBe(true);
       });
       // Check CSS is correctly applied
-      expect(orcidAnchor.parentNode.className).toEqual("orcid");
-      expect(twitterAnchor.parentNode.className).toEqual("twitter");
+      expect(orcidAnchor.parentNode.className).toBe("orcid");
+      expect(twitterAnchor.parentNode.className).toBe("twitter");
       // check that extra items with no name are ignored
-      expect(doc.querySelector("a[href='http://not-valid']")).toEqual(null);
-      expect(doc.querySelector("a[href='http://empty-name']")).toEqual(null);
+      expect(doc.querySelector("a[href='http://not-valid']")).toBe(null);
+      expect(doc.querySelector("a[href='http://empty-name']")).toBe(null);
     });
 
     it("treats editor's info as HTML", async () => {
@@ -198,7 +192,7 @@ describe("W3C — Headers", () => {
       expect(personName.textContent).toBe("阿南 康宏");
       expect(edition.textContent).toBe("第１版");
       expect(company.textContent).toBe("マイクロソフト");
-      expect(ddElem.textContent.replace(/\s\s+/g, " ").trim()).toEqual(
+      expect(ddElem.textContent.replace(/\s\s+/g, " ").trim()).toBe(
         "阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (マイクロソフト (Microsoft))"
       );
     });
@@ -249,25 +243,25 @@ describe("W3C — Headers", () => {
       expect(formerEditorsLabel).toBeUndefined();
 
       const editor = formerEditorLabel.nextSibling;
-      expect(editor.localName).toEqual("dd");
-      expect(editor.textContent.replace(/\s+/gm, " ").trim()).toEqual(
+      expect(editor.localName).toBe("dd");
+      expect(editor.textContent.replace(/\s+/gm, " ").trim()).toBe(
         "NAME (COMPANY)"
       );
 
       const editorCompany = editor.querySelectorAll("a[href='http://COMPANY']");
-      expect(editorCompany.length).toEqual(1);
-      expect(editorCompany[0].textContent).toEqual("COMPANY");
+      expect(editorCompany.length).toBe(1);
+      expect(editorCompany[0].textContent).toBe("COMPANY");
 
       const editorEmail = editor.querySelectorAll("a[href='mailto:EMAIL']");
-      expect(editorEmail.length).toEqual(1);
-      expect(editorEmail[0].textContent).toEqual("NAME");
+      expect(editorEmail.length).toBe(1);
+      expect(editorEmail[0].textContent).toBe("NAME");
 
       // if `mailto` is specified in People, `url` won't be used
       const editorUrl = editor.querySelectorAll("a[href='http://URI']");
-      expect(editorUrl.length).toEqual(0);
+      expect(editorUrl.length).toBe(0);
 
       const { editorId } = editor.dataset;
-      expect(editorId).toEqual("1234");
+      expect(editorId).toBe("1234");
     });
 
     it("takes multiple former editors into account", async () => {
@@ -293,12 +287,12 @@ describe("W3C — Headers", () => {
       expect(formerEditorsLabel).toBeDefined();
 
       const firstEditor = formerEditorsLabel.nextSibling;
-      expect(firstEditor.localName).toEqual("dd");
-      expect(firstEditor.textContent).toEqual("NAME1");
+      expect(firstEditor.localName).toBe("dd");
+      expect(firstEditor.textContent).toBe("NAME1");
 
       const secondEditor = firstEditor.nextSibling;
-      expect(secondEditor.localName).toEqual("dd");
-      expect(secondEditor.textContent).toEqual("NAME2");
+      expect(secondEditor.localName).toBe("dd");
+      expect(secondEditor.textContent).toBe("NAME2");
     });
 
     it("treats formerEditor's name as HTML", async () => {
@@ -321,7 +315,7 @@ describe("W3C — Headers", () => {
       expect(personName.lang).toBe("ja");
       expect(personName.textContent).toBe("阿南 康宏");
       expect(edition.textContent).toBe("第１版");
-      expect(ddElem.textContent.replace(/\s\s+/g, " ").trim()).toEqual(
+      expect(ddElem.textContent.replace(/\s\s+/g, " ").trim()).toBe(
         "阿南 康宏 (Yasuhiro Anan), (第１版 1st edition) (Microsoft)"
       );
     });
@@ -340,9 +334,9 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(contains(doc, "dt", "Authors:").length).toEqual(0);
-      expect(contains(doc, "dt", "Author:").length).toEqual(1);
-      expect(doc.querySelectorAll("dd")[6].textContent).toEqual("NAME1");
+      expect(contains(doc, "dt", "Authors:").length).toBe(0);
+      expect(contains(doc, "dt", "Author:").length).toBe(1);
+      expect(doc.querySelectorAll("dd")[6].textContent).toBe("NAME1");
     });
 
     it("takes multiple authors into account", async () => {
@@ -360,14 +354,14 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(contains(doc, "dt", "Authors:").length).toEqual(1);
-      expect(contains(doc, "dt", "Author:").length).toEqual(0);
-      expect(
-        contains(doc, "dt", "Authors:")[0].nextSibling.textContent
-      ).toEqual("NAME1");
+      expect(contains(doc, "dt", "Authors:").length).toBe(1);
+      expect(contains(doc, "dt", "Author:").length).toBe(0);
+      expect(contains(doc, "dt", "Authors:")[0].nextSibling.textContent).toBe(
+        "NAME1"
+      );
       expect(
         contains(doc, "dt", "Authors:")[0].nextSibling.nextSibling.textContent
-      ).toEqual("NAME2");
+      ).toBe("NAME2");
     });
   });
 
@@ -380,10 +374,10 @@ describe("W3C — Headers", () => {
          </h1>` + makeDefaultBody();
       const ops = makeStandardOps({}, body);
       const doc = await makeRSDoc(ops);
-      expect(doc.title).toEqual("This should be pass.");
+      expect(doc.title).toBe("This should be pass.");
       const titleElem = doc.querySelector("title");
       expect(titleElem).toBeTruthy();
-      expect(titleElem.textContent).toEqual("This should be pass.");
+      expect(titleElem.textContent).toBe("This should be pass.");
     });
 
     it("uses <h1> if already present", async () => {
@@ -394,15 +388,15 @@ describe("W3C — Headers", () => {
       // Title was relocated to head
       const titleInHead = doc.querySelector(".head h1");
       expect(titleInHead.classList.contains("p-name")).toBe(true);
-      expect(titleInHead.id).toEqual("title");
+      expect(titleInHead.id).toBe("title");
 
       // html is not escaped
-      expect(titleInHead.firstChild.tagName).toEqual("CODE");
-      expect(titleInHead.textContent).toEqual("pass");
+      expect(titleInHead.firstChild.tagName).toBe("CODE");
+      expect(titleInHead.textContent).toBe("pass");
 
       // the config title is overridden
       const { title } = doc.defaultView.respecConfig;
-      expect(title).toEqual("pass");
+      expect(title).toBe("pass");
     });
   });
 
@@ -414,7 +408,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(doc.getElementById("subtitle")).toEqual(null);
+      expect(doc.getElementById("subtitle")).toBe(null);
     });
 
     it("uses existing h2#subtitle as subtitle", async () => {
@@ -423,19 +417,19 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
 
       const subTitleElements = doc.querySelectorAll("h2#subtitle");
-      expect(subTitleElements.length).toEqual(1);
+      expect(subTitleElements.length).toBe(1);
 
       const { subtitle } = doc.defaultView.respecConfig;
-      expect(subtitle).toEqual("pass");
+      expect(subtitle).toBe("pass");
 
       const [h2Elem] = subTitleElements;
-      expect(h2Elem.textContent).toEqual("pass");
+      expect(h2Elem.textContent).toBe("pass");
 
       // make sure it was relocated to head
       expect(h2Elem.closest(".head")).toBeTruthy();
 
-      expect(h2Elem.firstElementChild.localName).toEqual("code");
-      expect(h2Elem.firstElementChild.textContent).toEqual("pass");
+      expect(h2Elem.firstElementChild.localName).toBe("code");
+      expect(h2Elem.firstElementChild.textContent).toBe("pass");
     });
 
     it("overwrites conf.subtitle if it exists", async () => {
@@ -449,7 +443,7 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
 
       const { subtitle } = doc.defaultView.respecConfig;
-      expect(subtitle).toEqual("pass");
+      expect(subtitle).toBe("pass");
     });
 
     it("sets conf.subtitle if it doesn't exist, but h2#subtitle exists", async () => {
@@ -458,7 +452,7 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
 
       const { subtitle } = doc.defaultView.respecConfig;
-      expect(subtitle).toEqual("pass");
+      expect(subtitle).toBe("pass");
     });
 
     it("generates a subtitle from the `subtitle` configuration option", async () => {
@@ -471,7 +465,7 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       const h2Elem = doc.getElementById("subtitle");
       expect(h2Elem).toBeTruthy();
-      expect(h2Elem.textContent.trim()).toEqual("pass");
+      expect(h2Elem.textContent.trim()).toBe("pass");
     });
   });
 
@@ -483,7 +477,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(contains(doc, "h2", "15 March 1977").length).toEqual(1);
+      expect(contains(doc, "h2", "15 March 1977").length).toBe(1);
     });
   });
 
@@ -546,7 +540,7 @@ describe("W3C — Headers", () => {
         contains(doc.querySelector(".head"), "a", "errata")[0].getAttribute(
           "href"
         )
-      ).toEqual("ERR");
+      ).toBe("ERR");
     });
   });
 
@@ -560,9 +554,9 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       const licenses = doc.querySelectorAll("div.head a[rel=license]");
-      expect(licenses.length).toEqual(1);
-      expect(licenses[0].tagName).toEqual("A");
-      expect(licenses[0].href).toEqual(
+      expect(licenses.length).toBe(1);
+      expect(licenses[0].tagName).toBe("A");
+      expect(licenses[0].href).toBe(
         "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
       );
     });
@@ -584,7 +578,7 @@ describe("W3C — Headers", () => {
     const doc = await makeRSDoc(ops);
     expect(
       contains(doc.querySelector(".head"), "a", "LABEL")[0].getAttribute("href")
-    ).toEqual("URI");
+    ).toBe("URI");
   });
 
   describe("testSuiteURI", () => {});
@@ -599,9 +593,7 @@ describe("W3C — Headers", () => {
     const terms = doc.querySelectorAll("dt");
     expect(terms[3].textContent).toBe("Test suite:");
     expect(terms[3].nextElementSibling.localName).toBe("dd");
-    expect(terms[3].nextElementSibling.textContent).toBe(
-      "URI"
-    );
+    expect(terms[3].nextElementSibling.textContent).toBe("URI");
   });
 
   describe("implementationReportURI", () => {
@@ -617,7 +609,7 @@ describe("W3C — Headers", () => {
         ({ textContent }) => /Implementation report:/.test(textContent)
       );
       const dd = dt.nextElementSibling;
-      expect(dd.textContent.trim()).toEqual("URI");
+      expect(dd.textContent.trim()).toBe("URI");
     });
   });
 
@@ -633,14 +625,12 @@ describe("W3C — Headers", () => {
 
       expect(terms[2].textContent).toBe("Latest editor's draft:");
       expect(terms[2].nextElementSibling.localName).toBe("dd");
-      expect(terms[2].nextElementSibling.textContent).toBe(
-        "URI"
-      );
+      expect(terms[2].nextElementSibling.textContent).toBe("URI");
     });
   });
 
   describe("prevED", () => {
-      it("takes prevED into account", async () => {
+    it("takes prevED into account", async () => {
       const ops = makeStandardOps();
       const newProps = {
         specStatus: "ED",
@@ -651,9 +641,7 @@ describe("W3C — Headers", () => {
       const terms = doc.querySelectorAll("dt");
       expect(terms[4].textContent).toBe("Previous editor's draft:");
       expect(terms[4].nextElementSibling.localName).toBe("dd");
-      expect(terms[4].nextElementSibling.textContent).toBe(
-        "URI"
-      );
+      expect(terms[4].nextElementSibling.textContent).toBe("URI");
     });
   });
 
@@ -726,7 +714,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelector(".head .copyright").textContent.trim()).toEqual(
+      expect(doc.querySelector(".head .copyright").textContent.trim()).toBe(
         "XXX"
       );
     });
@@ -738,7 +726,7 @@ describe("W3C — Headers", () => {
       });
 
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelector(".head .copyright .test").textContent).toEqual(
+      expect(doc.querySelector(".head .copyright .test").textContent).toBe(
         "XXX"
       );
     });
@@ -752,9 +740,9 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelectorAll(".head .copyright").length).toEqual(0);
-      expect(doc.querySelectorAll(".head .copyright2").length).toEqual(1);
-      expect(doc.querySelector(".head .copyright2", doc).textContent).toEqual(
+      expect(doc.querySelectorAll(".head .copyright").length).toBe(0);
+      expect(doc.querySelectorAll(".head .copyright2").length).toBe(1);
+      expect(doc.querySelector(".head .copyright2", doc).textContent).toBe(
         "XXX"
       );
     });
@@ -800,9 +788,9 @@ describe("W3C — Headers", () => {
       const { wgId, isNote } = doc.defaultView.respecConfig;
       const elem = doc.querySelector("p[data-deliverer]");
       expect(isNote).toBe(true);
-      expect(wgId).toEqual("123456");
+      expect(wgId).toBe("123456");
       expect(elem).toBeTruthy();
-      expect(elem.dataset.deliverer).toEqual("123456");
+      expect(elem.dataset.deliverer).toBe("123456");
     });
     it("gracefully handles missing wgPatentURI", async () => {
       const ops = makeStandardOps();
@@ -814,9 +802,9 @@ describe("W3C — Headers", () => {
       const elem = doc.querySelector("p[data-deliverer]");
       const { wgId, isNote } = doc.defaultView.respecConfig;
       expect(isNote).toBe(true);
-      expect(wgId).toEqual("");
+      expect(wgId).toBe("");
       expect(elem).toBeTruthy();
-      expect(elem.dataset.deliverer).toEqual("");
+      expect(elem.dataset.deliverer).toBe("");
     });
     it("only doesn't data-deliverer for non-notes", async () => {
       const ops = makeStandardOps();
@@ -829,8 +817,8 @@ describe("W3C — Headers", () => {
       const elem = doc.querySelector("p[data-deliverer]");
       const { wgId, isNote } = doc.defaultView.respecConfig;
       expect(isNote).toBe(false);
-      expect(wgId).toEqual("123456");
-      expect(elem).toEqual(null);
+      expect(wgId).toBe("123456");
+      expect(elem).toBe(null);
     });
   });
 
@@ -847,21 +835,21 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops, simpleSpecURL);
       const sotd = doc.getElementById("sotd");
-      expect(contains(sotd, "p", "CUSTOM PARAGRAPH").length).toEqual(1);
-      expect(contains(sotd, "a", "WGNAME").length).toEqual(1);
-      expect(contains(sotd, "a", "WGNAME")[0].getAttribute("href")).toEqual(
+      expect(contains(sotd, "p", "CUSTOM PARAGRAPH").length).toBe(1);
+      expect(contains(sotd, "a", "WGNAME").length).toBe(1);
+      expect(contains(sotd, "a", "WGNAME")[0].getAttribute("href")).toBe(
         "WGURI"
       );
-      expect(contains(sotd, "a", "WGLIST").length).toEqual(1);
-      expect(contains(sotd, "a", "WGLIST")[0].getAttribute("href")).toEqual(
+      expect(contains(sotd, "a", "WGLIST").length).toBe(1);
+      expect(contains(sotd, "a", "WGLIST")[0].getAttribute("href")).toBe(
         "mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D"
       );
-      expect(contains(sotd, "a", "archives")[0].getAttribute("href")).toEqual(
+      expect(contains(sotd, "a", "archives")[0].getAttribute("href")).toBe(
         "https://lists.w3.org/Archives/Public/WGLIST/"
       );
-      expect(
-        contains(sotd, "a", "disclosures")[0].getAttribute("href")
-      ).toEqual("WGPATENT");
+      expect(contains(sotd, "a", "disclosures")[0].getAttribute("href")).toBe(
+        "WGPATENT"
+      );
     });
 
     it("takes multi-group configurations into account", async () => {
@@ -875,21 +863,21 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       const sotd = doc.getElementById("sotd");
-      expect(contains(sotd, "a", "WGNAME1").length).toEqual(2);
-      expect(contains(sotd, "a", "WGNAME2").length).toEqual(2);
-      expect(contains(sotd, "a", "WGNAME1")[0].getAttribute("href")).toEqual(
+      expect(contains(sotd, "a", "WGNAME1").length).toBe(2);
+      expect(contains(sotd, "a", "WGNAME2").length).toBe(2);
+      expect(contains(sotd, "a", "WGNAME1")[0].getAttribute("href")).toBe(
         "WGURI1"
       );
-      expect(contains(sotd, "a", "WGNAME2")[0].getAttribute("href")).toEqual(
+      expect(contains(sotd, "a", "WGNAME2")[0].getAttribute("href")).toBe(
         "WGURI2"
       );
-      expect(contains(sotd, "a", "WGNAME1")[1].getAttribute("href")).toEqual(
+      expect(contains(sotd, "a", "WGNAME1")[1].getAttribute("href")).toBe(
         "WGPATENT1"
       );
-      expect(contains(sotd, "a", "WGNAME2")[1].getAttribute("href")).toEqual(
+      expect(contains(sotd, "a", "WGNAME2")[1].getAttribute("href")).toBe(
         "WGPATENT2"
       );
-      expect(contains(sotd, "a", "WGLIST").length).toEqual(1);
+      expect(contains(sotd, "a", "WGLIST").length).toBe(1);
     });
   });
 
@@ -912,7 +900,7 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       const sotd = doc.getElementById("sotd");
       const f = contains(sotd, "p", "Proposed Edited Recommendation");
-      expect(f.length).toEqual(2);
+      expect(f.length).toBe(2);
       const questionnaires = doc
         .getElementById("sotd")
         .querySelector(
@@ -937,10 +925,10 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops, simpleSpecURL);
       const sotd = doc.getElementById("sotd");
       const f = contains(sotd, "p", "CUSTOM PARAGRAPH");
-      expect(f.length).toEqual(1);
-      expect(
-        contains(doc.querySelectorAll("p")[6], "a", "WGLIST").length
-      ).toEqual(1);
+      expect(f.length).toBe(1);
+      expect(contains(doc.querySelectorAll("p")[6], "a", "WGLIST").length).toBe(
+        1
+      );
     });
   });
 
@@ -953,9 +941,9 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(
-        contains(doc, "#sotd a", "charter")[0].getAttribute("href")
-      ).toEqual("URI");
+      expect(contains(doc, "#sotd a", "charter")[0].getAttribute("href")).toBe(
+        "URI"
+      );
     });
   });
 
@@ -967,7 +955,7 @@ describe("W3C — Headers", () => {
       };
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
-      expect(doc.querySelector("#sotd p strong").textContent).toEqual(
+      expect(doc.querySelector("#sotd p strong").textContent).toBe(
         "PATENTNOTE"
       );
     });
@@ -986,32 +974,32 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       const c = doc.querySelector(".head .copyright");
-      expect(c.querySelectorAll("a[href='http://WG']").length).toEqual(1);
-      expect(contains(c, "a", "WGNAME").length).toEqual(1);
+      expect(c.querySelectorAll("a[href='http://WG']").length).toBe(1);
+      expect(contains(c, "a", "WGNAME").length).toBe(1);
       expect(
         c.querySelectorAll(
           "a[href='https://www.w3.org/community/about/agreements/cla/']"
         ).length
-      ).toEqual(1);
+      ).toBe(1);
       expect(doc.querySelector(".head h2").textContent).toMatch(
         /Draft Community Group Report/
       );
       const sotd = doc.getElementById("sotd");
-      expect(sotd.querySelectorAll("a[href='http://WG']").length).toEqual(1);
-      expect(contains(sotd, "a", "WGNAME").length).toEqual(1);
+      expect(sotd.querySelectorAll("a[href='http://WG']").length).toBe(1);
+      expect(contains(sotd, "a", "WGNAME").length).toBe(1);
       expect(
         sotd.querySelectorAll(
           "a[href='https://www.w3.org/community/about/agreements/cla/']"
         ).length
-      ).toEqual(1);
-      expect(contains(sotd, "a", "WGLIST").length).toEqual(1);
-      expect(contains(sotd, "a", "WGLIST")[0].getAttribute("href")).toEqual(
+      ).toBe(1);
+      expect(contains(sotd, "a", "WGLIST").length).toBe(1);
+      expect(contains(sotd, "a", "WGLIST")[0].getAttribute("href")).toBe(
         "mailto:WGLIST@w3.org?subject=%5BThe%20Prefix%5D"
       );
-      expect(contains(sotd, "a", "subscribe")[0].getAttribute("href")).toEqual(
+      expect(contains(sotd, "a", "subscribe")[0].getAttribute("href")).toBe(
         "mailto:WGLIST-request@w3.org?subject=subscribe"
       );
-      expect(contains(sotd, "a", "archives")[0].getAttribute("href")).toEqual(
+      expect(contains(sotd, "a", "archives")[0].getAttribute("href")).toBe(
         "https://lists.w3.org/Archives/Public/WGLIST/"
       );
     });
@@ -1031,29 +1019,27 @@ describe("W3C — Headers", () => {
         doc.querySelectorAll(
           ".head .copyright a[href='https://www.w3.org/community/about/agreements/fsa/']"
         ).length
-      ).toEqual(1);
+      ).toBe(1);
       expect(doc.querySelector(".head h2").textContent).toContain(
         "Final Business Group Report"
       );
       const terms = doc.querySelectorAll("dt");
       expect(terms[0].textContent).toBe("This version:");
       expect(terms[0].nextElementSibling.localName).toBe("dd");
-      expect(terms[0].nextElementSibling.textContent).toMatch(
-        /http:\/\/THIS/
-      );
+      expect(terms[0].nextElementSibling.textContent).toMatch(/http:\/\/THIS/);
       expect(terms[1].textContent).toBe("Latest published version:");
       expect(terms[1].nextElementSibling.localName).toBe("dd");
       expect(terms[1].nextElementSibling.textContent).toMatch(
         /http:\/\/LATEST/
       );
       const sotd = doc.getElementById("sotd");
-      expect(sotd.querySelectorAll("a[href='http://WG']").length).toEqual(1);
-      expect(contains(sotd, "a", "WGNAME").length).toEqual(1);
+      expect(sotd.querySelectorAll("a[href='http://WG']").length).toBe(1);
+      expect(contains(sotd, "a", "WGNAME").length).toBe(1);
       expect(
         sotd.querySelectorAll(
           "a[href='https://www.w3.org/community/about/agreements/final/']"
         ).length
-      ).toEqual(1);
+      ).toBe(1);
     });
   });
 
@@ -1071,7 +1057,7 @@ describe("W3C — Headers", () => {
       doc = await makeRSDoc(ops);
     });
     it("shouldn't expose a Previous version link for Member submissions", async () => {
-      expect(contains(doc, "dt", "Previous version:").length).toEqual(0);
+      expect(contains(doc, "dt", "Previous version:").length).toBe(0);
     });
     it("displays the Member Submission logo for Member submissions", async () => {
       const img = doc.querySelector(
@@ -1112,13 +1098,13 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops, simpleSpecURL);
       const sotd = doc.getElementById("sotd");
-      expect(contains(sotd, "p", "CUSTOM PARAGRAPH").length).toEqual(1);
-      expect(contains(sotd, "a", "WGNAME").length).toEqual(0);
-      expect(contains(sotd, "a", "WGLIST@w3.org").length).toEqual(0);
-      expect(contains(sotd, "a", "subscribe").length).toEqual(0);
-      expect(
-        contains(sotd, "a", "disclosures")[0].getAttribute("href")
-      ).toEqual("WGPATENT");
+      expect(contains(sotd, "p", "CUSTOM PARAGRAPH").length).toBe(1);
+      expect(contains(sotd, "a", "WGNAME").length).toBe(0);
+      expect(contains(sotd, "a", "WGLIST@w3.org").length).toBe(0);
+      expect(contains(sotd, "a", "subscribe").length).toBe(0);
+      expect(contains(sotd, "a", "disclosures")[0].getAttribute("href")).toBe(
+        "WGPATENT"
+      );
     });
   });
   it("allows custom sections and custom content, not just paragraphs", async () => {
@@ -1218,7 +1204,7 @@ describe("W3C — Headers", () => {
       .trim()
       .replace("\n", "")
       .replace(/\s+/g, " ");
-    expect(textContent).toEqual("See also translations.");
+    expect(textContent).toBe("See also translations.");
   });
   it("doesn't include a translation link when it's not REC", async () => {
     const ops = makeStandardOps();
@@ -1231,7 +1217,7 @@ describe("W3C — Headers", () => {
     const aElem = doc.querySelector(
       `a[href^="http://www.w3.org/2003/03/Translations/"]`
     );
-    expect(aElem).toEqual(null);
+    expect(aElem).toBe(null);
   });
   describe("isPreview", () => {
     it("adds annoying warning when isPreview", async () => {
@@ -1282,7 +1268,7 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, { logos, specStatus: "unofficial" });
       const doc = await makeRSDoc(ops);
       const elems = doc.querySelectorAll("img#logo1, img#logo2");
-      expect(elems.length).toEqual(2);
+      expect(elems.length).toBe(2);
     });
 
     it("adds logos defined by configuration", async () => {
@@ -1321,11 +1307,11 @@ describe("W3C — Headers", () => {
         const anchor = anchors[i];
         const img = anchor.children[0];
         const logo = logos[i];
-        expect(img.src).toEqual(logo.src);
-        expect(img.alt).toEqual(logo.alt);
-        expect(img.height).toEqual(logo.height);
-        expect(img.width).toEqual(logo.width);
-        expect(anchor.href).toEqual(logo.url);
+        expect(img.src).toBe(logo.src);
+        expect(img.alt).toBe(logo.alt);
+        expect(img.height).toBe(logo.height);
+        expect(img.width).toBe(logo.width);
+        expect(anchor.href).toBe(logo.url);
       }
     });
   });
