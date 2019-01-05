@@ -61,7 +61,7 @@ describe("Core — Issues and Notes", () => {
     expect(iss.querySelector("p").textContent).toBe("ISSUE");
     expect(atr.querySelectorAll("div.issue-title").length).toBe(1);
     expect(atr.querySelector("div.issue-title").textContent).toBe(
-      "Feature at Risk 2: ATR-TIT"
+      "(Feature at Risk) Issue 2: ATR-TIT"
     );
     expect(atr.querySelector("p").getAttribute("title")).toBeNull();
     expect(atr.querySelector("p").textContent).toBe("FEATURE AT RISK");
@@ -309,7 +309,7 @@ describe("Core — Issues and Notes", () => {
     const iss = doc.querySelector("div.atrisk");
     expect(iss.querySelectorAll("div.issue-title").length).toBe(1);
     expect(iss.querySelector("div.issue-title").textContent).toBe(
-      "Feature at Risk 10"
+      "(Feature at Risk) Issue 10"
     );
     expect(iss.querySelector("div.issue-title a").getAttribute("href")).toBe(
       atRiskBaseConfig.atRiskBase + "10"
