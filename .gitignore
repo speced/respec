@@ -7,7 +7,6 @@ examples/touchevents.html
 bevy.json
 .idea
 js/deps/*
-!js/deps/highlight.js
 js/**/*.map
 js/*/linter-rules/
 js/core/*.js

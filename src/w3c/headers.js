@@ -95,7 +95,7 @@ import { ISODate, concatDate, joinAnd } from "../core/utils";
 import cgbgHeadersTmpl from "./templates/cgbg-headers";
 import cgbgSotdTmpl from "./templates/cgbg-sotd";
 import headersTmpl from "./templates/headers";
-import hyperHTML from "../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { pub } from "../core/pubsubhub";
 import sotdTmpl from "./templates/sotd";
 
@@ -406,9 +406,10 @@ export function run(conf) {
   conf.multipleFormerEditors =
     Array.isArray(conf.formerEditors) && conf.formerEditors.length > 1;
   conf.multipleAuthors = conf.authors && conf.authors.length > 1;
-  $.each(conf.alternateFormats || [], (i, it) => {
-    if (!it.uri || !it.label)
+  (conf.alternateFormats || []).forEach(it => {
+    if (!it.uri || !it.label) {
       pub("error", "All alternate formats must have a uri and a label.");
+    }
   });
   conf.multipleAlternates =
     conf.alternateFormats && conf.alternateFormats.length > 1;

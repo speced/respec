@@ -1,12 +1,13 @@
 /// Module ui/dfn-list
 // Displays all definitions with links to the defining element.
 import { l10n, lang } from "../core/l10n";
-import hyperHTML from "../deps/hyperhtml";
+import { definitionMap } from "../core/dfn-map";
+import hyperHTML from "hyperhtml";
 import { ui } from "../core/ui";
 
 const button = ui.addCommand(
   l10n[lang].definition_list,
-  "ui/dfn-list",
+  show,
   "Ctrl+Shift+Alt+D",
   "📔"
 );
@@ -21,7 +22,7 @@ ul.addEventListener("click", ev => {
 });
 
 function show() {
-  const definitionLinks = Object.entries(respecConfig.definitionMap)
+  const definitionLinks = Object.entries(definitionMap)
     .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
     .map(([, [dfn]]) => {
       return hyperHTML.wire(dfn, ":li>a")`
@@ -35,5 +36,3 @@ function show() {
   render`${definitionLinks}`;
   ui.freshModal(l10n[lang].list_of_definitions, ul, button);
 }
-
-export { show };

@@ -1,4 +1,4 @@
-import hyperHTML from "../../deps/hyperhtml";
+import hyperHTML from "hyperhtml";
 import { showInlineWarning } from "../../core/utils";
 
 export default obj => {

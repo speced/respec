@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/examples
 // Manages examples, including marking them up, numbering, inserting the title,
 // and reindenting.
@@ -6,8 +7,8 @@
 // be used by a containing shell to extract all examples.
 
 import { addId, reindent } from "./utils";
-import css from "../deps/text!core/css/examples.css";
-import hyperHTML from "../deps/hyperhtml";
+import css from "text!./css/examples.css";
+import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 
 export const name = "core/examples";
@@ -26,6 +27,7 @@ function makeTitle(conf, elem, num, report) {
 }
 
 export function run(conf) {
+  /** @type {NodeListOf<HTMLElement>} */
   const examples = document.querySelectorAll(
     "pre.example, pre.illegal-example, aside.example"
   );

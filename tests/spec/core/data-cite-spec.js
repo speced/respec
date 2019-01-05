@@ -283,19 +283,27 @@ describe("Core — data-cite attribute", () => {
     });
   });
 
-  it("does not create bibliography reference to itself", async () => {
+  it("does not create external bibliography reference when when external spec id matches its Short Name", async () => {
     const body = `
       <section>
         <h2>test</h2>
         <p>
-          <a data-cite="dahut#test">a</a>
-          <a data-cite="DaHuT#test">a</a>
+          <a data-cite="dahut#test1">a</a>
+          <a data-cite="DaHuT#test2">a</a>
         </p>
       </section>
     `;
     const ops = makeStandardOps({ shortName: "dahut" }, body);
     const doc = await makeRSDoc(ops);
     const dahut = doc.getElementById("bib-dahut");
+    const a = [...doc.querySelectorAll("section p a")];
+    expect(
+      a.every(
+        anchor =>
+          anchor.href ===
+          `${doc.location.href}#${anchor.dataset.cite.split("#")[1]}`
+      )
+    ).toBeTruthy();
     expect(dahut).toBe(null);
   });
 });

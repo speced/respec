@@ -3,6 +3,7 @@
 import "./include-config";
 import "./override-configuration";
 import "./respec-ready";
+import "./jquery-enhanced"; // for backward compatibility
 import { done as postProcessDone } from "./post-process";
 import { done as preProcessDone } from "./pre-process";
 import { pub } from "./pubsubhub";
@@ -51,10 +52,6 @@ function toRunnable(plug) {
 
 export async function runAll(plugs) {
   pub("start-all", respecConfig);
-  // TODO: assign defaults properly
-  if (!respecConfig.definitionMap) {
-    respecConfig.definitionMap = Object.create(null);
-  }
   if (canMeasure) {
     performance.mark(name + "-start");
   }

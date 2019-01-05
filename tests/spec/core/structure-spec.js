@@ -1,5 +1,12 @@
 "use strict";
 describe("Core - Structure", () => {
+  let utils;
+  beforeAll(done => {
+    require(["core/utils"], u => {
+      utils = u;
+      done();
+    });
+  });
   const body =
     makeDefaultBody() +
     "<section class='introductory'><h2>INTRO</h2></section>" +
@@ -52,17 +59,12 @@ describe("Core - Structure", () => {
     };
     ops.config.tocIntroductory = true;
     const doc = await makeRSDoc(ops);
-    const $toc = $("#toc", doc);
-    expect($toc.find("h2").text()).toEqual("Table of Contents");
-    expect($toc.find("> ol > li").length).toEqual(6);
-    expect($toc.find("li").length).toEqual(18);
-    expect(
-      $toc
-        .find("> ol > li a")
-        .first()
-        .text()
-    ).toEqual("Abstract");
-    expect($toc.find("> ol > li a[href='#intro']").length).toEqual(1);
+    const toc = doc.getElementById("toc");
+    expect(toc.querySelector("h2").textContent).toEqual("Table of Contents");
+    expect(utils.children(toc, "ol > li").length).toEqual(6);
+    expect(toc.querySelectorAll("li").length).toEqual(18);
+    expect(toc.querySelector("ol > li").textContent).toEqual("Abstract");
+    expect(utils.children(toc, "ol > li a[href='#intro']").length).toEqual(1);
   });
 
   it("should limit ToC depth with maxTocLevel", async () => {
@@ -72,26 +74,29 @@ describe("Core - Structure", () => {
     };
     ops.config.maxTocLevel = 4;
     const doc = await makeRSDoc(ops);
-    const $toc = $("#toc", doc);
-    expect($toc.find("h2").text()).toEqual("Table of Contents");
-    expect($toc.find("> ol > li").length).toEqual(3);
-    expect($toc.find("li").length).toEqual(11);
+    const toc = doc.getElementById("toc");
+    expect(toc.querySelector("h2").textContent).toEqual("Table of Contents");
+    expect(doc.querySelectorAll("#toc > ol > li").length).toEqual(3);
+    expect(toc.querySelectorAll("li").length).toEqual(11);
+    expect(doc.querySelector("#toc > ol > li > a").textContent).toEqual(
+      "1. ONE"
+    );
+    expect(toc.querySelector("a[href='#four']").textContent).toEqual(
+      "1.1.1.1 FOUR"
+    );
+
     expect(
-      $toc
-        .find("> ol > li a")
-        .first()
-        .text()
-    ).toEqual("1. ONE");
-    expect($toc.find("a[href='#four']").text()).toEqual("1.1.1.1 FOUR");
-    expect(
-      $toc
-        .find("> ol > li")
-        .first()
-        .next()
-        .find("> a")
-        .text()
+      doc.querySelector("#toc > ol > li").nextSibling.querySelector("a")
+        .textContent
     ).toEqual("A. ONE");
-    expect($toc.find("a[href='#four-0']").text()).toEqual("A.1.1.1 FOUR");
+
+    expect(toc.querySelector("a[href='#four-0']").textContent).toEqual(
+      "A.1.1.1 FOUR"
+    );
+    // should still add section number to the original header
+    expect(doc.getElementById("x1-1-1-1-1-five").textContent).toBe(
+      "1.1.1.1.1 FIVE"
+    );
   });
 
   it("gives the toc's heading an id", async () => {
