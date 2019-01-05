@@ -14,6 +14,7 @@ describe("W3C — Defaults", () => {
       "no-http-props": true,
       "local-refs-exist": true,
       "check-punctuation": false,
+      "check-internal-slots": false,
     });
     expect(rsConf.highlightVars).toEqual(true);
     expect(rsConf.license).toEqual("w3c-software-doc");
