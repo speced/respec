@@ -64,7 +64,7 @@ describe("Core — Issues and Notes", () => {
 
     expect($atr.find("div.issue-title").length).toEqual(1);
     expect($atr.find("div.issue-title").text()).toEqual(
-      "Feature at Risk 2: ATR-TIT"
+      "(Feature at Risk) Issue 2: ATR-TIT"
     );
     expect($patr.attr("title")).toBeUndefined();
     expect($patr.text()).toEqual("FEATURE AT RISK");
@@ -311,11 +311,31 @@ describe("Core — Issues and Notes", () => {
     const $iss = $("div.atrisk", doc);
     const $piss = $iss.find("p");
     expect($iss.find("div.issue-title").length).toEqual(1);
-    expect($iss.find("div.issue-title").text()).toEqual("Feature at Risk 10");
+    expect($iss.find("div.issue-title").text()).toEqual("(Feature at Risk) Issue 10");
     expect($iss.find("div.issue-title a").attr("href")).toEqual(
       atRiskBaseConfig.atRiskBase + "10"
     );
     expect($piss.attr("title")).toBeUndefined();
     expect($piss.text()).toEqual("FEATURE AT RISK");
+  });
+
+  it("should link to GitHub issue tracker for features at risk", async () => {
+    const config = {
+      github: "https://github.com/mock-company/mock-repository",
+      githubAPI: `${window.location.origin}/tests/data`,
+    };
+    const ops = {
+      config,
+      body:
+        makeDefaultBody() +
+        "<section><p class='issue atrisk' data-number='1540'>FEATURE AT RISK</p></section>",
+    };
+    const doc = await makeRSDoc(ops);
+    const issue = doc.querySelector("div.atrisk");
+    const issueTitles = issue.querySelectorAll("div.issue-title");
+    expect(issueTitles.length).toBe(1);
+    expect(issueTitles[0].querySelector("a").getAttribute("href")).toBe(
+      config.github + "/issues/1540"
+    );
   });
 });
