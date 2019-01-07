@@ -935,7 +935,7 @@ describe("W3C — Headers", () => {
       expect(f.length).toBe(1);
       // eslint-disable-next-line no-console
       console.log(...[...doc.querySelectorAll("p")].map(p => p.textContent));
-      expect(contains(doc.querySelectorAll("p")[5], "a", "WGLIST").length).toBe(
+      expect(contains(doc.querySelectorAll("p")[6], "a", "WGLIST").length).toBe(
         1
       );
     });
