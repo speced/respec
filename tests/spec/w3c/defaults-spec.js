@@ -14,6 +14,7 @@ describe("W3C — Defaults", () => {
       "no-http-props": true,
       "local-refs-exist": true,
       "check-punctuation": false,
+      "check-internal-slots": false,
     });
     expect(rsConf.highlightVars).toEqual(true);
     expect(rsConf.license).toEqual("w3c-software-doc");
@@ -31,6 +32,7 @@ describe("W3C — Defaults", () => {
           "local-refs-exist": true,
           "check-punctuation": false,
           "fake-linter-rule": "foo",
+          "check-internal-slots": true,
         },
         license: "c0",
         specStatus: "unofficial",
@@ -48,6 +50,7 @@ describe("W3C — Defaults", () => {
       "local-refs-exist": true,
       "check-punctuation": false,
       "fake-linter-rule": "foo",
+      "check-internal-slots": true,
     });
     expect(rsConf.highlightVars).toEqual(false);
     expect(rsConf.license).toEqual("c0");
