@@ -684,9 +684,10 @@ export function getTextNodes(el, exclusions = []) {
  *   subsequent calls to this method will return the data-lt based list.
  * @param {Element} elem
  * @param {Object} args
+ * @param {boolean} [args.isDefinition]
  * @returns {String[]} array of title strings
  */
-export function getDfnTitles(elem, args) {
+export function getDfnTitles(elem, { isDefinition = false } = {}) {
   let titleString = "";
   let normText = "";
   //data-lt-noDefault avoid using the text content of a definition
@@ -699,7 +700,7 @@ export function getDfnTitles(elem, args) {
     titleString = elem.dataset.lt.toLowerCase();
     if (normText !== "" && !titleString.startsWith(`${normText}|`)) {
       // Use the definition itself, so to avoid having to declare the definition twice.
-      titleString = titleString + "|" + normText;
+      titleString += "|" + normText;
     }
   } else if (
     elem.childNodes.length === 1 &&
@@ -714,7 +715,7 @@ export function getDfnTitles(elem, args) {
 
   // now we have a string of one or more titles
   titleString = norm(titleString).toLowerCase();
-  if (args && args.isDefinition === true) {
+  if (isDefinition) {
     if (elem.dataset.lt) {
       elem.dataset.lt = titleString;
     }
