@@ -28,6 +28,11 @@ module.exports = function(config) {
     files: [
       "js/deps/jquery.js",
       {
+        pattern: "assets/**/*.*",
+        included: false,
+        served: true,
+      },
+      {
         pattern: "tests/support-files/**/*",
         included: false,
         served: true,
