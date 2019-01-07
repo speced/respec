@@ -9,4 +9,13 @@ export async function run() {
   elements
     .filter(li => li.innerText.trim().startsWith("Assert: "))
     .forEach(li => li.classList.add("assert"));
+  const css = `.assert {
+    border-color: #AAA;
+    background: #EEE;
+    border-left: .5em solid;
+    padding: 0.3em;
+  }`;
+  const style = document.createElement("style");
+  style.textContent = css;
+  document.head.appendChild(style);
 }
