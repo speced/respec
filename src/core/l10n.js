@@ -29,7 +29,7 @@ const base = {
   editors_note: "Editor's note",
   editors: "Editors:",
   example: "Example",
-  feature_at_risk: "Feature at Risk",
+  feature_at_risk: "(Feature at Risk) Issue",
   fig: "Figure ",
   file_a_bug: "File a bug",
   former_editor: "Former editor:",

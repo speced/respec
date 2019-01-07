@@ -43,36 +43,38 @@ describe("Core — Issues and Notes", () => {
         "<p class='note' title='NOT-TIT'>NOTE</p></section>",
     };
     const doc = await makeRSDoc(ops);
-    const $iss = $("div.issue", doc).first();
-    const $atr = $("div.atrisk", doc);
-    const $piss = $iss.find("p");
-    const $patr = $atr.find("p");
-    const $spiss = $("span.issue", doc);
-    const $spatr = $("span.atrisk", doc);
-    const $not = $("div.note", doc);
-    const $pnot = $not.find("p");
-    const $spnot = $("span.note", doc);
+    const iss = doc.querySelector("div.issue", doc);
+    const piss = iss.querySelector("p");
+    const atr = doc.querySelector("div.atrisk");
+    const patr = atr.querySelector("p");
+    const spiss = doc.querySelector("span.issue");
+    const spatr = doc.querySelector("span.atrisk");
+    const not = doc.querySelector("div.note");
+    const pnot = not.querySelector("p");
+    const spnot = doc.querySelector("span.note");
 
-    expect($spiss.parent("div").length).toEqual(0);
-    expect($spatr.parent("div").length).toEqual(0);
-    expect($spnot.parent("div").length).toEqual(0);
-
-    expect($iss.find("div.issue-title").length).toEqual(1);
-    expect($iss.find("div.issue-title").text()).toEqual("Issue 1: ISS-TIT");
-    expect($piss.attr("title")).toBeUndefined();
-    expect($piss.text()).toEqual("ISSUE");
-
-    expect($atr.find("div.issue-title").length).toEqual(1);
-    expect($atr.find("div.issue-title").text()).toEqual(
-      "Feature at Risk 2: ATR-TIT"
+    expect(spiss.closest("div")).toBeNull();
+    expect(spatr.closest("div")).toBeNull();
+    expect(spnot.closest("div")).toBeNull();
+    expect(iss.querySelectorAll("div.issue-title").length).toBe(1);
+    expect(iss.querySelector("div.issue-title").textContent).toBe(
+      "Issue 1: ISS-TIT"
     );
-    expect($patr.attr("title")).toBeUndefined();
-    expect($patr.text()).toEqual("FEATURE AT RISK");
+    expect(piss.getAttribute("title")).toBeNull();
+    expect(piss.textContent).toBe("ISSUE");
+    expect(atr.querySelectorAll("div.issue-title").length).toBe(1);
+    expect(atr.querySelector("div.issue-title").textContent).toBe(
+      "(Feature at Risk) Issue 2: ATR-TIT"
+    );
+    expect(patr.getAttribute("title")).toBeNull();
+    expect(patr.textContent).toBe("FEATURE AT RISK");
 
-    expect($not.find("div.note-title").length).toEqual(1);
-    expect($not.find("div.note-title").text()).toEqual("Note: NOT-TIT");
-    expect($pnot.attr("title")).toBeUndefined();
-    expect($pnot.text()).toEqual("NOTE");
+    expect(not.querySelectorAll("div.note-title").length).toBe(1);
+    expect(not.querySelector("div.note-title").textContent).toBe(
+      "Note: NOT-TIT"
+    );
+    expect(pnot.getAttribute("title")).toBeNull();
+    expect(pnot.textContent).toBe("NOTE");
   });
 
   it("should process ednotes", async () => {
@@ -84,14 +86,14 @@ describe("Core — Issues and Notes", () => {
         "<p class='ednote' title='EDNOTE-TIT'>EDNOTE</p>",
     };
     const doc = await makeRSDoc(ops);
-    const $not = $("div.ednote", doc);
-    const $pnot = $not.find("p");
-    expect($not.find("div.ednote-title").length).toEqual(1);
-    expect($not.find("div.ednote-title").text()).toEqual(
+    const edNote = doc.querySelector("div.ednote");
+    const pnot = edNote.querySelector("p");
+    expect(edNote.querySelectorAll("div.ednote-title").length).toBe(1);
+    expect(edNote.querySelector("div.ednote-title").textContent).toBe(
       "Editor's note: EDNOTE-TIT"
     );
-    expect($pnot.attr("title")).toBeUndefined();
-    expect($pnot.text()).toEqual("EDNOTE");
+    expect(pnot.getAttribute("title")).toBeNull();
+    expect(pnot.textContent).toBe("EDNOTE");
   });
 
   it("should process warnings", async () => {
@@ -104,10 +106,11 @@ describe("Core — Issues and Notes", () => {
         "<p class='issue' title='ISS-TIT'>ISSUE</p></section>",
     };
     const doc = await makeRSDoc(ops);
-    const $sec = $("section", doc);
-    expect($sec.find(".warning").length).toEqual(2);
-    expect($sec.find(".warning-title").length).toEqual(1);
-    expect($sec.find(".warning-title").text()).toEqual("Warning: WARN-TIT");
+    expect(doc.querySelectorAll("section .warning").length).toBe(2);
+    expect(doc.querySelectorAll("section .warning-title").length).toBe(1);
+    expect(doc.querySelector("section .warning-title").textContent).toBe(
+      "Warning: WARN-TIT"
+    );
   });
 
   it("should use data-number for issue and note numbers", async () => {
@@ -121,9 +124,9 @@ describe("Core — Issues and Notes", () => {
     const ops = makeStandardOps({}, body);
     const doc = await makeRSDoc(ops);
     const [i10, i11, ixx] = doc.querySelectorAll(".issue .issue-title");
-    expect(i10.textContent).toEqual("Issue 10");
-    expect(i11.textContent).toEqual("Issue 11: ISS-TIT");
-    expect(ixx.textContent).toEqual("Issue");
+    expect(i10.textContent).toBe("Issue 10");
+    expect(i11.textContent).toBe("Issue 11: ISS-TIT");
+    expect(ixx.textContent).toBe("Issue");
   });
 
   it("shows labels for github issues", async () => {
@@ -152,9 +155,9 @@ describe("Core — Issues and Notes", () => {
     const issueDiv404 = doc.getElementById("this-is-404");
 
     expect(issueDiv404).toBeTruthy();
-    expect(
-      issueDiv404.querySelector("div:not(.issue-title)").textContent
-    ).toEqual("this is 404");
+    expect(issueDiv404.querySelector("div:not(.issue-title)").textContent).toBe(
+      "this is 404"
+    );
 
     const [
       refactorLabel,
@@ -163,41 +166,41 @@ describe("Core — Issues and Notes", () => {
       invalidLabel,
     ] = doc.getElementsByClassName("respec-gh-label");
 
-    expect(refactorLabel.textContent).toEqual("refactor");
+    expect(refactorLabel.textContent).toBe("refactor");
     expect(refactorLabel.classList).toContain(
       "respec-gh-label",
       "respec-label-light"
     );
-    expect(refactorLabel.style.backgroundColor).toEqual("rgb(71, 244, 65)");
-    expect(refactorLabel.href).toEqual(
+    expect(refactorLabel.style.backgroundColor).toBe("rgb(71, 244, 65)");
+    expect(refactorLabel.href).toBe(
       "https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22refactor%22"
     );
 
-    expect(bugLabel.textContent).toEqual("bug");
+    expect(bugLabel.textContent).toBe("bug");
     expect(bugLabel.classList).toContain(
       "respec-gh-label",
       "respec-label-dark"
     );
-    expect(bugLabel.style.backgroundColor).toEqual("rgb(244, 66, 92)");
-    expect(bugLabel.href).toEqual(
+    expect(bugLabel.style.backgroundColor).toBe("rgb(244, 66, 92)");
+    expect(bugLabel.href).toBe(
       "https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22bug%22"
     );
 
-    expect(blankLabel.textContent).toEqual("blank");
+    expect(blankLabel.textContent).toBe("blank");
     expect(blankLabel.classList).toContain(
       "respec-gh-label",
       "respec-label-dark"
     );
-    expect(blankLabel.href).toEqual(
+    expect(blankLabel.href).toBe(
       "https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22blank%22"
     );
 
-    expect(invalidLabel.textContent).toEqual("not-a-color");
+    expect(invalidLabel.textContent).toBe("not-a-color");
     expect(invalidLabel.classList).toContain(
       "respec-gh-label",
       "respec-label-dark"
     );
-    expect(invalidLabel.href).toEqual(
+    expect(invalidLabel.href).toBe(
       "https://github.com/mock-company/mock-repository/issues/?q=is%3Aissue+is%3Aopen+label%3A%22not-a-color%22"
     );
   });
@@ -220,15 +223,15 @@ describe("Core — Issues and Notes", () => {
         "<section><p class='issue' data-number='10'>ISSUE</p></section>",
     };
     const doc = await makeRSDoc(ops);
-    const $iss = $("div.issue", doc);
-    const $piss = $iss.find("p");
-    expect($iss.find("div.issue-title").length).toEqual(1);
-    expect($iss.find("div.issue-title").text()).toEqual("Issue 10");
-    expect($iss.find("div.issue-title a").attr("href")).toEqual(
+    const iss = doc.querySelector("div.issue");
+    const piss = iss.querySelector("p");
+    expect(iss.querySelectorAll("div.issue-title").length).toBe(1);
+    expect(iss.querySelector("div.issue-title").textContent).toBe("Issue 10");
+    expect(iss.querySelector("div.issue-title a").getAttribute("href")).toBe(
       issueBaseConfig.issueBase + "10"
     );
-    expect($piss.attr("title")).toBeUndefined();
-    expect($piss.text()).toEqual("ISSUE");
+    expect(piss.getAttribute("title")).toBeNull();
+    expect(piss.textContent).toBe("ISSUE");
   });
 
   it("marks closed issues as closed in the spec", async () => {
@@ -265,9 +268,9 @@ describe("Core — Issues and Notes", () => {
     expect(textContent).toBe("Issue 1540");
     const issueDiv404 = doc.getElementById("this-is-404");
     expect(issueDiv404).toBeTruthy();
-    expect(
-      issueDiv404.querySelector("div:not(.issue-title)").textContent
-    ).toEqual("this is 404");
+    expect(issueDiv404.querySelector("div:not(.issue-title)").textContent).toBe(
+      "this is 404"
+    );
   });
 
   it("renders the original issue post in an empty issue block", async () => {
@@ -308,14 +311,36 @@ describe("Core — Issues and Notes", () => {
         "<section><p class='issue atrisk' data-number='10'>FEATURE AT RISK</p></section>",
     };
     const doc = await makeRSDoc(ops);
-    const $iss = $("div.atrisk", doc);
-    const $piss = $iss.find("p");
-    expect($iss.find("div.issue-title").length).toEqual(1);
-    expect($iss.find("div.issue-title").text()).toEqual("Feature at Risk 10");
-    expect($iss.find("div.issue-title a").attr("href")).toEqual(
+    const iss = doc.querySelector("div.atrisk");
+    const piss = iss.querySelector("p");
+    expect(iss.querySelectorAll("div.issue-title").length).toBe(1);
+    expect(iss.querySelector("div.issue-title").textContent).toBe(
+      "(Feature at Risk) Issue 10"
+    );
+    expect(iss.querySelector("div.issue-title a").getAttribute("href")).toBe(
       atRiskBaseConfig.atRiskBase + "10"
     );
-    expect($piss.attr("title")).toBeUndefined();
-    expect($piss.text()).toEqual("FEATURE AT RISK");
+    expect(piss.getAttribute("title")).toBeNull();
+    expect(piss.textContent).toBe("FEATURE AT RISK");
+  });
+
+  it("should link to GitHub issue tracker for features at risk", async () => {
+    const config = {
+      github: "https://github.com/mock-company/mock-repository",
+      githubAPI: `${window.location.origin}/tests/data`,
+    };
+    const ops = {
+      config,
+      body:
+        makeDefaultBody() +
+        "<section><p class='issue atrisk' data-number='1540'>FEATURE AT RISK</p></section>",
+    };
+    const doc = await makeRSDoc(ops);
+    const issue = doc.querySelector("div.atrisk");
+    const issueTitles = issue.querySelectorAll("div.issue-title");
+    expect(issueTitles.length).toBe(1);
+    expect(issueTitles[0].querySelector("a").getAttribute("href")).toBe(
+      config.github + "/issues/1540"
+    );
   });
 });
