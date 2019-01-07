@@ -917,7 +917,7 @@ describe("W3C — Headers", () => {
     });
   });
 
-  describe("sotdAfterWGinfo", () => {
+  fdescribe("sotdAfterWGinfo", () => {
     it("relocates custom sotd", async () => {
       const ops = makeStandardOps();
       const newProps = {
@@ -933,7 +933,9 @@ describe("W3C — Headers", () => {
       const sotd = doc.getElementById("sotd");
       const f = contains(sotd, "p", "CUSTOM PARAGRAPH");
       expect(f.length).toBe(1);
-      expect(contains(doc.querySelectorAll("p")[6], "a", "WGLIST").length).toBe(
+      // eslint-disable-next-line no-console
+      console.log(...[...doc.querySelectorAll("p")].map(p => p.textContent));
+      expect(contains(doc.querySelectorAll("p")[5], "a", "WGLIST").length).toBe(
         1
       );
     });
