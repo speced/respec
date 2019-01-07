@@ -7,7 +7,7 @@
 // be used by a containing shell to extract all examples.
 
 import { addId, reindent } from "./utils";
-import css from "text!./css/examples.css";
+import css from "text!../../assets/examples.css";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 
