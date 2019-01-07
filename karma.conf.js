@@ -86,6 +86,7 @@ module.exports = function(config) {
 
     proxies: {
       "/about-blank.html": "/base/tests/about-blank.html",
+      "/assets/": "/base/assets/",
       "/js/": "/base/js/",
       "/builds/": "/base/builds/",
       "/tests/": "/base/tests/",
@@ -93,7 +94,6 @@ module.exports = function(config) {
       "/deps/": "/base/js/deps/",
       "/js/deps/": "/base/js/deps/",
       "/base/deps/": "/base/js/deps/",
-      "/base/deps/marked.js": "/base/js/deps/marked.js",
       "/worker/respec-worker.js": "/base/worker/respec-worker.js",
       "/support-files/hljs-testlang.js":
         "/base/tests/support-files/hljs-testlang.js",
