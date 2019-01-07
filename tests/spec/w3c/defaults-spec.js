@@ -32,6 +32,7 @@ describe("W3C — Defaults", () => {
           "local-refs-exist": true,
           "check-punctuation": false,
           "fake-linter-rule": "foo",
+          "check-internal-slots": true,
         },
         license: "c0",
         specStatus: "unofficial",
@@ -49,6 +50,7 @@ describe("W3C — Defaults", () => {
       "local-refs-exist": true,
       "check-punctuation": false,
       "fake-linter-rule": "foo",
+      "check-internal-slots": true,
     });
     expect(rsConf.highlightVars).toEqual(false);
     expect(rsConf.license).toEqual("c0");
