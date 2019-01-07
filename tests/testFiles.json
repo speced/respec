@@ -1,4 +1,5 @@
 [
+  "spec/core/algorithms-spec.js",
   "spec/core/best-practices-spec.js",
   "spec/core/biblio-db-spec.js",
   "spec/core/biblio-spec.js",
