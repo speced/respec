@@ -2,6 +2,7 @@
  * Sets the defaults for W3C specs
  */
 export const name = "w3c/defaults";
+import { rule as checkInternalSlots } from "../core/linter-rules/check-internal-slots";
 import { rule as checkPunctuation } from "../core/linter-rules/check-punctuation";
 import linter from "../core/linter";
 import { rule as localRefsExist } from "../core/linter-rules/local-refs-exist";
@@ -14,7 +15,8 @@ linter.register(
   privsecSectionRule,
   noHeadinglessSectionsRule,
   checkPunctuation,
-  localRefsExist
+  localRefsExist,
+  checkInternalSlots
 );
 
 const cgbg = new Set(["BG-DRAFT", "BG-FINAL", "CG-DRAFT", "CG-FINAL"]);
@@ -62,6 +64,7 @@ const w3cDefaults = {
     "no-http-props": true,
     "check-punctuation": false,
     "local-refs-exist": true,
+    "check-internal-slots": false,
   },
   pluralize: false,
   highlightVars: true,
