@@ -45,7 +45,7 @@ export function run(conf) {
       number,
       illegal,
     };
-    const title = example.title;
+    const { title } = example;
     if (example.localName === "aside") {
       ++number;
       const div = makeTitle(conf, example, number, report);
