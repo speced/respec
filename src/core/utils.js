@@ -139,7 +139,7 @@ export function createResourceHint(opts) {
   }
   const url = new URL(opts.href, location.href);
   const linkElem = document.createElement("link");
-  let href = url.href;
+  let { href } = url;
   linkElem.rel = opts.hint;
   switch (linkElem.rel) {
     case "dns-prefetch":
