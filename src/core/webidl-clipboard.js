@@ -6,7 +6,7 @@
  *
  */
 import Clipboard from "clipboard";
-import svgClipboard from "text!./images/clipboard.svg";
+import svgClipboard from "text!../../assets/clipboard.svg";
 export const name = "core/webidl-clipboard";
 
 // This button serves a prototype that we clone as needed.
