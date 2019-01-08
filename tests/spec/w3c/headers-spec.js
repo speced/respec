@@ -933,7 +933,7 @@ describe("W3C — Headers", () => {
       const sotd = doc.getElementById("sotd");
       const f = contains(sotd, "p", "CUSTOM PARAGRAPH");
       expect(f.length).toBe(1);
-      expect(contains(doc.querySelectorAll("p")[6], "a", "WGLIST").length).toBe(
+      expect(contains(f[0].previousElementSibling, "a", "WGLIST").length).toBe(
         1
       );
     });

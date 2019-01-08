@@ -4,7 +4,7 @@
 // The summary is generated if there is a section in the document with ID bp-summary.
 // Best practices are marked up with span.practicelab.
 import { addId } from "./utils";
-import css from "text!./css/bp.css";
+import css from "text!../../assets/bp.css";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 

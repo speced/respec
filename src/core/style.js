@@ -8,7 +8,7 @@
 // CONFIGURATION
 //  - noReSpecCSS: if you're using a profile that loads this module but you don't want
 //    the style, set this to true
-import css from "text!./css/respec2.css";
+import css from "text!../../assets/respec2.css";
 export const name = "core/style";
 
 // Opportunistically inserts the style, with the chance to reduce some FOUC
