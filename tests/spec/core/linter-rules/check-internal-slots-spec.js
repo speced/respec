@@ -41,7 +41,8 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
 
     const [result] = results;
     expect(result.name).toEqual(ruleName);
-    expect(result.occurrences).toEqual(13);
+    expect(result.occurrences).toEqual(4);
+    // only first four are checked, rest are filtered
 
     const offendingElement = result.offendingElements[0];
     const { previousSibling } = offendingElement;
