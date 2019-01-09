@@ -668,6 +668,6 @@ function populateSoTD(conf, sotd) {
   return template(conf, {
     additionalContent,
     // Whatever sections are left, we throw at the end.
-    additionalSections: sotdClone,
+    additionalSections: sotdClone.childNodes,
   });
 }
