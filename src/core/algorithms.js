@@ -11,9 +11,7 @@ export async function run() {
   elements
     .filter(li => li.innerText.trim().startsWith("Assert: "))
     .forEach(li => li.classList.add("assert"));
-  if (
-    document.querySelector(".assert")
-  ) {
+  if (document.querySelector(".assert")) {
     const style = document.createElement("style");
     style.textContent = css;
     document.head.appendChild(style);
