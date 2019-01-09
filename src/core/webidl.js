@@ -5,7 +5,7 @@
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
 import { flatten, normalizePadding, reindent } from "./utils";
-import css from "text!./css/webidl.css";
+import css from "text!../../assets/webidl.css";
 import { findDfn } from "./dfn-finder";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
