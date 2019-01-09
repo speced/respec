@@ -28,7 +28,8 @@
     "prefer-const": 2,
     "quotes": 0,
     "semi": ["error", "always"],
-    "sort-imports": 2
+    "sort-imports": 2,
+    "eol-last": ["error", "always"]
   },
   "globals": {
     "flushIframes": true,
