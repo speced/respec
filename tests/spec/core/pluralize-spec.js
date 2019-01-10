@@ -106,6 +106,26 @@ describe("Core - Pluralize", () => {
     ).toBeTruthy();
   });
 
+  it("does nothing if conf.pluralize is not defined", async () => {
+    const body = `
+      <section id="section">
+        <dfn>foo</dfn> can be referenced
+        as <a>foo</a>
+        but not as <a>foos</a>
+      </section>
+    `;
+    const ops = makeStandardOps({ specStatus: "unofficial" }, body);
+    const doc = await makeRSDoc(ops);
+
+    const { id: dfnId } = doc.querySelector("#section dfn");
+    expect(dfnId).toBe("dfn-foo");
+    const [validLink, invalidLink] = [...doc.querySelectorAll("#section a")];
+    expect(validLink.getAttribute("href")).toEqual("#dfn-foo");
+    expect(
+      invalidLink.classList.contains("respec-offending-element")
+    ).toBeTruthy();
+  });
+
   it("doesn't pluralize when [data-lt-noDefault] is defined", async () => {
     const body = `
       <section id="section">
