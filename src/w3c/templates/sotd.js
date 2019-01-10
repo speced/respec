@@ -1,6 +1,6 @@
 import hyperHTML from "hyperhtml";
 
-export default conf => {
+export default (conf, opts) => {
   const html = hyperHTML;
   return html`
     <h2>${conf.l10n.sotd}</h2>
@@ -44,12 +44,12 @@ export default conf => {
               official standing of any kind and does not represent the support
               or consensus of any standards organization.
             </p>
-            ${[conf.additionalContent]}
+            ${opts.additionalContent}
           `
         : html`
             ${
               conf.isTagFinding
-                ? [conf.additionalContent]
+                ? opts.additionalContent
                 : html`
                     ${
                       conf.isNoTrack
@@ -61,14 +61,14 @@ export default conf => {
                               and does not represent consensus of the W3C
                               Membership.
                             </p>
-                            ${[conf.additionalContent]}
+                            ${opts.additionalContent}
                           `
                         : html`
                             <p><em>${[conf.l10n.status_at_publication]}</em></p>
                             ${
                               conf.isSubmission
                                 ? html`
-                                    ${[conf.additionalContent]}
+                                    ${opts.additionalContent}
                                     ${
                                       conf.isMemberSubmission
                                         ? html`
@@ -125,81 +125,71 @@ export default conf => {
                                               >.
                                             </p>
                                           `
-                                        : html`
-                                            ${
-                                              conf.isTeamSubmission
-                                                ? html`
-                                                    <p>
-                                                      If you wish to make
-                                                      comments regarding this
-                                                      document, please send them
-                                                      to
-                                                      <a
-                                                        href="${
-                                                          `mailto:${
-                                                            conf.wgPublicList
-                                                          }@w3.org${
-                                                            conf.subjectPrefix
-                                                              ? `?subject=${
-                                                                  conf.subjectPrefixEnc
-                                                                }`
-                                                              : [""]
-                                                          }`
-                                                        }"
+                                        : conf.isTeamSubmission
+                                        ? html`
+                                            <p>
+                                              If you wish to make comments
+                                              regarding this document, please
+                                              send them to
+                                              <a
+                                                href="${
+                                                  `mailto:${
+                                                    conf.wgPublicList
+                                                  }@w3.org${
+                                                    conf.subjectPrefix
+                                                      ? `?subject=${
+                                                          conf.subjectPrefixEnc
+                                                        }`
+                                                      : [""]
+                                                  }`
+                                                }"
+                                                >${conf.wgPublicList}@w3.org</a
+                                              >
+                                              (<a
+                                                href="${
+                                                  `mailto:${
+                                                    conf.wgPublicList
+                                                  }-request@w3.org?subject=subscribe`
+                                                }"
+                                                >subscribe</a
+                                              >,
+                                              <a
+                                                href="${
+                                                  `https://lists.w3.org/Archives/Public/${
+                                                    conf.wgPublicList
+                                                  }/`
+                                                }"
+                                                >archives</a
+                                              >)${
+                                                conf.subjectPrefix
+                                                  ? html`
+                                                      with
+                                                      <code
                                                         >${
-                                                          conf.wgPublicList
-                                                        }@w3.org</a
+                                                          conf.subjectPrefix
+                                                        }</code
                                                       >
-                                                      (<a
-                                                        href="${
-                                                          `mailto:${
-                                                            conf.wgPublicList
-                                                          }-request@w3.org?subject=subscribe`
-                                                        }"
-                                                        >subscribe</a
-                                                      >,
-                                                      <a
-                                                        href="${
-                                                          `https://lists.w3.org/Archives/Public/${
-                                                            conf.wgPublicList
-                                                          }/`
-                                                        }"
-                                                        >archives</a
-                                                      >)${
-                                                        conf.subjectPrefix
-                                                          ? html`
-                                                              with
-                                                              <code
-                                                                >${
-                                                                  conf.subjectPrefix
-                                                                }</code
-                                                              >
-                                                              at the start of
-                                                              your email's
-                                                              subject
-                                                            `
-                                                          : ""
-                                                      }.
-                                                    </p>
-                                                    <p>
-                                                      Please consult the
-                                                      complete
-                                                      <a
-                                                        href="https://www.w3.org/TeamSubmission/"
-                                                        >list of Team
-                                                        Submissions</a
-                                                      >.
-                                                    </p>
-                                                  `
-                                                : ""
-                                            }
+                                                      at the start of your
+                                                      email's subject
+                                                    `
+                                                  : ""
+                                              }.
+                                            </p>
+                                            <p>
+                                              Please consult the complete
+                                              <a
+                                                href="https://www.w3.org/TeamSubmission/"
+                                                >list of Team Submissions</a
+                                              >.
+                                            </p>
                                           `
+                                        : ""
                                     }
                                   `
                                 : html`
                                     ${
                                       !conf.sotdAfterWGinfo
-                                        ? [conf.additionalContent]
+                                        ? opts.additionalContent
                                         : ""
                                     }
                                     ${
@@ -434,7 +424,7 @@ export default conf => {
                                     }
                                     ${
                                       conf.sotdAfterWGinfo
-                                        ? [conf.additionalContent]
+                                        ? opts.additionalContent
                                         : ""
                                     }
                                     ${
@@ -589,6 +579,6 @@ export default conf => {
             }
           `
     }
-    ${[conf.additionalSections]}
+    ${opts.additionalSections}
   `;
 };

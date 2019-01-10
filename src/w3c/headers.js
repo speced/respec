@@ -630,13 +630,6 @@ export function run(conf) {
     );
   }
 
-  if (conf.isTagFinding && !conf.additionalContent) {
-    pub(
-      "warn",
-      "ReSpec does not support automated SotD generation for TAG findings, " +
-        "please add the prerequisite content in the 'sotd' section"
-    );
-  }
   // Requested by https://github.com/w3c/respec/issues/504
   // Makes a record of a few auto-generated things.
   pub("amend-user-config", {
@@ -645,10 +638,13 @@ export function run(conf) {
   });
 }
 
+/**
+ * @param {*} conf
+ * @param {HTMLElement} sotd
+ */
 function populateSoTD(conf, sotd) {
   const sotdClone = sotd.cloneNode(true);
-  const additionalNodes = document.createDocumentFragment();
-  const additionalContent = document.createElement("temp");
+  const additionalContent = document.createDocumentFragment();
   // we collect everything until we hit a section,
   // that becomes the custom content.
   while (sotdClone.hasChildNodes()) {
@@ -656,14 +652,22 @@ function populateSoTD(conf, sotd) {
       sotdClone.firstChild.nodeType !== Node.ELEMENT_NODE ||
       sotdClone.firstChild.localName !== "section"
     ) {
-      additionalNodes.appendChild(sotdClone.firstChild);
+      additionalContent.appendChild(sotdClone.firstChild);
       continue;
     }
     break;
   }
-  additionalContent.appendChild(additionalNodes);
-  conf.additionalContent = additionalContent.innerHTML;
-  // Whatever sections are left, we throw at the end.
-  conf.additionalSections = sotdClone.innerHTML;
-  return (conf.isCGBG ? cgbgSotdTmpl : sotdTmpl)(conf);
+  if (conf.isTagFinding && !additionalContent.hasChildNodes()) {
+    pub(
+      "warn",
+      "ReSpec does not support automated SotD generation for TAG findings, " +
+        "please add the prerequisite content in the 'sotd' section"
+    );
+  }
+  const template = conf.isCGBG ? cgbgSotdTmpl : sotdTmpl;
+  return template(conf, {
+    additionalContent,
+    // Whatever sections are left, we throw at the end.
+    additionalSections: sotdClone.childNodes,
+  });
 }
