@@ -48,9 +48,7 @@ function filterElement({ textContent }) {
   return /^\[\[\w+\]\]/.test(textContent);
 }
 
-function checkElement({ previousSibling, textContent }) {
-  const potentialSlot = previousSibling.textContent + textContent;
-  // starts with dot, followed by [[ and any word
-  return !/^\.\[\[\w+\]\]/.test(potentialSlot);
-  // return true if regex test fails
+function checkElement({ previousSibling }) {
+  // return true if the text is not "."
+  return previousSibling.textContent !== ".";
 }
