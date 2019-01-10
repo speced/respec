@@ -66,7 +66,7 @@ const w3cDefaults = {
     "local-refs-exist": true,
     "check-internal-slots": false,
   },
-  pluralize: false,
+  pluralize: true,
   highlightVars: true,
   doJsonLd: false,
   license: "w3c-software-doc",
