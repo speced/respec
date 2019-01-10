@@ -115,16 +115,10 @@ export default conf => {
             : ""
         }
         ${
-          conf.isED
+          conf.isED && conf.prevED
             ? html`
-                ${
-                  conf.prevED
-                    ? html`
-                        <dt>Previous editor's draft:</dt>
-                        <dd><a href="${conf.prevED}">${conf.prevED}</a></dd>
-                      `
-                    : ""
-                }
+                <dt>Previous editor's draft:</dt>
+                <dd><a href="${conf.prevED}">${conf.prevED}</a></dd>
               `
             : ""
         }
@@ -137,25 +131,17 @@ export default conf => {
             : ""
         }
         ${
-          conf.prevRecURI
+          !conf.prevRecURI
+            ? ""
+            : conf.isRec
             ? html`
-                ${
-                  conf.isRec
-                    ? html`
-                        <dt>Previous Recommendation:</dt>
-                        <dd>
-                          <a href="${conf.prevRecURI}">${conf.prevRecURI}</a>
-                        </dd>
-                      `
-                    : html`
-                        <dt>Latest Recommendation:</dt>
-                        <dd>
-                          <a href="${conf.prevRecURI}">${conf.prevRecURI}</a>
-                        </dd>
-                      `
-                }
+                <dt>Previous Recommendation:</dt>
+                <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
               `
-            : ""
+            : html`
+                <dt>Latest Recommendation:</dt>
+                <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
+              `
         }
         <dt>${conf.multipleEditors ? conf.l10n.editors : conf.l10n.editor}</dt>
         ${showPeople(conf, "Editor", conf.editors)}
@@ -330,24 +316,20 @@ export default conf => {
                                   >document use</a
                                 >
                               `
+                            : conf.isW3CSoftAndDocLicense
+                            ? html`
+                                <a
+                                  rel="license"
+                                  href="https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
+                                  >permissive document license</a
+                                >
+                              `
                             : html`
-                                ${
-                                  conf.isW3CSoftAndDocLicense
-                                    ? html`
-                                        <a
-                                          rel="license"
-                                          href="https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
-                                          >permissive document license</a
-                                        >
-                                      `
-                                    : html`
-                                        <a
-                                          rel="license"
-                                          href="https://www.w3.org/Consortium/Legal/copyright-documents"
-                                          >document use</a
-                                        >
-                                      `
-                                }
+                                <a
+                                  rel="license"
+                                  href="https://www.w3.org/Consortium/Legal/copyright-documents"
+                                  >document use</a
+                                >
                               `
                         }
                         rules apply.

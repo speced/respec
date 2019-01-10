@@ -15,6 +15,7 @@
   "rules": {
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "dot-notation": "error",
+    "eol-last": ["error", "always"],
     "indent": 0,
     "no-console": 0,
     "no-duplicate-imports": 2,

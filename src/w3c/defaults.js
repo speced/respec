@@ -4,6 +4,7 @@
 export const name = "w3c/defaults";
 import { rule as checkInternalSlots } from "../core/linter-rules/check-internal-slots";
 import { rule as checkPunctuation } from "../core/linter-rules/check-punctuation";
+import { definitionMap } from "../core/dfn-map";
 import linter from "../core/linter";
 import { rule as localRefsExist } from "../core/linter-rules/local-refs-exist";
 import { rule as noHeadinglessSectionsRule } from "../core/linter-rules/no-headingless-sections";
@@ -66,7 +67,7 @@ const w3cDefaults = {
     "local-refs-exist": true,
     "check-internal-slots": false,
   },
-  pluralize: false,
+  pluralize: true,
   highlightVars: true,
   doJsonLd: false,
   license: "w3c-software-doc",
@@ -95,6 +96,7 @@ function computeProps(conf) {
 }
 
 export function run(conf) {
+  if (conf.specStatus === "unofficial") return;
   // assign the defaults
   Object.assign(conf, {
     ...w3cDefaults,
@@ -106,4 +108,9 @@ export function run(conf) {
   });
   //computed properties
   Object.assign(conf, computeProps(conf));
+
+  // TODO: eventually, we want to remove this.
+  // It's here for legacy support of json-ld specs
+  // see https://github.com/w3c/respec/issues/2019
+  Object.assign(conf, { definitionMap });
 }
