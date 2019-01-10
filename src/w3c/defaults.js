@@ -67,7 +67,7 @@ const w3cDefaults = {
     "local-refs-exist": true,
     "check-internal-slots": false,
   },
-  pluralize: false,
+  pluralize: true,
   highlightVars: true,
   doJsonLd: false,
   license: "w3c-software-doc",
@@ -96,6 +96,7 @@ function computeProps(conf) {
 }
 
 export function run(conf) {
+  if (conf.specStatus === "unofficial") return;
   // assign the defaults
   Object.assign(conf, {
     ...w3cDefaults,
