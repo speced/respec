@@ -216,126 +216,115 @@ export default conf => {
       }
       ${
         conf.isUnofficial
-          ? html`
-              ${
-                conf.additionalCopyrightHolders
-                  ? html`
-                      <p class="copyright">
-                        ${[conf.additionalCopyrightHolders]}
-                      </p>
-                    `
-                  : html`
-                      ${
-                        conf.overrideCopyright
-                          ? [conf.overrideCopyright]
-                          : html`
-                              <p class="copyright">
-                                This document is licensed under a
-                                <a
-                                  class="subfoot"
-                                  href="https://creativecommons.org/licenses/by/3.0/"
-                                  rel="license"
-                                  >Creative Commons Attribution 3.0 License</a
-                                >.
-                              </p>
-                            `
-                      }
-                    `
-              }
-            `
+          ? conf.additionalCopyrightHolders
+            ? html`
+                <p class="copyright">${[conf.additionalCopyrightHolders]}</p>
+              `
+            : html`
+                ${
+                  conf.overrideCopyright
+                    ? [conf.overrideCopyright]
+                    : html`
+                        <p class="copyright">
+                          This document is licensed under a
+                          <a
+                            class="subfoot"
+                            href="https://creativecommons.org/licenses/by/3.0/"
+                            rel="license"
+                            >Creative Commons Attribution 3.0 License</a
+                          >.
+                        </p>
+                      `
+                }
+              `
+          : conf.overrideCopyright
+          ? [conf.overrideCopyright]
           : html`
-              ${
-                conf.overrideCopyright
-                  ? [conf.overrideCopyright]
-                  : html`
-                      <p class="copyright">
+              <p class="copyright">
+                <a
+                  href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright"
+                  >Copyright</a
+                >
+                &copy;
+                ${conf.copyrightStart ? `${conf.copyrightStart}-` : ""}${
+                  conf.publishYear
+                }
+                ${
+                  conf.additionalCopyrightHolders
+                    ? html`
+                        ${[conf.additionalCopyrightHolders]} &amp;
+                      `
+                    : ""
+                }
+                <a href="https://www.w3.org/"
+                  ><abbr title="World Wide Web Consortium">W3C</abbr></a
+                ><sup>&reg;</sup> (<a href="https://www.csail.mit.edu/"
+                  ><abbr title="Massachusetts Institute of Technology"
+                    >MIT</abbr
+                  ></a
+                >,
+                <a href="https://www.ercim.eu/"
+                  ><abbr
+                    title="European Research Consortium for Informatics and Mathematics"
+                    >ERCIM</abbr
+                  ></a
+                >, <a href="https://www.keio.ac.jp/">Keio</a>,
+                <a href="http://ev.buaa.edu.cn/">Beihang</a>).
+                ${
+                  conf.isCCBY
+                    ? html`
+                        Some Rights Reserved: this document is dual-licensed,
                         <a
-                          href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright"
-                          >Copyright</a
-                        >
-                        &copy;
-                        ${
-                          conf.copyrightStart ? `${conf.copyrightStart}-` : ""
-                        }${conf.publishYear}
-                        ${
-                          conf.additionalCopyrightHolders
-                            ? html`
-                                ${[conf.additionalCopyrightHolders]} &amp;
-                              `
-                            : ""
-                        }
-                        <a href="https://www.w3.org/"
-                          ><abbr title="World Wide Web Consortium">W3C</abbr></a
-                        ><sup>&reg;</sup> (<a href="https://www.csail.mit.edu/"
-                          ><abbr title="Massachusetts Institute of Technology"
-                            >MIT</abbr
-                          ></a
-                        >,
-                        <a href="https://www.ercim.eu/"
-                          ><abbr
-                            title="European Research Consortium for Informatics and Mathematics"
-                            >ERCIM</abbr
-                          ></a
-                        >, <a href="https://www.keio.ac.jp/">Keio</a>,
-                        <a href="http://ev.buaa.edu.cn/">Beihang</a>).
-                        ${
-                          conf.isCCBY
-                            ? html`
-                                Some Rights Reserved: this document is
-                                dual-licensed,
-                                <a
-                                  rel="license"
-                                  href="https://creativecommons.org/licenses/by/3.0/"
-                                  >CC-BY</a
-                                >
-                                and
-                                <a
-                                  rel="license"
-                                  href="https://www.w3.org/Consortium/Legal/copyright-documents"
-                                  >W3C Document License</a
-                                >.
-                              `
-                            : ""
-                        }
-                        W3C
-                        <a
-                          href="https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer"
-                          >liability</a
-                        >,
-                        <a
-                          href="https://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks"
-                          >trademark</a
+                          rel="license"
+                          href="https://creativecommons.org/licenses/by/3.0/"
+                          >CC-BY</a
                         >
                         and
-                        ${
-                          conf.isCCBY
-                            ? html`
-                                <a
-                                  rel="license"
-                                  href="https://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html"
-                                  >document use</a
-                                >
-                              `
-                            : conf.isW3CSoftAndDocLicense
-                            ? html`
-                                <a
-                                  rel="license"
-                                  href="https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
-                                  >permissive document license</a
-                                >
-                              `
-                            : html`
-                                <a
-                                  rel="license"
-                                  href="https://www.w3.org/Consortium/Legal/copyright-documents"
-                                  >document use</a
-                                >
-                              `
-                        }
-                        rules apply.
-                      </p>
-                    `
-              }
+                        <a
+                          rel="license"
+                          href="https://www.w3.org/Consortium/Legal/copyright-documents"
+                          >W3C Document License</a
+                        >.
+                      `
+                    : ""
+                }
+                W3C
+                <a
+                  href="https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer"
+                  >liability</a
+                >,
+                <a
+                  href="https://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks"
+                  >trademark</a
+                >
+                and
+                ${
+                  conf.isCCBY
+                    ? html`
+                        <a
+                          rel="license"
+                          href="https://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html"
+                          >document use</a
+                        >
+                      `
+                    : conf.isW3CSoftAndDocLicense
+                    ? html`
+                        <a
+                          rel="license"
+                          href="https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
+                          >permissive document license</a
+                        >
+                      `
+                    : html`
+                        <a
+                          rel="license"
+                          href="https://www.w3.org/Consortium/Legal/copyright-documents"
+                          >document use</a
+                        >
+                      `
+                }
+                rules apply.
+              </p>
             `
       }
       <hr title="Separator for header" />
