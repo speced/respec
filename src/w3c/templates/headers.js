@@ -1,8 +1,15 @@
-import hyperHTML from "hyperhtml";
+import html from "hyperhtml";
 import { pub } from "../../core/pubsubhub";
 import showLink from "./show-link";
 import showLogo from "./show-logo";
 import showPeople from "./show-people";
+
+const ccLicense = "https://creativecommons.org/licenses/by/3.0/";
+const w3cLicense = "https://www.w3.org/Consortium/Legal/copyright-documents";
+const legalDisclaimer =
+  "https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer";
+const w3cTrademark =
+  "https://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks";
 
 function getSpecTitleElem(conf) {
   const specTitleElem =
@@ -41,8 +48,6 @@ function getSpecSubTitleElem(conf) {
 }
 
 export default conf => {
-  const html = hyperHTML;
-
   return html`
     <div class="head">
       ${conf.logos.map(showLogo)} ${getSpecTitleElem(conf)}
@@ -266,60 +271,10 @@ export default conf => {
                   ></a
                 >, <a href="https://www.keio.ac.jp/">Keio</a>,
                 <a href="http://ev.buaa.edu.cn/">Beihang</a>).
-                ${
-                  conf.isCCBY
-                    ? html`
-                        Some Rights Reserved: this document is dual-licensed,
-                        <a
-                          rel="license"
-                          href="https://creativecommons.org/licenses/by/3.0/"
-                          >CC-BY</a
-                        >
-                        and
-                        <a
-                          rel="license"
-                          href="https://www.w3.org/Consortium/Legal/copyright-documents"
-                          >W3C Document License</a
-                        >.
-                      `
-                    : ""
-                }
-                W3C
-                <a
-                  href="https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer"
-                  >liability</a
-                >,
-                <a
-                  href="https://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks"
-                  >trademark</a
-                >
-                and
-                ${
-                  conf.isCCBY
-                    ? html`
-                        <a
-                          rel="license"
-                          href="https://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html"
-                          >document use</a
-                        >
-                      `
-                    : conf.isW3CSoftAndDocLicense
-                    ? html`
-                        <a
-                          rel="license"
-                          href="https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
-                          >permissive document license</a
-                        >
-                      `
-                    : html`
-                        <a
-                          rel="license"
-                          href="https://www.w3.org/Consortium/Legal/copyright-documents"
-                          >document use</a
-                        >
-                      `
-                }
-                rules apply.
+                ${noteIfDualLicense(conf)} W3C
+                <a href="${legalDisclaimer}">liability</a>,
+                <a href="${w3cTrademark}">trademark</a> and
+                ${linkDocumentUse(conf)} rules apply.
               </p>
             `
       }
@@ -327,3 +282,40 @@ export default conf => {
     </div>
   `;
 };
+
+/**
+ * @param {string} text
+ * @param {string} url
+ */
+function linkLicense(text, url) {
+  return html`
+    <a rel="license" href="${url}">${text}</a>
+  `;
+}
+
+function noteIfDualLicense(conf) {
+  if (!conf.isCCBY) {
+    return;
+  }
+  return html`
+    Some Rights Reserved: this document is dual-licensed,
+    ${linkLicense("CC-BY", ccLicense)} and
+    ${linkLicense("W3C Document License", w3cLicense)}.
+  `;
+}
+
+function linkDocumentUse(conf) {
+  if (conf.isCCBY) {
+    return linkLicense(
+      "document use",
+      "https://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html"
+    );
+  }
+  if (conf.isW3CSoftAndDocLicense) {
+    return linkLicense(
+      "permissive document license",
+      "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
+    );
+  }
+  return linkLicense("document use", w3cLicense);
+}
