@@ -96,6 +96,7 @@ function computeProps(conf) {
 }
 
 export function run(conf) {
+  if (conf.specStatus === "unofficial") return;
   // assign the defaults
   Object.assign(conf, {
     ...w3cDefaults,
