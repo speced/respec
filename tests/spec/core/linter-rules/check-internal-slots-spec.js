@@ -21,28 +21,28 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
 
   it("only returns an error when there is no '.' between var and an internal slot", async () => {
     doc.body.innerHTML = `
-    <var>bar</var><a>[[foo]]</a>
-    <var>bar</var>..<a>[[foo]]</a>
-    <var>bar</var> . <a>[[foo]]</a>
-    <var>bar</var> <a>[[foo]]</a>
-    <a>[[foo]]</a><var>bar</var>
-    <var>bar</var>.<a>[foo]</a>
-    <var>bar</var>.<a>foo</a>
-    <var>bar</var>.<a>[[foo</a>
-    <var>bar</var>.<a>foo]]</a>
-    <var></var>.<a></a>
-    <var></var><a></a>
-    <var>[[foo]]</var>.<a></a>
-    <var>[[foo]]</var>.<a>bar</a>
-    <var>bar</var>.<a>[[f oo]]</a>
+      <var>bar</var><a>[[foo]]</a>
+      <var>bar</var>..<a>[[foo]]</a>
+      <var>bar</var> . <a>[[foo]]</a>
+      <var>bar</var> <a>[[foo]]</a>
+      <a>[[foo]]</a><var>bar</var>
+      <var>bar</var>.<a>[foo]</a>
+      <var>bar</var>.<a>foo</a>
+      <var>bar</var>.<a>[[foo</a>
+      <var>bar</var>.<a>foo]]</a>
+      <var></var>.<a></a>
+      <var></var><a></a>
+      <var>[[foo]]</var>.<a></a>
+      <var>[[foo]]</var>.<a>bar</a>
+      <var>bar</var>.<a>[[f oo]]</a>
     `;
     const results = await rule.lint(config, doc);
     expect(results.length).toEqual(1);
 
     const [result] = results;
     expect(result.name).toEqual(ruleName);
-    expect(result.occurrences).toEqual(4);
     // only first four are checked, rest are filtered
+    expect(result.occurrences).toEqual(4);
 
     const offendingElement = result.offendingElements[0];
     const { previousSibling } = offendingElement;
@@ -52,9 +52,9 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
 
   it("generates no error when the expected pattern is followed", async () => {
     doc.body.innerHTML = `
-    <var>bar</var>.<a>[[foo]]</a>
-    <var>foo</var>.<a>[[BarFoo]]</a>
-    <var></var>.<a>[[foo]]</a>
+      <var>bar</var>.<a>[[foo]]</a>
+      <var>foo</var>.<a>[[BarFoo]]</a>
+      <var></var>.<a>[[foo]]</a>
     `;
     const results = await rule.lint(config, doc);
     expect(results.length).toEqual(0);
