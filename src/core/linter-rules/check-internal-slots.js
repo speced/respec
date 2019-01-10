@@ -27,9 +27,7 @@ function linterFunction(conf, doc) {
     filterElement
   );
 
-  const offendingElements = filteredElements.filter(
-    checkElement
-  );
+  const offendingElements = filteredElements.filter(checkElement);
 
   if (!offendingElements.length) {
     return [];
@@ -45,7 +43,7 @@ function linterFunction(conf, doc) {
 
 export const rule = new LinterRule(name, linterFunction);
 
-function filterElement({textContent}) {
+function filterElement({ textContent }) {
   // return true if text is an internal slot
   return /^\[\[\w+\]\]/.test(textContent);
 }
