@@ -220,22 +220,18 @@ export default conf => {
             ? html`
                 <p class="copyright">${[conf.additionalCopyrightHolders]}</p>
               `
+            : conf.overrideCopyright
+            ? [conf.overrideCopyright]
             : html`
-                ${
-                  conf.overrideCopyright
-                    ? [conf.overrideCopyright]
-                    : html`
-                        <p class="copyright">
-                          This document is licensed under a
-                          <a
-                            class="subfoot"
-                            href="https://creativecommons.org/licenses/by/3.0/"
-                            rel="license"
-                            >Creative Commons Attribution 3.0 License</a
-                          >.
-                        </p>
-                      `
-                }
+                <p class="copyright">
+                  This document is licensed under a
+                  <a
+                    class="subfoot"
+                    href="https://creativecommons.org/licenses/by/3.0/"
+                    rel="license"
+                    >Creative Commons Attribution 3.0 License</a
+                  >.
+                </p>
               `
           : conf.overrideCopyright
           ? [conf.overrideCopyright]
