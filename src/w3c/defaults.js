@@ -4,6 +4,7 @@
 export const name = "w3c/defaults";
 import { rule as checkInternalSlots } from "../core/linter-rules/check-internal-slots";
 import { rule as checkPunctuation } from "../core/linter-rules/check-punctuation";
+import { definitionMap } from "../core/dfn-map";
 import linter from "../core/linter";
 import { rule as localRefsExist } from "../core/linter-rules/local-refs-exist";
 import { rule as noHeadinglessSectionsRule } from "../core/linter-rules/no-headingless-sections";
@@ -106,4 +107,9 @@ export function run(conf) {
   });
   //computed properties
   Object.assign(conf, computeProps(conf));
+
+  // TODO: eventually, we want to remove this.
+  // It's here for legacy support of json-ld specs
+  // see https://github.com/w3c/respec/issues/2019
+  Object.assign(conf, { definitionMap });
 }
