@@ -664,7 +664,8 @@ function populateSoTD(conf, sotd) {
       return `mailto:${conf.wgPublicList}-request@w3.org?subject=subscribe`;
     },
   };
-  return (conf.isCGBG ? cgbgSotdTmpl : sotdTmpl)(options);
+  const template = conf.isCGBG ? cgbgSotdTmpl : sotdTmpl;
+  return template(conf, options);
 }
 
 /**
