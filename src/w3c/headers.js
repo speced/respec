@@ -614,9 +614,6 @@ export function run(conf) {
       "error",
       "IG-NOTEs must link to charter's disclosure section using `charterDisclosureURI`."
     );
-  // ensure subjectPrefix is encoded before using template
-  if (conf.subjectPrefix !== "")
-    conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
 
   hyperHTML.bind(sotd)`${populateSoTD(conf, sotd)}`;
 
@@ -656,9 +653,10 @@ function populateSoTD(conf, sotd) {
       return `mailto:${conf.wgPublicList}@w3.org`;
     },
     get mailToWGPublicListWithSubject() {
-      return this.mailToWGPublicList + conf.subjectPrefix
-        ? `?subject=${conf.subjectPrefixEnc}`
+      const fragment = conf.subjectPrefix
+        ? `?subject=${encodeURIComponent(conf.subjectPrefix)}`
         : "";
+      return this.mailToWGPublicList + fragment;
     },
     get mailToWGPublicListSubscription() {
       return `mailto:${conf.wgPublicList}-request@w3.org?subject=subscribe`;
