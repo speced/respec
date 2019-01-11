@@ -76,7 +76,7 @@ export default (conf, opts) => {
                                   : ""
                               }
                             </p>
-                            ${linkToCommunity(conf)}
+                            ${linkToCommunity(conf, opts)}
                             ${
                               conf.isCR || conf.isPER || conf.isPR
                                 ? html`
@@ -120,17 +120,13 @@ export default (conf, opts) => {
                                               <a
                                                 rel="discussion"
                                                 href="${
-                                                  `mailto:${
-                                                    conf.wgPublicList
-                                                  }@w3.org`
+                                                  opts.mailToWGPublicList
                                                 }"
                                                 >${conf.wgPublicList}@w3.org</a
                                               >
                                               (<a
                                                 href="${
-                                                  `mailto:${
-                                                    conf.wgPublicList
-                                                  }-request@w3.org?subject=subscribe`
+                                                  opts.mailToWGPublicListSubscription
                                                 }"
                                                 >subscribe</a
                                               >,
@@ -299,14 +295,14 @@ export default (conf, opts) => {
   `;
 };
 
-function noteForSubmission(conf, { additionalContent }) {
+function noteForSubmission(conf, opts) {
   return html`
-    ${additionalContent}
+    ${opts.additionalContent}
     ${
       conf.isMemberSubmission
         ? noteForMemberSubmission(conf)
         : conf.isTeamSubmission
-        ? noteForTeamSubmission(conf)
+        ? noteForTeamSubmission(conf, opts)
         : ""
     }
   `;
@@ -347,22 +343,14 @@ function noteForMemberSubmission(conf) {
   `;
 }
 
-function noteForTeamSubmission(conf) {
+function noteForTeamSubmission(conf, opts) {
   return html`
     <p>
       If you wish to make comments regarding this document, please send them to
-      <a
-        href="${
-          `mailto:${conf.wgPublicList}@w3.org${
-            conf.subjectPrefix ? `?subject=${conf.subjectPrefixEnc}` : ""
-          }`
-        }"
+      <a href="${opts.mailToWGPublicListWithSubject}"
         >${conf.wgPublicList}@w3.org</a
       >
-      (<a
-        href="${`mailto:${conf.wgPublicList}-request@w3.org?subject=subscribe`}"
-        >subscribe</a
-      >,
+      (<a href="${opts.mailToWGPublicListSubscription}">subscribe</a>,
       <a href="${`https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`}"
         >archives</a
       >)${
@@ -381,7 +369,7 @@ function noteForTeamSubmission(conf) {
   `;
 }
 
-function linkToCommunity(conf) {
+function linkToCommunity(conf, opts) {
   if (!conf.github && !conf.wgPublicList) {
     return;
   }
@@ -404,14 +392,7 @@ function linkToCommunity(conf) {
                   : "Comments regarding this document are welcome."
               }
               Please send them to
-              <a
-                href="${
-                  `mailto:${conf.wgPublicList}@w3.org${
-                    conf.subjectPrefix
-                      ? `?subject=${conf.subjectPrefixEnc}`
-                      : ""
-                  }`
-                }"
+              <a href="${opts.mailToWGPublicListWithSubject}"
                 >${conf.wgPublicList}@w3.org</a
               >
               (<a

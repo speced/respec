@@ -649,6 +649,28 @@ export function run(conf) {
  * @param {HTMLElement} sotd
  */
 function populateSoTD(conf, sotd) {
+  const options = {
+    ...collectSotdContent(sotd, conf),
+
+    get mailToWGPublicList() {
+      return `mailto:${conf.wgPublicList}@w3.org`;
+    },
+    get mailToWGPublicListWithSubject() {
+      return this.mailToWGPublicList + conf.subjectPrefix
+        ? `?subject=${conf.subjectPrefixEnc}`
+        : "";
+    },
+    get mailToWGPublicListSubscription() {
+      return `mailto:${conf.wgPublicList}-request@w3.org?subject=subscribe`;
+    },
+  };
+  return (conf.isCGBG ? cgbgSotdTmpl : sotdTmpl)(options);
+}
+
+/**
+ * @param {HTMLElement} sotd
+ */
+function collectSotdContent(sotd, { isTagFinding = false }) {
   const sotdClone = sotd.cloneNode(true);
   const additionalContent = document.createDocumentFragment();
   // we collect everything until we hit a section,
@@ -663,19 +685,18 @@ function populateSoTD(conf, sotd) {
     }
     break;
   }
-  if (conf.isTagFinding && !additionalContent.hasChildNodes()) {
+  if (isTagFinding && !additionalContent.hasChildNodes()) {
     pub(
       "warn",
       "ReSpec does not support automated SotD generation for TAG findings, " +
         "please add the prerequisite content in the 'sotd' section"
     );
   }
-  const template = conf.isCGBG ? cgbgSotdTmpl : sotdTmpl;
-  return template(conf, {
+  return {
     additionalContent,
     // Whatever sections are left, we throw at the end.
     additionalSections: sotdClone.childNodes,
-  });
+  };
 }
 
 /**
