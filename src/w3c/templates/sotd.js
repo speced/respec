@@ -1,7 +1,6 @@
-import hyperHTML from "hyperhtml";
+import html from "hyperhtml";
 
 export default (conf, opts) => {
-  const html = hyperHTML;
   return html`
     <h2>${conf.l10n.sotd}</h2>
     ${
@@ -62,103 +61,7 @@ export default (conf, opts) => {
             <p><em>${[conf.l10n.status_at_publication]}</em></p>
             ${
               conf.isSubmission
-                ? html`
-                    ${opts.additionalContent}
-                    ${
-                      conf.isMemberSubmission
-                        ? html`
-                            <p>
-                              By publishing this document, W3C acknowledges that
-                              the
-                              <a href="${conf.thisVersion}"
-                                >Submitting Members</a
-                              >
-                              have made a formal Submission request to W3C for
-                              discussion. Publication of this document by W3C
-                              indicates no endorsement of its content by W3C,
-                              nor that W3C has, is, or will be allocating any
-                              resources to the issues addressed by it. This
-                              document is not the product of a chartered W3C
-                              group, but is published as potential input to the
-                              <a href="https://www.w3.org/Consortium/Process"
-                                >W3C Process</a
-                              >. A
-                              <a
-                                href="${
-                                  `https://www.w3.org/Submission/${conf.publishDate.getUTCFullYear()}/${
-                                    conf.submissionCommentNumber
-                                  }/Comment/`
-                                }"
-                                >W3C Team Comment</a
-                              >
-                              has been published in conjunction with this Member
-                              Submission. Publication of acknowledged Member
-                              Submissions at the W3C site is one of the benefits
-                              of
-                              <a
-                                href="https://www.w3.org/Consortium/Prospectus/Joining"
-                              >
-                                W3C Membership</a
-                              >. Please consult the requirements associated with
-                              Member Submissions of
-                              <a
-                                href="https://www.w3.org/Consortium/Patent-Policy/#sec-submissions"
-                                >section 3.3 of the W3C Patent Policy</a
-                              >. Please consult the complete
-                              <a href="https://www.w3.org/Submission"
-                                >list of acknowledged W3C Member Submissions</a
-                              >.
-                            </p>
-                          `
-                        : conf.isTeamSubmission
-                        ? html`
-                            <p>
-                              If you wish to make comments regarding this
-                              document, please send them to
-                              <a
-                                href="${
-                                  `mailto:${conf.wgPublicList}@w3.org${
-                                    conf.subjectPrefix
-                                      ? `?subject=${conf.subjectPrefixEnc}`
-                                      : [""]
-                                  }`
-                                }"
-                                >${conf.wgPublicList}@w3.org</a
-                              >
-                              (<a
-                                href="${
-                                  `mailto:${
-                                    conf.wgPublicList
-                                  }-request@w3.org?subject=subscribe`
-                                }"
-                                >subscribe</a
-                              >,
-                              <a
-                                href="${
-                                  `https://lists.w3.org/Archives/Public/${
-                                    conf.wgPublicList
-                                  }/`
-                                }"
-                                >archives</a
-                              >)${
-                                conf.subjectPrefix
-                                  ? html`
-                                      with <code>${conf.subjectPrefix}</code> at
-                                      the start of your email's subject
-                                    `
-                                  : ""
-                              }.
-                            </p>
-                            <p>
-                              Please consult the complete
-                              <a href="https://www.w3.org/TeamSubmission/"
-                                >list of Team Submissions</a
-                              >.
-                            </p>
-                          `
-                        : ""
-                    }
-                  `
+                ? noteForSubmission(conf, opts)
                 : html`
                     ${!conf.sotdAfterWGinfo ? opts.additionalContent : ""}
                     ${
@@ -464,3 +367,85 @@ export default (conf, opts) => {
     ${opts.additionalSections}
   `;
 };
+
+function noteForSubmission(conf, { additionalContent }) {
+  return html`
+    ${additionalContent}
+    ${
+      conf.isMemberSubmission
+        ? noteForMemberSubmission(conf)
+        : conf.isTeamSubmission
+        ? noteForTeamSubmission(conf)
+        : ""
+    }
+  `;
+}
+
+function noteForMemberSubmission(conf) {
+  return html`
+    <p>
+      By publishing this document, W3C acknowledges that the
+      <a href="${conf.thisVersion}">Submitting Members</a> have made a formal
+      Submission request to W3C for discussion. Publication of this document by
+      W3C indicates no endorsement of its content by W3C, nor that W3C has, is,
+      or will be allocating any resources to the issues addressed by it. This
+      document is not the product of a chartered W3C group, but is published as
+      potential input to the
+      <a href="https://www.w3.org/Consortium/Process">W3C Process</a>. A
+      <a
+        href="${
+          `https://www.w3.org/Submission/${conf.publishDate.getUTCFullYear()}/${
+            conf.submissionCommentNumber
+          }/Comment/`
+        }"
+        >W3C Team Comment</a
+      >
+      has been published in conjunction with this Member Submission. Publication
+      of acknowledged Member Submissions at the W3C site is one of the benefits
+      of
+      <a href="https://www.w3.org/Consortium/Prospectus/Joining">
+        W3C Membership</a
+      >. Please consult the requirements associated with Member Submissions of
+      <a href="https://www.w3.org/Consortium/Patent-Policy/#sec-submissions"
+        >section 3.3 of the W3C Patent Policy</a
+      >. Please consult the complete
+      <a href="https://www.w3.org/Submission"
+        >list of acknowledged W3C Member Submissions</a
+      >.
+    </p>
+  `;
+}
+
+function noteForTeamSubmission(conf) {
+  return html`
+    <p>
+      If you wish to make comments regarding this document, please send them to
+      <a
+        href="${
+          `mailto:${conf.wgPublicList}@w3.org${
+            conf.subjectPrefix ? `?subject=${conf.subjectPrefixEnc}` : ""
+          }`
+        }"
+        >${conf.wgPublicList}@w3.org</a
+      >
+      (<a
+        href="${`mailto:${conf.wgPublicList}-request@w3.org?subject=subscribe`}"
+        >subscribe</a
+      >,
+      <a href="${`https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`}"
+        >archives</a
+      >)${
+        conf.subjectPrefix
+          ? html`
+              with <code>${conf.subjectPrefix}</code> at the start of your
+              email's subject
+            `
+          : ""
+      }.
+    </p>
+    <p>
+      Please consult the complete
+      <a href="https://www.w3.org/TeamSubmission/">list of Team Submissions</a>.
+    </p>
+  `;
+}
