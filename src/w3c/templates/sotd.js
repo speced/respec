@@ -76,76 +76,7 @@ export default (conf, opts) => {
                                   : ""
                               }
                             </p>
-                            ${
-                              conf.github || conf.wgPublicList
-                                ? html`
-                                    <p>
-                                      ${
-                                        conf.github
-                                          ? html`
-                                              <a href="${conf.issueBase}"
-                                                >GitHub Issues</a
-                                              >
-                                              are preferred for discussion of
-                                              this specification.
-                                            `
-                                          : ""
-                                      }
-                                      ${
-                                        conf.wgPublicList
-                                          ? html`
-                                              ${
-                                                conf.github && conf.wgPublicList
-                                                  ? html`
-                                                      Alternatively, you can
-                                                      send comments to our
-                                                      mailing list.
-                                                    `
-                                                  : "Comments regarding this document are welcome."
-                                              }
-                                              Please send them to
-                                              <a
-                                                href="${
-                                                  `mailto:${
-                                                    conf.wgPublicList
-                                                  }@w3.org${
-                                                    conf.subjectPrefix
-                                                      ? `?subject=${
-                                                          conf.subjectPrefixEnc
-                                                        }`
-                                                      : [""]
-                                                  }`
-                                                }"
-                                                >${conf.wgPublicList}@w3.org</a
-                                              >
-                                              (<a
-                                                href="${
-                                                  `https://lists.w3.org/Archives/Public/${
-                                                    conf.wgPublicList
-                                                  }/`
-                                                }"
-                                                >archives</a
-                                              >)${
-                                                conf.subjectPrefix
-                                                  ? html`
-                                                      with
-                                                      <code
-                                                        >${
-                                                          conf.subjectPrefix
-                                                        }</code
-                                                      >
-                                                      at the start of your
-                                                      email's subject
-                                                    `
-                                                  : ""
-                                              }.
-                                            `
-                                          : ""
-                                      }
-                                    </p>
-                                  `
-                                : ""
-                            }
+                            ${linkToCommunity(conf)}
                             ${
                               conf.isCR || conf.isPER || conf.isPR
                                 ? html`
@@ -446,6 +377,59 @@ function noteForTeamSubmission(conf) {
     <p>
       Please consult the complete
       <a href="https://www.w3.org/TeamSubmission/">list of Team Submissions</a>.
+    </p>
+  `;
+}
+
+function linkToCommunity(conf) {
+  if (!conf.github && !conf.wgPublicList) {
+    return;
+  }
+  return html`
+    <p>
+      ${
+        conf.github
+          ? html`
+              <a href="${conf.issueBase}">GitHub Issues</a> are preferred for
+              discussion of this specification.
+            `
+          : ""
+      }
+      ${
+        conf.wgPublicList
+          ? html`
+              ${
+                conf.github && conf.wgPublicList
+                  ? "Alternatively, you can send comments to our mailing list."
+                  : "Comments regarding this document are welcome."
+              }
+              Please send them to
+              <a
+                href="${
+                  `mailto:${conf.wgPublicList}@w3.org${
+                    conf.subjectPrefix
+                      ? `?subject=${conf.subjectPrefixEnc}`
+                      : ""
+                  }`
+                }"
+                >${conf.wgPublicList}@w3.org</a
+              >
+              (<a
+                href="${
+                  `https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`
+                }"
+                >archives</a
+              >)${
+                conf.subjectPrefix
+                  ? html`
+                      with <code>${conf.subjectPrefix}</code> at the start of
+                      your email's subject
+                    `
+                  : ""
+              }.
+            `
+          : ""
+      }
     </p>
   `;
 }
