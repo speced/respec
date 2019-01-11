@@ -1,3 +1,4 @@
+// @ts-check
 /*jshint
     forin: false
 */
@@ -214,6 +215,11 @@ const baseLogo = Object.freeze({
   width: "72",
 });
 
+/**
+ * @param {*} conf
+ * @param {string} prop
+ * @param {string | number | Date} fallbackDate
+ */
 function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   const date = conf[prop] ? new Date(conf[prop]) : new Date(fallbackDate);
   // if date is valid
@@ -252,7 +258,7 @@ export function run(conf) {
     pub("error", "Missing required configuration: `shortName`");
   }
   if (conf.testSuiteURI) {
-    const url = new URL(conf.testSuiteURI, document.location);
+    const url = new URL(conf.testSuiteURI, location.href);
     const { host, pathname } = url;
     if (
       host === "github.com" &&
@@ -649,7 +655,7 @@ function populateSoTD(conf, sotd) {
   // that becomes the custom content.
   while (sotdClone.hasChildNodes()) {
     if (
-      sotdClone.firstChild.nodeType !== Node.ELEMENT_NODE ||
+      !isElement(sotdClone.firstChild) ||
       sotdClone.firstChild.localName !== "section"
     ) {
       additionalContent.appendChild(sotdClone.firstChild);
@@ -670,4 +676,12 @@ function populateSoTD(conf, sotd) {
     // Whatever sections are left, we throw at the end.
     additionalSections: sotdClone.childNodes,
   });
+}
+
+/**
+ * @param {Node} node
+ * @return {node is Element}
+ */
+function isElement(node) {
+  return node.nodeType === Node.ELEMENT_NODE;
 }
