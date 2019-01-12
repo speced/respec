@@ -89,7 +89,7 @@ function computeProps(conf) {
     isCCBY: conf.license === "cc-by",
     licenseInfo: licenses.get(conf.license),
     isCGBG: cgbg.has(conf.specStatus),
-    isCGFinal: conf.isCGBG && /G-FINAL$/.test(conf.specStatus),
+    isCGFinal: conf.isCGBG && conf.specStatus.endsWith("G-FINAL"),
     isBasic: conf.specStatus === "base",
     isRegular: !conf.isCGBG && conf.specStatus === "base",
   };

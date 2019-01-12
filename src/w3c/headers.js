@@ -378,7 +378,7 @@ export function run(conf) {
     }
   } else {
     if (
-      !/NOTE$/.test(conf.specStatus) &&
+      !conf.specStatus.endsWith("NOTE") &&
       conf.specStatus !== "FPWD" &&
       conf.specStatus !== "FPLC" &&
       conf.specStatus !== "ED" &&
@@ -478,7 +478,7 @@ export function run(conf) {
     conf.specStatus !== "ED" &&
     !conf.isNoTrack &&
     !conf.isSubmission;
-  if (/NOTE$/.test(conf.specStatus) && !conf.prevVersion)
+  if (conf.specStatus.endsWith("NOTE") && !conf.prevVersion)
     conf.showPreviousVersion = false;
   if (conf.isTagFinding)
     conf.showPreviousVersion = conf.previousPublishDate ? true : false;
