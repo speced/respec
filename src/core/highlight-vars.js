@@ -6,7 +6,7 @@
  * All is done while keeping in mind that exported html stays clean
  * on export.
  */
-import hlVars from "text!./css/var.css";
+import hlVars from "text!../../assets/var.css";
 import { sub } from "./pubsubhub";
 
 export const name = "core/highlight-vars";

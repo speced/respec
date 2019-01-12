@@ -141,7 +141,6 @@ const Builder = {
     };
     const buildDir = path.resolve(__dirname, "../builds/");
     const workerDir = path.resolve(__dirname, "../worker/");
-    await fsp.emptyDir(buildDir);
     const stats = await promisify(webpack)(config);
     if (stats.hasErrors()) {
       throw new Error(stats.toJson().errors);

@@ -27,6 +27,10 @@ function requestLookup(conf) {
     let href = "";
     // This is just referring to this document
     if (key.toLowerCase() === conf.shortName.toLowerCase()) {
+      console.log(
+        elem,
+        `The reference "${key}" is resolved into the current document per \`conf.shortName\`.`
+      );
       href = document.location.href;
     } else {
       // Let's go look it up in spec ref...
@@ -146,6 +150,6 @@ export async function linkInlineCitations(doc, conf = respecConfig) {
   const newEntries = await updateFromNetwork(missingBibEntries);
   Object.assign(conf.biblio, newEntries);
 
-  const lookupRequests = elems.map(toLookupRequest);
+  const lookupRequests = [...new Set(elems)].map(toLookupRequest);
   return await Promise.all(lookupRequests);
 }

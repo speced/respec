@@ -9,7 +9,7 @@
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
 
-import css from "text!../ui/ui.css";
+import css from "text!../../assets/ui.css";
 import hyperHTML from "hyperhtml";
 import { markdownToHtml } from "./utils";
 import shortcut from "../shortcut";

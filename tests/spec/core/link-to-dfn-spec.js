@@ -108,4 +108,27 @@ describe("Core — Link to definitions", () => {
     const [dfn] = doc.getElementsByTagName("dfn");
     expect(dfn.id).toBe("dfn-test2");
   });
+
+  it("prefers data-lt over text content", async () => {
+    const bodyText = `
+      <section>
+        <h2>Test Section</h2>
+        <pre class="idl">
+          interface Presentation {};
+        </pre>
+        <dfn>Foo</dfn>
+        <dfn>Bar</dfn>
+        <a id="testFoo" data-lt="Foo">Presentation</a>
+        <a id="testBar" data-lt="Bar">Foo</a>
+      </section>`;
+    const ops = {
+      config: makeBasicConfig(),
+      body: makeDefaultBody() + bodyText,
+    };
+    const doc = await makeRSDoc(ops);
+    const testFoo = doc.getElementById("testFoo");
+    const testBar = doc.getElementById("testBar");
+    expect(testFoo.hash).toBe("#dfn-foo");
+    expect(testBar.hash).toBe("#dfn-bar");
+  });
 });
