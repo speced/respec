@@ -249,7 +249,7 @@ export function run(conf) {
   }
   conf.licenseInfo = licenses[conf.license];
   conf.isCGBG = cgbg.includes(conf.specStatus);
-  conf.isCGFinal = conf.isCGBG && /G-FINAL$/.test(conf.specStatus);
+  conf.isCGFinal = conf.isCGBG && conf.specStatus.endsWith("G-FINAL");
   conf.isBasic = conf.specStatus === "base";
   conf.isRegular = !conf.isCGBG && !conf.isBasic;
   if (!conf.specStatus) {
