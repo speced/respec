@@ -165,6 +165,7 @@ const status2text = {
   "BG-FINAL": "Final Business Group Report",
 };
 const status2long = {
+  ...status2text,
   "FPWD-NOTE": "First Public Working Group Note",
   "LC-NOTE": "Last Call Working Draft",
 };
@@ -465,10 +466,6 @@ export function run(conf) {
   }
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
-  for (const k in status2text) {
-    if (status2long[k]) continue;
-    status2long[k] = status2text[k];
-  }
   conf.longStatus = status2long[conf.specStatus];
   conf.textStatus = status2text[conf.specStatus];
   if (status2rdf[conf.specStatus]) {
