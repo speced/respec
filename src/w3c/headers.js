@@ -1,3 +1,4 @@
+// @ts-check
 /*jshint
     forin: false
 */
@@ -214,6 +215,11 @@ const baseLogo = Object.freeze({
   width: "72",
 });
 
+/**
+ * @param {*} conf
+ * @param {string} prop
+ * @param {string | number | Date} fallbackDate
+ */
 function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   const date = conf[prop] ? new Date(conf[prop]) : new Date(fallbackDate);
   // if date is valid
@@ -252,7 +258,7 @@ export function run(conf) {
     pub("error", "Missing required configuration: `shortName`");
   }
   if (conf.testSuiteURI) {
-    const url = new URL(conf.testSuiteURI, document.location);
+    const url = new URL(conf.testSuiteURI, location.href);
     const { host, pathname } = url;
     if (
       host === "github.com" &&
@@ -608,9 +614,6 @@ export function run(conf) {
       "error",
       "IG-NOTEs must link to charter's disclosure section using `charterDisclosureURI`."
     );
-  // ensure subjectPrefix is encoded before using template
-  if (conf.subjectPrefix !== "")
-    conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
 
   hyperHTML.bind(sotd)`${populateSoTD(conf, sotd)}`;
 
@@ -643,13 +646,37 @@ export function run(conf) {
  * @param {HTMLElement} sotd
  */
 function populateSoTD(conf, sotd) {
+  const options = {
+    ...collectSotdContent(sotd, conf),
+
+    get mailToWGPublicList() {
+      return `mailto:${conf.wgPublicList}@w3.org`;
+    },
+    get mailToWGPublicListWithSubject() {
+      const fragment = conf.subjectPrefix
+        ? `?subject=${encodeURIComponent(conf.subjectPrefix)}`
+        : "";
+      return this.mailToWGPublicList + fragment;
+    },
+    get mailToWGPublicListSubscription() {
+      return `mailto:${conf.wgPublicList}-request@w3.org?subject=subscribe`;
+    },
+  };
+  const template = conf.isCGBG ? cgbgSotdTmpl : sotdTmpl;
+  return template(conf, options);
+}
+
+/**
+ * @param {HTMLElement} sotd
+ */
+function collectSotdContent(sotd, { isTagFinding = false }) {
   const sotdClone = sotd.cloneNode(true);
   const additionalContent = document.createDocumentFragment();
   // we collect everything until we hit a section,
   // that becomes the custom content.
   while (sotdClone.hasChildNodes()) {
     if (
-      sotdClone.firstChild.nodeType !== Node.ELEMENT_NODE ||
+      !isElement(sotdClone.firstChild) ||
       sotdClone.firstChild.localName !== "section"
     ) {
       additionalContent.appendChild(sotdClone.firstChild);
@@ -657,17 +684,24 @@ function populateSoTD(conf, sotd) {
     }
     break;
   }
-  if (conf.isTagFinding && !additionalContent.hasChildNodes()) {
+  if (isTagFinding && !additionalContent.hasChildNodes()) {
     pub(
       "warn",
       "ReSpec does not support automated SotD generation for TAG findings, " +
         "please add the prerequisite content in the 'sotd' section"
     );
   }
-  const template = conf.isCGBG ? cgbgSotdTmpl : sotdTmpl;
-  return template(conf, {
+  return {
     additionalContent,
     // Whatever sections are left, we throw at the end.
     additionalSections: sotdClone.childNodes,
-  });
+  };
+}
+
+/**
+ * @param {Node} node
+ * @return {node is Element}
+ */
+function isElement(node) {
+  return node.nodeType === Node.ELEMENT_NODE;
 }
