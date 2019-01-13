@@ -638,7 +638,8 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
     let i = 0;
     let nextId = `${id}-${i}`;
     while (elem.ownerDocument.getElementById(nextId)) {
-      nextId = `${id}-${i++}`;
+      nextId = `${id}-${i}`;
+      i += 1;
     }
     id = nextId;
   }
