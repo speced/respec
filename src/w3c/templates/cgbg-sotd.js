@@ -1,6 +1,6 @@
 import hyperHTML from "hyperhtml";
 
-export default (conf, opts) => {
+export default conf => {
   const html = hyperHTML;
   return html`
     <h2>${conf.l10n.sotd}</h2>
@@ -62,17 +62,17 @@ export default (conf, opts) => {
         >W3C Community and Business Groups</a
       >.
     </p>
-    ${!conf.sotdAfterWGinfo ? opts.additionalContent : ""}
+    ${!conf.sotdAfterWGinfo ? conf.additionalContent : ""}
     ${
       conf.wgPublicList
         ? html`
             <p>
               If you wish to make comments regarding this document, please send
               them to
-              <a href="${opts.mailToWGPublicListWithSubject}"
+              <a href="${conf.mailToWGPublicListWithSubject}"
                 >${conf.wgPublicList}@w3.org</a
               >
-              (<a href="${opts.mailToWGPublicListSubscription}">subscribe</a>,
+              (<a href="${conf.mailToWGPublicListSubscription}">subscribe</a>,
               <a
                 href="${
                   `https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`
@@ -90,7 +90,7 @@ export default (conf, opts) => {
           `
         : ""
     }
-    ${conf.sotdAfterWGinfo ? opts.additionalContent : ""}
-    ${opts.additionalSections}
+    ${conf.sotdAfterWGinfo ? conf.additionalContent : ""}
+    ${conf.additionalSections}
   `;
 };

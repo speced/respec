@@ -1,6 +1,6 @@
 import html from "hyperhtml";
 
-export default (conf, opts) => {
+export default conf => {
   return html`
     <h2>${conf.l10n.sotd}</h2>
     ${
@@ -43,10 +43,10 @@ export default (conf, opts) => {
               official standing of any kind and does not represent the support
               or consensus of any standards organization.
             </p>
-            ${opts.additionalContent}
+            ${conf.additionalContent}
           `
         : conf.isTagFinding
-        ? opts.additionalContent
+        ? conf.additionalContent
         : conf.isNoTrack
         ? html`
             <p>
@@ -55,15 +55,15 @@ export default (conf, opts) => {
               official standing of any kind and does not represent consensus of
               the W3C Membership.
             </p>
-            ${opts.additionalContent}
+            ${conf.additionalContent}
           `
         : html`
             <p><em>${[conf.l10n.status_at_publication]}</em></p>
             ${
               conf.isSubmission
-                ? noteForSubmission(conf, opts)
+                ? noteForSubmission(conf, conf)
                 : html`
-                    ${!conf.sotdAfterWGinfo ? opts.additionalContent : ""}
+                    ${!conf.sotdAfterWGinfo ? conf.additionalContent : ""}
                     ${
                       !conf.overrideStatus
                         ? html`
@@ -76,7 +76,7 @@ export default (conf, opts) => {
                                   : ""
                               }
                             </p>
-                            ${linkToCommunity(conf, opts)}
+                            ${linkToCommunity(conf, conf)}
                             ${
                               conf.isCR || conf.isPER || conf.isPR
                                 ? html`
@@ -120,13 +120,13 @@ export default (conf, opts) => {
                                               <a
                                                 rel="discussion"
                                                 href="${
-                                                  opts.mailToWGPublicList
+                                                  conf.mailToWGPublicList
                                                 }"
                                                 >${conf.wgPublicList}@w3.org</a
                                               >
                                               (<a
                                                 href="${
-                                                  opts.mailToWGPublicListSubscription
+                                                  conf.mailToWGPublicListSubscription
                                                 }"
                                                 >subscribe</a
                                               >,
@@ -170,7 +170,7 @@ export default (conf, opts) => {
                           `
                         : ""
                     }
-                    ${conf.sotdAfterWGinfo ? opts.additionalContent : ""}
+                    ${conf.sotdAfterWGinfo ? conf.additionalContent : ""}
                     ${
                       conf.notRec
                         ? html`
@@ -291,7 +291,7 @@ export default (conf, opts) => {
             }
           `
     }
-    ${opts.additionalSections}
+    ${conf.additionalSections}
   `;
 };
 

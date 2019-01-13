@@ -216,6 +216,383 @@ const baseLogo = Object.freeze({
   width: "72",
 });
 
+function createTemplateOptions(conf) {
+  const options = {
+    get mailToWGPublicList() {
+      return `mailto:${this.wgPublicList}@w3.org`;
+    },
+    get mailToWGPublicListWithSubject() {
+      const fragment = this.subjectPrefix
+        ? `?subject=${encodeURIComponent(this.subjectPrefix)}`
+        : "";
+      return this.mailToWGPublicList + fragment;
+    },
+    get mailToWGPublicListSubscription() {
+      return `mailto:${this.wgPublicList}-request@w3.org?subject=subscribe`;
+    },
+    get isUnofficial() {
+      return this.specStatus === "unofficial";
+    },
+    get logos() {
+      if (this.isUnofficial && !Array.isArray(conf.logos)) {
+        return [];
+      }
+      if (this.isSubmission) {
+        const logos = conf.logos.slice();
+        if (this.isMemberSubmission) {
+          const memSubmissionLogo = {
+            alt: "W3C Member Submission",
+            href: "https://www.w3.org/Submission/",
+            src: "https://www.w3.org/Icons/member_subm-v.svg",
+            width: "211",
+          };
+          logos.push({ ...baseLogo, ...memSubmissionLogo });
+        }
+        if (this.isTeamSubmission) {
+          const teamSubmissionLogo = {
+            alt: "W3C Team Submission",
+            href: "https://www.w3.org/TeamSubmission/",
+            src: "https://www.w3.org/Icons/team_subm-v.svg",
+            width: "211",
+          };
+          logos.push({ ...baseLogo, ...teamSubmissionLogo });
+        }
+        return logos;
+      }
+      return conf.logos;
+    },
+    get isCCBY() {
+      return this.license === "cc-by";
+    },
+    get isW3CSoftAndDocLicense() {
+      return this.license === "w3c-software-doc";
+    },
+    get licenseInfo() {
+      return licenses[this.license];
+    },
+    get isCGBG() {
+      return cgbg.includes(this.specStatus);
+    },
+    get isCGFinal() {
+      return this.isCGBG && this.specStatus.endsWith("G-FINAL");
+    },
+    get isBasic() {
+      return this.specStatus === "base";
+    },
+    get isRegular() {
+      return !this.isCGBG && !this.isBasic;
+    },
+    get title() {
+      return document.title || "No Title";
+    },
+    get subtitle() {
+      return conf.subtitle || "";
+    },
+    get publishYear() {
+      return this.publishDate.getUTCFullYear();
+    },
+    get publishHumanDate() {
+      return W3CDate.format(this.publishDate);
+    },
+    get isNoTrack() {
+      return noTrackStatus.includes(this.specStatus);
+    },
+    get isRecTrack() {
+      return this.noRecTrack ? false : recTrackStatus.includes(this.specStatus);
+    },
+    get isMemberSubmission() {
+      return this.specStatus === "Member-SUBM";
+    },
+    get isTeamSubmission() {
+      return this.specStatus === "Team-SUBM";
+    },
+    get isSubmission() {
+      return this.isMemberSubmission || this.isTeamSubmission;
+    },
+    get anOrA() {
+      return precededByAn.includes(this.specStatus) ? "an" : "a";
+    },
+    get isTagFinding() {
+      return (
+        this.specStatus === "finding" || this.specStatus === "draft-finding"
+      );
+    },
+    get maturity() {
+      return status2maturity[this.specStatus] || this.specStatus;
+    },
+    get publishSpace() {
+      if (this.specStatus === "Member-SUBM") return "Submission";
+      else if (this.specStatus === "Team-SUBM") return "TeamSubmission";
+      return "TR";
+    },
+    get thisVersion() {
+      if (this.isRegular) {
+        return (
+          "https://www.w3.org/" +
+          this.publishSpace +
+          "/" +
+          this.publishDate.getUTCFullYear() +
+          "/" +
+          this.maturity +
+          "-" +
+          this.shortName +
+          "-" +
+          concatDate(this.publishDate) +
+          "/"
+        );
+      }
+      if (this.specStatus === "ED") {
+        return this.edDraftURI;
+      }
+      if (this.isTagFinding) {
+        return "https://www.w3.org/2001/tag/doc/" + this.shortName;
+      }
+      return conf.thisVersion;
+    },
+    get latestVersion() {
+      if (this.isRegular) {
+        return (
+          "https://www.w3.org/" + this.publishSpace + "/" + this.shortName + "/"
+        );
+      }
+      if (this.isTagFinding) {
+        return conf.latestVersion + "-" + ISODate.format(this.publishDate);
+      }
+      return conf.latestVersion;
+    },
+    get prevVersion() {
+      if (!this.previousPublishDate) {
+        return this.prevVersion || "";
+      }
+      if (this.isTagFinding) {
+        return (
+          this.latestVersion + "-" + ISODate.format(this.previousPublishDate)
+        );
+      } else if (this.isCGBG) {
+        return this.prevVersion || "";
+      } else if (this.isBasic) {
+        return "";
+      }
+      const pmat = status2maturity[this.previousMaturity]
+        ? status2maturity[this.previousMaturity]
+        : this.previousMaturity;
+      return (
+        "https://www.w3.org/TR/" +
+        this.previousPublishDate.getUTCFullYear() +
+        "/" +
+        pmat +
+        "-" +
+        this.shortName +
+        "-" +
+        concatDate(this.previousPublishDate) +
+        "/"
+      );
+    },
+    get prevRecURI() {
+      if (this.prevRecShortname && !conf.prevRecURI) {
+        return "https://www.w3.org/TR/" + this.prevRecShortname;
+      }
+      return conf.prevRecURI;
+    },
+    get multipleEditors() {
+      return this.editors && this.editors.length > 1;
+    },
+    get multipleFormerEditors() {
+      return Array.isArray(this.formerEditors) && this.formerEditors.length > 1;
+    },
+    get multipleAuthors() {
+      return this.authors && this.authors.length > 1;
+    },
+    get multipleAlternates() {
+      return this.alternateFormats && this.alternateFormats.length > 1;
+    },
+    get alternatesHTML() {
+      return (
+        this.alternateFormats &&
+        joinAnd(this.alternateFormats, alt => {
+          let optional =
+            alt.hasOwnProperty("lang") && alt.lang
+              ? " hreflang='" + alt.lang + "'"
+              : "";
+          optional +=
+            alt.hasOwnProperty("type") && alt.type
+              ? " type='" + alt.type + "'"
+              : "";
+          return (
+            "<a rel='alternate' href='" +
+            alt.uri +
+            "'" +
+            optional +
+            ">" +
+            alt.label +
+            "</a>"
+          );
+        })
+      );
+    },
+    get bugTrackerHTML() {
+      if (!this.bugTracker) {
+        return "";
+      }
+      if (this.bugTracker.new && this.bugTracker.open) {
+        return (
+          "<a href='" +
+          this.bugTracker.new +
+          "'>" +
+          this.l10n.file_a_bug +
+          "</a> " +
+          this.l10n.open_parens +
+          "<a href='" +
+          this.bugTracker.open +
+          "'>" +
+          this.l10n.open_bugs +
+          "</a>" +
+          this.l10n.close_parens
+        );
+      } else if (this.bugTracker.open) {
+        return "<a href='" + this.bugTracker.open + "'>open bugs</a>";
+      } else if (this.bugTracker.new) {
+        return "<a href='" + this.bugTracker.new + "'>file a bug</a>";
+      }
+      return "";
+    },
+    get copyrightStart() {
+      if (conf.copyrightStart && conf.copyrightStart == this.publishYear) {
+        return "";
+      }
+      return conf.copyrightStart;
+    },
+    get longStatus() {
+      return status2long[this.specStatus];
+    },
+    get textStatus() {
+      return status2text[this.specStatus];
+    },
+    get rdfStatus() {
+      return status2rdf[this.specStatus];
+    },
+    get showThisVersion() {
+      return !this.isNoTrack || this.isTagFinding;
+    },
+    get showPreviousVersion() {
+      if (this.specStatus.endsWith("NOTE") && !this.prevVersion) {
+        return false;
+      }
+      if (this.isTagFinding) {
+        return !!this.previousPublishDate;
+      }
+      return (
+        this.specStatus !== "FPWD" &&
+        this.specStatus !== "FPLC" &&
+        this.specStatus !== "ED" &&
+        !this.isNoTrack &&
+        !this.isSubmission
+      );
+    },
+    get notYetRec() {
+      return this.isRecTrack && this.specStatus !== "REC";
+    },
+    get isRec() {
+      return this.isRecTrack && this.specStatus === "REC";
+    },
+    get notRec() {
+      return this.specStatus !== "REC";
+    },
+    get prependW3C() {
+      return !this.isUnofficial;
+    },
+    get isED() {
+      return this.specStatus === "ED";
+    },
+    get isCR() {
+      return this.specStatus === "CR";
+    },
+    get isPR() {
+      return this.specStatus === "PR";
+    },
+    get isPER() {
+      return this.specStatus === "PER";
+    },
+    get isMO() {
+      return this.specStatus === "MO";
+    },
+    get isNote() {
+      return ["FPWD-NOTE", "WG-NOTE"].includes(this.specStatus);
+    },
+    get isIGNote() {
+      return this.specStatus === "IG-NOTE";
+    },
+    get dashDate() {
+      return ISODate.format(this.publishDate);
+    },
+    get publishISODate() {
+      return this.publishDate.toISOString();
+    },
+    get shortISODate() {
+      return ISODate.format(this.publishDate);
+    },
+    get wgId() {
+      if (!this.wgPatentURI) {
+        return "";
+      }
+      // it's always at "pp-impl" + 1
+      const urlParts = this.wgPatentURI.split("/");
+      const pos = urlParts.findIndex(item => item === "pp-impl") + 1;
+      return urlParts[pos] || "";
+    },
+    get multipleWGs() {
+      return Array.isArray(this.wg) && this.wg.length > 1;
+    },
+    get wgHTML() {
+      if (!Array.isArray(this.wg)) {
+        return "the <a href='" + this.wgURI + "'>" + this.wg + "</a>";
+      }
+      return joinAnd(
+        this.wg,
+        (wg, idx) => "the <a href='" + this.wgURI[idx] + "'>" + wg + "</a>"
+      );
+    },
+    get wgPatentHTML() {
+      const pats = [];
+      for (let i = 0, n = this.wg.length; i < n; i++) {
+        pats.push(
+          "a <a href='" +
+            this.wgPatentURI[i] +
+            "' rel='disclosure'>" +
+            "public list of any patent disclosures  (" +
+            this.wg[i] +
+            ")</a>"
+        );
+      }
+      return joinAnd(pats);
+    },
+    get humanCREnd() {
+      return W3CDate.format(this.crEnd);
+    },
+    get humanPREnd() {
+      return W3CDate.format(this.prEnd);
+    },
+    get humanPEREnd() {
+      return W3CDate.format(this.perEnd);
+    },
+    get recNotExpected() {
+      return conf.recNotExpected
+        ? true
+        : !this.isRecTrack &&
+            this.maturity == "WD" &&
+            this.specStatus !== "FPWD-NOTE";
+    }
+  };
+  // TODO: use object spread on top of the options object
+  // after https://github.com/babel/babel/issues/9322
+  for (const [key, value] of Object.entries(conf)) {
+    if (!(key in options)) {
+      options[key] = value;
+    }
+  }
+  return options;
+}
+
 /**
  * @param {*} conf
  * @param {string} prop
@@ -235,31 +612,21 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   return new Date(ISODate.format(new Date()));
 }
 
-export function run(conf) {
-  conf.isUnofficial = conf.specStatus === "unofficial";
-  if (conf.isUnofficial && !Array.isArray(conf.logos)) {
-    conf.logos = [];
-  }
-  conf.isCCBY = conf.license === "cc-by";
-  conf.isW3CSoftAndDocLicense = conf.license === "w3c-software-doc";
-  if (["cc-by"].includes(conf.license)) {
-    let msg = `You cannot use license "\`${conf.license}\`" with W3C Specs. `;
-    msg += `Please set \`respecConfig.license: "w3c-software-doc"\` instead.`;
+function validateConfigurationAndTryRecover(options) {
+  if (["cc-by"].includes(options.license)) {
+    const msg =
+      `You cannot use license "\`${options.license}\`" with W3C Specs. ` +
+      'Please set `respecConfig.license: "w3c-software-doc"` instead.';
     pub("error", msg);
   }
-  conf.licenseInfo = licenses[conf.license];
-  conf.isCGBG = cgbg.includes(conf.specStatus);
-  conf.isCGFinal = conf.isCGBG && conf.specStatus.endsWith("G-FINAL");
-  conf.isBasic = conf.specStatus === "base";
-  conf.isRegular = !conf.isCGBG && !conf.isBasic;
-  if (!conf.specStatus) {
+  if (!options.specStatus) {
     pub("error", "Missing required configuration: `specStatus`");
   }
-  if (conf.isRegular && !conf.shortName) {
+  if (options.isRegular && !options.shortName) {
     pub("error", "Missing required configuration: `shortName`");
   }
-  if (conf.testSuiteURI) {
-    const url = new URL(conf.testSuiteURI, location.href);
+  if (options.testSuiteURI) {
+    const url = new URL(options.testSuiteURI, location.href);
     const { host, pathname } = url;
     if (
       host === "github.com" &&
@@ -269,264 +636,88 @@ export function run(conf) {
         "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. " +
         "Please update your [`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI) to point to the " +
         `new tests repository (e.g., https://github.com/web-platform-tests/wpt/${
-          conf.shortName
+          options.shortName
         } ).`;
       pub("warn", msg);
     }
   }
-  conf.title = document.title || "No Title";
-  if (!conf.subtitle) conf.subtitle = "";
-  conf.publishDate = validateDateAndRecover(
-    conf,
+  options.publishDate = validateDateAndRecover(
+    options,
     "publishDate",
     document.lastModified
   );
-  conf.publishYear = conf.publishDate.getUTCFullYear();
-  conf.publishHumanDate = W3CDate.format(conf.publishDate);
-  conf.isNoTrack = noTrackStatus.includes(conf.specStatus);
-  conf.isRecTrack = conf.noRecTrack
-    ? false
-    : recTrackStatus.includes(conf.specStatus);
-  conf.isMemberSubmission = conf.specStatus === "Member-SUBM";
-  if (conf.isMemberSubmission) {
-    const memSubmissionLogo = {
-      alt: "W3C Member Submission",
-      href: "https://www.w3.org/Submission/",
-      src: "https://www.w3.org/Icons/member_subm-v.svg",
-      width: "211",
-    };
-    conf.logos.push({ ...baseLogo, ...memSubmissionLogo });
+  if (!options.edDraftURI && options.specStatus === "ED") {
+    pub("warn", "Editor's Drafts should set edDraftURI.");
   }
-  conf.isTeamSubmission = conf.specStatus === "Team-SUBM";
-  if (conf.isTeamSubmission) {
-    const teamSubmissionLogo = {
-      alt: "W3C Team Submission",
-      href: "https://www.w3.org/TeamSubmission/",
-      src: "https://www.w3.org/Icons/team_subm-v.svg",
-      width: "211",
-    };
-    conf.logos.push({ ...baseLogo, ...teamSubmissionLogo });
-  }
-  conf.isSubmission = conf.isMemberSubmission || conf.isTeamSubmission;
-  conf.anOrA = precededByAn.includes(conf.specStatus) ? "an" : "a";
-  conf.isTagFinding =
-    conf.specStatus === "finding" || conf.specStatus === "draft-finding";
-  if (!conf.edDraftURI) {
-    conf.edDraftURI = "";
-    if (conf.specStatus === "ED")
-      pub("warn", "Editor's Drafts should set edDraftURI.");
-  }
-  conf.maturity = status2maturity[conf.specStatus]
-    ? status2maturity[conf.specStatus]
-    : conf.specStatus;
-  let publishSpace = "TR";
-  if (conf.specStatus === "Member-SUBM") publishSpace = "Submission";
-  else if (conf.specStatus === "Team-SUBM") publishSpace = "TeamSubmission";
-  if (conf.isRegular)
-    conf.thisVersion =
-      "https://www.w3.org/" +
-      publishSpace +
-      "/" +
-      conf.publishDate.getUTCFullYear() +
-      "/" +
-      conf.maturity +
-      "-" +
-      conf.shortName +
-      "-" +
-      concatDate(conf.publishDate) +
-      "/";
-  if (conf.specStatus === "ED") conf.thisVersion = conf.edDraftURI;
-  if (conf.isRegular)
-    conf.latestVersion =
-      "https://www.w3.org/" + publishSpace + "/" + conf.shortName + "/";
-  if (conf.isTagFinding) {
-    conf.latestVersion = "https://www.w3.org/2001/tag/doc/" + conf.shortName;
-    conf.thisVersion =
-      conf.latestVersion + "-" + ISODate.format(conf.publishDate);
-  }
-  if (conf.previousPublishDate) {
-    if (!conf.previousMaturity && !conf.isTagFinding) {
+  if (options.previousPublishDate) {
+    if (!options.previousMaturity && !options.isTagFinding) {
       pub("error", "`previousPublishDate` is set, but not `previousMaturity`.");
     }
 
-    conf.previousPublishDate = validateDateAndRecover(
-      conf,
+    options.previousPublishDate = validateDateAndRecover(
+      options,
       "previousPublishDate"
     );
-
-    const pmat = status2maturity[conf.previousMaturity]
-      ? status2maturity[conf.previousMaturity]
-      : conf.previousMaturity;
-    if (conf.isTagFinding) {
-      conf.prevVersion =
-        conf.latestVersion + "-" + ISODate.format(conf.previousPublishDate);
-    } else if (conf.isCGBG) {
-      conf.prevVersion = conf.prevVersion || "";
-    } else if (conf.isBasic) {
-      conf.prevVersion = "";
-    } else {
-      conf.prevVersion =
-        "https://www.w3.org/TR/" +
-        conf.previousPublishDate.getUTCFullYear() +
-        "/" +
-        pmat +
-        "-" +
-        conf.shortName +
-        "-" +
-        concatDate(conf.previousPublishDate) +
-        "/";
-    }
-  } else {
-    if (
-      !conf.specStatus.endsWith("NOTE") &&
-      conf.specStatus !== "FPWD" &&
-      conf.specStatus !== "FPLC" &&
-      conf.specStatus !== "ED" &&
-      !conf.noRecTrack &&
-      !conf.isNoTrack &&
-      !conf.isSubmission
-    )
-      pub(
-        "error",
-        "Document on track but no previous version:" +
-          " Add `previousMaturity`, and `previousPublishDate` to ReSpec's config."
-      );
-    if (!conf.prevVersion) conf.prevVersion = "";
+  } else if (
+    !options.specStatus.endsWith("NOTE") &&
+    options.specStatus !== "FPWD" &&
+    options.specStatus !== "FPLC" &&
+    options.specStatus !== "ED" &&
+    !options.noRecTrack &&
+    !options.isNoTrack &&
+    !options.isSubmission
+  ) {
+    pub(
+      "error",
+      "Document on track but no previous version:" +
+        " Add `previousMaturity`, and `previousPublishDate` to ReSpec's config."
+    );
   }
-  if (conf.prevRecShortname && !conf.prevRecURI)
-    conf.prevRecURI = "https://www.w3.org/TR/" + conf.prevRecShortname;
-  if (!conf.editors || conf.editors.length === 0)
+  if (!options.editors || options.editors.length === 0) {
     pub("error", "At least one editor is required");
-  const peopCheck = function(it) {
+  }
+  const peopCheck = it => {
     if (!it.name) pub("error", "All authors and editors must have a name.");
   };
-  if (conf.editors) {
-    conf.editors.forEach(peopCheck);
+  if (options.editors) {
+    options.editors.forEach(peopCheck);
   }
-  if (conf.formerEditors) {
-    conf.formerEditors.forEach(peopCheck);
+  if (options.formerEditors) {
+    options.formerEditors.forEach(peopCheck);
   }
-  if (conf.authors) {
-    conf.authors.forEach(peopCheck);
+  if (options.authors) {
+    options.authors.forEach(peopCheck);
   }
-  conf.multipleEditors = conf.editors && conf.editors.length > 1;
-  conf.multipleFormerEditors =
-    Array.isArray(conf.formerEditors) && conf.formerEditors.length > 1;
-  conf.multipleAuthors = conf.authors && conf.authors.length > 1;
-  (conf.alternateFormats || []).forEach(it => {
+  (options.alternateFormats || []).forEach(it => {
     if (!it.uri || !it.label) {
       pub("error", "All alternate formats must have a uri and a label.");
     }
   });
-  conf.multipleAlternates =
-    conf.alternateFormats && conf.alternateFormats.length > 1;
-  conf.alternatesHTML =
-    conf.alternateFormats &&
-    joinAnd(conf.alternateFormats, alt => {
-      let optional =
-        alt.hasOwnProperty("lang") && alt.lang
-          ? " hreflang='" + alt.lang + "'"
-          : "";
-      optional +=
-        alt.hasOwnProperty("type") && alt.type
-          ? " type='" + alt.type + "'"
-          : "";
-      return (
-        "<a rel='alternate' href='" +
-        alt.uri +
-        "'" +
-        optional +
-        ">" +
-        alt.label +
-        "</a>"
-      );
-    });
-  if (conf.bugTracker) {
-    if (conf.bugTracker.new && conf.bugTracker.open) {
-      conf.bugTrackerHTML =
-        "<a href='" +
-        conf.bugTracker.new +
-        "'>" +
-        conf.l10n.file_a_bug +
-        "</a> " +
-        conf.l10n.open_parens +
-        "<a href='" +
-        conf.bugTracker.open +
-        "'>" +
-        conf.l10n.open_bugs +
-        "</a>" +
-        conf.l10n.close_parens;
-    } else if (conf.bugTracker.open) {
-      conf.bugTrackerHTML =
-        "<a href='" + conf.bugTracker.open + "'>open bugs</a>";
-    } else if (conf.bugTracker.new) {
-      conf.bugTrackerHTML =
-        "<a href='" + conf.bugTracker.new + "'>file a bug</a>";
-    }
-  }
-  if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
-    conf.copyrightStart = "";
-  conf.longStatus = status2long[conf.specStatus];
-  conf.textStatus = status2text[conf.specStatus];
-  if (status2rdf[conf.specStatus]) {
-    conf.rdfStatus = status2rdf[conf.specStatus];
-  }
-  conf.showThisVersion = !conf.isNoTrack || conf.isTagFinding;
-  conf.showPreviousVersion =
-    conf.specStatus !== "FPWD" &&
-    conf.specStatus !== "FPLC" &&
-    conf.specStatus !== "ED" &&
-    !conf.isNoTrack &&
-    !conf.isSubmission;
-  if (conf.specStatus.endsWith("NOTE") && !conf.prevVersion)
-    conf.showPreviousVersion = false;
-  if (conf.isTagFinding)
-    conf.showPreviousVersion = conf.previousPublishDate ? true : false;
-  conf.notYetRec = conf.isRecTrack && conf.specStatus !== "REC";
-  conf.isRec = conf.isRecTrack && conf.specStatus === "REC";
-  if (conf.isRec && !conf.errata)
+  if (options.isRec && !options.errata) {
     pub("error", "Recommendations must have an errata link.");
-  conf.notRec = conf.specStatus !== "REC";
-  conf.prependW3C = !conf.isUnofficial;
-  conf.isED = conf.specStatus === "ED";
-  conf.isCR = conf.specStatus === "CR";
-  conf.isPR = conf.specStatus === "PR";
-  conf.isPER = conf.specStatus === "PER";
-  conf.isMO = conf.specStatus === "MO";
-  conf.isNote = ["FPWD-NOTE", "WG-NOTE"].includes(conf.specStatus);
-  conf.isIGNote = conf.specStatus === "IG-NOTE";
-  conf.dashDate = ISODate.format(conf.publishDate);
-  conf.publishISODate = conf.publishDate.toISOString();
-  conf.shortISODate = ISODate.format(conf.publishDate);
-  Object.defineProperty(conf, "wgId", {
-    get() {
-      if (!this.hasOwnProperty("wgPatentURI")) {
-        return "";
-      }
-      // it's always at "pp-impl" + 1
-      const urlParts = this.wgPatentURI.split("/");
-      const pos = urlParts.findIndex(item => item === "pp-impl") + 1;
-      return urlParts[pos] || "";
-    },
-  });
-  // configuration done - yay!
-
-  // insert into document
-  const header = (conf.isCGBG ? cgbgHeadersTmpl : headersTmpl)(conf);
-  document.body.prepend(header);
-  document.body.classList.add("h-entry");
-
-  // handle SotD
-  const sotd =
-    document.getElementById("sotd") || document.createElement("section");
-  if ((conf.isCGBG || !conf.isNoTrack || conf.isTagFinding) && !sotd.id) {
+  }
+  if (options.specStatus === "PR" && !options.crEnd) {
     pub(
       "error",
-      "A custom SotD paragraph is required for your type of document."
+      `\`specStatus\` is "PR" but no \`crEnd\` is specified (needed to indicate end of previous CR).`
     );
   }
-  sotd.id = sotd.id || "sotd";
-  sotd.classList.add("introductory");
+  if (options.specStatus === "CR" && !options.crEnd) {
+    pub(
+      "error",
+      `\`specStatus\` is "CR", but no \`crEnd\` is specified in Respec config.`
+    );
+  }
+  options.crEnd = validateDateAndRecover(options, "crEnd");
+  if (options.specStatus === "PR" && !options.prEnd) {
+    pub("error", `\`specStatus\` is "PR" but no \`prEnd\` is specified.`);
+  }
+  options.prEnd = validateDateAndRecover(options, "prEnd");
+  if (options.specStatus === "PER" && !options.perEnd) {
+    pub("error", "Status is PER but no perEnd is specified");
+  }
+  options.perEnd = validateDateAndRecover(options, "perEnd");
+
   // NOTE:
   //  When arrays, wg and wgURI have to be the same length (and in the same order).
   //  Technically wgURI could be longer but the rest is ignored.
@@ -535,7 +726,7 @@ export function run(conf) {
   //  happens when one is foolish enough to do joint work with the TAG). In such cases,
   //  the groups whose patent policy applies need to be listed first, and wgPatentURI
   //  can be shorter — but it still needs to be an array.
-  const wgPotentialArray = [conf.wg, conf.wgURI, conf.wgPatentURI];
+  const wgPotentialArray = [options.wg, options.wgURI, options.wgPatentURI];
   if (
     wgPotentialArray.some(item => Array.isArray(item)) &&
     !wgPotentialArray.every(item => Array.isArray(item))
@@ -545,83 +736,27 @@ export function run(conf) {
       "If one of '`wg`', '`wgURI`', or '`wgPatentURI`' is an array, they all have to be."
     );
   }
-  if (conf.isCGBG && !conf.wg) {
+  if (options.isCGBG && !options.wg) {
     pub(
       "error",
       "[`wg`](https://github.com/w3c/respec/wiki/wg)" +
         " configuration option is required for this kind of document."
     );
   }
-  if (Array.isArray(conf.wg)) {
-    conf.multipleWGs = conf.wg.length > 1;
-    conf.wgHTML = joinAnd(conf.wg, (wg, idx) => {
-      return "the <a href='" + conf.wgURI[idx] + "'>" + wg + "</a>";
-    });
-    const pats = [];
-    for (let i = 0, n = conf.wg.length; i < n; i++) {
-      pats.push(
-        "a <a href='" +
-          conf.wgPatentURI[i] +
-          "' rel='disclosure'>" +
-          "public list of any patent disclosures  (" +
-          conf.wg[i] +
-          ")</a>"
-      );
-    }
-    conf.wgPatentHTML = joinAnd(pats);
-  } else {
-    conf.multipleWGs = false;
-    conf.wgHTML = "the <a href='" + conf.wgURI + "'>" + conf.wg + "</a>";
-  }
-  if (conf.specStatus === "PR" && !conf.crEnd) {
-    pub(
-      "error",
-      `\`specStatus\` is "PR" but no \`crEnd\` is specified (needed to indicate end of previous CR).`
-    );
-  }
-
-  if (conf.specStatus === "CR" && !conf.crEnd) {
-    pub(
-      "error",
-      `\`specStatus\` is "CR", but no \`crEnd\` is specified in Respec config.`
-    );
-  }
-  conf.crEnd = validateDateAndRecover(conf, "crEnd");
-  conf.humanCREnd = W3CDate.format(conf.crEnd);
-
-  if (conf.specStatus === "PR" && !conf.prEnd) {
-    pub("error", `\`specStatus\` is "PR" but no \`prEnd\` is specified.`);
-  }
-  conf.prEnd = validateDateAndRecover(conf, "prEnd");
-  conf.humanPREnd = W3CDate.format(conf.prEnd);
-
-  if (conf.specStatus === "PER" && !conf.perEnd) {
-    pub("error", "Status is PER but no perEnd is specified");
-  }
-  conf.perEnd = validateDateAndRecover(conf, "perEnd");
-  conf.humanPEREnd = W3CDate.format(conf.perEnd);
-
-  conf.recNotExpected = conf.recNotExpected
-    ? true
-    : !conf.isRecTrack &&
-      conf.maturity == "WD" &&
-      conf.specStatus !== "FPWD-NOTE";
-  if (conf.isIGNote && !conf.charterDisclosureURI)
+  if (options.isIGNote && !options.charterDisclosureURI) {
     pub(
       "error",
       "IG-NOTEs must link to charter's disclosure section using `charterDisclosureURI`."
     );
-
-  hyperHTML.bind(sotd)`${populateSoTD(conf, sotd)}`;
-
-  if (!conf.implementationReportURI && conf.isCR) {
+  }
+  if (!options.implementationReportURI && options.isCR) {
     pub(
       "error",
       "CR documents must have an [`implementationReportURI`](https://github.com/w3c/respec/wiki/implementationReportURI) " +
         "that describes [implementation experience](https://www.w3.org/2018/Process-20180201/#implementation-experience)."
     );
   }
-  if (!conf.implementationReportURI && conf.isPR) {
+  if (!options.implementationReportURI && options.isPR) {
     pub(
       "warn",
       "PR documents should include an " +
@@ -629,38 +764,50 @@ export function run(conf) {
         " that describes [implementation experience](https://www.w3.org/2018/Process-20180201/#implementation-experience)."
     );
   }
+}
+
+export function run(conf) {
+  const options = createTemplateOptions(conf);
+  validateConfigurationAndTryRecover(options);
+
+  // insert into document
+  const header = (options.isCGBG ? cgbgHeadersTmpl : headersTmpl)(options);
+  document.body.prepend(header);
+  document.body.classList.add("h-entry");
+
+  // handle SotD
+  const sotd =
+    document.getElementById("sotd") || document.createElement("section");
+  if (
+    (options.isCGBG || !options.isNoTrack || options.isTagFinding) &&
+    !sotd.id
+  ) {
+    pub(
+      "error",
+      "A custom SotD paragraph is required for your type of document."
+    );
+    sotd.id = "sotd";
+  }
+  sotd.classList.add("introductory");
+
+  hyperHTML.bind(sotd)`${populateSoTD(options, sotd)}`;
 
   // Requested by https://github.com/w3c/respec/issues/504
   // Makes a record of a few auto-generated things.
   pub("amend-user-config", {
-    publishISODate: conf.publishISODate,
-    generatedSubtitle: `${conf.longStatus} ${conf.publishHumanDate}`,
+    publishISODate: options.publishISODate,
+    generatedSubtitle: `${options.longStatus} ${options.publishHumanDate}`,
   });
 }
 
 /**
- * @param {*} conf
+ * @param {*} options
  * @param {HTMLElement} sotd
  */
-function populateSoTD(conf, sotd) {
-  const options = {
-    ...collectSotdContent(sotd, conf),
-
-    get mailToWGPublicList() {
-      return `mailto:${conf.wgPublicList}@w3.org`;
-    },
-    get mailToWGPublicListWithSubject() {
-      const fragment = conf.subjectPrefix
-        ? `?subject=${encodeURIComponent(conf.subjectPrefix)}`
-        : "";
-      return this.mailToWGPublicList + fragment;
-    },
-    get mailToWGPublicListSubscription() {
-      return `mailto:${conf.wgPublicList}-request@w3.org?subject=subscribe`;
-    },
-  };
-  const template = conf.isCGBG ? cgbgSotdTmpl : sotdTmpl;
-  return template(conf, options);
+function populateSoTD(options, sotd) {
+  Object.assign(options, collectSotdContent(sotd, options));
+  const template = options.isCGBG ? cgbgSotdTmpl : sotdTmpl;
+  return template(options);
 }
 
 /**
