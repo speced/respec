@@ -4,13 +4,13 @@
 //   so later they can be handled by core/link-to-dfn.
 // https://github.com/w3c/respec/issues/1662
 
-import * as IDB from "idb";
 import {
   IDBKeyVal,
   nonNormativeSelector,
   norm as normalize,
   showInlineWarning,
 } from "./utils";
+import { openDb } from "idb";
 
 const API_URL = new URL(
   "https://wt-466c7865b463a6c4cbb820b42dde9e58-0.sandbox.auth0-extend.com/xref-proto-2"
@@ -35,7 +35,7 @@ const CACHE_MAX_AGE = 86400000; // 24 hours
  * @param {Array:Elements} elems possibleExternalLinks
  */
 export async function run(conf, elems) {
-  const idb = await IDB.open("xref", 1, upgradeDB => {
+  const idb = await openDb("xref", 1, upgradeDB => {
     upgradeDB.createObjectStore("xrefs");
   });
   const cache = new IDBKeyVal(idb, "xrefs");
