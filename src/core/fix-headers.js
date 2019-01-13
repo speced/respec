@@ -12,7 +12,7 @@ export function run() {
     .filter(h => h)
     .forEach(heading => {
       const depth = Math.min(getParents(heading, "section").length + 1, 6);
-      renameElement(heading, "h" + depth);
+      renameElement(heading, `h${depth}`);
     });
 }
 

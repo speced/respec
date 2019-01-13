@@ -67,6 +67,7 @@ async function runRespec2html() {
       debug(msg);
       await exe.run();
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error(colors.error(err));
       errors.add(exe.cmd);
     }
@@ -78,6 +79,7 @@ async function runRespec2html() {
 }
 
 function debug(msg) {
+  // eslint-disable-next-line no-console
   console.log(colors.debug(`${colors.input(moment().format("LTS"))} ${msg}`));
 }
 
@@ -86,6 +88,7 @@ async function run() {
   try {
     await runRespec2html();
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error(err);
     process.exit(1);
   }

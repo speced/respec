@@ -30,7 +30,7 @@ export function run() {
       txt = req.querySelector("a:first-child").textContent;
     } else {
       txt = `Req. not found '${id}'`;
-      const msg = "Requirement not found in element `a.reqRef`: " + id;
+      const msg = `Requirement not found in element \`a.reqRef\`: ${id}`;
       pub("error", msg);
       console.warn(msg, ref);
     }

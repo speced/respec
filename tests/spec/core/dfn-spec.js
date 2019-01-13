@@ -4,9 +4,7 @@ describe("Core — Definitions", () => {
   it("processes definitions", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        "<section id='dfn'><dfn>text</dfn><a>text</a></section>",
+      body: `${makeDefaultBody()}<section id='dfn'><dfn>text</dfn><a>text</a></section>`,
     };
     const doc = await makeRSDoc(ops);
     const sec = doc.getElementById("dfn");
@@ -17,9 +15,7 @@ describe("Core — Definitions", () => {
   it("makes links <code> when their definitions are <code>", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `<section id='dfn'>
+      body: `${makeDefaultBody()}<section id='dfn'>
           <code><dfn>outerCode</dfn></code>
           <pre><dfn>outerPre</dfn></pre>
           <dfn><code>innerCode</code></dfn>
@@ -47,9 +43,7 @@ describe("Core — Definitions", () => {
   it("links <code> for IDL, but not when text doesn't match", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `
+      body: `${makeDefaultBody()}
           <pre class="idl">
             interface Test {};
           </pre>
@@ -69,9 +63,7 @@ describe("Core — Definitions", () => {
   it("processes aliases", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `<section id='dfn'>
+      body: `${makeDefaultBody()}<section id='dfn'>
           <dfn data-lt='text|text 1|text  2|text 3 '>text</dfn>
           <a>text</a>
         </section>`,

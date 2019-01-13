@@ -16,7 +16,7 @@ export const name = "core/examples";
 function makeTitle(conf, elem, num, report) {
   report.title = elem.title;
   if (report.title) elem.removeAttribute("title");
-  const number = num > 0 ? " " + num : "";
+  const number = num > 0 ? ` ${num}` : "";
 
   return hyperHTML`
   <div class="marker"><a class="self-link">${conf.l10n.example}${number}</a>${
@@ -50,7 +50,7 @@ export function run(conf) {
       ++number;
       const div = makeTitle(conf, example, number, report);
       example.prepend(div);
-      const id = addId(example, "ex-" + number, title);
+      const id = addId(example, `ex-${number}`, title);
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${id}`;
       pub("example", report);
@@ -72,7 +72,7 @@ export function run(conf) {
           ${example.cloneNode(true)}
         </div>
       `;
-      addId(div, "ex-" + number, title);
+      addId(div, `ex-${number}`, title);
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${div.id}`;
       example.parentElement.replaceChild(div, example);
