@@ -353,7 +353,7 @@ function generateMarkdownLink(element, i) {
 
 export class IDBKeyVal {
   /**
-   * @param {{ _db: IDBDatabase }} idb
+   * @param {import("idb").DB} idb
    * @param {string} storeName
    */
   constructor(idb, storeName) {
