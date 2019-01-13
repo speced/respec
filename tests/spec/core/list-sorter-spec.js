@@ -5,9 +5,7 @@ describe("Core — list-sorter", () => {
   beforeAll(async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `
+      body: `${makeDefaultBody()}
         <ol data-sort=ascending>
           <li>F</li>
           <li>Z</li>

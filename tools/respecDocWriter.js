@@ -66,7 +66,7 @@ async function fetchAndWrite(
   whenToHalt,
   { timeout = 300000, disableSandbox = false, debug = false } = {}
 ) {
-  const userDataDir = await mkdtemp(os.tmpdir() + "/respec2html-");
+  const userDataDir = await mkdtemp(`${os.tmpdir()}/respec2html-`);
   const args = disableSandbox ? ["--no-sandbox"] : undefined;
   const browser = await puppeteer.launch({
     userDataDir,
@@ -115,14 +115,13 @@ async function generateHTML(page, version, url) {
   try {
     return await page.evaluate(evaluateHTML);
   } catch (err) {
-    const msg =
-      "\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n" +
-      colors.debug(
-        `Specification: ${url}\n` +
-          `ReSpec version: ${version.join(".")}\n` +
-          "File a bug: https://github.com/w3c/respec/\n" +
-          (err ? `Error: ${err}\n` : "")
-      );
+    const msg = `\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n${colors.debug(
+      `${`Specification: ${url}\n` +
+        `ReSpec version: ${version.join(".")}\n` +
+        "File a bug: https://github.com/w3c/respec/\n"}${
+        err ? `Error: ${err}\n` : ""
+      }`
+    )}`;
     throw new Error(msg);
   }
 }
@@ -133,9 +132,9 @@ async function checkReSpecVersion(page) {
   const [mayor] = version;
   // The exportDocument() method only appeared in vesion 18.
   if (mayor < 18) {
-    let msg =
-      "👴🏽  Ye Olde ReSpec version detected! " +
-      colors.debug("Sorry, we only support ReSpec version 18.0.0 onwards.\n");
+    let msg = `👴🏽  Ye Olde ReSpec version detected! ${colors.debug(
+      "Sorry, we only support ReSpec version 18.0.0 onwards.\n"
+    )}`;
     msg += colors.debug(
       `The document has version: ${colors.info(version.join("."))}\n`
     );

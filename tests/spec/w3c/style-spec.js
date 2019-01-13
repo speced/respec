@@ -62,12 +62,12 @@ async function loadWithStatus(status, expectedURL, mode) {
   switch (mode) {
     case "experimental":
       config.useExperimentalStyles = true;
-      version = 2016 + "/";
+      version = `${2016}/`;
       break;
     default:
       if (mode) {
         config.useExperimentalStyles = mode;
-        version = mode + "/";
+        version = `${mode}/`;
       }
   }
   const testedURL = expectedURL.replace("{version}", version);

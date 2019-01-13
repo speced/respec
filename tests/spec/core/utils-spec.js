@@ -17,7 +17,7 @@ describe("Core - Utils", () => {
     }
     beforeEach(clearCaches);
     it("caches a requests of different type with a 1 day default", async () => {
-      const url = location.origin + "/tests/data/pass.txt";
+      const url = `${location.origin}/tests/data/pass.txt`;
       const requests = [url, new URL(url), new Request(url)];
       for (const request of requests) {
         expect(await caches.match(request)).toBe(undefined);
@@ -40,13 +40,13 @@ describe("Core - Utils", () => {
 
     it("uses the origin as the cache key", async () => {
       expect(await caches.keys()).toEqual([]);
-      const url = location.origin + "/tests/data/pass.txt";
+      const url = `${location.origin}/tests/data/pass.txt`;
       await utils.fetchAndCache(url);
       expect(await caches.keys()).toEqual([location.origin]);
     });
 
     it("returns a cached response when the response is not ok", async () => {
-      const url = location.origin + "/bad-request";
+      const url = `${location.origin}/bad-request`;
       const cache = await caches.open(location.origin);
       const goodResponse = new Response("PASS");
       await cache.put(url, goodResponse);
@@ -56,7 +56,7 @@ describe("Core - Utils", () => {
     });
 
     it("returns a fresh network response when the cached response is expired", async () => {
-      const url = location.origin + "/tests/data/pass.txt";
+      const url = `${location.origin}/tests/data/pass.txt`;
       const cache = await caches.open(location.origin);
       const yesterday = Date.now() - 86400000;
       const expiredResponse = new Response("FAIL", {
@@ -71,7 +71,7 @@ describe("Core - Utils", () => {
     });
 
     it("allows overriding the default cache time", async () => {
-      const url = location.origin + "/tests/data/pass.txt";
+      const url = `${location.origin}/tests/data/pass.txt`;
       const cachedResponse = await utils.fetchAndCache(url, 0);
       expect(cachedResponse.headers.has("Expires")).toBe(true);
       const cacheTime = new Date(

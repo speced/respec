@@ -27,7 +27,7 @@ function show() {
     .map(([, [dfn]]) => {
       return hyperHTML.wire(dfn, ":li>a")`
         <li>
-          <a href="${"#" + dfn.id}">
+          <a href="${`#${dfn.id}`}">
             ${dfn.textContent}
           </a>
         </li>

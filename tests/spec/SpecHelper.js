@@ -9,7 +9,7 @@ function makeRSDoc(opts = {}, src = "about-blank.html", style = "") {
     opts = opts || {};
     // reject when DEFAULT_TIMEOUT_INTERVAL passes
     const timeoutId = setTimeout(() => {
-      reject(new Error("Timed out waiting on " + src));
+      reject(new Error(`Timed out waiting on ${src}`));
     }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
     ifr.addEventListener("load", async () => {
       const doc = ifr.contentDocument;
@@ -89,7 +89,7 @@ function decorateDocument(doc, opts) {
   }
 
   function decorateBody({ abstract = "<p>test abstract</p>", body = "" }) {
-    doc.body.innerHTML += `<section id='abstract'>${abstract}</section>` + body;
+    doc.body.innerHTML += `<section id='abstract'>${abstract}</section>${body}`;
   }
 
   if (opts.htmlAttrs) {
