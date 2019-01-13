@@ -4,9 +4,7 @@ describe("Core — Examples", () => {
   it("processes examples", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `<section>
+      body: `${makeDefaultBody()}<section>
           <pre class='example' title='EX'>\n  {\n    CONTENT\n  }\n  </pre>
         </section>`,
     };
@@ -29,9 +27,7 @@ describe("Core — Examples", () => {
   it("processes aside examples", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `<article>
+      body: `${makeDefaultBody()}<article>
            <aside class='example' title='EX'>\n{\n  CONTENT\n}\n  </aside>
          </article>`,
     };

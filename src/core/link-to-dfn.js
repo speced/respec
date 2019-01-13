@@ -134,7 +134,7 @@ function assignDfnId(dfn, title) {
   if (!dfn.id) {
     const { dfnFor } = dfn.dataset;
     if (dfn.dataset.idl) {
-      addId(dfn, "dom", (dfnFor ? dfnFor + "-" : "") + title);
+      addId(dfn, "dom", (dfnFor ? `${dfnFor}-` : "") + title);
     } else {
       addId(dfn, "dfn", title);
     }
@@ -163,7 +163,7 @@ function findLinkTarget(target, ant, titleToDfns, possibleExternalLinks) {
     ant.dataset.lt = lt[0] || dfn.textContent;
     possibleExternalLinks.push(ant);
   } else {
-    ant.href = "#" + dfn.id;
+    ant.href = `#${dfn.id}`;
     ant.classList.add("internalDFN");
   }
   // add a bikeshed style indication of the type of link

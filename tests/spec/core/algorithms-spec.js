@@ -4,9 +4,7 @@ describe("Core — Algorithm Lists", () => {
   it("adds 'assert' CSS class to Assert: in ordered lists that are marked as algorithms", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `<section>
+      body: `${makeDefaultBody()}<section>
           <ol class='algorithm'>
             <li>
               Assert: one.
@@ -23,9 +21,7 @@ describe("Core — Algorithm Lists", () => {
   it("doesn't add 'assert' CSS class to Assert: in ordered lists that are not marked as algorithms", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `<section>
+      body: `${makeDefaultBody()}<section>
           <ol>
             <li>Assert: shouldn't be modified.</li>
             <li>This shouldn't be modified.</li>

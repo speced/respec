@@ -9,7 +9,7 @@ describe("Core — xref", () => {
     await clear(cache);
   });
 
-  const apiURL = location.origin + "/tests/data/xref.json";
+  const apiURL = `${location.origin}/tests/data/xref.json`;
   const localBiblio = {
     html: { id: "HTML", href: "https://html.spec.whatwg.org/multipage/" },
     "service-workers": {
