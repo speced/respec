@@ -165,6 +165,7 @@ const status2text = {
   "BG-FINAL": "Final Business Group Report",
 };
 const status2long = {
+  ...status2text,
   "FPWD-NOTE": "First Public Working Group Note",
   "LC-NOTE": "Last Call Working Draft",
 };
@@ -248,7 +249,7 @@ export function run(conf) {
   }
   conf.licenseInfo = licenses[conf.license];
   conf.isCGBG = cgbg.includes(conf.specStatus);
-  conf.isCGFinal = conf.isCGBG && /G-FINAL$/.test(conf.specStatus);
+  conf.isCGFinal = conf.isCGBG && conf.specStatus.endsWith("G-FINAL");
   conf.isBasic = conf.specStatus === "base";
   conf.isRegular = !conf.isCGBG && !conf.isBasic;
   if (!conf.specStatus) {
@@ -267,7 +268,7 @@ export function run(conf) {
       const msg =
         "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. " +
         "Please update your [`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI) to point to the " +
-        `new tests repository (e.g., https://github.com/web-platform-tests/${
+        `new tests repository (e.g., https://github.com/web-platform-tests/wpt/${
           conf.shortName
         } ).`;
       pub("warn", msg);
@@ -364,7 +365,7 @@ export function run(conf) {
     }
   } else {
     if (
-      !/NOTE$/.test(conf.specStatus) &&
+      !conf.specStatus.endsWith("NOTE") &&
       conf.specStatus !== "FPWD" &&
       conf.specStatus !== "FPLC" &&
       conf.specStatus !== "ED" &&
@@ -430,10 +431,6 @@ export function run(conf) {
   }
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
-  for (const k in status2text) {
-    if (status2long[k]) continue;
-    status2long[k] = status2text[k];
-  }
   conf.longStatus = status2long[conf.specStatus];
   conf.textStatus = status2text[conf.specStatus];
   if (status2rdf[conf.specStatus]) {
@@ -446,7 +443,7 @@ export function run(conf) {
     conf.specStatus !== "ED" &&
     !conf.isNoTrack &&
     !conf.isSubmission;
-  if (/NOTE$/.test(conf.specStatus) && !conf.prevVersion)
+  if (conf.specStatus.endsWith("NOTE") && !conf.prevVersion)
     conf.showPreviousVersion = false;
   if (conf.isTagFinding)
     conf.showPreviousVersion = conf.previousPublishDate ? true : false;
