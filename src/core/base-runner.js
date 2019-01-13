@@ -25,7 +25,7 @@ function toRunnable(plug) {
         reject(new Error(msg));
       }, 15000);
       if (canMeasure) {
-        performance.mark(name + "-start");
+        performance.mark(`${name}-start`);
       }
       try {
         if (plug.run.length <= 1) {
@@ -43,8 +43,8 @@ function toRunnable(plug) {
         clearTimeout(timerId);
       }
       if (canMeasure) {
-        performance.mark(name + "-end");
-        performance.measure(name, name + "-start", name + "-end");
+        performance.mark(`${name}-end`);
+        performance.measure(name, `${name}-start`, `${name}-end`);
       }
     });
   };
@@ -53,7 +53,7 @@ function toRunnable(plug) {
 export async function runAll(plugs) {
   pub("start-all", respecConfig);
   if (canMeasure) {
-    performance.mark(name + "-start");
+    performance.mark(`${name}-start`);
   }
   await preProcessDone;
   const runnables = plugs.filter(plug => plug && plug.run).map(toRunnable);
@@ -69,7 +69,7 @@ export async function runAll(plugs) {
   pub("end-all", respecConfig);
   removeReSpec(document);
   if (canMeasure) {
-    performance.mark(name + "-end");
-    performance.measure(name, name + "-start", name + "-end");
+    performance.mark(`${name}-end`);
+    performance.measure(name, `${name}-start`, `${name}-end`);
   }
 }

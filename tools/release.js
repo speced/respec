@@ -245,7 +245,7 @@ const Prompts = {
     pack.version = await this.askQuestion(promptOps);
     await fsp.writeFile(
       packagePath,
-      JSON.stringify(pack, null, 2) + "\n",
+      `${JSON.stringify(pack, null, 2)}\n`,
       "utf8"
     );
     return pack.version;

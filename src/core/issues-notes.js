@@ -54,7 +54,7 @@ function handleIssues(ins, ghIssues, conf) {
         (isFeatureAtRisk ? " atrisk" : "")}'></div>`;
       const title = document.createElement("span");
       const titleParent = hyperHTML`
-        <div role='heading' class='${type + "-title marker"}'>${title}</div>`;
+        <div role='heading' class='${`${type}-title marker`}'>${title}</div>`;
       addId(titleParent, "h", type);
       let text = displayType;
       if (inno.id) {
@@ -71,9 +71,9 @@ function handleIssues(ins, ghIssues, conf) {
       let ghIssue;
       if (isIssue) {
         if (!hasDataNum) {
-          text += " " + issueNum;
+          text += ` ${issueNum}`;
         } else if (dataNum) {
-          text += " " + dataNum;
+          text += ` ${dataNum}`;
           const link = linkToIssueTracker(dataNum, conf, { isFeatureAtRisk });
           if (link) {
             title.before(link);
@@ -181,7 +181,7 @@ function createIssueSummaryEntry(l10nIssue, report, id) {
     ? hyperHTML`<span style="text-transform: none">: ${report.title}</span>`
     : "";
   return hyperHTML`
-    <li><a href="${"#" + id}">${issueNumberText}</a>${title}</li>
+    <li><a href="${`#${id}`}">${issueNumberText}</a>${title}</li>
   `;
 }
 

@@ -184,7 +184,7 @@ export function normalizePadding(text = "") {
     return node !== null && node.nodeType === Node.TEXT_NODE;
   }
   // Force into body
-  const parserInput = "<body>" + text;
+  const parserInput = `<body>${text}`;
   const doc = new DOMParser().parseFromString(parserInput, "text/html");
   // Normalize block level elements children first
   Array.from(doc.body.children)
@@ -243,7 +243,7 @@ export function normalizePadding(text = "") {
         }
         node.textContent = padding + node.textContent.replace(replacer, "");
         return replacer;
-      }, new RegExp("^ {1," + chop + "}", "gm"));
+      }, new RegExp(`^ {1,${chop}}`, "gm"));
     // deal with pre elements... we can chop whitespace from their siblings
     const endsWithSpace = new RegExp(`\\ {${chop}}$`, "gm");
     Array.from(doc.body.querySelectorAll("pre"))
@@ -260,7 +260,7 @@ export function normalizePadding(text = "") {
       }, chop);
   }
   const result = endsWithSpace.test(doc.body.innerHTML)
-    ? doc.body.innerHTML.trimRight() + "\n"
+    ? `${doc.body.innerHTML.trimRight()}\n`
     : doc.body.innerHTML;
   return result;
 }
@@ -305,7 +305,7 @@ export function showInlineWarning(elems, msg, title) {
       return generateMarkdownLink(element, i);
     })
     .join(", ");
-  pub("warn", msg + ` at: ${links}.`);
+  pub("warn", `${msg} at: ${links}.`);
   console.warn(msg, elems);
 }
 
@@ -323,7 +323,7 @@ export function showInlineError(elems, msg, title) {
       return generateMarkdownLink(element, i);
     })
     .join(", ");
-  pub("error", msg + ` at: ${links}.`);
+  pub("error", `${msg} at: ${links}.`);
   console.error(msg, elems);
 }
 
@@ -421,7 +421,7 @@ export function toShortIsoDate(date) {
 
 // takes a string, prepends a "0" if it is of length 1, does nothing otherwise
 export function lead0(str) {
-  return String(str).length === 1 ? "0" + str : str;
+  return String(str).length === 1 ? `0${str}` : str;
 }
 
 // takes a YYYY-MM-DD date and returns a Date object for it
@@ -629,16 +629,16 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
   if (!id) {
     id = "generatedID";
   } else if (/\.$/.test(id) || !/^[a-z]/i.test(id)) {
-    id = "x" + id; // trailing . doesn't play well with jQuery
+    id = `x${id}`; // trailing . doesn't play well with jQuery
   }
   if (pfx) {
     id = `${pfx}-${id}`;
   }
   if (elem.ownerDocument.getElementById(id)) {
     let i = 0;
-    let nextId = id + "-" + i;
+    let nextId = `${id}-${i}`;
     while (elem.ownerDocument.getElementById(nextId)) {
-      nextId = id + "-" + i++;
+      nextId = `${id}-${i++}`;
     }
     id = nextId;
   }
@@ -700,7 +700,7 @@ export function getDfnTitles(elem, { isDefinition = false } = {}) {
     titleString = elem.dataset.lt.toLowerCase();
     if (normText !== "" && !titleString.startsWith(`${normText}|`)) {
       // Use the definition itself, so to avoid having to declare the definition twice.
-      titleString += "|" + normText;
+      titleString += `|${normText}`;
     }
   } else if (
     elem.childNodes.length === 1 &&

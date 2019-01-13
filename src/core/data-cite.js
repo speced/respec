@@ -95,7 +95,7 @@ function citeDetailsConverter(conf) {
       dataset.citeFrag = rawKey.replace("#", ""); // the key is acting as fragment
       return toCiteDetails(elem);
     }
-    const frag = citeFrag ? "#" + citeFrag : findFrag(rawKey);
+    const frag = citeFrag ? `#${citeFrag}` : findFrag(rawKey);
     const path = citePath || findPath(rawKey).split("#")[0]; // path is always before "#"
     const { type } = refTypeFromContext(rawKey, elem);
     const isNormative = type === "normative";

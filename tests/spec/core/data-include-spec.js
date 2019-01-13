@@ -61,9 +61,7 @@ describe("Core — Data Include", () => {
     //Data URI encoding of: "## PASS", which markdown converts to a H2 element.
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `<section
+      body: `${makeDefaultBody()}<section
           id="includes"
           data-include="data:text/plain;charset=utf-8,%23%23%20PASS">
         </section>`,

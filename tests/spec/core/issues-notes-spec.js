@@ -34,13 +34,12 @@ describe("Core — Issues and Notes", () => {
     const ops = {
       config: makeBasicConfig(),
       body:
-        makeDefaultBody() +
-        "<section><p>BLAH <span class='issue'>ISS-INLINE</span></p>" +
-        "<p class='issue' title='ISS-TIT'>ISSUE</p>" +
-        "<p>BLAH <span class='issue atrisk'>ATR-INLINE</span></p>" +
-        "<p class='issue atrisk' title='ATR-TIT'>FEATURE AT RISK</p>" +
-        "<p>BLAH <span class='note'>NOT-INLINE</span></p>" +
-        "<p class='note' title='NOT-TIT'>NOTE</p></section>",
+        `${makeDefaultBody()}<section><p>BLAH <span class='issue'>ISS-INLINE</span></p>` +
+        `<p class='issue' title='ISS-TIT'>ISSUE</p>` +
+        `<p>BLAH <span class='issue atrisk'>ATR-INLINE</span></p>` +
+        `<p class='issue atrisk' title='ATR-TIT'>FEATURE AT RISK</p>` +
+        `<p>BLAH <span class='note'>NOT-INLINE</span></p>` +
+        `<p class='note' title='NOT-TIT'>NOTE</p></section>`,
     };
     const doc = await makeRSDoc(ops);
     const iss = doc.querySelector("div.issue", doc);
@@ -81,9 +80,8 @@ describe("Core — Issues and Notes", () => {
     const ops = {
       config: makeBasicConfig(),
       body:
-        makeDefaultBody() +
-        "<section><p>BLAH <span class='ednote'>EDNOTE-INLINE</span></p>" +
-        "<p class='ednote' title='EDNOTE-TIT'>EDNOTE</p>",
+        `${makeDefaultBody()}<section><p>BLAH <span class='ednote'>EDNOTE-INLINE</span></p>` +
+        `<p class='ednote' title='EDNOTE-TIT'>EDNOTE</p>`,
     };
     const doc = await makeRSDoc(ops);
     const edNote = doc.querySelector("div.ednote");
@@ -100,10 +98,9 @@ describe("Core — Issues and Notes", () => {
     const ops = {
       config: makeBasicConfig(),
       body:
-        makeDefaultBody() +
-        "<section><p>BLAH <span class='warning'>WARN-INLINE</span></p>" +
-        "<p class='warning' title='WARN-TIT'>WARNING</p>" +
-        "<p class='issue' title='ISS-TIT'>ISSUE</p></section>",
+        `${makeDefaultBody()}<section><p>BLAH <span class='warning'>WARN-INLINE</span></p>` +
+        `<p class='warning' title='WARN-TIT'>WARNING</p>` +
+        `<p class='issue' title='ISS-TIT'>ISSUE</p></section>`,
     };
     const doc = await makeRSDoc(ops);
     expect(doc.querySelectorAll("section .warning").length).toBe(2);
@@ -136,9 +133,7 @@ describe("Core — Issues and Notes", () => {
     };
     const ops = {
       config: githubConfig,
-      body:
-        makeDefaultBody() +
-        `
+      body: `${makeDefaultBody()}
         <div class='issue' data-number='1540'>issue is open on github</div>
         <div class='issue' id='this-is-404' data-number='404'>this is 404</div>
         <section id='issue-summary'></section>
@@ -218,9 +213,7 @@ describe("Core — Issues and Notes", () => {
     };
     const ops = {
       config: issueBaseConfig,
-      body:
-        makeDefaultBody() +
-        "<section><p class='issue' data-number='10'>ISSUE</p></section>",
+      body: `${makeDefaultBody()}<section><p class='issue' data-number='10'>ISSUE</p></section>`,
     };
     const doc = await makeRSDoc(ops);
     const iss = doc.querySelector("div.issue");
@@ -228,7 +221,7 @@ describe("Core — Issues and Notes", () => {
     expect(iss.querySelectorAll("div.issue-title").length).toBe(1);
     expect(iss.querySelector("div.issue-title").textContent).toBe("Issue 10");
     expect(iss.querySelector("div.issue-title a").getAttribute("href")).toBe(
-      issueBaseConfig.issueBase + "10"
+      `${issueBaseConfig.issueBase}10`
     );
     expect(piss.getAttribute("title")).toBeNull();
     expect(piss.textContent).toBe("ISSUE");
@@ -241,9 +234,7 @@ describe("Core — Issues and Notes", () => {
     };
     const ops = {
       config: githubConfig,
-      body:
-        makeDefaultBody() +
-        `
+      body: `${makeDefaultBody()}
         <div class='issue' id='this-should-exist' data-number='1548'>issue is closed on github</div>
         <div class='issue' data-number='1540'>issue is open on github</div>
         <div class='issue' id='i-should-be-here-too'>regular issue</div>
@@ -280,9 +271,7 @@ describe("Core — Issues and Notes", () => {
     };
     const ops = {
       config: githubConfig,
-      body:
-        makeDefaultBody() +
-        `<div class='issue' id='issue1540' data-number='1540'></div>`,
+      body: `${makeDefaultBody()}<div class='issue' id='issue1540' data-number='1540'></div>`,
     };
     const doc = await makeRSDoc(ops);
     const issueDiv1 = doc.getElementById("issue1540");
@@ -306,9 +295,7 @@ describe("Core — Issues and Notes", () => {
     };
     const ops = {
       config: atRiskBaseConfig,
-      body:
-        makeDefaultBody() +
-        "<section><p class='issue atrisk' data-number='10'>FEATURE AT RISK</p></section>",
+      body: `${makeDefaultBody()}<section><p class='issue atrisk' data-number='10'>FEATURE AT RISK</p></section>`,
     };
     const doc = await makeRSDoc(ops);
     const iss = doc.querySelector("div.atrisk");
@@ -318,7 +305,7 @@ describe("Core — Issues and Notes", () => {
       "(Feature at Risk) Issue 10"
     );
     expect(iss.querySelector("div.issue-title a").getAttribute("href")).toBe(
-      atRiskBaseConfig.atRiskBase + "10"
+      `${atRiskBaseConfig.atRiskBase}10`
     );
     expect(piss.getAttribute("title")).toBeNull();
     expect(piss.textContent).toBe("FEATURE AT RISK");
@@ -331,16 +318,14 @@ describe("Core — Issues and Notes", () => {
     };
     const ops = {
       config,
-      body:
-        makeDefaultBody() +
-        "<section><p class='issue atrisk' data-number='1540'>FEATURE AT RISK</p></section>",
+      body: `${makeDefaultBody()}<section><p class='issue atrisk' data-number='1540'>FEATURE AT RISK</p></section>`,
     };
     const doc = await makeRSDoc(ops);
     const issue = doc.querySelector("div.atrisk");
     const issueTitles = issue.querySelectorAll("div.issue-title");
     expect(issueTitles.length).toBe(1);
     expect(issueTitles[0].querySelector("a").getAttribute("href")).toBe(
-      config.github + "/issues/1540"
+      `${config.github}/issues/1540`
     );
   });
 });
