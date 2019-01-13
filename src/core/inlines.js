@@ -40,12 +40,18 @@ export function run(conf) {
   // PROCESSING
   const txts = getTextNodes(document.body, ["pre"]);
   const rx = new RegExp(
-    `${"(\\bMUST(?:\\s+NOT)?\\b|\\bSHOULD(?:\\s+NOT)?\\b|\\bSHALL(?:\\s+NOT)?\\b|" +
-    "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +
-    "(?:{{3}\\s*.*\\s*}{3})|" + // inline IDL references
-      "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])"}${
-      abbrRx ? `|${abbrRx}` : ""
-    })`
+    `(${[
+      "\\bMUST(?:\\s+NOT)?\\b",
+      "\\bSHOULD(?:\\s+NOT)?\\b",
+      "\\bSHALL(?:\\s+NOT)?\\b",
+      "\\bMAY\\b",
+      "\\b(?:NOT\\s+)?REQUIRED\\b",
+      "\\b(?:NOT\\s+)?RECOMMENDED\\b",
+      "\\bOPTIONAL\\b",
+      "(?:{{3}\\s*.*\\s*}{3})", // inline IDL references,
+      "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])",
+      ...(abbrRx ? [abbrRx] : []),
+    ].join("|")})`
   );
   for (const txt of txts) {
     const subtxt = txt.data.split(rx);
