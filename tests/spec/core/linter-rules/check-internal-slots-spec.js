@@ -29,7 +29,7 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
     const [result] = results;
     expect(result.name).toEqual(ruleName);
     // only first four are checked, rest are filtered
-    expect(result.occurrences).toEqual(4);
+    expect(result.occurrences).toEqual(1);
 
     const offendingElement = result.offendingElements[0];
     const { previousSibling } = offendingElement;
@@ -60,6 +60,7 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
       <var>bar</var>.<a>[[f oo]]</a>
     `;
     const results = await rule.lint(config, doc);
+    console.log(results);
     expect(results.length).toEqual(0);
   });
 });
