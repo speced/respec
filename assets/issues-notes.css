@@ -36,11 +36,6 @@ span.note, span.ednote, span.issue, span.warning { padding: .1em .5em .15em; }
     text-decoration: line-through;
 }
 
-.note, .ednote {
-    border-color: #52e052;
-    background: #e9fbe9;
-}
-
 .warning {
     border-color: #f11;
     border-width: .2em;
