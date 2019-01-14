@@ -126,25 +126,6 @@ async function generateHTML(page, version, url) {
   }
 }
 
-async function checkReSpecVersion(page) {
-  await page.waitForFunction(() => window.hasOwnProperty("respecVersion"));
-  const version = await page.evaluate(getVersion);
-  const [mayor] = version;
-  // The exportDocument() method only appeared in vesion 18.
-  if (mayor < 18) {
-    let msg = `👴🏽  Ye Olde ReSpec version detected! ${colors.debug(
-      "Sorry, we only support ReSpec version 18.0.0 onwards.\n"
-    )}`;
-    msg += colors.debug(
-      `The document has version: ${colors.info(version.join("."))}\n`
-    );
-    msg += colors.debug("Grab the latest ReSpec from: ");
-    msg += colors.gray.underline("https:github.com/w3c/respec/");
-    throw new Error(msg);
-  }
-  return version;
-}
-
 async function checkIfReSpec(page) {
   const isRespecDoc = await page.evaluate(isRespec);
   if (!isRespecDoc) {
@@ -177,10 +158,7 @@ async function isRespec() {
 
 async function evaluateHTML() {
   await document.respecIsReady;
-  const [major, minor] =
-    window.respecVersion === "Developer Edition"
-      ? [123456789, 0, 0]
-      : window.respecVersion.split(".").map(str => parseInt(str, 10));
+  const [major, minor] = getVersion();
   if (major < 20 || (major === 20 && minor < 10)) {
     console.warn(
       "👴🏽  Ye Olde ReSpec version detected! Please update to 20.10.0 or above. " +
@@ -211,8 +189,7 @@ function getVersion() {
   if (window.respecVersion === "Developer Edition") {
     return [123456789, 0, 0];
   }
-  const version = window.respecVersion.split(".").map(str => parseInt(str, 10));
-  return version;
+  return window.respecVersion.split(".").map(str => parseInt(str, 10));
 }
 /**
  * Handles messages from the browser's Console API.
