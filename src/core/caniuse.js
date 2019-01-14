@@ -53,7 +53,7 @@ export async function run(conf) {
     return; // no feature to show
   }
   const { feature } = caniuse;
-  const featureURL = "https://caniuse.com/#feat=" + feature;
+  const featureURL = `https://caniuse.com/#feat=${feature}`;
   const link = createResourceHint({
     hint: "preconnect",
     href: "https://raw.githubusercontent.com",
@@ -190,7 +190,7 @@ function createTableHTML(conf, stats) {
     };
     const addBrowserVersion = version => {
       const { support, title } = getSupport(version);
-      const cssClass = "caniuse-cell " + support;
+      const cssClass = `caniuse-cell ${support}`;
       return `<li class="${cssClass}" title="${title}">${version}</li>`;
     };
 

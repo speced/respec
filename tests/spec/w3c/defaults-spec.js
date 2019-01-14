@@ -35,7 +35,7 @@ describe("W3C — Defaults", () => {
           "check-internal-slots": true,
         },
         license: "c0",
-        specStatus: "unofficial",
+        specStatus: "ED",
         shortName: "foo",
         highlightVars: false,
       },
@@ -54,6 +54,6 @@ describe("W3C — Defaults", () => {
     });
     expect(rsConf.highlightVars).toEqual(false);
     expect(rsConf.license).toEqual("c0");
-    expect(rsConf.specStatus).toEqual("unofficial");
+    expect(rsConf.specStatus).toEqual("ED");
   });
 });

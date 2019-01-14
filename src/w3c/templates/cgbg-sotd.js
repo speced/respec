@@ -69,22 +69,10 @@ export default (conf, opts) => {
             <p>
               If you wish to make comments regarding this document, please send
               them to
-              <a
-                href="${
-                  `mailto:${conf.wgPublicList}@w3.org${
-                    conf.subjectPrefix
-                      ? `?subject=${conf.subjectPrefixEnc}`
-                      : ""
-                  }`
-                }"
+              <a href="${opts.mailToWGPublicListWithSubject}"
                 >${conf.wgPublicList}@w3.org</a
               >
-              (<a
-                href="${
-                  `mailto:${conf.wgPublicList}-request@w3.org?subject=subscribe`
-                }"
-                >subscribe</a
-              >,
+              (<a href="${opts.mailToWGPublicListSubscription}">subscribe</a>,
               <a
                 href="${
                   `https://lists.w3.org/Archives/Public/${conf.wgPublicList}/`

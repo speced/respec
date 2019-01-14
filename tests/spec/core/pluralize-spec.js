@@ -114,7 +114,7 @@ describe("Core - Pluralize", () => {
         but not as <a>foos</a>
       </section>
     `;
-    const ops = makeStandardOps(null, body);
+    const ops = makeStandardOps({ specStatus: "unofficial" }, body);
     const doc = await makeRSDoc(ops);
 
     const { id: dfnId } = doc.querySelector("#section dfn");

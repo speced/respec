@@ -154,8 +154,8 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       const oricdHref = ops.config.editors[0].extras[0].href;
       const twitterHref = ops.config.editors[0].extras[1].href;
-      const orcidAnchor = doc.querySelector("a[href='" + oricdHref + "']");
-      const twitterAnchor = doc.querySelector("a[href='" + twitterHref + "']");
+      const orcidAnchor = doc.querySelector(`a[href='${oricdHref}']`);
+      const twitterAnchor = doc.querySelector(`a[href='${twitterHref}']`);
       // general checks
       const header = doc.querySelector("div.head");
       [orcidAnchor, twitterAnchor].forEach(elem => {
@@ -373,11 +373,10 @@ describe("W3C — Headers", () => {
 
   describe("use existing h1 element", () => {
     it("uses the <h1>'s value as the document's title", async () => {
-      const body =
-        `
+      const body = `
         <h1 id='title'>
           This should be <code>pass</code>.
-         </h1>` + makeDefaultBody();
+         </h1>${makeDefaultBody()}`;
       const ops = makeStandardOps({}, body);
       const doc = await makeRSDoc(ops);
       expect(doc.title).toBe("This should be pass.");
@@ -388,7 +387,7 @@ describe("W3C — Headers", () => {
 
     it("uses <h1> if already present", async () => {
       const ops = makeStandardOps();
-      ops.body = "<h1 id='title'><code>pass</code></h1>" + makeDefaultBody();
+      ops.body = `<h1 id='title'><code>pass</code></h1>${makeDefaultBody()}`;
       const doc = await makeRSDoc(ops);
 
       // Title was relocated to head
@@ -419,7 +418,7 @@ describe("W3C — Headers", () => {
 
     it("uses existing h2#subtitle as subtitle", async () => {
       const ops = makeStandardOps();
-      ops.body = "<h2 id='subtitle'><code>pass</code></h2>" + makeDefaultBody();
+      ops.body = `<h2 id='subtitle'><code>pass</code></h2>${makeDefaultBody()}`;
       const doc = await makeRSDoc(ops);
 
       const subTitleElements = doc.querySelectorAll("h2#subtitle");
@@ -440,7 +439,7 @@ describe("W3C — Headers", () => {
 
     it("overwrites conf.subtitle if it exists", async () => {
       const ops = makeStandardOps();
-      ops.body = "<h2 id='subtitle'><code>pass</code></h2>" + makeDefaultBody();
+      ops.body = `<h2 id='subtitle'><code>pass</code></h2>${makeDefaultBody()}`;
       const newProps = {
         subtitle: "fail - this should have been overridden by the <h2>",
       };
@@ -454,7 +453,7 @@ describe("W3C — Headers", () => {
 
     it("sets conf.subtitle if it doesn't exist, but h2#subtitle exists", async () => {
       const ops = makeStandardOps();
-      ops.body = "<h2 id='subtitle'><code>pass</code></h2>" + makeDefaultBody();
+      ops.body = `<h2 id='subtitle'><code>pass</code></h2>${makeDefaultBody()}`;
       const doc = await makeRSDoc(ops);
 
       const { subtitle } = doc.defaultView.respecConfig;

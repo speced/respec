@@ -4,6 +4,7 @@
 export const name = "w3c/defaults";
 import { rule as checkInternalSlots } from "../core/linter-rules/check-internal-slots";
 import { rule as checkPunctuation } from "../core/linter-rules/check-punctuation";
+import { definitionMap } from "../core/dfn-map";
 import linter from "../core/linter";
 import { rule as localRefsExist } from "../core/linter-rules/local-refs-exist";
 import { rule as noHeadinglessSectionsRule } from "../core/linter-rules/no-headingless-sections";
@@ -19,44 +20,6 @@ linter.register(
   checkInternalSlots
 );
 
-const cgbg = new Set(["BG-DRAFT", "BG-FINAL", "CG-DRAFT", "CG-FINAL"]);
-const licenses = new Map([
-  [
-    "cc0",
-    {
-      name: "Creative Commons 0 Public Domain Dedication",
-      short: "CC0",
-      url: "https://creativecommons.org/publicdomain/zero/1.0/",
-    },
-  ],
-  [
-    "w3c-software",
-    {
-      name: "W3C Software Notice and License",
-      short: "W3C Software",
-      url:
-        "https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231",
-    },
-  ],
-  [
-    "w3c-software-doc",
-    {
-      name: "W3C Software and Document Notice and License",
-      short: "W3C Software and Document",
-      url:
-        "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document",
-    },
-  ],
-  [
-    "cc-by",
-    {
-      name: "Creative Commons Attribution 4.0 International Public License",
-      short: "CC-BY",
-      url: "https://creativecommons.org/licenses/by/4.0/legalcode",
-    },
-  ],
-]);
-
 const w3cDefaults = {
   lint: {
     "no-headingless-sections": true,
@@ -66,7 +29,7 @@ const w3cDefaults = {
     "local-refs-exist": true,
     "check-internal-slots": false,
   },
-  pluralize: false,
+  pluralize: true,
   highlightVars: true,
   doJsonLd: false,
   license: "w3c-software-doc",
@@ -83,18 +46,8 @@ const w3cDefaults = {
   addSectionLinks: true,
 };
 
-function computeProps(conf) {
-  return {
-    isCCBY: conf.license === "cc-by",
-    licenseInfo: licenses.get(conf.license),
-    isCGBG: cgbg.has(conf.specStatus),
-    isCGFinal: conf.isCGBG && /G-FINAL$/.test(conf.specStatus),
-    isBasic: conf.specStatus === "base",
-    isRegular: !conf.isCGBG && conf.specStatus === "base",
-  };
-}
-
 export function run(conf) {
+  if (conf.specStatus === "unofficial") return;
   // assign the defaults
   Object.assign(conf, {
     ...w3cDefaults,
@@ -104,6 +57,9 @@ export function run(conf) {
     ...w3cDefaults.lint,
     ...conf.lint,
   });
-  //computed properties
-  Object.assign(conf, computeProps(conf));
+
+  // TODO: eventually, we want to remove this.
+  // It's here for legacy support of json-ld specs
+  // see https://github.com/w3c/respec/issues/2019
+  Object.assign(conf, { definitionMap });
 }

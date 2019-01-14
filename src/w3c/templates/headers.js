@@ -1,8 +1,15 @@
-import hyperHTML from "hyperhtml";
+import html from "hyperhtml";
 import { pub } from "../../core/pubsubhub";
 import showLink from "./show-link";
 import showLogo from "./show-logo";
 import showPeople from "./show-people";
+
+const ccLicense = "https://creativecommons.org/licenses/by/3.0/";
+const w3cLicense = "https://www.w3.org/Consortium/Legal/copyright-documents";
+const legalDisclaimer =
+  "https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer";
+const w3cTrademark =
+  "https://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks";
 
 function getSpecTitleElem(conf) {
   const specTitleElem =
@@ -41,8 +48,6 @@ function getSpecSubTitleElem(conf) {
 }
 
 export default conf => {
-  const html = hyperHTML;
-
   return html`
     <div class="head">
       ${conf.logos.map(showLogo)} ${getSpecTitleElem(conf)}
@@ -115,16 +120,10 @@ export default conf => {
             : ""
         }
         ${
-          conf.isED
+          conf.isED && conf.prevED
             ? html`
-                ${
-                  conf.prevED
-                    ? html`
-                        <dt>Previous editor's draft:</dt>
-                        <dd><a href="${conf.prevED}">${conf.prevED}</a></dd>
-                      `
-                    : ""
-                }
+                <dt>Previous editor's draft:</dt>
+                <dd><a href="${conf.prevED}">${conf.prevED}</a></dd>
               `
             : ""
         }
@@ -137,25 +136,17 @@ export default conf => {
             : ""
         }
         ${
-          conf.prevRecURI
+          !conf.prevRecURI
+            ? ""
+            : conf.isRec
             ? html`
-                ${
-                  conf.isRec
-                    ? html`
-                        <dt>Previous Recommendation:</dt>
-                        <dd>
-                          <a href="${conf.prevRecURI}">${conf.prevRecURI}</a>
-                        </dd>
-                      `
-                    : html`
-                        <dt>Latest Recommendation:</dt>
-                        <dd>
-                          <a href="${conf.prevRecURI}">${conf.prevRecURI}</a>
-                        </dd>
-                      `
-                }
+                <dt>Previous Recommendation:</dt>
+                <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
               `
-            : ""
+            : html`
+                <dt>Latest Recommendation:</dt>
+                <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
+              `
         }
         <dt>${conf.multipleEditors ? conf.l10n.editors : conf.l10n.editor}</dt>
         ${showPeople(conf, "Editor", conf.editors)}
@@ -228,135 +219,105 @@ export default conf => {
             `
           : ""
       }
-      ${
-        conf.isUnofficial
-          ? html`
-              ${
-                conf.additionalCopyrightHolders
-                  ? html`
-                      <p class="copyright">
-                        ${[conf.additionalCopyrightHolders]}
-                      </p>
-                    `
-                  : html`
-                      ${
-                        conf.overrideCopyright
-                          ? [conf.overrideCopyright]
-                          : html`
-                              <p class="copyright">
-                                This document is licensed under a
-                                <a
-                                  class="subfoot"
-                                  href="https://creativecommons.org/licenses/by/3.0/"
-                                  rel="license"
-                                  >Creative Commons Attribution 3.0 License</a
-                                >.
-                              </p>
-                            `
-                      }
-                    `
-              }
-            `
-          : html`
-              ${
-                conf.overrideCopyright
-                  ? [conf.overrideCopyright]
-                  : html`
-                      <p class="copyright">
-                        <a
-                          href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright"
-                          >Copyright</a
-                        >
-                        &copy;
-                        ${
-                          conf.copyrightStart ? `${conf.copyrightStart}-` : ""
-                        }${conf.publishYear}
-                        ${
-                          conf.additionalCopyrightHolders
-                            ? html`
-                                ${[conf.additionalCopyrightHolders]} &amp;
-                              `
-                            : ""
-                        }
-                        <a href="https://www.w3.org/"
-                          ><abbr title="World Wide Web Consortium">W3C</abbr></a
-                        ><sup>&reg;</sup> (<a href="https://www.csail.mit.edu/"
-                          ><abbr title="Massachusetts Institute of Technology"
-                            >MIT</abbr
-                          ></a
-                        >,
-                        <a href="https://www.ercim.eu/"
-                          ><abbr
-                            title="European Research Consortium for Informatics and Mathematics"
-                            >ERCIM</abbr
-                          ></a
-                        >, <a href="https://www.keio.ac.jp/">Keio</a>,
-                        <a href="http://ev.buaa.edu.cn/">Beihang</a>).
-                        ${
-                          conf.isCCBY
-                            ? html`
-                                Some Rights Reserved: this document is
-                                dual-licensed,
-                                <a
-                                  rel="license"
-                                  href="https://creativecommons.org/licenses/by/3.0/"
-                                  >CC-BY</a
-                                >
-                                and
-                                <a
-                                  rel="license"
-                                  href="https://www.w3.org/Consortium/Legal/copyright-documents"
-                                  >W3C Document License</a
-                                >.
-                              `
-                            : ""
-                        }
-                        W3C
-                        <a
-                          href="https://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer"
-                          >liability</a
-                        >,
-                        <a
-                          href="https://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks"
-                          >trademark</a
-                        >
-                        and
-                        ${
-                          conf.isCCBY
-                            ? html`
-                                <a
-                                  rel="license"
-                                  href="https://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html"
-                                  >document use</a
-                                >
-                              `
-                            : html`
-                                ${
-                                  conf.isW3CSoftAndDocLicense
-                                    ? html`
-                                        <a
-                                          rel="license"
-                                          href="https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
-                                          >permissive document license</a
-                                        >
-                                      `
-                                    : html`
-                                        <a
-                                          rel="license"
-                                          href="https://www.w3.org/Consortium/Legal/copyright-documents"
-                                          >document use</a
-                                        >
-                                      `
-                                }
-                              `
-                        }
-                        rules apply.
-                      </p>
-                    `
-              }
-            `
-      }
+      ${renderCopyright(conf)}
       <hr title="Separator for header" />
     </div>
   `;
 };
+
+/**
+ * @param {string} text
+ * @param {string} url
+ * @param {string=} cssClass
+ */
+function linkLicense(text, url, cssClass) {
+  return html`
+    <a rel="license" href="${url}" class="${cssClass}">${text}</a>
+  `;
+}
+
+function renderCopyright(conf) {
+  return conf.isUnofficial
+    ? conf.additionalCopyrightHolders
+      ? html`
+          <p class="copyright">${[conf.additionalCopyrightHolders]}</p>
+        `
+      : conf.overrideCopyright
+      ? [conf.overrideCopyright]
+      : html`
+          <p class="copyright">
+            This document is licensed under a
+            ${
+              linkLicense(
+                "Creative Commons Attribution 3.0 License",
+                ccLicense,
+                "subfoot"
+              )
+            }.
+          </p>
+        `
+    : conf.overrideCopyright
+    ? [conf.overrideCopyright]
+    : renderOfficialCopyright(conf);
+}
+
+function renderOfficialCopyright(conf) {
+  return html`
+    <p class="copyright">
+      <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright"
+        >Copyright</a
+      >
+      &copy;
+      ${conf.copyrightStart ? `${conf.copyrightStart}-` : ""}${conf.publishYear}
+      ${
+        conf.additionalCopyrightHolders
+          ? html`
+              ${[conf.additionalCopyrightHolders]} &amp;
+            `
+          : ""
+      }
+      <a href="https://www.w3.org/"
+        ><abbr title="World Wide Web Consortium">W3C</abbr></a
+      ><sup>&reg;</sup> (<a href="https://www.csail.mit.edu/"
+        ><abbr title="Massachusetts Institute of Technology">MIT</abbr></a
+      >,
+      <a href="https://www.ercim.eu/"
+        ><abbr
+          title="European Research Consortium for Informatics and Mathematics"
+          >ERCIM</abbr
+        ></a
+      >, <a href="https://www.keio.ac.jp/">Keio</a>,
+      <a href="http://ev.buaa.edu.cn/">Beihang</a>). ${noteIfDualLicense(conf)}
+      W3C <a href="${legalDisclaimer}">liability</a>,
+      <a href="${w3cTrademark}">trademark</a> and ${linkDocumentUse(conf)} rules
+      apply.
+    </p>
+  `;
+}
+
+function noteIfDualLicense(conf) {
+  if (!conf.isCCBY) {
+    return;
+  }
+  return html`
+    Some Rights Reserved: this document is dual-licensed,
+    ${linkLicense("CC-BY", ccLicense)} and
+    ${linkLicense("W3C Document License", w3cLicense)}.
+  `;
+}
+
+function linkDocumentUse(conf) {
+  if (conf.isCCBY) {
+    return linkLicense(
+      "document use",
+      "https://www.w3.org/Consortium/Legal/2013/copyright-documents-dual.html"
+    );
+  }
+  if (conf.isW3CSoftAndDocLicense) {
+    return linkLicense(
+      "permissive document license",
+      "https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document"
+    );
+  }
+  return linkLicense("document use", w3cLicense);
+}

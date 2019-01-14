@@ -79,7 +79,7 @@ describe("Core - Github", () => {
         respecConfig: { l10n },
       } = doc.defaultView;
       const participate = Array.from(doc.querySelectorAll("dt")).find(
-        node => node.textContent === l10n.participate + ":"
+        node => node.textContent === `${l10n.participate}:`
       );
       expect(participate).toBeTruthy();
       const fileABug = Array.from(doc.querySelectorAll("dd")).find(
