@@ -90,8 +90,7 @@ async function fetchAndWrite(
       throw new Error(msg);
     }
     await checkIfReSpec(page);
-    const version = await checkReSpecVersion(page);
-    const html = await generateHTML(page, version, url);
+    const html = await generateHTML(page, url);
     switch (out) {
       case null:
         process.stdout.write(html);
@@ -111,9 +110,15 @@ async function fetchAndWrite(
   }
 }
 
-async function generateHTML(page, version, url) {
+/**
+ * @param {import("puppeteer").Page} page
+ * @param {string} url
+ */
+async function generateHTML(page, url) {
+  await page.waitForFunction(() => window.hasOwnProperty("respecVersion"));
+  const version = await page.evaluate(getVersion);
   try {
-    return await page.evaluate(evaluateHTML);
+    return await page.evaluate(evaluateHTML, version);
   } catch (err) {
     const msg = `\n😭  Sorry, there was an error generating the HTML. Please report this issue!\n${colors.debug(
       `${`Specification: ${url}\n` +
@@ -126,6 +131,9 @@ async function generateHTML(page, version, url) {
   }
 }
 
+/**
+ * @param {import("puppeteer").Page} page
+ */
 async function checkIfReSpec(page) {
   const isRespecDoc = await page.evaluate(isRespec);
   if (!isRespecDoc) {
@@ -156,9 +164,12 @@ async function isRespec() {
   return Boolean(document.getElementById("respec-ui"));
 }
 
-async function evaluateHTML() {
+/**
+ * @param {number[]} version
+ */
+async function evaluateHTML(version) {
   await document.respecIsReady;
-  const [major, minor] = getVersion();
+  const [major, minor] = version;
   if (major < 20 || (major === 20 && minor < 10)) {
     console.warn(
       "👴🏽  Ye Olde ReSpec version detected! Please update to 20.10.0 or above. " +
@@ -194,7 +205,7 @@ function getVersion() {
 /**
  * Handles messages from the browser's Console API.
  *
- * @param  {puppeteer.Page} page Instance of page to listen on.
+ * @param  {import("puppeteer").Page} page Instance of page to listen on.
  * @return {Function}
  */
 function makeConsoleMsgHandler(page) {
