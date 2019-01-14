@@ -23,11 +23,13 @@ const lang = defaultLang in meta ? defaultLang : "en";
  * @param {Document} doc The document to be checked.
  */
 function linterFunction(conf, doc) {
-  const filteredElements = [...doc.querySelectorAll("var+a")].filter(
-    filterElement
+  const offendingElements = [...doc.querySelectorAll("var+a")].filter(
+    ({ previousSibling: { nodeName }, textContent }) => {
+      const isInternalSlot = /\[\[\w+\]\]/.test(textContent.trim());
+      const isPrevVar = nodeName && nodeName === "VAR";
+      return isInternalSlot && isPrevVar;
+    }
   );
-
-  const offendingElements = filteredElements.filter(checkElement);
 
   if (!offendingElements.length) {
     return [];
@@ -42,13 +44,3 @@ function linterFunction(conf, doc) {
 }
 
 export const rule = new LinterRule(name, linterFunction);
-
-function filterElement({ textContent }) {
-  // return true if text is an internal slot
-  return /^\[\[\w+\]\]/.test(textContent);
-}
-
-function checkElement({ previousSibling }) {
-  // return true if the text is not "."
-  return previousSibling.textContent !== ".";
-}
