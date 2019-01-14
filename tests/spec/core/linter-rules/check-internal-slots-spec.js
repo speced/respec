@@ -22,14 +22,23 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
   it("returns an error when there is no '.' between var and an internal slot", async () => {
     doc.body.innerHTML = `
       <var>bar</var><a>[[foo]]</a>
+      <var>bar</var>.<a>[foo]</a>
+      <var>bar</var>.<a>foo</a>
+      <var>bar</var>.<a>[[foo</a>
+      <var>bar</var>.<a>foo]]</a>
+      <var></var>.<a></a>
+      <var></var><a></a>
+      <var>[[foo]]</var>.<a></a>
+      <var>[[foo]]</var>.<a>bar</a>
+      <var>bar</var>.<a>[[f oo]]</a>
     `;
     const results = await rule.lint(config, doc);
     expect(results.length).toEqual(1);
 
     const [result] = results;
     expect(result.name).toEqual(ruleName);
-    // only first four are checked, rest are filtered
-    expect(result.occurrences).toEqual(1);
+    // first fails the isPrevVar check, rest fail isInternalSlot check
+    expect(result.occurrences).toEqual(10);
 
     const offendingElement = result.offendingElements[0];
     const { previousSibling } = offendingElement;
@@ -48,16 +57,7 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
       <var>bar</var>..<a>[[foo]]</a>
       <var>bar</var> . <a>[[foo]]</a>
       <var>bar</var> <a>[[foo]]</a>
-      <a>[[foo]]</a><var>bar</var>
-      <var>bar</var>.<a>[foo]</a>
-      <var>bar</var>.<a>foo</a>
-      <var>bar</var>.<a>[[foo</a>
-      <var>bar</var>.<a>foo]]</a>
-      <var></var>.<a></a>
-      <var></var><a></a>
-      <var>[[foo]]</var>.<a></a>
-      <var>[[foo]]</var>.<a>bar</a>
-      <var>bar</var>.<a>[[f oo]]</a>
+     
     `;
     const results = await rule.lint(config, doc);
     expect(results.length).toEqual(0);

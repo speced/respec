@@ -27,7 +27,7 @@ function linterFunction(conf, doc) {
     ({ previousSibling: { nodeName }, textContent }) => {
       const isInternalSlot = /\[\[\w+\]\]/.test(textContent.trim());
       const isPrevVar = nodeName && nodeName === "VAR";
-      return isInternalSlot && isPrevVar;
+      return !isInternalSlot || isPrevVar;
     }
   );
 
