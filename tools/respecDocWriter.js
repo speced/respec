@@ -119,7 +119,7 @@ async function generateHTML(page, version, url) {
       `${`Specification: ${url}\n` +
         `ReSpec version: ${version.join(".")}\n` +
         "File a bug: https://github.com/w3c/respec/\n"}${
-        err ? `Error: ${err}\n` : ""
+        err ? `Error: ${err.stack}\n` : ""
       }`
     )}`;
     throw new Error(msg);
@@ -157,80 +157,62 @@ async function checkIfReSpec(page) {
 }
 
 async function isRespec() {
-  try {
-    const query = "script[data-main*='profile-'], script[src*='respec']";
-    if (document.head.querySelector(query)) {
-      return true;
-    }
-    await new Promise(resolve => {
-      document.onreadystatechange = () => {
-        if (document.readyState === "complete") {
-          resolve();
-        }
-      };
-      document.onreadystatechange();
-    });
-    await new Promise(resolve => {
-      setTimeout(resolve, 2000);
-    });
-    return Boolean(document.getElementById("respec-ui"));
-  } catch (err) {
-    throw err.stack;
+  const query = "script[data-main*='profile-'], script[src*='respec']";
+  if (document.head.querySelector(query)) {
+    return true;
   }
+  await new Promise(resolve => {
+    document.onreadystatechange = () => {
+      if (document.readyState === "complete") {
+        resolve();
+      }
+    };
+    document.onreadystatechange();
+  });
+  await new Promise(resolve => {
+    setTimeout(resolve, 2000);
+  });
+  return Boolean(document.getElementById("respec-ui"));
 }
 
 async function evaluateHTML() {
-  try {
-    await document.respecIsReady;
-    const [major, minor] =
-      window.respecVersion === "Developer Edition"
-        ? [123456789, 0, 0]
-        : window.respecVersion.split(".").map(str => parseInt(str, 10));
-    if (major < 20 || (major === 20 && minor < 10)) {
-      console.warn(
-        "👴🏽  Ye Olde ReSpec version detected! Please update to 20.10.0 or above. " +
-          `Your version: ${window.respecVersion}.`
-      );
-      // Document references an older version of ReSpec that does not yet
-      // have the "core/exporter" module. Try with the old "ui/save-html"
-      // module.
-      const { exportDocument } = await new Promise((resolve, reject) => {
-        require(["ui/save-html"], resolve, err => {
-          reject(new Error(err.message));
-        });
+  await document.respecIsReady;
+  const [major, minor] =
+    window.respecVersion === "Developer Edition"
+      ? [123456789, 0, 0]
+      : window.respecVersion.split(".").map(str => parseInt(str, 10));
+  if (major < 20 || (major === 20 && minor < 10)) {
+    console.warn(
+      "👴🏽  Ye Olde ReSpec version detected! Please update to 20.10.0 or above. " +
+        `Your version: ${window.respecVersion}.`
+    );
+    // Document references an older version of ReSpec that does not yet
+    // have the "core/exporter" module. Try with the old "ui/save-html"
+    // module.
+    const { exportDocument } = await new Promise((resolve, reject) => {
+      require(["ui/save-html"], resolve, err => {
+        reject(new Error(err.message));
       });
-      return exportDocument("html", "text/html");
-    } else {
-      const { rsDocToDataURL } = await new Promise((resolve, reject) => {
-        require(["core/exporter"], resolve, err => {
-          reject(new Error(err.message));
-        });
+    });
+    return exportDocument("html", "text/html");
+  } else {
+    const { rsDocToDataURL } = await new Promise((resolve, reject) => {
+      require(["core/exporter"], resolve, err => {
+        reject(new Error(err.message));
       });
-      const dataURL = rsDocToDataURL("text/html");
-      const encodedString = dataURL.replace(
-        /^data:\w+\/\w+;charset=utf-8,/,
-        ""
-      );
-      const decodedString = decodeURIComponent(encodedString);
-      return decodedString;
-    }
-  } catch (err) {
-    throw err.stack;
+    });
+    const dataURL = rsDocToDataURL("text/html");
+    const encodedString = dataURL.replace(/^data:\w+\/\w+;charset=utf-8,/, "");
+    return decodeURIComponent(encodedString);
   }
 }
 
 function getVersion() {
-  try {
-    if (window.respecVersion === "Developer Edition") {
-      return [123456789, 0, 0];
-    }
-    const version = window.respecVersion
-      .split(".")
-      .map(str => parseInt(str, 10));
-    return version;
-  } catch (err) {
-    throw err.stack;
+  if (window.respecVersion === "Developer Edition") {
+    return [123456789, 0, 0];
   }
+  const version = window.respecVersion.split(".").map(str => parseInt(str, 10));
+  return version;
 }
 /**
  * Handles messages from the browser's Console API.
