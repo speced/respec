@@ -14,8 +14,8 @@ div.note, div.issue, div.ednote, div.warning {
     margin-top: 1em;
     margin-bottom: 1em;
 }
-.note > p:first-child, .ednote > p:first-child, .issue > p:first-child, .warning > p:first-child { margin-top: 0 }
-.issue, .note, .ednote, .warning {
+.warning > p:first-child { margin-top: 0 }
+.warning {
     padding: .5em;
     border-left-width: .5em;
     border-left-style: solid;
@@ -26,7 +26,7 @@ div.issue, div.note , div.ednote,  div.warning {
     position: relative;
     clear: both;
 }
-span.note, span.ednote, span.issue, span.warning { padding: .1em .5em .15em; }
+span.warning { padding: .1em .5em .15em; }
 
 .issue {
     border-color: #e05252;
