@@ -24,10 +24,9 @@ const lang = defaultLang in meta ? defaultLang : "en";
  */
 function linterFunction(conf, doc) {
   const offendingElements = [...doc.querySelectorAll("var+a")].filter(
-    ({ previousSibling: { nodeName }, textContent }) => {
-      const isInternalSlot = /\[\[\w+\]\]/.test(textContent.trim());
+    ({ previousSibling: { nodeName } }) => {
       const isPrevVar = nodeName && nodeName === "VAR";
-      return !isInternalSlot || isPrevVar;
+      return isPrevVar;
     }
   );
 

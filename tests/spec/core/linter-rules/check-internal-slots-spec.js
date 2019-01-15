@@ -27,7 +27,6 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
       <var>bar</var>.<a>[[foo</a>
       <var>bar</var>.<a>foo]]</a>
       <var></var>.<a></a>
-      <var></var><a></a>
       <var>[[foo]]</var>.<a></a>
       <var>[[foo]]</var>.<a>bar</a>
       <var>bar</var>.<a>[[f oo]]</a>
@@ -38,7 +37,7 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
     const [result] = results;
     expect(result.name).toEqual(ruleName);
     // first fails the isPrevVar check, rest fail isInternalSlot check
-    expect(result.occurrences).toEqual(10);
+    expect(result.occurrences).toEqual(1);
 
     const offendingElement = result.offendingElements[0];
     const { previousSibling } = offendingElement;
