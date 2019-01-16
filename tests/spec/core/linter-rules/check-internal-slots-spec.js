@@ -36,7 +36,7 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
 
     const [result] = results;
     expect(result.name).toEqual(ruleName);
-    // first fails the isPrevVar check, rest fail isInternalSlot check
+    // first fails the isPrevVar check, rest are ok tho weird...
     expect(result.occurrences).toEqual(1);
 
     const offendingElement = result.offendingElements[0];
