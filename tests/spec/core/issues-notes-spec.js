@@ -84,7 +84,7 @@ describe("Core — Issues and Notes", () => {
         `<p class='ednote' title='EDNOTE-TIT'>EDNOTE</p>`,
     };
     const doc = await makeRSDoc(ops);
-    const edNote = doc.querySelector("div.ednote");
+    const edNote = doc.querySelector("div.note");
     const pnot = edNote.querySelector("p");
     expect(edNote.querySelectorAll("div.ednote-title").length).toBe(1);
     expect(edNote.querySelector("div.ednote-title").textContent).toBe(

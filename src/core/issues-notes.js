@@ -306,4 +306,9 @@ export async function run(conf) {
     headElem.querySelector("link")
   );
   handleIssues(issuesAndNotes, ghIssues, conf);
+  const ednotes = document.querySelectorAll(".ednote");
+  ednotes.forEach(ednote => {
+    ednote.classList.remove("ednote");
+    ednote.classList.add("note");
+  });
 }
