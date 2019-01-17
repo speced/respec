@@ -5,7 +5,7 @@ import { pub } from "../core/pubsubhub";
 export const name = "w3c/seo";
 export function run(conf) {
   const trLatestUri = conf.shortName
-    ? "https://www.w3.org/TR/" + conf.shortName + "/"
+    ? `https://www.w3.org/TR/${conf.shortName}/`
     : null;
   switch (conf.canonicalURI) {
     case "edDraft":
@@ -40,7 +40,7 @@ export function run(conf) {
             document.location
           ).href;
         } catch (err) {
-          pub("warn", "CanonicalURI is an invalid URL: " + err.message);
+          pub("warn", `CanonicalURI is an invalid URL: ${err.message}`);
           conf.canonicalURI = null;
         }
       } else if (trLatestUri) {

@@ -155,7 +155,7 @@ export function run(conf) {
       { once: true }
     );
   }
-  const finalVersionPath = version ? version + "/" : "";
+  const finalVersionPath = version ? `${version}/` : "";
   const finalStyleURL = `https://www.w3.org/StyleSheets/TR/${finalVersionPath}${styleFile}`;
 
   linkCSS(document, finalStyleURL);

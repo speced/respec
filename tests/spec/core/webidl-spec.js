@@ -176,7 +176,7 @@ describe("Core - WebIDL", () => {
     expect(target.querySelector(".idlID").textContent).toEqual("SuperStar");
 
     target = doc.getElementById("if-extended-attribute");
-    text = "[Something, Constructor()] " + text;
+    text = `[Something, Constructor()] ${text}`;
     expect(target.textContent).toEqual(text);
     const extAttrs = target.querySelectorAll(".extAttr");
     expect(extAttrs[0].textContent).toEqual("Something");
@@ -866,7 +866,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(target.getElementsByClassName("idlIncludes").length).toEqual(1);
 
     target = doc.getElementById("incl-less-basic");
-    text = "[Something]" + text;
+    text = `[Something]${text}`;
     expect(target.textContent).toEqual(text);
   });
 

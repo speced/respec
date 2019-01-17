@@ -132,7 +132,7 @@ function getRefContent(conf) {
 
 // renders a reference
 function showRef({ ref, refcontent }) {
-  const refId = "bib-" + ref.toLowerCase();
+  const refId = `bib-${ref.toLowerCase()}`;
   if (refcontent) {
     return hyperHTML`
       <dt id="${refId}">[${ref}]</dt>
@@ -199,8 +199,8 @@ export function stringifyReference(ref) {
   if (ref.publisher) {
     output = `${output} ${endWithDot(ref.publisher)} `;
   }
-  if (ref.date) output += ref.date + ". ";
-  if (ref.status) output += (REF_STATUSES.get(ref.status) || ref.status) + ". ";
+  if (ref.date) output += `${ref.date}. `;
+  if (ref.status) output += `${REF_STATUSES.get(ref.status) || ref.status}. `;
   if (ref.href) output += `URL: <a href="${ref.href}">${ref.href}</a>`;
   return output;
 }
@@ -221,7 +221,7 @@ function getAliases(refs) {
 function fixRefUrls(refs, aliases) {
   refs
     .map(({ ref, refcontent }) => {
-      const refUrl = "#bib-" + ref.toLowerCase();
+      const refUrl = `#bib-${ref.toLowerCase()}`;
       const selectors = aliases
         .get(refcontent.id)
         .map(alias => `a.bibref[href="#bib-${alias.toLowerCase()}"]`)

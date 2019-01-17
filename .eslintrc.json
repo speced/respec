@@ -27,6 +27,7 @@
     "one-var": ["error", "never"],
     "prefer-arrow-callback": 2,
     "prefer-const": 2,
+    "prefer-template": 2,
     "quotes": 0,
     "semi": ["error", "always"],
     "sort-imports": 2

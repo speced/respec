@@ -44,8 +44,9 @@ function lintingFunction(conf, doc) {
     occurrences: offendingMembers.length,
     ...meta[lang],
   };
-  result.howToFix +=
-    offendingMembers.map(item => "`" + item + "`").join(", ") + ".";
+  result.howToFix += `${offendingMembers
+    .map(item => `\`${item}\``)
+    .join(", ")}.`;
   return result;
 }
 

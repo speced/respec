@@ -173,7 +173,7 @@ function renameSectionHeaders() {
   }
   headers.forEach(header => {
     const depth = Math.min(parents(header, "section").length + 1, 6);
-    const h = "h" + depth;
+    const h = `h${depth}`;
     if (header.localName !== h) {
       renameElement(header, h);
     }

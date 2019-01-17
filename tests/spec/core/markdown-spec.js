@@ -4,7 +4,7 @@ describe("Core - Markdown", () => {
   it("processes standard markdown content", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() + "\n\nFoo\n===\n",
+      body: `${makeDefaultBody()}\n\nFoo\n===\n`,
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
@@ -19,7 +19,7 @@ describe("Core - Markdown", () => {
   it("processes markdown inside of sections", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body: makeDefaultBody() + "<section>\nFoo\n===\n</section>",
+      body: `${makeDefaultBody()}<section>\nFoo\n===\n</section>`,
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
@@ -31,9 +31,7 @@ describe("Core - Markdown", () => {
   it("processes markdown inside of notes, issues and reqs.", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `
+      body: `${makeDefaultBody()}
         <div class=note>
           _note_
         </div>
@@ -50,9 +48,7 @@ describe("Core - Markdown", () => {
   it("removes left padding before processing markdown content", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `\n
+      body: `${makeDefaultBody()}\n
       ## Foo
         * list item 1
         * list item 2
@@ -98,16 +94,14 @@ describe("Core - Markdown", () => {
     const [firstH3, secondH3] = h3s;
     expect(firstH3.id).not.toBe(secondH3);
     for (const elem of [h2, firstH3, secondH3]) {
-      expect(doc.querySelectorAll("#" + elem.id).length).toBe(1);
+      expect(doc.querySelectorAll(`#${elem.id}`).length).toBe(1);
     }
   });
 
   it("structures content in nested sections with appropriate titles", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `
+      body: `${makeDefaultBody()}
 
         Foo
         ===
@@ -157,9 +151,7 @@ describe("Core - Markdown", () => {
   it("gracefully handles jumps in nested headers", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        "\n\nFoo\n===\n\nBar\n---\n\nBaz\n===\n\n### Foobar ###\n\n",
+      body: `${makeDefaultBody()}\n\nFoo\n===\n\nBar\n---\n\nBaz\n===\n\n### Foobar ###\n\n`,
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
@@ -174,9 +166,7 @@ describe("Core - Markdown", () => {
   it("nests sections according to their first header, if present", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n===\n</section>\n",
+      body: `${makeDefaultBody()}\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n===\n</section>\n`,
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
@@ -187,9 +177,7 @@ describe("Core - Markdown", () => {
   it("nests sections according to their headers", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        "\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n",
+      body: `${makeDefaultBody()}\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n`,
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
@@ -202,9 +190,7 @@ describe("Core - Markdown", () => {
   it("shouldn't nest content following a section inside of said section", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `
+      body: `${makeDefaultBody()}
 
         Foo
         ===
@@ -236,9 +222,7 @@ describe("Core - Markdown", () => {
   it("shouldn't nest sections with a top level header", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        "\n\nFoo\n---\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n",
+      body: `${makeDefaultBody()}\n\nFoo\n---\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n`,
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
@@ -250,9 +234,7 @@ describe("Core - Markdown", () => {
   it("shouldn't nest sections with no headers at all", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        "\n\nFoo\n===\n\nsome text\n\n<section id=bar>no header</section>\n",
+      body: `${makeDefaultBody()}\n\nFoo\n===\n\nsome text\n\n<section id=bar>no header</section>\n`,
     };
     ops.config.format = "markdown";
     const doc = await makeRSDoc(ops);
@@ -266,9 +248,7 @@ describe("Core - Markdown", () => {
     it("automatically links URLs in pre when missing (smoke test)", async () => {
       const ops = {
         config: makeBasicConfig(),
-        body:
-          makeDefaultBody() +
-          `
+        body: `${makeDefaultBody()}
           <div id=testElem>
             this won't link
             this will link: http://no-links-foo.com
@@ -286,9 +266,7 @@ describe("Core - Markdown", () => {
     it("replaces HTMLAnchors when present", async () => {
       const ops = {
         config: makeBasicConfig(),
-        body:
-          makeDefaultBody() +
-          `
+        body: `${makeDefaultBody()}
           <div id=testElem class=nolinks>
             http://no-links-foo.com
             http://no-links-bar.com
@@ -310,9 +288,7 @@ describe("Core - Markdown", () => {
     it("handles quoted elements, including entity quotes", async () => {
       const ops = {
         config: makeBasicConfig(),
-        body:
-          makeDefaultBody() +
-          `<p id='test-text1'>test1 text &quot;<code>inner text</code>".</p>
+        body: `${makeDefaultBody()}<p id='test-text1'>test1 text &quot;<code>inner text</code>".</p>
            <p id='test-text2'>test2 '<code>inner</code>&#39;.</p>
            // Pre left alone
            <pre class=nohighlight id='test-text3'>test3 text "<code>inner text</code>".</pre>`,
@@ -333,9 +309,7 @@ describe("Core - Markdown", () => {
     it("replaces processes data-format=markdown sections, but leaves other sections alone", async () => {
       const ops = {
         config: makeBasicConfig(),
-        body:
-          makeDefaultBody() +
-          `
+        body: `${makeDefaultBody()}
           <section id=markdown1 data-format=markdown>
             ## this is a h2
             This is a paragraph with \`code\`.
