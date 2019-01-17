@@ -19,29 +19,25 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
     }
   });
 
-  it("only returns an error when there is no '.' between var and an internal slot", async () => {
+  it("returns an error when there is no '.' between var and an internal slot", async () => {
     doc.body.innerHTML = `
-    <var>bar</var><a>[[foo]]</a>
-    <var>bar</var>..<a>[[foo]]</a>
-    <var>bar</var> . <a>[[foo]]</a>
-    <var>bar</var> <a>[[foo]]</a>
-    <a>[[foo]]</a><var>bar</var>
-    <var>bar</var>.<a>[foo]</a>
-    <var>bar</var>.<a>foo</a>
-    <var>bar</var>.<a>[[foo</a>
-    <var>bar</var>.<a>foo]]</a>
-    <var></var>.<a></a>
-    <var></var><a></a>
-    <var>[[foo]]</var>.<a></a>
-    <var>[[foo]]</var>.<a>bar</a>
-    <var>bar</var>.<a>[[f oo]]</a>
+      <var>bar</var><a>[[foo]]</a>
+      <var>bar</var>.<a>[foo]</a>
+      <var>bar</var>.<a>foo</a>
+      <var>bar</var>.<a>[[foo</a>
+      <var>bar</var>.<a>foo]]</a>
+      <var></var>.<a></a>
+      <var>[[foo]]</var>.<a></a>
+      <var>[[foo]]</var>.<a>bar</a>
+      <var>bar</var>.<a>[[f oo]]</a>
     `;
     const results = await rule.lint(config, doc);
     expect(results.length).toEqual(1);
 
     const [result] = results;
     expect(result.name).toEqual(ruleName);
-    expect(result.occurrences).toEqual(13);
+    // first fails the isPrevVar check, rest are ok tho weird...
+    expect(result.occurrences).toEqual(1);
 
     const offendingElement = result.offendingElements[0];
     const { previousSibling } = offendingElement;
@@ -49,11 +45,18 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
     expect(previousSibling.textContent).not.toEqual(".");
   });
 
-  it("generates no error when the expected pattern is followed", async () => {
+  it("doesn't generates an error for general internal slot and var usage", async () => {
     doc.body.innerHTML = `
-    <var>bar</var>.<a>[[foo]]</a>
-    <var>foo</var>.<a>[[BarFoo]]</a>
-    <var></var>.<a>[[foo]]</a>
+      <var>bar</var>.<a>[[foo]]</a>
+      <var>foo</var>.<a>[[BarFoo]]</a>
+      <var></var>.<a>[[foo]]</a>
+      <p>
+       ... the <var>foo</var>. The internal slot <a>[[bar]]</a>...
+      </p>
+      <var>bar</var>..<a>[[foo]]</a>
+      <var>bar</var> . <a>[[foo]]</a>
+      <var>bar</var> <a>[[foo]]</a>
+     
     `;
     const results = await rule.lint(config, doc);
     expect(results.length).toEqual(0);

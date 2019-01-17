@@ -24,7 +24,10 @@ const lang = defaultLang in meta ? defaultLang : "en";
  */
 function linterFunction(conf, doc) {
   const offendingElements = [...doc.querySelectorAll("var+a")].filter(
-    checkElement
+    ({ previousSibling: { nodeName } }) => {
+      const isPrevVar = nodeName && nodeName === "VAR";
+      return isPrevVar;
+    }
   );
 
   if (!offendingElements.length) {
@@ -40,10 +43,3 @@ function linterFunction(conf, doc) {
 }
 
 export const rule = new LinterRule(name, linterFunction);
-
-function checkElement({ previousSibling, textContent }) {
-  const potentialSlot = previousSibling.textContent + textContent;
-  // starts with dot, followed by [[ and any word
-  return !/^\.\[\[\w+\]\]/.test(potentialSlot);
-  // return true if regex test fails
-}
