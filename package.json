@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.2.1",
+  "version": "24.2.2",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -48,7 +48,7 @@
     "karma-opera-launcher": "^1.0.0",
     "karma-requirejs": "^1.1.0",
     "karma-safari-launcher": "^1.0.0",
-    "karma-safaritechpreview-launcher": "1.0.0",
+    "karma-safaritechpreview-launcher": "2.0.2",
     "karma-verbose-summary-reporter": "0.0.1",
     "mocha": "^5.2.0",
     "moment": "^2.23.0",
@@ -58,7 +58,7 @@
     "requirejs": "^2.3.6",
     "serve": "^10.1.1",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
-    "typescript": "^3.2.2",
+    "typescript": "^3.2.4",
     "webidl2": "^17.0.1",
     "webpack": "^4.28.4",
     "webpack-cli": "^3.2.1"
@@ -89,7 +89,7 @@
     "epipebomb": "^1.0.0",
     "fs-extra": "^7.0.1",
     "highlight.js": "github:marcoscaceres/highlight.js#7b144b3b83ce296d5b29c5e4fc2ea2a65e9d3f32",
-    "hyperhtml": "^2.25.3",
+    "hyperhtml": "^2.25.4",
     "loading-indicator": "^2.0.0",
     "marked": "^0.6.0",
     "prompt": "^1.0.0",
