@@ -17,7 +17,6 @@ function makeTitle(conf, elem, num, report) {
   report.title = elem.title;
   if (report.title) elem.removeAttribute("title");
   const number = num > 0 ? ` ${num}` : "";
-
   return hyperHTML`
   <div class="marker"><a class="self-link">${conf.l10n.example}${number}</a>${
     report.title
@@ -46,14 +45,25 @@ export function run(conf) {
       illegal,
     };
     const { title } = example;
+    function href(id, div){
+      const selfLink = div.querySelector("a.self-link");
+      selfLink.href = `#${id}`;
+      pub("example", report);
+    }
     if (example.localName === "aside") {
       ++number;
       const div = makeTitle(conf, example, number, report);
       example.prepend(div);
-      const id = addId(example, `ex-${number}`, title);
-      const selfLink = div.querySelector("a.self-link");
-      selfLink.href = `#${id}`;
-      pub("example", report);
+      
+      if (example.title || example.id) {
+        const id = addId(example, `ex-${number}`, title);
+        href(id, div);
+      } else {
+        const id = addId(div, `ex-${number}`, title);
+        example.id = id;
+        div.removeAttribute("id");
+        href(id, div);
+      }
     } else {
       const inAside = !!example.closest("aside");
       if (!inAside) ++number;

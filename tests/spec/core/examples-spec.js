@@ -86,4 +86,18 @@ describe("Core — Examples", () => {
     // id got relocated from the pre to the div
     expect(example.localName).toBe("div");
   });
+  it("shortens title for links", async () => {
+    const body = `
+      <aside class="example">
+      <p>This is a very long title</p>
+      </aside>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const exampleLink = doc.querySelector("aside.example a.self-link");
+    expect(
+      exampleLink.getAttribute("href").includes("this-is-a-very-long-title")
+    ).toEqual(false);
+    expect(exampleLink.getAttribute("href")).toBe("#ex-1-example-1");
+  });
 });
