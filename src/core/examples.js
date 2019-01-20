@@ -45,25 +45,21 @@ export function run(conf) {
       illegal,
     };
     const { title } = example;
-    function href(id, div){
-      const selfLink = div.querySelector("a.self-link");
-      selfLink.href = `#${id}`;
-      pub("example", report);
-    }
     if (example.localName === "aside") {
+      let id;
       ++number;
       const div = makeTitle(conf, example, number, report);
       example.prepend(div);
-      
       if (example.title || example.id) {
-        const id = addId(example, `ex-${number}`, title);
-        href(id, div);
+        id = addId(example, `ex-${number}`, title);
       } else {
-        const id = addId(div, `ex-${number}`, title);
+        id = addId(div, `ex-${number}`, title);
         example.id = id;
         div.removeAttribute("id");
-        href(id, div);
       }
+      const selfLink = div.querySelector("a.self-link");
+      selfLink.href = `#${id}`;
+      pub("example", report);
     } else {
       const inAside = !!example.closest("aside");
       if (!inAside) ++number;
