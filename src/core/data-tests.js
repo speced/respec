@@ -88,6 +88,7 @@ export function run(conf) {
       const renderer = hyperHTML.bind(details);
       const testURLs = elem.dataset.tests
         .split(/,/gm)
+        .filter((links, i, self) => self.indexOf(links) === i)
         .map(url => url.trim())
         .map(url => {
           let href = "";
