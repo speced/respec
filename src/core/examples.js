@@ -46,17 +46,16 @@ export function run(conf) {
     };
     const { title } = example;
     if (example.localName === "aside") {
-      let id;
       ++number;
       const div = makeTitle(conf, example, number, report);
       example.prepend(div);
-      if (example.title || example.id) {
-        id = addId(example, `ex-${number}`, title);
+      if (example.title) {
+        addId(example, `ex-${number}`); // title gets used
       } else {
-        id = addId(div, `ex-${number}`, title);
-        example.id = id;
-        div.removeAttribute("id");
+        // use the number as the title... so, e.g., "ex-5"
+        addId(example, `ex-`, String(number));
       }
+      const { id } = example;
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${id}`;
       pub("example", report);

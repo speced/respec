@@ -89,7 +89,7 @@ describe("Core — Examples", () => {
   it("makes correct links", async () => {
     const body = `
       <aside class="example">
-      <p>This is a very long link</p>
+       <p>This is a very long link</p>
       </aside>
     `;
     const ops = makeStandardOps({}, body);
