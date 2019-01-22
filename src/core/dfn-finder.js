@@ -44,7 +44,7 @@ export function findDfn(
   if (dfn) {
     return dfn;
   }
-  const showWarnings = name && !suppressWarnings;
+  const showWarnings = name && !(suppressWarnings || defn.type === "typedef");
   if (showWarnings) {
     const styledName = defn.type === "operation" ? `${name}()` : name;
     const ofParent = parent ? ` \`${parent}\`'s` : "";
