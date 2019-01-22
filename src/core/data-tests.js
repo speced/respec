@@ -88,7 +88,6 @@ export function run(conf) {
       const renderer = hyperHTML.bind(details);
       const testURLs = elem.dataset.tests
         .split(/,/gm)
-        .filter((links, i, self) => self.indexOf(links) === i)
         .map(url => url.trim())
         .map(url => {
           let href = "";
@@ -99,12 +98,22 @@ export function run(conf) {
           }
           return href;
         });
+      const duplicates = testURLs.filter(
+        (links, i, self) => self.indexOf(links) !== i
+      );
+      if (duplicates) {
+        pub(
+          "warn",
+          `Duplicate tests: duplicate tests have been removed, please check and remove manually`
+        );
+      }
       details.classList.add("respec-tests-details", "removeOnSave");
+      const uniqueList = [...new Set(testURLs)];
       renderer`
         <summary>
-          tests: ${testURLs.length}
+          tests: ${uniqueList.length}
         </summary>
-        <ul>${testURLs.map(toListItem)}</ul>
+        <ul>${uniqueList.map(toListItem)}</ul>
       `;
       return { elem, details };
     })

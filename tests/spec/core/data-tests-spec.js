@@ -25,11 +25,15 @@ describe("Core — data-tests attribute", () => {
           </p>
         </section>
         <section>
+          <h2>Duplicate Tests</h2>
           <p id="duplicates" data-tests="
             payment-request-show-method.https.html,
             some-other-test.html,
-            payment-request-show-method.https.html">
-          </p>
+            payment-request-show-method.https.html, 
+            ./payment-request-show-method.https.html,
+            https://wpt.fyi/respec/payment-request-show-method.https.html"
+        >
+        </p>
         </section>`,
     };
     ops.config.testSuiteURI = "https://wpt.fyi/respec/";
@@ -145,12 +149,18 @@ describe("Core — data-tests attribute", () => {
       expect(spanTitle2).toEqual("Manual test");
     });
   });
-  it("removes duplicates", async () => {
-    const items = Array.from(
-      doc.querySelectorAll("#duplicates > .respec-tests-details > ul > li > a")
-    );
-    expect(items.length).toEqual(2);
-    expect(items[0].textContent.trim()).toEqual("payment-request-show-method");
-    expect(items[1].textContent.trim()).toEqual("some-other-test");
+  describe("duplicate test removal", () => {
+    it("checks for and removes duplicate links", () => {
+      const items = Array.from(
+        doc.querySelectorAll(
+          "#duplicates > .respec-tests-details > ul > li > a"
+        )
+      );
+      expect(items.length).toEqual(2);
+      expect(items[0].textContent.trim()).toEqual(
+        "payment-request-show-method"
+      );
+      expect(items[1].textContent.trim()).toEqual("some-other-test");
+    });
   });
 });
