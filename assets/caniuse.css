@@ -16,11 +16,25 @@ button.caniuse-cell {
   position: relative;
 }
 
-/* printing */
+/* handle case when printing */
 @media print {
-  .display_emoji {
-    display: block !important;
-    text-align: center;
+  .caniuse-cell.y::before {
+    background: #8bc34a;
+    content: "&#10004;";
+  }
+
+  .caniuse-cell.n::before{
+    background: #e53935;
+    content: "&#x2718;";
+  }
+
+  .caniuse-cell.d::before,
+  .caniuse-cell.a::before,
+  .caniuse-cell.x::before,
+  .caniuse-cell.p::before {
+    background: #ffc107;
+    content: "?";
+    padding: 0.5em;
   }
 }
 
@@ -92,9 +106,4 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
 .caniuse-stats button:focus + ul,
 .caniuse-stats .caniuse-browser:hover > ul {
   display: block;
-}
-
-.display_emoji {
-  display: none;
-  text-align: center;
 }
