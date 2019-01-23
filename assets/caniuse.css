@@ -16,6 +16,18 @@ button.caniuse-cell {
   position: relative;
 }
 
+/* printing */
+@media print {
+  .display_emoji {
+    display: block !important;
+    text-align: center;
+  }
+  .tick .cross .q_mark {
+    display: block !important;
+    text-align: center;
+  }
+}
+
 /* reset styles, hide old versions by default */
 .caniuse-browser ul {
   display: none;
@@ -84,4 +96,13 @@ see https://github.com/Fyrd/caniuse/blob/master/CONTRIBUTING.md for stats */
 .caniuse-stats button:focus + ul,
 .caniuse-stats .caniuse-browser:hover > ul {
   display: block;
+}
+
+.tick .cross .q_mark {
+
+}
+
+.display_emoji {
+  display: none;
+  text-align: center;
 }

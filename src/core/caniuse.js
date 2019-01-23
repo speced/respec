@@ -200,8 +200,20 @@ function createTableHTML(conf, stats) {
       .reverse();
     const { support, title } = getSupport(latestVersion);
     const cssClass = `caniuse-cell ${support}`;
+    let emoji;
+    if(support.indexOf('y') !== -1) {
+        emoji = `&#10004;&nbsp;`;
+    }
+    else if((support.indexOf('d') !== -1) || (support.indexOf('a') !== -1) ||
+                (support.indexOf('x') !== -1) || (support.indexOf('p') !== -1)) {
+        emoji = `?`;
+    }
+    else if(support.indexOf('n') !== -1) {
+        emoji = `&#x2718;&nbsp;`;
+    }
     return hyperHTML`
       <div class="caniuse-browser">
+        <p class="display_emoji">${emoji}</p>
         <button class="${cssClass}" title="${title}">
           ${BROWSERS.get(browser) || browser} ${latestVersion}
         </button>
