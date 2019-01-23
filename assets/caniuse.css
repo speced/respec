@@ -21,11 +21,13 @@ button.caniuse-cell {
   .caniuse-cell.y::before {
     background: #8bc34a;
     content: "&#10004;";
+    padding: 0.5em;
   }
 
   .caniuse-cell.n::before{
     background: #e53935;
     content: "&#x2718;";
+    padding: 0.5em;
   }
 
   .caniuse-cell.d::before,
