@@ -28,7 +28,6 @@ const coreDefaults = {
   pluralize: true,
   specStatus: "base",
   highlightVars: true,
-  license: "CC-BY",
   addSectionLinks: true,
 };
 
