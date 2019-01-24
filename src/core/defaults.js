@@ -25,7 +25,7 @@ const coreDefaults = {
     "local-refs-exist": true,
     "check-internal-slots": false,
   },
-  pluralize: true,
+  pluralize: false,
   specStatus: "base",
   highlightVars: true,
   addSectionLinks: true,
