@@ -14,7 +14,7 @@ const w3cDefaults = {
   },
   doJsonLd: false,
   license: "w3c-software-doc",
-  pluralize: false,
+  pluralize: true,
   logos: [
     {
       src: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
