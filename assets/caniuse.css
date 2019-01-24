@@ -19,12 +19,12 @@ button.caniuse-cell {
 /* handle case when printing */
 @media print {
   .caniuse-cell.y::before {
-    content: " ✔️ ";
+    content: "✔️";
     padding: 0.5em;
   }
 
   .caniuse-cell.n::before{
-    content: " ❌ ";
+    content: "❌";
     padding: 0.5em;
   }
 
@@ -32,7 +32,7 @@ button.caniuse-cell {
   .caniuse-cell.a::before,
   .caniuse-cell.x::before,
   .caniuse-cell.p::before {
-    content: " ⚠️ ";
+    content: "⚠️";
     padding: 0.5em;
   }
 }
