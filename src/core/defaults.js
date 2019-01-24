@@ -32,8 +32,6 @@ const coreDefaults = {
   addSectionLinks: true,
 };
 
-export default coreDefaults;
-
 export function run(conf) {
   // assign the defaults
   Object.assign(conf, {
