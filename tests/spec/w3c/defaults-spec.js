@@ -8,6 +8,7 @@ describe("W3C — Defaults", () => {
     };
     const doc = await makeRSDoc(ops);
     const rsConf = doc.defaultView.respecConfig;
+    console.log(rsConf);
     expect(rsConf.lint).toEqual({
       "no-headingless-sections": true,
       "privsec-section": true,
