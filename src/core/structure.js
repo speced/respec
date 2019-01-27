@@ -121,7 +121,7 @@ function getSectionTree(parent, { tocIntroductory = false } = {}) {
  * @param {string} id
  */
 function createTocListItem(header, id) {
-  const anchor = hyperHTML`<a href="${`#${id}`}" class="tocxref" aria-label="§"/>`;
+  const anchor = hyperHTML`<a href="${`#${id}`}" class="tocxref"/>`;
   anchor.append(...header.cloneNode(true).childNodes);
   filterHeader(anchor);
   return hyperHTML`<li class='tocline'>${anchor}</li>`;

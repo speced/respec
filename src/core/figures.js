@@ -79,7 +79,7 @@ function getTableOfFiguresListItem(figureId, caption) {
     renameElement(anchor, "span").removeAttribute("href");
   });
   return hyperHTML`<li class='tofline'>
-    <a class='tocxref' href='${`#${figureId}`}'> ${tofCaption.childNodes}</a>
+    <a class='tocxref' href='${`#${figureId}`}'>${tofCaption.childNodes}</a>
   </li>`;
 }
 
