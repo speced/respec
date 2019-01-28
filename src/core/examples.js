@@ -58,6 +58,11 @@ export function run(conf) {
       const { id } = example;
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${id}`;
+      const children = Array.from(example.children);
+      children.forEach(child => {
+        console.log(child.innerHTML);
+        child.innerHTML = reindent(child.innerHTML);
+      });
       pub("example", report);
     } else {
       const inAside = !!example.closest("aside");
@@ -65,7 +70,6 @@ export function run(conf) {
 
       const reindentedHtml = reindent(example.innerHTML);
       example.innerHTML = report.content = reindentedHtml;
-
       // wrap
       example.classList.remove("example", "illegal-example");
       // relocate the id to the div
