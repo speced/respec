@@ -658,6 +658,7 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
     return elem.id;
   }
   if (!txt) {
+    console.log(elem);
     txt = (elem.title ? elem.title : elem.textContent).trim();
   }
   let id = noLC ? txt : txt.toLowerCase();
@@ -671,6 +672,8 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
 
   if (!id) {
     id = "generatedID";
+  } else if (pfx === "example") {
+    id = txt;
   } else if (/\.$/.test(id) || !/^[a-z]/i.test(id)) {
     id = `x${id}`; // trailing . doesn't play well with jQuery
   }
