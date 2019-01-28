@@ -311,4 +311,9 @@ export async function run(conf) {
     ednote.classList.remove("ednote");
     ednote.classList.add("note");
   });
+  const notes = document.querySelectorAll(".note");
+  console.log(notes);
+  notes.forEach(note => {
+    note.setAttribute("role", "note");
+  });
 }
