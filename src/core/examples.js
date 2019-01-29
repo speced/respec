@@ -17,7 +17,6 @@ function makeTitle(conf, elem, num, report) {
   report.title = elem.title;
   if (report.title) elem.removeAttribute("title");
   const number = num > 0 ? ` ${num}` : "";
-
   return hyperHTML`
   <div class="marker"><a class="self-link">${conf.l10n.example}${number}</a>${
     report.title
@@ -50,7 +49,13 @@ export function run(conf) {
       ++number;
       const div = makeTitle(conf, example, number, report);
       example.prepend(div);
-      const id = addId(example, `ex-${number}`, title);
+      if (title) {
+        addId(example, `example-${number}`, title); // title gets used
+      } else {
+        // use the number as the title... so, e.g., "example-5"
+        addId(example, `example`, String(number));
+      }
+      const { id } = example;
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${id}`;
       pub("example", report);
@@ -72,7 +77,10 @@ export function run(conf) {
           ${example.cloneNode(true)}
         </div>
       `;
-      addId(div, `ex-${number}`, title);
+      if (title) {
+        addId(div, `example-${number}`, title);
+      }
+      addId(div, `example`, String(number));
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${div.id}`;
       example.parentElement.replaceChild(div, example);
