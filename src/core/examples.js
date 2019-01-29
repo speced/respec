@@ -52,7 +52,7 @@ export function run(conf) {
       if (title) {
         addId(example, `example-${number}`, title); // title gets used
       } else {
-        // use the number as the title... so, e.g., "ex-5"
+        // use the number as the title... so, e.g., "example-5"
         addId(example, `example`, String(number));
       }
       const { id } = example;
