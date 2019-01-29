@@ -11,6 +11,6 @@ describe("Core - Section References", () => {
     const two = doc.getElementById("TWO");
     const tit = one.children[0].textContent;
 
-    expect(two.querySelector("a").textContent).toEqual(`section ${tit}`);
+    expect(two.querySelector("a").textContent).toEqual(`section § ${tit}`);
   });
 });
