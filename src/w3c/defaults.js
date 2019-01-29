@@ -36,7 +36,6 @@ export function run(conf) {
     ...conf,
   });
   Object.assign(conf.lint, {
-    ...coreDefaults.lint,
     ...w3cDefaults.lint,
     ...conf.lint,
   });
