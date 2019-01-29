@@ -44,6 +44,21 @@ describe("Core — Examples", () => {
     expect(example.getAttribute("title")).toBeNull();
     expect(example.textContent).toBe("Example 1: EX\n{\n  CONTENT\n}\n  ");
   });
+  it("processes children of aside examples", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}<article>
+           <aside class="example">
+            <pre class="js">
+            // Whitespace before this text should be removed
+            </pre>
+           </aside>
+         </article>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const example = doc.querySelector("pre.hljs");
+    expect(example.textContent).toBe("// Whitespace before this text should be removed");
+  });
   it("self-links examples made from asides", async () => {
     const body = `
       <aside class="example"></aside>
