@@ -4,9 +4,7 @@ describe("Core — Examples", () => {
   it("processes examples", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `<section>
+      body: `${makeDefaultBody()}<section>
           <pre class='example' title='EX'>\n  {\n    CONTENT\n  }\n  </pre>
         </section>`,
     };
@@ -14,7 +12,7 @@ describe("Core — Examples", () => {
     const example = doc.querySelector("div.example pre");
     const div = example.closest("div");
     expect(div.classList.contains("example")).toBeTruthy();
-    expect(div.id).toBe("ex-1-ex");
+    expect(div.id).toBe("example-1-ex");
 
     const markers = div.querySelectorAll("div.marker");
     expect(markers.length).toBe(1);
@@ -29,15 +27,13 @@ describe("Core — Examples", () => {
   it("processes aside examples", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `<article>
+      body: `${makeDefaultBody()}<article>
            <aside class='example' title='EX'>\n{\n  CONTENT\n}\n  </aside>
          </article>`,
     };
     const doc = await makeRSDoc(ops);
     const example = doc.querySelector("aside.example");
-    expect(example.id).toBe("ex-1-ex");
+    expect(example.id).toBe("example-1-ex");
 
     const markers = example.querySelectorAll("div.marker");
     expect(markers.length).toBe(1);
@@ -59,9 +55,9 @@ describe("Core — Examples", () => {
     const exampleLinks = doc.querySelectorAll("aside.example a.self-link");
     expect(exampleLinks.length).toBe(3);
     const [example1, example2, example3] = exampleLinks;
-    expect(example1.getAttribute("href")).toBe("#ex-1-example-1");
+    expect(example1.getAttribute("href")).toBe("#example-1");
     expect(example2.getAttribute("href")).toBe("#pass");
-    expect(example3.getAttribute("href")).toBe("#ex-3-pass");
+    expect(example3.getAttribute("href")).toBe("#example-3-pass");
   });
   it("self-links examples made from pre", async () => {
     const body = `
@@ -74,9 +70,9 @@ describe("Core — Examples", () => {
     const exampleLinks = doc.querySelectorAll("div.example a.self-link");
     expect(exampleLinks.length).toBe(3);
     const [example1, example2, example3] = exampleLinks;
-    expect(example1.getAttribute("href")).toBe("#ex-1-example-1");
+    expect(example1.getAttribute("href")).toBe("#example-1");
     expect(example2.getAttribute("href")).toBe("#pass");
-    expect(example3.getAttribute("href")).toBe("#ex-3-pass");
+    expect(example3.getAttribute("href")).toBe("#example-3-pass");
   });
   it("relocates ids and doesn't duplicate them", async () => {
     const body = `
@@ -89,5 +85,21 @@ describe("Core — Examples", () => {
     const [example] = examples;
     // id got relocated from the pre to the div
     expect(example.localName).toBe("div");
+  });
+  it("makes correct links", async () => {
+    const body = `
+      <aside class="example">
+       <p>This is a very long link</p>
+      </aside>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const exampleLink = doc.querySelector("aside.example a.self-link");
+    const example = doc.querySelector("aside.example");
+    expect(
+      exampleLink.getAttribute("href").includes("this-is-a-very-long-link")
+    ).toEqual(false);
+    expect(exampleLink.getAttribute("href")).toBe("#example-1");
+    expect(example.id).toBe("example-1");
   });
 });

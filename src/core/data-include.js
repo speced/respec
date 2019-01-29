@@ -68,7 +68,7 @@ export async function run() {
     if (!url) {
       return; // just skip it
     }
-    const id = "include-" + String(Math.random()).substr(2);
+    const id = `include-${String(Math.random()).substr(2)}`;
     el.dataset.includeId = id;
     try {
       const response = await fetch(url);

@@ -10,7 +10,7 @@ const srcDesMap = [
     "./node_modules/handlebars/dist/handlebars.runtime.js",
     "./js/deps/handlebars.js",
   ],
-  ["./node_modules/highlight.js/src/styles/github.css", "./js/core/css/"],
+  ["./node_modules/highlight.js/src/styles/github.css", "./assets/"],
   ["./node_modules/hyperhtml/umd.js", "./js/deps/hyperhtml.js"],
   ["./node_modules/jquery/dist/jquery.slim.js", "./js/deps/jquery.js"],
   ["./node_modules/marked/lib/marked.js", "./js/deps/"],
@@ -19,7 +19,7 @@ const srcDesMap = [
   ["./node_modules/webidl2/lib/webidl2.js", "./js/deps/"],
   ["./node_modules/webidl2/lib/writer.js", "./js/deps/webidl2writer.js"],
   ["./node_modules/pluralize/pluralize.js", "./js/deps/"],
-  ["./node_modules/idb-keyval/dist/idb-keyval-amd.min.js", "./js/deps/idb.js"],
+  ["./node_modules/idb/build/idb.js", "./js/deps/"],
 ];
 
 const deprecated = [

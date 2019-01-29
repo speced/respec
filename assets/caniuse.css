@@ -16,6 +16,27 @@ button.caniuse-cell {
   position: relative;
 }
 
+/* handle case when printing */
+@media print {
+  .caniuse-cell.y::before {
+    content: "✔️";
+    padding: 0.5em;
+  }
+
+  .caniuse-cell.n::before{
+    content: "❌";
+    padding: 0.5em;
+  }
+
+  .caniuse-cell.d::before,
+  .caniuse-cell.a::before,
+  .caniuse-cell.x::before,
+  .caniuse-cell.p::before {
+    content: "⚠️";
+    padding: 0.5em;
+  }
+}
+
 /* reset styles, hide old versions by default */
 .caniuse-browser ul {
   display: none;

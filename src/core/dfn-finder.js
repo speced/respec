@@ -44,7 +44,7 @@ export function findDfn(
   if (dfn) {
     return dfn;
   }
-  const showWarnings = name && !suppressWarnings;
+  const showWarnings = name && !(suppressWarnings || defn.type === "typedef");
   if (showWarnings) {
     const styledName = defn.type === "operation" ? `${name}()` : name;
     const ofParent = parent ? ` \`${parent}\`'s` : "";
@@ -81,7 +81,7 @@ function tryFindDfn(defn, parent, name) {
 function findAttributeDfn(defn, parent, name) {
   const parentLow = parent.toLowerCase();
   const asLocalName = name.toLowerCase();
-  const asQualifiedName = parentLow + "." + asLocalName;
+  const asQualifiedName = `${parentLow}.${asLocalName}`;
   const dfn = findNormalDfn(defn, parent, asLocalName);
   if (!dfn) {
     return;
@@ -103,9 +103,9 @@ function findOperationDfn(defn, parent, name) {
   const parentLow = parent.toLowerCase();
   // Allow linking to both "method()" and "method" name.
   const asLocalName = name.toLowerCase();
-  const asMethodName = asLocalName + "()";
-  const asQualifiedName = parentLow + "." + asLocalName;
-  const asFullyQualifiedName = asQualifiedName + "()";
+  const asMethodName = `${asLocalName}()`;
+  const asQualifiedName = `${parentLow}.${asLocalName}`;
+  const asFullyQualifiedName = `${asQualifiedName}()`;
 
   const dfn =
     findNormalDfn(defn, parent, asMethodName) ||
@@ -148,7 +148,7 @@ function findNormalDfn(defn, parent, name) {
   // If we haven't found any definitions with explicit [for]
   // and [title], look for a dotted definition, "parent.name".
   if (dfns.length === 0 && parentLow !== "") {
-    resolvedName = parentLow + "." + nameLow;
+    resolvedName = `${parentLow}.${nameLow}`;
     dfnForArray = definitionMap[resolvedName];
     if (dfnForArray !== undefined && dfnForArray.length === 1) {
       dfns = dfnForArray;
@@ -179,11 +179,9 @@ function findNormalDfn(defn, parent, name) {
  */
 function decorateDfn(dfn, defn, parent, name) {
   if (!dfn.id) {
-    const id =
-      "dom-" +
-      (parent ? parent + "-" : "") +
-      name.replace(/[()]/g, "").replace(/\s/g, "-");
-    dfn.id = id;
+    const middle = parent ? `${parent}-` : "";
+    const last = name.replace(/[()]/g, "").replace(/\s/g, "-");
+    dfn.id = `dom-${middle}${last}`;
   }
   dfn.dataset.idl = defn.type;
   dfn.dataset.title = dfn.textContent;

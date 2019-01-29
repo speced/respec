@@ -5,9 +5,7 @@ describe("Core — data-cite attribute", () => {
   it(`walks up the tree to find the right reference to cite`, async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `
+      body: `${makeDefaultBody()}
       <section data-cite="dahut">
         <h2>test</h2>
         <p>
@@ -50,9 +48,7 @@ describe("Core — data-cite attribute", () => {
   it(`treats data-cite="#foo" as self citing when there is no parent data-cite`, async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `
+      body: `${makeDefaultBody()}
       <section>
         <h2>test</h2>
         <p>
@@ -74,9 +70,7 @@ describe("Core — data-cite attribute", () => {
   it("links data-cite attributes as normative/informative reference when parent is citing", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `
+      body: `${makeDefaultBody()}
         <section class="informative" data-cite="FETCH">
           <p><a data-cite="#fetch-thing">informative reference</a></p>
         </section>
@@ -97,9 +91,7 @@ describe("Core — data-cite attribute", () => {
   it("links directly to externally defined references", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `
+      body: `${makeDefaultBody()}
         <section>
           <p id="t1"><a>inline link</a></p>
           <p id="t2"><dfn data-cite="!WHATWG-HTML#test">inline link</dfn></p>
@@ -129,9 +121,7 @@ describe("Core — data-cite attribute", () => {
   it("links data-cite attributes as normative reference", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `
+      body: `${makeDefaultBody()}
         <section>
           <p id="t1"><a data-cite="!WHATWG-HTML">inline link</a></p>
         </section>
@@ -150,9 +140,7 @@ describe("Core — data-cite attribute", () => {
   it("links data-cite attributes as informative reference", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `
+      body: `${makeDefaultBody()}
           <section>
             <p id="t1"><a data-cite="?WHATWG-DOM">inline link</a></p>
           </section>
@@ -171,9 +159,7 @@ describe("Core — data-cite attribute", () => {
   it("handles bogus data-cite values", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `
+      body: `${makeDefaultBody()}
           <section>
             <p id="t1"><a data-cite="?no-exist-inf">link 1</a></p>
             <p id="t2"><a data-cite="!no-exist-norm">link 2</a></p>
@@ -200,9 +186,7 @@ describe("Core — data-cite attribute", () => {
   it("adds the path and fragment identifier to the link", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `
+      body: `${makeDefaultBody()}
         <section>
           <p id="t1"><a
             data-cite="!WHATWG-HTML/webappapis.html#scripting">inline link</a></p>
@@ -224,9 +208,7 @@ describe("Core — data-cite attribute", () => {
     it("adds the path and the fragment identifier to the link", async () => {
       const ops = {
         config: makeBasicConfig(),
-        body:
-          makeDefaultBody() +
-          `
+        body: `${makeDefaultBody()}
         <section class="informative">
           <p id="t1"><a
             data-cite="WHATWG-HTML"
@@ -261,9 +243,7 @@ describe("Core — data-cite attribute", () => {
     it("cited fragments are overridden by cite-frag", async () => {
       const ops = {
         config: makeBasicConfig(),
-        body:
-          makeDefaultBody() +
-          `
+        body: `${makeDefaultBody()}
         <section>
           <p id="t1"><a
             data-cite="!WHATWG-HTML#fail"

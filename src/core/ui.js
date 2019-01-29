@@ -9,7 +9,7 @@
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
 
-import css from "text!../ui/ui.css";
+import css from "text!../../assets/ui.css";
 import hyperHTML from "hyperhtml";
 import { markdownToHtml } from "./utils";
 import shortcut from "../shortcut";
@@ -29,7 +29,7 @@ function ariaDecorate(elem, ariaMap) {
     return;
   }
   Array.from(ariaMap.entries()).reduce((elem, [name, value]) => {
-    elem.setAttribute("aria-" + name, value);
+    elem.setAttribute(`aria-${name}`, value);
     return elem;
   }, elem);
 }
@@ -110,8 +110,8 @@ function createWarnButton(butName, arr, title) {
   const ariaMap = new Map([
     ["expanded", "false"],
     ["haspopup", "true"],
-    ["controls", "respec-pill-" + butName + "-modal"],
-    ["label", "Document " + title.toLowerCase()],
+    ["controls", `respec-pill-${butName}-modal`],
+    ["label", `Document ${title.toLowerCase()}`],
   ]);
   ariaDecorate(button, ariaMap);
   return button;
@@ -133,7 +133,7 @@ export const ui = {
   },
   addCommand(label, handler, keyShort, icon) {
     icon = icon || "";
-    const id = "respec-button-" + label.toLowerCase().replace(/\s+/, "-");
+    const id = `respec-button-${label.toLowerCase().replace(/\s+/, "-")}`;
     const button = hyperHTML`<button id="${id}" class="respec-option" title="${keyShort}">
       <span class="respec-cmd-icon">${icon}</span> ${label}…
     </button>`;
@@ -169,8 +169,8 @@ export const ui = {
     if (modal) modal.remove();
     if (overlay) overlay.remove();
     overlay = hyperHTML`<div id='respec-overlay' class='removeOnSave'></div>`;
-    const id = currentOwner.id + "-modal";
-    const headingId = id + "-heading";
+    const id = `${currentOwner.id}-modal`;
+    const headingId = `${id}-heading`;
     modal = hyperHTML`<div id='${id}' class='respec-modal removeOnSave' role='dialog'>
       <h3 id="${headingId}">${title}</h3>
       <div class='inside'>${content}</div>

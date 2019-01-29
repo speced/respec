@@ -11,7 +11,7 @@
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { addId, fetchAndCache, parents } from "./utils";
-import css from "text!./css/issues-notes.css";
+import css from "text!../../assets/issues-notes.css";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 export const name = "core/issues-notes";
@@ -54,7 +54,7 @@ function handleIssues(ins, ghIssues, conf) {
         (isFeatureAtRisk ? " atrisk" : "")}'></div>`;
       const title = document.createElement("span");
       const titleParent = hyperHTML`
-        <div role='heading' class='${type + "-title marker"}'>${title}</div>`;
+        <div role='heading' class='${`${type}-title marker`}'>${title}</div>`;
       addId(titleParent, "h", type);
       let text = displayType;
       if (inno.id) {
@@ -71,9 +71,9 @@ function handleIssues(ins, ghIssues, conf) {
       let ghIssue;
       if (isIssue) {
         if (!hasDataNum) {
-          text += " " + issueNum;
+          text += ` ${issueNum}`;
         } else if (dataNum) {
-          text += " " + dataNum;
+          text += ` ${dataNum}`;
           const link = linkToIssueTracker(dataNum, conf, { isFeatureAtRisk });
           if (link) {
             title.before(link);
@@ -181,7 +181,7 @@ function createIssueSummaryEntry(l10nIssue, report, id) {
     ? hyperHTML`<span style="text-transform: none">: ${report.title}</span>`
     : "";
   return hyperHTML`
-    <li><a href="${"#" + id}">${issueNumberText}</a>${title}</li>
+    <li><a href="${`#${id}`}">${issueNumberText}</a>${title}</li>
   `;
 }
 
@@ -306,4 +306,9 @@ export async function run(conf) {
     headElem.querySelector("link")
   );
   handleIssues(issuesAndNotes, ghIssues, conf);
+  const ednotes = document.querySelectorAll(".ednote");
+  ednotes.forEach(ednote => {
+    ednote.classList.remove("ednote");
+    ednote.classList.add("note");
+  });
 }

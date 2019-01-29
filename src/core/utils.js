@@ -139,7 +139,7 @@ export function createResourceHint(opts) {
   }
   const url = new URL(opts.href, location.href);
   const linkElem = document.createElement("link");
-  let href = url.href;
+  let { href } = url;
   linkElem.rel = opts.hint;
   switch (linkElem.rel) {
     case "dns-prefetch":
@@ -184,7 +184,7 @@ export function normalizePadding(text = "") {
     return node !== null && node.nodeType === Node.TEXT_NODE;
   }
   // Force into body
-  const parserInput = "<body>" + text;
+  const parserInput = `<body>${text}`;
   const doc = new DOMParser().parseFromString(parserInput, "text/html");
   // Normalize block level elements children first
   Array.from(doc.body.children)
@@ -243,7 +243,7 @@ export function normalizePadding(text = "") {
         }
         node.textContent = padding + node.textContent.replace(replacer, "");
         return replacer;
-      }, new RegExp("^ {1," + chop + "}", "gm"));
+      }, new RegExp(`^ {1,${chop}}`, "gm"));
     // deal with pre elements... we can chop whitespace from their siblings
     const endsWithSpace = new RegExp(`\\ {${chop}}$`, "gm");
     Array.from(doc.body.querySelectorAll("pre"))
@@ -260,7 +260,7 @@ export function normalizePadding(text = "") {
       }, chop);
   }
   const result = endsWithSpace.test(doc.body.innerHTML)
-    ? doc.body.innerHTML.trimRight() + "\n"
+    ? `${doc.body.innerHTML.trimRight()}\n`
     : doc.body.innerHTML;
   return result;
 }
@@ -305,7 +305,7 @@ export function showInlineWarning(elems, msg, title) {
       return generateMarkdownLink(element, i);
     })
     .join(", ");
-  pub("warn", msg + ` at: ${links}.`);
+  pub("warn", `${msg} at: ${links}.`);
   console.warn(msg, elems);
 }
 
@@ -323,7 +323,7 @@ export function showInlineError(elems, msg, title) {
       return generateMarkdownLink(element, i);
     })
     .join(", ");
-  pub("error", msg + ` at: ${links}.`);
+  pub("error", `${msg} at: ${links}.`);
   console.error(msg, elems);
 }
 
@@ -349,6 +349,49 @@ function markAsOffending(elem, msg, title) {
  */
 function generateMarkdownLink(element, i) {
   return `[${i + 1}](#${element.id})`;
+}
+
+export class IDBKeyVal {
+  /**
+   * @param {import("idb").DB} idb
+   * @param {string} storeName
+   */
+  constructor(idb, storeName) {
+    this.idb = idb;
+    this.storeName = storeName;
+  }
+
+  /** @param {string} key */
+  async get(key) {
+    return await this.idb
+      .transaction(this.storeName)
+      .objectStore(this.storeName)
+      .get(key);
+  }
+
+  /**
+   * @param {string} key
+   * @param {any} value
+   */
+  async set(key, value) {
+    const tx = this.idb.transaction(this.storeName, "readwrite");
+    tx.objectStore(this.storeName).put(value, key);
+    return await tx.complete;
+  }
+
+  async clear() {
+    const tx = this.idb.transaction(this.storeName, "readwrite");
+    tx.objectStore(this.storeName).clear();
+    return await tx.complete;
+  }
+
+  async keys() {
+    const tx = this.idb.transaction(this.storeName);
+    /** @type {string[]} */
+    const keys = tx.objectStore(this.storeName).getAllKeys();
+    await tx.complete;
+    return keys;
+  }
 }
 
 // STRING HELPERS
@@ -421,7 +464,7 @@ export function toShortIsoDate(date) {
 
 // takes a string, prepends a "0" if it is of length 1, does nothing otherwise
 export function lead0(str) {
-  return String(str).length === 1 ? "0" + str : str;
+  return String(str).length === 1 ? `0${str}` : str;
 }
 
 // takes a YYYY-MM-DD date and returns a Date object for it
@@ -628,17 +671,20 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
 
   if (!id) {
     id = "generatedID";
+  } else if (pfx === "example") {
+    id = txt;
   } else if (/\.$/.test(id) || !/^[a-z]/i.test(id)) {
-    id = "x" + id; // trailing . doesn't play well with jQuery
+    id = `x${id}`; // trailing . doesn't play well with jQuery
   }
   if (pfx) {
     id = `${pfx}-${id}`;
   }
   if (elem.ownerDocument.getElementById(id)) {
     let i = 0;
-    let nextId = id + "-" + i;
+    let nextId = `${id}-${i}`;
     while (elem.ownerDocument.getElementById(nextId)) {
-      nextId = id + "-" + i++;
+      i += 1;
+      nextId = `${id}-${i}`;
     }
     id = nextId;
   }
@@ -684,9 +730,10 @@ export function getTextNodes(el, exclusions = []) {
  *   subsequent calls to this method will return the data-lt based list.
  * @param {Element} elem
  * @param {Object} args
+ * @param {boolean} [args.isDefinition]
  * @returns {String[]} array of title strings
  */
-export function getDfnTitles(elem, args) {
+export function getDfnTitles(elem, { isDefinition = false } = {}) {
   let titleString = "";
   let normText = "";
   //data-lt-noDefault avoid using the text content of a definition
@@ -699,7 +746,7 @@ export function getDfnTitles(elem, args) {
     titleString = elem.dataset.lt.toLowerCase();
     if (normText !== "" && !titleString.startsWith(`${normText}|`)) {
       // Use the definition itself, so to avoid having to declare the definition twice.
-      titleString = titleString + "|" + normText;
+      titleString += `|${normText}`;
     }
   } else if (
     elem.childNodes.length === 1 &&
@@ -714,7 +761,7 @@ export function getDfnTitles(elem, args) {
 
   // now we have a string of one or more titles
   titleString = norm(titleString).toLowerCase();
-  if (args && args.isDefinition === true) {
+  if (isDefinition) {
     if (elem.dataset.lt) {
       elem.dataset.lt = titleString;
     }

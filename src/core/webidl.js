@@ -5,7 +5,7 @@
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
 import { flatten, normalizePadding, reindent } from "./utils";
-import css from "text!./css/webidl.css";
+import css from "text!../../assets/webidl.css";
 import { findDfn } from "./dfn-finder";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
@@ -237,12 +237,12 @@ function resolvePartial(defn) {
     idlPartials[defn.name] = 0;
   }
   idlPartials[defn.name] += 1;
-  return "-partial-" + idlPartials[defn.name];
+  return `-partial-${idlPartials[defn.name]}`;
 }
 
 function resolveOverload(name, parentName) {
-  const qualifiedName = parentName + "." + name;
-  const fullyQualifiedName = qualifiedName + "()";
+  const qualifiedName = `${parentName}.${name}`;
+  const fullyQualifiedName = `${qualifiedName}()`;
   let overload;
   if (!operationNames[fullyQualifiedName]) {
     operationNames[fullyQualifiedName] = 0;
@@ -250,7 +250,7 @@ function resolveOverload(name, parentName) {
   if (!operationNames[qualifiedName]) {
     operationNames[qualifiedName] = 0;
   } else {
-    overload = "!overload-" + operationNames[qualifiedName];
+    overload = `!overload-${operationNames[qualifiedName]}`;
   }
   operationNames[fullyQualifiedName] += 1;
   operationNames[qualifiedName] += 1;

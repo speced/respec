@@ -69,7 +69,7 @@ const usageSections = [
  * @return {Promise} Resolves when done writing the files.
  */
 async function appendBoilerplate(outPath, version, name) {
-  const mapPath = path.dirname(outPath) + `/respec-${name}.js.map`;
+  const mapPath = `${path.dirname(outPath)}/respec-${name}.js.map`;
   const [optimizedJs, sourceMap] = await Promise.all([
     fsp.readFile(outPath, "utf-8"),
     fsp.readFile(mapPath, "utf-8"),
@@ -141,7 +141,6 @@ const Builder = {
     };
     const buildDir = path.resolve(__dirname, "../builds/");
     const workerDir = path.resolve(__dirname, "../worker/");
-    await fsp.emptyDir(buildDir);
     const stats = await promisify(webpack)(config);
     if (stats.hasErrors()) {
       throw new Error(stats.toJson().errors);

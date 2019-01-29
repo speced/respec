@@ -4,9 +4,7 @@ describe("Core — Informative", () => {
   it("should process informative sections", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        "<section class='informative'><h2>TITLE</h2></section>",
+      body: `${makeDefaultBody()}<section class='informative'><h2>TITLE</h2></section>`,
     };
     const doc = await makeRSDoc(ops);
     const sec = doc.querySelector("div.informative, section.informative");

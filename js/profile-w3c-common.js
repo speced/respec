@@ -9,7 +9,7 @@ require.config({
   paths: {
     clipboard: "deps/clipboard",
     hyperhtml: "deps/hyperhtml",
-    "idb-keyval": "deps/idb",
+    idb: "deps/idb",
     jquery: "deps/jquery",
     marked: "deps/marked",
     pluralize: "deps/pluralize",
@@ -75,6 +75,7 @@ define([
   "./core/data-tests",
   "./core/list-sorter",
   "./core/highlight-vars",
+  "./core/algorithms",
   /*Linter must be the last thing to run*/
   "./core/linter",
 ], (runner, { ui }, ...plugins) => {

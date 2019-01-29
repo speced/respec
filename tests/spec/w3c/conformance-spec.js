@@ -4,9 +4,7 @@ describe("W3C — Conformance", () => {
   it("includes a h2 and inject its content", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `<section id='conformance'>
+      body: `${makeDefaultBody()}<section id='conformance'>
             <p>CONFORMANCE</p>
         </section>
         <section>
@@ -32,9 +30,7 @@ describe("W3C — Conformance", () => {
   it("includes only referenced 2119 terms", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `<section id='conformance'>
+      body: `${makeDefaultBody()}<section id='conformance'>
           <p>CONFORMANCE</p>
         </section>
         <section><h2>my section</h2>
@@ -48,9 +44,7 @@ describe("W3C — Conformance", () => {
   it("omits the 2119 reference when there are no terms", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body:
-        makeDefaultBody() +
-        `<section id='conformance'>
+      body: `${makeDefaultBody()}<section id='conformance'>
           <p>CONFORMANCE</p>
         </section>
         <section><h2>my section</h2>

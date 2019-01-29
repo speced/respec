@@ -1,3 +1,4 @@
+// @ts-check
 /*jshint
     forin: false
 */
@@ -164,6 +165,7 @@ const status2text = {
   "BG-FINAL": "Final Business Group Report",
 };
 const status2long = {
+  ...status2text,
   "FPWD-NOTE": "First Public Working Group Note",
   "LC-NOTE": "Last Call Working Draft",
 };
@@ -214,6 +216,11 @@ const baseLogo = Object.freeze({
   width: "72",
 });
 
+/**
+ * @param {*} conf
+ * @param {string} prop
+ * @param {string | number | Date} fallbackDate
+ */
 function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   const date = conf[prop] ? new Date(conf[prop]) : new Date(fallbackDate);
   // if date is valid
@@ -242,7 +249,7 @@ export function run(conf) {
   }
   conf.licenseInfo = licenses[conf.license];
   conf.isCGBG = cgbg.includes(conf.specStatus);
-  conf.isCGFinal = conf.isCGBG && /G-FINAL$/.test(conf.specStatus);
+  conf.isCGFinal = conf.isCGBG && conf.specStatus.endsWith("G-FINAL");
   conf.isBasic = conf.specStatus === "base";
   conf.isRegular = !conf.isCGBG && !conf.isBasic;
   if (!conf.specStatus) {
@@ -252,7 +259,7 @@ export function run(conf) {
     pub("error", "Missing required configuration: `shortName`");
   }
   if (conf.testSuiteURI) {
-    const url = new URL(conf.testSuiteURI, document.location);
+    const url = new URL(conf.testSuiteURI, location.href);
     const { host, pathname } = url;
     if (
       host === "github.com" &&
@@ -261,7 +268,7 @@ export function run(conf) {
       const msg =
         "Web Platform Tests have moved to a new Github Organization at https://github.com/web-platform-tests. " +
         "Please update your [`testSuiteURI`](https://github.com/w3c/respec/wiki/testSuiteURI) to point to the " +
-        `new tests repository (e.g., https://github.com/web-platform-tests/${
+        `new tests repository (e.g., https://github.com/web-platform-tests/wpt/${
           conf.shortName
         } ).`;
       pub("warn", msg);
@@ -316,26 +323,19 @@ export function run(conf) {
   if (conf.specStatus === "Member-SUBM") publishSpace = "Submission";
   else if (conf.specStatus === "Team-SUBM") publishSpace = "TeamSubmission";
   if (conf.isRegular)
-    conf.thisVersion =
-      "https://www.w3.org/" +
-      publishSpace +
-      "/" +
-      conf.publishDate.getUTCFullYear() +
-      "/" +
-      conf.maturity +
-      "-" +
-      conf.shortName +
-      "-" +
-      concatDate(conf.publishDate) +
-      "/";
+    conf.thisVersion = `https://www.w3.org/${publishSpace}/${conf.publishDate.getUTCFullYear()}/${
+      conf.maturity
+    }-${conf.shortName}-${concatDate(conf.publishDate)}/`;
   if (conf.specStatus === "ED") conf.thisVersion = conf.edDraftURI;
   if (conf.isRegular)
-    conf.latestVersion =
-      "https://www.w3.org/" + publishSpace + "/" + conf.shortName + "/";
+    conf.latestVersion = `https://www.w3.org/${publishSpace}/${
+      conf.shortName
+    }/`;
   if (conf.isTagFinding) {
-    conf.latestVersion = "https://www.w3.org/2001/tag/doc/" + conf.shortName;
-    conf.thisVersion =
-      conf.latestVersion + "-" + ISODate.format(conf.publishDate);
+    conf.latestVersion = `https://www.w3.org/2001/tag/doc/${conf.shortName}`;
+    conf.thisVersion = `${conf.latestVersion}-${ISODate.format(
+      conf.publishDate
+    )}`;
   }
   if (conf.previousPublishDate) {
     if (!conf.previousMaturity && !conf.isTagFinding) {
@@ -351,27 +351,21 @@ export function run(conf) {
       ? status2maturity[conf.previousMaturity]
       : conf.previousMaturity;
     if (conf.isTagFinding) {
-      conf.prevVersion =
-        conf.latestVersion + "-" + ISODate.format(conf.previousPublishDate);
+      conf.prevVersion = `${conf.latestVersion}-${ISODate.format(
+        conf.previousPublishDate
+      )}`;
     } else if (conf.isCGBG) {
       conf.prevVersion = conf.prevVersion || "";
     } else if (conf.isBasic) {
       conf.prevVersion = "";
     } else {
-      conf.prevVersion =
-        "https://www.w3.org/TR/" +
-        conf.previousPublishDate.getUTCFullYear() +
-        "/" +
-        pmat +
-        "-" +
-        conf.shortName +
-        "-" +
-        concatDate(conf.previousPublishDate) +
-        "/";
+      conf.prevVersion = `https://www.w3.org/TR/${conf.previousPublishDate.getUTCFullYear()}/${pmat}-${
+        conf.shortName
+      }-${concatDate(conf.previousPublishDate)}/`;
     }
   } else {
     if (
-      !/NOTE$/.test(conf.specStatus) &&
+      !conf.specStatus.endsWith("NOTE") &&
       conf.specStatus !== "FPWD" &&
       conf.specStatus !== "FPLC" &&
       conf.specStatus !== "ED" &&
@@ -387,7 +381,7 @@ export function run(conf) {
     if (!conf.prevVersion) conf.prevVersion = "";
   }
   if (conf.prevRecShortname && !conf.prevRecURI)
-    conf.prevRecURI = "https://www.w3.org/TR/" + conf.prevRecShortname;
+    conf.prevRecURI = `https://www.w3.org/TR/${conf.prevRecShortname}`;
   if (!conf.editors || conf.editors.length === 0)
     pub("error", "At least one editor is required");
   const peopCheck = function(it) {
@@ -417,52 +411,26 @@ export function run(conf) {
     conf.alternateFormats &&
     joinAnd(conf.alternateFormats, alt => {
       let optional =
-        alt.hasOwnProperty("lang") && alt.lang
-          ? " hreflang='" + alt.lang + "'"
-          : "";
+        alt.hasOwnProperty("lang") && alt.lang ? ` hreflang='${alt.lang}'` : "";
       optional +=
-        alt.hasOwnProperty("type") && alt.type
-          ? " type='" + alt.type + "'"
-          : "";
-      return (
-        "<a rel='alternate' href='" +
-        alt.uri +
-        "'" +
-        optional +
-        ">" +
-        alt.label +
-        "</a>"
-      );
+        alt.hasOwnProperty("type") && alt.type ? ` type='${alt.type}'` : "";
+      return `<a rel='alternate' href='${alt.uri}'${optional}>${alt.label}</a>`;
     });
   if (conf.bugTracker) {
     if (conf.bugTracker.new && conf.bugTracker.open) {
-      conf.bugTrackerHTML =
-        "<a href='" +
-        conf.bugTracker.new +
-        "'>" +
-        conf.l10n.file_a_bug +
-        "</a> " +
-        conf.l10n.open_parens +
-        "<a href='" +
-        conf.bugTracker.open +
-        "'>" +
-        conf.l10n.open_bugs +
-        "</a>" +
-        conf.l10n.close_parens;
+      conf.bugTrackerHTML = `<a href='${conf.bugTracker.new}'>${
+        conf.l10n.file_a_bug
+      }</a> ${conf.l10n.open_parens}<a href='${conf.bugTracker.open}'>${
+        conf.l10n.open_bugs
+      }</a>${conf.l10n.close_parens}`;
     } else if (conf.bugTracker.open) {
-      conf.bugTrackerHTML =
-        "<a href='" + conf.bugTracker.open + "'>open bugs</a>";
+      conf.bugTrackerHTML = `<a href='${conf.bugTracker.open}'>open bugs</a>`;
     } else if (conf.bugTracker.new) {
-      conf.bugTrackerHTML =
-        "<a href='" + conf.bugTracker.new + "'>file a bug</a>";
+      conf.bugTrackerHTML = `<a href='${conf.bugTracker.new}'>file a bug</a>`;
     }
   }
   if (conf.copyrightStart && conf.copyrightStart == conf.publishYear)
     conf.copyrightStart = "";
-  for (const k in status2text) {
-    if (status2long[k]) continue;
-    status2long[k] = status2text[k];
-  }
   conf.longStatus = status2long[conf.specStatus];
   conf.textStatus = status2text[conf.specStatus];
   if (status2rdf[conf.specStatus]) {
@@ -475,7 +443,7 @@ export function run(conf) {
     conf.specStatus !== "ED" &&
     !conf.isNoTrack &&
     !conf.isSubmission;
-  if (/NOTE$/.test(conf.specStatus) && !conf.prevVersion)
+  if (conf.specStatus.endsWith("NOTE") && !conf.prevVersion)
     conf.showPreviousVersion = false;
   if (conf.isTagFinding)
     conf.showPreviousVersion = conf.previousPublishDate ? true : false;
@@ -552,23 +520,19 @@ export function run(conf) {
   if (Array.isArray(conf.wg)) {
     conf.multipleWGs = conf.wg.length > 1;
     conf.wgHTML = joinAnd(conf.wg, (wg, idx) => {
-      return "the <a href='" + conf.wgURI[idx] + "'>" + wg + "</a>";
+      return `the <a href='${conf.wgURI[idx]}'>${wg}</a>`;
     });
     const pats = [];
     for (let i = 0, n = conf.wg.length; i < n; i++) {
       pats.push(
-        "a <a href='" +
-          conf.wgPatentURI[i] +
-          "' rel='disclosure'>" +
-          "public list of any patent disclosures  (" +
-          conf.wg[i] +
-          ")</a>"
+        `a <a href='${conf.wgPatentURI[i]}' rel='disclosure'>` +
+          `public list of any patent disclosures  (${conf.wg[i]})</a>`
       );
     }
     conf.wgPatentHTML = joinAnd(pats);
   } else {
     conf.multipleWGs = false;
-    conf.wgHTML = "the <a href='" + conf.wgURI + "'>" + conf.wg + "</a>";
+    conf.wgHTML = `the <a href='${conf.wgURI}'>${conf.wg}</a>`;
   }
   if (conf.specStatus === "PR" && !conf.crEnd) {
     pub(
@@ -608,9 +572,6 @@ export function run(conf) {
       "error",
       "IG-NOTEs must link to charter's disclosure section using `charterDisclosureURI`."
     );
-  // ensure subjectPrefix is encoded before using template
-  if (conf.subjectPrefix !== "")
-    conf.subjectPrefixEnc = encodeURIComponent(conf.subjectPrefix);
 
   hyperHTML.bind(sotd)`${populateSoTD(conf, sotd)}`;
 
@@ -630,13 +591,6 @@ export function run(conf) {
     );
   }
 
-  if (conf.isTagFinding && !conf.additionalContent) {
-    pub(
-      "warn",
-      "ReSpec does not support automated SotD generation for TAG findings, " +
-        "please add the prerequisite content in the 'sotd' section"
-    );
-  }
   // Requested by https://github.com/w3c/respec/issues/504
   // Makes a record of a few auto-generated things.
   pub("amend-user-config", {
@@ -645,25 +599,67 @@ export function run(conf) {
   });
 }
 
+/**
+ * @param {*} conf
+ * @param {HTMLElement} sotd
+ */
 function populateSoTD(conf, sotd) {
+  const options = {
+    ...collectSotdContent(sotd, conf),
+
+    get mailToWGPublicList() {
+      return `mailto:${conf.wgPublicList}@w3.org`;
+    },
+    get mailToWGPublicListWithSubject() {
+      const fragment = conf.subjectPrefix
+        ? `?subject=${encodeURIComponent(conf.subjectPrefix)}`
+        : "";
+      return this.mailToWGPublicList + fragment;
+    },
+    get mailToWGPublicListSubscription() {
+      return `mailto:${conf.wgPublicList}-request@w3.org?subject=subscribe`;
+    },
+  };
+  const template = conf.isCGBG ? cgbgSotdTmpl : sotdTmpl;
+  return template(conf, options);
+}
+
+/**
+ * @param {HTMLElement} sotd
+ */
+function collectSotdContent(sotd, { isTagFinding = false }) {
   const sotdClone = sotd.cloneNode(true);
-  const additionalNodes = document.createDocumentFragment();
-  const additionalContent = document.createElement("temp");
+  const additionalContent = document.createDocumentFragment();
   // we collect everything until we hit a section,
   // that becomes the custom content.
   while (sotdClone.hasChildNodes()) {
     if (
-      sotdClone.firstChild.nodeType !== Node.ELEMENT_NODE ||
+      !isElement(sotdClone.firstChild) ||
       sotdClone.firstChild.localName !== "section"
     ) {
-      additionalNodes.appendChild(sotdClone.firstChild);
+      additionalContent.appendChild(sotdClone.firstChild);
       continue;
     }
     break;
   }
-  additionalContent.appendChild(additionalNodes);
-  conf.additionalContent = additionalContent.innerHTML;
-  // Whatever sections are left, we throw at the end.
-  conf.additionalSections = sotdClone.innerHTML;
-  return (conf.isCGBG ? cgbgSotdTmpl : sotdTmpl)(conf);
+  if (isTagFinding && !additionalContent.hasChildNodes()) {
+    pub(
+      "warn",
+      "ReSpec does not support automated SotD generation for TAG findings, " +
+        "please add the prerequisite content in the 'sotd' section"
+    );
+  }
+  return {
+    additionalContent,
+    // Whatever sections are left, we throw at the end.
+    additionalSections: sotdClone.childNodes,
+  };
+}
+
+/**
+ * @param {Node} node
+ * @return {node is Element}
+ */
+function isElement(node) {
+  return node.nodeType === Node.ELEMENT_NODE;
 }
