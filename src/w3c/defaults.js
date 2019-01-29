@@ -2,6 +2,7 @@
  * Sets the defaults for W3C specs
  */
 export const name = "w3c/defaults";
+import { coreDefaults } from "../core/defaults";
 import { definitionMap } from "../core/dfn-map";
 import linter from "../core/linter";
 import { rule as privsecSectionRule } from "./linter-rules/privsec-section";
@@ -30,10 +31,12 @@ export function run(conf) {
   if (conf.specStatus === "unofficial") return;
   // assign the defaults
   Object.assign(conf, {
+    ...coreDefaults,
     ...w3cDefaults,
     ...conf,
   });
   Object.assign(conf.lint, {
+    ...coreDefaults.lint,
     ...w3cDefaults.lint,
     ...conf.lint,
   });
