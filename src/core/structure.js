@@ -121,7 +121,7 @@ function getSectionTree(parent, { tocIntroductory = false } = {}) {
  * @param {string} id
  */
 function createTocListItem(header, id) {
-  const anchor = hyperHTML`<a href="${`#${id}`}" class="tocxref" />`;
+  const anchor = hyperHTML`<a href="${`#${id}`}" class="tocxref"/>`;
   anchor.append(...header.cloneNode(true).childNodes);
   filterHeader(anchor);
   return hyperHTML`<li class='tocline'>${anchor}</li>`;
@@ -234,7 +234,7 @@ function updateEmptyAnchors(secMap) {
         anchor.append("section ");
       }
       if (secno) {
-        anchor.append(hyperHTML`<span class='secno'>${secno}</span>`, " ");
+        anchor.append(hyperHTML`<span class='secno'>§ ${secno}</span>`, " ");
       }
       anchor.append(hyperHTML`<span class='sec-title'>${title}</span>`);
     }
