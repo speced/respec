@@ -1,5 +1,5 @@
 "use strict";
-fdescribe("Core — data-tests attribute", () => {
+describe("Core — data-tests attribute", () => {
   let doc;
   beforeAll(async () => {
     const ops = {
