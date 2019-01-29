@@ -69,9 +69,11 @@ describe("Core — Issues and Notes", () => {
     expect(patr.textContent).toBe("FEATURE AT RISK");
 
     expect(not.querySelectorAll("div.note-title").length).toBe(1);
+    expect(not.getAttribute("role")).toBe("note");
     expect(not.querySelector("div.note-title").textContent).toBe(
       "Note: NOT-TIT"
     );
+
     expect(pnot.getAttribute("title")).toBeNull();
     expect(pnot.textContent).toBe("NOTE");
   });
@@ -90,6 +92,7 @@ describe("Core — Issues and Notes", () => {
     expect(edNote.querySelector("div.ednote-title").textContent).toBe(
       "Editor's note: EDNOTE-TIT"
     );
+    expect(edNote.getAttribute("role")).toBe("note");
     expect(pnot.getAttribute("title")).toBeNull();
     expect(pnot.textContent).toBe("EDNOTE");
   });

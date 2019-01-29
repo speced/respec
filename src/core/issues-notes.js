@@ -51,7 +51,7 @@ function handleIssues(ins, ghIssues, conf) {
     // wrap
     if (!isInline) {
       const div = hyperHTML`<div class='${type +
-        (isFeatureAtRisk ? " atrisk" : "")}'></div>`;
+        (isFeatureAtRisk ? " atrisk" : "")}' role=${(type === "note"? "note" :"")} ></div>`;
       const title = document.createElement("span");
       const titleParent = hyperHTML`
         <div role='heading' class='${`${type}-title marker`}'>${title}</div>`;
@@ -310,9 +310,5 @@ export async function run(conf) {
   ednotes.forEach(ednote => {
     ednote.classList.remove("ednote");
     ednote.classList.add("note");
-  });
-  const notes = document.querySelectorAll(".note");
-  notes.forEach(note => {
-    note.setAttribute("role", "note");
   });
 }
