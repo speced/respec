@@ -26,14 +26,15 @@ describe("Core — data-tests attribute", () => {
         </section>
         <section>
           <h2>Duplicate Tests</h2>
-          <p id="duplicates" data-tests="
-            payment-request-show-method.https.html,
-            some-other-test.html,
-            payment-request-show-method.https.html, 
-            ./payment-request-show-method.https.html,
-            https://wpt.fyi/respec/payment-request-show-method.https.html"
-        >
-        </p>
+          <p id="duplicates" 
+            data-tests="
+              payment-request-show-method.https.html,
+              some-other-test.html,
+              payment-request-show-method.https.html, 
+              ./payment-request-show-method.https.html,
+              https://wpt.fyi/respec/payment-request-show-method.https.html"
+          >
+          </p>
         </section>`,
     };
     ops.config.testSuiteURI = "https://wpt.fyi/respec/";
@@ -157,10 +158,8 @@ describe("Core — data-tests attribute", () => {
         )
       );
       expect(items.length).toEqual(2);
-      expect(items[0].textContent.trim()).toEqual(
-        "payment-request-show-method"
-      );
-      expect(items[1].textContent.trim()).toEqual("some-other-test");
+      expect(items[0].textContent.trim()).toBe("payment-request-show-method");
+      expect(items[1].textContent.trim()).toBe("some-other-test");
     });
   });
 });

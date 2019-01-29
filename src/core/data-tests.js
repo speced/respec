@@ -106,9 +106,9 @@ export function run(conf) {
         showInlineWarning(
           elem,
           `Duplicate tests found`,
-          `To fix, remove duplicates from "data-tests": ${duplicates.join(
-            ", "
-          )}`
+          `To fix, remove duplicates from "data-tests": ${duplicates
+            .map(url => new URL(url).pathname)
+            .join(", ")}`
         );
       }
       details.classList.add("respec-tests-details", "removeOnSave");
