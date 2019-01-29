@@ -47,17 +47,25 @@ describe("Core — Examples", () => {
   it("processes children of aside examples", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body: `${makeDefaultBody()}<article>
+      body: `${makeDefaultBody()}
            <aside class="example">
             <pre class="js">
             // Whitespace before this text should be removed
             </pre>
-           </aside>
-         </article>`,
+            <pre>
+                  // this one should also have its whitespace removed
+            </pre>
+            <pre>
+                                this one should also have its whitespace removed
+            </pre>
+           </aside>`,
     };
     const doc = await makeRSDoc(ops);
-    const example = doc.querySelector("pre.hljs");
-    expect(example.textContent).toBe("// Whitespace before this text should be removed");
+    const example = doc.querySelectorAll("pre.hljs");
+    expect(example.length).toBe(3);
+    expect(example[0].textContent).toBe("// Whitespace before this text should be removed");
+    expect(example[1].textContent).toBe("// this one should also have its whitespace removed");
+    expect(example[2].textContent).toBe("this one should also have its whitespace removed");
   });
   it("self-links examples made from asides", async () => {
     const body = `
