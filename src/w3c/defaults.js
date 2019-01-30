@@ -30,15 +30,16 @@ const w3cDefaults = {
 export function run(conf) {
   if (conf.specStatus === "unofficial") return;
   // assign the defaults
+  const lint = {
+    ...coreDefaults.lint,
+    ...w3cDefaults.lint,
+    ...conf.lint,
+  };
   Object.assign(conf, {
     ...coreDefaults,
     ...w3cDefaults,
     ...conf,
-    lint: {
-      ...coreDefaults.lint,
-      ...w3cDefaults.lint,
-      ...conf.lint,
-    },
+    lint,
   });
 
   // TODO: eventually, we want to remove this.
