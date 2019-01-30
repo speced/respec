@@ -17,7 +17,7 @@ linter.register(
   checkInternalSlots
 );
 
-const coreDefaults = {
+export const coreDefaults = {
   lint: {
     "no-headingless-sections": true,
     "no-http-props": true,
@@ -30,5 +30,3 @@ const coreDefaults = {
   highlightVars: true,
   addSectionLinks: true,
 };
-
-export default coreDefaults;
