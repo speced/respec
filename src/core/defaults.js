@@ -25,20 +25,10 @@ const coreDefaults = {
     "local-refs-exist": true,
     "check-internal-slots": false,
   },
-  pluralize: true,
+  pluralize: false,
   specStatus: "base",
   highlightVars: true,
   addSectionLinks: true,
 };
 
-export function run(conf) {
-  // assign the defaults
-  Object.assign(conf, {
-    ...coreDefaults,
-    ...conf,
-  });
-  Object.assign(conf.lint, {
-    ...coreDefaults.lint,
-    ...conf.lint,
-  });
-}
+export default coreDefaults;
