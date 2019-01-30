@@ -2,10 +2,7 @@
  * Sets the defaults for W3C specs
  */
 export const name = "w3c/defaults";
-<<<<<<< HEAD
-=======
 import { coreDefaults } from "../core/defaults";
->>>>>>> 53d23db0b28473a27461109299cc73bcd280e933
 import { definitionMap } from "../core/dfn-map";
 import linter from "../core/linter";
 import { rule as privsecSectionRule } from "./linter-rules/privsec-section";
@@ -16,10 +13,7 @@ const w3cDefaults = {
   lint: {
     "privsec-section": true,
   },
-<<<<<<< HEAD
-=======
   pluralize: true,
->>>>>>> 53d23db0b28473a27461109299cc73bcd280e933
   doJsonLd: false,
   license: "w3c-software-doc",
   logos: [
@@ -40,10 +34,11 @@ export function run(conf) {
     ...coreDefaults,
     ...w3cDefaults,
     ...conf,
-  });
-  Object.assign(conf.lint, {
-    ...w3cDefaults.lint,
-    ...conf.lint,
+    lint: {
+      ...coreDefaults.lint,
+      ...w3cDefaults.lint,
+      ...conf.lint,
+    },
   });
 
   // TODO: eventually, we want to remove this.
