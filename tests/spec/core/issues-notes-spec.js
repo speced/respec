@@ -92,7 +92,6 @@ describe("Core — Issues and Notes", () => {
     expect(edNote.querySelector("div.ednote-title").textContent).toBe(
       "Editor's note: EDNOTE-TIT"
     );
-    expect(edNote.getAttribute("role")).toBe("note");
     expect(pnot.getAttribute("title")).toBeNull();
     expect(pnot.textContent).toBe("EDNOTE");
   });
