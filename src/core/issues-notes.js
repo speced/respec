@@ -50,10 +50,9 @@ function handleIssues(ins, ghIssues, conf) {
     }
     // wrap
     if (!isInline) {
-      const div = hyperHTML`<div class='${type +
-        (isFeatureAtRisk ? " atrisk" : "")}' role=${
-        type === "note" ? "note" : null
-      } ></div>`;
+      const cssClass = isFeatureAtRisk ? `${type} atrisk` : type;
+      const ariaRole = type === "note" ? "note" : null;
+      const div = hyperHTML`<div class="${cssClass}" role="${ariaRole}"></div>`;
       const title = document.createElement("span");
       const titleParent = hyperHTML`
         <div role='heading' class='${`${type}-title marker`}'>${title}</div>`;
