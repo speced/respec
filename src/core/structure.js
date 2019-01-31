@@ -222,12 +222,14 @@ function createTableOfContents(ol, conf) {
  * @param {Record<string, SectionInfo>} secMap
  */
 function updateEmptyAnchors(secMap) {
-  document.querySelectorAll("a[href^='#']:not(.tocxref)").forEach(anchor => {
-    if (anchor.innerHTML !== "") {
-      return;
-    }
-    const id = anchor.getAttribute("href").slice(1);
-    if (secMap[id]) {
+  [...document.querySelectorAll("a[href^='#']:not(.tocxref)")]
+    .filter(
+      anchor =>
+        anchor.textContent === "" &&
+        anchor.getAttribute("href").slice(1) in secMap
+    )
+    .forEach(anchor => {
+      const id = anchor.getAttribute("href").slice(1);
       const { secno, title } = secMap[id];
       anchor.classList.add("sec-ref");
       if (anchor.classList.contains("sectionRef")) {
@@ -236,7 +238,6 @@ function updateEmptyAnchors(secMap) {
       if (secno) {
         anchor.append(hyperHTML`<span class='secno'>§ ${secno}</span>`, " ");
       }
-      anchor.append(hyperHTML`<span class='sec-title'>${title}</span>`);
-    }
-  });
+      anchor.append(hyperHTML`<span class='sec-title'>${title.trim()}</span>`);
+    });
 }
