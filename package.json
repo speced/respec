@@ -23,7 +23,7 @@
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
-    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-env": "^7.3.1",
     "chai": "^4.2.0",
     "clipboard": "^2.0.4",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
@@ -51,9 +51,9 @@
     "karma-safaritechpreview-launcher": "2.0.2",
     "karma-verbose-summary-reporter": "0.0.1",
     "mocha": "^5.2.0",
-    "moment": "^2.23.0",
+    "moment": "^2.24.0",
     "pluralize": "^7.0.0",
-    "prettier": "^1.16.0",
+    "prettier": "^1.16.2",
     "raw-loader": "^1.0.0",
     "requirejs": "^2.3.6",
     "serve": "^10.1.1",
@@ -88,13 +88,13 @@
     "command-line-usage": "^5.0.5",
     "epipebomb": "^1.0.0",
     "fs-extra": "^7.0.1",
-    "highlight.js": "github:marcoscaceres/highlight.js#7b144b3b83ce296d5b29c5e4fc2ea2a65e9d3f32",
+    "highlight.js": "github:highlightjs/highlight.js.git#cli",
     "hyperhtml": "^2.25.4",
     "loading-indicator": "^2.0.0",
     "marked": "^0.6.0",
     "prompt": "^1.0.0",
     "puppeteer": "^1.11.0",
-    "snyk": "^1.122.2"
+    "snyk": "^1.123.0"
   },
   "prettier": {
     "trailingComma": "es5"

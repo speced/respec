@@ -23,6 +23,18 @@ describe("Core — data-tests attribute", () => {
           >
              metadata tests
           </p>
+        </section>
+        <section>
+          <h2>Duplicate Tests</h2>
+          <p id="duplicates" 
+            data-tests="
+              payment-request-show-method.https.html,
+              some-other-test.html,
+              payment-request-show-method.https.html, 
+              ./payment-request-show-method.https.html,
+              https://wpt.fyi/respec/payment-request-show-method.https.html"
+          >
+          </p>
         </section>`,
     };
     ops.config.testSuiteURI = "https://wpt.fyi/respec/";
@@ -136,6 +148,18 @@ describe("Core — data-tests attribute", () => {
 
       const spanTitle2 = manualIconElement.getAttribute("title");
       expect(spanTitle2).toEqual("Manual test");
+    });
+  });
+  describe("duplicate test removal", () => {
+    it("checks for and removes duplicate links", () => {
+      const items = Array.from(
+        doc.querySelectorAll(
+          "#duplicates > .respec-tests-details > ul > li > a"
+        )
+      );
+      expect(items.length).toEqual(2);
+      expect(items[0].textContent.trim()).toBe("payment-request-show-method");
+      expect(items[1].textContent.trim()).toBe("some-other-test");
     });
   });
 });
