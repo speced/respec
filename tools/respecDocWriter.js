@@ -75,10 +75,10 @@ async function fetchAndWrite(
   });
   try {
     const page = await browser.newPage();
-    const url = new URL(src);
-    const response = await page.goto(url, { timeout });
     const handleConsoleMessages = makeConsoleMsgHandler(page);
     handleConsoleMessages(whenToHalt);
+    const url = new URL(src);
+    const response = await page.goto(url, { timeout });
     if (
       !response.ok() &&
       response.status() /* workaround: 0 means ok for local files */
