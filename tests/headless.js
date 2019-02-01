@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// @ts-check
 /*eslint-env node*/
 "use strict";
 const port = 5000;
@@ -9,17 +10,6 @@ const testURLs = [
 const colors = require("colors");
 const { exec } = require("child_process");
 const moment = require("moment");
-colors.setTheme({
-  data: "grey",
-  debug: "cyan",
-  error: "red",
-  help: "cyan",
-  info: "green",
-  input: "grey",
-  prompt: "grey",
-  verbose: "cyan",
-  warn: "yellow",
-});
 
 const handler = require("serve-handler");
 const http = require("http");
@@ -62,13 +52,13 @@ async function runRespec2html() {
   let testCount = 1;
   for (const exe of executables) {
     try {
-      const testInfo = colors.info(`(test ${testCount++}/${testURLs.length})`);
+      const testInfo = colors.green(`(test ${testCount++}/${testURLs.length})`);
       const msg = ` 👷‍♀️  ${exe.cmd} ${testInfo}`;
       debug(msg);
       await exe.run();
     } catch (err) {
       // eslint-disable-next-line no-console
-      console.error(colors.error(err));
+      console.error(colors.red(err));
       errors.add(exe.cmd);
     }
   }
@@ -80,7 +70,7 @@ async function runRespec2html() {
 
 function debug(msg) {
   // eslint-disable-next-line no-console
-  console.log(colors.debug(`${colors.input(moment().format("LTS"))} ${msg}`));
+  console.log(colors.grey(moment().format("LTS")) + colors.cyan(` ${msg}`));
 }
 
 async function run() {
