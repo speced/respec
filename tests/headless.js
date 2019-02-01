@@ -35,10 +35,8 @@ function toExecutable(cmd) {
 }
 
 async function runRespec2html() {
-  const server = http.createServer((request, response) => {
-    return handler(request, response);
-  });
-  server.listen(port, () => {});
+  const server = http.createServer(handler);
+  server.listen(port);
 
   const errors = new Set();
   // Incrementally spawn processes and add them to process counter.
