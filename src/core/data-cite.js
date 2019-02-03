@@ -54,12 +54,17 @@ function requestLookup(conf) {
     }
     switch (elem.localName) {
       case "a": {
-        elem.text = title;
+        if (elem.text === "") {
+          elem.text = title;
+        }
         elem.href = href;
         break;
       }
       case "dfn": {
-        wrapInner(elem, hyperHTML`<a href="${href}">${title}</a>`);
+        if (elem.text === "") {
+          wrapInner(elem, hyperHTML`<a href="${href}">${title}</a>`);
+        }
+        wrapInner(elem, hyperHTML`<a href="${href}"></a>`);
         break;
       }
     }
