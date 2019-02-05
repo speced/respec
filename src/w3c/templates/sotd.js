@@ -179,7 +179,7 @@ export default (conf, opts) => {
                   ${conf.recNotExpected
                     ? "The group does not expect this document to become a W3C Recommendation."
                     : ""}
-                  ${!conf.isIGNote
+                  ${!conf.isNote && !conf.isIGNote
                     ? html`
                         ${conf.multipleWGs
                           ? html`
