@@ -9,11 +9,10 @@ export default (conf, opts) => {
         ? html`
             <details class="annoying-warning" open="">
               <summary
-                >This is a
-                preview${
+                >Preview of PR
+                ${
                   conf.prUrl && conf.prNumber
                     ? html`
-                        of pull request
                         <a href="${conf.prUrl}">#${conf.prNumber}</a>
                       `
                     : ""
