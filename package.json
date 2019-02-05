@@ -94,7 +94,7 @@
     "marked": "^0.6.0",
     "prompt": "^1.0.0",
     "puppeteer": "^1.11.0",
-    "snyk": "^1.123.0"
+    "snyk": "^1.124.1"
   },
   "prettier": {
     "trailingComma": "es5"
