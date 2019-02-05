@@ -12,6 +12,7 @@
 import { lang as defaultLang } from "./l10n";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
+import { showInlineWarning } from "./utils";
 const l10n = {
   en: {
     missing_test_suite_uri:
@@ -98,12 +99,25 @@ export function run(conf) {
           }
           return href;
         });
+      const duplicates = testURLs.filter(
+        (links, i, self) => self.indexOf(links) !== i
+      );
+      if (duplicates.length) {
+        showInlineWarning(
+          elem,
+          `Duplicate tests found`,
+          `To fix, remove duplicates from "data-tests": ${duplicates
+            .map(url => new URL(url).pathname)
+            .join(", ")}`
+        );
+      }
       details.classList.add("respec-tests-details", "removeOnSave");
+      const uniqueList = [...new Set(testURLs)];
       renderer`
         <summary>
-          tests: ${testURLs.length}
+          tests: ${uniqueList.length}
         </summary>
-        <ul>${testURLs.map(toListItem)}</ul>
+        <ul>${uniqueList.map(toListItem)}</ul>
       `;
       return { elem, details };
     })

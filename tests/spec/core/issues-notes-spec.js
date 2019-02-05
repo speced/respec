@@ -42,21 +42,22 @@ describe("Core — Issues and Notes", () => {
         `<p class='note' title='NOT-TIT'>NOTE</p></section>`,
     };
     const doc = await makeRSDoc(ops);
-    const iss = doc.querySelector("div.issue", doc);
-    const piss = iss.querySelector("p");
+    const issue = doc.querySelector("div.issue", doc);
+    const piss = issue.querySelector("p");
     const atr = doc.querySelector("div.atrisk");
     const patr = atr.querySelector("p");
     const spiss = doc.querySelector("span.issue");
     const spatr = doc.querySelector("span.atrisk");
-    const not = doc.querySelector("div.note");
-    const pnot = not.querySelector("p");
+    const note = doc.querySelector("div.note");
+    const pnot = note.querySelector("p");
     const spnot = doc.querySelector("span.note");
 
     expect(spiss.closest("div")).toBeNull();
     expect(spatr.closest("div")).toBeNull();
     expect(spnot.closest("div")).toBeNull();
-    expect(iss.querySelectorAll("div.issue-title").length).toBe(1);
-    expect(iss.querySelector("div.issue-title").textContent).toBe(
+    expect(issue.getAttribute("role")).toBeNull();
+    expect(issue.querySelectorAll("div.issue-title").length).toBe(1);
+    expect(issue.querySelector("div.issue-title").textContent).toBe(
       "Issue 1: ISS-TIT"
     );
     expect(piss.getAttribute("title")).toBeNull();
@@ -68,10 +69,12 @@ describe("Core — Issues and Notes", () => {
     expect(patr.getAttribute("title")).toBeNull();
     expect(patr.textContent).toBe("FEATURE AT RISK");
 
-    expect(not.querySelectorAll("div.note-title").length).toBe(1);
-    expect(not.querySelector("div.note-title").textContent).toBe(
+    expect(note.querySelectorAll("div.note-title").length).toBe(1);
+    expect(note.getAttribute("role")).toBe("note");
+    expect(note.querySelector("div.note-title").textContent).toBe(
       "Note: NOT-TIT"
     );
+
     expect(pnot.getAttribute("title")).toBeNull();
     expect(pnot.textContent).toBe("NOTE");
   });

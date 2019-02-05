@@ -58,6 +58,10 @@ export function run(conf) {
       const { id } = example;
       const selfLink = div.querySelector("a.self-link");
       selfLink.href = `#${id}`;
+      const children = Array.from(example.children);
+      children.forEach(child => {
+        child.innerHTML = reindent(child.innerHTML);
+      });
       pub("example", report);
     } else {
       const inAside = !!example.closest("aside");
