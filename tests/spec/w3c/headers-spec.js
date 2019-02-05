@@ -906,7 +906,7 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       const sotd = doc.getElementById("sotd");
       const f = contains(sotd, "p", "Proposed Edited Recommendation");
-      expect(f.length).toBe(2);
+      expect(f.length).toBe(3);
       const questionnaires = doc
         .getElementById("sotd")
         .querySelector(
