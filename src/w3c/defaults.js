@@ -30,7 +30,7 @@ const w3cDefaults = {
 export function run(conf) {
   if (conf.specStatus === "unofficial") return;
   // assign the defaults
-  const lint = {
+  const lint = conf.lint && {
     ...coreDefaults.lint,
     ...w3cDefaults.lint,
     ...conf.lint,
