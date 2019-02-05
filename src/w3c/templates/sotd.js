@@ -179,36 +179,6 @@ export default (conf, opts) => {
                   ${conf.recNotExpected
                     ? "The group does not expect this document to become a W3C Recommendation."
                     : ""}
-                  ${!conf.isIGNote
-                    ? html`
-                        ${conf.multipleWGs
-                          ? html`
-                              W3C maintains ${[conf.wgPatentHTML]}
-                            `
-                          : html`
-                              W3C maintains a
-                              <a href="${[conf.wgPatentURI]}" rel="disclosure"
-                                >public list of any patent disclosures</a
-                              >
-                            `}
-                        made in connection with the deliverables of
-                        ${conf.multipleWGs
-                          ? "each group; these pages also include"
-                          : "the group; that page also includes"}
-                        instructions for disclosing a patent. An individual who
-                        has actual knowledge of a patent which the individual
-                        believes contains
-                        <a
-                          href="https://www.w3.org/Consortium/Patent-Policy/#def-essential"
-                          >Essential Claim(s)</a
-                        >
-                        must disclose the information in accordance with
-                        <a
-                          href="https://www.w3.org/Consortium/Patent-Policy/#sec-Disclosure"
-                          >section 6 of the W3C Patent Policy</a
-                        >.
-                      `
-                    : ""}
                   ${conf.isIGNote
                     ? html`
                         The disclosure obligations of the Participants of this
