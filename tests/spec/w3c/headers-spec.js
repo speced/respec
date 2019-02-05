@@ -842,10 +842,10 @@ describe("W3C — Headers", () => {
       const opts = makeStandardOps({ specStatus: "IG-NOTE" });
       const doc = await makeRSDoc(opts);
       const sotd = doc.querySelector("#sotd");
-      const [p] = contains(sotd, "p", "Patent Policy");
+      const [p] = contains(sotd, "p", "The disclosure obligations");
       const normalized = p.textContent.trim().replace(/\s+/gm, " ");
       expect(normalized).toBe(
-        "This document was produced by a group operating under the W3C Patent Policy. The disclosure obligations of the Participants of this group are described in the charter."
+        "The disclosure obligations of the Participants of this group are described in the charter."
       );
     });
   });

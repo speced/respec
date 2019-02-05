@@ -204,19 +204,26 @@ export default (conf, opts) => {
                         : ""
                     }
                     <p data-deliverer="${conf.isNote ? conf.wgId : null}">
-                      This document was produced by
-                      ${conf.multipleWGs ? "groups" : "a group"} operating under
-                      the
-                      <a href="https://www.w3.org/Consortium/Patent-Policy/"
-                        >W3C Patent Policy</a
-                      >.
+                      ${
+                        !conf.isIGNote
+                          ? html`
+                              This document was produced by
+                              ${conf.multipleWGs ? "groups" : "a group"}
+                              operating under the
+                              <a
+                                href="https://www.w3.org/Consortium/Patent-Policy/"
+                                >W3C Patent Policy</a
+                              >.
+                            `
+                          : ""
+                      }
                       ${
                         conf.recNotExpected
                           ? "The group does not expect this document to become a W3C Recommendation."
                           : ""
                       }
                       ${
-                        !conf.isIGNote && !conf.isNote
+                        !conf.isNote && !conf.isIGNote
                           ? html`
                               ${
                                 conf.multipleWGs
