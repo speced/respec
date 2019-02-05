@@ -53,15 +53,15 @@
     "mocha": "^5.2.0",
     "moment": "^2.24.0",
     "pluralize": "^7.0.0",
-    "prettier": "^1.16.3",
+    "prettier": "^1.16.4",
     "raw-loader": "^1.0.0",
     "requirejs": "^2.3.6",
     "serve": "^10.1.1",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
-    "typescript": "^3.2.4",
+    "typescript": "^3.3.1",
     "webidl2": "^17.0.1",
-    "webpack": "^4.29.0",
-    "webpack-cli": "^3.2.1"
+    "webpack": "^4.29.1",
+    "webpack-cli": "^3.2.3"
   },
   "scripts": {
     "babel:build": "babel src -d js --source-maps -q",
@@ -93,8 +93,8 @@
     "loading-indicator": "^2.0.0",
     "marked": "^0.6.0",
     "prompt": "^1.0.0",
-    "puppeteer": "^1.11.0",
-    "snyk": "^1.123.0"
+    "puppeteer": "^1.12.1",
+    "snyk": "^1.124.1"
   },
   "prettier": {
     "trailingComma": "es5"
