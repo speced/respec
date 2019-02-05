@@ -63,9 +63,15 @@ describe("Core — Examples", () => {
     const doc = await makeRSDoc(ops);
     const example = doc.querySelectorAll("pre.hljs");
     expect(example.length).toBe(3);
-    expect(example[0].textContent).toBe("// Whitespace before this text should be removed");
-    expect(example[1].textContent).toBe("// this one should also have its whitespace removed");
-    expect(example[2].textContent).toBe("this one should also have its whitespace removed");
+    expect(example[0].textContent).toBe(
+      "// Whitespace before this text should be removed"
+    );
+    expect(example[1].textContent).toBe(
+      "// this one should also have its whitespace removed"
+    );
+    expect(example[2].textContent).toBe(
+      "this one should also have its whitespace removed"
+    );
   });
   it("self-links examples made from asides", async () => {
     const body = `
