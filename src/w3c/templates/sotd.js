@@ -223,7 +223,7 @@ export default (conf, opts) => {
                           : ""
                       }
                       ${
-                        !conf.isIGNote
+                        !conf.isNote && !conf.isIGNote
                           ? html`
                               ${
                                 conf.multipleWGs

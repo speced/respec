@@ -825,6 +825,29 @@ describe("W3C — Headers", () => {
       expect(wgId).toBe("123456");
       expect(elem).toBe(null);
     });
+    it("excludes the long patent text for note types", async () => {
+      const noteTypes = ["WG-NOTE", "FPWD-NOTE"];
+      for (const specStatus of noteTypes) {
+        const opts = makeStandardOps({ specStatus });
+        const doc = await makeRSDoc(opts);
+        const sotd = doc.querySelector("#sotd");
+        const [p] = contains(sotd, "p", "Patent Policy");
+        const normalized = p.textContent.trim().replace(/\s+/gm, " ");
+        expect(normalized).toBe(
+          "This document was produced by a group operating under the W3C Patent Policy."
+        );
+      }
+    });
+    it("includes specific text for IG-Notes", async () => {
+      const opts = makeStandardOps({ specStatus: "IG-NOTE" });
+      const doc = await makeRSDoc(opts);
+      const sotd = doc.querySelector("#sotd");
+      const [p] = contains(sotd, "p", "The disclosure obligations");
+      const normalized = p.textContent.trim().replace(/\s+/gm, " ");
+      expect(normalized).toBe(
+        "The disclosure obligations of the Participants of this group are described in the charter."
+      );
+    });
   });
 
   describe("wg, wgURI, wgPatentURI, wgPublicList", () => {
