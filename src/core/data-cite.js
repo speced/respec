@@ -61,7 +61,7 @@ function requestLookup(conf) {
         break;
       }
       case "dfn": {
-        if (elem.text === "") {
+        if (elem.textContent === "") {
           wrapInner(elem, hyperHTML`<a href="${href}">${title}</a>`);
         }
         wrapInner(elem, hyperHTML`<a href="${href}"></a>`);

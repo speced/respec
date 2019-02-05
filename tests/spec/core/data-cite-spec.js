@@ -263,6 +263,55 @@ describe("Core — data-cite attribute", () => {
     });
   });
 
+  it("Adds title to a reference when inline-link is empty normative reference", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}
+        <section>
+          <p id="t1"><a data-cite="!WHATWG-HTML"></a></p>
+          <p id="t2"><dfn data-cite="!WHATWG-HTML"></dfn></p>
+        </section>
+      `,
+    };
+    const doc = await makeRSDoc(ops);
+    const a = doc.querySelector("#t1 > a");
+    expect(a.textContent).toEqual("HTML Standard");
+    expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/");
+    expect(a.hasAttribute("data-cite")).toEqual(false);
+    expect(doc.getElementById("bib-whatwg-html").closest("section").id).toEqual(
+      "normative-references"
+    );
+    // Definition part
+    const dfn = doc.querySelector("#t2 > dfn");
+    expect(dfn).toBeTruthy();
+    const dfnA = doc.querySelector("#t2 > dfn > a");
+    expect(dfnA.textContent).toEqual("HTML Standard");
+    expect(dfnA.href).toEqual("https://html.spec.whatwg.org/multipage/");
+    expect(dfnA.hasAttribute("data-cite")).toEqual(false);
+    expect(doc.getElementById("bib-whatwg-html").closest("section").id).toEqual(
+      "normative-references"
+    );
+  });
+
+  it("Adds title to a reference when inline-link is empty as informative reference", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}
+          <section>
+            <p id="t1"><a data-cite="?WHATWG-DOM"></a></p>
+          </section>
+        `,
+    };
+    const doc = await makeRSDoc(ops);
+    const a = doc.querySelector("#t1 > a");
+    expect(a.textContent).toEqual("DOM Standard");
+    expect(a.href).toEqual("https://dom.spec.whatwg.org/");
+    expect(a.hasAttribute("data-cite")).toEqual(false);
+    expect(doc.getElementById("bib-whatwg-dom").closest("section").id).toEqual(
+      "informative-references"
+    );
+  });
+
   it("does not create external bibliography reference when when external spec id matches its Short Name", async () => {
     const body = `
       <section>
