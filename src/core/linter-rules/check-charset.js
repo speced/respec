@@ -37,7 +37,7 @@ function linterFunction(conf, doc) {
   const utfExists = val.includes("utf-8");
 
   //only a single meta[charset] and is set to utf-8, correct case
-  if (utfExists !== false && metas.length === 1) {
+  if (utfExists === true && metas.length === 1) {
     return [];
   }
   //if more than one meta[charset] tag defined along with utf-8

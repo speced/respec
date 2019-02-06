@@ -26,7 +26,7 @@ export const coreDefaults = {
     "check-punctuation": false,
     "local-refs-exist": true,
     "check-internal-slots": false,
-    "check-charset": true,
+    "check-charset": false,
   },
   pluralize: false,
   specStatus: "base",
