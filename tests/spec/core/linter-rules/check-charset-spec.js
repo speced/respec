@@ -18,8 +18,7 @@ describe("Core Linter Rule - 'check-charset'", () => {
     `;
 
     const results = await rule.lint(config, doc);
-    const [result] = results;
-    expect(result.length).toEqual(0);
+    expect(results.length).toEqual(0);
   });
 
   it("doesn't give an error when written in capitals", async () => {
@@ -31,8 +30,7 @@ describe("Core Linter Rule - 'check-charset'", () => {
     `;
 
     const results = await rule.lint(config, doc);
-    const [result] = results;
-    expect(result.length).toEqual(0);
+    expect(results.length).toEqual(0);
   });
 
   it("checks if meta[charset] is present or not", async () => {
