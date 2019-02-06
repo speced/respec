@@ -40,6 +40,7 @@ function lintingFunction(conf, doc) {
   if (!offendingMembers.length) {
     return [];
   }
+  /** @type {import("../../core/LinterRule").LinterResult} */
   const result = {
     name,
     occurrences: offendingMembers.length,

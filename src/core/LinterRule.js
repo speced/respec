@@ -8,7 +8,7 @@
  * @property {number} occurrences
  * @property {Element[]} offendingElements
  *
- * @typedef {(conf: any, doc: Document) => (LinterResult | Promise<LinterResult>)[]} LintingFunction
+ * @typedef {(conf: any, doc: Document) => (LinterResult | Promise<LinterResult> | (LinterResult | Promise<LinterResult>)[])} LintingFunction
  */
 
 /** @type {WeakMap<LinterRule, { name: string, lintingFunction: LintingFunction }>} */
@@ -47,8 +47,11 @@ export default class LinterRule {
    * @param {Document} doc The document to be checked.
    */
   lint(conf = { lint: { [this.name]: false } }, doc = document) {
-    return canLint(conf, this.name)
-      ? [...privs.get(this).lintingFunction(conf, doc)]
-      : [];
+    /** @type {(LinterResult | Promise<LinterResult>)[]} */
+    const results = [];
+    if (canLint(conf, this.name)) {
+      return results;
+    }
+    return results.concat(privs.get(this).lintingFunction(conf, doc));
   }
 }

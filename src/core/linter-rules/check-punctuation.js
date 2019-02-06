@@ -36,6 +36,7 @@ function lintingFunction(conf, doc) {
   if (!offendingElements.length) {
     return [];
   }
+  /** @type {import("../../core/LinterRule").LinterResult} */
   const result = {
     name,
     offendingElements,
