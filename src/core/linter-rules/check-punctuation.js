@@ -23,7 +23,7 @@ const lang = defaultLang in meta ? defaultLang : "en";
  *
  * @param {Object} conf The ReSpec config.
  * @param  {Document} doc The document to be checked.
- * @return {import("../../core/LinterRule").LinterResult[]}
+ * @return {import("../../core/LinterRule").LinterResult}
  */
 function lintingFunction(conf, doc) {
   // Check string ends with one of ., !, ?, :, ], or is empty.
@@ -35,15 +35,13 @@ function lintingFunction(conf, doc) {
     ...doc.querySelectorAll("p:not(#back-to-top)"),
   ].filter(elem => !punctuatingRegExp.test(elem.textContent.trim()));
   if (!offendingElements.length) {
-    return [];
+    return;
   }
-  return [
-    {
-      name,
-      offendingElements,
-      occurrences: offendingElements.length,
-      ...meta[lang],
-    },
-  ];
+  return {
+    name,
+    offendingElements,
+    occurrences: offendingElements.length,
+    ...meta[lang],
+  };
 }
 export const rule = new LinterRule(name, lintingFunction);

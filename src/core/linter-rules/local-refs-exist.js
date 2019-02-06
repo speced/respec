@@ -23,23 +23,21 @@ const lang = defaultLang in meta ? defaultLang : "en";
  * Runs linter rule.
  * @param {Object} conf The ReSpec config.
  * @param  {Document} doc The document to be checked.
- * @return {import("../../core/LinterRule").LinterResult[]}
+ * @return {import("../../core/LinterRule").LinterResult}
  */
 function linterFunction(conf, doc) {
   const offendingElements = [...doc.querySelectorAll("a[href^='#']")].filter(
     isBrokenHyperlink
   );
   if (!offendingElements.length) {
-    return [];
+    return;
   }
-  return [
-    {
-      name,
-      offendingElements,
-      occurrences: offendingElements.length,
-      ...meta[lang],
-    },
-  ];
+  return {
+    name,
+    offendingElements,
+    occurrences: offendingElements.length,
+    ...meta[lang],
+  };
 }
 
 export const rule = new LinterRule(name, linterFunction);

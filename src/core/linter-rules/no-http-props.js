@@ -27,7 +27,7 @@ const lang = defaultLang in meta ? defaultLang : "en";
 function lintingFunction(conf, doc) {
   // We can only really perform this check over http/https
   if (!doc.location.href.startsWith("http")) {
-    return [];
+    return;
   }
   const offendingMembers = Object.getOwnPropertyNames(conf)
     // this check is cheap, "prevED" is w3c exception.
@@ -38,7 +38,7 @@ function lintingFunction(conf, doc) {
     )
     .reduce((collector, key) => collector.concat(key), []);
   if (!offendingMembers.length) {
-    return [];
+    return;
   }
   /** @type {import("../../core/LinterRule").LinterResult} */
   const result = {
@@ -49,7 +49,7 @@ function lintingFunction(conf, doc) {
   result.howToFix += `${offendingMembers
     .map(item => `\`${item}\``)
     .join(", ")}.`;
-  return [result];
+  return result;
 }
 
 export const rule = new LinterRule(name, lintingFunction);

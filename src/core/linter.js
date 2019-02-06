@@ -48,28 +48,25 @@ const baseResult = {
 
 /**
  * @typedef {import("./LinterRule").LinterResult} LinterResult
- * @param {(LinterResult | Promise<LinterResult>)[]} promiseToLint
+ * @param {LinterResult | Promise<LinterResult>} [resultPromise]
  */
-async function toLinterWarning(promiseToLint) {
-  const results = await promiseToLint;
-  results.forEach(async resultPromise => {
-    const result = await resultPromise;
-    const output = { ...baseResult, ...result };
-    const {
-      description,
-      help,
-      howToFix,
-      name,
-      occurrences,
-      offendingElements,
-    } = output;
-    const message = `Linter (${name}): ${description} ${howToFix} ${help}`;
-    if (offendingElements.length) {
-      showInlineWarning(offendingElements, `${message} Occured`);
-    } else {
-      pub("warn", `${message} (Count: ${occurrences})`);
-    }
-  });
+async function toLinterWarning(resultPromise) {
+  const result = await resultPromise;
+  const output = { ...baseResult, ...result };
+  const {
+    description,
+    help,
+    howToFix,
+    name,
+    occurrences,
+    offendingElements,
+  } = output;
+  const message = `Linter (${name}): ${description} ${howToFix} ${help}`;
+  if (offendingElements.length) {
+    showInlineWarning(offendingElements, `${message} Occured`);
+  } else {
+    pub("warn", `${message} (Count: ${occurrences})`);
+  }
 }
 
 export function run(conf) {
