@@ -61,10 +61,13 @@ function requestLookup(conf) {
         break;
       }
       case "dfn": {
-        const wrapper = hyperHTML`<a href="${href}">${
-          elem.textContent === "" ? title : ""
-        }</a>`;
-        wrapInner(elem, wrapper);
+        const anchor = hyperHTML`<a href="${href}">`;
+        if (!elem.textContent) {
+          anchor.textContent = title;
+          elem.append(anchor);
+        } else {
+          wrapInner(elem, anchor);
+        }
         break;
       }
     }
