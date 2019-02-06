@@ -16,9 +16,6 @@ const meta = {
 
 // Fall back to english, if language is missing
 const lang = defaultLang in meta ? defaultLang : "en";
-const getCharset = element => {
-  return !/charset="(utf-8|UTF-8)"/.test(element);
-};
 
 /**
  * Runs linter rule.
@@ -29,13 +26,13 @@ const getCharset = element => {
 function linterFunction(conf, doc) {
   const metas = doc.querySelectorAll("meta[charset]");
   const val = [];
-  for (let i = 0; i < metas.length; i++) {
-    val.push(metas[i].outerHTML);
+  for (const meta of metas) {
+    val.push(meta.getAttribute('charset').trim().toLowerCase());
   }
-  const offendingElements = val.filter(getCharset);
+  const utfExists = val.indexOf('utf-8');
 
   //only a single meta[charset] and is set to utf-8, correct case
-  if (!offendingElements.length && metas.length === 1) {
+  if (utfExists !== -1 && metas.length === 1) {
     return [];
   }
   //if more than one meta[charset] tag defined along with utf-8
@@ -43,8 +40,8 @@ function linterFunction(conf, doc) {
   //no meta[charset] present in the document
   return {
     name,
-    offendingElements,
-    occurrences: offendingElements.length,
+    utf_exists: (utfExists !== -1) ? 1: 0,
+    metasLength: metas.length,
     ...meta[lang],
   };
 }
