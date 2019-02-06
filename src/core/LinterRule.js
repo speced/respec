@@ -49,7 +49,7 @@ export default class LinterRule {
   lint(conf = { lint: { [this.name]: false } }, doc = document) {
     /** @type {(LinterResult | Promise<LinterResult>)[]} */
     const results = [];
-    if (canLint(conf, this.name)) {
+    if (!canLint(conf, this.name)) {
       return results;
     }
     return results.concat(privs.get(this).lintingFunction(conf, doc));
