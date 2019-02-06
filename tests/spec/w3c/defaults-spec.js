@@ -52,7 +52,7 @@ describe("W3C — Defaults", () => {
       "check-punctuation": false,
       "fake-linter-rule": "foo",
       "check-internal-slots": true,
-      "check-charset": true
+      "check-charset": true,
     });
     expect(rsConf.highlightVars).toEqual(false);
     expect(rsConf.license).toEqual("c0");
