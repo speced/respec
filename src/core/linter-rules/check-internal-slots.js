@@ -22,7 +22,7 @@ const lang = defaultLang in meta ? defaultLang : "en";
  * Runs linter rule.
  * @param {Object} conf The ReSpec config.
  * @param {Document} doc The document to be checked.
- * @return {import("../../core/LinterRule").LinterResult | any[]}
+ * @return {import("../../core/LinterRule").LinterResult[]}
  */
 function linterFunction(conf, doc) {
   const offendingElements = [...doc.querySelectorAll("var+a")].filter(
@@ -36,12 +36,14 @@ function linterFunction(conf, doc) {
     return [];
   }
 
-  return {
-    name,
-    offendingElements,
-    occurrences: offendingElements.length,
-    ...meta[lang],
-  };
+  return [
+    {
+      name,
+      offendingElements,
+      occurrences: offendingElements.length,
+      ...meta[lang],
+    },
+  ];
 }
 
 export const rule = new LinterRule(name, linterFunction);

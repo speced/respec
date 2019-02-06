@@ -28,6 +28,11 @@ const hasNoHeading = ({ firstElementChild: elem }) => {
   return elem === null || /^h[1-6]$/.test(elem.localName) === false;
 };
 
+/**
+ * @param {*} conf
+ * @param {Document} doc
+ * @return {import("../../core/LinterRule").LinterResult[]}
+ */
 function linterFunction(conf, doc) {
   const offendingElements = [...doc.querySelectorAll("section")].filter(
     hasNoHeading
@@ -35,11 +40,13 @@ function linterFunction(conf, doc) {
   if (!offendingElements.length) {
     return [];
   }
-  return {
-    name,
-    offendingElements,
-    occurrences: offendingElements.length,
-    ...meta[lang],
-  };
+  return [
+    {
+      name,
+      offendingElements,
+      occurrences: offendingElements.length,
+      ...meta[lang],
+    },
+  ];
 }
 export const rule = new LinterRule(name, linterFunction);

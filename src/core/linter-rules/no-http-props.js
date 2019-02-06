@@ -49,7 +49,7 @@ function lintingFunction(conf, doc) {
   result.howToFix += `${offendingMembers
     .map(item => `\`${item}\``)
     .join(", ")}.`;
-  return result;
+  return [result];
 }
 
 export const rule = new LinterRule(name, lintingFunction);
