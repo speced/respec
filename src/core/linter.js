@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Module core/linter
  *
@@ -6,6 +7,8 @@
 import { pub } from "./pubsubhub";
 import { showInlineWarning } from "./utils";
 export const name = "core/linter";
+
+/** @type {WeakMap<Linter, { rules: Set<import("./LinterRule").default> }>} */
 const privates = new WeakMap();
 
 class Linter {
@@ -17,6 +20,9 @@ class Linter {
   get rules() {
     return privates.get(this).rules;
   }
+  /**
+   * @param  {...import("./LinterRule").default} newRules
+   */
   register(...newRules) {
     newRules.reduce((rules, newRule) => rules.add(newRule), this.rules);
   }
@@ -40,26 +46,30 @@ const baseResult = {
   help: "", // where to get help
 };
 
-async function toLinterWarning(promiseToLint) {
-  const results = await promiseToLint;
-  results.forEach(async resultPromise => {
-    const result = await resultPromise;
-    const output = { ...baseResult, ...result };
-    const {
-      description,
-      help,
-      howToFix,
-      name,
-      occurrences,
-      offendingElements,
-    } = output;
-    const message = `Linter (${name}): ${description} ${howToFix} ${help}`;
-    if (offendingElements.length) {
-      showInlineWarning(offendingElements, `${message} Occured`);
-    } else {
-      pub("warn", `${message} (Count: ${occurrences})`);
-    }
-  });
+/**
+ * @typedef {import("./LinterRule").LinterResult} LinterResult
+ * @param {LinterResult | Promise<LinterResult>} [resultPromise]
+ */
+async function toLinterWarning(resultPromise) {
+  const result = await resultPromise;
+  if (!result) {
+    return;
+  }
+  const output = { ...baseResult, ...result };
+  const {
+    description,
+    help,
+    howToFix,
+    name,
+    occurrences,
+    offendingElements,
+  } = output;
+  const message = `Linter (${name}): ${description} ${howToFix} ${help}`;
+  if (offendingElements.length) {
+    showInlineWarning(offendingElements, `${message} Occured`);
+  } else {
+    pub("warn", `${message} (Count: ${occurrences})`);
+  }
 }
 
 export function run(conf) {

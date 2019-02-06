@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Checks that there is a section that has at least privacy and/or
  * security and considerations.
@@ -32,12 +33,15 @@ function hasPriSecConsiderations(doc) {
   );
 }
 
+/**
+ * @param {*} conf
+ * @param {Document} doc
+ * @return {import("../../core/LinterRule").LinterResult}
+ */
 function lintingFunction(conf, doc) {
-  const results = [];
   if (conf.isRecTrack && !hasPriSecConsiderations(doc)) {
-    results.push({ name, occurrences: 1, ...meta[lang] });
+    return { name, occurrences: 1, ...meta[lang] };
   }
-  return results;
 }
 
 export const rule = new LinterRule(name, lintingFunction);
