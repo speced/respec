@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Linter rule "warn-local-ref".
  * Warns about href's that link to nonexistent id's in a spec
@@ -20,7 +21,7 @@ const lang = defaultLang in meta ? defaultLang : "en";
 
 /**
  * Runs linter rule.
- * @param {Object} config The ReSpec config.
+ * @param {Object} conf The ReSpec config.
  * @param  {Document} doc The document to be checked.
  */
 function linterFunction(conf, doc) {

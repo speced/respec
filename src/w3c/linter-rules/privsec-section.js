@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Checks that there is a section that has at least privacy and/or
  * security and considerations.

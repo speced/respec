@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Linter rule "check-punctuation". Makes sure the there are no punctuations missing at the end of a <p>
  *   in the ReSpec config.
@@ -20,7 +21,7 @@ const lang = defaultLang in meta ? defaultLang : "en";
 /**
  * Runs linter rule.
  *
- * @param {Object} config The ReSpec config.
+ * @param {Object} conf The ReSpec config.
  * @param  {Document} doc The document to be checked.
  */
 function lintingFunction(conf, doc) {

@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Linter rule "no-headingless-sections".
  *
