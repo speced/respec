@@ -8,13 +8,15 @@ import linter from "./linter";
 import { rule as localRefsExist } from "./linter-rules/local-refs-exist";
 import { rule as noHeadinglessSectionsRule } from "./linter-rules/no-headingless-sections";
 import { rule as noHttpPropsRule } from "./linter-rules/no-http-props";
+import { rule as checkCharset } from './linter-rules/check-charset';
 
 linter.register(
   noHttpPropsRule,
   noHeadinglessSectionsRule,
   checkPunctuation,
   localRefsExist,
-  checkInternalSlots
+  checkInternalSlots,
+  checkCharset
 );
 
 export const coreDefaults = {
@@ -24,6 +26,7 @@ export const coreDefaults = {
     "check-punctuation": false,
     "local-refs-exist": true,
     "check-internal-slots": false,
+    "check-charset": true
   },
   pluralize: false,
   specStatus: "base",
