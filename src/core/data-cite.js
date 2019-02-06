@@ -55,7 +55,7 @@ function requestLookup(conf) {
     switch (elem.localName) {
       case "a": {
         if (elem.textContent === "") {
-          elem.text = title;
+          elem.textContent = title;
         }
         elem.href = href;
         break;
