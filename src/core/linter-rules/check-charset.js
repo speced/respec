@@ -27,9 +27,14 @@ function linterFunction(conf, doc) {
   const metas = doc.querySelectorAll("meta[charset]");
   const val = [];
   for (const meta of metas) {
-    val.push(meta.getAttribute('charset').trim().toLowerCase());
+    val.push(
+      meta
+        .getAttribute("charset")
+        .trim()
+        .toLowerCase()
+    );
   }
-  const utfExists = val.includes('utf-8');
+  const utfExists = val.includes("utf-8");
 
   //only a single meta[charset] and is set to utf-8, correct case
   if (utfExists !== false && metas.length === 1) {
