@@ -52,6 +52,9 @@ const baseResult = {
  */
 async function toLinterWarning(resultPromise) {
   const result = await resultPromise;
+  if (!result) {
+    return;
+  }
   const output = { ...baseResult, ...result };
   const {
     description,
