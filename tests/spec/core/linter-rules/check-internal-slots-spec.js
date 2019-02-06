@@ -31,10 +31,7 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
       <var>[[foo]]</var>.<a>bar</a>
       <var>bar</var>.<a>[[f oo]]</a>
     `;
-    const results = await rule.lint(config, doc);
-    expect(results.length).toEqual(1);
-
-    const [result] = results;
+    const result = await rule.lint(config, doc);
     expect(result.name).toEqual(ruleName);
     // first fails the isPrevVar check, rest are ok tho weird...
     expect(result.occurrences).toEqual(1);
@@ -58,7 +55,7 @@ describe("Core Linter Rule - 'check-internal-slots'", () => {
       <var>bar</var> <a>[[foo]]</a>
      
     `;
-    const results = await rule.lint(config, doc);
-    expect(results.length).toEqual(0);
+    const result = await rule.lint(config, doc);
+    expect(result).toBeUndefined();
   });
 });
