@@ -7,6 +7,7 @@
 import { pub } from "./pubsubhub";
 import { showInlineWarning } from "./utils";
 export const name = "core/linter";
+
 /** @type {WeakMap<Linter, { rules: Set<import("./LinterRule").default> }>} */
 const privates = new WeakMap();
 

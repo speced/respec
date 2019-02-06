@@ -22,7 +22,7 @@ const lang = defaultLang in meta ? defaultLang : "en";
  * Runs linter rule.
  *
  * @param {Object} conf The ReSpec config.
- * @param  {Document} doc The document to be checked.
+ * @param {Document} doc The document to be checked.
  */
 function lintingFunction(conf, doc) {
   // We can only really perform this check over http/https
