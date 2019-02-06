@@ -38,12 +38,10 @@ function hasPriSecConsiderations(doc) {
  * @param {Document} doc
  */
 function lintingFunction(conf, doc) {
-  /** @type {import("../../core/LinterRule").LinterResult[]} */
-  const results = [];
+  /** @type {import("../../core/LinterRule").LinterResult} */
   if (conf.isRecTrack && !hasPriSecConsiderations(doc)) {
-    results.push({ name, occurrences: 1, ...meta[lang] });
+    return { name, occurrences: 1, ...meta[lang] };
   }
-  return results;
 }
 
 export const rule = new LinterRule(name, lintingFunction);
