@@ -48,7 +48,7 @@ export default class LinterRule {
    */
   lint(conf = { lint: { [this.name]: false } }, doc = document) {
     if (canLint(conf, this.name)) {
-      return privs.get(this).lintingFunction(conf, doc)
+      return privs.get(this).lintingFunction(conf, doc);
     }
   }
 }
