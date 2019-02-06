@@ -43,8 +43,7 @@ describe("Core Linter Rule - 'check-charset'", () => {
 
     const results = await rule.lint(config, doc);
     const [result] = results;
-    expect(result.utf_exists).toEqual(0);
-    expect(result.metasLength).toEqual(0);
+    expect(result.occurrences).toEqual(0);
   });
 
   it("returns error when more then one meta[charset] present", async () => {
@@ -58,8 +57,7 @@ describe("Core Linter Rule - 'check-charset'", () => {
 
     const results = await rule.lint(config, doc);
     const [result] = results;
-    expect(result.utf_exists).toEqual(1);
-    expect(result.metasLength).toEqual(2);
+    expect(result.occurrences).toEqual(2);
   });
 
   it("return error when some other charset defined", async () => {
@@ -72,7 +70,6 @@ describe("Core Linter Rule - 'check-charset'", () => {
 
     const results = await rule.lint(config, doc);
     const [result] = results;
-    expect(result.utf_exists).toEqual(0);
-    expect(result.metasLength).toEqual(1);
+    expect(result.occurrences).toEqual(1);
   });
 });

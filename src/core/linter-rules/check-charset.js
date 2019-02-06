@@ -29,10 +29,10 @@ function linterFunction(conf, doc) {
   for (const meta of metas) {
     val.push(meta.getAttribute('charset').trim().toLowerCase());
   }
-  const utfExists = val.indexOf('utf-8');
+  const utfExists = val.includes('utf-8');
 
   //only a single meta[charset] and is set to utf-8, correct case
-  if (utfExists !== -1 && metas.length === 1) {
+  if (utfExists !== false && metas.length === 1) {
     return [];
   }
   //if more than one meta[charset] tag defined along with utf-8
@@ -40,8 +40,7 @@ function linterFunction(conf, doc) {
   //no meta[charset] present in the document
   return {
     name,
-    utf_exists: (utfExists !== -1) ? 1: 0,
-    metasLength: metas.length,
+    occurrences: metas.length,
     ...meta[lang],
   };
 }
