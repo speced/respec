@@ -34,7 +34,6 @@ describe("W3C — Defaults", () => {
           "check-punctuation": false,
           "fake-linter-rule": "foo",
           "check-internal-slots": true,
-          "check-charset": true,
         },
         license: "c0",
         specStatus: "ED",
@@ -53,7 +52,7 @@ describe("W3C — Defaults", () => {
       "check-punctuation": false,
       "fake-linter-rule": "foo",
       "check-internal-slots": true,
-      "check-charset": true,
+      "check-charset": true,de
     });
     expect(rsConf.highlightVars).toEqual(false);
     expect(rsConf.license).toEqual("c0");
