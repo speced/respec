@@ -42,7 +42,6 @@ describe("Core Linter Rule - 'check-charset'", () => {
     `;
 
     const results = await rule.lint(config, doc);
-    const [result] = results;
     expect(result.occurrences).toEqual(0);
   });
 
@@ -56,7 +55,6 @@ describe("Core Linter Rule - 'check-charset'", () => {
     `;
 
     const results = await rule.lint(config, doc);
-    const [result] = results;
     expect(result.occurrences).toEqual(2);
   });
 
@@ -69,7 +67,6 @@ describe("Core Linter Rule - 'check-charset'", () => {
     `;
 
     const results = await rule.lint(config, doc);
-    const [result] = results;
     expect(result.occurrences).toEqual(1);
   });
 });
