@@ -42,7 +42,7 @@ describe("Core — Examples", () => {
     expect(marker.textContent.trim()).toBe("Example 1: EX");
     expect(marker.querySelector(".example-title").textContent).toBe(": EX");
     expect(example.getAttribute("title")).toBeNull();
-    expect(example.textContent).toBe("Example 1: EX\n{\n  CONTENT\n}\n  ");
+    expect(example.textContent.trim()).toBe("Example 1: EX\n    \n{\n  CONTENT\n}");
   });
   it("processes children of aside examples", async () => {
     const ops = {
