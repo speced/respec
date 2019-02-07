@@ -1,7 +1,7 @@
 /**
  * Linter rule "check-charset".
  *
- * Checks whether the document has `<meta charset="utf-8" />` properly.
+ * Checks whether the document has `<meta charset="utf-8">` properly.
  */
 import LinterRule from "../LinterRule";
 import { lang as defaultLang } from "../l10n";
