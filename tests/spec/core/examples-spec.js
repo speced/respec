@@ -131,4 +131,18 @@ describe("Core — Examples", () => {
     expect(exampleLink.getAttribute("href")).toBe("#example-1");
     expect(example.id).toBe("example-1");
   });
+  it("preserves dynamically attached event listeners", async () => {
+    const body = `
+      <aside class="example">
+       <button id="mybutton">Click me</button>
+      </aside>
+      <script>
+        mybutton.onclick = () => {};
+      </script>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const mybutton = doc.getElementById("mybutton")
+    expect(mybutton.onclick).toBeDefined();
+  });
 });

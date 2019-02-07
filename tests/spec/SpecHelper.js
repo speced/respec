@@ -3,10 +3,12 @@
 "use strict";
 const iframes = [];
 
+/**
+ * @return {Promise<Document>}
+ */
 function makeRSDoc(opts = {}, src = "about-blank.html", style = "") {
   return new Promise((resolve, reject) => {
     const ifr = document.createElement("iframe");
-    opts = opts || {};
     // reject when DEFAULT_TIMEOUT_INTERVAL passes
     const timeoutId = setTimeout(() => {
       reject(new Error(`Timed out waiting on ${src}`));

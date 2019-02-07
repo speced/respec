@@ -292,8 +292,7 @@ export function run() {
   idls.forEach(idlElement => {
     let parse;
     try {
-      const idl = reindent(idlElement.textContent);
-      parse = webidl2.parse(idl);
+      parse = webidl2.parse(idlElement.textContent);
     } catch (e) {
       pub(
         "error",
