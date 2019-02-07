@@ -32,7 +32,7 @@
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-prettier": "^3.0.1",
     "exports-loader": "^0.7.0",
-    "handlebars": "^4.0.12",
+    "handlebars": "^4.1.0",
     "idb": "^3.0.2",
     "jasmine-core": "^3.3.0",
     "jasmine-reporters": "^2.3.2",
@@ -60,7 +60,7 @@
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "typescript": "^3.3.1",
     "webidl2": "^17.0.1",
-    "webpack": "^4.29.2",
+    "webpack": "^4.29.3",
     "webpack-cli": "^3.2.3"
   },
   "scripts": {
@@ -94,7 +94,7 @@
     "marked": "^0.6.0",
     "prompt": "^1.0.0",
     "puppeteer": "^1.12.2",
-    "snyk": "^1.125.0"
+    "snyk": "^1.126.0"
   },
   "prettier": {
     "trailingComma": "es5"
