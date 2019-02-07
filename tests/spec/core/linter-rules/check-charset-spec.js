@@ -19,7 +19,7 @@ describe("Core Linter Rule - 'check-charset'", () => {
     `;
 
     const results = await rule.lint(config, doc);
-    expect(results.length).toEqual(0);
+    expect(results.length).toBe(0);
   });
 
   it("doesn't give an error when written in capitals", async () => {
@@ -31,7 +31,7 @@ describe("Core Linter Rule - 'check-charset'", () => {
     `;
 
     const results = await rule.lint(config, doc);
-    expect(results.length).toEqual(0);
+    expect(results.length).toBe(0);
   });
 
   it("checks if meta[charset] is present or not", async () => {
@@ -42,7 +42,7 @@ describe("Core Linter Rule - 'check-charset'", () => {
     `;
 
     const results = await rule.lint(config, doc);
-    expect(results.occurrences).toEqual(0);
+    expect(results.occurrences).toBe(0);
   });
 
   it("returns error when more then one meta[charset] present", async () => {
@@ -55,7 +55,7 @@ describe("Core Linter Rule - 'check-charset'", () => {
     `;
 
     const results = await rule.lint(config, doc);
-    expect(results.occurrences).toEqual(2);
+    expect(results.occurrences).toBe(2);
   });
 
   it("return error when some other charset defined", async () => {
@@ -67,6 +67,6 @@ describe("Core Linter Rule - 'check-charset'", () => {
     `;
 
     const results = await rule.lint(config, doc);
-    expect(results.occurrences).toEqual(1);
+    expect(results.occurrences).toBe(1);
   });
 });
