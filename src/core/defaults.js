@@ -2,6 +2,7 @@
  * Sets the core defaults
  */
 export const name = "core/defaults";
+import { rule as checkCharset } from "./linter-rules/check-charset";
 import { rule as checkInternalSlots } from "./linter-rules/check-internal-slots";
 import { rule as checkPunctuation } from "./linter-rules/check-punctuation";
 import linter from "./linter";
@@ -14,7 +15,8 @@ linter.register(
   noHeadinglessSectionsRule,
   checkPunctuation,
   localRefsExist,
-  checkInternalSlots
+  checkInternalSlots,
+  checkCharset
 );
 
 export const coreDefaults = {
@@ -24,6 +26,7 @@ export const coreDefaults = {
     "check-punctuation": false,
     "local-refs-exist": true,
     "check-internal-slots": false,
+    "check-charset": false,
   },
   pluralize: false,
   specStatus: "base",
