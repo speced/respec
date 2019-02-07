@@ -25,6 +25,7 @@ function requestLookup(conf) {
     const originalKey = elem.dataset.cite;
     const { key, frag, path } = toCiteDetails(elem);
     let href = "";
+    let title = "";
     // This is just referring to this document
     if (key.toLowerCase() === conf.shortName.toLowerCase()) {
       console.log(
@@ -41,6 +42,7 @@ function requestLookup(conf) {
         return;
       }
       href = entry.href;
+      title = entry.title;
     }
     if (path) {
       // See: https://github.com/w3c/respec/issues/1856#issuecomment-429579475
@@ -52,11 +54,20 @@ function requestLookup(conf) {
     }
     switch (elem.localName) {
       case "a": {
+        if (elem.textContent === "") {
+          elem.textContent = title;
+        }
         elem.href = href;
         break;
       }
       case "dfn": {
-        wrapInner(elem, hyperHTML`<a href="${href}"></a>`);
+        const anchor = hyperHTML`<a href="${href}">`;
+        if (!elem.textContent) {
+          anchor.textContent = title;
+          elem.append(anchor);
+        } else {
+          wrapInner(elem, anchor);
+        }
         break;
       }
     }
