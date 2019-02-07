@@ -10,7 +10,7 @@ const path = require("path");
 const MAIN_BRANCH = "develop";
 const DEBUG = false;
 
-//See: https://github.com/w3c/respec/issues/645
+// See: https://github.com/w3c/respec/issues/645
 require("epipebomb")();
 
 const loadOps = {

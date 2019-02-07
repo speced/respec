@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // @ts-check
-/*eslint-env node*/
+/* eslint-env node */
 "use strict";
 const port = 5000;
 const testURLs = [

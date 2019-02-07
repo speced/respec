@@ -58,7 +58,7 @@ describe("Core — Data Include", () => {
   });
 
   it("includes a URL and processes it as markdown", async () => {
-    //Data URI encoding of: "## PASS", which markdown converts to a H2 element.
+    // Data URI encoding of: "## PASS", which markdown converts to a H2 element.
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<section
