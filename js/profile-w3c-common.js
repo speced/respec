@@ -76,7 +76,7 @@ define([
   "./core/list-sorter",
   "./core/highlight-vars",
   "./core/algorithms",
-  /*Linter must be the last thing to run*/
+  /* Linter must be the last thing to run */
   "./core/linter",
 ], (runner, { ui }, ...plugins) => {
   ui.show();
