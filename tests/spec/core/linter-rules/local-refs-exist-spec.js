@@ -29,10 +29,7 @@ describe("Core Linter Rule - 'local-refs-exist'", () => {
       <a href="#ID-NOT-EXIST">FAIL</a>
     `;
 
-    const results = await rule.lint(config, doc);
-    expect(results.length).toEqual(1);
-
-    const result = results[0];
+    const result = await rule.lint(config, doc);
     expect(result.name).toEqual("local-refs-exist");
     expect(result.occurrences).toEqual(2);
 
@@ -46,8 +43,8 @@ describe("Core Linter Rule - 'local-refs-exist'", () => {
       <section id="ID">PASS</section>
       <a href="#ID">PASS</a>
     `;
-    const results = await rule.lint(config, doc);
-    expect(results.length).toEqual(0);
+    const result = await rule.lint(config, doc);
+    expect(result).toBeUndefined();
   });
 
   it("handles unicode characters in ID", async () => {
@@ -55,7 +52,7 @@ describe("Core Linter Rule - 'local-refs-exist'", () => {
       <section id="přehled">PASS</section>
       <a href="#přehled">PASS</a>
     `;
-    const results = await rule.lint(config, doc);
-    expect(results.length).toEqual(0);
+    const result = await rule.lint(config, doc);
+    expect(result).toBeUndefined();
   });
 });
