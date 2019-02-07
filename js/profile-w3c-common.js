@@ -30,6 +30,7 @@ define([
   // order is significant
   "./core/base-runner",
   "./core/ui",
+  "./core/reindent",
   "./core/location-hash",
   "./core/l10n",
   "./w3c/defaults",
