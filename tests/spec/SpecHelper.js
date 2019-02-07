@@ -1,5 +1,5 @@
-/*exported pickRandomsFromList, makeRSDoc, flushIframes,
- makeStandardOps, makeDefaultBody, makeBasicConfig*/
+/* exported pickRandomsFromList, makeRSDoc, flushIframes,
+ makeStandardOps, makeDefaultBody, makeBasicConfig */
 "use strict";
 const iframes = [];
 

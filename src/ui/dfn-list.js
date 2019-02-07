@@ -1,4 +1,4 @@
-/// Module ui/dfn-list
+// Module ui/dfn-list
 // Displays all definitions with links to the defining element.
 import { l10n, lang } from "../core/l10n";
 import { definitionMap } from "../core/dfn-map";

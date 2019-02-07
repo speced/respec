@@ -235,7 +235,7 @@ describe("Core - Pluralize", () => {
     expect(dfn.id).toEqual("dfn-tables");
     const dfnlt = dfn.dataset.lt.split("|").sort();
     const expectedDfnlt = "chairs|tables".split("|"); // no "table" here
-    expect(dfn.dataset.plurals).toBeUndefined(); //no pluralization
+    expect(dfn.dataset.plurals).toBeUndefined(); // no pluralization
     expect(dfnlt).toEqual(expectedDfnlt);
   });
 
