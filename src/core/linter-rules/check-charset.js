@@ -10,7 +10,7 @@ const name = "check-charset";
 const meta = {
   en: {
     description: `Document must only contain one \`<meta>\` tag with charset set to 'utf-8'`,
-    howToFix: `Add this line in your document \`<head>\` section -  \`<meta charset="utf-8" />\` or set charset to "utf-8" if not set already.`,
+    howToFix: `Add this line in your document \`<head>\` section - \`<meta charset="utf-8" />\` or set charset to "utf-8" if not set already.`,
   },
 };
 
@@ -20,8 +20,8 @@ const lang = defaultLang in meta ? defaultLang : "en";
 /**
  * Runs linter rule.
  *
- * @param {Object} config The ReSpec config.
- * @param  {Document} doc The document to be checked.
+ * @param {Object} conf The ReSpec config.
+ * @param {Document} doc The document to be checked.
  */
 function linterFunction(conf, doc) {
   const metas = doc.querySelectorAll("meta[charset]");
