@@ -13,16 +13,32 @@ import { pub } from "./pubsubhub";
 
 export const name = "core/examples";
 
+/**
+ * @typedef {object} Report
+ * @property {number} number
+ * @property {boolean} illegal
+ * @property {string} [title]
+ * @property {string} [content]
+ *
+ * @param {*} conf
+ * @param {HTMLElement} elem
+ * @param {number} num
+ * @param {Report} report
+ */
 function makeTitle(conf, elem, num, report) {
   report.title = elem.title;
   if (report.title) elem.removeAttribute("title");
   const number = num > 0 ? ` ${num}` : "";
+  const title = report.title
+    ? html`
+        <span class="example-title">: ${report.title}</span>
+      `
+    : "";
   return html`
-  <div class="marker"><a class="self-link">${conf.l10n.example}${number}</a>${
-    report.title
-      ? html`<span class="example-title">: ${report.title}</span>`
-      : ""
-  }</div>`;
+    <div class="marker">
+      <a class="self-link">${conf.l10n.example}${number}</a>${title}
+    </div>
+  `;
 }
 
 export function run(conf) {
@@ -33,13 +49,18 @@ export function run(conf) {
   if (!examples.length) return;
 
   document.head.insertBefore(
-    html`<style>${css}</style>`,
+    html`
+      <style>
+        ${css}
+      </style>
+    `,
     document.querySelector("link")
   );
 
   let number = 0;
   examples.forEach(example => {
     const illegal = example.classList.contains("illegal-example");
+    /** @type {Report} */
     const report = {
       number,
       illegal,
@@ -71,7 +92,7 @@ export function run(conf) {
       const id = example.id ? example.id : null;
       if (id) example.removeAttribute("id");
       const div = html`
-        <div class='example' id="${id}">
+        <div class="example" id="${id}">
           ${makeTitle(conf, example, inAside ? 0 : number, report)}
           ${example.cloneNode(true)}
         </div>

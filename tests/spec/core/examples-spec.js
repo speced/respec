@@ -142,7 +142,7 @@ describe("Core — Examples", () => {
     `;
     const ops = makeStandardOps({}, body);
     const doc = await makeRSDoc(ops);
-    const mybutton = doc.getElementById("mybutton")
+    const mybutton = doc.getElementById("mybutton");
     expect(mybutton.onclick).toBeDefined();
   });
 });
