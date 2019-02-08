@@ -1,28 +1,28 @@
-/* --- Best Practices --- */
-div.practice {
-    border: solid #bebebe 1px;
-    margin: 2em 1em 1em 2em;
-}
+/* --- Best Practices ---  */
 
 span.practicelab {
-    margin: 1.5em 0.5em 1em 1em;
-    font-weight: bold;
-    font-style: italic;
-    background: #dfffff;
-    position: relative;
-    padding: 0 0.5em;
-    top: -1.5em;
+  display: block;
+  color: #f5721b;
+  margin-bottom: 1em;
+}
+
+span.practicetitle {
+  color: #f58a43;
+  text-decoration: underline;
+  margin-right: 1em;
+  margin-bottom: 1em;
 }
 
 p.practicedesc {
-    margin: 1.5em 0.5em 1em 1em;
+  padding: 2em;
+  border-left-width: 0.5em;
+  border-left-style: solid;
+  border-color: #f58a43;
+  background: #fde0bf;
 }
 
-@media screen {
-    p.practicedesc {
-        position: relative;
-        top: -2em;
-        padding: 0;
-        margin: 1.5em 0.5em -1em 1em;
-    }
+@media (max-width: 767px) {
+  span.practicetitle {
+    display: block;
+  }
 }
