@@ -2,7 +2,7 @@
 describe("respecIsReady promise", () => {
   afterAll(flushIframes);
 
-  test("resolve with the resulting respecConfig", async () => {
+  it("resolve with the resulting respecConfig", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops);
     expect(doc.hasOwnProperty("respecIsReady")).toBe(true);

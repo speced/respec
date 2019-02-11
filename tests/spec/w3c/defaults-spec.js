@@ -1,7 +1,7 @@
 "use strict";
 describe("W3C — Defaults", () => {
   afterAll(flushIframes);
-  test("sets sensible defaults for w3c specs", async () => {
+  it("sets sensible defaults for w3c specs", async () => {
     const ops = {
       config: { editors: [{ name: "foo" }] },
       body: makeDefaultBody(),
@@ -23,7 +23,7 @@ describe("W3C — Defaults", () => {
     expect(rsConf.addSectionLinks).toBe(true);
   });
 
-  test("allows w3c defaults to be overridden", async () => {
+  it("allows w3c defaults to be overridden", async () => {
     const ops = {
       config: {
         editors: [{ name: "foo" }],

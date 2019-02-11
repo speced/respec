@@ -16,7 +16,7 @@ describe("Core - Utils", () => {
       }
     }
     beforeEach(clearCaches);
-    test("caches a requests of different type with a 1 day default", async () => {
+    it("caches a requests of different type with a 1 day default", async () => {
       const url = `${location.origin}/tests/data/pass.txt`;
       const requests = [url, new URL(url), new Request(url)];
       for (const request of requests) {
@@ -38,14 +38,14 @@ describe("Core - Utils", () => {
       }
     });
 
-    test("uses the origin as the cache key", async () => {
+    it("uses the origin as the cache key", async () => {
       expect(await caches.keys()).toEqual([]);
       const url = `${location.origin}/tests/data/pass.txt`;
       await utils.fetchAndCache(url);
       expect(await caches.keys()).toEqual([location.origin]);
     });
 
-    test("returns a cached response when the response is not ok", async () => {
+    it("returns a cached response when the response is not ok", async () => {
       const url = `${location.origin}/bad-request`;
       const cache = await caches.open(location.origin);
       const goodResponse = new Response("PASS");
@@ -55,25 +55,22 @@ describe("Core - Utils", () => {
       expect(await cachedResponse.text()).toBe("PASS");
     });
 
-    test(
-      "returns a fresh network response when the cached response is expired",
-      async () => {
-        const url = `${location.origin}/tests/data/pass.txt`;
-        const cache = await caches.open(location.origin);
-        const yesterday = Date.now() - 86400000;
-        const expiredResponse = new Response("FAIL", {
-          headers: { Expires: yesterday },
-        });
-        await cache.put(new Request(url), expiredResponse);
-        const response = await utils.fetchAndCache(url);
-        const body = await response.text();
-        expect(body).toBe("PASS");
-        const cachedResponse = await cache.match(url);
-        expect(await cachedResponse.text()).toBe("PASS");
-      }
-    );
+    it("returns a fresh network response when the cached response is expired", async () => {
+      const url = `${location.origin}/tests/data/pass.txt`;
+      const cache = await caches.open(location.origin);
+      const yesterday = Date.now() - 86400000;
+      const expiredResponse = new Response("FAIL", {
+        headers: { Expires: yesterday },
+      });
+      await cache.put(new Request(url), expiredResponse);
+      const response = await utils.fetchAndCache(url);
+      const body = await response.text();
+      expect(body).toBe("PASS");
+      const cachedResponse = await cache.match(url);
+      expect(await cachedResponse.text()).toBe("PASS");
+    });
 
-    test("allows overriding the default cache time", async () => {
+    it("allows overriding the default cache time", async () => {
       const url = `${location.origin}/tests/data/pass.txt`;
       const cachedResponse = await utils.fetchAndCache(url, 0);
       expect(cachedResponse.headers.has("Expires")).toBe(true);
@@ -85,14 +82,14 @@ describe("Core - Utils", () => {
   });
 
   describe("createResourceHint", () => {
-    test("returns a link element", () => {
+    it("returns a link element", () => {
       const link = utils.createResourceHint({
         href: "https://example.com",
         hint: "preconnect",
       });
       expect(link instanceof HTMLLinkElement).toEqual(true);
     });
-    test("throws given invalid opts", () => {
+    it("throws given invalid opts", () => {
       expect(() => {
         utils.createResourceHint();
       }).toThrow();
@@ -112,7 +109,7 @@ describe("Core - Utils", () => {
         });
       }).not.toThrow();
     });
-    test("throws given an unknown hint", () => {
+    it("throws given an unknown hint", () => {
       expect(() => {
         utils.createResourceHint({ hint: null });
       }).toThrow();
@@ -123,7 +120,7 @@ describe("Core - Utils", () => {
         utils.createResourceHint({ hint: "preconnect" });
       }).not.toThrow();
     });
-    test("throws given an invalid URL", () => {
+    it("throws given an invalid URL", () => {
       expect(() => {
         utils.createResourceHint({
           hint: "preconnect",
@@ -137,21 +134,21 @@ describe("Core - Utils", () => {
         });
       }).not.toThrow();
     });
-    test("normalizes a URL intended for dns-prefetch to an origin", () => {
+    it("normalizes a URL intended for dns-prefetch to an origin", () => {
       const link = utils.createResourceHint({
         hint: "dns-prefetch",
         href: "http://origin:8080/./../test",
       });
       expect(link.href).toEqual("http://origin:8080/");
     });
-    test("normalizes a URL intended for preconnect to an origin", () => {
+    it("normalizes a URL intended for preconnect to an origin", () => {
       const link = utils.createResourceHint({
         hint: "preconnect",
         href: "http://origin:8080/./../test",
       });
       expect(link.href).toEqual("http://origin:8080/");
     });
-    test("ignores 'as' member on dns-prefetch", () => {
+    it("ignores 'as' member on dns-prefetch", () => {
       const link = utils.createResourceHint({
         hint: "dns-prefetch",
         href: "https://example.com",
@@ -159,7 +156,7 @@ describe("Core - Utils", () => {
       });
       expect(link.hasAttribute("as")).toEqual(false);
     });
-    test("ignores 'as' member on preconnect", () => {
+    it("ignores 'as' member on preconnect", () => {
       const link = utils.createResourceHint({
         hint: "preconnect",
         href: "https://example.com",
@@ -167,7 +164,7 @@ describe("Core - Utils", () => {
       });
       expect(link.hasAttribute("as")).toEqual(false);
     });
-    test("respects 'as' member on preload", () => {
+    it("respects 'as' member on preload", () => {
       const link = utils.createResourceHint({
         hint: "preload",
         href: "https://example.com",
@@ -176,7 +173,7 @@ describe("Core - Utils", () => {
       expect(link.hasAttribute("as")).toEqual(true);
       expect(link.getAttribute("as")).toEqual("style");
     });
-    test("respects override of the CORS mode", () => {
+    it("respects override of the CORS mode", () => {
       const link = utils.createResourceHint({
         hint: "preconnect",
         href: "https://other.origin.com",
@@ -184,7 +181,7 @@ describe("Core - Utils", () => {
       });
       expect(link.crossOrigin).toEqual("use-credentials");
     });
-    test("allows the browser to recover from bogus CORS mode", () => {
+    it("allows the browser to recover from bogus CORS mode", () => {
       const link = utils.createResourceHint({
         hint: "preconnect",
         href: "https://other.origin.com",
@@ -192,28 +189,28 @@ describe("Core - Utils", () => {
       });
       expect(link.crossOrigin).toEqual("anonymous");
     });
-    test("automatically detects cross-origin requests for dns-prefetch", () => {
+    it("automatically detects cross-origin requests for dns-prefetch", () => {
       const link = utils.createResourceHint({
         hint: "dns-prefetch",
         href: "https://other.origin.com",
       });
       expect(link.crossOrigin).toEqual("anonymous");
     });
-    test("automatically detects cross-origin requests for preconnect", () => {
+    it("automatically detects cross-origin requests for preconnect", () => {
       const link = utils.createResourceHint({
         hint: "preconnect",
         href: "https://other.origin.com",
       });
       expect(link.crossOrigin).toEqual("anonymous");
     });
-    test("marks the link element for removal on save by default", () => {
+    it("marks the link element for removal on save by default", () => {
       const link = utils.createResourceHint({
         href: "https://example.com",
         hint: "preconnect",
       });
       expect(link.classList.contains("removeOnSave")).toEqual(true);
     });
-    test("repects leaving a hint in the spec when told to", () => {
+    it("repects leaving a hint in the spec when told to", () => {
       const link = utils.createResourceHint({
         href: "https://example.com",
         hint: "preconnect",
@@ -224,13 +221,13 @@ describe("Core - Utils", () => {
   });
 
   describe("calculateLeftPad()", () => {
-    test("throws given invalid input", () => {
+    it("throws given invalid input", () => {
       expect(() => utils.calculateLeftPad()).toThrow();
       expect(() => utils.calculateLeftPad({})).toThrow();
       expect(() => utils.calculateLeftPad(123)).toThrow();
       expect(() => utils.calculateLeftPad(null)).toThrow();
     });
-    test("calculates the smallest left padding of multiline text", () => {
+    it("calculates the smallest left padding of multiline text", () => {
       expect(utils.calculateLeftPad("")).toEqual(0);
       expect(utils.calculateLeftPad("\n    \n  ")).toEqual(2);
       expect(utils.calculateLeftPad("                         ")).toEqual(25);
@@ -250,7 +247,7 @@ describe("Core - Utils", () => {
   });
 
   describe("addID()", () => {
-    test("removes diacritical marks", () => {
+    it("removes diacritical marks", () => {
       const elem = document.createElement("h2");
       elem.innerHTML = "Systém jednotné trigonometrické sítě katastrální";
       utils.addId(elem);
@@ -259,7 +256,7 @@ describe("Core - Utils", () => {
   });
 
   describe("normalizePadding() method", () => {
-    test("throws given an argument that is not a string", () => {
+    it("throws given an argument that is not a string", () => {
       expect(() => {
         utils.normalizePadding({});
       }).toThrow();
@@ -271,13 +268,13 @@ describe("Core - Utils", () => {
       }).toThrow();
     });
 
-    test("returns the empty string given falsy values", () => {
+    it("returns the empty string given falsy values", () => {
       expect(utils.normalizePadding()).toEqual("");
       expect(utils.normalizePadding("")).toEqual("");
       expect(utils.normalizePadding(null)).toEqual("");
     });
 
-    test("normalises whitespace, but ignore white with pre tags", () => {
+    it("normalises whitespace, but ignore white with pre tags", () => {
       const str = `   trim start\n    * trim 3 from start \n <pre>trim 1\n   if(x){\n\t party()</pre>\n  foo \n    bar`;
       const testStrings = utils.normalizePadding(str).split("\n");
       expect(testStrings[0]).toEqual("trim start");
@@ -291,13 +288,13 @@ describe("Core - Utils", () => {
   });
 
   describe("linkCSS", () => {
-    test("adds a link element", () => {
+    it("adds a link element", () => {
       utils.linkCSS(document, "BOGUS");
       expect(document.querySelectorAll("link[href='BOGUS']").length).toEqual(1);
       document.querySelector("link[href='BOGUS']").remove();
     });
 
-    test("adds several link elements", () => {
+    it("adds several link elements", () => {
       utils.linkCSS(document, ["BOGUS", "BOGUS", "BOGUS"]);
       expect(document.querySelectorAll("link[href='BOGUS']").length).toEqual(3);
       document
@@ -307,14 +304,14 @@ describe("Core - Utils", () => {
   });
 
   describe("lead0", () => {
-    test("prepends 0 only when needed", () => {
+    it("prepends 0 only when needed", () => {
       expect(utils.lead0("1")).toEqual("01");
       expect(utils.lead0("01")).toEqual("01");
     });
   });
 
   describe("concatDate", () => {
-    test("formats the date as needed", () => {
+    it("formats the date as needed", () => {
       const d = new Date("1977-03-01");
       expect(utils.concatDate(d)).toEqual("19770301");
       expect(utils.concatDate(d, "-")).toEqual("1977-03-01");
@@ -322,7 +319,7 @@ describe("Core - Utils", () => {
   });
 
   describe("parseSimpleDate", () => {
-    test("parses a simple date", () => {
+    it("parses a simple date", () => {
       const d = utils.parseSimpleDate("1977-03-01");
       expect(d.getUTCFullYear()).toEqual(1977);
       expect(d.getUTCMonth()).toEqual(2);
@@ -331,7 +328,7 @@ describe("Core - Utils", () => {
   });
 
   describe("parseLastModified", () => {
-    test("parses a date in lastModified format", () => {
+    it("parses a date in lastModified format", () => {
       const d = utils.parseLastModified("03/15/1977 13:05:42");
       expect(d.getUTCFullYear()).toEqual(1977);
       expect(d.getUTCMonth()).toEqual(2);
@@ -340,13 +337,13 @@ describe("Core - Utils", () => {
   });
 
   describe("humanDate", () => {
-    test("produces a human date", () => {
+    it("produces a human date", () => {
       expect(utils.humanDate("1977-03-15")).toEqual("15 March 1977");
       const d = new Date("1977-03-15");
       expect(utils.humanDate(d)).toEqual("15 March 1977");
     });
 
-    test("produces a human date in different languages", () => {
+    it("produces a human date in different languages", () => {
       expect(utils.humanDate("1977-03-15", "en")).toEqual("15 March 1977");
       const d = new Date("1977-03-15");
       expect(utils.humanDate(d)).toEqual("15 March 1977");
@@ -358,7 +355,7 @@ describe("Core - Utils", () => {
   });
 
   describe("isoDate", () => {
-    test("produces an ISO date", () => {
+    it("produces an ISO date", () => {
       expect(utils.isoDate("2013-06-25")).toMatch(/2013-06-2[45]T/);
       const d = new Date("2013-09-25");
       expect(utils.isoDate(d)).toMatch(/2013-09-2[45]T/);
@@ -366,7 +363,7 @@ describe("Core - Utils", () => {
   });
 
   describe("joinAnd", () => {
-    test("joins with proper commas and 'and'", () => {
+    it("joins with proper commas and 'and'", () => {
       expect(utils.joinAnd([])).toEqual("");
       expect(utils.joinAnd(["x"])).toEqual("x");
       expect(utils.joinAnd(["x", "x"])).toEqual("x and x");
@@ -381,19 +378,19 @@ describe("Core - Utils", () => {
   });
 
   describe("xmlEscape", () => {
-    test("escapes properly", () => {
+    it("escapes properly", () => {
       expect(utils.xmlEscape('&<>"')).toEqual("&amp;&lt;&gt;&quot;");
     });
   });
 
   describe("norm", () => {
-    test("normalises text", () => {
+    it("normalises text", () => {
       expect(utils.norm("  a   b   ")).toEqual("a b");
     });
   });
 
   describe("toKeyValuePairs", () => {
-    test("converts objects to key values pairs", () => {
+    it("converts objects to key values pairs", () => {
       const obj = {
         editors: [
           {
@@ -411,7 +408,7 @@ describe("Core - Utils", () => {
     });
   });
 
-  test("converts objects to key values pairs with different separator", () => {
+  it("converts objects to key values pairs with different separator", () => {
     const obj = {
       editors: [
         {
@@ -428,33 +425,30 @@ describe("Core - Utils", () => {
     expect(utils.toKeyValuePairs(obj, "|||")).toEqual(expected);
   });
 
-  test(
-    "converts objects to key values pairs with different separator and delimiter",
-    () => {
-      const obj = {
-        editors: [
-          {
-            name: "Person Name",
-          },
-        ],
-        specStatus: "ED",
-        edDraftURI: "http://foo.com",
-        shortName: "Foo",
-      };
-      let expected =
-        'editors;[{"name":"Person Name"}], specStatus;"ED", ' +
-        'edDraftURI;"http://foo.com", shortName;"Foo"';
-      expect(utils.toKeyValuePairs(obj, undefined, ";")).toEqual(expected);
+  it("converts objects to key values pairs with different separator and delimiter", () => {
+    const obj = {
+      editors: [
+        {
+          name: "Person Name",
+        },
+      ],
+      specStatus: "ED",
+      edDraftURI: "http://foo.com",
+      shortName: "Foo",
+    };
+    let expected =
+      'editors;[{"name":"Person Name"}], specStatus;"ED", ' +
+      'edDraftURI;"http://foo.com", shortName;"Foo"';
+    expect(utils.toKeyValuePairs(obj, undefined, ";")).toEqual(expected);
 
-      expected =
-        'editors^[{"name":"Person Name"}] % specStatus^"ED" % ' +
-        'edDraftURI^"http://foo.com" % shortName^"Foo"';
-      expect(utils.toKeyValuePairs(obj, " % ", "^")).toEqual(expected);
-    }
-  );
+    expected =
+      'editors^[{"name":"Person Name"}] % specStatus^"ED" % ' +
+      'edDraftURI^"http://foo.com" % shortName^"Foo"';
+    expect(utils.toKeyValuePairs(obj, " % ", "^")).toEqual(expected);
+  });
 
   describe("flatten()", () => {
-    test("flattens arrays", () => {
+    it("flattens arrays", () => {
       expect(utils.flatten(["pass"], [123, 456])).toEqual(["pass", 123, 456]);
       const map = new Map([["key-fail", "pass"], ["anotherKey", 123]]);
       expect(utils.flatten([], map)).toEqual([map]);
@@ -464,7 +458,7 @@ describe("Core - Utils", () => {
       expect(utils.flatten([], object)).toEqual([object]);
     });
 
-    test("flattens nested arrays as a reducer", () => {
+    it("flattens nested arrays as a reducer", () => {
       const input = [
         new Map([["fail", "123"]]),
         new Set([456]),
@@ -484,13 +478,13 @@ describe("Core - Utils", () => {
       ]);
     });
 
-    test("flattens sparse and arrays", () => {
+    it("flattens sparse and arrays", () => {
       const input = [, 1, 1, , , , 1, , 1];
       const output = input.reduce(utils.flatten, ["pass"]);
       expect(output).toEqual(["pass", 1, 1, 1, 1]);
     });
 
-    test("flattens dense and arrays", () => {
+    it("flattens dense and arrays", () => {
       const input = new Array(10);
       const output = input.reduce(utils.flatten, ["pass"]);
       expect(output).toEqual(["pass"]);
@@ -500,7 +494,7 @@ describe("Core - Utils", () => {
   describe("DOM utils", () => {
     // migrated from core/jquery-enhanced
     describe("getTextNodes", () => {
-      test("finds all the text nodes", () => {
+      it("finds all the text nodes", () => {
         const node = document.createElement("div");
         node.innerHTML =
           "<div>aa<span>bb</span><p>cc<i>dd</i></p><pre>nope</pre></div>";
@@ -513,7 +507,7 @@ describe("Core - Utils", () => {
     });
 
     describe("renameElement", () => {
-      test("renames empty elements", () => {
+      it("renames empty elements", () => {
         const a = document.createElement("a");
         a.id = "this-is-a-div";
         document.body.appendChild(a);
@@ -526,7 +520,7 @@ describe("Core - Utils", () => {
         a.remove();
       });
 
-      test("renames elements with children", () => {
+      it("renames elements with children", () => {
         const a = document.createElement("a");
         a.id = "this-is-a-div";
         a.innerHTML = "<span id='inner-pass'>pass</span>";
@@ -544,7 +538,7 @@ describe("Core - Utils", () => {
     });
 
     describe("addId", () => {
-      test("addId - creates an id from the content of an elements", () => {
+      it("addId - creates an id from the content of an elements", () => {
         const { addId } = utils;
         let elem = document.createElement("p");
         elem.id = "ID";
@@ -603,7 +597,7 @@ describe("Core - Utils", () => {
     });
 
     describe("getDfnTitles", () => {
-      test("doesn't prepend empty dfns to data-lt", () => {
+      it("doesn't prepend empty dfns to data-lt", () => {
         const dfn = document.createElement("dfn");
         dfn.dataset.lt = "DFN|DFN2|DFN3";
         document.body.appendChild(dfn);
@@ -616,7 +610,7 @@ describe("Core - Utils", () => {
         dfn.remove();
       });
 
-      test("doesn't use the text content when data-lt-noDefault is present", () => {
+      it("doesn't use the text content when data-lt-noDefault is present", () => {
         const dfn = document.createElement("dfn");
         dfn.dataset.lt = "DFN|DFN2|DFN3";
         dfn.setAttribute("data-lt-noDefault", true);
@@ -631,7 +625,7 @@ describe("Core - Utils", () => {
         dfn.remove();
       });
 
-      test("finds the data-lts", () => {
+      it("finds the data-lts", () => {
         const dfn = document.createElement("dfn");
         dfn.dataset.lt = "DFN|DFN2|DFN3";
         dfn.innerHTML = "<abbr title='ABBR'>TEXT</abbr>";

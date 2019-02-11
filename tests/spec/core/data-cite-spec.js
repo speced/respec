@@ -2,7 +2,7 @@
 describe("Core — data-cite attribute", () => {
   afterAll(flushIframes);
 
-  test(`walks up the tree to find the right reference to cite`, async () => {
+  it(`walks up the tree to find the right reference to cite`, async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}
@@ -45,56 +45,50 @@ describe("Core — data-cite attribute", () => {
     expect(t5.href).toEqual(fooBarHref);
   });
 
-  test(
-    `treats data-cite="#foo" as self citing when there is no parent data-cite`,
-    async () => {
-      const ops = {
-        config: makeBasicConfig(),
-        body: `${makeDefaultBody()}
-        <section>
-          <h2>test</h2>
-          <p>
-            <a id="t1" data-cite="#test">a</a>
-            <dfn id="t2" data-cite="#test">a</dfn>
-          </p>
+  it(`treats data-cite="#foo" as self citing when there is no parent data-cite`, async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}
+      <section>
+        <h2>test</h2>
+        <p>
+          <a id="t1" data-cite="#test">a</a>
+          <dfn id="t2" data-cite="#test">a</dfn>
+        </p>
+      </section>
+    `,
+    };
+    ops.config.shortName = "dahut";
+    const doc = await makeRSDoc(ops);
+    const t1 = doc.getElementById("t1");
+    const t2 = doc.getElementById("t2").querySelector("a");
+    const location = new URL("#test", doc.location).href;
+    expect(t1.href).toEqual(location);
+    expect(t2.href).toEqual(location);
+  });
+
+  it("links data-cite attributes as normative/informative reference when parent is citing", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}
+        <section class="informative" data-cite="FETCH">
+          <p><a data-cite="#fetch-thing">informative reference</a></p>
+        </section>
+        <section data-cite="!URL">
+          <p><a data-cite="#url-thing">normative reference</a></p>
         </section>
       `,
-      };
-      ops.config.shortName = "dahut";
-      const doc = await makeRSDoc(ops);
-      const t1 = doc.getElementById("t1");
-      const t2 = doc.getElementById("t2").querySelector("a");
-      const location = new URL("#test", doc.location).href;
-      expect(t1.href).toEqual(location);
-      expect(t2.href).toEqual(location);
-    }
-  );
+    };
+    const doc = await makeRSDoc(ops);
+    expect(doc.getElementById("bib-url").closest("section").id).toEqual(
+      "normative-references"
+    );
+    expect(doc.getElementById("bib-fetch").closest("section").id).toEqual(
+      "informative-references"
+    );
+  });
 
-  test(
-    "links data-cite attributes as normative/informative reference when parent is citing",
-    async () => {
-      const ops = {
-        config: makeBasicConfig(),
-        body: `${makeDefaultBody()}
-          <section class="informative" data-cite="FETCH">
-            <p><a data-cite="#fetch-thing">informative reference</a></p>
-          </section>
-          <section data-cite="!URL">
-            <p><a data-cite="#url-thing">normative reference</a></p>
-          </section>
-        `,
-      };
-      const doc = await makeRSDoc(ops);
-      expect(doc.getElementById("bib-url").closest("section").id).toEqual(
-        "normative-references"
-      );
-      expect(doc.getElementById("bib-fetch").closest("section").id).toEqual(
-        "informative-references"
-      );
-    }
-  );
-
-  test("links directly to externally defined references", async () => {
+  it("links directly to externally defined references", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}
@@ -124,7 +118,7 @@ describe("Core — data-cite attribute", () => {
     );
   });
 
-  test("links data-cite attributes as normative reference", async () => {
+  it("links data-cite attributes as normative reference", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}
@@ -143,7 +137,7 @@ describe("Core — data-cite attribute", () => {
     );
   });
 
-  test("links data-cite attributes as informative reference", async () => {
+  it("links data-cite attributes as informative reference", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}
@@ -162,7 +156,7 @@ describe("Core — data-cite attribute", () => {
     );
   });
 
-  test("handles bogus data-cite values", async () => {
+  it("handles bogus data-cite values", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}
@@ -189,7 +183,7 @@ describe("Core — data-cite attribute", () => {
     ).toEqual("normative-references");
   });
 
-  test("adds the path and fragment identifier to the link", async () => {
+  it("adds the path and fragment identifier to the link", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}
@@ -211,7 +205,7 @@ describe("Core — data-cite attribute", () => {
     );
   });
   describe("data-cite-frag", () => {
-    test("adds the path and the fragment identifier to the link", async () => {
+    it("adds the path and the fragment identifier to the link", async () => {
       const ops = {
         config: makeBasicConfig(),
         body: `${makeDefaultBody()}
@@ -235,21 +229,18 @@ describe("Core — data-cite attribute", () => {
       ).toEqual("informative-references");
     });
 
-    test(
-      "resolves paths relative to the cited spec, even when path is absolute",
-      async () => {
-        const body = `<a data-cite="HTML51/subpage.html#section">text</a>`;
-        const ops = makeStandardOps({}, body);
-        const doc = await makeRSDoc(ops);
-        expect(
-          doc.querySelector(
-            "a[href='https://www.w3.org/TR/html51/subpage.html#section']"
-          )
-        ).toBeTruthy();
-      }
-    );
+    it("resolves paths relative to the cited spec, even when path is absolute", async () => {
+      const body = `<a data-cite="HTML51/subpage.html#section">text</a>`;
+      const ops = makeStandardOps({}, body);
+      const doc = await makeRSDoc(ops);
+      expect(
+        doc.querySelector(
+          "a[href='https://www.w3.org/TR/html51/subpage.html#section']"
+        )
+      ).toBeTruthy();
+    });
 
-    test("cited fragments are overridden by cite-frag", async () => {
+    it("cited fragments are overridden by cite-frag", async () => {
       const ops = {
         config: makeBasicConfig(),
         body: `${makeDefaultBody()}
@@ -272,97 +263,88 @@ describe("Core — data-cite attribute", () => {
     });
   });
 
-  test(
-    "Adds title to a reference when inline-link is empty normative reference",
-    async () => {
-      const ops = {
-        config: makeBasicConfig(),
-        body: `${makeDefaultBody()}
-          <section>
-            <p id="t1"><a data-cite="HTML"></a></p>
-            <p id="t2"><a data-cite="Fetch"></a></p>
-            <p id="t3"><a data-cite="HTML">This should not be replaced</a></p>
-          </section>
-        `,
-      };
-      const doc = await makeRSDoc(ops);
-      let a = doc.querySelector("#t1 > a");
-      expect(a.textContent).toBe("HTML Standard");
-      expect(a.href).toBe("https://html.spec.whatwg.org/multipage/");
-      expect(doc.getElementById("bib-html").closest("section").id).toBe(
-        "normative-references"
-      );
-      a = doc.querySelector("#t2 > a");
-      expect(a.textContent).toBe("Fetch Standard");
-      expect(a.href).toBe("https://fetch.spec.whatwg.org/");
-      expect(doc.getElementById("bib-fetch").closest("section").id).toBe(
-        "normative-references"
-      );
-      a = doc.querySelector("#t3 > a");
-      expect(a.textContent).toBe("This should not be replaced");
-      expect(a.href).toBe("https://html.spec.whatwg.org/multipage/");
-      expect(doc.getElementById("bib-fetch").closest("section").id).toBe(
-        "normative-references"
-      );
-    }
-  );
-
-  test(
-    "Adds title to a reference when inline-link is empty normative reference in definition",
-    async () => {
-      const ops = {
-        config: makeBasicConfig(),
-        body: `${makeDefaultBody()}
-          <section>
-            <p id="t1"><dfn data-cite="WHATWG-HTML#test"></dfn></p>
-            <p id="t2"><dfn data-cite="WHATWG-HTML#test">This should not change</dfn></p>
-          </section>
-        `,
-      };
-      const doc = await makeRSDoc(ops);
-      let dfn = doc.querySelector("#t1 > dfn");
-      expect(dfn).toBeTruthy();
-      let dfnA = doc.querySelector("#t1 > dfn > a");
-      expect(dfnA.textContent).toBe("HTML Standard");
-      expect(dfnA.href).toBe("https://html.spec.whatwg.org/multipage/#test");
-      expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
-        "normative-references"
-      );
-      dfn = doc.querySelector("#t2 > dfn");
-      expect(dfn).toBeTruthy();
-      dfnA = doc.querySelector("#t2 > dfn > a");
-      expect(dfnA.textContent).toBe("This should not change");
-      expect(dfnA.href).toBe("https://html.spec.whatwg.org/multipage/#test");
-      expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
-        "normative-references"
-      );
-    }
-  );
-
-  test(
-    "does not create external bibliography reference when when external spec id matches its Short Name",
-    async () => {
-      const body = `
+  it("Adds title to a reference when inline-link is empty normative reference", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}
         <section>
-          <h2>test</h2>
-          <p>
-            <a data-cite="dahut#test1">a</a>
-            <a data-cite="DaHuT#test2">a</a>
-          </p>
+          <p id="t1"><a data-cite="HTML"></a></p>
+          <p id="t2"><a data-cite="Fetch"></a></p>
+          <p id="t3"><a data-cite="HTML">This should not be replaced</a></p>
         </section>
-      `;
-      const ops = makeStandardOps({ shortName: "dahut" }, body);
-      const doc = await makeRSDoc(ops);
-      const dahut = doc.getElementById("bib-dahut");
-      const a = [...doc.querySelectorAll("section p a")];
-      expect(
-        a.every(
-          anchor =>
-            anchor.href ===
-            `${doc.location.href}#${anchor.dataset.cite.split("#")[1]}`
-        )
-      ).toBeTruthy();
-      expect(dahut).toBe(null);
-    }
-  );
+      `,
+    };
+    const doc = await makeRSDoc(ops);
+    let a = doc.querySelector("#t1 > a");
+    expect(a.textContent).toBe("HTML Standard");
+    expect(a.href).toBe("https://html.spec.whatwg.org/multipage/");
+    expect(doc.getElementById("bib-html").closest("section").id).toBe(
+      "normative-references"
+    );
+    a = doc.querySelector("#t2 > a");
+    expect(a.textContent).toBe("Fetch Standard");
+    expect(a.href).toBe("https://fetch.spec.whatwg.org/");
+    expect(doc.getElementById("bib-fetch").closest("section").id).toBe(
+      "normative-references"
+    );
+    a = doc.querySelector("#t3 > a");
+    expect(a.textContent).toBe("This should not be replaced");
+    expect(a.href).toBe("https://html.spec.whatwg.org/multipage/");
+    expect(doc.getElementById("bib-fetch").closest("section").id).toBe(
+      "normative-references"
+    );
+  });
+
+  it("Adds title to a reference when inline-link is empty normative reference in definition", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}
+        <section>
+          <p id="t1"><dfn data-cite="WHATWG-HTML#test"></dfn></p>
+          <p id="t2"><dfn data-cite="WHATWG-HTML#test">This should not change</dfn></p>
+        </section>
+      `,
+    };
+    const doc = await makeRSDoc(ops);
+    let dfn = doc.querySelector("#t1 > dfn");
+    expect(dfn).toBeTruthy();
+    let dfnA = doc.querySelector("#t1 > dfn > a");
+    expect(dfnA.textContent).toBe("HTML Standard");
+    expect(dfnA.href).toBe("https://html.spec.whatwg.org/multipage/#test");
+    expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
+      "normative-references"
+    );
+    dfn = doc.querySelector("#t2 > dfn");
+    expect(dfn).toBeTruthy();
+    dfnA = doc.querySelector("#t2 > dfn > a");
+    expect(dfnA.textContent).toBe("This should not change");
+    expect(dfnA.href).toBe("https://html.spec.whatwg.org/multipage/#test");
+    expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
+      "normative-references"
+    );
+  });
+
+  it("does not create external bibliography reference when when external spec id matches its Short Name", async () => {
+    const body = `
+      <section>
+        <h2>test</h2>
+        <p>
+          <a data-cite="dahut#test1">a</a>
+          <a data-cite="DaHuT#test2">a</a>
+        </p>
+      </section>
+    `;
+    const ops = makeStandardOps({ shortName: "dahut" }, body);
+    const doc = await makeRSDoc(ops);
+    const dahut = doc.getElementById("bib-dahut");
+    const a = [...doc.querySelectorAll("section p a")];
+    expect(
+      a.every(
+        anchor =>
+          anchor.href ===
+          `${doc.location.href}#${anchor.dataset.cite.split("#")[1]}`
+      )
+    ).toBeTruthy();
+    expect(dahut).toBe(null);
+  });
 });

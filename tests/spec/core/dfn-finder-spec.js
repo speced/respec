@@ -2,7 +2,7 @@
 describe("Core — Definition finder", () => {
   afterAll(flushIframes);
 
-  test("shouldn't duplicate data-lt items", async () => {
+  it("shouldn't duplicate data-lt items", async () => {
     const bodyText = `
       <section>
         <h2>Test section</h2>
@@ -24,7 +24,7 @@ describe("Core — Definition finder", () => {
     expect(dfn.classList.contains("respec-offending-element")).toBeFalsy();
   });
 
-  test("should enumerate operation alternative names", async () => {
+  it("should enumerate operation alternative names", async () => {
     const bodyText = `
       <section data-dfn-for="Foo">
         <h2>Test section</h2>

@@ -40,50 +40,38 @@ describe("Core - Github", () => {
       expect(conf.edDraftURI).toEqual("https://test.com/edDraftURI");
       expect(conf.shortName).toEqual("dontOverrideThis");
     }
-    test(
-      "generates githubAPI, issueBase, edDraftURI, shortName members from string",
-      async () => {
-        const doc = await makeRSDoc(stringOpt);
-        generateMembersTest(doc);
-      }
-    );
-    test(
-      "generates githubAPI, issueBase, edDraftURI, shortName members from object",
-      async () => {
-        const doc = await makeRSDoc(objOpt);
-        generateMembersTest(doc);
-      }
-    );
+    it("generates githubAPI, issueBase, edDraftURI, shortName members from string", async () => {
+      const doc = await makeRSDoc(stringOpt);
+      generateMembersTest(doc);
+    });
+    it("generates githubAPI, issueBase, edDraftURI, shortName members from object", async () => {
+      const doc = await makeRSDoc(objOpt);
+      generateMembersTest(doc);
+    });
     const dontOverrideTheseOps = {
       githubAPI: "https://test.com/githubAPI",
       issueBase: "https://test.com/issueBase",
       edDraftURI: "https://test.com/edDraftURI",
       shortName: "dontOverrideThis",
     };
-    test(
-      "doesn't override githubAPI, issueBase, edDraftURI, shortName members if present (from string)",
-      async () => {
-        const opts = {
-          config: Object.assign(makeBasicConfig(), dontOverrideTheseOps, {
-            github: "https://github.com/w3c/respec/",
-          }),
-        };
-        const doc = await makeRSDoc(opts);
-        doesntOverrideTest(doc);
-      }
-    );
-    test(
-      "doesn't override githubAPI, issueBase, edDraftURI, shortName members if present (from object)",
-      async () => {
-        const opts = {
-          config: Object.assign(makeBasicConfig(), dontOverrideTheseOps, {
-            github: { repoURL: "https://github.com/w3c/respec/" },
-          }),
-        };
-        const doc = await makeRSDoc(opts);
-        doesntOverrideTest(doc);
-      }
-    );
+    it("doesn't override githubAPI, issueBase, edDraftURI, shortName members if present (from string)", async () => {
+      const opts = {
+        config: Object.assign(makeBasicConfig(), dontOverrideTheseOps, {
+          github: "https://github.com/w3c/respec/",
+        }),
+      };
+      const doc = await makeRSDoc(opts);
+      doesntOverrideTest(doc);
+    });
+    it("doesn't override githubAPI, issueBase, edDraftURI, shortName members if present (from object)", async () => {
+      const opts = {
+        config: Object.assign(makeBasicConfig(), dontOverrideTheseOps, {
+          github: { repoURL: "https://github.com/w3c/respec/" },
+        }),
+      };
+      const doc = await makeRSDoc(opts);
+      doesntOverrideTest(doc);
+    });
   });
   describe("the definition list items (localized)", () => {
     function definitionListTest(doc) {
@@ -122,14 +110,14 @@ describe("Core - Github", () => {
       // This differs between the string and the object tests, so we return it
       return commitHistory;
     }
-    test("generates a participate set of links (from string)", async () => {
+    it("generates a participate set of links (from string)", async () => {
       const doc = await makeRSDoc(stringOpt);
       const commitHistory = definitionListTest(doc);
       expect(commitHistory.querySelector("a").href).toEqual(
         "https://github.com/w3c/respec/commits/gh-pages"
       );
     });
-    test("generates a participate set of links (from object)", async () => {
+    it("generates a participate set of links (from object)", async () => {
       const doc = await makeRSDoc(objOpt);
       const commitHistory = definitionListTest(doc);
       expect(commitHistory.querySelector("a").href).toEqual(

@@ -1,7 +1,7 @@
 "use strict";
 describe("W3C — Abstract", () => {
   afterAll(flushIframes);
-  test("includes a h2 and sets the class", async () => {
+  it("includes a h2 and sets the class", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody(),

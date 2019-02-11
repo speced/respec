@@ -1,7 +1,7 @@
 "use strict";
 describe("Core — Informative", () => {
   afterAll(flushIframes);
-  test("should process informative sections", async () => {
+  it("should process informative sections", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<section class='informative'><h2>TITLE</h2></section>`,

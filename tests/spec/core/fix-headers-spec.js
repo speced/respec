@@ -1,7 +1,7 @@
 "use strict";
 describe("Core - Fix headers", () => {
   afterAll(flushIframes);
-  test("sets the correct header levels", async () => {
+  it("sets the correct header levels", async () => {
     const body = `
       <section id='turtles'>
         <h1>ONE</h1>

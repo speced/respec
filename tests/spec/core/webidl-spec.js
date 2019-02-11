@@ -8,7 +8,7 @@ describe("Core - WebIDL", () => {
     doc = await makeRSDoc(ops, "spec/core/webidl.html");
   });
 
-  test("handles record types", () => {
+  it("handles record types", () => {
     const idl = doc.querySelector("#records pre");
     expect(idl).toBeTruthy(idl);
     expect(idl.querySelector(".idlType:first-child").textContent).toEqual(
@@ -19,7 +19,7 @@ describe("Core - WebIDL", () => {
     );
   });
 
-  test("links standardized IDL types to WebIDL spec", () => {
+  it("links standardized IDL types to WebIDL spec", () => {
     const idl = doc.querySelector("#linkToIDLSpec>div>pre");
     // [Constructor(sequence<DOMString> methodData), SecureContext]
     const sequences = idl.querySelectorAll(`a[href$="#idl-sequence"]`);
@@ -51,7 +51,7 @@ describe("Core - WebIDL", () => {
     );
   });
 
-  test("distinguishes between types and identifiers when linking", async () => {
+  it("distinguishes between types and identifiers when linking", async () => {
     const similarlyNamedInterface = doc.getElementById(
       "idl-def-similarlynamed"
     );
@@ -115,7 +115,7 @@ describe("Core - WebIDL", () => {
     ).toBeTruthy();
   });
 
-  test("links to fully qualified method names", () => {
+  it("links to fully qualified method names", () => {
     const t1 = new URL(doc.getElementById("fullyQualifiedNoParens-1").href)
       .hash;
     expect(t1).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
@@ -133,7 +133,7 @@ describe("Core - WebIDL", () => {
     expect(t4).toEqual("#dom-parenthesistest-fullyqualifiednoparens");
   });
 
-  test("links simple method names and types", () => {
+  it("links simple method names and types", () => {
     const section = doc.getElementById("sec-parenthesis-method");
     ["basic", "ext", "ull", "withName", "named"]
       .map(methodName => [methodName, methodName.toLowerCase()])
@@ -168,7 +168,7 @@ describe("Core - WebIDL", () => {
     expect(aElem).toBeTruthy();
     expect(aElem.textContent).toEqual("noParens");
   });
-  test("should handle interfaces", () => {
+  it("should handle interfaces", () => {
     let target = doc.getElementById("if-basic");
     let text = "interface SuperStar {};";
     expect(target.textContent).toEqual(text);
@@ -230,7 +230,7 @@ describe("Core - WebIDL", () => {
     );
   });
 
-  test("should handle constructors", () => {
+  it("should handle constructors", () => {
     let target = doc.getElementById("ctor-basic");
     let text =
       "[Something,\n" +
@@ -257,7 +257,7 @@ describe("Core - WebIDL", () => {
     expect(target.textContent).toEqual(text);
   });
 
-  test("should handle named constructors", () => {
+  it("should handle named constructors", () => {
     const target = doc.getElementById("namedctor-basic");
     const text =
       "[Something,\n" +
@@ -279,7 +279,7 @@ describe("Core - WebIDL", () => {
     expect(params[0].textContent).toEqual("boolean");
   });
 
-  test("should handle constants", () => {
+  it("should handle constants", () => {
     const target = doc.getElementById("const-basic");
     const text =
       "interface ConstTest {\n" +
@@ -362,7 +362,7 @@ describe("Core - WebIDL", () => {
     ).toBeNull();
   });
 
-  test("should handle attributes", () => {
+  it("should handle attributes", () => {
     const target = doc.getElementById("attr-basic");
     const text = `interface AttrBasic {
   // 1
@@ -432,7 +432,7 @@ describe("Core - WebIDL", () => {
     );
   });
 
-  test("handles stringifiers special operations", () => {
+  it("handles stringifiers special operations", () => {
     const stringifierTestElems = [
       ...doc.querySelectorAll("#stringifiertest .idlMethod"),
     ];
@@ -452,7 +452,7 @@ describe("Core - WebIDL", () => {
     );
   });
 
-  test("handles getter special operations", () => {
+  it("handles getter special operations", () => {
     const getterTestElems = [...doc.querySelectorAll("#gettertest .idlMethod")];
     const [getterAnon, getterNamed] = getterTestElems;
     expect(getterAnon).toBeTruthy();
@@ -468,7 +468,7 @@ describe("Core - WebIDL", () => {
     expect(getterNamed.querySelector(".idlName").textContent).toBe("named");
   });
 
-  test("handles setter special operations", () => {
+  it("handles setter special operations", () => {
     const setterTestElems = [...doc.querySelectorAll("#settertest .idlMethod")];
     const [setterAnon, setterNamed] = setterTestElems;
     expect(setterAnon).toBeTruthy();
@@ -484,7 +484,7 @@ describe("Core - WebIDL", () => {
     expect(setterNamed.querySelector(".idlName").textContent).toBe("named");
   });
 
-  test("should handle operations", () => {
+  it("should handle operations", () => {
     const target = doc.getElementById("meth-basic");
     const text = `interface MethBasic {
   // 1
@@ -558,14 +558,14 @@ describe("Core - WebIDL", () => {
     );
   });
 
-  test("should handle iterable-like interface member declarations", () => {
+  it("should handle iterable-like interface member declarations", () => {
     const elem = doc.getElementById("iterable-like");
     expect(elem.getElementsByClassName("idlIterable").length).toEqual(2);
     expect(elem.getElementsByClassName("idlMaplike").length).toEqual(1);
     expect(elem.getElementsByClassName("idlSetlike").length).toEqual(1);
   });
 
-  test("outputs map/set-like interface member declarations", () => {
+  it("outputs map/set-like interface member declarations", () => {
     const { textContent } = doc.getElementById("map-set-readonly");
     const expected = `
 interface MapLikeInterface {
@@ -583,7 +583,7 @@ interface ReadOnlySetLike {
     expect(textContent).toBe(expected);
   });
 
-  test("should handle comments", () => {
+  it("should handle comments", () => {
     const target = doc.getElementById("comments-basic");
     const text =
       "interface SuperStar {\n" +
@@ -600,7 +600,7 @@ interface ReadOnlySetLike {
     );
   });
 
-  test("should handle dictionaries", () => {
+  it("should handle dictionaries", () => {
     let target = doc.getElementById("dict-basic");
     let text = "dictionary SuperStar {};";
     expect(target.textContent).toEqual(text);
@@ -683,7 +683,7 @@ interface ReadOnlySetLike {
     ).toBeNull();
   });
 
-  test("handles multiple dictionaries", async () => {
+  it("handles multiple dictionaries", async () => {
     const idl = doc.getElementById("multiple-dictionaries");
     const expected = `
 dictionary OneThing {
@@ -698,7 +698,7 @@ partial dictionary AnotherThing {
     expect(idl.querySelector(".idlSectionComment")).toBeNull();
   });
 
-  test("uniquely links to enum values", () => {
+  it("uniquely links to enum values", () => {
     const target = doc.getElementById("multipleEnums");
     const idlLinks = target.querySelectorAll("a[data-link-for]");
     expect(idlLinks.length).toBe(2);
@@ -709,7 +709,7 @@ partial dictionary AnotherThing {
     expect(doc.getElementById("dom-test2-enum")).toBeTruthy();
   });
 
-  test("handles enumerations", () => {
+  it("handles enumerations", () => {
     const target = doc.getElementById("enum-basic");
     const text = `
 enum EnumBasic {
@@ -738,7 +738,7 @@ enum EnumBasic {
     expect(doc.getElementById("idl-def-enumbasic")).toBeTruthy();
   });
 
-  test("should handle enumeration value definitions", () => {
+  it("should handle enumeration value definitions", () => {
     const section = doc.getElementById("enumerations");
     expect(
       [...section.getElementsByTagName("dfn")]
@@ -757,7 +757,7 @@ enum EnumBasic {
     ).toEqual("#dom-enumbasic-one");
   });
 
-  test("links empty-string enumeration value", () => {
+  it("links empty-string enumeration value", () => {
     const links = doc.querySelector(
       `#enum-empty-sec a[href="#dom-emptyenum-the-empty-string"]`
     );
@@ -770,7 +770,7 @@ enum EnumBasic {
     expect(smokeDfn).toBeTruthy();
   });
 
-  test("handles optional and trivia", () => {
+  it("handles optional and trivia", () => {
     const expected = `
 [Constructor(X x, optional Y y, /*trivia*/ Z y)]
 interface Foo {
@@ -784,7 +784,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(trivaComments.length).toEqual(3);
   });
 
-  test("should handle callbacks", () => {
+  it("should handle callbacks", () => {
     let target = doc.getElementById("cb-basic");
     let text = "callback SuperStar = void();";
     expect(target.textContent).toEqual(text);
@@ -823,7 +823,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(prm[1].textContent).toEqual("b");
   });
 
-  test("should handle typedefs", () => {
+  it("should handle typedefs", () => {
     let target = doc.getElementById("td-basic");
     let text = "typedef DOMString string;";
     expect(target.textContent).toEqual(text);
@@ -859,7 +859,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(target.textContent).toEqual(text);
   });
 
-  test("should handle includes", () => {
+  it("should handle includes", () => {
     let target = doc.getElementById("incl-basic");
     let text = "Window includes Breakable;";
     expect(target.textContent).toEqual(text);
@@ -870,7 +870,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(target.textContent).toEqual(text);
   });
 
-  test("should link documentation", () => {
+  it("should link documentation", () => {
     const section = doc.getElementById("documentation");
     const target = doc.getElementById("doc-iface");
 
@@ -924,12 +924,12 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
         .textContent
     ).toEqual("Documented");
   });
-  test("retains css classes afer processing", () => {
+  it("retains css classes afer processing", () => {
     const elem = doc.getElementById("retain-css-classes");
     const expected = ["a", "b", "c", "overlarge"];
     expect(expected.every(item => elem.classList.contains(item))).toBe(true);
   });
-  test("links `[Default] object toJSON();` automatically to IDL spec", () => {
+  it("links `[Default] object toJSON();` automatically to IDL spec", () => {
     const elem = doc.getElementById("AutoLinkToIDLSpec");
     const [defaultLink, objectLink, toJSONLink] = Array.from(
       elem.querySelectorAll("[data-title='toJSON'] a")
@@ -938,7 +938,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(objectLink.hash).toEqual("#idl-object");
     expect(toJSONLink.hash).toEqual("#default-tojson-operation");
   });
-  test("allows toJSON() to be defined in spec", () => {
+  it("allows toJSON() to be defined in spec", () => {
     const elem = doc.getElementById("DefinedToJson");
     const [defaultLink, objectLink, toJSONLink] = Array.from(
       elem.querySelectorAll("[data-title='toJSON'] a")
@@ -949,7 +949,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(toJSONLink.origin).toEqual(doc.location.origin);
     expect(toJSONLink.hash).toEqual("#dom-definedtojson-tojson");
   });
-  test("puts code elements around both IDL definitions and links", () => {
+  it("puts code elements around both IDL definitions and links", () => {
     const things = [
       ...document.querySelectorAll("#coded-things > a, #coded-things > dfn"),
     ];
@@ -966,7 +966,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     );
     expect(linkToBarBarAttr.length).toBe(2);
   });
-  test("sets the IDL type for each type of IDL token", () => {
+  it("sets the IDL type for each type of IDL token", () => {
     // interface InterfaceType
     const interfaceType = doc.getElementById("dom-interfacetype");
     expect(interfaceType.dataset.idl).toBe("interface");

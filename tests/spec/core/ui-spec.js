@@ -3,7 +3,7 @@
 describe("Core - UI", () => {
   afterAll(flushIframes);
 
-  test("shows and hides the UI", async () => {
+  it("shows and hides the UI", async () => {
     const doc = await makeRSDoc(makeStandardOps());
     const ui = doc.defaultView.respecUI;
     const pillContainer = doc.getElementById("respec-ui");
@@ -16,7 +16,7 @@ describe("Core - UI", () => {
     expect(pillContainer.hidden).toBe(false);
   });
 
-  test("hides the UI when document is clicked", async () => {
+  it("hides the UI when document is clicked", async () => {
     const doc = await makeRSDoc(makeStandardOps(), null, "display: block");
     const menu = doc.getElementById("respec-menu");
     expect(window.getComputedStyle(menu).display).toEqual("none");
@@ -40,7 +40,7 @@ describe("Core - UI", () => {
   });
 
   describe("ui/dfn-list", () => {
-    test("shows a list of definitions and links them", async () => {
+    it("shows a list of definitions and links them", async () => {
       const body = "<p><dfn>bar()</dfn> <dfn>foo</dfn></p>";
       const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);

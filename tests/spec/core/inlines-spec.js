@@ -1,7 +1,7 @@
 "use strict";
 describe("Core - Inlines", () => {
   afterAll(flushIframes);
-  test("processes inline cite content", async () => {
+  it("processes inline cite content", async () => {
     const body = `
       <section>
         <p>[[dom]] and [[!html]] are normative in normative section.</p>
@@ -48,7 +48,7 @@ describe("Core - Inlines", () => {
     ).toBe(false);
   });
 
-  test("processes abbr and rfc2119 content", async () => {
+  it("processes abbr and rfc2119 content", async () => {
     const body = `
       <section id='inlines'>
         <p><abbr title='ABBR-TIT'>ABBR</abbr> ABBR</p>

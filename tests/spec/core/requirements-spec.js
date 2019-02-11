@@ -2,7 +2,7 @@
 describe("Core — Requirements", () => {
   afterAll(flushIframes);
 
-  test("should process requirements", async () => {
+  it("should process requirements", async () => {
     const body = "<p class='req' id='req-id'>REQ</p>";
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
@@ -16,7 +16,7 @@ describe("Core — Requirements", () => {
     expect(ref.getAttribute("href")).toEqual("#req-id");
   });
 
-  test("should process requirement references", async () => {
+  it("should process requirement references", async () => {
     const body = `
       <a href='#req-id' class='reqRef'></a>
       <a href='#foo' class='reqRef'></a>

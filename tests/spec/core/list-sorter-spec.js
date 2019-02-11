@@ -70,7 +70,7 @@ describe("Core — list-sorter", () => {
     doc = await makeRSDoc(ops);
   });
   describe("Ordered and unordered lists", () => {
-    test("sorts ordered lists in ascending order", () => {
+    it("sorts ordered lists in ascending order", () => {
       const list = doc.querySelector("ol[data-sort='ascending']");
       const first = list.querySelector("li:first-of-type");
       const last = list.querySelector("li:last-of-type");
@@ -78,7 +78,7 @@ describe("Core — list-sorter", () => {
       expect(last.textContent).toEqual("Z");
     });
 
-    test("sorts unordered lists in descending order", () => {
+    it("sorts unordered lists in descending order", () => {
       const list = doc.querySelector("ul[data-sort='descending']");
       const first = list.querySelector("li:first-of-type");
       const last = list.querySelector("li:last-of-type");
@@ -86,13 +86,13 @@ describe("Core — list-sorter", () => {
       expect(last.textContent).toEqual("a");
     });
 
-    test("defaults to sorting in ascending order", () => {
+    it("defaults to sorting in ascending order", () => {
       const list = doc.getElementById("ol-default");
       expect(list.firstElementChild.textContent).toEqual("a");
       expect(list.lastElementChild.textContent).toEqual("Z");
     });
 
-    test("sorts nested lists", () => {
+    it("sorts nested lists", () => {
       const list = doc.getElementById("nested-list");
       const first = list.querySelector("li:first-of-type");
       const last = list.querySelector("li:last-of-type");
@@ -101,7 +101,7 @@ describe("Core — list-sorter", () => {
     });
   });
   describe("Definition lists", () => {
-    test("sorts definition lists in ascending order", () => {
+    it("sorts definition lists in ascending order", () => {
       const list = doc.querySelector("dl[data-sort='ascending']");
       const firstDt = list.querySelector("dt:first-of-type");
       const lastDt = list.querySelector("dt:last-of-type");
@@ -114,7 +114,7 @@ describe("Core — list-sorter", () => {
       );
     });
 
-    test("sorts definition lists in descending order", () => {
+    it("sorts definition lists in descending order", () => {
       const list = doc.querySelector("dl[data-sort='descending']");
       expect(list.firstElementChild.textContent).toEqual("9");
       const lastDt = list.querySelector("dt:last-of-type");
@@ -125,13 +125,13 @@ describe("Core — list-sorter", () => {
       );
     });
 
-    test("defaults to sorting in definition lists in ascending order", () => {
+    it("defaults to sorting in definition lists in ascending order", () => {
       const list = doc.getElementById("default-sort");
       expect(list.firstElementChild.textContent).toEqual("1");
       expect(list.lastElementChild.textContent).toEqual("9");
     });
 
-    test("leaves unmarked lists alone", () => {
+    it("leaves unmarked lists alone", () => {
       const list = doc.getElementById("dont-sort");
       expect(list.firstElementChild.textContent).toEqual("dont");
       expect(list.lastElementChild.textContent).toEqual("me");

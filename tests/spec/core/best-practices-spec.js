@@ -2,7 +2,7 @@
 describe("Core — Best Practices", () => {
   afterAll(flushIframes);
 
-  test("processes examples", async () => {
+  it("processes examples", async () => {
     const body = `
       <section>
         <span class='practicelab'>BP1</span>

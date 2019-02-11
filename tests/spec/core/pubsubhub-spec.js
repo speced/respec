@@ -9,7 +9,7 @@ describe("Core - pubsubhub", () => {
     doc = await makeRSDoc(ops, "spec/core/pubsubhub-spec.html");
   });
 
-  test("subscribes start-all", () => {
+  it("subscribes start-all", () => {
     expect(doc.getElementById("start-all").textContent).toEqual("pass");
   });
 });

@@ -13,22 +13,22 @@ describe("Core - ID headers", () => {
     doc = await makeRSDoc(ops);
   });
 
-  test("sets an id on header", () => {
+  it("sets an id on header", () => {
     const h2 = doc.querySelector("#t0 h2");
     expect(h2.id).toBe("foo");
   });
 
   describe("section links", () => {
-    test("doesn't add sections links to introductory sections", () => {
+    it("doesn't add sections links to introductory sections", () => {
       expect(doc.querySelector(".introductory h2 a.self-link")).toBeFalsy();
     });
 
-    test("(aria) labels section links", () => {
+    it("(aria) labels section links", () => {
       const queryForSymbol = "h2 a[aria-label=§].self-link";
       expect(doc.querySelector(queryForSymbol)).toBeTruthy();
     });
 
-    test("doesn't add sections links when addSectionLinks is false", async () => {
+    it("doesn't add sections links when addSectionLinks is false", async () => {
       const ops = makeStandardOps(
         {
           addSectionLinks: false,
@@ -39,7 +39,7 @@ describe("Core - ID headers", () => {
       expect(doc.querySelector("h2 > a.self-link")).toBeFalsy();
     });
 
-    test("adds section links", () => {
+    it("adds section links", () => {
       const test1 = doc.querySelector("#test-1 > h2 > a.self-link");
       expect(test1.getAttribute("href")).toBe("#test-1");
 

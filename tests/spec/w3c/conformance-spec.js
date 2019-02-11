@@ -1,7 +1,7 @@
 "use strict";
 describe("W3C — Conformance", () => {
   afterAll(flushIframes);
-  test("includes a h2 and inject its content", async () => {
+  it("includes a h2 and inject its content", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<section id='conformance'>
@@ -27,7 +27,7 @@ describe("W3C — Conformance", () => {
     );
   });
 
-  test("includes only referenced 2119 terms", async () => {
+  it("includes only referenced 2119 terms", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<section id='conformance'>
@@ -41,7 +41,7 @@ describe("W3C — Conformance", () => {
     expect(doc.querySelectorAll("#conformance .rfc2119").length).toEqual(3);
   });
 
-  test("omits the 2119 reference when there are no terms", async () => {
+  it("omits the 2119 reference when there are no terms", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<section id='conformance'>

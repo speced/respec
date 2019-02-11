@@ -4,7 +4,7 @@ describe("Core — l10n", () => {
   const body = makeDefaultBody();
   const config = makeBasicConfig();
 
-  test("uses en and ltr", async () => {
+  it("uses en and ltr", async () => {
     const ops = {
       config,
       body,
@@ -14,7 +14,7 @@ describe("Core — l10n", () => {
     expect(doc.documentElement.dir).toEqual("ltr");
   });
 
-  test("shouldn't override existing dir", async () => {
+  it("shouldn't override existing dir", async () => {
     const ops = {
       config,
       htmlAttrs: {
@@ -27,7 +27,7 @@ describe("Core — l10n", () => {
     expect(doc.documentElement.dir).toEqual("rtl");
   });
 
-  test("shouldn't override existing lang and not set dir", async () => {
+  it("shouldn't override existing lang and not set dir", async () => {
     const ops = {
       config,
       htmlAttrs: {

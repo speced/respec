@@ -1,7 +1,7 @@
 "use strict";
 describe("Core — Examples", () => {
   afterAll(flushIframes);
-  test("processes examples", async () => {
+  it("processes examples", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<section>
@@ -24,7 +24,7 @@ describe("Core — Examples", () => {
     expect(example.textContent).toBe("{\n  CONTENT\n}");
   });
 
-  test("processes aside examples", async () => {
+  it("processes aside examples", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<article>
@@ -46,7 +46,7 @@ describe("Core — Examples", () => {
       "Example 1: EX\n    \n{\n  CONTENT\n}"
     );
   });
-  test("processes children of aside examples", async () => {
+  it("processes children of aside examples", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}
@@ -75,7 +75,7 @@ describe("Core — Examples", () => {
       "this one should also have its whitespace removed"
     );
   });
-  test("self-links examples made from asides", async () => {
+  it("self-links examples made from asides", async () => {
     const body = `
       <aside class="example"></aside>
       <aside class="example" id="pass"></aside>
@@ -90,7 +90,7 @@ describe("Core — Examples", () => {
     expect(example2.getAttribute("href")).toBe("#pass");
     expect(example3.getAttribute("href")).toBe("#example-3-pass");
   });
-  test("self-links examples made from pre", async () => {
+  it("self-links examples made from pre", async () => {
     const body = `
       <pre class="example"></pre>
       <pre class="example" id="pass"></pre>
@@ -105,7 +105,7 @@ describe("Core — Examples", () => {
     expect(example2.getAttribute("href")).toBe("#pass");
     expect(example3.getAttribute("href")).toBe("#example-3-pass");
   });
-  test("relocates ids and doesn't duplicate them", async () => {
+  it("relocates ids and doesn't duplicate them", async () => {
     const body = `
       <pre class="example" id="this-is-unique"></pre>
     `;
@@ -117,7 +117,7 @@ describe("Core — Examples", () => {
     // id got relocated from the pre to the div
     expect(example.localName).toBe("div");
   });
-  test("makes correct links", async () => {
+  it("makes correct links", async () => {
     const body = `
       <aside class="example">
        <p>This is a very long link</p>
@@ -133,7 +133,7 @@ describe("Core — Examples", () => {
     expect(exampleLink.getAttribute("href")).toBe("#example-1");
     expect(example.id).toBe("example-1");
   });
-  test("preserves dynamically attached event listeners", async () => {
+  it("preserves dynamically attached event listeners", async () => {
     const body = `
       <aside class="example">
        <button id="mybutton">Click me</button>

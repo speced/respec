@@ -5,6 +5,6 @@ module.exports = {
       "!**/node_modules/**",
       "!**/vendor/**"
   ],
-  "testRegex": "(/tests/spec/.*|(\\.|/)(test|spec))\\.jsx?$",
+  "testRegex": "(/tests/spec/core/linter-rules/.*|(\\.|/)(test|spec))\\.jsx?$",
   "testURL": "http://localhost/"
 }

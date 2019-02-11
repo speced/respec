@@ -1,7 +1,7 @@
 "use strict";
 describe("Core - Section References", () => {
   afterAll(flushIframes);
-  test("should have produced the section reference", async () => {
+  it("should have produced the section reference", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}
