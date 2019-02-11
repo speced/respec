@@ -1,5 +1,5 @@
 /**
- * Linter rule "check-charset".
+ * Linter Rule "check-charset".
  *
  * Checks whether the document has `<meta charset="utf-8">` properly.
  */
@@ -18,7 +18,7 @@ const meta = {
 const lang = defaultLang in meta ? defaultLang : "en";
 
 /**
- * Runs linter rule.
+ * Runs Linter Rule.
  *
  * @param {Object} conf The ReSpec config.
  * @param {Document} doc The document to be checked.

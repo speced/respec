@@ -3,7 +3,7 @@ describe("Core — Can I Use", () => {
   afterAll(flushIframes);
   const apiURL = `${window.location.origin}/tests/data/caniuse/{FEATURE}.json`;
 
-  it("uses meaningful defaults", async () => {
+  test("uses meaningful defaults", async () => {
     const ops = makeStandardOps({
       caniuse: {
         feature: "FEATURE",
@@ -20,7 +20,7 @@ describe("Core — Can I Use", () => {
     expect(caniuse.browsers).toEqual(["chrome", "firefox", "safari", "edge"]);
   });
 
-  it("allows overriding defaults", async () => {
+  test("allows overriding defaults", async () => {
     const ops = makeStandardOps({
       caniuse: {
         feature: "FEATURE",
@@ -40,7 +40,7 @@ describe("Core — Can I Use", () => {
     expect(caniuse.versions).toBe(10);
   });
 
-  it("does nothing if caniuse is not enabled", async () => {
+  test("does nothing if caniuse is not enabled", async () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(ops);
     await doc.respecIsReady;
@@ -51,7 +51,7 @@ describe("Core — Can I Use", () => {
     expect(doc.querySelector(".caniuse-stats")).toBeFalsy();
   });
 
-  it("removes unsupported browsers", async () => {
+  test("removes unsupported browsers", async () => {
     const ops = makeStandardOps({
       caniuse: {
         feature: "FEATURE",
@@ -68,7 +68,7 @@ describe("Core — Can I Use", () => {
     // TODO: check for `pub` warnings
   });
 
-  it("shows caniuse.com link on error", async () => {
+  test("shows caniuse.com link on error", async () => {
     const ops = makeStandardOps({
       caniuse: {
         feature: "FEATURE",
@@ -83,7 +83,7 @@ describe("Core — Can I Use", () => {
     expect(link.href).toBe("https://caniuse.com/#feat=FEATURE");
   });
 
-  it("shows caniuse browser support table", async () => {
+  test("shows caniuse browser support table", async () => {
     const ops = makeStandardOps({
       caniuse: {
         feature: "FEATURE",
@@ -129,7 +129,7 @@ describe("Core — Can I Use", () => {
     // expect(style.getPropertyValue("display")).toBe("block");
   });
 
-  it("removes irrelevant config for caniuse feature", async () => {
+  test("removes irrelevant config for caniuse feature", async () => {
     const expectedObj = Object.assign(makeBasicConfig(), {
       publishDate: "1999-12-11",
       publishISODate: "1999-12-11T00:00:00.000Z",

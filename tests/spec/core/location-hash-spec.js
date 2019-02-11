@@ -5,18 +5,21 @@ describe("Core — Location Hash", () => {
   const simpleURL = "/tests/spec/core/simple.html";
 
   describe("legacy fragment format", () => {
-    it("leaves editor defined id alone, even if they include illegal chars", async () => {
-      const expectedHash = "#custom_id(¡™£¢∞§¶•ªº)";
-      const testURL = `${simpleURL}${expectedHash}`;
-      const doc = await makeRSDoc(ops, testURL);
-      expect(decodeURIComponent(doc.location.hash)).toEqual(expectedHash);
-    });
-    it("recovers from legacy IDL methods frags", async () => {
+    test(
+      "leaves editor defined id alone, even if they include illegal chars",
+      async () => {
+        const expectedHash = "#custom_id(¡™£¢∞§¶•ªº)";
+        const testURL = `${simpleURL}${expectedHash}`;
+        const doc = await makeRSDoc(ops, testURL);
+        expect(decodeURIComponent(doc.location.hash)).toEqual(expectedHash);
+      }
+    );
+    test("recovers from legacy IDL methods frags", async () => {
       const testURL = `${simpleURL}#dom-test-foo()`;
       const doc = await makeRSDoc(ops, testURL);
       expect(doc.location.hash).toEqual("#dom-test-foo");
     });
-    it("recovers legacy encoded hashes for slots", async () => {
+    test("recovers legacy encoded hashes for slots", async () => {
       const testURL = `${simpleURL}#dfn-%5B%5Bescapedslot%5D%5D`;
       const doc = await makeRSDoc(ops, testURL);
       expect(doc.location.hash).toEqual("#dfn-escapedslot");

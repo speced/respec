@@ -1,7 +1,7 @@
 "use strict";
 describe("Core — Issues and Notes", () => {
   afterAll(flushIframes);
-  it("treats each issue as unique", async () => {
+  test("treats each issue as unique", async () => {
     const body = `
       <section>
         <h2>Test issues</h2>
@@ -30,7 +30,7 @@ describe("Core — Issues and Notes", () => {
     expect(secondItem.hash).toBe(`#${firstDuplicateIssue.id}`);
     expect(thirdItem.hash).toBe(`#${secondDuplicateIssue.id}`);
   });
-  it("should process issues and notes", async () => {
+  test("should process issues and notes", async () => {
     const ops = {
       config: makeBasicConfig(),
       body:
@@ -79,7 +79,7 @@ describe("Core — Issues and Notes", () => {
     expect(pnot.textContent).toBe("NOTE");
   });
 
-  it("should process ednotes", async () => {
+  test("should process ednotes", async () => {
     const ops = {
       config: makeBasicConfig(),
       body:
@@ -97,7 +97,7 @@ describe("Core — Issues and Notes", () => {
     expect(pnot.textContent).toBe("EDNOTE");
   });
 
-  it("should process warnings", async () => {
+  test("should process warnings", async () => {
     const ops = {
       config: makeBasicConfig(),
       body:
@@ -113,7 +113,7 @@ describe("Core — Issues and Notes", () => {
     );
   });
 
-  it("should use data-number for issue and note numbers", async () => {
+  test("should use data-number for issue and note numbers", async () => {
     const body = `
       <section>
         <p id='i10' class='issue' data-number='10'>Numbered ISSUE</p>
@@ -129,7 +129,7 @@ describe("Core — Issues and Notes", () => {
     expect(ixx.textContent).toBe("Issue");
   });
 
-  it("shows labels for github issues", async () => {
+  test("shows labels for github issues", async () => {
     const githubConfig = {
       github: "https://github.com/mock-company/mock-repository",
       githubAPI: `${window.location.origin}/tests/data`,
@@ -203,7 +203,7 @@ describe("Core — Issues and Notes", () => {
     );
   });
 
-  it("should link to external issue tracker", async () => {
+  test("should link to external issue tracker", async () => {
     const issueBaseConfig = {
       editors: [
         {
@@ -230,7 +230,7 @@ describe("Core — Issues and Notes", () => {
     expect(piss.textContent).toBe("ISSUE");
   });
 
-  it("marks closed issues as closed in the spec", async () => {
+  test("marks closed issues as closed in the spec", async () => {
     const githubConfig = {
       github: "https://github.com/mock-company/mock-repository",
       githubAPI: `${window.location.origin}/tests/data`,
@@ -267,7 +267,7 @@ describe("Core — Issues and Notes", () => {
     );
   });
 
-  it("renders the original issue post in an empty issue block", async () => {
+  test("renders the original issue post in an empty issue block", async () => {
     const githubConfig = {
       github: "https://github.com/mock-company/mock-repository",
       githubAPI: `${window.location.origin}/tests/data`,
@@ -284,37 +284,40 @@ describe("Core — Issues and Notes", () => {
     );
   });
 
-  it("should link to external issue tracker for features at risk", async () => {
-    const atRiskBaseConfig = {
-      editors: [
-        {
-          name: "Markus Lanthaler",
-        },
-      ],
-      issueBase: "http://example.com/issues/",
-      atRiskBase: "http://example.com/atrisk/",
-      specStatus: "FPWD",
-      shortName: "foo",
-    };
-    const ops = {
-      config: atRiskBaseConfig,
-      body: `${makeDefaultBody()}<section><p class='issue atrisk' data-number='10'>FEATURE AT RISK</p></section>`,
-    };
-    const doc = await makeRSDoc(ops);
-    const iss = doc.querySelector("div.atrisk");
-    const piss = iss.querySelector("p");
-    expect(iss.querySelectorAll("div.issue-title").length).toBe(1);
-    expect(iss.querySelector("div.issue-title").textContent).toBe(
-      "(Feature at Risk) Issue 10"
-    );
-    expect(iss.querySelector("div.issue-title a").getAttribute("href")).toBe(
-      `${atRiskBaseConfig.atRiskBase}10`
-    );
-    expect(piss.getAttribute("title")).toBeNull();
-    expect(piss.textContent).toBe("FEATURE AT RISK");
-  });
+  test(
+    "should link to external issue tracker for features at risk",
+    async () => {
+      const atRiskBaseConfig = {
+        editors: [
+          {
+            name: "Markus Lanthaler",
+          },
+        ],
+        issueBase: "http://example.com/issues/",
+        atRiskBase: "http://example.com/atrisk/",
+        specStatus: "FPWD",
+        shortName: "foo",
+      };
+      const ops = {
+        config: atRiskBaseConfig,
+        body: `${makeDefaultBody()}<section><p class='issue atrisk' data-number='10'>FEATURE AT RISK</p></section>`,
+      };
+      const doc = await makeRSDoc(ops);
+      const iss = doc.querySelector("div.atrisk");
+      const piss = iss.querySelector("p");
+      expect(iss.querySelectorAll("div.issue-title").length).toBe(1);
+      expect(iss.querySelector("div.issue-title").textContent).toBe(
+        "(Feature at Risk) Issue 10"
+      );
+      expect(iss.querySelector("div.issue-title a").getAttribute("href")).toBe(
+        `${atRiskBaseConfig.atRiskBase}10`
+      );
+      expect(piss.getAttribute("title")).toBeNull();
+      expect(piss.textContent).toBe("FEATURE AT RISK");
+    }
+  );
 
-  it("should link to GitHub issue tracker for features at risk", async () => {
+  test("should link to GitHub issue tracker for features at risk", async () => {
     const config = {
       github: "https://github.com/mock-company/mock-repository",
       githubAPI: `${window.location.origin}/tests/data`,

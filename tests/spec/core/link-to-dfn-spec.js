@@ -2,7 +2,7 @@
 describe("Core — Link to definitions", () => {
   afterAll(flushIframes);
 
-  it("removes non-alphanum chars from fragment components", async () => {
+  test("removes non-alphanum chars from fragment components", async () => {
     const bodyText = `
       <section>
         <h2>Test section</h2>
@@ -20,7 +20,7 @@ describe("Core — Link to definitions", () => {
     expect(doc.getElementById(decodedHash.slice(1))).toBeTruthy();
   });
 
-  it("links to IDL definitions and wraps in code if needed", async () => {
+  test("links to IDL definitions and wraps in code if needed", async () => {
     const bodyText = `
       <section data-link-for="Request">
         <h2><dfn>Request</dfn> interface</h2>
@@ -45,7 +45,7 @@ describe("Core — Link to definitions", () => {
     expect(noCodeWrap.textContent).toEqual("the request interface");
   });
 
-  it("checks for duplicate definitions", async () => {
+  test("checks for duplicate definitions", async () => {
     const bodyText = `
       <section>
         <h2>Test Section</h2>
@@ -77,7 +77,7 @@ describe("Core — Link to definitions", () => {
     expect(dfn3.title).toBe("test1");
   });
 
-  it("should not have data-dfn-for if not an IDL definition", async () => {
+  test("should not have data-dfn-for if not an IDL definition", async () => {
     const bodyText = `
       <section>
         <h2>Test Section</h2>
@@ -92,7 +92,7 @@ describe("Core — Link to definitions", () => {
     expect(dfn.dataset.dfnFor).toBeUndefined();
   });
 
-  it("should get ID from the first match", async () => {
+  test("should get ID from the first match", async () => {
     const bodyText = `
       <section>
         <h2>Test Section</h2>
@@ -109,7 +109,7 @@ describe("Core — Link to definitions", () => {
     expect(dfn.id).toBe("dfn-test2");
   });
 
-  it("prefers data-lt over text content", async () => {
+  test("prefers data-lt over text content", async () => {
     const bodyText = `
       <section>
         <h2>Test Section</h2>

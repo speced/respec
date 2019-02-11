@@ -1,7 +1,7 @@
 "use strict";
 describe("Core - Markdown", () => {
   afterAll(flushIframes);
-  it("processes standard markdown content", async () => {
+  test("processes standard markdown content", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}\n\nFoo\n===\n`,
@@ -16,7 +16,7 @@ describe("Core - Markdown", () => {
     expect(foo.textContent).toEqual("1. Foo");
   });
 
-  it("processes markdown inside of sections", async () => {
+  test("processes markdown inside of sections", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<section>\nFoo\n===\n</section>`,
@@ -28,7 +28,7 @@ describe("Core - Markdown", () => {
     expect(foo.textContent).toEqual("1. Foo");
   });
 
-  it("processes markdown inside of notes, issues and reqs.", async () => {
+  test("processes markdown inside of notes, issues and reqs.", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}
@@ -45,7 +45,7 @@ describe("Core - Markdown", () => {
     expect(doc.querySelector(".issue p em")).toBeTruthy();
   });
 
-  it("removes left padding before processing markdown content", async () => {
+  test("removes left padding before processing markdown content", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}\n
@@ -68,7 +68,7 @@ describe("Core - Markdown", () => {
     expect(nestedLi.textContent).toEqual("nested list item");
   });
 
-  it("assigns unique ids to headers", async () => {
+  test("assigns unique ids to headers", async () => {
     const body = `
     <section data-format="markdown" id="test-section">
       Section title
@@ -98,57 +98,60 @@ describe("Core - Markdown", () => {
     }
   });
 
-  it("structures content in nested sections with appropriate titles", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
+  test(
+    "structures content in nested sections with appropriate titles",
+    async () => {
+      const ops = {
+        config: makeBasicConfig(),
+        body: `${makeDefaultBody()}
 
-        Foo
-        ===
+          Foo
+          ===
 
-        Bar
-        ---
+          Bar
+          ---
 
-        Baz
-        ---
+          Baz
+          ---
 
-        ### Foobar ###
+          ### Foobar ###
 
-        #### Foobaz ####
+          #### Foobaz ####
 
-        Zing
-        ----
+          Zing
+          ----
 
-        `,
-    };
-    ops.config.format = "markdown";
-    const doc = await makeRSDoc(ops);
-    const foo = doc.querySelector("#foo h2");
-    expect(foo.textContent).toEqual("1. Foo");
-    expect(foo.parentElement.localName).toEqual("section");
+          `,
+      };
+      ops.config.format = "markdown";
+      const doc = await makeRSDoc(ops);
+      const foo = doc.querySelector("#foo h2");
+      expect(foo.textContent).toEqual("1. Foo");
+      expect(foo.parentElement.localName).toEqual("section");
 
-    const bar = doc.querySelector("#bar h3");
-    expect(bar.textContent).toEqual("1.1 Bar");
-    expect(bar.parentElement.localName).toEqual("section");
+      const bar = doc.querySelector("#bar h3");
+      expect(bar.textContent).toEqual("1.1 Bar");
+      expect(bar.parentElement.localName).toEqual("section");
 
-    const baz = doc.querySelector("#baz h3");
-    expect(baz.textContent).toEqual("1.2 Baz");
-    expect(baz.parentElement.localName).toEqual("section");
+      const baz = doc.querySelector("#baz h3");
+      expect(baz.textContent).toEqual("1.2 Baz");
+      expect(baz.parentElement.localName).toEqual("section");
 
-    const foobar = doc.querySelector("#foobar h4");
-    expect(foobar.textContent).toEqual("1.2.1 Foobar");
-    expect(foobar.parentElement.localName).toEqual("section");
+      const foobar = doc.querySelector("#foobar h4");
+      expect(foobar.textContent).toEqual("1.2.1 Foobar");
+      expect(foobar.parentElement.localName).toEqual("section");
 
-    const foobaz = doc.querySelector("#foobaz h5");
-    expect(foobaz.textContent).toEqual("1.2.1.1 Foobaz");
-    expect(foobaz.parentElement.localName).toEqual("section");
+      const foobaz = doc.querySelector("#foobaz h5");
+      expect(foobaz.textContent).toEqual("1.2.1.1 Foobaz");
+      expect(foobaz.parentElement.localName).toEqual("section");
 
-    const zing = doc.querySelector("#zing h3");
-    expect(zing.textContent).toEqual("1.3 Zing");
-    expect(zing.parentElement.localName).toEqual("section");
-  });
+      const zing = doc.querySelector("#zing h3");
+      expect(zing.textContent).toEqual("1.3 Zing");
+      expect(zing.parentElement.localName).toEqual("section");
+    }
+  );
 
-  it("gracefully handles jumps in nested headers", async () => {
+  test("gracefully handles jumps in nested headers", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}\n\nFoo\n===\n\nBar\n---\n\nBaz\n===\n\n### Foobar ###\n\n`,
@@ -163,18 +166,21 @@ describe("Core - Markdown", () => {
     expect(baz.parentElement.contains(foobar)).toBeTruthy();
   });
 
-  it("nests sections according to their first header, if present", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n===\n</section>\n`,
-    };
-    ops.config.format = "markdown";
-    const doc = await makeRSDoc(ops);
-    const bar = doc.getElementById("bar");
-    expect(bar.textContent).toEqual("2. Bar");
-  });
+  test(
+    "nests sections according to their first header, if present",
+    async () => {
+      const ops = {
+        config: makeBasicConfig(),
+        body: `${makeDefaultBody()}\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n===\n</section>\n`,
+      };
+      ops.config.format = "markdown";
+      const doc = await makeRSDoc(ops);
+      const bar = doc.getElementById("bar");
+      expect(bar.textContent).toEqual("2. Bar");
+    }
+  );
 
-  it("nests sections according to their headers", async () => {
+  test("nests sections according to their headers", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}\n\nFoo\n===\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n`,
@@ -187,39 +193,42 @@ describe("Core - Markdown", () => {
     expect(foo.parentElement.contains(bar)).toBeTruthy();
   });
 
-  it("shouldn't nest content following a section inside of said section", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
+  test(
+    "shouldn't nest content following a section inside of said section",
+    async () => {
+      const ops = {
+        config: makeBasicConfig(),
+        body: `${makeDefaultBody()}
 
-        Foo
-        ===
-        some text
+          Foo
+          ===
+          some text
 
-        <section>
+          <section>
 
-        Bar
-        ---
+          Bar
+          ---
 
-        </section>
+          </section>
 
-        Baz
-        ===
+          Baz
+          ===
 
-        some text
+          some text
 
-        `,
-    };
-    ops.config.format = "markdown";
-    const doc = await makeRSDoc(ops);
-    const baz = doc.querySelector("#baz h2");
-    expect(baz.textContent).toEqual("2. Baz");
-    const bar = doc.querySelector("#bar h3");
-    expect(bar.parentElement.contains(baz)).toBeFalsy();
-    expect(baz.parentElement.contains(bar)).toBeFalsy();
-  });
+          `,
+      };
+      ops.config.format = "markdown";
+      const doc = await makeRSDoc(ops);
+      const baz = doc.querySelector("#baz h2");
+      expect(baz.textContent).toEqual("2. Baz");
+      const bar = doc.querySelector("#bar h3");
+      expect(bar.parentElement.contains(baz)).toBeFalsy();
+      expect(baz.parentElement.contains(bar)).toBeFalsy();
+    }
+  );
 
-  it("shouldn't nest sections with a top level header", async () => {
+  test("shouldn't nest sections with a top level header", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}\n\nFoo\n---\n\nsome text\n\n<section>\n\nBar\n---\n</section>\n`,
@@ -231,7 +240,7 @@ describe("Core - Markdown", () => {
     expect(doc.body.contains(bar)).toBeTruthy();
   });
 
-  it("shouldn't nest sections with no headers at all", async () => {
+  test("shouldn't nest sections with no headers at all", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}\n\nFoo\n===\n\nsome text\n\n<section id=bar>no header</section>\n`,
@@ -245,7 +254,7 @@ describe("Core - Markdown", () => {
   });
 
   describe("nolinks options", () => {
-    it("automatically links URLs in pre when missing (smoke test)", async () => {
+    test("automatically links URLs in pre when missing (smoke test)", async () => {
       const ops = {
         config: makeBasicConfig(),
         body: `${makeDefaultBody()}
@@ -263,7 +272,7 @@ describe("Core - Markdown", () => {
       expect(anchors[1].href).toEqual("http://no-links-bar.com/");
     });
 
-    it("replaces HTMLAnchors when present", async () => {
+    test("replaces HTMLAnchors when present", async () => {
       const ops = {
         config: makeBasicConfig(),
         body: `${makeDefaultBody()}
@@ -285,7 +294,7 @@ describe("Core - Markdown", () => {
       ).toBeFalsy();
     });
 
-    it("handles quoted elements, including entity quotes", async () => {
+    test("handles quoted elements, including entity quotes", async () => {
       const ops = {
         config: makeBasicConfig(),
         body: `${makeDefaultBody()}<p id='test-text1'>test1 text &quot;<code>inner text</code>".</p>
@@ -306,38 +315,41 @@ describe("Core - Markdown", () => {
     });
   });
   describe("data-format=markdown", () => {
-    it("replaces processes data-format=markdown sections, but leaves other sections alone", async () => {
-      const ops = {
-        config: makeBasicConfig(),
-        body: `${makeDefaultBody()}
-          <section id=markdown1 data-format=markdown>
-            ## this is a h2
-            This is a paragraph with \`code\`.
+    test(
+      "replaces processes data-format=markdown sections, but leaves other sections alone",
+      async () => {
+        const ops = {
+          config: makeBasicConfig(),
+          body: `${makeDefaultBody()}
+            <section id=markdown1 data-format=markdown>
+              ## this is a h2
+              This is a paragraph with \`code\`.
 
-            ### heading 3
-            This is another paragraph.
+              ### heading 3
+              This is another paragraph.
 
-            ### another h3
-            This is another paragraph.
-          </section>
-          <section id=dontTouch>
-            ## this should not change
-          </section>
-          `,
-      };
-      const doc = await makeRSDoc(ops);
-      const headings = Array.from(
-        doc.querySelectorAll("#markdown1 h2, #markdown1 h3")
-      );
-      expect(headings.length).toEqual(3);
-      const [h2, h3, anotherH3] = headings;
-      expect(h2.localName).toEqual("h2");
-      expect(h3.localName).toEqual("h3");
-      expect(anotherH3.localName).toEqual("h3");
-      expect(anotherH3.textContent.trim()).toEqual("1.2 another h3");
-      expect(doc.querySelector("#markdown1 code")).toBeTruthy();
-      const dontChange = doc.getElementById("dontTouch").textContent.trim();
-      expect(dontChange).toEqual("## this should not change");
-    });
+              ### another h3
+              This is another paragraph.
+            </section>
+            <section id=dontTouch>
+              ## this should not change
+            </section>
+            `,
+        };
+        const doc = await makeRSDoc(ops);
+        const headings = Array.from(
+          doc.querySelectorAll("#markdown1 h2, #markdown1 h3")
+        );
+        expect(headings.length).toEqual(3);
+        const [h2, h3, anotherH3] = headings;
+        expect(h2.localName).toEqual("h2");
+        expect(h3.localName).toEqual("h3");
+        expect(anotherH3.localName).toEqual("h3");
+        expect(anotherH3.textContent.trim()).toEqual("1.2 another h3");
+        expect(doc.querySelector("#markdown1 code")).toBeTruthy();
+        const dontChange = doc.getElementById("dontTouch").textContent.trim();
+        expect(dontChange).toEqual("## this should not change");
+      }
+    );
   });
 });

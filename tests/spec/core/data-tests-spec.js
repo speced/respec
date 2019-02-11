@@ -41,15 +41,15 @@ describe("Core — data-tests attribute", () => {
     doc = await makeRSDoc(ops);
   });
   afterAll(flushIframes);
-  it("deletes the data-tests attribute after processing", () => {
+  test("deletes the data-tests attribute after processing", () => {
     const testable = doc.getElementById("testable");
     expect(testable.hasAttribute("data-tests")).toBe(false);
   });
   describe("generated details element", () => {
-    it("gets generated and added", () => {
+    test("gets generated and added", () => {
       expect(doc.querySelector("#testable > details")).toBeTruthy();
     });
-    it(`includes the css classes`, () => {
+    test(`includes the css classes`, () => {
       expect(
         doc.querySelector("#testable > details.respec-tests-details")
       ).toBeTruthy();
@@ -59,7 +59,7 @@ describe("Core — data-tests attribute", () => {
     });
   });
   describe("generated summary element", () => {
-    it(`lists the number of tests in the summary`, () => {
+    test(`lists the number of tests in the summary`, () => {
       const { textContent } = doc.querySelector(
         "#testable > details > summary"
       );
@@ -67,11 +67,11 @@ describe("Core — data-tests attribute", () => {
     });
   });
   describe("generated test list", () => {
-    it(`adds tests into an unordered list`, () => {
+    test(`adds tests into an unordered list`, () => {
       const ul = doc.querySelector("#testable > .respec-tests-details > ul");
       expect(ul).toBeTruthy();
     });
-    it(`links the tests to the test site, resolved as proper URLs`, () => {
+    test(`links the tests to the test site, resolved as proper URLs`, () => {
       const items = Array.from(
         doc.querySelectorAll("#testable > .respec-tests-details > ul > li > a")
       );
@@ -81,7 +81,7 @@ describe("Core — data-tests attribute", () => {
         expect(pathname.endsWith(`test${i}.html`)).toBe(true);
       });
     });
-    it(`adds emojis for secure tests`, () => {
+    test(`adds emojis for secure tests`, () => {
       const li = doc.querySelector("#metadata-tests ul>li:nth-child(1)");
       const [fileElement, secureIconElement] = li.children;
 
@@ -100,7 +100,7 @@ describe("Core — data-tests attribute", () => {
       const spanTitle = secureIconElement.getAttribute("title");
       expect(spanTitle).toEqual("Test requires HTTPS");
     });
-    it(`adds emojis for manual tests`, () => {
+    test(`adds emojis for manual tests`, () => {
       const li = doc.querySelector("#metadata-tests ul>li:nth-child(2)");
       const [fileElement, manualIconElement] = li.children;
 
@@ -119,7 +119,7 @@ describe("Core — data-tests attribute", () => {
       const spanTitle = manualIconElement.getAttribute("title");
       expect(spanTitle).toEqual("Manual test");
     });
-    it(`adds emojis for secure manual tests`, () => {
+    test(`adds emojis for secure manual tests`, () => {
       const li = doc.querySelector("#metadata-tests ul>li:nth-child(3)");
       const [fileElement, secureIconElement, manualIconElement] = li.children;
 
@@ -151,7 +151,7 @@ describe("Core — data-tests attribute", () => {
     });
   });
   describe("duplicate test removal", () => {
-    it("checks for and removes duplicate links", () => {
+    test("checks for and removes duplicate links", () => {
       const items = Array.from(
         doc.querySelectorAll(
           "#duplicates > .respec-tests-details > ul > li > a"

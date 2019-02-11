@@ -1,15 +1,11 @@
 "use strict";
+import { rule } from  '../../../../src/core/linter-rules/no-headingless-sections.js';
 describe("Core Linter Rule - 'no-headingless-sections'", () => {
   const ruleName = "no-headingless-sections";
   const config = {
     lint: { [ruleName]: true },
   };
-  let rule;
-  beforeAll(async () => {
-    rule = await new Promise(resolve => {
-      require([`core/linter-rules/${ruleName}`], ({ rule }) => resolve(rule));
-    });
-  });
+
   const doc = document.implementation.createHTMLDocument("test doc");
   beforeEach(() => {
     // Make sure every unordered test get an empty document
@@ -18,7 +14,7 @@ describe("Core Linter Rule - 'no-headingless-sections'", () => {
       doc.body.removeChild(doc.body.firstChild);
     }
   });
-  it("returns error when heading is missing section", async () => {
+  test("returns error when heading is missing section", async () => {
     const section = doc.createElement("section");
     doc.body.appendChild(section);
     const result = await rule.lint(config, doc);
@@ -32,7 +28,7 @@ describe("Core Linter Rule - 'no-headingless-sections'", () => {
     });
     section.remove();
   });
-  it("doesn't complain when sections do have a heading", async () => {
+  test("doesn't complain when sections do have a heading", async () => {
     doc.body.innerHTML = `
         <section>
           <h2>test</h2>
@@ -47,7 +43,7 @@ describe("Core Linter Rule - 'no-headingless-sections'", () => {
     const result = await rule.lint(config, doc);
     expect(result).toBeUndefined();
   });
-  it("complains when a nested section doesn't have a heading", async () => {
+  test("complains when a nested section doesn't have a heading", async () => {
     doc.body.innerHTML = `
         <section>
           <h2>test</h2>

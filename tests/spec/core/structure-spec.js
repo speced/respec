@@ -16,7 +16,7 @@ describe("Core - Structure", () => {
     `<h2>FOUR</h2><section><h2>FIVE</h2><section><h2>SIX</h2><p>[[?DAHUT]]</p><p>[[!HTML5]]</p>` +
     `</section></section></section></section></section></section>`;
 
-  it("should build a ToC with default values", async () => {
+  test("should build a ToC with default values", async () => {
     const ops = {
       config: makeBasicConfig(),
       body,
@@ -40,7 +40,7 @@ describe("Core - Structure", () => {
     );
   });
 
-  it("should not build a ToC with noTOC", async () => {
+  test("should not build a ToC with noTOC", async () => {
     // test with noTOC
     const ops = {
       config: makeBasicConfig(),
@@ -51,22 +51,25 @@ describe("Core - Structure", () => {
     expect(doc.getElementById("toc")).toEqual(null);
   });
 
-  it("should include introductory sections in ToC with tocIntroductory", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body,
-    };
-    ops.config.tocIntroductory = true;
-    const doc = await makeRSDoc(ops);
-    const toc = doc.getElementById("toc");
-    expect(toc.querySelector("h2").textContent).toEqual("Table of Contents");
-    expect(utils.children(toc, "ol > li").length).toEqual(6);
-    expect(toc.querySelectorAll("li").length).toEqual(18);
-    expect(toc.querySelector("ol > li").textContent).toEqual("Abstract");
-    expect(utils.children(toc, "ol > li a[href='#intro']").length).toEqual(1);
-  });
+  test(
+    "should include introductory sections in ToC with tocIntroductory",
+    async () => {
+      const ops = {
+        config: makeBasicConfig(),
+        body,
+      };
+      ops.config.tocIntroductory = true;
+      const doc = await makeRSDoc(ops);
+      const toc = doc.getElementById("toc");
+      expect(toc.querySelector("h2").textContent).toEqual("Table of Contents");
+      expect(utils.children(toc, "ol > li").length).toEqual(6);
+      expect(toc.querySelectorAll("li").length).toEqual(18);
+      expect(toc.querySelector("ol > li").textContent).toEqual("Abstract");
+      expect(utils.children(toc, "ol > li a[href='#intro']").length).toEqual(1);
+    }
+  );
 
-  it("should limit ToC depth with maxTocLevel", async () => {
+  test("should limit ToC depth with maxTocLevel", async () => {
     const ops = {
       config: makeBasicConfig(),
       body,
@@ -98,7 +101,7 @@ describe("Core - Structure", () => {
     );
   });
 
-  it("gives the toc's heading an id", async () => {
+  test("gives the toc's heading an id", async () => {
     const ops = {
       config: makeBasicConfig(),
       body,
@@ -107,7 +110,7 @@ describe("Core - Structure", () => {
     expect(doc.querySelector("#toc > h2").id).toBeTruthy();
   });
 
-  it("should link to the title of the document", async () => {
+  test("should link to the title of the document", async () => {
     const ops = {
       config: makeBasicConfig(),
       body,

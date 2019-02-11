@@ -1,6 +1,6 @@
 describe("Core — data-type attribute", () => {
   afterAll(flushIframes);
-  it("assigns the return type as the type for a method", async () => {
+  test("assigns the return type as the type for a method", async () => {
     const body = `
       <section>
         <h2><dfn>PaymentRequest</dfn></h2>
@@ -30,7 +30,7 @@ describe("Core — data-type attribute", () => {
     expect(returnsVoid.dataset.type).toBe("void");
   });
 
-  it("adds data-type to an interface's attribute definitions", async () => {
+  test("adds data-type to an interface's attribute definitions", async () => {
     const body = `
       <section>
         <h2><dfn>PaymentRequest</dfn></h2>
@@ -94,7 +94,7 @@ describe("Core — data-type attribute", () => {
     expect(onmerchantvalidation.dataset.type).toBe("EventHandler");
   });
 
-  it("adds data-type to an dictionary's member definitions", async () => {
+  test("adds data-type to an dictionary's member definitions", async () => {
     const body = `
       <section>
         <h2><dfn>PaymentMethodData</dfn> dictionary</h2>

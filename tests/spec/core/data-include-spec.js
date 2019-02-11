@@ -5,22 +5,25 @@ describe("Core — Data Include", () => {
   // important should provide more tests
   const url = "/tests/spec/core/includer.html";
 
-  it("includes an external file and remove the data-include attr", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: makeDefaultBody(),
-    };
-    const doc = await makeRSDoc(ops, url);
-    const p = doc.querySelector("#includes > div > p");
-    expect(p).toBeTruthy();
-    expect(p.textContent).toEqual("INCLUDED");
-    const div = doc.querySelector("#includes > div");
-    expect(div.dataset.include).toBe(undefined);
-    expect(div.dataset.includeFormat).toBe(undefined);
-    expect(div.dataset.dontRemove).toBe("pass");
-  });
+  test(
+    "includes an external file and remove the data-include attr",
+    async () => {
+      const ops = {
+        config: makeBasicConfig(),
+        body: makeDefaultBody(),
+      };
+      const doc = await makeRSDoc(ops, url);
+      const p = doc.querySelector("#includes > div > p");
+      expect(p).toBeTruthy();
+      expect(p.textContent).toEqual("INCLUDED");
+      const div = doc.querySelector("#includes > div");
+      expect(div.dataset.include).toBe(undefined);
+      expect(div.dataset.includeFormat).toBe(undefined);
+      expect(div.dataset.dontRemove).toBe("pass");
+    }
+  );
 
-  it("replaces sections when data-include-replace is present", async () => {
+  test("replaces sections when data-include-replace is present", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody(),
@@ -35,7 +38,7 @@ describe("Core — Data Include", () => {
     expect(heading.textContent).toBe("Replacement");
   });
 
-  it("gracefully handles empty data-includes", async () => {
+  test("gracefully handles empty data-includes", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody(),
@@ -46,7 +49,7 @@ describe("Core — Data Include", () => {
     expect(container.textContent).toBe("");
   });
 
-  it("includes text when data-include-format is 'text'", async () => {
+  test("includes text when data-include-format is 'text'", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: makeDefaultBody(),
@@ -57,7 +60,7 @@ describe("Core — Data Include", () => {
     expect(container.textContent).toBe("<p>pass</p>");
   });
 
-  it("includes a URL and processes it as markdown", async () => {
+  test("includes a URL and processes it as markdown", async () => {
     // Data URI encoding of: "## PASS", which markdown converts to a H2 element.
     const ops = {
       config: makeBasicConfig(),

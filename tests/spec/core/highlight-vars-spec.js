@@ -22,7 +22,7 @@ describe("Core - highlightVars", () => {
       </ol>
     </section>`;
 
-  it("toggles highlight class on click", async () => {
+  test("toggles highlight class on click", async () => {
     const ops = makeStandardOps({ highlightVars: true }, testBody);
     const doc = await makeRSDoc(ops);
     const elemVar = doc.getElementById("section1-foo");
@@ -36,7 +36,7 @@ describe("Core - highlightVars", () => {
     expect(doc.querySelectorAll(".respec-hl").length).toBe(0);
   });
 
-  it("removes highlight when clicked outside", async () => {
+  test("removes highlight when clicked outside", async () => {
     const ops = makeStandardOps({ highlightVars: true }, testBody);
     const doc = await makeRSDoc(ops);
 
@@ -47,7 +47,7 @@ describe("Core - highlightVars", () => {
     expect(elemVar.classList.contains("respec-hl")).toBe(false);
   });
 
-  it("highlights variables only in current section", async () => {
+  test("highlights variables only in current section", async () => {
     const ops = makeStandardOps({ highlightVars: true }, testBody);
     const doc = await makeRSDoc(ops);
 

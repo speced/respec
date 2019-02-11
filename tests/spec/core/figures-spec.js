@@ -1,7 +1,7 @@
 "use strict";
 describe("Core - Figures", () => {
   afterAll(flushIframes);
-  it("creates autolinks from the anchor to the figure", async () => {
+  test("creates autolinks from the anchor to the figure", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<figure id='fig'> <img src='img' alt=''>
@@ -26,7 +26,7 @@ describe("Core - Figures", () => {
     expect(anchorFigTitleEmpty.title).toEqual("");
   });
 
-  it("localizes the anchor of figure", async () => {
+  test("localizes the anchor of figure", async () => {
     const ops = {
       config: makeBasicConfig(),
       htmlAttrs: {
@@ -43,7 +43,7 @@ describe("Core - Figures", () => {
     expect(anchorFig.title).toEqual("漢字と仮名のサイズの示し方");
   });
 
-  it("generates table of figures", async () => {
+  test("generates table of figures", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<figure>
@@ -69,7 +69,7 @@ describe("Core - Figures", () => {
     expect(figLinks[1].textContent).toEqual("Figure 2 test 2");
   });
 
-  it("warns when no <figcaption>", async () => {
+  test("warns when no <figcaption>", async () => {
     const ops = {
       config: makeBasicConfig(),
       htmlAttrs: {
@@ -106,7 +106,7 @@ describe("Core - Figures", () => {
       doc = await makeRSDoc(ops);
     });
 
-    it("sets height and width for images with no height and width", async () => {
+    test("sets height and width for images with no height and width", async () => {
       const image = doc.getElementById("image-with-no-dimensions");
       expect(image).toBeTruthy();
       expect(image.hasAttribute("height")).toBeTruthy();
@@ -114,29 +114,38 @@ describe("Core - Figures", () => {
       expect(image.height).toBe(3);
       expect(image.width).toBe(5);
     });
-    it("doesn't change height and width for images with both height and width", async () => {
-      const image = doc.getElementById("image-with-dimensions");
-      expect(image).toBeTruthy();
-      expect(image.hasAttribute("height")).toBeTruthy();
-      expect(image.hasAttribute("width")).toBeTruthy();
-      expect(image.height).toBe(100);
-      expect(image.width).toBe(200);
-    });
-    it("doesn't change height and width for images with height only", async () => {
-      const image = doc.getElementById("image-with-height-only");
-      expect(image).toBeTruthy();
-      expect(image.hasAttribute("height")).toBeTruthy();
-      expect(image.hasAttribute("width")).toBeFalsy();
-      expect(image.height).toBe(100);
-    });
-    it("doesn't change height and width for images with width only", async () => {
-      const image = doc.getElementById("image-with-width-only");
-      expect(image).toBeTruthy();
-      expect(image.hasAttribute("height")).toBeFalsy();
-      expect(image.hasAttribute("width")).toBeTruthy();
-      expect(image.width).toBe(200);
-    });
-    it("doesn't change height and width for images with srcset", async () => {
+    test(
+      "doesn't change height and width for images with both height and width",
+      async () => {
+        const image = doc.getElementById("image-with-dimensions");
+        expect(image).toBeTruthy();
+        expect(image.hasAttribute("height")).toBeTruthy();
+        expect(image.hasAttribute("width")).toBeTruthy();
+        expect(image.height).toBe(100);
+        expect(image.width).toBe(200);
+      }
+    );
+    test(
+      "doesn't change height and width for images with height only",
+      async () => {
+        const image = doc.getElementById("image-with-height-only");
+        expect(image).toBeTruthy();
+        expect(image.hasAttribute("height")).toBeTruthy();
+        expect(image.hasAttribute("width")).toBeFalsy();
+        expect(image.height).toBe(100);
+      }
+    );
+    test(
+      "doesn't change height and width for images with width only",
+      async () => {
+        const image = doc.getElementById("image-with-width-only");
+        expect(image).toBeTruthy();
+        expect(image.hasAttribute("height")).toBeFalsy();
+        expect(image.hasAttribute("width")).toBeTruthy();
+        expect(image.width).toBe(200);
+      }
+    );
+    test("doesn't change height and width for images with srcset", async () => {
       const image = doc.getElementById("image-with-srcset");
       expect(image).toBeTruthy();
       expect(image.hasAttribute("srcset")).toBeTruthy();
@@ -144,7 +153,7 @@ describe("Core - Figures", () => {
       expect(image.hasAttribute("width")).toBeFalsy();
       expect(image.srcset).toBe(imgDataURL);
     });
-    it("doesn't change height and width for images inside picture", async () => {
+    test("doesn't change height and width for images inside picture", async () => {
       const image = doc.getElementById("image-inside-picture");
       expect(image).toBeTruthy();
       expect(image.hasAttribute("height")).toBeFalsy();

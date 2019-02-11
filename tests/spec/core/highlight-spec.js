@@ -2,13 +2,16 @@
 describe("Core — Highlight", () => {
   afterAll(flushIframes);
 
-  it("highlights remote languages not bundled by default with ReSpec", async () => {
-    const doc = await makeRSDoc({}, "spec/core/highlight.html");
-    const span = doc.querySelector("pre.testlang span[class^=hljs]");
-    expect(span.innerText).toBe("funkyFunction");
-  });
+  test(
+    "highlights remote languages not bundled by default with ReSpec",
+    async () => {
+      const doc = await makeRSDoc({}, "spec/core/highlight.html");
+      const span = doc.querySelector("pre.testlang span[class^=hljs]");
+      expect(span.innerText).toBe("funkyFunction");
+    }
+  );
 
-  it("shouldn't highlight idl blocks", async () => {
+  test("shouldn't highlight idl blocks", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}
@@ -25,7 +28,7 @@ describe("Core — Highlight", () => {
     expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
   });
 
-  it("automatically highlights", async () => {
+  test("automatically highlights", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<section>
@@ -44,7 +47,7 @@ describe("Core — Highlight", () => {
     );
   });
 
-  it("shouldn't highlight pre elements when told not to", async () => {
+  test("shouldn't highlight pre elements when told not to", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<section>
@@ -61,7 +64,7 @@ describe("Core — Highlight", () => {
     expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
   });
 
-  it("respects the noHighlightCSS by not highlighting anything", async () => {
+  test("respects the noHighlightCSS by not highlighting anything", async () => {
     const ops = {
       config: Object.assign(makeBasicConfig(), { noHighlightCSS: true }),
       body: `${makeDefaultBody()}<section>

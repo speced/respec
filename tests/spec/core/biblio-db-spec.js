@@ -46,14 +46,14 @@ describe("Core - biblioDB", () => {
   });
 
   describe("ready getter", () => {
-    it("resolves with a IDB database", async () => {
+    test("resolves with a IDB database", async () => {
       const db = await biblioDB.ready;
       expect(db instanceof window.IDBDatabase).toBe(true);
     });
   });
 
   describe("add() method", () => {
-    it("rejects when adding bad types", async () => {
+    test("rejects when adding bad types", async () => {
       try {
         await biblioDB.add("invalid", "bar");
       } catch (err) {
@@ -61,7 +61,7 @@ describe("Core - biblioDB", () => {
       }
     });
 
-    it("rejects when adding empty type", async () => {
+    test("rejects when adding empty type", async () => {
       try {
         await biblioDB.add("", "ref");
       } catch (err) {
@@ -69,7 +69,7 @@ describe("Core - biblioDB", () => {
       }
     });
 
-    it("adds single reference", async () => {
+    test("adds single reference", async () => {
       await biblioDB.add("reference", {
         authors: ["Test Author"],
         href: "https://test/",
@@ -84,7 +84,7 @@ describe("Core - biblioDB", () => {
   });
 
   describe("addAll() method", () => {
-    it("adds both aliases and references", async () => {
+    test("adds both aliases and references", async () => {
       await biblioDB.addAll(data);
       const results = await Promise.all([
         biblioDB.has("alias", "whatwg-dom"),
@@ -96,7 +96,7 @@ describe("Core - biblioDB", () => {
   });
 
   describe("get() method", () => {
-    it("rejects when getting invalid type", async () => {
+    test("rejects when getting invalid type", async () => {
       try {
         await biblioDB.get("invalid", "bar");
       } catch (err) {
@@ -104,7 +104,7 @@ describe("Core - biblioDB", () => {
       }
     });
 
-    it("rejects when id is missing", async () => {
+    test("rejects when id is missing", async () => {
       try {
         await biblioDB.get("invalid");
       } catch (err) {
@@ -112,7 +112,7 @@ describe("Core - biblioDB", () => {
       }
     });
 
-    it("retrieves a reference", async () => {
+    test("retrieves a reference", async () => {
       await biblioDB.add("reference", {
         href: "https://test/",
         title: "PASS",
@@ -124,7 +124,7 @@ describe("Core - biblioDB", () => {
       expect(entry.title).toEqual("PASS");
     });
 
-    it("retrieves an alias", async () => {
+    test("retrieves an alias", async () => {
       await biblioDB.add("alias", {
         id: "ALIAS-GET-TEST",
         aliasOf: "PASS",
@@ -133,7 +133,7 @@ describe("Core - biblioDB", () => {
       expect(entry.aliasOf).toEqual("PASS");
     });
 
-    it("returns null when it can't find an entry", async () => {
+    test("returns null when it can't find an entry", async () => {
       const results = await Promise.all([
         biblioDB.get("reference", "does not exist"),
         biblioDB.get("alias", "does not exist"),
@@ -143,7 +143,7 @@ describe("Core - biblioDB", () => {
   });
 
   describe("has() method", () => {
-    it("rejects on invalid type", async () => {
+    test("rejects on invalid type", async () => {
       try {
         await biblioDB.has("invalid", "bar");
       } catch (err) {
@@ -151,7 +151,7 @@ describe("Core - biblioDB", () => {
       }
     });
 
-    it("rejects when id is missing", async () => {
+    test("rejects when id is missing", async () => {
       try {
         await biblioDB.has("invalid");
       } catch (err) {
@@ -159,7 +159,7 @@ describe("Core - biblioDB", () => {
       }
     });
 
-    it("returns true when entries exist", async () => {
+    test("returns true when entries exist", async () => {
       await Promise.all([
         biblioDB.add("reference", {
           id: "has-ref-test",
@@ -177,7 +177,7 @@ describe("Core - biblioDB", () => {
       expect(results.every(v => v === true)).toBe(true);
     });
 
-    it("returns false when entries don't exist", async () => {
+    test("returns false when entries don't exist", async () => {
       const results = await Promise.all([
         biblioDB.has("reference", "does not exist"),
         biblioDB.has("alias", "does not exist"),
@@ -187,7 +187,7 @@ describe("Core - biblioDB", () => {
   });
 
   describe("isAlias() method", () => {
-    it("rejects if passed a bad id", async () => {
+    test("rejects if passed a bad id", async () => {
       const p1 = biblioDB.isAlias();
       const p2 = biblioDB.isAlias(null);
       const p3 = biblioDB.isAlias("");
@@ -198,7 +198,7 @@ describe("Core - biblioDB", () => {
       ]);
     });
 
-    it("returns true when it is an alias", async () => {
+    test("returns true when it is an alias", async () => {
       await biblioDB.add("alias", {
         aliasOf: "isAlias",
         id: "test-isAlias-pass",
@@ -207,14 +207,14 @@ describe("Core - biblioDB", () => {
       expect(result).toBe(true);
     });
 
-    it("returns false when it is not an alias", async () => {
+    test("returns false when it is not an alias", async () => {
       const result = await biblioDB.isAlias("not an alias");
       expect(result).toBe(false);
     });
   });
 
   describe("find() method", () => {
-    it("rejects if passed a bad id", async () => {
+    test("rejects if passed a bad id", async () => {
       const p1 = biblioDB.find();
       const p2 = biblioDB.find(null);
       const p3 = biblioDB.find("");
@@ -225,7 +225,7 @@ describe("Core - biblioDB", () => {
       ]);
     });
 
-    it("finds a references and resolves aliases", async () => {
+    test("finds a references and resolves aliases", async () => {
       await biblioDB.addAll(data);
       const r1 = await biblioDB.find("DAHU");
       expect(r1.id).toEqual("DAHUT");
@@ -235,7 +235,7 @@ describe("Core - biblioDB", () => {
   });
 
   describe("resolveAlias() method", () => {
-    it("rejects if passed a bad id", async () => {
+    test("rejects if passed a bad id", async () => {
       const p1 = biblioDB.resolveAlias();
       const p2 = biblioDB.resolveAlias(null);
       const p3 = biblioDB.resolveAlias("");
@@ -246,19 +246,22 @@ describe("Core - biblioDB", () => {
       ]);
     });
 
-    it("resolves known aliases or return null when alias is unknown", async () => {
-      await biblioDB.addAll(data);
-      const alias = await biblioDB.resolveAlias("whatwg-dom");
-      expect(alias).toEqual("WHATWG-DOM");
-      const noAlias = await biblioDB.resolveAlias("does not exist");
-      expect(noAlias).toBe(null);
-    });
+    test(
+      "resolves known aliases or return null when alias is unknown",
+      async () => {
+        await biblioDB.addAll(data);
+        const alias = await biblioDB.resolveAlias("whatwg-dom");
+        expect(alias).toEqual("WHATWG-DOM");
+        const noAlias = await biblioDB.resolveAlias("does not exist");
+        expect(noAlias).toBe(null);
+      }
+    );
   });
 
   describe("close() method", () => {});
 
   describe("clear() method", () => {
-    it("clears entire database", async () => {
+    test("clears entire database", async () => {
       await biblioDB.add("reference", {
         title: "will be deleted",
         id: "get-ref-test",

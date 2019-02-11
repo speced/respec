@@ -109,7 +109,7 @@ describe("Core — xref", () => {
     ["EventTarget", "https://dom.spec.whatwg.org/#eventtarget"],
   ]);
 
-  it("does nothing if xref is not enabled", async () => {
+  test("does nothing if xref is not enabled", async () => {
     const body = `<a id="external-link">event handler</a>`;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
@@ -119,7 +119,7 @@ describe("Core — xref", () => {
     expect(link.classList.contains("respec-offending-element")).toBeTruthy();
   });
 
-  it("adds link to unique external terms", async () => {
+  test("adds link to unique external terms", async () => {
     const body = `
       <section>
         <p id="external-link"><a>event handler</a><p>
@@ -138,7 +138,7 @@ describe("Core — xref", () => {
     expect(dfn.classList.contains("respec-offending-element")).toBeFalsy();
   });
 
-  it("shows error if external term doesn't exist", async () => {
+  test("shows error if external term doesn't exist", async () => {
     const body = `<section><a id="external-link">NOT_FOUND</a></section>`;
     const config = { xref: { url: apiURL } };
     const ops = makeStandardOps(config, body);
@@ -150,7 +150,7 @@ describe("Core — xref", () => {
     expect(link.title).toEqual("Error: No matching dfn found.");
   });
 
-  it("uses data-cite to disambiguate (server side)", async () => {
+  test("uses data-cite to disambiguate (server side)", async () => {
     const body = `
       <section id="links" data-cite="service-workers">
         <p><a>fetch</a> is defined 1 time in service-workers and 2 times in fetch.
@@ -182,7 +182,7 @@ describe("Core — xref", () => {
     expect(dfn3.href).toEqual("https://html.spec.whatwg.org/multipage/");
   });
 
-  it("shows error if cannot resolve by data-cite", async () => {
+  test("shows error if cannot resolve by data-cite", async () => {
     const body = `
       <section data-cite="fetch">
         <p><a id="link">fetch</a> twice in fetch spec.</p>
@@ -197,7 +197,7 @@ describe("Core — xref", () => {
     expect(link.title).toEqual("Error: Linking an ambiguous dfn.");
   });
 
-  it("uses data-cite to disambiguate (client side)", async () => {
+  test("uses data-cite to disambiguate (client side)", async () => {
     // https://github.com/w3c/respec/pull/1750
     const body = `
       <section id="test">
@@ -233,7 +233,7 @@ describe("Core — xref", () => {
     expect(five.title).toEqual(`Couldn't find a match for "NOT-FOUND"`);
   });
 
-  it("treats terms as local if empty data-cite on parent", async () => {
+  test("treats terms as local if empty data-cite on parent", async () => {
     const body = `
       <section data-cite="" id="test">
         <p id="local-dfn-1"><dfn>local one</dfn></p>
@@ -270,7 +270,7 @@ describe("Core — xref", () => {
     expect(offendingElements.length).toEqual(0);
   });
 
-  it("ignores terms if local dfn exists", async () => {
+  test("ignores terms if local dfn exists", async () => {
     const body = `
       <section id="test">
         <p id="local-dfn-1"><dfn>local one</dfn></p>
@@ -312,7 +312,7 @@ describe("Core — xref", () => {
     expect(offendingElements.length).toEqual(0);
   });
 
-  it("takes data-lt into account", async () => {
+  test("takes data-lt into account", async () => {
     const body = `
       <section id="test1">
         <a data-lt="list">list stuff</a>
@@ -339,7 +339,7 @@ describe("Core — xref", () => {
     }
   });
 
-  it("takes dfn pluralization into account", async () => {
+  test("takes dfn pluralization into account", async () => {
     const body = `
       <section id="test">
         <dfn class="externalDFN" data-lt="event handler|event handling">
@@ -375,7 +375,7 @@ describe("Core — xref", () => {
     }
   });
 
-  it("uses inline references to provide context", async () => {
+  test("uses inline references to provide context", async () => {
     const body = `
       <section id="test">
         <section>
@@ -422,7 +422,7 @@ describe("Core — xref", () => {
     expect(five.href).toEqual(expectedLink2);
   });
 
-  it("adds normative and informative references", async () => {
+  test("adds normative and informative references", async () => {
     const body = `
       <section class="informative" id="test">
         <section>
@@ -503,7 +503,7 @@ describe("Core — xref", () => {
   });
 
   describe("inline IDL references", () => {
-    it("ignores inlines starting with backslash", async () => {
+    test("ignores inlines starting with backslash", async () => {
       // whitespace inside {{{ }}} doesn't matter
       const body = `<section><p id="test">{{{\\PASS }}}</p></section>`;
       const config = { xref: { url: apiURL } };
@@ -514,7 +514,7 @@ describe("Core — xref", () => {
       expect(el.textContent).toEqual("{{{PASS}}}");
     });
 
-    it("ignores malformed syntax", async () => {
+    test("ignores malformed syntax", async () => {
       const body = `<section><p id="test">{ { { PASS }}}</p></section>`;
       const config = { xref: { url: apiURL } };
       const ops = makeStandardOps(config, body);
@@ -524,7 +524,7 @@ describe("Core — xref", () => {
       expect(el.textContent).toEqual("{ { { PASS }}}");
     });
 
-    it("links inline IDL references", async () => {
+    test("links inline IDL references", async () => {
       const body = `
       <section id="test">
         <p id="link1">{{{ Window }}}</p>
@@ -558,7 +558,7 @@ describe("Core — xref", () => {
       expect(link4.textContent).toEqual("EventTarget");
     });
 
-    it("links methods", async () => {
+    test("links methods", async () => {
       const body = `
       <section id="test">
         <p id="link1">{{{ addEventListener(type, callback) }}}</p>
@@ -601,7 +601,7 @@ describe("Core — xref", () => {
       );
     });
 
-    it("links attributes", async () => {
+    test("links attributes", async () => {
       const body = `
       <section>
         <p id="link1">{{{Window.event}}}</p>
@@ -629,7 +629,7 @@ describe("Core — xref", () => {
       );
     });
 
-    it("links internalSlots", async () => {
+    test("links internalSlots", async () => {
       const body = `
       <section>
         <p><dfn>[[\\type]]</dfn></p>
@@ -651,7 +651,7 @@ describe("Core — xref", () => {
       expect(link2b.href).toEqual(expectedLinks.get("Credential.[[type]]"));
     });
 
-    it("links dictionary members", async () => {
+    test("links dictionary members", async () => {
       const body = `
       <section>
         <p id="link1">{{{ TextDecoderOptions["fatal"] }}}</p>
@@ -669,7 +669,7 @@ describe("Core — xref", () => {
       );
     });
 
-    it("links local definitions first", async () => {
+    test("links local definitions first", async () => {
       const body = `
         <section data-dfn-for="PaymentAddress" data-link-for="PaymentAddress">
           <h2><dfn>PaymentAddress</dfn> interface</h2>
@@ -709,7 +709,7 @@ describe("Core — xref", () => {
     });
   });
 
-  it("caches results and uses cached results when available", async () => {
+  test("caches results and uses cached results when available", async () => {
     const config = { xref: true, localBiblio };
     let cacheKeys;
 

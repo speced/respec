@@ -9,33 +9,39 @@ function makeTest(uri) {
 describe("W3C - SEO", () => {
   afterAll(flushIframes);
 
-  it("defaults to TR as canonical URI", async () => {
+  test("defaults to TR as canonical URI", async () => {
     const test = makeTest("https://www.w3.org/TR/Foo/");
     test(await makeRSDoc(makeStandardOps()));
   });
 
-  it("sets the canonical URI to TR URI when so configured", async () => {
+  test("sets the canonical URI to TR URI when so configured", async () => {
     const test = makeTest("https://www.w3.org/TR/Foo/");
     const ops = makeStandardOps();
     ops.config.canonicalURI = "TR";
     test(await makeRSDoc(ops));
   });
 
-  it("sets the canonical URI to editors draft when so configured", async () => {
-    const test = makeTest("https://foo.com/");
-    const ops = makeStandardOps();
-    ops.config.canonicalURI = "edDraft";
-    test(await makeRSDoc(ops));
-  });
+  test(
+    "sets the canonical URI to editors draft when so configured",
+    async () => {
+      const test = makeTest("https://foo.com/");
+      const ops = makeStandardOps();
+      ops.config.canonicalURI = "edDraft";
+      test(await makeRSDoc(ops));
+    }
+  );
 
-  it("shouldn't set any canonical URI if no shortname is defined", async () => {
-    const ops = makeStandardOps();
-    ops.config.shortName = undefined;
-    const doc = await makeRSDoc(ops);
-    expect(doc.querySelector("link[rel='canonical']")).toEqual(null);
-  });
+  test(
+    "shouldn't set any canonical URI if no shortname is defined",
+    async () => {
+      const ops = makeStandardOps();
+      ops.config.shortName = undefined;
+      const doc = await makeRSDoc(ops);
+      expect(doc.querySelector("link[rel='canonical']")).toEqual(null);
+    }
+  );
 
-  it("sets the canonical URI if explicitly set", async () => {
+  test("sets the canonical URI if explicitly set", async () => {
     const test = makeTest("https://example.com/");
     const ops = makeStandardOps();
     ops.config.canonicalURI = "https://example.com";
@@ -98,7 +104,7 @@ describe("W3C - SEO", () => {
     },
   };
 
-  it("includes basic document information", async () => {
+  test("includes basic document information", async () => {
     const ops = { config, body };
     const doc = await makeRSDoc(ops);
     const script = doc.querySelector("script[type='application/ld+json']");
@@ -123,7 +129,7 @@ describe("W3C - SEO", () => {
     });
   });
 
-  it("describes editors and contributors", async () => {
+  test("describes editors and contributors", async () => {
     const ops = { config, body };
     const doc = await makeRSDoc(ops);
 
@@ -141,7 +147,7 @@ describe("W3C - SEO", () => {
     });
   });
 
-  it("describes contributors", async () => {
+  test("describes contributors", async () => {
     const ops = { config, body };
     const doc = await makeRSDoc(ops);
 
@@ -157,7 +163,7 @@ describe("W3C - SEO", () => {
     });
   });
 
-  it("describes citations", async () => {
+  test("describes citations", async () => {
     const ops = { config, body };
     const doc = await makeRSDoc(ops);
 
@@ -183,7 +189,7 @@ describe("W3C - SEO", () => {
     });
   });
 
-  it("adds an additional copyright holder", async () => {
+  test("adds an additional copyright holder", async () => {
     const ops = {
       config: { ...config, additionalCopyrightHolders: ["ACME"] },
       body,

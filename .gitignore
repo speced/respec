@@ -2,6 +2,7 @@ scratch
 .DS_Store
 *~
 /node_modules
+/coverage
 .htaccess
 examples/touchevents.html
 bevy.json

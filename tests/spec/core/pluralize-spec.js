@@ -1,5 +1,5 @@
 describe("Core - Pluralize", () => {
-  it("adds pluralization when [data-lt] is not specified", async () => {
+  test("adds pluralization when [data-lt] is not specified", async () => {
     const body = `
       <section id="section">
         <dfn>foo</dfn> can be referenced as
@@ -35,7 +35,7 @@ describe("Core - Pluralize", () => {
     ).toBeTruthy();
   });
 
-  it("adds pluralization when [data-lt] is defined", async () => {
+  test("adds pluralization when [data-lt] is defined", async () => {
     const body = `
       <section id="section">
         <dfn data-lt="baz">bars</dfn> can be referenced
@@ -61,7 +61,7 @@ describe("Core - Pluralize", () => {
     expect(ignoredLink.href).toEqual(`${window.location.origin}/PASS`);
   });
 
-  it("handles pluralization when data-plurals are defined", async () => {
+  test("handles pluralization when data-plurals are defined", async () => {
     const body = `
       <section id="test">
         <dfn data-lt="yeast" data-plurals="fungi">fungus</dfn>
@@ -86,7 +86,7 @@ describe("Core - Pluralize", () => {
     ).toBeTruthy();
   });
 
-  it("does nothing if conf.pluralize = false", async () => {
+  test("does nothing if conf.pluralize = false", async () => {
     const body = `
       <section id="section">
         <dfn>foo</dfn> can be referenced
@@ -106,7 +106,7 @@ describe("Core - Pluralize", () => {
     ).toBeTruthy();
   });
 
-  it("does nothing if conf.pluralize is not defined", async () => {
+  test("does nothing if conf.pluralize is not defined", async () => {
     const body = `
       <section id="section">
         <dfn>foo</dfn> can be referenced
@@ -126,7 +126,7 @@ describe("Core - Pluralize", () => {
     ).toBeTruthy();
   });
 
-  it("doesn't pluralize when [data-lt-noDefault] is defined", async () => {
+  test("doesn't pluralize when [data-lt-noDefault] is defined", async () => {
     const body = `
       <section id="section">
         <dfn data-lt="baz" data-lt-noDefault>bar</dfn> can be referenced
@@ -151,95 +151,104 @@ describe("Core - Pluralize", () => {
     ).toBeTruthy();
   });
 
-  it("doesn't mishandle pluralization when both plural and singular <dfn> exists", async () => {
-    const body = `
-      <section id="section">
-        <dfn>bar</dfn>
-        <dfn>bars</dfn>
+  test(
+    "doesn't mishandle pluralization when both plural and singular <dfn> exists",
+    async () => {
+      const body = `
+        <section id="section">
+          <dfn>bar</dfn>
+          <dfn>bars</dfn>
 
-        <dfn>foo</dfn>
-        <dfn data-lt="foos">baz</dfn>
+          <dfn>foo</dfn>
+          <dfn data-lt="foos">baz</dfn>
 
-        <a id="link-to-bar">bar</a>
-        <a id="link-to-bars">bars</a>
-        <a id="link-to-foo">foo</a>
+          <a id="link-to-bar">bar</a>
+          <a id="link-to-bars">bars</a>
+          <a id="link-to-foo">foo</a>
 
-        The following refer to same:
-        <div id="links-to-foos">
-          <a>foos</a>
-          <a>baz</a>
-          <a>bazs</a>
-          <a data-lt="foos">PASS</a>
-          <a data-lt="bazs">PASS</a>
-          <a data-lt="baz">PASS</a>
-        </div>
-      </section>
-    `;
-    const ops = makeStandardOps({ pluralize: true }, body);
-    const doc = await makeRSDoc(ops);
+          The following refer to same:
+          <div id="links-to-foos">
+            <a>foos</a>
+            <a>baz</a>
+            <a>bazs</a>
+            <a data-lt="foos">PASS</a>
+            <a data-lt="bazs">PASS</a>
+            <a data-lt="baz">PASS</a>
+          </div>
+        </section>
+      `;
+      const ops = makeStandardOps({ pluralize: true }, body);
+      const doc = await makeRSDoc(ops);
 
-    const dfnBar = doc.getElementById("dfn-bar");
-    expect(dfnBar).toBeTruthy();
-    const dfnBars = doc.getElementById("dfn-bars");
-    expect(dfnBars).toBeTruthy();
-    const dfnFoo = doc.getElementById("dfn-foo");
-    expect(dfnFoo).toBeTruthy();
-    expect("lt" in dfnFoo.dataset).toBeFalsy();
-    const dfnFoos = doc.getElementById("dfn-foos");
-    expect(dfnFoos).toBeTruthy();
-    expect(dfnFoos.textContent).toEqual("baz");
-    expect(dfnFoos.dataset.lt).toEqual("foos|baz");
-    expect(dfnFoos.dataset.plurals).toEqual("bazs");
+      const dfnBar = doc.getElementById("dfn-bar");
+      expect(dfnBar).toBeTruthy();
+      const dfnBars = doc.getElementById("dfn-bars");
+      expect(dfnBars).toBeTruthy();
+      const dfnFoo = doc.getElementById("dfn-foo");
+      expect(dfnFoo).toBeTruthy();
+      expect("lt" in dfnFoo.dataset).toBeFalsy();
+      const dfnFoos = doc.getElementById("dfn-foos");
+      expect(dfnFoos).toBeTruthy();
+      expect(dfnFoos.textContent).toEqual("baz");
+      expect(dfnFoos.dataset.lt).toEqual("foos|baz");
+      expect(dfnFoos.dataset.plurals).toEqual("bazs");
 
-    const linkToBar = doc.getElementById("link-to-bar");
-    const linkToBars = doc.getElementById("link-to-bars");
-    const linkToFoo = doc.getElementById("link-to-foo");
-    const linksToFoos = [...doc.querySelectorAll("#links-to-foos a")];
-    expect(linkToBar.getAttribute("href")).toEqual("#dfn-bar");
-    expect(linkToBars.getAttribute("href")).toEqual("#dfn-bars");
-    expect(linkToFoo.getAttribute("href")).toEqual("#dfn-foo");
-    expect(linksToFoos.length).toBe(6);
-    expect(
-      linksToFoos.every(el => el.getAttribute("href") === "#dfn-foos")
-    ).toBeTruthy();
-  });
+      const linkToBar = doc.getElementById("link-to-bar");
+      const linkToBars = doc.getElementById("link-to-bars");
+      const linkToFoo = doc.getElementById("link-to-foo");
+      const linksToFoos = [...doc.querySelectorAll("#links-to-foos a")];
+      expect(linkToBar.getAttribute("href")).toEqual("#dfn-bar");
+      expect(linkToBars.getAttribute("href")).toEqual("#dfn-bars");
+      expect(linkToFoo.getAttribute("href")).toEqual("#dfn-foo");
+      expect(linksToFoos.length).toBe(6);
+      expect(
+        linksToFoos.every(el => el.getAttribute("href") === "#dfn-foos")
+      ).toBeTruthy();
+    }
+  );
 
-  it("doesn't add pluralization when no <a> references plural term", async () => {
-    const body = `
-      <section id="section">
-        <dfn data-lt="baz">bar</dfn> can be referenced
-        as <a>baz</a> or <a>bar</a>
-      </section>
-    `;
-    const ops = makeStandardOps({ pluralize: true }, body);
-    const doc = await makeRSDoc(ops);
+  test(
+    "doesn't add pluralization when no <a> references plural term",
+    async () => {
+      const body = `
+        <section id="section">
+          <dfn data-lt="baz">bar</dfn> can be referenced
+          as <a>baz</a> or <a>bar</a>
+        </section>
+      `;
+      const ops = makeStandardOps({ pluralize: true }, body);
+      const doc = await makeRSDoc(ops);
 
-    const dfn = doc.querySelector("#section dfn");
-    expect(dfn.id).toEqual("dfn-baz");
-    const dfnlt = dfn.dataset.lt.split("|").sort();
-    const expectedDfnlt = "bar|baz".split("|"); // no "bars" here
-    expect(dfnlt).toEqual(expectedDfnlt);
-  });
+      const dfn = doc.querySelector("#section dfn");
+      expect(dfn.id).toEqual("dfn-baz");
+      const dfnlt = dfn.dataset.lt.split("|").sort();
+      const expectedDfnlt = "bar|baz".split("|"); // no "bars" here
+      expect(dfnlt).toEqual(expectedDfnlt);
+    }
+  );
 
-  it("doesn't add singularization when no <a> references singular term", async () => {
-    const body = `
-      <section id="section">
-        <dfn data-lt="tables">chairs</dfn> can be referenced
-        as <a>chairs</a> or <a>tables</a>
-      </section>
-    `;
-    const ops = makeStandardOps({ pluralize: true }, body);
-    const doc = await makeRSDoc(ops);
+  test(
+    "doesn't add singularization when no <a> references singular term",
+    async () => {
+      const body = `
+        <section id="section">
+          <dfn data-lt="tables">chairs</dfn> can be referenced
+          as <a>chairs</a> or <a>tables</a>
+        </section>
+      `;
+      const ops = makeStandardOps({ pluralize: true }, body);
+      const doc = await makeRSDoc(ops);
 
-    const dfn = doc.querySelector("#section dfn");
-    expect(dfn.id).toEqual("dfn-tables");
-    const dfnlt = dfn.dataset.lt.split("|").sort();
-    const expectedDfnlt = "chairs|tables".split("|"); // no "table" here
-    expect(dfn.dataset.plurals).toBeUndefined(); // no pluralization
-    expect(dfnlt).toEqual(expectedDfnlt);
-  });
+      const dfn = doc.querySelector("#section dfn");
+      expect(dfn.id).toEqual("dfn-tables");
+      const dfnlt = dfn.dataset.lt.split("|").sort();
+      const expectedDfnlt = "chairs|tables".split("|"); // no "table" here
+      expect(dfn.dataset.plurals).toBeUndefined(); // no pluralization
+      expect(dfnlt).toEqual(expectedDfnlt);
+    }
+  );
 
-  it("doesn't add pluralization with [data-lt-no-plural]", async () => {
+  test("doesn't add pluralization with [data-lt-no-plural]", async () => {
     const body = `
       <section id="section">
         <dfn data-lt-no-plural>baz</dfn> can be referenced

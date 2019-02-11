@@ -58,18 +58,18 @@ describe("W3C — Bibliographic References", () => {
     specRefOk = (await fetch(bibRefsURL, { method: "HEAD" })).ok;
   });
 
-  it("pings biblio service to see if it's running", () => {
+  test("pings biblio service to see if it's running", () => {
     expect(specRefOk).toBeTruthy();
   });
 
-  it("includes a dns-prefetch to bibref server", () => {
+  test("includes a dns-prefetch to bibref server", () => {
     const host = bibRefsURL.host;
     const link = doc.querySelector(`link[rel='dns-prefetch'][href*='${host}']`);
     expect(link).toBeTruthy();
     expect(link.classList.contains("removeOnSave")).toBeTruthy();
   });
 
-  it("displays the publisher when present", () => {
+  test("displays the publisher when present", () => {
     // Make sure the reference is added.
     let ref = doc.querySelector("#bib-testref1 + dd");
     expect(ref).toBeTruthy();
@@ -92,13 +92,13 @@ describe("W3C — Bibliographic References", () => {
     expect(ref.textContent).toMatch(/Publisher Here\.\s/);
   });
 
-  it("resolves a localy-aliased spec", () => {
+  test("resolves a localy-aliased spec", () => {
     const ref = doc.querySelector("#bib-foobarglop + dd");
     expect(ref).toBeTruthy();
     expect(ref.textContent).toMatch(/BARBAR/);
   });
 
-  it("normalizes aliases", async () => {
+  test("normalizes aliases", async () => {
     const body = `
       <p id="refs-dom">[[DOM4]] [[DOM]] [[dom]] [[dom4]]</p>
       <p id="refs-cssom">[[CSSOM-VIEW]] [[cssom-view]] [[cssom-view-1]]</p>
@@ -137,7 +137,7 @@ describe("W3C — Bibliographic References", () => {
     expect(refsLocal[1].href).toEqual("http://test.com/");
   });
 
-  it("sorts references as if they were lowercase", () => {
+  test("sorts references as if they were lowercase", () => {
     const { textContent: first } = doc.querySelector(
       "#normative-references dt:first-of-type"
     );
@@ -148,7 +148,7 @@ describe("W3C — Bibliographic References", () => {
     expect(last).toMatch("[Zzz]");
   });
 
-  it("makes sure that normative references win irrespective of case", () => {
+  test("makes sure that normative references win irrespective of case", () => {
     expect(doc.querySelectorAll("#bib-dom").length).toBe(1);
     const domRef = doc.getElementById("bib-dom");
     expect(domRef.closest("section").id).toBe("normative-references");
@@ -159,7 +159,7 @@ describe("W3C — Bibliographic References", () => {
     expect(fetchRef.textContent.trim()).toBe("[fetch]");
   });
 
-  it("shows error if reference doesn't exist", async () => {
+  test("shows error if reference doesn't exist", async () => {
     const body = `<p id="bad-ref">[[bad-ref]]`;
     const ops = makeStandardOps({ localBiblio }, body);
     const doc = await makeRSDoc(ops);
@@ -172,7 +172,7 @@ describe("W3C — Bibliographic References", () => {
     expect(badRef.textContent).toEqual("Reference not found.");
   });
 
-  it("uses cached results from IDB", async () => {
+  test("uses cached results from IDB", async () => {
     const body = `<p id="test">[[dom]] [[DOM4]] [[DOM]] [[dom4]]</p>`;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
@@ -187,7 +187,7 @@ describe("W3C — Bibliographic References", () => {
     expect(refs[0].textContent).toEqual("[dom]");
   });
 
-  it("fetches fresh results from specref", async () => {
+  test("fetches fresh results from specref", async () => {
     const { biblioDB } = await new Promise(resolve => {
       require(["core/biblio-db"], resolve);
     });

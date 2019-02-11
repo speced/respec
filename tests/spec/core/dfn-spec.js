@@ -1,7 +1,7 @@
 "use strict";
 describe("Core — Definitions", () => {
   afterAll(flushIframes);
-  it("processes definitions", async () => {
+  test("processes definitions", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<section id='dfn'><dfn>text</dfn><a>text</a></section>`,
@@ -12,7 +12,7 @@ describe("Core — Definitions", () => {
     expect(sec.querySelector("a").getAttribute("href")).toEqual("#dfn-text");
   });
 
-  it("makes links <code> when their definitions are <code>", async () => {
+  test("makes links <code> when their definitions are <code>", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<section id='dfn'>
@@ -40,7 +40,7 @@ describe("Core — Definitions", () => {
     expect(anchors[3].childNodes[0].nodeName).toEqual("#text");
   });
 
-  it("links <code> for IDL, but not when text doesn't match", async () => {
+  test("links <code> for IDL, but not when text doesn't match", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}
@@ -60,7 +60,7 @@ describe("Core — Definitions", () => {
     expect(t2.querySelector("a").getAttribute("href")).toEqual("#idl-def-test");
   });
 
-  it("processes aliases", async () => {
+  test("processes aliases", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<section id='dfn'>

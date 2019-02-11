@@ -5,9 +5,10 @@
     "node": true,
     "jquery": true,
     "amd": true,
-    "worker": true
+    "worker": true,
+    "jest/globals": true
   },
-  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "extends": ["eslint:recommended", "plugin:prettier/recommended", "airbnb-base", "plugin:jest/recommended"],
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2019
@@ -43,5 +44,5 @@
     "pickRandomsFromList": true,
     "respecConfig": true
   },
-  "plugins": ["prettier"]
+  "plugins": ["prettier", "import", "jest"]
 }

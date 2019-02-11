@@ -17,7 +17,7 @@ describe("Core - exporter", () => {
     return exportedDoc;
   }
 
-  it("removes .removeOnSave elements", async () => {
+  test("removes .removeOnSave elements", async () => {
     const ops = makeStandardOps();
     ops.body = `<div class="removeOnSave" id="this-should-be-removed">this should be removed</div>`;
     const doc = await getExportedDoc(ops);
@@ -26,7 +26,7 @@ describe("Core - exporter", () => {
     expect(doc.querySelectorAll(".removeOnSave").length).toBe(0);
   });
 
-  it("cleans up hyperHTML comments", async () => {
+  test("cleans up hyperHTML comments", async () => {
     const ops = makeStandardOps();
     ops.body = `<div><!---LEAVE%-->PASS<!-- STAY --></div>`;
     const doc = await getExportedDoc(ops);
