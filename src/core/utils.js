@@ -1,5 +1,5 @@
-/*jshint browser: true */
-/*globals console*/
+/* jshint browser: true */
+/* globals console */
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
@@ -265,25 +265,6 @@ export function normalizePadding(text = "") {
   return result;
 }
 
-/**
- * Removes common indents across the IDL texts,
- * so that indentation inside <pre> won't affect the rendered result.
- * @param {string} text IDL text
- */
-export function reindent(text) {
-  if (!text) {
-    return text;
-  }
-  // TODO: use trimEnd when Edge supports it
-  const lines = text.trimRight().split("\n");
-  while (lines.length && !lines[0].trim()) {
-    lines.shift();
-  }
-  const indents = lines.filter(s => s.trim()).map(s => s.search(/[^\s]/));
-  const leastIndent = Math.min(...indents);
-  return lines.map(s => s.slice(leastIndent)).join("\n");
-}
-
 // RESPEC STUFF
 export function removeReSpec(doc) {
   doc.querySelectorAll(".remove, script[data-requiremodule]").forEach(elem => {
@@ -498,7 +479,7 @@ export function humanDate(
     year: "numeric",
     timeZone: "UTC",
   });
-  //date month year
+  // date month year
   return `${day} ${month} ${year}`;
 }
 // given either a Date object or a date in YYYY-MM-DD format,
@@ -736,8 +717,8 @@ export function getTextNodes(el, exclusions = []) {
 export function getDfnTitles(elem, { isDefinition = false } = {}) {
   let titleString = "";
   let normText = "";
-  //data-lt-noDefault avoid using the text content of a definition
-  //in the definition list.
+  // data-lt-noDefault avoid using the text content of a definition
+  // in the definition list.
   if (!elem.hasAttribute("data-lt-noDefault")) {
     normText = norm(elem.textContent).toLowerCase();
   }

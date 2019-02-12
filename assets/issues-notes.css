@@ -28,10 +28,6 @@ div.issue, div.note , div.ednote,  div.warning {
 }
 span.warning { padding: .1em .5em .15em; }
 
-.issue {
-    border-color: #e05252;
-    background: #fbe9e9;
-}
 .issue.closed span.issue-number {
     text-decoration: line-through;
 }

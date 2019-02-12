@@ -30,6 +30,7 @@ define([
   // order is significant
   "./core/base-runner",
   "./core/ui",
+  "./core/reindent",
   "./core/location-hash",
   "./core/l10n",
   "./w3c/defaults",
@@ -76,7 +77,7 @@ define([
   "./core/list-sorter",
   "./core/highlight-vars",
   "./core/algorithms",
-  /*Linter must be the last thing to run*/
+  /* Linter must be the last thing to run */
   "./core/linter",
 ], (runner, { ui }, ...plugins) => {
   ui.show();

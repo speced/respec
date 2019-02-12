@@ -19,9 +19,7 @@ describe("Core Linter Rule - 'no-http-props'", () => {
       },
       config
     );
-    const results = await rule.lint(conf);
-    expect(results.length).toEqual(1);
-    const [result] = results;
+    const result = await rule.lint(conf);
     expect(result).toEqual({
       name: "no-http-props",
       occurrences: 2,
@@ -32,7 +30,7 @@ describe("Core Linter Rule - 'no-http-props'", () => {
     conf.charterDisclosureURI = "https://valid";
     conf.URI = "https://valid";
     const r2 = await rule.lint(conf);
-    expect(r2.length).toEqual(0);
+    expect(r2).toBeUndefined();
   });
   it("checks for prevED, as special case", async () => {
     const conf = Object.assign(
@@ -45,11 +43,10 @@ describe("Core Linter Rule - 'no-http-props'", () => {
       },
       config
     );
-    const results = await rule.lint(conf);
-    const [result] = results;
+    const result = await rule.lint(conf);
     expect(result.howToFix.includes("prevED")).toBe(true);
     conf.prevED = "https://valid-now";
-    const [r2] = await rule.lint(conf);
+    const r2 = await rule.lint(conf);
     expect(r2.howToFix.includes("prevED")).toBe(false);
   });
   it("flags well-known props as invalid, when invalid URLs are present", async () => {
@@ -68,9 +65,7 @@ describe("Core Linter Rule - 'no-http-props'", () => {
       },
       config
     );
-    const results = await rule.lint(conf);
-    const [result] = results;
-    const { howToFix } = result;
+    const { howToFix } = await rule.lint(conf);
     expect(howToFix.includes("charterDisclosureURI")).toBe(true);
     expect(howToFix.includes("edDraftURI")).toBe(true);
     expect(howToFix.includes("implementationReportURI")).toBe(true);
@@ -98,8 +93,8 @@ describe("Core Linter Rule - 'no-http-props'", () => {
       },
       config
     );
-    const results = await rule.lint(conf);
-    expect(results.length).toBe(0);
+    const result = await rule.lint(conf);
+    expect(result).toBeUndefined();
   });
   it("lints URLs by resolving them as real URLs", async () => {
     const conf = Object.assign(
@@ -110,9 +105,7 @@ describe("Core Linter Rule - 'no-http-props'", () => {
       },
       config
     );
-    const results = await rule.lint(conf);
-    const [result] = results;
-    const { howToFix } = result;
+    const { howToFix } = await rule.lint(conf);
     expect(howToFix.includes("someRelativeURI")).toBe(true);
     expect(howToFix.includes("somePathURI")).toBe(true);
     expect(howToFix.includes("someControlURI")).toBe(false);
