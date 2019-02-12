@@ -1,5 +1,5 @@
 /**
- * Linter Rule "check-charset".
+ * Linter rule "check-charset".
  *
  * Checks whether the document has `<meta charset="utf-8">` properly.
  */
