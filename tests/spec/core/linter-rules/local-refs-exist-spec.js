@@ -1,12 +1,17 @@
 "use strict";
-import { rule } from  '../../../../src/core/linter-rules/local-refs-exist.js';
 describe("Core Linter Rule - 'local-refs-exist'", () => {
   const config = {
     lint: {
       "local-refs-exist": true,
     },
   };
-
+  let rule;
+  beforeAll(async () => {
+    rule = await new Promise(resolve => {
+      require(["core/linter-rules/local-refs-exist"], ({ rule }) =>
+        resolve(rule));
+    });
+  });
   const doc = document.implementation.createHTMLDocument("test doc");
   beforeEach(() => {
     // Make sure every unordered test get an empty document
@@ -16,7 +21,7 @@ describe("Core Linter Rule - 'local-refs-exist'", () => {
     }
   });
 
-  test("returns error when a link is broken", async () => {
+  it("returns error when a link is broken", async () => {
     doc.body.innerHTML = `
       <section id="ID">M/section>
       <a href="#ID">PASS</a>
@@ -33,7 +38,7 @@ describe("Core Linter Rule - 'local-refs-exist'", () => {
     expect(hash).toEqual("#ID-NOT-EXIST");
   });
 
-  test("doesn't complain when all links are fine", async () => {
+  it("doesn't complain when all links are fine", async () => {
     doc.body.innerHTML = `
       <section id="ID">PASS</section>
       <a href="#ID">PASS</a>
@@ -42,7 +47,7 @@ describe("Core Linter Rule - 'local-refs-exist'", () => {
     expect(result).toBeUndefined();
   });
 
-  test("handles unicode characters in ID", async () => {
+  it("handles unicode characters in ID", async () => {
     doc.body.innerHTML = `
       <section id="přehled">PASS</section>
       <a href="#přehled">PASS</a>

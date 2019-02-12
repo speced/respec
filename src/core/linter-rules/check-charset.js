@@ -18,7 +18,7 @@ const meta = {
 const lang = defaultLang in meta ? defaultLang : "en";
 
 /**
- * Runs Linter Rule.
+ * Runs linter rule.
  *
  * @param {Object} conf The ReSpec config.
  * @param {Document} doc The document to be checked.

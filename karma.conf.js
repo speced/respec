@@ -79,6 +79,7 @@ module.exports = function(config) {
       },
       "tests/spec/SpecHelper.js",
       "tests/test-main.js",
+      "src/**/*.js",
     ],
 
     // list of files to exclude
@@ -101,12 +102,17 @@ module.exports = function(config) {
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {},
+    preprocessors: {
+      // source files, that you wanna generate coverage for
+      // do not include tests or libraries
+      // (these files will be instrumented by Istanbul)
+      'src/**/*.js': "coverage",
+    },
 
     // test results reporter to use
     // possible values: "dots", "progress"
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ["mocha"],
+    reporters: ["mocha", "progess", "coverage", "coveralls"],
 
     // web server port
     port: config.port || 9876,
@@ -136,6 +142,11 @@ module.exports = function(config) {
 
     client: {
       args: ["--grep", config.grep || ""],
+    },
+
+    coverageReporter: {
+      type : 'lcov', // lcov or lcovonly are required for generating lcov.info files needed for coveralls.
+      dir : 'coverage/',
     },
   };
   if (process.env.TRAVIS) {

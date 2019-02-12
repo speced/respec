@@ -1,9 +1,13 @@
-import { rule } from  '../../../../src/core/linter-rules/no-http-props.js';
 describe("Core Linter Rule - 'no-http-props'", () => {
   const ruleName = "no-http-props";
   const config = { lint: { [ruleName]: true } };
-
-  test("checks any prop ending with 'URI' (case sensitive)", async () => {
+  let rule;
+  beforeAll(async () => {
+    rule = await new Promise(resolve => {
+      require([`core/linter-rules/${ruleName}`], ({ rule }) => resolve(rule));
+    });
+  });
+  it("checks any prop ending with 'URI' (case sensitive)", async () => {
     const conf = Object.assign(
       {
         FAIL_uri: "http://fail",
@@ -28,7 +32,7 @@ describe("Core Linter Rule - 'no-http-props'", () => {
     const r2 = await rule.lint(conf);
     expect(r2).toBeUndefined();
   });
-  test("checks for prevED, as special case", async () => {
+  it("checks for prevED, as special case", async () => {
     const conf = Object.assign(
       {
         FAIL_uri: "http://fail",
@@ -45,38 +49,35 @@ describe("Core Linter Rule - 'no-http-props'", () => {
     const r2 = await rule.lint(conf);
     expect(r2.howToFix.includes("prevED")).toBe(false);
   });
-  test(
-    "flags well-known props as invalid, when invalid URLs are present",
-    async () => {
-      const conf = Object.assign(
-        {
-          charterDisclosureURI: "http://invalid",
-          edDraftURI: "http://invalid",
-          implementationReportURI: "http://invalid",
-          previousDiffURI: "http://invalid",
-          previousMaturityURI: "http://invalid",
-          previousURI: "http://invalid",
-          prevRecURI: "http://invalid",
-          testSuiteURI: "http://invalid",
-          wgPatentURI: "http://invalid",
-          wgURI: "http://invalid",
-        },
-        config
-      );
-      const { howToFix } = await rule.lint(conf);
-      expect(howToFix.includes("charterDisclosureURI")).toBe(true);
-      expect(howToFix.includes("edDraftURI")).toBe(true);
-      expect(howToFix.includes("implementationReportURI")).toBe(true);
-      expect(howToFix.includes("previousDiffURI")).toBe(true);
-      expect(howToFix.includes("previousMaturityURI")).toBe(true);
-      expect(howToFix.includes("previousURI")).toBe(true);
-      expect(howToFix.includes("prevRecURI")).toBe(true);
-      expect(howToFix.includes("testSuiteURI")).toBe(true);
-      expect(howToFix.includes("wgPatentURI")).toBe(true);
-      expect(howToFix.includes("wgURI")).toBe(true);
-    }
-  );
-  test("ignores well-known URIs when they are valid", async () => {
+  it("flags well-known props as invalid, when invalid URLs are present", async () => {
+    const conf = Object.assign(
+      {
+        charterDisclosureURI: "http://invalid",
+        edDraftURI: "http://invalid",
+        implementationReportURI: "http://invalid",
+        previousDiffURI: "http://invalid",
+        previousMaturityURI: "http://invalid",
+        previousURI: "http://invalid",
+        prevRecURI: "http://invalid",
+        testSuiteURI: "http://invalid",
+        wgPatentURI: "http://invalid",
+        wgURI: "http://invalid",
+      },
+      config
+    );
+    const { howToFix } = await rule.lint(conf);
+    expect(howToFix.includes("charterDisclosureURI")).toBe(true);
+    expect(howToFix.includes("edDraftURI")).toBe(true);
+    expect(howToFix.includes("implementationReportURI")).toBe(true);
+    expect(howToFix.includes("previousDiffURI")).toBe(true);
+    expect(howToFix.includes("previousMaturityURI")).toBe(true);
+    expect(howToFix.includes("previousURI")).toBe(true);
+    expect(howToFix.includes("prevRecURI")).toBe(true);
+    expect(howToFix.includes("testSuiteURI")).toBe(true);
+    expect(howToFix.includes("wgPatentURI")).toBe(true);
+    expect(howToFix.includes("wgURI")).toBe(true);
+  });
+  it("ignores well-known URIs when they are valid", async () => {
     const conf = Object.assign(
       {
         charterDisclosureURI: "https://valid.com",
@@ -95,7 +96,7 @@ describe("Core Linter Rule - 'no-http-props'", () => {
     const result = await rule.lint(conf);
     expect(result).toBeUndefined();
   });
-  test("lints URLs by resolving them as real URLs", async () => {
+  it("lints URLs by resolving them as real URLs", async () => {
     const conf = Object.assign(
       {
         someRelativeURI: "./foo/bar",
