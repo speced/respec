@@ -30,7 +30,8 @@
     "prefer-template": 2,
     "quotes": 0,
     "semi": ["error", "always"],
-    "sort-imports": 2
+    "sort-imports": 2,
+    "spaced-comment": ["error", "always", { "block": { "balanced": true } }]
   },
   "globals": {
     "flushIframes": true,

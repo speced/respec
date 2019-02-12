@@ -4,7 +4,7 @@
  *
  * For usage, see example a https://github.com/w3c/respec/pull/692
  */
-/*jshint node: true, browser: false*/
+/* jshint node: true, browser: false */
 "use strict";
 const os = require("os");
 const puppeteer = require("puppeteer");

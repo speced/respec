@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Linter rule "no-headingless-sections".
  *
@@ -27,12 +28,17 @@ const hasNoHeading = ({ firstElementChild: elem }) => {
   return elem === null || /^h[1-6]$/.test(elem.localName) === false;
 };
 
+/**
+ * @param {*} conf
+ * @param {Document} doc
+ * @return {import("../../core/LinterRule").LinterResult}
+ */
 function linterFunction(conf, doc) {
   const offendingElements = [...doc.querySelectorAll("section")].filter(
     hasNoHeading
   );
   if (!offendingElements.length) {
-    return [];
+    return;
   }
   return {
     name,

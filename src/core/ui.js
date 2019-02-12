@@ -1,6 +1,6 @@
 // Module core/ui
 // Handles the ReSpec UI
-/*jshint laxcomma:true*/
+/* jshint laxcomma:true */
 // XXX TODO
 //  - look at other UI things to add
 //      - list issues
