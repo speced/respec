@@ -245,15 +245,10 @@ function makeConsoleMsgHandler(page) {
         return;
       }
       const output = `ReSpec ${type}: ${colors.debug(text)}`;
-      if (type === "error") {
-        haltFlags.error = true;
-      }
-      if (type === "warning") {
-        haltFlags.warn = true;
-      }
       switch (type) {
         case "error":
           console.error(colors.error(`😱 ${output}`));
+          haltFlags.error = true;
           break;
         case "warning":
           // Ignore polling of respecDone
@@ -261,6 +256,7 @@ function makeConsoleMsgHandler(page) {
             return;
           }
           console.warn(colors.warn(`🚨 ${output}`));
+          haltFlags.warn = true;
           break;
       }
     });
