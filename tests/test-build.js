@@ -1,5 +1,5 @@
 #!/usr/bin/env mocha
-/*eslint-env node*/
+/* eslint-env node */
 
 "use strict";
 const colors = require("colors");

@@ -41,7 +41,7 @@
  *     </section>
  *
  * The whitespace of pre elements are left alone.
- **/
+ */
 
 import { markdownToHtml } from "./utils";
 export const name = "core/markdown";

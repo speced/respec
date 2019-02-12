@@ -3,8 +3,8 @@
 // Configuration:
 //  - localBiblio: override or supplement the official biblio with your own.
 
-/*jshint jquery: true*/
-/*globals console*/
+/* jshint jquery: true */
+/* globals console */
 import { biblioDB } from "./biblio-db";
 import { createResourceHint } from "./utils";
 import { pub } from "./pubsubhub";
