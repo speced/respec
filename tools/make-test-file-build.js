@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// @ts-check
 
 "use strict";
 const fsp = require("fs-extra");
@@ -6,6 +7,9 @@ const path = require("path");
 const { exec } = require("child_process");
 const testsPath = path.resolve(__dirname, "../tests");
 
+/**
+ * @param {string} files
+ */
 function toJSON(files) {
   const pathMatcher = new RegExp(`${testsPath}/`, "g");
   const paths = files
@@ -30,6 +34,10 @@ run().catch(err => {
   process.exit(1);
 });
 
+/**
+ * @param {string} cmd
+ * @return {Promise<string>}
+ */
 function toExecPromise(cmd) {
   return new Promise((resolve, reject) => {
     const id = setTimeout(() => {

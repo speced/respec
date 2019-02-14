@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// @ts-check
 
 "use strict";
 const colors = require("colors");
@@ -10,10 +11,6 @@ const webpack = require("webpack");
 const { promisify } = require("util");
 const commandLineArgs = require("command-line-args");
 const getUsage = require("command-line-usage");
-colors.setTheme({
-  error: "red",
-  info: "green",
-});
 
 const optionList = [
   {
@@ -64,8 +61,9 @@ const usageSections = [
  * and writes out the result. It also creates the source map file.
  *
  * @private
- * @param  {String} outPath Where to write the output to.
- * @param  {String} version The version of the script.
+ * @param {string} outPath Where to write the output to.
+ * @param {string} version The version of the script.
+ * @param {string} name Profile name
  * @return {Promise} Resolves when done writing the files.
  */
 async function appendBoilerplate(outPath, version, name) {
@@ -99,8 +97,8 @@ const Builder = {
    * Async function runs Requirejs' optimizer to generate the output.
    *
    * using a custom configuration.
-   * @param  {[type]} options [description]
-   * @return {[type]}         [description]
+   * @param {object} options
+   * @param {string} options.name
    */
   async build({ name }) {
     if (!name) {
@@ -109,7 +107,7 @@ const Builder = {
     const buildPath = path.join(__dirname, "../builds");
     const outFile = `respec-${name}.js`;
     const outPath = path.join(buildPath, outFile);
-    const loadingMsg = colors.info(` Generating ${outFile}. Please wait... `);
+    const loadingMsg = colors.green(` Generating ${outFile}. Please wait... `);
     const timer = loading.start(loadingMsg, {
       frames: presets.clock,
       delay: 1,
@@ -117,6 +115,7 @@ const Builder = {
 
     // optimisation settings
     const buildVersion = await this.getRespecVersion();
+    /** @type {import("webpack").Configuration} */
     const config = {
       mode: "production",
       entry: require.resolve("../js/profile-w3c-common.js"),
@@ -141,6 +140,8 @@ const Builder = {
     };
     const buildDir = path.resolve(__dirname, "../builds/");
     const workerDir = path.resolve(__dirname, "../worker/");
+    /** @type {import("webpack").Stats} */
+    // @ts-ignore
     const stats = await promisify(webpack)(config);
     if (stats.hasErrors()) {
       throw new Error(stats.toJson().errors);
@@ -163,7 +164,7 @@ if (require.main === module) {
       parsedArgs = commandLineArgs(optionList);
     } catch (err) {
       console.info(getUsage(usageSections));
-      console.error(colors.error(err.stack));
+      console.error(colors.red(err.stack));
       return process.exit(127);
     }
     if (parsedArgs.help) {
@@ -177,7 +178,7 @@ if (require.main === module) {
     try {
       await Builder.build({ name });
     } catch (err) {
-      console.error(colors.error(err.stack));
+      console.error(colors.red(err.stack));
       return process.exit(1);
     }
     process.exit(0);
