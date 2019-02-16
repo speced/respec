@@ -68,6 +68,7 @@ input.task-list-item-checkbox {
   border-radius: 4px;
   position: relative;
   bottom: 2px;
+  border: none;
 }
 
 .issue a.respec-label-dark {

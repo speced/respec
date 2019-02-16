@@ -241,10 +241,15 @@ function isLight(rgb) {
  */
 function createLabelsGroup(labels, title, repoURL) {
   const labelsGroup = labels.map(label => createLabel(label, repoURL));
+  const labelName = labels.map(label => label.name);
   if (labelsGroup.length) {
     labelsGroup.unshift(document.createTextNode(" "));
   }
-  return hyperHTML`<span style='text-transform: none'>: ${title}${labelsGroup}</span>`;
+  const ariaLabel = `This issue is labelled as ${labelName}`;
+  return hyperHTML`<span
+    style="text-transform: none"
+    aria-label="${ariaLabel}">: ${title}${labelsGroup}
+    </span>`;
 }
 
 /**
