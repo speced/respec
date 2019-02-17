@@ -2,21 +2,21 @@
 <html lang="en" dir="ltr">
 <head>
 
-  
+
     <title>W3C Wicked Cool Stuff Specification</title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-    
-    
-    
-    
-    
+
+
+
+
+
   <link charset="utf-8" type="text/css" rel="stylesheet" href="../css/respec.css"><link charset="utf-8" type="text/css" rel="stylesheet" href="http://www.w3.org/StyleSheets/TR/W3C-WD.css"></head><body><div class="head"><p><a href="http://www.w3.org/"><img src="http://www.w3.org/Icons/w3c_home" alt="W3C" height="48" width="72"></a></p><h1><acronym title="World Wide Web Consortium">W3C</acronym> Wicked Cool Stuff Specification</h1><h2><acronym title="World Wide Web Consortium">W3C</acronym> Working Draft 06 August 2009</h2><dl><dt>This Version:</dt><dd><a href="http://www.w3.org/TR/2009/WD-wicked-cool-20090806/">http://www.w3.org/TR/2009/WD-wicked-cool-20090806/</a></dd><dt>Latest Published Version:</dt><dd><a href="http://www.w3.org/TR/wicked-cool/">http://www.w3.org/TR/wicked-cool/</a></dd><dt>Latest Editor's Draft:</dt><dd><a href="http://dev.w3.org/2009/dap/respec/test-spec/">http://dev.w3.org/2009/dap/respec/test-spec/</a></dd><dt>Previous version:</dt><dd><a href="http://www.w3.org/TR/2009/WD-wicked-cool-20090315/">http://www.w3.org/TR/2009/WD-wicked-cool-20090315/</a></dd><dt>Editors:</dt><dd><a href="http://berjon.com/">Robin Berjon</a>, <a href="http://robineko.com/">Robineko</a></dd><dd>Batman, Outsiders</dd></dl><p class="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2009 <a href="http://www.w3.org/"><acronym title="World Wide Web Consortium">W3C</acronym></a><sup>®</sup> (<a href="http://www.csail.mit.edu/"><acronym title="Massachusetts Institute of Technology">MIT</acronym></a>, <a href="http://www.ercim.org/"><acronym title="European Research Consortium for Informatics and Mathematics">ERCIM</acronym></a>, <a href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. <acronym title="World Wide Web Consortium">W3C</acronym> <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>, <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a> rules apply.</p><hr></div>
     <div class="section" id="abstract"><h2>Abstract</h2>
       This is an example specification used to test, develop, and document the ReSpec.js specification
       publishing system. This really isn't so much a specification as a playground in more ways than one.
     </div><div id="sotd" class="section"><h2>Status of This Document</h2><p><em>This section describes the status of this document at the time of its publication. Other documents may supersede this document. A list of current <acronym title="World Wide Web Consortium">W3C</acronym> publications and the latest revision of this technical report can be found in the <a href="http://www.w3.org/TR/"><acronym title="World Wide Web Consortium">W3C</acronym> technical reports index</a> at http://www.w3.org/TR/.</em></p><p>This document was published by the <a href="http://www.w3.org/2009/dap/">Device APIs and Policy Working Group</a> as a Working Draft. This document is intended to become a <acronym title="World Wide Web Consortium">W3C</acronym> Recommendation. If you wish to make comments regarding this document, please send them to <a href="mailto:public-device-apis@w3.org">public-device-apis@w3.org</a> (<a href="mailto:public-device-apis-request@w3.org?subject=subscribe">subscribe</a>, <a href="http://lists.w3.org/Archives/Public/public-device-apis/">archives</a>). All feedback is welcome.</p><p>Publication as a Working Draft does not imply endorsement by the <acronym title="World Wide Web Consortium">W3C</acronym> Membership. This is a draft document and may be updated, replaced or obsoleted by other documents at any time. It is inappropriate to cite this document as other than work in progress.</p><p>This document was produced by a group operating under the <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/">5 February 2004 <acronym title="World Wide Web Consortium">W3C</acronym> Patent Policy</a>. <acronym title="World Wide Web Consortium">W3C</acronym> maintains a <a href="http://www.w3.org/2004/01/pp-impl/43696/status" rel="disclosure">public list of any patent disclosures</a> made in connection with the deliverables of the group; that page also includes instructions for disclosing a patent. An individual who has actual knowledge of a patent which the individual believes contains <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential">Essential Claim(s)</a> must disclose the information in accordance with <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure">section 6 of the <acronym title="World Wide Web Consortium">W3C</acronym> Patent Policy</a>.</p></div><div class="section" id="toc"><h2 class="introductory">Table of Contents</h2><ul class="toc"><li><a href="#rfc-2119-is-not-optional"><span class="secno">1. </span>RFC 2119 is not <em title="optional" class="rfc2119">optional</em></a></li><li><a href="#small-talk-about-abbreviations"><span class="secno">2. </span>Small Talk about Abbreviations</a></li><li><a href="#a-defining-moment"><span class="secno">3. </span>A Defining Moment</a></li><li><a href="#the-dahut-interface"><span class="secno">4. </span>The <span class="formerLink idlType"><code>Dahut</code></span> interface</a></li><li><ul class="toc"><li><a href="#attributes"><span class="secno">4.1 </span>Attributes</a></li><li><a href="#methods"><span class="secno">4.2 </span>Methods</a></li></ul></li><li><a href="#a-good-reference"><span class="secno">5. </span>A Good Reference</a></li><li><a href="#acknowledgements"><span class="secno">A. </span>Acknowledgements</a></li><li><a href="#references"><span class="secno">B. </span>References</a></li><li><ul class="toc"><li><a href="#normative-references"><span class="secno">B.1 </span>Normative references</a></li><li><a href="#informative-references"><span class="secno">B.2 </span>Informative references</a></li></ul></li></ul></div>
-    
-    
+
+
     <div class="section" id="rfc-2119-is-not-optional">
       <h2><span class="secno">1. </span>RFC 2119 is not <em title="optional" class="rfc2119">optional</em></h2>
       <p>
@@ -33,8 +33,8 @@
         <li>work over element boundaries.</li>
       </ul>
     </div>
-    
-    
+
+
     <div class="section" id="small-talk-about-abbreviations">
       <h2><span class="secno">2. </span>Small Talk about Abbreviations</h2>
       <p>
@@ -48,8 +48,8 @@
         <li><abbr title="seriously">srsly</abbr> and <abbr title="seriously">srsly</abbr></li>
       </ul>
     </div>
-    
-    
+
+
     <div class="section" id="a-defining-moment">
       <h2><span class="secno">3. </span>A Defining Moment</h2>
       <p>
@@ -80,7 +80,7 @@
         with a title</a> works over several lines, just like <a class="internalDFN" href="#dfn-definitions-over-multiple-lines">definitions over multiple lines</a>.
       </p>
     </div>
-    
+
     <div class="section" id="the-dahut-interface">
       <h2><span class="secno">4. </span>The <a class="idlType" href="#idl-inf-Dahut"><code>Dahut</code></a> interface</h2>
       <p>
@@ -107,7 +107,7 @@ interface <span class="idlInterfaceID">Dahut</span> : <span class="idlSuperclass
           Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
         </dd></dl></div>
     </div>
-    
+
     <div class="section" id="a-good-reference">
       <h2><span class="secno">5. </span>A Good Reference</h2>
       <p>
@@ -115,11 +115,11 @@ interface <span class="idlInterfaceID">Dahut</span> : <span class="idlSuperclass
         and even in a normative way [<a href="#bib-REX" rel="biblioentry" class="bibref">REX</a>] or [<a href="#bib-SVGMOBILE12" rel="biblioentry" class="bibref">SVGMOBILE12</a>]. It's all about I18N, [<a href="#bib-ZHMARK" rel="biblioentry" class="bibref">ZHMARK</a>].
       </p>
     </div>
-    
+
     <div id="acknowledgements" class="section">
       <h2><span class="secno">A. </span>Acknowledgements</h2>
       <p>
-        Many thanks to Marcos Cáceres for moral support, and to Bert Bos and Geoffrey Sneddon for their
+        Many thanks to Marcos Cáceres for moral support, and to Bert Bos and Sam Sneddon for their
         tools from which I pilfered joyfully.
       </p>
     </div>
