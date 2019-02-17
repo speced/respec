@@ -101,7 +101,9 @@ function handleIssues(ins, ghIssues, conf) {
         if (ghIssue && ghIssue.state === "closed") {
           div.classList.add("closed");
         }
-        titleParent.append(createLabelsGroup(labels, report.title, repoURL));
+        titleParent.append(
+          createLabelsGroup(conf, labels, report.title, repoURL)
+        );
       }
       let body = inno;
       inno.replaceWith(div);
@@ -239,15 +241,22 @@ function isLight(rgb) {
  * @param {string} title
  * @param {string} repoURL
  */
-function createLabelsGroup(labels, title, repoURL) {
+function createLabelsGroup(conf, labels, title, repoURL) {
   const labelsGroup = labels.map(label => createLabel(label, repoURL));
-  const labelName = labels.map(label => label.name);
+  let labelName = labels.map(label => label.name);
+  const totalLabels = labels.length;
+  const reducer = (string, label, index) => {
+    return index === totalLabels - 1
+      ? `${string} and ${label}`
+      : `${string}, ${label}`;
+  };
+  labelName = labelName.reduce(reducer);
   if (labelsGroup.length) {
     labelsGroup.unshift(document.createTextNode(" "));
   }
   const ariaLabel = `This issue is labelled as ${labelName}`;
   return hyperHTML`<span
-    style="text-transform: none"
+    class="issue-label"
     aria-label="${ariaLabel}">: ${title}${labelsGroup}
     </span>`;
 }
