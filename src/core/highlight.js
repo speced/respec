@@ -26,9 +26,7 @@ export async function run(conf) {
   const highlightables = Array.from(
     document.querySelectorAll("pre:not(.idl):not(.nohighlight), code.highlight")
   );
-  //console.log(highlightables[0].childNodes);
-  // const bache = highlightables.map(element => element.childNodes);
-  // console.log(bache);
+  
   // Nothing to highlight
   if (highlightables.length === 0) {
     codeStyle.remove();
