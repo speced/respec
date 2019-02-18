@@ -292,21 +292,14 @@ async function processResponse(response, issueNumber) {
 
 export async function run(conf) {
   const query = ".issue, .note, .warning, .ednote";
+  const { head: headElem } = document;
   /** @type {NodeListOf<HTMLElement>} */
   const issuesAndNotes = document.querySelectorAll(query);
-  if (!issuesAndNotes.length) {
-    return; // nothing to do.
-  }
-  /** @type {Map<number, GitHubIssue>} */
-  const ghIssues = conf.githubAPI
-    ? await fetchAndStoreGithubIssues(conf)
-    : new Map();
-  const { head: headElem } = document;
+  handleIssues(issuesAndNotes, window.ghIssues, conf);
   headElem.insertBefore(
     hyperHTML`<style>${[css]}</style>`,
     headElem.querySelector("link")
   );
-  handleIssues(issuesAndNotes, ghIssues, conf);
   const ednotes = document.querySelectorAll(".ednote");
   ednotes.forEach(ednote => {
     ednote.classList.remove("ednote");
