@@ -3,6 +3,7 @@
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
+import { lang as docLang } from "./l10n";
 import marked from "marked";
 import { pub } from "./pubsubhub";
 export const name = "core/utils";
@@ -379,19 +380,27 @@ export class IDBKeyVal {
 // Takes an array and returns a string that separates each of its items with the proper commas and
 // "and". The second argument is a mapping function that can convert the items before they are
 // joined
-export function joinAnd(array = [], mapper = item => item) {
+export function joinAnd(array = [], mapper = item => item, lang = docLang) {
   const items = array.map(mapper);
-  switch (items.length) {
-    case 0:
-    case 1: // "x"
-      return items.toString();
-    case 2: // x and y
-      return items.join(" and ");
-    default: {
-      // x, y, and z
-      const str = items.join(", ");
-      const lastComma = str.lastIndexOf(",");
-      return `${str.substr(0, lastComma + 1)} and ${str.slice(lastComma + 2)}`;
+  if (Intl.ListFormat && typeof Intl.ListFormat === "function") {
+    const formatter = new Intl.ListFormat(lang, {
+      style: "long",
+      type: "conjunction",
+    });
+    return formatter.format(items);
+  } else {
+    switch (items.length) {
+      case 0:
+      case 1: // "x"
+        return items.toString();
+      case 2: // x and y
+        return items.join(" and ");
+      default: {
+        // x, y, and z
+        const str = items.join(", ");
+        const lastComma = str.lastIndexOf(",");
+        return `${str.substr(0, lastComma + 1)} and ${str.slice(lastComma + 2)}`;
+      }
     }
   }
 }
