@@ -98,6 +98,10 @@ export function fetchIndex(url, headers) {
   return fetchAll(url.replace(/\{[^}]+\}/, ""), headers);
 }
 
+export async function getArgs(urls, editors, elements, headers){
+  return await Promise.all(urls.map(url => fetch(url, { headers })));
+}
+
 export async function run(conf) {
   const query = ".issue, .note, .warning, .ednote";
   /** @type {NodeListOf<HTMLElement>} */
