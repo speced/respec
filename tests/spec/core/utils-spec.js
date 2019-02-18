@@ -363,11 +363,7 @@ describe("Core - Utils", () => {
   });
 
   describe("joinAnd", () => {
-    it("joins with proper commas and 'and' when Intl.ListFormat is not available", () => {
-      // force Intl.ListFormat to not be a function
-      Intl.ListFormat = jasmine.createSpyObj("fakeObj", ["fakeMethod"]);
-      utils.joinAnd(["x", "x"]);
-      // expect(Intl.ListFormat).toHaveBeenCalled();
+    it("joins with proper commas and 'and'", () => {
       expect(utils.joinAnd([])).toEqual("");
       expect(utils.joinAnd(["x"])).toEqual("x");
       expect(utils.joinAnd(["x", "x"])).toEqual("x and x");
@@ -378,22 +374,6 @@ describe("Core - Utils", () => {
           return str.toUpperCase();
         })
       ).toEqual("X, X, X, and X");
-    });
-    it("joins with proper commas and 'and' when Intl.ListFormat is available", () => {
-      // only for testing purposes, creating a mock Intl.ListFormat as most browsers still don't have it.
-      Intl.ListFormat = jasmine.createSpy("intl() spy").and.callFake(() => {
-        return {
-          format: () => "cat, dog and apple",
-        };
-      });
-      utils.joinAnd(["cat", "dog", "apple"]);
-      expect(Intl.ListFormat).toHaveBeenCalledWith(
-        "en",
-        Object({ style: "long", type: "conjunction" })
-      );
-      expect(utils.joinAnd(["cat", "dog", "apple"])).toEqual(
-        "cat, dog and apple"
-      );
     });
   });
 
