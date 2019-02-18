@@ -97,7 +97,7 @@ module.exports = function(config) {
       "/base/deps/": "/base/js/deps/",
       "/worker/respec-worker.js": "/base/worker/respec-worker.js",
       "/support-files/hljs-testlang.js":
-      "/base/tests/support-files/hljs-testlang.js",
+        "/base/tests/support-files/hljs-testlang.js",
     },
 
     // preprocess matching files before serving them to the browser
