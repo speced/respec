@@ -5,6 +5,7 @@
 // #gh-contributors: people whose PR have been merged.
 // Spec editors get filtered out automatically.
 import { flatten, joinAnd } from "./utils";
+import { getArgs } from "./github-api";
 import { pub } from "./pubsubhub";
 export const name = "core/contrib";
 
@@ -33,7 +34,7 @@ function getHeaders(conf) {
   return headers;
 }
 async function toHTML(urls, editors, element, headers) {
-  const args = await Promise.all(urls.map(url => fetch(url, { headers })));
+  const args = await getArgs(urls, editors, element, headers);
   const names = args
     .map(([user]) => user.name || user.login)
     .filter(name => !editors.includes(name))
