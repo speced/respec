@@ -39,36 +39,7 @@ export async function run(conf) {
   if (!ghCommenters && !ghContributors) {
     return;
   }
-  const headers = {};
-  const { githubAPI, githubUser, githubToken } = conf;
-  if (githubUser && githubToken) {
-    const credentials = btoa(`${githubUser}:${githubToken}`);
-    const Authorization = `Basic ${credentials}`;
-    Object.assign(headers, { Authorization });
-  }
-  if (!githubAPI) {
-    const msg =
-      "Requested list of contributors and/or commenters from GitHub, but " +
-      "[`githubAPI`](https://github.com/w3c/respec/wiki/githubAPI) is not set.";
-    pub("error", msg);
-    return;
-  }
-  const response = await fetch(githubAPI, { headers });
-  if (!response.ok) {
-    const msg =
-      "Error fetching repository information from GitHub. " +
-      `(HTTP Status ${response.status}).`;
-    pub("error", msg);
-    return;
-  }
-  const indexes = await response.json();
-  const { issues_url, issue_comment_url, contributors_url } = indexes;
-
-  const [issues, comments, contributors] = await Promise.all([
-    fetchIndex(issues_url, headers),
-    fetchIndex(issue_comment_url, headers),
-    fetchIndex(contributors_url, headers),
-  ]);
+  const { issues, comments, contributors } = window.ghRepoInfo;
   const editors = conf.editors.map(nameProp);
   const commenterUrls = ghCommenters ? findUserURLs(issues, comments) : [];
   const contributorUrls = ghContributors ? contributors.map(urlProp) : [];
