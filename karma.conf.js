@@ -97,7 +97,7 @@ module.exports = function(config) {
       "/base/deps/": "/base/js/deps/",
       "/worker/respec-worker.js": "/base/worker/respec-worker.js",
       "/support-files/hljs-testlang.js":
-        "/base/tests/support-files/hljs-testlang.js",
+      "/base/tests/support-files/hljs-testlang.js",
     },
 
     // preprocess matching files before serving them to the browser
@@ -106,7 +106,7 @@ module.exports = function(config) {
       // source files, that you wanna generate coverage for
       // do not include tests or libraries
       // (these files will be instrumented by Istanbul)
-      "src/**/*.js": "coverage",
+      "src/**/*.js": ["coverage"],
     },
 
     // test results reporter to use
@@ -155,7 +155,7 @@ module.exports = function(config) {
     options.autoWatch = false;
     options.singleRun = true;
     options.concurrency = 1;
-    options.reporters = ["mocha"];
+    options.reporters = ["mocha", "progress", "coverage", "coveralls"];
     options.browsers = ["ChromeHeadless"];
   }
   config.set(options);

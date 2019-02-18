@@ -72,6 +72,7 @@
     "build:components": "npm run copydeps && node ./tools/build-components.js && npm run babel:build",
     "build": "npm run snyk-protect && npm run build:components",
     "copydeps": "node ./tools/copydeps.js",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
     "karma": "karma start --single-run",
     "lint": "tsc -p src/jsconfig.json && eslint \"src/**/*.js\" \"tests/**/*.js\" tools/*.js js/profile-w3c-common.js",
     "release": "node ./tools/release.js",

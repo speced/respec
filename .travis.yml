@@ -23,3 +23,6 @@ jobs:
     - stage: Run Karma unit tests
       script:
         - travis_retry karma start --single-run --reporters mocha karma.conf.js
+
+after_success:
+  - "npm run coveralls"
