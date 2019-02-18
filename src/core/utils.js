@@ -399,7 +399,9 @@ export function joinAnd(array = [], mapper = item => item, lang = docLang) {
         // x, y, and z
         const str = items.join(", ");
         const lastComma = str.lastIndexOf(",");
-        return `${str.substr(0, lastComma + 1)} and ${str.slice(lastComma + 2)}`;
+        return `${str.substr(0, lastComma + 1)} and ${str.slice(
+          lastComma + 2
+        )}`;
       }
     }
   }

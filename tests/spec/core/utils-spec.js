@@ -387,8 +387,13 @@ describe("Core - Utils", () => {
         };
       });
       utils.joinAnd(["cat", "dog", "apple"]);
-      expect(Intl.ListFormat).toHaveBeenCalled();
-      expect(utils.joinAnd(["cat", "dog", "apple"])).toEqual("cat, dog and apple");
+      expect(Intl.ListFormat).toHaveBeenCalledWith(
+        "en",
+        Object({ style: "long", type: "conjunction" })
+      );
+      expect(utils.joinAnd(["cat", "dog", "apple"])).toEqual(
+        "cat, dog and apple"
+      );
     });
   });
 
