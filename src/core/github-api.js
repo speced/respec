@@ -1,6 +1,4 @@
 import { fetchAndCache } from "./utils";
-import css from "text!../../assets/issues-notes.css";
-import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 export const name = "core/github-api";
 
