@@ -388,21 +388,18 @@ export function joinAnd(array = [], mapper = item => item, lang = docLang) {
       type: "conjunction",
     });
     return formatter.format(items);
-  } else {
-    switch (items.length) {
-      case 0:
-      case 1: // "x"
-        return items.toString();
-      case 2: // x and y
-        return items.join(" and ");
-      default: {
-        // x, y, and z
-        const str = items.join(", ");
-        const lastComma = str.lastIndexOf(",");
-        return `${str.substr(0, lastComma + 1)} and ${str.slice(
-          lastComma + 2
-        )}`;
-      }
+  }
+  switch (items.length) {
+    case 0:
+    case 1: // "x"
+      return items.toString();
+    case 2: // x and y
+      return items.join(" and ");
+    default: {
+      // x, y, and z
+      const str = items.join(", ");
+      const lastComma = str.lastIndexOf(",");
+      return `${str.substr(0, lastComma + 1)} and ${str.slice(lastComma + 2)}`;
     }
   }
 }
