@@ -241,12 +241,12 @@ function isLight(rgb) {
  */
 function createLabelsGroup(labels, title, repoURL) {
   const labelsGroup = labels.map(label => createLabel(label, repoURL));
-  let labelNames = labels.map(label => label.name);
-  labelNames = joinAnd(labelNames);
+  const labelNames = labels.map(label => label.name);
+  const joinedNames = joinAnd(labelNames);
   if (labelsGroup.length) {
     labelsGroup.unshift(document.createTextNode(" "));
   }
-  const ariaLabel = `This issue is labelled as ${labelNames}`;
+  const ariaLabel = `This issue is labelled as ${joinedNames}.`;
   return hyperHTML`<span
     class="issue-label"
     aria-label="${ariaLabel}">: ${title}${labelsGroup}
