@@ -3,6 +3,9 @@
  * so that indentation inside <pre> won't affect the rendered result.
  * @param {string} text IDL text
  */
+
+export const name = "core/reindent";
+
 function reindent(text) {
   if (!text) {
     return text;
