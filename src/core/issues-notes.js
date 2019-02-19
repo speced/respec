@@ -10,7 +10,7 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
-import { addId, fetchAndCache, parents } from "./utils";
+import { addId, fetchAndCache, joinAnd, parents } from "./utils";
 import css from "text!../../assets/issues-notes.css";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
@@ -101,9 +101,7 @@ function handleIssues(ins, ghIssues, conf) {
         if (ghIssue && ghIssue.state === "closed") {
           div.classList.add("closed");
         }
-        titleParent.append(
-          createLabelsGroup(conf, labels, report.title, repoURL)
-        );
+        titleParent.append(createLabelsGroup(labels, report.title, repoURL));
       }
       let body = inno;
       inno.replaceWith(div);
@@ -241,20 +239,14 @@ function isLight(rgb) {
  * @param {string} title
  * @param {string} repoURL
  */
-function createLabelsGroup(conf, labels, title, repoURL) {
+function createLabelsGroup(labels, title, repoURL) {
   const labelsGroup = labels.map(label => createLabel(label, repoURL));
-  let labelName = labels.map(label => label.name);
-  const totalLabels = labels.length;
-  const reducer = (string, label, index) => {
-    return index === totalLabels - 1
-      ? `${string} and ${label}`
-      : `${string}, ${label}`;
-  };
-  labelName = labelName.reduce(reducer);
+  let labelNames = labels.map(label => label.name);
+  labelNames = joinAnd(labelNames);
   if (labelsGroup.length) {
     labelsGroup.unshift(document.createTextNode(" "));
   }
-  const ariaLabel = `This issue is labelled as ${labelName}`;
+  const ariaLabel = `This issue is labelled as ${labelNames}`;
   return hyperHTML`<span
     class="issue-label"
     aria-label="${ariaLabel}">: ${title}${labelsGroup}
