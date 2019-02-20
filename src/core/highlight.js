@@ -58,7 +58,12 @@ export async function run(conf) {
         if (id !== msg.id) {
           return; // not for us!
         }
-        element.innerHTML = value;
+        const codeElements = element.querySelectorAll('code');
+        if(codeElements.length > 0)
+          element.innerHTML = value;
+        else {
+          element.innerHTML = `<code>${value}</code>`;
+        }
         if (element.localName === "pre") {
           element.classList.add("hljs");
         }
