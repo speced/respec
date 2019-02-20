@@ -77,9 +77,12 @@ module.exports = function(config) {
         included: false,
         served: true,
       },
+      {
+        pattern: "src/**/*.js",
+        included: false,
+      },
       "tests/spec/SpecHelper.js",
       "tests/test-main.js",
-      "src/**/*.js",
     ],
 
     // list of files to exclude
@@ -112,7 +115,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: "dots", "progress"
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ["mocha", "coverage", "coveralls"],
+    reporters: ["mocha", "progress", "coverage", "coveralls"],
 
     // web server port
     port: config.port || 9876,
@@ -145,6 +148,7 @@ module.exports = function(config) {
     },
 
     coverageReporter: {
+      includeAllSources: true,
       type: "lcov", // lcov or lcovonly are required for generating lcov.info files needed for coveralls.
       dir: "coverage/",
     },
@@ -155,7 +159,7 @@ module.exports = function(config) {
     options.autoWatch = false;
     options.singleRun = true;
     options.concurrency = 1;
-    options.reporters = ["mocha", "coverage", "coveralls"];
+    options.reporters = ["mocha", "progress", "coverage", "coveralls"];
     options.browsers = ["ChromeHeadless"];
   }
   config.set(options);
