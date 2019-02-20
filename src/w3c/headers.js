@@ -1,7 +1,5 @@
 // @ts-check
-/*jshint
-    forin: false
-*/
+/* jshint forin: false */
 
 // Module w3c/headers
 // Generate the headers material based on the provided configuration.

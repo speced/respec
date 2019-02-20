@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Linter rule "check-internal-slots".
  */
@@ -19,8 +20,9 @@ const lang = defaultLang in meta ? defaultLang : "en";
 
 /**
  * Runs linter rule.
- * @param {Object} config The ReSpec config.
+ * @param {Object} conf The ReSpec config.
  * @param {Document} doc The document to be checked.
+ * @return {import("../../core/LinterRule").LinterResult}
  */
 function linterFunction(conf, doc) {
   const offendingElements = [...doc.querySelectorAll("var+a")].filter(
@@ -31,7 +33,7 @@ function linterFunction(conf, doc) {
   );
 
   if (!offendingElements.length) {
-    return [];
+    return;
   }
 
   return {

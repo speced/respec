@@ -59,166 +59,130 @@ export default conf => {
         >
       </h2>
       <dl>
-        ${
-          !conf.isNoTrack
-            ? html`
-                <dt>${conf.l10n.this_version}</dt>
-                <dd>
-                  <a class="u-url" href="${conf.thisVersion}"
-                    >${conf.thisVersion}</a
-                  >
-                </dd>
-                <dt>${conf.l10n.latest_published_version}</dt>
-                <dd>
-                  ${
-                    conf.latestVersion
-                      ? html`
-                          <a href="${conf.latestVersion}"
-                            >${conf.latestVersion}</a
-                          >
-                        `
-                      : "none"
-                  }
-                </dd>
-              `
-            : ""
-        }
-        ${
-          conf.edDraftURI
-            ? html`
-                <dt>${conf.l10n.latest_editors_draft}</dt>
-                <dd><a href="${conf.edDraftURI}">${conf.edDraftURI}</a></dd>
-              `
-            : ""
-        }
-        ${
-          conf.testSuiteURI
-            ? html`
-                <dt>Test suite:</dt>
-                <dd><a href="${conf.testSuiteURI}">${conf.testSuiteURI}</a></dd>
-              `
-            : ""
-        }
-        ${
-          conf.implementationReportURI
-            ? html`
-                <dt>Implementation report:</dt>
-                <dd>
-                  <a href="${conf.implementationReportURI}"
-                    >${conf.implementationReportURI}</a
-                  >
-                </dd>
-              `
-            : ""
-        }
-        ${
-          conf.bugTrackerHTML
-            ? html`
-                <dt>${conf.l10n.bug_tracker}</dt>
-                <dd>${[conf.bugTrackerHTML]}</dd>
-              `
-            : ""
-        }
-        ${
-          conf.isED && conf.prevED
-            ? html`
-                <dt>Previous editor's draft:</dt>
-                <dd><a href="${conf.prevED}">${conf.prevED}</a></dd>
-              `
-            : ""
-        }
-        ${
-          conf.showPreviousVersion
-            ? html`
-                <dt>Previous version:</dt>
-                <dd><a href="${conf.prevVersion}">${conf.prevVersion}</a></dd>
-              `
-            : ""
-        }
-        ${
-          !conf.prevRecURI
-            ? ""
-            : conf.isRec
-            ? html`
-                <dt>Previous Recommendation:</dt>
-                <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
-              `
-            : html`
-                <dt>Latest Recommendation:</dt>
-                <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
-              `
-        }
+        ${!conf.isNoTrack
+          ? html`
+              <dt>${conf.l10n.this_version}</dt>
+              <dd>
+                <a class="u-url" href="${conf.thisVersion}"
+                  >${conf.thisVersion}</a
+                >
+              </dd>
+              <dt>${conf.l10n.latest_published_version}</dt>
+              <dd>
+                ${conf.latestVersion
+                  ? html`
+                      <a href="${conf.latestVersion}">${conf.latestVersion}</a>
+                    `
+                  : "none"}
+              </dd>
+            `
+          : ""}
+        ${conf.edDraftURI
+          ? html`
+              <dt>${conf.l10n.latest_editors_draft}</dt>
+              <dd><a href="${conf.edDraftURI}">${conf.edDraftURI}</a></dd>
+            `
+          : ""}
+        ${conf.testSuiteURI
+          ? html`
+              <dt>Test suite:</dt>
+              <dd><a href="${conf.testSuiteURI}">${conf.testSuiteURI}</a></dd>
+            `
+          : ""}
+        ${conf.implementationReportURI
+          ? html`
+              <dt>Implementation report:</dt>
+              <dd>
+                <a href="${conf.implementationReportURI}"
+                  >${conf.implementationReportURI}</a
+                >
+              </dd>
+            `
+          : ""}
+        ${conf.bugTrackerHTML
+          ? html`
+              <dt>${conf.l10n.bug_tracker}</dt>
+              <dd>${[conf.bugTrackerHTML]}</dd>
+            `
+          : ""}
+        ${conf.isED && conf.prevED
+          ? html`
+              <dt>Previous editor's draft:</dt>
+              <dd><a href="${conf.prevED}">${conf.prevED}</a></dd>
+            `
+          : ""}
+        ${conf.showPreviousVersion
+          ? html`
+              <dt>Previous version:</dt>
+              <dd><a href="${conf.prevVersion}">${conf.prevVersion}</a></dd>
+            `
+          : ""}
+        ${!conf.prevRecURI
+          ? ""
+          : conf.isRec
+          ? html`
+              <dt>Previous Recommendation:</dt>
+              <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
+            `
+          : html`
+              <dt>Latest Recommendation:</dt>
+              <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
+            `}
         <dt>${conf.multipleEditors ? conf.l10n.editors : conf.l10n.editor}</dt>
         ${showPeople(conf, "Editor", conf.editors)}
-        ${
-          Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
-            ? html`
-                <dt>
-                  ${
-                    conf.multipleFormerEditors
-                      ? conf.l10n.former_editors
-                      : conf.l10n.former_editor
-                  }
-                </dt>
-                ${showPeople(conf, "Editor", conf.formerEditors)}
-              `
-            : ""
-        }
-        ${
-          conf.authors
-            ? html`
-                <dt>
-                  ${conf.multipleAuthors ? conf.l10n.authors : conf.l10n.author}
-                </dt>
-                ${showPeople(conf, "Author", conf.authors)}
-              `
-            : ""
-        }
+        ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
+          ? html`
+              <dt>
+                ${conf.multipleFormerEditors
+                  ? conf.l10n.former_editors
+                  : conf.l10n.former_editor}
+              </dt>
+              ${showPeople(conf, "Editor", conf.formerEditors)}
+            `
+          : ""}
+        ${conf.authors
+          ? html`
+              <dt>
+                ${conf.multipleAuthors ? conf.l10n.authors : conf.l10n.author}
+              </dt>
+              ${showPeople(conf, "Author", conf.authors)}
+            `
+          : ""}
         ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}
       </dl>
-      ${
-        conf.errata
-          ? html`
-              <p>
-                Please check the
-                <a href="${conf.errata}"><strong>errata</strong></a> for any
-                errors or issues reported since publication.
-              </p>
-            `
-          : ""
-      }
-      ${
-        conf.isRec
-          ? html`
-              <p>
-                See also
-                <a
-                  href="${
-                    `http://www.w3.org/2003/03/Translations/byTechnology?technology=${
-                      conf.shortName
-                    }`
-                  }"
-                >
-                  <strong>translations</strong></a
-                >.
-              </p>
-            `
-          : ""
-      }
-      ${
-        conf.alternateFormats
-          ? html`
-              <p>
-                ${
-                  conf.multipleAlternates
-                    ? "This document is also available in these non-normative formats:"
-                    : "This document is also available in this non-normative format:"
-                }
-                ${[conf.alternatesHTML]}
-              </p>
-            `
-          : ""
-      }
+      ${conf.errata
+        ? html`
+            <p>
+              Please check the
+              <a href="${conf.errata}"><strong>errata</strong></a> for any
+              errors or issues reported since publication.
+            </p>
+          `
+        : ""}
+      ${conf.isRec
+        ? html`
+            <p>
+              See also
+              <a
+                href="${`http://www.w3.org/2003/03/Translations/byTechnology?technology=${
+                  conf.shortName
+                }`}"
+              >
+                <strong>translations</strong></a
+              >.
+            </p>
+          `
+        : ""}
+      ${conf.alternateFormats
+        ? html`
+            <p>
+              ${conf.multipleAlternates
+                ? "This document is also available in these non-normative formats:"
+                : "This document is also available in this non-normative format:"}
+              ${[conf.alternatesHTML]}
+            </p>
+          `
+        : ""}
       ${renderCopyright(conf)}
       <hr title="Separator for header" />
     </div>
@@ -247,13 +211,11 @@ function renderCopyright(conf) {
       : html`
           <p class="copyright">
             This document is licensed under a
-            ${
-              linkLicense(
-                "Creative Commons Attribution 3.0 License",
-                ccLicense,
-                "subfoot"
-              )
-            }.
+            ${linkLicense(
+              "Creative Commons Attribution 3.0 License",
+              ccLicense,
+              "subfoot"
+            )}.
           </p>
         `
     : conf.overrideCopyright
@@ -269,13 +231,11 @@ function renderOfficialCopyright(conf) {
       >
       &copy;
       ${conf.copyrightStart ? `${conf.copyrightStart}-` : ""}${conf.publishYear}
-      ${
-        conf.additionalCopyrightHolders
-          ? html`
-              ${[conf.additionalCopyrightHolders]} &amp;
-            `
-          : ""
-      }
+      ${conf.additionalCopyrightHolders
+        ? html`
+            ${[conf.additionalCopyrightHolders]} &amp;
+          `
+        : ""}
       <a href="https://www.w3.org/"
         ><abbr title="World Wide Web Consortium">W3C</abbr></a
       ><sup>&reg;</sup> (<a href="https://www.csail.mit.edu/"
@@ -287,7 +247,7 @@ function renderOfficialCopyright(conf) {
           >ERCIM</abbr
         ></a
       >, <a href="https://www.keio.ac.jp/">Keio</a>,
-      <a href="http://ev.buaa.edu.cn/">Beihang</a>). ${noteIfDualLicense(conf)}
+      <a href="https://ev.buaa.edu.cn/">Beihang</a>). ${noteIfDualLicense(conf)}
       W3C <a href="${legalDisclaimer}">liability</a>,
       <a href="${w3cTrademark}">trademark</a> and ${linkDocumentUse(conf)} rules
       apply.

@@ -1,4 +1,4 @@
-/*eslint-env node*/
+/* eslint-env node */
 "use strict";
 // Get a list of all the test files to include
 const testFiles = Object.keys(window.__karma__.files)
