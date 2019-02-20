@@ -4,7 +4,7 @@
 // TODO:
 //  - It could be useful to report parsed IDL items as events
 //  - don't use generated content in the CSS!
-import { flatten, normalizePadding, reindent } from "./utils";
+import { flatten, normalizePadding } from "./utils";
 import css from "text!../../assets/webidl.css";
 import { findDfn } from "./dfn-finder";
 import hyperHTML from "hyperhtml";
@@ -292,8 +292,7 @@ export function run() {
   idls.forEach(idlElement => {
     let parse;
     try {
-      const idl = reindent(idlElement.textContent);
-      parse = webidl2.parse(idl);
+      parse = webidl2.parse(idlElement.textContent);
     } catch (e) {
       pub(
         "error",
