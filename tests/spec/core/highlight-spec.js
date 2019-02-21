@@ -76,4 +76,20 @@ describe("Core — Highlight", () => {
     const pre = doc.getElementById("test");
     expect(pre.querySelectorAll("span[class^=hljs-]").length).toBe(0);
   });
+
+  it("checks if <pre> content is warpped in <code>", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}<section>
+          <pre>
+            function foo() {
+              alert('foo');
+            }
+          </pre>
+        </section>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const pre = doc.querySelectorAll("pre");
+    expect(pre.querySelectorAll("code[class^='javascript']").length).toBe(1);
+  });
 });

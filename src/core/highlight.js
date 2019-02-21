@@ -52,7 +52,6 @@ export async function run(conf) {
         languages: getLanguageHint(element.classList),
       };
       const codeElements = element.querySelectorAll('code');
-      const noCode = (codeElements.length === 0) ? true : false;
       worker.addEventListener("message", function listener(ev) {
         const {
           data: { id, language, value },
@@ -64,12 +63,10 @@ export async function run(conf) {
         if (element.localName === "pre") {
           element.classList.add("hljs");
         }
-        if (language) {
-          if(noCode === true) {
-            element.innerHTML = `<code>${value}</code>`;
-            element.classList.remove(language);
-            element.firstChild.classList.add(language);
-          }
+        if (language && !codeElements.length) {
+          element.innerHTML = `<code>${value}</code>`;
+          element.classList.remove(language);
+          element.firstChild.classList.add(language);
         }
         clearTimeout(timeoutId);
         worker.removeEventListener("message", listener);
