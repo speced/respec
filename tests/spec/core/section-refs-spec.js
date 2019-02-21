@@ -14,7 +14,7 @@ describe("Core - Section References", () => {
     };
     const doc = await makeRSDoc(ops);
     const two = doc.getElementById("TWO");
-    //\u00A0 is &nbsp; - non-breaking space U+00A0
+    // \u00A0 is &nbsp; - non-breaking space U+00A0
     expect(two.querySelector("a").textContent).toBe("section §\u00A01. ONE");
   });
 });
