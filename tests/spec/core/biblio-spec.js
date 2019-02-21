@@ -42,7 +42,7 @@ describe("W3C — Bibliographic References", () => {
     </section>
     <section>
       <h2>Sorted</h2>
-      <p>From [[Zzz]] to [[aaa]]</p>
+      <p>From [[Zzz]] to [[aaa]] - [[DOM]] and [[fetch]]</p>
     </section>
   `;
 
