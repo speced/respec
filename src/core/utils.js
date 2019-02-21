@@ -100,7 +100,7 @@ const fetchDestinations = new Set([
 
 // CSS selector for matching elements that are non-normative
 export const nonNormativeSelector =
-  ".informative, .note, .issue, .example, .ednote, .practice";
+  ".informative, .note, .issue, .example, .ednote, .practice, .introductory";
 
 export function calculateLeftPad(text) {
   if (typeof text !== "string") {
