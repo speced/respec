@@ -88,7 +88,7 @@
     "command-line-usage": "^5.0.5",
     "epipebomb": "^1.0.0",
     "fs-extra": "^7.0.1",
-    "highlight.js": "github:highlightjs/highlight.js#cli",
+    "highlight.js": "github:highlightjs/highlight.js",
     "hyperhtml": "^2.25.4",
     "loading-indicator": "^2.0.0",
     "marked": "^0.6.0",
