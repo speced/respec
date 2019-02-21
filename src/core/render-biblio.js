@@ -2,8 +2,8 @@
 // renders the biblio data pre-processed in core/biblio
 
 import { addId } from "./utils";
-import hyperHTML from "hyperhtml";
 import { lang as defaultLang } from "../core/l10n";
+import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 
 export const name = "core/render-biblio";
