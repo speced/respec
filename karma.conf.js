@@ -193,7 +193,7 @@ module.exports = function(config) {
     options.autoWatch = false;
     options.singleRun = true;
     options.concurrency = 1;
-    options.reporters = ["mocha", "progress", "coverage", "coveralls"];
+    options.reporters = ["mocha", "coverage-istanbul", "coveralls"];
     options.browsers = ["ChromeHeadless"];
   }
   config.set(options);
