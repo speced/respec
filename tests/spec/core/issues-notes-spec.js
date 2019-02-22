@@ -267,6 +267,32 @@ describe("Core — Issues and Notes", () => {
     );
   });
 
+  it("check if aria-label renders for issues", async () => {
+    const githubConfig = {
+      github: "https://github.com/mock-company/mock-repository",
+      githubAPI: `${window.location.origin}/tests/data`,
+    };
+    const ops = {
+      config: githubConfig,
+      body: `${makeDefaultBody()}
+        <div class='issue' data-number='1548'>no aria-label for this</div>
+        <div class='issue' data-number='1540'>this should have aria-label</div>
+      `,
+    };
+    const doc = await makeRSDoc(ops);
+    const issueDiv1 = doc.getElementById("issue-container-number-1548");
+    expect(issueDiv1).toBeTruthy();
+    const issueLabel1 = issueDiv1.querySelector("span.issue-label");
+    expect(issueLabel1.getAttribute("aria-label")).toBeNull();
+
+    const issueDiv2 = doc.getElementById("issue-container-number-1540");
+    expect(issueDiv2).toBeTruthy();
+    const issueLabel2 = issueDiv2.querySelector("span.issue-label");
+    expect(issueLabel2.getAttribute("aria-label")).toBe(
+      "This issue is labelled as refactor, bug, blank, and not-a-color."
+    );
+  });
+
   it("renders the original issue post in an empty issue block", async () => {
     const githubConfig = {
       github: "https://github.com/mock-company/mock-repository",

@@ -246,11 +246,13 @@ function createLabelsGroup(labels, title, repoURL) {
   if (labelsGroup.length) {
     labelsGroup.unshift(document.createTextNode(" "));
   }
-  const ariaLabel = `This issue is labelled as ${joinedNames}.`;
-  return hyperHTML`<span
-    class="issue-label"
-    aria-label="${ariaLabel}">: ${title}${labelsGroup}
-    </span>`;
+  if (labelNames.length) {
+    const ariaLabel = `This issue is labelled as ${joinedNames}.`;
+    return hyperHTML`<span
+      class="issue-label"
+      aria-label="${ariaLabel}">: ${title}${labelsGroup}</span>`;
+  }
+  return hyperHTML`<span class="issue-label">: ${title}${labelsGroup}</span>`;
 }
 
 /**
