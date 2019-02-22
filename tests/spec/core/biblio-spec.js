@@ -210,7 +210,7 @@ describe("W3C — Bibliographic References", () => {
   });
 });
 
-it(">>>>>> makes sure the Informative references section has expected localization text", async () => {
+it("makes sure the Informative references section has expected localization text", async () => {
   const ops = {
     config: makeBasicConfig(),
     htmlAttrs: {
@@ -227,7 +227,7 @@ it(">>>>>> makes sure the Informative references section has expected localizati
   );
 });
 
-it(">>>>>>>  makes sure the normative references section has expected localization text", async () => {
+it("makes sure the normative references section has expected localization text", async () => {
   const ops = {
     config: makeBasicConfig(),
     htmlAttrs: {
