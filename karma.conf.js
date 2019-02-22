@@ -2,6 +2,7 @@
 // Generated on Fri Feb 26 2016 13:09:51 GMT+1100 (AEDT)
 /*globals module, require, process*/
 "use strict";
+const path = require('path');
 module.exports = function(config) {
   const options = {
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -105,17 +106,12 @@ module.exports = function(config) {
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-      // source files, that you wanna generate coverage for
-      // do not include tests or libraries
-      // (these files will be instrumented by Istanbul)
-      "src/**/*.js": ["coverage"],
-    },
+    preprocessors: {},
 
     // test results reporter to use
     // possible values: "dots", "progress"
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ["mocha", "progress", "coverage", "coveralls"],
+    reporters: ["mocha", "coverage-istanbul", "coveralls"],
 
     // web server port
     port: config.port || 9876,
@@ -147,11 +143,49 @@ module.exports = function(config) {
       args: ["--grep", config.grep || ""],
     },
 
-    coverageReporter: {
-      includeAllSources: true,
-      type: "lcov", // lcov or lcovonly are required for generating lcov.info files needed for coveralls.
-      dir: "coverage/",
-    },
+    // any of these options are valid: https://github.com/istanbuljs/istanbuljs/blob/aae256fb8b9a3d19414dcf069c592e88712c32c6/packages/istanbul-api/lib/config.js#L33-L39
+    coverageIstanbulReporter: {
+      // reports can be any that are listed here: https://github.com/istanbuljs/istanbuljs/tree/aae256fb8b9a3d19414dcf069c592e88712c32c6/packages/istanbul-reports/lib
+      reports: ['lcovonly'],
+
+      // base output directory. If you include %browser% in the path it will be replaced with the karma browser name
+      dir: path.join(__dirname, 'coverage'),
+
+      // Combines coverage information from multiple browsers into one report rather than outputting a report
+      // for each browser.
+      combineBrowserReports: true,
+
+      // if using webpack and pre-loaders, work around webpack breaking the source path
+      fixWebpackSourcePaths: true,
+
+      // Omit files with no statements, no functions and no branches from the report
+      skipFilesWithNoCoverage: true,
+
+      // Most reporters accept additional config options. You can pass these through the `report-config` option
+      'report-config': {},
+
+      // enforce percentage thresholds
+      // anything under these percentages will cause karma to fail with an exit code of 1 if not running in watch mode
+      thresholds: {
+        emitWarning: false, // set to `true` to not fail the test command when thresholds are not met
+        // thresholds for all files
+        global: {
+          statements: 100,
+          lines: 100,
+          branches: 100,
+          functions: 100
+        },
+        // thresholds per file
+        each: {
+          statements: 100,
+          lines: 100,
+          branches: 100,
+          functions: 100,
+        }
+      },
+
+      verbose: true // output config used by istanbul for debugging
+    }
   };
   if (process.env.TRAVIS) {
     process.env.CHROME_BIN = require("puppeteer").executablePath();

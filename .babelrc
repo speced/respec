@@ -7,5 +7,16 @@
         "modules": "amd"
       }
     ]
-  ]
+  ],
+  "env": {
+    "test": {
+      "plugins": [
+        ["istanbul", {
+          "exclude": [
+            "tests/**/*-spec.js"
+          ]
+        }]
+      ]
+    }
+  }
 }
