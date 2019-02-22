@@ -93,4 +93,38 @@ describe("Core — Highlight", () => {
     expect(pre.querySelectorAll("code").length).toBe(1);
     expect(pre.querySelectorAll("code[class^='javascript']").length).toBe(1);
   });
+
+  it("<code> gets the language class defined in <pre>", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}<section>
+          <pre class="js">
+            function foo() {
+              alert('foo');
+            }
+          </pre>
+        </section>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const pre = doc.querySelectorAll("pre");
+    expect(pre.querySelectorAll("code").length).toBe(1);
+    expect(pre.querySelectorAll("code[class^='js']").length).toBe(1);
+  });
+
+  it("When class defined in <pre> is not correct, returns language: undefined", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}<section>
+          <pre class="http">
+            function foo() {
+              alert('foo');
+            }
+          </pre>
+        </section>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const pre = doc.querySelectorAll("pre");
+    expect(pre.querySelectorAll("code").length).toBe(1);
+    expect(pre.querySelectorAll("code[class^='http']").length).toBe(1);
+  });
 });

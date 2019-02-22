@@ -63,10 +63,11 @@ export async function run(conf) {
         if (element.localName === "pre") {
           element.classList.add("hljs");
         }
-        if (language && !codeElements.length) {
+        var lang = (language !== undefined) ? language : msg.languages[0];
+        if (!codeElements.length) {
           element.innerHTML = `<code>${value}</code>`;
-          element.classList.remove(language);
-          element.firstChild.classList.add(language);
+          element.classList.remove(lang);
+          element.firstChild.classList.add(lang);
         }
         clearTimeout(timeoutId);
         worker.removeEventListener("message", listener);
