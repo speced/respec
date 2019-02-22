@@ -90,6 +90,7 @@ describe("Core — Highlight", () => {
     };
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelectorAll("pre");
+    expect(pre.querySelectorAll("code").length).toBe(1);
     expect(pre.querySelectorAll("code[class^='javascript']").length).toBe(1);
   });
 });
