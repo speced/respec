@@ -213,26 +213,36 @@ describe("W3C — Bibliographic References", () => {
   });
 });
 
-it("should make sure references section has expected localization text", async () => {
+it(">>>>>> makes sure the Informative references section has expected localization text", async () => {
   const ops = {
     config: makeBasicConfig(),
     htmlAttrs: {
       lang: "nl",
     },
-    body: `
-  <section class="informative" id="intro">
-    <h2>
-      Introduction
-    </h2>
-    <p>
-      This section has a CSS class "<code>informative</code>", so it is
-      listed in the TOC. ReSpec will list this reference as non-normative
-      since this is an informative section [[DOM]].
-    </p>
-  </section>`,
+    body: `<section class="informative" id="intro">[[DOM]]</section>`,
   };
   const doc = await makeRSDoc(ops);
   const ref = doc.getElementById("references");
   expect(doc.documentElement.lang).toEqual("nl");
   expect(ref.querySelector("h2").textContent).toMatch("Referenties");
+  expect(ref.querySelector("section").querySelector("h3").textContent).toMatch(
+    "Informatieve referenties"
+  );
+});
+
+it(">>>>>>>  makes sure the normative references section has expected localization text", async () => {
+  const ops = {
+    config: makeBasicConfig(),
+    htmlAttrs: {
+      lang: "nl",
+    },
+    body: `<section>[[DOM]]</section>`,
+  };
+  const doc = await makeRSDoc(ops);
+  const ref = doc.getElementById("references");
+  expect(doc.documentElement.lang).toEqual("nl");
+  expect(ref.querySelector("h2").textContent).toMatch("Referenties");
+  expect(ref.querySelector("section").querySelector("h3").textContent).toMatch(
+    "Normatieve referenties"
+  );
 });
