@@ -51,7 +51,7 @@ export async function run(conf) {
         id: `highlight:${i}`,
         languages: getLanguageHint(element.classList),
       };
-      const codeElements = element.querySelectorAll('code');
+      const codeElements = element.querySelectorAll("code");
       worker.addEventListener("message", function listener(ev) {
         const {
           data: { id, language, value },
@@ -63,7 +63,7 @@ export async function run(conf) {
         if (element.localName === "pre") {
           element.classList.add("hljs");
         }
-        var lang = (language !== undefined) ? language : msg.languages[0];
+        let lang = language !== undefined ? language : msg.languages[0];
         if (!codeElements.length) {
           element.innerHTML = `<code>${value}</code>`;
           element.classList.remove(lang);
