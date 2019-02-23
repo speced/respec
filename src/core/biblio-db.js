@@ -7,7 +7,7 @@
  * It's a standalone module that can be imported into other modules.
  *
  */
-/*globals IDBKeyRange, DOMException */
+/* globals IDBKeyRange, DOMException */
 import { pub } from "./pubsubhub";
 export const name = "core/biblio-db";
 

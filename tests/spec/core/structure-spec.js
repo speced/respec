@@ -40,6 +40,42 @@ describe("Core - Structure", () => {
     );
   });
 
+  it("treats references in introductory sections as non-normative", async () => {
+    // test with noTOC
+    const config = makeBasicConfig();
+    config.localBiblio = {
+      normative: {
+        title: "This is normative",
+      },
+      informative: {
+        title: "This is informative",
+      },
+    };
+    config.specStatus = "ED";
+    const ops = {
+      config,
+      body: `
+        <section id="sotd">
+          <p>[[informative]] [[normative]]</p>
+        </section>
+        <section>
+          <p>[[normative]]</p>
+        </section>`,
+    };
+    ops.config.noTOC = true;
+    const doc = await makeRSDoc(ops);
+
+    const informativeRefs = doc.querySelectorAll("#informative-references dt");
+    expect(informativeRefs.length).toBe(1);
+    const [informativeRef] = informativeRefs;
+    expect(informativeRef.textContent).toBe("[informative]");
+
+    const normativeRefs = doc.querySelectorAll("#normative-references dt");
+    expect(normativeRefs.length).toBe(1);
+    const [normativeRef] = normativeRefs;
+    expect(normativeRef.textContent).toBe("[normative]");
+  });
+
   it("should not build a ToC with noTOC", async () => {
     // test with noTOC
     const ops = {

@@ -33,17 +33,17 @@ describe("W3C — Bibliographic References", () => {
   };
   const body = `
     <section id='sotd'>
-      <p>[[!DOM]] [[dom]] [[fetch]] [[!FeTcH]] [[FETCh]] [[fetCH]]
-      <p>foo [[!TestRef1]] [[TestRef2]] [[!TestRef3]]</p>
+      <p>[[DOM]] [[dom]] [[fetch]] [[?FeTcH]] [[FETCh]] [[fetCH]]
+      <p>foo [[TestRef1]] [[TestRef2]] [[TestRef3]]</p>
     </section>
     <section id='sample'>
       <h2>Privacy</h2>
-      <p>foo [[!FOOBARGLOP]] bar</p>
+      <p>foo [[FOOBARGLOP]] bar</p>
     </section>
     <section>
       <h2>Sorted</h2>
-      <p>From [[!Zzz]] to [[!aaa]]</p>
-    </secton>
+      <p>From [[Zzz]] to [[aaa]] - [[DOM]] and [[fetch]]</p>
+    </section>
   `;
 
   const ops = makeStandardOps({ localBiblio }, body);
