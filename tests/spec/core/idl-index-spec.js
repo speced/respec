@@ -19,6 +19,7 @@ describe("Core — IDL Index", () => {
         </pre>
       </section>
       <section id="idl-index"></section>
+      <section id="conformance"></section>
     `;
     const expectedIDL = `interface Foo {
   readonly attribute DOMString bar;
@@ -45,23 +46,23 @@ interface Bar {
   it("excludes things the editor doesn't want in the idl summary and informative class", async () => {
     const body = `
       ${makeDefaultBody()}
-      <section>
+      <section id="conformance">
         <pre class="idl exclude">
-        interface Foo {
+        interface Excluded {
           readonly attribute DOMString bar;
         };
         </pre>
       </section>
       <section>
         <pre class=idl>
-        interface Bar {
+        interface Include {
           readonly attribute DOMString foo;
         };
         </pre>
       </section>
       <section class="informative">
         <pre class="idl">
-        interface Baz {
+        interface Informative {
           readonly attribute DOMString baz;
         };
         </pre>
@@ -73,10 +74,10 @@ interface Bar {
       body,
     };
     const doc = await makeRSDoc(ops);
-    const idlIndex = doc.getElementById("idl-index");
-    expect(idlIndex.innerText.includes("Foo")).toEqual(false);
-    expect(idlIndex.innerText.includes("Bar")).toEqual(true);
-    expect(idlIndex.innerText.includes("Baz")).toEqual(false);
+    const { textContent } = doc.querySelector("#idl-index pre");
+    expect(textContent).toMatch(/Include/gm);
+    expect(textContent).not.toMatch(/Excluded/gm);
+    expect(textContent).not.toMatch(/Informative/gm);
   });
 
   // this should exclude because IDL parent section is a note, issue or example (non-normative)
@@ -85,33 +86,34 @@ interface Bar {
       ${makeDefaultBody()}
       <section class="note">
         <pre class="idl">
-        interface Foo {
+        interface Note {
           readonly attribute DOMString bar;
         };
         </pre>
       </section>
       <section class="issue">
         <pre class="idl">
-        interface Bar {
+        interface Issue {
           readonly attribute DOMString foo;
         };
         </pre>
       </section>
       <section class="example">
         <pre class="idl">
-      interface Baz {
-        readonly attribute DOMString baz;
-      };
+          interface Example {
+            readonly attribute DOMString baz;
+          };
         </pre>
       </section>
       <section>
-      <pre class="idl">
-    interface Qux {
-      readonly attribute DOMString qux;
-    };
-      </pre>
-    </section>
+        <pre class="idl">
+          interface Pass {
+            readonly attribute DOMString qux;
+          };
+        </pre>
+      </section>
       <section id="idl-index"></section>
+      <section id="conformance"></section>
     `;
     const ops = {
       config: makeBasicConfig(),
@@ -119,10 +121,10 @@ interface Bar {
     };
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
-    expect(idlIndex.innerText.includes("Foo")).toEqual(false);
-    expect(idlIndex.innerText.includes("Bar")).toEqual(false);
-    expect(idlIndex.innerText.includes("Baz")).toEqual(false);
-    expect(idlIndex.innerText.includes("Qux")).toEqual(true);
+    expect(idlIndex.textContent.includes("Example")).toEqual(false);
+    expect(idlIndex.textContent.includes("Issue")).toEqual(false);
+    expect(idlIndex.textContent.includes("Note")).toEqual(false);
+    expect(idlIndex.textContent.includes("Pass")).toEqual(true);
   });
 
   // this should exclude because IDL parent section is editors note or best practice section (non-normative)
@@ -131,26 +133,27 @@ interface Bar {
       ${makeDefaultBody()}
       <section>
         <pre class="idl">
-        interface Foo {
+        interface Pass {
           readonly attribute DOMString bar;
         };
         </pre>
       </section>
       <section class="ednote">
         <pre class="idl">
-        interface Bar {
+        interface Ednote {
           readonly attribute DOMString foo;
         };
         </pre>
       </section>
       <section class="practice">
         <pre class="idl">
-        interface Baz {
+        interface Practice {
           readonly attribute DOMString baz;
         };
         </pre>
       </section>
       <section id="idl-index"></section>
+      <section id="conformance"></section>
     `;
     const ops = {
       config: makeBasicConfig(),
@@ -158,9 +161,9 @@ interface Bar {
     };
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
-    expect(idlIndex.innerText.includes("Foo")).toEqual(true);
-    expect(idlIndex.innerText.includes("Bar")).toEqual(false);
-    expect(idlIndex.innerText.includes("Baz")).toEqual(false);
+    expect(idlIndex.textContent.includes("Pass")).toBe(true);
+    expect(idlIndex.textContent.includes("Practice")).toBe(false);
+    expect(idlIndex.textContent.includes("Ednote")).toBe(false);
   });
 
   // Check that "This specification doesn't declare any Web IDL" is generated when all IDL is excluded
@@ -200,7 +203,7 @@ interface Bar {
   it("allows multi-block idl", async () => {
     const body = `
       ${makeDefaultBody()}
-      <section>
+      <section id="conformance">
         <pre class=idl>
         [Constructor, Exposed=Window]
         interface BeforeInstallPromptEvent : Event {
@@ -264,6 +267,7 @@ dictionary PromptResponseObject {
         <h2>PASS</h2>
         <p>Custom paragraph.</p>
       </section>
+      <section id="conformance"></section>
     `;
     const ops = {
       config: makeBasicConfig(),
