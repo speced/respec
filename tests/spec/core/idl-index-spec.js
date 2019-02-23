@@ -75,9 +75,9 @@ interface Bar {
     };
     const doc = await makeRSDoc(ops);
     const { textContent } = doc.querySelector("#idl-index pre");
-    expect(textContent).toMatch(/Include/gm);
-    expect(textContent).not.toMatch(/Excluded/gm);
-    expect(textContent).not.toMatch(/Informative/gm);
+    expect(textContent).toContain("Include");
+    expect(textContent).not.toContain("Excluded");
+    expect(textContent).not.toContain("Informative");
   });
 
   // this should exclude because IDL parent section is a note, issue or example (non-normative)
@@ -120,11 +120,11 @@ interface Bar {
       body,
     };
     const doc = await makeRSDoc(ops);
-    const idlIndex = doc.getElementById("idl-index");
-    expect(idlIndex.textContent.includes("Example")).toEqual(false);
-    expect(idlIndex.textContent.includes("Issue")).toEqual(false);
-    expect(idlIndex.textContent.includes("Note")).toEqual(false);
-    expect(idlIndex.textContent.includes("Pass")).toEqual(true);
+    const { textContent } = doc.getElementById("idl-index");
+    expect(textContent).toContain("Pass");
+    expect(textContent).not.toContain("Example");
+    expect(textContent).not.toContain("Issue");
+    expect(textContent).not.toContain("Note");
   });
 
   // this should exclude because IDL parent section is editors note or best practice section (non-normative)
@@ -160,10 +160,10 @@ interface Bar {
       body,
     };
     const doc = await makeRSDoc(ops);
-    const idlIndex = doc.getElementById("idl-index");
-    expect(idlIndex.textContent.includes("Pass")).toBe(true);
-    expect(idlIndex.textContent.includes("Practice")).toBe(false);
-    expect(idlIndex.textContent.includes("Ednote")).toBe(false);
+    const { textContent } = doc.getElementById("idl-index");
+    expect(textContent).toContain("Pass");
+    expect(textContent).not.toContain("Practice");
+    expect(textContent).not.toContain("Ednote");
   });
 
   // Check that "This specification doesn't declare any Web IDL" is generated when all IDL is excluded
@@ -192,12 +192,10 @@ interface Bar {
       body,
     };
     const doc = await makeRSDoc(ops);
-    const idlIndex = doc.getElementById("idl-index");
-    expect(
-      idlIndex.textContent.includes(
-        "This specification doesn't declare any Web IDL"
-      )
-    ).toEqual(true);
+    const { textContent } = doc.getElementById("idl-index");
+    expect(textContent).toContain(
+      "This specification doesn't declare any Web IDL"
+    );
   });
 
   it("allows multi-block idl", async () => {
