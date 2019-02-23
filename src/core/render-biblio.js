@@ -46,8 +46,6 @@ export function run(conf) {
       ${conf.refNote ? hyperHTML`<p>${conf.refNote}</p>` : ""}
     </section>`;
 
-  const toRefContent = getRefContent(conf);
-
   for (const type of ["Normative", "Informative"]) {
     const refs = type === "Normative" ? norms : informs;
     if (!refs.length) continue;
@@ -107,28 +105,27 @@ export function run(conf) {
 /**
  * returns refcontent and unique key for a reference among its aliases
  * and warns about circular references
+ * @param {String} ref
  */
-function getRefContent() {
-  return function(ref) {
-    let refcontent = biblio[ref];
-    let key = ref;
-    const circular = new Set([key]);
-    while (refcontent && refcontent.aliasOf) {
-      if (circular.has(refcontent.aliasOf)) {
-        refcontent = null;
-        const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
-        pub("error", msg);
-      } else {
-        key = refcontent.aliasOf;
-        refcontent = biblio[key];
-        circular.add(key);
-      }
+function toRefContent(ref) {
+  let refcontent = biblio[ref];
+  let key = ref;
+  const circular = new Set([key]);
+  while (refcontent && refcontent.aliasOf) {
+    if (circular.has(refcontent.aliasOf)) {
+      refcontent = null;
+      const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
+      pub("error", msg);
+    } else {
+      key = refcontent.aliasOf;
+      refcontent = biblio[key];
+      circular.add(key);
     }
-    if (refcontent && !refcontent.id) {
-      refcontent.id = ref.toLowerCase();
-    }
-    return { ref, refcontent };
-  };
+  }
+  if (refcontent && !refcontent.id) {
+    refcontent.id = ref.toLowerCase();
+  }
+  return { ref, refcontent };
 }
 
 /**
