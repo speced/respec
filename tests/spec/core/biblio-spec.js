@@ -213,36 +213,22 @@ describe("W3C — Bibliographic References", () => {
   });
 });
 
-it("makes sure the Informative references section has expected localization text", async () => {
+it("makes sure references section has expected localization text", async () => {
   const ops = {
     config: makeBasicConfig(),
     htmlAttrs: {
       lang: "nl",
     },
-    body: `<section class="informative" id="intro">[[DOM]]</section>`,
+    body: `
+    <section class="informative" id="intro">[[DOM]]</section>
+    <section>[[HTML]]</section>
+    `,
   };
   const doc = await makeRSDoc(ops);
-  const ref = doc.getElementById("references");
-  expect(doc.documentElement.lang).toEqual("nl");
-  expect(ref.querySelector("h2").textContent).toMatch("Referenties");
-  expect(ref.querySelector("section").querySelector("h3").textContent).toMatch(
-    "Informatieve referenties"
-  );
-});
-
-it("makes sure the normative references section has expected localization text", async () => {
-  const ops = {
-    config: makeBasicConfig(),
-    htmlAttrs: {
-      lang: "nl",
-    },
-    body: `<section>[[DOM]]</section>`,
-  };
-  const doc = await makeRSDoc(ops);
-  const ref = doc.getElementById("references");
-  expect(doc.documentElement.lang).toEqual("nl");
-  expect(ref.querySelector("h2").textContent).toMatch("Referenties");
-  expect(ref.querySelector("section").querySelector("h3").textContent).toMatch(
-    "Normatieve referenties"
-  );
+  const { textContent } = doc.querySelector("#references h2");
+  const [ normRef, infoRef] = doc.querySelectorAll("#references h3");
+  expect(doc.documentElement.lang).toBe("nl");
+  expect(textContent.substr(3)).toBe("Referenties");
+  expect(normRef.textContent.substr(4)).toBe("Normatieve referenties");
+  expect(infoRef.textContent.substr(4)).toBe("Informatieve referenties");  
 });
