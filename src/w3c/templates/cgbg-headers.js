@@ -10,13 +10,6 @@ export default conf => {
       ${conf.logos.map(showLogo)}
       <h1 class="title p-name" id="title">${conf.title}</h1>
       ${
-        conf.specTitle
-          ? html`
-              <h1 id="title">${conf.specTitle}</h1>
-            `
-          : ""
-      }
-      ${
         conf.subtitle
           ? html`
               <h2 id="subtitle">${conf.subtitle}</h2>
