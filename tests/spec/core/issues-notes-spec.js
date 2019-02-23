@@ -267,7 +267,7 @@ describe("Core — Issues and Notes", () => {
     );
   });
 
-  it("check if aria-label renders for issues", async () => {
+  it("sets aria-label to reflect the labels from Github", async () => {
     const githubConfig = {
       github: "https://github.com/mock-company/mock-repository",
       githubAPI: `${window.location.origin}/tests/data`,
