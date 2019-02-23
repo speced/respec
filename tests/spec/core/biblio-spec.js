@@ -223,9 +223,9 @@ it("makes sure references section has expected localization text", async () => {
   };
   const doc = await makeRSDoc(ops);
   const { textContent } = doc.querySelector("#references h2");
-  const [ normRef, infoRef] = doc.querySelectorAll("#references h3");
+  const [normRef, infoRef] = doc.querySelectorAll("#references h3");
   expect(doc.documentElement.lang).toBe("nl");
   expect(textContent.substr(3)).toBe("Referenties");
   expect(normRef.textContent.substr(4)).toBe("Normatieve referenties");
-  expect(infoRef.textContent.substr(4)).toBe("Informatieve referenties");  
+  expect(infoRef.textContent.substr(4)).toBe("Informatieve referenties");
 });
