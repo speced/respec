@@ -280,19 +280,21 @@ describe("Core — Issues and Notes", () => {
       `,
     };
     const doc = await makeRSDoc(ops);
-    const issueDiv1 = doc.getElementById("issue-container-number-1548");
-    expect(issueDiv1).toBeTruthy();
-    const issueLabel1 = issueDiv1.querySelector("span.issue-label");
-    expect(issueLabel1.getAttribute("aria-label")).toBeNull();
+    expect(doc.querySelectorAll("div.issue").length).toBe(2);
+    expect(
+      doc.querySelector(
+        "div#issue-container-number-1548 span.issue-label[aria-label]"
+      )
+    ).toBeNull();
 
-    const issueDiv2 = doc.getElementById("issue-container-number-1540");
-    expect(issueDiv2).toBeTruthy();
-    const issueLabel2 = issueDiv2.querySelector("span.issue-label");
-    expect(issueLabel2.getAttribute("aria-label")).toBe(
-      "This issue is labelled as refactor, bug, blank, and not-a-color."
-    );
+    const expectedAttributeValue =
+      "This issue is labelled as refactor, bug, blank, and not-a-color.";
+    expect(
+      doc.querySelector(
+        `div#issue-container-number-1540 span.issue-label[aria-label="${expectedAttributeValue}"]`
+      )
+    ).toBeTruthy();
   });
-
   it("renders the original issue post in an empty issue block", async () => {
     const githubConfig = {
       github: "https://github.com/mock-company/mock-repository",
