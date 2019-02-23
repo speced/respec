@@ -26,17 +26,15 @@ export function run(conf) {
       diagrams, examples, and notes in this specification are non-normative.
       Everything else in this specification is normative.
     </p>
-    ${
-      terms.length
-        ? html`
-            <p>
-              The key word${plural ? "s" : ""} ${[keywords]}
-              ${plural ? "are" : "is"} to be interpreted as described in
-              ${renderInlineCitation("RFC2119")}.
-            </p>
-          `
-        : null
-    }
+    ${terms.length
+      ? html`
+          <p>
+            The key word${plural ? "s" : ""} ${[keywords]}
+            ${plural ? "are" : "is"} to be interpreted as described in
+            ${renderInlineCitation("RFC2119")}.
+          </p>
+        `
+      : null}
   `;
   conformance.prepend(...content.childNodes);
   // Added message for legacy compat with Aria specs
