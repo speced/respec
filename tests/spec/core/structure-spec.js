@@ -9,8 +9,8 @@ describe("Core - Structure", () => {
   });
   const body = `
       ${makeDefaultBody()}
-      <section class='introductory'>
-        <h2>INTRO</h2>
+      <section class="introductory">
+      <h2>INTRO</h2>
       </section>
       <section>
         <h2>ONE</h2>
@@ -19,11 +19,11 @@ describe("Core - Structure", () => {
           <section>
             <h2>THREE</h2>
             <section>
-             <h2>FOUR</h2>
+              <h2>FOUR</h2>
               <section>
                 <h2>FIVE</h2>
                 <section>
-                 <h2>SIX</h2>
+                  <h2>SIX</h2>
                 </section>
               </section>
             </section>
@@ -31,10 +31,10 @@ describe("Core - Structure", () => {
         </section>
       </section>
       <section class="notoc">
-      <h2>Not in TOC</h2>
+        <h2>Not in TOC</h2>
       </section>
       <section id="conformance"></section>
-      <section class='appendix'>
+      <section class="appendix">
         <h2>ONE</h2>
         <section>
           <h2>TWO</h2>
