@@ -191,7 +191,7 @@ interface Bar {
     const doc = await makeRSDoc(ops);
     const idlIndex = doc.getElementById("idl-index");
     expect(
-      idlIndex.innerText.includes(
+      idlIndex.textContent.includes(
         "This specification doesn't declare any Web IDL"
       )
     ).toEqual(true);
