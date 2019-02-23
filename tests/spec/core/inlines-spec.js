@@ -20,7 +20,7 @@ describe("Core - Inlines", () => {
     const doc = await makeRSDoc(ops);
 
     const norm = [...doc.querySelectorAll("#normative-references dt")];
-    expect(norm.length).toEqual(4);
+    expect(norm.length).toBe(4);
     expect(norm.map(el => el.textContent)).toEqual([
       "[dom]",
       "[html]",
@@ -64,12 +64,12 @@ describe("Core - Inlines", () => {
     const inl = doc.getElementById("inlines");
 
     const abbr = inl.querySelectorAll("abbr[title='ABBR-TIT']");
-    expect(abbr.length).toEqual(2);
+    expect(abbr.length).toBe(2);
     expect([...abbr].every(({ textContent: t }) => t === "ABBR")).toBeTruthy();
 
     const rfc2119 = [...inl.querySelectorAll("em.rfc2119")];
-    expect(rfc2119.length).toEqual(2);
-    expect(rfc2119[0].textContent).toEqual("MUST");
-    expect(rfc2119[1].textContent).toEqual("NOT RECOMMENDED");
+    expect(rfc2119.length).toBe(2);
+    expect(rfc2119[0].textContent).toBe("MUST");
+    expect(rfc2119[1].textContent).toBe("NOT RECOMMENDED");
   });
 });
