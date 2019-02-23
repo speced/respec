@@ -44,6 +44,7 @@ describe("W3C — Bibliographic References", () => {
       <h2>Sorted</h2>
       <p>From [[Zzz]] to [[aaa]] - [[DOM]] and [[fetch]]</p>
     </section>
+    <section id="conformance"></section>
   `;
 
   const ops = makeStandardOps({ localBiblio }, body);
@@ -100,9 +101,11 @@ describe("W3C — Bibliographic References", () => {
 
   it("normalizes aliases", async () => {
     const body = `
-      <p id="refs-dom">[[DOM4]] [[DOM]] [[dom]] [[dom4]]</p>
-      <p id="refs-cssom">[[CSSOM-VIEW]] [[cssom-view]] [[cssom-view-1]]</p>
-      <p id="refs-local">[[LOCAL]] <a data-cite="LOCAL">PASS<a></p>
+      <section id="conformance">
+        <p id="refs-dom">[[DOM4]] [[DOM]] [[dom]] [[dom4]]</p>
+        <p id="refs-cssom">[[CSSOM-VIEW]] [[cssom-view]] [[cssom-view-1]]</p>
+        <p id="refs-local">[[LOCAL]] <a data-cite="LOCAL">PASS<a></p>
+      </section>
     `;
     const localBiblio = {
       LOCAL: {
@@ -160,14 +163,14 @@ describe("W3C — Bibliographic References", () => {
   });
 
   it("shows error if reference doesn't exist", async () => {
-    const body = `<p id="bad-ref">[[bad-ref]]`;
+    const body = `<p id="bad-ref">[[bad-ref]]</p>`;
     const ops = makeStandardOps({ localBiblio }, body);
     const doc = await makeRSDoc(ops);
 
     const badRefLink = doc.querySelector("#bad-ref a");
     expect(badRefLink.textContent).toEqual("bad-ref");
     expect(badRefLink.getAttribute("href")).toEqual("#bib-bad-ref");
-    const badRef = doc.querySelector("#normative-references dd");
+    const badRef = doc.querySelector("#informative-references dd");
     expect(badRef).toBeTruthy();
     expect(badRef.textContent).toEqual("Reference not found.");
   });

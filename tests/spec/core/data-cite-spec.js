@@ -77,6 +77,7 @@ describe("Core — data-cite attribute", () => {
         <section data-cite="!URL">
           <p><a data-cite="#url-thing">normative reference</a></p>
         </section>
+        <section id="conformance"></section>
       `,
     };
     const doc = await makeRSDoc(ops);
@@ -92,9 +93,9 @@ describe("Core — data-cite attribute", () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}
-        <section>
+        <section id="conformance">
           <p id="t1"><a>inline link</a></p>
-          <p id="t2"><dfn data-cite="!WHATWG-HTML#test">inline link</dfn></p>
+          <p id="t2"><dfn data-cite="WHATWG-HTML#test">inline link</dfn></p>
         </section>
       `,
     };
@@ -122,8 +123,8 @@ describe("Core — data-cite attribute", () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}
-        <section>
-          <p id="t1"><a data-cite="!WHATWG-HTML">inline link</a></p>
+        <section id="conformance">
+          <p id="t1"><a data-cite="WHATWG-HTML">inline link</a></p>
         </section>
       `,
     };
@@ -160,7 +161,7 @@ describe("Core — data-cite attribute", () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}
-          <section>
+          <section id="conformance">
             <p id="t1"><a data-cite="?no-exist-inf">link 1</a></p>
             <p id="t2"><a data-cite="!no-exist-norm">link 2</a></p>
           </section>
@@ -187,9 +188,9 @@ describe("Core — data-cite attribute", () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}
-        <section>
+        <section id="conformance">
           <p id="t1"><a
-            data-cite="!WHATWG-HTML/webappapis.html#scripting">inline link</a></p>
+            data-cite="WHATWG-HTML/webappapis.html#scripting">inline link</a></p>
         </section>
       `,
     };
@@ -244,9 +245,9 @@ describe("Core — data-cite attribute", () => {
       const ops = {
         config: makeBasicConfig(),
         body: `${makeDefaultBody()}
-        <section>
+        <section id="conformance">
           <p id="t1"><a
-            data-cite="!WHATWG-HTML#fail"
+            data-cite="WHATWG-HTML#fail"
             data-cite-frag="pass">inline link</a></p>
         </section>
       `,
@@ -272,6 +273,7 @@ describe("Core — data-cite attribute", () => {
           <p id="t2"><a data-cite="Fetch"></a></p>
           <p id="t3"><a data-cite="HTML">This should not be replaced</a></p>
         </section>
+        <section id="conformance"></section>
       `,
     };
     const doc = await makeRSDoc(ops);
@@ -303,6 +305,7 @@ describe("Core — data-cite attribute", () => {
           <p id="t1"><dfn data-cite="WHATWG-HTML#test"></dfn></p>
           <p id="t2"><dfn data-cite="WHATWG-HTML#test">This should not change</dfn></p>
         </section>
+        <section id="conformance"></section>
       `,
     };
     const doc = await makeRSDoc(ops);
