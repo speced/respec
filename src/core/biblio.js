@@ -8,6 +8,7 @@
 import { biblioDB } from "./biblio-db";
 import { createResourceHint } from "./utils";
 import { pub } from "./pubsubhub";
+export const biblio = {};
 
 // for backward compatibity
 export { wireReference, stringifyReference } from "./render-biblio";
@@ -53,7 +54,7 @@ export async function updateFromNetwork(
   const refsToFetch = [...new Set(refs)].filter(ref => ref.trim());
   // Update database if needed, if we are online
   if (!refsToFetch.length || navigator.onLine === false) {
-    return;
+    return null;
   }
   let response;
   try {
@@ -98,7 +99,7 @@ export async function run(conf) {
     msg += "`.localBiblio` for custom biblio entries.";
     pub("warn", msg);
   }
-  conf.biblio = {};
+  conf.biblio = biblio;
   const localAliases = Array.from(Object.keys(conf.localBiblio))
     .filter(key => conf.localBiblio[key].hasOwnProperty("aliasOf"))
     .map(key => conf.localBiblio[key].aliasOf);
@@ -142,14 +143,14 @@ export async function run(conf) {
   split.hasData.reduce((collector, ref) => {
     collector[ref.id] = ref.data;
     return collector;
-  }, conf.biblio);
+  }, biblio);
   const externalRefs = split.noData.map(item => item.id);
   if (externalRefs.length) {
     // Going to the network for refs we don't have
     const data = await updateFromNetwork(externalRefs, { forceUpdate: true });
-    Object.assign(conf.biblio, data);
+    Object.assign(biblio, data);
   }
-  Object.assign(conf.biblio, conf.localBiblio);
+  Object.assign(biblio, conf.localBiblio);
   await updateFromNetwork(neededRefs);
   finish();
 }
