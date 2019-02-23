@@ -107,9 +107,8 @@ export function run(conf) {
 /**
  * returns refcontent and unique key for a reference among its aliases
  * and warns about circular references
- * @param {String} ref
  */
-function getRefContent(conf) {
+function getRefContent() {
   return function(ref) {
     let refcontent = biblio[ref];
     let key = ref;
@@ -130,6 +129,18 @@ function getRefContent(conf) {
     }
     return { ref, refcontent };
   };
+}
+
+/**
+ * Render an inline citation
+ *
+ * @param {String} ref the inline reference.
+ * @returns HTMLElement
+ */
+export function renderInlineCitation(ref) {
+  const key = ref.replace(/^(!|\?)/, "");
+  const href = `#bib-${key.toLowerCase()}`;
+  return hyperHTML`[<cite><a class="bibref" href="${href}">${key}</a></cite>]`;
 }
 
 // renders a reference
