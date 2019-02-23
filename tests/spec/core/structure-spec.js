@@ -64,17 +64,17 @@ describe("Core - Structure", () => {
     const doc = await makeRSDoc(ops);
     // test default values
     const toc = doc.getElementById("toc");
-    expect(toc.querySelector("h2").textContent).toEqual("Table of Contents");
-    expect(toc.querySelector("ol > li a").textContent).toEqual("1. ONE");
-    expect(toc.querySelectorAll("li").length).toEqual(16);
-    expect(toc.querySelector("ol:first-of-type").childElementCount).toEqual(4);
-    expect(toc.querySelector("a[href='#six']").textContent).toEqual(
+    expect(toc.querySelector("h2").textContent).toBe("Table of Contents");
+    expect(toc.querySelector("ol > li a").textContent).toBe("1. ONE");
+    expect(toc.querySelectorAll("li").length).toBe(16);
+    expect(toc.querySelector("ol:first-of-type").childElementCount).toBe(4);
+    expect(toc.querySelector("a[href='#six']").textContent).toBe(
       "1.1.1.1.1.1 SIX"
     );
-    expect(toc.querySelector("ol > li:nth-child(3) > a").textContent).toEqual(
+    expect(toc.querySelector("ol > li:nth-child(3) > a").textContent).toBe(
       "A. ONE"
     );
-    expect(toc.querySelector("a[href='#six-0']").textContent).toEqual(
+    expect(toc.querySelector("a[href='#six-0']").textContent).toBe(
       "A.1.1.1.1.1 SIX"
     );
   });
@@ -123,7 +123,7 @@ describe("Core - Structure", () => {
     };
     ops.config.noTOC = true;
     const doc = await makeRSDoc(ops);
-    expect(doc.getElementById("toc")).toEqual(null);
+    expect(doc.getElementById("toc")).toBeNull();
   });
 
   it("should include introductory sections in ToC with tocIntroductory", async () => {
@@ -134,11 +134,11 @@ describe("Core - Structure", () => {
     ops.config.tocIntroductory = true;
     const doc = await makeRSDoc(ops);
     const toc = doc.getElementById("toc");
-    expect(toc.querySelector("h2").textContent).toEqual("Table of Contents");
-    expect(utils.children(toc, "ol > li").length).toEqual(7);
-    expect(toc.querySelectorAll("li").length).toEqual(19);
-    expect(toc.querySelector("ol > li").textContent).toEqual("Abstract");
-    expect(utils.children(toc, "ol > li a[href='#intro']").length).toEqual(1);
+    expect(toc.querySelector("h2").textContent).toBe("Table of Contents");
+    expect(utils.children(toc, "ol > li").length).toBe(7);
+    expect(toc.querySelectorAll("li").length).toBe(19);
+    expect(toc.querySelector("ol > li").textContent).toBe("Abstract");
+    expect(utils.children(toc, "ol > li a[href='#intro']").length).toBe(1);
   });
 
   it("should limit ToC depth with maxTocLevel", async () => {
@@ -149,20 +149,18 @@ describe("Core - Structure", () => {
     ops.config.maxTocLevel = 4;
     const doc = await makeRSDoc(ops);
     const toc = doc.getElementById("toc");
-    expect(toc.querySelector("h2").textContent).toEqual("Table of Contents");
-    expect(doc.querySelectorAll("#toc > ol > li").length).toEqual(4);
-    expect(toc.querySelectorAll("li").length).toEqual(12);
-    expect(doc.querySelector("#toc > ol > li > a").textContent).toEqual(
-      "1. ONE"
-    );
-    expect(toc.querySelector("a[href='#four']").textContent).toEqual(
+    expect(toc.querySelector("h2").textContent).toBe("Table of Contents");
+    expect(doc.querySelectorAll("#toc > ol > li").length).toBe(4);
+    expect(toc.querySelectorAll("li").length).toBe(12);
+    expect(doc.querySelector("#toc > ol > li > a").textContent).toBe("1. ONE");
+    expect(toc.querySelector("a[href='#four']").textContent).toBe(
       "1.1.1.1 FOUR"
     );
     expect(
       doc.querySelector("#toc > ol > li:nth-child(3) > a").textContent
-    ).toEqual("A. ONE");
+    ).toBe("A. ONE");
 
-    expect(toc.querySelector("a[href='#four-0']").textContent).toEqual(
+    expect(toc.querySelector("a[href='#four-0']").textContent).toBe(
       "A.1.1.1 FOUR"
     );
     // should still add section number to the original header
