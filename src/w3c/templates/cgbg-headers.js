@@ -13,7 +13,7 @@ export default conf => {
         conf.specTitle
           ? html`
               <h1 id = "title">${conf.specTitle}</h1>
-          `
+            `
           : ""
       }
       ${
