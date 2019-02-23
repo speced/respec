@@ -211,7 +211,7 @@ export function normalizePadding(text = "") {
   }
   doc.normalize();
   // use the first space as an indicator of how much to chop off the front
-  const firstSpace = doc.body.innerText
+  const firstSpace = doc.body.textContent
     .replace(/^ *\n/, "")
     .split("\n")
     .filter(item => item && item.startsWith(" "))[0];
