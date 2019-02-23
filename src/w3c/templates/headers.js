@@ -247,7 +247,7 @@ function renderOfficialCopyright(conf) {
           >ERCIM</abbr
         ></a
       >, <a href="https://www.keio.ac.jp/">Keio</a>,
-      <a href="http://ev.buaa.edu.cn/">Beihang</a>). ${noteIfDualLicense(conf)}
+      <a href="https://ev.buaa.edu.cn/">Beihang</a>). ${noteIfDualLicense(conf)}
       W3C <a href="${legalDisclaimer}">liability</a>,
       <a href="${w3cTrademark}">trademark</a> and ${linkDocumentUse(conf)} rules
       apply.
