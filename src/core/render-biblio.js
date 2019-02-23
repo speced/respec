@@ -1,7 +1,9 @@
+// @ts-check
 // Module core/render-biblio
 // renders the biblio data pre-processed in core/biblio
 
 import { addId } from "./utils";
+import { biblio } from "./biblio";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 
@@ -109,7 +111,7 @@ export function run(conf) {
  */
 function getRefContent(conf) {
   return function(ref) {
-    let refcontent = conf.biblio[ref];
+    let refcontent = biblio[ref];
     let key = ref;
     const circular = new Set([key]);
     while (refcontent && refcontent.aliasOf) {
@@ -119,7 +121,7 @@ function getRefContent(conf) {
         pub("error", msg);
       } else {
         key = refcontent.aliasOf;
-        refcontent = conf.biblio[key];
+        refcontent = biblio[key];
         circular.add(key);
       }
     }
