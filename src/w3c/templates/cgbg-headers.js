@@ -12,7 +12,7 @@ export default conf => {
       ${
         conf.specTitle
           ? html`
-              <h1 id = "title">${conf.specTitle}</h1>
+              <h1 id="title">${conf.specTitle}</h1>
             `
           : ""
       }
@@ -148,7 +148,7 @@ export default conf => {
                 >summary</a
               >
               is available.
-            `
+              `
           : html`
               <a href="https://www.w3.org/community/about/agreements/cla/"
                 >W3C Community Contributor License Agreement (CLA)</a
