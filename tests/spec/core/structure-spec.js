@@ -7,14 +7,54 @@ describe("Core - Structure", () => {
       done();
     });
   });
-  const body =
-    `${makeDefaultBody()}<section class='introductory'><h2>INTRO</h2></section>` +
-    `<section><h2>ONE</h2><section><h2>TWO</h2><section><h2>THREE</h2><section><h2>FOUR</h2>` +
-    `<section><h2>FIVE</h2><section><h2>SIX</h2></section></section></section></section></section></section>` +
-    `<section class='notoc'><h2>Not in TOC</h2></section>` +
-    `<section class='appendix'><h2>ONE</h2><section><h2>TWO</h2><section><h2>THREE</h2><section>` +
-    `<h2>FOUR</h2><section><h2>FIVE</h2><section><h2>SIX</h2><p>[[?DAHUT]]</p><p>[[!HTML5]]</p>` +
-    `</section></section></section></section></section></section>`;
+  const body = `
+      ${makeDefaultBody()}
+      <section class="introductory">
+      <h2>INTRO</h2>
+      </section>
+      <section>
+        <h2>ONE</h2>
+        <section>
+          <h2>TWO</h2>
+          <section>
+            <h2>THREE</h2>
+            <section>
+              <h2>FOUR</h2>
+              <section>
+                <h2>FIVE</h2>
+                <section>
+                  <h2>SIX</h2>
+                </section>
+              </section>
+            </section>
+          </section>
+        </section>
+      </section>
+      <section class="notoc">
+        <h2>Not in TOC</h2>
+      </section>
+      <section id="conformance"></section>
+      <section class="appendix">
+        <h2>ONE</h2>
+        <section>
+          <h2>TWO</h2>
+          <section>
+            <h2>THREE</h2>
+            <section>
+              <h2>FOUR</h2>
+              <section>
+                <h2>FIVE</h2>
+                <section>
+                  <h2>SIX</h2>
+                  <p>[[?DAHUT]]</p>
+                  <p>[[!HTML5]]</p>
+                </section>
+              </section>
+            </section>
+          </section>
+        </section>
+      </section>
+    `;
 
   it("should build a ToC with default values", async () => {
     const ops = {
@@ -24,18 +64,17 @@ describe("Core - Structure", () => {
     const doc = await makeRSDoc(ops);
     // test default values
     const toc = doc.getElementById("toc");
-    expect(toc.querySelector("h2").textContent).toEqual("Table of Contents");
-    expect(toc.querySelector("ol > li a").textContent).toEqual("1. ONE");
-    expect(toc.querySelectorAll("li").length).toEqual(15);
-    expect(toc.querySelector("ol:first-of-type").childElementCount).toEqual(3);
-    expect(toc.querySelector("a[href='#six']").textContent).toEqual(
+    expect(toc.querySelector("h2").textContent).toBe("Table of Contents");
+    expect(toc.querySelector("ol > li a").textContent).toBe("1. ONE");
+    expect(toc.querySelectorAll("li").length).toBe(16);
+    expect(toc.querySelector("ol:first-of-type").childElementCount).toBe(4);
+    expect(toc.querySelector("a[href='#six']").textContent).toBe(
       "1.1.1.1.1.1 SIX"
     );
-    expect(
-      toc.querySelector("li:first-child").nextElementSibling.querySelector("a")
-        .textContent
-    ).toEqual("A. ONE");
-    expect(toc.querySelector("a[href='#six-0']").textContent).toEqual(
+    expect(toc.querySelector("ol > li:nth-child(3) > a").textContent).toBe(
+      "A. ONE"
+    );
+    expect(toc.querySelector("a[href='#six-0']").textContent).toBe(
       "A.1.1.1.1.1 SIX"
     );
   });
@@ -58,7 +97,7 @@ describe("Core - Structure", () => {
         <section id="sotd">
           <p>[[informative]] [[normative]]</p>
         </section>
-        <section>
+        <section id="conformance">
           <p>[[normative]]</p>
         </section>`,
     };
@@ -72,8 +111,8 @@ describe("Core - Structure", () => {
 
     const normativeRefs = doc.querySelectorAll("#normative-references dt");
     expect(normativeRefs.length).toBe(1);
-    const [normativeRef] = normativeRefs;
-    expect(normativeRef.textContent).toBe("[normative]");
+    const [normativeRef1] = normativeRefs;
+    expect(normativeRef1.textContent).toBe("[normative]");
   });
 
   it("should not build a ToC with noTOC", async () => {
@@ -84,7 +123,7 @@ describe("Core - Structure", () => {
     };
     ops.config.noTOC = true;
     const doc = await makeRSDoc(ops);
-    expect(doc.getElementById("toc")).toEqual(null);
+    expect(doc.getElementById("toc")).toBeNull();
   });
 
   it("should include introductory sections in ToC with tocIntroductory", async () => {
@@ -95,11 +134,11 @@ describe("Core - Structure", () => {
     ops.config.tocIntroductory = true;
     const doc = await makeRSDoc(ops);
     const toc = doc.getElementById("toc");
-    expect(toc.querySelector("h2").textContent).toEqual("Table of Contents");
-    expect(utils.children(toc, "ol > li").length).toEqual(6);
-    expect(toc.querySelectorAll("li").length).toEqual(18);
-    expect(toc.querySelector("ol > li").textContent).toEqual("Abstract");
-    expect(utils.children(toc, "ol > li a[href='#intro']").length).toEqual(1);
+    expect(toc.querySelector("h2").textContent).toBe("Table of Contents");
+    expect(utils.children(toc, "ol > li").length).toBe(7);
+    expect(toc.querySelectorAll("li").length).toBe(19);
+    expect(toc.querySelector("ol > li").textContent).toBe("Abstract");
+    expect(utils.children(toc, "ol > li a[href='#intro']").length).toBe(1);
   });
 
   it("should limit ToC depth with maxTocLevel", async () => {
@@ -110,22 +149,18 @@ describe("Core - Structure", () => {
     ops.config.maxTocLevel = 4;
     const doc = await makeRSDoc(ops);
     const toc = doc.getElementById("toc");
-    expect(toc.querySelector("h2").textContent).toEqual("Table of Contents");
-    expect(doc.querySelectorAll("#toc > ol > li").length).toEqual(3);
-    expect(toc.querySelectorAll("li").length).toEqual(11);
-    expect(doc.querySelector("#toc > ol > li > a").textContent).toEqual(
-      "1. ONE"
-    );
-    expect(toc.querySelector("a[href='#four']").textContent).toEqual(
+    expect(toc.querySelector("h2").textContent).toBe("Table of Contents");
+    expect(doc.querySelectorAll("#toc > ol > li").length).toBe(4);
+    expect(toc.querySelectorAll("li").length).toBe(12);
+    expect(doc.querySelector("#toc > ol > li > a").textContent).toBe("1. ONE");
+    expect(toc.querySelector("a[href='#four']").textContent).toBe(
       "1.1.1.1 FOUR"
     );
-
     expect(
-      doc.querySelector("#toc > ol > li").nextSibling.querySelector("a")
-        .textContent
-    ).toEqual("A. ONE");
+      doc.querySelector("#toc > ol > li:nth-child(3) > a").textContent
+    ).toBe("A. ONE");
 
-    expect(toc.querySelector("a[href='#four-0']").textContent).toEqual(
+    expect(toc.querySelector("a[href='#four-0']").textContent).toBe(
       "A.1.1.1 FOUR"
     );
     // should still add section number to the original header
