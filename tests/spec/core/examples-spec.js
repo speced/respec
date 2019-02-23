@@ -18,7 +18,7 @@ describe("Core — Examples", () => {
     expect(markers.length).toBe(1);
 
     const marker = markers[0];
-    expect(marker.textContent).toBe("Example 1: EX");
+    expect(marker.textContent.trim()).toBe("Example 1: EX");
     expect(marker.querySelector(".example-title").textContent).toBe(": EX");
     expect(example.getAttribute("title")).toBeNull();
     expect(example.textContent).toBe("{\n  CONTENT\n}");
@@ -39,10 +39,41 @@ describe("Core — Examples", () => {
     expect(markers.length).toBe(1);
 
     const [marker] = markers;
-    expect(marker.textContent).toBe("Example 1: EX");
+    expect(marker.textContent.trim()).toBe("Example 1: EX");
     expect(marker.querySelector(".example-title").textContent).toBe(": EX");
     expect(example.getAttribute("title")).toBeNull();
-    expect(example.textContent).toBe("Example 1: EX\n{\n  CONTENT\n}\n  ");
+    expect(example.textContent.trim()).toBe(
+      "Example 1: EX\n    \n{\n  CONTENT\n}"
+    );
+  });
+  it("processes children of aside examples", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}
+           <aside class="example">
+            <pre class="js">
+            // Whitespace before this text should be removed
+            </pre>
+            <pre>
+                  // this one should also have its whitespace removed
+            </pre>
+            <pre>
+                                this one should also have its whitespace removed
+            </pre>
+           </aside>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const example = doc.querySelectorAll("pre.hljs");
+    expect(example.length).toBe(3);
+    expect(example[0].textContent).toBe(
+      "// Whitespace before this text should be removed"
+    );
+    expect(example[1].textContent).toBe(
+      "// this one should also have its whitespace removed"
+    );
+    expect(example[2].textContent).toBe(
+      "this one should also have its whitespace removed"
+    );
   });
   it("self-links examples made from asides", async () => {
     const body = `
@@ -101,5 +132,19 @@ describe("Core — Examples", () => {
     ).toEqual(false);
     expect(exampleLink.getAttribute("href")).toBe("#example-1");
     expect(example.id).toBe("example-1");
+  });
+  it("preserves dynamically attached event listeners", async () => {
+    const body = `
+      <aside class="example">
+       <button id="mybutton">Click me</button>
+      </aside>
+      <script>
+        mybutton.onclick = () => {};
+      </script>
+    `;
+    const ops = makeStandardOps({}, body);
+    const doc = await makeRSDoc(ops);
+    const mybutton = doc.getElementById("mybutton");
+    expect(mybutton.onclick).toBeDefined();
   });
 });

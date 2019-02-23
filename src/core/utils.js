@@ -1,8 +1,9 @@
-/*jshint browser: true */
-/*globals console*/
+/* jshint browser: true */
+/* globals console */
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
+import { lang as docLang } from "./l10n";
 import marked from "marked";
 import { pub } from "./pubsubhub";
 export const name = "core/utils";
@@ -99,7 +100,7 @@ const fetchDestinations = new Set([
 
 // CSS selector for matching elements that are non-normative
 export const nonNormativeSelector =
-  ".informative, .note, .issue, .example, .ednote, .practice";
+  ".informative, .note, .issue, .example, .ednote, .practice, .introductory";
 
 export function calculateLeftPad(text) {
   if (typeof text !== "string") {
@@ -265,25 +266,6 @@ export function normalizePadding(text = "") {
   return result;
 }
 
-/**
- * Removes common indents across the IDL texts,
- * so that indentation inside <pre> won't affect the rendered result.
- * @param {string} text IDL text
- */
-export function reindent(text) {
-  if (!text) {
-    return text;
-  }
-  // TODO: use trimEnd when Edge supports it
-  const lines = text.trimRight().split("\n");
-  while (lines.length && !lines[0].trim()) {
-    lines.shift();
-  }
-  const indents = lines.filter(s => s.trim()).map(s => s.search(/[^\s]/));
-  const leastIndent = Math.min(...indents);
-  return lines.map(s => s.slice(leastIndent)).join("\n");
-}
-
 // RESPEC STUFF
 export function removeReSpec(doc) {
   doc.querySelectorAll(".remove, script[data-requiremodule]").forEach(elem => {
@@ -398,8 +380,15 @@ export class IDBKeyVal {
 // Takes an array and returns a string that separates each of its items with the proper commas and
 // "and". The second argument is a mapping function that can convert the items before they are
 // joined
-export function joinAnd(array = [], mapper = item => item) {
+export function joinAnd(array = [], mapper = item => item, lang = docLang) {
   const items = array.map(mapper);
+  if (Intl.ListFormat && typeof Intl.ListFormat === "function") {
+    const formatter = new Intl.ListFormat(lang, {
+      style: "long",
+      type: "conjunction",
+    });
+    return formatter.format(items);
+  }
   switch (items.length) {
     case 0:
     case 1: // "x"
@@ -498,7 +487,7 @@ export function humanDate(
     year: "numeric",
     timeZone: "UTC",
   });
-  //date month year
+  // date month year
   return `${day} ${month} ${year}`;
 }
 // given either a Date object or a date in YYYY-MM-DD format,
@@ -736,8 +725,8 @@ export function getTextNodes(el, exclusions = []) {
 export function getDfnTitles(elem, { isDefinition = false } = {}) {
   let titleString = "";
   let normText = "";
-  //data-lt-noDefault avoid using the text content of a definition
-  //in the definition list.
+  // data-lt-noDefault avoid using the text content of a definition
+  // in the definition list.
   if (!elem.hasAttribute("data-lt-noDefault")) {
     normText = norm(elem.textContent).toLowerCase();
   }
