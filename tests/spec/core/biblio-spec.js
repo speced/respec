@@ -133,7 +133,7 @@ describe("W3C — Bibliographic References", () => {
     expect(nr[0].textContent).toEqual("[CSSOM-VIEW]");
     expect(nr[1].textContent).toEqual("[DOM4]"); // first appearing [[TERM]] is used
     expect(nr[2].textContent).toEqual("[LOCAL]");
-    // Added by conformance section
+
     const refsLocal = [...doc.querySelectorAll("p#refs-local a")];
     expect(refsLocal[0].textContent).toEqual("LOCAL");
     expect(refsLocal[0].getAttribute("href")).toEqual("#bib-local");
