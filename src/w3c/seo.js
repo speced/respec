@@ -1,6 +1,7 @@
 // Module w3c/seo
 // Manages SEO information for documents
 // e.g. set the canonical URL for the document if configured
+import { biblio } from "../core/biblio";
 import { pub } from "../core/pubsubhub";
 export const name = "w3c/seo";
 export function run(conf) {
@@ -120,7 +121,7 @@ async function addJSONLDInfo(conf, doc) {
 
   // normative and informative references
   jsonld.citation = [...conf.normativeReferences, ...conf.informativeReferences]
-    .map(ref => conf.biblio[ref])
+    .map(ref => biblio[ref])
     .filter(ref => typeof ref === "object")
     .map(addRef);
 

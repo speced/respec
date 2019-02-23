@@ -28,9 +28,7 @@ describe("Core - WebIDL", () => {
 
     // sequence<DOMString>
     expect(sequence.nextElementSibling.localName).toEqual("a");
-    expect(sequence.nextElementSibling.href.endsWith("#idl-DOMString")).toBe(
-      true
-    );
+    expect(sequence.nextElementSibling.hash).toBe("#idl-DOMString");
 
     // readonly attribute DOMString? aBoolAttribute;
     const attr = doc.getElementById("idl-def-linkingtest-aboolattribute");

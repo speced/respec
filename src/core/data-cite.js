@@ -14,8 +14,8 @@
  * Usage:
  * https://github.com/w3c/respec/wiki/data--cite
  */
+import { biblio, resolveRef, updateFromNetwork } from "./biblio";
 import { refTypeFromContext, showInlineWarning, wrapInner } from "./utils";
-import { resolveRef, updateFromNetwork } from "./biblio";
 import hyperHTML from "hyperhtml";
 export const name = "core/data-cite";
 
@@ -159,7 +159,7 @@ export async function linkInlineCitations(doc, conf = respecConfig) {
 
   // we now go to network to fetch missing entries
   const newEntries = await updateFromNetwork(missingBibEntries);
-  Object.assign(conf.biblio, newEntries);
+  if (newEntries) Object.assign(biblio, newEntries);
 
   const lookupRequests = [...new Set(elems)].map(toLookupRequest);
   return await Promise.all(lookupRequests);
