@@ -16,7 +16,7 @@ export default (conf, opts) => {
                         <a href="${conf.prUrl}">#${conf.prNumber}</a>
                       `
                     : ""
-                }</summary
+                }</summary"This is a preview of pull request PR number
               >
               <p>
                 Do not attempt to implement this version of the specification.
