@@ -50,7 +50,6 @@ export async function run(conf) {
           ? Array.from(element.querySelectorAll("code"))
           : [element];
       elementsToHighlight.map((each, id) => {
-        console.log(id);
         const msg = {
           action: "highlight",
           code: each.innerText,
@@ -64,7 +63,6 @@ export async function run(conf) {
           if (id !== msg.id) {
             return; // not for us!
           }
-          console.log(ev.data);
           const lang = language !== undefined ? language : msg.languages[0];
           switch (each.localName) {
             case "pre":

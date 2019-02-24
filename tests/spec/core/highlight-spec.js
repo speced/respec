@@ -111,6 +111,22 @@ describe("Core — Highlight", () => {
     expect(pre.querySelectorAll("code[class^='js']").length).toBe(1);
   });
 
+  it("checks if <code> is the first child of <pre>", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}<section>
+          <pre class="js">
+            function foo() {
+              alert('foo');
+            }
+          </pre>
+        </section>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const pre = doc.querySelectorAll("pre");
+    expect(pre.firstChild.localName).toBe("code");
+  });
+
   it("adds the correct language class to <code> if languge is undefined or not right in <pre>", async () => {
     const ops = {
       config: makeBasicConfig(),
@@ -125,6 +141,28 @@ describe("Core — Highlight", () => {
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelectorAll("pre");
     expect(pre.querySelectorAll("code").length).toBe(1);
+    expect(pre.querySelectorAll("code[class^='http']").length).toBe(1);
+  });
+
+  it("adds the correct language class to <code> if languge is undefined or not right in <pre>", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}<section>
+          <pre>
+            <code>
+              function one(){}
+            </code>
+            this function(){} is not highlighted.
+            <code class="http">
+              Header: Test
+            </code>
+          </pre>
+        </section>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const pre = doc.querySelectorAll("pre");
+    expect(pre.querySelectorAll("code").length).toBe(2);
+    expect(pre.querySelectorAll("code[class^='javascript']").length).toBe(1);
     expect(pre.querySelectorAll("code[class^='http']").length).toBe(1);
   });
 });
