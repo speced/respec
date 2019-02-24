@@ -144,7 +144,7 @@ describe("Core — Highlight", () => {
     expect(pre.querySelectorAll("code[class^='http']").length).toBe(1);
   });
 
-  it("adds the correct language class to <code> if languge is undefined or not right in <pre>", async () => {
+  it("checks case when <code> is present inside <pre>", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<section>
