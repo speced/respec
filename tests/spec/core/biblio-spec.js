@@ -221,7 +221,7 @@ it("makes sure references section has expected localization text", async () => {
     },
     body: `
     <section class="informative" id="intro">[[DOM]]</section>
-    <section>[[HTML]]</section>
+    <section>[[!HTML]]</section>
     `,
   };
   const doc = await makeRSDoc(ops);
