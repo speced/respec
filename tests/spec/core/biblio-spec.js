@@ -228,7 +228,7 @@ it("makes sure references section has expected localization text", async () => {
   const { textContent } = doc.querySelector("#references h2");
   const [normRef, infoRef] = doc.querySelectorAll("#references h3");
   expect(doc.documentElement.lang).toBe("nl");
-  expect(textContent).toMatch("Referenties");
-  expect(normRef.textContent).toMatch("Normatieve referenties");
-  expect(infoRef.textContent).toMatch("Informatieve referenties");
+  expect(textContent).toContain("Referenties");
+  expect(normRef.textContent).toContain("Normatieve referenties");
+  expect(infoRef.textContent).toContain("Informatieve referenties");
 });
