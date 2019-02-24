@@ -100,7 +100,7 @@ const fetchDestinations = new Set([
 
 // CSS selector for matching elements that are non-normative
 export const nonNormativeSelector =
-  ".informative, .note, .issue, .example, .ednote, .practice";
+  ".informative, .note, .issue, .example, .ednote, .practice, .introductory";
 
 export function calculateLeftPad(text) {
   if (typeof text !== "string") {
@@ -211,7 +211,7 @@ export function normalizePadding(text = "") {
   }
   doc.normalize();
   // use the first space as an indicator of how much to chop off the front
-  const firstSpace = doc.body.innerText
+  const firstSpace = doc.body.textContent
     .replace(/^ *\n/, "")
     .split("\n")
     .filter(item => item && item.startsWith(" "))[0];
