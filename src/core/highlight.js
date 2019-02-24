@@ -31,7 +31,7 @@ export async function run(conf) {
     codeStyle.remove();
     return;
   }
-  const promisesToHighlight = highlightables.map((element, i) => {
+  const promisesToHighlight = highlightables.map(element => {
     return new Promise(resolve => {
       if (element.textContent.trim() === "") {
         return resolve(); // no work to do
@@ -45,12 +45,16 @@ export async function run(conf) {
         console.error("Timed-out waiting for highlight:", element);
         done();
       }, 4000);
-      const elementsToHighlight = element.querySelectorAll("code").length > 0 ? element.querySelectorAll("code") : [element];
-      for(let each of elementsToHighlight) {
+      const elementsToHighlight =
+        element.querySelectorAll("code").length > 0
+          ? Array.from(element.querySelectorAll("code"))
+          : [element];
+      elementsToHighlight.map((each, id) => {
+        console.log(id);
         const msg = {
           action: "highlight",
           code: each.innerText,
-          id: `highlight:${i}`,
+          id: `highlight:${id}`,
           languages: getLanguageHint(each.classList),
         };
         worker.addEventListener("message", function listener(ev) {
@@ -60,24 +64,27 @@ export async function run(conf) {
           if (id !== msg.id) {
             return; // not for us!
           }
-          let lang = language !== undefined ? language : msg.languages[0];
-          if (each.localName === "pre") {
-            each.innerHTML = `<code>${value}</code>`;
-            each.classList.remove(lang);
-            each.firstChild.classList.add(lang);
+          console.log(ev.data);
+          const lang = language !== undefined ? language : msg.languages[0];
+          switch (each.localName) {
+            case "pre":
+              each.innerHTML = `<code class="${lang}">${value}</code>`;
+              each.classList.remove(lang);
+              each.firstChild.classList.add("hljs");
+              break;
+            case "code":
+              each.innerHTML = value;
+              each.classList.add(language);
+              each.classList.add("hljs");
+              break;
           }
-          else {
-            each.innerHTML = value;
-            each.classList.add(language);
-          }
-          each.classList.add("hljs");
           clearTimeout(timeoutId);
           worker.removeEventListener("message", listener);
           done();
         });
         element.setAttribute("aria-busy", "true");
         worker.postMessage(msg);
-      }
+      });
     });
   });
   await Promise.all(promisesToHighlight);

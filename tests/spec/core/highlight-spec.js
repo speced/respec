@@ -94,7 +94,7 @@ describe("Core — Highlight", () => {
     expect(pre.querySelectorAll("code[class^='javascript']").length).toBe(1);
   });
 
-  it("<code> gets the language class defined in <pre>", async () => {
+  it("gets the language class defined in <pre>", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<section>
@@ -111,7 +111,7 @@ describe("Core — Highlight", () => {
     expect(pre.querySelectorAll("code[class^='js']").length).toBe(1);
   });
 
-  it("When class defined in <pre> is not correct, returns language: undefined", async () => {
+  it("adds the correct language class to <code> if languge is undefined or not right in <pre>", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<section>
