@@ -1,7 +1,9 @@
+// @ts-check
 // Module core/render-biblio
 // renders the biblio data pre-processed in core/biblio
 
 import { addId } from "./utils";
+import { biblio } from "./biblio";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 import { lang as defaultLang } from "../core/l10n"
@@ -68,8 +70,6 @@ export function run(conf) {
       ${conf.refNote ? hyperHTML`<p>${conf.refNote}</p>` : ""}
     </section>`;
 
-  const toRefContent = getRefContent(conf);
-
   for (const type of ["Normative", "Informative"]) {
     const refs = type === "Normative" ? norms : informs;
     if (!refs.length) continue;
@@ -131,27 +131,37 @@ export function run(conf) {
  * and warns about circular references
  * @param {String} ref
  */
-function getRefContent(conf) {
-  return function(ref) {
-    let refcontent = conf.biblio[ref];
-    let key = ref;
-    const circular = new Set([key]);
-    while (refcontent && refcontent.aliasOf) {
-      if (circular.has(refcontent.aliasOf)) {
-        refcontent = null;
-        const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
-        pub("error", msg);
-      } else {
-        key = refcontent.aliasOf;
-        refcontent = conf.biblio[key];
-        circular.add(key);
-      }
+function toRefContent(ref) {
+  let refcontent = biblio[ref];
+  let key = ref;
+  const circular = new Set([key]);
+  while (refcontent && refcontent.aliasOf) {
+    if (circular.has(refcontent.aliasOf)) {
+      refcontent = null;
+      const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
+      pub("error", msg);
+    } else {
+      key = refcontent.aliasOf;
+      refcontent = biblio[key];
+      circular.add(key);
     }
-    if (refcontent && !refcontent.id) {
-      refcontent.id = ref.toLowerCase();
-    }
-    return { ref, refcontent };
-  };
+  }
+  if (refcontent && !refcontent.id) {
+    refcontent.id = ref.toLowerCase();
+  }
+  return { ref, refcontent };
+}
+
+/**
+ * Render an inline citation
+ *
+ * @param {String} ref the inline reference.
+ * @returns HTMLElement
+ */
+export function renderInlineCitation(ref) {
+  const key = ref.replace(/^(!|\?)/, "");
+  const href = `#bib-${key.toLowerCase()}`;
+  return hyperHTML`[<cite><a class="bibref" href="${href}">${key}</a></cite>]`;
 }
 
 // renders a reference
