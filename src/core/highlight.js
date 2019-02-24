@@ -45,13 +45,13 @@ export async function run(conf) {
         console.error("Timed-out waiting for highlight:", element);
         done();
       }, 4000);
-      const codeElements = element.querySelectorAll("code");
-      if(!codeElements.length) {
+      const elementsToHighlight = element.querySelectorAll("code").length > 0 ? element.querySelectorAll("code") : [element];
+      for(let each of elementsToHighlight) {
         const msg = {
           action: "highlight",
-          code: element.textContent,
+          code: each.innerText,
           id: `highlight:${i}`,
-          languages: getLanguageHint(element.classList),
+          languages: getLanguageHint(each.classList),
         };
         worker.addEventListener("message", function listener(ev) {
           const {
@@ -60,45 +60,23 @@ export async function run(conf) {
           if (id !== msg.id) {
             return; // not for us!
           }
-          if (element.localName === "pre") {
-            element.classList.add("hljs");
-          }
           let lang = language !== undefined ? language : msg.languages[0];
-          element.innerHTML = `<code>${value}</code>`;
-          element.classList.remove(lang);
-          element.firstChild.classList.add(lang);
+          if (each.localName === "pre") {
+            each.innerHTML = `<code>${value}</code>`;
+            each.classList.remove(lang);
+            each.firstChild.classList.add(lang);
+          }
+          else {
+            each.innerHTML = value;
+            each.classList.add(language);
+          }
+          each.classList.add("hljs");
           clearTimeout(timeoutId);
           worker.removeEventListener("message", listener);
           done();
         });
         element.setAttribute("aria-busy", "true");
         worker.postMessage(msg);
-      }
-      else {
-        for(let each of codeElements) {
-          const msg = {
-            action: "highlight",
-            code: each.textContent,
-            id: `highlight:${i}`,
-            languages: getLanguageHint(each.classList),
-          };
-          worker.addEventListener("message", function listener(ev) {
-            const {
-              data: { id, language, value },
-            } = ev;
-            if (id !== msg.id) {
-              return; // not for us!
-            }
-            each.innerHTML = value;
-            each.classList.add("hljs");
-            each.classList.add(language);
-            clearTimeout(timeoutId);
-            worker.removeEventListener("message", listener);
-            done();
-          });
-          element.setAttribute("aria-busy", "true");
-          worker.postMessage(msg);
-        }
       }
     });
   });
