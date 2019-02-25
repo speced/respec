@@ -1,11 +1,36 @@
+// @ts-check
 // Module core/render-biblio
 // renders the biblio data pre-processed in core/biblio
 
 import { addId } from "./utils";
+import { biblio } from "./biblio";
+import { lang as defaultLang } from "../core/l10n";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 
 export const name = "core/render-biblio";
+
+const localizationStrings = {
+  en: {
+    info_references: "Informative references",
+    norm_references: "Normative references",
+    references: "References",
+  },
+  nl: {
+    info_references: "Informatieve referenties",
+    norm_references: "Normatieve referenties",
+    references: "Referenties",
+  },
+  es: {
+    info_references: "Referencias informativas",
+    norm_references: "Referencias normativas",
+    references: "Referencias",
+  },
+};
+
+const lang = defaultLang in localizationStrings ? defaultLang : "en";
+
+const l10n = localizationStrings[lang];
 
 const REF_STATUSES = new Map([
   ["CR", "W3C Candidate Recommendation"],
@@ -40,11 +65,9 @@ export function run(conf) {
 
   const refsec = hyperHTML`
     <section id='references' class='appendix'>
-      <h2>${conf.l10n.references}</h2>
+      <h2>${l10n.references}</h2>
       ${conf.refNote ? hyperHTML`<p>${conf.refNote}</p>` : ""}
     </section>`;
-
-  const toRefContent = getRefContent(conf);
 
   for (const type of ["Normative", "Informative"]) {
     const refs = type === "Normative" ? norms : informs;
@@ -53,9 +76,7 @@ export function run(conf) {
     const sec = hyperHTML`
       <section>
         <h3>${
-          type === "Normative"
-            ? conf.l10n.norm_references
-            : conf.l10n.info_references
+          type === "Normative" ? l10n.norm_references : l10n.info_references
         }</h3>
       </section>`;
     addId(sec);
@@ -107,27 +128,37 @@ export function run(conf) {
  * and warns about circular references
  * @param {String} ref
  */
-function getRefContent(conf) {
-  return function(ref) {
-    let refcontent = conf.biblio[ref];
-    let key = ref;
-    const circular = new Set([key]);
-    while (refcontent && refcontent.aliasOf) {
-      if (circular.has(refcontent.aliasOf)) {
-        refcontent = null;
-        const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
-        pub("error", msg);
-      } else {
-        key = refcontent.aliasOf;
-        refcontent = conf.biblio[key];
-        circular.add(key);
-      }
+function toRefContent(ref) {
+  let refcontent = biblio[ref];
+  let key = ref;
+  const circular = new Set([key]);
+  while (refcontent && refcontent.aliasOf) {
+    if (circular.has(refcontent.aliasOf)) {
+      refcontent = null;
+      const msg = `Circular reference in biblio DB between [\`${ref}\`] and [\`${key}\`].`;
+      pub("error", msg);
+    } else {
+      key = refcontent.aliasOf;
+      refcontent = biblio[key];
+      circular.add(key);
     }
-    if (refcontent && !refcontent.id) {
-      refcontent.id = ref.toLowerCase();
-    }
-    return { ref, refcontent };
-  };
+  }
+  if (refcontent && !refcontent.id) {
+    refcontent.id = ref.toLowerCase();
+  }
+  return { ref, refcontent };
+}
+
+/**
+ * Render an inline citation
+ *
+ * @param {String} ref the inline reference.
+ * @returns HTMLElement
+ */
+export function renderInlineCitation(ref) {
+  const key = ref.replace(/^(!|\?)/, "");
+  const href = `#bib-${key.toLowerCase()}`;
+  return hyperHTML`[<cite><a class="bibref" href="${href}">${key}</a></cite>]`;
 }
 
 // renders a reference
