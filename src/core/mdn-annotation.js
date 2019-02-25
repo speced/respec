@@ -41,43 +41,47 @@ export async function run(conf) {
        div.parentNode.classList.toggle('wrapped');
      }
   </script>`);
-  nodesWithId.forEach(node => {
-    if (unlikelyTagNames.indexOf(node.tagName) > -1) {
-      return;
-    }
-    if (!(mdnSpecJson[node.id] && Array.isArray(mdnSpecJson[node.id]))) {
-      return;
-    }
-    const mdnSpecArray = mdnSpecJson[node.id];
-    let targetAncestor = node;
-    // Find the furthest ancestor that is a direct child of <body>
-    while (targetAncestor.parentNode.tagName !== "BODY") {
-      targetAncestor = targetAncestor.parentNode;
-    }
-    const targetSibling = targetAncestor.previousElementSibling;
-    let mdnBox;
-    if (targetSibling && targetSibling.class === "mdn before") {
-      // If the target ancestor already has a mdnBox inserted, we just use it
-      mdnBox = targetSibling;
-    } else {
-      mdnBox = hyperHTML`<aside class="mdn before">
-        <input type="button" onclick="toggleStatus(this)" value="⋰" />
-      </aside>`;
-      document.body.insertBefore(mdnBox, targetAncestor);
-    }
-    mdnSpecArray.forEach(spec => {
-      const mdnDiv = document.createElement("div");
-      mdnDiv.innerHTML += `<b>MDN </b>`;
-      const { slug, summary } = spec;
-      const mdnSubPath = slug.slice(slug.indexOf("/") + 1);
-      mdnDiv.innerHTML += `
-        <details>
-          <summary>
-            <a title="${summary}" href="${MDN_URL_BASE}${slug}">${mdnSubPath}</a>
-          </summary>
-        </details>
-      `;
-      mdnBox.appendChild(mdnDiv);
+  [...nodesWithId]
+    .filter(node => {
+      return (
+        unlikelyTagNames.indexOf(node.tagName) === -1 &&
+        mdnSpecJson[node.id] &&
+        Array.isArray(mdnSpecJson[node.id])
+      );
+    })
+    .forEach(node => {
+      const mdnSpecArray = mdnSpecJson[node.id];
+      let targetAncestor = node;
+      // Find the furthest ancestor that is a direct child of <body>
+      while (targetAncestor.parentNode.tagName !== "BODY") {
+        targetAncestor = targetAncestor.parentNode;
+      }
+      const targetSibling = targetAncestor.previousElementSibling;
+      let mdnBox;
+      if (targetSibling && targetSibling.classList.contains("mdn")) {
+        // If the target ancestor already has a mdnBox inserted, we just use it
+        mdnBox = targetSibling;
+      } else {
+        mdnBox = hyperHTML`<aside class="mdn before">
+          <input type="button" onclick="toggleStatus(this)" value="⋰" >
+        </aside>`;
+        document.body.insertBefore(mdnBox, targetAncestor);
+      }
+      mdnSpecArray
+        .map(spec => {
+          const mdnDiv = document.createElement("div");
+          mdnDiv.innerHTML += `<b>MDN </b>`;
+          const { slug, summary } = spec;
+          const mdnSubPath = slug.slice(slug.indexOf("/") + 1);
+          mdnDiv.innerHTML += `
+            <details>
+              <summary>
+                <a title="${summary}" href="${MDN_URL_BASE}${slug}">${mdnSubPath}</a>
+              </summary>
+            </details>
+          `;
+          return mdnDiv;
+        })
+        .forEach(mdnDiv => mdnBox.appendChild(mdnDiv));
     });
-  });
 }
