@@ -6,6 +6,7 @@
 import ghCss from "text!../../assets/github.css";
 import { worker } from "./worker";
 export const name = "core/highlight";
+let id = 0;
 
 // Opportunistically insert the style into the head to reduce FOUC.
 const codeStyle = document.createElement("style");
@@ -49,12 +50,12 @@ export async function run(conf) {
         element.querySelectorAll("code").length > 0
           ? Array.from(element.querySelectorAll("code"))
           : [element];
-      elementsToHighlight.map((each, id) => {
+      elementsToHighlight.map(elem => {
         const msg = {
           action: "highlight",
-          code: each.innerText,
-          id: `highlight:${id}`,
-          languages: getLanguageHint(each.classList),
+          code: elem.innerText,
+          id: `highlight:${id++}`,
+          languages: getLanguageHint(elem.classList),
         };
         worker.addEventListener("message", function listener(ev) {
           const {
@@ -63,17 +64,18 @@ export async function run(conf) {
           if (id !== msg.id) {
             return; // not for us!
           }
+          console.log(ev.data);
           const lang = language !== undefined ? language : msg.languages[0];
-          switch (each.localName) {
+          switch (elem.localName) {
             case "pre":
-              each.innerHTML = `<code class="${lang}">${value}</code>`;
-              each.classList.remove(lang);
-              each.firstChild.classList.add("hljs");
+              elem.innerHTML = `<code class="${lang}">${value}</code>`;
+              elem.classList.remove(lang);
+              elem.firstChild.classList.add("hljs");
               break;
             case "code":
-              each.innerHTML = value;
-              each.classList.add(language);
-              each.classList.add("hljs");
+              elem.innerHTML = value;
+              elem.classList.add(language);
+              elem.classList.add("hljs");
               break;
           }
           clearTimeout(timeoutId);
