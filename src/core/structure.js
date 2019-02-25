@@ -236,7 +236,10 @@ function updateEmptyAnchors(secMap) {
         anchor.append("section ");
       }
       if (secno) {
-        anchor.append(hyperHTML`<span class='secno'>§ ${secno}</span>`, " ");
+        anchor.append(
+          hyperHTML`<span class='secno'>§&nbsp;${secno}</span>`,
+          " "
+        );
       }
       anchor.append(hyperHTML`<span class='sec-title'>${title.trim()}</span>`);
     });

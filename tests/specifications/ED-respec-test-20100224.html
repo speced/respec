@@ -2,11 +2,11 @@
 <html lang="en" dir="ltr">
 <head>
 
-  
+
     <title>W3C Wicked Cool Stuff Specification</title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-    
-    
+
+
   <style type="text/css">
 /*****************************************************************
  * ReSpec CSS
@@ -16,7 +16,7 @@
 
 
 /* --- INLINES --- */
-em.rfc2119 { 
+em.rfc2119 {
     text-transform:     lowercase;
     font-variant:       small-caps;
     font-style:         normal;
@@ -442,8 +442,8 @@ pre.sh_sourceCode .sh_attribute { color: #006400; }
       This is an example specification used to test, develop, and document the ReSpec.js specification
       publishing system. This really isn't so much a specification as a playground in more ways than one.
     </div><div id="sotd" class="introductory section"><h2 id="status-of-this-document">Status of This Document</h2><p><em>This section describes the status of this document at the time of its publication. Other documents may supersede this document. A list of current <acronym title="World Wide Web Consortium">W3C</acronym> publications and the latest revision of this technical report can be found in the <a href="http://www.w3.org/TR/"><acronym title="World Wide Web Consortium">W3C</acronym> technical reports index</a> at http://www.w3.org/TR/.</em></p><p>This document was published by the <a href="http://www.w3.org/2009/dap/">Device APIs and Policy Working Group</a> as an Editor's Draft. If you wish to make comments regarding this document, please send them to <a href="mailto:public-device-apis@w3.org">public-device-apis@w3.org</a> (<a href="mailto:public-device-apis-request@w3.org?subject=subscribe">subscribe</a>, <a href="http://lists.w3.org/Archives/Public/public-device-apis/">archives</a>). All feedback is welcome.</p><p>Publication as a Editor's Draft does not imply endorsement by the <acronym title="World Wide Web Consortium">W3C</acronym> Membership. This is a draft document and may be updated, replaced or obsoleted by other documents at any time. It is inappropriate to cite this document as other than work in progress.</p><p>This document was produced by a group operating under the <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/">5 February 2004 <acronym title="World Wide Web Consortium">W3C</acronym> Patent Policy</a>. <acronym title="World Wide Web Consortium">W3C</acronym> maintains a <a href="http://www.w3.org/2004/01/pp-impl/43696/status" rel="disclosure">public list of any patent disclosures</a> made in connection with the deliverables of the group; that page also includes instructions for disclosing a patent. An individual who has actual knowledge of a patent which the individual believes contains <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential">Essential Claim(s)</a> must disclose the information in accordance with <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure">section 6 of the <acronym title="World Wide Web Consortium">W3C</acronym> Patent Policy</a>.</p></div><div class="section" id="toc"><h2 id="table-of-contents" class="introductory">Table of Contents</h2><ul class="toc"><li class="tocline"><a class="tocxref" href="#rfc-2119-is-not-optional"><span class="secno">1. </span>RFC 2119 is not <em title="optional" class="rfc2119">optional</em></a></li><li class="tocline"><a class="tocxref" href="#small-talk-about-abbreviations"><span class="secno">2. </span>Small Talk about Abbreviations</a></li><li class="tocline"><a class="tocxref" href="#a-defining-moment"><span class="secno">3. </span>A Defining Moment</a></li><li class="tocline"><a class="tocxref" href="#the-dahut-interface"><span class="secno">4. </span>The <span class="idlType formerLink idlType"><code>Dahut</code></span> interface</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#attributes"><span class="secno">4.1 </span>Attributes</a></li><li class="tocline"><a class="tocxref" href="#methods"><span class="secno">4.2 </span>Methods</a></li></ul></li><li class="tocline"><a class="tocxref" href="#a-good-reference"><span class="secno">5. </span>A Good Reference</a></li><li class="tocline"><a class="tocxref" href="#russian-turtles"><span class="secno">6. </span>Russian Turtles</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#russian-turtles-1"><span class="secno">6.1 </span>Russian Turtles</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#russian-turtles-2"><span class="secno">6.1.1 </span>Russian Turtles</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#russian-turtles-3"><span class="secno">6.1.1.1 </span>Russian Turtles</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#russian-turtles-4"><span class="secno">6.1.1.1.1 </span>Russian Turtles</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#russian-turtles-5"><span class="secno">6.1.1.1.1.1 </span>Russian Turtles</a></li></ul></li></ul></li></ul></li></ul></li></ul></li><li class="tocline"><a class="tocxref" href="#including-other-data"><span class="secno">7. </span>Including other data</a></li><li class="tocline"><a class="tocxref" href="#transforming-content"><span class="secno">8. </span>Transforming content</a></li><li class="tocline"><a class="tocxref" href="#acknowledgements"><span class="secno">A. </span>Acknowledgements</a></li><li class="tocline"><a class="tocxref" href="#references"><span class="secno">B. </span>References</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#normative-references"><span class="secno">B.1 </span>Normative references</a></li><li class="tocline"><a class="tocxref" href="#informative-references"><span class="secno">B.2 </span>Informative references</a></li></ul></li></ul></div>
-    
-    
+
+
     <div class="section" id="rfc-2119-is-not-optional">
       <!--OddPage--><h2 id="x1.-rfc-2119-is-not-optional"><span class="secno">1. </span>RFC 2119 is not <em title="optional" class="rfc2119">optional</em></h2>
       <p>
@@ -460,8 +460,8 @@ pre.sh_sourceCode .sh_attribute { color: #006400; }
         <li>work over element boundaries.</li>
       </ul>
     </div>
-    
-    
+
+
     <div class="section" id="small-talk-about-abbreviations">
       <!--OddPage--><h2 id="x2.-small-talk-about-abbreviations"><span class="secno">2. </span>Small Talk about Abbreviations</h2>
       <p>
@@ -475,8 +475,8 @@ pre.sh_sourceCode .sh_attribute { color: #006400; }
         <li><abbr title="seriously"><abbr title="seriously">srsly</abbr></abbr> and <abbr title="seriously">srsly</abbr></li>
       </ul>
     </div>
-    
-    
+
+
     <div class="section" id="a-defining-moment">
       <!--OddPage--><h2 id="x3.-a-defining-moment"><span class="secno">3. </span>A Defining Moment</h2>
       <p>
@@ -507,7 +507,7 @@ pre.sh_sourceCode .sh_attribute { color: #006400; }
         with a title</a> works over several lines, just like <a class="internalDFN" href="#dfn-definitions-over-multiple-lines">definitions over multiple lines</a>.
       </p>
     </div>
-    
+
     <div class="section" id="the-dahut-interface">
       <!--OddPage--><h2 id="x4.-the-dahut-interface"><span class="secno">4. </span>The <a class="idlType" href="#idl-def-Dahut"><code>Dahut</code></a> interface</h2>
       <p>
@@ -534,7 +534,7 @@ interface <span class="idlInterfaceID">Dahut</span> : <span class="idlSuperclass
           Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
         <table class="parameters"><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">volume</td><td class="prmType"><code><a>unsigned long</a></code></td><td class="prmNullFalse">✘</td><td class="prmOptFalse">✘</td><td class="prmDesc"></td></tr><tr><td class="prmName">sentence</td><td class="prmType"><code><a>DOMString</a></code></td><td class="prmNullFalse">✘</td><td class="prmOptFalse">✘</td><td class="prmDesc"></td></tr></table><div><em>No exceptions.</em></div><div><em>Return type: </em><code><a>void</a></code></div></dd></dl></div>
     </div>
-    
+
     <div class="section" id="a-good-reference">
       <!--OddPage--><h2 id="x5.-a-good-reference"><span class="secno">5. </span>A Good Reference</h2>
       <p>
@@ -542,7 +542,7 @@ interface <span class="idlInterfaceID">Dahut</span> : <span class="idlSuperclass
         and even in a normative way [<a href="#bib-REX" rel="biblioentry" class="bibref">REX</a>] or [<a href="#bib-SVGMOBILE12" rel="biblioentry" class="bibref">SVGMOBILE12</a>]. It's all about I18N, [<a href="#bib-ZHMARK" rel="biblioentry" class="bibref">ZHMARK</a>].
       </p>
     </div>
-    
+
     <div class="section" id="russian-turtles">
       <!--OddPage--><h2 id="x6.-russian-turtles"><span class="secno">6. </span>Russian Turtles</h2>
       <p>
@@ -589,15 +589,15 @@ interface <span class="idlInterfaceID">Dahut</span> : <span class="idlSuperclass
 
       <p>The example below is from an external file:</p>
       <pre class="example">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;xs:schema 
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-    elementFormDefault="qualified" 
+&lt;xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified"
 &gt;
   &lt;xs:attribute name="data-include" type="xs:string"/&gt;
   &lt;xs:attribute name="data-oninclude" type="xs:ID"/&gt;
 
 &lt;/xs:schema&gt;</pre>
-    
+
       </div>
 
       <div class="section" id="transforming-content">
@@ -608,15 +608,15 @@ interface <span class="idlInterfaceID">Dahut</span> : <span class="idlSuperclass
     <div id="acknowledgements" class="appendix section">
       <!--OddPage--><h2 id="a.-acknowledgements"><span class="secno">A. </span>Acknowledgements</h2>
       <p>
-        Many thanks to Marcos Cáceres for moral support, and to Bert Bos and Geoffrey Sneddon for their
+        Many thanks to Marcos Cáceres for moral support, and to Bert Bos and Sam Sneddon for their
         tools from which I pilfered joyfully.
       </p>
     </div>
-  <div class="appendix section" id="references"><!--OddPage--><h2 id="b.-references"><span class="secno">B. </span>References</h2><div class="section" id="normative-references"><h3 id="b.1-normative-references"><span class="secno">B.1 </span>Normative references</h3><dl class="bibliography"><dt id="bib-REX">[REX]</dt><dd>Robin Berjon. <a href="http://www.w3.org/TR/2006/WD-rex-20061013"><cite>Remote Events for XML (REX) 1.0.</cite></a> 13 October 2006. W3C Working Draft. (Work in progress.) URL: <a href="http://www.w3.org/TR/2006/WD-rex-20061013">http://www.w3.org/TR/2006/WD-rex-20061013</a> 
-</dd><dt id="bib-SVGMOBILE12">[SVGMOBILE12]</dt><dd>Chris Lilley; et al. <a href="http://www.w3.org/TR/2006/CR-SVGMobile12-20060810"><cite>Scalable Vector Graphics (SVG) Tiny 1.2 Specification.</cite></a> 10 August 2006. W3C Candidate Recommendation. (Work in progress.) URL: <a href="http://www.w3.org/TR/2006/CR-SVGMobile12-20060810">http://www.w3.org/TR/2006/CR-SVGMobile12-20060810</a> 
-</dd></dl></div><div class="section" id="informative-references"><h3 id="b.2-informative-references"><span class="secno">B.2 </span>Informative references</h3><dl class="bibliography"><dt id="bib-WEBIDL">[WEBIDL]</dt><dd>Cameron McCormack. <a href="http://www.w3.org/TR/2008/WD-WebIDL-20081219"><cite>Web IDL.</cite></a> 19 December 2008. W3C Working Draft. (Work in progress.) URL: <a href="http://www.w3.org/TR/2008/WD-WebIDL-20081219">http://www.w3.org/TR/2008/WD-WebIDL-20081219</a> 
-</dd><dt id="bib-WICD">[WICD]</dt><dd>Daniel Appelquist; et al. <a href="http://www.w3.org/TR/2007/CR-WICD-20070718"><cite>WICD Core 1.0.</cite></a> 18 July 2007. W3C Candidate Recommendation. (Work in progress.) URL: <a href="http://www.w3.org/TR/2007/CR-WICD-20070718">http://www.w3.org/TR/2007/CR-WICD-20070718</a> 
-</dd><dt id="bib-WIDGETS">[WIDGETS]</dt><dd>Marcos Caceres. <a href="http://www.w3.org/TR/2009/CR-widgets-20091201/"><cite>Widget Packaging and Configuration.</cite></a> 01 December 2009. W3C Candidate Recommendation. (Work in progress.) URL: <a href="http://www.w3.org/TR/2009/CR-widgets-20091201/">http://www.w3.org/TR/2009/CR-widgets-20091201/</a> 
-</dd><dt id="bib-ZHMARK">[ZHMARK]</dt><dd><cite>标点符号用法 (Punctuation Mark Usage).</cite> 1995. 中华人民共和国国家标准 
+  <div class="appendix section" id="references"><!--OddPage--><h2 id="b.-references"><span class="secno">B. </span>References</h2><div class="section" id="normative-references"><h3 id="b.1-normative-references"><span class="secno">B.1 </span>Normative references</h3><dl class="bibliography"><dt id="bib-REX">[REX]</dt><dd>Robin Berjon. <a href="http://www.w3.org/TR/2006/WD-rex-20061013"><cite>Remote Events for XML (REX) 1.0.</cite></a> 13 October 2006. W3C Working Draft. (Work in progress.) URL: <a href="http://www.w3.org/TR/2006/WD-rex-20061013">http://www.w3.org/TR/2006/WD-rex-20061013</a>
+</dd><dt id="bib-SVGMOBILE12">[SVGMOBILE12]</dt><dd>Chris Lilley; et al. <a href="http://www.w3.org/TR/2006/CR-SVGMobile12-20060810"><cite>Scalable Vector Graphics (SVG) Tiny 1.2 Specification.</cite></a> 10 August 2006. W3C Candidate Recommendation. (Work in progress.) URL: <a href="http://www.w3.org/TR/2006/CR-SVGMobile12-20060810">http://www.w3.org/TR/2006/CR-SVGMobile12-20060810</a>
+</dd></dl></div><div class="section" id="informative-references"><h3 id="b.2-informative-references"><span class="secno">B.2 </span>Informative references</h3><dl class="bibliography"><dt id="bib-WEBIDL">[WEBIDL]</dt><dd>Cameron McCormack. <a href="http://www.w3.org/TR/2008/WD-WebIDL-20081219"><cite>Web IDL.</cite></a> 19 December 2008. W3C Working Draft. (Work in progress.) URL: <a href="http://www.w3.org/TR/2008/WD-WebIDL-20081219">http://www.w3.org/TR/2008/WD-WebIDL-20081219</a>
+</dd><dt id="bib-WICD">[WICD]</dt><dd>Daniel Appelquist; et al. <a href="http://www.w3.org/TR/2007/CR-WICD-20070718"><cite>WICD Core 1.0.</cite></a> 18 July 2007. W3C Candidate Recommendation. (Work in progress.) URL: <a href="http://www.w3.org/TR/2007/CR-WICD-20070718">http://www.w3.org/TR/2007/CR-WICD-20070718</a>
+</dd><dt id="bib-WIDGETS">[WIDGETS]</dt><dd>Marcos Caceres. <a href="http://www.w3.org/TR/2009/CR-widgets-20091201/"><cite>Widget Packaging and Configuration.</cite></a> 01 December 2009. W3C Candidate Recommendation. (Work in progress.) URL: <a href="http://www.w3.org/TR/2009/CR-widgets-20091201/">http://www.w3.org/TR/2009/CR-widgets-20091201/</a>
+</dd><dt id="bib-ZHMARK">[ZHMARK]</dt><dd><cite>标点符号用法 (Punctuation Mark Usage).</cite> 1995. 中华人民共和国国家标准
 </dd></dl></div></div></body></html>
 
