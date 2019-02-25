@@ -2,12 +2,12 @@
 
 span.practicelab {
   display: block;
-  color: #f5721b;
+  color: #005A9C;
   margin-bottom: 1em;
 }
 
 span.practicetitle {
-  color: #f58a43;
+  color: #005A9C;
   text-decoration: underline;
   margin-right: 1em;
   margin-bottom: 1em;
@@ -17,8 +17,13 @@ p.practicedesc {
   padding: 2em;
   border-left-width: 0.5em;
   border-left-style: solid;
-  border-color: #f58a43;
-  background: #fde0bf;
+  border-color: #8CCBF2;
+  background: 
+  rgb(241, 246, 253);
+}
+
+.practicebox {
+    background: black;
 }
 
 @media (max-width: 767px) {
