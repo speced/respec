@@ -21,8 +21,8 @@ export function run() {
       bp.textContent
     }</li>`;
     ul.appendChild(li);
-    ul.classList.add('practicebox');
-    const title = hyperHTML`<span class="practicetitle">Best Practice ${num}:</span>`;
+    ul.classList.add("practicebox");
+    const title = hyperHTML`<span><span class="practicetitle">Best Practice ${num}</span>: </span>`;
     bp.prepend(title);
   }
   const bpSummary = document.getElementById("bp-summary");
