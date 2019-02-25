@@ -138,10 +138,12 @@ describe("Core — Highlight", () => {
     };
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelectorAll("pre");
-    for(eachPre of pre) {
-        expect(eachPre.querySelectorAll("code").length).toBe(2);
-        expect(eachPre.querySelectorAll("code[class~='javascript']").length).toBe(1);
-        expect(eachPre.querySelectorAll("code[class~='http']").length).toBe(1);
+    for (const eachPre of pre) {
+      expect(eachPre.querySelectorAll("code").length).toBe(2);
+      expect(eachPre.querySelectorAll("code[class~='javascript']").length).toBe(
+        1
+      );
+      expect(eachPre.querySelectorAll("code[class~='http']").length).toBe(1);
     }
   });
 });

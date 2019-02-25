@@ -64,7 +64,6 @@ export async function run(conf) {
           if (id !== msg.id) {
             return; // not for us!
           }
-          console.log(ev.data);
           const lang = language !== undefined ? language : msg.languages[0];
           switch (elem.localName) {
             case "pre":
