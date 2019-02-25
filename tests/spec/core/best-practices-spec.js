@@ -1,5 +1,5 @@
 "use strict";
-fdescribe("Core — Best Practices", () => {
+describe("Core — Best Practices", () => {
   afterAll(flushIframes);
 
   it("processes examples", async () => {
