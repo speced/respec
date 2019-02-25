@@ -16,6 +16,6 @@ export async function run() {
     return;
   }
   abstractHeading = document.createElement("h2");
-  abstractHeading.innerText = l10n[lang].abstract;
+  abstractHeading.textContent = l10n[lang].abstract;
   abs.prepend(abstractHeading);
 }
