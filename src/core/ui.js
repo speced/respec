@@ -47,7 +47,7 @@ sub("end-all", () => document.body.prepend(respecUI), { once: true });
 
 const respecPill = hyperHTML`<button id='respec-pill' disabled>ReSpec</button>`;
 respecUI.appendChild(respecPill);
-respecPill.addEventListener("click", function(e) {
+respecPill.addEventListener("click", function (e) {
   e.stopPropagation();
   if (menu.hidden) {
     menu.classList.remove("respec-hidden");
@@ -88,7 +88,7 @@ function errWarn(msg, arr, butName, title) {
 function createWarnButton(butName, arr, title) {
   const buttonId = `respec-pill-${butName}`;
   const button = hyperHTML`<button id='${buttonId}' class='respec-info-button'>`;
-  button.addEventListener("click", function() {
+  button.addEventListener("click", function () {
     this.setAttribute("aria-expanded", "true");
     const ol = hyperHTML`<ol class='${`respec-${butName}-list`}'></ol>`;
     for (const err of arr) {
@@ -114,6 +114,58 @@ function createWarnButton(butName, arr, title) {
     ["label", `Document ${title.toLowerCase()}`],
   ]);
   ariaDecorate(button, ariaMap);
+
+
+  var numSteps = 20.0;
+  var boxElement
+  var prevRatio = 0.0;
+  var increasingColor = "rgba(255, 255, 255)";
+  var decreasingColor = "rgba(255, 255, 255, ratio)";
+
+  button.addEventListener("load", function (event) {
+    boxElement = document.querySelector("#respec-pill");
+
+    createObserver();
+  }, false);
+
+  function createObserver() {
+    var observer;
+
+    var options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: buildThresholdList()
+    };
+
+    observer = new IntersectionObserver(handleIntersect, options);
+    observer.observe(boxElement);
+  }
+
+  function buildThresholdList() {
+    var thresholds = [];
+    var numSteps = 20;
+
+    for (var i = 1.0; i <= numSteps; i++) {
+      var ratio = i / numSteps;
+      thresholds.push(ratio);
+    }
+
+    thresholds.push(0);
+    return thresholds;
+  }
+
+  function handleIntersect(entries, observer) {
+    entries.forEach(function (entry) {
+      if (entry.intersectionRatio > prevRatio) {
+        entry.target.style.backgroundColor = increasingColor.replace("ratio", entry.intersectionRatio);
+      } else {
+        entry.target.style.backgroundColor = decreasingColor.replace("ratio", entry.intersectionRatio);
+      }
+
+      prevRatio = entry.intersectionRatio;
+    });
+  }
+
   return button;
 }
 
