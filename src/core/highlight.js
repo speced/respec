@@ -83,8 +83,8 @@ export async function run(conf) {
         });
         element.setAttribute("aria-busy", "true");
         worker.postMessage(msg);
+        id++;
       });
-      id++;
     });
   });
   await Promise.all(promisesToHighlight);
