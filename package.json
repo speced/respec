@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.3.3",
+  "version": "24.4.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -88,10 +88,10 @@
     "command-line-usage": "^5.0.5",
     "epipebomb": "^1.0.0",
     "fs-extra": "^7.0.1",
-    "highlight.js": "github:highlightjs/highlight.js#cli",
+    "highlight.js": "github:highlightjs/highlight.js",
     "hyperhtml": "^2.25.4",
     "loading-indicator": "^2.0.0",
-    "marked": "^0.6.0",
+    "marked": "^0.6.1",
     "prompt": "^1.0.0",
     "puppeteer": "^1.12.2",
     "snyk": "^1.134.2"

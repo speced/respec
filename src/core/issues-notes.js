@@ -10,7 +10,7 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
-import { addId, fetchAndCache, parents } from "./utils";
+import { addId, fetchAndCache, joinAnd, parents } from "./utils";
 import css from "text!../../assets/issues-notes.css";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
@@ -241,10 +241,18 @@ function isLight(rgb) {
  */
 function createLabelsGroup(labels, title, repoURL) {
   const labelsGroup = labels.map(label => createLabel(label, repoURL));
+  const labelNames = labels.map(label => label.name);
+  const joinedNames = joinAnd(labelNames);
   if (labelsGroup.length) {
     labelsGroup.unshift(document.createTextNode(" "));
   }
-  return hyperHTML`<span style='text-transform: none'>: ${title}${labelsGroup}</span>`;
+  if (labelNames.length) {
+    const ariaLabel = `This issue is labelled as ${joinedNames}.`;
+    return hyperHTML`<span
+      class="issue-label"
+      aria-label="${ariaLabel}">: ${title}${labelsGroup}</span>`;
+  }
+  return hyperHTML`<span class="issue-label">: ${title}${labelsGroup}</span>`;
 }
 
 /**
