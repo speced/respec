@@ -54,7 +54,7 @@ export async function run(conf) {
         const msg = {
           action: "highlight",
           code: elem.innerText,
-          id: `highlight:${id++}`,
+          id: `highlight:${id}`,
           languages: getLanguageHint(elem.classList),
         };
         worker.addEventListener("message", function listener(ev) {
@@ -84,6 +84,7 @@ export async function run(conf) {
         element.setAttribute("aria-busy", "true");
         worker.postMessage(msg);
       });
+      id++;
     });
   });
   await Promise.all(promisesToHighlight);

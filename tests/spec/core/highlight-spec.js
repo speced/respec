@@ -38,7 +38,7 @@ describe("Core — Highlight", () => {
     };
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelector("div.example pre");
-    expect(pre.classList.contains("hljs")).toBeTruthy();
+    expect(pre.firstChild.classList.contains("hljs")).toBeTruthy();
     expect(pre.querySelectorAll("span[class~=hljs-]").length).toBeGreaterThan(
       0
     );
@@ -90,8 +90,8 @@ describe("Core — Highlight", () => {
     };
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelectorAll("pre");
-    expect(pre.querySelectorAll("code").length).toBe(1);
-    expect(pre.querySelectorAll("code[class~='javascript']").length).toBe(1);
+    expect(pre[0].querySelectorAll("code").length).toBe(1);
+    expect(pre[0].querySelectorAll("code[class~='javascript']").length).toBe(1);
   });
 
   it("gets the language class defined in <pre>", async () => {
@@ -107,12 +107,12 @@ describe("Core — Highlight", () => {
     };
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelectorAll("pre");
-    expect(pre.firstChild.localName).toBe("code");
-    expect(pre.querySelectorAll("code").length).toBe(1);
-    expect(pre.querySelectorAll("code[class~='js']").length).toBe(1);
+    expect(pre[0].firstChild.localName).toBe("code");
+    expect(pre[0].querySelectorAll("code").length).toBe(1);
+    expect(pre[0].querySelectorAll("code[class~='js']").length).toBe(1);
   });
 
-  it("checks case when <code> is present inside <pre>", async () => {
+  it("checks the case when <code> is present inside <pre>", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}<section>
