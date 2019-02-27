@@ -8,10 +8,27 @@
 
 import { addId } from "./utils";
 import css from "text!../../assets/examples.css";
+import { lang as defaultLang } from "../core/l10n";
 import html from "hyperhtml";
 import { pub } from "./pubsubhub";
 
 export const name = "core/examples";
+
+const localizationStrings = {
+  en: {
+    example: "Example",
+  },
+  nl: {
+    example: "Voorbeeld",
+  },
+  es: {
+    example: "Ejemplo",
+  },
+};
+
+const lang = defaultLang in localizationStrings ? defaultLang : "en";
+
+const l10n = localizationStrings[lang];
 
 /**
  * @typedef {object} Report
@@ -36,7 +53,7 @@ function makeTitle(conf, elem, num, report) {
     : "";
   return html`
     <div class="marker">
-      <a class="self-link">${conf.l10n.example}${number}</a>${title}
+      <a class="self-link">${l10n.example}${number}</a>${title}
     </div>
   `;
 }
