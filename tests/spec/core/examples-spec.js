@@ -149,7 +149,7 @@ describe("Core — Examples", () => {
   });
 });
 
-it("makes sure examples section have expected localization text", async () => {
+it("localizes examples", async () => {
   const ops = {
     config: makeBasicConfig(),
     htmlAttrs: {
