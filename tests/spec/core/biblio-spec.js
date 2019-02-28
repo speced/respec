@@ -212,3 +212,23 @@ describe("W3C — Bibliographic References", () => {
     expect(refs[0].textContent).toEqual("[dom]");
   });
 });
+
+it("makes sure references section has expected localization text", async () => {
+  const ops = {
+    config: makeBasicConfig(),
+    htmlAttrs: {
+      lang: "nl",
+    },
+    body: `
+    <section class="informative" id="intro">[[DOM]]</section>
+    <section>[[!HTML]]</section>
+    `,
+  };
+  const doc = await makeRSDoc(ops);
+  const { textContent } = doc.querySelector("#references h2");
+  const [normRef, infoRef] = doc.querySelectorAll("#references h3");
+  expect(doc.documentElement.lang).toBe("nl");
+  expect(textContent).toContain("Referenties");
+  expect(normRef.textContent).toContain("Normatieve referenties");
+  expect(infoRef.textContent).toContain("Informatieve referenties");
+});
