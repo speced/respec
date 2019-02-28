@@ -9,13 +9,11 @@ export default conf => {
     <div class="head">
       ${conf.logos.map(showLogo)}
       <h1 class="title p-name" id="title">${conf.title}</h1>
-      ${
-        conf.subtitle
-          ? html`
-              <h2 id="subtitle">${conf.subtitle}</h2>
-            `
-          : ""
-      }
+      ${conf.subtitle
+        ? html`
+            <h2 id="subtitle">${conf.subtitle}</h2>
+          `
+        : ""}
       <h2>
         ${conf.longStatus}
         <time class="dt-published" datetime="${conf.dashDate}"
@@ -141,7 +139,7 @@ export default conf => {
                 >summary</a
               >
               is available.
-              `
+            `
           : html`
               <a href="https://www.w3.org/community/about/agreements/cla/"
                 >W3C Community Contributor License Agreement (CLA)</a

@@ -3,51 +3,17 @@ import html from "hyperhtml";
 export default (conf, opts) => {
   return html`
     <h2>${conf.l10n.sotd}</h2>
-    ${
-      conf.isPreview
-        ? html`
-            <details class="annoying-warning" open="">
-              <summary
-                >Preview of PR
-                ${
-                  conf.prUrl && conf.prNumber
-                    ? html`
-                        <a href="${conf.prUrl}">#${conf.prNumber}</a>
-                      `
-                    : ""
-                }</summary
-              >
-              <p>
-                Do not attempt to implement this version of the specification.
-                Do not reference this version as authoritative in any way.
-                ${
-                  conf.edDraftURI
-                    ? html`
-                        Instead, see
-                        <a href="${conf.edDraftURI}">${conf.edDraftURI}</a> for
-                        the Editor's draft.
-                      `
-                    : ""
-                }
-              </p>
-            </details>
-          `
-        : ""
-    }
-    ${
-      conf.isUnofficial
-        ? html`
-            <p>
-              This document is draft of a potential specification. It has no
-              official standing of any kind and does not represent the support
-              or consensus of any standards organization.
-            </p>
-            ${opts.additionalContent}
-          `
-        : conf.isTagFinding
-        ? opts.additionalContent
-        : conf.isNoTrack
-        ? html`
+    ${conf.isPreview
+      ? html`
+          <details class="annoying-warning" open="">
+            <summary
+              >Preview of PR
+              ${conf.prUrl && conf.prNumber
+                ? html`
+                    <a href="${conf.prUrl}">#${conf.prNumber}</a>
+                  `
+                : ""}</summary
+            >
             <p>
               Do not attempt to implement this version of the specification. Do
               not reference this version as authoritative in any way.
@@ -58,6 +24,35 @@ export default (conf, opts) => {
                     Editor's draft.
                   `
                 : ""}
+            </p>
+          </details>
+        `
+      : ""}
+    ${conf.isUnofficial
+      ? html`
+          <p>
+            This document is draft of a potential specification. It has no
+            official standing of any kind and does not represent the support or
+            consensus of any standards organization.
+          </p>
+          ${opts.additionalContent}
+        `
+      : conf.isTagFinding
+      ? opts.additionalContent
+      : conf.isNoTrack
+      ? html`
+            <p>
+              Do not attempt to implement this version of the specification. Do
+              not reference this version as authoritative in any way.
+              ${
+                conf.edDraftURI
+                  ? html`
+                      Instead, see
+                      <a href="${conf.edDraftURI}">${conf.edDraftURI}</a> for
+                      the Editor's draft.
+                    `
+                  : ""
+              }
             </p>
           </details>
         `
