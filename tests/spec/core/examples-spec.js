@@ -148,3 +148,19 @@ describe("Core — Examples", () => {
     expect(mybutton.onclick).toBeDefined();
   });
 });
+
+it("localizes examples", async () => {
+  const ops = {
+    config: makeBasicConfig(),
+    htmlAttrs: {
+      lang: "nl",
+    },
+    body: `<section>
+        <pre class="example"> This is an example </pre>
+      </section>`,
+  };
+  const doc = await makeRSDoc(ops);
+  const { textContent } = doc.querySelector(".example");
+  expect(doc.documentElement.lang).toBe("nl");
+  expect(textContent).toContain("Voorbeeld");
+});

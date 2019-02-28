@@ -4,10 +4,33 @@
 
 import { addId } from "./utils";
 import { biblio } from "./biblio";
+import { lang as defaultLang } from "../core/l10n";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 
 export const name = "core/render-biblio";
+
+const localizationStrings = {
+  en: {
+    info_references: "Informative references",
+    norm_references: "Normative references",
+    references: "References",
+  },
+  nl: {
+    info_references: "Informatieve referenties",
+    norm_references: "Normatieve referenties",
+    references: "Referenties",
+  },
+  es: {
+    info_references: "Referencias informativas",
+    norm_references: "Referencias normativas",
+    references: "Referencias",
+  },
+};
+
+const lang = defaultLang in localizationStrings ? defaultLang : "en";
+
+const l10n = localizationStrings[lang];
 
 const REF_STATUSES = new Map([
   ["CR", "W3C Candidate Recommendation"],
@@ -42,7 +65,7 @@ export function run(conf) {
 
   const refsec = hyperHTML`
     <section id='references' class='appendix'>
-      <h2>${conf.l10n.references}</h2>
+      <h2>${l10n.references}</h2>
       ${conf.refNote ? hyperHTML`<p>${conf.refNote}</p>` : ""}
     </section>`;
 
@@ -53,9 +76,7 @@ export function run(conf) {
     const sec = hyperHTML`
       <section>
         <h3>${
-          type === "Normative"
-            ? conf.l10n.norm_references
-            : conf.l10n.info_references
+          type === "Normative" ? l10n.norm_references : l10n.info_references
         }</h3>
       </section>`;
     addId(sec);
