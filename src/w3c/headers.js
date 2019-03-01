@@ -577,7 +577,7 @@ export function run(conf) {
     pub(
       "error",
       "CR documents must have an [`implementationReportURI`](https://github.com/w3c/respec/wiki/implementationReportURI) " +
-        "that describes [implementation experience](https://www.w3.org/2018/Process-20180201/#implementation-experience)."
+        "that describes [implementation experience](https://www.w3.org/2019/Process-20190301/#implementation-experience)."
     );
   }
   if (!conf.implementationReportURI && conf.isPR) {
@@ -585,7 +585,7 @@ export function run(conf) {
       "warn",
       "PR documents should include an " +
         " [`implementationReportURI`](https://github.com/w3c/respec/wiki/implementationReportURI)" +
-        " that describes [implementation experience](https://www.w3.org/2018/Process-20180201/#implementation-experience)."
+        " that describes [implementation experience](https://www.w3.org/2019/Process-20190301/#implementation-experience)."
     );
   }
 
