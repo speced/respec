@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.4.0",
+  "version": "24.4.1",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -22,13 +22,13 @@
   ],
   "devDependencies": {
     "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.3.3",
-    "@babel/preset-env": "^7.3.1",
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
     "chai": "^4.2.0",
     "clipboard": "^2.0.4",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
     "eslint": "^5.14.1",
-    "eslint-config-prettier": "^4.0.0",
+    "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-prettier": "^3.0.1",
     "exports-loader": "^0.7.0",
@@ -50,7 +50,7 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-safaritechpreview-launcher": "2.0.2",
     "karma-verbose-summary-reporter": "0.0.1",
-    "mocha": "^6.0.0",
+    "mocha": "^6.0.2",
     "moment": "^2.24.0",
     "pluralize": "^7.0.0",
     "prettier": "^1.16.4",
@@ -58,9 +58,9 @@
     "requirejs": "^2.3.6",
     "serve": "^10.1.2",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
-    "typescript": "^3.3.3",
+    "typescript": "^3.3.3333",
     "webidl2": "^17.0.2",
-    "webpack": "^4.29.5",
+    "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3"
   },
   "scripts": {
@@ -94,7 +94,7 @@
     "marked": "^0.6.1",
     "prompt": "^1.0.0",
     "puppeteer": "^1.12.2",
-    "snyk": "^1.134.2"
+    "snyk": "^1.135.1"
   },
   "prettier": {
     "trailingComma": "es5"
