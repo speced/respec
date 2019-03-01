@@ -119,7 +119,7 @@ const Builder = {
     const buildVersion = await this.getRespecVersion();
     const config = {
       mode: "production",
-      entry: require.resolve("../js/profile-w3c-common.js"),
+      entry: require.resolve(`../js/profile-${name}.js`),
       output: {
         path: buildPath,
         filename: outFile,
