@@ -26,7 +26,6 @@ const lang = defaultLang in localizationStrings ? defaultLang : "en";
 
 const l10n = localizationStrings[lang];
 
-
 export function run(conf) {
   normalizeImages(document);
 
@@ -39,7 +38,7 @@ export function run(conf) {
   if (tof.length && tofElement) {
     decorateTableOfFigures(tofElement);
     tofElement.append(
-      hyperHTML`<h2>${conf.l10n.table_of_fig}</h2>`,
+      hyperHTML`<h2>${l10n.table_of_fig}</h2>`,
       hyperHTML`<ul class='tof'>${tof}</ul>`
     );
   }
