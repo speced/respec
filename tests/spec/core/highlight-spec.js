@@ -4,7 +4,7 @@ describe("Core — Highlight", () => {
 
   it("highlights remote languages not bundled by default with ReSpec", async () => {
     const doc = await makeRSDoc({}, "spec/core/highlight.html");
-    const span = doc.querySelector("pre.testlang span[class^=hljs]");
+    const span = doc.querySelector("code.testlang span[class*=hljs]");
     expect(span.textContent).toBe("funkyFunction");
   });
 
@@ -39,7 +39,7 @@ describe("Core — Highlight", () => {
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelector("div.example pre");
     expect(pre.firstChild.classList.contains("hljs")).toBeTruthy();
-    expect(pre.querySelectorAll("span[class~=hljs-]").length).toBeGreaterThan(
+    expect(pre.querySelectorAll("span[class*=hljs-]").length).toBeGreaterThan(
       0
     );
   });
@@ -53,18 +53,49 @@ describe("Core — Highlight", () => {
               alert('foo');
             }
           </pre>
+          <pre>
         </section>`,
     };
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelector("div.example pre");
     expect(pre.classList.contains("nohighlight")).toBeTruthy();
-    expect(pre.querySelectorAll("span[class~=hljs-]").length).toBe(0);
+    expect(pre.querySelectorAll("span[class*=hljs-]").length).toBe(0);
+  });
+
+  it("shouldn't highlight code inside pre elements when told not to", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}
+        <section>
+          <pre class="example">
+            <code class="nohighlight">
+              function(){}
+            </code>
+            <code class="js">
+              function(){}
+            </code>
+          </pre>
+        </section>`,
+    };
+    const doc = await makeRSDoc(ops);
+
+    const codeNoHighlight = doc.querySelector("div.example code.nohighlight");
+    expect(codeNoHighlight).toBeTruthy();
+    expect(codeNoHighlight.querySelectorAll("span[class*=hljs-]").length).toBe(
+      0
+    );
+
+    const codeHighlight = doc.querySelector("div.example code.js");
+    expect(
+      codeHighlight.querySelectorAll("span[class*=hljs-]").length
+    ).toBeGreaterThan(0);
   });
 
   it("respects the noHighlightCSS by not highlighting anything", async () => {
     const ops = {
       config: Object.assign(makeBasicConfig(), { noHighlightCSS: true }),
-      body: `${makeDefaultBody()}<section>
+      body: `${makeDefaultBody()}
+        <section>
           <pre id="test">
             function foo() {
               alert('foo');
@@ -77,27 +108,11 @@ describe("Core — Highlight", () => {
     expect(pre.querySelectorAll("span[class~=hljs-]").length).toBe(0);
   });
 
-  it("checks if <pre> content is warpped in <code>", async () => {
+  it("checks if <pre> content is warped in <code>", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body: `${makeDefaultBody()}<section>
-          <pre>
-            function foo() {
-              alert('foo');
-            }
-          </pre>
-        </section>`,
-    };
-    const doc = await makeRSDoc(ops);
-    const pre = doc.querySelectorAll("pre");
-    expect(pre[0].querySelectorAll("code").length).toBe(1);
-    expect(pre[0].querySelectorAll("code[class~='javascript']").length).toBe(1);
-  });
-
-  it("gets the language class defined in <pre>", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}<section>
+      body: `${makeDefaultBody()}
+        <section>
           <pre class="js">
             function foo() {
               alert('foo');
@@ -106,44 +121,63 @@ describe("Core — Highlight", () => {
         </section>`,
     };
     const doc = await makeRSDoc(ops);
-    const pre = doc.querySelectorAll("pre");
-    expect(pre[0].firstChild.localName).toBe("code");
-    expect(pre[0].querySelectorAll("code").length).toBe(1);
-    expect(pre[0].querySelectorAll("code[class~='js']").length).toBe(1);
+    const pre = doc.querySelector("pre");
+    const code = pre.firstElementChild;
+    expect(code.localName).toBe("code");
+    expect(code.classList.contains("hljs")).toBeTruthy();
+    expect(code.classList.contains("js")).toBeTruthy();
   });
 
-  it("checks the case when <code> is present inside <pre>", async () => {
+  it("asynchronously hightlights <code> elements inside <pre>", async () => {
     const ops = {
       config: makeBasicConfig(),
-      body: `${makeDefaultBody()}<section>
-          <pre>
-            <code>
+      body: `${makeDefaultBody()}
+        <section>
+          <pre class="example" id="first-pre">
+            <code class="js" id="test1">
               function one(){}
             </code>
             this function(){} is not highlighted.
-            <code class="http">
+            <code class="http" id="test2">
               Header: Test1
             </code>
           </pre>
-          <pre>
-            <code class="javascript">
+          <pre id="second-pre">
+            second function(){} is not highlighted.
+            <code class="js">
               function three(){}
             </code>
-            this function(){} is not highlighted.
+            <code>
+              function four(){}
+            </code>
             <code class="http">
-              Header: Test2
+              Header: Test5
             </code>
           </pre>
         </section>`,
     };
     const doc = await makeRSDoc(ops);
-    const pre = doc.querySelectorAll("pre");
-    for (const eachPre of pre) {
-      expect(eachPre.querySelectorAll("code").length).toBe(2);
-      expect(eachPre.querySelectorAll("code[class~='javascript']").length).toBe(
-        1
-      );
-      expect(eachPre.querySelectorAll("code[class~='http']").length).toBe(1);
-    }
+
+    const firstPre = doc.getElementById("first-pre");
+    expect(firstPre.textContent).toContain(
+      "this function(){} is not highlighted"
+    );
+    expect(
+      firstPre.querySelectorAll("code span[class*=hljs-]").length
+    ).toBeGreaterThan(0);
+    expect(firstPre.querySelector("code:nth-child(1)").textContent).toContain(
+      "function one(){}"
+    );
+
+    const secondPre = doc.getElementById("second-pre");
+    expect(secondPre.textContent).toContain(
+      "second function(){} is not highlighted"
+    );
+    const lastCode = secondPre.querySelector("code:last-child");
+    expect(lastCode.textContent).toContain("Header: Test5");
+    expect(lastCode.classList.contains("http")).toBeTruthy();
+    expect(
+      lastCode.querySelectorAll("code span[class*=hljs-]").length
+    ).toBeGreaterThan(0);
   });
 });
