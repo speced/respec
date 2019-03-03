@@ -63,8 +63,9 @@ describe("Core — Examples", () => {
            </aside>`,
     };
     const doc = await makeRSDoc(ops);
-    const example = doc.querySelectorAll("pre.hljs");
+    const example = doc.querySelectorAll("code.hljs");
     expect(example.length).toBe(3);
+    debugger
     expect(example[0].textContent).toBe(
       "// Whitespace before this text should be removed"
     );
