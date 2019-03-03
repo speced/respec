@@ -31,7 +31,7 @@ export function run() {
     idlIndexSec.prepend(header);
   }
 
-  //filter out the IDL marked with class="exclude" and the IDL in non-normative sections
+  // filter out the IDL marked with class="exclude" and the IDL in non-normative sections
   const idlIndex = Array.from(
     document.querySelectorAll("pre.def.idl:not(.exclude)")
   ).filter(idl => !idl.closest(nonNormativeSelector));

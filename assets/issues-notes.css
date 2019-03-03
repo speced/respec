@@ -7,9 +7,10 @@ div.issue-title, div.note-title , div.ednote-title, div.warning-title {
 div.issue-title { color: #e05252; }
 div.note-title, div.ednote-title { color: #2b2; }
 div.warning-title { color: #f22; }
-div.issue-title span, div.note-title span, div.ednote-title span, div.warning-title span {
+div.note-title span, div.ednote-title span, div.warning-title span {
     text-transform: uppercase;
 }
+div.issue-title span { text-transform: none; }
 div.note, div.issue, div.ednote, div.warning {
     margin-top: 1em;
     margin-bottom: 1em;
@@ -28,10 +29,6 @@ div.issue, div.note , div.ednote,  div.warning {
 }
 span.warning { padding: .1em .5em .15em; }
 
-.issue {
-    border-color: #e05252;
-    background: #fbe9e9;
-}
 .issue.closed span.issue-number {
     text-decoration: line-through;
 }
@@ -72,6 +69,7 @@ input.task-list-item-checkbox {
   border-radius: 4px;
   position: relative;
   bottom: 2px;
+  border: none;
 }
 
 .issue a.respec-label-dark {

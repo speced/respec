@@ -14,8 +14,8 @@
  * Usage:
  * https://github.com/w3c/respec/wiki/data--cite
  */
+import { biblio, resolveRef, updateFromNetwork } from "./biblio";
 import { refTypeFromContext, showInlineWarning, wrapInner } from "./utils";
-import { resolveRef, updateFromNetwork } from "./biblio";
 import hyperHTML from "hyperhtml";
 export const name = "core/data-cite";
 
@@ -25,6 +25,7 @@ function requestLookup(conf) {
     const originalKey = elem.dataset.cite;
     const { key, frag, path } = toCiteDetails(elem);
     let href = "";
+    let title = "";
     // This is just referring to this document
     if (key.toLowerCase() === conf.shortName.toLowerCase()) {
       console.log(
@@ -41,6 +42,7 @@ function requestLookup(conf) {
         return;
       }
       href = entry.href;
+      title = entry.title;
     }
     if (path) {
       // See: https://github.com/w3c/respec/issues/1856#issuecomment-429579475
@@ -52,11 +54,20 @@ function requestLookup(conf) {
     }
     switch (elem.localName) {
       case "a": {
+        if (elem.textContent === "") {
+          elem.textContent = title;
+        }
         elem.href = href;
         break;
       }
       case "dfn": {
-        wrapInner(elem, hyperHTML`<a href="${href}"></a>`);
+        const anchor = hyperHTML`<a href="${href}">`;
+        if (!elem.textContent) {
+          anchor.textContent = title;
+          elem.append(anchor);
+        } else {
+          wrapInner(elem, anchor);
+        }
         break;
       }
     }
@@ -148,7 +159,7 @@ export async function linkInlineCitations(doc, conf = respecConfig) {
 
   // we now go to network to fetch missing entries
   const newEntries = await updateFromNetwork(missingBibEntries);
-  Object.assign(conf.biblio, newEntries);
+  if (newEntries) Object.assign(biblio, newEntries);
 
   const lookupRequests = [...new Set(elems)].map(toLookupRequest);
   return await Promise.all(lookupRequests);

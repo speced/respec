@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-/*jshint node: true, browser: false*/
+/* jshint node: true, browser: false */
 "use strict";
 const { URL } = require("url");
 const colors = require("colors");

@@ -26,11 +26,9 @@ describe("Core - WebIDL", () => {
     expect(sequences.length).toEqual(1);
     const sequence = sequences[0];
 
-    //sequence<DOMString>
+    // sequence<DOMString>
     expect(sequence.nextElementSibling.localName).toEqual("a");
-    expect(sequence.nextElementSibling.href.endsWith("#idl-DOMString")).toBe(
-      true
-    );
+    expect(sequence.nextElementSibling.hash).toBe("#idl-DOMString");
 
     // readonly attribute DOMString? aBoolAttribute;
     const attr = doc.getElementById("idl-def-linkingtest-aboolattribute");
@@ -967,7 +965,7 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
     expect(linkToBarBarAttr.length).toBe(2);
   });
   it("sets the IDL type for each type of IDL token", () => {
-    //interface InterfaceType
+    // interface InterfaceType
     const interfaceType = doc.getElementById("dom-interfacetype");
     expect(interfaceType.dataset.idl).toBe("interface");
 
