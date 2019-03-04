@@ -159,12 +159,13 @@ it("localizes table of figures", async () => {
     htmlAttrs: {
       lang: "nl",
     },
-    body: `<section id="tof" class="informative appendix"></section>
+    body: `
+    <section id="tof" class="informative appendix"></section>
     <section>
       <figure id='figure'> <img src='img' alt=''>
         <figcaption>Example Figure</figcaption>
-       </figure>
-       </section>`,
+      </figure>
+    </section>`,
   };
   const doc = await makeRSDoc(ops);
   const { textContent } = doc.querySelector("#tof h2");
