@@ -118,7 +118,7 @@ describe("Core — Highlight", () => {
     const code = pre.firstElementChild;
     expect(code.localName).toBe("code");
     expect(code.classList).toContain("hljs");
-    expect(code.classList.contains("js")).toBeTruthy();
+    expect(code.classList).toContain("js");
   });
 
   it("asynchronously hightlights <code> elements inside <pre>", async () => {
