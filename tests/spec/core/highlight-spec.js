@@ -108,7 +108,7 @@ describe("Core — Highlight", () => {
     expect(pre.querySelectorAll("span[class~=hljs-]").length).toBe(0);
   });
 
-  it("checks if <pre> content is warped in <code>", async () => {
+  it("checks if <pre> content is wrapped in <code>", async () => {
     const ops = {
       config: makeBasicConfig(),
       body: `${makeDefaultBody()}
