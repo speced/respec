@@ -39,6 +39,7 @@ async function highlightElement(elem) {
     case "code":
       elem.innerHTML = value;
       elem.classList.add("hljs");
+      if (language) elem.classList.add(language);
       break;
   }
   elem.setAttribute("aria-busy", "false");
@@ -79,9 +80,7 @@ export async function run(conf) {
   `),
   ].filter(
     // Filter pre's that contain code
-    elem =>
-      elem.localName !== "pre" ||
-      (elem.localName === "pre" && !elem.querySelector("code"))
+    elem => elem.localName !== "pre" || !elem.querySelector("code")
   );
   // Nothing to highlight
   if (!highlightables.length) {

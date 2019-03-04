@@ -53,7 +53,6 @@ describe("Core — Highlight", () => {
               alert('foo');
             }
           </pre>
-          <pre>
         </section>`,
     };
     const doc = await makeRSDoc(ops);
@@ -81,14 +80,10 @@ describe("Core — Highlight", () => {
 
     const codeNoHighlight = doc.querySelector("div.example code.nohighlight");
     expect(codeNoHighlight).toBeTruthy();
-    expect(codeNoHighlight.querySelectorAll("span[class*=hljs-]").length).toBe(
-      0
-    );
+    expect(codeNoHighlight.querySelector("span[class*=hljs-]")).toBeNull();
 
     const codeHighlight = doc.querySelector("div.example code.js");
-    expect(
-      codeHighlight.querySelectorAll("span[class*=hljs-]").length
-    ).toBeGreaterThan(0);
+    expect(codeHighlight.querySelector("span[class*=hljs-]")).toBeTruthy();
   });
 
   it("respects the noHighlightCSS by not highlighting anything", async () => {
@@ -105,7 +100,7 @@ describe("Core — Highlight", () => {
     };
     const doc = await makeRSDoc(ops);
     const pre = doc.getElementById("test");
-    expect(pre.querySelectorAll("span[class~=hljs-]").length).toBe(0);
+    expect(pre.querySelectorAll("span[class*=hljs-]").length).toBe(0);
   });
 
   it("checks if <pre> content is wrapped in <code>", async () => {
@@ -137,7 +132,7 @@ describe("Core — Highlight", () => {
             <code class="js" id="test1">
               function one(){}
             </code>
-            this function(){} is not highlighted.
+            function pass(){}
             <code class="http" id="test2">
               Header: Test1
             </code>
@@ -159,25 +154,22 @@ describe("Core — Highlight", () => {
     const doc = await makeRSDoc(ops);
 
     const firstPre = doc.getElementById("first-pre");
-    expect(firstPre.textContent).toContain(
-      "this function(){} is not highlighted"
-    );
-    expect(
-      firstPre.querySelectorAll("code span[class*=hljs-]").length
-    ).toBeGreaterThan(0);
+    expect(firstPre.innerHTML).toContain("function pass(){}");
+    expect(firstPre.querySelectorAll("code span[class*=hljs-]")).toBeTruthy();
     expect(firstPre.querySelector("code:nth-child(1)").textContent).toContain(
       "function one(){}"
     );
 
     const secondPre = doc.getElementById("second-pre");
-    expect(secondPre.textContent).toContain(
+    expect(secondPre.innerHTML).toContain(
       "second function(){} is not highlighted"
     );
+
+    const fourthCode = secondPre.querySelector("code:nth-child(2)");
+    expect(fourthCode.classList.contains("javascript")).toBeTruthy();
     const lastCode = secondPre.querySelector("code:last-child");
     expect(lastCode.textContent).toContain("Header: Test5");
     expect(lastCode.classList.contains("http")).toBeTruthy();
-    expect(
-      lastCode.querySelectorAll("code span[class*=hljs-]").length
-    ).toBeGreaterThan(0);
+    expect(lastCode.querySelector("code span[class*=hljs-]")).toBeTruthy();
   });
 });
