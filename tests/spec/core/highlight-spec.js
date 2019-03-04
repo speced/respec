@@ -164,7 +164,7 @@ describe("Core — Highlight", () => {
     );
 
     const fourthCode = secondPre.querySelector("code:nth-child(2)");
-    expect(fourthCode.classList.contains("javascript")).toBeTruthy();
+    expect(fourthCode.classList).toContain("javascript");
     const lastCode = secondPre.querySelector("code:last-child");
     expect(lastCode.textContent).toContain("Header: Test5");
     expect(lastCode.classList).toContain("http");
