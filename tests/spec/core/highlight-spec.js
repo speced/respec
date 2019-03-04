@@ -98,7 +98,7 @@ describe("Core — Highlight", () => {
     };
     const doc = await makeRSDoc(ops);
     const pre = doc.getElementById("test");
-    expect(pre.querySelectorAll("span[class*=hljs-]").length).toBe(0);
+    expect(pre.querySelector("span[class*=hljs-]")).toBeNull();
   });
 
   it("checks if <pre> content is wrapped in <code>", async () => {
