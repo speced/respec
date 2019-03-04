@@ -116,6 +116,7 @@ describe("Core — Highlight", () => {
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelector("pre");
     const code = pre.firstElementChild;
+    expect(pre.classList).not.toContain("js");
     expect(code.localName).toBe("code");
     expect(code.classList).toContain("hljs");
     expect(code.classList).toContain("js");
