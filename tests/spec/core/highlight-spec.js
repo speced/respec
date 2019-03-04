@@ -117,7 +117,7 @@ describe("Core — Highlight", () => {
     const pre = doc.querySelector("pre");
     const code = pre.firstElementChild;
     expect(code.localName).toBe("code");
-    expect(code.classList.contains("hljs")).toBeTruthy();
+    expect(code.classList).toContain("hljs");
     expect(code.classList.contains("js")).toBeTruthy();
   });
 
