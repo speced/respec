@@ -153,7 +153,7 @@ describe("Core — Highlight", () => {
 
     const firstPre = doc.getElementById("first-pre");
     expect(firstPre.innerHTML).toContain("function pass(){}");
-    expect(firstPre.querySelectorAll("code span[class*=hljs-]")).toBeTruthy();
+    expect(firstPre.querySelector("code span[class*=hljs-]")).toBeTruthy();
     expect(firstPre.querySelector("code:nth-child(1)").textContent).toContain(
       "function one(){}"
     );
