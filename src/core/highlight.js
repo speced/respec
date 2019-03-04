@@ -34,7 +34,6 @@ async function highlightElement(elem) {
       elem.innerHTML = `<code class="hljs${
         language ? ` ${language}` : ""
       }">${value}</code>`;
-      elem.classList.remove(language);
       if (!elem.classList.length) elem.removeAttribute("class");
       break;
     case "code":
