@@ -56,7 +56,7 @@ describe("Core — Highlight", () => {
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelector("div.example pre");
     expect(pre.classList.contains("nohighlight")).toBeTruthy();
-    expect(pre.querySelectorAll("span[class*=hljs-]").length).toBe(0);
+    expect(pre.querySelector("span[class*=hljs-]")).toBeNull();
   });
 
   it("shouldn't highlight code inside pre elements when told not to", async () => {
