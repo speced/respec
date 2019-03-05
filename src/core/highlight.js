@@ -4,74 +4,97 @@
  * Performs syntax highlighting to all pre and code elements.
  */
 import ghCss from "text!../../assets/github.css";
+import html from "hyperhtml";
+import { msgIdGenerator } from "./utils";
 import { worker } from "./worker";
 export const name = "core/highlight";
 
-// Opportunistically insert the style into the head to reduce FOUC.
-const codeStyle = document.createElement("style");
-codeStyle.textContent = ghCss;
-document.head.appendChild(codeStyle);
+const nextMsgId = msgIdGenerator("highlight");
+
 function getLanguageHint(classList) {
   return Array.from(classList)
     .filter(item => item !== "highlight" && item !== "nolinks")
     .map(item => item.toLowerCase());
 }
 
-export async function run(conf) {
-  // Nothing to highlight
-  if (conf.noHighlightCSS) {
-    codeStyle.remove();
+async function highlightElement(elem) {
+  elem.setAttribute("aria-busy", "true");
+  const languages = getLanguageHint(elem.classList);
+  let response;
+  try {
+    response = await sendHighlightRequest(elem.innerText, languages);
+  } catch (err) {
+    console.error(err);
     return;
   }
-  const highlightables = Array.from(
-    document.querySelectorAll("pre:not(.idl):not(.nohighlight), code.highlight")
-  );
-  // Nothing to highlight
-  if (highlightables.length === 0) {
-    codeStyle.remove();
-    return;
+  const { language, value } = response;
+  switch (elem.localName) {
+    case "pre":
+      elem.classList.remove(language);
+      elem.innerHTML = `<code class="hljs${
+        language ? ` ${language}` : ""
+      }">${value}</code>`;
+      if (!elem.classList.length) elem.removeAttribute("class");
+      break;
+    case "code":
+      elem.innerHTML = value;
+      elem.classList.add("hljs");
+      if (language) elem.classList.add(language);
+      break;
   }
-  const promisesToHighlight = highlightables.map((element, i) => {
-    return new Promise(resolve => {
-      if (element.textContent.trim() === "") {
-        return resolve(); // no work to do
-      }
-      const done = () => {
-        element.setAttribute("aria-busy", "false");
-        resolve();
-      };
-      // We always resolve, even if we couldn't actually highlight
-      const timeoutId = setTimeout(() => {
-        console.error("Timed-out waiting for highlight:", element);
-        done();
-      }, 4000);
-      const msg = {
-        action: "highlight",
-        code: element.textContent,
-        id: `highlight:${i}`,
-        languages: getLanguageHint(element.classList),
-      };
-      worker.addEventListener("message", function listener(ev) {
-        const {
-          data: { id, language, value },
-        } = ev;
-        if (id !== msg.id) {
-          return; // not for us!
-        }
-        element.innerHTML = value;
-        if (element.localName === "pre") {
-          element.classList.add("hljs");
-        }
-        if (language) {
-          element.classList.add(language);
-        }
-        clearTimeout(timeoutId);
-        worker.removeEventListener("message", listener);
-        done();
-      });
-      element.setAttribute("aria-busy", "true");
-      worker.postMessage(msg);
+  elem.setAttribute("aria-busy", "false");
+}
+
+function sendHighlightRequest(code, languages) {
+  const msg = {
+    action: "highlight",
+    code,
+    id: nextMsgId(),
+    languages,
+  };
+  worker.postMessage(msg);
+  return new Promise((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      reject(new Error("Timed out waiting for highlight."));
+    }, 4000);
+    worker.addEventListener("message", function listener(ev) {
+      const {
+        data: { id, language, value },
+      } = ev;
+      if (id !== msg.id) return; // not for us!
+      worker.removeEventListener("message", listener);
+      clearTimeout(timeoutId);
+      resolve({ language, value });
     });
   });
+}
+
+export async function run(conf) {
+  // Nothing to highlight
+  if (conf.noHighlightCSS) return;
+  const highlightables = [
+    ...document.querySelectorAll(`
+    pre:not(.idl):not(.nohighlight) > code:not(.nohighlight),
+    pre:not(.idl):not(.nohighlight),
+    code.highlight
+  `),
+  ].filter(
+    // Filter pre's that contain code
+    elem => elem.localName !== "pre" || !elem.querySelector("code")
+  );
+  // Nothing to highlight
+  if (!highlightables.length) {
+    return;
+  }
+  const promisesToHighlight = highlightables
+    .filter(elem => elem.textContent.trim())
+    .map(highlightElement);
+  document.head.appendChild(
+    html`
+      <style>
+        ${ghCss}
+      </style>
+    `
+  );
   await Promise.all(promisesToHighlight);
 }

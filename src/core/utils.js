@@ -895,3 +895,22 @@ export function children(element, selector) {
     return elements;
   }
 }
+
+/**
+ * Generates simple ids. The id's increment after it yields.
+ *
+ * @param {String} namespace A string like "highlight".
+ * @param {Int} counter A number, which can start at a given value.
+ */
+export function msgIdGenerator(namespace, counter = 0) {
+  function* idGenerator(namespace, counter) {
+    while (true) {
+      yield `${namespace}:${counter}`;
+      counter++;
+    }
+  }
+  const gen = idGenerator(namespace, counter);
+  return () => {
+    return gen.next().value;
+  };
+}
