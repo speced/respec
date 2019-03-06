@@ -1,23 +1,19 @@
 "use strict";
 
 describe("Core - exporter", () => {
-  let rsDocToDataURL;
-  beforeAll(async () => {
-    rsDocToDataURL = await new Promise(resolve => {
-      require(["core/exporter"], ({ rsDocToDataURL }) =>
-        resolve(rsDocToDataURL));
-    });
-  });
   afterAll(flushIframes);
 
   async function getExportedDoc(ops) {
     const doc = await makeRSDoc(ops);
     const dataURL = await new Promise(resolve => {
       doc.defaultView.require(["core/exporter"], ({ rsDocToDataURL }) =>
-        resolve(rsDocToDataURL("text/html", doc)));
+        resolve(rsDocToDataURL("text/html", doc))
+      );
     });
-    const docString = decodeURIComponent(dataURL)
-      .replace("data:text/html;charset=utf-8,", "");
+    const docString = decodeURIComponent(dataURL).replace(
+      "data:text/html;charset=utf-8,",
+      ""
+    );
     return new DOMParser().parseFromString(docString, "text/html");
   }
 
