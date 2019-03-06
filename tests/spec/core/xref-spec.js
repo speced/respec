@@ -92,11 +92,11 @@ describe("Core — xref", () => {
     ],
     [
       "PublicKeyCredential.[[type]]",
-      "https://www.w3.org/TR/webauthn/#dom-publickeycredential-type-slot",
+      "https://www.w3.org/TR/webauthn-1/#dom-publickeycredential-type-slot",
     ],
     [
       "PublicKeyCredential",
-      "https://www.w3.org/TR/webauthn/#publickeycredential",
+      "https://www.w3.org/TR/webauthn-1/#publickeycredential",
     ],
     [
       "TextDecoderOptions",

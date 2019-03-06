@@ -63,7 +63,7 @@ describe("Core — Examples", () => {
            </aside>`,
     };
     const doc = await makeRSDoc(ops);
-    const example = doc.querySelectorAll("pre.hljs");
+    const example = doc.querySelectorAll("code.hljs");
     expect(example.length).toBe(3);
     expect(example[0].textContent).toBe(
       "// Whitespace before this text should be removed"
@@ -147,4 +147,20 @@ describe("Core — Examples", () => {
     const mybutton = doc.getElementById("mybutton");
     expect(mybutton.onclick).toBeDefined();
   });
+});
+
+it("localizes examples", async () => {
+  const ops = {
+    config: makeBasicConfig(),
+    htmlAttrs: {
+      lang: "nl",
+    },
+    body: `<section>
+        <pre class="example"> This is an example </pre>
+      </section>`,
+  };
+  const doc = await makeRSDoc(ops);
+  const { textContent } = doc.querySelector(".example");
+  expect(doc.documentElement.lang).toBe("nl");
+  expect(textContent).toContain("Voorbeeld");
 });
