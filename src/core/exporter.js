@@ -87,6 +87,7 @@ function cleanup(cloneDoc) {
   insertions.appendChild(metaGenerator);
   head.prepend(insertions);
   console.log("BEFORE SAVE");
+  // eslint-disable-next-line no-debugger
   debugger;
   pub("beforesave", documentElement);
 }

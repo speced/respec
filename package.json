@@ -68,7 +68,7 @@
     "babel:watch": "babel src -d js --watch --source-maps",
     "build:respec-w3c-common": "node ./tools/builder.js --profile=w3c-common",
     "build:components": "npm run copydeps && node ./tools/build-components.js && npm run babel:build",
-    "build": "npm run snyk-protect && npm run build:components",
+    "build": "snyk protect && npm run build:components",
     "copydeps": "node ./tools/copydeps.js",
     "karma": "karma start --single-run",
     "lint": "tsc -p src/jsconfig.json && eslint \"src/**/*.js\" \"tests/**/*.js\" tools/*.js js/profile-w3c-common.js",
