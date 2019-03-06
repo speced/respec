@@ -360,3 +360,23 @@ describe("Core — Issues and Notes", () => {
     );
   });
 });
+
+it("localizes issues summary", async () => {
+  const ops = {
+    config: makeBasicConfig(),
+    htmlAttrs: {
+      lang: "es",
+    },
+    body: `
+    <section>
+      <h2>Test Issues</h2>
+      <p class="issue" data-number=123></p>
+    </section>
+    <section id="issue-summary"></section>
+    `,
+  };
+  const doc = await makeRSDoc(ops);
+  const { textContent } = doc.querySelector("#issue-summary h2");
+  expect(doc.documentElement.lang).toBe("es");
+  expect(textContent).toContain("Resumen de la cuestión");
+});

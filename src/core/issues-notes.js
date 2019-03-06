@@ -12,9 +12,27 @@
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { addId, fetchAndCache, joinAnd, parents } from "./utils";
 import css from "text!../../assets/issues-notes.css";
+import { lang as defaultLang } from "../core/l10n";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
+
 export const name = "core/issues-notes";
+
+const localizationStrings = {
+  en: {
+    issue_summary: "Issue Summary",
+  },
+  nl: {
+    issue_summary: "Lijst met issues",
+  },
+  es: {
+    issue_summary: "Resumen de la cuestión",
+  },
+};
+
+const lang = defaultLang in localizationStrings ? defaultLang : "en";
+
+const l10n = localizationStrings[lang];
 
 const MAX_GITHUB_REQUESTS = 60;
 
@@ -30,7 +48,7 @@ function handleIssues(ins, ghIssues, conf) {
   let issueNum = 0;
   const issueList = document.createElement("ul");
   const issueSummary = hyperHTML`
-    <div><h2>${conf.l10n.issue_summary}</h2>${issueList}</div>`;
+    <div><h2>${l10n.issue_summary}</h2>${issueList}</div>`;
   ins.forEach(inno => {
     const { type, displayType, isFeatureAtRisk } = getIssueType(inno, conf);
     const isIssue = type === "issue";
