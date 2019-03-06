@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.4.3",
+  "version": "24.4.4",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -68,7 +68,7 @@
     "babel:watch": "babel src -d js --watch --source-maps",
     "build:respec-w3c-common": "node ./tools/builder.js --profile=w3c-common",
     "build:components": "npm run copydeps && node ./tools/build-components.js && npm run babel:build",
-    "build": "npm run snyk-protect && npm run build:components",
+    "build": "snyk protect && npm run build:components",
     "copydeps": "node ./tools/copydeps.js",
     "karma": "karma start --single-run",
     "lint": "tsc -p src/jsconfig.json && eslint \"src/**/*.js\" \"tests/**/*.js\" tools/*.js js/profile-w3c-common.js",
@@ -94,7 +94,7 @@
     "marked": "^0.6.1",
     "prompt": "^1.0.0",
     "puppeteer": "^1.13.0",
-    "snyk": "^1.135.1"
+    "snyk": "^1.136.0"
   },
   "prettier": {
     "trailingComma": "es5"
