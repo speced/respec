@@ -12,13 +12,13 @@ describe("Core - exporter", () => {
 
   async function getExportedDoc(ops) {
     const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
-    const parser = new DOMParser();
-    const docString = decodeURIComponent(
-      rsDocToDataURL("text/html", doc)
-    ).replace("data:text/html;charset=utf-8,", "");
-    const exportedDoc = parser.parseFromString(docString, "text/html");
-    return exportedDoc;
+    const dataURL = await new Promise(resolve => {
+      doc.defaultView.require(["core/exporter"], ({ rsDocToDataURL }) =>
+        resolve(rsDocToDataURL("text/html", doc)));
+    });
+    const docString = decodeURIComponent(dataURL)
+      .replace("data:text/html;charset=utf-8,", "");
+    return new DOMParser().parseFromString(docString, "text/html");
   }
 
   it("removes .removeOnSave elements", async () => {
@@ -63,8 +63,8 @@ describe("Core - exporter", () => {
         function Foo(){};
       </pre>`;
     const doc = await getExportedDoc(ops);
-    const head = doc.querySelector("head");
-    expect(head.lastElementChild.href).toBe(
+    const { lastElementChild } = doc.head;
+    expect(lastElementChild.href).toBe(
       "https://www.w3.org/StyleSheets/TR/2016/W3C-ED"
     );
   });
