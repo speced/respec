@@ -1,12 +1,16 @@
 "use strict";
 
 describe("Core - exporter", () => {
+  let rsDocToDataURL;
+  beforeAll(async () => {
+    rsDocToDataURL = await new Promise(resolve => {
+      require(["core/exporter"], ({ rsDocToDataURL }) =>
+        resolve(rsDocToDataURL));
+    });
+  });
   afterAll(flushIframes);
 
   async function getExportedDoc(ops) {
-    const { rsDocToDataURL } = await new Promise(resolve => {
-      require(["core/exporter"], resolve);
-    });
     const doc = await makeRSDoc(ops);
     await doc.respecIsReady;
     const parser = new DOMParser();
@@ -45,5 +49,23 @@ describe("Core - exporter", () => {
 
     expect(comments.length).toBe(1);
     expect(comments[0].textContent.trim()).toBe("STAY");
+  });
+
+  it("moves the W3C style sheet to be last thing in documents head", async () => {
+    const ops = makeStandardOps();
+    ops.body = `
+      <!-- add WebIDL style -->
+      <pre class="idl">
+        interface Foo {};
+      </pre>
+      <!-- add examples and hljs styles -->
+      <pre class="example js">
+        function Foo(){};
+      </pre>`;
+    const doc = await getExportedDoc(ops);
+    const head = doc.querySelector("head");
+    expect(head.lastElementChild.href).toBe(
+      "https://www.w3.org/StyleSheets/TR/2016/W3C-ED"
+    );
   });
 });

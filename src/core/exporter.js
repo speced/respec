@@ -86,6 +86,8 @@ function cleanup(cloneDoc) {
 
   insertions.appendChild(metaGenerator);
   head.prepend(insertions);
+  console.log("BEFORE SAVE");
+  debugger;
   pub("beforesave", documentElement);
 }
 
