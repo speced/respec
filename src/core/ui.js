@@ -12,7 +12,7 @@
 import css from "text!../../assets/ui.css";
 import hyperHTML from "hyperhtml";
 import { markdownToHtml } from "./utils";
-import shortcut from "../shortcut";
+import shortcut from "./shortcut.js";
 import { sub } from "./pubsubhub";
 export const name = "core/ui";
 
