@@ -18,13 +18,19 @@ import { getTextNodes, refTypeFromContext, showInlineWarning } from "./utils";
 import hyperHTML from "hyperhtml";
 import { idlStringToHtml } from "./inline-idl-parser";
 import { pub } from "./pubsubhub";
+import { renderInlineCitation } from "./render-biblio";
 export const name = "core/inlines";
+export const rfc2119Usage = {};
 
 export function run(conf) {
   document.normalize();
+  if (!document.querySelector("section#conformance")) {
+    // make the document informative
+    document.body.classList.add("informative");
+  }
   if (!conf.normativeReferences) conf.normativeReferences = new Set();
   if (!conf.informativeReferences) conf.informativeReferences = new Set();
-  if (!conf.respecRFC2119) conf.respecRFC2119 = {};
+  if (!conf.respecRFC2119) conf.respecRFC2119 = rfc2119Usage;
 
   // PRE-PROCESSING
   const abbrMap = new Map();
@@ -75,7 +81,7 @@ export function run(conf) {
             hyperHTML`<em class="rfc2119" title="${matched}">${matched}</em>`
           );
           // remember which ones were used
-          conf.respecRFC2119[matched] = true;
+          rfc2119Usage[matched] = true;
         } else if (matched.startsWith("{{{")) {
           // External IDL references (xref)
           const ref = matched
@@ -100,25 +106,21 @@ export function run(conf) {
             );
           } else {
             const { type, illegal } = refTypeFromContext(ref, txt.parentNode);
-            ref = ref.replace(/^(!|\?)/, "");
-            df.appendChild(document.createTextNode("["));
-            const refHref = `#bib-${ref.toLowerCase()}`;
-            const cite = hyperHTML`<cite><a class="bibref" href="${refHref}">${ref}</a></cite>`;
-            df.appendChild(cite);
-            df.appendChild(document.createTextNode("]"));
-
-            if (illegal && !conf.normativeReferences.has(ref)) {
+            const cite = renderInlineCitation(ref);
+            const cleanRef = ref.replace(/^(!|\?)/, "");
+            df.append(...cite.childNodes);
+            if (illegal && !conf.normativeReferences.has(cleanRef)) {
               showInlineWarning(
-                cite,
+                cite.childNodes[1], // cite element
                 "Normative references in informative sections are not allowed. " +
                   `Remove '!' from the start of the reference \`[[!${ref}]]\``
               );
             }
 
             if (type === "informative" && !illegal) {
-              conf.informativeReferences.add(ref);
+              conf.informativeReferences.add(cleanRef);
             } else {
-              conf.normativeReferences.add(ref);
+              conf.normativeReferences.add(cleanRef);
             }
           }
         } else if (abbrMap.has(matched)) {

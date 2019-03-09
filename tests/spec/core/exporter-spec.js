@@ -4,17 +4,17 @@ describe("Core - exporter", () => {
   afterAll(flushIframes);
 
   async function getExportedDoc(ops) {
-    const { rsDocToDataURL } = await new Promise(resolve => {
-      require(["core/exporter"], resolve);
-    });
     const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
-    const parser = new DOMParser();
-    const docString = decodeURIComponent(
-      rsDocToDataURL("text/html", doc)
-    ).replace("data:text/html;charset=utf-8,", "");
-    const exportedDoc = parser.parseFromString(docString, "text/html");
-    return exportedDoc;
+    const dataURL = await new Promise(resolve => {
+      doc.defaultView.require(["core/exporter"], ({ rsDocToDataURL }) =>
+        resolve(rsDocToDataURL("text/html", doc))
+      );
+    });
+    const docString = decodeURIComponent(dataURL).replace(
+      "data:text/html;charset=utf-8,",
+      ""
+    );
+    return new DOMParser().parseFromString(docString, "text/html");
   }
 
   it("removes .removeOnSave elements", async () => {
@@ -45,5 +45,23 @@ describe("Core - exporter", () => {
 
     expect(comments.length).toBe(1);
     expect(comments[0].textContent.trim()).toBe("STAY");
+  });
+
+  it("moves the W3C style sheet to be last thing in documents head", async () => {
+    const ops = makeStandardOps();
+    ops.body = `
+      <!-- add WebIDL style -->
+      <pre class="idl">
+        interface Foo {};
+      </pre>
+      <!-- add examples and hljs styles -->
+      <pre class="example js">
+        function Foo(){};
+      </pre>`;
+    const doc = await getExportedDoc(ops);
+    const { lastElementChild } = doc.head;
+    expect(lastElementChild.href).toBe(
+      "https://www.w3.org/StyleSheets/TR/2016/W3C-ED"
+    );
   });
 });
