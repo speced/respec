@@ -16,7 +16,7 @@ export function pub(topic, ...data) {
   }
   Array.from(subscriptions.get(topic)).forEach(cb => {
     try {
-      cb.apply(undefined, data);
+      cb(...data);
     } catch (err) {
       pub(
         "error",
