@@ -54,4 +54,22 @@ describe("W3C — Conformance", () => {
     const doc = await makeRSDoc(ops);
     expect(doc.querySelectorAll("#conformance .rfc2119").length).toEqual(0);
   });
+
+  it("emits end event", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}
+        <script>
+          require(["core/pubsubhub"], ({ sub }) => {
+            sub("end", name => {
+              if (name === "w3c/conformance") {
+                document.title = "hello";
+              }
+            })
+          })
+        </script>`,
+    };
+    const doc = await makeRSDoc(ops);
+    expect(doc.title).toBe("hello");
+  });
 });
