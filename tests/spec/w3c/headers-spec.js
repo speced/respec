@@ -582,7 +582,9 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, newProps);
       const doc = await makeRSDoc(ops);
       expect(
-        contains(doc.querySelector(".head"), "a", "LABEL")[0].getAttribute("href")
+        contains(doc.querySelector(".head"), "a", "LABEL")[0].getAttribute(
+          "href"
+        )
       ).toBe("URI");
     });
   });
