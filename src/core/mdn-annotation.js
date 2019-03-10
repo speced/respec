@@ -30,10 +30,10 @@ const MDN_BROWSERS = {
   webview_android: "WebView Android",
 };
 
-async function fetchAndCacheJson(url, maxAge) {
+function fetchAndCacheJson(url, maxAge) {
   if (!url) return {};
   const request = new Request(url);
-  return await fetchAndCache(request, maxAge).then(r => r.json());
+  return fetchAndCache(request, maxAge).then(r => r.json());
 }
 
 function insertMDNBox(node) {
@@ -42,13 +42,13 @@ function insertMDNBox(node) {
   while (targetAncestor.parentNode.tagName !== "BODY") {
     targetAncestor = targetAncestor.parentNode;
   }
-  const targetSibling = targetAncestor.previousElementSibling;
+  const { previousElementSibling: targetSibling } = targetAncestor;
   if (targetSibling && targetSibling.classList.contains("mdn")) {
     // If the target ancestor already has a mdnBox inserted, we just use it
     return targetSibling;
   }
   const mdnBox = hyperHTML`<aside class="mdn before">
-    <input type="button" onclick="toggleStatus(this)" value="⋰" >
+    <button onclick="toggleStatus(this)" aria-label="Expand MDN details">⋰</button>
   </aside>`;
   document.body.insertBefore(mdnBox, targetAncestor);
   return mdnBox;
@@ -59,9 +59,10 @@ function attachMDNDetail(container, mdnSpec) {
   container.innerHTML += `<b>MDN </b>`;
   const mdnSubPath = slug.slice(slug.indexOf("/") + 1);
   const mdnDetail = document.createElement("details");
-  mdnDetail.innerHTML += `
+  const href = `${MDN_URL_BASE}${slug}`;
+  hyperHTML(mdnDetail)`
     <summary>
-      <a title="${summary}" href="${MDN_URL_BASE}${slug}">${mdnSubPath}</a>
+      <a title="${summary}" href="${href}">${mdnSubPath}</a>
     </summary>
   `;
   attachMDNBrowserSupport(mdnDetail, mdnSpec);
@@ -73,21 +74,23 @@ function attachMDNBrowserSupport(container, mdnSpec) {
     container.innerHTML += `<p class="nosupportdata">No support data.</p>`;
     return;
   }
-  const supportTable = hyperHTML`<p class="mdnsupport"></p>`;
-  buildBrowserSupportTable(supportTable, mdnSpec.support);
+  const supportTable = hyperHTML`<p class="mdnsupport">
+    ${[buildBrowserSupportTable(mdnSpec.support)]}
+  </p>`;
   container.appendChild(supportTable);
 }
 
-function buildBrowserSupportTable(supportTable, support) {
+function buildBrowserSupportTable(support) {
+  let innerHTML = "";
   function addMDNBrowserRow(browserId, yesNoUnknown, version) {
     const displayStatus = yesNoUnknown === "Unknown" ? "?" : yesNoUnknown;
     const classList = `${browserId} ${yesNoUnknown.toLowerCase()}`;
-    const browserRow = hyperHTML`
+    const browserRow = `
       <span class="${classList}">
         <span>${MDN_BROWSERS[browserId]}</span>
         <span>${version ? version : displayStatus}</span>
       </span>`;
-    supportTable.appendChild(browserRow);
+    innerHTML += browserRow;
   }
 
   function processBrowserData(browserId, versionData) {
@@ -120,15 +123,16 @@ function buildBrowserSupportTable(supportTable, support) {
       }
     }
   });
+  return innerHTML;
 }
 
 export async function run(conf) {
-  const { shortName, mdnAnnotation } = conf;
-  if (!shortName) {
+  const { shortName, mdn } = conf;
+  if (!shortName || !mdn) {
     // Nothing to do if shortName is not provided
     return;
   }
-  const maxAge = (mdnAnnotation && mdnAnnotation.maxAge) || 60 * 60 * 24 * 1000;
+  const maxAge = mdn.maxAge || 60 * 60 * 24 * 1000;
   const specMap = await fetchAndCacheJson(SPEC_MAP_URL, maxAge);
   const hasSpecJson = Object.values(specMap).some(
     jsonName => jsonName === `${shortName}.json`

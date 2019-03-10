@@ -11,7 +11,7 @@
     box-shadow: 0 0 3px #999;
 }
 
-.mdn input {
+.mdn button {
     cursor: pointer;
     position: absolute;
     left: 0;
