@@ -13,6 +13,7 @@
 import { addId, joinAnd, parents } from "./utils";
 import css from "text!../../assets/issues-notes.css";
 import { lang as defaultLang } from "../core/l10n";
+import { fetchAndStoreGithubIssues } from "./github-api";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 
@@ -262,6 +263,16 @@ export async function run(conf) {
   const { head: headElem } = document;
   /** @type {NodeListOf<HTMLElement>} */
   const issuesAndNotes = document.querySelectorAll(query);
+
+  if (!issuesAndNotes.length) {
+    return; // nothing to do.
+  }
+
+  const ghIssues = conf.githubAPI
+    ? await fetchAndStoreGithubIssues(conf)
+    : new Map();
+  window.ghIssues = ghIssues;
+
   handleIssues(issuesAndNotes, window.ghIssues, conf);
   headElem.insertBefore(
     hyperHTML`<style>${[css]}</style>`,

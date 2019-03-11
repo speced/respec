@@ -1,12 +1,12 @@
 /**
- * core/github-config
- *
+ * core/github
+ 
  * @see https://github.com/w3c/respec/wiki/github
  */
 
 import { pub } from "./pubsubhub";
 
-export const name = "core/github-config";
+export const name = "core/github";
 
 export async function run(conf) {
   if (!conf.hasOwnProperty("github") || !conf.github) {

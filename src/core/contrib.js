@@ -4,8 +4,8 @@
 // #gh-commenters: people having contributed comments to issues.
 // #gh-contributors: people whose PR have been merged.
 // Spec editors get filtered out automatically.
+import { extractGithubCredentials, getArgs } from "./github-api";
 import { flatten, joinAnd } from "./utils";
-import { getArgs } from "./github-api";
 import { pub } from "./pubsubhub";
 export const name = "core/contrib";
 
@@ -23,16 +23,6 @@ function findUserURLs(...thingsWithUsers) {
   return [...new Set(usersURLs)];
 }
 
-function getHeaders(conf) {
-  const headers = {};
-  const { githubUser, githubToken } = conf;
-  if (githubUser && githubToken) {
-    const credentials = btoa(`${githubUser}:${githubToken}`);
-    const Authorization = `Basic ${credentials}`;
-    Object.assign(headers, { Authorization });
-  }
-  return headers;
-}
 async function toHTML(urls, editors, element, headers) {
   const args = await getArgs(urls, editors, element, headers);
   const names = args
@@ -53,7 +43,7 @@ export async function run(conf) {
   const editors = conf.editors.map(nameProp);
   const commenterUrls = ghCommenters ? findUserURLs(issues, comments) : [];
   const contributorUrls = ghContributors ? contributors.map(urlProp) : [];
-  const headers = getHeaders(conf);
+  const headers = extractGithubCredentials(conf);
   try {
     await Promise.all(
       toHTML(commenterUrls, editors, ghCommenters, headers),

@@ -37,7 +37,7 @@ define([
   "./core/style",
   "./w3c/style",
   "./w3c/l10n",
-  "./core/github-config",
+  "./core/github",
   "./core/github-api",
   "./core/data-include",
   "./core/markdown",
