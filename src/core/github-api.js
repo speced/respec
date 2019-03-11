@@ -2,16 +2,30 @@ import { fetchAndCache } from "./utils";
 import { pub } from "./pubsubhub";
 export const name = "core/github-api";
 
-const MAX_GITHUB_REQUESTS = 60;
-
-async function fetchAndStoreGithubIssues(conf) {
+export async function fetchAndStoreGithubIssues(conf) {
   const { githubAPI, githubUser, githubToken } = conf;
   /** @type {NodeListOf<HTMLElement>} */
   const specIssues = document.querySelectorAll(".issue[data-number]");
-  if (specIssues.length > MAX_GITHUB_REQUESTS) {
+
+  const ratelimitURL = `https://api.github.com/rate_limit`;
+  const rateheaders = {
+    // Get back HTML content instead of markdown
+    // See: https://developer.github.com/v3/media/
+    Accept: "application/vnd.github.v3.html+json",
+  };
+  const raterequest = new Request(ratelimitURL, {
+    mode: "cors",
+    referrerPolicy: "no-referrer",
+    rateheaders,
+  });
+  const rateresponse = await fetchAndCache(raterequest);
+  const jsonresponse = await rateresponse.json();
+  if (specIssues.length > jsonresponse.rate.remaining) {
     const msg =
       `Your spec contains ${specIssues.length} Github issues, ` +
-      `but GitHub only allows ${MAX_GITHUB_REQUESTS} requests. Some issues might not show up.`;
+      `but GitHub only allows ${
+        jsonresponse.rate.remaining
+      } requests. Some issues might not show up.`;
     pub("warning", msg);
   }
   const issuePromises = [...specIssues]
@@ -42,6 +56,17 @@ async function fetchAndStoreGithubIssues(conf) {
     });
   const issues = await Promise.all(issuePromises);
   return new Map(issues);
+}
+
+export function extractGithubCredentials(conf) {
+  const headers = {};
+  const { githubUser, githubToken } = conf;
+  if (githubUser && githubToken) {
+    const credentials = btoa(`${githubUser}:${githubToken}`);
+    const Authorization = `Basic ${credentials}`;
+    Object.assign(headers, { Authorization });
+  }
+  return headers;
 }
 
 async function processResponse(response, issueNumber) {
@@ -103,23 +128,6 @@ export async function getArgs(urls, editors, elements, headers) {
 }
 
 export async function run(conf) {
-  const query = ".issue, .note, .warning, .ednote";
-  /** @type {NodeListOf<HTMLElement>} */
-  const issuesAndNotes = document.querySelectorAll(query);
-  if (!issuesAndNotes.length) {
-    return; // nothing to do.
-  }
-  /** @type {Map<number, GitHubIssue>} */
-  const ghIssues = conf.githubAPI
-    ? await fetchAndStoreGithubIssues(conf)
-    : new Map();
-  window.ghIssues = ghIssues;
-
-  const ghCommenters = document.getElementById("gh-commenters");
-  const ghContributors = document.getElementById("gh-contributors");
-  if (!ghCommenters && !ghContributors) {
-    return;
-  }
   const headers = {};
   const { githubAPI, githubUser, githubToken } = conf;
   if (githubUser && githubToken) {
