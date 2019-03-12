@@ -125,7 +125,7 @@ export function calculateLeftPad(text) {
  *
  * @param {Object} opts Configure the resource hint.
  * @param {String} opts.hint The type of hint (see resourceHints).
- * @param {URL|String} opts.href The URL for the resource or origin.
+ * @param {String} opts.href The URL for the resource or origin.
  * @param {String} [opts.corsMode] Optional, the CORS mode to use (see HTML spec).
  * @param {String} [opts.as] Optional, fetch destination type (see fetchDestinations).
  * @param {boolean} [opts.dontRemove] If the hint should remain in the spec after processing.

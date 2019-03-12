@@ -13,7 +13,7 @@ function attachFixupScript(doc, version) {
     script.addEventListener(
       "load",
       () => {
-        window.location = location.hash;
+        window.location.href = location.hash;
       },
       { once: true }
     );
