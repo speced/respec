@@ -129,20 +129,18 @@ export function run(conf) {
     if (subtxt.length === 1) continue;
 
     const df = document.createDocumentFragment();
-    while (subtxt.length) {
-      const t = subtxt.shift();
+    // The shift() method might have O(N) time complexity where N is subtxt.length, due to re-indexing.
+    // Using simple loop will avoid the re-indexing overhead.
+    for (let i = 0; i < subtxt.length; i++) {
+      const t = subtxt[i];
       let matched = null;
-      if (subtxt.length) matched = subtxt.shift();
+      if (i != subtxt.length - 1) {
+        matched = subtxt[i + 1];
+        i++;
+      }
       df.appendChild(document.createTextNode(t));
       if (matched) {
-        if (
-          /MUST(?:\s+NOT)?|SHOULD(?:\s+NOT)?|SHALL(?:\s+NOT)?|MAY|(?:NOT\s+)?REQUIRED|(?:NOT\s+)?RECOMMENDED|OPTIONAL/.test(
-            matched
-          )
-        ) {
-          const node = inlineRFC2119Matches(matched);
-          df.appendChild(node);
-        } else if (matched.startsWith("{{{")) {
+        if (matched.startsWith("{{{")) {
           const node = inlineXrefMatches(matched);
           df.appendChild(node);
         } else if (matched.startsWith("[[")) {
@@ -150,6 +148,13 @@ export function run(conf) {
           df.append(...nodes);
         } else if (abbrMap.has(matched)) {
           const node = inlineAbbrMatches(matched, txt, abbrMap);
+          df.appendChild(node);
+        } else if (
+          /MUST(?:\s+NOT)?|SHOULD(?:\s+NOT)?|SHALL(?:\s+NOT)?|MAY|(?:NOT\s+)?REQUIRED|(?:NOT\s+)?RECOMMENDED|OPTIONAL/.test(
+            matched
+          )
+        ) {
+          const node = inlineRFC2119Matches(matched);
           df.appendChild(node);
         } else {
           // FAIL -- not sure that this can really happen
