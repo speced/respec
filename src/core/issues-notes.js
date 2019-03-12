@@ -10,6 +10,7 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
+
 import { addId, joinAnd, parents } from "./utils";
 import css from "text!../../assets/issues-notes.css";
 import { lang as defaultLang } from "../core/l10n";
