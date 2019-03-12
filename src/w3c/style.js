@@ -13,7 +13,7 @@ function attachFixupScript(doc, version) {
     script.addEventListener(
       "load",
       () => {
-        window.location = location.hash;
+        window.location.href = location.hash;
       },
       { once: true }
     );
@@ -103,6 +103,13 @@ if (!document.head.querySelector("meta[name=viewport]")) {
 
 document.head.prepend(elements);
 
+function styleMover(linkURL) {
+  return exportDoc => {
+    const w3cStyle = exportDoc.querySelector(`head link[href="${linkURL}"]`);
+    exportDoc.querySelector("head").append(w3cStyle);
+  };
+}
+
 export function run(conf) {
   if (!conf.specStatus) {
     const warn = "`respecConfig.specStatus` missing. Defaulting to 'base'.";
@@ -156,6 +163,8 @@ export function run(conf) {
   }
   const finalVersionPath = version ? `${version}/` : "";
   const finalStyleURL = `https://www.w3.org/StyleSheets/TR/${finalVersionPath}${styleFile}`;
-
   linkCSS(document, finalStyleURL);
+  // Make sure the W3C stylesheet is the last stylesheet, as required by W3C Pub Rules.
+  const moveStyle = styleMover(finalStyleURL);
+  sub("beforesave", moveStyle);
 }

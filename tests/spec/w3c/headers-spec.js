@@ -567,38 +567,42 @@ describe("W3C — Headers", () => {
     });
   });
 
-  describe("alternateFormats", () => {});
-  it("takes alternateFormats into account", async () => {
-    const ops = makeStandardOps();
-    const newProps = {
-      specStatus: "FPWD",
-      alternateFormats: [
-        {
-          uri: "URI",
-          label: "LABEL",
-        },
-      ],
-    };
-    Object.assign(ops.config, newProps);
-    const doc = await makeRSDoc(ops);
-    expect(
-      contains(doc.querySelector(".head"), "a", "LABEL")[0].getAttribute("href")
-    ).toBe("URI");
+  describe("alternateFormats", () => {
+    it("takes alternateFormats into account", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "FPWD",
+        alternateFormats: [
+          {
+            uri: "URI",
+            label: "LABEL",
+          },
+        ],
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+      expect(
+        contains(doc.querySelector(".head"), "a", "LABEL")[0].getAttribute(
+          "href"
+        )
+      ).toBe("URI");
+    });
   });
 
-  describe("testSuiteURI", () => {});
-  it("takes testSuiteURI into account", async () => {
-    const ops = makeStandardOps();
-    const newProps = {
-      specStatus: "REC",
-      testSuiteURI: "URI",
-    };
-    Object.assign(ops.config, newProps);
-    const doc = await makeRSDoc(ops);
-    const terms = doc.querySelectorAll("dt");
-    expect(terms[3].textContent).toBe("Test suite:");
-    expect(terms[3].nextElementSibling.localName).toBe("dd");
-    expect(terms[3].nextElementSibling.textContent).toBe("URI");
+  describe("testSuiteURI", () => {
+    it("takes testSuiteURI into account", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+        testSuiteURI: "my:uri",
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+      const terms = doc.querySelectorAll("dt");
+      expect(terms[3].textContent).toBe("Test suite:");
+      expect(terms[3].nextElementSibling.localName).toBe("dd");
+      expect(terms[3].nextElementSibling.textContent).toBe("my:uri");
+    });
   });
 
   describe("implementationReportURI", () => {

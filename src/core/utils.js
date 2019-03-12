@@ -3,6 +3,7 @@
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
+import { lang as docLang } from "./l10n";
 import marked from "marked";
 import { pub } from "./pubsubhub";
 export const name = "core/utils";
@@ -99,7 +100,7 @@ const fetchDestinations = new Set([
 
 // CSS selector for matching elements that are non-normative
 export const nonNormativeSelector =
-  ".informative, .note, .issue, .example, .ednote, .practice";
+  ".informative, .note, .issue, .example, .ednote, .practice, .introductory";
 
 export function calculateLeftPad(text) {
   if (typeof text !== "string") {
@@ -124,7 +125,7 @@ export function calculateLeftPad(text) {
  *
  * @param {Object} opts Configure the resource hint.
  * @param {String} opts.hint The type of hint (see resourceHints).
- * @param {URL|String} opts.href The URL for the resource or origin.
+ * @param {String} opts.href The URL for the resource or origin.
  * @param {String} [opts.corsMode] Optional, the CORS mode to use (see HTML spec).
  * @param {String} [opts.as] Optional, fetch destination type (see fetchDestinations).
  * @param {boolean} [opts.dontRemove] If the hint should remain in the spec after processing.
@@ -210,7 +211,7 @@ export function normalizePadding(text = "") {
   }
   doc.normalize();
   // use the first space as an indicator of how much to chop off the front
-  const firstSpace = doc.body.innerText
+  const firstSpace = doc.body.textContent
     .replace(/^ *\n/, "")
     .split("\n")
     .filter(item => item && item.startsWith(" "))[0];
@@ -379,8 +380,15 @@ export class IDBKeyVal {
 // Takes an array and returns a string that separates each of its items with the proper commas and
 // "and". The second argument is a mapping function that can convert the items before they are
 // joined
-export function joinAnd(array = [], mapper = item => item) {
+export function joinAnd(array = [], mapper = item => item, lang = docLang) {
   const items = array.map(mapper);
+  if (Intl.ListFormat && typeof Intl.ListFormat === "function") {
+    const formatter = new Intl.ListFormat(lang, {
+      style: "long",
+      type: "conjunction",
+    });
+    return formatter.format(items);
+  }
   switch (items.length) {
     case 0:
     case 1: // "x"
@@ -886,4 +894,23 @@ export function children(element, selector) {
     }
     return elements;
   }
+}
+
+/**
+ * Generates simple ids. The id's increment after it yields.
+ *
+ * @param {String} namespace A string like "highlight".
+ * @param {Int} counter A number, which can start at a given value.
+ */
+export function msgIdGenerator(namespace, counter = 0) {
+  function* idGenerator(namespace, counter) {
+    while (true) {
+      yield `${namespace}:${counter}`;
+      counter++;
+    }
+  }
+  const gen = idGenerator(namespace, counter);
+  return () => {
+    return gen.next().value;
+  };
 }
