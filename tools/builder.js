@@ -15,6 +15,7 @@ colors.setTheme({
   info: "green",
 });
 
+/** @type {import("command-line-args").OptionDefinition[]} */
 const optionList = [
   {
     alias: "h",
@@ -32,6 +33,13 @@ const optionList = [
     multiple: false,
     name: "profile",
     type: String,
+  },
+  {
+    alias: "d",
+    defaultValue: false,
+    description: "Disable optimization to ease debugging",
+    name: "debug",
+    type: Boolean,
   },
 ];
 
@@ -99,10 +107,11 @@ const Builder = {
    * Async function runs Requirejs' optimizer to generate the output.
    *
    * using a custom configuration.
-   * @param  {[type]} options [description]
-   * @return {[type]}         [description]
+   * @param {object} options
+   * @param {string} options.name
+   * @param {boolean} options.debug
    */
-  async build({ name }) {
+  async build({ name, debug }) {
     if (!name) {
       throw new TypeError("name is required");
     }
@@ -118,7 +127,7 @@ const Builder = {
     // optimisation settings
     const buildVersion = await this.getRespecVersion();
     const config = {
-      mode: "production",
+      mode: debug ? "none" : "production",
       entry: require.resolve(`../js/profile-${name}.js`),
       output: {
         path: buildPath,
@@ -170,12 +179,12 @@ if (require.main === module) {
       console.info(getUsage(usageSections));
       return process.exit(0);
     }
-    const { profile: name } = parsedArgs;
+    const { profile: name, debug } = parsedArgs;
     if (!name) {
       return;
     }
     try {
-      await Builder.build({ name });
+      await Builder.build({ name, debug });
     } catch (err) {
       console.error(colors.error(err.stack));
       return process.exit(1);
