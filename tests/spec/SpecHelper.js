@@ -6,7 +6,7 @@ const iframes = [];
 /**
  * @return {Promise<Document>}
  */
-function makeRSDoc(opts = {}, src = "about-blank.html", style = "") {
+function makeRSDoc(opts = {}, src, style = "") {
   return new Promise((resolve, reject) => {
     const ifr = document.createElement("iframe");
     // reject when DEFAULT_TIMEOUT_INTERVAL passes
@@ -15,7 +15,9 @@ function makeRSDoc(opts = {}, src = "about-blank.html", style = "") {
     }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
     ifr.addEventListener("load", async () => {
       const doc = ifr.contentDocument;
-      decorateDocument(doc, opts);
+      if (src) {
+        decorateDocument(doc, opts);
+      }
       if (doc.respecIsReady) {
         await doc.respecIsReady;
         resolve(doc);
@@ -45,6 +47,10 @@ function makeRSDoc(opts = {}, src = "about-blank.html", style = "") {
     }
     if (src) {
       ifr.src = src;
+    } else {
+      const doc = document.implementation.createHTMLDocument();
+      decorateDocument(doc, opts);
+      ifr.srcdoc = doc.documentElement.outerHTML;
     }
     // trigger load
     document.body.appendChild(ifr);
