@@ -11,7 +11,10 @@ export function run(conf) {
   switch (conf.canonicalURI) {
     case "edDraft":
       if (conf.edDraftURI) {
-        conf.canonicalURI = new URL(conf.edDraftURI, document.location.href).href;
+        conf.canonicalURI = new URL(
+          conf.edDraftURI,
+          document.location.href
+        ).href;
       } else {
         pub(
           "warn",
