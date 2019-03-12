@@ -72,7 +72,7 @@ export const biblioDB = {
    * If it's an alias, it resolves it.
    *
    * @param {String} id The reference or alias to look for.
-   * @return {Object?} The reference or null.
+   * @return {Promise<Object?>} The reference or null.
    */
   async find(id) {
     if (await this.isAlias(id)) {
@@ -85,7 +85,7 @@ export const biblioDB = {
    *
    * @param {String} type One of the ALLOWED_TYPES.
    * @param {String} id The reference to find.
-   * @return {Boolean} True if it has it, false otherwise.
+   * @return {Promise<Boolean>} True if it has it, false otherwise.
    */
   async has(type, id) {
     if (!ALLOWED_TYPES.has(type)) {
