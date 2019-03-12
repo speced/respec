@@ -3,7 +3,6 @@
 // For each returend result, adds `data-cite` attributes to respective elements,
 //   so later they can be handled by core/link-to-dfn.
 // https://github.com/w3c/respec/issues/1662
-
 import {
   IDBKeyVal,
   nonNormativeSelector,
