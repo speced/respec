@@ -39,8 +39,8 @@ const optionList = [
     defaultValue: false,
     description: "Disable optimization to ease debugging",
     name: "debug",
-    type: Boolean
-  }
+    type: Boolean,
+  },
 ];
 
 const usageSections = [
