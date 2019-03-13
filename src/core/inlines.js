@@ -27,12 +27,12 @@ export const rfc2119Usage = {};
  * @param {DocumentFragment} df
  */
 function inlineRFC2119Matches(matched, df) {
-  matched = matched.split(/\s+/).join(" ");
+  const normalize = matched.split(/\s+/).join(" ");
   df.appendChild(
-    hyperHTML`<em class="rfc2119" title="${matched}">${matched}</em>`
+    hyperHTML`<em class="rfc2119" title="${normalize}">${normalize}</em>`
   );
   // remember which ones were used
-  rfc2119Usage[matched] = true;
+  rfc2119Usage[normalize] = true;
 }
 
 /**
@@ -40,9 +40,9 @@ function inlineRFC2119Matches(matched, df) {
  * @param {DocumentFragment} df
  */
 function inlineXrefMatches(matched, df) {
+  // slices "{{{" at the beginning and "}}}" at the end
   const ref = matched
-    .replace(/^\{{3}/, "")
-    .replace(/\}{3}$/, "")
+    .slice(3, -3)
     .trim();
   if (ref.startsWith("\\")) {
     df.appendChild(document.createTextNode(`{{{${ref.slice(1)}}}}`));
@@ -58,9 +58,8 @@ function inlineXrefMatches(matched, df) {
  * @param {Object} conf
  */
 function inlineBibrefMatches(matched, df, txt, conf) {
-  let ref = matched;
-  ref = ref.replace(/^\[\[/, "");
-  ref = ref.replace(/\]\]$/, "");
+  // slices "[[" at the start and "]]" at the end
+  const ref = matched.slice(2, -2);
   if (ref.startsWith("\\")) {
     df.appendChild(document.createTextNode(`[[${ref.slice(1)}]]`));
   } else {
