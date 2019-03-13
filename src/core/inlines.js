@@ -45,7 +45,7 @@ function inlineXrefMatches(matched, df) {
     .replace(/\}{3}$/, "")
     .trim();
   if (ref.startsWith("\\")) {
-    df.appendChild(document.createTextNode(`{{{${ref.replace(/^\\/, "")}}}}`));
+    df.appendChild(document.createTextNode(`{{{${ref.slice(1)}}}}`));
   } else {
     df.appendChild(idlStringToHtml(ref));
   }
