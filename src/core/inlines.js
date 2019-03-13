@@ -53,7 +53,7 @@ function inlineBibrefMatches(matched, txt, conf) {
   // slices "[[" at the start and "]]" at the end
   const ref = matched.slice(2, -2);
   if (ref.startsWith("\\")) {
-    return /** type {HTMLElement[]} */ [
+    return /** @type {HTMLElement[]} */ [
       document.createTextNode(`[[${ref.slice(1)}]]`),
     ];
   } else {
@@ -73,7 +73,7 @@ function inlineBibrefMatches(matched, txt, conf) {
     } else {
       conf.normativeReferences.add(cleanRef);
     }
-    return /** type {HTMLElement[]} */ cite.childNodes;
+    return /** @type {HTMLElement[]} */ cite.childNodes;
   }
 }
 
