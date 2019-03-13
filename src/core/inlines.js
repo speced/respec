@@ -157,7 +157,6 @@ export function run(conf) {
           // External IDL references (xref)
           inlineXrefMatches(matched, df);
         } else if (matched.startsWith("[[")) {
-          // BIBREF
           inlineBibrefMatches(matched, df, txt, conf);
         } else if (abbrMap.has(matched)) {
           inlineAbbrMatches(matched, df, txt, abbrMap);
