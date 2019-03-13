@@ -27,7 +27,7 @@ export const rfc2119Usage = {};
  */
 function inlineRFC2119Matches(matched) {
   const normalize = matched.split(/\s+/).join(" ");
-  const nodeElement = (hyperHTML`<em class="rfc2119" title="${normalize}">${normalize}</em>`);
+  const nodeElement = hyperHTML`<em class="rfc2119" title="${normalize}">${normalize}</em>`;
   // remember which ones were used
   rfc2119Usage[normalize] = true;
   return /** @type {HTMLElement} */ nodeElement;
@@ -38,10 +38,10 @@ function inlineRFC2119Matches(matched) {
  */
 function inlineXrefMatches(matched) {
   // slices "{{{" at the beginning and "}}}" at the end
-  const ref = matched
-    .slice(3, -3)
-    .trim();
-  return /** @type {HTMLElement} */ ref.startsWith("\\") ? document.createTextNode(`{{{${ref.slice(1)}}}}`) : idlStringToHtml(ref);
+  const ref = matched.slice(3, -3).trim();
+  return /** @type {HTMLElement} */ ref.startsWith("\\")
+    ? document.createTextNode(`{{{${ref.slice(1)}}}}`)
+    : idlStringToHtml(ref);
 }
 
 /**
@@ -53,7 +53,9 @@ function inlineBibrefMatches(matched, txt, conf) {
   // slices "[[" at the start and "]]" at the end
   const ref = matched.slice(2, -2);
   if (ref.startsWith("\\")) {
-    return /** type {HTMLElement[]} */ [document.createTextNode(`[[${ref.slice(1)}]]`)];
+    return /** type {HTMLElement[]} */ [
+      document.createTextNode(`[[${ref.slice(1)}]]`),
+    ];
   } else {
     const { type, illegal } = refTypeFromContext(ref, txt.parentNode);
     const cite = renderInlineCitation(ref);
@@ -81,8 +83,9 @@ function inlineBibrefMatches(matched, txt, conf) {
  * @param {Map<string, string>} abbrMap
  */
 function inlineAbbrMatches(matched, txt, abbrMap) {
-  return /** @type {HTMLElement} */ txt.parentElement.tagName === "ABBR" ?
-    document.createTextNode(matched) : (hyperHTML`<abbr title="${abbrMap.get(matched)}">${matched}</abbr>`);
+  return /** @type {HTMLElement} */ txt.parentElement.tagName === "ABBR"
+    ? document.createTextNode(matched)
+    : hyperHTML`<abbr title="${abbrMap.get(matched)}">${matched}</abbr>`;
 }
 
 export function run(conf) {
