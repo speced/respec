@@ -36,7 +36,7 @@ function inlineRFC2119Matches(matched) {
 /**
  * @param {string} matched
  */
-function inlineXrefMatches(matched, df) {
+function inlineXrefMatches(matched) {
   // slices "{{{" at the beginning and "}}}" at the end
   const ref = matched
     .slice(3, -3)
@@ -46,11 +46,10 @@ function inlineXrefMatches(matched, df) {
 
 /**
  * @param {string} matched
- * @param {DocumentFragment} df
  * @param {Text} txt
  * @param {Object} conf
  */
-function inlineBibrefMatches(matched, df, txt, conf) {
+function inlineBibrefMatches(matched, txt, conf) {
   // slices "[[" at the start and "]]" at the end
   const ref = matched.slice(2, -2);
   if (ref.startsWith("\\")) {
@@ -78,11 +77,10 @@ function inlineBibrefMatches(matched, df, txt, conf) {
 
 /**
  * @param {string} matched
- * @param {DocumentFragment} df
  * @param {Text} txt
  * @param {Map<string, string>} abbrMap
  */
-function inlineAbbrMatches(matched, df, txt, abbrMap) {
+function inlineAbbrMatches(matched, txt, abbrMap) {
   return /** @type {HTMLElement} */ txt.parentElement.tagName === "ABBR" ?
     document.createTextNode(matched) : (hyperHTML`<abbr title="${abbrMap.get(matched)}">${matched}</abbr>`);
 }
@@ -140,16 +138,16 @@ export function run(conf) {
             matched
           )
         ) {
-          const node = inlineRFC2119Matches(matched, df);
+          const node = inlineRFC2119Matches(matched);
           df.appendChild(node);
         } else if (matched.startsWith("{{{")) {
-          const node = inlineXrefMatches(matched, df);
+          const node = inlineXrefMatches(matched);
           df.appendChild(node);
         } else if (matched.startsWith("[[")) {
-          const nodes = inlineBibrefMatches(matched, df, txt, conf);
+          const nodes = inlineBibrefMatches(matched, txt, conf);
           df.append(...nodes);
         } else if (abbrMap.has(matched)) {
-          const node = inlineAbbrMatches(matched, df, txt, abbrMap);
+          const node = inlineAbbrMatches(matched, txt, abbrMap);
           df.appendChild(node);
         } else {
           // FAIL -- not sure that this can really happen
