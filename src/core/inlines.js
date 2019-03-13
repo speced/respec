@@ -24,31 +24,24 @@ export const rfc2119Usage = {};
 
 /**
  * @param {string} matched
- * @param {DocumentFragment} df
  */
-function inlineRFC2119Matches(matched, df) {
+function inlineRFC2119Matches(matched) {
   const normalize = matched.split(/\s+/).join(" ");
-  df.appendChild(
-    hyperHTML`<em class="rfc2119" title="${normalize}">${normalize}</em>`
-  );
+  const nodeElement = (hyperHTML`<em class="rfc2119" title="${normalize}">${normalize}</em>`);
   // remember which ones were used
   rfc2119Usage[normalize] = true;
+  return /** @type {HTMLElement} */ nodeElement;
 }
 
 /**
  * @param {string} matched
- * @param {DocumentFragment} df
  */
 function inlineXrefMatches(matched, df) {
   // slices "{{{" at the beginning and "}}}" at the end
   const ref = matched
     .slice(3, -3)
     .trim();
-  if (ref.startsWith("\\")) {
-    df.appendChild(document.createTextNode(`{{{${ref.slice(1)}}}}`));
-  } else {
-    df.appendChild(idlStringToHtml(ref));
-  }
+  return /** @type {HTMLElement} */ ref.startsWith("\\") ? document.createTextNode(`{{{${ref.slice(1)}}}}`) : idlStringToHtml(ref);
 }
 
 /**
@@ -61,12 +54,11 @@ function inlineBibrefMatches(matched, df, txt, conf) {
   // slices "[[" at the start and "]]" at the end
   const ref = matched.slice(2, -2);
   if (ref.startsWith("\\")) {
-    df.appendChild(document.createTextNode(`[[${ref.slice(1)}]]`));
+    return /** type {HTMLElement[]} */ [document.createTextNode(`[[${ref.slice(1)}]]`)];
   } else {
     const { type, illegal } = refTypeFromContext(ref, txt.parentNode);
     const cite = renderInlineCitation(ref);
     const cleanRef = ref.replace(/^(!|\?)/, "");
-    df.append(...cite.childNodes);
     if (illegal && !conf.normativeReferences.has(cleanRef)) {
       showInlineWarning(
         cite.childNodes[1], // cite element
@@ -80,6 +72,7 @@ function inlineBibrefMatches(matched, df, txt, conf) {
     } else {
       conf.normativeReferences.add(cleanRef);
     }
+    return /** type {HTMLElement[]} */ cite.childNodes;
   }
 }
 
@@ -90,11 +83,8 @@ function inlineBibrefMatches(matched, df, txt, conf) {
  * @param {Map<string, string>} abbrMap
  */
 function inlineAbbrMatches(matched, df, txt, abbrMap) {
-  if (txt.parentElement.tagName === "ABBR")
-    df.appendChild(document.createTextNode(matched));
-  else
-    df.appendChild(hyperHTML`
-      <abbr title="${abbrMap.get(matched)}">${matched}</abbr>`);
+  return /** @type {HTMLElement} */ txt.parentElement.tagName === "ABBR" ?
+    document.createTextNode(matched) : (hyperHTML`<abbr title="${abbrMap.get(matched)}">${matched}</abbr>`);
 }
 
 export function run(conf) {
@@ -150,13 +140,17 @@ export function run(conf) {
             matched
           )
         ) {
-          inlineRFC2119Matches(matched, df);
+          const node = inlineRFC2119Matches(matched, df);
+          df.appendChild(node);
         } else if (matched.startsWith("{{{")) {
-          inlineXrefMatches(matched, df);
+          const node = inlineXrefMatches(matched, df);
+          df.appendChild(node);
         } else if (matched.startsWith("[[")) {
-          inlineBibrefMatches(matched, df, txt, conf);
+          const nodes = inlineBibrefMatches(matched, df, txt, conf);
+          df.append(...nodes);
         } else if (abbrMap.has(matched)) {
-          inlineAbbrMatches(matched, df, txt, abbrMap);
+          const node = inlineAbbrMatches(matched, df, txt, abbrMap);
+          df.appendChild(node);
         } else {
           // FAIL -- not sure that this can really happen
           pub(
