@@ -62,7 +62,7 @@ function inlineBibrefMatches(matched, df, txt, conf) {
   ref = ref.replace(/^\[\[/, "");
   ref = ref.replace(/\]\]$/, "");
   if (ref.startsWith("\\")) {
-    df.appendChild(document.createTextNode(`[[${ref.replace(/^\\/, "")}]]`));
+    df.appendChild(document.createTextNode(`[[${ref.slice(1)}]]`));
   } else {
     const { type, illegal } = refTypeFromContext(ref, txt.parentNode);
     const cite = renderInlineCitation(ref);
