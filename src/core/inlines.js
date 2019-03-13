@@ -153,7 +153,6 @@ export function run(conf) {
         ) {
           inlineRFC2119Matches(matched, df);
         } else if (matched.startsWith("{{{")) {
-          // External IDL references (xref)
           inlineXrefMatches(matched, df);
         } else if (matched.startsWith("[[")) {
           inlineBibrefMatches(matched, df, txt, conf);
