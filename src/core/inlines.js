@@ -160,7 +160,6 @@ export function run(conf) {
           // BIBREF
           inlineBibrefMatches(matched, df, txt, conf);
         } else if (abbrMap.has(matched)) {
-          // ABBR
           inlineAbbrMatches(matched, df, txt, abbrMap);
         } else {
           // FAIL -- not sure that this can really happen
