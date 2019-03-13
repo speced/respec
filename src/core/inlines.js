@@ -92,7 +92,7 @@ function inlineBibrefMatches(matched, df, txt, conf) {
  * @param {string} matched
  * @param {DocumentFragment} df
  * @param {Text} txt
- * @param {NodeListOf<HTMLElement>} abbrMap
+ * @param {Map<textContent, title>} abbrMap
  */
 function inlineAbbrMatches(matched, df, txt, abbrMap) {
   if (txt.parentElement.tagName === "ABBR")
