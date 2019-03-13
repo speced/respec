@@ -151,7 +151,6 @@ export function run(conf) {
             matched
           )
         ) {
-          // RFC 2119
           inlineRFC2119Matches(matched, df);
         } else if (matched.startsWith("{{{")) {
           // External IDL references (xref)
