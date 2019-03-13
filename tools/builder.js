@@ -126,6 +126,7 @@ const Builder = {
 
     // optimisation settings
     const buildVersion = await this.getRespecVersion();
+    /** @type {import("webpack").Configuration} */
     const config = {
       mode: debug ? "none" : "production",
       entry: require.resolve(`../js/profile-${name}.js`),

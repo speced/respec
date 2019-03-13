@@ -64,20 +64,10 @@ function decorateDocument(doc, opts) {
     return element;
   }
 
-  function addRespecLoader({ jsPath = "../js/" }) {
+  function addRespecLoader() {
     const loader = doc.createElement("script");
-    const isKarma = !!window.__karma__;
-    const loadAttr = {
-      src: isKarma
-        ? new URL("/base/builds/respec-w3c-common.js", location).href
-        : "/js/deps/require.js",
-      "data-main": isKarma
-        ? ""
-        : jsPath + (opts.profile || "profile-w3c-common"),
-    };
-    Object.keys(loadAttr)
-      .reduce(intoAttributes.bind(loadAttr), loader)
-      .classList.add("remove");
+    loader.src = new URL("/base/builds/respec-w3c-common.js", location).href;
+    loader.classList.add("remove");
     doc.head.appendChild(loader);
   }
 
