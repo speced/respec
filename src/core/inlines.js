@@ -45,9 +45,7 @@ function inlineXrefMatches(matched, df) {
     .replace(/\}{3}$/, "")
     .trim();
   if (ref.startsWith("\\")) {
-    df.appendChild(
-      document.createTextNode(`{{{${ref.replace(/^\\/, "")}}}}`)
-    );
+    df.appendChild(document.createTextNode(`{{{${ref.replace(/^\\/, "")}}}}`));
   } else {
     df.appendChild(idlStringToHtml(ref));
   }
@@ -64,9 +62,7 @@ function inlineBibrefMatches(matched, df, txt, conf) {
   ref = ref.replace(/^\[\[/, "");
   ref = ref.replace(/\]\]$/, "");
   if (ref.startsWith("\\")) {
-    df.appendChild(
-      document.createTextNode(`[[${ref.replace(/^\\/, "")}]]`)
-    );
+    df.appendChild(document.createTextNode(`[[${ref.replace(/^\\/, "")}]]`));
   } else {
     const { type, illegal } = refTypeFromContext(ref, txt.parentNode);
     const cite = renderInlineCitation(ref);
@@ -92,7 +88,7 @@ function inlineBibrefMatches(matched, df, txt, conf) {
  * @param {string} matched
  * @param {DocumentFragment} df
  * @param {Text} txt
- * @param {Map<textContent, title>} abbrMap
+ * @param {Map<string, string>} abbrMap
  */
 function inlineAbbrMatches(matched, df, txt, abbrMap) {
   if (txt.parentElement.tagName === "ABBR")
