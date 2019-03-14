@@ -23,6 +23,7 @@ export const name = "core/inlines";
 export const rfc2119Usage = {};
 
 /**
+ * @return {HTMLElement}
  * @param {string} matched
  */
 function inlineRFC2119Matches(matched) {
@@ -30,7 +31,7 @@ function inlineRFC2119Matches(matched) {
   const nodeElement = hyperHTML`<em class="rfc2119" title="${normalize}">${normalize}</em>`;
   // remember which ones were used
   rfc2119Usage[normalize] = true;
-  return /** @type {HTMLElement} */ nodeElement;
+  return nodeElement;
 }
 
 /**
@@ -39,12 +40,13 @@ function inlineRFC2119Matches(matched) {
 function inlineXrefMatches(matched) {
   // slices "{{{" at the beginning and "}}}" at the end
   const ref = matched.slice(3, -3).trim();
-  return /** @type {HTMLElement} */ ref.startsWith("\\")
+  return ref.startsWith("\\")
     ? document.createTextNode(`{{{${ref.slice(1)}}}}`)
     : idlStringToHtml(ref);
 }
 
 /**
+ * @return {Iterable<Node>}
  * @param {string} matched
  * @param {Text} txt
  * @param {Object} conf
@@ -53,28 +55,25 @@ function inlineBibrefMatches(matched, txt, conf) {
   // slices "[[" at the start and "]]" at the end
   const ref = matched.slice(2, -2);
   if (ref.startsWith("\\")) {
-    return /** @type {HTMLElement[]} */ [
-      document.createTextNode(`[[${ref.slice(1)}]]`),
-    ];
-  } else {
-    const { type, illegal } = refTypeFromContext(ref, txt.parentNode);
-    const cite = renderInlineCitation(ref);
-    const cleanRef = ref.replace(/^(!|\?)/, "");
-    if (illegal && !conf.normativeReferences.has(cleanRef)) {
-      showInlineWarning(
-        cite.childNodes[1], // cite element
-        "Normative references in informative sections are not allowed. " +
-          `Remove '!' from the start of the reference \`[[!${ref}]]\``
-      );
-    }
-
-    if (type === "informative" && !illegal) {
-      conf.informativeReferences.add(cleanRef);
-    } else {
-      conf.normativeReferences.add(cleanRef);
-    }
-    return /** @type {HTMLElement[]} */ cite.childNodes;
+    return [document.createTextNode(`[[${ref.slice(1)}]]`)];
   }
+  const { type, illegal } = refTypeFromContext(ref, txt.parentNode);
+  const cite = renderInlineCitation(ref);
+  const cleanRef = ref.replace(/^(!|\?)/, "");
+  if (illegal && !conf.normativeReferences.has(cleanRef)) {
+    showInlineWarning(
+      cite.childNodes[1], // cite element
+      "Normative references in informative sections are not allowed. " +
+        `Remove '!' from the start of the reference \`[[!${ref}]]\``
+    );
+  }
+
+  if (type === "informative" && !illegal) {
+    conf.informativeReferences.add(cleanRef);
+  } else {
+    conf.normativeReferences.add(cleanRef);
+  }
+  return cite.childNodes;
 }
 
 /**
@@ -83,7 +82,7 @@ function inlineBibrefMatches(matched, txt, conf) {
  * @param {Map<string, string>} abbrMap
  */
 function inlineAbbrMatches(matched, txt, abbrMap) {
-  return /** @type {HTMLElement} */ txt.parentElement.tagName === "ABBR"
+  return txt.parentElement.tagName === "ABBR"
     ? document.createTextNode(matched)
     : hyperHTML`<abbr title="${abbrMap.get(matched)}">${matched}</abbr>`;
 }
