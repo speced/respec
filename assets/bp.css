@@ -12,15 +12,6 @@ span.practicetitle {
   margin-bottom: 1em;
 }
 
-p.practicedesc {
-  padding: 2em;
-  border-left-width: 0.5em;
-  border-left-style: solid;
-  border-color: #8CCBF2;
-  background: 
-  rgb(241, 246, 253);
-}
-
 .practicebox {
     background: black;
 }
