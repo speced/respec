@@ -129,8 +129,6 @@ export function run(conf) {
     if (subtxt.length === 1) continue;
 
     const df = document.createDocumentFragment();
-    // The shift() method might have O(N) time complexity where N is subtxt.length, due to re-indexing.
-    // Using simple loop will avoid the re-indexing overhead.
     for (let i = 0; i < subtxt.length; i++) {
       const t = subtxt[i];
       let matched = null;
