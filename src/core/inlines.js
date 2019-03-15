@@ -23,8 +23,8 @@ export const name = "core/inlines";
 export const rfc2119Usage = {};
 
 /**
- * @return {HTMLElement}
  * @param {string} matched
+ * @return {HTMLElement}
  */
 function inlineRFC2119Matches(matched) {
   const normalize = matched.split(/\s+/).join(" ");
@@ -46,10 +46,10 @@ function inlineXrefMatches(matched) {
 }
 
 /**
- * @return {Iterable<Node>}
  * @param {string} matched
  * @param {Text} txt
  * @param {Object} conf
+ * @return {Iterable<Node>}
  */
 function inlineBibrefMatches(matched, txt, conf) {
   // slices "[[" at the start and "]]" at the end
