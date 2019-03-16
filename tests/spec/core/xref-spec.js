@@ -563,11 +563,9 @@ describe("Core — xref", () => {
       <section id="test">
         <p id="link1">{{{ addEventListener(type, callback) }}}</p>
         <p id="link2">{{{ EventTarget.addEventListener(type, callback) }}}</p>
-        <p id="link3">{{{ [[CollectFromCredentialStore]](options, sameOriginWithAncestors) }}} is ambiguous</p>
-        <p id="link4">{{{ Credential.[[CollectFromCredentialStore]](options, sameOriginWithAncestors) }}}</p>
       </section>
       `;
-      const config = { xref: { url: apiURL }, localBiblio };
+      const config = { xref: true, localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -589,16 +587,6 @@ describe("Core — xref", () => {
       expect(vars2.length).toEqual(2);
       expect(vars2[0].textContent).toEqual("type");
       expect(vars2[1].textContent).toEqual("callback");
-
-      const link3 = doc.querySelector("#link3 code a");
-      expect(link3.href).toEqual("");
-      expect(link3.title).toEqual("Error: Linking an ambiguous dfn.");
-
-      const [link4a, link4b] = [...doc.querySelectorAll("#link4 code a")];
-      expect(link4a.href).toEqual(expectedLinks.get("Credential"));
-      expect(link4b.href).toEqual(
-        expectedLinks.get("Credential.[[CollectFromCredentialStore]]")
-      );
     });
 
     it("links attributes", async () => {

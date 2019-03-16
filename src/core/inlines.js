@@ -36,13 +36,14 @@ function inlineRFC2119Matches(matched) {
 
 /**
  * @param {string} matched
+ * @param {Text} txt
  */
-function inlineXrefMatches(matched) {
+function inlineXrefMatches(matched, txt) {
   // slices "{{{" at the beginning and "}}}" at the end
   const ref = matched.slice(3, -3).trim();
   return ref.startsWith("\\")
     ? document.createTextNode(`{{{${ref.slice(1)}}}}`)
-    : idlStringToHtml(ref);
+    : idlStringToHtml(ref, txt);
 }
 
 /**
@@ -143,7 +144,7 @@ export function run(conf) {
           const node = inlineRFC2119Matches(matched);
           df.appendChild(node);
         } else if (matched.startsWith("{{{")) {
-          const node = inlineXrefMatches(matched);
+          const node = inlineXrefMatches(matched, txt);
           df.appendChild(node);
         } else if (matched.startsWith("[[")) {
           const nodes = inlineBibrefMatches(matched, txt, conf);

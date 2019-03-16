@@ -25,7 +25,7 @@ function parseInlineIDL(str) {
   const tokens = nonMethodPart
     .split(/\b.\b/)
     .concat(methodPart)
-    .filter(s => s.trim());
+    .filter(s => s && s.trim());
   const results = [];
   while (tokens.length) {
     const value = tokens.pop();
@@ -131,7 +131,7 @@ function renderAttribute(details) {
 // Method: .identifier(arg1, arg2, ...)
 function renderMethod(details, contextNode) {
   const { args, identifier, type, parent } = details;
-  const { idlType } = parent;
+  const { idlType } = parent || {};
   const argsText = args
     .map(arg => {
       // Are we passing a local variable to the method?
@@ -140,10 +140,12 @@ function renderMethod(details, contextNode) {
     })
     .map(({ arg, type }) => `<var data-type="${type}">${arg}</var>`)
     .join(", ");
-  const html = hyperHTML`.<a
+  const searchText = `${identifier}(${args.join(", ")})`;
+  const html = hyperHTML`${parent ? "." : ""}<a
     class="respec-idl-xref"
     data-xref-type="${type}"
     data-link-for="${idlType}"
+    data-lt="${searchText}"
     >${identifier}</a>(${[argsText]})`;
   return html;
 }
@@ -165,8 +167,13 @@ function renderEnum(details) {
  * @return {Node} html output
  */
 export function idlStringToHtml(str, contextNode) {
-  const results = parseInlineIDL(str);
-  if (!results) return;
+  let results;
+  try {
+    results = parseInlineIDL(str);
+  } catch (error) {
+    console.error(error);
+    return document.createTextNode(str);
+  }
   const render = hyperHTML(document.createDocumentFragment());
   const output = [];
   for (const details of results) {
@@ -190,6 +197,6 @@ export function idlStringToHtml(str, contextNode) {
         throw new Error("Unknown type.");
     }
   }
-  const result = render`${output}`;
+  const result = render`<code>${output}</code>`;
   return result;
 }
