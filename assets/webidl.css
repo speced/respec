@@ -125,6 +125,6 @@ a.idlEnumItem {
 
 @media print {
   .respec-button-copy-paste {
-    display: none;
+    visibility: hidden;
   }
 }
