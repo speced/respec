@@ -130,7 +130,7 @@ function renderAttribute(details) {
   return html;
 }
 
-// Method: .identifier(arg1, arg2, ...)
+// Method: .identifier(arg1, arg2, ...), identifier(arg1, arg2, ...)
 function renderMethod(details, contextNode) {
   const { args, identifier, type, parent } = details;
   const { idlType } = parent || {};
