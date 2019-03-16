@@ -17,6 +17,11 @@
           url: "https://your-site.com",
         }],
         github: "https://github.com/w3c/some-API/",
+        mdnBrowserSupport: {
+          feature: "PaymentRequest",
+          category: "api"
+        },
+        caniuse: "payment-request",
         testSuiteURI: "https://w3c-test.org/some-API/",
         implementationReportURI: "https://w3c.github.io/test-results/some-API",
       };
@@ -52,6 +57,60 @@
         listed in the TOC. ReSpec will list this reference as non-normative
         since this is an informative section [[DOM]].
       </p>
+    </section>
+    <section data-dfn-for="PaymentRequest" data-link-for="PaymentRequest">
+      <h2><dfn>PaymentRequest</dfn> interface</h2>
+      <pre class="idl">
+      interface PaymentRequest {
+        void PaymentRequest();
+        void canMakePayment();
+        void abort();
+        void onpaymentmethodchange();
+        readonly attribute USVString id;
+      };
+      </pre>
+      <section>
+        <h2><dfn>PaymentRequest()</dfn> method</h2>
+        <p>Define <a>PaymentRequest()</a> here...<p>
+      </section>
+      <section>
+        <h2><dfn>canMakePayment()</dfn> method</h2>
+        <p>Define <a>canMakePayment()</a> here...<p>
+      </section>
+      <section>
+        <h2><dfn>abort()</dfn> method</h2>
+        <p>Define <a>abort()</a> here...<p>
+      </section>
+      <section>
+        <h2><dfn>onpaymentmethodchange()</dfn> method</h2>
+        <p>Define <a>onpaymentmethodchange()</a> here...<p>
+      </section>
+      <section>
+        <h2><dfn>id</dfn> attribute</h2>
+        <p>Define <a>id</a> here...<p>
+      </section>
+    </section>
+    <section data-dfn-for="ExampleInterface" data-link-for="ExampleInterface">
+      <h2><dfn>ExampleInterface</dfn> interface</h2>
+      <pre class="idl">
+      interface ExampleInterface {
+        void exampleMethod();
+        readonly attribute USVString url;
+      };
+      </pre>
+      <section>
+        <h2><dfn>exampleMethod()</dfn> method</h2>
+        <p>Define <a>exampleMethod()</a> here...<p>
+      </section>
+      <section>
+        <h2><dfn>url</dfn> attribute</h2>
+        <p>Define <a>url</a> here...<p>
+      </section>
+    </section>
+    <section data-link-for="ExampleInterface">
+      <h2>Here is how you link!</h2>
+      <p>The <a>ExampleInterface</a> or the <a>ExampleInterface.exampleMethod()</a>.</p>
+      <p>Or like this: <a>exampleMethod</a> - which uses "data-link-for" to link.</p>
     </section>
     <section data-dfn-for="Foo">
       <h2>

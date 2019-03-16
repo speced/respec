@@ -64,6 +64,7 @@ define([
   "./w3c/informative",
   "./core/id-headers",
   "./core/caniuse",
+  "./core/mdn-browser-compat",
   "./ui/save-html",
   "./ui/search-specref",
   "./ui/dfn-list",

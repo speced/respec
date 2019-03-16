@@ -1,0 +1,108 @@
+/* container for stats */
+.mbc-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: baseline;
+  cursor: pointer;
+}
+
+div.mbc-cell {
+  margin: 1px 1px 0 0;
+  border: none;
+}
+
+.mbc-browser {
+  position: relative;
+}
+
+/* handle case when printing */
+@media print {
+  .mbc-cell.y::before {
+    content: "✔️";
+    padding: 0.5em;
+  }
+
+  .mbc-cell.n::before{
+    content: "❌";
+    padding: 0.5em;
+  }
+
+  .mbc-cell.d::before,
+  .mbc-cell.a::before,
+  .mbc-cell.x::before,
+  .mbc-cell.p::before {
+    content: "⚠️";
+    padding: 0.5em;
+  }
+}
+
+/* reset styles, hide old versions by default */
+.mbc-browser ul {
+  display: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  position: absolute;
+  left: 0;
+  z-index: 2;
+  background: #fff;
+  margin-top: 1px;
+}
+
+.mbc-stats a {
+  white-space: nowrap;
+  align-self: center;
+  margin-left: .5em;
+}
+
+/* a browser version */
+.mbc-cell {
+  display: flex;
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 90%;
+  height: 0.8cm;
+  margin-right: 1px;
+  margin-top: 0;
+  min-width: 3cm;
+  overflow: visible;
+  justify-content: center;
+  align-items: center;
+}
+
+li.mbc-cell {
+  margin-bottom: 1px;
+}
+
+.mbc-cell:focus {
+  outline: none;
+}
+
+.mbc-cell:hover {
+  color: rgba(0, 0, 0, 1);
+}
+
+/* supports */
+.mbc-cell.y {
+  background: #e4f8e1;
+}
+
+/* no support */
+.mbc-cell.n {
+  background: #e53935;
+}
+
+/* not supported by default / partial support etc
+see https://github.com/Fyrd/mbc/blob/master/CONTRIBUTING.md for stats */
+.mbc-cell.d,
+.mbc-cell.a,
+.mbc-cell.x,
+.mbc-cell.p {
+  background: #ffc107;
+}
+
+/* show rest of the browser versions */
+.mbc-stats button:focus + ul,
+.mbc-stats .mbc-browser:hover > ul {
+  display: block;
+}

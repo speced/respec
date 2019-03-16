@@ -92,6 +92,7 @@
     "hyperhtml": "^2.25.4",
     "loading-indicator": "^2.0.0",
     "marked": "^0.6.1",
+    "mdn-browser-compat-data": "0.0.71",
     "prompt": "^1.0.0",
     "puppeteer": "^1.13.0",
     "snyk": "^1.136.1"
