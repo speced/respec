@@ -18,12 +18,17 @@ function parseInlineIDL(str) {
   const slotRegex = /$\[\[(\w+)\]\]$/;
   const attributeRegex = /^(\w+)$/;
   const enumRegex = /^(\w+)\["([\w ]+)"\]$/;
-  const tokens = str.split(".");
-  let count = tokens.length;
+  // TODO: const splitRegex = /(?<=\]\]|\b)\./
+  // https://github.com/w3c/respec/pull/1848/files#r225087385
+  const methodSplitRegex = /\.?(\w+\(.*\)$)/;
+  const [nonMethodPart, methodPart] = str.split(methodSplitRegex);
+  const tokens = nonMethodPart
+    .split(/\b.\b/)
+    .concat(methodPart)
+    .filter(s => s.trim());
   const results = [];
   while (tokens.length) {
     const value = tokens.pop();
-    count--;
     // Method
     if (methodRegex.test(value)) {
       const [, identifier, allArgs] = value.match(methodRegex);
@@ -55,7 +60,7 @@ function parseInlineIDL(str) {
       continue;
     }
     throw new SyntaxError(
-      `IDL micro-syntax parsing error: "${value}" at token ${++count}.`
+      `IDL micro-syntax parsing error: "${value}" in \`${str}\``
     );
   }
   // link the list
