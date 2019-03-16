@@ -15,15 +15,17 @@ import hyperHTML from "hyperhtml";
 
 function parseInlineIDL(str) {
   const methodRegex = /(\w+)\((.*)\)$/;
-  const slotRegex = /$\[\[(\w+)\]\]$/;
-  const attributeRegex = /^(\w+)$/;
+  const slotRegex = /^\[\[(\w+)\]\]$/;
+  // matches: `value` or `[[value]]`
+  // NOTE: [[value]] is actually a slot, but database has this as type="attribute"
+  const attributeRegex = /^((?:\[\[)?(?:\w+)(?:\]\])?)$/;
   const enumRegex = /^(\w+)\["([\w ]+)"\]$/;
   // TODO: const splitRegex = /(?<=\]\]|\b)\./
   // https://github.com/w3c/respec/pull/1848/files#r225087385
   const methodSplitRegex = /\.?(\w+\(.*\)$)/;
   const [nonMethodPart, methodPart] = str.split(methodSplitRegex);
   const tokens = nonMethodPart
-    .split(/\b.\b/)
+    .split(".")
     .concat(methodPart)
     .filter(s => s && s.trim());
   const results = [];
@@ -36,12 +38,6 @@ function parseInlineIDL(str) {
       results.push({ type: "method", identifier, args });
       continue;
     }
-    // internal slot
-    if (slotRegex.test(value)) {
-      const [, identifier] = value.match(slotRegex);
-      results.push({ type: "internal-slot", identifier });
-      continue;
-    }
     // enum
     if (enumRegex.test(value)) {
       const [, identifier, enumValue] = value.match(enumRegex);
@@ -52,6 +48,12 @@ function parseInlineIDL(str) {
     if (attributeRegex.test(value) && tokens.length) {
       const [, identifier] = value.match(attributeRegex);
       results.push({ type: "attribute", identifier });
+      continue;
+    }
+    // internal slot
+    if (slotRegex.test(value)) {
+      const [, identifier] = value.match(slotRegex);
+      results.push({ type: "internal-slot", identifier });
       continue;
     }
     // base, always final token
@@ -104,27 +106,27 @@ function renderBase(details, contextNode) {
   return html;
 }
 
-// Internal slot: .[[identifer]]
+// Internal slot: .[[identifer]] or [[identifier]]
 function renderInternalSlot(details) {
-  const { identifier, type } = details;
+  const { identifier, parent } = details;
   details.idlType = findDfnType(`[[${identifier}]]`);
   const lt = `[[${identifier}]]`;
-  const html = hyperHTML`.[[<code><a
+  const html = hyperHTML`${parent ? "." : ""}[[<a
     class="respec-idl-xref"
-    data-xref-type="${type}"
+    data-xref-type="_IDL_"
     data-type="${details.idlType}"
-    data-lt="${lt}">${identifier}</a></code>]]`;
+    data-lt="${lt}">${identifier}</a>]]`;
   return html;
 }
 
 // Attribute: .identifier
 function renderAttribute(details) {
-  const { parent, identifier, type } = details;
-  const idlType = parent ? parent.idlType : null;
+  const { parent, identifier } = details;
+  const { idlType } = parent;
   const html = hyperHTML`.<a
       class="respec-idl-xref"
-      data-xref-type="${type}"
-      data-link-for="${idlType}">${identifier}</code></a>`;
+      data-xref-type="attribute|dict-member"
+      data-link-for="${idlType}">${identifier}</a>`;
   return html;
 }
 

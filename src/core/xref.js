@@ -101,7 +101,17 @@ function createXrefMap(elems) {
       specs.push(...refs);
     }
 
-    const types = [isIDL ? elem.dataset.xrefType || "_IDL_" : "_CONCEPT_"];
+    const types = [];
+    if (isIDL) {
+      if (elem.dataset.xrefType) {
+        types.push(...elem.dataset.xrefType.split("|"));
+      } else {
+        types.push("_IDL_");
+      }
+    } else {
+      types.push("_CONCEPT_");
+    }
+
     const { linkFor: forContext } = elem.dataset;
 
     const xrefsForTerm = map.has(term) ? map.get(term) : [];

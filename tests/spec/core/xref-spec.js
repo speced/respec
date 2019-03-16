@@ -103,7 +103,7 @@ describe("Core — xref", () => {
       "https://encoding.spec.whatwg.org/#textdecoderoptions",
     ],
     [
-      `TextDecoderOptions["fatal"]`,
+      `TextDecoderOptions.fatal`,
       "https://encoding.spec.whatwg.org/#dom-textdecoderoptions-fatal",
     ],
     ["EventTarget", "https://dom.spec.whatwg.org/#eventtarget"],
@@ -547,7 +547,7 @@ describe("Core — xref", () => {
       expect(link2.href).toEqual(
         expectedLinks.get("PermissionStatus.[[query]]")
       );
-      expect(link2.textContent).toEqual("[[query]]");
+      expect(link2.textContent).toEqual("query");
 
       const link3 = doc.querySelector("#link3 code a");
       expect(link3.href).toBeFalsy();
@@ -642,7 +642,7 @@ describe("Core — xref", () => {
     it("links dictionary members", async () => {
       const body = `
       <section>
-        <p id="link1">{{{ TextDecoderOptions["fatal"] }}}</p>
+        <p id="link1">{{{ TextDecoderOptions.fatal }}}</p>
       </section>
       `;
       const config = { xref: { url: apiURL }, localBiblio };
@@ -653,7 +653,7 @@ describe("Core — xref", () => {
       const [link1a, link1b] = [...doc.querySelectorAll("#link1 code a")];
       expect(link1a.href).toEqual(expectedLinks.get("TextDecoderOptions"));
       expect(link1b.href).toEqual(
-        expectedLinks.get(`TextDecoderOptions["fatal"]`)
+        expectedLinks.get(`TextDecoderOptions.fatal`)
       );
     });
 
