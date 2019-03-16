@@ -6,16 +6,6 @@ span.practicelab {
   margin-bottom: 1em;
 }
 
-span.practicetitle {
-  color: #005A9C;
-  text-decoration: underline;
-  margin-bottom: 1em;
-}
-
-.practicebox {
-    background: black;
-}
-
 @media (max-width: 767px) {
   span.practicetitle {
     display: block;
