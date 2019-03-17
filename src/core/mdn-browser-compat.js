@@ -4,16 +4,16 @@
  * Usage options: [[to be updated]]
  */
 import { createResourceHint, fetchAndCache } from "./utils";
-import { pub, sub } from "./pubsubhub";
-import mbcCss from "text!../../assets/mdn-browser-compat.css";
+import { pub } from "./pubsubhub";
 import hyperHTML from "hyperhtml";
+import mbcCss from "text!../../assets/mdn-browser-compat.css";
 
 export const name = "core/mdn-browser-compat";
 
 const GH_USER_CONTENT_URL =
   "https://raw.githubusercontent.com/mdn/browser-compat-data/master/";
 
-//browser name dictionary
+// browser name dictionary
 const BROWSERS = new Map([
   ["chrome", "Chrome"],
   ["chrome_android", "Chrome (Android)"],
@@ -51,8 +51,7 @@ export async function run(conf) {
   if (!mdnBrowserSupport.feature) {
     return; // no feature to show
   }
-  const { feature, category } = mdnBrowserSupport;
-  const featureURL = `https://github.com/mdn/browser-compat-data/blob/master/${category}/${feature}.json`;
+  const { feature } = mdnBrowserSupport;
   const link = createResourceHint({
     hint: "preconnect",
     href: "https://raw.githubusercontent.com",
@@ -61,7 +60,6 @@ export async function run(conf) {
   document.head.appendChild(hyperHTML`
     <style class="removeOnSave">${mbcCss}</style>`);
 
-  const headDlElem = document.querySelector(".head dl");
   try {
     const stats = await fetchAndCacheJson(mdnBrowserSupport);
     createTablesHTML(mdnBrowserSupport, stats);
@@ -87,7 +85,9 @@ function normalizeConf(conf) {
   } else {
     conf.mdnBrowserSupport.browsers = DEFAULTS.browsers;
   }
-  Object.assign(conf.mdnBrowserSupport, DEFAULTS, { ...conf.mdnBrowserSupport });
+  Object.assign(conf.mdnBrowserSupport, DEFAULTS, {
+    ...conf.mdnBrowserSupport
+  });
   function isValidBrowser(browser) {
     if (BROWSERS.has(browser)) {
       return true;
@@ -136,7 +136,7 @@ function createTablesHTML(conf, stats) {
     hyperHTML.bind(df) `
       <dt class="mbc-title">Support Table</dt>
       <dd class="mbc-stats">
-        ${conf.browsers
+        ${browsers
           .map(browser => addBrowser(browser, normalizedStats.__compat.support[browser]))
           .filter(elem => elem)}
         <a title="${featureURL}" href="${normalizedStats.__compat.mdn_url}">More info</a>
@@ -177,9 +177,9 @@ function createTablesHTML(conf, stats) {
           .map(key => addDetail(key, stats))
           .filter(elem => elem)}`;
       function addDetail(key, stats) {
-        if(key === "version_added")
+        if (key === "version_added")
           return;
-        return hyperHTML `
+        return hyperHTML`
           <li title="${JSON.stringify(stats[key], null, 4)}" class="mbc-cell i">
             ${TAGS.get(key)}
           </li>`;
