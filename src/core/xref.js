@@ -174,9 +174,12 @@ async function resolveFromCache(keys, cache) {
   }
 
   function cacheFilter(cacheEntry, key) {
-    let accept = cacheEntry.title === key.term;
-    if (accept && key.specs && key.specs.length) {
+    let accept = true;
+    if (key.specs && key.specs.length) {
       accept = key.specs.includes(cacheEntry.spec);
+    }
+    if (accept && key.for) {
+      accept = cacheEntry.for && cacheEntry.for.includes(key.for);
     }
     return accept;
   }
