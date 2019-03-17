@@ -123,9 +123,14 @@ function makeMarkup(parse, { suppressWarnings } = {}) {
       });
       const idlAnchor = createIdlAnchor(escaped, data, parentName, dfn);
       const className = parent ? "idlName" : "idlID";
-      if (data.type === "enum-value") {
-        return idlAnchor;
+      switch (data.type) {
+        case "enum-value":
+          return idlAnchor;
+        case "attribute":
+          // Set the real data type
+          dfn.dataset.type = data.idlType.idlType;
       }
+
       return hyperHTML`<span class="${className}">${idlAnchor}</span>`;
     },
     type: contents => hyperHTML`<span class="idlType">${contents}</span>`,

@@ -51,8 +51,8 @@ function parseInlineIDL(str) {
       continue;
     }
     if (enumValueRegex.test(value)) {
-      const [, identifer] = value.match(enumValueRegex);
-      results.push({ type: "enum-value", identifer });
+      const [, identifier] = value.match(enumValueRegex);
+      results.push({ type: "enum-value", identifier });
       continue;
     }
     // internal slot
@@ -117,7 +117,7 @@ function renderBase(details, contextNode) {
   return html;
 }
 
-// Internal slot: .[[identifer]] or [[identifier]]
+// Internal slot: .[[identifier]] or [[identifier]]
 function renderInternalSlot(details) {
   const { identifier, parent } = details;
   details.idlType = findDfnType(`[[${identifier}]]`);
@@ -133,11 +133,24 @@ function renderInternalSlot(details) {
 // Attribute: .identifier
 function renderAttribute(details) {
   const { parent, identifier } = details;
-  const { idlType } = parent;
+  let { idlType: linkFor } = parent;
+  // We need to walk up the parent
+  if (!linkFor) {
+    // TODO: we get the type from the parent definition
+    // THIS IS TOO FRAGILE:
+    const query = `dfn[data-idl=attribute][data-title=${identifier}]`;
+    const dfn = document.querySelector(query);
+    linkFor = dfn.dataset.dfnFor;
+  }
+  const dfn = document.querySelector(
+    `dfn[data-dfn-for=${linkFor.toLocaleLowerCase()}][data-idl=attribute][data-title=${identifier}]`
+  );
+  const dataType = dfn ? dfn.dataset.type : null;
   const html = hyperHTML`.<a
       class="respec-idl-xref"
       data-xref-type="attribute|dict-member"
-      data-link-for="${idlType}">${identifier}</a>`;
+      data-link-for="${linkFor}"
+      data-type="${dataType}">${identifier}</a>`;
   return html;
 }
 
@@ -176,11 +189,11 @@ function renderEnum(details) {
 
 // Enum value: "enum value"
 function renderEnumValue(details) {
-  const { identifer } = details;
+  const { identifier } = details;
   const html = hyperHTML`"<a
     class="respec-idl-xref"
     data-xref-type="enum-value"
-    >${identifer}</a>"`;
+    >${identifier}</a>"`;
   return html;
 }
 
@@ -223,6 +236,6 @@ export function idlStringToHtml(str, contextNode) {
         throw new Error("Unknown type.");
     }
   }
-  const result = render`<code>${output}</code>`;
+  const result = render`${output}`;
   return result;
 }
