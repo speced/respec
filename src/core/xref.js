@@ -7,6 +7,7 @@ import {
   IDBKeyVal,
   nonNormativeSelector,
   norm as normalize,
+  showInlineError,
   showInlineWarning,
 } from "./utils";
 import { openDb } from "idb";
@@ -208,11 +209,21 @@ async function fetchFromNetwork(keys, url) {
  * @param {Object} conf respecConfig
  */
 function addDataCiteToTerms(results, xrefMap, conf) {
+  const errorCollectors = {
+    /** @type {Map<string, HTMLElement[]>} */
+    noDfn: new Map(),
+    /** @type {Map<string, { specs: Set<string>, elems: HTMLElement[] }>} */
+    ambiguousSpec: new Map(),
+  };
+
   for (const [term, entries] of xrefMap) {
     entries.forEach(entry => {
       const result = disambiguate(results[term], entry, term);
-      if (!result) return;
       const { elem } = entry;
+      if (result.error) {
+        collectErrors(term, elem, result, errorCollectors);
+        return;
+      }
       const { uri, spec: cite, normative } = result;
       const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
       const [citePath, citeFrag] = path.split("#");
@@ -249,11 +260,12 @@ function addDataCiteToTerms(results, xrefMap, conf) {
       }
     });
   }
+  showErrors(errorCollectors);
 }
 
 // disambiguate fetched results based on context
 function disambiguate(fetchedData, context, term) {
-  const { elem, specs, types, for: contextFor } = context;
+  const { specs, types, for: contextFor } = context;
   const data = (fetchedData || []).filter(entry => {
     let valid = true;
     if (specs.length) {
@@ -273,27 +285,61 @@ function disambiguate(fetchedData, context, term) {
   });
 
   if (!data.length) {
-    const msg =
-      `Couldn't match "**${term}**" to anything in the document or to any other spec. ` +
-      "Please provide a [`data-cite`](https://github.com/w3c/respec/wiki/data--cite) attribute for it.";
-    const title = "Error: No matching dfn found.";
-    if (!elem.dataset.cite) showInlineWarning(elem, msg, title);
-    return null;
+    // no match found
+    return { error: "NO_MATCH", term };
   }
 
   if (data.length === 1) {
     return data[0]; // unambiguous
   }
 
-  const ambiguousSpecs = [...new Set(data.map(e => e.spec))];
-  const msg =
-    `The term "**${term}**" is defined in ${ambiguousSpecs.length} ` +
-    `spec(s) in ${data.length} ways, so it's ambiguous. ` +
-    "To disambiguate, you need to add a [`data-cite`](https://github.com/w3c/respec/wiki/data--cite) attribute. " +
-    `The specs where it's defined are: ${ambiguousSpecs
-      .map(s => `**${s}**`)
-      .join(", ")}.`;
-  const title = "Error: Linking an ambiguous dfn.";
-  showInlineWarning(elem, msg, title);
-  return null;
+  // ambiguous
+  return { error: "AMBIGUOUS", term, specs: data.map(e => e.spec) };
+}
+
+function collectErrors(term, elem, errorData, errorCollectors) {
+  switch (errorData.error) {
+    case "NO_MATCH": {
+      const errors = errorCollectors.noDfn;
+      if (!errors.has(term)) {
+        errors.set(term, []);
+      }
+      const elems = errors.get(term);
+      elems.push(elem);
+      break;
+    }
+    case "AMBIGUOUS": {
+      const errors = errorCollectors.ambiguousSpec;
+      if (!errors.has(term)) {
+        errors.set(term, { specs: new Set(), elems: [] });
+      }
+      const { specs, elems } = errors.get(term);
+      errorData.specs.forEach(spec => specs.add(spec));
+      elems.push(elem);
+      break;
+    }
+  }
+}
+
+function showErrors(errorCollectors) {
+  for (const [term, elems] of errorCollectors.noDfn) {
+    const msg =
+      `Couldn't match "**${term}**" to anything in the document or to any other spec. ` +
+      "Please provide a [`data-cite`](https://github.com/w3c/respec/wiki/data--cite) attribute for it.";
+    const title = "Error: No matching dfn found.";
+    showInlineError(elems, msg, title);
+  }
+
+  for (const [term, data] of errorCollectors.ambiguousSpec) {
+    const specs = [...data.specs];
+    const msg =
+      `The term "**${term}**" is defined in ${specs.length} ` +
+      `spec(s) in multiple ways, so it's ambiguous. ` +
+      "To disambiguate, you need to add a [`data-cite`](https://github.com/w3c/respec/wiki/data--cite) attribute. " +
+      `The specs where it's defined are: ${specs
+        .map(s => `**${s}**`)
+        .join(", ")}.`;
+    const title = "Error: Linking an ambiguous dfn.";
+    showInlineError(data.elems, msg, title);
+  }
 }
