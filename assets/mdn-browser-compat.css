@@ -7,7 +7,7 @@
   cursor: pointer;
 }
 
-div.mbc-cell {
+button.mbc-cell {
   margin: 1px 1px 0 0;
   border: none;
 }
@@ -89,7 +89,15 @@ li.mbc-cell {
 
 /* no support */
 .mbc-cell.n {
-  background: #e53935;
+  background: #f8e1e1;
+}
+
+.mbc-cell.c {
+  background: #f6b73c4d;
+}
+
+.mbc-cell.i {
+  background: #eaeff2;
 }
 
 /* not supported by default / partial support etc
@@ -102,7 +110,6 @@ see https://github.com/Fyrd/mbc/blob/master/CONTRIBUTING.md for stats */
 }
 
 /* show rest of the browser versions */
-.mbc-stats button:focus + ul,
 .mbc-stats .mbc-browser:hover > ul {
   display: block;
 }

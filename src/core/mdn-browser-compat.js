@@ -35,21 +35,16 @@ export async function run(conf) {
     <style class="removeOnSave">${mbcCss}</style>`);
 
   const headDlElem = document.querySelector(".head dl");
-  const contentPromise = new Promise(async resolve => {
-    let content;
-    try {
-      const stats = await fetchAndCacheJson(mdnBrowserSupport);
-      content = createTableHTML(mdnBrowserSupport, stats);
-    } catch (err) {
-      console.error(err);
-      const msg =
-        `Couldn't find feature "${feature}" on https://github.com/mdn/browser-compat-data? ` +
-        "Please check the feature key on [mdn-browser-compat](https://github.com/mdn/browser-compat-data)";
-      pub("error", msg);
-      content = hyperHTML`<a href="${featureURL}">caniuse.com</a>`;
-    }
-    resolve(content);
-  });
+  try {
+    const stats = await fetchAndCacheJson(mdnBrowserSupport);
+    createTablesHTML(mdnBrowserSupport, stats);
+  } catch (err) {
+    console.error(err);
+    const msg =
+      `Couldn't find feature "${feature}" on https://github.com/mdn/browser-compat-data? ` +
+      "Please check the feature key on [mdn-browser-compat](https://github.com/mdn/browser-compat-data)";
+    pub("error", msg);
+  }
 }
 
 function normalizeConf(conf) {
@@ -74,9 +69,14 @@ async function fetchAndCacheJson(mdnBrowserSupportConf) {
   return stats[`${category}`];
 }
 
-function createTableHTML(conf, stats) {
+const mappingTable = {
+  "true": ["Yes", "y"],
+  "false": ["No", "n"],
+  "null": ["?", "c"],
+}
+
+function createTablesHTML(conf, stats) {
   // render the support table
-  console.log(conf);
   const { browsers, feature, category } = conf;
   const nodePoints = document.querySelectorAll(`section[data-dfn-for="${feature}"] dfn`);
   let fragments = [];
@@ -90,15 +90,55 @@ function createTableHTML(conf, stats) {
     const { fragment, id } = el;
     const newStats = stats[`${feature}`][`${fragment}`];
     const refElement = document.getElementById(`${id}`);
-    const newNode = hyperHTML `
+    const newNode = new DocumentFragment();
+    const featureURL = `check out more on ${newStats.__compat.mdn_url}`;
+    hyperHTML.bind(newNode) `
       <div class="mbc-stats">
-        <div class="mbc-cell y">chrome ${newStats.__compat.support.chrome.version_added}</div>
-        <div class="mbc-cell y">safari ${newStats.__compat.support.safari.version_added}</div>
-        <div class="mbc-cell y">firefox ${newStats.__compat.support.firefox.version_added}</div>
-        <div class="mbc-cell y">edge ${newStats.__compat.support.edge.version_added}</div>
-        <div class="mbc-cell"><a href="${newStats.__compat.mdn_url}">more info</a></div>
-      </div>
-    `;
-    console.log(refElement.parentNode.insertBefore(newNode, refElement.nextSibling.nextSibling));
+        ${conf.browsers
+        .map(browser => addBrowser(browser, newStats.__compat.support[browser]))
+        .filter(elem => elem)}
+        <a title="${featureURL}" href="${newStats.__compat.mdn_url}">More info</a>
+      </div>`;
+    refElement.parentNode.insertBefore(newNode, refElement.nextSibling.nextSibling);
   });
+
+  function addBrowser(browser, newStats) {
+    let t, cssClass, version;
+    if(typeof newStats.version_added === "string") {
+      version = newStats.version_added;
+      cssClass = "mbc-cell y";
+    } else {
+      version = mappingTable[newStats.version_added][0];
+      cssClass = `mbc-cell ${mappingTable[newStats.version_added][1]}`;
+    }
+    if(Object.keys(newStats).length > 1) {
+      return hyperHTML `
+        <div class="mbc-browser">
+          <button class="${cssClass}">${browser} ${version} *</button>
+          <ul>
+            ${extractKeys(Object.keys(newStats), newStats)}
+          </ul>
+        </div>`;
+    } else {
+      return hyperHTML `
+        <div class="mbc-browser">
+          <button class="${cssClass}">${browser} ${version}</button>
+        </div>`;
+    }
+    function extractKeys(keys, stats) {
+      return hyperHTML `
+        ${keys
+          .map(key => addDetail(key, stats))
+          .filter(elem => elem)}
+        `
+      function addDetail(key, stats) {
+        if(key === "version_added")
+          return;
+        return hyperHTML `
+          <li title="${JSON.stringify(stats[key], null, 4)}" class="mbc-cell i">
+            ${key}
+          </li>`;
+      }
+    }
+  }
 }
