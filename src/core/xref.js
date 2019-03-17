@@ -227,11 +227,11 @@ function addDataCiteToTerms(results, xrefMap, conf) {
       const result = disambiguate(results[term], entry, term);
       if (!result) return;
       const { elem } = entry;
-      const { uri, spec: cite, normative } = result;
+      const { uri, spec: cite, normative, type } = result;
       const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
       const [citePath, citeFrag] = path.split("#");
-      const citeObj = { cite, citePath, citeFrag };
-      Object.assign(elem.dataset, citeObj);
+      const dataset = { cite, citePath, citeFrag, type };
+      Object.assign(elem.dataset, dataset);
 
       // update indirect links (data-lt, data-plurals)
       const indirectLinks = document.querySelectorAll(
@@ -239,7 +239,7 @@ function addDataCiteToTerms(results, xrefMap, conf) {
       );
       indirectLinks.forEach(el => {
         el.removeAttribute("data-xref");
-        Object.assign(el.dataset, citeObj);
+        Object.assign(el.dataset, dataset);
       });
 
       // add specs for citation (references section)
