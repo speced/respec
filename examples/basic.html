@@ -19,7 +19,14 @@
         github: "https://github.com/w3c/some-API/",
         mdnBrowserSupport: {
           feature: "PaymentRequest",
-          category: "api"
+          category: "api",
+          browsers: [
+            "ie",
+            "firefox_android",
+            "firefox",
+            "webview_android",
+            "edge"
+          ]
         },
         caniuse: "payment-request",
         testSuiteURI: "https://w3c-test.org/some-API/",

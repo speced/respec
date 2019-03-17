@@ -13,17 +13,44 @@ export const name = "core/mdn-browser-compat";
 const GH_USER_CONTENT_URL =
   "https://raw.githubusercontent.com/mdn/browser-compat-data/master/";
 
+//browser name dictionary
+const BROWSERS = new Map([
+  ["chrome", "Chrome"],
+  ["chrome_android", "Chrome (Android)"],
+  ["edge", "Edge"],
+  ["edge_mobile", "Edge (Mobile)"],
+  ["firefox", "Firefox"],
+  ["firefox_android", "Firefox (Android)"],
+  ["ie", "IE"],
+  ["opera", "Opera"],
+  ["opera_android", "Opera (Android)"],
+  ["safari", "Safari"],
+  ["safari_ios", "Safari (IOS)"],
+  ["samsunginternet_android", "Samsung Internet (Android)"],
+  ["webview_android", "Webview (Android)"],
+]);
+
+const SUPPORT_TITLES = new Map([
+  ["true", ["Yes", "y", "supported"]],
+  ["false", ["No", "n", "not supported"]],
+  ["null", ["?", "u", "unknown support"]],
+]);
+
+const TAGS = new Map([
+  ["notes", "Notes *"],
+  ["flags", "Flags 🏴"],
+  ["alternative_name", "Alternative name 📛"],
+]);
+
 export async function run(conf) {
   if (!conf.mdnBrowserSupport) {
     return; // nothing to do.
   }
   normalizeConf(conf);
   const { mdnBrowserSupport } = conf;
-
   if (!mdnBrowserSupport.feature) {
     return; // no feature to show
   }
-
   const { feature, category } = mdnBrowserSupport;
   const featureURL = `https://github.com/mdn/browser-compat-data/blob/master/${category}/${feature}.json`;
   const link = createResourceHint({
@@ -53,7 +80,25 @@ function normalizeConf(conf) {
     browsers: ["chrome", "firefox", "safari", "edge"],
     versions: 4,
   };
-  conf.mdnBrowserSupport = { feature: conf.mdnBrowserSupport.feature, category: conf.mdnBrowserSupport.category, ...DEFAULTS };
+  if (Array.isArray(conf.mdnBrowserSupport.browsers)) {
+    conf.mdnBrowserSupport.browsers = conf.mdnBrowserSupport.browsers
+      .map(b => b.toLowerCase())
+      .filter(isValidBrowser);
+  } else {
+    conf.mdnBrowserSupport.browsers = DEFAULTS.browsers;
+  }
+  Object.assign(conf.mdnBrowserSupport, DEFAULTS, { ...conf.mdnBrowserSupport });
+  function isValidBrowser(browser) {
+    if (BROWSERS.has(browser)) {
+      return true;
+    }
+    pub(
+      "warn",
+      `Ignoring invalid browser "\`${browser}\`" in ` +
+        "[`respecConfig.mdnBrowserSupport.browsers`](https://github.com/w3c/respec/wiki/mdnBrowserSupport)"
+    );
+    return false;
+  }
   return;
 }
 
@@ -69,60 +114,61 @@ async function fetchAndCacheJson(mdnBrowserSupportConf) {
   return stats[`${category}`];
 }
 
-const mappingTable = {
-  "true": ["Yes", "y"],
-  "false": ["No", "n"],
-  "null": ["?", "c"],
-}
-
 function createTablesHTML(conf, stats) {
-  // render the support table
+  // render support tables for each method/attribute
   const { browsers, feature, category } = conf;
-  const nodePoints = document.querySelectorAll(`section[data-dfn-for="${feature}"] dfn`);
-  let fragments = [];
-  nodePoints.forEach(node => {
-    fragments.push({
-      fragment: node.innerText.replace("()", ""),
+  const targetNodes = document.querySelectorAll(`section[data-dfn-for="${feature}"] dfn`);
+  let nodeDetails = [];
+  targetNodes.forEach(node => {
+    nodeDetails.push({
+      detail: node.innerText.replace("()", "").trim(),
       id: node.id
     });
   });
-  fragments.forEach(el => {
-    const { fragment, id } = el;
-    const newStats = stats[`${feature}`][`${fragment}`];
-    const refElement = document.getElementById(`${id}`);
-    const newNode = new DocumentFragment();
-    const featureURL = `check out more on ${newStats.__compat.mdn_url}`;
-    hyperHTML.bind(newNode) `
-      <div class="mbc-stats">
+  nodeDetails.forEach(el => {
+    const { detail, id } = el;
+    const normalizedStats = stats[`${feature}`][`${detail}`];
+    const parentNode = document.getElementById(`${id}`)
+      .parentNode.parentNode;
+    const referenceElement = parentNode.firstChild.nextSibling.nextSibling.nextSibling;
+    const df = new DocumentFragment();
+    const featureURL = `check out more on ${normalizedStats.__compat.mdn_url}`;
+    hyperHTML.bind(df) `
+      <dt class="mbc-title">Support Table</dt>
+      <dd class="mbc-stats">
         ${conf.browsers
-        .map(browser => addBrowser(browser, newStats.__compat.support[browser]))
-        .filter(elem => elem)}
-        <a title="${featureURL}" href="${newStats.__compat.mdn_url}">More info</a>
-      </div>`;
-    refElement.parentNode.insertBefore(newNode, refElement.nextSibling.nextSibling);
+          .map(browser => addBrowser(browser, normalizedStats.__compat.support[browser]))
+          .filter(elem => elem)}
+        <a title="${featureURL}" href="${normalizedStats.__compat.mdn_url}">More info</a>
+      </dd>`;
+    console.log(referenceElement);
+    parentNode.insertBefore(df, referenceElement);
   });
 
-  function addBrowser(browser, newStats) {
-    let t, cssClass, version;
-    if(typeof newStats.version_added === "string") {
-      version = newStats.version_added;
+  function addBrowser(browser, normalizedStats) {
+    let title, cssClass, version;
+    if(typeof normalizedStats.version_added === "string") {
+      version = normalizedStats.version_added;
+      title = "supported";
       cssClass = "mbc-cell y";
     } else {
-      version = mappingTable[newStats.version_added][0];
-      cssClass = `mbc-cell ${mappingTable[newStats.version_added][1]}`;
+      const support_details = SUPPORT_TITLES.get(`${normalizedStats.version_added}`);
+      version = support_details[0];
+      cssClass = `mbc-cell ${support_details[1]}`;
+      title = support_details[2];
     }
-    if(Object.keys(newStats).length > 1) {
+    if(Object.keys(normalizedStats).length > 1) {
       return hyperHTML `
         <div class="mbc-browser">
-          <button class="${cssClass}">${browser} ${version} *</button>
+          <button title="${title}" class="${cssClass}">${BROWSERS.get(browser)} ${version} *</button>
           <ul>
-            ${extractKeys(Object.keys(newStats), newStats)}
+            ${extractKeys(Object.keys(normalizedStats), normalizedStats)}
           </ul>
         </div>`;
     } else {
       return hyperHTML `
         <div class="mbc-browser">
-          <button class="${cssClass}">${browser} ${version}</button>
+          <button title="${title}" class="${cssClass}">${BROWSERS.get(browser)} ${version}</button>
         </div>`;
     }
     function extractKeys(keys, stats) {
@@ -136,7 +182,7 @@ function createTablesHTML(conf, stats) {
           return;
         return hyperHTML `
           <li title="${JSON.stringify(stats[key], null, 4)}" class="mbc-cell i">
-            ${key}
+            ${TAGS.get(key)}
           </li>`;
       }
     }

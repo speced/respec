@@ -64,7 +64,7 @@ button.mbc-cell {
   height: 0.8cm;
   margin-right: 1px;
   margin-top: 0;
-  min-width: 3cm;
+  min-width: 6cm;
   overflow: visible;
   justify-content: center;
   align-items: center;
@@ -92,7 +92,7 @@ li.mbc-cell {
   background: #f8e1e1;
 }
 
-.mbc-cell.c {
+.mbc-cell.u {
   background: #f6b73c4d;
 }
 
