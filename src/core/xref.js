@@ -98,12 +98,13 @@ function createXrefMap(elems) {
       ].map(el => el.textContent.toLowerCase());
       specs.push(...refs);
     }
+    const uniqueSpecs = [...new Set(specs)].sort();
 
     const types = [isIDL ? elem.dataset.xrefType || "_IDL_" : "_CONCEPT_"];
     const { linkFor: forContext } = elem.dataset;
 
     const xrefsForTerm = map.has(term) ? map.get(term) : [];
-    xrefsForTerm.push({ elem, specs, for: forContext, types });
+    xrefsForTerm.push({ elem, specs: uniqueSpecs, for: forContext, types });
     return map.set(term, xrefsForTerm);
   }, new Map());
 }
