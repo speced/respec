@@ -113,7 +113,7 @@ function createXrefMap(elems) {
     }
 
     let { linkFor: forContext } = elem.dataset;
-    if (!forContext) {
+    if (!forContext && isIDL) {
       const dataLinkFor = elem.closest("[data-link-for]");
       if (dataLinkFor) {
         forContext = dataLinkFor.dataset.linkFor;
