@@ -55,16 +55,16 @@ function parseInlineIDL(str) {
       results.push({ type: "enum-value", identifer });
       continue;
     }
-    // attribute
-    if (attributeRegex.test(value) && tokens.length) {
-      const [, identifier] = value.match(attributeRegex);
-      results.push({ type: "attribute", identifier });
-      continue;
-    }
     // internal slot
     if (slotRegex.test(value)) {
       const [, identifier] = value.match(slotRegex);
       results.push({ type: "internal-slot", identifier });
+      continue;
+    }
+    // attribute
+    if (attributeRegex.test(value) && tokens.length) {
+      const [, identifier] = value.match(attributeRegex);
+      results.push({ type: "attribute", identifier });
       continue;
     }
     // base, always final token
