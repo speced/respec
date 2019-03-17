@@ -239,7 +239,9 @@ function findExplicitExternalLinks() {
     .filter(el => {
       /** @type {HTMLElement} */
       const closest = el.closest("[data-cite]");
-      return !closest || closest.dataset.cite !== "";
+      return (
+        !!el.textContent.trim() && (!closest || closest.dataset.cite !== "")
+      );
     })
     .concat([...document.querySelectorAll("dfn.externalDFN")]);
 }
