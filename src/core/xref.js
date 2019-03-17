@@ -7,6 +7,7 @@ import {
   IDBKeyVal,
   nonNormativeSelector,
   norm as normalize,
+  showInlineError,
   showInlineWarning,
 } from "./utils";
 import { openDb } from "idb";
@@ -324,7 +325,7 @@ function showErrors(errorCollectors) {
       `Couldn't match "**${term}**" to anything in the document or to any other spec. ` +
       "Please provide a [`data-cite`](https://github.com/w3c/respec/wiki/data--cite) attribute for it.";
     const title = "Error: No matching dfn found.";
-    showInlineWarning(elems, msg, title);
+    showInlineError(elems, msg, title);
   }
 
   for (const [term, data] of errorCollectors.ambiguousSpec) {
@@ -337,6 +338,6 @@ function showErrors(errorCollectors) {
         .map(s => `**${s}**`)
         .join(", ")}.`;
     const title = "Error: Linking an ambiguous dfn.";
-    showInlineWarning(data.elems, msg, title);
+    showInlineError(data.elems, msg, title);
   }
 }
