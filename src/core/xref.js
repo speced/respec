@@ -12,9 +12,7 @@ import {
 } from "./utils";
 import { openDb } from "idb";
 
-const API_URL = new URL(
-  "https://wt-466c7865b463a6c4cbb820b42dde9e58-0.sandbox.auth0-extend.com/xref-proto-2"
-);
+const API_URL = new URL("https://respec.org/xref");
 const IDL_TYPES = new Set([
   "attribute",
   "dict-member",
@@ -101,12 +99,13 @@ function createXrefMap(elems) {
       ].map(el => el.textContent.toLowerCase());
       specs.push(...refs);
     }
+    const uniqueSpecs = [...new Set(specs)].sort();
 
     const types = [isIDL ? elem.dataset.xrefType || "_IDL_" : "_CONCEPT_"];
     const { linkFor: forContext } = elem.dataset;
 
     const xrefsForTerm = map.has(term) ? map.get(term) : [];
-    xrefsForTerm.push({ elem, specs, for: forContext, types });
+    xrefsForTerm.push({ elem, specs: uniqueSpecs, for: forContext, types });
     return map.set(term, xrefsForTerm);
   }, new Map());
 }
@@ -176,9 +175,12 @@ async function resolveFromCache(keys, cache) {
   }
 
   function cacheFilter(cacheEntry, key) {
-    let accept = cacheEntry.title === key.term;
-    if (accept && key.specs && key.specs.length) {
+    let accept = true;
+    if (key.specs && key.specs.length) {
       accept = key.specs.includes(cacheEntry.spec);
+    }
+    if (accept && key.for) {
+      accept = cacheEntry.for && cacheEntry.for.includes(key.for);
     }
     return accept;
   }
