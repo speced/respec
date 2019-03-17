@@ -11,9 +11,7 @@ import {
 } from "./utils";
 import { openDb } from "idb";
 
-const API_URL = new URL(
-  "https://wt-466c7865b463a6c4cbb820b42dde9e58-0.sandbox.auth0-extend.com/xref-proto-2"
-);
+const API_URL = new URL("https://respec.org/xref");
 const IDL_TYPES = new Set([
   "attribute",
   "dict-member",
