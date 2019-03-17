@@ -145,7 +145,9 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
     const link = doc.getElementById("test");
     expect(link.classList.contains("respec-offending-element")).toBeFalsy();
-    expect(link.getAttribute("href")).toBe("https://www.w3.org/TR/credential-management-1/");
+    expect(link.getAttribute("href")).toBe(
+      "https://www.w3.org/TR/credential-management-1/"
+    );
     expect(link.textContent).toBe("Credential Management Level 1");
   });
 
