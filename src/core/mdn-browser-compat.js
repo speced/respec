@@ -4,9 +4,9 @@
  * Usage options: [[to be updated]]
  */
 import { createResourceHint, fetchAndCache } from "./utils";
-import { pub } from "./pubsubhub";
 import hyperHTML from "hyperhtml";
 import mbcCss from "text!../../assets/mbc.css";
+import pub from "./pubsubhub";
 
 export const name = "core/mdn-browser-compat";
 
