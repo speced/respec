@@ -112,7 +112,13 @@ function createXrefMap(elems) {
       types.push("_CONCEPT_");
     }
 
-    const { linkFor: forContext } = elem.dataset;
+    let { linkFor: forContext } = elem.dataset;
+    if (!forContext) {
+      const dataLinkFor = elem.closest("[data-link-for]");
+      if (dataLinkFor) {
+        forContext = dataLinkFor.dataset.linkFor;
+      }
+    }
 
     const xrefsForTerm = map.has(term) ? map.get(term) : [];
     xrefsForTerm.push({ elem, specs, for: forContext, types });
@@ -265,7 +271,7 @@ function disambiguate(fetchedData, context, term) {
   const data = (fetchedData || []).filter(entry => {
     let valid = true;
     if (specs.length) {
-      valid = specs.includes(entry.spec);
+      valid = specs.includes(entry.shortname) || specs.includes(entry.spec);
     }
     if (valid && types.length) {
       valid = types.includes(entry.type);

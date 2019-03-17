@@ -107,6 +107,22 @@ describe("Core — xref", () => {
       "https://encoding.spec.whatwg.org/#dom-textdecoderoptions-fatal",
     ],
     ["EventTarget", "https://dom.spec.whatwg.org/#eventtarget"],
+    [
+      "ServiceWorkerUpdateViaCache",
+      "https://www.w3.org/TR/service-workers-1/#enumdef-serviceworkerupdateviacache",
+    ],
+    [
+      "ServiceWorkerUpdateViaCache.imports",
+      "https://www.w3.org/TR/service-workers-1/#dom-serviceworkerupdateviacache-imports",
+    ],
+    [
+      "invert",
+      "https://www.w3.org/TR/css-typed-om-1/#dom-cssmathoperator-invert",
+    ],
+    [
+      "BlockFragmentationType.none",
+      "https://www.w3.org/TR/css-layout-api-1/#dom-blockfragmentationtype-none",
+    ],
   ]);
 
   it("does nothing if xref is not enabled", async () => {
@@ -654,6 +670,38 @@ describe("Core — xref", () => {
       expect(link1a.href).toEqual(expectedLinks.get("TextDecoderOptions"));
       expect(link1b.href).toEqual(
         expectedLinks.get(`TextDecoderOptions.fatal`)
+      );
+    });
+
+    it("links enum and enum-values", async () => {
+      const body = `
+        <section>
+          <p id="link1">{{{ ServiceWorkerUpdateViaCache["imports"] }}}</p>
+          <p id="link2">{{{ "invert" }}}</p>
+          <p id="link3"
+            data-cite="css-layout-api" data-link-for="BlockFragmentationType"
+          >{{{ "none" }}}</p>
+        </section>
+      `;
+      const config = { xref: { url: apiURL }, localBiblio };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+
+      // "ServiceWorkerUpdateViaCache" is enum and "imports" is enum-value
+      const [link1a, link1b] = [...doc.querySelectorAll("#link1 code a")];
+      expect(link1a.href).toEqual(
+        expectedLinks.get("ServiceWorkerUpdateViaCache")
+      );
+      expect(link1b.href).toEqual(
+        expectedLinks.get(`ServiceWorkerUpdateViaCache.imports`)
+      );
+
+      const link2 = doc.querySelector("#link2 code a");
+      expect(link2.href).toEqual(expectedLinks.get("invert"));
+
+      const link3 = doc.querySelector("#link3 code a");
+      expect(link3.href).toEqual(
+        expectedLinks.get("BlockFragmentationType.none")
       );
     });
 
