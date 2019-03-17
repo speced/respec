@@ -175,8 +175,7 @@ function createTablesHTML(conf, stats) {
       return hyperHTML `
         ${keys
           .map(key => addDetail(key, stats))
-          .filter(elem => elem)}
-        `
+          .filter(elem => elem)}`;
       function addDetail(key, stats) {
         if(key === "version_added")
           return;
