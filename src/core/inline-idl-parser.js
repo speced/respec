@@ -1,18 +1,23 @@
 /**
- * Parses an IDL string and returns its components as:
- *
- * Foo ->
- *  { base: "Foo" }
- * Foo.bar ->
- *  { base: "Foo", attribute: "bar" }
- * Foo.bar.baz() ->
- *  { base: "Foo.bar", method: "baz()", args: [] }
- * Foo.baz(arg1, arg2) ->
- *  { base: "Foo", method: "baz(arg1, arg2)", args: ["arg1", "arg2"] }
+ * Parses an inline IDL string (`{{{ idl string }}}`)
+ *  and renders its components as HTML
  */
 
 import hyperHTML from "hyperhtml";
 
+/**
+ * Parses an IDL string and returns its components as:
+ *
+ * Foo ->
+ *  { type: "base", identifier: "Foo" }
+ * Foo.bar ->
+ *  { type: "base", identifier: "Foo" } <- parent
+ *  { type: "attribute", identifier: "bar", parent }
+ * Foo.baz(arg1, arg2) ->
+ *  { type: "base", identifier: "Foo" } <- parent
+ *  { type: "method", identifier: "baz", args: ["arg1", "arg2"] }
+ * etc.
+ */
 function parseInlineIDL(str) {
   const methodRegex = /(\w+)\((.*)\)$/;
   const slotRegex = /^\[\[(\w+)\]\]$/;
