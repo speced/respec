@@ -280,7 +280,7 @@ function disambiguate(fetchedData, context, term) {
         valid = [...validTypes].some(type => type === entry.type);
       }
     }
-    if (valid && contextFor) {
+    if (valid && contextFor && entry.for) {
       valid = entry.for.includes(contextFor);
     }
     return valid;
