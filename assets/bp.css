@@ -5,9 +5,3 @@ span.practicelab {
   color: #005A9C;
   margin-bottom: 1em;
 }
-
-@media (max-width: 767px) {
-  span.practicetitle {
-    display: block;
-  }
-}
