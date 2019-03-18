@@ -6,11 +6,12 @@ scratch
 examples/touchevents.html
 bevy.json
 .idea
-js/deps/*
 js/**/*.map
 js/*/linter-rules/
+js/deps/*.*
 js/core/*.js
 js/templates.js
 js/ui/*.js
 js/w3c/templates/*
 js/w3c/*.js
+!js/deps/highlight.js

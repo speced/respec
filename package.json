@@ -67,7 +67,7 @@
     "babel:build": "babel src -d js --source-maps -q",
     "babel:watch": "babel src -d js --watch --source-maps",
     "build:respec-w3c-common": "node ./tools/builder.js --profile=w3c-common",
-    "build:components": "npm run copydeps && node ./tools/build-components.js && npm run babel:build",
+    "build:components": "npm run copydeps && npm run babel:build",
     "build": "snyk protect && npm run build:components",
     "copydeps": "node ./tools/copydeps.js",
     "karma": "karma start --single-run",
@@ -94,6 +94,7 @@
     "marked": "^0.6.1",
     "prompt": "^1.0.0",
     "puppeteer": "^1.13.0",
+    "respec-hljs": "^1.0.2",
     "snyk": "^1.136.3"
   },
   "prettier": {
