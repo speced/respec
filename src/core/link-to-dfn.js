@@ -237,11 +237,11 @@ function findExplicitExternalLinks() {
   );
   return [...links]
     .filter(el => {
+      // ignore empties
+      if (el.textContent === "") return false;
       /** @type {HTMLElement} */
       const closest = el.closest("[data-cite]");
-      return (
-        !!el.textContent.trim() && (!closest || closest.dataset.cite !== "")
-      );
+      return !closest || closest.dataset.cite !== "";
     })
     .concat([...document.querySelectorAll("dfn.externalDFN")]);
 }
