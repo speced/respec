@@ -1,7 +1,7 @@
 // ReSpec Worker v1.0.0
 "use strict";
 try {
-  importScripts("http://localhost:5000/js/deps/respec-highlight.js");
+  importScripts("https://www.w3.org/Tools/respec/respec-highlight.js");
   // Compatibly with new bundle - can be deleted after deployment.
   if (self.respecHljs) self.hljs = self.respecHljs;
 } catch (err) {
