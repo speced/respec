@@ -138,6 +138,19 @@ describe("Core — xref", () => {
     expect(dfn.classList.contains("respec-offending-element")).toBeFalsy();
   });
 
+  it("doesn't link auto-filled anchors", async () => {
+    const body = `<section><a id="test" data-cite="credential-management"></a></section>`;
+    const config = { xref: { url: apiURL }, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+    const link = doc.getElementById("test");
+    expect(link.classList.contains("respec-offending-element")).toBeFalsy();
+    expect(link.getAttribute("href")).toBe(
+      "https://www.w3.org/TR/credential-management-1/"
+    );
+    expect(link.textContent).toBe("Credential Management Level 1");
+  });
+
   it("shows error if external term doesn't exist", async () => {
     const body = `<section><a id="external-link">NOT_FOUND</a></section>`;
     const config = { xref: { url: apiURL } };
