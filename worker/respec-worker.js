@@ -2,8 +2,6 @@
 "use strict";
 try {
   importScripts("https://www.w3.org/Tools/respec/respec-highlight.js");
-  // Compatibly with new bundle - can be deleted after deployment.
-  if (self.respecHljs) self.hljs = self.respecHljs;
 } catch (err) {
   console.error("Network error loading highlighter", err);
 }
