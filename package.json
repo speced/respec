@@ -56,6 +56,7 @@
     "prettier": "^1.16.4",
     "raw-loader": "^1.0.0",
     "requirejs": "^2.3.6",
+    "respec-hljs": "^2.0.0",
     "serve": "^10.1.2",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "typescript": "^3.3.3333",
@@ -94,7 +95,6 @@
     "marked": "^0.6.1",
     "prompt": "^1.0.0",
     "puppeteer": "^1.13.0",
-    "respec-hljs": "^2.0.0",
     "snyk": "^1.136.3"
   },
   "prettier": {
