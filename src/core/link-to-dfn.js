@@ -237,6 +237,8 @@ function findExplicitExternalLinks() {
   );
   return [...links]
     .filter(el => {
+      // ignore empties
+      if (el.textContent.trim() === "") return false;
       /** @type {HTMLElement} */
       const closest = el.closest("[data-cite]");
       return !closest || closest.dataset.cite !== "";
