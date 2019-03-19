@@ -7,7 +7,7 @@ const iframes = [];
  * @return {Promise<Document>}
  */
 function makeRSDoc(opts = {}, src, style = "") {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const ifr = document.createElement("iframe");
     // reject when DEFAULT_TIMEOUT_INTERVAL passes
     const timeoutId = setTimeout(() => {
@@ -15,6 +15,9 @@ function makeRSDoc(opts = {}, src, style = "") {
     }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
     ifr.addEventListener("load", async () => {
       const doc = ifr.contentDocument;
+      if (src) {
+        decorateDocument(doc, opts);
+      }
       if (doc.respecIsReady) {
         await doc.respecIsReady;
         resolve(doc);
@@ -42,25 +45,17 @@ function makeRSDoc(opts = {}, src, style = "") {
         console.warn(`Could not override iframe style: ${style} (${message})`);
       }
     }
-    const doc = await getDocument(src);
-    decorateDocument(doc, opts);
-    ifr.srcdoc = doc.documentElement.outerHTML;
+    if (src) {
+      ifr.src = src;
+    } else {
+      const doc = document.implementation.createHTMLDocument();
+      decorateDocument(doc, opts);
+      ifr.srcdoc = doc.documentElement.outerHTML;
+    }
     // trigger load
     document.body.appendChild(ifr);
     iframes.push(ifr);
   });
-}
-
-/**
- * @param {string?} src local source url
- */
-async function getDocument(src) {
-  if (!src) {
-    return document.implementation.createHTMLDocument();
-  }
-  const res = await fetch(src);
-  const text = await res.text();
-  return new DOMParser().parseFromString(text, "text/html");
 }
 
 function decorateDocument(doc, opts) {
