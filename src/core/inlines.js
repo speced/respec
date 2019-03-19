@@ -17,7 +17,6 @@
 import { getTextNodes, refTypeFromContext, showInlineWarning } from "./utils";
 import hyperHTML from "hyperhtml";
 import { idlStringToHtml } from "./inline-idl-parser";
-import { pub } from "./pubsubhub";
 import { renderInlineCitation } from "./render-biblio";
 export const name = "core/inlines";
 export const rfc2119Usage = {};
@@ -105,7 +104,6 @@ export function run(conf) {
     abbrMap.set(abbr.textContent, abbr.title);
   }
   const aKeys = [...abbrMap.keys()];
-  aKeys.sort((a, b) => b.length - a.length);
   const abbrRx = aKeys.length ? `(?:\\b${aKeys.join("\\b)|(?:\\b")}\\b)` : null;
 
   // PROCESSING
@@ -129,38 +127,30 @@ export function run(conf) {
     if (subtxt.length === 1) continue;
 
     const df = document.createDocumentFragment();
-    for (let i = 0; i < subtxt.length; i++) {
-      const t = subtxt[i];
-      let matched = null;
-      if (i != subtxt.length - 1) {
-        matched = subtxt[i + 1];
-        i++;
-      }
-      df.appendChild(document.createTextNode(t));
-      if (matched) {
-        if (matched.startsWith("{{{")) {
-          const node = inlineXrefMatches(matched);
-          df.appendChild(node);
-        } else if (matched.startsWith("[[")) {
-          const nodes = inlineBibrefMatches(matched, txt, conf);
-          df.append(...nodes);
-        } else if (abbrMap.has(matched)) {
-          const node = inlineAbbrMatches(matched, txt, abbrMap);
-          df.appendChild(node);
-        } else if (
-          /MUST(?:\s+NOT)?|SHOULD(?:\s+NOT)?|SHALL(?:\s+NOT)?|MAY|(?:NOT\s+)?REQUIRED|(?:NOT\s+)?RECOMMENDED|OPTIONAL/.test(
-            matched
-          )
-        ) {
-          const node = inlineRFC2119Matches(matched);
-          df.appendChild(node);
-        } else {
-          // FAIL -- not sure that this can really happen
-          pub(
-            "error",
-            `Found token '${matched}' but it does not correspond to anything`
-          );
-        }
+    let matched = true;
+    for (const t of subtxt) {
+      matched = !matched;
+      if (!matched) {
+        df.appendChild(document.createTextNode(t));
+      } else if (t.startsWith("{{{")) {
+        const node = inlineXrefMatches(t);
+        df.appendChild(node);
+      } else if (t.startsWith("[[")) {
+        const nodes = inlineBibrefMatches(t, txt, conf);
+        df.append(...nodes);
+      } else if (abbrMap.has(t)) {
+        const node = inlineAbbrMatches(t, txt, abbrMap);
+        df.appendChild(node);
+      } else if (
+        /MUST(?:\s+NOT)?|SHOULD(?:\s+NOT)?|SHALL(?:\s+NOT)?|MAY|(?:NOT\s+)?REQUIRED|(?:NOT\s+)?RECOMMENDED|OPTIONAL/.test(
+          t
+        )
+      ) {
+        const node = inlineRFC2119Matches(t);
+        df.appendChild(node);
+      } else {
+        // FAIL -- not sure that this can really happen
+        throw `Found token '${t}' but it does not correspond to anything`;
       }
     }
     txt.parentNode.replaceChild(df, txt);
