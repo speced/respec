@@ -2,12 +2,12 @@
 // The module in charge of running the whole processing pipeline.
 import "./include-config";
 import "./override-configuration";
-import "./respec-ready";
 import "./jquery-enhanced"; // for backward compatibility
 import { done as postProcessDone } from "./post-process";
 import { done as preProcessDone } from "./pre-process";
 import { pub } from "./pubsubhub";
 import { removeReSpec } from "./utils";
+import { resolveAsReady } from "./respec-ready";
 
 export const name = "core/base-runner";
 const canMeasure = performance.mark && performance.measure;
@@ -67,6 +67,7 @@ export async function runAll(plugs) {
   pub("plugins-done", respecConfig);
   await postProcessDone;
   pub("end-all", respecConfig);
+  resolveAsReady();
   removeReSpec(document);
   if (canMeasure) {
     performance.mark(`${name}-end`);

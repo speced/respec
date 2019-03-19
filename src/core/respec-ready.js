@@ -1,13 +1,15 @@
+// @ts-check
 /**
  * This Module adds a `respecIsReady` property to the document object.
  * The property returns a promise that settles when ReSpec finishes
  * processing the document.
  */
-import { sub } from "./pubsubhub";
 export const name = "core/respec-ready";
 
+/** @type {() => void} */
+let resolver;
 const respecDonePromise = new Promise(resolve => {
-  sub("end-all", resolve, { once: true });
+  resolver = resolve;
 });
 
 Object.defineProperty(document, "respecIsReady", {
@@ -15,3 +17,7 @@ Object.defineProperty(document, "respecIsReady", {
     return respecDonePromise;
   },
 });
+
+export function resolveAsReady() {
+  resolver();
+}
