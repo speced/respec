@@ -11,5 +11,5 @@ const respecDonePromise = new Promise(resolve => {
 });
 
 Object.defineProperty(document, "respecIsReady", {
-  value: respecDonePromise
+  value: respecDonePromise,
 });
