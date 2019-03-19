@@ -87,6 +87,53 @@ function errWarn(msg, arr, butName, title) {
 
 function createWarnButton(butName, arr, title) {
   const buttonId = `respec-pill-${butName}`;
+  var numSteps = 20.0;
+  var boxElement
+  var prevRatio = 0.0;
+
+  button.addEventListener("load", function (event) {
+    boxElement = document.querySelector("#respec-pill");
+
+    createObserver();
+  }, false);
+
+  function createObserver() {
+    var observer;
+
+    var options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: buildThresholdList()
+    };
+
+    observer = new IntersectionObserver(handleIntersect, options);
+    observer.observe(boxElement);
+  }
+
+  function buildThresholdList() {
+    var thresholds = [];
+    var numSteps = 20;
+
+    for (var i = 1.0; i <= numSteps; i++) {
+      var ratio = i / numSteps;
+      thresholds.push(ratio);
+    }
+
+    thresholds.push(0);
+    return thresholds;
+  }
+
+  function handleIntersect(entries, observer) {
+    entries.forEach(function (entry) {
+      if (entry.intersectionRatio > prevRatio) {
+        const button = hyperHTML`<button id='${buttonId}' class='respec-info-button'>`;
+      } else {
+        const button = hyperHTML`<button id='${buttonId}' class='respec-info-button:hover'>`;
+      }
+      prevRatio = entry.intersectionRatio;
+    });
+  }
+
   const button = hyperHTML`<button id='${buttonId}' class='respec-info-button'>`;
   button.addEventListener("click", function () {
     this.setAttribute("aria-expanded", "true");
