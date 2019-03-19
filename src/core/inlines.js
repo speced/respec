@@ -150,7 +150,7 @@ export function run(conf) {
         df.appendChild(node);
       } else {
         // FAIL -- not sure that this can really happen
-        throw `Found token '${t}' but it does not correspond to anything`;
+        throw new Error(`Found token '${t}' but it does not correspond to anything`);
       }
     }
     txt.parentNode.replaceChild(df, txt);
