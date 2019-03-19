@@ -63,7 +63,7 @@ describe("Core — Examples", () => {
            </aside>`,
     };
     const doc = await makeRSDoc(ops);
-    const example = doc.querySelectorAll("pre.hljs");
+    const example = doc.querySelectorAll("code.hljs");
     expect(example.length).toBe(3);
     expect(example[0].textContent).toBe(
       "// Whitespace before this text should be removed"
@@ -145,7 +145,7 @@ describe("Core — Examples", () => {
     const ops = makeStandardOps({}, body);
     const doc = await makeRSDoc(ops);
     const mybutton = doc.getElementById("mybutton");
-    expect(mybutton.onclick).toBeDefined();
+    expect(mybutton.onclick).toBeTruthy();
   });
 });
 

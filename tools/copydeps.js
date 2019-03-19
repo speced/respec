@@ -10,7 +10,7 @@ const srcDesMap = [
     "./node_modules/handlebars/dist/handlebars.runtime.js",
     "./js/deps/handlebars.js",
   ],
-  ["./node_modules/highlight.js/src/styles/github.css", "./assets/"],
+  ["./node_modules/highlight.js/styles/github.css", "./assets/"],
   ["./node_modules/hyperhtml/umd.js", "./js/deps/hyperhtml.js"],
   ["./node_modules/jquery/dist/jquery.slim.js", "./js/deps/jquery.js"],
   ["./node_modules/marked/lib/marked.js", "./js/deps/"],

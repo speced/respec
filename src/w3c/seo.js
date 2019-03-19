@@ -11,7 +11,10 @@ export function run(conf) {
   switch (conf.canonicalURI) {
     case "edDraft":
       if (conf.edDraftURI) {
-        conf.canonicalURI = new URL(conf.edDraftURI, document.location).href;
+        conf.canonicalURI = new URL(
+          conf.edDraftURI,
+          document.location.href
+        ).href;
       } else {
         pub(
           "warn",
@@ -38,7 +41,7 @@ export function run(conf) {
         try {
           conf.canonicalURI = new URL(
             conf.canonicalURI,
-            document.location
+            document.location.href
           ).href;
         } catch (err) {
           pub("warn", `CanonicalURI is an invalid URL: ${err.message}`);

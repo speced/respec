@@ -5,9 +5,26 @@
 // Generates a Table of Figures wherever there is a #tof element.
 
 import { addId, renameElement, showInlineWarning, wrapInner } from "./utils";
+import { lang as defaultLang } from "../core/l10n";
 import hyperHTML from "hyperhtml";
 
 export const name = "core/figures";
+
+const localizationStrings = {
+  en: {
+    table_of_fig: "Table of Figures",
+  },
+  nl: {
+    table_of_fig: "Lijst met figuren",
+  },
+  es: {
+    table_of_fig: "Tabla de Figuras",
+  },
+};
+
+const lang = defaultLang in localizationStrings ? defaultLang : "en";
+
+const l10n = localizationStrings[lang];
 
 export function run(conf) {
   normalizeImages(document);
@@ -21,7 +38,7 @@ export function run(conf) {
   if (tof.length && tofElement) {
     decorateTableOfFigures(tofElement);
     tofElement.append(
-      hyperHTML`<h2>${conf.l10n.table_of_fig}</h2>`,
+      hyperHTML`<h2>${l10n.table_of_fig}</h2>`,
       hyperHTML`<ul class='tof'>${tof}</ul>`
     );
   }

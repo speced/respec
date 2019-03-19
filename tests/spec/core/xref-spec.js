@@ -92,11 +92,11 @@ describe("Core — xref", () => {
     ],
     [
       "PublicKeyCredential.[[type]]",
-      "https://www.w3.org/TR/webauthn/#dom-publickeycredential-type-slot",
+      "https://www.w3.org/TR/webauthn-1/#dom-publickeycredential-type-slot",
     ],
     [
       "PublicKeyCredential",
-      "https://www.w3.org/TR/webauthn/#publickeycredential",
+      "https://www.w3.org/TR/webauthn-1/#publickeycredential",
     ],
     [
       "TextDecoderOptions",
@@ -136,6 +136,19 @@ describe("Core — xref", () => {
     const dfn = doc.querySelector("#external-dfn dfn a");
     expect(dfn.href).toEqual(expectedLinks.get("url parser"));
     expect(dfn.classList.contains("respec-offending-element")).toBeFalsy();
+  });
+
+  it("doesn't link auto-filled anchors", async () => {
+    const body = `<section><a id="test" data-cite="credential-management"></a></section>`;
+    const config = { xref: { url: apiURL }, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+    const link = doc.getElementById("test");
+    expect(link.classList.contains("respec-offending-element")).toBeFalsy();
+    expect(link.getAttribute("href")).toBe(
+      "https://www.w3.org/TR/credential-management-1/"
+    );
+    expect(link.textContent).toBe("Credential Management Level 1");
   });
 
   it("shows error if external term doesn't exist", async () => {
@@ -230,7 +243,7 @@ describe("Core — xref", () => {
     const five = doc.getElementById("five");
     expect(five.href).toEqual("");
     expect(five.classList.contains("respec-offending-element")).toBeTruthy();
-    expect(five.title).toEqual(`Couldn't find a match for "NOT-FOUND"`);
+    expect(five.title).toEqual("Error: No matching dfn found.");
   });
 
   it("treats terms as local if empty data-cite on parent", async () => {

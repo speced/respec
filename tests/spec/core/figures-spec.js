@@ -152,3 +152,23 @@ describe("Core - Figures", () => {
     });
   });
 });
+
+it("localizes table of figures", async () => {
+  const ops = {
+    config: makeBasicConfig(),
+    htmlAttrs: {
+      lang: "nl",
+    },
+    body: `
+    <section id="tof" class="informative appendix"></section>
+    <section>
+      <figure id='figure'> <img src='img' alt=''>
+        <figcaption>Example Figure</figcaption>
+      </figure>
+    </section>`,
+  };
+  const doc = await makeRSDoc(ops);
+  const { textContent } = doc.querySelector("#tof h2");
+  expect(doc.documentElement.lang).toBe("nl");
+  expect(textContent).toContain("Lijst met figuren");
+});
