@@ -52,7 +52,7 @@ function makeRSDoc(opts = {}, src, style = "") {
 }
 
 /**
- * @param {string?} src 
+ * @param {string?} src local source url
  */
 async function getDocument(src) {
   if (!src) {
