@@ -10,6 +10,7 @@
 //  - maxTocLevel: only generate a TOC so many levels deep
 
 import { addId, children, parents, renameElement } from "./utils";
+import { lang as defaultLang } from "../core/l10n";
 import hyperHTML from "hyperhtml";
 
 const lowerHeaderTags = ["h2", "h3", "h4", "h5", "h6"];
@@ -17,6 +18,22 @@ const headerTags = ["h1", ...lowerHeaderTags];
 
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 export const name = "core/structure";
+
+const localizationStrings = {
+  en: {
+    toc: "Table of Contents",
+  },
+  nl: {
+    toc: "Inhoudsopgave",
+  },
+  es: {
+    toc: "Tabla de Contenidos",
+  },
+};
+
+const lang = defaultLang in localizationStrings ? defaultLang : "en";
+
+const l10n = localizationStrings[lang];
 
 /**
  * @typedef {{ secno: string, title: string }} SectionInfo
@@ -193,12 +210,12 @@ function getNonintroductorySectionHeaders() {
  * @param {HTMLElement} ol
  * @param {*} conf
  */
-function createTableOfContents(ol, conf) {
+function createTableOfContents(ol) {
   if (!ol) {
     return;
   }
   const nav = hyperHTML`<nav id="toc">`;
-  const h2 = hyperHTML`<h2 class="introductory">${conf.l10n.toc}</h2>`;
+  const h2 = hyperHTML`<h2 class="introductory">${l10n.toc}</h2>`;
   addId(h2);
   nav.append(h2, ol);
   const ref =
