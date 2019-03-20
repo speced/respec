@@ -34,6 +34,21 @@ function ariaDecorate(elem, ariaMap) {
   }, elem);
 }
 
+const observer = new IntersectionObserver(
+  entries => {
+    entries.forEach(entry => {
+      if (entry.intersectionRatio > 0) {
+        entry.target.setAttribute("visibility", "hidden");
+      } else {
+        entry.target.setAttribute("visibility", "visible");
+      }
+    });
+  },
+  { root: document.querySelector("#logo") }
+);
+
+observer.observe(document.querySelector("#respec-pill"));
+
 const respecUI = hyperHTML`<div id='respec-ui' class='removeOnSave' hidden></div>`;
 const menu = hyperHTML`<ul id=respec-menu role=menu aria-labelledby='respec-pill' hidden></ul>`;
 let modal;
@@ -87,37 +102,9 @@ function errWarn(msg, arr, butName, title) {
 
 function createWarnButton(butName, arr, title) {
   const buttonId = `respec-pill-${butName}`;
-  let boxElement
-  let prevRatio = 0.0;
-
-  function createObserver() {
-    const observer
-
-    let options = {
-      root: null,
-      rootMargin: "0px",
-    };
-
-    observer = new IntersectionObserver(handleIntersect, options);
-    observer.observe(boxElement);
-  }
-
-  function handleIntersect(entries, observer) {
-    entries.forEach(entry => {
-      if (entry.intersectionRatio > prevRatio) {
-        observer.styleElement("hover", "true");
-      } else {
-        observer.styleElement("focus", "true");
-      }
-      prevRatio = entry.intersectionRatio;
-    });
-  }
 
   const button = hyperHTML`<button id='${buttonId}' class='respec-info-button'>`;
-  handleIntersect();
   button.addEventListener("click", function() {
-    boxElement = document.querySelector("#respec-pill");
-    createObserver();
     this.setAttribute("aria-expanded", "true");
     const ol = hyperHTML`<ol class='${`respec-${butName}-list`}'></ol>`;
     for (const err of arr) {
