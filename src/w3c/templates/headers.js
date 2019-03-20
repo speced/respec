@@ -13,7 +13,7 @@ const w3cTrademark =
 
 function getSpecTitleElem(conf) {
   const specTitleElem =
-    document.querySelector("h1#title") || document.createElement("h1");
+    document.querySelector("h1#title") || document.createElement("title");
   if (specTitleElem.parentElement) {
     specTitleElem.remove();
     conf.title = specTitleElem.textContent.trim();
