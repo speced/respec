@@ -242,7 +242,7 @@ function updateEmptyAnchors(secMap) {
   [...document.querySelectorAll("a[href^='#']:not(.tocxref)")]
     .filter(
       anchor =>
-        anchor.textContent === "" &&
+        anchor.textContent.trim() === "" &&
         anchor.getAttribute("href").slice(1) in secMap
     )
     .forEach(anchor => {
