@@ -7,14 +7,14 @@ export default (conf, opts) => {
     ${conf.isPreview
       ? html`
           <details class="annoying-warning" open="">
-            <summary
-              >Preview of PR
+            <title>
+              Preview of PR
               ${conf.prUrl && conf.prNumber
                 ? html`
                     <a href="${conf.prUrl}">#${conf.prNumber}</a>
                   `
                 : ""}
-            </summary>
+            </title>
             <p>
               Do not attempt to implement this version of the specification. Do
               not reference this version as authoritative in any way.
