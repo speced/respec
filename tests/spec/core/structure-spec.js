@@ -1,5 +1,5 @@
 "use strict";
-fdescribe("Core - Structure", () => {
+describe("Core - Structure", () => {
   let utils;
   beforeAll(done => {
     require(["core/utils"], u => {
@@ -234,6 +234,6 @@ fdescribe("Core - Structure", () => {
     anchors.forEach(anchor => {
       expect(anchor.classList).toContain("sec-ref");
       expect(anchor.textContent).toContain("Sample Interface");
-    });   
+    });
   });
 });
