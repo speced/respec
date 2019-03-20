@@ -47,7 +47,7 @@ sub("end-all", () => document.body.prepend(respecUI), { once: true });
 
 const respecPill = hyperHTML`<button id='respec-pill' disabled>ReSpec</button>`;
 respecUI.appendChild(respecPill);
-respecPill.addEventListener("click", function (e) {
+respecPill.addEventListener("click", function(e) {
   e.stopPropagation();
   if (menu.hidden) {
     menu.classList.remove("respec-hidden");
