@@ -53,7 +53,7 @@ function requestLookup(conf) {
       href = new URL(frag, href).href;
     }
     if (frag == null && path == null) {
-      const cite = hyperHTML`<cite>`;
+      const cite = document.createElement("cite");
       wrapInner(cite, elem);
     }
     switch (elem.localName) {
@@ -66,7 +66,7 @@ function requestLookup(conf) {
       }
       case "dfn": {
         const anchor = hyperHTML`<a href="${href}">`;
-        const cite = hyperHTML`<cite>`;
+        const cite = document.createElement("cite");
         wrapInner(cite, anchor);
         if (!elem.textContent) {
           anchor.textContent = title;
