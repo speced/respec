@@ -41,35 +41,6 @@ export default (conf, opts) => {
       ? opts.additionalContent
       : conf.isNoTrack
       ? html`
-            <p>
-              Do not attempt to implement this version of the specification. Do
-              not reference this version as authoritative in any way.
-              ${
-                conf.edDraftURI
-                  ? html`
-                      Instead, see
-                      <a href="${conf.edDraftURI}">${conf.edDraftURI}</a> for
-                      the Editor's draft.
-                    `
-                  : ""
-              }
-            </p>
-          </details>
-        `
-      : ""}
-    ${conf.isUnofficial
-      ? html`
-          <p>
-            This document is draft of a potential specification. It has no
-            official standing of any kind and does not represent the support or
-            consensus of any standards organization.
-          </p>
-          ${opts.additionalContent}
-        `
-      : conf.isTagFinding
-      ? opts.additionalContent
-      : conf.isNoTrack
-      ? html`
           <p>
             This document is merely a W3C-internal
             ${conf.isMO ? "member-confidential" : ""} document. It has no
