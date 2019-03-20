@@ -52,6 +52,10 @@ function requestLookup(conf) {
     if (frag) {
       href = new URL(frag, href).href;
     }
+    if (path === null && frag === null) {
+      const cite = hyperHTML`<cite>`;
+      wrapInner(cite, elem);
+    }
     switch (elem.localName) {
       case "a": {
         if (elem.textContent === "") {
