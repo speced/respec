@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.4.5",
+  "version": "24.5.1",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -27,12 +27,13 @@
     "chai": "^4.2.0",
     "clipboard": "^2.0.4",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
-    "eslint": "^5.15.1",
+    "eslint": "^5.15.2",
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-prettier": "^3.0.1",
     "exports-loader": "^0.7.0",
-    "handlebars": "^4.1.0",
+    "handlebars": "^4.1.1",
+    "highlight.js": "^9.15.6",
     "idb": "^3.0.2",
     "jasmine-core": "^3.3.0",
     "jasmine-reporters": "^2.3.2",
@@ -54,20 +55,20 @@
     "moment": "^2.24.0",
     "pluralize": "^7.0.0",
     "prettier": "^1.16.4",
-    "raw-loader": "^1.0.0",
+    "raw-loader": "^2.0.0",
     "requirejs": "^2.3.6",
     "serve": "^10.1.2",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "typescript": "^3.3.3333",
     "webidl2": "^17.0.2",
     "webpack": "^4.29.6",
-    "webpack-cli": "^3.2.3"
+    "webpack-cli": "^3.3.0"
   },
   "scripts": {
     "babel:build": "babel src -d js --source-maps -q",
     "babel:watch": "babel src -d js --watch --source-maps",
     "build:respec-w3c-common": "node ./tools/builder.js --profile=w3c-common",
-    "build:components": "npm run copydeps && node ./tools/build-components.js && npm run babel:build",
+    "build:components": "npm run copydeps && npm run babel:build",
     "build": "snyk protect && npm run build:components",
     "copydeps": "node ./tools/copydeps.js",
     "karma": "karma start --single-run",
@@ -88,13 +89,12 @@
     "command-line-usage": "^5.0.5",
     "epipebomb": "^1.0.0",
     "fs-extra": "^7.0.1",
-    "highlight.js": "github:highlightjs/highlight.js#cli",
     "hyperhtml": "^2.25.4",
     "loading-indicator": "^2.0.0",
     "marked": "^0.6.1",
     "prompt": "^1.0.0",
     "puppeteer": "^1.13.0",
-    "snyk": "^1.136.1"
+    "snyk": "^1.136.3"
   },
   "prettier": {
     "trailingComma": "es5"
