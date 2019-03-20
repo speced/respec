@@ -52,7 +52,7 @@ function requestLookup(conf) {
     if (frag) {
       href = new URL(frag, href).href;
     }
-    if (frag == null && path == null) {
+    if (!frag && !path) {
       const cite = document.createElement("cite");
       wrapInner(cite, elem);
     }
