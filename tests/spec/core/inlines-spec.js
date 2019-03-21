@@ -72,4 +72,26 @@ describe("Core - Inlines", () => {
     expect(rfc2119[0].textContent).toBe("MUST");
     expect(rfc2119[1].textContent).toBe("NOT RECOMMENDED");
   });
+
+  it("processes inline variable syntax", async () => {
+    const body = `
+      <section>
+        <p id="a">TEXT |Interface:variable| TEXT</p>
+        <p id="b">TEXT |variable| TEXT</p>
+        <p id="c">TEXT | ignored | TEXT</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+
+    const a = doc.querySelector("#a var");
+    expect(a.textContent).toEqual("variable");
+    expect(a.dataset.type).toEqual("Interface");
+
+    const b = doc.querySelector("#b var");
+    expect(b.textContent).toEqual("variable");
+    expect(b.dataset.type).toBeUndefined();
+
+    const c = doc.querySelector("#c");
+    expect(c.querySelector("var")).toBeFalsy();
+  });
 });
