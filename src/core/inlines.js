@@ -133,7 +133,7 @@ export function run(conf) {
       "\\b(?:NOT\\s+)?RECOMMENDED\\b",
       "\\bOPTIONAL\\b",
       "(?:{{3}\\s*.*\\s*}{3})", // inline IDL references,
-      "\\|\\w+(?:\\:\\w+)?\\|", // inline variable regex
+      "\\B\\|\\w+(?:\\:\\w+)?\\|\\B", // inline variable regex
       "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])",
       ...(abbrRx ? [abbrRx] : []),
     ].join("|")})`

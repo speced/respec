@@ -79,6 +79,7 @@ describe("Core - Inlines", () => {
         <p id="a">TEXT |Interface:variable| TEXT</p>
         <p id="b">TEXT |variable| TEXT</p>
         <p id="c">TEXT | ignored | TEXT</p>
+        <p id="d">TEXT|Ignore:ignore|TEXT</p>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(null, body));
@@ -91,7 +92,7 @@ describe("Core - Inlines", () => {
     expect(b.textContent).toEqual("variable");
     expect(b.dataset.type).toBeUndefined();
 
-    const c = doc.querySelector("#c");
-    expect(c.querySelector("var")).toBeFalsy();
+    expect(doc.querySelector("#c var")).toBeFalsy();
+    expect(doc.querySelector("#d var")).toBeFalsy();
   });
 });
