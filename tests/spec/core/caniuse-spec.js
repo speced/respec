@@ -48,23 +48,6 @@ describe("Core — Can I Use", () => {
     expect(doc.querySelector(".caniuse-stats")).toBeFalsy();
   });
 
-  it("removes unsupported browsers", async () => {
-    const ops = makeStandardOps({
-      caniuse: {
-        feature: "FEATURE",
-        browsers: ["FireFox", "GoogleChrome", "SafarIE", "Opera"],
-        apiURL,
-      },
-    });
-    const doc = await makeRSDoc(ops);
-    await doc.respecIsReady;
-    const { caniuse } = doc.defaultView.respecConfig;
-
-    expect(caniuse.browsers.length).toBe(2);
-    expect(caniuse.browsers).toEqual(["firefox", "opera"]);
-    // TODO: check for `pub` warnings
-  });
-
   it("shows caniuse.com link on error", async () => {
     const ops = makeStandardOps({
       caniuse: {

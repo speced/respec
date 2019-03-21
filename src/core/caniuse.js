@@ -105,22 +105,16 @@ function getNormalizedConf(conf) {
   }
   const caniuseConf = { ...DEFAULTS, ...conf.caniuse };
   if (Array.isArray(caniuseConf.browsers)) {
-    caniuseConf.browsers = caniuseConf.browsers
-      .map(b => b.toLowerCase())
-      .filter(isValidBrowser);
+    for (const browser of caniuseConf.browsers)
+      if (!BROWSERS.has(browser)) {
+        pub(
+          "warn",
+          `Ignoring invalid browser "\`${browser}\`" in ` +
+            "[`respecConfig.caniuse.browsers`](https://github.com/w3c/respec/wiki/caniuse)"
+        );
+      }
   }
   return caniuseConf;
-  function isValidBrowser(browser) {
-    if (BROWSERS.has(browser)) {
-      return true;
-    }
-    pub(
-      "warn",
-      `Ignoring invalid browser "\`${browser}\`" in ` +
-        "[`respecConfig.caniuse.browsers`](https://github.com/w3c/respec/wiki/caniuse)"
-    );
-    return false;
-  }
 }
 
 /**
