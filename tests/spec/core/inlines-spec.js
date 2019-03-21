@@ -76,17 +76,22 @@ describe("Core - Inlines", () => {
   it("processes inline variable syntax", async () => {
     const body = `
       <section>
-        <p id="a">TEXT |Interface:variable| TEXT</p>
+        <p id="a1">TEXT |variable: Type| TEXT</p>
+        <p id="a2">TEXT |variable with spaces:Type| TEXT</p>
         <p id="b">TEXT |variable| TEXT</p>
         <p id="c">TEXT | ignored | TEXT</p>
-        <p id="d">TEXT|Ignore:ignore|TEXT</p>
+        <p id="d">TEXT|ignore: Ignore|TEXT</p>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(null, body));
 
-    const a = doc.querySelector("#a var");
-    expect(a.textContent).toEqual("variable");
-    expect(a.dataset.type).toEqual("Interface");
+    const a1 = doc.querySelector("#a1 var");
+    expect(a1.textContent).toEqual("variable");
+    expect(a1.dataset.type).toEqual("Type");
+
+    const a2 = doc.querySelector("#a2 var");
+    expect(a2.textContent).toEqual("variable with spaces");
+    expect(a2.dataset.type).toEqual("Type");
 
     const b = doc.querySelector("#b var");
     expect(b.textContent).toEqual("variable");
