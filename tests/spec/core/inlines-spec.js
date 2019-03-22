@@ -93,7 +93,6 @@ describe("Core - Inlines", () => {
     const a2 = doc.querySelector("#a2 var");
     expect(a2.textContent).toEqual("variable with spaces");
     expect(a2.dataset.type).toEqual("Type");
-    
     const a3 = doc.querySelector("#a3 var");
     expect(a3.textContent).toEqual("with spaces");
     expect(a3.dataset.type).toEqual("Type");
