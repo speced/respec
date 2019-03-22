@@ -8,7 +8,7 @@ import * as webidl2 from "webidl2";
 import { flatten, normalizePadding } from "./utils";
 import css from "text!../../assets/webidl.css";
 import { findDfn } from "./dfn-finder";
-import hyperHTML from "hyperhtml";
+import html from "hyperhtml";
 import { pub } from "./pubsubhub";
 import { registerDefinition } from "./dfn-map";
 
@@ -100,19 +100,19 @@ function makeMarkup(parse, { suppressWarnings } = {}) {
       if (!t.trim()) {
         return t;
       }
-      return hyperHTML`<span class='idlSectionComment'>${t}</span>`;
+      return html`<span class='idlSectionComment'>${t}</span>`;
     },
     reference(wrapped, name) {
       if (standardTypes.has(name)) {
-        return hyperHTML`<a data-cite='${standardTypes.get(
+        return html`<a data-cite='${standardTypes.get(
           name
         )}'>${wrapped}</a>`;
       }
-      return hyperHTML`<a data-link-for="">${wrapped}</a>`;
+      return html`<a data-link-for="">${wrapped}</a>`;
     },
     name(escaped, { data, parent }) {
       if (data.idlType && data.idlType.type === "argument-type") {
-        return hyperHTML`<span class="idlParamName">${escaped}</span>`;
+        return html`<span class="idlParamName">${escaped}</span>`;
       }
       const parentName = parent ? parent.name : "";
       const { name } = getNameAndId(data, parentName);
@@ -125,40 +125,39 @@ function makeMarkup(parse, { suppressWarnings } = {}) {
       if (data.type === "enum-value") {
         return idlAnchor;
       }
-      return hyperHTML`<span class="${className}">${idlAnchor}</span>`;
+      return html`<span class="${className}">${idlAnchor}</span>`;
     },
-    type: contents => hyperHTML`<span class="idlType">${contents}</span>`,
+    type: contents => html`<span class="idlType">${contents}</span>`,
     inheritance: contents =>
-      hyperHTML`<span class="idlSuperclass">${contents}</span>`,
+      html`<span class="idlSuperclass">${contents}</span>`,
     definition: createIdlElement,
     extendedAttribute: contents =>
-      hyperHTML`<span class="extAttr">${contents}</span>`,
+      html`<span class="extAttr">${contents}</span>`,
     extendedAttributeReference(name) {
       if (!extendedAttributesLinks.has(name)) {
-        return hyperHTML`<a>${name}</a>`;
+        return html`<a>${name}</a>`;
       }
-      return hyperHTML`<a data-cite="${extendedAttributesLinks.get(
+      return html`<a data-cite="${extendedAttributesLinks.get(
         name
       )}">${name}</a>`;
     },
   };
   const result = webidl2.write(parse, { templates });
-  return hyperHTML`<pre class="def idl">${result}</pre>`;
+  return html`<pre class="def idl">${result}</pre>`;
 }
 
 function createIdlAnchor(escaped, data, parentName, dfn) {
   if (dfn) {
-    return hyperHTML`<a data-link-for="${parentName.toLowerCase()}" data-lt="${dfn
+    return html`<a data-link-for="${parentName.toLowerCase()}" data-lt="${dfn
       .dataset.lt || ""}">${escaped}</a>`;
   }
   const isDefaultJSON =
-    data.body &&
-    data.body.name &&
-    data.body.name.value === "toJSON" &&
+    data.type === "operation" &&
+    data.name === "toJSON" &&
     data.extAttrs &&
     data.extAttrs.items.some(({ name }) => name === "Default");
   if (isDefaultJSON) {
-    return hyperHTML`<a data-cite="WEBIDL#default-tojson-operation">${escaped}</a>`;
+    return html`<a data-cite="WEBIDL#default-tojson-operation">${escaped}</a>`;
   }
   return escaped;
 }
@@ -168,11 +167,11 @@ function createIdlElement(contents, { data, parent }) {
   switch (data.type) {
     case "includes":
     case "enum-value":
-      return hyperHTML`<span class='${className}'>${contents}</span>`;
+      return html`<span class='${className}'>${contents}</span>`;
   }
   const parentName = parent ? parent.name : "";
   const { name, idlId } = getNameAndId(data, parentName);
-  return hyperHTML`<span class='${className}' id='${idlId}' data-idl data-title='${name}'>${contents}</span>`;
+  return html`<span class='${className}' id='${idlId}' data-idl data-title='${name}'>${contents}</span>`;
 }
 
 function getIdlDefinitionClassName(defn) {
@@ -266,12 +265,10 @@ function getIdlId(name, parentName) {
 function getDefnName(defn) {
   if (defn.type === "enum-value") {
     return defn.value;
-  } else if (defn.type !== "operation") {
-    return defn.name || defn.type;
-  } else if (defn.body && defn.body.name) {
-    return defn.body.name.value;
+  } else if (defn.type === "operation") {
+    return defn.name;
   }
-  return "";
+  return defn.name || defn.type;
 }
 
 export function run() {
