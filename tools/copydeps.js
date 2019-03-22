@@ -16,8 +16,7 @@ const srcDesMap = [
   ["./node_modules/marked/lib/marked.js", "./js/deps/"],
   ["./node_modules/requirejs/require.js", "./js/deps/"],
   ["./node_modules/text/text.js", "./js/deps/"],
-  ["./node_modules/webidl2/lib/webidl2.js", "./js/deps/"],
-  ["./node_modules/webidl2/lib/writer.js", "./js/deps/webidl2writer.js"],
+  ["./node_modules/webidl2/dist/webidl2.js", "./js/deps/"],
   ["./node_modules/pluralize/pluralize.js", "./js/deps/"],
   ["./node_modules/idb/build/idb.js", "./js/deps/"],
 ];

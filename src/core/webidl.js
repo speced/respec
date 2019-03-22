@@ -10,8 +10,7 @@ import { findDfn } from "./dfn-finder";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 import { registerDefinition } from "./dfn-map";
-import webidl2 from "webidl2";
-import webidl2writer from "../deps/webidl2writer";
+import * as webidl2 from "webidl2";
 
 export const name = "core/webidl";
 
@@ -143,7 +142,7 @@ function makeMarkup(parse, { suppressWarnings } = {}) {
       )}">${name}</a>`;
     },
   };
-  const result = webidl2writer.write(parse, { templates });
+  const result = webidl2.write(parse, { templates });
   return hyperHTML`<pre class="def idl">${result}</pre>`;
 }
 
