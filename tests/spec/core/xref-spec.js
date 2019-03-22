@@ -1,5 +1,5 @@
 "use strict";
-fdescribe("Core — xref", () => {
+describe("Core — xref", () => {
   afterAll(flushIframes);
 
   let cache;
