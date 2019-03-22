@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.5.2",
+  "version": "24.5.3",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -23,7 +23,7 @@
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.4.0",
-    "@babel/preset-env": "^7.4.1",
+    "@babel/preset-env": "^7.4.2",
     "chai": "^4.2.0",
     "clipboard": "^2.0.4",
     "domReady": "github:requirejs/domReady#d85bdc38a6df868ead52ab3e80715aaf60e68765",
