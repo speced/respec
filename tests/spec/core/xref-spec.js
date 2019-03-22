@@ -1,5 +1,5 @@
 "use strict";
-describe("Core — xref", () => {
+fdescribe("Core — xref", () => {
   afterAll(flushIframes);
 
   let cache;
@@ -459,7 +459,7 @@ describe("Core — xref", () => {
               <p><a id="valid4n">ascii alphanumeric</a> from infra</p>
               <p>Remains normative: <a>URL parser</a> from URL.</p>
             </div>
-            <p class="informative">Remains normative: <a>URL parser</a> from URL.</p>
+            <p class="informative">Remains normative: <a id="valid6n">URL parser</a> from URL.</p>
           </section>
         </section>
       </section>
