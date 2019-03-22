@@ -8,41 +8,6 @@ import { pub } from "./pubsubhub";
 
 export const name = "core/github";
 
-function findNext(header) {
-  // Finds the next URL of paginated resources which
-  // is available in the Link header. Link headers look like this:
-  // Link: <url1>; rel="next", <url2>; rel="foo"; bar="baz"
-  // More info here: https://developer.github.com/v3/#link-header
-  const m = (header || "").match(/<([^>]+)>\s*;\s*rel="next"/);
-  return (m && m[1]) || null;
-}
-
-export async function fetchAll(url, headers = {}, output = []) {
-  const urlObj = new URL(url);
-  if (urlObj.searchParams && !urlObj.searchParams.has("per_page")) {
-    urlObj.searchParams.append("per_page", "100");
-  }
-  const request = new Request(urlObj, {
-    headers,
-  });
-  request.headers.set("Accept", "application/vnd.github.v3+json");
-  const response = await window.fetch(request);
-  const json = await response.json();
-  if (Array.isArray(json)) {
-    output.push(...json);
-  }
-  const next = findNext(response.headers.get("Link"));
-  return next ? fetchAll(next, headers, output) : output;
-}
-
-export function fetchIndex(url, headers) {
-  // converts URLs of the form:
-  // https://api.github.com/repos/user/repo/comments{/number}
-  // into:
-  // https://api.github.com/repos/user/repo/comments
-  // which is what you need if you want to get the index.
-  return fetchAll(url.replace(/\{[^}]+\}/, ""), headers);
-}
 
 export async function run(conf) {
   if (!conf.hasOwnProperty("github") || !conf.github) {

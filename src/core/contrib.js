@@ -5,7 +5,7 @@
 // #gh-contributors: people whose PR have been merged.
 // Spec editors get filtered out automatically.
 import { flatten, joinAnd } from "./utils";
-import { fetchIndex } from "./github";
+import { fetchIndex } from "./github-api";
 import { pub } from "./pubsubhub";
 export const name = "core/contrib";
 
@@ -39,13 +39,7 @@ export async function run(conf) {
   if (!ghCommenters && !ghContributors) {
     return;
   }
-  const headers = {};
-  const { githubAPI, githubUser, githubToken } = conf;
-  if (githubUser && githubToken) {
-    const credentials = btoa(`${githubUser}:${githubToken}`);
-    const Authorization = `Basic ${credentials}`;
-    Object.assign(headers, { Authorization });
-  }
+  const { githubAPI } = conf;
   if (!githubAPI) {
     const msg =
       "Requested list of contributors and/or commenters from GitHub, but " +
@@ -53,7 +47,7 @@ export async function run(conf) {
     pub("error", msg);
     return;
   }
-  const response = await fetch(githubAPI, { headers });
+  const response = await fetch(githubAPI );
   if (!response.ok) {
     const msg =
       "Error fetching repository information from GitHub. " +
@@ -65,17 +59,17 @@ export async function run(conf) {
   const { issues_url, issue_comment_url, contributors_url } = indexes;
 
   const [issues, comments, contributors] = await Promise.all([
-    fetchIndex(issues_url, headers),
-    fetchIndex(issue_comment_url, headers),
-    fetchIndex(contributors_url, headers),
+    fetchIndex(issues_url, conf),
+    fetchIndex(issue_comment_url, conf),
+    fetchIndex(contributors_url, conf),
   ]);
   const editors = conf.editors.map(nameProp);
   const commenterUrls = ghCommenters ? findUserURLs(issues, comments) : [];
   const contributorUrls = ghContributors ? contributors.map(urlProp) : [];
   try {
     await Promise.all(
-      toHTML(commenterUrls, editors, ghCommenters, headers),
-      toHTML(contributorUrls, editors, ghContributors, headers)
+      toHTML(commenterUrls, editors, ghCommenters),
+      toHTML(contributorUrls, editors, ghContributors)
     );
   } catch (error) {
     pub("error", "Error loading contributors and/or commenters from GitHub.");
