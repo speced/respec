@@ -122,7 +122,7 @@ describe("Core — xref", () => {
   it("adds link to unique external terms", async () => {
     const body = `
       <section>
-        <p id="external-link"><a>event handler</a><p>
+        <p id="external-link"><a>event handler</a></p>
         <p id="external-dfn"><dfn class="externalDFN">URL parser</dfn></p>
       </section>`;
     const config = { xref: { url: apiURL }, localBiblio };
@@ -445,23 +445,22 @@ describe("Core — xref", () => {
         <section class="normative">
           <p>Informative document: <a id="invalid">bearing angle</a> in normative section</p>
           <p>Normative reference: <a id="valid5n">URL parser</a> from URL</p>
-        </section>
-        <section>
-          <p>
-          <div class="example">
-            <p><a id="valid2">fake inform 2</a></p>
-            <p><a id="valid2n">event handler</a> from HTML</p>
-          </div>
-          <div class="note">
-            <p><a id="valid3">fake inform 3</a></p>
-            <p><a id="valid3n">dictionary</a> from WebIDL</p>
-          </div>
-          <div class="issue">
-            <p><a id="valid4">fake inform 4</a></p>
-            <p><a id="valid4n">ascii alphanumeric</a> from infra</p>
-            <p>Remains normative: <a>URL parser</a> from URL.</p>
-          </div>
-          <p><a id="valid6n">URL parser</a></p>
+          <section>
+            <div class="example">
+              <p><a id="valid2">fake inform 2</a></p>
+              <p><a id="valid2n">event handler</a> from HTML</p>
+            </div>
+            <div class="note">
+              <p><a id="valid3">fake inform 3</a></p>
+              <p><a id="valid3n">dictionary</a> from WebIDL</p>
+            </div>
+            <div class="issue">
+              <p><a id="valid4">fake inform 4</a></p>
+              <p><a id="valid4n">ascii alphanumeric</a> from infra</p>
+              <p>Remains normative: <a>URL parser</a> from URL.</p>
+            </div>
+            <p class="informative">Remains normative: <a>URL parser</a> from URL.</p>
+          </section>
         </section>
       </section>
     `;
