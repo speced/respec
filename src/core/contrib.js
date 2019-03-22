@@ -5,7 +5,7 @@
 // #gh-contributors: people whose PR have been merged.
 // Spec editors get filtered out automatically.
 import { flatten, joinAnd } from "./utils";
-import { fetchIndex, githubRequestHeaders } from "./github-api";
+import { fetchIndex, githubRequestHeaders, getRateLimit } from "./github-api";
 import { pub } from "./pubsubhub";
 export const name = "core/contrib";
 
@@ -61,13 +61,20 @@ export async function run(conf) {
   const { issues_url, issue_comment_url, contributors_url } = indexes;
 
   const [issues, comments, contributors] = await Promise.all([
-    fetchIndex(issues_url, conf),
-    fetchIndex(issue_comment_url, conf),
-    fetchIndex(contributors_url, conf),
+    fetchIndex(issues_url, headers),
+    fetchIndex(issue_comment_url, headers),
+    fetchIndex(contributors_url, headers),
   ]);
   const editors = conf.editors.map(nameProp);
   const commenterUrls = ghCommenters ? findUserURLs(issues, comments) : [];
   const contributorUrls = ghContributors ? contributors.map(urlProp) : [];
+  const remainingRequests = await getRateLimit(conf);
+  if (commenterUrls.length + contributorUrls.length > remainingRequests) {
+    const msg =
+      `Your GitHub Repository contains ${commenterUrls.length + contributorUrls.length} contributors and commenters` +
+      `but your current GitHub quota only allows ${remainingRequests} more requests. Some contributors will not show up`;
+    pub("warning", msg);
+  }
   try {
     await Promise.all(
       toHTML(commenterUrls, editors, ghCommenters, headers),

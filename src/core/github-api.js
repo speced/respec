@@ -19,7 +19,7 @@ export function githubRequestHeaders(conf){
   return headers;
 }
 
-async function getRateLimit(conf) {
+export async function getRateLimit(conf) {
   const headers = githubRequestHeaders(conf);
   const request = new Request(`https://api.github.com/rate_limit`, {
     mode: "cors",
@@ -28,16 +28,14 @@ async function getRateLimit(conf) {
   });
   const response = await fetch(request);
   const responseJSON =  await response.json();
-  return {
-    remainingRequests: responseJSON.rate.remaining
-  }
+  return responseJSON.rate.remaining;
 }
 
 export async function fetchAndStoreGithubIssues(conf) {
   const { githubAPI } = conf;
   /** @type {NodeListOf<HTMLElement>} */
   const specIssues = document.querySelectorAll(".issue[data-number]");
-  let { remainingRequests } = await getRateLimit(conf);
+  const remainingRequests = await getRateLimit(conf);
   if (specIssues.length > remainingRequests) {
     const msg =
       `Your spec contains ${specIssues.length} Github issues, ` +
@@ -99,9 +97,8 @@ function findNext(header) {
   return (m && m[1]) || null;
 }
 
-export async function fetchAll(url, conf, output = []) {
+export async function fetchAll(url, headers, output = []) {
   const urlObj = new URL(url);
-  const headers = githubRequestHeaders(conf);
   if (urlObj.searchParams && !urlObj.searchParams.has("per_page")) {
     urlObj.searchParams.append("per_page", "100");
   }
@@ -118,12 +115,12 @@ export async function fetchAll(url, conf, output = []) {
   return next ? fetchAll(next, headers, output) : output;
 }
 
-export async function fetchIndex(url, conf) {
+export async function fetchIndex(url, headers) {
   // converts URLs of the form:
   // https://api.github.com/repos/user/repo/comments{/number}
   // into:
   // https://api.github.com/repos/user/repo/comments
   // which is what you need if you want to get the index.
-  return fetchAll(url.replace(/\{[^}]+\}/, ""), conf);
+  return fetchAll(url.replace(/\{[^}]+\}/, ""), headers);
 }
 
