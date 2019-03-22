@@ -4,8 +4,8 @@
 // #gh-commenters: people having contributed comments to issues.
 // #gh-contributors: people whose PR have been merged.
 // Spec editors get filtered out automatically.
+import { fetchIndex, getRateLimit, githubRequestHeaders } from "./github-api";
 import { flatten, joinAnd } from "./utils";
-import { fetchIndex, githubRequestHeaders, getRateLimit } from "./github-api";
 import { pub } from "./pubsubhub";
 export const name = "core/contrib";
 
@@ -24,7 +24,9 @@ function findUserURLs(...thingsWithUsers) {
 }
 
 async function toHTML(urls, editors, element, headers) {
-  const args = await Promise.all(urls.map(url => fetch(new Request(url, {headers}))));
+  const args = await Promise.all(
+    urls.map(url => fetch(new Request(url, { headers })))
+  );
   const argsResolved = await Promise.all(args.map(arg => arg.json()));
   const names = argsResolved
     .map(user => user.name || user.login)
@@ -48,8 +50,8 @@ export async function run(conf) {
     pub("error", msg);
     return;
   }
-  let headers = githubRequestHeaders(conf);
-  const response = await fetch(new Request(githubAPI, {headers}));
+  const headers = githubRequestHeaders(conf);
+  const response = await fetch(new Request(githubAPI, { headers }));
   if (!response.ok) {
     const msg =
       "Error fetching repository information from GitHub. " +
@@ -71,7 +73,8 @@ export async function run(conf) {
   const remainingRequests = await getRateLimit(conf);
   if (commenterUrls.length + contributorUrls.length > remainingRequests) {
     const msg =
-      `Your GitHub Repository contains ${commenterUrls.length + contributorUrls.length} contributors and commenters` +
+      `Your GitHub Repository contains ${commenterUrls.length +
+        contributorUrls.length} contributors and commenters` +
       `but your current GitHub quota only allows ${remainingRequests} more requests. Some contributors will not show up`;
     pub("warning", msg);
   }

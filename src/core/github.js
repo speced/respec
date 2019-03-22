@@ -8,7 +8,6 @@ import { pub } from "./pubsubhub";
 
 export const name = "core/github";
 
-
 export async function run(conf) {
   if (!conf.hasOwnProperty("github") || !conf.github) {
     // nothing to do, bail out.

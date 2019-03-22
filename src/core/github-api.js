@@ -1,7 +1,8 @@
-import { pub } from "./pubsubhub";
 import { fetchAndCache } from "./utils";
+import { pub } from "./pubsubhub";
+export const name = "core/github-api";
 
-export function githubRequestHeaders(conf){
+export function githubRequestHeaders(conf) {
   const { githubUser, githubToken } = conf;
   const headers = {
     // Get back HTML content instead of markdown
@@ -27,7 +28,7 @@ export async function getRateLimit(conf) {
     headers,
   });
   const response = await fetch(request);
-  const responseJSON =  await response.json();
+  const responseJSON = await response.json();
   return responseJSON.rate.remaining;
 }
 
@@ -35,7 +36,7 @@ export async function fetchAndStoreGithubIssues(conf) {
   const { githubAPI } = conf;
   /** @type {NodeListOf<HTMLElement>} */
   const specIssues = document.querySelectorAll(".issue[data-number]");
-  const remainingRequests = await getRateLimit(conf);
+  let remainingRequests = await getRateLimit(conf);
   if (specIssues.length > remainingRequests) {
     const msg =
       `Your spec contains ${specIssues.length} Github issues, ` +
@@ -46,7 +47,7 @@ export async function fetchAndStoreGithubIssues(conf) {
     .map(elem => Number.parseInt(elem.dataset.number, 10))
     .filter(issueNumber => issueNumber)
     .map(async issueNumber => {
-      if (remainingRequests > 0){
+      if (remainingRequests > 0) {
         const issueURL = `${githubAPI}/issues/${issueNumber}`;
         const headers = githubRequestHeaders(conf);
         const request = new Request(issueURL, {
@@ -82,7 +83,7 @@ async function processResponse(response, issueNumber) {
   if (!response.ok || issue.message) {
     const msg = `Error fetching issue #${issueNumber} from GitHub. ${
       issue.message
-      } (HTTP Status ${response.status}).`;
+    } (HTTP Status ${response.status}).`;
     pub("error", msg);
   }
   return /** @type {[number, GitHubIssue]} */ ([issueNumber, issue]);
@@ -123,4 +124,3 @@ export async function fetchIndex(url, headers) {
   // which is what you need if you want to get the index.
   return fetchAll(url.replace(/\{[^}]+\}/, ""), headers);
 }
-
