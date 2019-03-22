@@ -439,33 +439,32 @@ describe("Core — xref", () => {
     const body = `
       <section class="informative" id="test">
         <section>
-          <p>informative reference: <a id="valid1">fake inform 1</a></p>
-          <p>normative reference: <a id="valid1n">list</a></p>
+          <p>informative reference: <a id="valid1">fake inform 1</a> is in spec "local-1"</p>
+          <p>informative reference: <a id="valid1n">list</a> is in infra</p>
         </section>
         <section class="normative">
-          <p>an informative reference:
-            <a id="invalid">bearing angle</a> in normative section
-          </p>
-          <p><a id="valid5n">URL parser</a></p>
-          <section>
-            <div class="example">
-              <p><a id="valid2">fake inform 2</a></p>
-              <p><a id="valid2n">event handler</a></p>
-            </div>
-            <div class="note">
-              <p><a id="valid3">fake inform 3</a></p>
-              <p><a id="valid3n">dictionary</a></p>
-            </div>
-            <div class="issue">
-              <p><a id="valid4">fake inform 4</a></p>
-              <p><a id="valid4n">ascii alphanumeric</a></p>
-            </div>
-            <p><a id="valid6n">URL parser</a></p>
-          </section>
+          <p>Informative document: <a id="invalid">bearing angle</a> in normative section</p>
+          <p>Normative reference: <a id="valid5n">URL parser</a> from URL</p>
+        </section>
+        <section>
+          <p>
+          <div class="example">
+            <p><a id="valid2">fake inform 2</a></p>
+            <p><a id="valid2n">event handler</a> from HTML</p>
+          </div>
+          <div class="note">
+            <p><a id="valid3">fake inform 3</a></p>
+            <p><a id="valid3n">dictionary</a> from WebIDL</p>
+          </div>
+          <div class="issue">
+            <p><a id="valid4">fake inform 4</a></p>
+            <p><a id="valid4n">ascii alphanumeric</a> from infra</p>
+            <p>Remains normative: <a>URL parser</a> from URL.</p>
+          </div>
+          <p><a id="valid6n">URL parser</a></p>
         </section>
       </section>
     `;
-
     const config = { xref: { url: apiURL }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
@@ -509,8 +508,7 @@ describe("Core — xref", () => {
     expect(normRefs.map(r => r.textContent)).toEqual(["[url]"]);
 
     const informRefs = [...doc.querySelectorAll("#informative-references dt")];
-    expect(informRefs.length).toEqual(7);
-    expect(informRefs.map(r => r.textContent).join()).toEqual(
+    expect(informRefs.map(r => r.textContent).join()).toBe(
       "[html],[infra],[local-1],[local-2],[local-3],[local-4],[webidl]"
     );
   });

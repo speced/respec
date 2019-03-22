@@ -241,12 +241,24 @@ function addDataCiteToTerms(results, xrefMap, conf) {
 
       // add specs for citation (references section)
       const closestInform = elem.closest(nonNormativeSelector);
-      if (
+      const closestNormative = elem.closest(".normative");
+      let isNormative = false;
+      if (!closestInform) {
+        isNormative = true;
+      } else if (elem === closestNormative) {
+        isNormative = true;
+      } else if (
+        closestNormative &&
         closestInform &&
-        (!elem.closest(".normative") ||
-          !closestInform.querySelector(".normative"))
+        closestInform.contains(closestNormative)
       ) {
-        conf.informativeReferences.add(cite);
+        isNormative = true;
+      }
+      if (!isNormative) {
+        // Only add it if not already normative...
+        if (!conf.normativeReferences.has(cite)) {
+          conf.informativeReferences.add(cite);
+        }
       } else {
         if (normative) {
           conf.normativeReferences.add(cite);
