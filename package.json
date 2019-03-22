@@ -60,7 +60,7 @@
     "serve": "^10.1.2",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "typescript": "^3.3.4000",
-    "webidl2": "^17.0.2",
+    "webidl2": "^18.0.0",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0"
   },
