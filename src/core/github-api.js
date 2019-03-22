@@ -1,7 +1,7 @@
 import { pub } from "./pubsubhub";
 import { fetchAndCache } from "./utils";
 
-function githubRequestHeaders(conf){
+export function githubRequestHeaders(conf){
   const { githubUser, githubToken } = conf;
   const headers = {
     // Get back HTML content instead of markdown
@@ -118,7 +118,7 @@ export async function fetchAll(url, conf, output = []) {
   return next ? fetchAll(next, headers, output) : output;
 }
 
-export function fetchIndex(url, conf) {
+export async function fetchIndex(url, conf) {
   // converts URLs of the form:
   // https://api.github.com/repos/user/repo/comments{/number}
   // into:
@@ -126,3 +126,4 @@ export function fetchIndex(url, conf) {
   // which is what you need if you want to get the index.
   return fetchAll(url.replace(/\{[^}]+\}/, ""), conf);
 }
+

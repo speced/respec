@@ -5,7 +5,7 @@
 // #gh-contributors: people whose PR have been merged.
 // Spec editors get filtered out automatically.
 import { flatten, joinAnd } from "./utils";
-import { fetchIndex } from "./github-api";
+import { fetchIndex, githubRequestHeaders } from "./github-api";
 import { pub } from "./pubsubhub";
 export const name = "core/contrib";
 
@@ -24,7 +24,8 @@ function findUserURLs(...thingsWithUsers) {
 }
 
 async function toHTML(urls, editors, element, headers) {
-  const args = await Promise.all(urls.map(url => fetch(url, { headers })));
+  const args = await Promise.all(urls.map(url => fetch(new Request(url, {headers}))));
+  const argsResolved = await Promise.all(args.map(arg => arg.json()));
   const names = args
     .map(([user]) => user.name || user.login)
     .filter(name => !editors.includes(name))
@@ -47,7 +48,8 @@ export async function run(conf) {
     pub("error", msg);
     return;
   }
-  const response = await fetch(githubAPI );
+  let headers = githubRequestHeaders(conf);
+  const response = await fetch(new Request(githubAPI, {headers}));
   if (!response.ok) {
     const msg =
       "Error fetching repository information from GitHub. " +
@@ -68,8 +70,8 @@ export async function run(conf) {
   const contributorUrls = ghContributors ? contributors.map(urlProp) : [];
   try {
     await Promise.all(
-      toHTML(commenterUrls, editors, ghCommenters),
-      toHTML(contributorUrls, editors, ghContributors)
+      toHTML(commenterUrls, editors, ghCommenters, headers),
+      toHTML(contributorUrls, editors, ghContributors, headers)
     );
   } catch (error) {
     pub("error", "Error loading contributors and/or commenters from GitHub.");
