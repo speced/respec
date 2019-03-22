@@ -13,7 +13,7 @@
 import { addId, joinAnd, parents } from "./utils";
 import css from "text!../../assets/issues-notes.css";
 import { lang as defaultLang } from "../core/l10n";
-import { fetchAndStoreGithubIssues } from './github-api';
+import { fetchAndStoreGithubIssues } from "./github-api";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 
@@ -34,7 +34,6 @@ const localizationStrings = {
 const lang = defaultLang in localizationStrings ? defaultLang : "en";
 
 const l10n = localizationStrings[lang];
-
 
 /**
  * @typedef {{ type: string, inline: boolean, number: number, title: string }} Report
@@ -204,7 +203,6 @@ function createIssueSummaryEntry(l10nIssue, report, id) {
   `;
 }
 
-
 function isLight(rgb) {
   const red = (rgb >> 16) & 0xff;
   const green = (rgb >> 8) & 0xff;
@@ -251,7 +249,6 @@ function createLabel(label, repoURL) {
     style="${style}"
     href="${issuesURL.href}">${name}</a>`;
 }
-
 
 export async function run(conf) {
   const query = ".issue, .note, .warning, .ednote";
