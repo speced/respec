@@ -78,7 +78,7 @@ describe("Core - Inlines", () => {
       <section>
         <p id="a1">TEXT |variable: Type| TEXT</p>
         <p id="a2">TEXT |variable with spaces:Type| TEXT</p>
-        <p id="a3">TEXT |with spaces: Type| TEXT</p>
+        <p id="a3">TEXT |with spaces :  Type| TEXT</p>
         <p id="b">TEXT |variable| TEXT</p>
         <p id="c">TEXT | ignored | TEXT</p>
         <p id="d">TEXT|ignore: Ignore|TEXT</p>
