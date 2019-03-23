@@ -27,8 +27,7 @@ export async function getRateLimit(conf) {
     referrerPolicy: "no-referrer",
     headers,
   });
-  const response = await fetch(request);
-  const responseJSON = await response.json();
+  const responseJSON = await fetch(request).then(r => r.json());
   return responseJSON.rate.remaining;
 }
 
