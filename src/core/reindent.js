@@ -8,7 +8,7 @@
 export const name = "core/reindent";
 
 /**
- * @param {string} text 
+ * @param {string} text
  */
 function reindent(text) {
   if (!text) {
@@ -25,7 +25,7 @@ function reindent(text) {
 }
 
 /**
- * @param {Document} document 
+ * @param {Document} document
  */
 function preprocess(document) {
   for (const pre of document.getElementsByTagName("pre")) {
@@ -40,6 +40,6 @@ export function run() {
 /**
  * @param {import("../respec-document").RespecDocument} respecDoc
  */
-export default function ({ document }) {
+export default function({ document }) {
   preprocess(document);
 }

@@ -74,7 +74,7 @@
     "build": "snyk protect && npm run build:components",
     "copydeps": "node ./tools/copydeps.js",
     "karma": "karma start --single-run",
-    "lint": "tsc -p src/jsconfig.json && eslint \"src/**/*.js\" \"tests/**/*.js\" tools/*.js js/profile-w3c-common.js",
+    "lint": "tsc -p src/jsconfig.json && eslint .",
     "release": "node ./tools/release.js",
     "server": "npm start",
     "snyk": "snyk",
