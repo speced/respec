@@ -116,7 +116,6 @@ export function run(conf) {
   for (const abbr of abbrs) {
     abbrMap.set(abbr.textContent, abbr.title);
   }
-  console.log(abbrMap);
   const aKeys = [...abbrMap.keys()];
   const abbrRx = aKeys.length ? `(?:\\b${aKeys.join("\\b)|(?:\\b")}\\b)` : null;
 
