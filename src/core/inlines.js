@@ -151,7 +151,7 @@ export function run(conf) {
       } else if (t.startsWith("[[")) {
         const nodes = inlineBibrefMatches(t, txt, conf);
         df.append(...nodes);
-      } else if (t.startsWith("|") && t.endsWith("|")) {
+      } else if (t.startsWith("|")) {
         const node = inlineVariableMatches(t);
         df.appendChild(node);
       } else if (abbrMap.has(t)) {
