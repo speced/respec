@@ -721,6 +721,53 @@ describe("Core — xref", () => {
     });
   });
 
+
+  describe("Handle configurations correctly", () => {
+    it("xref as array of specifications", async () => {
+      const config = { xref: ["a", "b", "c"] }; 
+      const body = `
+      <section id='abstract'>
+        <p>This is required.</p>
+      </section>
+      <section id='sotd'>
+        <p>This is required.</p>
+      </section>`;
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+      expect(doc.body.dataset.cite).toContain("a b c");
+    });
+    
+    it("xref as profile string - valid profile", async () => {
+      const config = { xref: "W3C" }; 
+      const body = `
+      <section id='abstract'>
+        <p>This is required.</p>
+      </section>
+      <section id='sotd'>
+        <p>This is required.</p>
+      </section>`;
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+      expect(doc.body.dataset.cite).toContain("HTML INFRA URL PROMISES-GUIDE WEBIDL DOM FETCH");
+    });
+
+    it("xref as profile string - valid profile", async () => {
+      const config = { xref: { specs:["a", "b", "c"], profile:"W3C" } }; 
+      const body = `
+      <section id='abstract'>
+        <p>This is required.</p>
+      </section>
+      <section id='sotd'>
+        <p>This is required.</p>
+      </section>`;
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+      expect(doc.body.dataset.cite).toContain("a b c HTML INFRA URL PROMISES-GUIDE WEBIDL DOM FETCH");
+    });
+
+  });
+
+
   it("caches results and uses cached results when available", async () => {
     const config = { xref: true, localBiblio };
     let cacheKeys;

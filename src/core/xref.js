@@ -39,7 +39,14 @@ export async function run(conf, elems) {
     },
   });
   const cache = new IDBKeyVal(idb, "xrefs");
-  const { xref } = conf;
+
+  const xref = normalizeConfig(conf.xref);
+  if (xref.specs) {
+    const bodyCite = document.body.dataset.cite
+      ? document.body.dataset.cite.split(/\s+/)
+      : [];
+    document.body.dataset.cite = bodyCite.concat(xref.specs).join(" ");
+  }
   const xrefMap = createXrefMap(elems);
   const allKeys = collectKeys(xrefMap);
   const apiURL = xref.url ? new URL(xref.url, location.href) : API_URL;
@@ -70,6 +77,72 @@ export async function run(conf, elems) {
   }, Object.create(null));
 
   addDataCiteToTerms(results, xrefMap, conf);
+}
+
+function invalidProfileError(profile) {
+  pub(
+    "error",
+    `Invalid \`xref\` profile option passed in the configuration: "${profile}". Please use one of the supported specification profiles: ${Object.keys(
+      profiles
+    ).join(", ")}.`
+  );
+}
+
+/**
+ * converts conf.xref to object with url and spec properties
+ */
+function normalizeConfig(xref) {
+  const xrefDefaults = {
+    url: API_URL,
+    specs: null,
+  };
+
+  const normalizedConfig = {};
+  const type = Array.isArray(xref) ? "array" : typeof xref;
+  switch (type) {
+    case "boolean":
+      // ... true
+      Object.assign(normalizedConfig, xrefDefaults);
+      break;
+    case "string":
+      if (profiles[xref.toLowerCase()]) {
+        // We have the profile
+        Object.assign(normalizedConfig, xrefDefaults, {
+          specs: profiles[xref.toLowerCase()],
+        });
+      } else {
+        invalidProfileError(xref);
+        Object.assign(normalizedConfig, xrefDefaults);
+      }
+      break;
+    case "array":
+      Object.assign(normalizedConfig, xrefDefaults, {
+        specs: [].concat(xref),
+      });
+      break;
+    case "object":
+      if (xref.profile && !profiles[xref.profile.toLowerCase()]) {
+        invalidProfileError(xref.profile);
+        Object.assign(normalizedConfig, xrefDefaults, xref);
+      } else {
+        Object.assign(normalizedConfig, xrefDefaults, xref);
+        if (xref.profile)
+          Object.assign(normalizedConfig, {
+            specs: xref.specs
+              ? xref.specs.concat(profiles[xref.profile.toLowerCase()])
+              : profiles[xref.profile.toLowerCase()],
+          });
+      }
+      break;
+    default:
+      // show user error - bad configuration
+      Object.assign(normalizedConfig, xrefDefaults);
+      pub(
+        "error",
+        `Invalid value for \`xref\` configuration option. Got passed: "${xref}".`
+      );
+  }
+  return normalizedConfig;
 }
 
 /**
