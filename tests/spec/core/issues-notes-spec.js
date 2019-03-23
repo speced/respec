@@ -379,4 +379,3 @@ describe("Core — Issues and Notes", () => {
     expect(textContent).toContain("Resumen de la cuestión");
   });
 });
-

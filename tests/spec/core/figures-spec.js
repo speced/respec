@@ -171,4 +171,3 @@ describe("Core - Figures", () => {
     expect(textContent).toContain("Lijst met figuren");
   });
 });
-

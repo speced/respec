@@ -163,4 +163,3 @@ describe("Core — Examples", () => {
     expect(textContent).toContain("Voorbeeld");
   });
 });
-
