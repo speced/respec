@@ -70,6 +70,7 @@ export async function fetchAndStoreGithubIssues(conf) {
  *
  * @param {Response} response
  * @param {number} issueNumber
+ * @returns {[number, GitHubIssue]}
  */
 async function processResponse(response, issueNumber) {
   // "message" is always error message from GitHub
@@ -86,7 +87,7 @@ async function processResponse(response, issueNumber) {
     } (HTTP Status ${response.status}).`;
     pub("error", msg);
   }
-  return /** @type {[number, GitHubIssue]} */ ([issueNumber, issue]);
+  return [issueNumber, issue];
 }
 
 function findNext(header) {
@@ -95,7 +96,7 @@ function findNext(header) {
   // Link: <url1>; rel="next", <url2>; rel="foo"; bar="baz"
   // More info here: https://developer.github.com/v3/#link-header
   const m = (header || "").match(/<([^>]+)>\s*;\s*rel="next"/);
-  return (m && m[1]) || null;
+  return m ? m[1] : null;
 }
 
 export async function fetchAll(url, headers, output = []) {
@@ -103,11 +104,9 @@ export async function fetchAll(url, headers, output = []) {
   if (urlObj.searchParams && !urlObj.searchParams.has("per_page")) {
     urlObj.searchParams.append("per_page", "100");
   }
-  const request = new Request(urlObj, {
-    headers,
-  });
+  const request = new Request(urlObj, { headers });
   request.headers.set("Accept", "application/vnd.github.v3+json");
-  const response = await window.fetch(request);
+  const response = await fetch(request);
   const json = await response.json();
   if (Array.isArray(json)) {
     output.push(...json);
