@@ -201,6 +201,26 @@ async function fetchFromNetwork(keys, url) {
 }
 
 /**
+ * Figures out from the tree structure if the reference is
+ * normative (true) or informative (false).
+ * @param {HTMLElement} elem
+ */
+function isNormative(elem) {
+  const closestNormative = elem.closest(".normative");
+  const closestInform = elem.closest(nonNormativeSelector);
+  if (!closestInform || elem === closestNormative) {
+    return true;
+  } else if (
+    closestNormative &&
+    closestInform &&
+    closestInform.contains(closestNormative)
+  ) {
+    return true;
+  }
+  return false;
+}
+
+/**
  * adds data-cite attributes to elems
  * for each term from conf.xref[term] for which results are found.
  * @param {Object} query query sent to server
@@ -217,7 +237,7 @@ function addDataCiteToTerms(results, xrefMap, conf) {
   };
 
   for (const [term, entries] of xrefMap) {
-    entries.forEach(entry => {
+    for (const entry of entries) {
       const result = disambiguate(results[term], entry, term);
       const { elem } = entry;
       if (result.error) {
@@ -240,37 +260,24 @@ function addDataCiteToTerms(results, xrefMap, conf) {
       });
 
       // add specs for citation (references section)
-      const closestInform = elem.closest(nonNormativeSelector);
-      const closestNormative = elem.closest(".normative");
-      let isNormative = false;
-      if (!closestInform) {
-        isNormative = true;
-      } else if (elem === closestNormative) {
-        isNormative = true;
-      } else if (
-        closestNormative &&
-        closestInform &&
-        closestInform.contains(closestNormative)
-      ) {
-        isNormative = true;
-      }
-      if (!isNormative) {
+      const isNormRef = isNormative(elem);
+      if (!isNormRef) {
         // Only add it if not already normative...
         if (!conf.normativeReferences.has(cite)) {
           conf.informativeReferences.add(cite);
         }
-      } else {
-        if (normative) {
-          conf.normativeReferences.add(cite);
-        } else {
-          const msg =
-            `Adding an informative reference to "${term}" from "${cite}" ` +
-            "in a normative section";
-          const title = "Error: Informative reference in normative section";
-          showInlineWarning(entry.elem, msg, title);
-        }
+        continue;
       }
-    });
+      if (normative) {
+        conf.normativeReferences.add(cite);
+      } else {
+        const msg =
+          `Adding an informative reference to "${term}" from "${cite}" ` +
+          "in a normative section";
+        const title = "Error: Informative reference in normative section";
+        showInlineWarning(entry.elem, msg, title);
+      }
+    }
   }
   showErrors(errorCollectors);
 }
