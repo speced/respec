@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Removes common indents across the IDL texts,
  * so that indentation inside <pre> won't affect the rendered result.
@@ -6,6 +7,9 @@
 
 export const name = "core/reindent";
 
+/**
+ * @param {string} text 
+ */
 function reindent(text) {
   if (!text) {
     return text;
@@ -20,8 +24,22 @@ function reindent(text) {
   return lines.map(s => s.slice(leastIndent)).join("\n");
 }
 
-export function run() {
+/**
+ * @param {Document} document 
+ */
+function preprocess(document) {
   for (const pre of document.getElementsByTagName("pre")) {
     pre.innerHTML = reindent(pre.innerHTML);
   }
+}
+
+export function run() {
+  preprocess(document);
+}
+
+/**
+ * @param {import("../respec-document").RespecDocument} respecDoc
+ */
+export default function ({ document }) {
+  preprocess(document);
 }

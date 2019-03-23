@@ -10,6 +10,8 @@
   "bin": {
     "respec2html": "./tools/respec2html.js"
   },
+  "main": "./src/main.js",
+  "module": "./src/index.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/w3c/respec.git"
@@ -88,8 +90,10 @@
     "command-line-args": "^5.0.2",
     "command-line-usage": "^5.0.5",
     "epipebomb": "^1.0.0",
+    "esm": "^3.2.20",
     "fs-extra": "^7.0.1",
     "hyperhtml": "^2.25.4",
+    "jsdom": "^14.0.0",
     "loading-indicator": "^2.0.0",
     "marked": "^0.6.1",
     "prompt": "^1.0.0",

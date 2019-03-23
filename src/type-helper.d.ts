@@ -18,6 +18,7 @@ declare module "text!*" {
 declare var respecConfig: any;
 interface Window {
   respecVersion: string;
+  respecConfig: any;
 }
 
 interface Document {
@@ -34,3 +35,5 @@ interface Node {
 }
 
 declare function fetch(input: URL, init?: RequestInit): Promise<Response>;
+
+type PromiseParameter<T> = T extends Promise<infer X> ? X : null;
