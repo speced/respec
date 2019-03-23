@@ -10,8 +10,16 @@ export const name = "core/dfn";
 
 export function addDfnAbbrtoMap(abbrMap) {
   document.querySelectorAll("dfn").forEach(dfn => {
-    if (dfn.hasAttribute("data-abbr"))
+    if (dfn.hasAttribute("data-abbr")) {
+      if (dfn.dataset.abbr === "")
+        dfn.dataset.abbr = dfn.textContent
+          .split(" ")
+          .map(definition => definition.charAt(0))
+          .filter(char => char.match(/[a-z]/i))
+          .join("")
+          .toUpperCase();
       abbrMap.set(dfn.dataset.abbr, dfn.textContent);
+    }
   });
 }
 
@@ -29,14 +37,6 @@ export function run() {
     let titles = getDfnTitles(dfn, { isDefinition: true });
 
     if (dfn.hasAttribute("data-abbr")) {
-      if (dfn.dataset.abbr === "")
-        dfn.dataset.abbr = dfn.textContent
-          .split(" ")
-          .map(definition => definition.charAt(0))
-          .filter(char => char.match(/[a-z]/i))
-          .join("")
-          .toUpperCase();
-
       // checks if text content is already in the form Permanent Account Number (PAN)
       const matched = /\((.*?)\)/.exec(dfn.textContent);
       if (!matched || !(matched.pop() === dfn.dataset.abbr))
