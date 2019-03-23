@@ -86,6 +86,18 @@ function inlineAbbrMatches(matched, txt, abbrMap) {
     : hyperHTML`<abbr title="${abbrMap.get(matched)}">${matched}</abbr>`;
 }
 
+/**
+ * @example |varName: type| => <var data-type="type">varName</var>
+ * @example |varName| => <var>varName</var>
+ * @param {string} matched
+ */
+function inlineVariableMatches(matched) {
+  // remove "|" at the beginning and at the end, then split at an optional `:`
+  const matches = matched.slice(1, -1).split(":", 2);
+  const [varName, type] = matches.map(s => s.trim());
+  return hyperHTML`<var data-type="${type}">${varName}</var>`;
+}
+
 export function run(conf) {
   document.normalize();
   if (!document.querySelector("section#conformance")) {
@@ -118,6 +130,7 @@ export function run(conf) {
       "\\b(?:NOT\\s+)?RECOMMENDED\\b",
       "\\bOPTIONAL\\b",
       "(?:{{3}\\s*.*\\s*}{3})", // inline IDL references,
+      "\\B\\|\\w[\\s\\w]*\\w(?:\\s*\\:\\s*\\w+)?\\|\\B", // inline variable regex
       "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])",
       ...(abbrRx ? [abbrRx] : []),
     ].join("|")})`
@@ -138,6 +151,9 @@ export function run(conf) {
       } else if (t.startsWith("[[")) {
         const nodes = inlineBibrefMatches(t, txt, conf);
         df.append(...nodes);
+      } else if (t.startsWith("|")) {
+        const node = inlineVariableMatches(t);
+        df.appendChild(node);
       } else if (abbrMap.has(t)) {
         const node = inlineAbbrMatches(t, txt, abbrMap);
         df.appendChild(node);
