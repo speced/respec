@@ -7,5 +7,6 @@
         "modules": "amd"
       }
     ]
-  ]
+  ],
+  "plugins": ["@babel/plugin-syntax-dynamic-import"]
 }
