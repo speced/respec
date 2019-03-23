@@ -15,13 +15,12 @@
 //    key word was used.  NOTE: While each member is a counter, at this time
 //    the counter is not used.
 import { getTextNodes, refTypeFromContext, showInlineWarning } from "./utils";
+import { addDfnAbbrtoMap } from "./dfn";
 import hyperHTML from "hyperhtml";
 import { idlStringToHtml } from "./inline-idl-parser";
 import { renderInlineCitation } from "./render-biblio";
 export const name = "core/inlines";
 export const rfc2119Usage = {};
-
-export const abbrMap = new Map();
 
 /**
  * @param {string} matched
@@ -111,11 +110,13 @@ export function run(conf) {
   if (!conf.respecRFC2119) conf.respecRFC2119 = rfc2119Usage;
 
   // PRE-PROCESSING
+  const abbrMap = new Map();
   /** @type {NodeListOf<HTMLElement>} */
   const abbrs = document.querySelectorAll("abbr[title]");
   for (const abbr of abbrs) {
     abbrMap.set(abbr.textContent, abbr.title);
   }
+  addDfnAbbrtoMap(abbrMap);
   const aKeys = [...abbrMap.keys()];
   const abbrRx = aKeys.length ? `(?:\\b${aKeys.join("\\b)|(?:\\b")}\\b)` : null;
 

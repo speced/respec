@@ -3,11 +3,17 @@
 // - Finds all <dfn> elements and populates conf.definitionMap to identify them.
 // - Also populates abbrMap from core/inlines for definitions that have an abbreviation
 
-import { abbrMap } from "./inlines";
 import { getDfnTitles } from "./utils";
 import { registerDefinition } from "./dfn-map";
 
 export const name = "core/dfn";
+
+export function addDfnAbbrtoMap(abbrMap) {
+  document.querySelectorAll("dfn").forEach(dfn => {
+    if (dfn.hasAttribute("data-abbr"))
+      abbrMap.set(dfn.dataset.abbr, dfn.textContent);
+  });
+}
 
 export function run() {
   document.querySelectorAll("dfn").forEach(dfn => {
@@ -30,7 +36,6 @@ export function run() {
           .filter(char => char.match(/[a-z]/i))
           .join("")
           .toUpperCase();
-      abbrMap.set(dfn.dataset.abbr, dfn.textContent);
 
       // checks if text content is already in the form Permanent Account Number (PAN)
       const matched = /\((.*?)\)/.exec(dfn.textContent);
