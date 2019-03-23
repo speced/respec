@@ -242,7 +242,7 @@ function addDataCiteToTerms(results, xrefMap, conf) {
       const { elem } = entry;
       if (result.error) {
         collectErrors(term, elem, result, errorCollectors);
-        return;
+        continue;
       }
       const { uri, spec: cite, normative } = result;
       const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
