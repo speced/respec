@@ -4,7 +4,7 @@
  */
 
 /**
- * @param {string} text 
+ * @param {string} text
  */
 async function parseDocument(text) {
   if (typeof DOMParser !== "undefined") {
@@ -20,13 +20,13 @@ async function parseDocument(text) {
  * @param {*} [conf]
  */
 export async function createRespecDocument(doc, conf) {
-  const document = typeof doc === "string" ?
-    await parseDocument(doc) :
-    doc;
-  const configuration = conf || (document.defaultView && document.defaultView.respecConfig);
+  const document = typeof doc === "string" ? await parseDocument(doc) : doc;
+  const configuration =
+    conf || (document.defaultView && document.defaultView.respecConfig);
   if (!configuration) {
-    throw new Error("Configuration object required if not given within document");
+    throw new Error(
+      "Configuration object required if not given within document"
+    );
   }
   return { document, configuration };
 }
-

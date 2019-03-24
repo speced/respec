@@ -1,4 +1,3 @@
 builds/*
 js/*
 !js/profile-w3c-common.js
-src/respec-document.js
