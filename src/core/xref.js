@@ -270,6 +270,7 @@ function addDataCiteToTerms(results, xrefMap, conf) {
       }
       if (normative) {
         conf.normativeReferences.add(cite);
+        conf.informativeReferences.delete(cite);
       } else {
         const msg =
           `Adding an informative reference to "${term}" from "${cite}" ` +

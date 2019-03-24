@@ -439,6 +439,7 @@ describe("Core — xref", () => {
     const body = `
       <section class="informative" id="test">
         <section>
+          <p>Cite the <a data-cite="URL"></a> non-normative.</p>
           <p>informative reference: <a id="valid1">fake inform 1</a> is in spec "local-1"</p>
           <p>informative reference: <a id="valid1n">list</a> is in infra</p>
         </section>
