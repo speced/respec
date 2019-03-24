@@ -44,7 +44,7 @@ async function insertStyle(document, conf) {
 export default async function({ document, configuration }) {
   if (!styleElement) {
     await insertStyle(document, configuration);
-  } else if (conf.noReSpecCSS) {
+  } else if (configuration.noReSpecCSS) {
     (await styleElement).remove();
   }
 }
