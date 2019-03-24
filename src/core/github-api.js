@@ -46,7 +46,7 @@ export async function fetchAndStoreGithubIssues(conf) {
     .map(elem => Number.parseInt(elem.dataset.number, 10))
     .filter(issueNumber => issueNumber)
     .map(async issueNumber => {
-      if (remainingRequests > 0) {
+      if (!remainingRequests) return;
         const issueURL = `${githubAPI}/issues/${issueNumber}`;
         const headers = githubRequestHeaders(conf);
         const request = new Request(issueURL, {
