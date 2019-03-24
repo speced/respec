@@ -33,7 +33,6 @@ export async function getRateLimit(conf) {
 
 export async function fetchAndStoreGithubIssues(conf) {
   const { githubAPI } = conf;
-  /** @type {NodeListOf<HTMLElement>} */
   const specIssues = document.querySelectorAll(".issue[data-number]");
   let remainingRequests = await getRateLimit(conf);
   if (specIssues.length > remainingRequests) {
@@ -47,17 +46,16 @@ export async function fetchAndStoreGithubIssues(conf) {
     .filter(issueNumber => issueNumber)
     .map(async issueNumber => {
       if (!remainingRequests) return;
-        const issueURL = `${githubAPI}/issues/${issueNumber}`;
-        const headers = githubRequestHeaders(conf);
-        const request = new Request(issueURL, {
-          mode: "cors",
-          referrerPolicy: "no-referrer",
-          headers,
-        });
-        const response = await fetchAndCache(request);
-        remainingRequests--;
-        return processResponse(response, issueNumber);
-      }
+      const issueURL = `${githubAPI}/issues/${issueNumber}`;
+      const headers = githubRequestHeaders(conf);
+      const request = new Request(issueURL, {
+        mode: "cors",
+        referrerPolicy: "no-referrer",
+        headers,
+      });
+      const response = await fetchAndCache(request);
+      remainingRequests--;
+      return processResponse(response, issueNumber);
     });
   const issues = await Promise.all(issuePromises);
   return new Map(issues);
