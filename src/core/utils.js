@@ -915,18 +915,3 @@ export function msgIdGenerator(namespace, counter = 0) {
   };
 }
 
-/**
- * Generates simple Abbreviations from text passed.
- *
- * @param {String} text A string like "Permanent Account Number".
- * @returns {String} abbr Abbreviation like "PAN"
- */
-
-export function getAbbreviationFromText(text) {
-  return text
-    .split(" ")
-    .map(definition => definition.charAt(0))
-    .filter(char => char.match(/[a-z]/i))
-    .join("")
-    .toUpperCase();
-}

@@ -3,11 +3,24 @@
 // - Finds all <dfn> elements with data-abbr attribute and parses them and registers definitions.
 // - Also populates abbrMap used by core/inlines for such definitions.
 
-import { getAbbreviationFromText } from "./utils";
 import { registerDefinition } from "./dfn-map";
 
 export const name = "core/dfn-abbr";
 export const abbrMap = new Map();
+
+/**
+ * Generates simple Abbreviations from text passed.
+ *
+ * @param {String} text A string like "Permanent Account Number".
+ * @returns {String} abbr Abbreviation like "PAN"
+ */
+
+function getAbbreviationFromText(text) {
+  return text
+    .match(/\b([a-z])/gi)
+    .join("")
+    .toUpperCase();
+}
 
 /**
  * Parses Elements of form <dfn data-abbr="PAN">Permanent Account Number</dfn>
@@ -22,7 +35,9 @@ function parseAbbreviatedDefinition(dfn) {
 }
 
 export function run() {
-  document.querySelectorAll("dfn").forEach(dfn => {
+  /** @type {NodeListOf<HTMLElement>} */
+  const dfns = document.querySelectorAll("dfn[data-abbr]");
+  dfns.forEach(dfn => {
     if (!dfn.hasAttribute("data-abbr")) return;
 
     if (dfn.dataset.abbr === "")
