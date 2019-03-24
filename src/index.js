@@ -1,5 +1,6 @@
 // @ts-check
 import { createRespecDocument } from "./respec-document";
+import insertStyle from "./core/style";
 import reindent from "./core/reindent";
 
 /**
@@ -9,5 +10,6 @@ import reindent from "./core/reindent";
 export async function preprocess(doc, conf) {
   const respecDocument = await createRespecDocument(doc, conf);
   reindent(respecDocument);
+  await insertStyle(respecDocument);
   return respecDocument;
 }

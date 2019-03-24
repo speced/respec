@@ -8,17 +8,47 @@
 // CONFIGURATION
 //  - noReSpecCSS: if you're using a profile that loads this module but you don't want
 //    the style, set this to true
-import css from "text!../../assets/respec2.css";
 export const name = "core/style";
 
 // Opportunistically inserts the style, with the chance to reduce some FOUC
-const styleElement = document.createElement("style");
-styleElement.id = "respec-mainstyle";
-styleElement.textContent = css;
-document.head.appendChild(styleElement);
+const styleElement =
+  typeof document !== "undefined" ? insertStyle(document, {}) : undefined;
 
-export function run(conf) {
+/**
+ * @return {string}
+ */
+async function loadStyle() {
+  try {
+    return await import("text!../../assets/respec2.css");
+  } catch {
+    const loader = await import("./asset-loader");
+    return loader.loadAssetOnNode("respec2.css");
+  }
+}
+
+/**
+ * @param {Document} document
+ * @param {*} conf
+ */
+async function insertStyle(document, conf) {
   if (conf.noReSpecCSS) {
-    styleElement.remove();
+    return;
+  }
+  const styleElement = document.createElement("style");
+  styleElement.id = "respec-mainstyle";
+  styleElement.textContent = await loadStyle();
+  document.head.appendChild(styleElement);
+  return styleElement;
+}
+
+export async function run(conf) {
+  if (conf.noReSpecCSS) {
+    (await styleElement).remove();
+  }
+}
+
+export default async function({ document, configuration }) {
+  if (!styleElement) {
+    await insertStyle(document, configuration);
   }
 }

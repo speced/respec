@@ -9,3 +9,4 @@ bevy.json
 js/
 !js/profile-w3c-common.js
 !js/shortcut.js
+.vscode/
