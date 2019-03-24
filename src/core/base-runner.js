@@ -31,6 +31,7 @@ function toRunnable(plug) {
       try {
         if (typeof plug.default === "function") {
           await plug.default(respecDoc);
+          resolve();
         } else if (plug.run.length <= 1) {
           await plug.run(respecDoc.configuration);
           resolve();
@@ -60,7 +61,9 @@ export async function runAll(plugs) {
     performance.mark(`${name}-start`);
   }
   await preProcessDone;
-  const runnables = plugs.filter(plug => plug && plug.run).map(toRunnable);
+  const runnables = plugs
+    .filter(plug => plug && (typeof plug.default === "function" || plug.run))
+    .map(toRunnable);
   for (const task of runnables) {
     try {
       await task(respecDoc);
