@@ -29,7 +29,7 @@ function toRunnable(plug) {
         performance.mark(`${name}-start`);
       }
       try {
-        if (plug.default) {
+        if (typeof plug.default === "function") {
           await plug.default(respecDoc);
         } else if (plug.run.length <= 1) {
           await plug.run(respecDoc.configuration);
