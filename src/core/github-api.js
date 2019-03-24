@@ -39,7 +39,7 @@ export async function fetchAndStoreGithubIssues(conf) {
   if (specIssues.length > remainingRequests) {
     const msg =
       `Your spec contains ${specIssues.length} Github issues, ` +
-      `but your current GitHub quota only allows ${remainingRequests} more requests. Some issues will not show up`;
+      `but your current GitHub quota only allows ${remainingRequests} more requests. Some issues will not show up.`;
     pub("warning", msg);
   }
   const issuePromises = [...specIssues]
