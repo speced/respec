@@ -46,4 +46,44 @@ describe("Core — Definition Abbreviations", () => {
       expect(link.getAttribute("href")).toEqual("#dfn-fb")
     );
   });
+  it("correctly parses and abbreviates different Abbreviation syntax", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `
+      <section id="section">
+        <dfn data-abbr>Statement of Purpose (SoP)</dfn>
+        <dfn data-abbr="PoR">Position of Responsibility</dfn>
+        <dfn data-abbr="UI">User Interface</dfn>
+        <div>SoP</div>
+        <div>PoR</div>
+        <div>UI</div>
+      </section>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const divs = doc.querySelectorAll("#section div");
+    const dfns = doc.querySelectorAll("#section dfn");
+
+    const dfnSoP = dfns[0];
+    const dfnPoR = dfns[1];
+    const dfnUI = dfns[2];
+    expect(dfnSoP.dataset.abbr).toEqual("SoP");
+    expect(dfnPoR.dataset.abbr).toEqual("PoR");
+    expect(dfnUI.dataset.abbr).toEqual("UI");
+    expect(dfnSoP.textContent.trim()).toEqual("Statement of Purpose (SoP)");
+    expect(dfnPoR.textContent.trim()).toEqual(
+      "Position of Responsibility (PoR)"
+    );
+    expect(dfnUI.textContent.trim()).toEqual("User Interface (UI)");
+
+    for (const x of Array(3).keys()) {
+      expect(dfns[x].dataset.abbr).toEqual(
+        divs[x].getElementsByTagName("abbr")[0].textContent
+      );
+      expect(
+        dfns[x].textContent
+          .substr(0, dfns[x].textContent.lastIndexOf("("))
+          .trim()
+      ).toEqual(divs[x].getElementsByTagName("abbr")[0].title);
+    }
+  });
 });

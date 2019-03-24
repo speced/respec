@@ -27,29 +27,30 @@ function getAbbreviationFromText(text) {
  * to <dfn data-abbr="PAN">Permanent Account Number (PAN)</dfn>
  * @param {HTMLElement} dfn Element to be parsed.
  */
-function parseAbbreviatedDefinition(dfn) {
+function renderAbbreviatedDefinition(dfn) {
   // checks if text content is already in the form Permanent Account Number (PAN)
   const matched = /\((.*?)\)/.exec(dfn.textContent);
-  if (!matched || !(matched.pop() === dfn.dataset.abbr))
+  if (matched && matched.length === 2) {
+    dfn.dataset.abbr = matched.pop();
+  } else {
     dfn.textContent = dfn.textContent.concat(` (${dfn.dataset.abbr})`);
+  }
 }
 
 export function run() {
   /** @type {NodeListOf<HTMLElement>} */
   const dfns = document.querySelectorAll("dfn[data-abbr]");
   dfns.forEach(dfn => {
-    if (!dfn.hasAttribute("data-abbr")) return;
-
     if (dfn.dataset.abbr === "")
       dfn.dataset.abbr = getAbbreviationFromText(dfn.textContent);
 
-    abbrMap.set(dfn.dataset.abbr, dfn.textContent);
-
-    parseAbbreviatedDefinition(dfn);
+    renderAbbreviatedDefinition(dfn);
 
     const fullForm = dfn.textContent
       .substr(0, dfn.textContent.lastIndexOf("("))
       .trim();
+
+    abbrMap.set(dfn.dataset.abbr, fullForm);
 
     const titles = [
       ...new Set([
