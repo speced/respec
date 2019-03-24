@@ -14,6 +14,9 @@ export function pub(topic, ...data) {
   if (!subscriptions.has(topic)) {
     return; // Nothing to do...
   }
+  if (typeof document === "undefined" && topic === "error") {
+    throw new Error(data[0]);
+  }
   Array.from(subscriptions.get(topic)).forEach(cb => {
     try {
       cb(...data);

@@ -25,21 +25,10 @@ function reindent(text) {
 }
 
 /**
- * @param {Document} document
- */
-function preprocess(document) {
-  for (const pre of document.getElementsByTagName("pre")) {
-    pre.innerHTML = reindent(pre.innerHTML);
-  }
-}
-
-export function run() {
-  preprocess(document);
-}
-
-/**
  * @param {import("../respec-document").RespecDocument} respecDoc
  */
 export default function({ document }) {
-  preprocess(document);
+  for (const pre of document.getElementsByTagName("pre")) {
+    pre.innerHTML = reindent(pre.innerHTML);
+  }
 }
