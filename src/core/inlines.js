@@ -14,7 +14,12 @@
 //  - respecRFC2119: a list of the number of times each RFC2119
 //    key word was used.  NOTE: While each member is a counter, at this time
 //    the counter is not used.
-import { getTextNodes, refTypeFromContext, showInlineWarning } from "./utils";
+import {
+  InsensitiveStringSet,
+  getTextNodes,
+  refTypeFromContext,
+  showInlineWarning,
+} from "./utils";
 import hyperHTML from "hyperhtml";
 import { idlStringToHtml } from "./inline-idl-parser";
 import { renderInlineCitation } from "./render-biblio";
@@ -104,8 +109,9 @@ export function run(conf) {
     // make the document informative
     document.body.classList.add("informative");
   }
-  if (!conf.normativeReferences) conf.normativeReferences = new Set();
-  if (!conf.informativeReferences) conf.informativeReferences = new Set();
+  conf.normativeReferences = new InsensitiveStringSet();
+  conf.informativeReferences = new InsensitiveStringSet();
+
   if (!conf.respecRFC2119) conf.respecRFC2119 = rfc2119Usage;
 
   // PRE-PROCESSING
