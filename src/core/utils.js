@@ -914,4 +914,3 @@ export function msgIdGenerator(namespace, counter = 0) {
     return gen.next().value;
   };
 }
-
