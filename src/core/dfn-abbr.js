@@ -41,8 +41,9 @@ export function run() {
   /** @type {NodeListOf<HTMLElement>} */
   const dfns = document.querySelectorAll("dfn[data-abbr]");
   dfns.forEach(dfn => {
-    if (dfn.dataset.abbr === "")
+    if (dfn.dataset.abbr === "") {
       dfn.dataset.abbr = getAbbreviationFromText(dfn.textContent);
+    }
 
     renderAbbreviatedDefinition(dfn);
 
