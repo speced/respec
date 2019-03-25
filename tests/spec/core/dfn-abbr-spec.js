@@ -15,12 +15,12 @@ describe("Core — Definition Abbreviations", () => {
     const doc = await makeRSDoc(ops);
 
     const dfnFooBar = doc.querySelector("#section dfn");
-    expect(dfnFooBar.id).toEqual("dfn-fb");
-    expect(dfnFooBar.dataset.abbr).toEqual("FB");
-    expect(dfnFooBar.textContent.trim()).toEqual("foo bar (FB)");
+    expect(dfnFooBar.id).toBe("dfn-fb");
+    expect(dfnFooBar.dataset.abbr).toBe("FB");
+    expect(dfnFooBar.textContent.trim()).toBe("foo bar (FB)");
     const linkToDfn = doc.getElementById("dfnlink");
-    expect(linkToDfn.getAttribute("href")).toEqual("#dfn-fb");
-    expect(linkToDfn.querySelector("abbr").textContent.trim()).toEqual("FB");
+    expect(linkToDfn.getAttribute("href")).toBe("#dfn-fb");
+    expect(linkToDfn.querySelector("abbr").textContent.trim()).toBe("FB");
   });
   it("allows different abbreviation combinations to link to dfn", async () => {
     const ops = {
@@ -38,12 +38,12 @@ describe("Core — Definition Abbreviations", () => {
     const doc = await makeRSDoc(ops);
 
     const dfnFooBar = doc.querySelector("#section dfn");
-    expect(dfnFooBar.id).toEqual("dfn-fb");
-    expect(dfnFooBar.dataset.abbr).toEqual("FB");
-    expect(dfnFooBar.textContent.trim()).toEqual("foo bar (FB)");
+    expect(dfnFooBar.id).toBe("dfn-fb");
+    expect(dfnFooBar.dataset.abbr).toBe("FB");
+    expect(dfnFooBar.textContent.trim()).toBe("foo bar (FB)");
     const linkToDfn = doc.querySelectorAll(".dfnlink");
     linkToDfn.forEach(link =>
-      expect(link.getAttribute("href")).toEqual("#dfn-fb")
+      expect(link.getAttribute("href")).toBe("#dfn-fb")
     );
   });
   it("correctly parses and abbreviates different Abbreviation syntax", async () => {
