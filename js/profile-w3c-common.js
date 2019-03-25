@@ -24,8 +24,8 @@ require.config({
       exports: "hljs",
     },
     idb: {
-      exports: 'idb'
-    }
+      exports: "idb",
+    },
   },
 });
 
