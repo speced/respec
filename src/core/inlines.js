@@ -14,7 +14,12 @@
 //  - respecRFC2119: a list of the number of times each RFC2119
 //    key word was used.  NOTE: While each member is a counter, at this time
 //    the counter is not used.
-import { getTextNodes, refTypeFromContext, showInlineWarning } from "./utils";
+import {
+  InsensitiveStringSet,
+  getTextNodes,
+  refTypeFromContext,
+  showInlineWarning,
+} from "./utils";
 import hyperHTML from "hyperhtml";
 import { idlStringToHtml } from "./inline-idl-parser";
 import { renderInlineCitation } from "./render-biblio";
@@ -86,14 +91,27 @@ function inlineAbbrMatches(matched, txt, abbrMap) {
     : hyperHTML`<abbr title="${abbrMap.get(matched)}">${matched}</abbr>`;
 }
 
+/**
+ * @example |varName: type| => <var data-type="type">varName</var>
+ * @example |varName| => <var>varName</var>
+ * @param {string} matched
+ */
+function inlineVariableMatches(matched) {
+  // remove "|" at the beginning and at the end, then split at an optional `:`
+  const matches = matched.slice(1, -1).split(":", 2);
+  const [varName, type] = matches.map(s => s.trim());
+  return hyperHTML`<var data-type="${type}">${varName}</var>`;
+}
+
 export function run(conf) {
   document.normalize();
   if (!document.querySelector("section#conformance")) {
     // make the document informative
     document.body.classList.add("informative");
   }
-  if (!conf.normativeReferences) conf.normativeReferences = new Set();
-  if (!conf.informativeReferences) conf.informativeReferences = new Set();
+  conf.normativeReferences = new InsensitiveStringSet();
+  conf.informativeReferences = new InsensitiveStringSet();
+
   if (!conf.respecRFC2119) conf.respecRFC2119 = rfc2119Usage;
 
   // PRE-PROCESSING
@@ -118,6 +136,7 @@ export function run(conf) {
       "\\b(?:NOT\\s+)?RECOMMENDED\\b",
       "\\bOPTIONAL\\b",
       "(?:{{3}\\s*.*\\s*}{3})", // inline IDL references,
+      "\\B\\|\\w[\\s\\w]*\\w(?:\\s*\\:\\s*\\w+)?\\|\\B", // inline variable regex
       "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])",
       ...(abbrRx ? [abbrRx] : []),
     ].join("|")})`
@@ -138,6 +157,9 @@ export function run(conf) {
       } else if (t.startsWith("[[")) {
         const nodes = inlineBibrefMatches(t, txt, conf);
         df.append(...nodes);
+      } else if (t.startsWith("|")) {
+        const node = inlineVariableMatches(t);
+        df.appendChild(node);
       } else if (abbrMap.has(t)) {
         const node = inlineAbbrMatches(t, txt, abbrMap);
         df.appendChild(node);
