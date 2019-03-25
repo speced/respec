@@ -25,10 +25,9 @@ function findUserURLs(...thingsWithUsers) {
 
 async function toHTML(urls, editors, element, headers) {
   const args = await Promise.all(
-    urls.map(url => fetch(new Request(url, { headers })))
+    urls.map(url => fetch(new Request(url, { headers })).then(r => r.json()))
   );
-  const argsResolved = await Promise.all(args.map(arg => arg.json()));
-  const names = argsResolved
+  const names = args
     .map(user => user.name || user.login)
     .filter(name => !editors.includes(name))
     .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
