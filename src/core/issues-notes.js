@@ -10,10 +10,9 @@
 // numbered to avoid involuntary clashes.
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
-import { addId, joinAnd, parents } from "./utils";
+import { addId, fetchAndCache, joinAnd, parents } from "./utils";
 import css from "text!../../assets/issues-notes.css";
 import { lang as defaultLang } from "../core/l10n";
-import { fetchAndStoreGithubIssues } from "./github-api";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 
@@ -34,6 +33,8 @@ const localizationStrings = {
 const lang = defaultLang in localizationStrings ? defaultLang : "en";
 
 const l10n = localizationStrings[lang];
+
+const MAX_GITHUB_REQUESTS = 60;
 
 /**
  * @typedef {{ type: string, inline: boolean, number: number, title: string }} Report
@@ -203,6 +204,46 @@ function createIssueSummaryEntry(l10nIssue, report, id) {
   `;
 }
 
+async function fetchAndStoreGithubIssues(conf) {
+  const { githubAPI, githubUser, githubToken } = conf;
+  /** @type {NodeListOf<HTMLElement>} */
+  const specIssues = document.querySelectorAll(".issue[data-number]");
+  if (specIssues.length > MAX_GITHUB_REQUESTS) {
+    const msg =
+      `Your spec contains ${specIssues.length} Github issues, ` +
+      `but GitHub only allows ${MAX_GITHUB_REQUESTS} requests. Some issues might not show up.`;
+    pub("warning", msg);
+  }
+  const issuePromises = [...specIssues]
+    .map(elem => Number.parseInt(elem.dataset.number, 10))
+    .filter(issueNumber => issueNumber)
+    .map(async issueNumber => {
+      const issueURL = `${githubAPI}/issues/${issueNumber}`;
+      const headers = {
+        // Get back HTML content instead of markdown
+        // See: https://developer.github.com/v3/media/
+        Accept: "application/vnd.github.v3.html+json",
+      };
+      if (githubUser && githubToken) {
+        const credentials = btoa(`${githubUser}:${githubToken}`);
+        const Authorization = `Basic ${credentials}`;
+        Object.assign(headers, { Authorization });
+      } else if (githubToken) {
+        const Authorization = `token ${githubToken}`;
+        Object.assign(headers, { Authorization });
+      }
+      const request = new Request(issueURL, {
+        mode: "cors",
+        referrerPolicy: "no-referrer",
+        headers,
+      });
+      const response = await fetchAndCache(request);
+      return processResponse(response, issueNumber);
+    });
+  const issues = await Promise.all(issuePromises);
+  return new Map(issues);
+}
+
 function isLight(rgb) {
   const red = (rgb >> 16) & 0xff;
   const green = (rgb >> 8) & 0xff;
@@ -248,6 +289,31 @@ function createLabel(label, repoURL) {
     class="${cssClasses}"
     style="${style}"
     href="${issuesURL.href}">${name}</a>`;
+}
+
+/**
+ * @typedef {{ color: string, name: string }} GitHubLabel
+ * @typedef {{ title: string, number: number, state: string, message: string, body_html: string, labels: GitHubLabel[] }} GitHubIssue
+ *
+ * @param {Response} response
+ * @param {number} issueNumber
+ */
+async function processResponse(response, issueNumber) {
+  // "message" is always error message from GitHub
+  const issue = { title: "", number: issueNumber, state: "", message: "" };
+  try {
+    const json = await response.json();
+    Object.assign(issue, json);
+  } catch (err) {
+    issue.message = `Error JSON parsing issue #${issueNumber} from GitHub.`;
+  }
+  if (!response.ok || issue.message) {
+    const msg = `Error fetching issue #${issueNumber} from GitHub. ${
+      issue.message
+    } (HTTP Status ${response.status}).`;
+    pub("error", msg);
+  }
+  return /** @type {[number, GitHubIssue]} */ ([issueNumber, issue]);
 }
 
 export async function run(conf) {
