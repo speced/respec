@@ -129,16 +129,18 @@ export function calculateLeftPad(text) {
  * @param {String} [opts.corsMode] Optional, the CORS mode to use (see HTML spec).
  * @param {String} [opts.as] Optional, fetch destination type (see fetchDestinations).
  * @param {boolean} [opts.dontRemove] If the hint should remain in the spec after processing.
+ * @param {Document} [doc]
  * @return {HTMLLinkElement} A link element ready to use.
  */
-export function createResourceHint(opts) {
+export function createResourceHint(opts, doc) {
   if (!opts || typeof opts !== "object") {
     throw new TypeError("Missing options");
   }
   if (!resourceHints.has(opts.hint)) {
     throw new TypeError("Invalid resources hint");
   }
-  const url = new URL(opts.href, location.href);
+  const document = doc || window.document;
+  const url = new URL(opts.href, document.location.href);
   const linkElem = document.createElement("link");
   let { href } = url;
   linkElem.rel = opts.hint;

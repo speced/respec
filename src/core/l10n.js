@@ -7,7 +7,7 @@
  */
 export const name = "core/l10n";
 
-const html = document.documentElement;
+const html = typeof document !== "undefined" && document.documentElement;
 if (html && !html.hasAttribute("lang")) {
   html.lang = "en";
   if (!html.hasAttribute("dir")) {

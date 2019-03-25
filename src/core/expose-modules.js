@@ -1,5 +1,5 @@
-const inAmd = !!window.require;
-if (!inAmd) {
+const needAmdLike = typeof window !== "undefined" && !window.require;
+if (needAmdLike) {
   window.require = function(deps, callback) {
     const modules = deps.map(dep => {
       if (!(dep in window.require.modules)) {
@@ -13,7 +13,7 @@ if (!inAmd) {
 }
 
 export function expose(name, object) {
-  if (!inAmd) {
+  if (needAmdLike) {
     window.require.modules[name] = object;
   }
 }

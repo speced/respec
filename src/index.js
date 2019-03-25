@@ -1,6 +1,7 @@
 // @ts-check
 import { createRespecDocument } from "./respec-document";
 import insertStyle from "./core/style";
+import insertW3CStyle from "./w3c/style";
 import reindent from "./core/reindent";
 
 /**
@@ -8,8 +9,9 @@ import reindent from "./core/reindent";
  * @param {*} [conf] a configuration object for preprocessor
  */
 export async function preprocess(doc, conf) {
-  const respecDocument = await createRespecDocument(doc, conf);
-  reindent(respecDocument);
-  await insertStyle(respecDocument);
-  return respecDocument;
+  const respecDoc = await createRespecDocument(doc, conf);
+  reindent(respecDoc);
+  await insertStyle(respecDoc);
+  insertW3CStyle(respecDoc);
+  return respecDoc;
 }

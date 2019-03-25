@@ -1,3 +1,4 @@
+// @ts-check
 /* jshint strict: true, browser:true, jquery: true */
 // Module w3c/style
 // Inserts a link to the appropriate W3C style for the specification's maturity level.
@@ -5,8 +6,11 @@
 //  - specStatus: the short code for the specification's maturity level or type (required)
 
 import { createResourceHint, linkCSS, toKeyValuePairs } from "../core/utils";
-import { pub, sub } from "../core/pubsubhub";
 export const name = "w3c/style";
+
+const headElements =
+  typeof document !== "undefined" ? insertHeadElements(document) : undefined;
+
 function attachFixupScript(doc, version) {
   const script = doc.createElement("script");
   if (location.hash) {
@@ -22,12 +26,16 @@ function attachFixupScript(doc, version) {
   doc.body.appendChild(script);
 }
 
-// Make a best effort to attach meta viewport at the top of the head.
-// Other plugins might subsequently push it down, but at least we start
-// at the right place. When ReSpec exports the HTML, it again moves the
-// meta viewport to the top of the head - so to make sure it's the first
-// thing the browser sees. See js/ui/save-html.js.
-function createMetaViewport() {
+/**
+ * Make a best effort to attach meta viewport at the top of the head.
+ * Other plugins might subsequently push it down, but at least we start
+ * at the right place. When ReSpec exports the HTML, it again moves the
+ * meta viewport to the top of the head - so to make sure it's the first
+ * thing the browser sees. See js/ui/save-html.js.
+ *
+ * @param {Document} document
+ */
+function createMetaViewport(document) {
   const meta = document.createElement("meta");
   meta.name = "viewport";
   const contentProps = {
@@ -39,7 +47,10 @@ function createMetaViewport() {
   return meta;
 }
 
-function createBaseStyle() {
+/**
+ * @param {Document} document
+ */
+function createBaseStyle(document) {
   const link = document.createElement("link");
   link.rel = "stylesheet";
   link.href = "https://www.w3.org/StyleSheets/TR/2016/base.css";
@@ -62,7 +73,10 @@ function selectStyleVersion(styleVersion) {
   return version;
 }
 
-function createResourceHints() {
+/**
+ * @param {Document} document
+ */
+function createResourceHints(document) {
   const resourceHints = [
     {
       hint: "preconnect", // for W3C styles and scripts.
@@ -84,24 +98,28 @@ function createResourceHints() {
       as: "image",
     },
   ]
-    .map(createResourceHint)
+    .map(opts => createResourceHint(opts, document))
     .reduce((frag, link) => {
       frag.appendChild(link);
       return frag;
     }, document.createDocumentFragment());
   return resourceHints;
 }
-// Collect elements for insertion (document fragment)
-const elements = createResourceHints();
 
-// Opportunistically apply base style
-elements.appendChild(createBaseStyle());
-if (!document.head.querySelector("meta[name=viewport]")) {
-  // Make meta viewport the first element in the head.
-  elements.prepend(createMetaViewport());
+function insertHeadElements(document) {
+  // Collect elements for insertion (document fragment)
+  const elements = createResourceHints(document);
+
+  // Opportunistically apply base style
+  elements.appendChild(createBaseStyle(document));
+  if (!document.head.querySelector("meta[name=viewport]")) {
+    // Make meta viewport the first element in the head.
+    elements.prepend(createMetaViewport(document));
+  }
+
+  document.head.prepend(elements);
+  return elements;
 }
-
-document.head.prepend(elements);
 
 function styleMover(linkURL) {
   return exportDoc => {
@@ -110,11 +128,18 @@ function styleMover(linkURL) {
   };
 }
 
-export function run(conf) {
+/**
+ * @param {import("../respec-document").RespecDocument} respecDoc
+ */
+export default function(respecDoc) {
+  const { document, configuration: conf, hub } = respecDoc;
   if (!conf.specStatus) {
     const warn = "`respecConfig.specStatus` missing. Defaulting to 'base'.";
     conf.specStatus = "base";
-    pub("warn", warn);
+    hub.pub("warn", warn);
+  }
+  if (!headElements) {
+    insertHeadElements(document);
   }
 
   let styleFile = "W3C-";
@@ -153,7 +178,7 @@ export function run(conf) {
   const version = selectStyleVersion(conf.useExperimentalStyles || "2016");
   // Attach W3C fixup script after we are done.
   if (version && !conf.noToc) {
-    sub(
+    hub.sub(
       "end-all",
       () => {
         attachFixupScript(document, version);
@@ -166,5 +191,5 @@ export function run(conf) {
   linkCSS(document, finalStyleURL);
   // Make sure the W3C stylesheet is the last stylesheet, as required by W3C Pub Rules.
   const moveStyle = styleMover(finalStyleURL);
-  sub("beforesave", moveStyle);
+  hub.sub("beforesave", moveStyle);
 }
