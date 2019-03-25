@@ -28,7 +28,6 @@ function getAbbreviationFromText(text) {
  * @param {HTMLElement} dfn Element to be parsed.
  */
 function renderAbbreviatedDefinition(dfn) {
-  // checks if text content is already in the form Permanent Account Number (PAN)
   dfn.textContent = dfn.textContent.concat(` (${dfn.dataset.abbr})`);
 }
 
