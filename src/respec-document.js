@@ -1,3 +1,5 @@
+import { PubSubHub } from "./core/pubsubhub";
+
 // @ts-check
 /**
  * @typedef {PromiseParameter<ReturnType<typeof createRespecDocument>>} RespecDocument
@@ -28,5 +30,9 @@ export async function createRespecDocument(doc, conf) {
       "Configuration object required if not given within document"
     );
   }
-  return { document, configuration };
+  return {
+    document,
+    configuration,
+    hub: new PubSubHub(),
+  };
 }

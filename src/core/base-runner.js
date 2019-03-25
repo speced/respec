@@ -56,7 +56,9 @@ function toRunnable(plug) {
 
 export async function runAll(plugs) {
   const respecDoc = await createRespecDocument(document, respecConfig);
-  pub("start-all", respecConfig);
+  const { configuration, hub } = respecDoc;
+  hub.pub("start-all", configuration);
+  pub("start-all", configuration);
   if (canMeasure) {
     performance.mark(`${name}-start`);
   }
@@ -71,9 +73,11 @@ export async function runAll(plugs) {
       console.error(err);
     }
   }
-  pub("plugins-done", respecConfig);
+  hub.pub("plugins-done", configuration);
+  pub("plugins-done", configuration);
   await postProcessDone;
-  pub("end-all", respecConfig);
+  hub.pub("end-all", configuration);
+  pub("end-all", configuration);
   removeReSpec(document);
   if (canMeasure) {
     performance.mark(`${name}-end`);
