@@ -86,6 +86,7 @@ function cleanup(cloneDoc) {
 
   insertions.appendChild(metaGenerator);
   head.prepend(insertions);
+  head.append(head.querySelector(".w3c-move-last"));
   pub("beforesave", documentElement);
 }
 

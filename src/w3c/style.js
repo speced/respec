@@ -5,7 +5,7 @@
 // CONFIGURATION
 //  - specStatus: the short code for the specification's maturity level or type (required)
 
-import { createResourceHint, linkCSS, toKeyValuePairs } from "../core/utils";
+import { createResourceHint, toKeyValuePairs } from "../core/utils";
 export const name = "w3c/style";
 
 const headElements =
@@ -48,12 +48,27 @@ function createMetaViewport(document) {
 }
 
 /**
+ * take a document and a link to CSS and appends
+ * a <link/> element to the head pointing to each
+ *
+ * @param {Document} doc
+ * @param {string} cssUrl
+ */
+function createCssStyle(doc, cssUrl) {
+  const link = doc.createElement("link");
+  link.rel = "stylesheet";
+  link.href = cssUrl;
+  return link;
+}
+
+/**
  * @param {Document} document
  */
 function createBaseStyle(document) {
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = "https://www.w3.org/StyleSheets/TR/2016/base.css";
+  const link = createCssStyle(
+    document,
+    "https://www.w3.org/StyleSheets/TR/2016/base.css"
+  );
   link.classList.add("removeOnSave");
   return link;
 }
@@ -121,13 +136,6 @@ function insertHeadElements(document) {
   return elements;
 }
 
-function styleMover(linkURL) {
-  return exportDoc => {
-    const w3cStyle = exportDoc.querySelector(`head link[href="${linkURL}"]`);
-    exportDoc.querySelector("head").append(w3cStyle);
-  };
-}
-
 /**
  * @param {import("../respec-document").RespecDocument} respecDoc
  */
@@ -178,18 +186,15 @@ export default function(respecDoc) {
   const version = selectStyleVersion(conf.useExperimentalStyles || "2016");
   // Attach W3C fixup script after we are done.
   if (version && !conf.noToc) {
-    hub.sub(
-      "end-all",
-      () => {
-        attachFixupScript(document, version);
-      },
-      { once: true }
-    );
+    hub.sub("end-all", () => attachFixupScript(document, version), {
+      once: true,
+    });
   }
   const finalVersionPath = version ? `${version}/` : "";
-  const finalStyleURL = `https://www.w3.org/StyleSheets/TR/${finalVersionPath}${styleFile}`;
-  linkCSS(document, finalStyleURL);
-  // Make sure the W3C stylesheet is the last stylesheet, as required by W3C Pub Rules.
-  const moveStyle = styleMover(finalStyleURL);
-  hub.sub("beforesave", moveStyle);
+  const finalStyle = createCssStyle(
+    document,
+    `https://www.w3.org/StyleSheets/TR/${finalVersionPath}${styleFile}`
+  );
+  finalStyle.classList.add("w3c-move-last");
+  document.head.appendChild(finalStyle);
 }
