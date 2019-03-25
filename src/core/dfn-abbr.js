@@ -8,25 +8,17 @@ import { registerDefinition } from "./dfn-map";
 export const name = "core/dfn-abbr";
 export const abbrMap = new Map();
 
-/**
- * Generates simple Abbreviations from text passed.
- *
- * @param {String} text A string like "Permanent Account Number".
- * @returns {String} abbr Abbreviation like "PAN"
- */
-function getAbbreviationFromText(text) {
-  return text
-    .match(/\b([a-z])/gi)
-    .join("")
-    .toUpperCase();
-}
-
 export function run() {
   /** @type {NodeListOf<HTMLElement>} */
   const dfns = document.querySelectorAll("dfn[data-abbr]");
   dfns.forEach(dfn => {
     if (dfn.dataset.abbr === "") {
-      dfn.dataset.abbr = getAbbreviationFromText(dfn.textContent);
+      // Generates simple Abbreviations from text passed.
+      // A string like "Permanent Account Number" returns an abbreviation like "PAN"
+      dfn.dataset.abbr = dfn.textContent
+        .match(/\b([a-z])/gi)
+        .join("")
+        .toUpperCase();
     }
 
     dfn.append(` (${dfn.dataset.abbr})`);
