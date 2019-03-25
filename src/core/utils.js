@@ -914,3 +914,53 @@ export function msgIdGenerator(namespace, counter = 0) {
     return gen.next().value;
   };
 }
+
+export class InsensitiveStringSet extends Set {
+  /**
+   * @param {Array<String>} [keys] Optional, initial keys
+   */
+  constructor(keys = []) {
+    super();
+    for (const key of keys) {
+      this.add(key);
+    }
+  }
+  /**
+   * @param {string} key
+   */
+  add(key) {
+    if (!this.has(key) && !this.getCanonicalKey(key)) {
+      return super.add(key);
+    }
+    return this;
+  }
+  /**
+   * @param {string} key
+   */
+  has(key) {
+    return (
+      super.has(key) ||
+      [...this.keys()].some(
+        existingKey => existingKey.toLowerCase() === key.toLowerCase()
+      )
+    );
+  }
+  /**
+   * @param {string} key
+   */
+  delete(key) {
+    return super.has(key)
+      ? super.delete(key)
+      : super.delete(this.getCanonicalKey(key));
+  }
+  /**
+   * @param {string} key
+   */
+  getCanonicalKey(key) {
+    return super.has(key)
+      ? key
+      : [...this.keys()].find(
+          existingKey => existingKey.toLowerCase() === key.toLowerCase()
+        );
+  }
+}

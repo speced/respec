@@ -269,14 +269,20 @@ function addDataCiteToTerms(results, xrefMap, conf) {
         continue;
       }
       if (normative) {
-        conf.normativeReferences.add(cite);
-      } else {
-        const msg =
-          `Adding an informative reference to "${term}" from "${cite}" ` +
-          "in a normative section";
-        const title = "Error: Informative reference in normative section";
-        showInlineWarning(entry.elem, msg, title);
+        // If it was originally informative, we move the existing
+        // key to be normative.
+        const existingKey = conf.informativeReferences.has(cite)
+          ? conf.informativeReferences.getCanonicalKey(cite)
+          : cite;
+        conf.normativeReferences.add(existingKey);
+        conf.informativeReferences.delete(existingKey);
+        continue;
       }
+      const msg =
+        `Adding an informative reference to "${term}" from "${cite}" ` +
+        "in a normative section";
+      const title = "Error: Informative reference in normative section";
+      showInlineWarning(entry.elem, msg, title);
     }
   }
   showErrors(errorCollectors);

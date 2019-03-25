@@ -129,10 +129,12 @@ export async function run(conf) {
       return key.toLowerCase() !== (conf.shortName || "").toLowerCase();
     })
     .forEach(({ isNormative, key }) => {
-      const refSink = isNormative
-        ? conf.normativeReferences
-        : conf.informativeReferences;
-      refSink.add(key);
+      if (!isNormative && !conf.normativeReferences.has(key)) {
+        conf.informativeReferences.add(key);
+        return;
+      }
+      conf.normativeReferences.add(key);
+      conf.informativeReferences.delete(key);
     });
 }
 

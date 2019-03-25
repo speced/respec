@@ -439,12 +439,13 @@ describe("Core — xref", () => {
     const body = `
       <section class="informative" id="test">
         <section>
+          <p>Cite the <a data-cite="URL"></a> non-normative</p>
           <p>informative reference: <a id="valid1">fake inform 1</a> is in spec "local-1"</p>
           <p>informative reference: <a id="valid1n">list</a> is in infra</p>
         </section>
         <section class="normative">
           <p>Informative document: <a id="invalid">bearing angle</a> in normative section</p>
-          <p>Normative reference: <a id="valid5n">URL parser</a> from URL</p>
+          <p>Normative reference: <a id="valid5n">URL parser</a> from "url" (lower case)</p>
           <section>
             <div class="example">
               <p><a id="valid2">fake inform 2</a></p>
@@ -504,7 +505,7 @@ describe("Core — xref", () => {
 
     const normRefs = [...doc.querySelectorAll("#normative-references dt")];
     expect(normRefs.length).toEqual(1); // excludes `css-values` of `#invalid`
-    expect(normRefs.map(r => r.textContent)).toEqual(["[url]"]);
+    expect(normRefs.map(r => r.textContent)).toEqual(["[URL]"]);
 
     const informRefs = [...doc.querySelectorAll("#informative-references dt")];
     expect(informRefs.map(r => r.textContent).join()).toBe(
