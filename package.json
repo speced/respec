@@ -34,7 +34,7 @@
     "exports-loader": "^0.7.0",
     "handlebars": "^4.1.1",
     "highlight.js": "^9.15.6",
-    "idb": "^3.0.2",
+    "idb": "^4.0.0",
     "jasmine-core": "^3.3.0",
     "jasmine-reporters": "^2.3.2",
     "jquery": "^3.3.1",
