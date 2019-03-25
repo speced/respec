@@ -52,16 +52,17 @@ function requestLookup(conf) {
     if (frag) {
       href = new URL(frag, href).href;
     }
-    if (path === null && frag === null) {
-      const cite = hyperHTML`<cite>`;
-      wrapInner(cite, elem);
-    }
+    const cite = document.createElement("cite");
     switch (elem.localName) {
       case "a": {
         if (elem.textContent === "") {
           elem.textContent = title;
         }
         elem.href = href;
+        // ToDo (It creates problem because HTML does not know ehere to place newly created node that is <cite> <a..> </a> </cite>)
+        // if (!path && !frag) {
+        //   wrapInner(cite, elem);
+        // }
         break;
       }
       case "dfn": {
@@ -71,6 +72,10 @@ function requestLookup(conf) {
           elem.append(anchor);
         } else {
           wrapInner(elem, anchor);
+        }
+        if (!path && !frag) {
+          wrapInner(cite, anchor);
+          elem.append(cite);
         }
         break;
       }

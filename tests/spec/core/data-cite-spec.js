@@ -350,4 +350,26 @@ describe("Core — data-cite attribute", () => {
     ).toBeTruthy();
     expect(dahut).toBe(null);
   });
+
+  it("Adds <cite> around <a> when frag and path are missing from <dfn data-cite=''>", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `${makeDefaultBody()}
+        <section>
+          <p id="t1"><dfn data-cite="HTML"></dfn></p>
+          <p id="t2"><dfn data-cite="Fetch"></dfn></p>
+        </section>
+      `,
+    };
+    const doc = await makeRSDoc(ops);
+    let cite = doc.querySelector("#t1 > dfn > cite");
+    expect(cite).toBeTruthy();
+    let dfnA = doc.querySelector("#t1 > dfn > cite > a");
+    expect(dfnA.href).toBe("https://html.spec.whatwg.org/multipage/");
+
+    cite = doc.querySelector("#t2 > dfn > cite");
+    expect(cite).toBeTruthy();
+    dfnA = doc.querySelector("#t2 > dfn > cite > a");
+    expect(dfnA.href).toBe("https://fetch.spec.whatwg.org/");
+  });
 });
