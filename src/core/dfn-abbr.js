@@ -29,12 +29,7 @@ function getAbbreviationFromText(text) {
  */
 function renderAbbreviatedDefinition(dfn) {
   // checks if text content is already in the form Permanent Account Number (PAN)
-  const matched = /\((.*?)\)/.exec(dfn.textContent);
-  if (matched && matched.length === 2) {
-    dfn.dataset.abbr = matched.pop();
-  } else {
-    dfn.textContent = dfn.textContent.concat(` (${dfn.dataset.abbr})`);
-  }
+  dfn.textContent = dfn.textContent.concat(` (${dfn.dataset.abbr})`);
 }
 
 export function run() {

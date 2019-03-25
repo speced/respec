@@ -51,10 +51,10 @@ describe("Core — Definition Abbreviations", () => {
       config: makeBasicConfig(),
       body: `
       <section id="section">
-        <dfn data-abbr>Statement of Purpose (SoP)</dfn>
+        <dfn data-abbr>United States</dfn>
         <dfn data-abbr="PoR">Position of Responsibility</dfn>
         <dfn data-abbr="UI">User Interface</dfn>
-        <div>SoP</div>
+        <div>US</div>
         <div>PoR</div>
         <div>UI</div>
       </section>`,
@@ -63,13 +63,13 @@ describe("Core — Definition Abbreviations", () => {
     const divs = doc.querySelectorAll("#section div");
     const dfns = doc.querySelectorAll("#section dfn");
 
-    const dfnSoP = dfns[0];
+    const dfnUS = dfns[0];
     const dfnPoR = dfns[1];
     const dfnUI = dfns[2];
-    expect(dfnSoP.dataset.abbr).toEqual("SoP");
+    expect(dfnUS.dataset.abbr).toEqual("US");
     expect(dfnPoR.dataset.abbr).toEqual("PoR");
     expect(dfnUI.dataset.abbr).toEqual("UI");
-    expect(dfnSoP.textContent.trim()).toEqual("Statement of Purpose (SoP)");
+    expect(dfnUS.textContent.trim()).toEqual("United States (US)");
     expect(dfnPoR.textContent.trim()).toEqual(
       "Position of Responsibility (PoR)"
     );
