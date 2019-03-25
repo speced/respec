@@ -189,4 +189,51 @@ describe("Core - Structure", () => {
     const anchor = doc.querySelector("#back-to-top a[href='#title']");
     expect(anchor).toBeTruthy();
   });
+
+  it("localizes table of contents", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      htmlAttrs: {
+        lang: "es",
+      },
+      body: `
+      <section id='sotd'>
+        <p>This is required.</p>
+      </section>
+      <section class="informative" id="intro">
+        <h2>Introduction</h2>
+      </section>
+      `,
+    };
+    const doc = await makeRSDoc(ops);
+    const { textContent } = doc.querySelector("#toc h2");
+    expect(doc.documentElement.lang).toBe("es");
+    expect(textContent).toContain("Tabla de Contenidos");
+  });
+
+  it("finds and updates empty anchors correctly", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `
+        <section id='sotd'>
+          <p>Structure of the document.</p>
+        </section>
+        <section>
+          <h2>Sample Interface</h2>
+        </section>
+        <section>
+        <a class="test" href="#sample-interface">    </a>
+        <a class="test" href="#sample-interface">
+        </a>
+        <a class="test" href="#sample-interface">
+                </a>
+        </section>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const anchors = doc.querySelectorAll("a.test");
+    anchors.forEach(anchor => {
+      expect(anchor.classList).toContain("sec-ref");
+      expect(anchor.textContent).toContain("Sample Interface");
+    });
+  });
 });

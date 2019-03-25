@@ -125,7 +125,7 @@ export function calculateLeftPad(text) {
  *
  * @param {Object} opts Configure the resource hint.
  * @param {String} opts.hint The type of hint (see resourceHints).
- * @param {URL|String} opts.href The URL for the resource or origin.
+ * @param {String} opts.href The URL for the resource or origin.
  * @param {String} [opts.corsMode] Optional, the CORS mode to use (see HTML spec).
  * @param {String} [opts.as] Optional, fetch destination type (see fetchDestinations).
  * @param {boolean} [opts.dontRemove] If the hint should remain in the spec after processing.
@@ -913,4 +913,54 @@ export function msgIdGenerator(namespace, counter = 0) {
   return () => {
     return gen.next().value;
   };
+}
+
+export class InsensitiveStringSet extends Set {
+  /**
+   * @param {Array<String>} [keys] Optional, initial keys
+   */
+  constructor(keys = []) {
+    super();
+    for (const key of keys) {
+      this.add(key);
+    }
+  }
+  /**
+   * @param {string} key
+   */
+  add(key) {
+    if (!this.has(key) && !this.getCanonicalKey(key)) {
+      return super.add(key);
+    }
+    return this;
+  }
+  /**
+   * @param {string} key
+   */
+  has(key) {
+    return (
+      super.has(key) ||
+      [...this.keys()].some(
+        existingKey => existingKey.toLowerCase() === key.toLowerCase()
+      )
+    );
+  }
+  /**
+   * @param {string} key
+   */
+  delete(key) {
+    return super.has(key)
+      ? super.delete(key)
+      : super.delete(this.getCanonicalKey(key));
+  }
+  /**
+   * @param {string} key
+   */
+  getCanonicalKey(key) {
+    return super.has(key)
+      ? key
+      : [...this.keys()].find(
+          existingKey => existingKey.toLowerCase() === key.toLowerCase()
+        );
+  }
 }

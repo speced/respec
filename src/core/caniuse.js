@@ -135,7 +135,7 @@ function normalizeConf(conf) {
  * Get stats for canIUse table.
  *
  * @param {Object} caniuseConf    normalized respecConfig.caniuse
- * @return {Object} Can I Use stats
+ * @return {Promise<Object>} Can I Use stats
  * @throws {Error} on failure
  */
 async function fetchAndCacheJson(caniuseConf) {

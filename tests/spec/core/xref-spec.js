@@ -122,7 +122,7 @@ describe("Core — xref", () => {
   it("adds link to unique external terms", async () => {
     const body = `
       <section>
-        <p id="external-link"><a>event handler</a><p>
+        <p id="external-link"><a>event handler</a></p>
         <p id="external-dfn"><dfn class="externalDFN">URL parser</dfn></p>
       </section>`;
     const config = { xref: { url: apiURL }, localBiblio };
@@ -136,6 +136,19 @@ describe("Core — xref", () => {
     const dfn = doc.querySelector("#external-dfn dfn a");
     expect(dfn.href).toEqual(expectedLinks.get("url parser"));
     expect(dfn.classList.contains("respec-offending-element")).toBeFalsy();
+  });
+
+  it("doesn't link auto-filled anchors", async () => {
+    const body = `<section><a id="test" data-cite="credential-management"></a></section>`;
+    const config = { xref: { url: apiURL }, localBiblio };
+    const ops = makeStandardOps(config, body);
+    const doc = await makeRSDoc(ops);
+    const link = doc.getElementById("test");
+    expect(link.classList.contains("respec-offending-element")).toBeFalsy();
+    expect(link.getAttribute("href")).toBe(
+      "https://www.w3.org/TR/credential-management-1/"
+    );
+    expect(link.textContent).toBe("Credential Management Level 1");
   });
 
   it("shows error if external term doesn't exist", async () => {
@@ -230,7 +243,7 @@ describe("Core — xref", () => {
     const five = doc.getElementById("five");
     expect(five.href).toEqual("");
     expect(five.classList.contains("respec-offending-element")).toBeTruthy();
-    expect(five.title).toEqual(`Couldn't find a match for "NOT-FOUND"`);
+    expect(five.title).toEqual("Error: No matching dfn found.");
   });
 
   it("treats terms as local if empty data-cite on parent", async () => {
@@ -426,33 +439,32 @@ describe("Core — xref", () => {
     const body = `
       <section class="informative" id="test">
         <section>
-          <p>informative reference: <a id="valid1">fake inform 1</a></p>
-          <p>normative reference: <a id="valid1n">list</a></p>
+          <p>Cite the <a data-cite="URL"></a> non-normative</p>
+          <p>informative reference: <a id="valid1">fake inform 1</a> is in spec "local-1"</p>
+          <p>informative reference: <a id="valid1n">list</a> is in infra</p>
         </section>
         <section class="normative">
-          <p>an informative reference:
-            <a id="invalid">bearing angle</a> in normative section
-          </p>
-          <p><a id="valid5n">URL parser</a></p>
+          <p>Informative document: <a id="invalid">bearing angle</a> in normative section</p>
+          <p>Normative reference: <a id="valid5n">URL parser</a> from "url" (lower case)</p>
           <section>
             <div class="example">
               <p><a id="valid2">fake inform 2</a></p>
-              <p><a id="valid2n">event handler</a></p>
+              <p><a id="valid2n">event handler</a> from HTML</p>
             </div>
             <div class="note">
               <p><a id="valid3">fake inform 3</a></p>
-              <p><a id="valid3n">dictionary</a></p>
+              <p><a id="valid3n">dictionary</a> from WebIDL</p>
             </div>
             <div class="issue">
               <p><a id="valid4">fake inform 4</a></p>
-              <p><a id="valid4n">ascii alphanumeric</a></p>
+              <p><a id="valid4n">ascii alphanumeric</a> from infra</p>
+              <p>Remains normative: <a>URL parser</a> from URL.</p>
             </div>
-            <p><a id="valid6n">URL parser</a></p>
+            <p class="informative">Remains normative: <a id="valid6n">URL parser</a> from URL.</p>
           </section>
         </section>
       </section>
     `;
-
     const config = { xref: { url: apiURL }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
@@ -493,11 +505,10 @@ describe("Core — xref", () => {
 
     const normRefs = [...doc.querySelectorAll("#normative-references dt")];
     expect(normRefs.length).toEqual(1); // excludes `css-values` of `#invalid`
-    expect(normRefs.map(r => r.textContent)).toEqual(["[url]"]);
+    expect(normRefs.map(r => r.textContent)).toEqual(["[URL]"]);
 
     const informRefs = [...doc.querySelectorAll("#informative-references dt")];
-    expect(informRefs.length).toEqual(7);
-    expect(informRefs.map(r => r.textContent).join()).toEqual(
+    expect(informRefs.map(r => r.textContent).join()).toBe(
       "[html],[infra],[local-1],[local-2],[local-3],[local-4],[webidl]"
     );
   });
