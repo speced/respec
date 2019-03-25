@@ -14,22 +14,11 @@ export const abbrMap = new Map();
  * @param {String} text A string like "Permanent Account Number".
  * @returns {String} abbr Abbreviation like "PAN"
  */
-
 function getAbbreviationFromText(text) {
   return text
     .match(/\b([a-z])/gi)
     .join("")
     .toUpperCase();
-}
-
-/**
- * Parses Elements of form <dfn data-abbr="PAN">Permanent Account Number</dfn>
- * to <dfn data-abbr="PAN">Permanent Account Number (PAN)</dfn>
- * @param {HTMLElement} dfn Element to be parsed.
- */
-function renderAbbreviatedDefinition(dfn) {
-  const abbrNode = document.createTextNode(` (${dfn.dataset.abbr})`);
-  dfn.appendChild(abbrNode);
 }
 
 export function run() {
@@ -40,7 +29,7 @@ export function run() {
       dfn.dataset.abbr = getAbbreviationFromText(dfn.textContent);
     }
 
-    renderAbbreviatedDefinition(dfn);
+    dfn.append(` (${dfn.dataset.abbr})`);
 
     const fullForm = dfn.textContent
       .substr(0, dfn.textContent.lastIndexOf("("))

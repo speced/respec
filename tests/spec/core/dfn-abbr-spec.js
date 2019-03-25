@@ -61,27 +61,25 @@ describe("Core — Definition Abbreviations", () => {
     };
     const doc = await makeRSDoc(ops);
     const divs = doc.querySelectorAll("#section div");
-    const dfns = [...doc.querySelectorAll("#section dfn")];
+    const dfns = doc.querySelectorAll("#section dfn");
     const [dfnUS, dfnPoR, dfnUI] = dfns;
 
-    expect(dfnUS.dataset.abbr).toEqual("US");
-    expect(dfnPoR.dataset.abbr).toEqual("PoR");
-    expect(dfnUI.dataset.abbr).toEqual("UI");
-    expect(dfnUS.textContent.trim()).toEqual("United States (US)");
-    expect(dfnPoR.textContent.trim()).toEqual(
-      "Position of Responsibility (PoR)"
-    );
-    expect(dfnUI.textContent.trim()).toEqual("User Interface (UI)");
+    expect(dfnUS.dataset.abbr).toBe("US");
+    expect(dfnPoR.dataset.abbr).toBe("PoR");
+    expect(dfnUI.dataset.abbr).toBe("UI");
+    expect(dfnUS.textContent.trim()).toBe("United States (US)");
+    expect(dfnPoR.textContent.trim()).toBe("Position of Responsibility (PoR)");
+    expect(dfnUI.textContent.trim()).toBe("User Interface (UI)");
 
     divs.forEach((div, i) => {
       const correspondingDfn = dfns[i];
-      expect(correspondingDfn.dataset.abbr).toEqual(
+      expect(correspondingDfn.dataset.abbr).toBe(
         div.getElementsByTagName("abbr")[0].textContent
       );
       const fullForm = correspondingDfn.textContent
         .substr(0, correspondingDfn.textContent.lastIndexOf("("))
         .trim();
-      expect(div.getElementsByTagName("abbr")[0].title).toEqual(fullForm);
+      expect(div.getElementsByTagName("abbr")[0].title).toBe(fullForm);
     });
   });
 });
