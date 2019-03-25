@@ -21,11 +21,8 @@ export function run() {
         .toUpperCase();
     }
 
+    const fullForm = dfn.textContent.trim();
     dfn.append(` (${dfn.dataset.abbr})`);
-
-    const fullForm = dfn.textContent
-      .substr(0, dfn.textContent.lastIndexOf("("))
-      .trim();
 
     abbrMap.set(dfn.dataset.abbr, fullForm);
 
