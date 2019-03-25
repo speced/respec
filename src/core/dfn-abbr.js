@@ -28,7 +28,8 @@ function getAbbreviationFromText(text) {
  * @param {HTMLElement} dfn Element to be parsed.
  */
 function renderAbbreviatedDefinition(dfn) {
-  dfn.textContent = dfn.textContent.concat(` (${dfn.dataset.abbr})`);
+  const abbrNode = document.createTextNode(` (${dfn.dataset.abbr})`);
+  dfn.appendChild(abbrNode);
 }
 
 export function run() {

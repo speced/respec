@@ -61,11 +61,9 @@ describe("Core — Definition Abbreviations", () => {
     };
     const doc = await makeRSDoc(ops);
     const divs = doc.querySelectorAll("#section div");
-    const dfns = doc.querySelectorAll("#section dfn");
+    const dfns = [...doc.querySelectorAll("#section dfn")];
+    const [dfnUS, dfnPoR, dfnUI] = dfns;
 
-    const dfnUS = dfns[0];
-    const dfnPoR = dfns[1];
-    const dfnUI = dfns[2];
     expect(dfnUS.dataset.abbr).toEqual("US");
     expect(dfnPoR.dataset.abbr).toEqual("PoR");
     expect(dfnUI.dataset.abbr).toEqual("UI");
@@ -75,15 +73,15 @@ describe("Core — Definition Abbreviations", () => {
     );
     expect(dfnUI.textContent.trim()).toEqual("User Interface (UI)");
 
-    for (const x of Array(3).keys()) {
-      expect(dfns[x].dataset.abbr).toEqual(
-        divs[x].getElementsByTagName("abbr")[0].textContent
+    divs.forEach((div, i) => {
+      const correspondingDfn = dfns[i];
+      expect(correspondingDfn.dataset.abbr).toEqual(
+        div.getElementsByTagName("abbr")[0].textContent
       );
-      expect(
-        dfns[x].textContent
-          .substr(0, dfns[x].textContent.lastIndexOf("("))
-          .trim()
-      ).toEqual(divs[x].getElementsByTagName("abbr")[0].title);
-    }
+      const fullForm = correspondingDfn.textContent
+        .substr(0, correspondingDfn.textContent.lastIndexOf("("))
+        .trim();
+      expect(div.getElementsByTagName("abbr")[0].title).toEqual(fullForm);
+    });
   });
 });
