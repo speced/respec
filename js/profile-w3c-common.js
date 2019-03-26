@@ -23,6 +23,9 @@ require.config({
     highlight: {
       exports: "hljs",
     },
+    idb: {
+      exports: "idb",
+    },
   },
 });
 
@@ -43,6 +46,7 @@ define([
   "./w3c/headers",
   "./w3c/abstract",
   "./core/data-transform",
+  "./core/dfn-abbr",
   "./core/inlines",
   "./w3c/conformance",
   "./core/dfn",
