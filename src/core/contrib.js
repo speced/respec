@@ -4,7 +4,7 @@
 // #gh-commenters: people having contributed comments to issues.
 // #gh-contributors: people whose PR have been merged.
 // Spec editors get filtered out automatically.
-import { fetchIndex, getRateLimit, githubRequestHeaders } from "./github-api";
+import { fetchIndex, checkLimitReached, githubRequestHeaders } from "./github-api";
 import { flatten, joinAnd } from "./utils";
 import { pub } from "./pubsubhub";
 export const name = "core/contrib";
@@ -25,7 +25,10 @@ function findUserURLs(...thingsWithUsers) {
 
 async function toHTML(urls, editors, element, headers) {
   const args = await Promise.all(
-    urls.map(url => fetch(new Request(url, { headers })).then(r => r.json()))
+    urls.map(url => fetch(new Request(url, { headers })).then(r => {
+      checkLimitReached(r);
+      return r.json()
+    }))
   );
   const names = args
     .map(user => user.name || user.login)
@@ -69,14 +72,14 @@ export async function run(conf) {
   const editors = conf.editors.map(nameProp);
   const commenterUrls = ghCommenters ? findUserURLs(issues, comments) : [];
   const contributorUrls = ghContributors ? contributors.map(urlProp) : [];
-  const remainingRequests = await getRateLimit(conf);
-  if (commenterUrls.length + contributorUrls.length > remainingRequests) {
-    const msg =
-      `Your GitHub Repository contains ${commenterUrls.length +
-        contributorUrls.length} contributors and commenters` +
-      `but your current GitHub quota only allows ${remainingRequests} more requests. Some contributors will not show up`;
-    pub("warning", msg);
-  }
+  // const remainingRequests = await getRateLimit(conf);
+  // if (commenterUrls.length + contributorUrls.length > remainingRequests) {
+  //   const msg =
+  //     `Your GitHub Repository contains ${commenterUrls.length +
+  //       contributorUrls.length} contributors and commenters` +
+  //     `but your current GitHub quota only allows ${remainingRequests} more requests. Some contributors will not show up`;
+  //   pub("warning", msg);
+  // }
   try {
     await Promise.all(
       toHTML(commenterUrls, editors, ghCommenters, headers),

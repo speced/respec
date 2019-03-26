@@ -20,6 +20,15 @@ export function githubRequestHeaders(conf) {
   return headers;
 }
 
+export function checkLimitReached(response){
+  const {headers, status} = response;
+  if (status === 403 && headers.get("X-RateLimit-Remaining") === "0") {
+    console.log("limit reached");
+    return true;
+  }
+  return false;
+}
+
 export async function getRateLimit(conf) {
   const headers = githubRequestHeaders(conf);
   const request = new Request(`https://api.github.com/rate_limit`, {
@@ -34,7 +43,7 @@ export async function getRateLimit(conf) {
 export async function fetchAndStoreGithubIssues(conf) {
   const { githubAPI } = conf;
   const specIssues = document.querySelectorAll(".issue[data-number]");
-  let remainingRequests = await getRateLimit(conf);
+  // let remainingRequests = await getRateLimit(conf);
   if (specIssues.length > remainingRequests) {
     const msg =
       `Your spec contains ${specIssues.length} Github issues, ` +
@@ -54,7 +63,7 @@ export async function fetchAndStoreGithubIssues(conf) {
         headers,
       });
       const response = await fetchAndCache(request);
-      remainingRequests--;
+      // remainingRequests--;
       return processResponse(response, issueNumber);
     });
   const issues = await Promise.all(issuePromises);
@@ -71,6 +80,7 @@ export async function fetchAndStoreGithubIssues(conf) {
  */
 async function processResponse(response, issueNumber) {
   // "message" is always error message from GitHub
+  checkLimitReached(response);
   const issue = { title: "", number: issueNumber, state: "", message: "" };
   try {
     const json = await response.json();
