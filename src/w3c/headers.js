@@ -565,6 +565,16 @@ export function run(conf) {
       : !conf.isRecTrack &&
         conf.maturity == "WD" &&
         conf.specStatus !== "FPWD-NOTE";
+  if (conf.noRecTrack && recTrackStatus.includes(conf.specStatus)) {
+    pub(
+      "error",
+      `Document configured as [\`noRecTrack\`](https://github.com/w3c/respec/wiki/noRecTrack), but its status ("${
+        conf.specStatus
+      }") puts it on the W3C Rec Track. Status cannot be any of: ${recTrackStatus.join(
+        ", "
+      )}. [More info](https://github.com/w3c/respec/wiki/noRecTrack).`
+    );
+  }
   if (conf.isIGNote && !conf.charterDisclosureURI)
     pub(
       "error",
