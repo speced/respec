@@ -12,6 +12,10 @@ const localizationStrings = {
   nl: {
     informative: "Dit onderdeel is niet normatief.",
   },
+  es: {
+    informative: "Esta sección no es normativa.",
+  },
+  pt: "Essa seção não é normativa.",
 };
 
 const lang = defaultLang in localizationStrings ? defaultLang : "en";
