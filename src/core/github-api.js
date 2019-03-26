@@ -21,7 +21,6 @@ export function githubRequestHeaders(conf) {
 }
 
 export function checkLimitReached(response) {
-  if (response.ok) return false;
   const { headers, status } = response;
   if (status === 403 && headers.get("X-RateLimit-Remaining") === "0") {
     if (typeof checkLimitReached.warned === "undefined") {
@@ -32,7 +31,7 @@ export function checkLimitReached(response) {
     }
     return true;
   }
-  // Not sure we can reach here.
+  return false;
 }
 
 export async function fetchAndStoreGithubIssues(conf) {

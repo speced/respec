@@ -32,7 +32,7 @@ async function toHTML(urls, editors, element, headers) {
     urls
       .map(url =>
         fetch(new Request(url, { headers })).then(r => {
-          if (checkLimitReached(r)) return;
+          if (checkLimitReached(r)) return null;
           return r.json();
         })
       )
