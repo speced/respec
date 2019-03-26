@@ -35,17 +35,6 @@ export function checkLimitReached(response) {
   // Not sure we can reach here.
 }
 
-export async function getRateLimit(conf) {
-  const headers = githubRequestHeaders(conf);
-  const request = new Request(`https://api.github.com/rate_limit`, {
-    mode: "cors",
-    referrerPolicy: "no-referrer",
-    headers,
-  });
-  const responseJSON = await fetch(request).then(r => r.json());
-  return responseJSON.rate.remaining;
-}
-
 export async function fetchAndStoreGithubIssues(conf) {
   const { githubAPI } = conf;
   const specIssues = document.querySelectorAll(".issue[data-number]");
