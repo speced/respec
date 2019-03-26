@@ -11,7 +11,12 @@ describe("Core — Issues and Notes", () => {
       </section>
       <section id="issue-summary"></section>
     `;
-    const ops = makeStandardOps({}, body);
+    const ops = makeStandardOps(
+      {
+        githubRateLimitAPI: "${location.origin}/tests/data/ratelimit.json",
+      },
+      body
+    );
     const doc = await makeRSDoc(ops);
     const issues = doc.querySelectorAll(".issue");
     expect(issues.length).toBe(3);

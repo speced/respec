@@ -21,8 +21,11 @@ export function githubRequestHeaders(conf) {
 }
 
 export async function getRateLimit(conf) {
+  const githubRateLimitAPI = conf.githubRateLimitAPI
+    ? conf.githubRateLimitAPI
+    : "https://api.github.com/rate_limit";
   const headers = githubRequestHeaders(conf);
-  const request = new Request(`https://api.github.com/rate_limit`, {
+  const request = new Request(githubRateLimitAPI, {
     mode: "cors",
     referrerPolicy: "no-referrer",
     headers,
