@@ -461,17 +461,18 @@ export function run(conf) {
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
-  Object.defineProperty(conf, "wgId", {
-    get() {
-      if (!this.hasOwnProperty("wgPatentURI")) {
-        return "";
-      }
-      // it's always at "pp-impl" + 1
-      const urlParts = this.wgPatentURI.split("/");
-      const pos = urlParts.findIndex(item => item === "pp-impl") + 1;
-      return urlParts[pos] || "";
-    },
-  });
+  if (conf.hasOwnProperty("wgPatentURI") && !Array.isArray(conf.wgPatentURI)) {
+    Object.defineProperty(conf, "wgId", {
+      get() {
+        // it's always at "pp-impl" + 1
+        const urlParts = this.wgPatentURI.split("/");
+        const pos = urlParts.findIndex(item => item === "pp-impl") + 1;
+        return urlParts[pos] || "";
+      },
+    });
+  } else {
+    conf.wgId = conf.wgId ? conf.wgId : "";
+  }
   // configuration done - yay!
 
   // insert into document
