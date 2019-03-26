@@ -1,6 +1,6 @@
 // Karma configuration
 // Generated on Fri Feb 26 2016 13:09:51 GMT+1100 (AEDT)
-/*globals module, require, process*/
+/* globals module, require, process */
 "use strict";
 module.exports = function(config) {
   const options = {
@@ -122,7 +122,7 @@ module.exports = function(config) {
     autoWatch: true,
 
     // See "detectBrowsers"
-    //browsers: ["Chrome", "Safari", "Firefox"],
+    // browsers: ["Chrome", "Safari", "Firefox"],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
