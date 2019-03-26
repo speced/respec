@@ -23,6 +23,9 @@ require.config({
     highlight: {
       exports: "hljs",
     },
+    idb: {
+      exports: "idb",
+    },
   },
 });
 
