@@ -1,31 +1,15 @@
 import html from "hyperhtml";
 
 export default (conf, opts) => {
-  const isPreview = conf.isPreview ? renderPreview(conf) : "";
   return html`
     <h2>${conf.l10n.sotd}</h2>
-    ${isPreview}
+    ${conf.isPreview ? renderPreview(conf) : ""}
     ${conf.isUnofficial
-      ? html`
-          <p>
-            This document is draft of a potential specification. It has no
-            official standing of any kind and does not represent the support or
-            consensus of any standards organization.
-          </p>
-          ${opts.additionalContent}
-        `
+      ? renderIsUnofficial(opts)
       : conf.isTagFinding
       ? opts.additionalContent
       : conf.isNoTrack
-      ? html`
-          <p>
-            This document is merely a W3C-internal
-            ${conf.isMO ? "member-confidential" : ""} document. It has no
-            official standing of any kind and does not represent consensus of
-            the W3C Membership.
-          </p>
-          ${opts.additionalContent}
-        `
+      ? renderIsNoTrack(conf, opts)
       : html`
           <p><em>${[conf.l10n.status_at_publication]}</em></p>
           ${conf.isSubmission
@@ -156,6 +140,31 @@ function renderPreview(conf) {
   `;
 }
 
+function renderIsUnofficial(opts) {
+  const { additionalContent } = opts;
+  return html`
+    <p>
+      This document is draft of a potential specification. It has no official
+      standing of any kind and does not represent the support or consensus of
+      any standards organization.
+    </p>
+    ${additionalContent}
+  `;
+}
+
+function renderIsNoTrack(conf, opts) {
+  const { isMO } = conf;
+  const { additionalContent } = opts;
+  return html`
+    <p>
+      This document is merely a W3C-internal
+      ${isMO ? "member-confidential" : ""} document. It has no official standing
+      of any kind and does not represent consensus of the W3C Membership.
+    </p>
+    ${additionalContent}
+  `;
+}
+
 function renderImplementationReportURI(conf) {
   const { implementationReportURI } = conf;
   return html`
@@ -257,7 +266,6 @@ function renderDeliverer(conf) {
     </p>
   `;
 }
-
 
 function noteForSubmission(conf, opts) {
   return html`
