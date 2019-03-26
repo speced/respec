@@ -61,7 +61,7 @@ define([
   "./core/contrib",
   "./core/fix-headers",
   "./core/structure",
-  "./w3c/informative",
+  "./core/informative",
   "./core/id-headers",
   "./core/caniuse",
   "./ui/save-html",
