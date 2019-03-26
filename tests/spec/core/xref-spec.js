@@ -4,14 +4,15 @@ describe("Core — xref", () => {
 
   let cache;
   beforeAll(async () => {
-    const { openDb } = await new Promise(resolve =>
-      require(["deps/idb"], resolve)
-    );
+    await new Promise(resolve => require(["deps/idb"], resolve));
+    const { openDB } = window.idb;
     const { IDBKeyVal } = await new Promise(resolve =>
       require(["core/utils"], resolve)
     );
-    const idb = await openDb("xref", 1, upgradeDB => {
-      upgradeDB.createObjectStore("xrefs");
+    const idb = await openDB("xref", 1, {
+      upgrade(db) {
+        db.createObjectStore("xrefs");
+      },
     });
     cache = new IDBKeyVal(idb, "xrefs");
   });
