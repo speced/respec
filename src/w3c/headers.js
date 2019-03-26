@@ -461,17 +461,18 @@ export function run(conf) {
   conf.dashDate = ISODate.format(conf.publishDate);
   conf.publishISODate = conf.publishDate.toISOString();
   conf.shortISODate = ISODate.format(conf.publishDate);
-  Object.defineProperty(conf, "wgId", {
-    get() {
-      if (!this.hasOwnProperty("wgPatentURI")) {
-        return "";
-      }
-      // it's always at "pp-impl" + 1
-      const urlParts = this.wgPatentURI.split("/");
-      const pos = urlParts.findIndex(item => item === "pp-impl") + 1;
-      return urlParts[pos] || "";
-    },
-  });
+  if (conf.hasOwnProperty("wgPatentURI") && !Array.isArray(conf.wgPatentURI)) {
+    Object.defineProperty(conf, "wgId", {
+      get() {
+        // it's always at "pp-impl" + 1
+        const urlParts = this.wgPatentURI.split("/");
+        const pos = urlParts.findIndex(item => item === "pp-impl") + 1;
+        return urlParts[pos] || "";
+      },
+    });
+  } else {
+    conf.wgId = conf.wgId ? conf.wgId : "";
+  }
   // configuration done - yay!
 
   // insert into document
@@ -559,12 +560,22 @@ export function run(conf) {
   }
   conf.perEnd = validateDateAndRecover(conf, "perEnd");
   conf.humanPEREnd = W3CDate.format(conf.perEnd);
-
-  conf.recNotExpected = conf.recNotExpected
-    ? true
-    : !conf.isRecTrack &&
-      conf.maturity == "WD" &&
-      conf.specStatus !== "FPWD-NOTE";
+  conf.recNotExpected =
+    conf.noRecTrack || conf.recNotExpected
+      ? true
+      : !conf.isRecTrack &&
+        conf.maturity == "WD" &&
+        conf.specStatus !== "FPWD-NOTE";
+  if (conf.noRecTrack && recTrackStatus.includes(conf.specStatus)) {
+    pub(
+      "error",
+      `Document configured as [\`noRecTrack\`](https://github.com/w3c/respec/wiki/noRecTrack), but its status ("${
+        conf.specStatus
+      }") puts it on the W3C Rec Track. Status cannot be any of: ${recTrackStatus.join(
+        ", "
+      )}. [More info](https://github.com/w3c/respec/wiki/noRecTrack).`
+    );
+  }
   if (conf.isIGNote && !conf.charterDisclosureURI)
     pub(
       "error",
