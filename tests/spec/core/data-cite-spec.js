@@ -352,16 +352,15 @@ describe("Core — data-cite attribute", () => {
   });
 
   it("Adds <cite> around <a> when frag and path are missing from <dfn data-cite=''>", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
-        <section>
-          <p id="t1"><dfn data-cite="HTML"></dfn></p>
-          <p id="t2"><dfn data-cite="Fetch"></dfn></p>
-        </section>
-      `,
-    };
+    const body = `
+      <section>
+        <p id="t1"><dfn data-cite="HTML"></dfn></p>
+        <p id="t2"><dfn data-cite="Fetch"></dfn></p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
+
     let cite = doc.querySelector("#t1 > dfn > cite");
     expect(cite).toBeTruthy();
     let dfnA = doc.querySelector("#t1 > dfn > cite > a");
@@ -374,16 +373,15 @@ describe("Core — data-cite attribute", () => {
   });
 
   it("Adds <cite> around <a> when frag and path are missing from <a data-cite='some-spec'>", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
-        <section>
-          <p id="t1"><a data-cite="HTML"></a></p>
-          <p id="t2"><a data-cite="Fetch"></a></p>
-        </section>
-      `,
-    };
+    const body = `
+      <section>
+        <p id="t1"><a data-cite="HTML"></a></p>
+        <p id="t2"><a data-cite="Fetch"></a></p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
+
     let cite = doc.querySelector("#t1 > cite");
     expect(cite).toBeTruthy();
     let a = doc.querySelector("#t1 > cite > a");
