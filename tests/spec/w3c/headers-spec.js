@@ -1287,7 +1287,7 @@ describe("W3C — Headers", () => {
     const ops = makeStandardOps();
     const newProps = {
       noRecTrack: true,
-      status: "WD",
+      status: "ED",
     };
     Object.assign(ops.config, newProps);
     const doc = await makeRSDoc(ops);
