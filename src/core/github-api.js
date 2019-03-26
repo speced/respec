@@ -20,32 +20,27 @@ export function githubRequestHeaders(conf) {
   return headers;
 }
 
-export async function getRateLimit(conf) {
-  const headers = githubRequestHeaders(conf);
-  const request = new Request(`https://api.github.com/rate_limit`, {
-    mode: "cors",
-    referrerPolicy: "no-referrer",
-    headers,
-  });
-  const responseJSON = await fetch(request).then(r => r.json());
-  return responseJSON.rate.remaining;
+export function checkLimitReached(response) {
+  const { headers, status } = response;
+  if (status === 403 && headers.get("X-RateLimit-Remaining") === "0") {
+    if (typeof checkLimitReached.warned === "undefined") {
+      checkLimitReached.warned = true;
+      const msg = `You have run out of github requests. Some github assets will not show up.`;
+      pub("warning", msg);
+      window.pub = pub;
+    }
+    return true;
+  }
+  return false;
 }
 
 export async function fetchAndStoreGithubIssues(conf) {
   const { githubAPI } = conf;
   const specIssues = document.querySelectorAll(".issue[data-number]");
-  let remainingRequests = await getRateLimit(conf);
-  if (specIssues.length > remainingRequests) {
-    const msg =
-      `Your spec contains ${specIssues.length} Github issues, ` +
-      `but your current GitHub quota only allows ${remainingRequests} more requests. Some issues will not show up.`;
-    pub("warning", msg);
-  }
   const issuePromises = [...specIssues]
     .map(elem => Number.parseInt(elem.dataset.number, 10))
     .filter(issueNumber => issueNumber)
     .map(async issueNumber => {
-      if (!remainingRequests) return;
       const issueURL = `${githubAPI}/issues/${issueNumber}`;
       const headers = githubRequestHeaders(conf);
       const request = new Request(issueURL, {
@@ -54,7 +49,6 @@ export async function fetchAndStoreGithubIssues(conf) {
         headers,
       });
       const response = await fetchAndCache(request);
-      remainingRequests--;
       return processResponse(response, issueNumber);
     });
   const issues = await Promise.all(issuePromises);
@@ -71,6 +65,7 @@ export async function fetchAndStoreGithubIssues(conf) {
  */
 async function processResponse(response, issueNumber) {
   // "message" is always error message from GitHub
+  checkLimitReached(response);
   const issue = { title: "", number: issueNumber, state: "", message: "" };
   try {
     const json = await response.json();
