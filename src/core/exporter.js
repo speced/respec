@@ -35,7 +35,7 @@ export function rsDocToDataURL(mimeType, doc = document) {
 
 function serialize(format, doc) {
   const cloneDoc = doc.cloneNode(true);
-  cleanup(cloneDoc);
+  cleanup(cloneDoc, { pub });
   let result = "";
   switch (format) {
     case "xml":
@@ -51,7 +51,12 @@ function serialize(format, doc) {
   return result;
 }
 
-function cleanup(cloneDoc) {
+/**
+ * @param {Document} cloneDoc
+ * @param {object} hub
+ * @param {Function} hub.pub
+ */
+export function cleanup(cloneDoc, hub) {
   const { head, body, documentElement } = cloneDoc;
   cleanupHyper(cloneDoc);
 
@@ -87,9 +92,12 @@ function cleanup(cloneDoc) {
   insertions.appendChild(metaGenerator);
   head.prepend(insertions);
   head.append(head.querySelector(".w3c-move-last"));
-  pub("beforesave", documentElement);
+  hub.pub("beforesave", cloneDoc);
 }
 
+/**
+ * @param {Document} doc
+ */
 function cleanupHyper({ documentElement: node }) {
   // collect first, or walker will cease too early
   /** @param {Comment} comment */
