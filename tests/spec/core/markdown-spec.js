@@ -112,7 +112,7 @@ describe("Core - Markdown", () => {
         ----
 
         `;
-    const ops = makeStandardOps({ format: "markdown" }, body);    
+    const ops = makeStandardOps({ format: "markdown" }, body);
     const doc = await makeRSDoc(ops);
     const foo = doc.querySelector("#foo h2");
     expect(foo.textContent).toEqual("1. Foo");
