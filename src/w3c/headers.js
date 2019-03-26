@@ -559,12 +559,12 @@ export function run(conf) {
   }
   conf.perEnd = validateDateAndRecover(conf, "perEnd");
   conf.humanPEREnd = W3CDate.format(conf.perEnd);
-
-  conf.recNotExpected = conf.recNotExpected
-    ? true
-    : !conf.isRecTrack &&
-      conf.maturity == "WD" &&
-      conf.specStatus !== "FPWD-NOTE";
+  conf.recNotExpected =
+    conf.noRecTrack || conf.recNotExpected
+      ? true
+      : !conf.isRecTrack &&
+        conf.maturity == "WD" &&
+        conf.specStatus !== "FPWD-NOTE";
   if (conf.isIGNote && !conf.charterDisclosureURI)
     pub(
       "error",
