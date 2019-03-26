@@ -10,7 +10,7 @@ import {
   showInlineError,
   showInlineWarning,
 } from "./utils";
-import { openDb } from "idb";
+import { openDB } from "idb";
 
 const API_URL = new URL("https://respec.org/xref");
 const IDL_TYPES = new Set([
@@ -33,8 +33,10 @@ const CACHE_MAX_AGE = 86400000; // 24 hours
  * @param {Array:Elements} elems possibleExternalLinks
  */
 export async function run(conf, elems) {
-  const idb = await openDb("xref", 1, upgradeDB => {
-    upgradeDB.createObjectStore("xrefs");
+  const idb = await openDB("xref", 1, {
+    upgrade(db) {
+      db.createObjectStore("xrefs");
+    },
   });
   const cache = new IDBKeyVal(idb, "xrefs");
   const { xref } = conf;
@@ -201,6 +203,26 @@ async function fetchFromNetwork(keys, url) {
 }
 
 /**
+ * Figures out from the tree structure if the reference is
+ * normative (true) or informative (false).
+ * @param {HTMLElement} elem
+ */
+function isNormative(elem) {
+  const closestNormative = elem.closest(".normative");
+  const closestInform = elem.closest(nonNormativeSelector);
+  if (!closestInform || elem === closestNormative) {
+    return true;
+  } else if (
+    closestNormative &&
+    closestInform &&
+    closestInform.contains(closestNormative)
+  ) {
+    return true;
+  }
+  return false;
+}
+
+/**
  * adds data-cite attributes to elems
  * for each term from conf.xref[term] for which results are found.
  * @param {Object} query query sent to server
@@ -217,12 +239,12 @@ function addDataCiteToTerms(results, xrefMap, conf) {
   };
 
   for (const [term, entries] of xrefMap) {
-    entries.forEach(entry => {
+    for (const entry of entries) {
       const result = disambiguate(results[term], entry, term);
       const { elem } = entry;
       if (result.error) {
         collectErrors(term, elem, result, errorCollectors);
-        return;
+        continue;
       }
       const { uri, spec: cite, normative } = result;
       const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
@@ -240,25 +262,30 @@ function addDataCiteToTerms(results, xrefMap, conf) {
       });
 
       // add specs for citation (references section)
-      const closestInform = elem.closest(nonNormativeSelector);
-      if (
-        closestInform &&
-        (!elem.closest(".normative") ||
-          !closestInform.querySelector(".normative"))
-      ) {
-        conf.informativeReferences.add(cite);
-      } else {
-        if (normative) {
-          conf.normativeReferences.add(cite);
-        } else {
-          const msg =
-            `Adding an informative reference to "${term}" from "${cite}" ` +
-            "in a normative section";
-          const title = "Error: Informative reference in normative section";
-          showInlineWarning(entry.elem, msg, title);
+      const isNormRef = isNormative(elem);
+      if (!isNormRef) {
+        // Only add it if not already normative...
+        if (!conf.normativeReferences.has(cite)) {
+          conf.informativeReferences.add(cite);
         }
+        continue;
       }
-    });
+      if (normative) {
+        // If it was originally informative, we move the existing
+        // key to be normative.
+        const existingKey = conf.informativeReferences.has(cite)
+          ? conf.informativeReferences.getCanonicalKey(cite)
+          : cite;
+        conf.normativeReferences.add(existingKey);
+        conf.informativeReferences.delete(existingKey);
+        continue;
+      }
+      const msg =
+        `Adding an informative reference to "${term}" from "${cite}" ` +
+        "in a normative section";
+      const title = "Error: Informative reference in normative section";
+      showInlineWarning(entry.elem, msg, title);
+    }
   }
   showErrors(errorCollectors);
 }

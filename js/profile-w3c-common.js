@@ -20,8 +20,8 @@ require.config({
     shortcut: {
       exports: "shortcut",
     },
-    highlight: {
-      exports: "hljs",
+    idb: {
+      exports: "idb",
     },
   },
 });
@@ -43,6 +43,7 @@ define([
   "./w3c/headers",
   "./w3c/abstract",
   "./core/data-transform",
+  "./core/dfn-abbr",
   "./core/inlines",
   "./w3c/conformance",
   "./core/dfn",
@@ -61,7 +62,7 @@ define([
   "./core/contrib",
   "./core/fix-headers",
   "./core/structure",
-  "./w3c/informative",
+  "./core/informative",
   "./core/id-headers",
   "./core/caniuse",
   "./ui/save-html",

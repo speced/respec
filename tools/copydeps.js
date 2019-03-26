@@ -18,7 +18,7 @@ const srcDesMap = [
   ["./node_modules/text/text.js", "./js/deps/"],
   ["./node_modules/webidl2/dist/webidl2.js", "./js/deps/"],
   ["./node_modules/pluralize/pluralize.js", "./js/deps/"],
-  ["./node_modules/idb/build/idb.js", "./js/deps/"],
+  ["./node_modules/idb/build/iife/with-async-ittr-min.js", "./js/deps/idb.js"],
 ];
 
 const deprecated = [
