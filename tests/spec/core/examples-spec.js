@@ -2,12 +2,12 @@
 describe("Core — Examples", () => {
   afterAll(flushIframes);
   it("processes examples", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}<section>
-          <pre class='example' title='EX'>\n  {\n    CONTENT\n  }\n  </pre>
-        </section>`,
-    };
+    const body = `
+      <section>
+        <pre class='example' title='EX'>\n  {\n    CONTENT\n  }\n  </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const example = doc.querySelector("div.example pre");
     const div = example.closest("div");
@@ -25,12 +25,12 @@ describe("Core — Examples", () => {
   });
 
   it("processes aside examples", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}<article>
-           <aside class='example' title='EX'>\n{\n  CONTENT\n}\n  </aside>
-         </article>`,
-    };
+    const body = `
+      <article>
+        <aside class='example' title='EX'>\n{\n  CONTENT\n}\n  </aside>
+      </article>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const example = doc.querySelector("aside.example");
     expect(example.id).toBe("example-1-ex");
@@ -47,21 +47,20 @@ describe("Core — Examples", () => {
     );
   });
   it("processes children of aside examples", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
-           <aside class="example">
-            <pre class="js">
-            // Whitespace before this text should be removed
-            </pre>
-            <pre>
-                  // this one should also have its whitespace removed
-            </pre>
-            <pre>
-                                this one should also have its whitespace removed
-            </pre>
-           </aside>`,
-    };
+    const body = `
+      <aside class="example">
+      <pre class="js">
+      // Whitespace before this text should be removed
+      </pre>
+      <pre>
+            // this one should also have its whitespace removed
+      </pre>
+      <pre>
+                          this one should also have its whitespace removed
+      </pre>
+      </aside>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const example = doc.querySelectorAll("code.hljs");
     expect(example.length).toBe(3);
@@ -147,20 +146,19 @@ describe("Core — Examples", () => {
     const mybutton = doc.getElementById("mybutton");
     expect(mybutton.onclick).toBeTruthy();
   });
-});
-
-it("localizes examples", async () => {
-  const ops = {
-    config: makeBasicConfig(),
-    htmlAttrs: {
-      lang: "nl",
-    },
-    body: `<section>
-        <pre class="example"> This is an example </pre>
-      </section>`,
-  };
-  const doc = await makeRSDoc(ops);
-  const { textContent } = doc.querySelector(".example");
-  expect(doc.documentElement.lang).toBe("nl");
-  expect(textContent).toContain("Voorbeeld");
+  it("localizes examples", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      htmlAttrs: {
+        lang: "nl",
+      },
+      body: `<section>
+          <pre class="example"> This is an example </pre>
+        </section>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const { textContent } = doc.querySelector(".example");
+    expect(doc.documentElement.lang).toBe("nl");
+    expect(textContent).toContain("Voorbeeld");
+  });
 });
