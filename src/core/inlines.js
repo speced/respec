@@ -20,9 +20,11 @@ import {
   refTypeFromContext,
   showInlineWarning,
 } from "./utils";
+import { abbrMap } from "./dfn-abbr";
 import hyperHTML from "hyperhtml";
 import { idlStringToHtml } from "./inline-idl-parser";
 import { renderInlineCitation } from "./render-biblio";
+
 export const name = "core/inlines";
 export const rfc2119Usage = {};
 
@@ -115,7 +117,6 @@ export function run(conf) {
   if (!conf.respecRFC2119) conf.respecRFC2119 = rfc2119Usage;
 
   // PRE-PROCESSING
-  const abbrMap = new Map();
   /** @type {NodeListOf<HTMLElement>} */
   const abbrs = document.querySelectorAll("abbr[title]");
   for (const abbr of abbrs) {

@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Removes common indents across the IDL texts,
  * so that indentation inside <pre> won't affect the rendered result.
@@ -6,6 +7,9 @@
 
 export const name = "core/reindent";
 
+/**
+ * @param {string} text
+ */
 function reindent(text) {
   if (!text) {
     return text;
