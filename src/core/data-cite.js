@@ -74,7 +74,7 @@ function requestLookup(conf) {
           wrapInner(elem, anchor);
         }
         if (!path && !frag) {
-          wrapInner(cite, anchor);
+          cite.append(anchor);
           elem.append(cite);
         }
         break;

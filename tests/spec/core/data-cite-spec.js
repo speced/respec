@@ -351,7 +351,7 @@ describe("Core — data-cite attribute", () => {
     expect(dahut).toBe(null);
   });
 
-  it("Adds <cite> around <a> when frag and path are missing from <dfn data-cite=''>", async () => {
+  it("Adds <cite> around <a> when frag and path are missing from <dfn data-cite='some-spec'>", async () => {
     const body = `
       <section>
         <p id="t1"><dfn data-cite="HTML"></dfn></p>
