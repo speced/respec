@@ -12,4 +12,19 @@ describe("Core — Informative", () => {
       "This section is non-normative."
     );
   });
+  it("localizes informative sections", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      htmlAttrs: {
+        lang: "nl",
+      },
+      body: `
+      <section class="informative" id="info">
+        <h2>title</h2>
+      </section>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const em = doc.querySelector("#info > p > em");
+    expect(em.textContent).toEqual("Dit onderdeel is niet normatief.");
+  });
 });

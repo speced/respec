@@ -72,4 +72,36 @@ describe("Core - Inlines", () => {
     expect(rfc2119[0].textContent).toBe("MUST");
     expect(rfc2119[1].textContent).toBe("NOT RECOMMENDED");
   });
+
+  it("processes inline variable syntax", async () => {
+    const body = `
+      <section>
+        <p id="a1">TEXT |variable: Type| TEXT</p>
+        <p id="a2">TEXT |variable with spaces:Type| TEXT</p>
+        <p id="a3">TEXT |with spaces :  Type| TEXT</p>
+        <p id="b">TEXT |variable| TEXT</p>
+        <p id="c">TEXT | ignored | TEXT</p>
+        <p id="d">TEXT|ignore: Ignore|TEXT</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+
+    const a1 = doc.querySelector("#a1 var");
+    expect(a1.textContent).toEqual("variable");
+    expect(a1.dataset.type).toEqual("Type");
+
+    const a2 = doc.querySelector("#a2 var");
+    expect(a2.textContent).toEqual("variable with spaces");
+    expect(a2.dataset.type).toEqual("Type");
+    const a3 = doc.querySelector("#a3 var");
+    expect(a3.textContent).toEqual("with spaces");
+    expect(a3.dataset.type).toEqual("Type");
+
+    const b = doc.querySelector("#b var");
+    expect(b.textContent).toEqual("variable");
+    expect(b.dataset.type).toBeUndefined();
+
+    expect(doc.querySelector("#c var")).toBeFalsy();
+    expect(doc.querySelector("#d var")).toBeFalsy();
+  });
 });

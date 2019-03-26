@@ -307,23 +307,18 @@ describe("Core - WebIDL", () => {
       "  const double twice = 4.222222222;\n" +
       "  // 13\n" +
       "  const unrestricted double rambaldi = 47.0;\n" +
-      "\n" +
       "  // 14\n" +
-      "  const boolean? why = false;\n" +
-      "  // 15\n" +
-      "  const boolean? notSo = null;\n" +
-      "  // 16\n" +
       "  const short inf = Infinity;\n" +
-      "  // 17\n" +
+      "  // 15\n" +
       "  const short mininf = -Infinity;\n" +
-      "  // 18\n" +
+      "  // 16\n" +
       "  const short cheese = NaN;\n" +
-      "  // 19\n" +
+      "  // 17\n" +
       "  [Something] const short extAttr = NaN;\n" +
       "};";
     expect(target.textContent).toEqual(text);
     const consts = [...target.getElementsByClassName("idlConst")];
-    expect(consts.length).toEqual(19);
+    expect(consts.length).toEqual(17);
     const const1 = target.querySelector(".idlConst");
     expect(const1.querySelector(".idlType").textContent).toEqual(" boolean");
     expect(const1.querySelector(".idlName").textContent).toEqual("test");
@@ -343,10 +338,10 @@ describe("Core - WebIDL", () => {
     ).toEqual("idl-def-consttest-rambaldi");
     expect(
       consts
-        .find(c => c.textContent.includes("why"))
+        .find(c => c.textContent.includes("bite"))
         .querySelector(".idlName a")
         .getAttribute("href")
-    ).toEqual("#dom-consttest-why");
+    ).toEqual("#dom-consttest-bite");
     expect(
       consts
         .find(c => c.textContent.includes("inf"))
