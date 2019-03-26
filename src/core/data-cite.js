@@ -59,10 +59,10 @@ function requestLookup(conf) {
           elem.textContent = title;
         }
         elem.href = href;
-        // ToDo (It creates problem because HTML does not know ehere to place newly created node that is <cite> <a..> </a> </cite>)
-        // if (!path && !frag) {
-        //   wrapInner(cite, elem);
-        // }
+        if (!path && !frag) {
+          elem.replaceWith(cite);
+          cite.append(elem);
+        }
         break;
       }
       case "dfn": {
