@@ -17,11 +17,8 @@ describe("Core - Markdown", () => {
   });
 
   it("processes markdown inside of sections", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}<section>\nFoo\n===\n</section>`,
-    };
-    ops.config.format = "markdown";
+    const body = `<section>\nFoo\n===\n</section>`;
+    const ops = makeStandardOps({ format: "markdown" }, body);
     const doc = await makeRSDoc(ops);
     const foo = doc.getElementById("foo");
     expect(foo).toBeTruthy();
@@ -29,32 +26,29 @@ describe("Core - Markdown", () => {
   });
 
   it("processes markdown inside of notes, issues and reqs.", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
-        <div class=note>
-          _note_
-        </div>
-        <div class=issue>
-          _issue_
-        </div>`,
-    };
-    ops.config.format = "markdown";
+    const body = `
+      <div class=note>
+        _note_
+      </div>
+      <div class=issue>
+        _issue_
+      </div>
+    `;
+    const ops = makeStandardOps({ format: "markdown" }, body);
     const doc = await makeRSDoc(ops);
     expect(doc.querySelector(".note p em")).toBeTruthy();
     expect(doc.querySelector(".issue p em")).toBeTruthy();
   });
 
   it("removes left padding before processing markdown content", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}\n
+    const body = `
+
       ## Foo
         * list item 1
         * list item 2
-          * nested list item`,
-    };
-    ops.config.format = "markdown";
+          * nested list item
+    `;
+    const ops = makeStandardOps({ format: "markdown" }, body);
     const doc = await makeRSDoc(ops);
     expect(doc.querySelector("code")).toBeFalsy();
     expect(doc.querySelector("#foo h2").textContent).toBe("1. Foo");
@@ -99,9 +93,7 @@ describe("Core - Markdown", () => {
   });
 
   it("structures content in nested sections with appropriate titles", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
+    const body = `
 
         Foo
         ===
@@ -119,9 +111,8 @@ describe("Core - Markdown", () => {
         Zing
         ----
 
-        `,
-    };
-    ops.config.format = "markdown";
+        `;
+    const ops = makeStandardOps({ format: "markdown" }, body);
     const doc = await makeRSDoc(ops);
     const foo = doc.querySelector("#foo h2");
     expect(foo.textContent).toEqual("1. Foo");
@@ -188,9 +179,7 @@ describe("Core - Markdown", () => {
   });
 
   it("shouldn't nest content following a section inside of said section", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
+    const body = `
 
         Foo
         ===
@@ -208,9 +197,8 @@ describe("Core - Markdown", () => {
 
         some text
 
-        `,
-    };
-    ops.config.format = "markdown";
+        `;
+    const ops = makeStandardOps({ format: "markdown" }, body);
     const doc = await makeRSDoc(ops);
     const baz = doc.querySelector("#baz h2");
     expect(baz.textContent).toEqual("2. Baz");
@@ -246,16 +234,14 @@ describe("Core - Markdown", () => {
 
   describe("nolinks options", () => {
     it("automatically links URLs in pre when missing (smoke test)", async () => {
-      const ops = {
-        config: makeBasicConfig(),
-        body: `${makeDefaultBody()}
-          <div id=testElem>
-            this won't link
-            this will link: http://no-links-foo.com
-            so will this: http://no-links-bar.com
-          </div>`,
-      };
-      ops.config.format = "markdown";
+      const body = `
+        <div id=testElem>
+          this won't link
+          this will link: http://no-links-foo.com
+          so will this: http://no-links-bar.com
+        </div>
+      `;
+      const ops = makeStandardOps({ format: "markdown" }, body);
       const doc = await makeRSDoc(ops);
       const anchors = doc.querySelectorAll("#testElem a");
       expect(anchors.length).toEqual(2);
@@ -264,16 +250,13 @@ describe("Core - Markdown", () => {
     });
 
     it("replaces HTMLAnchors when present", async () => {
-      const ops = {
-        config: makeBasicConfig(),
-        body: `${makeDefaultBody()}
-          <div id=testElem class=nolinks>
-            http://no-links-foo.com
-            http://no-links-bar.com
-          <div>
-          `,
-      };
-      ops.config.format = "markdown";
+      const body = `
+        <div id=testElem class=nolinks>
+          http://no-links-foo.com
+          http://no-links-bar.com
+        <div>
+      `;
+      const ops = makeStandardOps({ format: "markdown" }, body);
       const doc = await makeRSDoc(ops);
       const anchors = doc.querySelectorAll("#testElem a");
       expect(anchors.length).toEqual(0);
@@ -286,14 +269,13 @@ describe("Core - Markdown", () => {
     });
 
     it("handles quoted elements, including entity quotes", async () => {
-      const ops = {
-        config: makeBasicConfig(),
-        body: `${makeDefaultBody()}<p id='test-text1'>test1 text &quot;<code>inner text</code>".</p>
-           <p id='test-text2'>test2 '<code>inner</code>&#39;.</p>
-           // Pre left alone
-           <pre class=nohighlight id='test-text3'>test3 text "<code>inner text</code>".</pre>`,
-      };
-      ops.config.format = "markdown";
+      const body = `
+        <p id='test-text1'>test1 text &quot;<code>inner text</code>".</p>
+        <p id='test-text2'>test2 '<code>inner</code>&#39;.</p>
+        // Pre left alone
+        <pre class=nohighlight id='test-text3'>test3 text "<code>inner text</code>".</pre>
+      `;
+      const ops = makeStandardOps({ format: "markdown" }, body);
       const doc = await makeRSDoc(ops);
       const text1 = doc.getElementById("test-text1");
       expect(text1.textContent).toEqual(`test1 text "inner text".`);
@@ -307,24 +289,22 @@ describe("Core - Markdown", () => {
   });
   describe("data-format=markdown", () => {
     it("replaces processes data-format=markdown sections, but leaves other sections alone", async () => {
-      const ops = {
-        config: makeBasicConfig(),
-        body: `${makeDefaultBody()}
-          <section id=markdown1 data-format=markdown>
-            ## this is a h2
-            This is a paragraph with \`code\`.
+      const body = `
+        <section id=markdown1 data-format=markdown>
+          ## this is a h2
+          This is a paragraph with \`code\`.
 
-            ### heading 3
-            This is another paragraph.
+          ### heading 3
+          This is another paragraph.
 
-            ### another h3
-            This is another paragraph.
-          </section>
-          <section id=dontTouch>
-            ## this should not change
-          </section>
-          `,
-      };
+          ### another h3
+          This is another paragraph.
+        </section>
+        <section id=dontTouch>
+          ## this should not change
+        </section>
+      `;
+      const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
       const headings = Array.from(
         doc.querySelectorAll("#markdown1 h2, #markdown1 h3")

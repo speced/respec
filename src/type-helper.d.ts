@@ -34,3 +34,9 @@ interface Node {
 }
 
 declare function fetch(input: URL, init?: RequestInit): Promise<Response>;
+
+// TODO: Remove this when TS3.4 arrives
+interface String {
+  trimLeft(): string;
+  trimRight(): string;
+}
