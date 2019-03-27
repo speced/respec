@@ -354,4 +354,17 @@ describe("Core — data-cite attribute", () => {
     const a = doc.querySelector("#t1 > cite > a");
     expect(a.href).toBe("https://html.spec.whatwg.org/multipage/");
   });
+
+  it("<cite> does not appear around tags other than a/dfn when frag and path are missing with data-cite='some-spec' attribute", async () => {
+    const body = `
+      <section>
+        <p id="t1"><span data-cite="HTML"></a></p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const cite = doc.querySelector("#t1 > cite");
+    expect(cite).toBeNull();
+  });
 });
