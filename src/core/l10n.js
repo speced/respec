@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Module core/l10n
  *
@@ -7,11 +8,20 @@
  */
 export const name = "core/l10n";
 
-const html = typeof document !== "undefined" && document.documentElement;
-if (html && !html.hasAttribute("lang")) {
-  html.lang = "en";
-  if (!html.hasAttribute("dir")) {
-    html.dir = "ltr";
+if (typeof document !== "undefined") {
+  setDocumentLocale(document);
+};
+
+/**
+ * @param {Document} doc
+ */
+export function setDocumentLocale(doc) {
+  const { documentElement: html } = doc;
+  if (html && !html.hasAttribute("lang")) {
+    html.lang = "en";
+    if (!html.hasAttribute("dir")) {
+      html.dir = "ltr";
+    }
   }
 }
 
@@ -177,8 +187,13 @@ export const l10n = {
 l10n["zh-hans"] = l10n.zh;
 l10n["zh-cn"] = l10n.zh;
 
+const html = typeof document !== "undefined" && document.documentElement;
 export const lang = html && html.lang in l10n ? html.lang : "en";
 
-export function run(config) {
-  config.l10n = l10n[lang] || l10n.en;
+/**
+ * 
+ * @param {import("../respec-document.js").RespecDocument} respecDoc
+ */
+export default function({ configuration, lang }) {
+  configuration.l10n = l10n[lang] || l10n.en;
 }

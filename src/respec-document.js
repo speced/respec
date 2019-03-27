@@ -34,5 +34,8 @@ export async function createRespecDocument(doc, conf) {
     document,
     configuration,
     hub: new PubSubHub(),
+    get lang() {
+      return document.documentElement.lang;
+    }
   };
 }
