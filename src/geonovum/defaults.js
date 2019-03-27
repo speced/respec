@@ -2,16 +2,13 @@
  * Sets the defaults for Geonovum documents
  */
 export const name = "geonovum/defaults";
-import { rule as checkPunctuation } from "../core/linter-rules/check-punctuation";
+import { coreDefaults } from "../core/defaults";
+import { definitionMap } from "../core/dfn-map";
 import linter from "../core/linter";
-import { rule as localRefsExist } from "../core/linter-rules/local-refs-exist";
-import { rule as noHeadinglessSectionsRule } from "../core/linter-rules/no-headingless-sections";
-import { rule as noHttpPropsRule } from "../core/linter-rules/no-http-props";
+import { rule as privsecSectionRule } from "./linter-rules/privsec-section";
 
-linter.register(noHttpPropsRule, noHeadinglessSectionsRule, checkPunctuation,
-localRefsExist);
+linter.register(privsecSectionRule);
 
-// const cgbg = new Set(["BG-DRAFT", "BG-FINAL", "CG-DRAFT", "CG-FINAL"]);
 const licenses = new Map([
   [
     "cc0",
@@ -41,12 +38,10 @@ const licenses = new Map([
 
 const geonovumDefaults = {
   lint: {
-    "no-headingless-sections": true,
     "privsec-section": true,
-    "no-http-props": true,
   },
   doJsonLd: true,
-  license: "cc-by-nd",
+  license: "cc-by",
   specStatus: "GN-BASIS",
   logos: [{
     src: "https://tools.geostandaarden.nl/respec/style/logos/Geonovum.svg",
@@ -60,7 +55,7 @@ const geonovumDefaults = {
 
 function computeProps(conf) {
   return {
-    isCCBY: conf.license === "cc-by-nd",
+    isCCBY: conf.license === "cc-by",
     licenseInfo: licenses.get(conf.license),
     isBasic: conf.specStatus === "GN-BASIS",
     isRegular: conf.specStatus === "GN-BASIS",
@@ -69,7 +64,20 @@ function computeProps(conf) {
 
 export function run(conf) {
   // assign the defaults
-  Object.assign(conf, { ...geonovumDefaults, ...conf });
+  const lint =
+    conf.lint === false
+      ? false
+      : {
+          ...coreDefaults.lint,
+          ...geonovumDefaults.lint,
+          ...conf.lint,
+        };
+  Object.assign(conf, {
+    ...coreDefaults,
+    ...geonovumDefaults,
+    ...conf,
+    lint,
+  });
   //computed properties
   Object.assign(conf, computeProps(conf));
 }
