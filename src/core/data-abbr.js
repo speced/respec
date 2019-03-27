@@ -35,6 +35,7 @@ function processDfnElement(dfn) {
   const lt = dfn.dataset.lt || "";
   dfn.dataset.lt = lt
     .split("|")
+    .filter(i => i.trim())
     .concat(abbr)
     .join("|");
 }
