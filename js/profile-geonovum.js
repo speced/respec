@@ -18,8 +18,8 @@ require.config({
     shortcut: {
       exports: "shortcut",
     },
-    highlight: {
-      exports: "hljs",
+    idb: {
+      exports: "idb",
     },
   },
 });
