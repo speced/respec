@@ -3,7 +3,6 @@
  */
 export const name = "geonovum/defaults";
 import { coreDefaults } from "../core/defaults";
-import { definitionMap } from "../core/dfn-map";
 import linter from "../core/linter";
 import { rule as privsecSectionRule } from "./linter-rules/privsec-section";
 
@@ -29,11 +28,12 @@ const licenses = new Map([
   [
     "cc-by-nd",
     {
-      name: "Creative Commons Attribution-NoDerivatives 4.0 International Public License",
+      name:
+        "Creative Commons Attribution-NoDerivatives 4.0 International Public License",
       short: "CC-BY-ND",
       url: "https://creativecommons.org/licenses/by-nd/4.0/legalcode.nl",
     },
-  ]
+  ],
 ]);
 
 const geonovumDefaults = {
@@ -43,14 +43,16 @@ const geonovumDefaults = {
   doJsonLd: true,
   license: "cc-by",
   specStatus: "GN-BASIS",
-  logos: [{
-    src: "https://tools.geostandaarden.nl/respec/style/logos/Geonovum.svg",
-    alt: "Geonovum",
-    id: "Geonovum",
-    height: 67,
-    width: 132,
-    url: "https://www.geonovum.nl/"
-  }]
+  logos: [
+    {
+      src: "https://tools.geostandaarden.nl/respec/style/logos/Geonovum.svg",
+      alt: "Geonovum",
+      id: "Geonovum",
+      height: 67,
+      width: 132,
+      url: "https://www.geonovum.nl/",
+    },
+  ],
 };
 
 function computeProps(conf) {
@@ -78,6 +80,6 @@ export function run(conf) {
     ...conf,
     lint,
   });
-  //computed properties
+  // computed properties
   Object.assign(conf, computeProps(conf));
 }
