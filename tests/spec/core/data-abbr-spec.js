@@ -71,4 +71,13 @@ describe("Core — data-abbr", () => {
       expect(abbr.title).toBe(correspondingDfn.textContent);
     });
   });
+  it("warns when used with unsupported elements", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `<p id="test" data-abbr>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const p = doc.getElementById("test");
+    expect(p.classList).toContain("respec-offending-element");
+  });
 });
