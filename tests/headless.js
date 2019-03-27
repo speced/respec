@@ -3,9 +3,51 @@
 /* eslint-env node */
 "use strict";
 const port = 5000;
-const testURLs = [
-  `http://localhost:${port}/examples/basic.built.html`,
-  `http://localhost:${port}/examples/basic.html`,
+const respec2htmlTests = [
+  {
+    blockDescription: "Process builds",
+    tests: [
+      {
+        URL: `http://localhost:${port}/examples/basic.built.html`,
+        evalFunction: async exec => {
+          try {
+            await exec.run();
+          } catch (error) {
+            throw error;
+          }
+        },
+        message: `Processes example spec employing default respec-w3c-common.js profile`,
+      },
+      {
+        URL: `http://localhost:${port}/examples/basic.html`,
+        evalFunction: async exec => {
+          try {
+            await exec.run();
+          } catch (error) {
+            throw error;
+          }
+        },
+        message: `Processes example spec employing source JS files being pushed`,
+      },
+    ],
+  },
+  {
+    blockDescription: "Process warnings and builds",
+    tests: [
+      {
+        URL: `http://localhost:${port}/tests/respec2htmlTests/byte-stream-format-registry-respec.html`,
+        evalFunction: async exec => {
+          try {
+            await exec.run();
+          } catch (error) {
+            // TODO check against expected errors and warnings
+            // throw error;
+          }
+        },
+        message: `Shows multiple warnings and errors in terminal`,
+      },
+    ],
+  },
 ];
 const colors = require("colors");
 const { exec } = require("child_process");
@@ -34,34 +76,41 @@ function toExecutable(cmd) {
   };
 }
 
+function URLTorespec2htmlExecutable(url) {
+  const nullDevice = process.platform === "win32" ? "\\\\.\\NUL" : "/dev/null";
+  const disableSandbox = process.env.TRAVIS ? " --disable-sandbox" : "";
+  const cmd = `node ./tools/respec2html.js -e${disableSandbox} --timeout 20 --src ${url} --out ${nullDevice}`;
+  return toExecutable(cmd);
+}
+
 async function runRespec2html() {
   const server = http.createServer(handler);
   server.listen(port);
 
-  const errors = new Set();
+  const failures = new Set();
   // Incrementally spawn processes and add them to process counter.
-  const executables = testURLs.map(url => {
-    const nullDevice =
-      process.platform === "win32" ? "\\\\.\\NUL" : "/dev/null";
-    const disableSandbox = process.env.TRAVIS ? " --disable-sandbox" : "";
-    const cmd = `node ./tools/respec2html.js -e${disableSandbox} --timeout 30 --src ${url} --out ${nullDevice}`;
-    return toExecutable(cmd);
-  });
-  let testCount = 1;
-  for (const exe of executables) {
-    try {
-      const testInfo = colors.green(`(test ${testCount++}/${testURLs.length})`);
-      const msg = ` 👷‍♀️  ${exe.cmd} ${testInfo}`;
-      debug(msg);
-      await exe.run();
-    } catch (err) {
+  respec2htmlTests.forEach(async block => {
+    const { blockDescription: description, tests } = block;
+    debug(description);
+    let testCount = 1;
+    tests.forEach(async ({ URL, evalFunction, message }) => {
+      const exec = URLTorespec2htmlExecutable(URL);
+      const num = colors.yellow(`(test ${testCount++}/${tests.length})`);
+      const testInfo = ` 👷‍♀️  ${exec.cmd} ${num}`;
       // eslint-disable-next-line no-console
-      console.error(colors.red(err));
-      errors.add(exe.cmd);
-    }
-  }
-  if (errors.size) {
-    const files = [...errors].join(", ");
+      console.log(colors.green(message));
+      debug(testInfo);
+      try {
+        await evalFunction(exec);
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(colors.red(err));
+        failures.add(exec.cmd);
+      }
+    });
+  });
+  if (failures.size) {
+    const files = [...failures].join(", ");
     throw new Error(` ❌ File(s) generated errors: ${files}.`);
   }
 }

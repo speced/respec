@@ -1,0 +1,188 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Media Source Extensions Byte Stream Format Registry</title>
+  <script src="https://www.w3.org/Tools/respec/respec-w3c-common" class="remove"></script>
+  <!--<script src="respec-w3c-common.js" class="remove"></script>-->
+  <script src="media-source.js" class="remove"></script>
+  <script class="remove">
+    var respecConfig = {
+      // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
+      specStatus: "ED",
+      // the specification's short name, as in http://www.w3.org/TR/short-name/
+      shortName: "mse-byte-stream-format-registry", <!-- The registry does not have its own short name. -->
+      // if there a publicly available Editor's Draft, this is the link
+      edDraftURI: "https://w3c.github.io/media-source/byte-stream-format-registry.html",
+      // if this is a LCWD, uncomment and set the end of its review period
+      // lcEnd: "2009-08-05",
+      //publishDate: "2015-03-09",
+      prevVersion: "https://www.w3.org/2013/12/byte-stream-format-registry/",
+      // editors, add as many as you like
+      // only "name" is required
+      editors:  [
+        { name: "Matthew Wolenetz",  url: "",
+          company: "Google Inc.", companyURL: "http://www.google.com/" },
+        { name: "Jerry Smith", url: "",
+          company: "Microsoft Corporation", companyURL: "http://www.microsoft.com/" },
+        { name: "Aaron Colwell (until April 2015)",  url: "",
+          company: "Google Inc.", companyURL: "http://www.google.com/" },
+      ],
+      mseDefGroupName: "byte-stream-format-registry",
+      mseUnusedGroupNameExcludeList: ["media-source"],
+      mseContributors: [
+      ],
+      // name of the WG
+      wg:           "HTML Media Extensions Working Group",
+      // URI of the public WG page
+      wgURI:        "https://www.w3.org/html/wg/",
+      // name (without the @w3c.org) of the public mailing to which comments are due
+      wgPublicList: "public-html-media",
+      // URI of the patent status for this WG, for Rec-track documents
+      // !!!! IMPORTANT !!!!
+      // This is important for Rec-track documents, do not copy a patent URI from a random
+      // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
+      // Team Contact.
+      wgPatentURI: "https://www.w3.org/2004/01/pp-impl/40318/status",
+      noIDLIn: true,
+      scheme: "https",
+      otherLinks: [{
+        key: 'Repository',
+        data: [{
+          value: 'We are on GitHub',
+          href: 'https://github.com/w3c/media-source/'
+        }, {
+          value: 'File a bug',
+          href: 'https://github.com/w3c/media-source/issues'
+        }, {
+          value: 'Commit history',
+          href: 'https://github.com/w3c/media-source/commits/gh-pages/byte-stream-format-registry-respec.html'
+        }]
+      },{
+        key: 'Mailing list',
+        data: [{
+          value: 'public-html-media@w3.org',
+          href: 'https://lists.w3.org/Archives/Public/public-html-media/'
+        }]
+      }],
+      preProcess: [ mediaSourceAddMainSpecDefinitionInfos, mediaSourcePreProcessor ],
+      // Empty definitions for objects declared in the document are here to
+      // prevent error messages from being displayed for references to these objects.
+      definitionMap: {},
+      postProcess: [ mediaSourcePostProcessor ]
+    };
+  </script>
+  <!-- script to register bugs -->
+  <!-- Disabled unless/until it supports GitHub issues.
+  <script src="https://w3c.github.io/webcomponents/assets/scripts/bug-assist.js"></script>
+  <meta name="bug.short_desc" content="[MSE] ">
+  <meta name="bug.product" content="HTML WG">
+  <meta name="bug.component" content="Media Source Extensions">
+  -->
+
+  <link rel="stylesheet" href="mse.css">
+
+  <style type="text/css">
+    #registry table { border-collapse: collapse; border-style: hidden hidden none hidden; }
+    #registry table thead, table tbody { border-bottom: solid; }
+    #registry table tbody th:first-child { border-left: solid; }
+    #registry table tbody th { text-align: left; }
+    #registry table td, table th { border-left: solid; border-right: solid; border-bottom: solid thin; vertical-align: top; padding: 0.2em; }
+  </style>
+</head>
+<body>
+
+<section id="abstract">
+  <p>This specification defines the byte stream formats for use with the <a def-id="mse-spec"></a> specification [[!MEDIA-SOURCE]].</p>
+</section>
+
+<section id="sotd">
+  <p>The working group maintains <a href="https://github.com/w3c/media-source/issues">a list of all bug reports that the editors have not yet tried to address</a>; there may also be open bugs in the <a href="http://w3.org/brief/Mjcw">previous bug tracker</a>.</p>
+  <p>Implementors should be aware that this specification is not stable. <strong>Implementors who are not taking part in the discussions are likely to find the specification changing out from under them in incompatible ways.</strong> Vendors interested in implementing this specification before it eventually reaches the Candidate Recommendation stage should join the mailing list mentioned below and take part in the discussions.</p>
+</section>
+
+<section id="purpose">
+  <h2>Purpose</h2>
+  <p>This registry is intended to enhance interoperability among implementations and users of
+    <a class="externalDFN">SourceBuffer</a> objects described in the
+    <a def-id="mse-spec"></a>(MSE) specification. In particular, this registry provides the means (1) to identify
+    and avoid MIME-type collisions among byte stream formats, and (2) to disclose information about byte stream formats accepted by MSE
+    implementations to promote interoperability.
+</section>
+
+<section id="organization">
+  <h2>Organization</h2>
+  <p>The registry maintains a mapping between MIME-type/subtype pairs and byte stream format specifications. The byte stream format specifications describe the
+    structure and semantics of byte streams accepted by <a class="externalDFN">SourceBuffer</a> objects
+    created with the associated MIME-type/subtype pair.</p>
+  <p>This registry is not intended to include any information on whether a byte stream format is encumbered by intellectual property claims. Implementors and users
+    are advised to seek appropriate legal counsel in this matter if they intend to implement or use a specific byte stream format.</p>
+</section>
+
+<section id="entry-requirements">
+  <h2>Registration Entry Requirements</h2>
+  <ol>
+    <li>Each entry MUST include a unique MIME-type/subtype pair. If the byte stream format is derived-from an existing file format, then it SHOULD use the
+      MIME-type/subtype pairs typically used for the file format.</li>
+    <li>Each entry MUST include a <a def-id="generate-timestamps-flag"></a> value that MUST be used by
+      <a class="externalDFN">SourceBuffer</a> when handling the byte stream format.</li>
+    <li>Each entry MUST include a link that references a publically available specification. It is recommended that such a specification be made available
+      without cost (other than reasonable shipping and handling if not available by online means).</li>
+    <li>Each entry MUST comply with all requirements outlined in the <a def-id="byte-stream-formats-section"></a>
+      of the <a def-id="mse-spec"></a> specification.</li>
+    <li>Candidate entries MUST be announced on <a href="mailto:public-html-media@w3.org">public-html-media@w3.org</a>(<a href="mailto:public-html-media-request@w3.org">subscribe</a>,
+      <a href="http://lists.w3.org/Archives/Public/public-html-media/">archives</a>) so they can be discussed and evaluated for compliance before being added to the
+      registry.</li>
+  </ol>
+  <p>If a registration fails to satisfy a mandatory requirement specified above, then it MAY be removed from the registry (without prejudice).
+</section>
+
+<section id="registry">
+  <h2>Registry</h2>
+  <table>
+    <thead>
+    <tr>
+      <th>MIME type/subtype</th>
+      <th>Public Specification(s)</th>
+      <th>Generate Timestamps Flag</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>
+        audio/webm<br>
+        video/webm
+      </td>
+      <td><a def-id="byte-stream-format-registry-webm"></a> [[!MSE-FORMAT-WEBM]]</td>
+      <td>false</td>
+    </tr>
+    <tr>
+      <td>
+        audio/mp4<br>
+        video/mp4
+      </td>
+      <td><a def-id="byte-stream-format-registry-isobmff"></a> [[!MSE-FORMAT-ISOBMFF]]</td>
+      <td>false</td>
+    </tr>
+    <tr>
+      <td>
+        audio/mp2t<br>
+        video/mp2t
+      </td>
+      <td><a def-id="byte-stream-format-registry-mp2t"></a> [[!MSE-FORMAT-MP2T]]</td>
+      <td>false</td>
+    </tr>
+    <tr>
+      <td>
+        audio/mpeg<br>
+        audio/aac
+      </td>
+      <td><a def-id="byte-stream-format-registry-mpeg-audio"></a> [[!MSE-FORMAT-MPEG-AUDIO]]</td>
+      <td>true</td>
+    </tr>
+    </tbody>
+  </table>
+</section>
+<section id="conformance"></section>
+</body>
+</html>
