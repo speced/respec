@@ -10,7 +10,7 @@ export const name = "core/l10n";
 
 if (typeof document !== "undefined") {
   setDocumentLocale(document);
-};
+}
 
 /**
  * @param {Document} doc
@@ -191,7 +191,7 @@ const html = typeof document !== "undefined" && document.documentElement;
 export const lang = html && html.lang in l10n ? html.lang : "en";
 
 /**
- * 
+ *
  * @param {import("../respec-document.js").RespecDocument} respecDoc
  */
 export default function({ configuration, lang }) {

@@ -1,11 +1,10 @@
 // @ts-check
-import addL10nConfiguration from "./core/l10n";
+import addL10nConfiguration, { setDocumentLocale } from "./core/l10n";
 import { cleanup } from "./core/exporter";
 import { createRespecDocument } from "./respec-document";
 import insertStyle from "./core/style";
 import insertW3CStyle from "./w3c/style";
 import reindent from "./core/reindent";
-import { setDocumentLocale } from "./core/l10n";
 
 /**
  * @param {string|Document} doc A document that will be preprocessed

@@ -36,6 +36,6 @@ export async function createRespecDocument(doc, conf) {
     hub: new PubSubHub(),
     get lang() {
       return document.documentElement.lang;
-    }
+    },
   };
 }
