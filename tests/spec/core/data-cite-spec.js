@@ -3,9 +3,7 @@ describe("Core — data-cite attribute", () => {
   afterAll(flushIframes);
 
   it(`walks up the tree to find the right reference to cite`, async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
+    const body = `
       <section data-cite="dahut">
         <h2>test</h2>
         <p>
@@ -24,9 +22,8 @@ describe("Core — data-cite attribute", () => {
           </div>
         </section>
       </section>
-    `,
-    };
-    ops.config.shortName = "fail";
+    `;
+    const ops = makeStandardOps({ shortName: "fail" }, body);
     const doc = await makeRSDoc(ops);
     const t1 = doc.getElementById("t1");
     const t2 = doc.getElementById("t2").querySelector("a");
@@ -46,9 +43,7 @@ describe("Core — data-cite attribute", () => {
   });
 
   it(`treats data-cite="#foo" as self citing when there is no parent data-cite`, async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
+    const body = `
       <section>
         <h2>test</h2>
         <p>
@@ -56,9 +51,8 @@ describe("Core — data-cite attribute", () => {
           <dfn id="t2" data-cite="#test">a</dfn>
         </p>
       </section>
-    `,
-    };
-    ops.config.shortName = "dahut";
+    `;
+    const ops = makeStandardOps({ shortName: "dahut" }, body);
     const doc = await makeRSDoc(ops);
     const t1 = doc.getElementById("t1");
     const t2 = doc.getElementById("t2").querySelector("a");
@@ -68,18 +62,16 @@ describe("Core — data-cite attribute", () => {
   });
 
   it("links data-cite attributes as normative/informative reference when parent is citing", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
-        <section class="informative" data-cite="FETCH">
-          <p><a data-cite="#fetch-thing">informative reference</a></p>
-        </section>
-        <section data-cite="!URL">
-          <p><a data-cite="#url-thing">normative reference</a></p>
-        </section>
-        <section id="conformance"></section>
-      `,
-    };
+    const body = `
+      <section class="informative" data-cite="FETCH">
+        <p><a data-cite="#fetch-thing">informative reference</a></p>
+      </section>
+      <section data-cite="!URL">
+        <p><a data-cite="#url-thing">normative reference</a></p>
+      </section>
+      <section id="conformance"></section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     expect(doc.getElementById("bib-url").closest("section").id).toEqual(
       "normative-references"
@@ -90,15 +82,13 @@ describe("Core — data-cite attribute", () => {
   });
 
   it("links directly to externally defined references", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
-        <section id="conformance">
-          <p id="t1"><a>inline link</a></p>
-          <p id="t2"><dfn data-cite="WHATWG-HTML#test">inline link</dfn></p>
-        </section>
-      `,
-    };
+    const body = `
+      <section id="conformance">
+        <p id="t1"><a>inline link</a></p>
+        <p id="t2"><dfn data-cite="WHATWG-HTML#test">inline link</dfn></p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const a = doc.querySelector("#t1 > a");
     expect(a.textContent).toEqual("inline link");
@@ -120,14 +110,12 @@ describe("Core — data-cite attribute", () => {
   });
 
   it("links data-cite attributes as normative reference", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
-        <section id="conformance">
-          <p id="t1"><a data-cite="WHATWG-HTML">inline link</a></p>
-        </section>
-      `,
-    };
+    const body = `
+      <section id="conformance">
+        <p id="t1"><a data-cite="WHATWG-HTML">inline link</a></p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const a = doc.querySelector("#t1 > cite > a");
     expect(a.textContent).toEqual("inline link");
@@ -139,14 +127,12 @@ describe("Core — data-cite attribute", () => {
   });
 
   it("links data-cite attributes as informative reference", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
-          <section>
-            <p id="t1"><a data-cite="?WHATWG-DOM">inline link</a></p>
-          </section>
-        `,
-    };
+    const body = `
+      <section>
+        <p id="t1"><a data-cite="?WHATWG-DOM">inline link</a></p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const a = doc.querySelector("#t1 > cite > a");
     expect(a.textContent).toEqual("inline link");
@@ -158,15 +144,13 @@ describe("Core — data-cite attribute", () => {
   });
 
   it("handles bogus data-cite values", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
-          <section id="conformance">
-            <p id="t1"><a data-cite="?no-exist-inf">link 1</a></p>
-            <p id="t2"><a data-cite="!no-exist-norm">link 2</a></p>
-          </section>
-        `,
-    };
+    const body = `
+      <section id="conformance">
+        <p id="t1"><a data-cite="?no-exist-inf">link 1</a></p>
+        <p id="t2"><a data-cite="!no-exist-norm">link 2</a></p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const a1 = doc.querySelector("#t1 > a");
     const a2 = doc.querySelector("#t2 > a");
@@ -185,15 +169,13 @@ describe("Core — data-cite attribute", () => {
   });
 
   it("adds the path and fragment identifier to the link", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
-        <section id="conformance">
-          <p id="t1"><a
-            data-cite="WHATWG-HTML/webappapis.html#scripting">inline link</a></p>
-        </section>
-      `,
-    };
+    const body = `
+      <section id="conformance">
+        <p id="t1"><a
+          data-cite="WHATWG-HTML/webappapis.html#scripting">inline link</a></p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const a = doc.querySelector("#t1 > a");
     expect(a.textContent).toEqual("inline link");
@@ -207,17 +189,15 @@ describe("Core — data-cite attribute", () => {
   });
   describe("data-cite-frag", () => {
     it("adds the path and the fragment identifier to the link", async () => {
-      const ops = {
-        config: makeBasicConfig(),
-        body: `${makeDefaultBody()}
+      const body = `
         <section class="informative">
           <p id="t1"><a
             data-cite="WHATWG-HTML"
             data-cite-path="webappapis.html"
             data-cite-frag="pass">inline link</a></p>
         </section>
-      `,
-      };
+      `;
+      const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
       const a = doc.querySelector("#t1 > a");
       expect(a.textContent).toEqual("inline link");
@@ -242,16 +222,14 @@ describe("Core — data-cite attribute", () => {
     });
 
     it("cited fragments are overridden by cite-frag", async () => {
-      const ops = {
-        config: makeBasicConfig(),
-        body: `${makeDefaultBody()}
+      const body = `
         <section id="conformance">
           <p id="t1"><a
             data-cite="WHATWG-HTML#fail"
             data-cite-frag="pass">inline link</a></p>
         </section>
-      `,
-      };
+      `;
+      const ops = makeStandardOps(null, body);
       const doc = await makeRSDoc(ops);
 
       const a = doc.querySelector("#t1 > a");
@@ -265,17 +243,15 @@ describe("Core — data-cite attribute", () => {
   });
 
   it("Adds title to a reference when inline-link is empty normative reference", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
-        <section>
-          <p id="t1"><a data-cite="HTML"></a></p>
-          <p id="t2"><a data-cite="Fetch"></a></p>
-          <p id="t3"><a data-cite="HTML">This should not be replaced</a></p>
-        </section>
-        <section id="conformance"></section>
-      `,
-    };
+    const body = `
+      <section>
+        <p id="t1"><a data-cite="HTML"></a></p>
+        <p id="t2"><a data-cite="Fetch"></a></p>
+        <p id="t3"><a data-cite="HTML">This should not be replaced</a></p>
+      </section>
+      <section id="conformance"></section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     let a = doc.querySelector("#t1 > cite > a");
     expect(a.textContent).toBe("HTML Standard");
@@ -298,16 +274,14 @@ describe("Core — data-cite attribute", () => {
   });
 
   it("Adds title to a reference when inline-link is empty normative reference in definition", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
-        <section>
-          <p id="t1"><dfn data-cite="WHATWG-HTML#test"></dfn></p>
-          <p id="t2"><dfn data-cite="WHATWG-HTML#test">This should not change</dfn></p>
-        </section>
-        <section id="conformance"></section>
-      `,
-    };
+    const body = `
+      <section>
+        <p id="t1"><dfn data-cite="WHATWG-HTML#test"></dfn></p>
+        <p id="t2"><dfn data-cite="WHATWG-HTML#test">This should not change</dfn></p>
+      </section>
+      <section id="conformance"></section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     let dfn = doc.querySelector("#t1 > dfn");
     expect(dfn).toBeTruthy();
