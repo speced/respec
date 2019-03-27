@@ -18,7 +18,25 @@ function overrideConfig(config) {
     .filter(([key, value]) => !!key && !!value)
     .map(([codedKey, codedValue]) => {
       const key = decodeURIComponent(codedKey);
-      const decodedValue = decodeURIComponent(codedValue.replace(/%3D/g, "="));
+      // The URL is not necessarily trusted, so we escape any suspicious tag-like
+      // content. While hyperHTML seems to block execution of inserted scripts (most
+      // likely because adding a script via innerHTML doesn't work), other harmful
+      // tags (think <style>) are enough to classify this as a minor XSS threat.
+      // Although harmful configuration would never occur to a user who clicks around,
+      // say, w3c.org, they might click a link to w3c.org from another website, see the
+      // trusted w3c domain in their address bar, but receive a misleading page because
+      // of the query parameters. Content on w3c.org should only be content that
+
+      // Even with this escaping, it is possible for an attacker to make a link that
+      // displays a page with misleading content. They might add themselves to the list
+      // of copyright holders, for example, a task which requires no HTML tags.
+
+      // Potential solutions include whitelisting certain options, blocking query
+      // string interpretation when `document.referrer` is present, or displaying
+      // a clear warning message to make it obvious that the page was modified.
+      const decodedValue = decodeURIComponent(codedValue.replace(/%3D/g, "="))
+        .replace(/>/g, "&gt;")
+        .replace(/</g, "&lt;");
       let value;
       try {
         value = JSON.parse(decodedValue);

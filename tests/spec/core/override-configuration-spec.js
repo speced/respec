@@ -9,6 +9,7 @@ describe("Core — Override Configuration", () => {
     url.searchParams.set("previousPublishDate", "1994-03-01");
     url.searchParams.set(
       "additionalCopyrightHolders",
+      // URL will perform encodeURIComponent automatically
       "Internet Engineering Task Force"
     );
     const doc = await makeRSDoc(makeStandardOps(), url);
@@ -21,5 +22,18 @@ describe("Core — Override Configuration", () => {
     expect(previousMaturity).toEqual("REC");
     const copyrightText = doc.querySelector(".copyright").textContent;
     expect(copyrightText).toMatch(/Internet Engineering Task Force/);
+  });
+
+  it("doesn't allow HTML tags", async () => {
+    const url = new URL(simpleURL.href);
+    url.searchParams.set(
+      "additionalCopyrightHolders",
+      // URL will perform encodeURIComponent automatically
+      "<span id=\"xss-attempt\">Internet Engineering Task Force</span>"
+    );
+    const doc = await makeRSDoc(makeStandardOps(), url);
+    const copyrightText = doc.querySelector(".copyright").textContent;
+    // if the ID is in the textContent, the HTML must not have been parsed.
+    expect(copyrightText).toMatch(/xss-attempt/);
   });
 });
