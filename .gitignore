@@ -6,7 +6,9 @@ scratch
 examples/touchevents.html
 bevy.json
 .idea
-js/
+js/*
 !js/profile-w3c-common.js
 !js/shortcut.js
+!js/html-template.js
+!js/html-template.d.ts
 .vscode/

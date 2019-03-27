@@ -7,7 +7,7 @@
  */
 
 import { expose } from "./expose-modules";
-import hyperHTML from "hyperhtml";
+import hyperHTML from "../../js/html-template";
 import { pub } from "./pubsubhub";
 import { removeReSpec } from "./utils";
 
@@ -96,15 +96,15 @@ export function cleanup(cloneDoc, hub) {
 }
 
 /**
- * @param {Document} doc
+ * @param {Document} document
  */
-function cleanupHyper({ documentElement: node }) {
+function cleanupHyper(document) {
   // collect first, or walker will cease too early
   /** @param {Comment} comment */
   const filter = comment =>
     comment.textContent.startsWith("-") && comment.textContent.endsWith("%");
   const walker = document.createTreeWalker(
-    node,
+    document.documentElement,
     NodeFilter.SHOW_COMMENT,
     filter
   );

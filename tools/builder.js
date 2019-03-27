@@ -153,7 +153,7 @@ const Builder = {
           maxChunks: 1,
         }),
         new webpack.IgnorePlugin({
-          resourceRegExp: /^\.\/asset-loader$|^jsdom$/,
+          resourceRegExp: /^\.\/asset-loader$|^jsdom$|^viperhtml$/,
         }),
       ],
     };
