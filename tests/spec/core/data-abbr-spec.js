@@ -13,7 +13,6 @@ describe("Core — data-abbr", () => {
     const dfnFooBar = doc.querySelector("#section dfn");
     const abbr = doc.querySelector("#section dfn + abbr");
 
-    expect(dfnFooBar.dataset.abbr).toBe("FB");
     expect(dfnFooBar.dataset.lt).toBe("fb|foo bar");
     expect(dfnFooBar.textContent.trim()).toBe("foo bar");
     expect(abbr.textContent).toBe("FB");
@@ -45,31 +44,31 @@ describe("Core — data-abbr", () => {
         <dfn data-abbr="">United States</dfn>
         <dfn data-abbr="PoR">Position of Responsibility</dfn>
         <dfn data-abbr="UI">User Interface</dfn>
-        <div>US</div>
-        <div>PoR</div>
-        <div>UI</div>
+        <div class="test">US</div>
+        <div class="test">PoR</div>
+        <div class="test">UI</div>
       </section>`,
     };
     const doc = await makeRSDoc(ops);
-    const divs = doc.querySelectorAll("#section div");
-    const dfns = doc.querySelectorAll("#section dfn");
-    const [dfnUS, dfnPoR, dfnUI] = dfns;
+    const [dfnUS, dfnPoR, dfnUI] = doc.querySelectorAll("#section dfn");
+    const [abbrUS, abbrPoR, abbrUI] = doc.querySelectorAll("div.test abbr");
 
-    expect(dfnUS.dataset.abbr).toBe("US");
+    expect(dfnUS.dataset.abbr).toBe("");
     expect(dfnUS.textContent.trim()).toBe("United States");
 
+    expect(abbrUS.title).toBe(dfnUS.textContent);
+    expect(abbrUS.textContent).toBe("US");
+
     expect(dfnPoR.textContent.trim()).toBe("Position of Responsibility");
+    expect(abbrPoR.textContent).toBe("PoR");
     expect(dfnPoR.dataset.abbr).toBe("PoR");
+    expect(abbrPoR.title).toBe(dfnPoR.textContent);
 
     expect(dfnUI.dataset.abbr).toBe("UI");
+    expect(abbrUI.textContent).toBe("UI");
     expect(dfnUI.textContent.trim()).toBe("User Interface");
+    expect(abbrUI.title).toBe(dfnUI.textContent);
 
-    divs.forEach((div, i) => {
-      const correspondingDfn = dfns[i];
-      const abbr = div.querySelector("abbr");
-      expect(abbr.textContent).toBe(correspondingDfn.dataset.abbr);
-      expect(abbr.title).toBe(correspondingDfn.textContent);
-    });
   });
   it("warns when used with unsupported elements", async () => {
     const ops = {

@@ -26,13 +26,8 @@ export function run() {
  * @param {HTMLElement} dfn
  */
 function processDfnElement(dfn) {
-  // Generates abbreviation from textContent
-  // e.g., "Permanent Account Number" -> "PAN"
-  dfn.dataset.abbr = generateAbbreviation(dfn);
-
-  const { abbr } = dfn.dataset;
+  const abbr = generateAbbreviation(dfn);
   const fullForm = dfn.textContent.trim();
-
   dfn.insertAdjacentHTML(
     "afterend",
     ` (<abbr title="${fullForm}">${abbr}</abbr>)`
@@ -42,6 +37,8 @@ function processDfnElement(dfn) {
 
 function generateAbbreviation(elem) {
   if (elem.dataset.abbr) return elem.dataset.abbr;
+  // Generates abbreviation from textContent
+  // e.g., "Permanent Account Number" -> "PAN"
   return elem.textContent
     .match(/\b([a-z])/gi)
     .join("")
