@@ -52,7 +52,6 @@ function requestLookup(conf) {
     if (frag) {
       href = new URL(frag, href).href;
     }
-    const cite = document.createElement("cite");
     switch (elem.localName) {
       case "a": {
         if (elem.textContent === "") {
@@ -60,6 +59,7 @@ function requestLookup(conf) {
         }
         elem.href = href;
         if (!path && !frag) {
+          const cite = document.createElement("cite");
           elem.replaceWith(cite);
           cite.append(elem);
         }
@@ -74,6 +74,7 @@ function requestLookup(conf) {
           wrapInner(elem, anchor);
         }
         if (!path && !frag) {
+          const cite = document.createElement("cite");
           cite.append(anchor);
           elem.append(cite);
         }
