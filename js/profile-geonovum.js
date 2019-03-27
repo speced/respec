@@ -52,7 +52,7 @@ define([
   "./core/contrib",
   "./core/fix-headers",
   "./core/structure",
-  "./geonovum/informative",
+  "./core/informative",
   "./core/id-headers",
   "./ui/save-html",
   "./ui/search-specref",

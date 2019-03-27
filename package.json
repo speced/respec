@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.6.2",
+  "version": "24.7.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -34,7 +34,7 @@
     "exports-loader": "^0.7.0",
     "handlebars": "^4.1.1",
     "highlight.js": "^9.15.6",
-    "idb": "^3.0.2",
+    "idb": "^4.0.0",
     "jasmine-core": "^3.3.0",
     "jasmine-reporters": "^2.3.2",
     "jquery": "^3.3.1",
@@ -72,7 +72,7 @@
     "build": "snyk protect && npm run build:components",
     "copydeps": "node ./tools/copydeps.js",
     "karma": "karma start --single-run",
-    "lint": "tsc -p src/jsconfig.json && eslint \"src/**/*.js\" \"tests/**/*.js\" tools/*.js js/profile-w3c-common.js",
+    "lint": "tsc -p src/jsconfig.json && eslint .",
     "release": "node ./tools/release.js",
     "server": "npm start",
     "snyk": "snyk",

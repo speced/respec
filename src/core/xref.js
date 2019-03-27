@@ -10,7 +10,7 @@ import {
   showInlineError,
   showInlineWarning,
 } from "./utils";
-import { openDb } from "idb";
+import { openDB } from "idb";
 
 const API_URL = new URL("https://respec.org/xref");
 const IDL_TYPES = new Set([
@@ -33,8 +33,10 @@ const CACHE_MAX_AGE = 86400000; // 24 hours
  * @param {Array:Elements} elems possibleExternalLinks
  */
 export async function run(conf, elems) {
-  const idb = await openDb("xref", 1, upgradeDB => {
-    upgradeDB.createObjectStore("xrefs");
+  const idb = await openDB("xref", 1, {
+    upgrade(db) {
+      db.createObjectStore("xrefs");
+    },
   });
   const cache = new IDBKeyVal(idb, "xrefs");
   const { xref } = conf;
