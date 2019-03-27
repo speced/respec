@@ -32,7 +32,7 @@ const respec2htmlTests = [
     ],
   },
   {
-    blockDescription: "Process warnings and builds",
+    blockDescription: "Process warnings and errors",
     tests: [
       {
         URL: `http://localhost:${port}/tests/respec2htmlTests/multiple-warn.html`,
@@ -41,14 +41,77 @@ const respec2htmlTests = [
             await exec.run();
           } catch (error) {
             // TODO check against expected errors and warnings
-            // throw error;
+            const expectedErrors = new Set([
+              "A custom SotD paragraph is required for your type of document.",
+              'Document must have one element with `id="abstract"',
+            ]);
+            const expectedWarnings = new Set([
+              "Can't find Table of Contents. Please use <nav id='toc'> around the ToC.",
+            ]);
+            const RecordedTerminalErrors = parseErrorsAndWarnings(
+              error.toString().split("\n")
+            ).filter(err => err);
+            RecordedTerminalErrors.forEach(({ type, text }) => {
+              switch (type) {
+                case "ReSpec error":
+                  if (!expectedErrors.has(text))
+                    throw `Unexpected ReSpec error ${text}`;
+                  expectedErrors.delete(text);
+                  break;
+
+                case "ReSpec warning":
+                  if (!expectedWarnings.has(text))
+                    throw `Unexpected ReSpec warning ${text}`;
+                  expectedWarnings.delete(text);
+                  break;
+
+                case "Fatal error":
+                  throw text;
+              }
+            });
+            if (expectedWarnings.size || expectedErrors.size)
+              throw `Expected the following errors and warnings: \n ${[
+                ...expectedErrors,
+                ...expectedWarnings,
+              ].join("\n")}`;
           }
         },
-        message: `Shows multiple warnings and errors in terminal`,
+        message: `Shows multiple errors in terminal`,
       },
     ],
   },
 ];
+
+function parseErrorsAndWarnings(errorList) {
+  return errorList.map((errorStr, i) => {
+    if (i === 0 || errorStr === "") return null;
+    const type = errorStr.includes("ReSpec error")
+      ? "ReSpec error"
+      : errorStr.includes("ReSpec warning")
+      ? "ReSpec warning"
+      : "Fatal error";
+    switch (type) {
+      case "ReSpec error":
+        return {
+          type: "ReSpec error",
+          text: errorStr.substr(27, errorStr.length - 37),
+        };
+
+      case "ReSpec warning":
+        return {
+          type: "ReSpec warning",
+          text: errorStr.substr(29, errorStr.length - 39),
+        };
+
+      case "Fatal error":
+        return {
+          type: "Fatal error",
+          text: errorStr,
+        };
+    }
+  });
+}
+
 const colors = require("colors");
 const { exec } = require("child_process");
 const moment = require("moment");
@@ -105,13 +168,16 @@ async function runRespec2html() {
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error(colors.red(err));
-        failures.add(exec.cmd);
+        failures.add(description);
       }
     }
   }
   if (failures.size) {
     const files = [...failures].join(", ");
-    throw new Error(`   ❌ File(s) generated errors: ${files}.`);
+    throw new Error(`   ❌ Test(s) failed: ${files}.`);
+  } else {
+    // eslint-disable-next-line no-console
+    console.log(colors.green("All Respec2HTML Test(s) Passed!"));
   }
 }
 
