@@ -35,7 +35,7 @@ const respec2htmlTests = [
     blockDescription: "Process warnings and builds",
     tests: [
       {
-        URL: `http://localhost:${port}/tests/respec2htmlTests/byte-stream-format-registry-respec.html`,
+        URL: `http://localhost:${port}/tests/respec2htmlTests/multiple-warn.html`,
         evalFunction: async exec => {
           try {
             await exec.run();
@@ -89,12 +89,12 @@ async function runRespec2html() {
 
   const failures = new Set();
   // Incrementally spawn processes and add them to process counter.
-  respec2htmlTests.forEach(async block => {
+  for (const block of respec2htmlTests) {
     const { blockDescription: description, tests } = block;
     // eslint-disable-next-line no-console
     console.log(colors.green(`${description}`));
     let testCount = 1;
-    tests.forEach(async ({ URL, evalFunction, message }) => {
+    for (const { URL, evalFunction, message } of tests) {
       const exec = URLTorespec2htmlExecutable(URL);
       const num = colors.yellow(`(test ${testCount++}/${tests.length})`);
       const testInfo = `   👷‍♀️  ${exec.cmd} ${num}`;
@@ -107,8 +107,8 @@ async function runRespec2html() {
         console.error(colors.red(err));
         failures.add(exec.cmd);
       }
-    });
-  });
+    }
+  }
   if (failures.size) {
     const files = [...failures].join(", ");
     throw new Error(`   ❌ File(s) generated errors: ${files}.`);
