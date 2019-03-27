@@ -26,19 +26,24 @@ export function run() {
  * @param {HTMLElement} dfn
  */
 function processDfnElement(dfn) {
-  if (dfn.dataset.abbr === "") {
-    // Generates abbreviation from textContent
-    // e.g., "Permanent Account Number" -> "PAN"
-    dfn.dataset.abbr = dfn.textContent
-      .match(/\b([a-z])/gi)
-      .join("")
-      .toUpperCase();
-  }
-  const fullForm = dfn.textContent.trim();
+  // Generates abbreviation from textContent
+  // e.g., "Permanent Account Number" -> "PAN"
+  dfn.dataset.abbr = generateAbbreviation(dfn);
+
   const { abbr } = dfn.dataset;
+  const fullForm = dfn.textContent.trim();
+
   dfn.insertAdjacentHTML(
     "afterend",
     ` (<abbr title="${fullForm}">${abbr}</abbr>)`
   );
   dfn.dataset.lt = dfn.dataset.lt ? `${dfn.dataset.lt}|${abbr}` : abbr;
+}
+
+function generateAbbreviation(elem) {
+  if (elem.dataset.abbr) return elem.dataset.abbr;
+  return elem.textContent
+    .match(/\b([a-z])/gi)
+    .join("")
+    .toUpperCase();
 }
