@@ -1,5 +1,5 @@
 // @ts-check
-// Module core/dfn
+// Module core/data-abbr
 // - Finds all elements with data-abbr attribute and processes them.
 import { showInlineWarning } from "./utils";
 export const name = "core/dfn-abbr";
