@@ -355,7 +355,7 @@ describe("Core — data-cite attribute", () => {
     expect(a.href).toBe("https://html.spec.whatwg.org/multipage/");
   });
 
-  it("<cite> does not appear around tags other than a/dfn when frag and path are missing with data-cite='some-spec' attribute", async () => {
+  it("does not wrap tags other than a/dfn with <cite> even with [data-cite='spec']", async () => {
     const body = `
       <section>
         <p id="t1"><span data-cite="HTML"></a></p>
