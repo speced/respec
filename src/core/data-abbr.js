@@ -5,11 +5,12 @@ import { showInlineWarning } from "./utils";
 export const name = "core/dfn-abbr";
 
 export function run() {
-  document.querySelectorAll("[data-abbr]").forEach(elem => {
+  /** @type {NodeListOf<HTMLElement>} */
+  const elements = document.querySelectorAll("[data-abbr]");
+  for (const elem of elements) {
     const { localName } = elem;
     switch (localName) {
       case "dfn":
-        // @ts-ignore
         processDfnElement(elem);
         break;
       default: {
@@ -19,7 +20,7 @@ export function run() {
         showInlineWarning(elem, msg, "Error: unsupported.");
       }
     }
-  });
+  }
 }
 /**
  * @param {HTMLElement} dfn
