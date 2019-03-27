@@ -43,7 +43,7 @@ define([
   "./w3c/headers",
   "./w3c/abstract",
   "./core/data-transform",
-  "./core/dfn-abbr",
+  "./core/data-abbr",
   "./core/inlines",
   "./w3c/conformance",
   "./core/dfn",
