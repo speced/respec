@@ -32,7 +32,11 @@ function processDfnElement(dfn) {
     "afterend",
     ` (<abbr title="${fullForm}">${abbr}</abbr>)`
   );
-  dfn.dataset.lt = dfn.dataset.lt ? `${dfn.dataset.lt}|${abbr}` : abbr;
+  const lt = dfn.dataset.lt || "";
+  dfn.dataset.lt = lt
+    .split("|")
+    .concat(abbr)
+    .join("|");
 }
 
 function generateAbbreviation(elem) {
