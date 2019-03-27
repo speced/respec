@@ -68,7 +68,6 @@ describe("Core — data-abbr", () => {
     expect(abbrUI.textContent).toBe("UI");
     expect(dfnUI.textContent.trim()).toBe("User Interface");
     expect(abbrUI.title).toBe(dfnUI.textContent);
-
   });
   it("warns when used with unsupported elements", async () => {
     const ops = {
