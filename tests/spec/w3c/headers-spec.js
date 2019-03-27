@@ -73,6 +73,7 @@ describe("W3C — Headers", () => {
             mailto: "EMAIL",
             note: "NOTE",
             w3cid: "1234",
+            orcid: "https://orcid.org/0000-0002-1694-233X",
           },
         ],
       };
@@ -93,6 +94,7 @@ describe("W3C — Headers", () => {
       expect(dd.querySelectorAll("a[href='http://URI']").length).toBe(0);
       expect(dd.dataset.editorId).toBe("1234");
       expect(dd.textContent).toMatch("(NOTE)");
+      expect(dd.querySelectorAll("a[href='https://orcid.org/0000-0002-1694-233X]").length).toBe(1);
     });
 
     it("takes multiple editors into account", async () => {
