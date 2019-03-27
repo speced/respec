@@ -11,6 +11,11 @@ import {
   showInlineWarning,
 } from "./utils";
 import { openDB } from "idb";
+import { pub } from "./pubsubhub";
+
+const profiles = {
+  w3c: ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"],
+};
 
 const API_URL = new URL("https://respec.org/xref");
 const IDL_TYPES = new Set([
