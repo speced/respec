@@ -91,14 +91,14 @@ async function runRespec2html() {
   // Incrementally spawn processes and add them to process counter.
   respec2htmlTests.forEach(async block => {
     const { blockDescription: description, tests } = block;
-    debug(description);
+    // eslint-disable-next-line no-console
+    console.log(colors.green(`${description}`));
     let testCount = 1;
     tests.forEach(async ({ URL, evalFunction, message }) => {
       const exec = URLTorespec2htmlExecutable(URL);
       const num = colors.yellow(`(test ${testCount++}/${tests.length})`);
-      const testInfo = ` 👷‍♀️  ${exec.cmd} ${num}`;
-      // eslint-disable-next-line no-console
-      console.log(colors.green(message));
+      const testInfo = `   👷‍♀️  ${exec.cmd} ${num}`;
+      debug(message);
       debug(testInfo);
       try {
         await evalFunction(exec);
@@ -111,7 +111,7 @@ async function runRespec2html() {
   });
   if (failures.size) {
     const files = [...failures].join(", ");
-    throw new Error(` ❌ File(s) generated errors: ${files}.`);
+    throw new Error(`   ❌ File(s) generated errors: ${files}.`);
   }
 }
 
