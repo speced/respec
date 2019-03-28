@@ -384,7 +384,11 @@ export function run(conf) {
     pub("error", "At least one editor is required");
   const peopCheck = function(it) {
     if (!it.name) pub("error", "All authors and editors must have a name.");
-    if (it.orcid && !isOrcid(it.orcid)) pub("error", "All authors' and editors' ORCID must be in a valid format if provided.");
+    if (it.orcid && !isOrcid(it.orcid))
+      pub(
+        "error",
+        "All authors' and editors' ORCID must be in a valid format if provided."
+      );
   };
   if (conf.editors) {
     conf.editors.forEach(peopCheck);
@@ -669,19 +673,20 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
 /**
  * @param {String} orcid
  * @return {boolean}
- **/
+ * */
 function isOrcid(orcid) {
   if (!/^https:\/\/orcid.org\/\d{4}-\d{4}-\d{4}-\d{3}(\d|X)$/.test(orcid)) {
     return false;
   }
   // calculate checksum as per https://support.orcid.org/hc/en-us/articles/360006897674-Structure-of-the-ORCID-Identifier
   const lastDigit = orcid[orcid.length - 1];
-  const remainder = orcid.split("")
-        .slice(0, -1)
-        .filter(c => /\d/.test(c))
-        .map(Number)
-        .reduce((acc, c) => (acc + c) * 2, 0);
-  const lastDigitInt = (12 - remainder % 11) % 11;
+  const remainder = orcid
+    .split("")
+    .slice(0, -1)
+    .filter(c => /\d/.test(c))
+    .map(Number)
+    .reduce((acc, c) => (acc + c) * 2, 0);
+  const lastDigitInt = (12 - (remainder % 11)) % 11;
   const lastDigitShould = lastDigitInt === 10 ? "X" : String(lastDigitInt);
   return lastDigit === lastDigitShould;
 }

@@ -94,7 +94,9 @@ describe("W3C — Headers", () => {
       expect(dd.querySelectorAll("a[href='http://URI']").length).toBe(0);
       expect(dd.dataset.editorId).toBe("1234");
       expect(dd.textContent).toMatch("(NOTE)");
-      expect(dd.querySelectorAll("a[href='https://orcid.org/0000-0002-1694-233X]").length).toBe(1);
+      expect(
+        dd.querySelector("a[href='https://orcid.org/0000-0002-1694-233X']")
+      ).not.toBeNull();
     });
 
     it("takes multiple editors into account", async () => {
@@ -140,6 +142,11 @@ describe("W3C — Headers", () => {
                 class: "twitter",
               },
               {
+                name: '<strong id="fb-link">Pyotr Zverev</strong>',
+                href: "https://facebook.com/pyotr_zverev",
+                class: "",
+              },
+              {
                 href: "http://not-valid-missing-name",
                 class: "invalid",
               },
@@ -169,7 +176,9 @@ describe("W3C — Headers", () => {
       // Check CSS is correctly applied
       expect(orcidAnchor.parentNode.className).toBe("orcid");
       expect(twitterAnchor.parentNode.className).toBe("twitter");
-      // check that extra items with no name are ignored
+      // Check that HTML is not escaped
+      expect(doc.querySelector("#fb-link")).not.toBeNull();
+      // Check that extra items with no name are ignored
       expect(doc.querySelector("a[href='http://not-valid']")).toBe(null);
       expect(doc.querySelector("a[href='http://empty-name']")).toBe(null);
     });

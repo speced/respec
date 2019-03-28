@@ -29,7 +29,7 @@ describe("Core — Override Configuration", () => {
     url.searchParams.set(
       "additionalCopyrightHolders",
       // URL will perform encodeURIComponent automatically
-      "<span id=\"xss-attempt\">Internet Engineering Task Force</span>"
+      '<span id="xss-attempt">Internet Engineering Task Force</span>'
     );
     const doc = await makeRSDoc(makeStandardOps(), url);
     const copyrightText = doc.querySelector(".copyright").textContent;
