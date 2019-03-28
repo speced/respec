@@ -325,33 +325,24 @@ describe("Core — data-cite attribute", () => {
     expect(dahut).toBe(null);
   });
 
-  it("Adds <cite> around <a> when frag and path are missing from <dfn data-cite='some-spec'>", async () => {
+  it("Adds <cite> around <a> when frag and path are missing from <a/dfn data-cite='some-spec'>", async () => {
     const body = `
       <section>
+        <p id="t1"><a data-cite="HTML"></a></p>
         <p id="t1"><dfn data-cite="HTML"></dfn></p>
       </section>
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
 
-    const cite = doc.querySelector("#t1 > dfn > cite");
+    let cite = doc.querySelector("#t1 > cite");
     expect(cite).toBeTruthy();
-    const dfnA = doc.querySelector("#t1 > dfn > cite > a");
-    expect(dfnA.href).toBe("https://html.spec.whatwg.org/multipage/");
-  });
+    let a = doc.querySelector("#t1 > cite > a");
+    expect(a.href).toBe("https://html.spec.whatwg.org/multipage/");
 
-  it("Adds <cite> around <a> when frag and path are missing from <a data-cite='some-spec'>", async () => {
-    const body = `
-      <section>
-        <p id="t1"><a data-cite="HTML"></a></p>
-      </section>
-    `;
-    const ops = makeStandardOps(null, body);
-    const doc = await makeRSDoc(ops);
-
-    const cite = doc.querySelector("#t1 > cite");
+    cite = doc.querySelector("#t1 > dfn > cite");
     expect(cite).toBeTruthy();
-    const a = doc.querySelector("#t1 > cite > a");
+    a = doc.querySelector("#t1 > dfn > cite > a");
     expect(a.href).toBe("https://html.spec.whatwg.org/multipage/");
   });
 
