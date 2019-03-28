@@ -113,7 +113,7 @@ function cleanupHyper(document) {
     comment.textContent.startsWith("-") && comment.textContent.endsWith("%");
   const walker = document.createTreeWalker(
     document.documentElement,
-    document.defaultView.NodeFilter.SHOW_COMMENT,
+    128, // NodeFilter.SHOW_COMMENT
     filter
   );
   for (const comment of [...walkTree(walker)]) {
