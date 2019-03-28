@@ -99,14 +99,12 @@ function decorateDocument(doc, opts) {
   function decorateBody({
     abstract = "<p>test abstract</p>",
     body = "",
-    bodyAttrs,
+    bodyAttrs = {},
   }) {
     doc.body.innerHTML += `<section id='abstract'>${abstract}</section>${body}`;
-    if (bodyAttrs) {
-      Object.keys(bodyAttrs).forEach(key => {
-        doc.body.setAttribute(key, bodyAttrs[key]);
-      });
-    }
+    Object.entries(bodyAttrs).forEach(([key, value]) => {
+      doc.body.setAttribute(key, value);
+    });
   }
 
   if (opts.htmlAttrs) {
