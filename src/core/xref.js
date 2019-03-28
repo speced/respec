@@ -87,9 +87,10 @@ export async function run(conf, elems) {
 function invalidProfileError(profile) {
   pub(
     "error",
-    `Invalid \`xref\` profile option passed in the configuration: "${profile}". Please use one of the supported specification profiles: ${Object.keys(
-      profiles
-    ).join(", ")}.`
+    `Invalid \`xref\` profile option passed in the configuration: "${profile}".` +
+      ` Please use one of the supported specification profiles: ${Object.keys(
+        profiles
+      ).join(", ")}.`
   );
 }
 
