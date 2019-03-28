@@ -1,6 +1,6 @@
 // A shim to use hyperhtml on Node.js.
 // TODO: migrate to ES module when top-level await arrives
-(function (factory) {
+(function(factory) {
   if (typeof define === "function" && define.amd) {
     define(["require", "exports", "hyperhtml"], factory);
   } else if (typeof module === "object" && typeof module.exports === "object") {
@@ -8,10 +8,10 @@
       typeof document !== "undefined"
         ? require("hyperhtml")
         : require("viperhtml");
-    var v = factory(require, exports, hypermorphic);
+    const v = factory(require, exports, hypermorphic);
     if (v !== undefined) module.exports = v;
   }
-})(function (require, exports, hypermorphic) {
+})((require, exports, hypermorphic) => {
   "use strict";
   exports.__esModule = true;
   exports.default = function(strings, ...args) {
