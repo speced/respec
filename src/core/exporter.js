@@ -7,9 +7,10 @@
  */
 
 import { expose } from "./expose-modules";
-import hyperHTML from "../../js/html-template";
+import html from "../../js/html-template";
 import { pub } from "./pubsubhub";
 import { removeReSpec } from "./utils";
+import { version } from "../../js/respec-version";
 
 const mimeTypes = new Map([["text/html", "html"], ["application/xml", "xml"]]);
 
@@ -33,10 +34,15 @@ export function rsDocToDataURL(mimeType, doc = document) {
   return `data:${mimeType};charset=utf-8,${encodedString}`;
 }
 
+/**
+ * @param {string} format 
+ * @param {Document} doc 
+ */
 function serialize(format, doc) {
   const cloneDoc = doc.cloneNode(true);
   cleanup(cloneDoc, { pub });
   let result = "";
+  const { XMLSerializer } = doc.defaultView;
   switch (format) {
     case "xml":
       result = new XMLSerializer().serializeToString(cloneDoc);
@@ -79,13 +85,13 @@ export function cleanup(cloneDoc, hub) {
     "meta[charset], meta[content*='charset=']"
   );
   if (!metaCharset) {
-    metaCharset = hyperHTML`<meta charset="utf-8">`;
+    metaCharset = html`<meta charset="utf-8">`;
   }
   insertions.appendChild(metaCharset);
 
   // Add meta generator
-  const respecVersion = `ReSpec ${window.respecVersion || "Developer Channel"}`;
-  const metaGenerator = hyperHTML`
+  const respecVersion = `ReSpec ${version}`;
+  const metaGenerator = html`
     <meta name="generator" content="${respecVersion}">
   `;
 
@@ -105,7 +111,7 @@ function cleanupHyper(document) {
     comment.textContent.startsWith("-") && comment.textContent.endsWith("%");
   const walker = document.createTreeWalker(
     document.documentElement,
-    NodeFilter.SHOW_COMMENT,
+    document.defaultView.NodeFilter.SHOW_COMMENT,
     filter
   );
   for (const comment of [...walkTree(walker)]) {

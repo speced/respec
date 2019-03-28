@@ -19,6 +19,9 @@ declare var respecConfig: any;
 interface Window {
   respecVersion: string;
   respecConfig: any;
+
+  NodeFilter: typeof NodeFilter;
+  XMLSerializer: typeof XMLSerializer
 }
 
 interface Document {
