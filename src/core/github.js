@@ -8,7 +8,7 @@ import { pub } from "./pubsubhub";
 
 export const name = "core/github";
 
-export default async function ({ configuration: conf }) {
+export default async function({ configuration: conf }) {
   if (!conf.hasOwnProperty("github") || !conf.github) {
     // nothing to do, bail out.
     return;
