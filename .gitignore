@@ -11,4 +11,6 @@ js/*
 !js/shortcut.js
 !js/html-template.js
 !js/html-template.d.ts
+!js/respec-version.js
+!js/respec-version.d.ts
 .vscode/

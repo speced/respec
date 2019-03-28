@@ -35,8 +35,8 @@ export function rsDocToDataURL(mimeType, doc = document) {
 }
 
 /**
- * @param {string} format 
- * @param {Document} doc 
+ * @param {string} format
+ * @param {Document} doc
  */
 function serialize(format, doc) {
   const cloneDoc = doc.cloneNode(true);
@@ -85,14 +85,16 @@ export function cleanup(cloneDoc, hub) {
     "meta[charset], meta[content*='charset=']"
   );
   if (!metaCharset) {
-    metaCharset = html`<meta charset="utf-8">`;
+    metaCharset = html`
+      <meta charset="utf-8" />
+    `;
   }
   insertions.appendChild(metaCharset);
 
   // Add meta generator
   const respecVersion = `ReSpec ${version}`;
   const metaGenerator = html`
-    <meta name="generator" content="${respecVersion}">
+    <meta name="generator" content="${respecVersion}" />
   `;
 
   insertions.appendChild(metaGenerator);
