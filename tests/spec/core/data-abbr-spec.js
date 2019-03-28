@@ -82,7 +82,7 @@ describe("Core — data-abbr", () => {
     const ops = {
       config: makeBasicConfig(),
       body: `<section id="section">
-       <dfn id="test" data-abbr>Permanent Account \n   Number</dfn>
+       <dfn id="test" data-abbr>\t\n Permanent\t\nAccount \n   Number\t\n</dfn>
       </section>`,
     };
     const doc = await makeRSDoc(ops);
