@@ -5,6 +5,7 @@ import { createRespecDocument } from "./respec-document";
 import insertStyle from "./core/style";
 import insertW3CStyle from "./w3c/style";
 import reindent from "./core/reindent";
+import setGitHubConfiguration from "./core/github";
 
 /**
  * @param {string|Document} doc A document that will be preprocessed
@@ -17,6 +18,7 @@ export async function preprocess(doc, conf) {
   await insertStyle(respecDoc);
   insertW3CStyle(respecDoc);
   addL10nConfiguration(respecDoc);
+  setGitHubConfiguration(respecDoc);
 
   cleanup(respecDoc.document, respecDoc.hub);
   return respecDoc;
