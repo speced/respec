@@ -329,7 +329,7 @@ describe("Core — data-cite attribute", () => {
     const body = `
       <section>
         <p id="t1"><a data-cite="HTML"></a></p>
-        <p id="t1"><dfn data-cite="HTML"></dfn></p>
+        <p id="t2"><dfn data-cite="HTML"></dfn></p>
       </section>
     `;
     const ops = makeStandardOps(null, body);
@@ -340,9 +340,9 @@ describe("Core — data-cite attribute", () => {
     let a = doc.querySelector("#t1 > cite > a");
     expect(a.href).toBe("https://html.spec.whatwg.org/multipage/");
 
-    cite = doc.querySelector("#t1 > dfn > cite");
+    cite = doc.querySelector("#t2 > dfn > cite");
     expect(cite).toBeTruthy();
-    a = doc.querySelector("#t1 > dfn > cite > a");
+    a = doc.querySelector("#t2 > dfn > cite > a");
     expect(a.href).toBe("https://html.spec.whatwg.org/multipage/");
   });
 
