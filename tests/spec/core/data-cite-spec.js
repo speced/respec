@@ -117,7 +117,7 @@ describe("Core — data-cite attribute", () => {
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    const a = doc.querySelector("#t1 > a");
+    const a = doc.querySelector("#t1 > cite > a");
     expect(a.textContent).toEqual("inline link");
     expect(a.href).toEqual("https://html.spec.whatwg.org/multipage/");
     expect(a.hasAttribute("data-cite")).toEqual(false);
@@ -134,7 +134,7 @@ describe("Core — data-cite attribute", () => {
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    const a = doc.querySelector("#t1 > a");
+    const a = doc.querySelector("#t1 > cite > a");
     expect(a.textContent).toEqual("inline link");
     expect(a.href).toEqual("https://dom.spec.whatwg.org/");
     expect(a.hasAttribute("data-cite")).toEqual(false);
@@ -253,19 +253,19 @@ describe("Core — data-cite attribute", () => {
     `;
     const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
-    let a = doc.querySelector("#t1 > a");
+    let a = doc.querySelector("#t1 > cite > a");
     expect(a.textContent).toBe("HTML Standard");
     expect(a.href).toBe("https://html.spec.whatwg.org/multipage/");
     expect(doc.getElementById("bib-html").closest("section").id).toBe(
       "normative-references"
     );
-    a = doc.querySelector("#t2 > a");
+    a = doc.querySelector("#t2 > cite > a");
     expect(a.textContent).toBe("Fetch Standard");
     expect(a.href).toBe("https://fetch.spec.whatwg.org/");
     expect(doc.getElementById("bib-fetch").closest("section").id).toBe(
       "normative-references"
     );
-    a = doc.querySelector("#t3 > a");
+    a = doc.querySelector("#t3 > cite > a");
     expect(a.textContent).toBe("This should not be replaced");
     expect(a.href).toBe("https://html.spec.whatwg.org/multipage/");
     expect(doc.getElementById("bib-fetch").closest("section").id).toBe(
@@ -323,5 +323,39 @@ describe("Core — data-cite attribute", () => {
       )
     ).toBeTruthy();
     expect(dahut).toBe(null);
+  });
+
+  it("Adds <cite> around <a> when frag and path are missing from <a/dfn data-cite='some-spec'>", async () => {
+    const body = `
+      <section>
+        <p id="t1"><a data-cite="HTML"></a></p>
+        <p id="t2"><dfn data-cite="HTML"></dfn></p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    let cite = doc.querySelector("#t1 > cite");
+    expect(cite).toBeTruthy();
+    let a = doc.querySelector("#t1 > cite > a");
+    expect(a.href).toBe("https://html.spec.whatwg.org/multipage/");
+
+    cite = doc.querySelector("#t2 > dfn > cite");
+    expect(cite).toBeTruthy();
+    a = doc.querySelector("#t2 > dfn > cite > a");
+    expect(a.href).toBe("https://html.spec.whatwg.org/multipage/");
+  });
+
+  it("does not wrap tags other than a/dfn with <cite> even with [data-cite='spec']", async () => {
+    const body = `
+      <section>
+        <p id="t1"><span data-cite="HTML"></a></p>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
+    const doc = await makeRSDoc(ops);
+
+    const cite = doc.querySelector("#t1 > cite");
+    expect(cite).toBeNull();
   });
 });
