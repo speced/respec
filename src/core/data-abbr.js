@@ -28,7 +28,7 @@ export function run() {
 function processDfnElement(dfn) {
   const abbr = generateAbbreviation(dfn);
   // get normalized <dfn> textContent to remove spaces, tabs, new lines.
-  const fullForm = dfn.textContent.replace(/(\r\n|\n|\r|\s+)/gm, " ").trim();
+  const fullForm = dfn.textContent.replace(/\s\s+/g, " ").trim();
   dfn.insertAdjacentHTML(
     "afterend",
     ` (<abbr title="${fullForm}">${abbr}</abbr>)`
