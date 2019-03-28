@@ -1281,8 +1281,24 @@ describe("W3C — Headers", () => {
       .textContent.replace(/\s+/gm, " ");
     const expectedString =
       "does not expect this document to become a W3C Recommendation";
-    expect(sotdText).toMatch(expectedString);
+    expect(sotdText).toContain(expectedString);
   });
+  it("states that the document won't be on the W3C Rec Track", async () => {
+    const ops = makeStandardOps();
+    const newProps = {
+      noRecTrack: true,
+      status: "ED",
+    };
+    Object.assign(ops.config, newProps);
+    const doc = await makeRSDoc(ops);
+    const sotdText = doc
+      .getElementById("sotd")
+      .textContent.replace(/\s+/gm, " ");
+    const expectedString =
+      "does not expect this document to become a W3C Recommendation";
+    expect(sotdText).toContain(expectedString);
+  });
+
   describe("logos", () => {
     it("adds allows multiple logos when spec is unofficial", async () => {
       const ops = makeStandardOps();
