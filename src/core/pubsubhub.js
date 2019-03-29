@@ -10,6 +10,9 @@ export const name = "core/pubsubhub";
 
 const subscriptions = new Map();
 
+let onRespecError = null;
+let onRespecWarn = null;
+
 export function pub(topic, ...data) {
   if (!subscriptions.has(topic)) {
     return; // Nothing to do...
@@ -74,10 +77,21 @@ export function unsub({ topic, cb }) {
 
 sub("error", err => {
   console.error(err, err.stack);
+  if (onRespecError) onRespecError(err);
 });
 
 sub("warn", str => {
   console.warn(str);
+  if (onRespecWarn) onRespecWarn(str);
 });
 
 expose(name, { sub });
+
+export async function run(conf) {
+  if (conf.onRespecError && typeof conf.onRespecError === "function") {
+    onRespecError = conf.onRespecError;
+  }
+  if (conf.onRespecWarn && typeof conf.onRespecWarn === "function") {
+    onRespecWarn = conf.onRespecWarn;
+  }
+}
