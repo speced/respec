@@ -738,7 +738,7 @@ describe("Core — xref", () => {
 
     it("xref as profile string - valid profile", async () => {
       const ops = {
-        config: { xref: "W3C" },
+        config: { xref: "WEB-PLATFORM" },
         bodyAttrs: {
           "data-cite": "SVG XHR",
         },
@@ -761,7 +761,7 @@ describe("Core — xref", () => {
 
     it("xref as object with valid profile and specs", async () => {
       const ops = {
-        config: { xref: { specs: ["a", "b", "c"], profile: "W3C" } },
+        config: { xref: { specs: ["a", "b", "c"], profile: "WEB-PLATFORM" } },
         bodyAttrs: {
           "data-cite": "SVG XHR",
         },
