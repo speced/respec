@@ -9,6 +9,8 @@ bevy.json
 js/*
 !js/profile-w3c-common.js
 !js/shortcut.js
+!js/html-parser.js
+!js/html-parser.d.ts
 !js/html-template.js
 !js/html-template.d.ts
 !js/respec-version.js

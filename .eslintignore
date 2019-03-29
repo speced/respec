@@ -1,5 +1,6 @@
 builds/*
 js/*
 !js/profile-w3c-common.js
+!js/html-parser.js
 !js/html-template.js
 !js/respec-version.js

@@ -5,6 +5,7 @@
 // anywhere else.
 import { lang as docLang } from "./l10n";
 import marked from "marked";
+import { parseHTML } from "../../js/html-parser";
 import { pub } from "./pubsubhub";
 export const name = "core/utils";
 
@@ -200,7 +201,7 @@ export function normalizePadding(text = "") {
   function isTextNode(node) {
     return node !== null && node.nodeType === node.TEXT_NODE;
   }
-  const doc = document.createRange().createContextualFragment(text);
+  const doc = parseHTML(text);
   // Normalize block level elements children first
   Array.from(doc.children)
     .filter(elem => !inlineElems.has(elem.localName))
