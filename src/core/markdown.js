@@ -124,7 +124,7 @@ function structure(fragment, doc) {
     const stack = new Builder(doc);
     while (root.firstChild) {
       const node = root.firstChild;
-      if (node.nodeType !== Node.ELEMENT_NODE) {
+      if (node.nodeType !== node.ELEMENT_NODE) {
         root.removeChild(node);
         continue;
       }
@@ -161,7 +161,10 @@ const processBlockLevelElements = processElements(
   "[data-format=markdown]:not(body), section, div, address, article, aside, figure, header, main, body"
 );
 
-export function run(conf) {
+/**
+ * @param {import("../respec-document").RespecDocument} respecDoc
+ */
+export default function({ document, configuration: conf }) {
   const hasMDSections = !!document.querySelector(
     "[data-format=markdown]:not(body)"
   );
@@ -198,7 +201,9 @@ export function run(conf) {
   }
   // We transplant the UI to do the markdown processing
   const rsUI = document.getElementById("respec-ui");
-  rsUI.remove();
+  if (rsUI) {
+    rsUI.remove();
+  }
   // The new body will replace the old body
   const newHTML = document.createElement("html");
   const newBody = document.createElement("body");
@@ -219,6 +224,8 @@ export function run(conf) {
   const fragment = structure(newBody, document);
   // Frankenstein the whole thing back together
   newBody.appendChild(fragment);
-  newBody.prepend(rsUI);
+  if (rsUI) {
+    newBody.prepend(rsUI);
+  }
   document.body.parentNode.replaceChild(newBody, document.body);
 }

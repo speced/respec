@@ -4,6 +4,7 @@ import { cleanup } from "./core/exporter";
 import { createRespecDocument } from "./respec-document";
 import insertStyle from "./core/style";
 import insertW3CStyle from "./w3c/style";
+import processMarkdown from "./core/markdown";
 import reindent from "./core/reindent";
 import setGitHubConfiguration from "./core/github";
 
@@ -19,6 +20,7 @@ export async function preprocess(doc, conf) {
   insertW3CStyle(respecDoc);
   addL10nConfiguration(respecDoc);
   setGitHubConfiguration(respecDoc);
+  processMarkdown(respecDoc);
 
   cleanup(respecDoc.document, respecDoc.hub);
   return respecDoc;
