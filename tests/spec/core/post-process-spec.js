@@ -1,4 +1,4 @@
-describe("Core Linter", () => {
+describe("Core Post Process", () => {
   it("emits a warning if post-process array contains non-functions", async () => {
     const ops = {
       config: makeBasicConfig(),
