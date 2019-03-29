@@ -1,19 +1,18 @@
 describe("Core Post Process", () => {
-  it("emits a warning if post-process array contains non-functions", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-    };
-
-    const errorPromise = new Promise(resolve => {
-      ops.config.postProcess = [{ key: "value" }];
-      ops.config.onRespecError = error => {
-        expect(error).toBe(
-          "Every item in `postProcess` must be a JS function."
-        );
-        resolve();
-      };
+  it("emits an error if post-process array contains non-functions", async () => {
+    const ops = makeStandardOps({
+      collectErrors: true,
+      postProcess: [
+        {
+          text: "this should not be here",
+        },
+      ],
     });
-    await makeRSDoc(ops);
-    await Promise.resolve(errorPromise);
+    const doc = await makeRSDoc(ops);
+    const { collectedErrors } = doc.defaultView.respecConfig;
+    expect(collectedErrors.size).toEqual(1);
+    expect(
+      collectedErrors.has("Every item in `postProcess` must be a JS function.")
+    ).toBe(true);
   });
 });

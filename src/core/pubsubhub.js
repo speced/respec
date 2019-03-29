@@ -88,6 +88,25 @@ sub("warn", str => {
 expose(name, { sub });
 
 export async function run(conf) {
+  if (conf.collectErrors && !conf.hasOwnProperty("onRespecError")) {
+    // Automatically assign a callback function to collect errors.
+    conf.onRespecError = err => {
+      if (!conf.hasOwnProperty("collectedErrors"))
+        conf.collectedErrors = new Set();
+      const { collectedErrors } = conf;
+      collectedErrors.add(err);
+    };
+  }
+  if (conf.collectWarnings && !conf.hasOwnProperty("onRespecWarn")) {
+    // Automatically assign a callback function to collect warnings.
+    conf.onRespecWarn = warn => {
+      if (!conf.hasOwnProperty("collectedWarnings"))
+        conf.collectedWarnings = new Set();
+      const { collectedWarnings } = conf;
+      collectedWarnings.add(warn);
+    };
+  }
+
   if (conf.onRespecError && typeof conf.onRespecError === "function") {
     onRespecError = conf.onRespecError;
   }
