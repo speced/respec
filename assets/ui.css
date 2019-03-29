@@ -286,15 +286,6 @@
   border-radius: inherit;
 }
 
-@supports (text-decoration-style: wavy) {
-  .respec-offending-element {
-    background: none;
-    text-decoration-line: underline;
-    text-decoration-style: wavy;
-    text-decoration-color: red;
-  }
-}
-
 .respec-button-copy-paste {
   position: absolute;
   display: block;
