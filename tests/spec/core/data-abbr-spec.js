@@ -78,4 +78,15 @@ describe("Core — data-abbr", () => {
     const p = doc.getElementById("test");
     expect(p.classList).toContain("respec-offending-element");
   });
+  it("normalizes title of added abbr for unwanted spaces", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `<section id="section">
+       <dfn id="test" data-abbr>\t\n Permanent\t\nAccount \n   Number\t\n</dfn>
+      </section>`,
+    };
+    const doc = await makeRSDoc(ops);
+    const abbr = doc.querySelector("section abbr");
+    expect(abbr.title).toBe("Permanent Account Number");
+  });
 });
