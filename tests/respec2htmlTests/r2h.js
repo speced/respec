@@ -46,7 +46,6 @@ const respec2htmlTests = [
           try {
             await exec.run();
           } catch (error) {
-            // TODO check against expected errors and warnings
             const expectedErrors = new Set([
               "A custom SotD paragraph is required for your type of document.",
               'Document must have one element with `id="abstract"',
