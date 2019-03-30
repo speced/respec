@@ -1,4 +1,3 @@
-// @ts-check
 import html from "hyperhtml";
 
 export default (items = []) => {
@@ -12,6 +11,7 @@ export default (items = []) => {
     const dd = html`
       <dd class="p-author h-card vcard" data-editor-id="${editorid}"></dd>
     `;
+    const span = document.createDocumentFragment();
     const contents = [];
     if (p.mailto) {
       contents.push(html`
@@ -58,7 +58,8 @@ export default (items = []) => {
         contents.push(document.createTextNode(", "), result);
       }
     }
-    dd.append(...contents);
+    html.bind(span)`${contents}`;
+    dd.appendChild(span);
     return dd;
   }
 
