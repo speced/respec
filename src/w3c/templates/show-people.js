@@ -51,6 +51,15 @@ export default (conf, name, items = []) => {
         );
       }
     }
+    if (p.orcid) {
+      contents.push(
+        html`
+          <a class="p-name orcid" href="${p.orcid}"
+            ><div class="orcid-logo"></div
+          ></a>
+        `
+      );
+    }
     if (p.note) contents.push(document.createTextNode(` (${p.note})`));
     if (p.extras) {
       const results = p.extras

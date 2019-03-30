@@ -385,16 +385,13 @@ export function run(conf) {
   const peopCheck = function(it) {
     if (!it.name) pub("error", "All authors and editors must have a name.");
     if (it.orcid) {
-        try {
-          it.orcid = normalizeOrcid(it.orcid);
-        } catch (e) {
-          pub(
-            "error",
-            `"${it.orcid}" is not an ORCID. ${e.message}`,
-          );
-          // a failed orcid link could link to something outside of orcid, which would be misleading.
-          delete it.orcid;
-        }
+      try {
+        it.orcid = normalizeOrcid(it.orcid);
+      } catch (e) {
+        pub("error", `"${it.orcid}" is not an ORCID. ${e.message}`);
+        // a failed orcid link could link to something outside of orcid, which would be misleading.
+        delete it.orcid;
+      }
     }
   };
   if (conf.editors) {
@@ -682,32 +679,36 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
  * @return {string} the full ORCID URL. Throws an error if the ID is invalid.
  */
 function normalizeOrcid(orcid) {
-    const orcidUrl = new URL(orcid, "https://orcid.org/");
-    if (orcidUrl.origin !== "https://orcid.org") {
-        throw new Error(`The origin should be "https://orcid.org", not "${orcidUrl.origin}".`);
-    }
+  const orcidUrl = new URL(orcid, "https://orcid.org/");
+  if (orcidUrl.origin !== "https://orcid.org") {
+    throw new Error(
+      `The origin should be "https://orcid.org", not "${orcidUrl.origin}".`
+    );
+  }
 
-    // trailing slash would mess up checksum
-    const orcidId = orcidUrl.pathname.slice(1).replace(/\/$/, "");
-    if (!/^\d{4}-\d{4}-\d{4}-\d{3}(\d|X)$/.test(orcidId)) {
-        throw new Error(`ORCIDs have the format "1234-1234-1234-1234", not "${orcidId}"`);
-    }
+  // trailing slash would mess up checksum
+  const orcidId = orcidUrl.pathname.slice(1).replace(/\/$/, "");
+  if (!/^\d{4}-\d{4}-\d{4}-\d{3}(\d|X)$/.test(orcidId)) {
+    throw new Error(
+      `ORCIDs have the format "1234-1234-1234-1234", not "${orcidId}"`
+    );
+  }
 
-    // calculate checksum as per https://support.orcid.org/hc/en-us/articles/360006897674-Structure-of-the-ORCID-Identifier
-    const lastDigit = orcidId[orcidId.length - 1];
-    const remainder = orcidId
-          .split("")
-          .slice(0, -1)
-          .filter(c => /\d/.test(c))
-          .map(Number)
-          .reduce((acc, c) => (acc + c) * 2, 0);
-    const lastDigitInt = (12 - (remainder % 11)) % 11;
-    const lastDigitShould = lastDigitInt === 10 ? "X" : String(lastDigitInt);
-    if (lastDigit !== lastDigitShould) {
-        throw new Error(`"${orcidId}" has an invalid checksum.`);
-    }
+  // calculate checksum as per https://support.orcid.org/hc/en-us/articles/360006897674-Structure-of-the-ORCID-Identifier
+  const lastDigit = orcidId[orcidId.length - 1];
+  const remainder = orcidId
+    .split("")
+    .slice(0, -1)
+    .filter(c => /\d/.test(c))
+    .map(Number)
+    .reduce((acc, c) => (acc + c) * 2, 0);
+  const lastDigitInt = (12 - (remainder % 11)) % 11;
+  const lastDigitShould = lastDigitInt === 10 ? "X" : String(lastDigitInt);
+  if (lastDigit !== lastDigitShould) {
+    throw new Error(`"${orcidId}" has an invalid checksum.`);
+  }
 
-    return orcidUrl.href;
+  return orcidUrl.href;
 }
 
 /**
