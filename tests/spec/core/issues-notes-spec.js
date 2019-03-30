@@ -378,4 +378,47 @@ describe("Core — Issues and Notes", () => {
     expect(doc.documentElement.lang).toBe("es");
     expect(textContent).toContain("Resumen de la cuestión");
   });
+  it("shows issue-summary section with heading provided", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `
+      <section>
+        <h2>Test Issues</h2>
+        <p class="issue" data-number=123></p>
+      </section>
+      <section id="issue-summary">
+        <h2>Open Issues</h2>
+        <p>Here you will find all open issues</p>
+      </section>
+      `,
+    };
+    const doc = await makeRSDoc(ops);
+    let textContent = doc.querySelector("#issue-summary h2");
+    expect(textContent.innerText).toContain("Open Issues");
+    textContent = doc.querySelector("#issue-summary p");
+    expect(textContent.innerText).toContain(
+      "Here you will find all open issues"
+    );
+  });
+  it("shows issue-summary section with paragraph and default heading when only <p> is defined", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `
+      <section>
+        <h2>Test Issues</h2>
+        <p class="issue" data-number=123></p>
+      </section>
+      <section id="issue-summary">
+        <p>Here you will find all issues summary</p>
+      </section>
+      `,
+    };
+    const doc = await makeRSDoc(ops);
+    let textContent = doc.querySelector("#issue-summary h2");
+    expect(textContent.innerText).toContain("Issue Summary");
+    textContent = doc.querySelector("#issue-summary p");
+    expect(textContent.innerText).toContain(
+      "Here you will find all issues summary"
+    );
+  });
 });
