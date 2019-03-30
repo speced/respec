@@ -721,6 +721,113 @@ describe("Core — xref", () => {
     });
   });
 
+  describe("Handle configurations correctly", () => {
+    it("xref as array of specifications", async () => {
+      const ops = {
+        config: { xref: ["a", "b", "c"] },
+        bodyAttrs: {
+          "data-cite": "SVG DOM",
+        },
+        body: makeDefaultBody(),
+      };
+      const doc = await makeRSDoc(ops);
+      expect(doc.body.dataset.cite.split(" ")).toEqual(
+        jasmine.arrayWithExactContents(["b", "SVG", "a", "DOM", "c"])
+      );
+    });
+
+    it("xref as profile string - valid profile", async () => {
+      const ops = {
+        config: { xref: "WEB-PLATFORM" },
+        bodyAttrs: {
+          "data-cite": "SVG XHR",
+        },
+        body: makeDefaultBody(),
+      };
+      const doc = await makeRSDoc(ops);
+      expect(doc.body.dataset.cite.split(" ")).toEqual(
+        jasmine.arrayWithExactContents([
+          "HTML",
+          "INFRA",
+          "URL",
+          "SVG",
+          "XHR",
+          "WEBIDL",
+          "DOM",
+          "FETCH",
+        ])
+      );
+    });
+
+    it("xref as object with valid profile and specs", async () => {
+      const ops = {
+        config: { xref: { specs: ["a", "b", "c"], profile: "WEB-PLATFORM" } },
+        bodyAttrs: {
+          "data-cite": "SVG XHR",
+        },
+        body: makeDefaultBody(),
+      };
+      const doc = await makeRSDoc(ops);
+      expect(doc.body.dataset.cite.split(" ")).toEqual(
+        jasmine.arrayWithExactContents([
+          "HTML",
+          "INFRA",
+          "URL",
+          "SVG",
+          "XHR",
+          "WEBIDL",
+          "a",
+          "b",
+          "c",
+          "DOM",
+          "FETCH",
+        ])
+      );
+    });
+
+    it("xref as profile string - invalid profile", async () => {
+      const ops = {
+        config: { xref: "W4C" },
+        bodyAttrs: {
+          "data-cite": "SVG XHR",
+        },
+        body: makeDefaultBody(),
+      };
+      const doc = await makeRSDoc(ops);
+      expect(doc.body.dataset.cite.split(" ")).toEqual(
+        jasmine.arrayWithExactContents(["SVG", "XHR"])
+      );
+    });
+
+    it("xref as object with invalid profile but valid specs", async () => {
+      const ops = {
+        config: { xref: { specs: ["a", "b", "c"], profile: "W4C" } },
+        bodyAttrs: {
+          "data-cite": "SVG XHR",
+        },
+        body: makeDefaultBody(),
+      };
+      const doc = await makeRSDoc(ops);
+      expect(doc.body.dataset.cite.split(" ")).toEqual(
+        jasmine.arrayWithExactContents(["XHR", "a", "SVG", "b", "c"])
+      );
+    });
+
+    it("xref as invalid syntax", async () => {
+      const ops = {
+        config: { xref: 123 },
+        bodyAttrs: {
+          "data-cite": "SVG XHR",
+        },
+        body: makeDefaultBody(),
+      };
+      const doc = await makeRSDoc(ops);
+      expect(doc.body.dataset.cite.split(" ")).toEqual(
+        jasmine.arrayWithExactContents(["XHR", "SVG"])
+      );
+    });
+  });
+
   it("caches results and uses cached results when available", async () => {
     const config = { xref: true, localBiblio };
     let cacheKeys;
