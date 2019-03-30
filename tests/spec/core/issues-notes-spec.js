@@ -84,7 +84,7 @@ describe("Core — Issues and Notes", () => {
       config: makeBasicConfig(),
       body:
         `${makeDefaultBody()}<section><p>BLAH <span class='ednote'>EDNOTE-INLINE</span></p>` +
-        `<p class='ednote' title='EDNOTE-TIT'>EDNOTE</p>`,
+        `<p class='ednote' title='EDNOTE-TIT'>EDNOTE</p></section>`,
     };
     const doc = await makeRSDoc(ops);
     const edNote = doc.querySelector("div.note");
