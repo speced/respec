@@ -1,12 +1,8 @@
-import hyperHTML from "hyperhtml";
+// @ts-check
+import html from "../../../js/html-template";
 
-export default (conf, name, items = []) => {
-  const html = hyperHTML;
-  const results = [];
-  for (const item of items) {
-    results.push(getItem(item));
-  }
-  return results;
+export default (items = []) => {
+  return items.map(getItem);
 
   function getItem(p) {
     const personName = [p.name]; // treated as opt-in HTML by hyperHTML
@@ -15,7 +11,7 @@ export default (conf, name, items = []) => {
     const dd = html`
       <dd class="p-author h-card vcard" data-editor-id="${editorid}"></dd>
     `;
-    const span = document.createDocumentFragment();
+    /** @type {(string | Node)[]} */
     const contents = [];
     if (p.mailto) {
       contents.push(html`
@@ -51,7 +47,7 @@ export default (conf, name, items = []) => {
         );
       }
     }
-    if (p.note) contents.push(document.createTextNode(` (${p.note})`));
+    if (p.note) contents.push(` (${p.note})`);
     if (p.extras) {
       const results = p.extras
         // Remove empty names
@@ -59,11 +55,10 @@ export default (conf, name, items = []) => {
         // Convert to HTML
         .map(getExtra);
       for (const result of results) {
-        contents.push(document.createTextNode(", "), result);
+        contents.push(", ", result);
       }
     }
-    hyperHTML.bind(span)`${contents}`;
-    dd.appendChild(span);
+    dd.append(...contents);
     return dd;
   }
 

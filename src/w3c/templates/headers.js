@@ -1,4 +1,4 @@
-import html from "hyperhtml";
+import html from "../../../js/html-template";
 import { pub } from "../../core/pubsubhub";
 import showLink from "./show-link";
 import showLogo from "./show-logo";
@@ -11,7 +11,10 @@ const legalDisclaimer =
 const w3cTrademark =
   "https://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks";
 
-function getSpecTitleElem(conf) {
+/**
+ * @param {Document} document
+ */
+function getSpecTitleElem(document, conf) {
   const specTitleElem =
     document.querySelector("h1#title") || document.createElement("h1");
   if (specTitleElem.parentElement) {
@@ -30,7 +33,10 @@ function getSpecTitleElem(conf) {
   return specTitleElem;
 }
 
-function getSpecSubTitleElem(conf) {
+/**
+ * @param {Document} document
+ */
+function getSpecSubTitleElem(document, conf) {
   let specSubTitleElem = document.querySelector("h2#subtitle");
 
   if (specSubTitleElem && specSubTitleElem.parentElement) {
@@ -47,11 +53,14 @@ function getSpecSubTitleElem(conf) {
   return specSubTitleElem;
 }
 
-export default conf => {
+/**
+ * @param {Document} document
+ */
+export default (document, conf) => {
   return html`
     <div class="head">
-      ${conf.logos.map(showLogo)} ${getSpecTitleElem(conf)}
-      ${getSpecSubTitleElem(conf)}
+      ${conf.logos.map(showLogo)} ${getSpecTitleElem(document, conf)}
+      ${getSpecSubTitleElem(document, conf)}
       <h2>
         ${conf.prependW3C ? "W3C " : ""}${conf.textStatus}
         <time class="dt-published" datetime="${conf.dashDate}"
@@ -129,7 +138,7 @@ export default conf => {
               <dd><a href="${conf.prevRecURI}">${conf.prevRecURI}</a></dd>
             `}
         <dt>${conf.multipleEditors ? conf.l10n.editors : conf.l10n.editor}</dt>
-        ${showPeople(conf, "Editor", conf.editors)}
+        ${showPeople(conf.editors)}
         ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
           ? html`
               <dt>
@@ -137,7 +146,7 @@ export default conf => {
                   ? conf.l10n.former_editors
                   : conf.l10n.former_editor}
               </dt>
-              ${showPeople(conf, "Editor", conf.formerEditors)}
+              ${showPeople(conf.formerEditors)}
             `
           : ""}
         ${conf.authors
@@ -145,7 +154,7 @@ export default conf => {
               <dt>
                 ${conf.multipleAuthors ? conf.l10n.authors : conf.l10n.author}
               </dt>
-              ${showPeople(conf, "Author", conf.authors)}
+              ${showPeople(conf.authors)}
             `
           : ""}
         ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}

@@ -1,10 +1,9 @@
-import hyperHTML from "hyperhtml";
+import html from "../../../js/html-template";
 import showLink from "./show-link";
 import showLogo from "./show-logo";
 import showPeople from "./show-people";
 
-export default conf => {
-  const html = hyperHTML;
+export default (_, conf) => {
   return html`
     <div class="head">
       ${conf.logos.map(showLogo)}
@@ -84,7 +83,7 @@ export default conf => {
             `
           : ""}
         <dt>${conf.multipleEditors ? conf.l10n.editors : conf.l10n.editor}</dt>
-        ${showPeople(conf, "Editor", conf.editors)}
+        ${showPeople(conf.editors)}
         ${Array.isArray(conf.formerEditors) && conf.formerEditors.length > 0
           ? html`
               <dt>
@@ -92,7 +91,7 @@ export default conf => {
                   ? conf.l10n.former_editors
                   : conf.l10n.former_editor}
               </dt>
-              ${showPeople(conf, "Editor", conf.formerEditors)}
+              ${showPeople(conf.formerEditors)}
             `
           : ""}
         ${conf.authors
@@ -100,7 +99,7 @@ export default conf => {
               <dt>
                 ${conf.multipleAuthors ? conf.l10n.authors : conf.l10n.author}
               </dt>
-              ${showPeople(conf, "Author", conf.authors)}
+              ${showPeople(conf.authors)}
             `
           : ""}
         ${conf.otherLinks ? conf.otherLinks.map(showLink) : ""}

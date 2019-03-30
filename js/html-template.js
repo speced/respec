@@ -14,16 +14,64 @@
 })((require, exports, hypermorphic) => {
   "use strict";
   exports.__esModule = true;
-  exports.default = function(strings, ...args) {
-    const result = (hypermorphic.default || hypermorphic)(strings, ...args);
-    if (result.constructor.name !== "Buffer") {
-      return result;
+  exports.default = (strings, ...args) => {
+    const normalized = args.map(normalizeArg);
+    const result = (hypermorphic.default || hypermorphic)(
+      strings,
+      ...normalized
+    );
+    if (result.constructor.name === "Buffer") {
+      const { JSDOM } = require("jsdom");
+      const fragment = JSDOM.fragment(result.toString());
+      if (fragment.childNodes.length === 1) {
+        return fragment.childNodes[0];
+      }
+      return fragment;
+    } else if (!(result instanceof Node)) {
+      const fragment = document.createDocumentFragment();
+      fragment.append(...result.childNodes);
+      return fragment;
     }
-    const { JSDOM } = require("jsdom");
-    const fragment = JSDOM.fragment(result.toString());
-    if (fragment.childNodes.length === 1) {
-      return fragment.childNodes[0];
-    }
-    return fragment;
+    return result;
   };
+
+  function normalizeArg(arg) {
+    if (!Array.isArray(arg)) {
+      const html = getOuterHTML(arg);
+      if (html) {
+        return [html];
+      }
+      return arg;
+    }
+    if (!arg.length || typeof arg[0] === "string") {
+      return arg;
+    }
+    return arg.map(getOuterHTML);
+  }
+
+  function getOuterHTML(node) {
+    if (!node || typeof node !== "object") {
+      return "";
+    }
+    switch (node.nodeType) {
+      case node.ELEMENT_NODE:
+        return node.outerHTML;
+      case node.TEXT_NODE:
+        return node.textContent;
+      case node.COMMENT_NODE:
+        return `<!--${node.textContent}-->`;
+      case node.DOCUMENT_FRAGMENT_NODE:
+        return fragmentToHTML(node);
+    }
+    return "";
+  }
+
+  function fragmentToHTML(fragment) {
+    let result = "";
+    for (const node of fragment.childNodes) {
+      result += getOuterHTML(node);
+    }
+    return result;
+  }
+  exports.fragmentToHTML = fragmentToHTML;
 });

@@ -3,6 +3,7 @@ import addL10nConfiguration, { setDocumentLocale } from "./core/l10n";
 import { cleanup } from "./core/exporter";
 import { createRespecDocument } from "./respec-document";
 import insertStyle from "./core/style";
+import insertW3CHeader from "./w3c/headers";
 import insertW3CStyle from "./w3c/style";
 import processMarkdown from "./core/markdown";
 import reindent from "./core/reindent";
@@ -21,6 +22,7 @@ export async function preprocess(doc, conf) {
   addL10nConfiguration(respecDoc);
   setGitHubConfiguration(respecDoc);
   processMarkdown(respecDoc);
+  insertW3CHeader(respecDoc);
 
   cleanup(respecDoc.document, respecDoc.hub);
   return respecDoc;

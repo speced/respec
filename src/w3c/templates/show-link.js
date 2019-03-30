@@ -1,6 +1,5 @@
-import hyperHTML from "hyperhtml";
+import html from "../../../js/html-template";
 import { pub } from "../../core/pubsubhub";
-const html = hyperHTML;
 
 export default link => {
   if (!link.key) {

@@ -4,6 +4,7 @@
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
 import { lang as docLang } from "./l10n";
+import { fragmentToHTML } from "../../js/html-template";
 import marked from "marked";
 import { parseHTML } from "../../js/html-parser";
 import { pub } from "./pubsubhub";
@@ -167,20 +168,6 @@ export function createResourceHint(opts, doc) {
     linkElem.classList.add("removeOnSave");
   }
   return linkElem;
-}
-
-/**
- * @param {DocumentFragment} fragment
- */
-function fragmentToHTML(fragment) {
-  let result = "";
-  for (const child of fragment.childNodes) {
-    result +=
-      child.nodeType === child.ELEMENT_NODE
-        ? child.outerHTML
-        : child.textContent;
-  }
-  return result;
 }
 
 export function normalizePadding(text = "") {

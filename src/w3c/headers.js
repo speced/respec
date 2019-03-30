@@ -94,7 +94,6 @@ import { ISODate, concatDate, joinAnd } from "../core/utils";
 import cgbgHeadersTmpl from "./templates/cgbg-headers";
 import cgbgSotdTmpl from "./templates/cgbg-sotd";
 import headersTmpl from "./templates/headers";
-import hyperHTML from "hyperhtml";
 import { pub } from "../core/pubsubhub";
 import sotdTmpl from "./templates/sotd";
 
@@ -233,7 +232,7 @@ function validateDateAndRecover(conf, prop, fallbackDate = new Date()) {
   return new Date(ISODate.format(new Date()));
 }
 
-export function run(conf) {
+export default function({ document, configuration: conf }) {
   conf.isUnofficial = conf.specStatus === "unofficial";
   if (conf.isUnofficial && !Array.isArray(conf.logos)) {
     conf.logos = [];
@@ -476,7 +475,7 @@ export function run(conf) {
   // configuration done - yay!
 
   // insert into document
-  const header = (conf.isCGBG ? cgbgHeadersTmpl : headersTmpl)(conf);
+  const header = (conf.isCGBG ? cgbgHeadersTmpl : headersTmpl)(document, conf);
   document.body.prepend(header);
   document.body.classList.add("h-entry");
 
@@ -576,13 +575,16 @@ export function run(conf) {
       )}. [More info](https://github.com/w3c/respec/wiki/noRecTrack).`
     );
   }
-  if (conf.isIGNote && !conf.charterDisclosureURI)
+  if (conf.isIGNote && !conf.charterDisclosureURI) {
     pub(
       "error",
       "IG-NOTEs must link to charter's disclosure section using `charterDisclosureURI`."
     );
+  }
 
-  hyperHTML.bind(sotd)`${populateSoTD(conf, sotd)}`;
+  const populated = populateSoTD(conf, sotd);
+  sotd.textContent = "";
+  sotd.append(populated);
 
   if (!conf.implementationReportURI && conf.isCR) {
     pub(
@@ -638,20 +640,22 @@ function populateSoTD(conf, sotd) {
  */
 function collectSotdContent(sotd, { isTagFinding = false }) {
   const sotdClone = sotd.cloneNode(true);
-  const additionalContent = document.createDocumentFragment();
+  /** @type {Node[]} */
+  const additionalContent = [];
   // we collect everything until we hit a section,
   // that becomes the custom content.
   while (sotdClone.hasChildNodes()) {
     if (
-      !isElement(sotdClone.firstChild) ||
-      sotdClone.firstChild.localName !== "section"
+      isElement(sotdClone.firstChild) &&
+      sotdClone.firstChild.localName == "section"
     ) {
-      additionalContent.appendChild(sotdClone.firstChild);
-      continue;
+      break;
     }
-    break;
+    const { firstChild } = sotdClone;
+    firstChild.remove();
+    additionalContent.push(firstChild);
   }
-  if (isTagFinding && !additionalContent.hasChildNodes()) {
+  if (isTagFinding && !additionalContent.length) {
     pub(
       "warn",
       "ReSpec does not support automated SotD generation for TAG findings, " +
@@ -670,5 +674,5 @@ function collectSotdContent(sotd, { isTagFinding = false }) {
  * @return {node is Element}
  */
 function isElement(node) {
-  return node.nodeType === Node.ELEMENT_NODE;
+  return node.nodeType === node.ELEMENT_NODE;
 }

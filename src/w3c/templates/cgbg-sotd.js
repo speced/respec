@@ -1,7 +1,6 @@
-import hyperHTML from "hyperhtml";
+import html from "../../../js/html-template";
 
 export default (conf, opts) => {
-  const html = hyperHTML;
   return html`
     <h2>${conf.l10n.sotd}</h2>
     ${conf.isPreview
