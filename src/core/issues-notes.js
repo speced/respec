@@ -133,29 +133,7 @@ function handleIssues(ins, ghIssues, conf) {
     }
     pub(report.type, report);
   });
-  const issueSummaryElement = document.getElementById("issue-summary");
-
-  if (issueSummaryElement) {
-    if (document.querySelectorAll(".issue").length) {
-      const heading = issueSummaryElement.querySelector("h2");
-      const paragraph = issueSummaryElement.querySelector("p");
-      if (heading && paragraph) {
-        issueSummaryElement.append(issueList);
-      } else if (!heading && paragraph) {
-        issueSummaryElement.removeChild(paragraph);
-        const issueSummary = hyperHTML`
-          <div><h2>${l10n.issue_summary}</h2>${paragraph}${issueList}</div>`;
-        issueSummaryElement.append(...issueSummary.childNodes);
-      } else {
-        const issueSummary = hyperHTML`
-          <div><h2>${l10n.issue_summary}</h2>${issueList}</div>`;
-        issueSummaryElement.append(...issueSummary.childNodes);
-      }
-    } else {
-      pub("warn", "Using issue summary (#issue-summary) but no issues found.");
-      issueSummaryElement.remove();
-    }
-  }
+  makeIssueSectionSummary(issueList);
 }
 
 /**
@@ -213,6 +191,36 @@ function createIssueSummaryEntry(l10nIssue, report, id) {
   return hyperHTML`
     <li><a href="${`#${id}`}">${issueNumberText}</a>${title}</li>
   `;
+}
+
+/**
+ *
+ * @param {*} issueList
+ */
+function makeIssueSectionSummary(issueList) {
+  const issueSummaryElement = document.getElementById("issue-summary");
+
+  if (issueSummaryElement) {
+    if (document.querySelectorAll(".issue").length) {
+      const heading = issueSummaryElement.querySelector("h2");
+      const paragraph = issueSummaryElement.querySelector("p");
+      if (heading && paragraph) {
+        issueSummaryElement.append(issueList);
+      } else if (!heading && paragraph) {
+        issueSummaryElement.removeChild(paragraph);
+        const issueSummary = hyperHTML`
+          <div><h2>${l10n.issue_summary}</h2>${paragraph}${issueList}</div>`;
+        issueSummaryElement.append(...issueSummary.childNodes);
+      } else {
+        const issueSummary = hyperHTML`
+          <div><h2>${l10n.issue_summary}</h2>${issueList}</div>`;
+        issueSummaryElement.append(...issueSummary.childNodes);
+      }
+    } else {
+      pub("warn", "Using issue summary (#issue-summary) but no issues found.");
+      issueSummaryElement.remove();
+    }
+  }
 }
 
 function isLight(rgb) {
