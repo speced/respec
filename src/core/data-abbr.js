@@ -4,7 +4,10 @@
 import { showInlineWarning } from "./utils";
 export const name = "core/dfn-abbr";
 
-export function run() {
+/**
+ * @param {import("../respec-document").RespecDocument} respecDoc
+ */
+export default function({ document }) {
   /** @type {NodeListOf<HTMLElement>} */
   const elements = document.querySelectorAll("[data-abbr]");
   for (const elem of elements) {
@@ -15,7 +18,7 @@ export function run() {
         break;
       default: {
         const msg =
-          `[\`data-dfn\`](https://github.com/w3c/respec/wiki/data-abbr)` +
+          `[\`data-abbr\`](https://github.com/w3c/respec/wiki/data-abbr)` +
           ` attribute not supported on \`${localName}\` elements.`;
         showInlineWarning(elem, msg, "Error: unsupported.");
       }
