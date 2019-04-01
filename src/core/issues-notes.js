@@ -200,27 +200,21 @@ function createIssueSummaryEntry(l10nIssue, report, id) {
 function makeIssueSectionSummary(issueList) {
   const issueSummaryElement = document.getElementById("issue-summary");
 
-  if (issueSummaryElement) {
-    if (document.querySelectorAll(".issue").length) {
-      const heading = issueSummaryElement.querySelector("h2");
-      const paragraph = issueSummaryElement.querySelector("p");
-      if (heading && paragraph) {
-        issueSummaryElement.append(issueList);
-      } else if (!heading && paragraph) {
-        issueSummaryElement.removeChild(paragraph);
-        const issueSummary = hyperHTML`
-          <div><h2>${l10n.issue_summary}</h2>${paragraph}${issueList}</div>`;
-        issueSummaryElement.append(...issueSummary.childNodes);
-      } else {
-        const issueSummary = hyperHTML`
-          <div><h2>${l10n.issue_summary}</h2>${issueList}</div>`;
-        issueSummaryElement.append(...issueSummary.childNodes);
-      }
-    } else {
-      pub("warn", "Using issue summary (#issue-summary) but no issues found.");
-      issueSummaryElement.remove();
-    }
-  }
+  if (!issueSummaryElement) return;
+  const heading = issueSummaryElement.querySelectorAll("h2, h3, h4, h5, h6");
+  const defaultHeading = hyperHTML`<h2>${l10n.issue_summary}</h2>`;
+
+  issueList.hasChildNodes()
+    ? issueSummaryElement.append(issueList)
+    : issueSummaryElement.append(
+        hyperHTML`<p>There are no issues listed in this specification.</p>`
+      );
+  heading.length
+    ? issueSummaryElement.append(issueList)
+    : issueSummaryElement.insertBefore(
+        defaultHeading,
+        issueSummaryElement.firstChild
+      );
 }
 
 function isLight(rgb) {
