@@ -96,8 +96,15 @@ function decorateDocument(doc, opts) {
     }
   }
 
-  function decorateBody({ abstract = "<p>test abstract</p>", body = "" }) {
+  function decorateBody({
+    abstract = "<p>test abstract</p>",
+    body = "",
+    bodyAttrs = {},
+  }) {
     doc.body.innerHTML += `<section id='abstract'>${abstract}</section>${body}`;
+    Object.entries(bodyAttrs).forEach(([key, value]) => {
+      doc.body.setAttribute(key, value);
+    });
   }
 
   if (opts.htmlAttrs) {
