@@ -1,10 +1,14 @@
+// @ts-check
 // Module w3c/abstract
 // Handle the abstract section properly.
-import { l10n, lang } from "../core/l10n";
+import { l10n } from "../core/l10n";
 import { pub } from "../core/pubsubhub";
 export const name = "w3c/abstract";
 
-export async function run() {
+/**
+ * @param {import("../respec-document").RespecDocument} respecDoc
+ */
+export default function({ document, lang }) {
   const abs = document.getElementById("abstract");
   if (!abs) {
     pub("error", `Document must have one element with \`id="abstract"`);
