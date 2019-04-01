@@ -79,9 +79,12 @@ describe("Core - Inlines", () => {
         <p id="a1">TEXT |variable: Type| TEXT</p>
         <p id="a2">TEXT |variable with spaces:Type| TEXT</p>
         <p id="a3">TEXT |with spaces :  Type| TEXT</p>
+        <p id="a4">TEXT |with spaces :  Type with spaces| TEXT</p>
         <p id="b">TEXT |variable| TEXT</p>
         <p id="c">TEXT | ignored | TEXT</p>
         <p id="d">TEXT|ignore: Ignore|TEXT</p>
+        <p id="e">TEXT |p| TEXT </p>
+        <p id="f">TEXT |p: Type with spaces| TEXT </p>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(null, body));
@@ -97,11 +100,22 @@ describe("Core - Inlines", () => {
     expect(a3.textContent).toEqual("with spaces");
     expect(a3.dataset.type).toEqual("Type");
 
+    const a4 = doc.querySelector("#a4 var");
+    expect(a4.textContent).toEqual("with spaces");
+    expect(a4.dataset.type).toEqual("Type with spaces");
+
     const b = doc.querySelector("#b var");
     expect(b.textContent).toEqual("variable");
     expect(b.dataset.type).toBeUndefined();
 
     expect(doc.querySelector("#c var")).toBeFalsy();
     expect(doc.querySelector("#d var")).toBeFalsy();
+
+    const e = doc.querySelector("#e var");
+    expect(e.textContent).toEqual("p");
+    expect(e.dataset.type).toBeUndefined();
+    const f = doc.querySelector("#f var");
+    expect(f.textContent).toEqual("p");
+    expect(f.dataset.type).toEqual("Type with spaces");
   });
 });
