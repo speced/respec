@@ -389,7 +389,8 @@ export function run(conf) {
         it.orcid = normalizeOrcid(it.orcid);
       } catch (e) {
         pub("error", `"${it.orcid}" is not an ORCID. ${e.message}`);
-        // a failed orcid link could link to something outside of orcid, which would be misleading.
+        // A failed orcid link could link to something outside of orcid,
+        // which would be misleading.
         delete it.orcid;
       }
     }
