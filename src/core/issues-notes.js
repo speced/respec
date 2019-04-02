@@ -136,7 +136,7 @@ function handleIssues(ins, ghIssues, conf) {
     }
     pub(report.type, report);
   });
-  if (!issueSummaryElement) makeIssueSectionSummary(issueList);
+  if (!issueList) makeIssueSectionSummary(issueList);
 }
 
 /**
