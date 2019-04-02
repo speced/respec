@@ -1,5 +1,5 @@
 "use strict";
-describe("Core - Inlines", () => {
+fdescribe("Core - Inlines", () => {
   afterAll(flushIframes);
   it("processes inline cite content", async () => {
     const body = `
@@ -136,13 +136,20 @@ describe("Core - Inlines", () => {
   });
 
   it("expands inline references", async () => {
+    const config = {
+      localBiblio: {
+        "payment-request": {title: "Payment Request API", href: "https://www.w3.org/TR/payment-request/"},
+        "dom" : {title: "DOM Standard", href: "https://dom.spec.whatwg.org/"}
+      }
+    };
     const body = `
       <section id="test">
         <p>Example having [[[payment-request]]], [[[DOM]]]</p>
       </section>
     `;
-    const doc = await makeRSDoc(makeStandardOps(null, body));
-    const refs = doc.querySelectorAll("#test a");
-    expect(refs.length).toBe(2);
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const refs = doc.querySelectorAll("#test a[href]");
+    expect(refs[0].textContent).toBe("Payment Request API");
+    expect(refs[1].textContent).toBe("DOM Standard");
   });
 });
