@@ -85,6 +85,8 @@ describe("Core - Inlines", () => {
         <p id="d">TEXT|ignore: Ignore|TEXT</p>
         <p id="e">TEXT |p| TEXT </p>
         <p id="f">TEXT |p: Type with spaces| TEXT </p>
+        <p id="g"> |p: Type with spaces| and |var1| and |var2:Type| </p>
+        <p id="h"> TEXT |var: Generic&lt;int&gt;| TEXT |var2: Generic&lt;unsigned short int&gt;| </p>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(null, body));
@@ -117,5 +119,19 @@ describe("Core - Inlines", () => {
     const f = doc.querySelector("#f var");
     expect(f.textContent).toEqual("p");
     expect(f.dataset.type).toEqual("Type with spaces");
+
+    const g = doc.querySelectorAll("#g var");
+    expect(g[0].textContent).toEqual("p");
+    expect(g[0].dataset.type).toEqual("Type with spaces");
+    expect(g[1].textContent).toEqual("var1");
+    expect(g[1].dataset.type).toBeUndefined();
+    expect(g[2].textContent).toEqual("var2");
+    expect(g[2].dataset.type).toEqual("Type");
+
+    const h = doc.querySelectorAll("#h var");
+    expect(h[0].textContent).toEqual("var");
+    expect(h[0].dataset.type).toEqual("Generic<int>");
+    expect(h[1].textContent).toEqual("var2");
+    expect(h[1].dataset.type).toEqual("Generic<unsigned short int>");
   });
 });
