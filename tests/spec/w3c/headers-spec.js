@@ -73,6 +73,7 @@ describe("W3C — Headers", () => {
             mailto: "EMAIL",
             note: "NOTE",
             w3cid: "1234",
+            orcid: "https://orcid.org/0000-0002-1694-233X",
           },
         ],
       };
@@ -93,6 +94,43 @@ describe("W3C — Headers", () => {
       expect(dd.querySelectorAll("a[href='http://URI']").length).toBe(0);
       expect(dd.dataset.editorId).toBe("1234");
       expect(dd.textContent).toMatch("(NOTE)");
+      expect(
+        dd.querySelector("a[href='https://orcid.org/0000-0002-1694-233X']")
+      ).not.toBeNull();
+    });
+
+    it("identifies valid and invalid ORCIDs", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+        editors: [
+          {
+            name: "John Doe",
+            orcid: "https://orcid.org/0000-0002-1694-233X",
+          },
+          {
+            name: "Jane Doe",
+            orcid: "0000-0002-1694-233X",
+          },
+          {
+            name: "John Smith",
+            orcid: "http://orcid.org/0000-0002-1694-233X",
+          },
+          {
+            name: "Jane Smith",
+            orcid: "0000-0002-1694-2330",
+          },
+        ],
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+
+      expect(
+        doc.querySelectorAll(
+          "a.orcid[href='https://orcid.org/0000-0002-1694-233X']"
+        ).length
+      ).toBe(2);
+      expect(doc.querySelectorAll("a.orcid").length).toBe(2);
     });
 
     it("takes multiple editors into account", async () => {
