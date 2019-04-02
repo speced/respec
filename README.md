@@ -23,6 +23,7 @@ If you are new to spec writing, we strongly encourage you to read:
   * [API Design Principles](https://w3ctag.github.io/design-principles/)
   * [Writing Promise-Using Specifications](https://www.w3.org/2001/tag/doc/promises-guide)
   * [Privacy and Security Self-Review Questionnaire](https://w3ctag.github.io/security-questionnaire/)
+  * [Short i18n review checklist](https://www.w3.org/International/techniques/shortchecklist.html)
 
 ## Getting help
 
