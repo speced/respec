@@ -26,11 +26,11 @@ const localizationStrings = {
   },
   nl: {
     issue_summary: "Lijst met issues",
-    no_issues_in_spec: "No hay problemas enumerados en esta especificación.",
+    no_issues_in_spec: "Er zijn geen problemen vermeld in deze specificatie.",
   },
   es: {
     issue_summary: "Resumen de la cuestión",
-    no_issues_in_spec: "Er zijn geen problemen vermeld in deze specificatie.",
+    no_issues_in_spec: "No hay problemas enumerados en esta especificación.",
   },
 };
 
@@ -209,12 +209,11 @@ function makeIssueSectionSummary(issueList) {
   issueList.hasChildNodes()
     ? issueSummaryElement.append(issueList)
     : issueSummaryElement.append(hyperHTML`<p>${l10n.no_issues_in_spec}</p>`);
-  heading
-    ? issueSummaryElement.append(issueList)
-    : issueSummaryElement.insertBefore(
-        hyperHTML`<h2>${l10n.issue_summary}</h2>`,
-        issueSummaryElement.firstChild
-      );
+  heading ||
+    issueSummaryElement.insertBefore(
+      hyperHTML`<h2>${l10n.issue_summary}</h2>`,
+      issueSummaryElement.firstChild
+    );
 }
 
 function isLight(rgb) {
