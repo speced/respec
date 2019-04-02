@@ -136,7 +136,7 @@ function handleIssues(ins, ghIssues, conf) {
     }
     pub(report.type, report);
   });
-  if (!issueList) makeIssueSectionSummary(issueList);
+  makeIssueSectionSummary(issueList);
 }
 
 /**
@@ -202,6 +202,7 @@ function createIssueSummaryEntry(l10nIssue, report, id) {
  */
 function makeIssueSectionSummary(issueList) {
   const issueSummaryElement = document.getElementById("issue-summary");
+  if (!issueSummaryElement) return;
   const heading = issueSummaryElement.querySelector("h2, h3, h4, h5, h6");
 
   issueList.hasChildNodes()
