@@ -410,6 +410,7 @@ describe("Core — Issues and Notes", () => {
       </section>
       <section id="issue-summary">
         <p>Here you will find all issues summary</p>
+        <div class="note">This is a note</div>
       </section>
       `,
     };
@@ -420,5 +421,7 @@ describe("Core — Issues and Notes", () => {
     expect(textContent.innerText).toContain(
       "Here you will find all issues summary"
     );
+    textContent = doc.querySelector("#issue-summary div");
+    expect(textContent.innerText).toContain("This is a note");
   });
 });

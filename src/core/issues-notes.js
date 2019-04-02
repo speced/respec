@@ -22,12 +22,15 @@ export const name = "core/issues-notes";
 const localizationStrings = {
   en: {
     issue_summary: "Issue Summary",
+    no_issues_in_spec: "There are no issues listed in this specification.",
   },
   nl: {
     issue_summary: "Lijst met issues",
+    no_issues_in_spec: "No hay problemas enumerados en esta especificación.",
   },
   es: {
     issue_summary: "Resumen de la cuestión",
+    no_issues_in_spec: "Er zijn geen problemen vermeld in deze specificatie.",
   },
 };
 
@@ -201,18 +204,15 @@ function makeIssueSectionSummary(issueList) {
   const issueSummaryElement = document.getElementById("issue-summary");
 
   if (!issueSummaryElement) return;
-  const heading = issueSummaryElement.querySelectorAll("h2, h3, h4, h5, h6");
-  const defaultHeading = hyperHTML`<h2>${l10n.issue_summary}</h2>`;
+  const heading = issueSummaryElement.querySelector("h2, h3, h4, h5, h6");
 
   issueList.hasChildNodes()
     ? issueSummaryElement.append(issueList)
-    : issueSummaryElement.append(
-        hyperHTML`<p>There are no issues listed in this specification.</p>`
-      );
-  heading.length
+    : issueSummaryElement.append(hyperHTML`<p>${l10n.no_issues_in_spec}</p>`);
+  heading
     ? issueSummaryElement.append(issueList)
     : issueSummaryElement.insertBefore(
-        defaultHeading,
+        hyperHTML`<h2>${l10n.issue_summary}</h2>`,
         issueSummaryElement.firstChild
       );
 }
