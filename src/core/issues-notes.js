@@ -198,7 +198,7 @@ function createIssueSummaryEntry(l10nIssue, report, id) {
 
 /**
  *
- * @param {*} issueList
+ * @param {HTMLUListElement} issueList
  */
 function makeIssueSectionSummary(issueList) {
   const issueSummaryElement = document.getElementById("issue-summary");
