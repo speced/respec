@@ -418,17 +418,17 @@ describe("Core — Issues and Notes", () => {
       `,
     };
     const doc = await makeRSDoc(ops);
-    let textContent = doc.querySelector("#issue-summary h2");
-    expect(textContent.innerText).toContain("Issue Summary");
-    textContent = doc.querySelector("#issue-summary p");
-    expect(textContent.innerText).toContain(
+    const h2 = doc.querySelector("#issue-summary h2");
+    expect(h2.innerText).toContain("Issue Summary");
+    const p = doc.querySelector("#issue-summary p");
+    expect(p.innerText).toContain(
       "Here you will find all issues summary"
     );
-    textContent = doc.querySelector("#issue-summary div");
-    expect(textContent.innerText).toContain("This is a note");
+    const div = doc.querySelector("#issue-summary div");
+    expect(div.innerText).toContain("This is a note");
     // Headings other than top level heading should not be detected as issue summary heading
-    textContent = doc.querySelector("#issue-summary section h3");
-    expect(textContent.innerText).toContain(
+    const h3 = doc.querySelector("#issue-summary section h3");
+    expect(h3.innerText).toContain(
       "This is not the heading of issue-summary"
     );
   });
