@@ -58,6 +58,11 @@ function requestLookup(conf) {
           elem.textContent = title;
         }
         elem.href = href;
+        if (!path && !frag) {
+          const cite = document.createElement("cite");
+          elem.replaceWith(cite);
+          cite.append(elem);
+        }
         break;
       }
       case "dfn": {
@@ -67,6 +72,11 @@ function requestLookup(conf) {
           elem.append(anchor);
         } else {
           wrapInner(elem, anchor);
+        }
+        if (!path && !frag) {
+          const cite = document.createElement("cite");
+          cite.append(anchor);
+          elem.append(cite);
         }
         break;
       }

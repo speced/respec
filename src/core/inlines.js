@@ -20,7 +20,6 @@ import {
   refTypeFromContext,
   showInlineWarning,
 } from "./utils";
-import { abbrMap } from "./dfn-abbr";
 import hyperHTML from "hyperhtml";
 import { idlStringToHtml } from "./inline-idl-parser";
 import { renderInlineCitation } from "./render-biblio";
@@ -106,6 +105,7 @@ function inlineVariableMatches(matched) {
 }
 
 export function run(conf) {
+  const abbrMap = new Map();
   document.normalize();
   if (!document.querySelector("section#conformance")) {
     // make the document informative

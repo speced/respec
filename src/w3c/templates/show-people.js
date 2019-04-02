@@ -1,17 +1,13 @@
-import hyperHTML from "hyperhtml";
+import html from "hyperhtml";
 
-export default (conf, name, items = []) => {
-  const html = hyperHTML;
-  const results = [];
-  for (const item of items) {
-    results.push(getItem(item));
-  }
-  return results;
+export default (items = []) => {
+  return items.map(getItem);
 
   function getItem(p) {
     const personName = [p.name]; // treated as opt-in HTML by hyperHTML
     const company = [p.company];
     const editorid = p.w3cid ? parseInt(p.w3cid, 10) : null;
+    /** @type {HTMLElement} */
     const dd = html`
       <dd class="p-author h-card vcard" data-editor-id="${editorid}"></dd>
     `;
@@ -89,7 +85,7 @@ export default (conf, name, items = []) => {
         contents.push(document.createTextNode(", "), result);
       }
     }
-    hyperHTML.bind(span)`${contents}`;
+    html.bind(span)`${contents}`;
     dd.appendChild(span);
     return dd;
   }
