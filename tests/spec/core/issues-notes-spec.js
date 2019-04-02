@@ -396,9 +396,7 @@ describe("Core — Issues and Notes", () => {
     const h2 = doc.querySelector("#issue-summary > h2");
     expect(h2.innerText).toContain("Open Issues");
     const p = doc.querySelector("#issue-summary p");
-    expect(p.innerText).toContain(
-      "Here you will find all open issues"
-    );
+    expect(p.innerText).toContain("Here you will find all open issues");
   });
   it("shows issue-summary section with paragraph and default heading when only <p> is defined", async () => {
     const ops = {
@@ -421,15 +419,11 @@ describe("Core — Issues and Notes", () => {
     const h2 = doc.querySelector("#issue-summary > h2");
     expect(h2.innerText).toContain("Issue Summary");
     const p = doc.querySelector("#issue-summary p");
-    expect(p.innerText).toContain(
-      "Here you will find all issues summary"
-    );
+    expect(p.innerText).toContain("Here you will find all issues summary");
     const div = doc.querySelector("#issue-summary div");
     expect(div.innerText).toContain("This is a note");
     // Headings other than top level heading should not be detected as issue summary heading
     const h3 = doc.querySelector("#issue-summary section h3");
-    expect(h3.innerText).toContain(
-      "This is not the heading of issue-summary"
-    );
+    expect(h3.innerText).toContain("This is not the heading of issue-summary");
   });
 });
