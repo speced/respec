@@ -411,6 +411,9 @@ describe("Core — Issues and Notes", () => {
       <section id="issue-summary">
         <p>Here you will find all issues summary</p>
         <div class="note">This is a note</div>
+        <section>
+          <h3>This is not the heading of issue-summary</h3>
+        </section>
       </section>
       `,
     };
@@ -423,5 +426,10 @@ describe("Core — Issues and Notes", () => {
     );
     textContent = doc.querySelector("#issue-summary div");
     expect(textContent.innerText).toContain("This is a note");
+    // Headings other than top level heading should not be detected as issue summary heading
+    textContent = doc.querySelector("#issue-summary section h3");
+    expect(textContent.innerText).toContain(
+      "This is not the heading of issue-summary"
+    );
   });
 });

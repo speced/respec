@@ -209,11 +209,15 @@ function makeIssueSectionSummary(issueList) {
   issueList.hasChildNodes()
     ? issueSummaryElement.append(issueList)
     : issueSummaryElement.append(hyperHTML`<p>${l10n.no_issues_in_spec}</p>`);
-  heading ||
-    issueSummaryElement.insertBefore(
-      hyperHTML`<h2>${l10n.issue_summary}</h2>`,
-      issueSummaryElement.firstChild
+  if (
+    !heading ||
+    (heading && heading !== issueSummaryElement.firstElementChild)
+  ) {
+    issueSummaryElement.insertAdjacentHTML(
+      "afterbegin",
+      `<h2>${l10n.issue_summary}</h2>`
     );
+  }
 }
 
 function isLight(rgb) {
