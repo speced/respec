@@ -393,10 +393,10 @@ describe("Core — Issues and Notes", () => {
       `,
     };
     const doc = await makeRSDoc(ops);
-    let textContent = doc.querySelector("#issue-summary h2");
-    expect(textContent.innerText).toContain("Open Issues");
-    textContent = doc.querySelector("#issue-summary p");
-    expect(textContent.innerText).toContain(
+    const h2 = doc.querySelector("#issue-summary h2");
+    expect(h2.innerText).toContain("Open Issues");
+    const p = doc.querySelector("#issue-summary p");
+    expect(p.innerText).toContain(
       "Here you will find all open issues"
     );
   });
