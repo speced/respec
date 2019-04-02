@@ -134,4 +134,15 @@ describe("Core - Inlines", () => {
     expect(h[1].textContent).toEqual("var2");
     expect(h[1].dataset.type).toEqual("Generic<unsigned short int>");
   });
+
+  it("expands inline references", async () => {
+    const body = `
+      <section id="test">
+        <p>Example having [[[payment-request]]], [[[DOM]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const refs = doc.querySelectorAll("#test a");
+    expect(refs.length).toBe(2);
+  });
 });
