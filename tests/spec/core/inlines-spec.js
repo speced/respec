@@ -1,5 +1,5 @@
 "use strict";
-fdescribe("Core - Inlines", () => {
+describe("Core - Inlines", () => {
   afterAll(flushIframes);
   it("processes inline cite content", async () => {
     const body = `
@@ -135,21 +135,48 @@ fdescribe("Core - Inlines", () => {
     expect(h[1].dataset.type).toEqual("Generic<unsigned short int>");
   });
 
-  it("expands inline references", async () => {
+  it("expands inline references and they get classified as normative/informative correctly", async () => {
     const config = {
       localBiblio: {
-        "payment-request": {title: "Payment Request API", href: "https://www.w3.org/TR/payment-request/"},
-        "dom" : {title: "DOM Standard", href: "https://dom.spec.whatwg.org/"}
-      }
+        "payment-request": {
+          title: "Payment Request API",
+          href: "https://www.w3.org/TR/payment-request/",
+        },
+        dom: { title: "DOM Standard", href: "https://dom.spec.whatwg.org/" },
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+        html: {
+          title: "HTML Standard",
+          href: "https://html.spec.whatwg.org/multipage/",
+        },
+      },
     };
     const body = `
       <section id="test">
-        <p>Example having [[[payment-request]]], [[[DOM]]]</p>
+      <section id="conformance">[[[html]]]</section>
+      <section class="informative">
+          <p>[[[dom]]]</a></p>
+      </section>
+      <p>[[[fetch]]] and [[[?payment-request]]]</p>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(config, body));
-    const refs = doc.querySelectorAll("#test a[href]");
-    expect(refs[0].textContent).toBe("Payment Request API");
+    const refs = doc.querySelectorAll("#test a[href]:not(.self-link)");
+    expect(refs[0].textContent).toBe("HTML Standard");
     expect(refs[1].textContent).toBe("DOM Standard");
+    expect(refs[2].textContent).toBe("Fetch Standard");
+    expect(refs[3].textContent).toBe("Payment Request API");
+    const norm = [...doc.querySelectorAll("#normative-references dt")];
+    expect(norm.length).toBe(2);
+    expect(norm.map(el => el.textContent)).toEqual(["[fetch]", "[html]"]);
+
+    const inform = [...doc.querySelectorAll("#informative-references dt")];
+    expect(inform.length).toBe(2);
+    expect(inform.map(el => el.textContent)).toEqual([
+      "[dom]",
+      "[payment-request]",
+    ]);
   });
 });
