@@ -10,11 +10,7 @@ const handler = require("serve-handler");
 const http = require("http");
 const colors = require("colors");
 
-const {
-  parseErrorsAndWarnings,
-  URLTorespec2htmlExecutable,
-  debug,
-} = require("./utils");
+const { parseErrorsAndWarnings, urlToExecutable, debug } = require("./utils");
 
 const respec2htmlTests = [
   {
@@ -53,32 +49,34 @@ const respec2htmlTests = [
             const expectedWarnings = new Set([
               "Can't find Table of Contents. Please use <nav id='toc'> around the ToC.",
             ]);
-            const RecordedTerminalErrors = parseErrorsAndWarnings(
+            const recordedTerminalErrors = parseErrorsAndWarnings(
               error.toString().split("\n")
             ).filter(err => err);
-            RecordedTerminalErrors.forEach(({ type, text }) => {
+            recordedTerminalErrors.forEach(({ type, text }) => {
               switch (type) {
                 case "ReSpec error":
                   if (!expectedErrors.has(text))
-                    throw `Unexpected ReSpec error ${text}`;
+                    throw new Error(`Unexpected ReSpec error ${text}`);
                   expectedErrors.delete(text);
                   break;
 
                 case "ReSpec warning":
                   if (!expectedWarnings.has(text))
-                    throw `Unexpected ReSpec warning ${text}`;
+                    throw new Error(`Unexpected ReSpec warning ${text}`);
                   expectedWarnings.delete(text);
                   break;
 
                 case "Fatal error":
-                  throw text;
+                  throw new Error(text);
               }
             });
             if (expectedWarnings.size || expectedErrors.size)
-              throw `Expected the following errors and warnings: \n ${[
-                ...expectedErrors,
-                ...expectedWarnings,
-              ].join("\n")}`;
+              throw new Error(
+                `Expected the following errors and warnings: \n ${[
+                  ...expectedErrors,
+                  ...expectedWarnings,
+                ].join("\n")}`
+              );
           }
         },
         message: `Shows multiple errors in terminal`,
@@ -100,7 +98,7 @@ module.exports = async function() {
     console.log(colors.green(`${description}`));
     let testCount = 1;
     for (const { URL, evalFunction, message } of tests) {
-      const exec = URLTorespec2htmlExecutable(URL);
+      const exec = urlToExecutable(URL);
       const num = colors.yellow(`(test ${testCount++}/${tests.length})`);
       const testInfo = `   👷‍♀️  ${exec.cmd} ${num}`;
       debug(message);
