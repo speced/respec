@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.9.1",
+  "version": "24.10.0",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -58,7 +58,7 @@
     "prettier": "^1.16.4",
     "raw-loader": "^2.0.0",
     "requirejs": "^2.3.6",
-    "serve": "^10.1.2",
+    "serve": "^11.0.0",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "typescript": "^3.4.1",
     "webidl2": "^18.0.1",
@@ -95,7 +95,7 @@
     "marked": "^0.6.1",
     "prompt": "^1.0.0",
     "puppeteer": "^1.14.0",
-    "snyk": "^1.147.0"
+    "snyk": "^1.147.2"
   },
   "prettier": {
     "trailingComma": "es5"

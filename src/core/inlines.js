@@ -41,6 +41,17 @@ function inlineRFC2119Matches(matched) {
 
 /**
  * @param {string} matched
+ * @return {HTMLElement}
+ */
+function inlineRefMatches(matched) {
+  // slices "[[[" at the beginning and "]]]" at the end
+  const ref = matched.slice(3, -3).trim();
+  const nodeElement = hyperHTML`<a data-cite="${ref}"></a>`;
+  return nodeElement;
+}
+
+/**
+ * @param {string} matched
  */
 function inlineXrefMatches(matched) {
   // slices "{{{" at the beginning and "}}}" at the end
@@ -139,6 +150,7 @@ export function run(conf) {
       "(?:{{3}\\s*.*\\s*}{3})", // inline IDL references,
       "\\B\\|\\w[\\w\\s]*(?:\\s*\\:[\\w\\s&;<>]+)?\\|\\B", // inline variable regex
       "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])",
+      "(?:\\[\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\]\\])",
       ...(abbrRx ? [abbrRx] : []),
     ].join("|")})`
   );
@@ -154,6 +166,9 @@ export function run(conf) {
         df.appendChild(document.createTextNode(t));
       } else if (t.startsWith("{{{")) {
         const node = inlineXrefMatches(t);
+        df.appendChild(node);
+      } else if (t.startsWith("[[[")) {
+        const node = inlineRefMatches(t);
         df.appendChild(node);
       } else if (t.startsWith("[[")) {
         const nodes = inlineBibrefMatches(t, txt, conf);
