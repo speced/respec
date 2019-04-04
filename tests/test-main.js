@@ -21,11 +21,16 @@ require.config({
     w3c: "/base/js/w3c",
     clipboard: "deps/clipboard",
     hyperhtml: "deps/hyperhtml",
-    "idb-keyval": "deps/idb",
+    idb: "deps/idb",
     jquery: "deps/jquery",
     marked: "deps/marked",
     pluralize: "deps/pluralize",
     text: "deps/text",
     webidl2: "deps/webidl2",
   },
+  shim: {
+    idb: {
+      exports: "idb",
+    },
+  }
 });
