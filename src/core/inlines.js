@@ -20,7 +20,7 @@ import {
   refTypeFromContext,
   showInlineWarning,
 } from "./utils";
-import hyperHTML from "hyperhtml";
+import hyperHTML from "../../js/html-template";
 import { idlStringToHtml } from "./inline-idl-parser";
 import { renderInlineCitation } from "./render-biblio";
 
@@ -33,6 +33,7 @@ export const rfc2119Usage = {};
  */
 function inlineRFC2119Matches(matched) {
   const normalize = matched.split(/\s+/).join(" ");
+  /** @type {HTMLElement} */
   const nodeElement = hyperHTML`<em class="rfc2119" title="${normalize}">${normalize}</em>`;
   // remember which ones were used
   rfc2119Usage[normalize] = true;
@@ -54,20 +55,20 @@ function inlineXrefMatches(matched) {
  * @param {string} matched
  * @param {Text} txt
  * @param {Object} conf
- * @return {Iterable<Node>}
+ * @return {Iterable<string | Node>}
  */
 function inlineBibrefMatches(matched, txt, conf) {
   // slices "[[" at the start and "]]" at the end
   const ref = matched.slice(2, -2);
   if (ref.startsWith("\\")) {
-    return [document.createTextNode(`[[${ref.slice(1)}]]`)];
+    return [`[[${ref.slice(1)}]]`];
   }
   const { type, illegal } = refTypeFromContext(ref, txt.parentNode);
   const cite = renderInlineCitation(ref);
   const cleanRef = ref.replace(/^(!|\?)/, "");
   if (illegal && !conf.normativeReferences.has(cleanRef)) {
     showInlineWarning(
-      cite.childNodes[1], // cite element
+      cite.children[0], // cite element
       "Normative references in informative sections are not allowed. " +
         `Remove '!' from the start of the reference \`[[!${ref}]]\``
     );
@@ -88,7 +89,7 @@ function inlineBibrefMatches(matched, txt, conf) {
  */
 function inlineAbbrMatches(matched, txt, abbrMap) {
   return txt.parentElement.tagName === "ABBR"
-    ? document.createTextNode(matched)
+    ? matched
     : hyperHTML`<abbr title="${abbrMap.get(matched)}">${matched}</abbr>`;
 }
 
@@ -104,7 +105,10 @@ function inlineVariableMatches(matched) {
   return hyperHTML`<var data-type="${type}">${varName}</var>`;
 }
 
-export function run(conf) {
+/**
+ * @param {import("../respec-document").RespecDocument} respecDoc
+ */
+export default function({ document, configuration: conf }) {
   const abbrMap = new Map();
   document.normalize();
   if (!document.querySelector("section#conformance")) {
@@ -151,26 +155,26 @@ export function run(conf) {
     for (const t of subtxt) {
       matched = !matched;
       if (!matched) {
-        df.appendChild(document.createTextNode(t));
+        df.append(t);
       } else if (t.startsWith("{{{")) {
         const node = inlineXrefMatches(t);
-        df.appendChild(node);
+        df.append(node);
       } else if (t.startsWith("[[")) {
         const nodes = inlineBibrefMatches(t, txt, conf);
         df.append(...nodes);
       } else if (t.startsWith("|")) {
         const node = inlineVariableMatches(t);
-        df.appendChild(node);
+        df.append(node);
       } else if (abbrMap.has(t)) {
         const node = inlineAbbrMatches(t, txt, abbrMap);
-        df.appendChild(node);
+        df.append(node);
       } else if (
         /MUST(?:\s+NOT)?|SHOULD(?:\s+NOT)?|SHALL(?:\s+NOT)?|MAY|(?:NOT\s+)?REQUIRED|(?:NOT\s+)?RECOMMENDED|OPTIONAL/.test(
           t
         )
       ) {
         const node = inlineRFC2119Matches(t);
-        df.appendChild(node);
+        df.append(node);
       } else {
         // FAIL -- not sure that this can really happen
         throw new Error(
@@ -178,6 +182,6 @@ export function run(conf) {
         );
       }
     }
-    txt.parentNode.replaceChild(df, txt);
+    txt.replaceWith(df);
   }
 }

@@ -5,7 +5,7 @@
 import { addId } from "./utils";
 import { biblio } from "./biblio";
 import { lang as defaultLang } from "../core/l10n";
-import hyperHTML from "hyperhtml";
+import hyperHTML from "../../js/html-template";
 import { pub } from "./pubsubhub";
 
 export const name = "core/render-biblio";
@@ -73,6 +73,7 @@ export function run(conf) {
     const refs = type === "Normative" ? norms : informs;
     if (!refs.length) continue;
 
+    /** @type {HTMLElement} */
     const sec = hyperHTML`
       <section>
         <h3>${
@@ -153,7 +154,7 @@ function toRefContent(ref) {
  * Render an inline citation
  *
  * @param {String} ref the inline reference.
- * @returns HTMLElement
+ * @return {DocumentFragment}
  */
 export function renderInlineCitation(ref) {
   const key = ref.replace(/^(!|\?)/, "");
@@ -193,7 +194,7 @@ export function wireReference(rawRef, target = "_blank") {
   const ref = Object.assign({}, defaultsReference, rawRef);
   const authors = ref.authors.join("; ") + (ref.etAl ? " et al" : "");
   const status = REF_STATUSES.get(ref.status) || ref.status;
-  return hyperHTML.wire(ref)`
+  return hyperHTML`
     <cite>
       <a
         href="${ref.href}"

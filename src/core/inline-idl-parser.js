@@ -13,7 +13,7 @@
  *  { base: "Dictionary", member: "member" }
  */
 
-import hyperHTML from "hyperhtml";
+import hyperHTML from "../../js/html-template";
 
 const methodRegex = /\((.*)\)$/;
 const idlSplitRegex = /\b\.\b|\.(?=\[\[)/;

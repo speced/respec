@@ -35,13 +35,27 @@ function getRefKeys(conf) {
   };
 }
 
+/**
+ * @param {Document} document
+ */
+function insertResourceHint(document) {
+  const link = createResourceHint(
+    {
+      hint: "dns-prefetch",
+      href: bibrefsURL.origin,
+    },
+    document
+  );
+  document.head.appendChild(link);
+}
+
 // Opportunistically dns-prefetch to bibref server, as we don't know yet
 // if we will actually need to download references yet.
-const link = createResourceHint({
-  hint: "dns-prefetch",
-  href: bibrefsURL.origin,
-});
-document.head.appendChild(link);
+const linkElement =
+  typeof document !== "undefined"
+    ? insertResourceHint(document, {})
+    : undefined;
+
 let doneResolver;
 const done = new Promise(resolve => {
   doneResolver = resolve;
@@ -87,10 +101,13 @@ export async function resolveRef(key) {
   return entry;
 }
 
-export async function run(conf) {
+export default async function({ document, configuration: conf }) {
   const finish = () => {
     doneResolver(conf.biblio);
   };
+  if (!linkElement) {
+    insertResourceHint(document);
+  }
   if (!conf.localBiblio) {
     conf.localBiblio = {};
   }

@@ -3,6 +3,7 @@ import html from "../../../js/html-template";
 import { showInlineWarning } from "../../core/utils";
 
 export default obj => {
+  /** @type {HTMLAnchorElement} */
   const a = html`
     <a href="${obj.url || ""}" class="logo"></a>
   `;

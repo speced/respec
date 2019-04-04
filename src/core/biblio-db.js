@@ -13,7 +13,13 @@ export const name = "core/biblio-db";
 
 const ALLOWED_TYPES = new Set(["alias", "reference"]);
 // Database initialization, tracked by "readyPromise"
+/**
+ * @type {Promise<IDBDatabase>}
+ */
 const readyPromise = new Promise((resolve, reject) => {
+  if (typeof indexedDB === "undefined") {
+    return;
+  }
   let request;
   try {
     request = window.indexedDB.open("respec-biblio2", 12);

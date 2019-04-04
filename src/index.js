@@ -7,6 +7,7 @@ import insertW3CHeader from "./w3c/headers";
 import insertW3CStyle from "./w3c/style";
 import processAbbreviation from "./core/data-abbr";
 import processAbstract from "./w3c/abstract";
+import processInlineText from "./core/inlines";
 import processMarkdown from "./core/markdown";
 import reindent from "./core/reindent";
 import setGitHubConfiguration from "./core/github";
@@ -27,6 +28,7 @@ export async function preprocess(doc, conf) {
   insertW3CHeader(respecDoc);
   processAbstract(respecDoc);
   processAbbreviation(respecDoc);
+  processInlineText(respecDoc);
 
   cleanup(respecDoc.document, respecDoc.hub);
   return respecDoc;

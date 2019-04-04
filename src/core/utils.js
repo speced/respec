@@ -672,12 +672,12 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
 export function getTextNodes(el, exclusions = []) {
   const acceptNode = (/** @type {Text} */ node) => {
     return exclusions.includes(node.parentElement.localName)
-      ? NodeFilter.FILTER_REJECT
-      : NodeFilter.FILTER_ACCEPT;
+      ? 2 // NodeFilter.FILTER_REJECT
+      : 1; // NodeFilter.FILTER_ACCEPT
   };
-  const nodeIterator = document.createNodeIterator(
+  const nodeIterator = el.ownerDocument.createNodeIterator(
     el,
-    NodeFilter.SHOW_TEXT,
+    4, // NodeFilter.SHOW_TEXT
     acceptNode
   );
   /** @type {Text[]} */
