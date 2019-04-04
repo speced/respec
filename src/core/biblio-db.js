@@ -8,26 +8,14 @@
  *
  */
 /* globals IDBKeyRange, DOMException */
+import { openDB } from "idb";
 import { pub } from "./pubsubhub";
 export const name = "core/biblio-db";
 
 const ALLOWED_TYPES = new Set(["alias", "reference"]);
 // Database initialization, tracked by "readyPromise"
-const readyPromise = new Promise((resolve, reject) => {
-  let request;
-  try {
-    request = window.indexedDB.open("respec-biblio2", 12);
-  } catch (err) {
-    return reject(err);
-  }
-  request.onerror = () => {
-    reject(new DOMException(request.error.message, request.error.name));
-  };
-  request.onsuccess = () => {
-    resolve(request.result);
-  };
-  request.onupgradeneeded = async () => {
-    const db = request.result;
+const readyPromise = openDB("respec-biblio2", 12, {
+  upgrade(db) {
     Array.from(db.objectStoreNames).map(storeName =>
       db.deleteObjectStore(storeName)
     );
@@ -55,12 +43,12 @@ const readyPromise = new Promise((resolve, reject) => {
       }),
     ];
     try {
-      await Promise.all(promisesToCreateSchema);
+      Promise.all(promisesToCreateSchema);
       resolve();
     } catch (err) {
       reject(err);
     }
-  };
+  },
 });
 
 export const biblioDB = {
