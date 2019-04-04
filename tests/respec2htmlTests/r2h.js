@@ -13,26 +13,26 @@ const colors = require("colors");
 const { parseErrorsAndWarnings, urlToExecutable, debug } = require("./utils");
 
 const respec2htmlTests = [
-  // {
-  //   blockDescription: "Process builds",
-  //   tests: [
-  //     {
-  //       URL: `http://localhost:${port}/examples/basic.built.html`,
-  //       evalFunction: async exec => {
-  //         // The following function will automatically throw if ReSpec fails to make the document.
-  //         await exec.run();
-  //       },
-  //       message: `Processes example spec employing default respec-w3c-common.js profile`,
-  //     },
-  //     {
-  //       URL: `http://localhost:${port}/examples/basic.html`,
-  //       evalFunction: async exec => {
-  //         await exec.run();
-  //       },
-  //       message: `Processes example spec employing source JS files being pushed`,
-  //     },
-  //   ],
-  // },
+  {
+    blockDescription: "Process builds",
+    tests: [
+      {
+        URL: `http://localhost:${port}/examples/basic.built.html`,
+        evalFunction: async exec => {
+          // The following function will automatically throw if ReSpec fails to make the document.
+          await exec.run();
+        },
+        message: `Processes example spec employing default respec-w3c-common.js profile`,
+      },
+      {
+        URL: `http://localhost:${port}/examples/basic.html`,
+        evalFunction: async exec => {
+          await exec.run();
+        },
+        message: `Processes example spec employing source JS files being pushed`,
+      },
+    ],
+  },
   {
     blockDescription: "Process warnings and errors",
     tests: [
