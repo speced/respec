@@ -13,26 +13,26 @@ const colors = require("colors");
 const { parseErrorsAndWarnings, urlToExecutable, debug } = require("./utils");
 
 const respec2htmlTests = [
-  {
-    blockDescription: "Process builds",
-    tests: [
-      {
-        URL: `http://localhost:${port}/examples/basic.built.html`,
-        evalFunction: async exec => {
-          // The following function will automatically throw if ReSpec fails to make the document.
-          await exec.run();
-        },
-        message: `Processes example spec employing default respec-w3c-common.js profile`,
-      },
-      {
-        URL: `http://localhost:${port}/examples/basic.html`,
-        evalFunction: async exec => {
-          await exec.run();
-        },
-        message: `Processes example spec employing source JS files being pushed`,
-      },
-    ],
-  },
+  // {
+  //   blockDescription: "Process builds",
+  //   tests: [
+  //     {
+  //       URL: `http://localhost:${port}/examples/basic.built.html`,
+  //       evalFunction: async exec => {
+  //         // The following function will automatically throw if ReSpec fails to make the document.
+  //         await exec.run();
+  //       },
+  //       message: `Processes example spec employing default respec-w3c-common.js profile`,
+  //     },
+  //     {
+  //       URL: `http://localhost:${port}/examples/basic.html`,
+  //       evalFunction: async exec => {
+  //         await exec.run();
+  //       },
+  //       message: `Processes example spec employing source JS files being pushed`,
+  //     },
+  //   ],
+  // },
   {
     blockDescription: "Process warnings and errors",
     tests: [
@@ -44,10 +44,11 @@ const respec2htmlTests = [
           } catch (error) {
             const expectedErrors = new Set([
               "A custom SotD paragraph is required for your type of document.",
-              'Document must have one element with `id="abstract"',
+              "Every item in `postProcess` must be a JS function.",
             ]);
             const expectedWarnings = new Set([
-              "Can't find Table of Contents. Please use <nav id='toc'> around the ToC.",
+              "Missing `<dfn>` for `UndefinedInterface` interface. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).",
+              "Missing `<dfn>` for `UndefinedInterface`'s `undefinedAttribute()` operation. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).",
             ]);
             const recordedTerminalErrors = parseErrorsAndWarnings(
               error.toString().split("\n")

@@ -16,6 +16,9 @@
         name: "Your Name",
         url: "https://your-site.com",
       }],
+      postProcess: [{
+        title: "not a function, will cause error"
+      }],
       github: "https://github.com/w3c/some-API/",
       testSuiteURI: "https://w3c-test.org/some-API/",
       implementationReportURI: "https://w3c.github.io/test-results/some-API",
@@ -23,6 +26,11 @@
   </script>
 </head>
 <body>
+<section id='abstract'>
+  <p>
+    This is required.
+  </p>
+</section>
 <section class="introductory" id="overview">
   <h2>
     Overview
@@ -49,9 +57,8 @@
   </h2>
   <pre class="idl">
       [Constructor]
-      interface Foo {
-        attribute Bar bar;
-        void doTheFoo();
+      interface UndefinedInterface {
+        void undefinedAttribute();
       };
       </pre>
   <p>

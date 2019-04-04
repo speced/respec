@@ -60,7 +60,7 @@ module.exports = {
     const nullDevice =
       process.platform === "win32" ? "\\\\.\\NUL" : "/dev/null";
     const disableSandbox = process.env.TRAVIS ? " --disable-sandbox" : "";
-    const cmd = `node ./tools/respec2html.js${disableSandbox} --timeout 20 --src ${url} --out ${nullDevice}`;
+    const cmd = `node ./tools/respec2html.js -e -w${disableSandbox} --timeout 20 --src ${url} --out ${nullDevice}`;
     return toExecutable(cmd);
   },
   debug(msg) {
