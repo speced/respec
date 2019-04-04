@@ -44,7 +44,7 @@ const respec2htmlTests = [
           } catch (error) {
             const expectedErrors = new Set([
               "A custom SotD paragraph is required for your type of document.",
-              "Every item in `postProcess` must be a JS function.",
+              "At least one editor is required",
             ]);
             const expectedWarnings = new Set([
               "Missing `<dfn>` for `UndefinedInterface` interface. [More info](https://github.com/w3c/respec/wiki/WebIDL-thing-is-not-defined).",
