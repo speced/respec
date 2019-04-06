@@ -97,7 +97,7 @@ describe("W3C — Headers", () => {
       expect(
         dd.querySelector("a[href='https://orcid.org/0000-0002-1694-233X']")
       ).not.toBeNull();
-      // It puts orcid after the author's name
+      // It puts orcid after the editor's name, but before the organization's details
       expect(doc.querySelector("dd > .p-name + .orcid + .org")).not.toBeNull();
     });
 
