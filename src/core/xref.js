@@ -1,3 +1,4 @@
+// @ts-check
 // Automatically adds external references.
 // Looks for the terms which do not have a definition locally on Shepherd API
 // For each returend result, adds `data-cite` attributes to respective elements,
@@ -160,7 +161,7 @@ function normalizeConfig(xref) {
  * @param {HTMLElement[]} elems
  */
 function createXrefMap(elems) {
-  /** @type {Map<string, XrefMapEntry[]} */
+  /** @type {Map<string, XrefMapEntry[]>} */
   const map = new Map();
 
   for (const elem of elems) {
@@ -217,7 +218,7 @@ function createXrefMap(elems) {
 
 /**
  * collects xref keys in a form more usable for querying
- * @param {ReturnType<createXrefMap>} xrefs
+ * @param {ReturnType<typeof createXrefMap>} xrefs
  * @typedef {{ term: string, specs?: string[], types?: string[], for?: string }} PayloadKey
  * @returns {PayloadKey[]}
  */
@@ -347,12 +348,15 @@ function addDataCiteToTerms(results, xrefMap, conf) {
 
   for (const [term, entries] of xrefMap) {
     for (const entry of entries) {
-      const result = disambiguate(results[term], entry, term);
-      const { elem } = entry;
-      if (result.error) {
-        collectErrors(term, elem, result, errorCollectors);
+      let result;
+      try {
+        result = disambiguate(results[term], entry, term);
+      } catch (error) {
+        collectErrors(term, entry.elem, error, errorCollectors);
         continue;
       }
+
+      const { elem } = entry;
       const { uri, spec: cite, normative, type } = result;
       const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
       const [citePath, citeFrag] = path.split("#");
@@ -360,6 +364,7 @@ function addDataCiteToTerms(results, xrefMap, conf) {
       Object.assign(elem.dataset, dataset);
 
       // update indirect links (data-lt, data-plurals)
+      /** @type {NodeListOf<HTMLElement>} */
       const indirectLinks = document.querySelectorAll(
         `[data-dfn-type="xref"][data-xref="${term.toLowerCase()}"]`
       );
@@ -425,7 +430,7 @@ function disambiguate(fetchedData, context, term) {
 
   if (!data.length) {
     // no match found
-    return { error: "NO_MATCH", term };
+    throw { error: "NO_MATCH", term };
   }
 
   if (data.length === 1) {
@@ -433,7 +438,7 @@ function disambiguate(fetchedData, context, term) {
   }
 
   // ambiguous
-  return { error: "AMBIGUOUS", term, specs: data.map(e => e.spec) };
+  throw { error: "AMBIGUOUS", term, specs: data.map(e => e.spec) };
 }
 
 function collectErrors(term, elem, errorData, errorCollectors) {
