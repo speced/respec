@@ -59,14 +59,29 @@ respecPill.addEventListener("click", function(e) {
   this.setAttribute("aria-expanded", String(menu.hidden));
   menu.hidden = !menu.hidden;
 });
+document.documentElement.addEventListener("keyup", e => {
+  e.stopPropagation();
+  if (e.keyCode === 73) {
+    if (menu.hidden) {
+      menu.classList.remove("respec-hidden");
+      menu.classList.add("respec-visible");
+      respecPill.focus();
+    } else {
+      menu.classList.add("respec-hidden");
+      menu.classList.remove("respec-visible");
+    }
+    respecPill.setAttribute("aria-expanded", String(menu.hidden));
+    menu.hidden = !menu.hidden;
+  }
+});
+respecUI.appendChild(menu);
 document.documentElement.addEventListener("click", () => {
-  if (!menu.hidden) {
+  if (!menu.hidden && !overlay) {
     menu.classList.remove("respec-visible");
     menu.classList.add("respec-hidden");
     menu.hidden = true;
   }
 });
-respecUI.appendChild(menu);
 
 const ariaMap = new Map([
   ["controls", "respec-menu"],
@@ -161,6 +176,10 @@ export const ui = {
     if (owner) {
       owner.setAttribute("aria-expanded", "false");
     }
+    respecPill.setAttribute("aria-expanded", String(false));
+    respecPill.focus();
+    menu.hidden = false;
+    menu.classList.add("respec-visible");
     if (!modal) return;
     modal.remove();
     modal = null;
