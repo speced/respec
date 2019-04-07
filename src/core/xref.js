@@ -33,9 +33,10 @@ const CONCEPT_TYPES = new Set(["dfn", "event", "element", "_CONCEPT_"]);
 const CACHE_MAX_AGE = 86400000; // 24 hours
 
 class ObjectSet extends Set {
-  constructor() {
+  constructor(data = []) {
     super();
     this.stringified = new Set();
+    data.forEach(entry => this.add(entry));
   }
 
   add(entry) {
@@ -83,17 +84,16 @@ export async function run(conf, elems) {
   }
 
   // merge results
-  const uniqueKeys = new Set(
+  const uniqueTerms = new Set(
     Object.keys(resultsFromCache).concat(Object.keys(fetchedResults))
   );
-  const results = [...uniqueKeys].reduce((results, key) => {
-    const data = (resultsFromCache[key] || []).concat(
-      fetchedResults[key] || []
+  const results = Object.create(null);
+  for (const term of uniqueTerms) {
+    const data = (resultsFromCache[term] || []).concat(
+      fetchedResults[term] || []
     );
-    results[key] = [...new Set(data.map(JSON.stringify))].map(JSON.parse);
-    return results;
-  }, Object.create(null));
-
+    results[term] = [...new ObjectSet(data)];
+  }
   addDataCiteToTerms(results, xrefMap, conf);
 }
 
@@ -218,7 +218,8 @@ function createXrefMap(elems) {
 /**
  * collects xref keys in a form more usable for querying
  * @param {ReturnType<createXrefMap>} xrefs
- * @returns {{ term: string, specs?: string[], types?: string[], for?: string }[]}
+ * @typedef {{ term: string, specs?: string[], types?: string[], for?: string }} PayloadKey
+ * @returns {PayloadKey[]}
  */
 function collectPayloadKeys(xrefs) {
   const keys = new ObjectSet();
@@ -239,21 +240,21 @@ async function cacheResults(data, cache) {
   const promisesToSet = Object.entries(data).map(([term, results]) =>
     cache.set(term, results)
   );
-  await cache.set("__CACHE_TIME__", new Date());
+  await cache.set("__CACHE_TIME__", Date.now());
   await Promise.all(promisesToSet);
 }
 
 /**
- * looks for keys in cache and resolves them
+ * looks for keys in cache and resolves them.
+ * `found` contains resolved data from cache.
+ * `notFound` contains keys not found in cache.
  * @param {Array} keys query keys
- * @param {IDBCache} cache
- * @returns {Object}
- *  @property {Object} found resolved data from cache
- *  @property {Array} notFound keys not found in cache
+ * @param {IDBKeyVal} cache
+ * @returns {Promise<{ found: ApiResponse, notFound: PayloadKey[] }>}
  */
 async function resolveFromCache(keys, cache) {
   const cacheTime = await cache.get("__CACHE_TIME__");
-  const bustCache = cacheTime && new Date() - cacheTime > CACHE_MAX_AGE;
+  const bustCache = cacheTime && Date.now() - cacheTime > CACHE_MAX_AGE;
   if (bustCache) {
     await cache.clear();
     return { found: Object.create(null), notFound: keys };
@@ -292,9 +293,13 @@ async function resolveFromCache(keys, cache) {
   }
 }
 
-// fetch from network
+/**
+ * @typedef {{ uri: string; shortname: string; spec: string; type: string; normative: boolean; for?: string[] }} ApiResponseElement
+ * @typedef {{ [term: string]: ApiResponseElement[] }} ApiResponse
+ * @returns {Promise<ApiResponse>}
+ */
 async function fetchFromNetwork(keys, url) {
-  const query = { keys }; // TODO: add `query.options`
+  const query = { keys };
   const options = {
     method: "POST",
     body: JSON.stringify(query),
@@ -327,11 +332,9 @@ function isNormative(elem) {
 }
 
 /**
- * adds data-cite attributes to elems
- * for each term from conf.xref[term] for which results are found.
- * @param {Object} query query sent to server
+ * adds data-cite attributes to elems for each term for which results are found.
  * @param {Object} results parsed JSON results returned from API
- * @param {Map} xrefMap xrefMap
+ * @param {ReturnType<createXrefMap>} xrefMap
  * @param {Object} conf respecConfig
  */
 function addDataCiteToTerms(results, xrefMap, conf) {
