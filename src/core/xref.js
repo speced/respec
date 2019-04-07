@@ -183,7 +183,13 @@ function createXrefMap(elems) {
       types.push("_CONCEPT_");
     }
 
-    const { linkFor: forContext } = elem.dataset;
+    let { linkFor: forContext = null } = elem.dataset;
+    if (!forContext && isIDL) {
+      const dataLinkForElem = elem.closest("[data-link-for]");
+      if (dataLinkForElem) {
+        forContext = dataLinkForElem.dataset.linkFor;
+      }
+    }
 
     const xrefsForTerm = map.has(term) ? map.get(term) : [];
     xrefsForTerm.push({ elem, specs: uniqueSpecs, for: forContext, types });
