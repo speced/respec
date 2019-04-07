@@ -140,12 +140,16 @@ function normalizeConfig(xref) {
 
 /**
  * maps term to elements and context
- * @param {Array:Elements} elems
- * @returns {Map} term => [ { elem } ]
+ * @typedef {{ elem: HTMLElement, specs: string[], for?: string, types: string[] }} XrefMapEntry
+ * @param {HTMLElement[]} elems
  */
 function createXrefMap(elems) {
-  return elems.reduce((map, elem) => {
+  /** @type {Map<string, XrefMapEntry[]} */
+  const map = new Map();
+
+  for (const elem of elems) {
     const isIDL = "xrefType" in elem.dataset;
+
     let term = elem.dataset.lt
       ? elem.dataset.lt.split("|", 1)[0]
       : elem.textContent;
@@ -153,29 +157,40 @@ function createXrefMap(elems) {
     if (!isIDL) term = term.toLowerCase();
 
     let specs = [];
-    const datacite = elem.closest("[data-cite]");
-    if (datacite && datacite.dataset.cite) {
-      specs = datacite.dataset.cite
-        .toLowerCase()
-        .replace(/!/g, "")
-        .split(/\s+/);
+    /** @type {HTMLElement} */
+    const dataciteElem = elem.closest("[data-cite]");
+    if (dataciteElem && dataciteElem.dataset.cite) {
+      const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
+      specs = cite.split(/\s+/);
     }
     // if element itself contains data-cite, we don't take inline context into account
-    if (datacite !== elem) {
-      const refs = [
-        ...elem.closest("section").querySelectorAll("a.bibref"),
-      ].map(el => el.textContent.toLowerCase());
-      specs.push(...refs);
+    if (dataciteElem !== elem) {
+      for (const el of elem.closest("section").querySelectorAll("a.bibref")) {
+        const ref = el.textContent.toLowerCase();
+        specs.push(ref);
+      }
     }
     const uniqueSpecs = [...new Set(specs)].sort();
 
-    const types = [isIDL ? elem.dataset.xrefType || "_IDL_" : "_CONCEPT_"];
+    const types = [];
+    if (isIDL) {
+      if (elem.dataset.xrefType) {
+        types.push(...elem.dataset.xrefType.split("|"));
+      } else {
+        types.push("_IDL_");
+      }
+    } else {
+      types.push("_CONCEPT_");
+    }
+
     const { linkFor: forContext } = elem.dataset;
 
     const xrefsForTerm = map.has(term) ? map.get(term) : [];
     xrefsForTerm.push({ elem, specs: uniqueSpecs, for: forContext, types });
-    return map.set(term, xrefsForTerm);
-  }, new Map());
+    map.set(term, xrefsForTerm);
+  }
+
+  return map;
 }
 
 /**
