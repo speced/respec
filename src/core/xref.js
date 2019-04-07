@@ -333,8 +333,8 @@ function isNormative(elem) {
 
 /**
  * adds data-cite attributes to elems for each term for which results are found.
- * @param {Object} results parsed JSON results returned from API
- * @param {ReturnType<createXrefMap>} xrefMap
+ * @param {ApiResponse} results parsed JSON results returned from API
+ * @param {ReturnType<typeof createXrefMap>} xrefMap
  * @param {Object} conf respecConfig
  */
 function addDataCiteToTerms(results, xrefMap, conf) {
@@ -353,11 +353,11 @@ function addDataCiteToTerms(results, xrefMap, conf) {
         collectErrors(term, elem, result, errorCollectors);
         continue;
       }
-      const { uri, spec: cite, normative } = result;
+      const { uri, spec: cite, normative, type } = result;
       const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
       const [citePath, citeFrag] = path.split("#");
-      const citeObj = { cite, citePath, citeFrag };
-      Object.assign(elem.dataset, citeObj);
+      const dataset = { cite, citePath, citeFrag, type };
+      Object.assign(elem.dataset, dataset);
 
       // update indirect links (data-lt, data-plurals)
       const indirectLinks = document.querySelectorAll(
@@ -365,7 +365,7 @@ function addDataCiteToTerms(results, xrefMap, conf) {
       );
       indirectLinks.forEach(el => {
         el.removeAttribute("data-xref");
-        Object.assign(el.dataset, citeObj);
+        Object.assign(el.dataset, dataset);
       });
 
       // add specs for citation (references section)
