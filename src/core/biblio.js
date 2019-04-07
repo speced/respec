@@ -11,7 +11,7 @@ import { pub } from "./pubsubhub.js";
 export const biblio = {};
 
 // for backward compatibity
-export { wireReference, stringifyReference } from "./render-biblio.js.js";
+export { wireReference, stringifyReference } from "./render-biblio.js";
 
 export const name = "core/biblio";
 
