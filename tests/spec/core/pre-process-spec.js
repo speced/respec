@@ -1,4 +1,6 @@
-"use strict";
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
+("use strict");
 describe("Core - preProcess, postProcess, afterEnd", () => {
   afterAll(flushIframes);
   let doc;

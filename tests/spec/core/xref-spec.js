@@ -1,14 +1,19 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeDefaultBody,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
+import { IDBKeyVal } from "../../../src/core/utils.js";
+import { openDB } from "idb";
+
 describe("Core — xref", () => {
   afterAll(flushIframes);
 
   let cache;
   beforeAll(async () => {
-    await new Promise(resolve => require(["deps/idb"], resolve));
-    const { openDB } = window.idb;
-    const { IDBKeyVal } = await new Promise(resolve =>
-      require(["core/utils"], resolve)
-    );
     const idb = await openDB("xref", 1, {
       upgrade(db) {
         db.createObjectStore("xrefs");

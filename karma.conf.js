@@ -43,19 +43,19 @@ module.exports = function(config) {
         served: true,
       },
       {
-        pattern: "js/deps/marked.js",
-        included: false,
-        served: true,
-      },
-      {
         pattern: "js/**/*.*",
         included: false,
         served: true,
       },
       {
-        pattern: "tests/**/*-spec.js",
+        pattern: "src/**/*.*",
         included: false,
         served: true,
+      },
+      {
+        pattern: "tests/**/*-spec.js",
+        type: "module",
+        included: true,
       },
       {
         pattern: "tests/data/**/*",
@@ -85,9 +85,13 @@ module.exports = function(config) {
     exclude: ["**/*.swp", "*.swp", ".DS_Store"],
 
     proxies: {
+      idb: "/base/node_modules/idb/build/esm/index.js",
+
       "/about-blank.html": "/base/tests/about-blank.html",
       "/assets/": "/base/assets/",
       "/js/": "/base/js/",
+      "/src/": "/base/src/",
+      "/node_modules/": "/base/node_modules/",
       "/builds/": "/base/builds/",
       "/tests/": "/base/tests/",
       "/spec/": "/base/tests/spec/",

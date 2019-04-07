@@ -1,4 +1,12 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeBasicConfig,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
+
 describe("Core — Informative", () => {
   afterAll(flushIframes);
   it("should process informative sections", async () => {

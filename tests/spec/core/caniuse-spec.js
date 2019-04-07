@@ -1,4 +1,13 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeBasicConfig,
+  makeDefaultBody,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
+
 describe("Core — Can I Use", () => {
   afterAll(flushIframes);
   const apiURL = `${window.location.origin}/tests/data/caniuse/FEATURE.json`;

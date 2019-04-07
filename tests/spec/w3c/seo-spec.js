@@ -1,5 +1,7 @@
 "use strict";
 
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 function makeTest(uri) {
   return doc => {
     const canLink = doc.querySelector("link[rel='canonical']");

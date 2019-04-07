@@ -1,4 +1,13 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeBasicConfig,
+  makeDefaultBody,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
+
 describe("Core — Issues and Notes", () => {
   afterAll(flushIframes);
   it("treats each issue as unique", async () => {

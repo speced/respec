@@ -1,4 +1,12 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeBasicConfig,
+  makeDefaultBody,
+  makeRSDoc,
+} from "../SpecHelper.js";
+
 describe("W3C — Conformance", () => {
   afterAll(flushIframes);
   it("includes a h2 and inject its content", async () => {

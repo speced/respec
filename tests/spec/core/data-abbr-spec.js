@@ -1,4 +1,7 @@
 "use strict";
+
+import { flushIframes, makeBasicConfig, makeRSDoc } from "../SpecHelper.js";
+
 describe("Core — data-abbr", () => {
   afterAll(flushIframes);
   it("processes definition abbreviations", async () => {
