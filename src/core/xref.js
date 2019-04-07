@@ -17,7 +17,7 @@ const profiles = {
   "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"],
 };
 
-const API_URL = new URL("https://respec.org/xref");
+const API_URL = "https://respec.org/xref";
 const IDL_TYPES = new Set([
   "attribute",
   "dict-member",
@@ -54,10 +54,7 @@ export async function run(conf, elems) {
   }
   const xrefMap = createXrefMap(elems);
   const allKeys = collectKeys(xrefMap);
-  const apiURL = xref.url ? new URL(xref.url, location.href) : API_URL;
-  if (!(apiURL instanceof URL)) {
-    throw new TypeError("respecConfig.xref.url must be a valid URL instance");
-  }
+  const apiURL = xref.url;
 
   const {
     found: resultsFromCache,
@@ -84,71 +81,61 @@ export async function run(conf, elems) {
   addDataCiteToTerms(results, xrefMap, conf);
 }
 
-function invalidProfileError(profile) {
-  pub(
-    "error",
-    `Invalid \`xref\` profile option passed in the configuration: "${profile}".` +
-      ` Please use one of the supported specification profiles: ${Object.keys(
-        profiles
-      ).join(", ")}.`
-  );
-}
-
 /**
  * converts conf.xref to object with url and spec properties
  */
 function normalizeConfig(xref) {
-  const xrefDefaults = {
+  const defaults = {
     url: API_URL,
     specs: null,
   };
 
-  const normalizedConfig = {};
+  const config = Object.assign({}, defaults);
+
   const type = Array.isArray(xref) ? "array" : typeof xref;
   switch (type) {
     case "boolean":
-      // ... true
-      Object.assign(normalizedConfig, xrefDefaults);
+      // using defaults already, as above
       break;
     case "string":
-      if (profiles[xref.toLowerCase()]) {
-        // We have the profile
-        Object.assign(normalizedConfig, xrefDefaults, {
-          specs: profiles[xref.toLowerCase()],
-        });
+      if (xref.toLowerCase() in profiles) {
+        Object.assign(config, { specs: profiles[xref.toLowerCase()] });
       } else {
         invalidProfileError(xref);
-        Object.assign(normalizedConfig, xrefDefaults);
       }
       break;
     case "array":
-      Object.assign(normalizedConfig, xrefDefaults, {
-        specs: [].concat(xref),
-      });
+      Object.assign(config, { specs: xref });
       break;
     case "object":
-      if (xref.profile && !profiles[xref.profile.toLowerCase()]) {
-        invalidProfileError(xref.profile);
-        Object.assign(normalizedConfig, xrefDefaults, xref);
-      } else {
-        Object.assign(normalizedConfig, xrefDefaults, xref);
-        if (xref.profile)
-          Object.assign(normalizedConfig, {
-            specs: xref.specs
-              ? xref.specs.concat(profiles[xref.profile.toLowerCase()])
-              : profiles[xref.profile.toLowerCase()],
-          });
+      Object.assign(config, xref);
+      if (xref.profile) {
+        const profile = xref.profile.toLowerCase();
+        if (profile in profiles) {
+          const specs = (xref.specs || []).concat(profiles[profile]);
+          Object.assign(config, { specs });
+        } else {
+          invalidProfileError(xref.profile);
+        }
       }
       break;
     default:
-      // show user error - bad configuration
-      Object.assign(normalizedConfig, xrefDefaults);
       pub(
         "error",
-        `Invalid value for \`xref\` configuration option. Got passed: "${xref}".`
+        `Invalid value for \`xref\` configuration option. Received: "${xref}".`
       );
   }
-  return normalizedConfig;
+  return config;
+
+  function invalidProfileError(profile) {
+    const supportedProfiles = Object.keys(profiles)
+      .map(p => `"${p}"`)
+      .join(", ");
+    const msg =
+      `Invalid profile "${profile}" in \`respecConfig.xref\`. ` +
+      `Please use one of the supported profiles: ${supportedProfiles}.`;
+    pub("error", msg);
+  }
 }
 
 /**
