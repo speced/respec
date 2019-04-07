@@ -32,10 +32,26 @@ const IDL_TYPES = new Set([
 const CONCEPT_TYPES = new Set(["dfn", "event", "element", "_CONCEPT_"]);
 const CACHE_MAX_AGE = 86400000; // 24 hours
 
+class ObjectSet extends Set {
+  constructor() {
+    super();
+    this.stringified = new Set();
+  }
+
+  add(entry) {
+    const stringified = JSON.stringify(entry);
+    if (!this.stringified.has(stringified)) {
+      this.stringified.add(stringified);
+      super.add(entry);
+    }
+    return this;
+  }
+}
+
 /**
  * main external reference driver
  * @param {Object} conf respecConfig
- * @param {Array:Elements} elems possibleExternalLinks
+ * @param {HTMLElement[]} elems possibleExternalLinks
  */
 export async function run(conf, elems) {
   const idb = await openDB("xref", 1, {
@@ -53,7 +69,7 @@ export async function run(conf, elems) {
     document.body.dataset.cite = bodyCite.concat(xref.specs).join(" ");
   }
   const xrefMap = createXrefMap(elems);
-  const allKeys = collectKeys(xrefMap);
+  const allKeys = collectPayloadKeys(xrefMap);
   const apiURL = xref.url;
 
   const {
@@ -201,20 +217,21 @@ function createXrefMap(elems) {
 
 /**
  * collects xref keys in a form more usable for querying
- * @param {Map} xrefs
- * @returns {Array} =[{ term, specs[] }]
+ * @param {ReturnType<createXrefMap>} xrefs
+ * @returns {{ term: string, specs?: string[], types?: string[], for?: string }[]}
  */
-function collectKeys(xrefs) {
-  const queryKeys = [...xrefs.entries()].reduce(
-    (queryKeys, [term, entries]) => {
-      for (const { specs, types, for: forContext } of entries) {
-        queryKeys.add(JSON.stringify({ term, specs, types, for: forContext })); // only unique
-      }
-      return queryKeys;
-    },
-    new Set()
-  );
-  return [...queryKeys].map(JSON.parse);
+function collectPayloadKeys(xrefs) {
+  const keys = new ObjectSet();
+  for (const [term, entries] of xrefs) {
+    for (const { specs, types, for: forContext } of entries) {
+      const key = { term };
+      if (specs.length) key.specs = specs;
+      if (types.length) key.types = types;
+      if (forContext) key.for = forContext;
+      keys.add(key);
+    }
+  }
+  return [...keys];
 }
 
 // adds data to cache
