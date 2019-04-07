@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/style
 // Inserts the CSS that ReSpec uses into the document.
 //
@@ -15,11 +16,11 @@ const styleElement =
   typeof document !== "undefined" ? insertStyle(document, {}) : undefined;
 
 /**
- * @return {string}
+ * @return {Promise<string>}
  */
 async function loadStyle() {
   try {
-    return await import("text!../../assets/respec2.css");
+    return (await import("text!../../assets/respec2.css")).default;
   } catch {
     const loader = await import("./asset-loader");
     return loader.loadAssetOnNode("respec2.css");
