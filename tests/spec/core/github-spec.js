@@ -26,6 +26,8 @@ describe("Core - Github", () => {
       const { respecConfig: conf } = doc.defaultView;
       expect(conf.hasOwnProperty("githubAPI")).toEqual(true);
       expect(conf.githubAPI).toEqual("https://api.github.com/repos/w3c/respec");
+      expect(conf.hasOwnProperty("githubAPIBase")).toEqual(true);
+      expect(conf.githubAPIBase).toEqual("https://api.github.com");
       expect(conf.hasOwnProperty("issueBase")).toEqual(true);
       expect(conf.issueBase).toEqual("https://github.com/w3c/respec/issues/");
       expect(conf.hasOwnProperty("edDraftURI")).toEqual(true);
@@ -36,6 +38,7 @@ describe("Core - Github", () => {
     function doesntOverrideTest(doc) {
       const { respecConfig: conf } = doc.defaultView;
       expect(conf.githubAPI).toEqual("https://test.com/githubAPI");
+      expect(conf.githubAPIBase).toEqual("https://test.com");
       expect(conf.issueBase).toEqual("https://test.com/issueBase");
       expect(conf.edDraftURI).toEqual("https://test.com/edDraftURI");
       expect(conf.shortName).toEqual("dontOverrideThis");
@@ -50,6 +53,7 @@ describe("Core - Github", () => {
     });
     const dontOverrideTheseOps = {
       githubAPI: "https://test.com/githubAPI",
+      githubAPIBase: "https://test.com",
       issueBase: "https://test.com/issueBase",
       edDraftURI: "https://test.com/edDraftURI",
       shortName: "dontOverrideThis",

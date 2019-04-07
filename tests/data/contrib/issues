@@ -1,0 +1,17 @@
+[
+  {
+    "user": {
+      "login": "john_doe"
+    }
+  },
+  {
+    "user": {
+      "login": "jane_smith"
+    }
+  },
+  {
+    "user": {
+      "login": "bob_park"
+    }
+  }
+]
