@@ -1,12 +1,12 @@
 "use strict";
 
+// Supports dynamic import for RequireJS
+
 const { expression, default: template } = require("@babel/template");
 const { default: inherits } = require("@babel/plugin-syntax-dynamic-import");
 const { wrapInterop } = require("@babel/helper-module-transforms");
 
-exports.__esModule = true;
-
-exports.default = function() {
+module.exports = function() {
   return {
     inherits,
     visitor: {
@@ -25,5 +25,3 @@ exports.default = function() {
     },
   };
 };
-
-module.exports = exports.default;

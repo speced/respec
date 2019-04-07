@@ -7,7 +7,7 @@
  * All is done while keeping in mind that exported html stays clean
  * on export.
  */
-import { sub } from "./pubsubhub";
+import { sub } from "./pubsubhub.js";
 
 export const name = "core/highlight-vars";
 

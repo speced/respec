@@ -9,8 +9,8 @@ import {
   plural as pluralOf,
   singular as singularOf,
 } from "pluralize";
-import { norm as normalize } from "./utils";
-import { registerDefinition } from "./dfn-map";
+import { norm as normalize } from "./utils.js";
+import { registerDefinition } from "./dfn-map.js";
 
 export const name = "core/pluralize";
 

@@ -1,5 +1,8 @@
 "use strict";
 
+// Removes import.meta from babel compiled results
+// as it's only for native ES module
+
 const { ast } = require("@babel/template").default;
 const { default: inherits } = require("@babel/plugin-syntax-import-meta");
 

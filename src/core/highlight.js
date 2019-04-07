@@ -5,8 +5,8 @@
  * Performs syntax highlighting to all pre and code elements.
  */
 import html from "hyperhtml";
-import { msgIdGenerator } from "./utils";
-import { workerPromise } from "./worker";
+import { msgIdGenerator } from "./utils.js";
+import { workerPromise } from "./worker.js";
 export const name = "core/highlight";
 
 const nextMsgId = msgIdGenerator("highlight");

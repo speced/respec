@@ -43,7 +43,7 @@
  * The whitespace of pre elements are left alone.
  */
 
-import { markdownToHtml } from "./utils";
+import { markdownToHtml } from "./utils.js";
 export const name = "core/markdown";
 
 function processElements(selector) {

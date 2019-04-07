@@ -11,5 +11,6 @@
   "plugins": [
     "./tools/babel-plugin-dynamic-import-requirejs",
     "./tools/babel-plugin-import-meta-ignore",
+    "./tools/babel-plugin-import-path-requirejs.js"
   ]
 }

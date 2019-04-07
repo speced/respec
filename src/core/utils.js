@@ -3,9 +3,9 @@
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
-import { lang as docLang } from "./l10n";
+import { lang as docLang } from "./l10n.js";
 import marked from "marked";
-import { pub } from "./pubsubhub";
+import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
 
 marked.setOptions({
