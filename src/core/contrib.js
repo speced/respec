@@ -82,10 +82,10 @@ export async function run(conf) {
   const commenterUrls = ghCommenters ? findUserURLs(issues, comments) : [];
   const contributorUrls = ghContributors ? contributors.map(urlProp) : [];
   try {
-    await Promise.all(
+    await Promise.all([
       toHTML(commenterUrls, editors, ghCommenters, headers),
-      toHTML(contributorUrls, editors, ghContributors, headers)
-    );
+      toHTML(contributorUrls, editors, ghContributors, headers),
+    ]);
   } catch (error) {
     pub("error", "Error loading contributors and/or commenters from GitHub.");
   }

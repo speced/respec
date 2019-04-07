@@ -1,0 +1,5 @@
+{
+  "issues_url": "http://localhost:9876/tests/data/issues/index",
+  "issue_comment_url": "http://localhost:9876/tests/data/issues/comments/index",
+  "contributors_url": "http://localhost:9876/tests/data/contributors"
+}

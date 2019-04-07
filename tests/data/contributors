@@ -1,0 +1,10 @@
+[
+  {
+    "login": "john_doe",
+    "url": "/tests/data/users/john_doe"
+  },
+  {
+    "login": "fb",
+    "url": "/tests/data/users/fb"
+  }
+]
