@@ -13,9 +13,10 @@ export const name = "core/style";
 // Opportunistically inserts the style, with the chance to reduce some FOUC
 const styleElement = insertStyle();
 
+/** @return {Promise<any>} */
 async function loadStyle() {
   try {
-    return (await import("text!../../assets/respec2.css")).default;
+    return await import("text!../../assets/respec2.css");
   } catch {
     const res = await fetch(
       new URL("../../assets/respec2.css", import.meta.url)

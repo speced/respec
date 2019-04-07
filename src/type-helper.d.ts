@@ -12,7 +12,7 @@ interface Element {
 
 declare module "text!*" {
   const value: string;
-  export default value;
+  export = value;
 }
 
 declare var respecConfig: any;

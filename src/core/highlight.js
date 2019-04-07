@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Module core/highlight
  *
@@ -69,9 +70,10 @@ async function sendHighlightRequest(code, languages) {
   });
 }
 
+/** @return {Promise<any>} */
 async function loadStyle() {
   try {
-    return (await import("text!../../assets/github.css")).default;
+    return await import("text!../../assets/github.css");
   } catch {
     const res = await fetch(
       new URL("../../assets/github.css", import.meta.url)

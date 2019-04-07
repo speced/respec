@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Module core/highlight-vars
  * Highlights occurrences of a <var> within a section on click.
@@ -29,9 +30,10 @@ export async function run(conf) {
   });
 }
 
+/** @return {Promise<any>} */
 async function loadStyle() {
   try {
-    return (await import("text!../../assets/var.css")).default;
+    return await import("text!../../assets/var.css");
   } catch {
     const res = await fetch(new URL("../../assets/var.css", import.meta.url));
     return await res.text();

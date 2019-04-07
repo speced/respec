@@ -1,3 +1,4 @@
+// @ts-check
 // Module core/issues-notes
 // Manages issues and notes, including marking them up, numbering, inserting the title,
 // and injecting the style sheet.
@@ -15,6 +16,11 @@ import { lang as defaultLang } from "../core/l10n";
 import { fetchAndStoreGithubIssues } from "./github-api";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
+
+/**
+ * @typedef {import("./github-api").GitHubIssue} GitHubIssue
+ * @typedef {import("./github-api").GitHubLabel} GitHubLabel
+ */
 
 export const name = "core/issues-notes";
 
@@ -92,7 +98,9 @@ function handleIssues(ins, ghIssues, conf) {
           text += ` ${issueNum}`;
         } else if (dataNum) {
           text += ` ${dataNum}`;
-          const link = linkToIssueTracker(dataNum, conf, { isFeatureAtRisk });
+          const link = linkToIssueTracker(Number(dataNum), conf, {
+            isFeatureAtRisk,
+          });
           if (link) {
             title.before(link);
             link.append(title);
@@ -120,6 +128,7 @@ function handleIssues(ins, ghIssues, conf) {
         }
         titleParent.append(createLabelsGroup(labels, report.title, repoURL));
       }
+      /** @type {HTMLElement | DocumentFragment} */
       let body = inno;
       inno.replaceWith(div);
       body.classList.remove(type);
@@ -265,9 +274,10 @@ function createLabel(label, repoURL) {
     href="${issuesURL.href}">${name}</a>`;
 }
 
+/** @return {Promise<any>} */
 async function loadStyle() {
   try {
-    return (await import("text!../../assets/issues-notes.css")).default;
+    return await import("text!../../assets/issues-notes.css");
   } catch {
     const res = await fetch(
       new URL("../../assets/issues-notes.css", import.meta.url)

@@ -19,9 +19,10 @@ const clipboardOps = {
   },
 };
 
+/** @return {Promise<any>} */
 async function loadImage() {
   try {
-    return (await import("text!../../assets/clipboard.svg")).default;
+    return await import("text!../../assets/clipboard.svg");
   } catch {
     const res = await fetch(
       new URL("../../assets/clipboard.svg", import.meta.url)

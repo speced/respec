@@ -9,7 +9,7 @@
     ]
   ],
   "plugins": [
-    "./tools/babel-plugin-import-meta-requirejs",
+    "./tools/babel-plugin-import-meta-ignore",
     "dynamic-import-amd"
   ]
 }
