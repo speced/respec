@@ -11,7 +11,6 @@
 // If the configuration has issueBase set to a non-empty string, and issues are
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { addId, joinAnd, parents } from "./utils";
-import css from "text!../../assets/issues-notes.css";
 import { lang as defaultLang } from "../core/l10n";
 import { fetchAndStoreGithubIssues } from "./github-api";
 import hyperHTML from "hyperhtml";
@@ -266,6 +265,17 @@ function createLabel(label, repoURL) {
     href="${issuesURL.href}">${name}</a>`;
 }
 
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/issues-notes.css")).default;
+  } catch {
+    const res = await fetch(
+      new URL("../../assets/issues-notes.css", import.meta.url)
+    );
+    return await res.text();
+  }
+}
+
 export async function run(conf) {
   const query = ".issue, .note, .warning, .ednote";
   /** @type {NodeListOf<HTMLElement>} */
@@ -273,6 +283,7 @@ export async function run(conf) {
   if (!issuesAndNotes.length) {
     return; // nothing to do.
   }
+  const css = await loadStyle();
   /** @type {Map<number, GitHubIssue>} */
   const ghIssues = conf.githubAPI
     ? await fetchAndStoreGithubIssues(conf)

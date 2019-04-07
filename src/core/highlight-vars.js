@@ -6,17 +6,16 @@
  * All is done while keeping in mind that exported html stays clean
  * on export.
  */
-import hlVars from "text!../../assets/var.css";
 import { sub } from "./pubsubhub";
 
 export const name = "core/highlight-vars";
 
-export function run(conf) {
+export async function run(conf) {
   if (!conf.highlightVars) {
     return;
   }
   const styleElement = document.createElement("style");
-  styleElement.textContent = hlVars;
+  styleElement.textContent = await loadStyle();
   styleElement.classList.add("removeOnSave");
   document.head.appendChild(styleElement);
 
@@ -28,6 +27,15 @@ export function run(conf) {
   sub("beforesave", outputDoc => {
     outputDoc.querySelectorAll("var.respec-hl").forEach(removeHighlight);
   });
+}
+
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/var.css")).default;
+  } catch {
+    const res = await fetch(new URL("../../assets/var.css", import.meta.url));
+    return await res.text();
+  }
 }
 
 function highlightListener(ev) {

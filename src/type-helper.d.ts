@@ -34,3 +34,7 @@ interface Node {
 }
 
 declare function fetch(input: URL, init?: RequestInit): Promise<Response>;
+
+interface ImportMeta {
+  url: string;
+}

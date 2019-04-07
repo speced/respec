@@ -4,13 +4,21 @@
 // The summary is generated if there is a section in the document with ID bp-summary.
 // Best practices are marked up with span.practicelab.
 import { addId } from "./utils";
-import css from "text!../../assets/bp.css";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
 
 export const name = "core/best-practices";
 
-export function run() {
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/bp.css")).default;
+  } catch {
+    const res = await fetch(new URL("../../assets/bp.css", import.meta.url));
+    return await res.text();
+  }
+}
+
+export async function run() {
   let num = 0;
   const bps = document.querySelectorAll("span.practicelab");
   const ul = document.createElement("ul");
@@ -27,6 +35,7 @@ export function run() {
   }
   const bpSummary = document.getElementById("bp-summary");
   if (bps.length) {
+    const css = await loadStyle();
     document.head.insertBefore(
       hyperHTML`<style>${[css]}</style>`,
       document.head.querySelector("link")

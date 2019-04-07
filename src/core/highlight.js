@@ -3,10 +3,9 @@
  *
  * Performs syntax highlighting to all pre and code elements.
  */
-import ghCss from "text!../../assets/github.css";
 import html from "hyperhtml";
 import { msgIdGenerator } from "./utils";
-import { worker } from "./worker";
+import { workerPromise } from "./worker";
 export const name = "core/highlight";
 
 const nextMsgId = msgIdGenerator("highlight");
@@ -45,13 +44,14 @@ async function highlightElement(elem) {
   elem.setAttribute("aria-busy", "false");
 }
 
-function sendHighlightRequest(code, languages) {
+async function sendHighlightRequest(code, languages) {
   const msg = {
     action: "highlight",
     code,
     id: nextMsgId(),
     languages,
   };
+  const worker = await workerPromise;
   worker.postMessage(msg);
   return new Promise((resolve, reject) => {
     const timeoutId = setTimeout(() => {
@@ -67,6 +67,17 @@ function sendHighlightRequest(code, languages) {
       resolve({ language, value });
     });
   });
+}
+
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/github.css")).default;
+  } catch {
+    const res = await fetch(
+      new URL("../../assets/github.css", import.meta.url)
+    );
+    return await res.text();
+  }
 }
 
 export async function run(conf) {
@@ -86,6 +97,7 @@ export async function run(conf) {
   if (!highlightables.length) {
     return;
   }
+  const ghCss = await loadStyle();
   const promisesToHighlight = highlightables
     .filter(elem => elem.textContent.trim())
     .map(highlightElement);

@@ -6,7 +6,6 @@
 //  - don't use generated content in the CSS!
 import * as webidl2 from "webidl2";
 import { flatten, normalizePadding } from "./utils";
-import css from "text!../../assets/webidl.css";
 import { findDfn } from "./dfn-finder";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub";
@@ -274,7 +273,18 @@ function getDefnName(defn) {
   return "";
 }
 
-export function run() {
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/webidl.css")).default;
+  } catch {
+    const res = await fetch(
+      new URL("../../assets/webidl.css", import.meta.url)
+    );
+    return await res.text();
+  }
+}
+
+export async function run() {
   const idls = document.querySelectorAll("pre.idl");
   if (!idls.length) {
     return;
@@ -283,7 +293,7 @@ export function run() {
     const link = document.querySelector("head link");
     if (link) {
       const style = document.createElement("style");
-      style.textContent = css;
+      style.textContent = await loadStyle();
       link.before(style);
     }
   }

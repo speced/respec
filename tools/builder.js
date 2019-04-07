@@ -147,6 +147,12 @@ const Builder = {
         alias: { text: "raw-loader" },
       },
       devtool: "source-map",
+      plugins: [
+        // prevents generating empty 1.respec-w3c-common.js
+        new webpack.optimize.LimitChunkCountPlugin({
+          maxChunks: 1,
+        }),
+      ],
     };
     const buildDir = path.resolve(__dirname, "../builds/");
     const workerDir = path.resolve(__dirname, "../worker/");

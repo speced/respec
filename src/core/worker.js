@@ -6,10 +6,9 @@
  */
 export const name = "core/worker";
 
-// Opportunistically preload syntax highlighter, which is used by the worker
 import { createResourceHint } from "./utils";
 import { expose } from "./expose-modules";
-import workerScript from "text!../../worker/respec-worker.js";
+
 // Opportunistically preload syntax highlighter
 const hint = {
   hint: "preload",
@@ -19,9 +18,25 @@ const hint = {
 const link = createResourceHint(hint);
 document.head.appendChild(link);
 
-const workerURL = URL.createObjectURL(
-  new Blob([workerScript], { type: "application/javascript" })
-);
-export const worker = new Worker(workerURL);
+async function loadWorkerScript() {
+  try {
+    return (await import("text!../../assets/respec-worker.js")).default;
+  } catch {
+    const res = await fetch(
+      new URL("../../assets/respec-worker.js", import.meta.url)
+    );
+    return await res.text();
+  }
+}
 
-expose(name, { worker });
+async function createWorker() {
+  const workerScript = await loadWorkerScript();
+  const workerURL = URL.createObjectURL(
+    new Blob([workerScript], { type: "application/javascript" })
+  );
+  const worker = new Worker(workerURL);
+  expose(name, { worker });
+  return worker;
+}
+
+export const workerPromise = createWorker();

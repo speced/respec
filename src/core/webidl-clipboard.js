@@ -6,14 +6,7 @@
  *
  */
 import Clipboard from "clipboard";
-import svgClipboard from "text!../../assets/clipboard.svg";
 export const name = "core/webidl-clipboard";
-
-// This button serves a prototype that we clone as needed.
-const copyButton = document.createElement("button");
-copyButton.innerHTML = svgClipboard;
-copyButton.title = "Copy IDL to clipboard";
-copyButton.classList.add("respec-button-copy-paste", "removeOnSave");
 
 const clipboardOps = {
   text: trigger => {
@@ -26,7 +19,24 @@ const clipboardOps = {
   },
 };
 
+async function loadImage() {
+  try {
+    return (await import("text!../../assets/clipboard.svg")).default;
+  } catch {
+    const res = await fetch(
+      new URL("../../assets/clipboard.svg", import.meta.url)
+    );
+    return await res.text();
+  }
+}
+
 export async function run() {
+  // This button serves a prototype that we clone as needed.
+  const copyButton = document.createElement("button");
+  copyButton.innerHTML = await loadImage();
+  copyButton.title = "Copy IDL to clipboard";
+  copyButton.classList.add("respec-button-copy-paste", "removeOnSave");
+
   Array.from(document.querySelectorAll("pre.idl"))
     .map(elem => {
       const button = copyButton.cloneNode(true);

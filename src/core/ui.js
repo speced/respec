@@ -9,7 +9,6 @@
 //  - make a release candidate that people can test
 //  - once we have something decent, merge, ship as 3.2.0
 
-import css from "text!../../assets/ui.css";
 import hyperHTML from "hyperhtml";
 import { markdownToHtml } from "./utils";
 import shortcut from "../shortcut";
@@ -17,12 +16,25 @@ import { sub } from "./pubsubhub";
 export const name = "core/ui";
 
 // Opportunistically inserts the style, with the chance to reduce some FOUC
-const styleElement = document.createElement("style");
-styleElement.id = "respec-ui-styles";
-styleElement.textContent = css;
-styleElement.classList.add("removeOnSave");
+insertStyle();
 
-document.head.appendChild(styleElement);
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/ui.css")).default;
+  } catch {
+    const res = await fetch(new URL("../../assets/ui.css", import.meta.url));
+    return await res.text();
+  }
+}
+
+async function insertStyle() {
+  const styleElement = document.createElement("style");
+  styleElement.id = "respec-ui-styles";
+  styleElement.textContent = await loadStyle();
+  styleElement.classList.add("removeOnSave");
+  document.head.appendChild(styleElement);
+  return styleElement;
+}
 
 function ariaDecorate(elem, ariaMap) {
   if (!elem) {

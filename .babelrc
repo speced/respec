@@ -7,5 +7,9 @@
         "modules": "amd"
       }
     ]
+  ],
+  "plugins": [
+    "./tools/babel-plugin-import-meta-requirejs",
+    "dynamic-import-amd"
   ]
 }

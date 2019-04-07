@@ -7,7 +7,6 @@
 // be used by a containing shell to extract all examples.
 
 import { addId } from "./utils";
-import css from "text!../../assets/examples.css";
 import { lang as defaultLang } from "../core/l10n";
 import html from "hyperhtml";
 import { pub } from "./pubsubhub";
@@ -58,13 +57,25 @@ function makeTitle(conf, elem, num, report) {
   `;
 }
 
-export function run(conf) {
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/examples.css")).default;
+  } catch {
+    const res = await fetch(
+      new URL("../../assets/examples.css", import.meta.url)
+    );
+    return await res.text();
+  }
+}
+
+export async function run(conf) {
   /** @type {NodeListOf<HTMLElement>} */
   const examples = document.querySelectorAll(
     "pre.example, pre.illegal-example, aside.example"
   );
   if (!examples.length) return;
 
+  const css = await loadStyle();
   document.head.insertBefore(
     html`
       <style>

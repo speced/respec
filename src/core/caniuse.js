@@ -4,7 +4,6 @@
  * Usage options: https://github.com/w3c/respec/wiki/caniuse
  */
 import { pub, sub } from "./pubsubhub";
-import caniuseCss from "text!../../assets/caniuse.css";
 import { createResourceHint } from "./utils";
 import hyperHTML from "hyperhtml";
 
@@ -42,6 +41,17 @@ const supportTitles = new Map([
   ["d", "Disabled by default (needs to enabled)."],
 ]);
 
+async function loadStyle() {
+  try {
+    return (await import("text!../../assets/caniuse.css")).default;
+  } catch {
+    const res = await fetch(
+      new URL("../../assets/caniuse.css", import.meta.url)
+    );
+    return await res.text();
+  }
+}
+
 export async function run(conf) {
   if (!conf.caniuse) {
     return; // nothing to do.
@@ -56,9 +66,12 @@ export async function run(conf) {
     hint: "preconnect",
     href: "https://respec.org",
   });
-  document.head.appendChild(link);
-  document.head.appendChild(hyperHTML`
-    <style class="removeOnSave">${caniuseCss}</style>`);
+  const caniuseCss = await loadStyle();
+  document.head.append(
+    link,
+    hyperHTML`
+      <style class="removeOnSave">${caniuseCss}</style>`
+  );
 
   const headDlElem = document.querySelector(".head dl");
   const contentPromise = new Promise(async resolve => {
