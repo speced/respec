@@ -20,14 +20,14 @@ const nameProp = prop("name");
 
 function URLByUser(conf, user) {
   const { githubAPIBase } = conf;
-  return (new URL(`users/${user.login}`, githubAPIBase)).href;
+  return new URL(user.url, githubAPIBase).href;
 }
 
 function findUserURLs(conf, ...thingsWithUsers) {
   const usersURLs = thingsWithUsers
     .reduce(flatten, [])
     .filter(thing => thing && thing.user)
-        .map(({ user }) => URLByUser(conf, user));
+    .map(({ user }) => URLByUser(conf, user));
   return [...new Set(usersURLs)];
 }
 
@@ -55,7 +55,7 @@ export async function run(conf) {
   if (!ghCommenters && !ghContributors) {
     return;
   }
-  const { githubAPI } = conf;
+  const { githubAPI, githubAPIBase } = conf;
   if (!githubAPI) {
     const msg =
       "Requested list of contributors and/or commenters from GitHub, but " +
@@ -65,6 +65,22 @@ export async function run(conf) {
   }
 
   const headers = githubRequestHeaders(conf);
+  const response = await fetch(new Request(githubAPI, { headers }));
+  checkLimitReached(response);
+  if (!response.ok) {
+    const msg =
+      "Error fetching repository information from GitHub. " +
+      `(HTTP Status ${response.status}).`;
+    pub("error", msg);
+    return;
+  }
+  const indexes = await response.json();
+  const {
+    issues_url,
+    issue_comment_url,
+    comments_url,
+    contributors_url,
+  } = indexes;
 
   const [
     issues,
@@ -72,26 +88,32 @@ export async function run(conf) {
     otherComments,
     contributors,
   ] = await Promise.all(
-    [
-      `${githubAPI}/issues`,
-      `${githubAPI}/issues_comments`,
-      `${githubAPI}/comments`,
-      `${githubAPI}/contributors`,
-    ].map(endpoint => fetchAll(endpoint, headers))
+    [issues_url, issue_comment_url, comments_url, contributors_url].map(url =>
+      fetchAll(
+        new URL(url.replace(/\{[^}]+\}/, ""), githubAPIBase).href,
+        headers
+      )
+    )
   );
 
   const editors = conf.editors.map(nameProp);
   const commenterUrls = ghCommenters
-        ? findUserURLs(conf, issues, issueComments, otherComments)
+    ? findUserURLs(conf, issues, issueComments, otherComments)
     : [];
-  const contributorUrls = ghContributors ? contributors.map(c => URLByUser(conf, c)) : [];
+  const contributorUrls = ghContributors
+    ? contributors.map(c => URLByUser(conf, c))
+    : [];
   try {
     const toHTMLPromises = [];
     if (ghCommenters) {
-      toHTMLPromises.push(toHTML(commenterUrls, editors, ghCommenters, headers));
+      toHTMLPromises.push(
+        toHTML(commenterUrls, editors, ghCommenters, headers)
+      );
     }
     if (ghContributors) {
-      toHTMLPromises.push(toHTML(contributorUrls, editors, ghContributors, headers));
+      toHTMLPromises.push(
+        toHTML(contributorUrls, editors, ghContributors, headers)
+      );
     }
     await Promise.all(toHTMLPromises);
   } catch (error) {

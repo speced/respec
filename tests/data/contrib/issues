@@ -1,17 +1,20 @@
 [
   {
     "user": {
-      "login": "john_doe"
+      "login": "john_doe",
+      "url": "/tests/data/contrib/users/john_doe"
     }
   },
   {
     "user": {
-      "login": "jane_smith"
+      "login": "jane_smith",
+      "url": "/tests/data/contrib/users/jane_smith"
     }
   },
   {
     "user": {
-      "login": "bob_park"
+      "login": "bob_park",
+      "url": "/tests/data/contrib/users/bob_park"
     }
   }
 ]
