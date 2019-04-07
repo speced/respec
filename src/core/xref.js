@@ -397,13 +397,18 @@ function addDataCiteToTerms(results, xrefMap, conf) {
   showErrors(errorCollectors);
 }
 
-// disambiguate fetched results based on context
+/**
+ * disambiguate fetched results based on context
+ * @param {ApiResponseElement[]} fetchedData
+ * @param {XrefMapEntry} context
+ * @param {string} term
+ */
 function disambiguate(fetchedData, context, term) {
   const { specs, types, for: contextFor } = context;
   const data = (fetchedData || []).filter(entry => {
     let valid = true;
     if (specs.length) {
-      valid = specs.includes(entry.spec);
+      valid = specs.includes(entry.shortname) || specs.includes(entry.spec);
     }
     if (valid && types.length) {
       valid = types.includes(entry.type);
@@ -412,7 +417,7 @@ function disambiguate(fetchedData, context, term) {
         valid = [...validTypes].some(type => type === entry.type);
       }
     }
-    if (valid && contextFor) {
+    if (valid && contextFor && entry.for) {
       valid = entry.for.includes(contextFor);
     }
     return valid;
