@@ -30,23 +30,6 @@ export default (items = []) => {
         `
       );
     }
-    if (p.company) {
-      if (p.companyURL) {
-        contents.push(
-          html`
-            (<a class="p-org org h-org h-card" href="${p.companyURL}"
-              >${company}</a
-            >)
-          `
-        );
-      } else {
-        contents.push(
-          html`
-            (${company})
-          `
-        );
-      }
-    }
     if (p.orcid) {
       contents.push(
         html`
@@ -73,6 +56,23 @@ export default (items = []) => {
           ></a>
         `
       );
+    }
+    if (p.company) {
+      if (p.companyURL) {
+        contents.push(
+          html`
+            (<a class="p-org org h-org h-card" href="${p.companyURL}"
+              >${company}</a
+            >)
+          `
+        );
+      } else {
+        contents.push(
+          html`
+            (${company})
+          `
+        );
+      }
     }
     if (p.note) contents.push(document.createTextNode(` (${p.note})`));
     if (p.extras) {
