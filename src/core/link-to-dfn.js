@@ -27,7 +27,7 @@ export async function run(conf) {
 
   const titleToDfns = mapTitleToDfns();
 
-  /** @type {Element[]} */
+  /** @type {HTMLElement[]} */
   const possibleExternalLinks = [];
   /** @type {HTMLAnchorElement[]} */
   const badLinks = [];
@@ -145,7 +145,7 @@ function assignDfnId(dfn, title) {
  * @param {{ for: string, title: string }} target
  * @param {HTMLAnchorElement} ant
  * @param {Record<string, Record<string, HTMLElement>>} titleToDfns
- * @param {Element[]} possibleExternalLinks
+ * @param {HTMLElement[]} possibleExternalLinks
  */
 function findLinkTarget(target, ant, titleToDfns, possibleExternalLinks) {
   const { linkFor } = ant.dataset;
@@ -231,10 +231,13 @@ function shouldWrapByCode(dfn, term) {
  * Examples: a[data-cite="spec"], dfn[data-cite="spec"], dfn.externalDFN
  */
 function findExplicitExternalLinks() {
+  /** @type {NodeListOf<HTMLElement>} */
   const links = document.querySelectorAll(
     "a[data-cite]:not([data-cite='']):not([data-cite*='#']), " +
       "dfn[data-cite]:not([data-cite='']):not([data-cite*='#'])"
   );
+  /** @type {NodeListOf<HTMLElement>} */
+  const externalDFNs = document.querySelectorAll("dfn.externalDFN");
   return [...links]
     .filter(el => {
       // ignore empties
@@ -243,7 +246,7 @@ function findExplicitExternalLinks() {
       const closest = el.closest("[data-cite]");
       return !closest || closest.dataset.cite !== "";
     })
-    .concat([...document.querySelectorAll("dfn.externalDFN")]);
+    .concat([...externalDFNs]);
 }
 
 function showLinkingError(elems) {
