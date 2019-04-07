@@ -18,10 +18,9 @@ export const name = "core/ui";
 // Opportunistically inserts the style, with the chance to reduce some FOUC
 insertStyle();
 
-/** @return {Promise<any>} */
 async function loadStyle() {
   try {
-    return await import("text!../../assets/ui.css");
+    return (await import("text!../../assets/ui.css")).default;
   } catch {
     const res = await fetch(new URL("../../assets/ui.css", import.meta.url));
     return await res.text();

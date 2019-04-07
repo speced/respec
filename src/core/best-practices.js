@@ -9,10 +9,9 @@ import { pub } from "./pubsubhub";
 
 export const name = "core/best-practices";
 
-/** @return {Promise<any>} */
 async function loadStyle() {
   try {
-    return await import("text!../../assets/bp.css");
+    return (await import("text!../../assets/bp.css")).default;
   } catch {
     const res = await fetch(new URL("../../assets/bp.css", import.meta.url));
     return await res.text();

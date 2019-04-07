@@ -18,10 +18,9 @@ const hint = {
 const link = createResourceHint(hint);
 document.head.appendChild(link);
 
-/** @return {Promise<any>} */
 async function loadWorkerScript() {
   try {
-    return await import("text!../../worker/respec-worker.js");
+    return (await import("text!../../worker/respec-worker.js")).default;
   } catch {
     const res = await fetch(
       new URL("../../worker/respec-worker.js", import.meta.url)

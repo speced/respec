@@ -42,10 +42,9 @@ const supportTitles = new Map([
   ["d", "Disabled by default (needs to enabled)."],
 ]);
 
-/** @return {Promise<any>} */
 async function loadStyle() {
   try {
-    return await import("text!../../assets/caniuse.css");
+    return (await import("text!../../assets/caniuse.css")).default;
   } catch {
     const res = await fetch(
       new URL("../../assets/caniuse.css", import.meta.url)

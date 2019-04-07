@@ -273,10 +273,9 @@ function getDefnName(defn) {
   return "";
 }
 
-/** @return {Promise<any>} */
 async function loadStyle() {
   try {
-    return await import("text!../../assets/webidl.css");
+    return (await import("text!../../assets/webidl.css")).default;
   } catch {
     const res = await fetch(
       new URL("../../assets/webidl.css", import.meta.url)

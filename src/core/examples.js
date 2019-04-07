@@ -57,10 +57,9 @@ function makeTitle(conf, elem, num, report) {
   `;
 }
 
-/** @return {Promise<any>} */
 async function loadStyle() {
   try {
-    return await import("text!../../assets/examples.css");
+    return (await import("text!../../assets/examples.css")).default;
   } catch {
     const res = await fetch(
       new URL("../../assets/examples.css", import.meta.url)

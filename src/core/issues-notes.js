@@ -274,10 +274,9 @@ function createLabel(label, repoURL) {
     href="${issuesURL.href}">${name}</a>`;
 }
 
-/** @return {Promise<any>} */
 async function loadStyle() {
   try {
-    return await import("text!../../assets/issues-notes.css");
+    return (await import("text!../../assets/issues-notes.css")).default;
   } catch {
     const res = await fetch(
       new URL("../../assets/issues-notes.css", import.meta.url)

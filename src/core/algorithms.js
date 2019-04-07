@@ -5,10 +5,9 @@ Currently used only for adding 'assert' class to algorithm lists
 
 export const name = "core/algorithms";
 
-/** @return {Promise<any>} */
 async function loadStyle() {
   try {
-    return await import("text!../../assets/algorithms.css");
+    return (await import("text!../../assets/algorithms.css")).default;
   } catch {
     const res = await fetch(
       new URL("../../assets/algorithms.css", import.meta.url)
