@@ -20,10 +20,10 @@ document.head.appendChild(link);
 
 async function loadWorkerScript() {
   try {
-    return (await import("text!../../assets/respec-worker.js")).default;
+    return (await import("text!../../worker/respec-worker.js")).default;
   } catch {
     const res = await fetch(
-      new URL("../../assets/respec-worker.js", import.meta.url)
+      new URL("../../worker/respec-worker.js", import.meta.url)
     );
     return await res.text();
   }
