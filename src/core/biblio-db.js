@@ -19,29 +19,27 @@ const readyPromise = openDB("respec-biblio2", 12, {
     Array.from(db.objectStoreNames).map(storeName =>
       db.deleteObjectStore(storeName)
     );
-    const promisesToCreateSchema = [
-      new Promise((resolve, reject) => {
-        try {
-          const store = db.createObjectStore("alias", { keyPath: "id" });
-          store.createIndex("aliasOf", "aliasOf", { unique: false });
-          store.transaction.oncomplete = resolve;
-          store.transaction.onerror = reject;
-        } catch (err) {
-          reject(err);
-        }
-      }),
-      new Promise((resolve, reject) => {
-        try {
-          const transaction = db.createObjectStore("reference", {
-            keyPath: "id",
-          }).transaction;
-          transaction.oncomplete = resolve;
-          transaction.onerror = reject;
-        } catch (err) {
-          reject(err);
-        }
-      }),
-    ];
+    new Promise((resolve, reject) => {
+      try {
+        const store = db.createObjectStore("alias", { keyPath: "id" });
+        store.createIndex("aliasOf", "aliasOf", { unique: false });
+        store.transaction.oncomplete = resolve;
+        store.transaction.onerror = reject;
+      } catch (err) {
+        reject(err);
+      }
+    });
+    new Promise((resolve, reject) => {
+      try {
+        const transaction = db.createObjectStore("reference", {
+          keyPath: "id",
+        }).transaction;
+        transaction.oncomplete = resolve;
+        transaction.onerror = reject;
+      } catch (err) {
+        reject(err);
+      }
+    });
   },
 });
 
@@ -173,8 +171,8 @@ export const biblioDB = {
       }, aliasesAndRefs);
     const promisesToAdd = Object.keys(aliasesAndRefs)
       .map(type => {
-        return Array.from(aliasesAndRefs[type]).map(details =>
-          await this.add(type, details)
+        return Array.from(aliasesAndRefs[type]).map(
+          async details => await this.add(type, details)
         );
       })
       .reduce((collector, promises) => collector.concat(promises), []);
@@ -220,7 +218,7 @@ export const biblioDB = {
     const db = await this.ready;
     const storeNames = [...ALLOWED_TYPES];
     const stores = await db.transaction(storeNames, "readwrite");
-    const clearStorePromises = storeNames.map(name => {
+    const clearStorePromises = storeNames.map(async name => {
       return await stores.objectStore(name).clear();
     });
     Promise.all(clearStorePromises);
