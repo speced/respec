@@ -4,8 +4,7 @@ describe("Core — xref", () => {
 
   let cache;
   beforeAll(async () => {
-    await new Promise(resolve => require(["deps/idb"], resolve));
-    const { openDB } = window.idb;
+    const { openDB } = await new Promise(resolve => require(["idb"], resolve));
     const { IDBKeyVal } = await new Promise(resolve =>
       require(["core/utils"], resolve)
     );
