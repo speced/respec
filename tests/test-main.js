@@ -32,5 +32,5 @@ require.config({
     idb: {
       exports: "idb",
     },
-  }
+  },
 });
