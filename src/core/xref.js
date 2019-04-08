@@ -89,10 +89,9 @@ export async function run(conf, elems) {
   }, Object.create(null));
 
   Object.keys(results).forEach(key => {
-      if (isSingular(key)) xrefMap.delete(pluralOf(key));
-      else xrefMap.delete(singularOf(key));
-    }
-  )
+    if (isSingular(key)) xrefMap.delete(pluralOf(key));
+    else xrefMap.delete(singularOf(key));
+  });
   addDataCiteToTerms(results, xrefMap, conf);
 }
 
@@ -201,10 +200,22 @@ function createXrefMap(elems) {
     const types = [isIDL ? elem.dataset.xrefType || "_IDL_" : "_CONCEPT_"];
     const { linkFor: forContext } = elem.dataset;
 
-    const xrefsForSingularTerm = map.has(singularterm) ? map.get(singularterm) : [];
+    const xrefsForSingularTerm = map.has(singularterm)
+      ? map.get(singularterm)
+      : [];
     const xrefsForPluralTerm = map.has(pluralterm) ? map.get(pluralterm) : [];
-    xrefsForSingularTerm.push({ elem, specs: uniqueSpecs, for: forContext, types });
-    xrefsForPluralTerm.push({ elem, specs: uniqueSpecs, for: forContext, types });
+    xrefsForSingularTerm.push({
+      elem,
+      specs: uniqueSpecs,
+      for: forContext,
+      types,
+    });
+    xrefsForPluralTerm.push({
+      elem,
+      specs: uniqueSpecs,
+      for: forContext,
+      types,
+    });
     map.set(singularterm, xrefsForSingularTerm);
     return map.set(pluralterm, xrefsForPluralTerm);
   }, new Map());
