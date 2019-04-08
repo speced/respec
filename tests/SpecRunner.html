@@ -28,6 +28,12 @@
         paths: {
           "jquery": "deps/jquery",
           "marked": "deps/marked",
+          "idb": "deps/idb",
+        },
+        shim: {
+          idb:  {
+            exports: "idb",
+          },
         },
         deps: testFiles,
         callback: runner,

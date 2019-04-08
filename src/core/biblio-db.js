@@ -7,7 +7,7 @@
  * It's a standalone module that can be imported into other modules.
  *
  */
-/* globals IDBKeyRange, DOMException */
+/* globals IDBKeyRange */
 import { openDB } from "idb";
 import { pub } from "./pubsubhub";
 export const name = "core/biblio-db";
@@ -42,12 +42,7 @@ const readyPromise = openDB("respec-biblio2", 12, {
         }
       }),
     ];
-    try {
-      Promise.all(promisesToCreateSchema);
-      resolve();
-    } catch (err) {
-      reject(err);
-    }
+    Promise.all(promisesToCreateSchema);
   },
 });
 
@@ -83,17 +78,9 @@ export const biblioDB = {
       throw new TypeError("id is required");
     }
     const db = await this.ready;
-    return new Promise((resolve, reject) => {
-      const objectStore = db.transaction([type], "readonly").objectStore(type);
-      const range = IDBKeyRange.only(id);
-      const request = objectStore.openCursor(range);
-      request.onsuccess = () => {
-        resolve(!!request.result);
-      };
-      request.onerror = () => {
-        reject(new DOMException(request.error.message, request.error.name));
-      };
-    });
+    const objectStore = db.transaction([type], "readonly").objectStore(type);
+    const range = IDBKeyRange.only(id);
+    return !!(await objectStore.openCursor(range));
   },
   /**
    * Checks if a given id is an alias.
@@ -106,19 +93,11 @@ export const biblioDB = {
       throw new TypeError("id is required");
     }
     const db = await this.ready;
-    return new Promise((resolve, reject) => {
-      const objectStore = db
-        .transaction(["alias"], "readonly")
-        .objectStore("alias");
-      const range = IDBKeyRange.only(id);
-      const request = objectStore.openCursor(range);
-      request.onsuccess = () => {
-        resolve(!!request.result);
-      };
-      request.onerror = () => {
-        reject(new DOMException(request.error.message, request.error.name));
-      };
-    });
+    const objectStore = db
+      .transaction(["alias"], "readonly")
+      .objectStore("alias");
+    const range = IDBKeyRange.only(id);
+    return !!(await objectStore.openCursor(range));
   },
   /**
    * Resolves an alias to its corresponding reference id.
@@ -131,22 +110,13 @@ export const biblioDB = {
       throw new TypeError("id is required");
     }
     const db = await this.ready;
-    return new Promise((resolve, reject) => {
-      const objectStore = db
-        .transaction("alias", "readonly")
-        .objectStore("alias");
-      const range = IDBKeyRange.only(id);
-      const request = objectStore.openCursor(range);
-      request.onsuccess = () => {
-        if (request.result === null) {
-          return resolve(null);
-        }
-        resolve(request.result.value.aliasOf);
-      };
-      request.onerror = () => {
-        reject(new DOMException(request.error.message, request.error.name));
-      };
-    });
+
+    const objectStore = db
+      .transaction("alias", "readonly")
+      .objectStore("alias");
+    const range = IDBKeyRange.only(id);
+    const request = await objectStore.openCursor(range);
+    return request ? request.value.aliasOf : request;
   },
   /**
    * Get a reference or alias out of the database.
@@ -163,20 +133,10 @@ export const biblioDB = {
       throw new TypeError("id is required");
     }
     const db = await this.ready;
-    return new Promise((resolve, reject) => {
-      const objectStore = db.transaction([type], "readonly").objectStore(type);
-      const range = IDBKeyRange.only(id);
-      const request = objectStore.openCursor(range);
-      request.onsuccess = () => {
-        if (request.result === null) {
-          return resolve(null);
-        }
-        resolve(request.result.value);
-      };
-      request.onerror = () => {
-        reject(new DOMException(request.error.message, request.error.name));
-      };
-    });
+    const objectStore = db.transaction([type], "readonly").objectStore(type);
+    const range = IDBKeyRange.only(id);
+    const request = await objectStore.openCursor(range);
+    return request ? request.value : request;
   },
   /**
    * Adds references and aliases to database. This is usually the data from
@@ -239,15 +199,10 @@ export const biblioDB = {
     }
     const db = await this.ready;
     const isInDB = await this.has(type, details.id);
-    return new Promise((resolve, reject) => {
-      const store = db.transaction([type], "readwrite").objectStore(type);
-      // update or add, depending of already having it in db
-      const request = isInDB ? store.put(details) : store.add(details);
-      request.onsuccess = resolve;
-      request.onerror = () => {
-        reject(new DOMException(request.error.message, request.error.name));
-      };
-    });
+    const store = db.transaction([type], "readwrite").objectStore(type);
+    // update or add, depending of already having it in db
+    const request = isInDB ? store.put(details) : store.add(details);
+    return await request;
   },
   /**
    * Closes the underlying database.
@@ -265,20 +220,9 @@ export const biblioDB = {
   async clear() {
     const db = await this.ready;
     const storeNames = [...ALLOWED_TYPES];
-    const stores = await new Promise((resolve, reject) => {
-      const transaction = db.transaction(storeNames, "readwrite");
-      transaction.onerror = () => {
-        reject(
-          new DOMException(transaction.error.message, transaction.error.name)
-        );
-      };
-      resolve(transaction);
-    });
+    const stores = await db.transaction(storeNames, "readwrite");
     const clearStorePromises = storeNames.map(name => {
-      return new Promise(resolve => {
-        const request = stores.objectStore(name).clear();
-        request.onsuccess = resolve;
-      });
+      return stores.objectStore(name).clear();
     });
     Promise.all(clearStorePromises);
   },
