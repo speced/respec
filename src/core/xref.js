@@ -10,6 +10,13 @@ import {
   showInlineError,
   showInlineWarning,
 } from "./utils";
+
+import {
+  isSingular,
+  plural as pluralOf,
+  singular as singularOf,
+} from "pluralize";
+
 import { openDB } from "idb";
 import { pub } from "./pubsubhub";
 
@@ -81,6 +88,11 @@ export async function run(conf, elems) {
     return results;
   }, Object.create(null));
 
+  Object.keys(results).forEach(key => {
+      if (isSingular(key)) xrefMap.delete(pluralOf(key));
+      else xrefMap.delete(singularOf(key));
+    }
+  )
   addDataCiteToTerms(results, xrefMap, conf);
 }
 
@@ -165,6 +177,10 @@ function createXrefMap(elems) {
     term = normalize(term);
     if (!isIDL) term = term.toLowerCase();
 
+    let singularterm = term;
+    let pluralterm = term;
+    if (isSingular(term)) pluralterm = pluralOf(term);
+    else singularterm = singularOf(term);
     let specs = [];
     const datacite = elem.closest("[data-cite]");
     if (datacite && datacite.dataset.cite) {
@@ -185,9 +201,12 @@ function createXrefMap(elems) {
     const types = [isIDL ? elem.dataset.xrefType || "_IDL_" : "_CONCEPT_"];
     const { linkFor: forContext } = elem.dataset;
 
-    const xrefsForTerm = map.has(term) ? map.get(term) : [];
-    xrefsForTerm.push({ elem, specs: uniqueSpecs, for: forContext, types });
-    return map.set(term, xrefsForTerm);
+    const xrefsForSingularTerm = map.has(singularterm) ? map.get(singularterm) : [];
+    const xrefsForPluralTerm = map.has(pluralterm) ? map.get(pluralterm) : [];
+    xrefsForSingularTerm.push({ elem, specs: uniqueSpecs, for: forContext, types });
+    xrefsForPluralTerm.push({ elem, specs: uniqueSpecs, for: forContext, types });
+    map.set(singularterm, xrefsForSingularTerm);
+    return map.set(pluralterm, xrefsForPluralTerm);
   }, new Map());
 }
 
