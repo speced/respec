@@ -57,7 +57,7 @@ const standardTypes = new Map([
   ["DOMString", "WEBIDL#idl-DOMString"],
   ["double", "WEBIDL#idl-double"],
   ["Error", "WEBIDL#idl-Error"],
-  ["EventHandler", "HTML#eventhandler"],
+  ["EventHandler", "HTML/webappapis.html#eventhandler"],
   ["float", "WEBIDL#idl-float"],
   ["Float32Array", "WEBIDL#idl-Float32Array"],
   ["Float64Array", "WEBIDL#idl-Float64Array"],
