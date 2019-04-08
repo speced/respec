@@ -7,8 +7,8 @@
  * case-insensitive, multi-line check.
  *
  */
-import LinterRule from "../../core/LinterRule";
-import { lang as defaultLang } from "../../core/l10n";
+import LinterRule from "../LinterRule";
+import { lang as defaultLang } from "../l10n";
 const name = "privsec-section";
 const meta = {
   en: {
@@ -36,7 +36,7 @@ function hasPriSecConsiderations(doc) {
 /**
  * @param {*} conf
  * @param {Document} doc
- * @return {import("../../core/LinterRule").LinterResult}
+ * @return {import("../LinterRule").LinterResult}
  */
 function lintingFunction(conf, doc) {
   if (conf.isRecTrack && !hasPriSecConsiderations(doc)) {

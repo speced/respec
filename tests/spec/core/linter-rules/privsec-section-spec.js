@@ -1,5 +1,5 @@
 "use strict";
-describe("W3C Linter Rule - 'privsec-section'", () => {
+describe("Core Linter Rule - 'privsec-section'", () => {
   const ruleName = "privsec-section";
   const config = {
     isRecTrack: true,
