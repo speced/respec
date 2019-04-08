@@ -19,27 +19,9 @@ const readyPromise = openDB("respec-biblio2", 12, {
     Array.from(db.objectStoreNames).map(storeName =>
       db.deleteObjectStore(storeName)
     );
-    new Promise((resolve, reject) => {
-      try {
-        const store = db.createObjectStore("alias", { keyPath: "id" });
-        store.createIndex("aliasOf", "aliasOf", { unique: false });
-        store.transaction.oncomplete = resolve;
-        store.transaction.onerror = reject;
-      } catch (err) {
-        reject(err);
-      }
-    });
-    new Promise((resolve, reject) => {
-      try {
-        const transaction = db.createObjectStore("reference", {
-          keyPath: "id",
-        }).transaction;
-        transaction.oncomplete = resolve;
-        transaction.onerror = reject;
-      } catch (err) {
-        reject(err);
-      }
-    });
+    const store = db.createObjectStore("alias", { keyPath: "id" });
+    store.createIndex("aliasOf", "aliasOf", { unique: false });
+    db.createObjectStore("reference", { keyPath: "id" });
   },
 });
 
@@ -221,6 +203,6 @@ export const biblioDB = {
     const clearStorePromises = storeNames.map(async name => {
       return await stores.objectStore(name).clear();
     });
-    Promise.all(clearStorePromises);
+    await Promise.all(clearStorePromises);
   },
 };
