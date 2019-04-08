@@ -10,22 +10,19 @@ function isRelative(path) {
   return path.startsWith(".") && path.endsWith(".js");
 }
 
+function normalizeSource(source) {
+  if (source && isRelative(source.value)) {
+    source.value = source.value.slice(0, -3);
+  }
+}
+
 module.exports = () => ({
   visitor: {
     ImportDeclaration(path) {
-      const { value: importPath } = path.node.source;
-      if (isRelative(importPath)) {
-        path.node.source.value = importPath.slice(0, -3);
-      }
+      normalizeSource(path.node.source);
     },
     ExportDeclaration(path) {
-      if (!path.node.source) {
-        return;
-      }
-      const { value: importPath } = path.node.source;
-      if (isRelative(importPath)) {
-        path.node.source.value = importPath.slice(0, -3);
-      }
+      normalizeSource(path.node.source);
     },
   },
 });
