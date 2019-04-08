@@ -10,7 +10,7 @@
 //  - once we have something decent, merge, ship as 3.2.0
 
 import hyperHTML from "hyperhtml";
-import { markdownToHtml } from "./utils.js";
+import { markdownToHtml } from "./markdown.js";
 import shortcut from "../shortcut.js";
 import { sub } from "./pubsubhub.js";
 export const name = "core/ui";

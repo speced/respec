@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Module core/markdown
  * Handles the optional markdown processing.
@@ -43,8 +44,30 @@
  * The whitespace of pre elements are left alone.
  */
 
-import { markdownToHtml } from "./utils.js";
+import marked from "marked";
+import { normalizePadding } from "./utils.js";
 export const name = "core/markdown";
+
+const gtEntity = /&gt;/gm;
+const ampEntity = /&amp;/gm;
+
+/**
+ * @param {string} text
+ */
+export function markdownToHtml(text) {
+  const normalizedLeftPad = normalizePadding(text);
+  // As markdown is pulled from HTML, > and & are already escaped and
+  // so blockquotes aren't picked up by the parser. This fixes it.
+  const potentialMarkdown = normalizedLeftPad
+    .replace(gtEntity, ">")
+    .replace(ampEntity, "&");
+  const result = marked(potentialMarkdown, {
+    sanitize: false,
+    gfm: true,
+    headerIds: false,
+  });
+  return result;
+}
 
 function processElements(selector) {
   return element => {
