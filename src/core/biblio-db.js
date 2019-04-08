@@ -42,7 +42,6 @@ const readyPromise = openDB("respec-biblio2", 12, {
         }
       }),
     ];
-    Promise.all(promisesToCreateSchema);
   },
 });
 
@@ -61,7 +60,7 @@ export const biblioDB = {
     if (await this.isAlias(id)) {
       id = await this.resolveAlias(id);
     }
-    return this.get("reference", id);
+    return await this.get("reference", id);
   },
   /**
    * Checks if the database has an id for a given type.
@@ -115,8 +114,8 @@ export const biblioDB = {
       .transaction("alias", "readonly")
       .objectStore("alias");
     const range = IDBKeyRange.only(id);
-    const request = await objectStore.openCursor(range);
-    return request ? request.value.aliasOf : request;
+    const result = await objectStore.openCursor(range);
+    return result ? result.value.aliasOf : result;
   },
   /**
    * Get a reference or alias out of the database.
@@ -135,8 +134,8 @@ export const biblioDB = {
     const db = await this.ready;
     const objectStore = db.transaction([type], "readonly").objectStore(type);
     const range = IDBKeyRange.only(id);
-    const request = await objectStore.openCursor(range);
-    return request ? request.value : request;
+    const result = await objectStore.openCursor(range);
+    return result ? result.value : result;
   },
   /**
    * Adds references and aliases to database. This is usually the data from
@@ -175,7 +174,7 @@ export const biblioDB = {
     const promisesToAdd = Object.keys(aliasesAndRefs)
       .map(type => {
         return Array.from(aliasesAndRefs[type]).map(details =>
-          this.add(type, details)
+          await this.add(type, details)
         );
       })
       .reduce((collector, promises) => collector.concat(promises), []);
@@ -222,7 +221,7 @@ export const biblioDB = {
     const storeNames = [...ALLOWED_TYPES];
     const stores = await db.transaction(storeNames, "readwrite");
     const clearStorePromises = storeNames.map(name => {
-      return stores.objectStore(name).clear();
+      return await stores.objectStore(name).clear();
     });
     Promise.all(clearStorePromises);
   },
