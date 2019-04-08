@@ -7,7 +7,7 @@ import {
   makeStandardOps,
 } from "../SpecHelper.js";
 import { IDBKeyVal } from "../../../src/core/utils.js";
-import { openDB } from "./node_modules/idb/build/esm/index.js";
+import { openDB } from "../../../node_modules/idb/build/esm/index.js";
 
 describe("Core — xref", () => {
   afterAll(flushIframes);
