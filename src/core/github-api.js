@@ -1,5 +1,5 @@
-import { fetchAndCache } from "./utils";
-import { pub } from "./pubsubhub";
+import { fetchAndCache } from "./utils.js";
+import { pub } from "./pubsubhub.js";
 export const name = "core/github-api";
 
 export function githubRequestHeaders(conf) {

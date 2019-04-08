@@ -8,12 +8,12 @@ import {
   showInlineError,
   showInlineWarning,
   wrapInner,
-} from "./utils";
-import { run as addExternalReferences } from "./xref";
-import { lang as defaultLang } from "./l10n";
-import { definitionMap } from "./dfn-map";
-import { linkInlineCitations } from "./data-cite";
-import { pub } from "./pubsubhub";
+} from "./utils.js";
+import { run as addExternalReferences } from "./xref.js";
+import { lang as defaultLang } from "./l10n.js";
+import { definitionMap } from "./dfn-map.js";
+import { linkInlineCitations } from "./data-cite.js";
+import { pub } from "./pubsubhub.js";
 export const name = "core/link-to-dfn";
 const l10n = {
   en: {

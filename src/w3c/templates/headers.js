@@ -1,9 +1,9 @@
 // @ts-check
 import html from "hyperhtml";
 import { pub } from "../../core/pubsubhub";
-import showLink from "./show-link";
-import showLogo from "./show-logo";
-import showPeople from "./show-people";
+import showLink from "./show-link.js";
+import showLogo from "./show-logo.js";
+import showPeople from "./show-people.js";
 
 const ccLicense = "https://creativecommons.org/licenses/by/3.0/";
 const w3cLicense = "https://www.w3.org/Consortium/Legal/copyright-documents";

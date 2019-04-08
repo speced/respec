@@ -11,9 +11,9 @@
 
 import css from "text!../../assets/ui.css";
 import hyperHTML from "hyperhtml";
-import { markdownToHtml } from "./utils";
+import { markdownToHtml } from "./utils.js";
 import shortcut from "../shortcut";
-import { sub } from "./pubsubhub";
+import { sub } from "./pubsubhub.js";
 export const name = "core/ui";
 
 // Opportunistically inserts the style, with the chance to reduce some FOUC

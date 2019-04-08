@@ -5,7 +5,7 @@ export const name = "w3c/defaults";
 import { coreDefaults } from "../core/defaults";
 import { definitionMap } from "../core/dfn-map";
 import linter from "../core/linter";
-import { rule as privsecSectionRule } from "./linter-rules/privsec-section";
+import { rule as privsecSectionRule } from "./linter-rules/privsec-section.js";
 
 linter.register(privsecSectionRule);
 

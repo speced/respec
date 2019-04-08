@@ -19,10 +19,10 @@ import {
   getTextNodes,
   refTypeFromContext,
   showInlineWarning,
-} from "./utils";
+} from "./utils.js";
 import hyperHTML from "hyperhtml";
-import { idlStringToHtml } from "./inline-idl-parser";
-import { renderInlineCitation } from "./render-biblio";
+import { idlStringToHtml } from "./inline-idl-parser.js";
+import { renderInlineCitation } from "./render-biblio.js";
 
 export const name = "core/inlines";
 export const rfc2119Usage = {};
