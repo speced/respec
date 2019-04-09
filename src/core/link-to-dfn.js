@@ -246,7 +246,7 @@ function findExplicitExternalLinks() {
       const closest = el.closest("[data-cite]");
       return !closest || closest.dataset.cite !== "";
     })
-    .concat([...externalDFNs]);
+    .concat(...externalDFNs);
 }
 
 function showLinkingError(elems) {
