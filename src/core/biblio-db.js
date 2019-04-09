@@ -156,8 +156,8 @@ export const biblioDB = {
       }, aliasesAndRefs);
     const promisesToAdd = Object.keys(aliasesAndRefs)
       .map(type => {
-        return Array.from(aliasesAndRefs[type]).map(
-          details => this.add(type, details)
+        return Array.from(aliasesAndRefs[type]).map(details =>
+          this.add(type, details)
         );
       })
       .reduce((collector, promises) => collector.concat(promises), []);
