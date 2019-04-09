@@ -1,3 +1,5 @@
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 describe("Core — data-type attribute", () => {
   afterAll(flushIframes);
   it("assigns the return type as the type for a method", async () => {

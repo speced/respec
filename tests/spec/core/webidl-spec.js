@@ -1,4 +1,7 @@
 "use strict";
+
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 describe("Core - WebIDL", () => {
   afterAll(flushIframes);
   /** @type {Document} */
