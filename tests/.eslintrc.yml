@@ -3,6 +3,7 @@ env:
   node: false
 extends:
   - 'plugin:jasmine/recommended'
+parser: babel-eslint
 parserOptions:
   sourceType: module
 rules:
