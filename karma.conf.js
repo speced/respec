@@ -87,8 +87,6 @@ module.exports = function(config) {
     exclude: ["**/*.swp", "*.swp", ".DS_Store"],
 
     proxies: {
-      idb: "/base/node_modules/idb/build/esm/index.js",
-
       "/about-blank.html": "/base/tests/about-blank.html",
       "/assets/": "/base/assets/",
       "/js/": "/base/js/",

@@ -98,9 +98,7 @@ function handleIssues(ins, ghIssues, conf) {
           text += ` ${issueNum}`;
         } else if (dataNum) {
           text += ` ${dataNum}`;
-          const link = linkToIssueTracker(Number(dataNum), conf, {
-            isFeatureAtRisk,
-          });
+          const link = linkToIssueTracker(dataNum, conf, { isFeatureAtRisk });
           if (link) {
             title.before(link);
             link.append(title);
