@@ -178,7 +178,7 @@ function getIssueType(inno, conf) {
 }
 
 /**
- * @param {number} dataNum
+ * @param {string} dataNum
  * @param {*} conf
  */
 function linkToIssueTracker(dataNum, conf, { isFeatureAtRisk = false } = {}) {
