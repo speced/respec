@@ -40,15 +40,20 @@ module.exports = function(config) {
         included: false,
       },
       {
-        pattern: "js/deps/marked.js",
-        included: false,
-      },
-      {
         pattern: "js/**/*.*",
         included: false,
       },
       {
+        pattern: "src/**/*.*",
+        included: false,
+      },
+      {
+        pattern: "node_modules/idb/**/*.js",
+        included: false,
+      },
+      {
         pattern: "tests/**/*-spec.js",
+        type: "module",
         included: false,
       },
       {
@@ -67,8 +72,15 @@ module.exports = function(config) {
         pattern: "worker/*.js",
         included: false,
       },
-      "tests/spec/SpecHelper.js",
-      "tests/test-main.js",
+      {
+        pattern: "tests/spec/SpecHelper.js",
+        type: "module",
+        included: false,
+      },
+      {
+        pattern: "tests/test-main.js",
+        type: "module",
+      },
     ],
 
     // list of files to exclude
@@ -78,6 +90,8 @@ module.exports = function(config) {
       "/about-blank.html": "/base/tests/about-blank.html",
       "/assets/": "/base/assets/",
       "/js/": "/base/js/",
+      "/src/": "/base/src/",
+      "/node_modules/": "/base/node_modules/",
       "/builds/": "/base/builds/",
       "/tests/": "/base/tests/",
       "/spec/": "/base/tests/spec/",
