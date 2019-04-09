@@ -6,11 +6,11 @@
 // When an example is found, it is reported using the "example" event. This can
 // be used by a containing shell to extract all examples.
 
-import { addId } from "./utils";
+import { addId } from "./utils.js";
 import css from "text!../../assets/examples.css";
-import { lang as defaultLang } from "../core/l10n";
+import { lang as defaultLang } from "../core/l10n.js";
 import html from "hyperhtml";
-import { pub } from "./pubsubhub";
+import { pub } from "./pubsubhub.js";
 
 export const name = "core/examples";
 

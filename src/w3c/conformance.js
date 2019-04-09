@@ -2,10 +2,10 @@
 // Module w3c/conformance
 // Handle the conformance section properly.
 import html from "hyperhtml";
-import { joinAnd } from "../core/utils";
-import { pub } from "../core/pubsubhub";
-import { renderInlineCitation } from "../core/render-biblio";
-import { rfc2119Usage } from "../core/inlines";
+import { joinAnd } from "../core/utils.js";
+import { pub } from "../core/pubsubhub.js";
+import { renderInlineCitation } from "../core/render-biblio.js";
+import { rfc2119Usage } from "../core/inlines.js";
 export const name = "w3c/conformance";
 
 /**

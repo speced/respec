@@ -7,7 +7,7 @@
  * on export.
  */
 import hlVars from "text!../../assets/var.css";
-import { sub } from "./pubsubhub";
+import { sub } from "./pubsubhub.js";
 
 export const name = "core/highlight-vars";
 

@@ -1,9 +1,9 @@
 // Module ui/search-specref
 // Search Specref database
-import { l10n, lang } from "../core/l10n";
+import { l10n, lang } from "../core/l10n.js";
 import hyperHTML from "hyperhtml";
-import { ui } from "../core/ui";
-import { wireReference } from "../core/biblio";
+import { ui } from "../core/ui.js";
+import { wireReference } from "../core/biblio.js";
 
 const button = ui.addCommand(
   l10n[lang].search_specref,
