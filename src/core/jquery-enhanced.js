@@ -4,7 +4,7 @@ import {
   getLinkTargets,
   getTextNodes,
   renameElement,
-} from "./utils";
+} from "./utils.js";
 import $ from "jquery";
 
 export const name = "core/jquery-enhanced";

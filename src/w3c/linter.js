@@ -6,6 +6,6 @@
 export const name = "w3c/linter";
 
 import linter from "../core/linter";
-import { lint as privsec } from "./linter-rules/privsec-section";
+import { lint as privsec } from "./linter-rules/privsec-section.js";
 
 linter.register(privsec);
