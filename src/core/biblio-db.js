@@ -40,7 +40,8 @@ export const biblioDB = {
     if (await this.isAlias(id)) {
       id = await this.resolveAlias(id);
     }
-    return await this.get("reference", id);
+    const result = this.get("reference", id);
+    return await result;
   },
   /**
    * Checks if the database has an id for a given type.
@@ -59,7 +60,8 @@ export const biblioDB = {
     const db = await this.ready;
     const objectStore = db.transaction([type], "readonly").objectStore(type);
     const range = IDBKeyRange.only(id);
-    return !!(await objectStore.openCursor(range));
+    const result = await objectStore.openCursor(range);
+    return !!result;
   },
   /**
    * Checks if a given id is an alias.
@@ -76,7 +78,8 @@ export const biblioDB = {
       .transaction(["alias"], "readonly")
       .objectStore("alias");
     const range = IDBKeyRange.only(id);
-    return !!(await objectStore.openCursor(range));
+    const result = await objectStore.openCursor(range);
+    return !!result;
   },
   /**
    * Resolves an alias to its corresponding reference id.
@@ -154,7 +157,7 @@ export const biblioDB = {
     const promisesToAdd = Object.keys(aliasesAndRefs)
       .map(type => {
         return Array.from(aliasesAndRefs[type]).map(
-          async details => await this.add(type, details)
+          details => this.add(type, details)
         );
       })
       .reduce((collector, promises) => collector.concat(promises), []);
@@ -180,8 +183,7 @@ export const biblioDB = {
     const isInDB = await this.has(type, details.id);
     const store = db.transaction([type], "readwrite").objectStore(type);
     // update or add, depending of already having it in db
-    const request = isInDB ? store.put(details) : store.add(details);
-    return await request;
+    return isInDB ? await store.put(details) : await store.add(details);
   },
   /**
    * Closes the underlying database.
@@ -200,8 +202,8 @@ export const biblioDB = {
     const db = await this.ready;
     const storeNames = [...ALLOWED_TYPES];
     const stores = await db.transaction(storeNames, "readwrite");
-    const clearStorePromises = storeNames.map(async name => {
-      return await stores.objectStore(name).clear();
+    const clearStorePromises = storeNames.map(name => {
+      return stores.objectStore(name).clear();
     });
     await Promise.all(clearStorePromises);
   },
