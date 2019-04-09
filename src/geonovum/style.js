@@ -1,4 +1,3 @@
-/* jshint strict: true, browser:true, jquery: true*/
 // Module geonovum/style
 // Inserts a link to the appropriate Geonovum style for the specification's maturity level.
 // CONFIGURATION
@@ -11,9 +10,9 @@ function attachFixupScript(doc, version) {
   const script = doc.createElement("script");
   script.addEventListener(
     "load",
-    function() {
+    () => {
       if (window.location.hash) {
-        window.location = window.location;
+        window.location = window.location.href;
       }
     },
     { once: true }
@@ -89,7 +88,7 @@ const favicon = document.createElement("link");
 favicon.rel = "shortcut icon";
 favicon.type = "image/x-icon";
 favicon.href =
-"https://tools.geostandaarden.nl/respec/style/logos/Geonovum.ico";
+  "https://tools.geostandaarden.nl/respec/style/logos/Geonovum.ico";
 document.head.prepend(favicon);
 
 if (!document.head.querySelector("meta[name=viewport]")) {
@@ -139,7 +138,7 @@ export function run(conf) {
   if (!conf.noToc) {
     sub(
       "end-all",
-      function() {
+      () => {
         attachFixupScript(document, "2016");
       },
       { once: true }
