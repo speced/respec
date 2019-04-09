@@ -1,4 +1,7 @@
 "use strict";
+
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 describe("Core - Section References", () => {
   afterAll(flushIframes);
   it("should have produced the section reference", async () => {

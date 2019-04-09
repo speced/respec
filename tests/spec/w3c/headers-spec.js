@@ -1,4 +1,12 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeDefaultBody,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
+
 const findContent = string => {
   return ({ textContent }) => textContent.trim() === string;
 };
@@ -528,11 +536,7 @@ describe("W3C — Headers", () => {
 
   describe("previousPublishDate & previousMaturity", () => {
     it("recovers given bad date inputs", async () => {
-      const ISODate = await new Promise(resolve => {
-        require(["core/utils"], ({ ISODate }) => {
-          resolve(ISODate);
-        });
-      });
+      const { ISODate } = await import("../../../src/core/utils.js");
 
       const ops = makeStandardOps();
       const start = new Date(ISODate.format(Date.now())).valueOf();

@@ -1,5 +1,7 @@
 "use strict";
 
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 // TODO: add tests:
 // - right colors are applied
 
