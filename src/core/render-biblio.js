@@ -4,7 +4,7 @@
 
 import { addId } from "./utils.js";
 import { biblio } from "./biblio.js";
-import { lang as defaultLang } from "../core/l10n";
+import { lang as defaultLang } from "../core/l10n.js";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub.js";
 

@@ -12,7 +12,7 @@
 // manually numbered, a link to the issue is created using issueBase and the issue number
 import { addId, joinAnd, parents } from "./utils.js";
 import css from "text!../../assets/issues-notes.css";
-import { lang as defaultLang } from "../core/l10n";
+import { lang as defaultLang } from "../core/l10n.js";
 import { fetchAndStoreGithubIssues } from "./github-api.js";
 import hyperHTML from "hyperhtml";
 import { pub } from "./pubsubhub.js";
