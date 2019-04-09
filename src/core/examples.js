@@ -8,7 +8,7 @@
 
 import { addId } from "./utils.js";
 import css from "text!../../assets/examples.css";
-import { lang as defaultLang } from "../core/l10n";
+import { lang as defaultLang } from "../core/l10n.js";
 import html from "hyperhtml";
 import { pub } from "./pubsubhub.js";
 

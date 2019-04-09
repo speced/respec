@@ -1,6 +1,6 @@
 // @ts-check
 import html from "hyperhtml";
-import { pub } from "../../core/pubsubhub";
+import { pub } from "../../core/pubsubhub.js";
 import showLink from "./show-link.js";
 import showLogo from "./show-logo.js";
 import showPeople from "./show-people.js";
