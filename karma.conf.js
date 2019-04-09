@@ -30,52 +30,42 @@ module.exports = function(config) {
       {
         pattern: "assets/**/*.*",
         included: false,
-        served: true,
       },
       {
         pattern: "tests/support-files/**/*",
         included: false,
-        served: true,
       },
       {
         pattern: "builds/**/*.*",
         included: false,
-        served: true,
       },
       {
         pattern: "js/deps/marked.js",
         included: false,
-        served: true,
       },
       {
         pattern: "js/**/*.*",
         included: false,
-        served: true,
       },
       {
         pattern: "tests/**/*-spec.js",
         included: false,
-        served: true,
       },
       {
         pattern: "tests/data/**/*",
         included: false,
-        served: true,
       },
       {
         pattern: "tests/*.html",
         included: false,
-        served: true,
       },
       {
         pattern: "tests/**/*.html",
         included: false,
-        served: true,
       },
       {
         pattern: "worker/*.js",
         included: false,
-        served: true,
       },
       "tests/spec/SpecHelper.js",
       "tests/test-main.js",
