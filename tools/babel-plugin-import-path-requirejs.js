@@ -3,24 +3,26 @@
 // Trim '.js' extension from import/export declarations
 // beacuse RequireJS does not allow '.js' extension for relative paths
 
-module.exports = () => {
-  return {
-    visitor: {
-      ImportDeclaration(path) {
-        const { value: importPath } = path.node.source;
-        if (importPath.endsWith(".js")) {
-          path.node.source.value = importPath.slice(0, -3);
-        }
-      },
-      ExportDeclaration(path) {
-        if (!path.node.source) {
-          return;
-        }
-        const { value: importPath } = path.node.source;
-        if (importPath.endsWith(".js")) {
-          path.node.source.value = importPath.slice(0, -3);
-        }
-      },
+/**
+ * @param {string} path
+ */
+function isRelative(path) {
+  return path.startsWith(".") && path.endsWith(".js");
+}
+
+function normalizeSource(source) {
+  if (source && isRelative(source.value)) {
+    source.value = source.value.slice(0, -3);
+  }
+}
+
+module.exports = () => ({
+  visitor: {
+    ImportDeclaration(path) {
+      normalizeSource(path.node.source);
     },
-  };
-};
+    ExportDeclaration(path) {
+      normalizeSource(path.node.source);
+    },
+  },
+});
