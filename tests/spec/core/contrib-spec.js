@@ -11,7 +11,6 @@ describe("Core — Contributors and Commenters", () => {
     const ops = makeStandardOps(
       {
         githubAPI: `${window.location.origin}/tests/data/contrib/index`,
-        githubAPIBase: `${window.location.origin}/tests/data/contrib/`,
       },
       body
     );
@@ -37,7 +36,6 @@ describe("Core — Contributors and Commenters", () => {
     const ops = makeStandardOps(
       {
         githubAPI: `${window.location.origin}/tests/data/contrib/index`,
-        githubAPIBase: `${window.location.origin}/tests/data/contrib/`,
       },
       body
     );

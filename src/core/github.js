@@ -51,7 +51,6 @@ export async function run(conf) {
     githubToken: undefined,
     githubUser: undefined,
     githubAPI: `https://api.github.com/repos/${org}/${repo}`,
-    githubAPIBase: `https://api.github.com`,
     issueBase,
     atRiskBase: issueBase,
     otherLinks: [],
