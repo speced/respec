@@ -4,7 +4,7 @@
 // tweaks to a document before generating the snapshot, without mucking with the source.
 // For example, you can change the status and date by appending:
 //      ?specStatus=LC&publishDate=2012-03-15
-import { pub, sub } from "./pubsubhub";
+import { pub, sub } from "./pubsubhub.js";
 
 export const name = "core/override-configuration";
 

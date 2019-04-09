@@ -3,33 +3,13 @@
 // Module core/utils
 // As the name implies, this contains a ragtag gang of methods that just don't fit
 // anywhere else.
-import { lang as docLang } from "./l10n";
-import marked from "marked";
-import { pub } from "./pubsubhub";
+import { lang as docLang } from "./l10n.js";
+import { pub } from "./pubsubhub.js";
 export const name = "core/utils";
-
-marked.setOptions({
-  sanitize: false,
-  gfm: true,
-  headerIds: false,
-});
 
 const spaceOrTab = /^[ |\t]*/;
 const endsWithSpace = /\s+$/gm;
 const dashes = /-/g;
-const gtEntity = /&gt;/gm;
-const ampEntity = /&amp;/gm;
-
-export function markdownToHtml(text) {
-  const normalizedLeftPad = normalizePadding(text);
-  // As markdown is pulled from HTML, > and & are already escaped and
-  // so blockquotes aren't picked up by the parser. This fixes it.
-  const potentialMarkdown = normalizedLeftPad
-    .replace(gtEntity, ">")
-    .replace(ampEntity, "&");
-  const result = marked(potentialMarkdown);
-  return result;
-}
 
 export const ISODate = new Intl.DateTimeFormat(["en-ca-iso8601"], {
   timeZone: "UTC",
@@ -421,22 +401,6 @@ export function xmlEscape(s) {
  */
 export function norm(str) {
   return str.trim().replace(/\s+/g, " ");
-}
-
-// semverCompare
-// https://github.com/substack/semver-compare
-export function semverCompare(a, b) {
-  const pa = a.split(".");
-  const pb = b.split(".");
-  for (let i = 0; i < 3; i++) {
-    const na = Number(pa[i]);
-    const nb = Number(pb[i]);
-    if (na > nb) return 1;
-    if (nb > na) return -1;
-    if (!isNaN(na) && isNaN(nb)) return 1;
-    if (isNaN(na) && !isNaN(nb)) return -1;
-  }
-  return 0;
 }
 
 // --- DATE HELPERS -------------------------------------------------------------------------------

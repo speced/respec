@@ -1,7 +1,7 @@
 // @ts-check
 // Module core/data-abbr
 // - Finds all elements with data-abbr attribute and processes them.
-import { showInlineWarning } from "./utils";
+import { showInlineWarning } from "./utils.js";
 export const name = "core/dfn-abbr";
 
 export function run() {
@@ -27,7 +27,8 @@ export function run() {
  */
 function processDfnElement(dfn) {
   const abbr = generateAbbreviation(dfn);
-  const fullForm = dfn.textContent.trim();
+  // get normalized <dfn> textContent to remove spaces, tabs, new lines.
+  const fullForm = dfn.textContent.replace(/\s\s+/g, " ").trim();
   dfn.insertAdjacentHTML(
     "afterend",
     ` (<abbr title="${fullForm}">${abbr}</abbr>)`

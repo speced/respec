@@ -19,10 +19,10 @@ import {
   getTextNodes,
   refTypeFromContext,
   showInlineWarning,
-} from "./utils";
+} from "./utils.js";
 import hyperHTML from "hyperhtml";
-import { idlStringToHtml } from "./inline-idl-parser";
-import { renderInlineCitation } from "./render-biblio";
+import { idlStringToHtml } from "./inline-idl-parser.js";
+import { renderInlineCitation } from "./render-biblio.js";
 
 export const name = "core/inlines";
 export const rfc2119Usage = {};
@@ -36,6 +36,17 @@ function inlineRFC2119Matches(matched) {
   const nodeElement = hyperHTML`<em class="rfc2119" title="${normalize}">${normalize}</em>`;
   // remember which ones were used
   rfc2119Usage[normalize] = true;
+  return nodeElement;
+}
+
+/**
+ * @param {string} matched
+ * @return {HTMLElement}
+ */
+function inlineRefMatches(matched) {
+  // slices "[[[" at the beginning and "]]]" at the end
+  const ref = matched.slice(3, -3).trim();
+  const nodeElement = hyperHTML`<a data-cite="${ref}"></a>`;
   return nodeElement;
 }
 
@@ -137,8 +148,9 @@ export function run(conf) {
       "\\b(?:NOT\\s+)?RECOMMENDED\\b",
       "\\bOPTIONAL\\b",
       "(?:{{3}\\s*.*\\s*}{3})", // inline IDL references,
-      "\\B\\|\\w[\\s\\w]*\\w(?:\\s*\\:\\s*\\w+)?\\|\\B", // inline variable regex
+      "\\B\\|\\w[\\w\\s]*(?:\\s*\\:[\\w\\s&;<>]+)?\\|\\B", // inline variable regex
       "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])",
+      "(?:\\[\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\]\\])",
       ...(abbrRx ? [abbrRx] : []),
     ].join("|")})`
   );
@@ -154,6 +166,9 @@ export function run(conf) {
         df.appendChild(document.createTextNode(t));
       } else if (t.startsWith("{{{")) {
         const node = inlineXrefMatches(t);
+        df.appendChild(node);
+      } else if (t.startsWith("[[[")) {
+        const node = inlineRefMatches(t);
         df.appendChild(node);
       } else if (t.startsWith("[[")) {
         const nodes = inlineBibrefMatches(t, txt, conf);
