@@ -11,7 +11,7 @@
  * that is preferred.
  */
 export const name = "core/webidl-index";
-import { nonNormativeSelector } from "./utils";
+import { nonNormativeSelector } from "./utils.js";
 
 export function run() {
   const idlIndexSec = document.querySelector("section#idl-index");

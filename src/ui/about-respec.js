@@ -1,8 +1,8 @@
 // Module ui/about-respec
 // A simple about dialog with pointer to the help
-import { l10n, lang } from "../core/l10n";
+import { l10n, lang } from "../core/l10n.js";
 import hyperHTML from "hyperhtml";
-import { ui } from "../core/ui";
+import { ui } from "../core/ui.js";
 
 // window.respecVersion is added at build time (see tools/builder.js)
 window.respecVersion = window.respecVersion || "Developer Edition";

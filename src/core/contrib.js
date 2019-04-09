@@ -8,9 +8,9 @@ import {
   checkLimitReached,
   fetchIndex,
   githubRequestHeaders,
-} from "./github-api";
-import { flatten, joinAnd } from "./utils";
-import { pub } from "./pubsubhub";
+} from "./github-api.js";
+import { flatten, joinAnd } from "./utils.js";
+import { pub } from "./pubsubhub.js";
 export const name = "core/contrib";
 
 function prop(prop) {

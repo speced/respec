@@ -1,8 +1,8 @@
 // @ts-check
 import html from "hyperhtml";
-import showLink from "./show-link";
-import showLogo from "./show-logo";
-import showPeople from "./show-people";
+import showLink from "./show-link.js";
+import showLogo from "./show-logo.js";
+import showPeople from "./show-people.js";
 
 export default conf => {
   return html`

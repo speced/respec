@@ -1,4 +1,7 @@
 "use strict";
+
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 describe("Core - Fix headers", () => {
   afterAll(flushIframes);
   it("sets the correct header levels", async () => {

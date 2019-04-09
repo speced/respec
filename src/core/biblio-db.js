@@ -9,7 +9,7 @@
  */
 /* globals IDBKeyRange */
 import { openDB } from "idb";
-import { pub } from "./pubsubhub";
+import { pub } from "./pubsubhub.js";
 export const name = "core/biblio-db";
 
 const ALLOWED_TYPES = new Set(["alias", "reference"]);

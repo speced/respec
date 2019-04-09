@@ -1,11 +1,12 @@
+// @ts-check
 /**
  * Module: "core/caniuse"
  * Adds a caniuse support table for a "feature" #1238
  * Usage options: https://github.com/w3c/respec/wiki/caniuse
  */
-import { pub, sub } from "./pubsubhub";
+import { pub, sub } from "./pubsubhub.js";
 import caniuseCss from "text!../../assets/caniuse.css";
-import { createResourceHint } from "./utils";
+import { createResourceHint } from "./utils.js";
 import hyperHTML from "hyperhtml";
 
 export const name = "core/caniuse";
@@ -77,13 +78,13 @@ export async function run(conf) {
     }
     resolve(content);
   });
-  const definitionPair = hyperHTML.bind(document.createDocumentFragment())`
+  const definitionPair = hyperHTML`
     <dt class="caniuse-title">Can I Use this API?</dt>
     <dd class="caniuse-stats">${{
       any: contentPromise,
       placeholder: "Fetching data from caniuse.com...",
     }}</dd>`;
-  headDlElem.appendChild(definitionPair);
+  headDlElem.append(...definitionPair.childNodes);
   await contentPromise;
 
   // remove from export
@@ -155,7 +156,7 @@ function createTableHTML(featureURL, stats) {
 
 /**
  * Add a browser and it's support to table.
- * @param {[ string, ApiResponse["browserName"] ]}
+ * @param {[ string, ApiResponse["browserName"] ]} args
  */
 function addBrowser([browserName, browserData]) {
   /** @param {string[]} supportKeys */
@@ -169,7 +170,7 @@ function addBrowser([browserName, browserData]) {
     };
   };
 
-  /** @param {[string, string[]]} */
+  /** @param {[string, string[]]} args */
   const addLatestVersion = ([version, supportKeys]) => {
     const { className, title } = getSupport(supportKeys);
     const buttonText = `${BROWSERS.get(browserName) || browserName} ${version}`;
@@ -177,7 +178,7 @@ function addBrowser([browserName, browserData]) {
       <button class="${className}" title="${title}">${buttonText}</button>`;
   };
 
-  /** @param {[string, string[]]} */
+  /** @param {[string, string[]]} args */
   const addBrowserVersion = ([version, supportKeys]) => {
     const { className, title } = getSupport(supportKeys);
     return `<li class="${className}" title="${title}">${version}</li>`;
