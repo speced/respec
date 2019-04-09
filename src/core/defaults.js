@@ -29,7 +29,7 @@ export const coreDefaults = {
     "local-refs-exist": true,
     "check-internal-slots": false,
     "check-charset": false,
-    "privsec-section": true,
+    "privsec-section": false,
   },
   pluralize: false,
   specStatus: "base",

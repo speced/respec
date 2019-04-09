@@ -10,6 +10,9 @@ import { rule as privsecSectionRule } from "../core/linter-rules/privsec-section
 linter.register(privsecSectionRule);
 
 const w3cDefaults = {
+  lint: {
+    "privsec-section": true,
+  },
   pluralize: true,
   doJsonLd: false,
   license: "w3c-software-doc",

@@ -8,7 +8,7 @@ describe("Core Linter Rule - 'privsec-section'", () => {
   let rule;
   beforeAll(async () => {
     rule = await new Promise(resolve => {
-      require([`w3c/linter-rules/${ruleName}`], ({ rule }) => resolve(rule));
+      require([`core/linter-rules/${ruleName}`], ({ rule }) => resolve(rule));
     });
   });
   const doc = document.implementation.createHTMLDocument("test doc");
