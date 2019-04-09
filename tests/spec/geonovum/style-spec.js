@@ -26,25 +26,13 @@ const specStatusGeonovum = [
   },
 ];
 
-async function loadWithStatus(status, expectedURL, mode) {
+async function loadWithStatus(status, expectedURL) {
   const config = makeBasicConfig();
   config.useExperimentalStyles = false;
   config.specStatus = status;
   // config.prevVersion = "CV";
   config.previousStatus = "CV";
   config.previousPublishDate = "2013-12-17";
-  // let version = "2016/";
-  // switch (mode) {
-  //   case "experimental":
-  //     config.useExperimentalStyles = true;
-  //     version = `${2016}/`;
-  //     break;
-  //   default:
-  //     if (mode) {
-  //       config.useExperimentalStyles = mode;
-  //       version = `${mode}/`;
-  //     }
-  // }
   const testedURL = expectedURL;
   const ops = {
     config,
