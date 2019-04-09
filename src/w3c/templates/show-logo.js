@@ -1,6 +1,6 @@
 // @ts-check
 import html from "hyperhtml";
-import { showInlineWarning } from "../../core/utils";
+import { showInlineWarning } from "../../core/utils.js";
 
 export default obj => {
   /** @type {HTMLAnchorElement} */

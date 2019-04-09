@@ -9,9 +9,9 @@ import {
   norm as normalize,
   showInlineError,
   showInlineWarning,
-} from "./utils";
+} from "./utils.js";
 import { openDB } from "idb";
-import { pub } from "./pubsubhub";
+import { pub } from "./pubsubhub.js";
 
 const profiles = {
   "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"],

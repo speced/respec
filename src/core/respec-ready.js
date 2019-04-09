@@ -3,7 +3,7 @@
  * The property returns a promise that settles when ReSpec finishes
  * processing the document.
  */
-import { sub } from "./pubsubhub";
+import { sub } from "./pubsubhub.js";
 export const name = "core/respec-ready";
 
 const respecDonePromise = new Promise(resolve => {

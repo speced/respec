@@ -3,8 +3,8 @@
  *
  * Checks whether the document has `<meta charset="utf-8">` properly.
  */
-import LinterRule from "../LinterRule";
-import { lang as defaultLang } from "../l10n";
+import LinterRule from "../LinterRule.js";
+import { lang as defaultLang } from "../l10n.js";
 
 const name = "check-charset";
 const meta = {

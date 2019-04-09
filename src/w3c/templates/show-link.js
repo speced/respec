@@ -1,6 +1,6 @@
 // @ts-check
 import hyperHTML from "hyperhtml";
-import { pub } from "../../core/pubsubhub";
+import { pub } from "../../core/pubsubhub.js";
 const html = hyperHTML;
 
 export default link => {

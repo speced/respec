@@ -90,13 +90,13 @@
 //      - "w3c-software", a permissive and attributions license (but GPL-compatible).
 //      - "w3c-software-doc", the W3C Software and Document License
 //            https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
-import { ISODate, concatDate, joinAnd } from "../core/utils";
-import cgbgHeadersTmpl from "./templates/cgbg-headers";
-import cgbgSotdTmpl from "./templates/cgbg-sotd";
-import headersTmpl from "./templates/headers";
+import { ISODate, concatDate, joinAnd } from "../core/utils.js";
+import cgbgHeadersTmpl from "./templates/cgbg-headers.js";
+import cgbgSotdTmpl from "./templates/cgbg-sotd.js";
+import headersTmpl from "./templates/headers.js";
 import hyperHTML from "hyperhtml";
-import { pub } from "../core/pubsubhub";
-import sotdTmpl from "./templates/sotd";
+import { pub } from "../core/pubsubhub.js";
+import sotdTmpl from "./templates/sotd.js";
 
 export const name = "w3c/headers";
 

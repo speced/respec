@@ -5,8 +5,8 @@
  */
 import ghCss from "text!../../assets/github.css";
 import html from "hyperhtml";
-import { msgIdGenerator } from "./utils";
-import { worker } from "./worker";
+import { msgIdGenerator } from "./utils.js";
+import { worker } from "./worker.js";
 export const name = "core/highlight";
 
 const nextMsgId = msgIdGenerator("highlight");
