@@ -1,4 +1,7 @@
 "use strict";
+
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 describe("Core — Override Configuration", () => {
   afterAll(flushIframes);
   const simpleURL = new URL("./spec/core/simple.html", document.location);

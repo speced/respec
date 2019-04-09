@@ -30,55 +30,57 @@ module.exports = function(config) {
       {
         pattern: "assets/**/*.*",
         included: false,
-        served: true,
       },
       {
         pattern: "tests/support-files/**/*",
         included: false,
-        served: true,
       },
       {
         pattern: "builds/**/*.*",
         included: false,
-        served: true,
-      },
-      {
-        pattern: "js/deps/marked.js",
-        included: false,
-        served: true,
       },
       {
         pattern: "js/**/*.*",
         included: false,
-        served: true,
+      },
+      {
+        pattern: "src/**/*.*",
+        included: false,
+      },
+      {
+        pattern: "node_modules/idb/**/*.js",
+        included: false,
       },
       {
         pattern: "tests/**/*-spec.js",
+        type: "module",
         included: false,
-        served: true,
       },
       {
         pattern: "tests/data/**/*",
         included: false,
-        served: true,
       },
       {
         pattern: "tests/*.html",
         included: false,
-        served: true,
       },
       {
         pattern: "tests/**/*.html",
         included: false,
-        served: true,
       },
       {
         pattern: "worker/*.js",
         included: false,
-        served: true,
       },
-      "tests/spec/SpecHelper.js",
-      "tests/test-main.js",
+      {
+        pattern: "tests/spec/SpecHelper.js",
+        type: "module",
+        included: false,
+      },
+      {
+        pattern: "tests/test-main.js",
+        type: "module",
+      },
     ],
 
     // list of files to exclude
@@ -88,6 +90,8 @@ module.exports = function(config) {
       "/about-blank.html": "/base/tests/about-blank.html",
       "/assets/": "/base/assets/",
       "/js/": "/base/js/",
+      "/src/": "/base/src/",
+      "/node_modules/": "/base/node_modules/",
       "/builds/": "/base/builds/",
       "/tests/": "/base/tests/",
       "/spec/": "/base/tests/spec/",

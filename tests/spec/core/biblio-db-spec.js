@@ -1,4 +1,7 @@
 "use strict";
+
+import { biblioDB } from "../../../src/core/biblio-db.js";
+
 describe("Core - biblioDB", () => {
   const data = {
     "whatwg-dom": {
@@ -37,13 +40,6 @@ describe("Core - biblioDB", () => {
       id: "DAHUT",
     },
   };
-  let biblioDB;
-  beforeAll(done => {
-    require(["core/biblio-db"], ({ biblioDB: db }) => {
-      biblioDB = db;
-      done();
-    });
-  });
 
   describe("ready getter", () => {
     it("resolves with a IDB database", async () => {
