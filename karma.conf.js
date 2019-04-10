@@ -61,10 +61,6 @@ module.exports = function(config) {
         included: false,
       },
       {
-        pattern: "tests/*.html",
-        included: false,
-      },
-      {
         pattern: "tests/**/*.html",
         included: false,
       },
