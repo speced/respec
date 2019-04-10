@@ -1,6 +1,6 @@
 "use strict";
 
-import { rule } from "../../../../src/w3c/linter-rules/privsec-section.js";
+import { rule } from "../../../../src/core/linter-rules/privsec-section.js";
 
 describe("W3C Linter Rule - 'privsec-section'", () => {
   const ruleName = "privsec-section";
