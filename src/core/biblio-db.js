@@ -8,7 +8,7 @@
  *
  */
 /* globals IDBKeyRange */
-import { openDB } from "idb";
+import { openDB } from "../../node_modules/idb/build/esm/index.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/biblio-db";
 
