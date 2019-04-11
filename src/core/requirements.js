@@ -10,7 +10,7 @@
 //     element with its href pointing to the requirement it should be referencing
 //     and a class of "reqRef".
 import hyperHTML from "hyperhtml";
-import { pub } from "./pubsubhub";
+import { pub } from "./pubsubhub.js";
 
 export const name = "core/requirements";
 

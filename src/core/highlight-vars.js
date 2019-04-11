@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Module core/highlight-vars
  * Highlights occurrences of a <var> within a section on click.
@@ -7,7 +8,7 @@
  * on export.
  */
 import hlVars from "text!../../assets/var.css";
-import { sub } from "./pubsubhub";
+import { sub } from "./pubsubhub.js";
 
 export const name = "core/highlight-vars";
 
