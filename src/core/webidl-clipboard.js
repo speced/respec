@@ -6,7 +6,6 @@
  * well-formatted IDL to the clipboard.
  *
  */
-import Clipboard from "clipboard";
 import svgClipboard from "text!../../assets/clipboard.svg";
 export const name = "core/webidl-clipboard";
 
@@ -15,17 +14,6 @@ const copyButton = document.createElement("button");
 copyButton.innerHTML = svgClipboard;
 copyButton.title = "Copy IDL to clipboard";
 copyButton.classList.add("respec-button-copy-paste", "removeOnSave");
-
-const clipboardOps = {
-  text: trigger => {
-    return document
-      .querySelector(trigger.dataset.clipboardTarget)
-      .textContent.replace(/ +/gm, " ")
-      .replace(/^ /gm, "  ")
-      .replace(/^};\n/gm, "};\n")
-      .trim();
-  },
-};
 
 export async function run() {
   Array.from(document.querySelectorAll("pre.idl"))
@@ -49,11 +37,28 @@ export async function run() {
     })
     .forEach(({ elem, button, target }) => {
       const wrapper = document.createElement("div");
-      button.dataset.clipboardTarget = target;
-      elem.parentElement.replaceChild(wrapper, elem);
+      button.addEventListener("click", () => {
+        clipboardWriteText(document.querySelector(target).textContent);
+      })
+      elem.replaceWith(wrapper);
       wrapper.appendChild(button);
       wrapper.appendChild(elem);
     });
-  const clipboard = new Clipboard(".respec-button-copy-paste", clipboardOps);
-  clipboard.on("success", e => e.clearSelection());
+}
+
+/**
+ * Mocks navigator.clipboard.writeText()
+ * @param {string} text 
+ */
+function clipboardWriteText(text) {
+  if (navigator.clipboard) {
+    return navigator.clipboard.writeText(text);
+  }
+  return new Promise(resolve => {
+    document.addEventListener("copy", ev => {
+      ev.clipboardData.setData("text/plain", text);
+      resolve();
+    }, { once: true })
+    document.execCommand("copy");
+  });
 }
