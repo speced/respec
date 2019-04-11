@@ -5,7 +5,7 @@ const iframes = [];
  * @return {Promise<Document>}
  */
 export function makeRSDoc(opts, src, style = "") {
-  opts = { profile: "w3c-common", ...opts };
+  opts = { profile: "w3c", ...opts };
   return new Promise((resolve, reject) => {
     const ifr = document.createElement("iframe");
     // reject when DEFAULT_TIMEOUT_INTERVAL passes

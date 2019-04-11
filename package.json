@@ -74,6 +74,7 @@
     "babel:build": "babel src -d js --source-maps -q",
     "babel:watch": "babel src -d js --watch --source-maps",
     "build:respec-w3c-common": "node ./tools/builder.js --profile=w3c-common",
+    "build:w3c": "node ./tools/builder.js --profile=w3c",
     "build:geonovum": "node ./tools/builder.js --profile=geonovum",
     "build:components": "npm run copydeps && npm run babel:build",
     "build:respec-w3c-common": "node ./tools/builder.js --profile=w3c-common",

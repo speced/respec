@@ -9,7 +9,6 @@ require.config({
   paths: {
     hyperhtml: "deps/hyperhtml",
     idb: "deps/idb",
-    jquery: "deps/jquery",
     marked: "deps/marked",
     pluralize: "deps/pluralize",
     text: "deps/text",
@@ -29,7 +28,6 @@ define([
   // order is significant
   "./core/base-runner",
   "./core/ui",
-  "./core/jquery-enhanced",
   "./core/reindent",
   "./core/location-hash",
   "./core/l10n",
