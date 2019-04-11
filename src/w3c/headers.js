@@ -272,7 +272,11 @@ export function run(conf) {
       pub("warn", msg);
     }
   }
-  conf.title = document.title || "No Title";
+  const title = document.title || "No Title";
+  conf.title =
+    conf.isPreview && conf.prNumber
+      ? `Preview of PR #${conf.prNumber}: ${title}`
+      : title;
   if (!conf.subtitle) conf.subtitle = "";
   conf.publishDate = validateDateAndRecover(
     conf,
