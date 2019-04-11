@@ -1,4 +1,7 @@
 "use strict";
+
+import { flushIframes, makeDefaultBody, makeRSDoc } from "../SpecHelper.js";
+
 describe("Geonovum — Defaults", () => {
   afterAll(flushIframes);
   it("sets sensible defaults for geonovum specs", async () => {
