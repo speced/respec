@@ -1,12 +1,8 @@
+import { rule } from "../../../../src/core/linter-rules/no-http-props.js";
+
 describe("Core Linter Rule - 'no-http-props'", () => {
   const ruleName = "no-http-props";
   const config = { lint: { [ruleName]: true } };
-  let rule;
-  beforeAll(async () => {
-    rule = await new Promise(resolve => {
-      require([`core/linter-rules/${ruleName}`], ({ rule }) => resolve(rule));
-    });
-  });
   it("checks any prop ending with 'URI' (case sensitive)", async () => {
     const conf = Object.assign(
       {

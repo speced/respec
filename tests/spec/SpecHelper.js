@@ -1,12 +1,10 @@
-/* exported pickRandomsFromList, makeRSDoc, flushIframes,
- makeStandardOps, makeDefaultBody, makeBasicConfig */
 "use strict";
 const iframes = [];
 
 /**
  * @return {Promise<Document>}
  */
-function makeRSDoc(opts = {}, src, style = "") {
+export function makeRSDoc(opts = {}, src, style = "") {
   return new Promise((resolve, reject) => {
     const ifr = document.createElement("iframe");
     // reject when DEFAULT_TIMEOUT_INTERVAL passes
@@ -123,14 +121,14 @@ function decorateDocument(doc, opts) {
   }
 }
 
-function flushIframes() {
+export function flushIframes() {
   while (iframes.length) {
     // Popping them from the list prevents memory leaks.
     iframes.pop().remove();
   }
 }
 
-function pickRandomsFromList(list, howMany) {
+export function pickRandomsFromList(list, howMany) {
   // Get at least half by default.
   if (!howMany) {
     howMany = Math.floor(list.length / 2);
@@ -156,7 +154,7 @@ function pickRandomsFromList(list, howMany) {
   }, []);
 }
 
-function makeBasicConfig() {
+export function makeBasicConfig() {
   return {
     editors: [
       {
@@ -176,7 +174,7 @@ function makeBasicConfig() {
   };
 }
 
-function makeDefaultBody() {
+export function makeDefaultBody() {
   return "<section id='sotd'><p>foo</p></section><section id='toc'></section>";
 }
 
@@ -187,7 +185,7 @@ function makeDefaultBody() {
  * @returns {{config: {editors, specStatus, edDraftURI, shortName, previousMaturity, previousPublishDate, errata, implementationReportURI, perEnd, lint} & any, body: string}}
  */
 
-function makeStandardOps(config = {}, body = makeDefaultBody()) {
+export function makeStandardOps(config = {}, body = makeDefaultBody()) {
   return {
     body,
     config: { ...makeBasicConfig(), ...config },

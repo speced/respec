@@ -1,4 +1,12 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeBasicConfig,
+  makeDefaultBody,
+  makeRSDoc,
+} from "../SpecHelper.js";
+
 describe("Core — Seo", () => {
   afterAll(flushIframes);
   it("doesn't insert a meta description element if there is no abstract", async () => {

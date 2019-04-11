@@ -1,3 +1,4 @@
+// @ts-check
 /**
 Currently used only for adding 'assert' class to algorithm lists
 */
