@@ -39,7 +39,6 @@ define([
   "./core/data-include",
   "./core/markdown",
   "./core/data-transform",
-  "./core/dfn-abbr",
   "./core/inlines",
   "./core/dfn",
   "./core/pluralize",
