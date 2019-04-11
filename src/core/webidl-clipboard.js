@@ -27,8 +27,6 @@ export async function run() {
   }
 }
 
-
-
 /**
  * Mocks navigator.clipboard.writeText()
  * @param {string} text 
