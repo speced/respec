@@ -363,7 +363,7 @@ function addDataCiteToTerms(results, xrefMap, conf) {
       try {
         result = disambiguate(results[term], entry, term);
       } catch (error) {
-        collectErrors(entry.elem, error, errorCollectors);
+        collectErrors(error, errorCollectors);
         continue;
       }
 
@@ -420,7 +420,7 @@ function addDataCiteToTerms(results, xrefMap, conf) {
  * @param {string} term
  */
 function disambiguate(fetchedData, context, term) {
-  const { specs, types, for: contextFor } = context;
+  const { specs, types, for: contextFor, elem } = context;
   const data = (fetchedData || []).filter(entry => {
     let valid = true;
     if (specs.length) {
@@ -441,7 +441,7 @@ function disambiguate(fetchedData, context, term) {
 
   if (!data.length) {
     // no match found
-    throw new XrefError("NO_MATCH", { term });
+    throw new XrefError("NO_MATCH", { elem, term });
   }
 
   if (data.length === 1) {
@@ -449,28 +449,26 @@ function disambiguate(fetchedData, context, term) {
   }
 
   // ambiguous
-  throw new XrefError("AMBIGUOUS", { term, specs: data.map(e => e.spec) });
+  const errorSpecs = data.map(e => e.spec);
+  throw new XrefError("AMBIGUOUS", { elem, term, specs: errorSpecs });
 }
 
 /**
- * @param {HTMLElement} elem
  * @param {XrefError} error
  * @param {ErrorCollectors} errorCollectors
  */
-function collectErrors(elem, error, errorCollectors) {
+function collectErrors(error, errorCollectors) {
+  const { term, elem } = error.data;
   switch (error.code) {
     case "NO_MATCH": {
-      const { term } = error.data;
       const errors = errorCollectors.noDfn;
       if (!errors.has(term)) {
         errors.set(term, []);
       }
-      const elems = errors.get(term);
-      elems.push(elem);
+      errors.get(term).push(elem);
       break;
     }
     case "AMBIGUOUS": {
-      const { term } = error.data;
       const errors = errorCollectors.ambiguousSpec;
       if (!errors.has(term)) {
         errors.set(term, { specs: new Set(), elems: [] });
