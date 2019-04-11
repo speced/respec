@@ -5,34 +5,8 @@ import {
   makeDefaultBody,
   makeRSDoc,
   makeStandardGeoOps,
+  pickRandomsFromList,
 } from "../SpecHelper.js";
-
-const specStatusGeonovum = [
-  {
-    status: "GN-BASIS",
-    expectedURL: "https://tools.geostandaarden.nl/respec/style/GN-BASIS.css",
-  },
-  {
-    status: "GN-WV",
-    expectedURL: "https://tools.geostandaarden.nl/respec/style/GN-WV.css",
-  },
-  {
-    status: "GN-CV",
-    expectedURL: "https://tools.geostandaarden.nl/respec/style/GN-CV.css",
-  },
-  {
-    status: "GN-VV",
-    expectedURL: "https://tools.geostandaarden.nl/respec/style/GN-VV.css",
-  },
-  {
-    status: "base",
-    expectedURL: "https://tools.geostandaarden.nl/respec/style/base.css",
-  },
-  {
-    status: "GN-DEF",
-    expectedURL: "https://tools.geostandaarden.nl/respec/style/GN-DEF.css",
-  },
-];
 
 async function loadWithStatus(status, expectedURL) {
   const config = makeBasicConfig("geonovum");
@@ -55,6 +29,40 @@ async function loadWithStatus(status, expectedURL) {
 
 describe("Geonovum - Style", () => {
   afterAll(flushIframes);
+  it("should style according to spec status", async () => {
+    const specStatusGeonovum = [
+      {
+        status: "GN-BASIS",
+        expectedURL:
+          "https://tools.geostandaarden.nl/respec/style/GN-BASIS.css",
+      },
+      {
+        status: "GN-WV",
+        expectedURL: "https://tools.geostandaarden.nl/respec/style/GN-WV.css",
+      },
+      {
+        status: "GN-CV",
+        expectedURL: "https://tools.geostandaarden.nl/respec/style/GN-CV.css",
+      },
+      {
+        status: "GN-VV",
+        expectedURL: "https://tools.geostandaarden.nl/respec/style/GN-VV.css",
+      },
+      {
+        status: "base",
+        expectedURL: "https://tools.geostandaarden.nl/respec/style/base.css",
+      },
+      {
+        status: "GN-DEF",
+        expectedURL: "https://tools.geostandaarden.nl/respec/style/GN-DEF.css",
+      },
+    ];
+    // We pick random half from the list, as running the whole set is very slow
+    const promises = pickRandomsFromList(specStatusGeonovum).map(test => {
+      return loadWithStatus(test.status, test.expectedURL, "2016");
+    });
+    await Promise.all(promises);
+  });
 
   it("should include 'fixup.js'", async () => {
     const ops = makeStandardGeoOps();
