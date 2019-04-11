@@ -21,7 +21,7 @@ export async function run() {
     const wrapper = document.createElement("div");
     button.addEventListener("click", () => {
       clipboardWriteText(pre.textContent);
-    })
+    });
     pre.replaceWith(wrapper);
     wrapper.append(button, pre);
   }
@@ -29,17 +29,21 @@ export async function run() {
 
 /**
  * Mocks navigator.clipboard.writeText()
- * @param {string} text 
+ * @param {string} text
  */
 function clipboardWriteText(text) {
   if (navigator.clipboard) {
     return navigator.clipboard.writeText(text);
   }
   return new Promise(resolve => {
-    document.addEventListener("copy", ev => {
-      ev.clipboardData.setData("text/plain", text);
-      resolve();
-    }, { once: true })
+    document.addEventListener(
+      "copy",
+      ev => {
+        ev.clipboardData.setData("text/plain", text);
+        resolve();
+      },
+      { once: true }
+    );
     document.execCommand("copy");
   });
 }
