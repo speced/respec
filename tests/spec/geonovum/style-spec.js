@@ -1,6 +1,7 @@
 "use strict";
 import {
   flushIframes,
+  makeBasicConfig,
   makeDefaultBody,
   makeRSDoc,
   makeStandardGeoOps,
