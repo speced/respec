@@ -4,9 +4,6 @@
 "use strict";
 module.exports = function(config) {
   const options = {
-    // Set reporter for Debug page
-    reporters: ['kjhtml'],
-
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: "./",
 
@@ -109,7 +106,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: "dots", "progress"
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ["mocha"],
+    reporters: ["mocha", "kjhtml"],
 
     // web server port
     port: config.port || 9876,
