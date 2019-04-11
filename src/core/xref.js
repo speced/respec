@@ -363,7 +363,7 @@ function addDataCiteToTerms(results, xrefMap, conf) {
       try {
         result = disambiguate(results[term], entry, term);
       } catch (error) {
-        collectErrors(term, entry.elem, error, errorCollectors);
+        collectErrors(entry.elem, error, errorCollectors);
         continue;
       }
 
@@ -453,14 +453,14 @@ function disambiguate(fetchedData, context, term) {
 }
 
 /**
- * @param {string} term
  * @param {HTMLElement} elem
  * @param {XrefError} error
  * @param {ErrorCollectors} errorCollectors
  */
-function collectErrors(term, elem, error, errorCollectors) {
+function collectErrors(elem, error, errorCollectors) {
   switch (error.code) {
     case "NO_MATCH": {
+      const { term } = error.data;
       const errors = errorCollectors.noDfn;
       if (!errors.has(term)) {
         errors.set(term, []);
@@ -470,6 +470,7 @@ function collectErrors(term, elem, error, errorCollectors) {
       break;
     }
     case "AMBIGUOUS": {
+      const { term } = error.data;
       const errors = errorCollectors.ambiguousSpec;
       if (!errors.has(term)) {
         errors.set(term, { specs: new Set(), elems: [] });
