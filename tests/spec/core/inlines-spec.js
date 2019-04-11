@@ -1,4 +1,7 @@
 "use strict";
+
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 describe("Core - Inlines", () => {
   afterAll(flushIframes);
   it("processes inline cite content", async () => {

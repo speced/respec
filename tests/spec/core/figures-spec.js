@@ -1,4 +1,13 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeBasicConfig,
+  makeDefaultBody,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
+
 describe("Core - Figures", () => {
   afterAll(flushIframes);
   it("creates autolinks from the anchor to the figure", async () => {

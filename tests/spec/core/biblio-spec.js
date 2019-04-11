@@ -1,4 +1,12 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeBasicConfig,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
+
 describe("W3C — Bibliographic References", () => {
   const localBiblio = {
     Zzz: {
@@ -191,9 +199,7 @@ describe("W3C — Bibliographic References", () => {
   });
 
   it("fetches fresh results from specref", async () => {
-    const { biblioDB } = await new Promise(resolve => {
-      require(["core/biblio-db"], resolve);
-    });
+    const { biblioDB } = await import("../../../src/core/biblio-db.js");
 
     await biblioDB.ready;
     await biblioDB.clear();

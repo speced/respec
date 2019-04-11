@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Module core/highlight-vars
  * Highlights occurrences of a <var> within a section on click.

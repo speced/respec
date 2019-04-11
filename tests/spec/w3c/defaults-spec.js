@@ -1,4 +1,7 @@
 "use strict";
+
+import { flushIframes, makeDefaultBody, makeRSDoc } from "../SpecHelper.js";
+
 describe("W3C — Defaults", () => {
   afterAll(flushIframes);
   it("sets sensible defaults for w3c specs", async () => {

@@ -1,17 +1,13 @@
 "use strict";
+
+import { rule } from "../../../../src/core/linter-rules/local-refs-exist.js";
+
 describe("Core Linter Rule - 'local-refs-exist'", () => {
   const config = {
     lint: {
       "local-refs-exist": true,
     },
   };
-  let rule;
-  beforeAll(async () => {
-    rule = await new Promise(resolve => {
-      require(["core/linter-rules/local-refs-exist"], ({ rule }) =>
-        resolve(rule));
-    });
-  });
   const doc = document.implementation.createHTMLDocument("test doc");
   beforeEach(() => {
     // Make sure every unordered test get an empty document

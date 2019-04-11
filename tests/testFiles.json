@@ -31,6 +31,7 @@
   "spec/core/linter-rules/local-refs-exist-spec.js",
   "spec/core/linter-rules/no-headingless-sections-spec.js",
   "spec/core/linter-rules/no-http-props-spec.js",
+  "spec/core/linter-rules/privsec-section-spec.js",
   "spec/core/list-sorter-spec.js",
   "spec/core/location-hash-spec.js",
   "spec/core/markdown-spec.js",
@@ -54,7 +55,6 @@
   "spec/w3c/conformance-spec.js",
   "spec/w3c/defaults-spec.js",
   "spec/w3c/headers-spec.js",
-  "spec/w3c/linter-rules/privsec-section-spec.js",
   "spec/w3c/seo-spec.js",
   "spec/w3c/style-spec.js"
 ]
