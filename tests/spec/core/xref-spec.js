@@ -521,36 +521,36 @@ describe("Core — xref", () => {
 
   describe("inline IDL references", () => {
     it("ignores inlines starting with backslash", async () => {
-      // whitespace inside {{{ }}} doesn't matter
-      const body = `<section><p id="test">{{{\\PASS }}}</p></section>`;
+      // whitespace inside {{ }} doesn't matter
+      const body = `<section><p id="test">{{\\PASS }}</p></section>`;
       const config = { xref: { url: apiURL } };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
       const el = doc.getElementById("test");
       expect(el.querySelector("code a")).toBeFalsy();
-      expect(el.textContent).toEqual("{{{PASS}}}");
+      expect(el.textContent).toEqual("{{PASS}}");
     });
 
     it("ignores malformed syntax", async () => {
-      const body = `<section><p id="test">{ { { PASS }}}</p></section>`;
+      const body = `<section><p id="test">{ {  PASS }}</p></section>`;
       const config = { xref: { url: apiURL } };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
       const el = doc.getElementById("test");
       expect(el.querySelector("code a")).toBeFalsy();
-      expect(el.textContent).toEqual("{ { { PASS }}}");
+      expect(el.textContent).toEqual("{ {  PASS }}");
     });
 
     it("links inline IDL references", async () => {
       const body = `
       <section id="test">
-        <p id="link1">{{{ Window }}}</p>
-        <p id="link2">{{{ [[query]] }}}</p>
-        <p id="link3">{{{ [[type]] }}} is ambiguous.</p>
-        <p id="link4"> This should work {{{
+        <p id="link1">{{ Window }}</p>
+        <p id="link2">{{ [[query]] }}</p>
+        <p id="link3">{{ [[type]] }} is ambiguous.</p>
+        <p id="link4"> This should work {{
               EventTarget
 
-        }}} , i.e. should trim the whitespace.</p>
+        }} , i.e. should trim the whitespace.</p>
       </section>
       `;
       const config = { xref: { url: apiURL }, localBiblio };
@@ -578,10 +578,10 @@ describe("Core — xref", () => {
     it("links methods", async () => {
       const body = `
       <section id="test">
-        <p id="link1">{{{ addEventListener(type, callback) }}}</p>
-        <p id="link2">{{{ EventTarget.addEventListener(type, callback) }}}</p>
-        <p id="link3">{{{ [[CollectFromCredentialStore]](options, sameOriginWithAncestors) }}} is ambiguous</p>
-        <p id="link4">{{{ Credential.[[CollectFromCredentialStore]](options, sameOriginWithAncestors) }}}</p>
+        <p id="link1">{{ addEventListener(type, callback) }}</p>
+        <p id="link2">{{ EventTarget.addEventListener(type, callback) }}</p>
+        <p id="link3">{{ [[CollectFromCredentialStore]](options, sameOriginWithAncestors) }} is ambiguous</p>
+        <p id="link4">{{ Credential.[[CollectFromCredentialStore]](options, sameOriginWithAncestors) }}</p>
       </section>
       `;
       const config = { xref: { url: apiURL }, localBiblio };
@@ -621,9 +621,9 @@ describe("Core — xref", () => {
     it("links attributes", async () => {
       const body = `
       <section>
-        <p id="link1">{{{Window.event}}}</p>
-        <p id="link2">{{{ Credential.[[type]] }}}</p>
-        <p id="link3">{{{ PublicKeyCredential.[[type]] }}}</p>
+        <p id="link1">{{Window.event}}</p>
+        <p id="link2">{{ Credential.[[type]] }}</p>
+        <p id="link3">{{ PublicKeyCredential.[[type]] }}</p>
       </section>
       `;
       const config = { xref: { url: apiURL }, localBiblio };
@@ -650,8 +650,8 @@ describe("Core — xref", () => {
       const body = `
       <section>
         <p><dfn>[[\\type]]</dfn></p>
-        <p id="link1">{{{ [[type]] }}}</p>
-        <p id="link2">{{{ Credential.[[type]] }}}</p>
+        <p id="link1">{{ [[type]] }}</p>
+        <p id="link2">{{ Credential.[[type]] }}</p>
       </section>
       `;
       const config = { xref: { url: apiURL }, localBiblio };
@@ -671,7 +671,7 @@ describe("Core — xref", () => {
     it("links dictionary members", async () => {
       const body = `
       <section>
-        <p id="link1">{{{ TextDecoderOptions["fatal"] }}}</p>
+        <p id="link1">{{ TextDecoderOptions["fatal"] }}</p>
       </section>
       `;
       const config = { xref: { url: apiURL }, localBiblio };
@@ -700,9 +700,9 @@ describe("Core — xref", () => {
         <section id="test">
           <h2>Ignore</h2>
           <p>Some other <dfn>languageCode</dfn> definiton.</p>
-          <p id="link-internal">{{{ PaymentAddress.languageCode }}} links to PaymentAddress definitons.</p>
-          <p id="link-internal-dfn">{{{ languageCode }}} links to some other definiton.</p>
-          <p id="link-external">{{{ Window.event }}} links to html spec.</p>
+          <p id="link-internal">{{ PaymentAddress.languageCode }} links to PaymentAddress definitons.</p>
+          <p id="link-internal-dfn">{{ languageCode }} links to some other definiton.</p>
+          <p id="link-external">{{ Window.event }} links to html spec.</p>
         </section>
       `;
       const config = { xref: { url: apiURL }, localBiblio };
