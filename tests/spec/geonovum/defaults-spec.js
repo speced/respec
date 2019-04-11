@@ -8,7 +8,7 @@ describe("Geonovum — Defaults", () => {
     const ops = {
       config: { editors: [{ name: "foo" }] },
       body: makeDefaultBody(),
-      profile: "profile-geonovum",
+      profile: "geonovum",
     };
     const doc = await makeRSDoc(ops);
     const rsConf = doc.defaultView.respecConfig;
@@ -45,7 +45,7 @@ describe("Geonovum — Defaults", () => {
         highlightVars: false,
       },
       body: makeDefaultBody(),
-      profile: "profile-geonovum",
+      profile: "geonovum",
     };
     const doc = await makeRSDoc(ops);
     const rsConf = doc.defaultView.respecConfig;

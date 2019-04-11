@@ -1,5 +1,10 @@
 "use strict";
-import { flushIframes, makeDefaultBody, makeRSDoc } from "../SpecHelper.js";
+import {
+  flushIframes,
+  makeDefaultBody,
+  makeRSDoc,
+  makeStandardGeoOps,
+} from "../SpecHelper.js";
 
 const specStatusGeonovum = [
   {
@@ -29,7 +34,7 @@ const specStatusGeonovum = [
 ];
 
 async function loadWithStatus(status, expectedURL) {
-  const config = makeBasicConfig();
+  const config = makeBasicConfig("geonovum");
   config.useExperimentalStyles = false;
   config.specStatus = status;
   // config.prevVersion = "CV";
@@ -39,7 +44,7 @@ async function loadWithStatus(status, expectedURL) {
   const ops = {
     config,
     body: makeDefaultBody(),
-    profile: "profile-geonovum",
+    profile: "geonovum",
   };
   const doc = await makeRSDoc(ops);
   const query = `link[href^='${testedURL}']`;
@@ -53,7 +58,7 @@ describe("Geonovum - Style", () => {
   afterAll(flushIframes);
 
   it("should include 'fixup.js'", async () => {
-    const ops = makeStandardOps();
+    const ops = makeStandardGeoOps();
     // TODO: create test specs for Geonovum?
     const doc = await makeRSDoc(ops, "spec/core/simple.html");
     const query = "script[src^='https://www.w3.org/scripts/TR/2016/fixup.js']";
@@ -62,7 +67,7 @@ describe("Geonovum - Style", () => {
   });
 
   it("should have a meta viewport added", async () => {
-    const ops = makeStandardOps();
+    const ops = makeStandardGeoOps();
     const doc = await makeRSDoc(ops, "spec/core/simple.html");
     const elem = doc.head.querySelector("meta[name=viewport]");
     expect(elem).toBeTruthy();
@@ -94,7 +99,7 @@ describe("Geonovum - Style", () => {
   });
 
   it("shouldn't include fixup.js when noToc is set", async () => {
-    const ops = makeStandardOps();
+    const ops = makeStandardGeoOps();
     const newProps = {
       noToc: true,
     };
