@@ -50,7 +50,6 @@
   "spec/core/utils-spec.js",
   "spec/core/webidl-spec.js",
   "spec/core/xref-spec.js",
-  "spec/geonovum/defaults-spec.js",
   "spec/w3c/abstract-spec.js",
   "spec/w3c/conformance-spec.js",
   "spec/w3c/defaults-spec.js",
