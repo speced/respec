@@ -147,5 +147,9 @@ module.exports = function(config) {
     options.reporters = ["mocha"];
     options.browsers = ["ChromeHeadless"];
   }
+  if (process.env.BROWSERS) {
+    options.detectBrowsers.enabled = false;
+    options.browsers = process.env.BROWSERS.split(" ");
+  }
   config.set(options);
 };
