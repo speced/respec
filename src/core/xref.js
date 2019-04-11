@@ -50,6 +50,14 @@ class ObjectSet extends Set {
   }
 }
 
+class XrefError extends Error {
+  constructor(code, data) {
+    super(code);
+    this.code = code;
+    this.data = data;
+  }
+}
+
 /**
  * main external reference driver
  * @param {Object} conf respecConfig
@@ -337,12 +345,15 @@ function isNormative(elem) {
  * @param {ApiResponse} results parsed JSON results returned from API
  * @param {ReturnType<typeof createXrefMap>} xrefMap
  * @param {Object} conf respecConfig
+ * @typedef {{
+    noDfn: Map<string, HTMLElement[]>,
+    ambiguousSpec: Map<string, { specs: Set<string>, elems: HTMLElement[] }>
+  }} ErrorCollectors
  */
 function addDataCiteToTerms(results, xrefMap, conf) {
+  /** @type {ErrorCollectors} */
   const errorCollectors = {
-    /** @type {Map<string, HTMLElement[]>} */
     noDfn: new Map(),
-    /** @type {Map<string, { specs: Set<string>, elems: HTMLElement[] }>} */
     ambiguousSpec: new Map(),
   };
 
@@ -430,7 +441,7 @@ function disambiguate(fetchedData, context, term) {
 
   if (!data.length) {
     // no match found
-    throw { error: "NO_MATCH", term };
+    throw new XrefError("NO_MATCH", { term });
   }
 
   if (data.length === 1) {
@@ -438,11 +449,17 @@ function disambiguate(fetchedData, context, term) {
   }
 
   // ambiguous
-  throw { error: "AMBIGUOUS", term, specs: data.map(e => e.spec) };
+  throw new XrefError("AMBIGUOUS", { term, specs: data.map(e => e.spec) });
 }
 
-function collectErrors(term, elem, errorData, errorCollectors) {
-  switch (errorData.error) {
+/**
+ * @param {string} term
+ * @param {HTMLElement} elem
+ * @param {XrefError} error
+ * @param {ErrorCollectors} errorCollectors
+ */
+function collectErrors(term, elem, error, errorCollectors) {
+  switch (error.code) {
     case "NO_MATCH": {
       const errors = errorCollectors.noDfn;
       if (!errors.has(term)) {
@@ -458,7 +475,7 @@ function collectErrors(term, elem, errorData, errorCollectors) {
         errors.set(term, { specs: new Set(), elems: [] });
       }
       const { specs, elems } = errors.get(term);
-      errorData.specs.forEach(spec => specs.add(spec));
+      error.data.specs.forEach(spec => specs.add(spec));
       elems.push(elem);
       break;
     }
