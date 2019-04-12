@@ -10,7 +10,7 @@ import {
 const findContent = string => {
   return ({ textContent }) => textContent.trim() === string;
 };
-fdescribe("W3C — Headers", () => {
+describe("W3C — Headers", () => {
   afterEach(flushIframes);
   const simpleSpecURL = "spec/core/simple.html";
   const contains = (el, query, string) =>
