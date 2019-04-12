@@ -2,10 +2,6 @@ language: node_js
 dist: xenial
 node_js:
   - lts/*
-
-install:
-  - npm install
-
 cache:
   directories:
     - node_modules # NPM packages
@@ -17,9 +13,11 @@ jobs:
         - npm run lint
     - stage: Run headless
       script:
+        - npm install
         - npm run test:headless
     - stage: Run Karma unit tests
       script:
+        - npm install
         - npm run build:w3c
         - npm run build:geonovum
         - travis_retry karma start --single-run --reporters mocha karma.conf.js
