@@ -45,11 +45,10 @@ function createStyle(css_name) {
   return link;
 }
 
-// TODO: Geonovum version or cleanup
 function createResourceHints() {
   const resourceHints = [
     {
-      hint: "preconnect", // for W3C styles and scripts.
+      hint: "preconnect", // for W3C fixup.js
       href: "https://www.w3.org",
     },
     {
@@ -58,13 +57,17 @@ function createResourceHints() {
       as: "script",
     },
     {
-      hint: "preload", // all specs include on base.css.
-      href: "https://www.w3.org/StyleSheets/TR/2016/base.css",
+      hint: "preconnect", // for Geonovum styles and scripts.
+      href: "https://tools.geostandaarden.nl/",
+    },
+    {
+      hint: "preload", // all Geonovum specs import base.css.
+      href: "https://tools.geostandaarden.nl/respec/style/base.css",
       as: "style",
     },
     {
-      hint: "preload", // all specs show the logo.
-      href: "https://www.w3.org/StyleSheets/TR/2016/logos/W3C",
+      hint: "preload", // all Geonovum specs show the logo.
+      href: "https://tools.geostandaarden.nl/respec/style/logos/Geonovum.svg",
       as: "image",
     },
   ]
