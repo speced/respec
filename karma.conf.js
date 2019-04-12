@@ -123,6 +123,14 @@ module.exports = function(config) {
 
     // See "detectBrowsers"
     // browsers: ["Chrome", "Safari", "Firefox"],
+    customLaunchers: {
+      FirefoxPref: {
+        base: "Firefox",
+        prefs: {
+          "javascript.options.dynamicImport": true,
+        },
+      },
+    },
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
