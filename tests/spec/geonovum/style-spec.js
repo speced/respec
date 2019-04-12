@@ -59,7 +59,7 @@ describe("Geonovum - Style", () => {
     ];
     // We pick random half from the list, as running the whole set is very slow
     const promises = pickRandomsFromList(specStatusGeonovum).map(test => {
-      return loadWithStatus(test.status, test.expectedURL, "2016");
+      return loadWithStatus(test.status, test.expectedURL);
     });
     await Promise.all(promises);
   });
