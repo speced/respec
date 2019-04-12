@@ -1,3 +1,4 @@
+// @ts-check
 // Automatically adds external references.
 // Looks for the terms which do not have a definition locally on Shepherd API
 // For each returend result, adds `data-cite` attributes to respective elements,
@@ -17,7 +18,7 @@ const profiles = {
   "web-platform": ["HTML", "INFRA", "URL", "WEBIDL", "DOM", "FETCH"],
 };
 
-const API_URL = new URL("https://respec.org/xref");
+const API_URL = "https://respec.org/xref";
 const IDL_TYPES = new Set([
   "attribute",
   "dict-member",
@@ -32,10 +33,35 @@ const IDL_TYPES = new Set([
 const CONCEPT_TYPES = new Set(["dfn", "event", "element", "_CONCEPT_"]);
 const CACHE_MAX_AGE = 86400000; // 24 hours
 
+class ObjectSet extends Set {
+  constructor(data = []) {
+    super();
+    this.stringified = new Set();
+    data.forEach(entry => this.add(entry));
+  }
+
+  add(entry) {
+    const stringified = JSON.stringify(entry);
+    if (!this.stringified.has(stringified)) {
+      this.stringified.add(stringified);
+      super.add(entry);
+    }
+    return this;
+  }
+}
+
+class XrefError extends Error {
+  constructor(code, data) {
+    super(code);
+    this.code = code;
+    this.data = data;
+  }
+}
+
 /**
  * main external reference driver
  * @param {Object} conf respecConfig
- * @param {Array:Elements} elems possibleExternalLinks
+ * @param {HTMLElement[]} elems possibleExternalLinks
  */
 export async function run(conf, elems) {
   const idb = await openDB("xref", 1, {
@@ -53,11 +79,8 @@ export async function run(conf, elems) {
     document.body.dataset.cite = bodyCite.concat(xref.specs).join(" ");
   }
   const xrefMap = createXrefMap(elems);
-  const allKeys = collectKeys(xrefMap);
-  const apiURL = xref.url ? new URL(xref.url, location.href) : API_URL;
-  if (!(apiURL instanceof URL)) {
-    throw new TypeError("respecConfig.xref.url must be a valid URL instance");
-  }
+  const allKeys = collectPayloadKeys(xrefMap);
+  const apiURL = xref.url;
 
   const {
     found: resultsFromCache,
@@ -70,95 +93,88 @@ export async function run(conf, elems) {
   }
 
   // merge results
-  const uniqueKeys = new Set(
+  const uniqueTerms = new Set(
     Object.keys(resultsFromCache).concat(Object.keys(fetchedResults))
   );
-  const results = [...uniqueKeys].reduce((results, key) => {
-    const data = (resultsFromCache[key] || []).concat(
-      fetchedResults[key] || []
+  const results = Object.create(null);
+  for (const term of uniqueTerms) {
+    const data = (resultsFromCache[term] || []).concat(
+      fetchedResults[term] || []
     );
-    results[key] = [...new Set(data.map(JSON.stringify))].map(JSON.parse);
-    return results;
-  }, Object.create(null));
-
+    results[term] = [...new ObjectSet(data)];
+  }
   addDataCiteToTerms(results, xrefMap, conf);
-}
-
-function invalidProfileError(profile) {
-  pub(
-    "error",
-    `Invalid \`xref\` profile option passed in the configuration: "${profile}".` +
-      ` Please use one of the supported specification profiles: ${Object.keys(
-        profiles
-      ).join(", ")}.`
-  );
 }
 
 /**
  * converts conf.xref to object with url and spec properties
  */
 function normalizeConfig(xref) {
-  const xrefDefaults = {
+  const defaults = {
     url: API_URL,
     specs: null,
   };
 
-  const normalizedConfig = {};
+  const config = Object.assign({}, defaults);
+
   const type = Array.isArray(xref) ? "array" : typeof xref;
   switch (type) {
     case "boolean":
-      // ... true
-      Object.assign(normalizedConfig, xrefDefaults);
+      // using defaults already, as above
       break;
     case "string":
-      if (profiles[xref.toLowerCase()]) {
-        // We have the profile
-        Object.assign(normalizedConfig, xrefDefaults, {
-          specs: profiles[xref.toLowerCase()],
-        });
+      if (xref.toLowerCase() in profiles) {
+        Object.assign(config, { specs: profiles[xref.toLowerCase()] });
       } else {
         invalidProfileError(xref);
-        Object.assign(normalizedConfig, xrefDefaults);
       }
       break;
     case "array":
-      Object.assign(normalizedConfig, xrefDefaults, {
-        specs: [].concat(xref),
-      });
+      Object.assign(config, { specs: xref });
       break;
     case "object":
-      if (xref.profile && !profiles[xref.profile.toLowerCase()]) {
-        invalidProfileError(xref.profile);
-        Object.assign(normalizedConfig, xrefDefaults, xref);
-      } else {
-        Object.assign(normalizedConfig, xrefDefaults, xref);
-        if (xref.profile)
-          Object.assign(normalizedConfig, {
-            specs: xref.specs
-              ? xref.specs.concat(profiles[xref.profile.toLowerCase()])
-              : profiles[xref.profile.toLowerCase()],
-          });
+      Object.assign(config, xref);
+      if (xref.profile) {
+        const profile = xref.profile.toLowerCase();
+        if (profile in profiles) {
+          const specs = (xref.specs || []).concat(profiles[profile]);
+          Object.assign(config, { specs });
+        } else {
+          invalidProfileError(xref.profile);
+        }
       }
       break;
     default:
-      // show user error - bad configuration
-      Object.assign(normalizedConfig, xrefDefaults);
       pub(
         "error",
-        `Invalid value for \`xref\` configuration option. Got passed: "${xref}".`
+        `Invalid value for \`xref\` configuration option. Received: "${xref}".`
       );
   }
-  return normalizedConfig;
+  return config;
+
+  function invalidProfileError(profile) {
+    const supportedProfiles = Object.keys(profiles)
+      .map(p => `"${p}"`)
+      .join(", ");
+    const msg =
+      `Invalid profile "${profile}" in \`respecConfig.xref\`. ` +
+      `Please use one of the supported profiles: ${supportedProfiles}.`;
+    pub("error", msg);
+  }
 }
 
 /**
  * maps term to elements and context
- * @param {Array:Elements} elems
- * @returns {Map} term => [ { elem } ]
+ * @typedef {{ elem: HTMLElement, specs: string[], for?: string, types: string[] }} XrefMapEntry
+ * @param {HTMLElement[]} elems
  */
 function createXrefMap(elems) {
-  return elems.reduce((map, elem) => {
+  /** @type {Map<string, XrefMapEntry[]>} */
+  const map = new Map();
+
+  for (const elem of elems) {
     const isIDL = "xrefType" in elem.dataset;
+
     let term = elem.dataset.lt
       ? elem.dataset.lt.split("|", 1)[0]
       : elem.textContent;
@@ -166,47 +182,66 @@ function createXrefMap(elems) {
     if (!isIDL) term = term.toLowerCase();
 
     let specs = [];
-    const datacite = elem.closest("[data-cite]");
-    if (datacite && datacite.dataset.cite) {
-      specs = datacite.dataset.cite
-        .toLowerCase()
-        .replace(/!/g, "")
-        .split(/\s+/);
+    /** @type {HTMLElement} */
+    const dataciteElem = elem.closest("[data-cite]");
+    if (dataciteElem && dataciteElem.dataset.cite) {
+      const cite = dataciteElem.dataset.cite.toLowerCase().replace(/[!?]/g, "");
+      specs = cite.split(/\s+/);
     }
     // if element itself contains data-cite, we don't take inline context into account
-    if (datacite !== elem) {
-      const refs = [
-        ...elem.closest("section").querySelectorAll("a.bibref"),
-      ].map(el => el.textContent.toLowerCase());
-      specs.push(...refs);
+    if (dataciteElem !== elem) {
+      for (const el of elem.closest("section").querySelectorAll("a.bibref")) {
+        const ref = el.textContent.toLowerCase();
+        specs.push(ref);
+      }
     }
     const uniqueSpecs = [...new Set(specs)].sort();
 
-    const types = [isIDL ? elem.dataset.xrefType || "_IDL_" : "_CONCEPT_"];
-    const { linkFor: forContext } = elem.dataset;
+    const types = [];
+    if (isIDL) {
+      if (elem.dataset.xrefType) {
+        types.push(...elem.dataset.xrefType.split("|"));
+      } else {
+        types.push("_IDL_");
+      }
+    } else {
+      types.push("_CONCEPT_");
+    }
+
+    let { linkFor: forContext = null } = elem.dataset;
+    if (!forContext && isIDL) {
+      const dataLinkForElem = elem.closest("[data-link-for]");
+      if (dataLinkForElem) {
+        forContext = dataLinkForElem.dataset.linkFor;
+      }
+    }
 
     const xrefsForTerm = map.has(term) ? map.get(term) : [];
     xrefsForTerm.push({ elem, specs: uniqueSpecs, for: forContext, types });
-    return map.set(term, xrefsForTerm);
-  }, new Map());
+    map.set(term, xrefsForTerm);
+  }
+
+  return map;
 }
 
 /**
  * collects xref keys in a form more usable for querying
- * @param {Map} xrefs
- * @returns {Array} =[{ term, specs[] }]
+ * @param {ReturnType<typeof createXrefMap>} xrefs
+ * @typedef {{ term: string, specs?: string[], types?: string[], for?: string }} PayloadKey
+ * @returns {PayloadKey[]}
  */
-function collectKeys(xrefs) {
-  const queryKeys = [...xrefs.entries()].reduce(
-    (queryKeys, [term, entries]) => {
-      for (const { specs, types, for: forContext } of entries) {
-        queryKeys.add(JSON.stringify({ term, specs, types, for: forContext })); // only unique
-      }
-      return queryKeys;
-    },
-    new Set()
-  );
-  return [...queryKeys].map(JSON.parse);
+function collectPayloadKeys(xrefs) {
+  const keys = new ObjectSet();
+  for (const [term, entries] of xrefs) {
+    for (const { specs, types, for: forContext } of entries) {
+      const key = { term };
+      if (specs.length) key.specs = specs;
+      if (types.length) key.types = types;
+      if (forContext) key.for = forContext;
+      keys.add(key);
+    }
+  }
+  return [...keys];
 }
 
 // adds data to cache
@@ -214,21 +249,21 @@ async function cacheResults(data, cache) {
   const promisesToSet = Object.entries(data).map(([term, results]) =>
     cache.set(term, results)
   );
-  await cache.set("__CACHE_TIME__", new Date());
+  await cache.set("__CACHE_TIME__", Date.now());
   await Promise.all(promisesToSet);
 }
 
 /**
- * looks for keys in cache and resolves them
+ * looks for keys in cache and resolves them.
+ * `found` contains resolved data from cache.
+ * `notFound` contains keys not found in cache.
  * @param {Array} keys query keys
- * @param {IDBCache} cache
- * @returns {Object}
- *  @property {Object} found resolved data from cache
- *  @property {Array} notFound keys not found in cache
+ * @param {IDBKeyVal} cache
+ * @returns {Promise<{ found: ApiResponse, notFound: PayloadKey[] }>}
  */
 async function resolveFromCache(keys, cache) {
   const cacheTime = await cache.get("__CACHE_TIME__");
-  const bustCache = cacheTime && new Date() - cacheTime > CACHE_MAX_AGE;
+  const bustCache = cacheTime && Date.now() - cacheTime > CACHE_MAX_AGE;
   if (bustCache) {
     await cache.clear();
     return { found: Object.create(null), notFound: keys };
@@ -267,9 +302,13 @@ async function resolveFromCache(keys, cache) {
   }
 }
 
-// fetch from network
+/**
+ * @typedef {{ uri: string; shortname: string; spec: string; type: string; normative: boolean; for?: string[] }} ApiResponseElement
+ * @typedef {{ [term: string]: ApiResponseElement[] }} ApiResponse
+ * @returns {Promise<ApiResponse>}
+ */
 async function fetchFromNetwork(keys, url) {
-  const query = { keys }; // TODO: add `query.options`
+  const query = { keys };
   const options = {
     method: "POST",
     body: JSON.stringify(query),
@@ -302,42 +341,47 @@ function isNormative(elem) {
 }
 
 /**
- * adds data-cite attributes to elems
- * for each term from conf.xref[term] for which results are found.
- * @param {Object} query query sent to server
- * @param {Object} results parsed JSON results returned from API
- * @param {Map} xrefMap xrefMap
+ * adds data-cite attributes to elems for each term for which results are found.
+ * @param {ApiResponse} results parsed JSON results returned from API
+ * @param {ReturnType<typeof createXrefMap>} xrefMap
  * @param {Object} conf respecConfig
+ * @typedef {{
+    noDfn: Map<string, HTMLElement[]>,
+    ambiguousSpec: Map<string, { specs: Set<string>, elems: HTMLElement[] }>
+  }} ErrorCollectors
  */
 function addDataCiteToTerms(results, xrefMap, conf) {
+  /** @type {ErrorCollectors} */
   const errorCollectors = {
-    /** @type {Map<string, HTMLElement[]>} */
     noDfn: new Map(),
-    /** @type {Map<string, { specs: Set<string>, elems: HTMLElement[] }>} */
     ambiguousSpec: new Map(),
   };
 
   for (const [term, entries] of xrefMap) {
     for (const entry of entries) {
-      const result = disambiguate(results[term], entry, term);
-      const { elem } = entry;
-      if (result.error) {
-        collectErrors(term, elem, result, errorCollectors);
+      let result;
+      try {
+        result = disambiguate(results[term], entry, term);
+      } catch (error) {
+        collectErrors(error, errorCollectors);
         continue;
       }
-      const { uri, spec: cite, normative } = result;
+
+      const { elem } = entry;
+      const { uri, spec: cite, normative, type } = result;
       const path = uri.includes("/") ? uri.split("/", 1)[1] : uri;
       const [citePath, citeFrag] = path.split("#");
-      const citeObj = { cite, citePath, citeFrag };
-      Object.assign(elem.dataset, citeObj);
+      const dataset = { cite, citePath, citeFrag, type };
+      Object.assign(elem.dataset, dataset);
 
       // update indirect links (data-lt, data-plurals)
+      /** @type {NodeListOf<HTMLElement>} */
       const indirectLinks = document.querySelectorAll(
         `[data-dfn-type="xref"][data-xref="${term.toLowerCase()}"]`
       );
       indirectLinks.forEach(el => {
         el.removeAttribute("data-xref");
-        Object.assign(el.dataset, citeObj);
+        Object.assign(el.dataset, dataset);
       });
 
       // add specs for citation (references section)
@@ -369,13 +413,18 @@ function addDataCiteToTerms(results, xrefMap, conf) {
   showErrors(errorCollectors);
 }
 
-// disambiguate fetched results based on context
+/**
+ * disambiguate fetched results based on context
+ * @param {ApiResponseElement[]} fetchedData
+ * @param {XrefMapEntry} context
+ * @param {string} term
+ */
 function disambiguate(fetchedData, context, term) {
-  const { specs, types, for: contextFor } = context;
+  const { specs, types, for: contextFor, elem } = context;
   const data = (fetchedData || []).filter(entry => {
     let valid = true;
     if (specs.length) {
-      valid = specs.includes(entry.spec);
+      valid = specs.includes(entry.shortname) || specs.includes(entry.spec);
     }
     if (valid && types.length) {
       valid = types.includes(entry.type);
@@ -384,7 +433,7 @@ function disambiguate(fetchedData, context, term) {
         valid = [...validTypes].some(type => type === entry.type);
       }
     }
-    if (valid && contextFor) {
+    if (valid && contextFor && entry.for) {
       valid = entry.for.includes(contextFor);
     }
     return valid;
@@ -392,7 +441,7 @@ function disambiguate(fetchedData, context, term) {
 
   if (!data.length) {
     // no match found
-    return { error: "NO_MATCH", term };
+    throw new XrefError("NO_MATCH", { elem, term });
   }
 
   if (data.length === 1) {
@@ -400,18 +449,23 @@ function disambiguate(fetchedData, context, term) {
   }
 
   // ambiguous
-  return { error: "AMBIGUOUS", term, specs: data.map(e => e.spec) };
+  const errorSpecs = data.map(e => e.spec);
+  throw new XrefError("AMBIGUOUS", { elem, term, specs: errorSpecs });
 }
 
-function collectErrors(term, elem, errorData, errorCollectors) {
-  switch (errorData.error) {
+/**
+ * @param {XrefError} error
+ * @param {ErrorCollectors} errorCollectors
+ */
+function collectErrors(error, errorCollectors) {
+  const { term, elem } = error.data;
+  switch (error.code) {
     case "NO_MATCH": {
       const errors = errorCollectors.noDfn;
       if (!errors.has(term)) {
         errors.set(term, []);
       }
-      const elems = errors.get(term);
-      elems.push(elem);
+      errors.get(term).push(elem);
       break;
     }
     case "AMBIGUOUS": {
@@ -420,7 +474,7 @@ function collectErrors(term, elem, errorData, errorCollectors) {
         errors.set(term, { specs: new Set(), elems: [] });
       }
       const { specs, elems } = errors.get(term);
-      errorData.specs.forEach(spec => specs.add(spec));
+      error.data.specs.forEach(spec => specs.add(spec));
       elems.push(elem);
       break;
     }

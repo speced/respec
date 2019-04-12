@@ -843,7 +843,7 @@ describe("Core — xref", () => {
       </section>`;
 
     const preLoadTime = await cache.get("__CACHE_TIME__");
-    expect(preLoadTime instanceof Date).toBeFalsy();
+    expect(Number.isInteger(preLoadTime)).toBeFalsy();
     cacheKeys = (await cache.keys()).sort();
     expect(cacheKeys).toEqual([]);
 
@@ -852,7 +852,7 @@ describe("Core — xref", () => {
       expectedLinks.get("dictionary")
     );
     const preCacheTime = await cache.get("__CACHE_TIME__");
-    expect(preCacheTime instanceof Date).toBeTruthy();
+    expect(Number.isInteger(preCacheTime)).toBeTruthy();
     cacheKeys = (await cache.keys()).sort();
     expect(cacheKeys).toEqual(["__CACHE_TIME__", "dictionary"]);
 
