@@ -77,16 +77,22 @@ define([
   "./core/algorithms",
   /* Linter must be the last thing to run */
   "./core/linter",
-], async (runner, { ui }, ...plugins) => {
+], (runner, { ui }, ...plugins) => {
   ui.show();
-  if (document.readyState === "loading") {
-    await new Promise(r => document.addEventListener("DOMContentLoaded", r));
-  }
-  try {
-    await runner.runAll(plugins);
-  } catch (err) {
-    console.error(err);
-  } finally {
-    ui.enable();
-  }
+  const loadPromise = new Promise(r => {
+    if (document.readyState !== "loading") {
+      r();
+      return;
+    }
+    document.addEventListener("DOMContentLoaded", r)
+  });
+  loadPromise.then(async () => {
+    try {
+      await runner.runAll(plugins);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      ui.enable();
+    }
+  });
 });
