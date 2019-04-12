@@ -28,5 +28,4 @@ export function run() {
   if (conformance) {
     processConformance(conformance);
   }
-  pub("end", name);
 }
