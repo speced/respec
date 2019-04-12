@@ -17,19 +17,24 @@ function getSpecTitleElem(conf) {
     document.querySelector("h1#title") || document.createElement("h1");
   if (specTitleElem.parentElement) {
     specTitleElem.remove();
-    const title = specTitleElem.textContent.trim();
-    if (conf.isPreview && conf.prNumber) {
-      if (conf.prUrl)
-        specTitleElem.innerHTML = `Preview of PR <a href=${conf.prUrl}>#${
-          conf.prNumber
-        }</a>: ${title}`;
-      else
-        specTitleElem.textContent = `Preview of PR #${conf.prNumber}: ${title}`;
-    }
-    conf.title = specTitleElem.textContent;
+    conf.title = specTitleElem.textContent.trim();
   } else {
     specTitleElem.textContent = conf.title;
     specTitleElem.id = "title";
+  }
+  if (conf.isPreview && conf.prNumber) {
+    if (conf.prUrl)
+      specTitleElem.prepend(
+        html`
+          <span
+            >Preview of PR <a href=${conf.prUrl}>#${conf.prNumber}</a>:
+          </span>
+        `
+      );
+    else
+      specTitleElem.prepend(
+        document.createTextNode(`Preview of PR #${conf.prNumber}: `)
+      );
   }
   specTitleElem.classList.add("title", "p-name");
   if (document.querySelector("title") === null) {
