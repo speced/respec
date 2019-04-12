@@ -1408,4 +1408,13 @@ describe("W3C — Headers", () => {
       }
     });
   });
+
+  it("adds Preview status to title", async () => {
+    const ops = makeStandardOps();
+    const doc = await makeRSDoc(
+      ops,
+      "spec/core/simple.html?isPreview=true&prNumber=123"
+    );
+    expect(doc.title).toBe("Preview of PR #123: Simple Spec");
+  });
 });

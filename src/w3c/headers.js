@@ -273,7 +273,7 @@ export function run(conf) {
     }
   }
   const title = document.title || "No Title";
-  conf.title =
+  document.title = conf.title =
     conf.isPreview && conf.prNumber
       ? `Preview of PR #${conf.prNumber}: ${title}`
       : title;
