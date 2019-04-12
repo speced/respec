@@ -17,11 +17,9 @@ jobs:
         - npm run lint
     - stage: Run headless
       script:
-        - npm run build
         - npm run test:headless
     - stage: Run Karma unit tests
       script:
-        - npm run build
         - npm run build:w3c
         - npm run build:geonovum
         - travis_retry karma start --single-run --reporters mocha karma.conf.js
