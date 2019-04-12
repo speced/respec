@@ -14,6 +14,7 @@ jobs:
     - stage: Run headless
       script:
         - npm install
+        - npm run build:w3c
         - npm run test:headless
     - stage: Run Karma unit tests
       script:
