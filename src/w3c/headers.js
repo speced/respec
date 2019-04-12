@@ -273,10 +273,11 @@ export function run(conf) {
     }
   }
   const title = document.title || "No Title";
-  document.title = conf.title =
+  conf.title =
     conf.isPreview && conf.prNumber
       ? `Preview of PR #${conf.prNumber}: ${title}`
       : title;
+  if (document.title) document.title = conf.title;
   if (!conf.subtitle) conf.subtitle = "";
   conf.publishDate = validateDateAndRecover(
     conf,

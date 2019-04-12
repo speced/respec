@@ -10,7 +10,7 @@ import {
 const findContent = string => {
   return ({ textContent }) => textContent.trim() === string;
 };
-describe("W3C — Headers", () => {
+fdescribe("W3C — Headers", () => {
   afterEach(flushIframes);
   const simpleSpecURL = "spec/core/simple.html";
   const contains = (el, query, string) =>
@@ -1413,8 +1413,13 @@ describe("W3C — Headers", () => {
     const ops = makeStandardOps();
     const doc = await makeRSDoc(
       ops,
-      "spec/core/simple.html?isPreview=true&prNumber=123"
+      "spec/core/simple.html?isPreview=true&prNumber=123&prUrl=%22http%3A//w3c.github.io/respec/%22"
     );
     expect(doc.title).toBe("Preview of PR #123: Simple Spec");
+    const headingtitle = doc.querySelector("h1#title");
+    expect(headingtitle.textContent).toEqual("Preview of PR #123: Simple Spec");
+    expect(headingtitle.querySelector("a").href).toEqual(
+      "http://w3c.github.io/respec/"
+    );
   });
 });
