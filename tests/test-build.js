@@ -2,38 +2,31 @@
 /* eslint-env node */
 
 "use strict";
-const fsp = require("fs-extra");
+const fs = require("fs");
+const { promisify } = require("util");
+const readFile = promisify(fs.readFile);
+const lstat = promisify(fs.lstat);
 const path = require("path");
 const expect = require("chai").expect;
 const { Builder } = require("../tools/builder");
 
 async function checkIfFileExists(filePath) {
-  const stats = await fsp.lstat(filePath);
+  const stats = await lstat(filePath);
   return stats.isFile();
 }
 
 describe("builder (tool)", () => {
-  it("builds w3c respec", async () => {
-    const profileFile = path.join(__dirname, "../builds/respec-w3c-common.js");
-    const mapFile = path.join(__dirname, "../builds/respec-w3c-common.js.map");
-    await Builder.build({ name: "w3c-common" });
-    expect(await checkIfFileExists(profileFile)).to.equal(true);
-    expect(await checkIfFileExists(mapFile)).to.equal(true);
-  });
-
-  it("builds Geonovum profile", async () => {
-    const profileFile = path.join(__dirname, "../builds/respec-geonovum.js");
-    const mapFile = path.join(__dirname, "../builds/respec-geonovum.js.map");
-    await Builder.build({ name: "geonovum" });
-    expect(await checkIfFileExists(profileFile)).to.equal(true);
-    expect(await checkIfFileExists(mapFile)).to.equal(true);
-  });
-
-  describe("respec-w3c.js", () => {
-    const latest = path.join(__dirname, "../builds/respec-w3c.js");
-    it("should include the link to the sourcemap", async () => {
-      const source = await fsp.readFile(latest, "utf-8");
-      expect(source.includes("respec-w3c.js.map")).to.equal(true);
+  for (const profile of ["w3c-common", "w3c", "geonovum"]) {
+    const profileFile = path.join(__dirname, `../builds/respec-${profile}.js`);
+    const mapFile = path.join(__dirname, `../builds/respec-${profile}.js.map`);
+    it(`builds the "${profile}" profile and sourcemap`, async () => {
+      await Builder.build({ name: profile });
+      expect(await checkIfFileExists(profileFile)).to.equal(true);
+      expect(await checkIfFileExists(mapFile)).to.equal(true);
     });
-  });
+    it(`includes sourcemap link for "${profile}"`, async () => {
+      const source = await readFile(profileFile, "utf-8");
+      expect(source.includes(`${profile}.js.map`)).to.equal(true);
+    });
+  }
 });
