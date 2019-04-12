@@ -2,7 +2,6 @@
 // Handle the conformance section properly.
 // based on W3C conformance, but because Geonovum has different requirements, have a separate module
 import html from "hyperhtml";
-import { pub } from "../core/pubsubhub";
 export const name = "geonovum/conformance";
 
 /**
@@ -28,5 +27,4 @@ export function run() {
   if (conformance) {
     processConformance(conformance);
   }
-  pub("end", name);
 }

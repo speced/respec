@@ -21,9 +21,7 @@ describe("Geonovum — Conformance", () => {
     const doc = await makeRSDoc(ops);
     const conformance = doc.getElementById("conformance");
     expect(conformance.querySelectorAll("h2").length).toEqual(1);
-    expect(conformance.querySelector("h2").textContent).toMatch(
-      /\d+\.\s+Conformiteit/
-    );
+    expect(conformance.querySelector("h2").textContent).toBe("Conformiteit");
     expect(conformance.querySelectorAll("p").length).toEqual(3);
   });
 });
