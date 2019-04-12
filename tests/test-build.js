@@ -29,11 +29,11 @@ describe("builder (tool)", () => {
     expect(await checkIfFileExists(mapFile)).to.equal(true);
   });
 
-  describe("respec-w3c-common.build.js", () => {
-    const latest = path.join(__dirname, "../builds/respec-w3c-common.js");
+  describe("respec-w3c.js", () => {
+    const latest = path.join(__dirname, "../builds/respec-w3c.js");
     it("should include the link to the sourcemap", async () => {
       const source = await fsp.readFile(latest, "utf-8");
-      expect(source.search("respec-w3c-common.js.map")).to.not.equal(-1);
+      expect(source.includes("respec-w3c.js.map")).to.equal(true);
     });
   });
 });
