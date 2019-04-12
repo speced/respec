@@ -4,7 +4,7 @@
 // seemingly a better idea to orthogonalise them. The issue is that processing text nodes
 // is harder to orthogonalise, and in some browsers can also be particularly slow.
 // Things that are recognised are <abbr>/<acronym> which when used once are applied
-// throughout the document, [[REFERENCES]]/[[!REFERENCES]], {{{ IDL }}} and RFC2119 keywords.
+// throughout the document, [[REFERENCES]]/[[!REFERENCES]], {{ IDL }} and RFC2119 keywords.
 // CONFIGURATION:
 //  These options do not configure the behaviour of this module per se, rather this module
 //  manipulates them (oftentimes being the only source to set them) so that other modules
@@ -54,10 +54,10 @@ function inlineRefMatches(matched) {
  * @param {string} matched
  */
 function inlineXrefMatches(matched) {
-  // slices "{{{" at the beginning and "}}}" at the end
-  const ref = matched.slice(3, -3).trim();
+  // slices "{{" at the beginning and "}}" at the end
+  const ref = matched.slice(2, -2).trim();
   return ref.startsWith("\\")
-    ? document.createTextNode(`{{{${ref.slice(1)}}}}`)
+    ? document.createTextNode(`{{${ref.slice(1)}}}`)
     : idlStringToHtml(ref);
 }
 
@@ -147,7 +147,7 @@ export function run(conf) {
       "\\b(?:NOT\\s+)?REQUIRED\\b",
       "\\b(?:NOT\\s+)?RECOMMENDED\\b",
       "\\bOPTIONAL\\b",
-      "(?:{{3}\\s*.*\\s*}{3})", // inline IDL references,
+      "(?:{{2}\\s*.*\\s*}{2})", // inline IDL references,
       "\\B\\|\\w[\\w\\s]*(?:\\s*\\:[\\w\\s&;<>]+)?\\|\\B", // inline variable regex
       "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])",
       "(?:\\[\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\]\\])",
@@ -164,7 +164,7 @@ export function run(conf) {
       matched = !matched;
       if (!matched) {
         df.appendChild(document.createTextNode(t));
-      } else if (t.startsWith("{{{")) {
+      } else if (t.startsWith("{{")) {
         const node = inlineXrefMatches(t);
         df.appendChild(node);
       } else if (t.startsWith("[[[")) {

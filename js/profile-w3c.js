@@ -9,7 +9,6 @@ require.config({
   paths: {
     hyperhtml: "deps/hyperhtml",
     idb: "deps/idb",
-    jquery: "deps/jquery",
     marked: "deps/marked",
     pluralize: "deps/pluralize",
     text: "deps/text",
@@ -29,7 +28,6 @@ define([
   // order is significant
   "./core/base-runner",
   "./core/ui",
-  "./core/jquery-enhanced",
   "./core/reindent",
   "./core/location-hash",
   "./core/l10n",
@@ -81,10 +79,16 @@ define([
   "./core/linter",
 ], (runner, { ui }, ...plugins) => {
   ui.show();
-  domReady().then(async () => {
+  const loadPromise = new Promise(r => {
+    if (document.readyState !== "loading") {
+      r();
+      return;
+    }
+    document.addEventListener("DOMContentLoaded", r)
+  });
+  loadPromise.then(async () => {
     try {
       await runner.runAll(plugins);
-      await document.respecIsReady;
     } catch (err) {
       console.error(err);
     } finally {
@@ -92,11 +96,3 @@ define([
     }
   });
 });
-
-async function domReady() {
-  if (document.readyState === "loading") {
-    await new Promise(resolve =>
-      document.addEventListener("DOMContentLoaded", resolve)
-    );
-  }
-}
