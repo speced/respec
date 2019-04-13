@@ -1,0 +1,104 @@
+{
+  "result": {
+    "c6d3c68906956ac107378e2a84bcb55ea71a06c6": [
+      {
+        "shortname": "dom",
+        "type": "method",
+        "for": ["EventTarget"],
+        "normative": true,
+        "uri": "#dom-eventtarget-addeventlistener"
+      }
+    ],
+    "fe2c17ac17606b140aa1c868f37155594a26903a": [
+      {
+        "shortname": "dom",
+        "type": "interface",
+        "normative": true,
+        "uri": "#eventtarget"
+      }
+    ],
+    "a33d6eae47b4960c5958b91bb323a601b09ab0a1": [
+      {
+        "shortname": "dom",
+        "type": "method",
+        "for": ["EventTarget"],
+        "normative": true,
+        "uri": "#dom-eventtarget-addeventlistener"
+      }
+    ],
+    "ff43fbf2ceec872fd95c84d45bd8c11087005503": [
+      {
+        "shortname": "credential-management",
+        "type": "method",
+        "for": ["Credential"],
+        "normative": true,
+        "uri": "#dom-credential-collectfromcredentialstore-slot"
+      },
+      {
+        "shortname": "credential-management",
+        "type": "method",
+        "for": ["PasswordCredential"],
+        "normative": true,
+        "uri": "#dom-passwordcredential-collectfromcredentialstore-slot"
+      },
+      {
+        "shortname": "credential-management",
+        "type": "method",
+        "for": ["FederatedCredential"],
+        "normative": true,
+        "uri": "#dom-federatedcredential-collectfromcredentialstore-slot"
+      }
+    ],
+    "8353d37515560293872e372283da18c25efdb0db": [
+      {
+        "shortname": "credential-management",
+        "type": "interface",
+        "normative": true,
+        "uri": "#credential"
+      }
+    ],
+    "56e5bc5a85a28b7bc7c735d487f0cb6dc1d57e49": [
+      {
+        "shortname": "credential-management",
+        "type": "method",
+        "for": ["Credential"],
+        "normative": true,
+        "uri": "#dom-credential-collectfromcredentialstore-slot"
+      }
+    ]
+  },
+  "query": [
+    {
+      "term": "addEventListener(type, callback)",
+      "types": ["method"],
+      "id": "c6d3c68906956ac107378e2a84bcb55ea71a06c6"
+    },
+    {
+      "term": "EventTarget",
+      "types": ["_IDL_"],
+      "id": "fe2c17ac17606b140aa1c868f37155594a26903a"
+    },
+    {
+      "term": "addEventListener(type, callback)",
+      "types": ["method"],
+      "for": "EventTarget",
+      "id": "a33d6eae47b4960c5958b91bb323a601b09ab0a1"
+    },
+    {
+      "term": "[[CollectFromCredentialStore]](options, sameOriginWithAncestors)",
+      "types": ["method"],
+      "id": "ff43fbf2ceec872fd95c84d45bd8c11087005503"
+    },
+    {
+      "term": "Credential",
+      "types": ["_IDL_"],
+      "id": "8353d37515560293872e372283da18c25efdb0db"
+    },
+    {
+      "term": "[[CollectFromCredentialStore]](options, sameOriginWithAncestors)",
+      "types": ["method"],
+      "for": "Credential",
+      "id": "56e5bc5a85a28b7bc7c735d487f0cb6dc1d57e49"
+    }
+  ]
+}

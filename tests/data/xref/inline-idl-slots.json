@@ -1,0 +1,34 @@
+{
+  "result": {
+    "8353d37515560293872e372283da18c25efdb0db": [
+      {
+        "shortname": "credential-management",
+        "type": "interface",
+        "normative": true,
+        "uri": "#credential"
+      }
+    ],
+    "144f93f7390c7b8c61476be5fb51454665c13aa5": [
+      {
+        "shortname": "credential-management",
+        "type": "attribute",
+        "for": ["Credential"],
+        "normative": true,
+        "uri": "#dom-credential-type-slot"
+      }
+    ]
+  },
+  "query": [
+    {
+      "term": "Credential",
+      "types": ["_IDL_"],
+      "id": "8353d37515560293872e372283da18c25efdb0db"
+    },
+    {
+      "term": "[[type]]",
+      "types": ["attribute"],
+      "for": "Credential",
+      "id": "144f93f7390c7b8c61476be5fb51454665c13aa5"
+    }
+  ]
+}

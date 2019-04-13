@@ -1,0 +1,67 @@
+{
+  "result": {
+    "7c6f3cfd1cf92d00249d3a483265a7c58e42ecf1": [
+      {
+        "shortname": "html",
+        "type": "interface",
+        "normative": true,
+        "uri": "window-object.html#window"
+      }
+    ],
+    "29070e2b7703e718fff520b29f52dedf812e23ab": [
+      {
+        "shortname": "permissions",
+        "type": "attribute",
+        "for": ["PermissionStatus"],
+        "normative": true,
+        "uri": "#dom-permissionstatus-query-slot"
+      }
+    ],
+    "1442fa5908c67eba92549dfd6899832ec6802ad0": [
+      {
+        "shortname": "credential-management",
+        "type": "attribute",
+        "for": ["Credential"],
+        "normative": true,
+        "uri": "#dom-credential-type-slot"
+      },
+      {
+        "shortname": "webauthn",
+        "type": "attribute",
+        "for": ["PublicKeyCredential"],
+        "normative": true,
+        "uri": "#dom-publickeycredential-type-slot"
+      }
+    ],
+    "fe2c17ac17606b140aa1c868f37155594a26903a": [
+      {
+        "shortname": "dom",
+        "type": "interface",
+        "normative": true,
+        "uri": "#eventtarget"
+      }
+    ]
+  },
+  "query": [
+    {
+      "term": "Window",
+      "types": ["_IDL_"],
+      "id": "7c6f3cfd1cf92d00249d3a483265a7c58e42ecf1"
+    },
+    {
+      "term": "[[query]]",
+      "types": ["attribute"],
+      "id": "29070e2b7703e718fff520b29f52dedf812e23ab"
+    },
+    {
+      "term": "[[type]]",
+      "types": ["attribute"],
+      "id": "1442fa5908c67eba92549dfd6899832ec6802ad0"
+    },
+    {
+      "term": "EventTarget",
+      "types": ["_IDL_"],
+      "id": "fe2c17ac17606b140aa1c868f37155594a26903a"
+    }
+  ]
+}

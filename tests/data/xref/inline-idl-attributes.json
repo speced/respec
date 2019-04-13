@@ -1,0 +1,90 @@
+{
+  "result": {
+    "7c6f3cfd1cf92d00249d3a483265a7c58e42ecf1": [
+      {
+        "shortname": "html",
+        "type": "interface",
+        "normative": true,
+        "uri": "window-object.html#window"
+      }
+    ],
+    "af8ec9cd32a9241135f61c57e7b0c9b900efb26b": [
+      {
+        "shortname": "dom",
+        "type": "attribute",
+        "for": ["Window"],
+        "normative": true,
+        "uri": "#dom-window-event"
+      }
+    ],
+    "8353d37515560293872e372283da18c25efdb0db": [
+      {
+        "shortname": "credential-management",
+        "type": "interface",
+        "normative": true,
+        "uri": "#credential"
+      }
+    ],
+    "144f93f7390c7b8c61476be5fb51454665c13aa5": [
+      {
+        "shortname": "credential-management",
+        "type": "attribute",
+        "for": ["Credential"],
+        "normative": true,
+        "uri": "#dom-credential-type-slot"
+      }
+    ],
+    "6d25c2c01d3802f2478346e3b56bf7931ffa84fd": [
+      {
+        "shortname": "webauthn",
+        "type": "interface",
+        "normative": true,
+        "uri": "#publickeycredential"
+      }
+    ],
+    "4014fc92b1e56d111504f82e12c0053f9fd5b591": [
+      {
+        "shortname": "webauthn",
+        "type": "attribute",
+        "for": ["PublicKeyCredential"],
+        "normative": true,
+        "uri": "#dom-publickeycredential-type-slot"
+      }
+    ]
+  },
+  "query": [
+    {
+      "term": "Window",
+      "types": ["_IDL_"],
+      "id": "7c6f3cfd1cf92d00249d3a483265a7c58e42ecf1"
+    },
+    {
+      "term": "event",
+      "types": ["attribute"],
+      "for": "Window",
+      "id": "af8ec9cd32a9241135f61c57e7b0c9b900efb26b"
+    },
+    {
+      "term": "Credential",
+      "types": ["_IDL_"],
+      "id": "8353d37515560293872e372283da18c25efdb0db"
+    },
+    {
+      "term": "[[type]]",
+      "types": ["attribute"],
+      "for": "Credential",
+      "id": "144f93f7390c7b8c61476be5fb51454665c13aa5"
+    },
+    {
+      "term": "PublicKeyCredential",
+      "types": ["_IDL_"],
+      "id": "6d25c2c01d3802f2478346e3b56bf7931ffa84fd"
+    },
+    {
+      "term": "[[type]]",
+      "types": ["attribute"],
+      "for": "PublicKeyCredential",
+      "id": "4014fc92b1e56d111504f82e12c0053f9fd5b591"
+    }
+  ]
+}

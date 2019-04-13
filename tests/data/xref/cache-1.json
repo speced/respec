@@ -1,0 +1,19 @@
+{
+  "result": {
+    "7a82727efd37620ec8b50cac9dca75d1b1f08d94": [
+      {
+        "shortname": "webidl",
+        "type": "dfn",
+        "normative": true,
+        "uri": "#dfn-dictionary"
+      }
+    ]
+  },
+  "query": [
+    {
+      "term": "dictionary",
+      "types": ["_CONCEPT_"],
+      "id": "7a82727efd37620ec8b50cac9dca75d1b1f08d94"
+    }
+  ]
+}

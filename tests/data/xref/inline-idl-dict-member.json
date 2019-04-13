@@ -1,0 +1,34 @@
+{
+  "result": {
+    "6009774ba9189eb7fd8c48c1f53984cafe22734a": [
+      {
+        "shortname": "encoding",
+        "type": "dictionary",
+        "normative": true,
+        "uri": "#textdecoderoptions"
+      }
+    ],
+    "90404a5be8141de2cf8f38b9b3f214d425080290": [
+      {
+        "shortname": "encoding",
+        "type": "dict-member",
+        "for": ["TextDecoderOptions"],
+        "normative": true,
+        "uri": "#dom-textdecoderoptions-fatal"
+      }
+    ]
+  },
+  "query": [
+    {
+      "term": "TextDecoderOptions",
+      "types": ["dictionary"],
+      "id": "6009774ba9189eb7fd8c48c1f53984cafe22734a"
+    },
+    {
+      "term": "fatal",
+      "types": ["dict-member"],
+      "for": "TextDecoderOptions",
+      "id": "90404a5be8141de2cf8f38b9b3f214d425080290"
+    }
+  ]
+}

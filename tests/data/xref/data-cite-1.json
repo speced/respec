@@ -1,0 +1,77 @@
+{
+  "result": {
+    "e213d4aa61dc5d60811d5464377329558efa4ae8": [
+      {
+        "shortname": "service-workers",
+        "type": "event",
+        "for": ["ServiceWorkerGlobalScope"],
+        "normative": true,
+        "uri": "#service-worker-global-scope-fetch-event"
+      }
+    ],
+    "bbabe623239d2a1607b933960c6a34bcd4d1d56f": [
+      {
+        "shortname": "infra",
+        "type": "dfn",
+        "normative": true,
+        "uri": "#ascii-uppercase"
+      }
+    ],
+    "79bfc4a5aef0aa9d3e8667eaf7af25fa52c8004e": [],
+    "894c6675a44baa71428942ef2667d0f7d67d97f4": [
+      {
+        "shortname": "html",
+        "type": "dfn",
+        "normative": true,
+        "uri": "webappapis.html#event-handlers"
+      }
+    ],
+    "0020e502dd6ecfa359e8ed1d31bffda67b6ce80a": [],
+    "60dd8815438fc970897118da38c45abbea4e75be": [
+      {
+        "shortname": "infra",
+        "type": "dfn",
+        "normative": true,
+        "uri": "#list"
+      }
+    ]
+  },
+  "query": [
+    {
+      "term": "fetch",
+      "types": ["_CONCEPT_"],
+      "specs": ["service-workers"],
+      "id": "e213d4aa61dc5d60811d5464377329558efa4ae8"
+    },
+    {
+      "term": "ascii uppercase",
+      "types": ["_CONCEPT_"],
+      "specs": ["infra"],
+      "id": "bbabe623239d2a1607b933960c6a34bcd4d1d56f"
+    },
+    {
+      "term": "ascii uppercasing",
+      "types": ["_CONCEPT_"],
+      "specs": ["infra"],
+      "id": "79bfc4a5aef0aa9d3e8667eaf7af25fa52c8004e"
+    },
+    {
+      "term": "event handler",
+      "types": ["_CONCEPT_"],
+      "specs": ["html"],
+      "id": "894c6675a44baa71428942ef2667d0f7d67d97f4"
+    },
+    {
+      "term": "event manager",
+      "types": ["_CONCEPT_"],
+      "specs": ["html"],
+      "id": "0020e502dd6ecfa359e8ed1d31bffda67b6ce80a"
+    },
+    {
+      "term": "list",
+      "types": ["_CONCEPT_"],
+      "specs": ["infra"],
+      "id": "60dd8815438fc970897118da38c45abbea4e75be"
+    }
+  ]
+}

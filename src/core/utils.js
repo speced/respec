@@ -332,12 +332,37 @@ export class IDBKeyVal {
   }
 
   /**
+   * @param {string[]} keys
+   * @returns {[string, any][]}
+   */
+  async getMany(keys) {
+    const keySet = new Set(keys);
+    const results = [];
+    let cursor = await this.idb.transaction(this.storeName).store.openCursor();
+    while (cursor) {
+      if (keySet.has(cursor.key)) {
+        results.push([cursor.key, cursor.value]);
+      }
+      cursor = await cursor.continue();
+    }
+    return results;
+  }
+
+  /**
    * @param {string} key
    * @param {any} value
    */
   async set(key, value) {
     const tx = this.idb.transaction(this.storeName, "readwrite");
     tx.objectStore(this.storeName).put(value, key);
+    return await tx.complete;
+  }
+
+  async addMany(entries) {
+    const tx = this.idb.transaction(this.storeName, "readwrite");
+    for (const [key, value] of entries) {
+      tx.objectStore(this.storeName).put(value, key);
+    }
     return await tx.complete;
   }
 
