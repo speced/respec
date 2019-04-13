@@ -30,18 +30,18 @@
       "term": "dictionary",
       "types": ["_CONCEPT_"],
       "specs": ["webidl"],
-      "hash": "fbdc4e814011e66433770ee7a69c6fccea2ad3a8"
+      "id": "fbdc4e814011e66433770ee7a69c6fccea2ad3a8"
     },
     {
       "term": "url parser",
       "types": ["_CONCEPT_"],
       "specs": ["url"],
-      "hash": "e3526b58dcc76929cca21d78f659e0f895b94931"
+      "id": "e3526b58dcc76929cca21d78f659e0f895b94931"
     },
     {
       "term": "list",
       "types": ["_CONCEPT_"],
-      "hash": "ab349a2eac4671070c40c1c1763bf973ff856fa6"
+      "id": "ab349a2eac4671070c40c1c1763bf973ff856fa6"
     }
   ]
 }

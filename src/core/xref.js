@@ -44,8 +44,8 @@ export async function run(conf, elems) {
   const queryKeys = [];
   for (const elem of elems) {
     const entry = getRequestEntry(elem);
-    const hash = await objectHash(entry);
-    queryKeys.push({ ...entry, hash });
+    const id = await objectHash(entry);
+    queryKeys.push({ ...entry, id });
   }
 
   const data = await getData(queryKeys, xref.url);
@@ -180,7 +180,7 @@ async function getData(queryKeys, apiUrl) {
   const cache = new IDBKeyVal(idb, "xrefs");
   const resultsFromCache = await resolveFromCache(queryKeys, cache);
 
-  const termsToLook = queryKeys.filter(key => !resultsFromCache.get(key.hash));
+  const termsToLook = queryKeys.filter(key => !resultsFromCache.get(key.id));
   const fetchedResults = await fetchFromNetwork(termsToLook, apiUrl);
   if (fetchedResults.size) {
     // add data to cache
@@ -188,12 +188,7 @@ async function getData(queryKeys, apiUrl) {
     await cache.set("__CACHE_TIME__", Date.now());
   }
 
-  // merge above two Maps. faster than following equivalent:
-  // return new Map([...resultsFromCache, ...fetchedResults]);
-  const data = new Map();
-  for (const [hash, results] of resultsFromCache) data.set(hash, results);
-  for (const [hash, results] of fetchedResults) data.set(hash, results);
-  return data;
+  return new Map([...resultsFromCache, ...fetchedResults]);
 }
 
 /**
@@ -209,7 +204,7 @@ async function resolveFromCache(keys, cache) {
     return new Map();
   }
 
-  const cachedData = await cache.getMany(keys.map(key => key.hash));
+  const cachedData = await cache.getMany(keys.map(key => key.id));
   return new Map(cachedData);
 }
 
@@ -269,8 +264,8 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
 
   for (let i = 0, l = elems.length; i < l; i++) {
     const elem = elems[i];
-    const { hash, term } = queryKeys[i];
-    const results = data.get(hash);
+    const { id, term } = queryKeys[i];
+    const results = data.get(id);
     switch (results.length) {
       case 1:
         addDataCite(elem, queryKeys[i], results[0], conf);

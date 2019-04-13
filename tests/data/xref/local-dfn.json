@@ -29,18 +29,18 @@
     {
       "term": "event handler",
       "types": ["_CONCEPT_"],
-      "hash": "c7ef0091ed0c25312798d467d3d1aa1fdc9368cc"
+      "id": "c7ef0091ed0c25312798d467d3d1aa1fdc9368cc"
     },
     {
       "term": "list",
       "types": ["_CONCEPT_"],
       "specs": ["infra"],
-      "hash": "60dd8815438fc970897118da38c45abbea4e75be"
+      "id": "60dd8815438fc970897118da38c45abbea4e75be"
     },
     {
       "term": "url parser",
       "types": ["_CONCEPT_"],
-      "hash": "b3f39e21ff440b3efd5949b8952c0f23f11b23a2"
+      "id": "b3f39e21ff440b3efd5949b8952c0f23f11b23a2"
     }
   ]
 }

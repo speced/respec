@@ -71,34 +71,34 @@
     {
       "term": "addEventListener(type, callback)",
       "types": ["method"],
-      "hash": "c6d3c68906956ac107378e2a84bcb55ea71a06c6"
+      "id": "c6d3c68906956ac107378e2a84bcb55ea71a06c6"
     },
     {
       "term": "EventTarget",
       "types": ["_IDL_"],
-      "hash": "fe2c17ac17606b140aa1c868f37155594a26903a"
+      "id": "fe2c17ac17606b140aa1c868f37155594a26903a"
     },
     {
       "term": "addEventListener(type, callback)",
       "types": ["method"],
       "for": "EventTarget",
-      "hash": "a33d6eae47b4960c5958b91bb323a601b09ab0a1"
+      "id": "a33d6eae47b4960c5958b91bb323a601b09ab0a1"
     },
     {
       "term": "[[CollectFromCredentialStore]](options, sameOriginWithAncestors)",
       "types": ["method"],
-      "hash": "ff43fbf2ceec872fd95c84d45bd8c11087005503"
+      "id": "ff43fbf2ceec872fd95c84d45bd8c11087005503"
     },
     {
       "term": "Credential",
       "types": ["_IDL_"],
-      "hash": "8353d37515560293872e372283da18c25efdb0db"
+      "id": "8353d37515560293872e372283da18c25efdb0db"
     },
     {
       "term": "[[CollectFromCredentialStore]](options, sameOriginWithAncestors)",
       "types": ["method"],
       "for": "Credential",
-      "hash": "56e5bc5a85a28b7bc7c735d487f0cb6dc1d57e49"
+      "id": "56e5bc5a85a28b7bc7c735d487f0cb6dc1d57e49"
     }
   ]
 }

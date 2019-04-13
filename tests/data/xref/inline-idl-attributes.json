@@ -56,35 +56,35 @@
     {
       "term": "Window",
       "types": ["_IDL_"],
-      "hash": "7c6f3cfd1cf92d00249d3a483265a7c58e42ecf1"
+      "id": "7c6f3cfd1cf92d00249d3a483265a7c58e42ecf1"
     },
     {
       "term": "event",
       "types": ["attribute"],
       "for": "Window",
-      "hash": "af8ec9cd32a9241135f61c57e7b0c9b900efb26b"
+      "id": "af8ec9cd32a9241135f61c57e7b0c9b900efb26b"
     },
     {
       "term": "Credential",
       "types": ["_IDL_"],
-      "hash": "8353d37515560293872e372283da18c25efdb0db"
+      "id": "8353d37515560293872e372283da18c25efdb0db"
     },
     {
       "term": "[[type]]",
       "types": ["attribute"],
       "for": "Credential",
-      "hash": "144f93f7390c7b8c61476be5fb51454665c13aa5"
+      "id": "144f93f7390c7b8c61476be5fb51454665c13aa5"
     },
     {
       "term": "PublicKeyCredential",
       "types": ["_IDL_"],
-      "hash": "6d25c2c01d3802f2478346e3b56bf7931ffa84fd"
+      "id": "6d25c2c01d3802f2478346e3b56bf7931ffa84fd"
     },
     {
       "term": "[[type]]",
       "types": ["attribute"],
       "for": "PublicKeyCredential",
-      "hash": "4014fc92b1e56d111504f82e12c0053f9fd5b591"
+      "id": "4014fc92b1e56d111504f82e12c0053f9fd5b591"
     }
   ]
 }

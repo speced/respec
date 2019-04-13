@@ -22,13 +22,13 @@
     {
       "term": "Credential",
       "types": ["_IDL_"],
-      "hash": "8353d37515560293872e372283da18c25efdb0db"
+      "id": "8353d37515560293872e372283da18c25efdb0db"
     },
     {
       "term": "[[type]]",
       "types": ["attribute"],
       "for": "Credential",
-      "hash": "144f93f7390c7b8c61476be5fb51454665c13aa5"
+      "id": "144f93f7390c7b8c61476be5fb51454665c13aa5"
     }
   ]
 }

@@ -46,22 +46,22 @@
     {
       "term": "Window",
       "types": ["_IDL_"],
-      "hash": "7c6f3cfd1cf92d00249d3a483265a7c58e42ecf1"
+      "id": "7c6f3cfd1cf92d00249d3a483265a7c58e42ecf1"
     },
     {
       "term": "[[query]]",
       "types": ["attribute"],
-      "hash": "29070e2b7703e718fff520b29f52dedf812e23ab"
+      "id": "29070e2b7703e718fff520b29f52dedf812e23ab"
     },
     {
       "term": "[[type]]",
       "types": ["attribute"],
-      "hash": "1442fa5908c67eba92549dfd6899832ec6802ad0"
+      "id": "1442fa5908c67eba92549dfd6899832ec6802ad0"
     },
     {
       "term": "EventTarget",
       "types": ["_IDL_"],
-      "hash": "fe2c17ac17606b140aa1c868f37155594a26903a"
+      "id": "fe2c17ac17606b140aa1c868f37155594a26903a"
     }
   ]
 }

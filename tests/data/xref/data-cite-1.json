@@ -41,37 +41,37 @@
       "term": "fetch",
       "types": ["_CONCEPT_"],
       "specs": ["service-workers"],
-      "hash": "e213d4aa61dc5d60811d5464377329558efa4ae8"
+      "id": "e213d4aa61dc5d60811d5464377329558efa4ae8"
     },
     {
       "term": "ascii uppercase",
       "types": ["_CONCEPT_"],
       "specs": ["infra"],
-      "hash": "bbabe623239d2a1607b933960c6a34bcd4d1d56f"
+      "id": "bbabe623239d2a1607b933960c6a34bcd4d1d56f"
     },
     {
       "term": "ascii uppercasing",
       "types": ["_CONCEPT_"],
       "specs": ["infra"],
-      "hash": "79bfc4a5aef0aa9d3e8667eaf7af25fa52c8004e"
+      "id": "79bfc4a5aef0aa9d3e8667eaf7af25fa52c8004e"
     },
     {
       "term": "event handler",
       "types": ["_CONCEPT_"],
       "specs": ["html"],
-      "hash": "894c6675a44baa71428942ef2667d0f7d67d97f4"
+      "id": "894c6675a44baa71428942ef2667d0f7d67d97f4"
     },
     {
       "term": "event manager",
       "types": ["_CONCEPT_"],
       "specs": ["html"],
-      "hash": "0020e502dd6ecfa359e8ed1d31bffda67b6ce80a"
+      "id": "0020e502dd6ecfa359e8ed1d31bffda67b6ce80a"
     },
     {
       "term": "list",
       "types": ["_CONCEPT_"],
       "specs": ["infra"],
-      "hash": "60dd8815438fc970897118da38c45abbea4e75be"
+      "id": "60dd8815438fc970897118da38c45abbea4e75be"
     }
   ]
 }

@@ -22,13 +22,13 @@
     {
       "term": "Window",
       "types": ["_IDL_"],
-      "hash": "7c6f3cfd1cf92d00249d3a483265a7c58e42ecf1"
+      "id": "7c6f3cfd1cf92d00249d3a483265a7c58e42ecf1"
     },
     {
       "term": "event",
       "types": ["attribute"],
       "for": "Window",
-      "hash": "af8ec9cd32a9241135f61c57e7b0c9b900efb26b"
+      "id": "af8ec9cd32a9241135f61c57e7b0c9b900efb26b"
     }
   ]
 }
