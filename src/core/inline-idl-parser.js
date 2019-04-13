@@ -8,6 +8,8 @@ const slotRegex = /^\[\[(\w+)\]\]$/;
 // matches: `value` or `[[value]]`
 // NOTE: [[value]] is actually a slot, but database has this as type="attribute"
 const attributeRegex = /^((?:\[\[)?(?:\w+)(?:\]\])?)$/;
+const enumRegex = /^(\w+)\["([\w ]+)"\]$/;
+const enumValueRegex = /^"([\w ]+)"$/;
 // TODO: const splitRegex = /(?<=\]\]|\b)\./
 // https://github.com/w3c/respec/pull/1848/files#r225087385
 const methodSplitRegex = /\.?(\w+\(.*\)$)/;
@@ -27,6 +29,17 @@ function parseInlineIDL(str) {
       const [, identifier, allArgs] = value.match(methodRegex);
       const args = allArgs.split(/,\s*/).filter(arg => arg);
       results.push({ type: "method", identifier, args });
+      continue;
+    }
+    // Enum["enum value"]
+    if (enumRegex.test(value)) {
+      const [, identifier, enumValue] = value.match(enumRegex);
+      results.push({ type: "enum", identifier, enumValue });
+      continue;
+    }
+    if (enumValueRegex.test(value)) {
+      const [, identifier] = value.match(enumValueRegex);
+      results.push({ type: "enum-value", identifier });
       continue;
     }
     // internal slot
@@ -113,6 +126,27 @@ function renderMethod(details) {
   return html;
 }
 
+// Enum: Identifier["enum value"]
+function renderEnum(details) {
+  const { identifier, enumValue } = details;
+  const html = hyperHTML`<a class="respec-idl-xref"
+    data-xref-type="enum"
+    >${identifier}</a>["<a class="respec-idl-xref"
+    data-xref-type="enum-value" data-link-for="${identifier}"
+    >${enumValue}</a>]"`;
+  return html;
+}
+
+// Enum value: "enum value"
+function renderEnumValue(details) {
+  const { identifier } = details;
+  const html = hyperHTML`"<a
+    class="respec-idl-xref"
+    data-xref-type="enum-value"
+    >${identifier}</a>"`;
+  return html;
+}
+
 /**
  * Generates HTML by parsing an IDL string
  * @param {String} str IDL string
@@ -141,6 +175,12 @@ export function idlStringToHtml(str) {
         break;
       case "method":
         output.push(renderMethod(details));
+        break;
+      case "enum":
+        output.push(renderEnum(details));
+        break;
+      case "enum-value":
+        output.push(renderEnumValue(details));
         break;
       default:
         throw new Error("Unknown type.");

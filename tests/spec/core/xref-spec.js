@@ -48,6 +48,10 @@ describe("Core — xref", () => {
       title: "Encoding Standard",
       id: "ENCODING",
     },
+    "css-layout-api": {
+      href: "https://www.w3.org/TR/css-layout-api-1/",
+      id: "css-layout-api-1",
+    },
     "local-1": { id: "local-1", href: "https://example.com/" },
     "local-2": { id: "local-2", href: "https://example.com/" },
     "local-3": { id: "local-3", href: "https://example.com/" },
@@ -124,6 +128,22 @@ describe("Core — xref", () => {
     [
       "URLSearchParams.append",
       "https://url.spec.whatwg.org/#dom-urlsearchparams-append",
+    ],
+    [
+      "ServiceWorkerUpdateViaCache",
+      "https://www.w3.org/TR/service-workers-1/#enumdef-serviceworkerupdateviacache",
+    ],
+    [
+      "ServiceWorkerUpdateViaCache.imports",
+      "https://www.w3.org/TR/service-workers-1/#dom-serviceworkerupdateviacache-imports",
+    ],
+    [
+      "blob",
+      "https://xhr.spec.whatwg.org/#dom-xmlhttprequestresponsetype-blob",
+    ],
+    [
+      "ChildDisplayType.block",
+      "https://www.w3.org/TR/css-layout-api-1/#dom-childdisplaytype-block",
     ],
   ]);
 
@@ -703,6 +723,36 @@ describe("Core — xref", () => {
       const [link2a, link2b] = [...doc.querySelectorAll("#link2 code a")];
       expect(link2a.href).toEqual(expectedLinks.get("Credential"));
       expect(link2b.href).toEqual(expectedLinks.get("Credential.[[type]]"));
+    });
+
+    it("links enum and enum-values", async () => {
+      const body = `
+        <section id="test">
+          <p id="link1">{{ ServiceWorkerUpdateViaCache["imports"] }}</p>
+          <p id="link2">{{ "blob" }}</p>
+          <p id="link3"
+            data-cite="css-layout-api" data-link-for="ChildDisplayType"
+          >{{ "block" }}</p>
+        </section>
+      `;
+      const config = { xref: { url: urlOf("inline-idl-enum") }, localBiblio };
+      const ops = makeStandardOps(config, body);
+      const doc = await makeRSDoc(ops);
+
+      // "ServiceWorkerUpdateViaCache" is enum and "imports" is enum-value
+      const [link1a, link1b] = [...doc.querySelectorAll("#link1 code a")];
+      expect(link1a.href).toEqual(
+        expectedLinks.get("ServiceWorkerUpdateViaCache")
+      );
+      expect(link1b.href).toEqual(
+        expectedLinks.get(`ServiceWorkerUpdateViaCache.imports`)
+      );
+
+      const link2 = doc.querySelector("#link2 code a");
+      expect(link2.href).toEqual(expectedLinks.get("blob"));
+
+      const link3 = doc.querySelector("#link3 code a");
+      expect(link3.href).toEqual(expectedLinks.get("ChildDisplayType.block"));
     });
 
     it("links local definitions first", async () => {
