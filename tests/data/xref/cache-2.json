@@ -1,0 +1,19 @@
+{
+  "result": {
+    "b3f39e21ff440b3efd5949b8952c0f23f11b23a2": [
+      {
+        "shortname": "url",
+        "type": "dfn",
+        "normative": true,
+        "uri": "#concept-url-parser"
+      }
+    ]
+  },
+  "query": [
+    {
+      "term": "url parser",
+      "types": ["_CONCEPT_"],
+      "id": "b3f39e21ff440b3efd5949b8952c0f23f11b23a2"
+    }
+  ]
+}

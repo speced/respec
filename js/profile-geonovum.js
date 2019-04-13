@@ -56,6 +56,7 @@ define([
   "./core/structure",
   "./core/informative",
   "./core/id-headers",
+  "./geonovum/conformance",
   "./ui/save-html",
   "./ui/search-specref",
   "./ui/dfn-list",

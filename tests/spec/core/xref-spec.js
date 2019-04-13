@@ -22,12 +22,13 @@ describe("Core — xref", () => {
     cache = new IDBKeyVal(idb, "xrefs");
   });
 
+  const urlOf = id => `${location.origin}/tests/data/xref/${id}.json`;
+
   beforeEach(async () => {
     // clear idb cache before each
     await cache.clear();
   });
 
-  const apiURL = `${location.origin}/tests/data/xref.json`;
   const localBiblio = {
     html: { id: "HTML", href: "https://html.spec.whatwg.org/multipage/" },
     "service-workers": {
@@ -64,11 +65,11 @@ describe("Core — xref", () => {
     ],
     ["uppercase", "https://infra.spec.whatwg.org/#ascii-uppercase"],
     ["url parser", "https://url.spec.whatwg.org/#concept-url-parser"],
-    ["object@url", "https://url.spec.whatwg.org/#concept-url-object"],
+    ["object@fileapi", "https://www.w3.org/TR/FileAPI/#blob-url-entry-object"],
     ["dictionary", "https://heycam.github.io/webidl/#dfn-dictionary"],
     ["alphanumeric", "https://infra.spec.whatwg.org/#ascii-alphanumeric"],
     [
-      "object-html",
+      "object@html",
       "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-object-element",
     ],
     ["exception", "https://heycam.github.io/webidl/#dfn-exception"],
@@ -131,7 +132,7 @@ describe("Core — xref", () => {
         <p id="external-link"><a>event handler</a></p>
         <p id="external-dfn"><dfn class="externalDFN">URL parser</dfn></p>
       </section>`;
-    const config = { xref: { url: apiURL }, localBiblio };
+    const config = { xref: { url: urlOf("basic") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -146,7 +147,7 @@ describe("Core — xref", () => {
 
   it("doesn't link auto-filled anchors", async () => {
     const body = `<section><a id="test" data-cite="credential-management"></a></section>`;
-    const config = { xref: { url: apiURL }, localBiblio };
+    const config = { xref: { url: urlOf("basic") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
     const link = doc.getElementById("test");
@@ -159,7 +160,7 @@ describe("Core — xref", () => {
 
   it("shows error if external term doesn't exist", async () => {
     const body = `<section><a id="external-link">NOT_FOUND</a></section>`;
-    const config = { xref: { url: apiURL } };
+    const config = { xref: { url: urlOf("not_found") } };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -169,7 +170,7 @@ describe("Core — xref", () => {
     expect(link.title).toEqual("Error: No matching dfn found.");
   });
 
-  it("uses data-cite to disambiguate (server side)", async () => {
+  it("uses data-cite to disambiguate", async () => {
     const body = `
       <section id="links" data-cite="service-workers">
         <p><a>fetch</a> is defined 1 time in service-workers and 2 times in fetch.
@@ -185,8 +186,7 @@ describe("Core — xref", () => {
         <p><dfn data-cite="html">event manager</dfn> doesn't exist in html.</p>
       </section>
     `;
-    // using default API url here as xref.json cannot disambiguate
-    const config = { xref: true, localBiblio };
+    const config = { xref: { url: urlOf("data-cite-1") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -207,7 +207,7 @@ describe("Core — xref", () => {
         <p><a id="link">fetch</a> twice in fetch spec.</p>
       </section>
     `;
-    const config = { xref: { url: apiURL }, localBiblio };
+    const config = { xref: { url: urlOf("ambiguous") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -216,34 +216,34 @@ describe("Core — xref", () => {
     expect(link.title).toEqual("Error: Linking an ambiguous dfn.");
   });
 
-  it("uses data-cite to disambiguate (client side)", async () => {
+  it("uses data-cite to disambiguate - 2", async () => {
     // https://github.com/w3c/respec/pull/1750
     const body = `
       <section id="test">
-        <p data-cite="url"><a id="one">object</a></p>
+        <p data-cite="fileapi"><a id="one">object</a></p>
         <p data-cite="html"><a id="two">object</a></p>
         <p data-cite="html">
-          <a id="three" data-cite="url">object</a> (overrides parent)
+          <a id="three" data-cite="fileapi">object</a> (overrides parent)
           <a id="four">object</a> (uses parent's data-cite - html)
         </p>
         <p><a id="five" data-cite="NOT-FOUND">object</a></p>
       </section>
     `;
-    const config = { xref: { url: apiURL }, localBiblio };
+    const config = { xref: { url: urlOf("data-cite-2") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
     expect(doc.getElementById("one").href).toEqual(
-      expectedLinks.get("object@url")
+      expectedLinks.get("object@fileapi")
     );
     expect(doc.getElementById("two").href).toEqual(
-      expectedLinks.get("object-html")
+      expectedLinks.get("object@html")
     );
     expect(doc.getElementById("three").href).toEqual(
-      expectedLinks.get("object@url")
+      expectedLinks.get("object@fileapi")
     );
     expect(doc.getElementById("four").href).toEqual(
-      expectedLinks.get("object-html")
+      expectedLinks.get("object@html")
     );
 
     const five = doc.getElementById("five");
@@ -263,7 +263,10 @@ describe("Core — xref", () => {
         <p id="external-link-1"><a data-cite="url">URL parser</a></p>
       </section>
     `;
-    const config = { xref: { url: apiURL }, localBiblio };
+    const config = {
+      xref: { url: urlOf("empty-data-cite-parent") },
+      localBiblio,
+    };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -303,7 +306,7 @@ describe("Core — xref", () => {
         <p id="external-link-1"><a>event handler</a></p>
       </section>
     `;
-    const config = { xref: { url: apiURL }, localBiblio };
+    const config = { xref: { url: urlOf("local-dfn") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -343,7 +346,7 @@ describe("Core — xref", () => {
         <a>foo</a>
       </section>
     `;
-    const config = { xref: { url: apiURL }, localBiblio };
+    const config = { xref: { url: urlOf("data-lt") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -373,7 +376,11 @@ describe("Core — xref", () => {
         <a>event handler</a> <a>event handlers</a>
       </section>
     `;
-    const config = { xref: { url: apiURL }, localBiblio, pluralize: true };
+    const config = {
+      xref: { url: urlOf("data-lt") },
+      localBiblio,
+      pluralize: true,
+    };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -398,32 +405,30 @@ describe("Core — xref", () => {
     const body = `
       <section id="test">
         <section>
-          <p>Uses [[url]] to create context for <a id="one">object</a></p>
+          <p>Uses [[fileapi]] to create context for <a id="one">object</a></p>
         </section>
         <section>
           <p>Uses [[html]] to create context for <a id="two">object</a></p>
         </section>
         <section>
-          <p>Uses [[html]] and [[url]] to create context for
+          <p>Uses [[html]] and [[fileapi]] to create context for
             <a id="three">object</a>. It fails as it's defined in both.
           </p>
         </section>
         <section>
           <p>But data-cite on element itself wins.
-            <a id="four">object</a> uses [[url]],
+            <a id="four">object</a> uses [[fileapi]],
             whereas <a data-cite="html" id="five">object</a> uses html.
           </p>
         </section>
       </section>
     `;
-    const config = { xref: { url: apiURL }, localBiblio };
+    const config = { xref: { url: urlOf("inline-bibref") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    const expectedLink1 = "https://url.spec.whatwg.org/#concept-url-object";
-    const expectedLink2 =
-      "https://html.spec.whatwg.org/multipage/iframe-embed-object.html" +
-      "#the-object-element";
+    const expectedLink1 = expectedLinks.get("object@fileapi");
+    const expectedLink2 = expectedLinks.get("object@html");
 
     const one = doc.getElementById("one");
     expect(one.href).toEqual(expectedLink1);
@@ -471,7 +476,7 @@ describe("Core — xref", () => {
         </section>
       </section>
     `;
-    const config = { xref: { url: apiURL }, localBiblio };
+    const config = { xref: { url: urlOf("refs") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -523,7 +528,7 @@ describe("Core — xref", () => {
     it("ignores inlines starting with backslash", async () => {
       // whitespace inside {{ }} doesn't matter
       const body = `<section><p id="test">{{\\PASS }}</p></section>`;
-      const config = { xref: { url: apiURL } };
+      const config = { xref: true };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
       const el = doc.getElementById("test");
@@ -533,7 +538,7 @@ describe("Core — xref", () => {
 
     it("ignores malformed syntax", async () => {
       const body = `<section><p id="test">{ {  PASS }}</p></section>`;
-      const config = { xref: { url: apiURL } };
+      const config = { xref: true };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
       const el = doc.getElementById("test");
@@ -553,7 +558,7 @@ describe("Core — xref", () => {
         }} , i.e. should trim the whitespace.</p>
       </section>
       `;
-      const config = { xref: { url: apiURL }, localBiblio };
+      const config = { xref: { url: urlOf("inline-idl") }, localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -584,7 +589,10 @@ describe("Core — xref", () => {
         <p id="link4">{{ Credential.[[CollectFromCredentialStore]](options, sameOriginWithAncestors) }}</p>
       </section>
       `;
-      const config = { xref: { url: apiURL }, localBiblio };
+      const config = {
+        xref: { url: urlOf("inline-idl-methods") },
+        localBiblio,
+      };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -626,7 +634,10 @@ describe("Core — xref", () => {
         <p id="link3">{{ PublicKeyCredential.[[type]] }}</p>
       </section>
       `;
-      const config = { xref: { url: apiURL }, localBiblio };
+      const config = {
+        xref: { url: urlOf("inline-idl-attributes") },
+        localBiblio,
+      };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -654,7 +665,7 @@ describe("Core — xref", () => {
         <p id="link2">{{ Credential.[[type]] }}</p>
       </section>
       `;
-      const config = { xref: { url: apiURL }, localBiblio };
+      const config = { xref: { url: urlOf("inline-idl-slots") }, localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -674,7 +685,10 @@ describe("Core — xref", () => {
         <p id="link1">{{ TextDecoderOptions["fatal"] }}</p>
       </section>
       `;
-      const config = { xref: { url: apiURL }, localBiblio };
+      const config = {
+        xref: { url: urlOf("inline-idl-dict-member") },
+        localBiblio,
+      };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -705,7 +719,7 @@ describe("Core — xref", () => {
           <p id="link-external">{{ Window.event }} links to html spec.</p>
         </section>
       `;
-      const config = { xref: { url: apiURL }, localBiblio };
+      const config = { xref: { url: urlOf("inline-locals") }, localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -834,8 +848,13 @@ describe("Core — xref", () => {
   });
 
   it("caches results and uses cached results when available", async () => {
-    const config = { xref: true, localBiblio };
+    const config = { xref: { url: urlOf("cache-1") }, localBiblio };
     let cacheKeys;
+
+    const keys = new Map([
+      ["dictionary", "7a82727efd37620ec8b50cac9dca75d1b1f08d94"],
+      ["url parser", "b3f39e21ff440b3efd5949b8952c0f23f11b23a2"],
+    ]);
 
     const body1 = `
       <section>
@@ -854,7 +873,7 @@ describe("Core — xref", () => {
     const preCacheTime = await cache.get("__CACHE_TIME__");
     expect(Number.isInteger(preCacheTime)).toBeTruthy();
     cacheKeys = (await cache.keys()).sort();
-    expect(cacheKeys).toEqual(["__CACHE_TIME__", "dictionary"]);
+    expect(cacheKeys).toEqual([keys.get("dictionary"), "__CACHE_TIME__"]);
 
     // no new data was requested from server, cache shoudln't change
     const postCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
@@ -864,16 +883,17 @@ describe("Core — xref", () => {
     const postCacheTime = await cache.get("__CACHE_TIME__");
     expect(postCacheTime).toEqual(preCacheTime);
     cacheKeys = (await cache.keys()).sort();
-    expect(cacheKeys).toEqual(["__CACHE_TIME__", "dictionary"]);
+    expect(cacheKeys).toEqual([keys.get("dictionary"), "__CACHE_TIME__"]);
 
     // new data was requested from server, cache should change
+    const config2 = { xref: { url: urlOf("cache-2") }, localBiblio };
     const body2 = `
       <section>
         <p><a id="link-1">dictionary</a><p>
         <p><a id="link-2">URL parser</a><p>
       </section>
     `;
-    const updatedCacheDoc = await makeRSDoc(makeStandardOps(config, body2));
+    const updatedCacheDoc = await makeRSDoc(makeStandardOps(config2, body2));
     expect(updatedCacheDoc.getElementById("link-1").href).toEqual(
       expectedLinks.get("dictionary")
     );
@@ -883,6 +903,10 @@ describe("Core — xref", () => {
     const updatedCacheTime = await cache.get("__CACHE_TIME__");
     expect(updatedCacheTime).toBeGreaterThan(preCacheTime);
     cacheKeys = (await cache.keys()).sort();
-    expect(cacheKeys).toEqual(["__CACHE_TIME__", "dictionary", "url parser"]);
+    expect(cacheKeys).toEqual([
+      keys.get("dictionary"),
+      "__CACHE_TIME__",
+      keys.get("url parser"),
+    ]);
   });
 });

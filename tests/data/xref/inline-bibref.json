@@ -1,0 +1,68 @@
+{
+  "result": {
+    "68e01071b16a3e768b3a40e67b289df52fabe7c7": [
+      {
+        "shortname": "fileapi",
+        "type": "dfn",
+        "for": ["blob URL entry"],
+        "normative": true,
+        "uri": "#blob-url-entry-object"
+      }
+    ],
+    "2cd423cd128c0b98f80b7f937ce3cfe44e8bb71c": [
+      {
+        "shortname": "html",
+        "type": "element",
+        "normative": true,
+        "uri": "iframe-embed-object.html#the-object-element"
+      }
+    ],
+    "b437672bbb362ebf0a4b2a3c1c9774c11d931bab": [
+      {
+        "shortname": "fileapi",
+        "type": "dfn",
+        "for": ["blob URL entry"],
+        "normative": true,
+        "uri": "#blob-url-entry-object"
+      },
+      {
+        "shortname": "html",
+        "type": "element",
+        "normative": true,
+        "uri": "iframe-embed-object.html#the-object-element"
+      }
+    ]
+  },
+  "query": [
+    {
+      "term": "object",
+      "types": ["_CONCEPT_"],
+      "specs": ["fileapi"],
+      "id": "68e01071b16a3e768b3a40e67b289df52fabe7c7"
+    },
+    {
+      "term": "object",
+      "types": ["_CONCEPT_"],
+      "specs": ["html"],
+      "id": "2cd423cd128c0b98f80b7f937ce3cfe44e8bb71c"
+    },
+    {
+      "term": "object",
+      "types": ["_CONCEPT_"],
+      "specs": ["fileapi", "html"],
+      "id": "b437672bbb362ebf0a4b2a3c1c9774c11d931bab"
+    },
+    {
+      "term": "object",
+      "types": ["_CONCEPT_"],
+      "specs": ["fileapi"],
+      "id": "68e01071b16a3e768b3a40e67b289df52fabe7c7"
+    },
+    {
+      "term": "object",
+      "types": ["_CONCEPT_"],
+      "specs": ["html"],
+      "id": "2cd423cd128c0b98f80b7f937ce3cfe44e8bb71c"
+    }
+  ]
+}
