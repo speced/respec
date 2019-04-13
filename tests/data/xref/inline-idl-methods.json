@@ -26,44 +26,63 @@
         "uri": "#dom-eventtarget-addeventlistener"
       }
     ],
-    "ff43fbf2ceec872fd95c84d45bd8c11087005503": [
+    "f38a792f9220d2766650da49838a527cef820b0d": [
       {
-        "shortname": "credential-management",
-        "type": "method",
-        "for": ["Credential"],
-        "normative": true,
-        "uri": "#dom-credential-collectfromcredentialstore-slot"
-      },
-      {
-        "shortname": "credential-management",
-        "type": "method",
-        "for": ["PasswordCredential"],
-        "normative": true,
-        "uri": "#dom-passwordcredential-collectfromcredentialstore-slot"
-      },
-      {
-        "shortname": "credential-management",
-        "type": "method",
-        "for": ["FederatedCredential"],
-        "normative": true,
-        "uri": "#dom-federatedcredential-collectfromcredentialstore-slot"
-      }
-    ],
-    "8353d37515560293872e372283da18c25efdb0db": [
-      {
-        "shortname": "credential-management",
+        "shortname": "dom",
         "type": "interface",
         "normative": true,
-        "uri": "#credential"
+        "uri": "#childnode"
       }
     ],
-    "56e5bc5a85a28b7bc7c735d487f0cb6dc1d57e49": [
+    "5d080147dd5fac7f89220ca374378a2b0ff03ef2": [
       {
-        "shortname": "credential-management",
+        "shortname": "dom",
         "type": "method",
-        "for": ["Credential"],
+        "for": ["ChildNode"],
         "normative": true,
-        "uri": "#dom-credential-collectfromcredentialstore-slot"
+        "uri": "#dom-childnode-after"
+      }
+    ],
+    "044ddd505b3673759ed445e1ae1301f5132d9101": [
+      {
+        "shortname": "feature-policy",
+        "type": "method",
+        "for": ["FeaturePolicy"],
+        "normative": true,
+        "uri": "#dom-featurepolicy-allowedfeatures"
+      }
+    ],
+    "c6968990e96146140852e66a6e09bd32c92dfdca": [
+      {
+        "shortname": "fetch",
+        "type": "method",
+        "for": ["Headers"],
+        "normative": true,
+        "uri": "#dom-headers-append"
+      },
+      {
+        "shortname": "xhr",
+        "type": "method",
+        "for": ["FormData"],
+        "normative": true,
+        "uri": "#dom-formdata-append"
+      }
+    ],
+    "e96636bab8acd8fa7aeea74b972727fe3bd2c6aa": [
+      {
+        "shortname": "url",
+        "type": "interface",
+        "normative": true,
+        "uri": "#urlsearchparams"
+      }
+    ],
+    "2a569a9eb6d37a0c1583b592b19558458ca2fb15": [
+      {
+        "shortname": "url",
+        "type": "method",
+        "for": ["URLSearchParams"],
+        "normative": true,
+        "uri": "#dom-urlsearchparams-append"
       }
     ]
   },
@@ -85,20 +104,36 @@
       "id": "a33d6eae47b4960c5958b91bb323a601b09ab0a1"
     },
     {
-      "term": "[[CollectFromCredentialStore]](options, sameOriginWithAncestors)",
-      "types": ["method"],
-      "id": "ff43fbf2ceec872fd95c84d45bd8c11087005503"
-    },
-    {
-      "term": "Credential",
+      "term": "ChildNode",
       "types": ["_IDL_"],
-      "id": "8353d37515560293872e372283da18c25efdb0db"
+      "id": "f38a792f9220d2766650da49838a527cef820b0d"
     },
     {
-      "term": "[[CollectFromCredentialStore]](options, sameOriginWithAncestors)",
+      "term": "after(...nodes)",
       "types": ["method"],
-      "for": "Credential",
-      "id": "56e5bc5a85a28b7bc7c735d487f0cb6dc1d57e49"
+      "for": "ChildNode",
+      "id": "5d080147dd5fac7f89220ca374378a2b0ff03ef2"
+    },
+    {
+      "term": "allowedFeatures()",
+      "types": ["method"],
+      "id": "044ddd505b3673759ed445e1ae1301f5132d9101"
+    },
+    {
+      "term": "append(name, value)",
+      "types": ["method"],
+      "id": "c6968990e96146140852e66a6e09bd32c92dfdca"
+    },
+    {
+      "term": "URLSearchParams",
+      "types": ["_IDL_"],
+      "id": "e96636bab8acd8fa7aeea74b972727fe3bd2c6aa"
+    },
+    {
+      "term": "append(name, value)",
+      "types": ["method"],
+      "for": "URLSearchParams",
+      "id": "2a569a9eb6d37a0c1583b592b19558458ca2fb15"
     }
   ]
 }
