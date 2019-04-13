@@ -116,10 +116,9 @@ function renderMethod(details) {
 /**
  * Generates HTML by parsing an IDL string
  * @param {String} str IDL string
- * @param {HTMLTextNode} contextNode
  * @return {Node} html output
  */
-export function idlStringToHtml(str, contextNode) {
+export function idlStringToHtml(str) {
   let results;
   try {
     results = parseInlineIDL(str);
@@ -132,7 +131,7 @@ export function idlStringToHtml(str, contextNode) {
   for (const details of results) {
     switch (details.type) {
       case "base":
-        output.push(renderBase(details, contextNode));
+        output.push(renderBase(details));
         break;
       case "attribute":
         output.push(renderAttribute(details));
@@ -141,7 +140,7 @@ export function idlStringToHtml(str, contextNode) {
         output.push(renderInternalSlot(details));
         break;
       case "method":
-        output.push(renderMethod(details, contextNode));
+        output.push(renderMethod(details));
         break;
       default:
         throw new Error("Unknown type.");
