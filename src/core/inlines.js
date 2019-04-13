@@ -57,7 +57,7 @@ function inlineXrefMatches(matched) {
   // slices "{{" at the beginning and "}}" at the end
   const ref = matched.slice(2, -2).trim();
   return ref.startsWith("\\")
-    ? document.createTextNode(`{{${ref.slice(1)}}}`)
+    ? document.createTextNode(`${matched.replace("\\", "")}`)
     : idlStringToHtml(ref);
 }
 

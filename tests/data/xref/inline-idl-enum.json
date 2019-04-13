@@ -1,0 +1,64 @@
+{
+  "result": {
+    "80d1737627fa69e92a559069d842ea038fb83806": [
+      {
+        "shortname": "service-workers",
+        "type": "enum",
+        "normative": true,
+        "uri": "#enumdef-serviceworkerupdateviacache"
+      }
+    ],
+    "9a7f11d8f9a46fce8d14170914f73271d1cc8896": [
+      {
+        "shortname": "service-workers",
+        "type": "enum-value",
+        "for": ["ServiceWorkerUpdateViaCache"],
+        "normative": true,
+        "uri": "#dom-serviceworkerupdateviacache-imports"
+      }
+    ],
+    "2dc7c88bffd81e1ddc880de8841fb9cdd3f612d5": [
+      {
+        "shortname": "xhr",
+        "type": "enum-value",
+        "for": ["XMLHttpRequestResponseType"],
+        "normative": true,
+        "uri": "#dom-xmlhttprequestresponsetype-blob"
+      }
+    ],
+    "5f235b5e4a147d3ca02061c2fc84626159c277bd": [
+      {
+        "shortname": "css-layout-api",
+        "type": "enum-value",
+        "for": ["ChildDisplayType"],
+        "normative": true,
+        "uri": "#dom-childdisplaytype-block"
+      }
+    ]
+  },
+  "query": [
+    {
+      "term": "ServiceWorkerUpdateViaCache",
+      "types": ["enum"],
+      "id": "80d1737627fa69e92a559069d842ea038fb83806"
+    },
+    {
+      "term": "imports",
+      "types": ["enum-value"],
+      "for": "ServiceWorkerUpdateViaCache",
+      "id": "9a7f11d8f9a46fce8d14170914f73271d1cc8896"
+    },
+    {
+      "term": "blob",
+      "types": ["enum-value"],
+      "id": "2dc7c88bffd81e1ddc880de8841fb9cdd3f612d5"
+    },
+    {
+      "term": "block",
+      "types": ["enum-value"],
+      "specs": ["css-layout-api"],
+      "for": "ChildDisplayType",
+      "id": "5f235b5e4a147d3ca02061c2fc84626159c277bd"
+    }
+  ]
+}

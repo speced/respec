@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.12.1",
+  "version": "24.12.2",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -34,7 +34,7 @@
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-prettier": "^3.0.1",
     "exports-loader": "^0.7.0",
-    "handlebars": "^4.1.1",
+    "handlebars": "^4.1.2",
     "highlight.js": "^9.15.6",
     "hyperhtml": "^2.25.5",
     "idb": "^4.0.3",
