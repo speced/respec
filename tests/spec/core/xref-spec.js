@@ -48,6 +48,10 @@ describe("Core — xref", () => {
       title: "Encoding Standard",
       id: "ENCODING",
     },
+    "css-layout-api": {
+      href: "https://www.w3.org/TR/css-layout-api-1/",
+      id: "css-layout-api-1",
+    },
     "local-1": { id: "local-1", href: "https://example.com/" },
     "local-2": { id: "local-2", href: "https://example.com/" },
     "local-3": { id: "local-3", href: "https://example.com/" },
@@ -114,6 +118,33 @@ describe("Core — xref", () => {
       "https://encoding.spec.whatwg.org/#dom-textdecoderoptions-fatal",
     ],
     ["EventTarget", "https://dom.spec.whatwg.org/#eventtarget"],
+    [
+      "allowedFeatures",
+      "https://wicg.github.io/feature-policy/#dom-featurepolicy-allowedfeatures",
+    ],
+    ["ChildNode", "https://dom.spec.whatwg.org/#childnode"],
+    ["ChildNode.after", "https://dom.spec.whatwg.org/#dom-childnode-after"],
+    ["URLSearchParams", "https://url.spec.whatwg.org/#urlsearchparams"],
+    [
+      "URLSearchParams.append",
+      "https://url.spec.whatwg.org/#dom-urlsearchparams-append",
+    ],
+    [
+      "ServiceWorkerUpdateViaCache",
+      "https://www.w3.org/TR/service-workers-1/#enumdef-serviceworkerupdateviacache",
+    ],
+    [
+      "ServiceWorkerUpdateViaCache.imports",
+      "https://www.w3.org/TR/service-workers-1/#dom-serviceworkerupdateviacache-imports",
+    ],
+    [
+      "blob",
+      "https://xhr.spec.whatwg.org/#dom-xmlhttprequestresponsetype-blob",
+    ],
+    [
+      "ChildDisplayType.block",
+      "https://www.w3.org/TR/css-layout-api-1/#dom-childdisplaytype-block",
+    ],
   ]);
 
   it("does nothing if xref is not enabled", async () => {
@@ -533,7 +564,7 @@ describe("Core — xref", () => {
       const doc = await makeRSDoc(ops);
       const el = doc.getElementById("test");
       expect(el.querySelector("code a")).toBeFalsy();
-      expect(el.textContent).toEqual("{{PASS}}");
+      expect(el.textContent).toEqual("{{PASS }}");
     });
 
     it("ignores malformed syntax", async () => {
@@ -569,7 +600,7 @@ describe("Core — xref", () => {
       expect(link2.href).toEqual(
         expectedLinks.get("PermissionStatus.[[query]]")
       );
-      expect(link2.textContent).toEqual("[[query]]");
+      expect(link2.textContent).toEqual("query");
 
       const link3 = doc.querySelector("#link3 code a");
       expect(link3.href).toBeFalsy();
@@ -585,8 +616,10 @@ describe("Core — xref", () => {
       <section id="test">
         <p id="link1">{{ addEventListener(type, callback) }}</p>
         <p id="link2">{{ EventTarget.addEventListener(type, callback) }}</p>
-        <p id="link3">{{ [[CollectFromCredentialStore]](options, sameOriginWithAncestors) }} is ambiguous</p>
-        <p id="link4">{{ Credential.[[CollectFromCredentialStore]](options, sameOriginWithAncestors) }}</p>
+        <p id="link3">{{ ChildNode.after(...nodes) }}</p>
+        <p id="link4">{{ allowedFeatures() }}</p>
+        <p id="link5">{{ append(name, value) }} is ambiguous</p>
+        <p id="link6">{{ URLSearchParams.append(name, value) }} is not ambiguous</p>
       </section>
       `;
       const config = {
@@ -615,23 +648,29 @@ describe("Core — xref", () => {
       expect(vars2[0].textContent).toEqual("type");
       expect(vars2[1].textContent).toEqual("callback");
 
-      const link3 = doc.querySelector("#link3 code a");
-      expect(link3.href).toEqual("");
-      expect(link3.title).toEqual("Error: Linking an ambiguous dfn.");
+      const [link3a, link3b] = [...doc.querySelectorAll("#link3 code a")];
+      expect(link3a.href).toEqual(expectedLinks.get("ChildNode"));
+      expect(link3b.href).toEqual(expectedLinks.get("ChildNode.after"));
 
-      const [link4a, link4b] = [...doc.querySelectorAll("#link4 code a")];
-      expect(link4a.href).toEqual(expectedLinks.get("Credential"));
-      expect(link4b.href).toEqual(
-        expectedLinks.get("Credential.[[CollectFromCredentialStore]]")
-      );
+      const link4 = doc.querySelector("#link4 code a");
+      expect(link4.href).toEqual(expectedLinks.get("allowedFeatures"));
+
+      const link5 = doc.querySelector("#link5 code a");
+      expect(link5.href).toEqual("");
+      expect(link5.title).toEqual("Error: Linking an ambiguous dfn.");
+
+      const [link6a, link6b] = [...doc.querySelectorAll("#link6 code a")];
+      expect(link6a.href).toEqual(expectedLinks.get("URLSearchParams"));
+      expect(link6b.href).toEqual(expectedLinks.get("URLSearchParams.append"));
     });
 
-    it("links attributes", async () => {
+    it("links attribute and dict-member", async () => {
       const body = `
       <section>
         <p id="link1">{{Window.event}}</p>
         <p id="link2">{{ Credential.[[type]] }}</p>
         <p id="link3">{{ PublicKeyCredential.[[type]] }}</p>
+        <p id="link4">{{ TextDecoderOptions.fatal }}</p>
       </section>
       `;
       const config = {
@@ -654,6 +693,13 @@ describe("Core — xref", () => {
       expect(link3a.href).toEqual(expectedLinks.get("PublicKeyCredential"));
       expect(link3b.href).toEqual(
         expectedLinks.get("PublicKeyCredential.[[type]]")
+      );
+
+      // "TextDecoderOptions" is dictionary and "fatal" is dict-member
+      const [link4a, link4b] = [...doc.querySelectorAll("#link4 code a")];
+      expect(link4a.href).toEqual(expectedLinks.get("TextDecoderOptions"));
+      expect(link4b.href).toEqual(
+        expectedLinks.get(`TextDecoderOptions["fatal"]`)
       );
     });
 
@@ -679,25 +725,34 @@ describe("Core — xref", () => {
       expect(link2b.href).toEqual(expectedLinks.get("Credential.[[type]]"));
     });
 
-    it("links dictionary members", async () => {
+    it("links enum and enum-values", async () => {
       const body = `
-      <section>
-        <p id="link1">{{ TextDecoderOptions["fatal"] }}</p>
-      </section>
+        <section id="test">
+          <p id="link1">{{ ServiceWorkerUpdateViaCache["imports"] }}</p>
+          <p id="link2">{{ "blob" }}</p>
+          <p id="link3"
+            data-cite="css-layout-api" data-link-for="ChildDisplayType"
+          >{{ "block" }}</p>
+        </section>
       `;
-      const config = {
-        xref: { url: urlOf("inline-idl-dict-member") },
-        localBiblio,
-      };
+      const config = { xref: { url: urlOf("inline-idl-enum") }, localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
-      // "TextDecoderOptions" is dictionary and "fatal" is dict-member
+      // "ServiceWorkerUpdateViaCache" is enum and "imports" is enum-value
       const [link1a, link1b] = [...doc.querySelectorAll("#link1 code a")];
-      expect(link1a.href).toEqual(expectedLinks.get("TextDecoderOptions"));
-      expect(link1b.href).toEqual(
-        expectedLinks.get(`TextDecoderOptions["fatal"]`)
+      expect(link1a.href).toEqual(
+        expectedLinks.get("ServiceWorkerUpdateViaCache")
       );
+      expect(link1b.href).toEqual(
+        expectedLinks.get(`ServiceWorkerUpdateViaCache.imports`)
+      );
+
+      const link2 = doc.querySelector("#link2 code a");
+      expect(link2.href).toEqual(expectedLinks.get("blob"));
+
+      const link3 = doc.querySelector("#link3 code a");
+      expect(link3.href).toEqual(expectedLinks.get("ChildDisplayType.block"));
     });
 
     it("links local definitions first", async () => {
@@ -873,7 +928,9 @@ describe("Core — xref", () => {
     const preCacheTime = await cache.get("__CACHE_TIME__");
     expect(Number.isInteger(preCacheTime)).toBeTruthy();
     cacheKeys = (await cache.keys()).sort();
-    expect(cacheKeys).toEqual([keys.get("dictionary"), "__CACHE_TIME__"]);
+    expect(cacheKeys).toEqual(
+      ["__CACHE_TIME__", keys.get("dictionary")].sort()
+    );
 
     // no new data was requested from server, cache shoudln't change
     const postCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
@@ -883,7 +940,9 @@ describe("Core — xref", () => {
     const postCacheTime = await cache.get("__CACHE_TIME__");
     expect(postCacheTime).toEqual(preCacheTime);
     cacheKeys = (await cache.keys()).sort();
-    expect(cacheKeys).toEqual([keys.get("dictionary"), "__CACHE_TIME__"]);
+    expect(cacheKeys).toEqual(
+      ["__CACHE_TIME__", keys.get("dictionary")].sort()
+    );
 
     // new data was requested from server, cache should change
     const config2 = { xref: { url: urlOf("cache-2") }, localBiblio };
@@ -903,10 +962,8 @@ describe("Core — xref", () => {
     const updatedCacheTime = await cache.get("__CACHE_TIME__");
     expect(updatedCacheTime).toBeGreaterThan(preCacheTime);
     cacheKeys = (await cache.keys()).sort();
-    expect(cacheKeys).toEqual([
-      keys.get("dictionary"),
-      "__CACHE_TIME__",
-      keys.get("url parser"),
-    ]);
+    expect(cacheKeys).toEqual(
+      ["__CACHE_TIME__", keys.get("dictionary"), keys.get("url parser")].sort()
+    );
   });
 });

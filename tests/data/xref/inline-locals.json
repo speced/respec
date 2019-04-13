@@ -8,7 +8,7 @@
         "uri": "window-object.html#window"
       }
     ],
-    "af8ec9cd32a9241135f61c57e7b0c9b900efb26b": [
+    "5530bca3f739b4cec44acfa985117a332bff078e": [
       {
         "shortname": "dom",
         "type": "attribute",
@@ -26,9 +26,9 @@
     },
     {
       "term": "event",
-      "types": ["attribute"],
+      "types": ["attribute", "dict-member"],
       "for": "Window",
-      "id": "af8ec9cd32a9241135f61c57e7b0c9b900efb26b"
+      "id": "5530bca3f739b4cec44acfa985117a332bff078e"
     }
   ]
 }
