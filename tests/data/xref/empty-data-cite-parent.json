@@ -1,0 +1,47 @@
+{
+  "result": {
+    "fbdc4e814011e66433770ee7a69c6fccea2ad3a8": [
+      {
+        "shortname": "webidl",
+        "type": "dfn",
+        "normative": true,
+        "uri": "#dfn-dictionary"
+      }
+    ],
+    "e3526b58dcc76929cca21d78f659e0f895b94931": [
+      {
+        "shortname": "url",
+        "type": "dfn",
+        "normative": true,
+        "uri": "#concept-url-parser"
+      }
+    ],
+    "ab349a2eac4671070c40c1c1763bf973ff856fa6": [
+      {
+        "shortname": "infra",
+        "type": "dfn",
+        "normative": true,
+        "uri": "#list"
+      }
+    ]
+  },
+  "query": [
+    {
+      "term": "dictionary",
+      "types": ["_CONCEPT_"],
+      "specs": ["webidl"],
+      "id": "fbdc4e814011e66433770ee7a69c6fccea2ad3a8"
+    },
+    {
+      "term": "url parser",
+      "types": ["_CONCEPT_"],
+      "specs": ["url"],
+      "id": "e3526b58dcc76929cca21d78f659e0f895b94931"
+    },
+    {
+      "term": "list",
+      "types": ["_CONCEPT_"],
+      "id": "ab349a2eac4671070c40c1c1763bf973ff856fa6"
+    }
+  ]
+}

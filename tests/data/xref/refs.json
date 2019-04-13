@@ -1,0 +1,147 @@
+{
+  "result": {
+    "964a6928f0061e8a28c6e799dc1777a1bababe74": [
+      {
+        "shortname": "local-1",
+        "type": "dfn",
+        "normative": false,
+        "uri": "#fake-inform-1"
+      }
+    ],
+    "ab349a2eac4671070c40c1c1763bf973ff856fa6": [
+      {
+        "shortname": "infra",
+        "type": "dfn",
+        "normative": true,
+        "uri": "#list"
+      }
+    ],
+    "ace10a8db6b758d2d2523077211fea575daa6ac4": [
+      {
+        "shortname": "css-values",
+        "type": "dfn",
+        "normative": false,
+        "uri": "#bearing-angle"
+      }
+    ],
+    "b3f39e21ff440b3efd5949b8952c0f23f11b23a2": [
+      {
+        "shortname": "url",
+
+        "type": "dfn",
+        "normative": true,
+        "uri": "#concept-url-parser"
+      }
+    ],
+    "ea07a98420b98807471b6041b15b612b6590fc52": [
+      {
+        "shortname": "local-2",
+        "type": "dfn",
+        "normative": false,
+        "uri": "#fake-inform-2"
+      }
+    ],
+    "c7ef0091ed0c25312798d467d3d1aa1fdc9368cc": [
+      {
+        "shortname": "html",
+        "type": "dfn",
+        "normative": true,
+        "uri": "webappapis.html#event-handlers"
+      }
+    ],
+    "1cb8c55085c55d02477232bc3910ad4a1fa72183": [
+      {
+        "shortname": "local-3",
+        "type": "dfn",
+        "normative": false,
+        "uri": "#fake-inform-3"
+      }
+    ],
+    "7a82727efd37620ec8b50cac9dca75d1b1f08d94": [
+      {
+        "shortname": "webidl",
+        "type": "dfn",
+        "normative": true,
+        "uri": "#dfn-dictionary"
+      }
+    ],
+    "ac3f5f63e6a2ed0b384e5284f09abdfbe826b17e": [
+      {
+        "shortname": "local-4",
+        "type": "dfn",
+        "normative": false,
+        "uri": "#fake-inform-4"
+      }
+    ],
+    "8b2f8e4c2e57922a662f9be57e4183c25038dcaf": [
+      {
+        "shortname": "infra",
+        "type": "dfn",
+        "normative": true,
+        "uri": "#ascii-alphanumeric"
+      }
+    ]
+  },
+  "query": [
+    {
+      "term": "fake inform 1",
+      "types": ["_CONCEPT_"],
+      "id": "964a6928f0061e8a28c6e799dc1777a1bababe74"
+    },
+    {
+      "term": "list",
+      "types": ["_CONCEPT_"],
+      "id": "ab349a2eac4671070c40c1c1763bf973ff856fa6"
+    },
+    {
+      "term": "bearing angle",
+      "types": ["_CONCEPT_"],
+      "id": "ace10a8db6b758d2d2523077211fea575daa6ac4"
+    },
+    {
+      "term": "url parser",
+      "types": ["_CONCEPT_"],
+      "id": "b3f39e21ff440b3efd5949b8952c0f23f11b23a2"
+    },
+    {
+      "term": "fake inform 2",
+      "types": ["_CONCEPT_"],
+      "id": "ea07a98420b98807471b6041b15b612b6590fc52"
+    },
+    {
+      "term": "event handler",
+      "types": ["_CONCEPT_"],
+      "id": "c7ef0091ed0c25312798d467d3d1aa1fdc9368cc"
+    },
+    {
+      "term": "fake inform 3",
+      "types": ["_CONCEPT_"],
+      "id": "1cb8c55085c55d02477232bc3910ad4a1fa72183"
+    },
+    {
+      "term": "dictionary",
+      "types": ["_CONCEPT_"],
+      "id": "7a82727efd37620ec8b50cac9dca75d1b1f08d94"
+    },
+    {
+      "term": "fake inform 4",
+      "types": ["_CONCEPT_"],
+      "id": "ac3f5f63e6a2ed0b384e5284f09abdfbe826b17e"
+    },
+    {
+      "term": "ascii alphanumeric",
+      "types": ["_CONCEPT_"],
+      "id": "8b2f8e4c2e57922a662f9be57e4183c25038dcaf"
+    },
+    {
+      "term": "url parser",
+      "types": ["_CONCEPT_"],
+      "id": "b3f39e21ff440b3efd5949b8952c0f23f11b23a2"
+    },
+    {
+      "term": "url parser",
+      "types": ["_CONCEPT_"],
+      "id": "b3f39e21ff440b3efd5949b8952c0f23f11b23a2"
+    }
+  ]
+}

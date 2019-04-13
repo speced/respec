@@ -1,0 +1,32 @@
+{
+  "result": {
+    "c7ef0091ed0c25312798d467d3d1aa1fdc9368cc": [
+      {
+        "shortname": "html",
+        "type": "dfn",
+        "normative": true,
+        "uri": "webappapis.html#event-handlers"
+      }
+    ],
+    "b3f39e21ff440b3efd5949b8952c0f23f11b23a2": [
+      {
+        "shortname": "url",
+        "type": "dfn",
+        "normative": true,
+        "uri": "#concept-url-parser"
+      }
+    ]
+  },
+  "query": [
+    {
+      "term": "event handler",
+      "types": ["_CONCEPT_"],
+      "id": "c7ef0091ed0c25312798d467d3d1aa1fdc9368cc"
+    },
+    {
+      "term": "url parser",
+      "types": ["_CONCEPT_"],
+      "id": "b3f39e21ff440b3efd5949b8952c0f23f11b23a2"
+    }
+  ]
+}
