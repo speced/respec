@@ -1418,7 +1418,8 @@ describe("W3C — Headers", () => {
       );
       expect(doc.title).toBe("Preview of PR #123: Simple Spec");
       const h1 = doc.querySelector("h1#title");
-      expect(h1.textContent).toBe("Preview of PR #123: Simple Spec");
+      expect(h1.textContent).toContain("Preview of PR #123:");
+      expect(h1.textContent).toContain("Simple Spec");
       expect(h1.querySelector("a").href).toBe("http://w3c.github.io/respec/");
     });
 
@@ -1434,7 +1435,8 @@ describe("W3C — Headers", () => {
       const doc = await makeRSDoc(ops);
       expect(doc.title).toBe("Preview of PR #123: Simple Spec");
       const h1 = doc.querySelector("h1#title");
-      expect(h1.textContent).toBe("Preview of PR #123: Simple Spec");
+      expect(h1.textContent).toContain("Preview of PR #123:");
+      expect(h1.textContent).toContain("Simple Spec");
       expect(h1.querySelector("a").href).toBe("http://w3c.github.io/respec/");
     });
   });
