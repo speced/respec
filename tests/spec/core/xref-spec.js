@@ -544,7 +544,7 @@ describe("Core — xref", () => {
       const doc = await makeRSDoc(ops);
       const el = doc.getElementById("test");
       expect(el.querySelector("code a")).toBeFalsy();
-      expect(el.textContent).toEqual("{{PASS}}");
+      expect(el.textContent).toEqual("{{PASS }}");
     });
 
     it("ignores malformed syntax", async () => {
