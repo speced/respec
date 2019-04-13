@@ -22,8 +22,9 @@ function getSpecTitleElem(conf) {
     specTitleElem.id = "title";
   }
   if (conf.isPreview && conf.prNumber) {
-    // eslint-disable-next-line prettier/prettier
-    const { childNodes } = html`Preview of PR <a href="${conf.prUrl}">#${conf.prNumber}</a>: `;
+    const { childNodes } = html`
+      Preview of PR <a href="${conf.prUrl}">#${conf.prNumber}</a>:
+    `;
     specTitleElem.prepend(...childNodes);
   }
   conf.title = specTitleElem.textContent.trim();
