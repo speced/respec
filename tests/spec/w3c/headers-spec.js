@@ -1409,17 +1409,41 @@ describe("W3C — Headers", () => {
     });
   });
 
-  it("adds Preview status to title", async () => {
-    const ops = makeStandardOps();
-    const doc = await makeRSDoc(
-      ops,
-      "spec/core/simple.html?isPreview=true&prNumber=123&prUrl=%22http%3A//w3c.github.io/respec/%22"
-    );
-    expect(doc.title).toBe("Preview of PR #123: Simple Spec");
-    const headingtitle = doc.querySelector("h1#title");
-    expect(headingtitle.textContent).toEqual("Preview of PR #123: Simple Spec");
-    expect(headingtitle.querySelector("a").href).toEqual(
-      "http://w3c.github.io/respec/"
-    );
+  describe("Add Preview Status in title", () => {
+    it("when document title is present", async () => {
+      const ops = makeStandardOps();
+      const doc = await makeRSDoc(
+        ops,
+        "spec/core/simple.html?isPreview=true&prNumber=123&prUrl=%22http%3A//w3c.github.io/respec/%22"
+      );
+      expect(doc.title).toBe("Preview of PR #123: Simple Spec");
+      const headingtitle = doc.querySelector("h1#title");
+      expect(headingtitle.textContent).toEqual(
+        "Preview of PR #123: Simple Spec"
+      );
+      expect(headingtitle.querySelector("a").href).toEqual(
+        "http://w3c.github.io/respec/"
+      );
+    });
+
+    it("when only <h1> title is present", async () => {
+      const ops = {
+        config: {
+          isPreview: true,
+          prNumber: 123,
+          prUrl: "http://w3c.github.io/respec/",
+        },
+        body: `<h1 id='title'>Simple Spec</h1>${makeDefaultBody()}`,
+      };
+      const doc = await makeRSDoc(ops);
+      expect(doc.title).toBe("Preview of PR #123: Simple Spec");
+      const headingtitle = doc.querySelector("h1#title");
+      expect(headingtitle.textContent).toEqual(
+        "Preview of PR #123: Simple Spec"
+      );
+      expect(headingtitle.querySelector("a").href).toEqual(
+        "http://w3c.github.io/respec/"
+      );
+    });
   });
 });
