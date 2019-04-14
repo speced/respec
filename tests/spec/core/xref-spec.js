@@ -202,7 +202,7 @@ describe("Core — xref", () => {
         <p><a>fetch</a> is defined 1 time in service-workers and 2 times in fetch.
           It uses parent's data-cite (service-workers).</p>
         <p>Looks up <a data-cite="infra">ASCII uppercase</a> in infra.</p>
-        <p>As <a data-cite="infra">ASCII uppercasing</a> doesn't exist in INFRA,
+        <p>As <a data-cite="infra">ASCII upcasing</a> doesn't exist in INFRA,
           it resolves to spec only.</p>
       </section>
       <section id="dfns" data-cite="infra">
