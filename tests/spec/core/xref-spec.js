@@ -743,7 +743,7 @@ describe("Core — xref", () => {
           <p id="link1">{{ ServiceWorkerUpdateViaCache["imports"] }}</p>
           <p id="link2">{{ "blob" }} {{ ServiceWorkerUpdateViaCache["imports"] }}</p>
           <p id="link3"
-            data-cite="css-layout-api" data-link-for="ChildDisplayType"
+            data-cite="css-layout-api" data-xref-for="ChildDisplayType"
           >{{ "block" }} {{"block"}} </p>
         </section>
       `;

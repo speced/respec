@@ -150,11 +150,11 @@ function getRequestEntry(elem) {
     types.push("_CONCEPT_");
   }
 
-  let { linkFor: forContext } = elem.dataset;
+  let { xrefFor: forContext } = elem.dataset;
   if (!forContext && isIDL) {
-    const dataLinkForElem = elem.closest("[data-link-for]");
-    if (dataLinkForElem) {
-      forContext = dataLinkForElem.dataset.linkFor;
+    const dataXrefForElem = elem.closest("[data-xref-for]");
+    if (dataXrefForElem) {
+      forContext = dataXrefForElem.dataset.xrefFor;
     }
   }
 
