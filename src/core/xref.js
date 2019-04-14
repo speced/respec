@@ -237,7 +237,7 @@ async function fetchFromNetwork(keys, url) {
   };
   const response = await fetch(url, options);
   const json = await response.json();
-  return new Map(Object.entries(json.result));
+  return new Map(json.result);
 }
 
 /**

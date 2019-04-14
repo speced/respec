@@ -1,21 +1,24 @@
 {
-  "result": {
-    "5059ed6c18b500027fb4bf62a8a9c726548fcdca": [
-      {
-        "shortname": "fetch",
-        "type": "dfn",
-        "for": ["fetch record"],
-        "normative": true,
-        "uri": "#concept-fetch-record-fetch"
-      },
-      {
-        "shortname": "fetch",
-        "type": "dfn",
-        "normative": true,
-        "uri": "#concept-fetch"
-      }
+  "result": [
+    [
+      "5059ed6c18b500027fb4bf62a8a9c726548fcdca",
+      [
+        {
+          "shortname": "fetch",
+          "type": "dfn",
+          "for": ["fetch record"],
+          "normative": true,
+          "uri": "#concept-fetch-record-fetch"
+        },
+        {
+          "shortname": "fetch",
+          "type": "dfn",
+          "normative": true,
+          "uri": "#concept-fetch"
+        }
+      ]
     ]
-  },
+  ],
   "query": [
     {
       "term": "fetch",
