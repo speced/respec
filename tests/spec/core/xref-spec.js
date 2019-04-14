@@ -764,7 +764,6 @@ describe("Core — xref", () => {
       expect(blockLink2.href).toEqual(
         expectedLinks.get("ChildDisplayType.block")
       );
-
     });
 
     it("links local definitions first", async () => {
