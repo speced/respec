@@ -27,7 +27,7 @@ function getSpecTitleElem(conf) {
     `;
     specTitleElem.prepend(...childNodes);
   }
-  conf.title = specTitleElem.textContent.trim();
+  conf.title = specTitleElem.textContent.replace(/\s{2,}/g, " ").trim();
   specTitleElem.classList.add("title", "p-name");
   if (document.querySelector("title") === null) {
     document.title = conf.title;
