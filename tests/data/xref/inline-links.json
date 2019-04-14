@@ -1,0 +1,111 @@
+{
+  "result": {
+    "cc1a594d6026e36992f8910fa8e18bf34dc54043": [
+      {
+        "shortname": "dom",
+        "spec": "dom",
+        "type": "dfn",
+        "for": [
+          "AbortSignal"
+        ],
+        "normative": true,
+        "uri": "#abortsignal-add"
+      }
+    ],
+    "6fbd11cc8dfab63bd8f06c5d4dafbc90b67e379c": [
+      {
+        "shortname": "infra",
+        "spec": "infra",
+        "type": "dfn",
+        "for": [
+          "list",
+          "set"
+        ],
+        "normative": true,
+        "uri": "#list-iterate"
+      }
+    ],
+    "e947ca8c647792fa1bc3bf65c15c1b959b4202a5": [
+      {
+        "shortname": "infra",
+        "spec": "infra",
+        "type": "dfn",
+        "for": [
+          "map"
+        ],
+        "normative": true,
+        "uri": "#map-iterate"
+      }
+    ],
+    "48614561fa383c60b83583fe76521ccffa101649": [
+      {
+        "shortname": "infra",
+        "spec": "infra",
+        "type": "dfn",
+        "for": [
+          "list",
+          "set"
+        ],
+        "normative": true,
+        "uri": "#list-iterate"
+      }
+    ]
+  },
+  "query": [
+    {
+      "term": "add",
+      "types": [
+        "_CONCEPT_"
+      ],
+      "specs": [
+        "dom"
+      ],
+      "for": "AbortSignal",
+      "id": "cc1a594d6026e36992f8910fa8e18bf34dc54043"
+    },
+    {
+      "term": "for each",
+      "types": [
+        "_CONCEPT_"
+      ],
+      "specs": [
+        "infra"
+      ],
+      "for": "set",
+      "id": "6fbd11cc8dfab63bd8f06c5d4dafbc90b67e379c"
+    },
+    {
+      "term": "for each",
+      "types": [
+        "_CONCEPT_"
+      ],
+      "specs": [
+        "infra"
+      ],
+      "for": "map",
+      "id": "e947ca8c647792fa1bc3bf65c15c1b959b4202a5"
+    },
+    {
+      "term": "for each",
+      "types": [
+        "_CONCEPT_"
+      ],
+      "specs": [
+        "infra"
+      ],
+      "for": "map",
+      "id": "e947ca8c647792fa1bc3bf65c15c1b959b4202a5"
+    },
+    {
+      "term": "for each",
+      "types": [
+        "_CONCEPT_"
+      ],
+      "specs": [
+        "infra"
+      ],
+      "for": "list",
+      "id": "48614561fa383c60b83583fe76521ccffa101649"
+    }
+  ]
+}

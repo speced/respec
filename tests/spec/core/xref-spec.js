@@ -713,7 +713,10 @@ describe("Core — xref", () => {
         <p id="link2">{{ Credential.[[type]] }}</p>
       </section>
       `;
-      const config = { xref: { url: xrefTestUrl("inline-idl-slots") }, localBiblio };
+      const config = {
+        xref: { url: xrefTestUrl("inline-idl-slots") },
+        localBiblio,
+      };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -737,7 +740,10 @@ describe("Core — xref", () => {
           >{{ "block" }} {{"block"}} </p>
         </section>
       `;
-      const config = { xref: { url: xrefTestUrl("inline-idl-enum") }, localBiblio };
+      const config = {
+        xref: { url: xrefTestUrl("inline-idl-enum") },
+        localBiblio,
+      };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -784,7 +790,10 @@ describe("Core — xref", () => {
           <p id="link-external">{{ Window.event }} links to html spec.</p>
         </section>
       `;
-      const config = { xref: { url: xrefTestUrl("inline-locals") }, localBiblio };
+      const config = {
+        xref: { url: xrefTestUrl("inline-locals") },
+        localBiblio,
+      };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
