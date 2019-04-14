@@ -5,6 +5,7 @@ import {
   makeDefaultBody,
   makeRSDoc,
   makeStandardOps,
+  xrefTestUrl,
 } from "../SpecHelper.js";
 import { IDBKeyVal } from "../../../src/core/utils.js";
 import { openDB } from "../../../node_modules/idb/build/esm/index.js";
@@ -21,8 +22,6 @@ describe("Core — xref", () => {
     });
     cache = new IDBKeyVal(idb, "xrefs");
   });
-
-  const urlOf = id => `${location.origin}/tests/data/xref/${id}.json`;
 
   beforeEach(async () => {
     // clear idb cache before each
@@ -130,10 +129,6 @@ describe("Core — xref", () => {
       "https://url.spec.whatwg.org/#dom-urlsearchparams-append",
     ],
     [
-      "ServiceWorkerUpdateViaCache",
-      "https://www.w3.org/TR/service-workers-1/#enumdef-serviceworkerupdateviacache",
-    ],
-    [
       "ServiceWorkerUpdateViaCache.imports",
       "https://www.w3.org/TR/service-workers-1/#dom-serviceworkerupdateviacache-imports",
     ],
@@ -163,7 +158,7 @@ describe("Core — xref", () => {
         <p id="external-link"><a>event handler</a></p>
         <p id="external-dfn"><dfn class="externalDFN">URL parser</dfn></p>
       </section>`;
-    const config = { xref: { url: urlOf("basic") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("basic") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -178,7 +173,7 @@ describe("Core — xref", () => {
 
   it("doesn't link auto-filled anchors", async () => {
     const body = `<section><a id="test" data-cite="credential-management"></a></section>`;
-    const config = { xref: { url: urlOf("basic") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("basic") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
     const link = doc.getElementById("test");
@@ -191,7 +186,7 @@ describe("Core — xref", () => {
 
   it("shows error if external term doesn't exist", async () => {
     const body = `<section><a id="external-link">NOT_FOUND</a></section>`;
-    const config = { xref: { url: urlOf("not_found") } };
+    const config = { xref: { url: xrefTestUrl("not_found") } };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -217,7 +212,7 @@ describe("Core — xref", () => {
         <p><dfn data-cite="html">event manager</dfn> doesn't exist in html.</p>
       </section>
     `;
-    const config = { xref: { url: urlOf("data-cite-1") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("data-cite-1") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -238,7 +233,7 @@ describe("Core — xref", () => {
         <p><a id="link">fetch</a> twice in fetch spec.</p>
       </section>
     `;
-    const config = { xref: { url: urlOf("ambiguous") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("ambiguous") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -260,7 +255,7 @@ describe("Core — xref", () => {
         <p><a id="five" data-cite="NOT-FOUND">object</a></p>
       </section>
     `;
-    const config = { xref: { url: urlOf("data-cite-2") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("data-cite-2") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -295,7 +290,7 @@ describe("Core — xref", () => {
       </section>
     `;
     const config = {
-      xref: { url: urlOf("empty-data-cite-parent") },
+      xref: { url: xrefTestUrl("empty-data-cite-parent") },
       localBiblio,
     };
     const ops = makeStandardOps(config, body);
@@ -337,7 +332,7 @@ describe("Core — xref", () => {
         <p id="external-link-1"><a>event handler</a></p>
       </section>
     `;
-    const config = { xref: { url: urlOf("local-dfn") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("local-dfn") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -377,7 +372,7 @@ describe("Core — xref", () => {
         <a>foo</a>
       </section>
     `;
-    const config = { xref: { url: urlOf("data-lt") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("data-lt") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -408,7 +403,7 @@ describe("Core — xref", () => {
       </section>
     `;
     const config = {
-      xref: { url: urlOf("data-lt") },
+      xref: { url: xrefTestUrl("data-lt") },
       localBiblio,
       pluralize: true,
     };
@@ -454,7 +449,7 @@ describe("Core — xref", () => {
         </section>
       </section>
     `;
-    const config = { xref: { url: urlOf("inline-bibref") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("inline-bibref") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -507,7 +502,7 @@ describe("Core — xref", () => {
         </section>
       </section>
     `;
-    const config = { xref: { url: urlOf("refs") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("refs") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -577,10 +572,21 @@ describe("Core — xref", () => {
       expect(el.textContent).toEqual("{ {  PASS }}");
     });
 
+    it("shows error if IDL string parsing fails", async () => {
+      const body = `<section id="test">text {{"imp"orts" }} text</section>`;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const el = doc.getElementById("test");
+      expect(el.querySelector("code a")).toBeFalsy();
+      const errorEl = el.querySelector("span.respec-offending-element");
+      expect(errorEl).toBeTruthy();
+      expect(el.textContent).toEqual(`text {{ "imp"orts" }} text`);
+    });
+
     it("links inline IDL references", async () => {
       const body = `
       <section id="test">
-        <p id="link1">{{ Window }}</p>
+        <p id="link1">{{ Window }} and {{EventTarget}}</p>
         <p id="link2">{{ [[query]] }}</p>
         <p id="link3">{{ [[type]] }} is ambiguous.</p>
         <p id="link4"> This should work {{
@@ -589,12 +595,15 @@ describe("Core — xref", () => {
         }} , i.e. should trim the whitespace.</p>
       </section>
       `;
-      const config = { xref: { url: urlOf("inline-idl") }, localBiblio };
+      const config = { xref: { url: xrefTestUrl("inline-idl") }, localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
-      const link1 = doc.querySelector("#link1 code a");
-      expect(link1.href).toEqual(expectedLinks.get("Window"));
+      const [windowLink, eventTargetLink] = doc.querySelectorAll(
+        "#link1 code a"
+      );
+      expect(windowLink.href).toEqual(expectedLinks.get("Window"));
+      expect(eventTargetLink.href).toEqual(expectedLinks.get("EventTarget"));
 
       const link2 = doc.querySelector("#link2 code a");
       expect(link2.href).toEqual(
@@ -623,7 +632,7 @@ describe("Core — xref", () => {
       </section>
       `;
       const config = {
-        xref: { url: urlOf("inline-idl-methods") },
+        xref: { url: xrefTestUrl("inline-idl-methods") },
         localBiblio,
       };
       const ops = makeStandardOps(config, body);
@@ -674,7 +683,7 @@ describe("Core — xref", () => {
       </section>
       `;
       const config = {
-        xref: { url: urlOf("inline-idl-attributes") },
+        xref: { url: xrefTestUrl("inline-idl-attributes") },
         localBiblio,
       };
       const ops = makeStandardOps(config, body);
@@ -711,7 +720,10 @@ describe("Core — xref", () => {
         <p id="link2">{{ Credential.[[type]] }}</p>
       </section>
       `;
-      const config = { xref: { url: urlOf("inline-idl-slots") }, localBiblio };
+      const config = {
+        xref: { url: xrefTestUrl("inline-idl-slots") },
+        localBiblio,
+      };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -729,30 +741,41 @@ describe("Core — xref", () => {
       const body = `
         <section id="test">
           <p id="link1">{{ ServiceWorkerUpdateViaCache["imports"] }}</p>
-          <p id="link2">{{ "blob" }}</p>
+          <p id="link2">{{ "blob" }} {{ ServiceWorkerUpdateViaCache["imports"] }}</p>
           <p id="link3"
             data-cite="css-layout-api" data-link-for="ChildDisplayType"
-          >{{ "block" }}</p>
+          >{{ "block" }} {{"block"}} </p>
         </section>
       `;
-      const config = { xref: { url: urlOf("inline-idl-enum") }, localBiblio };
+      const config = {
+        xref: { url: xrefTestUrl("inline-idl-enum") },
+        localBiblio,
+      };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
-      // "ServiceWorkerUpdateViaCache" is enum and "imports" is enum-value
-      const [link1a, link1b] = [...doc.querySelectorAll("#link1 code a")];
-      expect(link1a.href).toEqual(
-        expectedLinks.get("ServiceWorkerUpdateViaCache")
-      );
-      expect(link1b.href).toEqual(
-        expectedLinks.get(`ServiceWorkerUpdateViaCache.imports`)
+      const link1 = doc.getElementById("link1");
+      expect(link1.textContent).toEqual(`"imports"`);
+      expect(link1.querySelector("a").textContent).toEqual("imports");
+      expect(link1.querySelector("a").href).toEqual(
+        expectedLinks.get("ServiceWorkerUpdateViaCache.imports")
       );
 
-      const link2 = doc.querySelector("#link2 code a");
-      expect(link2.href).toEqual(expectedLinks.get("blob"));
+      const link2 = doc.getElementById("link2");
+      const [blobLink, swImport] = link2.querySelectorAll("a");
+      expect(blobLink.href).toEqual(expectedLinks.get("blob"));
+      expect(swImport.href).toEqual(
+        expectedLinks.get("ServiceWorkerUpdateViaCache.imports")
+      );
+      expect(link2.textContent).toEqual(`"blob" "imports"`);
 
-      const link3 = doc.querySelector("#link3 code a");
-      expect(link3.href).toEqual(expectedLinks.get("ChildDisplayType.block"));
+      const [blockLink1, blockLink2] = doc.querySelectorAll("#link3 code a");
+      expect(blockLink1.href).toEqual(
+        expectedLinks.get("ChildDisplayType.block")
+      );
+      expect(blockLink2.href).toEqual(
+        expectedLinks.get("ChildDisplayType.block")
+      );
     });
 
     it("links local definitions first", async () => {
@@ -774,7 +797,10 @@ describe("Core — xref", () => {
           <p id="link-external">{{ Window.event }} links to html spec.</p>
         </section>
       `;
-      const config = { xref: { url: urlOf("inline-locals") }, localBiblio };
+      const config = {
+        xref: { url: xrefTestUrl("inline-locals") },
+        localBiblio,
+      };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -903,7 +929,7 @@ describe("Core — xref", () => {
   });
 
   it("caches results and uses cached results when available", async () => {
-    const config = { xref: { url: urlOf("cache-1") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("cache-1") }, localBiblio };
     let cacheKeys;
 
     const keys = new Map([
@@ -945,7 +971,7 @@ describe("Core — xref", () => {
     );
 
     // new data was requested from server, cache should change
-    const config2 = { xref: { url: urlOf("cache-2") }, localBiblio };
+    const config2 = { xref: { url: xrefTestUrl("cache-2") }, localBiblio };
     const body2 = `
       <section>
         <p><a id="link-1">dictionary</a><p>

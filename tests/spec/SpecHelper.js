@@ -212,3 +212,7 @@ export function makeStandardGeoOps(config = {}, body = makeDefaultBody()) {
     config: { ...makeBasicConfig("geonovum"), ...config },
   };
 }
+
+export function xrefTestUrl(id) {
+  return `${location.origin}/tests/data/xref/${id}.json`;
+}
