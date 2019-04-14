@@ -149,7 +149,7 @@ export function run(conf) {
   // Don't gather text nodes for these:
   const exclusions = ["#respec-ui", ".head", "pre"];
   const txts = getTextNodes(document.body, exclusions, {
-    wsNodes: false, // we don't nodes with just whitespace
+    wsNodes: false, // we don't want nodes with just whitespace
   });
   const rx = new RegExp(
     `(${[
