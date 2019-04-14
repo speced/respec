@@ -674,13 +674,19 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
  * Returns all the descendant text nodes of an element.
  * @param {Node} el
  * @param {string[]} exclusions node localName to exclude
+ * @param {boolean} options.wsNodes if nodes that only have whitespace are returned.
  * @returns {Text[]}
  */
-export function getTextNodes(el, exclusions = []) {
+export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
+  const exclusionQuery = exclusions.join(", ");
   const acceptNode = (/** @type {Text} */ node) => {
-    return exclusions.includes(node.parentElement.localName)
-      ? NodeFilter.FILTER_REJECT
-      : NodeFilter.FILTER_ACCEPT;
+    if (node.parentElement.closest(exclusionQuery)) {
+      return NodeFilter.FILTER_REJECT;
+    }
+    if (options.wsNodes && /\s/gm.test(node.data)) {
+      return NodeFilter.FILTER_REJECT;
+    }
+    return NodeFilter.FILTER_ACCEPT;
   };
   const nodeIterator = document.createNodeIterator(
     el,
