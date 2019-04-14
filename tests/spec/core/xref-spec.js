@@ -5,6 +5,7 @@ import {
   makeDefaultBody,
   makeRSDoc,
   makeStandardOps,
+  xrefTestUrl,
 } from "../SpecHelper.js";
 import { IDBKeyVal } from "../../../src/core/utils.js";
 import { openDB } from "../../../node_modules/idb/build/esm/index.js";
@@ -21,8 +22,6 @@ describe("Core — xref", () => {
     });
     cache = new IDBKeyVal(idb, "xrefs");
   });
-
-  const urlOf = id => `${location.origin}/tests/data/xref/${id}.json`;
 
   beforeEach(async () => {
     // clear idb cache before each
@@ -163,7 +162,7 @@ describe("Core — xref", () => {
         <p id="external-link"><a>event handler</a></p>
         <p id="external-dfn"><dfn class="externalDFN">URL parser</dfn></p>
       </section>`;
-    const config = { xref: { url: urlOf("basic") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("basic") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -178,7 +177,7 @@ describe("Core — xref", () => {
 
   it("doesn't link auto-filled anchors", async () => {
     const body = `<section><a id="test" data-cite="credential-management"></a></section>`;
-    const config = { xref: { url: urlOf("basic") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("basic") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
     const link = doc.getElementById("test");
@@ -191,7 +190,7 @@ describe("Core — xref", () => {
 
   it("shows error if external term doesn't exist", async () => {
     const body = `<section><a id="external-link">NOT_FOUND</a></section>`;
-    const config = { xref: { url: urlOf("not_found") } };
+    const config = { xref: { url: xrefTestUrl("not_found") } };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -217,7 +216,7 @@ describe("Core — xref", () => {
         <p><dfn data-cite="html">event manager</dfn> doesn't exist in html.</p>
       </section>
     `;
-    const config = { xref: { url: urlOf("data-cite-1") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("data-cite-1") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -238,7 +237,7 @@ describe("Core — xref", () => {
         <p><a id="link">fetch</a> twice in fetch spec.</p>
       </section>
     `;
-    const config = { xref: { url: urlOf("ambiguous") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("ambiguous") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -260,7 +259,7 @@ describe("Core — xref", () => {
         <p><a id="five" data-cite="NOT-FOUND">object</a></p>
       </section>
     `;
-    const config = { xref: { url: urlOf("data-cite-2") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("data-cite-2") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -295,7 +294,7 @@ describe("Core — xref", () => {
       </section>
     `;
     const config = {
-      xref: { url: urlOf("empty-data-cite-parent") },
+      xref: { url: xrefTestUrl("empty-data-cite-parent") },
       localBiblio,
     };
     const ops = makeStandardOps(config, body);
@@ -337,7 +336,7 @@ describe("Core — xref", () => {
         <p id="external-link-1"><a>event handler</a></p>
       </section>
     `;
-    const config = { xref: { url: urlOf("local-dfn") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("local-dfn") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -377,7 +376,7 @@ describe("Core — xref", () => {
         <a>foo</a>
       </section>
     `;
-    const config = { xref: { url: urlOf("data-lt") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("data-lt") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -408,7 +407,7 @@ describe("Core — xref", () => {
       </section>
     `;
     const config = {
-      xref: { url: urlOf("data-lt") },
+      xref: { url: xrefTestUrl("data-lt") },
       localBiblio,
       pluralize: true,
     };
@@ -454,7 +453,7 @@ describe("Core — xref", () => {
         </section>
       </section>
     `;
-    const config = { xref: { url: urlOf("inline-bibref") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("inline-bibref") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -507,7 +506,7 @@ describe("Core — xref", () => {
         </section>
       </section>
     `;
-    const config = { xref: { url: urlOf("refs") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("refs") }, localBiblio };
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
@@ -589,7 +588,7 @@ describe("Core — xref", () => {
         }} , i.e. should trim the whitespace.</p>
       </section>
       `;
-      const config = { xref: { url: urlOf("inline-idl") }, localBiblio };
+      const config = { xref: { url: xrefTestUrl("inline-idl") }, localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -626,7 +625,7 @@ describe("Core — xref", () => {
       </section>
       `;
       const config = {
-        xref: { url: urlOf("inline-idl-methods") },
+        xref: { url: xrefTestUrl("inline-idl-methods") },
         localBiblio,
       };
       const ops = makeStandardOps(config, body);
@@ -677,7 +676,7 @@ describe("Core — xref", () => {
       </section>
       `;
       const config = {
-        xref: { url: urlOf("inline-idl-attributes") },
+        xref: { url: xrefTestUrl("inline-idl-attributes") },
         localBiblio,
       };
       const ops = makeStandardOps(config, body);
@@ -714,7 +713,7 @@ describe("Core — xref", () => {
         <p id="link2">{{ Credential.[[type]] }}</p>
       </section>
       `;
-      const config = { xref: { url: urlOf("inline-idl-slots") }, localBiblio };
+      const config = { xref: { url: xrefTestUrl("inline-idl-slots") }, localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -738,7 +737,7 @@ describe("Core — xref", () => {
           >{{ "block" }} {{"block"}} </p>
         </section>
       `;
-      const config = { xref: { url: urlOf("inline-idl-enum") }, localBiblio };
+      const config = { xref: { url: xrefTestUrl("inline-idl-enum") }, localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -785,7 +784,7 @@ describe("Core — xref", () => {
           <p id="link-external">{{ Window.event }} links to html spec.</p>
         </section>
       `;
-      const config = { xref: { url: urlOf("inline-locals") }, localBiblio };
+      const config = { xref: { url: xrefTestUrl("inline-locals") }, localBiblio };
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
@@ -914,7 +913,7 @@ describe("Core — xref", () => {
   });
 
   it("caches results and uses cached results when available", async () => {
-    const config = { xref: { url: urlOf("cache-1") }, localBiblio };
+    const config = { xref: { url: xrefTestUrl("cache-1") }, localBiblio };
     let cacheKeys;
 
     const keys = new Map([
@@ -956,7 +955,7 @@ describe("Core — xref", () => {
     );
 
     // new data was requested from server, cache should change
-    const config2 = { xref: { url: urlOf("cache-2") }, localBiblio };
+    const config2 = { xref: { url: xrefTestUrl("cache-2") }, localBiblio };
     const body2 = `
       <section>
         <p><a id="link-1">dictionary</a><p>
