@@ -43,11 +43,15 @@ const supportTitles = new Map([
   ["d", "Disabled by default (needs to enabled)."],
 ]);
 
-const link = createResourceHint({
-  hint: "preconnect",
-  href: "https://respec.org",
-});
-document.head.appendChild(link);
+if (
+  !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
+) {
+  const link = createResourceHint({
+    hint: "preconnect",
+    href: "https://respec.org",
+  });
+  document.head.appendChild(link);
+}
 
 export async function run(conf) {
   if (!conf.caniuse) {
