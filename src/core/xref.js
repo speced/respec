@@ -11,6 +11,7 @@
  */
 import {
   IDBKeyVal,
+  createResourceHint,
   nonNormativeSelector,
   norm as normalize,
   showInlineError,
@@ -25,6 +26,16 @@ const profiles = {
 
 const API_URL = "https://respec.org/xref";
 const CACHE_MAX_AGE = 86400000; // 24 hours
+
+if (
+  !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
+) {
+  const link = createResourceHint({
+    hint: "preconnect",
+    href: "https://respec.org",
+  });
+  document.head.appendChild(link);
+}
 
 /**
  * main external reference driver
