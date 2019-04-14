@@ -118,7 +118,7 @@ function inlineVariableMatches(matched) {
 function inlineLinkMatches(matched) {
   const parts = matched
     .slice(2, -2) // Chop [= =]
-    .split(/\/(?:\s?)/) // Only at first "/"
+    .split("/", 2)
     .map(s => s.trim());
   const [isFor, content] = parts.length === 2 ? parts : [null, parts[0]];
   return hyperHTML`<a data-link-for="${isFor}">${content}</a>`;
