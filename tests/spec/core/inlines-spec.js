@@ -1,6 +1,11 @@
 "use strict";
 
-import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import {
+  flushIframes,
+  makeRSDoc,
+  makeStandardOps,
+  xrefTestUrl,
+} from "../SpecHelper.js";
 
 describe("Core - Inlines", () => {
   afterAll(flushIframes);
@@ -220,7 +225,8 @@ describe("Core - Inlines", () => {
         </p>
       </section>
     `;
-    const doc = await makeRSDoc(makeStandardOps({ xref: true }, body));
+    const config = { xref: { url: xrefTestUrl("inline-links") } };
+    const doc = await makeRSDoc(makeStandardOps(config, body));
     const dfnId = doc.querySelector("#definitions dfn").id;
     const anchors = doc.querySelectorAll("#simple-links a");
     const expectedAnchor = `#${dfnId}`;
