@@ -580,7 +580,7 @@ describe("Core — xref", () => {
     it("links inline IDL references", async () => {
       const body = `
       <section id="test">
-        <p id="link1">{{ Window }}</p>
+        <p id="link1">{{ Window }} and {{EventTarget}}</p>
         <p id="link2">{{ [[query]] }}</p>
         <p id="link3">{{ [[type]] }} is ambiguous.</p>
         <p id="link4"> This should work {{
@@ -593,8 +593,11 @@ describe("Core — xref", () => {
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
-      const link1 = doc.querySelector("#link1 code a");
-      expect(link1.href).toEqual(expectedLinks.get("Window"));
+      const [windowLink, eventTargetLink] = doc.querySelectorAll(
+        "#link1 code a"
+      );
+      expect(windowLink.href).toEqual(expectedLinks.get("Window"));
+      expect(eventTargetLink.href).toEqual(expectedLinks.get("EventTarget"));
 
       const link2 = doc.querySelector("#link2 code a");
       expect(link2.href).toEqual(
