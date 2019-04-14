@@ -129,11 +129,11 @@ function renderMethod(details) {
 // Enum: Identifier["enum value"]
 function renderEnum(details) {
   const { identifier, enumValue } = details;
-  const html = hyperHTML`<a class="respec-idl-xref"
-    data-xref-type="enum"
-    >${identifier}</a>["<a class="respec-idl-xref"
-    data-xref-type="enum-value" data-link-for="${identifier}"
-    >${enumValue}</a>]"`;
+  const html = hyperHTML`"<a
+    class="respec-idl-xref"
+    data-xref-type="enum-value"
+    data-link-for="${identifier}"
+    >${enumValue}</a>"`;
   return html;
 }
 

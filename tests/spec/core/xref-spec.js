@@ -130,10 +130,6 @@ describe("Core — xref", () => {
       "https://url.spec.whatwg.org/#dom-urlsearchparams-append",
     ],
     [
-      "ServiceWorkerUpdateViaCache",
-      "https://www.w3.org/TR/service-workers-1/#enumdef-serviceworkerupdateviacache",
-    ],
-    [
       "ServiceWorkerUpdateViaCache.imports",
       "https://www.w3.org/TR/service-workers-1/#dom-serviceworkerupdateviacache-imports",
     ],
@@ -742,22 +738,22 @@ describe("Core — xref", () => {
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
-      // "ServiceWorkerUpdateViaCache" is enum and "imports" is enum-value
-      const [link1a, link1b] = [...doc.querySelectorAll("#link1 code a")];
-      expect(link1a.href).toEqual(
-        expectedLinks.get("ServiceWorkerUpdateViaCache")
-      );
-      expect(link1b.href).toEqual(
-        expectedLinks.get(`ServiceWorkerUpdateViaCache.imports`)
+      const link1 = doc.getElementById("link1");
+      expect(link1.textContent).toEqual(`"imports"`);
+      expect(link1.querySelector("a").textContent).toEqual("imports");
+      expect(link1.querySelector("a").href).toEqual(
+        expectedLinks.get("ServiceWorkerUpdateViaCache.imports")
       );
 
-      const [blobLink, swImport] = doc.querySelectorAll("#link2 code a");
+      const link2 = doc.getElementById("link2");
+      const [blobLink, swImport] = link2.querySelectorAll("a");
       expect(blobLink.href).toEqual(expectedLinks.get("blob"));
       expect(swImport.href).toEqual(
-        expectedLinks.get("ServiceWorkerUpdateViaCache")
+        expectedLinks.get("ServiceWorkerUpdateViaCache.imports")
       );
-      const [blockLink1, blockLink2] = doc.querySelectorAll("#link3 code a");
+      expect(link2.textContent).toEqual(`"blob" "imports"`);
 
+      const [blockLink1, blockLink2] = doc.querySelectorAll("#link3 code a");
       expect(blockLink1.href).toEqual(
         expectedLinks.get("ChildDisplayType.block")
       );
