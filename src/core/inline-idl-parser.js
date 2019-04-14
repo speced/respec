@@ -82,7 +82,6 @@ function renderInternalSlot(details) {
   const { identifier: linkFor } = parent || {};
   const lt = `[[${identifier}]]`;
   const html = hyperHTML`${parent ? "." : ""}[[<a
-    class="respec-idl-xref"
     data-xref-type="attribute"
     data-link-for=${linkFor}
     data-xref-for=${linkFor}
@@ -95,7 +94,6 @@ function renderAttribute(details) {
   const { parent, identifier } = details;
   const { identifier: linkFor } = parent || {};
   const html = hyperHTML`.<a
-      class="respec-idl-xref"
       data-xref-type="attribute|dict-member"
       data-link-for="${linkFor}"
       data-xref-for="${linkFor}"
@@ -110,7 +108,6 @@ function renderMethod(details) {
   const argsText = args.map(arg => `<var>${arg}</var>`).join(", ");
   const searchText = `${identifier}(${args.join(", ")})`;
   const html = hyperHTML`${parent ? "." : ""}<a
-    class="respec-idl-xref"
     data-xref-type="${type}"
     data-link-for="${linkFor}"
     data-xref-for="${linkFor}"
@@ -123,7 +120,6 @@ function renderMethod(details) {
 function renderEnum(details) {
   const { identifier, enumValue } = details;
   const html = hyperHTML`"<a
-    class="respec-idl-xref"
     data-xref-type="enum-value"
     data-link-for="${identifier}"
     data-xref-for="${identifier}"
@@ -135,7 +131,6 @@ function renderEnum(details) {
 function renderEnumValue(details) {
   const { identifier } = details;
   const html = hyperHTML`"<a
-    class="respec-idl-xref"
     data-xref-type="enum-value"
     >${identifier}</a>"`;
   return html;
