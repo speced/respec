@@ -70,31 +70,21 @@ function parseInlineIDL(str) {
   return results.reverse();
 }
 
-function findDfnType(varName) {
-  const potentialElems = [...document.body.querySelectorAll("dfn[data-type]")];
-  const match = potentialElems.find(
-    ({ textContent }) => textContent.trim() === varName
-  );
-  return match ? match.dataset.type : null;
-}
-
 function renderBase(details) {
   // Check if base is a local variable in a section
   const { identifier } = details;
-  // we can use the identifier as the base type
-  if (!details.idlType) details.idlType = identifier;
   return hyperHTML`<a data-xref-type="_IDL_">${identifier}</a>`;
 }
 
 // Internal slot: .[[identifier]] or [[identifier]]
 function renderInternalSlot(details) {
   const { identifier, parent } = details;
-  details.idlType = findDfnType(`[[${identifier}]]`);
+  const { identifier: linkFor } = parent || {};
   const lt = `[[${identifier}]]`;
   const html = hyperHTML`${parent ? "." : ""}[[<a
-    class="respec-idl-xref"
     data-xref-type="attribute"
-    data-link-for=${parent ? parent.identifier : undefined}
+    data-link-for=${linkFor}
+    data-xref-for=${linkFor}
     data-lt="${lt}">${identifier}</a>]]`;
   return html;
 }
@@ -102,10 +92,11 @@ function renderInternalSlot(details) {
 // Attribute: .identifier
 function renderAttribute(details) {
   const { parent, identifier } = details;
+  const { identifier: linkFor } = parent || {};
   const html = hyperHTML`.<a
-      class="respec-idl-xref"
       data-xref-type="attribute|dict-member"
-      data-link-for="${parent.identifier}"
+      data-link-for="${linkFor}"
+      data-xref-for="${linkFor}"
     >${identifier}</a>`;
   return html;
 }
@@ -117,9 +108,9 @@ function renderMethod(details) {
   const argsText = args.map(arg => `<var>${arg}</var>`).join(", ");
   const searchText = `${identifier}(${args.join(", ")})`;
   const html = hyperHTML`${parent ? "." : ""}<a
-    class="respec-idl-xref"
     data-xref-type="${type}"
     data-link-for="${linkFor}"
+    data-xref-for="${linkFor}"
     data-lt="${searchText}"
     >${identifier}</a>(${[argsText]})`;
   return html;
@@ -129,9 +120,9 @@ function renderMethod(details) {
 function renderEnum(details) {
   const { identifier, enumValue } = details;
   const html = hyperHTML`"<a
-    class="respec-idl-xref"
     data-xref-type="enum-value"
     data-link-for="${identifier}"
+    data-xref-for="${identifier}"
     >${enumValue}</a>"`;
   return html;
 }
@@ -140,7 +131,6 @@ function renderEnum(details) {
 function renderEnumValue(details) {
   const { identifier } = details;
   const html = hyperHTML`"<a
-    class="respec-idl-xref"
     data-xref-type="enum-value"
     >${identifier}</a>"`;
   return html;
