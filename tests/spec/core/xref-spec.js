@@ -573,6 +573,17 @@ describe("Core — xref", () => {
       expect(el.textContent).toEqual("{ {  PASS }}");
     });
 
+    it("shows error if IDL string parsing fails", async () => {
+      const body = `<section id="test">text {{"imp"orts" }} text</section>`;
+      const ops = makeStandardOps(null, body);
+      const doc = await makeRSDoc(ops);
+      const el = doc.getElementById("test");
+      expect(el.querySelector("code a")).toBeFalsy();
+      const errorEl = el.querySelector("span.respec-offending-element");
+      expect(errorEl).toBeTruthy();
+      expect(el.textContent).toEqual(`text {{ "imp"orts" }} text`);
+    });
+
     it("links inline IDL references", async () => {
       const body = `
       <section id="test">
