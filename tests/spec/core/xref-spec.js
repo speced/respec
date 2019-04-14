@@ -580,7 +580,7 @@ describe("Core — xref", () => {
     it("links inline IDL references", async () => {
       const body = `
       <section id="test">
-        <p id="link1">{{ Window }}</p>
+        <p id="link1">{{ Window }} and {{EventTarget}}</p>
         <p id="link2">{{ [[query]] }}</p>
         <p id="link3">{{ [[type]] }} is ambiguous.</p>
         <p id="link4"> This should work {{
@@ -593,8 +593,11 @@ describe("Core — xref", () => {
       const ops = makeStandardOps(config, body);
       const doc = await makeRSDoc(ops);
 
-      const link1 = doc.querySelector("#link1 code a");
-      expect(link1.href).toEqual(expectedLinks.get("Window"));
+      const [windowLink, eventTargetLink] = doc.querySelectorAll(
+        "#link1 code a"
+      );
+      expect(windowLink.href).toEqual(expectedLinks.get("Window"));
+      expect(eventTargetLink.href).toEqual(expectedLinks.get("EventTarget"));
 
       const link2 = doc.querySelector("#link2 code a");
       expect(link2.href).toEqual(
@@ -729,10 +732,10 @@ describe("Core — xref", () => {
       const body = `
         <section id="test">
           <p id="link1">{{ ServiceWorkerUpdateViaCache["imports"] }}</p>
-          <p id="link2">{{ "blob" }}</p>
+          <p id="link2">{{ "blob" }} {{ ServiceWorkerUpdateViaCache["imports"] }}</p>
           <p id="link3"
             data-cite="css-layout-api" data-link-for="ChildDisplayType"
-          >{{ "block" }}</p>
+          >{{ "block" }} {{"block"}} </p>
         </section>
       `;
       const config = { xref: { url: urlOf("inline-idl-enum") }, localBiblio };
@@ -748,11 +751,19 @@ describe("Core — xref", () => {
         expectedLinks.get(`ServiceWorkerUpdateViaCache.imports`)
       );
 
-      const link2 = doc.querySelector("#link2 code a");
-      expect(link2.href).toEqual(expectedLinks.get("blob"));
+      const [blobLink, swImport] = doc.querySelectorAll("#link2 code a");
+      expect(blobLink.href).toEqual(expectedLinks.get("blob"));
+      expect(swImport.href).toEqual(
+        expectedLinks.get("ServiceWorkerUpdateViaCache")
+      );
+      const [blockLink1, blockLink2] = doc.querySelectorAll("#link3 code a");
 
-      const link3 = doc.querySelector("#link3 code a");
-      expect(link3.href).toEqual(expectedLinks.get("ChildDisplayType.block"));
+      expect(blockLink1.href).toEqual(
+        expectedLinks.get("ChildDisplayType.block")
+      );
+      expect(blockLink2.href).toEqual(
+        expectedLinks.get("ChildDisplayType.block")
+      );
     });
 
     it("links local definitions first", async () => {
