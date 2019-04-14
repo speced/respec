@@ -1,5 +1,6 @@
 // @ts-check
 import html from "hyperhtml";
+import { norm } from "../../core/utils.js";
 import { pub } from "../../core/pubsubhub.js";
 import showLink from "./show-link.js";
 import showLogo from "./show-logo.js";
@@ -27,7 +28,7 @@ function getSpecTitleElem(conf) {
     `;
     specTitleElem.prepend(...childNodes);
   }
-  conf.title = specTitleElem.textContent.trim();
+  conf.title = norm(specTitleElem.textContent);
   specTitleElem.classList.add("title", "p-name");
   if (document.querySelector("title") === null) {
     document.title = conf.title;
