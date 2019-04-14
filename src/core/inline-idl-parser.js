@@ -2,6 +2,7 @@
 //  and renders its components as HTML
 
 import hyperHTML from "hyperhtml";
+import { showInlineError } from "./utils";
 
 const methodRegex = /(\w+)\((.*)\)$/;
 const slotRegex = /^\[\[(\w+)\]\]$/;
@@ -59,9 +60,7 @@ function parseInlineIDL(str) {
       results.push({ type: "base", identifier: value });
       continue;
     }
-    throw new SyntaxError(
-      `IDL micro-syntax parsing error: "${value}" in \`${str}\``
-    );
+    throw new SyntaxError(`IDL micro-syntax parsing error in \`{{ ${str} }}\``);
   }
   // link the list
   results.forEach((item, i, list) => {
@@ -157,8 +156,9 @@ export function idlStringToHtml(str) {
   try {
     results = parseInlineIDL(str);
   } catch (error) {
-    console.error(error);
-    return document.createTextNode(str);
+    const el = hyperHTML`<span>{{ ${str} }}</span>`;
+    showInlineError(el, error.message, "Error: Invalid inline IDL string");
+    return el;
   }
   const render = hyperHTML(document.createDocumentFragment());
   const output = [];
