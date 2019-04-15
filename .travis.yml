@@ -5,9 +5,6 @@ node_js:
 cache:
   directories:
     - node_modules # NPM packages
-env:
-  - BROWSERS=ChromeHeadless
-  - BROWSERS=FirefoxHeadless
 
 install:
   - npm install
@@ -25,6 +22,9 @@ jobs:
         - npm run build:w3c
         - npm run test:headless
     - stage: Run Karma unit tests
+      env:
+        - BROWSERS=ChromeHeadless
+        - BROWSERS=FirefoxHeadless
       script:
         - npm run build:w3c
         - npm run build:geonovum
