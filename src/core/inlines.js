@@ -170,7 +170,8 @@ export function run(conf) {
       "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])",
       "(?:\\[\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\]\\])",
       "(?:\\[=[^=]+=\\])", // Inline [= For/link =]
-      "(?<!`)(?:`[^`]+`)", // Inline `code`
+      // TODO: Add (?:<!`) when Firefox and Safari add support
+      "(?:`[^`]+`)(?!`)", // Inline `code`
       ...(abbrRx ? [abbrRx] : []),
     ].join("|")})`
   );
