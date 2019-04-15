@@ -22,11 +22,15 @@ jobs:
         - npm run build:w3c
         - npm run test:headless
     - stage: Run Karma unit tests
+      env:
+        - BROWSERS=ChromeHeadless
       script:
         - npm run build:w3c
         - npm run build:geonovum
-        - travis_retry karma start --single-run --reporters mocha --browsers ChromeHeadless karma.conf.js
-    - script:
+        - travis_retry karma start --single-run --reporters mocha karma.conf.js
+    - env:
+        - BROWSERS=FirefoxHeadlessPref
+      script:
         - npm run build:w3c
         - npm run build:geonovum
-        - travis_retry karma start --single-run --reporters mocha --browsers FirefoxHeadlessPref karma.conf.js
+        - travis_retry karma start --single-run --reporters mocha karma.conf.js
