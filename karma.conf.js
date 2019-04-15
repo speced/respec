@@ -130,6 +130,12 @@ module.exports = function(config) {
           "javascript.options.dynamicImport": true,
         },
       },
+      FirefoxHeadlessPref: {
+        base: "FirefoxHeadless",
+        prefs: {
+          "javascript.options.dynamicImport": true,
+        },
+      },
     },
 
     // Continuous Integration mode
@@ -148,12 +154,8 @@ module.exports = function(config) {
   };
   if (process.env.TRAVIS) {
     process.env.CHROME_BIN = require("puppeteer").executablePath();
-    options.detectBrowsers.enabled = false;
     options.autoWatch = false;
-    options.singleRun = true;
     options.concurrency = 1;
-    options.reporters = ["mocha"];
-    options.browsers = ["ChromeHeadless"];
   }
   if (process.env.BROWSERS) {
     options.detectBrowsers.enabled = false;
