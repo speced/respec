@@ -130,6 +130,12 @@ module.exports = function(config) {
           "javascript.options.dynamicImport": true,
         },
       },
+      FirefoxHeadlessPref: {
+        base: "FirefoxHeadless",
+        prefs: {
+          "javascript.options.dynamicImport": true,
+        },
+      },
     },
 
     // Continuous Integration mode

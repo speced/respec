@@ -29,4 +29,4 @@ jobs:
     - script:
         - npm run build:w3c
         - npm run build:geonovum
-        - travis_retry karma start --single-run --reporters mocha --browsers FirefoxHeadless karma.conf.js
+        - travis_retry karma start --single-run --reporters mocha --browsers FirefoxHeadlessPref karma.conf.js
