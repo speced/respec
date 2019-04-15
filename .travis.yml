@@ -5,9 +5,15 @@ node_js:
 cache:
   directories:
     - node_modules # NPM packages
+env:
+  - BROWSERS=ChromeHeadless
+  - BROWSERS=FirefoxHeadless
 
 install:
   - npm install
+
+addons:
+  firefox: latest
 
 jobs:
   include:
