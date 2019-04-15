@@ -12,6 +12,11 @@ install:
 addons:
   firefox: latest
 
+karma_runner: &karma_runner
+  - npm run build:w3c
+  - npm run build:geonovum
+  - travis_retry karma start --single-run --reporters mocha karma.conf.js
+
 jobs:
   include:
     - stage: Run eslint
@@ -25,12 +30,8 @@ jobs:
       env:
         - BROWSERS=ChromeHeadless
       script:
-        - npm run build:w3c
-        - npm run build:geonovum
-        - travis_retry karma start --single-run --reporters mocha karma.conf.js
+        <<: *karma_runner
     - env:
         - BROWSERS=FirefoxHeadlessPref
       script:
-        - npm run build:w3c
-        - npm run build:geonovum
-        - travis_retry karma start --single-run --reporters mocha karma.conf.js
+        <<: *karma_runner
