@@ -10,7 +10,7 @@ const slotRegex = /^\[\[(\w+)\]\]$/;
 // NOTE: [[value]] is actually a slot, but database has this as type="attribute"
 const attributeRegex = /^((?:\[\[)?(?:\w+)(?:\]\])?)$/;
 const enumRegex = /^(\w+)\["([\w ]+)"\]$/;
-const enumValueRegex = /"([^"]+)"/;
+const enumValueRegex = /\B"([^"]+)"\B/;
 // TODO: const splitRegex = /(?<=\]\]|\b)\./
 // https://github.com/w3c/respec/pull/1848/files#r225087385
 const methodSplitRegex = /\.?(\w+\(.*\)$)/;
