@@ -130,8 +130,10 @@ function renderEnum(details) {
 // Enum value: "enum value"
 function renderEnumValue(details) {
   const { identifier } = details;
+  const lt = identifier === "" ? "the-empty-string" : null;
   const html = hyperHTML`"<a
     data-xref-type="enum-value"
+    data-lt="${lt}"
     >${identifier}</a>"`;
   return html;
 }
