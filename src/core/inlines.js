@@ -124,6 +124,11 @@ function inlineLinkMatches(matched) {
   return hyperHTML`<a data-link-for="${isFor}" data-xref-for="${isFor}">${content}</a>`;
 }
 
+function inlineCodeMatches(matched) {
+  const clean = matched.slice(1, -1); // Chop ` and `
+  return hyperHTML`<code>${clean}</code>`;
+}
+
 export function run(conf) {
   const abbrMap = new Map();
   document.normalize();
@@ -165,6 +170,7 @@ export function run(conf) {
       "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])",
       "(?:\\[\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\]\\])",
       "(?:\\[=[^=]+=\\])", // Inline [= For/link =]
+      "(?<!`)(?:`[^`]+`)", // Inline `code`
       ...(abbrRx ? [abbrRx] : []),
     ].join("|")})`
   );
@@ -192,6 +198,9 @@ export function run(conf) {
         df.appendChild(node);
       } else if (t.startsWith("[=")) {
         const node = inlineLinkMatches(t);
+        df.appendChild(node);
+      } else if (t.startsWith("`")) {
+        const node = inlineCodeMatches(t);
         df.appendChild(node);
       } else if (abbrMap.has(t)) {
         const node = inlineAbbrMatches(t, txt, abbrMap);

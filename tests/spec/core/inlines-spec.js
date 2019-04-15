@@ -188,6 +188,34 @@ describe("Core - Inlines", () => {
     ]);
   });
 
+  it("proceses `backticks` as code", async () => {
+    const body = `
+      <section>
+        <p id="simple">Return \`null\`.</p>
+        <p id="multi">Return \`123\` or \`undefined\` or \`this
+          particular string\`.
+        </p>
+        <p id="no-match">Return \`\`\`don't match this code blocks\`\`\`</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+
+    // simple case
+    const simple = doc.querySelector("#simple code");
+    expect(simple).toBeTruthy();
+    expect(simple.textContent).toBe("null");
+
+    // multi per line
+    const multi = doc.querySelectorAll("#multi code");
+    expect(multi.length).toBe(3);
+    expect(multi[0].textContent).toBe("123");
+    expect(multi[1].textContent).toBe("undefined");
+    expect(multi[2].textContent.endsWith("string")).toBeTruthy();
+
+    // no-match
+    expect(doc.querySelector("#no-match code")).toBeNull();
+  });
+
   it("processes [= BikeShed style inline links =]", async () => {
     const body = `
       <section data-cite="INFRA">
