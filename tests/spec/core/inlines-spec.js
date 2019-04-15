@@ -208,9 +208,9 @@ describe("Core - Inlines", () => {
     // multi per line
     const multi = doc.querySelectorAll("#multi code");
     expect(multi.length).toBe(3);
-    expect(multi[1].textContent).toBe("123");
-    expect(multi[2].textContent).toBe("undefined");
-    expect(multi[3].textContent.endsWith("string")).toBeTruthy();
+    expect(multi[0].textContent).toBe("123");
+    expect(multi[1].textContent).toBe("undefined");
+    expect(multi[2].textContent.endsWith("string")).toBeTruthy();
 
     // no-match
     expect(doc.querySelector("#no-match code")).toBeNull();
