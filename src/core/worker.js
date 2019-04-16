@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Module core/worker
  *
@@ -7,8 +8,8 @@
 export const name = "core/worker";
 
 // Opportunistically preload syntax highlighter, which is used by the worker
-import { createResourceHint } from "./utils";
-import { expose } from "./expose-modules";
+import { createResourceHint } from "./utils.js";
+import { expose } from "./expose-modules.js";
 import workerScript from "text!../../worker/respec-worker.js";
 // Opportunistically preload syntax highlighter
 const hint = {

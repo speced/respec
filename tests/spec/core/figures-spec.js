@@ -1,16 +1,25 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeBasicConfig,
+  makeDefaultBody,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
+
 describe("Core - Figures", () => {
   afterAll(flushIframes);
   it("creates autolinks from the anchor to the figure", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}<figure id='fig'> <img src='img' alt=''>
+    const body = `
+      <figure id='fig'> <img src='img' alt=''>
         <figcaption>test figure caption</figcaption>
        </figure>
        <a id='anchor-fig-title-empty' title='' href='#fig'></a>
        <a id='anchor-fig-title-set' title='pass' href='#fig'></a>
-       <a id='anchor-fig' href='#fig'></a>`,
-    };
+       <a id='anchor-fig' href='#fig'></a>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const anchorFig = doc.getElementById("anchor-fig");
     const anchorFigTitleSet = doc.getElementById("anchor-fig-title-set");
@@ -44,18 +53,18 @@ describe("Core - Figures", () => {
   });
 
   it("generates table of figures", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}<figure>
-          <img src='img' alt=''>
-          <figcaption>test 1</figcaption>
-        </figure>
-        <figure>
-          <img src='img' alt=''>
-          <figcaption>test 2</figcaption>
-        </figure>
-        <section id=tof></section>`,
-    };
+    const body = `
+      <figure>
+        <img src='img' alt=''>
+        <figcaption>test 1</figcaption>
+      </figure>
+      <figure>
+        <img src='img' alt=''>
+        <figcaption>test 2</figcaption>
+      </figure>
+      <section id=tof></section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const tof = doc.getElementById("tof");
     const tofHeader = tof.querySelector("h2");

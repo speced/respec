@@ -1,4 +1,13 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeBasicConfig,
+  makeDefaultBody,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
+
 describe("Core — Highlight", () => {
   afterAll(flushIframes);
 
@@ -9,16 +18,15 @@ describe("Core — Highlight", () => {
   });
 
   it("shouldn't highlight idl blocks", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
-        <section><pre class=idl>
-          [Constructor]interface Dahut : Mammal {
-            const unsigned short DEXTROGYROUS = 1;
-            Dahut turnAround(float angle, boolean fall);
-          };</pre>
-        </section>`,
-    };
+    const body = `
+      <section><pre class=idl>
+        [Constructor]interface Dahut : Mammal {
+          const unsigned short DEXTROGYROUS = 1;
+          Dahut turnAround(float angle, boolean fall);
+        };</pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelector("pre");
     expect(pre.classList.contains("hljs")).toBeFalsy();
@@ -26,16 +34,16 @@ describe("Core — Highlight", () => {
   });
 
   it("automatically highlights", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}<section>
-          <pre class=example>
-            function foo() {
-              alert('foo');
-            }
-          </pre>
-        </section>`,
-    };
+    const body = `
+      <section>
+        <pre class=example>
+          function foo() {
+            alert('foo');
+          }
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelector("div.example pre");
     expect(pre.firstChild.classList.contains("hljs")).toBeTruthy();
@@ -43,16 +51,16 @@ describe("Core — Highlight", () => {
   });
 
   it("shouldn't highlight pre elements when told not to", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}<section>
-          <pre class='nohighlight example'>
-            function foo() {
-              alert('foo');
-            }
-          </pre>
-        </section>`,
-    };
+    const body = `
+      <section>
+        <pre class='nohighlight example'>
+          function foo() {
+            alert('foo');
+          }
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelector("div.example pre");
     expect(pre.classList.contains("nohighlight")).toBeTruthy();
@@ -60,20 +68,19 @@ describe("Core — Highlight", () => {
   });
 
   it("shouldn't highlight code inside pre elements when told not to", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
-        <section>
-          <pre class="example">
-            <code class="nohighlight">
-              function(){}
-            </code>
-            <code class="js">
-              function(){}
-            </code>
-          </pre>
-        </section>`,
-    };
+    const body = `
+      <section>
+        <pre class="example">
+          <code class="nohighlight">
+            function(){}
+          </code>
+          <code class="js">
+            function(){}
+          </code>
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
 
     const codeNoHighlight = doc.querySelector("div.example code.nohighlight");
@@ -102,17 +109,16 @@ describe("Core — Highlight", () => {
   });
 
   it("checks if <pre> content is wrapped in <code>", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
+    const body = `
         <section>
           <pre class="js">
             function foo() {
               alert('foo');
             }
           </pre>
-        </section>`,
-    };
+        </section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
     const pre = doc.querySelector("pre");
     const code = pre.firstElementChild;
@@ -123,33 +129,32 @@ describe("Core — Highlight", () => {
   });
 
   it("asynchronously hightlights <code> elements inside <pre>", async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
-        <section>
-          <pre class="example" id="first-pre">
-            <code class="js" id="test1">
-              function one(){}
-            </code>
-            function pass(){}
-            <code class="http" id="test2">
-              Header: Test1
-            </code>
-          </pre>
-          <pre id="second-pre">
-            second function(){} is not highlighted.
-            <code class="js">
-              function three(){}
-            </code>
-            <code>
-              function four(){}
-            </code>
-            <code class="http">
-              Header: Test5
-            </code>
-          </pre>
-        </section>`,
-    };
+    const body = `
+      <section>
+        <pre class="example" id="first-pre">
+          <code class="js" id="test1">
+            function one(){}
+          </code>
+          function pass(){}
+          <code class="http" id="test2">
+            Header: Test1
+          </code>
+        </pre>
+        <pre id="second-pre">
+          second function(){} is not highlighted.
+          <code class="js">
+            function three(){}
+          </code>
+          <code>
+            function four(){}
+          </code>
+          <code class="http">
+            Header: Test5
+          </code>
+        </pre>
+      </section>
+    `;
+    const ops = makeStandardOps(null, body);
     const doc = await makeRSDoc(ops);
 
     const firstPre = doc.getElementById("first-pre");

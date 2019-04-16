@@ -1,15 +1,12 @@
 "use strict";
+
+import { rule } from "../../../../src/core/linter-rules/check-internal-slots.js";
+
 describe("Core Linter Rule - 'check-internal-slots'", () => {
   const ruleName = "check-internal-slots";
   const config = {
     lint: { [ruleName]: true },
   };
-  let rule;
-  beforeAll(async () => {
-    rule = await new Promise(resolve => {
-      require([`core/linter-rules/${ruleName}`], ({ rule }) => resolve(rule));
-    });
-  });
   const doc = document.implementation.createHTMLDocument("test doc");
   beforeEach(() => {
     // Make sure every unordered test get an empty document

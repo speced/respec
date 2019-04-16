@@ -4,7 +4,7 @@
 // seemingly a better idea to orthogonalise them. The issue is that processing text nodes
 // is harder to orthogonalise, and in some browsers can also be particularly slow.
 // Things that are recognised are <abbr>/<acronym> which when used once are applied
-// throughout the document, [[REFERENCES]]/[[!REFERENCES]], {{{ IDL }}} and RFC2119 keywords.
+// throughout the document, [[REFERENCES]]/[[!REFERENCES]], {{ IDL }} and RFC2119 keywords.
 // CONFIGURATION:
 //  These options do not configure the behaviour of this module per se, rather this module
 //  manipulates them (oftentimes being the only source to set them) so that other modules
@@ -19,10 +19,11 @@ import {
   getTextNodes,
   refTypeFromContext,
   showInlineWarning,
-} from "./utils";
+} from "./utils.js";
 import hyperHTML from "hyperhtml";
-import { idlStringToHtml } from "./inline-idl-parser";
-import { renderInlineCitation } from "./render-biblio";
+import { idlStringToHtml } from "./inline-idl-parser.js";
+import { renderInlineCitation } from "./render-biblio.js";
+
 export const name = "core/inlines";
 export const rfc2119Usage = {};
 
@@ -40,12 +41,23 @@ function inlineRFC2119Matches(matched) {
 
 /**
  * @param {string} matched
+ * @return {HTMLElement}
+ */
+function inlineRefMatches(matched) {
+  // slices "[[[" at the beginning and "]]]" at the end
+  const ref = matched.slice(3, -3).trim();
+  const nodeElement = hyperHTML`<a data-cite="${ref}"></a>`;
+  return nodeElement;
+}
+
+/**
+ * @param {string} matched
  */
 function inlineXrefMatches(matched) {
-  // slices "{{{" at the beginning and "}}}" at the end
-  const ref = matched.slice(3, -3).trim();
+  // slices "{{" at the beginning and "}}" at the end
+  const ref = matched.slice(2, -2).trim();
   return ref.startsWith("\\")
-    ? document.createTextNode(`{{{${ref.slice(1)}}}}`)
+    ? document.createTextNode(`${matched.replace("\\", "")}`)
     : idlStringToHtml(ref);
 }
 
@@ -103,7 +115,22 @@ function inlineVariableMatches(matched) {
   return hyperHTML`<var data-type="${type}">${varName}</var>`;
 }
 
+function inlineLinkMatches(matched) {
+  const parts = matched
+    .slice(2, -2) // Chop [= =]
+    .split("/", 2)
+    .map(s => s.trim());
+  const [isFor, content] = parts.length === 2 ? parts : [null, parts[0]];
+  return hyperHTML`<a data-link-for="${isFor}" data-xref-for="${isFor}">${content}</a>`;
+}
+
+function inlineCodeMatches(matched) {
+  const clean = matched.slice(1, -1); // Chop ` and `
+  return hyperHTML`<code>${clean}</code>`;
+}
+
 export function run(conf) {
+  const abbrMap = new Map();
   document.normalize();
   if (!document.querySelector("section#conformance")) {
     // make the document informative
@@ -115,7 +142,6 @@ export function run(conf) {
   if (!conf.respecRFC2119) conf.respecRFC2119 = rfc2119Usage;
 
   // PRE-PROCESSING
-  const abbrMap = new Map();
   /** @type {NodeListOf<HTMLElement>} */
   const abbrs = document.querySelectorAll("abbr[title]");
   for (const abbr of abbrs) {
@@ -125,7 +151,11 @@ export function run(conf) {
   const abbrRx = aKeys.length ? `(?:\\b${aKeys.join("\\b)|(?:\\b")}\\b)` : null;
 
   // PROCESSING
-  const txts = getTextNodes(document.body, ["pre"]);
+  // Don't gather text nodes for these:
+  const exclusions = ["#respec-ui", ".head", "pre"];
+  const txts = getTextNodes(document.body, exclusions, {
+    wsNodes: false, // we don't want nodes with just whitespace
+  });
   const rx = new RegExp(
     `(${[
       "\\bMUST(?:\\s+NOT)?\\b",
@@ -135,9 +165,13 @@ export function run(conf) {
       "\\b(?:NOT\\s+)?REQUIRED\\b",
       "\\b(?:NOT\\s+)?RECOMMENDED\\b",
       "\\bOPTIONAL\\b",
-      "(?:{{3}\\s*.*\\s*}{3})", // inline IDL references,
-      "\\B\\|\\w[\\s\\w]*\\w(?:\\s*\\:\\s*\\w+)?\\|\\B", // inline variable regex
+      "(?:{{[^}]+}})", // inline IDL references,
+      "\\B\\|\\w[\\w\\s]*(?:\\s*\\:[\\w\\s&;<>]+)?\\|\\B", // inline variable regex
       "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])",
+      "(?:\\[\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\]\\])",
+      "(?:\\[=[^=]+=\\])", // Inline [= For/link =]
+      // TODO: Add (?:<!`) when Firefox and Safari add support
+      "(?:`[^`]+`)(?!`)", // Inline `code`
       ...(abbrRx ? [abbrRx] : []),
     ].join("|")})`
   );
@@ -151,14 +185,23 @@ export function run(conf) {
       matched = !matched;
       if (!matched) {
         df.appendChild(document.createTextNode(t));
-      } else if (t.startsWith("{{{")) {
+      } else if (t.startsWith("{{")) {
         const node = inlineXrefMatches(t);
+        df.appendChild(node);
+      } else if (t.startsWith("[[[")) {
+        const node = inlineRefMatches(t);
         df.appendChild(node);
       } else if (t.startsWith("[[")) {
         const nodes = inlineBibrefMatches(t, txt, conf);
         df.append(...nodes);
       } else if (t.startsWith("|")) {
         const node = inlineVariableMatches(t);
+        df.appendChild(node);
+      } else if (t.startsWith("[=")) {
+        const node = inlineLinkMatches(t);
+        df.appendChild(node);
+      } else if (t.startsWith("`")) {
+        const node = inlineCodeMatches(t);
         df.appendChild(node);
       } else if (abbrMap.has(t)) {
         const node = inlineAbbrMatches(t, txt, abbrMap);

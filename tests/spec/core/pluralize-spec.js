@@ -1,3 +1,5 @@
+import { makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 describe("Core - Pluralize", () => {
   it("adds pluralization when [data-lt] is not specified", async () => {
     const body = `

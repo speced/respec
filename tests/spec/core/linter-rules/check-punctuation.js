@@ -1,12 +1,8 @@
+import { rule } from "../../../../src/core/linter-rules/check-punctuation.js";
+
 describe("Core Linter Rule - 'check-punctuation'", () => {
   const ruleName = "check-punctuation";
   const config = { lint: { [ruleName]: true } };
-  let rule;
-  beforeAll(async () => {
-    rule = await new Promise(resolve => {
-      require([`core/linter-rules/${ruleName}`], ({ rule }) => resolve(rule));
-    });
-  });
   it("checks p ending without a punctuation", async () => {
     const doc = document.implementation.createHTMLDocument("test doc");
     doc.body.innerHTML = `

@@ -1,4 +1,12 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeDefaultBody,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
+
 const findContent = string => {
   return ({ textContent }) => textContent.trim() === string;
 };
@@ -73,6 +81,7 @@ describe("W3C — Headers", () => {
             mailto: "EMAIL",
             note: "NOTE",
             w3cid: "1234",
+            orcid: "https://orcid.org/0000-0002-1694-233X",
           },
         ],
       };
@@ -93,6 +102,45 @@ describe("W3C — Headers", () => {
       expect(dd.querySelectorAll("a[href='http://URI']").length).toBe(0);
       expect(dd.dataset.editorId).toBe("1234");
       expect(dd.textContent).toMatch("(NOTE)");
+      expect(
+        dd.querySelector("a[href='https://orcid.org/0000-0002-1694-233X']")
+      ).not.toBeNull();
+      // It puts orcid after the editor's name, but before the organization's details
+      expect(doc.querySelector("dd > .p-name + .orcid + .org")).not.toBeNull();
+    });
+
+    it("identifies valid and invalid ORCIDs", async () => {
+      const ops = makeStandardOps();
+      const newProps = {
+        specStatus: "REC",
+        editors: [
+          {
+            name: "John Doe",
+            orcid: "https://orcid.org/0000-0002-1694-233X",
+          },
+          {
+            name: "Jane Doe",
+            orcid: "0000-0002-1694-233X",
+          },
+          {
+            name: "John Smith",
+            orcid: "http://orcid.org/0000-0002-1694-233X",
+          },
+          {
+            name: "Jane Smith",
+            orcid: "0000-0002-1694-2330",
+          },
+        ],
+      };
+      Object.assign(ops.config, newProps);
+      const doc = await makeRSDoc(ops);
+
+      expect(
+        doc.querySelectorAll(
+          "a.orcid[href='https://orcid.org/0000-0002-1694-233X']"
+        ).length
+      ).toBe(2);
+      expect(doc.querySelectorAll("a.orcid").length).toBe(2);
     });
 
     it("takes multiple editors into account", async () => {
@@ -488,11 +536,7 @@ describe("W3C — Headers", () => {
 
   describe("previousPublishDate & previousMaturity", () => {
     it("recovers given bad date inputs", async () => {
-      const ISODate = await new Promise(resolve => {
-        require(["core/utils"], ({ ISODate }) => {
-          resolve(ISODate);
-        });
-      });
+      const { ISODate } = await import("../../../src/core/utils.js");
 
       const ops = makeStandardOps();
       const start = new Date(ISODate.format(Date.now())).valueOf();
@@ -1281,8 +1325,24 @@ describe("W3C — Headers", () => {
       .textContent.replace(/\s+/gm, " ");
     const expectedString =
       "does not expect this document to become a W3C Recommendation";
-    expect(sotdText).toMatch(expectedString);
+    expect(sotdText).toContain(expectedString);
   });
+  it("states that the document won't be on the W3C Rec Track", async () => {
+    const ops = makeStandardOps();
+    const newProps = {
+      noRecTrack: true,
+      status: "ED",
+    };
+    Object.assign(ops.config, newProps);
+    const doc = await makeRSDoc(ops);
+    const sotdText = doc
+      .getElementById("sotd")
+      .textContent.replace(/\s+/gm, " ");
+    const expectedString =
+      "does not expect this document to become a W3C Recommendation";
+    expect(sotdText).toContain(expectedString);
+  });
+
   describe("logos", () => {
     it("adds allows multiple logos when spec is unofficial", async () => {
       const ops = makeStandardOps();
@@ -1346,6 +1406,38 @@ describe("W3C — Headers", () => {
         expect(img.width).toBe(logo.width);
         expect(anchor.href).toBe(logo.url);
       }
+    });
+  });
+
+  describe("Add Preview Status in title", () => {
+    it("when document title is present", async () => {
+      const ops = makeStandardOps();
+      const doc = await makeRSDoc(
+        ops,
+        "spec/core/simple.html?isPreview=true&prNumber=123&prUrl=%22http%3A//w3c.github.io/respec/%22"
+      );
+      expect(doc.title).toBe("Preview of PR #123: Simple Spec");
+      const h1 = doc.querySelector("h1#title");
+      expect(h1.textContent).toContain("Preview of PR #123:");
+      expect(h1.textContent).toContain("Simple Spec");
+      expect(h1.querySelector("a").href).toBe("http://w3c.github.io/respec/");
+    });
+
+    it("when only <h1> title is present", async () => {
+      const ops = {
+        config: {
+          isPreview: true,
+          prNumber: 123,
+          prUrl: "http://w3c.github.io/respec/",
+        },
+        body: `<h1 id='title'>Simple Spec</h1>${makeDefaultBody()}`,
+      };
+      const doc = await makeRSDoc(ops);
+      expect(doc.title).toBe("Preview of PR #123: Simple Spec");
+      const h1 = doc.querySelector("h1#title");
+      expect(h1.textContent).toContain("Preview of PR #123:");
+      expect(h1.textContent).toContain("Simple Spec");
+      expect(h1.querySelector("a").href).toBe("http://w3c.github.io/respec/");
     });
   });
 });

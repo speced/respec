@@ -1,14 +1,10 @@
+import { rule } from "../../../../src/core/linter-rules/check-charset.js";
+
 describe("Core Linter Rule - 'check-charset'", () => {
   const ruleName = "check-charset";
   const config = {
     lint: { [ruleName]: true },
   };
-  let rule;
-  beforeAll(async () => {
-    rule = await new Promise(resolve => {
-      require([`core/linter-rules/${ruleName}`], ({ rule }) => resolve(rule));
-    });
-  });
 
   it("checks if meta[charset] is set to utf-8", async () => {
     const doc = document.implementation.createHTMLDocument("test doc");

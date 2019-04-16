@@ -1,4 +1,12 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeBasicConfig,
+  makeDefaultBody,
+  makeRSDoc,
+} from "../SpecHelper.js";
+
 describe("Core — Algorithm Lists", () => {
   afterAll(flushIframes);
   it("adds 'assert' CSS class to Assert: in ordered lists that are marked as algorithms", async () => {

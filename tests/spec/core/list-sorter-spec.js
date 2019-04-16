@@ -1,72 +1,73 @@
 "use strict";
+
+import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+
 describe("Core — list-sorter", () => {
   afterAll(flushIframes);
   let doc;
   beforeAll(async () => {
-    const ops = {
-      config: makeBasicConfig(),
-      body: `${makeDefaultBody()}
-        <ol data-sort=ascending>
-          <li>F</li>
-          <li>Z</li>
-          <li>a</li>
-          <li>B</li>
-        </ol>
-        <ul data-sort=descending>
-          <li>F</li>
-          <li>Z</li>
-          <li>a</li>
-          <li>c</li>
-        </ul>
-        <ol id="ol-default" data-sort>
-          <li>F</li>
-          <li>Z</li>
-          <li>a</li>
-          <li>B</li>
-        </ol>
-        <ul data-sort=descending id="nested-list">
-          <li>F</li>
-          <li>A
-            <ol data-sort=ascending>
-              <li>3</li>
-              <li>9</li>
-              <li>1</li>
-              <li>5</li>
-            </ol>
-          </li>
-          <li>z</li>
-          <li>c</li>
-        </ul>
-        <dl data-sort="ascending">
-          <dt>Z</dt>
-          <dd>First</dd>
-          <dd>Second last</dd>
-          <dd>Last when sorted.</dd>
-          <dt>h</dt>
-          <dt>a</dt>
-          <dt>W</dt>
-        </dl>
-        <dl data-sort="descending">
-          <dt>3</dt>
-          <dt>9</dt>
-          <dd>First</dd>
-          <dt>1</dt>
-          <dd>First</dd>
-          <dd>Second last</dd>
-          <dd>Last when sorted.</dd>
-        </dl>
-        <dl id="dont-sort">
-          <dt>dont</dt>
-          <dt>sort</dt>
-          <dt>me</dt>
-        </dl>
-        <dl id="default-sort" data-sort>
-          <dt>9</dt>
-          <dt>3</dt>
-          <dt>1</dt>
-        </dl>
-      `,
-    };
+    const body = `
+      <ol data-sort=ascending>
+        <li>F</li>
+        <li>Z</li>
+        <li>a</li>
+        <li>B</li>
+      </ol>
+      <ul data-sort=descending>
+        <li>F</li>
+        <li>Z</li>
+        <li>a</li>
+        <li>c</li>
+      </ul>
+      <ol id="ol-default" data-sort>
+        <li>F</li>
+        <li>Z</li>
+        <li>a</li>
+        <li>B</li>
+      </ol>
+      <ul data-sort=descending id="nested-list">
+        <li>F</li>
+        <li>A
+          <ol data-sort=ascending>
+            <li>3</li>
+            <li>9</li>
+            <li>1</li>
+            <li>5</li>
+          </ol>
+        </li>
+        <li>z</li>
+        <li>c</li>
+      </ul>
+      <dl data-sort="ascending">
+        <dt>Z</dt>
+        <dd>First</dd>
+        <dd>Second last</dd>
+        <dd>Last when sorted.</dd>
+        <dt>h</dt>
+        <dt>a</dt>
+        <dt>W</dt>
+      </dl>
+      <dl data-sort="descending">
+        <dt>3</dt>
+        <dt>9</dt>
+        <dd>First</dd>
+        <dt>1</dt>
+        <dd>First</dd>
+        <dd>Second last</dd>
+        <dd>Last when sorted.</dd>
+      </dl>
+      <dl id="dont-sort">
+        <dt>dont</dt>
+        <dt>sort</dt>
+        <dt>me</dt>
+      </dl>
+      <dl id="default-sort" data-sort>
+        <dt>9</dt>
+        <dt>3</dt>
+        <dt>1</dt>
+      </dl>
+    `;
+    const ops = makeStandardOps(null, body);
     doc = await makeRSDoc(ops);
   });
   describe("Ordered and unordered lists", () => {

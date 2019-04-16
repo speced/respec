@@ -7,7 +7,6 @@ window.addEventListener("error", ev => {
 // this is only set in a build, not at all in the dev environment
 require.config({
   paths: {
-    clipboard: "deps/clipboard",
     hyperhtml: "deps/hyperhtml",
     idb: "deps/idb",
     jquery: "deps/jquery",
@@ -20,8 +19,8 @@ require.config({
     shortcut: {
       exports: "shortcut",
     },
-    highlight: {
-      exports: "hljs",
+    idb: {
+      exports: "idb",
     },
   },
 });
@@ -30,6 +29,7 @@ define([
   // order is significant
   "./core/base-runner",
   "./core/ui",
+  "./core/jquery-enhanced",
   "./core/reindent",
   "./core/location-hash",
   "./core/l10n",
@@ -43,6 +43,7 @@ define([
   "./w3c/headers",
   "./w3c/abstract",
   "./core/data-transform",
+  "./core/data-abbr",
   "./core/inlines",
   "./w3c/conformance",
   "./core/dfn",
@@ -61,7 +62,7 @@ define([
   "./core/contrib",
   "./core/fix-headers",
   "./core/structure",
-  "./w3c/informative",
+  "./core/informative",
   "./core/id-headers",
   "./core/caniuse",
   "./ui/save-html",

@@ -1,13 +1,8 @@
 "use strict";
-describe("Core - Utils", () => {
-  let utils;
-  beforeAll(done => {
-    require(["core/utils"], u => {
-      utils = u;
-      done();
-    });
-  });
 
+import * as utils from "../../../src/core/utils.js";
+
+describe("Core - Utils", () => {
   describe("fetchAndCache", () => {
     async function clearCaches() {
       const keys = await caches.keys();

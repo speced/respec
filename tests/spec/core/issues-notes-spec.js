@@ -1,4 +1,13 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeBasicConfig,
+  makeDefaultBody,
+  makeRSDoc,
+  makeStandardOps,
+} from "../SpecHelper.js";
+
 describe("Core — Issues and Notes", () => {
   afterAll(flushIframes);
   it("treats each issue as unique", async () => {
@@ -84,7 +93,7 @@ describe("Core — Issues and Notes", () => {
       config: makeBasicConfig(),
       body:
         `${makeDefaultBody()}<section><p>BLAH <span class='ednote'>EDNOTE-INLINE</span></p>` +
-        `<p class='ednote' title='EDNOTE-TIT'>EDNOTE</p>`,
+        `<p class='ednote' title='EDNOTE-TIT'>EDNOTE</p></section>`,
     };
     const doc = await makeRSDoc(ops);
     const edNote = doc.querySelector("div.note");
@@ -374,8 +383,56 @@ describe("Core — Issues and Notes", () => {
       `,
     };
     const doc = await makeRSDoc(ops);
-    const { textContent } = doc.querySelector("#issue-summary h2");
+    const { textContent } = doc.querySelector("#issue-summary > h2");
     expect(doc.documentElement.lang).toBe("es");
     expect(textContent).toContain("Resumen de la cuestión");
+  });
+  it("shows issue-summary section with heading provided", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `
+      <section>
+        <h2>Test Issues</h2>
+        <p class="issue" data-number=123></p>
+      </section>
+      <section id="issue-summary">
+        <h2>Open Issues</h2>
+        <p>Here you will find all open issues</p>
+      </section>
+      `,
+    };
+    const doc = await makeRSDoc(ops);
+    const h2 = doc.querySelector("#issue-summary > h2");
+    expect(h2.innerText).toContain("Open Issues");
+    const p = doc.querySelector("#issue-summary p");
+    expect(p.innerText).toContain("Here you will find all open issues");
+  });
+  it("shows issue-summary section with paragraph and default heading when only <p> is defined", async () => {
+    const ops = {
+      config: makeBasicConfig(),
+      body: `
+      <section>
+        <h2>Test Issues</h2>
+        <p class="issue" data-number=123></p>
+      </section>
+      <section id="issue-summary">
+        <p>Here you will find all issues summary</p>
+        <div class="note">This is a note</div>
+        <section>
+          <h3>This is not the heading of issue-summary</h3>
+        </section>
+      </section>
+      `,
+    };
+    const doc = await makeRSDoc(ops);
+    const h2 = doc.querySelector("#issue-summary > h2");
+    expect(h2.innerText).toContain("Issue Summary");
+    const p = doc.querySelector("#issue-summary p");
+    expect(p.innerText).toContain("Here you will find all issues summary");
+    const div = doc.querySelector("#issue-summary div");
+    expect(div.innerText).toContain("This is a note");
+    // Headings other than top level heading should not be detected as issue summary heading
+    const h3 = doc.querySelector("#issue-summary section h3");
+    expect(h3.innerText).toContain("This is not the heading of issue-summary");
   });
 });

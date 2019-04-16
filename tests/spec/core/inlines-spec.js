@@ -1,4 +1,12 @@
 "use strict";
+
+import {
+  flushIframes,
+  makeRSDoc,
+  makeStandardOps,
+  xrefTestUrl,
+} from "../SpecHelper.js";
+
 describe("Core - Inlines", () => {
   afterAll(flushIframes);
   it("processes inline cite content", async () => {
@@ -79,9 +87,14 @@ describe("Core - Inlines", () => {
         <p id="a1">TEXT |variable: Type| TEXT</p>
         <p id="a2">TEXT |variable with spaces:Type| TEXT</p>
         <p id="a3">TEXT |with spaces :  Type| TEXT</p>
+        <p id="a4">TEXT |with spaces :  Type with spaces| TEXT</p>
         <p id="b">TEXT |variable| TEXT</p>
         <p id="c">TEXT | ignored | TEXT</p>
         <p id="d">TEXT|ignore: Ignore|TEXT</p>
+        <p id="e">TEXT |p| TEXT </p>
+        <p id="f">TEXT |p: Type with spaces| TEXT </p>
+        <p id="g"> |p: Type with spaces| and |var1| and |var2:Type| </p>
+        <p id="h"> TEXT |var: Generic&lt;int&gt;| TEXT |var2: Generic&lt;unsigned short int&gt;| </p>
       </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(null, body));
@@ -97,11 +110,180 @@ describe("Core - Inlines", () => {
     expect(a3.textContent).toEqual("with spaces");
     expect(a3.dataset.type).toEqual("Type");
 
+    const a4 = doc.querySelector("#a4 var");
+    expect(a4.textContent).toEqual("with spaces");
+    expect(a4.dataset.type).toEqual("Type with spaces");
+
     const b = doc.querySelector("#b var");
     expect(b.textContent).toEqual("variable");
     expect(b.dataset.type).toBeUndefined();
 
     expect(doc.querySelector("#c var")).toBeFalsy();
     expect(doc.querySelector("#d var")).toBeFalsy();
+
+    const e = doc.querySelector("#e var");
+    expect(e.textContent).toEqual("p");
+    expect(e.dataset.type).toBeUndefined();
+    const f = doc.querySelector("#f var");
+    expect(f.textContent).toEqual("p");
+    expect(f.dataset.type).toEqual("Type with spaces");
+
+    const g = doc.querySelectorAll("#g var");
+    expect(g[0].textContent).toEqual("p");
+    expect(g[0].dataset.type).toEqual("Type with spaces");
+    expect(g[1].textContent).toEqual("var1");
+    expect(g[1].dataset.type).toBeUndefined();
+    expect(g[2].textContent).toEqual("var2");
+    expect(g[2].dataset.type).toEqual("Type");
+
+    const h = doc.querySelectorAll("#h var");
+    expect(h[0].textContent).toEqual("var");
+    expect(h[0].dataset.type).toEqual("Generic<int>");
+    expect(h[1].textContent).toEqual("var2");
+    expect(h[1].dataset.type).toEqual("Generic<unsigned short int>");
+  });
+
+  it("expands inline references and they get classified as normative/informative correctly", async () => {
+    const config = {
+      localBiblio: {
+        "payment-request": {
+          title: "Payment Request API",
+          href: "https://www.w3.org/TR/payment-request/",
+        },
+        dom: { title: "DOM Standard", href: "https://dom.spec.whatwg.org/" },
+        fetch: {
+          title: "Fetch Standard",
+          href: "https://fetch.spec.whatwg.org/",
+        },
+        html: {
+          title: "HTML Standard",
+          href: "https://html.spec.whatwg.org/multipage/",
+        },
+      },
+    };
+    const body = `
+      <section id="test">
+      <section id="conformance">[[[html]]]</section>
+      <section class="informative">
+          <p>[[[dom]]]</a></p>
+      </section>
+      <p>[[[fetch]]] and [[[?payment-request]]]</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const refs = doc.querySelectorAll("#test a[href]:not(.self-link)");
+    expect(refs[0].textContent).toBe("HTML Standard");
+    expect(refs[1].textContent).toBe("DOM Standard");
+    expect(refs[2].textContent).toBe("Fetch Standard");
+    expect(refs[3].textContent).toBe("Payment Request API");
+    const norm = [...doc.querySelectorAll("#normative-references dt")];
+    expect(norm.length).toBe(2);
+    expect(norm.map(el => el.textContent)).toEqual(["[fetch]", "[html]"]);
+
+    const inform = [...doc.querySelectorAll("#informative-references dt")];
+    expect(inform.length).toBe(2);
+    expect(inform.map(el => el.textContent)).toEqual([
+      "[dom]",
+      "[payment-request]",
+    ]);
+  });
+
+  it("proceses `backticks` as code", async () => {
+    const body = `
+      <section>
+        <p id="simple">Return \`null\`.</p>
+        <p id="multi">Return \`123\` or \`undefined\` or \`this
+          particular string\`.
+        </p>
+        <p id="no-match">Return \`\`\`don't match this code blocks\`\`\`</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+
+    // simple case
+    const simple = doc.querySelector("#simple code");
+    expect(simple).toBeTruthy();
+    expect(simple.textContent).toBe("null");
+
+    // multi per line
+    const multi = doc.querySelectorAll("#multi code");
+    expect(multi.length).toBe(3);
+    expect(multi[0].textContent).toBe("123");
+    expect(multi[1].textContent).toBe("undefined");
+    expect(multi[2].textContent.endsWith("string")).toBeTruthy();
+
+    // no-match
+    expect(doc.querySelector("#no-match code")).toBeNull();
+  });
+
+  it("processes [= BikeShed style inline links =]", async () => {
+    const body = `
+      <section data-cite="INFRA">
+        <p id="definitions">
+          <dfn data-lt="definition alias">link to definition</dfn>
+        </p>
+        <p id="simple-links">
+          [= link
+          to
+          definition =]
+
+          <!-- plural case -->
+          [= link
+          to
+          definitions =]
+
+          [= definition alias =]
+        </p>
+
+        <p id="qualified" data-cite="DOM">
+          [= AbortSignal/add =]
+        </p>
+
+        <p id="overmatch">
+          [=set / For each=] [= map / For each =]
+        </p>
+
+        <p id="multiline">
+          [=   map /
+          For each=]
+          [=
+            list/
+          For each
+          =]
+        </p>
+      </section>
+    `;
+    const config = { xref: { url: xrefTestUrl("inline-links") } };
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const dfnId = doc.querySelector("#definitions dfn").id;
+    const anchors = doc.querySelectorAll("#simple-links a");
+    const expectedAnchor = `#${dfnId}`;
+    expect(anchors.length).toBe(3);
+    for (const a of anchors) {
+      expect(a.getAttribute("href")).toBe(expectedAnchor);
+      expect(a.dataset.linkFor).toBeUndefined();
+    }
+
+    // Qualified (link is "for" something)
+    const qualifiedAnchor = doc.querySelector("#qualified a");
+    expect(qualifiedAnchor.href).toBe(
+      "https://dom.spec.whatwg.org/#abortsignal-add"
+    );
+
+    // overmatch protection - two per line.
+    const [setForEach, mapForEach] = doc.querySelectorAll("#overmatch a");
+    expect(setForEach.href).toBe("https://infra.spec.whatwg.org/#list-iterate");
+    expect(mapForEach.href).toBe("https://infra.spec.whatwg.org/#map-iterate");
+
+    // qualified multiline
+    const [multiListForEach, multiMapForEach] = doc.querySelectorAll(
+      "#overmatch a"
+    );
+    expect(multiListForEach.href).toBe(
+      "https://infra.spec.whatwg.org/#list-iterate"
+    );
+    expect(multiMapForEach.href).toBe(
+      "https://infra.spec.whatwg.org/#map-iterate"
+    );
   });
 });
