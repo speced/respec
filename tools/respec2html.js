@@ -1,10 +1,11 @@
 #!/usr/bin/env node
+// @ts-check
 
 /* jshint node: true, browser: false */
 "use strict";
 const { URL } = require("url");
 const colors = require("colors");
-const fetchAndWrite = require("./respecDocWriter").fetchAndWrite;
+const { fetchAndWrite } = require("./respecDocWriter");
 colors.setTheme({
   data: "grey",
   debug: "cyan",

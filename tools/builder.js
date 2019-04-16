@@ -2,7 +2,7 @@
 
 "use strict";
 const colors = require("colors");
-const fsp = require("fs-extra");
+const { promises: fsp } = require("fs");
 const path = require("path");
 const webpack = require("webpack");
 const { promisify } = require("util");
@@ -13,7 +13,7 @@ colors.setTheme({
   info: "white",
 });
 
-/** @type {import("command-line-args").OptionDefinition[]} */
+/** @type {import("command-line-usage").OptionDefinition[]} */
 const optionList = [
   {
     alias: "h",
@@ -72,7 +72,7 @@ const usageSections = [
  * @private
  * @param  {String} outPath Where to write the output to.
  * @param  {String} version The version of the script.
- * @return {Promise} Resolves when done writing the files.
+ * @return {Promise<void>} Resolves when done writing the files.
  */
 async function appendBoilerplate(outPath, version, name) {
   const mapPath = `${path.dirname(outPath)}/respec-${name}.js.map`;
@@ -107,7 +107,7 @@ const Builder = {
    * using a custom configuration.
    * @param {object} options
    * @param {string} options.name
-   * @param {boolean} options.debug
+   * @param {boolean} [options.debug]
    */
   async build({ name, debug }) {
     if (!name) {

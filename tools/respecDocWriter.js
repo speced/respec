@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Exports fetchAndWrite() method, allowing programmatic control of the
  * spec generator.
@@ -14,7 +15,6 @@ const fs = require("fs");
 const writeFile = promisify(fs.writeFile);
 const mkdtemp = promisify(fs.mkdtemp);
 const path = require("path");
-const { URL } = global.URL ? { URL: global.URL } : require("url");
 colors.setTheme({
   debug: "cyan",
   error: "red",
@@ -27,7 +27,7 @@ colors.setTheme({
  * @private
  * @param  {String} outPath The relative or absolute path to write to.
  * @param  {String} data    The data to write.
- * @return {Promise}        Resolves when writing is done.
+ * @return {Promise<void>}  Resolves when writing is done.
  */
 async function writeTo(outPath, data) {
   let newFilePath = "";
@@ -50,14 +50,14 @@ async function writeTo(outPath, data) {
  *
  * @public
  * @param  {String} src         A URL that is the ReSpec source.
- * @param  {String|null|""} out A path to write to. If null, goes to stdout.
+ * @param  {String?} out        A path to write to. If null, goes to stdout.
  *                              If "", then don't write, just return value.
  * @param  {Object} whenToHalt  Object with two bool props (haltOnWarn,
  *                              haltOnError), allowing execution to stop
  *                              if either occurs.
- * @param  {Number} timeout     Optional. Milliseconds before NightmareJS
+ * @param  options              Optional. Milliseconds before NightmareJS
  *                              should timeout.
- * @return {Promise}            Resolves with HTML when done writing.
+ * @return {Promise<string>}    Resolves with HTML when done writing.
  *                              Rejects on errors.
  */
 async function fetchAndWrite(
@@ -82,7 +82,7 @@ async function fetchAndWrite(
     };
     handleConsoleMessages(haltFlags);
     const url = new URL(src);
-    const response = await page.goto(url, { timeout });
+    const response = await page.goto(url.toString(), { timeout });
     if (
       !response.ok() &&
       response.status() /* workaround: 0 means ok for local files */
@@ -94,7 +94,7 @@ async function fetchAndWrite(
       throw new Error(msg);
     }
     await checkIfReSpec(page);
-    const html = await generateHTML(page, url);
+    const html = await generateHTML(page, url.toString());
     const abortOnWarning = whenToHalt.haltOnWarn && haltFlags.warn;
     const abortOnError = whenToHalt.haltOnError && haltFlags.error;
     if (abortOnError || abortOnWarning) {
@@ -122,6 +122,7 @@ async function fetchAndWrite(
 /**
  * @param {import("puppeteer").Page} page
  * @param {string} url
+ * @return {Promise<string>}
  */
 async function generateHTML(page, url) {
   await page.waitForFunction(() => window.hasOwnProperty("respecVersion"));
@@ -148,7 +149,7 @@ async function checkIfReSpec(page) {
   if (!isRespecDoc) {
     const msg = `${colors.warn(
       "🕵️‍♀️  That doesn't seem to be a ReSpec document. Please check manually:"
-    )} ${colors.debug(page.url)}`;
+    )} ${colors.debug(page.url())}`;
     throw new Error(msg);
   }
   return isRespecDoc;
@@ -160,12 +161,13 @@ async function isRespec() {
     return true;
   }
   await new Promise(resolve => {
-    document.onreadystatechange = () => {
+    const onready = () => {
       if (document.readyState === "complete") {
         resolve();
       }
     };
-    document.onreadystatechange();
+    document.onreadystatechange = onready;
+    onready();
   });
   await new Promise(resolve => {
     setTimeout(resolve, 2000);
@@ -175,6 +177,7 @@ async function isRespec() {
 
 /**
  * @param {number[]} version
+ * @return {Promise<string>}
  */
 async function evaluateHTML(version) {
   await document.respecIsReady;
@@ -188,6 +191,7 @@ async function evaluateHTML(version) {
     // have the "core/exporter" module. Try with the old "ui/save-html"
     // module.
     const { exportDocument } = await new Promise((resolve, reject) => {
+      //@ts-ignore
       require(["ui/save-html"], resolve, err => {
         reject(new Error(err.message));
       });
@@ -195,6 +199,7 @@ async function evaluateHTML(version) {
     return exportDocument("html", "text/html");
   } else {
     const { rsDocToDataURL } = await new Promise((resolve, reject) => {
+      //@ts-ignore
       require(["core/exporter"], resolve, err => {
         reject(new Error(err.message));
       });

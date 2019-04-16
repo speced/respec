@@ -1,10 +1,11 @@
 #!/usr/bin/env node
+// @ts-check
 "use strict";
 const { Builder } = require("./builder");
 const cmdPrompt = require("prompt");
 const colors = require("colors");
 const { exec } = require("child_process");
-const fsp = require("fs-extra");
+const { promises: fsp } = require("fs");
 const loading = require("loading-indicator");
 const path = require("path");
 const MAIN_BRANCH = "develop";
@@ -181,6 +182,9 @@ const Prompts = {
    *  - MAJOR version when you make incompatible API changes,
    *  - MINOR version when you add functionality in a backwards-compatible manner, and
    *  - PATCH version when you make backwards-compatible bug fixes.
+   * 
+   * @param {string} commits
+   * @param {string} version
    */
   suggestSemVersion(commits, version) {
     let [major, minor, patch] = version

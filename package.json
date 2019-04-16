@@ -25,6 +25,7 @@
     "@babel/core": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
     "@types/clipboard": "^2.0.1",
+    "@types/node": "^11.13.4",
     "@types/pluralize": "0.0.29",
     "babel-eslint": "^10.0.1",
     "chai": "^4.2.0",
