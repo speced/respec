@@ -261,7 +261,7 @@ describe("Core - Inlines", () => {
     expect(anchors.length).toBe(3);
     for (const a of anchors) {
       expect(a.getAttribute("href")).toBe(expectedAnchor);
-      expect(a.dataset.linkFor).toBeUndefined();
+      expect(a.dataset.linkFor).toBe("");
     }
 
     // Qualified (link is "for" something)
@@ -269,6 +269,7 @@ describe("Core - Inlines", () => {
     expect(qualifiedAnchor.href).toBe(
       "https://dom.spec.whatwg.org/#abortsignal-add"
     );
+    expect(qualifiedAnchor.dataset.linkFor).toBe("AbortSignal");
 
     // overmatch protection - two per line.
     const [setForEach, mapForEach] = doc.querySelectorAll("#overmatch a");
