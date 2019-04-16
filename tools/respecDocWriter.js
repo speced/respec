@@ -9,12 +9,8 @@
 const os = require("os");
 const puppeteer = require("puppeteer");
 const colors = require("colors");
-const { promisify } = require("util");
-const fs = require("fs");
-const writeFile = promisify(fs.writeFile);
-const mkdtemp = promisify(fs.mkdtemp);
+const { mkdtemp, writeFile } = require("fs").promises;
 const path = require("path");
-const { URL } = global.URL ? { URL: global.URL } : require("url");
 colors.setTheme({
   debug: "cyan",
   error: "red",

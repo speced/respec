@@ -120,7 +120,7 @@ function inlineLinkMatches(matched) {
     .slice(2, -2) // Chop [= =]
     .split("/", 2)
     .map(s => s.trim());
-  const [isFor, content] = parts.length === 2 ? parts : [null, parts[0]];
+  const [isFor, content] = parts.length === 2 ? parts : ["", parts[0]];
   return hyperHTML`<a data-link-for="${isFor}" data-xref-for="${isFor}">${content}</a>`;
 }
 
