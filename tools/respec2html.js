@@ -2,7 +2,6 @@
 
 /* jshint node: true, browser: false */
 "use strict";
-const { URL } = require("url");
 const colors = require("colors");
 const fetchAndWrite = require("./respecDocWriter").fetchAndWrite;
 colors.setTheme({

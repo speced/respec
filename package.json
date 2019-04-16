@@ -4,7 +4,7 @@
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
-    "node": ">=8",
+    "node": ">=10",
     "npm": ">=5"
   },
   "bin": {
