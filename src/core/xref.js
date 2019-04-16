@@ -173,7 +173,7 @@ function getRequestEntry(elem) {
     term,
     types,
     ...(specs.length && { specs: [...new Set(specs)].sort() }),
-    ...(forContext && { for: forContext }),
+    ...(typeof forContext === "string" && { for: forContext }),
   };
 }
 
