@@ -788,7 +788,9 @@ describe("Core — xref", () => {
       expect(dashedThing.textContent).toBe("dashed-thing");
       expect(dashedThing.getAttribute("href")).toBe("#dom-foo-dashed-thing");
       expect(emptyString.textContent).toBe("");
-      expect(emptyString.getAttribute("href")).toBe("#dom-foo-the-empty-string");
+      expect(emptyString.getAttribute("href")).toBe(
+        "#dom-foo-the-empty-string"
+      );
     });
 
     it("links local definitions first", async () => {
