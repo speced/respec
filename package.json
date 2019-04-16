@@ -1,6 +1,6 @@
 {
   "name": "respec",
-  "version": "24.16.1",
+  "version": "24.16.2",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
@@ -41,7 +41,7 @@
     "jasmine-core": "^3.4.0",
     "jasmine-reporters": "^2.3.2",
     "jquery": "^3.4.0",
-    "karma": "^4.0.1",
+    "karma": "^4.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-detect-browsers": "^2.3.3",
     "karma-edge-launcher": "^0.4.2",
@@ -63,7 +63,7 @@
     "raw-loader": "^2.0.0",
     "requirejs": "^2.3.6",
     "serve": "^11.0.0",
-    "snyk": "^1.150.0",
+    "snyk": "^1.151.0",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "typescript": "^3.4.3",
     "webidl2": "^18.0.1",
