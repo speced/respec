@@ -740,11 +740,18 @@ describe("Core — xref", () => {
     it("links enum and enum-values", async () => {
       const body = `
         <section id="test">
+          <pre class="idl">
+          enum Foo { "dashed-thing", "" };
+          </pre>
           <p id="link1">{{ ServiceWorkerUpdateViaCache["imports"] }}</p>
           <p id="link2">{{ "blob" }} {{ ServiceWorkerUpdateViaCache["imports"] }}</p>
           <p id="link3"
             data-cite="css-layout-api" data-xref-for="ChildDisplayType"
           >{{ "block" }} {{"block"}} </p>
+          <p id="link4" data-link-for="Foo" data-dfn-for="Foo">
+            <dfn>dashed-thing</dfn> <dfn>""</dfn>
+            {{ "dashed-thing" }} {{""}}
+          </p>
         </section>
       `;
       const config = {
@@ -776,6 +783,12 @@ describe("Core — xref", () => {
       expect(blockLink2.href).toEqual(
         expectedLinks.get("ChildDisplayType.block")
       );
+
+      const [dashedThing, emptyString] = doc.querySelectorAll("#link4 code a");
+      expect(dashedThing.textContent).toBe("dashed-thing");
+      expect(dashedThing.getAttribute("href")).toBe("#dom-foo-dashed-thing");
+      expect(emptyString.textContent).toBe("");
+      expect(emptyString.getAttribute("href")).toBe("#dom-foo-the-empty-string");
     });
 
     it("links local definitions first", async () => {
