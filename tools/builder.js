@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// @ts-nocheck
 
 "use strict";
 const colors = require("colors");

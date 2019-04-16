@@ -10,10 +10,7 @@
 const os = require("os");
 const puppeteer = require("puppeteer");
 const colors = require("colors");
-const { promisify } = require("util");
-const fs = require("fs");
-const writeFile = promisify(fs.writeFile);
-const mkdtemp = promisify(fs.mkdtemp);
+const { writeFile, mkdtemp } = require("fs").promises
 const path = require("path");
 colors.setTheme({
   debug: "cyan",
@@ -191,7 +188,7 @@ async function evaluateHTML(version) {
     // have the "core/exporter" module. Try with the old "ui/save-html"
     // module.
     const { exportDocument } = await new Promise((resolve, reject) => {
-      //@ts-ignore
+      // @ts-ignore
       require(["ui/save-html"], resolve, err => {
         reject(new Error(err.message));
       });
@@ -199,7 +196,7 @@ async function evaluateHTML(version) {
     return exportDocument("html", "text/html");
   } else {
     const { rsDocToDataURL } = await new Promise((resolve, reject) => {
-      //@ts-ignore
+      // @ts-ignore
       require(["core/exporter"], resolve, err => {
         reject(new Error(err.message));
       });
