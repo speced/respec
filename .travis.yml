@@ -9,6 +9,14 @@ cache:
 install:
   - npm install
 
+addons:
+  firefox: latest
+
+karma_runner: &karma_runner
+  - npm run build:w3c
+  - npm run build:geonovum
+  - travis_retry karma start --single-run --reporters mocha karma.conf.js
+
 jobs:
   include:
     - stage: Run eslint
@@ -19,7 +27,9 @@ jobs:
         - npm run build:w3c
         - npm run test:headless
     - stage: Run Karma unit tests
-      script:
-        - npm run build:w3c
-        - npm run build:geonovum
-        - travis_retry karma start --single-run --reporters mocha karma.conf.js
+      env:
+        - BROWSERS=ChromeHeadless
+      script: *karma_runner
+    - env:
+        - BROWSERS=FirefoxHeadlessPref
+      script: *karma_runner
