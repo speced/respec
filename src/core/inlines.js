@@ -112,7 +112,7 @@ function inlineVariableMatches(matched) {
   // remove "|" at the beginning and at the end, then split at an optional `:`
   const matches = matched.slice(1, -1).split(":", 2);
   const [varName, type] = matches.map(s => s.trim());
-  return hyperHTML`<var title="${type}" data-type="${type}">${varName}</var>`;
+  return hyperHTML`<var data-type="${type}">${varName}</var>`;
 }
 
 function inlineLinkMatches(matched) {
