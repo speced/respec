@@ -1,74 +1,98 @@
 {
-  "result": {
-    "7c6f3cfd1cf92d00249d3a483265a7c58e42ecf1": [
-      {
-        "shortname": "html",
-        "type": "interface",
-        "normative": true,
-        "uri": "window-object.html#window"
-      }
+  "result": [
+    [
+      "7c6f3cfd1cf92d00249d3a483265a7c58e42ecf1",
+      [
+        {
+          "shortname": "html",
+          "type": "interface",
+          "normative": true,
+          "uri": "window-object.html#window"
+        }
+      ]
     ],
-    "5530bca3f739b4cec44acfa985117a332bff078e": [
-      {
-        "shortname": "dom",
-        "type": "attribute",
-        "for": ["Window"],
-        "normative": true,
-        "uri": "#dom-window-event"
-      }
+    [
+      "5530bca3f739b4cec44acfa985117a332bff078e",
+      [
+        {
+          "shortname": "dom",
+          "type": "attribute",
+          "for": ["Window"],
+          "normative": true,
+          "uri": "#dom-window-event"
+        }
+      ]
     ],
-    "8353d37515560293872e372283da18c25efdb0db": [
-      {
-        "shortname": "credential-management",
-        "type": "interface",
-        "normative": true,
-        "uri": "#credential"
-      }
+    [
+      "8353d37515560293872e372283da18c25efdb0db",
+      [
+        {
+          "shortname": "credential-management",
+          "type": "interface",
+          "normative": true,
+          "uri": "#credential"
+        }
+      ]
     ],
-    "144f93f7390c7b8c61476be5fb51454665c13aa5": [
-      {
-        "shortname": "credential-management",
-        "type": "attribute",
-        "for": ["Credential"],
-        "normative": true,
-        "uri": "#dom-credential-type-slot"
-      }
+    [
+      "144f93f7390c7b8c61476be5fb51454665c13aa5",
+      [
+        {
+          "shortname": "credential-management",
+          "type": "attribute",
+          "for": ["Credential"],
+          "normative": true,
+          "uri": "#dom-credential-type-slot"
+        }
+      ]
     ],
-    "6d25c2c01d3802f2478346e3b56bf7931ffa84fd": [
-      {
-        "shortname": "webauthn",
-        "type": "interface",
-        "normative": true,
-        "uri": "#publickeycredential"
-      }
+    [
+      "6d25c2c01d3802f2478346e3b56bf7931ffa84fd",
+      [
+        {
+          "shortname": "webauthn",
+          "type": "interface",
+          "normative": true,
+          "uri": "#publickeycredential"
+        }
+      ]
     ],
-    "4014fc92b1e56d111504f82e12c0053f9fd5b591": [
-      {
-        "shortname": "webauthn",
-        "type": "attribute",
-        "for": ["PublicKeyCredential"],
-        "normative": true,
-        "uri": "#dom-publickeycredential-type-slot"
-      }
+    [
+      "4014fc92b1e56d111504f82e12c0053f9fd5b591",
+      [
+        {
+          "shortname": "webauthn",
+          "type": "attribute",
+          "for": ["PublicKeyCredential"],
+          "normative": true,
+          "uri": "#dom-publickeycredential-type-slot"
+        }
+      ]
     ],
-    "e1ba145d75cb297f653c2276968729aa73b176d9": [
-      {
-        "shortname": "encoding",
-        "type": "dictionary",
-        "normative": true,
-        "uri": "#textdecoderoptions"
-      }
+    [
+      "e1ba145d75cb297f653c2276968729aa73b176d9",
+      [
+        {
+          "shortname": "encoding",
+          "type": "dictionary",
+          "normative": true,
+          "uri": "#textdecoderoptions"
+        }
+      ]
     ],
-    "fa3f68ead7def2fbf060d67db4c4e2d024de8116": [
-      {
-        "shortname": "encoding",
-        "type": "dict-member",
-        "for": ["TextDecoderOptions"],
-        "normative": true,
-        "uri": "#dom-textdecoderoptions-fatal"
-      }
+    [
+      "fa3f68ead7def2fbf060d67db4c4e2d024de8116",
+      [
+        {
+          "shortname": "encoding",
+          "type": "dict-member",
+          "for": ["TextDecoderOptions"],
+          "normative": true,
+          "uri": "#dom-textdecoderoptions-fatal"
+        }
+      ]
     ]
-  },
+  ],
   "query": [
     {
       "term": "Window",

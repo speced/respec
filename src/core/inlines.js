@@ -115,6 +115,20 @@ function inlineVariableMatches(matched) {
   return hyperHTML`<var title="${type}" data-type="${type}">${varName}</var>`;
 }
 
+function inlineLinkMatches(matched) {
+  const parts = matched
+    .slice(2, -2) // Chop [= =]
+    .split("/", 2)
+    .map(s => s.trim());
+  const [isFor, content] = parts.length === 2 ? parts : ["", parts[0]];
+  return hyperHTML`<a data-link-for="${isFor}" data-xref-for="${isFor}">${content}</a>`;
+}
+
+function inlineCodeMatches(matched) {
+  const clean = matched.slice(1, -1); // Chop ` and `
+  return hyperHTML`<code>${clean}</code>`;
+}
+
 export function run(conf) {
   const abbrMap = new Map();
   document.normalize();
@@ -137,7 +151,11 @@ export function run(conf) {
   const abbrRx = aKeys.length ? `(?:\\b${aKeys.join("\\b)|(?:\\b")}\\b)` : null;
 
   // PROCESSING
-  const txts = getTextNodes(document.body, ["pre"]);
+  // Don't gather text nodes for these:
+  const exclusions = ["#respec-ui", ".head", "pre"];
+  const txts = getTextNodes(document.body, exclusions, {
+    wsNodes: false, // we don't want nodes with just whitespace
+  });
   const rx = new RegExp(
     `(${[
       "\\bMUST(?:\\s+NOT)?\\b",
@@ -147,10 +165,13 @@ export function run(conf) {
       "\\b(?:NOT\\s+)?REQUIRED\\b",
       "\\b(?:NOT\\s+)?RECOMMENDED\\b",
       "\\bOPTIONAL\\b",
-      "(?:{{2}\\s*.*\\s*}{2})", // inline IDL references,
+      "(?:{{[^}]+}})", // inline IDL references,
       "\\B\\|\\w[\\w\\s]*(?:\\s*\\:[\\w\\s&;<>]+)?\\|\\B", // inline variable regex
       "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])",
       "(?:\\[\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\]\\])",
+      "(?:\\[=[^=]+=\\])", // Inline [= For/link =]
+      // TODO: Add (?:<!`) when Firefox and Safari add support
+      "(?:`[^`]+`)(?!`)", // Inline `code`
       ...(abbrRx ? [abbrRx] : []),
     ].join("|")})`
   );
@@ -175,6 +196,12 @@ export function run(conf) {
         df.append(...nodes);
       } else if (t.startsWith("|")) {
         const node = inlineVariableMatches(t);
+        df.appendChild(node);
+      } else if (t.startsWith("[=")) {
+        const node = inlineLinkMatches(t);
+        df.appendChild(node);
+      } else if (t.startsWith("`")) {
+        const node = inlineCodeMatches(t);
         df.appendChild(node);
       } else if (abbrMap.has(t)) {
         const node = inlineAbbrMatches(t, txt, abbrMap);

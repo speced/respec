@@ -1,10 +1,10 @@
 {
   "name": "respec",
-  "version": "24.12.1",
+  "version": "24.16.3",
   "license": "W3C",
   "description": "A technical specification pre-processor.",
   "engines": {
-    "node": ">=8",
+    "node": ">=10",
     "npm": ">=5"
   },
   "bin": {
@@ -34,14 +34,14 @@
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-prettier": "^3.0.1",
     "exports-loader": "^0.7.0",
-    "handlebars": "^4.1.1",
+    "handlebars": "^4.1.2",
     "highlight.js": "^9.15.6",
     "hyperhtml": "^2.25.5",
     "idb": "^4.0.3",
     "jasmine-core": "^3.4.0",
     "jasmine-reporters": "^2.3.2",
     "jquery": "^3.4.0",
-    "karma": "^4.0.1",
+    "karma": "^4.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-detect-browsers": "^2.3.3",
     "karma-edge-launcher": "^0.4.2",
@@ -63,7 +63,7 @@
     "raw-loader": "^2.0.0",
     "requirejs": "^2.3.6",
     "serve": "^11.0.0",
-    "snyk": "^1.150.0",
+    "snyk": "^1.151.0",
     "text": "github:requirejs/text#d04de4ffd7bf5ba6cb80cdca2d40d4f6f52a1b1f",
     "typescript": "^3.4.3",
     "webidl2": "^18.0.1",

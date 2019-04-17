@@ -1,6 +1,11 @@
 "use strict";
 
-import { flushIframes, makeRSDoc, makeStandardOps } from "../SpecHelper.js";
+import {
+  flushIframes,
+  makeRSDoc,
+  makeStandardOps,
+  xrefTestUrl,
+} from "../SpecHelper.js";
 
 describe("Core - Inlines", () => {
   afterAll(flushIframes);
@@ -181,5 +186,105 @@ describe("Core - Inlines", () => {
       "[dom]",
       "[payment-request]",
     ]);
+  });
+
+  it("proceses `backticks` as code", async () => {
+    const body = `
+      <section>
+        <p id="simple">Return \`null\`.</p>
+        <p id="multi">Return \`123\` or \`undefined\` or \`this
+          particular string\`.
+        </p>
+        <p id="no-match">Return \`\`\`don't match this code blocks\`\`\`</p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+
+    // simple case
+    const simple = doc.querySelector("#simple code");
+    expect(simple).toBeTruthy();
+    expect(simple.textContent).toBe("null");
+
+    // multi per line
+    const multi = doc.querySelectorAll("#multi code");
+    expect(multi.length).toBe(3);
+    expect(multi[0].textContent).toBe("123");
+    expect(multi[1].textContent).toBe("undefined");
+    expect(multi[2].textContent.endsWith("string")).toBeTruthy();
+
+    // no-match
+    expect(doc.querySelector("#no-match code")).toBeNull();
+  });
+
+  it("processes [= BikeShed style inline links =]", async () => {
+    const body = `
+      <section data-cite="INFRA">
+        <p id="definitions">
+          <dfn data-lt="definition alias">link to definition</dfn>
+        </p>
+        <p id="simple-links">
+          [= link
+          to
+          definition =]
+
+          <!-- plural case -->
+          [= link
+          to
+          definitions =]
+
+          [= definition alias =]
+        </p>
+
+        <p id="qualified" data-cite="DOM">
+          [= AbortSignal/add =]
+        </p>
+
+        <p id="overmatch">
+          [=set / For each=] [= map / For each =]
+        </p>
+
+        <p id="multiline">
+          [=   map /
+          For each=]
+          [=
+            list/
+          For each
+          =]
+        </p>
+      </section>
+    `;
+    const config = { xref: { url: xrefTestUrl("inline-links") } };
+    const doc = await makeRSDoc(makeStandardOps(config, body));
+    const dfnId = doc.querySelector("#definitions dfn").id;
+    const anchors = doc.querySelectorAll("#simple-links a");
+    const expectedAnchor = `#${dfnId}`;
+    expect(anchors.length).toBe(3);
+    for (const a of anchors) {
+      expect(a.getAttribute("href")).toBe(expectedAnchor);
+      expect(a.dataset.linkFor).toBe("");
+    }
+
+    // Qualified (link is "for" something)
+    const qualifiedAnchor = doc.querySelector("#qualified a");
+    expect(qualifiedAnchor.href).toBe(
+      "https://dom.spec.whatwg.org/#abortsignal-add"
+    );
+    expect(qualifiedAnchor.dataset.linkFor).toBe("AbortSignal");
+
+    // overmatch protection - two per line.
+    const [setForEach, mapForEach] = doc.querySelectorAll("#overmatch a");
+    expect(setForEach.href).toBe("https://infra.spec.whatwg.org/#list-iterate");
+    expect(mapForEach.href).toBe("https://infra.spec.whatwg.org/#map-iterate");
+
+    // qualified multiline
+    const [multiListForEach, multiMapForEach] = doc.querySelectorAll(
+      "#overmatch a"
+    );
+    expect(multiListForEach.href).toBe(
+      "https://infra.spec.whatwg.org/#list-iterate"
+    );
+    expect(multiMapForEach.href).toBe(
+      "https://infra.spec.whatwg.org/#map-iterate"
+    );
   });
 });

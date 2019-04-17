@@ -11,6 +11,7 @@
  */
 import {
   IDBKeyVal,
+  createResourceHint,
   nonNormativeSelector,
   norm as normalize,
   showInlineError,
@@ -25,6 +26,16 @@ const profiles = {
 
 const API_URL = "https://respec.org/xref";
 const CACHE_MAX_AGE = 86400000; // 24 hours
+
+if (
+  !document.querySelector("link[rel='preconnect'][href='https://respec.org']")
+) {
+  const link = createResourceHint({
+    hint: "preconnect",
+    href: "https://respec.org",
+  });
+  document.head.appendChild(link);
+}
 
 /**
  * main external reference driver
@@ -150,11 +161,11 @@ function getRequestEntry(elem) {
     types.push("_CONCEPT_");
   }
 
-  let { linkFor: forContext } = elem.dataset;
+  let { xrefFor: forContext } = elem.dataset;
   if (!forContext && isIDL) {
-    const dataLinkForElem = elem.closest("[data-link-for]");
-    if (dataLinkForElem) {
-      forContext = dataLinkForElem.dataset.linkFor;
+    const dataXrefForElem = elem.closest("[data-xref-for]");
+    if (dataXrefForElem) {
+      forContext = dataXrefForElem.dataset.xrefFor;
     }
   }
 
@@ -162,7 +173,7 @@ function getRequestEntry(elem) {
     term,
     types,
     ...(specs.length && { specs: [...new Set(specs)].sort() }),
-    ...(forContext && { for: forContext }),
+    ...(typeof forContext === "string" && { for: forContext }),
   };
 }
 
@@ -226,7 +237,7 @@ async function fetchFromNetwork(keys, url) {
   };
   const response = await fetch(url, options);
   const json = await response.json();
-  return new Map(Object.entries(json.result));
+  return new Map(json.result);
 }
 
 /**
