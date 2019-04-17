@@ -6,7 +6,7 @@ export const name = "core/mdn-annoatation";
 
 const SPEC_MAP_URL =
   "https://raw.githubusercontent.com/w3c/mdn-spec-links/master/SPECMAP.json";
-const JSON_BASE = "https://w3c.github.io/mdn-spec-links/";
+const BASE_JSON_PATH = "https://w3c.github.io/mdn-spec-links/";
 const MDN_URL_BASE = "https://developer.mozilla.org/en-US/docs/Web/";
 const MDN_BROWSERS = {
   // The browser IDs here must match the ones in the imported JSON data.
@@ -47,8 +47,8 @@ function insertMDNBox(node) {
     // If the target ancestor already has a mdnBox inserted, we just use it
     return targetSibling;
   }
-  const mdnBox = hyperHTML`<aside class="mdn before">
-    <button onclick="toggleStatus(this)" aria-label="Expand MDN details">⋰</button>
+  const mdnBox = hyperHTML`<aside class="mdn before wrapped">
+    <button onclick="toggleMDNStatus(this)" aria-label="Expand MDN details">⋰</button>
   </aside>`;
   document.body.insertBefore(mdnBox, targetAncestor);
   return mdnBox;
@@ -56,7 +56,7 @@ function insertMDNBox(node) {
 
 function attachMDNDetail(container, mdnSpec) {
   const { slug, summary } = mdnSpec;
-  container.innerHTML += `<b>MDN </b>`;
+  container.innerHTML += "<b>MDN </b>";
   const mdnSubPath = slug.slice(slug.indexOf("/") + 1);
   const mdnDetail = document.createElement("details");
   const href = `${MDN_URL_BASE}${slug}`;
@@ -133,7 +133,9 @@ export async function run(conf) {
     return;
   }
   const maxAge = mdn.maxAge || 60 * 60 * 24 * 1000;
-  const specMap = await fetchAndCacheJson(SPEC_MAP_URL, maxAge);
+  const specMapUrl = mdn.specMapUrl || SPEC_MAP_URL;
+  const baseJsonPath = mdn.baseJsonPath || BASE_JSON_PATH;
+  const specMap = await fetchAndCacheJson(specMapUrl, maxAge);
   const hasSpecJson = Object.values(specMap).some(
     jsonName => jsonName === `${shortName}.json`
   );
@@ -141,12 +143,12 @@ export async function run(conf) {
     return;
   }
   const mdnSpecJson = await fetchAndCacheJson(
-    `${JSON_BASE}/${shortName}.json`,
+    `${baseJsonPath}/${shortName}.json`,
     maxAge
   );
   document.head.appendChild(hyperHTML`<style>${[mdnCss]}</style>`);
   document.head.appendChild(hyperHTML`<script>
-     function toggleStatus(div) {
+     function toggleMDNStatus(div) {
        div.parentNode.classList.toggle('wrapped');
      }
   </script>`);
