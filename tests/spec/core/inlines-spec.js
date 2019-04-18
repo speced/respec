@@ -188,7 +188,31 @@ describe("Core - Inlines", () => {
     ]);
   });
 
-  it("proceses `backticks` as code", async () => {
+  it("proceseses backticks inside [= =] inline links", async () => {
+    const body = `
+      <section>
+        <p>
+          <dfn><code>link</code> element</dfn>
+          <dfn>some \`Coded\` thing</dfn>
+        </p>
+        <p id="inlines">
+          [= \`link\` element =] and [= some \`Coded\` thing =]
+        </p>
+      </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const [linkElement, someCodedThing] = doc.querySelectorAll("#inlines a");
+
+    expect(linkElement.getAttribute("href")).toBe("#dfn-link-element");
+    const linkCodeElem = linkElement.querySelector("code");
+    expect(linkCodeElem.textContent).toBe("link");
+
+    expect(someCodedThing.getAttribute("href")).toBe("#dfn-some-coded-thing");
+    const codedThingCodeElem = someCodedThing.querySelector("code");
+    expect(codedThingCodeElem.textContent).toBe("Coded");
+  });
+
+  it("proceseses `backticks` as code", async () => {
     const body = `
       <section>
         <p id="simple">Return \`null\`.</p>
