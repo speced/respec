@@ -506,8 +506,7 @@ describe("Core - Utils", () => {
 
         const textNodes = utils.getTextNodes(node, [], "");
         expect(textNodes.length).toEqual(1);
-        const str = textNodes.map(tn => tn.nodeValue).join("");
-        expect(str).toEqual("include me");
+        expect(textNodes[0].nodeValue).toEqual("include me");
       });
     });
 
