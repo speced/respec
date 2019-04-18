@@ -37,12 +37,8 @@ function fetchAndCacheJson(url, maxAge) {
 }
 
 function insertMDNBox(node) {
-  let targetAncestor = node;
-  // Find the furthest ancestor that is a direct child of <body>
-  while (targetAncestor.parentNode.tagName !== "BODY") {
-    targetAncestor = targetAncestor.parentNode;
-  }
-  const { previousElementSibling: targetSibling } = targetAncestor;
+  const targetAncestor = node.closest("section");
+  const { previousElementSibling: targetSibling, parentNode } = targetAncestor;
   if (targetSibling && targetSibling.classList.contains("mdn")) {
     // If the target ancestor already has a mdnBox inserted, we just use it
     return targetSibling;
@@ -50,7 +46,7 @@ function insertMDNBox(node) {
   const mdnBox = hyperHTML`<aside class="mdn before wrapped">
     <button onclick="toggleMDNStatus(this)" aria-label="Expand MDN details">⋰</button>
   </aside>`;
-  document.body.insertBefore(mdnBox, targetAncestor);
+  parentNode.insertBefore(mdnBox, targetAncestor);
   return mdnBox;
 }
 
