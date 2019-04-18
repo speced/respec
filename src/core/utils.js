@@ -680,10 +680,10 @@ export function addId(elem, pfx = "", txt = "", noLC = false) {
 export function getTextNodes(el, exclusions = [], options = { wsNodes: true }) {
   const exclusionQuery = exclusions.join(", ");
   const acceptNode = (/** @type {Text} */ node) => {
-    if (node.parentElement.closest(exclusionQuery)) {
+    if (!options.wsNodes && /^\s*$/.test(node.data)) {
       return NodeFilter.FILTER_REJECT;
     }
-    if (options.wsNodes && /\s/gm.test(node.data)) {
+    if (exclusionQuery && node.parentElement.closest(exclusionQuery)) {
       return NodeFilter.FILTER_REJECT;
     }
     return NodeFilter.FILTER_ACCEPT;
