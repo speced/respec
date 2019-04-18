@@ -144,7 +144,7 @@ function processInlineContent(text) {
         : processInlineContent(part);
     });
   }
-  return hyperHTML`${text}`;
+  return document.createTextNode(text);
 }
 
 export function run(conf) {
