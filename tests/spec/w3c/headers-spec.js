@@ -1393,19 +1393,17 @@ describe("W3C — Headers", () => {
       Object.assign(ops.config, { logos });
       const doc = await makeRSDoc(ops);
       // get logos
-      const anchors = doc.querySelectorAll(
-        ".head p:not(.copyright):first-child > a"
-      );
-      for (let i = 0; i < anchors.length; i++) {
-        const anchor = anchors[i];
-        const img = anchor.children[0];
+      const logosAnchors = doc.querySelectorAll(".logo");
+      expect(logos.length).toBe(3);
+      logosAnchors.forEach((anchor, i) => {
         const logo = logos[i];
+        const img = anchor.querySelector("img");
+        expect(anchor.href).toBe(logo.url);
         expect(img.src).toBe(logo.src);
         expect(img.alt).toBe(logo.alt);
         expect(img.height).toBe(logo.height);
         expect(img.width).toBe(logo.width);
-        expect(anchor.href).toBe(logo.url);
-      }
+      });
     });
   });
 
