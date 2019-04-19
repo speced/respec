@@ -492,12 +492,21 @@ describe("Core - Utils", () => {
       it("finds all the text nodes", () => {
         const node = document.createElement("div");
         node.innerHTML =
-          "<div>aa<span>bb</span><p>cc<i>dd</i></p><pre>nope</pre></div>";
+          "<div>aa<span>bb<div class='exclude'>ignore me</div></span><p>cc<i>dd</i></p><pre>nope</pre></div>";
 
-        const textNodes = utils.getTextNodes(node, ["pre"]);
+        const textNodes = utils.getTextNodes(node, ["pre", ".exclude"]);
         expect(textNodes.length).toEqual(4);
         const str = textNodes.map(tn => tn.nodeValue).join("");
         expect(str).toEqual("aabbccdd");
+      });
+      it("Excludes white space nodes", () => {
+        const node = document.createElement("div");
+        node.innerHTML =
+          " <exclude> </exclude> <exclude>\t \n</exclude>include me";
+
+        const textNodes = utils.getTextNodes(node, [], "");
+        expect(textNodes.length).toEqual(1);
+        expect(textNodes[0].nodeValue).toEqual("include me");
       });
     });
 

@@ -27,6 +27,11 @@ import { renderInlineCitation } from "./render-biblio.js";
 export const name = "core/inlines";
 export const rfc2119Usage = {};
 
+// Inline `code`
+// TODO: Replace (?!`) at the end with (?:<!`) at the start when Firefox + Safari
+// add support.
+const inlineCodeRegExp = new RegExp("(?:`[^`]+`)(?!`)");
+
 /**
  * @param {string} matched
  * @return {HTMLElement}
@@ -121,12 +126,25 @@ function inlineLinkMatches(matched) {
     .split("/", 2)
     .map(s => s.trim());
   const [isFor, content] = parts.length === 2 ? parts : ["", parts[0]];
-  return hyperHTML`<a data-link-for="${isFor}" data-xref-for="${isFor}">${content}</a>`;
+  const processedContent = processInlineContent(content);
+  return hyperHTML`<a data-link-for="${isFor}" data-xref-for="${isFor}">${processedContent}</a>`;
 }
 
 function inlineCodeMatches(matched) {
   const clean = matched.slice(1, -1); // Chop ` and `
   return hyperHTML`<code>${clean}</code>`;
+}
+
+function processInlineContent(text) {
+  if (inlineCodeRegExp.test(text)) {
+    // We use a capture group to split, so we can process all the parts.
+    return text.split(/(`[^`]+`)(?!`)/).map(part => {
+      return part.startsWith("`")
+        ? inlineCodeMatches(part)
+        : processInlineContent(part);
+    });
+  }
+  return document.createTextNode(text);
 }
 
 export function run(conf) {
@@ -170,15 +188,13 @@ export function run(conf) {
       "(?:\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\])",
       "(?:\\[\\[\\[(?:!|\\\\|\\?)?[A-Za-z0-9\\.-]+\\]\\]\\])",
       "(?:\\[=[^=]+=\\])", // Inline [= For/link =]
-      // TODO: Add (?:<!`) when Firefox and Safari add support
-      "(?:`[^`]+`)(?!`)", // Inline `code`
+      inlineCodeRegExp.source,
       ...(abbrRx ? [abbrRx] : []),
     ].join("|")})`
   );
   for (const txt of txts) {
     const subtxt = txt.data.split(rx);
     if (subtxt.length === 1) continue;
-
     const df = document.createDocumentFragment();
     let matched = true;
     for (const t of subtxt) {
