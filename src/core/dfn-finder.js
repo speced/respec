@@ -237,7 +237,7 @@ function getDfns(dfnForArray, parent, originalName, type) {
 function getDataType(idlStruct) {
   const { idlType, generic, type, body, union } = idlStruct;
   if (typeof idlType === "string") return idlType;
-  if (generic) return generic.value;
+  if (generic) return generic;
   if (type === "operation") return getDataType(body.idlType);
   // join on "|" handles for "unsigned short" etc.
   if (union) return idlType.map(getDataType).join("|");
