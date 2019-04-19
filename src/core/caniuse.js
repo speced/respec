@@ -85,7 +85,7 @@ export async function run(conf) {
     resolve(content);
   });
   const definitionPair = hyperHTML`
-    <dt class="caniuse-title">Can I Use this API?</dt>
+    <dt class="caniuse-title">Browser support:</dt>
     <dd class="caniuse-stats">${{
       any: contentPromise,
       placeholder: "Fetching data from caniuse.com...",

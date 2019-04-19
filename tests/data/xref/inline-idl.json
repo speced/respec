@@ -52,17 +52,6 @@
           "uri": "#dom-publickeycredential-type-slot"
         }
       ]
-    ],
-    [
-      "fe2c17ac17606b140aa1c868f37155594a26903a",
-      [
-        {
-          "shortname": "dom",
-          "type": "interface",
-          "normative": true,
-          "uri": "#eventtarget"
-        }
-      ]
     ]
   ],
   "query": [
@@ -85,11 +74,6 @@
       "term": "[[type]]",
       "types": ["attribute"],
       "id": "1442fa5908c67eba92549dfd6899832ec6802ad0"
-    },
-    {
-      "term": "EventTarget",
-      "types": ["_IDL_"],
-      "id": "fe2c17ac17606b140aa1c868f37155594a26903a"
     }
   ]
 }
