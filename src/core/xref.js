@@ -183,8 +183,8 @@ function getRequestEntry(elem) {
  * @returns {Promise<Map<string, SearchResultEntry[]>>}
  */
 async function getData(queryKeys, apiUrl) {
-  let cache;
-  let resultsFromCache;
+  let cache = null;
+  let resultsFromCache = new Map();
   try {
     const idb = await openDB("xref", 1, {
       upgrade(db) {
@@ -195,8 +195,6 @@ async function getData(queryKeys, apiUrl) {
     resultsFromCache = await resolveFromCache(queryKeys, cache);
   } catch (error) {
     console.error(error);
-    cache = null;
-    resultsFromCache = new Map();
   }
 
   const termsToLook = queryKeys.filter(key => !resultsFromCache.get(key.id));
