@@ -161,16 +161,6 @@
       "term": "ascii alphanumeric",
       "types": ["_CONCEPT_"],
       "id": "8b2f8e4c2e57922a662f9be57e4183c25038dcaf"
-    },
-    {
-      "term": "url parser",
-      "types": ["_CONCEPT_"],
-      "id": "b3f39e21ff440b3efd5949b8952c0f23f11b23a2"
-    },
-    {
-      "term": "url parser",
-      "types": ["_CONCEPT_"],
-      "id": "b3f39e21ff440b3efd5949b8952c0f23f11b23a2"
     }
   ]
 }
