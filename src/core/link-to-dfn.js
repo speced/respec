@@ -12,6 +12,7 @@ import {
 import { run as addExternalReferences } from "./xref.js";
 import { lang as defaultLang } from "./l10n.js";
 import { definitionMap } from "./dfn-map.js";
+import hyperHTML from "hyperhtml";
 import { linkInlineCitations } from "./data-cite.js";
 import { pub } from "./pubsubhub.js";
 export const name = "core/link-to-dfn";
@@ -26,6 +27,13 @@ export async function run(conf) {
   document.normalize();
 
   const titleToDfns = mapTitleToDfns();
+
+  document.querySelectorAll("dfn").forEach(dfn => {
+    const { id } = dfn;
+    dfn.appendChild(
+      hyperHTML`<a href="${`#${id}`}" class="self-link" aria-label="#"></a>`
+    );
+  });
 
   /** @type {HTMLElement[]} */
   const possibleExternalLinks = [];

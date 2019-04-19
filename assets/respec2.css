@@ -265,6 +265,31 @@ h6 > a.self-link::before {
   display: block;
 }
 
+dfn > a.self-link {
+  position: relative;
+  border: none;
+}
+
+dfn > a.self-link::before {
+  content: "#";
+  position: absolute;
+  left: 2px;
+  opacity: 0;
+  padding: 0 0.3em;
+  background: #808080;
+  color: #fff;
+  transition: all .2s;
+}
+
+dfn:hover > a.self-link::before {
+  opacity: 1;
+}
+
+dfn > a.self-link:hover::before {
+  background: #bfbfbf;
+  color: #000;
+}
+
 @media (max-width: 767px) {
   dd {
     margin-left: 0;
