@@ -61,10 +61,6 @@ module.exports = function(config) {
         included: false,
       },
       {
-        pattern: "tests/*.html",
-        included: false,
-      },
-      {
         pattern: "tests/**/*.html",
         included: false,
       },
@@ -110,7 +106,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: "dots", "progress"
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ["mocha"],
+    reporters: ["mocha", "kjhtml"],
 
     // web server port
     port: config.port || 9876,
@@ -160,6 +156,10 @@ module.exports = function(config) {
     process.env.CHROME_BIN = require("puppeteer").executablePath();
     options.autoWatch = false;
     options.concurrency = 1;
+  }
+  if (process.env.BROWSERS) {
+    options.detectBrowsers.enabled = false;
+    options.browsers = process.env.BROWSERS.split(" ");
   }
   config.set(options);
 };
