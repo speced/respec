@@ -589,7 +589,7 @@ export async function fetchAndCache(request, maxAge = 86400000) {
   }
 
   // cache response
-  if (cache) {
+  if (cache && response.ok) {
     const clonedResponse = response.clone();
     const customHeaders = new Headers(response.headers);
     const expiryDate = new Date(Date.now() + maxAge);
@@ -599,7 +599,6 @@ export async function fetchAndCache(request, maxAge = 86400000) {
     });
     // put in cache, and forget it (there is no recovery if it throws, but that's ok).
     await cache.put(request, cacheResponse).catch(console.error);
-    return await cache.match(request);
   }
   return response;
 }
