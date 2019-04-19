@@ -32,7 +32,7 @@ describe("Core — Link to definitions", () => {
       </section>`;
     const ops = makeStandardOps(null, bodyText);
     const doc = await makeRSDoc(ops);
-    const hasCode = doc.body.querySelector("#codeWrap a");
+    const hasCode = doc.body.querySelector("#codeWrap a:not(.self-link)");
     expect(hasCode).toBeTruthy();
     expect(hasCode.firstElementChild.localName).toEqual("code");
     expect(hasCode.textContent).toEqual("Request");

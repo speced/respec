@@ -37,7 +37,9 @@ describe("Core — Definitions", () => {
 
     const doc = await makeRSDoc(ops);
     const sec = doc.getElementById("dfn");
-    const anchors = [...sec.children].filter(node => node.localName === "a");
+    const anchors = [...sec.children].filter(
+      node => node.localName === "a" && !node.classList.contains("self-link")
+    );
     expect(anchors[0].childNodes[0].textContent).toEqual("outerCode");
     expect(anchors[0].childNodes[0].nodeName).toEqual("CODE");
     expect(anchors[1].childNodes[0].textContent).toEqual("outerPre");

@@ -882,7 +882,8 @@ callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
       section.querySelector("dfn#dfn-some-generic-term").textContent
     ).toEqual("Some generic term");
     expect(
-      section.querySelector("a[href='#dfn-some-generic-term']").textContent
+      section.querySelector("a:not(.self-link)[href='#dfn-some-generic-term']")
+        .textContent
     ).toEqual("Some generic term");
     expect(
       section.querySelector(

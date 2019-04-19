@@ -288,7 +288,7 @@ describe("Core — data-cite attribute", () => {
     const doc = await makeRSDoc(ops);
     let dfn = doc.querySelector("#t1 > dfn");
     expect(dfn).toBeTruthy();
-    let dfnA = doc.querySelector("#t1 > dfn > a");
+    let dfnA = doc.querySelector("#t1 > dfn > a:not(.self-link)");
     expect(dfnA.textContent).toBe("HTML Standard");
     expect(dfnA.href).toBe("https://html.spec.whatwg.org/multipage/#test");
     expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(
@@ -296,7 +296,7 @@ describe("Core — data-cite attribute", () => {
     );
     dfn = doc.querySelector("#t2 > dfn");
     expect(dfn).toBeTruthy();
-    dfnA = doc.querySelector("#t2 > dfn > a");
+    dfnA = doc.querySelector("#t2 > dfn > a:not(.self-link)");
     expect(dfnA.textContent).toBe("This should not change");
     expect(dfnA.href).toBe("https://html.spec.whatwg.org/multipage/#test");
     expect(doc.getElementById("bib-whatwg-html").closest("section").id).toBe(

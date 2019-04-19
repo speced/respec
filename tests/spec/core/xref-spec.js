@@ -166,7 +166,7 @@ describe("Core — xref", () => {
     expect(link.href).toEqual(expectedLinks.get("event handler"));
     expect(link.classList.contains("respec-offending-element")).toBeFalsy();
 
-    const dfn = doc.querySelector("#external-dfn dfn a");
+    const dfn = doc.querySelector("#external-dfn dfn a:not(.self-link)");
     expect(dfn.href).toEqual(expectedLinks.get("url parser"));
     expect(dfn.classList.contains("respec-offending-element")).toBeFalsy();
   });
@@ -221,7 +221,9 @@ describe("Core — xref", () => {
     expect(link2.href).toEqual(expectedLinks.get("uppercase"));
     expect(link3.href).toEqual("https://infra.spec.whatwg.org/");
 
-    const [dfn1, dfn2, dfn3] = [...doc.querySelectorAll("#dfns dfn a")];
+    const [dfn1, dfn2, dfn3] = doc.querySelectorAll(
+      "#dfns dfn a:not(.self-link)"
+    );
     expect(dfn1.href).toEqual(expectedLinks.get("event handler"));
     expect(dfn2.href).toEqual(expectedLinks.get("list"));
     expect(dfn3.href).toEqual("https://html.spec.whatwg.org/multipage/");
@@ -297,15 +299,15 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     const localDfn1 = doc.getElementById("local-dfn-1");
-    expect(localDfn1.querySelector("a")).toBeFalsy();
+    expect(localDfn1.querySelector("a:not(.self-link)")).toBeFalsy();
     expect(localDfn1.querySelector("dfn").id).toEqual("dfn-local-one");
-    const localDfn2 = doc.querySelector("#local-dfn-2 a");
+    const localDfn2 = doc.querySelector("#local-dfn-2 a:not(.self-link)");
     expect(localDfn2.href).toEqual(
       "https://html.spec.whatwg.org/multipage/#hello"
     );
-    const externalDfn1 = doc.querySelector("#external-dfn-1 a");
+    const externalDfn1 = doc.querySelector("#external-dfn-1 a:not(.self-link)");
     expect(externalDfn1.href).toEqual(expectedLinks.get("dictionary"));
-    const externalDfn2 = doc.querySelector("#external-dfn-2 a");
+    const externalDfn2 = doc.querySelector("#external-dfn-2 a:not(.self-link)");
     expect(externalDfn2.href).toEqual(expectedLinks.get("list"));
     const localLink1 = doc.querySelector("#local-link-1 a");
     expect(localLink1.getAttribute("href")).toEqual("#dfn-local-one");
@@ -337,15 +339,15 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     const localDfn1p = doc.querySelector("p#local-dfn-1");
-    expect(localDfn1p.querySelector("a")).toBeFalsy();
+    expect(localDfn1p.querySelector("a:not(.self-link)")).toBeFalsy();
     expect(localDfn1p.querySelector("dfn").id).toEqual("dfn-local-one");
-    const localDfn2 = doc.querySelector("#local-dfn-2 a");
+    const localDfn2 = doc.querySelector("#local-dfn-2 a:not(.self-link)");
     expect(localDfn2.href).toEqual(
       "https://html.spec.whatwg.org/multipage/#world"
     );
-    const externalDfn1 = doc.querySelector("#external-dfn-1 a");
+    const externalDfn1 = doc.querySelector("#external-dfn-1 a:not(.self-link)");
     expect(externalDfn1.href).toEqual(expectedLinks.get("url parser"));
-    const externalDfn2 = doc.querySelector("#external-dfn-2 a");
+    const externalDfn2 = doc.querySelector("#external-dfn-2 a:not(.self-link)");
     expect(externalDfn2.href).toEqual(expectedLinks.get("list"));
     const localLink1 = doc.querySelector("#local-link-1 a");
     expect(localLink1.getAttribute("href")).toEqual("#dfn-local-one");
@@ -379,7 +381,7 @@ describe("Core — xref", () => {
     const link = doc.querySelector("#test1 a");
     expect(link.getAttribute("href")).toEqual(expectedLinks.get("list"));
 
-    const links = [...doc.querySelectorAll("#test2 a")];
+    const links = doc.querySelectorAll("#test2 a:not(.self-link)");
     expect(links.length).toEqual(4);
     for (const link of links) {
       expect(link.href).toEqual(expectedLinks.get("event handler"));
@@ -412,14 +414,14 @@ describe("Core — xref", () => {
 
     const dfn = doc.querySelector("#test dfn");
     expect(dfn.id).toEqual("dfn-event-handler");
-    const links = [...doc.querySelectorAll("#test a")];
+    const links = [...doc.querySelectorAll("#test a:not(.self-link)")];
     expect(links.length).toEqual(6);
     for (const link of links) {
       expect(link.href).toEqual(expectedLinks.get("event handler"));
       expect(link.classList.contains("respec-offending-element")).toBeFalsy();
     }
 
-    const test2Links = [...doc.querySelectorAll("#test2 a")];
+    const test2Links = [...doc.querySelectorAll("#test2 a:not(.self-link)")];
     expect(test2Links.length).toEqual(3);
     for (const link of test2Links) {
       expect(link.href).toEqual(expectedLinks.get("event handler"));

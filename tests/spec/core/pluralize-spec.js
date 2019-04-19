@@ -54,7 +54,9 @@ describe("Core - Pluralize", () => {
     expect(dfn.id).toEqual("dfn-baz"); // uses first data-lt as `id`
     expect(dfn.dataset.lt).toEqual("baz|bars");
     expect(dfn.dataset.plurals.split("|").sort()).toEqual(["bar", "bazs"]);
-    const validLinks = [...doc.querySelectorAll("#section a[href^='#']")];
+    const validLinks = [
+      ...doc.querySelectorAll("#section a[href^='#']:not(.self-link)")
+    ];
     expect(validLinks.length).toEqual(4);
     expect(
       validLinks.every(el => el.getAttribute("href") === "#dfn-baz")
@@ -81,7 +83,9 @@ describe("Core - Pluralize", () => {
     const { lt, plurals } = dfn.dataset;
     expect(lt).toEqual("yeast|fungus");
     expect(plurals.split("|").sort()).toEqual(["fungi", "yeasts"]);
-    const links = [...doc.querySelectorAll("#test a[href^='#']")];
+    const links = [
+      ...doc.querySelectorAll("#test a[href^='#']:not(.self-link)")
+    ];
     expect(links.length).toEqual(4);
     expect(
       links.every(el => el.getAttribute("href") === "#dfn-yeast")
@@ -101,7 +105,9 @@ describe("Core - Pluralize", () => {
 
     const { id: dfnId } = doc.querySelector("#section dfn");
     expect(dfnId).toBe("dfn-foo");
-    const [validLink, invalidLink] = [...doc.querySelectorAll("#section a")];
+    const [validLink, invalidLink] = doc.querySelectorAll(
+      "#section a:not(.self-link)"
+    );
     expect(validLink.getAttribute("href")).toEqual("#dfn-foo");
     expect(
       invalidLink.classList.contains("respec-offending-element")
@@ -121,7 +127,9 @@ describe("Core - Pluralize", () => {
 
     const { id: dfnId } = doc.querySelector("#section dfn");
     expect(dfnId).toBe("dfn-foo");
-    const [validLink, invalidLink] = [...doc.querySelectorAll("#section a")];
+    const [validLink, invalidLink] = doc.querySelectorAll(
+      "#section a:not(.self-link)"
+    );
     expect(validLink.getAttribute("href")).toEqual("#dfn-foo");
     expect(
       invalidLink.classList.contains("respec-offending-element")
@@ -141,9 +149,9 @@ describe("Core - Pluralize", () => {
 
     const dfn = doc.querySelector("#section dfn");
     expect(dfn.id).toEqual("dfn-baz");
-    const [validLink, badLink1, badLink2] = [
-      ...doc.querySelectorAll("#section a"),
-    ];
+    const [validLink, badLink1, badLink2] = doc.querySelectorAll(
+      "#section a:not(.self-link)"
+    );
     expect(validLink.getAttribute("href")).toEqual("#dfn-baz");
     expect(
       badLink1.classList.contains("respec-offending-element")
@@ -255,7 +263,9 @@ describe("Core - Pluralize", () => {
     const dfn = doc.querySelector("#section dfn");
     expect(dfn.id).toEqual("dfn-baz"); // uses first data-lt as `id`
     expect(dfn.dataset.lt).toEqual(undefined);
-    const [goodLink, badLink] = [...doc.querySelectorAll("#section a")];
+    const [goodLink, badLink] = doc.querySelectorAll(
+      "#section a:not(.self-link)"
+    );
     expect(goodLink.getAttribute("href")).toEqual("#dfn-baz");
     expect(badLink.classList.contains("respec-offending-element")).toBeTruthy();
   });
