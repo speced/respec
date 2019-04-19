@@ -152,9 +152,8 @@ function createIdlAnchor(escaped, data, parentName, dfn) {
       .dataset.lt || ""}">${escaped}</a>`;
   }
   const isDefaultJSON =
-    data.body &&
-    data.body.name &&
-    data.body.name.value === "toJSON" &&
+    data.type === "operation" &&
+    data.name === "toJSON" &&
     data.extAttrs &&
     data.extAttrs.items.some(({ name }) => name === "Default");
   if (isDefaultJSON) {
