@@ -61,7 +61,6 @@ describe("Core - ID headers", () => {
 
     it("doesn't add section links to h2s .introductory, but h3, h4s are ok", () => {
       const [h3, h4] = doc.querySelectorAll("#sotd h3, #sotd h4");
-      debugger
       expect(h3.id).toBe("level-3-heading");
       expect(h4.id).toBe("level-4-heading");
     });
