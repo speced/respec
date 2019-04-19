@@ -11,6 +11,7 @@ var[data-type]::after {
   top: -6px;
   opacity: 0;
   transition: opacity 0.4s;
+  pointer-events: none;
 }
 
 /* the triangle or arrow or caret or whatever */

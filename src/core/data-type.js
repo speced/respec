@@ -19,23 +19,16 @@ export function run(conf) {
   document.head.appendChild(style);
 
   document.querySelectorAll("section").forEach(section => {
-    const varSet = new Set();
-    section.querySelectorAll("var").forEach(variable => {
-      varSet.add(variable.textContent.trim());
-    });
-    varSet.forEach(uniquevar => {
-      const vars = Array.from(section.querySelectorAll("var")).filter(
-        elem => elem.textContent.trim() == uniquevar
-      );
-      let datatype = null;
-      vars.forEach(v => {
-        if (v.dataset.type) datatype = v.dataset.type;
-      });
-      if (datatype) {
-        vars.forEach(v => {
-          v.dataset.type = datatype;
-        });
+    const varMap = new Map();
+    const vars = section.querySelectorAll("var");
+    vars.forEach(variable => {
+      if (variable.dataset.type) {
+        varMap.set(variable.textContent.trim(), variable.dataset.type);
       }
+    });
+    vars.forEach(variable => {
+      const type = varMap.get(variable.textContent.trim());
+      if (type) variable.dataset.type = type;
     });
   });
 }
