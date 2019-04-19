@@ -183,17 +183,25 @@ function getRequestEntry(elem) {
  * @returns {Promise<Map<string, SearchResultEntry[]>>}
  */
 async function getData(queryKeys, apiUrl) {
-  const idb = await openDB("xref", 1, {
-    upgrade(db) {
-      db.createObjectStore("xrefs");
-    },
-  });
-  const cache = new IDBKeyVal(idb, "xrefs");
-  const resultsFromCache = await resolveFromCache(queryKeys, cache);
+  let cache;
+  let resultsFromCache;
+  try {
+    const idb = await openDB("xref", 1, {
+      upgrade(db) {
+        db.createObjectStore("xrefs");
+      },
+    });
+    cache = new IDBKeyVal(idb, "xrefs");
+    resultsFromCache = await resolveFromCache(queryKeys, cache);
+  } catch (error) {
+    console.error(error);
+    cache = null;
+    resultsFromCache = new Map();
+  }
 
   const termsToLook = queryKeys.filter(key => !resultsFromCache.get(key.id));
   const fetchedResults = await fetchFromNetwork(termsToLook, apiUrl);
-  if (fetchedResults.size) {
+  if (fetchedResults.size && cache) {
     // add data to cache
     await cache.addMany(fetchedResults);
     await cache.set("__CACHE_TIME__", Date.now());
