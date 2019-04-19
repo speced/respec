@@ -55,7 +55,7 @@ describe("Core - Pluralize", () => {
     expect(dfn.dataset.lt).toEqual("baz|bars");
     expect(dfn.dataset.plurals.split("|").sort()).toEqual(["bar", "bazs"]);
     const validLinks = [
-      ...doc.querySelectorAll("#section a[href^='#']:not(.self-link)")
+      ...doc.querySelectorAll("#section a[href^='#']:not(.self-link)"),
     ];
     expect(validLinks.length).toEqual(4);
     expect(
@@ -84,7 +84,7 @@ describe("Core - Pluralize", () => {
     expect(lt).toEqual("yeast|fungus");
     expect(plurals.split("|").sort()).toEqual(["fungi", "yeasts"]);
     const links = [
-      ...doc.querySelectorAll("#test a[href^='#']:not(.self-link)")
+      ...doc.querySelectorAll("#test a[href^='#']:not(.self-link)"),
     ];
     expect(links.length).toEqual(4);
     expect(
