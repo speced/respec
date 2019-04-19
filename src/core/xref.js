@@ -281,7 +281,7 @@ function isNormative(elem) {
  * @param {any} conf
  */
 function addDataCiteToTerms(elems, queryKeys, data, conf) {
-  /** @type {Map<string, { elems: HTMLElement[], specs: Set<string> }>} */
+  /** @type {Map<string, { elems: HTMLElement[], results: SearchResultEntry[], term: string }>} */
   const errorsAmbiguous = new Map();
   /** @type {Map<string, HTMLElement[]>} */
   const errorsTermNotFound = new Map();
@@ -303,9 +303,8 @@ function addDataCiteToTerms(elems, queryKeys, data, conf) {
       }
       default: {
         const collector =
-          errorsAmbiguous.get(term) ||
-          errorsAmbiguous.set(term, { specs: new Set(), elems: [] }).get(term);
-        results.forEach(result => collector.specs.add(result.shortname));
+          errorsAmbiguous.get(id) ||
+          errorsAmbiguous.set(id, { term, results, elems: [] }).get(id);
         collector.elems.push(elem);
       }
     }
@@ -378,11 +377,11 @@ function addToReferences(elem, cite, normative, term, conf) {
 }
 
 function showErrors({ errorsAmbiguous, errorsTermNotFound }) {
-  const linkToDataCite =
+  const dataCiteLink =
     "[`data-cite`](https://github.com/w3c/respec/wiki/data--cite)";
 
   const titleForNotFound = "Error: No matching dfn found.";
-  const hintForNotFound = `Please provide a ${linkToDataCite} attribute for it.`;
+  const hintForNotFound = `Please provide a ${dataCiteLink} attribute for it.`;
   for (const [term, elems] of errorsTermNotFound) {
     const msg =
       `Couldn't match "**${term}**" to anything in the document ` +
@@ -391,16 +390,22 @@ function showErrors({ errorsAmbiguous, errorsTermNotFound }) {
   }
 
   const titleForAmbiguous = "Error: Linking an ambiguous dfn.";
-  const hintForAmbiguous = `To disambiguate, you need to add a ${linkToDataCite} attribute.`;
-  for (const [term, data] of errorsAmbiguous) {
-    const specList = [...data.specs];
-    const count = specList.length;
-    const specs = specList.map(s => `**${s}**`).join(", ");
-    const msg =
-      `The term "**${term}**" is defined in ${count} ` +
-      `spec(s) in multiple ways, so it's ambiguous. ${hintForAmbiguous} ` +
-      `The specs where it's defined are: ${specs}.`;
-    showInlineError(data.elems, msg, titleForAmbiguous);
+  for (const { term, elems, results } of errorsAmbiguous.values()) {
+    const definedInSpecs = new Set(results.map(entry => entry.shortname));
+    const specs = [...definedInSpecs].map(s => `**${s}**`).join(", ");
+    const msg = `The term "**${term}**" is defined in ${specs} in multiple ways, so it's ambiguous.`;
+    let hint = "";
+    if (definedInSpecs.size === 1) {
+      // defined only in one spec but in multiple ways
+      const xrefFor = new Set([].concat(...results.map(entry => entry.for)));
+      const forContext = [...xrefFor].map(s => `**${s}**`).join(", ");
+      hint = `add \`data-xref-for\` attribute with value equal to one of the following: ${forContext}.`;
+    } else {
+      // defined in multiple specs
+      hint = `add ${dataCiteLink} attribute with value equal to one of the following: ${specs}.`;
+    }
+    const message = `${msg} To disambiguate, you need to ${hint}`;
+    showInlineError(elems, message, titleForAmbiguous);
   }
 }
 
