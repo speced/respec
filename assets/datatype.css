@@ -23,6 +23,7 @@ var[data-type]::before {
   border-color: transparent;
   border-top-color: #000;
 }
+
 /* actual text */
 var[data-type]::after {
   content: attr(data-type);
