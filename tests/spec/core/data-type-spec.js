@@ -133,4 +133,58 @@ describe("Core — data-type attribute", () => {
     );
     expect(displayItems.dataset.type).toBe("sequence");
   });
+
+  it("propagates data-type to subsequent instances of a <var>", async () => {
+    const body = `
+    <section>
+      <p id="a1">First instance of |varA|.</p>
+      <p id="a2">Second instance of |varA: DOMString|.</p>
+      <p id="a3">Third instance of |varA|.</p>
+      <p id="a4">Fourth instance of |varA: float|.</p>
+      <p id="b1">First instance of |varB:DOMString|.</p>
+      <p id="a5">Fifth instance of |varA|.</p>
+      <section>
+        <p id="a6">First instance of |varA| in this section.</p>
+        <p id="b2">First instance of |varB: sequence&lt;Promise>|.</p>
+        <p id="b3">Second instance of |varB|.</p>
+      </section>
+    </section>
+    `;
+    const doc = await makeRSDoc(makeStandardOps(null, body));
+    const a1 = doc.querySelector("#a1 var");
+    expect(a1.textContent).toEqual("varA");
+    expect(a1.dataset.type).toBeUndefined();
+
+    const a2 = doc.querySelector("#a2 var");
+    expect(a2.textContent).toEqual("varA");
+    expect(a2.dataset.type).toEqual("DOMString");
+
+    const a3 = doc.querySelector("#a3 var");
+    expect(a3.textContent).toEqual("varA");
+    expect(a3.dataset.type).toEqual("DOMString");
+
+    const a4 = doc.querySelector("#a4 var");
+    expect(a4.textContent).toEqual("varA");
+    expect(a4.dataset.type).toEqual("float");
+
+    const a5 = doc.querySelector("#a5 var");
+    expect(a5.textContent).toEqual("varA");
+    expect(a5.dataset.type).toEqual("float");
+
+    const b1 = doc.querySelector("#b1 var");
+    expect(b1.textContent).toEqual("varB");
+    expect(b1.dataset.type).toEqual("DOMString");
+
+    const a6 = doc.querySelector("#a6 var");
+    expect(a6.textContent).toEqual("varA");
+    expect(a6.dataset.type).toBeUndefined();
+
+    const b2 = doc.querySelector("#b2 var");
+    expect(b2.textContent).toEqual("varB");
+    expect(b2.dataset.type).toEqual("sequence<Promise>");
+
+    const b3 = doc.querySelector("#b2 var");
+    expect(b3.textContent).toEqual("varB");
+    expect(b3.dataset.type).toEqual("sequence<Promise>");
+  });
 });
