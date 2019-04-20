@@ -87,13 +87,17 @@ describe("Core - Inlines", () => {
         <p id="a1">TEXT |variable: Type| TEXT</p>
         <p id="a2">TEXT |variable with spaces:Type| TEXT</p>
         <p id="a3">TEXT |with spaces :  Type| TEXT</p>
+        <p id="e">TEXT |p| TEXT </p>
+      </section>
+      <section>
         <p id="a4">TEXT |with spaces :  Type with spaces| TEXT</p>
         <p id="b">TEXT |variable| TEXT</p>
         <p id="c">TEXT | ignored | TEXT</p>
         <p id="d">TEXT|ignore: Ignore|TEXT</p>
-        <p id="e">TEXT |p| TEXT </p>
         <p id="f">TEXT |p: Type with spaces| TEXT </p>
         <p id="g"> |p: Type with spaces| and |var1| and |var2:Type| </p>
+      </section>
+      <section>
         <p id="h"> TEXT |var: Generic&lt;int&gt;| TEXT |var2: Generic&lt;unsigned short int&gt;| </p>
       </section>
     `;
