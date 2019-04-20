@@ -1,7 +1,7 @@
 // @ts-check
 /**
  * Module core/data-type
- * Propagates data type of a <var> in all occurrences within a section.
+ * Propagates data type of a <var> to subsequent instances within a section.
  * Also adds the CSS for the data type tooltip.
  * Set `conf.highlightVars = true` to enable.
  */
@@ -18,17 +18,21 @@ export function run(conf) {
   style.textContent = tooltipStyle;
   document.head.appendChild(style);
 
-  document.querySelectorAll("section").forEach(section => {
-    const varMap = new Map();
-    const vars = section.querySelectorAll("var");
-    vars.forEach(variable => {
-      if (variable.dataset.type) {
-        varMap.set(variable.textContent.trim(), variable.dataset.type);
-      }
-    });
-    vars.forEach(variable => {
-      const type = varMap.get(variable.textContent.trim());
-      if (type) variable.dataset.type = type;
-    });
-  });
+  let section = null;
+  const varMap = new Map();
+  /** @type {NodeListOf<HTMLElement>} */
+  const variables = document.querySelectorAll("section var");
+  for (const varElem of variables) {
+    const currentSection = varElem.closest("section");
+    if (section !== currentSection) {
+      section = currentSection;
+      varMap.clear();
+    }
+    if (varElem.dataset.type) {
+      varMap.set(varElem.textContent.trim(), varElem.dataset.type);
+      continue;
+    }
+    const type = varMap.get(varElem.textContent.trim());
+    if (type) varElem.dataset.type = type;
+  }
 }
