@@ -143,11 +143,11 @@ describe("Core — data-type attribute", () => {
       <p id="a4">Fourth instance of |varA: Type2|.</p>
       <p id="b1">First instance of |varB:Type1|.</p>
       <p id="a5">Fifth instance of |varA|.</p>
-    </section>
-    <section>
-      <p id="a6">First instance of |varA| in this section.</p>
-      <p id="b2">First instance of |varB: Type2|.</p>
-      <p id="b3">Second instance of |varB|.</p>
+      <section>
+        <p id="a6">First instance of |varA| in this section.</p>
+        <p id="b2">First instance of |varB: Type2|.</p>
+        <p id="b3">Second instance of |varB|.</p>
+      </section>
     </section>
     `;
     const doc = await makeRSDoc(makeStandardOps(null, body));
