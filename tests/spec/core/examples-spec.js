@@ -19,7 +19,7 @@ describe("Core — Examples", () => {
     const doc = await makeRSDoc(ops);
     const example = doc.querySelector("div.example pre");
     const div = example.closest("div");
-    expect(div.classList.contains("example")).toBeTruthy();
+    expect(div.classList).toContain("example");
     expect(div.id).toBe("example-1-ex");
 
     const markers = div.querySelectorAll("div.marker");

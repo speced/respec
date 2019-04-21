@@ -149,7 +149,7 @@ describe("Core — xref", () => {
 
     const link = doc.getElementById("external-link");
     expect(link.getAttribute("href")).toBeFalsy();
-    expect(link.classList.contains("respec-offending-element")).toBeTruthy();
+    expect(link.classList).toContain("respec-offending-element");
   });
 
   it("adds link to unique external terms", async () => {
@@ -191,7 +191,7 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     const link = doc.getElementById("external-link");
-    expect(link.classList.contains("respec-offending-element")).toBeTruthy();
+    expect(link.classList).toContain("respec-offending-element");
     expect(link.getAttribute("href")).toBeFalsy();
     expect(link.title).toBe("Error: No matching dfn found.");
   });
@@ -238,7 +238,7 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     const link = doc.getElementById("link");
-    expect(link.classList.contains("respec-offending-element")).toBeTruthy();
+    expect(link.classList).toContain("respec-offending-element");
     expect(link.title).toBe("Error: Linking an ambiguous dfn.");
   });
 
@@ -274,7 +274,7 @@ describe("Core — xref", () => {
 
     const five = doc.getElementById("five");
     expect(five.href).toBe("");
-    expect(five.classList.contains("respec-offending-element")).toBeTruthy();
+    expect(five.classList).toContain("respec-offending-element");
     expect(five.title).toBe("Error: No matching dfn found.");
   });
 
@@ -463,7 +463,7 @@ describe("Core — xref", () => {
 
     const three = doc.getElementById("three");
     expect(three.href).toBe("");
-    expect(three.classList.contains("respec-offending-element")).toBeTruthy();
+    expect(three.classList).toContain("respec-offending-element");
     expect(doc.querySelectorAll(".respec-offending-element").length).toBe(1);
 
     const four = doc.getElementById("four");
@@ -535,7 +535,7 @@ describe("Core — xref", () => {
     expect(badLink.href).toBe(
       "https://www.w3.org/TR/css-values-3/#bearing-angle"
     );
-    expect(badLink.classList.contains("respec-offending-element")).toBeTruthy();
+    expect(badLink.classList).toContain("respec-offending-element");
     expect(badLink.title).toBe(
       "Error: Informative reference in normative section"
     );

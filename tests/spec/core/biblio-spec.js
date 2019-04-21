@@ -75,7 +75,7 @@ describe("W3C — Bibliographic References", () => {
     const host = bibRefsURL.host;
     const link = doc.querySelector(`link[rel='dns-prefetch'][href*='${host}']`);
     expect(link).toBeTruthy();
-    expect(link.classList.contains("removeOnSave")).toBeTruthy();
+    expect(link.classList).toContain("removeOnSave");
   });
 
   it("displays the publisher when present", () => {

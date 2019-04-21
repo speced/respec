@@ -55,9 +55,9 @@ describe("Core - Inlines", () => {
     );
 
     const illegalCiteNoWarn = doc.querySelector("#illegal-no-warn cite");
-    expect(
-      illegalCiteNoWarn.classList.contains("respec-offending-element")
-    ).toBe(false);
+    expect(illegalCiteNoWarn.classList).not.toContain(
+      "respec-offending-element"
+    );
   });
 
   it("processes abbr and rfc2119 content", async () => {

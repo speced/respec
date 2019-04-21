@@ -440,7 +440,7 @@ describe("W3C — Headers", () => {
 
       // Title was relocated to head
       const titleInHead = doc.querySelector(".head h1");
-      expect(titleInHead.classList.contains("p-name")).toBe(true);
+      expect(titleInHead.classList).toContain("p-name");
       expect(titleInHead.id).toBe("title");
 
       // html is not escaped
@@ -1220,7 +1220,7 @@ describe("W3C — Headers", () => {
       // the class introductory is added by script
       const sotd = doc.getElementById("sotd");
 
-      expect(sotd.classList.contains("introductory")).toBe(true);
+      expect(sotd.classList).toContain("introductory");
 
       const p1 = doc.getElementById("p1");
       expect(p1).toBeTruthy();
