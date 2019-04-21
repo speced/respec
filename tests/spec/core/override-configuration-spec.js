@@ -19,9 +19,9 @@ describe("Core — Override Configuration", () => {
     const { textContent } = doc.querySelector(".head h2");
     expect(textContent).toMatch(/W3C Rescinded Recommendation/);
     const month = conf.previousPublishDate.getUTCMonth();
-    expect(month).toEqual(2);
+    expect(month).toBe(2);
     const { previousMaturity } = conf;
-    expect(previousMaturity).toEqual("REC");
+    expect(previousMaturity).toBe("REC");
     const copyrightText = doc.querySelector(".copyright").textContent;
     expect(copyrightText).toMatch(/Internet Engineering Task Force/);
   });

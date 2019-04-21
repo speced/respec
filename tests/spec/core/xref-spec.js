@@ -163,11 +163,11 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     const link = doc.querySelector("#external-link a");
-    expect(link.href).toEqual(expectedLinks.get("event handler"));
+    expect(link.href).toBe(expectedLinks.get("event handler"));
     expect(link.classList.contains("respec-offending-element")).toBeFalsy();
 
     const dfn = doc.querySelector("#external-dfn dfn a");
-    expect(dfn.href).toEqual(expectedLinks.get("url parser"));
+    expect(dfn.href).toBe(expectedLinks.get("url parser"));
     expect(dfn.classList.contains("respec-offending-element")).toBeFalsy();
   });
 
@@ -193,7 +193,7 @@ describe("Core — xref", () => {
     const link = doc.getElementById("external-link");
     expect(link.classList.contains("respec-offending-element")).toBeTruthy();
     expect(link.getAttribute("href")).toBeFalsy();
-    expect(link.title).toEqual("Error: No matching dfn found.");
+    expect(link.title).toBe("Error: No matching dfn found.");
   });
 
   it("uses data-cite to disambiguate", async () => {
@@ -217,14 +217,14 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     const [link1, link2, link3] = [...doc.querySelectorAll("#links a")];
-    expect(link1.href).toEqual(expectedLinks.get("sw-fetch"));
-    expect(link2.href).toEqual(expectedLinks.get("uppercase"));
-    expect(link3.href).toEqual("https://infra.spec.whatwg.org/");
+    expect(link1.href).toBe(expectedLinks.get("sw-fetch"));
+    expect(link2.href).toBe(expectedLinks.get("uppercase"));
+    expect(link3.href).toBe("https://infra.spec.whatwg.org/");
 
     const [dfn1, dfn2, dfn3] = [...doc.querySelectorAll("#dfns dfn a")];
-    expect(dfn1.href).toEqual(expectedLinks.get("event handler"));
-    expect(dfn2.href).toEqual(expectedLinks.get("list"));
-    expect(dfn3.href).toEqual("https://html.spec.whatwg.org/multipage/");
+    expect(dfn1.href).toBe(expectedLinks.get("event handler"));
+    expect(dfn2.href).toBe(expectedLinks.get("list"));
+    expect(dfn3.href).toBe("https://html.spec.whatwg.org/multipage/");
   });
 
   it("shows error if cannot resolve by data-cite", async () => {
@@ -239,7 +239,7 @@ describe("Core — xref", () => {
 
     const link = doc.getElementById("link");
     expect(link.classList.contains("respec-offending-element")).toBeTruthy();
-    expect(link.title).toEqual("Error: Linking an ambiguous dfn.");
+    expect(link.title).toBe("Error: Linking an ambiguous dfn.");
   });
 
   it("uses data-cite to disambiguate - 2", async () => {
@@ -259,23 +259,23 @@ describe("Core — xref", () => {
     const ops = makeStandardOps(config, body);
     const doc = await makeRSDoc(ops);
 
-    expect(doc.getElementById("one").href).toEqual(
+    expect(doc.getElementById("one").href).toBe(
       expectedLinks.get("object@fileapi")
     );
-    expect(doc.getElementById("two").href).toEqual(
+    expect(doc.getElementById("two").href).toBe(
       expectedLinks.get("object@html")
     );
-    expect(doc.getElementById("three").href).toEqual(
+    expect(doc.getElementById("three").href).toBe(
       expectedLinks.get("object@fileapi")
     );
-    expect(doc.getElementById("four").href).toEqual(
+    expect(doc.getElementById("four").href).toBe(
       expectedLinks.get("object@html")
     );
 
     const five = doc.getElementById("five");
-    expect(five.href).toEqual("");
+    expect(five.href).toBe("");
     expect(five.classList.contains("respec-offending-element")).toBeTruthy();
-    expect(five.title).toEqual("Error: No matching dfn found.");
+    expect(five.title).toBe("Error: No matching dfn found.");
   });
 
   it("treats terms as local if empty data-cite on parent", async () => {
@@ -298,24 +298,24 @@ describe("Core — xref", () => {
 
     const localDfn1 = doc.getElementById("local-dfn-1");
     expect(localDfn1.querySelector("a")).toBeFalsy();
-    expect(localDfn1.querySelector("dfn").id).toEqual("dfn-local-one");
+    expect(localDfn1.querySelector("dfn").id).toBe("dfn-local-one");
     const localDfn2 = doc.querySelector("#local-dfn-2 a");
-    expect(localDfn2.href).toEqual(
+    expect(localDfn2.href).toBe(
       "https://html.spec.whatwg.org/multipage/#hello"
     );
     const externalDfn1 = doc.querySelector("#external-dfn-1 a");
-    expect(externalDfn1.href).toEqual(expectedLinks.get("dictionary"));
+    expect(externalDfn1.href).toBe(expectedLinks.get("dictionary"));
     const externalDfn2 = doc.querySelector("#external-dfn-2 a");
-    expect(externalDfn2.href).toEqual(expectedLinks.get("list"));
+    expect(externalDfn2.href).toBe(expectedLinks.get("list"));
     const localLink1 = doc.querySelector("#local-link-1 a");
-    expect(localLink1.getAttribute("href")).toEqual("#dfn-local-one");
+    expect(localLink1.getAttribute("href")).toBe("#dfn-local-one");
     const externalLink1 = doc.querySelector("#external-link-1 a");
-    expect(externalLink1.href).toEqual(expectedLinks.get("url parser"));
+    expect(externalLink1.href).toBe(expectedLinks.get("url parser"));
 
     const offendingElements = doc.querySelectorAll(
       "#test .respec-offending-element"
     );
-    expect(offendingElements.length).toEqual(0);
+    expect(offendingElements.length).toBe(0);
   });
 
   it("ignores terms if local dfn exists", async () => {
@@ -338,26 +338,26 @@ describe("Core — xref", () => {
 
     const localDfn1p = doc.querySelector("p#local-dfn-1");
     expect(localDfn1p.querySelector("a")).toBeFalsy();
-    expect(localDfn1p.querySelector("dfn").id).toEqual("dfn-local-one");
+    expect(localDfn1p.querySelector("dfn").id).toBe("dfn-local-one");
     const localDfn2 = doc.querySelector("#local-dfn-2 a");
-    expect(localDfn2.href).toEqual(
+    expect(localDfn2.href).toBe(
       "https://html.spec.whatwg.org/multipage/#world"
     );
     const externalDfn1 = doc.querySelector("#external-dfn-1 a");
-    expect(externalDfn1.href).toEqual(expectedLinks.get("url parser"));
+    expect(externalDfn1.href).toBe(expectedLinks.get("url parser"));
     const externalDfn2 = doc.querySelector("#external-dfn-2 a");
-    expect(externalDfn2.href).toEqual(expectedLinks.get("list"));
+    expect(externalDfn2.href).toBe(expectedLinks.get("list"));
     const localLink1 = doc.querySelector("#local-link-1 a");
-    expect(localLink1.getAttribute("href")).toEqual("#dfn-local-one");
+    expect(localLink1.getAttribute("href")).toBe("#dfn-local-one");
     const localLink2 = doc.querySelector("#local-link-2 a");
-    expect(localLink2.getAttribute("href")).toEqual("#dfn-local-one");
+    expect(localLink2.getAttribute("href")).toBe("#dfn-local-one");
     const externalLink1 = doc.querySelector("#external-link-1 a");
-    expect(externalLink1.href).toEqual(expectedLinks.get("event handler"));
+    expect(externalLink1.href).toBe(expectedLinks.get("event handler"));
 
     const offendingElements = doc.querySelectorAll(
       "#test .respec-offending-element"
     );
-    expect(offendingElements.length).toEqual(0);
+    expect(offendingElements.length).toBe(0);
   });
 
   it("takes data-lt into account", async () => {
@@ -377,12 +377,12 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     const link = doc.querySelector("#test1 a");
-    expect(link.getAttribute("href")).toEqual(expectedLinks.get("list"));
+    expect(link.getAttribute("href")).toBe(expectedLinks.get("list"));
 
     const links = [...doc.querySelectorAll("#test2 a")];
-    expect(links.length).toEqual(4);
+    expect(links.length).toBe(4);
     for (const link of links) {
-      expect(link.href).toEqual(expectedLinks.get("event handler"));
+      expect(link.href).toBe(expectedLinks.get("event handler"));
       expect(link.classList.contains("respec-offending-element")).toBeFalsy();
     }
   });
@@ -411,18 +411,18 @@ describe("Core — xref", () => {
     const doc = await makeRSDoc(ops);
 
     const dfn = doc.querySelector("#test dfn");
-    expect(dfn.id).toEqual("dfn-event-handler");
+    expect(dfn.id).toBe("dfn-event-handler");
     const links = [...doc.querySelectorAll("#test a")];
-    expect(links.length).toEqual(6);
+    expect(links.length).toBe(6);
     for (const link of links) {
-      expect(link.href).toEqual(expectedLinks.get("event handler"));
+      expect(link.href).toBe(expectedLinks.get("event handler"));
       expect(link.classList.contains("respec-offending-element")).toBeFalsy();
     }
 
     const test2Links = [...doc.querySelectorAll("#test2 a")];
-    expect(test2Links.length).toEqual(3);
+    expect(test2Links.length).toBe(3);
     for (const link of test2Links) {
-      expect(link.href).toEqual(expectedLinks.get("event handler"));
+      expect(link.href).toBe(expectedLinks.get("event handler"));
       expect(link.classList.contains("respec-offending-element")).toBeFalsy();
     }
   });
@@ -457,19 +457,19 @@ describe("Core — xref", () => {
     const expectedLink2 = expectedLinks.get("object@html");
 
     const one = doc.getElementById("one");
-    expect(one.href).toEqual(expectedLink1);
+    expect(one.href).toBe(expectedLink1);
     const two = doc.getElementById("two");
-    expect(two.href).toEqual(expectedLink2);
+    expect(two.href).toBe(expectedLink2);
 
     const three = doc.getElementById("three");
-    expect(three.href).toEqual("");
+    expect(three.href).toBe("");
     expect(three.classList.contains("respec-offending-element")).toBeTruthy();
-    expect(doc.querySelectorAll(".respec-offending-element").length).toEqual(1);
+    expect(doc.querySelectorAll(".respec-offending-element").length).toBe(1);
 
     const four = doc.getElementById("four");
-    expect(four.href).toEqual(expectedLink1);
+    expect(four.href).toBe(expectedLink1);
     const five = doc.getElementById("five");
-    expect(five.href).toEqual(expectedLink2);
+    expect(five.href).toBe(expectedLink2);
   });
 
   it("adds normative and informative references", async () => {
@@ -511,37 +511,37 @@ describe("Core — xref", () => {
       expect(link.classList.contains("respec-offending-element")).toBeFalsy();
     }
     const valid1 = doc.getElementById("valid1");
-    expect(valid1.href).toEqual("https://example.com/#fake-inform-1");
+    expect(valid1.href).toBe("https://example.com/#fake-inform-1");
     const valid1n = doc.getElementById("valid1n");
-    expect(valid1n.href).toEqual(expectedLinks.get("list"));
+    expect(valid1n.href).toBe(expectedLinks.get("list"));
     const valid2 = doc.getElementById("valid2");
-    expect(valid2.href).toEqual("https://example.com/#fake-inform-2");
+    expect(valid2.href).toBe("https://example.com/#fake-inform-2");
     const valid2n = doc.getElementById("valid2n");
-    expect(valid2n.href).toEqual(expectedLinks.get("event handler"));
+    expect(valid2n.href).toBe(expectedLinks.get("event handler"));
     const valid3 = doc.getElementById("valid3");
-    expect(valid3.href).toEqual("https://example.com/#fake-inform-3");
+    expect(valid3.href).toBe("https://example.com/#fake-inform-3");
     const valid3n = doc.getElementById("valid3n");
-    expect(valid3n.href).toEqual(expectedLinks.get("dictionary"));
+    expect(valid3n.href).toBe(expectedLinks.get("dictionary"));
     const valid4 = doc.getElementById("valid4");
-    expect(valid4.href).toEqual("https://example.com/#fake-inform-4");
+    expect(valid4.href).toBe("https://example.com/#fake-inform-4");
     const valid4n = doc.getElementById("valid4n");
-    expect(valid4n.href).toEqual(expectedLinks.get("alphanumeric"));
+    expect(valid4n.href).toBe(expectedLinks.get("alphanumeric"));
     const valid5n = doc.getElementById("valid5n");
-    expect(valid5n.href).toEqual(expectedLinks.get("url parser"));
+    expect(valid5n.href).toBe(expectedLinks.get("url parser"));
     const valid6n = doc.getElementById("valid6n");
-    expect(valid6n.href).toEqual(expectedLinks.get("url parser"));
+    expect(valid6n.href).toBe(expectedLinks.get("url parser"));
 
     const badLink = doc.getElementById("invalid");
-    expect(badLink.href).toEqual(
+    expect(badLink.href).toBe(
       "https://www.w3.org/TR/css-values-3/#bearing-angle"
     );
     expect(badLink.classList.contains("respec-offending-element")).toBeTruthy();
-    expect(badLink.title).toEqual(
+    expect(badLink.title).toBe(
       "Error: Informative reference in normative section"
     );
 
     const normRefs = [...doc.querySelectorAll("#normative-references dt")];
-    expect(normRefs.length).toEqual(1); // excludes `css-values` of `#invalid`
+    expect(normRefs.length).toBe(1); // excludes `css-values` of `#invalid`
     expect(normRefs.map(r => r.textContent)).toEqual(["[URL]"]);
 
     const informRefs = [...doc.querySelectorAll("#informative-references dt")];
@@ -559,7 +559,7 @@ describe("Core — xref", () => {
       const doc = await makeRSDoc(ops);
       const el = doc.getElementById("test");
       expect(el.querySelector("code a")).toBeFalsy();
-      expect(el.textContent).toEqual("{{PASS }}");
+      expect(el.textContent).toBe("{{PASS }}");
     });
 
     it("ignores malformed syntax", async () => {
@@ -569,7 +569,7 @@ describe("Core — xref", () => {
       const doc = await makeRSDoc(ops);
       const el = doc.getElementById("test");
       expect(el.querySelector("code a")).toBeFalsy();
-      expect(el.textContent).toEqual("{ {  PASS }}");
+      expect(el.textContent).toBe("{ {  PASS }}");
     });
 
     it("shows error if IDL string parsing fails", async () => {
@@ -580,7 +580,7 @@ describe("Core — xref", () => {
       expect(el.querySelector("code a")).toBeFalsy();
       const errorEl = el.querySelector("span.respec-offending-element");
       expect(errorEl).toBeTruthy();
-      expect(el.textContent).toEqual(`text {{ "imp"orts" }} text`);
+      expect(el.textContent).toBe(`text {{ "imp"orts" }} text`);
     });
 
     it("links inline IDL references", async () => {
@@ -602,22 +602,20 @@ describe("Core — xref", () => {
       const [windowLink, eventTargetLink] = doc.querySelectorAll(
         "#link1 code a"
       );
-      expect(windowLink.href).toEqual(expectedLinks.get("Window"));
-      expect(eventTargetLink.href).toEqual(expectedLinks.get("EventTarget"));
+      expect(windowLink.href).toBe(expectedLinks.get("Window"));
+      expect(eventTargetLink.href).toBe(expectedLinks.get("EventTarget"));
 
       const link2 = doc.querySelector("#link2 code a");
-      expect(link2.href).toEqual(
-        expectedLinks.get("PermissionStatus.[[query]]")
-      );
-      expect(link2.textContent).toEqual("query");
+      expect(link2.href).toBe(expectedLinks.get("PermissionStatus.[[query]]"));
+      expect(link2.textContent).toBe("query");
 
       const link3 = doc.querySelector("#link3 code a");
       expect(link3.href).toBeFalsy();
-      expect(link3.title).toEqual("Error: Linking an ambiguous dfn.");
+      expect(link3.title).toBe("Error: Linking an ambiguous dfn.");
 
       const link4 = doc.querySelector("#link4 code a");
-      expect(link4.href).toEqual(expectedLinks.get("EventTarget"));
-      expect(link4.textContent).toEqual("EventTarget");
+      expect(link4.href).toBe(expectedLinks.get("EventTarget"));
+      expect(link4.textContent).toBe("EventTarget");
     });
 
     it("links methods", async () => {
@@ -639,38 +637,38 @@ describe("Core — xref", () => {
       const doc = await makeRSDoc(ops);
 
       const link1 = doc.querySelector("#link1 code a");
-      expect(link1.href).toEqual(
+      expect(link1.href).toBe(
         expectedLinks.get("EventTarget.addEventListener")
       );
       const vars1 = [...doc.querySelectorAll("#link1 var")];
-      expect(vars1.length).toEqual(2);
-      expect(vars1[0].textContent).toEqual("type");
-      expect(vars1[1].textContent).toEqual("callback");
+      expect(vars1.length).toBe(2);
+      expect(vars1[0].textContent).toBe("type");
+      expect(vars1[1].textContent).toBe("callback");
 
       const [link2a, link2b] = [...doc.querySelectorAll("#link2 code a")];
-      expect(link2a.href).toEqual(expectedLinks.get("EventTarget"));
-      expect(link2b.href).toEqual(
+      expect(link2a.href).toBe(expectedLinks.get("EventTarget"));
+      expect(link2b.href).toBe(
         expectedLinks.get("EventTarget.addEventListener")
       );
       const vars2 = [...doc.querySelectorAll("#link2 var")];
-      expect(vars2.length).toEqual(2);
-      expect(vars2[0].textContent).toEqual("type");
-      expect(vars2[1].textContent).toEqual("callback");
+      expect(vars2.length).toBe(2);
+      expect(vars2[0].textContent).toBe("type");
+      expect(vars2[1].textContent).toBe("callback");
 
       const [link3a, link3b] = [...doc.querySelectorAll("#link3 code a")];
-      expect(link3a.href).toEqual(expectedLinks.get("ChildNode"));
-      expect(link3b.href).toEqual(expectedLinks.get("ChildNode.after"));
+      expect(link3a.href).toBe(expectedLinks.get("ChildNode"));
+      expect(link3b.href).toBe(expectedLinks.get("ChildNode.after"));
 
       const link4 = doc.querySelector("#link4 code a");
-      expect(link4.href).toEqual(expectedLinks.get("allowedFeatures"));
+      expect(link4.href).toBe(expectedLinks.get("allowedFeatures"));
 
       const link5 = doc.querySelector("#link5 code a");
-      expect(link5.href).toEqual("");
-      expect(link5.title).toEqual("Error: Linking an ambiguous dfn.");
+      expect(link5.href).toBe("");
+      expect(link5.title).toBe("Error: Linking an ambiguous dfn.");
 
       const [link6a, link6b] = [...doc.querySelectorAll("#link6 code a")];
-      expect(link6a.href).toEqual(expectedLinks.get("URLSearchParams"));
-      expect(link6b.href).toEqual(expectedLinks.get("URLSearchParams.append"));
+      expect(link6a.href).toBe(expectedLinks.get("URLSearchParams"));
+      expect(link6b.href).toBe(expectedLinks.get("URLSearchParams.append"));
     });
 
     it("links attribute and dict-member", async () => {
@@ -690,24 +688,24 @@ describe("Core — xref", () => {
       const doc = await makeRSDoc(ops);
 
       const [link1a, link1b] = [...doc.querySelectorAll("#link1 code a")];
-      expect(link1a.href).toEqual(expectedLinks.get("Window"));
-      expect(link1b.href).toEqual(expectedLinks.get("Window.event"));
+      expect(link1a.href).toBe(expectedLinks.get("Window"));
+      expect(link1b.href).toBe(expectedLinks.get("Window.event"));
 
       // the base "Credential" is used to disambiguate as "forContext"
       const [link2a, link2b] = [...doc.querySelectorAll("#link2 code a")];
-      expect(link2a.href).toEqual(expectedLinks.get("Credential"));
-      expect(link2b.href).toEqual(expectedLinks.get("Credential.[[type]]"));
+      expect(link2a.href).toBe(expectedLinks.get("Credential"));
+      expect(link2b.href).toBe(expectedLinks.get("Credential.[[type]]"));
 
       const [link3a, link3b] = [...doc.querySelectorAll("#link3 code a")];
-      expect(link3a.href).toEqual(expectedLinks.get("PublicKeyCredential"));
-      expect(link3b.href).toEqual(
+      expect(link3a.href).toBe(expectedLinks.get("PublicKeyCredential"));
+      expect(link3b.href).toBe(
         expectedLinks.get("PublicKeyCredential.[[type]]")
       );
 
       // "TextDecoderOptions" is dictionary and "fatal" is dict-member
       const [link4a, link4b] = [...doc.querySelectorAll("#link4 code a")];
-      expect(link4a.href).toEqual(expectedLinks.get("TextDecoderOptions"));
-      expect(link4b.href).toEqual(
+      expect(link4a.href).toBe(expectedLinks.get("TextDecoderOptions"));
+      expect(link4b.href).toBe(
         expectedLinks.get(`TextDecoderOptions["fatal"]`)
       );
     });
@@ -729,12 +727,12 @@ describe("Core — xref", () => {
 
       // as base == [[type]], it is treated as a local internal slot
       const link1 = doc.querySelector("#link1 a");
-      expect(link1.getAttribute("href")).toEqual("#dfn-type");
+      expect(link1.getAttribute("href")).toBe("#dfn-type");
 
       // the base "Credential" is used as "forContext" for [[type]]
       const [link2a, link2b] = [...doc.querySelectorAll("#link2 code a")];
-      expect(link2a.href).toEqual(expectedLinks.get("Credential"));
-      expect(link2b.href).toEqual(expectedLinks.get("Credential.[[type]]"));
+      expect(link2a.href).toBe(expectedLinks.get("Credential"));
+      expect(link2b.href).toBe(expectedLinks.get("Credential.[[type]]"));
     });
 
     it("links enum and enum-values", async () => {
@@ -762,27 +760,23 @@ describe("Core — xref", () => {
       const doc = await makeRSDoc(ops);
 
       const link1 = doc.getElementById("link1");
-      expect(link1.textContent).toEqual(`"imports"`);
-      expect(link1.querySelector("a").textContent).toEqual("imports");
-      expect(link1.querySelector("a").href).toEqual(
+      expect(link1.textContent).toBe(`"imports"`);
+      expect(link1.querySelector("a").textContent).toBe("imports");
+      expect(link1.querySelector("a").href).toBe(
         expectedLinks.get("ServiceWorkerUpdateViaCache.imports")
       );
 
       const link2 = doc.getElementById("link2");
       const [blobLink, swImport] = link2.querySelectorAll("a");
-      expect(blobLink.href).toEqual(expectedLinks.get("blob"));
-      expect(swImport.href).toEqual(
+      expect(blobLink.href).toBe(expectedLinks.get("blob"));
+      expect(swImport.href).toBe(
         expectedLinks.get("ServiceWorkerUpdateViaCache.imports")
       );
-      expect(link2.textContent).toEqual(`"blob" "imports"`);
+      expect(link2.textContent).toBe(`"blob" "imports"`);
 
       const [blockLink1, blockLink2] = doc.querySelectorAll("#link3 code a");
-      expect(blockLink1.href).toEqual(
-        expectedLinks.get("ChildDisplayType.block")
-      );
-      expect(blockLink2.href).toEqual(
-        expectedLinks.get("ChildDisplayType.block")
-      );
+      expect(blockLink1.href).toBe(expectedLinks.get("ChildDisplayType.block"));
+      expect(blockLink2.href).toBe(expectedLinks.get("ChildDisplayType.block"));
 
       const [dashedThing, emptyString] = doc.querySelectorAll("#link4 code a");
       expect(dashedThing.textContent).toBe("dashed-thing");
@@ -820,19 +814,19 @@ describe("Core — xref", () => {
       const doc = await makeRSDoc(ops);
 
       const externalLinks = [...doc.querySelectorAll("#link-external a")];
-      expect(externalLinks[0].href).toEqual(expectedLinks.get("Window"));
-      expect(externalLinks[1].href).toEqual(expectedLinks.get("Window.event"));
+      expect(externalLinks[0].href).toBe(expectedLinks.get("Window"));
+      expect(externalLinks[1].href).toBe(expectedLinks.get("Window.event"));
 
       const paymentAddressLinks = [...doc.querySelectorAll("#link-internal a")];
-      expect(paymentAddressLinks[0].getAttribute("href")).toEqual(
+      expect(paymentAddressLinks[0].getAttribute("href")).toBe(
         "#dom-paymentaddress"
       );
-      expect(paymentAddressLinks[1].getAttribute("href")).toEqual(
+      expect(paymentAddressLinks[1].getAttribute("href")).toBe(
         "#dom-paymentaddress-languagecode"
       );
 
       const internalLink = doc.querySelector("#link-internal-dfn a");
-      expect(internalLink.getAttribute("href")).toEqual("#dfn-languagecode");
+      expect(internalLink.getAttribute("href")).toBe("#dfn-languagecode");
     });
   });
 
@@ -963,7 +957,7 @@ describe("Core — xref", () => {
     expect(cacheKeys).toEqual([]);
 
     const preCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
-    expect(preCacheDoc.getElementById("link").href).toEqual(
+    expect(preCacheDoc.getElementById("link").href).toBe(
       expectedLinks.get("dictionary")
     );
     const preCacheTime = await cache.get("__CACHE_TIME__");
@@ -975,7 +969,7 @@ describe("Core — xref", () => {
 
     // no new data was requested from server, cache shoudln't change
     const postCacheDoc = await makeRSDoc(makeStandardOps(config, body1));
-    expect(postCacheDoc.getElementById("link").href).toEqual(
+    expect(postCacheDoc.getElementById("link").href).toBe(
       expectedLinks.get("dictionary")
     );
     const postCacheTime = await cache.get("__CACHE_TIME__");
@@ -994,10 +988,10 @@ describe("Core — xref", () => {
       </section>
     `;
     const updatedCacheDoc = await makeRSDoc(makeStandardOps(config2, body2));
-    expect(updatedCacheDoc.getElementById("link-1").href).toEqual(
+    expect(updatedCacheDoc.getElementById("link-1").href).toBe(
       expectedLinks.get("dictionary")
     );
-    expect(updatedCacheDoc.getElementById("link-2").href).toEqual(
+    expect(updatedCacheDoc.getElementById("link-2").href).toBe(
       expectedLinks.get("url parser")
     );
     const updatedCacheTime = await cache.get("__CACHE_TIME__");

@@ -125,27 +125,27 @@ describe("W3C — Bibliographic References", () => {
     const doc = await makeRSDoc(ops);
 
     const refsDom = [...doc.querySelectorAll("p#refs-dom cite a")];
-    expect(refsDom.length).toEqual(4);
+    expect(refsDom.length).toBe(4);
     expect(
       refsDom.every(a => a.getAttribute("href") === "#bib-dom4")
     ).toBeTruthy();
 
     const refsCssom = [...doc.querySelectorAll("p#refs-cssom cite a")];
-    expect(refsCssom.length).toEqual(3);
+    expect(refsCssom.length).toBe(3);
     expect(
       refsCssom.every(a => a.getAttribute("href") === "#bib-cssom-view")
     ).toBeTruthy();
 
     const nr = [...doc.querySelectorAll("#normative-references dt")];
-    expect(nr.length).toEqual(3);
-    expect(nr[0].textContent).toEqual("[CSSOM-VIEW]");
-    expect(nr[1].textContent).toEqual("[DOM4]"); // first appearing [[TERM]] is used
-    expect(nr[2].textContent).toEqual("[LOCAL]");
+    expect(nr.length).toBe(3);
+    expect(nr[0].textContent).toBe("[CSSOM-VIEW]");
+    expect(nr[1].textContent).toBe("[DOM4]"); // first appearing [[TERM]] is used
+    expect(nr[2].textContent).toBe("[LOCAL]");
 
     const refsLocal = [...doc.querySelectorAll("p#refs-local a")];
-    expect(refsLocal[0].textContent).toEqual("LOCAL");
-    expect(refsLocal[0].getAttribute("href")).toEqual("#bib-local");
-    expect(refsLocal[1].href).toEqual("http://test.com/");
+    expect(refsLocal[0].textContent).toBe("LOCAL");
+    expect(refsLocal[0].getAttribute("href")).toBe("#bib-local");
+    expect(refsLocal[1].href).toBe("http://test.com/");
   });
 
   it("sorts references as if they were lowercase", () => {
@@ -176,11 +176,11 @@ describe("W3C — Bibliographic References", () => {
     const doc = await makeRSDoc(ops);
 
     const badRefLink = doc.querySelector("#bad-ref a");
-    expect(badRefLink.textContent).toEqual("bad-ref");
-    expect(badRefLink.getAttribute("href")).toEqual("#bib-bad-ref");
+    expect(badRefLink.textContent).toBe("bad-ref");
+    expect(badRefLink.getAttribute("href")).toBe("#bib-bad-ref");
     const badRef = doc.querySelector("#informative-references dd");
     expect(badRef).toBeTruthy();
-    expect(badRef.textContent).toEqual("Reference not found.");
+    expect(badRef.textContent).toBe("Reference not found.");
   });
 
   it("uses cached results from IDB", async () => {
@@ -189,13 +189,13 @@ describe("W3C — Bibliographic References", () => {
     const doc = await makeRSDoc(ops);
 
     const links = [...doc.querySelectorAll("#test a")];
-    expect(links.length).toEqual(4);
+    expect(links.length).toBe(4);
     expect(
       links.every(a => a.getAttribute("href") === "#bib-dom")
     ).toBeTruthy();
     const refs = doc.querySelectorAll("#references dt");
-    expect(refs.length).toEqual(1);
-    expect(refs[0].textContent).toEqual("[dom]");
+    expect(refs.length).toBe(1);
+    expect(refs[0].textContent).toBe("[dom]");
   });
 
   it("fetches fresh results from specref", async () => {
@@ -209,13 +209,13 @@ describe("W3C — Bibliographic References", () => {
     const doc = await makeRSDoc(ops);
 
     const links = [...doc.querySelectorAll("#test a")];
-    expect(links.length).toEqual(4);
+    expect(links.length).toBe(4);
     expect(
       links.every(a => a.getAttribute("href") === "#bib-dom")
     ).toBeTruthy();
     const refs = doc.querySelectorAll("#references dt");
-    expect(refs.length).toEqual(1);
-    expect(refs[0].textContent).toEqual("[dom]");
+    expect(refs.length).toBe(1);
+    expect(refs[0].textContent).toBe("[dom]");
   });
 });
 
