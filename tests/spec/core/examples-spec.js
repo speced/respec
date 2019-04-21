@@ -134,9 +134,9 @@ describe("Core — Examples", () => {
     const doc = await makeRSDoc(ops);
     const exampleLink = doc.querySelector("aside.example a.self-link");
     const example = doc.querySelector("aside.example");
-    expect(
-      exampleLink.getAttribute("href").includes("this-is-a-very-long-link")
-    ).toBe(false);
+    expect(exampleLink.getAttribute("href")).not.toContain(
+      "this-is-a-very-long-link"
+    );
     expect(exampleLink.getAttribute("href")).toBe("#example-1");
     expect(example.id).toBe("example-1");
   });
